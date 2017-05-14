@@ -1,4 +1,8 @@
-﻿local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
+local addonName = "Altoholic"
+local addon = _G[addonName]
+local colors = addon.Colors
+
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 Altoholic.Sharing = {}
 Altoholic.Sharing.Clients = {}		-- authorized clients
@@ -6,10 +10,6 @@ Altoholic.Sharing.Content = {}		-- shared content
 Altoholic.Sharing.AvailableContent = {}		-- available content
 
 local THIS_ACCOUNT = "Default"
-local WHITE		= "|cFFFFFFFF"
-local RED		= "|cFFFF0000"
-local GREEN		= "|cFF00FF00"
-local LIGHTBLUE = "|cFFB0B0FF"
 
 local AUTH_AUTO	= 1
 local AUTH_ASK		= 2
@@ -52,9 +52,9 @@ local ClientsScrollFrame_Desc = {
 					_G[ entry..i.."NameNormalText" ].name = name
 					
 					if auth == AUTH_NEVER then
-						name = RED..name
+						name = colors.red..name
 					elseif auth == AUTH_AUTO then
-						name = GREEN..name
+						name = colors.green..name
 					end
 					
 					_G[ entry..i.."NameNormalText" ]:SetText(name)
@@ -161,7 +161,7 @@ local moduleLabels = {		-- these are the labels
 	["DataStore_Auctions"] = format("%s & %s", AUCTIONS, BIDS),
 --	["DataStore_Characters"] = ,
 	["DataStore_Containers"] = L["Containers"],
-	["DataStore_Crafts"] = L["Professions"],
+	["DataStore_Crafts"] = TRADE_SKILLS,
 	["DataStore_Currencies"] = CURRENCY,
 	["DataStore_Inventory"] = L["Equipment"],
 	["DataStore_Mails"] = L["Mails"],
@@ -238,7 +238,7 @@ local ContentScrollFrame_Desc = {
 	Lines = {
 		[GUILD_HEADER_LINE] = {
 			GetText = function(self, line)
-					return format("%s|r / %s", WHITE..line.realm, GREEN..line.name)
+					return format("%s|r / %s", colors.white..line.realm, colors.green..line.name)
 				end,
 			GetOffset = function(self, line)
 					return 20
@@ -279,7 +279,7 @@ local ContentScrollFrame_Desc = {
 		[CHARACTER_HEADER_LINE] = {
 			GetText = function(self, line)
 					local _, realm, name = strsplit(".", line.key)
-					return format("%s|r / %s", WHITE..realm, DataStore:GetColoredCharacterName(line.key))
+					return format("%s|r / %s", colors.white..realm, DataStore:GetColoredCharacterName(line.key))
 				end,
 			GetOffset = function(self, line)
 					return 20
@@ -574,7 +574,7 @@ local AvailableContentScrollFrame_Desc = {
 					_G[entry..i.."Check"]:SetChecked(AvailableContentCheckedItems[lineData.parentID])
 					
 					if lineData.size then
-						_G[entry..i.."Size"]:SetText(LIGHTBLUE..GetSizeInKB(lineData.size))
+						_G[entry..i.."Size"]:SetText(colors.lightBlue..GetSizeInKB(lineData.size))
 						_G[entry..i.."Size"]:Show()
 					else
 						_G[entry..i.."Size"]:Hide()
@@ -583,7 +583,7 @@ local AvailableContentScrollFrame_Desc = {
 					if lineData.lastUpdate then
 						local text
 						if lineData.lastUpdate == 0 then
-							text = RED..NEVER
+							text = colors.red..NEVER
 						else
 							text = LineDesc:GetDate(lineData)
 						end
@@ -602,7 +602,7 @@ local AvailableContentScrollFrame_Desc = {
 	Lines = {
 		[GUILD_HEADER_LINE] = {
 			GetText = function(self, line)
-					return format("%s|r / %s", WHITE..line.realm, GREEN..line.name)
+					return format("%s|r / %s", colors.white..line.realm, colors.green..line.name)
 				end,
 			GetOffset = function(self, line)
 					return 20
@@ -619,7 +619,7 @@ local AvailableContentScrollFrame_Desc = {
 					item:Show()
 				end,
 			GetDate = function(self, line)
-					return LIGHTBLUE..date("%m/%d/%Y %H:%M", line.lastUpdate)
+					return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
 				end,
 		},
 		[GUILD_BANKTAB_LINE] = {
@@ -633,14 +633,14 @@ local AvailableContentScrollFrame_Desc = {
 					_G[ entry.."Collapse" ]:Hide()
 				end,
 			GetDate = function(self, line)
-					return LIGHTBLUE..date("%m/%d/%Y %H:%M", line.lastUpdate)
+					return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
 				end,
 		},
 		[CHARACTER_HEADER_LINE] = {
 			GetText = function(self, line)
 					local _, realm, name = strsplit(".", line.key)
 					name = DataStore:GetClassColor(line.class) ..name
-					return format("%s|r / %s", WHITE..realm, name)
+					return format("%s|r / %s", colors.white..realm, name)
 				end,
 			GetOffset = function(self, line)
 					return 20
@@ -659,9 +659,9 @@ local AvailableContentScrollFrame_Desc = {
 					local last = DataStore:GetModuleLastUpdate("DataStore_Characters", name, realm, account)
 					
 					if last == line.lastUpdate then
-						return GREEN.."Up-to-date"
+						return colors.green.."Up-to-date"
 					else
-						return LIGHTBLUE..date("%m/%d/%Y %H:%M", line.lastUpdate)
+						return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
 					end
 				end,
 		},
@@ -680,9 +680,9 @@ local AvailableContentScrollFrame_Desc = {
 					local last = DataStore:GetModuleLastUpdate(line.module, name, realm, account)
 					
 					if last == line.lastUpdate then
-						return GREEN.."Up-to-date"
+						return colors.green.."Up-to-date"
 					else
-						return LIGHTBLUE..date("%m/%d/%Y %H:%M", line.lastUpdate)
+						return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
 					end
 				end,
 		},
@@ -697,7 +697,7 @@ local AvailableContentScrollFrame_Desc = {
 					_G[ entry.."Collapse" ]:Hide()
 				end,
 			GetDate = function(self, line)
-					return LIGHTBLUE..date("%m/%d/%Y %H:%M", line.lastUpdate)
+					return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
 				end,
 		},
 	},

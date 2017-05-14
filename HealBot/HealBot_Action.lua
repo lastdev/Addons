@@ -532,6 +532,7 @@ function HealBot_Action_SetrSpell()
 			HealBot_RangeSpells["HARM"]=HEALBOT_PLAGUE_STRIKE -- 30 
             x=HEALBOT_PLAGUE_STRIKE
 		end
+    elseif HealBot_Data["PCLASSTRIM"]=="DEMO" then
     end
 	if (HealBot_RangeSpells["HEAL"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HEAL"]=x end
 	if (HealBot_RangeSpells["BUFF"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["BUFF"]=x end
@@ -1363,11 +1364,11 @@ function HealBot_Action_EnableButton(button, isTarget)
                     HealBot_UnitTextRange["og"][ebUnit]=0
                     HealBot_UnitTextRange["ob"][ebUnit]=0
                 end
-                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] and UnitIsVisible(ebUnit) then
+                if not IsInInstance() and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] and UnitIsVisible(ebUnit) then
                     HealBot_Action_ShowDirectionArrow(button, ebUnit)
                 end
             else
-                if uDirArrow and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] then
+                if not IsInInstance() and uDirArrow and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] then
                     HealBot_Action_ShowDirectionArrow(button, ebUnit)
                 elseif HealBot_UnitDirection[ebUnit] then
                     HealBot_Action_HideDirectionArrow(button, ebUnit)
@@ -1496,7 +1497,7 @@ function HealBot_Action_EnableButton(button, isTarget)
 end
 
 function HealBot_Action_ShowDirectionArrow(button, unit)
-    if (Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIRMOUSE"]==false or unit==HealBot_Data["TIPUNIT"]) and UnitIsPlayer(unit) then
+    if (Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIRMOUSE"]==false or unit==HealBot_Data["TIPUNIT"]) then
         local hbX, hbY, hbD = HealBot_Direction_Check(unit)
         if hbD then
             if not HealBot_UnitDirection[unit] then 
@@ -2017,6 +2018,19 @@ function HealBot_Action_ResetSkin(barType,button,numcols)
         bar6:SetWidth(bWidth)
         barDir:SetHeight(bheight);
         barDir:SetWidth(bWidth)
+        if Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][b.frame]["OFIX"]==1 then
+            bar:SetOrientation("HORIZONTAL");
+            bar2:SetOrientation("HORIZONTAL");
+            bar3:SetOrientation("HORIZONTAL");
+            bar5:SetOrientation("HORIZONTAL");
+            bar6:SetOrientation("HORIZONTAL");
+        else
+            bar:SetOrientation("VERTICAL");
+            bar2:SetOrientation("VERTICAL");
+            bar3:SetOrientation("VERTICAL");
+            bar5:SetOrientation("VERTICAL");
+            bar6:SetOrientation("VERTICAL");
+        end
         bar5:SetPoint("TOPLEFT",bar,"TOPLEFT",-bOutline,bOutline);
         local gaf = _G["f"..b.frame.."_HealBot_Action"]
         b:SetFrameLevel(gaf:GetFrameLevel()+ 1);
@@ -2616,8 +2630,7 @@ function HealBot_Action_CheckRange(button)
                         end
                     end
                 elseif uRange==0 then
-                    if not HealBot_UnitDirection[unit] and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"]
-                                                       and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIRMOUSE"]==false then
+                    if not HealBot_UnitDirection[unit] and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] then
                         HealBot_Action_RefreshButton(button)
                     else
                         ebubar:SetStatusBarColor(HealBot_UnitBarsRange["r"][unit],HealBot_UnitBarsRange["g"][unit],HealBot_UnitBarsRange["b"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["ORA"])
@@ -2638,21 +2651,25 @@ function HealBot_Action_CheckRange(button)
                         end
                     end
                 else
-                    ebubar:SetStatusBarColor(HealBot_UnitBarsRange["r"][unit],HealBot_UnitBarsRange["g"][unit],HealBot_UnitBarsRange["b"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"])
-                    if uHealIn>0 then 
-                        ebubar2:SetStatusBarColor(HealBot_UnitBarsRange["hr"][unit],HealBot_UnitBarsRange["hg"][unit],HealBot_UnitBarsRange["hb"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]); 
-                    end
-                    if uAbsorbs>0 then 
-                        ebubar6:SetStatusBarColor(HealBot_UnitBarsRange["sr"][unit],HealBot_UnitBarsRange["sg"][unit],HealBot_UnitBarsRange["sb"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]); 
-                    end
-                    ebubar.txt:SetTextColor(HealBot_UnitTextRange["or"][unit],HealBot_UnitTextRange["og"][unit],HealBot_UnitTextRange["ob"][unit],Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["DA"]);
-                    if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSONBAR"] and Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSTYPE"]==1 and 
-                       Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"]==false and not HealBot_retdebuffTargetIcon(unit) then
-                        ebuicon15:SetAlpha(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]);
-                    end
-                    if Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["POWERSIZE"]>0 then 
-                        HealBot_UnitBarsRange["3a"][unit]=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]
-                        HealBot_Action_SetBar3Value(button);
+                    if not HealBot_UnitDirection[unit] and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] then
+                        HealBot_Action_RefreshButton(button)
+                    else
+                        ebubar:SetStatusBarColor(HealBot_UnitBarsRange["r"][unit],HealBot_UnitBarsRange["g"][unit],HealBot_UnitBarsRange["b"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"])
+                        if uHealIn>0 then 
+                            ebubar2:SetStatusBarColor(HealBot_UnitBarsRange["hr"][unit],HealBot_UnitBarsRange["hg"][unit],HealBot_UnitBarsRange["hb"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]); 
+                        end
+                        if uAbsorbs>0 then 
+                            ebubar6:SetStatusBarColor(HealBot_UnitBarsRange["sr"][unit],HealBot_UnitBarsRange["sg"][unit],HealBot_UnitBarsRange["sb"][unit],Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]); 
+                        end
+                        ebubar.txt:SetTextColor(HealBot_UnitTextRange["or"][unit],HealBot_UnitTextRange["og"][unit],HealBot_UnitTextRange["ob"][unit],Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["DA"]);
+                        if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSONBAR"] and Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSTYPE"]==1 and 
+                           Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["I15EN"]==false and not HealBot_retdebuffTargetIcon(unit) then
+                            ebuicon15:SetAlpha(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]);
+                        end
+                        if Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["POWERSIZE"]>0 then 
+                            HealBot_UnitBarsRange["3a"][unit]=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["DISA"]
+                            HealBot_Action_SetBar3Value(button);
+                        end
                     end
                 end
             elseif HealBot_UnitDirection[unit] then
@@ -2952,7 +2969,7 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
     elseif status=="Disabled" then
         sName, sTar, sTrin1, sTrin2, AvoidBC = HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
     elseif status=="Enemy" then
-        sName, sTar, sTrin1, sTrin2, AvoidBC = HealBot_Action_AttribEnemySpellPattern(HB_combo_prefix)
+        sName = HealBot_Action_AttribEnemySpellPattern(HB_combo_prefix)
         buttonType="harmbutton"
         sType="harm"
     end
@@ -3090,38 +3107,34 @@ end
 function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellTrin2, spellAvoidBC, unit, status)
     local smName=""
     local scText=""
-    local sysSoundSFX = strsub(GetCVar("Sound_EnableSFX") or "nil",1,1)
+    local sysSoundSFX = strsub(GetCVar("Sound_EnableErrorSpeech") or "nil",1,1)
     local spellType="help"
     if status=="Enemy" then spellType="harm" end
-    if spellName==HEALBOT_HOLY_WORD_SERENITY then
-        scText="/use [@"..unit.."] "..spellName..";\n"
-    else
-        scText="/cast [@"..unit..","..spellType.."] "..spellName..";\n"
-    end
+    scText="/cast [@"..unit..","..spellType.."] "..spellName..";\n"
 
-    if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 0;\n" end
+    if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableErrorSpeech 0\n" end
     if HealBot_Globals.MacroSuppressError==1 then smName=smName.."/script UIErrorsFrame:Hide();\n" end
     if spellTar then smName=smName.."/target "..unit..";\n" end
     if spellTrin1 then smName=smName.."/use 13;\n" end
     if spellTrin2 then smName=smName.."/use 14;\n" end
     if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
     if HealBot_Globals.MacroSuppressError==1 then smName=smName.."/script UIErrorsFrame:Clear(); UIErrorsFrame:Show();\n" end
-    if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 1;\n" end
+    if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableErrorSpeech 1\n" end
     smName=smName..scText
     if spellAvoidBC then smName=smName.."/use 4;" end
     if strlen(smName)>255 then
         smName=""
-        if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 0;\n" end
-        if spellTar then smName=smName.."/target "..HealBot_GetUnitName(unit)..";\n" end
+        if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableErrorSpeech 0\n" end
+        if spellTar then smName=smName.."/target "..unit..";\n" end
         if spellTrin1 then smName=smName.."/use 13;\n" end
         if spellTrin2 then smName=smName.."/use 14;\n" end
         if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
-        if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 1;\n" end
+        if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableErrorSpeech 1\n" end
         smName=smName..scText
         if spellAvoidBC then smName=smName.."/use 4;" end
         if strlen(smName)>255 then
             smName=""
-            if spellTar then smName=smName.."/target "..HealBot_GetUnitName(unit)..";\n" end
+            if spellTar then smName=smName.."/target "..unit..";\n" end
             if spellTrin1 then smName=smName.."/use 13;\n" end
             if spellTrin2 then smName=smName.."/use 14;\n" end
             if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
@@ -3567,6 +3580,7 @@ function HealBot_Action_setPoint(hbCurFrame)
 end
 
 local hbClassCols = {
+          ["DEMO"] = {r=0.8,  g=0.1, b=0.8, },
           ["DRUI"] = {r=1.0,  g=0.49, b=0.04, },
           ["HUNT"] = {r=0.67, g=0.83, b=0.45, },
           ["MAGE"] = {r=0.41, g=0.8,  b=0.94, },
@@ -4162,6 +4176,16 @@ function HealBot_Action_RetMyTarget(hbGUID)
     return HealBot_MyTargets[hbGUID]
 end
 
+function HealBot_Action_GetNumDead()
+    local numMembers = GetNumGroupMembers();
+    local numDead = 0;
+    for i = 1, numMembers do
+       _, _, _, _, _, _, _, _, isDead = GetRaidRosterInfo(i);
+       if isDead then numDead = numDead + 1 end
+    end
+    return numDead
+end
+
 function HealBot_Action_SmartCast(button)
     local scuSpell, scuHlth, scuMaxHlth, scuHealsIn, scuMinHlth = nil,nil,nil,nil, UnitLevel("player")*20
     local rangeSpell=HealBot_RangeSpells["HEAL"]
@@ -4169,7 +4193,16 @@ function HealBot_Action_SmartCast(button)
     
   
     if HealBot_Globals.SmartCastRes and UnitIsDead(button.unit) and not UnitIsGhost(button.unit) then
-        scuSpell=HealBot_Init_retSmartCast_Res();
+        local mrSpell = HealBot_Init_retSmartCast_MassRes();
+        -- HealBot_Action_GetNumDead() > 1 and
+        --[[if HealBot_GetSpellId(mrSpell) and (UnitInParty(button.unit) or UnitInRaid(button.unit)) then 
+            scuSpell=HealBot_Init_retSmartCast_MassRes();
+            rangeSpell=nil
+        else
+            scuSpell=HealBot_Init_retSmartCast_Res();
+            rangeSpell=HealBot_RangeSpells["RES"]
+        end--]]
+		scuSpell=HealBot_Init_retSmartCast_Res();
         rangeSpell=HealBot_RangeSpells["RES"]
     elseif button.debuff.type and HealBot_Globals.SmartCastDebuff then
         scuSpell=HealBot_Options_retDebuffCureSpell(button.debuff.type);
@@ -4185,7 +4218,7 @@ function HealBot_Action_SmartCast(button)
             scuSpell=HealBot_SmartCast(x)
         end
     end
-    if scuSpell and button.guid~=HealBot_Data["PGUID"] then
+    if rangeSpell and scuSpell and button.guid~=HealBot_Data["PGUID"] then
         if HealBot_UnitInRange(rangeSpell, button.unit)~=1 then return nil; end
     end
     return scuSpell;
@@ -4259,7 +4292,7 @@ function HealBot_MountsPets_InitMount()
     
     local x = C_MountJournal.GetNumMounts()
 	for z=1,x do
-        local mount, sID, _, _, isUsable, _, _, _, faction, _, isCollected = C_MountJournal.GetMountInfo(z)
+        local mount, sID, _, _, isUsable, _, _, _, faction, _, isCollected = C_MountJournal.GetMountInfoByID(z)
         if faction and isUsable and isCollected then
             local englishFaction = UnitFactionGroup("player")
             if (faction~=HealBot_mountData["playerFaction"]) then
@@ -4269,7 +4302,7 @@ function HealBot_MountsPets_InitMount()
         end
         
         if isUsable and isCollected and not HealBot_Globals.excludeMount[mount] then
-            local _, _, _, _, mountType = C_MountJournal.GetMountInfoExtra(z)
+            local _, _, _, _, mountType = C_MountJournal.GetMountInfoExtraByID(z)
             if (mountType==248 or mountType==247 or mountType==242) then
                 if HealBot_mountData["IncFlying"] then
                     table.insert(HealBot_FMount, mount);
@@ -4369,7 +4402,7 @@ function HealBot_MountsPets_DislikeMount(action)
     local z = C_MountJournal.GetNumMounts()
     local mount=nil
 	for i=1,z do
- 		local creatureName, sID, _, active, isUsable, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfo(i)
+ 		local creatureName, sID, _, active, isUsable, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(i)
  		if active then
  			mount=creatureName
             break
@@ -4399,7 +4432,7 @@ end
 
 function HealBot_MountsPets_Mount(mount)
     if HealBot_MountIndex[mount] then 
-        C_MountJournal.Summon(HealBot_MountIndex[mount]) 
+        C_MountJournal.SummonByID(HealBot_MountIndex[mount]) 
     else
         HealBot_setOptions_Timer(405)
         HealBot_AddChat(HEALBOT_OPTION_EXCLUDEMOUNT_ON.." "..mount)

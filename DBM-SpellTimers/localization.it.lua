@@ -1,6 +1,4 @@
 if GetLocale() ~= "itIT" then return end
-DBM_SpellsUsed_Translations = {}
-
 local L = DBM_SpellsUsed_Translations
 
 

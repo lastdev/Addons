@@ -1,4 +1,4 @@
-﻿local debug = false
+local debug = false
 --[===[@debug@
 debug = true
 --@end-debug@]===]
@@ -12,4 +12,3 @@ L["REPORT_UNCOLLECTED_ENABLED"] = "At logon, alts with more than 400 uncollected
 L["REPORT_UNCOLLECTED_LABEL"] = "Report uncollected resources"
 L["REPORT_UNCOLLECTED_TITLE"] = "Report uncollected resources"
 L["UNCOLLECTED_RESOURCES_ALERT"] = "%s has %s uncollected resources"
-

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterSearch.lua 5354 2012-09-14 22:38:20Z kandoko $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCounterSearch.lua 5597 2016-04-26 11:50:40Z brykrys $
 
 	BeanCounterSearch - Search routines for BeanCounter data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterSearch.lua $","$Rev: 5354 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterSearch.lua $","$Rev: 5597 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals()
@@ -107,10 +107,10 @@ function private.searchByItemID(id, settings, queryReturn, count, itemTexture, c
 	else
 		tbl[1] = tostring(id)
 	end
-	
+
 	data = {}
 	style = {}
-	
+
 	local profit, low, high, serverName, playerName
 	--serverName and playerName are used as part of our cache ID string
 	if settings.servers and settings.servers[1] then
@@ -123,33 +123,33 @@ function private.searchByItemID(id, settings, queryReturn, count, itemTexture, c
 	else
 		playerName = "server"
 	end
-	
+
 	--check if we have a cache of this search
 	local cached = private.checkSearchCache(classic or tbl[1], serverName, playerName)
 	if cached then
 		data = cached
 	else
 		data = private.searchServerData(serverName, data, tbl, settings)
-		--format raw into displayed data, the cached version is already in this format	
+		--format raw into displayed data, the cached version is already in this format
 		data = private.formatServerData(data, settings)
 	end
-	
+
 	--add item to cache
 	if not cached then
 		private.addSearchCache(classic or tbl[1], data, serverName, playerName)
 	end
-	
+
 	--If query return
 	if queryReturn then --this lets us know it was not an external addon asking for beancounter data
 		return data --All results are now returned, calling addons can filter
 	end
-	
+
 	--if BeanCounters frame is not visible then store till we are and cease processing
 	if not private.frame:IsVisible() then
 		private.storedQuery = id
 		return
 	end
-	
+
 	--store profit for this item, need to do this before we reduce number of results for display
 	local player = private.frame.SelectBoxSetting[2]
 	if get("util.beancounter.ButtonuseDateCheck") and (settings.dateFilterLow or settings.dateFilterHigh) then
@@ -157,7 +157,7 @@ function private.searchByItemID(id, settings, queryReturn, count, itemTexture, c
 	else
 		profit, low, high = lib.API.getAHProfit(player, data)
 	end
-	
+
 	--filter by dates
 	if settings.dateFilterLow or settings.dateFilterHigh then
 		data = private.filterbyDate(data, settings.dateFilterLow, settings.dateFilterHigh)
@@ -166,16 +166,16 @@ function private.searchByItemID(id, settings, queryReturn, count, itemTexture, c
 	if #data > count then
 		data = private.reduceSize(data, count)
 	end
-	
+
 	style = private.styleServerData(data) --create a style sheet for this data
-	
+
 	--Adds itemtexture to display box and if possible the gain/loss on the item
 	if itemTexture then
 		private.frame.icon:SetNormalTexture(itemTexture)
 	else
 		private.frame.icon:SetNormalTexture(nil)
 	end
-	
+
 	--display profit for the search term
 	if profit then
 		local change = "|CFF33FF33Gained"
@@ -192,7 +192,7 @@ function private.searchByItemID(id, settings, queryReturn, count, itemTexture, c
 		private.frame.slot.help:SetTextColor(1, 0.8, 0)
 		private.frame.slot.help:SetText(_BC('HelpGuiItemBox')) --"Drop item into box to search."
 	end
-	
+
 	private.frame.resultlist.sheet:SetData(data, style) --Set the GUI scrollsheet
 	return data, style
 end
@@ -200,8 +200,8 @@ end
 --Helper functions for the Search
 function private.searchServerData(serverName, data, tbl, settings)
 	local server = BeanCounterDB[serverName]
-	if not server then return end
-			
+	if not server then return data end -- return data table unchanged
+
 	--Retrives all matching results
 	for i in pairs(server) do
 		--get faction for player i out of the BeanCounterDBSettings table
@@ -281,7 +281,7 @@ function private.formatServerData(data, settings)
 			tinsert(formatedData, entry)
 		end
 	end
-	
+
 	return formatedData
 end
 --take collected data and format
@@ -291,6 +291,8 @@ local  function styleColors(database) --helper takes formated data table and loo
 		return 0.3, 0.9, 0.8
 	elseif database == _BC('UiAucExpired') then
 		return 1, 0, 0
+	elseif database == _BC('UiAucCancelled') then
+		return 1, 0.6, 0
 	elseif database == _BC('UiWononBuyout') or database == _BC('UiWononBid') then
 		return 1, 1, 0
 	elseif database == _BC('UiOutbid') then
@@ -314,11 +316,12 @@ function private.styleServerData(data)
 	return style
 end
 
+local function sorton12(a, b)
+	return a[12] > b[12]
+end
 function private.reduceSize(tbl, count)
 	--The data provided is from multiple toons tables, so we need to resort the merged data back into sequential time order
-	table.sort(tbl, function(a, b)
-			 return a[12] > b[12]
-			end)
+	sort(tbl, sorton12)
 	local data = {} -- this will be a new table, this prevents chages from being propagated back to the cached "data" refrence
 	for i = 1, count do
 		tinsert(data, tbl[i])
@@ -339,155 +342,182 @@ function private.filterbyDate(tbl, lowDate, highDate)
 	return data
 end
 --To simplify having two seperate search routines, the Data creation of each table has been made a local function
-	function private.COMPLETEDAUCTIONS(id, itemKey, text)
-			local uStack, uMoney, uDeposit , uFee, uBuyout , uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
-			if uSeller == "0" then uSeller = "..." end
-			if uReason == "0" then uReason = "..." end
-			
-			local pricePer = 0
-			local stack = tonumber(uStack) or 0
-			local profit =  (uMoney - uDeposit + uFee)
-			if stack > 0 then pricePer =  profit/stack end
-			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
+function private.COMPLETEDAUCTIONS(id, itemKey, text)
+	local uStack, uMoney, uDeposit, uFee, uBuyout, uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
+	if uSeller == "0" then uSeller = "..." end
+	if uReason == "0" then uReason = "..." end
+	local bid = tonumber(uBid) or 0
+	local buyout = tonumber(uBuyout) or 0
+	local money = tonumber(uMoney) or 0
+	local stack = tonumber(uStack) or 0
+	local deposit = tonumber(uDeposit) or 0
+	local fee = tonumber(uFee) or 0
+	local datestamp = tonumber(uTime) or 0
 
-			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
+	local profit = money - deposit
+	local pricePer = profit + fee
+	if stack > 1 then pricePer = pricePer / stack end
 
-			return {
-				itemLink or "Failed to get Link", --itemname
-				_BC('UiAucSuccessful'), --status
+	local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+	local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
+		or private.getItemInfo(id, "name") -- if not in our DB ask the server
+		or "Unknown"
 
-				tonumber(uBid) or 0,  --bid
-				tonumber(uBuyout) or 0,  --buyout
-				tonumber(uMoney), --Net
-				tonumber(stack),  --stacksize
-				tonumber(pricePer), --Profit/per
-			
-				uSeller,  --seller/seller
+	return {
+		itemLink, --itemname
+		_BC('UiAucSuccessful'), --Transaction status
 
-				tonumber(uDeposit), --deposit
-				tonumber(uFee), --fee
-				uReason, --reason bought
-				tonumber(uTime), --time, --Make this a user choosable option.
-				tonumber(profit), --Profit
-				uMeta or "",
-			}
+		bid,
+		buyout,
+		money, --money received in mail (Net)
+		stack,
+		pricePer,
+
+		uSeller, --seller/buyer - buyer in this case
+
+		deposit,
+		fee,
+		uReason, --usually blank in this case
+		datestamp, --time, --Make this a user choosable option.
+		profit,
+		uMeta or "",
+	}
+end
+function private.FAILEDAUCTIONS(id, itemKey, text)
+	local status
+	local uStack, uMoney, uDeposit, uFee, uBuyout, uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
+	if uSeller == "0" then uSeller = "..." end
+	if uReason == "0" then uReason = "..." end
+	local bid = tonumber(uBid) or 0
+	local buyout = tonumber(uBuyout) or 0
+	local stack = tonumber(uStack) or 0
+	local deposit = tonumber(uDeposit) or 0
+	local datestamp = tonumber(uTime) or 0
+	-- uMoney, uFee should be "0" in this case
+
+	if uReason == _BC('Cancelled') then
+		status = _BC('UiAucCancelled') --if its a cancel rather than true expired auction
+	else
+		status =_BC('UiAucExpired')
 	end
-	--STACK; BUY; BID; DEPOSIT; TIME; DATE; WEALTH
-	function private.FAILEDAUCTIONS(id, itemKey, text)
-			local uStack, uMoney, uDeposit , uFee, uBuyout , uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
-			if uSeller == "0" then uSeller = "..." end
-			if uReason == "0" then uReason = "..." end
-			local status =_BC('UiAucExpired')
-			if uReason == _BC('Cancelled') then status = _BC('UiAucCancelled') end --if its a cancel rather than true expired auction
-			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
-			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
 
-			return {
-				itemLink, --itemname
-				status,
+	local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+	local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
+		or private.getItemInfo(id, "name") -- if not in our DB ask the server
+		or "Unknown"
 
-				tonumber(uBid) or 0, --bid
-				tonumber(uBuyout) or 0, --buyout
-				0, --money,
-				tonumber(uStack) or 0,
-				0, --Profit/per
-								
-				uSeller,  --seller/buyer
+	return {
+		itemLink,
+		status, --Transaction status
 
-				tonumber(uDeposit) or 0, --deposit
-				0, --fee
-				uReason, --reason bought
-				tonumber(uTime), --time, --Make this a user choosable option.
-				0, --Profit
-				uMeta or "",
-			}
+		bid,
+		buyout,
+		0, --money (Net)
+		stack,
+		0, --Price/per
+
+		uSeller, --seller/buyer - should be blank in this case
+
+		deposit,
+		0, --fee
+		uReason, --reason for return, e.g. cancelled
+		datestamp, --time, --Make this a user choosable option.
+		-deposit, --Profit - lost deposit
+		uMeta or "",
+	}
+end
+function private.COMPLETEDBIDSBUYOUTS(id, itemKey, text)
+	local status
+	local uStack, uMoney, uDeposit, uFee, uBuyout, uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
+	if uSeller == "0" then uSeller = "..." end
+	if uReason == "0" then uReason = "..." end
+	if not uMeta then uMeta = "" end
+	local price = tonumber(uBid) or 0 -- how much we paid
+	local stack = tonumber(uStack) or 0
+	local buyout = tonumber(uBuyout) or 0
+	local datestamp = tonumber(uTime) or 0
+	-- uMoney, uDeposit, uFee should all be "0" in this case
+
+	if uBuyout ~= uBid then
+		status = _BC('UiWononBid')
+	else
+		status = _BC('UiWononBuyout')
 	end
-	function private.COMPLETEDBIDSBUYOUTS(id, itemKey, text)
-			--local value = "stack"], "money"], p"fee"], buyout"], "bid"], p"Seller/buyer"], ["time"], reason)
-		
-			local uStack, uMoney, uDeposit , uFee, uBuyout , uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
-			if uSeller == "0" then uSeller = "..." end
-			if uReason == "0" then uReason = "..." end
-					
-			local pricePer, stack, text = 0, tonumber(uStack), _BC('UiWononBuyout')
-			local profit
-			--If the auction was won on bid change text, and adjust ProfitPer
-			if uBuyout ~= uBid then
-				text = _BC('UiWononBid')
-				profit = (uBid - uMoney + uFee)
-				if stack > 0 then pricePer = profit/stack end
-			else --Devide by BUY price if it was won on Buy
-				profit = (uBuyout - uMoney + uFee)
-				if stack > 0 then pricePer = profit/stack end
-			end
 
-			--replace reason with DE info
-			if not uMeta then uMeta = "" end
-			local mat, count, value = uMeta:match("DE:(%d-):(%d-):(%d-)|")
-			if mat and count and value then
-				local _, link = GetItemInfo(mat)
-				if link then
-					uReason = link.." X "..count
-					--change the profit to be the diff between bought and what we DE into
-					profit = count*value - profit
-				end
-			end
+	local pricePer = price
+	if stack > 1 then pricePer = pricePer / stack end
 
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
-			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
-
-			return {
-				itemLink, --itemname
-				text, --status
-
-				tonumber(uBid), --bid
-				tonumber(uBuyout), --buyout
-				0, --money,
-				tonumber(stack),  --stacksize
-				tonumber(pricePer), --Profit/per
-	
-				uSeller,   --seller/buyer
-
-				tonumber(uDeposit), --deposit
-				tonumber(uFee), --fee
-				uReason, --reason bought
-				tonumber(uTime), --time, --Make this a user choosable option.
-				tonumber(profit), --Profit/per
-				uMeta,
-			}
+	--replace reason with DE info
+	local mat, count, value = uMeta:match("DE:(%d-):(%d-):(%d-)|")
+	if mat and count and value then
+		local _, link = GetItemInfo(mat)
+		if link then
+			uReason = link.." X "..count
+			--change the profit to be the diff between bought and what we DE into
+			--profit = count*value - profit -- disabled: we don't yet know how much these mats will really sell for
+		end
 	end
-	function private.FAILEDBIDS(id, itemKey, text)
-			
-			local uStack, uMoney, uDeposit , uFee, uBuyout , uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
-			if uSeller == "0" then uSeller = "..." end
-			if uReason == "0" then uReason = "..." end
-			
-			local itemID, suffix, uniqueID, reforged = lib.API.decodeLink(itemKey)
-			local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID, reforged)
-			if not itemLink then itemLink = private.getItemInfo(id, "name") end--if not in our DB ask the server
-			
-			return {
-				itemLink, --itemname
-				_BC('UiOutbid'), --status
 
-				tonumber(uBid), --bid
-				0, --buyout
-				tonumber(uMoney), --money,
-				tonumber(uStack), --stack
-				0, --Profit/per
-			
-				uSeller,  --seller/buyer
+	local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+	local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
+		or private.getItemInfo(id, "name") -- if not in our DB ask the server
+		or "Unknown"
 
-				tonumber(uDeposit), --deposit
-				tonumber(uFee), --fee
-				uReason, --reason bought
-				tonumber(uTime), --time, --Make this a user choosable option.
-				0, --Profit/per
-				uMeta or "",
-			}
-	end
+	return {
+		itemLink,
+		status, --Transaction status
+
+		price, --bid
+		buyout,
+		0, --money (Net)
+		stack,
+		pricePer,
+
+		uSeller, --seller/buyer - seller in this case
+
+		0, --deposit
+		0, --fee
+		uReason, --reason bought
+		datestamp, --time, --Make this a user choosable option.
+		-price, --Profit - how much we paid (negative value)
+		uMeta or "",
+	}
+end
+function private.FAILEDBIDS(id, itemKey, text)
+	local uStack, uMoney, uDeposit, uFee, uBuyout, uBid, uSeller, uTime, uReason, uMeta = private.unpackString(text)
+	if uSeller == "0" then uSeller = "..." end
+	if uReason == "0" then uReason = "..." end
+	-- uMoney, uDeposit, uFee, uBuyout expected to all be "0" in this case
+	-- BeanCounterMail records money received with the mail in uBid
+	local stack = tonumber(uStack) or 0
+	local money = tonumber(uBid) or 0
+	local timestamp = tonumber(uTime) or 0
+
+	local pricePer = money
+	if stack > 1 then pricePer = pricePer / stack end
+
+	local itemID, suffix, uniqueID = lib.API.decodeLink(itemKey)
+	local itemLink =  lib.API.createItemLinkFromArray(itemID..":"..suffix, uniqueID)
+		or private.getItemInfo(id, "name") -- if not in our DB ask the server
+		or "Unknown"
+
+	return {
+		itemLink,
+		_BC('UiOutbid'), --Transaction status
+
+		money, --bid
+		0, --buyout
+		money, --money received in mail (Net)
+		stack,
+		pricePer,
+
+		uSeller, --seller/buyer - seller in this case
+
+		0, --deposit
+		0, --fee
+		uReason, --reason for bid
+		timestamp, --time, --Make this a user choosable option.
+		0, --Profit
+		uMeta or "",
+	}
+end

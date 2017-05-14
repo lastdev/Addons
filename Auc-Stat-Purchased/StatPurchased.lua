@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - StatPurchased
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: StatPurchased.lua 5478 2014-09-27 19:09:48Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: StatPurchased.lua 5555 2015-04-14 14:00:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -42,6 +42,9 @@ local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRAN
 local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
 local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+local GetServerKeyText = AucAdvanced.GetServerKeyText
+
 
 -- globals -> locals
 local assert = assert
@@ -51,10 +54,11 @@ local select,ipairs,pairs,unpack,type,wipe = select,ipairs,pairs,unpack,type,wip
 local tonumber = tonumber
 local strsplit = strsplit
 local time = time
-local concat = table.concat
+local tconcat = table.concat
 local strmatch = strmatch
 
 local PET_BAND = 3
+local DATABASE_VERSION = 3
 
 -- Constants used when creating a PDF:
 local BASE_WEIGHT = 1
@@ -75,7 +79,6 @@ local ESTIMATE_OFFSET = 1 -- offset divisor to avoid division by 0
 
 
 -- Internal variables
-local SPRealmData
 
 local pricecache = setmetatable({}, {__mode="v"})
 
@@ -96,8 +99,8 @@ local GetStoreKey = function(link)
 end
 
 function lib.CommandHandler(command, ...)
-	local serverKey = Resources.ServerKeyCurrent
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+	local serverKey = Resources.ServerKey
+	local keyText = GetServerKeyText(serverKey)
 	if (command == "help") then
 		aucPrint(_TRANS('PURC_Help_SlashHelp1') )--Help for Auctioneer - Purchased
 		local line = AucAdvanced.Config.GetCommandLead(libType, libName)
@@ -117,12 +120,15 @@ function lib.Processors.itemtooltip(callbackType, ...)
 	private.ProcessTooltip(...)
 end
 lib.Processors.battlepettooltip = lib.Processors.itemtooltip
-function lib.Processors.config(callbackType, ...)
+function lib.Processors.config(callbackType, gui)
 	--Called when you should build your Configator tab.
-	private.SetupConfigGui(...)
+	if private.SetupConfigGui then private.SetupConfigGui(gui) end
 end
-function lib.Processors.scanstats(callbackType, ...)
+function lib.Processors.scanstats()
 	private.ClearCache()
+end
+function lib.Processors.gameactive()
+	if private.LookForOldData then private.LookForOldData() end
 end
 
 lib.ScanProcessors = {}
@@ -154,7 +160,7 @@ function lib.ScanProcessors.delete(operation, itemData, oldData)
 
 	price = price / itemData.stackSize
 
-	local pricedata = private.GetPriceData(Resources.ServerKeyCurrent)
+	local pricedata = private.GetServerData(Resources.ServerKey, true)
 	local keyId, property = GetStoreKey(itemData.link)
 	if not keyId then return end
 	if not pricedata.daily[keyId] then pricedata.daily[keyId] = "" end
@@ -280,9 +286,12 @@ end
 
 function lib.GetPrice(hyperlink, serverKey)
 	if not get("stat.purchased.enable") then return end --disable purchased if desired
-	serverKey = serverKey or Resources.ServerKeyCurrent
 
-	local data = private.GetPriceData(serverKey)
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+
+	local data = private.GetServerData(serverKey)
+	if not data then return end
 
 	local keyId, property = GetStoreKey(hyperlink)
 	if not keyId then return end
@@ -291,26 +300,36 @@ function lib.GetPrice(hyperlink, serverKey)
 	if pricecache[cachesig] then
 		local dayAverage, avg3, avg7, avg14, dayTotal, dayCount, seenDays, seenCount = unpack(pricecache[cachesig], 1, 8)
 		return dayAverage, avg3, avg7, avg14, false, dayTotal, dayCount, seenDays, seenCount
+	elseif pricecache[cachesig] == false then
+		return
 	end
 
 	local dayTotal, dayCount, dayAverage = 0,0,0
 	local seenDays, seenCount, avg3, avg7, avg14 = 0,0,0,0,0
+	local found = false
 
 	if data.daily[keyId] then
 		local stats = private.UnpackStats(data.daily[keyId])
 		if stats[property] then
 			dayTotal, dayCount = unpack(stats[property])
 			dayAverage = dayTotal/dayCount
+			found = true
 		end
 	end
 	if data.means[keyId] then
 		local stats = private.UnpackStats(data.means[keyId])
 		if stats[property] then
 			seenDays, seenCount, avg3, avg7, avg14 = unpack(stats[property])
+			found = true
 		end
 	end
-	pricecache[cachesig] = {dayAverage, avg3, avg7, avg14, dayTotal, dayCount, seenDays, seenCount}
-	return dayAverage, avg3, avg7, avg14, false, dayTotal, dayCount, seenDays, seenCount
+
+	if found then
+		pricecache[cachesig] = {dayAverage, avg3, avg7, avg14, dayTotal, dayCount, seenDays, seenCount}
+		return dayAverage, avg3, avg7, avg14, false, dayTotal, dayCount, seenDays, seenCount
+	else
+		pricecache[cachesig] = false
+	end
 end
 
 function lib.GetPriceColumns()
@@ -319,11 +338,11 @@ end
 
 local pricearray={} -- used to return stuff in
 function lib.GetPriceArray(hyperlink, serverKey)
-	if not get("stat.purchased.enable") then return end --disable purchased if desired
-	wipe(pricearray)
-
 	-- Get our statistics
 	local dayAverage, avg3, avg7, avg14, _, dayTotal, dayCount, seenDays, seenCount = lib.GetPrice(hyperlink, serverKey)
+	if not seenCount then return end -- if seenCount is not nil then all other values should be non-nil (may be 0 instead)
+
+	wipe(pricearray)
 
 	-- pricearray.price and pricearray.seen are the ones that most algorithms will look for
 	pricearray.seen = seenCount
@@ -364,7 +383,7 @@ function lib.GetPriceArray(hyperlink, serverKey)
 end
 
 function lib.OnLoad(addon)
-	if SPRealmData then return end
+	if not private.InitData then return end
 	-- set defaults
 	default("stat.purchased.tooltip", false)
 	default("stat.purchased.avg3", false)
@@ -377,7 +396,10 @@ function lib.OnLoad(addon)
 	private.InitData()
 end
 
+--[[ Local functions ]]--
+
 function private.SetupConfigGui(gui)
+	private.SetupConfigGui = nil
 	local id = gui:AddTab(lib.libName, lib.libType.." Modules")
 	--gui:MakeScrollable(id)
 
@@ -442,7 +464,6 @@ function private.SetupConfigGui(gui)
 
 end
 
---[[ Local functions ]]--
 function private.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not get("stat.purchased.tooltip") then return end
 
@@ -478,7 +499,8 @@ end
 function private.PushStats(serverKey)
 	local dailyAvg
 
-	local data = private.GetPriceData(serverKey)
+	local data = private.GetServerData(serverKey)
+	if not data then return end
 
 	local pdata, fdata
 	for keyId, stats in pairs(data.daily) do
@@ -539,58 +561,87 @@ function private.PackStats(data)
 	for property, info in pairs(data) do
 		tmp[n+1]=property
 		tmp[n+2]=":"
-		tmp[n+3]=concat(info, ";")
+		tmp[n+3]=tconcat(info, ";")
 		tmp[n+4]=","
 		n=n+4
 	end
-	return concat(tmp, "", 1, n-1)   -- n-1 to skip last ","
+	return tconcat(tmp, "", 1, n-1)   -- n-1 to skip last ","
 end
 
 -- The following Functions are the routines used to access the permanent store data
+local SPRealmData
 
-function private.UpgradeDb()
-	private.UpgradeDb = nil
-	if type(AucAdvancedStatPurchasedData) == "table" and AucAdvancedStatPurchasedData.Version == "2.0" then return end
+function private.UpgradeDB()
+	private.UpgradeDB = nil
 
-	local newSave = { Version = "2.0", RealmData = {} }
+	local savedroot = AucAdvancedStatPurchasedData
+	local saveddata
+	if savedroot then
+		saveddata = savedroot.RealmData
+		if saveddata and savedroot.Version == DATABASE_VERSION then return end
+	end
 
-	if type(AucAdvancedStatPurchasedData) == "table" and AucAdvancedStatPurchasedData.Version == "1.0" then
-		-- convert from type "1.0" database to type "2.0"
-		for realm, realmData in pairs (AucAdvancedStatPurchasedData.RealmData) do
-			if type(realm) == "string" and type(realmData) == "table" then
-				for faction, data in pairs (realmData) do
-					if type(faction) == "string" and type(data) == "table" and strmatch(faction, "^%u%l+$") then
-						-- looks like a valid realm/faction combination
-						local serverKey = realm.."-"..faction
-						local stats = data.stats
-						if type(stats) == "table" then
-							if type(data.means) ~= "table" then
-								data.means = {}
-							end
-							if type(data.daily) ~= "table" then
-								data.daily = { created = time () }
-							elseif type(data.daily.created) ~= "number" then
-								data.daily.created = time ()
-							end
-							newSave.RealmData[serverKey] = stats
-						end
+	local newSave = {
+		Version = DATABASE_VERSION,
+		RealmData = {}
+	}
+
+	if saveddata and savedroot.Version == "2.0" then
+		for serverKey, data in pairs(saveddata) do
+			if type(data) ~= "table" then
+				saveddata[serverKey] = nil
+			else
+				local realm, faction = AucAdvanced.SplitServerKey(serverKey)
+				if not realm or faction == "Neutral" then -- don't keep invalid or neutral (old style) serverKeys
+					saveddata[serverKey] = nil
+				else
+					-- check means for empty (for simplicity we ignore daily)
+					if type(data.means) ~= "table" or not next(data.means) then
+						saveddata[serverKey] = nil
 					end
 				end
 			end
+		end
+
+		if next(saveddata) then
+			newSave.OldRealmData = saveddata
+			saveddata.expires = time() + 1209600 -- 60 * 60 * 24 * 14 = 14 days
 		end
 	end
 
 	AucAdvancedStatPurchasedData = newSave
 end
 
+function private.LookForOldData()
+	private.LookForOldData = nil
+
+	local oldrealms = AucAdvancedStatPurchasedData.OldRealmData
+	if not oldrealms then return end
+
+	local newKey = Resources.ServerKey
+	if  not SPRealmData[newKey] then
+		-- prefer home faction, but use opposing if no home data
+		SPRealmData[newKey] = oldrealms[Resources.ServerKeyHome] or oldrealms[Resources.ServerKeyOpposing]
+	end
+
+	if not oldrealms.expires or time() > oldrealms.expires then
+		AucAdvancedStatPurchasedData.OldRealmData = nil
+	else
+		oldrealms[Resources.ServerKeyHome] = nil
+		oldrealms[Resources.ServerKeyOpposing] = nil
+	end
+end
+
 function lib.ClearData(serverKey)
-	serverKey = serverKey or Resources.ServerKeyCurrent
-	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
+	if serverKey and AucAdvanced.API.IsKeyword(serverKey, "ALL") then
 		wipe(SPRealmData)
 		private.ClearCache()
 		aucPrint(_TRANS('PURC_Interface_ClearingPurchased').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing Purchased stats for // All realms
-	elseif SPRealmData[serverKey] then
-		local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+		return
+	end
+	serverKey = ResolveServerKey(serverKey)
+	if SPRealmData[serverKey] then
+		local keyText = GetServerKeyText(serverKey)
 		SPRealmData[serverKey] = nil
 		private.ClearCache()
 		aucPrint(_TRANS('PURC_Interface_ClearingPurchased').." {{"..keyText.."}}")--Clearing Purchased stats for
@@ -601,9 +652,10 @@ function lib.ClearItem(hyperlink, serverKey)
 	local keyId, property = GetStoreKey(hyperlink)
 	if not keyId then return end
 
-	serverKey = serverKey or Resources.ServerKeyCurrent
+	serverKey = ResolveServerKey(serverKey)
 
-	local data = private.GetPriceData(serverKey)
+	local data = private.GetServerData(serverKey)
+	if not data then return end
 
 	local cleareditem = false
 
@@ -626,18 +678,15 @@ function lib.ClearItem(hyperlink, serverKey)
 	end
 
 	if cleareditem then
-		local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
+		local keyText = GetServerKeyText(serverKey)
 		aucPrint(_TRANS('PURC_Interface_ClearingPurchasedLink'):format(hyperlink, keyText) )--Stat - Purchased: clearing data for {{%s}} for {{%s}}
 		private.ClearCache()
 	end
 end
 
-function private.GetPriceData(serverKey)
+function private.GetServerData(serverKey, create)
 	local data = SPRealmData[serverKey]
-	if not data then
-		if not AucAdvanced.SplitServerKey(serverKey) then
-			error("Invalid serverKey passed to Stat-Purchased")
-		end
+	if not data and create then
 		data = {means = {}, daily = {created = time()}}
 		SPRealmData[serverKey] = data
 	end
@@ -648,7 +697,7 @@ function private.InitData()
 	private.InitData = nil
 
 	-- Load Data
-	private.UpgradeDb()
+	private.UpgradeDB()
 	SPRealmData = AucAdvancedStatPurchasedData.RealmData
 	if not SPRealmData then
 		SPRealmData = {} -- dummy table to avoid errors in future events; data will not be saved
@@ -657,46 +706,32 @@ function private.InitData()
 
 	-- Data maintenance
 	for serverKey, data in pairs(SPRealmData) do
-		if type(serverKey) ~= "string" or not strmatch(serverKey, ".%-%u%l") then
-			-- not a valid serverKey - remove it
-			SPRealmData[serverKey] = nil
-		else
-			-- lots of checks to make sure we ONLY have valid data in this table
-			for key, _ in pairs (data) do
-				if key ~= "means" and key ~= "daily" then
-					data[key] = nil
-				end
-			end
-			if type(data.means) == "table" then
-				for id, packed in pairs(data.means) do
-					-- id type checking currently removed to allow for battlepets
-					if type(packed) ~= "string" then
-						data.means[id] = nil
-					end
-				end
-			else
-				data.means = {}
-			end
-			if type(data.daily) == "table" then
-				for id, packed in pairs(data.daily) do
-					-- id type checking currently removed to allow for battlepets
-					if id ~= "created" and type(packed) ~= "string" then
-						data.daily[id] = nil
-					end
-				end
-				if type(data.daily.created) ~= "number" then
-					data.daily.created = time()
-				end
-			else
-				data.daily = {created = time()}
-			end
-
-			if time() - data.daily.created > 3600*16 then
-				-- This data is more than 16 hours old, we classify this as "yesterday's data"
-				private.PushStats(serverKey)
-			end
+		if time() - data.daily.created > 3600*16 then
+			-- This data is more than 16 hours old, we classify this as "yesterday's data"
+			private.PushStats(serverKey)
 		end
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Purchased/StatPurchased.lua $", "$Rev: 5478 $")
+-- GetServerKeyList
+function lib.GetServerKeyList()
+	if not SPRealmData then return end
+	local list = {}
+	for serverKey in pairs(SPRealmData) do
+		tinsert(list, serverKey)
+	end
+	return list
+end
+
+-- ChangeServerKey
+function lib.ChangeServerKey(oldKey, newKey)
+	if not SPRealmData then return end
+	local oldData = SPRealmData[oldKey]
+	SPRealmData[oldKey] = nil
+	if oldData and newKey then
+		SPRealmData[newKey] = oldData
+		-- if there was data for newKey then it will be discarded (simplest implementation)
+	end
+end
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Purchased/StatPurchased.lua $", "$Rev: 5555 $")

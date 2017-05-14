@@ -1,5 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Characters", "zhCN" )
+local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Characters", "zhCN" )
 
 if not L then return end
-
 

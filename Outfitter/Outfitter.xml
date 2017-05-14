@@ -360,7 +360,9 @@
 		<Scripts>
 			<OnLoad>
 				self.Inherit = Outfitter.Inherit
-				self:Inherit(Outfitter.UIElementsLib._DropDownMenuButton, nil, Outfitter.ItemDropDownMenuFunc, 17)
+				self:Inherit(Outfitter.UIElementsLib._DropDownMenuButton, nil, function (...)
+					Outfitter.ItemDropDownMenuFunc(self, ...)
+				end, 17)
 				self.ItemClickedFunc = function (...)
 					Outfitter.OutfitItemSelected(...)
 				end
@@ -369,11 +371,13 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
-	<Frame name="OutfitterItemTemplate" hidden="true" virtual="true">
+	<Button name="OutfitterItemTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="224" y="18"/>
 		</Size>
 		<Frames>
+			<Button name="$parentSecureAction" inherits="SecureActionButtonTemplate" setAllPoints="true">
+			</Button>
 			<Frame name="$parentItem" hidden="true" setAllPoints="true">
 				<Layers>
 					<Layer level="OVERLAY">
@@ -538,7 +542,7 @@
 								self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 							</OnLoad>
 							<OnClick>
-								Outfitter.Item_OnClick(self:GetParent():GetParent(), button)
+								self:GetParent():GetParent():OnClick(button)
 							</OnClick>
 						</Scripts>
 						<NormalTexture setAllPoints="true" file="Interface\Buttons\UI-MinusButton-UP"/>
@@ -550,22 +554,17 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-				self.OutfitMenu = _G[self:GetName().."OutfitMenu"]
-				self.OutfitMenu.ParentItem = self
-				self.UpdateTooltip = Outfitter.Item_OnEnter
+				self.inherit = Outfitter.inherit
+				self:inherit(Outfitter._ListItem)
 			</OnLoad>
-			<OnClick>
-				Outfitter.Item_OnClick(self, button)
-			</OnClick>
 			<OnEnter>
-				Outfitter.Item_OnEnter(self)
+				self:OnEnter()
 			</OnEnter>
 			<OnLeave>
-				Outfitter.Item_OnLeave(self)
+				self:OnLeave()
 			</OnLeave>
 		</Scripts>
-	</Frame>
+	</Button>
 
 	<Frame name="OutfitterButtonFrame" hidden="false" parent="PaperDollFrame" setAllPoints="true">
 		<Frames>
@@ -1300,24 +1299,20 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				self:RegisterForDrag("LeftButton")
-				self.CurrentOutfitTexture = self:CreateTexture(nil, "BACKGROUND")
-				self.CurrentOutfitTexture:SetWidth(22)
-				self.CurrentOutfitTexture:SetHeight(22)
-				self.CurrentOutfitTexture:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -4)
-				SetPortraitToTexture(self.CurrentOutfitTexture, "Interface\\Icons\\INV_Chest_Cloth_21")
+				self.Inherit = Outfitter.Inherit
+				self:Inherit(Outfitter._MinimapButton)
 			</OnLoad>
 			<OnDragStart>
-				Outfitter.MinimapButton_DragStart(self)
+				self:DragStart()
 			</OnDragStart>
 			<OnDragStop>
-				Outfitter.MinimapButton_DragEnd(self)
+				self:DragEnd()
 			</OnDragStop>
 			<OnMouseDown>
-				Outfitter.MinimapButton_MouseDown(self)
+				self:MouseDown()
 			</OnMouseDown>
 			<OnMouseUp>
-				Outfitter.MinimapButton_ToggleMenu(self)
+				self:ToggleMenu()
 			</OnMouseUp>
 			<OnEnter>
 				Outfitter.AddNewbieTip(self, Outfitter.cMinimapButtonTitle, 1, 1, 1, Outfitter.cMinimapButtonDescription, 1)
@@ -1568,7 +1563,10 @@
 				<Scripts>
 					<OnLoad>
 						self.Inherit = Outfitter.Inherit
-						self:Inherit(Outfitter.UIElementsLib._DropDownMenu, nil, Outfitter.ScriptMenuFunc, 150)
+						self:Inherit(Outfitter.UIElementsLib._TitledDropDownMenuButton, nil,
+						function (menu)
+							OutfitterEditScriptDialog:ScriptMenuFunc(menu, self:GetParent().Outfit)
+						end, 150)
 						self:SetTitle(Outfitter.cPresetScript)
 					</OnLoad>
 				</Scripts>

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: Undercut.lua 5507 2014-10-23 16:08:21Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: Undercut.lua 5585 2016-03-22 20:37:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer Matcher module that returns an undercut price
@@ -89,11 +89,11 @@ function lib.Processors.auctionclose(callbackType, ...)
 end
 
 
-local query = {} -- resusable table
+local query = {} -- reusable table
 function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 	if not get("match.undercut.enable") then return end
 
-	serverKey = serverKey or Resources.ServerKeyCurrect
+	serverKey = serverKey or Resources.ServerKey
 	marketprice = marketprice or 0
 	local linkType, id, suffix, factor = decode(hyperlink)
 	local cacheKey
@@ -292,4 +292,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5507 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5585 $")

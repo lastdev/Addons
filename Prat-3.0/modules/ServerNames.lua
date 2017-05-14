@@ -31,10 +31,10 @@ Prat:AddModuleToLoad(function()
     return
   end
 
-  local L = Prat:GetLocalizer({})
+  local PL = Prat:GetLocalizer({})
 
   --[===[@debug@
-  L:AddLocale("enUS", {
+  PL:AddLocale("enUS", {
     ["ServerNames"] = true,
     ["Server name abbreviation options."] = true,
     ["randomclr_name"] = "Random Colors",
@@ -48,127 +48,133 @@ Prat:AddModuleToLoad(function()
 
   -- These Localizations are auto-generated. To help with localization
   -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-
-
   --@non-debug@
-  L:AddLocale("enUS",
-  {
-	autoabbreviate_desc = "Shorten the server name to 3 letters",
-	autoabbreviate_name = "Auto-abbreviate",
-	colon_desc = "Toggle adding colon after server replacement.",
-	colon_name = "Show Colon",
-	randomclr_desc = "Use a random color for each server.",
-	randomclr_name = "Random Colors",
-	["Server name abbreviation options."] = true,
-	ServerNames = true,
+ do
+     local L
+
+ L=
+{
+["autoabbreviate_desc"] = "Shorten the server name to 3 letters",
+["autoabbreviate_name"] = "Auto-abbreviate",
+["colon_desc"] = "Toggle adding colon after server replacement.",
+["colon_name"] = "Show Colon",
+["randomclr_desc"] = "Use a random color for each server.",
+["randomclr_name"] = "Random Colors",
+["Server name abbreviation options."] = true,
+["ServerNames"] = true,
 }
 
-  )
-  L:AddLocale("frFR",
-  {
-	autoabbreviate_desc = "Raccourcir le nom des serveurs à 3 lettres.",
-	autoabbreviate_name = "Abréviation",
-	-- colon_desc = "",
-	-- colon_name = "",
-	randomclr_desc = "Utiliser une couleur aléatoire pour chaque serveur.",
-	randomclr_name = "Couleurs aléatoires",
-	["Server name abbreviation options."] = "Options d'abréviation des noms de serveur.",
-	ServerNames = "Noms de serveur",
+   PL:AddLocale("enUS",L)
+
+
+ L=
+{
+["autoabbreviate_desc"] = "Raccourcir le nom des serveurs à 3 lettres.",
+["autoabbreviate_name"] = "Abréviation",
+["randomclr_desc"] = "Utiliser une couleur aléatoire pour chaque serveur.",
+["randomclr_name"] = "Couleurs aléatoires",
+["Server name abbreviation options."] = "Options d'abréviation des noms de serveur.",
+["ServerNames"] = "Noms de serveur",
 }
 
-  )
-  L:AddLocale("deDE",
-  {
-	autoabbreviate_desc = "Kürze den Server-Namen auf 3 Buchstaben",
-	autoabbreviate_name = "Auto-Abkürzen",
-	colon_desc = "Hinzufügen eines Doppelpunkts nach dem Ersetzen des Servers ein-/ausschalten.",
-	colon_name = "Doppelpunkt anzeigen",
-	randomclr_desc = "Eine zufällige Farbe für jeden Server verwenden.",
-	randomclr_name = "Zufällige Farben",
-	["Server name abbreviation options."] = "Optionen für Abkürzungen von Server-Namen",
-	ServerNames = "ServerNamen",
+   PL:AddLocale("frFR",L)
+
+
+ L=
+{
+["autoabbreviate_desc"] = "Kürze den Server-Namen auf 3 Buchstaben",
+["autoabbreviate_name"] = "Auto-Abkürzen",
+["colon_desc"] = "Hinzufügen eines Doppelpunkts nach dem Ersetzen des Servers ein-/ausschalten.",
+["colon_name"] = "Doppelpunkt anzeigen",
+["randomclr_desc"] = "Eine zufällige Farbe für jeden Server verwenden.",
+["randomclr_name"] = "Zufällige Farben",
+["Server name abbreviation options."] = "Optionen für Abkürzungen von Server-Namen",
+["ServerNames"] = "ServerNamen",
 }
 
-  )
-  L:AddLocale("koKR",
-  {
-	autoabbreviate_desc = "서버이름을 3글자로 줄임",
-	autoabbreviate_name = "자동-줄임",
-	colon_desc = "서버 대체이름 뒤에 콜론 추가",
-	colon_name = "콜론 보이기",
-	randomclr_desc = "서버이름에 무작위 색상 사용",
-	randomclr_name = "무작위 색상",
-	["Server name abbreviation options."] = "서버이름 줄이기 옵션.",
-	ServerNames = "서버이름",
+   PL:AddLocale("deDE",L)
+
+
+ L=
+{
+["autoabbreviate_desc"] = "서버 이름을 3글자로 줄입니다",
+["autoabbreviate_name"] = "자동-줄임",
+["colon_desc"] = "서버 대체 이름 뒤에 콜론 추가 기능을 끄거나 켭니다.",
+["colon_name"] = "콜론 표시",
+["randomclr_desc"] = "서버 이름에 무작위 색상을 사용합니다.",
+["randomclr_name"] = "무작위 색상",
+["Server name abbreviation options."] = "서버 이름 줄이기 옵션입니다.",
+["ServerNames"] = "서버 이름",
 }
 
-  )
-  L:AddLocale("esMX",
-  {
-	-- autoabbreviate_desc = "",
-	-- autoabbreviate_name = "",
-	-- colon_desc = "",
-	-- colon_name = "",
-	-- randomclr_desc = "",
-	-- randomclr_name = "",
-	-- ["Server name abbreviation options."] = "",
-	-- ServerNames = "",
+   PL:AddLocale("koKR",L)
+
+
+ L=
+{
 }
 
-  )
-  L:AddLocale("ruRU",
-  {
-	autoabbreviate_desc = "Сокращает название сервера до трех букв",
-	autoabbreviate_name = "Авто-сокращение",
-	colon_desc = "Вкл/Выкл добавление двоеточия после замещения сервера.",
-	colon_name = "Показывать двоеточие",
-	randomclr_desc = "Использовать случайные цвета для всех серверов.",
-	randomclr_name = "Случайные цвета",
-	["Server name abbreviation options."] = "Настройки сокращений имен серверов.",
-	ServerNames = "Названия серверов",
+   PL:AddLocale("esMX",L)
+
+
+ L=
+{
+["autoabbreviate_desc"] = "Сокращает название сервера до трех букв",
+["autoabbreviate_name"] = "Авто-сокращение",
+["colon_desc"] = "Вкл/Выкл добавление двоеточия после замещения сервера.",
+["colon_name"] = "Показывать двоеточие",
+["randomclr_desc"] = "Использовать случайные цвета для всех серверов.",
+["randomclr_name"] = "Случайные цвета",
+["Server name abbreviation options."] = "Настройки сокращений имен серверов.",
+["ServerNames"] = "Названия серверов",
 }
 
-  )
-  L:AddLocale("zhCN",
-  {
-	autoabbreviate_desc = "把服务器名缩到3个字符", -- Needs review
-	autoabbreviate_name = "自动缩写", -- Needs review
-	colon_desc = "在服务器后添加冒号",
-	colon_name = "显示冒号",
-	randomclr_desc = "为每个服务器使用随机颜色",
-	randomclr_name = "随机颜色",
-	["Server name abbreviation options."] = "服务器名称缩写选项",
-	ServerNames = "服务器名称",
+   PL:AddLocale("ruRU",L)
+
+
+ L=
+{
+["autoabbreviate_desc"] = "把服务器名缩到3个字符",
+["autoabbreviate_name"] = "自动缩写",
+["colon_desc"] = "在服务器后添加冒号",
+["colon_name"] = "显示冒号",
+["randomclr_desc"] = "为每个服务器使用随机颜色",
+["randomclr_name"] = "随机颜色",
+["Server name abbreviation options."] = "服务器名称缩写选项",
+["ServerNames"] = "服务器名称",
 }
 
-  )
-  L:AddLocale("esES",
-  {
-	-- autoabbreviate_desc = "",
-	-- autoabbreviate_name = "",
-	colon_desc = "Alterna añadir dos puntos despues del servidor reemplazado.",
-	colon_name = "Mostrar dos puntos",
-	randomclr_desc = "Utiliza un color aleatorio para cada servidor.",
-	randomclr_name = "Colores Aleatorios",
-	["Server name abbreviation options."] = "Opciones de la abreviatura del nombre del servidor.",
-	ServerNames = "NombreServidor",
+   PL:AddLocale("zhCN",L)
+
+
+ L=
+{
+["colon_desc"] = "Alterna añadir dos puntos despues del servidor reemplazado.",
+["colon_name"] = "Mostrar dos puntos",
+["randomclr_desc"] = "Utiliza un color aleatorio para cada servidor.",
+["randomclr_name"] = "Colores Aleatorios",
+["Server name abbreviation options."] = "Opciones de la abreviatura del nombre del servidor.",
+["ServerNames"] = "NombreServidor",
 }
 
-  )
-  L:AddLocale("zhTW",
-  {
-	-- autoabbreviate_desc = "",
-	autoabbreviate_name = "自動縮短",
-	-- colon_desc = "",
-	colon_name = "顯示冒號",
-	randomclr_desc = "伺服器名稱使用隨機色彩",
-	randomclr_name = "隨機色彩",
-	["Server name abbreviation options."] = "伺服器名稱縮寫選項",
-	ServerNames = "伺服器名稱",
+   PL:AddLocale("esES",L)
+
+
+ L=
+{
+["autoabbreviate_name"] = "自動縮短",
+["colon_name"] = "顯示冒號",
+["randomclr_desc"] = "伺服器名稱使用隨機色彩",
+["randomclr_name"] = "隨機色彩",
+["Server name abbreviation options."] = "伺服器名稱縮寫選項",
+["ServerNames"] = "伺服器名稱",
 }
 
-  )
-  --@end-non-debug@
+   PL:AddLocale("zhTW",L)
+
+
+ end
+ --@end-non-debug@
 
   local module = Prat:NewModule(PRAT_MODULE)
 
@@ -199,21 +205,21 @@ Prat:AddModuleToLoad(function()
   local serverPlugins = { servers = {} }
 
   Prat:SetModuleOptions(module.name, {
-    name = L["ServerNames"],
-    desc = L["Server name abbreviation options."],
+    name = PL["ServerNames"],
+    desc = PL["Server name abbreviation options."],
     type = "group",
     plugins = serverPlugins,
     args = {
       autoabbreviate = {
         type = "toggle",
-        name = L["autoabbreviate_name"],
-        desc = L["autoabbreviate_desc"],
+        name = PL["autoabbreviate_name"],
+        desc = PL["autoabbreviate_desc"],
         order = 250
       },
       randomclr = {
         type = "toggle",
-        name = L["randomclr_name"],
-        desc = L["randomclr_desc"],
+        name = PL["randomclr_name"],
+        desc = PL["randomclr_desc"],
         order = 250
       }
     }

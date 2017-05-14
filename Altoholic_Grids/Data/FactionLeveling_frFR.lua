@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "frFR" then return end		-- ** French translation by Laumac **
+if GetLocale() ~= "frFR" then return end		-- ** French translation by Laumac **
 
 local addonName = "Altoholic"
 local addon = _G[addonName]

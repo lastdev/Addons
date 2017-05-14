@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreBuy.lua 5529 2014-11-28 16:17:01Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreBuy.lua 5685 2016-10-31 17:11:06Z Prowell $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -39,6 +39,7 @@
 	queueable fashion.
 ]]
 if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CoreBuy")
 local coremodule, internalStore = AucAdvanced.GetCoreModule("CoreBuy")
 if not coremodule then return end -- Someone has explicitely broken us
 
@@ -48,9 +49,12 @@ local lib = AucAdvanced.Buy
 local private = {}
 lib.Private = private
 
-local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill,L = AucAdvanced.GetModuleLocals()
 local Const = AucAdvanced.Const
 local highlight = "|cffff7f3f"
+
+local ITEMRETRYDELAY = 0.25
+local ITEMRETRYMAX = 10 / ITEMRETRYDELAY
 
 local ErrorText = {
 	NoPrice = "No price provided",
@@ -110,6 +114,22 @@ function private.QueueRemove(index)
 		private.QueueReport()
 		return removed
 	end
+end
+function private.QueueReorder(indexfrom, indexto)
+	-- removes the request at position indexfrom and reinserts it at position indexto
+	-- when indexto > indexfrom, be aware that the remove operation reindexes the table positions after indexfrom, before the reinsert occurs
+	local queuelen = #private.BuyRequests
+	if queuelen < 2 then return end
+	indexfrom = indexfrom or 1
+	if not indexto or indexto > queuelen then
+		indexto = queuelen
+	end
+	if indexfrom == indexto then return end
+	local request = tremove(private.BuyRequests, indexfrom)
+	if not request then return end
+	tinsert(private.BuyRequests, indexto, request)
+	private.QueueReport()
+	return true
 end
 function private.QueueFind(key, value, lastindex)
 	-- search the queue for a request where the entry [key] matches value, and return the index
@@ -171,7 +191,7 @@ end
 	If item cannot be found on Auctionhouse, will output a warning message to chat
 ]]
 local function QueueBuyErrorHelper(link, reason)
-	aucPrint(format("%sAuctioner: Unable to buy |r%s%s: %s", highlight, link, highlight, ErrorText[reason] or "Unknown")) -- need to highlight before and after the link
+	aucPrint(format("%sAuctioneer: Unable to buy |r%s%s: %s", highlight, link, highlight, ErrorText[reason] or "Unknown")) -- need to highlight before and after the link
 	return false, reason
 end
 function lib.QueueBuy(link, seller, count, minbid, buyout, price, reason, nosearch)
@@ -212,40 +232,9 @@ function lib.QueueBuy(link, seller, count, minbid, buyout, price, reason, nosear
 	if nosearch then
 		request.nosearch = true
 	else
-		-- calculate and store values needed for searching
-		if strmatch(link, "|Hitem:") then
-			local name, _, quality, _, minlevel, classname, subclassname = GetItemInfo(link)
-			if not name then
-				return QueueBuyErrorHelper(link, "NoItem")
-			end
-			request.itemname = name:lower()
-			request.uselevel = minlevel or 0
-			request.classindex = AucAdvanced.Const.CLASSESREV[classname]
-			if request.classindex then
-				request.subclassindex = AucAdvanced.Const.SUBCLASSESREV[classname][subclassname]
-			end
-			request.quality = quality or 0
-		else
-			local lType, speciesID, _, petQuality = strsplit(":", link)
-			lType = lType:sub(-9)
-			speciesID = tonumber(speciesID)
-			if lType == "battlepet" and speciesID then
-				-- it's a pet
-				local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
-				-- all caged pets should have the default pet name (custom names are removed when caging)
-				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-				if not petType then
-					-- indicates it's not a recognized Pet species
-					return QueueBuyErrorHelper(link, "NoPet")
-				end
-				request.itemname = petName:lower()
-				request.uselevel = iMin or 0
-				request.classindex = AucAdvanced.Const.CLASSESREV[iType]
-				request.subclassindex = petType
-				request.quality = tonumber(petQuality) or 0
-			else
-				return QueueBuyErrorHelper(link, "NoItem")
-			end
+		local result, reason = private.SetRequestSearchParams(request)
+		if not result then
+			return result, reason
 		end
 	end
 
@@ -253,6 +242,75 @@ function lib.QueueBuy(link, seller, count, minbid, buyout, price, reason, nosear
 	private.ActivateEvents()
 	lib.ScanPage()
 	return true
+end
+
+-- Another helper for QueueBuy
+-- returns 1 : full success
+-- returns false, reason : complete failure (and prints message to chat)
+-- returns -1 : retry: waiting for next retry
+-- returns -2 : retry: retry just failed, but not yet at max count
+function private.SetRequestSearchParams(request)
+	-- calculate and store values needed for searching
+	local link = request.link
+	local lType, itemID, _, petQuality = strsplit(":", link)
+	itemID = tonumber(itemID)
+	if not itemID or itemID == 0 then
+		return QueueBuyErrorHelper(link, "InvalidLink")
+	end
+	lType = lType:sub(-4)
+	if lType == "item" then
+		local retrytime = request.retrytime
+		if retrytime and GetTime() < retrytime then -- too soon to retry, we don't want to spam GetItemInfo too much
+			return -1
+		end
+		local name, _, quality, _, minlevel, _, _, _, _, _, _, classID, subClassID = GetItemInfo(link)
+		if not name or name == "" then
+			-- may be due to GetItemInfo not always returning info immediately (after WoW 7.0)
+			if retrytime then
+				local retrycount = (request.retrycount or 0) + 1
+				if retrycount > ITEMRETRYMAX then -- tried too many times, give up
+					return QueueBuyErrorHelper(link, "NoItem")
+				else
+					request.retrycount = retrycount
+					request.retrytime = GetTime() + ITEMRETRYDELAY -- waiting period bewteen retries
+					return -2
+				end
+			else
+				-- if the link looks valid, set up to retry next time
+				local checkItemID = tonumber(strmatch(link, "item:(%d+):"))
+				if not checkItemID or checkItemID == 0 then
+					return QueueBuyErrorHelper(link, "NoItem")
+				end
+				if get("ShowPurchaseDebug") then
+					aucPrint("Auctioneer: Unable to find item info for "..link.." at this time, will try again")
+				end
+				request.retrytime = GetTime() + ITEMRETRYDELAY -- waiting period bewteen retries
+				return -1
+			end
+		end
+		request.itemname = name:lower()
+		-- only store uselevel and quality if greater than 0
+		if minlevel and minlevel > 0 then request.uselevel = minlevel end
+		if quality and quality > 0 then request.quality = quality end
+		request.filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID)
+		if #request.itemname < 60 then request.exact = true end -- use exact match, except for very long names
+	elseif lType == "epet" then -- last 4 characters of "battlepet"
+		local quality = tonumber(petQuality)
+		local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(itemID) -- speciesID = itemID
+		if not petType or not petName or petName == "" then
+			-- indicates it's not a recognized Pet species
+			return QueueBuyErrorHelper(link, "NoPet")
+		end
+		-- all caged pets should have the default pet name (custom names are removed when caging)
+		request.itemname = petName:lower()
+		--request.uselevel always nil. only store quality if greater than 0
+		if quality and quality > 0 then request.quality = quality end
+		request.filterData = AucAdvanced.Scan.QueryFilterFromID(LE_ITEM_CLASS_BATTLEPET, Const.AC_PetType2SubClassID[petType])
+		if #request.itemname < 60 then request.exact = true end -- use exact match, except for very long names
+	else
+		return QueueBuyErrorHelper(link, "InvalidLink")
+	end
+	return 1 -- signal success
 end
 
 --[[
@@ -284,14 +342,36 @@ function private.PushSearch()
 	if AucAdvanced.Scan.IsPaused() then return end
 	local request = private.BuyRequests[1]
 	if not request.itemname then -- itemname should have been stored for every request that reaches this point
-		private.QueueRemove(1)
-		return
+		if request.nosearch then -- this request should have been removed earlier, extra check just in case
+			private.QueueRemove(1)
+			return
+		end
+		-- GetItemInfo sometimes fails after WoW7.0, but will work after a brief wait. Pass through SetRequestSearchParams again
+		local result = private.SetRequestSearchParams(request)
+		if not result then
+			-- a chat message should already have been issued
+			private.QueueRemove(1)
+			return
+		elseif result < 0 then -- needs to be retried
+			if result == -2 then
+				private.QueueReorder() -- push first request to back of the queue
+			end
+			return
+		end
+		if not request.itemname then -- ### extra check, just in case
+			geterrorhandler()("CoreBuy: PushSearch unexpectedly found request with no itemname") -- ### debug
+			private.QueueRemove(1)
+			return
+		end
 	end
 	if GetMoney() < request.price then -- check that player still has enough money
 		aucPrint("Auctioneer: Can't buy "..request.link.." : ".."not enough money")
 		private.QueueRemove(1)
 		return
 	end
+	
+	local isScanning, isGetAll = AucAdvanced.Scan.IsScanning()
+	if (isScanning and isGetAll) then return end -- we must wait on getall, and PushScan failure is too noisy for something fired every frame
 
 	AucAdvanced.Scan.PushScan()
 	if AucAdvanced.Scan.IsScanning() then return end -- check that PushScan succeeded
@@ -300,17 +380,19 @@ function private.PushSearch()
 	-- acts as a flag to show that the request existed before the current scan started
 	-- (when the scan finishes, only requests with .querysig entries may be deleted)
 	for _, req in ipairs(private.BuyRequests) do
-		if not req.querysig then
-			req.querysig = AucAdvanced.Scan.CreateQuerySig(req.itemname, req.uselevel, req.uselevel, nil, req.classindex, req.subclassindex, nil, req.quality, true)
+		if req.itemname and not req.querysig then
+			-- Usage CreateQuerySig(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
+			req.querysig = AucAdvanced.Scan.CreateQuerySig(req.itemname, req.uselevel, req.uselevel, nil, req.quality, req.exact, req.filterData)
 		end
 	end
 
 	private.Searching = request.querysig
-	AucAdvanced.Scan.StartScan(request.itemname, request.uselevel, request.uselevel, nil, request.classindex, request.subclassindex, nil, request.quality, nil, true)
+	-- Usage StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, GetAll, exactMatch, filterData, options)
+	AucAdvanced.Scan.StartScan(request.itemname, request.uselevel, request.uselevel, nil, request.quality, nil, request.exact, request.filterData)
 end
 
 function private.FinishedSearch(complete, querysig, query)
-	if not complete or query.isUsable or query.invType or not query.name then return end
+	if not complete or query.isUsable or not query.name then return end
 	for index = #private.BuyRequests, 1, -1 do
 		local request = private.BuyRequests[index]
 		-- Compare the query sig to the sig(s) calculated during PushSearch
@@ -459,7 +541,7 @@ function private.PerformPurchase()
 		aucPrint(highlight.."Cancelling bid: Bid below minimum bid: "..AucAdvanced.Coins(price))
 		private.HidePrompt()
 		return
-	elseif (curBid and curBid > 0 and price < curBid + minIncrement and price < buyout) then
+	elseif (curBid and curBid > 0 and price < curBid + minIncrement and price < buyout) then -- ### todo: check and fix logic, looks worng here...
 		aucPrint(highlight.."Cancelling bid: Already higher bidder")
 		private.HidePrompt()
 		return
@@ -587,15 +669,6 @@ local function OnEvent(frame, event, message, ...)
 		end
 
 		lib.ScanPage()
-	elseif event == "AUCTION_HOUSE_SHOW" then
-		private.ActivateEvents()
-	elseif event == "AUCTION_HOUSE_CLOSED" then
-		local request = private.CurRequest
-		if request then -- prompt is open: cancel prompt and requeue auction
-			private.HidePrompt(true) -- silent
-			private.QueueInsert(request, 1)
-		end
-		private.DeactivateEvents()
 	elseif event == "CHAT_MSG_SYSTEM" then
 		if message == ERR_AUCTION_BID_PLACED then
 		 	private.onBidAccepted()
@@ -614,8 +687,6 @@ local function OnEvent(frame, event, message, ...)
 end
 
 private.updateFrame = CreateFrame("Frame")
-private.updateFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-private.updateFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
 private.updateFrame:SetScript("OnUpdate", OnUpdate)
 private.updateFrame:SetScript("OnEvent", OnEvent)
 private.updateFrame:Hide()
@@ -623,6 +694,19 @@ private.updateFrame:Hide()
 coremodule.Processors = {
 	scanfinish = function(event, scansize, querysig, queryinfo, complete, query, scanstats)
 		private.FinishedSearch(complete, querysig, query)
+	end,
+
+	auctionopen = function()
+		private.ActivateEvents()
+	end,
+
+	auctionclose = function()
+		local request = private.CurRequest
+		if request then -- prompt is open: cancel prompt and requeue auction
+			private.HidePrompt(true) -- silent
+			private.QueueInsert(request, 1)
+		end
+		private.DeactivateEvents()
 	end,
 }
 
@@ -744,4 +828,5 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5529 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5685 $")
+AucAdvanced.CoreFileCheckOut("CoreBuy")

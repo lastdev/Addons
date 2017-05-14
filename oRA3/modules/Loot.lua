@@ -4,7 +4,8 @@ local oRA = scope.addon
 local module = oRA:NewModule("Loot", "AceTimer-3.0")
 local L = scope.locale
 
-module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
+-- luacheck: globals ITEM_QUALITY_COLORS
+
 local db
 local defaults = {
 	profile = {
@@ -12,113 +13,110 @@ local defaults = {
 		party = {
 			method = "group", -- Group Loot
 			threshold = 2, -- Green (should be blizzard default setting)
+			master = "",
 		},
 		raid = {
 			method = "master", -- master looter
 			threshold = 2, -- Green (should be blizzard default setting)
+			master = "",
 		},
 	}
 }
 
-local options
-local function getOptions()
-	if not options then
-		options = {
+local methodValues = {
+	needbeforegreed = LOOT_NEED_BEFORE_GREED,
+	freeforall = LOOT_FREE_FOR_ALL,
+	roundrobin = LOOT_ROUND_ROBIN,
+	master = LOOT_MASTER_LOOTER,
+	group = LOOT_GROUP_LOOT,
+	personalloot = LOOT_PERSONAL_LOOT,
+}
+local thresholdValues = {
+	[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC,
+	[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC,
+	[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC,
+	[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC,
+	[6] = ITEM_QUALITY_COLORS[6].hex .. ITEM_QUALITY6_DESC,
+}
+
+local disabled = function() return not db.enable end
+local options = {
+	type = "group",
+	name = LOOT_METHOD,
+	get = function(info)
+		local cat, key = info[#info-1], info[#info]
+		return db[cat][key]
+	end,
+	set = function(info, value)
+		local cat, key = info[#info-1], info[#info]
+		db[cat][key] = value
+		module:SetLoot()
+	end,
+	args = {
+		enable = {
+			type = "toggle",
+			name = L.autoLootMethod,
+			desc = L.autoLootMethodDesc,
+			get = function(info) return db.enable end,
+			set = function(info, value)
+				db.enable = value
+				module:SetLoot()
+			end,
+			width = "full",
+			order = 1,
+		},
+		raid = {
 			type = "group",
-			name = LOOT_METHOD,
+			name = RAID,
+			inline = true,
+			disabled = disabled,
+			order = 2,
 			args = {
-				enable = {
-					type = "toggle",
-					name = L.autoLootMethod,
-					desc = L.autoLootMethodDesc,
-					get = function() return db.enable end,
-					set = function(k, v) db.enable = v end,
-					order = 1,
-					width = "full",
+				method = {
+					type = "select",
+					name = LOOT_METHOD,
+					values = methodValues,
 				},
-				raid = {
-					order = 2,
-					type = "group",
-					name = RAID,
-					inline = true,
-					get = function( k ) return db.raid[k.arg] end,
-					set = function( k, v ) db.raid[k.arg] = v end,
-					disabled = function() return not db.enable end,
-					width = "full",
-					args = {
-						method = {
-							type = "select", name = LOOT_METHOD,
-							arg = "method",
-							values = {
-								needbeforegreed = LOOT_NEED_BEFORE_GREED,
-								freeforall = LOOT_FREE_FOR_ALL,
-								roundrobin = LOOT_ROUND_ROBIN,
-								master = LOOT_MASTER_LOOTER,
-								group = LOOT_GROUP_LOOT,
-								personalloot = LOOT_PERSONAL_LOOT,
-							}
-						},
-						threshold = {
-							type = "select", name = LOOT_THRESHOLD,
-							arg = "threshold",
-							values = {
-								[2] = ITEM_QUALITY2_DESC,
-								[3] = ITEM_QUALITY3_DESC,
-								[4] = ITEM_QUALITY4_DESC,
-								[5] = ITEM_QUALITY5_DESC,
-								[6] = ITEM_QUALITY6_DESC,
-							},
-						},
-						master = {
-							type = "input", name = MASTER_LOOTER, desc = L.makeLootMaster,
-							arg = "master",
-						},
-					},
+				threshold = {
+					type = "select",
+					name = LOOT_THRESHOLD,
+					values = thresholdValues,
 				},
-				party = {
-					order = 3,
-					type = "group",
-					name = PARTY,
-					inline = true,
-					get = function( k ) return db.party[k.arg] end,
-					set = function( k, v ) db.party[k.arg] = v end,
-					disabled = function() return not db.enable end,
-					width = "full",
-					args = {
-						method = {
-							type = "select", name = LOOT_METHOD,
-							arg = "method",
-							values = {
-								needbeforegreed = LOOT_NEED_BEFORE_GREED,
-								freeforall = LOOT_FREE_FOR_ALL,
-								roundrobin = LOOT_ROUND_ROBIN,
-								master = LOOT_MASTER_LOOTER,
-								group = LOOT_GROUP_LOOT,
-								personalloot = LOOT_PERSONAL_LOOT,
-							}
-						},
-						threshold = {
-							type = "select", name = LOOT_THRESHOLD,
-							arg = "threshold",
-							values = {
-								[2] = ITEM_QUALITY2_DESC,
-								[3] = ITEM_QUALITY3_DESC,
-								[4] = ITEM_QUALITY4_DESC,
-								[5] = ITEM_QUALITY5_DESC,
-								[6] = ITEM_QUALITY6_DESC,
-							}
-						},
-						master = {
-							type = "input", name = MASTER_LOOTER, desc = L.makeLootMaster,
-							arg = "master",
-						},
-					},
+				master = {
+					type = "input",
+					name = MASTER_LOOTER,
+					desc = L.makeLootMaster,
+					arg = "master",
 				},
 			},
-		}
-	end
-	return options
-end
+		},
+		party = {
+			type = "group",
+			name = PARTY,
+			inline = true,
+			disabled = disabled,
+			order = 3,
+			args = {
+				method = {
+					type = "select",
+					name = LOOT_METHOD,
+					values = methodValues,
+				},
+				threshold = {
+					type = "select",
+					name = LOOT_THRESHOLD,
+					values = thresholdValues,
+				},
+				master = {
+					type = "input",
+					name = MASTER_LOOTER,
+					desc = L.makeLootMaster,
+					arg = "master",
+				},
+			},
+		},
+	},
+}
 
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("Loot", defaults)
@@ -130,7 +128,7 @@ function module:OnRegister()
 		db = self.db.profile
 	end)
 
-	oRA:RegisterModuleOptions("Loot", getOptions, LOOT_METHOD)
+	oRA:RegisterModuleOptions("Loot", options)
 end
 
 do
@@ -159,16 +157,17 @@ do
 				threshold = db.party.threshold
 				master = db.party.master
 			end
-			if not master or master == "" then master = UnitName("player") end
-			local current = GetLootMethod()
-			if current and current == method then return end
-			SetLootMethod(method, master, threshold)
-			if method == "master" or method == "group" then
+			if GetLootMethod() ~= method then
+				if method == "master" then
+					if master == "" then
+						master = UnitName("player")
+					end
+					SetLootMethod(method, master, 1)
+				else
+					SetLootMethod(method)
+				end
 				self:ScheduleTimer(SetLootThreshold, 2, threshold)
 			end
-			-- SetLootMethod("method"[,"masterPlayer" or ,threshold])
-			-- method  "group", "freeforall", "master", "neeedbeforegreed", "roundrobin", "personalloot".
-			-- threshold  0 poor  1 common  2 uncommon  3 rare  4 epic  5 legendary  6 artifact
 		end
 	end
 

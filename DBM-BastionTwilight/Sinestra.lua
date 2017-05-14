@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(45213)
---mod:SetEncounterID(1082, 1083) Muiti encounter id. need to verify.
+mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Aggro01.ogg", "Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Kill02.ogg")
@@ -41,13 +41,13 @@ local specWarnEggShield		= mod:NewSpecialWarningSpell(87654, "Ranged")
 local specWarnEggWeaken		= mod:NewSpecialWarningSwitch("ej3238", "Ranged")
 local specWarnIndomitable	= mod:NewSpecialWarningDispel(90045, "RemoveEnrage")
 
-local timerBreathCD			= mod:NewCDTimer(21, 90125)
-local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852)
-local timerWrack			= mod:NewNextTimer(61, 89421)
+local timerBreathCD			= mod:NewCDTimer(21, 90125, nil, nil, nil, 2)
+local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerWrack			= mod:NewNextTimer(61, 89421, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerExtinction		= mod:NewCastTimer(16, 86227)
 local timerEggWeakening		= mod:NewTimer(4, "TimerEggWeakening", 61357)
-local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357)
-local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil,nil, 69002)
+local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil, nil, 1, 69002)
 local timerRedEssenceCD		= mod:NewNextTimer(22, 87946)--21-23 seconds after red egg dies
 local timerRedEssence		= mod:NewBuffFadesTimer(180, 87946)
 
@@ -87,6 +87,11 @@ end
 local function showOrbWarning(source)
 	table.wipe(orbList)
 	mod:Unschedule(showOrbWarning)
+	if not IsInGroup() then--Solo, always orb target
+		playerWarned = true
+		specWarnOrbOnYou:Show()
+		return
+	end
 	local _, _, difficulty = GetInstanceInfo()
 	for i = 1, DBM:GetNumGroupMembers() do
 		-- do some checks for 25/10 man raid size so we don't warn for ppl who are not in the instance
@@ -94,7 +99,7 @@ local function showOrbWarning(source)
 		if difficulty == 6 and i > 25 then return end
 		local n = GetRaidRosterInfo(i)
 		-- Has aggro on something, but not a tank
-		if UnitThreatSituation(n) == 3 and not isTank(n) then
+		if n and UnitThreatSituation(n) == 3 and not isTank(n) then
 			orbList[#orbList + 1] = n
 			if UnitIsUnit(n, "player") and not playerWarned then
 				playerWarned = true

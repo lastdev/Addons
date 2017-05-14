@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreMain.lua 5524 2014-11-23 18:06:32Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreMain.lua 5698 2017-01-10 19:57:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -37,6 +37,8 @@
 	See CoreAPI.lua for a description of the modules API
 ]]
 local AucAdvanced = AucAdvanced
+if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CoreMain")
 
 if (not AucAdvancedData) then AucAdvancedData = {} end
 if (not AucAdvancedLocal) then AucAdvancedLocal = {} end
@@ -143,8 +145,7 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 
 	if AucAdvanced.Settings.GetSetting("core.tooltip.depositcost") then
 		local duration = AucAdvanced.Settings.GetSetting("core.tooltip.depositduration")
-		local faction = AucAdvanced.Resources.CurrentFaction
-		local deposit = GetDepositCost(saneLink, duration, faction, 1)
+		local deposit = GetDepositCost(saneLink, duration, nil, 1)
 		if not deposit then
 			tooltip:AddLine(L"ADV_Tooltip_UnknownDepositCost", .2, .4, .6)
 		else
@@ -152,7 +153,7 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 			local text = format(L"ADV_Tooltip_HourDepositCost", hours)
 			tooltip:AddLine(text..": ", deposit, .8, 1, .6)
 			if quantity > 1 and AucAdvanced.Settings.GetSetting("tooltip.marketprice.stacksize") then
-				local stackdeposit = GetDepositCost(saneLink, duration, faction, quantity) -- for now we won't worry if stacksize > maxstack: assume GetDepositCost will handle it
+				local stackdeposit = GetDepositCost(saneLink, duration, nil, quantity) -- for now we won't worry if stacksize > maxstack: assume GetDepositCost will handle it
 				if stackdeposit and stackdeposit ~= deposit then
 					tooltip:AddLine(text.." x"..tostring(quantity)..": ", stackdeposit, .8, 1, .6)
 				end
@@ -168,7 +169,7 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 		Modules whose tooltip does not depend on serverKey should check the order parameter to ensure they don't duplicate their output in the tooltip
 			usually they would only respond when order == 1
 		]]
-		local serverKey = AucAdvanced.Resources.ServerKeyCurrent
+		local serverKey = AucAdvanced.Resources.ServerKey
 		local order = 1
 		AucAdvanced.SendProcessorMessage("itemtooltip", tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 
@@ -186,7 +187,7 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 		end
 		AucAdvanced.SendProcessorMessage("tooltip", tooltip, name, hyperlink, quality, quantity, cost, extra)
 	elseif calltype == "battlepet" then
-		local serverKey = AucAdvanced.Resources.ServerKeyCurrent
+		local serverKey = AucAdvanced.Resources.ServerKey
 		local order = 1
 		AucAdvanced.SendProcessorMessage("battlepettooltip", tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	end
@@ -322,14 +323,20 @@ end
 local function OnEnteringWorld(frame)
 	frame:UnregisterEvent("PLAYER_ENTERING_WORLD") -- we only want the first instance of this event
 	OnEnteringWorld = nil
-
-	if not AucAdvanced or AucAdvanced.ABORTLOAD then
-		-- something's gone wrong - silently abort loading (any error should have been reported elsewhere)
+	if not AucAdvanced then return end -- Shouldn't happen as CoreManifest creates the basic table first thing
+	AucAdvanced.CoreFileCheckOut() -- calling with no filename to finalize check in/out process
+	if AucAdvanced.ABORTLOAD then
+		-- something's gone wrong - abort loading
+		-- in most cases an error should have been reported elsewhere, we don't want to generate a new one
+		-- but we should give some indication of the problem, so we shall print a short message to chat instead
+		-- since we cannot guarantee Auc's print is working, we shall use default print function
+		print("Auctioneer load aborted: "..AucAdvanced.ABORTLOAD)
 		return
 	end
 
 	frame:RegisterEvent("ITEM_LOCK_CHANGED")
 	frame:RegisterEvent("BAG_UPDATE")
+	frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
 	-- Following items are for experimental scan processor modifications
 	frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 	frame:RegisterEvent("AUCTION_OWNED_LIST_UPDATE")
@@ -350,6 +357,7 @@ local function OnEnteringWorld(frame)
 
 	-- send general activate message
 	AucAdvanced.SendProcessorMessage("gameactive")
+	internal.Util.ResetSPMArray() -- Modules may add Processors entries during 'gameactive', so must flush SPM cache to ensure they don't get missed.
 
 	if AucAdvanced.Settings.GetSetting("scandata.force") then
 		AucAdvanced.Scan.LoadScanData()
@@ -363,8 +371,10 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		internal.Scan.NotifyOwnedListUpdated()
 	elseif (event == "ITEM_LOCK_CHANGED" and arg2) or event == "BAG_UPDATE" then
 		if arg1 >= 0 and arg1 <= 4 then
-			ScheduleMessage("inventory", 0.05) -- collect multiple events for same bag change using a slight delay
+			ScheduleMessage("inventory", 0.15) -- collect multiple events for same bag change using a slight delay
 		end
+	elseif event == "GET_ITEM_INFO_RECEIVED" then
+		ScheduleMessage("iteminfoupdate", 0.15)
 	elseif event == "ADDON_LOADED" then
 		OnLoad(arg1)
 	elseif event == "SAVED_VARIABLES_TOO_LARGE" then
@@ -378,7 +388,6 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		-- they should check for their own name (lowercased) in arg1
 		AucAdvanced.SendProcessorMessage("loadfail", arg1, event)
 	elseif event == "PLAYER_LOGOUT" then
-		internal.Scan.Logout()
 		OnUnload()
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		OnEnteringWorld(self)
@@ -411,4 +420,5 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5524 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5698 $")
+AucAdvanced.CoreFileCheckOut("CoreMain")

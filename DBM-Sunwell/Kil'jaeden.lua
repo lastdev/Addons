@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kil", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(25315)
 mod:SetModelID(23200)
 mod:SetZone()
@@ -39,7 +39,7 @@ local timerDartCD		= mod:NewCDTimer(20, 45740)
 local timerBomb			= mod:NewCastTimer(9, 46605)
 local timerBombCD		= mod:NewCDTimer(45, 46605)
 local timerSpike		= mod:NewCastTimer(28, 46680)
-local timerBlueOrb		= mod:NewTimer(37, "TimerBlueOrb", 45109)
+local timerBlueOrb		= mod:NewTimer(37, "TimerBlueOrb", 45109, nil, nil, 5)
 
 local berserkTimer		= mod:NewBerserkTimer(900)
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: ScanButton.lua 5403 2013-04-03 16:50:32Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: ScanButton.lua 5631 2016-07-31 14:14:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a textual scan progress
@@ -34,31 +34,19 @@ if not AucAdvanced then return end
 local libType, libName = "Util", "ScanButton"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
-
-function lib.Processor(callbackType, ...)
-	if (callbackType == "scanprogress") then
-		private.UpdateScanProgress(...)
-	elseif (callbackType == "auctionui") then
-		private.HookAH(...)
-	elseif (callbackType == "config") then
-		private.SetupConfigGui(...)
-	elseif (callbackType == "configchanged") then
-		private.ConfigChanged(...)
-	end
-end
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
 
 lib.Processors = {}
 function lib.Processors.scanprogress(callbackType, ...)
 	private.UpdateScanProgress(...)
 end
 
-function lib.Processors.auctionui(callbackType, ...)
-	private.HookAH(...)
+function lib.Processors.auctionui()
+	private.HookAH()
 end
 
-function lib.Processors.config(callbackType, ...)
-	private.SetupConfigGui(...)
+function lib.Processors.config(callbackType, gui)
+	private.SetupConfigGui(gui)
 end
 
 function lib.Processors.configchanged(callbackType, ...)
@@ -68,9 +56,9 @@ end
 
 
 function lib.OnLoad()
-	AucAdvanced.Settings.SetDefault("util.scanbutton.enabled", true)
-	AucAdvanced.Settings.SetDefault("util.scanbutton.message", true)
-	AucAdvanced.Settings.SetDefault("util.scanbutton.getall", false)
+	default("util.scanbutton.enabled", true)
+	default("util.scanbutton.message", true)
+	default("util.scanbutton.getall", false)
 end
 
 -- /run local t = AucAdvanced.Modules.Util.ScanButton.Private.buttons.stop.tex t:SetPoint("TOPLEFT", t:GetParent() "TOPLEFT", 3,-3) t:SetPoint("BOTTOMRIGHT", t:GetParent(), "BOTTOMRIGHT", -3,3)
@@ -197,16 +185,13 @@ function private.HookAH()
 
 	msg.Text:SetText("|c00ff4400Important note about the GetAll scan option:|r\n\nUtilizing this feature can result in a very fast scan once every 15 minutes, however it requires a fast computer, low latency/ping times to the server, and for the servers to be running in optimum conditions. If any one of these three things are lagging, you may be disconnected from the server during the scan process.\n\nIf you wish to continue click the button again.\n\n|c00444444If you wish, you can disable this warning message via the Scan Button configuration settings.|r")
 
+	private.buttons:SetShown(get("util.scanbutton.enabled"))
 	private.UpdateScanProgress()
 end
 local progressBarOptions = {barColor = {0,0.6,0}}
 function private.UpdateScanProgress(state, _, _, _, _, _, _, scansQueued)
 	local scanning, paused = false, false
-	if AucAdvanced and AucAdvanced.Scan then
-		scanning, paused = AucAdvanced.Scan.IsScanning(), AucAdvanced.Scan.IsPaused()
-	end
-
-	private.ConfigChanged()
+	scanning, paused = AucAdvanced.Scan.IsScanning(), AucAdvanced.Scan.IsPaused()
 
 	if scanning or paused then
 		private.buttons.stop:Enable()
@@ -279,10 +264,12 @@ function private:OnUpdate(delay)
 		end
 	end
 	--Create the overlay filter buttons the (callbackType == "auctionui") is too early.
+	--[[ ### Legion: Filter overlay temporarily disabled as broken by patch
 	if not AuctioneerFilterButton1 and AuctionFilterButton1 then
 		private.CreateSecondaryFilterButtons()
 		hooksecurefunc("AuctionFrameFilters_Update", private.AuctionFrameFilters_UpdateClasses)--used to respond to scrollframe
 	end
+	--]]
 	--if we still have filters pending process it, unless a scan is in progress or paused
 	if #queue > 0 and not AucAdvanced.Scan.IsScanning() and not AucAdvanced.Scan.IsPaused() then
 		private.play()
@@ -290,7 +277,7 @@ function private:OnUpdate(delay)
 	--Used to clear the selected filters/highlights AFTER the last queued scan has completed
 	if queueFinished and not AucAdvanced.Scan.IsScanning() and not AucAdvanced.Scan.IsPaused() then
 		queueFinished = false
-		if AucAdvanced.Settings.GetSetting("util.scanbutton.message") then print("|CFFFFFF00 Last queued Auction Filter completed") end
+		if get("util.scanbutton.message") then aucPrint("|CFFFFFF00 Last queued Auction Filter completed") end
 		private.AuctionFrameFilters_ClearSelection()
 		private.AuctionFrameFilters_ClearHighlight()
 	end
@@ -298,7 +285,7 @@ function private:OnUpdate(delay)
 	local canSend, canSendAll = CanSendAuctionQuery()
 	if canSendAll and not AucAdvanced.Scan.IsScanning() and private.buttons.play:IsEnabled() then
 		private.buttons.getall:Enable()
-		if AucAdvanced.Settings.GetSetting("util.scanbutton.getall") or private.warned then
+		if get("util.scanbutton.getall") or private.warned then
 			private.buttons.getall.tex:SetVertexColor(1.0, 0.9, 0.1)
 			private.buttons.getall.warn = nil
 		else
@@ -330,12 +317,11 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, _TRANS('SBTN_HelpTooltip_Getall')) --"Disable the warning that you get when you click the GetAll button."
 end
 
-function private.ConfigChanged()
-	if not private.buttons then return end
-	if AucAdvanced.Settings.GetSetting("util.scanbutton.enabled") then
-		private.buttons:Show()
-	else
-		private.buttons:Hide()
+function private.ConfigChanged(fullsetting, value, subsetting, module, base)
+	if fullsetting == "util.scanbutton.enabled" or base == "profile" then -- only interested in "util.scanbutton.enabled"
+		if private.buttons then
+			private.buttons:SetShown(get("util.scanbutton.enabled"))
+		end
 	end
 end
 
@@ -362,10 +348,11 @@ function private.play()
 	if AucAdvanced.Scan.IsPaused() then
 		AucAdvanced.Scan.SetPaused(false)
 	elseif not AucAdvanced.Scan.IsScanning() then
+		--[=[ ### Legion todo: temp disabled
 		if #queue == 0 then queue = private.checkedFrames() end --check for user selected frames
 		--debugPrint(("play: queue count=%i"):format(#queue), "ScanButton", "play", 0, "Debug")
 		if #queue > 0  then
-			if AucAdvanced.Settings.GetSetting("util.scanbutton.message") then print("Starting search on filter: |CFFFFFF00", CLASS_FILTERS[queue[1]]) end
+			if get("util.scanbutton.message") then aucPrint("Starting search on filter: |CFFFFFF00", CLASS_FILTERS[queue[1]]) end
 			AucAdvanced.Scan.StartScan("", "", "", nil, queue[1], nil, nil, nil)
 			table.remove(queue, 1)
 			if #queue == 0 then
@@ -374,6 +361,10 @@ function private.play()
 		else
 			AucAdvanced.Scan.StartScan("", "", "", AuctionFrameBrowse.selectedInvtypeIndex, AuctionFrameBrowse.selectedClassIndex, AuctionFrameBrowse.selectedSubclassIndex,  nil, nil)
 		end
+		--]=]
+		-- Usage StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, GetAll, exactMatch, filterData, options)
+		local filterData = AucAdvanced.Scan.QueryFilterFromIndex(AuctionFrameBrowse.selectedCategoryIndex, AuctionFrameBrowse.selectedSubCategoryIndex, AuctionFrameBrowse.selectedSubSubCategoryIndex)
+		AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, nil, nil, filterData)
 	end
 	private.UpdateScanProgress()
 end
@@ -386,7 +377,7 @@ function private.getall()
 			return
 		end
 
-		AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, nil, nil, nil, true)
+		AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, true)
 	end
 	private.UpdateScanProgress()
 end
@@ -406,7 +397,7 @@ This means we do not have to directly modify blizzards filter frame
 --Resets the selections table to 0 if an alt click is not used, or after a scan has been implemented
 private.Filters = {}
 function private.AuctionFrameFilters_ClearSelection()
-	for i,v in pairs(CLASS_FILTERS) do
+	for i,v in pairs(CLASS_FILTERS) do -- ### Legion : CLASS_FILTERS exists, but is not used by Blizzard code (empty table)
 		private.Filters[v] = {0,i} --store cleared table of selections
 	end
 end
@@ -429,7 +420,7 @@ function private.checkedFrames()
 end
 
 function private.CreateSecondaryFilterButtons()
-local base, frame, prev = AuctionFrameBrowse, nil, nil
+	local base, frame, prev = AuctionFrameBrowse, nil, nil
 	private.AuctionFrameFilters_ClearSelection() --create the filter selection table
 	for i = 1,15 do
 		frame = "AuctioneerFilterButton"..i
@@ -441,31 +432,31 @@ local base, frame, prev = AuctionFrameBrowse, nil, nil
 			base[frame]:SetWidth(156)
 			base[frame]:SetAlpha(0)
 			base[frame]:SetScript("OnClick", function()
-									if IsControlKeyDown() then
--- Test patch to clear AH settings when CTRL click is used just like we clear ours when non-ctrl is used
-if (AuctionFrameBrowse.selectedClassIndex) then
-	AuctionFrameBrowse.selectedClass = nil
-	AuctionFrameBrowse.selectedClassIndex = nil
-	AuctionFrameBrowse.selectedSubclass = nil
-	AuctionFrameBrowse.selectedSubclassIndex = nil
-	AuctionFrameBrowse.selectedInvtype = nil
-	AuctionFrameBrowse.selectedInvtypeIndex = nil
-	AuctionFrameFilters_Update()
-end
- 										if private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] then
-											if  private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] == 1 then
-												private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 0
-												 _G["AuctionFilterButton"..i]:UnlockHighlight()
-											else
-												private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 1
-												 _G["AuctionFilterButton"..i]:LockHighlight()
-											end
-										end
-									else
-										private.AuctionFrameFilters_ClearSelection()
-										AuctionFrameFilter_OnClick(_G["AuctionFilterButton"..i])
-									end
-								end)
+				if IsControlKeyDown() then
+					-- Test patch to clear AH settings when CTRL click is used just like we clear ours when non-ctrl is used
+					if (AuctionFrameBrowse.selectedClassIndex) then -- ### Legion : replaced by selectedCategoryIndex
+						AuctionFrameBrowse.selectedClass = nil
+						AuctionFrameBrowse.selectedClassIndex = nil
+						AuctionFrameBrowse.selectedSubclass = nil
+						AuctionFrameBrowse.selectedSubclassIndex = nil -- ### Legion : replaced by selectedSubCategoryIndex
+						AuctionFrameBrowse.selectedInvtype = nil
+						AuctionFrameBrowse.selectedInvtypeIndex = nil -- ### Legion : replaced by selectedSubSubCategoryIndex
+						AuctionFrameFilters_Update()
+					end
+					if private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] then
+						if  private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] == 1 then
+							private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 0
+							 _G["AuctionFilterButton"..i]:UnlockHighlight()
+						else
+							private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 1
+							 _G["AuctionFilterButton"..i]:LockHighlight()
+						end
+					end
+				else
+					private.AuctionFrameFilters_ClearSelection()
+					AuctionFrameFilter_OnClick(_G["AuctionFilterButton"..i])
+				end
+			end) -- OnClick
 		else
 			base[frame] = CreateFrame("Button", frame, AuctionFilterButton1, "AuctionClassButtonTemplate")
 			base[frame]:SetText("TICK-"..i)
@@ -474,29 +465,29 @@ end
 			base[frame]:SetWidth(156)
 			base[frame]:SetAlpha(0)
 			base[frame]:SetScript("OnClick", function()
-									if IsControlKeyDown() then
--- Test patch to clear AH settings when CTRL click is used just like we clear ours when non-ctrl is used
-if (AuctionFrameBrowse.selectedClassIndex) then
-	AuctionFrameBrowse.selectedClass = nil
-	AuctionFrameBrowse.selectedClassIndex = nil
-	AuctionFrameBrowse.selectedSubclass = nil
-	AuctionFrameBrowse.selectedSubclassIndex = nil
-	AuctionFrameFilters_Update()
-end
-										if private.Filters[ _G["AuctionFilterButton"..i]:GetText()] then
-											if  private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] == 1 then
-												private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 0
-												 _G["AuctionFilterButton"..i]:UnlockHighlight()
-											else
-												private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 1
-												 _G["AuctionFilterButton"..i]:LockHighlight()
-											end
-										end
-									else
-										private.AuctionFrameFilters_ClearSelection()
-										AuctionFrameFilter_OnClick(_G["AuctionFilterButton"..i])
-									end
-								end)
+				if IsControlKeyDown() then
+					-- Test patch to clear AH settings when CTRL click is used just like we clear ours when non-ctrl is used
+					if (AuctionFrameBrowse.selectedClassIndex) then
+						AuctionFrameBrowse.selectedClass = nil
+						AuctionFrameBrowse.selectedClassIndex = nil
+						AuctionFrameBrowse.selectedSubclass = nil
+						AuctionFrameBrowse.selectedSubclassIndex = nil
+						AuctionFrameFilters_Update()
+					end
+					if private.Filters[ _G["AuctionFilterButton"..i]:GetText()] then
+						if  private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] == 1 then
+							private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 0
+							 _G["AuctionFilterButton"..i]:UnlockHighlight()
+						else
+							private.Filters[ _G["AuctionFilterButton"..i]:GetText()][1] = 1
+							 _G["AuctionFilterButton"..i]:LockHighlight()
+						end
+					end
+				else
+					private.AuctionFrameFilters_ClearSelection()
+					AuctionFrameFilter_OnClick(_G["AuctionFilterButton"..i])
+				end
+			end) -- OnClick
 		end
 	end
 	private.AuctionFrameFilters_UpdateClasses() --Changes the frame to match current filter frame, needed for 1 refresh after frame creation.
@@ -546,4 +537,4 @@ function private.AuctionFrameFilters_UpdateClasses()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5403 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5631 $")

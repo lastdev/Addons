@@ -1,123 +1,179 @@
+----------------------------------------
 local AddonName, Addon = ...
-
 Addon.AddonPath = "Interface\\Addons\\"..AddonName.."\\"
+----------------------------------------
 
-function Addon:New(pMethodTable, ...)
-	local vObject
+function Addon:new(methodTable, ...)
+	local object
 	
-	if type(pMethodTable) ~= "table" then
-		error("table expected")
-	end
-	
-	if pMethodTable.New then
-		vObject = pMethodTable:New(...)
+	if methodTable.New then
+		object = methodTable:New(...)
 	else
-		vObject = {}
+		object = {}
 	end
 	
-	vObject.Inherit = self.Inherit
-	vObject.InheritOver = self.InheritOver
+	self:initObject(object, methodTable, ...)
 	
-	vObject:InheritOver(pMethodTable, ...)
-	
-	return vObject
+	return object
 end
 
-function Addon:InheritOver(pMethodTable, ...)
-	for vKey, vValue in pairs(pMethodTable) do
-		if self[vKey] then
-			if not self.Inherited then
-				self.Inherited = {}
-			end
-			
-			self.Inherited[vKey] = self[vKey]
-		end
+function Addon:initObject(object, class, ...)
+	assert(type(class) == "table", "table expected")
+	
+	local methodTable = class
+	if methodTable._class_meta then
+		methodTable = methodTable._class_meta
+	end
+	
+	if methodTable.__index then
+		setmetatable(object, methodTable)
 		
-		self[vKey] = vValue
-	end
-	
-	if pMethodTable.Construct then
-		pMethodTable.Construct(self, ...)
-	end
-end
-
-function Addon:Inherit(pMethodTable, ...)
-	for vKey, vValue in pairs(pMethodTable) do
-		if self[vKey] then
-			if not self.Inherited then
-				self.Inherited = {}
-			end
-			
-			if not self.Inherited[vKey] then
-				self.Inherited[vKey] = vValue
-			end
-		else
-			self[vKey] = vValue
+		if object.construct then
+			object:construct(...)
+		elseif object.Construct then
+			object:Construct(...)
 		end
+	else
+		for k, v in pairs(self.Object) do
+			object[k] = v
+		end
+	
+		object:inheritOver(methodTable, ...)
 	end
 	
-	if pMethodTable.Construct then
-		pMethodTable.Construct(self, ...)
-	end
+	return object
 end
 
-function Addon:DuplicateTable(pTable, pRecurse, pDestTable)
-	if not pTable then
+function Addon:duplicateTable(table, recurse, destTable)
+	if not table then
 		return nil
 	end
 	
-	local vTable
+	local result
 	
-	if pDestTable then
-		if type(pDestTable) ~= "table" then
-			error("table expected for pDestTable")
+	if destTable then
+		if type(destTable) ~= "table" then
+			error("table expected for destTable")
 		end
 		
-		vTable = pDestTable
+		result = destTable
 	else
-		vTable = {}
+		result = {}
 	end
 	
-	if pRecurse then
-		for vKey, vValue in pairs(pTable) do
-			if type(vValue) == "table" then
-				vTable[vKey] = self:DuplicateTable(vValue, true)
+	if recurse then
+		for key, value in pairs(table) do
+			if type(value) == "table" then
+				result[key] = self:duplicateTable(value, true)
 			else
-				vTable[vKey] = vValue
+				result[key] = value
 			end
 		end
 	else
-		self:CopyTable(vTable, pTable)
+		self:copyTable(result, table)
 	end
 	
-	return vTable
+	return result
 end
 
-function Addon:CopyTable(pDestTable, pTable)
-	for vKey, vValue in pairs(pTable) do
-		pDestTable[vKey] = vValue
+function Addon:copyTable(destTable, table)
+	for key, value in pairs(table) do
+		destTable[key] = value
 	end
 end
 
-function Addon:EraseTable(pTable)
-	for vKey, _ in pairs(pTable) do
-		pTable[vKey] = nil
-	end
+function Addon:eraseTable(table)
+	return wipe(table)
 end
 
-function Addon:RecycleTable(pTable)
-	if pTable then
-		self:EraseTable(pTable)
-		return pTable
+function Addon:recycleTable(table)
+	if table then
+		return wipe(table)
 	else
 		return {}
 	end
 end
 
-function Addon:HookScript(pFrame, pScriptID, pFunction)
-	if not pFrame:GetScript(pScriptID) then
-		pFrame:SetScript(pScriptID, pFunction)
+function Addon:hookScript(frame, scriptID, func)
+	if not frame:GetScript(scriptID) then
+		frame:SetScript(scriptID, func)
 	else
-		pFrame:HookScript(pScriptID, pFunction)
+		frame:HookScript(scriptID, func)
 	end
 end
+
+function Addon:newClass(inherits)
+	local class = {}
+	setmetatable(class, inherits or Addon.ObjectMetaTable)
+	
+	local classMeta = {
+		__index = class
+	}
+	
+	class._class_meta = classMeta
+	
+	return class
+end
+
+-- Old name compatibility
+Addon.New = Addon.new
+Addon.DuplicateTable  = Addon.duplicateTable
+Addon.CopyTable  = Addon.copyTable
+Addon.EraseTable  = Addon.eraseTable
+Addon.RecycleTable  = Addon.recycleTable
+Addon.HookScript  = Addon.hookScript
+
+----------------------------------------
+Addon.Object = {}
+Addon.ObjectMetaTable = {__index = Addon.Object}
+----------------------------------------
+
+function Addon.Object:inheritOver(methodTable, ...)
+	for key, value in pairs(methodTable) do
+		if self[key] then
+			if not self.Inherited then
+				self.Inherited = {}
+			end
+			
+			self.Inherited[key] = self[key]
+		end
+		
+		self[key] = value
+	end
+	
+	if methodTable.construct then
+		methodTable.construct(self, ...)
+	elseif methodTable.Construct then
+		methodTable.Construct(self, ...)
+	end
+end
+
+function Addon.Object:inherit(methodTable, ...)
+	for key, value in pairs(methodTable) do
+		if self[key] then
+			if not self.Inherited then
+				self.Inherited = {}
+			end
+			
+			if not self.Inherited[key] then
+				self.Inherited[key] = value
+			end
+		else
+			self[key] = value
+		end
+	end
+	
+	if methodTable.construct then
+		methodTable.construct(self, ...)
+	elseif methodTable.Construct then
+		methodTable.Construct(self, ...)
+	end
+end
+
+Addon.Object.Inherit = Addon.Object.inherit
+Addon.Object.InheritOver = Addon.Object.inheritOver
+
+Addon.Inherit = Addon.Object.Inherit
+Addon.InheritOver = Addon.Object.InheritOver
+Addon.inherit = Addon.Object.inherit
+Addon.inheritOver = Addon.Object.inheritOver

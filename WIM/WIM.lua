@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.6.24";
+version = "3.7.11";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -375,6 +375,7 @@ function WIM:VARIABLES_LOADED()
     
     SetEnabled(db.enabled);
     initialize();
+     --_G.print("WIM Notice: Since 7.0 there is a new bug where first whisper is not visible until you get a 2nd whisper, or you scroll up and then back down. That's work around. Scroll up, then scroll down.")
 end
 
 function WIM:FRIENDLIST_UPDATE()
@@ -402,7 +403,7 @@ function WIM:BN_FRIEND_LIST_SIZE_CHANGED()
 	end
     end
 	for i=1, _G.BNGetNumFriends() do
-	    local id, name = _G.BNGetFriendInfo(i);--in mop surname is removed and replaced by battletag and name & surname are combined into name
+	    local id, name = _G.BNGetFriendInfo(i);
 	    if(name) then
 		env.cache[env.realm][env.character].friendList[name] = 2; --[set place holder for quick lookup
 			if(windows.active.whisper[name]) then
@@ -462,7 +463,7 @@ function IsInParty(user)
 end
 
 function IsInRaid(user)
-    for i=1, GetNumGroupMembers() do
+    for i=1, _G.GetNumGroupMembers() do
         if(_G.GetUnitName("raid"..i, true) == user) then
             return true;
         end

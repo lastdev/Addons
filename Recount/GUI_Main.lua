@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1300 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1419 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -49,10 +49,27 @@ local dbCombatants
 
 -- Based on cck's numeric Short code in DogTag-3.0.
 function Recount.ShortNumber(value)
-	if value >= 10000000 or value <= -10000000 then
-		return ("%.2fm"):format(value / 1000000)
+	if not value then
+		return ""
+	end
+	if value >= 100000000000000 or value <= -100000000000000 then
+		return ("%.3fT"):format(value / 1000000000000)
+	elseif value >= 10000000000000 or value <= -10000000000000 then
+		return ("%.3fT"):format(value / 1000000000000)
+	elseif value >= 1000000000000 or value <= -1000000000000 then
+		return ("%.3fT"):format(value / 1000000000000)
+	elseif value >= 100000000000 or value <= -100000000000 then
+		return ("%.3fG"):format(value / 1000000000)
+	elseif value >= 10000000000 or value <= -10000000000 then
+		return ("%.3fG"):format(value / 1000000000)
+	elseif value >= 1000000000 or value <= -1000000000 then
+		return ("%.3fG"):format(value / 1000000000)
+	elseif value >= 100000000 or value <= -100000000 then
+		return ("%.2fM"):format(value / 1000000)
+	elseif value >= 10000000 or value <= -10000000 then
+		return ("%.2fM"):format(value / 1000000)
 	elseif value >= 1000000 or value <= -1000000 then
-		return ("%.2fm"):format(value / 1000000)
+		return ("%.2fM"):format(value / 1000000)
 	elseif value >= 100000 or value <= -100000 then
 		return ("%.1fk"):format(value / 1000)
 	elseif value >= 10000 or value <= -10000 then
@@ -63,14 +80,20 @@ function Recount.ShortNumber(value)
 end
 
 -- This is comma_value() by Richard Warburton from: http://lua-users.org/wiki/FormattingNumbers with slight modifications (and a bug fix)
-function Recount.CommaNumber(n)
-	n = ("%.0f"):format(math_floor(n + 0.5))
-	local left, num, right = string_match(n, "^([^%d]*%d)(%d+)(.-)$")
-	return left and left..(num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) or n --..right
+function Recount.CommaNumber(value)
+	if not value then
+		return ""
+	end
+	value = ("%.0f"):format(math_floor(value + 0.5))
+	local left, num, right = string_match(value, "^([^%d]*%d)(%d+)(.-)$")
+	return left and left..(num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) or value --..right
 end
 
 local NumFormats = {
 	function(value)
+		if not value then
+			return ""
+		end
 		return ("%.0f"):format(math_floor(value + 0.5))
 	end,
 	Recount.CommaNumber,
@@ -459,7 +482,7 @@ function me:FixRow(i)
 		LText = string.gsub(LText, "%-[^ >]+", "")
 	end
 	row.LeftText:SetText(LText)
-	while row.LeftText:GetStringWidth() > MaxNameWidth do
+	while row.LeftText:GetStringWidth() > MaxNameWidth and #LText >= 2 do
 		LText = string.sub(LText, 1, #LText - 1)
 		row.LeftText:SetText(LText.."...")
 	end
@@ -670,6 +693,16 @@ function Recount:CreateMainWindow()
 			parent:SaveMainWindowPosition()
 		end
 	end)
+	theFrame.TitleClick:SetScript("OnMouseWheel", function (self, delta)
+		if not IsAltKeyDown() then
+			return
+		end
+		if delta > 0 then
+			Recount:MainWindowPrevMode()
+		else
+			Recount:MainWindowNextMode()
+		end
+	end)
 
 	theFrame.ScrollBar = CreateFrame("SCROLLFRAME", "Recount_MainWindow_ScrollBar", theFrame, "FauxScrollFrameTemplate")
 	theFrame.ScrollBar:SetScript("OnVerticalScroll", function(self, offset)
@@ -732,7 +765,7 @@ function Recount:CreateMainWindow()
 	theFrame.RightButton:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-NextPage-Down.blp")
 	theFrame.RightButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight.blp")
 	theFrame.RightButton:SetWidth(16)
-	theFrame.RightButton:SetHeight(18)
+	theFrame.RightButton:SetHeight(16)
 	--theFrame.RightButton:SetPoint("TOPRIGHT", theFrame, "TOPRIGHT", -38 + 16,-12)
 	theFrame.RightButton:SetPoint("RIGHT", theFrame.CloseButton, "LEFT", 0, 0)
 	theFrame.RightButton:SetScript("OnClick", function()
@@ -745,7 +778,7 @@ function Recount:CreateMainWindow()
 	theFrame.LeftButton:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down.blp")
 	theFrame.LeftButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight.blp")
 	theFrame.LeftButton:SetWidth(16)
-	theFrame.LeftButton:SetHeight(18)
+	theFrame.LeftButton:SetHeight(16)
 	theFrame.LeftButton:SetPoint("RIGHT", theFrame.RightButton, "LEFT", 0, 0)
 	theFrame.LeftButton:SetScript("OnClick",function()
 		Recount:MainWindowPrevMode()
@@ -821,7 +854,11 @@ function Recount:SetupMainWindowButtons()
 	for k, v in pairs(Recount.db.profile.MainWindow.Buttons) do
 		if v then
 			Recount.MainWindow[k]:Show()
-			Recount.MainWindow[k]:SetWidth(16)
+			if Recount.MainWindow[k] == Recount.MainWindow.CloseButton then
+				Recount.MainWindow[k]:SetWidth(20)
+			else
+				Recount.MainWindow[k]:SetWidth(16)
+			end
 		else
 			--Have to use width of 1 since 0 is invalid but you can't tell the diff really
 			Recount.MainWindow[k]:SetWidth(1)
@@ -909,7 +946,7 @@ function Recount:MainWindowNextMode()
 end
 
 function Recount:MainWindowPrevMode()
-	local mode = Recount.db.profile.MainWindowMode-1
+	local mode = Recount.db.profile.MainWindowMode - 1
 	if mode == 0 then
 		mode = table.maxn(Recount.MainWindowData)
 	end
@@ -1166,7 +1203,9 @@ function Recount:RefreshMainWindow(datarefresh)
 		rows[0]:SetWidth(RowWidth)
 		--offset = offset + 1 -- Add a row
 	else
-		if rows[0] then rows[0]:Hide() end
+		if rows[0] then
+			rows[0]:Hide()
+		end
 	end
 
 	for i = 1, MainWindow.CurRows do
@@ -1464,7 +1503,6 @@ function Recount:OpenModeDropDown(myframe)
 	local currentorder = 1
 
 	for k, v in pairs(Recount.MainWindowData) do
-
 		modeopts.args["mode"..currentorder] = {
 			order = currentorder * 10,
 			name = v[1],
@@ -1515,7 +1553,7 @@ function Recount:OpenModeDropDown(myframe)
 	--modemenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
 end
 
-function Recount:ModeDropDownOpen(myframe)
+--[[function Recount:ModeDropDownOpen(myframe)
 	local Recount_ModeDropDownMenu = CreateFrame("Frame", "Recount_ModeDropDownMenu", myframe)
 	Recount_ModeDropDownMenu.displayMode = "MENU"
 	Recount_ModeDropDownMenu.initialize = me.CreateModeDropdown
@@ -1540,15 +1578,16 @@ function Recount:ModeDropDownOpen(myframe)
 		oside = "TOPLEFT"
 	end
 	UIDropDownMenu_SetAnchor(Recount_ModeDropDownMenu , 0, 0, oside, myframe, side)
-end
+end]]
 
-function me:CreateModeDropdown(level)
+--[[function me:CreateModeDropdown(level)
 	local info = {}
 	for k, v in pairs(Recount.MainWindowData) do
-
 		info.checked = nil
 		info.text = v[1]
-		info.func = function() Recount:SetMainWindowMode(k) end
+		info.func = function()
+			Recount:SetMainWindowMode(k)
+		end
 		if Recount.db.profile.MainWindowMode == k then
 			info.checked = 1
 		else
@@ -1556,7 +1595,7 @@ function me:CreateModeDropdown(level)
 		end
 		UIDropDownMenu_AddButton(info, level)
 	end
-end
+end]]
 
 local ConvertDataSet = {}
 ConvertDataSet["OverallData"] = L["Overall Data"]
@@ -1766,7 +1805,7 @@ function me:AddCombatantToGraphData(name)
 		end
 		Recount.GraphClass[name.."'s "..DataName] = dbCombatants[name].enClass
 
-		Recount.GraphWindow.Data={}
+		Recount.GraphWindow.Data = {}
 		Recount.GraphWindow.Data[name.."'s "..DataName] = dbCombatants[name].TimeData[DataComparing]
 		return
 	end

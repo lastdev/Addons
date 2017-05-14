@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterConfig.lua 5420 2013-06-12 17:27:06Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCounterConfig.lua 5572 2015-08-28 11:26:08Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterConfig - Controls Configuration data
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterConfig.lua $","$Rev: 5420 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterConfig.lua $","$Rev: 5572 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --Most of this code is from enchantrix by ccox
 local lib = BeanCounter
@@ -99,19 +99,18 @@ private.settingDefaults = {
 	["columnwidth.".._BC('UiTransactions')] = 100,
 	["columnwidth.".._BC('UiBidTransaction')] = 60,
 	["columnwidth.".._BC('UiBuyTransaction')] = 60,
-	["columnwidth.".._BC('UiNetHeader')] = 65,
+	["columnwidth.".._BC('UiNetHeader')] = 60,
 	["columnwidth.".._BC('UiQuantityHeader')] = 40,
-	["columnwidth.".._BC('UiPriceper')] = 70,
 
-	["columnwidth.".."|CFFFFFF00"..Seller.."/|CFF4CE5CC"..Buyer] = 90,
+	["columnwidth.".."|CFFFFFF00"..Seller.."/|CFF4CE5CC"..Buyer] = 100,
 
-	["columnwidth.".._BC('UiDepositTransaction')] = 58,
-	["columnwidth.".._BC('UiPriceper')] = 50,
-	["columnwidth.".._BC("UiFee")] = 70,
-	["columnwidth.".._BC('UiReason')] = 70,
-	["columnwidth.".._BC('UiDateHeader')] = 250,
+	["columnwidth.".._BC('UiDepositTransaction')] = 60,
+	["columnwidth.".._BC('UiPriceper')] = 60,
+	["columnwidth.".._BC("UiFee")] = 60,
+	["columnwidth.".._BC('UiReason')] = 90,
+	["columnwidth.".._BC('UiDateHeader')] = 140,
 
-	["columnwidth.".._BC('UiProfit')] = 65,
+	["columnwidth.".._BC('UiProfit')] = 60,
 	["ModTTShow"] = false,
     }
 

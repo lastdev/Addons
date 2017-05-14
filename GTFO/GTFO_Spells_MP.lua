@@ -2478,3 +2478,8 @@ GTFO.SpellID["135868"] = {
 	--desc = "Ignite Fuel";
 	sound = 2;
 };
+
+GTFO.SpellID["131831"] = {
+	--desc = "Fiery Keg Smash (Master Cheng)";
+	sound = 1;
+};

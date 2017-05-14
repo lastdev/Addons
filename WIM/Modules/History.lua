@@ -12,6 +12,9 @@ local select = select;
 --set namespace
 setfenv(1, WIM);
 
+--Quick and dirty fix for renames in legion to deal with renamed globals
+local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
+
 local History = CreateModule("History", true);
 
 -- default history settings.
@@ -119,6 +122,7 @@ local function createWidget()
 end
 
 
+--BNet_GetValidatedCharacterName
 local function recordWhisper(inbound, ...)
     local msg, from = ...;
     if not from then
@@ -130,7 +134,7 @@ local function recordWhisper(inbound, ...)
         win.widgets.history:SetHistory(true);
         --If realid/btag whisper, we save them under btag to avoid caching issues
         --(ie NAME is encoded and changes every session, we can't use that to save whispers, plus if user dumps cache, they all return unknown)
-        local pid = _G.BNet_GetPresenceID(from)
+        local pid = BNet_GetPresenceID(from)
         if pid then
         	local _, _, btag, _, toonName = _G.BNGetFriendInfoByID(pid)
 			from = btag or toonName or from
@@ -436,7 +440,7 @@ local function createHistoryViewer()
     -- create nav
     win.nav = CreateFrame("Frame", nil, win);
     win.nav.border = win.nav:CreateTexture(nil, "BACKGROUND");
-    win.nav.border:SetTexture(1,1,1,.25);
+    win.nav.border:SetColorTexture(1,1,1,.25);
     win.nav.border:SetPoint("TOPRIGHT");
     win.nav.border:SetPoint("BOTTOMRIGHT");
     win.nav.border:SetWidth(2);
@@ -495,7 +499,7 @@ local function createHistoryViewer()
     win.nav.filters:SetPoint("BOTTOMRIGHT", -2, 0);
     win.nav.filters:SetHeight(125);
     win.nav.filters.border = win.nav.filters:CreateTexture(nil, "BACKGROUND");
-    win.nav.filters.border:SetTexture(1, 1, 1, .25);
+    win.nav.filters.border:SetColorTexture(1, 1, 1, .25);
     win.nav.filters.border:SetPoint("TOPLEFT");
     win.nav.filters.border:SetPoint("TOPRIGHT");
     win.nav.filters.border:SetHeight(20);
@@ -578,7 +582,7 @@ local function createHistoryViewer()
     win.nav.userList:SetPoint("BOTTOMRIGHT", win.nav.filters, "TOPRIGHT", 0, 1);
     win.nav.userList:SetPoint("TOP", 0, -30);
     win.nav.userList.border = win.nav.userList:CreateTexture(nil, "BACKGROUND");
-    win.nav.userList.border:SetTexture(1,1,1,.25);
+    win.nav.userList.border:SetColorTexture(1,1,1,.25);
     win.nav.userList.border:SetPoint("TOPLEFT", 0, 1);
     win.nav.userList.border:SetPoint("TOPRIGHT", 0, 1);
     win.nav.userList.border:SetHeight(1);
@@ -609,7 +613,7 @@ local function createHistoryViewer()
                         local user, gmTag = string.match(original, "([^*]+)(*?)$");
                         color = gmTag == "*" and constants.classes[L["Game Master"]].color or "ffffff";
                         if(string.match(original, "^*")) then
-                            extra = " |TInterface\\AddOns\\WIM\\Skins\\Default\\minimap.tga:20:20:0:0|t";
+                            extra = " |TInterface\\AddOns\\WIM\\Skins\\Default\\minimap.blp:20:20:0:0|t";
                             color = "fff569";
                         end
                         if not user then
@@ -720,7 +724,7 @@ local function createHistoryViewer()
     --search bar
     win.search = CreateFrame("Frame", nil, win);
     win.search.bg = win.search:CreateTexture(nil, "BACKGROUND");
-    win.search.bg:SetTexture(1,1,1,.25);
+    win.search.bg:SetColorTexture(1,1,1,.25);
     win.search.bg:SetAllPoints();
     win.search:SetPoint("TOPLEFT", win.nav, "TOPRIGHT");
     win.search:SetPoint("RIGHT", -18, 0);
@@ -800,7 +804,7 @@ local function createHistoryViewer()
     --content frame
     win.content = CreateFrame("Frame", nil, win);
     win.content.border = win.content:CreateTexture(nil, "BACKGROUND");
-    win.content.border:SetTexture(1,1,1,.25);
+    win.content.border:SetColorTexture(1,1,1,.25);
     win.content.border:SetPoint("BOTTOMLEFT");
     win.content.border:SetPoint("BOTTOMRIGHT");
     win.content.border:SetHeight(1);
@@ -817,7 +821,7 @@ local function createHistoryViewer()
             tab.text:SetAllPoints();
             tab.text:SetText(ViewTypes[index].text);
             tab.bg = tab:CreateTexture(nil, "BACKGROUND");
-            tab.bg:SetTexture(1, 1, 1, .25);
+            tab.bg:SetColorTexture(1, 1, 1, .25);
             tab.bg:SetAllPoints();
             tab:SetWidth(tab.text:GetStringWidth() + 16);
             if(#self.tabs > 0) then
@@ -1109,13 +1113,13 @@ local function createHistoryViewer()
     win.progressBar:SetWidth(300); win.progressBar:SetHeight(65);
     win.progressBar:SetPoint("CENTER", 0, 50);
     options.AddFramedBackdrop(win.progressBar);
-    win.progressBar.backdrop.bg:SetTexture(0, 0, 0, 1);
+    win.progressBar.backdrop.bg:SetColorTexture(0, 0, 0, 1);
     win.progressBar.bar = CreateFrame("Frame", nil, win.progressBar);
     options.AddFramedBackdrop(win.progressBar.bar);
     win.progressBar.bar:SetWidth(win.progressBar:GetWidth()-50); win.progressBar.bar:SetHeight(15);
     win.progressBar.bar:SetPoint("CENTER", -10, -5);
     win.progressBar.bar.bg = win.progressBar.bar:CreateTexture(nil, "OVERLAY");
-    win.progressBar.bar.bg:SetTexture(1,1,1, .5);
+    win.progressBar.bar.bg:SetColorTexture(1,1,1, .5);
     win.progressBar.bar.bg:SetPoint("TOPLEFT");
     win.progressBar.bar.bg:SetPoint("BOTTOMLEFT");
     win.progressBar.text = win.progressBar:CreateFontString(nil, "OVERLAY", "ChatFontNormal");

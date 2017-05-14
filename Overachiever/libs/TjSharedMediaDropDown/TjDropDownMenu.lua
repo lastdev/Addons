@@ -145,7 +145,7 @@
 --
 
 
-local THIS_VERSION = 0.55
+local THIS_VERSION = 0.56
 
 if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   TjDropDownMenu = TjDropDownMenu or {};
@@ -429,9 +429,15 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   end
 
   local function SetDropDownWidth(frame, width)
-    _G[frame:GetName().."Middle"]:SetWidth(width)
+    if (width) then
+      _G[frame:GetName().."Middle"]:SetWidth(width)
+    else
+      width = _G[frame:GetName().."Middle"]:GetWidth()
+    end
     _G[frame:GetName().."Text"]:SetWidth(width - TEXTCUTOFF)
-    frame:SetWidth(width+8)
+    frame:SetWidth(width + 8)
+	-- Make cursor over any part of the dropdown trigger button highlight:
+    frame.button:SetWidth( frame:GetWidth() + _G[frame:GetName().."Right"]:GetWidth() + 8 )
   end
 
   local function GetDropDownWidth(frame, ...)
@@ -528,6 +534,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
 
 
   local function OnEnter(self)
+    --self.highlight:Show()
     if (self.tooltip) then
       local tip = self.tooltip
       if (tip ~= 0) then
@@ -557,7 +564,8 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
     end
   end
 
-  local function OnLeave()
+  local function OnLeave(self)
+    --self.highlight:Hide()
     GameTooltip:Hide()
   end
 
@@ -604,6 +612,10 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
 -- API
 ---------
 
+  function TjDropDownMenu.OnClick(self)
+    self.button:Click()
+  end
+
   function TjDropDownMenu.DropBtnOnClick(self)
     PlaySound("igMainMenuOptionCheckBoxOn");
     self:GetParent():OpenMenu();
@@ -620,7 +632,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
 
     TjDropDownMenu.NumCreated = TjDropDownMenu.NumCreated + 1;
     name = name or "TjDropDownMenu_Num"..TjDropDownMenu.NumCreated
-    local dropdown = CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
+    local dropdown = CreateFrame("Button", name, parent, "UIDropDownMenuTemplate") --CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
     dropdown.TjDDM = {};
     dropdown.TjDDM.menuList = menuList;
     dropdown.TjDDM.x = x;
@@ -640,10 +652,13 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
       end
     end
 
-    _G[name.."Button"]:SetScript("OnClick", TjDropDownMenu.DropBtnOnClick)
+    dropdown.button = _G[name.."Button"]
+    dropdown.button:SetScript("OnClick", TjDropDownMenu.DropBtnOnClick)
+    dropdown:SetScript("OnClick", TjDropDownMenu.OnClick)
     dropdown:SetScript("OnEnter", OnEnter)
     dropdown:SetScript("OnLeave", OnLeave)
-    dropdown:EnableMouse(true)
+    --Redundant now that it's a Button --dropdown:EnableMouse(true)
+    --dropdown.highlight = _G[name.."ButtonHighlightTexture"]
 
     -- Set functions to call in this style: MyDropDownFrame:FunctionName(...)
     dropdown.SetOffset = SetOffset;
@@ -664,10 +679,14 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
     dropdown.Disable = Disable;
     dropdown.IsEnabled = IsEnabled;
     dropdown.OpenMenu = OpenMenu;
-    
+
     _G[name.."Text"]:SetWidth( _G[name.."Middle"]:GetWidth() - TEXTCUTOFF )
 
     SetupFunctions(dropdown, dropdown.TjDDM.menuList)
+
+    -- Make cursor over any part of the dropdown trigger button highlight.
+    dropdown:SetDropDownWidth()
+    --dropdown.button:SetWidth( dropdown:GetWidth() )
 
     return dropdown;
   end

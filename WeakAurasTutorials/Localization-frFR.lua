@@ -21,6 +21,8 @@ L["Activation Settings: 3/5"] = "Réglages d'activation : 3/5"
 L["Activation Settings: 4/5"] = "Réglages d'activation : 4/5"
 L["Activation Settings: 5/5"] = "Réglages d'activation : 5/5"
 L["Activation Settings Text"] = "Comme vous êtes un %s, vous pouvez activer l'option de Classe du Joueur et choisir %s."
+L["Aura"] = "Aura"
+L["Aura Name"] = "Nom d'aura"
 L["Auto-cloning: 1/10"] = "Auto-clonage : 1/10"
 L["Auto-cloning 1/10 Text"] = [=[La plus grande nouveauté de la version |cFF8800FF1.4|r est l'|cFFFF0000auto-clonage|r. L'|cFFFF0000auto-clonage|r permet à vos graphiques de se dupliquer automatiquement pour montrer plusieurs sources d'information. Placés dans un Groupe Dynamique, cela vous permet de créer de grands ensembles d'information dynamiques.
 
@@ -30,6 +32,7 @@ L["Beginners Finished Text"] = [=[C'est tout pour le Guide du Débutant. Cependa
 Dans le futur, |cFFFFFF00Plus de|r |cFFFF7F00Didactitiels|r |cFFFF0000Avancés|r seront publiés pour vous guider plus profondément dans les possibilités sans fin de |cFF8800FFWeakAuras|r.]=]
 L["Beginners Guide Desc"] = "Guide du Débutant"
 L["Beginners Guide Desc Text"] = "Un guide détaillant les options de configuration basiques de WeakAuras"
+-- L["Constant Factor"] = ""
 L["Create a Display: 1/5"] = "Créer un Graphique : 1/5"
 L["Create a Display: 2/5"] = "Créer un Graphique : 2/5"
 L["Create a Display: 3/5"] = "Créer un Graphique : 3/5"
@@ -48,6 +51,8 @@ L["Display Options 2/4 Text"] = [=[Les graphiques |cFFFFFFFFBarre de progression
 Cette option est uniquement disponible si votre graphique est déclenché par une aura, un objet, ou un sort.]=]
 L["Display Options: 4/4"] = "Options de Graphique : 4/4"
 L["Display Options 4/4 Text"] = "Finalement, un nouveau type de graphique, |cFFFFFFFFModèle|r, permet d'utiliser n'importe quel modèle 3D tiré du jeu."
+L["Dynamic Group Options: 1/4"] = "Options de Groupe Dynamique : 1/4"
+L["Dynamic Group Options 1/4 Text"] = "Options de Groupe Dynamique 1/4 Texte"
 L["Dynamic Group Options: 2/4"] = "Options de Groupe Dynamique : 2/4"
 L["Dynamic Group Options 2/4 Text"] = [=[La plus grande amélioration des |cFFFFFFFFGroupes Dynamiques|rs est une nouvelle option pour la Croissance.
 
@@ -73,7 +78,7 @@ L["Full-scan Auras 4/10 Text"] = [=[Un popup doit apparaître, vous informant qu
 Cliquez "Oui" pour permettre à |cFF8800FFWeakAuras|r de mettre automatiquement vos graphiques dans un Groupe Dynamique.]=]
 L["Full-scan Auras: 5/10"] = "Auras en Scan Complet : 5/10"
 L["Full-scan Auras 5/10 Text"] = "Désactivez l'option Scan Complet pour ré-activer les autres options d'unité."
-L["Group Auras 6/10"] = "Auras de groupe : 6/10"
+-- L["Group Auras: 6/10"] = ""
 L["Group Auras 6/10 Text"] = "Maintenant, Sélectionnez \"Groupe\" dans l'option Unité."
 L["Group Auras: 7/10"] = "Auras de groupe : 7/10"
 L["Group Auras 7/10 Text"] = [=[L'|cFFFF0000auto-clonage|r est, à nouveau, activé en utilisant l'option \"%s\".
@@ -81,7 +86,11 @@ L["Group Auras 7/10 Text"] = [=[L'|cFFFF0000auto-clonage|r est, à nouveau, acti
 Un nouveau graphique sera créé pour chaque membre du groupe affecté par l'aura spécifiée.]=]
 L["Group Auras: 8/10"] = "Auras de groupe : 8/10"
 L["Group Auras 8/10 Text"] = "Activer l'option %s pour une aura de groupe avec |cFFFF0000auto-clonage|r activé causera un nouveau graphique pour chaque membre du groupe qui |cFFFFFFFFn'est pas|r affecté par l'aura spécifiée."
+-- L["Grow"] = ""
 L["Home"] = "Accueil"
+L["Inverse"] = "Inverser"
+L["Left Text"] = "Texte gauche"
+L["Model"] = "Modèle"
 L["Multi-target Auras: 10/10"] = "Auras multi-cibles : 10/10"
 L["Multi-target Auras 10/10 Text"] = [=[Les auras multi-cibles ont l'|cFFFF0000auto-clonage|r par défaut.
 
@@ -93,16 +102,24 @@ L["Multi-target Auras 9/10 Text"] = "Enfin, sélectionnez \"Multi-cibles\" comme
 L["New in 1.4:"] = "Nouveau dans la 1.4 :"
 L["New in 1.4 Desc:"] = "Nouveau dans la 1.4"
 L["New in 1.4 Desc Text"] = "Découvrez les nouvelles fonctions de WeakAuras 1.4"
-L["New in 1.4 Finnished Text"] = [=[Bien sûr, il y a plus de nouvelles fonctions dans |cFF8800FFWeakAuras 1.4|r qu'on ne peut discuter en une fois, sans parler des nombreuses corrections de bugs et optimisations.
-
-Nous espérons que ce Didacticiel vous a au moins guidé vers les principales nouvelles possibilités qui vous sont offertes.
-
-Merci d'utiliser |cFF8800FFWeakAuras|r !]=]
+L["New in 1.4 Finished Text"] = "Nouveau avec la 1.4 Texte final"
 L["New in 1.4 Text1"] = [=[La version 1.4 de |cFF8800FFWeakAuras|r introduit plusieurs nouvelles fonctions puissantes.
 
 Ce didacticiel fournit un aperçu des principales nouvelles possibilités, et comment les utiliser.]=]
 L["New in 1.4 Text2"] = "D'abord, créez un nouveau graphique pour la démonstration."
+L["Next"] = "Suivant"
+L["Options/Trigger"] = "Options/Déclencheur"
+L["Player Class"] = "Classe du joueur"
+L["Play Sound"] = "Jouer un son"
+L["Preset"] = "Preset"
 L["Previous"] = "Précédent"
+L["Progress Bar"] = "Barre de progression"
+L["Show all matches (Auto-clone)"] = "Montrer toutes les correspondances (Auto-clone)"
+L["Sort"] = "Trier"
+L["Sound"] = "Son"
+L["Specific Unit"] = "Unité spécifique"
+L["Status"] = "Statut"
+L["Tooltip on Mouseover"] = "Infobulle à la souris"
 L["Trigger Options: 1/4"] = "Options de Déclencheur : 1/4"
 L["Trigger Options 1/4 Text"] = [=[En plus de \"Multi-cibles\" il y a un autre nouveau réglage pour l'option Unité : Unité Spécifique.
 
@@ -119,6 +136,9 @@ L["Trigger Options: 4/4"] = "Options de Déclencheur : 4/4"
 L["Trigger Options 4/4 Text"] = [=[Le déclencheur |cFFFFFFFFCaractéristique d'unité|r permet de tester le nom d'une unité, sa classe, son hostilité, et si c'est un Joueur ou un Personnage non-Joueur.
 
 Les déclencheurs |cFFFFFFFFRecharge Globale|r et |cFFFFFFFFVitesse d'attaque|r s'ajoutent au déclencheur Incantation.]=]
+L["Type"] = "Type"
+L["Unit"] = "Unité"
+L["Use Full Scan (High CPU)"] = "Utiliser Scan Complet (CPU élevé)"
 L["WeakAuras Tutorials"] = "Didacticiels WeakAuras"
 L["Welcome"] = "Bienvenue"
 L["Welcome Text"] = [=[Bienvenue au Guide du Débutant de |cFF8800FFWeakAuras|r.

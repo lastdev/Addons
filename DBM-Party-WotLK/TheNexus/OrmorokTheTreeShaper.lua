@@ -1,33 +1,43 @@
 local mod	= DBM:NewMod(620, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 243 $"):sub(12, -3))
 mod:SetCreatureID(26794)
-mod:SetEncounterID(524, 525)
+mod:SetEncounterID(524, 525, 2012)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_SUMMON"
+	"SPELL_CAST_SUCCESS 47958 57082 57083 48017 57086",
+	"SPELL_AURA_APPLIED 47981",
+	"SPELL_AURA_REMOVED 47981",
+	"SPELL_SUMMON 61564"
 )
 
-local warningSpikes			= mod:NewSpellAnnounce(47958, 2)
-local warningFrenzy			= mod:NewSpellAnnounce(48017, 3)
-local warningReflection		= mod:NewSpellAnnounce(47981, 4)
-local warningAdd			= mod:NewSpellAnnounce(61564, 1)
+local warningFrenzy			= mod:NewSpellAnnounce(48017, 3, nil, "Tank|Healer", 2)
+local warningAdd			= mod:NewSpellAnnounce(61564, 2)
 
-local specWarnReflection	= mod:NewSpecialWarningSpell(47981, "SpellCaster")
+local specWarnReflection	= mod:NewSpecialWarningReflect(47981, "SpellCaster", nil, nil, 1, 2)
+local specWarnSpikes		= mod:NewSpecialWarningDodge(47958, nil, nil, nil, 2, 2)
 
-local timerReflection		= mod:NewBuffActiveTimer(15, 47981)
-local timerReflectionCD		= mod:NewCDTimer(30, 47981)
+local timerReflection		= mod:NewBuffActiveTimer(15, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerReflectionCD		= mod:NewCDTimer(30, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerSpikesCD			= mod:NewCDTimer(12.1, 47958, nil, nil, nil, 3)--Health based or CD?
+
+local voiceReflection		= mod:NewVoice(47981, "SpellCaster")
+local voiceSpikes			= mod:NewVoice(47958)
+
+function mod:OnCombatStart(delay)
+	timerSpikesCD:Start(10-delay)
+	timerReflectionCD:Start(20-delay)
+end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(47958, 57082, 57083) then
-		warningSpikes:Show()
+		specWarnSpikes:Show()
+		timerSpikesCD:Start()
+		voiceSpikes:Play("watchstep")
 	elseif args:IsSpellID(48017, 57086) then
 		warningFrenzy:Show()
 	end
@@ -36,9 +46,9 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 47981 then
 		timerReflection:Start()
-		warningReflection:Show()
-		specWarnReflection:Show()
+		specWarnReflection:Show(args.sourceName)
 		timerReflectionCD:Start()
+		voiceReflection:Play("stopattack")
 	end
 end
 

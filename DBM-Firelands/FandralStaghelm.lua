@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(197, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(8)
 mod:SetModelSound("Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_GATE_INTRO_01.ogg", "Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_KILL_05.ogg")
@@ -33,9 +32,9 @@ local specWarnLeapingFlames		= mod:NewSpecialWarningMove(98535)
 local specWarnSearingSeed		= mod:NewSpecialWarningMoveAway(98450)
 local specWarnOrb				= mod:NewSpecialWarningStack(98584, true, 4)
 
-local timerOrbActive			= mod:NewBuffActiveTimer(64, 98451)
+local timerOrbActive			= mod:NewBuffActiveTimer(64, 98451, nil, nil, nil, 5)
 local timerOrb					= mod:NewBuffFadesTimer(6, 98584)
-local timerSearingSeed			= mod:NewBuffFadesTimer(60, 98450)
+local timerSearingSeed			= mod:NewBuffFadesTimer(60, 98450, nil, nil, nil, 3)
 local timerNextSpecial			= mod:NewTimer(4, "timerNextSpecial", 97238)--This one stays localized because it's 1 timer used for two abilities
 
 local berserkTimer				= mod:NewBerserkTimer(600)
@@ -193,10 +192,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerOrb:Start()
 	elseif spellId == 98450 and args:IsPlayer() then
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)--Find out what our specific seed timer is
-		specWarnSearingSeed:Schedule(expires - GetTime() - 5)	-- Show "move away" warning 5secs before explode
-		timerSearingSeed:Start(expires-GetTime())
-		if self.Options.RangeFrameSeeds then
-			DBM.RangeCheck:Show(12)
+		if expires then
+			specWarnSearingSeed:Schedule(expires - GetTime() - 5)	-- Show "move away" warning 5secs before explode
+			timerSearingSeed:Start(expires-GetTime())
+			if self.Options.RangeFrameSeeds then
+				DBM.RangeCheck:Show(12)
+			end
 		end
 	end
 end

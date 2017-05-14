@@ -27,6 +27,7 @@ Outfitter.cRenameOutfit = "Rename Outfit"
 Outfitter.cCompleteOutfits = "Complete outfits"
 Outfitter.cAccessoryOutfits = "Accessories"
 Outfitter.cOddsNEndsOutfits = "Odds 'n ends"
+Outfitter.cBoEsOutfits = "Unopened"
 
 Outfitter.cGlobalCategory = "Special Outfits"
 Outfitter.cNormalOutfit = "Normal"
@@ -162,9 +163,9 @@ Outfitter.cOptionsTitle = "Outfitter Options"
 Outfitter.cShowMinimapButton = "Show Minimap Button"
 Outfitter.cShowMinimapButtonOnDescription = "Turn this off if you don't want the Outfitter button on your minimap cluster"
 Outfitter.cShowMinimapButtonOffDescription = "Turn this on if you want the Outfitter button on your minimap cluster"
-Outfitter.cAutoSwitch = "Disable automatic changes"
-Outfitter.cAutoSwitchOnDescription = "Turn this off to enable automatic outfit switching"
-Outfitter.cAutoSwitchOffDescription = "Turn this on to disable automatic outfit switching"
+Outfitter.cAutoSwitch = "Disable all outfit scripts"
+Outfitter.cAutoSwitchOnDescription = "Turn this off to allow outfit scripts to run"
+Outfitter.cAutoSwitchOffDescription = "Turn this on to block all outfit scripts from running"
 Outfitter.cTooltipInfo = "Show 'Used by:' in tooltips"
 Outfitter.cTooltipInfoOnDescription = "Turn this off if you experience performance problems when mousing over equippable items"
 Outfitter.cTooltipInfoOffDescription = "Turn this on if you want to display 'Used By:' information in Tooltip"
@@ -182,7 +183,7 @@ Outfitter.cUnequipOutfitMessageFormat = "Outfitter: %s unequipped"
 
 Outfitter.cAboutTitle = "About Outfitter %s"
 Outfitter.cAboutAuthor = "Designed and written by John Stephen"
-Outfitter.cAboutCopyright = "Copyright 2006 - 2014 John Stephen"
+Outfitter.cAboutCopyright = "Copyright 2006 - 2016 John Stephen"
 Outfitter.cAboutThanks = "Many thanks to all fans and supporters."
 
 Outfitter.cGermanLocalization = "German Localization"
@@ -216,12 +217,13 @@ BINDING_NAME_OUTFITTER_OUTFIT10 = "Outfit 10"
 BINDING_NAME_OUTFITTER_ENABLEAUTOMATION = "Enable automatic changes"
 BINDING_NAME_OUTFITTER_DISABLEAUTOMATION = "Disable automatic changes"
 
+BINDING_NAME_OUTFITTER_UPDATEOUTFIT = "Update to equipped items"
+
 Outfitter.cShow = "Show"
+Outfitter.cShowInCombat = "Show in combat"
 Outfitter.cHide = "Hide"
 Outfitter.cDontChange = "Don't change"
 
-Outfitter.cHelm = "Helm"
-Outfitter.cCloak = "Cloak"
 Outfitter.cPlayerTitle = "Title"
 
 Outfitter.cMore = "More"
@@ -242,19 +244,6 @@ Outfitter.cChangeIcon = "Choose icon..."
 
 Outfitter.cMinimapButtonTitle = "Outfitter Minimap Button"
 Outfitter.cMinimapButtonDescription = "Click to select a different outfit or drag to re-position this button."
-
-Outfitter.cClassName = {}
-Outfitter.cClassName.DRUID = "Druid"
-Outfitter.cClassName.HUNTER = "Hunter"
-Outfitter.cClassName.MAGE = "Mage"
-Outfitter.cClassName.PALADIN = "Paladin"
-Outfitter.cClassName.PRIEST = "Priest"
-Outfitter.cClassName.ROGUE = "Rogue"
-Outfitter.cClassName.SHAMAN = "Shaman"
-Outfitter.cClassName.WARLOCK = "Warlock"
-Outfitter.cClassName.WARRIOR = "Warrior"
-Outfitter.cClassName.DEATHKNIGHT = "Death Knight"
-Outfitter.cClassName.MONK = "Monk"
 
 Outfitter.cBattleStance = "Battle Stance"
 Outfitter.cDefensiveStance = "Defensive Stance"
@@ -305,7 +294,8 @@ Outfitter.cMonkOx = "Monk: Ox stance"
 
 Outfitter.cCompleteCategoryDescription = "Complete outfits have all slots specified.  When these outfits are equipped all other outfits will automatically be unequipped."
 Outfitter.cAccessoryCategoryDescription = "Accessory outfits have some, but not all, slots specified.  You can equip as many accessory outfits at a time as you like."
-Outfitter.cOddsNEndsCategoryDescription = "Odds 'n ends is a list of items which you haven't used in any of your outfits.  This may be useful in ensuring that you're using all of your items or that you're not carrying around excess baggage."
+Outfitter.cOddsNEndsCategoryDescription = "Odds 'n ends is a list of items which are Soulbound but aren't used in any of your outfits."
+Outfitter.cBoEsCategoryDescription = "Unopened is a list of items which are still in their original 'Binds on Equip' state."
 
 Outfitter.cRebuildOutfitFormat = "Rebuild for %s"
 Outfitter.cRebuildFor = "Rebuild for..."
@@ -432,3 +422,6 @@ Outfitter.cCantSetIcon = "Equipment Manager doesn't have the ability to change a
 Outfitter.cChangeIcon = "Change Icon"
 
 Outfitter.cNoItemsWithStat = "Couldn't generate an outfit because no items with that stat were found"
+
+Outfitter.cRequiresPrefix = "Requires:"
+Outfitter.cUniqueEquippedSearchPattern = "^Unique%-Equipped: (.*) %((%d+)%)$"

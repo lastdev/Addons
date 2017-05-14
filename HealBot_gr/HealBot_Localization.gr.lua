@@ -539,6 +539,7 @@ function HealBot_Lang_grGR()
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Καταστολή Ηχου"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Απενεργοποιηση Λαθων"
     HEALBOT_OPTIONS_CRASHPROT               = "Προστασια απο Crash"
+    HEALBOT_OPTIONS_USEGENERALMACRO         = "Use general macro slots"
     HEALBOT_CP_MACRO_LEN                    = "Το ονομα του μακρο πρεπει να ειναι μεταξυ 1 κ 14 χαρακτηρες"
     HEALBOT_CP_MACRO_BASE                   = "Βασικη ονομασια macro"
     HEALBOT_CP_MACRO_SAVE                   = "Τελευταια αποθηκευση στης: "
@@ -613,6 +614,7 @@ function HealBot_Lang_grGR()
     HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%"
 
     HEALBOT_OPTION_IGNORE_AURA_RESTED       = "Παραβλεψη των aura events οταν ειμαι σε resting"
+    HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Adjust unit max health"
 
     HEALBOT_WORD_ENABLE                     = "Ενεργο"
     HEALBOT_WORD_DISABLE                    = "Απενεργο"

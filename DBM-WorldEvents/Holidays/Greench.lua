@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Greench", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11379 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15613 $"):sub(12, -3))
 mod:SetCreatureID(54499)
 mod:SetModelID(39021)
-mod:SetReCombatTime(10)
+mod:SetReCombatTime(10, 5)
 mod:SetZone(0)--Eastern Kingdoms
 mod:DisableWBEngageSync()
 
 mod:RegisterCombat("combat")
+mod:SetWipeTime(20)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 101907",
@@ -26,8 +27,8 @@ local warnTree					= mod:NewSpellAnnounce(101938, 2)--Needs a custom icon, i'll 
 local specWarnShrinkHeart		= mod:NewSpecialWarningMove(101860)
 
 local timerShrinkHeartCD		= mod:NewCDTimer(32.5, 101873)
-local timerSnowmanCD			= mod:NewCDTimer(10, 101910)--He alternates these
-local timerTreeCD				= mod:NewCDTimer(10, 101938)
+local timerSnowmanCD			= mod:NewCDTimer(10, 101910, nil, nil, nil, 3)--He alternates these
+local timerTreeCD				= mod:NewCDTimer(10, 101938, nil, nil, nil, 3)
 local timerCrushCD				= mod:NewCDTimer(5, 101885)--Used 5 seconds after tree casts (on the tree itself). Right before stomp he stops targeting tank. He has no target during stomp, usable for cast trigger? Only trigger in log is the stomp landing.
 local timerSnowCrash			= mod:NewCastTimer(5, 101907)
 

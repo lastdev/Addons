@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - BasicFilter
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BasicFilter.lua 5318 2012-08-06 10:15:53Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BasicFilter.lua 5602 2016-06-01 15:52:11Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -150,7 +150,7 @@ end
 function private.IgnoreListUpdate()
 	if not GUILoaded then return end
 	local numIgnores = #IgnoreList
-	if SelectedIgnore > 0  then
+	if SelectedIgnore > 0 then
 		private.UnignoreButton:Enable()
 	else
 		private.UnignoreButton:Disable()
@@ -216,28 +216,7 @@ end
 
 --[[ Initialization and Event Handlers ]]--
 
-local function OnLoadRunOnce()
-	OnLoadRunOnce = nil
-	default("filter.basic.activated", true)
-	default("filter.basic.minquality", 1)
-	default("filter.basic.minlevel", 0)
-	default("filter.basic.ignoreself", false)
-end
-function lib.OnLoad(addon)
-	if OnLoadRunOnce then OnLoadRunOnce() end
-end
-
-lib.Processors = {}
-
-local function Activate()
-	local faction = Resources.PlayerFaction
-	if faction == "Neutral" then
-		-- special handling for Neutral player characters:
-		-- don't initialize until player chooses a faction
-		lib.Processors.factionselect = lib.Processors.gameactive
-		return
-	end
-
+local function UpdateDB()
 	local realm = Const.PlayerRealm
 
 	if not AucAdvancedFilterBasic_IgnoreList then
@@ -250,14 +229,25 @@ local function Activate()
 		AucAdvancedFilterBasic_IgnoreList[realm] = realmtable
 	end
 
-	-- delete any Neutral entry - in case one was created by player using an outdated version
-	-- temp fix, to be removed at a later date -- ###
-	realmtable.Neutral = nil
-
-	IgnoreList = realmtable[faction]
+	IgnoreList = realmtable.List
 	if not IgnoreList then
 		IgnoreList = {}
-		realmtable[faction] = IgnoreList
+		realmtable.List = IgnoreList
+
+		-- If there are old-style data, merge them
+		if realmtable.Alliance then
+			for _, name in ipairs(realmtable.Alliance) do
+				tinsert(IgnoreList, name)
+			end
+		end
+		if realmtable.Horde then
+			for _, name in ipairs(realmtable.Horde) do
+				tinsert(IgnoreList, name)
+			end
+		end
+		if realmtable.Alliance or realmtable.Horde then
+			table.sort(IgnoreList)
+		end
 	end
 
 	IgnoreLookup = {}
@@ -266,11 +256,30 @@ local function Activate()
 	end
 	private.IgnoreListUpdate()
 
-	Activate = nil
+	-- delete any obsolete entries
+	-- temp fix, to be removed at a later date -- ###
+	realmtable.Neutral = nil
+	realmtable.Alliance = nil
+	realmtable.Horde = nil
+
+	UpdateDB = nil
 end
-lib.Processors.gameactive = function()
-	if Activate then Activate() end
+
+local function OnLoadRunOnce()
+	OnLoadRunOnce = nil
+	default("filter.basic.activated", true)
+	default("filter.basic.minquality", 1)
+	default("filter.basic.minlevel", 0)
+	default("filter.basic.ignoreself", false)
+
+	UpdateDB()
 end
+function lib.OnLoad(addon)
+	if OnLoadRunOnce then OnLoadRunOnce() end
+end
+
+lib.Processors = {}
+
 
 local function SetupConfigGui(gui)
 	-- The defaults for the following settings are set in the lib.OnLoad function
@@ -420,4 +429,4 @@ private.IgnorePrompt.no:SetPoint("BOTTOMRIGHT", private.IgnorePrompt, "BOTTOMRIG
 private.IgnorePrompt.no:SetScript("OnClick", private.OnPromptNo)
 private.IgnorePrompt.no:SetText(NO)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5318 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5602 $")

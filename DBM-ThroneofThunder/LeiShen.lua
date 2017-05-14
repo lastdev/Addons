@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -26,14 +26,10 @@ local warnStaticShock					= mod:NewTargetAnnounce(135695, 4)
 local warnDiffusionChain				= mod:NewTargetAnnounce(135991, 3)--More informative than actually preventative. (you need to just spread out, and that's it. can't control who it targets only that it doesn't spread)
 local warnDiffusionChainSpread			= mod:NewAnnounce("warnDiffusionChainSpread", 4, 135991)
 local warnOvercharged					= mod:NewTargetAnnounce(136295, 3)
-local warnBouncingBolt					= mod:NewSpellAnnounce(136361, 3)
 --Phase 1
 local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, "Tank|Healer")
-local warnThunderstruck					= mod:NewCountAnnounce(135095, 3)--Target scanning seems to not work
 --Phase 2
 local warnPhase2						= mod:NewPhaseAnnounce(2)
-local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, "Tank|Healer")
-local warnLightningWhip					= mod:NewCountAnnounce(136850, 3)
 local warnSummonBallLightning			= mod:NewCountAnnounce(136543, 3)--This seems to be VERY important to spread for. It spawns an orb for every person who takes damage. MUST range 6 this.
 local warnGorefiendsGrasp				= mod:NewCountAnnounce(108199, 1)
 local warnMassSpellReflect				= mod:NewCountAnnounce(114028, 1)
@@ -54,7 +50,7 @@ local specWarnOverchargedNear			= mod:NewSpecialWarningClose(136295)
 local specWarnBouncingBoltSoon			= mod:NewSpecialWarningPreWarn(136361, nil, 4)
 local specWarnBouncingBolt				= mod:NewSpecialWarningSpell(136361)
 --Phase 1
-local specWarnDecapitate				= mod:NewSpecialWarningRun("OptionVersion2", 134912, nil, nil, nil, 4)
+local specWarnDecapitate				= mod:NewSpecialWarningRun(134912, nil, nil, 2, 4)
 local specWarnDecapitateOther			= mod:NewSpecialWarningTaunt(134912)
 local specWarnThunderstruck				= mod:NewSpecialWarningCount(135095, nil, nil, nil, 2)
 local specWarnCrashingThunder			= mod:NewSpecialWarningMove(135150)
@@ -73,28 +69,28 @@ local specWarnElectricalShockOther		= mod:NewSpecialWarningTaunt(136914)
 local specWarnHelmOfCommand				= mod:NewSpecialWarningYou(139011, nil, nil, nil, 3)
 
 --Conduits (All phases)
-local timerConduitCD					= mod:NewTimer(40, "timerConduitCD", 135695)
+local timerConduitCD					= mod:NewTimer(40, "timerConduitCD", 135695, nil, nil, 6)
 local timerStaticShock					= mod:NewBuffFadesTimer(8, 135695)
-local timerStaticShockCD				= mod:NewCDTimer(40, 135695)
-local timerDiffusionChainCD				= mod:NewCDTimer(40, 135991)
+local timerStaticShockCD				= mod:NewCDTimer(40, 135695, nil, nil, nil, 3)
+local timerDiffusionChainCD				= mod:NewCDTimer(40, 135991, nil, nil, nil, 3)
 local timerOvercharge					= mod:NewCastTimer(6, 136295)
-local timerOverchargeCD					= mod:NewCDTimer(40, 136295)
-local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361)
+local timerOverchargeCD					= mod:NewCDTimer(40, 136295, nil, nil, nil, 3)
+local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361, nil, nil, nil, 5)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank")--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank", nil, 5)--Cooldown with some variation. 50-57ish or so.
 local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
-local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095)--Seems like an exact bar
+local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095, nil, nil, nil, 3)--Seems like an exact bar
 --Phase 2
-local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank")
+local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank", nil, 5)
 local timerLightningWhip				= mod:NewCastTimer(4, 136850)
-local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850)--Also an exact bar
-local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543)--Seems exact on live, versus the variable it was on PTR
+local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850, nil, nil, nil, 3)--Also an exact bar
+local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543, nil, nil, nil, 1)--Seems exact on live, versus the variable it was on PTR
 --Phase 3
 local timerViolentGaleWinds				= mod:NewBuffActiveTimer(18, 136889)
-local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136889)
+local timerViolentGaleWindsCD			= mod:NewNextTimer(30.5, 136889, nil, nil, nil, 2)
 --Heroic
-local timerHelmOfCommand				= mod:NewCDTimer(14, 139011)
+local timerHelmOfCommand				= mod:NewCDTimer(14, 139011, nil, nil, nil, 3)
 local timerMassSpellReflect				= mod:NewBuffActiveTimer(5, 114028)
 
 local berserkTimer						= mod:NewBerserkTimer(900)--Confirmed in LFR, probably the same in all modes though?
@@ -196,7 +192,6 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 135095 then
 		self.vb.thunderCount = self.vb.thunderCount + 1
-		warnThunderstruck:Show(self.vb.thunderCount)
 		specWarnThunderstruck:Show(self.vb.thunderCount)
 		timerThunderstruck:Start()
 		if self.vb.phase < 3 then
@@ -209,7 +204,6 @@ function mod:SPELL_CAST_START(args)
 	--"<206.2 20:38:58> [UNIT_SPELLCAST_SUCCEEDED] Lei Shen [[boss1:Lightning Whip::0:136845]]", -- [13762] --This event comes about .5 seconds earlier than SPELL_CAST_START. Maybe worth using?
 	elseif spellId == 136850 then
 		self.vb.whipCount = self.vb.whipCount + 1
-		warnLightningWhip:Show(self.vb.whipCount)
 		specWarnLightningWhip:Show(self.vb.whipCount)
 		timerLightningWhip:Start()
 		if self.vb.phase < 3 then
@@ -218,7 +212,6 @@ function mod:SPELL_CAST_START(args)
 			timerLightningWhipCD:Start(30, self.vb.whipCount+1)
 		end
 	elseif spellId == 136478 then
-		warnFusionSlash:Show()
 		timerFussionSlashCD:Start()
 		if self:IsDifficulty("lfr25") then return end
 		specWarnFusionSlash:Show()
@@ -516,16 +509,10 @@ local function LoopIntermission()
 	end
 	if not mod.vb.westDestroyed or mod:IsHeroic() then
 		if mod:IsDifficulty("lfr25") then
-			warnBouncingBolt:Schedule(8.5)
-			specWarnBouncingBolt:Schedule(8.5)
 			timerBouncingBoltCD:Start(8.5)
 		elseif mod:IsHeroic() then
-			warnBouncingBolt:Schedule(15.5)--Delayed by second helm of command i believe
-			specWarnBouncingBolt:Schedule(15.5)
 			timerBouncingBoltCD:Start(15.5)
 		else
-			warnBouncingBolt:Schedule(14)
-			specWarnBouncingBolt:Schedule(14)
 			timerBouncingBoltCD:Start(14)
 		end
 	end
@@ -585,12 +572,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		end
 		if (not self.vb.westDestroyed and not self:IsDifficulty("lfr25")) or self:IsHeroic() then--Doesn't get cast in first wave in LFR, only second
 			if self:IsDifficulty("normal10") then--TODO, verify 25 man again.
-				warnBouncingBolt:Schedule(9)
-				specWarnBouncingBolt:Schedule(9)
 				timerBouncingBoltCD:Start(9)
 			else
-				warnBouncingBolt:Schedule(14)
-				specWarnBouncingBolt:Schedule(14)
 				timerBouncingBoltCD:Start(14)
 			end
 		end
@@ -605,14 +588,15 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self:IsHeroic() then
 			timerHelmOfCommand:Start(14)
 		end
-	elseif spellId == 136395 and self:AntiSpam(2, 3) and not self.vb.intermissionActive then--Bouncing Bolt (During intermission phases, it fires randomly, use scheduler and filter this :\)
-		warnBouncingBolt:Show()
+	elseif spellId == 136395 and self:AntiSpam(2, 3) then--Bouncing Bolt (During intermission phases, it fires randomly, use scheduler and filter this :\)
 		specWarnBouncingBolt:Show()
-		timerBouncingBoltCD:Start(40)
-		if not (self.vb.phase == 2 and self.vb.eastDestroyed) or not self:IsHeroic() then--Disable this countdown in phase 2 if using diffusion strat
-			countdownBouncingBolt:Start(40)
+		if not self.vb.intermissionActive then
+			timerBouncingBoltCD:Start(40)
+			if not (self.vb.phase == 2 and self.vb.eastDestroyed) or not self:IsHeroic() then--Disable this countdown in phase 2 if using diffusion strat
+				countdownBouncingBolt:Start(40)
+			end
+			specWarnBouncingBoltSoon:Schedule(36)
 		end
-		specWarnBouncingBoltSoon:Schedule(36)
 	elseif spellId == 136869 and self:AntiSpam(2, 4) then--Violent Gale Winds
 		warnViolentGaleWinds:Show()
 		timerViolentGaleWinds:Start()

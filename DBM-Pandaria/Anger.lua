@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(691, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(60491)
-mod:SetReCombatTime(20)
+mod:SetEncounterID(1564)
+mod:SetReCombatTime(20, 10)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetZone()
 
@@ -23,12 +24,12 @@ local specWarnUnleashedWrath	= mod:NewSpecialWarningSpell(119488, nil, nil, nil,
 local specWarnGrowingAnger		= mod:NewSpecialWarningYou(119622)
 local specWarnBitterThoughts	= mod:NewSpecialWarningMove(119610)
 
-local timerGrowingAngerCD		= mod:NewCDTimer(32, 119622)--Min 32.6~ Max 67.8
-local timerUnleashedWrathCD		= mod:NewCDTimer(53, 119488)--Based on rage, but timing is consistent enough to use a CD bar, might require some perfecting later, similar to xariona's special, if rage doesn't reset after wipes, etc.
+local timerGrowingAngerCD		= mod:NewCDTimer(32, 119622, nil, nil, nil, 3)--Min 32.6~ Max 67.8
+local timerUnleashedWrathCD		= mod:NewCDTimer(53, 119488, nil, nil, nil, 2)--Based on rage, but timing is consistent enough to use a CD bar, might require some perfecting later, similar to xariona's special, if rage doesn't reset after wipes, etc.
 local timerUnleashedWrath		= mod:NewBuffActiveTimer(24, 119488, nil, "Tank|Healer")
 
 mod:AddBoolOption("RangeFrame", true)--For Mind control spreading.
-mod:AddBoolOption("SetIconOnMC", true)
+mod:AddBoolOption("SetIconOnMC2", false)
 mod:AddReadyCheckOption(32099, false)
 
 local bitterThought = GetSpellInfo(119601)
@@ -77,14 +78,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 119622 then
 		warnGrowingAnger:CombinedShow(1.2, args.destName)
 		self:updateRangeFrame()
-		if self.Options.SetIconOnMC then--Set icons on first debuff to get an earlier spread out.
-			self:SetSortedIcon(1.2, args.destName, 8, 3, true)
-		end
 		if args:IsPlayer() then
 			specWarnGrowingAnger:Show()
 		end
 	elseif spellId == 119626 then
 		--Maybe add in function to update icons here in case of a spread that results in more then the original 3 getting the final MC debuff.
+		if self.Options.SetIconOnMC2 then--Set icons on first debuff to get an earlier spread out.
+			self:SetSortedIcon(1.2, args.destName, 8, 3, true)
+		end
 		warnAggressiveBehavior:CombinedShow(2.5, args.destName)
 		if args:IsPlayer() then
 			playerMCed = true
@@ -97,7 +98,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 119626 and self.Options.SetIconOnMC then--Remove them after the MCs break.
+	if spellId == 119626 and self.Options.SetIconOnMC2 then--Remove them after the MCs break.
 		self:SetIcon(args.destName, 0)
 		if args:IsPlayer() then
 			playerMCed = false

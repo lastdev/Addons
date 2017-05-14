@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CompactUI.lua 5523 2014-11-23 17:55:39Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CompactUI.lua 5694 2016-12-23 15:15:14Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -48,7 +48,7 @@ private.pageElements = {} -- cache pageContents subtables for reuse
 private.candy = {} -- decorative elements
 private.buttons = {}
 
-local searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch
+local searchname, searchminLevel, searchmaxLevel, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch, searchFilterData
 
 lib.Processors = {
 	config = function(callbackType, gui)
@@ -101,7 +101,7 @@ end
 --[[ Local functions ]]--
 function private.OnQuery(...)
 	-- copy query details
-	searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch = ...
+	searchname, searchminLevel, searchmaxLevel, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch, searchFilterData = ...
 	-- other functions hooking the query
 	if private.UpdateDetailColumn then private.UpdateDetailColumn(...) end
 end
@@ -110,7 +110,7 @@ function private.QueryCurrent(SortTable, SortColumn, reverse)
 	if SortTable == "bidder" or SortTable == "owner" then
 		OldSortAuctionApplySort(SortTable, SortColumn, reverse)
 	else
-		QueryAuctionItems(searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch)
+		QueryAuctionItems(searchname, searchminLevel, searchmaxLevel, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch, searchFilterData)
 	end
 end
 
@@ -124,7 +124,7 @@ end
 
 function private.HookAH()
 	private.HookAH = nil
-	lib.inUse = true -- deprecated
+	lib.inUse = true -- deprecated, use lib.IsActive()
 	private.switchUI:SetParent(AuctionFrameBrowse)
 	private.switchUI:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPRIGHT", -157, -17)
 
@@ -138,11 +138,25 @@ function private.HookAH()
 	local button, lastButton, origButton
 	local line
 
-	BrowseQualitySort:Hide()
-	BrowseLevelSort:Hide()
-	BrowseDurationSort:Hide()
-	BrowseHighBidderSort:Hide()
-	BrowseCurrentBidSort:Hide()
+	local function HideBlizzardColumnHeaders()
+		BrowseQualitySort:Hide()
+		BrowseLevelSort:Hide()
+		BrowseDurationSort:Hide()
+		BrowseHighBidderSort:Hide()
+		BrowseCurrentBidSort:Hide()
+	end
+	HideBlizzardColumnHeaders()
+	BrowseResetButton:HookScript("OnClick", HideBlizzardColumnHeaders)
+	hooksecurefunc("AuctionFrameBrowse_Reset", HideBlizzardColumnHeaders) -- hook this too, in case it's called by a third party AddOn
+	hooksecurefunc("AuctionFrameFilter_OnClick", function()
+		HideBlizzardColumnHeaders()
+		if AuctionFrameBrowse.selectedClass == TOKEN_FILTER_LABEL then
+			for pos, candy in ipairs(private.candy) do candy:Hide() end
+			BrowsePrevPageButton:Hide()
+			BrowseNextPageButton:Hide()
+			BrowseSearchCountText:Hide()
+		end
+	end) -- AuctionFrameFilter_OnClick
 
 	local NEW_NUM_BROWSE = 14
 	for i = 1, NEW_NUM_BROWSE do
@@ -306,8 +320,8 @@ function private.HookAH()
 					local pos = private.headers.pos
 					if pos == 1 then col = "minbidbuyout" -- Buy
 					elseif pos == 2 then col = "bid" -- Bid
-					--elseif pos == 3 then <?> -- BuyEach
-					--elseif pos == 4 then <?> -- BidEach
+					elseif pos == 3 then col = "unitprice" -- BuyEach
+					elseif pos == 4 then col = "unitprice" -- BidEach -- there is no BidEach server sort command, so we just use "unitprice" here
 					end
 				--elseif sort == 8 then <?> -- PriceLevel
 				end
@@ -374,39 +388,46 @@ function private.HookAH()
 
 	-- Column 3 special handling: label changes depending on queried class/subclass filters
 	local detail = private.headers[3]
-	function private.UpdateDetailColumn(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll)
-		local text = GetDetailColumnString(classIndex, subclassIndex)
-		if text == "SLOT_ABBR" then
-			detail.Text:SetText("Slot")
-		elseif text == "SKILL_ABBR" then
-			detail.Text:SetText("Skill")
-		else
-			detail.Text:SetText("Min")
+	function private.UpdateDetailColumn(name, minLevel, maxLevel, page, isUsable, qualityIndex, GetAll, exactMatch, filterData)
+		-- Detail should be set to "Slot" for bags, "Skill" for recipes, otherwise "Min"
+		-- Inspect filterData, looking for any classID other than for container or recipe
+		local detailText = "Min"
+		if filterData then
+			local allBags, allRecipes = true, true
+			local bagID, recipeID = LE_ITEM_CLASS_CONTAINER, LE_ITEM_CLASS_RECIPE
+			for _, filter in ipairs(filterData) do
+				if filter.classID ~= bagID then allBags = false end
+				if filter.classID ~= recipeID then allRecipes = false end
+			end
+			if allBags then detailText = "Slot"
+			elseif allRecipes then detailText = "Skill" end
 		end
+
+		detail.Text:SetText(detailText)
 	end
 
 	local tex
 	tex = AuctionFrameBrowse:CreateTexture()
-	tex:SetTexture(1,1,1, 0.05)
+	tex:SetColorTexture(1,1,1, 0.05)
 	tex:SetPoint("TOPLEFT", private.buttons[1].rLevel, "TOPLEFT")
 	tex:SetPoint("BOTTOMRIGHT", private.buttons[NEW_NUM_BROWSE].rLevel, "BOTTOMRIGHT")
 	tinsert(private.candy, tex)
 
 	tex = AuctionFrameBrowse:CreateTexture()
-	tex:SetTexture(1,1,1, 0.05)
+	tex:SetColorTexture(1,1,1, 0.05)
 	tex:SetPoint("TOPLEFT", private.buttons[1].tLeft, "TOPLEFT")
 	tex:SetPoint("BOTTOMRIGHT", private.buttons[NEW_NUM_BROWSE].tLeft, "BOTTOMRIGHT")
 	tinsert(private.candy, tex)
 
 	tex = AuctionFrameBrowse:CreateTexture()
-	tex:SetTexture(1,1,1, 0.05)
+	tex:SetColorTexture(1,1,1, 0.05)
 	tex:SetPoint("TOPLEFT", private.buttons[1].Owner, "TOPRIGHT", 2, 0)
 	tex:SetPoint("BOTTOM", private.buttons[NEW_NUM_BROWSE].Buy, "BOTTOM", 0, 0)
 	tex:SetPoint("RIGHT", private.buttons[1].Bid, "RIGHT", -10, 0)
 	tinsert(private.candy, tex)
 
 	tex = AuctionFrameBrowse:CreateTexture()
-	tex:SetTexture(1,1,0.5, 0.1)
+	tex:SetColorTexture(1,1,0.5, 0.1)
 	tex:SetPoint("TOPLEFT", private.buttons[NEW_NUM_BROWSE].Count, "BOTTOMLEFT", 0, -1)
 	tex:SetWidth(610)
 	tex:SetHeight(38)
@@ -584,8 +605,8 @@ function private.RetrievePage()
 			item[1] = i
 			item[2] = selected == i
 
-			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId =  GetAuctionItemInfo("list", i)
-			local _, _, _, itemLevel, itemDetail = GetItemInfo(itemId) -- itemDetail = minUseLevel
+			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName =  GetAuctionItemInfo("list", i)
+			local _, _, _, itemLevel, itemDetail = GetItemInfo(link) -- itemDetail = minUseLevel
 
 			if levelColHeader == "ITEM_LEVEL_ABBR" then
 				itemLevel = level
@@ -676,11 +697,11 @@ function private.SetAuction(button, pos)
 	end
 
 	if (selected) then
-		button.LineTexture:SetTexture(1,1,0.3, 0.2)
+		button.LineTexture:SetColorTexture(1,1,0.3, 0.2)
 	elseif (pos % 2 == 0) then
-		button.LineTexture:SetTexture(0.3,0.3,0.4, 0.1)
+		button.LineTexture:SetColorTexture(0.3,0.3,0.4, 0.1)
 	else
-		button.LineTexture:SetTexture(0,0,0.1, 0.1)
+		button.LineTexture:SetColorTexture(0,0,0.1, 0.1)
 	end
 	button.id = id
 
@@ -748,65 +769,62 @@ function private.SetAuction(button, pos)
 end
 
 function private.MyAuctionFrameUpdate()
-	if not BrowseScrollFrame then return end
+	if AuctionFrameBrowse.selectedClass ~= TOKEN_FILTER_LABEL then
+		if not BrowseScrollFrame then return end
 
-	if WOWEcon_AH_PerItem_Enable
-	and WOWEcon_AH_PerItem_Enable:IsVisible() then
-		WOWEcon_AH_PerItem_Enable:Hide()
-	end
-
-	if AucAdvanced.API.IsBlocked() then
-		for pos, candy in ipairs(private.candy) do candy:Hide() end
-		BrowsePrevPageButton:Hide()
-		BrowseNextPageButton:Hide()
-		BrowseSearchCountText:Hide()
-		return
-	end
-
-	local numBatchAuctions, totalAuctions = private.RetrievePage()
-	local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame)
-
-	BrowseBidButton:Disable()
-	BrowseBuyoutButton:Disable()
-
-	BrowseNoResultsText:SetShown(numBatchAuctions == 0)
-
-	private.RetrievePage()
-	for i=1, NUM_BROWSE_TO_DISPLAY do
-		local index = offset + i
-		local button = private.buttons[i]
-		if index > numBatchAuctions then
-			button:SetAuction() -- empty auction
-		else
-			button:SetAuction(index)
+		if AucAdvanced.API.IsBlocked() then
+			for pos, candy in ipairs(private.candy) do candy:Hide() end
+			BrowsePrevPageButton:Hide()
+			BrowseNextPageButton:Hide()
+			BrowseSearchCountText:Hide()
+			return
 		end
-	end
 
-	if totalAuctions > 0 then
-		for _, candy in ipairs(private.candy) do candy:Show() end
-		BrowsePrevPageButton:Show()
-		BrowseNextPageButton:Show()
-		BrowseSearchCountText:Show()
-		local itemsMin = AuctionFrameBrowse.page * NUM_AUCTION_ITEMS_PER_PAGE + 1
-		local itemsMax = itemsMin + numBatchAuctions - 1
-		local pageMax = ceil(totalAuctions/NUM_AUCTION_ITEMS_PER_PAGE)
-		BrowseSearchCountText:SetFormattedText(NUMBER_OF_RESULTS_TEMPLATE, itemsMin, itemsMax, totalAuctions)
-		if totalAuctions > NUM_AUCTION_ITEMS_PER_PAGE then
-			BrowsePrevPageButton.isEnabled = AuctionFrameBrowse.page > 0
-			BrowseNextPageButton.isEnabled = AuctionFrameBrowse.page < pageMax - 1
-		else
-			BrowsePrevPageButton.isEnabled = false
-			BrowseNextPageButton.isEnabled = false
+		local numBatchAuctions, totalAuctions = private.RetrievePage()
+		local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame)
+
+		BrowseBidButton:Disable()
+		BrowseBuyoutButton:Disable()
+
+		BrowseNoResultsText:SetShown(numBatchAuctions == 0)
+
+		private.RetrievePage()
+		for i=1, NUM_BROWSE_TO_DISPLAY do
+			local index = offset + i
+			local button = private.buttons[i]
+			if index > numBatchAuctions then
+				button:SetAuction() -- empty auction
+			else
+				button:SetAuction(index)
+			end
 		end
-		private.PageNum:SetFormattedText("%d/%d", AuctionFrameBrowse.page+1, pageMax)
-	else
-		for _, candy in ipairs(private.candy) do candy:Hide() end
-		BrowsePrevPageButton:Hide()
-		BrowseNextPageButton:Hide()
-		BrowseSearchCountText:Hide()
+
+		if totalAuctions > 0 then
+			for _, candy in ipairs(private.candy) do candy:Show() end
+			BrowsePrevPageButton:Show()
+			BrowseNextPageButton:Show()
+			BrowseSearchCountText:Show()
+			local itemsMin = AuctionFrameBrowse.page * NUM_AUCTION_ITEMS_PER_PAGE + 1
+			local itemsMax = itemsMin + numBatchAuctions - 1
+			local pageMax = ceil(totalAuctions/NUM_AUCTION_ITEMS_PER_PAGE)
+			BrowseSearchCountText:SetFormattedText(NUMBER_OF_RESULTS_TEMPLATE, itemsMin, itemsMax, totalAuctions)
+			if totalAuctions > NUM_AUCTION_ITEMS_PER_PAGE then
+				BrowsePrevPageButton.isEnabled = AuctionFrameBrowse.page > 0
+				BrowseNextPageButton.isEnabled = AuctionFrameBrowse.page < pageMax - 1
+			else
+				BrowsePrevPageButton.isEnabled = false
+				BrowseNextPageButton.isEnabled = false
+			end
+			private.PageNum:SetFormattedText("%d/%d", AuctionFrameBrowse.page+1, pageMax)
+		else
+			for _, candy in ipairs(private.candy) do candy:Hide() end
+			BrowsePrevPageButton:Hide()
+			BrowseNextPageButton:Hide()
+			BrowseSearchCountText:Hide()
+		end
+		FauxScrollFrame_Update(BrowseScrollFrame, numBatchAuctions, NUM_BROWSE_TO_DISPLAY, AUCTIONS_BUTTON_HEIGHT)
+		AucAdvanced.API.ListUpdate()
 	end
-	FauxScrollFrame_Update(BrowseScrollFrame, numBatchAuctions, NUM_BROWSE_TO_DISPLAY, AUCTIONS_BUTTON_HEIGHT)
-	AucAdvanced.API.ListUpdate()
 end
 
 --create the configure UI button.
@@ -893,4 +911,4 @@ function lib.GetButtons()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5523 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5694 $")

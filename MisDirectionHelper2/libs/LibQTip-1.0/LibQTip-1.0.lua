@@ -1,5 +1,5 @@
 local MAJOR = "LibQTip-1.0"
-local MINOR = 43 -- Should be manually increased
+local MINOR = 44 -- Should be manually increased
 assert(LibStub, MAJOR .. " requires LibStub")
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -45,6 +45,8 @@ lib.activeTooltips = lib.activeTooltips or {}
 lib.tooltipHeap = lib.tooltipHeap or {}
 lib.frameHeap = lib.frameHeap or {}
 lib.tableHeap = lib.tableHeap or {}
+
+lib.onReleaseHandlers = lib.onReleaseHandlers or {}
 
 local tipPrototype = lib.tipPrototype
 local tipMetatable = lib.tipMetatable
@@ -156,9 +158,9 @@ local frameHeap = lib.frameHeap
 local function AcquireFrame(parent)
 	local frame = tremove(frameHeap) or CreateFrame("Frame")
 	frame:SetParent(parent)
-	--[===[@debug@
+	--@debug@
 	usedFrames = usedFrames + 1
-	--@end-debug@]===]
+	--@end-debug@
 	return frame
 end
 
@@ -169,9 +171,9 @@ local function ReleaseFrame(frame)
 	frame:SetBackdrop(nil)
 	ClearFrameScripts(frame)
 	tinsert(frameHeap, frame)
-	--[===[@debug@
+	--@debug@
 	usedFrames = usedFrames - 1
-	--@end-debug@]===]
+	--@end-debug@
 end
 
 ------------------------------------------------------------------------------
@@ -340,9 +342,9 @@ function AcquireTooltip()
 		tooltip.scrollChild = scrollChild
 		setmetatable(tooltip, tipMetatable)
 	end
-	--[===[@debug@
+	--@debug@
 	usedTooltips = usedTooltips + 1
-	--@end-debug@]===]
+	--@end-debug@
 	return tooltip
 end
 
@@ -355,7 +357,15 @@ function ReleaseTooltip(tooltip)
 
 	tooltip:Hide()
 
-	if tooltip.OnRelease then
+	local releaseHandler = lib.onReleaseHandlers[tooltip]
+	if releaseHandler then
+		lib.onReleaseHandlers[tooltip] = nil
+
+		local success, errorMessage = pcall(releaseHandler, tooltip)
+		if not success then
+			geterrorhandler()(errorMessage)
+		end
+	elseif tooltip.OnRelease then
 		local success, errorMessage = pcall(tooltip.OnRelease, tooltip)
 		if not success then
 			geterrorhandler()(errorMessage)
@@ -393,9 +403,9 @@ function ReleaseTooltip(tooltip)
 	highlightTexture:SetTexture(DEFAULT_HIGHLIGHT_TEXTURE_PATH)
 	highlightTexture:SetTexCoord(0, 1, 0, 1)
 
-	--[===[@debug@
+	--@debug@
 	usedTooltips = usedTooltips - 1
-	--@end-debug@]===]
+	--@end-debug@
 end
 
 ------------------------------------------------------------------------------
@@ -444,9 +454,9 @@ local tableHeap = lib.tableHeap
 -- Returns a table
 function AcquireTable()
 	local tbl = tremove(tableHeap) or {}
-	--[===[@debug@
+	--@debug@
 	usedTables = usedTables + 1
-	--@end-debug@]===]
+	--@end-debug@
 	return tbl
 end
 
@@ -454,9 +464,9 @@ end
 function ReleaseTable(table)
 	wipe(table)
 	tinsert(tableHeap, table)
-	--[===[@debug@
+	--@debug@
 	usedTables = usedTables - 1
-	--@end-debug@]===]
+	--@end-debug@
 end
 
 ------------------------------------------------------------------------------
@@ -1330,9 +1340,16 @@ end
 -- :SetAutoHideDelay(0.25) => hides after 0.25sec outside of the tooltip
 -- :SetAutoHideDelay(0.25, someFrame) => hides after 0.25sec outside of both the tooltip and someFrame
 -- :SetAutoHideDelay() => disable auto-hiding (default)
-function tipPrototype:SetAutoHideDelay(delay, alternateFrame)
+function tipPrototype:SetAutoHideDelay(delay, alternateFrame, releaseHandler)
 	local timerFrame = self.autoHideTimerFrame
 	delay = tonumber(delay) or 0
+
+	if releaseHandler then
+		if type(releaseHandler) ~= "function" then
+			error("releaseHandler must be a function", 2)
+		end
+		lib.onReleaseHandlers[self] = releaseHandler
+	end
 
 	if delay > 0 then
 		if not timerFrame then

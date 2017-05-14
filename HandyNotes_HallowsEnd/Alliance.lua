@@ -386,3 +386,29 @@ points["ValleyoftheFourWinds"] = {
 	[83642019] = 32048, -- Pang's Stead
 	[19885582] = 32046, -- Stoneplow
 }
+
+
+-------------
+-- Draenor --
+-------------
+points["garrisonsmvalliance_tier3"] = {
+	[43765159] = 39657, -- Lunarfall Garrison
+}
+
+points["ShadowmoonValleyDR"] = {
+	[30181800] = 39657, -- Lunarfall Garrison
+}
+
+
+------------------
+-- Broken Isles --
+------------------
+points["BrokenIsles"] = {
+	[45776429] = 43055, -- The Ledgerdemain Lounge
+	[45486526] = 43056, -- Greyfang Enclave
+}
+
+points["Dalaran70"] = {
+	[47954177] = 43055, -- The Ledgerdemain Lounge
+	[41486398] = 43056, -- Greyfang Enclave
+}

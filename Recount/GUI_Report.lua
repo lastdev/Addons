@@ -3,7 +3,7 @@ local Recount = _G.Recount
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1309 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -28,7 +28,7 @@ local CreateFrame = CreateFrame
 
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 
-local me = {}
+local me = { }
 
 local ReportLocations = {
 	{L["Say"], "SAY"},
@@ -41,8 +41,8 @@ local ReportLocations = {
 	{L["Raid"], "RAID", function()
 		return UnitInRaid("player")
 	end},
-	{L["Guild"], "GUILD",IsInGuild},
-	{L["Officer"], "OFFICER",IsInGuild},
+	{L["Guild"], "GUILD", IsInGuild},
+	{L["Officer"], "OFFICER", IsInGuild},
 	-- H.Schuetz - added RealID
 	{"RealID", "REALID"},
 	{L["Whisper"], "WHISPER"},
@@ -52,7 +52,7 @@ local ReportLocations = {
 local ReportList
 
 function me:CreateReportList()
-	ReportList = {}
+	ReportList = { }
 
 	for _, v in ipairs(ReportLocations) do
 		if type(v[3]) == "function" and v[3]() then
@@ -200,7 +200,7 @@ function me:CreateReportWindow()
 
 	theFrame:Hide()
 
-	me.Rows = {}
+	me.Rows = { }
 	me.NumRows = 0
 
 	theFrame:SetFrameStrata("DIALOG")

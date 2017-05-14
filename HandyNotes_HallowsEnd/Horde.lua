@@ -367,3 +367,29 @@ points["ValleyoftheFourWinds"] = {
 	[83642015] = 32048, -- Pang's Stead
 	[19875579] = 32046, -- Stoneplow
 }
+
+
+-------------
+-- Draenor --
+-------------
+points["garrisonffhorde_tier3"] = {
+	[47083791] = 39657, -- Frostwall Garrison
+}
+
+points["FrostfireRidge"] = {
+	[48276471] = 39657, -- Frostwall Garrison
+}
+
+
+------------------
+-- Broken Isles --
+------------------
+points["BrokenIsles"] = {
+	[45776429] = 43055, -- The Ledgerdemain Lounge
+	[46606373] = 43057, -- Windrunner's Sanctuary
+}
+
+points["Dalaran70"] = {
+	[47954177] = 43055, -- The Ledgerdemain Lounge
+	[67042940] = 43057, -- Windrunner's Sanctuary
+}

@@ -21,7 +21,8 @@ L:SetOptionLocalization({
 	specWarnYourNext	= "Spezialwarnung, wenn du als nächstes dran bist",
 	specWarnYourTurn	= "Spezialwarnung, wenn es dein Kampf ist",
 	SpectatorMode		= "Zeige Warnungen/Timer auch beim Zuschauen fremder Kämpfe<br/>(persönliche Spezialwarnungsmeldungen werden nicht angezeigt)",
-	SpeakOutQueue		= "Verkünde akustisch deine aktuelle Position in der Warteschlange<br/>(bei jeder Änderung)"
+	SpeakOutQueue		= "Verkünde akustisch deine aktuelle Position in der Warteschlange<br/>(bei jeder Änderung)",
+	NormalizeVolume		= "Setze im Kampfgildengebiet die Lautstärke des DIALOG-Audiokanals automatisch auf die Lautstärke des SFX-Audiokanals, damit der Jubel nicht so laut ist."
 })
 
 L:SetMiscLocalization({
@@ -113,6 +114,7 @@ L:SetGeneralLocalization({
 	name = "Kampfgilde: Rang 7"
 })
 
+--[[
 ------------
 -- Rank 8 --
 ------------
@@ -130,23 +132,28 @@ L= DBM:GetModLocalization("BrawlRank9")
 L:SetGeneralLocalization({
 	name = "Kampfgilde: Rang 9"
 })
+--]]
 
 -------------
--- Rares 1 --
+-- Brawlers: Legacy --
 -------------
-L= DBM:GetModLocalization("BrawlRare1")
+L= DBM:GetModLocalization("BrawlLegacy")
 
 L:SetGeneralLocalization({
-	name = "Kampfgilde: Klassische Herausford."
+	name = "Kampfgilde: alte Gegner"
+})
+
+L:SetOptionLocalization({
+	SpeakOutStrikes		= "Verkünde akustisch die Anzahl der $spell:141190 Angriffe"
 })
 
 -------------
--- Rares 2 --
+-- Brawlers: Challenges --
 -------------
-L= DBM:GetModLocalization("BrawlRare2")
+L= DBM:GetModLocalization("BrawlChallenges")
 
 L:SetGeneralLocalization({
-	name = "Kampfgilde: Spezielle Herausford."
+	name = "Kampfgilde: Herausforderungen"
 })
 
 L:SetWarningLocalization({
@@ -155,12 +162,20 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	ArrowOnBoxing		= "Zeige DBM-Pfeil während $spell:140868, $spell:140862 und $spell:140886",
-	specWarnRPS			= "Spezialwarnung für die richtige Auswahl bei $spell:141206",
-	SpeakOutStrikes		= "Verkünde akustisch die Anzahl der $spell:141190 Angriffe"
+	specWarnRPS			= "Spezialwarnung für die richtige Auswahl bei $spell:141206"
 })
 
 L:SetMiscLocalization({
 	rock			= "Stein",
 	paper			= "Papier",
 	scissors		= "Schere"
+})
+
+-------------
+-- Brawlers: Rumble --
+-------------
+L= DBM:GetModLocalization("BrawlRumble")
+
+L:SetGeneralLocalization({
+	name = "Kampfgilde: Prügeleien"
 })

@@ -102,10 +102,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "Ping sur la minimap lorsque le Général Umbriss est sur le point de vous faire une Attaque éclair"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "Son regard se fixe sur |cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -115,10 +111,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "Dragon, vous faites ce que je commande! Attrape-moi!"	-- Yell when Valiona is incoming
-}
 
 ------------
 -- Erudax --
@@ -325,14 +317,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Alerte spéciale pour le sort $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "SAUTE !"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------
@@ -365,8 +349,7 @@ L= DBM:GetModLocalization(186)
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
 	RangeFrame	= "Show range frame (10 yards)",
-	StormArrow	= "Show DBM Arrow for $spell:43648",
-	SetIconOnEagle	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97318)
+	StormArrow	= "Show DBM Arrow for $spell:43648"
 }
 
 ---------------
@@ -481,8 +464,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "Announce how many ghost revive remaining",
-	SpecWarnOhgan	= "Show warning when Ohgan is revived", -- check this, i'm not good at English
-	SetIconOnOhgan	= "Put an icon on Ohgan when he revives" 
+	SpecWarnOhgan	= "Show warning when Ohgan is revived" -- check this, i'm not good at English
 }
 
 ----------------------

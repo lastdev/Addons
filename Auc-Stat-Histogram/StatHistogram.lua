@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Histogram Statistics module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: StatHistogram.lua 5154 2011-05-13 23:15:57Z kandoko $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: StatHistogram.lua 5680 2016-10-26 18:48:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -34,31 +34,45 @@
 if not AucAdvanced then return end
 
 local libType, libName = "Stat", "Histogram"
+local LIBSTRING = libType.."-"..libName
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local Resources = AucAdvanced.Resources
+local GetStoreKey = AucAdvanced.API.GetStoreKeyFromLinkB
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+
+local DATABASE_VERSION = 3.0
+local TABLE_DIVIDER = ";"
+local DATA_DIVIDER = "!"
+local PROPERTY_DIVIDER = "@"
+local ITEM_DIVIDER = "_"
+local PET_BAND = 10
+
 local tonumber,pairs,type,setmetatable=tonumber,pairs,type,setmetatable
 local strsplit,strjoin = strsplit,strjoin
 local min,max,abs,ceil,floor = min,max,abs,ceil,floor
-local concat = table.concat
+local tconcat = table.concat
 local wipe,unpack = wipe,unpack
 
-local GetFaction = AucAdvanced.GetFaction
 
-local data
-local totaldata
-local stattable = {}
+local RealmData
+local StatTable = {}
 local PDcurve = {}
-local newstats = {}
 local array = {}
 local frame
 local pricecache
+local meta0 = {__index = function() return 0 end}
+
+function private.ClearCache()
+	pricecache = nil
+end
+
 
 function lib.CommandHandler(command, ...)
-	if (not data) then private.makeData() end
-	local serverKey = GetFaction()
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+	local serverKey = Resources.ServerKey
+	local keyText = AucAdvanced.GetServerKeyText(serverKey)
 	if (command == "help") then
 		aucPrint(_TRANS('SHTG_Help_SlashHelp1') )--Help for Auctioneer - Histogram
 		local line = AucAdvanced.Config.GetCommandLead(libType, libName)
@@ -69,155 +83,128 @@ function lib.CommandHandler(command, ...)
 	end
 end
 
-function lib.Processor(callbackType, ...)
-	if (not data) then private.makeData() end
-	if (callbackType == "tooltip") then
-		lib.ProcessTooltip(...)
-	elseif (callbackType == "config") then
+lib.Processors = {
+	itemtooltip = function(callbackType, ...)
+		private.ProcessTooltip(...)
+	end,
+	config = function(callbackType, gui)
 		--Called when you should build your Configator tab.
-		private.SetupConfigGui(...)
-	elseif (callbackType == "load") then
-		lib.OnLoad(...)
-	elseif (callbackType == "scanstats") then
-		pricecache = nil
-	elseif callbackType == "auctionclose" then
-		pricecache = nil	-- not actually needed, just conserving RAM
-	end
-end
-
-lib.Processors = {}
-function lib.Processors.tooltip(callbackType, ...)
-	if (not data) then private.makeData() end
-	lib.ProcessTooltip(...)
-end
-function lib.Processors.config(callbackType, ...)
-	if (not data) then private.makeData() end
-	--Called when you should build your Configator tab.
-	private.SetupConfigGui(...)
-end
-function lib.Processors.load(callbackType, ...)
-	if (not data) then private.makeData() end
-	lib.OnLoad(...)
-end
-function lib.Processors.scanstats(callbackType, ...)
-	if (not data) then private.makeData() end
-	pricecache = nil
-end
-function lib.Processors.auctionclose(callbackType, ...)
-	if (not data) then private.makeData() end
-	pricecache = nil	-- not actually needed, just conserving RAM
-end
-
+		if private.SetupConfigGui then private.SetupConfigGui(gui) end
+	end,
+}
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
+lib.Processors.scanstats = private.ClearCache
+lib.Processors.auctionclose = private.ClearCache -- not actually needed, just conserving RAM
 
 function private.GetPriceData()
-	if not stattable["count"] then
-		debugPrint("GetPriceData: No stattable", libType.."-"..libName, "Warning")
+	if not StatTable.count then
+		debugPrint("GetPriceData: No data in StatTable", LIBSTRING, "Error")
 		return
 	end
-	local median = 0
-	local Qone = 0
-	local Qthree = 0
-	local percent40, percent30 = 0, 0
-	local count = stattable["count"]
+	local median, Qone, Qthree, percent40, percent30 = 0, 0, 0, 0, 0
+	local count = StatTable.count
 	local refactored = false
-	local recount = 0
 	--now find the Q1, median, and Q3 values
-	if stattable["min"] == stattable["max"] then
+	if StatTable.min == StatTable.max then
 		--no need to do fancy median calculations
-		median = stattable["min"]*stattable["step"]
+		median = StatTable.min * StatTable.step
 		--count = value at the only index we have
-		count = stattable[stattable["min"]]
-		stattable["count"] = count
+		count = StatTable[StatTable.min]
+		StatTable.count = count
 	else
-		for i = stattable["min"], stattable["max"] do
-			recount = recount + (stattable[i] or 0)
+		local recount = 0
+		for i = StatTable.min, StatTable.max do
+			recount = recount + (StatTable[i] or 0)
 			if Qone == 0 and count > 4 then --Q1 is meaningless with very little data
-				if recount >= count/4 then
-					Qone = i*stattable["step"]
+				if recount >= count * 0.25 then
+					Qone = i * StatTable.step
 				end
 			end
 			if percent30 == 0 then
-				if recount >= count*0.3 then
-					percent30 = i*stattable["step"]
+				if recount >= count * 0.3 then
+					percent30 = i * StatTable.step
 				end
 			end
 			if percent40 == 0 then
-				if recount >= count*0.4 then
-					percent40 = i*stattable["step"]
+				if recount >= count * 0.4 then
+					percent40 = i * StatTable.step
 				end
 			end
 			if median == 0 then
-				if recount >= count/2 then
-					median = i*stattable["step"]
+				if recount >= count * 0.5 then
+					median = i * StatTable.step
 				end
 			end
 			if Qthree == 0 and count > 4 then--Q3 is meaningless with very little data
-				if recount >= count * 3/4 then
-					Qthree = i*stattable["step"]
+				if recount >= count * 0.75 then
+					Qthree = i * StatTable.step
 				end
 			end
 		end
 		if count ~= recount then
-			count = recount --We've just rechecked the count, so save the correct value
-			stattable["count"] = count
+			-- This should not happen, but was sometimes occurring in earlier builds. Make correction and report if it happens again.
+			count = recount
+			StatTable.count = count
 			refactored = true
+			debugPrint("GetPriceData: corrected count mismatch", LIBSTRING, "Warning")
 		end
 	end
-	local step = stattable["step"]
+	local step = StatTable.step
 	if count > 20 then --we've seen enough to get a fairly decent price to base the precision on
-		if (step > (median/85)) and (step > 1) then
-			private.refactor(median*3, 300)
+		if (step > (median / 85)) and (step > 1) then
+			private.refactor(median * 3, 300)
 			refactored = true
-		elseif step < (median/115) then
-			private.refactor(median*3, 300)
+		elseif step < (median / 115) then
+			private.refactor(median * 3, 300)
 			refactored = true
 		end
 	end
 	return median, Qone, Qthree, step, count, refactored, percent40, percent30
 end
 
-function lib.GetPrice(link, faction)
+function lib.GetPrice(link, serverKey)
 	if not get("stat.histogram.enable") then return end
-	wipe(stattable)
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(link)
-	if (linkType ~= "item") then return end
-	if (factor and factor ~= 0) then property = property.."x"..factor end
 
-	if not faction then faction = GetFaction() end
-	if (not data[faction]) or (not data[faction][itemId]) or (not data[faction][itemId][property]) then
-		--debugPrint("GetPrice: No data", libType.."-"..libName, "Info")
-		return
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+
+	local itemID, property = GetStoreKey(link, PET_BAND)
+	if not itemID then return end
+
+	-- ### todo: rethink cache
+	if pricecache and pricecache[serverKey] and pricecache[serverKey][itemID] and pricecache[serverKey][itemID][property] then
+		return unpack(pricecache[serverKey][itemID][property], 1, 7)
 	end
-	if pricecache and pricecache[faction] and pricecache[faction][itemId] and pricecache[faction][itemId][property] then
-		return unpack(pricecache[faction][itemId][property])
-	end
-	private.UnpackStats(data[faction][itemId][property])
+
+	if not private.StatTableOpen(serverKey, itemID, property) then return end -- fill in StatTable, bail if no data
+
 	local median, Qone, Qthree, step, count, refactored, percent40, percent30 = private.GetPriceData()
 	if refactored then
 		--data has been refactored, so we need to repack it
-		data[faction][itemId][property] = private.PackStats()
+		private.StatTableWrite(serverKey, itemID, property)
 		--get the updated data
 		median, Qone, Qthree, step, count = private.GetPriceData()
 	end
 	--we're done with the data, so clear the table
-	wipe(stattable)
+	private.StatTableClose()
+
 	if not pricecache then pricecache = {} end
-	if not pricecache[faction] then pricecache[faction] = {} end
-	if not pricecache[faction][itemId] then pricecache[faction][itemId] = {} end
-	pricecache[faction][itemId][property] = {median or false, Qone or false, Qthree or false, step or false, count or false}
+	if not pricecache[serverKey] then pricecache[serverKey] = {} end
+	if not pricecache[serverKey][itemID] then pricecache[serverKey][itemID] = {} end
+	pricecache[serverKey][itemID][property] = {median, Qone, Qthree, step, count, percent40, percent30}
 	return median, Qone, Qthree, step, count, percent40, percent30
 end
 
 
 function lib.GetPriceColumns()
-	return "Median", "Q1", "Q3", "step", "Seen"
+	return "Median", "Q1", "Q3", "step", "Seen", "Percent40", "Percent30"
 end
 
-function lib.GetPriceArray(link, faction)
+function lib.GetPriceArray(link, serverKey)
 	if not get("stat.histogram.enable") then return end
 	--make sure that array is empty
 	wipe(array)
-	local median, Qone, Qthree, step, count = lib.GetPrice(link, faction)
+	local median, Qone, Qthree, step, count, percent40, percent30 = lib.GetPrice(link, serverKey)
 	--these are the two values that GetMarketPrice cares about
 	array.price = median
 	array.seen = count
@@ -225,6 +212,8 @@ function lib.GetPriceArray(link, faction)
 	array.Qone = Qone
 	array.Qthree = Qthree
 	array.step = step
+	array.percent40 = percent40
+	array.percent30 = percent30
 
 	-- Return a temporary array. Data in this array is
 	-- only valid until this function is called again.
@@ -232,88 +221,66 @@ function lib.GetPriceArray(link, faction)
 end
 
 function private.ItemPDF(price)
-	if not PDcurve["step"] then return 0 end
-	local index = floor(price/PDcurve["step"])
-	if (index >= PDcurve["min"]) and (index <= PDcurve["max"]) then
+	if not PDcurve.step then return 0 end -- ### or PDcurve.step == 0
+	local index = floor(price / PDcurve.step)
+	if index >= PDcurve.min and index <= PDcurve.max then
 		return PDcurve[index]
 	else
 		return 0
 	end
 end
 
-function lib.GetItemPDF(link, faction)
+function lib.GetItemPDF(link, serverKey)
 	if not get("stat.histogram.enable") then return end
+
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+
+	local itemID, property = GetStoreKey(link, PET_BAND)
+	if not itemID then return end
+
+	if not private.StatTableOpen(serverKey, itemID, property) then return end -- fill in StatTable, bail if no data
+
+	-- ### todo: consider refactoring test here
+	-- ### todo 2: consider caching? May be impractical as we'd need to store entire PDcurve array?
+
 	wipe(PDcurve)
-	wipe(stattable)
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(link)
-	if (linkType ~= "item") then return end
-	if (factor and factor ~= 0) then property = property.."x"..factor end
 
-	if not faction then faction = GetFaction() end
-	if not data[faction] then return end
-	if not data[faction][itemId] then return end
-	if not data[faction][itemId][property] then return end
-	local median, Qone, Qthree, step, count, refactored
-	if pricecache and pricecache[faction] and pricecache[faction][itemId] and pricecache[faction][itemId][property] then
-		median, Qone, Qthree, step, count = unpack(pricecache[faction][itemId][property])
-	end
-
-	private.UnpackStats(data[faction][itemId][property])
-	if not count or count == 0 then
-		median, Qone, Qthree, step, count, refactored = private.GetPriceData()
-	end
-	if refactored then
-		--data has been refactored, so we need to repack it
-		data[faction][itemId][property] = private.PackStats()
-		--get the updated data
-		median, Qone, Qthree, step, count = private.GetPriceData()
-	end
-	if not count or count == 0 then
-		return
-	end
-
-	if not pricecache then pricecache = {} end
-	if not pricecache[faction] then pricecache[faction] = {} end
-	if not pricecache[faction][itemId] then pricecache[faction][itemId] = {} end
-	pricecache[faction][itemId][property] = {median or false, Qone or false, Qthree or false, step or false, count or false}
+	local count = StatTable.count
+	local step = StatTable.step
 
 	local curcount = 0
 	local area = 0
-	local targetarea = min(1, count/30) --if count is less than thirty, we're not very sure about the price
+	local targetarea = min(1, count / 30) --if count is less than thirty, we're not very sure about the price
 
-	PDcurve["step"] = step
-	PDcurve["min"] = stattable["min"]-1
-	PDcurve["max"] = stattable["max"]+1
+	PDcurve.step = step
+	PDcurve.min = StatTable.min - 1
+	PDcurve.max = StatTable.max + 1
 
-	for i = stattable["min"], stattable["max"] do
-		curcount = curcount + stattable[i]
-		if count == stattable[i] then
+	for i = StatTable.min, StatTable.max do
+		curcount = curcount + StatTable[i]
+		if count == StatTable[i] then
 			PDcurve[i] = 1
 		else
-			PDcurve[i] = 1-(abs(2*curcount - count)/count)
+			PDcurve[i] = 1 - abs(2 * curcount - count) / count
 		end
-		area = area + step*PDcurve[i]
+		area = area + step * PDcurve[i]
 	end
 
 	local areamultiplier = 1
-	if area > 0 then
-		areamultiplier = targetarea/area
+	if area > 0 then -- ### todo: should return nil if area == 0 ? can that even happen?
+		areamultiplier = targetarea / area
 	end
-	for i = PDcurve["min"], PDcurve["max"] do
+	for i = PDcurve.min, PDcurve.max do
 		PDcurve[i]= (PDcurve[i] or 0) * areamultiplier
 	end
-	return private.ItemPDF, PDcurve["min"]*PDcurve["step"], PDcurve["max"]*PDcurve["step"], targetarea
+	private.StatTableClose()
+	return private.ItemPDF, PDcurve.min * PDcurve.step, PDcurve.max * PDcurve.step, targetarea
 end
 
 lib.ScanProcessors = {}
 function lib.ScanProcessors.create(operation, itemData, oldData)
 	if not get("stat.histogram.enable") then return end
-	if (not data) then private.makeData() end
-
-	-- This function is responsible for processing and storing the stats after each scan
-	-- Note: itemData gets reused over and over again, so do not make changes to it, or use
-	-- it in places where you rely on it. Make a deep copy of it if you need it after this
-	-- function returns.
 
 	-- We're only interested in items with buyouts.
 	local buyout = itemData.buyoutPrice
@@ -321,72 +288,72 @@ function lib.ScanProcessors.create(operation, itemData, oldData)
 	if (itemData.stackSize > 1) then
 		buyout = buyout/itemData.stackSize
 	end
-	local priceindex
 
-	-- Get the signature of this item and find it's stats.
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(itemData.link)
-	if (linkType ~= "item") then return end
-	if (factor and factor ~= 0) then property = property.."x"..factor end
-	wipe(stattable)
-	local faction = GetFaction()
-	if not data[faction] then data[faction] = {} end
-	if not data[faction][itemId] then data[faction][itemId] = {} end
-	if data[faction][itemId][property] then
-		private.UnpackStats(data[faction][itemId][property])
+	local itemID, property = GetStoreKey(itemData.link, PET_BAND)
+	if not itemID then return end
+	local serverKey = Resources.ServerKey
+	private.StatTableOpen(serverKey, itemID, property, true) -- Fill StatTable; create new record for this item if one doesn't exist
+
+	if not StatTable.count then -- ### or StatTable.count == 0 ?
+		StatTable.step = ceil(buyout / 100)
+		StatTable.count = 0
 	end
-	if not stattable["count"] then
+	local priceindex = ceil(buyout / StatTable.step)
+	if StatTable.count <= 20 then
 		--start out with first 20 prices pushing max to 100.  This should help prevent losing data due to the first price being way too low
 		--also keeps data small initially, as we don't need extremely accurate prices with that little data
-		stattable["step"] = ceil(buyout / 100)
-		stattable["count"] = 0
-	end
-	priceindex = ceil(buyout / stattable["step"])
-	if stattable["count"] <= 20 then
-		stattable["count"] = stattable["count"] + 1
 		--get the refactoring out of the way first, because we're not capping the price yet
 		--failure to do this now can cause major trouble in the form of massive tables
 		if priceindex > 100 then
 			private.refactor(buyout, 100)
 			priceindex = 100
 		end
-		if not stattable["min"] then
-			stattable["min"] = priceindex
-			stattable["max"] = priceindex
-			stattable[priceindex] = 0
-		elseif stattable["min"] > priceindex then
-			for i = priceindex, (stattable["min"]-1) do
-				stattable[i] = 0
+		if not StatTable.min then
+			StatTable.min = priceindex
+			StatTable.max = priceindex
+			StatTable[priceindex] = 0
+		elseif StatTable.min > priceindex then
+			for i = priceindex, StatTable.min - 1 do
+				StatTable[i] = 0
 			end
-			stattable["min"] = priceindex
+			StatTable.min = priceindex
+		elseif StatTable.max < priceindex then
+			for i = StatTable.max + 1, priceindex do
+				StatTable[i] = 0
+			end
+			StatTable.max = priceindex
 		end
-		if not stattable[priceindex] then stattable[priceindex] = 0 end
-		stattable[priceindex] = stattable[priceindex] + 1
-		data[faction][itemId][property] = private.PackStats()
+		StatTable.count = StatTable.count + 1
+		if not StatTable[priceindex] then StatTable[priceindex] = 0 end
+		StatTable[priceindex] = StatTable[priceindex] + 1
+		private.StatTableWrite(serverKey, itemID, property)
 	elseif priceindex <= 300 then --we don't want prices too high: they'll bloat the data.  If range needs to go higher, we'll refactor later
-		stattable["count"] = stattable["count"] + 1
-		if not stattable["min"] then --first time we've seen this
-			stattable["min"] = priceindex
-			stattable["max"] = priceindex
-			stattable[priceindex] = 0
-		elseif stattable["min"] > priceindex then
-			for i = priceindex, (stattable["min"]-1) do
-				stattable[i] = 0
+		if not StatTable.min then --first time we've seen this -- ### todo: this should never happen?
+			debugPrint("create: count > 20 but no StatTable.min", LIBSTRING, "Warning")
+			StatTable.min = priceindex
+			StatTable.max = priceindex
+			StatTable[priceindex] = 0
+		elseif StatTable.min > priceindex then
+			for i = priceindex, StatTable.min - 1 do
+				StatTable[i] = 0
 			end
-			stattable["min"] = priceindex
-		elseif stattable["max"] < priceindex then
-			for i = (stattable["max"]+1),priceindex do
-				stattable[i] = 0
+			StatTable.min = priceindex
+		elseif StatTable.max < priceindex then
+			for i = StatTable.max + 1, priceindex do
+				StatTable[i] = 0
 			end
-			stattable["max"] = priceindex
+			StatTable.max = priceindex
 		end
-		if not stattable[priceindex] then stattable[priceindex] = 0 end
-		stattable[priceindex] = stattable[priceindex] + 1
-		data[faction][itemId][property] = private.PackStats()
+		StatTable.count = StatTable.count + 1
+		if not StatTable[priceindex] then StatTable[priceindex] = 0 end
+		StatTable[priceindex] = StatTable[priceindex] + 1
+		private.StatTableWrite(serverKey, itemID, property)
 	end
-	wipe(stattable)
+	private.StatTableClose()
 end
 
 function private.SetupConfigGui(gui)
+	private.SetupConfigGui = nil
 	local id = gui:AddTab(lib.libName, lib.libType.." Modules")
 
 	gui:AddHelp(id, "what histogram stats",
@@ -412,7 +379,7 @@ function private.SetupConfigGui(gui)
 	function frame.IconClicked()
 		local objtype, _, link = GetCursorInfo()
 		ClearCursor()
-		if objtype == "item" then
+		if objtype == "item" or objtype == "battlepet" then
 			lib.SetWorkingItem(link)
 		else
 			lib.SetWorkingItem()
@@ -466,7 +433,7 @@ function private.SetupConfigGui(gui)
 		local bar = frame.bargraph.bars[i]
 		bar:SetPoint("BOTTOMLEFT", frame.bargraph, "BOTTOMLEFT", (graphwidth*(i-1)/300)+5, 5)
 		bar:SetWidth(graphwidth/300)
-		bar:SetTexture(0.2, 0.8, 0.2)
+		bar:SetColorTexture(0.2, 0.8, 0.2)
 		function bar:SetValue(value)
 			if value == 0 then value = 0.001 end
 			self:SetHeight((self:GetParent():GetHeight()-20)*value)
@@ -480,7 +447,7 @@ function private.SetupConfigGui(gui)
 		pdf:SetPoint("BOTTOMLEFT", frame.bargraph, "BOTTOMLEFT", pdf.offset, 50)
 		pdf:SetWidth(graphwidth/300)
 		pdf:SetHeight(5)
-		pdf:SetTexture(.2, .2, 0.8, .6)
+		pdf:SetColorTexture(.2, .2, 0.8, .6)
 		function pdf:SetValue(value)
 			local bottom = (self:GetParent():GetHeight()-20)*value
 			self:SetPoint("BOTTOMLEFT", frame.bargraph, "BOTTOMLEFT", self.offset, bottom)
@@ -549,62 +516,68 @@ function lib.SetWorkingItem(link)
 	--clear the graph
 	frame.name:SetText(_TRANS('SHTG_Interface_InsertItemStart') )--Insert or Alt-Click Item to start
 	frame.icon:SetNormalTexture(nil) --set icon texture
+	frame.med:SetText("")
+	frame.max:SetText("")
 	frame.link = nil
 	for i = 1,300 do
 		frame.bargraph.bars[i]:SetValue(0)
-		frame.bargraph.bars[i]:SetTexture(0.2, 0.8, 0.2)
+		frame.bargraph.bars[i]:SetColorTexture(0.2, 0.8, 0.2)
 		frame.bargraph.pdf[i]:SetValue(0)
 	end
 
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(link)
-	if (linkType ~= "item") then return end
-	local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
-	if not name or not texture then return end
+	if not link then return end
+	local itemID, property, linktype = GetStoreKey(link, PET_BAND)
+	if not itemID then return end
+	local texture
+	if linktype == "item" then
+		texture = GetItemIcon(link)
+	elseif linktype == "battlepet" then
+		local speciesID = tonumber(strmatch(link, "battlepet:(%d+)"))
+		if speciesID then
+			local _, t = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+			texture = t
+		end
+	end
+	if not texture then return end
+
 	frame.name:SetText(link)
 	frame.link = link
 	frame.icon:SetNormalTexture(texture) --set icon texture
 
-	wipe(stattable)
-	if (factor and factor ~= 0) then property = property.."x"..factor end
 
-	local faction = GetFaction()
-	if (not data[faction]) or (not data[faction][itemId]) or (not data[faction][itemId][property]) then
-		debugPrint("SetWorkingItem: No data", libType.."-"..libName, "Info")
-		return
-	end
-	private.UnpackStats(data[faction][itemId][property])
+	if not private.StatTableOpen(Resources.ServerKey, itemID, property) then return end -- fill in StatTable, bail if no data
 
 	local maxvalue = 0
 	local indexes = 0
-	local count = stattable["count"]
+	local count = StatTable.count
 	local recount = 0
 	local median = 0
-	for i = stattable["min"], stattable["max"] do
-		indexes = indexes +1
-		if stattable[i] > maxvalue then maxvalue = stattable[i] end
-		recount = recount + stattable[i]
+	for i = StatTable.min, StatTable.max do
+		indexes = indexes +1 -- ### todo: not used anywhere?
+		if StatTable[i] > maxvalue then maxvalue = StatTable[i] end
+		recount = recount + StatTable[i]
 		if median == 0 then
 			if recount >= count/2 then
 				median = i
-				frame.bargraph.bars[i]:SetTexture(0.8, 0.2, 0.2)
+				frame.bargraph.bars[i]:SetColorTexture(0.8, 0.2, 0.2)
 			end
 		end
 	end
-	for i = stattable["min"], stattable["max"] do
-		frame.bargraph.bars[i]:SetValue(stattable[i]/maxvalue)
+	for i = StatTable.min, StatTable.max do
+		frame.bargraph.bars[i]:SetValue(StatTable[i]/maxvalue)
 	end
 
 	--now show the PD curve
 	wipe(PDcurve)
-	PDcurve["step"] = stattable["step"]
-	PDcurve["min"] = stattable["min"]
-	PDcurve["max"] = stattable["max"]
+	PDcurve.step = StatTable.step
+	PDcurve.min = StatTable.min
+	PDcurve.max = StatTable.max
 	local curcount = 0
-	count = stattable["count"]
+	count = StatTable.count -- ### todo: shouldn't have changed from above?
 	maxvalue = 0
-	for i = stattable["min"], stattable["max"] do
-		curcount = curcount + stattable[i]
-		if count == stattable[i] then
+	for i = StatTable.min, StatTable.max do
+		curcount = curcount + StatTable[i]
+		if count == StatTable[i] then
 			PDcurve[i] = 1
 		else
 			PDcurve[i] = 1-(abs(2*curcount - count)/count)
@@ -613,32 +586,29 @@ function lib.SetWorkingItem(link)
 			maxvalue = PDcurve[i]
 		end
 	end
-	for i = PDcurve["min"], PDcurve["max"] do
-		PDcurve[i]= (PDcurve[i] or 0)
+	for i = PDcurve.min, PDcurve.max do -- ### todo: can some of these extra loops be merged?
+		PDcurve[i]= PDcurve[i] or 0
 	end
 
 	for i = 1,300 do
-		if (i >= PDcurve["min"]) and (i <= PDcurve["max"]) then
+		if i >= PDcurve.min and i <= PDcurve.max then
 			frame.bargraph.pdf[i]:SetValue(PDcurve[i])
 		else
 			frame.bargraph.pdf[i]:SetValue(0)
 		end
 	end
 
-	frame.med:SetText("Median: "..AucAdvanced.Coins(median*stattable["step"], true))
-	frame.max:SetText("Max: "..AucAdvanced.Coins(300*stattable["step"], true))
+	frame.med:SetText("Median: "..AucAdvanced.Coins(median * StatTable.step, true)) -- ### todo: localize
+	frame.max:SetText("Max: "..AucAdvanced.Coins(300 * StatTable.step, true))
+	private.StatTableClose()
 end
 
-function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, ...)
-	-- In this function, you are afforded the opportunity to add data to the tooltip should you so
-	-- desire. You are passed a hyperlink, and it's up to you to determine whether or what you should
-	-- display in the tooltip.
-
+function private.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not get("stat.histogram.tooltip") then return end
 
 	local quantmul = get("stat.histogram.quantmul")
 	if (not quantmul) or (not quantity) or (quantity < 1) then quantity = 1 end
-	local median, Qone, Qthree, step, count, percent40, percent30 = lib.GetPrice(hyperlink)
+	local median, Qone, Qthree, step, count, percent40, percent30 = lib.GetPrice(hyperlink, serverKey)
 	if not count then
 		count = 0
 	end
@@ -665,140 +635,258 @@ function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, .
 end
 
 function lib.OnLoad(addon)
-	private.makeData()
-	private.makeTotalData()
-	AucAdvanced.Settings.SetDefault("stat.histogram.tooltip", false)
-	AucAdvanced.Settings.SetDefault("stat.histogram.median", false)
-	AucAdvanced.Settings.SetDefault("stat.histogram.iqr", true)
-	AucAdvanced.Settings.SetDefault("stat.histogram.precision", false)
-	AucAdvanced.Settings.SetDefault("stat.histogram.quantmul", true)
-	AucAdvanced.Settings.SetDefault("stat.histogram.enable", true)
+	private.InitData()
+	default("stat.histogram.tooltip", false)
+	default("stat.histogram.median", false)
+	default("stat.histogram.iqr", true)
+	default("stat.histogram.precision", false)
+	default("stat.histogram.quantmul", true)
+	default("stat.histogram.enable", true)
 end
 
-function lib.ClearItem(hyperlink, serverKey)
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(hyperlink)
-	if (linkType ~= "item") then return end
-	if (factor and factor ~= 0) then property = property.."x"..factor end
+function lib.ClearItem(link, serverKey)
+	if not link then return end
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
 
-	if not serverKey then serverKey = GetFaction() end
-	if not data[serverKey] then return end
-	if not data[serverKey][itemId] then return end
-	if not data[serverKey][itemId][property] then return end
-	data[serverKey][itemId][property] = nil
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
-	aucPrint(libType.._TRANS('SHTG_Interface_ClearingData'):format(hyperlink, keyText))--- Histogram: clearing data for %s for {{%s}}
+	local storeID, storeProperty = GetStoreKey(link, PET_BAND)
+	if not storeID then return end
+
+	if private.FindRemoveEntry(serverKey, storeID, storeProperty) then
+		local keyText = AucAdvanced.GetServerKeyText(serverKey)
+		aucPrint(libType.._TRANS('SHTG_Interface_ClearingData'):format(link, keyText))--- Histogram: clearing data for %s for {{%s}}
+		private.ClearCache()
+	end
 end
 
 function lib.ClearData(serverKey)
-	if not serverKey then serverKey = GetFaction() end
+	if not RealmData then return end
 	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
-		local version = data.version -- save this so it doesn't get lost in the wipe
-		wipe(data)
-		data.version = version
+		wipe(RealmData)
 		aucPrint(_TRANS('SHTG_Help_SlashHelp5').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing Histogram stats for // All realms
-	elseif data[serverKey] then
-		data[serverKey] = nil
-		local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
-		aucPrint(_TRANS('SHTG_Help_SlashHelp5').." {{"..keyText.."}}") --Clearing Histogram stats for
-	end
-end
-
---[[ Local functions ]]--
-
-function private.DataLoaded()
-	-- This function gets called when the data is first loaded. You may do any required maintenence
-	-- here before the data gets used.
-	--Forces all data to be refactored if the database hasn't been updated yet
-	local VERSION = 2
-	if (data["version"]) and (data["version"] >= VERSION) then return end
-	local function findallprices()
-		aucPrint("Auc-Stat-Histogram: Updating database.  Please be patient")
-		local i = 1
-		for faction, itemlist in pairs(data) do
-			if type(itemlist) == "table" then
-				for itemId, proplist in pairs(itemlist) do
-					for prop, datastring in pairs(proplist) do
-						i = i+1
-						wipe(stattable)
-						private.UnpackStats(datastring)
-						local _,_,_,_,_,refactored = private.GetPriceData()
-						if refactored then
-							data[faction][itemId][prop] = private.PackStats()
-						end
-						if i%5000 == 0 then
-							coroutine.yield()
-						end
-					end
-				end
-			end
-		end
-		aucPrint("Auc-Stat-Histogram: Database is updated.  Thank You for your patience")
-		data["version"] = VERSION
-	end
-	local co = coroutine.create(findallprices)
-	coroutine.resume(co)
-	local function onupdate(self)
-		if coroutine.status(co) ~= "dead" then
-			coroutine.resume(co)
-		else
-			self:Hide()	-- stops further onupdates
+		private.ClearCache()
+	else
+		serverKey = ResolveServerKey(serverKey)
+		if serverKey and RealmData[serverKey] then
+			local keyText = AucAdvanced.GetServerKeyText(serverKey)
+			RealmData[serverKey] = nil
+			aucPrint(_TRANS('SHTG_Help_SlashHelp5').." {{"..keyText.."}}") --Clearing Histogram stats for
+			private.ClearCache()
 		end
 	end
-	local onupdateframe = CreateFrame("Frame")
-	onupdateframe:SetScript("OnUpdate", onupdate)
 end
 
-function private.makeData()
-	if data then return end
-	if (not AucAdvancedStatHistogramData) then AucAdvancedStatHistogramData = {} end
-	data = AucAdvancedStatHistogramData
-	private.DataLoaded()
+--[[ Local and Database functions ]]--
+
+function private.UpgradeDB()
+	private.UpgradeDB = nil
+	if type(AucAdvancedStatHistogramData) == "table" and AucAdvancedStatHistogramData.Version == DATABASE_VERSION then return end
+
+	-- "Upgrade" to Version 3.0: database format has changed completely; we shall wipe the data and start fresh
+	AucAdvancedStatHistogramData = {Version = DATABASE_VERSION, RealmData = {}}
 end
 
-function private.makeTotalData()
-	if totaldata then return end
-	AucAdvancedStatHistogramTotalData = ""
-	totaldata = AucAdvancedStatHistogramTotalData
-	--private.DataLoaded()
+function private.InitData()
+	private.InitData = nil
+
+	private.UpgradeDB()
+	RealmData = AucAdvancedStatHistogramData.RealmData
+	if not RealmData then
+		RealmData = {} -- dummy value to avoid more errors - will not get saved
+		error("Error loading or creating "..LIBSTRING.." database")
+	end
+
 end
 
-function private.UnpackStats(dataItem)
-	wipe(stattable)
-	if dataItem then
-		local firstvalue, maxvalue, step, count, newdataItem = strsplit(";",dataItem)
+
+local WriteStore = {}
+
+-- helper function for private.StatTableOpen: Unpack datastring to StatTable
+local function UnpackStats(datastring)
+	if datastring then
+		local minvalue, maxvalue, step, count, newdataItem = strsplit(DATA_DIVIDER,datastring)
 		if not newdataItem then
-			debugPrint("UnpackStats: dataItem only 4 long", libType.."-"..libName, "Critical")
+			debugPrint("UnpackStats: datastring is missing data table", LIBSTRING, "Error")
 			return
 		end
-		stattable["min"] = tonumber(firstvalue)
-		stattable["max"] = tonumber(maxvalue)
-		stattable["step"] = tonumber(step)
-		stattable["count"] = tonumber(count)
-		local index = stattable["min"]
-		if not index then
-			aucPrint(dataItem)
+		minvalue, maxvalue, step, count = tonumber(minvalue), tonumber(maxvalue), tonumber(step),  tonumber(count)
+		if not minvalue or not maxvalue or not step or not count then
+			debugPrint("UnpackStats: datastring is missing control values", LIBSTRING, "Error")
+			return
 		end
+		StatTable.min, StatTable.max, StatTable.step, StatTable.count = minvalue, maxvalue, step, count
+		local index = minvalue -- StatTable.min
 		for n in newdataItem:gmatch("[0-9]+") do
-			stattable[index] = tonumber(n)
+			StatTable[index] = tonumber(n)
 			index = index + 1
 		end
+
+		return true -- success
 	else
-		debugPrint("UnpackStats: No data passed", libType.."-"..libName, "Warning")
+		debugPrint("UnpackStats: No data passed", LIBSTRING, "Error")
 	end
 end
 
-local meta0 = { __index = function(tbl,key) return 0 end }
-function private.PackStats()
+-- helper function for private.StatTableWrite. Repack StatTable to a datastring. Inverse of UnpackStats
+local function RepackStats()
+	local minvalue, maxvalue, step, count = StatTable.min, StatTable.max, StatTable.step, StatTable.count
+	if not minvalue or not maxvalue or not step or not count or minvalue == 0 or maxvalue == 0 or step == 0 or count == 0 then
+		debugPrint("RepackStats: StatTable is missing control values", LIBSTRING, "Error")
+		return
+	end
 
-	setmetatable(stattable, meta0)	-- Instead of looping through and checking for nil->0. /Mikk
+	setmetatable(StatTable, meta0)	-- Instead of looping through and checking for nil->0. /Mikk
+	local values = tconcat(StatTable, TABLE_DIVIDER, minvalue, maxvalue)
+	setmetatable(StatTable, nil)	-- I'm not even sure if this needs to be unset, but I don't want to change the behavior of code I don't fully understand, so unsetting it. /Mikk
+									-- currently does need to be unset, as there are places we test for the existence of certain values, to see if StatTable holds valid data -- brykrys
 
-	local values = concat(stattable, ",", stattable.min, stattable.max)
+	local datastring = strjoin(DATA_DIVIDER, minvalue, maxvalue, step, count, values)
+	return datastring
+end
 
-	local ret = strjoin(";",stattable.min, stattable.max, stattable.step, stattable.count, values)
+-- Function to load an item into StatTable
+-- serverKey, storeID, storeProperty must be validated by caller
+-- 'create' is a boolean flag to indicate that the entry should be created if it does not already exist
+-- Returns StatTable to indicate success
+-- Use private.StatTableWrite to write StatTable back to saved variables
+-- Caller must release StatTable by calling private.StatTableClose.
+function private.StatTableOpen(serverKey, storeID, storeProperty, create)
+	if WriteStore.storeID then
+		-- StatTableOpen called without calling StatTableClose on previous entry
+		-- assume caused by some error, previous data assumed to be corrupted
+		debugPrint("StatTableOpen called without clearing previous WriteStore. ID="..WriteStore.storeID, LIBSTRING, "Error")
+		wipe(WriteStore)
+	end
+	wipe(StatTable) -- ### todo: should already be clear here?
 
-	setmetatable(stattable, nil)	-- I'm not even sure if this needs to be unset, but I don't want to change the behavior of code I don't fully understand, so unsetting it. /Mikk
+	local currentrealm = RealmData[serverKey]
+	if not currentrealm then
+		if not create then return end
+		currentrealm = {}
+		RealmData[serverKey] = currentrealm
+	end
 
-	return ret
+	local itemstring = currentrealm[storeID]
+	local itemstore, propindex
+	if itemstring then
+		itemstore = {strsplit(ITEM_DIVIDER, itemstring)}
+		for index = 1, #itemstore do
+			local prop, datastring = strsplit(PROPERTY_DIVIDER, itemstore[index])
+			if prop == storeProperty then
+				if UnpackStats(datastring) then -- try to unpack datastring into StatTable
+					propindex = index
+				elseif create then
+					-- UnpackStats failed (corrupted data); it should have left StatTable empty
+					-- we are in create mode, so overwrite this index with new data
+					propindex = index
+				else
+					-- UnpackStats failed, we are not in create mode
+					-- remove corrupted data, repack, and bail out
+					tremove(itemstore, index)
+					currentrealm[storeID] = tconcat(itemstore, ITEM_DIVIDER)
+					return
+				end
+				break -- we found the matching property, no need to search further
+			end
+		end
+	elseif create then
+		itemstore = {}
+	else
+		return
+	end
+
+	if not propindex then
+		if not create then return end
+		propindex = #itemstore + 1
+	end
+
+	WriteStore.storeID = storeID
+	WriteStore.storeProperty = storeProperty
+	WriteStore.serverKey = serverKey
+	WriteStore.itemstore = itemstore
+	--WriteStore.data = StatTable
+	WriteStore.index = propindex
+
+	return StatTable -- return non-nil to signal success
+end
+
+-- Called after StatTableOpen, and after StatTable has been modified, to write data back to saved variables
+-- serverKey, storeID, storeProperty should match the last call to StatTableOpen; this is a debug check (may be removed in future)
+-- StatTableWrite may be called multiple times after a call to StatTableOpen, up until StatTable is "closed" by StatTableClose
+function private.StatTableWrite(serverKey, storeID, storeProperty)
+	if not WriteStore.storeID then
+		debugPrint("StatTableWrite: no data in WriteStore", LIBSTRING, "Error")
+		return
+	end
+	if serverKey ~= WriteStore.serverKey or storeID ~= WriteStore.storeID or storeProperty ~= WriteStore.storeProperty then
+		debugPrint("StatTableWrite: parameters do not match WriteStore"..
+			format("\nParameters serverKey %s, storeID %s, storeProperty %s", tostringall(serverKey, storeID, storeProperty))..
+			format("\nWriteStore serverKey %s, storeID %s, storeProperty %s", tostringall(WriteStore.serverKey, WriteStore.storeID, WriteStore.storeProperty)),
+			LIBSTRING,
+			"Error"
+		)
+		return
+	end
+
+	local itemstore = WriteStore.itemstore
+	local datastring = RepackStats()
+	if datastring then
+		itemstore[WriteStore.index] = WriteStore.storeProperty..PROPERTY_DIVIDER..datastring
+		RealmData[serverKey][WriteStore.storeID] = tconcat(itemstore, ITEM_DIVIDER)
+	else
+		tremove(itemstore, WriteStore.index)
+		if #itemstore >= 1 then
+			RealmData[serverKey][WriteStore.storeID] = tconcat(itemstore, ITEM_DIVIDER)
+		else
+			RealmData[serverKey][WriteStore.storeID] = nil
+		end
+	end
+end
+
+-- Mark the current StatTable as "closed", signalling that all work is complete on the current item
+-- Block any futher calls to StatTableWrite on this entry
+function private.StatTableClose()
+	wipe(WriteStore)
+	wipe(StatTable)
+end
+
+-- Function to search for a specific record, and delete it if found
+-- Implemented as a shortcut, without going through the StatTableOpen/Write/Close functions
+-- returns true if found and deleted, nil otherwise
+function private.FindRemoveEntry(serverKey, storeID, storeProperty)
+	if WriteStore.storeID then
+		-- FindRemoveEntry called while StatTableOpen still has data open for writing
+		-- as above, assume caused by some error, previous data assumed to be corrupted
+		debugPrint("FindRemoveEntry called without clearing previous WriteStore. ID="..WriteStore.storeID, LIBSTRING, "Error")
+		wipe(WriteStore)
+		wipe(StatTable)
+	end
+
+	local currentrealm = RealmData[serverKey]
+	if not currentrealm then return end
+
+	local itemstring = currentrealm[storeID]
+	if not itemstring then return end
+
+	if not storeProperty then -- request to delete all entries for storeID, regardless of properties
+		currentrealm[storeID] = nil
+		return true
+	end
+
+	local itemstore = {strsplit(ITEM_DIVIDER, itemstring)}
+	local storecount = #itemstore
+	for index = 1, storecount do
+		local prop, datastring = strsplit(PROPERTY_DIVIDER, itemstore[index])
+		if prop == storeProperty then
+			if storecount == 1 then -- there is only one entry in this storeID, and it matches, so delete the whole storeID record
+				currentrealm[storeID] = nil
+			else -- there were multiple properties for this storeID; remove the matching one, and repack
+				tremove(itemstore, index)
+				currentrealm[storeID] = tconcat(itemstore, ITEM_DIVIDER)
+			end
+			return true
+		end
+	end
 end
 
 --private.refactor(pmax, precision)
@@ -806,38 +894,77 @@ end
 --redistributes the price data so that pmax is at precision
 --this does cause some loss of accuracy, but should only be necessary every once in a great while
 --and increases future accuracy.
---If data points would end up having an index > 750, they get cut off.  They're more than 3x market price, and should not be taken into account anyway
---called by the GetPrice function when price is detected as being too far off an index of 250
+--If data points would end up having an index > 300, they get cut off.  They're more than 3x market price, and should not be taken into account anyway
+--called by the GetPrice function when median is detected as being too far off an index of 100
 --Also called when adding new data early on that would push the max up.
+local newstats = {}
 function private.refactor(pmax, precision)
-	if type(stattable) ~= "table" or type(pmax)~="number" or pmax == 0 then
+	-- we've had report of a NaN sneaking in here somehow...
+	if type(pmax)~="number" or pmax == 0 or pmax ~= pmax or StatTable.step == 0 then
+		debugPrint("private.refactor - invalid parameters", LIBSTRING, "Error")
 		return
 	end
-	wipe(newstats)
-	newstats["step"] = ceil(pmax/precision)
-	local conversion = stattable["step"]/newstats["step"]
-	newstats["min"] = ceil(conversion*stattable["min"])
-	newstats["max"] = ceil(conversion*stattable["max"])
-	local count = 0
-	if newstats["max"] > 300 then
+
+	local newstep = ceil(pmax / precision)
+	local conversion = StatTable.step / newstep
+	local newmin = ceil(conversion * StatTable.min)
+	local newmax = ceil(conversion * StatTable.max)
+	if newmax > 300 then
 		--we need to crop off the top end
-		newstats["max"] = 300
-		stattable["max"] = floor(300/conversion)
+		newmax = 300
+		StatTable.max = floor(300 / conversion)
 	end
-	for i = newstats["min"], newstats["max"] do
+	local newcount = 0
+	for i = newmin, newmax do
 		newstats[i] = 0
 	end
-	for i = stattable["min"], stattable["max"] do
-		local j = ceil(conversion*i)
-		if not newstats[j] then newstats[j] = 0 end
-		newstats[j]= newstats[j] + stattable[i]
-		count = count + stattable[i]
+
+	for oldindex = StatTable.min, StatTable.max do
+		local curcount = StatTable[oldindex]
+		local newindex = ceil(conversion * oldindex)
+		newstats[newindex]= (newstats[newindex] or 0) + curcount -- ### todo: is the 0 check really needed?
+		newcount = newcount + curcount
 	end
-	wipe(stattable)
+	while newstats[newmax] == 0 and newmax > newmin do
+		-- if we cropped newmax above, we could end up with a lot of trailing 0's at the top end of newstats
+		-- decrement newmax until we finc a non-zero entry; also nil out the 0 value so it doesn't get copied later
+		newstats[newmax] = nil
+		newmax = newmax - 1
+	end
+	-- ### todo: is it possible to get 0's at the bottom end of newstats too?
+
+	wipe(StatTable)
 	for i,j in pairs(newstats) do
-		stattable[i] = j
+		StatTable[i] = j
 	end
-	stattable["count"] = count
+	StatTable.min = newmin
+	StatTable.max = newmax
+	StatTable.step = newstep
+	StatTable.count = newcount
+
+	wipe(newstats)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5154 $")
+-- GetServerKeyList
+function lib.GetServerKeyList()
+	if not RealmData then return end
+	local list = {}
+	for serverKey in pairs(RealmData) do
+		tinsert(list, serverKey)
+	end
+	return list
+end
+
+-- ChangeServerKey
+function lib.ChangeServerKey(oldKey, newKey)
+	if not RealmData then return end
+	local oldData = RealmData[oldKey]
+	RealmData[oldKey] = nil
+	if oldData and newKey then
+		RealmData[newKey] = oldData
+		-- any prior data for newKey will be discarded (simplest implementation)
+	end
+end
+
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5680 $")

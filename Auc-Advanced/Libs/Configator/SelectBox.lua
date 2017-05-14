@@ -1,7 +1,7 @@
 --[[
 	SelectBox
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SelectBox.lua 312 2011-06-14 07:33:25Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SelectBox.lua 396 2015-10-01 16:35:24Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -26,55 +26,59 @@
 --]]
 
 local LIBRARY_VERSION_MAJOR = "SelectBox"
-local LIBRARY_VERSION_MINOR = 4
+local LIBRARY_VERSION_MINOR = 5
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/SelectBox.lua $","$Rev: 312 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/SelectBox.lua $","$Rev: 396 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local NUM_MENU_ITEMS = 15
+local SCROLLTIME = 0.2
+
+local _G = _G
+local tinsert = tinsert
+local type = type
 
 local kit = {}
 local buttonKit = {}
 
-local keys = {}
-local values = {}
-
-function kit:GetItems()
-	for pos in pairs(keys) do keys[pos] = nil end
-	for pos in pairs(values) do values[pos] = nil end
-
-	local curpos
+local keys, values = {}, {}
+function kit:GetItems(setMenu)
+	local curpos, curtext
 	local current = self.value
-
-	local items
-	if type(self.items) == "function" then
-		items = self.items()
-	else
-		items = self.items
+	local items = self.items
+	if type(items) == "function" then
+		items = items()
+	end
+	if setMenu then
+		wipe(keys)
+		wipe(values)
 	end
 
-	if (not items) then items = {} end
-
-	local key, value
-	for pos, item in ipairs(items) do
-		if type(item) == "table" then
-			key = item[1]
-			value = item[2]
-		else
-			key = item
-			value = item
-		end
-		if (key) then
-			table.insert(keys, key)
-			table.insert(values, value)
-			if (not curpos and type(key)==type(current) and key==current) then
-				curpos = table.getn(keys)
+	if type(items) == "table" then
+		local key, value
+		for _, item in ipairs(items) do
+			if type(item) == "table" then
+				key = item[1]
+				value = item[2]
+			else
+				key = item
+				value = item
+			end
+			if key then
+				if setMenu then
+					tinsert(keys, key)
+					tinsert(values, value)
+				end
+				if not curpos and key == current then
+					curpos = #keys
+					curtext = value
+				end
 			end
 		end
 	end
 
-	return curpos or 1
+	return curpos, curtext
 end
 
 function kit:SetWidth(width)
@@ -129,8 +133,8 @@ function kit:SetText(text)
 end
 
 function kit:UpdateValue()
-	local pos = self:GetItems()
-	self:SetText(values[pos])
+	local _, text = self:GetItems()
+	self:SetText(text or "---")
 end
 
 function kit:OnClose()
@@ -138,7 +142,6 @@ function kit:OnClose()
 		lib:DoHide()
 	end
 end
-
 
 function buttonKit:Open()
 	local box = self
@@ -153,7 +156,7 @@ function buttonKit:Open()
 	lib.menu.currentBox = box
 	lib.menu.cp = nil
 	lib.menu.ts = nil
-	lib.menu.position = box:GetItems()
+	lib.menu.position = box:GetItems(true) or 1
 	lib:DoUpdate()
 	lib:DoShow()
 end
@@ -186,9 +189,9 @@ function lib:DoUpdate()
 		cp = lib.menu.cp
 		ts = lib.menu.ts
 	else
-		ts = table.getn(keys)
+		ts = #keys
 		cp = lib.menu.position
-		cp = math.max(1, math.min(cp-7, ts-10))
+		cp = max(1, min(cp-7, ts-10))
 		lib.menu.cp = cp
 		lib.menu.ts = ts
 	end
@@ -242,13 +245,12 @@ function lib:DoFade()
 	lib.menu.fadeInfo.finishedFunc = lib.DoHide
 end
 
-local scrollTime = 0.2
 function lib:MouseIn()
 	if (self.index == 'prev') then
-		lib.menu.scrollTimer = scrollTime
+		lib.menu.scrollTimer = SCROLLTIME
 		lib.menu.scrollDir = -1
 	elseif (self.index == 'next') then
-		lib.menu.scrollTimer = scrollTime
+		lib.menu.scrollTimer = SCROLLTIME
 		lib.menu.scrollDir = 1
 	end
 	lib.menu.outTimer = nil
@@ -258,12 +260,11 @@ function lib:MouseOut()
 	lib.menu.outTimer = 0.5
 end
 function lib:OnUpdate(delay)
-	if (not delay) then return end
 	if (lib.menu.scrollTimer ~= nil) then
 		lib.menu.scrollTimer = lib.menu.scrollTimer - delay
 		if lib.menu.scrollTimer <= 0 then
-			lib.menu.scrollTimer = lib.menu.scrollTimer + scrollTime
-			lib.menu.cp = math.max(1, math.min(lib.menu.ts-9, lib.menu.cp + lib.menu.scrollDir))
+			lib.menu.scrollTimer = lib.menu.scrollTimer + SCROLLTIME
+			lib.menu.cp = max(1, min(lib.menu.ts-9, lib.menu.cp + lib.menu.scrollDir))
 			lib:DoUpdate()
 		end
 	end
@@ -286,38 +287,40 @@ function lib:OnClick()
 end
 
 if not lib.menu then
-	lib.menu = CreateFrame("Frame", "SelectBoxMenu", UIParent)
-	lib.menu:Hide()
-	lib.menu:SetWidth(120)
-	lib.menu:SetHeight(16 * NUM_MENU_ITEMS + 5)
-	lib.menu:EnableMouse(true)
-	lib.menu:SetFrameStrata("TOOLTIP")
-	lib.menu:SetScript("OnEnter", lib.MouseIn)
-	lib.menu:SetScript("OnLeave", lib.MouseOut)
-	lib.menu:SetScript("OnMouseDown", lib.DoHide)
-	lib.menu:SetScript("OnUpdate", lib.OnUpdate)
+	local menu = CreateFrame("Frame", "SelectBoxMenu", UIParent)
+	lib.menu = menu
+	menu:Hide()
+	menu:SetWidth(120)
+	menu:SetHeight(16 * NUM_MENU_ITEMS + 5)
+	menu:EnableMouse(true)
+	menu:SetFrameStrata("TOOLTIP")
+	menu:SetScript("OnEnter", lib.MouseIn)
+	menu:SetScript("OnLeave", lib.MouseOut)
+	menu:SetScript("OnMouseDown", lib.DoHide)
+	menu:SetScript("OnUpdate", lib.OnUpdate)
 
-	lib.menu.back = CreateFrame("Frame", "", lib.menu)
-	lib.menu.back:SetPoint("TOPLEFT", lib.menu, "TOPLEFT", 15, -20)
-	lib.menu.back:SetPoint("BOTTOMRIGHT", lib.menu, "BOTTOMRIGHT", -15, 10)
-	lib.menu.back:SetBackdrop({
+	menu.back = CreateFrame("Frame", "", lib.menu)
+	menu.back:SetPoint("TOPLEFT", lib.menu, "TOPLEFT", 15, -20)
+	menu.back:SetPoint("BOTTOMRIGHT", lib.menu, "BOTTOMRIGHT", -15, 10)
+	menu.back:SetBackdrop({
 		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
 		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
 		tile = true, tileSize = 32, edgeSize = 16,
 		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	})
-	lib.menu.back:SetBackdropColor(0,0,0, 0.8)
-	lib.menu.buttons = {}
+	menu.back:SetBackdropColor(0,0,0, 0.8)
+
+	local buttons = {}
+	menu.buttons = buttons
 	for i=1, NUM_MENU_ITEMS do
-		local l = CreateFrame("Button", "SelectBoxMenuButton"..i, lib.menu.back)
-		lib.menu.buttons[i] = l
+		local l = CreateFrame("Button", "SelectBoxMenuButton"..i, menu.back)
+		buttons[i] = l
 		if (i == 1) then
-			l:SetPoint("TOPLEFT", lib.menu.back, "TOPLEFT", 0,-5)
+			l:SetPoint("TOPLEFT", menu.back, "TOPLEFT", 0,-5)
 		else
-			l:SetPoint("TOPLEFT", lib.menu.buttons[i-1], "BOTTOMLEFT", 0,0)
+			l:SetPoint("TOPLEFT", buttons[i-1], "BOTTOMLEFT", 0,0)
 		end
-		l:SetPoint("RIGHT", lib.menu.back, "RIGHT", 0,0)
-		if ( l.SetTextFontObject ) then l.SetNormalFontObject = l.SetTextFontObject end -- WotLK Hack
+		l:SetPoint("RIGHT", menu.back, "RIGHT", 0,0)
 		l:SetNormalFontObject (GameFontHighlightSmall)
 		l:SetHighlightFontObject(GameFontNormalSmall)
 		l:SetHeight(12)
@@ -325,9 +328,6 @@ if not lib.menu then
 		l:SetScript("OnEnter", lib.MouseIn)
 		l:SetScript("OnLeave", lib.MouseOut)
 		l:SetScript("OnClick", lib.OnClick)
-	--	_G["SelectBoxMenuButton"..i.."Text"]:SetJustifyH("LEFT")
 		l:Show()
 	end
-
--- 	cmenu = lib.menu --no refrence anywhere to cmenu  its appears to be a leftover global
 end

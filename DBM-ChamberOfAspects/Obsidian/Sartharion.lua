@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sartharion", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 178 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
 mod:SetModelID(27035)
@@ -22,18 +22,18 @@ local warnTenebron          = mod:NewAnnounce("WarningTenebron", 2, 61248, false
 local warnShadron           = mod:NewAnnounce("WarningShadron", 2, 58105, false)
 local warnVesperon          = mod:NewAnnounce("WarningVesperon", 2, 61251, false)
 
-local warnFireWall			= mod:NewSpecialWarning("WarningFireWall", nil, nil, true)
+local warnFireWall			= mod:NewSpecialWarning("WarningFireWall", nil, nil, nil, 0)
 local warnVesperonPortal	= mod:NewSpecialWarning("WarningVesperonPortal", false)
 local warnTenebronPortal	= mod:NewSpecialWarning("WarningTenebronPortal", false)
 local warnShadronPortal		= mod:NewSpecialWarning("WarningShadronPortal", false)
 
 mod:AddBoolOption("AnnounceFails", false, "announce")
 
-local timerShadowFissure    = mod:NewCastTimer(5, 59128)--Cast timer until Void Blast. it's what happens when shadow fissure explodes.
-local timerWall             = mod:NewCDTimer(30, 43113)
-local timerTenebron         = mod:NewTimer(30, "TimerTenebron", 61248)
-local timerShadron          = mod:NewTimer(80, "TimerShadron", 58105)
-local timerVesperon         = mod:NewTimer(120, "TimerVesperon", 61251)
+local timerShadowFissure    = mod:NewCastTimer(5, 59128, nil, nil, nil, 3)--Cast timer until Void Blast. it's what happens when shadow fissure explodes.
+local timerWall             = mod:NewCDTimer(30, 43113, nil, nil, nil, 2)
+local timerTenebron         = mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
+local timerShadron          = mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
+local timerVesperon         = mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
 
 local lastvoids = {}
 local lastfire = {}

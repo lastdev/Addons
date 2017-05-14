@@ -6,6 +6,18 @@ GTFO Fail List - Wrath of the Lich King
 Author: Zensunim of Malygos
 ]]--
 
+GTFO.SpellID["63987"] = {
+  --desc = "Trespasser!";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["63986"] = {
+  --desc = "Trespasser!";
+  applicationOnly = true;
+  sound = 3;
+};
+
 GTFO.SpellID["27812"] = {
 	--desc = "Void Blast (Kel'thuzad)";
 	sound = 3;

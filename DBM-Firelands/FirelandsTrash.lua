@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FirelandsTrash", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 146 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 161 $"):sub(12, -3))
 mod:SetModelID(38765)
 mod:SetZone()
 mod.isTrashMod = true
@@ -30,10 +30,10 @@ local specWarnDruidLeapNear	= mod:NewSpecialWarningClose(99629)
 local specWarnEarthQuake	= mod:NewSpecialWarningCast(100724, "Ranged")
 local specWarnLava			= mod:NewSpecialWarningMove(99510)
 
-local timerMoltenArmor		= mod:NewTargetTimer(15, 99532, nil, "Tank|Healer")
-local timerRaiseLavaCD		= mod:NewNextTimer(17, 99503)--Every 15 sec + 2 sec cast.
-local timerMoltenBoltCD		= mod:NewNextTimer(15.5, 99579)--The worm gyser things that always kill people for not moving.
-local timerLavaSpawnCD		= mod:NewNextTimer(16, 99575)--The worm gyser things that always kill people for not moving.
+local timerMoltenArmor		= mod:NewTargetTimer(15, 99532, nil, "Tank|Healer", nil, 5)
+local timerRaiseLavaCD		= mod:NewNextTimer(17, 99503, nil, nil, nil, 3)--Every 15 sec + 2 sec cast.
+local timerMoltenBoltCD		= mod:NewNextTimer(15.5, 99579, nil, nil, nil, 3)--The worm gyser things that always kill people for not moving.
+local timerLavaSpawnCD		= mod:NewNextTimer(16, 99575, nil, nil, nil, 1)--The worm gyser things that always kill people for not moving.
 
 local lavaRunning = false
 

@@ -10,6 +10,7 @@
 	GoGo_Variables.Localize.ColdWeatherFlying = 54197
 --	GoGo_Variables.Localize.CloudSerpentRiding = 130487		-- Gone with Warcraft 6.0
 	GoGo_Variables.Localize.CrusaderAura = 32223
+	GoGo_Variables.Localize.DraenorPathfinder = 191645
 	GoGo_Variables.Localize.ExpertRiding = 34090  -- 225 Riding skill
 	GoGo_Variables.Localize.FastFlightForm = 40120
 	GoGo_Variables.Localize.FelineSwiftness = 131768  -- Druid talent

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(325, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -32,15 +32,15 @@ local specWarnVoidBoltOther	= mod:NewSpecialWarningTarget(104849, "Tank")
 local specWarnManaVoid		= mod:NewSpecialWarningSpell(105530, "ManaUser")
 local specWarnPurple		= mod:NewSpecialWarningSpell(104896, "Tank|Healer")
 
-local timerOozesCD			= mod:NewNextTimer(90, "ej3978")
-local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372) -- varies (7.0~8.5)
-local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372)
-local timerAcidCD			= mod:NewNextTimer(8.3, 105573)--Green ooze aoe
-local timerSearingCD		= mod:NewNextTimer(6, 105033)--Red ooze aoe
-local timerVoidBoltCD		= mod:NewNextTimer(6, 104849, nil, "Tank")
+local timerOozesCD			= mod:NewNextTimer(90, "ej3978", nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON) -- varies (7.0~8.5)
+local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerAcidCD			= mod:NewNextTimer(8.3, 105573, nil, nil, nil, 2)--Green ooze aoe
+local timerSearingCD		= mod:NewNextTimer(6, 105033, nil, nil, nil, 2)--Red ooze aoe
+local timerVoidBoltCD		= mod:NewNextTimer(6, 104849, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerVoidBolt			= mod:NewTargetTimer(12, 104849, nil, "Tank|Healer")--Nerfed yet again, its now 12. Good thing dbm timers were already right since i dbm pulls duration from aura heh.
 local timerManaVoid			= mod:NewBuffFadesTimer(4, 105530, nil, "ManaUser")
-local timerDeepCorruption	= mod:NewBuffFadesTimer(25, 105171, nil, "Tank|Healer")
+local timerDeepCorruption	= mod:NewBuffFadesTimer(25, 105171, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_TANK_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -127,7 +127,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		warnVoidBolt:Show(args.destName, amount)
 		local _, _, _, _, _, duration, expires = UnitDebuff(args.destName, args.spellName)--This is now consistently 12 seconds, but it's been nerfed twice without warning, i'm just gonna leave this here to make the mod continue to auto correct it when/if it changes more.
-		timerVoidBolt:Start(duration, args.destName)
+		if duration then
+			timerVoidBolt:Start(duration, args.destName)
+		end
 		if amount >= 2 then
 			if args:IsPlayer() then
 				specWarnVoidBolt:Show(amount)

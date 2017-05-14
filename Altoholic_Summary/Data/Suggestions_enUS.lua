@@ -1,19 +1,16 @@
-﻿local addonName = "Altoholic"
+local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local TS = addon.TradeSkills.Names
 
 -- temporary test, until all locales are done for the suggestions, test the ones that are done in order to use them instead of enUS, this test will be replaced later on.
 if (GetLocale() == "frFR") or
     (GetLocale() == "ruRU") or
 	(GetLocale() == "deDE") or
+	(GetLocale() == "koKR") or
 	(GetLocale() == "zhCN") or
 	(GetLocale() == "zhTW") then return end				-- exit to use zhCN, zhTW or frFR instead of enUS
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
 
 local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
@@ -22,7 +19,7 @@ addon.Suggestions = {
 
 	-- source : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[TS.TAILORING] = {
 		{ 50, "Up to 50: Bolt of Linen Cloth" },
 		{ 70, "Up to 70: Linen Bag" },
 		{ 75, "Up to 75: Reinforced Linen Cape" },
@@ -59,7 +56,7 @@ addon.Suggestions = {
 		{ 515, "Up to 515: Swordguard Embroidary" },
 		{ 525, "Up to 525: Dreams and whatever earns a skill-up." },
 	},
-	[BI["Leatherworking"]] = {
+	[TS.LEATHERWORKING] = {
 		{ 35, "Up to 35: Light Armour Kit" },
 		{ 55, "Up to 55: Cured Light Hide" },
 		{ 85, "Up to 85: Embossed Leather Gloves" },
@@ -94,7 +91,7 @@ addon.Suggestions = {
 		{ 425, "Up to 425: Any Fur Lining\nTradeskill bags" },
 		{ 450, "Up to 450: Whatever makes you earn a point,\ndepending on your needs" },
 	},
-	[BI["Engineering"]] = {
+	[TS.ENGINEERING] = {
 		{ 40, "Up to 40: Rough Blasting Powder" },
 		{ 50, "Up to 50: Handful of Copper Bolt" },
 		{ 51, "Craft one Arclight Spanner" },
@@ -128,7 +125,7 @@ addon.Suggestions = {
 		{ 435, "Up to 435: Mana Injector Kit" },
 		{ 450, "Up to 450: Whatever makes you earn a point,\ndepending on your needs" },
 	},
-	[BI["Jewelcrafting"]] = {
+	[TS.JEWELCRAFTING] = {
 		{ 20, "Up to 20: Delicate Copper Wire" },
 		{ 30, "Up to 30: Rough Stone Statue" },
 		{ 50, "Up to 50: Tigerseye Band" },
@@ -165,7 +162,7 @@ addon.Suggestions = {
 		{ 475, "Up to 475: Prospect Ore for Gems" },
 		{ 525, "Up to 525: Recipes obtained from Jewelcrafter Dailies" },
 	},
-	[BI["Enchanting"]] = {
+	[TS.ENCHANTING] = {
 		{ 2, "Up to 2: Runed Copper Rod" },
 		{ 75, "Up to 75: Enchant Bracer - Minor Health" },
 		{ 85, "Up to 85: Enchant Bracer - Minor Deflection" },
@@ -211,7 +208,7 @@ addon.Suggestions = {
 		{ 515, "Craft one Runed Elementium Rod" },
 		{ 525, "Up to 525: Trade in Shards for Recipes" },
 	},
-	[BI["Blacksmithing"]] = {	
+	[TS.BLACKSMITHING] = {	
 		{ 25, "Up to 25: Rough Sharpening Stones" },
 		{ 45, "Up to 45: Rough Grinding Stones" },
 		{ 75, "Up to 75: Copper Chain Belt" },
@@ -256,7 +253,7 @@ addon.Suggestions = {
 		{ 500, "Up to 500: Any skill-up will do" },
 		{ 525, "Up to 525: Farm Ore for Recipes in Twilight Highlands" },
 	},
-	[BI["Alchemy"]] = {	
+	[TS.ALCHEMY] = {	
 		{ 60, "Up to 60: Minor Healing Potion" },
 		{ 110, "Up to 110: Lesser Healing Potion" },
 		{ 140, "Up to 140: Healing Potion" },
@@ -395,7 +392,7 @@ addon.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[TS.FIRSTAID] = {
 		{ 40, "Up to 40: Linen Bandages" },
 		{ 80, "Up to 80: Heavy Linen Bandages\nBecome Journeyman at 50" },
 		{ 115, "Up to 115: Wool Bandages" },
@@ -413,7 +410,7 @@ addon.Suggestions = {
 		{ 475, "Up to 475: Embersilk Bandages" },
 		{ 525, "Up to 525: Heavy Embersilk Bandages" },
 	},
-	[BI["Cooking"]] = {
+	[TS.COOKING] = {
 		{ 40, "Up to 40: Spice Bread"	},
 		{ 85, "Up to 85: Smoked Bear Meat, Crab Cake" },
 		{ 100, "Up to 100: Cooked Crab Claw (A)\nDig Rat Stew (H)" },
@@ -434,7 +431,7 @@ addon.Suggestions = {
 		{ 525, "Up to 525: Stormwind & Orgrimmar Cooking Dailies" },
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[TS.FISHING] = {
 		{ 50, "Up to 50: Any starting zone" },
 		{ 75, "Up to 75:\nThe Canals in Stormwind\nThe Pond in Orgrimmar" },
 		{ 150, "Up to 150: Hillsbrad Foothills' river" },
@@ -451,7 +448,7 @@ addon.Suggestions = {
 		{ 525, "Up to 525: Any Cataclysm Zone\nStormwind & Orgrimmar Fishing Dailies" },
 	},
 
-	[BI["Archaeology"]] = {
+	[TS.ARCHAEOLOGY] = {
 		{ 300, "Up to 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "Up to 375: " .. continents[3]},
 		{ 450, "Up to 450: " .. continents[4]},

@@ -5,9 +5,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local parent = "AltoholicFrameContacts"
 
-local WHITE		= "|cFFFFFFFF"
-local TEAL		= "|cFF00FF9A"
-
 addon.Contacts = {}
 
 local ns = addon.Contacts		-- ns = namespace
@@ -49,7 +46,7 @@ function ns:Update()
 end
 
 function ns:OnLoad()
-	addon.Tabs.Agenda:RegisterChildPane(ns)
+	-- addon.Tabs.Agenda:RegisterChildPane(ns)
 end
 
 function ns:InvalidateView()

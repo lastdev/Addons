@@ -1,8 +1,8 @@
-﻿--[[
+--[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: InfMain.lua 5533 2014-12-11 22:11:04Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: InfMain.lua 5711 2017-04-04 17:45:39Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	License:
@@ -27,9 +27,9 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfMain.lua $","$Rev: 5533 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfMain.lua $","$Rev: 5711 $")
 
-INFORMANT_VERSION = "5.21d.5538"
+INFORMANT_VERSION = "7.5.5714"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end
@@ -56,7 +56,7 @@ local debugPrint            -- debugPrint(message, title, errorCode, level)
 local frameActive			-- frameActive(isActive)
 local frameLoaded			-- frameLoaded()
 local getCatName			-- getCatName(catID)
-local getItem				-- getItem(itemID)
+local getItem				-- getItem(itemLink)
 local getLocale
 local getRowCount			-- getRowCount()
 local infDebugPrint         -- debugPrint(message, category, title, errorCode, level)
@@ -148,6 +148,17 @@ function idFromLink( itemLink )
 	return tonumber(strmatch(itemLink, "item:(%d+)"))
 end
 
+-- clean up the link to an item string that applies to all characters and all levels
+-- copied (more or less) from BeanCounterAPI.lua function lib.API.getItemString(itemLink)
+function cleanStringFromLink( itemLink )
+	if not itemLink or not type(itemLink) == "string" then return itemLink end
+	local itemString, itemName = itemLink:match("H(item:.-)|h%[(.-)%]")
+	if not itemString then return itemLink end
+	-- WARNING - this must survive multiple iterations on the same link/string without changing it
+	itemString = itemString:gsub("(item:%d+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*):%d+:%d*:(.*)", "%1:100::%2")
+	return itemString
+end
+
 function skillToName(userSkill)
 	local skillName = self.skills[tonumber(userSkill)]
 	local localized = "Unknown"
@@ -159,21 +170,28 @@ end
 
 local staticDataItem={}
 local emptyTable={}
-local staticDataID
+local staticDataLink
 local cache = setmetatable({}, {__mode="v"})
-function getItem(itemID, static)
-	if (not itemID) then return end
-	if (static and staticDataID and staticDataID==itemID) then return staticDataItem end
-	if cache[itemID] then return cache[itemID] end
 
-	local baseData = self.database[itemID]
-	local buy, sell, class, quality, stack, additional, usedby, quantity, limited, merchantlist,soulbind,specialbind
-	local itemName, itemLink, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc, itemTexture = GetItemInfo(tonumber(itemID))
+function getItem(itemLink, static)
+	if (not itemLink) then return end
+	if static and staticDataLink == itemLink then return staticDataItem end
+	if cache[itemLink] then return cache[itemLink] end
 
+	-- this must use the full itemLink, not just the item ID To get the data correct
+	local itemName, _link, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc,
+		itemTexture, itemSell, itemClassID, itemSubClassID, itemBindType, itemExpacID, itemSetID, itemReagent = GetItemInfo(itemLink)
+	--debugPrintQuick("GetItem : ", itemLink, itemLink:match("item:([^|]+)"), GetItemInfo(itemLink) )	-- GetItemInfo is returning base level, not the level with upgrades!
+	local incompleteFlag = not itemName -- flag if GetItemInfo returns nils, so we know not to cache it
+
+	local itemID = idFromLink(itemLink)	-- not optimal, but needed for other code
+	local baseData = self.database[itemID]	-- old database of items that can be safely indexed by ID - if that changes, this code will have to change as well
+	local buy, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind
 	if (baseData) then
 		buy, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind = strsplit(":", baseData)
 		buy = tonumber(buy)
 	end
+	local sell = itemSell
 
 	-- work around a blizzard bug where honor tokens return stack size 2147483647
 	-- this only seems to happen for the obsolete honor tokens shown in the currency frame
@@ -186,12 +204,13 @@ function getItem(itemID, static)
 	-- if we have a local correction for this item, merge in the corrected data
 	local itemUpdateData
 	if (InformantLocalUpdates and InformantLocalUpdates.items) then
-		itemUpdateData = InformantLocalUpdates.items[ itemID ]
+		local cleanString = cleanStringFromLink( itemLink )
+		itemUpdateData = InformantLocalUpdates.items[ cleanString ]
 		if (itemUpdateData) then
 			if (itemUpdateData.buy) then
 				buy = tonumber(itemUpdateData.buy)
 			end
-			if (itemUpdateData.sell) then
+			if not sell and itemUpdateData.sell then
 				sell = tonumber(itemUpdateData.sell)
 			end
 			if (itemUpdateData.stack) then
@@ -210,7 +229,6 @@ function getItem(itemID, static)
 	soulbind = tonumber(soulbind)
 	specialbind = tonumber(specialbind)
 
-	sell = select(11,GetItemInfo(itemID))
 	local dataItem = (static and staticDataItem or {})
 	dataItem.buy = buy
 	dataItem.sell = sell
@@ -387,20 +405,23 @@ function getItem(itemID, static)
 		end
 	end
 
-	-- we adjusted the static table, if called with static = true
-	-- so save the itemID for future calls
-	if static then
-		staticDataID = itemID
-	else
-		cache[itemID] = dataItem
+	if not incompleteFlag then
+		-- only save cache/static if data complete
+		-- todo: consider caching partial data, with a flag to try to obtain missing data next time?
+		if static then
+			-- we adjusted the static table, if called with static = true
+			-- so save the link info for future calls
+			staticDataLink = itemLink
+		else
+			cache[itemLink] = dataItem
+		end
 	end
 	return dataItem
 end
 
-local function getInformantVendorInfo(id)
+local function getInformantVendorInfo(itemLink)
 	local isVendored,isLimited,itemCost,toSell,buyStack,maxStack
-	local itemID = tonumber(id)
-	local itemData = getItem(itemID)
+	local itemData = getItem(itemLink)
 	if itemData.merchantList then
 		isVendored = true
 	else
@@ -420,6 +441,7 @@ local function getInformantVendorInfo(id)
 end
 
 --Implementation of GetSellValue API proposed by Tekkub at http://www.wowwiki.com/API_GetSellValue
+-- May not be accurate if an itemID is passed in
 local origGetSellValue = GetSellValue
 function GetSellValue(item)
 	local itemName, itemLink, _, _, _, _, _, _, _, _, itemSellPrice = GetItemInfo(item)
@@ -440,7 +462,7 @@ function GetSellValue(item)
 	-- Return out if we didn't find an id
 	if not id then return end
 
-	local itemInfo = Informant.GetItem(id)
+	local itemInfo = Informant.GetItem(itemLink)
 	local sellval
 
 -- ccox - TODO - is this correct for items sold in stacks?
@@ -519,7 +541,22 @@ function getLocale()
 	return GetLocale();
 end
 
-local categories = {GetAuctionItemClasses()};
+-- local categories = {GetAuctionItemClasses()} -- GetAuctionItemClasses removed in 7.0.0
+local categories = {
+		AUCTION_CATEGORY_WEAPONS,
+		AUCTION_CATEGORY_ARMOR,
+		AUCTION_CATEGORY_CONTAINERS,
+		AUCTION_CATEGORY_GEMS,
+		AUCTION_CATEGORY_ITEM_ENHANCEMENT,
+		AUCTION_CATEGORY_CONSUMABLES,
+		AUCTION_CATEGORY_GLYPHS,
+		AUCTION_CATEGORY_TRADE_GOODS,
+		AUCTION_CATEGORY_RECIPES,
+		AUCTION_CATEGORY_BATTLE_PETS,
+		AUCTION_CATEGORY_QUEST_ITEMS,
+		AUCTION_CATEGORY_MISCELLANEOUS
+		-- TOKEN_FILTER_LABEL
+}
 function getCatName(catID)
 	for cat, name in ipairs(categories) do
 		if (cat == catID) then
@@ -708,8 +745,7 @@ local function updateSellPricesFromMerchant()
 			if (scanningLink) then
 				TooltipScanBagItem(bag, slot)
 				if (tt.scanningMoneyFound) then
-					local itemid = idFromLink(scanningLink)
-					local informantItemInfo = getItem( itemid )
+					local informantItemInfo = getItem( scanningLink )
 					if (informantItemInfo) then
 
 						local sellPrice = tt.scanningMoneyFound / tt.scanningStack
@@ -718,12 +754,13 @@ local function updateSellPricesFromMerchant()
 							-- is this item sell price correct in our database? or missing from our database?
 							local itemName, itemLink, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc, itemTexture = GetItemInfo(scanningLink)
 
-							local newItemInfo = InformantLocalUpdates.items[ itemid ]
+							local cleanString = cleanStringFromLink( scanningLink )
+							local newItemInfo = InformantLocalUpdates.items[ cleanString ]
 							if (not newItemInfo) then newItemInfo = {} end
 							newItemInfo.sell = sellPrice
 							newItemInfo.stack = itemStackSize
 							newItemInfo.quantity = itemStackSize
-							InformantLocalUpdates.items[ itemid ] = newItemInfo
+							InformantLocalUpdates.items[ cleanString ] = newItemInfo
 
 						end
 
@@ -740,14 +777,13 @@ local function updateBuyPricesFromMerchant( vendorID )
 	for index = 1, GetMerchantNumItems() do
 		local link = GetMerchantItemLink(index)
 		if (link) then
-			local itemid = idFromLink( link )
 			local name, texture, price, quantity, numAvailable, isUsableFlag, extendedCostFlag = GetMerchantItemInfo(index)
 			if (extendedCostFlag) then
 				--local honorPoints, arenaPoints, itemCount = GetMerchantItemCostInfo(index);
 				-- NOTE - currently not using this information
 			end
 
-			local informantItemInfo = getItem( itemid )
+			local informantItemInfo = getItem( link )
 			if (informantItemInfo) then		-- this should always be true
 
 				if (price ~= informantItemInfo.buy) then
@@ -759,12 +795,13 @@ local function updateBuyPricesFromMerchant( vendorID )
 -- should we try to get rep discounts, or just update the price as seen?  Then they'll be wrong for alts!
 -- could we account for the rep discounts and calculate a baseline?
 
-					local newItemInfo = InformantLocalUpdates.items[ itemid ]
+					local cleanString = cleanStringFromLink( link )
+					local newItemInfo = InformantLocalUpdates.items[ cleanString ]
 					if (not newItemInfo) then newItemInfo = {} end
 					newItemInfo.buy = price
 					newItemInfo.stack = itemStackSize
 					newItemInfo.quantity = quantity
-					InformantLocalUpdates.items[ itemid ] = newItemInfo
+					InformantLocalUpdates.items[ cleanString ] = newItemInfo
 
 				end
 
@@ -782,7 +819,9 @@ local function updateBuyPricesFromMerchant( vendorID )
 
 				-- if no vendors are known, or this vendor isn't on the list, add this vendor
 				if (not foundMerchant) then
-					local newItemInfo = InformantLocalUpdates.items[ itemid ]
+
+					local cleanString = cleanStringFromLink( link )
+					local newItemInfo = InformantLocalUpdates.items[ cleanString ]
 					if (not newItemInfo) then newItemInfo = {} end
 					local oldList = newItemInfo.merchants
 
@@ -803,7 +842,7 @@ local function updateBuyPricesFromMerchant( vendorID )
 							newItemInfo.merchants = tostring( vendorID )
 						end
 
-						InformantLocalUpdates.items[ itemid ] = newItemInfo
+						InformantLocalUpdates.items[ cleanString ] = newItemInfo
 					end
 				end
 
@@ -863,7 +902,7 @@ local function scrubLocalUpdateInfo()
 	if (InformantLocalUpdates and InformantLocalUpdates.items
 		and not InformantLocalUpdates.scrubbedForDupeMerchants) then
 
-		for itemID, itemInfo in pairs(InformantLocalUpdates.items) do
+		for itemString, itemInfo in pairs(InformantLocalUpdates.items) do
 			if (itemInfo.merchants) then
 
 				-- make sure vendor IDs are unique by regenerating the list into a table
@@ -887,7 +926,7 @@ local function scrubLocalUpdateInfo()
 
 				-- finally, replace the existing info with scrubbed info
 				itemInfo.merchants = newList
-				InformantLocalUpdates.items[ itemID ] = itemInfo
+				InformantLocalUpdates.items[ itemString ] = itemInfo
 
 			end
 		end
@@ -1267,4 +1306,3 @@ Informant = {
 }
 
 _G.Informant = Informant
-

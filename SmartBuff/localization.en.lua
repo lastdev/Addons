@@ -4,11 +4,12 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Added buffs: Hunter (Munitions, Lone Wolf), Rogue (Instant Poison), Hunter (Camouflage), Warrior (Gladiator Stance)\n\n"
-  .."- Added items: WoD flasks, Oralius' Whispering Crystal, Fire-Watcher's Oath, Blazing Wings\n\n"
-  .."- Fix for LUA error: script ran too long\n\n"
-  --.."- This release will restore basic functionality, but unfortunately it does not contain all the new aura changes, sorry.\n\n"
-  .."- Due to I am not playing WoD atm, please report any missing auras and be patient, thanks!\n\n"
+  .."- Updated TOC\n\n"
+  .."- Added Demon Hunter class\n\n"
+  .."- Fixed LUA errors\n\n"
+  .."- This release will restore basic functionality, but unfortunately it does not contain all the new aura changes, sorry.\n\n"
+  .."\n- Due to I am not playing WoW atm, please report any missing auras, items, etc. and be patient, thanks!\n\n"
+  .."- Thanks to all who have helped me to keep it alive.\n\n"
   
   --[[
   .."- Thanks for donation:\n"
@@ -39,7 +40,7 @@ SMARTBUFF_DEMONTYPE = "Imp";
 SMARTBUFF_UNDEAD    = "Undead";
 
 -- Classes
-SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
+SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
 SMARTBUFF_TEMPLATES = {"Solo", "Party", "Raid", "Battleground", "Arena", "ICC", "TOC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};

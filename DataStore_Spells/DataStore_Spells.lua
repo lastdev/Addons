@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Spells ***
+--[[	*** DataStore_Spells ***
 Written by : Thaoky, EU-Marécages de Zangar
 July 6th, 2009
 --]]

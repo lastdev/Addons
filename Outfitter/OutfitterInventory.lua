@@ -65,16 +65,17 @@ end
 
 function Outfitter:GetBagItemInfo(pBagIndex, pSlotIndex)
 	local vItemLink = GetContainerItemLink(pBagIndex, pSlotIndex)
+	if not vItemLink then
+		return
+	end
+
 	local vItemInfo = self:GetItemInfoFromLink(vItemLink)
-	
 	if not vItemInfo then
-		return nil
+		return
 	end
 	
 	vItemInfo.Texture = GetContainerItemInfo(pBagIndex, pSlotIndex)
-	
-	vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3 = GetContainerItemGems(pBagIndex, pSlotIndex)
-	
+	-- vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3, vItemInfo.Gem4 = GetContainerItemGems(pBagIndex, pSlotIndex)
 	vItemInfo.Location = {BagIndex = pBagIndex, BagSlotIndex = pSlotIndex}
 	
 	return vItemInfo
@@ -97,22 +98,7 @@ function Outfitter:GetBagItemInvType(pBagIndex, pSlotIndex)
 		return
 	end
 	
-	local vItemCodes, vItemName = self:ParseItemLink2(vItemLink)
-	
-	if not vItemCodes then
-		return
-	end
-	
-	local vItemFamilyName,
-	      vItemLink,
-	      vItemQuality,
-	      vItemLevel,
-	      vItemMinLevel,
-	      vItemType,
-	      vItemSubType,
-	      vItemCount,
-	      vItemInvType,
-		  vItemTexture = GetItemInfo(vItemCodes[1])
+	local _, _, _, _, _, _, _, _, vItemInvType = GetItemInfo(vItemLink)
 	
 	return vItemInvType
 end
@@ -184,149 +170,285 @@ function Outfitter:ParseItemLink2(pItemLink)
 	
 	local vStartIndex, vEndIndex, vCodeStrings, vName = pItemLink:find("|Hitem:([^|]*)|h%[([^%]]*)%]|h")
 	-- self:DebugMessage("start %s, end %s, codes %s, name %s", tostring(vStartIndex), tostring(vEndIndex), tostring(vCodeStrings), tostring(vName))
-		
+	
+	if not vCodeStrings then
+		return
+	end
+
 	local vCodes = {}
-	for vCodeString in string.gmatch(vCodeStrings, "%d+") do
-		local vCode = tonumber(vCodeString)
+	for vCodeString in string.gmatch(vCodeStrings..":", "%d*:") do
+		local vCode = tonumber(strmatch(vCodeString, "(%d+):")) or 0
 		vCodes[#vCodes + 1] = vCode
 	end
 
 	return vCodes, vName
 end
 
-function Outfitter:GetItemInfoFromLink(pItemLink)
-	if not pItemLink then
-		return nil
-	end
-	
-	-- |cff1eff00|Hitem:1465:803:0:0:0:0:0:0|h[Tigerbane]|h|r
-	-- |(hex code for item color)|Hitem:(item ID code):(enchant code):(added stats code):0|h[(item name)]|h|r
-	
-	local vItemCodes, vItemName = self:ParseItemLink2(pItemLink)
-	
-	if not vItemCodes then
+function Outfitter:GetItemInfoFromLink(itemLink)
+	-- Return nothing if no link is given
+	if not itemLink then
 		return
 	end
 
-	local vItemInfo = self:GetItemInfoFromCode(vItemCodes[1])
-	
-	vItemInfo.Name = vItemName
-	vItemInfo.Link = pItemLink
-	vItemInfo.SubCode = vItemCodes[7]
-	
-	vItemInfo.EnchantCode = vItemCodes[2]
-	
-	vItemInfo.JewelCode1 = vItemCodes[3]
-	vItemInfo.JewelCode2 = vItemCodes[4]
-	vItemInfo.JewelCode3 = vItemCodes[5]
-	vItemInfo.JewelCode4 = vItemCodes[6]
-	
-	vItemInfo.UniqueID = vItemCodes[8]
-	vItemInfo.ReforgeID = vItemCodes[10]
-	
-	vItemInfo.ID11 = vItemCodes[11] or 0;
-	vItemInfo.ID12 = vItemCodes[12] or 0;
-	vItemInfo.ID13 = vItemCodes[13] or 0;
+	-- Create the object and have it populate itself
+	local itemInfo = Outfitter:New(Outfitter._ItemInfoMetaTable)
+	itemInfo:GetItemInfoFromLink(itemLink)
 
-	return vItemInfo
+	-- Done
+	return itemInfo
 end
 
-function Outfitter:GetItemInfoFromCode(pItemCode)
-	local vItemFamilyName,
-	      vItemLink,
-	      vItemQuality,
-	      vItemLevel,
-	      vItemMinLevel,
-	      vItemType,
-	      vItemSubType,
-	      vItemCount,
-	      vItemInvType = GetItemInfo(pItemCode)
+function Outfitter:GetItemInfoFromCode(itemCode)
+	local itemInfo = Outfitter:New(Outfitter._ItemInfoMetaTable)
+	itemInfo:GetItemInfoFromCode(itemCode)
+	return itemInfo
+end
+
+function Outfitter:GetBagSlotItemName(bag, slot)
+	local tooltip = self.TooltipLib:SharedTooltip()
+	tooltip:ClearLines()
+	tooltip:SetBagItem(bag, slot)
+	
+	if not tooltip:IsShown() then
+		return
+	end
+	
+	-- Find the first left text line
+	local tooltipName = tooltip:GetName()
+	local textLeft1Name = tooltipName.."TextLeft1"
+	local textLeft1 = _G[textLeft1Name]
+
+	-- Return the item name
+	local itemName = textLeft1:GetText()
+	return itemName
+end
+
+function Outfitter:IsBankBagIndex(pBagIndex)
+	return pBagIndex and (pBagIndex > NUM_BAG_SLOTS or pBagIndex < 0)
+end
+
+----------------------------------------
+Outfitter._ItemInfo = {}
+setmetatable(Outfitter._ItemInfo, Outfitter.ObjectMetaTable)
+Outfitter._ItemInfoMetaTable = {__index = Outfitter._ItemInfo}
+----------------------------------------
+
+function Outfitter._ItemInfo:Construct()
+end
+
+function Outfitter._ItemInfo:GetItemInfoFromCode(itemCode)
+	local itemFamilyName,
+	      itemLink,
+	      itemQuality,
+	      itemLevel,
+	      itemMinLevel,
+	      itemType,
+	      itemSubType,
+	      itemCount,
+	      itemInvType = GetItemInfo(itemCode)
 	
 	--
 	
-	local vItemInfo =
-	{
-		Name = vItemFamilyName,
-		Link = "",
-		Code = pItemCode,
-		SubCode = 0,
-		
-		Quality = vItemQuality,
-		Level = vItemLevel,
-		MinLevel = vItemMinLevel,
-		Type = vItemType,
-		SubType = vItemSubType,
-		
-		Count = vItemCount,
-		InvType = vItemInvType,
-		
-		EnchantCode = 0,
-		
-		JewelCode1 = 0,
-		JewelCode2 = 0,
-		JewelCode3 = 0,
-		JewelCode4 = 0,
-		
-		UniqueID = 0,
-		ReforgeID = 0,
 
-		ID11 = 0,
-		ID12 = 0,
-		ID13 = 0
-	}
+	self.Name = itemFamilyName
+	self.Link = ""
+	self.Code = itemCode
+	self.SubCode = 0
+		
+	self.Quality = itemQuality
+	self.Level = itemLevel
+	self.MinLevel = itemMinLevel
+	self.Type = itemType
+	self.SubType = itemSubType
+		
+	self.Count = itemCount
+	self.InvType = itemInvType
+		
+	self.EnchantCode = 0
+		
+	self.JewelCode1 = 0
+	self.JewelCode2 = 0
+	self.JewelCode3 = 0
+	self.JewelCode4 = 0
+		
+	self.UniqueID = 0
+	self.UpgradeTypeID = 0
+	self.InstanceDifficultyID = 0
+	self.BonusIDs = "::"
+	self.UpgradeID = 0
 	
-	-- Just return if there's no inventory type
-	
-	if not vItemInvType
-	or vItemInvType == "" then
-		return vItemInfo
+	-- Return if there's no inventory type
+	if not itemInvType
+	or itemInvType == "" then
+		return
 	end
 	
 	-- If it's a known inventory type add that knowledge to the item info
-	
-	local vInvTypeInfo = self.cInvTypeToSlotName[vItemInvType]
-	
-	if vInvTypeInfo then
+	local invTypeInfo = Outfitter.cInvTypeToSlotName[itemInvType]
+	if invTypeInfo then
+
 		-- Get the slot name
-		
-		if not vInvTypeInfo.SlotName then
-			self:ErrorMessage("Unknown slot name for inventory type "..vItemInvType)
-			return vItemInfo
+		if not invTypeInfo.SlotName then
+			Outfitter:ErrorMessage("Unknown slot name for inventory type "..itemInvType)
+			return
 		end
 		
-		vItemInfo.ItemSlotName = vInvTypeInfo.SlotName
-		vItemInfo.MetaSlotName = vInvTypeInfo.MetaSlotName
+		-- Save the slot info
+		self.ItemSlotName = invTypeInfo.SlotName
+		self.MetaSlotName = invTypeInfo.MetaSlotName
 	else
 		-- This function can be used to query non-equippable items, so it's not an error for
 		-- the inventory type to be unknown.  Should Blizzard ever add a new type though, this
 		-- debug message may be useful in figuring out its characteristics
 		
-		-- self:ErrorMessage("Unknown slot type "..vItemInvType.." for item "..vItemName)
+		-- Outfitter:ErrorMessage("Unknown slot type "..itemInvType.." for item "..itemName)
+	end
+end
+
+function Outfitter._ItemInfo:GetItemInfoFromLink(itemLink)
+	-- Do nothing if invalid
+	if not itemLink then
+		return
 	end
 	
+	-- Do nothing if the codes can't be extracted
+	local itemCodes, itemName = Outfitter:ParseItemLink2(itemLink)
+	if not itemCodes then
+		return
+	end
+
+	-- Start with the base code info
+	self:GetItemInfoFromCode(itemCodes[1])
+
+	-- The provided itemLink may have Quality, ItemLevel etc. that differ from the base item.
+	-- supersede info from ItemCode with info from the provided itemLink:
+	local _, _,
+	      itemQuality,
+	      itemLevel,
+	      itemMinLevel = GetItemInfo(itemLink)
+	
+	self.Name = itemName
+	self.Link = itemLink
+	self.Quality = itemQuality
+	self.Level = itemLevel
+	self.MinLevel = itemMinLevel
+
+	-- Fill in the rest from itemCodes
+	self.EnchantCode = itemCodes[2] or 0
+	self.JewelCode1 = itemCodes[3] or 0
+	self.JewelCode2 = itemCodes[4] or 0
+	self.JewelCode3 = itemCodes[5] or 0
+	self.JewelCode4 = itemCodes[6] or 0
+	self.SubCode = itemCodes[7] or 0
+	self.UniqueID = itemCodes[8] or 0
+	-- self.LinkLevel = itemCodes[9]		-- LinkLevel is the level of the player who generated the link, which isn't interesting to us
+	-- self.SpecializationID = itemCodes[10]	-- DON'T capture this
+	self.UpgradeTypeID = itemCodes[11] or 0
+	self.InstanceDifficultyID = itemCodes[12] or 0
+
+	local numBonusIDsString = itemCodes[13]
+	local index = 14
+
+	local numBonusIDs = tonumber(numBonusIDsString)
+	local bonusID1, bonusID2
+	if numBonusIDs > 0 then
+		bonusID1 = itemCodes[index]
+		index = index + 1
+	end
+	if numBonusIDs > 1 then
+		bonusID2 = itemCodes[index]
+		index = index + 1
+	end
+
+	self.BonusIDs = (numBonusIDsString ~= 0 and numBonusIDsString or "")..":"..(bonusID1 ~= 0 and bonusID1 or "")..":"..(bonusID2 ~= 0 and bonusID2 or "")
+	self.UpgradeID = itemCodes[index] or 0
+end
+
+function Outfitter._ItemInfo:ParseTooltip()
+	-- Grab a tooltip
+	local tooltip = Outfitter.TooltipLib:SharedTooltip()
+	tooltip:ClearLines()
+	if self.Location and self.Location.BagIndex then
+		tooltip:SetBagItem(self.Location.BagIndex, self.Location.BagSlotIndex)
+	elseif self.Location and self.Location.SlotID then
+		tooltip:SetInventoryItem("player", self.Location.SlotID)
+	elseif self.Link then
+		tooltip:SetHyperlink(self.Link)
+	else
+		assert(false, "can't find item for tooltip")
+		return
+	end
+		
+	-- Return if something went wrong
+	if not tooltip:IsShown() then
+		return
+	end
+	
+	-- Iterate the lines of the tooltip
+	for line in Outfitter.TooltipLib:TooltipLines(tooltip) do
+		self:ParseTooltipLine(line.leftText, line.leftColor)
+	end
+
 	-- Done
-	
-	return vItemInfo
+	self.didParseTooltip = true
 end
 
-function Outfitter:GetBagSlotItemName(pBagIndex, pBagSlotIndex)
-	OutfitterTooltip:SetOwner(OutfitterFrame, "ANCHOR_BOTTOMRIGHT", 0, 0)
-	OutfitterTooltip:SetBagItem(pBagIndex, pBagSlotIndex)
-	
-	if not OutfitterTooltipTextLeft1:IsShown() then
-		OutfitterTooltip:Hide()
-		return nil
+function Outfitter._ItemInfo:ParseTooltipLine(text, color)
+	-- Check for Binds on Equip
+	if text == ITEM_BIND_ON_EQUIP then
+		self.BoE = true
+		return
+	end
+
+	-- Check for Unique-Equipped
+	local type, count = text:match(Outfitter.cUniqueEquippedSearchPattern)
+	if type then
+		self.UniqueType = type
+		self.UniqueCount = tonumber(count)
+		return
+	end
+
+	-- Check for Requires
+	if text:match(Outfitter.cRequiresPrefix) then
+		local hsvColor = Outfitter:RGBToHSV(color)
+		self.FailedRequirements = hsvColor.s > 0.2 and hsvColor.v > 0.2 and (hsvColor.h < 50 or hsvColor.h > 310)
+		return
+	end
+end
+
+function Outfitter._ItemInfo:GetBoE()
+	-- Get the info from the tooltip if necessary
+	if not self.didParseTooltip then
+		self:ParseTooltip()
+	end
+
+	-- Return the value
+	return self.BoE
+end
+
+function Outfitter._ItemInfo:GetMeetsRequirements()
+	-- Get the info from the tooltip if necessary
+	if not self.didParseTooltip then
+		self:ParseTooltip()
+	end
+
+	-- Return the value
+	return not self.FailedRequirements
+end
+
+function Outfitter._ItemInfo:GetUniqueEquipTypes()
+	-- Get the info from the tooltip if necessary
+	if not self.didParseTooltip then
+		self:ParseTooltip()
 	end
 	
-	local vItemName = OutfitterTooltipTextLeft1:GetText()
+	-- Return nothing if there is nothing
+	if not self.UniqueType then
+		return
+	end
 	
-	OutfitterTooltip:Hide()
-	
-	return vItemName
-end
-
-function Outfitter:IsBankBagIndex(pBagIndex)
-	return pBagIndex and (pBagIndex > NUM_BAG_SLOTS or pBagIndex < 0)
+	-- Return the values
+	return {[self.UniqueType] = self.UniqueCount}
 end
 
 ----------------------------------------
@@ -353,17 +475,18 @@ end
 
 function Outfitter:GetSlotIDItemInfo(pSlotID)
 	local vItemLink = self:GetInventorySlotIDLink(pSlotID)
+	if not vItemLink then
+		return
+	end
+
 	local vItemInfo = self:GetItemInfoFromLink(vItemLink)
-	
 	if not vItemInfo then
-		return nil
+		return
 	end
 	
 	vItemInfo.Quality = GetInventoryItemQuality("player", pSlotID)
 	vItemInfo.Texture = GetInventoryItemTexture("player", pSlotID)
-	
-	vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3 = GetInventoryItemGems(pSlotID)
-	
+	-- vItemInfo.Gem1, vItemInfo.Gem2, vItemInfo.Gem3, vItemInfo.Gem4 = GetInventoryItemGems(pSlotID)
 	vItemInfo.Location = {SlotID = pSlotID}
 	
 	return vItemInfo
@@ -428,7 +551,7 @@ function Outfitter:Synchronize()
 	local vBagsChanged, vInventoryChanged = false, false
 
 	if self.Debug.InventoryCache then
-		self:TestMessage("Synchronize()")
+		self:DebugMessage("Synchronize()")
 	end
 	
 	-- Synchronize bag links
@@ -456,7 +579,7 @@ function Outfitter:Synchronize()
 		local vNumBagSlots = GetContainerNumSlots(vBagIndex)
 		
 		if #vBag ~= vNumBagSlots then
-			self:EraseTable(vBag)
+			wipe(vBag)
 			vBagChanged = true
 		end
 		
@@ -486,7 +609,7 @@ function Outfitter:Synchronize()
 		vItemLink = GetInventoryItemLink("player", self.cSlotIDs[vInventorySlot])
 		
 		if self.Debug.InventoryCache then
-			self:TestMessage("Synchronize: Slot %s contains %s", tostring(vInventorySlot), tostring(vItemLink))
+			self:DebugMessage("Synchronize: Slot %s contains %s", tostring(vInventorySlot), tostring(vItemLink))
 		end
 		
 		if self.LinkCache.Inventory[vInventorySlot] ~= vItemLink then
@@ -497,7 +620,7 @@ function Outfitter:Synchronize()
 	
 	if vInventoryChanged then
 		if self.Debug.InventoryCache then
-			self:TestMessage("Synchronize: InventoryChanged")
+			self:DebugMessage("Synchronize: InventoryChanged")
 		end
 		
 		if self.InventoryCache then
@@ -509,7 +632,7 @@ function Outfitter:Synchronize()
 	
 	if vBagsChanged then
 		if self.Debug.InventoryCache then
-			self:TestMessage("Synchronize: Bags changed")
+			self:DebugMessage("Synchronize: Bags changed")
 		end
 		
 		self.EventLib:DispatchEvent("OUTFITTER_BAGS_CHANGED")
@@ -622,7 +745,7 @@ function Outfitter._InventoryCache:Synchronize()
 					and vItemInfo.Code ~= 0
 					and vItemInfo.ItemSlotName
 					and Outfitter:CanEquipBagItem(vBagIndex, vBagSlotIndex)
-					and not Outfitter:BagItemWillBind(vBagIndex, vBagSlotIndex) then
+					and not vItemInfo:GetBoE() then
 						self:AddItem(vItemInfo)
 					end
 				end -- for vBagSlotIndex
@@ -817,10 +940,9 @@ function Outfitter._InventoryCache:FindItemIndex(pOutfitItem, pAllowSubCodeWildc
 			and vItem.JewelCode3 == pOutfitItem.JewelCode3 
 			and vItem.JewelCode4 == pOutfitItem.JewelCode4
 			and vItem.UniqueID == pOutfitItem.UniqueID
-			and vItem.ReforgeID == pOutfitItem.ReforgeID
-			and vItem.ID11 == pOutfitItem.ID11
-			and vItem.ID12 == pOutfitItem.ID12
-			and vItem.ID13 == pOutfitItem.ID13) then
+			and vItem.UpgradeTypeID == pOutfitItem.UpgradeTypeID
+			and vItem.BonusIDs == pOutfitItem.BonusIDs
+			and vItem.UpgradeID == pOutfitItem.UpgradeID) then
 				if vItem.IgnoreItem then
 					vFoundIgnoredItem = vItem
 				else
@@ -920,7 +1042,7 @@ end
 
 function Outfitter._InventoryCache:FlushInventory()
 	if Outfitter.Debug.InventoryCache then
-		Outfitter:TestMessage("Outfitter._InventoryCache:FlushInventory()")
+		Outfitter:DebugMessage("Outfitter._InventoryCache:FlushInventory()")
 	end
 	
 	for vInventorySlot, vItem in pairs(self.InventoryItems) do
@@ -952,8 +1074,10 @@ function Outfitter._InventoryCache:GetMissingItems(pOutfit)
 end
 
 function Outfitter._InventoryCache:CompiledUnusedItemsList()
+	-- Reset all the in-use flags in the cache
 	self:ResetIgnoreItemFlags()
 	
+	-- Iterate the outfits and mark all their items as in-use
 	for vCategoryID, vOutfits in pairs(gOutfitter_Settings.Outfits) do
 		for vOutfitIndex, vOutfit in ipairs(vOutfits) do
 			local vItems = vOutfit:GetItems()
@@ -971,8 +1095,8 @@ function Outfitter._InventoryCache:CompiledUnusedItemsList()
 		end
 	end
 	
+	-- Look for items which aren't marked as in-use
 	local vUnusedItems = nil
-	
 	for vCode, vFamilyItems in pairs(self.ItemsByCode) do
 		for vIndex, vOutfitItem in ipairs(vFamilyItems) do
 			if not vOutfitItem.UsedInOutfit
@@ -980,13 +1104,40 @@ function Outfitter._InventoryCache:CompiledUnusedItemsList()
 				if not vUnusedItems then
 					vUnusedItems = {}
 				end
-				
+
 				table.insert(vUnusedItems, vOutfitItem)
 			end
 		end
 	end
 	
+	-- Done
 	self.UnusedItems = vUnusedItems
+end
+
+function Outfitter._InventoryCache:GetBoEItems()
+	local items = {}
+
+	-- Iterate the bags
+	local numBags, firstBagIndex = Outfitter:GetNumBags()
+	for bagIndex = firstBagIndex, numBags do
+		local numSlots = GetContainerNumSlots(bagIndex)
+			
+		if numSlots > 0 then
+			for slotIndex = 1, numSlots do
+				local itemInfo = Outfitter:GetBagItemInfo(bagIndex, slotIndex)
+					
+				if itemInfo
+				and itemInfo.Code ~= 0
+				and itemInfo.ItemSlotName
+				and Outfitter:CanEquipBagItem(bagIndex, slotIndex)
+				and itemInfo:GetBoE() then
+					table.insert(items, itemInfo)
+				end
+			end -- for slotIndex
+		end -- if numSlots > 0
+	end -- for bagIndex
+
+	return items
 end
 
 function Outfitter._InventoryCache:ItemsAreSame(pItem1, pItem2)
@@ -1050,10 +1201,10 @@ function Outfitter._InventoryCache:ItemsAreSame(pItem1, pItem2)
 		   and pItem1.JewelCode3 == pItem2.JewelCode3
 		   and pItem1.JewelCode4 == pItem2.JewelCode4
 		   and pItem1.UniqueID == pItem2.UniqueID
-		   and pItem1.ReforgeID == pItem2.ReforgeID
-		   and pItem1.ID11 == pItem2.ID11
-		   and pItem1.ID12 == pItem2.ID12
-		   and pItem1.ID13 == pItem2.ID13)
+		   and pItem1.UpgradeTypeID == pItem2.UpgradeTypeID
+		   and pItem1.InstanceDifficultyID == pItem2.InstanceDifficultyID
+		   and pItem1.BonusIDs == pItem2.BonusIDs
+		   and pItem1.UpgradeID == pItem2.UpgradeID)
 		
 		if Outfitter.Debug.TemporaryItems
 		and not vResult then
@@ -1106,6 +1257,7 @@ function Outfitter._InventoryCache:InventorySlotContainsItem(pInventorySlot, pOu
 				-- Must match the enchant and jewel codes if there are multiple items
 				-- in order to be considered a perfect match
 				
+					-- note SubCode mismatch is not checked for; shouldn't it be?
 				local vCodesMatch = vItem.InvType == "INVTYPE_AMMO"
 				                or (vItem.EnchantCode == pOutfitItem.EnchantCode
 				                and vItem.JewelCode1 == pOutfitItem.JewelCode1
@@ -1113,10 +1265,10 @@ function Outfitter._InventoryCache:InventorySlotContainsItem(pInventorySlot, pOu
 				                and vItem.JewelCode3 == pOutfitItem.JewelCode3
 				                and vItem.JewelCode4 == pOutfitItem.JewelCode4
 				                and vItem.UniqueID == pOutfitItem.UniqueID
-				                and vItem.ReforgeID == pOutfitItem.ReforgeID
-				                and vItem.ID11 == pOutfitItem.ID11
-				                and vItem.ID12 == pOutfitItem.ID12
-				                and vItem.ID13 == pOutfitItem.ID13)
+				                and vItem.UpgradeTypeID == pOutfitItem.UpgradeTypeID
+				                and vItem.InstanceDifficultyID == pOutfitItem.InstanceDifficultyID
+				                and vItem.BonusIDs == pOutfitItem.BonusIDs
+				                and vItem.UpgradeID == pOutfitItem.UpgradeID)
 				
 				if not vCodesMatch then
 --					Outfitter:DebugMessage("InventorySlotContainsItem: Items don't match")

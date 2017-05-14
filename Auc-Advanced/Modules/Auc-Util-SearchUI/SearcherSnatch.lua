@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherSnatch.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SearcherSnatch.lua 5710 2017-02-21 13:12:26Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -33,7 +33,7 @@
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Snatch")
 if not lib then return end
-local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,_,_,_,_,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 local get, set, default, Const, resources = parent.GetSearchLocals()
 lib.tabname = "Snatch"
 lib.Private = private
@@ -89,12 +89,12 @@ function lib.SlashCommand(cmd)
 	if itemlink and price and price > 0 then
 		lib.AddSnatch(itemlink, price)
 		price = tooltip:Coins(price)--convert to fancy gsc icon format
-		print("Added snatch for", itemlink, "at", price, "or lower")
+		aucPrint("Added snatch for", itemlink, "at", price, "or lower")
 	elseif itemlink and pct and pct > 0 then
 		lib.AddSnatch(itemlink, nil, pct)
-		print("Added snatch for", itemlink, "at", pct, "%  of market price or lower")
+		aucPrint("Added snatch for", itemlink, "at", pct, "%  of market price or lower")
 	else
-		print("FORMAT: <link> <price in copper> or <link> Xg Xs Xc or <link> X% or <link> Xp")
+		aucPrint("FORMAT: <link> <price in copper> or <link> Xg Xs Xc or <link> X% or <link> Xp")
 	end
 end
 
@@ -210,7 +210,7 @@ function lib:MakeGuiConfig(gui)
 
 	--If we have a saved order reapply
 	if get("snatch.columnorder") then
-		--print("saved order applied")
+		--aucPrint("saved order applied")
 		frame.snatchlist.sheet:SetOrder( get("snatch.columnorder") )
 	end
 	--Apply last column sort used
@@ -305,7 +305,7 @@ function lib:MakeGuiConfig(gui)
 									set("snatch.itemsList", private.snatchList)
 									private.refreshDisplay()
 								else
-									print("This will clear the snatch list permanently. To use hold ALT+CTRL+SHIFT while clicking this button")
+									aucPrint("This will clear the snatch list permanently. To use hold ALT+CTRL+SHIFT while clicking this button")
 								end
 							end)
 	frame.resetList:SetScript("OnEnter", function() lib.buttonTooltips( frame.resetList, "Shift+Ctrl+Alt Click to remove all items from the snatch list") end)
@@ -406,7 +406,13 @@ function private.OnEnterSnatch(button, row, index)
 		if link then
 			GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
 			if link:match("|Hitem:%d") then
-				GameTooltip:SetHyperlink(link)
+				-- Some old-style links may be saved, which can cause problems for other Addons
+				-- As a workaround we shall pass them through GetItemInfo to 'fix' them
+				-- todo: fix saved copies of all links
+				local _, fixedlink = GetItemInfo(link)
+				if fixedlink then
+					GameTooltip:SetHyperlink(fixedlink)
+				end
 			elseif link:match("|Hbattlepet:%d") then
 				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
 				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
@@ -428,7 +434,7 @@ function private.OnClickSnatch(button, row, index)
 end
 
 function private.OnResize(...)
-	--print(...)
+	--aucPrint(...)
 end
 
 --Beginner Tooltips script display for all UI elements
@@ -439,31 +445,6 @@ function lib.buttonTooltips(self, text)
 	end
 end
 
---[[ for reference:
-	ItemTable[Const.LINK]    = hyperlink
-	ItemTable[Const.ILEVEL]  = iLevel
-	ItemTable[Const.ITYPE]   = iType
-	ItemTable[Const.ISUB]    = iSubType
-	ItemTable[Const.IEQUIP]  = iEquip
-	ItemTable[Const.PRICE]   = price
-	ItemTable[Const.TLEFT]   = timeleft
-	ItemTable[Const.NAME]    = name
-	ItemTable[Const.COUNT]   = count
-	ItemTable[Const.QUALITY] = quality
-	ItemTable[Const.CANUSE]  = canUse
-	ItemTable[Const.ULEVEL]  = level
-	ItemTable[Const.MINBID]  = minBid
-	ItemTable[Const.MININC]  = minInc
-	ItemTable[Const.BUYOUT]  = buyout
-	ItemTable[Const.CURBID]  = curBid
-	ItemTable[Const.AMHIGH]  = isHigh
-	ItemTable[Const.SELLER]  = owner
-	ItemTable[Const.ITEMID]  = itemid
-	ItemTable[Const.SUFFIX]  = suffix
-	ItemTable[Const.FACTOR]  = factor
-	ItemTable[Const.ENCHANT]  = enchant
-	ItemTable[Const.SEED]  = seed
-]]
 --returns if a item meets snatch criteria
 function lib.Search(item)
 	local itemsig = GetSnatchSig(item[Const.LINK])
@@ -500,8 +481,8 @@ function lib.Search(item)
 	end
 	return false, "Not in snatch list"
 end
---Rescan is an optional method a searcher can implement that allows it to queue a rescan of teh ah
---Just pass any itemlinks you want rescaned
+--Rescan is an optional method a searcher can implement that allows it to queue a rescan of the AH
+--Just pass any itemlinks you want rescanned
 function lib.Rescan()
 	for itemsig, iteminfo in pairs(private.snatchList) do
 		local link = iteminfo.link
@@ -511,7 +492,7 @@ function lib.Rescan()
 	end
 end
 
---[[Snatch GUI functinality code]]
+--[[Snatch GUI functionality code]]
 function lib.AddSnatch(itemlink, price, percent, count)
 	local itemsig = GetSnatchSig(itemlink)
 	if not itemsig then return end
@@ -645,4 +626,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5710 $")

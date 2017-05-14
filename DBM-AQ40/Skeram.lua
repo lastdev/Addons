@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Skeram", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 534 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
 mod:SetCreatureID(15263)
+mod:SetEncounterID(709)
 mod:SetModelID(15345)
 mod:RegisterCombat("combat")
 
@@ -11,7 +12,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_REMOVED 785",
 	"SPELL_CAST_SUCCESS 20449 4801 8195",
 	"SPELL_SUMMON 747",
-	"UNIT_HEALTH target focus mouseover"
+	"UNIT_HEALTH boss1"
 )
 
 local warnMindControl	= mod:NewTargetAnnounce(785, 3)

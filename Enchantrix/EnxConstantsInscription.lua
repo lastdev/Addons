@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -55,6 +55,11 @@ local ICY_PIGMENT = 43109
 local BURNING_EMBERS = 61980
 local MISTY_PIGMENT = 79253
 
+local ROSEATE_PIGMENT = 129032
+local SALLOW_PIGMENT = 129034
+
+local HERB_NIGHTMARE_POD = 136926
+
 local HERB_PEACEBLOOM = 2447
 local HERB_SILVERLEAF = 765
 local HERB_EARTHROOT = 2449
@@ -89,7 +94,7 @@ local HERB_PLAGUEBLOOM = 13466
 local HERB_DREAMFOIL = 13463
 local HERB_MOUNTAINSILVERSAGE = 13465
 
--- all BC herbs
+-- all BurningCrusade herbs
 local HERB_TEROCONE = 22789
 local HERB_DREAMINGGLORY = 22786
 local HERB_FELWEED = 22785
@@ -133,8 +138,16 @@ local HERB_GORGONDFLYTRAP = 109126
 local HERB_STARFLOWER = 109127
 local HERB_NAGRANDARROWBLOOM = 109128
 local HERB_TALADORORCHID = 109129
-local HERB_CHAMELEONLOTUS = 109130 -- green quality, but millable!
+--local HERB_CHAMELEONLOTUS = 109130 -- removed in beta
 
+-- Legion herbs
+local HERB_AETHRIL = 124101
+local HERB_DREAMLEAF = 124102
+local HERB_FOXFLOWER = 124103
+local HERB_FJARNSKAGGL = 124104
+local HERB_STARLIGHTROSE = 124105
+local HERB_FELWORT = 124106
+local HERB_YSERALINESEEDS = 128304
 
 -- only currently used for autoloot in EnxAutoDisenchant.lua
 -- Blizz normally provides the reverse data in the pigment tooltip
@@ -152,6 +165,7 @@ const.ReversePigmentList = {
 	[ASHEN_PIGMENT] = 1,
 	[SHADOW_PIGMENT] = 1,
 	[CERULEAN_PIGMENT] = 1,
+	[ROSEATE_PIGMENT] = 1,
 
 	-- rare
 	[VERDANT_PIGMENT] = 1,
@@ -163,6 +177,10 @@ const.ReversePigmentList = {
 	[ICY_PIGMENT] = 1,
 	[BURNING_EMBERS] = 1,
 	[MISTY_PIGMENT] = 1,
+	[SALLOW_PIGMENT] = 1,
+	
+	[HERB_YSERALINESEEDS] = 1,
+	[HERB_NIGHTMARE_POD] = 1,
 
 }
 
@@ -190,6 +208,9 @@ local	SHADOW_PIGMENT_LOW = "SHADOW_PIGMENT_LOW"
 local	SHADOW_PIGMENT_HIGH = "SHADOW_PIGMENT_HIGH"
 local	CERULEAN_PEGMENT_LOW = "CERULEAN_PIGMENT_LOW"
 local	CERULEAN_PEGMENT_HIGH = "CERULEAN_PIGMENT_HIGH"
+local	ROSEATE_PIGMENT_LOW = "ROSEATE_PIGMENT_LOW"
+local	ROSEATE_PIGMENT_MEDIUM = "ROSEATE_PIGMENT_MEDIUM"
+local	ROSEATE_PIGMENT_HIGH = "ROSEATE_PIGMENT_HIGH"
 
 
 -- skill required, by bracket/result
@@ -216,10 +237,11 @@ const.MillingSkillRequired = {
 	[ASHEN_PIGMENT_HIGH] = 475,
 	[SHADOW_PIGMENT_LOW] = 500,
 	[SHADOW_PIGMENT_HIGH] = 500,
-	
--- WoD TODO - ccox - confirm values
 	[CERULEAN_PEGMENT_LOW] = 1,
 	[CERULEAN_PEGMENT_HIGH] = 1,
+	[ROSEATE_PIGMENT_LOW] = 1,
+	[ROSEATE_PIGMENT_MEDIUM] = 1,
+	[ROSEATE_PIGMENT_HIGH] = 1,
 
 }
 
@@ -301,14 +323,23 @@ const.MillableItems = {
 	[HERB_SNOWLILY] = SHADOW_PIGMENT_LOW,
 	[HERB_FOOLSCAP] = SHADOW_PIGMENT_HIGH,
 
--- TODO - ccox - confirm groupings
 	[HERB_FROSTWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_FIREWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_GORGONDFLYTRAP] = CERULEAN_PEGMENT_LOW,
-	[HERB_STARFLOWER] = CERULEAN_PEGMENT_LOW,
+	[HERB_STARFLOWER] = CERULEAN_PEGMENT_HIGH,
 	[HERB_NAGRANDARROWBLOOM] = CERULEAN_PEGMENT_HIGH,
 	[HERB_TALADORORCHID] = CERULEAN_PEGMENT_HIGH,
-	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- green quality, but millable!
+--	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- removed in beta
+
+	-- TODO - ccox - determine yields
+	[HERB_YSERALINESEEDS] = ROSEATE_PIGMENT_LOW,
+	[HERB_AETHRIL] = ROSEATE_PIGMENT_MEDIUM,
+	[HERB_DREAMLEAF] = ROSEATE_PIGMENT_MEDIUM,
+	[HERB_FOXFLOWER] = ROSEATE_PIGMENT_MEDIUM,
+	[HERB_FJARNSKAGGL] = ROSEATE_PIGMENT_MEDIUM,
+	[HERB_STARLIGHTROSE] = ROSEATE_PIGMENT_HIGH,
+	[HERB_FELWORT] = ROSEATE_PIGMENT_MEDIUM,	-- green quality, but is millable in beta
+
 }
 
 
@@ -417,7 +448,6 @@ const.MillGroupYields = {
 		[MISTY_PIGMENT] = 0.56,
 		},
 
--- WoD - TODO - ccox - need more data
 	[CERULEAN_PEGMENT_LOW] = {
 		[CERULEAN_PIGMENT] = 2.10,
 		},
@@ -425,6 +455,23 @@ const.MillGroupYields = {
 	[CERULEAN_PEGMENT_HIGH] = {
 		[CERULEAN_PIGMENT] = 2.10,
 		},
+	
+	-- TODO - ccox - determine yields
+	[ROSEATE_PIGMENT_LOW] = {		-- just HERB_YSERALINESEEDS
+		[ROSEATE_PIGMENT] = 1.0,
+	},
+	
+	[ROSEATE_PIGMENT_MEDIUM] = {
+		[ROSEATE_PIGMENT] = 2.1,
+		[SALLOW_PIGMENT] = 0.3,
+		[HERB_YSERALINESEEDS] = 0.2,		-- FoxFlower gives more?
+		[HERB_NIGHTMARE_POD] = 0.14,		-- only for Dreamleaf?
+	},
+	
+	[ROSEATE_PIGMENT_HIGH] = {		-- just HERB_STARLIGHTROSE
+		[ROSEATE_PIGMENT] = 6.0,
+		[SALLOW_PIGMENT] = 0.3,
+	},
 }
 
 
@@ -448,7 +495,9 @@ local BLACKFALLOW_INK = 61978
 local INFERNO_INK = 61981
 local INK_DREAMS = 79254
 local STARLIGHT_INK = 79255
-local WARBINDER_INK = 113111
+local WARPAINT_INK = 112377
+
+-- Legion uses pigments directly instead of making inks
 
 const.ReverseInkList = {
 
@@ -463,7 +512,7 @@ const.ReverseInkList = {
 	[ INKOFTHESEA_INK ] = { AZURE_PIGMENT },
 	[ BLACKFALLOW_INK ] = { ASHEN_PIGMENT },
 	[ INK_DREAMS ] = { SHADOW_PIGMENT },
-	[ WARBINDER_INK ] = { CERULEAN_PIGMENT },
+	[ WARPAINT_INK ] = { CERULEAN_PIGMENT },
 	
 	[ HUNTERS_INK ] = { VERDANT_PIGMENT },
 	[ DAWNSTAR_INK ] = { BURNT_PIGMENT },

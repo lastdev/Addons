@@ -128,8 +128,6 @@
 	Outfitter.cHide = "Verstecken"
 	Outfitter.cDontChange = "Don't change"
 	
-	Outfitter.cHelm = "Helm"
-	Outfitter.cCloak = "Umhang"
 	Outfitter.cPlayerTitle = "Title"
 
 	Outfitter.cMore = "More"
@@ -146,16 +144,6 @@
 
 	Outfitter.cMinimapButtonTitle = "Outfitter Minimapbutton"
 	Outfitter.cMinimapButtonDescription = "Klicken für eine Auswahl an Outfits oder gedrückt halten zum Bewegen des Buttons."
-
-	Outfitter.cClassName.DRUID = "Druide"
-	Outfitter.cClassName.HUNTER = "Jäger"
-	Outfitter.cClassName.MAGE = "Magier"
-	Outfitter.cClassName.PALADIN = "Paladin"
-	Outfitter.cClassName.PRIEST = "Priester"
-	Outfitter.cClassName.ROGUE = "Schurke"
-	Outfitter.cClassName.SHAMAN = "Schamane"
-	Outfitter.cClassName.WARLOCK = "Hexenmeister"
-	Outfitter.cClassName.WARRIOR = "Krieger"
 
 	Outfitter.cBattleStance = "Kampfhaltung"
 	Outfitter.cDefensiveStance = "Verteidigungshaltung"
@@ -276,4 +264,7 @@
 	Outfitter.cTooManyServerOutfits = "You cannot store more than %d outfits on the server."
 	
 	Outfitter.cNoItemsWithStat = "Couldn't generate an outfit because no items with that stat were found"
+	
+	Outfitter.cRequiresPrefix = "Benötigt:"
+	Outfitter.cUniqueEquippedSearchPattern = "^Einzigartig angelegt: (.*) %((%d+)%)$"
 end

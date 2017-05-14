@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetZone()
@@ -16,8 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 143766 143780 143773 143767 146589 143440 143445",
 	"SPELL_DAMAGE 143783",
 	"SPELL_MISSED 143783",
-	"SPELL_PERIODIC_DAMAGE 143784",
-	"SPELL_PERIODIC_MISSED 143784",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -46,8 +44,8 @@ local specWarnFearsomeRoar			= mod:NewSpecialWarningStack(143766, nil, 2)
 local specWarnFearsomeRoarOther		= mod:NewSpecialWarningTaunt(143766)
 local specWarnDeafeningScreech		= mod:NewSpecialWarningCast(143343, "SpellCaster", nil, nil, 2)
 --Stage 2: Frenzy for Blood!
-local specWarnBloodFrenzy			= mod:NewSpecialWarningSpell("OptionVersion2", 143440, nil, nil, nil, 4)
-local specWarnFixate				= mod:NewSpecialWarningRun("OptionVersion2", 143445, nil, nil, nil, 4)
+local specWarnBloodFrenzy			= mod:NewSpecialWarningSpell(143440, nil, nil, 2, 4)
+local specWarnFixate				= mod:NewSpecialWarningRun(143445, nil, nil, 2, 4)
 local yellFixate					= mod:NewYell(143445)
 local specWarnEnrage				= mod:NewSpecialWarningTarget(145974, "Tank|RemoveEnrage")
 local specWarnBloodFrenzyOver		= mod:NewSpecialWarningEnd(143440)
@@ -67,24 +65,24 @@ local yellBurningBlood				= mod:NewYell(143783, nil, false)
 
 --Stage 1: A Cry in the Darkness
 local timerFearsomeRoar				= mod:NewTargetTimer(30, 143766, nil, "Tank|Healer")
-local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank")
-local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343)-- (143345 base power regen, 4 every half second)
+local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)-- (143345 base power regen, 4 every half second)
 --Stage 2: Frenzy for Blood!
 local timerBloodFrenzyCD			= mod:NewNextTimer(5, 143442)
 local timerBloodFrenzyEnd			= mod:NewBuffActiveTimer(13.5, 143442)
-local timerFixate					= mod:NewTargetTimer(12, 143445)
-local timerKey						= mod:NewTargetTimer(60, 146589) 
+local timerFixate					= mod:NewTargetTimer(12, 143445, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerKey						= mod:NewTargetTimer(60, 146589, nil, false) 
 --Infusion of Acid
 local timerAcidBreath				= mod:NewTargetTimer(30, 143780, nil, "Tank|Healer")
-local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank")--Often 12, but sometimes 11
-local timerCorrosiveBloodCD			= mod:NewCDTimer(3.5, 143791, nil, false)--Cast often, so off by default
+local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Often 12, but sometimes 11
+local timerCorrosiveBloodCD			= mod:NewCDTimer(3.5, 143791, nil, false, nil, 3)--Cast often, so off by default
 --Infusion of Frost
 local timerFrostBreath				= mod:NewTargetTimer(30, 143773, nil, "Tank|Healer")
-local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank")
+local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 --Infusion of Fire
 local timerScorchingBreath			= mod:NewTargetTimer(30, 143767, nil, "Tank|Healer")
-local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank")--Often 12, but sometimes 11
-local timerBurningBloodCD			= mod:NewCDTimer(3.5, 143783, nil, false)--cast often, but someone might want to show it
+local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Often 12, but sometimes 11
+local timerBurningBloodCD			= mod:NewCDTimer(3.5, 143783, nil, false, nil, 3)--cast often, but someone might want to show it
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -127,18 +125,16 @@ function mod:OnCombatStart(delay)
 	end
 	berserkTimer:Start(-delay)
 	DBM:AddMsg(DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP)
---	if self.Options.RangeFrame then
---		if self:IsMythic() then
---			DBM.RangeCheck:Show(10, nil, nil, 11)--All difficulties are dynamic with no data. Will only be able to fix mythic really.
---		else
---		end
---	end
+	if not self:IsTrivial(100) then
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE 143784",
+			"SPELL_PERIODIC_MISSED 143784"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)

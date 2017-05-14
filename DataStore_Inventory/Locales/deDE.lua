@@ -2,6 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Inventory", "deDE" )
 
 if not L then return end
 
+L["%s is inspecting %s"] = " %s besichtigt %s"
 L["BROADCAST_AIL_DISABLED"] = "Es wird gar nichts gesendet."
 L["BROADCAST_AIL_ENABLED"] = "Die durchschnittliche Gegenstandsstufe deines altern. Chars wird beim Einloggen an den Gilden-Channel gesandt."
 L["BROADCAST_AIL_TEXT"] = "Beim Einloggen die durchschnittliche Gegenstandsstufe in der Gilde verbreiten."
@@ -15,6 +16,4 @@ L["EQUIP_REQ_ENABLED"] = "Eine Mitteilung im Chat informiert dich darüber, welc
 L["EQUIP_REQ_TEXT"] = "Benachrichtigung, wenn jemand die Ausrüstung eines meiner alternativen Charakters besichtigt."
 L["EQUIP_REQ_TITLE"] = "Benachrichtigung bei Ausrüstungsanfrage"
 L["Heroic"] = "Heroisch"
-L["%s is inspecting %s"] = " %s besichtigt %s"
-L["Trash Mobs"] = "\"Trash\"-Mobs"
-
+L["Trash Mobs"] = "Trash-Mobs"

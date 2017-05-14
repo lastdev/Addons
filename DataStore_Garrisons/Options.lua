@@ -1,4 +1,4 @@
-﻿if not DataStore then return end
+if not DataStore then return end
 
 local addonName = "DataStore_Garrisons"
 local addon = _G[addonName]
@@ -13,9 +13,6 @@ function addon:SetupOptions()
 	DataStoreGarrisonsOptions_SliderReportLevel.tooltipText = L["REPORT_LEVEL_TOOLTIP"]
 	DataStoreGarrisonsOptions_SliderReportLevelLow:SetText("350")
 	DataStoreGarrisonsOptions_SliderReportLevelHigh:SetText("475")
-	f.ReportUncollected.Text:SetText(L["REPORT_UNCOLLECTED_LABEL"])
-
-	DataStore:SetCheckBoxTooltip(f.ReportUncollected, L["REPORT_UNCOLLECTED_TITLE"], L["REPORT_UNCOLLECTED_ENABLED"], L["REPORT_UNCOLLECTED_DISABLED"])
 	
 	-- restore saved options to gui
 	local value = DataStore:GetOption(addonName, "ReportLevel")

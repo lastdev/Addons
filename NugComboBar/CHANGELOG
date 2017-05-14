@@ -1,3 +1,121 @@
+7.1.8:
+- ToC Update
+- cooldown charge bar returned for rogues, prot paladins, and brewmasters
+- chargecooldown now makes it appear below the point that is currently charging
+
+7.1.7:
+- Patch 7.2 will break the old way ncb effects worked.
+  Most effects were recovered, some with slight changes, but funnelPurple, Red, Green are gone.
+  Several new effects were added tho, most notably glowWhite,
+  which, being neutral, can be recolored to anything.
+
+7.1.6:
+- Fire mage 7.1.5 update for Flame On and Flare Up
+
+7.1.5a:
+- fixed a bug that was occuring in fullscreen mode
+
+7.1.5:
+- Option to attach bar to player nameplate
+- Fixed "Hide without target" feature
+
+7.1.4:
+- Removed chargecooldown feature attemping to eliminate fps drops
+
+7.1.3:
+ - Shadow dance counter is no longer shown until the spell is learned.
+
+7.1.2:
+ - Charge cooldown checkbox in GUI
+ - Fixed a bug with charge cooldown when switching between Sub and other 
+spec
+
+7.1.1:
+ - Charge Cooldown for Shadow Dance and SotR
+ - alt skin bug with charge cooldown feature fixed
+
+7.1.0:
+ - ToC Update
+
+7.0.9:
+ - double bar configs with top anchorpoint now centered
+ - charge cooldown tracking (for BrM monk), /ncb chargecooldown to 
+toggle
+
+7.0.8:
+ - Option to change second bar position
+ - Default class frame textures now should not be visible when disabled
+
+7.0.7:
+ - Instant feedback Meatcleaver tracking for historical reasons
+ - Checkbox for Meatcleaver toggle
+ - Cleave for Arms when Focused Rage is not talented
+ - Screen resolution query bug fixed
+
+7.0.6a:
+ - Default amount of Souls Shards changed to 3
+
+7.0.6:
+ - added Focused Rage for Arms
+ - added Phoenix's Flames for Fire
+ - updated "furnace" effect, it's good now
+
+7.0.5c:
+ - Fixed a bug with Runes on 2d mode
+
+7.0.5:
+ - BrM Monk: bar should no longer appear at login if disabled
+ - bugfixes
+ - Updated void and void2 presets
+
+7.0.4:
+ - Rune Tracking, rune cooldowns option (Makina skin requires update to 
+r7)
+ - Sound enabled for Hunters and Warlocks
+
+7.0.3:
+ - Bugfix for cases with points filled from the start of session
+
+7.0.2:
+ - Option to disable class frames on player nameplate
+ - Option to disable shadow dance, tidal waves, inferno blast
+ - Souls shards now fade out when out of combat
+
+7.0.1:
+ - Fixed Blizzard frames disablers
+
+7.0.0:
+ - Legion Update
+ - New 3d effects
+ - Switched to PlayerModel from Model, aspect ratio bug workaround 
+removed
+
+6.0.23:
+ - Hiding during Pet Battles
+
+6.0.22:
+ - Turn on/off Enh T18 setbonus dynamically
+ - Fulmination again displayed as points. Each point = 3 charges or 4 with improved lightning shield
+
+6.0.21:
+ - Enh T18 bonus now using a second layer instead of row
+
+6.0.19:
+ - Enhancement Shaman T18 set bonus support
+
+6.0.17:
+ - some settings were not updating on spec change
+ - ToC update for 6.2
+
+6.0.16:
+ - Updated ruRU and zhTW localizations
+
+6.0.15:
+ - Incanter's Flow for non-arcane mages
+
+6.0.14:
+ - ToC Update
+
 6.0.13a:
  - Bugfix for mages
 

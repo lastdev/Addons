@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: FilterItemPrice.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: FilterItemPrice.lua 5706 2017-02-10 12:29:06Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -41,38 +41,38 @@ local GetSigFromLink = AucAdvanced.API.GetSigFromLink
 -- Set our defaults
 default("ignoreitemprice.enable", true)
 
--- local constants
-local SHEET_RETRY_THROTTLE = 1
-
 local ignorelist = {}
-private.tempignorelist = {}
-private.sheetdata = {}
+local tempignorelist = {}
 
+local linkcache = {}
 function private.UpdateSheet(retryOnly)
 	local missing
+	if not private.ignorelistGUI then return end
 	if retryOnly then
-		if not private.sheetThrottle or GetTime() < private.sheetThrottle then
+		-- Retry if we need to fill in missing entries. Don't update if sheet not visible
+		if not private.needsRefresh or not private.ignorelistGUI:IsVisible() then
 			return
 		end
-	end
-	private.sheetdata = {} -- not worth using 'wipe' here as all the subtables get discarded anyway
-	for item, cost in pairs(ignorelist) do
-		local link = AucAdvanced.API.GetLinkFromSig(item)
-		if not link then
-			link = item
-			missing = true
-		end
-		tinsert(private.sheetdata, {link, cost})
-	end
-	if private.ignorelistGUI and private.ignorelistGUI.sheet then
-		private.ignorelistGUI.sheet:SetData(private.sheetdata)
-	end
-	if missing then
-		-- private.sheetThrottle serves double duty as a flag that we need to redo the sheet, and a throttle/timer to prevent us retrying it too soon
-		private.sheetThrottle = GetTime() + SHEET_RETRY_THROTTLE
 	else
-		private.sheetThrottle = nil
+		-- Sheet has (probably) changed
+		wipe(linkcache)
 	end
+	local sheetdata = {}
+	for sig, cost in pairs(ignorelist) do
+		local link = linkcache[sig]
+		if not link then
+			link = AucAdvanced.API.GetLinkFromSig(sig)
+			if link then
+				linkcache[sig] = link
+			else
+				link = sig
+				missing = true
+			end
+		end
+		tinsert(sheetdata, {link, cost})
+	end
+	private.ignorelistGUI.sheet:SetData(sheetdata)
+	private.needsRefresh = missing
 end
 
 function private.OnEnterSheet(button, row, index)
@@ -88,9 +88,10 @@ function private.OnEnterSheet(button, row, index)
 				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
 				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
 				return
+			else
+				private.UpdateSheet(true)
 			end
 		end
-		private.UpdateSheet(true) -- if no link, try updating the table to fix it
 	end
 end
 
@@ -115,6 +116,8 @@ function lib.Processor(msg, ...)
 			end
 			private.UpdateSheet()
 		end
+	elseif msg == "iteminfoupdate" then
+		private.UpdateSheet(true)
 	end
 end
 
@@ -125,7 +128,7 @@ end
 --if price==nil, item will be removed from the list
 function lib.AddIgnore(sig, price, temp)
 	if temp then
-		private.tempignorelist[sig] = price
+		tempignorelist[sig] = price
 	else
 		ignorelist[sig] = price
 		set("ignoreitemprice.ignorelist", ignorelist) -- not required to save the table, but may trigger notification
@@ -133,8 +136,8 @@ function lib.AddIgnore(sig, price, temp)
 	end
 end
 
---private.remove()
---removes the selected item from the ignore list
+-- private.remove()
+-- removes the selected item from the ignore list
 function private.remove()
 	local link = private.ignorelistGUI.sheet:GetSelection()[1]
 	if link then
@@ -145,6 +148,15 @@ function private.remove()
 			lib.AddIgnore(link)
 		end
 	end
+end
+
+-- private.removeall()
+-- wipes both the ignore list and the temp ignore list
+function private.removeall()
+	wipe(ignorelist)
+	wipe(tempignorelist)
+	set("ignoreitemprice.ignorelist", ignorelist) -- not required to save the table, but may trigger notification
+	private.UpdateSheet()
 end
 
 -- This function is automatically called when we need to create our search parameters
@@ -167,9 +179,10 @@ function private.MakeGuiConfig(gui)
 		"What does this filter do?",
 		"This filter provides the ability to exclude specific items that exceed a certain \"ignore\" price. You can selectively apply this filter to specific searches.")
 
-	gui:AddControl(id, "Header",     0,      "ItemPrice Filter Criteria")
+	gui:AddControl(id, "Header", 0, "ItemPrice Filter Criteria")
 
-	gui:AddControl(id, "Checkbox",    0, 1,  "ignoreitemprice.enable", "Enable ItemPrice filtering")
+	gui:AddControl(id, "Checkbox", 0, 1, "ignoreitemprice.enable", "Enable ItemPrice filtering")
+	gui:AddControl(id, "Note", 0, 1, nil, 20, "")
 	gui:AddControl(id, "Subhead",     0, "Filter for:")
 	for name, searcher in pairs(AucSearchUI.Searchers) do
 		if searcher and searcher.Search then
@@ -188,9 +201,10 @@ function private.MakeGuiConfig(gui)
 		end
 	end
 
-	private.ignorelistGUI = CreateFrame("Frame", nil, gui.tabs[id][3])
-	private.ignorelistGUI:SetPoint("BOTTOMRIGHT", gui.tabs[id][3], "TOPRIGHT", -50, -295)
-	private.ignorelistGUI:SetPoint("TOPLEFT", gui.tabs[id][3], "TOPRIGHT", -350, -20)
+	local content = gui.tabs[id].content
+	private.ignorelistGUI = CreateFrame("Frame", nil, content)
+	private.ignorelistGUI:SetPoint("BOTTOMRIGHT", content, "TOPRIGHT", -50, -295)
+	private.ignorelistGUI:SetPoint("TOPLEFT", content, "TOPRIGHT", -350, -20)
 	private.ignorelistGUI:SetBackdrop({
 		bgFile = "Interface/Tooltips/ChatBubble-Background",
 		edgeFile = "Interface/Tooltips/ChatBubble-BackDrop",
@@ -205,14 +219,21 @@ function private.MakeGuiConfig(gui)
 		{ "Ignore Price", "COIN", 90},
 	}, private.OnEnterSheet, private.OnLeaveSheet, private.OnClickSheet, nil, private.UpdateControls)
 	private.ignorelistGUI.sheet:EnableSelect(true)
-	private.ignorelistGUI.sheet:SetData(private.sheetdata)
 
-	private.removebutton = CreateFrame("Button", nil, gui.tabs[id][3], "OptionsButtonTemplate")
-	private.removebutton:SetPoint("TOPRIGHT", private.ignorelistGUI, "TOPLEFT", -10, -20)
+	private.removebutton = CreateFrame("Button", nil, gui.tabs[id].content, "OptionsButtonTemplate")
+	private.removebutton:SetPoint("TOPRIGHT", private.ignorelistGUI, "TOPLEFT", -5, -20)
 	private.removebutton:SetText("Remove Selected")
 	private.removebutton:SetWidth(150)
 	private.removebutton:SetScript("OnClick", private.remove)
 	private.removebutton:Disable()
+
+	private.removeallbutton = CreateFrame("Button", nil, gui.tabs[id].content, "OptionsButtonTemplate")
+	private.removeallbutton:SetPoint("TOPLEFT", private.removebutton, "BOTTOMLEFT", 0, -5)
+	private.removeallbutton:SetText("Remove All")
+	private.removeallbutton:SetWidth(150)
+	private.removeallbutton:SetScript("OnClick", private.removeall)
+	private.removeallbutton:Enable()
+
 end
 
 --lib.Filter(item, searcher)
@@ -225,7 +246,6 @@ function lib.Filter(item, searcher)
 			or (searcher and (not get("ignoreitemprice.filter."..searcher))) then
 		return
 	end
-	if not item[Const.PRICE] then DevTools_Dump(item) end
 	local price = item[Const.PRICE]
 	local count = item[Const.COUNT] or 1
 	price = floor(price/count)
@@ -236,9 +256,9 @@ function lib.Filter(item, searcher)
 			return true, "Item ignored at "..AucAdvanced.Coins(ignorelist[sig], true)
 		end
 	end
-	if private.tempignorelist[sig] then
-		if price >= private.tempignorelist[sig] then
-			return true, "Item ignored for session at "..AucAdvanced.Coins(private.tempignorelist[sig], true)
+	if tempignorelist[sig] then
+		if price >= tempignorelist[sig] then
+			return true, "Item ignored for session at "..AucAdvanced.Coins(tempignorelist[sig], true)
 		end
 	end
 end
@@ -265,11 +285,11 @@ function lib.PostFilter(item, searcher, buyorbid)
 			return true, "Item ignored at "..AucAdvanced.Coins(ignorelist[sig], true)
 		end
 	end
-	if private.tempignorelist[sig] then
-		if price >= private.tempignorelist[sig] then
-			return true, "Item ignored for session at "..AucAdvanced.Coins(private.tempignorelist[sig], true)
+	if tempignorelist[sig] then
+		if price >= tempignorelist[sig] then
+			return true, "Item ignored for session at "..AucAdvanced.Coins(tempignorelist[sig], true)
 		end
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5706 $")

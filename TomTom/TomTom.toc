@@ -1,7 +1,7 @@
-## Interface: 60000
+## Interface: 70200
 ## Title: TomTom
 ## Author: jnwhiteh
-## Version: v60000-1.1.1
+## Version: v70200-1.0.0
 ## License: All Rights Reserved
 ## Notes: Acts as your portable navigation assistant
 ## Notes-frFR: Agit comme un assistant de navigation portable
@@ -9,15 +9,11 @@
 ## Notes-ruRU: Удобный портативный навигатор по игровой карте
 ## Author: Cladhaire
 ## SavedVariables: TomTomDB, TomTomWaypoints, TomTomWaypointsMF
-## X-Curse-Packaged-Version: v60000-1.1.1
-## X-Curse-Project-Name: TomTom
-## X-Curse-Project-ID: tomtom
-## X-Curse-Repository-ID: wow/tomtom/mainline
+## OptionalDeps: HereBeDragons-1.0
 
 ## X-Localizations: enUS, enGB, deDE, frFR, zhCN, ruRU, zhTW
 ## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
 
-libs\Astrolabe\Load.xml
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 libs\AceGUI-3.0\AceGUI-3.0.xml
@@ -26,7 +22,8 @@ libs\AceEvent-3.0\AceEvent-3.0.xml
 libs\AceDB-3.0\AceDB-3.0.xml
 libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
-libs\LibMapData-1.0\library.lua
+libs\HereBeDragons-1.0\HereBeDragons-1.0.lua
+libs\HereBeDragons-1.0\HereBeDragons-Pins-1.0.lua
 
 AddonCore.lua
 

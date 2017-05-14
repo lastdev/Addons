@@ -40,8 +40,8 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v6.0c1";
-SMARTBUFF_VERSIONNR     = 60000;
+SMARTBUFF_VERSION       = "v7.0a";
+SMARTBUFF_VERSIONNR     = 70000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you or party/raid members/pets";
@@ -123,8 +123,8 @@ local cScrBtnBO = nil;
 local cAddUnitList = { };
 local cIgnoreUnitList = { };
 
-local cClasses       = {"DRUID", "HUNTER", "MAGE", "PALADIN", "PRIEST", "ROGUE", "SHAMAN", "WARLOCK", "WARRIOR", "DEATHKNIGHT", "MONK", "HPET", "WPET", "DKPET", "TANK", "HEALER", "DAMAGER"};
-local cOrderGrp      = {0, 1, 2 , 3, 4 , 5 , 6, 7, 8, 9};
+local cClasses       = {"DRUID", "HUNTER", "MAGE", "PALADIN", "PRIEST", "ROGUE", "SHAMAN", "WARLOCK", "WARRIOR", "DEATHKNIGHT", "MONK", "DEMONHUNTER", "HPET", "WPET", "DKPET", "TANK", "HEALER", "DAMAGER"};
+local cOrderGrp      = {0, 1, 2 , 3, 4 , 5 , 6, 7, 8, 9, 10};
 local cFonts         = {"NumberFontNormal", "NumberFontNormalLarge", "NumberFontNormalHuge", "GameFontNormal", "GameFontNormalLarge", "GameFontNormalHuge", "ChatFontNormal", "QuestFont", "MailTextFontNormal", "QuestTitleFont"};
 
 local currentUnit = nil;
@@ -154,6 +154,7 @@ local Icons = {
   ["PALADIN"]     = { IconPaths.Classes, 0.00, 0.25, 0.50, 0.75 },
   ["DEATHKNIGHT"] = { IconPaths.Classes, 0.25, 0.50, 0.50, 0.75 },
   ["MONK"]        = { IconPaths.Classes, 0.50, 0.75, 0.50, 0.75 },
+  ["DEMONHUNTER"] = { IconPaths.Classes, 0.75, 1.00, 0.50, 0.75 },
   ["PET"]         = { IconPaths.Pet, 0.08, 0.92, 0.08, 0.92},
   ["TANK"]        = { IconPaths.Roles, 0.0, 19/64, 22/64, 41/64 },
   ["HEALER"]      = { IconPaths.Roles, 20/64, 39/64, 1/64, 20/64 },
@@ -3010,7 +3011,6 @@ function SMARTBUFF_Options_Init(self)
     O.ColSplashFont.b = 1.0;                
   end
   iCurrentFont = O.CurrentFont;
-  SMARTBUFF_Splash_ChangeFont(0);
     
   if (O.Debug == nil) then O.Debug = false; end
   
@@ -3029,19 +3029,6 @@ function SMARTBUFF_Options_Init(self)
     Cosmos_RegisterButton(SMARTBUFF_TITLE, SMARTBUFF_TITLE, SMARTBUFF_TITLE, imgSB, SMARTBUFF_OptionsFrame_Toggle);
   end
 
-  -- CTMod support
-  if(CT_RegisterMod) then
-    CT_RegisterMod(
-      SMARTBUFF_VERS_TITLE,
-      SMARTBUFF_SUBTITLE,
-      5,
-      imgSB,
-      SMARTBUFF_DESC,
-      "switch",
-      "",
-      SMARTBUFF_OptionsFrame_Toggle);
-  end
-  
   if (IsAddOnLoaded("Parrot")) then
     isParrot = true;    
   end
@@ -3097,6 +3084,8 @@ function SMARTBUFF_Options_Init(self)
   if (OG.SplashIcon == nil) then OG.SplashIcon = true; end
   if (OG.SplashMsgShort == nil) then OG.SplashMsgShort = false; end
   if (OG.FirstStart == nil) then OG.FirstStart = "V0";  end
+  
+  SMARTBUFF_Splash_ChangeFont(0);
   if (OG.FirstStart ~= SMARTBUFF_VERSION) then
     OG.FirstStart = SMARTBUFF_VERSION;
     SMARTBUFF_OptionsFrame_Open(true);
@@ -4575,12 +4564,12 @@ function SMARTBUFF_ToggleTutorial(close)
 	
 	local b = HelpPlate_IsShowing(helpPlate);
 	if (close) then
-	  HelpPlate_Hide(false);
-	  return;
+		HelpPlate_Hide(false);
+		return;
 	end
 	
 	if (not b) then
-		HelpPlate_Show(helpPlate, SmartBuffOptionsFrame, SmartBuffOptionsFrame_btnTutorial, true);
+		HelpPlate_Show(helpPlate, SmartBuffOptionsFrame, SmartBuffOptionsFrame_TutorialButton, true);
 	else
 		HelpPlate_Hide(true);
 	end

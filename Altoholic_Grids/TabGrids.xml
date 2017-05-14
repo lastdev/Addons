@@ -1,44 +1,14 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabGrids.lua"></Script>
 	
 	<Button name="AltoTabGridsClassIconTemplate" inherits="AltoClassIconTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="optionFormat" value="Tabs.Grids.%s.%s.Column%d" />
+		</KeyValues>
 		<Scripts>
 			<OnEnter>
-				Altoholic.Tabs.Grids:Icon_OnEnter(self)
+				self:Icon_OnEnter()
 			</OnEnter>
-		</Scripts>
-	</Button>
-	
- 	<Button name="AltoTabGridsMenuIconTemplate" inherits="AltoButtonTemplate" virtual="true">
-		<Size x="30" y="30" />
-		<Frames>
-			<Frame parentKey="Shine" name="$parentShine" inherits="AutoCastShineTemplate">
-				<Size x="28" y="28" />
-				<Anchors>
-					<Anchor point="CENTER" x="0" y="0" />
-				</Anchors>
-			</Frame>
-		</Frames>
-		<Scripts>
-			<OnLoad>
-				if self.iconFile then
-					self.Icon:SetTexture(self.iconFile)
-				end
-			</OnLoad>
-			<OnEnter>
-				if self.text then
-					AltoTooltip:ClearLines();
-					AltoTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					AltoTooltip:AddLine(self.text,1,1,1);
-					AltoTooltip:Show();
-				end
-			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				Altoholic.Tabs.Grids:MenuItem_OnClick(self, button)
-			</OnClick>
 		</Scripts>
 	</Button>
 	
@@ -72,91 +42,28 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="SelectView" name="$parent_SelectView" inherits="UIDropDownMenuTemplate" hidden="true">
+			<Frame parentKey="SelectView" inherits="AltoDropDownMenuTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.TextView" relativePoint="BOTTOMLEFT" x="-25" y="-2"/>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TextView" relativePoint="BOTTOMLEFT" x="-30" y="-2"/>
 				</Anchors>
 			</Frame>
-			<Frame parentKey="SelectRealm" name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 100) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						
-						local realm = GetRealmName()
-						UIDropDownMenu_SetSelectedValue(self, "Default|".. realm)
-						UIDropDownMenu_SetText(self, realm)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Grids.DropDownRealm_Initialize)
-					</OnLoad>
-				</Scripts>
+				<KeyValues>
+					<KeyValue key="menuWidth" value="120" type="number" />
+				</KeyValues>
 			</Frame>
-		
+				
 			<!-- Menu Icons -->
-			<Frame parentKey="ClassIcons" name="$parent_ClassIcons">
-				<Size x="457" y="37" />
-				<Anchors>
-					<Anchor point="TOPLEFT" x="370" y="-55" />
-				</Anchors>
-				<Frames>
-					<Button parentKey="Icon1" inherits="AltoTabGridsClassIconTemplate" id="1">
-						<Anchors>
-							<Anchor point="TOPLEFT" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon2" inherits="AltoTabGridsClassIconTemplate" id="2">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon1" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon3" inherits="AltoTabGridsClassIconTemplate" id="3">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon2" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon4" inherits="AltoTabGridsClassIconTemplate" id="4">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon3" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon5" inherits="AltoTabGridsClassIconTemplate" id="5">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon4" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon6" inherits="AltoTabGridsClassIconTemplate" id="6">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon5" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon7" inherits="AltoTabGridsClassIconTemplate" id="7">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon6" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon8" inherits="AltoTabGridsClassIconTemplate" id="8">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon7" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon9" inherits="AltoTabGridsClassIconTemplate" id="9">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon8" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon10" inherits="AltoTabGridsClassIconTemplate" id="10">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon9" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon11" inherits="AltoTabGridsClassIconTemplate" id="11">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon10" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-				</Frames>
+			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
+				<KeyValues>
+					<!-- <KeyValue key="numIcons" value="11" type="number" /> -->
+					<KeyValue key="numIcons" value="12" type="number" />
+					<KeyValue key="iconTemplate" value="AltoTabGridsClassIconTemplate" />
+					<KeyValue key="tabName" value="Grids" />
+				</KeyValues>
 			</Frame>
 		
 			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
@@ -186,12 +93,12 @@
 					<KeyValue key="text" value="CURRENCY" type="global" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="Tabards" inherits="AltoTabGridsMenuIconTemplate" id="4">
+			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="4">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Tokens" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_30" />
+					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
 				</KeyValues>
 			</Button>
 
@@ -231,24 +138,16 @@
 				</KeyValues>
 			</Button>
 
-			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="9">
+			<Button parentKey="GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="9">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="160" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="10">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dailies" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_blueprints3" />
 					<KeyValue key="text" value="GARRISON_ARCHITECT" type="global" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="11">
+			<Button parentKey="GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="10">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonArchitect" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
@@ -257,7 +156,7 @@
 					<KeyValue key="text" value="GARRISON_FOLLOWERS_TITLE" type="global" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="FollowerAbilities" inherits="AltoTabGridsMenuIconTemplate" id="12">
+			<Button parentKey="FollowerAbilities" inherits="AltoTabGridsMenuIconTemplate" id="11">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonFollowers" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
@@ -335,10 +234,32 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Grids:OnLoad()
+				Altoholic:SetClassExtensions(self, "AltoTabGrids")
+				
+				local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
+				
+				self.Label1:SetText(L["Realm"])
+				self.Equipment.text = L["Equipment"]
+				self.Factions.text = L["Reputations"]
+				self.Archeology.text = GetSpellInfo(78670)
+				self.Dailies.text = "Daily Quests"
+				self.FollowerAbilities.text = format("%s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
+				
+				self.SelectRealm:RegisterClassEvent("RealmChanged", function()
+						self.Status:SetText("")
+						self:Update()
+					end)
+				
+				self.ClassIcons.OnCharacterChanged = function()
+						self:Update()
+					end
+					
+				self.Equipment:StartAutoCastShine()
+				self.currentGridID = 1
 			</OnLoad>
 			<OnShow>
-				Altoholic.Tabs.Grids:OnShow()
+				self:UpdateMenuIcons()
+				self:Update()
 			</OnShow>
 		</Scripts>
 	</Frame>

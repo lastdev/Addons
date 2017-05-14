@@ -1,19 +1,19 @@
 ## Title: Auc-Auctioneer |cff774422(core)
 ## Notes: Auctioneer assists players to track item values on the Auction House; whether buying or selling.
 ##
-## Interface: 60000
+## Interface: 70200
 ## LoadOnDemand: 0
 ## Dependencies: Stubby
 ## OptionalDependencies: !nLog, SlideBar, Configator, Babylonian, DebugLib, TipHelper, LibExtraTip, LibDataBroker
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData, AucAdvancedServers
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.21d.5538 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Advanced.toc 5524 2014-11-23 18:06:32Z brykrys $
+## Version: 7.5.5714 (TasmanianThylacine)
+## Revision: $Id: Auc-Advanced.toc 5712 2017-04-06 15:44:11Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 60000
+## X-Max-Interface: 70200
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##
@@ -22,6 +22,7 @@ CoreManifest.lua
 CoreModule.lua
 CoreStrings.lua
 CoreConst.lua
+DataBonusIDs.lua
 CoreResources.lua
 CoreServers.lua
 
@@ -30,7 +31,7 @@ CoreUtil.lua
 CoreConfig.lua
 CorePost.lua
 CoreSettings.lua
-CoreBuy.lua
 CoreScan.lua
+CoreBuy.lua
 CoreAPI.lua
 Modules\Active.xml

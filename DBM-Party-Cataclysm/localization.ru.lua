@@ -100,10 +100,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "С эмитировать импульс на мини-карте, если Умбрисс собирается применить на вас $spell:74670"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "останавливает взгяд на |cFFFF0000(%S+)" -- mb need use |3-3(%S+)
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -113,11 +109,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "Дракон, ты будеш делать то, что я прикажу! Подхвати меня!",	-- translate -- Yell when Valiona is incoming
-	Add			= "%s призывает"
-}
 
 ------------
 -- Erudax --
@@ -224,13 +215,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "2-ая фаза через 5 сек"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 	= "Начало 2-ой фазы"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "Показывать особое предупреждение перед началом 2-ой фазы (5 сек)",
-	timerPhase2 	= "Показывать таймер начала 2-ой фазы"
+	specWarnPhase2Soon	= "Показывать особое предупреждение перед началом 2-ой фазы (5 сек)"
 }
 
 -----------------------
@@ -366,14 +352,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Показывать особое предупреждение для $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "Хватка природы - ПРЫГАЙ!"	-- does $spell: work here ?
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------
@@ -406,8 +384,7 @@ L= DBM:GetModLocalization(186)
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
 	RangeFrame	= "Окно проверки дистанции (10м)",
-	StormArrow	= "Показывать стрелку DBM для $spell:43648",
-	SetIconOnEagle	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97318)
+	StormArrow	= "Показывать стрелку DBM для $spell:43648"
 }
 
 ---------------
@@ -539,8 +516,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "Показывать количество оставшихся духов",
-	SpecWarnOhgan	= "Предупреждение, когда Оган возрождается", -- check this, i'm not good at English
-	SetIconOnOhgan	= "Устанавливать метку на Огана, когда он возрождается"
+	SpecWarnOhgan	= "Предупреждение, когда Оган возрождается" -- check this, i'm not good at English
 }
 
 ----------------------

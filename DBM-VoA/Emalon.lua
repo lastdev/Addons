@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 178 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
 mod:SetCreatureID(33993)
 mod:SetEncounterID(1127)
 mod:SetModelID(27108)
@@ -22,9 +22,9 @@ local warnOverCharge		= mod:NewSpellAnnounce(64218, 2)
 
 local specWarnNova			= mod:NewSpecialWarningRun(65279, nil, nil, nil, 4)
 
-local timerNova				= mod:NewCastTimer(65279)
-local timerNovaCD			= mod:NewCDTimer(45, 65279)--Varies, 45-60seconds in between nova's
-local timerOvercharge		= mod:NewNextTimer(45, 64218)
+local timerNova				= mod:NewCastTimer(65279, nil, nil, nil, 2)
+local timerNovaCD			= mod:NewCDTimer(45, 65279, nil, nil, nil, 2)--Varies, 45-60seconds in between nova's
+local timerOvercharge		= mod:NewNextTimer(45, 64218, nil, nil, nil, 5)
 local timerMobOvercharge	= mod:NewTimer(20, "timerMobOvercharge", 64217)
 
 local timerEmalonEnrage		= mod:NewTimer(360, "EmalonEnrage", 26662)

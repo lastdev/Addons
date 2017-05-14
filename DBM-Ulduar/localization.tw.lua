@@ -138,8 +138,7 @@ L:SetMiscLocalization{
 	YellKill			= "我曾經看過塵世沉浸在造物者的烈焰之中，眾生連一聲悲泣都無法呼出，就此凋零。整個星系在彈指之間歷經了毀滅與重生。然而在這段歷程之中，我的心卻無法感受到絲毫的...惻隱之念。我‧感‧受‧不‧到。成千上萬的生命就這麼消逝。他們是否擁有與你同樣堅韌的生命?他們是否與你同樣熱愛生命?",
 	Emote_CollapsingStar	= "%s開始召喚崩陷之星!",
 	Phase2				= "瞧瞧泰坦造物的能耐吧!",
-	FirstPull			= "你的行為毫無意義。這場衝突的結果早已計算出來了。不論結局為何，萬神殿仍將收到觀察者的訊息。",
-	PullCheck			= "艾爾加隆開始上傳滅世訊息的剩餘時間= (%d+)分鐘。"
+	FirstPull			= "從我的雙眼觀看你的世界:一個無邊無際的宇宙--連你們之中最具智慧者都無法想像的廣闊無垠。",
 }
 
 ----------------
@@ -374,8 +373,7 @@ L:SetGeneralLocalization{
 L:SetMiscLocalization{
 	YellPull 			= "我們即將有機會打擊怪物的首腦!現在將你的憤怒與仇恨貫注在他的爪牙上!",
 	YellPhase2			= "我是清醒的夢境。",
-	Sara 				= "薩拉",
-	WarningYellSqueeze	= "我被觸手抓住了 - 快救我"
+	Sara 				= "薩拉"
 }
 
 L:SetWarningLocalization{
@@ -405,7 +403,6 @@ L:SetOptionLocalization{
 	SpecWarnMadnessOutNow			= "為瘋狂誘陷結束前顯示特別警告",
 	SpecWarnFervorCast				= "當薩拉的熱誠正在對你施放時顯示特別警告(必須有最少一名團隊成員設置目標或專注目標)",
 	specWarnBrainPortalSoon			= "為下一次腦部傳送門顯示特別警告",
-	WarningSqueeze					= "當你中了壓榨 (觸手綁人)時大喊",
 	NextPortal						= "為下一次傳送門顯示計時器",
 	ShowSaraHealth					= "顯示薩拉在第1階段的血量(必須有最少一名團隊成員設置目標或專注目標)",
 	MaladyArrow						= "當你附近的人中了$spell:63881時顯示DBM箭頭"

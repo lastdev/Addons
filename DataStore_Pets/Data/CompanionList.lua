@@ -1,4 +1,4 @@
-﻿local addonName = "DataStore_Pets"
+local addonName = "DataStore_Pets"
 local addon = _G[addonName]
 
 -- these are spellID's

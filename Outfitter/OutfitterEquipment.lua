@@ -1,18 +1,654 @@
 Outfitter.EquipmentUpdateCount = 0
 
-function Outfitter:DebugEquipmentChangeList(pEquipmentChangeList)
-	self:DebugMark()
-	self:DebugTable(pEquipmentChangeList, "ChangeList")
+----------------------------------------
+Outfitter._EquipmentChanges = Outfitter:newClass()
+----------------------------------------
+
+function Outfitter._EquipmentChanges:construct()
 end
 
-function Outfitter:NewEquipmentChange(pInventorySlot, pItemName)
-	local vSlotID = self.cSlotIDs[pInventorySlot]
-	local vEquipmentChange = {SlotName = pInventorySlot, SlotID = vSlotID, ItemName = pItemName, UniqueGemTotals = {}}
-	
-	self:SubtractInventoryUniqueGems(vSlotID, vEquipmentChange.UniqueGemTotals)
-	
-	return vEquipmentChange
+function Outfitter._EquipmentChanges:addChange(change)
+	table.insert(self, change)
 end
+
+function Outfitter._EquipmentChanges:insertChange(index, change)
+	table.insert(self, index, change)
+end
+
+function Outfitter._EquipmentChanges:findChangeForSlot(slotName)
+	for index, change in ipairs(self) do
+		if not change and change.SlotName == slotName then
+			return change, index
+		end
+	end
+	
+	-- Return nothing
+end
+
+function Outfitter._EquipmentChanges:addChangesToEquipOutfit(outfit, inventoryCache)
+	inventoryCache:ResetIgnoreItemFlags()
+	
+	-- Remove items which are already in the correct slot from the outfit and from the
+	-- equippable items list
+	
+	local items = outfit:GetItems()
+	
+	for inventorySlot, outfitItem in pairs(items) do
+		local containsItem, item = inventoryCache:InventorySlotContainsItem(inventorySlot, outfitItem)
+		
+		if containsItem then
+			outfit:RemoveItem(inventorySlot)
+			
+			if item then
+				item.IgnoreItem = true
+			end
+		end
+	end
+	
+	if Outfitter.Debug.EquipmentChanges then
+		Outfitter:DebugOutfitTable(outfit, "Remaining")
+	end
+	
+	-- WoW has a bug with dual-spec where you can end up with dual 2H weapons equipped even
+	-- though you may no longer have Titan's Grip.  To correct this, I detect the situation here
+	-- and insert an unequip operation for the 2H'er in the OH slot to restore the equipment
+	-- to a valid state.
+	
+	local has2HGlitch
+	local secondaryHandItem = inventoryCache.InventoryItems.SecondaryHandSlot
+	
+	if not Outfitter.CanDualWield2H
+	and secondaryHandItem
+	and secondaryHandItem.InvType == "INVTYPE_2HWEAPON" then
+		has2HGlitch = true
+		
+		local change = Outfitter:New(Outfitter._EquipmentChange, "SecondaryHandSlot", secondaryHandItem.Name)
+		
+		change.TGFix = true
+		
+		self:addChange(change)
+	end
+	
+	-- Scan the outfit using the Outfitter.cSlotNames array as an index so that changes
+	-- are executed in the specified order.  The order is designed so that items with
+	-- durability values are unequipped first, followed by other items such as cloaks and rings
+	-- which have no durability.  This makes unequipping before death (falling, raid/party wipe) more useful
+	-- since it'll reduce the cost of repairs
+	
+	for _, inventorySlot in ipairs(Outfitter.cSlotNames) do
+		self:addSlot(outfit, inventoryCache, inventorySlot, has2HGlitch)
+	end -- for
+	
+	if #self == 0 then
+		return nil
+	end
+	
+	self:adjustUniqueEquipSwaps()
+	self:optimize()
+end
+
+function Outfitter._EquipmentChanges:addUnequipChangesForOutfit(outfit, inventoryCache)
+	local items = outfit:GetItems()
+	
+	for inventorySlot, item in pairs(items) do
+		local inventoryItem, ignoredItem = inventoryCache:FindItemOrAlt(item, true)
+		
+		if inventoryItem then
+			local change = Outfitter:New(Outfitter._EquipmentChange)
+			change.FromLocation = inventoryItem.Location
+			change.Item = inventoryItem
+			self:addChange(change)
+		end
+	end -- for
+end
+
+function Outfitter._EquipmentChanges:addSlot(outfit, inventoryCache, inventorySlot, has2HGlitch)
+	-- Get the item the outfit wants in the slot
+	local outfitItem = outfit:GetItem(inventorySlot)
+	
+	-- Do nothing if the outfit isn't using that slot
+	if not outfitItem then
+		return
+	end
+	
+	local slotID = Outfitter.cSlotIDs[inventorySlot]
+	
+	local currentItemCodes, currentItemName = Outfitter:GetSlotIDLinkInfo(slotID)
+	local currentItemCode = currentItemCodes and currentItemCodes[1]
+
+	local equipmentChange = Outfitter:New(Outfitter._EquipmentChange, inventorySlot, outfitItem.Name)
+	
+	-- If the item is a phantom, just ignore it
+	if Outfitter.PhantomItemIDs[outfitItem.Code] then
+		return
+	end
+
+	--
+	
+	if has2HGlitch and inventorySlot == "SecondaryHandSlot" then
+		currentItemCode = nil -- Pretend there's nothing in the OH since we've queued an unequip for it
+	end
+	
+	-- Empty the slot if it's supposed to be blank
+	if outfitItem.Code == 0 or outfitItem.Code == nil then
+		if not currentItemCode then
+			return -- Nothing to do if the slot is supposed to be empty and already is
+		end
+	else
+		-- Find the item		
+		local item, ignoredItem = inventoryCache:FindItemOrAlt(outfitItem, true)
+		
+		-- If the item wasn't found then show an appropriate error message and leave
+		if not item then
+			Outfitter:ShowEquipError(outfitItem, ignoredItem, inventorySlot)
+			return
+		end
+		
+		-- Add the unique-equipped item counts for the item being equipped
+		equipmentChange:addLocationUniqueEquipTotals(item.Location)
+		
+		-- Update the change with info for the item being equipped
+		equipmentChange.ItemMetaSlotName = item.MetaSlotName
+		equipmentChange.ItemLocation = item.Location
+		
+		-- Treat the item as a 1H if they can dual wield it
+		if equipmentChange.ItemMetaSlotName == "TwoHandSlot"
+		and not Outfitter:ItemUsesBothWeaponSlots(outfitItem) then
+			equipmentChange.ItemMetaSlotName = "Weapon0Slot"
+		end
+	end -- else outfitItem.Code == 0 or outfitItem.Code == nil
+	
+	-- Insert the change
+	self:addChange(equipmentChange)
+end
+
+function Outfitter._EquipmentChanges:adjustUniqueEquipSwaps()
+	-- Calculate the sort rank for each change. There are three sort ranks and they are determined by whether an change item increases, decreases, or both increases and decreases totals for unique-equip attributes
+	for index, change in ipairs(self) do
+		
+		-- Calculate the initial sort rank
+		change.uniqueEquipOrderingRank = change:calcUniqueEquipOrderingRank()
+		
+		-- Initially use the slot sort index as the second-order sort value
+		change.uniqueEquipOrderingRank2 = Outfitter.cSlotOrder[change.SlotName]
+	end
+	
+	-- The algorithm is repeated for multiple passes until no entries are relocated during a pass. Keep track of the totals for each pass to determine whether it changed.
+	local previousRank1Count, previousRank2Count
+	
+	-- Limit the number of iterations by using a for loop instead of an unconditional while
+	local uniqueEquipStartCounts
+	for iteration = 1, 20 do
+
+		-- Sort the changes using the two change rank fields
+		table.sort(self, Outfitter.CompareUniqueEquipOrderingRanks)
+		
+		-- Sum up the ID counts in rank 1 entries and re-assign ranks
+		uniqueEquipStartCounts = Outfitter:RecycleTable(uniqueEquipStartCounts)
+		
+		local rank1Count, rank2Count = 0, 0
+		
+		for index, change in ipairs(self) do
+
+			-- Rank 1 doesn't change order, so simply total up the unique counts and set the uniqueEquipOrderingRank2 field to ensure the ordering is preserved
+			if change.uniqueEquipOrderingRank == 1 then
+
+				-- Track the totals for each type
+				for uniqueEquipID, uniqueEquipCount in pairs(change.uniqueEquipTotals) do
+					uniqueEquipStartCounts[uniqueEquipID] = (uniqueEquipStartCounts[uniqueEquipID] or 0) + uniqueEquipCount
+				end
+				
+				-- Preserve the ordering by using the index as the second-order sort value				
+				change.uniqueEquipOrderingRank2 = index
+				
+				-- Track how many rank 1 entries were found
+				rank1Count = rank1Count + 1
+			
+			-- Rank 2 changes increase the unique count of some categories while decreasing others. Swapping one unique-equipped item for another unique-equipped item of another type would do this for example.
+			elseif change.uniqueEquipOrderingRank == 2 then
+				-- If there's nothing in rank 1 then we're done
+				if rank1Count == 0 then
+					return
+				end
+				
+				-- Calculate a new rank using the start counts. A change can be promoted to rank 1 if it now results in no change or a net decrease in counts
+				change.uniqueEquipOrderingRank = change:calcUniqueEquipOrderingRank(uniqueEquipStartCounts)
+				
+				-- Adjust the rank for this change
+				if change.uniqueEquipOrderingRank == 1 then
+					rank1Count = rank1Count + 1
+					change.uniqueEquipOrderingRank2 = index
+				elseif change.uniqueEquipOrderingRank == 2 then
+					rank2Count = rank2Count + 1
+				else  -- 3
+					change.uniqueEquipOrderingRank2 = index
+				end
+			
+			-- Rank 3 changes increase the unique-equipped count of one or more types.
+			else
+				-- If there's nothing in rank 1 or 2 we're done
+				if rank1Count == 0
+				or rank2Count == 0 then
+					return
+				end
+				
+				-- Preserve the ordering
+				change.uniqueEquipOrderingRank2 = index
+			end
+		end
+		
+		-- If the counts don't change we're done
+		if previousRank1Count == rank1Count
+		and previousRank2Count == rank2Count then
+			break
+		end
+		
+		-- The counts changed, so remember the new counts and do it again
+		previousRank1Count = rank1Count
+		previousRank2Count = rank2Count
+	end -- for
+end
+
+function Outfitter._EquipmentChanges:fixSlotSwapChange(changeIndex1, equipmentChange1, slotName1, changeIndex2, equipmentChange2, slotName2)
+	-- No problem if both slots will be emptied
+	
+	if not equipmentChange1.ItemLocation
+	and not equipmentChange2.ItemLocation then
+		return
+	end
+	
+	-- No problem if neither slot is being moved to the other one
+	
+	local slot2ToSlot1 = equipmentChange1.ItemLocation ~= nil
+			            and equipmentChange1.ItemLocation.SlotName == slotName2
+	
+	local slot1ToSlot2 = equipmentChange2.ItemLocation ~= nil
+			            and equipmentChange2.ItemLocation.SlotName == slotName1
+	
+	-- No problem if the slots are swapping with each other
+	-- or not moving between each other at all
+	
+	if slot2ToSlot1 == slot1ToSlot2 then
+		return
+	end
+	
+	-- Slot 1 is moving to slot 2
+	
+	if slot1ToSlot2 then
+		if equipmentChange1.ItemLocation then
+			if Outfitter.Debug.EquipmentChanges then
+				Outfitter:DebugMessage("FixSlotSwapChange: Rearranging so that %s can move to %s", slotName1, slotName2)
+			end
+			
+			-- Swap change 1 and change 2 around
+			
+			self[changeIndex1] = equipmentChange2
+			self[changeIndex2] = equipmentChange1
+			
+			-- Insert a change to empty slot 2
+			
+			local emptySlot2 = Outfitter:New(Outfitter._EquipmentChange, equipmentChange2.SlotName)
+			self:insertChange(changeIndex1, emptySlot2)
+
+			equipmentChange1.Optimized = true
+			equipmentChange2.Optimized = true
+			emptySlot2.Optimized = true
+		else
+			-- Slot 1 is going to be empty, so empty slot 2 instead
+			-- and then when slot 1 is moved it'll swap the empty space
+			
+			if Outfitter.Debug.EquipmentChanges then
+				Outfitter:DebugMessage("FixSlotSwapChange: Emptying %s so that %s can move there", slotName2, slotName1)
+			end
+			
+			equipmentChange1.SlotName = slotName2
+			equipmentChange1.SlotID = equipmentChange2.SlotID
+			equipmentChange1.ItemLocation = nil
+
+			equipmentChange1.Optimized = true
+			equipmentChange2.Optimized = true
+		end
+		
+	-- Slot 2 is moving to slot 1
+	
+	else
+		if equipmentChange2.ItemLocation then
+			if Outfitter.Debug.EquipmentChanges then
+				Outfitter:DebugMessage("FixSlotSwapChange: Rearranging so that %s can move to %s", slotName2, slotName1)
+			end
+			
+			-- Insert a change to empty slot 1 first
+			
+			local emptySlot1 = Outfitter:New(Outfitter._EquipmentChange, equipmentChange1.SlotName)
+			self:insertChange(changeIndex1, emptySlot1)
+
+			equipmentChange1.Optimized = true
+			equipmentChange2.Optimized = true
+			emptySlot1.Optimized = true
+		else
+			if Outfitter.Debug.EquipmentChanges then
+				Outfitter:DebugMessage("FixSlotSwapChange: Emptying %s so that %s can move there", slotName1, slotName2)
+			end
+			
+			-- Slot 2 is going to be empty, so empty slot 1 instead
+			-- and then when slot 2 is moved it'll swap the empty space
+			
+			equipmentChange2.SlotName = slotName1
+			equipmentChange2.SlotID = equipmentChange1.SlotID
+			equipmentChange2.ItemLocation = nil
+			
+			-- Change the order so that slot 1 gets emptied before the move
+			
+			self[changeIndex1] = equipmentChange2
+			self[changeIndex2] = equipmentChange1
+
+			equipmentChange1.Optimized = true
+			equipmentChange2.Optimized = true
+		end
+	end
+end
+
+function Outfitter._EquipmentChanges:optimize()
+	local didSlot = {}
+	
+	local changeIndex = 1
+	local numChanges = #self
+	
+	while changeIndex <= numChanges do
+		local equipmentChange = self[changeIndex]
+		
+		-- Do nothing if this change has already been worked on
+		
+		if equipmentChange.Optimized then
+		
+		-- If this is the change for the Titan's Grip fix, put it at the very start
+		-- so it clears the state before any mainhand/offhand swaps happen
+		
+		elseif equipmentChange.TGFix then
+			if changeIndex ~= 1 then
+				if Outfitter.Debug.EquipmentChanges then
+					Outfitter:DebugMessage("EquipmentChanges:optimize: Moving TGFix to the front of the list")
+				end
+				
+				table.remove(self, changeIndex)
+				self:insertChange(1, equipmentChange)
+			end
+			
+		elseif equipmentChange.SlotName == "SecondaryHandSlot" then
+			local equipmentChange2, changeIndex2 = self:findChangeForSlot("MainHandSlot")
+			
+			-- If equipping an offhand item, make sure it's after equipping
+			-- a mainhand item or it will fail when the current mainhand
+			-- is a two-hander
+			
+			if equipmentChange.ItemLocation ~= nil then
+				if changeIndex2 and changeIndex2 > changeIndex then
+					if Outfitter.Debug.EquipmentChanges then
+						Outfitter:DebugMessage("EquipmentChanges:optimize: Moving offhand swap to be after mainhand")
+					end
+					
+					table.remove(self, changeIndex)
+					self:insertChange(changeIndex2, equipmentChange)
+					
+					changeIndex = changeIndex - 1
+				end
+			
+			-- If the off-hand slot is being emptied, then do that before handling the
+			-- main hand slot (fixes Titan's Grip problem with the Argent Lance)
+			
+			elseif equipmentChange.ItemLocation == nil then
+				if changeIndex2 and changeIndex2 < changeIndex then
+					if Outfitter.Debug.EquipmentChanges then
+						Outfitter:DebugMessage("EquipmentChanges:optimize: Moving offhand swap to be before mainhand")
+					end
+					
+					table.remove(self, changeIndex)
+					self:insertChange(changeIndex2, equipmentChange)
+				end
+			end
+		
+		-- If a two-hand weapon is being equipped, remove the change event
+		-- for removing the offhand slot
+		
+		elseif equipmentChange.ItemMetaSlotName == "TwoHandSlot" then
+			local equipmentChange2, changeIndex2 = self:findChangeForSlot("SecondaryHandSlot")
+			
+			-- If there's a change for the offhand slot, remove it
+			
+			if changeIndex2 then
+				if Outfitter.Debug.EquipmentChanges then
+					Outfitter:DebugMessage("EquipmentChanges:optimize: Removing offhand swap because of 2H being equipped")
+				end
+				
+				table.remove(self, changeIndex2)
+				
+				if changeIndex2 < changeIndex then
+					changeIndex = changeIndex - 1
+				end
+				
+				numChanges = numChanges - 1
+			end
+			
+			-- Insert a new change for the offhand slot to empty it ahead
+			-- of equipping the two-hand item
+			
+			if Outfitter.Debug.EquipmentChanges then
+				Outfitter:DebugMessage("EquipmentChanges:optimize: Emptying offhand before 2H equip")
+			end
+			
+			self:insertChange(changeIndex, Outfitter:New(Outfitter._EquipmentChange, "SecondaryHandSlot"))
+		
+		-- Otherwise see if the change needs to be re-arranged so that slot
+		-- swapping works correctly (trinkets, rings, or weapon slots being swapped)
+		
+		else
+			local swapSlot = Outfitter.SlotSwapList[equipmentChange.SlotName]
+			
+			if swapSlot and not didSlot[equipmentChange.SlotName] then
+				local equipmentChange2, changeIndex2 = self:findChangeForSlot(swapSlot)
+				
+				if changeIndex2 then
+					self:FixSlotSwapChange(changeIndex, equipmentChange, equipmentChange.SlotName, changeIndex2, equipmentChange2, swapSlot)
+				end
+				
+				didSlot[equipmentChange.SlotName] = true
+				
+				numChanges = #self
+			end
+		end
+		
+		--
+		
+		changeIndex = changeIndex + 1
+	end
+end
+
+function Outfitter._EquipmentChanges:execute(emptyBagSlots, expectedInventoryCache)
+	-- Disable sound effects during the swap
+	local savedEnabledSFXValue
+	if not Outfitter.Settings.EnableEquipSounds then
+		savedEnabledSFXValue = GetCVar("Sound_EnableSFX")
+		SetCVar("Sound_EnableSFX", "0")
+	end
+	
+	-- Process each change
+	for changeIndex, equipmentChange in ipairs(self) do
+		local swapItems, emptyThenEquip
+		
+		-- Determine if an in-place swap is possible (or even necessary)
+		if equipmentChange.ItemLocation then
+			swapItems = true
+			
+			-- If the items are for different bag types, check to see if we need to
+			-- separate the swap operation into Empty then Equip
+			
+			local equippedItemBagType = Outfitter:GetSlotIDItemBagType(equipmentChange.SlotID)
+			local newItemBagType = Outfitter:GetItemLocationBagType(equipmentChange.ItemLocation)
+			
+			-- If the item being equipped is in a specialty bag already and the
+			-- current item can't go in that bag then we have to EmptyThenEquip
+			
+			local newItemInBagType = equipmentChange.ItemLocation.BagIndex and Outfitter:GetBagType(equipmentChange.ItemLocation.BagIndex)
+			
+			if equippedItemBagType
+			and newItemInBagType
+			and newItemInBagType ~= 0
+			and bit.band(newItemInBagType, equippedItemBagType) == 0 then
+				emptyThenEquip = true
+			
+			-- Otherwise, if the item being unequipped has a specialty slot available, then we have to EmptyThenEquip
+			
+			elseif equippedItemBagType and Outfitter:FindEmptySpecialtyBagSlot(equippedItemBagType, emptyBagSlots) then
+				emptyThenEquip = true
+			end
+		end
+		
+		-- Swap the item in-place with the new item
+		if swapItems then
+			if emptyThenEquip then
+				Outfitter:UnequipSlotID(equipmentChange.SlotID, emptyBagSlots, expectedInventoryCache)
+			end
+			
+			-- Make sure nothing is already being held
+			ClearCursor()
+			
+			-- Pick up the item and equip it
+			Outfitter:PickupItemLocation(equipmentChange.ItemLocation)
+			EquipCursorItem(equipmentChange.SlotID)
+			
+			-- Update the expected cache
+			if expectedInventoryCache then
+				expectedInventoryCache:SwapLocationWithInventorySlot(equipmentChange.ItemLocation, equipmentChange.SlotName)
+			end
+		
+		-- Remove the item
+		else
+			Outfitter:UnequipSlotID(equipmentChange.SlotID, emptyBagSlots, expectedInventoryCache)
+		end
+	end
+	
+	-- Make sure nothing is left behind on the cursor
+	ClearCursor()
+	
+	-- Restore the sound effects setting
+	if savedEnabledSFXValue then
+		SetCVar("Sound_EnableSFX", savedEnabledSFXValue)
+	end
+end
+
+function Outfitter._EquipmentChanges:debug()
+	Outfitter:DebugMark()
+	Outfitter:DebugTable(self, "EquipmentChanges")
+end
+
+----------------------------------------
+Outfitter._EquipmentChange = Outfitter:newClass()
+----------------------------------------
+
+function Outfitter._EquipmentChange:construct(inventorySlot, itemName)
+	self.SlotName = inventorySlot
+	self.SlotID = Outfitter.cSlotIDs[inventorySlot]
+	self.ItemName = itemName
+	self.uniqueEquipTotals = {}
+	
+	-- Subtract the unique-equip totals to get starting values
+	self:subtractInventoryUniqueEquipTotals()
+	
+	return change
+end
+
+function Outfitter._EquipmentChange:subtractInventoryUniqueEquipTotals()
+	-- Get the item
+	local itemInfo = Outfitter:GetSlotIDItemInfo(self.SlotID)
+	
+	-- Leave if no item
+	if not itemInfo then
+		return
+	end
+	
+	-- Get the unique-equip types
+	local uniqueEquipTypes = itemInfo:GetUniqueEquipTypes()
+	
+	-- Done if there are no unique-equip types
+	if not uniqueEquipTypes then
+		return
+	end
+	
+	-- Subtract the counts
+	for uniqueEquipType in pairs(uniqueEquipTypes) do
+		self.uniqueEquipTotals[uniqueEquipType] = (self.uniqueEquipTotals[uniqueEquipType] or 0) - 1
+	end
+end
+
+function Outfitter._EquipmentChange:addLocationUniqueEquipTotals(location)
+	-- Get the item
+	local itemInfo
+	if location.BagIndex then
+		itemInfo = Outfitter:GetBagItemInfo(location.BagIndex, location.BagSlotIndex)
+	else
+		itemInfo = Outfitter:GetSlotIDItemInfo(location.SlotID)
+	end
+	
+	-- Leave if no item
+	if not itemInfo then
+		return
+	end
+	
+	-- Get the unique-equip types
+	local uniqueEquipTypes = itemInfo:GetUniqueEquipTypes()
+	
+	-- Done if there are no unique-equip types
+	if not uniqueEquipTypes then
+		return
+	end
+	
+	-- Add the counts
+	for uniqueEquipType in pairs(uniqueEquipTypes) do
+		self.uniqueEquipTotals[uniqueEquipType] = (self.uniqueEquipTotals[uniqueEquipType] or 0) + 1
+	end
+end	
+
+function Outfitter._EquipmentChange:calcUniqueEquipOrderingRank(uniqueEquipCountOffsets)
+	local hasNegative, hasPositive
+	
+	-- Check each total
+	for uniqueID, uniqueCount in pairs(self.uniqueEquipTotals) do
+		if uniqueEquipCountOffsets then
+			uniqueCount = uniqueCount + (uniqueEquipCountOffsets[uniqueID] or 0)
+		end
+		
+		if uniqueCount < 0 then
+			hasNegative = true
+			
+			if hasPositive then
+				break
+			end
+		elseif uniqueCount > 0 then
+			hasPositive = true
+			
+			if hasNegative then
+				break
+			end
+		end
+	end
+	
+	-- Changes which increase and decrease totals are given second priority so that they’re done before changes which increase only
+	if hasNegative and hasPositive then
+		return 2
+	
+	-- Changes which only increase totals are given the lowest priority so that they’re done last
+	elseif hasPositive then	
+		return 3
+	end
+	
+	-- Changes which don’t affect or decrease totals are the highest priority
+	return 1
+end
+
+
+----------------------------------------
+-- Outfitter
+----------------------------------------
 
 function Outfitter:ShowEquipError(pOutfitItem, pIgnoredItem, pInventorySlot)
 	if self.Settings.DisableEquipErrors then
@@ -38,54 +674,6 @@ function Outfitter:ShowEquipError(pOutfitItem, pIgnoredItem, pInventorySlot)
 	end
 end
 
-function Outfitter:SubtractInventoryUniqueGems(pSlotID, pUniqueGemTotals)
-	if not self.TempGemCodes then
-		self.TempGemCodes = {}
-	end
-	
-	self.TempGemCodes[1], self.TempGemCodes[2], self.TempGemCodes[3], self.TempGemCodes[4] = GetInventoryItemGems(pSlotID)
-	
-	for vGemIndex = 1, 4 do
-		local vGemItemCode = self.TempGemCodes[vGemIndex]
-		local vUniqueGemCode = vGemItemCode and self.cUniqueGemItemIDs[vGemItemCode]
-		
-		if vUniqueGemCode then
-			pUniqueGemTotals[vUniqueGemCode] = (pUniqueGemTotals[vUniqueGemCode] or 0) - 1
-		end
-	end
-end	
-
-function Outfitter:AddLocationUniqueGems(pLocation, pUniqueGemTotals)
-	if not self.TempGemCodes then
-		self.TempGemCodes = {}
-	end
-	
-	if pLocation.BagIndex then
-		self.TempGemCodes[1], self.TempGemCodes[2], self.TempGemCodes[3], self.TempGemCodes[4] = GetContainerItemGems(pLocation.BagIndex, pLocation.BagSlotIndex)
-	else
-		self.TempGemCodes[1], self.TempGemCodes[2], self.TempGemCodes[3], self.TempGemCodes[4] = GetInventoryItemGems(pLocation.SlotID)
-	end
-	
-	for vGemIndex = 1, 4 do
-		local vGemItemCode = self.TempGemCodes[vGemIndex]
-		local vUniqueGemCode = vGemItemCode and self.cUniqueGemItemIDs[vGemItemCode]
-		
-		if vUniqueGemCode then
-			pUniqueGemTotals[vUniqueGemCode] = (pUniqueGemTotals[vUniqueGemCode] or 0) + 1
-		end
-	end
-end	
-
-function Outfitter:FindEquipmentChangeForSlot(pEquipmentChangeList, pSlotName)
-	for vChangeIndex, vEquipmentChange in ipairs(pEquipmentChangeList) do
-		if not vEquipmentChange.TGFix and vEquipmentChange.SlotName == pSlotName then
-			return vChangeIndex, vEquipmentChange
-		end
-	end
-	
-	return nil, nil
-end
-
 function Outfitter:PickupItemLocation(pItemLocation)
 	if pItemLocation == nil then
 		self:ErrorMessage("nil location in PickupItemLocation")
@@ -106,440 +694,12 @@ function Outfitter:PickupItemLocation(pItemLocation)
 	end
 end
 
-function Outfitter:BuildUnequipChangeList(pOutfit, pInventoryCache)
-	self.EquipmentChangeList = self:RecycleTable(self.EquipmentChangeList)
-	
-	local vEquipmentChangeList = self.EquipmentChangeList
-	local vItems = pOutfit:GetItems()
-	
-	for vInventorySlot, vOutfitItem in pairs(vItems) do
-		local vItem, vIgnoredItem = pInventoryCache:FindItemOrAlt(vOutfitItem, true)
-		
-		if vItem then
-			table.insert(vEquipmentChangeList, {FromLocation = vItem.Location, Item = vItem})
-		end
-	end -- for
-	
-	return vEquipmentChangeList
-end
-
-function Outfitter:BuildEquipmentChangeList(pOutfit, pInventoryCache)
-	self.EquipmentChangeList = self:RecycleTable(self.EquipmentChangeList)
-	
-	local vEquipmentChangeList = self.EquipmentChangeList
-	
-	pInventoryCache:ResetIgnoreItemFlags()
-	
-	-- Remove items which are already in the correct slot from the outfit and from the
-	-- equippable items list
-	
-	local vItems = pOutfit:GetItems()
-	
-	for vInventorySlot, vOutfitItem in pairs(vItems) do
-		local vContainsItem, vItem = pInventoryCache:InventorySlotContainsItem(vInventorySlot, vOutfitItem)
-		
-		if vContainsItem then
-			pOutfit:RemoveItem(vInventorySlot)
-			
-			if vItem then
-				vItem.IgnoreItem = true
-			end
-		end
+function Outfitter.CompareUniqueEquipOrderingRanks(change1, change2)
+	if change1.uniqueEquipOrderingRank ~= change2.uniqueEquipOrderingRank then
+		return change1.uniqueEquipOrderingRank < change2.uniqueEquipOrderingRank
 	end
 	
-	if self.Debug.EquipmentChanges then
-		self:DebugOutfitTable(pOutfit, "Remaining")
-	end
-	
-	-- WoW has a bug with dual-spec where you can end up with dual 2H weapons equipped even
-	-- though you may no longer have Titan's Grip.  To correct this, I detect the situation here
-	-- and insert an unequip operation for the 2H'er in the OH slot to restore the equipment
-	-- to a valid state.
-	
-	local vHas2HGlitch
-	local vSecondaryHandItem = pInventoryCache.InventoryItems.SecondaryHandSlot
-	
-	if not self.CanDualWield2H
-	and vSecondaryHandItem
-	and vSecondaryHandItem.InvType == "INVTYPE_2HWEAPON" then
-		vHas2HGlitch = true
-		
-		local vEquipmentChange = self:NewEquipmentChange("SecondaryHandSlot", vSecondaryHandItem.Name)
-		
-		vEquipmentChange.TGFix = true
-		
-		table.insert(vEquipmentChangeList, vEquipmentChange)
-	end
-	
-	-- Scan the outfit using the Outfitter.cSlotNames array as an index so that changes
-	-- are executed in the specified order.  The order is designed so that items with
-	-- durability values are unequipped first, followed by other items such as cloaks and rings
-	-- which have no durability.  This makes unequipping before death (falling, raid/party wipe) more useful
-	-- since it'll reduce the cost of repairs
-	
-	for _, vInventorySlot in ipairs(self.cSlotNames) do
-		self:AddSlotToChangeList(pOutfit, pInventoryCache, vInventorySlot, vHas2HGlitch, vEquipmentChangeList)
-	end -- for
-	
-	if #vEquipmentChangeList == 0 then
-		return nil
-	end
-	
-	self:AdjustGemSwaps(vEquipmentChangeList)
-	self:OptimizeEquipmentChangeList(vEquipmentChangeList)
-	
-	return vEquipmentChangeList
-end
-
-function Outfitter:AddSlotToChangeList(pOutfit, pInventoryCache, pInventorySlot, pHas2HGlitch, pEquipmentChangeList)
-	local vOutfitItem = pOutfit:GetItem(pInventorySlot)
-	
-	if not vOutfitItem then
-		return -- Exit if the outfit doesn't want this slot modified
-	end
-	
-	local vSlotID = self.cSlotIDs[pInventorySlot]
-	
-	local vCurrentItemCodes, vCurrentItemName = self:GetSlotIDLinkInfo(vSlotID)
-	local vCurrentItemCode = vCurrentItemCodes and vCurrentItemCodes[1]
-
-	local vEquipmentChange = self:NewEquipmentChange(pInventorySlot, vOutfitItem.Name)
-	
-	--
-	
-	if pHas2HGlitch and pInventorySlot == "SecondaryHandSlot" then
-		vCurrentItemCode = nil -- Pretend there's nothing in the OH since we've queued an unequip for it
-	end
-	
-	-- Empty the slot if it's supposed to be blank
-	
-	if vOutfitItem.Code == 0 or vOutfitItem.Code == nil then
-		if not vCurrentItemCode then
-			return -- Nothing to do if the slot is supposed to be empty and already is
-		end
-	else
-		-- Find the item
-		
-		local vItem, vIgnoredItem = pInventoryCache:FindItemOrAlt(vOutfitItem, true)
-		
-		-- If the item wasn't found then show an appropriate error message and leave
-		
-		if not vItem then
-			self:ShowEquipError(vOutfitItem, vIgnoredItem, pInventorySlot)
-			return
-		end
-		
-		-- Add the unique-equipped gem counts for the item being equipped
-		
-		self:AddLocationUniqueGems(vItem.Location, vEquipmentChange.UniqueGemTotals)
-		
-		-- Update the change with info for the item being equipped
-		
-		pOutfit:GetItem(pInventorySlot).MetaSlotName = vItem.MetaSlotName -- This may be obsolete, a remnant from my transition to including the MetaSlotName field
-		
-		vEquipmentChange.ItemMetaSlotName = vItem.MetaSlotName
-		vEquipmentChange.ItemLocation = vItem.Location
-		
-		-- Treat the item as a 1H if they can dual wield it
-		
-		if vEquipmentChange.ItemMetaSlotName == "TwoHandSlot"
-		and not self:ItemUsesBothWeaponSlots(vOutfitItem) then
-			vEquipmentChange.ItemMetaSlotName = "Weapon0Slot"
-		end
-	end -- else vOutfitItem.Code == 0 or vOutfitItem.Code == nil
-	
-	-- Insert the change
-	
-	table.insert(pEquipmentChangeList, vEquipmentChange)
-end
-
-function Outfitter:GetGemChangeRank(pChange, pGemCountOffsets)
-	local vHasNegative, vHasPositive
-	
-	for vGemID, vGemCount in pairs(pChange.UniqueGemTotals) do
-		if pGemCountOffsets then
-			vGemCount = vGemCount + (pGemCountOffsets[vGemID] or 0)
-		end
-		
-		if vGemCount < 0 then
-			vHasNegative = true
-			
-			if vHasPositive then
-				break
-			end
-		elseif vGemCount > 0 then
-			vHasPositive = true
-			
-			if vHasNegative then
-				break
-			end
-		end
-	end
-	
-	if vHasNegative and vHasPositive then
-		return 2
-	elseif vHasPositive then	
-		return 3
-	end
-	
-	-- No changes or only negative changes are rank 1
-	
-	return 1
-end
-
-function Outfitter:AdjustGemSwaps(pEquipmentChangeList)
-	-- Calculate the sort rank for each change
-	
-	for vIndex, vChange in ipairs(pEquipmentChangeList) do
-		vChange.GemChangeRank = self:GetGemChangeRank(vChange)
-		vChange.GemChangeRank2 = Outfitter.cSlotOrder[vChange.SlotName]
-	end
-	
-	local vPreviousRank1Count, vPreviousRank2Count
-	
-	while true do
-		-- Sort the by rank
-		
-		table.sort(pEquipmentChangeList, Outfitter.CompareGemsChangeRank)
-		
-		-- Sum up the gem counts in rank 1 entries and re-assign ranks
-		
-		self.GemSortStartCounts = self:RecycleTable(self.GemSortStartCounts)
-		
-		local vRank1Count, vRank2Count = 0, 0
-		
-		for vIndex, vChange in ipairs(pEquipmentChangeList) do
-			-- Rank 1 doesn't change, just total up the counts
-			-- and preserve the ordering
-			
-			if vChange.GemChangeRank == 1 then
-				-- Total the counts
-				
-				for vGemID, vGemCount in pairs(vChange.UniqueGemTotals) do
-					self.GemSortStartCounts[vGemID] = (self.GemSortStartCounts[vGemID] or 0) + vGemCount
-				end
-				
-				-- Preserve the ordering
-				
-				vChange.GemRank2 = vIndex
-				
-				vRank1Count = vRank1Count + 1
-			elseif vChange.GemChangeRank == 2 then
-				-- If there's nothing in rank 1 then we're done
-				
-				if vRank1Count == 0 then
-					return
-				end
-				
-				-- Calculate a new rank using the offsets
-				
-				vChange.GemChangeRank = self:GetGemChangeRank(vChange, self.GemSortStartCounts)
-				
-				if vChange.GemChangeRank == 1 then
-					vRank1Count = vRank1Count + 1
-					vChange.GemChangeRank2 = vIndex
-				elseif vChange.GemChangeRank == 2 then
-					vRank2Count = vRank2Count + 1
-				else  -- 3
-					vChange.GemChangeRank2 = vIndex
-				end
-				
-			else -- rank 3
-				-- If there's nothing in rank 1 or 2 we're done
-				
-				if vRank1Count == 0
-				or vRank2Count == 0 then
-					return
-				end
-				
-				-- Preserve the ordering
-				
-				vChange.GemRank2 = vIndex
-			end
-		end
-		
-		-- If the counts don't change we're done, otherwise
-		-- do it again
-		
-		if vPreviousRank1Count == vRank1Count
-		and vPreviousRank2Count == vRank2Count then
-			break
-		end
-		
-		vPreviousRank1Count = vRank1Count
-		vPreviousRank2Count = vRank2Count
-	end -- while
-end
-
-function Outfitter.CompareGemsChangeRank(pChange1, pChange2)
-	if pChange1.GemChangeRank ~= pChange2.GemChangeRank then
-		return pChange1.GemChangeRank < pChange2.GemChangeRank
-	end
-	
-	return pChange1.GemChangeRank2 < pChange2.GemChangeRank2
-end
-
-function Outfitter:AdjustGemSwaps2(pEquipmentChangeList)
-	local vNumChanges = #pEquipmentChangeList
-	local vPassCount = 0
-	
-	for vPassNumber = 1, 4 do
-		local vDidRelocate
-		
-		self.SwapGemTotals = self:RecycleTable(self.SwapGemTotals)
-		
-		for vChangeIndex = 1, vNumChanges do
-			local vEquipmentChange = pEquipmentChangeList[vChangeIndex]
-			local vDestIndex
-			
-			-- Check each unique gem and move the change up until
-			-- it compensates for increases
-			
-			for vUniqueGemID, vGemTotal in pairs(vEquipmentChange.UniqueGemTotals) do
-				local vSwapGemTotal = self.SwapGemTotals[vUniqueGemID] or 0
-				
-				-- If this swap will decrease the count and the current count
-				-- shows a net increase, move this swap up to be before the first swap
-				-- that increased the count beyond zero
-				
-				if vGemTotal < 0 and vSwapGemTotal > 0 then
-					local vSwapGemTotal2 = vSwapGemTotal
-					
-					-- Work backwards to find the point at which the count
-					-- went positive
-					
-					for vChangeIndex2 = vChangeIndex - 1, 1, -1 do
-						local vEquipmentChange2 = pEquipmentChangeList[vChangeIndex2]
-						local vGemTotal2 = vEquipmentChange2.UniqueGemTotals[vUniqueGemID]
-						
-						if vGemTotal2 then
-							vSwapGemTotal2 = vSwapGemTotal2 - vGemTotal2
-							
-							if vSwapGemTotal2 <= 0 then
-								if not vDestIndex or vChangeIndex2 < vDestIndex then
-									vDestIndex = vChangeIndex2
-								end
-								
-								break
-							end
-						end
-					end -- for vChangeIndex2
-				end -- if vGemTotal < 0
-				
-				self.SwapGemTotals[vUniqueGemID] = vSwapGemTotal + vGemTotal
-			end -- for vUniqueGemID
-			
-			if vDestIndex then
-				pEquipmentChangeList[vChangeIndex] = pEquipmentChangeList[vDestIndex]
-				pEquipmentChangeList[vDestIndex] = vEquipmentChange
-				
-				vDidRelocate = true
-			end
-		end -- for vChangeIndex
-		
-		if not vDidRelocate then
-			break
-		end
-	end -- for vPassNumber
-end
-
-function Outfitter:FixSlotSwapChange(pEquipmentList, pChangeIndex1, pEquipmentChange1, pSlotName1, pChangeIndex2, pEquipmentChange2, pSlotName2)
-	-- No problem if both slots will be emptied
-	
-	if not pEquipmentChange1.ItemLocation
-	and not pEquipmentChange2.ItemLocation then
-		return
-	end
-	
-	-- No problem if neither slot is being moved to the other one
-	
-	local vSlot2ToSlot1 = pEquipmentChange1.ItemLocation ~= nil
-			            and pEquipmentChange1.ItemLocation.SlotName == pSlotName2
-	
-	local vSlot1ToSlot2 = pEquipmentChange2.ItemLocation ~= nil
-			            and pEquipmentChange2.ItemLocation.SlotName == pSlotName1
-	
-	-- No problem if the slots are swapping with each other
-	-- or not moving between each other at all
-	
-	if vSlot2ToSlot1 == vSlot1ToSlot2 then
-		return
-	end
-	
-	-- Slot 1 is moving to slot 2
-	
-	if vSlot1ToSlot2 then
-		if pEquipmentChange1.ItemLocation then
-			if self.Debug.EquipmentChanges then
-				self:DebugMessage("FixSlotSwapChange: Rearranging so that %s can move to %s", pSlotName1, pSlotName2)
-			end
-			
-			-- Swap change 1 and change 2 around
-			
-			pEquipmentList[pChangeIndex1] = pEquipmentChange2
-			pEquipmentList[pChangeIndex2] = pEquipmentChange1
-			
-			-- Insert a change to empty slot 2
-			
-			local vEmptySlot2 = self:NewEquipmentChange(pEquipmentChange2.SlotName)
-			table.insert(pEquipmentList, pChangeIndex1, vEmptySlot2)
-
-			pEquipmentChange1.Optimized = true
-			pEquipmentChange2.Optimized = true
-			vEmptySlot2.Optimized = true
-		else
-			-- Slot 1 is going to be empty, so empty slot 2 instead
-			-- and then when slot 1 is moved it'll swap the empty space
-			
-			if self.Debug.EquipmentChanges then
-				self:DebugMessage("FixSlotSwapChange: Emptying %s so that %s can move there", pSlotName2, pSlotName1)
-			end
-			
-			pEquipmentChange1.SlotName = pSlotName2
-			pEquipmentChange1.SlotID = pEquipmentChange2.SlotID
-			pEquipmentChange1.ItemLocation = nil
-
-			pEquipmentChange1.Optimized = true
-			pEquipmentChange2.Optimized = true
-		end
-		
-	-- Slot 2 is moving to slot 1
-	
-	else
-		if pEquipmentChange2.ItemLocation then
-			if self.Debug.EquipmentChanges then
-				self:DebugMessage("FixSlotSwapChange: Rearranging so that %s can move to %s", pSlotName2, pSlotName1)
-			end
-			
-			-- Insert a change to empty slot 1 first
-			
-			local vEmptySlot1 = self:NewEquipmentChange(pEquipmentChange1.SlotName)
-			table.insert(pEquipmentList, pChangeIndex1, vEmptySlot1)
-
-			pEquipmentChange1.Optimized = true
-			pEquipmentChange2.Optimized = true
-			vEmptySlot1.Optimized = true
-		else
-			if self.Debug.EquipmentChanges then
-				self:DebugMessage("FixSlotSwapChange: Emptying %s so that %s can move there", pSlotName1, pSlotName2)
-			end
-			
-			-- Slot 2 is going to be empty, so empty slot 1 instead
-			-- and then when slot 2 is moved it'll swap the empty space
-			
-			pEquipmentChange2.SlotName = pSlotName1
-			pEquipmentChange2.SlotID = pEquipmentChange1.SlotID
-			pEquipmentChange2.ItemLocation = nil
-			
-			-- Change the order so that slot 1 gets emptied before the move
-			
-			pEquipmentList[pChangeIndex1] = pEquipmentChange2
-			pEquipmentList[pChangeIndex2] = pEquipmentChange1
-
-			pEquipmentChange1.Optimized = true
-			pEquipmentChange2.Optimized = true
-		end
-	end
+	return change1.uniqueEquipOrderingRank2 < change2.uniqueEquipOrderingRank2
 end
 
 Outfitter.SlotSwapList =
@@ -548,224 +708,6 @@ Outfitter.SlotSwapList =
 	Trinket0Slot = "Trinket1Slot",
 	MainHandSlot = "SecondaryHandSlot",
 }
-
-function Outfitter:OptimizeEquipmentChangeList(pEquipmentChangeList)
-	self.DidOptimizeSlot = self:RecycleTable(self.DidOptimizeSlot)
-	local vDidSlot = self.DidOptimizeSlot
-	
-	local vChangeIndex = 1
-	local vNumChanges = #pEquipmentChangeList
-	
-	while vChangeIndex <= vNumChanges do
-		local vEquipmentChange = pEquipmentChangeList[vChangeIndex]
-		
-		-- Do nothing if this change has already been worked on
-		
-		if vEquipmentChange.Optimized then
-		
-		-- If this is the change for the Titan's Grip fix, put it at the very start
-		-- so it clears the state before any mainhand/offhand swaps happen
-		
-		elseif vEquipmentChange.TGFix then
-			if vChangeIndex ~= 1 then
-				if self.Debug.EquipmentChanges then
-					self:DebugMessage("OptimizeEquipmentChangeList: Moving TGFix to the front of the list")
-				end
-				
-				table.remove(pEquipmentChangeList, vChangeIndex)
-				table.insert(pEquipmentChangeList, 1, vEquipmentChange)
-			end
-			
-		elseif vEquipmentChange.SlotName == "SecondaryHandSlot" then
-			local vChangeIndex2, vEquipmentChange2 = self:FindEquipmentChangeForSlot(pEquipmentChangeList, "MainHandSlot")
-			
-			-- If equipping an offhand item, make sure it's after equipping
-			-- a mainhand item or it will fail when the current mainhand
-			-- is a two-hander
-			
-			if vEquipmentChange.ItemLocation ~= nil then
-				if vChangeIndex2 and vChangeIndex2 > vChangeIndex then
-					if self.Debug.EquipmentChanges then
-						self:DebugMessage("OptimizeEquipmentChangeList: Moving offhand swap to be after mainhand")
-					end
-					
-					table.remove(pEquipmentChangeList, vChangeIndex)
-					table.insert(pEquipmentChangeList, vChangeIndex2, vEquipmentChange)
-					
-					vChangeIndex = vChangeIndex - 1
-				end
-			
-			-- If the off-hand slot is being emptied, then do that before handling the
-			-- main hand slot (fixes Titan's Grip problem with the Argent Lance)
-			
-			elseif vEquipmentChange.ItemLocation == nil then
-				if vChangeIndex2 and vChangeIndex2 < vChangeIndex then
-					if self.Debug.EquipmentChanges then
-						self:DebugMessage("OptimizeEquipmentChangeList: Moving offhand swap to be before mainhand")
-					end
-					
-					table.remove(pEquipmentChangeList, vChangeIndex)
-					table.insert(pEquipmentChangeList, vChangeIndex2, vEquipmentChange)
-				end
-			end
-		
-		-- If a two-hand weapon is being equipped, remove the change event
-		-- for removing the offhand slot
-		
-		elseif vEquipmentChange.ItemMetaSlotName == "TwoHandSlot" then
-			local vChangeIndex2, vEquipmentChange2 = self:FindEquipmentChangeForSlot(pEquipmentChangeList, "SecondaryHandSlot")
-			
-			-- If there's a change for the offhand slot, remove it
-			
-			if vChangeIndex2 then
-				if self.Debug.EquipmentChanges then
-					self:DebugMessage("OptimizeEquipmentChangeList: Removing offhand swap because of 2H being equipped")
-				end
-				
-				table.remove(pEquipmentChangeList, vChangeIndex2)
-				
-				if vChangeIndex2 < vChangeIndex then
-					vChangeIndex = vChangeIndex - 1
-				end
-				
-				vNumChanges = vNumChanges - 1
-			end
-			
-			-- Insert a new change for the offhand slot to empty it ahead
-			-- of equipping the two-hand item
-			
-			if self.Debug.EquipmentChanges then
-				self:DebugMessage("OptimizeEquipmentChangeList: Emptying offhand before 2H equip")
-			end
-			
-			table.insert(pEquipmentChangeList, vChangeIndex, self:NewEquipmentChange("SecondaryHandSlot", nil))
-		
-		-- Otherwise see if the change needs to be re-arranged so that slot
-		-- swapping works correctly (trinkets, rings, or weapon slots being swapped)
-		
-		else
-			local vSwapSlot = self.SlotSwapList[vEquipmentChange.SlotName]
-			
-			if vSwapSlot and not vDidSlot[vEquipmentChange.SlotName] then
-				local vChangeIndex2, vEquipmentChange2 = self:FindEquipmentChangeForSlot(pEquipmentChangeList, vSwapSlot)
-				
-				if vChangeIndex2 then
-					self:FixSlotSwapChange(pEquipmentChangeList, vChangeIndex, vEquipmentChange, vEquipmentChange.SlotName, vChangeIndex2, vEquipmentChange2, vSwapSlot)
-				end
-				
-				vDidSlot[vEquipmentChange.SlotName] = true
-				
-				vNumChanges = #pEquipmentChangeList
-			end
-		end
-		
-		--
-		
-		vChangeIndex = vChangeIndex + 1
-	end
-end
-
-function Outfitter:ExecuteEquipmentChangeList(pEquipmentChangeList, pEmptyBagSlots, pExpectedInventoryCache)
-	local vSaved_EnableSFX
-	
-	if not self.Settings.EnableEquipSounds then
-		vSaved_EnableSFX = GetCVar("Sound_EnableSFX")
-		SetCVar("Sound_EnableSFX", "0")
-	end
-	
-	for vChangeIndex, vEquipmentChange in ipairs(pEquipmentChangeList) do
-		local vSwapItems, vEmptyThenEquip
-		
-		-- Determine if an in-place swap is possible (or even necessary)
-		
-		if vEquipmentChange.ItemLocation then
-			vSwapItems = true
-			
-			-- If the items are for different bag types, check to see if we need to
-			-- separate the swap operation into Empty then Equip
-			
-			local vEquippedItemBagType = self:GetSlotIDItemBagType(vEquipmentChange.SlotID)
-			local vNewItemBagType = self:GetItemLocationBagType(vEquipmentChange.ItemLocation)
-			
-			-- If the item being equipped is in a specialty bag already and the
-			-- current item can't go in that bag then we have to EmptyThenEquip
-			
-			local vNewItemInBagType = vEquipmentChange.ItemLocation.BagIndex and self:GetBagType(vEquipmentChange.ItemLocation.BagIndex)
-			
-			if vEquippedItemBagType
-			and vNewItemInBagType
-			and vNewItemInBagType ~= 0
-			and bit.band(vNewItemInBagType, vEquippedItemBagType) == 0 then
-				vEmptyThenEquip = true
-			
-			-- Otherwise, if the item being unequipped has a specialty slot available, then we have to EmptyThenEquip
-			
-			elseif vEquippedItemBagType and self:FindEmptySpecialtyBagSlot(vEquippedItemBagType, pEmptyBagSlots) then
-				vEmptyThenEquip = true
-			end
-		end
-		
-		-- Swap the item in-place with the new item
-		
-		if vSwapItems then
-			if vEmptyThenEquip then
-				self:UnequipSlotID(vEquipmentChange.SlotID, pEmptyBagSlots, pExpectedInventoryCache)
-			end
-			
-			ClearCursor() -- Make sure nothing is already being held
-			
-			self:PickupItemLocation(vEquipmentChange.ItemLocation)
-			EquipCursorItem(vEquipmentChange.SlotID)
-			
-			if pExpectedInventoryCache then
-				pExpectedInventoryCache:SwapLocationWithInventorySlot(vEquipmentChange.ItemLocation, vEquipmentChange.SlotName)
-			end
-		
-		-- Remove the item
-		
-		else
-			self:UnequipSlotID(vEquipmentChange.SlotID, pEmptyBagSlots, pExpectedInventoryCache)
-		end
-	end
-	
-	ClearCursor() -- Make sure we leave nothing on the cursor
-	
-	if vSaved_EnableSFX then
-		SetCVar("Sound_EnableSFX", vSaved_EnableSFX)
-	end
-end
-
-function Outfitter:ExecuteEquipmentChangeList2(pEquipmentChangeList, pEmptySlots, pBagsFullErrorFormat, pExpectedInventoryCache)
-	local vSaved_EnableSFX
-	
-	if not self.Settings.EnableEquipSounds then
-		vSaved_EnableSFX = GetCVar("Sound_EnableSFX")
-		SetCVar("Sound_EnableSFX", "0")
-	end
-	
-	for vChangeIndex, vEquipmentChange in ipairs(pEquipmentChangeList) do
-		if vEquipmentChange.ToLocation then
-			ClearCursor() -- Make sure nothing is already being held
-			
-			self:PickupItemLocation(vEquipmentChange.FromLocation)
-			EquipCursorItem(vEquipmentChange.SlotID)
-			
-			if pExpectedInventoryCache then
-				pExpectedInventoryCache:SwapLocationWithInventorySlot(vEquipmentChange.ToLocation, vEquipmentChange.SlotName)
-			end
-		else
-			-- Remove the item
-			
-			self:MoveLocationToEmptyBagSlot(vEquipmentChange.FromLocation, pEmptySlots, pBagsFullErrorFormat, pExpectedInventoryCache)
-		end
-	end
-	
-	ClearCursor() -- Make sure we leave nothing on the cursor
-	
-	if vSaved_EnableSFX then
-		SetCVar("Sound_EnableSFX", vSaved_EnableSFX)
-	end
-end
 
 function Outfitter:FindEmptySpecialtyBagSlot(pItemBagType, pEmptyBagSlots)
 	if not pEmptyBagSlots
@@ -941,7 +883,8 @@ function Outfitter:UpdateEquippedItems()
 	
 	-- Equip it
 	
-	local vEquipmentChangeList = self:BuildEquipmentChangeList(vCompiledOutfit, vInventoryCache)
+	local vEquipmentChangeList = Outfitter:New(Outfitter._EquipmentChanges)
+	vEquipmentChangeList:addChangesToEquipOutfit(vCompiledOutfit, vInventoryCache)
 	
 	if vEquipmentChangeList then
 		-- local vExpectedInventoryCache = self:New(self._InventoryCache)
@@ -951,7 +894,7 @@ function Outfitter:UpdateEquippedItems()
 			self:DebugTable(vEquipmentChangeList, "ChangeList")
 		end
 		
-		self:ExecuteEquipmentChangeList(vEquipmentChangeList, self:GetEmptyBagSlotList(), vExpectedInventoryCache)
+		vEquipmentChangeList:execute(self:GetEmptyBagSlotList(), vExpectedInventoryCache)
 	else
 		if self.Debug.EquipmentChanges then
 			self:DebugMessage("UpdateEquippedItems: No change list generated")
@@ -1171,7 +1114,7 @@ function Outfitter.OutfitStack:Clear()
 		Outfitter:DispatchOutfitEvent("UNWEAR_OUTFIT", vOutfit:GetName(), vOutfit)
 	end
 	
-	Outfitter:EraseTable(self.Outfits)
+	wipe(self.Outfits)
 	
 	gOutfitter_Settings.LastOutfitStack = Outfitter:RecycleTable(gOutfitter_Settings.LastOutfitStack)
 	gOutfitter_Settings.LayerIndex = Outfitter:RecycleTable(gOutfitter_Settings.LayerIndex)
@@ -1289,29 +1232,13 @@ function Outfitter.OutfitStack:IsTopmostOutfit(pOutfit)
 end
 
 function Outfitter.OutfitStack:UpdateOutfitDisplay()
-	local vShowHelm, vShowCloak, vShowTitleID
+	local vShowTitleID
 	
 	for vIndex, vOutfit in ipairs(self.Outfits) do
-		if vOutfit.ShowHelm ~= nil then
-			vShowHelm = vOutfit.ShowHelm
-		end
-		
-		if vOutfit.ShowCloak ~= nil then
-			vShowCloak = vOutfit.ShowCloak
-		end
-		
 		if vOutfit.ShowTitleID ~= nil then
 			vShowTitleID = vOutfit.ShowTitleID
 		end
 	end -- for
-	
-	if vShowHelm ~= nil then
-		ShowHelm(vShowHelm)
-	end
-	
-	if vShowCloak ~= nil then
-		ShowCloak(vShowCloak)
-	end
 	
 	if vShowTitleID ~= nil
 	and Outfitter.HasHWEvent then
@@ -1356,16 +1283,5 @@ function Outfitter.OutfitStack:GetCurrentOutfitInfo()
 		return vOutfit:GetName(), vOutfit
 	else
 		return Outfitter.cCustom, vOutfit
-	end
-end
-
-function Outfitter:GemTest()
-	local vStartEnchantID, vEndEnchantID = 3518, 3533
-	
-	for vEnchantID = vStartEnchantID, vEndEnchantID, 3 do
-		DEFAULT_CHAT_FRAME:AddMessage(string.format("|cffa335ee|Hitem:43590:0:%d:%d:%d:0:0:0:0|h[Polar Vest]|h|r",
-			vEnchantID,
-			vEnchantID + 1,
-			vEnchantID + 2))
 	end
 end

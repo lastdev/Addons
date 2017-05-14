@@ -29,6 +29,7 @@ mrt._L = {
         [800] = {}, 
         [886] = {}, 
         [953] = {}, 
+        [1026] = {},
     } 
 }
 local _L = mrt._L
@@ -59,6 +60,8 @@ _L.yells[886]["Tsulong"] = "I thank you, strangers. I have been freed."
 
 _L.yells[953]["Immerseus"] = "Ah, you have done it!  The waters are pure once more."
 _L.yells[953]["Spoils of Pandaria"] = "System resetting. Don't turn the power off, or the whole thing will probably explode."
+
+_L.yells[1026]["Hellfire Assault"] = "If you want something done right, you have to do it yourself..."
 
 
 ---------------------------------
@@ -169,6 +172,8 @@ MRT_L.Options = {
     TP_LogCataclysmRaids = "Track Cataclysm raids",
     TP_LogLFRRaids = "Track LFR raids",
     TP_LogLootModePersonal = "Track loot mode 'Personal'",
+    TP_LogMoPRaids = "Track Pandaria raids",
+    TP_LogWarlordsRaids = "Track Warlords of Draenor raids",
     TP_LogWotLKRaids = "Track WotLK raids",
 	TP_MinItemQualityToGetCost_Desc = "Min item quality to ask cost for",
 	TP_MinItemQualityToLog_Desc = "Min item quality to log",

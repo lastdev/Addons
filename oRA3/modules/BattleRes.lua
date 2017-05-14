@@ -1,11 +1,11 @@
 
 local addonName, scope = ...
 local oRA = scope.addon
-local util = oRA.util
 local module = oRA:NewModule("BattleRes", "AceTimer-3.0")
 local L = scope.locale
+local coloredNames = oRA.coloredNames
 
-module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
+--luacheck: globals GameFontNormal
 
 local resAmount = 0
 local redemption, feign = (GetSpellInfo(27827)), (GetSpellInfo(5384))
@@ -17,7 +17,7 @@ local inCombat = false
 local function createFrame()
 	brez = CreateFrame("Frame", "oRA3BattleResMonitor", UIParent)
 	brez:SetPoint("CENTER", UIParent, "CENTER")
-	oRA3:RestorePosition("oRA3BattleResMonitor")
+	oRA:RestorePosition("oRA3BattleResMonitor")
 	brez:SetWidth(140)
 	brez:SetHeight(30)
 	brez:EnableMouse(true)
@@ -25,13 +25,13 @@ local function createFrame()
 	brez:SetClampedToScreen(true)
 	brez:SetMovable(true)
 	brez:SetScript("OnDragStart", function(frame) frame:StartMoving() end)
-	brez:SetScript("OnDragStop", function(frame) frame:StopMovingOrSizing() oRA3:SavePosition("oRA3BattleResMonitor") end)
+	brez:SetScript("OnDragStop", function(frame) frame:StopMovingOrSizing() oRA:SavePosition("oRA3BattleResMonitor") end)
 	brez:SetScript("OnEvent", updateFunc)
 
 	local bg = brez:CreateTexture(nil, "PARENT")
 	bg:SetAllPoints(brez)
 	bg:SetBlendMode("BLEND")
-	bg:SetTexture(0, 0, 0, 0.3)
+	bg:SetColorTexture(0, 0, 0, 0.3)
 	brez.background = bg
 
 	local header = brez:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -103,52 +103,79 @@ local defaults = {
 	}
 }
 local function colorize(input) return ("|cfffed000%s|r"):format(input) end
-local options
-local function getOptions()
-	if not options then
-		options = {
-			type = "group",
-			name = L.battleResTitle,
-			get = function(k) return module.db.profile[k[#k]] end,
-			set = function(k, v)
-				module.db.profile[k[#k]] = v
-				toggleLock()
-				toggleShow()
-				module:ZONE_CHANGED_NEW_AREA()
+local options = {
+	type = "group",
+	name = L.battleResTitle,
+	get = function(k) return module.db.profile[k[#k]] end,
+	set = function(k, v)
+		module.db.profile[k[#k]] = v
+		toggleLock()
+		toggleShow()
+		module:CheckOpen()
+	end,
+	args = {
+		header = {
+			type = "description",
+			name = L.battleResHeader.."\n",
+			fontSize = "medium",
+			order = 0,
+		},
+		toggle = {
+			type = "execute",
+			name = L.toggleMonitor,
+			func = function()
+				if not brez then
+					createFrame()
+					createFrame = nil
+					brez:Hide()
+				end
+				if not brez:IsShown() then
+					toggleLock()
+					brez:Show()
+				else
+					brez:Hide()
+				end
 			end,
-			args = {
-				showDisplay = {
-					type = "toggle",
-					name = colorize(L.showMonitor),
-					desc = L.battleResShowDesc,
-					width = "full",
-					descStyle = "inline",
-					order = 1,
-				},
-				lock = {
-					type = "toggle",
-					name = colorize(L.lockMonitor),
-					desc = L.battleResLockDesc,
-					width = "full",
-					descStyle = "inline",
-					order = 2,
-				},
-			}
-		}
-	end
-	return options
-end
+			disabled = function()
+				local inInstance, instanceType =  IsInInstance()
+				return not module.db.profile.showDisplay or (inInstance and instanceType == "raid")
+			end,
+			order = 0.5,
+		},
+		showDisplay = {
+			type = "toggle",
+			name = colorize(L.showMonitor),
+			desc = L.battleResShowDesc,
+			width = "full",
+			descStyle = "inline",
+			order = 1,
+		},
+		lock = {
+			type = "toggle",
+			name = colorize(L.lockMonitor),
+			desc = L.battleResLockDesc,
+			width = "full",
+			descStyle = "inline",
+			order = 2,
+		},
+	}
+}
 
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("BattleRes", defaults)
-	oRA:RegisterModuleOptions("BattleRes", getOptions, L.battleResTitle)
+	oRA:RegisterModuleOptions("BattleRes", options)
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
 end
 
 function module:OnStartup()
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:ZONE_CHANGED_NEW_AREA()
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "CheckOpen")
+	self:CheckOpen()
+end
+
+function module:OnShutdown()
+	self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+	self:Close()
 end
 
 do
@@ -167,23 +194,7 @@ do
 					theDead[k] = nil
 				elseif not UnitIsDeadOrGhost(k) and UnitIsConnected(k) and UnitAffectingCombat(k) then
 					if v ~= "br" then
-						local _, class = UnitClass(k)
-						local tbl = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS -- Support custom class color addons, if installed
-						local s = class and tbl[class] or GRAY_FONT_COLOR -- Failsafe, rarely UnitClass can return nil
-						local shortName = k:gsub("%-.+", "*")
-						if class == "SHAMAN" then
-							brez.scroll:AddMessage(
-								("|cFF71d5ff|Hspell:20608|h%s|h|r >> |cFF%02x%02x%02x%s|r"):format(
-									GetSpellInfo(20608), s.r * 255, s.g * 255, s.b * 255, shortName
-								)
-							)
-						else
-							brez.scroll:AddMessage(
-								("|cFF71d5ff|Hspell:20707|h%s|h|r >> |cFF%02x%02x%02x%s|r"):format(
-									GetSpellInfo(20707), s.r * 255, s.g * 255, s.b * 255, shortName
-								)
-							)
-						end
+						brez.scroll:AddMessage(("%s >> %s"):format(GetSpellLink(20707), coloredNames[k])) -- Soulstone
 					end
 					theDead[k] = nil
 				end
@@ -197,7 +208,7 @@ do
 		if charges then
 			if not inCombat then
 				inCombat = true
-				theDead = {}
+				wipe(theDead)
 				timeUpdater = module:ScheduleRepeatingTimer(updateTime, 1)
 				brez:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 				brez.scroll:Clear()
@@ -222,7 +233,7 @@ do
 		end
 	end
 
-	function module:ZONE_CHANGED_NEW_AREA()
+	function module:CheckOpen()
 		local _, type = GetInstanceInfo()
 		if type == "raid" and self.db.profile.showDisplay then
 			if not inCombat then self:CancelAllTimers() end
@@ -235,15 +246,17 @@ do
 			toggleShow()
 
 			self:ScheduleRepeatingTimer(updateStatus, 0.1)
+		else
+			self:Close()
 		end
 	end
 end
 
-function module:OnShutdown()
+function module:Close()
 	if brez then
 		brez:Hide()
 		brez:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-		module:CancelAllTimers()
+		self:CancelAllTimers()
 		brez.remaining:SetText("0")
 		brez.timer:SetText("0:00")
 		brez.remaining:SetTextColor(1,1,1)
@@ -253,7 +266,7 @@ end
 do
 	local function getPetOwner(pet, guid)
 		if UnitGUID("pet") == guid then
-			return module:UnitName("player")
+			return UnitName("player")
 		end
 
 		local owner
@@ -284,24 +297,16 @@ do
 				name = getPetOwner(name, sGuid)
 			end
 
-			local tbl = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS -- Support custom class color addons, if installed
-			local _, class = UnitClass(tarName)
-			local t = class and tbl[class] or GRAY_FONT_COLOR -- Failsafe, rarely UnitClass can return nil
-			_, class = UnitClass(name)
-			local s = class and tbl[class] or GRAY_FONT_COLOR -- Failsafe, rarely UnitClass can return nil
-			local shortName = name:gsub("%-.+", "*")
-			local shortTarName = tarName:gsub("%-.+", "*")
-			brez.scroll:AddMessage(
-				("|cFF%02x%02x%02x%s|r >> |cFF%02x%02x%02x%s|r"):format(
-					s.r * 255, s.g * 255, s.b * 255, shortName, t.r * 255, t.g * 255, t.b * 255, shortTarName
-				)
-			)
+			brez.scroll:AddMessage(("%s >> %s"):format(coloredNames[name], coloredNames[tarName]))
 			theDead[tarName] = "br"
 
+		elseif event == "SPELL_CAST_SUCCESS" and spellId == 21169 then -- Reincarnation
+			brez.scroll:AddMessage(("%s >> %s"):format(GetSpellLink(20608), coloredNames[name]))
+			theDead[name] = nil
+
 		-- Lots of lovely checks before adding someone to the deaths table
-		elseif event == "UNIT_DIED" and UnitIsPlayer(tarName) and UnitGUID(tarName) == tarGuid and not UnitIsFeignDeath(tarName) and not UnitBuff(tarName, redemption) and not UnitBuff(tarName, feign) then 
+		elseif event == "UNIT_DIED" and UnitIsPlayer(tarName) and UnitGUID(tarName) == tarGuid and not UnitIsFeignDeath(tarName) and not UnitBuff(tarName, redemption) and not UnitBuff(tarName, feign) then
 			theDead[tarName] = true
 		end
 	end
 end
-

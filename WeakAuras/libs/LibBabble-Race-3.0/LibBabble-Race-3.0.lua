@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Race-3.0
-Revision: $Rev: 82 $
+Revision: $Rev: 88 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-race-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Race-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 82 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 88 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -142,8 +142,8 @@ elseif GAME_LOCALE == "koKR" then
 	["Night elves"] = "나이트 엘프",
 	Orc = "오크",
 	Orcs = "오크",
-	Pandaren = "판다렌", -- Needs review
-	Pandaren_PL = "판다렌", -- Needs review
+	Pandaren = "판다렌",
+	Pandaren_PL = "판다렌",
 	Succubus = "서큐버스",
 	Tauren = "타우렌",
 	Tauren_PL = "타우렌",

@@ -157,8 +157,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Zeige Warnung, wenn $spell:74769 gewirkt wird",
 	AnnounceAlternatePhase	= "Zeige auch Warnungen/Timer für Phasen, in denen du dich nicht befindest",
-	SetIconOnConsumption	= "Setze Zeichen auf Ziele von $spell:74562 und $spell:74792",
-	WhisperOnConsumption	= "Ziele von $spell:74562 und $spell:74792 anflüstern (benötigt Schlachtzugleitung)"
+	SetIconOnConsumption	= "Setze Zeichen auf Ziele von $spell:74562 und $spell:74792"
 })
 
 L:SetMiscLocalization({
@@ -167,7 +166,5 @@ L:SetMiscLocalization({
 	Phase2					= "Ihr werdet im Reich des Zwielichts nur Leid finden! Tretet ein, wenn ihr es wagt!",
 	Phase3					= "Ich bin das Licht und die Dunkelheit! Zittert, Sterbliche, vor dem Herold Todesschwinges!",
 	twilightcutter			= "Die kreisenden Sphären pulsieren vor dunkler Energie!",
-	WhisperCombustion		= "Feurige Einäscherung auf dir! Lauf zur Wand!",
-	WhisperConsumption		= "Seelenverzehrung auf dir! Lauf zur Wand!",
 	Kill					= "Genießt euren Sieg, Sterbliche, denn es war euer letzter. Bei der Rückkehr des Meisters wird diese Welt brennen!"
 })

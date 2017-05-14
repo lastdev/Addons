@@ -1,16 +1,16 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabGuild.lua"></Script>
 	
-	<Button name="AltoGuildMenuItemTemplate" inherits="AltoMenuItemTemplate" virtual="true">
+	<Button name="AltoGuildMenuItemTemplate" inherits="AltoMenuItemTemplate" hidden="false" virtual="true">
 		<Size x="156" y="20" />
 		<Scripts>
 			<OnClick>
-				Altoholic.Tabs.Guild:MenuItem_OnClick(self:GetID())
+				self:GetParent():MenuItem_OnClick(self:GetID(), self.panel)
 			</OnClick>
 		</Scripts>
 	</Button>
-
-	<Frame name="AltoholicTabGuild" parent="AltoholicFrame" hidden="true">
+	
+	<Frame name="AltoholicTabGuild" parent="AltoholicFrame">
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
@@ -31,64 +31,30 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" x="23" y="-105" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="panel" value="Members" />
+				</KeyValues>
 			</Button>
 			<Button parentKey="MenuItem2" inherits="AltoGuildMenuItemTemplate" id="2">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="panel" value="Bank" />
+				</KeyValues>
 			</Button>
-			<!--
-			<Button parentKey="MenuItem3" inherits="AltoGuildMenuItemTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem2" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem4" inherits="AltoGuildMenuItemTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			-->
-			
-			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
-				<Size x="130" y="19" />
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" id="2">
-				<Size x="70" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" id="3">
-				<Size x="100" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" id="4">
-				<Size x="100" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort5" inherits="AltoSortButtonTemplate" id="5">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort4" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
+			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+				<KeyValues>
+					<KeyValue key="numButtons" value="5" type="number" />
+					<KeyValue key="option" value="UI.Tabs.Guild.SortAscending" />
+				</KeyValues>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Guild:OnLoad()
+				Altoholic:SetClassExtensions(self, "AltoTabGuild")
+				self:Init()
 			</OnLoad>
-			<OnShow>
-				Altoholic.Tabs.Guild:OnShow()
-			</OnShow>
 		</Scripts>
 	</Frame>
-
 </Ui>

@@ -207,8 +207,6 @@
 	Outfitter.cHide = "Скрыть"
 	Outfitter.cDontChange = "Не менять"
 
-	Outfitter.cHelm = "Головной убор"
-	Outfitter.cCloak = "Плащ"
 	Outfitter.cPlayerTitle = "Титул"
 
 	Outfitter.cMore = "Еще"
@@ -229,17 +227,6 @@
 
 	Outfitter.cMinimapButtonTitle = "Значек Outfitter на мини-карте"
 	Outfitter.cMinimapButtonDescription = "Щелкните для выбора различных комплектов или тяните для перестаскивания иконки."
-
-	Outfitter.cClassName = {}
-	Outfitter.cClassName.DRUID = "Друид"
-	Outfitter.cClassName.HUNTER = "Охотник"
-	Outfitter.cClassName.MAGE = "Маг"
-	Outfitter.cClassName.PALADIN = "Паладин"
-	Outfitter.cClassName.PRIEST = "Жрец"
-	Outfitter.cClassName.ROGUE = "Разбойник"
-	Outfitter.cClassName.SHAMAN = "Шаман"
-	Outfitter.cClassName.WARLOCK = "Чернокнижник"
-	Outfitter.cClassName.WARRIOR = "Воин"
 
 	Outfitter.cBattleStance = "Боевая стойка"
 	Outfitter.cDefensiveStance = "Оборонительная стойка"

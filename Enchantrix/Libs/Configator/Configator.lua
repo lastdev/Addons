@@ -1,7 +1,7 @@
 --[[
 	Configator - A library to help you create a gui config
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: Configator.lua 376 2014-11-05 17:34:52Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: Configator.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -58,7 +58,7 @@ local LIBRARY_VERSION_MINOR = 32
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 376 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 406 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local kit = {}
 
@@ -1588,7 +1588,7 @@ function kit:AddControl(id, cType, column, ...)
 		el.bg:SetAlpha(0.7)
 		el.tex = el:CreateTexture(nil, "ARTWORK");
 		el.tex:SetAllPoints(el)
-		el.tex:SetTexture(el.r, el.g, el.b, el.a)
+		el.tex:SetColorTexture(el.r, el.g, el.b, el.a)
 		self:GetSetting(el)
 		el:SetScript("OnClick", function(obj, ...)
 			local f = ColorPickerFrame
@@ -1783,7 +1783,7 @@ function kit:GetSetting(element)
 		element.b = tonumber(b) or 0
 		element.a = tonumber(a) or 1
 		if element.tex then
-			element.tex:SetTexture(element.r,element.g,element.b,element.a)
+			element.tex:SetColorTexture(element.r,element.g,element.b,element.a)
 		end
 	else
 		value = element:GetValue()
@@ -1857,7 +1857,7 @@ function kit:ChangeSetting(element, ...)
 		end
 		value = ("%0.3f,%0.3f,%0.3f,%0.3f"):format(element.r,element.g,element.b,element.a)
 		if element.tex then
-			element.tex:SetTexture(element.r,element.g,element.b,element.a)
+			element.tex:SetColorTexture(element.r,element.g,element.b,element.a)
 		end
 	elseif element.GetValue then
 		value = element:GetValue()

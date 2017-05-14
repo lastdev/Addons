@@ -1,8 +1,9 @@
-local BCT = LibStub("LibBabble-CreatureType-3.0"):GetUnstrictLookupTable()
-local BCTR = LibStub("LibBabble-CreatureType-3.0"):GetReverseLookupTable()
+local myname, ns = ...
+
 local icon = LibStub("LibDBIcon-1.0", true)
 
 local LibQTip = LibStub("LibQTip-1.0")
+local HBD = LibStub("HereBeDragons-1.0")
 
 local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("LDB")
@@ -22,10 +23,11 @@ function module:OnInitialize()
 
 	local config = core:GetModule("Config", true)
 	if config then
-		config.options.args.outputs.plugins.broker = {
+		config.options.plugins.broker = {
 			broker = {
 				type = "group",
-				name = "Broker",
+				name = "Icon",
+				order = 91,
 				args = {
 					show_lastseen = {
 						type = "toggle",
@@ -84,36 +86,25 @@ function module:SetupDataObject()
 	local rares_seen = {}
 	local tooltip
 	function dataobject:OnEnter()
-		local zone = core:GetPlayerZone()
+		local zone = HBD:GetPlayerZone()
 
-		if not (core.db and core.db.global.mobs_byzoneid[zone]) then
+		if not (core.db and ns.mobsByZone[zone]) then
 			return
 		end
 
-		local mod_tooltip = core:GetModule("Tooltip", true)
-
 		tooltip = LibQTip:Acquire("SilverDragonTooltip", 6, "LEFT", "CENTER", "RIGHT", "CENTER", "RIGHT", "RIGHT")
-		tooltip:AddHeader("Name", "Level", "Type", "Count", "Last Seen")
+		tooltip:AddHeader("Name", "Count", "Last Seen")
 		
 		local n = 0
-		for id in pairs(core.db.global.mobs_byzoneid[zone]) do
+		for id in pairs(ns.mobsByZone[zone]) do
 			n = n + 1
-			local name, num_locations, level, elite, creature_type, lastseen, count, tameable, questid = core:GetMob(zone, id)
+			local name, questid, vignette, tameable, last_seen, times_seen = core:GetMobInfo(id)
 			local index = tooltip:AddLine(core:GetMobLabel(id) or UNKNOWN,
-				("%s%s"):format((level and level > 0) and level or (level and level == -1) and 'Boss' or '?', elite and '+' or ''),
-				BCT[creature_type],
-				count,
-				core:FormatLastSeen(lastseen),
+				times_seen,
+				core:FormatLastSeen(last_seen),
 				(tameable and 'Tameable' or '')
 			)
-			local completed, completion_knowable, achievement, achievement_name
-			if questid then
-				completion_knowable = true
-				completed = IsQuestFlaggedCompleted(questid)
-			elseif mod_tooltip then
-				achievement, achievement_name, completed = mod_tooltip:AchievementMobStatus(id)
-				completion_knowable = achievement
-			end
+			local completed, completion_knowable = ns:IsMobComplete(id)
 			if completion_knowable then
 				if completed then
 					tooltip:SetLineColor(index, 0, 1, 0)
@@ -131,8 +122,8 @@ function module:SetupDataObject()
 			tooltip:AddHeader("Name", "Zone", "Coords", "When", "Source")
 			for i,rare in ipairs(rares_seen) do
 				tooltip:AddLine(
-					core:GetMobLabel(rare.id) or UNKNOWN,
-					GetMapNameByID(rare.zone),
+					core:GetMobLabel(rare.id) or core:NameForMob(rare.id) or UNKNOWN,
+					GetMapNameByID(rare.zone) or UNKNOWN,
 					(rare.x and rare.y) and (core.round(rare.x * 100, 1) .. ', ' .. core.round(rare.y * 100, 1)) or UNKNOWN,
 					core:FormatLastSeen(rare.when),
 					rare.source or UNKNOWN
@@ -162,14 +153,13 @@ function module:SetupDataObject()
 	end
 
 	local last_seen
-	core.RegisterCallback("LDB", "Seen", function(callback, id, name, zone, x, y, dead, newloc, source)
-		last_seen = name
+	core.RegisterCallback("LDB", "Seen", function(callback, id, zone, x, y, dead, source)
+		last_seen = id
 		if db.profile.show_lastseen then
 			dataobject.text = name
 		end
 		table.insert(rares_seen, {
 			id = id,
-			name = name,
 			zone = zone,
 			x = x,
 			y = y,

@@ -1,10 +1,10 @@
--- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 
 -- Default settings
 local default = {
     controlledChildren     = {},
     anchorPoint         = "CENTER",
+    anchorFrameType     = "SCREEN",
     xOffset             = 0,
     yOffset             = 0,
     frameStrata         = 1,
@@ -40,6 +40,10 @@ local function getRect(data)
     local blx, bly, trx, try;
     blx, bly = data.xOffset, data.yOffset;
 
+    if (data.width == nil or data.height == nil) then
+      return blx, bly, blx, bly;
+    end
+
     -- Calc bounding box
     if(data.selfPoint:find("LEFT")) then
         trx = blx + data.width;
@@ -69,13 +73,6 @@ local function modify(parent, region, data)
     -- Localize
     local border = region.border;
 
-    -- Adjust framestrata
-    if(data.frameStrata == 1) then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
-    end
-
     -- Get overall bounding box
     data.selfPoint = "BOTTOMLEFT";
     local leftest, rightest, lowest, highest = 0, 0, 0, 0;
@@ -96,36 +93,31 @@ local function modify(parent, region, data)
 
     -- Reset position and size
     region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+    WeakAuras.AnchorFrame(data, region, parent);
 
     -- Adjust frame-level sorting
-    local lowestRegion = WeakAuras.regions[data.controlledChildren[1]] and WeakAuras.regions[data.controlledChildren[1]].region;
-    if(lowestRegion) then
-        local frameLevel = lowestRegion:GetFrameLevel();
-        for i=2,#data.controlledChildren do
-            local childRegion = WeakAuras.regions[data.controlledChildren[i]] and WeakAuras.regions[data.controlledChildren[i]].region;
-            if(childRegion) then
-                frameLevel = frameLevel + 1;
-                childRegion:SetFrameLevel(frameLevel);
-            end
+    local frameLevel = 1
+    for i=1,#data.controlledChildren do
+        local childRegion = WeakAuras.regions[data.controlledChildren[i]] and WeakAuras.regions[data.controlledChildren[i]].region
+        if(childRegion) then
+            frameLevel = frameLevel + 4
+            childRegion:SetFrameLevel(frameLevel)
         end
     end
 
     -- Control children (does not happen with "group")
     function region:UpdateBorder(childRegion)
-        -- Localize
         local border = region.border;
-
         -- Apply border settings
         if data.border then
             -- Initial visibility (of child that originated UpdateBorder(...))
-            local childVisible = childRegion and childRegion:IsVisible() or false;
+            local childVisible = childRegion and childRegion.toShow or false;
 
             -- Scan children for visibility
             if not childVisible then
                 for index, childId in ipairs(data.controlledChildren) do
                     local childRegion = WeakAuras.regions[childId] and WeakAuras.regions[childId].region;
-                    if childRegion and childRegion:IsVisible() then
+                    if childRegion and childRegion.toShow then
                         childVisible = true;
                         break;
                     end

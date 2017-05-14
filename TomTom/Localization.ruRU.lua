@@ -1,4 +1,4 @@
-﻿--Localization.ruRU.lua by Swix (wow.playhard.ru)
+--Localization.ruRU.lua by Swix (wow.playhard.ru)
 
 if ( GetLocale() == "ruRU" ) then
 

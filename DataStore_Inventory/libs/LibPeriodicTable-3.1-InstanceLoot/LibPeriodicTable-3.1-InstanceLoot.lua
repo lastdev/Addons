@@ -1,7 +1,7 @@
 -- (c) 2007 Nymbia.  see LGPLv2.1.txt for full details.
 --DO NOT MAKE CHANGES TO THIS FILE BEFORE READING THE WIKI PAGE REGARDING CHANGING THESE FILES
 if not LibStub("LibPeriodicTable-3.1", true) then error("PT3 must be loaded before data") end
-LibStub("LibPeriodicTable-3.1"):AddData("InstanceLoot", gsub("$Rev: 423 $", "(%d+)", function(n) return n+90000 end), {
+LibStub("LibPeriodicTable-3.1"):AddData("InstanceLoot", gsub("$Rev: 499 $", "(%d+)", function(n) return n+90000 end), {
 	["InstanceLoot.Ahn'Qiraj.Battleguard Sartura"]="21648:178,21666:82,21667:153,21668:146,21669:148,21670:158,21671:150,21672:157,21673:99,21674:174,21675:179,21676:180,21678:168",
 	["InstanceLoot.Ahn'Qiraj.C'Thun"]="20929:819,20933:885,21126:63,21134:104,21221:804,21579:121,21581:112,21582:153,21583:202,21585:107,21586:165,21596:160,21839:68,22730:197,22731:134,22732:192",
 	["InstanceLoot.Ahn'Qiraj.Emperor Vek'lor"]="20735:790,20930:800,21597:75,21598:138,21599:142,21600:142,21601:138,21602:138,93040:23",
@@ -444,10 +444,6 @@ LibStub("LibPeriodicTable-3.1"):AddData("InstanceLoot", gsub("$Rev: 423 $", "(%d
 	["InstanceLoot.Zul'Aman.Halazzi"]="69564:204,69565:203,69566:283,69567:139,69568:139",
 	["InstanceLoot.Zul'Aman.Malacrass"]="69569:180,69570:183,69571:185,69572:186,69573:121,69762:9,70080:60",
 	["InstanceLoot.Zul'Aman.Zul'jin"]="33102:875,33466:140,33467:144,33468:150,33469:158,33471:148,33473:147,33474:146,33476:151,33478:143,33479:149,33830:141,33831:144",
-	["InstanceLoot.Zul'Aman.Chest1"]="33590:100,33591:100,33489:110,33480:100,33483:90,33971:100,33805:110,33481:110",
-	["InstanceLoot.Zul'Aman.Chest2"]="33495:90,33493:100,33492:110,33490:110,33494:90,33491:100",
-	["InstanceLoot.Zul'Aman.Chest3"]="33497:200,33500:190,33496:210,33499:210,33498:190",
-	["InstanceLoot.Zul'Aman.Chest4"]="33809:1000",
 
 	["InstanceLoot.Zul'Gurub.Bloodlord Mandokir"]="68823:10,69605:197,69606:206,69607:200,69608:202,69609:200",
 	["InstanceLoot.Zul'Gurub.Gahz'ranka"]="19944:54,19945:117,19946:371,19947:358,22739:151",

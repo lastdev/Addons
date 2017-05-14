@@ -15,7 +15,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "Show timer for first adds spawning"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "loses power and shuts off!",
+	Phase2Emote	= "flee as the controlling power of the orb is drained.",
 	YellPull 	= "Intruders have breached the hatchery! Sound the alarm! Protect the eggs at all costs!\r\n"--Yes this yell actually has a return and new line in it. as grabbed by transcriptor
 }
 -------------------
@@ -37,10 +37,6 @@ L = DBM:GetModLocalization("Broodlord")
 
 L:SetGeneralLocalization{
 	name	= "Broodlord Lashlayer"
-}
-
-L:SetMiscLocalization{
-	Pull	= "None of your kind should be here!  You've doomed only yourselves!"
 }
 
 ---------------
@@ -114,7 +110,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "Announce phase change"
 }
 L:SetMiscLocalization{
-	YellPull	= "Let the games begin!",
 	YellP2		= "Well done, my minions. The mortals' courage begins to wane! Now, let's see how they contend with the true Lord of Blackrock Spire!!!",
 	YellP3		= "Impossible! Rise my minions!  Serve your master once more!",
 	YellShaman	= "Shamans, show me",

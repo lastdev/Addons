@@ -94,11 +94,6 @@ L= DBM:GetModLocalization(131)
 L:SetOptionLocalization{
 	PingBlitz	= "當昂布里斯將軍即將閃擊你時點擊小地圖"
 }
-
-L:SetMiscLocalization{
-	Blitz		= "將目光注射|cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -108,11 +103,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "龍啊，聽我命令! 抓住我!",
-	Add		= "%s進行"
-}
 
 ------------
 -- Erudax --
@@ -219,13 +209,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "5秒後進入第2階段"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 	= "第2階段開始"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "當第2階段即將到來(5秒)時顯示特別警告",
-	timerPhase2 	= "為第2階段開始顯示計時器"
+	specWarnPhase2Soon	= "當第2階段即將到來(5秒)時顯示特別警告"
 }
 
 -----------------------
@@ -356,14 +341,6 @@ L= DBM:GetModLocalization(115)
 -- Asaad --
 -----------
 L= DBM:GetModLocalization(116)
-
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "顯示$spell:87618的特別警告"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "跳!"
-})
 
 ---------------------------
 --  The Throne of Tides  --
@@ -529,8 +506,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "提示剩餘多少鬼魂",
-	SpecWarnOhgan	= "當奧根蘇醒時顯示警告",
-	SetIconOnOhgan	= "當奧根蘇醒時標記它"
+	SpecWarnOhgan	= "當奧根蘇醒時顯示警告"
 }
 
 ----------------------

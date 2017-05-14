@@ -60,7 +60,7 @@ end
 
 -- GetPlayerFacing seems to return values between -pi and pi instead of 0 - 2pi sometimes since 3.3.3
 local GetPlayerFacing = function(...)
-	local result = GetPlayerFacing(...)
+	local result = GetPlayerFacing(...) or 0
 	if result < 0 then
 		result = result + pi2
 	end
@@ -199,6 +199,7 @@ local function MapToWorldCoords(x, y)
 end
 
 local function show(runAway, x, y, distance, time, legacy)
+	if DBM:HasMapRestrictions() then return end
 	local player
 	if type(x) == "string" then
 		player, hideDistance, hideTime = x, y, hideDistance
@@ -233,6 +234,7 @@ end
 
 -- shows a static arrow
 function arrowFrame:ShowStatic(angle, time)
+	--Static arrows do not need restrictions, and are still permitted even in 7.1
 	runAwayArrow = false
 	hideDistance = 0
 	targetType = "static"

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: ScanData.lua 5538 2014-12-19 16:13:26Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: ScanData.lua 5603 2016-06-01 15:58:21Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -264,7 +264,7 @@ function private.GetPetDistribution(hyperlink, serverKey, iSpeciesId, iLevel, iQ
 	return exact, suffix, base, myColors
 end
 function lib.GetDistribution(hyperlink, serverKey)
-	serverKey = serverKey or Resources.ServerKeyCurrent
+	serverKey = serverKey or Resources.ServerKey
 	local iType, iID, iSuffix, iFactor = decode(hyperlink)
 	if iType == "battlepet" then
 		return private.GetPetDistribution(hyperlink, serverKey, iID, iSuffix, iFactor)
@@ -678,4 +678,4 @@ function ChangeServerKey(oldKey, newKey)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5538 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5603 $")

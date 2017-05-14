@@ -2,19 +2,8 @@ local L = NugComboBar.L
 
 do
     local opt = {
-        type = 'group',
-        name = "NugComboBar",
-        args = {},
-    }
-    -- opt.args.display = {
-    --     type    = "group",
-    --     name    = "Display Settings",
-    --     order   = 1,
-    --     args    = {},
-    -- }
-    opt.args.general = {
         type = "group",
-        name = "General",
+        name = "NugComboBar",
         order = 1,
         args = {
             charspec = {
@@ -56,6 +45,7 @@ do
                         name = L"Unlock",
                         type = "execute",
                         -- width = "half",
+                        disabled = function() return NugComboBarDB.nameplateAttach end,
                         desc = L"Unlock dragging anchor",
                         func = function() NugComboBar.Commands.unlock() end,
                         order = 1,
@@ -64,6 +54,7 @@ do
                         name = L"Lock",
                         type = "execute",
                         -- width = "half",
+                        disabled = function() return NugComboBarDB.nameplateAttach end,
                         desc = L"Lock dragging anchor",
                         func = function() NugComboBar.Commands.lock() end,
                         order = 2,
@@ -76,9 +67,36 @@ do
                             RIGHT = "Right",
                             TOP = "Top",
                         },
+                        disabled = function() return NugComboBarDB.nameplateAttach end,
                         get = function() return NugComboBarDB.anchorpoint end,
                         set = function(info, s) NugComboBar.Commands.anchorpoint(s) end,
                         order = 3,
+                    },
+                    nameplateAttach = {
+                        name = L"Attach to Player Nameplate",
+                        desc = L"Display below player nameplate\nOnly works if your have player nameplate enabled",
+                        type = "toggle",
+                        width = "double",
+                        get = function(info) return NugComboBarDB.nameplateAttach end,
+                        set = function(info, s) NugComboBar.Commands.nameplateattach() end,
+                        order = 3.1,
+                    },
+                    nameplateOffsetY = {
+                        name = L"Nameplate Y offset",
+                        type = "range",
+                        
+                        disabled = function() return not NugComboBarDB.nameplateAttach end,
+                        get = function(info) return NugComboBarDB.nameplateOffsetY end,
+                        set = function(info, s)
+                            NugComboBarDB.nameplateOffsetY = s
+                            if C_NamePlate.GetNamePlateForUnit("player") then
+                                NugComboBar:NAME_PLATE_UNIT_ADDED(nil, "player")
+                            end
+                        end,
+                        min = -100,
+                        max = 100,
+                        step = 1,
+                        order = 3.2,
                     },
                     scale = {
                         name = L"Scale",
@@ -131,14 +149,6 @@ do
                         set = function(info, s) NugComboBar.Commands.hideslowly() end,
                         order = 8,
                     },
-                    togglebliz = {
-                        name = L"Disable Default",
-                        type = "toggle",
-                        desc = L"Hides default combat point (and other) frames",
-                        get = function(info) return NugComboBarDB.disableBlizz end,
-                        set = function(info, s) NugComboBar.Commands.toggleblizz() end,
-                        order = 9,
-                    },
                     secondLayer = {
                         name = L"Second Layer",
                         desc = L"For Anticipation talent",
@@ -162,12 +172,75 @@ do
                         set = function(info, s) NugComboBar.Commands.toggleprogress() end,
                         order = 12,
                     },
-                    vertical = {
-                        name = L"Vertical",
+                    chargeCooldown = {
+                        name = L"Charge Cooldowns",
                         type = "toggle",
-                        get = function(info) return NugComboBarDB.vertical end,
-                        set = function(info, s) NugComboBar.Commands.vertical() end,
-                        order = 13,
+                        get = function(info) return NugComboBarDB.chargeCooldown end,
+                        set = function(info, s) NugComboBar.Commands.chargecooldown() end,
+                        order = 12.5,
+                    },
+                    -- vertical = {
+                    --     name = L"Vertical",
+                    --     type = "toggle",
+                    --     get = function(info) return NugComboBarDB.vertical end,
+                    --     set = function(info, s) NugComboBar.Commands.vertical() end,
+                    --     order = 13,
+                    -- },
+                    resourcesGroup = {
+                        type = "group",
+                        name = "",
+                        guiInline = true,
+                        order = 14,
+                        args = {
+                            togglebliz = {
+                                name = L"Disable Class Frames",
+                                type = "toggle",
+                                width = "double",
+                                desc = L"Hides default class frames on player unit frame",
+                                get = function(info) return NugComboBarDB.disableBlizz end,
+                                set = function(info, s) NugComboBar.Commands.toggleblizz() end,
+                                order = 14,
+                            },
+                            togglebliznp = {
+                                name = L"Disable Nameplate Class Frames",
+                                type = "toggle",
+                                width = "double",
+                                desc = L"Hides default class frames on player nameplate",
+                                get = function(info) return NugComboBarDB.disableBlizzNP end,
+                                set = function(info, s) NugComboBar.Commands.toggleblizznp() end,
+                                order = 16,
+                            },
+                        },
+                    },
+
+                    bar2offset = {
+                        type = "group",
+                        name = "",
+                        guiInline = true,
+                        order = 15,
+                        args = {
+
+                            bar2offset_x = {
+                                name = L"2nd row X offset",
+                                type = "range",
+                                get = function(info) return NugComboBarDB.bar2_x end,
+                                set = function(info, s) NugComboBar.Commands.bar2offset(tonumber(s), nil) end,
+                                softMin = -200,
+                                softMax = 200,
+                                step = 5,
+                                order = 4.1,
+                            },
+                            bar2offset_y = {
+                                name = L"2nd row Y offset",
+                                type = "range",
+                                get = function(info) return NugComboBarDB.bar2_y end,
+                                set = function(info, s) NugComboBar.Commands.bar2offset(nil, tonumber(s)) end,
+                                softMin = -200,
+                                softMax = 200,
+                                step = 5,
+                                order = 4.1,
+                            },
+                        },
                     },
                 }
             },
@@ -179,6 +252,54 @@ do
                         get = function(info) return NugComboBarDB.classThemes end,
                         set = function(info, s) NugComboBar.Commands.classthemes() end,
                     },
+            resourcesGroup = {
+                type = "group",
+                name = L"Additional Resources",
+                guiInline = true,
+                order = 2.3,
+                args = {
+                    shadowDance = {
+                        name = "|cff673065"..GetSpellInfo(185313).."|r",
+                        type = 'toggle',
+                        -- width = "double",
+                        order = 1,
+                        get = function(info) return NugComboBarDB.shadowDance end,
+                        set = function(info, s) NugComboBar.Commands.shadowdance() end,
+                    },
+                    tidalWaves = {
+                        name = "|cff4d7cb7"..GetSpellInfo(53390).."|r",
+                        type = 'toggle',
+                        -- width = "double",
+                        order = 2,
+                        get = function(info) return NugComboBarDB.tidalWaves end,
+                        set = function(info, s) NugComboBar.Commands.tidalwaves() end,
+                    },
+                    infernoBlast = {
+                        name = "|cffdb4d15"..GetSpellInfo(108853).."|r",
+                        type = 'toggle',
+                        -- width = "double",
+                        order = 3,
+                        get = function(info) return NugComboBarDB.infernoBlast end,
+                        set = function(info, s) NugComboBar.Commands.infernoblast() end,
+                    },
+                    detailedRunes = {
+                        name = "|cffaa0000"..L"Rune Cooldowns".."|r",
+                        type = 'toggle',
+                        -- width = "double",
+                        order = 4,
+                        get = function(info) return NugComboBarDB.enableFullRuneTracker end,
+                        set = function(info, s) NugComboBar.Commands.runecooldowns() end,
+                    },
+                    meatcleaver = {
+                        name = "|cffff3333"..GetSpellInfo(85739).."|r",
+                        type = 'toggle',
+                        -- width = "double",
+                        order = 5,
+                        get = function(info) return NugComboBarDB.meatcleaver end,
+                        set = function(info, s) NugComboBar.Commands.meatcleaver() end,
+                    },
+                },
+            },
             showColor = {
                 type = "group",
                 name = L"Colors",
@@ -346,15 +467,19 @@ do
                 guiInline = true,
                 order = 6,
                 args = {
-                    
+
                     preset = {
                         name = L"Preset",
                         type = 'select',
                         order = 1,
                         values = function()
                             local p = {}
-                            for k,_ in pairs(NugComboBar.presets) do
-                                p[k] = k
+                            for k,preset in pairs(NugComboBar.presets) do
+                                local v = k
+                                if preset.name then v = string.format("%s %s", k, preset.name) end
+                                if k ~= "_RuneCharger2" then
+                                    p[k] = v
+                                end
                             end
                             return p
                         end,
@@ -399,32 +524,6 @@ do
                         get = function(info) return NugComboBarDB.colors3d end,
                         set = function( info, v ) NugComboBar.Commands.colors3d(v) end,
                     },
-
-                    adjustX = {
-                        name = L"X Offset",
-                        type = "range",
-                        disabled = function() return NugComboBar._disableOffsetSettings end,
-                        desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
-                        get = function(info) return NugComboBarDB_Global.adjustX end,
-                        set = function(info, v) NugComboBar.Commands.adjustx(v) end,
-                        min = -10,
-                        max = 10,
-                        step = 0.01,
-                        order = 5,
-                    },
-
-                    adjustY = {
-                        name = L"Y Offset",
-                        type = "range",
-                        disabled = function() return NugComboBar._disableOffsetSettings end,
-                        desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
-                        get = function(info) return NugComboBarDB_Global.adjustY end,
-                        set = function(info, v) NugComboBar.Commands.adjusty(v) end,
-                        min = -10,
-                        max = 10,
-                        step = 0.01,
-                        order = 6,
-                    },
                 },
             },
 
@@ -447,7 +546,7 @@ do
                 guiInline = true,
                 order = 6.5,
                 args = {
-                    
+
                     soundNameFull = {
                         name = L"Max points sound",
                         desc = L"(Active only for certain specs)",
@@ -470,7 +569,7 @@ do
                         width = "half",
                         order = 1.5,
                         disabled = function() return (NugComboBarDB.soundNameFull == "none") end,
-                        func = function() 
+                        func = function()
                         local sound = NugComboBar.soundFiles[NugComboBarDB.soundNameFull]
                         if sound == "custom" then
                             sound = NugComboBarDB.soundNameFullCustom
@@ -521,21 +620,13 @@ do
                     -- },
                 },
             },
-            
+
         },
     }
 
     local Config = LibStub("AceConfigRegistry-3.0")
     local Dialog = LibStub("AceConfigDialog-3.0")
+
     Config:RegisterOptionsTable("NugComboBar", opt)
-    Config:RegisterOptionsTable("NugComboBar-Bliz", {name = "NugComboBar",type = 'group',args = {} })
-    Dialog:SetDefaultSize("NugComboBar-Bliz", 600, 400)
-    
-    Config:RegisterOptionsTable("NugComboBar-General", opt.args.general)
-    Dialog:AddToBlizOptions("NugComboBar-General", "NugComboBar")
-    --Config:RegisterOptionsTable("NugComboBar-General", opt.args.general)
-    --Dialog:AddToBlizOptions("NugComboBar-General", "NugComboBar")
-    
-    -- Config:RegisterOptionsTable("NugComboBar-Skin", opt.args.skin)
-    -- Dialog:AddToBlizOptions("NugComboBar-Skin", opt.args.skin.name, "NugComboBar")
+    Dialog:AddToBlizOptions("NugComboBar", "NugComboBar")
 end

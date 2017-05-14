@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SkyreachTrash", "DBM-Party-WoD", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12088 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -12,14 +12,15 @@ mod:RegisterEvents(
 	"SPELL_AURA_REMOVED 160303 160288"
 )
 
-local specWarnSolarDetonation		= mod:NewSpecialWarningMoveAway(160288)
+local specWarnSolarDetonation		= mod:NewSpecialWarningMoveAway(160288, nil, nil, nil, 1, 2)
 
 local voiceSolarDetonation			= mod:NewVoice(160288)
 
 mod:AddRangeFrameOption(3, 160288)--Range guessed. Maybe 5. one tooltip says 1.5 but it def seemed bigger then that. closer to 3-5
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
+
+local isTrivial = mod:IsTrivial(110)
 
 mod.vb.debuffCount = 0
 local Debuff = GetSpellInfo(160288)
@@ -32,7 +33,7 @@ do
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
 	local spellId = args.spellId
 	if spellId == 160303 or spellId == 160288 then
 		self.vb.debuffCount = self.vb.debuffCount + 1
@@ -51,7 +52,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
 	local spellId = args.spellId
 	if spellId == 160303 or spellId == 160288 then
 		self.vb.debuffCount = self.vb.debuffCount - 1

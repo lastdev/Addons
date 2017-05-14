@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 92 $"):sub(12, -3))
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetZone()
@@ -40,14 +40,14 @@ local specWarnBreathofYShaarj			= mod:NewSpecialWarningCount(142842, nil, nil, n
 local specWarnFatalStrike				= mod:NewSpecialWarningStack(142990, nil, 12)--stack guessed, based on CD
 local specWarnFatalStrikeOther			= mod:NewSpecialWarningTaunt(142990)
 
-local timerBloodRage					= mod:NewBuffActiveTimer(22.5, 142879)--2.5sec cast plus 20 second duration
-local timerDisplacedEnergyCD			= mod:NewNextTimer(11, 142913)
+local timerBloodRage					= mod:NewBuffActiveTimer(22.5, 142879, nil, nil, nil, 6)--2.5sec cast plus 20 second duration
+local timerDisplacedEnergyCD			= mod:NewNextTimer(11, 142913, nil, nil, nil, 3)
 --Might of the Kor'kron
-local timerArcingSmashCD				= mod:NewCDCountTimer(19, 142815)
-local timerImplodingEnergy				= mod:NewCastTimer(10, 142986)--Always 10 seconds after arcing
-local timerSeismicSlamCD				= mod:NewNextCountTimer(19.5, 142851)--Works exactly same as arcingsmash 18 sec unless delayed by breath. two sets of 3
-local timerBreathofYShaarjCD			= mod:NewNextCountTimer(70, 142842)
-local timerFatalStrike					= mod:NewTargetTimer(30, 142990, nil, "Tank")
+local timerArcingSmashCD				= mod:NewCDCountTimer(19, 142815, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerImplodingEnergy				= mod:NewCastTimer(10, 142986, nil, nil, nil, 5)--Always 10 seconds after arcing
+local timerSeismicSlamCD				= mod:NewNextCountTimer(19.5, 142851, nil, nil, nil, 3)--Works exactly same as arcingsmash 18 sec unless delayed by breath. two sets of 3
+local timerBreathofYShaarjCD			= mod:NewNextCountTimer(70, 142842, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerFatalStrike					= mod:NewTargetTimer(30, 142990, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 
 local berserkTimer						= mod:NewBerserkTimer(360)
 
@@ -201,6 +201,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFatalStrike:Show(args.destName, amount)
 		end
 		timerFatalStrike:Start(args.destName)
+		if self:IsTrivial(100) then return end
 		if amount % 3 == 0 and amount >= 12 then
 			if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 				specWarnFatalStrike:Show(amount)

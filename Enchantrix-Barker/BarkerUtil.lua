@@ -1,6 +1,6 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: BarkerUtil.lua 4937 2010-10-14 14:40:51Z kandoko $
 	URL: http://enchantrix.org/
 

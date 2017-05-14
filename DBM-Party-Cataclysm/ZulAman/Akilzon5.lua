@@ -1,8 +1,9 @@
 ﻿local mod	= DBM:NewMod(186, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 143 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(23574)
+mod:SetEncounterID(1189)
 mod:SetZone()
 mod:SetUsedIcons(1, 8)
 
@@ -28,28 +29,12 @@ local berserkTimer		= mod:NewBerserkTimer(600)
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("StormIcon", true)
 mod:AddBoolOption("StormArrow", true)
-mod:AddBoolOption("SetIconOnEagle", true)
-
-local eagleGUID = nil
-
-mod:RegisterOnUpdateHandler(function(self)
-	if self.Options.SetIconOnEagle and eagleGUID then
-		for uId in DBM:GetGroupMembers() do
-			local unitid = uId.."target"
-			local guid = UnitGUID(unitid)
-			if guid == eagleGUID then
-				SetRaidTarget(unitid, 8)
-				eagleGUID = nil
-			end
-		end
-	end
-end, 1)
+mod:AddSetIconOption("SetIconOnEagle", 97318, true, true)
 
 function mod:OnCombatStart(delay)
 	warnStormSoon:Schedule(43)
 	timerStormCD:Start(48)
 	berserkTimer:Start(-delay)
-	eagleGUID = nil
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(6)
 	end
@@ -66,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsDestTypePlayer() then
 			warnPlucked:Show(args.destName)	
 		else
-			eagleGUID = args.destGUID
+			self:ScanForMobs(args.destGUID, 0, 8, 1, 0.1, 10, "SetIconOnEagle")
 		end
 	end
 end

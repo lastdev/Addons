@@ -23,30 +23,15 @@ if GetLocale() ~= "zhCN" then return end
 -----------------
 --  Bossyells  --
 -----------------
-_L.yells[529]["Algalon"] = "我曾经看过尘世沉浸在造物者的烈焰之中，众生连一声悲泣都无法呼出，就此凋零。整个星系在弹指之间历经了毁灭与重生。然而在这段历程之中，我的心却无法感受到丝毫的…恻隐之念。我‧感‧受‧不‧到。成千上万的生命就这么消逝。他们是否拥有与你同样坚韧的生命?他们是否与你同样热爱生命?" -- Needs review
-_L.yells[529]["Freya"] = "他对我的控制已经不复存在了。我又一次恢复了理智。谢谢你们，英雄们。" -- Needs review
-_L.yells[529]["Hodir"] = "我……我终于从他的魔掌中……解脱了。" -- Needs review
-_L.yells[529]["Mimiron"] = "看起来我的计算有一点小小的偏差。" -- Needs review
-_L.yells[529]["Thorim"] = "住手！我认输了！" -- Needs review
-
-_L.yells[543]["Faction Champions"] = "肤浅且可悲的胜利。今天的内耗让我们又一次被削弱了。这种愚蠢的行为只能让巫妖王受益！伟大的战士们就这样白白牺牲，而真正的威胁却步步逼近。巫妖王正计算着我们的死期。" -- Needs review
-
-_L.yells[604]["Dreamwalker"] = "我获得了新生！伊瑟拉的恩泽赐予我消灭邪恶的力量！" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Alliance"] = "我早就警告过你，恶棍！兄弟姐妹们，前进！" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Horde"] = "联盟不行了。向巫妖王进攻！" -- Needs review
-
--- _L.yells[609]["Halion"] = "Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"
-
--- _L.yells[773]["Conclave Of Wind"] = "The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"
-
--- _L.yells[800]["Ragnaros"] = "Too soon! ... You have come too soon..."
-
--- _L.yells[886]["Lei Shi"] = "I... ah... oh! Did I...? Was I...? It was... so... cloudy."
--- _L.yells[886]["Tsulong"] = "I thank you, strangers. I have been freed."
-
--- _L.yells[953]["Immerseus"] = "Ah, you have done it!  The waters are pure once more."
--- _L.yells[953]["Spoils of Pandaria"] = "System resetting. Don't turn the power off, or the whole thing will probably explode."
-
+_L.yells[529]["Algalon"] = "我曾经看过尘世沉浸在造物者的烈焰之中，众生连一声悲泣都无法呼出，就此凋零。整个星系在弹指之间历经了毁灭与重生。然而在这段历程之中，我的心却无法感受到丝毫的…恻隐之念。我‧感‧受‧不‧到。成千上万的生命就这么消逝。他们是否拥有与你同样坚韧的生命?他们是否与你同样热爱生命?"
+_L.yells[529]["Freya"] = "他对我的控制已经不复存在了。我又一次恢复了理智。谢谢你们，英雄们。"
+_L.yells[529]["Hodir"] = "我……我终于从他的魔掌中……解脱了。"
+_L.yells[529]["Mimiron"] = "看起来我的计算有一点小小的偏差。"
+_L.yells[529]["Thorim"] = "住手！我认输了！"
+_L.yells[543]["Faction Champions"] = "肤浅且可悲的胜利。今天的内耗让我们又一次被削弱了。这种愚蠢的行为只能让巫妖王受益！伟大的战士们就这样白白牺牲，而真正的威胁却步步逼近。巫妖王正计算着我们的死期。"
+_L.yells[604]["Dreamwalker"] = "我获得了新生！伊瑟拉的恩泽赐予我消灭邪恶的力量！"
+_L.yells[604]["Icecrown Gunship Battle Alliance"] = "我早就警告过你，恶棍！兄弟姐妹们，前进！"
+_L.yells[604]["Icecrown Gunship Battle Horde"] = "联盟不行了。向巫妖王进攻！"
 
 
 ---------------------------------
@@ -62,9 +47,6 @@ MRT_L.Core["DKP_Frame_LootetBy"] = "已被|cFFFFFFFF%s|r拾取"
 MRT_L.Core["DKP_Frame_Note"] = "备注"
 MRT_L.Core["DKP_Frame_OK_Button"] = "确定"
 MRT_L.Core["DKP_Frame_Title"] = "输入物品分值"
---[==[ MRT_L.Core["Export_AttendanceNote"] = [=[In the Raid-Log-Import-Settings, please set the option
-"Time in seconds, the loot belongs to the boss before."
-to or below 180 seconds to avoid attendance issues.]=] ]==]
 MRT_L.Core["Export_Attendees"] = "参与者"
 MRT_L.Core["Export_Button"] = "关闭"
 MRT_L.Core["Export_Explanation"] = [=[按 Ctrl+C 将字符串复制到剪切板，
@@ -96,11 +78,10 @@ MRT_L.Core["TakeSnapshot_NotInRaidError"] = "错误: 你不在一个团队中，
 MRT_L.Core["Trash Mob"] = "小怪"
 
 
-
 -----------------------------------
 --  Option panels local strings  --
 -----------------------------------
-MRT_L.Options["AP_GroupRestriction"] = "仅追踪前2/前5小队" -- Needs review
+MRT_L.Options["AP_GroupRestriction"] = "仅追踪前2/前5小队"
 MRT_L.Options["AP_GuildAttendance"] = "启用公会成员检查"
 MRT_L.Options["AP_GuildAttendanceCustomTextTitle"] = "自定义公会成员文本:"
 MRT_L.Options["AP_GuildAttendanceDuration"] = "记录团队成员的持续时间"
@@ -138,27 +119,19 @@ MRT_L.Options["ITP_AutoFocus_Never"] = "从不"
 MRT_L.Options["ITP_AutoFocus_NoCombat"] = "不在战斗中时"
 MRT_L.Options["ITP_AutoFocus_Title"] = "物品价值细节窗口置顶"
 MRT_L.Options["ITP_IgnoreEnchantingMats"] = "忽略附魔材料"
--- MRT_L.Options["ITP_IgnoreGems"] = "Ignore gems"
 MRT_L.Options["ITP_Title"] = "物品追踪"
 MRT_L.Options["ITP_TitleText"] = "MRT - 物品追踪选项"
--- MRT_L.Options["ITP_UseEPGP_GP_Values"] = "Use EPGP GP values"
 MRT_L.Options["MP_AutoPrunning"] = "自动删除团队记录，早于"
 MRT_L.Options["MP_Days"] = "天的"
 MRT_L.Options["MP_Debug"] = "启用除错信息"
 MRT_L.Options["MP_Description"] = "追踪团队, 拾取和参与者"
 MRT_L.Options["MP_Enabled"] = "启用自动追踪"
 MRT_L.Options["MP_MinimapIcon"] = "显示小地图图标"
--- MRT_L.Options["MP_ResetGuiPos"] = "Reset GUI position"
 MRT_L.Options["MP_SlashCmd"] = "斜杠命令"
 MRT_L.Options["TP_AskForDKPValue"] = "询问物品价值"
--- MRT_L.Options["TP_AskForDKPValuePersonal"] = "... if loot mode is personal loot"
 MRT_L.Options["TP_CreateNewRaidOnNewZone"] = "在新地图时建立新的团队记录"
 MRT_L.Options["TP_Log10MenRaids"] = "追踪10人团队"
 MRT_L.Options["TP_LogAVRaids"] = "追踪PVP团队(宝库, BH)"
--- MRT_L.Options["TP_LogCataclysmRaids"] = "Track Cataclysm raids"
--- MRT_L.Options["TP_LogLFRRaids"] = "Track LFR raids"
--- MRT_L.Options["TP_LogLootModePersonal"] = "Track loot mode 'Personal'"
--- MRT_L.Options["TP_LogWotLKRaids"] = "Track WotLK raids"
 MRT_L.Options["TP_MinItemQualityToGetCost_Desc"] = "询问物品价值所需最低品质"
 MRT_L.Options["TP_MinItemQualityToLog_Desc"] = "记录的物品最低品质"
 MRT_L.Options["TP_OnlyTrackItemsAbove"] = "紧追踪物品等级等于或高于该数值的物品"
@@ -190,7 +163,6 @@ MRT_L.Options["TT_MP_SlashCmd"] = [=[命令前不需要斜杠，
 建议修改后退出重新登录游戏]=]
 
 
-
 -------------------
 --  GUI strings  --
 -------------------
@@ -213,7 +185,6 @@ MRT_L.GUI["Button_StartNewRaid"] = "建立新的团队事件"
 MRT_L.GUI["Button_TakeSnapshot"] = "取得快照"
 MRT_L.GUI["Can not delete current raid"] = "错误: 不能删除当前团队事件"
 MRT_L.GUI["Cell_Hard"] = "困难"
--- MRT_L.GUI["Cell_LFR"] = "LFR"
 MRT_L.GUI["Cell_Normal"] = "普通"
 MRT_L.GUI["Col_Cost"] = "物品价值"
 MRT_L.GUI["Col_Date"] = "日期"
@@ -240,8 +211,8 @@ MRT_L.GUI["Item cost invalid"] = "错误: 物品价值不是数字"
 MRT_L.GUI["Itemlink"] = "物品链接或物品编号或物品名称"
 MRT_L.GUI["Looter"] = "拾取者"
 MRT_L.GUI["Modify loot data"] = "修改掉落资料"
-MRT_L.GUI["No active raid."] = "错误: 没有进行中的团队时间"
 MRT_L.GUI["No active raid in progress. Please enter time."] = "错误: 没有进行中的团队事件，请输入时间"
+MRT_L.GUI["No active raid."] = "错误: 没有进行中的团队时间"
 MRT_L.GUI["No boss attendee selected"] = "错误: 没有选择首领战斗参与者"
 MRT_L.GUI["No boss name entered"] = "错误: 没有输入首领名称"
 MRT_L.GUI["No boss selected"] = "错误: 没有选择首领"
@@ -250,10 +221,10 @@ MRT_L.GUI["No loot selected"] = "错误: 没有选择物品"
 MRT_L.GUI["No name entered"] = "错误: 没有输入名称"
 MRT_L.GUI["No raid attendee selected"] = "错误: 没有选择团队成员"
 MRT_L.GUI["No raid selected"] = "错误: 没有选择团队事件"
-MRT_L.GUI["Note"] = "备注"
 MRT_L.GUI["No valid difficulty entered"] = "错误: 没有输入正确的难度"
 MRT_L.GUI["No valid raid size"] = "错误: 没有输入正确的团队人数"
 MRT_L.GUI["No valid time entered"] = "错误: 没有输入正确的时间"
+MRT_L.GUI["Note"] = "备注"
 MRT_L.GUI["Player not in raid."] = "错误: 你不在一个团队中"
 MRT_L.GUI["Raid size"] = "团队人数"
 MRT_L.GUI["Resuming last raid failed"] = "错误: 上一次团队事件记录恢复失败"
@@ -298,4 +269,3 @@ MRT_L.GUI["TT_TakeSnapshot"] = [=[建立当前团队的快照
 这种情况下，建立一个首领事件]=]
 MRT_L.GUI["Value"] = "值"
 MRT_L.GUI["Zone name"] = "地区名称"
-

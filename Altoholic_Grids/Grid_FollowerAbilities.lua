@@ -1,11 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local GREY		= "|cFF808080"
 
 local OPTION_STATS = "UI.Tabs.Grids.Garrisons.CurrentStats"
 
@@ -25,9 +22,6 @@ local statTypes = {
 }
 
 local currentKey
-
-local DDM_Add = addon.Helpers.DDM_Add
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 local function SortByAbility(a, b)
 	local nameA = C_Garrison.GetFollowerAbilityName(a)
@@ -63,7 +57,7 @@ local function BuildView()
 	viewItems = {}
 	wipe(counters)
 	
-	local realm, account = addon.Tabs.Grids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
 	local currentStats = addon:GetOption(OPTION_STATS)
 	
@@ -117,19 +111,19 @@ local function OnStatsFilterChange(self)
 	addon:SetOption(OPTION_STATS, currentStats)
 	currentKey = statTypes[currentStats].key
 
-	addon.Tabs.Grids:SetViewDDMText(statTypes[currentStats].label)
+	AltoholicTabGrids:SetViewDDMText(statTypes[currentStats].label)
 	
 	isViewValid = nil
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
-local function DropDown_Initialize()
+local function DropDown_Initialize(frame)
 	local currentStats = addon:GetOption(OPTION_STATS)
 	
 	for i = 1, #statTypes do
-		DDM_Add(statTypes[i].label, i, OnStatsFilterChange, nil, (i==currentStats))
+		frame:AddButton(statTypes[i].label, i, OnStatsFilterChange, nil, (i==currentStats))
 	end
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
 local callbacks = {
@@ -150,7 +144,7 @@ local callbacks = {
 			end
 	
 			if name then
-				rowFrame.Name.Text:SetText(WHITE .. name)
+				rowFrame.Name.Text:SetText(colors.white .. name)
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -180,7 +174,7 @@ local callbacks = {
 				button.IconBorder:Hide()
 				button.Background:SetTexture(icon)
 				button.Background:SetVertexColor(0.5, 0.5, 0.5)
-				button.Name:SetText(WHITE .. numFollowers)
+				button.Name:SetText(colors.white .. numFollowers)
 				button:Show()
 			else
 				-- button.key = nil
@@ -206,11 +200,11 @@ local callbacks = {
 			local currentStats = addon:GetOption(OPTION_STATS)
 			currentKey = statTypes[currentStats].key
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, statTypes[currentStats].label)
-			addon:DDM_Initialize(frame, DropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(statTypes[currentStats].label)
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(12, callbacks)
+AltoholicTabGrids:RegisterGrid(11, callbacks)

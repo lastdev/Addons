@@ -26,7 +26,7 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
-local Revision = ("$Revision: 102 $"):sub(12, -3)
+local Revision = ("$Revision: 108 $"):sub(12, -3)
 
 local IsInRaid = IsInRaid
 local IsInInstance = IsInInstance
@@ -76,6 +76,7 @@ local default_settings = {
 		{ spell = 88345, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
 		{ spell = 132620, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
 		{ spell = 120146, bartext = default_bartext, cooldown = 60 }, 	-- Ancient Portal: Dalaran
+		{ spell = 176246, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Stormshield
 	},
 	portal_horde = {
 		{ spell = 11417, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Orgrimmar
@@ -88,6 +89,7 @@ local default_settings = {
 		{ spell = 88346, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
 		{ spell = 132626, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
 		{ spell = 120146, bartext = default_bartext, cooldown = 60 }, 	-- Ancient Portal: Dalaran
+		{ spell = 176244, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Warspear
 	}
 }
 DBM_SpellTimers_Settings = {}
@@ -314,8 +316,8 @@ do
 		if event == "ADDON_LOADED" and select(1, ...) == "DBM-SpellTimers" then
 			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 			self:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
-			self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
-			self:RegisterEvent("PLAYER_REGEN_ENABLED")
+			--self:RegisterEvent("ENCOUNTER_START")
+			--self:RegisterEvent("ENCOUNTER_END")
 
 			-- Update settings of this Addon
 			settings = DBM_SpellTimers_Settings
@@ -349,23 +351,21 @@ do
 			end
 
 			rebuildSpellIDIndex()
-		elseif settings.enabled and event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" and IsEncounterInProgress() and not encounterStarted then--Encounter Started
-			encounterStarted = true
-
-		elseif settings.enabled and event == "PLAYER_REGEN_ENABLED" and not IsEncounterInProgress() and encounterStarted then--Encounter Ended
-			encounterStarted = false
-			--Reset all CDs that are > 3 minutes EXCEPT shaman reincarnate
+		elseif settings.enabled and event == "ENCOUNTER_START" then--Encounter Started
+			--Reset all CDs that are >= 3 minutes EXCEPT shaman reincarnate (20608)
+		elseif settings.enabled and event == "ENCOUNTER_END" then--Encounter Ended
+			--Reset all CDs that are > 3 minutes EXCEPT shaman reincarnate (20608)
 		elseif settings.enabled and event == "COMBAT_LOG_EVENT_UNFILTERED" and spellEvents[select(2, ...)] then
 			-- first some exeptions (we don't want to see any skill around the world)
 			if settings.only_from_raid and not IsInRaid() then return end
-			if not settings.active_in_pvp and (select(2, IsInInstance()) == "pvp") then return end
+			if not settings.active_in_pvp and (select(2, IsInInstance()) == "pvp" or select(2, IsInInstance()) == "arena") then return end
 
 			local fromplayer = select(5, ...)
 			local toplayer = select(9, ...)		-- Added by Florin Patan
 			local spellid = select(12, ...)
 
 			-- now we filter if cast is from outside raidgrp (we don't want to see mass spam in Dalaran/...)
-			if settings.only_from_raid and DBM:GetRaidUnitId(fromplayer) == "none" then return end
+			if settings.only_from_raid and not DBM:GetRaidUnitId(fromplayer) then return end
 
 			guikey = SpellIDIndex[spellid]
 			v = (guikey and settings.spells[guikey])

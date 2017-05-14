@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Characters", "frFR" )
+local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Characters", "frFR" )
 
 if not L then return end
 
@@ -10,4 +10,3 @@ L["REQUEST_PLAYTIME_DISABLED"] = "Le temps de jeu ne sera pas lu à la connexion
 L["REQUEST_PLAYTIME_ENABLED"] = "Le temps de jeu sera lu à chaque connexion."
 L["REQUEST_PLAYTIME_TEXT"] = "Lire le temps de jeu à la connexion."
 L["REQUEST_PLAYTIME_TITLE"] = "Lire le temps de jeu"
-

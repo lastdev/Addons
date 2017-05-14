@@ -1,10 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local WHITE		= "|cFFFFFFFF"
 
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
 local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
@@ -25,10 +23,6 @@ end
 if DataStore_Pets then
 	table.sort(DataStore:GetCompanionList(), SortPets)
 end
-
-local DDM_Add = addon.Helpers.DDM_Add
-local DDM_AddTitle = addon.Helpers.DDM_AddTitle
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 local function CompanionOnClick(frame, button)
 	if frame.id and ( button == "LeftButton" ) and ( IsShiftKeyDown() ) then
@@ -108,26 +102,26 @@ local function OnXPackChange(self)
 	
 	addon:SetOption(OPTION_XPACK, currentXPack)
 
-	addon.Tabs.Grids:SetViewDDMText(xPacks[currentXPack])
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:SetViewDDMText(xPacks[currentXPack])
+	AltoholicTabGrids:Update()
 end
 
-local function PetDropDown_Initialize()
+local function DropDown_Initialize(frame)
 	local currentXPack = addon:GetOption(OPTION_XPACK)
 
 	for i, xpack in pairs(xPacks) do
-		DDM_Add(xpack, i, OnXPackChange, nil, (i==currentXPack))
+		frame:AddButton(xpack, i, OnXPackChange, nil, (i==currentXPack))
 	end
 	
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
-local companionsCallbacks = {
+local callbacks = {
 	OnUpdate = function() 
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			spellList = (currentXPack <= CAT_ALLINONE) and petList[currentXPack] or DataStore:GetCompanionList()
 
-			addon.Tabs.Grids:SetStatus(xPacks[currentXPack])
+			AltoholicTabGrids:SetStatus(xPacks[currentXPack])
 		end,
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -136,7 +130,7 @@ local companionsCallbacks = {
 			petName, _, currentPetTexture = GetSpellInfo(currentSpellID)
 			
 			if petName then
-				rowFrame.Name.Text:SetText(WHITE .. petName)
+				rowFrame.Name.Text:SetText(colors.white .. petName)
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -174,18 +168,15 @@ local companionsCallbacks = {
 			AltoTooltip:Hide() 
 		end,
 		
-	InitViewDDM = function(frame, title) 
+	InitViewDDM = function(frame, title)
 			frame:Show()
 			title:Show()
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, xPacks[addon:GetOption(OPTION_XPACK)])
-			addon:DDM_Initialize(frame, PetDropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(xPacks[addon:GetOption(OPTION_XPACK)])
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-local tab = addon.Tabs.Grids
-
-tab:RegisterGrid(5, companionsCallbacks)
-
+AltoholicTabGrids:RegisterGrid(5, callbacks)

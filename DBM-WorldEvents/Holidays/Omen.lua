@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Omen", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11379 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 14525 $"):sub(12, -3))
 mod:SetCreatureID(15467)
 mod:SetModelID(15879)
 mod:SetReCombatTime(10)
@@ -9,6 +9,10 @@ mod:SetZone(1)--Kalimdor
 mod:DisableWBEngageSync()
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"ZONE_CHANGED_NEW_AREA"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 104903 26540",
@@ -21,14 +25,19 @@ local warnStarfall				= mod:NewSpellAnnounce(26540, 3)
 
 local specWarnStarfall			= mod:NewSpecialWarningMove(26540)
 
-local timerCleaveCD				= mod:NewCDTimer(8.5, 104903)
-local timerStarfallCD			= mod:NewCDTimer(15, 26540)
+local timerCleaveCD				= mod:NewCDTimer(8.5, 104903, nil, nil, nil, 6)
+local timerStarfallCD			= mod:NewCDTimer(15, 26540, nil, nil, nil, 2)
 
 function mod:OnCombatStart(delay)
 	timerCleaveCD:Start(10.5-delay)--Consistent?
 	timerStarfallCD:Start(11-delay)--^?
 end
 
+function mod:ZONE_CHANGED_NEW_AREA()
+
+end
+
+--[[
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 104903 then
@@ -46,3 +55,4 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+--]]

@@ -6,13 +6,16 @@ local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 local isGuildAchievement = Overachiever.IsGuildAchievement
 local isUIInGuildView = Overachiever.isUIInGuildView
 
-local tabs, tabselected
+local tabs, tabselected, prevtab
 local LeftFrame
+local varsLoaded, oldver = false
 
 local function emptyfunc() end
 
 local ACHIEVEMENTUI_FONTHEIGHT
 local In_Guild_View   -- imitation of Blizzard's local IN_GUILD_VIEW
+
+local GetPreviousAchievement = GetPreviousAchievement
 
 
 local isAchievementInUI_cache = {}
@@ -59,7 +62,7 @@ end
 
 local function delayedToggleView(self)
   if (not self) then
-    tabselected:SetScript("OnUpdate", delayedToggleView)
+    if (tabselected) then  tabselected:SetScript("OnUpdate", delayedToggleView);  end
     return;
   end
   self:SetScript("OnUpdate", nil)
@@ -335,7 +338,29 @@ local function displayAchievement(button, frame, achievement, index, selectionID
     button.description:Show();
     button.hiddenDescription:Hide();
   end
-  
+
+  if (frame.ShouldCrossOut and frame.ShouldCrossOut(id)) then
+    if (not button.CrossOut) then
+      button.CrossOut = CreateFrame("frame", nil, button) --button.icon
+	  local overPos = button --alternatively: button.shield OR button.icon
+	  local tl = button.CrossOut:CreateTexture(nil, "OVERLAY", nil, 5) --, 1)
+	  button.CrossOut.Left = tl
+	  tl:SetPoint("CENTER", overPos)
+	  tl:SetAtlas("GarrMission_EncounterBar-Xleft")
+	  tl:SetHeight(72) --48
+	  tl:SetWidth(72) --48
+	  local tr = button.CrossOut:CreateTexture(nil, "OVERLAY", nil, 1)
+	  button.CrossOut.Right = tr
+	  tr:SetPoint("CENTER", overPos)
+	  tr:SetAtlas("GarrMission_EncounterBar-Xright")
+	  tr:SetHeight(72)
+	  tr:SetWidth(72)
+	end
+	button.CrossOut:Show()
+  elseif (button.CrossOut) then
+    button.CrossOut:Hide()
+  end
+
   --if (Overachiever_Debug) then  print("- Last bit took for \""..name.."\" took "..(debugprofilestop() - StartTime) .." ms.");  end
 
   return id;
@@ -410,12 +435,23 @@ do
     getret = 2
     return sortList_simple(a, b)
   end
-  
+
   local function sortList_points(a, b)
     local aP = AchievementButton_GetProgressivePoints(a)
     local bP = AchievementButton_GetProgressivePoints(b)
     --This should have been set properly already to avoid doing it here repeatedly: getret = 3
     return sortList_simple(a, b, aP, bP)
+  end
+
+  local function sortList_relation(a, b)
+    local r = Overachiever.RelatedTab_Compare(a, b)
+	if (r < 0) then
+	  return true
+	elseif (r > 0) then
+	  return false;
+	end
+	-- Fall back to ID:
+	return a < b
   end
 
   function sortList(list, mode)
@@ -428,6 +464,8 @@ do
       sort(list, sortList_points)
     elseif (mode == 3) then  -- ID
       sort(list)  -- ID already given in the table, so default sort can handle this.
+    elseif (mode == 4) then  -- Relation
+      sort(list, sortList_relation)
     else  -- Name (mode 0, default)
       getret = 2
       sort(list, sortList_simple)
@@ -448,10 +486,9 @@ local function applyAchievementFilter(list, completed, built, checkprev, critlis
   end
   local count, _, c = 0
   for i,id in pairs(list) do  -- Using pairs instead of ipairs so we can safely nil things out.
-    if (critlist and critlist[id]) then
+    _, _, _, c = GetAchievementInfo(id)
+    if (not c and critlist and critlist[id]) then
       _, _, c = GetAchievementCriteriaInfo(id, critlist[id])
-    else
-      _, _, _, c = GetAchievementInfo(id)
     end
     if (c == completed) then
       count = count + 1
@@ -525,7 +562,7 @@ local function updateAchievementsList(frame)
     HybridScrollFrame_CollapseButton(scrollFrame);
   end
   
-  if (frame.SetNumListed) then  frame.SetNumListed(#list);  end
+  if (frame.SetNumListed) then  frame.SetNumListed(numAchievements);  end
 
   if (Overachiever_Debug) then  print("- Took "..(debugprofilestop() - StartTime)/1000 .." seconds.");  end
 end
@@ -562,6 +599,8 @@ local function forceUpdate_all()
 end
 
 local function tabUnselect()
+  --print("tabUnselect",tabselected and tabselected.tab.text:GetText() or "nil")
+  prevtab = tabselected
   tabselected = nil
   -- for k,tab in ipairs(tabs) do
   --   tab.text:SetPoint("CENTER", tab, "CENTER", 0, -3)
@@ -602,7 +641,7 @@ do
     tabselected = self.frame
     AchievementFrame_ShowSubFrame(self.frame, LeftFrame)
     LeftFrame.label:SetText(self:GetText())
-    AchievementFrameWaterMark:SetTexture(self.watermark)
+    AchievementFrameWaterMark:SetTexture(self.watermark) -- Note: nil actually works here for watermark texture. No error; just no visible watermark!
     --PanelTemplates_Tab_OnClick(self, AchievementFrame)  -- Not needed here any more: AchievementFrame_UpdateTabs, called by AchievementFrameBaseTab_OnClick, will call it.
     updateAchievementsList(self.frame)
   end
@@ -619,8 +658,16 @@ local function compheader_OnShow(...)
 end
 
 local function achbtnOnClick(self, button)
+  if (button == "RightButton") then
+    local frame = getFrameOfButton(self)
+	if (frame.HandleRightClick) then  frame.HandleRightClick(self.id);  end
+    return;
+  end
   local id = self.id
-  if ( IsControlKeyDown() and (GetPreviousAchievement(id) or isAchievementInUI(id, true)) ) then
+  if ( IsShiftKeyDown() and IsControlKeyDown() and Overachiever.OpenRelatedTab ) then
+    Overachiever.OpenRelatedTab(id)
+	return;
+  elseif ( IsControlKeyDown() and (GetPreviousAchievement(id) or isAchievementInUI(id, true)) ) then
     Overachiever.UI_SelectAchievement(id, silentDisplay, self)
     return;
   elseif (Overachiever_WatchFrame and IsAltKeyDown()) then
@@ -670,6 +717,10 @@ local function post_AchievementButton_OnLoad(self)
     -- Our button isn't put into this table as of WoW 4.0.1, so this line is unneeded:
     -- tremove(AchievementFrameAchievementsContainer.buttons);
 
+	-- Add right click feature:
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	--shield:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
     if ( not ACHIEVEMENTUI_FONTHEIGHT ) then
       local _, fontHeight = self.description:GetFont();
       ACHIEVEMENTUI_FONTHEIGHT = fontHeight;
@@ -710,7 +761,7 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
   frameBG:SetTexCoord(0, 1, 0, 0.5)
   local frameBGDarken = frame:CreateTexture(nil, "ARTWORK")
   frameBGDarken:SetAllPoints(frameBG)
-  frameBGDarken:SetTexture(0, 0, 0, 0.75)
+  frameBGDarken:SetColorTexture(0, 0, 0, 0.75)
   local frameBorder = CreateFrame("Frame", nil, frame)
   frameBorder:SetAllPoints(frame)
   frameBorder:SetBackdrop( {
@@ -785,14 +836,23 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
   frame:Hide()
   frame:SetScript("OnShow", ListFrame_OnShow)
   frame:SetScript("OnHide", ListFrame_OnHide)
-  
+
   FilterByTab[frame] = filter
+
+  if (varsLoaded and tab.loadFunc) then
+	local v = Overachiever_Tabs_Settings
+	local vc = Overachiever_Tabs_CharVars
+	local AchFilters = v.AchFilters
+	if (AchFilters[name]) then  FilterByTab[tab.frame] = AchFilters[name];  end
+	tab.loadFunc(v, oldver, vc)
+	tab.loadFunc = nil
+  end
 
   return frame, panel
 end
 
-function Overachiever.OpenTab_frame(frame)
-  tabOnClick(frame.tab)
+function Overachiever.OpenTab_frame(frame, makeSound)
+  tabOnClick(frame.tab, makeSound and "LeftButton" or nil)
 end
 
 
@@ -818,21 +878,23 @@ local function LeftFrame_OnShow(self)
   AchievementFrameCategoriesContainer:Hide()
   AchievementFrameCategoriesContainerScrollBar:Hide()
   AchievementFrameFilterDropDown:Show()
-  AchievementFrameHeaderRightDDLInset:Show()
+  AchievementFrameHeaderLeftDDLInset:Show()
+  --AchievementFrameHeaderRightDDLInset:Show()
 end
 
 local function LeftFrame_OnHide(self)
   AchievementFrameCategoriesContainer:Show()
   if (not AchievementFrameAchievements:IsShown()) then
     AchievementFrameFilterDropDown:Hide()
-    AchievementFrameHeaderRightDDLInset:Hide()
+	AchievementFrameHeaderLeftDDLInset:Hide()
+    --AchievementFrameHeaderRightDDLInset:Hide()
   end
   if (not Overachiever.NoAlterSetFilter) then
     AchievementFrame_SetFilter( FilterByTab[AchievementFrameAchievements] or ACHIEVEMENT_FILTER_ALL, true )
   end
 end
 
-local LeftFrame_OnEvent_CRITERIA_UPDATE, LeftFrame_OnUpdate
+local LeftFrame_OnEvent, LeftFrame_OnUpdate
 local recolor_AchievementObjectives_DisplayCriteria
 do
   local time, last, isSet = time, 0
@@ -866,7 +928,7 @@ do
     self:SetScript("OnUpdate", nil)
     for k,tab in ipairs(tabs) do
       local frame = tab.frame
-      if ( frame.selection and tabselected == frame ) then
+      if ( tabselected == frame and frame.selection ) then
 -- Based on part of AchievementFrameAchievements_OnEvent.
         local id = AchievementFrameAchievementsObjectives.id;
         local button = AchievementFrameAchievementsObjectives:GetParent();
@@ -881,10 +943,21 @@ do
     end
   end
 
-  function LeftFrame_OnEvent_CRITERIA_UPDATE(self)
-    if (isSet) then  return;  end
-    self:SetScript("OnUpdate", LeftFrame_OnUpdate)
-    isSet = true
+  function LeftFrame_OnEvent(self, event, arg1, ...)
+    if (event == "CRITERIA_UPDATE") then
+      if (isSet) then  return;  end
+      self:SetScript("OnUpdate", LeftFrame_OnUpdate)
+      isSet = true
+	elseif (event == "ACHIEVEMENT_EARNED") then
+      isAchievementInUI_cache[arg1] = nil
+	  local failsafe = 0
+      local nextID = GetNextAchievement(arg1)
+      while (nextID and failsafe < 100) do
+        isAchievementInUI_cache[nextID] = nil
+        nextID = GetNextAchievement(nextID)
+		failsafe = failsafe + 1
+      end
+    end
   end
 
 end
@@ -925,13 +998,19 @@ do
     if (arg1 == "Overachiever_Tabs") then
       self:UnregisterEvent("ADDON_LOADED")
       self:RegisterEvent("CRITERIA_UPDATE")
-      self:SetScript("OnEvent", LeftFrame_OnEvent_CRITERIA_UPDATE)
+	  self:RegisterEvent("ACHIEVEMENT_EARNED")
+      self:SetScript("OnEvent", LeftFrame_OnEvent)
+      varsLoaded = true
 
       Overachiever_Tabs_Settings = Overachiever_Tabs_Settings or {}
       local v = Overachiever_Tabs_Settings
-      local oldver = v.Version
+      oldver = v.Version
       v.Version = GetAddOnMetadata("Overachiever_Tabs", "Version")
       if (oldver == v.Version) then  oldver = false;  end
+
+	  Overachiever_Tabs_CharVars = Overachiever_Tabs_CharVars or {}
+	  local vc = Overachiever_Tabs_CharVars
+	  vc.Version = v.Version
 
       v.AchFilters = v.AchFilters or {}
       local AchFilters = v.AchFilters
@@ -944,7 +1023,7 @@ do
           name = tab.frame:GetName()
           if (AchFilters[name]) then  FilterByTab[tab.frame] = AchFilters[name];  end
           if (tab.loadFunc) then
-            tab.loadFunc(v, oldver)
+            tab.loadFunc(v, oldver, vc)
             tab.loadFunc = nil
           end
         end
@@ -1005,7 +1084,9 @@ do
     -- Flashing in
     local fade1 = flasher:CreateAnimation("Alpha")
     fade1:SetDuration(fadeInTime)
-    fade1:SetChange(1)
+	--fade1:SetChange(1)
+	fade1:SetFromAlpha(0)
+	fade1:SetToAlpha(1)
     fade1:SetOrder(1)
 
     if (flashInHoldTime) then  fade1:SetStartDelay(flashInHoldTime);  end
@@ -1013,7 +1094,9 @@ do
     -- Flashing out
     local fade2 = flasher:CreateAnimation("Alpha")
     fade2:SetDuration(fadeOutTime)
-    fade2:SetChange(-1)
+    --fade2:SetChange(-1)
+	fade2:SetFromAlpha(1)
+	fade2:SetToAlpha(0)
     fade2:SetOrder(2)
 
     if (flashOutHoldTime) then  fade2:SetEndDelay(flashOutHoldTime);  end
@@ -1052,4 +1135,8 @@ function Overachiever.FlashTab(tab)
   -- Use our own animation since the above causes taint:
   flashFrame_stop(flash)
   flashFrame(flash, 0.35, 0.35, 0.9, nil, 0.05, 0.15)
+end
+
+function Overachiever.GetSelectedTab(prev)
+  if (prev) then  return prevtab;  else  return tabselected;  end
 end

@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Stats ***
+--[[	*** DataStore_Stats ***
 Written by : Thaoky, EU-Marécages de Zangar
 July 18th, 2009
 --]]
@@ -33,24 +33,13 @@ local function ScanStats()
 	stats["MaxPower"] = UnitPowerType("player") .. "|" .. UnitPowerMax("player")
 	
 	local t = {}
-	-- *** resistances  ***
-	-- Removed in MoP
-	-- for i = 1, 6 do
-		-- _, t[i] = UnitResistance("player", i)
-		-- base, total, bonus, minus = UnitResistance(unitId [, resistanceIndex])
-		-- base = base
-		-- total = total after all modifiers
-		-- bonus = positive modif total
-		-- minus = negative ...
-	-- end
-	-- stats["Resistances"] = table.concat(t, "|")	--	["Resistances"] = "holy | fire | nature | frost | shadow | arcane"
 
 	-- *** base stats ***
-	for i = 1, 5 do
+	for i = 1, 4 do
 		t[i] = UnitStat("player", i)
 		-- stat, effectiveStat, posBuff, negBuff = UnitStat("player", statIndex);
 	end
-	t[6] = UnitArmor("player")
+	t[5] = UnitArmor("player")
 	stats["Base"] = table.concat(t, "|")	--	["Base"] = "strength | agility | stamina | intellect | spirit | armor"
 	
 	-- *** melee stats ***

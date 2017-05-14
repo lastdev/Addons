@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1235, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 5 $"):sub(12, -3))
 mod:SetCreatureID(81297, 81305)
 mod:SetEncounterID(1749)
 mod:SetZone()
@@ -24,11 +24,11 @@ local warnBurningArrows					= mod:NewSpellAnnounce(164635, 3)
 local warnRecklessProvocation			= mod:NewTargetAnnounce(164426, 3)
 local warnEnrage						= mod:NewSpellAnnounce(164835, 3, nil, "RemoveEnrage|Tank")
 
-local specWarnBurningArrows				= mod:NewSpecialWarningSpell(164635, nil, nil, nil, true)
-local specWarnBurningArrowsMove			= mod:NewSpecialWarningMove(164635)
-local specWarnRecklessProvocation		= mod:NewSpecialWarningReflect(164426)
+local specWarnBurningArrows				= mod:NewSpecialWarningSpell(164635, nil, nil, nil, 2)
+local specWarnBurningArrowsMove			= mod:NewSpecialWarningMove(164635, nil, nil, nil, 1, 2)
+local specWarnRecklessProvocation		= mod:NewSpecialWarningReflect(164426, nil, nil, nil, 1, 2)
 local specWarnRecklessProvocationEnd	= mod:NewSpecialWarningEnd(164426)
-local specWarnEnrage					= mod:NewSpecialWarningDispel(164835, "RemoveEnrage")
+local specWarnEnrage					= mod:NewSpecialWarningDispel(164835, "RemoveEnrage", nil, nil, 1, 2)
 
 local timerRecklessProvocation			= mod:NewBuffActiveTimer(5, 164426)
 --local timerBurningArrowsCD			= mod:NewNextTimer(25, 164635)--25~42 variable (patterned?)
@@ -49,13 +49,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		voiceEnrage:Play("trannow") --multi sound
 	elseif args.spellId == 164632 and args:IsPlayer() and self:AntiSpam(2, 2) then
 		specWarnBurningArrowsMove:Show()
+		voiceBurningArrows:Play("runaway")
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 164426 then
 		specWarnRecklessProvocationEnd:Show()
-		voiceBurningArrows:Play("runaway")
 	end
 end
 

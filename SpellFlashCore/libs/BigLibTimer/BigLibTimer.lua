@@ -1,6 +1,6 @@
 
 local MajorVersion = "BigLibTimer6"
-local BigLibTimer = LibStub:NewLibrary(MajorVersion, tonumber("73") or 9e9)
+local BigLibTimer = LibStub:NewLibrary(MajorVersion, tonumber("20150826224730") or tonumber(date("%Y%m%d%H%M%S")))
 if not BigLibTimer then return end
 
 BigLibTimer.API = BigLibTimer.API or {}

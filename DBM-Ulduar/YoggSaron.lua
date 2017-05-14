@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 188 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_AURA_REMOVED_DOSE",
-	"UNIT_HEALTH target focus mouseover"
+	"UNIT_HEALTH boss1"
 )
 
 local warnMadness 					= mod:NewCastAnnounce(64059, 2)
@@ -42,19 +42,18 @@ local specWarnFervor				= mod:NewSpecialWarningYou(63138)
 local specWarnFervorCast			= mod:NewSpecialWarning("SpecWarnFervorCast", "Melee")
 local specWarnMalady				= mod:NewSpecialWarningYou(63830, true)
 local specWarnMaladyNear			= mod:NewSpecialWarningClose(63830, true)
-
-mod:AddBoolOption("WarningSqueeze", true, "announce")
+local yellSqueeze					= mod:NewYell(64125)
 
 local enrageTimer					= mod:NewBerserkTimer(900)
-local timerFervor					= mod:NewTargetTimer("OptionVersion2", 15, 63138, nil, false)
-local timerMaladyCD					= mod:NewCDTimer(19, 63830)
-local timerBrainLinkCD				= mod:NewCDTimer(32, 63802)
-local brainportal					= mod:NewTimer(20, "NextPortal", 57687)
+local timerFervor					= mod:NewTargetTimer(15, 63138, nil, false, 2)
+local timerMaladyCD					= mod:NewCDTimer(19, 63830, nil, nil, nil, 3)
+local timerBrainLinkCD				= mod:NewCDTimer(32, 63802, nil, nil, nil, 3)
+local brainportal					= mod:NewTimer(20, "NextPortal", 57687, nil, nil, 5)
 local timerLunaricGaze				= mod:NewCastTimer(4, 64163)
 local timerNextLunaricGaze			= mod:NewCDTimer(8.5, 64163)
 local timerEmpower					= mod:NewCDTimer(46, 64465)
 local timerEmpowerDuration			= mod:NewBuffActiveTimer(10, 64465)
-local timerMadness 					= mod:NewCastTimer(60, 64059)
+local timerMadness 					= mod:NewCastTimer(60, 64059, nil, nil, nil, 5)
 local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189)
 local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
@@ -169,9 +168,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end 
 	elseif args:IsSpellID(64126, 64125) then	-- Squeeze
 		warnSqueeze:Show(args.destName)
-		if args:IsPlayer() and self.Options.WarningSqueeze then	
-			SendChatMessage(L.WarningYellSqueeze, "SAY")
-		end	
+		if args:IsPlayer() then
+			yellSqueeze:Yell()
+		end
 	elseif args.spellId == 63138 then	-- Sara's Fervor
 		warnFervor:Show(args.destName)
 		timerFervor:Start(args.destName)

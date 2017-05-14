@@ -10,10 +10,10 @@ Prat:AddModuleToLoad(function()
     return
   end
 
-  local L = Prat:GetLocalizer({})
+  local PL = Prat:GetLocalizer({})
 
   --[===[@debug@
-  L:AddLocale("enUS", {
+  PL:AddLocale("enUS", {
     ["Editbox"] = true,
     ["Editbox options."] = true,
     ["Top"] = true,
@@ -42,260 +42,248 @@ Prat:AddModuleToLoad(function()
   -- These Localizations are auto-generated. To help with localization
   -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
+    --@non-debug@
+do
+    local L
 
-  --@non-debug@
-  L:AddLocale("enUS",
-  {
-	["Attach edit box to..."] = true,
-	["Attach to..."] = true,
-	["Background color"] = true,
-	["Background Inset"] = true,
-	["Background texture"] = true,
-	["Border color"] = true,
-	["Border texture"] = true,
-	Bottom = true,
-	["Color border by channel"] = true,
-	currently_broken_alt_behavior = [=[Arrow key behaviour broken in current WoW client,
+L=
+{
+["Attach edit box to..."] = true,
+["Attach to..."] = true,
+["Background color"] = true,
+["Background Inset"] = true,
+["Background texture"] = true,
+["Border color"] = true,
+["Border texture"] = true,
+["Bottom"] = true,
+["Color border by channel"] = true,
+["currently_broken_alt_behavior"] = [=[Arrow key behaviour broken in current WoW client,
 
 Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
-	["Edge Size"] = true,
-	Editbox = true,
-	["Editbox options."] = true,
-	Font = true,
-	["Free-floating"] = true,
-	["Free-floating, Locked"] = true,
-	["Requires the Alt key to be held down to move the cursor in chat"] = true,
-	["Select the font to use for the edit box"] = true,
-	["Sets the frame's border color to the color of your currently active channel"] = true,
-	["Tile Size"] = true,
-	Top = true,
-	["Use Alt key for cursor movement"] = true,
+["Edge Size"] = true,
+["Editbox"] = true,
+["Editbox options."] = true,
+["Font"] = true,
+["Free-floating"] = true,
+["Free-floating, Locked"] = true,
+["Requires the Alt key to be held down to move the cursor in chat"] = true,
+["Select the font to use for the edit box"] = true,
+["Sets the frame's border color to the color of your currently active channel"] = true,
+["Tile Size"] = true,
+["Top"] = true,
+["Use Alt key for cursor movement"] = true,
 }
 
-  )
-  L:AddLocale("frFR",
-  {
-	["Attach edit box to..."] = "Définit la position de la boîte d'édition.",
-	["Attach to..."] = "Position",
-	["Background color"] = "Couleur du fond",
-	["Background Inset"] = "Marge du fond",
-	["Background texture"] = "Texture du fond",
-	["Border color"] = "Couleur de la bordure",
-	["Border texture"] = "Texture de la bordure",
-	Bottom = "Bas",
-	["Color border by channel"] = "Colorier avec le canal",
-	-- currently_broken_alt_behavior = "",
-	["Edge Size"] = "Taille de la bordure",
-	Editbox = "Boite d'édition",
-	["Editbox options."] = "Options de la boite d'édition.",
-	Font = "Police d'écriture",
-	["Free-floating"] = "Flottante",
-	["Free-floating, Locked"] = "Flottante, verrouillée",
-	["Requires the Alt key to be held down to move the cursor in chat"] = "Requiert de maintenir la touche Alt enfoncée pour déplacer le curseur lorsque vous écrivez un message.",
-	["Select the font to use for the edit box"] = "Définit la police du texte dans la boîte d'édition.",
-	["Sets the frame's border color to the color of your currently active channel"] = "Définit la couleur de la bordure avec la couleur du canal actif.",
-	["Tile Size"] = "Taille du fond",
-	Top = "Haut",
-	["Use Alt key for cursor movement"] = "Curseur avec Alt",
+  PL:AddLocale("enUS",L)
+
+
+L=
+{
+["Attach edit box to..."] = "Définit la position de la boîte d'édition.",
+["Attach to..."] = "Position",
+["Background color"] = "Couleur du fond",
+["Background Inset"] = "Marge du fond",
+["Background texture"] = "Texture du fond",
+["Border color"] = "Couleur de la bordure",
+["Border texture"] = "Texture de la bordure",
+["Bottom"] = "Bas",
+["Color border by channel"] = "Colorier avec le canal",
+["Edge Size"] = "Taille de la bordure",
+["Editbox"] = "Boite d'édition",
+["Editbox options."] = "Options de la boite d'édition.",
+["Font"] = "Police d'écriture",
+["Free-floating"] = "Flottante",
+["Free-floating, Locked"] = "Flottante, verrouillée",
+["Requires the Alt key to be held down to move the cursor in chat"] = "Requiert de maintenir la touche Alt enfoncée pour déplacer le curseur lorsque vous écrivez un message.",
+["Select the font to use for the edit box"] = "Définit la police du texte dans la boîte d'édition.",
+["Sets the frame's border color to the color of your currently active channel"] = "Définit la couleur de la bordure avec la couleur du canal actif.",
+["Tile Size"] = "Taille du fond",
+["Top"] = "Haut",
+["Use Alt key for cursor movement"] = "Curseur avec Alt",
 }
 
-  )
-  L:AddLocale("deDE",
-  {
-	["Attach edit box to..."] = "Befestige Eingabefeld an ...",
-	["Attach to..."] = "Befestige an ...",
-	["Background color"] = "Hintergrundfarbe",
-	["Background Inset"] = "Hintergrundbild",
-	["Background texture"] = "Hintergrundtextur",
-	["Border color"] = "Randfarbe",
-	["Border texture"] = "Randtextur",
-	Bottom = "Unten",
-	["Color border by channel"] = "Rand einfärben nach Kanal",
-	currently_broken_alt_behavior = [=[Das Verhalten der Pfeiltasten im Chat ist im aktuellen WoW Client defekt,
+  PL:AddLocale("frFR",L)
+
+
+L=
+{
+["Attach edit box to..."] = "Befestige Eingabefeld an ...",
+["Attach to..."] = "Befestige an ...",
+["Background color"] = "Hintergrundfarbe",
+["Background Inset"] = "Hintergrundbild",
+["Background texture"] = "Hintergrundtextur",
+["Border color"] = "Randfarbe",
+["Border texture"] = "Randtextur",
+["Bottom"] = "Unten",
+["Color border by channel"] = "Rand einfärben nach Kanal",
+["currently_broken_alt_behavior"] = [=[Das Verhalten der Pfeiltasten im Chat ist im aktuellen WoW-Client defekt,
 
 verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scrollen.]=],
-	["Edge Size"] = "Kantengröße",
-	Editbox = "Eingabefeld",
-	["Editbox options."] = "Optionen für das Eingabefeld.",
-	Font = "Schriftart",
-	["Free-floating"] = "Freischwebend",
-	["Free-floating, Locked"] = "Freischwebend, festgesetzt",
-	["Requires the Alt key to be held down to move the cursor in chat"] = "Das Drücken der Alt-Taste wird benötigt, um den Cursor (Zeiger) im Chat zu bewegen.",
-	["Select the font to use for the edit box"] = "Schriftart auswählen, die im Eingabefeld verwendet wird.",
-	["Sets the frame's border color to the color of your currently active channel"] = "Wendet die Randfarbe des Rahmens auf die Farbe deines gegenwärtig aktiven Kanals an.",
-	["Tile Size"] = "Kachelgröße",
-	Top = "Oben",
-	["Use Alt key for cursor movement"] = "Benutze Alt-Taste für Cursor-Bewegung",
+["Edge Size"] = "Kantengröße",
+["Editbox"] = "Eingabefeld",
+["Editbox options."] = "Optionen für das Eingabefeld.",
+["Font"] = "Schriftart",
+["Free-floating"] = "Freischwebend",
+["Free-floating, Locked"] = "Freischwebend, fixiert",
+["Requires the Alt key to be held down to move the cursor in chat"] = "Das Drücken der Alt-Taste wird benötigt, um den Cursor (Zeiger) im Chat zu bewegen.",
+["Select the font to use for the edit box"] = "Schriftart auswählen, die im Eingabefeld verwendet wird.",
+["Sets the frame's border color to the color of your currently active channel"] = "Wendet die Randfarbe des Rahmens auf die Farbe deines gegenwärtig aktiven Kanals an.",
+["Tile Size"] = "Kachelgröße",
+["Top"] = "Oben",
+["Use Alt key for cursor movement"] = "Benutze Alt-Taste für Cursor-Bewegung",
 }
 
-  )
-  L:AddLocale("koKR",
-  {
-	["Attach edit box to..."] = "입력창 붙이기...",
-	["Attach to..."] = "붙이기...",
-	["Background color"] = "배경 색상",
-	-- ["Background Inset"] = "",
-	["Background texture"] = "배경 텍스쳐",
-	["Border color"] = "테두리 색상",
-	["Border texture"] = "테두리 텍스쳐",
-	Bottom = "아래",
-	["Color border by channel"] = "채널 테두리 색상",
-	-- currently_broken_alt_behavior = "",
-	["Edge Size"] = "모서리 크기",
-	Editbox = "대화입력창",
-	["Editbox options."] = "대화입력창을 설정합니다.",
-	Font = "폰트",
-	["Free-floating"] = "자유로운 이동",
-	["Free-floating, Locked"] = "자유로운 이동, 잠금",
-	["Requires the Alt key to be held down to move the cursor in chat"] = "대화 입력창 커서 이동에 Alt 키를 사용합니다",
-	["Select the font to use for the edit box"] = "대화 입력창에 사용할 폰트 선택",
-	["Sets the frame's border color to the color of your currently active channel"] = "대화 입력창 테두리 색상을 현재 채널 색상으로 설정",
-	-- ["Tile Size"] = "",
-	Top = "위",
-	["Use Alt key for cursor movement"] = "커서 이동에 Alt 키 사용",
+  PL:AddLocale("deDE",L)
+
+
+L=
+{
+["Attach edit box to..."] = "입력창 붙이기...",
+["Attach to..."] = "붙이기...",
+["Background color"] = "배경 색상",
+["Background Inset"] = "배경 삽입",
+["Background texture"] = "배경 무늬",
+["Border color"] = "테두리 색상",
+["Border texture"] = "테두리 무늬",
+["Bottom"] = "아래",
+["Color border by channel"] = "채널에 의한 테두리 색상",
+["currently_broken_alt_behavior"] = [=[화살표 키 동작은 현재 WoW 클라이언트에서 작동하지 않습니다.
+
+기록 접근에 위쪽 아래쪽 키 대신 ALT-위와 ALT-아래 키를 사용하세요]=],
+["Edge Size"] = "모서리 크기",
+["Editbox"] = "대화 입력창",
+["Editbox options."] = "대화 입력창을 설정합니다.",
+["Font"] = "글꼴",
+["Free-floating"] = "자유로운 이동",
+["Free-floating, Locked"] = "자유로운 이동, 잠금",
+["Requires the Alt key to be held down to move the cursor in chat"] = "대화 입력창 커서 이동에 Alt 키를 사용합니다",
+["Select the font to use for the edit box"] = "대화 입력창에 사용할 글꼴 선택",
+["Sets the frame's border color to the color of your currently active channel"] = "대화 입력창 테두리 색상을 현재 채널 색상으로 설정",
+["Tile Size"] = "타일 크기",
+["Top"] = "위",
+["Use Alt key for cursor movement"] = "커서 이동에 Alt 키 사용",
 }
 
-  )
-  L:AddLocale("esMX",
-  {
-	-- ["Attach edit box to..."] = "",
-	-- ["Attach to..."] = "",
-	-- ["Background color"] = "",
-	-- ["Background Inset"] = "",
-	-- ["Background texture"] = "",
-	-- ["Border color"] = "",
-	-- ["Border texture"] = "",
-	-- Bottom = "",
-	-- ["Color border by channel"] = "",
-	-- currently_broken_alt_behavior = "",
-	-- ["Edge Size"] = "",
-	-- Editbox = "",
-	-- ["Editbox options."] = "",
-	-- Font = "",
-	-- ["Free-floating"] = "",
-	-- ["Free-floating, Locked"] = "",
-	-- ["Requires the Alt key to be held down to move the cursor in chat"] = "",
-	-- ["Select the font to use for the edit box"] = "",
-	-- ["Sets the frame's border color to the color of your currently active channel"] = "",
-	-- ["Tile Size"] = "",
-	-- Top = "",
-	-- ["Use Alt key for cursor movement"] = "",
+  PL:AddLocale("koKR",L)
+
+
+L=
+{
 }
 
-  )
-  L:AddLocale("ruRU",
-  {
-	["Attach edit box to..."] = "Закрепить поле ввода...",
-	["Attach to..."] = "Закрепить...",
-	["Background color"] = "Цвет фона",
-	["Background Inset"] = "Фоновая врезка",
-	["Background texture"] = "Текстура фона",
-	["Border color"] = "Цвет границ",
-	["Border texture"] = "Текстура границы",
-	Bottom = "Внизу",
-	["Color border by channel"] = "Окраска границы по цвету канала",
-	currently_broken_alt_behavior = [=[Поведение стрелок сломано в текущей версии WoW
+  PL:AddLocale("esMX",L)
 
-Используйте ALT-СтрелкаВверх и ALT-СтрелкаВниз вместо просто стрелок вверх и вниз чтобы открыть историю]=], -- Needs review
-	["Edge Size"] = "Размер контура",
-	Editbox = "Поле ввода",
-	["Editbox options."] = "Настройки поля ввода.",
-	Font = "Шрифт",
-	["Free-floating"] = "Свободно",
-	["Free-floating, Locked"] = "Свободно, заблокировано",
-	["Requires the Alt key to be held down to move the cursor in chat"] = "Для перемещения курсора в чате требуется нажатая клавиша Alt",
-	["Select the font to use for the edit box"] = "Выбор шрифта для области редактирования",
-	["Sets the frame's border color to the color of your currently active channel"] = "Установить окраску границы в цвет вашего активного канала",
-	["Tile Size"] = "Размер мозаики",
-	Top = "Вверху",
-	["Use Alt key for cursor movement"] = "Исп. кливишу Alt для перемещения курсора",
+
+L=
+{
+["Attach edit box to..."] = "Закрепить поле ввода...",
+["Attach to..."] = "Закрепить...",
+["Background color"] = "Цвет фона",
+["Background Inset"] = "Фоновая врезка",
+["Background texture"] = "Текстура фона",
+["Border color"] = "Цвет границ",
+["Border texture"] = "Текстура границы",
+["Bottom"] = "Внизу",
+["Color border by channel"] = "Окраска границы по цвету канала",
+["currently_broken_alt_behavior"] = [=[Поведение стрелок сломано в текущей версии WoW
+
+Используйте ALT-СтрелкаВверх и ALT-СтрелкаВниз вместо просто стрелок вверх и вниз чтобы открыть историю]=],
+["Edge Size"] = "Размер контура",
+["Editbox"] = "Поле ввода",
+["Editbox options."] = "Настройки поля ввода.",
+["Font"] = "Шрифт",
+["Free-floating"] = "Свободно",
+["Free-floating, Locked"] = "Свободно, заблокировано",
+["Requires the Alt key to be held down to move the cursor in chat"] = "Для перемещения курсора в чате требуется нажатая клавиша Alt",
+["Select the font to use for the edit box"] = "Выбор шрифта для области редактирования",
+["Sets the frame's border color to the color of your currently active channel"] = "Установить окраску границы в цвет вашего активного канала",
+["Tile Size"] = "Размер мозаики",
+["Top"] = "Вверху",
+["Use Alt key for cursor movement"] = "Исп. кливишу Alt для перемещения курсора",
 }
 
-  )
-  L:AddLocale("zhCN",
-  {
-	["Attach edit box to..."] = "把输入框附加到……", -- Needs review
-	["Attach to..."] = "附加到……", -- Needs review
-	["Background color"] = "背景颜色", -- Needs review
-	["Background Inset"] = "背景嵌入", -- Needs review
-	["Background texture"] = "背景纹理", -- Needs review
-	["Border color"] = "边框颜色", -- Needs review
-	["Border texture"] = "边框纹理", -- Needs review
-	Bottom = "底部",
-	["Color border by channel"] = "频道颜色边框", -- Needs review
-	currently_broken_alt_behavior = [=[在现在WoW客户端里，方向键的行为已损坏，
+  PL:AddLocale("ruRU",L)
 
-使用Alt+上和Alt+下来替代上下键浏览历史]=], -- Needs review
-	["Edge Size"] = "边缘尺寸", -- Needs review
-	Editbox = "输入框",
-	["Editbox options."] = "输入框选项",
-	Font = "字体", -- Needs review
-	["Free-floating"] = "自由浮动", -- Needs review
-	["Free-floating, Locked"] = "自由浮动，锁定", -- Needs review
-	["Requires the Alt key to be held down to move the cursor in chat"] = "需要在聊天中按住Alt键移动光标", -- Needs review
-	["Select the font to use for the edit box"] = "选择输入框的字体", -- Needs review
-	["Sets the frame's border color to the color of your currently active channel"] = "设置边框颜色到你当前激活的频道颜色", -- Needs review
-	["Tile Size"] = "平铺尺寸", -- Needs review
-	Top = "顶部",
-	["Use Alt key for cursor movement"] = "使用Alt键令光标移动", -- Needs review
+
+L=
+{
+["Attach edit box to..."] = "把输入框附加到……",
+["Attach to..."] = "附加到……",
+["Background color"] = "背景颜色",
+["Background Inset"] = "背景嵌入",
+["Background texture"] = "背景纹理",
+["Border color"] = "边框颜色",
+["Border texture"] = "边框纹理",
+["Bottom"] = "底部",
+["Color border by channel"] = "频道颜色边框",
+["currently_broken_alt_behavior"] = [=[在现在WoW客户端里，方向键的行为已损坏，
+
+使用Alt+上和Alt+下来替代上下键浏览历史]=],
+["Edge Size"] = "边缘尺寸",
+["Editbox"] = "输入框",
+["Editbox options."] = "输入框选项",
+["Font"] = "字体",
+["Free-floating"] = "自由浮动",
+["Free-floating, Locked"] = "自由浮动，锁定",
+["Requires the Alt key to be held down to move the cursor in chat"] = "需要在聊天中按住Alt键移动光标",
+["Select the font to use for the edit box"] = "选择输入框的字体",
+["Sets the frame's border color to the color of your currently active channel"] = "设置边框颜色到你当前激活的频道颜色",
+["Tile Size"] = "平铺尺寸",
+["Top"] = "顶部",
+["Use Alt key for cursor movement"] = "使用Alt键令光标移动",
 }
 
-  )
-  L:AddLocale("esES",
-  {
-	-- ["Attach edit box to..."] = "",
-	-- ["Attach to..."] = "",
-	-- ["Background color"] = "",
-	-- ["Background Inset"] = "",
-	-- ["Background texture"] = "",
-	-- ["Border color"] = "",
-	-- ["Border texture"] = "",
-	Bottom = "Abajo",
-	-- ["Color border by channel"] = "",
-	-- currently_broken_alt_behavior = "",
-	-- ["Edge Size"] = "",
-	Editbox = "Caja de edición",
-	["Editbox options."] = "Opciones de la caja de edición.",
-	-- Font = "",
-	-- ["Free-floating"] = "",
-	-- ["Free-floating, Locked"] = "",
-	-- ["Requires the Alt key to be held down to move the cursor in chat"] = "",
-	-- ["Select the font to use for the edit box"] = "",
-	-- ["Sets the frame's border color to the color of your currently active channel"] = "",
-	-- ["Tile Size"] = "",
-	Top = "Arriba",
-	-- ["Use Alt key for cursor movement"] = "",
+  PL:AddLocale("zhCN",L)
+
+
+L=
+{
+["Background color"] = "Color de fondo",
+["Background texture"] = "Textura de fondo",
+["Border color"] = "Color del borde",
+["Border texture"] = "Textura del borde",
+["Bottom"] = "Abajo",
+["Color border by channel"] = "Color del borde por canal",
+["Edge Size"] = "Tamaño del borde",
+["Editbox"] = "Caja de edición",
+["Editbox options."] = "Opciones de la caja de edición.",
+["Font"] = "Fuente",
+["Free-floating"] = "Flotar-libre",
+["Free-floating, Locked"] = "Flotar-libre, Bloqueado",
+["Top"] = "Arriba",
 }
 
-  )
-  L:AddLocale("zhTW",
-  {
-	["Attach edit box to..."] = "附上編輯框...",
-	["Attach to..."] = "附上...",
-	["Background color"] = "背景色彩",
-	["Background Inset"] = "背景插入",
-	["Background texture"] = "背景材質",
-	["Border color"] = "邊緣色彩",
-	["Border texture"] = "邊緣材質",
-	Bottom = "底部",
-	["Color border by channel"] = "顏色邊框由道頻",
-	-- currently_broken_alt_behavior = "",
-	["Edge Size"] = "邊框尺寸",
-	Editbox = "輸入框",
-	["Editbox options."] = "輸入框選單",
-	Font = "字型",
-	["Free-floating"] = "自由浮動",
-	["Free-floating, Locked"] = "自由浮動, 已鎖定",
-	-- ["Requires the Alt key to be held down to move the cursor in chat"] = "",
-	["Select the font to use for the edit box"] = "選擇字型使用編輯框",
-	-- ["Sets the frame's border color to the color of your currently active channel"] = "",
-	["Tile Size"] = "並排尺寸",
-	Top = "頂部",
-	["Use Alt key for cursor movement"] = "使用 Alt 鍵游標移動",
+  PL:AddLocale("esES",L)
+
+
+L=
+{
+["Attach edit box to..."] = "附上編輯框...",
+["Attach to..."] = "附上...",
+["Background color"] = "背景色彩",
+["Background Inset"] = "背景插入",
+["Background texture"] = "背景材質",
+["Border color"] = "邊緣色彩",
+["Border texture"] = "邊緣材質",
+["Bottom"] = "底部",
+["Color border by channel"] = "顏色邊框由道頻",
+["Edge Size"] = "邊框尺寸",
+["Editbox"] = "輸入框",
+["Editbox options."] = "輸入框選單",
+["Font"] = "字型",
+["Free-floating"] = "自由浮動",
+["Free-floating, Locked"] = "自由浮動, 已鎖定",
+["Select the font to use for the edit box"] = "選擇字型使用編輯框",
+["Tile Size"] = "並排尺寸",
+["Top"] = "頂部",
+["Use Alt key for cursor movement"] = "使用 Alt 鍵游標移動",
 }
 
-  )
-  --@end-non-debug@
+  PL:AddLocale("zhTW",L)
+
+
+end
+--@end-non-debug@
 
 
 
@@ -311,10 +299,10 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
   local select = _G.select
 
   local VALID_ATTACH_POINTS = {
-    TOP = L["Top"],
-    BOTTOM = L["Bottom"],
-    FREE = L["Free-floating"],
-    LOCK = L["Free-floating, Locked"]
+    TOP = PL["Top"],
+    BOTTOM = PL["Bottom"],
+    FREE = PL["Free-floating"],
+    LOCK = PL["Free-floating, Locked"]
   }
 
   local function updateEditBox(method, ...)
@@ -325,14 +313,14 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
   end
 
   Prat:SetModuleOptions(mod, {
-    name = L["Editbox"],
-    desc = L["Editbox options."],
+    name = PL["Editbox"],
+    desc = PL["Editbox options."],
     type = "group",
     args = {
       background = {
         type = "select",
-        name = L["Background texture"],
-        desc = L["Background texture"],
+        name = PL["Background texture"],
+        desc = PL["Background texture"],
         values = backgrounds,
         get = function() return mod.db.profile.background end,
         set = function(info, v)
@@ -342,8 +330,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       border = {
         type = "select",
-        name = L["Border texture"],
-        desc = L["Border texture"],
+        name = PL["Border texture"],
+        desc = PL["Border texture"],
         values = borders,
         get = function() return mod.db.profile.border end,
         set = function(info, v)
@@ -353,8 +341,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       backgroundColor = {
         type = "color",
-        name = L["Background color"],
-        desc = L["Background color"],
+        name = PL["Background color"],
+        desc = PL["Background color"],
         hasAlpha = true,
         get = function()
           local c = mod.db.profile.backgroundColor
@@ -368,8 +356,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       borderColor = {
         type = "color",
-        name = L["Border color"],
-        desc = L["Border color"],
+        name = PL["Border color"],
+        desc = PL["Border color"],
         hasAlpha = true,
         get = function()
           local c = mod.db.profile.borderColor
@@ -383,8 +371,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       inset = {
         type = "range",
-        name = L["Background Inset"],
-        desc = L["Background Inset"],
+        name = PL["Background Inset"],
+        desc = PL["Background Inset"],
         min = 1,
         max = 64,
         step = 1,
@@ -397,8 +385,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       tileSize = {
         type = "range",
-        name = L["Tile Size"],
-        desc = L["Tile Size"],
+        name = PL["Tile Size"],
+        desc = PL["Tile Size"],
         min = 1,
         max = 64,
         step = 1,
@@ -411,8 +399,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       edgeSize = {
         type = "range",
-        name = L["Edge Size"],
-        desc = L["Edge Size"],
+        name = PL["Edge Size"],
+        desc = PL["Edge Size"],
         min = 1,
         max = 64,
         step = 1,
@@ -425,8 +413,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       attach = {
         type = "select",
-        name = L["Attach to..."],
-        desc = L["Attach edit box to..."],
+        name = PL["Attach to..."],
+        desc = PL["Attach edit box to..."],
         get = function() return mod.db.profile.attach end,
         values = VALID_ATTACH_POINTS,
         set = function(info, v)
@@ -436,8 +424,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       colorByChannel = {
         type = "toggle",
-        name = L["Color border by channel"],
-        desc = L["Sets the frame's border color to the color of your currently active channel"],
+        name = PL["Color border by channel"],
+        desc = PL["Sets the frame's border color to the color of your currently active channel"],
         get = function()
           return mod.db.profile.colorByChannel
         end,
@@ -458,8 +446,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       useAltKey = {
         type = "toggle",
-        name = L["Use Alt key for cursor movement"],
-        desc = L["Requires the Alt key to be held down to move the cursor in chat"],
+        name = PL["Use Alt key for cursor movement"],
+        desc = PL["Requires the Alt key to be held down to move the cursor in chat"],
         get = function()
           return mod.db.profile.useAltKey
         end,
@@ -470,8 +458,8 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       },
       font = {
         type = "select",
-        name = L["Font"],
-        desc = L["Select the font to use for the edit box"],
+        name = PL["Font"],
+        desc = PL["Select the font to use for the edit box"],
         values = fonts,
         get = function() return mod.db.profile.font end,
         set = function(i, v)
@@ -484,7 +472,7 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
         end
       },
         info = {
-            name = L.currently_broken_alt_behavior;
+            name = PL.currently_broken_alt_behavior;
             type = "description",
             hidden = not mustUseAlt;
             order = 1000;

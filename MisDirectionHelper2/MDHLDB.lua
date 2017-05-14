@@ -13,17 +13,14 @@ local channels = {["RAID"] = _G.RAID, ["PARTY"] = _G.PARTY, ["WHISPER"] = _G.WHI
 local misdtarget
 local GetSpellInfo = GetSpellInfo
 local imd = GetSpellInfo(34477)
-local iff = GetSpellInfo(82692)
 local itt = GetSpellInfo(57934)
 local iua = GetSpellInfo(51672)
 local hiconinfo = {
 	[imd] = {"Interface\\Icons\\Ability_Hunter_Misdirection", 151},
-	[iff] = {"Interface\\Icons\\Ability_Hunter_FocusFire", 134},
 }
-local hicons = {[151] = imd, [134] = iff}
+local hicons = {[151] = imd}
 local iconm = {
 	[151] = "Ability_Hunter_Misdirection",
-	[134] = "Ability_Hunter_FocusFire",
 	[454] = "Ability_Rogue_TricksOftheTrade",
 	[457] = "Ability_Rogue_UnfairAdvantage",
 }
@@ -81,6 +78,7 @@ local defaults = {
 		rname = "MDH " .. itt,
 		target = "pet",
 		target2 = nil,
+		target3 = nil,
 		name2 = nil,
 		clearjoin = nil,
 		remind = nil,
@@ -122,7 +120,7 @@ end
 function MDH:MDHEditMacro()
 	--cannot edit/create macros during combat
 	if InCombatLockdown() then return end
-	local singlemacro, multiplemacro, macro, macroid
+	local singlemacro, multiplemacro, macro, macroid, hovermacro
 	local spell = imd
 	local id = MDH.db.profile.hicon or hiconinfo[imd][2]
 	local mname = MDH.db.profile.hname
@@ -133,8 +131,12 @@ function MDH:MDHEditMacro()
 		mname = MDH.db.profile.rname
 	end
 	MDH:MDHTextUpdate()
-	singlemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][@%s,nodead] %s; %s"
-	multiplemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][btn:1,@%s,nodead][btn:2,@%s,nodead] %s; %s"
+	singlemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][@%s,nodead]%s;%s"
+	multiplemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][btn:1,@%s,nodead][btn:2,@%s,nodead]%s;%s"
+	--if MDH.db.profile.target3 then
+		--singlemacro = "#showtooltip\n/use [@mouseover,nodead]%s\n/use [mod:" .. modkey .. ",@none][@%s,nodead]%s;%s"
+		--multiplemacro = "#showtooltip\n/use [@mouseover,nodead]%s\n/use [mod:" .. modkey .. ",@none][btn:1,@%s,nodead][btn:2,@%s,nodead]%s;%s"
+	--end
 	if MDH.db.profile.target2 then macro = format(multiplemacro, MDH.db.profile.target or "target", MDH.db.profile.target2 or "target", spell, spell)
 	else macro = format(singlemacro, MDH.db.profile.target or "target", spell, spell) end
 	macroid = GetMacroIndexByName(mname)
@@ -151,7 +153,7 @@ function MDH:MDHChat()
 	local msg = format(L["%s casts %s on %s"], UnitName("player"), spelllink, misdtarget)
 	--LFD fix courtesy of Eincrou
 	--*****
-	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then 
+	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then
 		if (IsInGroup(_G.LE_PARTY_CATEGORY_INSTANCE)) then chan = "INSTANCE_CHAT" end
 		s = true
 	--*****
@@ -357,7 +359,7 @@ function MDH:OnInitialize()
 				order = 7,
 				type = "description",
 				name = "\n",
-			},			
+			},
 			hicon = {
 				type = "select",
 				name = L["Misdirection macro icon"],

@@ -4,7 +4,7 @@
 -- ********************************************************
 --
 -- This addon is written and copyrighted by:
---    * Mîzukichan @ EU-Antonidas (2010-2014)
+--    * Mï¿½zukichan @ EU-Antonidas (2010-2016)
 --
 -- Contributors:
 --    * Kevin (HTML-Export) (2010)
@@ -40,7 +40,7 @@ local _O = MRT_Options
 MRT_ADDON_TITLE = GetAddOnMetadata("MizusRaidTracker", "Title");
 MRT_ADDON_VERSION = GetAddOnMetadata("MizusRaidTracker", "Version");
 --[===[@debug@
-MRT_ADDON_VERSION = "v0.61.2-alpha"
+MRT_ADDON_VERSION = "v0.7x.y-alpha"
 --@end-debug@]===]
 MRT_NumOfCurrentRaid = nil;
 MRT_NumOfLastBoss = nil;
@@ -79,7 +79,8 @@ local MRT_Defaults = {
         ["Tracking_LogAVRaids"] = false,                                            -- Track PvP raids: true / nil
         ["Tracking_LogWotLKRaids"] = false,                                         -- Track WotLK raid: true / nil
         ["Tracking_LogCataclysmRaids"] = false,                                     -- Track Catacylsm raid: true / nil
-        ["Tracking_LogMoPRaids"] = true,                                            -- Track MoP raid: true / nil
+        ["Tracking_LogMoPRaids"] = false,                                           -- Track MoP raid: true / nil
+        ["Tracking_LogWarlordsRaids"] = false,                                      -- Track Warlords of Draenor raid: true / nil
         ["Tracking_LogLootModePersonal"] = true,
         ["Tracking_AskForDKPValue"] = true,                                         -- 
         ["Tracking_AskForDKPValuePersonal"] = true,                                 -- ask for points cost when in personal loot mode true/nil - not used when generic option is off
@@ -118,10 +119,7 @@ local LDBIcon = LibStub("LibDBIcon-1.0");
 local LDialog = LibStub("LibDialog-1.0");
 local LBB = LibStub("LibBabble-Boss-3.0");
 local LBBL = LBB:GetUnstrictLookupTable();
-local LBI = LibStub("LibBabble-Inventory-3.0");
-local LBIR = LBI:GetReverseLookupTable();
-local EPGPCalc = LibStub("LibEPGP-GPCalculator-1.0");
-local LibGP = LibStub("LibGearPoints-1.2");
+local LibGP = LibStub("LibGearPoints-1.2-MRT");
 local ScrollingTable = LibStub("ScrollingTable");
 local tinsert = tinsert;
 local pairs = pairs;
@@ -234,6 +232,8 @@ function MRT_OnEvent(frame, event, ...)
     elseif (event == "ENCOUNTER_END") then
         local encounterID, name, difficulty, size, success = ...
         MRT_Debug("ENCOUNTER_END fired! encounterID="..encounterID..", name="..name..", difficulty="..difficulty..", size="..size..", success="..success)
+        if (not MRT_Options["General_MasterEnable"]) then return end;
+        MRT_EncounterEndHandler(encounterID, name, difficulty, size, success);
     
     elseif (event == "GUILD_ROSTER_UPDATE") then 
         MRT_GuildRosterUpdate(frame, event, ...);
@@ -308,7 +308,7 @@ function MRT_OnEvent(frame, event, ...)
     
     elseif(event == "PLAYER_REGEN_DISABLED") then 
         wipe(MRT_ArrayBossID)
-        --MRT_Debug("Tabelle gelöscht");
+        --MRT_Debug("Tabelle gelï¿½scht");
     
     end
 end
@@ -363,6 +363,14 @@ function MRT_CombatLogHandler(...)
         -- Get localized boss name, if available - else use english one supplied in the constants file
         local localBossName = LBBL[MRT_BossSpellIDTriggerList[spellID][1]] or MRT_BossSpellIDTriggerList[spellID][1];
         MRT_AddBosskill(localBossName, nil, NPCID);
+    end
+end
+
+function MRT_EncounterEndHandler(encounterID, name, difficulty, size, success)
+    if (not MRT_NumOfCurrentRaid) then return; end
+    if ((success == 1) and (MRT_EncounterIDList[encounterID])) then
+        MRT_Debug("Valid encounterID found... - Match on "..MRT_EncounterIDList[encounterID]);
+        MRT_AddBosskill(name, nil, MRT_EncounterIDList[encounterID]);
     end
 end
 
@@ -610,6 +618,10 @@ function MRT_UpdateSavedOptions()
     if MRT_Options["General_OptionsVersion"] == 16 then
         MRT_Options["Tracking_AskForDKPValuePersonal"] = true;
         MRT_Options["General_OptionsVersion"] = 17;
+    end
+    if MRT_Options["General_OptionsVersion"] == 17 then
+        MRT_Options["Tracking_LogWarlordsRaids"] = true;
+        MRT_Options["General_OptionsVersion"] = 18;
     end
 end
 
@@ -875,6 +887,16 @@ function MRT_CheckZoneAndSizeStatus()
         -- Check if the current raidZone is a zone which should be tracked
         if (MRT_PvPRaids[areaID] and not MRT_Options["Tracking_LogAVRaids"]) then 
             MRT_Debug("This instance is a PvP-Raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (MRT_LegacyRaidZonesWarlords[areaID] and not MRT_Options["Tracking_LogWarlordsRaids"]) then
+            MRT_Debug("This instance is a Draenor-Raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (MRT_LegacyRaidZonesPanadria[areaID] and not MRT_Options["Tracking_LogMoPRaids"]) then
+            MRT_Debug("This instance is a Pandaria-Raid and tracking of those is disabled.");
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
@@ -1287,13 +1309,15 @@ function MRT_AutoAddLoot(chatmsg)
     -- if code reach this point, we should have a valid looter and a valid itemLink
     MRT_Debug("Item looted - Looter is "..playerName.." and loot is "..itemLink);
     -- example itemLink: |cff9d9d9d|Hitem:7073:0:0:0:0:0:0:0|h[Broken Fang]|h|r
-    local itemName, _, itemId, itemString, itemRarity, itemColor, itemLevel, _, itemType, itemSubType, _, _, _, _ = MRT_GetDetailedItemInformation(itemLink);
+    local itemName, _, itemId, itemString, itemRarity, itemColor, itemLevel, _, itemType, itemSubType, _, _, _, _, itemClassID, itemSubClassID = MRT_GetDetailedItemInformation(itemLink);
     if (not itemName == nil) then MRT_Debug("Panic! Item information lookup failed horribly. Source: MRT_AutoAddLoot()"); return; end
     -- check options, if this item should be tracked
     if (MRT_Options["Tracking_MinItemQualityToLog"] > itemRarity) then MRT_Debug("Item not tracked - quality is too low."); return; end
     if (MRT_Options["Tracking_OnlyTrackItemsAboveILvl"] > itemLevel) then MRT_Debug("Item not tracked - iLvl is too low."); return; end
-    if (MRT_Options["ItemTracking_IgnoreGems"] and LBIR[itemType] == "Gem") then MRT_Debug("Item not tracked - it is a gem and the corresponding ignore option is on."); return; end
-    if (MRT_Options["ItemTracking_IgnoreEnchantingMats"] and LBIR[itemType] == "Trade Goods" and LBIR[itemSubType] == "Enchanting") then MRT_Debug("Item not tracked - it is a enchanting material and the corresponding ignore option is on."); return; end
+    -- itemClassID 3 = "Gem", itemSubClassID 11 = "Artifact Relic"; itemClassID 7 = "Tradeskill", itemSubClassID 4 = "Jewelcrafting", 12 = Enchanting
+    if (MRT_Options["ItemTracking_IgnoreGems"] and itemClassID == 3 and itemSubClassID ~= 11) then MRT_Debug("Item not tracked - it is a gem and the corresponding ignore option is on."); return; end
+    if (MRT_Options["ItemTracking_IgnoreGems"] and itemClassID == 7 and itemSubClassID == 4) then MRT_Debug("Item not tracked - it is a gem and the corresponding ignore option is on."); return; end
+    if (MRT_Options["ItemTracking_IgnoreEnchantingMats"] and itemClassID == 7 and itemSubClassID == 12) then MRT_Debug("Item not tracked - it is a enchanting material and the corresponding ignore option is on."); return; end
     if (MRT_IgnoredItemIDList[itemId]) then MRT_Debug("Item not tracked - ItemID is listed on the ignore list"); return; end
     local dkpValue = 0;
     local lootAction = nil;
@@ -1775,17 +1799,16 @@ function MRT_GetNPCID(GUID)
 end
 
 -- @param itemIdentifer: Either itemLink or itemID and under special circumstances itemName
--- @usage local itemName, itemLink, itemId, itemString, itemRarity, itemColor, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = MRT_GetDetailedItemInformation(itemIdentifier)
+-- @usage local itemName, itemLink, itemId, itemString, itemRarity, itemColor, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice, itemClassID, itemSubClassID = MRT_GetDetailedItemInformation(itemIdentifier)
 -- If itemIdentifier is not valid, the return value will be nil
 -- otherwise, it will be a long tuple of item information
--- this function should be compatible with 3.x and 4.0.x clients
 function MRT_GetDetailedItemInformation(itemIdentifier)
-    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemIdentifier);
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice, itemClassID, itemSubClassID = GetItemInfo(itemIdentifier);
     if (not itemLink) then return nil; end
     local _, itemString, _ = deformat(itemLink, "|c%s|H%s|h%s|h|r");
     local itemId, _ = deformat(itemString, "item:%d:%s");
     local itemColor = MRT_ItemColors[itemRarity + 1];
-    return itemName, itemLink, itemId, itemString, itemRarity, itemColor, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice;
+    return itemName, itemLink, itemId, itemString, itemRarity, itemColor, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice, itemClassID, itemSubClassID;
 end
 
 function MRT_GetCurrentTime()

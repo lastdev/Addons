@@ -4,14 +4,15 @@
 
 -- Some shared functions
 -- Prevent multi-loading
-if not FLOLIB_VERSION or FLOLIB_VERSION < 1.34 then
+if not FLOLIB_VERSION or FLOLIB_VERSION < 1.35 then
 
 local _
 local NUM_SPELL_SLOTS = 10;
-FLOLIB_VERSION = 1.34;
+local SCHOOL_COLORS = { 1.0, 0.7, 0.0 };
 
-FLOLIB_ACTIVATE_SPEC_1 = GetSpellInfo(63645);
-FLOLIB_ACTIVATE_SPEC_2 = GetSpellInfo(63644);
+FLOLIB_VERSION = 1.35;
+
+FLOLIB_ACTIVATE_SPEC = GetSpellInfo(200749);
 
 StaticPopupDialogs["FLOLIB_CONFIRM_RESET"] = {
 	text = FLOLIB_CONFIRM_RESET,
@@ -228,7 +229,7 @@ function FloLib_Setup(self)
 	end
 
 	local numSpells = 0;
-	local button;
+	local button, coutdown;
 	local isKnown, spell;
 	local i = 1;
 	local id, j, n;
@@ -243,13 +244,13 @@ function FloLib_Setup(self)
 		isKnown = false;
 		if not self.settings.hiddenSpells[n] then
 			spell = self.availableSpells[n];
-			isKnown = spell and IsSpellKnown(spell.id);
+			isKnown = spell and GetSpellInfo(GetSpellInfo(spell.id)) ~= nil;
 		end
 
 		if isKnown then
 			spell.name, spell.addName, spell.texture = GetSpellInfo(spell.id);
-			if spell.glyphed and not spell.nameGlyphed then
-				spell.glyphedName, _, spell.glyphedTexture = GetSpellInfo(spell.glyphed);
+			if spell.talented and not spell.talentedName then
+				spell.talentedName = GetSpellInfo(spell.talented);
 			end
 			self:SetupSpell(spell, i);
 			i = i + 1;
@@ -266,14 +267,14 @@ function FloLib_Setup(self)
 
 	for n = 1, #self.availableSpells do
 
-		if n > NUM_SPELL_SLOTS then
+		if numSpells > NUM_SPELL_SLOTS then
 			break;
 		end
 
 		spell = self.availableSpells[n];
 		spell.name, spell.addName, spell.texture = GetSpellInfo(spell.id);
-		if spell.glyphed and not spell.nameGlyphed then
-			spell.glyphedName, _, spell.glyphedTexture = GetSpellInfo(spell.glyphed);
+		if spell.talented and not spell.talentedName then
+			spell.talentedName = GetSpellInfo(spell.talented);
 		end
 
 		-- Check if this spell is already positionned
@@ -288,7 +289,7 @@ function FloLib_Setup(self)
 		if not i then
 			isKnown = false;
 			if not self.settings.hiddenSpells[n] then
-				isKnown = IsSpellKnown(spell.id);
+				isKnown = GetSpellInfo(GetSpellInfo(spell.id)) ~= nil;
 			end
 			if isKnown then
 
@@ -304,16 +305,8 @@ function FloLib_Setup(self)
 	if not InCombatLockdown() then
 		if numSpells > 0 then
 
-			local timerOffset;
-			if _G[self:GetName().."Countdown"] then
-				timerOffset = 15;
-			elseif _G[self:GetName().."Countdown3"] then
-				timerOffset = 37;
-			else
-				timerOffset = 0;
-			end
-			self:Show();
-			self:SetWidth(numSpells * 35 + 12 + timerOffset);
+                        self:Show();
+			self:SetWidth(numSpells * 42 + 12 );
 
 			local group;
 			if LBF then
@@ -322,6 +315,7 @@ function FloLib_Setup(self)
 
 			for i=1, NUM_SPELL_SLOTS do
 				button = _G[self:GetName().."Button"..i];
+				countdown = _G[self:GetName().."Countdown"..i];
 				
 				-- Add the button to ButtonFacade
 				if group then
@@ -330,8 +324,10 @@ function FloLib_Setup(self)
 
 				if i <= numSpells then
 					button:Show();
+					countdown:Show();
 				else
 					button:Hide();
+					countdown:Hide();
 				end
 			end
 		else
@@ -365,9 +361,7 @@ function FloLib_UpdateState(self)
 		--Cooldown stuffs
 		cooldown = _G[self:GetName().."Button"..i.."Cooldown"];
                 start, duration, enable, charges, maxCharges = GetSpellCooldown(spell.id);
-                if spell.glyphed then
-                        start, duration, enable = GetSpellCooldown(spell.glyphed);
-                elseif spell.talented then
+                if spell.talented then
 			start2, duration2, enable2 = GetSpellCooldown(spell.talented);
 			if start > 0 and start2 > 0 then
 				start = math.min(start, start2);
@@ -383,7 +377,7 @@ function FloLib_UpdateState(self)
                         cooldown:SetHideCountdownNumbers(false);
                         cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL;
                 end
-                CooldownFrame_SetTimer(cooldown, start, duration, enable, charges, maxCharges);
+                CooldownFrame_Set(cooldown, start, duration, enable, charges, maxCharges);
 
 		--Castable stuffs
 		normalTexture = _G[self:GetName().."Button"..i.."NormalTexture"];
@@ -426,6 +420,90 @@ function FloLib_Button_SetTooltip(self)
 	end
 end
 
+function FloLib_StartTimer(self, spellName, rank, guid, spellid)
+
+	local founded = false;
+	local haveTotem, name, startTime, duration, icon;
+	local countdown;
+	local i;
+
+	-- Find spell
+	for i = 1, #self.spells do
+		if self.spells[i].id == spellid or self.spells[i].talented == spellid then
+			founded = i;
+
+			duration = self.spells[i].duration;
+			startTime = GetTime();
+			break;
+		end
+	end
+
+	if founded then
+
+		self["activeSpell"..founded] = founded;
+		self["startTime"..founded] = startTime;
+
+		countdown = _G[self:GetName().."Countdown"..founded];
+		if countdown then
+			countdown:SetMinMaxValues(0, duration);
+			countdown:SetStatusBarColor(unpack(SCHOOL_COLORS));
+		end
+		FloLib_OnUpdate(self);
+	end
+end
+
+function FloLib_ResetTimer(self, pos)
+
+	self["startTime"..pos] = 0;
+	FloLib_OnUpdate(self);
+end
+
+function FloLib_OnUpdate(self)
+
+	local isActive;
+	local button;
+	local countdown;
+	local timeleft;
+	local duration;
+	local name, spell;
+	local i;
+
+	for i=1, #self.spells do
+
+		name = self:GetName();
+		button = _G[name.."Button"..i];
+
+		spell = self.spells[i];
+
+		isActive = false;
+
+		if self["activeSpell"..i] == i then
+
+		        countdown = _G[name.."Countdown"..i];
+	        	if countdown then
+			        _, duration = countdown:GetMinMaxValues();
+
+			        timeleft = self["startTime"..i] + duration - GetTime();
+			        isActive = timeleft > 0;
+
+			        if (isActive) then
+				        countdown:SetValue(timeleft);
+			        else
+				        self["activeSpell"..i] = nil;
+				        countdown:SetValue(0);
+			        end
+		        else
+			        isActive = self["startTime"..i] ~= 0;
+		        end
+	        end
+
+		if isActive then
+			button:SetChecked(true);
+		else
+			button:SetChecked(false);
+		end
+	end
+end
 
 -- Bar Dropdown
 function FloLib_BarDropDown_OnLoad(self)

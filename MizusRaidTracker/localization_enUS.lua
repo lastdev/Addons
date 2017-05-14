@@ -1,4 +1,4 @@
-﻿-- ********************************************************
+-- ********************************************************
 -- **        Mizus RaidTracker - enGB/enUS Local         **
 -- **           <http://nanaki.affenfelsen.de>           **
 -- ********************************************************
@@ -28,25 +28,18 @@ _L.yells[529]["Freya"] = "His hold on me dissipates. I can see clearly once more
 _L.yells[529]["Hodir"] = "I... I am released from his grasp... at last."
 _L.yells[529]["Mimiron"] = "It would appear that I've made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear."
 _L.yells[529]["Thorim"] = "Stay your arms! I yield!"
-
 _L.yells[543]["Faction Champions"] = "A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death."
-
 _L.yells[604]["Dreamwalker"] = "I AM RENEWED! Ysera grant me the favor to lay these foul creatures to rest!"
 _L.yells[604]["Icecrown Gunship Battle Alliance"] = "Don't say I didn't warn ya, scoundrels! Onward, brothers and sisters!"
 _L.yells[604]["Icecrown Gunship Battle Horde"] = "The Alliance falter. Onward to the Lich King!"
-
 _L.yells[609]["Halion"] = "Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"
-
 _L.yells[773]["Conclave Of Wind"] = "The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"
-
 _L.yells[800]["Ragnaros"] = "Too soon! ... You have come too soon..."
-
 _L.yells[886]["Lei Shi"] = "I... ah... oh! Did I...? Was I...? It was... so... cloudy."
 _L.yells[886]["Tsulong"] = "I thank you, strangers. I have been freed."
-
 _L.yells[953]["Immerseus"] = "Ah, you have done it!  The waters are pure once more."
 _L.yells[953]["Spoils of Pandaria"] = "System resetting. Don't turn the power off, or the whole thing will probably explode."
-
+_L.yells[1026]["Hellfire Assault"] = "If you want something done right, you have to do it yourself..."
 
 
 ---------------------------------
@@ -64,7 +57,7 @@ MRT_L.Core["DKP_Frame_OK_Button"] = "Ok"
 MRT_L.Core["DKP_Frame_Title"] = "Enter cost"
 MRT_L.Core["Export_AttendanceNote"] = [=[In the Raid-Log-Import-Settings, please set the option
 "Time in seconds, the loot belongs to the boss before."
-to or below 180 seconds to avoid attendance issues.]=] -- Needs review
+to or below 180 seconds to avoid attendance issues.]=]
 MRT_L.Core["Export_Attendees"] = "Attendees"
 MRT_L.Core["Export_Button"] = "Close"
 MRT_L.Core["Export_Explanation"] = [=[Press Ctrl+C to copy the data to the clipboard.
@@ -94,7 +87,6 @@ MRT_L.Core["TakeSnapshot_CurrentRaidError"] = "Error: Active raid in progress. N
 MRT_L.Core["TakeSnapshot_Done"] = "Snapshot taken."
 MRT_L.Core["TakeSnapshot_NotInRaidError"] = "Error: You are not in a raid. No snapshot taken."
 MRT_L.Core["Trash Mob"] = "Trash Mob"
-
 
 
 -----------------------------------
@@ -160,6 +152,8 @@ MRT_L.Options["TP_LogAVRaids"] = "Track PVP raids (VoA, BH)"
 MRT_L.Options["TP_LogCataclysmRaids"] = "Track Cataclysm raids"
 MRT_L.Options["TP_LogLFRRaids"] = "Track LFR raids"
 MRT_L.Options["TP_LogLootModePersonal"] = "Track loot mode 'Personal'"
+MRT_L.Options["TP_LogMoPRaids"] = "Track Pandaria raids"
+MRT_L.Options["TP_LogWarlordsRaids"] = "Track Warlords of Draenor raids"
 MRT_L.Options["TP_LogWotLKRaids"] = "Track WotLK raids"
 MRT_L.Options["TP_MinItemQualityToGetCost_Desc"] = "Min item quality to ask cost for"
 MRT_L.Options["TP_MinItemQualityToLog_Desc"] = "Min item quality to log"
@@ -190,7 +184,6 @@ the 50% attendance threshold of the Raid-Log-Importer.
 Only use this option, if your DKP system is based on per boss attendance.]=]
 MRT_L.Options["TT_MP_SlashCmd"] = [=[Command without leading slash.
 A relog after changing this value is recommended.]=]
-
 
 
 -------------------
@@ -242,8 +235,8 @@ MRT_L.GUI["Item cost invalid"] = "Error: Item cost is not a number."
 MRT_L.GUI["Itemlink"] = "Itemlink or ItemID or Itemname"
 MRT_L.GUI["Looter"] = "Looter"
 MRT_L.GUI["Modify loot data"] = "Modify loot data"
-MRT_L.GUI["No active raid."] = "Error: No active raid."
 MRT_L.GUI["No active raid in progress. Please enter time."] = "Error: No active raid in progress. Please enter time."
+MRT_L.GUI["No active raid."] = "Error: No active raid."
 MRT_L.GUI["No boss attendee selected"] = "Error: No boss attendee selected."
 MRT_L.GUI["No boss name entered"] = "Error: No boss name entered."
 MRT_L.GUI["No boss selected"] = "Error: No boss selected."
@@ -252,10 +245,10 @@ MRT_L.GUI["No loot selected"] = "Error: No item selected."
 MRT_L.GUI["No name entered"] = "Error: No name entered."
 MRT_L.GUI["No raid attendee selected"] = "Error: No raid attendee selected."
 MRT_L.GUI["No raid selected"] = "Error: No raid selected."
-MRT_L.GUI["Note"] = "Note"
 MRT_L.GUI["No valid difficulty entered"] = "Error: No valid difficulty entered."
 MRT_L.GUI["No valid raid size"] = "Error: No valid raid size entered."
 MRT_L.GUI["No valid time entered"] = "Error: No valid time entered."
+MRT_L.GUI["Note"] = "Note"
 MRT_L.GUI["Player not in raid."] = "Error: You are not in a raid."
 MRT_L.GUI["Raid size"] = "Raid size"
 MRT_L.GUI["Resuming last raid failed"] = "Error: Failed to resume last raid"
@@ -300,4 +293,3 @@ Doesn't work, if raidtracking is in progress.
 In that case, add a boss event.]=]
 MRT_L.GUI["Value"] = "Value"
 MRT_L.GUI["Zone name"] = "Zone name"
-

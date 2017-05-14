@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(22948)
+mod:SetEncounterID(605)
 mod:SetModelID(21443)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE"
+	"SPELL_AURA_APPLIED 42005 40481 40491 40604",
+	"SPELL_AURA_APPLIED_DOSE 40481 42005"
 )
 
 local warnBlood			= mod:NewTargetAnnounce(42005, 3)
@@ -23,10 +24,10 @@ local warnRageEnd		= mod:NewEndAnnounce(40604, 4)
 local specWarnBlood		= mod:NewSpecialWarningYou(42005)
 local specWarnRage		= mod:NewSpecialWarningYou(40604)
 
-local timerBlood		= mod:NewCDTimer(10, 42005)
-local timerWound		= mod:NewTargetTimer(60, 40481)
+local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)
+local timerWound		= mod:NewTargetTimer(60, 40481, nil, false)
 local timerStrikeCD		= mod:NewCDTimer(30, 40491)
-local timerRage			= mod:NewCDTimer(52, 40604)
+local timerRage			= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)
 local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604)
 
 local berserkTimer		= mod:NewBerserkTimer(600)

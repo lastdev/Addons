@@ -120,7 +120,6 @@ L:SetTimerLocalization{
 }
 
 L:SetWarningLocalization{
-	WarningPhasePunch		= "Phasenschlag auf >%s< - %d Stapel",
 	WarnPhase2Soon			= "Phase 2 bald",
 	warnStarLow				= "Kollabierender Stern stirbt bald"
 }
@@ -138,8 +137,7 @@ L:SetMiscLocalization{
 	YellKill				= "Ich sah Welten umhüllt von den Flammen der Schöpfer, sah ohne einen Hauch von Trauer ihre Bewohner vergehen. Ganze Planetensysteme geboren und vernichtet, während Eure sterblichen Herzen nur einmal schlagen. Doch immer war mein Herz kalt... ohne Mitgefühl. Ich - habe - nichts - gefühlt. Millionen, Milliarden Leben verschwendet. Trugen sie alle dieselbe Beharrlichkeit in sich, wie Ihr? Liebten sie alle das Leben so sehr, wie Ihr es tut?",
 	Emote_CollapsingStar	= "%s beginnt damit, kollabierende Sterne zu beschwören!",
 	Phase2					= "Erblicket die Instrumente der Schöpfung!",
-	FirstPull				= "Seht Eure Welt durch meine Augen: Ein Universum so gewaltig - grenzenlos - unbegreiflich selbst für die Klügsten unter Euch.",
-	PullCheck				= "Zeit, bis Algalon mit dem Uplink beginnt= (%d+) min." -- obsolete
+	FirstPull				= "Seht Eure Welt durch meine Augen: Ein Universum so gewaltig - grenzenlos - unbegreiflich selbst für die Klügsten unter Euch."
 }
 
 ----------------
@@ -371,13 +369,6 @@ L:SetGeneralLocalization{
 	name = "Yogg-Saron"
 }
 
-L:SetMiscLocalization{
-	YellPull 			= "Bald ist die Zeit gekommen, dem Untier den Kopf abzuschlagen! Konzentriert Euren Zorn und Euren Hass auf seine Diener!",
-	YellPhase2	 		= "Ich bin der strahlende Traum.",
-	Sara 				= "Sara",
-	WarningYellSqueeze	= "Quetschen auf mir! Hilfe!"
-}
-
 L:SetWarningLocalization{
 	WarningGuardianSpawned 			= "Wächter %d erschienen",
 	WarningCrusherTentacleSpawned	= "Schmettertentakel erschienen",
@@ -405,8 +396,13 @@ L:SetOptionLocalization{
 	SpecWarnMadnessOutNow			= "Spezialwarnung kurz bevor $spell:64059 zu Ende gewirkt wird",
 	SpecWarnFervorCast				= "Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	specWarnBrainPortalSoon			= "Spezialwarnung für nächste Gehirnportale",
-	WarningSqueeze					= "Schreie bei Quetschen auf dir",
 	NextPortal						= "Zeige Zeit bis nächste Gehirnportale",
 	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1 (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	MaladyArrow						= "Zeige DBM-Pfeil, wenn $spell:63881 in deiner Nähe ist"
+}
+
+L:SetMiscLocalization{
+	YellPull 			= "Bald ist die Zeit gekommen, dem Untier den Kopf abzuschlagen! Konzentriert Euren Zorn und Euren Hass auf seine Diener!",
+	YellPhase2	 		= "Ich bin der strahlende Traum.",
+	Sara 				= "Sara"
 }

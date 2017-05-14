@@ -1,5 +1,5 @@
 if GetLocale() ~= "itIT" then return end
-DBM_CORE_NEED_SUPPORT				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
+DBM_CORE_NEED_LOCALS				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_HOW_TO_USE_MOD					= "Benvenuto in DBM. Scrivi /dbm help per avere una lista dei comandi supportati. Per accedere alle opzioni scrivi in chat /dbm. Carica le zone specifiche per configurare manualmente ogni settaggio di ogni boss. DBM prova a farlo per te controllando la tua specializzazione alla prima esecuzione, ma alcuni potrebbero volere alcune opzioni attivate."
 
 DBM_CORE_LOAD_MOD_ERROR				= "Errore nel caricamento del Boss Mod per %s: %s"
@@ -14,9 +14,9 @@ DBM_CORE_COMBAT_ENDED_AT			= "Combattimento contro %s (%s) finito dopo %s."
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "Combattimento contro %s (%s) finito dopo %s. Hai %d sconfitte in questa difficolta'."
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s e' stato ingaggiato %s fa, recupero dei timer..."
 
-DBM_CORE_TIMER_FORMAT_SECS			= "%d |4secondo:secondi;"
+DBM_CORE_TIMER_FORMAT_SECS			= "%.2f |4secondo:secondi;"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d |4minuto:minuti;"
-DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minuti; e %d |4secondo:secondi;"
+DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minuti; e %.2f |4secondo:secondi;"
 
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
@@ -43,7 +43,8 @@ DBM_CORE_WHISPER_COMBAT_END_WIPE_AT			= "%s e' stato ucciso da %s a %s"
 DBM_CORE_WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s e' stato ucciso da %s a %s. Ha %d sconfitte in questa difficolta'."
 
 DBM_CORE_VERSIONCHECK_HEADER		= "Deadly Boss Mods - Versione"
-DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"
+DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (%s)"
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) & %s (%s)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM non installato"
 DBM_CORE_VERSIONCHECK_FOOTER		= "%d giocatori hanno Deadly Boss Mods"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "La tua versione di Deadly Boss Mods e' obsoleta. Visita www.deadlybossmods.com per scaricare l'ultima versione."
@@ -115,7 +116,7 @@ DBM_CORE_RIGHT						= "Right"--Translate
 DBM_CORE_BACK						= "Back"--Translate
 DBM_CORE_FRONT						= "Front"--Translate
 
-DBM_CORE_BREAK_START				= "Pausa iniziata-- Hai %s minuto(i)!"
+DBM_CORE_BREAK_START				= "Pausa iniziata-- Hai %s!"
 DBM_CORE_BREAK_MIN					= "La Pausa finisce tra %s minuto(i)!"
 DBM_CORE_BREAK_SEC					= "La Pausa finisce tra %s secondi!"
 DBM_CORE_TIMER_BREAK				= "Pausa!"
@@ -136,7 +137,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s CD"
 DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s CD (%%d)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s CD: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Prossimo %s"
-DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Prossimo %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Prossimo %s (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Prossimo %s: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
@@ -154,7 +155,7 @@ DBM_CORE_AUTO_TIMER_OPTIONS.achievement	= "Visualizza Timer per %s"
 
 -- Auto-generated Warning Localizations
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s su >%%s<"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) su >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s) su >%%s<"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.adds			= "%s rimanente: %%d"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast			= "Lancio di %s: %.1f sec"
@@ -162,7 +163,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "%s imminente"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarn		= "%s in %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "Fase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "Fase %s imminente"
-DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= "%s su >%%s< (%%d)"
 
 local prewarnOption = "Visualizza un pre-Avvertimento per $spell:%s"
@@ -183,6 +184,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Mostra un Avviso Speciale per $spell:
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Mostra un Avviso Speciale per dissipare/rubare $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Mostra un Avviso Speciale per interrompere $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Mostra un Avviso Speciale quando sei afflitto da $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.youcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you--Temp, translate correctly (with count)
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Mostra un Avviso Speciale quando qualcuno e' afflitto da $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Mostra un Avviso Speciale quando qualcuno vicino a te e' afflitto da $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Mostra un Avviso Speciale quando sei afflitto da\n $spell:%s"
@@ -191,14 +193,15 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Mostra un Avviso Speciale per $spell:%s
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast 		= "Mostra un Avviso Speciale per il lancio di $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Mostra un Avviso Speciale per Accumuli >=%d di $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Mostra un Avviso Speciale per cambiare Bersaglio per $spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch--Temp, translate correctly (with count)
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt--Temp, translate correctly (with count)
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell		= "%s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel	= "%s su >%%s< - rimuovilo ora!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompi >%%s<!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - interrompi >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you		= "%s su di te"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.youcount	= "%s (%%s) su di te"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target	= "%s su >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s su >%%s< vicino a te"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - Spostati"
@@ -206,15 +209,15 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - Corri Via!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - Smetti di Attaccare!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - Cambia Bersaglio"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Cambia Bersaglio (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= "%s - Cambia Bersaglio"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - Cambia Bersaglio (%%s)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Imposta Icone sui bersagli di $spell:%s"
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Fai il suono \"muoviti\" per $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Esegui il conto alla rovescia per $spell:%s"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Esegui il conteggio per la durata di $spell:%s"
-DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Urla quando sei afflitto da $spell:%s"
+DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "Urla quando sei afflitto da $spell:%s"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "%s su di " .. UnitName("player") .. "!"
 
 
@@ -235,7 +238,6 @@ DBM_ARROW_ERROR_USAGE	= {
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Miglior Uccisione"
-DBM_SPEED_KILL_TIMER_OPTION	= "Visualizza un timer per battere il tuo record"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s ha richiesto di vedere l'ID e il progress della tua incursione.\nVuoi inviare questa informazione a %s? Potra' richiederti quest'informazione per tutta questa sessione (finche' non rilogghi)."

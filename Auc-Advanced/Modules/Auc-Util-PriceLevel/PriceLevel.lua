@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: PriceLevel.lua 5535 2014-12-12 15:12:36Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: PriceLevel.lua 5633 2016-07-31 14:25:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -52,8 +52,8 @@ lib.Processors = {
 		private.ListUpdate()
 	end,
 
-	configchanged = function(callbackType, setting, value, subsetting, module)
-		if module == "pricelevel" and AuctionFrameBrowse:IsVisible() then
+	configchanged = function(callbackType, setting, value, subsetting, module, base)
+		if (module == "pricelevel" or base == "profile") and (AuctionFrameBrowse and AuctionFrameBrowse:IsVisible()) then
 			private.ListUpdate()
 		end
 	end,
@@ -218,7 +218,7 @@ function lib.SetBar(i, r,g,b, pct)
 		elseif (opacity > 1) then opacity = 1 end
 
 		local gradient = AucAdvanced.Settings.GetSetting("util.pricelevel.gradient")
-		tex:SetTexture(1,1,1)
+		tex:SetColorTexture(1,1,1)
 		if (gradient) then
 			local direction = AucAdvanced.Settings.GetSetting("util.pricelevel.direction")
 			if (direction == "LEFT") then
@@ -324,4 +324,4 @@ function lib.CalcLevel(link, quantity, bidPrice, buyPrice, itemWorth, serverKey)
 	return priceLevel, perItem, r,g,b, lvl, itemWorth
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5535 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5633 $")

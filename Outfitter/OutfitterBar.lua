@@ -4,68 +4,52 @@ Outfitter.OutfitBar = {}
 
 Outfitter.OutfitBar.UniqueNameIndex = 1
 
-Outfitter.OutfitBar.cBlizzardIconPath = "Interface\\Icons\\"
-Outfitter.OutfitBar.cBlizzardIconPathLength = string.len(Outfitter.OutfitBar.cBlizzardIconPath)
-Outfitter.OutfitBar.cWildcardIconName = "INV_Misc_QuestionMark"
-Outfitter.OutfitBar.cWildcardIcon = Outfitter.OutfitBar.cBlizzardIconPath..Outfitter.OutfitBar.cWildcardIconName
+Outfitter.OutfitBar.cWildcardIcon = 134400
 
 Outfitter.OutfitBar.cDefaultScriptIcons =
 {
 	ArgentDawn = "INV_Jewelry_Talisman_07",
-	Riding = "Ability_Mount_RidingHorse",
-	Fishing = "Trade_Fishing",
-	Swimming = "Spell_Shadow_DemonBreath",
-	City = "INV_Shirt_Black_01",
-	Battleground = "Ability_Hunter_RapidKilling",
-	AB = "Ability_Hunter_RapidKilling",
-	AV = "Ability_Hunter_RapidKilling",
-	WSG = "Ability_Hunter_RapidKilling",
-	EotS = "Ability_Hunter_RapidKilling",
-	Arena = "Ability_Hunter_RapidKilling",
-	Battle = "Ability_Warrior_OffensiveStance",
-	Defensive = "Ability_Warrior_DefensiveStance",
-	Berserker = "Ability_Racial_Avatar",
-	Bear = "Ability_Racial_BearForm",
-	Cat = "Ability_Druid_CatForm",
-	Aquatic = "Ability_Druid_AquaticForm",
-	Flight = "Ability_Druid_FlightForm",
-	Travel = "Ability_Druid_TravelForm",
-	Moonkin = "Ability_Druid_TreeOfLife",
-	Tree = "Ability_Druid_TreeOfLife",
-	Prowl = "Ability_Stealth",
-	Stealth = "Ability_Stealth",
-	Shadowform = "Spell_Shadow_Shadowform",
-	GhostWolf = "Spell_Nature_SpiritWolf",
-	Monkey = "Ability_Hunter_AspectOfTheMonkey",
-	Hawk = "Spell_Nature_RavenForm",
-	Cheetah = "Ability_Mount_JungleTiger",
-	Pack = "Ability_Mount_WhiteTiger",
-	Beast = "Ability_Mount_PinkTiger",
-	Wild = "Spell_Nature_ProtectionformNature",
-	Viper = "Ability_Hunter_AspectOfTheViper",
-	Dragonhawk = "Ability_Hunter_Pet_DragonHawk",
-	Feigning = "Ability_Rogue_FeignDeath",
-	Evocate = "Spell_Nature_Purge",
-	Solo = "INV_Mask_05",
-	LOW_HEALTH = "Ability_Rogue_FeignDeath",
-	HAS_BUFF = "Spell_Fire_FlameTounge",
-	Dining = "INV_Misc_Fork&Knife",
-	Spirit = "Spell_Holy_DivineSpirit",
-	Caster = "INV_Staff_14",
-	HERBALISM = "INV_Misc_Herb_13",
-	MINING = "INV_Pick_03",
-	SKINNING = "INV_Weapon_ShortBlade_01",
-	LOCKPICKING = "INV_Misc_Key_03",
-	
-	-- Stat outfits
-	
-	FireResist = "INV_Elemental_Primal_Fire",
-	NatureResist = "Spell_Nature_ProtectionFromNature",
-	ShadowResist = "INV_Elemental_Primal_Shadow",
-	ArcaneResist = "Spell_Nature_WispSplode",
-	FrostResist = "Spell_Frost_ColdHearted",
-	
-	[Outfitter.cNakedOutfit] = "INV_Misc_CelebrationCake_01",
+	Riding = 132261,
+	Fishing = 136245,
+	Swimming = 136148,
+	City = 135022,
+	Battleground = 1376041,
+	AB = 1376041,
+	AV = 1376041,
+	WSG = 1376041,
+	EotS = 1376041,
+	Arena = 1376041,
+	Battle = 132355,
+	Defensive = 132341,
+	Berserker = 132347,
+	Bear = 132276,
+	Cat = 132115,
+	Aquatic = 132144,
+	Flight = 132144,
+	Travel = 132144,
+	Moonkin = 136096,
+	Tree = 136041,
+	Prowl = 132089,
+	Stealth = 132320,
+	Shadowform = 136200,
+	GhostWolf = 136095,
+	Cheetah = 132242,
+	Wild = 136074,
+	Feigning = 132293,
+	Evocate = 136075,
+	Solo = 132132,
+	LOW_HEALTH = 132293,
+	HAS_BUFF = 135826,
+	Dining = 134062,
+	Spirit = 135934,
+	Caster = 135157,
+	HERBALISM = 136246,
+	MINING = 134708,
+	SKINNING = 134366,
+	LOCKPICKING = 136058,
+	COOKING = 133971,
+
+	[Outfitter.cNakedOutfit] = 237360,
 }
 
 function Outfitter.OutfitBar:Construct()
@@ -343,61 +327,52 @@ function Outfitter.OutfitBar:NewBar(pNumColumns, pNumRows)
 end
 
 function Outfitter.OutfitBar:GetDefaultIcons(pOutfit)
-	local vIcons = {}
-	
+	local iconIDs = {}
+	local usedIconIDs = {}
+
 	-- See if the script has a default icon
-	
-	local vTexture = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit.ScriptID]
-	
-	if vTexture then
-		table.insert(vIcons, Outfitter.OutfitBar.cBlizzardIconPath..vTexture)
+	local iconID = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit.ScriptID]
+	if iconID then
+		table.insert(iconIDs, iconID)
+		usedIconIDs[iconID] = true
 	end
 	
 	-- See if the optimization has a default icon
-	
-	vTexture = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit.StatID]
-	
-	if vTexture then
-		table.insert(vIcons, Outfitter.OutfitBar.cBlizzardIconPath..vTexture)
+	iconID = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit.StatID]
+	if iconID and not usedIconIDs[iconID] then
+		table.insert(iconIDs, iconID)
 	end
 	
 	-- See if the name has a default icon
-	
-	vTexture = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit:GetName()]
-	
-	if vTexture then
-		table.insert(vIcons, Outfitter.OutfitBar.cBlizzardIconPath..vTexture)
+	iconID = Outfitter.OutfitBar.cDefaultScriptIcons[pOutfit:GetName()]
+	if iconID and not usedIconIDs[iconID] then
+		table.insert(iconIDs, iconID)
 	end
 	
-	return vIcons
+	-- Done
+	return iconIDs
 end
 
 function Outfitter.OutfitBar:GetOutfitTexture(pOutfit)
 	if not pOutfit then
-		return "Interface\\Icons\\INV_Chest_Cloth_50"
+		return 132662
 	end
 	
 	-- If the icon specifies the texture then just use it
-	
 	local vTexture = pOutfit:GetIcon()
-	
 	if vTexture then
 		return vTexture
 	end
 	
 	-- See if the outfit has a default icon
-	
 	local vIcons = self:GetDefaultIcons(pOutfit)
-	
 	if #vIcons > 0 then
 		return vIcons[1]
 	end
 	
 	-- If it's a single-item outfit, use that item as the icon
-	
 	local vOutfitItem
 	local vItems = pOutfit:GetItems()
-	
 	for vInventorySlot, vItem in pairs(vItems) do
 		if not vOutfitItem then
 			vOutfitItem = vItem
@@ -416,8 +391,7 @@ function Outfitter.OutfitBar:GetOutfitTexture(pOutfit)
 	end
 	
 	-- Use a plain icon
-	
-	return "Interface\\Icons\\INV_Chest_Cloth_50"
+	return 132662
 end
 
 function Outfitter.OutfitBar:GetCursorTexture()
@@ -679,28 +653,6 @@ function Outfitter.OutfitBar:UpdateBar(pBarIndex, pCategoryID)
 	return true
 end
 
-function Outfitter.OutfitBar.IconSetDropdown_OnLoad(pMenuFrame)
-	pMenuFrame.Dialog = OutfitterChooseIconDialog
-	pMenuFrame.ChangedValueFunc = Outfitter.OutfitBar.IconSetDropdown_ChangedValue
-	
-	Outfitter:DropDownMenu_Initialize(pMenuFrame, Outfitter.OutfitBar.IconSetDropdown_Initialize)
-	pMenuFrame:SetMenuWidth(175)
-	pMenuFrame:Refresh()
-end
-
-function Outfitter.OutfitBar.IconSetDropdown_Initialize(pFrame)
-	Outfitter:AddMenuItem(pFrame, Outfitter.cSuggestedIcons, "Recommend")
-	Outfitter:AddMenuItem(pFrame, Outfitter.cSpellbookIcons, "Spellbook")
-	Outfitter:AddMenuItem(pFrame, Outfitter.cYourItemIcons, "Inventory")
-	Outfitter:AddMenuItem(pFrame, Outfitter.cEveryIcon, "All")
-	Outfitter:AddMenuItem(pFrame, Outfitter.cItemIcons, "Items")
-	Outfitter:AddMenuItem(pFrame, Outfitter.cAbilityIcons, "Abilities")
-end
-
-function Outfitter.OutfitBar.IconSetDropdown_ChangedValue(pMenuFrame, pValue)
-	pMenuFrame.Dialog:SetIconSetID(pValue)
-end
-
 ----------------------------------------
 Outfitter.OutfitBar._Bar = {}
 ----------------------------------------
@@ -747,27 +699,9 @@ function Outfitter.OutfitBar._Button:Construct()
 	
 	self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	
-	-- Initialize the stuff for the dropdown menu
-	
-	self.SavedHeight = Outfitter.Style.ButtonBar.ButtonHeight
-	self.ChangedValueFunc = self.MenuItemSelected
-	
-	Outfitter.UIDropDownMenu_SetAnchor(self, 0, 0, "TOPLEFT", self:GetName(), "CENTER")
-	Outfitter:DropDownMenu_Initialize(self, self.InitializeMenu)
-	
 	if Outfitter.LBFGroup then
 		Outfitter.LBFGroup:AddButton(self)
 	end
-end
-
-function Outfitter.OutfitBar._Button.InitializeMenu(pButton)
-	Outfitter:InitializeOutfitMenu(pButton, pButton.Outfit)
-	
-	pButton:SetHeight(Outfitter.Style.ButtonBar.ButtonHeight) -- WoW's menu code changes the height, so put it back
-end
-
-function Outfitter.OutfitBar._Button:MenuItemSelected(pItemID)
-	Outfitter:PerformAction(pItemID, self.Outfit)
 end
 
 function Outfitter.OutfitBar._Button:SetOutfit(pOutfit)
@@ -777,11 +711,8 @@ end
 
 function Outfitter.OutfitBar._Button:Update()
 	local vTexture = Outfitter.OutfitBar:GetOutfitTexture(self.Outfit)
-	if type(vTexture) == "number" then
-		self.Widgets.Icon:SetToFileData(vTexture)
-	else
-		self.Widgets.Icon:SetTexture(vTexture)
-	end
+
+	self.Widgets.Icon:SetTexture(vTexture)
 	
 	if Outfitter:WearingOutfit(self.Outfit) then
 		self:SetChecked(true)
@@ -850,11 +781,35 @@ function Outfitter.OutfitBar._Button:OnClick(pMouseButton)
 			Outfitter.HasHWEvent = false
 		end
 	else -- if pButton == "RightButton" then
-		if DropDownList1:IsShown() then
-			ToggleDropDownMenu(nil, nil, self, self)
-		else
-			ToggleDropDownMenu(nil, nil, self, self)
-			PlaySound("igMainMenuOptionCheckBoxOn")
+		-- If the menu is already up then hide it
+		if self.menuFrame then
+			self.menuFrame:Hide()
+			return
+		end
+
+		-- Create the menu
+		local items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
+			Outfitter.SchedulerLib:ScheduleTask(0.2, function () self.menuFrame:Hide() end)
+		end)
+		Outfitter:AddOutfitMenu(items, self.Outfit)
+		
+		-- Get the cursor's position
+		local cursorX, cursorY = GetCursorPosition()
+		local uiScale = UIParent:GetScale()
+		cursorX = cursorX / uiScale
+		cursorY = cursorY / uiScale
+
+		-- Get the nearest and opposite edges
+		local nearestVert, nearestHoriz, oppositeVert, oppositeHoriz = Outfitter:GetNearestFrameEdgesFromCoordinates(UIParent, cursorX, cursorY)
+		local anchorPoint = nearestVert..nearestHoriz
+		local relativePoint = oppositeVert..nearestHoriz
+
+		-- Show the menu
+		self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
+		self.menuFrame:SetPoint(anchorPoint, self, relativePoint, 0, 0)
+		self.menuFrame.cleanup = function ()
+			self.menuFrame = nil
+			self:Update()
 		end
 	end
 end
@@ -931,9 +886,18 @@ function Outfitter.OutfitBar._ChooseIconDialog:Construct()
 		end
 	end)
 
+	-- Icon sets
+	self.iconSets = {
+		{id = "Recommend", name = Outfitter.cSuggestedIcons},
+		{id = "Spellbook", name = Outfitter.cSpellbookIcons},
+		{id = "Inventory", name = Outfitter.cYourItemIcons},
+		{id = "All", name = Outfitter.cEveryIcon},
+		{id = "Items", name = Outfitter.cItemIcons},
+		{id = "Abilities", name = Outfitter.cAbilityIcons},
+	}
+
 	-- Set the default icon set
-	
-	self.IconSetID = "Recommend"
+	self.IconSetID = self.iconSets[1].id
 end
 
 function Outfitter.OutfitBar._ChooseIconDialog:Open(pOutfit)
@@ -975,8 +939,14 @@ function Outfitter.OutfitBar._ChooseIconDialog:SetIconSetID(pIconSetID)
 	self.IconSetID = pIconSetID
 	self.TextureList = nil
 	
-	UIDropDownMenu_SetSelectedValue(self.Widgets.IconSetMenu, pIconSetID)
-	
+	-- Find the name
+	for _, iconSet in ipairs(self.iconSets) do
+		if iconSet.id == pIconSetID then
+			self.Widgets.IconSetMenu:SetCurrentValueText(iconSet.name)
+			break
+		end
+	end
+
 	self:SetIconFilter(self.Widgets.FilterEditBox:GetText())
 end
 
@@ -1038,11 +1008,7 @@ function Outfitter.OutfitBar._ChooseIconDialog:UpdateIcons()
 			end
 			
 			vIconButton.Texture = vTexture
-			if type(vTexture) == "number" then
-				vIconButton.Widgets.Icon:SetToFileData(vTexture)
-			else
-				vIconButton.Widgets.Icon:SetTexture(vTexture)
-			end
+			vIconButton.Widgets.Icon:SetTexture(vTexture)
 			vIconButton:Show()
 			
 			vTextureIndex = vTextureIndex + 1
@@ -1066,6 +1032,16 @@ function Outfitter.OutfitBar._ChooseIconDialog:NewIconButton()
 	vButton:Show()
 
 	return vButton
+end
+
+function Outfitter.OutfitBar._ChooseIconDialog:GetIconSetMenuItems(menu)
+	for _, iconSet in ipairs(self.iconSets) do
+		menu:AddToggle(iconSet.name, function ()
+				return self.IconSetID == iconSet.id
+			end, function (menu, value)
+				self:SetIconSetID(iconSet.id)
+			end)
+	end
 end
 
 ----------------------------------------
@@ -1097,8 +1073,6 @@ function Outfitter.OutfitBar._IconButton:OnEnter()
 	
 	if self.Texture == Outfitter.OutfitBar.cWildcardIcon then
 		vTextureName = Outfitter.cOutfitterDecides
-	elseif strsub(self.Texture, 1, Outfitter.OutfitBar.cBlizzardIconPathLength) == Outfitter.OutfitBar.cBlizzardIconPath then
-		vTextureName = strsub(self.Texture, Outfitter.OutfitBar.cBlizzardIconPathLength + 1)
 	else
 		vTextureName = self.Texture
 	end
@@ -1124,27 +1098,30 @@ Outfitter.OutfitBar.TextureSets = {}
 Outfitter.OutfitBar.TextureSets.Recommend = {}
 ----------------------------------------
 
-function Outfitter.OutfitBar.TextureSets.Recommend:Activate(pOutfit)
+function Outfitter.OutfitBar.TextureSets.Recommend:Activate(outfit)
 	self.TextureList = Outfitter:RecycleTable(self.TextureList)
-	
+	local usedIconIDs = {}
+
+	-- Add the wildcard item
 	table.insert(self.TextureList, Outfitter.OutfitBar.cWildcardIcon)
 	
-	local vItems = pOutfit:GetItems()
-	
-	for vInventorySlot, vOutfitItem in pairs(vItems) do
-		local vItem = Outfitter:GetInventoryCache():FindItemOrAlt(vOutfitItem)
-		
-		if vItem and vItem.Texture then
-			table.insert(self.TextureList, vItem.Texture)
+	-- Add each equipped item
+	local items = outfit:GetItems()
+	for _, outfitItem in pairs(items) do
+		local item = Outfitter:GetInventoryCache():FindItemOrAlt(outfitItem)
+		if item and item.Texture and not usedIconIDs[item.Texture] then
+			table.insert(self.TextureList, item.Texture)
+			usedIconIDs[item.Texture] = true
 		end
 	end
 	
 	-- Add any default icons
-	
-	local vIcons = Outfitter.OutfitBar:GetDefaultIcons(pOutfit)
-	
-	for _, vTexture in ipairs(vIcons) do
-		table.insert(self.TextureList, vTexture)
+	local iconIDs = Outfitter.OutfitBar:GetDefaultIcons(outfit)
+	for _, iconID in ipairs(iconIDs) do
+		if not usedIconIDs[iconID] then
+			table.insert(self.TextureList, iconID)
+			usedIconIDs[iconID] = true
+		end
 	end
 end
 
@@ -1165,19 +1142,16 @@ Outfitter.OutfitBar.TextureSets.All = {}
 ----------------------------------------
 
 function Outfitter.OutfitBar.TextureSets.All:GetNumTextures()
-	self.icons = {}
-	GetMacroItemIcons(self.icons)
-	GetMacroIcons(self.icons)
+	if not self.icons then
+		self.icons = {}
+		GetMacroItemIcons(self.icons)
+		GetMacroIcons(self.icons)
+	end
 	return #self.icons
 end
 
 function Outfitter.OutfitBar.TextureSets.All:GetIndexedTexture(pIndex)
-	local vTexture = self.icons[pIndex]
-	if type(vTexture) == "number" then
-		return vTexture
-	else
-		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
-	end
+	return self.icons[pIndex]
 end
 
 ----------------------------------------
@@ -1185,18 +1159,15 @@ Outfitter.OutfitBar.TextureSets.Items = {}
 ----------------------------------------
 
 function Outfitter.OutfitBar.TextureSets.Items:GetNumTextures()
-	self.icons = {}
-	GetMacroItemIcons(self.icons)
+	if not self.icons then
+		self.icons = {}
+		GetMacroItemIcons(self.icons)
+	end
 	return #self.icons
 end
 
 function Outfitter.OutfitBar.TextureSets.Items:GetIndexedTexture(pIndex)
-	local vTexture = self.icons[pIndex]
-	if type(vTexture) == "number" then
-		return vTexture
-	else
-		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
-	end
+	return self.icons[pIndex]
 end
 
 ----------------------------------------
@@ -1204,18 +1175,15 @@ Outfitter.OutfitBar.TextureSets.Abilities = {}
 ----------------------------------------
 
 function Outfitter.OutfitBar.TextureSets.Abilities:GetNumTextures()
-	self.icons = {}
-	GetMacroIcons(self.icons)
+	if not self.icons then
+		self.icons = {}
+		GetMacroIcons(self.icons)
+	end
 	return #self.icons
 end
 
 function Outfitter.OutfitBar.TextureSets.Abilities:GetIndexedTexture(pIndex)
-	local vTexture = self.icons[pIndex]
-	if type(vTexture) == "number" then
-		return vTexture
-	else
-		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
-	end
+	return self.icons[pIndex]
 end
 
 ----------------------------------------
@@ -1225,40 +1193,50 @@ Outfitter.OutfitBar.TextureSets.Spellbook = {}
 function Outfitter.OutfitBar.TextureSets.Spellbook:Activate()
 	self.TextureList = Outfitter:RecycleTable(self.TextureList)
 	
+	-- Always include the wildcard icon
 	table.insert(self.TextureList, Outfitter.OutfitBar.cWildcardIcon)
 	
-	local vUsedTextures = {}
+	-- Only insert each texture once
+	local usedIconIDs = {}
 	
+	-- Insert the profession icons
+	local professions = {GetProfessions()}
+	for _, professionID in ipairs(professions) do
+		local name, iconID = GetProfessionInfo(professionID)
+		if not usedIconIDs[iconID] then
+			table.insert(self.TextureList, iconID)
+			usedIconIDs[iconID] = true
+		end
+	end
+
 	-- Insert the spellbook category icons together
-	
-	for vSpellTabIndex = 1, MAX_SKILLLINE_TABS do
-		local	vCategoryName, vCategoryTexture, vCategoryOffset, vCategoryNumSpells = GetSpellTabInfo(vSpellTabIndex)
+	for tabIndex = 1, MAX_SKILLLINE_TABS do
+		local	categoryName, categoryIconID, categoryOffset, categoryNumSpells = GetSpellTabInfo(tabIndex)
 		
-		if not vCategoryName then
+		if not categoryName then
 			break
 		end
 		
-		if vCategoryTexture then
-			table.insert(self.TextureList, vCategoryTexture)
-			vUsedTextures[vCategoryTexture] = true
+		if categoryIconID and not usedIconIDs[categoryIconID] then
+			table.insert(self.TextureList, categoryIconID)
+			usedIconIDs[categoryIconID] = true
 		end
 	end
 	
 	-- Now insert the icons from each category
-	
-	for vSpellTabIndex = 1, MAX_SKILLLINE_TABS do
-		local	vCategoryName, vCategoryTexture, vCategoryOffset, vCategoryNumSpells = GetSpellTabInfo(vSpellTabIndex)
+	for tabIndex = 1, MAX_SKILLLINE_TABS do
+		local	categoryName, categoryIconID, categoryOffset, categoryNumSpells = GetSpellTabInfo(tabIndex)
 		
-		if not vCategoryName then
+		if not categoryName then
 			break
 		end
 		
-		for vSpellIndex = vCategoryOffset + 1, vCategoryOffset + vCategoryNumSpells do
-			local vSpellTexture = GetSpellTexture(vSpellIndex, BOOKTYPE_SPELL)
+		for spellIndex = categoryOffset + 1, categoryOffset + categoryNumSpells do
+			local spellIconID = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
 			
-			if vSpellTexture and not vUsedTextures[vSpellTexture] then
-				table.insert(self.TextureList, vSpellTexture)
-				vUsedTextures[vSpellTexture] = true
+			if spellIconID and not usedIconIDs[spellIconID] then
+				table.insert(self.TextureList, spellIconID)
+				usedIconIDs[spellIconID] = true
 			end
 		end
 	end
@@ -1440,30 +1418,17 @@ function Outfitter.OutfitBar._SettingsDialog:ShowDialog()
 	self.DisableUpdates = false
 	
 	-- Put the dialog under the cursor
+	local cursorX, cursorY = GetCursorPosition()
+	local uiScale = UIParent:GetScale()
+	cursorX = cursorX / uiScale
+	cursorY = cursorY / uiScale
+	local anchorPoint = Outfitter:GetScreenQuadrantFromCoordinates(cursorX, cursorY)
 	
-	local	vCursorX, vCursorY = GetCursorPosition()
-	local	vUIScale = UIParent:GetScale()
-	
-	vCursorX = vCursorX / vUIScale
-	vCursorY = vCursorY / vUIScale
-	
+	-- Anchor the dialog
 	self:ClearAllPoints()
-	
-	local	vAnchorPoint
-	
-	if vCursorY < 0.5 * (UIParent:GetTop() + UIParent:GetBottom()) then
-		vAnchorPoint = "BOTTOM"
-	else
-		vAnchorPoint = "TOP"
-	end
-	
-	if vCursorX < 0.5 * (UIParent:GetLeft() + UIParent:GetRight()) then
-		vAnchorPoint = vAnchorPoint.."LEFT"
-	else
-		vAnchorPoint = vAnchorPoint.."RIGHT"
-	end
-	
-	self:SetPoint(vAnchorPoint, UIParent, "BOTTOMLEFT", vCursorX, vCursorY)
+	self:SetPoint(anchorPoint, UIParent, "BOTTOMLEFT", cursorX, cursorY)
+
+	-- Show
 	self:Show()
 end
 

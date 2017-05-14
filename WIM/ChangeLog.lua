@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 449 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 524 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,30 +16,30 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
-addEntry("3.6.24", "02/01/2015", [[
-	*Grabbed new WhoLib for 2 bugfixes related to that lib.
+addEntry("3.7.11", "12/19/2016", [[
+	*Changed font used in 7.1 work around to avoid CYR font issues.
 ]]);
-addEntry("3.6.23", "01/02/2015", [[
-	*Fixed another 3 missing options in 'Window Settings'
+addEntry("3.7.10", "11/12/2016", [[
+	*Fixed Links on 7.1
+	*Fixed lua errors on 7.1 (Caveate now there are font issues do to less than ideal fix)
 ]]);
-addEntry("3.6.22", "12/28/2014", [[
-	*Fixed 3 more missing options in 'Display Settings'
+addEntry("3.7.9", "07/29/2016", [[
+	*Fixed a few green texture issues.
 ]]);
-addEntry("3.6.21", "11/30/2014", [[
-	*WIM should no longer taint join battleground.
-	*The window behavior options should be visible once again. Not as pretty as they used to be though.
-	*Armory links should go to correct region now for US players.
+addEntry("3.7.8", "07/19/2016", [[
+	*Set TOC version to 70000
 ]]);
-addEntry("3.6.19", "07/11/2014", [[
-	*Cleaned up and removed unneeded code and library.
-	*Removed private realm check since it doesn't work in 6.0 and causes problems with beta.
+addEntry("3.7.7", "06/04/2016", [[
+	*Whisper window will now report location correctly for non WoW clients.
 ]]);
-addEntry("3.6.18", "04/11/2014", [[
-	*Fixed icon for battle.net desktop app users.
+addEntry("3.7.6", "05/24/2016", [[
+	*Whisper window will now report location correctly for non WoW clients.
 ]]);
-addEntry("3.6.17", "03/05/2014", [[
-	*Fix issue that caused incoming whispers not to record for non battle.net.
-	*Strip realm name from more chat channels if WIM is used for them instead of blizzard chat tabs.
+addEntry("3.7.5", "05/04/2016", [[
+	*I didn't like the Overwatch icon quality, so I made it better.
+]]);
+addEntry("3.7.4", "05/02/2016", [[
+	*Added chat icon support for Heroes of Storm, Hearthstone, Overwatch, and Demon Hunters
 ]]);
 
 

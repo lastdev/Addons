@@ -2,23 +2,24 @@
 local addonName, scope = ...
 local addon = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceTimer-3.0")
 scope.addon = addon
+local L = scope.locale
+
+-- luacheck: globals RaidFrame RaidInfoFrame GameFontNormalSmall GameFontHighlightSmall GameFontDisableSmall
+-- luacheck: globals oRA3Frame oRA3DisbandButton oRA3CheckButton
+-- luacheck: globals PanelTemplates_SetNumTabs PanelTemplates_SetTab PanelTemplates_UpdateTabs
+-- luacheck: globals FauxScrollFrame_OnVerticalScroll FauxScrollFrame_Update FauxScrollFrame_GetOffset
 
 local CallbackHandler = LibStub("CallbackHandler-1.0")
-
-addon.VERSION = tonumber(("$Revision: 861 $"):sub(12, -3))
-
-local L = scope.locale
-local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
+local LGIST = LibStub("LibGroupInSpecT-1.1")
+local LibDialog = LibStub("LibDialog-1.0")
 
 BINDING_HEADER_oRA3 = addonName
 BINDING_NAME_TOGGLEORA3 = L.togglePane
 
-local hexColors, classColors = {}, {UNKNOWN = {r = 0.8, g = 0.8, b = 0.8}}
-for k, v in next, RAID_CLASS_COLORS do
-	hexColors[k] = string.format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
-	classColors[k] = v
-end
+local classColors = setmetatable({UNKNOWN = {r = 0.8, g = 0.8, b = 0.8, colorStr = "ffcccccc"}}, {__index = function(self) return self.UNKNOWN end})
+for k, v in next, RAID_CLASS_COLORS do classColors[k] = v end
 addon.classColors = classColors
+
 local _testUnits = {
 	Wally = "WARRIOR",
 	Kingkong = "DEATHKNIGHT",
@@ -31,18 +32,20 @@ local _testUnits = {
 	Purple = "HUNTER",
 	Tor = "SHAMAN",
 	Ling = "MONK",
+	Donk = "DEMONHUNTER",
 }
 addon._testUnits = _testUnits
+
 local coloredNames = setmetatable({}, {__index =
 	function(self, key)
 		if type(key) == "nil" then return nil end
 		local class = select(2, UnitClass(key)) or _testUnits[key]
 		if class then
-			self[key] = hexColors[class] .. key .. "|r"
+			self[key] = string.format("|c%s%s|r", classColors[class].colorStr, key:gsub("%-.+", ""))
+			return self[key]
 		else
-			self[key] = "|cffcccccc<"..key..">|r"
+			return string.format("|cffcccccc<%s>|r", key:gsub("%-.+", ""))
 		end
-		return self[key]
 	end
 })
 addon.coloredNames = coloredNames
@@ -63,6 +66,10 @@ function util.inTable(t, value, subindex)
 end
 
 -- Locals
+
+local playerName = UnitName("player")
+local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
+
 local guildMemberList = {} -- Name:RankIndex
 local guildRanks = {} -- Index:RankName
 local groupMembers = {} -- Index:Name
@@ -82,9 +89,6 @@ local contentFrame = nil -- content frame for the views
 local scrollheaders = {} -- scrollheader frames
 local scrollhighs = {} -- scroll highlights
 local secureScrollhighs = {} -- clickable secure scroll highlights
-
--- guild repair functions
-local onGroupChanged, onShutdown = nil, nil
 
 local function actuallyDisband()
 	if groupStatus > 0 and groupStatus < 3 and (addon:IsPromoted() or 0) > 1 then
@@ -110,25 +114,23 @@ local defaults = {
 		showRoleIcons = true,
 		lastSelectedPanel = nil,
 		lastSelectedList = nil,
-		ensureRepair = false,
-		repairFlagStorage = {},
-		repairAmountStorage = {},
 		open = false,
 	},
 }
 
-local selectList -- implemented down the file
 local showLists -- implemented down the file
 local hideLists -- implemented down the file
 local function colorize(input) return string.format("|cfffed000%s|r", input) end
-local options = nil
-local function giveOptions()
-	if not options then
-		options = {
-			name = addonName,
+local options = {
+	name = "oRA",
+	type = "group",
+	get = function(info) return db[info[#info]] end,
+	set = function(info, value) db[info[#info]] = value end,
+	args = {
+		general = {
+			order = 1,
 			type = "group",
-			get = function(info) return db[info[#info]] end,
-			set = function(info, value) db[info[#info]] = value end,
+			name = "oRA",
 			args = {
 				toggleWithRaid = {
 					type = "toggle",
@@ -145,22 +147,6 @@ local function giveOptions()
 					descStyle = "inline",
 					order = 2,
 					width = "full",
-				},
-				ensureRepair = {
-					type = "toggle",
-					name = colorize(L.ensureRepair),
-					desc = L.ensureRepairDesc,
-					descStyle = "inline",
-					order = 3,
-					width = "full",
-					set = function(info, value)
-						db[info[#info]] = value
-						if not value then
-							onShutdown()
-						elseif groupStatus == 2 then
-							onGroupChanged(nil, groupStatus, groupMembers)
-						end
-					end,
 				},
 				showHelpTexts = {
 					type = "toggle",
@@ -184,67 +170,30 @@ local function giveOptions()
 						},
 					},
 				},
-			}
-		}
-	end
+			},
+		},
+	}
+}
 
-	return options
-end
-
------------------------------------------------------------------------
--- Ensure guild repairs
---
-
+local GetOptions
 do
-	local processedRanks = {}
-	function onGroupChanged(event, status, members)
-		local promoted = addon:IsPromoted() or 0
-		if not db.ensureRepair or not IsGuildLeader() or not IsInRaid() or promoted < 2 then return end
-		if status == 3 then -- don't enable for LFR or BGs
-			if next(processedRanks) then -- disable for premades
-				onShutdown(event, status)
+	local registy = {}
+	function addon:RegisterModuleOptions(name, opts)
+			if type(opts) == "function" then
+				registy[name] = opts
+			else
+				options.args.general.args[name] = opts
 			end
-			return
-		end
-
-		local amount = math.floor(GetAverageItemLevel()) or 300 -- vhaarr am so smrt.. ?!
-		for _, name in next, members do
-			local rankIndex = guildMemberList[name]
-			if rankIndex and not processedRanks[rankIndex] then
-				processedRanks[rankIndex] = true
-				GuildControlSetRank(rankIndex)
-				local repair = select(15, GuildControlGetRankFlags())
-				if not repair then
-					db.repairFlagStorage[rankIndex] = true
-					GuildControlSetRankFlag(15, true)
-					local c = ChatTypeInfo["SYSTEM"]
-					DEFAULT_CHAT_FRAME:AddMessage(L.repairEnabled:format(guildRanks[rankIndex]), c.r, c.g, c.b)
-				end
-				local maxAmount = GetGuildBankWithdrawGoldLimit()
-				if not maxAmount or maxAmount == 0 then
-					db.repairAmountStorage[rankIndex] = true
-					SetGuildBankWithdrawGoldLimit(amount)
-				end
-			end
-		end
 	end
-
-	function onShutdown(event, status)
-		if not IsGuildLeader() then return end
-		for rankIndex in next, processedRanks do
-			GuildControlSetRank(rankIndex)
-			if db.repairFlagStorage[rankIndex] then
-				GuildControlSetRankFlag(15, false)
-			end
-			if db.repairAmountStorage[rankIndex] then
-				SetGuildBankWithdrawGoldLimit(0)
-			end
+	function GetOptions()
+		for name, opts in next, registy do
+			options.args.general.args[name] = opts()
 		end
-		wipe(db.repairAmountStorage)
-		wipe(db.repairFlagStorage)
-		wipe(processedRanks)
+		return options
 	end
 end
+LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA", GetOptions, true)
+LibStub("AceConfigDialog-3.0"):SetDefaultSize("oRA", 770, 600)
 
 -------------------------------------------------------------------------------
 -- Event handling
@@ -297,12 +246,8 @@ end
 --
 
 function addon:OnInitialize()
-	if oRA3DB and oRA3DB.char then
-		oRA3DB.char = nil -- XXX temp cleanup from Difficulty module
-	end
-
 	self.db = LibStub("AceDB-3.0"):New("oRA3DB", defaults, true)
-	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, addonName)
+	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, "oRA")
 
 	-- Comm register
 	RegisterAddonMessagePrefix("oRA")
@@ -321,13 +266,10 @@ function addon:OnInitialize()
 
 	self:RegisterPanel(L.checks, showLists, hideLists)
 
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(addonName, giveOptions, true)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addonName)
-
-	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-	LibStub("LibDualSpec-1.0"):EnhanceOptions(profileOptions, self.db)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3 Profile", profileOptions, true)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("oRA3 Profile", L.profile, addonName)
+	options.args.general.args.profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+	options.args.general.args.profileOptions.order = 1
+	options.args.general.args.profileOptions.args.desc.fontSize = "medium"
+	LibStub("LibDualSpec-1.0"):EnhanceOptions(options.args.general.args.profileOptions, self.db)
 
 	local function OnRaidHide()
 		if addon:IsEnabled() and db.toggleWithRaid and oRA3Frame then
@@ -368,11 +310,6 @@ function addon:OnInitialize()
 	self.OnInitialize = nil
 end
 
-function addon:RegisterModuleOptions(name, optionTbl, displayName)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(addonName..name, optionTbl, true)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName..name, displayName, addonName)
-end
-
 function addon:OnEnable()
 	-- Roster Status Events
 	self:RegisterEvent("GUILD_ROSTER_UPDATE")
@@ -381,16 +318,14 @@ function addon:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("CHAT_MSG_ADDON", "OnCommReceived")
-
-	self.RegisterCallback(addon, "OnGroupChanged", onGroupChanged)
-	self.RegisterCallback(addon, "OnShutdown", onShutdown)
-	self.RegisterCallback(addon, "ConvertParty", onShutdown)
+	LGIST.RegisterCallback(self, "GroupInSpecT_Update")
+	LGIST.RegisterCallback(self, "GroupInSpecT_Remove")
+	LGIST.RegisterCallback(self, "GroupInSpecT_InspectReady")
 
 	SLASH_ORA1 = "/ora"
 	SLASH_ORA2 = "/ora3"
 	SlashCmdList.ORA = function()
-		InterfaceOptionsFrame_OpenToCategory(addonName)
-		InterfaceOptionsFrame_OpenToCategory(addonName)
+		LibStub("AceConfigDialog-3.0"):Open("oRA")
 	end
 
 	SLASH_ORADISBAND1 = "/radisband"
@@ -403,7 +338,6 @@ function addon:OnEnable()
 	if CUSTOM_CLASS_COLORS then
 		local function updateClassColors()
 			for k, v in next, CUSTOM_CLASS_COLORS do
-				hexColors[k] = string.format("|cff%02x%02x%02x", v.r * 255, v.g * 255, v.b * 255)
 				classColors[k] = v
 			end
 			wipe(coloredNames)
@@ -441,26 +375,133 @@ end
 --
 
 do
+	local playerCache = {}
+
+	local function guidToUnit(guid)
+		local info = playerCache[guid]
+		if info and UnitGUID(info.unit) == guid then
+			return info.unit
+		end
+
+		local token = IsInRaid() and "raid%d" or "party%d"
+		for i = 1, GetNumGroupMembers() do
+			local unit = token:format(i)
+			if UnitGUID(unit) == guid then
+				return unit
+			end
+		end
+		if UnitGUID("player") == guid then
+			return "player"
+		end
+	end
+
+	function addon:OnGroupJoined()
+		for guid, info in next, playerCache do
+			-- check for stale entries
+			if guid ~= UnitGUID(info.name) then
+				self.callbacks:Fire("OnPlayerRemove", guid)
+				playerCache[guid] = nil
+			end
+		end
+		self:OnGroupChanged()
+		LGIST:Rescan() -- requeue previously inspected players
+	end
+
+	function addon:OnGroupChanged()
+		for _, player in next, groupMembers do
+			local guid = UnitGUID(player)
+			local _, class = UnitClass(player)
+			if guid and not playerCache[guid] and class then
+				local unit = guidToUnit(guid) or ""
+				playerCache[guid] = {
+					guid = guid,
+					unit = unit,
+					name = player,
+					class = class,
+					level = UnitLevel(player),
+					glyphs = {},
+					talents = {},
+				}
+				-- initial update with no inspect info
+				self.callbacks:Fire("OnPlayerUpdate", guid, unit, playerCache[guid])
+			end
+		end
+	end
+
+	function addon:GroupInSpecT_Update(_, guid, unit, info)
+		if not guid or not info.class then return end
+
+		if not playerCache[guid] then
+			playerCache[guid] = {
+				guid = guid,
+				unit = "",
+				glyphs = {},
+				talents = {},
+			}
+		end
+		local cache = playerCache[guid]
+		cache.name = info.name
+		cache.class = info.class
+		cache.level = UnitLevel(unit)
+		cache.unit = unit ~= "player" and unit or guidToUnit(guid) or ""
+
+		if info.global_spec_id and info.global_spec_id > 0 then
+			cache.spec = info.global_spec_id
+
+			wipe(cache.glyphs)
+			for spellId in next, info.glyphs do
+				cache.glyphs[spellId] = true
+			end
+			wipe(cache.talents)
+			for talentId, talentInfo in next, info.talents do
+				-- easier to look up by index than to try and check multiple talent spell ids
+				local index = 3 * (talentInfo.tier - 1) + talentInfo.column
+				cache.talents[index] = talentId
+			end
+		end
+		self.callbacks:Fire("OnPlayerUpdate", guid, unit, cache)
+	end
+
+	function addon:GroupInSpecT_Remove(_, guid)
+		self.callbacks:Fire("OnPlayerRemove", guid, playerCache[guid])
+		playerCache[guid] = nil
+	end
+
+	function addon:GroupInSpecT_InspectReady(_, guid, unit)
+		self.callbacks:Fire("OnPlayerInspect", guid, unit)
+	end
+
+	function addon:InspectGroup()
+		LGIST:Rescan()
+	end
+
+	function addon:GetPlayerInfo(guid)
+		return playerCache[guid]
+	end
+end
+
+do
 	local function isIndexedEqual(a, b)
 		if #a ~= #b then return false end
-		for i, v in next, a do
-			if v ~= b[i] then return false end
+		for i = 1, #a do
+			if a[i] ~= b[i] then return false end
 		end
 		return true
 	end
 	local function isKeyedEqual(a, b)
-		local aC, bC = 0, 0
-		for k in next, a do aC = aC + 1 end
-		for k in next, b do bC = bC + 1 end
-		if aC ~= bC then return false end
 		for k, v in next, a do
-			if not b[k] or v ~= b[k] then return false end
+			if v ~= b[k] then return false end
+		end
+		for k, v in next, b do
+			if v ~= a[k] then return false end
 		end
 		return true
 	end
 	local function copyToTable(src, dst)
 		wipe(dst)
-		for i, v in next, src do dst[i] = v end
+		for i, v in next, src do
+			dst[i] = v
+		end
 	end
 
 	local tmpRanks = {}
@@ -491,6 +532,7 @@ do
 	function addon:GetGuildMembers() return guildMemberList end
 	function addon:IsGuildMember(name) return guildMemberList[name] end
 	function addon:GetGroupMembers() return groupMembers end
+	function addon:GetGroupStatus() return groupStatus end
 	function addon:GetClassMembers(class)
 		local tmp = {}
 		for i, unit in next, groupMembers do
@@ -505,10 +547,7 @@ do
 
 	function addon:GROUP_ROSTER_UPDATE()
 		local oldStatus = groupStatus
-		groupStatus = IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and ININSTANCE or IsInRaid() and INRAID or IsInGroup() and INPARTY or UNGROUPED
-		if oldStatus ~= groupStatus and groupStatus ~= UNGROUPED then
-			self:SendComm("RequestUpdate")
-		end
+		groupStatus = IsInGroup(2) and ININSTANCE or IsInRaid() and INRAID or IsInGroup() and INPARTY or UNGROUPED
 
 		wipe(tmpGroup)
 		wipe(tmpTanks)
@@ -523,15 +562,16 @@ do
 				end
 			end
 		elseif IsInGroup() then
-			tinsert(tmpGroup, (UnitName("player")))
+			tinsert(tmpGroup, playerName)
 			for i = 1, 4 do
-				local n,s = UnitName("party" .. i)
+				local n,s = UnitName(("party%d"):format(i))
 				if s and s ~= "" then n = n.."-"..s end
 				if n then tmpGroup[#tmpGroup + 1] = n end
 			end
 		end
 		if oldStatus ~= groupStatus or not isIndexedEqual(tmpGroup, groupMembers) then
 			copyToTable(tmpGroup, groupMembers)
+			self:OnGroupChanged()
 			self.callbacks:Fire("OnGroupChanged", groupStatus, groupMembers)
 		end
 		if not isIndexedEqual(tmpTanks, tanks) then
@@ -541,9 +581,12 @@ do
 			self.callbacks:Fire("OnTanksChanged", tanks)
 		end
 		if groupStatus == UNGROUPED and oldStatus > groupStatus then
+			self:OnShutdown(groupStatus)
 			self.callbacks:Fire("OnShutdown", groupStatus)
 		elseif oldStatus == UNGROUPED and groupStatus > oldStatus then
+			self:OnStartup(groupStatus)
 			self.callbacks:Fire("OnStartup", groupStatus)
+			self:OnGroupJoined()
 		end
 		if oldStatus == INPARTY and groupStatus == INRAID then
 			self.callbacks:Fire("OnConvertRaid", groupStatus)
@@ -558,7 +601,7 @@ do
 				self.callbacks:Fire("OnPromoted", playerPromoted)
 			else
 				self:OnDemoted()
-				self.callbacks:Fire("OnDemoted", playerPromoted)
+				self.callbacks:Fire("OnDemoted")
 			end
 		end
 	end
@@ -585,7 +628,7 @@ function addon:SendComm(...)
 	if groupStatus == UNGROUPED then
 		addon.callbacks:Fire("OnCommReceived", playerName, ...)
 	elseif not UnitInBattleground("player") then
-		SendAddonMessage("oRA", strjoin(" ", ...), IsPartyLFG() and "INSTANCE_CHAT" or "RAID")
+		SendAddonMessage("oRA", strjoin(" ", ...), IsInGroup(2) and "INSTANCE_CHAT" or "RAID") -- LE_PARTY_CATEGORY_INSTANCE = 2
 	end
 end
 
@@ -609,10 +652,10 @@ local function setupGUI()
 
 	frame:SetHitRectInsets(0, 30, 0, 45)
 	frame:SetToplevel(true)
-	frame:EnableMouse(true)
+	frame:SetMovable(true)
 
 	local topleft = frame:CreateTexture(nil, "ARTWORK")
-	topleft:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-General-TopLeft")
+	topleft:SetTexture(136558) --"Interface\\PaperDollInfoFrame\\UI-Character-General-TopLeft"
 	topleft:SetWidth(256)
 	topleft:SetHeight(256)
 	topleft:SetPoint("TOPLEFT")
@@ -621,22 +664,22 @@ local function setupGUI()
 	toplefticon:SetWidth(60)
 	toplefticon:SetHeight(60)
 	toplefticon:SetPoint("TOPLEFT", 7, -6)
-	SetPortraitToTexture(toplefticon, "Interface\\WorldMap\\Gear_64Grey")
+	SetPortraitToTexture(toplefticon, 311226) --"Interface\\WorldMap\\Gear_64Grey"
 
 	local topright = frame:CreateTexture(nil, "ARTWORK")
-	topright:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-General-TopRight")
+	topright:SetTexture(136559) --"Interface\\PaperDollInfoFrame\\UI-Character-General-TopRight"
 	topright:SetWidth(128)
 	topright:SetHeight(256)
 	topright:SetPoint("TOPRIGHT")
 
 	local botleft = frame:CreateTexture(nil, "ARTWORK")
-	botleft:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-General-BottomLeft")
+	botleft:SetTexture(136556) --"Interface\\PaperDollInfoFrame\\UI-Character-General-BottomLeft"
 	botleft:SetWidth(256)
 	botleft:SetHeight(256)
 	botleft:SetPoint("BOTTOMLEFT")
 
 	local botright = frame:CreateTexture(nil, "ARTWORK")
-	botright:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-General-BottomRight")
+	botright:SetTexture(136557) --"Interface\\PaperDollInfoFrame\\UI-Character-General-BottomRight"
 	botright:SetWidth(128)
 	botright:SetHeight(256)
 	botright:SetPoint("BOTTOMRIGHT")
@@ -645,13 +688,33 @@ local function setupGUI()
 	close:SetPoint("TOPRIGHT", -30, -8)
 
 	local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetWidth(250)
+	title:SetWidth(256)
 	title:SetHeight(16)
-	title:SetPoint("TOP", 3, -16)
+	title:SetPoint("TOP", 4, -16)
 	frame.title = title
 
-	local disband = CreateFrame("Button", "oRA3Disband", frame, "UIPanelButtonTemplate")
-	disband:SetWidth(115)
+	local drag = CreateFrame("Frame", nil, frame)
+	drag:SetAllPoints(title)
+	drag:EnableMouse(true)
+	drag:SetMovable(true)
+	drag:RegisterForDrag("LeftButton")
+	drag:SetScript("OnDragStart", function() frame:StartMoving() end)
+	drag:SetScript("OnDragStop", function() frame:StopMovingOrSizing() end)
+	frame.drag = drag
+
+	LibDialog:Register("oRA3DisbandGroup", {
+		text = L.disbandGroupWarning,
+		buttons = {
+			{ text = YES, on_click = actuallyDisband, },
+			{ text = NO, },
+		},
+		no_close_button = true,
+		hide_on_escape = true,
+		show_while_dead = true,
+	})
+
+	local disband = CreateFrame("Button", "oRA3DisbandButton", frame, "UIPanelButtonTemplate")
+	disband:SetWidth(120)
 	disband:SetHeight(22)
 	disband:SetNormalFontObject(GameFontNormalSmall)
 	disband:SetHighlightFontObject(GameFontHighlightSmall)
@@ -659,25 +722,13 @@ local function setupGUI()
 	disband:SetText(L.disbandGroup)
 	disband:SetPoint("TOPLEFT", 72, -37)
 	disband:SetScript("OnClick", function()
-		if not StaticPopupDialogs["oRA3DisbandGroup"] then
-			StaticPopupDialogs["oRA3DisbandGroup"] = {
-				text = L.disbandGroupWarning,
-				button1 = YES,
-				button2 = NO,
-				whileDead = 1,
-				hideOnEscape = 1,
-				timeout = 0,
-				OnAccept = actuallyDisband,
-				preferredIndex = STATICPOPUP_NUMDIALOGS,
-			}
-		end
 		if IsControlKeyDown() then
 			actuallyDisband()
 		else
-			StaticPopup_Show("oRA3DisbandGroup")
+			LibDialog:Spawn("oRA3DisbandGroup")
 		end
 	end)
-	if (addon:IsPromoted() or 0) > 1 and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+	if (addon:IsPromoted() or 0) > 1 and not IsInGroup(2) then
 		disband:Enable()
 	else
 		disband:Disable()
@@ -685,17 +736,32 @@ local function setupGUI()
 	disband.tooltipText = L.disbandGroup
 	disband.newbieText = L.disbandGroupDesc
 
-	local options = CreateFrame("Button", "oRA3Options", frame, "UIPanelButtonTemplate")
-	options:SetWidth(115)
-	options:SetHeight(22)
-	options:SetNormalFontObject(GameFontNormalSmall)
-	options:SetHighlightFontObject(GameFontHighlightSmall)
-	options:SetDisabledFontObject(GameFontDisableSmall)
-	options:SetText(L.options)
-	options:SetPoint("TOPRIGHT", -40, -37)
-	options:SetScript("OnClick", function()
-		InterfaceOptionsFrame_OpenToCategory(addonName)
-		InterfaceOptionsFrame_OpenToCategory(addonName)
+	local consumables = addon:GetModule("Consumables")
+	local check = CreateFrame("Button", "oRA3CheckButton", frame, "UIPanelButtonTemplate")
+	check:SetWidth(120)
+	check:SetHeight(22)
+	check:SetNormalFontObject(GameFontNormalSmall)
+	check:SetHighlightFontObject(GameFontHighlightSmall)
+	check:SetDisabledFontObject(GameFontDisableSmall)
+	check:SetText(L.consumables)
+	check:SetEnabled(IsInGroup() and (consumables.db.profile.output > 1 or consumables.db.profile.whisper))
+	check:SetPoint("TOPRIGHT", -40, -37)
+	check:SetScript("OnClick", function()
+		consumables:OutputResults(true)
+	end)
+	check.module = consumables
+
+	local opt = CreateFrame("Button", "oRA3OptionsButton", frame)
+	opt:SetFrameLevel(drag:GetFrameLevel() + 1)
+	opt:SetNormalTexture(311225) --"Interface\\Worldmap\\Gear_64"
+	opt:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.5)
+	opt:SetHighlightTexture(311225) --"Interface\\Worldmap\\Gear_64"
+	opt:GetHighlightTexture():SetTexCoord(0, 0.5, 0, 0.5)
+	opt:SetSize(16, 16)
+	opt:SetPoint("RIGHT", title, "RIGHT")
+	opt:SetScript("OnClick", function()
+		LibStub("AceConfigDialog-3.0"):SelectGroup("oRA", "general")
+		LibStub("AceConfigDialog-3.0"):Open("oRA")
 	end)
 
 	local function selectPanel(self)
@@ -752,7 +818,7 @@ local function setupGUI()
 	bar:SetHeight(8)
 
 	local barmiddle = bar:CreateTexture(nil, "BORDER")
-	barmiddle:SetTexture("Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar")
+	barmiddle:SetTexture(130968) --"Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar"
 	barmiddle:SetAllPoints(bar)
 	barmiddle:SetTexCoord(0.29296875, 1, 0, 0.25)
 
@@ -767,7 +833,7 @@ local function setupGUI()
 	bar:SetHeight(8)
 
 	barmiddle = bar:CreateTexture(nil, "BORDER")
-	barmiddle:SetTexture("Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar")
+	barmiddle:SetTexture(130968) --"Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar"
 	barmiddle:SetAllPoints(bar)
 	barmiddle:SetTexCoord(0.29296875, 1, 0, 0.25)
 
@@ -829,17 +895,27 @@ function addon:ToggleFrame(force)
 end
 
 function addon:OnPromoted(promoted)
-	if oRA3Disband and promoted > 1 and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-		oRA3Disband:Enable()
+	if oRA3DisbandButton then
+		oRA3DisbandButton:SetEnabled(promoted > 1 and not IsInGroup(2))
 	end
-	onGroupChanged("OnPromoted", groupStatus, groupMembers)
 end
 
 function addon:OnDemoted()
-	if oRA3Disband then
-		oRA3Disband:Disable()
+	if oRA3DisbandButton then
+		oRA3DisbandButton:Disable()
 	end
-	onShutdown("OnDemoted", groupStatus)
+end
+
+function addon:OnStartup()
+	if oRA3CheckButton then
+		oRA3CheckButton:SetEnabled(oRA3CheckButton.module.db.profile.output > 1 or oRA3CheckButton.module.db.profile.whisper)
+	end
+end
+
+function addon:OnShutdown()
+	if oRA3CheckButton then
+		oRA3CheckButton:Disable()
+	end
 end
 
 function addon:SetAllPointsToPanel(frame, aceguihacky)
@@ -922,7 +998,7 @@ function addon:RegisterPanel(name, show, hide)
 	})
 end
 
-function addon:SelectPanel(name)
+function addon:SelectPanel(name, noUpdate)
 	self:ToggleFrame(true)
 	if not name then
 		name = db.lastSelectedPanel or panels[1].name
@@ -944,6 +1020,10 @@ function addon:SelectPanel(name)
 	PanelTemplates_UpdateTabs(oRA3Frame)
 
 	panels[index].show()
+
+	if not noUpdate then
+		UpdateUIPanelPositions(oRA3Frame) -- snap the panel back
+	end
 end
 
 -----------------------------------------------------------------------
@@ -976,7 +1056,7 @@ end
 function addon:UpdateList(name)
 	if not openedList or not oRA3Frame:IsVisible() then return end
 	if lists[openedList].name ~= name then return end
-	showLists()
+	showLists(true)
 end
 
 function addon:SelectList(index)
@@ -1048,8 +1128,8 @@ function addon:CreateScrollEntry(header)
 end
 
 local sortIndex -- current index (scrollheader) being sorted
-local function sortAsc(a, b) return b[sortIndex] > a[sortIndex] end
-local function sortDesc(a, b) return a[sortIndex] > b[sortIndex] end
+local function sortAsc(a, b) return (b[sortIndex] or 0) > (a[sortIndex] or 0) end
+local function sortDesc(a, b) return (a[sortIndex] or 0) > (b[sortIndex] or 0) end
 local function toggleColumn(header)
 	local list = lists[openedList]
 	local nr = header.headerIndex
@@ -1086,7 +1166,7 @@ local function createHighlights( secure )
 		end
 		list[i]:SetWidth(contentFrame.scrollFrame:GetWidth())
 		list[i]:SetHeight(16)
-		list[i]:SetHighlightTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
+		list[i]:SetHighlightTexture(131128) --"Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar"
 		list[i].isSecure = secure
 		list[i]:Hide()
 	end
@@ -1120,15 +1200,15 @@ local function createScrollHeader()
 
 	local entries = {}
 	for i = 1, 19 do
-		local text = addon:CreateScrollEntry(f)
+		local entry = addon:CreateScrollEntry(f)
 		if i == 1 then
-			text:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 8, 0)
-			text:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", -4, 0)
+			entry:SetPoint("TOPLEFT", f, "BOTTOMLEFT", 8, 0)
+			entry:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", -4, 0)
 		else
-			text:SetPoint("TOPLEFT", entries[i - 1], "BOTTOMLEFT")
-			text:SetPoint("TOPRIGHT", entries[i - 1], "BOTTOMRIGHT")
+			entry:SetPoint("TOPLEFT", entries[i - 1], "BOTTOMLEFT")
+			entry:SetPoint("TOPRIGHT", entries[i - 1], "BOTTOMRIGHT")
 		end
-		entries[i] = text
+		entries[i] = entry
 	end
 	f.entries = entries
 end
@@ -1139,19 +1219,19 @@ local function setScrollHeaderWidth(nr, width)
 end
 
 local listHeader = ("%s - %%s"):format(L.checks)
-local retainSortOrder = nil
-function showLists()
+function showLists(listUpdated)
 	-- hide all scrollheaders per default
 	for k, f in next, scrollheaders do
 		f:Hide()
 	end
 
 	if not openedList then openedList = db.lastSelectedList and lists[db.lastSelectedList] and db.lastSelectedList or 1 end
-	retainSortOrder = db.lastSelectedList == openedList
 	db.lastSelectedList = openedList
 
 	local list = lists[openedList]
-	addon.callbacks:Fire("OnListSelected", list.name)
+	if not listUpdated then -- Don't spam this callback when updating the list we're looking at
+		addon.callbacks:Fire("OnListSelected", list.name)
+	end
 	oRA3Frame.title:SetText(listHeader:format(list.name))
 
 	contentFrame.listFrame:Show()
@@ -1178,6 +1258,10 @@ function hideLists()
 		f:Hide()
 	end
 	contentFrame.listFrame:Hide()
+
+	if openedList then
+		addon.callbacks:Fire("OnListClosed", lists[openedList].name)
+	end
 	openedList = nil
 end
 
@@ -1211,5 +1295,4 @@ function addon:PLAYER_REGEN_DISABLED()
 	end
 end
 
-oRA3 = addon -- Set global
-
+_G.oRA3 = addon -- Set global

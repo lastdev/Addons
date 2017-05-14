@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: Core.lua 5537 2014-12-12 15:31:05Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: Core.lua 5676 2016-09-21 16:09:45Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -131,11 +131,32 @@ local isGem =
 	[76734] = true,--Serpent's Eye
 	[90407] = true,--Sparkling Shard
 	--Draenor - none mailable
+	--Legion Uncommon
+	[130172] = true,--Sangrite
+	[130173] = true,--Deepamber
+	[130174] = true,--Azsunite
+	[130175] = true,--ChaoticSpinel
+	[130176] = true,--Skystone
+	[130177] = true,--QueensOpal
+	--Legion Rare
+	[130178] = true,--Furystone
+	[130179] = true,--EyeOfProphecy
+	[130180] = true,--Dawnlight
+	[130181] = true,--Pandemonite
+	[130182] = true,--MaelstromSapphire
+	[130183] = true,--ShadowRuby
+	--Legion Other
+	[129100] = true,--GemChip
 }
 
 -- This table is validating that each ID within it is a mat from disenchanting.
 local isDEMats =
 	{
+	--Legion
+	[124440] = true,--Arkana
+	[124441] = true,--LeylightShard
+	[124442] = true,--ChaosCrystal
+	--[124124] = true,--BloodOfSargeros - currently Bind on Pickup
 	--Draenor
 	[115504] = true,--Fractured Temporal Crystal
 	[113588] = true,--Temporal Crystal
@@ -221,6 +242,9 @@ local isPigmentMats =
 	[79253] = true,--Misty Pigment
 	--Draenor
 	[114931] = true,--Cerulean Pigment
+	--Legion
+	[129032] = true,--RoseatePigment
+	[129034] = true,--SallowPigment
 }
 -- This table is validating that each ID within it is a herb. Data from informant. This allows locale independent herbs
 local isHerb =
@@ -304,6 +328,14 @@ local isHerb =
 	[109128] = true,--Nagrand Arrowbloom
 	[109129] = true,--Talador Orchid
 	[109130] = true,--Chameleon Lotus
+	--Legion
+	[124101] = true,--Aethril
+	[124102] = true,--Dreamleaf
+	[124103] = true,--Foxflower
+	[124104] = true,--Fjarnskaggle
+	[124105] = true,--StarlightRose
+	[124106] = true,--Felwort
+	[128304] = true,--YserallineSeed
 	}
 
 --Inv slot types, used to help define what gear is usable via tooltip parse
@@ -625,4 +657,4 @@ end
 
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5537 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5676 $")

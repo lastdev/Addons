@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Containers ***
+--[[	*** DataStore_Containers ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 21st, 2009
 
@@ -18,7 +18,6 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 local commPrefix = "DS_Cont"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local MAIN_BANK_SLOTS = 100		-- bag id of the 28 main bank slots
 
 local guildMembers = {} 	-- hash table containing guild member info (tab timestamps)
@@ -135,11 +134,8 @@ end
 
 -- *** Utility functions ***
 local function GetThisGuild()
-	local guild = GetGuildInfo("player")
-	if guild then 
-		local key = format("%s.%s.%s", THIS_ACCOUNT, GetRealmName(), guild)
-		return addon.db.global.Guilds[key]
-	end
+	local key = DataStore:GetThisGuildKey()
+	return key and addon.db.global.Guilds[key] 
 end
 
 local function GetBankTimestamps(guild)
@@ -161,7 +157,7 @@ local function GetBankTimestamps(guild)
 end
 
 local function SaveBankTimestamps(sender, timestamps)
-	if strlen(timestamps) == 0 then return end	-- sender has no tabs
+	if not timestamps or strlen(timestamps) == 0 then return end	-- sender has no tabs
 	
 	guildMembers[sender] = guildMembers[sender] or {}
 	wipe(guildMembers[sender])
@@ -386,6 +382,12 @@ local function ScanBag(bagID)
 	else						-- Bags 1 through 11
 		bag.icon = GetInventoryItemTexture("player", ContainerIDToInventoryID(bagID))
 		bag.link = GetInventoryItemLink("player", ContainerIDToInventoryID(bagID))
+		if bag.link then
+			local _, _, rarity = GetItemInfo(bag.link)
+			if rarity then	-- in case rarity was known from a previous scan, and GetItemInfo returns nil for some reason .. don't overwrite
+				bag.rarity = rarity
+			end
+		end
 	end
 	ScanContainer(bagID, BAGS)
 	ScanBagSlotsInfo()
@@ -545,16 +547,17 @@ local function _GetContainers(character)
 end
 
 local BagTypeStrings = {
-	[1] = BI["Quiver"],
-	[2] = BI["Ammo Pouch"],
-	[4] = BI["Soul Bag"],
-	[8] = BI["Leatherworking Bag"],
-	[16] = BI["Inscription Bag"],
-	[32] = BI["Herb Bag"],
-	[64] = BI["Enchanting Bag"],
-	[128] = BI["Engineering Bag"],
-	[512] = BI["Gem Bag"],
-	[1024] = BI["Mining Bag"],
+	-- [1] = "Quiver",
+	-- [2] = "Ammo Pouch",
+	[4] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 1), -- "Soul Bag",
+	[8] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 7), -- "Leatherworking Bag",
+	[16] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 8), -- "Inscription Bag",
+	[32] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 2), -- "Herb Bag"
+	[64] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 3), -- "Enchanting Bag",
+	[128] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 4), -- "Engineering Bag",
+	[512] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 5), -- "Gem Bag",
+	[1024] = GetItemSubClassInfo(LE_ITEM_CLASS_CONTAINER, 6), -- "Mining Bag",
+	
 }
 
 local function _GetContainerInfo(character, containerID)
@@ -581,6 +584,23 @@ local function _GetContainerSize(character, containerID)
 		return character.Containers["Bag" .. containerID].size
 	end
 	return character.Containers[containerID].size
+end
+
+local rarityColors = {
+	[2] = "|cFF1EFF00",
+	[3] = "|cFF0070DD",
+	[4] = "|cFFA335EE"
+}
+
+local function _GetColoredContainerSize(character, containerID)
+	local bag = _GetContainer(character, containerID)
+	local size = _GetContainerSize(character, containerID)
+	
+	if bag.rarity and rarityColors[bag.rarity] then
+		return format("%s%s", rarityColors[bag.rarity], size)
+	end
+	
+	return format("%s%s", "|cFFFFFFFF", size)
 end
 
 local function _GetSlotInfo(bag, slotID)
@@ -772,6 +792,7 @@ local PublicMethods = {
 	GetContainers = _GetContainers,
 	GetContainerInfo = _GetContainerInfo,
 	GetContainerSize = _GetContainerSize,
+	GetColoredContainerSize = _GetColoredContainerSize,
 	GetSlotInfo = _GetSlotInfo,
 	GetContainerCooldownInfo = _GetContainerCooldownInfo,
 	GetContainerItemCount = _GetContainerItemCount,
@@ -878,6 +899,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetContainers")
 	DataStore:SetCharacterBasedMethod("GetContainerInfo")
 	DataStore:SetCharacterBasedMethod("GetContainerSize")
+	DataStore:SetCharacterBasedMethod("GetColoredContainerSize")
 	DataStore:SetCharacterBasedMethod("GetContainerItemCount")
 	DataStore:SetCharacterBasedMethod("GetNumBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumFreeBagSlots")

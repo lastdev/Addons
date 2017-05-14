@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreTimeLeft
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: FilterTimeLeft.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 

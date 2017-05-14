@@ -1,5 +1,15 @@
 local myname, ns = ...
 
+ns.map_questids = {
+    ["ShadowmoonValleyDR"] = 36464,
+    ["FrostfireRidge"] = 34557,
+    ["Gorgrond"] = 36465,
+    ["Talador"] = 36466,
+    ["SpiresOfArak"] = 36467,
+    ["NagrandDraenor"] = 36468,
+    ["TanaanJungle"] = 39463,
+}
+
 ns.points = {
     --[[ structure:
     [mapFile] = { -- "_terrain1" etc will be stripped from attempts to fetch this
@@ -37,7 +47,7 @@ ns.points = {
         [88901820]={ quest=35660, label="Fungus-Covered Chest", note="Use a glider", currency=824, },
         -- generic garrison supplies
         [37707060]={ quest=34760, label="Treasure of Kull'krosh", currency=824, },
-        [40406860]={ quest=37435, label="Spirit Coffer", currency=824, },
+        [40406860]={ quest=37435, label="Spirit Coffer", currency=824, junk=true, },
         [43305750]={ quest=35987, label="Genedar Debris", currency=824, },
         [44606750]={ quest=36002, label="Genedar Debris", currency=824, },
         [47207430]={ quest=35576, label="Goblin Pack", currency=824, },
@@ -50,7 +60,7 @@ ns.points = {
         [73006220]={ quest=35590, label="Goblin Pack", currency=824, },
         [73107550]={ quest=35673, label="Appropriated Warsong Supplies", currency=824, },
         [77101660]={ quest=36174, label="Bounty of the Elements", currency=824, note="Cave, use the Elemental Stones for access", },
-        [88913310]={ quest=36857, label="Smuggler's Cache", note="In a cave, dodge the tripwires", currency=824, },
+        [89103310]={ quest=36857, label="Smuggler's Cache", note="In a cave, dodge the tripwires", currency=824, },
         [89406580]={ quest=35976, label="Warsong Supplies", currency=824, },
         -- treasures
         [38305880]={ quest=36109, label="Goldtoe's Plunder", npc=84068, item=114054, note="Gold, parrot has the key", },
@@ -115,13 +125,13 @@ ns.points = {
         [75606500]={ quest=36128, npc=80057, item=116806, }, -- Soulfang
         [77006400]={ quest=35735, npc=82826, currency=824, note="In a cave, use the switch", }, -- Berserk T-300 Series Mark II
         [80603040]={ quest=35923, npc=83603, item=118245, }, -- Hunter Blacktooth
-        [81206000]={ quest=35932, npc=83643, item=116796, }, -- Malroc Stonesunder 
+        [81206000]={ quest=35932, npc=83643, item=116796, }, -- Malroc Stonesunder
         [82607620]={ quest=34645, npc=79024, item=116805, }, -- Warmaster Blugthol
         [84603660]={ quest=36159, npc=84263, item=118689, }, -- Graveltooth
         [84605340]={ quest=35778, npc=82899, currency=824, }, -- Ancient Blademaster
         [86007160]={ quest=35784, npc=82912, item=118687, }, -- Grizzlemaw
         [87005500]={ quest=34862, npc=78161, item=116799, }, -- Hyperious
-        [89004120]={ quest=35623, npc=82486, item=118679, }, -- Explorer Nozzand 
+        [89004120]={ quest=35623, npc=82486, item=118679, }, -- Explorer Nozzand
         [93202820]={ quest=35898, npc=83509, item=116916, }, -- Gorepetal
         -- steamwheedle rares
         [62601680]={ quest=37211, npc=86732, item=118655, }, -- Bergruu
@@ -134,8 +144,15 @@ ns.points = {
         [34005100]={ quest=37224, npc=87666, item=118659, }, -- Mu'gra
         [37003800]={ quest=37520, npc=88951, item=120172, }, -- Vileclaw
         -- followers
+        [40307610]={ quest=35596, follower=170, note="Kill Bolkar nearby to get the key", }, -- Goldmane
         [46401600]={ quest=34466, follower=190, note="Mysterious Staff; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
         [67205600]={ quest=36711, npc=82746, follower=209, note="Rebuild his fishing rod by gathering the pieces @ 38.4,49.3, 65.8,61.1, 85.4,38.7", }, -- Abu'gar
+        -- pepe!
+        [80105040]={ quest=39265, item=127865, achievement=10053, }, -- Viking Pepe
+        -- Voidtalon
+        [57302670]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [45903140]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [40504750]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     --[[
     -- TODO: need the name
@@ -144,7 +161,7 @@ ns.points = {
     },
     -- "Vault of the Titan"
     ["StonecragGorge"] = {
-    
+
     },
     --]]
     ["ShadowmoonValleyDR"] = {
@@ -156,13 +173,14 @@ ns.points = {
         [45802460]={ quest=33570, currency=824, label="Shadowmoon Exile Treasure", note="cave below Exile Rise", },
         [52902490]={ quest=37254, currency=824, label="Mushroom-Covered Chest", },
         [57904530]={ quest=33568, currency=824, label="Kaliri Egg", },
-        [28303930]={ quest=33571, currency=824, label="Shadowmoon Treasure", note="It's in the tent-y building. Currently bugged so it won't show as complete.", },
+        [28303930]={ quest=33883, currency=824, label="Shadowmoon Treasure", },
         [42106130]={ quest=33041, currency=824, label="Iron Horde Cargo Shipment", },
         [84504470]={ quest=33885, currency=824, label="Cargo of the Raven Queen", },
         -- treasures
         [20303060]={ quest=33575, item=108904, note="Demonic Cache", },
         [22803390]={ quest=33572, item=113373, note="Rotting Basket", },
-        [30004530]={ quest=35919, item=113563, note="Shadowmoon Sacrificial Dagger" },
+        [29803750]={ quest=36879, label="Dusty Lockbox", note="On top of the standing stones; some random greens", },
+        [30004530]={ quest=35919, item=113563, note="Shadowmoon Sacrificial Dagger", },
         [31303910]={ quest=33886, item=109081, note="Ronokk's Belongings", },
         [33503970]={ quest=33569, item=113545, note="Reusable mana potion", },
         [34204350]={ quest=33866, item=109124, note="Veema's Herb Bag, underground", },
@@ -186,6 +204,7 @@ ns.points = {
         [49303750]={ quest=33867, item=109739, note="Astrologer's Box", toy=true, },
         [51107910]={ quest=33574, item=113375, note="Vindicator's Cache", toy=true, },
         [51803550]={ quest=33037, label="False-Bottomed Jar", note="Gold", junk=true, },
+        [52804840]={ quest=35584, item=113560, note="Ancestral Greataxe, against the grave", },
         [55004500]={ quest=35581, item=109124, note="Alchemist's Satchel", },
         [55307480]={ quest=35580, item=117550, note="Swamplighter Hive", toy=true, },
         [55801990]={ quest=35600, item=118104, note="Strange Spore, on top of the mushroom, go over the mountain", pet=true, },
@@ -210,7 +229,7 @@ ns.points = {
         [42804100]={ quest=33038, item=113553, npc=75434, }, -- Windfang Matriarch
         [43807740]={ quest=33383, item=117551, npc=81639, }, -- Brambleking Fili
         [44005760]={ quest=33642, item=119449, npc=75071, }, -- Mother Om'ra, hunter quest
-        [44802080]={ quest=35906, item=113561, npc=77310, }, -- Mad King Sporeon 
+        [44802080]={ quest=35906, item=113561, npc=77310, }, -- Mad King Sporeon
         [46007160]={ quest=37351, currency=823, npc=84911, }, -- Demidos
         [48007760]={ quest=37355, item=119360, npc=85121, }, -- Lady Temptessa
         [48208100]={ quest=37354, currency=823, npc=85029, }, -- Shadowspeaker Niir
@@ -233,6 +252,13 @@ ns.points = {
         [68208480]={ quest=37410, currency=823, npc=85568, }, -- Avalanche
         -- followers
         [42804040]={ quest=35614, follower=179, npc=74741, faction="Alliance", note="Do the crystal defense event here to get him", }, -- Artificer Romuul
+        -- Voidtalon
+        [49607160]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [43207100]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [50907250]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [41907570]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [48706990]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [46607000]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     ["BloodthornCave"] = {
         [55544974]={ quest=33572, item=113373, note="Rotting Basket", level=15, },
@@ -263,12 +289,14 @@ ns.points = {
         [27604280]={ quest=33500, item=43696, note="Slave's Stash, booze", },
         [30305120]={ quest=33438, item=107662, note="Time-Warped Tower; loot all the frozen ogres", }, -- note: other ogres are 33497, 33439, and 33440
         [38403780]={ quest=33502, item=112087, note="Obsidian Petroglyph", },
+        [39701710]={ quest=33532, item=120945, currency=823, note="In the tower, behind some rocks", }, -- Cragmaul Cache
         [40902010]={ quest=34473, item=110536, note="Envoy's Satchel", },
         [42401970]={ quest=34520, item=120341, note="Burning Pearl", },
         [42703170]={ quest=33940, item=112187, note="Crag-Leaper's Cache", },
+        [54803540]={ quest=33525, item=107273, note="Combine with Frostwolf First-Fang @ 63,48", }, -- Young Orc Traveler
         [57105210]={ quest=34476, item=111554, note="Frozen Orc Skeleton", },
         [61804250]={ quest=33511, npc=72156, item=112110, note="Interrupt the ritual, then feed him ogres", },
-        [63401480]={ quest=33525, npc=75081, note=UNKNOWN, }, -- Young Orc Woman
+        [63401480]={ quest=33525, item=107272, npc=75081, note="Combine with Snow Hare's Foot @ 54,35", }, -- Young Orc Woman
         [64406580]={ quest=33505, item=117564, note="Wiggling Egg; rylak nests on the roof", pet=true, },
         -- bladespire...
         [26503640]={ quest=35367, label="Gorr'thogg's Personal Reserve", currency=824, },
@@ -326,7 +354,14 @@ ns.points = {
         [43002100]={ quest=37387, item=119356, npc=82614, }, -- Moltnoma
         [40601240]={ quest=34522, npc=79104, currency=823, }, -- Ug'lok the Frozen
         -- followers
+        [39602800]={ quest=34733, follower=32, note="Rescue Dagg from the other cage first, then find him outside your garrison", }, -- Dagg
         [68001900]={ quest=34464, follower=190, note="Mysterious Boots; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
+        [65906080]={ quest=34733, follower=32, note="Rescue Dagg from the cage, then go to his other location", }, -- Dagg
+        -- Voidtalon
+        [51001990]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [52301830]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [53841721]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [47702750]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     ["BladespireFortress"] = {
         [44806480]={ quest=35570, label="Ogre Booty", note="Gold", level=1, },
@@ -396,17 +431,25 @@ ns.points = {
         [57603580]={ quest=37370, item=119406, npc=82058, currency=823, achievement=9678, }, -- Depthroot
         [58006360]={ quest=35153, item=113453, npc=80785, }, -- Fungal Praetorian
         [58604120]={ quest=37371, npc=86268, currency=823, achievement=9678, }, -- Alkali
+        [59603180]={ quest=37374, item=119367, npc=88582, currency=823, achievement=9678, }, -- Swift Onyx Flayer
         [59604300]={ quest=37375, item=119414, npc=88583, currency=823, achievement=9678, }, -- Grove Warden Yal
         [61803930]={ quest=37376, item=119391, npc=88586, currency=823, achievement=9678, }, -- Mogamago
         [63803160]={ quest=37372, npc=86266, achievement=9678, }, -- Venolasix
         [64006180]={ quest=36794, item=118213, npc=86410, }, -- Sylldross
         [69204460]={ quest=37369, item=119432, npc=86257, toy=true, achievement=9678, repeatable=true, note="Repeatable until you know the toy he drops", }, -- Basten
-        [70803400]={ quest=37374, item=119367, npc=88582, currency=823, achievement=9678, }, -- Swift Onyx Flayer
-        [72803580]={ quest=37373, npc=88580, achievement=9678, }, -- Firestarter Grash
+        [72803580]={ quest=37373, item=119381, npc=88580, achievement=9678, }, -- Firestarter Grash
         [76004200]={ quest=37405, npc=80371, currency=823, }, -- Typhon
         -- followers
         [39703990]={ quest=34463, follower=190, note="Mysterious Ring; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
         [44908690]={ quest=36037, npc=83820, follower=193, note="He'll look hostile; fight the things that are attacking him", }, -- Tormmok
+        [42809090]={ quest=34279, npc=78030, follower=189, note="Follow the path up and fight him", }, -- Blook
+        -- pepe!
+        [47504130]={ quest=39267, item=127867, achievement=10053, }, -- Ninja Pepe
+        -- Voidtalon
+        [51603880]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [54004500]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [56004000]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [43203420]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     ["Talador"] = {
         -- treasures
@@ -425,8 +468,8 @@ ns.points = {
         [54002760]={ quest=34290, item=116402, note="Ketya's Stash", pet=true, },
         [54105630]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
         [55206680]={ quest=34253, item=116118, note="Draenei Weapons", currency=824, },
-        [57207540]={ quest=34134, item=117563, note="Rescue 4 draenei trapped in spider webs, then Isaari's Cache will spawm here", faction="Alliance", },
-        [57402670]={ quest=34238, item=116120, note="Foreman's Lunchbox", },
+        [57207540]={ quest=34134, item=117563, note="Rescue 4 draenei trapped in spider webs, then Isaari's Cache will spawn here", faction="Alliance", junk=true, },
+        [57402870]={ quest=34238, item=116120, note="Foreman's Lunchbox", toy=true, },
         [58901200]={ quest=33933, item=108743, note="Deceptia's Smoldering Boots", toy=true, },
         [61107170]={ quest=34116, item=117563, label="Rescue 4 adventurers trapped in spider webs, then Norana's Cache will spawn here", faction="Horde", },
         [62003240]={ quest=34236, item=116131, note="Amethyl Crystal", currency=824, },
@@ -467,7 +510,7 @@ ns.points = {
         [38001460]={ quest=37343, npc=82922, item=119435, achievement=9633, }, -- Xothear the Destroyer (also drops 119371)
         [39004960]={ quest=37349, npc=82998, item=119353, }, -- Matron of Sin
         [41004200]={ quest=37347, npc=82930, currency=823, }, -- Shadowflame Terrorwalker
-        [41805940]={ quest=34671, npc=79543, item=112370, }, -- Shirzir
+        [41506020]={ quest=34671, npc=79543, item=112370, }, -- Shirzir
         [44003800]={ quest=37339, npc=87597, achievement=9633, }, -- Bombardier Gu'gok
         [46002740]={ quest=37337, npc=88071, currency=823, achievement=9633, }, -- War Council: Strategist Ankor, Archmagus Tekar, Soulbinder Naylana
         [46005500]={ quest=34145, npc=77614, item=113288, }, -- Frenzied Golem (also drops 113287)
@@ -494,19 +537,32 @@ ns.points = {
         -- followers
         [45303700]={ quest=34465, follower=190, note="Mysterious Hat; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
         [62755038]={ quest=nil, follower=171, note="Complete the quests starting with Clear!", }, -- Pleasure-Bot 8000 (actually a different quest for alliance and horde)
+        [57405120]={ quest=36519, follower=207, note="Complete her quest", faction="Alliance", }, -- Defender Illona
+        [58005300]={ quest=36518, follower=207, note="Complete her quest", faction="Horde", }, -- Aeda Brightdawn
+        [56802600]={ quest=36522, follower=208, note="Complete his quest. Find him again outside your garrison.", }, -- Ahm
+        -- pepe!
+        [51006330]={ quest=39266, item=127869, achievement=10053, }, -- Knight Pepe
+        -- Voidtalon
+        [47004800]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [39705540]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [51904120]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [46205260]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+    },
+    ["TombofSouls"] = {
+        [67602320]={ quest=34671, npc=79543, item=112370, }, -- Shirzir
     },
     ["SpiresOfArak"] = {
-        -- archaeology
-        [33302730]={ quest=36422, label="Sun-Touched Cache", currency=829, note="Needs archaeology", },
-        [42701830]={ quest=36244, label="Misplaced Scrolls", note="Needs archaeology", currency=829, },
-        [43001640]={ quest=36245, label="Relics of the Outcasts", currency=829, note="Needs archaeology; on top of the walls", },
-        [43202720]={ quest=36355, label="Relics of the Outcasts", currency=829, note="Needs archaeology; climb the ropes", },
-        [46004410]={ quest=36354, label="Relics of the Outcasts", currency=829, note="Needs archaeology; climb the tree, jump to the rope", },
-        [51904890]={ quest=36360, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
-        [52404280]={ quest=36416, label="Misplaced Scroll", currency=829, note="Needs archaeology; start climbing the mountain at 53.6, 47.7", },
-        [56304530]={ quest=36433, label="Smuggled Apexis Artifacts", currency=829, note="Needs archaeology; climb  the mushrooms up the tree", },
-        [60205390]={ quest=36359, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
-        [67403980]={ quest=36356, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
+        -- archeology
+        [33302730]={ quest=36422, label="Sun-Touched Cache", currency=829, note="Needs archeology", },
+        [42701830]={ quest=36244, label="Misplaced Scrolls", note="Needs archeology", currency=829, },
+        [43001640]={ quest=36245, label="Relics of the Outcasts", currency=829, note="Needs archeology; on top of the walls", },
+        [43202720]={ quest=36355, label="Relics of the Outcasts", currency=829, note="Needs archeology; climb the ropes", },
+        [46004410]={ quest=36354, label="Relics of the Outcasts", currency=829, note="Needs archeology; climb the tree, jump to the rope", },
+        [51904890]={ quest=36360, label="Relics of the Outcasts", currency=829, note="Needs archeology", },
+        [52404280]={ quest=36416, label="Misplaced Scroll", currency=829, note="Needs archeology; start climbing the mountain at 53.6, 47.7", },
+        [56304530]={ quest=36433, label="Smuggled Apexis Artifacts", currency=829, note="Needs archeology; climb  the mushrooms up the tree", },
+        [60205390]={ quest=36359, label="Relics of the Outcasts", currency=829, note="Needs archeology", },
+        [67403980]={ quest=36356, label="Relics of the Outcasts", currency=829, note="Needs archeology", },
         -- shrines
         [43802470]={ quest=36397, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
         [43901500]={ quest=36395, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
@@ -550,13 +606,13 @@ ns.points = {
         [59708130]={ quest=36365, label="Spray-O-Matic 5000 XT", currency=824, },
         [60908460]={ quest=36456, label="Shredder Parts", currency=824, },
         [55509080]={ quest=36366, label="Campaign Contributions", note="Gold", },
-        [50502210]={ quest=36401, item=116919, note="Fractured Sunstone; may be bugged and show as incomplete", },
+        [50502210]={ quest=36246, item=116919, note="Hidden in the water", }, -- Fractured Sunstone
         [44401200]={ quest=36377, npc=85206, item=118693, }, -- Rukhmar's Image
         [40605500]={ quest=36458, item=116913, note="Abandoned Mining Pick", },
         [58706030]={ quest=36340, item=116922, note="Ogron Plunder (Hobbit reference!)", },
         [37305070]={ quest=36657, item=116887, note="Feed the dog 3x[Rooby Reat] from the chef downstairs", },
         [37705640]={ quest=36462, item=116020, note="Unlocks a chest in Admiral Taylor's Garrison Town Hall @ 36.2,54.4", },
-        [59109060]={ quest=nil, item=116917, note="In the control room", }, -- Sailor Zazzuk's 180-Proof Rum
+        [59109060]={ quest=36366, item=116917, note="In the control room", }, -- Sailor Zazzuk's 180-Proof Rum
         -- rares
         [25202420]={ quest=36943, npc=86978, item=118696, currency=824, }, -- Gaze, not certain about item-drop
         [33005900]={ quest=36305, npc=84951, item=116836, }, -- Gobblefin
@@ -585,7 +641,14 @@ ns.points = {
         [71203380]={ quest=37392, npc=87027, currency=823, }, -- Shadow Hulk
         [74404280]={ quest=37390, npc=87019, currency=823, }, -- Glutonous Giant
         -- followers
-        [55306850]={ quest=37168, follower=219, note="Follow the trail up the hill to 64.9,65.4, find him in the cave", }, -- Leorajh
+        [55306850]={ quest=37168, follower=219, note="Follow the trail up the hill to 54.9,65.4, find him in the cave", }, -- Leorajh
+        -- pepe!
+        [54108360]={ quest=39268, item=127870, achievement=10053, }, -- Pirate Pepe
+        -- Voidtalon
+        [47002010]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [50400610]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [60801120]={ quest=37864, item=121815, note="Occasionally spawning portal", },
+        [36501820]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     -- Garrisons!
     ["garrisonsmvalliance_tier1"] = {
@@ -621,11 +684,74 @@ ns.points = {
     ["garrisonffhorde_tier3"] = {
         [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
     },
-    --[[
-    -- TODO: confirm map name, probably different per-floor, this is the one just before the Foundry Terminus
-    ["BlackrockFoundry"] {
-        [51704500] = { quest=nil, currency=824, label="Iron Horde Chest", },
+    ["FoundryRaid"] = {
+        [59305720] = { quest=34405, item=109118, label="Iron Horde Chest", junk=true, level=2, },
     },
-    ["TanaanJungleIntro"] = {},
-    --]]
+    -- ["TanaanJungleIntro"] = {},
+    ["TanaanJungle"] = {
+        -- [42903490] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest. Second floor", repeatable=true, },
+        -- [35604620] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest, in the cave", repeatable=true, },
+        -- [49104660] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest, on the pile", repeatable=true, },
+        -- [22104980] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest, on the ridge", repeatable=true, },
+        -- [27506940] = { quest=nil, item=128346, currency=824, repeatable=true, }, -- draenic chest
+        -- [21403570] = { quest=nil, item=128346, currency=824, repeatable=true, },
+        [14905440] = { quest=38754, item=127325, achievement=10262, note="In the tower, on an orc hanging from a chain" }, -- weeping wolf axe
+        [15904970] = { quest=38208, item=127324, achievement=10262, note="Back of cave", }, -- weathered axe
+        [16005940] = { quest=38757, item=128220, achievement=10262, note="Second floor of the tower", }, -- grannok's eye
+        [17005300] = { quest=38283, item=128346, achievement=10262, npc=91382, label="Small chest next to the body", }, -- deserter
+        [17405700] = { quest=38755, item=128346, achievement=10262, currency=824, note="In the hut", }, -- spoils
+        [19304100] = { quest=38320, item=127338, achievement=10262, note="Bottom of the lake", }, -- blade of Kra'nak
+        [22004780] = { quest=38678, item=128346, achievement=10262, currency=824, note="In the hut", }, -- warchest
+        [25305030] = { quest=38735, item=128222, achievement=10262, note="Top of tower, use rope to get up", }, -- enchanted spyglass
+        [26506290] = { quest=38741, currency=823, achievement=10262, note="Top of tower, use rope to get up", }, -- bleeding hollow chest
+        [26804410] = { quest=38683, item=127709, achievement=10262, }, -- Looted Bleeding Hollow Treasure
+        [28702330] = { quest=38334, item=127668, achievement=10262, }, -- Jewel of Hellfire
+        [28803460] = { quest=38863, currency=823, achievement=10262, }, -- Partially Mined Apexis Crystal
+        [30307190] = { quest=38629, item=127389, achievement=10262, }, -- polished crystal
+        [31403110] = { quest=38732, item=127413, achievement=10262, }, -- Jeweled Arakkoa Effigy
+        [32407040] = { quest=38426, item=127670, achievement=10262, toy=true, }, -- sargerei tome
+        [33907810] = { quest=38760, item=128346, achievement=10262, }, -- captain booty 1
+        [34407830] = { quest=38762, item=128346, achievement=10262, }, -- captain booty 3
+        [34703464] = { quest=38742, item=127669, achievement=10262, note="Bottom of the cave. Watch out for fall damage.", }, -- Mad Chief
+        [34707710] = { quest=38761, item=128346, achievement=10262, }, -- captain booty 2
+        [35907860] = { quest=38758, currency=824, achievement=10262, }, -- Ironbeard's Treasure
+        [36304350] = { quest=37956, item=127397, achievement=10262, }, -- Strange Sapphire
+        [37004620] = { quest=38640, currency=824, achievement=10262, }, -- Pale Removal Equipment
+        [37808070] = { quest=38788, item=127770, achievement=10262, }, -- brazier
+        [40607980] = { quest=38638, item=127333, achievement=10262, }, -- snake flute
+        [40807550] = { quest=38639, item=127766, achievement=10262, toy=true, }, -- perfect blossom
+        [41607330] = { quest=38657, item=127339, achievement=10262, }, -- forgotten champion sword
+        [42803530] = { quest=38822, item=127859, achievement=10262, note="Top floor", toy=true, },
+        [43203830] = { quest=38821, item=127348, achievement=10262, note="In the building" },
+        [46207280] = { quest=38739, item=128320, achievement=10262, }, -- Mysterious Corrupted Obelisk
+        [46804220] = { quest=38776, item=127328, achievement=10262, }, -- blade
+        [46903660] = { quest=38771, item=127347, achievement=10262, }, -- book
+        [46904440] = { quest=38773, item=128218, achievement=10262, }, -- fel satchel
+        [47907040] = { quest=38705, item=127329, achievement=10262, }, -- Crystalized Essence of Elements
+        [48507520] = { quest=38814, item=127337, achievement=10262, }, -- Looted Mystical Staff
+        [49907680] = { quest=38809, item=128223, achievement=10262, }, -- Bleeding Hollow Mushroom Stash
+        [49907960] = { quest=38703, item=127354, achievement=10262, }, -- Scouts Belongings
+        [49908120] = { quest=38702, item=127312, achievement=10262, }, -- Discarded Helm
+        [50806490] = { quest=38731, item=127412, achievement=10262, }, -- overgrown relic
+        [51603270] = { quest=39075, currency=823, achievement=10262, }, -- Fel-Tainted Apexis Formation
+        [51702430] = { quest=38686, item=127341, achievement=10262, }, -- Rune Etched Femur
+        [54806930] = { quest=38593, item=127334, achievement=10262, note="Climb the vine bridge, spear in the side", }, -- spear
+        [54909070] = { quest=39470, currency=824, achievement=10262, }, -- Dead Mans Chest
+        [56906510] = { quest=38591, item=127408, achievement=10262, }, -- broken selfie sack
+        [58502500] = { quest=38679, item=115804, achievement=10262, }, -- Jewel of the Fallen Star
+        [61207580] = { quest=38601, currency=824, achievement=10262, }, -- Blackfang Isle Cache
+        [62107070] = { quest=38602, item=128217, achievement=10262, }, -- Crystalized Fel Spike
+        [62602050] = { quest=38682, item=127401, achievement=10262, }, -- Censer of Torment
+        [63402810] = { quest=38740, item=128309, achievement=10262, }, -- Forgotten Shard of the Cipher
+        [64704280] = { quest=38701, item=127396, achievement=10262, toy=true, }, -- Loose Soil
+        [65908500] = { quest=39469, item=128386, achievement=10262, }, -- Bejeweled Egg
+        [69705600] = { quest=38704, currency=824, achievement=10262, }, -- Forgotten Iron Horde Supplies
+        [73604320] = { quest=38779, note="First floor of north-east tower", achievement=10262, }, -- Stashed Bleeding Hollow Loot
+    },
+    ["AshranAllianceFactionHub"] = {
+        [45307020] = { follower=467, faction="Alliance", note="Outside the town hall", }, -- Fen Tao
+    },
+    ["AshranHordeFactionHub"] = {
+        [47004500] = { follower=467, faction="Horde", note="Outside the inn", }, -- Fen Tao
+    },
 }

@@ -1,4 +1,4 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="AccountSharing.lua"></Script>
 
 	<!--	Options / Account Sharing / Authorization list	-->
@@ -232,7 +232,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoUIPanelScrollFrameTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMRIGHT">
 						<Offset>
@@ -247,7 +247,7 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 18, Altoholic.Sharing.Clients.Update)
+						self:OnVerticalScroll(offset, 18, Altoholic.Sharing.Clients.Update)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
@@ -426,7 +426,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoUIPanelScrollFrameTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMRIGHT">
 						<Offset>
@@ -441,7 +441,7 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 18, Altoholic.Sharing.Content.Update)
+						self:OnVerticalScroll(offset, 18, Altoholic.Sharing.Content.Update)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
@@ -688,7 +688,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoUIPanelScrollFrameTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMRIGHT">
 						<Offset>
@@ -703,7 +703,7 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 18, Altoholic.Sharing.AvailableContent.Update)
+						self:OnVerticalScroll(offset, 18, Altoholic.Sharing.AvailableContent.Update)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>

@@ -1,4 +1,4 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Inventory", "esES" )
+local L = LibStub("AceLocale-3.0"):NewLocale( "DataStore_Inventory", "esES" )
 
 if not L then return end
 
@@ -8,4 +8,3 @@ L["CLEAR_INVENTORY_TEXT"] = "Borrar automáticamente el equipamiento de los miem
 L["CLEAR_INVENTORY_TITLE"] = "Borrado del equipamiento de los miembros de la hermandad"
 L["Heroic"] = "Heroico"
 L["Trash Mobs"] = "Enemigos de relleno"
-

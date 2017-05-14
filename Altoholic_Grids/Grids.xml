@@ -1,8 +1,7 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Grid_Equipment.lua"></Script>
 	<Script file="Grid_Reputations.lua"></Script>
 	<Script file="Grid_Currencies.lua"></Script>
-	<Script file="Grid_Tabards.lua"></Script>
 	<Script file="Grid_Mounts.lua"></Script>
 	<Script file="Grid_Tradeskills.lua"></Script>
 	<Script file="Grid_Archeology.lua"></Script>
@@ -21,77 +20,21 @@
 			<Frame name="$parentRightClickMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
 				<Size x="100" y="40" />
 			</Frame>
-			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" />
-					<Anchor point="BOTTOMRIGHT" />
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="256" />
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106" />
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="0" />
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
+			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 41, Altoholic.Tabs.Grids.Update)
+						local parent = self:GetParent():GetParent()
+						self:OnVerticalScroll(offset, 41, parent.Update, parent)
 					</OnVerticalScroll>
 				</Scripts>
+				<KeyValues>
+					<KeyValue key="numRows" value="8" type="number" />
+					<KeyValue key="rowHeight" value="41" type="number" />
+					<KeyValue key="rowTemplate" value="AltoIconListEntryTemplate" />
+					<KeyValue key="xOffset" value="3" type="number" />
+					<KeyValue key="yOffset" value="3" type="number" />
+				</KeyValues>
 			</ScrollFrame>
-			
-			<Button parentKey="Entry1" inherits="AltoIconListEntryTemplate" id="1">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.ScrollFrame" relativePoint="TOPLEFT" x="3" y="3" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry2" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry1" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry3" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry2" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry4" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry3" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry5" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry4" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry6" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry5" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry7" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry6" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-			<Button parentKey="Entry8" inherits="AltoIconListEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Entry7" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
 		</Frames>
 	</Frame>
-
 </Ui>

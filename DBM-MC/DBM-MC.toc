@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 70200
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Molten Core|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Núcleo de Magma|r
@@ -17,7 +17,7 @@
 ## X-DBM-Mod-Has-Single-Format: 1
 ## X-DBM-Mod-MapID: 409
 ## X-DBM-Mod-Sort: 600
-## X-DBM-Mod-MinCoreRevision: 12473
+## X-DBM-Mod-MinCoreRevision: 14565
 localization.en.lua
 localization.es.lua
 localization.ru.lua

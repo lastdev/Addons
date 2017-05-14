@@ -1,7 +1,466 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
-Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
+Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp   *.zip
 
 
+---------------------------
+6.18.11
+---------------------------
+* I got injured a few weeks ago, halting my progress, so I may have broken some things, and then forgot to fix them...
+
+* Core: Different hiding method for Blizzard nameplates.  Might be a unreliable?  Changed to fix tainting issues.
+* Core: Updated the TOC versions.
+
+* Threat Line: The widget will auto update with no fading.
+* Core: Increased the Target & Mouseover FrameLevels
+* Hub: Filter: "Filter Players" will now filter players full-time.
+* Core: unit.reaction will default to "HOSTILE" if it can't be determined  (Should mitigate color.lua reaction color error)
+
+* Off-Tank Aggro: Party/Raid Threat  IsTank()  (unitid.."target") somethingerother?
+
+
+---------------------------
+6.18.10
+---------------------------
+* Core: RAID_TARGET_UPDATE, Full update
+* Core: Reverted unit.reaction gather function to using UnitSelectionColor.
+* Aura Widget: Removed the wonky Hide call.
+
+---------------------------
+6.18.9
+---------------------------
+* Utility: Replaced GetAggroCondition()
+* Core: Added RAID_TARGET_UPDATE event to core
+* Aura Widget: Added some missing ClearAllPoints()
+* Core: Updated unit.reaction function.  Now uses UnitReaction().  What a concept!
+* Threat Line Widget: Fixed anchor point..  the widget itself needs some work, though.
+
+---------------------------
+6.18.7
+---------------------------
+* Utility: Replaced GetAggroCondition()
+
+---------------------------
+6.18.7
+---------------------------
+* Core: Restored the WidgetReset function; Not quite ready to take that plunge.
+* Aura Widget: Some fixes and tweaks
+* Cure: Added, TidyPlates:GetThemeName()
+
+
+---------------------------
+6.18.4
+---------------------------
+* Major Internal Changes Warning!
+
+* Core/Utility: Totally and utterly removed all the caching that we used to do to store Guild names, Titles, Classes, etc.
+	IsGuildMate and IsFriend have been bypassed, so those functions don't do anything. Consquently,
+	the associated features are temporarily disabled.
+
+* Core: The Widget Reset function has been removed, which will possibly cause some problems with Non-Hub themes, but will help
+	to fix some memory leakage.  I want to avoid repetitively destroying/creating frames, so now the Hub functions will attempt
+	to call widget:UpdateConfig() and recycle/reconfig the old frames instead of nil-ing the old ones and creating new ones.
+
+* Combo Points: Now displays a 6th when you're using Deeper Strategem.  Anticipation will still use the 5+Overlap method to display.
+* Combo Points: Chi does not show up on Brewmaster Monks
+
+* Hub: Tapped Color on Healthbars is now working again
+* Themes: Fixed some elite/level display problems
+* Hub: Active/Damaged Units: On NPCs, if the unit has a target, it's considered active.
+
+* Hub: Guildmate and Friend colors are temporarily disabled.
+
+
+---------------------------
+6.18.3
+---------------------------
+* Mini Mob Headline is now Off by Default
+* Neutral Unit Headline is now Off by Default
+* Neon Level Text field width increased (to fix 100+ not being displayed correctly)
+* Fixed TotemIcon nil field error
+* Fixed Approximate Health
+* Fixed text shadow flag
+* Fixed friendly auras appearing when using "Show Dispellable.."
+* And more little fixes
+
+---------------------------
+6.18.2 - Happy Legion Day!
+---------------------------
+* Typo in Quest display
+
+---------------------------
+6.18.1 - Happy Legion Day!
+---------------------------
+* RESTORED the "Use Blizzard Font" from the Hub/Profile panel.  This will use the STANDARD_TEXT_FONT
+* Note: "Force Blizzard Font" has been renamed to "Force Multi-lingual Font" to make its purpose clear.
+* Renamed/Repurposed "Filter NPC" to "Filter Enemy NPC"
+* Added: "Filter Non-Titled Friendly NPC".. Which hides friendly NPCs that DON'T have a title, such as "Innkeeper".
+* Added: Experimental: Quest display on Headline Status Text.
+
+---------------------------
+6.18.Beta21
+---------------------------
+
+* "Force Blizzard Font" added to the Tidy Plates main panel.  This will use the Fritz Quadrata family,
+	and possibly fix localization issues
+* REMOVED the "Use Default Blizzard Font" from the Hub.  See above.
+
+# Fixed "Spotlight on Casting" Opacity
+* Fixed "Bar Width" shrinking
+
+* Better nil handling
+* Layering improvements
+* In Hub\Templates, changed OnEvent handler to OnShow and removed panel:RegisterEvent("PLAYER_ENTERING_WORLD")
+	(This will keep it from being called until the panel is shown)
+
+* Broke Guildmate and Friend coloring.  I'll fix at some point.
+* On the good side, No more caching of NPC roles!  They can be read instantly, now.
+
+* Cleaned up some ancient cludgy code.
+
+* Introduced more bugs. (It always happens!)
+
+
+---------------------------
+6.18.Beta20
+---------------------------
+Aura Widget typo fix
+Hopefully final fix for Blizzard Bars appearing
+Temporarily restored the outdated UseTankVariables and UseDamageVariables functions
+Tinkered with the ShadowOffset
+
+---------------------------
+6.18.Beta19
+---------------------------
+Isolated the theme parser to TidyPlatesParser.lua
+
+Loading themes via functions:
+	TidyPlates:SetTheme(themeNameString)
+	TidyPlates:GetTheme()
+
+Deprecated:		(Converted to Dummy functions, will be removed)
+	TidyPlates:ActivateTheme(themeNameString)
+	TidyPlates:ReloadTheme()
+
+Moved "Use Default Blizzard Font" down to the bottom of the Settings page
+	Didn't seem to be in the right place under "Health Bars"
+Advanced is now "Funky Stuff".  Why?  Because I've been drinking?  Perhaps..
+Hub: Fixed Unit Filter Alpha
+Rejiggered some things in the Panels
+	Hub/Profile Panels are now under the Tidy Plates tree
+Renamed some of the Core files
+Cleaned up some old rotten code in Core and Panel
+
+
+---------------------------
+6.18.Beta18
+---------------------------
+Panel fix
+
+---------------------------
+6.18.Beta17
+---------------------------
+Off-Tank Highlighting is back!  (/hub, jump to "Threat")
+
+Specialization Profiles are Back!
+
+And with them, new errors to find.
+
+Also, it's painful to look at code that I haven't touched in 5 years
+
+
+
+---------------------------
+6.18.Beta15
+---------------------------
+Cooldown fixes, perhaps?
+
+---------------------------
+6.18.Beta13
+---------------------------
+Aura Widget..  made it so OmniCC and the like won't mess with cooldown animations.
+
+
+---------------------------
+6.18.Beta11
+---------------------------
+More futzing with the Aura widget.  Stacks should show up.  Dispellable stuff might show up.
+
+
+---------------------------
+6.18.Beta10
+---------------------------
+Combo Point Widget should now update properly.
+
+
+---------------------------
+6.18.Beta9
+---------------------------
+Aura Widget is now about 90% complete
+
+Fixed some errors when Personal Resource Frame is used (alpha.lua:30)
+
+
+---------------------------
+6.18.Beta8
+---------------------------
+Aura Widget is now about 80% complete
+
+Under the Tidy Plates options panel, you can now disable cast bars
+
+
+---------------------------
+6.18.Beta7
+---------------------------
+Personal resource bar should work on it's own.
+
+Class widget repair
+
+Cast bar alpha
+Tradeskill bypass on castbar
+
+Tank autoswap may work correctly on your class;  Works fine for druids!
+
+
+---------------------------
+6.18.Beta6
+---------------------------
+Level coloring + text should be improved.
+
+FULLY hiding the Blizzard frames.. success!  Thanks N!
+
+CVar stuff
+
+Some health status text should now be working
+
+
+---------------------------
+6.18.Beta5
+---------------------------
+Raid Icons should be working
+
+Flickering is still a bit of a problem.
+
+Frame rates are lower than desired.
+
+I need to work on the widgets (auras, healer tracking, tank tracking, etc.)
+
+
+---------------------------
+6.18.Beta4
+---------------------------
+Class colors working better?
+The new Cast Bars have been written.  Hopefully they work.  I've only been testing near the target dummies.
+
+
+---------------------------
+6.18.Beta3
+---------------------------
+Class Colors should be working.  On health bars, at least.  I briefly tested them.
+Nameplates are not (and can not be) generated for enemies who are not in pvp conditions.  (This has been the case for years)
+
+Cast bars..  Early next week, I hope.
+
+Calm down, take a deep breath.  It's Friday, July 22nd!  It's time for beverages!
+
+
+---------------------------
+6.18.Beta2
+---------------------------
+More things are working!
+
+Notably absent...
+Cast Bars
+and more
+
+I have not tested the aura widget... although it MIGHT work.
+
+
+
+---------------------------
+6.18.Beta1
+---------------------------
+Nameplate-pocalypse!!!!!!!
+
+99% of the previous nameplate system has been replaced by Blizzard for Legion.
+
+Rebuilding has been slow, since I'm (apparently) a grown-up, now. ;-)
+
+BUT, progress is indeed being made!
+
+The internal widgets are disabled, which means the Aura timers are not working.  I'm rewriting the entire bloody system because we now have a good way to capture that data without all the trickery that was previously required.  (Blizzard does love us!)
+
+Again, progress is being made!
+
+Many things are broken, so I expect that many of you might want to check back with Tidy Plates in a week or so.
+
+Happy questing!
+
+
+---------------------------
+6.17.1
+---------------------------
+- Core: New value: unit.healthmaxCached, which is updated on target and mouseover.
+	(This uses the UnitHealthMax API function to store real health data.)
+- Core: Where available, uses the healthmaxCached to create real numbers.
+- Core: Figured out what the other statusbar is.. incoming heals.  But you guys already knew that.  Hiding that stuff, for now.
+- Hub: If healthmaxCached doesn't exist, the real health value won't be shown.  (Percent will still work)
+
+---------------------------
+6.17.0
+---------------------------
+- Partially updated the core to the new internal Blizzard nameplate layout.  Seems to fix a bunch of things for me.  ymmv
+- Not sure what some of the new bits and pieces are for... futher investigation is needed.
+
+---------------------------
+6.16.1
+---------------------------
+- Threat System: Disabled 'Other Tank' functions, for now; They're broken, and causing secondary issues to develop.
+
+---------------------------
+6.16.Beta: Quick Notes
+---------------------------
+This is a MAJOR update to Tidy Plates, and many things have changed.
+
+Here are some of the bigger changes:
+
+* The Hub has been revamped and some rearranging has been done.
+* Quick Fix - Quick Setup:
+	1. Use '/tp' to reselect your Theme (and Profile)
+	2. Use '/hub' to check your settings...
+
+* Some settings have been pruned; If there was something important that got
+	removed, let me know...
+
+* Numerous Bug Fixes & Improvements
+* Numerous Bug "Additions"? (Quite possible!)
+
+I sincerely apologize for any inconvenience these changes may cause...
+
+Think of this: Changes mean that this addon is being actively developed and
+	maintained, rather than withering, as many addons do...
+
+
+
+--------------------------------------
+6.16.Beta8
+--------------------------------------
+* Hub: Threat: Highlight Mobs Tanked by Other Tanks:  It was a mess. Rewrote and tested with hunter pet, and it's working well in that condition.
+	- To do:  Reimplement Combat Log melee swing detection, and test in 5-man and Raids
+
+--------------------------------------
+6.16.Beta7
+--------------------------------------
+* I haven't been keeping track of changes.  Warlords- yay!
+
+Things still needing testing...
+* Healer Tracking
+* Tank Target-Of-Mob Tracking
+
+--------------------------------------
+6.16.Beta6
+--------------------------------------
+* Some fixes, some additions..
+
+Things still needing testing...
+* Healer Tracking
+* Tank Target-Of-Mob Tracking
+
+
+--------------------------------------
+6.16.Beta5
+--------------------------------------
+* Lots of things that I didn't write down because I'm busy playing Warlords of Freakin' Draenor woot!
+* Fixed some bugs
+* Added some new bugs, probably
+* Lots of changes to the Hub.  Feedback is good.  Be polite, please!
+
+* Migrated to new Dropdown Menu and Hub Function system; Your settings will be a bit borked until you go to /hub
+
+--------------------------------------
+6.16.Beta4:
+--------------------------------------
+* Themes: Migrated Quatre, Grey, and Graphite to the new system
+* Hub/Themes: New function definition process, makes it easier to add themes
+* Numerous bug fixes..  Can't remember.  Been leveling my druid.  Sleep; Need more of.
+
+--------------------------------------
+6.16.Beta3:
+--------------------------------------
+* Hub/Aura Widget: Fixed an issue which would prevent your auras from showing up (Previous configuration conflict)
+
+--------------------------------------
+6.16.Beta3:
+--------------------------------------
+* Widget/Combo Points: Fixed?
+
+--------------------------------------
+6.16.Beta2:
+--------------------------------------
+* Widgets/UnitCache: Fix for mouseover bug
+* Class Coloring: Fixed IsInInstance() issue.. maybe?
+* Hub:  Removed "Default" choice from the Friendly and Enemy Coloring Modes  (Yeah, this will make current settings funk-up...  but it cleans out that redundant choice)
+
+--------------------------------------
+6.16.Beta1: Full-ish List of Changes:
+--------------------------------------
+
+Core:
+* Core/Panel: !! The Bundled themes no longer create a "Damage" and "Tank" copy !!
+* Core/Panel: Introduced a new menu set, called Profiles, which will load the appropriate "Damage", "Tank", or "Healer" Hub profile.
+* Core/Panel: When the selected theme is invalid, it'll fall-back to the first available theme.
+* Core/Panel: Added a Slash Command alias, "/tp" in addition to "/tidyplates"
+
+Bundled Themes:
+* Themes: Neon & Quatre now have CastProtected art.  About time!
+* Neon: New Elite Icon, which looks more like I'd originally intended.  (Replaces the old Star)
+* Removed "Blizzard Theme"...  Sorry guys...  There are core things that I want to get done, and fixing/maintaining
+	that component is not a priority.  It will probably return, but don't hold your breath.
+
+Widgets:
+* Widgets/UnitCache: Replaced " (*)" with FOREIGN_SERVER_LABEL, which will fix unit-caching on certain server types.
+* Widgets/UnitCache: Now using a Scanning Tooltip, which should prevent conflicts with TipTac and other Tooltip mods
+* Widgets/Aura: Combat Log Event Handler now skips units which are group members, relying on the general
+	Unit event handler for their updates.
+
+Hub/General:
+* Hub: Colorized 'Friendly' and 'Enemy' description titles, to improve readability.
+* Separated Hub functions.lua into discrete category files
+* Tweaked some names/descriptions
+* Removed Threat Wheel widget from Hub
+* Hub: Added a button to the Advanced category; "Clear Cache", which purges the stored Class/Description/Guild data
+* Hub/Advanced: "Health Bar Width" (%) Allows you to tweak the relative width of the theme's Health Bar  (Experimental)
+
+Hub/Colors:
+* Hub/Reaction: New Color, "Tapped Unit"
+* Hub/Color Function: Tapped Color will be applied, taking priority over Threat/Etc. functions
+
+Hub/Scale:
+* Hub: Scale: Added, Bring Target units to Spotlight Scale, Bring Mouseovers to Spotlight Scale
+
+Hub/Health Bar View:
+* Removed several of the Status Text choices; These will reappear in a more advanced "Custom Text" category  (Working on it...)
+* NOTE: The CUSTOM/ADVANCED Status Text function hasn't been written, yet; Thus, it doesn't do anything at the moment...
+
+Hub/Opacity:
+* Hub: Opacity: Enemy & Friendly units now have their own independent Spotlight Modes
+* Hub: Opacity: Spotlight Modes; Removal of some redundant and underused modes.
+* Hub: Opacity: New Checkbox, "Spotlight Raid Marked"
+* Hub: Opacity: Modified Checkbox, "Bring Mouseovers to Target Opacity" to "Spotlight Mouseover"
+* Hub: Opacity: Modified Checkbox, "Bring Casting Units to Target Opacity" to "Spotlight Casting Units"
+
+Hub/Aura Widget:
+* Hub: Buffs & Debuffs: Replaced "Aura Widget Mode" Dropdown with Checkboxes: "Include My Buffs", and "Include My Debuffs".
+* Hub: Buffs & Debuffs: The widget will now use a Smart Mode, where it first evaluates the checkboxes, then evaluates the Aura List.
+* Hub: Buffs & Debuffs: Added the "Not" prefix to the aura list; This new mode allows you to blacklist auras from "Show My Debuffs" etc.
+
+Framework:
+* Hub: Quick Frame Templates now return the created frame twice (ie. assign two references with a single call, which helps with the Quick Frame setup)
+* Fixed some Odd Mouseover Behavior
+* Rearranged and removed some old Hub stuff.  Cleaning out functions, removing ancient code, removed items of questionable utility
+
+
+
+---------------------------
 6.15.3
 ---------------------------
 * Combo Widget: Fixed monk and localization issues

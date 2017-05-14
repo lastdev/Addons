@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("LurkerBelow", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 531 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 605 $"):sub(12, -3))
 mod:SetCreatureID(21217)
+mod:SetEncounterID(624)
 mod:SetModelID(20216)
 mod:SetZone()
 
@@ -11,7 +12,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED target focus"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnSubmerge		= mod:NewAnnounce("WarnSubmerge", 1)
@@ -21,11 +22,11 @@ local warnWhirl			= mod:NewSpellAnnounce(37363, 2)
 
 local specWarnSpout		= mod:NewSpecialWarningSpell(37433, nil, nil, nil, 2)
 
-local timerSubmerge		= mod:NewTimer(105, "TimerSubmerge", 39091)
-local timerEmerge		= mod:NewTimer(60, "TimerEmerge", 39088)
-local timerSpoutCD		= mod:NewCDTimer(50, 37433)
+local timerSubmerge		= mod:NewTimer(105, "TimerSubmerge", 39091, nil, nil, 6)
+local timerEmerge		= mod:NewTimer(60, "TimerEmerge", 39088, nil, nil, 6)
+local timerSpoutCD		= mod:NewCDTimer(50, 37433, nil, nil, nil, 2)
 local timerSpout		= mod:NewBuffActiveTimer(22, 37433)
-local timerWhirlCD		= mod:NewCDTimer(18, 37363)
+local timerWhirlCD		= mod:NewCDTimer(18, 37363, nil, nil, nil, 2)
 
 local submerged = false
 local guardianKill = 0

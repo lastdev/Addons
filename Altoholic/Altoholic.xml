@@ -1,6 +1,7 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="Core.lua"></Script>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- 
 	<Script file="Profiler.lua"></Script>
+	-->
 	<Script file="Tasks.lua"></Script>
 	<Script file="Helpers.lua"></Script>
 	<Script file="Comm.lua"></Script>
@@ -15,65 +16,10 @@
 	<GameTooltip name="AltoScanningTooltip" inherits="GameTooltipTemplate">
 		<Scripts>
 			<Onload>
-				self:SetOwner(WorldFrame, "ANCHOR_NONE");
+				self:SetOwner(WorldFrame, "ANCHOR_NONE")
 			</Onload>
 		</Scripts>
 	</GameTooltip>
-	
-	<Button name="AltoholicMinimapButton" parent="Minimap" toplevel="true">
-		<Size x="33" y="33" />
-		<Anchors>
-			<Anchor point="CENTER" relativeTo="Minimap" relativePoint="RIGHT" x="5" y="0" />
-		</Anchors>		
-		<Scripts>
-			<OnLoad>
-				self:RegisterForClicks("LeftButtonDown", "RightButtonDown");
-				self:RegisterForDrag("RightButton")
-			</OnLoad>
-			<OnClick>
-				if button == "LeftButton" then
-					Altoholic:ToggleUI()
-				end
-			</OnClick>
-			<OnUpdate>
-				if(self.isMoving == true) then
-					Altoholic:UpdateMinimapIconCoords()
-				end
-			</OnUpdate>
-			<OnDragStart>
-				self.isMoving = true;
-			</OnDragStart>
-			<OnDragStop>
-				self.isMoving = false;
-			</OnDragStop>
-			<OnEnter> 
-				Altoholic:ShowWidgetTooltip(self)
-			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide();
-			</OnLeave>
-		</Scripts>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture name="$parentIcon" file="Interface\Icons\INV_Drink_13">
-					<Size x="21" y="21" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="7" y="-6" />
-					</Anchors>
-					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
-				</Texture>
-			</Layer>
-			<Layer level="OVERLAY">
-				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
-					<Size x="56" y="56" />
-					<Anchors>
-						<Anchor point="TOPLEFT"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
-		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-	</Button>
 
 	<Frame name="AltoholicFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
 		<Size x="832" y="447" />
@@ -82,25 +28,25 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				self:RegisterForDrag("LeftButton");
-				self.elapsed = 0;
-				PanelTemplates_SetNumTabs(AltoholicFrame, 7);
-				PanelTemplates_SetTab(AltoholicFrame, 1);
+				self:RegisterForDrag("LeftButton")
+				self.elapsed = 0
+				PanelTemplates_SetNumTabs(self, 7)
+				PanelTemplates_SetTab(self, 1)
 			</OnLoad>
 			<OnDragStart>
-				self:StartMoving();
-				self.isMoving = true;
+				self:StartMoving()
+				self.isMoving = true
 			</OnDragStart>
 			<OnDragStop>
-				self:StopMovingOrSizing();
-				self.isMoving = false;
+				self:StopMovingOrSizing()
+				self.isMoving = false
 			</OnDragStop>
 			<OnShow>
-				Altoholic:OnShow();
-				PlaySound("UChatScrollButton");
+				Altoholic:OnShow()
+				PlaySound("UChatScrollButton")
 			</OnShow>
 			<OnHide>
-				PlaySound("UChatScrollButton");
+				PlaySound("UChatScrollButton")
 			</OnHide>
 		</Scripts>
 		<Layers>
@@ -160,26 +106,26 @@
 				<FontString name="$parentTotals" inherits="GameFontNormal" >
 					<Size x="60" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMRIGHT" x="-270" y="13" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentTotalLv" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size x="80" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-185" y="13" />
+						<Anchor point="BOTTOMRIGHT" x="-200" y="13" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentTotalGold" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="80" y="24" />
+					<Size x="100" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-100" y="13" />
+						<Anchor point="BOTTOMRIGHT" x="-120" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString name="$parentTotalPlayed" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size x="80" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-20" y="13" />
+						<Anchor point="BOTTOMRIGHT" x="-30" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
@@ -197,36 +143,57 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="15" y="11" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Summary" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab2" inherits="AltoTabTemplate" id="2">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Characters" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab3" inherits="AltoTabTemplate" id="3" text="SEARCH">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab2" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Search" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab4" inherits="AltoTabTemplate" id="4" text="GUILD">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab3" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Guild" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab5" inherits="AltoTabTemplate" id="5" text="ACHIEVEMENT_BUTTON">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab4" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Achievements" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab6" inherits="AltoTabTemplate" id="6">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab5" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Agenda" />
+				</KeyValues>
 			</Button>
 			<Button name="$parentTab7" inherits="AltoTabTemplate" id="7">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab6" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Grids" />
+				</KeyValues>
 			</Button>
 
 			<EditBox name="$parent_SearchEditBox" inherits="InputBoxTemplate">
@@ -277,58 +244,6 @@
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="3" y="-8" />
 				</Anchors>
-			</Button>
-		</Frames>
-	</Frame>
-	
-	<Frame name="AltoMsgBox" toplevel="true" parent="UIParent" hidden="true">
-		<Size x="323" y="100" />
-		<Anchors>
-			<Anchor point="CENTER" x="0" y="-10" />
-		</Anchors>
-		<Layers>
-			<Layer>
-				<FontString name="$Parent_Text" inherits="GameFontNormalSmall">
-					<Size x="300" y="28" />
-					<Anchors>
-						<Anchor point="TOP" x="10" y="-20" />
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32" />
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32" />
-			</EdgeSize>
-		</Backdrop>
-		<Frames>
-			<Button name="$ParentYesButton" inherits="UIPanelButtonTemplate" text="YES">
-				<Size x="109" y="24" />
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" x="55" y="18" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						Altoholic:MsgBox_OnClick(1)
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$ParentNoButton" inherits="UIPanelButtonTemplate" text="NO">
-				<Size x="109" y="24" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$ParentYesButton" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						Altoholic:MsgBox_OnClick(nil)
-					</OnClick>
-				</Scripts>
 			</Button>
 		</Frames>
 	</Frame>

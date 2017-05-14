@@ -97,9 +97,7 @@ Outfitter.ScriptModules.DruidShapeshift.Settings =
 	{id = "Caster", type = "boolean", label = "Caster form"},
 	{id = "Bear", type = "boolean", label = "Bear form"},
 	{id = "Cat", type = "boolean", label = "Cat form"},
-	{id = "Aquatic", type = "boolean", label = "Aquatic form"},
 	{id = "Travel", type = "boolean", label = "Travel form"},
-	{id = "Flight", type = "boolean", label = "Flight form"},
 	{id = "Moonkin", type = "boolean", label = "Moonkin form"},
 	{id = "Tree", type = "boolean", label = "Tree form"},
 }
@@ -109,9 +107,7 @@ Outfitter.ScriptModules.DruidShapeshift.Events =
 	Caster = "CASTER_FORM",
 	Bear = "BEAR_FORM",
 	Cat = "CAT_FORM",
-	Aquatic = "AQUATIC_FORM",
 	Travel = "TRAVEL_FORM",
-	Flight = "FLIGHT_FORM",
 	Moonkin = "MOONKIN_FORM",
 	Tree = "TREE_FORM",
 }
@@ -127,9 +123,9 @@ function Outfitter.ScriptModules.DruidShapeshift:GetEquipHeader(pSettings)
 [[-- $EVENTS ]]..vEvent.." NOT_"..vEvent..[[
 
 if event == "]]..vEvent..[[" then
-	equip = true
+    equip= true
 elseif event == "NOT_]]..vEvent..[[" then
-	equip = false
+    equip = false
 end
 ]]
 		end
@@ -264,13 +260,17 @@ function Outfitter:GenerateSmartUnequipScript(pEventID, pDescription, pUnequipDe
 	if pIncludeSpecEnables then
 		vScript = vScript ..
 [[
--- $SETTING Spec1={type="boolean", label="Enable for Primary spec", default=true}
--- $SETTING Spec2={type="boolean", label="Enable for Secondary spec", default=true}
+-- $SETTING Tree1={type="boolean", label=Outfitter:GetTalentTreeName(1), default=true}
+-- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=true}
+-- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=true}
+-- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=true}
 
 -- Unequip and return if they're not in an enabled spec
 
-if (not setting.Spec1 and GetActiveSpecGroup() == 1)
-or (not setting.Spec2 and GetActiveSpecGroup() == 2) then
+if not setting.Tree1 and GetSpecialization() == 1
+or not setting.Tree2 and GetSpecialization() == 2
+or not setting.Tree3 and GetSpecialization() == 3
+or not setting.Tree4 and GetSpecialization() == 4 then
     equip = false
     return
 end
@@ -295,7 +295,7 @@ if event == "]]..pEventID..[[" then
 
 elseif didEquip then
     equip = false
-]]..((pUnequipDelay and ("	delay = "..pUnequipDelay)) or "")..[[
+]]..((pUnequipDelay and ("    delay = "..pUnequipDelay)) or "")..[[
 end
 ]]
 	
@@ -309,43 +309,44 @@ function Outfitter:GenerateShapeshiftScript(pEventID, pDescription, pAllowComple
 -- $SETTING DisableBG={type="boolean", label="Disable in Battlegrounds", default=false}
 -- $SETTING DisablePVP={type="boolean", label="Disable while PvP flagged", default=false}
 -- $SETTING UnequipComplete={type="boolean", label="Allow Complete outfits to unequip", default=false}
--- $SETTING Spec1={type="boolean", label="Enable for Primary spec", default=true}
--- $SETTING Spec2={type="boolean", label="Enable for Secondary spec", default=true}
+-- $SETTING Tree1={type="boolean", label=Outfitter:GetTalentTreeName(1), default=true}
+-- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=true}
+-- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=true}
+-- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=true}
 
 -- Just return if they're PvP'ing and don't want the outfit changing
-
 if (setting.DisableBG and Outfitter:InBattlegroundZone())
 or (setting.DisablePVP and UnitIsPVP("player")) then
     return
 end
 
 -- Return if they're not in an enabled spec
-
-if (not setting.Spec1 and GetActiveSpecGroup() == 1)
-or (not setting.Spec2 and GetActiveSpecGroup() == 2) then
+if not setting.Tree1 and GetSpecialization() == 1
+or not setting.Tree2 and GetSpecialization() == 2
+or not setting.Tree3 and GetSpecialization() == 3
+or not setting.Tree4 and GetSpecialization() == 4 then
     return
 end
 
 -- Return if the user isn't in full control
-
 if not Outfitter.IsDead and not HasFullControl() then
     return
 end
 
 -- If the outfit is being equipped then let Outfitter know
 -- which layer it's representing
-
 if event == "OUTFIT_EQUIPPED" then
     layer = "shapeshift"
 
 -- Equip and set the layer if entering the stance
-
 elseif event == "]]..pEventID..[[" then
+    if isEquipped then
+        return
+    end
     equip = true
     layer = "shapeshift"
 
 -- Just unequip if leaving the stance
-
 elseif setting.UnequipComplete
 or outfit.CategoryID ~= "Complete" then
     equip = false
@@ -360,8 +361,10 @@ function Outfitter:GenerateDruidShapeshiftScript(pEventID, pDescription)
 -- $SETTING DisableBG={type="boolean", label="Don't equip in Battlegrounds", default=false}
 -- $SETTING DisablePVP={type="boolean", label="Don't equip while PvP flagged", default=false}
 -- $SETTING UnequipComplete={type="boolean", label="Allow Complete outfits to unequip", default=false}
--- $SETTING Spec1={type="boolean", label="Enable for Primary spec", default=true}
--- $SETTING Spec2={type="boolean", label="Enable for Secondary spec", default=true}
+-- $SETTING Tree1={type="boolean", label=Outfitter:GetTalentTreeName(1), default=true}
+-- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=true}
+-- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=true}
+-- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=true}
 
 -- Just return if they're PvP'ing and don't want the outfit changing
 
@@ -371,9 +374,10 @@ or (setting.DisablePVP and UnitIsPVP("player")) then
 end
 
 -- Return if they're not in an enabled spec
-
-if (not setting.Spec1 and GetActiveSpecGroup() == 1)
-or (not setting.Spec2 and GetActiveSpecGroup() == 2) then
+if not setting.Tree1 and GetSpecialization() == 1
+or not setting.Tree2 and GetSpecialization() == 2
+or not setting.Tree3 and GetSpecialization() == 3
+or not setting.Tree4 and GetSpecialization() == 4 then
     return
 end
 
@@ -392,6 +396,9 @@ if event == "OUTFIT_EQUIPPED" then
 -- Equip and set the layer if entering the form
 
 elseif event == "]]..pEventID..[[" then
+    if isEquipped then
+        return
+    end
     equip = true
     layer = "shapeshift"
 
@@ -401,12 +408,12 @@ elseif event == "]]..pEventID..[[" then
 
 elseif event == "NOT_]]..pEventID..[[" then
     if setting.UnequipComplete
-	or outfit.CategoryID ~= "Complete" then
+    or outfit.CategoryID ~= "Complete" then
         equip = false
-		
-		if Outfitter.InCombat then
-			delay = 2
-		end
+        
+        if Outfitter.InCombat then
+            delay = 2
+        end
     end
 end
 ]]
@@ -555,7 +562,7 @@ if inInstance
 and ((setting.Enable5Man and instanceType == "party")
     or (setting.EnableRaid and instanceType == "raid")
     or (setting.EnableBG and instanceType == "pvp")
-	or (setting.EnableBG and instanceType == "arena")) then
+    or (setting.EnableBG and instanceType == "arena")) then
         equip = true
 else
     equip = false
@@ -691,24 +698,6 @@ end
 ]],
 	},
 	{
-		Name = TALENT_SPEC_PRIMARY or "Primary Talents",
-		ID = "Talent1",
-		Category = "GENERAL",
-		Script = Outfitter:GenerateScriptHeader("ACTIVE_TALENT_GROUP_CHANGED", "Equips the outfit when you activate your primary talents")..
-[[
-equip = GetActiveSpecGroup() == 1
-]],
-	},
-	{
-		Name = TALENT_SPEC_SECONDARY or "Secondary Talents",
-		ID = "Talent2",
-		Category = "GENERAL",
-		Script = Outfitter:GenerateScriptHeader("ACTIVE_TALENT_GROUP_CHANGED", "Equips the outfit when you activate your secondary talents")..
-[[
-equip = GetActiveSpecGroup() == 2
-]],
-	},
-	{
 		Name = "Talent Tree",
 		ID = "TalentTree",
 		Category = "GENERAL",
@@ -718,10 +707,19 @@ equip = GetActiveSpecGroup() == 2
 -- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=false}
 -- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=false}
 -- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=false}
-if GetSpecialization() == 1 then equip = setting.Tree1
-elseif GetSpecialization() == 2 then equip = setting.Tree2
-elseif GetSpecialization() == 3 then equip = setting.Tree3
-elseif GetSpecialization() == 4 then equip = setting.Tree4 end
+if setting.Tree1 and GetSpecialization() == 1
+or setting.Tree2 and GetSpecialization() == 2
+or setting.Tree3 and GetSpecialization() == 3
+or setting.Tree4 and GetSpecialization() == 4 then
+    if isEquipped then
+        return
+    end
+    equip = true
+    delay = 0.5
+else
+    equip= false
+    delay = 0.5
+end
 ]],
 	},
 	{
@@ -829,11 +827,11 @@ end
 		Name = Outfitter.cFishingOutfit,
 		ID = "Fishing",
 		Category = "TRADE",
-		Script = Outfitter:GenerateScriptHeader("OUTFIT_EQUIPPED OUTFIT_UNEQUIPPED PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED PLAYER_ENTERING_WORLD", Outfitter.cFishingOutfitDescription)..
+		Script = Outfitter:GenerateScriptHeader("OUTFIT_EQUIPPED OUTFIT_UNEQUIPPED", Outfitter.cFishingOutfitDescription)..
 [[
 -- $SETTING EnableFishTracking={type="boolean", label="Select Track Fish while equipped", default=true}
 -- $SETTING EnableAutoLoot={type="boolean", label="Enable auto loot while equipped"}
--- $SETTING DisableClicktoMove={type="boolean", label="Disable Click-to-Move while equipped"} 
+-- $SETTING DisableClicktoMove={type="boolean", label="Disable Click-to-Move while equipped", default=true} 
 -- $SETTING ChangeActionBar={type="boolean", label="Switch action bars while equipped", default=false}
 -- $SETTING ActionBarNumber={type="number", label="Action bar (1 - 6)", default=1}
 -- Enable auto looting if the outfit is being equipped and EnableAutoLoot is on
@@ -846,14 +844,14 @@ if event == "OUTFIT_EQUIPPED" then
     end
     
     if setting.EnableFishTracking then
-        setting.savedTracking = Outfitter:GetTrackingEnabled("Interface\\Icons\\INV_Misc_Fish_02")
-        Outfitter:SetTrackingEnabled("Interface\\Icons\\INV_Misc_Fish_02", 1)
+        setting.savedTracking = Outfitter:GetTrackingEnabled(133888)
+        Outfitter:SetTrackingEnabled(133888, 1)
         setting.didSetTracking = true
     end
     
    if setting.DisableClicktoMove then
-       setting.savedMove = GetCVar("Autointeract")
-       SetCVar("Autointeract", "0")
+       setting.savedMove = GetCVar("autointeract")
+       SetCVar("autointeract", "0")
        setting.didSetMove = true
    end
    
@@ -873,13 +871,13 @@ elseif event == "OUTFIT_UNEQUIPPED" then
    end
  
    if setting.EnableFishTracking and setting.didSetTracking then
-       Outfitter:SetTrackingEnabled("Interface\\Icons\\INV_Misc_Fish_02", setting.savedTracking)
+       Outfitter:SetTrackingEnabled(133888, setting.savedTracking)
        setting.didSetTracking = nil
        setting.savedTracking = nil
    end
    
   if setting.DisableClicktoMove and setting.didSetMove then
-      SetCVar("Autointeract", setting.savedMove)
+      SetCVar("autointeract", setting.savedMove)
       setting.didSetMove = nil
       setting.savedMove = nil
   end
@@ -889,19 +887,10 @@ elseif event == "OUTFIT_UNEQUIPPED" then
       setting.didChangeActionBar = nil
       setting.savedActionBar = nil
   end
--- If the player is entering combat then unequip the outfit
+end
 
-elseif isEquipped and event == "PLAYER_REGEN_DISABLED" then
-    equip = false
-    immediate = true
-    outfit.didCombatUnequip = true
-
--- If the outfit was unequipped because of combat
--- then put it back on when combat is over
- 
-elseif outfit.didCombatUnequip and (event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_ENTERING_WORLD") then
-    equip = true
-    outfit.didCombatUnequip = nil
+if equip == equipped then
+    equip = nil
 end
 ]],
 	},
@@ -996,24 +985,6 @@ end
 		Script = Outfitter:GenerateSmartUnequipScript("SPIRIT_REGEN", Outfitter.SpiritRegenOutfitDescription, 0.5),
 	},
 	{
-		Name = Outfitter.cWarriorBattleStance,
-		ID = "Battle",
-		Class = "WARRIOR",
-		Script = Outfitter:GenerateShapeshiftScript("BATTLE_STANCE", Outfitter.cWarriorBattleStanceDescription),
-	},
-	{
-		Name = Outfitter.cWarriorDefensiveStance,
-		ID = "Defensive",
-		Class = "WARRIOR",
-		Script = Outfitter:GenerateShapeshiftScript("DEFENSIVE_STANCE", Outfitter.cWarriorDefensiveStanceDescription),
-	},
-	{
-		Name = Outfitter.cWarriorBerserkerStance,
-		ID = "Berserker",
-		Class = "WARRIOR",
-		Script = Outfitter:GenerateShapeshiftScript("BERSERKER_STANCE", Outfitter.cWarriorBerserkerStanceDescription),
-	},
-	{
 		Name = Outfitter.cDruidCasterForm,
 		ID = "Caster",
 		Class = "DRUID",
@@ -1022,26 +993,34 @@ end
 -- $SETTING DisableInstance={type="boolean", label="Don't equip in dungeons", default=false}
 -- $SETTING DisableBG={type="boolean", label="Don't equip in Battlegrounds", default=false}
 -- $SETTING DisablePVP={type="boolean", label="Don't equip while PvP flagged", default=false}
+-- $SETTING Tree1={type="boolean", label=Outfitter:GetTalentTreeName(1), default=true}
+-- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=true}
+-- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=true}
+-- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=true}
 
 -- Just return if they're PvP'ing and don't want the outfit changing
-
 local inInstance, instanceType = IsInInstance()
-
 if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
 or (setting.DisableBG and Outfitter:InBattlegroundZone())
 or (setting.DisablePVP and UnitIsPVP("player")) then
     return
 end
 
--- Return if the user isn't in full control
+-- Return if they're not in an enabled spec
+if not setting.Tree1 and GetSpecialization() == 1
+or not setting.Tree2 and GetSpecialization() == 2
+or not setting.Tree3 and GetSpecialization() == 3
+or not setting.Tree4 and GetSpecialization() == 4 then
+    return
+end
 
+-- Return if the user isn't in full control
 if not Outfitter.IsDead and not HasFullControl() then
     return
 end
 
 -- If the user is manually equipping the outfit, let
 -- Outfitter know which layer it's representing
-
 if event == "OUTFIT_EQUIPPED" then
     layer = "shapeshift"
 
@@ -1079,18 +1058,6 @@ end
 		Script = Outfitter:GenerateDruidShapeshiftScript("CAT_FORM", "This outfit will be worn whenever you're in Cat Form"),
 	},
 	{
-		Name = Outfitter.cDruidAquaticForm,
-		ID = "Aquatic",
-		Class = "DRUID",
-		Script = Outfitter:GenerateDruidShapeshiftScript("AQUATIC_FORM", "This outfit will be worn whenever you're in Aquatic Form"),
-	},
-	{
-		Name = Outfitter.cDruidFlightForm,
-		ID = "Flight",
-		Class = "DRUID",
-		Script = Outfitter:GenerateDruidShapeshiftScript("FLIGHT_FORM", "This outfit will be worn whenever you're in Flight or Swift Flight Form"),
-	},
-	{
 		Name = Outfitter.cDruidTravelForm,
 		ID = "Travel",
 		Class = "DRUID",
@@ -1123,112 +1090,16 @@ end
 		         "-- $DESC This outfit will be worn whenever you're stealthed"))
 	},
 	{
-		Name = Outfitter.cPriestShadowform,
-		ID = "Shadowform",
-		Class = "PRIEST",
-		Script = Outfitter:GenerateShapeshiftScript("SHADOWFORM", Outfitter.cPriestShadowformDescription, true),
-	},
-	{
 		Name = Outfitter.cShamanGhostWolf,
 		ID = "GhostWolf",
 		Class = "SHAMAN",
 		Script = Outfitter:GenerateSimpleScript("GHOST_WOLF", Outfitter.cShamanGhostWolfDescription),
 	},
 	{
-		Name = Outfitter.cHunterMonkey,
-		ID = "Monkey",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("MONKEY_ASPECT", Outfitter.cHunterMonkeyDescription),
-	},
-	{
-		Name = Outfitter.cHunterHawk,
-		ID = "Hawk",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("HAWK_ASPECT", Outfitter.cHunterHawkDescription),
-	},
-	{
-		Name = Outfitter.cHunterCheetah,
-		ID = "Cheetah",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("CHEETAH_ASPECT", Outfitter.cHunterCheetahDescription),
-	},
-	{
-		Name = Outfitter.cHunterPack,
-		ID = "Pack",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("PACK_ASPECT", Outfitter.cHunterPackDescription),
-	},
-	{
-		Name = Outfitter.cHunterBeast,
-		ID = "Beast",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("BEAST_ASPECT", Outfitter.cHunterBeastDescription),
-	},
-	{
-		Name = Outfitter.cHunterWild,
-		ID = "Wild",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("WILD_ASPECT", Outfitter.cHunterWildDescription),
-	},
-	{
-		Name = Outfitter.cHunterViper,
-		ID = "Viper",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("VIPER_ASPECT", Outfitter.cHunterViperDescription),
-	},
-	{
-		Name = Outfitter.cHunterDragonhawk,
-		ID = "Dragonhawk",
-		Class = "HUNTER",
-		Script = Outfitter:GenerateShapeshiftScript("DRAGONHAWK_ASPECT", Outfitter.cHunterDragonhawkDescription),
-	},
-	{
 		Name = Outfitter.cHunterFeignDeath,
 		ID = "Feigning",
 		Class = "HUNTER",
 		Script = Outfitter:GenerateSimpleScript("FEIGN_DEATH", Outfitter.cHunterFeignDeathDescription),
-	},
-	{
-		Name = Outfitter.cMageEvocate,
-		ID = "Evocate",
-		Class = "MAGE",
-		Script = Outfitter:GenerateSimpleScript("EVOCATE", Outfitter.cMageEvocateDescription),
-	},
-	{
-		Name = Outfitter.cDeathknightBlood,
-		ID = "Blood",
-		Class = "DEATHKNIGHT",
-		Script = Outfitter:GenerateSimpleScript("BLOOD", Outfitter.cDeathknightBloodDescription),
-	},
-	{
-		Name = Outfitter.cDeathknightFrost,
-		ID = "Frost",
-		Class = "DEATHKNIGHT",
-		Script = Outfitter:GenerateSimpleScript("FROST", Outfitter.cDeathknightFrostDescription),
-	},
-	{
-		Name = Outfitter.cDeathknightUnholy,
-		ID = "Unholy",
-		Class = "DEATHKNIGHT",
-		Script = Outfitter:GenerateSimpleScript("UNHOLY", Outfitter.cDeathknightUnholyDescription),
-	},
-	{
-		Name = Outfitter.cMonkSerpent,
-		ID = "Serpent",
-		Class = "MONK",
-		Script = Outfitter:GenerateShapeshiftScript("SERPENT_STANCE", Outfitter.cMonkSerpentDescription),
-	},
-	{
-		Name = Outfitter.cMonkOx,
-		ID = "Ox",
-		Class = "MONK",
-		Script = Outfitter:GenerateShapeshiftScript("OX_STANCE", Outfitter.cMonkOxDescription),
-	},
-	{
-		Name = Outfitter.cMonkTiger,
-		ID = "Tiger",
-		Class = "MONK",
-		Script = Outfitter:GenerateShapeshiftScript("TIGER_STANCE", Outfitter.cMonkTigerDescription),
 	},
 	{
 		Name = Outfitter.cSoloOutfit,
@@ -1397,7 +1268,7 @@ end
 		Name = Outfitter.cRestingOutfit,
 		ID = "RESTING",
 		CATEGORY = "TRADE",
-		Script = Outfitter:GenerateScriptHeader("PLAYER_UPDATE_RESTING", Outfitter.cRestingOutfitDescription)..
+		Script = Outfitter:GenerateScriptHeader("PLAYER_UPDATE_RESTING PLAYER_ENTERING_WORLD", Outfitter.cRestingOutfitDescription)..
 [[
 if IsResting() then
     equip = true
@@ -1643,7 +1514,9 @@ end
 -- $EVENTS OUTFIT_EQUIPPED
 -- $DESC Makes you dance when you equip the outfit
 
-if event == "OUTFIT_EQUIPPED" then DoEmote("DANCE") end 
+if event == "OUTFIT_EQUIPPED" then
+    DoEmote("DANCE")
+end
 ]],
 	},
 	{
@@ -1669,10 +1542,12 @@ end
 [[
 -- $DESC Equips the outfit whenever your Cooking window is open
 -- $SETTING Ragnaros = {type = "boolean", label = "Summon Lil' Ragnaros", default = false}
+-- $SETTING Pierre   = {type = "boolean", label = "Summon Pierre", default = false}
+-- $SETTING RandomCookFirePet = {type = "boolean", label = "Randomly summon a permitted cooking fire pet", default = false}
 -- $EVENTS TRADE_SKILL_SHOW TRADE_SKILL_CLOSE
 
 if event == "TRADE_SKILL_SHOW" then
-    if GetTradeSkillLine() == Outfitter.LBI.Cooking then
+    if C_TradeSkillUI.GetTradeSkillLine() == 185 then
         equip = true
     end
 elseif event == "TRADE_SKILL_CLOSE" then
@@ -1680,20 +1555,33 @@ elseif event == "TRADE_SKILL_CLOSE" then
         equip = false
     end
 elseif event == "TRADE_SKILL_UPDATE" then
-    if GetTradeSkillLine() == Outfitter.LBI.Cooking then
+    if C_TradeSkillUI.GetTradeSkillLine() == 185 then
         equip = true
     elseif didEquip then
         equip = false
     end
 end
-if setting.Ragnaros and equip ~= nil then
+if ( setting.Ragnaros or setting.Pierre ) and equip ~= nil then
     if equip then
         self.savedCompanionID = Outfitter:GetSummonedCompanionID()
-        Outfitter:SummonCompanionByName("Lil' Ragnaros", 0.2)
-    elseif self.savedCompanionID then
-        Outfitter:SummonCompanionByGUID(self.savedCompanionID, 0.2)
-    else
-        Outfitter:DismissCompanionByName("Lil' Ragnaros")
+        if setting.RandomCookFirePet then
+            local tbl = { setting.Ragnaros and "Lil' Ragnaros" or nil, setting.Pierre and "Pierre" or nil }
+            self.summonedPet = tbl[ random( #tbl ) ]
+            Outfitter:SummonCompanionByName(self.summonedPet, 0.2)
+        elseif setting.Ragnaros then
+            self.summonedPet = "Lil' Ragnaros"
+            Outfitter:SummonCompanionByName("Lil' Ragnaros", 0.2)
+        elseif setting.Pierre then
+            self.summonedPet = "Pierre"
+            Outfitter:SummonCompanionByName("Pierre", 0.2)
+        end
+    else  -- unequipping
+        if self.savedCompanionID then
+            Outfitter:SummonCompanionByGUID(self.savedCompanionID, 0.2)
+        else
+            Outfitter:DismissCompanionByName(self.summonedPet)
+        end
+        self.summonedPet = nil
     end
 end
 ]],
@@ -1900,28 +1788,69 @@ Outfitter.cScriptCategoryOrder =
 	CLASS = 5,
 }
 
-table.sort(
-		Outfitter.PresetScripts,
-		function (pItem1, pItem2)
-			local vCategory1 = pItem1.Category or (pItem1.Class and "CLASS") or "GENERAL"
-			local vCategory2 = pItem2.Category or (pItem2.Class and "CLASS") or "GENERAL"
+function Outfitter:InstallTalentTreeScripts()
+	local _, playerClass = UnitClass("player")
+
+	-- Class talent tree scripts
+	for treeIndex = 1, 4 do
+		local name = Outfitter:GetTalentTreeName(treeIndex)
+		if not name then
+			break
+		end
+		table.insert(Outfitter.PresetScripts, {
+			Name = UnitClass("player")..": "..name,
+			ID = "SPECIALIZATION_"..treeIndex,
+			Class = playerClass,
+			Script = [[
+-- $EVENTS PLAYER_ENTERING_WORLD ACTIVE_TALENT_GROUP_CHANGED
+ 
+-- Prevent the script from doing anything unless the specialization actually changes
+local specialization = GetSpecialization()
+if specialization == self.previousSpecialization then
+    return
+end
+self.previousSpecialization = specialization
+ 
+-- Equip/unequip
+equip = specialization == ]]..treeIndex..[[
+ 
+ 
+-- Use a delay so that artifacts equip properly
+delay = 0.5
+]]
+		});
+	end
+end
+
+function Outfitter:SortScripts()
+	table.sort(
+			Outfitter.PresetScripts,
+			function (pItem1, pItem2)
+				local vCategory1 = pItem1.Category or (pItem1.Class and "CLASS") or "GENERAL"
+				local vCategory2 = pItem2.Category or (pItem2.Class and "CLASS") or "GENERAL"
 			
-			if vCategory1 ~= vCategory2 then
-				if not vCategory1 then
-					return true
-				elseif not vCategory2 then
+				if vCategory1 ~= vCategory2 then
+					if not vCategory1 then
+						return true
+					elseif not vCategory2 then
+						return false
+					else
+						return Outfitter.cScriptCategoryOrder[vCategory1] < Outfitter.cScriptCategoryOrder[vCategory2]
+					end
+				elseif not pItem2.Name then
 					return false
+				elseif not pItem1.Name then
+					return true
 				else
-					return Outfitter.cScriptCategoryOrder[vCategory1] < Outfitter.cScriptCategoryOrder[vCategory2]
+					return pItem1.Name < pItem2.Name
 				end
-			elseif not pItem2.Name then
-				return false
-			elseif not pItem1.Name then
-				return true
-			else
-				return pItem1.Name < pItem2.Name
-			end
-		end)
+			end)
+end
+
+function Outfitter:InitializeScripts()
+	Outfitter:InstallTalentTreeScripts()
+	Outfitter:SortScripts()
+end
 
 Outfitter.cScriptPrefix = [[
 	return function (self, event, ...)

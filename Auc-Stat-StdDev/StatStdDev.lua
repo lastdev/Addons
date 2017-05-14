@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Standard Deviation Statistics module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: StatStdDev.lua 5468 2014-08-20 15:22:36Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: StatStdDev.lua 5552 2015-03-28 18:04:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -40,7 +40,10 @@ if not lib then return end
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 local Resources = AucAdvanced.Resources
 local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+local GetServerKeyText = AucAdvanced.GetServerKeyText
 
+local DATABASE_VERSION = 2
 local PET_BAND = 5
 local MAX_DATAPOINTS = 100
 
@@ -64,14 +67,12 @@ local tonumber,strsplit,select,pairs=tonumber,strsplit,select,pairs
 local setmetatable=setmetatable
 local wipe=wipe
 local floor,ceil,abs=floor,ceil,abs
-local concat=table.concat
+local tconcat=table.concat
 local tinsert,tremove=table.insert,table.remove
 -- GLOBALS: AucAdvancedStatStdDevData
 
 
-local SSDRealmData
-
-local cache = {}
+local pricecache = {}
 
 local ZValues = {.063, .126, .189, .253, .319, .385, .454, .525, .598, .675, .756, .842, .935, 1.037, 1.151, 1.282, 1.441, 1.646, 1.962, 20, 20000}
 
@@ -88,8 +89,8 @@ local GetStoreKey = function(link)
 end
 
 function lib.CommandHandler(command, ...)
-	local serverKey = Resources.ServerKeyCurrent
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+	local serverKey = Resources.ServerKey
+	local keyText = GetServerKeyText(serverKey)
 	if (command == "help") then
 		aucPrint(_TRANS('SDEV_Help_SlashHelp1') )--Help for Auctioneer - StdDev
 		local line = AucAdvanced.Config.GetCommandLead(libType, libName)
@@ -105,12 +106,15 @@ function lib.Processors.itemtooltip(callbackType, ...)
 	lib.ProcessTooltip(...)
 end
 lib.Processors.battlepettooltip = lib.Processors.itemtooltip
-function lib.Processors.config(callbackType, ...)
+function lib.Processors.config(callbackType, gui)
 	--Called when you should build your Configator tab.
-	private.SetupConfigGui(...)
+	if private.SetupConfigGui then private.SetupConfigGui(gui) end
 end
-function lib.Processors.scanstats(callbackType, ...)
-	wipe(cache)
+function lib.Processors.scanstats()
+	wipe(pricecache)
+end
+function lib.Processors.gameactive()
+	if private.LookForOldData then private.LookForOldData() end
 end
 
 lib.ScanProcessors = {}
@@ -129,16 +133,15 @@ function lib.ScanProcessors.create(operation, itemData, oldData)
 	-- Get the key for this item and find it's stats.
 	local keyId, property = GetStoreKey(itemData.link)
 	if not keyId then return end
-	local serverKey = Resources.ServerKeyCurrent
-	if not SSDRealmData[serverKey] then SSDRealmData[serverKey] = {} end
-	local stats = private.UnpackStats(SSDRealmData[serverKey][keyId])
+	local serverdata = private.GetServerData(Resources.ServerKey, true)
+	local stats = private.UnpackStats(serverdata[keyId])
 	if not stats[property] then stats[property] = {} end
 
 	if #stats[property] >= MAX_DATAPOINTS then
 		tremove(stats[property], 1)
 	end
 	tinsert(stats[property], buyout)
-	SSDRealmData[serverKey][keyId] = private.PackStats(stats)
+	serverdata[keyId] = private.PackStats(stats)
 end
 
 local BellCurve = AucAdvanced.API.GenerateBellCurve()
@@ -210,29 +213,27 @@ local datapoints_stack = {}
 
 function lib.GetPrice(hyperlink, serverKey)
 	if not get("stat.stddev.enable") then return end
-
 	local keyId, property = GetStoreKey(hyperlink)
 	if not keyId then return end
-
-	if not serverKey then serverKey = Resources.ServerKeyCurrent end
-
-	if not SSDRealmData[serverKey] then return end
-	if not SSDRealmData[serverKey][keyId] then return end
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+	local serverdata = private.GetServerData(serverKey)
+	if not serverdata or not serverdata[keyId] then return end
 
 	local cacheKey = serverKey ..":"..keyId..":"..property
-	if cache[cacheKey] then
-		return unpack(cache[cacheKey], 1, 7)
+	if pricecache[cacheKey] then
+		return unpack(pricecache[cacheKey], 1, 7)
 	end
 
-	local stats = private.UnpackStats(SSDRealmData[serverKey][keyId])
-	if not stats[property] then return end
-
-	local count = #stats[property]
+	local stats = private.UnpackStats(serverdata[keyId])
+	local statsprop = stats[property]
+	if not statsprop then return end
+	local count = #statsprop
 	if (count < 1) then return end
 
 	local total, number = 0, 0
 	for i = 1, count do
-		local price, stack = strsplit("/", stats[property][i])
+		local price, stack = strsplit("/", statsprop[i])
 		price = tonumber(price) or 0
 		stack = tonumber(stack) or 1
 		if (stack < 1) then stack = 1 end
@@ -276,7 +277,7 @@ function lib.GetPrice(hyperlink, serverKey)
 		confidence = private.GetCfromZ(confidence)
 	end
 
-	cache[cacheKey] = { average, mean, false, stdev, variance, count, confidence }
+	pricecache[cacheKey] = { average, mean, false, stdev, variance, count, confidence }
 	return average, mean, false, stdev, variance, count, confidence
 end
 
@@ -309,6 +310,7 @@ function lib.GetPriceArray(hyperlink, serverKey)
 end
 
 function private.SetupConfigGui(gui)
+	private.SetupConfigGui = nil
 	local id = gui:AddTab(lib.libName, lib.libType.." Modules")
 	--gui:MakeScrollable(id)
 
@@ -412,7 +414,7 @@ function lib.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, ad
 end
 
 function lib.OnLoad(addon)
-	if SSDRealmData then return end
+	if not private.InitData then return end
 
 	default("stat.stddev.tooltip", false)
 	default("stat.stddev.mean", false)
@@ -425,35 +427,6 @@ function lib.OnLoad(addon)
 	private.InitData()
 end
 
-function lib.ClearItem(hyperlink, serverKey)
-	local keyId, property = GetStoreKey(hyperlink)
-	if not keyId then return end
-
-	if not serverKey then serverKey = Resources.ServerKeyCurrent end
-	if SSDRealmData[serverKey] and SSDRealmData[serverKey][keyId] then
-		local stats = private.UnpackStats(SSDRealmData[serverKey][keyId])
-		if stats[property] then
-			stats[property] = nil
-			SSDRealmData[serverKey][keyId] = private.PackStats(stats)
-			wipe(cache)
-			local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
-			aucPrint(libType.._TRANS('SDEV_Interface_ClearingData'):format(hyperlink, keyText))--- StdDev: clearing data for %s for {{%s}}
-		end
-	end
-end
-
-function lib.ClearData(serverKey)
-	serverKey = serverKey or Resources.ServerKeyCurrent
-	wipe(cache)
-	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
-		wipe(SSDRealmData)
-		aucPrint(_TRANS('SDEV_Help_SlashHelp4').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing StdDev stats for // All realms
-	elseif SSDRealmData[serverKey] then
-		SSDRealmData[serverKey] = nil
-		local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
-		aucPrint(_TRANS('SDEV_Help_SlashHelp4').." {{"..keyText.."}}") --Clearing StdDev stats for
-	end
-end
 
 --[[ Private functions ]]--
 
@@ -482,21 +455,143 @@ function private.PackStats(data)
 	local n=0
 	for property, info in pairs(data) do
 		n=n+1
-		tmp[n]=property..":"..concat(info, ";")
+		tmp[n]=property..":"..tconcat(info, ";")
 	end
-	return concat(tmp,",",1,n)
+	return tconcat(tmp,",",1,n)
+end
+
+--[[ Database functions ]]--
+local SSDRealmData
+
+function private.UpgradeDB()
+	private.UpgradeDB = nil
+
+	local saved = AucAdvancedStatStdDevData
+
+	if saved and saved.Version == DATABASE_VERSION then return end
+
+	AucAdvancedStatStdDevData = {
+		Version = DATABASE_VERSION,
+		RealmData = {},
+	}
+
+	if saved and not saved.Version then
+		-- original version: should be a table with simple format [serverKey] = {<data>}
+		-- used old-style serverKeys; we want to upgrade to new-style
+		-- internal format of {<data>} is unchanged
+
+		for serverKey, data in pairs(saved) do
+			if type(data) ~= "table" or not next(data) then -- don't keep invalid entries or empty tables
+				saved[serverKey] = nil
+			else
+				local realm, faction = AucAdvanced.SplitServerKey(serverKey)
+				if not realm or faction == "Neutral" then -- don't keep invalid or neutral (old style) serverKeys
+					saved[serverKey] = nil
+				end
+			end
+		end
+
+		if next(saved) then
+			AucAdvancedStatStdDevData.OldRealmData = saved
+			saved.expires = time() + 1209600 -- 60 * 60 * 24 * 14 = 14 days
+		end
+	end
+end
+
+function private.LookForOldData()
+	private.LookForOldData = nil
+
+	local oldrealms = AucAdvancedStatStdDevData.OldRealmData
+	if not oldrealms then return end
+
+	local newKey = Resources.ServerKey
+	if  not SSDRealmData[newKey] then
+		-- prefer home faction, but use opposing if no home data
+		SSDRealmData[newKey] = oldrealms[Resources.ServerKeyHome] or oldrealms[Resources.ServerKeyOpposing]
+	end
+
+	if not oldrealms.expires or time() > oldrealms.expires then
+		AucAdvancedStatStdDevData.OldRealmData = nil
+	else
+		oldrealms[Resources.ServerKeyHome] = nil
+		oldrealms[Resources.ServerKeyOpposing] = nil
+	end
+end
+
+function lib.ClearItem(hyperlink, serverKey)
+	local keyId, property = GetStoreKey(hyperlink)
+	if not keyId then return end
+
+	serverKey = ResolveServerKey(serverKey)
+	if SSDRealmData[serverKey] and SSDRealmData[serverKey][keyId] then
+		local stats = private.UnpackStats(SSDRealmData[serverKey][keyId])
+		if stats[property] then
+			stats[property] = nil
+			SSDRealmData[serverKey][keyId] = private.PackStats(stats)
+			wipe(pricecache)
+			local keyText = GetServerKeyText(serverKey)
+			aucPrint(libType.._TRANS('SDEV_Interface_ClearingData'):format(hyperlink, keyText))--- StdDev: clearing data for %s for {{%s}}
+		end
+	end
+end
+
+function lib.ClearData(serverKey)
+	if serverKey and AucAdvanced.API.IsKeyword(serverKey, "ALL") then
+		wipe(SSDRealmData)
+		wipe(pricecache)
+		aucPrint(_TRANS('SDEV_Help_SlashHelp4').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing StdDev stats for // All realms
+		return
+	end
+	serverKey = ResolveServerKey(serverKey)
+	if SSDRealmData[serverKey] then
+		SSDRealmData[serverKey] = nil
+		wipe(pricecache)
+		local keyText = GetServerKeyText(serverKey)
+		aucPrint(_TRANS('SDEV_Help_SlashHelp4').." {{"..keyText.."}}") --Clearing StdDev stats for
+	end
+end
+
+function private.GetServerData(serverKey, create)
+	local data = SSDRealmData[serverKey]
+	if not data and create then
+		data = {}
+		SSDRealmData[serverKey] = data
+	end
+	return data
 end
 
 function private.InitData()
 	private.InitData = nil
 
 	-- Do any database upgrades here
-	if not AucAdvancedStatStdDevData then AucAdvancedStatStdDevData = {} end
+	if private.UpgradeDB then private.UpgradeDB() end
 
-	SSDRealmData = AucAdvancedStatStdDevData
+	SSDRealmData = AucAdvancedStatStdDevData.RealmData
+	if not SSDRealmData then
+		SSDRealmData = {} -- dummy value to avoid more errors - will not get saved
+		error("Error loading or creating Stat-StdDev database")
+	end
 
 	-- Do any regular database maintenance here
 end
 
+function lib.GetServerKeyList()
+	if not SSDRealmData then return end
+	local list = {}
+	for serverKey in pairs(SSDRealmData) do
+		tinsert(list, serverKey)
+	end
+	return list
+end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5468 $")
+function lib.ChangeServerKey(oldKey, newKey)
+	if not SSDRealmData then return end
+	local oldData = SSDRealmData[oldKey]
+	SSDRealmData[oldKey] = nil
+	if oldData and newKey then
+		SSDRealmData[newKey] = oldData
+		-- if there was data for newKey then it will be discarded (simplest implementation)
+	end
+end
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5552 $")

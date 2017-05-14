@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnxMain.lua 5317 2012-08-03 05:11:38Z ccox $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnxMain.lua 5644 2016-08-06 21:39:02Z ccox $
 	URL: http://enchantrix.org/
 
 	This is an addon for World of Warcraft that add a list of what an item
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxMain.lua $", "$Rev: 5317 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxMain.lua $", "$Rev: 5644 $")
 
 -- Local functions
 local addonLoaded
@@ -41,7 +41,7 @@ local spellTargetItemHook
 local useItemByNameHook
 local onEvent
 
-Enchantrix.Version = "5.21d.5538"
+Enchantrix.Version = "7.5.5714"
 if (Enchantrix.Version == "<".."%version%>") then
 	Enchantrix.Version = "4.0.DEV"
 end
@@ -87,7 +87,7 @@ function addonLoaded(hookArgs, event, addOnName)
 	Enchantrix.AutoDisenchant.AddonLoaded()
 	Enchantrix.MiniIcon.Reposition()
 
-	Enchantrix.Revision = Enchantrix.Util.GetRevision("$Revision: 5317 $")
+	Enchantrix.Revision = Enchantrix.Util.GetRevision("$Revision: 5644 $")
 	for name, obj in pairs(Enchantrix) do
 		if type(obj) == "table" then
 			Enchantrix.Revision = math.max(Enchantrix.Revision, Enchantrix.Util.GetRevision(obj.Revision))
@@ -219,7 +219,13 @@ function ENX_OnTooltipSetItem(this)
 		ENX_TooltipHooks[tooltipName].OnTooltipSetItem(tooltip);
 	end
 	local name, link = this:GetItem();
-	if (link) then
+	
+	if ( name == "" or (link == "[]") ) then
+		-- Wow 7.0 issue
+		--Enchantrix.Util.DebugPrintQuick("Tooltip1 item empty for ", name, link, type(name), type(link) )	-- DEBUGGING
+		return false;
+	elseif (link) then
+		--Enchantrix.Util.DebugPrintQuick("Tooltip0 item for ", name, link, type(name), type(link) )	-- DEBUGGING
 		-- first, make sure that we think this item is disenchantable to start with (reduce false positives)
 		if (Enchantrix.Util.GetIType(link)) then
 			-- Ok, we think the item is disenchantable
@@ -246,10 +252,11 @@ function ENX_OnTooltipSetItem(this)
 end
 
 function pickupInventoryItemHook(slot)
-	--Enchantrix.Util.DebugPrintQuick("pickupInventoryItemHook", slot);
 	-- Remember last activated item
+	--Enchantrix.Util.DebugPrintQuick("pickupInventoryItemHook", slot);
 	if (not UnitCastingInfo("player")) then
 		if slot then
+			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by inventory", "info:", GetInventoryItemLink("player", slot))
 			DisenchantEvent.spellTarget = GetInventoryItemLink("player", slot)
 			DisenchantEvent.targetted = GetTime()
 		end
@@ -261,6 +268,7 @@ function useContainerItemHook(bag, slot)
 	--Enchantrix.Util.DebugPrintQuick("usecontaineritemhook", bag, slot);
 	if (not UnitCastingInfo("player")) then
 		if bag and slot then
+			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by bag", "info:", GetContainerItemLink(bag, slot))
 			DisenchantEvent.spellTarget = GetContainerItemLink(bag, slot)
 			DisenchantEvent.targetted = GetTime()
 		end
@@ -274,6 +282,7 @@ function spellTargetItemHook(itemString)
 		if itemString then
 			local _, itemLink = GetItemInfo(itemString)
 			if itemLink then
+				--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by item", "info:", itemLink)
 				DisenchantEvent.spellTarget = itemLink
 				DisenchantEvent.targetted = GetTime()
 			end
@@ -288,6 +297,7 @@ function useItemByNameHook(itemString)
 		if itemString then
 			local _, itemLink = GetItemInfo(itemString)
 			if itemLink then
+				--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by name", "info:", itemLink)
 				DisenchantEvent.spellTarget = itemLink
 				DisenchantEvent.targetted = GetTime()
 			end
@@ -308,15 +318,18 @@ function onEvent(funcVars, event, player, spell, rank, target)
 		end
 		DisenchantEvent.sent = nil
 	elseif event == "UNIT_SPELLCAST_FAILED" then
-		-- NOTE: we don't get the spell name here
-		-- Successful disenchant: SENT, START, STOP, SUCCEEDED
-		-- Events for failed disenchant are: SENT, (sometimes START), FAILED
-		-- For an item above our level, the events are: SENT, FAILED
+		-- NOTE: we do get the spell name here (Blizzard fixed the bug)
+		-- Successful disenchant: SENT, ItemTargeted, START, STOP, SUCCEEDED
+		-- Events for failed disenchant are: SENT, ItemTargeted, (sometimes START), FAILED
+		-- For an item above our level, the events are: SENT, ItemTargeted, FAILED
+		--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast failed", "info:", funcVars, event, spell, rank, target )
+		--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast failed 0", "info:", DisenchantEvent.sent, DisenchantEvent.spellTarget, (GetTime() - DisenchantEvent.targetted) )
 		if (DisenchantEvent.sent
 			and DisenchantEvent.spellTarget
-			and GetTime() - DisenchantEvent.targetted < 5) then
+			and ((GetTime() - DisenchantEvent.targetted) < 5)) then
 			-- first, make sure that we think this item is disenchantable to start with (reduce false positives)
-			if ( (DisenchantEvent.spellname == _ENCH('ArgSpellname'))
+			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast failed 1", "info:", spell, Enchantrix.Util.GetIType(DisenchantEvent.spellTarget) )
+			if ( (spell == _ENCH('ArgSpellname'))
 				and Enchantrix.Util.GetIType(DisenchantEvent.spellTarget) ) then
 				-- this means that the item is not disenchantable, but we think it is!
 				-- now make sure the user had enough skill to disenchant it
@@ -324,13 +337,16 @@ function onEvent(funcVars, event, player, spell, rank, target)
 				local skill = Enchantrix.Util.GetUserEnchantingSkill();
 				local name, link, quality, itemLevel = GetItemInfo( DisenchantEvent.spellTarget );
 				local skillNeeded = Enchantrix.Util.DisenchantSkillRequiredForItemLevel(itemLevel, quality);
+				--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast failed 2", "info:", skill, skillNeeded )
 				if (skill >= skillNeeded) then
+					--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast failed 3", "info:" )
 					Enchantrix.Storage.SaveNonDisenchantable(DisenchantEvent.spellTarget)
 				end
 			end
 		end
 		DisenchantEvent.finished = nil
 		DisenchantEvent.sent = nil
+
 	elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
 		-- disenchant interrupted
 		DisenchantEvent.finished = nil
@@ -350,13 +366,11 @@ function onEvent(funcVars, event, player, spell, rank, target)
 
 	elseif event == "UNIT_SPELLCAST_SENT" then
 		-- NOTE: we do get the spell name here
+		--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast sent", "info:", funcVars, event, spell, rank, target )
 		if (spell == _ENCH('ArgSpellname')) or (spell == _ENCH('ArgSpellProspectingName') or (spell == _ENCH('ArgSpellMillingName'))) then
-			if (DisenchantEvent.spellTarget and GetTime() - DisenchantEvent.targetted < 10) then
-				DisenchantEvent.sent = true;
-			end
-		else
-			DisenchantEvent.sent = nil;
-			DisenchantEvent.spellTarget = nil;
+			DisenchantEvent.sent = true;
+			DisenchantEvent.spellname = spell;
+			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "cast sent 2", "info:", funcVars, event, spell, rank, target )
 		end
 	elseif event == "LOOT_OPENED" then
 		if DisenchantEvent.finished then
@@ -380,7 +394,8 @@ function onEvent(funcVars, event, player, spell, rank, target)
 				end
 				isMilling = true;
 			end
-			local sig = Enchantrix.Util.GetSigFromLink(DisenchantEvent.finished)
+			local itemLink = DisenchantEvent.finished
+			local sig = Enchantrix.Util.GetSigFromLink(itemLink)
 			local reagentList = {}
 			for i = 1, GetNumLootItems(), 1 do
 				if GetLootSlotType(i) == LOOT_SLOT_ITEM then	-- LootSlotIsItem(i) 
@@ -396,8 +411,8 @@ function onEvent(funcVars, event, player, spell, rank, target)
 						reagentList[ reagentID ] = (reagentList[ reagentID ] or 0) + quantity
 						if (isDisenchant and i == 1) then
 							-- disenchant only yields one item, so we can pass it in one at a time
-							-- also, we want to ignore guild bonus materials, so only take the first one
-							Enchantrix.Storage.SaveDisenchant(sig, reagentID, quantity)
+							-- also, we want to ignore bonus materials, so only take the first one
+							Enchantrix.Storage.SaveDisenchant(sig, reagentID, quantity, itemLink)
 						end
 					end
 				end

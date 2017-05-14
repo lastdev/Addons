@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SimpFrame.lua 5531 2014-12-10 15:27:31Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SimpFrame.lua 5705 2017-02-07 10:34:30Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -53,6 +53,8 @@ local AucIsScanning = AucAdvanced.Scan.IsScanning
 local PostAuctionClick = AucAdvanced.Post.PostAuctionClick
 local ShowItemLink = AucAdvanced.ShowItemLink
 local ShowPetLink = AucAdvanced.ShowPetLink
+
+local GetSettingStr = private.GetSettingStr -- Note: see function definition in AucSimple.lua
 
 local IsPlayerIgnored -- to be filled in when Auc-Filter-Basic loads
 AucAdvanced.RegisterModuleCallback("basic", function(lib) IsPlayerIgnored = lib.IsPlayerIgnored end)
@@ -339,7 +341,7 @@ function private.UpdateDisplay()
 	end
 	frame.info:SetText(text)
 
-	local deposit = GetDepositCost(oLink, duration, Resources.CurrentFaction, cStack)
+	local deposit = GetDepositCost(oLink, duration, nil, cStack)
 	if not deposit then
 		frame.fees:SetText("Unknown deposit cost")
 	elseif cNum > 1 then
@@ -759,7 +761,7 @@ end
 function private.LoadConfig()
 	if not frame.CurItem.link then return end
 	local id = GetSigFromLink(frame.CurItem.link)
-	local settingstring = get("util.simpleauc."..Resources.ServerKeyCurrent.."."..id)
+	local settingstring = GetSettingStr(id)
 	if not settingstring then return end
 	local bid, buy, duration, number, stack = strsplit(":", settingstring)
 	bid = tonumber(bid)
@@ -801,7 +803,7 @@ end
 function private.RemoveConfig()
 	if not frame.CurItem.link then return end
 	local id = GetSigFromLink(frame.CurItem.link)
-	set("util.simpleauc."..Resources.ServerKeyCurrent.."."..id, nil)
+	set("util.simpleauc."..Resources.ServerKey.."."..id, nil)
 end
 
 function private.SaveConfig()
@@ -814,7 +816,7 @@ function private.SaveConfig()
 		tostring(frame.CurItem.number),
 		tostring(frame.CurItem.stack)
 		)
-	set("util.simpleauc."..Resources.ServerKeyCurrent.."."..id, settingstring)
+	set("util.simpleauc."..Resources.ServerKey.."."..id, settingstring)
 end
 
 function private.ClearSetting()
@@ -878,41 +880,33 @@ function private.PostAuction()
 end
 
 function private.Refresh(background)
-	local name, minLevel, typeId, subtypeId, quality
+	local name, filterData
 	local link = frame.CurItem.link
 	if not link then return end
-	if strmatch(link, "|Hitem:") then
-		local itemName, _, itemRarity, _, itemMinLevel, itemType, itemSubType = GetItemInfo(link)
+	local lType, itemID = strsplit(":", link)
+	lType = lType:sub(-4)
+	itemID = tonumber(itemID)
+	if not itemID then
+		-- link should always have an itemID, or speciesID for battlepets
+		return
+	elseif lType == "item" then
+		local itemName, _, _, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(link)
 		name = itemName
-		minLevel = itemMinLevel
-		typeId = Const.CLASSESREV[itemType]
-		if typeId then
-			subtypeId = Const.SUBCLASSESREV[itemType][itemSubType]
-		end
-		quality = itemRarity
-	else
-		local lType, speciesID, _, petQuality = strsplit(":", link)
-		lType = lType:sub(-9)
-		speciesID = tonumber(speciesID)
-		if lType == "battlepet" and speciesID then
-			-- it's a pet
-			local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
-			-- all caged pets should have the default pet name (custom names are removed when caging)
-			local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-			name = petName
-			minLevel = iMin
-			typeId = Const.CLASSESREV[iType]
-			subtypeId = petType
-			quality = tonumber(petQuality)
-		end
+		filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID)
+	elseif lType == "epet" then -- last 4 letters of "battlepet"
+		-- all caged pets should have the default pet name (custom names are removed when caging)
+		local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(itemID) -- itemID is speciesID
+		name = petName
+		filterData = AucAdvanced.Scan.QueryFilterFromID(LE_ITEM_CLASS_BATTLEPET, Const.AC_PetType2SubClassID[petType])
 	end
-	if not name then return end
+	if not name or name == "" then return end
+	local exact = #name < 30 -- use exact match, except for very long names
 	aucPrint(("Refreshing view of {{%s}}"):format(name))--Refreshing view of {{%s}}
-	if background and type(background) == 'boolean' then
-		StartPushedScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality, true)
+	if background == true then
+		StartPushedScan(name, nil, nil, nil, nil, exact, filterData)
 	else
 		PushScan()
-		StartScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality, nil, true)
+		StartScan(name, nil, nil, nil, nil, nil, exact, filterData)
 	end
 end
 
@@ -931,13 +925,6 @@ function private.CreateFrames()
 	frame.CurItem = {match = false, undercut = false, remember = false}
 	frame.detail = {0,0,0,"",""}
 	Stubby.RegisterFunctionHook("PickupContainerItem", 200, private.postPickupContainerItemHook)
-
-	frame.SetButtonTooltip = function(text)
-		if text and get("util.appraiser.buttontips") then
-			GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-			GameTooltip:SetText(text)
-		end
-	end
 
 	frame:SetParent(AuctionFrame)
 	frame:SetPoint("TOPLEFT", AuctionFrame, "TOPLEFT")
@@ -1314,7 +1301,8 @@ function private.CreateFrames()
 	frame.scanbutton:SetPoint("LEFT", "AuctionFrameMoneyFrame", "RIGHT", 5,0)
 	frame.scanbutton:SetScript("OnClick", function()
 		if not AucIsScanning() then
-			StartScan("", "", "", AuctionFrameBrowse.selectedInvtypeIndex, AuctionFrameBrowse.selectedClassIndex, AuctionFrameBrowse.selectedSubclassIndex,  nil, nil)
+			local filterData = AucAdvanced.Scan.QueryFilterFromIndex(AuctionFrameBrowse.selectedCategoryIndex, AuctionFrameBrowse.selectedSubCategoryIndex, AuctionFrameBrowse.selectedSubSubCategoryIndex)
+			StartScan(nil, nil, nil, nil, nil, nil, nil, filterData)
 		end
 	end)
 
@@ -1368,4 +1356,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5531 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5705 $")

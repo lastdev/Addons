@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Stat-Sales module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCount.lua 5476 2014-09-27 18:40:05Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCount.lua 5598 2016-04-29 10:21:38Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer statistic module calculates a price statistics for items
@@ -59,7 +59,10 @@ local floor,abs,sqrt = floor,abs,sqrt
 local strmatch = strmatch
 
 local GetSigFromLink = AucAdvanced.API.GetSigFromLink
-local GetFaction = AucAdvanced.GetFaction
+local Resources = AucAdvanced.Resources
+local Const = AucAdvanced.Const
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+local GetExpandedRealmName = AucAdvanced.GetExpandedRealmName
 
 local pricecache = setmetatable({}, {__mode="v"})
 -- don't recalc time every query, that would be ridiculous
@@ -139,27 +142,30 @@ end
 
 do
 	local keycache = {}
-	local faction2selectbox = {["Horde"]={"1","horde"}, ["Alliance"]={"1","alliance"}, ["Neutral"]={"1","neutral"}}
 	local basesettings = {
-	["bid"] =true,
-	["auction"] = true,
-	["exact"] = true,
-	["servers"] = {},
+		["bid"] =true,
+		["auction"] = true,
+		["exact"] = true,
+		["servers"] = {},
+		["selectbox"] = {"1", "server"},
 	}
 	function private.GetBCSearchSettings(serverKey)
-		local keysettings = keycache[serverKey]
-		if not keysettings then
-			-- only split each unique serverKey once, and cache the results
-			local realmName, factionName = AucAdvanced.SplitServerKey(serverKey)
-			local sbox = faction2selectbox[factionName]
-			if not sbox then -- Invalid faction
-				return
+		local realmname = keycache[serverKey]
+		if not realmname then
+			if serverKey == Resources.ServerKey then -- current server
+				realmname = Const.PlayerRealm
+			else
+				-- try to extract realm name from serverKey
+				-- if this doesn't result in a valid realm name, BeanCounter should return nil or an empty table
+				-- todo: revise this when BeanCounter gets proper multi-server support
+				if serverKey:byte(1) == 35 then -- '#'
+					serverKey = serverKey:sub(2)
+				end
+				realmname = GetExpandedRealmName(serverKey)
 			end
-			keysettings = {sbox, realmName}
-			keycache[serverKey] = keysettings
+			keycache[serverKey] = realmname
 		end
-		basesettings["selectbox"] = keysettings[1]
-		basesettings.servers[1] = keysettings[2]
+		basesettings.servers[1] = realmname
 		return basesettings
 	end
 end
@@ -178,8 +184,9 @@ function lib.GetPrice(hyperlink, serverKey)
 
 	local sig = GetSigFromLink(hyperlink)
 	if not sig then return end
-	serverKey = serverKey or GetFaction()
-	local cachesig = serverKey..sig
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+	local cachesig = serverKey.."^"..sig
 	local cached = pricecache[cachesig]
 	if cached == false then
 		return
@@ -187,7 +194,6 @@ function lib.GetPrice(hyperlink, serverKey)
 		return unpack(cached)
 	end
 	local settings = private.GetBCSearchSettings(serverKey)
-	if not settings then return end
 
 	local tbl = BeanCounter.API.search(hyperlink, settings, true, 99999)
 	local bought, sold, boughtseen, soldseen, boughtqty, soldqty, bought3, sold3, boughtqty3, soldqty3, bought7, sold7, boughtqty7, soldqty7 = 0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -345,32 +351,35 @@ end
 	Instead we record the time, and GetPrice will ignore entries with timestamps earlier than that time
 --]]
 function lib.ClearItem(hyperlink, serverKey)
-	aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData') )-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 	local sig = GetSigFromLink(hyperlink)
 	if not sig then return end
-	serverKey = serverKey or GetFaction()
-	sig = serverKey..sig
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+	aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData') )-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
+	sig = serverKey.."^"..sig
 	SalesDB[sig] = time()
 	wipe(pricecache)
 end
 
 function lib.ClearData(serverKey)
-	serverKey = serverKey or GetFaction()
 	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
 		-- "ALL" overrides all pre-existing entries in the table. Eliminate those "dead" entries.
 		wipe(SalesDB)
 		SalesDB.ALL = time()
 		aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{".._TRANS("ADV_Interface_AllRealms").."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
-	elseif AucAdvanced.SplitServerKey(serverKey) then -- looks like a valid serverKey
-		-- Any pre-existing entries *containing* this serverKey are overridden by the new entry for this serverKey; remove them
-		for key, value in pairs(SalesDB) do
-			if key:find(serverKey, 1, true) then -- plain text matching
-				SalesDB[key] = nil
+	else
+		serverKey = ResolveServerKey(serverKey)
+		if serverKey then
+			-- Any pre-existing entries *containing* this serverKey are overridden by the new entry for this serverKey; remove them
+			for key, value in pairs(SalesDB) do
+				if key:find(serverKey, 1, true) then -- plain text matching
+					SalesDB[key] = nil
+				end
 			end
+			SalesDB[serverKey] = time()
+			local keyText = AucAdvanced.GetServerKeyText(serverKey)
+			aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{"..keyText.."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 		end
-		SalesDB[serverKey] = time()
-		local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
-		aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{"..keyText.."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 	end
 	wipe(pricecache)
 end
@@ -385,23 +394,73 @@ function lib.OnLoad()
 	default("stat.sales.confidence", false)
 	default("stat.sales.enable", true)
 
+	private.ProfileChanged()
+end
+
+function private.ProfileChanged()
 	SalesDB = get("stat.sales.ignoredsigs")
 	if not SalesDB then
 		SalesDB = {}
 		set("stat.sales.ignoredsigs", SalesDB)
 	end
+
+	private.UpgradeDB32() -- for [ASAL-32]
 end
 
+function private.UpgradeDB32()
+	if not Resources.Active then return end -- serverKey info is unavailable until "gameactive" event
+	if get("stat.sales.upgraded32") then return end -- already updated _for this profile_
 
-lib.Processors = {}
+	-- Upgrade saved values for new-style serverKeys per [ASAL-32]
+	-- locate and update keys which are, or contain, an old-style serverKey
+	-- convert oldserverKey..sig format to newserverKey.."^"..sig
+	-- (the "^" separator has been added as new-style serverKeys may end with a numeric digit)
+	local merges = {} -- cannot add new entries while iterating 'pairs', so store them and merge in later
+	for key, timestamp in pairs(SalesDB) do
+		if key ~= "ALL" then
+			local serverKey, sig = strmatch(key, "^(.+%-Alliance)(.*)$")
+			if not serverKey then serverKey, sig = strmatch(key, "^(.+%-Horde)(.*)$") end
+			if serverKey then
+				serverKey = ResolveServerKey(serverKey)
+				if serverKey then
+					SalesDB[key] = nil
+					local newkey = serverKey
+					if sig ~= "" then newkey = newkey .."^".. sig end
+					if not merges[newkey] or merges[newkey] < timestamp then
+						merges[newkey] = timestamp
+					end
+				end
+			elseif strmatch(key, ".+%-Neutral") then
+				-- delete any keys related to obsolete neutral AH
+				SalesDB[key] = nil
+			end
+		end
+	end
 
-function lib.Processors.config(callbackType, ...)
-	if private.SetupConfigGui then private.SetupConfigGui(...) end
+	for key, timestamp in pairs(merges) do
+		if not SalesDB[key] or SalesDB[key] < timestamp then
+			SalesDB[key] = timestamp
+		end
+	end
+
+	set("stat.sales.upgraded32", true)
 end
+
+lib.Processors = {
+	config = function(callbackType, gui)
+		if private.SetupConfigGui then private.SetupConfigGui(gui) end
+	end,
+	configchanged = function(callbackType, fullsetting, value, subsetting, module, base)
+		if base == "profile" then
+			private.ProfileChanged()
+		end
+	end,
+}
 
 lib.Processors.mailclose = private.clearCache
 lib.Processors.auctionclose = private.clearCache
-lib.Processors.factionselect = private.clearCache
+
+lib.Processors.gameactive = private.ProfileChanged -- needed to drive private.UpgradeDB32 at startup, as it will not work before this event [ASAL-32]
 
 function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality, quantity, cost)
 	if not get("stat.sales.tooltip") or not (BeanCounter) or not (BeanCounter.API) or not (BeanCounter.API.isLoaded) then return end --If beancounter disabled itself, boughtseen etc are nil and throw errors
@@ -456,6 +515,7 @@ function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality,
 	end
 end
 
+
 function private.SetupConfigGui(gui)
 	private.SetupConfigGui = nil
 	local id = gui:AddTab(lib.libName, lib.libType.." Modules")
@@ -497,4 +557,4 @@ function private.SetupConfigGui(gui)
 	if tooltipID then private.addTooltipControls(tooltipID) end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5476 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5598 $")

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(192, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 148 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(52498)
 mod:SetEncounterID(1197)
-mod:DisableEEKillDetection()
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -29,15 +28,15 @@ local specWarnSmolderingDevastation	= mod:NewSpecialWarningSpell(99052)
 local specWarnVolatilePoison		= mod:NewSpecialWarningMove(99278)--Heroic ability
 local specWarnTouchWidowKissOther	= mod:NewSpecialWarningTarget(99476, "Tank")
 
-local timerSpinners 				= mod:NewNextTimer(15, "ej2770", nil, nil, nil, 97370) -- 15secs after Smoldering cast start
-local timerSpiderlings				= mod:NewNextTimer(30, "ej2778", nil, nil, nil, 72106)
-local timerDrone					= mod:NewNextTimer(60, "ej2773", nil, nil, nil, 28866)
-local timerSmolderingDevastationCD	= mod:NewNextCountTimer(90, 99052)
-local timerEmberFlareCD				= mod:NewNextTimer(6, 98934)
-local timerSmolderingDevastation	= mod:NewCastTimer(8, 99052)
+local timerSpinners 				= mod:NewNextTimer(15, "ej2770", nil, nil, nil, 1, 97370) -- 15secs after Smoldering cast start
+local timerSpiderlings				= mod:NewNextTimer(30, "ej2778", nil, nil, nil, 1, 72106)
+local timerDrone					= mod:NewNextTimer(60, "ej2773", nil, nil, nil, 1, 28866)
+local timerSmolderingDevastationCD	= mod:NewNextCountTimer(90, 99052, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerEmberFlareCD				= mod:NewNextTimer(6, 98934, nil, nil, nil, 2)
+local timerSmolderingDevastation	= mod:NewCastTimer(8, 99052, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerFixate					= mod:NewTargetTimer(10, 99526)
-local timerWidowsKissCD				= mod:NewCDTimer(32, 99476, nil, "Tank|Healer")
-local timerWidowKiss				= mod:NewTargetTimer(23, 99476, nil, "Tank|Healer")
+local timerWidowsKissCD				= mod:NewCDTimer(32, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerWidowKiss				= mod:NewTargetTimer(23, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
 
 local smolderingCount = 0
 

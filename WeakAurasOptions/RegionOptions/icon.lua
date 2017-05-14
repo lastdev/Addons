@@ -1,4 +1,4 @@
-local SharedMedia = LibStub("LibSharedMedia-3.0");
+local Masque = LibStub("Masque", true)
 local L = WeakAuras.L
 
 local function createOptions(id, data)
@@ -21,17 +21,12 @@ local function createOptions(id, data)
             type = "input",
             name = L["Display Icon"],
             hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto; end,
-            disabled = function() return not data.icon end,
             order = 12,
             get = function()
-                if(data.displayIcon) then
-                    return data.displayIcon:sub(17);
-                else
-                    return nil;
-                end
+                return data.displayIcon and tostring(data.displayIcon) or "";
             end,
             set = function(info, v)
-                data.displayIcon = "Interface\\Icons\\"..v;
+                data.displayIcon = v;
                 WeakAuras.Add(data);
                 WeakAuras.SetThumbnail(data);
                 WeakAuras.SetIconNames(data);
@@ -41,11 +36,10 @@ local function createOptions(id, data)
             type = "execute",
             name = L["Choose"],
             hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto; end,
-            disabled = function() return not data.icon end,
             order = 18,
-            func = function() WeakAuras.OpenIconPick(data, "displayIcon"); end
+            func = function() WeakAuras.OpenIconPicker(data, "displayIcon"); end
         },
-		
+
         desaturate = {
             type = "toggle",
             name = L["Desaturate"],
@@ -61,7 +55,11 @@ local function createOptions(id, data)
         displayStacks = {
             type = "input",
             name = L["Text"],
-            desc = L["Dynamic text tooltip"],
+            desc = function()
+                 local ret = L["Dynamic text tooltip"];
+                 ret = ret .. WeakAuras.GetAdditionalProperties(data);
+                 return ret
+            end,
             order = 40
         },
         textColor = {
@@ -99,7 +97,7 @@ local function createOptions(id, data)
             order = 41.2,
             name = L["Expand Text Editor"],
             func = function()
-                WeakAuras.TextEditor(data, {"customText"})
+                WeakAuras.OpenTextEditor(data, {"customText"})
             end,
             hidden = function()
                 return not data.displayStacks:find("%%c")
@@ -155,7 +153,7 @@ local function createOptions(id, data)
             name = L["Size"],
             order = 47,
             min = 6,
-            max = 24,
+            softMax = 72,
             step = 1
         },
         zoom = {
@@ -169,7 +167,7 @@ local function createOptions(id, data)
         },
         fontFlags = {
             type = "select",
-            name = "Outline",
+            name = L["Outline"],
             order = 48,
             values = WeakAuras.font_flags
         },
@@ -182,7 +180,7 @@ local function createOptions(id, data)
             bigStep = 0.01,
             isPercent = true,
 			hidden = function()
-                return not LBF;
+                return not Masque;
             end
         },
         stickyDuration = {
@@ -204,21 +202,21 @@ local function createOptions(id, data)
         }
     };
     options = WeakAuras.AddPositionOptions(options, id, data);
-    
+
     return options;
 end
 
-local function createThumbnail(parent, fullCreate)
+local function createThumbnail(parent)
     local icon = parent:CreateTexture();
     icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
-    
+
     return icon;
 end
 
 local function modifyThumbnail(parent, icon, data, fullModify)
     local texWidth = 0.25 * data.zoom;
     icon:SetTexCoord(texWidth, 1 - texWidth, texWidth, 1 - texWidth);
-    
+
     function icon:SetIcon(path)
         local success = icon:SetTexture(data.auto and path or data.displayIcon) and (data.auto and path or data.displayIcon);
         if not(success) then
@@ -227,4 +225,63 @@ local function modifyThumbnail(parent, icon, data, fullModify)
     end
 end
 
-WeakAuras.RegisterRegionOptions("icon", createOptions, "Interface\\ICONS\\Temp.blp", L["Icon"], createThumbnail, modifyThumbnail, L["Shows a spell icon with an optional a cooldown overlay"]);
+local templates = {
+  {
+    title = L["Default"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+    };
+  },
+  {
+    title = L["Tiny Icon"],
+    description = L["A 20x20 pixels icon"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+      width = 20,
+      height = 20,
+      cooldown = true
+    };
+  },
+  {
+    title = L["Small Icon"],
+    description = L["A 32x32 pixels icon"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+      width = 32,
+      height = 32,
+      cooldown = true
+    };
+  },
+  {
+    title = L["Medium Icon"],
+    description = L["A 40x40 pixels icon"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+      width = 40,
+      height = 40,
+      cooldown = true
+    };
+  },
+  {
+    title = L["Big Icon"],
+    description = L["A 48x48 pixels icon"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+      width = 48,
+      height = 48,
+      cooldown = true
+    };
+  },
+  {
+    title = L["Huge Icon"],
+    description = L["A 64x64 pixels icon"],
+    icon = "Interface\\ICONS\\Temp.blp",
+    data = {
+      width = 64,
+      height = 64,
+      cooldown = true
+    };
+  }
+}
+
+WeakAuras.RegisterRegionOptions("icon", createOptions, "Interface\\ICONS\\Temp.blp", L["Icon"], createThumbnail, modifyThumbnail, L["Shows a spell icon with an optional cooldown overlay"], templates);

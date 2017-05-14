@@ -209,8 +209,6 @@ BINDING_NAME_OUTFITTER_DISABLEAUTOMATION = "停用自動換裝"
 	Outfitter.cHide = "隱藏"
 	Outfitter.cDontChange = "不改變"
 
-	Outfitter.cHelm = "頭盔"
-	Outfitter.cCloak = "披風"
 	Outfitter.cPlayerTitle = "頭銜"
 
 	Outfitter.cMore = "更多"
@@ -231,17 +229,6 @@ BINDING_NAME_OUTFITTER_DISABLEAUTOMATION = "停用自動換裝"
 
 	Outfitter.cMinimapButtonTitle = "換裝管理 小地圖按鈕"
 	Outfitter.cMinimapButtonDescription = "點擊選取另一配裝，或者拖曳變更位置"
-
-	Outfitter.cClassName = {}
-	Outfitter.cClassName.DRUID = "德魯伊"
-	Outfitter.cClassName.HUNTER = "獵人"
-	Outfitter.cClassName.MAGE = "法師"
-	Outfitter.cClassName.PALADIN = "聖騎士"
-	Outfitter.cClassName.PRIEST = "牧師"
-	Outfitter.cClassName.ROGUE = "盜賊"
-	Outfitter.cClassName.SHAMAN = "薩滿"
-	Outfitter.cClassName.WARLOCK = "術士"
-	Outfitter.cClassName.WARRIOR = "戰士"
 
 	Outfitter.cBattleStance = "戰鬥姿態"
 	Outfitter.cDefensiveStance = "防禦姿態"

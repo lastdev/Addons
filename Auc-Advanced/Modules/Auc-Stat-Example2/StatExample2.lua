@@ -18,8 +18,8 @@ end
 
 --[[
 	Auctioneer - Stat's API Example module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: StatExample2.lua 5365 2012-09-24 17:33:48Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: StatExample2.lua 5590 2016-04-12 14:32:46Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that does something nifty.
@@ -134,7 +134,8 @@ lib.Processors.querysent = function(callbackType, query, isSearch, ...) end
 -- Page Store for page has completed.
 lib.Processors.pagefinished = function(callbackType, pageNum) end
 lib.Processors.scanstart = function(callbackType, scanSize, querySig, qryInfo) end
-lib.Processors.configchanged = function(callbackType, setting, value) end
+-- A config setting has changed. For convenience, the 3 parts from splitting fullsetting are also provided (fullsetting = settingbase.settingmodule.settingname)
+lib.Processors.configchanged = function(callbackType, fullsetting, value, settingname, settingmodule, settingbase) end
 -- Request for config screen gui elements.  gui references the config screen GUI.
 lib.Processors.config = function(callbackType, gui) end
 lib.Processors.searchbegin = function(callbackType, searcherName) end
@@ -255,4 +256,4 @@ end
 function private.Baz()
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5590 $")

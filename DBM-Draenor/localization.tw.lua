@@ -6,24 +6,21 @@ local L
 -----------------------
 L= DBM:GetModLocalization(1291)
 
-L:SetMiscLocalization({
-	Pull				= "TODO: Get Pull Yell!"
-})
-
 -----------------------
 -- Tarlna the Ageless --
 -----------------------
 L= DBM:GetModLocalization(1211)
-
-L:SetMiscLocalization({
-	Pull				= "TODO: Get Pull Yell!"
-})
 
 --------------
 -- Rukhmar --
 --------------
 L= DBM:GetModLocalization(1262)
 
+-------------------------
+-- Supreme Lord Kazzak --
+-------------------------
+L= DBM:GetModLocalization(1452)
+
 L:SetMiscLocalization({
-	Pull				= "TODO: Get Pull Yell!"
+	Pull				= "面對燃燒軍團的力量吧！"
 })

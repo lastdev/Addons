@@ -36,10 +36,10 @@ if PRAT_MODULE == nil then
     return
 end
 
-local L = Prat:GetLocalizer({})
+local PL = Prat:GetLocalizer({})
 
 --[===[@debug@
-L:AddLocale("enUS", {
+PL:AddLocale("enUS", {
     ["ChannelSticky"] = true,
     ["Chat channel sticky options."] = true,
     ["ChatType"] = true,
@@ -48,7 +48,7 @@ L:AddLocale("enUS", {
     ["Sticky %s"] = true,
     ["Toggles sticky on and off for %s."] = true,
     ["smartgroup_name"] = "Smart Groups",
-    ["smartgroup_desc"] = "Adds a /gr command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
+    ["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
     ["Sticky Per Chat Frame"] = true,
     ["Toggle remembering the chat type last used per chat frame."] = true,
 })
@@ -58,151 +58,150 @@ L:AddLocale("enUS", {
 -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
 
---@non-debug@
-L:AddLocale("enUS",
+  --@non-debug@
+do
+    local L
+
+L=
 {
-	Channel = true,
-	ChannelSticky = true,
-	["Chat channel sticky options."] = true,
-	ChatType = true,
-	["Per chat type options."] = true,
-	smartgroup_desc = "Adds a /gr command which automatically picks the correct type of chat, RAID, PARTY, or BATTLEGROUND",
-	smartgroup_name = "Smart Groups",
-	["Sticky Per Chat Frame"] = true,
-	["Sticky %s"] = true,
-	["Toggle remembering the chat type last used per chat frame."] = true,
-	["Toggles sticky on and off for %s."] = true,
+["Channel"] = true,
+["ChannelSticky"] = true,
+["Chat channel sticky options."] = true,
+["ChatType"] = true,
+["Per chat type options."] = true,
+["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
+["smartgroup_name"] = "Smart Groups",
+["Sticky %s"] = true,
+["Sticky Per Chat Frame"] = true,
+["Toggle remembering the chat type last used per chat frame."] = true,
+["Toggles sticky on and off for %s."] = true,
 }
 
-)
-L:AddLocale("frFR",
+PL:AddLocale("enUS",L)
+
+
+L=
 {
-	-- Channel = "",
-	-- ChannelSticky = "",
-	-- ["Chat channel sticky options."] = "",
-	-- ChatType = "",
-	-- ["Per chat type options."] = "",
-	smartgroup_desc = "Ajouter une commande /gr qui sélectionne automatiquement le bon type de chat : raid, groupe, champ de bataille",
-	smartgroup_name = "Groupes intelligents",
-	-- ["Sticky Per Chat Frame"] = "",
-	-- ["Sticky %s"] = "",
-	-- ["Toggle remembering the chat type last used per chat frame."] = "",
-	-- ["Toggles sticky on and off for %s."] = "",
+["smartgroup_desc"] = "Ajouter une commande /gr qui sélectionne automatiquement le bon type de chat : raid, groupe, champ de bataille",
+["smartgroup_name"] = "Groupes intelligents",
 }
 
-)
-L:AddLocale("deDE",
+PL:AddLocale("frFR",L)
+
+
+L=
 {
-	Channel = "Kanal",
-	ChannelSticky = true,
-	["Chat channel sticky options."] = "\"Sticky\"-Optionen für Chat-Kanal.",
-	ChatType = true,
-	["Per chat type options."] = "Optionen nach Chat-Type.",
-	smartgroup_desc = "Fügt einen Befehl /gr hinzu, der automatisch den richtigen Chat-Typ aufnimmt - RAID, PARTY, oder BATTLEGROUND",
-	smartgroup_name = "Intelligente Gruppen",
-	["Sticky Per Chat Frame"] = "\"Sticky\" nach Chat-Rahmen",
-	["Sticky %s"] = "\"Sticky\" %s",
-	["Toggle remembering the chat type last used per chat frame."] = "Das Merken des Chat-Typs, der zuletzt im Chat-Rahmen aktiviert war, umschalten.",
-	["Toggles sticky on and off for %s."] = "\"Sticky\" ein- und ausschalten für %s.",
+["Channel"] = "Kanal",
+["ChannelSticky"] = true,
+["Chat channel sticky options."] = "\"Sticky\"-Optionen für Chat-Kanal.",
+["ChatType"] = true,
+["Per chat type options."] = "Optionen nach Chat-Type.",
+["smartgroup_desc"] = "Fügt einen Befehl /gr hinzu, der automatisch den richtigen Chat-Typ aufnimmt - RAID, PARTY, oder BATTLEGROUND",
+["smartgroup_name"] = "Intelligente Gruppen",
+["Sticky %s"] = "\"Sticky\" %s",
+["Sticky Per Chat Frame"] = "\"Sticky\" nach Chat-Rahmen",
+["Toggle remembering the chat type last used per chat frame."] = "Das Merken des Chat-Typs, der zuletzt im Chatfenster aktiviert war, umschalten.",
+["Toggles sticky on and off for %s."] = "\"Sticky\" ein- und ausschalten für %s.",
 }
 
-)
-L:AddLocale("koKR",
+PL:AddLocale("deDE",L)
+
+
+L=
 {
-	Channel = "채널",
-	ChannelSticky = "채널고정",
-	["Chat channel sticky options."] = "채팅 채널 고정 옵션.",
-	-- ChatType = "",
-	-- ["Per chat type options."] = "",
-	smartgroup_desc = "자동으로 유효한 채팅 타입을 선택하도록 /gr 명령어를 추가합니다. (공격대, 파티 또는 전장)",
-	smartgroup_name = "스마트 그룹",
-	["Sticky Per Chat Frame"] = "채팅창 별 고정",
-	["Sticky %s"] = "%s 고정",
-	-- ["Toggle remembering the chat type last used per chat frame."] = "",
-	["Toggles sticky on and off for %s."] = "입력고정 켜거나 끄기 %s.",
+["Channel"] = "채널",
+["ChannelSticky"] = "채널 고정",
+["Chat channel sticky options."] = "대화 채널 고정 옵션입니다.",
+["ChatType"] = "대화 형식",
+["Per chat type options."] = "대화 형식 별 옵션",
+["smartgroup_desc"] = "공격대, 파티 또는 인스턴스 대화 중 자동으로 유효한 대화 유형을 선택하는 /smart와 /smrt 명령어를 추가합니다",
+["smartgroup_name"] = "스마트 그룹",
+["Sticky %s"] = "%s 고정",
+["Sticky Per Chat Frame"] = "대화창 별 고정",
+["Toggle remembering the chat type last used per chat frame."] = "대화창 별로 마지막으로 사용한 대화 형식 기억 기능을 켜거나 끕니다.",
+["Toggles sticky on and off for %s."] = "%s의 입력 고정을 켜거나 끕니다.",
 }
 
-)
-L:AddLocale("esMX",
+PL:AddLocale("koKR",L)
+
+
+L=
 {
-	-- Channel = "",
-	-- ChannelSticky = "",
-	-- ["Chat channel sticky options."] = "",
-	-- ChatType = "",
-	-- ["Per chat type options."] = "",
-	-- smartgroup_desc = "",
-	-- smartgroup_name = "",
-	-- ["Sticky Per Chat Frame"] = "",
-	-- ["Sticky %s"] = "",
-	-- ["Toggle remembering the chat type last used per chat frame."] = "",
-	-- ["Toggles sticky on and off for %s."] = "",
 }
 
-)
-L:AddLocale("ruRU",
+PL:AddLocale("esMX",L)
+
+
+L=
 {
-	Channel = "Канал",
-	ChannelSticky = "Совмещение каналов",
-	["Chat channel sticky options."] = "Настройки прилипания каналов чата.",
-	ChatType = "Тип чата",
-	["Per chat type options."] = "Настройки по типу чата.",
-	smartgroup_desc = "Добавляет команду /gr , автоматически выбирающую корректный тип чата, РЕЙД, ГРУППА, или ПОЛЕ БОЯ",
-	smartgroup_name = "Быстрая сортировка",
-	["Sticky Per Chat Frame"] = "Прилипать к окнам чата",
-	["Sticky %s"] = "Прилепить к %s",
-	["Toggle remembering the chat type last used per chat frame."] = "Вкл/Выкл запоминание тип чата при последнем использовании чата.",
-	["Toggles sticky on and off for %s."] = "Вкл/Выкл прилипание для %s.",
+["Channel"] = "Канал",
+["ChannelSticky"] = "Совмещение каналов",
+["Chat channel sticky options."] = "Настройки прилипания каналов чата.",
+["ChatType"] = "Тип чата",
+["Per chat type options."] = "Настройки по типу чата.",
+["smartgroup_desc"] = "Добавляет команду /gr , автоматически выбирающую корректный тип чата, РЕЙД, ГРУППА, или ПОЛЕ БОЯ",
+["smartgroup_name"] = "Быстрая сортировка",
+["Sticky %s"] = "Прилепить к %s",
+["Sticky Per Chat Frame"] = "Прилипать к окнам чата",
+["Toggle remembering the chat type last used per chat frame."] = "Вкл/Выкл запоминание тип чата при последнем использовании чата.",
+["Toggles sticky on and off for %s."] = "Вкл/Выкл прилипание для %s.",
 }
 
-)
-L:AddLocale("zhCN",
+PL:AddLocale("ruRU",L)
+
+
+L=
 {
-	Channel = "频道",
-	ChannelSticky = "频道粘连",
-	["Chat channel sticky options."] = "聊天频道粘连选项",
-	ChatType = "聊天分类",
-	["Per chat type options."] = "每个聊天分类选项",
-	smartgroup_desc = "添加一个/gr命令用来自动选择正确的聊天分类,比如团队,小队或战场",
-	smartgroup_name = "智能分组",
-	["Sticky Per Chat Frame"] = "粘连每个聊天框",
-	["Sticky %s"] = "粘连 %s",
-	["Toggle remembering the chat type last used per chat frame."] = "记住每个聊天框上一次使用的聊天分类",
-	["Toggles sticky on and off for %s."] = "切换%s的粘连开关",
+["Channel"] = "频道",
+["ChannelSticky"] = "频道粘连",
+["Chat channel sticky options."] = "聊天频道粘连选项",
+["ChatType"] = "聊天分类",
+["Per chat type options."] = "每个聊天分类选项",
+["smartgroup_desc"] = "添加一个/gr命令用来自动选择正确的聊天分类,比如团队,小队或战场",
+["smartgroup_name"] = "智能分组",
+["Sticky %s"] = "粘连 %s",
+["Sticky Per Chat Frame"] = "粘连每个聊天框",
+["Toggle remembering the chat type last used per chat frame."] = "记住每个聊天框上一次使用的聊天分类",
+["Toggles sticky on and off for %s."] = "切换%s的粘连开关",
 }
 
-)
-L:AddLocale("esES",
+PL:AddLocale("zhCN",L)
+
+
+L=
 {
-	Channel = "Canal",
-	ChannelSticky = "CanalAdhesivo",
-	["Chat channel sticky options."] = "Opciones de canal adhesivo de chat.",
-	ChatType = "TipoChat",
-	["Per chat type options."] = "Opciones por tipo de chat.",
-	smartgroup_desc = "Agrega un comando /gr que escoge automáticamente el tipo correcto de chat, BANDA, GRUPO, o CAMPO DE BATALLA",
-	smartgroup_name = "Grupos Inteligentes",
-	["Sticky Per Chat Frame"] = "Adhesivo Por Marco de Chat",
-	["Sticky %s"] = "Adhesivo %s",
-	["Toggle remembering the chat type last used per chat frame."] = "Alternar recordar el último tipo de chat utilizado por el marco de chat.",
-	["Toggles sticky on and off for %s."] = "Alterna activar adhesivo para %s.",
+["Channel"] = "Canal",
+["ChannelSticky"] = "CanalAdhesivo",
+["Chat channel sticky options."] = "Opciones de canal adhesivo de chat.",
+["ChatType"] = "TipoChat",
+["Per chat type options."] = "Opciones por tipo de chat.",
+["smartgroup_desc"] = "Agrega un comando /gr que escoge automáticamente el tipo correcto de chat, BANDA, GRUPO, o CAMPO DE BATALLA",
+["smartgroup_name"] = "Grupos Inteligentes",
+["Sticky %s"] = "Adhesivo %s",
+["Sticky Per Chat Frame"] = "Adhesivo Por Marco de Chat",
+["Toggle remembering the chat type last used per chat frame."] = "Alternar recordar el último tipo de chat utilizado por el marco de chat.",
+["Toggles sticky on and off for %s."] = "Alterna activar adhesivo para %s.",
 }
 
-)
-L:AddLocale("zhTW",
+PL:AddLocale("esES",L)
+
+
+L=
 {
-	Channel = "頻道",
-	ChannelSticky = "固定頻道",
-	["Chat channel sticky options."] = "聊天頻道固定選項",
-	ChatType = "聊天類型",
-	["Per chat type options."] = "每聊天類型選項。",
-	-- smartgroup_desc = "",
-	smartgroup_name = "智慧化群組",
-	["Sticky Per Chat Frame"] = "個別聊天視窗固定",
-	["Sticky %s"] = "固定 %s",
-	-- ["Toggle remembering the chat type last used per chat frame."] = "",
-	-- ["Toggles sticky on and off for %s."] = "",
+["Channel"] = "頻道",
+["ChannelSticky"] = "固定頻道",
+["Chat channel sticky options."] = "聊天頻道固定選項",
+["ChatType"] = "聊天類型",
+["Per chat type options."] = "每聊天類型選項。",
+["smartgroup_name"] = "智慧化群組",
+["Sticky %s"] = "固定 %s",
+["Sticky Per Chat Frame"] = "個別聊天視窗固定",
 }
 
-)
+PL:AddLocale("zhTW",L)
+
+
+end
 --@end-non-debug@
 
 
@@ -240,7 +239,7 @@ Prat:SetModuleDefaults(module, {
 	    channel = true,
 	    emote = true,
 	    perframe = false,
-	    smartgroup = false,
+	    smartgroup = true,
 	    bn_whisper = true,
 	    bn_conversation=true,
 	}
@@ -249,21 +248,16 @@ Prat:SetModuleDefaults(module, {
 local chatTypePlugins = { ctype = {} }
 
 Prat:SetModuleOptions(module, {
-        name = L["ChannelSticky"],
-        desc = L["Chat channel sticky options."],
+        name = PL["ChannelSticky"],
+        desc = PL["Chat channel sticky options."],
         type = "group",
 		plugins = chatTypePlugins,
         args = {
---            perframe = {
---                name = L["Sticky Per Chat Frame"],
---                desc = L["Toggle remembering the chat type last used per chat frame."],
---                type = "toggle",
---            },
---			smartgroup = {
---				name = L["smartgroup_name"],
---				desc = L["smartgroup_desc"],
---				type = "toggle",
---			}
+			smartgroup = {
+				name = PL["smartgroup_name"],
+				desc = PL["smartgroup_desc"],
+				type = "toggle",
+			}
         }
     }
 )
@@ -295,13 +289,11 @@ function module:OnModuleEnable()
     self:Stickum("BN_WHISPER",prof.bn_whisper)
     self:Stickum("BN_CONVERSATION",prof.bn_conversation)
 
-    --self:StickyFrameChan(prof.perframe)
 
---    Prat.RegisterChatEvent(self, "Prat_OutboundChat")
---
---    if prof.smartgroup then
---        self:RegisterSmartGroup()
---    end
+
+    if prof.smartgroup then
+        self:RegisterSmartGroup(true)
+    end
 end
 
 function module:OnModuleDisable()
@@ -317,12 +309,10 @@ function module:OnModuleDisable()
     self:Stickum("INSTANCE_CHAT",false)
     self:Stickum("CHANNEL",false)
     self:Stickum("EMOTE",false)
-    -- forget about per chat frame stickying
-    self:StickyFrameChan(false)
     -- unregister events
     self:UnregisterAllEvents()
 
-	--Prat.UnregisterAllChatEvents(self)
+	self:ResgisterSmartGroup(false)
 end
 
 --[[------------------------------------------------
@@ -334,68 +324,28 @@ function module:UPDATE_CHAT_COLOR()
 	self:ScheduleTimer("BuildChannelList", 1)
 end
 
-function module:StickyFrameChan(enabled)
---    if not enabled then
---        self:UnhookAll()
---    else
---        self.perframe = {}
---        self.perframechannum = {}
---        self:RawHook("ChatFrame_OpenChat", true)
---        self:SecureHook("ChatEdit_OnEscapePressed")
---        self:SecureHook("SendChatMessage")
---        self:SecureHook("ChatEdit_OnEnterPressed")
---    end
-end
+function module:ChatFrame_OpenChat(text, chatFrame)
+    if ( not chatFrame ) then
+        chatFrame = SELECTED_CHAT_FRAME
+    end
 
---function module:ChatFrame_OpenChat(text, chatFrame)
---    if ( not chatFrame ) then
---        chatFrame = SELECTED_CHAT_FRAME
---    end
---
---	local eb = chatFrame.editBox
---
---    if eb == nil then
---        return self.hooks["ChatFrame_OpenChat"](text, chatFrame)
---    end
---
---    local chatFrameN = chatFrame:GetName()
---
-	--Prat:Print(eb:GetAttribute("chatType"))
---
---    if eb:GetAttribute("chatType") == "WHISPER" then
-	----	 NADA
---    elseif eb:GetAttribute("chatType") == "GROUPSAY" then
---        eb:SetAttribute("origchatType", "GROUPSAY");
---    elseif self.perframe[chatFrameN] then
---        eb:SetAttribute("channelTarget", self.perframechannum[chatFrameN]);
---        eb:SetAttribute("chatType", self.perframe[chatFrameN]);
---        eb:SetAttribute("stickyType", self.perframe[chatFrameN]);
---    end
---
---    self.hooks["ChatFrame_OpenChat"](text, chatFrame)
---end
---
---function module:SendChatMessage(msg, chatType, language, channel)
---    if self.memoNext then
---        self.perframe[self.memoNext] = chatType
---        self.perframechannum[self.memoNext] = channel
---    end
---end
---
---function module:ChatEdit_OnEscapePressed(this)
---    self.memoNext = nil
---end
---
---function module:ChatEdit_OnEnterPressed(this)
---	this = this or _G.this
---    local chatFrameN = SELECTED_CHAT_FRAME:GetName()
---    local chatType = this:GetAttribute("chatType")
---
---    local channel = this:GetAttribute("channelTarget")
---    self.perframe[chatFrameN] = chatType
---    self.perframechannum[chatFrameN] = channel
---    self.memoNext = nil
---end
+	local eb = chatFrame.editBox
+
+    if eb == nil then
+        return
+    end
+
+    local chatFrameN = chatFrame:GetName()
+
+	Prat:Print(eb:GetAttribute("chatType"))
+
+    if eb:GetAttribute("chatType") == "WHISPER" then
+	--	 NADA
+    elseif eb:GetAttribute("chatType") == "SMARTGROUP" then
+        eb:SetAttribute("origchatType", "SMARTGROUP");
+    end
+
+end
 
 function module:Stickum(channel, stickied)
 	local cti = ChatTypeInfo[channel:upper()]
@@ -420,15 +370,15 @@ function module:BuildChannelList()
         if va ~= "CHANNEL" then
             chan = TEXT(_G["CHAT_MSG_"..va])
         else
-            chan = L["Channel"]
+            chan = PL["Channel"]
         end
 
         o[val] = o[val] or {
             type = "toggle",
         }
 
-		o[val].name = (L["Sticky %s"]):format(StkyChatType(chan:gsub(" ", ""), va))
-		o[val].desc = (L["Toggles sticky on and off for %s."]):format(chan)
+		o[val].name = (PL["Sticky %s"]):format(StkyChatType(chan:gsub(" ", ""), va))
+		o[val].desc = (PL["Toggles sticky on and off for %s."]):format(chan)
     end
 end
 
@@ -436,7 +386,7 @@ function module:OnValueChanged(info, b)
 	local o = info[#info]
 
 	if o == "smartgroup" then
-		if b then self:RegisterSmartGroup() end
+		self:RegisterSmartGroup(b)
 	elseif o == "perframe" then
 	    self:StickyFrameChan(b)
 	else
@@ -454,42 +404,55 @@ end
 
 
 
---function module:RegisterSmartGroup()
---    if not self.smart_group then
---    	self:SecureHook("ChatEdit_SendText", function(this) if self.groupsay then this:SetAttribute("chatType", "GROUPSAY") self.groupsay=nil end end)
---
---	    self.smart_group = true
---
---
---		SLASH_GROUPSAY1 = "/gr"
---		SLASH_GROUPSAY2 = "/group"
---		ChatTypeInfo["GROUPSAY"] = { r=0.5, g=0.9, b=0.9, sticky = 1 }
---		CHAT_GROUPSAY_SEND = "SmartGroup:\32 "
---		CHAT_GROUPSAY_GET = "SmartGroup: %1\32 "
---    end
---end
+function module:RegisterSmartGroup(on)
+    if not self.smart_group and on then
+        Prat.RegisterChatEvent(self, "Prat_OutboundChat")
+    	self:SecureHook("ChatEdit_SendText", function(this) if self.groupsay then this:SetAttribute("chatType", "SMARTGROUP") self.groupsay=nil end end)
+
+	    self.smart_group = true
 
 
---function module:SmartGroupChatType()
---     local _,pvp = IsInInstance()
---
---     if pvp == "pvp" then
---        return "BATTLEGROUND"
---     elseif GetNumRaidMembers() > 0 then
---         return "RAID"
---     elseif GetNumPartyMembers() > 0 then
---         return "PARTY"
---     end
---
---    return "SAY"
---end
---
---function module:Prat_OutboundChat(arg, m)
---	if m.CTYPE == "GROUPSAY" then
---		self.groupsay = true
---		m.CTYPE = self:SmartGroupChatType()
---	end
---end
+		SLASH_SMARTGROUP1 = "/smart"
+		SLASH_SMARTGROUP2 = "/smrt"
+		ChatTypeInfo["SMARTGROUP"] = { r=0.5, g=0.9, b=0.9, sticky = 1 }
+		CHAT_SMARTGROUP_SEND = "SmartGroup:\32 "
+		CHAT_SMARTGROUP_GET = "SmartGroup: %1\32 "
+    else
+        self:Unhook("ChatEdit_SendText")
+        SLASH_SMARTGROUP1 = nil
+        SLASH_SMARTGROUP2 = nil
+        ChatTypeInfo["SMARTGROUP"] = nil
+        CHAT_SMARTGROUP_SEND = nil
+        CHAT_SMARTGROUP_GET = nil
+        self.smart_group = false
+        Prat.UnregisterAllChatEvents(self)
+    end
+end
+
+
+function module:SmartGroupChatType()
+    local _, instanceType = IsInInstance()
+
+    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        if instanceType == "arena" then
+            return "PARTY"
+        else
+            return "INSTANCE_CHAT"
+        end
+    elseif IsInRaid() then
+        return "RAID"
+    elseif IsInGroup() then
+        return "PARTY"
+    else return "SAY" end
+
+end
+
+function module:Prat_OutboundChat(arg, m)
+	if m.CTYPE == "SMARTGROUP" then
+		self.groupsay = true
+		m.CTYPE = self:SmartGroupChatType()
+	end
+end
 
   return
 end ) -- Prat:AddModuleToLoad

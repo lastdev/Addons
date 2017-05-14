@@ -1,6 +1,10 @@
+local myname, ns = ...
+
 local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("Scan_Targets", "AceEvent-3.0")
 local Debug = core.Debug
+
+local HBD = LibStub("HereBeDragons-1.0")
 
 local globaldb
 local UnitExists, UnitIsVisible, UnitPlayerControled, UnitName, UnitLevel, UnitCreatureType, UnitGUID = UnitExists, UnitIsVisible, UnitPlayerControled, UnitName, UnitLevel, UnitCreatureType, UnitGUID
@@ -11,6 +15,8 @@ function module:OnInitialize()
 		profile = {
 			mouseover = true,
 			targets = true,
+			nameplate = true,
+			rare_only = true,
 		},
 	})
 
@@ -25,6 +31,8 @@ function module:OnInitialize()
 				args = {
 					mouseover = config.toggle("Mouseover", "Check mobs that you mouse over.", 10),
 					targets = config.toggle("Targets", "Check the targets of people in your group.", 20),
+					nameplate = config.toggle("Nameplates", "Check units whose nameplates appear.", 30),
+					rare_only = config.toggle("Rare only", "Only look for mobs that are still flagged as rare", 40),
 				},
 			},
 		}
@@ -36,6 +44,7 @@ function module:OnEnable()
 
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+	self:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 end
 
 function module:PLAYER_TARGET_CHANGED()
@@ -44,6 +53,10 @@ end
 
 function module:UPDATE_MOUSEOVER_UNIT()
 	self:ProcessUnit('mouseover', 'mouseover')
+end
+
+function module:NAME_PLATE_UNIT_ADDED(event, unit)
+	self:ProcessUnit(unit, 'nameplate')
 end
 
 local units_to_scan = {'targettarget', 'party1target', 'party2target', 'party3target', 'party4target', 'party5target'}
@@ -73,26 +86,39 @@ function module:ProcessUnit(unit, source)
 	if not UnitExists(unit) then return end
 	if not UnitIsVisible(unit) then return end
 	if UnitPlayerControlled(unit) then return end -- helps filter out player-pets
-	local unittype = UnitClassification(unit)
 	local id = core:UnitID(unit)
-	if id and (globaldb.always[id] or rare_nonflags[id] or (unittype == 'rare' or unittype == 'rareelite')) then
+	if not id then return end
+	local unittype = UnitClassification(unit)
+	local is_rare = (id and rare_nonflags[id]) or (unittype == 'rare' or unittype == 'rareelite')
+	local should_process = false
+
+	if globaldb.always[id] then
+		-- Manually-added mobs: always get announced
+		should_process = true
+	elseif is_rare then
+		-- It's actually rare, so it gets announced
+		should_process = true
+	elseif ns.mobdb[id] then
+		-- It's a known mob, but no longer flagged as rare, so we announce based on the setting
+		should_process = not self.db.profile.rare_only
+	end
+
+	if should_process then
 		-- from this point on, it's a rare
-		local zone, x, y = core:GetPlayerLocation()
-		if not zone then return end -- there are only a few places where this will happen
-
-		local name = UnitName(unit)
-		local level = (UnitLevel(unit) or -1)
-		local creature_type = UnitCreatureType(unit)
-		local guid = UnitGUID(unit) or 0
-
-		local newloc
-		if CheckInteractDistance(unit, 4) then
-			newloc = core:SaveMob(id, name, zone, x, y, level, unittype, creature_type)
+		local x, y, zone = HBD:GetPlayerZonePosition()
+		if not (zone and x and y) then
+			-- there are only a few places where this will happen
+			return
 		end
 
-		local silent = (source == 'target' and not self.db.profile.targets) or (source == 'mouseover' and not self.db.profile.mouseover)
+		if
+			(source == 'target' and not self.db.profile.targets)
+			or (source == 'mouseover' and not self.db.profile.mouseover)
+			or (source == 'nameplate' and not self.db.profile.nameplate)
+		then
+			return
+		end
 
-		core:NotifyMob(id, name, zone, x, y, UnitIsDead(unit), newloc, source or 'target', unit, silent)
-		return true
+		core:NotifyForMob(id, zone, x, y, UnitIsDead(unit), source or 'target', unit, silent)
 	end
 end

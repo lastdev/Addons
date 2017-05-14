@@ -1,4 +1,4 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabCharacters.lua"></Script>
 
  	<Button name="AltoViewIconTemplate" inherits="AltoButtonTemplate" virtual="true">
@@ -31,15 +31,6 @@
 
 	<Button name="AltoTabCharactersIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
-			<OnLoad>
-				local icon = self.Icon
-				icon:SetWidth(30)
-				icon:SetHeight(30)
-				
-				if self.iconFile then
-					self.Icon:SetTexture(self.iconFile)
-				end
-			</OnLoad>
 			<OnEnter>
 				Altoholic.Tabs.Characters:Icon_OnEnter(self)
 			</OnEnter>
@@ -134,6 +125,14 @@
 							<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
 						</KeyValues>
 					</Button>
+					<Button parentKey="GarrisonIcon" inherits="AltoTabCharactersIconTemplate" id="9">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_resource" />
+						</KeyValues>
+					</Button>
 				</Frames>
 			</Frame>
 	
@@ -186,22 +185,14 @@
 				</Anchors>
 			</Button>
 			-->
-			
-			<Frame parentKey="SelectRealm" name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
+		
+			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Text1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 120) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						
-						local realm = GetRealmName()
-						UIDropDownMenu_SetSelectedValue(self, "Default|".. realm)
-						UIDropDownMenu_SetText(self, realm)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Characters.DropDownRealm_Initialize)
-					</OnLoad>
-				</Scripts>
+				<KeyValues>
+					<KeyValue key="menuWidth" value="120" type="number" />
+				</KeyValues>
 			</Frame>
 			
 			<Button parentKey="Characters" inherits="AltoViewIconTemplate" id="1">
@@ -209,31 +200,13 @@
 					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="30" y="240" />
 				</Anchors>
 			</Button>
-
-			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
-				<Size x="130" y="19" />
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" id="2">
-				<Size x="70" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" id="3">
-				<Size x="100" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" id="4">
-				<Size x="100" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
+			
+			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+				<KeyValues>
+					<KeyValue key="numButtons" value="4" type="number" />
+					<KeyValue key="option" value="UI.Tabs.Characters.SortAscending" />
+				</KeyValues>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>

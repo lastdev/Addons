@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: AucSimple.lua 5507 2014-10-23 16:08:21Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: AucSimple.lua 5629 2016-07-31 13:17:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -39,6 +39,9 @@ local Resources = AucAdvanced.Resources
 local GetSigFromLink = AucAdvanced.API.GetSigFromLink
 local GetMarketValue = AucAdvanced.API.GetMarketValue
 
+local WHITEOFFSETA = "  " -- 2 spaces: standard tooltip offset
+local WHITEOFFSETB = "      " -- 6 spaces: deep tooltip offset
+
 local data, _
 local ownResults = {}
 local ownCounts = {}
@@ -72,19 +75,29 @@ end
 lib.Processors.auctionclose = lib.Processors.postresult
 lib.Processors.serverkey = lib.Processors.postresult
 
-local function whitespace(length)
-	local spaces = ""
-	for index = length, 0, -1 do
-		spaces = spaces.." "
+-- Fetch settingstr for the specified id
+-- Temporary function used during our process of conversion to connected realms and new-style serverKey
+-- This will slowly convert settings using the old-style serverKey to new-style as they are used
+-- However this will likely never completely remove all old-style strings, we will have to do some extra work at a later date to deal with them
+-- There is no equivalent to set this setting: should always use set("util.simpleauc."..Resources.ServerKey.."."..id, settingstr)
+local function GetSettingStr(id)
+	local settingstr = get("util.simpleauc."..Resources.ServerKey.."."..id)
+	if settingstr then return settingstr end
+	-- see if it's stored under old-style serverKey
+	settingstr = get("util.simpleauc."..Resources.ServerKeyCurrent.."."..id)
+	if settingstr then
+		set("util.simpleauc."..Resources.ServerKey.."."..id, settingstr, true) -- silent (3rd param 'true' inhibits "configchanged" messages)
+		set("util.simpleauc."..Resources.ServerKeyCurrent.."."..id, nil, true)
+		return settingstr
 	end
-	return spaces
 end
+private.GetSettingStr = GetSettingStr -- SimpFrame.lua needs this function too
 
 function lib.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additional, order)
 	if not get("util.simpleauc.tooltip") then return end
-	if serverKey ~= Resources.ServerKeyCurrent then return end -- only support current serverKey - consider handling other keys for future
+	if serverKey ~= Resources.ServerKeyCurrent and serverKey ~= Resources.ServerKey then return end
 	local id = GetSigFromLink(link)
-	local settingstr = get("util.simpleauc."..serverKey.."."..id)
+	local settingstr = GetSettingStr(id)
 	local market, seen, fixbuy, fixbid, stack
 	local imgseen, image, matchBid, matchBuy, lowBid, lowBuy, aSeen, aveBuy = private.GetItems(link)
 	local reason = "Market"
@@ -120,7 +133,7 @@ function lib.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additio
 		tooltip:AddLine(text)
 	else
 		local text = format("%s x%d: %s bid/%s buyout", libName, quantity, coinsBid, coinsBuy)
-		local textea =  format("%s(Or individually: %s/%s)", whitespace(5), coinsBidEa, coinsBuyEa)
+		local textea =  format("%sOr individually: %s/%s", WHITEOFFSETB, coinsBidEa, coinsBuyEa)
 		tooltip:AddLine(text)
 		tooltip:AddLine(textea, 0.3, 0.8, 0.7)
 	end
@@ -138,10 +151,10 @@ function lib.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additio
 			coinsBuy = private.coins(fixbuy*quantity)
 		end
 		if quantity == 1 then
-			local text = format("%sFixed: %s bid/%s buyout", whitespace(12), coinsBid, coinsBuy)
+			local text = format("%sFixed: %s bid/%s buyout", WHITEOFFSETB, coinsBid, coinsBuy)
 			tooltip:AddLine(text)
 		else
-			local text = format("%sFixed x%d: %s bid/%s buyout", whitespace(12), quantity, coinsBid, coinsBuy)
+			local text = format("%sFixed x%d: %s bid/%s buyout", WHITEOFFSETB, quantity, coinsBid, coinsBuy)
 			tooltip:AddLine(text)
 		end
 	end
@@ -153,10 +166,10 @@ function lib.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additio
 				coinsBuy = private.coins(lowBuy*quantity)
 			end
 			if quantity == 1 then
-				local text = format("%sUndercut: %s bid/%s buyout", whitespace(8), coinsBid, coinsBuy)
+				local text = format("%sUndercut: %s bid/%s buyout", WHITEOFFSETA, coinsBid, coinsBuy)
 				tooltip:AddLine(text)
 			else
-				local text = format("%sUndercut x%d: %s bid/%s buyout", whitespace(8), quantity, coinsBid, coinsBuy)
+				local text = format("%sUndercut x%d: %s bid/%s buyout", WHITEOFFSETA, quantity, coinsBid, coinsBuy)
 				tooltip:AddLine(text)
 			end
 		else
@@ -181,7 +194,6 @@ function lib.OnLoad()
 	default("util.simpleauc.clickhook", true)
 	default("util.simpleauc.clickhook.doubleclick", false)
 	default("util.simpleauc.scanbutton", true)
-	default("util.simpleauc.scanbutton.disable.wowecon", true)
 	default("util.simpleauc.tooltip", true)
 	default("util.simpleauc.tooltip.undercut", true)
 	default("util.simpleauc.auto.duration", 48)
@@ -191,20 +203,15 @@ function lib.OnLoad()
 	default("util.simpleauc.undercut.fixed", 1)
 	default("util.simpleauc.undercut.percent", 2.5)
 	default("util.simpleauc.displayauctiontab", true)
+
+	-- Removed setting
+	set("util.simpleauc.scanbutton.disable.wowecon", nil, true)
 end
 
 function private.UpdateConfig(setting, value)
 	if private.frame then
 		local frame = private.frame
-		local showing = false
 		if get("util.simpleauc.scanbutton") then
-			showing = true
-			if get("util.simpleauc.scanbutton.disable.wowecon") and IsAddOnLoaded("WOWEcon_PriceMod") then
-				showing = false
-			end
-		end
-
-		if showing then
 			frame.scanbutton:Show()
 		else
 			frame.scanbutton:Hide()
@@ -271,7 +278,6 @@ function private.SetupConfigGui(gui)
 	gui:AddControl(id, "Subhead",      0,    "Scan button")
 	gui:AddControl(id, "Checkbox",     0, 1, "util.simpleauc.scanbutton", "Show big red scan button at bottom of browse window")
 	gui:AddTip(id, "Displays the old-style \"Scan\" button at the bottom of the browse window.")
-	gui:AddControl(id, "Checkbox",     0, 2, "util.simpleauc.scanbutton.disable.wowecon", "Except if WowEcon is loaded")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5507 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5629 $")

@@ -1,12 +1,12 @@
-﻿## Interface: 60100
-## X-Min-Interface: 60000
+﻿## Interface: 70200
+## X-Min-Interface: 70100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Brawlers|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Бойцовская гильдия|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0싸움꾼 조합|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Kampfgilde|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0搏击俱乐部|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0鬥陣俱樂部|r
-## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Camorristas|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Hermandad de camorristas|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Bastonneurs|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
@@ -14,14 +14,14 @@
 ## SavedVariables: DBMBrawlers_AllSavedVars
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
-## X-DBM-Mod-Category: WOD
+## X-DBM-Mod-Category: LEG
 ## X-DBM-Mod-No-Statistics: 1
 ## X-DBM-Mod-Name: Brawlers
 ## X-DBM-Mod-Name-koKR: 싸움꾼 조합
 ## X-DBM-Mod-Name-deDE: Kampfgilde
 ## X-DBM-Mod-Name-zhCN: 搏击俱乐部
 ## X-DBM-Mod-Name-zhTW: 鬥陣俱樂部
-## X-DBM-Mod-Name-esES: Camorristas
+## X-DBM-Mod-Name-esES: Hermandad de camorristas
 ## X-DBM-Mod-Name-frFR: Bastonneurs
 ## X-DBM-Mod-Name-ruRU: Бойцовская гильдия
 ## X-DBM-Mod-Name-ptBR: Brigões
@@ -45,5 +45,6 @@ Rank4.lua
 Rank5.lua
 Rank6.lua
 Rank7.lua
-Rares1.lua
-Rares2.lua
+BrawlChallenges.lua
+BrawlRumble.lua
+BrawlLegacy.lua

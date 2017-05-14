@@ -1,10 +1,13 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabAchievements.lua"></Script>
 	
 	<Button name="AltoTabAchievementsClassIconTemplate" inherits="AltoClassIconTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="optionFormat" value="Tabs.Achievements.%s.%s.Column%d" />
+		</KeyValues>
 		<Scripts>
 			<OnEnter>
-				Altoholic.Tabs.Achievements:Icon_OnEnter(self)
+				self:Icon_OnEnter()
 			</OnEnter>
 		</Scripts>
 	</Button>
@@ -33,206 +36,53 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="SelectRealm" name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 100) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-						
-						local realm = GetRealmName()
-						UIDropDownMenu_SetSelectedValue(self, "Default|".. realm)
-						UIDropDownMenu_SetText(self, realm)
-						Altoholic:DDM_Initialize(self, Altoholic.Tabs.Achievements.DropDownRealm_Initialize)
-					</OnLoad>
-				</Scripts>
+				<KeyValues>
+					<KeyValue key="menuWidth" value="100" type="number" />
+				</KeyValues>
 			</Frame>
 		
 			<!-- Menu Icons -->
-			<Frame parentKey="ClassIcons" name="$parent_ClassIcons">
-				<Size x="457" y="37" />
-				<Anchors>
-					<Anchor point="TOPLEFT" x="370" y="-55" />
-				</Anchors>
-				<Frames>
-					<Button parentKey="Icon1" inherits="AltoTabAchievementsClassIconTemplate" id="1">
-						<Anchors>
-							<Anchor point="TOPLEFT" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon2" inherits="AltoTabAchievementsClassIconTemplate" id="2">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon1" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon3" inherits="AltoTabAchievementsClassIconTemplate" id="3">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon2" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon4" inherits="AltoTabAchievementsClassIconTemplate" id="4">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon3" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon5" inherits="AltoTabAchievementsClassIconTemplate" id="5">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon4" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon6" inherits="AltoTabAchievementsClassIconTemplate" id="6">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon5" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon7" inherits="AltoTabAchievementsClassIconTemplate" id="7">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon6" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon8" inherits="AltoTabAchievementsClassIconTemplate" id="8">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon7" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon9" inherits="AltoTabAchievementsClassIconTemplate" id="9">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon8" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon10" inherits="AltoTabAchievementsClassIconTemplate" id="10">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon9" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-					<Button parentKey="Icon11" inherits="AltoTabAchievementsClassIconTemplate" id="11">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Icon10" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-					</Button>
-				</Frames>
+			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
+				<KeyValues>
+					<!-- <KeyValue key="numIcons" value="11" type="number" /> -->
+					<KeyValue key="numIcons" value="12" type="number" />
+					<KeyValue key="iconTemplate" value="AltoTabAchievementsClassIconTemplate" />
+					<KeyValue key="tabName" value="Achievements" />
+				</KeyValues>
 			</Frame>
 		
 			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
 
-			<!-- Scroll frame items -->
-			<Button parentKey="MenuItem1" inherits="AltoMenuItemTemplate" id="1">
-				<Anchors>
-					<Anchor point="TOPLEFT" x="23" y="-105" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem2" inherits="AltoMenuItemTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem3" inherits="AltoMenuItemTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem2" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem4" inherits="AltoMenuItemTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0"/>
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem5" inherits="AltoMenuItemTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem6" inherits="AltoMenuItemTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem7" inherits="AltoMenuItemTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem8" inherits="AltoMenuItemTemplate" id="8">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem7" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem9" inherits="AltoMenuItemTemplate" id="9">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem8" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem10" inherits="AltoMenuItemTemplate" id="10">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem9" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem11" inherits="AltoMenuItemTemplate" id="11">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem10" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem12" inherits="AltoMenuItemTemplate" id="12">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem11" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem13" inherits="AltoMenuItemTemplate" id="13">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem12" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem14" inherits="AltoMenuItemTemplate" id="14">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem13" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem15" inherits="AltoMenuItemTemplate" id="15">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem14" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Size x="160" y="305" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="158" y="-105" />
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="256" />
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106" />
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
+			<ScrollFrame parentKey="ScrollFrame" inherits="AltoMenuScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 20, Altoholic.Tabs.Achievements.Update)
+						local parent = self:GetParent()
+						self:OnVerticalScroll(offset, 20, parent.Update, parent)
 					</OnVerticalScroll>
 					<OnShow>
-						Altoholic.Tabs.Achievements:Update();
+						self:GetParent().Achievements:Update()
 					</OnShow>
 				</Scripts>
+				<KeyValues>
+					<KeyValue key="numRows" value="15" type="number" />
+					<KeyValue key="rowHeight" value="20" type="number" />
+					<KeyValue key="rowTemplate" value="AltoMenuItemTemplate" />
+					<KeyValue key="xOffset" value="23" type="number" />
+					<KeyValue key="yOffset" value="-105" type="number" />
+				</KeyValues>
 			</ScrollFrame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Achievements:OnLoad()
+				Altoholic:SetClassExtensions(self, "AltoTabAchievements")
+				self:Init()
 			</OnLoad>
 			<OnShow>
-				Altoholic.Tabs.Achievements:UpdateClassIcons()
-				Altoholic.Tabs.Achievements:Update()
+				self:Update()
 			</OnShow>
 		</Scripts>
 	</Frame>

@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1288 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1309 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -17,7 +17,7 @@ local UnitName = UnitName
 
 function Recount:CheckPartyCombatWithPets()
 	if IsInRaid() and GetNumRaidMembers() > 0 then
-		for i = 1, GetNumRaidMembers() , 1 do
+		for i = 1, GetNumRaidMembers() do
 			if UnitAffectingCombat("raid"..i) then
 				return true
 			end
@@ -27,7 +27,7 @@ function Recount:CheckPartyCombatWithPets()
 		end
 	end
 	if not IsInRaid() and GetNumPartyMembers() > 0 then
-		for i = 1, GetNumPartyMembers(), 1 do
+		for i = 1, GetNumPartyMembers() do
 			if UnitAffectingCombat("party"..i) then
 				return true
 			end
@@ -50,7 +50,7 @@ function Recount:GetUnitIDFromName(name)
 	--[[if realm then
 		name = name:match("(.-)-") -- Strip the realm part for this function
 	end]] -- Resike: This is bad for some pet type detection
-	if UnitExists(name) then -- Elsia: Speed boost, yay.
+	if UnitExists(name) then -- Elsia: Speed boost, yay
 		return name
 	else
 		local lname = name:lower()
@@ -66,14 +66,14 @@ function Recount:GetPetPrefixUnit(name, realm)
 		return "player"
 	end
 	if IsInRaid() and GetNumRaidMembers() > 0 then
-		for i = 1, GetNumRaidMembers(), 1 do
+		for i = 1, GetNumRaidMembers() do
 			local unitname, unitrealm = UnitName("raid"..i)
 			if unitname == name and unitrealm == realm then
 				return "raid"..i
 			end
 		end
 	elseif GetNumPartyMembers() > 0 then
-		for i = 1, GetNumPartyMembers(), 1 do
+		for i = 1, GetNumPartyMembers() do
 			local unitname, unitrealm = UnitName("party"..i)
 			if unitname == name and unitrealm == realm then
 				return "party"..i
@@ -87,14 +87,14 @@ function Recount:FindTargetedUnit(name)
 	if UnitExists(name) then
 		return name
 	end
-	for i = 1, GetNumRaidMembers(), 1 do
+	for i = 1, GetNumRaidMembers() do
 		if UnitName("raid"..i) and name == UnitName("raid"..i.."target") then
 			return "raid"..i.."target"
 		elseif UnitName("raidpet"..i.."target") and name == UnitName("raidpet"..i.."target") then
 			return "raidpet"..i.."target"
 		end
 	end
-	for i = 1, GetNumPartyMembers(), 1 do
+	for i = 1, GetNumPartyMembers() do
 		if UnitName("party"..i) and name == UnitName("party"..i.."target") then
 			return "party"..i.."target"
 		elseif UnitName("partypet"..i) and name == UnitName("partypet"..i.."target") then
@@ -112,7 +112,7 @@ function Recount:FindOwnerPetFromGUID(petName, petGUID)
 	local ownerName
 	local ownerGUID
 	local ownerRealm
-	for i = 1, GetNumRaidMembers(), 1 do 
+	for i = 1, GetNumRaidMembers() do
 		if petGUID == UnitGUID("raidpet"..i) then
 			ownerName, ownerRealm = UnitName("raid"..i)
 			if ownerRealm then
@@ -122,7 +122,7 @@ function Recount:FindOwnerPetFromGUID(petName, petGUID)
 			return ownerName, ownerGUID
 		end
 	end
-	for i = 1, GetNumPartyMembers(), 1 do 
+	for i = 1, GetNumPartyMembers() do
 		if petGUID == UnitGUID("partypet"..i) then
 			ownerName, ownerRealm = UnitName("party"..i)
 			if ownerRealm then

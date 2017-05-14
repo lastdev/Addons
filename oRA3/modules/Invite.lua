@@ -5,7 +5,7 @@ local module = oRA:NewModule("Invite", "AceTimer-3.0")
 local L = scope.locale
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
+-- luacheck: globals BNET_CLIENT_WOW PLAYER_DIFFICULTY6 GameFontHighlight SetRaidDifficulties
 
 local frame = nil
 local db = nil
@@ -13,7 +13,7 @@ local peopleToInvite = {}
 local rankButtons = {}
 local difficultyDropdown, updateDifficultyDropdown = nil, nil -- a lot of effort for simply keeping the dialog in sync with the setting
 local playerRealm = GetRealmName()
-local Ambiguate = Ambiguate
+local playerFaction = UnitFactionGroup("player")
 
 local function canInvite()
 	return not IsInGroup() or oRA:IsPromoted()
@@ -98,7 +98,7 @@ do
 	end
 end
 
-local function doGuildInvites(level, zone, rank)
+local function doGuildInvites(level, zone, rank, rankOnly)
 	for i = 1, GetNumGuildMembers() do
 		local name, _, rankIndex, unitLevel, _, unitZone, _, _, online = GetGuildRosterInfo(i)
 		if name and online then
@@ -108,7 +108,7 @@ local function doGuildInvites(level, zone, rank)
 					peopleToInvite[#peopleToInvite + 1] = name
 				elseif zone and zone == unitZone then
 					peopleToInvite[#peopleToInvite + 1] = name
-				elseif rank and rankIndex <= rank then
+				elseif rank and ((not rankOnly and rankIndex <= rank) or (rankOnly and rankIndex == rank)) then
 					peopleToInvite[#peopleToInvite + 1] = name
 				end
 			end
@@ -133,14 +133,18 @@ local function inviteZone()
 	module:ScheduleTimer(doGuildInvites, 10, nil, currentZone, nil)
 end
 
-local function inviteRank(rank, name)
+local function inviteRank(rank, name, only)
 	if not canInvite() then return end
 	GuildRoster()
 	GuildControlSetRank(rank)
 	local _, _, ochat = GuildControlGetRankFlags()
 	local channel = ochat and "OFFICER" or "GUILD"
-	SendChatMessage((L.invitePrintRank):format(name), channel)
-	module:ScheduleTimer(doGuildInvites, 10, nil, nil, rank-1)
+	if only then
+		SendChatMessage((L.invitePrintRankOnly):format(name), channel)
+	else
+		SendChatMessage((L.invitePrintRank):format(name), channel)
+	end
+	module:ScheduleTimer(doGuildInvites, 10, nil, nil, rank-1, only)
 end
 
 local function inviteRankCommand(input)
@@ -148,7 +152,7 @@ local function inviteRankCommand(input)
 	input = input:lower()
 	for index, rank in next, oRA:GetGuildRanks() do
 		if rank:lower():find(input, nil, true) then
-			inviteRank(index, rank)
+			inviteRank(index, rank, false)
 			return
 		end
 	end
@@ -186,7 +190,7 @@ function module:OnRegister()
 	SlashCmdList.ORAINVITE_RANK = inviteRankCommand
 end
 
-local function inQueue()
+local function isInQueue()
 	-- LFG
 	for i=1, NUM_LE_LFG_CATEGORYS do
 		local mode = GetLFGMode(i)
@@ -204,50 +208,55 @@ local function inQueue()
 	end
 end
 
-local playerFaction = UnitFactionGroup("player")
-local function getBattleNetToon(presenceId)
-	local friendIndex = BNGetFriendIndex(presenceId)
-	for i=1, BNGetNumFriendToons(friendIndex) do
-		local _, toonName, client, realmName, realmId, faction, _, _, _, _, _, _, _, _, _, toonId = BNGetFriendToonInfo(friendIndex, i)
+local function getBattleNetCharacter(bnetIDAccount)
+	local friendIndex = BNGetFriendIndex(bnetIDAccount)
+	for i = 1, BNGetNumFriendGameAccounts(friendIndex) do
+		local _, charName, client, realmName, realmId, faction, _, _, _, _, _, _, _, _, _, bnetIDGameAccount = BNGetFriendGameAccountInfo(friendIndex, i)
 		if client == BNET_CLIENT_WOW and faction == playerFaction and realmId > 0 then
 			if realmName ~= "" and realmName ~= playerRealm then
 				-- To my knowledge there is no API for trimming server names. I can only guess this is what Blizzard uses internally.
 				realmName = realmName:gsub("[%s%-]", "")
-				toonName = FULL_PLAYER_NAME:format(toonName, realmName)
+				charName = FULL_PLAYER_NAME:format(charName, realmName)
 			end
-			return toonName, toonId
+			return charName, bnetIDGameAccount
+		end
+	end
+end
+
+local function checkKeywords(msg, ...)
+	for i = 1, select("#", ...) do
+		local keyword = select(i, ...):trim()
+		if msg == keyword then
+			return true
 		end
 	end
 end
 
 local function shouldInvite(msg, sender)
-	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or inQueue() then
-		return false
-	end
+	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or isInQueue() then return false end
 
 	msg = msg:trim():lower()
-	local keyword = db.keyword and db.keyword:lower()
-	local guildkeyword = db.guildkeyword and db.guildkeyword:lower()
+	if msg == "" then return false end
 
-	return msg == keyword or (msg == guildkeyword and oRA:IsGuildMember(sender))
+	return (db.keyword and checkKeywords(msg, strsplit(";", db.keyword))) or (db.guildkeyword and oRA:IsGuildMember(sender) and checkKeywords(msg, strsplit(";", db.guildkeyword)))
 end
 
-local function handleWhisper(msg, sender, _, _, _, _, _, _, _, _, _, _, presenceId)
+local function handleWhisper(msg, sender, _, _, _, _, _, _, _, _, _, _, bnetIDAccount)
 	if not canInvite() then return end
 	if db.raidonly and not IsInRaid() then return end
-	if presenceId > 0 then
+	if bnetIDAccount > 0 then
 		local id
-		sender, id = getBattleNetToon(presenceId)
+		sender, id = getBattleNetCharacter(bnetIDAccount)
 		if not id then return end
 	end
 	sender = Ambiguate(sender, "none")
 	if shouldInvite(msg, sender) then
 		local inInstance, instanceType = IsInInstance()
 		if (inInstance and instanceType == "party" and GetNumSubgroupMembers() == 4) or GetNumGroupMembers() == 40 then
-			if presenceId > 0 then
-				BNSendWhisper(presenceId, "<oRA3> ".. L.invitePrintGroupIsFull)
+			if bnetIDAccount > 0 then
+				BNSendWhisper(bnetIDAccount, "<oRA> ".. L.inviteGroupIsFull)
 			else
-				SendChatMessage("<oRA3> ".. L.invitePrintGroupIsFull, "WHISPER", nil, sender)
+				SendChatMessage("<oRA> ".. L.inviteGroupIsFull, "WHISPER", nil, sender)
 			end
 		else
 			peopleToInvite[#peopleToInvite + 1] = sender
@@ -263,14 +272,12 @@ function module:OnEnable()
 end
 
 local function onControlEnter(widget, event, value)
-	if not oRA.db.profile.showHelpTexts then return end
 	GameTooltip:ClearLines()
-	GameTooltip:SetOwner(widget.frame, "ANCHOR_CURSOR")
-	GameTooltip:AddLine(widget.text and widget.text:GetText() or widget.label:GetText())
+	GameTooltip:SetOwner(widget.frame, "ANCHOR_TOP")
+	GameTooltip:SetText(widget.text and widget.text:GetText() or widget.label:GetText())
 	GameTooltip:AddLine(widget:GetUserData("tooltip"), 1, 1, 1, 1)
 	GameTooltip:Show()
 end
-local function onControlLeave() GameTooltip:Hide() end
 
 local function updateRankButtons()
 	if not frame then return end
@@ -292,9 +299,9 @@ local function updateRankButtons()
 		button:SetUserData("tooltip", L.inviteGuildRankDesc:format(rankName))
 		button:SetUserData("rank", i)
 		button:SetCallback("OnEnter", onControlEnter)
-		button:SetCallback("OnLeave", onControlLeave)
+		button:SetCallback("OnLeave", GameTooltip_Hide)
 		button:SetCallback("OnClick", function()
-			inviteRank(i, rankName)
+			inviteRank(i, rankName, IsShiftKeyDown())
 		end)
 		button:SetRelativeWidth(0.33)
 		table.insert(rankButtons, button)
@@ -311,7 +318,12 @@ end
 local function saveKeyword(widget, event, value)
 	if type(value) == "string" and value:trim():len() < 2 then value = nil end
 	local key = widget:GetUserData("key")
-	if value then value = value:lower() end
+	if value then
+		value = value:lower():trim()
+		if value:sub(1, 1) == ";" then value = value:sub(2) end
+		if value:sub(-1) == ";" then value = value:sub(1, -2) end
+		value = value:trim()
+	end
 	db[key] = value
 	widget:SetText(value)
 end
@@ -367,9 +379,9 @@ function module:CreateFrame()
 	keyword:SetLabel(L.keyword)
 	keyword:SetText(db.keyword)
 	keyword:SetUserData("key", "keyword")
-	keyword:SetUserData("tooltip", L.keywordDesc)
+	keyword:SetUserData("tooltip", L.keywordDesc.."\n\n"..L.keywordMultiDesc)
 	keyword:SetCallback("OnEnter", onControlEnter)
-	keyword:SetCallback("OnLeave", onControlLeave)
+	keyword:SetCallback("OnLeave", GameTooltip_Hide)
 	keyword:SetCallback("OnEnterPressed", saveKeyword)
 	keyword:SetRelativeWidth(0.5)
 
@@ -377,9 +389,9 @@ function module:CreateFrame()
 	guildonlykeyword:SetLabel(L.guildKeyword)
 	guildonlykeyword:SetText(db.guildkeyword)
 	guildonlykeyword:SetUserData("key", "guildkeyword")
-	guildonlykeyword:SetUserData("tooltip", L.guildKeywordDesc)
+	guildonlykeyword:SetUserData("tooltip", L.guildKeywordDesc.."\n\n"..L.keywordMultiDesc)
 	guildonlykeyword:SetCallback("OnEnter", onControlEnter)
-	guildonlykeyword:SetCallback("OnLeave", onControlLeave)
+	guildonlykeyword:SetCallback("OnLeave", GameTooltip_Hide)
 	guildonlykeyword:SetCallback("OnEnterPressed", saveKeyword)
 	guildonlykeyword:SetRelativeWidth(0.5)
 
@@ -395,19 +407,15 @@ function module:CreateFrame()
 		guild:SetText(L.inviteGuild)
 		guild:SetUserData("tooltip", L.inviteGuildDesc)
 		guild:SetCallback("OnEnter", onControlEnter)
-		guild:SetCallback("OnLeave", onControlLeave)
+		guild:SetCallback("OnLeave", GameTooltip_Hide)
 		guild:SetCallback("OnClick", inviteGuild)
-		-- Default height is 24, per AceGUIWidget-Button.lua
-		-- FIXME: Jesus christ that looks crappy, buttons apparently only have 3 textures,
-		-- left, middle and right, so making it higher actually stretches the texture.
-		--guild:SetHeight(24 * 2)
 		guild:SetFullWidth(true)
 
 		zone = AceGUI:Create("Button")
 		zone:SetText(L.inviteZone)
 		zone:SetUserData("tooltip", L.inviteZoneDesc)
 		zone:SetCallback("OnEnter", onControlEnter)
-		zone:SetCallback("OnLeave", onControlLeave)
+		zone:SetCallback("OnLeave", GameTooltip_Hide)
 		zone:SetCallback("OnClick", inviteZone)
 		zone:SetFullWidth(true)
 
@@ -438,4 +446,3 @@ function module:CreateFrame()
 	-- updateRankButtons will ResumeLayout and DoLayout
 	updateRankButtons()
 end
-

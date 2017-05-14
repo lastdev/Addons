@@ -1,10 +1,6 @@
-﻿## Interface: 60000
-## Title: Altoholic
+## Interface: 70200
+## Title: Altoholic by |cFF69CCF0Thaoky|r
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
-## X-Curse-Packaged-Version: r152
-## X-Curse-Project-Name: Altoholic
-## X-Curse-Project-ID: altoholic
-## X-Curse-Repository-ID: wow/altoholic/mainline
 
 ## Notes: Provides information about your alts
 ## Notes-ruRU: Предоставляет информацию о вашем персонажах
@@ -13,7 +9,7 @@
 ## Notes-koKR: 부캐들(alts)의 정보들을 제공해 줍니다.
 
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r152
+## Version: r178
 ## X-Category: Inventory, Tradeskill, Mail
 ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
@@ -33,8 +29,11 @@ embeds.xml
 
 locale.xml
 
-AltoholicTemplates.xml
+Core.lua
+Templates\UITemplates.xml
 Altoholic.xml
 
+Frames\MessageBox.xml
+Frames\MinimapButton.xml
 Frames\TabOptions.xml
 Frames\AccountSharing.xml

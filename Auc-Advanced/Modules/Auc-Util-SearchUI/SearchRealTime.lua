@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Realtime module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SearchRealTime.lua 5515 2014-10-31 12:07:47Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SearchRealTime.lua 5623 2016-07-30 10:18:27Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows the user to search the current Browse tab
@@ -204,7 +204,7 @@ function lib.RefreshPage()
 	end
 	private.IsRefresh = true
 	AucAdvanced.Scan.SetAuctioneerQuery()
-	QueryAuctionItems("", "", "", nil, nil, nil, page, nil, nil)
+	QueryAuctionItems(nil, nil, nil, page, nil, nil, nil, nil, nil)
 	lib.SignalRTSButton()
 end
 
@@ -466,11 +466,13 @@ function lib.CreateRTSButton(parent, norightclick)
 	pulse:SetLooping("REPEAT")
 	local pulse1 = pulse:CreateAnimation("Alpha")
 	pulse1:SetStartDelay(1)
-	pulse1:SetChange(-0.8)
+	pulse1:SetFromAlpha(1)
+	pulse1:SetToAlpha(.2)
 	pulse1:SetDuration(.5)
 	pulse1:SetOrder(1)
 	local pulse2 = pulse:CreateAnimation("Alpha")
-	pulse2:SetChange(0.8)
+	pulse2:SetFromAlpha(.2)
+	pulse2:SetToAlpha(1)
 	pulse2:SetDuration(.5)
 	pulse2:SetOrder(2)
 	button.pulse = pulse
@@ -532,4 +534,4 @@ function private.HookAH()
 	BrowseRTSButton:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPLEFT", 310, -15)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5515 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5623 $")

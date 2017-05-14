@@ -38,10 +38,10 @@ if PRAT_MODULE == nil then
     return 
 end
 
-local L = Prat.GetLocalizer({})
+local PL = Prat.GetLocalizer({})
 
 --[===[@debug@
-L:AddLocale("enUS", {
+PL:AddLocale("enUS", {
     ["Frames"] = true,
     ["Chat window frame parameter options"] = true,
     ["removeclamp_name"] = "Zero Clamp Size",
@@ -66,260 +66,169 @@ L:AddLocale("enUS", {
 -- These Localizations are auto-generated. To help with localization
 -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
---@non-debug@
-L:AddLocale("enUS", 
-{
-	["Chat window frame parameter options"] = true,
-	framealpha_desc = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
-	framealpha_name = "Set Chatframe Alpha",
-	Frames = true,
-	mainchatonload_desc = "Automatically select the first chat frame and make it active on load.",
-	mainchatonload_name = "Force Main Chat Frame On Load",
-	maxchatheight_desc = "Sets the maximum height for all chat windows.",
-	maxchatheight_name = "Set Maximum Height",
-	maxchatwidth_desc = "Sets the maximum width for all chat windows.",
-	maxchatwidth_name = "Set Maximum Width",
-	minchatheight_desc = "Sets the minimum height for all chat windows.",
-	minchatheight_name = "Set Minimum Height",
-	minchatwidth_desc = "Sets the minimum width for all chat windows.",
-	minchatwidth_name = "Set Minimum Width",
-	rememberframepositions_desc = "Remember the chatframe positions, and restore them on load",
-	rememberframepositions_name = "Remember Positions",
-	removeclamp_desc = "Allow the chatframe to be moved flush with the edge of the screen",
-	removeclamp_name = "Zero Clamp Size",
-}
+  --@non-debug@
+do
+    local L
 
-)
-L:AddLocale("itIT", 
+L=
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	-- framealpha_name = "",
-	-- Frames = "",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	-- maxchatheight_desc = "",
-	-- maxchatheight_name = "",
-	-- maxchatwidth_desc = "",
-	-- maxchatwidth_name = "",
-	-- minchatheight_desc = "",
-	-- minchatheight_name = "",
-	-- minchatwidth_desc = "",
-	-- minchatwidth_name = "",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
+["Chat window frame parameter options"] = true,
+["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
+["framealpha_name"] = "Set Chatframe Alpha",
+["Frames"] = true,
+["mainchatonload_desc"] = "Automatically select the first chat frame and make it active on load.",
+["mainchatonload_name"] = "Force Main Chat Frame On Load",
+["maxchatheight_desc"] = "Sets the maximum height for all chat windows.",
+["maxchatheight_name"] = "Set Maximum Height",
+["maxchatwidth_desc"] = "Sets the maximum width for all chat windows.",
+["maxchatwidth_name"] = "Set Maximum Width",
+["minchatheight_desc"] = "Sets the minimum height for all chat windows.",
+["minchatheight_name"] = "Set Minimum Height",
+["minchatwidth_desc"] = "Sets the minimum width for all chat windows.",
+["minchatwidth_name"] = "Set Minimum Width",
+["rememberframepositions_desc"] = "Remember the chatframe positions, and restore them on load",
+["rememberframepositions_name"] = "Remember Positions",
+["removeclamp_desc"] = "Allow the chatframe to be moved flush with the edge of the screen",
+["removeclamp_name"] = "Zero Clamp Size",
 }
-
-)
-L:AddLocale("ptBR", 
+PL:AddLocale("enUS", L)
+L=
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	-- framealpha_name = "",
-	-- Frames = "",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	-- maxchatheight_desc = "",
-	-- maxchatheight_name = "",
-	-- maxchatwidth_desc = "",
-	-- maxchatwidth_name = "",
-	-- minchatheight_desc = "",
-	-- minchatheight_name = "",
-	-- minchatwidth_desc = "",
-	-- minchatwidth_name = "",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
 }
-
-)
-L:AddLocale("frFR",  
+PL:AddLocale("itIT", L)
+L=
 {
-	["Chat window frame parameter options"] = "Options de la fenêtre de discussion",
-	framealpha_desc = "Définit la transparence de la fenêtre de discussion quand la souris passe par dessus.",
-	framealpha_name = "Transparence",
-	Frames = "Fenêtre",
-	mainchatonload_desc = "Sélectionne automatiquement la première fenêtre de discussion et la rend active lors du chargement.",
-	-- mainchatonload_name = "",
-	maxchatheight_desc = "Définit la hauteur maximale pour toutes les fenêtres de discussion.",
-	maxchatheight_name = "Hauteur maximale",
-	maxchatwidth_desc = "Définit la largeur maximale pour toutes les fenêtres de discussion.",
-	maxchatwidth_name = "Largeur maximale",
-	minchatheight_desc = "Définit la hauteur minimum pour toutes les fenêtres de discussion.",
-	minchatheight_name = "Hauteur minimum",
-	minchatwidth_desc = "Définit la largeur minimum pour toutes les fenêtres de discussion.",
-	minchatwidth_name = "Largeur minimum",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
 }
-
-)
-L:AddLocale("deDE", 
+PL:AddLocale("ptBR", L)
+L=
 {
-	["Chat window frame parameter options"] = "Optionen für Parameter des Chat-Fenster-Rahmens",
-	framealpha_desc = "Steuert die Transparenz des Chat-Rahmens, wenn du die Maus darüberlegst.",
-	framealpha_name = "Transparenz für Chatrahmen einstellen",
-	Frames = "Rahmen",
-	mainchatonload_desc = "Automatisch den ersten Chat-Rahmen auswählen und beim Laden aktivieren.",
-	mainchatonload_name = "Erzwinge Haupt-Chat-Rahmen beim Laden",
-	maxchatheight_desc = "Stellt die maximale Höhe für alle alle Chat-Fenster ein.",
-	maxchatheight_name = "Maximale Höhe einstellen",
-	maxchatwidth_desc = "Die maximale Breite für alle Chat-Fenster einstellen.",
-	maxchatwidth_name = "Maximale Breite einstellen.",
-	minchatheight_desc = "Die minimale Höhe für alle Chat-Fenster einstellen.",
-	minchatheight_name = "Minimale Höhe einstellen",
-	minchatwidth_desc = "Die minimale Breite für alle Chat-Fenster einstellen.",
-	minchatwidth_name = "Minimale Breite einstellen.",
-	rememberframepositions_desc = "Die Positionen des Chatfensters merken und diese beim Laden wiederherstellen",
-	rememberframepositions_name = "Positionen merken",
-	removeclamp_desc = "Das Verschieben des Chat-Rahmens bündig zur Bildschirmkante zulassen",
-	removeclamp_name = "Klammergröße Null",
+["Chat window frame parameter options"] = "Options de la fenêtre de discussion",
+["framealpha_desc"] = "Définit la transparence de la fenêtre de discussion quand la souris passe par dessus.",
+["framealpha_name"] = "Transparence",
+["Frames"] = "Fenêtre",
+["mainchatonload_desc"] = "Sélectionne automatiquement la première fenêtre de discussion et la rend active lors du chargement.",
+["maxchatheight_desc"] = "Définit la hauteur maximale pour toutes les fenêtres de discussion.",
+["maxchatheight_name"] = "Hauteur maximale",
+["maxchatwidth_desc"] = "Définit la largeur maximale pour toutes les fenêtres de discussion.",
+["maxchatwidth_name"] = "Largeur maximale",
+["minchatheight_desc"] = "Définit la hauteur minimum pour toutes les fenêtres de discussion.",
+["minchatheight_name"] = "Hauteur minimum",
+["minchatwidth_desc"] = "Définit la largeur minimum pour toutes les fenêtres de discussion.",
+["minchatwidth_name"] = "Largeur minimum",
 }
-
-)
-L:AddLocale("koKR",  
+PL:AddLocale("frFR", L)
+L=
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	framealpha_name = "대화창 투명도 설정",
-	Frames = "대화창",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	maxchatheight_desc = "모든 대화창의 최대 높이 설정",
-	maxchatheight_name = "최대 높이 설정",
-	maxchatwidth_desc = "모든 대화창의 최대 폭 설정",
-	maxchatwidth_name = "최대 폭 설정",
-	minchatheight_desc = "모든 대화창의 최소 높이 설정",
-	minchatheight_name = "최소 높이 설정",
-	minchatwidth_desc = "모든 대화창의 최소 폭 설정",
-	minchatwidth_name = "최소 폭 설정",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
+["Chat window frame parameter options"] = "Optionen für Parameter des Chatfenster-Rahmens",
+["framealpha_desc"] = "Steuert die Transparenz des Chatfensters, wenn du die Maus darüberlegst.",
+["framealpha_name"] = "Transparenz für Chatfenster einstellen",
+["Frames"] = "Fenster",
+["mainchatonload_desc"] = "Automatisch das erste Chatfenster auswählen und beim Laden aktivieren.",
+["mainchatonload_name"] = "Haupt-Chatfenster beim Laden erzwingen",
+["maxchatheight_desc"] = "Die maximale Höhe für alle alle Chatfenster einstellen.",
+["maxchatheight_name"] = "Maximale Höhe einstellen",
+["maxchatwidth_desc"] = "Die maximale Breite für alle Chatfenster einstellen.",
+["maxchatwidth_name"] = "Maximale Breite einstellen.",
+["minchatheight_desc"] = "Die minimale Höhe für alle Chatfenster einstellen.",
+["minchatheight_name"] = "Minimale Höhe einstellen",
+["minchatwidth_desc"] = "Die minimale Breite für alle Chatfenster einstellen.",
+["minchatwidth_name"] = "Minimale Breite einstellen.",
+["rememberframepositions_desc"] = "Die Positionen des Chatfensters merken und diese beim Laden wiederherstellen",
+["rememberframepositions_name"] = "Positionen merken",
+["removeclamp_desc"] = "Das Verschieben des Chatfensters bündig zur Bildschirmkante zulassen",
+["removeclamp_name"] = "Klammergröße Null",
 }
-
-)
-L:AddLocale("esMX",  
+PL:AddLocale("deDE", L)
+L=
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	-- framealpha_name = "",
-	-- Frames = "",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	-- maxchatheight_desc = "",
-	-- maxchatheight_name = "",
-	-- maxchatwidth_desc = "",
-	-- maxchatwidth_name = "",
-	-- minchatheight_desc = "",
-	-- minchatheight_name = "",
-	-- minchatwidth_desc = "",
-	-- minchatwidth_name = "",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
+["Chat window frame parameter options"] = "대화창 프레임 한도 옵션",
+["framealpha_desc"] = "마우스를 올렸을 때 대화창의 투명도를 조절합니다.",
+["framealpha_name"] = "대화창 투명도 설정",
+["Frames"] = "대화창",
+["mainchatonload_desc"] = "첫번째 대화창을 자동으로 선택하고 로드 시에 활성화 시킵니다.",
+["mainchatonload_name"] = "로드 시 주 대화창 강제 설정",
+["maxchatheight_desc"] = "모든 대화창의 최대 높이를 설정합니다.",
+["maxchatheight_name"] = "최대 높이 설정",
+["maxchatwidth_desc"] = "모든 대화창의 최대 너비를 설정합니다.",
+["maxchatwidth_name"] = "최대 너비 설정",
+["minchatheight_desc"] = "모든 대화창의 최소 높이를 설정합니다.",
+["minchatheight_name"] = "최소 높이 설정",
+["minchatwidth_desc"] = "모든 대화창의 최소 너비를 설정합니다.",
+["minchatwidth_name"] = "최소 너비 설정",
+["rememberframepositions_desc"] = "대화창 위치를 기억하고 로드 시마다 불러옵니다",
+["rememberframepositions_name"] = "위치 기억",
+["removeclamp_desc"] = "대화창이 화면 밖으로 나가지 않도록 방지합니다.",
+["removeclamp_name"] = "Zero 고정 크기",
 }
-
-)
-L:AddLocale("ruRU",  
+PL:AddLocale("koKR", L)
+L=
 {
-	["Chat window frame parameter options"] = "Параметры окна чата",
-	framealpha_desc = "Настройка прозрачности окна чата при наведении на него курсора мыши.",
-	framealpha_name = "Прозрачность окна чата",
-	Frames = "Фреймы",
-	mainchatonload_desc = "Автоматически выбирает первое окно чата, и делает его активным при загрузке.",
-	mainchatonload_name = "Задействовать главное окно чата при загрузке",
-	maxchatheight_desc = "Устанавливает максимальную высоту для всех окон чата.",
-	maxchatheight_name = "Максимальная высоты",
-	maxchatwidth_desc = "Устанавливает максимальную ширину для всех окон чата.",
-	maxchatwidth_name = "Максимальная ширина",
-	minchatheight_desc = "Устанавливает минимальную высоту для всех окон чата.",
-	minchatheight_name = "Минимальная высоты",
-	minchatwidth_desc = "Устанавливает минимальную ширину для всех окон чата.",
-	minchatwidth_name = "Минимальная ширина",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	removeclamp_desc = "Позволить окну чата прижиматься вплотную к краю экрана",
-	removeclamp_name = "Вплотную к краю экрана",
 }
-
-)
-L:AddLocale("zhCN",  
+PL:AddLocale("esMX", L)
+L=
 {
-	["Chat window frame parameter options"] = "聊天窗口参数选项", -- Needs review
-	framealpha_desc = "控制鼠标移过时聊天框架的透明度.", -- Needs review
-	framealpha_name = "设定聊天框架透明度", -- Needs review
-	Frames = "框架", -- Needs review
-	mainchatonload_desc = "加载时自动选择并激活第1个聊天框架.", -- Needs review
-	mainchatonload_name = "加载时焦点于主聊天框架.", -- Needs review
-	maxchatheight_desc = "设定所有聊天窗口的最大高度.", -- Needs review
-	maxchatheight_name = "设定最大高度", -- Needs review
-	maxchatwidth_desc = "设定所有聊天窗口的最大宽度.", -- Needs review
-	maxchatwidth_name = "设定最大宽度", -- Needs review
-	minchatheight_desc = "设定所有聊天窗口的最小高度.", -- Needs review
-	minchatheight_name = "设定最小高度.", -- Needs review
-	minchatwidth_desc = "设定所有聊天窗口的最小宽度.", -- Needs review
-	minchatwidth_name = "设定最小宽度.", -- Needs review
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	removeclamp_desc = "允许聊天框架移动至屏幕边缘齐平", -- Needs review
-	-- removeclamp_name = "",
+["Chat window frame parameter options"] = "Параметры окна чата",
+["framealpha_desc"] = "Настройка прозрачности окна чата при наведении на него курсора мыши.",
+["framealpha_name"] = "Прозрачность окна чата",
+["Frames"] = "Фреймы",
+["mainchatonload_desc"] = "Автоматически выбирает первое окно чата, и делает его активным при загрузке.",
+["mainchatonload_name"] = "Задействовать главное окно чата при загрузке",
+["maxchatheight_desc"] = "Устанавливает максимальную высоту для всех окон чата.",
+["maxchatheight_name"] = "Максимальная высоты",
+["maxchatwidth_desc"] = "Устанавливает максимальную ширину для всех окон чата.",
+["maxchatwidth_name"] = "Максимальная ширина",
+["minchatheight_desc"] = "Устанавливает минимальную высоту для всех окон чата.",
+["minchatheight_name"] = "Минимальная высоты",
+["minchatwidth_desc"] = "Устанавливает минимальную ширину для всех окон чата.",
+["minchatwidth_name"] = "Минимальная ширина",
+["rememberframepositions_desc"] = "Запомнить положение окна чата и восстановить при загрузке",
+["rememberframepositions_name"] = "Запомнить положение",
+["removeclamp_desc"] = "Позволить окну чата прижиматься вплотную к краю экрана",
+["removeclamp_name"] = "Вплотную к краю экрана",
 }
-
-)
-L:AddLocale("esES",  
+PL:AddLocale("ruRU", L)
+L=
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	-- framealpha_name = "",
-	-- Frames = "",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	-- maxchatheight_desc = "",
-	-- maxchatheight_name = "",
-	-- maxchatwidth_desc = "",
-	-- maxchatwidth_name = "",
-	-- minchatheight_desc = "",
-	-- minchatheight_name = "",
-	-- minchatwidth_desc = "",
-	-- minchatwidth_name = "",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
+["Chat window frame parameter options"] = "聊天窗口参数选项",
+["framealpha_desc"] = "控制鼠标移过时聊天框架的透明度.",
+["framealpha_name"] = "设定聊天框架透明度",
+["Frames"] = "框架",
+["mainchatonload_desc"] = "加载时自动选择并激活第1个聊天框架.",
+["mainchatonload_name"] = "加载时焦点于主聊天框架.",
+["maxchatheight_desc"] = "设定所有聊天窗口的最大高度.",
+["maxchatheight_name"] = "设定最大高度",
+["maxchatwidth_desc"] = "设定所有聊天窗口的最大宽度.",
+["maxchatwidth_name"] = "设定最大宽度",
+["minchatheight_desc"] = "设定所有聊天窗口的最小高度.",
+["minchatheight_name"] = "设定最小高度.",
+["minchatwidth_desc"] = "设定所有聊天窗口的最小宽度.",
+["minchatwidth_name"] = "设定最小宽度.",
+["rememberframepositions_desc"] = "记住聊天框的位置,在加载时恢复.",
+["rememberframepositions_name"] = "记住位置",
+["removeclamp_desc"] = "允许聊天框架移动至屏幕边缘齐平",
 }
-
-)
-L:AddLocale("zhTW",  
+PL:AddLocale("zhCN", L)
+L=
 {
-	["Chat window frame parameter options"] = "聊天視窗框架參數選項",
-	-- framealpha_desc = "",
-	framealpha_name = "設定聊天欄透明度",
-	Frames = "框架",
-	-- mainchatonload_desc = "",
-	mainchatonload_name = "強制主聊天框在載入",
-	maxchatheight_desc = "設定最大高度全部聊天視窗。",
-	maxchatheight_name = "設定最大高度",
-	maxchatwidth_desc = "設定最大寬度全部聊天視窗。",
-	maxchatwidth_name = "設定最大寬度",
-	minchatheight_desc = "設定對話視窗最小高度",
-	minchatheight_name = "設定最小高度",
-	minchatwidth_desc = "設定對話視窗最小寬度",
-	minchatwidth_name = "設定最小寬度",
-	-- rememberframepositions_desc = "",
-	-- rememberframepositions_name = "",
-	-- removeclamp_desc = "",
-	-- removeclamp_name = "",
 }
-
-)
+PL:AddLocale("esES",  L)
+L=
+{
+["Chat window frame parameter options"] = "聊天視窗框架參數選項",
+["framealpha_name"] = "設定聊天欄透明度",
+["Frames"] = "框架",
+["mainchatonload_name"] = "強制主聊天框在載入",
+["maxchatheight_desc"] = "設定最大高度全部聊天視窗。",
+["maxchatheight_name"] = "設定最大高度",
+["maxchatwidth_desc"] = "設定最大寬度全部聊天視窗。",
+["maxchatwidth_name"] = "設定最大寬度",
+["minchatheight_desc"] = "設定對話視窗最小高度",
+["minchatheight_name"] = "設定最小高度",
+["minchatwidth_desc"] = "設定對話視窗最小寬度",
+["minchatwidth_name"] = "設定最小寬度",
+}
+PL:AddLocale("zhTW", L)
+end
 --@end-non-debug@
 
 
@@ -358,14 +267,14 @@ Prat:SetModuleDefaults(mod.name, {
 
 do
 	local frameoption = {
-		name = function(info) return L[info[#info].."_name"] end,
-		desc = function(info) return L[info[#info].."_desc"] end,
+		name = function(info) return PL[info[#info].."_name"] end,
+		desc = function(info) return PL[info[#info].."_desc"] end,
 		type="range", min=25, max=1024, step=1
 	}
 	
 	Prat:SetModuleOptions(mod.name, {
-	        name = L["Frames"],
-	        desc = L["Chat window frame parameter options"],
+	        name = PL["Frames"],
+	        desc = PL["Chat window frame parameter options"],
 	        type = "group",
 	        args = {
 	    		minchatwidth = frameoption,
@@ -375,20 +284,20 @@ do
 			    removeclamp = {
                 type = "toggle", 
                     order = 110, 
-                	name = L["removeclamp_name"],
-                	desc = L["removeclamp_desc"],    
+                	name = PL["removeclamp_name"],
+                	desc = PL["removeclamp_desc"],    
                 },
 			    framealpha = {
                     order = 115,
-					name = L["framealpha_name"],
-					desc = L["framealpha_desc"],
+					name = PL["framealpha_name"],
+					desc = PL["framealpha_desc"],
 					type="range", min=0.0, max=1.0, step=.01, order=190,
 				},
                 rememberframepositions = {
                     type = "toggle",
                     order = 120,
-                    name = L.rememberframepositions_name,
-                    desc = L.rememberframepositions_desc,
+                    name = PL.rememberframepositions_name,
+                    desc = PL.rememberframepositions_desc,
                 }
 	        }
 	    }

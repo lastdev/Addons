@@ -1,32 +1,41 @@
--- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 
 -- Default settings
 local default = {
-    model_path             = "Creature/Arthaslichking/arthaslichking.m2",
-    modelIsUnit         = false,
-    model_x             = 0,
-    model_y             = 0,
-    model_z             = 0,
-    width                 = 200,
-    height                 = 200,
-    sequence             = 1,
-    advance             = false,
-    rotation             = 0,
-    scale                 = 1,
-    selfPoint             = "CENTER",
-    anchorPoint         = "CENTER",
-    xOffset             = 0,
-    yOffset             = 0,
-    frameStrata         = 1,
-    border                = false,
-    borderColor         = {1.0, 1.0, 1.0, 0.5},
-    backdropColor        = {1.0, 1.0, 1.0, 0.5},
-    borderEdge            = "None",
-    borderOffset         = 5,
-    borderInset            = 11,
-    borderSize            = 16,
-    borderBackdrop        = "Blizzard Tooltip",
+    model_path = "Creature/Arthaslichking/arthaslichking.m2",
+    modelIsUnit = false,
+    api = true, -- false ==> SetPosition + SetFacing; true ==> SetTransform
+    model_x = 0,
+    model_y = 0,
+    model_z = 0,
+    -- SetTransform
+    model_st_tx = 0,
+    model_st_ty = 0,
+    model_st_tz = 0,
+    model_st_rx = 270,
+    model_st_ry = 0,
+    model_st_rz = 0,
+    model_st_us = 40,
+    width = 200,
+    height = 200,
+    sequence = 1,
+    advance = false,
+    rotation = 0,
+    scale = 1,
+    selfPoint = "CENTER",
+    anchorPoint = "CENTER",
+    anchorFrameType = "SCREEN",
+    xOffset = 0,
+    yOffset = 0,
+    frameStrata = 1,
+    border = false,
+    borderColor = {1.0, 1.0, 1.0, 0.5},
+    backdropColor = {1.0, 1.0, 1.0, 0.5},
+    borderEdge = "None",
+    borderOffset = 5,
+    borderInset = 11,
+    borderSize = 16,
+    borderBackdrop = "Blizzard Tooltip",
 };
 
 -- Called when first creating a new region/display
@@ -35,6 +44,7 @@ local function create(parent)
     local region = CreateFrame("FRAME", nil, UIParent);
     region:SetMovable(true);
     region:SetResizable(true);
+    region:SetMinResize(1, 1);
 
     -- Border region
     local border = CreateFrame("frame", nil, region);
@@ -54,30 +64,53 @@ local function modify(parent, region, data)
     -- Localize
     local model, border = region.model, region.border;
 
-    -- Adjust framestrata
-    if(data.frameStrata == 1) then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
-    end
-
     -- Reset position and size
     region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+    WeakAuras.AnchorFrame(data, region, parent);
     region:SetWidth(data.width);
     region:SetHeight(data.height);
 
     -- Adjust model
+    local register = false;
     if tonumber(data.model_path) then
         model:SetDisplayInfo(tonumber(data.model_path))
     else
         if (data.modelIsUnit) then
             model:SetUnit(data.model_path)
+            register = true;
         else
             pcall(function() model:SetModel(data.model_path) end);
         end
+        model:SetPortraitZoom(data.portraitZoom and 1 or 0);
     end
-    model:SetPosition(data.model_z, data.model_x, data.model_y);
+    if (data.api) then
+      model:SetTransform(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
+                         rad(data.model_st_rx), rad(data.model_st_ry), rad(data.model_st_rz),
+                         data.model_st_us / 1000);
+    else
+      model:ClearTransform();
+      model:SetPosition(data.model_z, data.model_x, data.model_y);
+    end
+
+    if (register) then
+        model:RegisterEvent("UNIT_MODEL_CHANGED");
+        if (data.model_path == "target") then
+          model:RegisterEvent("PLAYER_TARGET_CHANGED");
+        elseif (data.model_path == "focus") then
+          model:RegisterEvent("PLAYER_FOCUS_CHANGED");
+        end
+        model:SetScript("OnEvent", function(self, event, unitId)
+          if (event ~= "UNIT_MODEL_CHANGED" or UnitIsUnit(unitId, data.model_path)) then
+            model:SetUnit(data.model_path);
+          end
+        end
+        );
+    else
+       model:UnregisterEvent("UNIT_MODEL_CHANGED");
+       model:UnregisterEvent("PLAYER_TARGET_CHANGED");
+       model:UnregisterEvent("PLAYER_FOCUS_CHANGED");
+       model:SetScript("OnEvent", nil);
+    end
 
     -- Update border
     if data.border then
@@ -135,9 +168,19 @@ local function modify(parent, region, data)
     -- Roate model
     function region:Rotate(degrees)
         region.rotation = degrees;
-        model:SetFacing(rad(region.rotation));
+        if (data.api) then
+          model:SetTransform(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
+                             rad(data.model_st_rx), rad(data.model_st_ry), rad(degrees),
+                             data.model_st_us / 1000);
+        else
+          model:SetFacing(rad(region.rotation));
+        end
     end
-    region:Rotate(data.rotation);
+    if (data.api) then
+      region:Rotate(data.model_st_rz);
+    else
+      region:Rotate(data.rotation);
+    end
 
     -- Get model rotation
     function region:GetRotation()
@@ -146,19 +189,49 @@ local function modify(parent, region, data)
 
     -- Ensure using correct model
     function region:PreShow()
---        if(type(model:GetModel()) ~= "string") then
-            if tonumber(data.model_path) then
-                model:SetDisplayInfo(tonumber(data.model_path))
-            else
-                if (data.modelIsUnit) then
-                    model:SetUnit(data.model_path)
-                else
-                    pcall(function() model:SetModel(data.model_path) end);
-                end
-            end
---        end
+      if tonumber(data.model_path) then
+          model:SetDisplayInfo(tonumber(data.model_path))
+      else
+          if (data.modelIsUnit) then
+              model:SetUnit(data.model_path)
+          else
+              pcall(function() model:SetModel(data.model_path) end);
+          end
+      end
+      model:SetPortraitZoom(data.portraitZoom and 1 or 0);
+      if (data.api) then
+        model:SetTransform(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
+                           rad(data.model_st_rx), rad(data.model_st_ry), rad(data.model_st_rz),
+                           data.model_st_us / 1000);
+      else
+        model:ClearTransform();
+        model:SetPosition(data.model_z, data.model_x, data.model_y);
+      end
     end
 end
 
 -- Register new region type with WeakAuras
 WeakAuras.RegisterRegionType("model", create, modify, default);
+
+-- Work around for movies and world map hiding all models
+do
+  local function preShowModels()
+    for id, isLoaded in pairs(WeakAuras.loaded) do
+      if (isLoaded) then
+        local data = WeakAuras.regions[id];
+        if (data.regionType == "model") then
+          data.region:PreShow();
+        end
+      end
+    end
+  end
+
+  local movieWatchFrame;
+  movieWatchFrame = CreateFrame("frame");
+  movieWatchFrame:RegisterEvent("PLAY_MOVIE");
+
+  movieWatchFrame:SetScript("OnEvent", preShowModels);
+  WeakAuras.frames["Movie Watch Frame"] = movieWatchFrame;
+
+  hooksecurefunc(WorldMapFrame, "Hide", preShowModels);
+end

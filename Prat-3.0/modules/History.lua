@@ -39,11 +39,11 @@ Prat:AddModuleToLoad(function()
         return
     end
 
-    local L = Prat:GetLocalizer({})
+    local PL = Prat:GetLocalizer({})
 
 
     --[===[@debug@
-    L:AddLocale("enUS", {
+    PL:AddLocale("enUS", {
         ["History"] = true,
         ["Chat history options."] = true,
         ["Set Chat Lines"] = true,
@@ -67,221 +67,194 @@ Prat:AddModuleToLoad(function()
 
     -- These Localizations are auto-generated. To help with localization
     -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-
-
     --@non-debug@
-    L:AddLocale("enUS",
-    {
-	["Chat history options."] = true,
-	["Color GMOTD"] = true,
-	["Colors the GMOTD label"] = true,
-	delaygmotd_desc = "Delay GMOTD until after all the startup spam",
-	delaygmotd_name = "Delay GMOTD",
-	divider = "========== End of Scrollback ==========",
-	History = true,
-	["Maximum number of lines of command history to save."] = true,
-	["Save Command History"] = true,
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = true,
-	Scrollback = true,
-	scrollbacklen_desc = "Number of chatlines to save in the scrollback buffer.",
-	scrollbacklen_name = "Scrollback Length",
-	["Scrollback Options"] = true,
-	["Set Chat Lines"] = true,
-	["Set Command History"] = true,
-	["Set the number of lines of chat history for each window."] = true,
-	["Store the chat lines between sessions"] = true,
+   do
+       local L
+
+   L=
+{
+["Chat history options."] = true,
+["Color GMOTD"] = true,
+["Colors the GMOTD label"] = true,
+["delaygmotd_desc"] = "Delay GMOTD until after all the startup spam",
+["delaygmotd_name"] = "Delay GMOTD",
+["divider"] = "========== End of Scrollback ==========",
+["History"] = true,
+["Maximum number of lines of command history to save."] = true,
+["Save Command History"] = true,
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = true,
+["Scrollback"] = true,
+["Scrollback Options"] = true,
+["scrollbacklen_desc"] = "Number of chatlines to save in the scrollback buffer.",
+["scrollbacklen_name"] = "Scrollback Length",
+["Set Chat Lines"] = true,
+["Set Command History"] = true,
+["Set the number of lines of chat history for each window."] = true,
+["Store the chat lines between sessions"] = true,
 }
 
-    )
-    L:AddLocale("frFR",
-    {
-	["Chat history options."] = "Option de l'historique.",
-	-- ["Color GMOTD"] = "",
-	-- ["Colors the GMOTD label"] = "",
-	delaygmotd_desc = "Afficher le message du jour de la guilde après tous les autres messages lors de la connexion.",
-	-- delaygmotd_name = "",
-	divider = "========== Fin de l'historique ==========",
-	History = "Historique",
-	["Maximum number of lines of command history to save."] = "Nombre maximum de lignes de commande à sauvegarder dans l'historique.",
-	["Save Command History"] = "Historique de commandes",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Sauvegarde l'historique des commandes entre les sessions (à utiliser avec alt+haut ou juste haut)",
-	-- Scrollback = "",
-	scrollbacklen_desc = "Nombre de lignes de discussions à sauvegarder dans l'historique.",
-	scrollbacklen_name = "Taille de l'historique",
-	-- ["Scrollback Options"] = "",
-	["Set Chat Lines"] = "Historique de discussions",
-	["Set Command History"] = "Historique de commandes",
-	["Set the number of lines of chat history for each window."] = "Définit le nombre de lignes dans l'historique pour chaque fenêtre.",
-	["Store the chat lines between sessions"] = "Sauvegarder l'historique des discussions entre les sessions.",
+     PL:AddLocale("enUS",L)
+
+   L=
+{
+["Chat history options."] = "Option de l'historique.",
+["delaygmotd_desc"] = "Afficher le message du jour de la guilde après tous les autres messages lors de la connexion.",
+["divider"] = "========== Fin de l'historique ==========",
+["History"] = "Historique",
+["Maximum number of lines of command history to save."] = "Nombre maximum de lignes de commande à sauvegarder dans l'historique.",
+["Save Command History"] = "Historique de commandes",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Sauvegarde l'historique des commandes entre les sessions (à utiliser avec alt+haut ou juste haut)",
+["scrollbacklen_desc"] = "Nombre de lignes de discussions à sauvegarder dans l'historique.",
+["scrollbacklen_name"] = "Taille de l'historique",
+["Set Chat Lines"] = "Historique de discussions",
+["Set Command History"] = "Historique de commandes",
+["Set the number of lines of chat history for each window."] = "Définit le nombre de lignes dans l'historique pour chaque fenêtre.",
+["Store the chat lines between sessions"] = "Sauvegarder l'historique des discussions entre les sessions.",
 }
 
-    )
-    L:AddLocale("deDE",
-    {
-	["Chat history options."] = "Optionen zu Chat-Verlauf.",
-	["Color GMOTD"] = "Farbe Gildennachricht des Tages",
-	["Colors the GMOTD label"] = "Färbt die GMOTD-Beschriftung",
-	delaygmotd_desc = "GMOTD verzögern, bis die Ausgabe aller Mitteilungen nach dem Einloggen vollendet ist.",
-	delaygmotd_name = "GMOTD verzögern",
-	divider = "======= Ende der Aufzeichnungen =======",
-	History = "Verlauf",
-	["Maximum number of lines of command history to save."] = "Maximal zu speichernde Zeilenanzahl des Befehlverlaufs.",
-	["Save Command History"] = "Befehlsverlauf speichern",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Speichert Befehlsverlauf zwischen Sitzungen (um mit Alt + \"Pfeil nach oben\" oder nur \"Pfeil nach oben\" verwendet zu werden).",
-	Scrollback = "Aufzeichnung",
-	scrollbacklen_desc = "Anzahl der Chat-Zeilen, die im Puffer gespeichert werden sollen",
-	scrollbacklen_name = "Scroll-Weite",
-	["Scrollback Options"] = "Optionen zum Aufwärtsscrollen",
-	["Set Chat Lines"] = "Chat-Zeilen einstellen",
-	["Set Command History"] = "Befehlsverlauf einstellen",
-	["Set the number of lines of chat history for each window."] = "Die Zeilenanzahl des Chat-Verlaufs für jedes Fenster einstellen.",
-	["Store the chat lines between sessions"] = "Speichert den Chat zwischen den Sitzungen",
+     PL:AddLocale("frFR",L)
+
+   L=
+{
+["Chat history options."] = "Optionen zum Chatverlauf.",
+["Color GMOTD"] = "Farbe Gildennachricht des Tages",
+["Colors the GMOTD label"] = "Färbt die GMOTD-Beschriftung",
+["delaygmotd_desc"] = "GMOTD verzögern, bis die Ausgabe aller Mitteilungen nach dem Einloggen vollendet ist.",
+["delaygmotd_name"] = "GMOTD verzögern",
+["divider"] = "======= Ende der Aufzeichnungen =======",
+["History"] = "Verlauf",
+["Maximum number of lines of command history to save."] = "Maximal zu speichernde Zeilenanzahl des Befehlsverlaufs.",
+["Save Command History"] = "Befehlsverlauf speichern",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Speichert Befehlsverlauf zwischen Sitzungen (um mit Alt + \"Pfeil nach oben\" oder nur \"Pfeil nach oben\" verwendet zu werden).",
+["Scrollback"] = "Aufzeichnung",
+["Scrollback Options"] = "Optionen zum Aufwärtsscrollen",
+["scrollbacklen_desc"] = "Anzahl der Chatzeilen, die im Puffer gespeichert werden sollen",
+["scrollbacklen_name"] = "Scroll-Weite",
+["Set Chat Lines"] = "Chatzeilen einstellen",
+["Set Command History"] = "Befehlsverlauf einstellen",
+["Set the number of lines of chat history for each window."] = "Die Zeilenanzahl des Chatverlaufs für jedes Fenster einstellen.",
+["Store the chat lines between sessions"] = "Speichert den Chat zwischen den Sitzungen",
 }
 
-    )
-    L:AddLocale("koKR",
-    {
-	["Chat history options."] = "히스토리 설정",
-	-- ["Color GMOTD"] = "",
-	-- ["Colors the GMOTD label"] = "",
-	-- delaygmotd_desc = "",
-	-- delaygmotd_name = "",
-	-- divider = "",
-	History = "히스토리",
-	["Maximum number of lines of command history to save."] = "기억할 명령어 히스토리 갯수를 설정합니다.",
-	["Save Command History"] = "명령어 히스토리 저장",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "명령어 히스토리를 저장합니다. (Alt+위화살표나 위화살표를 사용하는 명령어)",
-	-- Scrollback = "",
-	-- scrollbacklen_desc = "",
-	-- scrollbacklen_name = "",
-	-- ["Scrollback Options"] = "",
-	["Set Chat Lines"] = "대화 히스토리 설정",
-	["Set Command History"] = "명령어 히스토리 설정",
-	["Set the number of lines of chat history for each window."] = "각각의 대화창에 대해 최대 히스토리 라인수를 설정합니다.",
-	-- ["Store the chat lines between sessions"] = "",
+     PL:AddLocale("deDE",L)
+
+   L=
+{
+["Chat history options."] = "대화 내역 옵션입니다.",
+["Color GMOTD"] = "오늘의 길드 메시지에 색상입히기",
+["Colors the GMOTD label"] = "오늘의 길드 메시지 제목에 색상입히기",
+["delaygmotd_desc"] = "모든 시작 스팸이 표시 될때까지 오늘의 길드 메시지 지연시키기",
+["delaygmotd_name"] = "오늘의 길드 메시지 지연",
+["divider"] = "========== 이전 대화 목록의 끝 ==========",
+["History"] = "대화 내역",
+["Maximum number of lines of command history to save."] = "저장할 명령어 내역의 최대 갯수입니다.",
+["Save Command History"] = "명령어 내역 저장",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "세션 간 명령어 내역을 저장합니다 (Alt+위 화살표나 위 화살표로 사용하는)",
+["Scrollback"] = "이전 대화 목록",
+["Scrollback Options"] = "이전 대화 목록 옵션",
+["scrollbacklen_desc"] = "이전 대화 목록 저장소에 저장할 대화 내용의 길이입니다.",
+["scrollbacklen_name"] = "이전 대화 목록 길이",
+["Set Chat Lines"] = "대화 내역 설정",
+["Set Command History"] = "명령어 내역 설정",
+["Set the number of lines of chat history for each window."] = "각 대화창 별로 대화 내역의 줄의 갯수를 설정합니다.",
+["Store the chat lines between sessions"] = "세션 간 대화 내용 저장하기",
 }
 
-    )
-    L:AddLocale("esMX",
-    {
-	-- ["Chat history options."] = "",
-	-- ["Color GMOTD"] = "",
-	-- ["Colors the GMOTD label"] = "",
-	-- delaygmotd_desc = "",
-	-- delaygmotd_name = "",
-	-- divider = "",
-	-- History = "",
-	-- ["Maximum number of lines of command history to save."] = "",
-	-- ["Save Command History"] = "",
-	-- ["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "",
-	-- Scrollback = "",
-	-- scrollbacklen_desc = "",
-	-- scrollbacklen_name = "",
-	-- ["Scrollback Options"] = "",
-	-- ["Set Chat Lines"] = "",
-	-- ["Set Command History"] = "",
-	-- ["Set the number of lines of chat history for each window."] = "",
-	-- ["Store the chat lines between sessions"] = "",
+     PL:AddLocale("koKR",L)
+
+   L=
+{
 }
 
-    )
-    L:AddLocale("ruRU",
-    {
-	["Chat history options."] = "Настройки истории чата.",
-	["Color GMOTD"] = "Цвет  GMOTD",
-	["Colors the GMOTD label"] = "Цвета названия СДГ",
-	delaygmotd_desc = "Задерживать отображение СДГ вплоть до окончания спама при входе в игру",
-	delaygmotd_name = "задержка GMOTD",
-	divider = "========== Конец истории сообщений ==========",
-	History = "История",
-	["Maximum number of lines of command history to save."] = "Максимальное число строк сохранённых в истории команд.",
-	["Save Command History"] = "Сохранять историю команд",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Сохранять историю команд между сеансами (для использования используйте alt+ стрелка вверх или просто стрелку вверх)",
-	Scrollback = "История сообщений",
-	scrollbacklen_desc = "Количество строк чата, которое надо сохранять в буфере истории сообщений.",
-	scrollbacklen_name = "Длина истории сообщений",
-	["Scrollback Options"] = "Вернуть опции",
-	["Set Chat Lines"] = "Задать число строк чата",
-	["Set Command History"] = "История команд",
-	["Set the number of lines of chat history for each window."] = "Установите число строк истории чата для всех окон чата.",
-	["Store the chat lines between sessions"] = "Сохранять строки чата между сессиями",
+     PL:AddLocale("esMX",L)
+
+   L=
+{
+["Chat history options."] = "Настройки истории чата.",
+["Color GMOTD"] = "Цвет  GMOTD",
+["Colors the GMOTD label"] = "Цвета названия СДГ",
+["delaygmotd_desc"] = "Задерживать отображение СДГ вплоть до окончания спама при входе в игру",
+["delaygmotd_name"] = "задержка GMOTD",
+["divider"] = "========== Конец истории сообщений ==========",
+["History"] = "История",
+["Maximum number of lines of command history to save."] = "Максимальное число строк сохранённых в истории команд.",
+["Save Command History"] = "Сохранять историю команд",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Сохранять историю команд между сеансами (для использования используйте alt+ стрелка вверх или просто стрелку вверх)",
+["Scrollback"] = "История сообщений",
+["Scrollback Options"] = "Вернуть опции",
+["scrollbacklen_desc"] = "Количество строк чата, которое надо сохранять в буфере истории сообщений.",
+["scrollbacklen_name"] = "Длина истории сообщений",
+["Set Chat Lines"] = "Задать число строк чата",
+["Set Command History"] = "История команд",
+["Set the number of lines of chat history for each window."] = "Установите число строк истории чата для всех окон чата.",
+["Store the chat lines between sessions"] = "Сохранять строки чата между сессиями",
 }
 
-    )
-    L:AddLocale("zhCN",
-    {
-	["Chat history options."] = "历史聊天记录选项",
-	["Color GMOTD"] = "每日公会信息颜色", -- Needs review
-	["Colors the GMOTD label"] = "为每日公会信息标签着色", -- Needs review
-	delaygmotd_desc = "延迟每日公会信息直到起始垃圾信息显示完毕为止", -- Needs review
-	delaygmotd_name = "延迟 GMOTD", -- Needs review
-	divider = "========== 回卷结束 ==========", -- Needs review
-	History = "历史记录",
-	["Maximum number of lines of command history to save."] = "存储命令记录最大行数",
-	["Save Command History"] = "命令记录存储",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "存储会话之间命令的历史记录(使用alt+上箭头键或仅上箭头键)",
-	Scrollback = "回卷", -- Needs review
-	scrollbacklen_desc = "聊天内容回滚缓冲数量", -- Needs review
-	scrollbacklen_name = "回卷长度", -- Needs review
-	["Scrollback Options"] = "回滚选项", -- Needs review
-	["Set Chat Lines"] = "聊天行设置",
-	["Set Command History"] = "命令历史记录",
-	["Set the number of lines of chat history for each window."] = "为每个聊天窗口设置聊天历史记录行数",
-	["Store the chat lines between sessions"] = "在会话之间存储聊天内容", -- Needs review
+     PL:AddLocale("ruRU",L)
+
+   L=
+{
+["Chat history options."] = "历史聊天记录选项",
+["Color GMOTD"] = "每日公会信息颜色",
+["Colors the GMOTD label"] = "为每日公会信息标签着色",
+["delaygmotd_desc"] = "延迟每日公会信息直到起始垃圾信息显示完毕为止",
+["delaygmotd_name"] = "延迟 GMOTD",
+["divider"] = "========== 回卷结束 ==========",
+["History"] = "历史记录",
+["Maximum number of lines of command history to save."] = "存储命令记录最大行数",
+["Save Command History"] = "命令记录存储",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "存储会话之间命令的历史记录(使用alt+上箭头键或仅上箭头键)",
+["Scrollback"] = "回卷",
+["Scrollback Options"] = "回滚选项",
+["scrollbacklen_desc"] = "聊天内容回滚缓冲数量",
+["scrollbacklen_name"] = "回卷长度",
+["Set Chat Lines"] = "聊天行设置",
+["Set Command History"] = "命令历史记录",
+["Set the number of lines of chat history for each window."] = "为每个聊天窗口设置聊天历史记录行数",
+["Store the chat lines between sessions"] = "在会话之间存储聊天内容",
 }
 
-    )
-    L:AddLocale("esES",
-    {
-	["Chat history options."] = "Opciones del historial del chat.",
-	-- ["Color GMOTD"] = "",
-	-- ["Colors the GMOTD label"] = "",
-	-- delaygmotd_desc = "",
-	-- delaygmotd_name = "",
-	-- divider = "",
-	History = "Historial",
-	["Maximum number of lines of command history to save."] = "Máximo número de líneas a guardar por el comando historial.",
-	["Save Command History"] = "Comando Guardar Historial",
-	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Guarda el historial de comandos entre sesiones (para utilizar con alt+flecha arriba o sólo la flecha arriba)",
-	-- Scrollback = "",
-	-- scrollbacklen_desc = "",
-	-- scrollbacklen_name = "",
-	-- ["Scrollback Options"] = "",
-	["Set Chat Lines"] = "Establecer Líneas de Chat",
-	["Set Command History"] = "Establecer Historial de Comandos",
-	["Set the number of lines of chat history for each window."] = "Establece el número de líneas del historial de chat para cada ventana.",
-	-- ["Store the chat lines between sessions"] = "",
+     PL:AddLocale("zhCN",L)
+
+   L=
+{
+["Chat history options."] = "Opciones del historial del chat.",
+["History"] = "Historial",
+["Maximum number of lines of command history to save."] = "Máximo número de líneas a guardar por el comando historial.",
+["Save Command History"] = "Comando Guardar Historial",
+["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Guarda el historial de comandos entre sesiones (para utilizar con alt+flecha arriba o sólo la flecha arriba)",
+["Set Chat Lines"] = "Establecer Líneas de Chat",
+["Set Command History"] = "Establecer Historial de Comandos",
+["Set the number of lines of chat history for each window."] = "Establece el número de líneas del historial de chat para cada ventana.",
 }
 
-    )
-    L:AddLocale("zhTW",
-    {
-	["Chat history options."] = "歷史訊息選項。",
-	["Color GMOTD"] = "顏色 GMOTD",
-	["Colors the GMOTD label"] = "顏色 GMOTD 標籤",
-	-- delaygmotd_desc = "",
-	delaygmotd_name = "延遲 GMOTD",
-	divider = "========== 捲動結束 ==========",
-	History = "歷史訊息",
-	["Maximum number of lines of command history to save."] = "最大行數的指令記錄儲存。",
-	["Save Command History"] = "儲存指令歷史",
-	-- ["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "",
-	Scrollback = "捲動",
-	-- scrollbacklen_desc = "",
-	scrollbacklen_name = "捲動長度",
-	["Scrollback Options"] = "捲動選項",
-	["Set Chat Lines"] = "設定聊天行數",
-	["Set Command History"] = "設定指令歷史",
-	["Set the number of lines of chat history for each window."] = "設定行數的聊天記錄每個視窗。",
-	-- ["Store the chat lines between sessions"] = "",
+     PL:AddLocale("esES",L)
+
+   L=
+{
+["Chat history options."] = "歷史訊息選項。",
+["Color GMOTD"] = "顏色 GMOTD",
+["Colors the GMOTD label"] = "顏色 GMOTD 標籤",
+["delaygmotd_name"] = "延遲 GMOTD",
+["divider"] = "========== 捲動結束 ==========",
+["History"] = "歷史訊息",
+["Maximum number of lines of command history to save."] = "最大行數的指令記錄儲存。",
+["Save Command History"] = "儲存指令歷史",
+["Scrollback"] = "捲動",
+["Scrollback Options"] = "捲動選項",
+["scrollbacklen_name"] = "捲動長度",
+["Set Chat Lines"] = "設定聊天行數",
+["Set Command History"] = "設定指令歷史",
+["Set the number of lines of chat history for each window."] = "設定行數的聊天記錄每個視窗。",
 }
 
-    )
-    --@end-non-debug@
+     PL:AddLocale("zhTW",L)
+   end
+   --@end-non-debug@
 
     -- create prat module
     local module = Prat:NewModule(PRAT_MODULE, "AceHook-3.0")
-    module.L = L
+    module.PL = PL
 
     Prat:SetModuleDefaults(module.name, {
         profile = {
@@ -300,22 +273,22 @@ Prat:AddModuleToLoad(function()
     module.pluginopts = {}
 
     Prat:SetModuleOptions(module.name, {
-        name = L["History"],
-        desc = L["Chat history options."],
+        name = PL["History"],
+        desc = PL["Chat history options."],
         type = "group",
         plugins = module.pluginopts,
         args = {
             chatlinesframes = {
-                name = L["Set Chat Lines"],
-                desc = L["Set the number of lines of chat history for each window."],
+                name = PL["Set Chat Lines"],
+                desc = PL["Set the number of lines of chat history for each window."],
                 type = "multiselect",
                 values = Prat.HookedFrameList,
                 get = "GetSubValue",
                 set = "SetSubValue"
             },
             chatlines = {
-                name = L["Set Chat Lines"],
-                desc = L["Set the number of lines of chat history for each window."],
+                name = PL["Set Chat Lines"],
+                desc = PL["Set the number of lines of chat history for each window."],
                 type = "range",
                 order = 120,
                 min = 300,
@@ -329,8 +302,8 @@ Prat:AddModuleToLoad(function()
                 order = 130,
             },
             maxlines = {
-                name = L["Set Command History"],
-                desc = L["Maximum number of lines of command history to save."],
+                name = PL["Set Command History"],
+                desc = PL["Maximum number of lines of command history to save."],
                 type = "range",
                 order = 132,
                 min = 0,
@@ -340,20 +313,20 @@ Prat:AddModuleToLoad(function()
                 disabled = function() return not module.db.profile.savehistory end
             },
             savehistory = {
-                name = L["Save Command History"],
-                desc = L["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"],
+                name = PL["Save Command History"],
+                desc = PL["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"],
                 type = "toggle",
                 order = 131,
             },
             colorgmotd = {
-                name = L["Color GMOTD"],
-                desc = L["Colors the GMOTD label"],
+                name = PL["Color GMOTD"],
+                desc = PL["Colors the GMOTD label"],
                 type = "toggle",
                 order = 150,
             },
             delaygmotd = {
-                name = L.delaygmotd_name,
-                desc = L.delaygmotd_desc,
+                name = PL.delaygmotd_name,
+                desc = PL.delaygmotd_desc,
                 type = "toggle",
                 order = 151
             }
@@ -506,49 +479,10 @@ Prat:AddModuleToLoad(function()
     --[[------------------------------------------------
         Core Functions
     ------------------------------------------------]] --
-    local acquire, reclaim
-    do
-        local cache = setmetatable({}, {
-            __mode = 'k'
-        })
-        acquire = function()
-            local t = next(cache) or {}
-            cache[t] = nil
-            return t
-        end
-        reclaim = function(t)
-            for k in pairs(t) do
-                t[k] = nil
-            end
-            cache[t] = true
-        end
-    end
-
-
     function module:SetHistory(f, lines)
         if f == nil then return end
-        
-        if f:GetMaxLines() ~= lines then
-            local chatlines = acquire()
-            for i=f:GetNumRegions(),1,-1 do
-                local x = select(i, f:GetRegions())
-                if x:GetObjectType() == "FontString" then
-                    table.insert(chatlines, {
-                        x:GetText(), x:GetTextColor()
-                    })
-                end
-            end
 
-            f:SetMaxLines(lines)
-
-            Prat.loading = true
-            for i,v in ipairs(chatlines) do
-                f:AddMessage(unpack(v))
-            end
-            Prat.loading = false
-
-            reclaim(chatlines)
-        end
+        f:SetMaxLines(lines)
     end
 
     function module:addSavedHistory(editBox)

@@ -1,12 +1,13 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 
 local default = {
-    displayText = "New",
-    outline = true,
+    displayText = "%p",
+    outline = "OUTLINE",
     color = {1, 1, 1, 1},
     justify = "LEFT",
     selfPoint = "BOTTOM",
     anchorPoint = "CENTER",
+    anchorFrameType = "SCREEN",
     xOffset = 0,
     yOffset = 0,
     font = "Friz Quadrata TT",
@@ -33,55 +34,69 @@ end
 local function modify(parent, region, data)
     local text = region.text;
 
-    if(data.frameStrata == 1) then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
-    end
+    region.useAuto = WeakAuras.CanHaveAuto(data);
 
     local fontPath = SharedMedia:Fetch("font", data.font);
-    text:SetFont(fontPath, data.fontSize <= 35 and data.fontSize or 35, data.outline and "OUTLINE" or nil);
-    text:SetTextHeight(data.fontSize);
+    text:SetFont(fontPath, data.fontSize, data.outline);
+    if not text:GetFont() then -- Font invalid, set the font but keep the setting
+        text:SetFont("Fonts\\FRIZQT__.TTF", data.fontSize, data.outline);
+    end
     if text:GetFont() then
         text:SetText(data.displayText);
-    else end
+    end
     text.displayText = data.displayText;
     text:SetJustifyH(data.justify);
 
     text:ClearAllPoints();
     text:SetPoint("CENTER", UIParent, "CENTER");
+
     data.width = text:GetWidth();
     data.height = text:GetHeight();
     region:SetWidth(data.width);
     region:SetHeight(data.height);
+
+    text:SetTextHeight(data.fontSize);
+
     text:ClearAllPoints();
     text:SetPoint(data.justify, region, data.justify);
 
     region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+    WeakAuras.AnchorFrame(data, region, parent);
 
-    local function UpdateText()
-        local textStr = data.displayText;
-        for symbol, v in pairs(WeakAuras.dynamic_texts) do
-            textStr = textStr:gsub(symbol, region.values[v.value] or "?");
-        end
-
-        if(textStr ~= text.displayText) then
+    local function SetText(textStr)
+      if(textStr ~= text.displayText) then
+          if text:GetFont() then
             text:SetText(textStr);
-        end
-        if(#textStr ~= #text.displayText) then
-            data.width = text:GetWidth();
-            data.height = text:GetHeight();
-            region:SetWidth(data.width);
-            region:SetHeight(data.height);
-            if(data.parent and WeakAuras.regions[data.parent].region.ControlChildren) then
-                WeakAuras.regions[data.parent].region:ControlChildren();
-            else
-                region:ClearAllPoints();
-                region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+          end
+      end
+      if(#textStr ~= #text.displayText) then
+          data.width = text:GetWidth();
+          data.height = text:GetHeight();
+          region:SetWidth(data.width);
+          region:SetHeight(data.height);
+          if(data.parent and WeakAuras.regions[data.parent].region.ControlChildren) then
+              WeakAuras.regions[data.parent].region:ControlChildren();
+          else
+              region:ClearAllPoints();
+              WeakAuras.AnchorFrame(data, region, parent);
+          end
+      end
+      text.displayText = textStr;
+    end
+
+    local UpdateText;
+    if (data.displayText:find('%%')) then
+        UpdateText = function()
+            local textStr = data.displayText;
+            textStr = WeakAuras.ReplacePlaceHolders(textStr, region.values, region.state);
+            if (textStr == nil or textStr == "") then
+              textStr = " ";
             end
+
+            SetText(textStr)
         end
-        text.displayText = textStr;
+    else
+      UpdateText = function() end
     end
 
     local customTextFunc = nil
@@ -91,8 +106,9 @@ local function modify(parent, region, data)
     if (customTextFunc) then
         local values = region.values;
         region.UpdateCustomText = function()
-            WeakAuras.ActivateAuraEnvironment(data.id);
-            local custom = customTextFunc(region.expirationTime, region.duration, values.progress, values.duration, values.name, values.icon, values.stacks);
+            WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
+            local custom = customTextFunc(region.expirationTime, region.duration,
+              values.progress, values.duration, values.name, values.icon, values.stacks);
             WeakAuras.ActivateAuraEnvironment(nil);
             custom = WeakAuras.EnsureString(custom);
             if(custom ~= values.custom) then
@@ -127,12 +143,14 @@ local function modify(parent, region, data)
 
     local function UpdateTime()
         local remaining = region.expirationTime - GetTime();
-        local progress = remaining / region.duration;
-
-        if(data.inverse) then
-            progress = 1 - progress;
+        local progress
+        if region.duration > 0 then
+            progress = remaining / region.duration;
+            if(data.inverse) then
+                progress = 1 - progress;
+            end
+            progress = progress > 0.0001 and progress or 0.0001;
         end
-        progress = progress > 0.0001 and progress or 0.0001;
 
         local remainingStr = "";
         if(remaining == math.huge) then
@@ -170,7 +188,7 @@ local function modify(parent, region, data)
     end
 
     local function UpdateCustom()
-        UpdateValue(region.customValueFunc(data.trigger));
+        UpdateValue(region.customValueFunc(region.state.trigger));
     end
 
     function region:SetDurationInfo(duration, expirationTime, customValue)
@@ -181,7 +199,7 @@ local function modify(parent, region, data)
 
         if(customValue) then
             if(type(customValue) == "function") then
-                local value, total = customValue(data.trigger);
+                local value, total = customValue(region.state.trigger);
                 if(total > 0 and value < total) then
                     region.customValueFunc = customValue;
                     region:SetScript("OnUpdate", UpdateCustom);
@@ -199,7 +217,7 @@ local function modify(parent, region, data)
                 region:SetScript("OnUpdate", UpdateTime);
             else
                 region:SetScript("OnUpdate", nil);
-                UpdateText();
+                UpdateTime();
             end
         end
     end
@@ -215,7 +233,8 @@ local function modify(parent, region, data)
 
     function region:SetIcon(path)
         local icon = (
-            WeakAuras.CanHaveAuto(data)
+            region.useAuto
+            and path
             and path ~= ""
             and path
             or data.displayIcon
@@ -226,11 +245,36 @@ local function modify(parent, region, data)
     end
 
     function region:SetName(name)
-        region.values.name = WeakAuras.CanHaveAuto(data) and name or data.id;
+        region.values.name = name or data.id;
         UpdateText();
     end
-
-    UpdateText();
+    if (data.displayText:find('%%')) then
+      UpdateText();
+    else
+      SetText(data.displayText);
+    end
 end
 
 WeakAuras.RegisterRegionType("text", create, modify, default);
+
+-- Fallback region type
+
+local function fallbackmodify(parent, region, data)
+    local text = region.text;
+
+    text:SetFont("Fonts\\FRIZQT__.TTF", data.fontSize, data.outline and "OUTLINE" or nil);
+    if text:GetFont() then
+        text:SetText(WeakAuras.L["Region type %s not supported"]:format(data.regionType));
+    end
+
+    text:ClearAllPoints();
+    text:SetPoint("CENTER", region, "CENTER");
+
+    region:SetWidth(text:GetWidth());
+    region:SetHeight(text:GetHeight());
+
+    region:ClearAllPoints();
+    WeakAuras.AnchorFrame(data, region, parent);
+end
+
+WeakAuras.RegisterRegionType("fallback", create, fallbackmodify, default);

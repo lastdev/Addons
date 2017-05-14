@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - BeanCounter Matcher module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: MatchBeanCount.lua 5279 2012-03-05 13:20:38Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: MatchBeanCount.lua 5594 2016-04-21 13:26:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer Matcher module which will modify the Appraiser
@@ -36,7 +36,7 @@
 --	AucAdvanced.Print("BeanCounter not loaded")
 --	return
 --end
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/MatchBeanCount.lua $","$Rev: 5279 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/MatchBeanCount.lua $","$Rev: 5594 $","5.1.DEV.", 'auctioneer', 'libs')
 
 if not AucAdvanced then return end
 
@@ -44,34 +44,20 @@ local libType, libName = "Match", "BeanCount"
 local AddOnName = ...
 local lib,parent,private = AucAdvanced.NewModule(libType, libName, nil, nil, AddOnName)
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+
+local Resources = AucAdvanced.Resources
 
 lib.Processors = {}
---[[
-function lib.Processors.tooltip(callbackType, ...)
-	--Called when the tooltip is being drawn.
-	private.ProcessTooltip(...)
-end
---]]
-function lib.Processors.config(callbackType, ...)
-	--Called when you should build your Configator tab.
-	if private.SetupConfigGui then private.SetupConfigGui(...) end
+function lib.Processors.config(callbackType, gui)
+	if private.SetupConfigGui then private.SetupConfigGui(gui) end
 end
 function lib.Processors.configchanged()
-	--Called when your config options (if Configator) have been changed.
 	lib.ClearMatchArrayCache()
 end
 lib.Processors.scanstats = lib.Processors.configchanged -- AH has been scanned
+lib.Processors.mailclose = lib.Processors.configchanged -- Mailbox closed
 lib.Processors.auctionclose = lib.Processors.configchanged -- this is mostly to conserve RAM, we don't really need to wipe the cache here
-
-
-local frame = CreateFrame("Frame", "MatchBeanCountHelperFrame")
-frame:Hide()
-frame:SetScript("OnEvent", function()
-	lib.ClearMatchArrayCache()
-end)
-frame:RegisterEvent("MAIL_CLOSED")
-
 
 local matchArrayCache = {}
 
@@ -80,13 +66,14 @@ function lib.ClearMatchArrayCache()	-- called from processor
 end
 
 function lib.GetMatchArray(hyperlink, marketprice, serverKey)
-	if not AucAdvanced.Settings.GetSetting("match.beancount.enable") or not BeanCounter or not BeanCounter.API.isLoaded then --check setting is on, beancounter exists, and that the database is sound
+	if not get("match.beancount.enable") or not BeanCounter.API.isLoaded then --check setting is on, and that the database is sound
 		return
 	end
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(hyperlink)
+	local linkType,itemId,property = decode(hyperlink)
 	if (linkType ~= "item") then return end
+	if not serverKey then serverKey = Resources.ServerKey end
 
-	local cacheKey = itemId .."x".. property .. "x" .. factor .. "x" .. marketprice
+	local cacheKey = serverKey .."x".. itemId .."x".. property .."x".. marketprice
 	if matchArrayCache[cacheKey] then return matchArrayCache[cacheKey] end
 
 	local matchArray = {}
@@ -95,13 +82,13 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 	local competing = 0
 	if not marketprice then marketprice = 0 end
 	local matchprice = marketprice
-	local increase = AucAdvanced.Settings.GetSetting("match.beancount.success")
-	local decrease = AucAdvanced.Settings.GetSetting("match.beancount.failed")
-	local maxincrease = AucAdvanced.Settings.GetSetting("match.beancount.maxup")
-	local maxdecrease = AucAdvanced.Settings.GetSetting("match.beancount.maxdown")
-	local daterange = AucAdvanced.Settings.GetSetting("match.beancount.daterange")
-	--local matchstacksize = AucAdvanced.Settings.GetSetting("match.beancount.matchstacksize") --REMOVED for now, the posible issues arising from buying at last appraiser stack price needs to be resolved
-	local numdays = AucAdvanced.Settings.GetSetting("match.beancount.numdays")
+	local increase = get("match.beancount.success")
+	local decrease = get("match.beancount.failed")
+	local maxincrease = get("match.beancount.maxup")
+	local maxdecrease = get("match.beancount.maxdown")
+	local daterange = get("match.beancount.daterange")
+	--local matchstacksize = get("match.beancount.matchstacksize") --REMOVED for now, the posible issues arising from buying at last appraiser stack price needs to be resolved
+	local numdays = get("match.beancount.numdays")
 	--nil numdays if we dont care how far back our data goes
 	if not daterange then
 		numdays = nil
@@ -112,11 +99,11 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 
 	local player =  UnitName("player")
 	local success, failed = BeanCounter.API.getAHSoldFailed(player, hyperlink, numdays, serverKey)
+	if not success then return end
 
-	increase = math.pow(increase, math.pow(success, 0.8))
-	decrease = math.pow(decrease, math.pow(failed, 0.8))
-	matchprice = matchprice * increase
-	matchprice = matchprice * decrease
+	increase = (increase ^ (success ^ 0.8))
+	decrease = (decrease ^ (failed ^ 0.8))
+	matchprice = matchprice * increase * decrease
 
 	if (marketprice > 0) then
 		if (matchprice > (marketprice * (maxincrease*0.01))) then
@@ -124,48 +111,32 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 		elseif (matchprice < (marketprice * (maxdecrease*0.01))) then
 			matchprice = (marketprice * (maxdecrease*0.01))
 		end
-		marketdiff = (((matchprice - marketprice)/marketprice)*100)
-		if (marketdiff-floor(marketdiff))<0.5 then
-			marketdiff = floor(marketdiff)
-		else
-			marketdiff = ceil(marketdiff)
-		end
+		marketdiff = floor((matchprice - marketprice) * 100 / marketprice + 0.5)
 	else
 		marketdiff = 0
 	end
 	matchArray.value = matchprice
 	matchArray.diff = marketdiff
 	matchArray.returnstring = "BeanCount: % change: "..tostring(marketdiff)
-	if AucAdvanced.Settings.GetSetting("match.beancount.showhistory") then
+	if get("match.beancount.showhistory") then
 		matchArray.returnstring = "BeanCount: Succeeded: "..tostring(success).."\nBeanCount: Failed: "..tostring(failed).."\n"..matchArray.returnstring
 	end
 	matchArrayCache[cacheKey] = matchArray
 	return matchArray
 end
 
-local array = {}
-
---[[
-function private.ProcessTooltip(frame, name, hyperlink, quality, quantity, cost, additional)
-
+function lib.OnLoad()
+	aucPrint("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
+	default("match.beancount.enable", false)
+	default("match.beancount.daterange", false)
+	--default("match.beancount.matchstacksize", false)
+	default("match.beancount.numdays", 30)
+	default("match.beancount.failed", -0.1)
+	default("match.beancount.success", 0.1)
+	default("match.beancount.maxup", 150)
+	default("match.beancount.maxdown", 50)
+	default("match.beancount.showhistory", true)
 end
---]]
-
---function lib.OnLoad()
-	--This function is called when your variables have been loaded.
-	--You should also set your Configator defaults here
-
-	print("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
-	AucAdvanced.Settings.SetDefault("match.beancount.enable", false)
-	AucAdvanced.Settings.SetDefault("match.beancount.daterange", false)
-	--AucAdvanced.Settings.SetDefault("match.beancount.matchstacksize", false)
-	AucAdvanced.Settings.SetDefault("match.beancount.numdays", 30)
-	AucAdvanced.Settings.SetDefault("match.beancount.failed", -0.1)
-	AucAdvanced.Settings.SetDefault("match.beancount.success", 0.1)
-	AucAdvanced.Settings.SetDefault("match.beancount.maxup", 150)
-	AucAdvanced.Settings.SetDefault("match.beancount.maxdown", 50)
-	AucAdvanced.Settings.SetDefault("match.beancount.showhistory", true)
---end
 
 --[[ Local functions ]]--
 

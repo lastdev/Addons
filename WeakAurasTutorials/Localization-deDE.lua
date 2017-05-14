@@ -21,6 +21,8 @@ L["Activation Settings: 3/5"] = "Aktivierungseinstellungen: 3/5"
 L["Activation Settings: 4/5"] = "Aktivierungseinstellungen: 4/5"
 L["Activation Settings: 5/5"] = "Aktivierungseinstellungen: 5/5"
 L["Activation Settings Text"] = "Da du ein %s bist, kannst du die Spielerklassen-Optionen aktivieren und %s auswählen."
+L["Aura"] = "Aura"
+L["Aura Name"] = "Auraname"
 L["Auto-cloning: 1/10"] = "Auto-Klonen: 1/10"
 L["Auto-cloning 1/10 Text"] = [=[Die größte in |cFF8800FF1.4|r enthaltene Neuerung ist |cFFFF0000Auto-Klonen|r. |cFFFF0000Auto-Klonen|r erlaubt deinen Anzeigen sich automatisch zu vervielfältigen, um Informationen mehrerer Quellen anzuzeigen. Einer Dynamischen Gruppe hinzugefügt erlaubt dies die Anzeige umfangreicher dynamischer Informationssätze.
 
@@ -30,6 +32,7 @@ L["Beginners Finished Text"] = [=[Hiermit ist die Einführung abgeschlossen. All
 Zukünftig werden |cFFFFFF00Weitere|r |cFFFF7F00Fortgeschrittene|r |cFFFF0000Tutorials|r veröffentlicht, die einen tieferen Einblick in |cFF8800FFWeakAuras|r endlose Möglichkeiten bieten werden.]=]
 L["Beginners Guide Desc"] = "Einführung"
 L["Beginners Guide Desc Text"] = "Eine Einführung in die Basiskonfiguration von WeakAuras."
+L["Constant Factor"] = "Konstanter Faktor"
 L["Create a Display: 1/5"] = "Eine Anzeige erzeugen: 1/5"
 L["Create a Display: 2/5"] = "Eine Anzeige erzeugen: 2/5"
 L["Create a Display: 3/5"] = "Eine Anzeige erzeugen: 3/5"
@@ -47,7 +50,9 @@ L["Display Options 2/4 Text"] = [=[|cFFFFFFFFFortschrittsbalken-|r und |cFFFFFFF
 
 Diese Einstellung ist nur verfügbar, wenn die Anzeige einen Auslöser basierend auf einer Aura, einem Gegenstand, oder einem Zauber besitzt.]=]
 L["Display Options: 4/4"] = "Anzeige-Einstellungen: 4/4"
-L["Display Options 4/4 Text"] = "Zu guter Letzt, ein neuer Anzeigentyp, |cFFFFFFFFModell|r, erlaubt es dir, jedes beliebige 3D Modell aus den Spieldateien zu nutzen."
+L["Display Options 4/4 Text"] = "Zu guter Letzt, ein neuer Anzeigentyp, |cFFFFFFFFModell|r, erlaubt es dir, jedes beliebige 3D-Modell aus den Spieldateien zu nutzen."
+-- L["Dynamic Group Options: 1/4"] = ""
+-- L["Dynamic Group Options 1/4 Text"] = ""
 L["Dynamic Group Options: 2/4"] = "Dynamische Gruppen Einstellungen: 2/4"
 L["Dynamic Group Options 2/4 Text"] = [=[Die größte Verbesserung der |cFFFFFFFFDynamischen Gruppen|r ist eine neue Auswahlmöglichkeit für die Wachstumseinstellung.
 
@@ -62,7 +67,7 @@ L["Dynamic Group Options 4/4 Text"] = [=[Dynamische Gruppen können ihre Element
 Anzeigen, die keine Verbleibende Zeit besitzen, werden je nach Auswahl von \"Aufsteigend\" oder \"Absteigend\" entsprechend oben oder unten plaziert.]=]
 L["Finished"] = "Abgeschlossen"
 L["Full-scan Auras: 2/10"] = "Komplett gescannte Auren: 2/10"
-L["Full-scan Auras 2/10 Text"] = "Aktiviere zunächst die Kompletter Scan Einstellung."
+L["Full-scan Auras 2/10 Text"] = "Aktiviere zunächst die Option \"Kompletter Scan\"."
 L["Full-scan Auras: 3/10"] = "Komplett gescannte Auren: 3/10"
 L["Full-scan Auras 3/10 Text"] = [=[|cFFFF0000Auto-Klonen|r kann nun über die \"%s\"-Einstellung aktiviert werden.
 
@@ -72,8 +77,8 @@ L["Full-scan Auras 4/10 Text"] = [=[Ein Popup sollte aufgetaucht sein, das dich 
 
 Drücke \"Ja\"um |cFF8800FFWeakAuras|r zu erlauben deine Anzeige automatisch in eine Dynamische Gruppe zu verschieben.]=]
 L["Full-scan Auras: 5/10"] = "Komplett gescannte Auren: 5/10"
-L["Full-scan Auras 5/10 Text"] = "Deaktiviere die Kompletter Scan Einstellung um andere Einheiten Einstellungen zu reaktivieren."
-L["Group Auras 6/10"] = "Gruppen Auren: 6/10"
+L["Full-scan Auras 5/10 Text"] = "Deaktiviere die Option \"Kompletter Scan\", um andere Einheitenoptionen zu reaktivieren."
+-- L["Group Auras: 6/10"] = ""
 L["Group Auras 6/10 Text"] = "Wähle jetzt \"Gruppe\" für die Einheiten-Einstellung."
 L["Group Auras: 7/10"] = "Gruppen Auren: 7/10"
 L["Group Auras 7/10 Text"] = [=[|cFFFF0000Auto-Klonen|r wird wieder über die \"%s\" Einstellung aktiviert.
@@ -81,7 +86,11 @@ L["Group Auras 7/10 Text"] = [=[|cFFFF0000Auto-Klonen|r wird wieder über die \"
 Eine neue Anzeige wird für jedes Gruppenmitglied erstellt, das von der/den angegebenen Aura/Auren betroffen ist.]=]
 L["Group Auras: 8/10"] = "Gruppen Auren: 8/10"
 L["Group Auras 8/10 Text"] = "Aktivieren der %s Einstellung für eine Gruppen Aura mit aktiviertem |cFFFF0000Auto-Klonen|r sorgt dafür, dass für jedes Gruppenmitglied, das |cFFFFFFFFnicht|r von der/den angegebenen Aura/Auren betroffen ist, eine Anzeige erstellt wird."
+-- L["Grow"] = ""
 L["Home"] = "Startseite"
+-- L["Inverse"] = ""
+-- L["Left Text"] = ""
+L["Model"] = "Modell"
 L["Multi-target Auras: 10/10"] = "Mehrfachziel-Auren: 10/10"
 L["Multi-target Auras 10/10 Text"] = [=[|cFFFF0000Auto-Klonen|r ist für Mehrfachziel-Auren standardmäßig aktiviert.
 
@@ -89,36 +98,47 @@ Auslöser für Mehrfachziel-Auren unterscheiden sich dadurch von normalen Aura-A
 
 Deshalb sind Mehrfachziel-Auren eine gute Wahl zur Verfolgung von DoTs auf mehreren Gegnern.]=]
 L["Multi-target Auras: 9/10"] = "Mehrfachziel-Auren: 9/10"
-L["Multi-target Auras 9/10 Text"] = "Wähle zum Abschluss \"Mehrfachziel\" für die Einheiten Einstellung."
+L["Multi-target Auras 9/10 Text"] = "Wähle zum Abschluss \"Mehrfachziel\" für die Einheitenoption."
 L["New in 1.4:"] = "Neu in 1.4:"
 L["New in 1.4 Desc:"] = "Neu in 1.4"
 L["New in 1.4 Desc Text"] = "Wirf einen Blick auf die neuen Features in WeakAuras 1.4"
-L["New in 1.4 Finnished Text"] = [=[Selbstverständlich beinhaltet |cFF8800FFWeakAuras 1.4|r mehr neue Funktionen als auf einmal abgedeckt werden können, auch ohne die zahllosen Bugfixes und Effizienzsteigerungen zu erwähnen.
-
-Hoffentlich hat diese Einführung dich wenigstens über die wichtigsten neuen Funktionen die dir zur Verfügung stehen aufgeklärt.
-
-Wir danken dir vielmals für die Nutzung von |cFF8800FFWeakAuras|r!]=]
-L["New in 1.4 Text1"] = [=[Version 1.4 von |cFF8800FFWeakAuras|r führt mehrere neu mächtige Funktionen ein.
+-- L["New in 1.4 Finished Text"] = ""
+L["New in 1.4 Text1"] = [=[Version 1.4 von |cFF8800FFWeakAuras|r führt mehrere neue mächtige Funktionen ein.
 
 Diese Einführung bietet einen Überblick der wichtigsten neuen Funktionen und deren Nutzung.]=]
 L["New in 1.4 Text2"] = "Lege zunächst eine neue Anzeige zu Demonstrationszwecken an."
+-- L["Next"] = ""
+-- L["Options/Trigger"] = ""
+L["Player Class"] = "Spielerklasse"
+-- L["Play Sound"] = ""
+L["Preset"] = "Vorlage"
 L["Previous"] = "Zurück"
-L["Trigger Options: 1/4"] = "Auslöser Einstellungen: 1/4"
-L["Trigger Options 1/4 Text"] = [=[Zusätzlich zu \"Mehrfachziel\" gibt es eine neue Option für die Einheiten Einstellung: Konkrete Einheit.
+L["Progress Bar"] = "Fortschrittsleiste"
+-- L["Show all matches (Auto-clone)"] = ""
+-- L["Sort"] = ""
+-- L["Sound"] = ""
+-- L["Specific Unit"] = ""
+L["Status"] = "Status"
+L["Tooltip on Mouseover"] = "Tooltip bei Mausberührung"
+L["Trigger Options: 1/4"] = "Auslöseroptionen: 1/4"
+L["Trigger Options 1/4 Text"] = [=[Zusätzlich zu \"Mehrfachziel\" gibt es eine neue Option für die Einheiteneinstellung: Konkrete Einheit.
 
 Wähle sie aus, um ein neues Textfeld anlegen zu können.]=]
-L["Trigger Options: 2/4"] = "Auslöser Einstellungen: 2/4"
-L["Trigger Options 2/4 Text"] = [=[In diesem Feld kannst du den Namen eines beliebigen Spielers in deiner Gruppe, oder eine spezielle Unit ID angeben. Unit IDs wie \"boss1\", \"boss2\", usw. sind besonders für Schlachtzugsbegegnungen sehr hilfreich.
+L["Trigger Options: 2/4"] = "Auslöseroptionen: 2/4"
+L["Trigger Options 2/4 Text"] = [=[In diesem Feld kannst du den Namen eines beliebigen Spielers in deiner Gruppe, oder eine spezielle Einheiten-ID angeben. Einheiten-IDs wie \"boss1\", \"boss2\", usw. sind besonders für Schlachtzugsbegegnungen sehr hilfreich.
 
-Alle Auslöser, die die Angabe einer Einheit ermöglichen (nicht nur Aura Auslöser) unterstützen nun die Konkrete Einheit Einstellung.]=]
-L["Trigger Options: 3/4"] = "Auslöser Einstellungen: 3/4"
-L["Trigger Options 3/4 Text"] = [=[|cFF8800FFWeakAuras 1.4|r bringt auch ein paar neue Auslöser-Typen mit sich.
+Alle Auslöser, die die Angabe einer Einheit ermöglichen (nicht nur Aura-Auslöser) unterstützen nun die Option 'Konkrete Einheit'.]=]
+L["Trigger Options: 3/4"] = "Auslöseroptionen: 3/4"
+L["Trigger Options 3/4 Text"] = [=[|cFF8800FFWeakAuras 1.4|r bringt auch ein paar neue Auslösertypen mit sich.
 
-Wähle die Status Kategorie um einen Blick auf sie zu werfen.]=]
-L["Trigger Options: 4/4"] = "Auslöser Einstellungen: 4/4"
-L["Trigger Options 4/4 Text"] = [=[Der |cFFFFFFFFEinheitencharakteristik|r Auslöser erlaubt dir das testen von Namen, Klasse, Feindseligkeit und ob es sich um einen Spieler- oder Nicht-Spieler-Charakter handelt.
+Wähle die Kategorie Status, um einen Blick auf sie zu werfen.]=]
+L["Trigger Options: 4/4"] = "Auslöseroptionen: 4/4"
+L["Trigger Options 4/4 Text"] = [=[Der |cFFFFFFFFEinheitencharakteristik|r-Auslöser erlaubt dir das Testen von Namen, Klasse und Gesinnung des Spielers und ob es sich um einen Spieler- oder Nicht-Spieler-Charakter handelt.
 
-Auslöser für |cFFFFFFFFGlobale Abklingzeit|r und |cFFFFFFFFSwing Timer|r ergänzen den Zauber Auslöser.]=]
+Auslöser für |cFFFFFFFFGlobale Abklingzeit|r und |cFFFFFFFFSwing Timer|r ergänzen den Zauberwirkungsauslöser.]=]
+-- L["Type"] = ""
+L["Unit"] = "Einheit"
+-- L["Use Full Scan (High CPU)"] = ""
 L["WeakAuras Tutorials"] = "WeakAuras Einführungen"
 L["Welcome"] = "Willkommen"
 L["Welcome Text"] = [=[Willkommen zur |cFF8800FFWeakAuras|r Einführung.

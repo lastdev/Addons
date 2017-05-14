@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnchantrixBarker.lua 5139 2011-05-01 18:22:28Z kandoko $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnchantrixBarker.lua 5641 2016-08-04 02:23:06Z ccox $
 	URL: http://enchantrix.org/
 
 	This is an addon for World of Warcraft that adds the ability to advertise
@@ -30,10 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5139 $")
-
--- ccox - WoW 3.0 API change
-local GetCraftInfoFunc = GetCraftInfo or GetTradeSkillInfo;
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 5641 $")
 
 local priorityList = {};
 
@@ -50,7 +47,9 @@ local categories = {
 	['factor_item.cloak'] = {search = _BARKLOC('Cloak'), print = _BARKLOC('Cloak') },
 	['factor_item.2hweap'] = {search = _BARKLOC('TwoHandWeapon'), print = _BARKLOC('TwoHandWeapon')},
 	['factor_item.weapon'] = {search = _BARKLOC('Weapon'), print = _BARKLOC('AnyWeapon') },
-	['factor_item.ring'] = {search = _BARKLOC('Ring'), print = _BARKLOC('Ring'), exclude = true },	-- currently applies to the enchanter only, can't sell
+	['factor_item.ring'] = {search = _BARKLOC('Ring'), print = _BARKLOC('Ring') },
+	['factor_item.other'] = {search = _BARKLOC('Other'), print = _BARKLOC('Other') },
+	['Unknown'] = {search = _BARKLOC('Other'), print = _BARKLOC('Other') },
 };
 
 
@@ -65,6 +64,8 @@ local print_order = {
 	'factor_item.2hweap',
 	'factor_item.weapon',
 	'factor_item.ring',
+	'factor_item.other',
+	'Unknown',
 };
 
 
@@ -157,8 +158,7 @@ local short_location = {
 	[_BARKLOC('Shattrath')] = _BARKLOC('ShortShattrath'),
 	[_BARKLOC('SilvermoonCity')] = _BARKLOC('ShortSilvermoon'),
 	[_BARKLOC('TheExodar')] = _BARKLOC('ShortExodar'),
--- TODO - ccox - localize me!
-	['Dalaran'] = 'Dalaran',
+	[_BARKLOC('Dalaran')] = _BARKLOC('ShortDalaran'),
 };
 
 
@@ -179,8 +179,7 @@ end
 
 function EnchantrixBarker_OnEvent(event,...)
 	--Returns "Enchanting" for enchantwindow
-	local GetTradeLineFunc = GetCraftDisplaySkillLine or GetTradeSkillLine	-- ccox - WoW 3.0 - GetCraft routines are gone
-	local craftName, _rank, _maxRank = GetTradeLineFunc();
+	local tradeSkillID, craftName, _rank, _maxRank, skillLineModifier = _G.C_TradeSkillUI.GetTradeSkillLine();
 
 	if craftName and craftName == _BARKLOC('Enchanting') then
 		if( event == "CRAFT_SHOW" or event == "TRADE_SKILL_SHOW") then
@@ -833,8 +832,9 @@ function Enchantrix_CreateBarker()
 		return nil;
 	end
 	
-	local temp = GetTradeSkillLine();
-	if (not temp) then
+	
+	local tradeSkillID, craftName, _rank, _maxRank, _modifier = _G.C_TradeSkillUI.GetTradeSkillLine();
+	if (not tradeSkillID) then
 		-- trade skill window isn't open (how did this happen?)
 		Barker.Util.ChatPrint(_BARKLOC('BarkerEnxWindowNotOpen'));
 		return nil;
@@ -849,35 +849,34 @@ function Enchantrix_CreateBarker()
 	local highestProfit = Enchantrix_BarkerGetConfig("highest_profit");
 	local profitMargin = Enchantrix_BarkerGetConfig("profit_margin");
 
-	-- ccox - WoW 3.0 - API change
-	local GetNumCraftsFunc = GetNumCrafts or GetNumTradeSkills
-	local GetCraftItemLinkFunc = GetCraftItemLink or GetTradeSkillItemLink
-	local GetCraftNumReagentsFunc = GetCraftNumReagents or GetTradeSkillNumReagents
-	local GetCraftReagentInfoFunc = GetCraftReagentInfo or GetTradeSkillReagentInfo
-	local GetCraftReagentItemLinkFunc = GetCraftReagentItemLink or GetTradeSkillReagentItemLink
+	local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
 
-	local craftCount = GetNumCraftsFunc()
+	if recipes and (#recipes > 0) then
+		for i = 1, #recipes do
 
-	for index=1, craftCount do
+		-- see http://wow.gamepedia.com/API_C_TradeSkillUI.GetRecipeInfo
+        local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(recipes[i])
+		local craftName = recipe_info.name
+		local craftType = recipe_info.type
+		local numEnchantsAvailable = recipe_info.numAvailable
 
-		local craftName, craftSubSpellName, craftType, numEnchantsAvailable, isExpanded;
-
-		craftName, craftType, numEnchantsAvailable, isExpanded = GetTradeSkillInfo(index);
-
-		if ( numEnchantsAvailable > 0 ) then -- user has reagents
+		if ( recipe_info.learned and recipe_info.craftable and numEnchantsAvailable > 0 ) then -- user can craft this
 
 			-- does this skill produce an enchant, or a trade good?
-			local itemLink = GetCraftItemLinkFunc(index);
+			local itemLink = _G.C_TradeSkillUI.GetRecipeItemLink(recipes[i]);
 			local itemName, newItemLink = GetItemInfo(itemLink);
+
+			--Barker.Util.DebugPrintQuick("Can Craft ", i, " info: ", recipe_info )
 
 			-- item name and link are nil for enchants, and valid for produced items (which we want to ignore)
 			if (not itemName and not newItemLink) then
 
 				local cost = 0;
-				for j=1,GetCraftNumReagentsFunc(index),1 do
-					local reagentName,_,countRequired = GetCraftReagentInfoFunc(index,j);
-					local reagent = GetCraftReagentItemLinkFunc(index,j);
-					cost = cost + (Enchantrix_GetReagentHSP(reagent)*countRequired);
+				local reagentCount = _G.C_TradeSkillUI.GetRecipeNumReagents(recipes[i])
+				for j=1,reagentCount,1 do
+					local _reagentName, _reagentTexture, reagentCountRequired, _playerReagentCount = _G.C_TradeSkillUI.GetRecipeReagentInfo(recipes[i], j)
+					local reagent = _G.C_TradeSkillUI.GetRecipeReagentItemLink(recipes[i], j)
+					cost = cost + (Enchantrix_GetReagentHSP(reagent)*reagentCountRequired);
 				end
 
 				local profit = cost * profitMargin*0.01;
@@ -887,24 +886,26 @@ function Enchantrix_CreateBarker()
 				local price = EnchantrixBarker_RoundPrice(cost + profit);
 
 				local enchant = {
-					index = index,
+					index = i,
+					recipe = recipes[i],
 					name = craftName,
 					type = craftType,
 					available = numEnchantsAvailable,
-					isExpanded = isExpanded,
 					cost = cost,
 					price = price,
 					profit = price - cost
 				};
 				availableEnchants[ numAvailable] = enchant;
 
-				local p_gold,p_silver,p_copper = getGSC(enchant.price);
-				local pr_gold,pr_silver,pr_copper = getGSC(enchant.profit);
+				--Barker.Util.DebugPrintQuick("Adding enchant ", enchant )
+				--local p_gold,p_silver,p_copper = getGSC(enchant.price);
+				--local pr_gold,pr_silver,pr_copper = getGSC(enchant.profit);
 
 				EnchantrixBarker_AddEnchantToPriorityList( enchant )
 				numAvailable = numAvailable + 1;
 			end
 		end
+	end
 	end
 
 	if numAvailable == 0 then
@@ -925,12 +926,16 @@ function EnchantrixBarker_ScoreEnchantPriority( enchant )
 
 	local score_item = 0;
 
-	if Enchantrix_BarkerGetConfig( EnchantrixBarker_GetItemCategoryKey(enchant.index) ) then
-		score_item = Enchantrix_BarkerGetConfig( EnchantrixBarker_GetItemCategoryKey(enchant.index) );
-		score_item = score_item * Enchantrix_BarkerGetConfig( 'factor_item' )*0.01;
+	local itemCatKey = EnchantrixBarker_GetItemCategoryKey(enchant.recipe)
+	if ( itemCatKey ) then
+		local score_config = Enchantrix_BarkerGetConfig( itemCatKey );
+		if (score_config) then
+			score_item = score_config * Enchantrix_BarkerGetConfig( 'factor_item' )*0.01;
+		end
 	end
-
-	local score_stat = Enchantrix_BarkerGetConfig( EnchantrixBarker_GetEnchantStat(enchant) );
+	
+	local stat = EnchantrixBarker_GetEnchantStat( enchant );
+	local score_stat = Enchantrix_BarkerGetConfig( stat );
 	if not score_stat then
 		score_stat = Enchantrix_BarkerGetConfig( 'factor_stat.other' );
 	end
@@ -950,8 +955,9 @@ function EnchantrixBarker_ScoreEnchantPriority( enchant )
 
 	score_price = score_price * Enchantrix_BarkerGetConfig( 'factor_price' )*0.01;
 	score_total = (score_item + score_stat + score_price);
-
-	return score_total * (1 - Enchantrix_BarkerGetConfig("randomise")*0.01) + math.random(300) * Enchantrix_BarkerGetConfig("randomise")*0.01;
+	
+	local randomize_factor = 0.01 * Enchantrix_BarkerGetConfig("randomise")
+	return score_total * (1 - randomize_factor) + math.random(300) * randomize_factor;
 end
 
 function EnchantrixBarker_ResetPriorityList()
@@ -964,11 +970,13 @@ function EnchantrixBarker_AddEnchantToPriorityList(enchant)
 
 	for i,priorityentry in ipairs(priorityList) do
 		if( priorityentry.score < enchant_score ) then
+			--Barker.Util.DebugPrintQuick("Adding item to priority list ", i, enchant_score, enchant )
 			table.insert( priorityList, i, {score = enchant_score, enchant = enchant} );
 			return;
 		end
 	end
 
+	--Barker.Util.DebugPrintQuick("Adding item to priority list ", 0, enchant_score, enchant )
 	table.insert( priorityList, {score = enchant_score, enchant = enchant} );
 end
 
@@ -1039,10 +1047,11 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 
 	local currBarker = EnchantrixBarker_GetBarkerString();
 
-	local category_key = EnchantrixBarker_GetItemCategoryKey( enchant.index )
+	local category_key = EnchantrixBarker_GetItemCategoryKey( enchant.recipe )
 
 	-- see if this category (self enchants) should be excluded from barking
 	if (categories[category_key] and categories[category_key].exclude) then
+		--Barker.Util.DebugPrintQuick("excluding category key ", category_key, enchant )
 		return false;
 	end
 
@@ -1050,7 +1059,7 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 	local test_category = {};
 	if barkerCategories[ category_key ] then
 		for i,element in ipairs(barkerCategories[category_key]) do
-			--Barker.Util.ChatPrint("Inserting: "..i..", elem: "..element.index );
+			--Barker.Util.ChatPrint("Inserting: "..i..", elem: "..element.recipe );
 			table.insert(test_category, element);
 		end
 	end
@@ -1059,8 +1068,8 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 
 	category_string = EnchantrixBarker_GetBarkerCategoryString( test_category );
 
-
 	if #currBarker + #category_string > 255 then
+		--Barker.Util.DebugPrintQuick("string too long", #currBarker, #category_string, enchant )
 		return false;
 	end
 
@@ -1068,7 +1077,8 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 		barkerCategories[ category_key ] = {};
 	end
 
-	table.insert( barkerCategories[ category_key ],enchant );
+	--Barker.Util.DebugPrintQuick("inserting new ", category_key, enchant )
+	table.insert( barkerCategories[ category_key ], enchant );
 
 	return true;
 end
@@ -1089,8 +1099,8 @@ end
 
 function EnchantrixBarker_GetBarkerCategoryString( barkerCategory )
 	local barkercat = ""
-	--Barker.Util.DebugPrintQuick("setting up ", barkerCategory[1].index, EnchantrixBarker_GetItemCategoryString(barkerCategory[1].index) );
-	barkercat = barkercat.." ["..EnchantrixBarker_GetItemCategoryString(barkerCategory[1].index)..": ";
+	--Barker.Util.DebugPrintQuick("setting up ", barkerCategory[1].recipe, EnchantrixBarker_GetItemCategoryString(barkerCategory[1].recipe) );
+	barkercat = barkercat.." ["..EnchantrixBarker_GetItemCategoryString(barkerCategory[1].recipe)..": ";
 	for j,enchant in ipairs(barkerCategory) do
 		if( j > 1) then
 			barkercat = barkercat..", "
@@ -1104,8 +1114,14 @@ end
 
 function EnchantrixBarker_GetBarkerEnchantString( enchant )
 	local p_gold,p_silver,p_copper = getGSC(enchant.price);
+	
+	local descString = Enchantrix_GetShortDescriptor(enchant.recipe)
 
-	enchant_barker = Enchantrix_GetShortDescriptor(enchant.index).." - ";
+	-- remove unnecessary substrings
+	descString = descString:gsub(_BARKLOC("BarkerCannotBeAppliedHigher"), "")
+	descString = descString:gsub(_BARKLOC("BarkerAddionalPointsOf"), "")
+	
+	enchant_barker = descString.." - ";
 	if( p_gold > 0 ) then
 		enchant_barker = enchant_barker..p_gold.._BARKLOC('OneLetterGold');
 	end
@@ -1116,50 +1132,67 @@ function EnchantrixBarker_GetBarkerEnchantString( enchant )
 	return enchant_barker
 end
 
-function EnchantrixBarker_GetItemCategoryString( index )
-
-	local enchant = GetCraftInfoFunc( index );
-
-	for key,category in pairs(categories) do
-		--Barker.Util.DebugPrintQuick( "cat key: ", key);
-		if( enchant:find(category.search ) ~= nil ) then
-			--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category.print, ", enchant: ", enchant );
-			return category.print;
+function EnchantrixBarker_GetItemCategoryString( recipe )
+	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo( recipe );
+	if (recipe_info) then
+		local enchant = recipe_info.name
+		if (enchant) then
+			for key,category in pairs(categories) do
+				--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category );
+				if( enchant:find(category.search ) ~= nil ) then
+					--Barker.Util.DebugPrintQuick( "Matched category key: ", key, ", name: ", category.print, ", enchant: ", enchant, recipe_info );
+					return category.print;
+				end
+			end
+		else
+			Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe_info);		-- should not fail
 		end
+	else
+		Barker.Util.DebugPrintQuick("Failed enchant info for: ", recipe_info);		-- should not fail
 	end
 
-	--Barker.Util.DebugPrintQuick("Unknown category for", enchant )
-
-	return 'Unknown';
+	--Barker.Util.DebugPrintQuick("Unknown category string for", recipe_info )
+	return "Unknown";
 end
 
-function EnchantrixBarker_GetItemCategoryKey( index )
-
-	local enchant = GetCraftInfoFunc( index );
-
-	for key,category in pairs(categories) do
-		--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category );
-		if( enchant:find(category.search ) ~= nil ) then
-			return key;
+function EnchantrixBarker_GetItemCategoryKey( recipe )
+	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo( recipe );
+	if (recipe_info) then
+		local enchant = recipe_info.name
+		if (enchant) then
+			for key,category in pairs(categories) do
+				--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category );
+				if( enchant:find(category.search ) ~= nil ) then
+					--Barker.Util.DebugPrintQuick("Matched category key for", key, recipe_info )
+					return key;
+				end
+			end
+		else
+			Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe_info);		-- should not fail
 		end
+	else
+		Barker.Util.DebugPrintQuick("Failed enchant info for: ", recipe_info);		-- should not fail
 	end
 
-	--Barker.Util.DebugPrintQuick("Unknown category for", enchant )
-
-	return 'Unknown';
-
+	--Barker.Util.DebugPrintQuick("Unknown category key for", recipe_info )
+	return "Unknown";
 end
 
-function EnchantrixBarker_GetCraftDescription( index )
-	return GetTradeSkillDescription(index) or "";
+function EnchantrixBarker_GetCraftDescription( recipe )
+	return _G.C_TradeSkillUI.GetRecipeDescription(recipe) or ""
 end
 
-function Enchantrix_GetShortDescriptor( index )
-	local long_str = EnchantrixBarker_GetCraftDescription(index):lower();
+function Enchantrix_GetShortDescriptor( recipe )
+	local long_str = EnchantrixBarker_GetCraftDescription(recipe):lower();
+	
+	if (long_str == NIL) then
+		Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe);		-- should not fail
+		return "unknown";
+	end
 
-	for index,attribute in ipairs(attributes) do
+	for kk,attribute in ipairs(attributes) do
 		if( long_str:find(attribute.search ) ~= nil ) then
-			--Barker.Util.DebugPrintQuick("Matched attribute: ", attribute.print, " in: ", long_str);
+			--Barker.Util.DebugPrintQuick("Matched attribute: ", attribute.print, " in: ", long_str);	-- DEBUGGING
 
 			local print_string = attribute.print;
 			if (print_string == nil) then
@@ -1168,23 +1201,30 @@ function Enchantrix_GetShortDescriptor( index )
 			end
 
 			if (not attribute.ignoreValues) then
-				statvalue = long_str:sub(long_str:find('[0-9]+[^%%]'));
-				statvalue = statvalue:sub(statvalue:find('[0-9]+'));
-				return "+"..statvalue..' '..print_string;
+				local foundFirst = long_str:find('[0-9]+[^%%]')		-- this can fail for illusions and items without stats
+				if (foundFirst) then
+					statvalue = long_str:sub(foundFirst);
+					local foundSecond = statvalue:find('[0-9]+')
+					statvalue = statvalue:sub(foundSecond);
+					return "+"..statvalue..' '..print_string;
+				else
+					--Barker.Util.DebugPrintQuick("Failed number lookup for: ", long_str, "using :", print_string);	-- DEBUGGING
+					return print_string;
+				end
 			else
 				return print_string;
 			end
 		end
 	end
 
-
-	local enchant = Barker.Util.Split(GetCraftInfoFunc(index), "-");
+	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(recipe)
+	local enchant = Barker.Util.Split(recipe_info.name, "-");
 
 	-- this happens for any enchant we don't have a special case for, which is relatively often
 	--Barker.Util.DebugPrintQuick("Nomatch in: ", GetCraftInfoFunc(index),  long_str,  enchant  );
 
 	if (enchant == nil) then
-		Barker.Util.DebugPrintQuick("Failed enchant split for: ", long_str);		-- should not fail
+		--Barker.Util.DebugPrintQuick("Failed enchant split for: ", long_str, recipe);		-- should not fail
 		return "unknown";
 	end
 
@@ -1192,13 +1232,12 @@ function Enchantrix_GetShortDescriptor( index )
 end
 
 function EnchantrixBarker_GetEnchantStat( enchant )
-	local index = enchant.index;
-	local long_str = EnchantrixBarker_GetCraftDescription(index):lower();
+	local long_str = EnchantrixBarker_GetCraftDescription(enchant.recipe):lower();
 
-	for index,attribute in ipairs(attributes) do
+	for kk,attribute in ipairs(attributes) do
 
 		--if (not attribute.search or not attribute.key) then
-		--	Barker.Util.DebugPrintQuick("bad attribute: ", index, attribute  );
+		--	Barker.Util.DebugPrintQuick("bad attribute: ", kk, attribute  );
 		--end
 
 		if( long_str:find(attribute.search) ~= nil ) then
@@ -1206,7 +1245,8 @@ function EnchantrixBarker_GetEnchantStat( enchant )
 		end
 	end
 
-	local enchant = Barker.Util.Split(GetCraftInfoFunc(index), "-");
+	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(enchant.recipe)
+	local enchant = Barker.Util.Split(recipe_info.name, "-");
 
 	return enchant[#enchant];
 end

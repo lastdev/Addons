@@ -36,6 +36,11 @@ local function RightShift(value, numBits)
 	return math.floor(value / 2^numBits)
 end
 
+local function LeftShift(value, numBits)
+   -- for bits beyond bit 31
+   return value * 2^numBits
+end
+
 local professionToInternalID = {
 	["Alchemy"] = 0,
 	["Blacksmithing"] = 1,
@@ -95,7 +100,7 @@ function lib:GetCraftXPack(spellID)
 	local attrib = lib.dataSource[spellID]
 	
 	if attrib then
-		return bAnd(RShift(attrib, 4), 15)
+		return bAnd(RightShift(attrib, 4), 15)
 	end
 end
 
@@ -171,7 +176,7 @@ function lib:SetCraftInfo(professionId, spellID, xpack, itemID, recipeID)
 	--]]
 
 	recipeID = recipeID or 0	-- recipe id is optional, there might not be an item that teaches this spellID
-	lib.dataSource[spellID] = LShift(recipeID, 28) + LShift(itemID, 8) + LShift(xpack, 4) + professionId
+	lib.dataSource[spellID] = LeftShift(recipeID, 28) + LeftShift(itemID, 8) + LeftShift(xpack, 4) + professionId
 end
 
 -- Removes craft information for a given spellID

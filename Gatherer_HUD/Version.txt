@@ -1,3 +1,0 @@
-
-This is the Gatherer Heads-Up Display Plugin v5.0.0 which is part of Gatherer v5.0.0
-

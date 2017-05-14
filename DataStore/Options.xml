@@ -1,6 +1,27 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Options.lua"></Script>
 
+	<CheckButton name="DataStoreToggleableOptionTemplate" inherits="InterfaceOptionsCheckButtonTemplate" virtual="true">
+		<Size x="20" y="20" />
+		<Scripts>
+			<OnLoad>
+				local module = self:GetParent().module
+				local L = LibStub("AceLocale-3.0"):GetLocale(module)
+				
+				-- Set Label
+				self.Text:SetText(L[self.locLabel])
+				
+				-- Set the tooltip
+				DataStore:SetCheckBoxTooltip(self, L[self.locTitle], L[self.locEnabled], L[self.locDisabled])
+			</OnLoad>
+			<OnClick>
+				local module = self:GetParent().module
+				
+				DataStore:ToggleOption(self, module, self.option)
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	
 	<Frame name="DataStoreGeneralOptions" hidden="true">
 		<Size x="615" y="306" />
 		<Layers>

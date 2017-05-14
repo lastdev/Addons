@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -- Modifications by Mizukichan: Removed LibDebug and LibItemUtils dependencies
 
-local MAJOR_VERSION = "LibGearPoints-1.2"
+local MAJOR_VERSION = "LibGearPoints-1.2-MRT"
 local MINOR_VERSION = 10200
 
 local lib, oldMinor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
@@ -41,20 +41,24 @@ local function BonusIDs(item)
 end
 
 -- This is the high price equipslot multiplier.
+-- Values adjusted to be proportional to the amount of stats provided by each slot in Legion
 local EQUIPSLOT_MULTIPLIER_1 = {
   INVTYPE_HEAD = 1,
-  INVTYPE_NECK = 0.5,
-  INVTYPE_SHOULDER = 0.75,
   INVTYPE_CHEST = 1,
   INVTYPE_ROBE = 1,
-  INVTYPE_WAIST = 0.75,
   INVTYPE_LEGS = 1,
+  INVTYPE_WRIST = 0.56,
+  INVTYPE_FINGER = 0.56,
+  INVTYPE_CLOAK = 0.56,
+  INVTYPE_NECK = 0.56,
+  INVTYPE_SHOULDER = 0.75,
+  INVTYPE_WAIST = 0.75,
   INVTYPE_FEET = 0.75,
-  INVTYPE_WRIST = 0.5,
   INVTYPE_HAND = 0.75,
-  INVTYPE_FINGER = 0.5,
   INVTYPE_TRINKET = 1.25,
-  INVTYPE_CLOAK = 0.5,
+  INVTYPE_RELIC = 0.667,
+
+  -- The below are not relevant for Legion items, only for old
   INVTYPE_WEAPON = 1.5,
   INVTYPE_SHIELD = 1.5,
   INVTYPE_2HWEAPON = 2,
@@ -64,7 +68,7 @@ local EQUIPSLOT_MULTIPLIER_1 = {
   INVTYPE_RANGED = 2.0,
   INVTYPE_RANGEDRIGHT = 2.0,
   INVTYPE_THROWN = 0.5,
-  INVTYPE_RELIC = 0.5,
+
   -- Hack for Tier 9 25M heroic tokens.
   INVTYPE_CUSTOM_MULTISLOT_TIER = 0.9,
 }
@@ -551,6 +555,32 @@ local CUSTOM_ITEM_DATA = {
   [120279] = { 4, 665, "INVTYPE_HEAD", true },
   [119316] = { 4, 665, "INVTYPE_HEAD", true },
   [120278] = { 4, 665, "INVTYPE_HEAD", true },
+  
+  -- T18
+  [127957] = { 4, 695, "INVTYPE_SHOULDER", true },
+  [127967] = { 4, 695, "INVTYPE_SHOULDER", true },
+  [127961] = { 4, 695, "INVTYPE_SHOULDER", true },
+
+  [127955] = { 4, 695, "INVTYPE_LEGS", true },
+  [127965] = { 4, 695, "INVTYPE_LEGS", true },
+  [127960] = { 4, 695, "INVTYPE_LEGS", true },
+
+  [127956] = { 4, 695, "INVTYPE_HEAD", true },
+  [127966] = { 4, 695, "INVTYPE_HEAD", true },
+  [127959] = { 4, 695, "INVTYPE_HEAD", true },
+
+  [127954] = { 4, 695, "INVTYPE_HAND", true },
+  [127964] = { 4, 695, "INVTYPE_HAND", true },
+  [127958] = { 4, 695, "INVTYPE_HAND", true },
+
+  [127953] = { 4, 695, "INVTYPE_CHEST", true },
+  [127963] = { 4, 695, "INVTYPE_CHEST", true },
+  [127962] = { 4, 695, "INVTYPE_CHEST", true },
+
+  -- T18 trinket tokens (note: slightly higher ilvl)
+  [127969] = { 4, 705, "INVTYPE_TRINKET", true },
+  [127970] = { 4, 705, "INVTYPE_TRINKET", true },
+  [127968] = { 4, 705, "INVTYPE_TRINKET", true },
 }
 
 -- Used to add extra GP if the item contains bonus stats
@@ -579,6 +609,16 @@ local quality_threshold = 4
 
 local recent_items_queue = {}
 local recent_items_map = {}
+
+local relicSubClass
+local function GetRelicSubClassString()
+	if not relicSubClass then		-- If not cached obtain 
+		local _, itemLink, rarity, level, _, itemClass, itemSubClass, _, equipLoc = GetItemInfo(140819)		-- ID of some relic
+		relicSubClass = itemSubClass
+	end
+
+	return relicSubClass
+end
 
 -- Given a list of item bonuses, return the ilvl delta it represents
 -- (15 for Heroic, 30 for Mythic)
@@ -668,6 +708,11 @@ function lib:GetValue(item)
   if not rarity or rarity < quality_threshold then
     return nil, nil, level, rarity, equipLoc
   end
+  
+  -- Check if it is a Relic
+  if equipLoc == "" and itemSubClass == GetRelicSubClassString() then
+    equipLoc = "INVTYPE_RELIC"
+  end
 
   -- Does the item have bonus sockets or tertiary stats?  If so,
   -- set extra GP to apply later.  We don't care about warforged
@@ -702,8 +747,14 @@ function lib:GetValue(item)
     standard_ilvl = 522
   elseif version < 60000 or level_cap == 90 then
     standard_ilvl = 553
+  elseif version < 60200 then
+    standard_ilvl = 680
+    ilvl_denominator = 30
+  elseif version < 70000 then
+    standard_ilvl = 710
+    ilvl_denominator = 30
   else
-    standard_ilvl = 670
+    standard_ilvl = 865		-- The Emerald Nightmare HC
     ilvl_denominator = 30
   end
   local multiplier = 1000 * 2 ^ (-standard_ilvl / ilvl_denominator)

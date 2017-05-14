@@ -1,18 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local LCI = LibStub("LibCraftInfo-1.0")
-local LCR = LibStub("LibCraftReagents-1.0")
-
-local WHITE				= "|cFFFFFFFF"
-local TEAL				= "|cFF00FF9A"
-local YELLOW			= "|cFFFFFF00"
-local GREEN				= "|cFF00FF00"
-local RECIPE_GREY		= "|cFF808080"
-local RECIPE_GREEN	= "|cFF40C040"
-local RECIPE_ORANGE	= "|cFFFF8040"
 
 local ICON_PLUS = "Interface\\Buttons\\UI-PlusButton-Up"
 local ICON_MINUS = "Interface\\Buttons\\UI-MinusButton-Up"
@@ -24,16 +14,16 @@ local SKILL_ORANGE = 3
 local SKILL_ANY = 4
 
 local RecipeColors = { 
-	[SKILL_GREY] = RECIPE_GREY,
-	[SKILL_GREEN] = RECIPE_GREEN, 
-	[SKILL_YELLOW] = YELLOW, 
-	[SKILL_ORANGE] = RECIPE_ORANGE, 
+	[SKILL_GREY] = colors.recipeGrey,
+	[SKILL_GREEN] = colors.recipeGreen, 
+	[SKILL_YELLOW] = colors.yellow, 
+	[SKILL_ORANGE] = colors.recipeOrange, 
 }
 local RecipeColorNames = { 
-	[SKILL_GREY] = L["Grey"],
-	[SKILL_GREEN] = BI["Green"], 
-	[SKILL_YELLOW] = BI["Yellow"], 
-	[SKILL_ORANGE] = BI["Orange"], 
+	[SKILL_GREY] = L["COLOR_GREY"],
+	[SKILL_GREEN] = L["COLOR_GREEN"], 
+	[SKILL_YELLOW] = L["COLOR_YELLOW"], 
+	[SKILL_ORANGE] = L["COLOR_ORANGE"], 
 }
 
 local parent = "AltoholicFrameRecipes"
@@ -42,7 +32,7 @@ local isViewValid
 local currentProfession
 local currentColor = SKILL_ANY
 local currentSlots = ALL_INVENTORY_SLOTS
-local currentSubClass = ALL_SUBCLASSES
+local currentSubClass = ALL
 
 local ns = addon.TradeSkills.Recipes		-- ns = namespace
 
@@ -54,9 +44,9 @@ end
 
 local function GetLinkByLine(index)
 	local profession = GetCurrentProfessionTable()
-	local _, _, spellID = DataStore:GetCraftLineInfo(profession, index)
+	local _, _, recipeID = DataStore:GetCraftLineInfo(profession, index)
 	
-	return addon:GetRecipeLink(spellID, currentProfession)
+	return addon:GetRecipeLink(recipeID, currentProfession)
 end
 
 function ns:GetRecipeColor(index)
@@ -77,18 +67,18 @@ local function BuildView()
 	
 	local hideCategory		-- hide or show the current header ?
 	local hideLine			-- hide or show the current line ?
-	
+		
 	for index = 1, DataStore:GetNumCraftLines(profession) do
-		local isHeader, color, info = DataStore:GetCraftLineInfo(profession, index)
+		local isHeader, color, recipeID, indent = DataStore:GetCraftLineInfo(profession, index)
 
 		if isHeader then
 			hideCategory = false
-			if currentSubClass ~= ALL_SUBCLASSES and currentSubClass ~= info then
+			if currentSubClass ~= ALL and currentSubClass ~= recipeID then
 				hideCategory = true	-- hide if a specific subclass is selected AND we're not on it
 			end
 
 			if not hideCategory then
-				table.insert(view, { id = index, isCollapsed = false } )
+				table.insert(view, { id = index, isCollapsed = false, indent = indent } )
 			end
 		else		-- data line
 			if not hideCategory then
@@ -96,12 +86,12 @@ local function BuildView()
 				if currentColor ~= SKILL_ANY and currentColor ~= color then
 					hideLine = true
 				elseif currentSlots ~= ALL_INVENTORY_SLOTS then
-					if info then	-- on a data line, info contains the itemID and is numeric
-						local itemID = LCI:GetCraftResultItem(info)
+					if recipeID then	-- on a data line, recipeID is numeric
+						local itemID = DataStore:GetCraftResultItem(recipeID)
 						if itemID then
 							local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
-
-							if itemType == BI["Armor"] or itemType == BI["Weapon"] then
+							
+							if itemType == GetItemClassInfo(LE_ITEM_CLASS_ARMOR) or itemType == GetItemClassInfo(LE_ITEM_CLASS_WEAPON) then
 								if itemEquipLoc and strlen(itemEquipLoc) > 0 then
 									if currentSlots ~= itemEquipLoc then
 										hideLine = true
@@ -112,7 +102,7 @@ local function BuildView()
 									hideLine = true
 								end
 							end
-						else		-- enchants, like socket bracker, might not have an item id, so hide the line
+						else		-- enchants, like socket bracer, might not have an item id, so hide the line
 							hideLine = true
 						end
 					else
@@ -145,6 +135,8 @@ local function BuildView()
 end
 
 function ns:Update()
+	if not _G[parent]:IsVisible() then return end		-- frame is not visible, do nothing
+	
 	if not isViewValid then
 		BuildView()
 	end
@@ -157,7 +149,8 @@ function ns:Update()
 	
 	_G[parent .. "Info"]:Show()
 	
-	local offset = FauxScrollFrame_GetOffset( _G[ parent.."ScrollFrame" ] );
+	local scrollFrame = _G[ parent.."ScrollFrame" ]
+	local offset = scrollFrame:GetOffset()
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawGroup = true
@@ -166,10 +159,13 @@ function ns:Update()
 	local isHeader
 	local isCollapsed
 	
+	local currentIndent = 0
+	
 	for index, s in pairs(view) do
 		if type(s) == "table" then
 			isHeader = true
 			isCollapsed = s.isCollapsed
+			currentIndent = s.indent
 		else
 			isHeader = nil
 		end
@@ -200,7 +196,7 @@ function ns:Update()
 				_G[entry..i.."Craft"]:Hide()
 				
 				local _, _, name = DataStore:GetCraftLineInfo(profession, s.id)
-				_G[entry..i.."RecipeLinkNormalText"]:SetText(TEAL .. name)
+				_G[entry..i.."RecipeLinkNormalText"]:SetText(colors.teal .. name)
 				_G[entry..i.."RecipeLink"]:SetID(0)
 				_G[entry..i.."RecipeLink"]:SetPoint("TOPLEFT", 25, 0)
 
@@ -217,9 +213,11 @@ function ns:Update()
 			elseif DrawGroup then
 				_G[entry..i.."Collapse"]:Hide()
 
-				local _, color, spellID = DataStore:GetCraftLineInfo(profession, s)
-				local itemID = LCI:GetCraftResultItem(spellID)
-				local reagents = LCR:GetCraftReagents(spellID)
+				-- row:Update(currentProfession, recipeID, RecipeColors[color])
+				
+				local _, color, recipeID = DataStore:GetCraftLineInfo(profession, s)
+				local itemID = DataStore:GetCraftResultItem(recipeID)
+				local reagents = DataStore:GetCraftReagents(recipeID)
 				
 				if itemID then
 					Altoholic:SetItemButtonTexture(entry..i.."Craft", GetItemIcon(itemID), 18, 18);
@@ -229,8 +227,8 @@ function ns:Update()
 					_G[entry..i.."Craft"]:Hide()
 				end
 				
-				if spellID then
-					_G[entry..i.."RecipeLinkNormalText"]:SetText(addon:GetRecipeLink(spellID, currentProfession, RecipeColors[color]))
+				if recipeID then
+					_G[entry..i.."RecipeLinkNormalText"]:SetText(addon:GetRecipeLink(recipeID, currentProfession, RecipeColors[color]))
 				else
 					-- this should NEVER happen, like NEVER-EVER-ER !!
 					_G[entry..i.."RecipeLinkNormalText"]:SetText(L["N/A"])
@@ -293,7 +291,7 @@ function ns:Update()
 	
 	_G[parent]:Show()
 	
-	FauxScrollFrame_Update( _G[ parent.."ScrollFrame" ], VisibleCount, VisibleLines, 18);
+	scrollFrame:Update(VisibleCount, VisibleLines, 18)
 end
 
 function ns:SetCurrentProfession(prof)

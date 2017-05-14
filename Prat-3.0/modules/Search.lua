@@ -5,10 +5,10 @@ Prat:AddModuleToLoad(function()
         return
     end
 
-    local L = Prat:GetLocalizer({})
+    local PL = Prat:GetLocalizer({})
 
     --[===[@debug@
-    L:AddLocale("enUS", {
+    PL:AddLocale("enUS", {
         module_name = "Search",
         module_desc = "Adds the ability to search the chatframes.",
         module_info = "This module adds the /find and /findall commands to search the chat history\n\nUsage:\n\n /find <text> \n\n /findall <text>",
@@ -20,46 +20,43 @@ Prat:AddModuleToLoad(function()
 
     -- These Localizations are auto-generated. To help with localization
     -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-
-
     --@non-debug@
-    L:AddLocale("enUS",
-    {
-	err_notfound = "Not Found",
-	err_tooshort = "Search term is too short",
-	find_results = "Find Results:",
-	module_desc = "Adds the ability to search the chatframes.",
-	module_info = [=[This module adds the /find and /findall commands to search the chat history
+   do
+       local L
+
+   L=
+{
+["err_notfound"] = "Not Found",
+["err_tooshort"] = "Search term is too short",
+["find_results"] = "Find Results:",
+["module_desc"] = "Adds the ability to search the chatframes.",
+["module_info"] = [=[This module adds the /find and /findall commands to search the chat history
 
 Usage:
 
  /find <text> 
 
  /findall <text>]=],
-	module_name = "Search",
+["module_name"] = "Search",
 }
 
-    )
-    L:AddLocale("frFR",
-    {
-	-- err_notfound = "",
-	-- err_tooshort = "",
-	-- find_results = "",
-	-- module_desc = "",
-	-- module_info = "",
-	-- module_name = "",
+     PL:AddLocale("enUS",L)
+
+   L=
+{
 }
 
-    )
-    L:AddLocale("deDE",
-    {
-	err_notfound = "Nicht gefunden",
-	err_tooshort = "Suchbegriff zu kurz",
-	find_results = "Gefundene Ergebnisse",
-	module_desc = [=[Aktiviert Suchfunktion in Chatfenstern
+     PL:AddLocale("frFR",L)
+
+   L=
+{
+["err_notfound"] = "Nicht gefunden",
+["err_tooshort"] = "Suchbegriff zu kurz",
+["find_results"] = "Gefundene Ergebnisse:",
+["module_desc"] = [=[Aktiviert die Suchfunktion in Chatfenstern.
 
 Suche]=],
-	module_info = [=[Aktiviert die Textbefehle /find und /findall, um die Chathistory zu durchsuchen
+["module_info"] = [=[Aktiviert die Textbefehle /find und /findall, um die Chathistorie zu durchsuchen
 
 Benutzung:
 
@@ -68,89 +65,89 @@ Benutzung:
 /findall <text>
 
 Suche]=],
-	module_name = "Suchen",
+["module_name"] = "Suchen",
 }
 
-    )
-    L:AddLocale("koKR",
-    {
-	-- err_notfound = "",
-	-- err_tooshort = "",
-	-- find_results = "",
-	-- module_desc = "",
-	-- module_info = "",
-	-- module_name = "",
+     PL:AddLocale("deDE",L)
+
+   L=
+{
+["err_notfound"] = "찾을 수 없음",
+["err_tooshort"] = "검색 구문이 너무 짧습니다",
+["find_results"] = "검색 결과:",
+["module_desc"] = "대화창 검색 기능을 추가합니다.",
+["module_info"] = [=[이 모듈은 대화 기록을 검색하는 /find 와 /findall 명령어를 추가합니다
+
+사용법:
+
+/find <문자열>
+
+/findall <문자열>]=],
+["module_name"] = "검색",
 }
 
-    )
-    L:AddLocale("esMX",
-    {
-	-- err_notfound = "",
-	-- err_tooshort = "",
-	-- find_results = "",
-	-- module_desc = "",
-	-- module_info = "",
-	-- module_name = "",
+     PL:AddLocale("koKR",L)
+
+   L=
+{
 }
 
-    )
-    L:AddLocale("ruRU",
-    {
-	err_notfound = "Не Найденно",
-	err_tooshort = "Критерий поиска слишком короток",
-	find_results = "Найти Результаты:",
-	module_desc = "Добавляет возможность поиска текста в чате.",
-	module_info = [=[Этот модуль добавляет команды /find и /findall для поиска в истории чата
+     PL:AddLocale("esMX",L)
+
+   L=
+{
+["err_notfound"] = "Не Найденно",
+["err_tooshort"] = "Критерий поиска слишком короток",
+["find_results"] = "Найти Результаты:",
+["module_desc"] = "Добавляет возможность поиска текста в чате.",
+["module_info"] = [=[Этот модуль добавляет команды /find и /findall для поиска в истории чата
 
 Использование:
 
 /find <текст>
 
 /findall <текст>]=],
-	module_name = "Поиск",
+["module_name"] = "Поиск",
 }
 
-    )
-    L:AddLocale("zhCN",
-    {
-	err_notfound = "没找到", -- Needs review
-	err_tooshort = "搜索文字太短", -- Needs review
-	find_results = "查找结果：", -- Needs review
-	module_desc = "增加搜索聊天框的能力", -- Needs review
-	module_info = [=[此模块增加 /find 和 /findall 命令搜索聊天历史
+     PL:AddLocale("ruRU",L)
+
+   L=
+{
+["err_notfound"] = "没找到",
+["err_tooshort"] = "搜索文字太短",
+["find_results"] = "查找结果：",
+["module_desc"] = "增加搜索聊天框的能力",
+["module_info"] = [=[此模块增加 /find 和 /findall 命令搜索聊天历史
 
 用法:
 
  /find <文字>
 
- /findall <文字>]=], -- Needs review
-	module_name = "搜索", -- Needs review
+ /findall <文字>]=],
+["module_name"] = "搜索",
 }
 
-    )
-    L:AddLocale("esES",
-    {
-	-- err_notfound = "",
-	-- err_tooshort = "",
-	-- find_results = "",
-	-- module_desc = "",
-	-- module_info = "",
-	-- module_name = "",
+     PL:AddLocale("zhCN",L)
+
+   L=
+{
 }
 
-    )
-    L:AddLocale("zhTW",
-    {
-	err_notfound = "找不到",
-	err_tooshort = "尋找物品太短",
-	find_results = "找到結果:",
-	-- module_desc = "",
-	-- module_info = "",
-	module_name = "尋找",
+     PL:AddLocale("esES",L)
+
+   L=
+{
+["err_notfound"] = "找不到",
+["err_tooshort"] = "尋找物品太短",
+["find_results"] = "找到結果:",
+["module_name"] = "尋找",
 }
 
-    )
-    --@end-non-debug@
+     PL:AddLocale("zhTW",L)
+
+   end
+   --@end-non-debug@
 
 
     local module = Prat:NewModule(PRAT_MODULE)
@@ -164,12 +161,12 @@ Suche]=],
 
     
     Prat:SetModuleOptions(module.name, {
-        name = L.module_name,
-        desc = L.module_desc,
+        name = PL.module_name,
+        desc = PL.module_desc,
         type = "group",
         args = {
             info = {
-                name = L.module_info,
+                name = PL.module_info,
                 type = "description",
             }
         }
@@ -187,7 +184,7 @@ Suche]=],
     local scrapelines = {}
 
     local function out(frame, msg)
-        Prat:Print(frame, msg)
+        frame:print(frame, msg)
     end
 
     function module:Find(word, all, frame)
@@ -203,12 +200,12 @@ Suche]=],
 
         if #word <= 1 then
             frame:ScrollToBottom()
-            out(frame, L.err_tooshort)
+            out(frame, PL.err_tooshorL)
             return
         end
 
         if frame:GetNumMessages() == 0 then
-             out(frame, L.err_notfound)
+             out(frame, PL.err_notfound)
              return
         end
 
@@ -228,8 +225,8 @@ Suche]=],
         repeat
             self:ScrapeFrame(frame, nil, true)
 
-            for i,v in ipairs(scrapelines) do
-                if v:find(word) then
+            for _,v in ipairs(scrapelines) do
+                if v.message:find(word) then
                     if all then
                         table.insert(foundlines, v)
                     else
@@ -252,16 +249,16 @@ Suche]=],
         frame:ScrollToBottom()
 
         if all and #foundlines > 0 then
-            out(frame, L.find_results)
+            out(frame, PL.find_results)
 
             Prat.loading = true
-            for i,v in ipairs(foundlines) do
-                frame:AddMessage(v)
+            for _,v in ipairs(foundlines) do
+                frame:AddMessage(v.message, v.r, v.g, v.b)
             end
             Prat.loading = nil
 
         else
-            out(frame, L.err_notfound)
+            out(frame, PL.err_notfound)
         end
 
         wipe(foundlines)
@@ -270,14 +267,10 @@ Suche]=],
     function module:ScrapeFrame(frame)
         wipe(scrapelines)
 
-        self:AddLines(scrapelines, frame:GetRegions())
-    end
-
-    function module:AddLines(lines, ...)
-        for i=select("#", ...),1,-1 do
-            local x = select(i, ...)
-            if x:GetObjectType() == "FontString" and not x:GetName() then
-                table.insert(lines, x:GetText())
+        for _,v in ipairs(frame.visibleLines) do
+            local msg = v.messageInfo
+            if msg then
+                table.insert(scrapelines, 1, msg)
             end
         end
     end

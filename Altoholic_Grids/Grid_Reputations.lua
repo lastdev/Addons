@@ -1,18 +1,10 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local TEAL		= "|cFF00FF9A"
-local YELLOW	= "|cFFFFFF00"
-local DARK_RED = "|cFFF00000"
-
 -- *** Reputations ***
-local CAT_GUILD = 7
-local CAT_ALLINONE = CAT_GUILD + 1
-
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
 local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 
@@ -209,12 +201,13 @@ local Factions = {
 			name = FACTION_ALLIANCE,	-- 469
 			{ name = DataStore:GetFactionName(1710), icon = "inv_tabard_a_shataridefense" },		-- Sha'tari Defense
 			{ name = DataStore:GetFactionName(1682), icon = "inv_tabard_a_78wrynnvanguard" },	-- Wrynn's Vanguard
+			{ name = DataStore:GetFactionName(1847), icon = "inv_tabard_a_78wrynnvanguard" },	-- Hand of the Prophet
 		},
 		{	-- [2]
 			name = FACTION_HORDE,
 			{ name = DataStore:GetFactionName(1708), icon = "inv_tabard_a_80laughingskull" },	-- Laughing Skull Orcs
 			{ name = DataStore:GetFactionName(1681), icon = "inv_tabard_a_77voljinsspear" },		-- Vol'jin's Spear
-
+			{ name = DataStore:GetFactionName(1848), icon = "inv_tabard_a_77voljinsspear" },	-- Vol'jin's Headh
 		},
 		{	-- [3]
 			name = OTHER,
@@ -222,15 +215,32 @@ local Factions = {
 			{ name = DataStore:GetFactionName(1731), icon = "inv_tabard_a_81exarchs" },		-- Council of Exarchs
 			{ name = DataStore:GetFactionName(1445), icon = "inv_tabard_a_01frostwolfclan" },		-- Frostwold Orcs
 			{ name = DataStore:GetFactionName(1711), icon = "achievement_goblinhead" },		-- Steamwheedle Preservation Society
+			{ name = DataStore:GetFactionName(1849), icon = "achievement_goblinhead" },			-- Order of the Awakened
+			{ name = DataStore:GetFactionName(1850), icon = "achievement_goblinhead" },			-- The Saberstalkers
 		},		
 	},	
 	{	-- [7]
+		name = EXPANSION_NAME6,	-- "Legion"
+		{	-- [1]
+			name = OTHER,
+			{ name = DataStore:GetFactionName(1900), icon = "achievements_zone_azsuna" },		-- Court of Farondis
+			{ name = DataStore:GetFactionName(1883), icon = "achievements_zone_valsharah" },		-- Dreamweavers
+			{ name = DataStore:GetFactionName(1828), icon = "achievements_zone_highmountain" },		-- Highmountain Tribe
+			{ name = DataStore:GetFactionName(1948), icon = "achievements_zone_stormheim" },		-- Valarjar
+			{ name = DataStore:GetFactionName(1859), icon = "achievements_zone_suramar" },			-- The Nightfallen
+			{ name = DataStore:GetFactionName(1894), icon = "achievements_zone_brokenshore" },			-- The Wardens
+		},		
+	},	
+	{	-- [8]
 		name = GUILD,
 		{	-- [1]
 			name = GUILD,
 		}
 	},
 }
+
+local CAT_GUILD = #Factions
+local CAT_ALLINONE = CAT_GUILD + 1
 
 local VertexColors = {
 	[FACTION_STANDING_LABEL1] = { r = 0.4, g = 0.13, b = 0.13 },	-- hated
@@ -251,6 +261,7 @@ local OPTION_FACTION = "UI.Tabs.Grids.Reputations.CurrentFactionGroup"
 
 local currentFaction
 local currentDDMText
+local dropDownFrame
 
 local function BuildView()
 	view = view or {}
@@ -310,31 +321,29 @@ local function AddGuildsToFactionsTable(realm, account)
 	end
 end
 
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
-
 local function OnFactionChange(self, xpackIndex, factionGroupIndex)
-	CloseDropDownMenus()
+	dropDownFrame:Close()
 
 	addon:SetOption(OPTION_XPACK, xpackIndex)
 	addon:SetOption(OPTION_FACTION, factionGroupIndex)
 		
 	local factionGroup = Factions[xpackIndex][factionGroupIndex]
 	currentDDMText = factionGroup.name
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	
 	isViewValid = nil
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
 local lastRealm, lastAccount
 
 local function OnGuildSelected(self)
-	CloseDropDownMenus()
+	dropDownFrame:Close()
 	
 	addon:SetOption(OPTION_XPACK, CAT_GUILD)
 	addon:SetOption(OPTION_FACTION, 1)
 	
-	local realm, account = addon.Tabs.Grids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
 	if not lastRealm or not lastAccount or lastRealm ~= realm or lastAccount ~= account then	-- realm/account changed ? rebuild view
 		AddGuildsToFactionsTable(realm, account)
@@ -343,27 +352,27 @@ local function OnGuildSelected(self)
 	lastRealm = realm
 	lastAccount = account
 	currentDDMText = GUILD
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	
 	isViewValid = nil
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
 local function OnAllInOneSelected(self)
+	dropDownFrame:Close()
 	addon:SetOption(OPTION_XPACK, CAT_ALLINONE)
 	addon:SetOption(OPTION_FACTION, 1)
 	
 	currentDDMText = L["All-in-one"]
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	isViewValid = nil
-	addon.Tabs.Grids:Update()
-	
+	AltoholicTabGrids:Update()
 end
 
-local function DropDown_Initialize(self, level)
+local function DropDown_Initialize(frame, level)
 	if not level then return end
 
-	local info = UIDropDownMenu_CreateInfo()
+	local info = frame:CreateInfo()
 	
 	local currentXPack = addon:GetOption(OPTION_XPACK)
 	local currentFactionGroup = addon:GetOption(OPTION_FACTION)
@@ -374,7 +383,7 @@ local function DropDown_Initialize(self, level)
 			info.hasArrow = 1
 			info.checked = (currentXPack == xpackIndex)
 			info.value = xpackIndex
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 		end
 		
 		-- Guild factions
@@ -382,24 +391,26 @@ local function DropDown_Initialize(self, level)
 		info.hasArrow = nil
 		info.func = OnGuildSelected
 		info.checked = (currentXPack == CAT_GUILD)
-		UIDropDownMenu_AddButton(info, level)
+		frame:AddButtonInfo(info, level)
 
 		info.text = L["All-in-one"]
 		info.hasArrow = nil
 		info.func = OnAllInOneSelected
 		info.checked = (currentXPack == CAT_ALLINONE)
-		UIDropDownMenu_AddButton(info, level)
+		frame:AddButtonInfo(info, level)
 		
-		DDM_AddCloseMenu()
+		frame:AddCloseMenu()
 	
 	elseif level == 2 then
-		for factionGroupIndex, factionGroup in ipairs(Factions[UIDROPDOWNMENU_MENU_VALUE]) do
+		local menuValue = frame:GetCurrentOpenMenuValue()
+		
+		for factionGroupIndex, factionGroup in ipairs(Factions[menuValue]) do
 			info.text = factionGroup.name
 			info.func = OnFactionChange
-			info.checked = ((currentXPack == UIDROPDOWNMENU_MENU_VALUE) and (currentFactionGroup == factionGroupIndex))
-			info.arg1 = UIDROPDOWNMENU_MENU_VALUE
+			info.checked = ((currentXPack == menuValue) and (currentFactionGroup == factionGroupIndex))
+			info.arg1 = menuValue
 			info.arg2 = factionGroupIndex
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 		end
 	end
 end
@@ -435,18 +446,18 @@ local callbacks = {
 			local currentFactionGroup = addon:GetOption(OPTION_FACTION)
 			
 			if (currentXPack == CAT_GUILD) then
-				addon.Tabs.Grids:SetStatus(GUILD)
+				AltoholicTabGrids:SetStatus(GUILD)
 			elseif (currentXPack == CAT_ALLINONE) then
-				addon.Tabs.Grids:SetStatus(L["All-in-one"])
+				AltoholicTabGrids:SetStatus(L["All-in-one"])
 			else
-				addon.Tabs.Grids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack][currentFactionGroup].name))
+				AltoholicTabGrids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack][currentFactionGroup].name))
 			end
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
 			currentFaction = view[dataRowID]
 
-			rowFrame.Name.Text:SetText(WHITE .. currentFaction.name)
+			rowFrame.Name.Text:SetText(colors.white .. currentFaction.name)
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
 	RowOnEnter = function()	end,
@@ -483,9 +494,9 @@ local callbacks = {
 				local vc = VertexColors[status]
 				button.Background:SetVertexColor(vc.r, vc.g, vc.b);
 				
-				local color = WHITE
+				local color = colors.white
 				if status == FACTION_STANDING_LABEL1 or status == FACTION_STANDING_LABEL2 then
-					color = DARK_RED
+					color = colors.darkred
 				end
 
 				button.key = character
@@ -509,7 +520,7 @@ local callbacks = {
 			
 			AltoTooltip:SetOwner(frame, "ANCHOR_LEFT");
 			AltoTooltip:ClearLines();
-			AltoTooltip:AddLine(DataStore:GetColoredCharacterName(character) .. WHITE .. " @ " ..	TEAL .. faction,1,1,1);
+			AltoTooltip:AddLine(DataStore:GetColoredCharacterName(character) .. colors.white .. " @ " ..	colors.teal .. faction,1,1,1);
 
 			rate = format("%d", floor(rate)) .. "%"
 			AltoTooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
@@ -519,7 +530,7 @@ local callbacks = {
 			if suggestion then
 				AltoTooltip:AddLine(" ",1,1,1)
 				AltoTooltip:AddLine("Suggestion: ",1,1,1)
-				AltoTooltip:AddLine(TEAL .. suggestion,1,1,1)
+				AltoTooltip:AddLine(colors.teal .. suggestion,1,1,1)
 			end
 			
 			AltoTooltip:AddLine(" ",1,1,1)
@@ -534,7 +545,7 @@ local callbacks = {
 			AltoTooltip:AddLine(format("%s = %s", ICON_READY, FACTION_STANDING_LABEL8), 1, 1, 1)
 			
 			AltoTooltip:AddLine(" ",1,1,1)
-			AltoTooltip:AddLine(GREEN .. L["Shift+Left click to link"])
+			AltoTooltip:AddLine(colors.green .. L["Shift+Left click to link"])
 			AltoTooltip:Show()
 			
 		end,
@@ -556,7 +567,8 @@ local callbacks = {
 	OnLeave = function(self)
 			AltoTooltip:Hide() 
 		end,
-	InitViewDDM = function(frame, title) 
+	InitViewDDM = function(frame, title)
+			dropDownFrame = frame
 			frame:Show()
 			title:Show()
 
@@ -570,15 +582,15 @@ local callbacks = {
 			end
 			
 			if (currentXPack == CAT_GUILD) then
-				local realm, account = addon.Tabs.Grids:GetRealm()
+				local account, realm = AltoholicTabGrids:GetRealm()
 				AddGuildsToFactionsTable(realm, account)
 			end
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
-			addon:DDM_Initialize(frame, DropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(currentDDMText)
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(2, callbacks)
+AltoholicTabGrids:RegisterGrid(2, callbacks)

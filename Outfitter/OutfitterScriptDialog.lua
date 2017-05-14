@@ -19,10 +19,6 @@ function Outfitter._EditScriptDialog:Construct()
 	self.Widgets.SourceScriptEditBox.Dialog = self
 	self.Widgets.SourceScriptEditBox.TextChanged = Outfitter.EditorScript_TextChanged
 	
-	self.Widgets.PresetScript.ItemClickedFunc = function (pMenu, pScriptID)
-		self:SetPresetScriptID(pScriptID)
-	end
-	
 	self.CloseButton:SetScript("OnClick", function (self) self:GetParent():Done() end)
 	
 	-- Tabs
@@ -144,11 +140,13 @@ function Outfitter._EditScriptDialog:SetPresetScriptID(pID)
 	local vPresetScript = Outfitter:GetPresetScriptByID(pID)
 	
 	if not vPresetScript then
-		self.Widgets.PresetScript:SetSelectedValue("CUSTOM")
+		self.SelectedScriptID = "CUSTOM"
+		self.Widgets.PresetScript:SetCurrentValueText(Outfitter.cCustom)
 		return
 	end
 	
-	self.Widgets.PresetScript:SetSelectedValue(pID)
+	self.SelectedScriptID = pID
+	self.Widgets.PresetScript:SetCurrentValueText(vPresetScript.Name)
 	
 	self.Widgets.SourceScriptEditBox:SetText(vPresetScript.Script)
 
@@ -412,6 +410,26 @@ function Outfitter._EditScriptDialog:SetScriptSettings()
 				vEditBox:SetText(table.concat(vValue, "\n"))
 			else
 				vEditBox:SetText("")
+			end
+		end
+	end
+end
+
+function Outfitter._EditScriptDialog:ScriptMenuFunc(menu, outfit)
+	assert(outfit, "ScriptMenuFunc: outfit is nil")
+
+	local category
+	for _, presetScript in ipairs(Outfitter.PresetScripts) do
+		if not presetScript.Class or presetScript.Class == Outfitter.PlayerClass then
+			local newCategory = presetScript.Category or presetScript.Class or "GENERAL"
+			if category ~= newCategory then
+				category = newCategory
+				Outfitter:AddScriptCategorySubmenu(menu, category,
+					function ()
+						return self.SelectedScriptID
+					end, function (menu, value)
+						self:SetPresetScriptID(value)
+					end)
 			end
 		end
 	end

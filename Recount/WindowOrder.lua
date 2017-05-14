@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1361 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -11,24 +11,24 @@ local strsub = strsub
 
 local UIParent = UIParent
 
---Code for organizing the frame order
+-- Code for organizing the frame order
 local TopWindow
-local AddToScale = {}
-local AllWindows = {}
+local AddToScale = { }
+local AllWindows = { }
 
-local LevelDiff
+--local LevelDiff
 
---Based off an Aloft function to save memory usage by SetLevel (was creating a table for children frames)
-local function SetLevel_ProcessChildFrames(...)
+-- Based off an Aloft function to save memory usage by SetLevel (was creating a table for children frames)
+--[[local function SetLevel_ProcessChildFrames(...)
 	for i = 1, select('#', ...) do
 		local frame = select(i, ...)
 
 		Recount:SetLevel(frame, frame:GetFrameLevel() + LevelDiff)
 	end
-end
+end]]
 
 function Recount:SetLevel(frame, level)
-	LevelDiff = level-frame:GetFrameLevel()
+	--LevelDiff = level - frame:GetFrameLevel()
 	frame:SetFrameLevel(level)
 
 	--SetLevel_ProcessChildFrames(frame:GetChildren()) --Elsia: If I understood correctly children now inherit frame levels so this should not be needed.
@@ -67,11 +67,11 @@ end
 
 function Recount:AddWindow(window)
 	window.Below = TopWindow
-	
+
 	local toplevel
-	
-	if TopWindow then 
-		TopWindow.Above = window 
+
+	if TopWindow then
+		TopWindow.Above = window
 		toplevel = TopWindow:GetFrameLevel()
 	else
 		toplevel = UIParent:GetFrameLevel()
@@ -91,13 +91,13 @@ end
 
 function Recount:ScaleWindows(scale, first)
 
-	--Reuses some of my code from IMBA to scale without moving the windows
+	-- Reuses some of my code from IMBA to scale without moving the windows
 	for _, v in pairs(AddToScale) do
 		if not first then
 			local pointNum = v:GetNumPoints()
 			local curScale = v:GetScale()
 			local points = Recount:GetTable()
-			for i = 1, pointNum, 1 do
+			for i = 1, pointNum do
 				points[i] = Recount:GetTable()
 				points[i][1], points[i][2], points[i][3], points[i][4], points[i][5] = v:GetPoint(i)
 				points[i][4] = points[i][4] * curScale / scale
@@ -105,16 +105,16 @@ function Recount:ScaleWindows(scale, first)
 			end
 
 			v:ClearAllPoints()
-			for i = 1, pointNum, 1 do
+			for i = 1, pointNum do
 				v:SetPoint(points[i][1],points[i][2],points[i][3],points[i][4],points[i][5])
 				Recount:FreeTable(points[i])
 			end
 
 			Recount:FreeTable(points)
-			
+
 			if v:GetScript("OnMouseUp") then
 				v.isMoving = true
-				v:GetScript("OnMouseUp")(v)
+				v:GetScript("OnMouseUp")
 				v.isMoving = false
 			end
 		end

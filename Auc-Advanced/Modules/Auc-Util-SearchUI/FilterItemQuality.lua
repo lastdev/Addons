@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemQuality
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: FilterItemQuality.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: FilterItemQuality.lua 5622 2016-07-29 18:06:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -28,6 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
+
 -- Create a new instance of our lib with our parent
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewFilter("ItemQuality")
@@ -38,9 +39,10 @@ lib.tabname = "ItemQuality"
 -- Set our defaults
 default("ignoreitemquality.enable", false)
 
-local typename = Const.CLASSES
+local classIDs = Const.AC_ClassIDList
+local classNames = Const.AC_ClassNameList
 
-local qualname = {
+local qualnames = {
 	[0] = "Poor",
 	[1] = "Common",
 	[2] = "Uncommon",
@@ -48,7 +50,7 @@ local qualname = {
 	[4] = "Epic",
 	[5] = "Legendary",
 	[6] = "Artifact",
-}
+} -- ### todo: localize
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
@@ -78,19 +80,24 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Subhead",      0,    "Ignore Item Quality by Type")
 	for i = 0, 6 do
 		local last = gui:GetLast(id)
-		gui:AddControl(id, "Note", i*0.07, 1, 50, 20, qualname[i])
+		gui:AddControl(id, "Note", i*0.1, 1, 50, 20, qualnames[i])
 		if i < 6 then
 			gui:SetLast(id, last)
 		end
 	end
-	for i = 1, #typename do
+	for i = 1, #classIDs do
 		for j = 0, 6 do
 			local last = gui:GetLast(id)
-			gui:AddControl(id, "Checkbox", j*0.07+0.02, 1, "ignoreitemquality."..typename[i].."."..qualname[j], "")
-			gui:AddTip(id, "Ignore "..qualname[j].." "..typename[i])
+			gui:AddControl(id, "Checkbox", j*0.1+0.02, 1, "ignoreitemquality."..classIDs[i].."."..j, "")
+			gui:AddTip(id, "Ignore "..qualnames[j].." "..classNames[i])
 			gui:SetLast(id, last)
+
+			-- ### Legion : try to delete obsolete settings,
+			-- we now use classID instead of class name (same as CoreScan), and numeric quality values instead of text (as we want to localize the text at some time)
+			-- to be removed after a suitable time interval...
+			set("ignoreitemquality."..classNames[i].."."..qualnames[j], nil, true)
 		end
-		gui:AddControl(id, "Note", 0.49, 1, 200, 20, typename[i])
+		gui:AddControl(id, "Note", .67, 1, 200, 20, classNames[i])
 	end
 end
 
@@ -103,15 +110,15 @@ function lib.Filter(item, searcher)
 		return
 	end
 
-	local itype = item[Const.ITYPE]
+	local classID = item[Const.CLASSID]
 	local quality = item[Const.QUALITY]
-	quality = qualname[quality]
-	if not quality then return end -- protection against Blizzard returning an unexpected value, e.g. after a patch
+	local qualname = qualnames[quality]
+	if not qualname then return end
 
-	if get("ignoreitemquality."..itype.."."..quality) then
-		return true, quality.." "..itype.." filtered"
+	if get("ignoreitemquality."..classID.."."..quality) then
+		return true, qualname.." "..classID.." filtered"
 	end
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5622 $")

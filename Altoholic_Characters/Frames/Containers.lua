@@ -32,22 +32,23 @@ local function UpdateSpread()
 
 	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	
-	local numRows = 7
 	local frame = AltoholicFrameContainers
 	local scrollFrame = frame.ScrollFrame
+	local numRows = scrollFrame.numRows
 	
 	if #bagIndices == 0 then
-		for i = 1, numRows do
-			frame["Entry"..i]:Hide()
+		for rowIndex = 1, numRows do
+			local rowFrame = scrollFrame:GetRow(rowIndex) 
+			rowFrame:Hide()
 		end
 		
-		FauxScrollFrame_Update( scrollFrame, numRows, numRows, 41)
+		scrollFrame:Update(numRows)
 		return
 	end
 	
 	local character = Altoholic.Tabs.Characters:GetAltKey()
 	local DS = DataStore
-	local offset = FauxScrollFrame_GetOffset( scrollFrame );
+	local offset = scrollFrame:GetOffset()
 	
 	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), L["Containers"]))
 	
@@ -55,7 +56,7 @@ local function UpdateSpread()
 	local itemButton
 	
 	for i=1, numRows do
-		rowFrame = frame["Entry"..i]
+		rowFrame = scrollFrame:GetRow(i)
 		
 		local line = i + offset
 		
@@ -116,61 +117,25 @@ local function UpdateSpread()
 			-- Column 2 : empty
 			itemButton = rowFrame.Item2
 			itemButton:Hide()
-			itemButton.id = nil
-			itemButton.link = nil
+			itemButton:SetInfo(nil, nil)
 			
 			-- Columns 3 to 14 : bag content
 			for j=3, 14 do
 				itemButton = rowFrame["Item"..j]
-				itemButton.IconBorder:Hide()
-				itemButton.Icon:SetDesaturated(false)
 				
 				local slotID = bagIndices[line].from - 3 + j
 				local itemID, itemLink, itemCount = DS:GetSlotInfo(container, slotID)
 				
 				if (slotID <= containerSize) then 
-					if itemID then
-						itemButton.Icon:SetTexture(GetItemIcon(itemID))
-						
-						if rarity ~= 0 then	
-							local _, _, itemRarity = GetItemInfo(itemID)
-							if itemRarity and itemRarity == rarity then
-								local r, g, b = GetItemQualityColor(itemRarity)
-								itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
-								itemButton.IconBorder:Show()
-							else
-								itemButton.Icon:SetDesaturated(true)
-							end
-						end
-					else
-						itemButton.Icon:SetTexture("Interface\\PaperDoll\\UI-Backpack-EmptySlot")
-					end
-				
-					itemButton.id = itemID
-					itemButton.link = itemLink
-					itemButton:SetScript("OnEnter", function(self) 
-							Altoholic:Item_OnEnter(self)
-						end)
-					
-					if not itemCount or (itemCount < 2) then
-						itemButton.Count:Hide();
-					else
-						itemButton.Count:SetText(itemCount);
-						itemButton.Count:Show();
-					end
+					itemButton:SetItem(itemID, itemLink, rarity)
+					itemButton:SetCount(itemCount)
 					
 					local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
-					
-					itemButton.startTime = startTime
-					itemButton.duration = duration
-					
-					CooldownFrame_SetTimer(itemButton.Cooldown, startTime or 0, duration or 0, isEnabled)
-				
+					itemButton:SetCooldown(startTime, duration, isEnabled)
 					itemButton:Show()
 				else
 					itemButton:Hide()
-					itemButton.id = nil
-					itemButton.link = nil
+					itemButton:SetInfo(nil, nil)
 					itemButton.startTime = nil
 					itemButton.duration = nil
 				end
@@ -182,22 +147,22 @@ local function UpdateSpread()
 	end
 	
 	if #bagIndices < numRows then
-		FauxScrollFrame_Update( scrollFrame, numRows, numRows, 41);
+		scrollFrame:Update(numRows)
 	else
-		FauxScrollFrame_Update( scrollFrame, #bagIndices, numRows, 41);
+		scrollFrame:Update(#bagIndices)
 	end	
 end	
 
 local function UpdateAllInOne()
 	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
-	local numRows = 7
 	local frame = AltoholicFrameContainers
 	local scrollFrame = frame.ScrollFrame
+	local numRows = scrollFrame.numRows
 	
 	local character = Altoholic.Tabs.Characters:GetAltKey()
 	AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", DataStore:GetColoredCharacterName(character), L["Containers"], L["All-in-one"]))
 
-	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+	local offset = scrollFrame:GetOffset()
 	
 	local minSlotIndex = offset * 14
 	local currentSlotIndex = 0		-- this indexes the non-empty slots
@@ -242,41 +207,11 @@ local function UpdateAllInOne()
 					currentSlotIndex = currentSlotIndex + 1
 					if (currentSlotIndex > minSlotIndex) and (rowIndex <= numRows) then
 						itemButton = frame["Entry"..rowIndex]["Item"..colIndex]
-						itemButton.IconBorder:Hide()
-						itemButton.Icon:SetTexture(GetItemIcon(itemID))
-						itemButton.Icon:SetDesaturated(false)
-						
-						if rarity ~= 0 then
-							local _, _, itemRarity = GetItemInfo(itemID)
-							if itemRarity and itemRarity == rarity then
-								local r, g, b = GetItemQualityColor(itemRarity)
-								itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
-								itemButton.IconBorder:Show()
-							else
-								itemButton.Icon:SetDesaturated(true)
-							end
-						end
-						
-						itemButton.id = itemID
-						itemButton.link = itemLink
-						itemButton:SetScript("OnEnter", function(self) 
-								Altoholic:Item_OnEnter(self)
-							end)
-					
-						if not itemCount or (itemCount < 2) then
-							itemButton.Count:Hide();
-						else
-							itemButton.Count:SetText(itemCount);
-							itemButton.Count:Show();
-						end
+						itemButton:SetItem(itemID, itemLink, rarity)
+						itemButton:SetCount(itemCount)
 						
 						local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
-						
-						itemButton.startTime = startTime
-						itemButton.duration = duration
-						
-						CooldownFrame_SetTimer(itemButton.Cooldown, startTime or 0, duration or 0, isEnabled)
-				
+						itemButton:SetCooldown(startTime, duration, isEnabled)
 						itemButton:Show()
 						
 						colIndex = colIndex + 1
@@ -294,8 +229,9 @@ local function UpdateAllInOne()
 		while colIndex <= 14 do
 			itemButton = frame["Entry"..rowIndex]["Item"..colIndex]
 			itemButton:Hide()
-			itemButton.id = nil
-			itemButton.link = nil
+			itemButton:SetInfo(nil, nil)
+			-- itemButton.id = nil
+			-- itemButton.link = nil
 			itemButton.startTime = nil
 			itemButton.duration = nil
 			colIndex = colIndex + 1
@@ -309,7 +245,7 @@ local function UpdateAllInOne()
 		frame["Entry"..i]:Show()
 	end
 
-	FauxScrollFrame_Update( scrollFrame, ceil(currentSlotIndex / 14), numRows, 41);
+	scrollFrame:Update(ceil(currentSlotIndex / 14))
 end
 
 
@@ -317,7 +253,7 @@ function ns:SetView(isAllInOne)
 	if not isAllInOne then	-- not an all-in-one view
 		ns.Update = UpdateSpread
 		ns:UpdateCache()
-		FauxScrollFrame_SetOffset( AltoholicFrameContainers.ScrollFrame, 0)
+		AltoholicFrameContainers.ScrollFrame:SetOffset(0)
 	else
 		ns.Update = UpdateAllInOne
 	end

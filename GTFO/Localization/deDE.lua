@@ -1,47 +1,47 @@
-﻿--------------------------------------------------------------------------
+--------------------------------------------------------------------------
 -- deDE.lua 
 --------------------------------------------------------------------------
 --[[
 GTFO German Localization
-Translator: Freydis88, GusBackus, Zaephyr81
+Translator: Freydis88, GusBackus, Zaephyr81, Pas06
 ]]--
 
 if (GetLocale() == "deDE") then
 
 GTFOLocal = 
 {
-	Active_Off = "AddOn pausiert", -- Needs review
-	Active_On = "AddOn wird fortgesetzt", -- Needs review
-	AlertType_Fail = "Versagt", -- Needs review
-	AlertType_FriendlyFire = "Friendly Fire", -- Requires localization
-	AlertType_High = "Hoch", -- Needs review
-	AlertType_Low = "Niedrig", -- Needs review
+	Active_Off = "AddOn pausiert",
+	Active_On = "AddOn wird fortgesetzt",
+	AlertType_Fail = "Versagt",
+	AlertType_FriendlyFire = "Schaden durch eigene Verbündete",
+	AlertType_High = "Hoch",
+	AlertType_Low = "Niedrig",
 	ClosePopup_Message = "Mit %s kannst du deine GTFO Einstellungen später ändern.",
 	Group_None = "Keine",
 	Group_NotInGroup = "Du bist weder in einer Gruppe, noch in einem Schlachtzug",
 	Group_PartyMembers = "%d von %d Gruppenmitgliedern verwenden dieses Add-On",
-	Group_RaidMembers = "%d von %d Schlachtzugmitgliedern verwenden dieses AddOn", -- Needs review
+	Group_RaidMembers = "%d von %d Schlachtzugmitgliedern verwenden dieses AddOn",
 	Help_Intro = "v%s (|cFFFFFFFFBefehlsliste|r)",
 	Help_Options = "Optionen anzeigen",
-	Help_Suspend = "AddOn pausieren/fortsetzen", -- Needs review
-	Help_Suspended = "Derzeit pausiert das AddOn.", -- Needs review
+	Help_Suspend = "AddOn pausieren/fortsetzen",
+	Help_Suspended = "Derzeit pausiert das AddOn.",
 	Help_TestFail = "Tonsignal zum Testen abspielen (Warnsignal für Fehlschläge)",
 	Help_TestFriendlyFire = "Tonsignal zum Testen abspielen (Friendly Fire)",
 	Help_TestHigh = "Tonsignal zum Testen abspielen (hoher Schaden)",
 	Help_TestLow = "Tonsignal zum Testen abspielen (niedriger Schaden)",
-	Help_Version = "Andere Schlachtzugmitglieder anzeigen, die dieses AddOn aktiviert haben.", -- Needs review
-	LoadingPopup_Message = "GTFO Einstellungen wurden zurückgesetzt. Jetzt neu konfigurieren?",
+	Help_Version = "Andere Schlachtzugmitglieder anzeigen, die dieses AddOn aktiviert haben.",
 	Loading_Loaded = "v%s wurde geladen.",
 	Loading_LoadedSuspended = "v%s wurde geladen. (|cFFFF1111Pausiert|r)",
 	Loading_LoadedWithPowerAuras = "v%s mit Power Auras wurde geladen.",
 	Loading_NewDatabase = "v%s: Eine neue Version der Datenbank wurde gefunden; es wird auf die Standardeinstellungen zurückgesetzt.",
 	Loading_OutOfDate = "v%s ist nun zum Herunterladen verfügbar!  |cFFFFFFFFBitte aktualisieren.|r",
+	LoadingPopup_Message = "GTFO Einstellungen wurden zurückgesetzt. Jetzt neu konfigurieren?",
 	Loading_PowerAurasOutOfDate = "Deine Version von |cFFFFFFFFPower Auras Classic|r ist veraltet!  GTFO & Power-Auras-Integration konnte nicht geladen werden.",
-	Recount_Environmental = "Umgebung ", -- Needs review
-	Recount_Name = "GTFO Alarme", -- Needs review
-	Skada_AlertList = "GTFO  Alarmtypen", -- Needs review
-	Skada_Category = "Warnungen", -- Needs review
-	Skada_SpellList = "GTFO Zauber", -- Needs review
+	Recount_Environmental = "Umgebung ",
+	Recount_Name = "GTFO Alarme",
+	Skada_AlertList = "GTFO  Alarmtypen",
+	Skada_Category = "Warnungen",
+	Skada_SpellList = "GTFO Zauber",
 	TestSound_Fail = "Tonsignal zum Testen (Warnsignal für Fehlschläge) wird abgespielt.",
 	TestSound_FailMuted = "Tonsignal zum Testen (Warnsignal für Fehlschläge) wird abgespielt. [|cFFFF4444VERSTUMMT|r]",
 	TestSound_FriendlyFire = "Tonsignal zum Testen (Friendly Fire) wird abgespielt.",
@@ -60,6 +60,10 @@ GTFOLocal =
 	UI_HighDamageDescription = "GTFO-Summer-Tonsignale für gefährliche Umgebungen, aus denen du sofort verschwinden solltest, aktivieren.",
 	UI_LowDamage = "Tonsignale für PvP/Umgebung/niedriger Schaden",
 	UI_LowDamageDescription = "GTFO-Deppen-Tonsignale aktivieren -- entscheide nach deinem Ermessen, ob du aus diesen Umgebungen mit niedrigem Schaden verschwindest oder nicht.",
+	UI_SoundChannel = "Soundkanal",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.", -- Requires localization
+	UI_SpecialAlerts = "Spezielle Alarme",
+	UI_SpecialAlertsHeader = "Aktiviere spezielle Alarme",
 	UI_Test = "Test",
 	UI_TestDescription = "Tonsignale testen.",
 	UI_TestMode = "Experimenteller/Beta Modus",
@@ -67,8 +71,11 @@ GTFOLocal =
 	UI_TestModeDescription2 = "Meldet Probleme bitte an |cFF44FFFF%s@%s.%s|r",
 	UI_Trivial = "Warnsignale für belanglose Begegnungen",
 	UI_TrivialDescription = "Aktiviert Tonsignale für niedrigstufige Gegner, welche dir auf deinem Level nicht ernsthaft schaden.",
+	UI_TrivialDescription2 = "Ziehe den Schieberegler, um die Schwelle für den minimalen prozentualen Anteil des erlittenen Schadens an den Lebenspunkten einzustellen, ab dem Alarme nicht mehr als geringfügig betrachtet werden.",
+	UI_TrivialSlider = "Minimum % der Lebenspunkte",
 	UI_Unmute = "Tonsignale abspielen, wenn stummgeschaltet",
-	UI_UnmuteDescription = "Falls Du die allgemeine Tonausgabe oder die Sound-Effekte stummgeschaltet haben solltest, aktiviert GTFO vorübergehend die Audiosignale, um ausschließlich jene von GTFO abzuspielen.", -- Needs review
+	UI_UnmuteDescription = "Falls Du die allgemeine Tonausgabe oder die Sound-Effekte stummgeschaltet haben solltest, aktiviert GTFO vorübergehend die Audiosignale, um ausschließlich jene von GTFO abzuspielen.",
+	UI_UnmuteDescription2 = "Dies erfordert, dass die Gesamtlautstärle höher als 0% sein muss.",
 	UI_Volume = "GTFO-Lautstärke",
 	UI_VolumeDescription = "Audiolautstärke einstellen.",
 	UI_VolumeLoud = "4: Laut",
@@ -78,20 +85,8 @@ GTFOLocal =
 	UI_VolumeNormal = "3: Normal (wird empfohlen)",
 	UI_VolumeQuiet = "1: Still",
 	UI_VolumeSoft = "2: Leise",
-	-- 4.12
-	UI_SpecialAlerts = "Special Alerts",
-	UI_SpecialAlertsHeader = "Activate Special Alerts",	
-	-- 4.12.3
-	Version_On = "Version reminders on",
-	Version_Off = "Version reminders off",
-	-- 4.19.1
-	UI_TrivialSlider = "Minimum % of HP",
-	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
-	-- 4.32
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
-	UI_SoundChannel = "Sound Channel",
-	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
+	Version_Off = "Aktualisierungshinweise aus",
+	Version_On = "Aktualisierungshinweise an",
 }
-
 
 end

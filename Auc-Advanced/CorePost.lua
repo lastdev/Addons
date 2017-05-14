@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CorePost.lua 5527 2014-11-28 14:26:57Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CorePost.lua 5691 2016-12-18 15:49:59Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -39,12 +39,13 @@
 	queueable fashion.
 
 	This code takes "sigs" as input to most of it's functions. A "sig" is a string containing
-	a colon seperated concatenation of itemId:suffixId:suffixFactor:enchantId
+	a colon seperated concatenation of itemID:suffixId:suffixFactor:enchantId
 	A sig must be shortened by truncating trailing 0's - this is required for equality testing
 	Any missing values at the end will be set to zero when the sig is decoded
 	The function AucAdvanced.API.GetSigFromLink(link) may be used to construct a valid sig
 ]]
 if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CorePost")
 local coremodule, internal = AucAdvanced.GetCoreModule("CorePost")
 -- internal is a shared space only accessible to code that can call GetCoreModule,
 -- which is only the .lua files in Auc-Advanced.  Basically, we have an internal use only area.
@@ -75,6 +76,7 @@ local ScanTip4 = _G["AppraiserTipTextLeft4"]
 local ScanTip5 = _G["AppraiserTipTextLeft5"]
 local ScanTip6 = _G["AppraiserTipTextLeft6"]
 local ScanTip7 = _G["AppraiserTipTextLeft7"]
+local ScanTip8 = _G["AppraiserTipTextLeft8"]
 
 -- control constants used in the posting mechanism
 local LAG_ADJUST = (4 / 1000)
@@ -140,6 +142,7 @@ local ErrorText = {
 	Accountbound = "Cannot auction an Account Bound item",
 	Conjured = "Cannot auction a Conjured item",
 	Quest = "Cannot auction a Quest item",
+	Token = "Auctioneer cannot post a WoW Token. Use the Auctions tab instead.",
 	Lootable = "Cannot auction a Lootable item",
 	Damaged = "Cannot auction a Damaged item",
 	InvalidBid = "Bid value is invalid",
@@ -334,6 +337,9 @@ function private.GetRequest(item, size, bid, buyout, duration, multiple)
 	local sig, id, linkType, exactLink = AnalyzeItem(item)
 	if not (sig and id) then
 		return nil, "InvalidItem"
+	elseif C_WowTokenPublic.IsAuctionableWowToken(id) then
+		-- WoW tokens require special handling, which Auctioneer currently doesn't support
+		return nil, "Token"
 	elseif type(size) ~= "number" or size < 1 then
 		return nil, "InvalidSize"
 	elseif type(bid) ~= "number" or bid < 1 then
@@ -513,10 +519,15 @@ end
     then the item is definately not auctionable.
 ]]
 function lib.IsAuctionable(bag, slot)
-	if GetContainerItemID(bag, slot) == 82800 then
+	local itemID = GetContainerItemID(bag, slot)
+	if itemID == 82800 then
 		-- battlepet cage always sellable
 		-- we test for it specially, as battlepets may break the other tests :(
 		return true
+	elseif C_WowTokenPublic.IsAuctionableWowToken(itemID) then
+		-- WoW tokens are technically auctionable, but not by Auctioneer currently
+		-- For now we shall report them as NOT auctionable
+		return false, "Token"
 	end
 
 	local _,_,_,_,_,lootable = GetContainerItemInfo(bag, slot)
@@ -528,7 +539,7 @@ function lib.IsAuctionable(bag, slot)
 	ScanTip:ClearLines()
 	ScanTip:SetBagItem(bag, slot)
 	local test = BindTypes[ScanTip2:GetText()] or BindTypes[ScanTip3:GetText()]	or BindTypes[ScanTip4:GetText()]
-		or BindTypes[ScanTip5:GetText()] or BindTypes[ScanTip6:GetText()] or BindTypes[ScanTip7:GetText()]
+		or BindTypes[ScanTip5:GetText()] or BindTypes[ScanTip6:GetText()] or BindTypes[ScanTip7:GetText()] or BindTypes[ScanTip8:GetText()]
 	ScanTip:Hide()
 	if test then
 		return false, test
@@ -890,13 +901,13 @@ function private.LoadAuctionSlot(request)
 	end
 
 	local link = GetContainerItemLink(bag, slot)
-	local itemId = GetContainerItemID(bag, slot)
-	if not (link and itemId) then
+	local itemID = GetContainerItemID(bag, slot)
+	if not (link and itemID) then
 		private.QueueRemove()
 		return nil, "NotFound", nil
 	end
 	local checkname, checkquality
-	if itemId == 82800 then
+	if itemID == 82800 then
 		-- battlepet special handling
 		local _, speciesID, _, breedQuality = strsplit(":", link)
 		speciesID = tonumber(speciesID)
@@ -928,8 +939,8 @@ function private.LoadAuctionSlot(request)
 	ClickAuctionSellItemButton()
 
 	-- verify that the contents of the Auction slot are what we expect
-	local name, texture, count, quality, canUse, price, pricePerUnit, stackCount, totalCount = GetAuctionSellItemInfo()
-	if name ~= checkname or quality ~= checkquality then
+	local name, texture, count, quality, canUse, price, pricePerUnit, stackCount, totalCount, slotItemID = GetAuctionSellItemInfo()
+	if slotItemID ~= itemID or name ~= checkname or quality ~= checkquality then
 		-- failed to drop item in auction slot, probably because item is not auctionable (but was missed by our checks)
 		private.ClearAuctionSlot()
 		private.QueueRemove()
@@ -947,16 +958,52 @@ function private.LoadAuctionSlot(request)
 		GetAuctionSellItemInfo returns incorrect totalCount for battlepets (always returns 1)
 		to be removed when Blizzard fixes the API (CountAvailableItems is not a particularly efficient or reliable way to do this)
 	--]]
-	if itemId == 82800 then
+	if itemID == 82800 then
 		local _, tc = lib.CountAvailableItems(request.sig)
 		totalCount = tc
 	end
 
 	if totalCount < request.count * request.stacks then
-		-- not enough items to complete this request; abort whole request
-		private.ClearAuctionSlot() -- Put it back in the bags
-		private.QueueRemove()
-		return nil, "NotEnough", nil
+		local doAbort = true
+		-- Provisional fix for GetAuctionSellItemInfo sometimes returning incorrect counts
+		-- This only appears to be a problem when multiposting items with a stack size of 1
+		if request.count == 1 and request.stacks > 1 and totalCount > 0 then
+			local _, countAvail, unpostable = lib.CountAvailableItems(request.sig)
+			if countAvail then
+				local newTotalCount = countAvail -- store unadjusted count to store into totalCount at end of this block
+				if unpostable then countAvail = countAvail - unpostable end
+				if countAvail >= request.count * request.stacks then
+					-- looks like we have enough items to fulfil request, but GetAuctionSellItemInfo is returning incorrect count
+					-- we won't be able to post them all in one go; post as many as we can and requeue the remainder
+					-- we should be able to post totalCount stacks immediately, so we should requeue request.stacks - totalCount
+					doAbort = false
+					-- queue a new request to post the remainder
+					lastPostId = lastPostId + 1
+					local newrequest = {
+						sig = request.sig,
+						count = request.count, -- this will always be 1
+						bid = request.bid,
+						buy = request.buy,
+						duration = request.duration,
+						stacks = request.stacks - totalCount, -- try to post the remainder in one go; if this fails again this code should split it again, unless size reaches 1
+						id = lastPostId,
+						posted = 0,
+						linkType = request.linkType,
+					}
+					private.QueueInsert(newrequest)
+					-- change current request to only post totalCount stacks
+					request.stacks = totalCount
+					-- Use correct totalCount below (stored in request.totalcount)
+					totalCount = newTotalCount
+				end
+			end
+		end
+		if doAbort then
+			-- not enough items to complete this request; abort whole request
+			private.ClearAuctionSlot() -- Put it back in the bags
+			private.QueueRemove()
+			return nil, "NotEnough", nil
+		end
 	end
 	if GetMoney() < CalculateAuctionDeposit(request.duration, request.count) * request.stacks then
 		-- not enough money to pay the deposit
@@ -1378,4 +1425,5 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5527 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5691 $")
+AucAdvanced.CoreFileCheckOut("CorePost")

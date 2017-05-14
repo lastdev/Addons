@@ -21,13 +21,15 @@ function GoGo_OnEvent(self, event, ...)
 ---------
 	local arg1, arg2, arg3, arg4 = ...
 	if event == "ADDON_LOADED" and arg1 == "GoGoMount" then
+		GoGo_DebugLog = {}
+		if not GoGo_Prefs then
+			GoGo_Settings_Default()
+		end --if
+		GoGo_Prefs.UnknownMounts = {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_OnEvent(ADDON_LOADED): Addon Loaded event fired.")
 		end --if
 		GoGoFrame:UnregisterEvent("ADDON_LOADED")
-		if not GoGo_Prefs then
-			GoGo_Settings_Default()
-		end --if
 		if not GoGo_Prefs_Template then
 			GoGo_Prefs_Template = {}
 		end --if
@@ -36,8 +38,6 @@ function GoGo_OnEvent(self, event, ...)
 		elseif GoGo_Prefs.version ~= GetAddOnMetadata("GoGoMount", "Version") then
 			GoGo_Settings_SetUpdates()
 		end --if
-		GoGo_DebugLog = {}
-		GoGo_Prefs.UnknownMounts = {}
 		GoGo_Variables.VerMajor, GoGo_Variables.VerMinor, GoGo_Variables.VerBuild = strsplit(".", GetAddOnMetadata("GoGoMount", "Version"))
 		GoGo_Variables.VerMajor, GoGo_Variables.VerMinor, GoGo_Variables.VerBuild = tonumber(GoGo_Variables.VerMajor), tonumber(GoGo_Variables.VerMinor), tonumber(GoGo_Variables.VerBuild)
 		_, GoGo_Variables.Player.Class = UnitClass("player")
@@ -102,6 +102,7 @@ function GoGo_OnEvent(self, event, ...)
 		SetMapToCurrentZone()
 		GoGo_Variables.Player.Zone = GetRealZoneText()
 		GoGo_Variables.Player.ZoneID = GetCurrentMapAreaID()
+		if GoGo_Variables.Debug >= 5 then GoGo_ZoneCheck() end --if
 		GoGo_UpdateZonePrefs()
 		if _G["GoGo_ZoneFavorites_ContentFrame"] and _G["GoGo_ZoneFavorites_ContentFrame"]:IsShown() then
 			GoGo_AddOptionCheckboxes("GoGo_ZoneFavorites_ContentFrame")
@@ -126,6 +127,7 @@ function GoGo_OnEvent(self, event, ...)
 		GoGo_StartStopDebug(0)
 		GoGo_Variables.Player.Zone = GetRealZoneText()
 		GoGo_Variables.Player.ZoneID = GetCurrentMapAreaID()
+--		GoGo_Variables.Player.SubZoneID = GetCurrentMapDungeonLevel()
 		GoGo_UpdateZonePrefs()
 		GoGo_Variables.ExpansionAccount = GetAccountExpansionLevel()
 		GoGo_Variables.ExpansionGame =  GetExpansionLevel()
@@ -292,6 +294,8 @@ function GoGo_ChooseMount()
 	GoGo_Variables.RidingLevel = GoGo_GetRidingSkillLevel() or 0
 	GoGo_Variables.Player.Level = UnitLevel("player")
 
+	GoGo_UpdateZonePrefs()  -- check & build zone preference table for this zone
+
 	if (GoGo_Variables.Player.Class == "DRUID") then
 		GoGo_TableAddUnique(GoGo_Variables.WaterSpeed, 101)  -- Aqua Form
 		GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 101)  -- Aqua Form
@@ -305,10 +309,6 @@ function GoGo_ChooseMount()
 		GoGo_TableAddUnique(GoGo_Variables.AirSpeed, 160)  -- Zen Flight
 	end --if
 
- 	if not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] or not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] or not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"] then
-		GoGo_UpdateZonePrefs()  -- building zone template in GoGo_Prefs for preferred and excluded mounts (incase it doesn't exist such as trying to mount for the first time after installing mod without zoning)
-	end --if
-	
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_DebugAddLine("GoGo_ChooseMount: " .. GoGo_Variables.Localize.Skill.Engineering .. " = "..GoGo_Variables.EngineeringLevel)
 		GoGo_DebugAddLine("GoGo_ChooseMount: " .. GoGo_Variables.Localize.Skill.Tailoring .. " = "..GoGo_Variables.TailoringLevel)
@@ -316,13 +316,14 @@ function GoGo_ChooseMount()
 	end --if
 
 	if (table.getn(mounts) == 0) then
-		if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]) > 0 then
-			GoGo_Variables.FilteredMounts = GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] or {}
+		if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"]) > 0 then
+			GoGo_Variables.FilteredMounts = GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"] or {}
 			GoGo_CheckForUnknownMounts(GoGo_Variables.FilteredMounts)
 			GoGo_Variables.FilteredMounts = GoGo_RemoveUnusableMounts(GoGo_Variables.FilteredMounts)  -- remove mounts blizzard says we can't use
 --			GoGo_Variables.UnknownMountMsgShown = true
 		end --if
 	end --if
+
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_DebugAddLine("GoGo_ChooseMount: Checked for zone favorites.")
 	end --if
@@ -361,8 +362,13 @@ function GoGo_ChooseMount()
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_DebugAddLine("GoGo_ChooseMount: ** Searched all areas for mounts and found " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts.")
 	end --if
-	
+
 	GoGo_ZoneCheck()  -- Checking to see what we can and can not do in zones
+
+	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly then
+		GoGo_Variables.SkipFlyingMount = true
+	end --if
+
 	GoGo_UpdateMountData()  -- update mount information with changes from talents, glyphs, etc.
 
 	if GoGo_Variables.EngineeringLevel <= 299 then
@@ -411,10 +417,6 @@ function GoGo_ChooseMount()
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 37)
 	end --if
 
-	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly then
-		GoGo_Variables.SkipFlyingMount = true
-	end --if
-	
 	if IsSubmerged() then
 		GoGo_CheckSwimSurface()
 	else
@@ -499,6 +501,13 @@ function GoGo_ChooseMount()
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 200) or {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated Thousand Needles boat - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
+		end --if
+	end --if
+
+	if GoGo_Variables.ZoneExclude.LegionZones then
+		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 203) or {}
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated mounts requiring Legion zones - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
 	end --if
 
@@ -594,6 +603,12 @@ function GoGo_ChooseMount()
 			GoGo_DebugAddLine("GoGo_ChooseMount: Looking for flying mounts since we past flight checks.")
 		end --if
 		mounts = GoGo_GetBestAirMounts(GoGo_Variables.FilteredMounts)
+	elseif (table.getn(mounts) == 0) and UnitBuff("player", GetSpellInfo(168796)) then
+		-- Druids in Ashran with "Book of Flight Form" buff can fly in Ashran zones
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Didn't pass flight checks but we're a Druid with buff 168796 so we're attempting to select flight form to fly.")
+		end --if
+		mounts = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 501) or {}
 	else
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Not looking for flying mounts since we didn't past flight checks (or found a better mount to use).")
@@ -790,9 +805,10 @@ function GoGo_BuildMountList()
 	local GoGo_MountList = {}
 
 	if (GetNumCompanions("MOUNT") >= 1) then
-		for slot = 1,  C_MountJournal.GetNumMounts(),1 do
-			local _, SpellID, _, _, isUsable, _, _, isFactionSpecific, faction, _, isCollected = C_MountJournal.GetMountInfo(slot)
-			
+		local mountIDs = C_MountJournal.GetMountIDs()
+		for i, id in pairs(mountIDs) do
+			local _, SpellID, _, _, isUsable, _, _, isFactionSpecific, faction, _, isCollected, _ = C_MountJournal.GetMountInfoByID(id)
+
 			if GoGo_Variables.Debug >= 10 then 
 				-- show a line for each mount and indicate if it's usable, etc. in debug log?
 				--GoGo_DebugAddLine("GoGo_BuildMountList: Found mount spell ID " .. SpellID .. " and added to known mount list.")
@@ -803,7 +819,7 @@ function GoGo_BuildMountList()
 					if GoGo_Variables.Debug >= 10 then 
 						GoGo_DebugAddLine("GoGo_BuildMountList: " .. SpellID .. " has been added to the list of mounts available.")
 					end --if
-					table.insert(GoGo_MountList, SpellID)
+					table.insert(GoGo_MountList, SpellID)  -- copy this line to the 'else' statement below to find new mounts on the ptr
 			else
 					if GoGo_Variables.Debug >= 10 then 
 						GoGo_DebugAddLine("GoGo_BuildMountList: " .. SpellID .. " has not been added to the list of mounts available.")
@@ -1100,14 +1116,14 @@ function GoGo_ZonePrefMount(SpellID)
 	if GoGo_Variables.Debug >= 10 then 
 		GoGo_DebugAddLine("GoGo_ZonePrefMount: Preference ID " .. SpellID)
 	end --if
-	for GoGo_CounterA = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]) do
-		if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"][GoGo_CounterA] == SpellID then
-			table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"], GoGo_CounterA)
+	for GoGo_CounterA = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"]) do
+		if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"][GoGo_CounterA] == SpellID then
+			table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"], GoGo_CounterA)
 			return -- mount found, removed and now returning
 		end --if
 	end --for
 	if not GoGo_SearchTable(GoGo_Prefs.UnknownMounts, SpellID) then
-		table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"], SpellID)
+		table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"], SpellID)
 	end --if
 end --function
 
@@ -1122,13 +1138,13 @@ function GoGo_ZoneExcludeMount(SpellID)
 	if GoGo_Variables.Debug >= 10 then 
 		GoGo_DebugAddLine("GoGo_ZoneExcludedMount: Excluded ID " .. SpellID)
 	end --if
-	for GoGo_CounterA = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) do
-		if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"][GoGo_CounterA] == SpellID then
-			table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"], GoGo_CounterA)
+	for GoGo_CounterA = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]) do
+		if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"][GoGo_CounterA] == SpellID then
+			table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"], GoGo_CounterA)
 			return -- mount found, removed and now returning
 		end --if
 	end --for
-	table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"], SpellID)
+	table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"], SpellID)
 end --function
 
 ---------
@@ -1228,10 +1244,10 @@ function GoGo_RemoveExcluded()  -- removes excluded mounts from mount selection 
 			end --for
 		end --for
 	end --if
-	if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) > 0 then
-		for a = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) do
+	if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]) > 0 then
+		for a = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]) do
 			for b = 1, table.getn(GoGo_Variables.FilteredMounts) do
-				if GoGo_Variables.FilteredMounts[b] == GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"][a] then
+				if GoGo_Variables.FilteredMounts[b] == GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"][a] then
 					table.remove(GoGo_Variables.FilteredMounts, b)
 				end --if
 			end --for
@@ -1268,34 +1284,68 @@ end --function
 ---------
 function GoGo_UpdateZonePrefs()
 ---------
+	if not GoGo_Variables.Player.ZoneID then
+		return
+	end --if
+
+	if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID] then
+		GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID] = {}
+	end --if
+	if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"] then
+		GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"] = {}
+	end --if
+	if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"] then
+		GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"] = {}
+	end --if
+
 	if not GoGo_Variables.Player.Zone then
 		return
 	end --if
-	if not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] then
-		GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] = {}
-	end --if
-	if not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] then
-		GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] = {}
-	end --if
-	if not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"] then
-		GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"] = {}
-	end --if
 	
 	if GoGo_Prefs[GoGo_Variables.Player.Zone] then
-		GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] = GoGo_Prefs[GoGo_Variables.Player.Zone]
+		while table.getn(GoGo_Prefs[GoGo_Variables.Player.Zone]) > 0 do
+			local GoGo_Temp = GoGo_Prefs[GoGo_Variables.Player.Zone][1]
+			if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"][GoGo_Temp] then
+				table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"], GoGo_Temp)
+			end --if
+			table.remove(GoGo_Prefs[GoGo_Variables.Player.Zone], 1)
+		end --while
 		GoGo_Prefs[GoGo_Variables.Player.Zone] = nil
 	end --if
 
 	if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] then
+		if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] then
+			while table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]) > 0 do
+				local GoGo_Temp = GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"][1]
+				if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"][GoGo_Temp] then
+					table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"], GoGo_Temp)
+				end --if
+				table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"], 1)
+			end --while
+			GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"] = nil
+		end --if
+		if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"] then
+			while table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) > 0 do
+				local GoGo_Temp = GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"][1]
+				if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"][GoGo_Temp] then
+					table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"], GoGo_Temp)
+				end --if
+				table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"], 1)
+			end --while
+			GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"] = nil
+		end --if
+
 		while table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]) > 0 do
 			local GoGo_Temp = GoGo_Prefs.Zones[GoGo_Variables.Player.Zone][1]
-			if not GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"][GoGo_Temp] then
-				table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"], GoGo_Temp)
+			if not GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"][GoGo_Temp] then
+				table.insert(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"], GoGo_Temp)
 			end --if
 			table.remove(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone], 1)
 		end --while
+
+		GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] = nil
 	end --if
-	GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["ZoneID"]=GoGo_Variables.Player.ZoneID or 0
+
 end --function
 
 ---------
@@ -1447,6 +1497,7 @@ function GoGo_ZoneCheck()
 	GoGo_Variables.ZoneExclude.CanFly = false
 	GoGo_Variables.ZoneExclude.UseMountGroup = nil
 	GoGo_Variables.InBattleground = false
+	GoGo_Variables.ZoneExclude.LegionZones = true
 	GoGo_Variables.Player.ZoneID = GetCurrentMapAreaID()
 
 	if GoGo_Variables.Debug >= 10 then
@@ -1500,8 +1551,6 @@ function GoGo_ZoneCheck()
 			-- The North Sea south of Isle of Quel'danas from Ironforge
 			-- Magister's Terrence (instance)
 			-- The Forbidden Sea (east of Loch Modan)
-			-- Blackrock Mountains
-			-- Karazhan
 			-- Dread Wastes
 		end --if
 		if not IsInInstance() then
@@ -1591,6 +1640,7 @@ function GoGo_ZoneCheck()
 	elseif GoGo_Variables.Player.ZoneID == 29 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Burning Stepps")
+			-- Blackrock Mountains
 		end --if
 		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
 			GoGo_Variables.ZoneExclude.CanFly = true
@@ -2554,6 +2604,11 @@ function GoGo_ZoneCheck()
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Magister's Terrace (5 player instance")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
+	elseif GoGo_Variables.Player.ZoneID == 799 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Karazhan (5 player instance")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
 	elseif GoGo_Variables.Player.ZoneID == 800 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Firelands (10 / 25 player instance")
@@ -2882,32 +2937,64 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 941 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Frostfire Ridge")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 945 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Tanaan Jungle")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 946 then
 		-- May also include Lunar Fall before garrison is setup
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Talador")
 		end --if
-		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 947 then
 		-- May also include Lunar Fall before garrison is setup
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Valley")
 		end --if
-		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 948 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Spires of Arak")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 949 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Gorgrond")
 		end --if
-		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 950 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Nagrand")
 		end --if
 		GoGo_Variables.ZoneExclude.Draenor_Nagrand = false
-		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 951 then
 		-- shows Temperal Anomaly buff showing no-flying for the main island
@@ -2931,6 +3018,13 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 962 then
+		-- instanced version of Ashran which replaced the phased world Ashran (978) with Warcraft 7.0
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Ashran (instace)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 964 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Bloodmaul Slag Mines (instance)")
@@ -2943,12 +3037,31 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 970 then
+		-- Tanaan Jungle - Kargathar Proving Grounds   --- Area behind the dark portal for Horde during initial WoD quests entering WoD
+		-- On PTR, character did not have achievement for flying and did not have spell purchased since that comes from the vendor.  On live, players might have achievement and might be able to fly here..
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Tanaan Jungle")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 971 then
-		-- Personal garrison area
+		-- Alliance Garrison
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Lunarfall")
 		end --if
-		GoGo_Variables.ZoneExclude.CanFly = false
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 976 then
+		-- Horde Garrison
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Quazzik's Outpost")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 978 then
 		if GoGo_Variables.Debug >= 10 then
@@ -2996,6 +3109,144 @@ function GoGo_ZoneCheck()
 		-- Alliance part of Ashran
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Stormshield")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1011 then
+		-- Horde part of Ashran
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Warspear")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.DraenorPathfinder) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1014 then
+		-- New Dalaran
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Dalaran")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+		if GetCurrentMapDungeonLevel() == 11 then
+			-- We're in the Underbelly area, enable the item mount
+			GoGo_Variables.MountDB[220124][10002] = 200
+			GoGo_Variables.MountDB[220124][7] = true
+			GoGo_Variables.MountDB[220124][8] = true
+		end --if
+	elseif GoGo_Variables.Player.ZoneID == 1015 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Azsuna")
+		end --if
+		GoGo_Variables.ZoneExclude.LegionZones = false
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1017 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Stormheim")
+		end --if
+		GoGo_Variables.ZoneExclude.LegionZones = false
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1018 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Val'sharah")
+		end --if
+		GoGo_Variables.ZoneExclude.LegionZones = false
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1021 then
+		-- Broken Isles Dalaran - Rooms used for scenarios as part of the various class specific quests
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Dalaran")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1024 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Highmountain")
+		end --if
+		GoGo_Variables.ZoneExclude.LegionZones = false
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1026 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Hellfire Citadel (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1033 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Suramar")
+		end --if
+		GoGo_Variables.ZoneExclude.LegionZones = false
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1047 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Niskara (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1052 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Mardum, the Shattered Abyss")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1054 then
+		-- Broken Isles version of Dalaran - The Violet Hold instance (scenario) for mages starting their quest line for the 7.0 expansion
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Violet Hold")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 1065 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Neltharion's Lair (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1067 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Darkheart Thicket (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1068 then
+		-- Mage hangout area in (Broken Isles) Dalaran
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Hall of the Guardian")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 1072 then
+		-- Hunter's Hall
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Trueshot Lodge")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1076 then
+		-- The Ulduar scenario as part of the quest line for the pre-release events to Warcraft 7 - Legion
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Ulduar (scenario)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1091 then
+		-- Single player scenario
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Exodar (scenario")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1100 then
+		-- The Kharazan scenario as part of the quest line for the pre-release events to Warcraft 7 - Legion
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Kharazan (scenario)")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
@@ -3075,6 +3326,7 @@ function GoGo_GetProfSkillLevel(searchname)
 	return 0
 end --function
 
+--[[
 ---------
 function GoGo_GlyphActive(spellid)
 ---------
@@ -3093,6 +3345,7 @@ function GoGo_GlyphActive(spellid)
 
 	return false
 end --function
+]]
 
 ---------
 function GoGo_CheckSwimSurface()
@@ -3325,6 +3578,7 @@ function GoGo_UpdateMountData()
 		end --if
 	end --if
 
+--[[
 	if (GoGo_Variables.Player.Class == "DRUID") and (GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_AquaticForm)) then
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.AquaForm][10001] = 135
 		GoGo_TableAddUnique(GoGo_Variables.WaterSpeed, 135)
@@ -3334,7 +3588,7 @@ function GoGo_UpdateMountData()
 			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid with Glyph of Aquatic Form.  Modifying Aquatic Form speed data.")
 		end --if
 	end --if
-
+]]
 	if (GoGo_Variables.Player.Class == "DRUID" and (IsSwimming() or IsSubmerged())) then
 		-- set the swim speeds to whatever AquaForm speed is including possible glyph modifier set above
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = GoGo_Variables.MountDB[GoGo_Variables.Localize.AquaForm][10001]
@@ -3352,6 +3606,7 @@ function GoGo_UpdateMountData()
 		end --if
 	end --if
 
+	--[[
 	if (GoGo_Variables.Player.Class == "DRUID") and (GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Stag) and not GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Cheetah)) then
 		-- Druid's travel form can carry a passenger
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][2] = true
@@ -3359,13 +3614,20 @@ function GoGo_UpdateMountData()
 
 	if (GoGo_Variables.Player.Class == "DRUID") and not GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Stag) then
 		-- Druid's travel form is used for flight form, travel form and aqua forms based on location
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][9] = true
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][300] = true
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][301] = true
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][403] = true
---		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = 101
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10003] = 250
---		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10004] = 101
+		if not (GoGo_Variables.SkipFlyingMount == true) then
+			-- If player presses "no flying" mount key or uses no flying mount option, these modifiers will remove travel form preventing aqua form in water, etc.
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][9] = true
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][300] = true
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][301] = true
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][403] = true
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][501] = true
+	--		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = 101
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10003] = 250
+	--		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10004] = 101
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid, not skipping flying so let travel form fly!")
+			end --if
+		end --if
 	end --if
 
 	
@@ -3391,6 +3653,7 @@ function GoGo_UpdateMountData()
 			GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 160)
 		end --if	
 	end --if
+]]
 	
 	if not GoGo_Variables.ZoneExclude.ThousandNeedles then  -- we are in thousand needles - ground mounts swim faster with buff
 		local GoGo_TempMountDB = {}
@@ -3440,6 +3703,15 @@ function GoGo_UpdateMountData()
 			end --if
 		end --if
 	end --if
+
+	if (GoGo_Variables.Player.ZoneID == 978) and (UnitBuff("player", GetSpellInfo(170495))) then
+	-- Makes mounts instant cast if in Ashran with "Swift Riding Crop" buff
+		local GoGo_TempMountDB = {}
+		GoGo_TempMountDB = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 701) or {}
+		for GoGo_TempCounter = 1, table.getn(GoGo_TempMountDB) do
+			GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][6] = true
+		end --for
+	end --if
 	
 	-- mount speed updates based on riding skill
 	if GoGo_GetRidingSkillLevel() == 325 then  -- increase air mounts to 410
@@ -3468,8 +3740,8 @@ function GoGo_UpdateMountData()
 					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] = 220
 					GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 220)
 				elseif GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] == 160 then
-					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] = 176
-					GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 176)
+					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] = 170
+					GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 170)
 				elseif GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] == 100 then
 					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] = 110
 					GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 110)
@@ -3518,6 +3790,51 @@ GOGO_ERRORS = {
 
 GOGO_SPELLS = {
 	["DRUID"] = function()
+		local GoGo_CastString
+		local UseSeperator = false
+		GoGo_CastString = ""
+		if GoGo_Prefs.DruidClickForm then
+			GoGo_CastString = "/cancelform [flying] \n"
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.TravelForm) or GoGo_InBook(GoGo_Variables.Localize.CatForm) then
+			GoGo_CastString = GoGo_CastString .. "/use "
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.TravelForm) then
+			GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
+			UseSeperator = true
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.CatForm) then
+			if UseSeperator then
+				GoGo_CastString = GoGo_CastString .. ";"
+			end --if
+			GoGo_CastString = GoGo_CastString .. "[indoors] "..GoGo_InBook(GoGo_Variables.Localize.CatForm)
+			UseSeperator = true
+		end --if
+		if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
+			if UseSeperator then
+				GoGo_CastString = GoGo_CastString .. ";"
+			end --if
+			if GoGo_InBook(GoGo_Variables.Localize.TravelForm) then
+				GoGo_CastString = GoGo_CastString .. "[combat] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
+				UseSeperator = true
+			end --if
+			if UseSeperator then
+				GoGo_CastString = GoGo_CastString .. ";"
+			end --if
+			GoGo_CastString = GoGo_CastString .. GoGo_InBook(165962)
+		else
+			if UseSeperator then
+				GoGo_CastString = GoGo_CastString .. ";"
+			end --if
+			if GoGo_InBook(GoGo_Variables.Localize.TravelForm) then
+				GoGo_CastString = GoGo_CastString .. GoGo_InBook(GoGo_Variables.Localize.TravelForm)
+			end --if
+		end --if
+		return GoGo_CastString
+	end, --function
+
+--[[
+	["DRUID"] = function()
 		if GoGo_Prefs.DruidClickForm then
 			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
 				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(165962)
@@ -3544,6 +3861,8 @@ GOGO_SPELLS = {
 			return GoGo_CastString
 		end --if
 	end, --function
+]]
+
 	["SHAMAN"] = function()
 		return GoGo_InBook(GoGo_Variables.Localize.GhostWolf)
 	end, --function
@@ -3584,7 +3903,7 @@ GOGO_COMMANDS = {
 				end --for
 			end --if
 		else
-			GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] = nil
+			GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID] = nil
 			if not InCombatLockdown() then
 				for i, button in ipairs({GoGoButton, GoGoButton2}) do
 					GoGo_FillButton(button)
@@ -3648,8 +3967,8 @@ GOGO_MESSAGES = {
 		local msg = ""
 		if not GoGo_Prefs.GlobalPrefMount then
 			local list = ""
-			if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] then
-				list = list .. GoGo_GetIDName(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone])
+			if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID] then
+				list = list .. GoGo_GetIDName(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID])
 				msg = GoGo_Variables.Player.Zone..": "..list.." - </gogo clear> to clear"
 			else
 				msg = GoGo_Variables.Player.Zone..": ?".." - </gogo ItemLink> or </gogo SpellName> to add"
@@ -3668,9 +3987,9 @@ GOGO_MESSAGES = {
 			else
 				msg =  "Global Preferred Mounts: ?".." - </gogo ItemLink> or </gogo SpellName> to add"
 			end --if
-			if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone] then
+			if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID] then
 				local listb = ""
-				listb = listb .. GoGo_GetIDName(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone])
+				listb = listb .. GoGo_GetIDName(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID])
 				msg = msg .. "\n" .. GoGo_Variables.Player.Zone ..": "..listb.." - Disable global mount preferences to change."
 			end --if
 			return msg
@@ -4006,7 +4325,7 @@ function GoGo_ZoneFavorites_Panel()
 	GoGo_ZoneFavorites_Panel = CreateFrame("Frame", nil, UIParent)
 	GoGo_ZoneFavorites_Panel.name = GoGo_Variables.Localize.String.CurrentZoneFavorites
 	GoGo_ZoneFavorites_Panel.parent = "GoGoMount"
-	GoGo_ZoneFavorites_Panel.default = function (self) GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]={}; GoGo_AddOptionCheckboxes("GoGo_ZoneFavorites_ContentFrame"); end;  -- use clear command with default button
+	GoGo_ZoneFavorites_Panel.default = function (self) GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"]={}; GoGo_AddOptionCheckboxes("GoGo_ZoneFavorites_ContentFrame"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_ZoneFavorites_Panel)
 	
 	GoGo_ZoneFavorites_ScrollFrame = CreateFrame("ScrollFrame", "GoGo_ZoneFavorites_ScrollFrame", GoGo_ZoneFavorites_Panel, "UIPanelScrollFrameTemplate")
@@ -4172,7 +4491,7 @@ function GoGo_ZoneExclusions_Panel()
 	GoGo_ZoneExclusions_Panel = CreateFrame("Frame", nil, UIParent)
 	GoGo_ZoneExclusions_Panel.name = GoGo_Variables.Localize.String.CurrentZoneExclusions
 	GoGo_ZoneExclusions_Panel.parent = "GoGoMount"
-	GoGo_ZoneExclusions_Panel.default = function (self) GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]={}; GoGo_AddOptionCheckboxes("GoGo_ZoneExclusions_ContentFrame"); end;  -- use clear command with default button
+	GoGo_ZoneExclusions_Panel.default = function (self) GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]={}; GoGo_AddOptionCheckboxes("GoGo_ZoneExclusions_ContentFrame"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_ZoneExclusions_Panel)
 	
 	GoGo_ZoneExclusions_ScrollFrame = CreateFrame("ScrollFrame", "GoGo_ZoneExclusions_ScrollFrame", GoGo_ZoneExclusions_Panel, "UIPanelScrollFrameTemplate")
@@ -4307,6 +4626,8 @@ function GoGo_Settings_Default(Class)
 		GoGo_SetPref("AutoExcludeFlyingMounts", false, true)
 		GoGo_SetPref("DruidDisableInCombat", false, true)
 		GoGo_SetPref("ShamanClickForm", false, true)
+		GoGo_Prefs.PrefVer = 1
+
 	end --if
 end --function
 
@@ -4345,6 +4666,8 @@ function GoGo_Settings_SetUpdates()
 	GoGo_Prefs.checkspells = nil
 	GoGo_Prefs.PaliUseCrusader = nil
 	GoGo_Prefs.PaladinUseCrusaderAura = nil
+	
+	GoGo_Prefs.PrefVer = 1
 
 end --function
 
@@ -4386,109 +4709,120 @@ function GoGo_AddOptionCheckboxes(GoGo_FrameParentText)
 
 	if GoGo_MountCount == 0 then
 		return nil
-	else
-		for loopcount=1, GoGo_MountCount do
-			local GoGo_MountID = GoGo_Mounts[loopcount]
-			local GoGo_checkboxrow = (-44 + (-16 * loopcount))
-			local GoGo_CheckBoxName = GoGo_FrameParentText .. GoGo_MountID
-			if _G[GoGo_CheckBoxName] then
-				_G[GoGo_CheckBoxName]:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)
-				_G[GoGo_CheckBoxName]:SetChecked(false)
---				_G[GoGo_CheckBoxName].tooltipText = "" -- clear tool tip text
-			else
-				GoGo_CheckButton = CreateFrame("CheckButton", GoGo_CheckBoxName, GoGo_FrameParent, "ChatConfigCheckButtonTemplate")
-				GoGo_CheckButton:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)
-				getglobal(GoGo_CheckButton:GetName() .. 'Text'):SetText(GoGo_GetIDName(GoGo_MountID))
-			end --if
-
-			if GoGo_Variables.Player.Class == "HUNTER" then  -- clear aspect of cheetah / pack incase hunter option changes
-				if GoGo_MountID == GoGo_Variables.Localize.AspectPack and _G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah] then
-					_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah]:Hide()
-					_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack]:Show()
-				elseif GoGo_MountID == GoGo_Variables.Localize.AspectCheetah and _G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack] then
-					_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah]:Show()
-					_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack]:Hide()
-				end --if
-			end --if
-			
-			if GoGo_FrameParentText == "GoGo_ZoneFavorites_ContentFrame" then
-				if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]) > 0 then
-					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"]) do
-						if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Preferred"][GoGo_FavoriteCount] == GoGo_MountID then
-							_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked " .. GoGo_MountID)
-						end --if
-					end --for
-				end --if
-				_G[GoGo_CheckBoxName]:SetScript("OnClick",
-					function(self)
-						GoGo_ZonePrefMount(GoGo_MountID)
-					end --function
-				)
-			elseif GoGo_FrameParentText == "GoGo_GlobalFavorites_ContentFrame" then
-				if GoGo_Prefs.GlobalPrefMounts then
-					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.GlobalPrefMounts) do
-						if GoGo_Prefs.GlobalPrefMounts[GoGo_FavoriteCount] == GoGo_MountID then
-							_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
-						end --if
-					end --for
-				end --if
-				_G[GoGo_CheckBoxName]:SetScript("OnClick",
-					function(self)
-						GoGo_GlobalPrefMount(GoGo_MountID)
-					end --function
-				)
-			elseif GoGo_FrameParentText == "GoGo_ExtraPassengerMounts_ContentFrame" then
-				if GoGo_Prefs.ExtraPassengerMounts then
-					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.ExtraPassengerMounts) do
-						if GoGo_Prefs.ExtraPassengerMounts[GoGo_FavoriteCount] == GoGo_MountID then
-							_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
-						end --if
-					end --for
-				end --if
-				_G[GoGo_CheckBoxName]:SetScript("OnClick",
-					function(self)
-						GoGo_ExtraPassengerMounts(GoGo_MountID)
-					end --function
-				)
-			elseif GoGo_FrameParentText == "GoGo_GlobalExclusions_ContentFrame" then
-				if GoGo_Prefs.GlobalExclude then
-					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.GlobalExclude) do
-						if GoGo_Prefs.GlobalExclude[GoGo_FavoriteCount] == GoGo_MountID then
-							_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
-						end --if
-					end --for
-				end --if
-				_G[GoGo_CheckBoxName]:SetScript("OnClick",
-					function(self)
-						GoGo_GlobalExcludeMount(GoGo_MountID)
-					end --function
-				)
- 			elseif GoGo_FrameParentText == "GoGo_ZoneExclusions_ContentFrame" then
-				if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) > 0 then
-					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"]) do
-						if GoGo_Prefs.Zones[GoGo_Variables.Player.Zone]["Excluded"][GoGo_FavoriteCount] == GoGo_MountID then
-							_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
-						end --if
-					end --for
-				end --if
-				_G[GoGo_CheckBoxName]:SetScript("OnClick",
-					function(self)
-						GoGo_ZoneExcludeMount(GoGo_MountID)
-					end --function
-				)
-			end --if
-		end --for
 	end --if
+
+	local tMountNames = {}
+	local tMountIDNames = {}
+	local sMountName
+	local i
+	for i=1, GoGo_MountCount do
+		sMountName = GoGo_GetIDName(GoGo_Mounts[i])
+		table.insert(tMountNames, sMountName)
+		tMountIDNames[sMountName] = GoGo_Mounts[i]
+	end --for
+	table.sort(tMountNames)
+
+	for i=1, GoGo_MountCount do
+		local GoGo_MountID = tMountIDNames[tMountNames[i]]
+		local GoGo_checkboxrow = (-44 + (-16 * i))
+		local GoGo_CheckBoxName = GoGo_FrameParentText .. GoGo_MountID
+		if _G[GoGo_CheckBoxName] then
+			_G[GoGo_CheckBoxName]:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)
+			_G[GoGo_CheckBoxName]:SetChecked(false)
+--				_G[GoGo_CheckBoxName].tooltipText = "" -- clear tool tip text
+		else
+			GoGo_CheckButton = CreateFrame("CheckButton", GoGo_CheckBoxName, GoGo_FrameParent, "ChatConfigCheckButtonTemplate")
+			GoGo_CheckButton:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)
+			getglobal(GoGo_CheckButton:GetName() .. 'Text'):SetText(GoGo_GetIDName(GoGo_MountID))
+		end --if
+
+		if GoGo_Variables.Player.Class == "HUNTER" then  -- clear aspect of cheetah / pack incase hunter option changes
+			if GoGo_MountID == GoGo_Variables.Localize.AspectPack and _G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah] then
+				_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah]:Hide()
+				_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack]:Show()
+			elseif GoGo_MountID == GoGo_Variables.Localize.AspectCheetah and _G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack] then
+				_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectCheetah]:Show()
+				_G[GoGo_FrameParentText .. GoGo_Variables.Localize.AspectPack]:Hide()
+			end --if
+		end --if
+		
+		if GoGo_FrameParentText == "GoGo_ZoneFavorites_ContentFrame" then
+			if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"]) > 0 then
+				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"]) do
+					if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Preferred"][GoGo_FavoriteCount] == GoGo_MountID then
+						_G[GoGo_CheckBoxName]:SetChecked(1)
+--							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked " .. GoGo_MountID)
+					end --if
+				end --for
+			end --if
+			_G[GoGo_CheckBoxName]:SetScript("OnClick",
+				function(self)
+					GoGo_ZonePrefMount(GoGo_MountID)
+				end --function
+			)
+		elseif GoGo_FrameParentText == "GoGo_GlobalFavorites_ContentFrame" then
+			if GoGo_Prefs.GlobalPrefMounts then
+				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.GlobalPrefMounts) do
+					if GoGo_Prefs.GlobalPrefMounts[GoGo_FavoriteCount] == GoGo_MountID then
+						_G[GoGo_CheckBoxName]:SetChecked(1)
+--							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
+					end --if
+				end --for
+			end --if
+			_G[GoGo_CheckBoxName]:SetScript("OnClick",
+				function(self)
+					GoGo_GlobalPrefMount(GoGo_MountID)
+				end --function
+			)
+		elseif GoGo_FrameParentText == "GoGo_ExtraPassengerMounts_ContentFrame" then
+			if GoGo_Prefs.ExtraPassengerMounts then
+				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.ExtraPassengerMounts) do
+					if GoGo_Prefs.ExtraPassengerMounts[GoGo_FavoriteCount] == GoGo_MountID then
+						_G[GoGo_CheckBoxName]:SetChecked(1)
+--							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
+					end --if
+				end --for
+			end --if
+			_G[GoGo_CheckBoxName]:SetScript("OnClick",
+				function(self)
+					GoGo_ExtraPassengerMounts(GoGo_MountID)
+				end --function
+			)
+		elseif GoGo_FrameParentText == "GoGo_GlobalExclusions_ContentFrame" then
+			if GoGo_Prefs.GlobalExclude then
+				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.GlobalExclude) do
+					if GoGo_Prefs.GlobalExclude[GoGo_FavoriteCount] == GoGo_MountID then
+						_G[GoGo_CheckBoxName]:SetChecked(1)
+--							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
+					end --if
+				end --for
+			end --if
+			_G[GoGo_CheckBoxName]:SetScript("OnClick",
+				function(self)
+					GoGo_GlobalExcludeMount(GoGo_MountID)
+				end --function
+			)
+		elseif GoGo_FrameParentText == "GoGo_ZoneExclusions_ContentFrame" then
+			if table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]) > 0 then
+				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"]) do
+					if GoGo_Prefs.Zones[GoGo_Variables.Player.ZoneID]["Excluded"][GoGo_FavoriteCount] == GoGo_MountID then
+						_G[GoGo_CheckBoxName]:SetChecked(1)
+--							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked ")
+					end --if
+				end --for
+			end --if
+			_G[GoGo_CheckBoxName]:SetScript("OnClick",
+				function(self)
+					GoGo_ZoneExcludeMount(GoGo_MountID)
+				end --function
+			)
+		end --if
+	end --for
 end --function
 
 ---------
@@ -4509,6 +4843,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Mists of Pandaria enabled.")
 	elseif GoGo_Variables.ExpansionAccount == 5 then
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Warlords of Draenor enabled.")
+	elseif GoGo_Variables.ExpansionAccount == 6 then
+		GoGo_DebugAddLine("Information: Account - World of Warcraft: Legion enabled.")
 	end --if
 	if GoGo_Variables.ExpansionGame == 0 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft (Classic) enabled.")
@@ -4522,6 +4858,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Mists of Pandaria enabled.")
 	elseif GoGo_Variables.ExpansionGame == 5 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Warlords of Draenor enabled.")
+	elseif GoGo_Variables.ExpansionGame == 6 then
+		GoGo_DebugAddLine("Information: Game - World of Warcraft: Legion enabled.")
 	end --if
 	GoGo_DebugAddLine("Information: Client locale is " .. GetLocale())
 	GoGo_DebugAddLine("Information: Location = " .. GetRealZoneText() .. " - " .. GetZoneText() .. " - " ..GetSubZoneText() .. " - " .. GetMinimapZoneText())
@@ -4586,6 +4924,11 @@ function GoGo_DebugCollectInformation()
 	else
 		GoGo_DebugAddLine("Information: We are not moving as per GoGo_IsMoving()")
 	end --if
+	if IsPlayerMoving() then
+		GoGo_DebugAddLine("Information: We are moving as per IsPlayerMoving()")
+	else
+		GoGo_DebugAddLine("Information: We are not moving as per IsPlayerMoving()")
+	end --if
 	
 	local buffs, i = { }, 1
 	local buff = UnitBuff("player", i)
@@ -4595,7 +4938,7 @@ function GoGo_DebugCollectInformation()
 		buff = UnitBuff("player", i)
 	end --while
 	if #buffs < 1 then
-		buffs = "We are unbuffed"
+		buffs = "We are not buffed"
 	else
 		buffs[1] = "We are buffed with: "..buffs[1]
 		buffs = table.concat(buffs, ", ")

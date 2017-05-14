@@ -1,4 +1,4 @@
---[[ $Id: GuildNotes.lua 53 2012-07-23 19:00:25Z nevcairiel $ ]]
+--[[ $Id: GuildNotes.lua 63 2016-08-16 18:06:15Z nevcairiel $ ]]
 local Guild = LibStub("AceAddon-3.0"):NewAddon("HandyNotes_Guild", "AceEvent-3.0", "AceBucket-3.0", "AceHook-3.0")
 
 local HandyNotes = HandyNotes
@@ -171,6 +171,7 @@ function Guild:GUILD_ROSTER_UPDATE()
 		for i = 1, numPlayersTotal do
 			name, _, _, level, class, _, _, _, _, _, classFile = GetGuildRosterInfo(i)
 			if name then
+				name = Ambiguate(name, "none")
 				if not playerClass[name] then
 					playerClass[name] = classFile
 					

@@ -5,7 +5,7 @@ local util = oRA.util
 local module = oRA:NewModule("Zone")
 local L = scope.locale
 
-module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
+-- luacheck: globals GameFontNormal
 
 local zones = {}
 local factionList = {}
@@ -111,11 +111,11 @@ function module:UPDATE_FACTION()
 		local name,_,_,_,_,_,_,_,isHeader,isCollapsed = GetFactionInfo(i)
 		if isHeader == 1 then
 			if isCollapsed == 1 then
-				local NumFactions = GetNumFactions()
+				local numFactions = GetNumFactions()
 				ExpandFactionHeader(i)
-				NumFactions = GetNumFactions() - NumFactions
-				for j = i+1, i+NumFactions do
-					local name = GetFactionInfo(j)
+				numFactions = GetNumFactions() - numFactions
+				for j = i + 1, i + numFactions do
+					name = GetFactionInfo(j)
 					factionList[name] = true
 				end
 				CollapseFactionHeader(i)
@@ -155,13 +155,14 @@ function module:UpdateZoneList()
 			createTooltip = nil
 		end
 		addPlayer(UnitName("player"), GetRealZoneText())
-		for i = 1, MAX_PARTY_MEMBERS do
+		for i = 1, 5 do
 			if i < GetNumSubgroupMembers() + 1 then
 				local name = UnitName("party"..i)
 				local zone = GetZone("party"..i)
 				addPlayer(name, zone)
 			end
 		end
+	else
+		addPlayer(UnitName("player"), GetRealZoneText())
 	end
 end
-

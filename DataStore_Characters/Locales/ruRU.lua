@@ -10,4 +10,3 @@ L["REQUEST_PLAYTIME_DISABLED"] = "Не передавать время игры 
 L["REQUEST_PLAYTIME_ENABLED"] = "Время обновляется при каждом входе"
 L["REQUEST_PLAYTIME_TEXT"] = "Обновлять время игры при каждом входе"
 L["REQUEST_PLAYTIME_TITLE"] = "Обновлять время игры при каждом входе"
-

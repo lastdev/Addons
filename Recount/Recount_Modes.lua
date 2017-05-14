@@ -1,10 +1,10 @@
 local Recount = _G.Recount
 
 local AceLocale = LibStub("AceLocale-3.0")
-local L = AceLocale:GetLocale( "Recount" )
+local L = AceLocale:GetLocale("Recount")
 local Epsilon = 0.000000000000000001
 
-local revision = tonumber(string.sub("$Revision: 1300 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1419 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -28,7 +28,9 @@ local dbCombatants
 --.BotAvg = The average label for bottom
 --.BotMax = The minimum label for bottom
 --.BotAmount = Label for what the amount is on the bottom
-local DetailTitles = {}
+
+local DetailTitles = { }
+
 DetailTitles.Attacks = {
 	TopNames = L["Ability Name"],
 	TopCount = L["Count"],
@@ -119,7 +121,7 @@ DetailTitles.HealedWho = {
 
 DetailTitles.OverHeals = {
 	TopNames = L["Heal Name"],
-	TopCount = "",
+	TopCount = L["Count"],
 	TopAmount = L["Overheal"],
 	BotNames = L["Type"],
 	BotMin = L["Min"],
@@ -239,19 +241,19 @@ function Recount:MergedPetDamageDPS(data, fight)
 			Time = PetTime
 		end
 	end
-	
+
 	local damage = data.Fights[fight].Damage or 0
-	
+
 	if Time == 0 then
 		damage = 0
 		PetAmount = 0
 		Time = Epsilon
 	end
-	
+
 	return (damage + PetAmount), (damage + PetAmount) / Time
 end
 
-local DataModes = {}
+local DataModes = { }
 
 function DataModes:DamageReturner(data, num)
 	if not data or not data.Fights[Recount.db.profile.CurDataSet] then
@@ -326,7 +328,7 @@ function Recount:MergedPetHealingDPS(data, fight)
 			Time = PetTime
 		end
 	end
-	
+
 	local healing = data.Fights[fight].Healing or 0
 
 	if Recount.db.profile.MergeAbsorbs then
@@ -338,7 +340,7 @@ function Recount:MergedPetHealingDPS(data, fight)
 		PetAmount = 0
 		Time = Epsilon
 	end
-	
+
 	return (healing + PetAmount), (healing + PetAmount) / Time
 end
 
@@ -352,7 +354,7 @@ function DataModes:HealingReturner(data, num)
 		--return (data.Fights[Recount.db.profile.CurDataSet].Healing or 0), (data.Fights[Recount.db.profile.CurDataSet].Healing or 0)/((data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 0) + Epsilon)
 	end
 
-	return healing, {{data.Fights[Recount.db.profile.CurDataSet].Heals, L["'s Effective Healing"], DetailTitles.Heals},{data.Fights[Recount.db.profile.CurDataSet].HealedWho, " "..L["Healed Who"], DetailTitles.HealedWho}, {data.Fights[Recount.db.profile.CurDataSet].OverHeals, L["'s Overhealing"],DetailTitles.OverHeals}, {data.Fights[Recount.db.profile.CurDataSet].TimeHealing, L["'s Time Spent Healing"], DetailTitles.HealTime}}
+	return healing, {{data.Fights[Recount.db.profile.CurDataSet].Heals, L["'s Effective Healing"], DetailTitles.Heals}, {data.Fights[Recount.db.profile.CurDataSet].HealedWho, " "..L["Healed Who"], DetailTitles.HealedWho}, {data.Fights[Recount.db.profile.CurDataSet].OverHeals, L["'s Overhealing"], DetailTitles.OverHeals}, {data.Fights[Recount.db.profile.CurDataSet].TimeHealing, L["'s Time Spent Healing"], DetailTitles.HealTime}}
 end
 
 function DataModes:HealingTaken(data, num)
@@ -363,8 +365,7 @@ function DataModes:HealingTaken(data, num)
 		return (data.Fights[Recount.db.profile.CurDataSet].HealingTaken or 0)
 	end
 
-
-	return (data.Fights[Recount.db.profile.CurDataSet].HealingTaken or 0), {{data.Fights[Recount.db.profile.CurDataSet].WhoHealed," "..L["was Healed by"],DetailTitles.HealedWho}}
+	return (data.Fights[Recount.db.profile.CurDataSet].HealingTaken or 0), {{data.Fights[Recount.db.profile.CurDataSet].WhoHealed," "..L["was Healed by"], DetailTitles.HealedWho}}
 end
 
 function DataModes:OverhealingReturner(data, num)
@@ -372,13 +373,14 @@ function DataModes:OverhealingReturner(data, num)
 		return 0
 	end
 	local overhealing = data.Fights[Recount.db.profile.CurDataSet].Overhealing or 0
+	--local activetime = (data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 0) + Epsilon
+	--local hps = (math_floor(10 * overhealing / (activetime) + 0.5) / 10)
 	if num == 1 then
-		local OverhealPercent
-		OverhealPercent = (math_floor(1000 * overhealing / (overhealing + (data.Fights[Recount.db.profile.CurDataSet].Healing or 0) + Epsilon) + 0.5) / 10).."%"
+		local OverhealPercent = (math_floor(1000 * overhealing / (overhealing + (data.Fights[Recount.db.profile.CurDataSet].Healing or 0) + Epsilon) + 0.5) / 10).."%"
 		return overhealing, OverhealPercent
 	end
 
-	return overhealing, {{data.Fights[Recount.db.profile.CurDataSet].OverHeals, L["'s Overhealing"],DetailTitles.OverHeals}, {data.Fights[Recount.db.profile.CurDataSet].Heals, L["'s Effective Healing"],DetailTitles.Heals}, {data.Fights[Recount.db.profile.CurDataSet].HealedWho, " "..L["Healed Who"],DetailTitles.HealedWho}}
+	return overhealing, {{data.Fights[Recount.db.profile.CurDataSet].OverHeals, L["'s Overhealing"], DetailTitles.OverHeals}, {data.Fights[Recount.db.profile.CurDataSet].Heals, L["'s Effective Healing"], DetailTitles.Heals}, {data.Fights[Recount.db.profile.CurDataSet].HealedWho, " "..L["Healed Who"], DetailTitles.HealedWho}}
 end
 
 function DataModes:DeathReturner(data, num)
@@ -436,17 +438,17 @@ function DataModes:Absorbs(data, num)
 	end
 end
 
---Some code for table management from Ace2
+-- Some code for table management from Ace2
 local new, del
 do
-	local cache = setmetatable({}, {__mode='k'})
+	local cache = setmetatable({}, {__mode = "k"})
 	function new()
 		local t = next(cache)
 		if t then
 			cache[t] = nil
 			return t
 		else
-			return {}
+			return { }
 		end
 	end
 
@@ -481,7 +483,7 @@ function Recount:AddSortedTooltipData(title, data, num)
 				end
 				SortedData[i][1] = k
 				SortedData[i][2] = v.amount
-				
+
 				total = total + v.amount
 			end
 		end
@@ -502,15 +504,15 @@ function Recount:AddSortedTooltipData(title, data, num)
 				percent = 100
 			end
 			local name = SortedData[i][1]
-			GameTooltip:AddDoubleLine(i..". "..name, SortedData[i][2].." ("..percent.."%)", 1, 1, 1, 1, 1, 1)
+			GameTooltip:AddDoubleLine(i..". "..name, Recount:FormatLongNums(SortedData[i][2]).." ("..percent.."%)", 1, 1, 1, 1, 1, 1)
 		end
 	end
 
 	Recount:FreeTableRecurse(SortedData)
 end
 
---The various tooltip functions used for each of the main window data displays
-local TooltipFuncs = {}
+-- The various tooltip functions used for each of the main window data displays
+local TooltipFuncs = { }
 function TooltipFuncs:Damage(name, data)
 	if data then
 		local SortedData, total
@@ -526,13 +528,13 @@ function TooltipFuncs:Damage(name, data)
 				Damage = data.Pet[petindex] and dbCombatants[data.Pet[petindex]] and dbCombatants[data.Pet[petindex]] and dbCombatants[data.Pet[petindex]].Fights and dbCombatants[data.Pet[petindex]].Fights[Recount.db.profile.CurDataSet] and dbCombatants[data.Pet[petindex]].Fights[Recount.db.profile.CurDataSet].Damage
 				petindex = petindex - 1
 			end
-			
+
 			petindex = petindex + 1
 
 			if Damage and Damage ~= 0 then
 				Damage = Damage / (Damage + (data.Fights[Recount.db.profile.CurDataSet].Damage or 0))
 				GameTooltip:AddLine(" ")
-				GameTooltip:AddDoubleLine(L["Pet"]..":",data.Pet[petindex].." ("..math_floor(Damage * 100 + 0.5).."%)", nil, nil, nil, 1, 1, 1)
+				GameTooltip:AddDoubleLine(L["Pet"]..":", data.Pet[petindex].." ("..math_floor(Damage * 100 + 0.5).."%)", nil, nil, nil, 1, 1, 1)
 				Recount:AddSortedTooltipData(L["Top 3"].." "..L["Pet Damage Abilities"], dbCombatants[data.Pet[petindex] ].Fights and dbCombatants[data.Pet[petindex] ].Fights[Recount.db.profile.CurDataSet].Attacks, 3)
 				GameTooltip:AddLine("")
 				Recount:AddSortedTooltipData(L["Top 3"].." "..L["Pet Attacked"],dbCombatants[data.Pet[petindex] ].Fights and dbCombatants[data.Pet[petindex] ].Fights[Recount.db.profile.CurDataSet].DamagedWho, 3)
@@ -578,7 +580,7 @@ function TooltipFuncs:Healing(name, data)
 			end
 
 			petindex = petindex + 1
-			
+
 			if Healing and Healing ~= 0 then
 				Healing = Healing / (Healing + (data.Fights[Recount.db.profile.CurDataSet].Healing or 0))
 				GameTooltip:AddLine(" ")
@@ -596,7 +598,7 @@ function TooltipFuncs:HealingTaken(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Healed By"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].WhoHealed, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Healed By"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].WhoHealed, 3)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 
@@ -604,7 +606,7 @@ function TooltipFuncs:Overhealing(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Over Heals"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].OverHeals, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Over Heals"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].OverHeals, 3)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 
@@ -612,7 +614,7 @@ function TooltipFuncs:DOTs(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["DOTs"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].DOTs, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["DOTs"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].DOTs, 3)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 
@@ -620,7 +622,7 @@ function TooltipFuncs:HOTs(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["HOTs"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].HOTs, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["HOTs"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].HOTs, 3)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 
@@ -628,7 +630,7 @@ function TooltipFuncs:ActiveTime(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Attacked/Healed"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].TimeSpent, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Attacked/Healed"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].TimeSpent, 3)
 	local Heal, Damage
 	Heal = data and data.Fights[Recount.db.profile.CurDataSet].TimeHeal or 0
 	Damage = data and data.Fights[Recount.db.profile.CurDataSet].TimeDamage or 0
@@ -673,12 +675,131 @@ local MainWindowModes = {
 }
 
 function Recount:AddModeTooltip(lname, modefunc, toolfunc, ...)
-	tinsert(MainWindowModes, {lname, modefunc, toolfunc,...})
+	tinsert(MainWindowModes, {lname, modefunc, toolfunc, ...})
 	Recount:SetupMainWindow()
 end
 
 function Recount:SetupMainWindow()
 	if Recount.LoadMainWindowData then -- If we add modes early no need to inform the main window, it will get set up later.
+		if Recount.db.profile.Modules.HealingTaken then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Healing Taken"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["Healing Taken"], DataModes.HealingTaken, TooltipFuncs.HealingTaken, nil, {"HEALINGTAKEN", L["'s HTPS"]}, nil, "HealingTaken"})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Healing Taken"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		if Recount.db.profile.Modules.OverhealingDone then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Overhealing Done"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["Overhealing Done"], DataModes.OverhealingReturner, TooltipFuncs.Overhealing})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Overhealing Done"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		if Recount.db.profile.Modules.Deaths then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Deaths"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["Deaths"], DataModes.DeathReturner, TooltipFuncs.DeathCounts})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Deaths"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		if Recount.db.profile.Modules.DOTUptime then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["DOT Uptime"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["DOT Uptime"], DataModes.DOTReturner, TooltipFuncs.DOTs, nil, nil, nil, nil})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["DOT Uptime"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		if Recount.db.profile.Modules.HOTUptime then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["HOT Uptime"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["HOT Uptime"], DataModes.HOTReturner, TooltipFuncs.HOTs, nil, nil, nil, nil})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["HOT Uptime"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		if Recount.db.profile.Modules.Activity then
+			local found
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Activity"] then
+					found = true
+					break
+				end
+			end
+			if not found then
+				tinsert(MainWindowModes, {L["Activity"], DataModes.ActiveTime, TooltipFuncs.ActiveTime, nil, nil, nil, nil})
+			end
+		else
+			for k, v in pairs(MainWindowModes) do
+				if MainWindowModes[k][1] == L["Activity"] then
+					MainWindowModes[k] = nil
+				end
+			end
+		end
+		for i = 1, #MainWindowModes do
+			if MainWindowModes[i] == nil then
+				local x = i + 1
+				for k = x, #MainWindowModes do
+					MainWindowModes[k - 1] = MainWindowModes[k]
+					if k == #MainWindowModes then
+						MainWindowModes[k] = nil
+					end
+				end
+			end
+		end
 		Recount:LoadMainWindowData(MainWindowModes)
 	end
 end

@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreSettings.lua 5518 2014-11-06 11:35:20Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreSettings.lua 5709 2017-02-16 16:40:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -75,6 +75,7 @@ Usage:
 
 ]]
 if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CoreSettings")
 local coremodule, internal = AucAdvanced.GetCoreModule("CoreSettings")
 if not coremodule or not internal then return end -- Someone has explicitely broken us
 
@@ -147,10 +148,12 @@ local settingDefaults = {
 	["core.scan.sellernamedelay"] = false,
 	["core.scan.unresolvedtolerance"] = 0,
 	["core.scan.scanallqueries"] = true,
-	["core.scan.hybridscans"] = false,
-	["core.scan.scannerthrottle"] = false,
+	["core.scan.fillduringscan"] = false,
+	["core.scan.scannerthrottle"] = Const.ALEVEL_MIN,
+	["core.scan.stage1throttle"] = Const.ALEVEL_OFF,
 	["core.scan.stage3garbage"] = Const.ALEVEL_OFF,
 	["core.scan.stage5garbage"] = false,
+	["core.scan.keepinfocacheonclose"] = false,
 	["core.tooltip.altchatlink_leftclick"] = false,
 	["core.tooltip.enableincombat"] = false,
 	["core.tooltip.depositcost"] = true,
@@ -158,13 +161,7 @@ local settingDefaults = {
 }
 
 local function getDefault(setting)
-	local a,b,c = strsplit(".", setting)
-
-	-- basic settings
-	if (a == "show") then return true end
-	if (b == "enable") then return true end
-
-	--If settings is a function reference, call it.
+	-- If setting is a function reference, call it.
 	-- This was added to enable Protect Window to update its
 	-- status without a UI reload by calling a function rather
 	-- than a setting in the Control definition.
@@ -173,21 +170,18 @@ local function getDefault(setting)
 	end
 
 	-- lookup the simple settings
-	local result = settingDefaults[setting];
-
-	return result
+	return settingDefaults[setting]
 end
 
 function lib.GetDefault(setting)
-	local val = getDefault(setting);
-	return val;
+	return getDefault(setting)
 end
 
 function lib.SetDefault(setting, default)
 	settingDefaults[setting] = default
 end
 
-local function setter(setting, value)
+local function setter(setting, value, silent)
 	-- turn value into a canonical true or false
 	if value == 'on' then
 		value = true
@@ -199,6 +193,7 @@ local function setter(setting, value)
 	-- This was added to enable Protect Window to update its
 	-- status without a UI reload by calling a function rather
 	-- than a setting in the Control definition.
+	-- setting function is responsible for issuing any appropriate "configchanged" processor message
 	if type(setting)=="function" then
 		return setting("set", value)
 	end
@@ -362,11 +357,17 @@ local function setter(setting, value)
 		lib.SetSetting("SelectedLocale", value)
 	end
 
+	if silent then
+		-- caller has specified that "configchanged" should not be sent - should only be used in exceptional circumstances
+		-- where a "configchanged" message might cause a conflict, e.g. from within the caller's configchanged handler!
+		-- where the setting is an obsolete setting being deleted
+		return
+	end
 	if not c then
 		c = setting
 		b = "flat"
 	end
-	AucAdvanced.SendProcessorMessage("configchanged", setting, callbackValue, c, b)
+	AucAdvanced.SendProcessorMessage("configchanged", setting, callbackValue, c, b, a)
 end
 
 function lib.SetSetting(...)
@@ -378,7 +379,6 @@ end
 
 
 local function getter(setting)
-
 	--Is the setting actually a function reference? If so, call it.
 	-- This was added to enable Protect Window to update its
 	-- status without a UI reload by calling a function rather
@@ -594,16 +594,21 @@ function private._MakeGuiConfig() -- Name mangled to block gui creation at first
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ScanAllQueries')) --Enable to perform scanning of every Auctionhouse search. Disable to only scan Auctioneer's own searches.\nYou may need to disable this option if you have compatibility problems with other AddOns
 
 	gui:AddControl(id, "Subhead", 0, "Experimental Settings (consult the forums before using these)")
-	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.scannerthrottle", "Scanner stage: Throttle during fast scans")
+	gui:AddControl(id, "Selectbox",  0, 1, AucAdvanced.selectorActivityLevelB, "core.scan.scannerthrottle", 80, "Scanner stage: Throttle during fast scans")
 	gui:AddTip(id, "Slow down the Scanning stage during Getall scans. May help avoid disconnects during this stage. May result in missed auctions and incomplete scans")
+	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.fillduringscan", "Scanner stage: Read extra item data early")
+	gui:AddTip(id, "Perform additional data gathering during the Scanning stage. This item data will otherwise be gathered during Processing Stage 1. This option may speed up overall scanning. Alternatively it may cause system freezes.")
 
+	gui:AddControl(id, "Selectbox",  0, 1, AucAdvanced.selectorActivityLevelA, "core.scan.stage1throttle", 80, "Processing Stage 1: Throttle processing speed")
+	gui:AddTip(id, "Throttle the speed of Stage 1 Processing. Applying this setting may help if you get disconnects during Stage 1")
 	gui:AddControl(id, "Selectbox",  0, 1, AucAdvanced.selectorActivityLevelA, "core.scan.stage3garbage", 80, "Processing Stage 3: Extra memory cleanup")
 	gui:AddTip(id, "Perform extra memory cleanup during Processing Stage 3. Will cause momentary freezes, and will cause Processing to take longer")
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.stage5garbage", "Processing Finished: Extra memory cleanup")
 	gui:AddTip(id, "Perform extra memory cleanup when scan processing finishes. Will cause a momentary freeze at the end of every scan")
+	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.keepinfocacheonclose", "Keep data in Item Info cache when AuctionHouse closed")
+	gui:AddTip(id, "Auctioneer Scanner stores some item data to help reduce the number of server calls it makes. Normally this is cleared when the AuctionHouse is closed, to free up some memory. Enabling this option retains the data until the end of the session.")
 
-	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.hybridscans", _TRANS("ADV_Interface_HybridScanning")) --Enable Hybrid scanning for very large Auction Houses
-	gui:AddTip(id, _TRANS("ADV_HelpTooltip_HybridScanning")) --For very large Auction Houses, a GetAll scan will not be able to retrieve all the auctions. A Hybrid scan will start Normal scanning to retrive the auctions missed by the GetAll
+
 
 	gui:AddHelp(id, "why show summation",
 		_TRANS('ADV_Help_WhyShowSummation'), --"What is the post scan summary?",
@@ -767,30 +772,37 @@ end
 function private.CheckObsolete()
 	-- clean up obsolete setting(s)
 	if getter("matcherdynamiclist") then
-		setter("matcherdynamiclist", nil)
+		setter("matcherdynamiclist", nil, true)
 	end
 	if getter("alwaysHomeFaction") then
-		setter("alwaysHomeFaction", nil)
+		setter("alwaysHomeFaction", nil, true)
 	end
 	if getter("core.general.alwaysHomeFaction") then
-		setter("core.general.alwaysHomeFaction", nil)
+		setter("core.general.alwaysHomeFaction", nil, true)
+	end
+	if getter("core.scan.scannerthrottle") == true then
+		setter("core.scan.scannerthrottle", Const.ALEVEL_MED, true)
+	end
+	if getter("core.scan.hybridscans") then
+		setter("core.scan.hybridscans", nil, true)
 	end
 
 	local old
 	local old = getter("matcherlist")
 	if old then
 		if not getter("core.matcher.matcherlist") then
-			setter("core.matcher.matcherlist", old)
+			setter("core.matcher.matcherlist", old, true)
 		end
-		setter("matcherlist", nil)
+		setter("matcherlist", nil, true)
 	end
 	old = getter("marketvalue.accuracy")
 	if old then
 		if getter("core.marketvalue.tolerance") == getDefault("core.marketvalue.tolerance") then
-			setter("core.marketvalue.tolerance", old)
+			setter("core.marketvalue.tolerance", old, true)
 		end
-		setter("marketvalue.accuracy", nil)
+		setter("marketvalue.accuracy", nil, true)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5518 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5709 $")
+AucAdvanced.CoreFileCheckOut("CoreSettings")

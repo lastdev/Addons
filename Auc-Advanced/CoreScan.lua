@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreScan.lua 5518 2014-11-06 11:35:20Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreScan.lua 5709 2017-02-16 16:40:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -137,26 +137,27 @@
 					otherwise mark unseen in AH Scan image.
 ]]
 local _G = _G
-
-if not _G.AucAdvanced then return end
-local coremodule, internal = _G.AucAdvanced.GetCoreModule("CoreScan")
+local AucAdvanced = AucAdvanced
+if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CoreScan")
+local coremodule, internal = AucAdvanced.GetCoreModule("CoreScan")
 if not coremodule or not internal then return end -- Someone has explicitely broken us
 
-if (not _G.AucAdvanced.Scan) then _G.AucAdvanced.Scan = {} end
+if (not AucAdvanced.Scan) then AucAdvanced.Scan = {} end
 
 local SCANDATA_VERSION = "A" -- must match Auc-ScanData INTERFACE_VERSION
 
 local TOLERANCE_LOWERLIMIT = 50
 local TOLERANCE_TAPERLIMIT = 10000
 
-local lib = _G.AucAdvanced.Scan
+local lib = AucAdvanced.Scan
 local private = {}
 
-local Const = _G.AucAdvanced.Const
+local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
-local _print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = _G.AucAdvanced.GetModuleLocals()
-local GetFaction = _G.AucAdvanced.GetFaction
-local EquipCodeToInvIndex = _G.AucAdvanced.Const.EquipCodeToInvIndex
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+local EquipCodeToInvType = AucAdvanced.Const.AC_EquipCode2InvTypeID
 
 local table, tinsert, tremove, gsub, string, coroutine, pcall, time = _G.table, _G.tinsert, _G.tremove, _G.gsub, _G.string, _G.coroutine, _G.pcall, _G.time
 local ceil, math, mod, floor = _G.ceil, _G.math, _G.mod, _G.floor
@@ -169,6 +170,14 @@ local GetTime = GetTime
 
 private.isScanning = false
 private.auctionItemListUpdated = false
+
+-- Only the following entries in a valid itemdata table are permitted to be nil or false
+local ItemDataAllowedNil = {
+	[Const.IEQUIP] = true,
+	[Const.AMHIGH] = true,
+	[Const.CANUSE] = true,
+	[Const.DEP2] = true,
+}
 
 function private.LoadScanData()
 	if not private.loadingScanData then
@@ -201,7 +210,7 @@ function private.LoadScanData()
 	end
 	if private.loadingScanData == "loading" then
 		local ready, version
-		local scanmodule = _G.AucAdvanced.Modules.Util.ScanData
+		local scanmodule = AucAdvanced.Modules.Util.ScanData
 		if scanmodule and scanmodule.GetAddOnInfo then
 			ready, version = scanmodule.GetAddOnInfo()
 		end
@@ -221,20 +230,18 @@ function private.LoadScanData()
 	end
 	if private.loadingScanData == "fallback" then
 		-- cannot load Auc-ScanData, go to fallback image handler
-		local fallbackscandata = {}
+		-- we only support 'home' serverKey
+		local scandata = {image = {}, scanstats = {ImageUpdated = time()}}
 		private.GetScanData = function(serverKey)
-			local scandata = fallbackscandata[serverKey]
-			if scandata then return scandata end
-			local test = _G.AucAdvanced.SplitServerKey(serverKey)
-			if not test then return end
-			scandata = {image = {}, scanstats = {ImageUpdated = time()}}
-			fallbackscandata[serverKey] = scandata
-			return scandata
+			serverKey = ResolveServerKey(serverKey)
+			if serverKey == Resources.ServerKey then
+				return scandata
+			end
 		end
 		-- fallback message
 		local text = format(_TRANS("ADV_Interface_ScanDataNotLoaded"), private.FallbackScanData) --The Auc-ScanData storage module could not be loaded: %s
 		if get("core.scan.disable_scandatawarning") then
-			_print("|cffff7f3f"..text.."|r")
+			aucPrint("|cffff7f3f"..text.."|r")
 		else
 			message(text)
 		end
@@ -251,9 +258,10 @@ function lib.LoadScanData()
 end
 
 -- scandataTable = private.GetScanData(serverKey)
--- parameter: serverKey (required)
+-- parameter: serverKey (defaults to home serverKey)
 -- returns: scandataTable = {image = imageTable, scanstats = scanstatsTable} for the specified serverKey
--- returns: nil if there is no data for serverKey (or if serverKey is invalid)
+--     scandataTable should only be modified for home serverKey
+-- returns: nil if there is no data for serverKey or if serverKey is invalid; home serverKey will always return a scandataTable
 -- CAUTION: the following is a stub function, which will be overloaded with the real function by LoadScanData
 function private.GetScanData(serverKey)
 	if private.LoadScanData then
@@ -264,23 +272,22 @@ function private.GetScanData(serverKey)
 	end
 end
 
--- _G.AucAdvanced.Scan.ClearScanData(serverKey)
--- _G.AucAdvanced.Scan.ClearScanData(realmName)
--- _G.AucAdvanced.Scan.ClearScanData("SERVER") -- all data for current server
--- _G.AucAdvanced.Scan.ClearScanData("FACTION") -- data for current faction (as determined by _G.AucAdvanced.GetFaction())
--- _G.AucAdvanced.Scan.ClearScanData("ALL")
+-- AucAdvanced.Scan.ClearScanData(serverKey)
+-- AucAdvanced.Scan.ClearScanData(realmName)
+-- AucAdvanced.Scan.ClearScanData("SERVER") -- all data for current server (default)
+-- AucAdvanced.Scan.ClearScanData("ALL")
 -- CAUTION: the following is a stub function, which will be overloaded with the real function by LoadScanData
 function lib.ClearScanData(key)
-	_print(_TRANS("ADV_Interface_ScanDataNotCleared")) --Scan Data cannot be cleared because {{Auc-ScanData}} is not loaded
+	aucPrint(_TRANS("ADV_Interface_ScanDataNotCleared")) --Scan Data cannot be cleared because {{Auc-ScanData}} is not loaded
 end
 
-function lib.StartPushedScan(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch, options)
-	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch = private.QueryScrubParameters(
-		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+function lib.StartPushedScan(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData, options) -- ### Legion : revised, check
+	name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData = private.QueryScrubParameters(
+		name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 
 	if private.scanStack then
 		for _, scan in ipairs(private.scanStack) do
-			if not scan[8] and private.QueryCompareParameters(scan[3], name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch) then
+			if not scan[8] and private.QueryCompareParameters(scan[3], name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData) then
 				-- duplicate of exisiting queued query
 				if (_G.nLog) then
 					_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, "Duplicate pushed scan detected, cancelling duplicate")
@@ -292,7 +299,7 @@ function lib.StartPushedScan(name, minLevel, maxLevel, invTypeIndex, classIndex,
 		private.scanStack = {}
 	end
 
-	local query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+	local query = private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	query.qryinfo.pushed = true
 
 	local NoSummary
@@ -315,14 +322,14 @@ end
 function lib.PushScan()
 	if private.isGetAll then
 		-- A GetAll scan cannot be Popped; do not allow it to be Pushed
-		_print("Warning: Scan cannot be Pushed because it is a GetAll scan")
+		aucPrint("Warning: Scan cannot be Pushed because it is a GetAll scan")
 		return
 	end
 	if private.isScanning then
 		if (_G.nLog) then
 			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Scan %d (%s) Paused, next page to scan is %d"):format(private.curQuery.qryinfo.id, private.curQuery.qryinfo.sig, private.curQuery.qryinfo.page+1))
 		end
-		-- _print(("Pausing current scan at page {{%d}}."):format(private.curQuery.qryinfo.page+1))
+		-- aucPrint(("Pausing current scan at page {{%d}}."):format(private.curQuery.qryinfo.page+1))
 		if not private.scanStack then private.scanStack = {} end
 		private.StopStorePage()
 		tinsert(private.scanStack, {
@@ -368,7 +375,7 @@ function lib.PopScan()
 		local elapsed = pauseTime and (now - pauseTime) or 0
 		if elapsed > 300 then
 			-- 5 minutes old
-			--_print("Paused scan is older than 5 minutes, commiting what we have and aborting")
+			--aucPrint("Paused scan is older than 5 minutes, commiting what we have and aborting")
 			if (_G.nLog) then
 				_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, ("Scan %d Too Old, committing what we have and aborting"):format(private.curQuery.qryinfo.id))
 			end
@@ -380,7 +387,7 @@ function lib.PopScan()
 		if (_G.nLog) then
 			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Scan %d Resumed, next page to scan is %d"):format(private.curQuery.qryinfo.id, private.curQuery.qryinfo.page+1))
 		end
-		--_print(("Resuming paused scan at page {{%d}}..."):format(private.curQuery.qryinfo.page+1))
+		--aucPrint(("Resuming paused scan at page {{%d}}..."):format(private.curQuery.qryinfo.page+1))
 		private.isScanning = true
 		private.sentQuery = false
 		private.ScanPage(private.curQuery.qryinfo.page+1)
@@ -390,17 +397,17 @@ end
 
 --[[This function is now in core API]]
 function lib.ProgressBars(name, value, show, text, options)
-	_G.AucAdvanced.API.ProgressBars(name, value, show, text, options)
+	AucAdvanced.API.ProgressBars(name, value, show, text, options)
 end
 
-function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, exactMatch, options)
-	if _G.AuctionFrame and _G.AuctionFrame:IsVisible() then
+function lib.StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, GetAll, exactMatch, filterData, options) -- ### Legion : revised, check
+	if AuctionFrame and AuctionFrame:IsVisible() then
 		if private.isPaused then
-			_G.message("Scanning is currently paused")
+			message("Scanning is currently paused")
 			return
 		end
 		if private.isScanning then
-			_G.message("Scan is currently in progress")
+			message("Scan is currently in progress")
 			return
 		end
 		local CanQuery, CanQueryAll = CanSendAuctionQuery()
@@ -416,22 +423,22 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 						text = text.." You must wait "..minleft..":"..secleft.." until you can scan again."
 					end
 				end
-				_G.message(text)
+				message(text)
 				return
 			end
 
-			_G.AucAdvanced.API.BlockUpdate(true, false)
+			AucAdvanced.API.BlockUpdate(true, false)
 			BrowseSearchButton:Hide()
-			lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scanning")
+			lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scan waiting for Server")
 			private.isGetAll = true -- indicates that certain functions must take special action, and that the above changes need to be undone
 
 			private.LastGetAll = now
 		else
 			if not CanQuery then
 				private.queueScan = {
-					name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, exactMatch, options
+					name, minUseLevel, maxUseLevel, isUsable, qualityIndex, GetAll, exactMatch, filterData, options
 				}
-				private.queueScanParams = 11 -- must match the number of entries we put into the table, including nils. Used when unpacking
+				private.queueScanParams = 9 -- must match the number of entries we put into the table, including nils. Used when unpacking
 				return
 			end
 		end
@@ -453,21 +460,20 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 
 		lib.SetAuctioneerQuery() -- flag the following query as coming from Auctioneer
 		SortAuctionClearSort("list")
-		QueryAuctionItems(name or "", minUseLevel or "", maxUseLevel or "",
-				invTypeIndex, classIndex, subclassIndex, startPage, isUsable, qualityIndex, GetAll, exactMatch)
+		QueryAuctionItems(name, minUseLevel, maxUseLevel, startPage, isUsable, qualityIndex, GetAll, exactMatch, filterData)
 		if not private.curQuery then
 			-- private.curQuery will have been set if QueryAuctionItems succeeded
 			-- this should never fail? we checked CanSendAuctionQuery() earlier
-			_G.message("Scan failed: unable to send query")
+			message("Scan failed: unable to send query")
 			if private.isGetAll then
 				lib.ProgressBars("GetAllProgressBar", nil, false)
 				BrowseSearchButton:Show()
-				_G.AucAdvanced.API.BlockUpdate(false)
+				AucAdvanced.API.BlockUpdate(false)
 				private.isGetAll = nil
 			end
 			return
 		end
-		_G.AuctionFrameBrowse.page = startPage
+		AuctionFrameBrowse.page = startPage
 		private.curQuery.qryinfo.nosummary = NoSummary
 		if GetAll then
 			private.curQuery.qryinfo.getall = true
@@ -476,12 +482,12 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 		--Show the progress indicator
 		private.UpdateScanProgress(true, nil, nil, nil, nil, nil, private.curQuery)
 	else
-		_G.message("Steady on; You'll need to talk to the auctioneer first!")
+		message("Steady on; You'll need to talk to the auctioneer first!")
 	end
 end
 
 function lib.IsScanning()
-	return private.isScanning or (private.queueScan ~= nil)
+	return (private.isScanning or private.queueScan ~= nil), private.isGetAll
 end
 
 function lib.IsPaused()
@@ -493,14 +499,15 @@ function private.Unpack(item, storage)
 	storage.link = item[Const.LINK]
 	storage.useLevel = item[Const.ULEVEL]
 	storage.itemLevel = item[Const.ILEVEL]
-	storage.itemType = item[Const.ITYPE]
-	storage.subType = item[Const.ISUB]
+	storage.itemType = item[Const.ITYPE] -- deprecated ### Legion: todo: find all instances where this is used
+	storage.classID = item[Const.CLASSID]
+	storage.subType = item[Const.ISUB] -- deprecated
+	storage.subClassID = item[Const.SUBCLASSID]
 	storage.equipPos = item[Const.IEQUIP]
 	storage.price = item[Const.PRICE]
 	storage.timeLeft = item[Const.TLEFT]
 	storage.seenTime = item[Const.TIME]
 	storage.itemName = item[Const.NAME]
-	storage.texture = item[Const.TEXTURE]
 	storage.stackSize = item[Const.COUNT]
 	storage.quality = item[Const.QUALITY]
 	storage.canUse = item[Const.CANUSE]
@@ -512,6 +519,7 @@ function private.Unpack(item, storage)
 	storage.amBidder = item[Const.AMHIGH]
 	storage.dataFlag = item[Const.FLAG]
 	storage.itemId = item[Const.ITEMID]
+	storage.bonusString = item[Const.BONUSES]
 	storage.itemSuffix = item[Const.SUFFIX]
 	storage.itemFactor = item[Const.FACTOR]
 	storage.itemEnchant = item[Const.ENCHANT]
@@ -532,7 +540,7 @@ function private.UpdateScanProgress(state, totalAuctions, scannedAuctions, elaps
 		end
 		local scanCount = 0
 		if (private.scanStack) then scanCount=#private.scanStack end
-		_G.AucAdvanced.SendProcessorMessage("scanprogress", state, totalAuctions, scannedAuctions, elapsedTime, page, maxPages, query, scanCount)
+		AucAdvanced.SendProcessorMessage("scanprogress", state, totalAuctions, scannedAuctions, elapsedTime, page, maxPages, query, scanCount)
 	end
 end
 
@@ -593,6 +601,7 @@ local function processBeginEndStats(processors, operation, querySizeInfo, Tempcu
 			local f = x.Func
 			local pOK, errormsg = pcall(f, operation, querySizeInfo, TempcurScanStats)
 			if (not pOK) then
+				collectgarbage() -- ### trial to see if this helps recover from Memory Allocation Errors
 				local text = ("Error trapped for ScanProcessor '%s' in module %s:\n%s"):format(operation, x.Name, errormsg)
 				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
 				geterrorhandler()(text)
@@ -628,6 +637,7 @@ local function processStats(processors, operation, curItem, oldItem)
 					break
 				end
 			else
+				collectgarbage() -- ### trial to see if this helps recover from Memory Allocation Errors
 				local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
 				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
 				geterrorhandler()(text)
@@ -648,6 +658,7 @@ local function processStats(processors, operation, curItem, oldItem)
 			local f = x.Func
 			local pOK, errormsg = pcall(f, operation, statItem, oldItem and statItemOld or nil)
 			if (not pOK) then
+				collectgarbage() -- ### trial to see if this helps recover from Memory Allocation Errors
 				local text = ("Error trapped for ScanProcessor '%s' in module %s:\n%s"):format(operation, x.Name, errormsg)
 				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
 				geterrorhandler()(text)
@@ -657,20 +668,49 @@ local function processStats(processors, operation, curItem, oldItem)
 	return true
 end
 
+
+function private.IsInFilter(filterData, data)
+	-- To find a match, we need to check that data matches any one filter in filterData
+	-- (at least, that's my understanding of how it works)
+	local classID, subClassID, inventoryType = data[Const.CLASSID], data[Const.SUBCLASSID], EquipCodeToInvType[data[Const.IEQUIP]] -- must convert iEquip code to inventoryType for comparison
+	for _, filter in ipairs(filterData) do
+		if filter.classID == classID then
+			if filter.subClassID then
+				if filter.subClassID == subClassID then
+					if not filter.inventoryType or filter.inventoryType == inventoryType then
+						-- classID and subClassID both match, and
+						-- either there is no inventoryType in the filter or inventoryType matches
+						return true
+					end
+				end
+			else
+				-- classID matches, no subClassID in filter, so data does match this filter
+				return true
+			end
+		end
+	end
+end
+
 function private.IsInQuery(curQuery, data)
-	if 	(not curQuery.class or curQuery.class == data[Const.ITYPE])
-			and (not curQuery.subclass or (curQuery.subclass == data[Const.ISUB]))
-			and (not curQuery.minUseLevel or (data[Const.ULEVEL] >= curQuery.minUseLevel))
-			and (not curQuery.maxUseLevel or (data[Const.ULEVEL] <= curQuery.maxUseLevel))
-			and (not curQuery.isUsable or (private.CanUse(data[Const.LINK])))
-			and (not curQuery.invType or (EquipCodeToInvIndex[data[Const.IEQUIP]] == curQuery.invType)) -- must convert iEquip code to invTypeIndex for comparison
-			and (not curQuery.quality or (data[Const.QUALITY] >= curQuery.quality))
-			then
+	if (not curQuery.minUseLevel or (data[Const.ULEVEL] >= curQuery.minUseLevel))
+		and (not curQuery.maxUseLevel or (data[Const.ULEVEL] <= curQuery.maxUseLevel))
+		and (not curQuery.isUsable or (private.CanUse(data[Const.LINK])))
+		then
+		if curQuery.quality then
+			local q = data[Const.QUALITY]
+			-- special handling as GetAuctionItemInfo sometimes returns invalid quality of -1
+			if q >= 0 and q < curQuery.quality then
+				return false
+			end
+		end
 		if curQuery.name then
 			local dataname = data[Const.NAME]:lower() -- case insensitive; curQuery.name is already lowercased
 			if dataname ~= curQuery.name and (curQuery.exactMatch or not dataname:find(curQuery.name, 1, true)) then
 				return false
 			end
+		end
+		if curQuery.filterData and not private.IsInFilter(curQuery.filterData, data) then
+			return false
 		end
 		return true
 	end
@@ -678,7 +718,7 @@ function private.IsInQuery(curQuery, data)
 end
 
 function lib.GetScanStats(serverKey)
-	local scandata = private.GetScanData(serverKey or GetFaction())
+	local scandata = private.GetScanData(serverKey)
 	if scandata then
 		return scandata.scanstats
 	end
@@ -686,7 +726,7 @@ end
 
 function lib.GetImageCopy(serverKey)
 	-- Create a fully independent copy of the image - intended for use by coroutines
-	local scandata = private.GetScanData(serverKey or GetFaction())
+	local scandata = private.GetScanData(serverKey)
 	if scandata then
 		local image = scandata.image
 		local size = Const.LASTENTRY
@@ -699,7 +739,7 @@ function lib.GetImageCopy(serverKey)
 end
 
 function lib.GetImageSize(serverKey)
-	local scandata = private.GetScanData(serverKey or GetFaction())
+	local scandata = private.GetScanData(serverKey)
 	if scandata then
 		return #scandata.image
 	end
@@ -707,7 +747,7 @@ end
 
 function lib.GetImageItem(index, serverKey, reserved)
 	-- reserved flag for possible future expansion
-	local scandata = private.GetScanData(serverKey or GetFaction())
+	local scandata = private.GetScanData(serverKey)
 	if scandata then
 		local item = scandata.image[index]
 		if item then return {unpack(item, 1, Const.LASTENTRY)} end
@@ -721,20 +761,9 @@ private.prevQuery = {}
 -- private.prevQueryServerKey is nil initially
 
 function private.clearImageCaches(event, scanstats)
-	if event == "factionselect" then
-		-- if cache for home serverKey exists at this point it is a weak table - just dump the cache and let it rebuild
-		private.scandataIndex[Resources.ServerKeyHome] = nil
-	else
-		local serverKey = scanstats and scanstats.serverKey
-		if serverKey then
-			local cache = private.scandataIndex[serverKey]
-			if cache then
-				wipe(cache)
-			end
-		else -- no serverKey provided: affects multiple serverKeys (or unknown source), dump all caches
-			wipe(private.scandataIndex)
-		end
-	end
+	-- todo: different actions based on event & scanstats have been removed for now,
+	-- until new-style serverKey is fully implemented
+	wipe(private.scandataIndex)
 
 	private.prevQueryServerKey = nil
 	private.queryResults = nil -- not required but frees some memory
@@ -742,18 +771,14 @@ end
 
 local weaktablemeta = {__mode="kv"}
 function private.SubImageCache(itemId, serverKey)
+	local itemResults
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
 	local indexResults = private.scandataIndex[serverKey]
-	if not indexResults then
-		if not _G.AucAdvanced.SplitServerKey(serverKey) then return end -- valid serverKey format?
-		indexResults = {}
-		if serverKey ~= Resources.ServerKeyHome and serverKey ~= Resources.ServerKeyNeutral then
-			-- use weak tables for other serverKeys
-			indexResults = setmetatable(indexResults, weaktablemeta)
-		end
-		private.scandataIndex[serverKey] = indexResults
+	if indexResults then
+		itemResults = indexResults[itemId]
 	end
 
-	local itemResults = indexResults[itemId]
 	if not itemResults then
 		local scandata = private.GetScanData(serverKey)
 		if not scandata then return end
@@ -763,6 +788,14 @@ function private.SubImageCache(itemId, serverKey)
 				tinsert(itemResults, data)
 			end
 		end
+		if not indexResults then
+			indexResults = {}
+			if serverKey ~= Resources.ServerKey then
+				-- use weak table if not 'home' serverKey
+				indexResults = setmetatable(indexResults, weaktablemeta)
+			end
+			private.scandataIndex[serverKey] = indexResults
+		end
 		indexResults[itemId] = itemResults
 	end
 
@@ -770,7 +803,7 @@ function private.SubImageCache(itemId, serverKey)
 end
 
 function lib.QueryImage(query, serverKey, reserved, ...)
-	serverKey = serverKey or GetFaction()
+	serverKey = serverKey or Resources.ServerKey
 	local prevQuery = private.prevQuery
 	local queryResults = private.queryResults
 
@@ -808,7 +841,7 @@ function lib.QueryImage(query, serverKey, reserved, ...)
 	local stringSpeciesID
 	if query.speciesID then
 		-- looking for a battlepet
-		-- we will need to split the link for each data item, resulting in a _string contaning the speciesID_
+		-- we will need to split the link for each data item, resulting in a _string containing the speciesID_
 		-- make sure the test value is also a string
 		stringSpeciesID = tostring(query.speciesID)
 		-- also, all battlepets have the same itemId
@@ -861,7 +894,7 @@ function lib.QueryImage(query, serverKey, reserved, ...)
 			if query.maxUseLevel and data[Const.ULEVEL] > query.maxUseLevel then break end
 			if query.minItemLevel and data[Const.ILEVEL] < query.minItemLevel then break end
 			if query.maxItemLevel and data[Const.ILEVEL] > query.maxItemLevel then break end
-			if query.class and data[Const.ITYPE] ~= query.class then break end
+			if query.class and data[Const.ITYPE] ~= query.class then break end -- ### Legion todo: revise for CLASSID
 			if query.subclass and data[Const.ISUB] ~= query.subclass then break end
 			if query.quality and data[Const.QUALITY] ~= query.quality then break end
 			if query.invType and data[Const.IEQUIP] ~= query.invType then break end
@@ -946,123 +979,203 @@ local Commitfunction = function()
 		wasIncomplete = true -- always treat as incomplete
 	end
 
-
-	local serverKey = TempcurQuery.qryinfo.serverKey or GetFaction()
+	local serverKey = Resources.ServerKey
 	local scandata = private.GetScanData(serverKey)
 	assert(scandata, "Critical error: scandata does not exist for serverKey "..serverKey)
 	local now = time()
 	if get("scancommit.progressbar") then
 		lib.ProgressBars("CommitProgressBar", 0, true)
 	end
-	local unresolvedCount = 0
 	local hadGetError = false
 	local oldCount = #scandata.image
 	local scanCount = #TempcurScan
 
 	local progresscounter = 0
-	local progresstotal = 3*oldCount + 6*scanCount
+	local progresstotal = 3*oldCount + 7*scanCount
+	if progresstotal == 0 then progresstotal = 1 end -- dummy value to avoid potential div0. ### this needs a better solution
 
-	local filterDeleteCount,filterOldCount, filterNewCount, updateCount, sameCount, newCount, updateRecoveredCount, sameRecoveredCount, missedCount, earlyDeleteCount, expiredDeleteCount = 0,0,0,0,0,0,0,0,0,0,0
+	local filterOldCount, filterNewCount, updateCount, sameCount, newCount, updateRecoveredCount, sameRecoveredCount, missedCount = 0,0,0,0, 0,0,0,0
+	local unresolvedCount = 0
+	local dirtyCount, undirtyCount, expiredCount, corruptCount, matchedCount = 0, 0, 0, 0, 0
+	local filterDeleteCount, earlyDeleteCount, expiredDeleteCount, corruptDeleteCount = 0, 0, 0, 0
 
-
-	--[[ *** Stage 1 : pre-process the new scan ]]--
-	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
-	coroutine.yield() -- yield here to allow the bar to display, and help the frame rate a little
-	nextPause = debugprofilestop() + processingTime
-	local pos=#TempcurScan
-	while (pos > 0) do
-		if debugprofilestop() > nextPause then
-			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
-			coroutine.yield()
-			nextPause = debugprofilestop() + processingTime
+	do --[[ *** Stage 1 : pre-process the new scan ]]--
+		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
+		coroutine.yield() -- yield here to allow the bar to display, and help the frame rate a little
+		local breakinterval, timeadjust
+		local itemcachedelay -- ### Legion item cache patch
+		local stage1throttle = get("core.scan.stage1throttle")
+		if stage1throttle >= Const.ALEVEL_HI then
+			breakinterval, timeadjust = 500, 0.1
+			itemcachedelay = 5 -- ### Legion item cache patch
+		elseif stage1throttle >= Const.ALEVEL_MED then
+			breakinterval, timeadjust = 2000, 0.4
+			itemcachedelay = 4 -- ### Legion item cache patch
+		elseif stage1throttle >= Const.ALEVEL_LOW then
+			breakinterval, timeadjust = 5000, 1
+			itemcachedelay = 3 -- ### Legion item cache patch
+		else -- OFF
+			breakinterval, timeadjust = nil, 1
+			itemcachedelay = 2 -- ### Legion item cache patch
 		end
+		local breakcount = 0
+		local doYield = false
+		local battlepetYield = true
+		local firstfailureYield = true
+		local retries = {}
+		nextPause = debugprofilestop() + processingTime * timeadjust
+		-- Stage 1 First Pass
+		private.InitItemInfoCache()
+		for pos = scanCount, 1, -1 do
+			if breakinterval then
+				breakcount = (breakcount + 1) % breakinterval
+				if breakcount == 0 then
+					doYield = true
+				end
+			end
+			if doYield or debugprofilestop() > nextPause then
+				lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
+				coroutine.yield()
+				nextPause = debugprofilestop() + processingTime * timeadjust
+				doYield = false
+			end
+			local success, reason, linkType = private.GetAuctionItemFillIn(TempcurScan[pos], true)
+			progresscounter = progresscounter + 1
+			if linkType == "battlepet" and battlepetYield then
+				-- experimental: yield on finding first battlepet
+				-- first time battlepet API is used, it appears to trigger a small amount of lag
+				doYield = true
+				battlepetYield = false
+			elseif not success then
+				if firstfailureYield then
+					-- experimental: yield after first failure detected
+					-- todo: fiddle with this, perhaps yielding every X failures, see if it appears to help
+					doYield = true
+					firstfailureYield = false
+				end
+				if reason == "Retry" then
+					progresscounter = progresscounter - 1 -- undo progress counter for this item ### todo: find a better way?
+					tinsert(retries, pos)
+				end
+			end
+		end
+		local numretries = #retries
 
-		local data = TempcurScan[pos]
-		local entryUnusable = false
-		progresscounter = progresscounter + 1
-		if not data[Const.SELLER] then data[Const.SELLER] = "" end
+		-- Stage 1 Retry passes - only checks entries in 'retries' table
+		local retrypass = 0
+		while numretries > 0 and retrypass < 10 do
+			local nextWait = GetTime() + itemcachedelay -- delay time depends on stage1throttle
+			while GetTime() < nextWait do
+				coroutine.yield()
+			end
 
-		if data[Const.ITEMID] and not (data[Const.ILEVEL] and data[Const.ITYPE] and data[Const.ISUB]) then
-			if data[Const.ITEMID] == 82800 then -- Pet Cage
-				local cType, cSubtypeLookup, cUseLevel = private.GetPetCageInfo()
-				if cType then
-					data[Const.ITYPE] = cType
-					data[Const.IEQUIP] = nil
-					data[Const.ULEVEL] = data[Const.ULEVEL] or cUseLevel
-					local _, speciesID, level = strsplit(":", data[Const.LINK])
-					speciesID, level = tonumber(speciesID), tonumber(level)
-					data[Const.ILEVEL] = data[Const.ILEVEL] or level -- should have been obtained from GetAuctionItemInfo anyway
-					if speciesID then
-						local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-						if petType then
-							data[Const.ISUB] = cSubtypeLookup[petType]
-						end
+			private.InitItemInfoCache()
+			local newretries = {}
+			retrypass = retrypass + 1
+			for i = #retries, 1, -1 do
+				local pos = retries[i]
+				if breakinterval then
+					breakcount = (breakcount + 1) % breakinterval
+					if breakcount == 0 then
+						doYield = true
 					end
 				end
+				if doYield or debugprofilestop() > nextPause then
+					lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1."..retrypass)
+					coroutine.yield()
+					nextPause = debugprofilestop() + processingTime * timeadjust
+					doYield = false
+				end
+				local success, reason, linkType = private.GetAuctionItemFillIn(TempcurScan[pos], true)
+
+				if not success and reason == "Retry" then
+					tinsert(newretries, pos)
+				else
+					progresscounter = progresscounter + 1
+				end
+
+			end
+			retries = newretries
+			numretries = #retries
+		end
+
+		-- Stage 1 Final Pass
+		breakcount = 0
+		doYield = false
+		private.InitItemInfoCache()
+		for pos = scanCount, 1, -1 do
+			if breakinterval then
+				breakcount = (breakcount + 1) % breakinterval
+				if breakcount == 0 then
+					doYield = true
+				end
+			end
+			if doYield or debugprofilestop() > nextPause then
+				lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
+				coroutine.yield()
+				nextPause = debugprofilestop() + processingTime * timeadjust
+				doYield = false
+			end
+
+			local entryUnusable = false
+			local data = TempcurScan[pos]
+			local success, reason, linkType = private.GetAuctionItemFillIn(data)
+			progresscounter = progresscounter + 1
+
+			if not success then
+				entryUnusable = true
 			else
-				local itemInfo = private.GetItemInfoCache(data[Const.ITEMID]) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
-				if itemInfo then
-					data[Const.ITYPE] = data[Const.ITYPE] or itemInfo[1]
-					data[Const.ISUB] = data[Const.ISUB] or itemInfo[2]
-					data[Const.IEQUIP] = data[Const.IEQUIP] or itemInfo[3]
-					data[Const.ILEVEL] = data[Const.ILEVEL] or itemInfo[4]
-					data[Const.ULEVEL] = data[Const.ULEVEL] or itemInfo[5]
+				-- full test
+				for i = 1, Const.LASTENTRY, 1 do
+					if not (data[i] or ItemDataAllowedNil[i]) then
+						entryUnusable = true
+						break
+					end
 				end
 			end
-		end
-		for i = 1, Const.LASTENTRY, 1 do
-			if not data[i] then
-				if i ~= Const.IEQUIP and i ~= Const.AMHIGH and i ~= Const.CANUSE then
-					entryUnusable = true
-					break
+
+
+			if entryUnusable then
+				if _G.nLog then
+					-- Yes this is a mess.  However, it gives enough information to let us resolve problems in the future when blizzard breaks in a new way.
+					_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "Incomplete Auction Seen",
+						(("%s%s%s%s%s%s"):format(
+						"Page %d, Index %d -- %s\n %s -- %d of %s sold by %s\n",
+						"Level %s, Quality %s, Item Level %s\n",
+						"Item Class %s, SubClass %s, Equipment Position %s\n",
+						"Price %s, Bid %s, NextBid %s, MinInc %s, Buyout %s\n Time Left %s, Time %s\n",
+						"High Bidder %s  Can Use: %s  Bonuses %s  Item ID %s  Suffix %s  Factor %s  Enchant %s  Seed %s\n",
+						"Deprecated2: %s")):format(
+						data.PAGE, data.PAGEINDEX, "too broken, can not use at all",
+						data[Const.LINK] or "(nil)", data[Const.COUNT] or -1, data[Const.NAME] or "(nil)", data[Const.SELLER] or "(UNKNOWN)",
+						data[Const.ULEVEL] or "(nil)", data[Const.QUALITY] or "(nil)", data[Const.ILEVEL] or "(nil)", data[Const.CLASSID] or "(UNKNOWN)", data[Const.SUBCLASSID] or "(UNKNOWN)", data[Const.IEQUIP] or '(n/a)',
+						data[Const.PRICE] or -1, data[Const.CURBID] or -1, data[Const.MINBID] or -1, data[Const.MININC] or -1, data[Const.BUYOUT] or -1,
+						data[Const.TLEFT] or -1, data[Const.TIME] or "(nil)", data[Const.AMHIGH] and "Yes" or "No",
+						(data[Const.CANUSE]==false and "Yes") or (data[Const.CANUSE] and "No" or "(nil)"), data[Const.BONUSES] or '(nil)', data[Const.ITEMID] or '(nil)',
+						data[Const.SUFFIX] or '(nil)', data[Const.FACTOR] or '(nil)', data[Const.ENCHANT] or '(nil)', data[Const.SEED] or '(nil)', data[Const.DEP2] or '(nil)'))
 				end
+				tremove(TempcurScan, pos)
+				unresolvedCount = unresolvedCount + 1
+				progresscounter = progresscounter + 5 -- We just wiped the entry from the db, so other steps won't see it.
 			end
 		end
-
-
-		if entryUnusable then
-			if _G.nLog then
-				-- Yes this is a mess.  However, it gives enough information to let us resolve problems in the future when blizzard breaks in a new way.
-				_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "Incomplete Auction Seen",
-					(("%s%s%s%s%s%s"):format(
-					"Page %d, Index %d -- %s\n %s -- %d of %s sold by %s\n",
-					"Level %d, Quality %s, Item Level %s\n",
-					"Item Type %s, Sub Type %s, Equipment Position %s\n",
-					"Price %s, Bid %s, NextBid %s, MinInc %s, Buyout %s\n Time Left %s, Time %s\n",
-					"High Bidder %s  Can Use: %s  (Dep1) %s  Item ID %s  Suffix %s  Factor %s  Enchant %s  Seed %s\n",
-					"Texture: %s")):format(
-					data.PAGE, data.PAGEINDEX, "too broken, can not use at all",
-					data[Const.LINK] or "(nil)", data[Const.COUNT] or -1, data[Const.NAME] or "(nil)", data[Const.SELLER] or "(UNKNOWN)",
-					data[Const.ULEVEL] or -1, data[Const.QUALITY] or -1, data[Const.ILEVEL] or -1,data[Const.ITYPE] or "(UNKNOWN)", data[Const.ISUB] or "(UNKNOWN)", data[Const.IEQUIP] or '(n/a)',
-					data[Const.PRICE] or -1, data[Const.CURBID] or -1, data[Const.MINBID] or -1, data[Const.MININC] or -1, data[Const.BUYOUT] or -1,
-					data[Const.TLEFT] or -1, data[Const.TIME] or "(nil)", data[Const.AMHIGH] and "Yes" or "No",
-					(data[Const.CANUSE]==false and "Yes") or (data[Const.CANUSE] and "No" or "(nil)"), data[Const.DEP1] or '(nil)', data[Const.ITEMID] or '(nil)',
-					data[Const.SUFFIX] or '(nil)', data[Const.FACTOR] or '(nil)', data[Const.ENCHANT] or '(nil)', data[Const.SEED] or '(nil)', data[Const.TEXTURE] or '(nil)'))
+		local tolerance = 0
+		if scanCount > TOLERANCE_LOWERLIMIT then -- don't use tolerance for tiny scans
+			tolerance = get("core.scan.unresolvedtolerance")
+			if scanCount < TOLERANCE_TAPERLIMIT then -- taper tolerance for smaller scans
+				tolerance = ceil(tolerance * scanCount / TOLERANCE_TAPERLIMIT)
 			end
-			tremove(TempcurScan, pos)
-			unresolvedCount = unresolvedCount + 1
-			progresscounter = progresscounter + 2 -- We just wiped the entry from the db, so other steps won't see it.
 		end
-		pos = pos -1
-	end
-	local tolerance = 0
-	if scanCount > TOLERANCE_LOWERLIMIT then -- don't use tolerance for tiny scans
-		tolerance = get("core.scan.unresolvedtolerance")
-		if scanCount < TOLERANCE_TAPERLIMIT then -- taper tolerance for smaller scans
-			tolerance = ceil(tolerance * scanCount / TOLERANCE_TAPERLIMIT)
+		if unresolvedCount > tolerance then
+			hadGetError = true
+			wasIncomplete = true
 		end
-	end
-	if unresolvedCount > tolerance then
-		hadGetError = true
-		wasIncomplete = true
-	end
-
+	end --[[ of Stage 1 ]]--
 
 	--[[ *** Stage 2 : Pre-process image table : Mark all matching auctions as DIRTY, and build a LookUpTable *** ]]--
 	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
 	coroutine.yield() -- yield to allow updated bar to display
 
-	local dirtyCount = 0
 	local lut = {}
 
 	nextPause = debugprofilestop() + processingTime
@@ -1073,28 +1186,42 @@ local Commitfunction = function()
 			nextPause = debugprofilestop() + processingTime
 		end
 		local link = data[Const.LINK]
+		local flags = data[Const.FLAG]
 		progresscounter = progresscounter + 1
-		if link then
+		if link and flags then
 			if private.IsInQuery(TempcurQuery, data) then
-				-- Mark dirty
-				data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_DIRTY)
-				dirtyCount = dirtyCount+1
+				matchedCount = matchedCount + 1
 
-				-- Build lookup table
-				local list = lut[link]
-				if (not list) then
-					lut[link] = pos
+				-- Test for expired
+				local auctionmaxtime = Const.AucMaxTimes[data[Const.TLEFT]] or 172800
+				if not data[Const.TIME] or (now - data[Const.TIME] > auctionmaxtime) then
+					data[Const.FLAG] = bitor(flags, Const.FLAG_EXPIRED)
+					expiredCount = expiredCount + 1
 				else
-					if (type(list) == "number") then
-						lut[link] = {}
-						tinsert(lut[link], list)
+					-- Mark dirty
+					data[Const.FLAG] = bitor(flags, Const.FLAG_DIRTY)
+					dirtyCount = dirtyCount+1
+
+					-- Build lookup table
+					local list = lut[link]
+					if (not list) then
+						lut[link] = pos
+					else
+						if (type(list) == "number") then
+							lut[link] = {}
+							tinsert(lut[link], list)
+						end
+						tinsert(lut[link], pos)
 					end
-					tinsert(lut[link], pos)
 				end
 			else
 				-- Mark NOT dirty
-				data[Const.FLAG] = bitand(data[Const.FLAG] or 0, bitnot(Const.FLAG_DIRTY))
+				data[Const.FLAG] = bitand(flags, bitnot(Const.FLAG_DIRTY))
 			end
+		else
+			-- corrupt entry
+			data[Const.FLAG] = bitor(flags or 0, Const.FLAG_CORRUPT)
+			corruptCount = corruptCount + 1
 		end
 	end
 
@@ -1104,7 +1231,7 @@ local Commitfunction = function()
 	coroutine.yield()
 
 	local processors = {}
-	local modules = _G.AucAdvanced.GetAllModules("AuctionFilter", "Filter")
+	local modules = AucAdvanced.GetAllModules("AuctionFilter", "Filter")
 	for pos, engineLib in ipairs(modules) do
 		if (not processors.Filter) then processors.Filter = {} end
 		local x = {}
@@ -1112,7 +1239,7 @@ local Commitfunction = function()
 		x.Func = engineLib.AuctionFilter
 		tinsert(processors.Filter, x)
 	end
-	modules = _G.AucAdvanced.GetAllModules("ScanProcessors")
+	modules = AucAdvanced.GetAllModules("ScanProcessors")
 	for pos, engineLib in ipairs(modules) do
 		for op, func in pairs(engineLib.ScanProcessors) do
 			if (not processors[op]) then processors[op] = {} end
@@ -1156,7 +1283,6 @@ local Commitfunction = function()
 
 	local maskNotDirtyUnseen = bitnot(bitor(Const.FLAG_DIRTY, Const.FLAG_UNSEEN)) -- only calculate mask for clearing these flags once
 	local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
-	local undirtyCount = 0
 
 	local garbageinterval
 	local stage3garbage = get("core.scan.stage3garbage")
@@ -1212,6 +1338,10 @@ local Commitfunction = function()
 			if data[Const.SELLER] == "" then -- unknown seller name in new data; copy the old name if it exists
 				data[Const.SELLER] = oldItem[Const.SELLER]
 			end
+
+			if data[Const.QUALITY] == -1 then -- invalid quality value in new data; copy the old quality
+				data[Const.QUALITY] = oldItem[Const.QUALITY]
+			end
 			if (bitand(data[Const.FLAG], Const.FLAG_FILTER)==Const.FLAG_FILTER) then
 				filterOldCount = filterOldCount + 1
 			else
@@ -1261,8 +1391,9 @@ local Commitfunction = function()
 		If we estimate this will be the case, switch to Keep mode, where we copy the entries we want to keep into a new image, which then replaces the old one.
 
 		Test version 1: use keep mode if scan is complete, and if number of remaining dirty entries exceeds a fixed threshold
+		Test version 2: Test for expired in Stage 2; expiredCount is now available to decide whether to use keep mode
 	--]]
-	if not wasIncomplete and (dirtyCount - undirtyCount) > 1000 then
+	if (expiredCount + corruptCount) > 1000 or (not wasIncomplete and (expiredCount + corruptCount + dirtyCount - undirtyCount) > 1000) then
 		loopBegin, loopEnd, loopDirection = 1, #scandata.image, 1 -- process Keep mode in ascending order to keep the new table in the same order
 		keepmodeImage = {} -- new image table; also acts as a flag for Keep mode
 	end
@@ -1276,46 +1407,47 @@ local Commitfunction = function()
 			lastTime = time()
 		end
 		local data = scandata.image[pos]
+		local flags = data[Const.FLAG] -- *caution* if we modify data[Const.FLAG] below, be sure to set flags to the same value again
 		local dodelete = false
 		progresscounter = progresscounter + progressstep
-		if (bitand(data[Const.FLAG] or 0, Const.FLAG_DIRTY) == Const.FLAG_DIRTY) then
-			local auctionmaxtime = Const.AucMaxTimes[data[Const.TLEFT]] or 172800
-
-			if data[Const.TIME] and (now - data[Const.TIME] > auctionmaxtime) then
-				-- delete items that have passed their expiry time - even if scan was incomplete
-				dodelete = true
-				if bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
-					filterDeleteCount = filterDeleteCount + 1
-				else
-					expiredDeleteCount = expiredDeleteCount + 1
-				end
-			elseif wasIncomplete then
+		if bitand(flags, Const.FLAG_CORRUPT) ~= 0 then
+			dodelete = true
+			corruptDeleteCount = corruptDeleteCount + 1
+		elseif bitand(flags, Const.FLAG_EXPIRED) ~= 0 then
+			dodelete = true
+			if bitand(flags, Const.FLAG_FILTER) ~= 0 then
+				filterDeleteCount = filterDeleteCount + 1
+			else
+				expiredDeleteCount = expiredDeleteCount + 1
+			end
+		elseif bitand(flags, Const.FLAG_DIRTY) ~= 0  then
+			if wasIncomplete then
 				missedCount = missedCount + 1
 			elseif wasOnePage then
 				-- a *completed* one-page scan should not have missed any auctions
 				dodelete = true
-				if bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
+				if bitand(flags, Const.FLAG_FILTER) ~= 0 then
 					filterDeleteCount = filterDeleteCount + 1
 				else
 					earlyDeleteCount = earlyDeleteCount + 1
 				end
 			else
-				if bitand(data[Const.FLAG] or 0, Const.FLAG_UNSEEN) == Const.FLAG_UNSEEN then
+				if bitand(flags, Const.FLAG_UNSEEN) ~= 0 then
 					dodelete = true
-					if bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
+					if bitand(flags, Const.FLAG_FILTER) ~= 0 then
 						filterDeleteCount = filterDeleteCount + 1
 					else
 						earlyDeleteCount = earlyDeleteCount + 1
 					end
 				else
-					data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_UNSEEN)
-					data[Const.FLAG] = bitand(data[Const.FLAG] or 0, bitnot(Const.FLAG_DIRTY))
+					flags = bitor(bitand(flags, bitnot(Const.FLAG_DIRTY)), Const.FLAG_UNSEEN)
+					data[Const.FLAG] = flags
 					missedCount = missedCount + 1
 				end
 			end
 		end
 		if dodelete then
-			if not (bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER) then
+			if bitand(flags, Const.FLAG_FILTER) == 0 then
 				processStats(processors, "delete", data)
 			end
 			if not keepmodeImage then
@@ -1337,10 +1469,23 @@ local Commitfunction = function()
 	-- final yield to update GetTime for the stats
 	-- (though we should be aware that whatever else happens during this yield gets added to our final time, we can't get an update of GetTime *without* yielding here!)
 	coroutine.yield()
+	local endTimeStamp = time()
+	local scanTimeSecs, scanTimeMins, scanTimeHours = GetTime() - scanStarted - totalPaused, 0, 0
+
 	-- optionally do a final collection here (as above, we want it surrounded by yields)
 	if get("core.scan.stage5garbage") then
 		collectgarbage()
 		coroutine.yield()
+	end
+
+	if scanTimeSecs < 1 then
+		scanTimeSecs = floor(scanTimeSecs*10)/10
+	else
+		scanTimeSecs = floor(scanTimeSecs)
+		scanTimeMins = floor(scanTimeSecs / 60)
+		scanTimeSecs =  mod(scanTimeSecs, 60)
+		scanTimeHours = floor(scanTimeMins / 60)
+		scanTimeMins = mod(scanTimeMins, 60)
 	end
 
 	local currentCount = #scandata.image
@@ -1353,24 +1498,12 @@ local Commitfunction = function()
 	end
 
 	-- image contains filtered items now.  Need to account for new entries that are flagged as filtered (not shown to stats modules)
-	if (oldCount - earlyDeleteCount - expiredDeleteCount + newCount + filterNewCount - filterDeleteCount ~= currentCount) then
+	if (oldCount - earlyDeleteCount - expiredDeleteCount - corruptDeleteCount + newCount + filterNewCount - filterDeleteCount ~= currentCount) then
 		if _G.nLog then
 			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "Current Count Discrepency Seen",
 				("%d - %d - %d + %d + %d - %d != %d"):format(oldCount, earlyDeleteCount, expiredDeleteCount,
 					newCount, filterNewCount, filterDeleteCount, currentCount))
 		end
-	end
-
-	local endTimeStamp = time()
-	local scanTimeSecs, scanTimeMins, scanTimeHours = GetTime() - scanStarted - totalPaused, 0, 0
-	if scanTimeSecs < 1 then
-		scanTimeSecs = floor(scanTimeSecs*10)/10
-	else
-		scanTimeSecs = floor(scanTimeSecs)
-		scanTimeMins = floor(scanTimeSecs / 60)
-		scanTimeSecs =  mod(scanTimeSecs, 60)
-		scanTimeHours = floor(scanTimeMins / 60)
-		scanTimeMins = mod(scanTimeMins, 60)
 	end
 
 	--Hides the end of scan summary if user is not interested
@@ -1401,11 +1534,11 @@ local Commitfunction = function()
 		else
 			summaryLine = (_TRANS("PSS_Complete")):format(scanCount, scanTime) --Auctioneer finished scanning {{%d}} auctions over {{%s}}
 		end
-		if (printSummary) then _print(summaryLine) end
+		if (printSummary) then aucPrint(summaryLine) end
 		summary = summaryLine
 
-		summaryLine = "  {{"..oldCount.."}} ".._TRANS("PSS_StartItems").."{{"..dirtyCount.."}} ".._TRANS("PSS_MatchedItems").." {{"..currentCount.."}} ".._TRANS("PSS_AtEnd")
-		if (printSummary) then _print(summaryLine) end
+		summaryLine = "  {{"..oldCount.."}} ".._TRANS("PSS_StartItems").."{{"..matchedCount.."}} ".._TRANS("PSS_MatchedItems").." {{"..currentCount.."}} ".._TRANS("PSS_AtEnd")
+		if (printSummary) then aucPrint(summaryLine) end
 		summary = summary.."\n"..summaryLine
 
 		if (sameCount > 0) then
@@ -1414,7 +1547,7 @@ local Commitfunction = function()
 			else
 				summaryLine = "  {{"..sameCount.."}} ".._TRANS("PSS_Unchanged_NoMissed")
 			end
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (updateCount > 0) then
@@ -1423,12 +1556,12 @@ local Commitfunction = function()
 			else
 				summaryLine = "  {{"..updateCount.."}} ".._TRANS("PSS_Updated_NoMissed")
 			end
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (newCount > 0) then
 			summaryLine = "  {{"..newCount.."}} ".._TRANS("PSS_NewItems")
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (earlyDeleteCount+expiredDeleteCount > 0) then
@@ -1437,17 +1570,17 @@ local Commitfunction = function()
 			else
 				summaryLine = "  {{"..earlyDeleteCount+expiredDeleteCount.."}} ".._TRANS("PSS_Removed_NoExpired")
 			end
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (filterNewCount+filterOldCount > 0) then
 			summaryLine = "  {{"..filterNewCount+filterOldCount.."}} ".._TRANS("PSS_Filtered")
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (filterDeleteCount > 0) then
 			summaryLine = "  {{"..filterDeleteCount.."}} ".._TRANS("PSS_Filtered_Removed")
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if (missedCount > 0 and not wasEndPagesOnly) then
@@ -1456,12 +1589,17 @@ local Commitfunction = function()
 			else
 				summaryLine = "  {{"..missedCount.."}} ".._TRANS("PSS_MissedItems")
 			end
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 		if unresolvedCount > 0 then
 			summaryLine = "  {{"..unresolvedCount.."}} Unresolved entries"
-			if (printSummary) then _print(summaryLine) end
+			if (printSummary) then aucPrint(summaryLine) end
+			summary = summary.."\n"..summaryLine
+		end
+		if corruptDeleteCount > 0 then
+			summaryLine = "  {{"..corruptDeleteCount.."}} Corrupt entries found and removed"
+			if (printSummary) then aucPrint(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
 
@@ -1484,7 +1622,7 @@ local Commitfunction = function()
 		sameCount = sameCount,
 		newCount = newCount,
 		updateCount = updateCount,
-		matchedCount = dirtyCount,
+		matchedCount = matchedCount,
 		earlyDeleteCount = earlyDeleteCount,
 		expiredDeleteCount = expiredDeleteCount,
 		currentCount = currentCount,
@@ -1510,7 +1648,7 @@ local Commitfunction = function()
 	end
 
 	scanstats.LastScan = endTimeStamp
-	if oldCount ~= currentCount or scanCount > 0 or dirtyCount > 0 then
+	if oldCount ~= currentCount or scanCount > 0 or dirtyCount > 0 or expiredCount > 0 or corruptCount > 0 then
 		scanstats.ImageUpdated = endTimeStamp
 	end
 	if wasUnrestricted and not wasIncomplete then scanstats.LastFullScan = endTimeStamp end
@@ -1525,7 +1663,7 @@ local Commitfunction = function()
 
 	processBeginEndStats(processors, "complete", querySizeInfo, TempcurScanStats)
 
-	_G.AucAdvanced.SendProcessorMessage("scanstats", TempcurScanStats)
+	AucAdvanced.SendProcessorMessage("scanstats", TempcurScanStats)
 
 	--Hide the progress indicator
 	lib.ProgressBars("CommitProgressBar", nil, false)
@@ -1535,7 +1673,7 @@ local Commitfunction = function()
 	if not private.curQuery then
 		private.ResetAll()
 	end
-	_G.AucAdvanced.SendProcessorMessage("scanfinish", scanSize, TempcurQuery.qryinfo.sig, TempcurQuery.qryinfo, not wasIncomplete, TempcurQuery, TempcurScanStats)
+	AucAdvanced.SendProcessorMessage("scanfinish", scanSize, TempcurQuery.qryinfo.sig, TempcurQuery.qryinfo, not wasIncomplete, TempcurQuery, TempcurScanStats)
 end
 
 local CoCommit, CoStore
@@ -1543,6 +1681,7 @@ local CoCommit, CoStore
 local function CoroutineResume(...)
 	local status, result = coroutine.resume(...)
 	if not status and result then
+		collectgarbage() -- ### trial to see if this helps recover from Memory Allocation Errors
 		local msg = "Error occurred in coroutine: "..result
 		if Swatter then
 			Swatter.OnError(msg, nil, debugstack((...)))
@@ -1584,13 +1723,13 @@ end
 
 function private.QuerySent(query, isSearch, ...)
 	-- Tell everyone that our stats are updated
-	_G.AucAdvanced.SendProcessorMessage("querysent", query, isSearch, ...)
+	AucAdvanced.SendProcessorMessage("querysent", query, isSearch, ...)
 	return ...
 end
 
 function private.FinishedPage(nextPage)
 	-- Tell everyone that our stats are updated
-	local modules = _G.AucAdvanced.GetAllModules("FinishedPage")
+	local modules = AucAdvanced.GetAllModules("FinishedPage")
 	for pos, engineLib in ipairs(modules) do
 		local pOK, finished = pcall(engineLib.FinishedPage,nextPage)
 		if (pOK) then
@@ -1618,66 +1757,162 @@ function private.ScanPage(nextPage, really)
 		private.queryStarted = GetTime()
 		private.auctionItemListUpdated = false
 		SortAuctionClearSort("list")
-		private.Hook.QueryAuctionItems(private.curQuery.name or "",
-			private.curQuery.minUseLevel or "", private.curQuery.maxUseLevel or "",
-			private.curQuery.invType, private.curQuery.classIndex, private.curQuery.subclassIndex, nextPage,
-			private.curQuery.isUsable, private.curQuery.quality, nil, private.curQuery.exactMatch)
+		private.Hook.QueryAuctionItems(private.curQuery.name, private.curQuery.minUseLevel, private.curQuery.maxUseLevel,
+		nextPage, private.curQuery.isUsable, private.curQuery.quality,
+		nil, private.curQuery.exactMatch, private.curQuery.filterData)
 
-		_G.AuctionFrameBrowse.page = nextPage
+		AuctionFrameBrowse.page = nextPage
 
 		private.verifyStart = nil
 	end
 end
 
+-- Mechanism to limit repeated calls to GetItemInfo and C_PetJournal.GetPetInfoBySpeciesID during processing
 do
-	local ItemInfoCache = {}
+	local ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
+	local lookupPetType2SubClassID = Const.AC_PetType2SubClassID
+	local GetPetInfoBySpeciesID = C_PetJournal.GetPetInfoBySpeciesID
+
 	function private.ResetItemInfoCache()
-		wipe(ItemInfoCache)
+		ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
 	end
-	function private.GetItemInfoCache(itemId, itemLinksTried)
-		-- we use itemId instead of itemLink - this reduces the number of entries in the cache
-		local data = ItemInfoCache[itemId]
-		if data then
-			return data
+	function private.InitItemInfoCache()
+		wipe(ItemTried)
+		wipe(PetTried)
+	end
+	local function GetItemInfoCache(link, itemID, bonuses, scanthrottle)
+		if bonuses and bonuses ~= "" then
+			-- for now we won't try to cache items with bonusIDs
+			local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
+			return classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0
 		end
-		if itemLinksTried and itemLinksTried[itemId] then
-			-- if GetItemInfo previously failed for this itemId in this scanning pass (itemLinksTried is reset each pass)
+		local data = ItemInfoCache[itemID]
+		if data then
+			return unpack(data, 1, 5)
+		end
+		if scanthrottle and ItemTried and ItemTried[itemID] then
+			-- if GetItemInfo previously failed for a link with this cachekey in this processing pass (ItemTried is reset each pass)
 			return
 		end
-		local _,_,rarity,iLevel,uLevel,iType,iSubtype,stack,equipLoc = GetItemInfo(itemId)
-		if not iType then
-			if itemLinksTried then
-				itemLinksTried[itemId] = true
+		local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
+		if not classID then
+			if scanthrottle then
+				ItemTried[itemID] = true
 			end
 			return
 		end
 		-- not all values are used; only store the ones we want
-		data = {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel or 0}
-		ItemInfoCache[itemId] = data
-		return data
+		data = {classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0}
+		ItemInfoCache[itemID] = data
+		return unpack(data, 1, 5)
 	end
 
-	local cageType, cageSubtypeLookup, cageUseLevel
-	function private.GetPetCageInfo()
-		-- returns generic info for the Pet Cage item 82800 - info that is the same for every pet
-		-- info for a specific pet will need to be extracted from the battlepet link
-		-- cageSubtypeLookup can be used to convert numeric subtype to localized string for ISUB
-		if cageType then
-			return cageType, cageSubtypeLookup, cageUseLevel
-		end
-		local _,_,_,_,uLevel, iType = GetItemInfo(82800)
-		if iType and uLevel then
-			cageSubtypeLookup = Const.SUBCLASSES[Const.CLASSESREV[iType]]
-			if cageSubtypeLookup then
-				cageType = iType
-				cageUseLevel = uLevel -- always 0, but we check here in case Blizzard changes it
-				return cageType, cageSubtypeLookup, cageUseLevel
+	local function GetPetInfoCache(speciesID, scanthrottle)
+		local subtype = PetInfoCache[speciesID]
+		if not subtype then
+			if scanthrottle and PetTried and PetTried[speciesID] then
+				-- GetPetInfoBySpeciesID previously failed for this speciesID in this processing pass
+				return
+			end
+			local _, _, petType = GetPetInfoBySpeciesID(speciesID)
+			if petType then
+				subtype = lookupPetType2SubClassID[petType]
+				PetInfoCache[speciesID] = subtype
+			else
+				if scanthrottle then
+					PetTried[speciesID] = true
+				end
+				return
 			end
 		end
+
+		return subtype
+	end
+
+	-- Called on a data table that has been processed by private.GetAuctionItem
+	-- Fills in certain entries that can be calculated from other entries, and so do not need to be determined at scan time
+	-- In particular, we avoid calling APIs GetItemInfo or C_PetJournal.GetPetInfoBySpeciesID duing the scan; we can delay them until processing
+	function private.GetAuctionItemFillIn(itemData, scanthrottle) -- ### Legion : revised, check
+		local linkType
+		local itemID = itemData[Const.ITEMID]
+		local itemLink = itemData[Const.LINK]
+		if not (itemID and itemLink and itemData[Const.TLEFT]) then
+			return nil, "Invalid", "unknown"
+		end
+
+		if itemID == 82800 then -- "Pet Cage"
+			linkType = "battlepet"
+			if not itemData[Const.SEED] then
+				-- following entries are not relevant to battlepets
+				itemData[Const.BONUSES] = ""
+				itemData[Const.SUFFIX] = 0
+				itemData[Const.FACTOR] = 0
+				itemData[Const.ENCHANT] = 0
+				itemData[Const.SEED] = 0 -- there must be a hidden unique seed, but I can't find a way to access it
+			end
+			if not itemData[Const.CLASSID] then
+				local _, speciesID, level = strsplit(":", itemLink)
+				speciesID = tonumber(speciesID)
+				if speciesID then
+					local subClassID = GetPetInfoCache(speciesID, scanthrottle)
+					if subClassID then
+						itemData[Const.CLASSID] = LE_ITEM_CLASS_BATTLEPET
+						itemData[Const.IEQUIP] = nil -- always nil for Pet Cages
+						itemData[Const.ULEVEL] = itemData[Const.ULEVEL] or 0 -- expected to be 0 for all battlepets
+						itemData[Const.SUBCLASSID] = subClassID
+						if not itemData[Const.ILEVEL] then
+							-- iLevel should normally have been obtained from GetAuctionItemInfo, but if it's missing we can get it from the link
+							itemData[Const.ILEVEL] = tonumber(level) or 1
+						end
+					end
+				end
+			end
+		else
+			linkType = "item"
+			if not itemData[Const.SEED] then
+				local lkt, id, suffix, factor, enchant, seed, _, _, _, _, bonuses = AucAdvanced.DecodeLink(itemLink)
+				if lkt == "item" and id == itemID then
+					itemData[Const.BONUSES] = bonuses or ""
+					itemData[Const.SUFFIX] = suffix
+					itemData[Const.FACTOR] = factor
+					itemData[Const.ENCHANT] = enchant
+					itemData[Const.SEED] = seed
+				else
+					-- unrecognised link type - if this is happening then we'll need to investigate the link type
+					-- and install a special exception for it (similar to battlepet links, as above)
+					if nLog then
+						nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "GetAuctionItemFillIn could not decode link",
+							("Page %d, Index %d\nLink %s, itemID %d (from GetAuctionItemInfo)\ntype %s, id %s, suffix %s, factor %s, enchant %s, seed %s (from Decode)"):format(
+								page, index, itemLink, itemID, tostringall(lkt, id, suffix, factor, enchant, seed)))
+					end
+					-- Note: SEED is still set to nil
+					return nil, "UnknownLinkType", "unknown"
+				end
+			end
+			if not itemData[Const.CLASSID] then
+				local classID, subClassID, equipCode, iLevel, uLevel = GetItemInfoCache(itemLink, itemID, itemData[Const.BONUSES], scanthrottle) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
+				if classID then
+					itemData[Const.CLASSID] = classID
+					itemData[Const.SUBCLASSID] = subClassID
+					itemData[Const.IEQUIP] = equipCode
+					-- Prefer iLevel and/or uLevel values provided by GetAuctionItemInfo over those from GetItemInfo
+					itemData[Const.ILEVEL] = itemData[Const.ILEVEL] or iLevel
+					itemData[Const.ULEVEL] = itemData[Const.ULEVEL] or uLevel
+				end
+			end
+		end
+
+		if not itemData[Const.CLASSID] then
+			return nil, "Retry", linkType
+		end
+
+		if not itemData[Const.SELLER] then itemData[Const.SELLER] = "" end
+
+		return true, nil, linkType
 	end
 end
 
---[[ private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
+--[[ private.GetAuctionItem(list, page, index, itemData)
 	Returns itemData, with entries filled in from the GetAuctionItemX & GetItemInfo functions, plus some additional processing
 	If page is provided, requires the same itemData table as was used for the same page/index combination previously in the current scan
 		This is used during scanning, when retrying an auction entry - also enables some error checking
@@ -1689,22 +1924,19 @@ end
 	Const.ITEMID : if present, most useful entries should be present, particularly all prices
 	Const.TLEFT : is one of the last entries to get resolved - only happens if no failures were detected
 
-	Const.ITYPE : if missing then GetItemInfo failed for this itemId - may work if retried after a delay
-
-	Const.SEED : if missing then other DecodeLink entries will be missing - indicates an unexpected link type, probably won't work if retried
-		For battlepets will be 0, as DecodeLink doesn't work on battlepet links
+	Const.CLASSID, Const.SEED : left blank
+		private.GetAuctionItemFillIn should be called after to fill these in
 
 	Const.SELLER : often missing, particularly during GetAll scans - may be resolvable after a delay, but may require a very long delay
-		Note: this function does not replace a missing seller with ""
+		private.GetAuctionItemFillIn will replace missing seller with ""
 --]]
-function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
+function private.GetAuctionItem(list, page, index, itemData)
 	if not itemData then
 		itemData = {}
 	elseif itemData.NORETRY then
 		return itemData
 	end
 	itemData[Const.FLAG] = itemData[Const.FLAG] or 0
-	itemData[Const.DEP1] = 0 -- deprecated entry
 
 	local isLogging = nLog and page and list == "list"
 	if isLogging then
@@ -1760,7 +1992,7 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 	itemData[Const.MINBID] = minBid
 
 	itemData[Const.NAME] = name
-	itemData[Const.TEXTURE] = texture
+	itemData[Const.DEP2] = nil
 	itemData[Const.QUALITY] = quality
 	itemData[Const.CANUSE] = canUse
 	itemData[Const.AMHIGH] = highBidder and true or false
@@ -1789,75 +2021,15 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 	end
 	itemData[Const.PRICE] = nextBid
 
-	local iLevel, uLevel
 	-- use the iLevel or uLevel data from GetAuctionItemInfo, if available
 	if level then
 		if levelColHeader == "REQ_LEVEL_ABBR" then
-			uLevel = level
+			itemData[Const.ULEVEL] = level
 		elseif levelColHeader == "ITEM_LEVEL_ABBR"  then
-			iLevel = level
+			itemData[Const.ILEVEL] = level
 		end
 		-- todo: handle other possible values for levelColHeader
 	end
-
-	if itemId == 82800 then -- "Pet Cage"
-		-- requires special handling: the link will be a battlepet link, not an item link
-		local cType, cSubtypeLookup, cUseLevel = private.GetPetCageInfo()
-		if cType then
-			itemData[Const.ITYPE] = cType -- string, localized to client
-			itemData[Const.IEQUIP] = nil -- always nil for Pet Cages
-			uLevel = uLevel or cUseLevel
-			-- get the proper subtype
-			local _, speciesID = strsplit(":", itemLink)
-			speciesID = tonumber(speciesID)
-			if speciesID then
-				local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-				if petType then
-					itemData[Const.ISUB] = cSubtypeLookup[petType]
-				end
-			end
-			-- we should get the real iLevel from GetAuctionItemInfo (could be extracted from link, if required though)
-		end
-		-- Cannot use DecodeLink on a battlepet link, but entries should all be 0 anyway
-		-- (note: there must be a hidden unique seed, but I can't find a way to access it)
-		itemData[Const.SUFFIX] = 0
-		itemData[Const.FACTOR] = 0
-		itemData[Const.ENCHANT] = 0
-		itemData[Const.SEED] = 0
-	else
-		local itemInfo = private.GetItemInfoCache(itemId, itemLinksTried) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
-		if itemInfo then
-			itemData[Const.ITYPE] = itemInfo[1]
-			itemData[Const.ISUB] = itemInfo[2]
-			itemData[Const.IEQUIP] = itemInfo[3]
-			-- use iLevel and/or uLevel from GetItemInfo, if not provided by GetAuctionItemInfo
-			-- because we used itemId, it is possible for values from GetAuctionItemInfo to be different from those provided by GetItemInfo
-			iLevel = iLevel or itemInfo[4]
-			uLevel = uLevel or itemInfo[5]
-		end
-
-		if not itemData[Const.SEED] then
-			local linkType, id, suffix, factor, enchant, seed = AucAdvanced.DecodeLink(itemLink)
-			if linkType == "item" and id == itemId then
-				itemData[Const.SUFFIX] = suffix
-				itemData[Const.FACTOR] = factor
-				itemData[Const.ENCHANT] = enchant
-				itemData[Const.SEED] = seed
-			else
-				-- unrecognised link type - if this is happening then we'll need to investigate the link type
-				-- and install a special exception for it (similar to battlepet links, as above)
-				if isLogging then
-					nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "GetAuctionItem could not decode link",
-						("Page %d, Index %d\nLink %s, itemId %d (from GetAuctionItemInfo)\ntype %s, id %s, suffix %s, factor %s, enchant %s, seed %s (from Decode)"):format(
-							page, index, itemLink, itemId, tostringall(linkType, id, suffix, factor, enchant, seed)))
-				end
-				-- Note: SEED is still set to nil - scanner will discard this auction as Unresolved
-			end
-		end
-	end
-
-	itemData[Const.ULEVEL] = uLevel
-	itemData[Const.ILEVEL] = iLevel
 
 	--[[
 		Returns Integer giving range of time left for query
@@ -1878,27 +2050,12 @@ function lib.GetAuctionItem(list, index, fillTable)
 	else
 		fillTable = nil
 	end
-	local itemData = private.GetAuctionItem(list, nil, index, nil, fillTable)
+	local itemData = private.GetAuctionItem(list, nil, index, fillTable)
 	if not itemData[Const.TLEFT] then
 		-- missing TLEFT indicates a failure was detected for one of the GetAuctionItemX functions
 		return
 	end
-	if not itemData[Const.SELLER] then
-		itemData[Const.SELLER] = ""
-	end
-	-- for this function we will fill certain (less important) missing entries with 0 or ""
-	if not itemData[Const.SEED] then
-		itemData[Const.SUFFIX] = itemData[Const.SUFFIX] or 0
-		itemData[Const.FACTOR] = itemData[Const.FACTOR] or 0
-		itemData[Const.ENCHANT] = itemData[Const.ENCHANT] or 0
-		itemData[Const.SEED] = 0
-	end
-	if not itemData[Const.ITYPE] then
-		itemData[Const.ITYPE] = ""
-		itemData[Const.ISUB] = ""
-		itemData[Const.ULEVEL] = itemData[Const.ULEVEL] or 0
-		itemData[Const.ILEVEL] = itemData[Const.ILEVEL] or 0
-	end
+	private.GetAuctionItemFillIn(itemData)
 
 	return itemData
 end
@@ -1908,16 +2065,16 @@ function lib.GetAuctionSellItem(minBid, buyoutPrice, runTime)
 	local name, texture, count, quality, canUse, price = GetAuctionSellItemInfo();
 
 	if name and itemLink then
-		local linkType, itemId, itemSuffix, itemFactor, itemEnchant, itemSeed = _G.AucAdvanced.DecodeLink(itemLink)
+		local linkType, itemId, itemSuffix, itemFactor, itemEnchant, itemSeed = AucAdvanced.DecodeLink(itemLink)
 		if linkType == "item" then
-			itemLink = _G.AucAdvanced.SanitizeLink(itemLink)
-			local _,_,_,itemLevel,level,itemType,itemSubType,_,itemEquipLoc = GetItemInfo(itemLink)
+			itemLink = AucAdvanced.SanitizeLink(itemLink)
+			local _,_,_,itemLevel,level,_,_,_,itemEquipLoc,_,_,classID,subClassID = GetItemInfo(itemLink)
 			local timeLeft = 4
 			if runTime <= 12*60 then timeLeft = 3 end
 			local curTime = time()
 
 			return {
-				itemLink, itemLevel, itemType, itemSubType, nil, minBid,
+				itemLink, itemLevel, classID, subClassID, nil, minBid,
 				timeLeft, curTime, name, texture, count, quality, canUse, level,
 				minBid, 0, buyoutPrice, 0, nil, Const.PlayerName,
 				0, -1, itemId, itemSuffix, itemFactor, itemEnchant, itemSeed
@@ -1929,8 +2086,6 @@ end
 --[[ Used to decide if we should retry scanning this auction
 	returns: IsResolved, IsResolvedExceptSeller
 	notes: assumes that if certain entries are present then auction is resolved (see notes for GetAuctionItem)
-		ignores Const.ITYPE, as if that is missing it might be resolved by CommitFunction (i.e. don't need to retry during scanning)
-		ignores Const.SEED, as if that is missing it will probably not be resolved by retrying (CommitFunction will decide if the entry is useable anyway)
 --]]
 function private.isComplete(itemData)
 	local resolved = itemData and itemData[Const.TLEFT]
@@ -1962,16 +2117,13 @@ local StorePageFunction = function()
 		_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("StorePage For Page %d Started %fs after Query Start"):format(page, retrievalStarted - queryStarted), ("StorePage (Page %d) Called\n%f seconds have elapsed since scan start"):format(page, retrievalStarted - queryStarted))
 	end
 
-	local scannerthrottle = get("core.scan.scannerthrottle")
 	if private.isGetAll then
+		lib.ProgressBars("GetAllProgressBar", 0, true, "Auctioneer: Scan Received")
 		--[[
 			pre-store delay before starting to store a getall query to give the client a bit of time to sort itself out
 			we want to call it before GetNumAuctionItems, so we must use private.isGetAll for detection
 		--]]
 		coroutine.yield()
-		if private.warningCanSendBug and CanSendAuctionQuery() then -- check it again after delay
-			private.warningCanSendBug = nil
-		end
 	end
 
 	local curQuery, curScan, curPages = private.curQuery, private.curScan, private.curPages
@@ -1981,38 +2133,20 @@ local StorePageFunction = function()
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
 	local maxPages = ceil(totalAuctions / NUM_AUCTION_ITEMS_PER_PAGE)
 	local isGetAll = false
-	local isGetAllFail = false -- used to handle Blizzard bug {ADV-595}
-	local hybridStartScanPage
-	if (numBatchAuctions > NUM_AUCTION_ITEMS_PER_PAGE) then
+	local isGetAllFail = false -- flag to handle certain GetAll failure situations
+	if numBatchAuctions > NUM_AUCTION_ITEMS_PER_PAGE then
 		isGetAll = true
 		maxPages = 1
-		if totalAuctions ~= numBatchAuctions then
-			-- Blizzard bug - these should be the same for a GetAll scan {ADV-595}
-			if get("core.scan.hybridscans") and not private.warningCanSendBug then
-				qryinfo.hybrid = true
-				hybridStartScanPage = floor(numBatchAuctions / NUM_AUCTION_ITEMS_PER_PAGE) -- where to start paged part of hybrid scan from
-				local wholePageAuctions = hybridStartScanPage * NUM_AUCTION_ITEMS_PER_PAGE -- where to end scanning GetAll to match up with paged part (this may be less than numBatchAuctions)
-				if nLog then
-					nLog.AddMessage("Auctioneer", "Scan", N_INFO, "StorePage commencing Hybrid scan",
-						format("Batch size %d\nHybrid start page %d\nGetAll limit %d\nReported total auctions %d",
-						numBatchAuctions, hybridStartScanPage, wholePageAuctions, totalAuctions))
-				end
-
-				numBatchAuctions = wholePageAuctions
-				totalAuctions = numBatchAuctions
-				_print("|cffff7f3fThe Server has not sent all data for this GetAll scan.|r")
-				_print("Auctioneer will use Hybrid scanning to retrieve the missing auctions.")
-			else
-				isGetAllFail = true
-				if nLog then
-					nLog.AddMessage("Auctioneer", "Scan", N_INFO, "StorePage incomplete GetAll",
-						format("Batch size %d\nReported total auctions %d",
-						numBatchAuctions, totalAuctions))
-				end
-				totalAuctions = numBatchAuctions
-				_print("|cffff7f3fThe Server has not sent all data for this GetAll scan. The scan will be incomplete.|r")
-				_print("It may not be possible to complete a GetAll scan on this server at this time.")
+		if totalAuctions ~= numBatchAuctions then -- check for invalid values from server (residual test in case it starts to happen again...)
+			isGetAllFail = true
+			if nLog then
+				nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "StorePage incomplete GetAll",
+					format("Batch size %d\nReported total auctions %d",
+					numBatchAuctions, totalAuctions))
 			end
+			totalAuctions = numBatchAuctions
+			aucPrint("|cffff7f3fThe Server has not sent all data for this GetAll scan. The scan will be incomplete.|r")
+			aucPrint("Please report this in the Auctioneer forums.")
 		end
 		EventFramesRegistered = {GetFramesRegisteredForEvent("AUCTION_ITEM_LIST_UPDATE")}
 		for _, frame in pairs(EventFramesRegistered) do
@@ -2034,11 +2168,19 @@ local StorePageFunction = function()
 	local processingTime = 800 / get("scancommit.targetFPS")
 	local debugprofilestop = debugprofilestop
 	local nextPause = debugprofilestop() + processingTime
-	local breakcount = 5000 -- additional limiter: yield every breakcount auctions scanned
+	local fillduringscan = get("core.scan.fillduringscan")
 
-	if scannerthrottle then
-		breakcount = 1000
-		processingTime = processingTime / 5
+	local breakcount = 10000 -- additional limiter: yield every breakcount auctions scanned
+	local scannerthrottle = get("core.scan.scannerthrottle")
+	if scannerthrottle >= Const.ALEVEL_HI then
+		breakcount = 500
+		processingTime = processingTime * 0.1
+	elseif scannerthrottle >= Const.ALEVEL_MED then
+		breakcount = 2000
+		processingTime = processingTime * 0.2
+	elseif scannerthrottle >= Const.ALEVEL_LOW then
+		breakcount = 5000
+		processingTime = processingTime * 0.5
 	end
 
 	local storecount = 0
@@ -2053,13 +2195,15 @@ local StorePageFunction = function()
 		remissedCounts[i] = 0
 	end
 
+
 	if not private.breakStorePage and (page > qryinfo.page) then
-		local itemLinksTried = {}
+		-- First pass
 		local retries = { }
+		private.InitItemInfoCache()
 		for i = 1, numBatchAuctions do
 			if isGetAll then -- only yield for GetAll scans
 				if debugprofilestop() > nextPause or i % breakcount == 0 then
-					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning")
 					coroutine.yield()
 					if private.breakStorePage then
 						break
@@ -2068,11 +2212,14 @@ local StorePageFunction = function()
 				end
 			end
 
-			local itemData = private.GetAuctionItem("list", page, i, itemLinksTried)
+			local itemData = private.GetAuctionItem("list", page, i)
 
 			if (itemData) then
 				local isComplete, completeMinusSeller = private.isComplete(itemData)
 				if (isComplete) then
+					if fillduringscan then
+						private.GetAuctionItemFillIn(itemData, true)
+					end
 					tinsert(curScan, itemData)
 					storecount = storecount + 1
 				else
@@ -2097,14 +2244,15 @@ local StorePageFunction = function()
 				("Page: %d\nRetries Setting: %d\nUnresolved Entries:%d\nPage Elapsed Time: %.2fs"):format(page, maxTries, #retries, GetTime() - retrievalStarted))
 		end
 
+		-- Second and subsequent passes
 		local newRetries = { }
 		local readCount = 1
 		local needsRetries = #retries > 0
 		while (needsRetries and tryCount < maxTries and ((not sellerOnly) or get("core.scan.sellernamedelay")) and not private.breakStorePage) do
 			needsRetries = false
 			sellerOnly = true
-			itemLinksTried = {}
 			tryCount = tryCount + 1
+			private.InitItemInfoCache()
 			-- must use GetTime to time this pause, as debugprofilestop is unsafe across yields
 			local nextWait = GetTime() + 1
 			while GetTime() < nextWait do
@@ -2117,7 +2265,7 @@ local StorePageFunction = function()
 			for pos, i in ipairs(retries) do
 				if isGetAll then
 					if debugprofilestop() > nextPause or pos % breakcount == 0 then
-						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning Retries")
 						coroutine.yield()
 						if private.breakStorePage then break end
 						nextPause = debugprofilestop() + processingTime
@@ -2126,11 +2274,14 @@ local StorePageFunction = function()
 
 				readCount = readCount + 1
 
-				local itemData = private.GetAuctionItem("list", page, i[1], itemLinksTried, i[2])
+				local itemData = private.GetAuctionItem("list", page, i[1], i[2])
 
 				if (itemData) then
 					local isComplete, completeMinusSeller = private.isComplete(itemData)
 					if (isComplete) then
+						if fillduringscan then
+							private.GetAuctionItemFillIn(itemData, true)
+						end
 						tinsert(curScan, itemData)
 						storecount = storecount + 1
 					else
@@ -2192,7 +2343,7 @@ local StorePageFunction = function()
 		for _, i in ipairs(retries) do
 			if isGetAll then
 				if debugprofilestop() > nextPause then
-					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
+					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true, "Auctioneer: Scanning Cleanup")
 					coroutine.yield()
 					if private.breakStorePage then break end
 					nextPause = debugprofilestop() + processingTime
@@ -2234,7 +2385,6 @@ local StorePageFunction = function()
 		end
 	end
 
-
 	if EventFramesRegistered then
 		for _, frame in pairs(EventFramesRegistered) do
 			frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
@@ -2247,13 +2397,13 @@ local StorePageFunction = function()
 	end
 
 	--Send a Processor event to modules letting them know we are done with the page
-	_G.AucAdvanced.SendProcessorMessage("pagefinished", page)
+	AucAdvanced.SendProcessorMessage("pagefinished", page)
 
 	-- Clear GetAll changes made by StartScan
 	if private.isGetAll then -- in theory private.isGetAll should be true iff (local) isGetAll is true -- unless total auctions <=50 (e.g. on PTR)
 		lib.ProgressBars("GetAllProgressBar", 100, false)
 		BrowseSearchButton:Show()
-		_G.AucAdvanced.API.BlockUpdate(false)
+		AucAdvanced.API.BlockUpdate(false)
 		private.isGetAll = nil
 	end
 
@@ -2261,20 +2411,7 @@ local StorePageFunction = function()
 	local endTime = GetTime()
 	if not private.breakStorePage then
 		-- Send the next page query or finish scanning
-		if qryinfo.hybrid then
-			if hybridStartScanPage then
-				-- we've just done the GetAll part of the hybrid; start the paged part
-				private.ScanPage(hybridStartScanPage)
-			else
-				if (page+1 < maxPages) then
-					private.ScanPage(page + 1)
-				else
-					elapsed = endTime - private.scanStarted - private.totalPaused
-					private.UpdateScanProgress(nil, totalAuctions, #curScan, elapsed, page+2, maxPages, curQuery)
-					private.Commit(false, false, false)
-				end
-			end
-		elseif isGetAll then
+		if isGetAll then
 				elapsed = endTime - private.scanStarted - private.totalPaused
 				private.UpdateScanProgress(nil, totalAuctions, #curScan, elapsed, page+2, maxPages, curQuery) -- page+2 signals that scan is done
 				private.Commit(isGetAllFail, false, true)
@@ -2282,7 +2419,7 @@ local StorePageFunction = function()
 				-- ### temp fix: isUsable flag appears to be acting like a mini-getall, in this case we don't want to blank the results
 				if not curQuery.isUsable then
 					private.queryStarted = GetTime()
-					private.Hook.QueryAuctionItems("empty page", "", "", nil, nil, nil, nil, nil, nil, nil, nil)
+					private.Hook.QueryAuctionItems("empty page", nil, nil, nil, nil, nil, nil, nil, nil)
 				end -- ###
 		elseif private.isScanning then
 			if (page+1 < maxPages) then
@@ -2326,15 +2463,6 @@ local StorePageFunction = function()
 --		("Query Elapsed: %fs\nThis Page Store Elapsed: %fs\nThis Page Code Execution Time: %fs"):format(endTime-queryStarted, endTime-retrievalStarted, RunTime))
 		("Query Elapsed: %fs\nThis Page Store Elapsed: %fs"):format(endTime-queryStarted, endTime-retrievalStarted))
 	end
-
-	-- Report warning for Blizzard bug {ADV-595}
-	-- (we wait til we're finished storing as much as we can, before asking the user to close the AH)
-	if private.warningCanSendBug then
-		private.warningCanSendBug = nil
-		if not CanSendAuctionQuery() then
-			_G.message("The Server is not responding correctly.\nClosing and reopening the Auctionhouse may fix this problem.")
-		end
-	end
 end
 
 function private.StopStorePage(silent)
@@ -2360,7 +2488,99 @@ function lib.StorePage()
 	end
 end
 
---[[ _G.AucAdvanced.Scan.QuerySafeName(name)
+--[[ AucAdvanced.Scan.QueryFilterFromID(classID, subClassID, inventoryType)
+	-- Auctioneer core functions generally work with ID values
+	-- In scandata records, indexes Const.CLASSID and Const.SUBCLASSID are stored as IDs
+	-- GetitemInfo returns classID and subClassID at postions 12 and 13
+	-- Caution: this is different from the index system used by Blizzard_AuctionUI
+	-- Caution: do not use EquipEncode values for inventoryType
+--]]
+function lib.QueryFilterFromID(classID, subClassID, inventoryType)
+	if type(classID) ~= "number" or classID < 0 then return end
+	if subClassID ~= nil and (type(subClassID) ~= "number" or subClassID < 0) then return end
+	if type(inventoryType) == "number" then
+		if inventoryType < 0 or not subClassID then return end
+	elseif inventoryType ~= nil then return end
+
+	return {{ classID = classID, subClassID = subClassID, inventoryType = inventoryType}}
+end
+--[[ AucAdvanced.Scan.QueryFilterFromIndex(categoryIndex, subCategoryIndex, subSubCategoryIndex)
+	Blizzard functions use indexes into the AuctionCategories structure
+--]]
+function lib.QueryFilterFromIndex(categoryIndex, subCategoryIndex, subSubCategoryIndex)
+	if not AuctionCategories then return end
+	local node = AuctionCategories[categoryIndex]
+	if not node then return end
+	if subCategoryIndex then
+		local subcat = node.subCategories
+		if not subcat then return end
+		node = subcat[subCategoryIndex]
+		if not node then return nil end
+
+		if subSubCategoryIndex then
+			subcat = node.subCategories
+			if not subcat then return end
+			node = subcat[subSubCategoryIndex]
+			if not node then return end
+		end
+	end
+
+	return node.filters
+end
+function lib.CreateFilterSig(filterData)
+	if type(filterData) ~= "table" then return end
+	local sig = ""
+	for index, filter in ipairs(filterData) do
+		local separator = "+"
+		if index == 1 then separator = "" end
+		local classID, subClassID, inventoryType = filter.classID, filter.subClassID, filter.inventoryType
+		if classID then
+			if subClassID then
+				if inventoryType then
+					sig = sig .. separator .. classID .. "." .. subClassID .. "." .. inventoryType
+				else
+					sig = sig .. separator .. classID .. "." .. subClassID
+				end
+			else
+				sig = sig .. separator .. classID
+			end
+		end
+	end
+	return sig
+end
+function private.CompareFilterData(data1, data2)
+	if data1 == data2 then
+		return true -- same table
+	elseif not data1 then
+		if not data2 then
+			return true -- both nil or false
+		else
+			return false -- one nil, one table
+		end
+	elseif not data2 then
+		return false -- one table, one nil
+	end
+	-- assume both are tables at this point, as we should have pre-checked this
+	local count = #data1
+	if #data2 ~= count then
+		-- different number of entries
+		return false
+	end
+	for index = 1, count do
+		local filter1, filter2 = data1[index], data2[index]
+		-- each should be table containing entries classID [, subClassID [, inventoryType]]
+		if filter1.classID ~= filter2.classID or filter1.subClassID ~= filter2.subClassID then
+			return false
+		end
+		if filter1.subClassID and filter1.inventoryType ~= filter2.inventoryType then
+			-- only check inventoryType if we have subClassID
+			return false
+		end
+	end
+	return true
+end
+
+--[[ AucAdvanced.Scan.QuerySafeName(name)
 	Library function to convert a name to the 'normalized' form used by scan querys
 	Note: performs truncation on names over 63 bytes as QueryAuctionItems cannot handle longer strings
 --]]
@@ -2379,7 +2599,7 @@ function lib.QuerySafeName(name)
 	end
 end
 
---[[ _G.AucAdvanced.Scan.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+--[[ AucAdvanced.Scan.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
 	Library function to allow other modules to obtain a query sig
 	Returns the sig that would be used in a scan with the specified parameters
 --]]
@@ -2387,7 +2607,7 @@ function lib.CreateQuerySig(...)
 	return private.CreateQuerySig(private.QueryScrubParameters(...))
 end
 
-function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+function private.QueryScrubParameters(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Converts the parameters that we will store in our scanQuery table into a consistent format:
 	-- converts each parameter to correct type;
 	-- converts all strings to lowercase;
@@ -2398,16 +2618,6 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, cl
 	if minLevel and minLevel < 1 then minLevel = nil end
 	maxLevel = tonumber(maxLevel)
 	if maxLevel and maxLevel < 1 then maxLevel = nil end
-	classIndex = tonumber(classIndex)
-	if classIndex and classIndex < 1 then classIndex = nil end
-	if classIndex then
-		subclassIndex = tonumber(subclassIndex)
-		if subclassIndex and subclassIndex < 1 then subclassIndex = nil end
-	else
-		subclassIndex = nil -- subclassIndex is only valid if we have a classIndex
-	end
-	invTypeIndex = tonumber(invTypeIndex) or Const.EquipLocToInvIndex[invTypeIndex] -- accepts "INVTYPE_*" strings
-	if invTypeIndex and invTypeIndex < 1 then invTypeIndex = nil end
 	if isUsable and isUsable ~= 0 then
 		isUsable = true
 	else
@@ -2421,24 +2631,25 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, cl
 	qualityIndex = tonumber(qualityIndex)
 	if qualityIndex and qualityIndex < 1 then qualityIndex = nil end
 
-	return name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch
+	-- ### todo: more robust filterData checks?
+	if type(filterData) ~= "table" then filterData = nil end
+
+	return name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData
 end
 
-function private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+function private.CreateQuerySig(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	return strjoin("#",
 		name or "",
 		minLevel or "",
 		maxLevel or "",
-		invTypeIndex or "",
-		classIndex or "",
-		subclassIndex or "",
 		isUsable and "1" or "", -- can't concatenate booleans
 		qualityIndex or "",
-		exactMatch and "1" or ""
+		exactMatch and "1" or "",
+		lib.CreateFilterSig(filterData) or "" -- filter sigs contain "+" and "." separators
 	) -- can use strsplit("#", sig) to extract params
 end
 
-function private.QueryCompareParameters(query, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+function private.QueryCompareParameters(query, name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Returns true if the parameters are identical to the values stored in the specified scanQuery table
 	-- Use this function to avoid creating a duplicate scanQuery table
 	-- Parameters must have been scrubbed first
@@ -2446,12 +2657,10 @@ function private.QueryCompareParameters(query, name, minLevel, maxLevel, invType
 	if query.name == name -- note: both already converted to lowercase when scrubbed
 	and query.minUseLevel == minLevel
 	and query.maxUseLevel == maxLevel
-	and query.classIndex == classIndex
-	and query.subclassIndex == subclassIndex
 	and query.quality == qualityIndex
-	and query.invType == invTypeIndex
 	and query.isUsable == isUsable
 	and query.exactMatch == exactMatch
+	and private.CompareFilterData(query.filterData, filterData)
 	then
 		return true
 	end
@@ -2459,7 +2668,7 @@ end
 
 private.querycount = 0
 
-function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+function private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 	-- Assumes the parameters have already been scrubbed
 	local class, subclass
 	local query, qryinfo = {}, {}
@@ -2469,39 +2678,27 @@ function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classInde
 	query.name = name
 	query.minUseLevel = minLevel
 	query.maxUseLevel = maxLevel
-	query.invType = invTypeIndex
-	if classIndex then
-		class = Const.CLASSES[classIndex]
-		query.class = class
-		query.classIndex = classIndex
-	end
-	if subclassIndex then
-		subclass = Const.SUBCLASSES[classIndex][subclassIndex]
-		query.subclass = subclass
-		query.subclassIndex = subclassIndex
-	end
 	query.isUsable = isUsable
 	query.quality = qualityIndex
 	query.exactMatch = exactMatch
+	query.filterData = filterData
 
 	qryinfo.page = -1 -- use this to store highest page seen by query, and we haven't seen any yet.
 	qryinfo.id = private.querycount
 	private.querycount = private.querycount+1
-	qryinfo.sig = private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
+	qryinfo.sig = private.CreateQuerySig(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
 
-	-- the return value from GetFaction() can change when the Auctionhouse closes
-	-- (Neutral Auctionhouse and "Always Home Faction" option enabled - this is on by default)
-	-- store the current return value - this will be used throughout processing to avoid problems
-	qryinfo.serverKey = GetFaction()
+	-- store the current serverKey value for compatibility, no longer used by Auctioneer code - ### deprecated
+	qryinfo.serverKey = Resources.ServerKey
 
 	local scanSize = false, ""
-	if ((not query.class) and (not query.subclass) and (not query.minUseLevel)
+	if ((not query.filterData)
 			and (not query.maxUseLevel)
 			and (not query.name) and (not query.isUsable)
-			and (not query.invType) and (not query.quality)
+			and (not query.quality)
 			and (not query.exactMatch)) then
 		qryinfo.scanSize = "Full"
-	elseif (query.name and query.class and query.subclass and query.quality) then
+	elseif (query.name and query.filterData) then
 		qryinfo.scanSize = "Micro"
 	else
 		qryinfo.scanSize = "Partial"
@@ -2511,12 +2708,110 @@ function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classInde
 end
 
 private.Hook = {}
+private.Hook.QueryAuctionItems = QueryAuctionItems
+local isSecure, taint = issecurevariable("CanSendAuctionQuery")
+if not isSecure then
+	private.warnTaint = taint
+end
+private.CanSend = CanSendAuctionQuery
+
+function QueryAuctionItems(name, minLevel, maxLevel, page, isUsable, qualityIndex, GetAll, exactMatch, filterData, ...) -- ### Legion check
+	if not private.isAuctioneerQuery then
+		-- Optional bypass to handle compatibility problems with other AddOns
+		local doBypass = false
+		if private.compatModeLocks then
+			local scanbit = private.isBlizzardQuery and 2 or 1
+			for lock, mode in pairs(private.compatModeLocks) do
+				if bitand(mode, scanbit) ~= 0 then -- another AddOn has requested we bypass this scan type
+					doBypass = true
+					break
+				end
+			end
+			private.compatModeLocks[""] = nil -- remove anonymous lock (if present)
+		end
+		doBypass = doBypass or not get("core.scan.scanallqueries")
+		if doBypass then
+			return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, page, isUsable, qualityIndex, GetAll, exactMatch, filterData, ...)
+		end
+	end
+
+	private.isAuctioneerQuery = nil
+	private.isBlizzardQuery = nil
+	if private.compatModeLocks and not next(private.compatModeLocks) then
+		private.compatModeLocks = nil -- remove table if empty
+	end
+	if private.warnTaint then
+		aucPrint("\nAuctioneer:\n  WARNING, The CanSendAuctionQuery() function was tainted by the addon: {{"..private.warnTaint.."}}.\n  This may cause minor inconsistencies with scanning.\n  If possible, adjust the load order to get me to load first.\n ")
+		private.warnTaint = nil
+	end
+	if not private.CanSend() then
+		aucPrint("Can't send query just at the moment")
+		return
+	end
+
+	local isSearch = (BrowseSearchButton:GetButtonState() == "PUSHED")
+
+	-- If we're getting called after we've sent a query, but before it's been stored, take this chance to save it.
+	if private.sentQuery then
+		lib.StorePage()
+	end
+
+	name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData = private.QueryScrubParameters(
+		name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
+
+	local query
+	if private.curQuery then
+		if not GetAll and not private.isGetAll
+		and private.QueryCompareParameters(private.curQuery, name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData) then
+			private.StopStorePage()
+			query = private.curQuery
+			if (_G.nLog) then
+				_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Sending existing query %d (%s)"):format(query.qryinfo.id, query.qryinfo.sig))
+			end
+		else
+			private.Commit(true, false, false)
+		end
+	end
+	if not query then
+		query = private.NewQueryTable(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData)
+		private.scanStartTime = time()
+		private.scanStarted = GetTime()
+		private.totalPaused = 0
+		private.storeTime = 0
+		private.curQuery = query
+	end
+
+	page = tonumber(page) or 0
+	if (page==0) then
+		local scanSize = query.qryinfo.scanSize
+		if (query.qryinfo.NoSummary) then
+			scanSize = "NoSum-"..scanSize
+		end
+		if (_G.nLog) then
+			local queryType = "standard"
+			if (GetAll) then queryType = "get all" end
+			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Sending new %s query %d (%s)"):format(queryType, query.qryinfo.id, query.qryinfo.sig))
+		end
+		AucAdvanced.SendProcessorMessage("scanstart", scanSize, query.qryinfo.sig, query)
+	end
+
+
+	private.sentQuery = true
+	lib.lastReq = GetTime()
+
+	private.queryStarted = GetTime()
+	private.auctionItemListUpdated = false
+	return private.QuerySent(query, isSearch,
+		private.Hook.QueryAuctionItems(
+			name, minLevel, maxLevel, page, isUsable, qualityIndex, GetAll, exactMatch, filterData, ...))
+end
+
 private.Hook.PlaceAuctionBid = PlaceAuctionBid
 function PlaceAuctionBid(type, index, bid, ...)
 	local itemData = lib.GetAuctionItem(type, index)
 	if itemData then
 		private.Unpack(itemData, statItem)
-		local modules = _G.AucAdvanced.GetAllModules("ScanProcessors")
+		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		for pos, engineLib in ipairs(modules) do
 			if engineLib.ScanProcessors["placebid"] then
 				pcall(engineLib.ScanProcessors["placebid"],"placebid", statItem, type, index, bid)
@@ -2542,7 +2837,7 @@ function StartAuction(minBid, buyoutPrice, runTime, ...)
 	local itemData, price = lib.GetAuctionSellItem(minBid, buyoutPrice, runTime)
 	if itemData then
 		private.Unpack(itemData, statItem)
-		local modules = _G.AucAdvanced.GetAllModules("ScanProcessors")
+		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		for pos, engineLib in ipairs(modules) do
 			if engineLib.ScanProcessors["newauc"] then
 				pcall(engineLib.ScanProcessors["newauc"],"newauc", statItem, minBid, buyoutPrice, runTime, price)
@@ -2556,7 +2851,7 @@ private.Hook.TakeInboxMoney = TakeInboxMoney
 function TakeInboxMoney(index, ...)
 	local invoiceType, itemName, playerName, bid, buyout, deposit, consignment = GetInboxInvoiceInfo(index)
 	if invoiceType then
-		local modules = _G.AucAdvanced.GetAllModules("ScanProcessors")
+		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		local _,_, sender = GetInboxHeaderInfo(index)
 
 		local faction = "Neutral"
@@ -2575,91 +2870,35 @@ function TakeInboxMoney(index, ...)
 	return private.Hook.TakeInboxMoney(index, ...)
 end
 
-private.Hook.QueryAuctionItems = QueryAuctionItems
-
-local isSecure, taint = issecurevariable("CanSendAuctionQuery")
-if not isSecure then
-	private.warnTaint = taint
-end
-private.CanSend = CanSendAuctionQuery
-
-function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
-	if not private.isAuctioneerQuery and not get("core.scan.scanallqueries")then
-		-- Optional bypass to handle compatibility problems with other AddOns
-		return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
-	end
-
-	private.isAuctioneerQuery = nil
-	if private.warnTaint then
-		_print("\nAuctioneer:\n  WARNING, The CanSendAuctionQuery() function was tainted by the addon: {{"..private.warnTaint.."}}.\n  This may cause minor inconsistencies with scanning.\n  If possible, adjust the load order to get me to load first.\n ")
-		private.warnTaint = nil
-	end
-	if not private.CanSend() then
-		_print("Can't send query just at the moment")
-		return
-	end
-
-	local isSearch = (BrowseSearchButton:GetButtonState() == "PUSHED")
-
-	-- If we're getting called after we've sent a query, but before it's been stored, take this chance to save it.
-	if private.sentQuery then
-		lib.StorePage()
-	end
-
-	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch = private.QueryScrubParameters(
-		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
-
-	local query
-	if private.curQuery then
-		if not GetAll and not private.isGetAll
-		and private.QueryCompareParameters(private.curQuery, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch) then
-			private.StopStorePage()
-			query = private.curQuery
-			if (_G.nLog) then
-				_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Sending existing query %d (%s)"):format(query.qryinfo.id, query.qryinfo.sig))
-			end
-		else
-			private.Commit(true, false, false)
-		end
-	end
-	if not query then
-		query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
-		private.scanStartTime = time()
-		private.scanStarted = GetTime()
-		private.totalPaused = 0
-		private.storeTime = 0
-		private.curQuery = query
-	end
-
-	page = tonumber(page) or 0
-	if (page==0) then
-		local scanSize = query.qryinfo.scanSize
-		if (query.qryinfo.NoSummary) then
-			scanSize = "NoSum-"..scanSize
-		end
-		if (_G.nLog) then
-			local queryType = "standard"
-			if (GetAll) then queryType = "get all" end
-			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Sending new %s query %d (%s)"):format(queryType, query.qryinfo.id, query.qryinfo.sig))
-		end
-		_G.AucAdvanced.SendProcessorMessage("scanstart", scanSize, query.qryinfo.sig, query)
-	end
-
-
-	private.sentQuery = true
-	lib.lastReq = GetTime()
-
-	private.queryStarted = GetTime()
-	private.auctionItemListUpdated = false
-	return private.QuerySent(query, isSearch,
-		private.Hook.QueryAuctionItems(
-			name or "", minLevel or "", maxLevel or "", invTypeIndex, classIndex, subclassIndex,
-			page, isUsable, qualityIndex, GetAll, exactMatch, ...))
-end
-
 -- Function to indicate that the next call to QueryAuctionItems comes from Auctioneer itself.
 function lib.SetAuctioneerQuery()
 	private.isAuctioneerQuery = true
+end
+
+--[[ Function for third-party AddOns to change Auctioneer's scanning behaviour to avoid compatibility issues
+	Duplicates or overrides certain compatibility Config settings
+	mode 1 : don't scan next raw call to QueryAuctionItems (i.e. neither isAuctioneerQuery nor isBlizzardQuery is set)
+	mode 2 : don't scan next Blizzard query (i.e. isBlizzardQuery is set but isAuctioneerQuery is not set)
+
+	lock : optional lock "key" (preferably string containing AddOn name for uniqueness)
+		given mode will persist until cancelled: cancel by calling CompatibilityMode with mode 0 and the same lock "key"
+--]]
+function lib.CompatibilityMode(mode, lock)
+	if type(mode) ~= "number" or floor(mode) ~= mode then
+		error("AucAdvanced.Scan.CompatibilityMode(mode, lock)\nmode must be a number (bitfield)", 2)
+	end
+	lock = lock or "" -- use "" as key for anonymous locks, which are removed by the next call to QueryAuctionItems
+	if not private.compatModeLocks then
+		private.compatModeLocks = {}
+	end
+
+	if lock == "" then -- anonymous lock
+		private.compatModeLocks[lock] = bitor(private.compatModeLocks[lock] or 0, mode) -- merge modes
+	elseif mode == 0 then
+		private.compatModeLocks[lock] = nil
+	else
+		private.compatModeLocks[lock] = mode -- overwrite mode
+	end
 end
 
 function lib.SetPaused(pause)
@@ -2667,7 +2906,7 @@ function lib.SetPaused(pause)
 		-- A GetAll scan cannot be Popped or Pushed
 		assert(not private.isPaused)
 		if pause then
-			_print("Scan cannot be paused/unpaused because it is a GetAll scan")
+			aucPrint("Scan cannot be paused/unpaused because it is a GetAll scan")
 		end
 		return
 	end
@@ -2682,7 +2921,7 @@ function lib.SetPaused(pause)
 end
 
 private.unexpectedClose = false
-local timeoutCanSend = 0 -- part of fix for Blizzard bug {ADV-595}
+local timeoutSentQuery = 0
 
 function private.OnUpdate(me, dur)
 	if CoCommit then
@@ -2731,19 +2970,29 @@ function private.OnUpdate(me, dur)
 			return
 		end
 
-		if private.sentQuery and private.auctionItemListUpdated then
-			if CanSendAuctionQuery() then
-				timeoutCanSend = 0
+		if private.sentQuery then
+			local itemlistUpdated = private.auctionItemListUpdated
+			local canSend = CanSendAuctionQuery()
+			if itemlistUpdated and canSend then
+				timeoutSentQuery = 0
 				lib.StorePage()
-			elseif timeoutCanSend > 15 then
-				-- Fix for Blizzard Auctionhouse bug {ADV-595}
-				-- CanSendAuctionQuery continues to return nil indefinitely. We use a timeout
-				timeoutCanSend = 0
-				private.warningCanSendBug = true -- further handling required by StorePageFunction
+			elseif itemlistUpdated and timeoutSentQuery > 30 then
+				-- Fix in case CanSendAuctionQuery continues to return nil indefinitely. We use a timeout {ADV-595}
+				timeoutSentQuery = 0
 				lib.StorePage()
+			elseif canSend and timeoutSentQuery > 75 then
+				-- Fix for AUCTION_ITEM_LIST_UPDATE sometimes not being sent by server after Legion
+				-- In this case Serve has updated CanSendAuctionQuery, it may have sent info, so we'll try to store page
+				-- Note longer timeout: AUCTION_ITEM_LIST_UPDATE is the important event, CanSendAuctionQuery is a backup
+				timeoutSentQuery = 0
+				lib.StorePage()
+			elseif timeoutSentQuery > 180 then
+				-- Neither CanSendAuctionQuery nor AUCTION_ITEM_LIST_UPDATE have occurred and we have waited a long time
+				timeoutSentQuery = 0
+				private.ResetAll()
+				message("Auctioneer: Scan failed, Server is not responding")
 			else
-				-- part of fix for Blizzard bug {ADV-595}
-				timeoutCanSend = timeoutCanSend + dur
+				timeoutSentQuery = timeoutSentQuery + dur
 			end
  		end
 	elseif private.curQuery then
@@ -2755,7 +3004,7 @@ private.updater:SetScript("OnUpdate", private.OnUpdate)
 
 function lib.Cancel()
 	if (private.curQuery) then
-		_print("Cancelling current scan")
+		aucPrint("Cancelling current scan")
 		private.Commit(true, false, false)
 	end
 	private.ResetAll()
@@ -2771,7 +3020,7 @@ function lib.Interrupt()
 				-- If the StorePage function didn't run, we need to cleanup here instead
 				lib.ProgressBars("GetAllProgressBar", nil, false)
 				BrowseSearchButton:Show()
-				_G.AucAdvanced.API.BlockUpdate(false)
+				AucAdvanced.API.BlockUpdate(false)
 				private.isGetAll = nil
 			end
 		elseif private.isScanning then
@@ -2786,7 +3035,7 @@ end
 
 function lib.Abort()
 	if (private.curQuery) then
-		_print("Aborting current scan")
+		aucPrint("Aborting current scan")
 	end
 	private.ResetAll()
 end
@@ -2797,7 +3046,7 @@ function private.ResetAll()
 	-- Fallback in case private.isGetAll and related actions were not cleared during processing
 	lib.ProgressBars("GetAllProgressBar", nil, false)
 	BrowseSearchButton:Show()
-	_G.AucAdvanced.API.BlockUpdate(false)
+	AucAdvanced.API.BlockUpdate(false)
 	private.isGetAll = nil
 
 	local oldquery = private.curQuery
@@ -2995,12 +3244,7 @@ function lib.GetStackedScanCount()
 	return scanCount
 end
 
-function lib.AHClosed()
-	lib.Interrupt()
-end
-
-function lib.Logout()
-	_G.AucAdvancedData.Scandata = nil -- delete obsolete data. it's here because CoreScan doesn't have an OnLoad processor
+function coremodule.OnUnload()
 	if (private.curQuery) then
 		private.Commit(true, false, false)
 	end
@@ -3011,24 +3255,28 @@ function lib.Logout()
 	end
 end
 
-
 coremodule.Processors = {}
+function coremodule.Processors.auctionui()
+	private.Hook.AuctionFrameBrowse_Search = AuctionFrameBrowse_Search
+	function AuctionFrameBrowse_Search()
+		private.isBlizzardQuery = true
+		private.Hook.AuctionFrameBrowse_Search()
+		private.isBlizzardQuery = nil
+	end
+end
+
 function coremodule.Processors.scanstats(event, scanstats)
 	private.clearImageCaches(event, scanstats)
 end
 
 function coremodule.Processors.auctionclose(event)
 	-- clearup memory usage when AH closed
-	private.ResetItemInfoCache()
-	private.clearImageCaches(event)
-end
-
-if Resources.PlayerFaction == "Neutral" then
-	coremodule.Processors.factionselect = function(event)
-		private.clearImageCaches(event)
+	if not get("core.scan.keepinfocacheonclose") then
+		private.ResetItemInfoCache()
 	end
+	private.clearImageCaches(event)
+	lib.Interrupt()
 end
-
 
 internal.Scan = {}
 function internal.Scan.NotifyItemListUpdated()
@@ -3052,7 +3300,5 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-internal.Scan.Logout = lib.Logout
-internal.Scan.AHClosed = lib.AHClosed
-
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5518 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5709 $")
+AucAdvanced.CoreFileCheckOut("CoreScan")

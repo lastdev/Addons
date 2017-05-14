@@ -1,7 +1,7 @@
 --[[
 	Norganna's Tooltip Helper class
 	Version: 1,4
-	Revision: $Id: nTipHelper.lua 351 2013-05-11 09:07:58Z brykrys $
+	Revision: $Id: nTipHelper.lua 405 2016-07-27 17:59:43Z brykrys $
 	URL: http://norganna.org/tthelp
 
 	This is a slide-in helper class for the Norganna's AddOns family of AddOns
@@ -43,8 +43,13 @@
 if not LibStub then -- LibStub is included in LibExtraTip
 	error("TipHelper cannot load because LibExtraTip is not loaded (LibStub missing)")
 end
-local MAJOR,MINOR,REVISION = "nTipHelper", 1, 6
+local MAJOR,MINOR = "nTipHelper", 1
 local LIBSTRING = MAJOR..":"..MINOR
+
+-- REVISION cannot be a SVN Revison in case this library is used in multiple repositories
+-- Should be updated manually with each (non-trivial) change
+local REVISION = 8
+
 local lib = LibStub:NewLibrary(LIBSTRING,REVISION)
 if not lib then return end
 
@@ -150,7 +155,7 @@ do -- tooltip class definition
 		if type(link) ~= "string" then
 			return
 		end
-		local newlink, test = gsub(link, "(|Hitem:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+):%d+([|:][^h]*h)", "%1:80%2")
+		local newlink, test = gsub(link, "(|Hitem:[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*):%d+:%d*", "%1:80:")
 		lastSaneLink = newlink
 		lastSanitized = link
 		return lastSaneLink
@@ -161,12 +166,22 @@ do -- tooltip class definition
 	-- where they are assigned values, comments will show what each one represents
 	local lastDecodeLink
 	local linkType,ret1,ret2,ret3,ret4,ret5,ret6,ret7,ret8,ret9,ret10
-	function lib:DecodeLink(link, info)
+	-- Fixed patterns to lift out BonusIDs from the tail of the string.
+	local bonusIDPatterns = {
+		["1"] = "%d+",
+		["2"] = "%d+:%d+",
+		["3"] = "%d+:%d+:%d+",
+		["4"] = "%d+:%d+:%d+:%d+",
+	}
+	function lib:DecodeLink(link, info, bonus)
 		if not link then
 			return
 		end
 		if type(info) ~= "table" then
 			info = nil
+		end
+		if type(bonus) ~= "table" then
+			bonus = nil
 		end
 
 		if link ~= lastDecodeLink then
@@ -174,7 +189,7 @@ do -- tooltip class definition
 			linkType = nil
 			local vartype = type(link)
 			if (vartype == "string") then
-				local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10 = strsplit(":", link)
+				local header,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14 = strsplit(":", link, 15)
 				lType = header:sub(-4) -- get last 4 letters of link type
 				if lType == "item" then
 					ret1 = tonumber(s1) -- itemId
@@ -186,11 +201,35 @@ do -- tooltip class definition
 						ret9 = tonumber(s6) or 0 -- gem 4 (gem bonus)
 						ret2 = tonumber(s7) or 0 -- suffix
 						ret5 = tonumber(s8) or 0 -- seed
-						-- s9 uLevel is not used
-						if s10 then
-							ret10 = tonumber((strsplit("|", s10))) or 0 -- reforge
+						-- s9 (uLevel), s10 (specializationID), s11 (upgrades), s12 (instanceID) not used
+						if s14 and s14 ~= "" and s13 ~= "" and s13 ~= "0" then
+							-- s13 contains count of bonusIDs, s14 contains tail of string starting with bonusIDs plus other stuff after
+							-- we need to snip the bonudIDs off the front of s14
+							local pattern = bonusIDPatterns[s13]
+							if pattern then -- for small numbers of bonusIDs we can look up a pattern to save time
+								ret10 = s14:match(pattern)
+							else
+								-- we have to search for the end of the bonusIDs section within s14
+								-- if there are x bonusIDs, they should have x-1 ':' separators
+								-- look for the position x'th ':' seperator; we want everything before that point
+								local count = tonumber(s13)
+								if not count then -- probably an incomplete or invalid link, but can occur for certain obscure valid links too in 6.2.4
+									ret10 = nil
+								else
+									local found = 0
+									for i = 1, count do
+										found = s14:find(":", found + 1)
+										if not found then break end
+									end
+									if found and found > 0 then
+										ret10 = s14:sub(1, found - 1)
+									else
+										ret10 = s14:match("([^|]+)")
+									end
+								end
+							end
 						else
-							ret10 = 0 -- reforge
+							ret10 = nil
 						end
 						ret3 = lib:GetFactor(ret2, ret5) -- factor
 						linkType = "item"
@@ -227,9 +266,9 @@ do -- tooltip class definition
 				end
 			elseif (vartype == "number") then
 				-- link is the itemId
-				-- linkType,itemId, suffix,factor,enchant,seed, gem1,gem2,gem3,gemBonus, reforge
+				-- linkType,itemId, suffix,factor,enchant,seed, gem1,gem2,gem3,gemBonus, bonuses(string)
 				linkType,ret1, ret2,ret3,ret4,ret5, ret6,ret7,ret8,ret9, ret10 =
-					"item",link, 0,0,0,0, 0,0,0,0, 0
+					"item",link, 0,0,0,0, 0,0,0,0, nil
 				if info then
 					-- only need to create a proper link if it will be needed for the info table
 					local _, newlink = GetItemInfo(link)
@@ -254,10 +293,17 @@ do -- tooltip class definition
 				info.itemGem2 = ret7
 				info.itemGem3 = ret8
 				info.itemGemBonus = ret9
-				info.itemReforge = ret10
+				info.itemBonuses = ret10
 			end
-			-- linkType,itemId, suffix,factor,enchant,seed, gem1,gem2,gem3,gemBonus, reforge
-			 return linkType,ret1, ret2,ret3,ret4,ret5, ret6,ret7,ret8,ret9, ret10
+			if bonus and ret10 then
+				-- this is potentially an expensive operation, we only perform it if caller provided a table for us to store bonuses into
+				-- caller is expected to pre-wipe the table (or caller can accumulate data from several items by not wiping)
+				for b in ret10:gmatch("%d+") do
+					tinsert(bonus, tonumber(b))
+				end
+			end
+			-- linkType,itemId, suffix,factor,enchant,seed, gem1,gem2,gem3,gemBonus, bonuses(string)
+			return linkType,ret1, ret2,ret3,ret4,ret5, ret6,ret7,ret8,ret9, ret10
 		elseif linkType == "battlepet" then
 			if info then
 				info.linkType = linkType
@@ -476,4 +522,4 @@ do -- tooltip class definition
 
 end -- tooltip class definition
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 351 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 405 $","5.12.DEV.", 'auctioneer', 'libs')

@@ -78,6 +78,63 @@ GTFO.SpellID["101873"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["210160"] = {
+  --desc = "Beaming Gaze (Inquisitor Ha'zaduum, Uldaur - Legion Event)";
+  sound = 2;
+};
+
+GTFO.SpellID["218624"] = {
+  --desc = "Blazing Hellfire (Smoldering Infernal, Dalaran - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["207576"] = {
+  --desc = "Fel Fire (Dalaran - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["221212"] = {
+  --desc = "Pool of Shadows (Gripping Shadows - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["219118"] = {
+  --desc = "Eye of Darkness (Harbinger Faraleth - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["217549"] = {
+  --desc = "Fel Flames (Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["219367"] = {
+  --desc = "Rain of Fire (Darthuzal - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["224069"] = {
+  --desc = "Wake of Blood (Subjugator Val'rek - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["218338"] = {
+  --desc = "Fel Lightning (Fel Lord Kaz'ral - Fel Spike - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["213865"] = {
+  --desc = "Fel Lava (Vogrethar the Defiled - Legion Event)";
+  sound = 1;
+};
+
+GTFO.SpellID["217559"] = {
+  --desc = "Creeping Doom (Gorgoloth)";
+  sound = 1;
+  applicationOnly = true;
+	test = true;
+};
+
 -- ==============================================================================
 -- Fail alerts
 -- ==============================================================================
@@ -137,4 +194,81 @@ GTFO.SpellID["101873"] = {
 GTFO.SpellID["101885"] = {
 	--desc = "Abominable Crush (The Abominable Greench, Feast of Winter Veil)";
 	sound = 3;
+};
+
+GTFO.SpellID["179807"] = {
+	--desc = "Electrified Tripwire (Darkmoon Faire)";
+	sound = 2;
+};
+
+GTFO.SpellID["153310"] = {
+	--desc = "Dazing Shot (Darkmoon Faire)";
+	sound = 3;
+};
+
+GTFO.SpellID["223521"] = {
+  --desc = "Wave of Depravity (Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["219110"] = {
+  --desc = "Shadow Nova (Harbinger Faraleth - Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["219180"] = {
+  --desc = "Secrete Shadows (Harbinger Faraleth - Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["212437"] = {
+  --desc = "Fel Artillery (Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["218507"] = {
+  --desc = "Flames of Argus (Fragment of Argus - Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["217936"] = {
+  --desc = "Hellfire (Mazgoroth - Legion Event)";
+  sound = 3;
+};
+
+GTFO.SpellID["236015"] = {
+  --desc = "Devour (Ravenous Larva - Un'goro Madness)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["235681"] = {
+  --desc = "Caustic Blood (Clutchmother Zavas - Un'goro Madness)";
+  sound = 1;
+};
+
+GTFO.SpellID["235887"] = {
+  --desc = "Call Pack (Queen Zavra - Un'goro Madness)";
+  sound = 3;
+  applicationOnly = true;
+};
+
+GTFO.SpellID["236423"] = {
+  --desc = "Sun's Fury (Sunkeeper Croesus - Un'goro Madness)";
+  sound = 1;
+};
+
+GTFO.SpellID["236183"] = {
+  --desc = "Fiery Breath (Worm - Un'goro Madness)";
+  sound = 1;
+};
+
+GTFO.SpellID["235677"] = {
+  --desc = "Explosive Spores (Tyrantus - Un'goro Madness)";
+  sound = 3;
+};
+
+GTFO.SpellID["236338"] = {
+  --desc = "Boiling Tar (Tar Tyrant - Un'goro Madness)";
+  sound = 1;
 };

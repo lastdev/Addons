@@ -6,7 +6,8 @@ local module = oRA:NewModule("Tanks")
 local L = scope.locale
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
+-- luacheck: globals READY_CHECK_READY_TEXTURE FauxScrollFrame_Update
+-- luacheck: globals FauxScrollFrame_OnVerticalScroll FauxScrollFrame_GetOffset
 
 local frame = nil
 local indexedTanks = {} -- table containing the final tank list
@@ -86,7 +87,7 @@ function module:OnPromoted(event, status)
 	end
 end
 
-function module:OnDemoted(event, status)
+function module:OnDemoted(event)
 	if not frame then return end
 	for k, v in next, top do
 		v.tank:Disable()
@@ -206,17 +207,17 @@ local function OnLeave(self)
 end
 
 local function createButton(parent, template)
-	local frame = CreateFrame("Button", nil, parent, template)
-	frame:SetWidth(16)
-	frame:SetHeight(16)
-	frame:SetScript("OnLeave", OnLeave)
-	frame:SetScript("OnEnter", OnEnter)
-	frame:SetHighlightTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
+	local button = CreateFrame("Button", nil, parent, template)
+	button:SetWidth(16)
+	button:SetHeight(16)
+	button:SetScript("OnLeave", OnLeave)
+	button:SetScript("OnEnter", OnEnter)
+	button:SetHighlightTexture(131128) --"Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar"
 
-	local image = frame:CreateTexture(nil, "BACKGROUND")
-	frame.icon = image
-	image:SetAllPoints(frame)
-	return frame
+	local image = button:CreateTexture(nil, "BACKGROUND")
+	button.icon = image
+	image:SetAllPoints(button)
+	return button
 end
 
 local function topScrollDeleteClick(self)
@@ -268,7 +269,7 @@ local function topScrollSaveClick(self)
 		PlaySound("igMainMenuOptionCheckBoxOn")
 		namedPersistent[value] = true
 		wipe(module.db.persistentTanks)
-		for k, v in next, allIndexedTanks do
+		for _, v in next, allIndexedTanks do
 			if namedPersistent[v] then
 				module.db.persistentTanks[#module.db.persistentTanks + 1] = v
 			end
@@ -289,7 +290,7 @@ local function topScrollUpClick(self)
 		allIndexedTanks[k - 1] = temp
 	end
 	wipe(module.db.persistentTanks)
-	for k, v in next, allIndexedTanks do
+	for _, v in next, allIndexedTanks do
 		if namedPersistent[v] then
 			module.db.persistentTanks[#module.db.persistentTanks + 1] = v
 		end
@@ -319,7 +320,7 @@ function module:CreateFrame()
 	centerBar:SetHeight(8)
 
 	local texture = centerBar:CreateTexture(nil, "BORDER")
-	texture:SetTexture("Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar")
+	texture:SetTexture(130968) --"Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar"
 	texture:SetAllPoints(centerBar)
 	texture:SetTexCoord(0.29296875, 1, 0, 0.25)
 
@@ -330,7 +331,7 @@ function module:CreateFrame()
 		topBar:SetPoint("TOPRIGHT", frame, 5, -42)
 		topBar:SetHeight(8)
 		texture = topBar:CreateTexture(nil, "BORDER")
-		texture:SetTexture("Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar")
+		texture:SetTexture(130968) --"Interface\\ClassTrainerFrame\\UI-ClassTrainer-HorizontalBar"
 		texture:SetAllPoints(topBar)
 		texture:SetTexCoord(0.29296875, 1, 0, 0.25)
 	end
@@ -358,7 +359,7 @@ function module:CreateFrame()
 		helpButton:SetWidth(24)
 		helpButton:SetHeight(24)
 		helpButton:SetPoint("TOPRIGHT", -4, -8)
-		helpButton.icon:SetTexture("Interface\\GossipFrame\\ActiveQuestIcon")
+		helpButton.icon:SetTexture(132048) --"Interface\\GossipFrame\\ActiveQuestIcon"
 		helpButton.tooltipTitle = L.whatIsThis
 		helpButton.tooltipText = L.tankHelp
 	end
@@ -368,7 +369,7 @@ function module:CreateFrame()
 	for i = 1, 10 do
 		local t = CreateFrame("Button", nil, frame)
 		t:SetHeight(16)
-		t:SetHighlightTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
+		t:SetHighlightTexture(131128) --"Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar"
 		t:SetScript("OnClick", topScrollUpClick)
 		t:SetScript("OnLeave", OnLeave)
 		t:SetScript("OnEnter", OnEnter)
@@ -401,7 +402,7 @@ function module:CreateFrame()
 
 		local delete = createButton(t)
 		delete:SetPoint("TOPRIGHT", t)
-		delete.icon:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
+		delete.icon:SetTexture(136813) --"Interface\\RaidFrame\\ReadyCheck-NotReady"
 		delete:SetScript("OnClick", topScrollDeleteClick)
 		delete.tooltipTitle = L.Remove
 		delete.tooltipText = L.deleteButtonHelp
@@ -409,7 +410,7 @@ function module:CreateFrame()
 
 		local tank = createButton(t)
 		tank:SetPoint("TOPRIGHT", delete, "TOPLEFT", -2, 0)
-		tank.icon:SetTexture("Interface\\AddOns\\oRA3\\images\\maintank")
+		tank.icon:SetTexture("Interface\\AddOns\\oRA3\\media\\maintank")
 		if oRA:IsPromoted() then
 			tank:Enable()
 		else
@@ -422,7 +423,7 @@ function module:CreateFrame()
 		if not InCombatLockdown() then
 			local stank = createButton(t, "SecureActionButtonTemplate")
 			stank:SetPoint("TOPRIGHT", delete, "TOPLEFT", -2, 0)
-			stank.icon:SetTexture("Interface\\AddOns\\oRA3\\images\\maintank")
+			stank.icon:SetTexture("Interface\\AddOns\\oRA3\\media\\maintank")
 			stank:SetAttribute("type", "maintank")
 			stank:SetAttribute("action", "toggle")
 			if oRA:IsPromoted() then
@@ -438,7 +439,7 @@ function module:CreateFrame()
 
 		local save = createButton(t)
 		save:SetPoint("TOPRIGHT", tank, "TOPLEFT", -2, 0)
-		save.icon:SetTexture(READY_CHECK_READY_TEXTURE)
+		save.icon:SetTexture(136814) -- "Interface\\RaidFrame\\ReadyCheck-Ready"
 		save:SetScript("OnClick", topScrollSaveClick)
 		save.tooltipTitle = L.Save
 		save.tooltipText = L.saveButtonHelp
@@ -450,7 +451,7 @@ function module:CreateFrame()
 	for i = 1, 9 do
 		local b = CreateFrame("Button", nil, frame)
 		b:SetHeight(16)
-		b:SetHighlightTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
+		b:SetHighlightTexture(131128) --"Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar"
 		b:SetScript("OnClick", bottomScrollClick)
 		if i == 1 then
 			b:SetPoint("TOPLEFT", frame.bottomscroll, 0, 1)
@@ -530,7 +531,7 @@ function module:PLAYER_REGEN_ENABLED()
 		if not top[i].stank then
 			local stank = createButton(top[i], "SecureActionButtonTemplate")
 			stank:SetPoint("TOPRIGHT", top[i].delete, "TOPLEFT", -2, 0)
-			stank.icon:SetTexture("Interface\\AddOns\\oRA3\\images\\maintank")
+			stank.icon:SetTexture("Interface\\AddOns\\oRA3\\media\\maintank")
 			stank:SetAttribute("type", "maintank")
 			stank:SetAttribute("action", "toggle")
 			stank.tooltipTitle = L.blizzMainTank
@@ -567,12 +568,14 @@ do
 		PALADIN = 2,
 		DRUID = 3,
 		DEATHKNIGHT = 4,
-		WARLOCK = 5,
-		HUNTER = 6,
-		ROGUE = 7,
-		MAGE = 8,
-		PRIEST = 9,
-		SHAMAN = 10,
+		MONK = 5,
+		DEMONHUNTER = 6,
+		WARLOCK = 7,
+		HUNTER = 8,
+		ROGUE = 9,
+		MAGE = 10,
+		PRIEST = 11,
+		SHAMAN = 12,
 	}
 	local function sort(a, b)
 		local _, aC = UnitClass(a)
@@ -610,4 +613,3 @@ end
 function oRA:GetSortedTanks()
 	return indexedTanks
 end
-

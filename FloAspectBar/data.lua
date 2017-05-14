@@ -4,10 +4,11 @@
 
 FLO_ASPECT_SPELLS = {
 	["HUNTER"] = {
-		{ id = 5118 },
-		{ id = 13159 },
-		{ id = 61648 },
-		{ id = 172106 }
+		{ id = 186257, duration = 12, modifier = function(x) if select(4, GetTalentInfo(3, 3, 1)) then x.duration = x.duration + 6 end end },
+		{ id = 193530, duration = 10 },
+		{ id = 61648, duration = 60 },
+		{ id = 186289, duration = 10 },
+		{ id = 186265, duration = 8 }
 	}
 };
 

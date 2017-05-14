@@ -1,6 +1,6 @@
-## Interface: 50400
+## Interface: 60000
 ## Title: HandyNotes_TimelessIsle_RareElites
-## Version: 2.31
+## Version: 2.32
 ## Notes: Shows location of Rare Elites on the Timeless Isle
 ## Author: Phone
 ## OptionalDeps: Ace3

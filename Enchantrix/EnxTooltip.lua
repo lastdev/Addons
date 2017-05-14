@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnxTooltip.lua 5407 2013-05-11 09:17:57Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnxTooltip.lua 5662 2016-08-15 18:50:37Z ccox $
 	URL: http://enchantrix.org/
 
 	Tooltip functions.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxTooltip.lua $", "$Rev: 5407 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxTooltip.lua $", "$Rev: 5662 $")
 
 -- Global functions
 local addonLoaded	-- Enchantrix.Tooltip.AddonLoaded()
@@ -305,6 +305,13 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	end
 
 	local embed = Enchantrix.Settings.GetSetting('ToolTipEmbedInGameTip')
+
+	-- useful for debugging, not useful for most folks, setting must be changed in settings file
+	if ( Enchantrix.Settings.GetSetting('TooltipShowItemDebugDetails') ) then
+--	if ( true ) then
+		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, invTexture = GetItemInfo(link)
+		tooltip:AddLine("Quality is "..itemRarity..", Type is "..itemType..", SubType is "..itemSubType..", EquipLoc is "..itemEquipLoc, nil, embed)
+	end
 	
 	-- see if this is a simple reagent produced from disenchanting, prospecting or milling
 	if ( Enchantrix.Settings.GetSetting('TooltipShowMatSources') ) then
@@ -474,17 +481,25 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	end
 end
 
--- using the Trade APIs
-local function getReagentsFromTradeFrame(craftIndex)
+-- using the Recipe APIs
+local function getReagentsFromTradeFrame(recipe)
 	local reagentList = {}
 
-	local numReagents = GetTradeSkillNumReagents(craftIndex)
+	local numReagents = C_TradeSkillUI.GetRecipeNumReagents(recipe)
+	-- Enchantrix.Util.DebugPrintQuick("reagents count ", numReagents )	-- DEBUGGING
+
+	if (not numReagents) then
+		return nil
+	end
+
 	for i = 1, numReagents do
-		local link = GetTradeSkillReagentItemLink(craftIndex, i)
+		local link = C_TradeSkillUI.GetRecipeReagentItemLink(recipe, i);
+		-- Enchantrix.Util.DebugPrintQuick("reagent ", i, link )	-- DEBUGGING
 		if link then
 			local hlink = link:match("|H([^|]+)|h")
-			local reagentName, reagentTexture, reagentCount, playerReagentCount = GetTradeSkillReagentInfo(craftIndex, i)
-			table.insert(reagentList, {hlink, reagentCount})
+			-- Enchantrix.Util.DebugPrintQuick("reagent info ", C_TradeSkillUI.GetRecipeReagentInfo(recipe, i) )	-- DEBUGGING
+			local reagentName, reagentTexture, reagentCountNeeded, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(recipe, i)
+			table.insert(reagentList, {hlink, reagentCountNeeded})
 		end
 	end
 
@@ -574,16 +589,22 @@ function enchantTooltip(tooltip, name, link, isItem)
 		name = name:gsub("^%s*", "")	-- remove leading spaces
 		--Enchantrix.Util.DebugPrintQuick("cleaned name is ", name )
 		
-		for i = GetFirstTradeSkill(), GetNumTradeSkills() do
-			local tradeName = GetTradeSkillInfo(i);
-			if name == tradeName then
-				tradeIndex = i
-				break
+		local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
+
+		-- Enchantrix.Util.DebugPrintQuick("recipe count is ", #recipes )		-- DEBUGGING
+		if recipes and (#recipes > 0) then
+			for i = 1, #recipes do
+				-- Enchantrix.Util.DebugPrintQuick("recipe ", i, " is ", recipes[i] )		-- DEBUGGING
+				if _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]).name == name then
+					tradeIndex = i
+					-- Enchantrix.Util.DebugPrintQuick("recipe matched ", i, _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]) )		-- DEBUGGING
+					break
+				end
 			end
 		end
 
 		if tradeIndex then
-			reagentList = getReagentsFromTradeFrame(tradeIndex)
+			reagentList = getReagentsFromTradeFrame( recipes[tradeIndex] )
 		else
 			-- if all else fails
 			reagentList = getReagentsFromTooltip(frame)
@@ -750,7 +771,7 @@ function callbackAltChatLinkTooltip(link, text, button, chatFrame)
 end
 
 Enchantrix.Tooltip = {
-	Revision		= "$Revision: 5407 $",
+	Revision		= "$Revision: 5662 $",
 
 	AddonLoaded		= addonLoaded,
 	Format			= tooltipFormat,

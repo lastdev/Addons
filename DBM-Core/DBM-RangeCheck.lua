@@ -70,26 +70,28 @@ local dims
 --------------------------------------------------------
 local UnitPosition = UnitPosition
 local GetPlayerFacing = GetPlayerFacing
-local UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitAffectingCombat, UnitExists = UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitAffectingCombat, UnitExists
+local UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, UnitAffectingCombat, UnitExists = UnitName, UnitClass, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, UnitAffectingCombat, UnitExists
 local IsInRaid, GetNumGroupMembers, GetNumSubgroupMembers = IsInRaid, GetNumGroupMembers, GetNumSubgroupMembers
 local GetRaidTargetIndex = GetRaidTargetIndex
 local GetTime = GetTime
-local max, sin, cos, pi = math.max, math.sin, math.cos, math.pi
+local CheckInteractDistance, IsItemInRange, UnitInRange = CheckInteractDistance, IsItemInRange, UnitInRange
+local max, sin, cos, pi, pi2 = math.max, math.sin, math.cos, math.pi, math.pi * 2
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 local BLIP_TEX_COORDS = {
-	["WARRIOR"]	= { 0,	   0.125, 0,    0.25 },
-	["PALADIN"]	= { 0.125, 0.25,  0,    0.25 },
-	["HUNTER"]	= { 0.25,  0.375, 0,    0.25 },
-	["ROGUE"]	= { 0.375, 0.5,   0,    0.25 },
-	["PRIEST"]	= { 0.5,   0.625, 0,    0.25 },
-	["DEATHKNIGHT"]	= { 0.625, 0.75,  0,    0.25 },
-	["SHAMAN"]	= { 0.75,  0.875, 0,    0.25 },
-	["MAGE"]	= { 0.875, 1,     0,    0.25 },
-	["WARLOCK"]	= { 0,     0.125, 0.25, 0.5  },
-	["DRUID"]	= { 0.25,  0.375, 0.25, 0.5  },
-	["MONK"]	= { 0.125, 0.25, 0.25, 0.5 }
+	["WARRIOR"]		 = { 0, 0.125, 0, 0.25 },
+	["PALADIN"]		 = { 0.125, 0.25, 0, 0.25 },
+	["HUNTER"]		 = { 0.25, 0.375, 0, 0.25 },
+	["ROGUE"]		 = { 0.375, 0.5, 0, 0.25 },
+	["PRIEST"]		 = { 0.5, 0.625, 0, 0.25 },
+	["DEATHKNIGHT"]	 = { 0.625, 0.75, 0, 0.25 },
+	["SHAMAN"]		 = { 0.75, 0.875, 0, 0.25 },
+	["MAGE"]		 = { 0.875, 1, 0, 0.25 },
+	["WARLOCK"]		 = { 0, 0.125, 0.25, 0.5 },
+	["DRUID"]		 = { 0.25, 0.375, 0.25, 0.5 },
+	["MONK"]		 = { 0.125, 0.25, 0.25, 0.5 },
+	["DEMONHUNTER"]	 = { 0.375, 0.5, 0.25, 0.5 },
 }
 ---------------------
 --  Dropdown Menu  --
@@ -103,11 +105,7 @@ do
 	local function setSound(self, option, sound)
 		DBM.Options[option] = sound
 		if sound ~= "none" then
-			if DBM.Options.UseMasterVolume then
-				PlaySoundFile(sound, "Master")
-			else
-				PlaySoundFile(sound)
-			end
+			DBM:PlaySoundFile(sound)
 		end
 	end
 
@@ -184,12 +182,12 @@ do
 		elseif level == 2 then
 			if menu == "range" then
 				info = UIDropDownMenu_CreateInfo()
-				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(6)
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(5)
 				info.func = setRange
-				info.arg1 = 6
-				info.checked = (mainFrame.range == 6)
+				info.arg1 = 5
+				info.checked = (mainFrame.range == 5)
 				UIDropDownMenu_AddButton(info, 2)
-
+				
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(8)
 				info.func = setRange
@@ -210,33 +208,33 @@ do
 				info.arg1 = 11
 				info.checked = (mainFrame.range == 11)
 				UIDropDownMenu_AddButton(info, 2)
-
+				
 				info = UIDropDownMenu_CreateInfo()
-				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(12)
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(13)
 				info.func = setRange
-				info.arg1 = 12
-				info.checked = (mainFrame.range == 12)
+				info.arg1 = 13
+				info.checked = (mainFrame.range == 13)
 				UIDropDownMenu_AddButton(info, 2)
 
 				info = UIDropDownMenu_CreateInfo()
-				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(15)
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(18)
 				info.func = setRange
-				info.arg1 = 15
-				info.checked = (mainFrame.range == 15)
+				info.arg1 = 18
+				info.checked = (mainFrame.range == 18)
 				UIDropDownMenu_AddButton(info, 2)
 
 				info = UIDropDownMenu_CreateInfo()
-				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(20)
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(30)
 				info.func = setRange
-				info.arg1 = 20
-				info.checked = (mainFrame.range == 20)
+				info.arg1 = 30
+				info.checked = (mainFrame.range == 30)
 				UIDropDownMenu_AddButton(info, 2)
-
+				
 				info = UIDropDownMenu_CreateInfo()
-				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(28)
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(43)
 				info.func = setRange
-				info.arg1 = 28
-				info.checked = (mainFrame.range == 28)
+				info.arg1 = 43
+				info.checked = (mainFrame.range == 43)
 				UIDropDownMenu_AddButton(info, 2)
 			elseif menu == "threshold" then
 				info = UIDropDownMenu_CreateInfo()
@@ -361,19 +359,11 @@ local function updateSound(num)
 	soundUpdate = GetTime()
 	if num == 1 then
 		if DBM.Options.RangeFrameSound1 ~= "none" then
-			if DBM.Options.UseMasterVolume then
-				PlaySoundFile(DBM.Options.RangeFrameSound1, "Master")
-			else
-				PlaySoundFile(DBM.Options.RangeFrameSound1)
-			end
+			DBM:PlaySoundFile(DBM.Options.RangeFrameSound1)
 		end
 	elseif num > 1 then
 		if DBM.Options.RangeFrameSound2 ~= "none" then
-			if DBM.Options.UseMasterVolume then
-				PlaySoundFile(DBM.Options.RangeFrameSound2, "Master")
-			else
-				PlaySoundFile(DBM.Options.RangeFrameSound2)
-			end
+			DBM:PlaySoundFile(DBM.Options.RangeFrameSound2)
 		end
 	end
 end
@@ -401,7 +391,7 @@ function createTextFrame()
 	textFrame:SetToplevel(true)
 	textFrame:SetMovable(1)
 	GameTooltip_OnLoad(textFrame)
-	textFrame:SetPadding(16)
+	textFrame:SetPadding(16, 0)
 	textFrame:RegisterForDrag("LeftButton")
 	textFrame:SetScript("OnDragStart", function(self)
 		if not DBM.Options.RangeFrameLocked then
@@ -410,7 +400,7 @@ function createTextFrame()
 	end)
 	textFrame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		ValidateFramePosition(self)
+		--ValidateFramePosition(self)
 		local point, _, _, x, y = self:GetPoint(1)
 		DBM.Options.RangeFrameX = x
 		DBM.Options.RangeFrameY = y
@@ -442,7 +432,7 @@ function createRadarFrame()
 	end)
 	radarFrame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		ValidateFramePosition(self)
+		--ValidateFramePosition(self)
 		local point, _, _, x, y = self:GetPoint(1)
 		DBM.Options.RangeFrameRadarX = x
 		DBM.Options.RangeFrameRadarY = y
@@ -458,7 +448,7 @@ function createRadarFrame()
 	local bg = radarFrame:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(radarFrame)
 	bg:SetBlendMode("BLEND")
-	bg:SetTexture(0, 0, 0, 0.3)
+	bg:SetColorTexture(0, 0, 0, 0.3)
 	radarFrame.background = bg
 
 	local circle = radarFrame:CreateTexture(nil, "ARTWORK")
@@ -510,14 +500,14 @@ do
 	local rotation, pixelsperyard, activeDots, numPlayers, circleColor, prevRange, prevThreshold, prevNumClosePlayer, prevclosestRange, prevColor, prevType = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	local unitList = {}
 
-	local function setDot(id)
+	local function setDot(id, sinTheta, cosTheta)
 		local dot = dots[id]
 		local x = dots[id].x
 		local y = dots[id].y
 		local range = dots[id].range
 		if range < (activeRange * 1.5) then -- if person is closer than 1.5 * range, show the dot. Else hide it
-			local dx = ((x * cos(rotation)) - (-y * sin(rotation))) * pixelsperyard -- Rotate the X,Y based on player facing
-			local dy = ((x * sin(rotation)) + (-y * cos(rotation))) * pixelsperyard
+			local dx = ((x * cosTheta) - (-y * sinTheta)) * pixelsperyard -- Rotate the X,Y based on player facing
+			local dy = ((x * sinTheta) + (-y * cosTheta)) * pixelsperyard
 			dot:ClearAllPoints()
 			dot:SetPoint("CENTER", radarFrame, "CENTER", dx, dy)
 			if not dot.isShown then
@@ -569,6 +559,7 @@ do
 			return
 		end
 		activeRange = mainFrame.range
+		local restricted = mainFrame.restrictions
 		local tEnabled = textFrame.isShown
 		local rEnabled = radarFrame.isShown
 		if tEnabled then
@@ -582,9 +573,12 @@ do
 			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange, mainFrame.redCircleNumPlayers))
 		end
 
-		local playerX, playerY, _, playerMapId = UnitPosition("player")
-
-		rotation = (2 * pi) - GetPlayerFacing()
+		local playerMapId = GetPlayerMapAreaID("player") or 0
+		if not restricted then
+			rotation = pi2 - (GetPlayerFacing() or 0)
+		end
+		local sinTheta = sin(rotation)
+		local cosTheta = cos(rotation)
 		local closePlayer = 0
 		local closestRange = nil
 		local closetName = nil
@@ -594,12 +588,30 @@ do
 		for i = 1, numPlayers do
 			local uId = unitList[i]
 			local dot = dots[i]
-			local x, y, _, mapId = UnitPosition(uId)
-			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and (not filter or filter(uId)) then
-				local cy = x - playerX
-				local cx = y - playerY
-				local range = (cx * cx + cy * cy) ^ 0.5
-				--local range = UnitDistanceSquared(uId) ^ 0.5
+			local mapId = GetPlayerMapAreaID(uId) or playerMapId
+			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
+				local range--Juset set to a number in case any api fails and returns nil
+				if restricted then--API restrictions are in play, so pretend we're back in BC
+					--Start at bottom and work way up.
+					--Definitely not most efficient way of doing it. Refactor later when 7.1 hits PTR
+					--All ranges aer tested and compared against UnitDistanceSquared.
+					--Worgsaw has a tooltip of 6 but doesn't factor in hitboxes/etc. It doesn't return false until UnitDistanceSquared of 8. bandages 18 even though spell range is 15, etc. Acorn actually is 5 in both though
+					if IsItemInRange(37727, uId) then range = 5--Ruby Acorn
+					elseif IsItemInRange(63427, uId) then range = 8--Worgsaw
+					elseif CheckInteractDistance(uId, 3) then range = 10
+					elseif CheckInteractDistance(uId, 2) then range = 11
+					elseif IsItemInRange(32321, uId) then range = 13--reports 12 but actual range tested is 13
+					elseif IsItemInRange(6450, uId) then range = 18--Bandages. (despite popular sites saying it's 15 yards, it's actually 18 yards verified by UnitDistanceSquared
+					elseif IsItemInRange(21519, uId) then range = 22--Item says 20, returns true until 22.
+					elseif CheckInteractDistance(uId, 1) then range = 30
+					elseif UnitInRange(uId) then range = 43
+					elseif IsItemInRange(116139, uId)  then range = 50
+					elseif IsItemInRange(32825, uId) then range = 60
+					elseif IsItemInRange(35278, uId) then range = 80
+					else range = 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
+				else
+					range = UnitDistanceSquared(uId) ^ 0.5
+				end
 				local inRange = false
 				if range < (activeRange+0.5) then
 					closePlayer = closePlayer + 1
@@ -619,10 +631,14 @@ do
 					textFrame:AddLine(text, color.r, color.g, color.b)
 				end
 				if rEnabled then
+					local playerX, playerY = UnitPosition("player")
+					local x, y = UnitPosition(uId)
+					local cy = x - playerX
+					local cx = y - playerY
 					dot.x = -cx
 					dot.y = -cy
 					dot.range = range
-					setDot(i)
+					setDot(i, sinTheta, cosTheta)
 				end
 			elseif rEnabled and dot.isShown then
 				dot.isShown = nil
@@ -691,16 +707,56 @@ end)
 -----------------------
 local getDistanceBetween
 do
+	local function itsBCAgain(uId)
+		if IsItemInRange(37727, uId) then return 5
+		elseif IsItemInRange(63427, uId) then return 8
+		elseif CheckInteractDistance(uId, 3) then return 10
+		elseif CheckInteractDistance(uId, 2) then return 11
+		elseif IsItemInRange(32321, uId) then return 13
+		elseif IsItemInRange(6450, uId) then return 18
+		elseif IsItemInRange(21519, uId) then return 22
+		elseif CheckInteractDistance(uId, 1) then return 30
+		elseif UnitInRange(uId) then return 43
+		elseif IsItemInRange(116139, uId) then return 50
+		elseif IsItemInRange(32825, uId) then return 60
+		elseif IsItemInRange(35278, uId) then return 80
+		else return 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
+	end
+	--TODO, add some check in 7.1 to return before calling UnitPosition, if in restricted area.
 	function getDistanceBetween(uId, x, y)
-		-- alternative arguments: uId, uId2
-		if type(x) == "string" then
-			local uId2 = x
-			x, y = UnitPosition(uId2)
-			if not x then
-				print("getDistanceBetween failed for: " .. uId .. " (" .. UnitExists(uId) .. ") and " .. uId2 .. " (" .. UnitExists(uId2) .. ")")
-				return
+		local restrictionsActive = DBM:HasMapRestrictions()
+		if not x then--If only one arg then 2nd arg is always assumed to be player
+			if restrictionsActive then
+				return itsBCAgain(uId)
+			else
+				return UnitDistanceSquared(uId) ^ 0.5
 			end
 		end
+		if type(x) == "string" and UnitExists(x) then -- arguments: uId, uId2
+			--First attempt to avoid UnitPosition if any of args is player UnitDistanceSquared should work
+			if UnitIsUnit("player", uId) then
+				if restrictionsActive then
+					return itsBCAgain(x)
+				else
+					return UnitDistanceSquared(x) ^ 0.5
+				end
+			elseif UnitIsUnit("player", x) then
+				if restrictionsActive then
+					return itsBCAgain(uId)
+				else
+					return UnitDistanceSquared(uId) ^ 0.5
+				end
+			else--Neither unit is player, no way to avoid UnitPosition
+				if restrictionsActive then return 1000 end--Cannot compare two units that don't involve player with restrictions, just fail quietly
+				local uId2 = x
+				x, y = UnitPosition(uId2)
+				if not x then
+					print("getDistanceBetween failed for: " .. uId .. " (" .. tostring(UnitExists(uId)) .. ") and " .. uId2 .. " (" .. tostring(UnitExists(uId2)) .. ")")
+					return
+				end
+			end
+		end
+		if restrictionsActive then return 1000 end--Cannot check distance between player and a location (not another unit, again, fail quietly)
 		local startX, startY = UnitPosition(uId)
 		local dX = startX - x
 		local dY = startY - y
@@ -721,12 +777,43 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 	redCircleNumPlayers = redCircleNumPlayers or 1
 	textFrame = textFrame or createTextFrame()
 	radarFrame = radarFrame or createRadarFrame()
-	if (DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both") and not textFrame.isShown then
+	local restrictionsActive = DBM:HasMapRestrictions()
+	if (DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" or restrictionsActive) and not textFrame.isShown then
+		if restrictionsActive then
+			if range <= 5 then
+				range = 5
+			elseif range <= 6 then
+				range = 6
+			elseif range <= 8 then
+				range = 8
+			elseif range <= 10 then
+				range = 10
+			elseif range <= 11 then
+				range = 11
+			elseif range <= 13 then
+				range = 13
+			elseif range <= 18 then
+				range = 18
+			elseif range <= 22 then
+				range = 22
+			elseif range <= 30 then
+				range = 30
+			elseif range <= 43 then
+				range = 43
+			elseif range <= 50 then
+				range = 50
+			elseif range <= 60 then
+				range = 60
+			elseif range <= 80 then
+				range = 80
+			end
+		end
 		textFrame.isShown = true
 		textFrame:Show()
 		textFrame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 	end
-	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and not radarFrame.isShown then
+	--TODO, add check for restricted area here so we can prevent radar frame loading.
+	if not restrictionsActive and (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and not radarFrame.isShown then
 		radarFrame.isShown = true
 		radarFrame:Show()
 	end
@@ -735,6 +822,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 	mainFrame.redCircleNumPlayers = redCircleNumPlayers
 	mainFrame.reverse = reverse
 	mainFrame.hideTime = hideTime and (GetTime() + hideTime) or 0
+	mainFrame.restrictions = restrictionsActive
 	if not mainFrame.eventRegistered then
 		mainFrame.eventRegistered = true
 		updateIcon()
@@ -773,6 +861,14 @@ end
 
 function rangeCheck:IsShown()
 	return textFrame and textFrame.isShown or radarFrame and radarFrame.isShown
+end
+
+function rangeCheck:IsRadarShown()
+	return radarFrame and radarFrame.isShown
+end
+
+function rangeCheck:UpdateRestrictions(force)
+	mainFrame.restrictions = force or DBM:HasMapRestrictions()
 end
 
 function rangeCheck:SetHideTime(hideTime)

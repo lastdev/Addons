@@ -72,3 +72,6 @@ L["Please enter a valid theme name"] = true
 L["Theme name already in use"] = true
 L["Theme saved"] = true
 L["Theme deleted"] = true
+L["Enable Mouseover"] = true
+L["Disable Mouseover"] = true
+L["Mouseover Enabled"] = true

@@ -543,6 +543,7 @@ function HealBot_Lang_ruRU()
     HEALBOT_SUPPRESSSOUND                   = "Авто-Аксессуар: подавлять звуки";
     HEALBOT_SUPPRESSERROR                   = "Авто-Аксессуар: подавлять ошибки";
     HEALBOT_OPTIONS_CRASHPROT               = "Защита от сбоев";
+    HEALBOT_OPTIONS_USEGENERALMACRO         = "Исп. слот основных макросов"
     HEALBOT_CP_MACRO_LEN                    = "Имя макроса должно быть от 1 до 14 символов";
     HEALBOT_CP_MACRO_BASE                   = "Основное имя макроса";
     HEALBOT_CP_MACRO_SAVE                   = "Последнее сохранение в: ";
@@ -617,6 +618,7 @@ function HealBot_Lang_ruRU()
     HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%";
 
     HEALBOT_OPTION_IGNORE_AURA_RESTED       = "Игнорировать события аур при отдыхе";
+    HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Выровнять макс. здоровье"
 
     HEALBOT_WORD_ENABLE                     = "Включить";
     HEALBOT_WORD_DISABLE                    = "Выключить";
@@ -876,6 +878,7 @@ function HealBot_Lang_ruRU()
     HEALBOT_OPTIONS_FRAME_TITLE             = "Заголовок окна";
     HEALBOT_OPTIONS_FRAME_TITLE_SHOW        = "Показывать заголовок";
     HEALBOT_OPTIONS_GROW_DIRECTION          = "Направление расширения";
+    HEALBOT_OPTIONS_BARSORIENTATION         = "Ориентация полос";
     HEALBOT_OPTIONS_GROW_HORIZONTAL         = "Горизонтально";
     HEALBOT_OPTIONS_GROW_VERTICAL           = "Вертикально";
     HEALBOT_OPTIONS_FONT_OFFSET             = "Сдвиг шрифта";
@@ -934,4 +937,5 @@ function HealBot_Lang_ruRU()
     HEALBOT_ENEMY_INCLUDE_ARENA             = "Включая оппонентов арены"
     HEALBOT_ENEMY_INCLUDE_ARENAPETS         = "Включая питомцев"
     HEALBOT_ENEMY_EXISTS_SHOW_ARENA         = "Полосы оппонентов арены"
+    HEALBOT_CMD_TOGGLECUSTOMCURECASTBY      = "Вкл/Выкл свои рассеивания - по умолчанию по"
 end

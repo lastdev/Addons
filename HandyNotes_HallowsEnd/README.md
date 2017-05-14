@@ -6,7 +6,7 @@ What it does
 ------------
 
 This addon displays locations of unvisited candy buckets on the worldmap and minimap.
-If you also have TomTom or Cartographer installed, you can right-click on a marker to create a Waypoint arrow.
+If you also have [TomTom](http://www.curse.com/addons/wow/tomtom), you can right-click on a marker to create a Waypoint arrow.
 
 Requires [HandyNotes](http://www.curse.com/addons/wow/handynotes) to work.
 

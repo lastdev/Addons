@@ -43,7 +43,7 @@ StyleDefault.healthborder = {
 }
 
 StyleDefault.target = {
-	texture		 =				path.."TargetBox",
+	texture		 =				path.."TargetBox_Original",
 	width = 128,
 	height = 64,
 	x = 0,
@@ -89,7 +89,7 @@ StyleDefault.castborder = {
 }
 
 StyleDefault.castnostop = {
-	texture = 				path.."RegularBorder",
+	texture = 				path.."RegularBorderAlternative",
 	width = 128,
 	height = 64,
 	x = 0,
@@ -208,29 +208,6 @@ StyleDefault.customart = {
 	show = true,
 }
 
-
-local arenaIconPath = "Interface\\AddOns\\TidyPlatesWidgets\\ArenaIcons"
-local arenaUnitIDs = {"arena1", "arena2", "arena3", "arena4", "arena5"}
-
-local function GetArenaIndex(unitname)
-	if IsActiveBattlefieldArena() then
-		local unitid, name
-		for i = 1, #arenaUnitIDs do
-			unitid = arenaUnitIDs[i]
-			name = UnitName(unitid)
-			if name and (name == unitname) then return unitid end
-		end
-	end
-end
-
-local function ArenaIconCustom(unit)
-	local unitid = GetArenaIndex(unit.name)
-	return "Interface\\AddOns\\TidyPlatesWidgets\\ArenaIcons\\arena5"
-	--if unitid then return arenaIconPath..unitid end
-end
-
-
-
 StyleDefault.skullicon = {
 	width = 8,
 	height = 8,
@@ -261,6 +238,12 @@ StyleTextOnly.eliteicon.show = false
 StyleTextOnly.highlight.texture = "Interface\\Addons\\TidyPlatesHub\\shared\\Highlight"
 StyleTextOnly.target.texture = "Interface\\Addons\\TidyPlatesHub\\shared\\Target"
 
+
+-- Active Styles
+Theme["Default"] = StyleDefault
+Theme["NameOnly"] = StyleTextOnly
+
+
 local WidgetConfig = {}
 WidgetConfig.ClassIcon = { anchor = "TOP" , x = 0,y = VerticalAdjustment + 26 }		-- Above Name
 WidgetConfig.TotemIcon = { anchor = "TOP" , x = 0 ,y = VerticalAdjustment + 26 }
@@ -270,73 +253,16 @@ WidgetConfig.ComboWidget = { anchor = "TOP" , x = 0 ,y = VerticalAdjustment + 0 
 WidgetConfig.RangeWidget = { anchor = "CENTER" , x = 0 ,y = VerticalAdjustment + 12 }
 WidgetConfig.DebuffWidget = { anchor = "TOP" , x = 15 ,y = VerticalAdjustment + 33 }
 
-local DamageThemeName = "Quatre/|cFFFF4400Damage"
-local TankThemeName = "Quatre/|cFF3782D1Tank"
+
+WidgetConfig._meta = true		-- tells the parser to ignore this table; ie. don't convert to "style" template
+Theme.WidgetConfig = WidgetConfig
+local ThemeName = "Quatre"
 
 ---------------------------------------------
 -- Tidy Plates Hub Integration
 ---------------------------------------------
-Theme["Default"] = StyleDefault
-Theme["NameOnly"] = StyleTextOnly			-- (6.2)
-
-TidyPlatesThemeList[DamageThemeName] = Theme
-local LocalVars = TidyPlatesHubDamageVariables
-
-local ApplyThemeCustomization = TidyPlatesHubFunctions.ApplyThemeCustomization
-
-local function ApplyDamageCustomization()
-	ApplyThemeCustomization(Theme)
-end
-
-local function OnInitialize(plate)
-	TidyPlatesHubFunctions.OnInitializeWidgets(plate, WidgetConfig)
-end
-
-local function OnActivateTheme(themeTable)
-		if Theme == themeTable then
-			LocalVars = TidyPlatesHubFunctions:UseDamageVariables()
-			ApplyDamageCustomization()
-		end
-end
-
-Theme.SetNameColor = TidyPlatesHubFunctions.SetNameColor
-Theme.SetScale = TidyPlatesHubFunctions.SetScale
-Theme.SetAlpha = TidyPlatesHubFunctions.SetAlpha
-Theme.SetHealthbarColor = TidyPlatesHubFunctions.SetHealthbarColor
-Theme.SetThreatColor = TidyPlatesHubFunctions.SetThreatColor
-Theme.SetCastbarColor = TidyPlatesHubFunctions.SetCastbarColor
-Theme.SetCustomText = TidyPlatesHubFunctions.SetCustomText
-Theme.OnUpdate = TidyPlatesHubFunctions.OnUpdate
-Theme.OnContextUpdate = TidyPlatesHubFunctions.OnContextUpdate
-Theme.ShowConfigPanel = ShowTidyPlatesHubDamagePanel
-Theme.SetStyle = TidyPlatesHubFunctions.SetStyleBinary
-Theme.SetCustomText = TidyPlatesHubFunctions.SetCustomTextBinary
-Theme.OnInitialize = OnInitialize		-- Need to provide widget positions
-Theme.OnActivateTheme = OnActivateTheme -- called by Tidy Plates Core, Theme Loader
-Theme.OnApplyThemeCustomization = ApplyDamageCustomization -- Called By Hub Panel
--- Theme.SetCustomArt = ArenaIconCustom
-
-do
-	local TankTheme = CopyTable(Theme)
-	TidyPlatesThemeList[TankThemeName] = TankTheme
-
-	local function ApplyTankCustomization()
-		ApplyThemeCustomization(TankTheme)
-	end
-
-	local function OnActivateTheme(themeTable)
-		if TankTheme == themeTable then
-			LocalVars = TidyPlatesHubFunctions:UseTankVariables()
-			ApplyTankCustomization()
-		end
-	end
-
-	TankTheme.OnActivateTheme = OnActivateTheme -- called by Tidy Plates Core, Theme Loader
-	TankTheme.OnApplyThemeCustomization = ApplyTankCustomization -- Called By Hub Panel
-	TankTheme.ShowConfigPanel = ShowTidyPlatesHubTankPanel
-end
-
---AddTidyPlatesHubStyle("Quatre", StyleDefault, StyleTextOnly, WidgetConfig)
+TidyPlatesThemeList[ThemeName] = Theme
+TidyPlatesHubFunctions.ApplyHubFunctions(Theme)
 
 
 

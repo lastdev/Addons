@@ -1,12 +1,214 @@
-﻿local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "enUS", true, true)
+local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "enUS", true, true)
 
 if not L then return end
+
+-- *************************
+-- *** Tab Summary 
+-- *************************
+
+L["COLOR_RED"] = "Red"
+L["COLOR_GREY"] = "Grey"
+L["COLOR_GREEN"] = "Green"
+L["COLOR_YELLOW"] = "Yellow"
+L["COLOR_ORANGE"] = "Orange"
+L["FILTER_REALMS"] = "Realms filter"
+L["FILTER_FACTIONS"] = "Faction filter"
+L["FILTER_LEVELS"] = "Level filter"
+L["FILTER_PROFESSIONS"] = "Profession filter"
+L["FILTER_CLASSES"] = "Class filter"
+
+-- *** Tab Summary / Account Summary ***
+
+L["COLUMN_LEVEL_TITLE"] = "Character Level"
+L["COLUMN_LEVEL_TITLE_SHORT"] = "Level"
+L["COLUMN_LEVEL_SUBTITLE"] = "Click level to toggle decimals"
+
+L["COLUMN_RESTXP_TITLE"] = "Rest XP"
+L["COLUMN_RESTXP_TITLE_SHORT"] = "Rest XP"
+L["COLUMN_RESTXP_SUBTITLE"] = "Click to toggle 100%/150% mode"
+L["COLUMN_RESTXP_DETAIL_1"] = "It takes 8 hours to gain 1 XP bubble (5%)."
+L["COLUMN_RESTXP_DETAIL_2"] = "The maximum rested XP is 30 XP bubbles, or 1.5 level."
+L["COLUMN_RESTXP_DETAIL_3"] = "It is achieved in 10 days."
+L["COLUMN_RESTXP_DETAIL_4"] = "%d%% mode : fully rested is displayed as '%d%%'"
+
+L["COLUMN_MONEY_TITLE"] = "Money"
+L["COLUMN_MONEY_TITLE_SHORT"] = "Money"
+L["COLUMN_MONEY_SUBTITLE_1"] = "Your shinies"
+L["COLUMN_MONEY_SUBTITLE_2"] = "Mo Money Mo Problems"
+L["COLUMN_MONEY_SUBTITLE_3"] = "Greed is good"
+L["COLUMN_MONEY_SUBTITLE_4"] = "Can't buy happiness .. but buys loads of mounts !"
+L["COLUMN_MONEY_SUBTITLE_5"] = "Does not grow on World Trees"
+
+L["COLUMN_PLAYED_TITLE"] = "Total Time Played"
+L["COLUMN_PLAYED_TITLE_SHORT"] = "Played"
+L["COLUMN_PLAYED_SUBTITLE"] = "Click to show/hide real play time"
+
+L["COLUMN_ILEVEL_TITLE"] = "Average Item Level"
+L["COLUMN_ILEVEL_TITLE_SHORT"] = "iLvl"
+L["COLUMN_ILEVEL_SUBTITLE"] = "Click level to toggle decimals"
+
+L["COLUMN_LASTONLINE_TITLE"] = "Last Online"
+L["COLUMN_LASTONLINE_TITLE_SHORT"] = "Last Online"
+L["COLUMN_LASTONLINE_SUBTITLE"] = "Last time a character was logged in"
+
+-- *** Tab Summary / Bag Usage ***
+
+L["COLUMN_BAGS_TITLE"] = "Character Bags"
+L["COLUMN_BAGS_TITLE_SHORT"] = "Bags"
+L["COLUMN_BAGS_SUBTITLE_1"] = "Your main inventory slots"
+L["COLUMN_BAGS_SUBTITLE_2"] = "Bigger is always better"
+
+L["COLUMN_FREEBAGSLOTS_TITLE"] = "Free Bag Slots"
+L["COLUMN_FREEBAGSLOTS_TITLE_SHORT"] = "Free"
+L["COLUMN_FREEBAGSLOTS_SUBTITLE"] = "Free vs total slots"
+
+L["COLUMN_BANK_TITLE"] = "Character Bank"
+L["COLUMN_BANK_TITLE_SHORT"] = "Bank"
+L["COLUMN_BANK_SUBTITLE_1"] = "Your bank inventory slots"
+L["COLUMN_BANK_SUBTITLE_2"] = "Where old ph4t l3wts go to rest"
+
+L["COLUMN_FREEBANKLOTS_TITLE"] = "Free Bank Slots"
+L["COLUMN_FREEBANKLOTS_TITLE_SHORT"] = "Free"
+L["COLUMN_FREEBANKLOTS_SUBTITLE"] = "Free vs total slots"
+
+L["NUM_SLOTS_AND_FREE"] = "%s%d%s slots, %s%d%s free"
+
+-- *** Tab Summary / Skills ***
+
+L["COLUMN_PROFESSION_1_TITLE"] = "Profession 1"
+L["COLUMN_PROFESSION_1_TITLE_SHORT"] = "Prof. 1"
+L["COLUMN_PROFESSION_2_TITLE"] = "Profession 2"
+L["COLUMN_PROFESSION_2_TITLE_SHORT"] = "Prof. 2"
+ 
+ -- *** Tab Summary / Activity ***
+
+L["COLUMN_MAILS_TITLE"] = "Mailbox Content"
+L["COLUMN_MAILS_TITLE_SHORT"] = "Mails"
+L["COLUMN_MAILS_SUBTITLE"] = "Number of items in the mailbox"
+L["COLUMN_MAILS_DETAIL_1"] = "Beyond a certain limit, mails are queued server-side."
+L["COLUMN_MAILS_DETAIL_2"] = "These mails are not accounted for here."
+
+L["COLUMN_MAILBOX_VISITED_TITLE"] = "Last Mailbox Check"
+L["COLUMN_MAILBOX_VISITED_TITLE_SHORT"] = "Visited"
+L["COLUMN_MAILBOX_VISITED_SUBTITLE"] = "Last time mailbox content was checked"
+
+L["COLUMN_AUCTIONS_TITLE"] = "Auction House Auctions"
+L["COLUMN_AUCTIONS_TITLE_SHORT"] = "Auctions"
+L["COLUMN_AUCTIONS_SUBTITLE"] = "Number of active auctions at the Auction House"
+
+L["COLUMN_BIDS_TITLE"] = "Auction House Bids"
+L["COLUMN_BIDS_TITLE_SHORT"] = "Bids"
+L["COLUMN_BIDS_SUBTITLE"] = "Number of bids placed at the Auction House"
+
+L["COLUMN_AUCTIONHOUSE_VISITED_TITLE"] = "Last Auction House Visit"
+L["COLUMN_AUCTIONHOUSE_VISITED_TITLE_SHORT"] = "Visited"
+L["COLUMN_AUCTIONHOUSE_VISITED_SUBTITLE"] = "Last time the Auction House was visited"
+
+L["COLUMN_GARRISON_MISSIONS_TITLE"] = "Garrison Missions"
+L["COLUMN_GARRISON_MISSIONS_TITLE_SHORT"] = "Missions"
+L["COLUMN_GARRISON_MISSIONS_SUBTITLE"] = "Last time mission status was checked"
+L["COLUMN_GARRISON_MISSIONS_DETAIL_1"] = "At least one mission is complete"
+L["COLUMN_GARRISON_MISSIONS_DETAIL_2"] = "All missions are complete" 
+L["COLUMN_GARRISON_MISSIONS_DETAIL_3"] = "No ongoing missions" 
+ 
+-- *** Tab Summary / Garrison Followers ***
+ 
+L["COLUMN_FOLLOWERS_LV100_TITLE"] = "Level 100 Followers"
+L["COLUMN_FOLLOWERS_LV100_TITLE_SHORT"] = "Lv 100"
+L["COLUMN_FOLLOWERS_LV100_SUBTITLE"] = "Level 100 vs Total Followers" 
+
+L["COLUMN_FOLLOWERS_RARITY_TITLE"] = "Followers' Rarity Level"
+L["COLUMN_FOLLOWERS_RARITY_TITLE_SHORT"] = "Rarity"
+L["COLUMN_FOLLOWERS_RARITY_SUBTITLE"] = "Rare vs Epic Rarity" 
+
+L["COLUMN_FOLLOWERS_ILEVEL_TITLE"] = "Followers with %s iLevel"
+L["COLUMN_FOLLOWERS_ILEVEL_SUBTITLE"] = "iLevel %s" 
+
+L["COLUMN_FOLLOWERS_AIL_TITLE"] = "Followers' AiL"
+L["COLUMN_FOLLOWERS_AIL_TITLE_SHORT"] = "iLvl"
+L["COLUMN_FOLLOWERS_AIL_SUBTITLE"] = "Average item level of all active followers" 
+
+-- *** Tab Summary / Artifacts ***
+ 
+L["COLUMN_ARTIFACT_RANK_TITLE"] = "Artifact Rank"
+L["COLUMN_ARTIFACT_RANK_TITLE_SHORT"] = "Rank"
+L["COLUMN_ARTIFACT_RANK_SUBTITLE"] = "Total artifact ranks purchased"
+
+L["COLUMN_ARTIFACT_POWER_TITLE"] = "Artifact Power"
+L["COLUMN_ARTIFACT_POWER_TITLE_SHORT"] = "Power"
+L["COLUMN_ARTIFACT_POWER_SUBTITLE"] = "Cost per level"
+ 
+L["COLUMN_ARTIFACT_KNOWLEDGE_TITLE"] = "Artifact Knowledge"
+L["COLUMN_ARTIFACT_KNOWLEDGE_TITLE_SHORT"] = "Knowledge"
+L["COLUMN_ARTIFACT_KNOWLEDGE_SUBTITLE"] = "Bonus per level"
+
+L["COLUMN_ARTIFACT_RESEARCH_TITLE"] = "Artifact Research Notes"
+L["COLUMN_ARTIFACT_RESEARCH_TITLE_SHORT"] = "Next Research"
+L["COLUMN_ARTIFACT_RESEARCH_SUBTITLE"] = "Time until the next note is ready"
+L["COLUMN_ARTIFACT_RESEARCH_DETAIL_1"] = "At least one note is ready for pickup"
+L["COLUMN_ARTIFACT_RESEARCH_DETAIL_2"] = "All notes are ready for pickup"
+
+
+-- *************************
+-- *** Tab Characters
+-- *************************
+
+L["TALENT_SPECIALIZATION_UNKOWN"] = "This talent specialization in unknown.\nActivate it to let the add-on learn about it."
+L["TALENT_SPECIALIZATION_STAT_PRIORITY"] = "Stat priority"
+
+
+-- *************************
+-- *** Tab Search 
+-- *************************
+
+
+
+-- *************************
+-- *** Tab Guild
+-- *************************
+
+-- *************************
+-- *** Tab Achievements 
+-- *************************
+
+L["ACCOUNT_WIDE"] = "Account Wide"
+
+-- *************************
+-- *** Tab Agenda 
+-- *************************
+
+
+-- *************************
+-- *** Tab Grids
+-- *************************
+
+
+-- everything below this point has not yet been reviewed
+-- last review : 2016/11/07
+
+
+
+
+
+
+
+
+L["ITEM_TYPE_RECIPE"] = "Recipe"
+L["ITEM_SUBTYPE_BOOK"] = "Book"
+
+
 
 -- Note: since 2.4.004 and the support of LibBabble, certain lines are commented, but remain there for clarity (especially those concerning the menu)
 -- A lot of translations, especially those concerning the loot table, come from atlas loot, credit goes to their team for gathering this info, I (Thaoky) simply took what I needed.
 
 L["TIME_TO_NEXT_WARNING_TEXT"] = "Time until next warning"
 L["TIME_TO_NEXT_WARNING_TOOLTIP"] = "Minimum time before you get the next mail expiry warning."
+
+L["Garrison resources"] = true
+L["Uncollected resources"] = true
+L["Last collected"] = true
+L["Max. uncollected resources in"] = true
+
 
 L["Death Knight"] = true
 
@@ -28,7 +230,6 @@ L["Resistance"] = true
 
 --skills
 L["Class Skills"] = true
-L["Professions"] = true
 L["Secondary Skills"] = true
 L["Fishing"] = true
 L["Riding"] = true
@@ -284,15 +485,9 @@ L["up to"] = true
 L["at"] = true
 L["and above"] = true
 L["Suggestion"] = true
-L["Prof. 1"] = true
-L["Prof. 2"] = true
 L["Grey"] = true
 L["All cooldowns are up"] = true
 
--- talents.lua
-L["Compare with"] = true
-L["Other guilds"] = true
-L["Other characters"] = true
 
 -- TabSummary.lua
 L["All accounts"] = true
@@ -731,9 +926,7 @@ L["Send account sharing request to:"] = true
 L["Memory used"] = true
 
 -- ** Frame 1 : General **
-L["Max rest XP displayed as 150%"] = true
-L["Show FuBar icon"] = true
-L["Show FuBar text"] = true
+
 L["Account Sharing Enabled"] = true
 L["Guild Communication Enabled"] = true
 
@@ -769,11 +962,8 @@ L["Include guild members' professions"] = true
 
 -- ** Frame 3 : Mail **
 L["Warn when mail expires in less days than this value"] = true
-L["Mail Expiry Warning"] = true
-L["Scan mail body (marks it as read)"] = true
 L["New mail notification"] = true
 L["Be informed when a guildmate sends a mail to one of my alts.\n\nMail content is directly visible without having to reconnect the character"] = true
-
 L["Use color-coding for recipes at the AH"] = true
 L["Use color-coding for recipes at vendors"] = true
 
@@ -787,6 +977,7 @@ L["Show Minimap Icon"] = true
 -- ** Frame 5 : Tooltip **
 L["Show item source"] = true
 L["Show item count per character"] = true
+L["Show item count without details"] = true
 L["Show total item count"] = true
 L["Show guild bank count"] = true
 L["Show already known/learnable by"] = true

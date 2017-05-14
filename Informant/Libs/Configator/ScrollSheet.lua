@@ -1,7 +1,7 @@
 --[[
 	ScrollSheet
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: ScrollSheet.lua 335 2012-09-05 06:08:16Z Esamynn $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: ScrollSheet.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -26,24 +26,29 @@
 --]]
 
 local LIBRARY_VERSION_MAJOR = "ScrollSheet"
-local LIBRARY_VERSION_MINOR = 21
+local LIBRARY_VERSION_MINOR = 22
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/ScrollSheet.lua $","$Rev: 335 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/ScrollSheet.lua $","$Rev: 406 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local GSC_GOLD="ffd100"
 local GSC_SILVER="e6e6e6"
 local GSC_COPPER="c8602c"
+local GSC_RED = "ff0000"
 
-local GSC_3 = "|cff%s%d|cff000000.|cff%s%02d|cff000000.|cff%s%02d|r"
-local GSC_2 = "|cff%s%d|cff000000.|cff%s%02d|r"
-local GSC_1 = "|cff%s%d|r"
+local GSC_3 = "|cff"..GSC_GOLD.."%d|cff000000.|cff"..GSC_SILVER.."%02d|cff000000.|cff"..GSC_COPPER.."%02d|r"
+local GSC_2 = "|cff"..GSC_SILVER.."%d|cff000000.|cff"..GSC_COPPER.."%02d|r"
+local GSC_1 = "|cff"..GSC_COPPER.."%d|r"
 
-local iconpath = "Interface\\MoneyFrame\\UI-"
-local goldicon = "%d|T"..iconpath.."GoldIcon:0|t"
-local silvericon = "%s|T"..iconpath.."SilverIcon:0|t"
-local coppericon = "%s|T"..iconpath.."CopperIcon:0|t"
+local GSC_3N = "|cff"..GSC_RED.."(|cff"..GSC_GOLD.."%d|cff000000.|cff"..GSC_SILVER.."%02d|cff000000.|cff"..GSC_COPPER.."%02d|cff"..GSC_RED..")|r"
+local GSC_2N = "|cff"..GSC_RED.."(|cff"..GSC_SILVER.."%d|cff000000.|cff"..GSC_COPPER.."%02d|cff"..GSC_RED..")|r"
+local GSC_1N = "|cff"..GSC_RED.."(|cff"..GSC_COPPER.."%d|cff"..GSC_RED..")|r"
+
+-- local iconpath = "Interface\\MoneyFrame\\UI-"
+-- local goldicon = "%d|T"..iconpath.."GoldIcon:0|t"
+-- local silvericon = "%s|T"..iconpath.."SilverIcon:0|t"
+-- local coppericon = "%s|T"..iconpath.."CopperIcon:0|t"
 
 -- Table management functions:
 local function replicate(source, depth, history)
@@ -61,40 +66,46 @@ local function replicate(source, depth, history)
 	end
 	return dest
 end
-local function empty(item)
-	if type(item) ~= 'table' then return end
-	for k,v in pairs(item) do item[k] = nil end
-end
-local function fill(item, ...)
-	if type(item) ~= 'table' then return end
-	if (#item > 0) then empty(item) end
-	local n = select('#', ...)
-	for i = 1,n do item[i] = select(i, ...) end
-end
 -- End table management functions
 
-local function coins(money, graphic)
-	money = math.floor(tonumber(money) or 0)
-	local g = math.floor(money / 10000)
-	local s = math.floor(money % 10000 / 100)
+local function coins(money)
+	local negative = false
+	money = floor(tonumber(money) or 0)
+	if money < 0 then
+		money = - money
+		negative = true
+	end
+	local g = floor(money / 10000)
+	local s = floor(money % 10000 / 100)
 	local c = money % 100
 
-	if not graphic then
-		if (g>0) then
-			return (GSC_3):format(GSC_GOLD, g, GSC_SILVER, s, GSC_COPPER, c)
-		elseif (s>0) then
-			return (GSC_2):format(GSC_SILVER, s, GSC_COPPER, c)
-		end
-		return (GSC_1):format(GSC_COPPER, c)
-	else
-		if g > 0 then
-			return goldicon:format(g)..silvericon:format("%02d"):format(s)..coppericon:format("%02d"):format(c)
-		elseif s > 0  then
-			return silvericon:format("%d"):format(s)..coppericon:format("%02d"):format(c)
+	if g > 0 then
+		if negative then
+			return format(GSC_3N, g, s, c)
 		else
-			return coppericon:format("%d"):format(c)
+			return format(GSC_3, g, s, c)
+		end
+	elseif s > 0 then
+		if negative then
+			return format(GSC_2N, s, c)
+		else
+			return format(GSC_2, s, c)
+		end
+	else
+		if negative then
+			return format(GSC_1N, c)
+		else
+			return format(GSC_1, c)
 		end
 	end
+	-- unused code for graphic coins, left here in case someone wants to develop it later
+	-- if g > 0 then
+		-- return goldicon:format(g)..silvericon:format("%02d"):format(s)..coppericon:format("%02d"):format(c)
+	-- elseif s > 0  then
+		-- return silvericon:format("%d"):format(s)..coppericon:format("%02d"):format(c)
+	-- else
+		-- return coppericon:format("%d"):format(c)
+	-- end
 end
 
 local function calculateMaxScroll(self, w, height)
@@ -663,14 +674,14 @@ function lib:Create(frame, layout, onEnter, onLeave, onClick, onResize, onSelect
 		local colorTex = content:CreateTexture()
 		colorTex:SetPoint("TOPLEFT", row[1], "TOPLEFT", 0,0)
 		colorTex:SetPoint("BOTTOMRIGHT", row[#layout], "BOTTOMRIGHT", 0, 1)
-		colorTex:SetTexture(1, 1, 1)
+		colorTex:SetColorTexture(1, 1, 1)
 		row.colorTex = colorTex
 		--create a highlight texture for row selection, replaces the per cell highlight system
 		local highlight = content:CreateTexture()
 		highlight:SetPoint("TOPLEFT", row[1], "TOPLEFT", 0,0)
 		highlight:SetPoint("BOTTOMRIGHT", row[#layout], "BOTTOMRIGHT", 0, 1)
 		highlight:SetAlpha(0)
-		highlight:SetTexture(.8, .6, 0)
+		highlight:SetColorTexture(.8, .6, 0)
 		row.highlight = highlight
 
 		rows[rowNum] = row

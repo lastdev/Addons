@@ -1,6 +1,5 @@
 -- *********************************************************
 -- **           Mizus Raid Tracker - Constants            **
--- **           <http://nanaki.affenfelsen.de>            **
 -- *********************************************************
 --
 
@@ -87,6 +86,17 @@ MRT_RaidZones = {
     -- Warlords of Draenor
     [994] = true,       -- Highmaul
     [988] = true,       -- Blackrock Foundry
+    [1026] = true,      -- Hellfire Citadel
+    -- Legion
+    [1094] = true,      -- The Emerald Nightmare
+    [1114] = true,      -- Trial of Valor
+    [1088] = true,      -- The Nighthold
+}
+
+MRT_LegacyRaidZonesWarlords = {
+    [994] = true,       -- Highmaul
+    [988] = true,       -- Blackrock Foundry
+    [1026] = true,      -- Hellfire Citadel
 }
 
 MRT_LegacyRaidZonesPanadria = {
@@ -382,6 +392,61 @@ MRT_BossIDList = {
     [77231] = "The Iron Maidens",       -- ID of Enforcer Sorka
     [77477] = "The Iron Maidens",       -- ID of Marak the Blooded
     [77325] = "Blackhand",
+    -- Hellfire Citadel
+        -- Hellfire Assault need boss yell or different win condition
+    [90284] = "Iron Reaver",
+    [90435] = "Kormrok",
+    [90378] = "Kilrogg Deadeye",
+    [92146] = "Hellfire High Council",  -- ID of Gurtogg Bloodboil
+    [92142] = "Hellfire High Council",  -- ID of Blademaster Jubei'thos
+    [92144] = "Hellfire High Council",  -- ID of Dia Darkwhisper
+    [90199] = "Gorefiend",
+    [90316] = "Shadow-Lord Iskar",
+    [92330] = "Socrethar the Eternal",  -- ID of Soulbound Construct
+    [90269] = "Tyrant Velhari",
+    [89890] = "Fel Lord Zakuun",
+    [93068] = "Xhul'horac",
+    [91349] = "Mannoroth",
+    [91331] = "Archimonde",
+    
+    --------------
+    --  Legion  --
+    --------------    
+    -- The Emerald Nightmare
+    [102672] = "Nythendra",
+    [105393] = "Il'gynoth",
+    [106087] = "Elerethe Renferal",
+    [100497] = "Ursoc",
+    [102679] = "Dragons of Nightmare",  -- ID of Ysondre
+    [104636] = "Cenarius",
+    [103769] = "Xavius",
+    
+    -- Trial of Valor
+        -- Odyn doesn't die, tracking via encounter ID 1958
+        -- [114323] = "Guarm",
+        -- [114537] = "Helya",
+}
+
+MRT_EncounterIDList = {
+    --------------
+    --  Legion  --
+    --------------
+    -- Trial of Valor
+    [1958] = 114263,            -- Odyn
+    [1962] = 114323,            -- Guarm
+    [2008] = 114537,            -- Helya
+    
+    -- The Nighthold
+    [1849] = 102263,            -- Skorpyon
+    [1865] = 104415,            -- Chronomatic Anomaly
+    [1867] = 104327,            -- Trilliax
+    [1871] = 104881,            -- Aluriel
+    [1862] = 103685,            -- Tichondrius
+    [1842] = 101002,            -- Krosus
+    [1886] = 104528,            -- Tel'arn
+    [1863] = 103758,            -- Etraeus
+    [1872] = 106643,            -- Elisande
+    [1866] = 105503,            -- Gul'dan
 }
 
 -- ARRAY 
@@ -450,6 +515,12 @@ MRT_BossRenameList = {
     ---------------------------
     -- Blackrock Foundry
     [76806] = "The Blast Furnace",  
+    
+    --------------
+    --  Legion  --
+    --------------    
+    -- The Emerald Nightmare
+    [102679] = "Dragons of Nightmare",
 }
 
 
@@ -486,6 +557,11 @@ MRT_ReverseBossIDList = {
 	
 	["Immerseus"] = 71543,
 	["Spoils of Pandaria"] = 71889,		-- ID of ... something
+    
+    ---------------------------
+    --  Warlords of Draenor  --
+    ---------------------------
+    ["Hellfire Assault"] = 95068,
 }
 
 
@@ -533,6 +609,25 @@ MRT_IgnoredItemIDList = {
     [115280] = true,    -- Abrogator Stone
     [115288] = true,    -- Felbreaker's Tome
     [115289] = true,    -- Sigil of the Sorcerer King
+    [115494] = true,    -- Draenic Thaumaturgical Orb
+    [127115] = true,    -- Tome of Chaos
+    
+    -- WoD Garrison Follower Upgrades
+    [114131] = true,    -- Power Overrun Weapon Enhancement
+    [114822] = true,    -- Heavily Reinforced Armor Enhancement
+    [114622] = true,    -- Goredrenched Weaponry
+    [114746] = true,    -- Goredrenched Armor Set
+    
+    -- Rogue stuff
+    [113007] = true,    -- Magma-Infused War Beads
+    
+    -- Legion Questitems
+    [141303] = true,    -- Essence of Clarity (normal)
+    [141304] = true,    -- Essence of Clarity (heroic)
+    [141305] = true,    -- Essence of Clarity (mythic)
+    [143656] = true,    -- Echo of Time (normal)
+    [143657] = true,    -- Echo of Time (heroic)
+    [143658] = true,    -- Echo of Time (mythic)
 }
 
 

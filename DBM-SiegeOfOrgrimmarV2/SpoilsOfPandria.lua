@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 97 $"):sub(12, -3))
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -18,8 +18,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 142947 145712 146253 145230 145786 145812",
 	"SPELL_AURA_APPLIED 145987 145692 145998",
 	"SPELL_AURA_REMOVED 145987 145692",
-	"SPELL_DAMAGE 145716 145748 146257",
-	"SPELL_MISSED 145716 145748 146257",
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
 	"UPDATE_WORLD_STATES"
@@ -52,7 +50,7 @@ local specWarnSetToBlowYou		= mod:NewSpecialWarningYou(145987)
 local specWarnSetToBlow			= mod:NewSpecialWarningPreWarn(145996, nil, 4, nil, 3)
 --Stout Crate of Goods
 ----Mogu
-local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, "Melee")
+local specWarnForbiddenMagic	= mod:NewSpecialWarningInterrupt(145230, "HasInterrupt")
 local specWarnMatterScramble	= mod:NewSpecialWarningSpell(145288, nil, nil, nil, 2)
 local specWarnCrimsonRecon		= mod:NewSpecialWarningMove(142947, "Tank", nil, nil, 3)
 local specWarnTorment			= mod:NewSpecialWarningSpell(142934, false)
@@ -72,16 +70,16 @@ local specWarnGustingCraneKick	= mod:NewSpecialWarningSpell(146180, nil, nil, ni
 local timerCombatStarts			= mod:NewCombatTimer(18)
 --Massive Crate of Goods
 local timerReturnToStoneCD		= mod:NewNextTimer(12, 145489)
-local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996)
+local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerSetToBlow			= mod:NewBuffFadesTimer(30, 145996)
 --Stout Crate of Goods
 local timerMatterScramble		= mod:NewCastTimer(7, 145288, nil, "-Tank")
-local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
-local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947)
-local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539)
-local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, "MagicDispeller")
+local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288, nil, nil, nil, 5)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
+local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539, nil, nil, nil, 1)
+local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, "MagicDispeller", nil, 5)
 local timerWindstormCD			= mod:NewCDTimer(34, 145286, nil, false)--Spammy but might be useful to some, if they aren't releasing a ton of these at once.
-local timerRageoftheEmpressCD	= mod:NewCDTimer(18, 145812, nil, "MagicDispeller")
+local timerRageoftheEmpressCD	= mod:NewCDTimer(18, 145812, nil, "MagicDispeller", nil, 5)
 --Lightweight Crate of Goods
 ----Most of these timers are included simply because of how accurate they are. Predictable next timers. However, MANY of these adds up at once.
 ----They are off by default and a user elected choice to possibly pick one specific timer they are in charge of dispeling/interrupting or whatever
@@ -108,25 +106,6 @@ local select, tonumber, UnitPosition, GetWorldStateUIInfo = select, tonumber, Un
 local worldTimer = 0
 local maxTimer = 0
 
-local function isPlayerInMantid()
-	local x, y = UnitPosition("player")
-	local p1 = {1666, -4982}--top point, clockwise
-	local p2 = {1711, -5070}
-	local p3 = {1552, -5179}
-	local p4 = {1493, -5102}
-
-	local m1 = (p2[2]-p1[2])/(p2[1]-p1[1])
-	if (y > m1*x-m1*p1[1]+p1[2]) then return false end
-	local m2 = (p3[2]-p2[2])/(p3[1]-p2[1])
-	if (y < m2*x-m2*p2[1]+p2[2]) then return false end
-	local m3 = (p4[2]-p3[2])/(p4[1]-p3[1])
-	if (y < m3*x-m3*p3[1]+p3[2]) then return false end
-	local m4 = (p1[2]-p4[2])/(p1[1]-p4[1])
-	if (y > m4*x-m4*p4[1]+p4[2]) then return false end
-
-	return true
-end
-
 local function hideRangeFrame()
 	if mod.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
@@ -139,6 +118,12 @@ function mod:OnCombatStart(delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.name)
 		DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
+	end
+	if not self:IsTrivial(100) then
+		self:RegisterShortTermEvents(
+			"SPELL_DAMAGE 145716 145748 146257",
+			"SPELL_MISSED 145716 145748 146257"
+		)
 	end
 end
 
@@ -154,19 +139,19 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 145996 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	if spellId == 145996 then
 		timerSetToBlowCD:Start(args.sourceGUID)
-	elseif spellId == 145288 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145288 then
 		specWarnMatterScramble:Show()
 		timerMatterScramble:Start(args.sourceGUID)
 		timerMatterScrambleCD:Start(args.sourceGUID)
-	elseif spellId == 142934 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 142934 then
 		warnTorment:Show()
 		specWarnTorment:Show()
-	elseif spellId == 142539 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 142539 then
 		specWarnMantidSwarm:Show()
 		timerMantidSwarmCD:Start(args.sourceGUID)
-	elseif spellId == 145286 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) and self:AntiSpam(5, args.sourceGUID) then
+	elseif spellId == 145286 and self:AntiSpam(5, args.sourceGUID) then
 		warnWindStorm:Show()
 		timerWindstormCD:Start(args.sourceGUID)
 	elseif spellId == 146222 and self:CheckTankDistance(args.sourceGUID) then--Relics can be either side, must use CheckTank Distance
@@ -175,12 +160,12 @@ function mod:SPELL_CAST_START(args)
 		warnGustingCraneKick:Show()
 		specWarnGustingCraneKick:Show()
 		timerGustingCraneKickCD:Start(args.sourceGUID)
-	elseif spellId == 145489 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145489 then
 		warnReturnToStone:Show()
 		timerReturnToStoneCD:Start(args.sourceGUID)
-	elseif spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then--Pre warn more or less
+	elseif spellId == 142947 then--Pre warn more or less
 		specWarnCrimsonRecon:Show()
-	elseif spellId == 146815 and self:AntiSpam(2, 4)  then--Will do more work on this later, not enough time before raid, but i have an idea for it
+	elseif spellId == 146815 and self:AntiSpam(2, 4)then--Will do more work on this later, not enough time before raid, but i have an idea for it
 		warnSuperNova:Show()
 		specWarnSuperNova:Show()
 	end
@@ -188,22 +173,24 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 142947 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	if spellId == 142947 then
 		timerCrimsonReconCD:Start(args.sourceGUID)
-	elseif spellId == 145712 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145712 then
 		timerBlazingChargeCD:Start(args.sourceGUID)
-	elseif spellId == 146253 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 146253 then
 		timerPathOfBlossomsCD:Start(args.sourceGUID)
-	elseif spellId == 145230 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then
+	elseif spellId == 145230 then
 		local source = args.sourceName
-		warnForbiddenMagic:Show(args.destName)
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if self:AntiSpam(5, args.destName) then
+			warnForbiddenMagic:CombinedShow(1, args.destName)
+		end
+		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then 
 			specWarnForbiddenMagic:Show(source)
 		end
-	elseif spellId == 145786 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145786 then
 		timerResidueCD:Start(args.sourceGUID)
 		specWarnResidue:Show()
-	elseif spellId == 145812 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145812 then
 		specWarnRageoftheEmpress:Show()
 		timerRageoftheEmpressCD:Start(args.sourceGUID)
 	end
@@ -211,7 +198,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 145987 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	if spellId == 145987 then
 		warnSetToBlow:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			local _, _, _, _, _, _, expires = UnitDebuff("player", args.spellName)
@@ -220,11 +207,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerSetToBlow:Start(buffTime)
 			specWarnSetToBlow:Schedule(buffTime)
 		end
-	elseif spellId == 145692 and (not DBM.Options.DontShowFarWarnings or isPlayerInMantid()) then
+	elseif spellId == 145692 then
 		warnEnrage:Show(args.destName)
 		specWarnEnrage:Show(args.destName)
 		timerEnrage:Start(args.destName)
-	elseif spellId == 145998 and (not DBM.Options.DontShowFarWarnings or not isPlayerInMantid()) then--This is a massive crate mogu spawning
+	elseif spellId == 145998 then--This is a massive crate mogu spawning
 		timerReturnToStoneCD:Start(6)
 	end
 end
@@ -293,7 +280,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(6))
+	local text = select(4, GetWorldStateUIInfo(1))
 	local time = tonumber(string.match(text or "", "%d+"))
 	if not time then return end
 	if time > worldTimer then

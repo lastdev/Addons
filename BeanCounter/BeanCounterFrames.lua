@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: BeanCounterFrames.lua 5240 2011-11-30 12:03:24Z brykrys $
 	URL: http://auctioneeraddon.com/
 

@@ -1,10 +1,24 @@
 
 
+== Version 2.1.1
+
+* Reduced code size of ElvUI compatibility.
+
+== Version 2.1
+
+* Fixed compatibility with ElvUI.
+
+== Version 2.0.7
+
+* Bumped the toc file interface number.
+
+== Version 2.0.6
+
+* Bumped the toc file interface number to 60100.
 
 == Version 2.0.5
 
 * Bumped the toc file interface number to 60000.
-
 
 == Version 2.0.4
 

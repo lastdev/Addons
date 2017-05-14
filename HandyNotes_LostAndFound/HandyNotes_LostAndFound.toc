@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 70000
 ## Title: HandyNotes_LostAndFound
 ## Notes: Where the Lost and Found objects are
 ## Author: Kemayo
@@ -8,7 +8,7 @@
 ## X-eMail: kemayo @ gmail DOT com
 ## SavedVariables: HandyNotes_LostAndFoundDB
 ## RequiredDeps: HandyNotes
-## X-Curse-Packaged-Version: v9
+## X-Curse-Packaged-Version: v10
 ## X-Curse-Project-Name: HandyNotes_LostAndFound
 ## X-Curse-Project-ID: handynotes_lostandfound
 ## X-Curse-Repository-ID: wow/handynotes_lostandfound/mainline

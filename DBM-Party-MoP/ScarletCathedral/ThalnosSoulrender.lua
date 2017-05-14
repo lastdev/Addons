@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(688, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(59789)
 mod:SetEncounterID(1423)
 mod:SetZone()
@@ -9,12 +9,11 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_SUMMON"
+	"SPELL_AURA_APPLIED 115297",
+	"SPELL_AURA_REMOVED 115297",
+	"SPELL_CAST_SUCCESS 115297 115147 115139",
+	"SPELL_SUMMON 115250"
 )
-
 
 local warnEvictSoul				= mod:NewTargetAnnounce(115297, 3)
 local warnRaiseCrusade			= mod:NewSpellAnnounce(115139, 3)
@@ -25,9 +24,9 @@ local specWarnFallenCrusader	= mod:NewSpecialWarningSwitch("ej5863", "-Healer")-
 local specWarnEmpoweredSpirit	= mod:NewSpecialWarningSwitch("ej5869", "-Healer")--These need to die before they become zombies. Cannot see a way in combat log to detect target, i'll have to watch for target scanning next time to warn that player to run away from dead crusaders.
 
 local timerEvictSoul			= mod:NewTargetTimer(6, 115297)
-local timerEvictSoulCD			= mod:NewCDTimer(41, 115297)
-local timerRaiseCrusadeCD		= mod:NewNextTimer(60, 115139)--Both of these are 40 second cds in challenge modes
-local timerSummonSpiritsCD		= mod:NewNextTimer(60, 115147)--Although correction is only needed in one spot
+local timerEvictSoulCD			= mod:NewCDTimer(41, 115297, nil, nil, nil, 3)
+local timerRaiseCrusadeCD		= mod:NewNextTimer(60, 115139, nil, nil, nil, 1)--Both of these are 40 second cds in challenge modes
+local timerSummonSpiritsCD		= mod:NewNextTimer(60, 115147, nil, nil, nil, 1)--Although correction is only needed in one spot
 
 function mod:OnCombatStart(delay)
 	timerRaiseCrusadeCD:Start(6-delay)

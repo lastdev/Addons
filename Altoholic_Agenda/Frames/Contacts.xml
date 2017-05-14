@@ -1,4 +1,4 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Contacts.lua"></Script>
 
 	<Button name="AltoContactEntryTemplate" hidden="true" virtual="true">
@@ -21,38 +21,12 @@
 		</Layers>
 	</Button>
 	
-	<Frame name="AltoholicFrameContacts" parent="AltoholicTabAgenda" hidden="true">
-		<Size x="615" y="306" />
-		<Anchors>
-			<Anchor point="TOPRIGHT" x="39" y="-105" />
-		</Anchors>
+	<Frame parentKey="Contacts" parent="AltoholicTabAgenda" inherits="AltoDataPanelTemplate">
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" />
-					<Anchor point="BOTTOMRIGHT" />
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="256" />
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106" />
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="0" />
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
+			<ScrollFrame name="$parentScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 41, Altoholic.Contacts.Update)
+						self:OnVerticalScroll(offset, 41, Altoholic.Contacts.Update)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>

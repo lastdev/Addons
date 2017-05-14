@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreUtil.lua 5524 2014-11-23 18:06:32Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreUtil.lua 5670 2016-09-03 11:59:41Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -33,6 +33,8 @@
 ]]
 
 local lib = AucAdvanced
+if not lib then return end
+lib.CoreFileCheckIn("CoreUtil")
 local private, internalUtil = {}, {}
 local tooltip = lib.Libraries.TipHelper
 local Const = lib.Const
@@ -130,10 +132,10 @@ end
 --This function will retrieve the index we've got stored for the user
 function lib.getFrameIndex()
 	--Check to make sure AucAdvanced.Settings exists, if not initialize it
-	if (not AucAdvanced.Settings) then
-		AucAdvanced.Settings = {}
+	if (not lib.Settings) then
+		lib.Settings = {}
 	end
-	local get = AucAdvanced.Settings.GetSetting
+	local get = lib.Settings.GetSetting
 	--Get the value of AucAdvanced.Settings["printwindow"]
 	local value = get("printwindow")
 	--If that value doesn't exist, we return a default of 0
@@ -146,7 +148,7 @@ end
 
 --This function is used to store the user's preferred chatframe
 function lib.setFrame(frame)
-	local set = AucAdvanced.Settings.SetSetting
+	local set = lib.Settings.SetSetting
 	--If called with no argument
 	if (not frame) then
 		frame = 0
@@ -165,8 +167,8 @@ end
 --This is the printing function.  If the user has selected a preferred chatframe, we'll use it.  If not, we'll default to the first one.
 function lib.Print(...)
 	local output, part, frameIndex
-	local frame = AucAdvanced.getFrameIndex()
-	local allFrames = AucAdvanced.getFrameNames()
+	local frame = lib.getFrameIndex()
+	local allFrames = lib.getFrameNames()
 	if (type(frame) == "string") then
 		if (allFrames[frame]) then
 			frameIndex = allFrames[frame]
@@ -223,7 +225,7 @@ do
 			-- delay creating table until function is first called, to give all modules a chance to load first
 			pricemodels = {}
 			tinsert(pricemodels,{"market", lib.localizations("ADV_Interface_MarketPrice")})--Market Price
-			local algoList, algoNames = AucAdvanced.API.GetAlgorithms()
+			local algoList, algoNames = lib.API.GetAlgorithms()
 			for pos, name in ipairs(algoList) do
 				tinsert(pricemodels,{name, format(lib.localizations("ADV_Interface_Algorithm_Price"), algoNames[pos])})--%s Price
 			end
@@ -245,7 +247,7 @@ do
 		return auctionlength
 	end
 
-	local alevel = {
+	local alevelA = {
 		{Const.ALEVEL_OFF, "Off"},
 		{Const.ALEVEL_LOW, "Low"},
 		{Const.ALEVEL_MED, "Medium"},
@@ -256,8 +258,20 @@ do
 	-- Proposed to introduce variations of this table in future, with different combinations of values
 	-- thus this variant has been called type 'A', having values OFF, LOW, MED, HI
 	function lib.selectorActivityLevelA()
-		return alevel
+		return alevelA
 	end
+
+	-- MIN, LOW, MED, HI - for settings where 'OFF' would be inappropriate
+	local alevelB = {
+		{Const.ALEVEL_MIN, "Minimum"},
+		{Const.ALEVEL_LOW, "Low"},
+		{Const.ALEVEL_MED, "Medium"},
+		{Const.ALEVEL_HI, "High"},
+	}
+	function lib.selectorActivityLevelB()
+		return alevelB
+	end
+
 end
 
 
@@ -267,8 +281,6 @@ function lib.DecodeLink(...) return tooltip:DecodeLink(...) end
 function lib.GetLinkQuality(...) return tooltip:GetLinkQuality(...) end
 function lib.ShowItemLink(...) return tooltip:ShowItemLink(...) end
 function lib.ShowPetLink(...) return tooltip:ShowPetLink(...) end
-function lib.BreakHyperlink(...) return tooltip:BreakHyperlink(...) end -- Deprecated
-lib.breakHyperlink = lib.BreakHyperlink -- Deprecated
 
 do -- Faction related functions
 	local lookupfaction = {
@@ -287,12 +299,12 @@ do -- Faction related functions
 	end
 
 	function lib.GetFaction()
-		-- Compatibility function
+		-- Compatibility function. Deprecated
 		return Resources.ServerKeyCurrent, Const.PlayerRealm, Resources.CurrentFaction
 	end
 
 	function lib.GetFactionGroup()
-		-- Compatibility function
+		-- Compatibility function. Deprecated
 		return Resources.CurrentFaction
 	end
 
@@ -521,7 +533,7 @@ do -- Module Functions
 		-- Flag it as loaded
 		module[MODULE_LOADED] = true
 		-- Flush the SPM cache
-		private.ResetSPMArray()
+		internalUtil.ResetSPMArray()
 		-- Send all the callbacks
 		if not moduleLoadCallbacks then return end
 		local moduleName = module:GetName():lower()
@@ -651,7 +663,7 @@ do -- Module Functions
 			end
 
 			private.resetPriceModels()
-			private.ResetSPMArray()
+			internalUtil.ResetSPMArray()
 
 			private.newmoduleCheckName = libName -- ### temp
 			lib.SendProcessorMessage("newmodule", libType, libName)
@@ -918,7 +930,7 @@ else
 	end
 end
 
-function private.ResetSPMArray()
+function internalUtil.ResetSPMArray() -- make available to CoreMain
 	wipe(spmArray)
 end
 
@@ -937,4 +949,5 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreUtil.lua $", "$Rev: 5524 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreUtil.lua $", "$Rev: 5670 $")
+lib.CoreFileCheckOut("CoreUtil")

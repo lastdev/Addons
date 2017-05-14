@@ -172,11 +172,15 @@ function frame.SetAchWatchList(id, add)
       DestinationWatchList[id] = true
       PlaySound("igMainMenuOptionCheckBoxOn")
       if (not CopyDestAchAnim) then
-        CopyDestAchAnim = CreateFrame("Model", "Overachiever_WatchFrameModelTest", panel)
+        CopyDestAchAnim = CreateFrame("Model", "Overachiever_WatchFrameModelCopying", panel)
         CopyDestAchAnim:Hide()
         CopyDestAchAnim:SetModel("Interface\\ItemAnimations\\ForcedBackpackItem.mdx")
         CopyDestAchAnim:SetScript("OnAnimFinished", function(self)  self:Hide();  end);
         CopyDestAchAnim:SetPoint("BOTTOMRIGHT", destlistdrop, 5, -14)
+		-- When you're up to trying to fix this again, a good place to look might be the reaction to event "ITEM_PUSH" in MainMenuBarBagButtons.lua.
+		-- It seemed like the dropdown above it was causing problems, but on further testing, that dropdown can be hidden entirely; it seems the animation is actually cut off on the top for some reason.
+		--CopyDestAchAnim:SetFrameStrata("TOOLTIP") -- tried to get this animation to appear above the dropdown, but it gets cut off anyway; problem with the animation itself?
+		--CopyDestAchAnim:SetFrameStrata("HIGH") -- also consider :SetFrameLevel
         --CopyDestAchAnim:SetWidth(30);  CopyDestAchAnim:SetHeight(30);
       end
       local texture = select(10, GetAchievementInfo(id))
@@ -197,7 +201,8 @@ function frame.SetAchWatchList(id, add)
     PlaySound("igMainMenuOptionCheckBoxOff")
   end
   if (frame:IsShown()) then
-    Refresh(true)
+    Refresh() --Refresh(true)
+	Overachiever.AchBtnRedisplayTooltip()
   else
     frame.AchList_sorted = nil
     Overachiever.FlashTab(frame.tab)
@@ -205,12 +210,12 @@ function frame.SetAchWatchList(id, add)
 end
 
 local orig_AchievementButton_OnClick = AchievementButton_OnClick
-AchievementButton_OnClick = function(self, ignoreModifiers, ...)
+AchievementButton_OnClick = function(self, button, down, ignoreModifiers, ...)
   if (not ignoreModifiers and IsAltKeyDown()) then
     frame.SetAchWatchList(self.id, true)
     return;
   end
-  return orig_AchievementButton_OnClick(self, ignoreModifiers, ...)
+  return orig_AchievementButton_OnClick(self, button, down, ignoreModifiers, ...)
 end
 
 
@@ -235,7 +240,7 @@ local function TjPopupHelper_EditBoxOnEnterPressed(self, ...)
 -- function should help prune redundant code (a problem you can see in spades if you examine FrameXML\StaticPopup.lua).
 -- To use, set this function to be your popup dialog's EditBoxOnEnterPressed value. Then, use OnAccept as normal.
 	local frame = self:GetParent()
-	if (frame.button1:IsEnabled() == 0) then  return;  end  -- Don't proceed if the button is disabled.
+	if (not frame.button1:IsEnabled()) then  return;  end  -- Don't proceed if the button is disabled.
 	local OnAccept = StaticPopupDialogs[frame.which].OnAccept
 	local ret = OnAccept(frame, ...)
 	frame:Hide()

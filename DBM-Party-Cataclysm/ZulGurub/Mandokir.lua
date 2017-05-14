@@ -2,8 +2,9 @@ local mod	= DBM:NewMod(176, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 local Ohgan	= EJ_GetSectionInfo(2615)
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(52151)
+mod:SetEncounterID(1179)
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -41,28 +42,13 @@ local timerOhgan			= mod:NewCastTimer(2.5, 96724)
 local specWarnSlam			= mod:NewSpecialWarningSpell(96740)
 local specWarnOhgan			= mod:NewSpecialWarning("SpecWarnOhgan")
 
-mod:AddBoolOption("SetIconOnOhgan", false)
+mod:AddSetIconOption("SetIconOnOhgan", 96717, false, true)
 
 local reviveCounter = 8
-local ohganGUID = nil
 local ohganDiedOnce = false
-
-mod:RegisterOnUpdateHandler(function(self)
-	if self.Options.SetIconOnOhgan and ohganGUID then
-		for uId in DBM:GetGroupMembers() do
-			local unitID = uId .. "target"
-			local guid = UnitGUID(unitID)
-			if guid == ohganGUID then
-				SetRaidTarget(unitID, 8)
-				ohganGUID = nil
-			end
-		end
-	end
-end, 1)
 
 function mod:OnCombatStart(delay)
 	reviveCounter = 8
-	ohganGUID = nil
 	ohganDiedOnce = false
 	timerSummonOhgan:Start(-delay)
 end
@@ -102,7 +88,9 @@ end
 function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 96724 then
 		specWarnOhgan:Show()
-		ohganGUID = destGUID
+		if self.Options.SetIconOnOhgan then
+			self:ScanForMobs(destGUID, 0, 8, 1, 0.1, 10, "SetIconOnOhgan")
+		end
 	end
 end
 

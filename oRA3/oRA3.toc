@@ -1,18 +1,26 @@
-## Interface: 60100
+## Interface: 70200
 ## Title: oRA3
 ## Notes: Raid and Party Assist
-## Author: Funkydude, Nebula169
-## X-Curse-Packaged-Version: r863-release
-## X-Curse-Project-Name: oRA3
-## X-Curse-Project-ID: ora3
-## X-Curse-Repository-ID: wow/ora3/mainline
+## Notes-zhCN: Raid and Party Assist
+## Notes-zhTW: Raid and Party Assist
+## Notes-deDE: Raid and Party Assist
+## Notes-frFR: Raid and Party Assist
+## Notes-itIT: Raid and Party Assist
+## Notes-koKR: Raid and Party Assist
+## Notes-ruRU: Raid and Party Assist
+## Notes-ptBR: Raid and Party Assist
+## Notes-esES: Raid and Party Assist
+## Notes-esMX: Raid and Party Assist
+## Version: v7.2.1
+## Author: Funkydude, Nebula
 
-## X-Credits: Cladhaire for the sliding/detaching panel, Ammo, Rabbit
+## X-Credits: Cladhaire, Ammo, Rabbit
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: 15655
+## X-WoWI-ID: 14635
 
 ## SavedVariables: oRA3DB
-
-## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibDDI-1.0, LibGroupInSpecT-1.1, LibDualSpec-1.0
-## X-Embeds: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibDDI-1.0, LibGroupInSpecT-1.1, LibDualSpec-1.0
+## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibDDI-1.0, LibGroupInSpecT-1.1, LibDualSpec-1.0, LibChatAnims, LibLatency, LibDurability, LibDialog-1.0, Masque
 
 libs.xml
 
@@ -30,17 +38,21 @@ locales\esES.lua
 oRA3.lua
 modulePrototype.lua
 
+# module order in options
+modules\Alerts.lua
 modules\BattleRes.lua
-modules\RoleIcons.lua
+modules\Consumables.lua
+modules\Cooldowns\module.xml
+modules\GuildRepairs.lua
+modules\Loot.lua
 modules\ReadyCheck.lua
+# modules with no settings
+modules\Difficulty.lua
 modules\Durability.lua
 modules\Gear.lua
-modules\Latency.lua
-modules\Zone.lua
 modules\Invite.lua
+modules\Latency.lua
 modules\Promote.lua
-modules\Cooldowns.lua
+modules\RoleIcons.lua
 modules\Tanks.lua
-modules\Loot.lua
-modules\Difficulty.lua
-
+modules\Zone.lua

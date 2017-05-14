@@ -3,14 +3,15 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision(("$Revision: 204 $"):sub(12, -3))
 mod:SetCreatureID(19044)
+mod:SetEncounterID(650)
 mod:SetModelID(18698)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE"
+	"SPELL_CAST_START 33525 33654",
+	"SPELL_CAST_SUCCESS 36297",
+	"SPELL_AURA_APPLIED 36300 36240",
+	"SPELL_AURA_APPLIED_DOSE 36300"
 )
 
 local warnGrowth		= mod:NewStackAnnounce(36300, 2, 36300)
@@ -21,9 +22,9 @@ local warnSilence		= mod:NewSpellAnnounce(36297, 4)
 local specWarnCaveIn	= mod:NewSpecialWarningMove(36240)
 
 local timerGrowthCD		= mod:NewNextTimer(30, 36300)
-local timerGroundSlamCD	= mod:NewCDTimer(74, 36300)--74-80 second variation,and this is just from 2 pulls.
-local timerShatterCD	= mod:NewNextTimer(10, 33654)--10 seconds after ground slam
-local timerSilenceCD	= mod:NewCDTimer(32, 36300)--Also showing a HUGE variation of 32-48 seconds.
+local timerGroundSlamCD	= mod:NewCDTimer(74, 36300, nil, nil, nil, 2)--74-80 second variation,and this is just from 2 pulls.
+local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2)--10 seconds after ground slam
+local timerSilenceCD	= mod:NewCDTimer(32, 36300, nil, nil, nil, 5)--Also showing a HUGE variation of 32-48 seconds.
 
 mod:AddBoolOption("RangeFrame", true)
 

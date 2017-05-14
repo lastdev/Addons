@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(615, "DBM-Party-WotLK", 14, 280)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
 mod:SetCreatureID(36497)
-mod:SetEncounterID(829, 830)
+mod:SetEncounterID(829, 830, 2006)
 mod:SetModelID(30226)
 
 mod:RegisterCombat("combat")
@@ -11,13 +11,14 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
-	"UNIT_HEALTH boss1 target focus mouseover"
+	"UNIT_HEALTH boss1"
 )
 
 local warnSoulstormSoon		= mod:NewSoonAnnounce(68872, 2)
 local warnCorruptSoul		= mod:NewTargetAnnounce(68839, 3)
 local specwarnSoulstorm		= mod:NewSpecialWarningSpell(68872, nil, nil, nil, 2)
-local timerSoulstormCast	= mod:NewCastTimer(4, 68872)
+
+local timerSoulstormCast	= mod:NewCastTimer(4, 68872, nil, nil, nil, 2)
 
 local warned_preStorm = false
 

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: ScanProgress.lua 4979 2010-10-31 10:59:55Z Prowell $
 	URL: http://auctioneeraddon.com/
 

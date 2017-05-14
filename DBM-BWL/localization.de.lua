@@ -16,7 +16,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "Zeige Zeit bis die ersten Adds erscheinen"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "verliert Energie und schaltet sich ab!",
+	Phase2Emote	= "flieht während die kontrollierenden Kräfte der Kugel schwinden.",
 	YellPull 	= "Eindringlinge sind in die Brutstätte vorgestoßen! Schlagt Alarm! Beschützt die Eier um jeden Preis!"
 }
 -------------------
@@ -38,10 +38,6 @@ L = DBM:GetModLocalization("Broodlord")
 
 L:SetGeneralLocalization{
 	name	= "Brutwächter Dreschbringer"
-}
-
-L:SetMiscLocalization{
-	Pull	= "Euresgleichen sollte nicht hier sein! Ich werde Euch vernichten!"
 }
 
 ---------------
@@ -115,7 +111,6 @@ L:SetOptionLocalization{
 	WarnPhase			= "Verkünde Phasenwechsel"
 }
 L:SetMiscLocalization{
-	YellPull	= "Lasst die Spiele beginnen!",
 	YellP2		= "Sehr gut, meine Diener. Der Mut der Sterblichen scheint zu schwinden! Nun lasst uns sehen, wie sie sich gegen den wahren Herrscher des Schwarzfels behaupten werden!",
 	YellP3		= "Unmöglich! Erhebt Euch, meine Diener! Kämpft erneut für Euren Meister!",
 	YellShaman	= "Schamane, zeigt mir was eure Totems können!",

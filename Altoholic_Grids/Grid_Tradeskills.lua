@@ -1,34 +1,13 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local LCI = LibStub("LibCraftInfo-1.0")
 local LCL = LibStub("LibCraftLevels-1.0")
 
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
-
-local RECIPE_GREY		= "|cFF808080"
-local RECIPE_GREEN	= "|cFF40C040"
-local RECIPE_ORANGE	= "|cFFFF8040"
-
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
 local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
-
-local tradeskills = {
-	2259,
-	3100,
-	7411,
-	4036,
-	45357,
-	25229,
-	2108,
-	2656,
-	3908,
-	2550,
-	3273,
-}
 
 local xPacks = {
 	EXPANSION_NAME0,	-- "Classic"
@@ -45,99 +24,56 @@ local OPTION_TRADESKILL = "UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"
 local currentDDMText
 local currentItemID
 local currentList
-
-local DDM_Add = addon.Helpers.DDM_Add
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
-local DDM_AddTitle = addon.Helpers.DDM_AddTitle
+local dropDownFrame
 
 local function OnXPackChange(self)
 	local currentXPack = self.value
 	
 	addon:SetOption(OPTION_XPACK, currentXPack)
 
-	addon.Tabs.Grids:SetViewDDMText(xPacks[currentXPack])
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:SetViewDDMText(xPacks[currentXPack])
+	AltoholicTabGrids:Update()
 end
 
 local function OnTradeSkillChange(self)
-	CloseDropDownMenus()
+	dropDownFrame:Close()
 	addon:SetOption(OPTION_TRADESKILL, self.value)
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
-local function DropDown_Initialize(self, level)
+local function DropDown_Initialize(frame, level)
 
 	if not level then return end
 
+	local tradeskills = addon.TradeSkills.spellIDs
 	local currentXPack = addon:GetOption(OPTION_XPACK)
 	local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
 	
-	local info = UIDropDownMenu_CreateInfo()
-	
 	if level == 1 then
-		-- Sub Menu : Primary Skills
-		info.text = PRIMARY_SKILLS
-		info.hasArrow = 1
-		info.value = 1
-		UIDropDownMenu_AddButton(info, level)
-
-		-- Sub Menu : Secondary Skills
-		info.text = SECONDARY_SKILLS
-		info.hasArrow = 1
-		info.value = 2
-		UIDropDownMenu_AddButton(info, level)
-
-		info.isTitle	= 1
-		info.hasArrow = nil
-		info.text = ""
-		info.icon = nil
-		info.checked = nil
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info, level)
-		
-		info = UIDropDownMenu_CreateInfo()
+		frame:AddCategoryButton(PRIMARY_SKILLS, 1, level)
+		frame:AddCategoryButton(SECONDARY_SKILLS, 2, level)
+		frame:AddTitle()
 		
 		-- XPack Selection
 		for i, xpack in pairs(xPacks) do
-			info.text = xpack
-			info.hasArrow = nil
-			info.value = i
-			info.func = OnXPackChange
-			info.icon = nil
-			info.checked = (i==currentXPack)
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButton(xpack, i, OnXPackChange, nil, (currentXPack == i))
 		end
-		
-		DDM_AddCloseMenu()
+		frame:AddCloseMenu()
 	
 	elseif level == 2 then
 		local spell, icon, _
-		local firstSecondarySkill = 10
+		local firstSecondarySkill = addon.TradeSkills.firstSecondarySkillIndex
 	
-		if UIDROPDOWNMENU_MENU_VALUE == 1 then				-- Primary professions
+		if frame:GetCurrentOpenMenuValue() == 1 then				-- Primary professions
 			for i = 1, (firstSecondarySkill - 1) do
 				spell, _, icon = GetSpellInfo(tradeskills[i])
-				
-				info.text = spell
-				info.hasArrow = nil
-				info.value = i
-				info.func = OnTradeSkillChange
-				info.icon = icon
-				info.checked = (i==currentTradeSkill)
-				UIDropDownMenu_AddButton(info, level)				
+				frame:AddButton(spell, i, OnTradeSkillChange, icon, (currentTradeSkill == i), level)
 			end
 		
-		elseif UIDROPDOWNMENU_MENU_VALUE == 2 then		-- Secondary professions
+		elseif frame:GetCurrentOpenMenuValue() == 2 then		-- Secondary professions
 			for i = firstSecondarySkill, #tradeskills do
 				spell, _, icon = GetSpellInfo(tradeskills[i])
-				
-				info.text = spell
-				info.hasArrow = nil
-				info.value = i
-				info.func = OnTradeSkillChange
-				info.icon = icon
-				info.checked = (i==currentTradeSkill)
-				UIDropDownMenu_AddButton(info, level)				
+				frame:AddButton(spell, i, OnTradeSkillChange, icon, (currentTradeSkill == i), level)
 			end
 		end
 	end
@@ -185,6 +121,7 @@ end
 
 local callbacks = {
 	OnUpdate = function() 
+			local tradeskills = addon.TradeSkills.spellIDs
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
 			
@@ -195,7 +132,7 @@ local callbacks = {
 			end
 			
 			local prof = GetSpellInfo(tradeskills[currentTradeSkill])
-			addon.Tabs.Grids:SetStatus(format("%s / %s", GREEN..prof, WHITE .. xPacks[currentXPack]))
+			AltoholicTabGrids:SetStatus(format("%s / %s", colors.green..prof, colors.white .. xPacks[currentXPack]))
 		end,
 	OnUpdateComplete = function() end,
 	GetSize = function() return #currentList end,
@@ -204,24 +141,25 @@ local callbacks = {
 			local itemName = GetSpellInfo(spellID)
 			local text
 			
-			-- if not itemName then
+			if not itemName then
 				-- DEFAULT_CHAT_FRAME:AddMessage("spell : " .. spellID)
-			-- end
+				return
+			end
 			
-			currentItemID = LCI:GetCraftResultItem(spellID)
+			currentItemID = DataStore:GetCraftResultItem(spellID)
 			local orange, yellow, green, grey = LCL:GetCraftLevels(spellID)
 			
 			if orange then
 				text = format("%s\n%s %s %s %s",
-					WHITE..itemName, 
-					-- WHITE..spellID, 
-					RECIPE_ORANGE..orange, 
-					YELLOW..yellow, 
-					RECIPE_GREEN..green, 
-					RECIPE_GREY..grey )
+					colors.white..itemName, 
+					-- colors.white..spellID, 
+					colors.recipeOrange..orange, 
+					colors.yellow..yellow, 
+					colors.recipeGreen..green, 
+					colors.recipeGrey..grey )
 			end
 			
-			text = text or format("%s", WHITE..itemName)
+			text = text or format("%s", colors.white..itemName)
 
 			rowFrame.Name.Text:SetText(text)
 			rowFrame.Name.Text:SetJustifyH("LEFT")
@@ -239,9 +177,10 @@ local callbacks = {
 
 			local text = ICON_NOTREADY
 			local vc = 0.25	-- vertex color
+			local tradeskills = addon.TradeSkills.spellIDs
 			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
 
-			if profession.NumCrafts ~= 0 then
+			if #profession.Crafts ~= 0 then
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity
 				
 				-- local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
@@ -275,15 +214,16 @@ local callbacks = {
 			GameTooltip:Hide() 
 		end,
 		
-	InitViewDDM = function(frame, title) 
+	InitViewDDM = function(frame, title)
+			dropDownFrame = frame
 			frame:Show()
 			title:Show()
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, xPacks[addon:GetOption(OPTION_XPACK)])
-			addon:DDM_Initialize(frame, DropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(xPacks[addon:GetOption(OPTION_XPACK)])
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(7, callbacks)
+AltoholicTabGrids:RegisterGrid(7, callbacks)

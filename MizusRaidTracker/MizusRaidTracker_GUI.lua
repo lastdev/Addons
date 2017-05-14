@@ -74,7 +74,16 @@ local MRT_BossLootTableColDef = {
                 --MRT_Debug("self:GetCell(realrow, column) = "..self:GetCell(realrow, column));
                 local itemId = self:GetCell(realrow, column);
                 local itemTexture = GetItemIcon(itemId); 
-                cellFrame:SetBackdrop( { bgFile = itemTexture } );
+                --cellFrame:SetBackdrop( { bgFile = itemTexture } );            -- put this back in, if and when SetBackdrop can handle texture IDs
+                if not (cellFrame.cellItemTexture) then
+                    cellFrame.cellItemTexture = cellFrame:CreateTexture();
+                end
+                cellFrame.cellItemTexture:SetTexture(itemTexture);
+                cellFrame.cellItemTexture:SetTexCoord(0, 1, 0, 1);
+                cellFrame.cellItemTexture:Show();
+                cellFrame.cellItemTexture:SetPoint("CENTER", cellFrame.cellItemTexture:GetParent(), "CENTER");
+                cellFrame.cellItemTexture:SetWidth(30);
+                cellFrame.cellItemTexture:SetHeight(30);
             end
             -- tooltip handling
             local itemLink = self:GetCell(realrow, 6);
@@ -252,7 +261,7 @@ end
 function mrt:UI_CreateTwoRowDDM()
     -- Create DropDownFrame
     if (not MRT_GUI_TwoRowDialog_DDM) then
-        CreateFrame("Frame", "MRT_GUI_TwoRowDialog_DDM", MRT_GUI_TwoRowDialog, "UIDropDownMenuTemplate")
+        CreateFrame("Frame", "MRT_GUI_TwoRowDialog_DDM", MRT_GUI_TwoRowDialog, "MRT_Lib_UIDropDownMenuTemplate")
         MRT_GUI_TwoRowDialog_DDM:CreateFontString("MRT_GUI_TwoRowDialog_DDM_Text", "OVERLAY", "ChatFontNormal")
     end
     -- List of DropDownMenuItems
@@ -273,27 +282,27 @@ function mrt:UI_CreateTwoRowDDM()
     MRT_GUI_TwoRowDialog_DDM:Show();
     -- Click handler function
     local function OnClick(self)
-       UIDropDownMenu_SetSelectedID(MRT_GUI_TwoRowDialog_DDM, self:GetID())
+       MRT_Lib_UIDropDownMenu_SetSelectedID(MRT_GUI_TwoRowDialog_DDM, self:GetID())
     end
     -- DropDownMenu initialize function
     local function initialize(self, level)
-        local info = UIDropDownMenu_CreateInfo()
+        local info = MRT_Lib_UIDropDownMenu_CreateInfo()
         for k2, v2 in ipairs(items) do
             for k, v in pairs(v2) do
-                info = UIDropDownMenu_CreateInfo()
+                info = MRT_Lib_UIDropDownMenu_CreateInfo()
                 info.text = v
                 info.value = k
                 info.func = OnClick
-                UIDropDownMenu_AddButton(info, level)
+                MRT_Lib_UIDropDownMenu_AddButton(info, level)
             end
         end
     end
     -- Setup DropDownMenu
-    UIDropDownMenu_Initialize(MRT_GUI_TwoRowDialog_DDM, initialize);
-    UIDropDownMenu_SetWidth(MRT_GUI_TwoRowDialog_DDM, 236);
-    UIDropDownMenu_SetButtonWidth(MRT_GUI_TwoRowDialog_DDM, 260);
-    UIDropDownMenu_SetSelectedID(MRT_GUI_TwoRowDialog_DDM, 3);
-    UIDropDownMenu_JustifyText(MRT_GUI_TwoRowDialog_DDM, "LEFT");
+    MRT_Lib_UIDropDownMenu_Initialize(MRT_GUI_TwoRowDialog_DDM, initialize);
+    MRT_Lib_UIDropDownMenu_SetWidth(MRT_GUI_TwoRowDialog_DDM, 236);
+    MRT_Lib_UIDropDownMenu_SetButtonWidth(MRT_GUI_TwoRowDialog_DDM, 260);
+    MRT_Lib_UIDropDownMenu_SetSelectedID(MRT_GUI_TwoRowDialog_DDM, 3);
+    MRT_Lib_UIDropDownMenu_JustifyText(MRT_GUI_TwoRowDialog_DDM, "LEFT");
     -- Setup text
     MRT_GUI_TwoRowDialog_DDM_Text:SetText(MRT_L.GUI["Raid size"])
     -- Hide element
@@ -1166,7 +1175,7 @@ end
 function MRT_GUI_StartNewRaidAccept()
     local diffIDList = { 16, 15, 14, 17, 9, 4, 3 }
     local zoneName = MRT_GUI_TwoRowDialog_EB1:GetText()
-    local diffId = diffIDList[UIDropDownMenu_GetSelectedID(MRT_GUI_TwoRowDialog_DDM)]
+    local diffId = diffIDList[MRT_Lib_UIDropDownMenu_GetSelectedID(MRT_GUI_TwoRowDialog_DDM)]
     local raidSize = mrt.raidSizes[diffId]
     -- Hide dialogs
     MRT_GUI_HideDialogs();

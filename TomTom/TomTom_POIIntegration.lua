@@ -1,5 +1,5 @@
 local addonName, addon = ...
-local astrolabe = addon.astrolabe
+local hbd = addon.hbd
 
 local enableClicks = true       -- True if waypoint-clicking is enabled to set points
 local enableClosest = true      -- True if 'Automatic' quest waypoints are enabled
@@ -37,7 +37,7 @@ local function ObjectivesChanged()
     end
 
     local map, floor = GetCurrentMapAreaID()
-    local floors = astrolabe:GetNumFloors(map)
+    local floors = hbd:GetNumFloors(map)
     floor = (floors == 0 and 0 or 1)
 
     local px, py = GetPlayerMapPosition("player")
@@ -72,7 +72,7 @@ local function ObjectivesChanged()
         local completed, x, y, objective = QuestPOIGetIconInfo(qid)
 
         if x and y then
-            local dist, xd, yd = astrolabe:ComputeDistance(map, floor, px, py, map, floor, x, y)
+            local dist = hbd:GetZoneDistance(map, floor, px, py, map, floor, x, y)
             if dist < closestdist then
                 closest = watchIndex
                 closestdist = dist
@@ -148,7 +148,7 @@ local function poi_OnClick(self, button)
         return
     end
 
-    if button == "RightButton" then
+    if button == "LeftButton" then
         for i = 1, #modifier do
             local mod = modifier:sub(i, i)
             local func = modTbl[mod]
@@ -160,15 +160,18 @@ local function poi_OnClick(self, button)
         return
     end
 
+    local cvar = GetCVarBool("questPOI")
+    SetCVar("questPOI", 1)
+
     -- Run our logic, and set a waypoint for this button
     local m, f = GetCurrentMapAreaID()
 
     local questIndex = self.quest and self.quest.questLogIndex
-    if not questIndex and self.questId then
-        -- Lookup the questIndex for the given questId
+    if not questIndex and self.questID then
+        -- Lookup the questIndex for the given questID
         for idx = 1, GetNumQuestLogEntries(), 1 do
             local qid = getQIDFromIndex(idx)
-            if qid == self.questId then
+            if qid == self.questID then
                 questIndex = idx
             end
         end
@@ -177,6 +180,8 @@ local function poi_OnClick(self, button)
     if not questIndex and self.index then
         questIndex = GetQuestIndexForWatch(self.index)
     end
+
+    QuestPOIUpdateIcons()
 
     local title = GetQuestLogTitle(questIndex)
     local qid = getQIDFromIndex(questIndex)
@@ -209,8 +214,21 @@ local function poi_OnClick(self, button)
             arrivaldistance = TomTom.profile.poi.arrival,
         })
         poiclickwaypoints[key] = uid
+    else
+        local uid = poiclickwaypoints[key]
+        TomTom:SetCrazyArrow(uid, TomTom.profile.poi.arrival, title)
     end
+
+    SetCVar("questPOI", cvar and 1 or 0)
 end
+
+hooksecurefunc("TaskPOI_OnClick", function(self, button)
+    poi_OnClick(self, button)
+end)
+
+hooksecurefunc("QuestPOIButton_OnClick", function(self, button)
+    poi_OnClick(self, button)
+end)
 
 function TomTom:EnableDisablePOIIntegration()
     enableClicks= TomTom.profile.poi.enable

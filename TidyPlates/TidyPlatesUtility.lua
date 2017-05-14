@@ -15,6 +15,11 @@ copytable = function(original)
 	return duplicate
 end
 
+
+TidyPlatesUtility.IsFriend = function(...) end
+--TidyPlatesUtility.IsHealer =
+TidyPlatesUtility.IsGuildmate = function(...) end
+
 local function RaidMemberCount()
 	if UnitInRaid("player") then
 		return GetNumGroupMembers()
@@ -100,6 +105,132 @@ TidyPlatesUtility.abbrevNumber = valueToString
 TidyPlatesUtility.copyTable = copytable
 TidyPlatesUtility.mergeTable = mergetable
 TidyPlatesUtility.updateTable = updatetable
+
+------------------------------------------
+-- GameTooltipScanner
+------------------------------------------
+local ScannerName = "TidyPlatesScanningTooltip"
+local TooltipScanner = CreateFrame( "GameTooltip", ScannerName , nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+TooltipScanner:SetOwner( WorldFrame, "ANCHOR_NONE" );
+
+------------------------------------------
+-- Unit Subtitles/NPC Roles
+------------------------------------------
+local UnitSubtitles = {}
+local function GetUnitSubtitle(unit)
+	local unitid = unit.unitid
+
+	-- Bypass caching while in an instance
+	--if inInstance or (not UnitExists(unitid)) then return end
+	if ( UnitIsPlayer(unitid) or UnitPlayerControlled(unitid) or (not UnitExists(unitid))) then return end
+
+	--local guid = UnitGUID(unitid)
+	local name = unit.name
+	local subTitle = UnitSubtitles[name]
+
+	if not subTitle then
+		TooltipScanner:ClearLines()
+ 		TooltipScanner:SetUnit(unitid)
+
+ 		local TooltipTextLeft1 = _G[ScannerName.."TextLeft1"]
+ 		local TooltipTextLeft2 = _G[ScannerName.."TextLeft2"]
+ 		local TooltipTextLeft3 = _G[ScannerName.."TextLeft3"]
+ 		local TooltipTextLeft4 = _G[ScannerName.."TextLeft4"]
+
+ 		name = TooltipTextLeft1:GetText()
+
+		if name then name = gsub( gsub( (name), "|c........", "" ), "|r", "" ) else return end	-- Strip color escape sequences: "|c"
+		if name ~= UnitName(unitid) then return end	-- Avoid caching information for the wrong unit
+
+
+		-- Tooltip Format Priority:  Faction, Description, Level
+		local toolTipText = TooltipTextLeft2:GetText() or "UNKNOWN"
+
+		if string.match(toolTipText, UNIT_LEVEL_TEMPLATE) then
+			subTitle = ""
+		else
+			subTitle = toolTipText
+		end
+
+		UnitSubtitles[name] = subTitle
+	end
+
+	-- Maintaining a cache allows us to avoid the hit
+	if subTitle == "" then return nil
+	else return subTitle end
+
+end
+
+TidyPlatesUtility.GetUnitSubtitle = GetUnitSubtitle
+
+------------------------------------------
+-- Quest Info
+------------------------------------------
+local function GetTooltipLineText(lineNumber)
+        local tooltipLine = _G[ScannerName .. "TextLeft" .. lineNumber]
+        local tooltipText = tooltipLine:GetText()
+        local r, g, b = tooltipLine:GetTextColor()
+
+        return tooltipText, r, g, b
+end
+
+local function GetUnitQuestInfo(unit)
+    local unitid = unit.unitid
+    local questName
+    local questProgress
+
+    if not unitid then return end
+
+    -- Tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+    TooltipScanner:ClearLines()
+    TooltipScanner:SetUnit(unitid)
+
+    for line = 3, TooltipScanner:NumLines() do
+        local tooltipText, r, g, b = GetTooltipLineText( line )
+
+        -- If the Quest Name exists, the following tooltip lines list quest progress
+        if questName then
+            -- Strip out the name of the player that is on the quest.
+            local playerName, questNote = string.match(tooltipText, "(%g*) ?%- (.*)")
+
+            if (playerName == "") or (playerName == UnitName("player")) then
+                questProgress = questNote
+                break
+            end
+
+        elseif b == 0 and r > 0.99 and g > 0.82 then
+            -- Note: Quest Name Heading is colored Yellow
+            questName = tooltipText
+        end
+    end
+
+    return questName, questProgress
+end
+
+
+TidyPlatesUtility.GetUnitQuestInfo = GetUnitQuestInfo
+
+------------------------
+-- Threat Function
+------------------------
+
+-- /run print(UnitThreatSituation("party1"), UnitAffectingCombat("party1"))
+--local function GetThreatCondition(name)
+local function GetFriendlyThreat(unitid)
+
+	if unitid then
+		local isUnitInParty = UnitPlayerOrPetInParty(unit)
+		local isUnitInRaid = UnitInRaid(unit)
+		local isUnitPet = (unit == "pet")
+
+		--if isUnitInParty then
+			local unitaggro = UnitThreatSituation(unitid)
+			if unitaggro and unitaggro > 1 then return true end
+		--end
+	end
+end
+
+TidyPlatesUtility.GetFriendlyThreat = GetFriendlyThreat
 
 ------------------------
 -- Threat Function
@@ -320,16 +451,13 @@ DropDownMenuFrame:Hide()
 local Border = CreateFrame("Frame", nil, DropDownMenuFrame)
 Border:SetBackdrop(
 		{	bgFile = "Interface/DialogFrame/UI-DialogBox-Background-Dark",
-			--bgFile = "Interface/Tooltips/UI-Tooltip-Background",
             edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-            --edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
             tile = true, tileSize = 16, edgeSize = 16,
             insets = { left = 4, right = 4, top = 4, bottom = 4 }});
 Border:SetBackdropColor(0,0,0,1);
 Border:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPLEFT")
-Border:SetPoint("TOPRIGHT", DropDownMenuFrame, "TOPRIGHT")
 
-
+-- Create the Menu Item Buttons
 for i = 1, MaxDropdownItems do
 	local button = CreateFrame("Button", "TidyPlateDropdownMenuButton"..i, DropDownMenuFrame)
 	DropDownMenuFrame["Button"..i] = button
@@ -338,7 +466,7 @@ for i = 1, MaxDropdownItems do
 	button:SetPoint("RIGHT", DropDownMenuFrame, "RIGHT")
 	button:SetText("Button")
 
-	button._ButtonIndex = i
+	button.buttonIndex = i
 
 	if i > 1 then
 		button:SetPoint("TOPLEFT", DropDownMenuFrame["Button"..i-1], "BOTTOMLEFT")
@@ -372,8 +500,7 @@ local function HideDropdownMenu()
 	DropDownMenuFrame:Hide()
 end
 
-
-local function ShowDropdownMenu(sourceFrame, menu, script)
+local function ShowDropdownMenu(sourceFrame, menu, clickScript)
 	if DropDownMenuFrame:IsShown() and DropDownMenuFrame.SourceFrame == sourceFrame then
 		HideDropdownMenu()
 		return
@@ -393,22 +520,24 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 
 		if item then
 			local itemText = item.text
-			if currentSelection == i then
-				-- Selected Item
-				--button:SetAlpha(1)
-				--button:SetBackdrop( { bgFile = "Interface\\QuestFrame\\UI-QuestTitleHighlight", })
-				--button:SetBackdropColor(1,1,1,.7)
-				itemText = "|cffffdd00"..itemText
+
+			local region1, region2 = button:GetRegions()
+			--print(region1:GetObjectType(), region2:GetObjectType() )
+
+			if currentSelection == i or itemText == currentSelection then
+				region1:SetTextColor(1, .8, 0)
+				region1:SetFont(1, .8, 0)
 			else
-				-- Non-Selected Items
-				--button:SetAlpha(1)
-				--button:SetBackdrop( { bgFile = nil, })
+				region1:SetTextColor(1, 1, 1)
 			end
 
 			button:SetText(itemText)
+			button.Value = item.value
+
+			--button:SetText
 			maxWidth = max(maxWidth, button:GetTextWidth())
 			numOfItems = numOfItems + 1
-			button:SetScript("OnClick", script)
+			button:SetScript("OnClick", clickScript)
 
 
 			button:Show()
@@ -418,8 +547,8 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 
 	end
 
-	DropDownMenuFrame:SetWidth(maxWidth + 40)
-	Border:SetPoint("BOTTOM", DropDownMenuFrame["Button"..numOfItems], "BOTTOM", 0, -12)
+	DropDownMenuFrame:SetWidth(maxWidth + 20)
+	Border:SetPoint("BOTTOMRIGHT", DropDownMenuFrame["Button"..numOfItems], "BOTTOMRIGHT", 10, -12)
 	DropDownMenuFrame:SetPoint("TOPLEFT", sourceFrame, "BOTTOM")
 	DropDownMenuFrame:Show()
 	DropDownMenuFrame:Raise()
@@ -433,72 +562,68 @@ end
 ------------------------------------------------
 -- Creates the Dropdown Drawer object
 ------------------------------------------------
-local function CreateDropdownFrame(helpertable, reference, parent, menu, default, label, byName)
-
-	--[[
-
-	Add:
-		- Description Text Field on Top, which displays tooltip Text
-		- Textures
-		- Close/Cancel Button
 
 
-	--]]
-
+local function CreateDropdownFrame(helpertable, reference, parent, menu, default, label, valueMethod)
 	local drawer = CreateFrame("Frame", reference, parent, "TidyPlatesDropdownDrawerTemplate" )
-	local index, item
+
 	drawer.Text = _G[reference.."Text"]
-	if byName then drawer.Text:SetText(default) else drawer.Text:SetText(menu[default].text) end
-	drawer.Text:SetWidth(100)
+	drawer.Button = _G[reference.."Button"]
 	drawer:SetWidth(120)
-	--
+
 	if label then
 		drawer.Label = drawer:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
 		drawer.Label:SetPoint("TOPLEFT", 18, 18)
 		drawer.Label:SetText(label)
 	end
 
+	drawer.valueMethod = valueMethod
 
+
+	drawer.Text:SetWidth(100)
 	drawer.Value = default
 
---[[
-	-- Old Dropdown Method
-	dropdown.initialize = function(self, level)		-- Replaces the default init function
-		--print("Dropdown Init", reference)
-		--print("Plog")
-		for index, item in pairs(menu) do
-			item.value = index
-			item.func = OnClickDropdownItem
-
-			UIDropDownMenu_AddButton(item)
-		end
-	end
-
---]]
-
+	-- SetValue is used in the Hub and Panel functions; Very important
+	------------------------------------
 	drawer.SetValue = function (self, value)
-		if byName and value then drawer.Text:SetText(value) else
-			--print(value, menu, menu[value], drawer.Value)
-			drawer.Text:SetText(menu[value].text); drawer.Value = value
+		--if not value then return end
+
+		local itemText
+
+		-- Search for Numerical Index
+		if menu[value] then
+			itemText = menu[value].text
+		else
+			-- Search for Token
+			for i,v in pairs(menu) do
+				if v.value == value then
+					itemText = v.text
+					break
+				end
+			end
+		end
+
+		if value then
+			drawer.Text:SetText(itemText)
+			drawer.Value = value
 		end
 	end
 
-	drawer.GetValue = function ()
-		if byName then return drawer.Text:GetText() else
-			return drawer.Value
-		end
+	-- GetValue is used in the Hub and Panel functions; Very important
+	------------------------------------
+	drawer.GetValue = function (self)
+		return self.Value
 	end
 
-	-- [[
-	------------------------------------------------
 	-- New Dropdown Method
 	------------------------------------------------
 
-
 	local function OnClickItem(self)
-		drawer.Text:SetText(self:GetText())
-		drawer.Value = self._ButtonIndex
-		if drawer.OnValueChanged then drawer.OnValueChanged() end
+
+		drawer:SetValue(menu[self.buttonIndex].value or self.buttonIndex)
+		--print(self.Value, menu[self.buttonIndex].value, drawer:GetValue())
+
+		if drawer.OnValueChanged then drawer.OnValueChanged(drawer) end
 		PlaySound("igMainMenuOptionCheckBoxOn");
 		HideDropdownMenu()
 	end
@@ -516,7 +641,9 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 	local button = _G[reference.."Button"]
 	button:SetScript("OnClick", OnClickDropdown)
 	button:SetScript("OnHide", OnHideDropdown)
-	--]]
+
+	-- Set the default value on itself
+	drawer:SetValue(default)
 
 	return drawer
 end

@@ -1547,7 +1547,7 @@
 				</Scripts>				
 			</Button>
 			
-      <Button name="$parentTutorialButton" parentKey="MainHelpButton" inherits="MainHelpPlateButton" toplevel="true">
+      <Button name="SmartBuffOptionsFrame_TutorialButton" parentKey="MainHelpButton" inherits="MainHelpPlateButton" toplevel="true">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parent" x="-24" y="24" />
         </Anchors>
@@ -2410,8 +2410,31 @@
 					</OnLeave>					
 				</Scripts>		    
 	    </Button>
-	    
-      <Button name="SmartBuff_BuffSetup_ClassIcon15">
+
+      <Button name="SmartBuff_BuffSetup_ClassIcon12">
+        <NormalTexture file="Interface\AddOns\SmartBuff\Icons\Demonhunter"/>
+        <Size>
+          <AbsDimension x="24" y="24"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon11">
+            <Offset>
+              <AbsDimension x="0" y="-28"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(SMARTBUFF_CLASSES[12], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>
+      </Button>
+
+      <Button name="SmartBuff_BuffSetup_ClassIcon16">
 		    <NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES"/>
 		    <Size>
 			    <AbsDimension x="24" y="24"/>
@@ -2427,32 +2450,6 @@
 					<OnLoad>
 					  t = self:GetNormalTexture();
 					  t:SetTexCoord(0.0, 19/64, 22/64, 41/64);
-					</OnLoad>
-					<OnEnter>
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetText(SMARTBUFF_CLASSES[15], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>					
-				</Scripts>		    
-	    </Button>
-      <Button name="SmartBuff_BuffSetup_ClassIcon16">
-		    <NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES"/>
-		    <Size>
-			    <AbsDimension x="24" y="24"/>
-		    </Size>
-		    <Anchors>
-			    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon15">
-				    <Offset>
-					    <AbsDimension x="0" y="-28"/>
-				    </Offset>
-			    </Anchor>
-		    </Anchors>
-				<Scripts>
-					<OnLoad>
-					  t = self:GetNormalTexture();
-					  t:SetTexCoord(20/64, 39/64, 1/64, 20/64);
 					</OnLoad>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -2478,7 +2475,7 @@
 				<Scripts>
 					<OnLoad>
 					  t = self:GetNormalTexture();
-					  t:SetTexCoord(20/64, 39/64, 22/64, 41/64);
+					  t:SetTexCoord(20/64, 39/64, 1/64, 20/64);
 					</OnLoad>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -2488,9 +2485,35 @@
 						GameTooltip:Hide();
 					</OnLeave>					
 				</Scripts>		    
+	    </Button>
+      <Button name="SmartBuff_BuffSetup_ClassIcon18">
+		    <NormalTexture file="Interface\LFGFrame\UI-LFG-ICON-PORTRAITROLES"/>
+		    <Size>
+			    <AbsDimension x="24" y="24"/>
+		    </Size>
+		    <Anchors>
+			    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon17">
+				    <Offset>
+					    <AbsDimension x="0" y="-28"/>
+				    </Offset>
+			    </Anchor>
+		    </Anchors>
+				<Scripts>
+					<OnLoad>
+					  t = self:GetNormalTexture();
+					  t:SetTexCoord(20/64, 39/64, 22/64, 41/64);
+					</OnLoad>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_CLASSES[18], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>					
+				</Scripts>		    
 	    </Button>	    
 	    
-      <Button name="SmartBuff_BuffSetup_ClassIcon12" hidden="true">
+      <Button name="SmartBuff_BuffSetup_ClassIcon13" hidden="true">
 		    <NormalTexture file="Interface\AddOns\SmartBuff\Icons\HunterPet"/>
 		    <Size>
 			    <AbsDimension x="24" y="24"/>
@@ -2505,28 +2528,6 @@
 				<Scripts>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetText(SMARTBUFF_CLASSES[12], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>					
-				</Scripts>		    
-	    </Button>
-      <Button name="SmartBuff_BuffSetup_ClassIcon13" hidden="true">
-		    <NormalTexture file="Interface\AddOns\SmartBuff\Icons\WarlockPet"/>
-		    <Size>
-			    <AbsDimension x="24" y="24"/>
-		    </Size>
-		    <Anchors>
-			    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon12">
-				    <Offset>
-					    <AbsDimension x="0" y="-28"/>
-				    </Offset>
-			    </Anchor>
-		    </Anchors>
-				<Scripts>
-					<OnEnter>
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 						GameTooltip:SetText(SMARTBUFF_CLASSES[13], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
 					</OnEnter>
 					<OnLeave>
@@ -2535,7 +2536,7 @@
 				</Scripts>		    
 	    </Button>
       <Button name="SmartBuff_BuffSetup_ClassIcon14" hidden="true">
-		    <NormalTexture file="Interface\AddOns\SmartBuff\Icons\DeathknightPet"/>
+		    <NormalTexture file="Interface\AddOns\SmartBuff\Icons\WarlockPet"/>
 		    <Size>
 			    <AbsDimension x="24" y="24"/>
 		    </Size>
@@ -2550,6 +2551,28 @@
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 						GameTooltip:SetText(SMARTBUFF_CLASSES[14], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>					
+				</Scripts>		    
+	    </Button>
+      <Button name="SmartBuff_BuffSetup_ClassIcon15" hidden="true">
+		    <NormalTexture file="Interface\AddOns\SmartBuff\Icons\DeathknightPet"/>
+		    <Size>
+			    <AbsDimension x="24" y="24"/>
+		    </Size>
+		    <Anchors>
+			    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon14">
+				    <Offset>
+					    <AbsDimension x="0" y="-28"/>
+				    </Offset>
+			    </Anchor>
+		    </Anchors>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(SMARTBUFF_CLASSES[15], SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
@@ -2897,8 +2920,27 @@
 						SmartBuff_BuffSetup_OnClick();
 					</OnClick>
 				</Scripts>
-		  </CheckButton>		  
-		  
+		  </CheckButton>
+      <CheckButton name="SmartBuff_BuffSetup_cbClass18" inherits="OptionsCheckButtonTemplate">
+        <HitRectInsets>
+          <AbsInset left="0" right="0" top="0" bottom="0"/>
+        </HitRectInsets>
+        <Size>
+          <AbsDimension x="20" y="20"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="SmartBuff_BuffSetup_ClassIcon18">
+            <Offset>
+              <AbsDimension x="24" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            SmartBuff_BuffSetup_OnClick();
+          </OnClick>
+        </Scripts>
+      </CheckButton>		  
 
 	    <Slider name="SmartBuff_BuffSetup_RBTime" orientation="VERTICAL" inherits="OptionsSliderTemplate" hidden="false">
 	    	<Size>

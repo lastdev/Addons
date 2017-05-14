@@ -1,9 +1,0 @@
-## Interface: 50400
-## Title: DBM-Interrupts
-## Version: 5.4.2
-## Author: Tristan Maxson
-## Notes: Adds Interrupt Timers To DBM
-## X-DBM-Mod-Category: General
-## X-DBM-Mod-Name: DBM-Interrupts
-
-Interrupt.lua

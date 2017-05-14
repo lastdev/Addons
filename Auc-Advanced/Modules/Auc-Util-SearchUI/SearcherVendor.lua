@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Vendor
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherVendor.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SearcherVendor.lua 5606 2016-06-13 16:33:33Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -32,8 +32,9 @@
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Vendor")
 if not lib then return end
-local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
+--local aucPrint,decode,_,_,replicate,_,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local get,set,default,Const = AucSearchUI.GetSearchLocals()
+local GetItemInfo = GetItemInfo
 lib.tabname = "Vendor"
 -- Set our defaults
 default("vendor.profit.min", 1)
@@ -45,6 +46,7 @@ default("vendor.maxprice.enable", false)
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
+	lib.MakeGuiConfig = nil
 	-- Get our tab and populate it with our controls
 	local id = gui:AddTab(lib.tabname, "Searchers")
 
@@ -103,4 +105,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 5606 $")

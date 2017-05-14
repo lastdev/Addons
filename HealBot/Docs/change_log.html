@@ -14,6 +14,103 @@
 <a href="http://healbot.darktech.org/">HealBot Continued</a> - Change Log
 </span><br>
 <br>
+v7.2.0.0<br>
+=================<br>
+* TOC Update<br>
+* Libraries updated<br>
+<br>
+v7.1.0.2<br>
+=================<br>
+* Added more HoT's to track<br>
+* Fix nil error for Target option on Spells tab, when unit does not exist<br>
+* Updates via git from Acirac<br>
+<br>
+v7.1.0.1<br>
+=================<br>
+* Added more HoT's to track<br>
+* Returned Avoid Blue Cursor - Required after all<br>
+<br>
+v7.1.0.0<br>
+=================<br>
+* Wait on All Variables Loaded before getting spell/item info with API - avoid failure on early calls with some spells/items<br>
+* Added more spells, buffs and debuffs<br>
+* Harmful spells on Enemy targets now ignore Trinket settings - breaks Healbot<br>
+* Removed Avoid Blue Cursor - No longer required<br>
+* nil Health (arg1) fix<br>
+<br>
+v7.0.3.1<br>
+=================<br>
+* Fixed button labels not showing in options on the Skins>Healing tab<br>
+* Fixed Toggle Dislike Mount command<br>
+* Added a number of spells, buffs and debuffs<br>
+<br>
+v7.0.3.0<br>
+=================<br>
+* Update to Spanish localizations to include Mexican (esMX)<br>
+* Added Demon Hunter class - ready for Legion<br>
+* Error speech fix with trinkets - Changed Sound_EnableSFX to Sound_EnableErrorSpeech<br>
+* Merged Spankyham changes into git<br>
+* A number of v7.0.3 fixes<br>
+<br>
+v6.2.3.0<br>
+=================<br>
+* Fixed buff check code incorrectly using player buffs instead of unit's - Thanks to Acirac<br>
+<br>
+v6.2.2.1<br>
+=================<br>
+* Added Monks Extended Life icon<br>
+* Updated Russian localizations<br>
+<br>
+v6.2.2.0 - <b>Thanks to Acirac</b><br>
+=================<br>
+* Cleaned up HealBot_Global.lua and sorted entries alphabetically for easier updates<br>
+* Rewrote buff swap code to support all alternate buffs based on buff type (stats, stamina, attack power, spell power, mastery, haste, critical strike, multistrike, and versatility) - Buffs now have their types defined, for example Mark of The Wild is defined as being Stats and Versatility, if either one of those buff types is not cast by another player then mark of the wild will show as missing<br>
+* Added "Adjust unit max health" option to support adjusting health bar based on any aura modifiers (Supports Tyrant Velhari debuff)<br>
+* Added Lone Wolf buffs to Hunter buff list<br>
+* Added Levitate to Priest buff list<br>
+* Added GET_ITEM_INFO_RECEIVED event to make sure item info is retrieved<br>
+* Fixed HealBot_Buff_ItemID only working for ever blooming frond<br>
+* Fixed Crash Protection checkbox not reenabling after macros slots are freed<br>
+* Added option to use general macros for Crash Protection<br>
+* Fixed corrupted Sound_EnableSFX variable - Thanks to vampik on GitHub<br>
+<br>
+v6.2.0.2<br>
+=================<br>
+* Players in phase now shown as out of range - Thanks to Acirac<br>
+* Fix with ignoring required buffs when similar class buff present, specifically warriors and death knights - Thanks to Acirac<br>
+<br>
+v6.2.0.1<br>
+=================<br>
+* Increased internal timers<br>
+* Additional check to show directional arrow<br>
+* castby dropdown fixes with enhancement - Thanks to Acirac<br>
+* Fix for custom debuffs not always showing - Thanks to Acirac<br>
+<br>
+v6.2.0.0<br>
+=================<br>
+* Minor performance improvement when creating/updating frames<br>
+* Increased max size of bars background outline<br>
+* TOC updates<br>
+<br>
+v6.1.2.1<br>
+=================<br>
+* Option added to Commands dropdown on General tab: Toggle Custom Cures - Default Cast By<br>
+<br>
+v6.1.2.0 - <b>Important</b>: If you have set Cast By for some debuffs on the Cures>Custom tab. Please check the settings.<br>
+=================<br>
+* Fixed Paladin Healer and DPS Seals for 6.1<br>
+* Added Skins>Frames option: Bar Orientation<br> 
+* A number of shaman debuff fixed by Acirac<br> 
+* Change to Custom>Cures: Cast By now defaults to Enemy, previously was Everyone<br> 
+* Localization Updates<br> 
+<br>
+v6.1.0.0<br>
+=================<br>
+* Updated Paladin Seals for 6.1<br>
+* Improved options displaying bars - Thanks to Acirac<br>
+* Ever-Blooming Frond no longer shows as needed when in raids<br>
+* Updated TOCs<br>
+<br>
 v6.0.3.10<br>
 =================<br>
 * Fixed Spec not tracked when healbot is disabled, check spec on wake up<br>
@@ -260,7 +357,7 @@ v5.4.0.0 <B>Recommend: "Reset Custom Debuffs" using commands dropdown on the opt
 * Additional check and exclusions for boss units from enemy frame when friendly<br>
 * Enable mouse wheel only set out of combat, turn ON the option no longer requires UI reload<br>
 * Custom Debuffs added for 5.4 boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
-* Fix for Renewing Mist Icon issue on Portuguese (ptBR) client, should now show Brumas da Renovação for buff only<br>
+* Fix for Renewing Mist Icon issue on Portuguese (ptBR) client, should now show Brumas da RenovaÃ§Ã£o for buff only<br>
 * TOC's updated<br>
 <br>
 v5.3.0.9<br>
@@ -521,7 +618,7 @@ v5.0.5.7<br>
 v5.0.5.6<br>
 =================<br>
 * Major localization update for French users - Thanks to Kubik on HealBot's main site.<br>
--- Si vous êtes français et que vous utilisez les debuffs personnalisés, vous pouvez les réinitialiser en utilisant la commande correspondante dans le menu déroulant dans l'onglet général<br>
+-- Si vous Ãªtes franÃ§ais et que vous utilisez les debuffs personnalisÃ©s, vous pouvez les rÃ©initialiser en utilisant la commande correspondante dans le menu dÃ©roulant dans l'onglet gÃ©nÃ©ral<br>
 * Improvements to Custom Debuffs and Cureable Debuffs<br>
 * Bug fix for notifications when set to raid, thanks to Acirac<br>
 <br>

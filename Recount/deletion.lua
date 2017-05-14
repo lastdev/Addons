@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1266 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1361 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -76,7 +76,7 @@ function Recount:DetectInstanceChange() -- Elsia: With thanks to Loggerhead
 	end
 
 	inInstance, instanceType = IsInInstance()
-	
+
 	if inInstance and (not Recount.db.profile.DeleteNewInstanceOnly or Recount.db.profile.LastInstanceName ~= zone) and Recount.CurrentDataCollect then
 		if Recount.db.profile.ConfirmDeleteInstance == true then
 			--Recount:DPrint("Instance based deletion: Old: "..Recount.db.profile.LastInstanceName.." New: "..zone)
@@ -91,11 +91,6 @@ end
 -- Elsia: For delete on join raid/group
 
 function Recount:PartyMembersChanged()
-
-	if Recount.db.profile.EnableSync then
-		Recount:ConfigComm()
-	end
-
 	local ct = 0
 	for k, v in pairs(Recount.db2.combatants) do
 		ct = ct + 1
@@ -110,9 +105,9 @@ function Recount:PartyMembersChanged()
 			Recount:ResetData() -- Elsia: Delete!
 		end
 
-		if Recount.RequestVersion then
+		--[[if Recount.RequestVersion then
 			Recount:RequestVersion()
-		end -- Elsia: If LazySync is present request version when entering raid
+		end]] -- Elsia: If LazySync is present request version when entering raid
 	end
 
 	if ct ~= 0 and Recount.db.profile.DeleteJoinGroup and not Recount.inGroup and GetNumPartyMembers() > 0 and not IsInRaid() and Recount.CurrentDataCollect then
@@ -123,9 +118,9 @@ function Recount:PartyMembersChanged()
 			Recount:ResetData() -- Elsia: Delete!
 		end
 
-		if Recount.RequestVersion then
+		--[[if Recount.RequestVersion then
 			Recount:RequestVersion()
-		end -- Elsia: If LazySync is present request version when entering party
+		end]] -- Elsia: If LazySync is present request version when entering party
 	end
 
 	local change = false
@@ -178,7 +173,7 @@ function Recount:InitPartyBasedDeletion()
 		Recount:RegisterEvent("GROUP_ROSTER_UPDATE", "PartyMembersChanged")
 	else
 		Recount:RegisterEvent("PARTY_MEMBERS_CHANGED","PartyMembersChanged")
-		
+
 		Recount:RegisterEvent("RAID_ROSTER_UPDATE","PartyMembersChanged")
 	end]]
 	Recount:RegisterEvent("GROUP_ROSTER_UPDATE", "PartyMembersChanged")

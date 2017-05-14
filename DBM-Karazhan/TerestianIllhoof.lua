@@ -1,17 +1,17 @@
 local mod	= DBM:NewMod("TerestianIllhoof", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(15688)
+mod:SetEncounterID(657)
 mod:SetModelID(11343)
 
---mod:RegisterCombat("yell", L.DBM_TI_YELL_PULL)
 mod:RegisterCombat("combat", 15688)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 30115 30065",
+	"SPELL_AURA_REMOVED 30115",
+	"SPELL_CAST_SUCCESS 30066",
 	"UNIT_DIED"
 )
 
@@ -21,9 +21,9 @@ local warningSacrifice	= mod:NewTargetAnnounce(30115, 4)
 
 local specWarnSacrifice	= mod:NewSpecialWarningYou(30115)
 
-local timerWeakened		= mod:NewBuffActiveTimer(31, 30065)
+local timerWeakened		= mod:NewBuffActiveTimer(31, 30065, nil, nil, nil, 6)
 local timerSacrifice	= mod:NewTargetTimer(30, 30115)
-local timerSacrificeCD	= mod:NewNextTimer(43, 30115)
+local timerSacrificeCD	= mod:NewNextTimer(43, 30115, nil, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 

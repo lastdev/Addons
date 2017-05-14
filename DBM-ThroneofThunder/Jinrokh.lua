@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(827, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
 mod:SetCreatureID(69465)
 mod:SetEncounterID(1577)
 mod:SetZone()
@@ -19,10 +19,8 @@ mod:RegisterEventsInCombat(
 local warnFocusedLightning			= mod:NewTargetAnnounce(137399, 4)
 local warnStaticBurst				= mod:NewTargetAnnounce(137162, 3, nil, "Tank|Healer")
 local warnThrow						= mod:NewTargetAnnounce(137175, 2)
-local warnStorm						= mod:NewSpellAnnounce(137313, 3)
-local warnIonization				= mod:NewSpellAnnounce(138732, 4)
 
-local specWarnFocusedLightning		= mod:NewSpecialWarningRun("OptionVersion2", 137422, nil, nil, nil, 4)
+local specWarnFocusedLightning		= mod:NewSpecialWarningRun(137422, nil, nil, 2, 4)
 local yellFocusedLightning			= mod:NewYell(137422)
 local specWarnStaticBurst			= mod:NewSpecialWarningYou(137162)
 local specWarnStaticBurstOther		= mod:NewSpecialWarningTaunt(137162)
@@ -33,13 +31,13 @@ local specWarnStorm					= mod:NewSpecialWarningSpell(137313, nil, nil, nil, 2)
 local specWarnElectrifiedWaters		= mod:NewSpecialWarningMove(138006)
 local specWarnIonization			= mod:NewSpecialWarningSpell(138732, "-Tank", nil, nil, 2)
 
-local timerFocusedLightningCD		= mod:NewCDTimer(10, 137399)--10-18 second variation, tends to lean toward 11-12 except when delayed by other casts such as throw or storm. Pull one also seems to variate highly
-local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, nil, "Tank")
-local timerThrowCD					= mod:NewCDTimer(26, 137175)--90-93 variable (26-30 seconds after storm. verified in well over 50 logs)
+local timerFocusedLightningCD		= mod:NewCDTimer(10, 137399, nil, nil, nil, 3)--10-18 second variation, tends to lean toward 11-12 except when delayed by other casts such as throw or storm. Pull one also seems to variate highly
+local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, nil, "Tank", nil, 5)
+local timerThrowCD					= mod:NewCDTimer(26, 137175, nil, nil, nil, 5)--90-93 variable (26-30 seconds after storm. verified in well over 50 logs)
 local timerStorm					= mod:NewBuffActiveTimer(17, 137313)--2 second cast, 15 second duration
-local timerStormCD					= mod:NewCDTimer(60.5, 137313)--90-93 variable (60.5~67 seconds after throw)
+local timerStormCD					= mod:NewCDTimer(60.5, 137313, nil, nil, nil, 2)--90-93 variable (60.5~67 seconds after throw)
 local timerIonization				= mod:NewBuffFadesTimer(24, 138732)
-local timerIonizationCD				= mod:NewNextTimer(61.5, 138732)
+local timerIonizationCD				= mod:NewNextTimer(61.5, 138732, nil, nil, nil, 3)
 
 local berserkTimer					= mod:NewBerserkTimer(540)
 
@@ -104,7 +102,6 @@ function mod:SPELL_CAST_START(args)
 		self:BossTargetScanner(69465, "FocusedLightningTarget", 0.025, 12)
 		timerFocusedLightningCD:Start()
 	elseif spellId == 137313 then
-		warnStorm:Show()
 		specWarnStorm:Show()
 		timerStorm:Start()
 		timerStaticBurstCD:Start(20.5)--May need tweaking (20.1-24.2)
@@ -119,7 +116,6 @@ function mod:SPELL_CAST_START(args)
 			"SPELL_PERIODIC_MISSED 138006"
 		)
 	elseif spellId == 138732 then
-		warnIonization:Show()
 		specWarnIonization:Show()
 		if timerStaticBurstCD:GetTime() == 0 or timerStaticBurstCD:GetTime() > 5 then -- Static Burst will be delayed by Ionization
 			timerStaticBurstCD:Start(12)

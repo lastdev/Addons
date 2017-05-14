@@ -1,7 +1,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
-
-local WHITE		= "|cFFFFFFFF"
+local colors = addon.Colors
 
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
 local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
@@ -14,7 +13,7 @@ local function BuildView()
 	questList = {}
 	view = {}
 	
-	local realm, account = addon.Tabs.Grids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
 		local num = DataStore:GetDailiesHistorySize(character) or 0
@@ -51,11 +50,11 @@ local callbacks = {
 	RowSetup = function(self, rowFrame, dataRowID)
 			local name = questList[ view[dataRowID] ].title
 			if name then
-				rowFrame.Name.Text:SetText(WHITE .. name)
+				rowFrame.Name.Text:SetText(colors.white .. name)
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	RowOnEnter = function()	end,
+	RowOnEnter = function() end,
 	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
 			button.Name:SetFontObject("GameFontNormalSmall")
@@ -90,7 +89,7 @@ local callbacks = {
 
 function addon:DATASTORE_QUEST_TURNED_IN(event, sender, character)
 	BuildView()
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
-addon.Tabs.Grids:RegisterGrid(9, callbacks)
+AltoholicTabGrids:RegisterGrid(4, callbacks)

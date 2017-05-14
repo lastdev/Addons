@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: InfTooltip.lua 5502 2014-10-18 16:29:56Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: InfTooltip.lua 5650 2016-08-08 00:34:42Z ccox $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Tooltip handler. Assumes the responsibility of filling the tooltip
@@ -23,7 +23,7 @@
 		along with this program(see GPL.txt); if not, write to the Free Software
 		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfTooltip.lua $", "$Rev: 5502 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfTooltip.lua $", "$Rev: 5650 $")
 
 local nilSafeString			-- nilSafeString(String)
 local whitespace			-- whitespace(length)
@@ -49,11 +49,8 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 	local sell = 0
 	local buy = 0
 	local stacks = 1
-
-	local itemInfo
-	if (itemID and itemID > 0) then
-		itemInfo = Informant.GetItem(itemID)
-	end
+	
+	local itemInfo = Informant.GetItem(link)
 	if (not itemInfo) then return end
 	Informant.itemInfo = itemInfo
 

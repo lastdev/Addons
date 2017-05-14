@@ -3,13 +3,14 @@ local L		= mod:GetLocalizedStrings()
 
 mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
 mod:SetCreatureID(18831, 18832, 18834, 18835, 18836)
+mod:SetEncounterID(649)
 mod:SetModelID(18649)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_AURA_APPLIED 33238 33054 33147",
+	"SPELL_CAST_START 33152 33144",
+	"SPELL_CAST_SUCCESS 33131"
 )
 
 --Maulgar
@@ -27,11 +28,11 @@ local specWarnWhirlwind		= mod:NewSpecialWarningSpell(33238, "Melee")
 local specWarnPoH			= mod:NewSpecialWarningInterrupt(33152)
 local specWarnHeal			= mod:NewSpecialWarningInterrupt(33144)
 
-local timerWhirlwindCD		= mod:NewCDTimer(55, 33238)
+local timerWhirlwindCD		= mod:NewCDTimer(55, 33238, nil, nil, nil, 2)
 local timerWhirlwind		= mod:NewBuffActiveTimer(15, 33238)
 local timerFelhunter		= mod:NewBuffActiveTimer(48.5, 33131)--Buff Active or Cd timer?
-local timerPoH				= mod:NewCastTimer(4, 33152)
-local timerHeal				= mod:NewCastTimer(2, 33144)
+local timerPoH				= mod:NewCastTimer(4, 33152, nil, nil, nil, 4)
+local timerHeal				= mod:NewCastTimer(2, 33144, nil, nil, nil, 4)
 
 local lastFear = 0
 

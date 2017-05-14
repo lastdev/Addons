@@ -1,28 +1,24 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local WHITE		= "|cFFFFFFFF"
-local RED		= "|cFFFF0000"
-local GREEN		= "|cFF00FF00"
-local TEAL		= "|cFF00FF9A"
 
 local isViewValid
 local collapsedHeaders
 
 local questSizeColors = {
-	[2] = GREEN,
-	[3] = YELLOW,
-	[4] = ORANGE,
-	[5] = RED,
+	[2] = colors.green,
+	[3] = colors.yellow,
+	[4] = colors.orange,
+	[5] = colors.red,
 }
 
 local function FormatQuestType(tag, size)
 	if questSizeColors[size] then
-		return format("%s%s%s (%d)", WHITE, tag, questSizeColors[size], size)
+		return format("%s%s%s (%d)", colors.white, tag, questSizeColors[size], size)
 	else
-		return format("%s%s", WHITE, tag)
+		return format("%s%s", colors.white, tag)
 	end
 end
 
@@ -31,23 +27,30 @@ addon.Quests = {}
 local ns = addon.Quests		-- ns = namespace
 
 function ns:Update()
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	local VisibleLines = 14
 	local frame = "AltoholicFrameQuests"
+	if not _G[frame]:IsVisible() then return end		-- frame is not visible, do nothing
+	
+	local character = addon.Tabs.Characters:GetAltKey()
+	local VisibleLines = 14
 	local entry = frame.."Entry"
 	
 	local DS = DataStore
+	local scrollFrame = _G[ frame.."ScrollFrame" ]
 	
 	if DS:GetQuestLogSize(character) == 0 then
 		AltoholicTabCharacters.Status:SetText(L["No quest found for "] .. addon.Tabs.Characters:GetAlt())
-		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 18)
+		
+		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
+			_G[ entry..i ]:Hide()
+		end
+
+		scrollFrame:Update(VisibleLines, VisibleLines, 18)
 		return
 	end
 
 	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), QUEST_LOG))
 	
-	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
+	local offset = scrollFrame:GetOffset()
 	local DisplayedCount = 0
 	local VisibleCount = 0
 	local DrawGroup
@@ -59,7 +62,6 @@ function ns:Update()
 	end
 
 	local i=1
-	
 	for line = 1, DS:GetQuestLogSize(character) do
 		local isHeader, quest, groupSize, money, isComplete = DS:GetQuestLogInfo(character, line)
 		
@@ -87,7 +89,7 @@ function ns:Update()
 					DrawGroup = false
 				end
 				_G[entry..i.."Collapse"]:Show()
-				_G[entry..i.."QuestLinkNormalText"]:SetText(TEAL .. quest)
+				_G[entry..i.."QuestLinkNormalText"]:SetText(colors.teal .. quest)
 				_G[entry..i.."QuestLink"]:SetID(0)
 				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 25, 0)
 				
@@ -108,7 +110,7 @@ function ns:Update()
 				-- quick fix, level may be nil, I suspect that due to certain locales, the quest link may require different parsing.
 				level = level or 0
 				
-				_G[entry..i.."QuestLinkNormalText"]:SetText(WHITE .. "[" .. level .. "] " .. quest)
+				_G[entry..i.."QuestLinkNormalText"]:SetText(colors.white .. "[" .. level .. "] " .. quest)
 				_G[entry..i.."QuestLink"]:SetID(line)
 				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 15, 0)
 				if groupSize then 
@@ -120,10 +122,10 @@ function ns:Update()
 				
 				_G[entry..i.."Status"]:Hide()
 				if isComplete == 1 then
-					_G[entry..i.."Status"]:SetText(GREEN .. COMPLETE)
+					_G[entry..i.."Status"]:SetText(colors.green .. COMPLETE)
 					_G[entry..i.."Status"]:Show()
 				elseif isComplete == -1 then
-					_G[entry..i.."Status"]:SetText(RED .. FAILED)
+					_G[entry..i.."Status"]:SetText(colors.red .. FAILED)
 					_G[entry..i.."Status"]:Show()
 				end
 				
@@ -149,7 +151,7 @@ function ns:Update()
 		i = i + 1
 	end
 	
-	FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], VisibleCount, VisibleLines, 18);
+	scrollFrame:Update(VisibleCount, VisibleLines, 18)
 end
 
 function ns:InvalidateView()

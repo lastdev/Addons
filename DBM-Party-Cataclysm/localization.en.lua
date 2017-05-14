@@ -98,10 +98,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "Ping the minimap when General Umbriss is about to blitz you"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "sets his eyes on |cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -111,11 +107,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "Dragon, you will do as I command! Catch me!",	-- Yell when Valiona is incoming
-	Add			= "%s Summons an"
-}
 
 ------------
 -- Erudax --
@@ -222,13 +213,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "Phase 2 in 5 seconds"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 		= "Phase 2 Starts"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "Show special warning for phase 2 soon (5 seconds)",
-	timerPhase2 		= "Show timer for start of phase 2"
+	specWarnPhase2Soon	= "Show special warning for phase 2 soon (5 seconds)"
 }
 
 -----------------------
@@ -364,14 +350,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Show special warning for $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "JUMP!"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------
@@ -412,8 +390,7 @@ L= DBM:GetModLocalization(186)
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
 	RangeFrame	= "Show range frame (10 yards)",
-	StormArrow	= "Show DBM Arrow for $spell:43648",
-	SetIconOnEagle	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97318)
+	StormArrow	= "Show DBM Arrow for $spell:43648"
 }
 
 --------------
@@ -545,8 +522,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "Announce how many ghost revive remaining",
-	SpecWarnOhgan	= "Show warning when Ohgan is revived", -- check this, i'm not good at English
-	SetIconOnOhgan	= "Put an icon on Ohgan when he revives" 
+	SpecWarnOhgan	= "Show warning when Ohgan has revived" -- check this, i'm not good at English
 }
 
 ----------------------

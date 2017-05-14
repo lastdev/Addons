@@ -24,14 +24,12 @@ function Outfitter:GenerateSmartOutfit(pName, pStatConfig, pInventoryCache, pAll
 	if type(pStatConfig) == "string" then
 		local vStatID = pStatConfig
 		
-		-- Backward compatibility (pre-LibStatLogic)
-		
+		-- Backward compatibility
 		if vStatID == "Fishing" then
 			vStatID = "FISHING"
 		end
 		
 		-- Hard-coded item lists
-		
 		if vStatID then
 			local vStatIDItems = self.cStatIDItems[vStatID]
 			
@@ -69,7 +67,7 @@ function Outfitter:GenerateSmartOutfit(pName, pStatConfig, pInventoryCache, pAll
 		
 		table.insert(vStatConfig, {Stat = vStat, StatID = vConfig.StatID, MinValue = vConfig.MinValue, MaxValue = vConfig.MaxValue})
 	end
-	
+
 	-- Determine if this is complex
 	
 	local vComplex = #vStatConfig > 1
@@ -122,27 +120,33 @@ function Outfitter:AddItemsWithStatToOutfit(pOutfit, pStat, pInventoryCache)
 	
 	for vInventorySlot, vItems in pairs(pInventoryCache.ItemsBySlot) do
 		for vIndex, vItem in ipairs(vItems) do
-			local vScore = pStat:GetItemScore(vItem)
-			
-			if vScore then
-				local vSlotName = vItem.MetaSlotName
+			-- Only consider items which aren't BoE (ie, must be already bound)
+			if not vItem:GetBoE() and vItem:GetMeetsRequirements() then
 				
-				if not vSlotName then
-					vSlotName = vItem.ItemSlotName
-				end
-				
-				if vItem.InvType == "INVTYPE_2HWEAPON"
-				and not self:ItemUsesBothWeaponSlots(vItem) then
-					vSlotName = "Weapon0Slot"
-				end
-				
-				self:AddOutfitStatItemIfBetter(pOutfit, vSlotName, vItem, pStat, vScore)
-			end
-		end
-	end
+				-- Score the item
+				local vScore = pStat:GetItemScore(vItem)
+				if vScore then
+					
+					-- Calculate the slot
+					local vSlotName = vItem.MetaSlotName
+					if not vSlotName then
+						vSlotName = vItem.ItemSlotName
+					end
+					
+					-- Change the slot to Weapon0 for two-handers
+					if vItem.InvType == "INVTYPE_2HWEAPON"
+					and not self:ItemUsesBothWeaponSlots(vItem) then
+						vSlotName = "Weapon0Slot"
+					end
+					
+					-- Compare and add the item
+					self:AddOutfitStatItemIfBetter(pOutfit, vSlotName, vItem, pStat, vScore)
+				end -- vScore
+			end -- not BoE
+		end -- for vItems
+	end -- for ItemsBySlot
 	
 	-- Collapse the meta slots (currently just 2H vs. 1H/OH)
-	
 	self:CollapseMetaSlotsIfBetter(pOutfit, pStat)
 end
 
@@ -162,9 +166,16 @@ function Outfitter:AddOutfitStatItemIfBetter(pOutfit, pSlotName, pItemInfo, pSta
 		
 		if vCurrentScore
 		and vAlternateSlotName then
+			if self.Debug.Optimize then
+				self:DebugMessage("AddOutfitStatItemIfBetter: Trying to push slot %s to slot %s", tostring(pSlotName), tostring(vAlternateSlotName))
+			end
 			self:AddOutfitStatItemIfBetter(pOutfit, vAlternateSlotName, vCurrentItem, pStat, vCurrentScore)
 		end
 		
+		if self.Debug.Optimize then
+			self:DebugMessage("AddOutfitStatItemIfBetter: putting %s (%s) into slot %s replacing %s (%s)", tostring(pItemInfo.Name), tostring(pScore), tostring(pSlotName), tostring(vCurrentItem and vCurrentItem.Name), tostring(vCurrentScore))
+		end
+
 		self:AddOutfitStatItem(pOutfit, pSlotName, pItemInfo, pStat, pScore)
 	else
 		if not vAlternateSlotName then
@@ -438,42 +449,6 @@ function Outfitter:FindGeneticCombinationThread(pName, pInventoryCache, pFilterS
 			end
 		end)
 	
-	-- HACK: Modify LibStatLogic to cache values for vastly better performance
-	
-	local vOrig_GetStatMod = Outfitter.LibStatLogic.GetStatMod
-	local vGetStatModCache = {}
-	
-	Outfitter.LibStatLogic.GetStatMod = function (pLibrary, pStatID, ...)
-		local vCacheEntry = vGetStatModCache[pStatID]
-		local vNumParams = select("#", ...)
-		
-		if vCacheEntry
-		and vNumParams == #vCacheEntry.Params then
-			local vIgnoreCache
-			
-			for vParamIndex = 1, vNumParams do
-				if vCacheEntry.Params[vParamIndex] ~= select(vParamIndex, ...) then
-					vIgnoreCache = true
-					break
-				end
-			end
-			
-			if not vIgnoreCache then
-				return vCacheEntry.Result
-			end
-		end
-		
-		if not vCacheEntry then
-			vCacheEntry = {}
-			vGetStatModCache[pStatID] = vCacheEntry
-		end
-		
-		vCacheEntry.Result = vOrig_GetStatMod(pLibrary, pStatID, ...)
-		vCacheEntry.Params = {...}
-		
-		return vCacheEntry.Result
-	end
-	
 	--
 	
 	local vStartTime = GetTime()
@@ -581,10 +556,6 @@ function Outfitter:FindGeneticCombinationThread(pName, pInventoryCache, pFilterS
 	end
 	
 	local vEndTime = GetTime()
-	
-	-- HACK: Unhook the patch from LSL
-
-	Outfitter.LibStatLogic.GetStatMod = vOrig_GetStatMod
 	
 	--
 	
@@ -708,19 +679,21 @@ function Outfitter._OutfitIterator:Construct(pName, pInventoryCache, pFilterStat
 				vNumItems = 0
 				
 				for vItemIndex, vItem in ipairs(vItems) do
-					for _, vStat in ipairs(pFilterStats) do
-						if vStat:GetItemScore(vItem) then
-							if not vFilteredItems then
-								vFilteredItems = {}
-							end
+					if vItem:GetMeetsRequirements() then
+						for _, vStat in ipairs(pFilterStats) do
+							if vStat:GetItemScore(vItem) then
+								if not vFilteredItems then
+									vFilteredItems = {}
+								end
 							
-							table.insert(vFilteredItems, vItem)
-							vNumItems = vNumItems + 1
-							vNumSlotItems = vNumSlotItems + 1
+								table.insert(vFilteredItems, vItem)
+								vNumItems = vNumItems + 1
+								vNumSlotItems = vNumSlotItems + 1
 							
-							break
-						end
-					end
+								break
+							end -- if GetItemScore
+						end -- for pFileStats
+					end -- GetMeetsRequirements
 				end
 			else
 				vFilteredItems = vItems
@@ -815,23 +788,18 @@ function Outfitter._OutfitIterator:SetRandomItemForSlot(pOutfit, pItems)
 	local vNumItems = #pItems.Items
 	
 	-- Set the slot to empty if there are no items for it
-	
 	if vNumItems < 1 then
 		pOutfit.Items[pItems.ItemSlotName] = nil
 		return
 	end
 	
 	-- Pick a random item (zero means that an empty slot was chosen)
-	
 	local vIndex = math.random(vNumItems + 1) - 1
-	
 	local vItem = vIndex > 0 and pItems.Items[vIndex] or nil
 	
 	-- All done if there's no alternate slot or that
 	-- slot has a different item
-	
 	local vAltSlotName = Outfitter.cFullAlternateStatSlot[pItems.ItemSlotName]
-	
 	if not vItem
 	or not vAltSlotName
 	or pOutfit.Items[vAltSlotName] ~= vItem then
@@ -840,21 +808,18 @@ function Outfitter._OutfitIterator:SetRandomItemForSlot(pOutfit, pItems)
 	end
 	
 	-- Choose an empty slot if there's only one item to choose from
-	
 	if vNumItems < 2 then
 		pOutfit.Items[pItems.ItemSlotName] = nil
 		return
 	end
 	
 	-- If there are only two items to choose from then choose the other one
-	
 	if vNumItems == 2 then
 		pOutfit.Items[pItems.ItemSlotName] = pItems.Items[3 - vIndex]
 		return
 	end
 	
 	-- Try to find an item until there's no conflict
-	
 	while vItem and pOutfit.Items[vAltSlotName] == vItem do
 		local vItemIndex = math.random(vNumItems + 1) - 1
 		vItem = vItemIndex > 0 and pItems.Items[vItemIndex] or nil
@@ -1044,6 +1009,12 @@ function Outfitter._MultiStatConfig:SetNumConfigLines(pNumLines)
 			self:DeleteConfigLine(vLineIndex)
 		end
 		
+		vConfigLine.OnChange = function ()
+			if self.OnChange then
+				self.OnChange()
+			end
+		end
+
 		if #self.ConfigLines == 0 then
 			vConfigLine:SetPoint("TOPLEFT", self, "TOPLEFT")
 		else
@@ -1088,6 +1059,17 @@ function Outfitter._MultiStatConfig:GetConfig()
 		table.insert(vConfig, vConfigLine:GetConfig())
 	end
 	
+	local vStat = Outfitter:GetStatByID(vConfig[1].StatID)
+
+	if not vStat then
+		Outfitter:ErrorMessage("Unknown stat ID: %s", tostring(vConfig.StatID))
+	else
+		vConfig.Complex = #vConfig > 1
+					   or vStat.Complex
+					   or vConfig[1].MinValue
+					   or vConfig[1].MaxValue
+	end
+
 	return vConfig
 end
 
@@ -1130,20 +1112,31 @@ function Outfitter._MultiStatConfigLine:New(pParent)
 end
 
 function Outfitter._MultiStatConfigLine:Construct(pParent, pIndex, pCanDelete)
-	self.StatMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu, self, function (...) self:StatMenuFunc(...) end)
+	self.StatMenu = Outfitter:New(Outfitter.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:StatMenuFunc(...) end)
 	self.StatMenu:SetTitle(string.format("Stat %d", pIndex))
 	self.StatMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:SetStatID(pValue)
+		if self.OnChange then
+			self:OnChange()
+		end
 	end
 	
-	self.OpMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu, self, function (...) self:OpMenuFunc(...) end)
+	self.OpMenu = Outfitter:New(Outfitter.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:OpMenuFunc(...) end)
 	self.OpMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:SetOp(pValue)
+		if self.OnChange then
+			self:OnChange()
+		end
 	end
 	
 	self.MinValue = Outfitter:New(Outfitter.UIElementsLib._EditBox, self, nil, 7)
 	self.MinValue:SetEmptyText("value")
-	
+	self.MinValue:SetScript("OnTextChanged", function ()
+		if self.OnChange then
+			self:OnChange()
+		end
+	end)
+
 	if pCanDelete then
 		self.DeleteButton = Outfitter:New(Outfitter.UIElementsLib._PushButton, self, REMOVE, 90)
 		self.DeleteButton:SetScript("OnClick", function ()
@@ -1171,41 +1164,64 @@ function Outfitter._MultiStatConfigLine:Construct(pParent, pIndex, pCanDelete)
 	self:SetHeight(30)
 end
 
-function Outfitter._MultiStatConfigLine:StatMenuFunc(pMenu, pValue, pLevel)
-	if pLevel == 2 then
-		local vCategory = Outfitter:GetCategoryByID(pValue)
-		
-		if vCategory then
-			local vNumStats = vCategory:GetNumStats()
-			
-			for vStatIndex = 1, vNumStats do
-				local vStat = vCategory:GetIndexedStat(vStatIndex)
-				
-				pMenu:AddNormalItem(vStat.Name, vStat.ID)
+function Outfitter._MultiStatConfigLine:StatMenuFunc(menu)
+	for _, category in ipairs(Outfitter.StatCategories) do
+		menu:AddSelect(category.Name, function ()
+			local items = {}
+			local numStats = category:GetNumStats()
+			for statIndex = 1, numStats do
+				local stat = category:GetIndexedStat(statIndex)
+				table.insert(items, stat.Name)
 			end
-		end
-	else
-		for _, vCategory in ipairs(Outfitter.StatCategories) do
-			pMenu:AddChildMenu(
-				vCategory.Name,
-				vCategory.CategoryID)
-		end
+			return items
+		end, function ()
+			local numStats = category:GetNumStats()
+			for statIndex = 1, numStats do
+				local stat = category:GetIndexedStat(statIndex)
+				if stat.ID == self.StatID then
+					return statIndex
+				end
+			end
+		end, function (menu, value)
+			local stat = category:GetIndexedStat(value)
+			self:SetStatID(stat.ID)
+		end)
 	end
 end
 
-function Outfitter._MultiStatConfigLine:OpMenuFunc(pMenu, pValue, pLevel)
-	pMenu:AddNormalItem("Max", "MAX")
-	pMenu:AddNormalItem("<=", "LT")
-	pMenu:AddNormalItem(">=", "GT")
+function Outfitter._MultiStatConfigLine:OpMenuFunc(menu)
+	menu:AddToggle("Max",
+		function ()
+		end, function (menu, value)
+			self:SetOp("MAX")
+		end)
+	menu:AddToggle("<=",
+		function ()
+		end, function (menu, value)
+			self:SetOp("LT")
+		end)
+	menu:AddToggle(">=",
+		function ()
+		end, function (menu, value)
+			self:SetOp("GT")
+		end)
 end
 
-function Outfitter._MultiStatConfigLine:SetStatID(pStatID)
-	self.StatID = pStatID
-	self.StatMenu:SetSelectedValue(self.StatID)
+function Outfitter._MultiStatConfigLine:SetStatID(statID)
+	local stat = Outfitter:GetStatByID(statID)
+	self.StatID = statID
+	self.StatMenu:SetCurrentValueText(stat and stat.Name or tostring(statID))
 end
 
 function Outfitter._MultiStatConfigLine:SetOp(pOp)
-	self.OpMenu:SetSelectedValue(pOp)
+	self.Op = pOp
+	if pOp == "MAX" then
+		self.OpMenu:SetCurrentValueText("Max")
+	elseif pOp == "GT" then
+		self.OpMenu:SetCurrentValueText(">=")
+	elseif pOp == "LT" then
+		self.OpMenu:SetCurrentValueText("<=")
+	end
 	
 	if pOp == "MAX" then
 		self.MinValue:Hide()
@@ -1232,8 +1248,8 @@ end
 
 function Outfitter._MultiStatConfigLine:GetConfig()
 	local vMinValue = tonumber(self.MinValue:GetText())
-	local vStatID = self.StatMenu:GetSelectedValue()
-	local vOp = self.OpMenu:GetSelectedValue()
+	local vStatID = self.StatID
+	local vOp = self.Op
 	
 	local vValue = tonumber(self.MinValue:GetText())
 	local vMinValue = vOp == "GT" and vValue or nil

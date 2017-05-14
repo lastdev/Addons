@@ -1,10 +1,10 @@
-﻿---------------------------------------------------------
+---------------------------------------------------------
 -- Module declaration
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HN = HandyNotes:NewModule("HandyNotes", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
-local Astrolabe = DongleStub("Astrolabe-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes", false)
 
+local HBD = LibStub("HereBeDragons-1.0")
 
 ---------------------------------------------------------
 -- Our db upvalue and db defaults
@@ -20,6 +20,7 @@ local defaults = {
 	},
 }
 
+local IsLegion = select(4, GetBuildInfo()) >= 70000
 
 ---------------------------------------------------------
 -- Localize some globals
@@ -209,11 +210,26 @@ do
 			-- Only move if we're viewing the same map as the icon's map
 			if mapFile == HandyNotes:WhereAmI() or mapFile == "World" or mapFile == "Cosmic" then
 				isMoving = true
+			local x, y = self:GetCenter()
+				local s = WorldMapButton:GetEffectiveScale() / UIParent:GetEffectiveScale()
+				self:ClearAllPoints()
+				self:SetParent(UIParent)
+				self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x * s, y * s)
+				self:SetFrameStrata("TOOLTIP")
 				self:StartMoving()
 			end
 		elseif isMoving and not down then
 			isMoving = false
 			self:StopMovingOrSizing()
+			local x, y = self:GetCenter()
+			local s = WorldMapButton:GetEffectiveScale() / UIParent:GetEffectiveScale()
+			self:ClearAllPoints()
+			self:SetParent(WorldMapButton)
+			x = x / s - WorldMapButton:GetLeft()
+			y = y / s - WorldMapButton:GetTop()
+			self:SetPoint("CENTER", WorldMapButton, "TOPLEFT", x, y)
+			self:SetFrameStrata("TOOLTIP")
+			self:SetUserPlaced(false)
 			-- Get the new coordinate
 			local x, y = self:GetCenter()
 			x = (x - WorldMapButton:GetLeft()) / WorldMapButton:GetWidth()
@@ -250,21 +266,7 @@ do
 end
 
 do
-	local emptyTbl = {}
 	local tablepool = setmetatable({}, {__mode = 'k'})
-	local continentMapFile = {
-		["Kalimdor"]              = {__index = Astrolabe.ContinentList[1]},
-		["Azeroth"]               = {__index = Astrolabe.ContinentList[2]},
-		["Expansion01"]           = {__index = Astrolabe.ContinentList[3]},
-		["Northrend"]             = {__index = Astrolabe.ContinentList[4]},
-		["TheMaelstromContinent"] = {__index = Astrolabe.ContinentList[5]},
-		["Vashjir"]               = {[0] = 613, 614, 615, 610},
-		["Pandaria"]              = {__index = Astrolabe.ContinentList[6]},
-		["Draenor"]               = {__index = Astrolabe.ContinentList[7]},
-	}
-	for k, v in pairs(continentMapFile) do
-		setmetatable(v, v)
-	end
 
 	-- This is a custom iterator we use to iterate over every node in a given zone
 	local function iter(t, prestate)
@@ -304,7 +306,7 @@ do
 				end
 			end
 			-- Get next zone
-			zone = zone + 1
+			zone = next(t.C, zone)
 			t.Z = zone
 			mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
 			data = dbdata[mapFile]
@@ -315,12 +317,12 @@ do
 	end
 
 	function HNHandler:GetNodes(mapFile, minimap, dungeonLevel)
-		local C = continentMapFile[mapFile] -- Is this a continent?
+		local C = HandyNotes:GetContinentZoneList(mapFile) -- Is this a continent?
 		if C then
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
 			tbl.C = C
-			tbl.Z = 0
+			tbl.Z = next(C)
 			return iterCont, tbl, nil
 		else -- It is a zone
 			local tbl = next(tablepool) or {}
@@ -381,10 +383,10 @@ function HN:CreateNoteHere(arg1)
 			self:Print(L["Syntax:"].." /hnnew [x, y]")
 			return
 		end
-		mapID, level = Astrolabe:GetUnitPosition("player")
+		mapID, level = HBD:GetPlayerZone()
 	else
 		-- No coordinates entered, get the coordinates of player
-		mapID, level, x, y = Astrolabe:GetUnitPosition("player")
+		x, y, mapID, level = HBD:GetPlayerZonePosition()
 	end
 
 	if mapID and level and x and y then
@@ -413,15 +415,21 @@ function HN:FillDungeonLevelData()
 	-- Thus no WhereAmI here.
 	local mapname = strupper(GetMapInfo() or "")
 	local usesTerrainMap = DungeonUsesTerrainMap() and 1 or 0
-	local numLevels, firstFloor = GetNumDungeonMapLevels()
-	local lastFloor = firstFloor + numLevels - 1
-	if numLevels > 0 then
+	local levels
+	if IsLegion then
+		levels = { GetNumDungeonMapLevels() }
+	else
+		levels = {}
+		for f = 1, GetNumDungeonMapLevels() do
+			levels[f] = f
+		end
+	end
+	if #levels > 0 then
 		HNEditFrame.leveldata[0] = ALL
 	end
-	for i=firstFloor, lastFloor do
-		local floorNum = i - usesTerrainMap
+	for id, floorNum in pairs(levels) do
 		local floorname = _G["DUNGEON_FLOOR_" .. mapname .. floorNum]
-		HNEditFrame.leveldata[i] = floorname or string.format(FLOOR_NUMBER, i)
+		HNEditFrame.leveldata[floorNum] = floorname or string.format(FLOOR_NUMBER, floorNum)
 	end
 end
 
@@ -471,6 +479,28 @@ function HN:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("HandyNotes_HandyNotesDB", defaults)
 	db = self.db.profile
 	dbdata = self.db.global
+
+	-- migrate data, if neccessary
+	local migration = {}
+	for zone in pairs(dbdata) do
+		if zone:find("_terrain%d+$") then
+			migration[zone] = true
+		end
+	end
+
+	for zone in pairs(migration) do
+		local data = dbdata[zone]
+		dbdata[zone] = nil
+
+		local stripped_zone = zone:gsub("_terrain%d+$", "")
+		if dbdata[stripped_zone] then
+			for coord, info in pairs(data) do
+				dbdata[stripped_zone][coord] = info
+			end
+		else
+			dbdata[stripped_zone] = data
+		end
+	end
 
 	-- Initialize our database with HandyNotes
 	HandyNotes:RegisterPluginDB("HandyNotes", HNHandler, options)

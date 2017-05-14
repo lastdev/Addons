@@ -7,35 +7,30 @@ local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 local OPTION_RACE = "UI.Tabs.Grids.Archaeology.CurrentRace"
 local currentItemID
 
-local DDM_Add = addon.Helpers.DDM_Add
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
-
 local function OnRaceChange(self)
 	addon:SetOption(OPTION_RACE, self.value)
 
-	addon.Tabs.Grids:SetViewDDMText(GetArchaeologyRaceInfo(self.value))
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:SetViewDDMText(GetArchaeologyRaceInfo(self.value))
+	AltoholicTabGrids:Update()
 end
 
-local function DropDown_Initialize()
+local function DropDown_Initialize(frame)
 	local numRaces = GetNumArchaeologyRaces()
 	local race, icon
 	
 	local currentRace = addon:GetOption(OPTION_RACE)
 	
 	for i = 1, numRaces do
-		if i ~= 13 then	-- 13 = UNUSED
-			race, icon = GetArchaeologyRaceInfo(i)
-			DDM_Add(race, i, OnRaceChange, icon, (i==currentRace))
-		end
+		race, icon = GetArchaeologyRaceInfo(i)
+		frame:AddButton(race, i, OnRaceChange, icon, (i==currentRace))
 	end
 
-	DDM_AddCloseMenu()
+	frame:AddCloseMenu()
 end
 
 local callbacks = {
 	OnUpdate = function()
-			addon.Tabs.Grids:SetStatus(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
+			AltoholicTabGrids:SetStatus(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
 		end,
 	GetSize = function() return DataStore:GetRaceNumArtifacts(addon:GetOption(OPTION_RACE)) end,
 	RowSetup = function(self, rowFrame, dataRowID)
@@ -93,11 +88,11 @@ local callbacks = {
 			frame:Show()
 			title:Show()
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
-			addon:DDM_Initialize(frame, DropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(8, callbacks)
+AltoholicTabGrids:RegisterGrid(8, callbacks)

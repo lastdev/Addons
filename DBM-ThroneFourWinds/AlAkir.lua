@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
-mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -39,16 +38,16 @@ local specWarnCloud			= mod:NewSpecialWarningMove(89588)
 local specWarnLightningRod	= mod:NewSpecialWarningMoveAway(89668)
 local yellLightningRod		= mod:NewYell(89668)
 
-local timerWindBurst		= mod:NewCastTimer(5, 87770)
-local timerWindBurstCD		= mod:NewCDTimer(25, 87770)		-- 25-30 Variation
-local timerAddCD			= mod:NewCDTimer(20, 88272)
-local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904)
+local timerWindBurst		= mod:NewCastTimer(5, 87770, nil, nil, nil, 2)
+local timerWindBurstCD		= mod:NewCDTimer(25, 87770, nil, nil, nil, 2)		-- 25-30 Variation
+local timerAddCD			= mod:NewCDTimer(20, 88272, nil, nil, nil, 1)
+local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
 local timerAcidRainStack	= mod:NewNextTimer(15, 88301, nil, isDKorPaly)
-local timerLightningRod		= mod:NewTargetTimer(5, 89668)
-local timerLightningRodCD	= mod:NewNextTimer(15, 89668)
-local timerLightningCloudCD	= mod:NewNextTimer(15, 89588)
-local timerIceStormCD		= mod:NewCDTimer(25, 88239)
-local timerSquallLineCD		= mod:NewCDTimer(20, 91129)
+local timerLightningRod		= mod:NewTargetTimer(5, 89668, nil, false)
+local timerLightningRodCD	= mod:NewNextTimer(15, 89668, nil, nil, nil, 3)
+local timerLightningCloudCD	= mod:NewNextTimer(15, 89588, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerIceStormCD		= mod:NewCDTimer(25, 88239, nil, nil, nil, 3)
+local timerSquallLineCD		= mod:NewCDTimer(20, 91129, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 
@@ -147,7 +146,6 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 87770 then--Phase 1 wind burst
-		warnWindBurst:Show()
 		specWarnWindBurst:Show()
 		timerWindBurstCD:Start()
 		if self:IsDifficulty("heroic10", "heroic25") then

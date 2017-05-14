@@ -1,129 +1,154 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabSummary.lua"></Script>
-	
-	<Button name="AltoSummaryMenuItemTemplate" inherits="AltoMenuItemTemplate" hidden="false" virtual="true">
-		<Size x="156" y="20" />
-		<Scripts>
-			<OnClick>
-				Altoholic.Tabs.Summary:MenuItem_OnClick(self:GetID())
-			</OnClick>
-		</Scripts>
-	</Button>
 	
 	<Frame name="AltoholicTabSummary" parent="AltoholicFrame">
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
-		<Layers>
-			<Layer level="OVERLAY">
-				<FontString name="$parentStatus" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="320" y="24" />
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
-			</Layer>
-		</Layers>
 		<Frames>
-			<Button parentKey="MenuItem1" inherits="AltoSummaryMenuItemTemplate" id="1">
+			<Button parentKey="MenuItem1" inherits="AltoTabSummaryMenuItemTemplate" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="23" y="-105" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem2" inherits="AltoSummaryMenuItemTemplate" id="2">
+			<Button parentKey="MenuItem2" inherits="AltoTabSummaryMenuItemTemplate" id="2">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem3" inherits="AltoSummaryMenuItemTemplate" id="3" text="SKILLS">
+			<Button parentKey="MenuItem3" inherits="AltoTabSummaryMenuItemTemplate" id="3">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem2" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem4" inherits="AltoSummaryMenuItemTemplate" id="4">
+			<Button parentKey="MenuItem4" inherits="AltoTabSummaryMenuItemTemplate" id="4">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem5" inherits="AltoSummaryMenuItemTemplate" id="5" text="CURRENCY">
+			<Button parentKey="MenuItem5" inherits="AltoTabSummaryMenuItemTemplate" id="5">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem6" inherits="AltoSummaryMenuItemTemplate" id="6" text="GARRISON_FOLLOWERS_TITLE">
+			<Button parentKey="MenuItem6" inherits="AltoTabSummaryMenuItemTemplate" id="6">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
+			<Button parentKey="MenuItem7" inherits="AltoTabSummaryMenuItemTemplate" id="7">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
 			
-			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
-				<Size x="130" y="19" />
+			<Button parentKey="RealmsIcon" inherits="AltoTabSummaryIconTemplate" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
+					<Anchor point="TOPLEFT" x="300" y="-40" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_Everyones a Hero_rank2" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" id="2">
-				<Size x="70" y="19" />
+			<Button parentKey="FactionIcon" inherits="AltoTabSummaryIconTemplate" id="2">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.RealmsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_BG_winWSG" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" id="3">
-				<Size x="100" y="19" />
+			<Button parentKey="LevelIcon" inherits="AltoTabSummaryIconTemplate" id="3">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.FactionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\achievement_level_100" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" id="4">
-				<Size x="100" y="19" />
+			<Button parentKey="ProfessionsIcon" inherits="AltoTabSummaryIconTemplate" id="4">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.LevelIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Sort5" inherits="AltoSortButtonTemplate" id="5">
-				<Size x="50" y="19" />
+			<Button parentKey="ClassIcon" inherits="AltoTabSummaryIconTemplate" id="5">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort4" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_Character_Gnome_Female" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Sort6" inherits="AltoSortButtonTemplate" id="6">
-				<Size x="80" y="19" />
+			<Button parentKey="DataStoreOptionsIcon" inherits="AltoTabSummaryIconTemplate" id="7">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort5" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="25" y="-40" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_11" />
+				</KeyValues>
+				<Scripts>
+					<OnClick>
+						Altoholic:ToggleUI()
+						InterfaceOptionsFrame_OpenToCategory("DataStore")
+					</OnClick>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Sort7" inherits="AltoSortButtonTemplate" id="7">
-				<Size x="80" y="19" />
+			<Button parentKey="AltoholicOptionsIcon" inherits="AltoTabSummaryIconTemplate" id="6">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort6" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPRIGHT" relativeKey="$parent.DataStoreOptionsIcon" relativePoint="TOPLEFT" x="-5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Trade_Engineering" />
+				</KeyValues>
+				<Scripts>
+					<OnClick>
+						Altoholic:ToggleUI()
+						InterfaceOptionsFrame_OpenToCategory("Altoholic")
+					</OnClick>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Sort8" inherits="AltoSortButtonTemplate" id="8">
-				<Size x="80" y="19" />
+			
+			<Button parentKey="RequestSharing" inherits="AltoButtonTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort7" relativePoint="RIGHT" x="0" y="0" />
+					<Anchor point="TOPRIGHT" relativeKey="$parent.AltoholicOptionsIcon" relativePoint="TOPLEFT" x="-15" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Achievement_Reputation_01" />
+				</KeyValues>
+				<Scripts>
+					<OnEnter>
+						Altoholic.Tabs.Summary:AccountSharingButton_OnEnter(self)
+					</OnEnter>
+					<OnLeave>
+						AltoTooltip:Hide()
+					</OnLeave>
+					<OnClick>
+						Altoholic.Tabs.Summary:AccountSharingButton_OnClick()
+					</OnClick>
+				</Scripts>
 			</Button>
-			<Button name="$parent_Sort9" inherits="AltoSortButtonTemplate" id="9">
-				<Size x="80" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort8" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-
-			<Button name="$parentToggleView">
-				<Size x="16" y="16" />
+			
+			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+				<KeyValues>
+					<KeyValue key="numButtons" value="9" type="number" />
+					<KeyValue key="option" value="UI.Tabs.Summary.SortAscending" />
+				</KeyValues>
+			</Frame>
+			
+			<Button parentKey="ToggleView" inherits="AltoToggleButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="TOPRIGHT" x="40" y="-15" />
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString name="$parent_CollapseAllText" inherits="GameFontNormalSmall" justifyH="LEFT" text="ALL">
+						<FontString parentKey="CollapseAllText" inherits="GameFontNormalSmall" justifyH="LEFT" text="ALL">
 							<Size x="60" y="20" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPRIGHT" x="4" y="2" />
+								<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPRIGHT" x="4" y="2" />
 							</Anchors>
 							<Color r="255" g="255" b="255" />
 						</FontString>
@@ -131,98 +156,40 @@
 				</Layers>
 				<Scripts>
 					<OnClick>
-						Altoholic.Tabs.Summary:ToggleView(self)
-					</OnClick>
-				</Scripts>
-				<NormalTexture name="$parentIcon" file="Interface\Buttons\UI-MinusButton-UP" />
-				<HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
-			</Button>
-			<Frame name="$parent_SelectLocation" inherits="UIDropDownMenuTemplate">
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentToggleView" relativePoint="RIGHT" x="30" y="-5" />
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						UIDropDownMenu_SetWidth(self, 180) 
-						UIDropDownMenu_SetButtonWidth(self, 20)
-					</OnLoad>
-				</Scripts>
-			</Frame>
-			
-			<Button name="$parent_OptionsDataStore" id="2">
-				<Size x="36" y="36" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT" x="25" y="-40" />
-				</Anchors>
-				<Layers>
-					<Layer level="BORDER">
-						<Texture name="$parentIconTexture" file="Interface\Icons\INV_Misc_Book_11" />
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnEnter>
-						Altoholic.Tabs.Summary:Icon_OnEnter(self)
-					</OnEnter>
-					<OnClick>
-						Altoholic:ToggleUI()
-						InterfaceOptionsFrame_OpenToCategory("DataStore")
+						self:Toggle()
+						Altoholic.Characters:ToggleView(self)
+						Altoholic.Summary:Update()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Options" id="1">
-				<Size x="36" y="36" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parent_OptionsDataStore" relativePoint="TOPLEFT" x="-5" y="0" />
-				</Anchors>
-				<Layers>
-					<Layer level="BORDER">
-						<Texture name="$parentIconTexture" file="Interface\Icons\Trade_Engineering" />
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnEnter>
-						Altoholic.Tabs.Summary:Icon_OnEnter(self)
-					</OnEnter>
-					<OnClick>
-						Altoholic:ToggleUI()
-						InterfaceOptionsFrame_OpenToCategory("Altoholic")
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$parent_RequestSharing">
-				<Size x="36" y="36" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parent_Options" relativePoint="TOPLEFT" x="-15" y="0" />
-				</Anchors>
-				<Layers>
-					<Layer level="BORDER">
-						<Texture name="$parentIconTexture" file="Interface\Icons\Achievement_Reputation_01" />
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnEnter>
-						Altoholic.Tabs.Summary:AccountSharingButton_OnEnter(self)
-					</OnEnter>
-					<OnLeave>
-						AltoTooltip:Hide();
-					</OnLeave>
-					<OnClick>
-						Altoholic.Tabs.Summary:AccountSharingButton_OnClick()
-					</OnClick>
-				</Scripts>
-			</Button>
-				
-			<Frame name="$parentRightClickMenu1" inherits="AltoContextualMenuTemplate" id="1" />
-			<Frame name="$parentRightClickMenu2" inherits="AltoContextualMenuTemplate" id="2" />
+
+			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic.Tabs.Summary:OnLoad()
+				local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
+				
+				self.MenuItem1:SetText(L["Account Summary"])
+				self.MenuItem2:SetText(L["Bag Usage"])
+				self.MenuItem3:SetText(SKILLS)
+				self.MenuItem4:SetText(L["Activity"])
+				self.MenuItem5:SetText(CURRENCY)
+				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)
+				
+				-- "Artifacts"
+				self.MenuItem7:SetText(GetCategoryInfo(15256))	
+				self.RequestSharing:SetText(L["Account Sharing"])
+				
+				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())
 			</OnLoad>
+			<OnShow>
+				if Altoholic.Summary then
+					Altoholic.Summary:Update()
+				end
+			</OnShow>
 			<OnHide>
-				DropDownList1:Hide()
+				self.ContextualMenu:Close()
 			</OnHide>
 		</Scripts>
 	</Frame>
-
 </Ui>

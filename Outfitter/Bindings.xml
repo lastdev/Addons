@@ -38,4 +38,7 @@
 	<Binding name="OUTFITTER_DISABLEAUTOMATION">
 		Outfitter:DisableAutoChanges()
 	</Binding>
+	<Binding name="OUTFITTER_UPDATEOUTFIT">
+		Outfitter:SetOutfitToCurrent(Outfitter:GetCurrentCompleteOutfit())
+	</Binding>
 </Bindings>

@@ -216,8 +216,6 @@ if GetLocale() == "zhCN" then
 	Outfitter.cHide = "隐藏"
 	Outfitter.cDontChange = "不做改变"
 
-	Outfitter.cHelm = "头盔"
-	Outfitter.cCloak = "披风"
 	Outfitter.cPlayerTitle = "头衔"
 
 	Outfitter.cMore = "更多"
@@ -238,17 +236,6 @@ if GetLocale() == "zhCN" then
 
 	Outfitter.cMinimapButtonTitle = "Outfitter 小地图按钮"
 	Outfitter.cMinimapButtonDescription = "单击左键选择不同的套装或左键拖曳重新定位小地图按钮。"
-
-	Outfitter.cClassName = {}
-	Outfitter.cClassName.DRUID = "德鲁伊"
-	Outfitter.cClassName.HUNTER = "猎人"
-	Outfitter.cClassName.MAGE = "法师"
-	Outfitter.cClassName.PALADIN = "圣骑士"
-	Outfitter.cClassName.PRIEST = "牧师"
-	Outfitter.cClassName.ROGUE = "潜行者"
-	Outfitter.cClassName.SHAMAN = "萨满祭司"
-	Outfitter.cClassName.WARLOCK = "术士"
-	Outfitter.cClassName.WARRIOR = "战士"
 
 	Outfitter.cBattleStance = "战斗姿态"
 	Outfitter.cDefensiveStance = "防御姿态"

@@ -7,7 +7,7 @@
 end)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 38 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetZone()
 
 --mod:RegisterCombat("scenario", 1148)
@@ -61,14 +61,14 @@ local specWarnSonicBlast	= mod:NewSpecialWarningInterrupt(145200, false)--have t
 local specWarnAquaBomb		= mod:NewSpecialWarningTarget(145206)--It's cast too often to dispel them off, so it's better as a target warning.
 
 --Tank
-local timerWindBlastCD		= mod:NewNextTimer(21, 144106)
-local timerPowerfulSlamCD	= mod:NewCDTimer(15, 144401)--15-17sec variation
+local timerWindBlastCD		= mod:NewNextTimer(21, 144106, nil, nil, nil, 5)
+local timerPowerfulSlamCD	= mod:NewCDTimer(15, 144401, nil, nil, nil, 3)--15-17sec variation
 --Damager
-local timerAmberGlobCD		= mod:NewNextTimer(10.5, 142189)
-local timerHealIllusionCD	= mod:NewNextTimer(20, 142238)
+local timerAmberGlobCD		= mod:NewNextTimer(10.5, 142189, nil, nil, nil, 5)
+local timerHealIllusionCD	= mod:NewNextTimer(20, 142238, nil, nil, nil, 4)
 --Healer
-local timerAquaBombCD		= mod:NewCDTimer(12, 145206, nil, false)--12-22 second variation? off by default do to this
-local timerSonicBlastCD		= mod:NewCDTimer(6, 145200)--8-11sec variation
+local timerAquaBombCD		= mod:NewCDTimer(12, 145206, nil, false, nil, 5)--12-22 second variation? off by default do to this
+local timerSonicBlastCD		= mod:NewCDTimer(6, 145200, nil, nil, nil, 2)--8-11sec variation
 
 local countdownTimer		= mod:NewCountdownFades(10, 141582)
 
@@ -76,7 +76,6 @@ local voiceHealIllusion		= mod:NewVoice(142238)
 local voicePowerfulSlam		= mod:NewVoice(144401)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 
 local started = false
 

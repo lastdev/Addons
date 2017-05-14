@@ -21,6 +21,8 @@ L["Activation Settings: 3/5"] = "激活設定：3/5"
 L["Activation Settings: 4/5"] = "激活設定：4/5"
 L["Activation Settings: 5/5"] = "激活設定：5/5"
 L["Activation Settings Text"] = "當你是%s，你可以啟用玩家職業設定並選擇%s。"
+-- L["Aura"] = ""
+-- L["Aura Name"] = ""
 L["Auto-cloning: 1/10"] = "自動複製：1/10"
 L["Auto-cloning 1/10 Text"] = [=[最大的有特色加入|cFF8800FF1.4|r是 |cFFFF0000自動複製|r。|cFFFF0000自動複製|r 讓您顯示方式具自我複製，以顯示多個信息源。當放置在一個動態組，這使您可以創建信息豐富的動態集。
 有跡象表明，支持三種觸發類型 |cFFFF0000自動複製|r全掃描光環，光環組和多目標光環。
@@ -30,6 +32,7 @@ L["Beginners Finished Text"] = [=[這是為初學者指南。但是，你已經�
 WeakAuras→教程- 語法相關教程]=]
 L["Beginners Guide Desc"] = "新手指南"
 L["Beginners Guide Desc Text"] = "透過WeakAuras的基礎設定選項教程"
+-- L["Constant Factor"] = ""
 L["Create a Display: 1/5"] = "創建一個特效: 1/5"
 L["Create a Display: 2/5"] = "創建一個特效: 2/5"
 L["Create a Display: 3/5"] = "創建一個特效: 3/5"
@@ -47,6 +50,8 @@ L["Display Options 2/4 Text"] = [=[現在有一個選項，開啟滑鼠停留於
 該選項僅在你的特效使用一個基於光環/物品/法術的觸發器時可用。]=]
 L["Display Options: 4/4"] = "特效設定: 4/4"
 L["Display Options 4/4 Text"] = "最後,這是一個新的特效類型,|cFFFFFFFF模組|r,允許你使用來自遊戲檔案的任意3D模組."
+-- L["Dynamic Group Options: 1/4"] = ""
+-- L["Dynamic Group Options 1/4 Text"] = ""
 L["Dynamic Group Options: 2/4"] = "動態群組設定：2/4"
 L["Dynamic Group Options 2/4 Text"] = [=[以最大的改進|cFFFFFFFF動態組|r為一個新的選擇擴展選目。
 選擇(循環)\"Circular\"，看它在行動。
@@ -72,7 +77,7 @@ L["Full-scan Auras 4/10 Text"] = [=[需要一個彈出顯示，通知您|cFFFF00
 WeakAuras→教程 - 語法相關教程]=]
 L["Full-scan Auras: 5/10"] = "完整掃描光環：5/10"
 L["Full-scan Auras 5/10 Text"] = "禁用完整掃描來重新啟用其它單位設定選項。"
-L["Group Auras 6/10"] = "群組光環：6/10"
+-- L["Group Auras: 6/10"] = ""
 L["Group Auras 6/10 Text"] = "現在，選擇\"群組\"進行單位設定。"
 L["Group Auras: 7/10"] = "群組光環：7/10"
 L["Group Auras 7/10 Text"] = [=[|cFFFF0000自動複製|r是再次/啟用使用\"%s\"的選項。
@@ -81,7 +86,11 @@ WeakAuras→教程 - 語法相關教程]=]
 L["Group Auras: 8/10"] = "群組光環：8/10"
 L["Group Auras 8/10 Text"] = [=[啟用%s選項光環組有 |cFFFF0000自動複製|r啟用將導致新的顯示項目為你光環組的每個部件(項目)是|cFFFFFFFF不|r受指定的光環。
 WeakAuras→教程 - 短語相關教程]=]
+-- L["Grow"] = ""
 L["Home"] = "首頁"
+-- L["Inverse"] = ""
+-- L["Left Text"] = ""
+-- L["Model"] = ""
 L["Multi-target Auras: 10/10"] = "多目標光環：10/10"
 L["Multi-target Auras 10/10 Text"] = [=[多目標光環都可以通過|cFFFF0000自動複製|r設為默認。
 多目標光環觸發器是有別於正常光環觸發，因為它們是基於戰鬥記錄事件，這意味著他們將在小怪沒人的目標時追踪光環(雖然一些動態信息不可用而沒有人在你的團隊鎖定目標單位)。
@@ -93,18 +102,24 @@ L["Multi-target Auras 9/10 Text"] = "最後，為單位設定選擇\"多個目�
 L["New in 1.4:"] = "在 1.4 版的新東西："
 L["New in 1.4 Desc:"] = "在1.4版的新東西："
 L["New in 1.4 Desc Text"] = "看WeakAuras 1.4 的新功能"
-L["New in 1.4 Finnished Text"] = [=[當然，也有更多的新功能|cFF8800FFWeakAuras 1.4|r 相比，可以覆蓋全部一次，更何況無數的bug修復和效率的提高。
-
-希望本教程至少引導你走向的主要新功能提供給您。
-
-感謝您使用 |cFF8800FFWeakAuras|r!
-
-WeakAuras→教程- 語法相關教程]=]
+-- L["New in 1.4 Finished Text"] = ""
 L["New in 1.4 Text1"] = [=[|cFF8800FFWeakAuras|r 1.4版新功能介紹。
 
 本教程將詳細介紹重要的新功能以及如何使用它們。]=]
 L["New in 1.4 Text2"] = "首先，建立一個用於示範目的的新顯示 。"
+-- L["Next"] = ""
+-- L["Options/Trigger"] = ""
+-- L["Player Class"] = ""
+-- L["Play Sound"] = ""
+-- L["Preset"] = ""
 L["Previous"] = "上一頁"
+-- L["Progress Bar"] = ""
+-- L["Show all matches (Auto-clone)"] = ""
+-- L["Sort"] = ""
+-- L["Sound"] = ""
+-- L["Specific Unit"] = ""
+-- L["Status"] = ""
+-- L["Tooltip on Mouseover"] = ""
 L["Trigger Options: 1/4"] = "觸發設定：1/4"
 L["Trigger Options 1/4 Text"] = [=[除了\"多目標\"(\"Multi-target\")沒有為單位選擇另一個新設置：具體單位。
 
@@ -125,6 +140,9 @@ L["Trigger Options 4/4 Text"] = [=[該|cFFFFFFFF單位特徵|r可以讓你測試
 
 cFFFFFFFF公共冷卻(GCD)|r和|cFFFFFFFF揮動時間|r觸發補足施法的觸發。
 WeakAuras→教程- 語法相關教程]=]
+-- L["Type"] = ""
+-- L["Unit"] = ""
+-- L["Use Full Scan (High CPU)"] = ""
 L["WeakAuras Tutorials"] = "WeakAuras 教程"
 L["Welcome"] = "歡迎"
 L["Welcome Text"] = [=[歡迎使用 |cFF8800FFWeakAuras|r 入門指南。

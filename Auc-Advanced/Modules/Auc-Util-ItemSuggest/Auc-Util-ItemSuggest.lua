@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Item Suggest module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: Auc-Util-ItemSuggest.lua 5417 2013-06-11 15:45:45Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: Auc-Util-ItemSuggest.lua 5651 2016-08-08 00:35:58Z ccox $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that allows the added tooltip for suggesting
@@ -36,20 +36,14 @@ if not AucAdvanced then return end
 local libType, libName = "Util", "ItemSuggest"
 local lib = AucAdvanced.NewModule(libType, libName, nil, true) -- noPrivate
 if not lib then return end
-local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,_,_TRANS = AucAdvanced.GetModuleLocals()
 local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
-
-local SplitServerKey = AucAdvanced.SplitServerKey
+local ResolveServerKey = AucAdvanced.ResolveServerKey
 local GetDepositCost = GetDepositCost
 local GetItemInfo = GetItemInfo
 
 local GetModelPrice -- function(model, link, serverKey)
-
-local CUTRATE_HOME = 0.05
-local CUTRATE_NEUTRAL = 0.15
-local CUTADJUST_HOME = 1 - CUTRATE_HOME
-local CUTADJUST_NEUTRAL = 1 - CUTRATE_NEUTRAL
 
 local type, tonumber = type, tonumber
 local format, strmatch = format, strmatch
@@ -81,8 +75,12 @@ function lib.Suggest(hyperlink, quantity, serverKey, additional)
 		LastLink = nil
 		return
 	end
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then
+		LastLink = nil
+		return
+	end
 	if type(quantity) ~= "number" or quantity < 1 then quantity = 1 end
-	if type(serverKey) ~= "string" then serverKey = Resources.ServerKeyCurrent end
 	if type(additional) ~= "table" then additional = emptyTable end -- ensure 'additional' is always a table, though it may be empty
 	if hyperlink == LastLink and quantity == LastQuantity and serverKey == LastServerKey and additional == LastAdditional then
 		-- caution: we don't check to see if the _contents_ of 'additional' have changed
@@ -301,30 +299,33 @@ function lib.GetRelistTimes(hyperlink)
 	return failed / ( success + 1 )
 end
 
---[[ GetFactionInfo
-	Returns values and adjustments based on the supplied serverKey
-	Performs lookups of ItemSuggest settings - should allow third-party modules to avoid directly accessing those settings
+--[[ GetAdjustmentInfo
+	Performs lookups of ItemSuggest settings - allows third-party modules to avoid directly accessing those settings
 	cutAdjust : multiplier to adjust base value for AuctionHouse cut. Must be applied before Deposit Cost. Always returns a valid number, so no need for a nil check.
 	duration : value to be used as duration (2nd parameter) in GetDepositCost. Will return nil if user has disabled deposit cost setting * so must be nil checked *
-	faction : value to be use as faction (3rd parameter) in GetDepositCost. May be nil (equivalent to 'Home' faction)
 --]]
-function lib.GetFactionInfo(serverKey)
+function lib.GetAdjustmentInfo()
 	local duration
 	local cutAdjust = 1 -- never nil
-	local _, faction = SplitServerKey(serverKey)
 
 	if get("util.itemsuggest.includebrokerage") then
-		if faction == "Neutral" then
-			cutAdjust = CUTADJUST_NEUTRAL
-		else -- assume 'Home' faction
-			cutAdjust = CUTADJUST_HOME
-		end
+		cutAdjust = Resources.AHCutAdjust
 	end
 	if get("util.itemsuggest.includedeposit") then
 		duration = get("util.itemsuggest.deplength")
 	end
 
-	return cutAdjust, duration, faction
+	return cutAdjust, duration
+end
+--[[ GetFactionInfo
+	Historical function retained for compatibility - Deprecated: modules should switch to GetAdjustmentInfo
+	With combined AuctionHouse there is only one set of fees and deposit costs.
+	serverKey parameter is accepted, but no longer makes any difference
+	faction return value returned for compatibility, but it should no longer be used in GetDepositCost
+--]]
+function lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
+	return cutAdjust, duration, Resources.PlayerFaction
 end
 
 --[[ Price Model Support ]]--
@@ -349,7 +350,7 @@ do
 
 	local enchantrixGetModel, enchantrixGetValue
 	local function EnchantrixFunc(model, link, serverKey)
-		if serverKey ~= Resources.ServerKeyCurrent then
+		if serverKey ~= Resources.ServerKey then
 			-- GetReagentPrice doesn't support serverKey, so it can only return prices for
 			-- current serverKey (or 'fixed' prices, but we can't tell if this is the case)
 			return
@@ -413,15 +414,12 @@ local function GetAuctionValue(hyperlink, quantity, serverKey, additional)
 			return
 		end
 	elseif InformantGetItem then
-		local itemId = additional.itemId or tonumber(strmatch(hyperlink, "item:(%d+):"))
-		if itemId then
-			local data = InformantGetItem(itemId)
-			if data then
-				local bind = data.soulBind -- 1 = BoU, 2 = BoE, 3 = BoP
-				local specialbind = data.specialBind -- bind to account, bind to guild,
-				if (bind == 3) or (specialbind and specialbind > 0) then
-					return
-				end
+		local data = InformantGetItem(hyperlink)
+		if data then
+			local bind = data.soulBind -- 1 = BoU, 2 = BoE, 3 = BoP
+			local specialbind = data.specialBind -- bind to account, bind to guild,
+			if (bind == 3) or (specialbind and specialbind > 0) then
+				return
 			end
 		end
 	end
@@ -430,10 +428,10 @@ local function GetAuctionValue(hyperlink, quantity, serverKey, additional)
 	local value = GetModelPrice(model, hyperlink, serverKey)
 	if not value then return end
 
-	local cutAdjust, duration, faction = lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
 	value = value * quantity * cutAdjust
 	if duration then
-		local deposit = GetDepositCost(hyperlink, duration, faction, quantity)
+		local deposit = GetDepositCost(hyperlink, duration, nil, quantity)
 		if deposit then
 			value = value - deposit * lib.GetRelistTimes(hyperlink)
 		end
@@ -461,7 +459,7 @@ local function GetDisenchantValue(hyperlink, quantity, serverKey, additional)
 	local totalNumber = total[1]
 	if totalNumber <= 0 then return end
 	local marketTotal, depositTotal = 0, 0
-	local cutAdjust, includeDeposit = lib.GetFactionInfo(serverKey)
+	local cutAdjust, includeDeposit = lib.GetAdjustmentInfo()
 	local model = get("util.itemsuggest.reagentmodel")
 	for result, resData in pairs(data) do
 		if result ~= "total" then
@@ -492,7 +490,7 @@ local function GetProspectValue(hyperlink, quantity, serverKey, additional)
 
 	local marketTotal, depositTotal = 0, 0
 	local model = get("util.itemsuggest.reagentmodel")
-	local cutAdjust, duration, faction = lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
 
 	for result, yield in pairs(prospects) do
 		-- adjust for stack size
@@ -505,7 +503,7 @@ local function GetProspectValue(hyperlink, quantity, serverKey, additional)
 			-- determine deposit for each result (only if we found a price for it)
 			if duration then
 				-- to minimize problems with the 1 silver minimum deposit, we calculate for a stack of 20, then divide by 20 after
-				local deposit = GetDepositCost(result, duration, faction, 20)
+				local deposit = GetDepositCost(result, duration, nil, 20)
 				if deposit then
 					depositTotal = depositTotal + deposit * yield * lib.GetRelistTimes(result) / 20
 				end
@@ -527,7 +525,7 @@ local function GetMillingValue(hyperlink, quantity, serverKey, additional)
 
 	local marketTotal, depositTotal = 0, 0
 	local model = get("util.itemsuggest.reagentmodel")
-	local cutAdjust, duration, faction = lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
 
 	for result, yield in pairs(pigments) do
 		-- adjust for stack size
@@ -540,7 +538,7 @@ local function GetMillingValue(hyperlink, quantity, serverKey, additional)
 			-- determine deposit for each result (only if we found a price for it)
 			if duration then
 				-- to minimize problems with the 1 silver minimum deposit, we calculate for a stack of 20, then divide by 20 after
-				local deposit = GetDepositCost(result, duration, faction, 20)
+				local deposit = GetDepositCost(result, duration, nil, 20)
 				if deposit then
 					depositTotal = depositTotal + deposit * yield * lib.GetRelistTimes(result) / 20
 				end
@@ -702,12 +700,12 @@ local function GetConvertValue(hyperlink, quantity, serverKey, additional)
 	local value = GetModelPrice(model, newId, serverKey)
 	if not value then return end
 
-	local cutAdjust, duration, faction = lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
 	value = value * yield * cutAdjust
 	if duration then
 		-- to minimize problems with the 1 silver minimum deposit, we calculate for a stack of 10, then divide by 10 after
 		-- todo: not all results can be stacked to 10, but GetDepositCost should handle it for now
-		local deposit = GetDepositCost(newId, duration, faction, 10)
+		local deposit = GetDepositCost(newId, duration, nil, 10)
 		if deposit then
 			value = value - lib.GetRelistTimes(newId) * deposit * yield / 10
 		end
@@ -917,11 +915,11 @@ local function GetSmeltValue(hyperlink, quantity, serverKey, additional)
 	local value = GetModelPrice(model, newId, serverKey)
 	if not value then return end
 
-	local cutAdjust, duration, faction = lib.GetFactionInfo(serverKey)
+	local cutAdjust, duration = lib.GetAdjustmentInfo()
 	value = value * yield * cutAdjust
 	if duration then
 		-- to minimize problems with the 1 silver minimum deposit, we calculate for a stack of 10, then divide by 10 after
-		local deposit = GetDepositCost(newId, duration, faction, 10)
+		local deposit = GetDepositCost(newId, duration, nil, 10)
 		if deposit then
 			value = value - lib.GetRelistTimes(newId) * deposit * yield / 10
 		end
@@ -1101,4 +1099,4 @@ end
 -- Neither Enchantrix nor Informant triggers "load" processor events; instead, use LoadTriggers to detect either loading
 lib.LoadTriggers = {enchantrix = true, informant = true}
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5417 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5651 $")

@@ -95,10 +95,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "$spell:74670 대상이 된 경우 미니맵에 위치 보기"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "보면서"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -108,11 +104,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "용이여, 내 명령을 따라라! 날 태워라!",
-	Add			= "화염의 기원"
-}
 
 ------------
 -- Erudax --
@@ -219,13 +210,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "5초 후 2 단계 시작!"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 		= "2 단계"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "2 단계 이전에 특수 경고 보기",
-	timerPhase2 		= "2 단계 바 보기"
+	specWarnPhase2Soon	= "2 단계 이전에 특수 경고 보기"
 }
 
 -----------------------
@@ -356,14 +342,6 @@ L= DBM:GetModLocalization(115)
 -- Asaad --
 -----------
 L= DBM:GetModLocalization(116)
-
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "$spell:87618 특수 경고 보기"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "전하 응집 - 점프!"
-})
 
 ---------------------------
 --  The Throne of Tides  --
@@ -528,8 +506,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "영혼 부활 남은횟수 알림 보기",
-	SpecWarnOhgan	= "되살아난 오간이 공격 가능 할때 특수 경고 보기",
-	SetIconOnOhgan	= "되살아난 오간에게 전술 목표 아이콘 설정"
+	SpecWarnOhgan	= "되살아난 오간이 공격 가능 할때 특수 경고 보기"
 }
 
 ----------------------

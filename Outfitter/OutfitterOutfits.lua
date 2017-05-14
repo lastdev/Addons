@@ -120,10 +120,10 @@ function Outfitter._OutfitMethods:AddItem(pSlotName, pItemInfo)
 		JewelCode3 = tonumber(pItemInfo.JewelCode3),
 		JewelCode4 = tonumber(pItemInfo.JewelCode4),
 		UniqueID = tonumber(pItemInfo.UniqueID),
-		ReforgeID = tonumber(pItemInfo.ReforgeID),
-		ID11 = tonumber(pItemInfo.ID11),
-		ID12 = tonumber(pItemInfo.ID12),
-		ID13 = tonumber(pItemInfo.ID13),
+		UpgradeTypeID = tonumber(pItemInfo.UpgradeTypeID),
+		InstanceDifficultyID = tonumber(pItemInfo.InstanceDifficultyID),
+		BonusIDs = tostring(pItemInfo.BonusIDs),
+		UpgradeID = tonumber(pItemInfo.UpgradeID),
 		InvType = pItemInfo.InvType,
 		SubType = pItemInfo.SubType,
 		Link = pItemInfo.Link,
@@ -197,7 +197,11 @@ end
 function Outfitter._OutfitMethods:IsComplete()
 	for _, vInventorySlot in ipairs(Outfitter.cSlotNames) do
 		if not self.Items[vInventorySlot] then
-			return false
+			if vInventorySlot == "ShirtSlot" or vInventorySlot == "TabardSlot" then
+				-- Ignore shirt and tabard slots
+			else
+				return false
+			end
 		end
 	end
 	
@@ -219,7 +223,10 @@ Outfitter._OutfitMethods.DefaultRepairValues =
 	JewelCode3 = 0,
 	JewelCode4 = 0,
 	UniqueID = 0,
-	ReforgeID = 0,
+	UpgradeTypeID = 0,
+	InstanceDifficultyID = 0,
+	BonusIDs = "0",
+	UpgradeID = 0,
 }
 
 function Outfitter._OutfitMethods:CheckOutfit(pCategoryID)
@@ -299,7 +306,10 @@ function Outfitter._OutfitMethods:UpdateDatabaseItemCodes(pInventoryCache)
 				vOutfitItem.JewelCode3 = vItem.JewelCode3
 				vOutfitItem.JewelCode4 = vItem.JewelCode4
 				vOutfitItem.UniqueID = vItem.UniqueID
-				vOutfitItem.ReforgeID = vItem.ReforgeID
+				vOutfitItem.UpgradeTypeID = vItem.UpgradeTypeID
+				vOutfitItem.InstanceDifficultyID = vItem.InstanceDifficultyID
+				vOutfitItem.BonusIDs = vItem.BonusIDs
+				vOutfitItem.UpgradeID = vItem.UpgradeID
 				vOutfitItem.Checksum = nil
 			else
 				vResult = false
@@ -366,7 +376,7 @@ function Outfitter._OutfitMethods:StoreOnServer()
 	-- Create the new outfit in the EM
 	
 	vOutfitEM:MarkEnabledSlots()
-	vOutfitEM:SaveEquipmentSet(vOutfitEM.Name, vTexture)
+	vOutfitEM:SaveEquipmentSet(vTexture)
 	
 	-- Copy the script
 	
@@ -395,7 +405,7 @@ function Outfitter._OutfitMethods:GetMissingItems(pInventoryCache)
 	local vItems = self:GetItems()
 	
 	for vInventorySlot, vOutfitItem in pairs(vItems) do
-		if vOutfitItem.Code ~= 0 then
+		if vOutfitItem.Code ~= 0 and not Outfitter.PhantomItemIDs[vOutfitItem.Code] then
 			local vItem = pInventoryCache:FindItemOrAlt(vOutfitItem)
 			
 			if not vItem then
@@ -431,25 +441,27 @@ function Outfitter._OutfitMethodsEM:GetName()
 end
 
 function Outfitter._OutfitMethodsEM:SetName(pName)
-	ModifyEquipmentSet(self.Name, pName, self:GetIconTexture())
-	
 	self.Name = pName
 	
+	if self.equipmentSetID then
+		C_EquipmentSet.ModifyEquipmentSet(self.equipmentSetID, self.Name, self:GetIconTexture())
+	end
+
 	Outfitter.DisplayIsDirty = true
 end
 
 function Outfitter._OutfitMethodsEM:GetIcon()
-	local vIcon = GetEquipmentSetInfoByName(self.Name)
+	if not self.equipmentSetID then
+		return 132662
+	end
+
+	local _, iconFileID = C_EquipmentSet.GetEquipmentSetInfo(self.equipmentSetID)
 	
-	if not vIcon then
-		return "Interface\\Icons\\INV_Chest_Cloth_21"
+	if not iconFileID then
+		return 132662
 	end
 	
-	if type(vIcon) == "number" then
-		return vIcon
-	else
-		return "Interface\\Icons\\"..vIcon
-	end
+	return iconFileID
 end
 
 function Outfitter._OutfitMethodsEM:SetIcon(pTexture)
@@ -465,22 +477,18 @@ function Outfitter._OutfitMethodsEM:SetIcon(pTexture)
 end
 
 function Outfitter._OutfitMethodsEM:SetIcon2(pTexture)
-	if type(pTexture) == "number" then
-		pTexture = Outfitter:ConvertTextureIDToString(pTexture)
-	end
-
 	self:MarkSlotsToIgnore()
-	self:SaveEquipmentSet(self.Name, pTexture)
+	self:SaveEquipmentSet(pTexture)
 end
 
 function Outfitter._OutfitMethodsEM:IsFullyEquipped()
-	local vLocations = GetEquipmentSetLocations(self.Name)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	
 	if not vLocations then
 		return false
 	end
 	
-	for vSlotID, vIgnore in pairs(GetEquipmentSetIgnoreSlots(self.Name)) do
+	for vSlotID, vIgnore in pairs(C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)) do
 		
 		local vLocation = vLocations[vSlotID]
 		if vLocation then
@@ -496,22 +504,22 @@ function Outfitter._OutfitMethodsEM:IsFullyEquipped()
 end
 
 function Outfitter._OutfitMethodsEM:GetIconTexture()
-	local vTexture = GetEquipmentSetInfoByName(self.Name)
+	local _, vTexture = C_EquipmentSet.GetEquipmentSetInfo(self.equipmentSetID)
 	return vTexture
 end
 
 function Outfitter._OutfitMethodsEM:GetIconIndex()
-	local vTexture = GetEquipmentSetInfoByName(self.Name)
+	local _, vTexture = C_EquipmentSet.GetEquipmentSetInfo(self.equipmentSetID)
 	
 	return Outfitter:GetIconIndex(vTexture) or 1
 end
 
 function Outfitter._OutfitMethodsEM:MarkSlotsToIgnore()
-	EquipmentManagerClearIgnoredSlotsForSave()
+	C_EquipmentSet.ClearIgnoredSlotsForSave()
 	
 	for vSlotName, vSlotID in pairs(Outfitter.cSlotIDs) do
 		if not self:SlotIsEnabled(vSlotName) then
-			EquipmentManagerIgnoreSlotForSave(vSlotID)
+			C_EquipmentSet.IgnoreSlotForSave(vSlotID)
 		end
 	end
 end
@@ -520,7 +528,7 @@ function Outfitter._OutfitMethodsEM:SetToCurrentInventory()
 	Outfitter:DebugMessage("OutfitMethodsEM:SetToCurrentInventory()")
 	
 	self:MarkSlotsToIgnore()
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 end
 
 function Outfitter._OutfitMethodsEM:AddNewItems(pNewItems)
@@ -537,8 +545,8 @@ function Outfitter._OutfitMethodsEM:AddNewItems(pNewItems)
 		
 		if not vCheckbox:GetChecked()
 		or not vCheckbox.IsUnknown then
-			EquipmentManagerUnignoreSlotForSave(Outfitter.cSlotIDs[vInventorySlot])
-			Outfitter:NoteMessage(Outfitter.cAddingItem, vNewItem.Name, self:GetName())
+			C_EquipmentSet.UnignoreSlotForSave(Outfitter.cSlotIDs[vInventorySlot])
+			Outfitter:NoteMessage(Outfitter.cAddingItem, vNewItem.Link or vNewItem.Name, self:GetName())
 		end
 		
 		-- Add the new items to the current compiled outfit
@@ -546,11 +554,11 @@ function Outfitter._OutfitMethodsEM:AddNewItems(pNewItems)
 		Outfitter.ExpectedOutfit:SetItem(vInventorySlot, vNewItem)
 	end
 	
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 end
 
 function Outfitter._OutfitMethodsEM:MarkEnabledSlots()
-	EquipmentManagerClearIgnoredSlotsForSave()
+	C_EquipmentSet.ClearIgnoredSlotsForSave()
 	
 	for vSlotName, vSlotID in pairs(Outfitter.cSlotIDs) do
 		local vCheckbox = _G["OutfitterEnable"..vSlotName]
@@ -559,15 +567,15 @@ function Outfitter._OutfitMethodsEM:MarkEnabledSlots()
 		and not vCheckbox.IsUnknown then
 			-- SaveEquipmentSet will pick it up
 		else
-			EquipmentManagerIgnoreSlotForSave(vSlotID)
+			C_EquipmentSet.IgnoreSlotForSave(vSlotID)
 		end
 	end
 end
 
 function Outfitter._OutfitMethodsEM:IsEmpty()
-	self.ItemLocations = GetEquipmentSetLocations(self.Name)
+	self.ItemLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	
-	for vSlotID, vIgnore in pairs(GetEquipmentSetIgnoreSlots(self.Name)) do
+	for vSlotID, vIgnore in pairs(C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)) do
 		if not vIgnore then
 			return false
 		end
@@ -609,18 +617,18 @@ function Outfitter._OutfitMethodsEM:SetInventoryItem(pSlotName)
 	self:CancelTemporaryItems()
 	
 	self:MarkSlotsToIgnore()
-	EquipmentManagerUnignoreSlotForSave(Outfitter.cSlotIDs[pSlotName])
+	C_EquipmentSet.UnignoreSlotForSave(Outfitter.cSlotIDs[pSlotName])
 	
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 	Outfitter.DisplayIsDirty = true
 end
 
 function Outfitter._OutfitMethodsEM:EnableAllSlots()
 	self:CancelTemporaryItems()
 	
-	EquipmentManagerClearIgnoredSlotsForSave()
+	C_EquipmentSet.ClearIgnoredSlotsForSave()
 	
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 	
 	Outfitter.DisplayIsDirty = true
 end
@@ -628,22 +636,22 @@ end
 function Outfitter._OutfitMethodsEM:DisableAllSlots()
 	self:CancelTemporaryItems()
 	
-	EquipmentManagerClearIgnoredSlotsForSave()
+	C_EquipmentSet.ClearIgnoredSlotsForSave()
 	
 	for _, vSlotName in ipairs(Outfitter.cSlotNames) do
-		EquipmentManagerIgnoreSlotForSave(Outfitter.cSlotIDs[vSlotName])
+		C_EquipmentSet.IgnoreSlotForSave(Outfitter.cSlotIDs[vSlotName])
 	end
 	
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 	
 	Outfitter.DisplayIsDirty = true
 end
 
 function Outfitter._OutfitMethodsEM:RemoveItem(pSlotName)
 	self:MarkSlotsToIgnore()
-	EquipmentManagerIgnoreSlotForSave(Outfitter.cSlotIDs[pSlotName])
+	C_EquipmentSet.IgnoreSlotForSave(Outfitter.cSlotIDs[pSlotName])
 	
-	self:SaveEquipmentSet(self.Name, self:GetIconTexture())
+	self:SaveEquipmentSet()
 	Outfitter.DisplayIsDirty = true
 end
 
@@ -661,7 +669,7 @@ function Outfitter._OutfitMethodsEM:GetItem(pSlotName)
 	if self.TemporaryItems then
 		return self.TemporaryItems[pSlotName]
 	else
-		return self:GetItemEM(pSlotName, GetEquipmentSetIgnoreSlots(self.Name), GetEquipmentSetLocations(self.Name))
+		return self:GetItemEM(pSlotName, C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID), C_EquipmentSet.GetItemLocations(self.equipmentSetID))
 	end
 end
 
@@ -743,7 +751,8 @@ function Outfitter._OutfitMethodsEM:GetItemEM(pSlotName, pIgnoreSlots, pLocation
 end
 
 function Outfitter:DumpEMOutfitLocations(pName)
-	local vLocations = GetEquipmentSetLocations(pName)
+	local equipmentSetID = C_EquipmentSet.GetEquipmentSetID(pName)
+	local vLocations = C_EquipmentSet.GetItemLocations(equipmentSetID)
 	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(pName)
 	self:DebugTable(vLocations, "Locations")
 	self:DebugTable(vIgnoreSlots, "IgnoreSlots")
@@ -770,14 +779,14 @@ function Outfitter._OutfitMethodsEM:GetItems()
 		return self.TemporaryItems
 	end
 	
-	self.ItemLocations = GetEquipmentSetLocations(self.Name)
+	self.ItemLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	
 	if not self.ItemLocations then
 		Outfitter:ErrorMessage("Couldn't get item locations for %s", tostring(self.Name))
 		return
 	end
 	
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
+	local vIgnoreSlots = C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)
 	for vSlotID, vSlotName in pairs(Outfitter.cSlotIDToInventorySlot) do
 		self.Items[vSlotName] = self:GetItemEM(vSlotName, vIgnoreSlots, self.ItemLocations)
 	end
@@ -787,6 +796,9 @@ end
 
 function Outfitter._OutfitMethodsEM:SlotIsEnabledEM(pSlotName, pIgnoreSlots, pItemLocations)
 	local vSlotID = Outfitter.cSlotIDs[pSlotName]
+	if not pIgnoreSlots then
+		return true
+	end
 	return not pIgnoreSlots[vSlotID]
 end
 
@@ -795,17 +807,17 @@ function Outfitter._OutfitMethodsEM:SlotIsEnabled(pSlotName)
 		return self.TemporaryItems[pSlotName] ~= nil
 	end
 	
-	return self:SlotIsEnabledEM(pSlotName, GetEquipmentSetIgnoreSlots(self.Name), GetEquipmentSetLocations(self.Name))
+	return self:SlotIsEnabledEM(pSlotName, C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID), C_EquipmentSet.GetItemLocations(self.equipmentSetID))
 end
 
 function Outfitter._OutfitMethodsEM:SlotIsEquipped(pSlotName, pInventoryCache)
 	local vSlotID = Outfitter.cSlotIDs[pSlotName]
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
+	local vIgnoreSlots = C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)
 	if vIgnoreSlots[vSlotID] then
 		return false
 	end
 
-	local vLocations = GetEquipmentSetLocations(self.Name)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	local vLocation = vLocations[vSlotID]
 
 	if not vLocation then
@@ -830,8 +842,8 @@ function Outfitter._OutfitMethodsEM:HasCombatEquipmentSlots()
 	
 	--
 	
-	local vLocations = GetEquipmentSetLocations(self.Name)
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
+	local vIgnoreSlots = C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)
 	for vEquipmentSlot, _ in pairs(Outfitter.cCombatEquipmentSlots) do
 		if self:SlotIsEnabledEM(vEquipmentSlot, vIgnoreSlots, vLocations) then
 			return true
@@ -854,8 +866,8 @@ function Outfitter._OutfitMethodsEM:OnlyHasCombatEquipmentSlots()
 	
 	--
 	
-	local vLocations = GetEquipmentSetLocations(self.Name)
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
+	local vIgnoreSlots = C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)
 	for vSlotName, vSlotID in pairs(Outfitter.cSlotIDs) do
 		if self:SlotIsEnabledEM(vSlotName, vIgnoreSlots, vLocations)
 		and not Outfitter.cCombatEquipmentSlots[vSlotName] then
@@ -885,8 +897,8 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 	end
 	
 	--
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
-	local vLocations = GetEquipmentSetLocations(self.Name)
+	local vIgnoreSlots = C_EquipmentSet.GetIgnoredSlots(self.equipmentSetID)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	
 	if not vLocations then
 		return false
@@ -897,14 +909,16 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 			-- If it's the offhand slot and there's a 2H weapon in the mainhand
 			-- then ignore the fact that it's empty
 			
-			if vSlotName ~= "SecondaryHandSlot" then
-				return false
-			end
+			if vSlotName == "SecondaryHandSlot" then
+				local vMainHandItem = self:GetItemEM("MainHandSlot", vIgnoreSlots, vLocations)
 			
-			local vMainHandItem = self:GetItemEM("MainHandSlot", vIgnoreSlots, vLocations)
-			
-			if not vMainHandItem
-			or vMainHandItem.InvType ~= "INVTYPE_2HWEAPON" then
+				if not vMainHandItem
+				or vMainHandItem.InvType ~= "INVTYPE_2HWEAPON" then
+					return false
+				end
+			elseif vSlotName == "ShirtSlot" or vSlotName == "TabardSlot" then
+				-- Ignore shirt and tabard slots
+			else
 				return false
 			end
 		end
@@ -979,20 +993,22 @@ function Outfitter._OutfitMethodsEM:OutfitUsesItem(pItemInfo)
 	    or (vItemInfo2 and vInventoryCache:ItemsAreSame(vItemInfo2, pItemInfo))
 end
 
-function Outfitter._OutfitMethodsEM:SaveEquipmentSet(pName, pIconTexture)
-	if Outfitter.Debug.NewItems then
-		Outfitter:TestMessage("%s:SaveEquipmentSet(%s)", pName, tostring(pIconTexture))
-		Outfitter:DebugStack()
-	end
+function Outfitter._OutfitMethodsEM:SaveEquipmentSet(iconID)
+	-- Ignore EM events while saving
+	Outfitter:StopMonitoringEM()
 	
-	if not pIconTexture then
-		pIconTexture = "INV_Misc_QuestionMark"
+	-- Create the set if it's new
+	if  not self.equipmentSetID then
+	   C_EquipmentSet.CreateEquipmentSet(self.Name, iconID)
+	   self.equipmentSetID = C_EquipmentSet.GetEquipmentSetID(self.Name)
+
+	-- Otherwise save it
+	else
+		C_EquipmentSet.SaveEquipmentSet(self.equipmentSetID, iconID)
 	end
-	
-	Outfitter.EventLib:UnregisterEvent("EQUIPMENT_SETS_CHANGED", Outfitter.SynchronizeEM, Outfitter)
-	local _, _, vTexture = pIconTexture:find("([^\\]*)$")
-	SaveEquipmentSet(pName, vTexture:upper())
-	Outfitter.EventLib:RegisterEvent("EQUIPMENT_SETS_CHANGED", Outfitter.SynchronizeEM, Outfitter)
+
+	-- Resume monitoring EM events
+	Outfitter:StartMonitoringEM()
 end
 
 function Outfitter._OutfitMethodsEM:StoreLocally()
@@ -1027,7 +1043,7 @@ function Outfitter._OutfitMethodsEM:GetMissingItems(pInventoryCache)
 	local vMissingItems = nil
 	local vBankedItems = nil
 	
-	local vLocations = GetEquipmentSetLocations(self.Name)
+	local vLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
 	
 	if not vLocations then
 		return
@@ -1040,7 +1056,8 @@ function Outfitter._OutfitMethodsEM:GetMissingItems(pInventoryCache)
 		if vOutfitItem
 		and vLocation
 		and vLocation ~= 0 -- Empty slot
-		and vLocation ~= 1 then -- Ignored slot
+		and vLocation ~= 1 -- Ignored slot
+		and not Outfitter.PhantomItemIDs[vOutfitItem.Code] then -- Phantom
 			local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = self:UnpackLocation(vLocation)
 			
 			if vInBank then

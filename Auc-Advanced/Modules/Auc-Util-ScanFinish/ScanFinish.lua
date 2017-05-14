@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: ScanFinish.lua 5515 2014-10-31 12:07:47Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: ScanFinish.lua 5588 2016-04-07 17:24:07Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a few event functionalities
@@ -236,23 +236,28 @@ function private.SetupConfigGui(gui)
 
 end
 
-function private.ConfigChanged(fullsetting, value, setting, module)
-	if module ~= "scanfinish" then return end -- only respond to own changes
-	--Debug switch via gui. Currently not exposed to the end user
-	blnDebug = get("util.scanfinish.debug")
-	if blnDebug then
-		aucPrint("  Debug:Configuration Changed")
-		if not get("util.scanfinish.activated") then
-			aucPrint("  Debug:Updating ScanFinish:Deactivated")
-		elseif AucAdvanced.Scan.IsScanning() then
-			aucPrint("  Debug:Updating ScanFinish with Scan in progress")
+function private.ConfigChanged(fullsetting, value, setting, module, base)
+	if module == "scanfinish" then -- only respond to own changes
+		--Debug switch via gui. Currently not exposed to the end user
+		blnDebug = get("util.scanfinish.debug")
+		if blnDebug then
+			aucPrint("  Debug:Configuration Changed")
+			if not get("util.scanfinish.activated") then
+				aucPrint("  Debug:Updating ScanFinish:Deactivated")
+			elseif AucAdvanced.Scan.IsScanning() then
+				aucPrint("  Debug:Updating ScanFinish with Scan in progress")
+			end
 		end
-	end
 
-	if not (strPrevSound == get("util.scanfinish.soundpath")) then
-		private.PlayCompleteSound()
+		local strCurSound = get("util.scanfinish.soundpath")
+		if strPrevSound ~= strCurSound then
+			private.PlayCompleteSound()
+			strPrevSound = strCurSound
+		end
+	elseif base == "profile" then
+		-- profile change: just re-sync strPrevSound
 		strPrevSound = get("util.scanfinish.soundpath")
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5515 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5588 $")

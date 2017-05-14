@@ -1,12 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local ORANGE	= "|cFFFF7F00"
 
 -- Class constants, for readability, these values match the ones in Altoholic.Classes (altoholic.lua)
 local CLASS_MAGE			= "MAGE"
@@ -330,7 +326,7 @@ local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 local function RightClickMenu_Initialize()
 	local searchCB = addon.Search.FindEquipmentUpgrade		-- search callback
 
-	DDM_Add(format("%s %s", L["Find Upgrade"], GREEN .. L["(based on iLvl)"]), -1, searchCB)
+	DDM_Add(format("%s %s", L["Find Upgrade"], colors.green .. L["(based on iLvl)"]), -1, searchCB)
 	
 	local class = addon.Search:GetClass()
 
@@ -340,18 +336,18 @@ local function RightClickMenu_Initialize()
 		(class == CLASS_DEATHKNIGHT) or
 		(class == CLASS_PALADIN) then
 		
-		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], GREEN, L["Tank"]), class .. "Tank", searchCB)
+		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], colors.green, L["Tank"]), class .. "Tank", searchCB)
 	end
 	
 	-- DPS upgrade
 	if class then
-		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], GREEN, L["DPS"]), class .. "DPS", searchCB)
+		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], colors.green, L["DPS"]), class .. "DPS", searchCB)
 	end
 		
 	if class == CLASS_DRUID then
-		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], GREEN, L["Balance"]), class .. "Balance", searchCB)
+		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], colors.green, L["Balance"]), class .. "Balance", searchCB)
 	elseif class == CLASS_SHAMAN then
-		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], GREEN, L["Elemental Shaman"]), class .. "Elemental", searchCB)
+		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], colors.green, L["Elemental Shaman"]), class .. "Elemental", searchCB)
 	end
 		
 	-- Heal upgrade
@@ -360,7 +356,7 @@ local function RightClickMenu_Initialize()
 		(class == CLASS_DRUID) or
 		(class == CLASS_PALADIN) then
 		
-		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], GREEN, L["Heal"]), class .. "Heal", searchCB)
+		DDM_Add(format("%s %s(%s)", L["Find Upgrade"], colors.green, L["Heal"]), class .. "Heal", searchCB)
 	end
 	
 	DDM_AddCloseMenu()
@@ -433,7 +429,7 @@ local callbacks = {
 			
 			GameTooltip:SetHyperlink(link)
 			GameTooltip:AddLine(" ")
-			GameTooltip:AddLine(GREEN .. L["Right-Click to find an upgrade"])
+			GameTooltip:AddLine(colors.green .. L["Right-Click to find an upgrade"])
 			GameTooltip:Show()
 		end,
 	OnClick = function(frame, button)
@@ -489,4 +485,4 @@ local callbacks = {
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(1, callbacks)
+AltoholicTabGrids:RegisterGrid(1, callbacks)

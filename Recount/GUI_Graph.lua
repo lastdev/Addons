@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1373 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -128,7 +128,7 @@ function me:DataSparsen(data, amount)
 	end
 
 	local i = #data[1]
-	
+
 	while i > 0 do
 		if not Keep[i] then
 			table.remove(data[1], i)
@@ -147,7 +147,7 @@ function me:FilterDataByTime(data)
 
 	local First = true
 	local Last = 0
-	
+
 	for k, v in ipairs(data[1]) do
 		if v >= Recount.TimeRangeLower and v <= Recount.TimeRangeUpper then
 			--Need to add value right at the front edge
@@ -278,7 +278,7 @@ function me:AddDataSeries(a, b)
 	elseif b == nil or table.maxn(b) < 2 then
 		return a
 	end
-	
+
 	local LastA, LastAT, Temp
 	local PosA, PosB, LengthA, LengthB
 
@@ -417,7 +417,7 @@ function me:RefreshGraph()
 	local Graph = Recount.GraphWindow.LineGraph
 	local Length, MaxLength, Filtered, Result, MinAmount, MaxAmount, DataMax, Temp
 	local Stacked = Recount:GetTable()
-	
+
 	Graph:ResetData()
 
 	local i = 1
@@ -449,8 +449,6 @@ function me:RefreshGraph()
 		Graph:LockXMax(true)
 	end
 
-	
-
 	if Recount.GraphWindow.Data then
 		for k, v in pairs(Recount.GraphWindow.Data) do
 			if type(v) == "table" and table.maxn(v[1]) > 0 and (v[1][1] ~= nil) and me.Enabled[k] then
@@ -472,7 +470,7 @@ function me:RefreshGraph()
 
 					if not Recount.GraphWindow.StackedOn then
 						Length = Filtered[1][table.maxn(Filtered[1])] - Filtered[1][1]
-						
+
 						if Length > 300 then
 							me:DataSparsen(Filtered, Length / 100)
 						end
@@ -490,7 +488,6 @@ function me:RefreshGraph()
 							MaxAmount = DataMax
 						end
 
-						
 						Graph:AddDataSeries(Filtered, color, true)
 
 						if MaxLength < Length then
@@ -527,7 +524,7 @@ function me:RefreshGraph()
 				end
 			end
 		end
-		
+
 		for k, v in pairs(Stacked) do
 			Length = v[2][1][table.maxn(v[2][1])] - v[2][1][1]
 
@@ -541,7 +538,7 @@ function me:RefreshGraph()
 				v[2] = Current
 			end
 		end
-		if Recount.GraphWindow.NormalizeOn then	
+		if Recount.GraphWindow.NormalizeOn then
 			--Divide now by the total
 			local Total = me:DataCopy(Current)
 			for k, v in pairs(Stacked) do
@@ -640,9 +637,9 @@ function me:RefreshGraph()
 			T = Background:FindTexture()
 			T:Show()
 			if Recount.GraphWindow.LastTimeOver ~= k then
-				T:SetTexture(1, 0, 0, 0.1)
+				T:SetColorTexture(1, 0, 0, 0.1)
 			else
-				T:SetTexture(1, 1, 0, 0.1)
+				T:SetColorTexture(1, 1, 0, 0.1)
 			end
 			T:SetPoint("TOPLEFT", Background, "TOPLEFT", (v[1] - XMin) * Width, 0)
 			if v[2] > XMax then
@@ -656,9 +653,9 @@ function me:RefreshGraph()
 			T = Background:FindTexture()
 			T:Show()
 			if Recount.GraphWindow.LastTimeOver ~= k then
-				T:SetTexture(1, 0, 0, 0.1)
+				T:SetColorTexture(1, 0, 0, 0.1)
 			else
-				T:SetTexture(1, 1, 0, 0.1)
+				T:SetColorTexture(1, 1, 0, 0.1)
 			end
 			T:SetPoint("TOPLEFT", Background, "TOPLEFT", (CurPos - XMin) * Width, 0)
 			if v[2] > XMax then
@@ -736,9 +733,9 @@ function me:HighlightCombatTime(time)
 	if TimeOver ~= Recount.GraphWindow.LastTimeOver then
 		for _, v in pairs(Recount.GraphWindow.GraphBackground.Textures) do
 			if v.id == TimeOver then
-				v:SetTexture(1, 1, 0, 0.1)
+				v:SetColorTexture(1, 1, 0, 0.1)
 			elseif v.id == Recount.GraphWindow.LastTimeOver then
-				v:SetTexture(1, 0, 0, 0.1)
+				v:SetColorTexture(1, 0, 0, 0.1)
 			end
 		end
 
@@ -840,13 +837,12 @@ function Recount:GraphRefreshData()
 			i = i + 1
 		end
 	end
-		
+
 	while i <= 10 do
 		Rows[i]:Hide()
 		i = i + 1
 	end
 end
-
 
 function Recount:GraphRefreshCombat()
 	local combat = Recount.db2.CombatTimes
@@ -942,7 +938,7 @@ function Recount:CreateGraphWindow()
 	--Recount.Colors:UnregisterItem(Recount.GraphWindow.Title)
 	Recount.Colors:RegisterFont("Other Windows", "Title Text", Recount.GraphWindow.Title)
 
-	theFrame.LineGraph = Graph:CreateGraphLine("Recount_GraphWindow_LineGraph", theFrame, "TOPLEFT", "TOPLEFT", 1, -30, 400, 420)
+	theFrame.LineGraph = Graph:CreateGraphLine("Recount_GraphWindow_LineGraph", theFrame, "TOPLEFT", "TOPLEFT", 1, -32, 400, 418)
 	theFrame.LineGraph:SetAutoScale(true)
 	theFrame.LineGraph:SetYAxis(0, 100)
 	theFrame.LineGraph:SetGridSpacing(15, 25)
@@ -961,7 +957,7 @@ function Recount:CreateGraphWindow()
 	theFrame.GraphBackground:EnableMouse(true)
 
 	theFrame.GraphBackground.TimeSelect = theFrame.GraphBackground:CreateTexture(nil, "BACKGROUND")
-	theFrame.GraphBackground.TimeSelect:SetTexture(0, 1, 0, 0.1)
+	theFrame.GraphBackground.TimeSelect:SetColorTexture(0, 1, 0, 0.1)
 	theFrame.GraphBackground.TimeSelect:Hide()
 
 
@@ -1216,12 +1212,12 @@ function Recount:CreateGraphWindow()
 
 		Row.Background = Row:CreateTexture(nil, "BACKGROUND")
 		Row.Background:SetAllPoints(Row)
-		Row.Background:SetTexture(1.0, 1.0, 0.0, 0.3)
+		Row.Background:SetColorTexture(1.0, 1.0, 0.0, 0.3)
 		Row.Background:Hide()
 
 		Row.Highlighted = Row:CreateTexture(nil, "BACKGROUND")
 		Row.Highlighted:SetAllPoints(Row)
-		Row.Highlighted:SetTexture(1.0, 0.0, 0.0, 0.3)
+		Row.Highlighted:SetColorTexture(1.0, 0.0, 0.0, 0.3)
 		Row.Highlighted:Hide()
 
 		Row.Who = Row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")

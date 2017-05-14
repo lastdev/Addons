@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Mails ***
+--[[	*** DataStore_Mails ***
 Written by : Thaoky, EU-Marécages de Zangar
 July 16th, 2009
 --]]
@@ -100,21 +100,6 @@ local function GuildWhisper(player, messageType, ...)
 	end
 end
 
-local function HasHeirloomAttachment()
-	local link, rarity, _
-
-	for i = 1, ATTACHMENTS_MAX_SEND do	-- loop through all attachments
-		link = GetSendMailItemLink(i)
-		if link then
-			_, _, rarity = GetItemInfo(link)
-			
-			if rarity == 7 then			-- is this an heirloom ?
-				return true					-- .. yes, return true !
-			end
-		end
-	end
-end
-
 local function SendGuildMail(recipient, subject, body, index)
 	local player = DataStore:GetNameOfMain(recipient)
 	if not player then return end
@@ -124,14 +109,14 @@ local function SendGuildMail(recipient, subject, body, index)
 	
 	-- send attachments
 	local isSentMail = (index == nil) and true or false
-	local item, icon, count, link
+	local item, icon, count, link, itemID
 	
 	for attachmentIndex = 1, ATTACHMENTS_MAX_SEND do		-- mandatory, loop through all 12 slots, since attachments could be anywhere (ex: slot 4,5,8)
 		if isSentMail then
-			item, icon, count = GetSendMailItem(attachmentIndex)
+			item, itemID, icon, count = GetSendMailItem(attachmentIndex)
 			link = GetSendMailItemLink(attachmentIndex)
 		else
-			item, icon, count = GetInboxItem(index, attachmentIndex)
+			item, itemID, icon, count = GetInboxItem(index, attachmentIndex)
 			link = GetInboxItemLink(index, attachmentIndex)
 		end
 		
@@ -156,20 +141,21 @@ local function SaveAttachments(character, index, sender, days, wasReturned)
 	-- index nil = sent mail => different methods
 	local isSentMail = (index == nil) and true or false
 	
-	local item, icon, count, link
+	local item, icon, count, link, itemID
 	
 	for attachmentIndex = 1, ATTACHMENTS_MAX_SEND do		-- mandatory, loop through all 12 slots, since attachments could be anywhere (ex: slot 4,5,8)
 		if isSentMail then
-			item, icon, count = GetSendMailItem(attachmentIndex)
+			item, itemID, icon, count = GetSendMailItem(attachmentIndex)
 			link = GetSendMailItemLink(attachmentIndex)
 		else
-			item, icon, count = GetInboxItem(index, attachmentIndex)
+			item, itemID, icon, count = GetInboxItem(index, attachmentIndex)
 			link = GetInboxItemLink(index, attachmentIndex)
 		end
 		
 		if item then
 			table.insert(character.Mails, {
 				["icon"] = icon,
+				["itemID"] = itemID,
 				["count"] = count,
 				["sender"] = sender,
 				["link"] = link,
@@ -190,8 +176,6 @@ local function ScanMailbox()
 	if numItems == 0 then
 		return
 	end
-	
-	
 	
 	for i = 1, numItems do
 		local _, stationaryIcon, mailSender, mailSubject, mailMoney, _, days, numAttachments, _, wasReturned = GetInboxHeaderInfo(i);
@@ -276,16 +260,24 @@ end
 local function _GetMailItemCount(character, searchedID)
 	local count = 0
 	for _, v in pairs (character.Mails) do
-		local link = v.link
-		if link and (GetIDFromLink(link) == searchedID) then
+		if v.itemID and (v.itemID == searchedID) then	-- added in 7.0
 			count = count + (v.count or 1)
+		else															-- .. remove link comparison soon
+			local link = v.link
+			if link and (GetIDFromLink(link) == searchedID) then
+				count = count + (v.count or 1)
+			end
 		end
 	end
 	
 	for _, v in pairs (character.MailCache) do
-		local link = v.link
-		if link and (GetIDFromLink(link) == searchedID) then
+		if v.itemID and (v.itemID == searchedID) then	-- added in 7.0
 			count = count + (v.count or 1)
+		else															-- .. remove link comparison soon
+			local link = v.link
+			if link and (GetIDFromLink(link) == searchedID) then
+				count = count + (v.count or 1)
+			end
 		end
 	end
 	return count
@@ -433,17 +425,28 @@ local function CheckExpiries()
 	for key, character in pairs(addon.db.global.Characters) do
 		account, realm, charName = strsplit(".", key)
 		
-		if allAccounts or ((allAccounts == false) and (account == THIS_ACCOUNT)) then		-- all accounts, or only current and current was found
-			if allRealms or ((allRealms == false) and (realm == GetRealmName())) then			-- all realms, or only current and current was found
-	
-			-- detect return vs delete
-				local numExpiredMails = _GetNumExpiredMails(character, threshold)
-				if numExpiredMails > 0 then
-					expiryFound = true
-					if reportToChat then		-- if the option is active, report the name of the character to chat, one line per alt.
-						addon:Print(format(L["EXPIRED_EMAILS_WARNING"], charName, realm))
+		-- 2015-02-07 : The problem of expired items is here
+		-- It appears that in older versions, the addon managed to create an invalid character key
+		-- ex: Default.Realm.Player-Realm
+		-- This was due to being able to guild character from merged realms, who would then send mail to an alt.
+		-- These invalid keys should be fully deleted.
+		
+		local pos = string.find(charName, "-")		-- is there a '-' in the character name ? if yes, invalid key ! delete it !
+		if pos then
+			addon.db.global.Characters[key] = nil
+		else
+			if allAccounts or ((allAccounts == false) and (account == THIS_ACCOUNT)) then		-- all accounts, or only current and current was found
+				if allRealms or ((allRealms == false) and (realm == GetRealmName())) then			-- all realms, or only current and current was found
+		
+				-- detect return vs delete
+					local numExpiredMails = _GetNumExpiredMails(character, threshold)
+					if numExpiredMails > 0 then
+						expiryFound = true
+						if reportToChat then		-- if the option is active, report the name of the character to chat, one line per alt.
+							addon:Print(format(L["EXPIRED_EMAILS_WARNING"], charName, realm))
+						end
+						addon:SendMessage("DATASTORE_MAIL_EXPIRY", character, key, threshold, numExpiredMails)
 					end
-					addon:SendMessage("DATASTORE_MAIL_EXPIRY", character, key, threshold, numExpiredMails)
 				end
 			end
 		end
@@ -546,9 +549,6 @@ hooksecurefunc("SendMail", function(recipient, subject, body, ...)
 			for characterName, characterKey in pairs(DataStore:GetCharacters(realm)) do
 				if strlower(characterName) == strlower(recipientName) then		-- right alt ? proceed
 					SendOwnMail(characterKey, subject, body)
-					if not HasHeirloomAttachment() then
-						DataStore:SetConnectedRealms(realm, GetRealmName())
-					end
 					isRecipientAnAlt = true
 					break
 				end

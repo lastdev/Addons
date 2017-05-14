@@ -248,7 +248,7 @@ do
     IsDisabled = isDisabled,
 
     -- Standard fields
-    L = {},
+    PL = Prat:GetLocalizer({}),
     section = "extras",
   }
 

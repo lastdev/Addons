@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1298 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1398 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -51,7 +51,7 @@ do
 end]]
 -- Pre-4.1 CLEU compat end
 
---Data for Recount is tracked within this file
+-- Data for Recount is tracked within this file
 local Tracking = { }
 
 -- Elsia: This is straight from GUIDRegistryLib-0.1 by ArrowMaster.
@@ -109,6 +109,8 @@ local LIB_FILTER_MY_PET = bit_bor(
 local LIB_FILTER_PARTY	= bit_bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_AFFILIATION_PARTY)
 local LIB_FILTER_RAID	= bit_bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_AFFILIATION_RAID)
 local LIB_FILTER_GROUP	= bit_bor(LIB_FILTER_PARTY, LIB_FILTER_RAID)
+
+local IgnoreAuras = { }
 
 local HotTickTimeId = {
 	[746]	= 1, -- First Aid (rank 1)
@@ -194,7 +196,7 @@ local DotTickTimeId = {
 
 -- Identified Absorb abilities by spell ID and contains their respective expected durations.
 -- These do not give the needed SPELL_AURA_* information to track accurately and hence need to be guessed
-local GuessAbsorbSpells = {
+--[[local GuessAbsorbSpells = {
 	-- Death Knight
 	--[77535] = 10, -- Blood Shield
 	-- Druid
@@ -202,12 +204,12 @@ local GuessAbsorbSpells = {
 	-- Priest
 	[62618]	= 25, -- Power Word: Barrier
 	[81781]	= 25,
-}
+}]]
 
 -- Identified Absorb abilities by spell ID and contains their respective expected durations.
 local AbsorbSpellDuration = {
 	-- Death Knight
-	[48707]		= 5, -- Anti-Magic Shell (DK) Rank 1 -- Does not currently seem to show tracable combat log events. It shows energizes which do not reveal the amount of damage absorbed
+	[48707]		= 5, -- Anti-Magic Shell (DK) Rank 1 -- Does not currently seem to show tracable combat log evnets. It shows energizes which do not reveal the amount of damage absorbed
 	[51052]		= 10, -- Anti-Magic Zone (DK)( Rank 1 (Correct spellID?)
 	-- Does DK Spell Deflection show absorbs in the CL?
 	[51271]		= 20, -- Unbreakable Armor (DK)
@@ -448,29 +450,28 @@ function Recount:MatchGUID(nName, nGUID, nFlags)
 end
 
 -- Biffur: Keep track of active shields on each target
-local AllShields = {}
+--local AllShields = {}
 
 --local last_timestamp
 
 -- This is needed only for abilities that do not offer absorb values through SPELL_AURA_*
 -- It involves a guessing heuristic
-function Recount:AddGuessedAbsorbData(source, victim, ability, element, hittype, damage, resist, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, timestamp)
-
+--[=[function Recount:AddGuessedAbsorbData(source, victim, ability, element, hittype, damage, resist, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, timestamp)
 	local shieldref = AllShields[victim]
 	local currenttime = timestamp
 	local mintime = 900000
 	local minspell
 	local minsrc
-	
+
 	if not shieldref then
 		return
 	end
-	
+
 	for k, v in pairs(shieldref) do
 		if GuessAbsorbSpells[k] then
 			for k2, v2 in pairs(v) do
 				if v2 - currenttime < mintime then
-				
+
 					if v2 - currenttime < -1.0 then
 						shieldref[k][k2] = nil
 						--Recount:DPrint("Removing old "..k.." "..k2.." on "..victim)
@@ -505,24 +506,27 @@ function Recount:AddGuessedAbsorbData(source, victim, ability, element, hittype,
 			end
 		end
 	end
+end]=]
+
+function Recount:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand)
+	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, 0, L["Melee"], SPELLSCHOOL_PHYSICAL, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand)
 end
 
-function Recount:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
-	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, 0, L["Melee"], SPELLSCHOOL_PHYSICAL, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
-end
-
-function Recount:SpellBuildingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
-	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
+function Recount:SpellBuildingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand)
+	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand)
 end
 
 function Recount:SpellBuildingHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overheal, critical)
 	-- Ignoring these for now
 end
 
-function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
-
+function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand)
 	-- Prismatic Crystal
 	if string_match(dstGUID, "^Creature%-0%-%d+%-%d+%-%d+%-76933%-%w+$") then
+		return
+	end
+	-- Soul Effigy
+	if string_match(dstGUID, "^Creature%-0%-%d+%-%d+%-%d+%-103679%-%w+$") then
 		return
 	end
 
@@ -547,11 +551,11 @@ function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	if glancing	then
 		HitType = "Glancing" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	end
-	if multistrike and critical then
+	--[[if multistrike and critical then
 		HitType = "Multistrike (Crit)"
 	elseif multistrike and not critical then
 		HitType = "Multistrike"
-	end
+	end]]
 	--[[if blocked then
 		HitType = "Block"
 	end
@@ -564,20 +568,17 @@ function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	if absorbed then
 		if Recount.db.profile.MergeDamageAbsorbs then
 			if spellId == 0 then
-				Recount:AddDamageData(srcName, dstName, L["Melee"], SPELLSCHOOL_PHYSICAL, "Absorb", absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed)
+				Recount:AddDamageData(srcName, dstName, L["Melee"], SPELLSCHOOL_PHYSICAL, "Absorb", absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, nil, nil)
 			else
-				Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], "Absorb", absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed)
+				Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], "Absorb", absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, nil, nil)
 			end
 		end
 	end
-
-	--last_timestamp = timestamp
 
 	Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], HitType, amount, resisted, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, isDot)
 end
 
 function Recount:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, enviromentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
-
 	local HitType = "Hit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	if critical then
 		HitType = "Crit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
@@ -596,11 +597,9 @@ function Recount:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, src
 	end]]
 	if absorbed then
 		if Recount.db.profile.MergeDamageAbsorbs then
-			Recount:AddDamageData("Environment", dstName, Recount:FixCaps(enviromentalType), Recount.SpellSchoolName[school], HitType, absorbed, resisted, srcGUID, 0, dstGUID, dstFlags, nil, blocked, absorbed)
+			Recount:AddDamageData("Environment", dstName, Recount:FixCaps(enviromentalType), Recount.SpellSchoolName[school], "Absorb", absorbed, resisted, srcGUID, 0, dstGUID, dstFlags, nil, nil, nil)
 		end
 	end
-
-	--last_timestamp = timestamp
 
 	Recount:AddDamageData("Environment", dstName, Recount:FixCaps(enviromentalType), Recount.SpellSchoolName[school], HitType, amount, resisted, srcGUID, 0, dstGUID, dstFlags, nil, blocked, absorbed)
 end
@@ -613,12 +612,7 @@ function Recount:FixCaps(capsstr)
 	end
 end
 
-function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType, isOffHand, multistrike, amountMissed)
-
-	--[[if TOC > 40200 then
-		missAmount = missAmountNew
-	end]]
-
+function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType, isOffHand, amountMissed)
 	local blocked
 	local absorbed
 	local spellId = L["Melee"]
@@ -629,25 +623,17 @@ function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 		blocked = amountMissed
 	end
 
-	--last_timestamp = timestamp
-
 	if Recount.db.profile.MergeDamageAbsorbs then
+		if IgnoreAuras[srcGUID] then
+			absorbed = nil
+		end
 		Recount:AddDamageData(srcName, dstName, L["Melee"], SPELLSCHOOL_PHYSICAL, Recount:FixCaps(missType), absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed)
 	else
 		Recount:AddDamageData(srcName, dstName, L["Melee"], SPELLSCHOOL_PHYSICAL, Recount:FixCaps(missType), nil, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed)
 	end
 end
 
-function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, missType, isOffHand, multistrike, amountMissed)
-	-- Stagger absorb
-	if spellId == 124255 then
-		return
-	end
-
-	--[[if TOC > 40200 then
-		missAmount = missAmountNew
-	end]]
-
+function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, missType, isOffHand, amountMissed)
 	local blocked
 	local absorbed
 
@@ -657,17 +643,23 @@ function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 		blocked = amountMissed
 	end
 
-	--last_timestamp = timestamp
+	local isDot
+	if eventtype == "SPELL_PERIODIC_MISSED" then
+		spellName = spellName .." ("..L["DoT"]..")"
+		isDot = true
+	end
 
 	if Recount.db.profile.MergeDamageAbsorbs then
-		Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], Recount:FixCaps(missType), absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, false)
+		if IgnoreAuras[srcGUID] then
+			absorbed = nil
+		end
+		Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], Recount:FixCaps(missType), absorbed, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, isDot)
 	else
-		Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], Recount:FixCaps(missType), nil, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, false)
+		Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], Recount:FixCaps(missType), nil, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, isDot)
 	end
 end
 
-function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overheal, absorbed, critical, multistrike)
-
+function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overheal, absorbed, critical)
 	local healtype = "Hit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	local isHot
 	if eventtype == "SPELL_PERIODIC_HEAL" then
@@ -684,11 +676,11 @@ function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dst
 	if critical then
 		healtype = "Crit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	end
-	if multistrike and critical then
+	--[[if multistrike and critical then
 		healtype = "Multistrike (Crit)"
 	elseif multistrike and not critical then
 		healtype = "Multistrike"
-	end
+	end]]
 
 	Recount:AddHealData(srcName, dstName, spellName, healtype, amount, overheal, srcGUID, srcFlags, dstGUID, dstFlags, spellId, isHot, absorbed) -- Elsia: Overheal missing!!!
 end
@@ -735,16 +727,53 @@ function Recount:AddAbsorbCredit(source, victim, spellName, spellId, absorbed)
 			Recount:AddTableDataStats(sourceData, "Heals", spellName, "Absorb", absorbed)
 			Recount:AddTableDataSum(sourceData, "HealedWho", victim, spellName, absorbed)
 			local victimData = Recount.db2.combatants[victim]
-			Recount:AddAmount(victimData, "HealingTaken", absorbed)
-			--Recount:AddTableDataStats(victimData, "HealingTaken", spellName, "Absorb", absorbed)
+			if Recount.db.profile.Modules.HealingTaken then
+				Recount:AddAmount(victimData, "HealingTaken", absorbed)
+				--Recount:AddTableDataStats(victimData, "HealingTaken", spellName, "Absorb", absorbed)
+			end
 			Recount:AddTableDataSum(victimData, "WhoHealed", source, spellName, absorbed)
 		end
 	end
 end
 
+local frame = CreateFrame("Frame")
+
+local function IgnoreAurasUpdate(self, elapsed)
+	self.time = (self.time or 0) + elapsed
+	if self.time > 0.2 then
+		local num = 0
+		for k, v in pairs(IgnoreAuras) do
+			if v + 10 < GetTime() then
+				v = nil
+			else
+				num = num + 1
+			end
+		end
+		if num == 0 then
+			frame:SetScript("OnUpdate", nil)
+		end
+		self.time = 0
+	end
+end
+
 function Recount:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType, amount)
-	-- Is this an absorb effect?
+	-- Spirit Shift
+	if spellId == 184293 then
+		IgnoreAuras[srcGUID] = GetTime()
+		local script = frame:GetScript("OnUpdate")
+		if not script then
+			frame:SetScript("OnUpdate", IgnoreAurasUpdate)
+		end
+	end
+
 	if AbsorbSpellDuration[spellId] then
+		if Recount.db2.combatants[srcName] then
+			local sourceData = Recount.db2.combatants[srcName]
+			Recount:AddTableDataSum(sourceData, "ShieldedWho", dstName, spellName, 1)
+		end
+	end
+	-- Is this an absorb effect?
+	--[=[if AbsorbSpellDuration[spellId] then
 		--Recount:DPrint("Absorb Aura: "..spellName.." "..spellId)
 		-- Yes? Add shield
 		AllShields[dstName] = AllShields[dstName] or {}
@@ -771,11 +800,17 @@ function Recount:SpellAuraApplied(timestamp, eventtype, srcGUID, srcName, srcFla
 		end
 	--[[else
 		Recount:DPrint("Aura Applied: "..spellName.." "..spellId)]]
-	end
+	end]=]
 end
 
 function Recount:SpellAuraRefresh(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType, amount)
-	if AbsorbSpellDuration[spellId] and amount then
+	if AbsorbSpellDuration[spellId] then
+		if Recount.db2.combatants[srcName] then
+			local sourceData = Recount.db2.combatants[srcName]
+			Recount:AddTableDataSum(sourceData, "ShieldedWho", dstName, spellName, 1)
+		end
+	end
+	--[=[if AbsorbSpellDuration[spellId] and amount then
 		-- Yes? Update shield if it is tracked
 		if AllShields[dstName] and AllShields[dstName][spellId] and AllShields[dstName][spellId][srcName] then
 			--Recount:DPrint("Updating " .. spellName .." from " .. dstName .. " at time ".. timestamp .. " old stamp was "..AllShields[dstName][spellId][srcName].." "..amount)
@@ -800,30 +835,33 @@ function Recount:SpellAuraRefresh(timestamp, eventtype, srcGUID, srcName, srcFla
 		AllShields[dstName][spellId] = AllShields[dstName][spellId] or {}
 		AllShields[dstName][spellId][srcName] = {}
 		AllShields[dstName][spellId][srcName] = timestamp + AbsorbSpellDuration[spellId] -- Store duration for guessing
-		
+
 		if not Recount.db2.combatants[srcName] then
 			--Recount:DPrint("No source combatant!")
 		else
 			local sourceData = Recount.db2.combatants[srcName]
 			Recount:AddTableDataSum(sourceData, "ShieldedWho", dstName, spellName, 1)
 		end
-	end
+	end]=]
 end
 
-function Recount:RemoveShield(args)
+--[=[function Recount:RemoveShield(args)
 	local dstName, spellId, srcName = unpack(args)
 	--Recount:DPrint("Removing "..dstName.." "..spellId.." "..srcName)
 	AllShields[dstName][spellId][srcName] = nil
-end
+end]=]
 
 function Recount:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType, amount)
+	if spellId == 184293 then
+		IgnoreAuras[srcGUID] = nil
+	end
 
 	-- Spirit of Redemption and Shadow of Death handling
 	--[[if spellId == 54223 or spellId == 27827 then
 		Recount:HandleDoubleDeath(srcName, dstName, spellName, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
 		-- Is this an absorb effect?
 	else]]
-	if AbsorbSpellDuration[spellId] then
+	--[=[if AbsorbSpellDuration[spellId] then
 		-- Yes? Lets remove it if it was tracked
 		if AllShields[dstName] and AllShields[dstName][spellId] and AllShields[dstName][spellId][srcName] then
 			if amount then
@@ -845,7 +883,7 @@ function Recount:SpellAuraRemoved(timestamp, eventtype, srcGUID, srcName, srcFla
 		--[[else
 			Recount:DPrint("Shield "..spellName.." was removed on target "..dstName.." but wasn't detected as applied")]]
 		end
-	end
+	end]=]
 end
 
 function Recount:SpellAuraAppliedRemovedDose(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType, amount)
@@ -891,19 +929,29 @@ function Recount:SpellAbsorbed(...)
 	local _, _, _, _, _, _, _, _, srcSpellId = ...
 	if type(srcSpellId) == "number" then
 		local timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, srcSpellId, srcSpellName, srcSpellSchool, casterGUID, casterName, casterFlags, casterRaidFlags, spellId, spellName, spellSchool, absorbed = ...
-		-- Spirit of Redemption, Stance of the Sturdy Ox, Purgatory
-		if spellId == 20711 or spellId == 115069 or spellId == 114556 then
+		-- Spirit of Redemption, Stance of the Sturdy Ox, Purgatory, Spirit Shift
+		if spellId == 20711 or spellId == 115069 or spellId == 114556 or spellId == 184553 then
 			return
 		end
+		local caster, casterowner, casterownerID = Recount:DetectPet(casterName, casterGUID, casterFlags)
+		if casterowner then
+			casterName = casterowner
+		end
+
 		local sourceData = dbCombatants[casterName]
 		Recount:AddTimeEvent(sourceData, dstName, spellName, true)
 		Recount:AddAbsorbCredit(casterName, dstName, spellName, spellId, absorbed)
 	else
 		local timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, casterGUID, casterName, casterFlags, casterRaidFlags, spellId, spellName, spellSchool, absorbed = ...
-		-- Spirit of Redemption, Stance of the Sturdy Ox, Purgatory
-		if spellId == 20711 or spellId == 115069 or spellId == 114556 then
+		-- Spirit of Redemption, Stance of the Sturdy Ox, Purgatory, Spirit Shift
+		if spellId == 20711 or spellId == 115069 or spellId == 114556 or spellId == 184553 then
 			return
 		end
+		local caster, casterowner, casterownerID = Recount:DetectPet(casterName, casterGUID, casterFlags)
+		if casterowner then
+			casterName = casterowner
+		end
+
 		local sourceData = dbCombatants[casterName]
 		Recount:AddTimeEvent(sourceData, dstName, spellName, true)
 		Recount:AddAbsorbCredit(casterName, dstName, spellName, spellId, absorbed)
@@ -935,7 +983,7 @@ local EventParse = {
 	["SPELL_PERIODIC_LEECH"] = Recount.SpellLeech,
 	["SPELL_DISPEL_FAILED"] = Recount.SpellAuraDispelFailed, -- Elsia: Failed dispell
 	["SPELL_AURA_APPLIED"] = Recount.SpellAuraApplied, -- Elsia: Auras
-	["SPELL_AURA_REMOVED"] = Recount.SpellAuraRemoved, -- Removed with 6.0.3
+	["SPELL_AURA_REMOVED"] = Recount.SpellAuraRemoved,
 	["SPELL_AURA_APPLIED_DOSE"] = Recount.SpellAuraAppliedRemovedDose, -- Elsia: Aura doses
 	["SPELL_AURA_REMOVED_DOSE"] = Recount.SpellAuraAppliedRemovedDose,
 	["SPELL_CAST_START"] = Recount.SpellCastStartSuccess, -- Elsia: Spell casts
@@ -964,7 +1012,6 @@ local EventParse = {
 }
 
 local QuickExitEvents = {
-	["SPELL_AURA_REMOVED"] = true,
 	["SPELL_AURA_APPLIED_DOSE"] = true,
 	["SPELL_AURA_REMOVED_DOSE"] = true,
 	["SPELL_CAST_START"] = true,
@@ -1012,7 +1059,6 @@ local GROUPED_PET_FILTER_BITMASK	= COMBATLOG_OBJECT_AFFILIATION_PARTY + COMBATLO
 local UNGROUPED_PET_FILTER_BITMASK	= COMBATLOG_OBJECT_AFFILIATION_OUTSIDER + COMBATLOG_OBJECT_REACTION_FRIENDLY
 
 function Recount:CheckRetentionFromFlags(nameFlags, name, nameGUID)
-
 	local filters = Recount.db.profile.Filters.Data
 
 	if not nameFlags then
@@ -1037,7 +1083,7 @@ function Recount:CheckRetentionFromFlags(nameFlags, name, nameGUID)
 		elseif bit_band(nameFlags, COMBATLOG_OBJECT_TYPE_GUARDIAN) ~= 0 and Recount:GetGuardianOwnerByGUID(nameGUID) then -- This is necessary because guardian combat log flags can be wrong in 3.0.9
 			return true
 		end
-	elseif bit_band(nameFlags, COMBATLOG_OBJECT_CONTROL_NPC) ~= 0 then 
+	elseif bit_band(nameFlags, COMBATLOG_OBJECT_CONTROL_NPC) ~= 0 then
 		local isBoss = Recount.IsBoss(nameGUID) 
 		if not isBoss and (filters["Trivial"] or filters["Nontrivial"]) then
 			return true
@@ -1126,15 +1172,13 @@ function Recount:SetActive(who)
 	who.LastActive = Recount.CurTime
 end
 
-local eventtime
 local Adding
 function Recount:AddTimeEvent(who, onWho, ability, friendly)
-
 	if not who then
 		return
 	end
 
-	eventtime = GetTime()
+	local eventtime = GetTime()
 	who.LastAbility = who.LastAbility or 0
 	Adding = eventtime - who.LastAbility
 
@@ -1163,77 +1207,88 @@ function Recount:AddTimeEvent(who, onWho, ability, friendly)
 	end
 end
 
-
 --Only care about event tracking for those we want to track deaths for
 function Recount:AddCurrentEvent(who, eventType, incoming, number, event)
 	if not who then
 		return
 	end
-	if Recount.db.profile.Filters.TrackDeaths[who.type] then
-		who.LastEvents = who.LastEvents or {}
-		who.LastEventTimes = who.LastEventTimes or {}
-		who.LastEventType = who.LastEventType or {}
-		who.LastEventIncoming = who.LastEventIncoming or {}
-		who.NextEventNum = who.NextEventNum or 1
-		who.LastEventTimes[who.NextEventNum] = GetTime()
-		who.LastEventType[who.NextEventNum] = eventType
-		who.LastEventIncoming[who.NextEventNum] = incoming
-		who.LastEvents[who.NextEventNum] = event --(eventType or "").." "..(abiliy or "").." "..(number or "")
+	if not Recount.db.profile.Filters.TrackDeaths[who.type] then
+		return
+	end
 
-		local name, realm 
+	if not who.LastEvents then
+		who.LastEvents = {}
+	end
+	if not who.LastEventTimes then
+		who.LastEventTimes = {}
+	end
+	if not who.LastEventType then
+		who.LastEventType = {}
+	end
+	if not who.LastEventIncoming then
+		who.LastEventIncoming = {}
+	end
 
-		if who.unit and UnitExists(who.unit) then
-			name, realm = UnitName(who.unit)
-		else
-			name = ""
-		end
-		if realm then
-			name = name.."-"..realm
-		end
-		if (not who.unit) or (name ~= who.Name) and who.UnitLockout < Recount.UnitLockout then
-			who.unit = Recount:FindUnit(who.Name)
-			who.UnitLockout = Recount.CurTime
-		end
+	local NextEventNum = who.NextEventNum or 1
+	who.LastEventTimes[NextEventNum] = GetTime()
+	who.LastEventType[NextEventNum] = eventType
+	who.LastEventIncoming[NextEventNum] = incoming
+	who.LastEvents[NextEventNum] = event --(eventType or "").." "..(abiliy or "").." "..(number or "")
 
-		if who.unit and UnitExists(who.unit) then
-			if UnitHealthMax(who.unit) ~= 100 then
-				who.LastEventHealth = who.LastEventHealth or {}
-				who.LastEventHealth[who.NextEventNum] = UnitHealth(who.unit).." ("..math_floor(100 * UnitHealth(who.unit) / (UnitHealthMax(who.unit) + Epsilon)).."%)"
-				if number then
-					who.LastEventNum = who.LastEventNum or {}
-					who.LastEventNum[who.NextEventNum] = 100 * number / (UnitHealthMax(who.unit) + Epsilon)
-				elseif who.LastEventNum then
-					who.LastEventNum[who.NextEventNum] = nil
-				end
-			else
-				who.LastEventHealth = who.LastEventHealth or {}
-				who.LastEventHealth[who.NextEventNum] = UnitHealth(who.unit).."%"
-				if who.LastEventNum then
-					who.LastEventNum[who.NextEventNum] = nil
-				end
+	local name, realm
+	local unit = who.unit
+	if not UnitExists(unit) then
+		unit = nil
+	end -- Sometimes there's boolean true in who.unit. It's source should be found and eliminated. After that, this check can be removed.
+
+	if unit then
+		name, realm = UnitName(unit)
+	end
+	if not name then
+		name = ""
+	end
+	if realm then
+		name = name.."-"..realm
+	end
+
+	if (not unit) or (name ~= who.Name) and who.UnitLockout < Recount.UnitLockout then
+		unit = Recount:FindUnit(who.Name)
+		who.unit = unit
+		who.UnitLockout = Recount.CurTime
+	end
+
+	if unit then
+		local health_max = UnitHealthMax(unit)
+		if health_max and health_max ~= 0 then
+			if not who.LastEventHealth then
+				who.LastEventHealth = {}
 			end
-			who.LastEventHealthNum = who.LastEventHealthNum or {}
-			who.LastEventHealthNum[who.NextEventNum] = 100 * UnitHealth(who.unit) / (UnitHealthMax(who.unit) + Epsilon)
-		else
-			who.LastEventHealth = who.LastEventHealth or {}
-			who.LastEventHealthNum = who.LastEventHealthNum or {}
-			who.LastEventHealth[who.NextEventNum] = "???"
-			who.LastEventHealthNum[who.NextEventNum] = 0
-			if who.LastEventNum then
-				who.LastEventNum[who.NextEventNum] = nil
+			if not who.LastEventHealthMax then
+				who.LastEventHealthMax = {}
 			end
-		end
-		
-		who.NextEventNum = who.NextEventNum + 1
 
-		if who.NextEventNum > Recount.db.profile.MessagesTracked then
-			who.NextEventNum = who.NextEventNum - Recount.db.profile.MessagesTracked
+			who.LastEventHealth[NextEventNum] = UnitHealth(unit)
+			who.LastEventHealthMax[NextEventNum] = health_max
+		else
+			if who.LastEventHealth then
+				who.LastEventHealth[NextEventNum] = nil
+			end
+			if who.LastEventHealthMax then
+				who.LastEventHealthMax[NextEventNum] = nil
+			end
 		end
 	end
+
+	NextEventNum = NextEventNum + 1
+
+	if NextEventNum > Recount.db.profile.MessagesTracked then
+		NextEventNum = NextEventNum - Recount.db.profile.MessagesTracked
+	end
+
+	who.NextEventNum = NextEventNum
 end
 
---Functions for adding data 
-
+--Functions for adding data
 function Recount:AddAmount(who, datatype, amount)
 	if not who then
 		return
@@ -1248,17 +1303,17 @@ function Recount:AddAmount(who, datatype, amount)
 	who.Fights = who.Fights or {}
 	who.Fights.OverallData = who.Fights.OverallData or {}
 	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] or 0
-	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] + amount
+	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] + (amount or 0)
 	who.Fights.CurrentFightData = who.Fights.CurrentFightData or {}
 	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] or 0
-	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] + amount
+	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] + (amount or 0)
 
 	--Now add the time data
 	--if who.TimeWindows[datatype] then
 	who.TimeWindows = who.TimeWindows or {}
 	who.TimeWindows[datatype] = who.TimeWindows[datatype] or {}
 	who.TimeWindows[datatype][Recount.TimeStep] = who.TimeWindows[datatype][Recount.TimeStep] or 0
-	who.TimeWindows[datatype][Recount.TimeStep] = who.TimeWindows[datatype][Recount.TimeStep] + amount
+	who.TimeWindows[datatype][Recount.TimeStep] = who.TimeWindows[datatype][Recount.TimeStep] + (amount or 0)
 
 	who.TimeLast = who.TimeLast or {}
 	who.TimeLast[datatype] = Recount.CurTime
@@ -1283,10 +1338,10 @@ function Recount:AddAmount2(who, datatype, secondary, amount)
 	who.Fights = who.Fights or {}
 	who.Fights.OverallData = who.Fights.OverallData or {}
 	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] or {}
-	who.Fights.OverallData[datatype][secondary] = (who.Fights.OverallData[datatype][secondary] or 0) + amount
+	who.Fights.OverallData[datatype][secondary] = (who.Fights.OverallData[datatype][secondary] or 0) + (amount or 0)
 	who.Fights.CurrentFightData = who.Fights.CurrentFightData or {}
 	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] or {}
-	who.Fights.CurrentFightData[datatype][secondary] = (who.Fights.CurrentFightData[datatype][secondary] or 0) + amount
+	who.Fights.CurrentFightData[datatype][secondary] = (who.Fights.CurrentFightData[datatype][secondary] or 0) + (amount or 0)
 end
 
 --Two Different Types of table functions
@@ -1316,11 +1371,11 @@ function Recount:AddTableDataStats(who, datatype, secondary, detailtype, amount,
 
 	-- Resike: Hack to make Partial Resist PieChart work
 	if reverse then
-		CurTable.count = CurTable.count + amount
+		CurTable.count = CurTable.count + (amount or 0)
 		CurTable.amount = CurTable.amount + 1
 	else
 		CurTable.count = CurTable.count + 1
-		CurTable.amount = CurTable.amount + amount
+		CurTable.amount = CurTable.amount + (amount or 0)
 	end
 
 	if type(CurTable.Details[detailtype]) ~= "table" then
@@ -1331,7 +1386,7 @@ function Recount:AddTableDataStats(who, datatype, secondary, detailtype, amount,
 	Details = CurTable.Details[detailtype]
 
 	Details.count = Details.count + 1
-	Details.amount = Details.amount + amount
+	Details.amount = Details.amount + (amount or 0)
 
 	if Details.max then
 		if amount > Details.max then
@@ -1361,11 +1416,11 @@ function Recount:AddTableDataStats(who, datatype, secondary, detailtype, amount,
 
 	-- Resike: Hack to make Partial Resist PieChart work
 	if reverse then
-		CurTable.count = CurTable.count + amount
+		CurTable.count = CurTable.count + (amount or 0)
 		CurTable.amount = CurTable.amount + 1
 	else
 		CurTable.count = CurTable.count + 1
-		CurTable.amount = CurTable.amount + amount
+		CurTable.amount = CurTable.amount + (amount or 0)
 	end
 
 	if type(CurTable.Details[detailtype]) ~= "table" then
@@ -1376,7 +1431,7 @@ function Recount:AddTableDataStats(who, datatype, secondary, detailtype, amount,
 	Details = CurTable.Details[detailtype]
 
 	Details.count = Details.count + 1
-	Details.amount = Details.amount + amount
+	Details.amount = Details.amount + (amount or 0)
 
 	if Details.max then
 		if amount > Details.max then
@@ -1392,7 +1447,9 @@ end
 
 local first = false
 function Recount:CorrectTableData(who, datatype, secondary, amount)
-	if not who then return end
+	if not who then
+		return
+	end
 	if not Recount.db.profile.Filters.Data[who.type] or Recount.db.profile.GlobalDataCollect == false or not Recount.CurrentDataCollect then
 		return
 	end
@@ -1402,7 +1459,7 @@ function Recount:CorrectTableData(who, datatype, secondary, amount)
 	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] or {}
 	CurTable = who.Fights.OverallData[datatype][secondary]
 
-	if type(CurTable)~="table" then
+	if type(CurTable) ~= "table" then
 		who.Fights.OverallData[datatype][secondary] = Recount:GetTable()
 		CurTable = who.Fights.OverallData[datatype][secondary]
 		CurTable.count = 0
@@ -1416,7 +1473,7 @@ function Recount:CorrectTableData(who, datatype, secondary, amount)
 	if CurTable.count then
 		CurTable.count = CurTable.count - 1
 	end
-	CurTable.amount = CurTable.amount - amount
+	CurTable.amount = CurTable.amount - (amount or 0)
 
 	who.Fights.CurrentFightData = who.Fights.CurrentFightData or {}
 	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] or {}
@@ -1433,10 +1490,8 @@ function Recount:CorrectTableData(who, datatype, secondary, amount)
 	if CurTable.count then
 		CurTable.count = CurTable.count - 1
 	end
-	CurTable.amount = CurTable.amount - amount
+	CurTable.amount = CurTable.amount - (amount or 0)
 end
-
-
 
 function Recount:AddTableDataStatsNoAmount(who, datatype, secondary, detailtype)
 	if not who then
@@ -1451,7 +1506,7 @@ function Recount:AddTableDataStatsNoAmount(who, datatype, secondary, detailtype)
 	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] or {}
 	CurTable = who.Fights.OverallData[datatype][secondary]
 
-	if type(CurTable)~="table" then
+	if type(CurTable) ~= "table" then
 		who.Fights.OverallData[datatype][secondary] = Recount:GetTable()
 		CurTable = who.Fights.OverallData[datatype][secondary]
 		CurTable.count = 0
@@ -1517,6 +1572,7 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 	who.Fights.OverallData[datatype] = who.Fights.OverallData[datatype] or {}
 
 	CurTable = who.Fights.OverallData[datatype][secondary]
+
 	if type(CurTable) ~= "table" then
 		who.Fights.OverallData[datatype][secondary] = Recount:GetTable()
 		CurTable = who.Fights.OverallData[datatype][secondary]
@@ -1524,7 +1580,7 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 		CurTable.Details = Recount:GetTable()
 	end
 
-	CurTable.amount = (CurTable.amount or 0) + amount
+	CurTable.amount = (CurTable.amount or 0) + (amount or 0)
 
 	--[[if detailtype == nil then
 		Recount:DPrint("DEBUG at: ".. (who or "nil").." "..(datatype or "nil").." ".. (secondary or "nil"))
@@ -1536,7 +1592,10 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 	end
 
 	Details = CurTable.Details[detailtype]
-	Details.count = Details.count + amount
+
+	if Details then
+		Details.count = Details.count + (amount or 0)
+	end
 
 	--Now for the current fight data
 	--[[if type(who.Fights.CurrentFightData[datatype])~="table" then
@@ -1544,6 +1603,7 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 	end]]
 	who.Fights.CurrentFightData = who.Fights.CurrentFightData or {}
 	who.Fights.CurrentFightData[datatype] = who.Fights.CurrentFightData[datatype] or {}
+
 	CurTable = who.Fights.CurrentFightData[datatype][secondary]
 
 	if type(CurTable) ~= "table" then
@@ -1553,7 +1613,7 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 		CurTable.Details = Recount:GetTable()
 	end
 
-	CurTable.amount = (CurTable.amount or 0) + amount
+	CurTable.amount = (CurTable.amount or 0) + (amount or 0)
 
 	if type(CurTable.Details[detailtype]) ~= "table" then
 		CurTable.Details[detailtype] = Recount:GetTable()
@@ -1562,7 +1622,9 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 
 	Details = CurTable.Details[detailtype]
 
-	Details.count = Details.count + amount
+	if Details then
+		Details.count = Details.count + (amount or 0)
+	end
 end
 
 function Recount:NPCID(guid)
@@ -1674,7 +1736,7 @@ end
 
 function Recount:BossFightWhoFromFlags(srcFlags, dstFlags, victim, victimGUID)
 	if Recount:InGroup(srcFlags) and not Recount:IsFriend(dstFlags) then
-		if Recount.IsBoss(victimGUID) then 
+		if Recount.IsBoss(victimGUID) then
 			Recount.FightingWho = victim
 			Recount.FightingLevel = -1
 		elseif Recount.FightingWho == "" then
@@ -1684,13 +1746,29 @@ function Recount:BossFightWhoFromFlags(srcFlags, dstFlags, victim, victimGUID)
 	end
 end
 
-local dottime -- Duration of a dot
 local DPass -- nil or damage to record
 function Recount:AddDamageData(source, victim, ability, element, hittype, damage, resist, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed, isDot)
-
 	--Is this friendly fire?
 	local FriendlyFire = Recount:IsFriendlyFire(srcFlags, dstFlags)
-	
+
+	-- Stagger DoT (Monk)
+	if spellId == 124255 then
+		FriendlyFire = false
+	end
+
+	-- Earthen Shield (Shaman)
+	if spellId == 201657 then
+		FriendlyFire = false
+	end
+
+	--[[local player = CombatLog_Object_IsA(dstFlags, COMBATLOG_FILTER_ME)
+	local pet = CombatLog_Object_IsA(dstFlags, COMBATLOG_FILTER_MY_PET)
+	local mine = CombatLog_Object_IsA(dstFlags, COMBATLOG_FILTER_MINE)
+	local friendly = CombatLog_Object_IsA(dstFlags, COMBATLOG_FILTER_FRIENDLY_UNITS)
+	if (player or pet or mine or friendly) and damage and absorbed then
+		damage = damage - absorbed
+	end]]
+
 	--Before any further processing need to check if we are going to be placed in combat or in combat 
 	if not Recount.InCombat and Recount.db.profile.RecordCombatOnly then
 		if (not FriendlyFire) and (Recount:InGroup(srcFlags) or Recount:InGroup(dstFlags)) then
@@ -1737,7 +1815,7 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 		Recount.cleventtext = Recount.cleventtext.." -"..damage
 	end
 	if resist and resist > 0 then
-		Recount.cleventtext = Recount.cleventtext .." ("..resist..L[" resisted"]..")"
+		Recount.cleventtext = Recount.cleventtext .." ("..resist.." "..L["Resisted"]..")"
 	end
 	if absorbed and absorbed > 0 then
 		absorbed = math.floor(absorbed + 0.5) -- Bandaid for weird rounding issues
@@ -1747,125 +1825,133 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 		Recount.cleventtext = Recount.cleventtext.." ("..element..")"
 	end
 
-	if srcRetention then
-		if not dbCombatants[source] then
-			Recount:AddCombatant(source, sourceowner, srcGUID, srcFlags, sourceownerID)
-		end
-
-		-- Reference to combatant data
-		local sourceData = dbCombatants[source]
-
-		if sourceData then
-
-			Recount:SetActive(sourceData)
-			--Need to add events for potential deaths
-			Recount:AddCurrentEvent(sourceData, "DAMAGE", false, nil, Recount.cleventtext)
-
-			--Fight tracking purposes to speed up leaving combat
-			sourceData.LastFightIn = Recount.db2.FightNum
-			--Melee is always considered Melee since its handled differently from specials keep it seperate
-			if ability == L["Melee"] then
-				element = "Melee"
+	if spellId ~= 124255 then
+		if srcRetention then
+			if not dbCombatants[source] then
+				Recount:AddCombatant(source, sourceowner, srcGUID, srcFlags, sourceownerID)
 			end
-			--Need to set the source as active
-			Recount:AddTimeEvent(sourceData, victim, ability, false)
-			--Stats for keeping track of DOT Uptime
-			if isDot or hittype == "Tick" then
-				--3 is default time since most abilities have 3 seconds inbetween ticks
 
-				dottime = DotTickTimeId[spellId] or 3
-				Recount:AddAmount(sourceData, "DOT_Time", dottime)
-				Recount:AddTableDataSum(sourceData, "DOTs", ability, victim, dottime)
-			end
-			if damage then
-				--Record the element type
-				--sourceData.AbilityType = sourceData.AbilityType or {}
-				--sourceData.AbilityType[ability] = element
+			-- Reference to combatant data
+			local sourceData = dbCombatants[source]
 
-				--Alright now if there was a friendly damage done or not decides where this data goes for the source
-				if not FriendlyFire then
-					if Recount.db.profile.EnableSync then
-						Recount:AddOwnerPetLazySyncAmount(sourceData, "Damage", damage)
-						--Recount:AddSyncAmount(sourceData, "Damage", damage)
+			if sourceData and Recount.db.profile.Filters.Data[sourceData.type] then
+
+				Recount:SetActive(sourceData)
+				--Need to add events for potential deaths
+				Recount:AddCurrentEvent(sourceData, "DAMAGE", false, nil, Recount.cleventtext)
+
+				--Fight tracking purposes to speed up leaving combat
+				sourceData.LastFightIn = Recount.db2.FightNum
+				--Melee is always considered Melee since its handled differently from specials keep it seperate
+				if ability == L["Melee"] then
+					element = "Melee"
+				end
+				--Need to set the source as active
+				Recount:AddTimeEvent(sourceData, victim, ability, false)
+				--Stats for keeping track of DOT Uptime
+				if isDot or hittype == "Tick" then
+					--3 is default time since most abilities have 3 seconds inbetween ticks
+
+					local dottime = DotTickTimeId[spellId] or 3
+					if Recount.db.profile.Modules.DOTUptime then
+						Recount:AddAmount(sourceData, "DOT_Time", dottime)
 					end
-					Recount:AddAmount(sourceData, "Damage", damage)
-					local newhittype = hittype
-					if blocked then
-						newhittype = hittype .. " ("..L["Blocked"]..")"
-					end
-					Recount:AddTableDataStats(sourceData, "Attacks", ability, newhittype, damage)
-					Recount:AddAmount2(sourceData, "ElementDone", element, damage)
-				else
-					if Recount.db.profile.EnableSync then
-						--Recount:AddOwnerPetLazySyncAmount(sourceData, "FDamage", damage) -- We don't currently sync friendly damage
-						--Recount:AddSyncAmount(sourceData, "FDamage", damage)
-					end
-					Recount:AddAmount(sourceData, "FDamage", damage)
-					Recount:AddTableDataStats(sourceData, "FAttacks", ability, hittype, damage)
-					Recount:AddTableDataSum(sourceData, "FDamagedWho", victim, ability, damage)
-					-- Fix to track friendly fire contributions in death log.
-					if dstRetention then
-						if not dbCombatants[victim] then
-							Recount:AddCombatant(victim, victimowner, dstGUID, dstFlags, victimownerID)
+					Recount:AddTableDataSum(sourceData, "DOTs", ability, victim, dottime)
+				end
+				if damage then
+					--Record the element type
+					--sourceData.AbilityType = sourceData.AbilityType or {}
+					--sourceData.AbilityType[ability] = element
+
+					--Alright now if there was a friendly damage done or not decides where this data goes for the source
+					if not FriendlyFire then
+						if Recount.db.profile.EnableSync then
+							Recount:AddOwnerPetLazySyncAmount(sourceData, "Damage", damage)
+							--Recount:AddSyncAmount(sourceData, "Damage", damage)
 						end
-
-						-- Reference to combatant data
-						local victimData = dbCombatants[victim]
-
-						if victimData then
-							--Need to add events for potential deaths
-							DPass = damage
-							if DPass == 0 then
-								DPass = nil
+						Recount:AddAmount(sourceData, "Damage", damage)
+						local newhittype = hittype
+						if blocked then
+							newhittype = hittype .. " ("..L["Blocked"]..")"
+						end
+						Recount:AddTableDataStats(sourceData, "Attacks", ability, newhittype, damage)
+						Recount:AddAmount2(sourceData, "ElementDone", element, damage)
+					else
+						if Recount.db.profile.EnableSync then
+							--Recount:AddOwnerPetLazySyncAmount(sourceData, "FDamage", damage) -- We don't currently sync friendly damage
+							--Recount:AddSyncAmount(sourceData, "FDamage", damage)
+						end
+						Recount:AddAmount(sourceData, "FDamage", damage)
+						Recount:AddTableDataStats(sourceData, "FAttacks", ability, hittype, damage)
+						Recount:AddTableDataSum(sourceData, "FDamagedWho", victim, ability, damage)
+						-- Fix to track friendly fire contributions in death log.
+						if dstRetention then
+							if not dbCombatants[victim] then
+								Recount:AddCombatant(victim, victimowner, dstGUID, dstFlags, victimownerID)
 							end
-							Recount:AddCurrentEvent(victimData, "DAMAGE", true, DPass, Recount.cleventtext)
+
+							-- Reference to combatant data
+							local victimData = dbCombatants[victim]
+
+							if victimData then
+								--Need to add events for potential deaths
+								DPass = damage
+								if DPass == 0 then
+									DPass = nil
+								end
+								Recount:AddCurrentEvent(victimData, "DAMAGE", true, DPass, Recount.cleventtext)
+							end
+						end
+						return
+					end
+
+					Recount:AddTableDataSum(sourceData, "DamagedWho", victim, ability, damage)
+				else
+					Recount:AddTableDataStatsNoAmount(sourceData, "Attacks", ability, hittype)
+				end
+
+				-- Elsia: Moved this out because we want this recorded regardless whether it was friendly damage or not
+				-- Elsia: Also removed bug, victims resist/block/absorb!
+				if resist then
+					Recount:AddAmount2(sourceData, "ElementDoneResist", element, resist)
+				end
+
+				if blocked then
+					Recount:AddAmount2(sourceData, "ElementDoneBlock", element, blocked)
+				end
+
+				if absorbed then
+					Recount:AddAmount2(sourceData, "ElementDoneAbsorb", element, absorbed)
+				end
+
+				--Needs to be here for tracking so we don't add Friendly Damage as well
+				if Tracking["DAMAGE"] then
+					if Tracking["DAMAGE"][source] then
+						for _, v in pairs(Tracking["DAMAGE"][source]) do
+							v.func(v.pass, damage)
 						end
 					end
-					return
-				end
 
-				Recount:AddTableDataSum(sourceData, "DamagedWho", victim, ability, damage)
-			else
-				Recount:AddTableDataStatsNoAmount(sourceData, "Attacks", ability, hittype)
-			end
-
-			-- Elsia: Moved this out because we want this recorded regardless whether it was friendly damage or not
-			-- Elsia: Also removed bug, victims resist/block/absorb!
-			if resist then
-				Recount:AddAmount2(sourceData, "ElementDoneResist", element, resist)
-			end
-
-			if blocked then
-				Recount:AddAmount2(sourceData, "ElementDoneBlock", element, blocked)
-			end
-
-			if absorbed then
-				Recount:AddAmount2(sourceData, "ElementDoneAbsorb", element, absorbed)
-			end
-
-			--Needs to be here for tracking so we don't add Friendly Damage as well
-			if Tracking["DAMAGE"] then
-				if Tracking["DAMAGE"][source] then
-					for _, v in pairs(Tracking["DAMAGE"][source]) do
-						v.func(v.pass, damage)
+					if Recount:InGroup(srcFlags) and Tracking["DAMAGE"]["!RAID"] then
+						for _, v in pairs(Tracking["DAMAGE"]["!RAID"]) do
+							v.func(v.pass, damage)
+						end
 					end
 				end
 
-				if Recount:InGroup(srcFlags) and Tracking["DAMAGE"]["!RAID"] then
-					for _, v in pairs(Tracking["DAMAGE"]["!RAID"]) do
-						v.func(v.pass, damage)
+				Recount:BossFightWho(dstFlags, srcFlags, sourceData, source)
+
+				if element then
+					Recount:AddTableDataSum(sourceData, "ElementHitsDone", element, hittype, 1)
+
+					if blocked then
+						Recount:AddTableDataSum(sourceData, "ElementHitsDone", element, "Block", 1)
 					end
 				end
 			end
-
-			Recount:BossFightWho(dstFlags, srcFlags, sourceData, source)
-
-			if element then
-				Recount:AddTableDataSum(sourceData, "ElementHitsDone", element, hittype, 1)
-			end
+		else
+			Recount:BossFightWhoFromFlags(dstFlags, srcFlags, source, srcGUID)
 		end
-	else
-		Recount:BossFightWhoFromFlags(dstFlags, srcFlags, source, srcGUID)
 	end
 
 	if dstRetention then
@@ -1876,7 +1962,7 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 		-- Reference to combatant data
 		local victimData = dbCombatants[victim]
 
-		if victimData then
+		if victimData and Recount.db.profile.Filters.Data[victimData.type] then
 
 			Recount:SetActive(victimData)
 			--Need to add events for potential deaths
@@ -1930,7 +2016,7 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 			else
 				Recount:AddTableDataStats(victimData, "PartialResist", ability, L["No Resist"], 0, true)
 			end
-			
+
 			if blocked or hittype == "Block" then
 				Recount:AddAmount2(victimData, "ElementTakenBlock", element, blocked)
 				if blocked then
@@ -1952,8 +2038,8 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 			-- Elsia: Moved this out because we want this recorded regardless whether it was friendly damage or not
 			-- Elsia: Also removed bug, victims resist/block/absorb!
 
-			--Tracking for passing data to other functions	
-			if Tracking["DAMAGETAKEN"] then 
+			--Tracking for passing data to other functions
+			if Tracking["DAMAGETAKEN"] then
 				if Tracking["DAMAGETAKEN"][victim] then
 					for _, v in pairs(Tracking["DAMAGETAKEN"][victim]) do
 						v.func(v.pass, damage)
@@ -1968,9 +2054,13 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 			end
 
 			Recount:BossFightWho(srcFlags, dstFlags, victimData, victim)
-			
+
 			if element then
 				Recount:AddTableDataSum(victimData, "ElementHitsTaken", element, hittype, 1)
+
+				if blocked then
+					Recount:AddTableDataSum(victimData, "ElementHitsTaken", element, "Block", 1)
+				end
 			end
 		end
 	else
@@ -1980,7 +2070,7 @@ end
 
 function Recount:AddHealData(source, victim, ability, healtype, amount, overheal, srcGUID, srcFlags, dstGUID, dstFlags, spellId, isHot, absorbed)
 	--First lets figure if there was overhealing
-	--Get the tables	
+	--Get the tables
 
 	-- Name and ID of pet owners
 	local sourceowner
@@ -1999,8 +2089,8 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 		Recount.cleventtext = Recount.cleventtext.." +"..amount
 	end
 
-	if overheal and overheal ~= 0 then 
-		Recount.cleventtext = Recount.cleventtext .." ("..overheal..L[" overheal"]..")"
+	if overheal and overheal ~= 0 then
+		Recount.cleventtext = Recount.cleventtext .." ("..overheal.." "..L["Overheal"]..")"
 	end
 
 	if absorbed and absorbed > 0 then
@@ -2092,7 +2182,9 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 			if isHot or healtype == "Tick" then
 				--3 is default time since most abilities have 3 seconds inbetween ticks
 				local hottime = HotTickTimeId[spellId] or 3
-				Recount:AddAmount(sourceData, "HOT_Time", hottime)
+				if Recount.db.profile.Modules.HOTUptime then
+					Recount:AddAmount(sourceData, "HOT_Time", hottime)
+				end
 				Recount:AddTableDataSum(sourceData, "HOTs", ability, victim, hottime)
 			end
 
@@ -2101,12 +2193,15 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 				Recount:AddAmount(sourceData, "Healing", amount)
 				Recount:AddTableDataStats(sourceData, "Heals", ability, healtype, amount)
 				Recount:AddTableDataSum(sourceData, "HealedWho", victim, ability, amount)
+				Recount:AddTableDataSum(victimData, "WhoHealed", source, ability, amount)
 			end
 
 			--Now if there was overhealing lets add that data in
-			if overheal > 0 then
-				Recount:AddAmount(sourceData, "Overhealing", overheal)
-				Recount:AddTableDataStats(sourceData, "OverHeals", ability, healtype, overheal)
+			if Recount.db.profile.Modules.OverhealingDone then
+				if overheal > 0 then
+					Recount:AddAmount(sourceData, "Overhealing", overheal)
+					Recount:AddTableDataStats(sourceData, "OverHeals", ability, healtype, overheal)
+				end
 			end
 		end
 	--end
@@ -2125,32 +2220,31 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 			Recount:AddOwnerPetLazySyncAmount(victimData, "HealingTaken", amount)
 		end
 
-		if Tracking["HEALINGTAKEN"] then
-			if Tracking["HEALINGTAKEN"][victim] then
-				for _, v in pairs(Tracking["HEALINGTAKEN"][victim]) do
-					v.func(v.pass, amount)
+		if Recount.db.profile.Modules.HealingTaken then
+			if Tracking["HEALINGTAKEN"] then
+				if Tracking["HEALINGTAKEN"][victim] then
+					for _, v in pairs(Tracking["HEALINGTAKEN"][victim]) do
+						v.func(v.pass, amount)
+					end
 				end
-			end
-				
-			if Recount:InGroup(dstFlags) and Tracking["HEALINGTAKEN"]["!RAID"] then
-				for _, v in pairs(Tracking["HEALINGTAKEN"]["!RAID"]) do
-					v.func(v.pass, amount)
-				end
-			end
-		end
 
-		--No reason to add information if everything was overhealing
-		if amount > 0 then
-			Recount:AddAmount(victimData, "HealingTaken", amount)
-			Recount:AddTableDataSum(victimData, "WhoHealed", source, ability, amount)
+				if Recount:InGroup(dstFlags) and Tracking["HEALINGTAKEN"]["!RAID"] then
+					for _, v in pairs(Tracking["HEALINGTAKEN"]["!RAID"]) do
+						v.func(v.pass, amount)
+					end
+				end
+			end
+
+			--No reason to add information if everything was overhealing
+			if amount > 0 then
+				Recount:AddAmount(victimData, "HealingTaken", amount)
+			end
 		end
 	end
 end
 
 function Recount:HandleDoubleDeath(source, victim, skill, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
-
 	if dstRetention then
-
 		-- Name and ID of pet owners
 		local victimowner
 		local victimownerID
@@ -2177,6 +2271,9 @@ local deathargs = {}
 local timeofdeath
 local doubleDeathDelay
 function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
+	if not Recount.db.profile.Modules.Deaths then
+		return
+	end
 	--Before any further processing need to check if we are in combat 
 
 	--Recount:DPrint("Add Death: "..victim)
@@ -2197,10 +2294,10 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 	end
 
 	victim, victimowner, victimownerID = Recount:DetectPet(victim, dstGUID, dstFlags)
-	
+
 	if srcRetention then
 
-		--Need to add events for potential deaths	
+		--Need to add events for potential deaths
 		if source and source ~= victim then -- Elsia: May be worth removing the source~=victim check
 			if not dbCombatants[source] then
 			 Recount:AddCombatant(source, sourceowner, srcGUID, srcFlags, sourceownerID)
@@ -2214,14 +2311,13 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 	end
 
 	if dstRetention then
-
 		--Get the tables
 		if not dbCombatants[victim] then
 			Recount:AddCombatant(victim, victimowner, dstGUID, dstFlags, victimownerID) -- Elsia: Bug owner missing
 		end
 
 		local victimData = dbCombatants[victim]
-		
+
 		if victimData then
 
 			-- This is fix to prevent feign death to show as real deaths.
@@ -2237,8 +2333,8 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 
 			-- Check for Spirit of Redemption or Ghoul
 			timeofdeath = GetTime()
-			--[[doubleDeathDelay = victimData.DoubleDeathTime and timeofdeath-victimData.DoubleDeathTime or 10
-			
+			--[[doubleDeathDelay = victimData.DoubleDeathTime and timeofdeath - victimData.DoubleDeathTime or 10
+
 			if doubleDeathDelay < 2 then
 				Recount.cleventtext = Recount.cleventtext .. " ("..victimData.DoubleDeathSpellName..")"
 			end]]
@@ -2260,7 +2356,7 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 			victimData.DoubleDeathSpellID = nil
 			victimData.DoubleDeathSpellName = nil
 			victimData.DoubleDeathTime = nil
-			
+
 			--We delay the saving of the event logs just in case more messages come later
 			if Recount.db.profile.Filters.TrackDeaths[victimData.type] then
 				--Recount:ScheduleTimer(Recount.HandleDeath, 2, Recount, victim, GetTime(),dstGUID, dstFlags)
@@ -2277,10 +2373,9 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 end
 
 function Recount:HandleDeath(arg)
-
 	local victim, DeathTime, dstGUID, dstFlags = unpack(arg)
 
---	Recount:DPrint("death: "..victim)
+	--Recount:DPrint("death: "..victim)
 
 	if not dbCombatants[victim] then
 		return
@@ -2297,7 +2392,7 @@ function Recount:HandleDeath(arg)
 	DeathLog.MessageType = Recount:GetTable()
 	DeathLog.MessageIncoming = Recount:GetTable()
 	DeathLog.Health = Recount:GetTable()
-	DeathLog.HealthNum = Recount:GetTable()
+	DeathLog.HealthMax = Recount:GetTable()
 	DeathLog.EventNum = Recount:GetTable()
 
 	if who.LastKilledBy and math_abs(who.LastKilledAt - DeathTime) < 2 then
@@ -2308,18 +2403,24 @@ function Recount:HandleDeath(arg)
 	end
 
 	local offset
-	for i = 1, num do
-		offset = math_fmod(who.NextEventNum + i + num - 2, num) + 1
-		if who.LastEvents[offset] and (who.LastEventTimes[offset] - DeathTime) > -15 then
-			DeathLog.MessageTimes[#DeathLog.MessageTimes + 1] = who.LastEventTimes[offset]-DeathTime
-			DeathLog.Messages[#DeathLog.Messages + 1] = who.LastEvents[offset] or ""
-			DeathLog.MessageType[#DeathLog.MessageType + 1] = who.LastEventType[offset] or "MISC"
-			DeathLog.MessageIncoming[#DeathLog.MessageIncoming + 1] = who.LastEventIncoming[offset] or false
-			DeathLog.Health[#DeathLog.Health + 1] = who.LastEventHealth[offset] or 0
-			DeathLog.HealthNum[#DeathLog.HealthNum + 1] = who.LastEventHealthNum[offset] or 0
-			DeathLog.EventNum[#DeathLog.HealthNum] = who.LastEventNum and who.LastEventNum[offset] or 0
-		end
-	end
+	local death_log_idx = 1
+ 	for i = 1, num do
+ 		offset = math_fmod(who.NextEventNum + i + num - 2, num) + 1
+ 		if who.LastEvents[offset] and (who.LastEventTimes[offset] - DeathTime) > -15 then
+			DeathLog.MessageTimes[death_log_idx] = who.LastEventTimes[offset]-DeathTime
+			DeathLog.Messages[death_log_idx] = who.LastEvents[offset] or ""
+			DeathLog.MessageType[death_log_idx] = who.LastEventType[offset] or "MISC"
+			DeathLog.MessageIncoming[death_log_idx] = who.LastEventIncoming[offset] or false
+			if who.LastEventHealth then
+				DeathLog.Health[death_log_idx] = who.LastEventHealth[offset]
+			end
+			if who.LastEventHealthMax then
+				DeathLog.HealthMax[death_log_idx] = who.LastEventHealthMax[offset]
+			end
+			DeathLog.EventNum[death_log_idx] = who.LastEventNum and who.LastEventNum[offset] or 0
+			death_log_idx = death_log_idx + 1
+ 		end
+ 	end
 
 	who.DeathLogs = who.DeathLogs or {}
 	tinsert(who.DeathLogs, 1, DeathLog)
@@ -2391,7 +2492,7 @@ function Recount:RegisterTracking(id, who, stat, func, pass)
 	Tracking[stat][who][id].func = func
 	Tracking[stat][who][id].pass = pass
 	Tracking[stat][who][id].token = idtoken
-end	
+end
 
 function Recount:UnregisterTracking(id, who, stat)
 	if stat == "FPS" or stat == "LAG" or stat == "UP_TRAFFIC" or stat == "DOWN_TRAFFIC" or stat == "AVAILABLE_BANDWIDTH" then

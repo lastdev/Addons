@@ -1,7 +1,7 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: InfLocale.lua 4021 2009-01-27 23:01:05Z anaral $
 	URL: http://auctioneeraddon.com/dl/Informant/
 

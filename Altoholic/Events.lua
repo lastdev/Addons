@@ -1,12 +1,10 @@
-﻿-- This file manages the events (calendar, cooldowns, etc..) supported by the addon
+-- This file manages the events (calendar, cooldowns, etc..) supported by the addon
 
 local addonName = ...
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
 
 addon.Events = {}
 
@@ -89,7 +87,7 @@ local eventTypes = {
 				local instanceName, raidID = strsplit("|", event.parentID)
 		
 				--	CALENDAR_EVENTNAME_FORMAT_RAID_LOCKOUT = "%s Unlocks"; -- %s = Raid Name
-				return instanceName, format("%s%s\nID: %s%s", WHITE,	format(CALENDAR_EVENTNAME_FORMAT_RAID_LOCKOUT, instanceName), GREEN, raidID)
+				return instanceName, format("%s%s\nID: %s%s", colors.white,	format(CALENDAR_EVENTNAME_FORMAT_RAID_LOCKOUT, instanceName), colors.green, raidID)
 			end,
 	},
 	[CALENDAR_LINE] = {
@@ -122,7 +120,7 @@ local eventTypes = {
 						CALENDAR_STATUS_NOT_SIGNEDUP	-- CALENDAR_INVITESTATUS_NOT_SIGNEDUP = 8
 					}
 				
-					desc = format("%s: %s", STATUS, WHITE..StatusText[inviteStatus]) 
+					desc = format("%s: %s", STATUS, colors.white..StatusText[inviteStatus]) 
 				else 
 					desc = format("%s", STATUS) 
 				end
@@ -148,22 +146,22 @@ local eventTypes = {
 				local numPlayers, minLvl, maxLvl, privateToFriends, privateToGuild = strsplit(",", eventDesc)
 				local eventTable = {}
 			
-				table.insert(eventTable, WHITE .. format(L["Number of players: %s"], GREEN .. numPlayers))
-				table.insert(eventTable, WHITE .. format(L["Minimum Level: %s"], GREEN .. minLvl))
-				table.insert(eventTable, WHITE .. format(L["Maximum Level: %s"], GREEN .. maxLvl))
-				table.insert(eventTable, WHITE .. format(L["Private to friends: %s"], GREEN .. (tonumber(privateToFriends) == 1 and YES or NO)))
-				table.insert(eventTable, WHITE .. format(L["Private to guild: %s"], GREEN .. (tonumber(privateToGuild) == 1 and YES or NO)))
+				table.insert(eventTable, colors.white .. format(L["Number of players: %s"], colors.green .. numPlayers))
+				table.insert(eventTable, colors.white .. format(L["Minimum Level: %s"], colors.green .. minLvl))
+				table.insert(eventTable, colors.white .. format(L["Maximum Level: %s"], colors.green .. maxLvl))
+				table.insert(eventTable, colors.white .. format(L["Private to friends: %s"], colors.green .. (tonumber(privateToFriends) == 1 and YES or NO)))
+				table.insert(eventTable, colors.white .. format(L["Private to guild: %s"], colors.green .. (tonumber(privateToGuild) == 1 and YES or NO)))
 
 				local attendeesTable = { strsplit(",", attendees) }
 				
 				if #attendeesTable > 0 then
 					table.insert(eventTable, "")
-					table.insert(eventTable, WHITE..L["Attendees: "].."|r")
+					table.insert(eventTable, colors.white..L["Attendees: "].."|r")
 					for _, name in pairs(attendeesTable) do
 						table.insert(eventTable, " " .. name )
 					end
 					table.insert(eventTable, "")
-					table.insert(eventTable, GREEN .. L["Left-click to invite attendees"])
+					table.insert(eventTable, colors.green .. L["Left-click to invite attendees"])
 				end
 				
 				return title, table.concat(eventTable, "\n")
@@ -295,9 +293,9 @@ local function ShowExpiryWarning(index, minutes)
 	
 	-- print instead of dialog box if player is in combat
 	if addon:GetOption("UI.Calendar.UseDialogBoxForWarnings") and not UnitAffectingCombat("player") then
-		addon:SetMsgBoxHandler(Warning_MsgBox_Handler)
-		AltoMsgBox_Text:SetText(format("%s\n%s", WHITE..warning, L["Do you want to open Altoholic's calendar for details ?"]))
-		AltoMsgBox:Show()
+		AltoMessageBox:SetHandler(Warning_MsgBox_Handler)
+		AltoMessageBox:SetText(format("%s%s\n%s", colors.white, warning, L["Do you want to open Altoholic's calendar for details ?"]))
+		AltoMessageBox:Show()
 	else
 		addon:Print(warning)
 	end
@@ -378,7 +376,7 @@ function ns:GetInfo(index)
 	local char = DataStore:GetColoredCharacterName(character)
 	
 	if event.realm ~= GetRealmName() then	-- different realm ?
-		char = format("%s %s(%s)", char, GREEN, event.realm)
+		char = format("%s %s(%s)", char, colors.green, event.realm)
 	end
 	
 	local title, desc = eventTypes[event.eventType]:GetInfo(event)
@@ -430,12 +428,12 @@ function ns:CheckExpiries(elapsed)
 		end
 	end
 	
-	if hasEventExpired then		-- if at least one event has expired, rebuild the list & refresh
+	if hasEventExpired then		-- if at least one event has expired, rebuild the list & Update
 		ClearExpiredEvents()
 		
 		-- should be removed, nothing to do here
 		-- nsEvents:BuildView()
-		-- Altoholic.Tabs.Summary:Refresh()
+		-- Altoholic.Summary:Update()
 	end
 end
 
@@ -516,14 +514,6 @@ function ns:BuildList()
 				
 				-- TODO: do not add declined invitations
 				AddEvent(CALENDAR_LINE, eventDate, eventTime, characterName, realm, i)
-			end
-			
-			-- ConnectMMO events
-			local c = addon:GetCharacterTable(characterName, realm)
-			
-			for k, v in pairs(c.ConnectMMO) do
-				local eventDate, eventTime = strsplit("|", v)
-				AddEvent(CONNECTMMO_LINE, eventDate, eventTime, characterName, realm, k)
 			end
 			
 			-- Other timers (like mysterious egg, etc..)

@@ -1,5 +1,4 @@
 ﻿if GetLocale() ~= "deDE" then return end
-
 local L = DBM_SpellsUsed_Translations
 
 

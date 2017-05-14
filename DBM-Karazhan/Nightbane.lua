@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Nightbane", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
 mod:SetCreatureID(17225)
+mod:SetEncounterID(662)
 mod:SetModelID(18062)
 mod:RegisterCombat("combat")
 
@@ -11,9 +12,9 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 36922",
+	"SPELL_CAST_SUCCESS 37098",
+	"SPELL_AURA_APPLIED 30129 30130",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -26,7 +27,7 @@ local specWarnCharred		= mod:NewSpecialWarningMove(30129)
 
 local timerNightbane		= mod:NewCombatTimer(36)
 local timerFearCD			= mod:NewCDTimer(31.5, 36922)
-local timerAirPhase			= mod:NewTimer(57, "timerAirPhase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local timerAirPhase			= mod:NewTimer(57, "timerAirPhase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 local timerBone				= mod:NewBuffActiveTimer(11, 37098)
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)

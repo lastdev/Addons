@@ -1,11 +1,13 @@
 local ADDON_NAME, TalentMacros = ...
 LibStub("AceAddon-3.0"):NewAddon(TalentMacros, ADDON_NAME, "AceEvent-3.0")
 
-local DEFAULT_MACRO = "#showtooltip\n/cast %n"
-local CHECK_TEXTURE = " |T" .. READY_CHECK_READY_TEXTURE .. ":0|t"
+-- luacheck: globals InterfaceOptionsFrame_OpenToCategory IconIntroTracker
 
-local MAX_TALENT_TIERS = MAX_TALENT_TIERS
-local NUM_TALENT_COLUMNS = NUM_TALENT_COLUMNS
+local DEFAULT_MACRO = "#showtooltip\n/cast %n"
+local CHECK_TEXTURE = " |T" .. _G.READY_CHECK_READY_TEXTURE .. ":0|t"
+
+local MAX_TALENT_TIERS = _G.MAX_TALENT_TIERS
+local NUM_TALENT_COLUMNS = _G.NUM_TALENT_COLUMNS
 
 local GetTalentDescription
 do
@@ -13,10 +15,11 @@ do
 	local tooltip = CreateFrame("GameTooltip", "TalentMacrosTooltip", nil, "GameTooltipTemplate")
 	tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 	function GetTalentDescription(id)
-		if cache[id] then return cache[id] end
-		tooltip:SetTalent(id)
-		local _, _, spellId = tooltip:GetSpell()
-		cache[id] = GetSpellDescription(spellId)
+		if not cache[id] then
+			tooltip:SetTalent(id)
+			local _, _, spellId = tooltip:GetSpell()
+			cache[id] = GetSpellDescription(spellId)
+		end
 		return cache[id]
 	end
 end
@@ -27,6 +30,7 @@ local defaults = {
 	profile = {
 		macrotext = {},
 		advanced = true,
+		disablepush = false,
 	},
 }
 
@@ -48,16 +52,18 @@ local function GetOptions()
 				name = "Create Macros",
 				desc = "Create several general macros named t1-t7 that will be updated when you change talents. Do not edit these directly!",
 				func = "CreateMacros",
-				disabled = function()
-					for tier = 1, MAX_TALENT_TIERS do
-						local name = ("t%d"):format(tier)
-						if GetMacroIndexByName(name) == 0 then
-							return false
-						end
-					end
-					return true
-				end,
 				order = 2,
+				width = "full",
+			},
+			disablepush = {
+				type = "toggle",
+				name = "Disable placing new abilities on your bars",
+				get = function() return db.disablepush end,
+				set = function(info, value)
+					db.disablepush = value
+					TalentMacros:UpdateFlyin()
+				end,
+				order = 3,
 				width = "full",
 			},
 			advanced = {
@@ -69,13 +75,14 @@ local function GetOptions()
 					db.advanced = value
 					TalentMacros:UpdateMacros()
 				end,
-				order = 3,
+				order = 4,
 				width = "full",
 			},
 			advanced_text = {
 				type = "description",
-				name = "|cffffd200Delete all of the macro text and hit accept to reset to the default text.|r",
+				name = "|cffffd200Delete all of the macro text and hit accept to reset to the default text. The icon will be set to the talent icon for passive talents or if there is no #show or #tooltip in the macro text.|r",
 				fontSize = "medium",
+				order = 5,
 				hidden = function() return not db.advanced end,
 			},
 		},
@@ -94,7 +101,7 @@ local function GetOptions()
 			options.args[tostring(tier)] = group
 
 			for column = 1, NUM_TALENT_COLUMNS do
-				local id, name, iconTexture, selected, available = GetTalentInfo(tier, column, spec)
+				local id, name, iconTexture, selected = GetTalentInfo(tier, column, spec)
 				local title = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or "")
 				group.desc = group.desc and ("%s\n%s"):format(group.desc, title) or title
 
@@ -108,7 +115,7 @@ local function GetOptions()
 					end,
 					set = function(info, value)
 						if type(value) == "string" and value:trim() ~= "" then
-							db.macrotext[id] = value:gsub("%%n", name):sub(1,255)
+							db.macrotext[id] = value:sub(1,255)
 						else
 							db.macrotext[id] = nil
 						end
@@ -116,9 +123,9 @@ local function GetOptions()
 					end,
 					validate = function(info, value)
 						if type(value) == "string" then
-							value = value:gsub("%%n", name)
-							if #value > 255 then
-								local error = ("Macro is longer than 255 characters! (%d)"):format(#value)
+							local length = strlenutf8(value)
+							if length > 255 then
+								local error = ("Macro is longer than 255 characters! (%d)"):format(length)
 								TalentMacros:Print(error)
 								return error
 							end
@@ -137,43 +144,45 @@ end
 
 function TalentMacros:OnInitialize()
 	self.db =  LibStub("AceDB-3.0"):New("TalentMacrosDB", defaults)
+	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, ADDON_NAME)
 	db = self.db.profile
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("TalentMacros", GetOptions)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TalentMacros", ADDON_NAME)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("TalentMacros/Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(TalentMacros.db))
+	local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(TalentMacros.db)
+	LibStub("LibDualSpec-1.0"):EnhanceOptions(profiles, self.db)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("TalentMacros/Profiles", profiles)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TalentMacros/Profiles", "Profiles", ADDON_NAME)
-end
 
-function TalentMacros:OnEnable()
-	-- upgrade the db
-	if not db.version then
-		local spec = GetActiveSpecGroup()
-		for tier = 1, MAX_TALENT_TIERS do
-			for column = 1, NUM_TALENT_COLUMNS do
-				local index = (tier - 1) * 3 + column
-				if db.macrotext[index] then
-					local id = GetTalentInfo(tier, column, spec)
-					db.macrotext[id] = db.macrotext[index]
-					db.macrotext[index] = nil
-				end
-			end
-		end
-		db.version = 1
+	SLASH_TALENTMACROS1 = "/talentmacros"
+	SLASH_TALENTMACROS2 = "/talentmacro"
+	SlashCmdList["TALENTMACROS"] = function()
+		InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
+		InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
 	end
 
-	self:RegisterEvent("PLAYER_TALENT_UPDATE")
-
-	self:UpdateMacros()
+	self:RegisterEvent("PLAYER_TALENT_UPDATE", "UpdateMacros")
+	self:RegisterEvent("PLAYER_LOGOUT")
+	self:UpdateFlyin()
 end
 
 function TalentMacros:Print(...)
 	print("|cff33ff99TalentMacros|r:", ...)
 end
 
-function TalentMacros:PLAYER_TALENT_UPDATE()
-	LibStub("AceConfigRegistry-3.0"):NotifyChange(ADDON_NAME)
-	self:UpdateMacros()
+function TalentMacros:UpdateFlyin()
+	if db.disablepush then
+		IconIntroTracker:UnregisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
+	else
+		IconIntroTracker:RegisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
+	end
+end
+
+function TalentMacros:PLAYER_LOGOUT()
+	-- Clean up macros
+	for tier = 1, MAX_TALENT_TIERS do
+		EditMacro(("t%d"):format(tier), nil, "INV_Misc_QuestionMark", "")
+	end
 end
 
 function TalentMacros:PLAYER_REGEN_ENABLED()
@@ -189,14 +198,22 @@ function TalentMacros:UpdateMacros()
 
 	local spec = GetActiveSpecGroup()
 	for tier = 1, MAX_TALENT_TIERS do
-		for column = 1, NUM_TALENT_COLUMNS do
-			local id, name, iconTexture, selected, available = GetTalentInfo(tier, column, spec)
-			if selected then
-				local body = db.advanced and db.macrotext[id] or DEFAULT_MACRO:gsub("%%n", name)
-				EditMacro(("t%d"):format(tier), nil, "INV_Misc_QuestionMark", body)
+		local available, selected = GetTalentTierInfo(tier, spec)
+		if available and selected ~= 0 then
+			local id, name, iconTexture = GetTalentInfo(tier, selected, spec)
+			local icon = "INV_Misc_QuestionMark"
+			local default = DEFAULT_MACRO:gsub("%%n", name or "")
+			local body = db.advanced and db.macrotext[id] or default
+			if (body == default and not GetSpellInfo(name)) or not body:find("#show", nil, true) then
+				-- use talent icon directly if the talent name isn't a spell or the macro has no #show[tooltip]
+				icon = iconTexture
 			end
+			EditMacro(("t%d"):format(tier), nil, icon, body)
+		else
+			EditMacro(("t%d"):format(tier), nil, "INV_Misc_QuestionMark", "")
 		end
 	end
+	LibStub("AceConfigRegistry-3.0"):NotifyChange(ADDON_NAME)
 end
 
 function TalentMacros:CreateMacros()
@@ -205,7 +222,7 @@ function TalentMacros:CreateMacros()
 		return
 	end
 
-	local errors = 0
+	local count, errors = 0, 0
 	for tier = 1, MAX_TALENT_TIERS do
 		local name = ("t%d"):format(tier)
 		if GetMacroIndexByName(name) == 0 then
@@ -213,21 +230,17 @@ function TalentMacros:CreateMacros()
 			if not success then
 				errors = errors + 1
 			end
+		else
+			count = count + 1
 		end
 	end
 	self:UpdateMacros()
 
-	if errors == 0 then
+	if count == MAX_TALENT_TIERS then
+		self:Print("Macros already exist!")
+	elseif errors == 0 then
 		self:Print("Macros created!")
 	else
 		self:Print("Unable to create all of the macros! (No more general macro space?)")
 	end
 end
-
-SLASH_TALENTMACROS1 = "/talentmacros"
-SLASH_TALENTMACROS2 = "/talentmacro"
-SlashCmdList["TALENTMACROS"] = function()
-	InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
-	InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
-end
-

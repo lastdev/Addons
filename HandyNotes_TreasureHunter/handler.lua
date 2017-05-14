@@ -78,6 +78,19 @@ local function work_out_label(point)
     return UNKNOWN
 end
 local function work_out_texture(point)
+    if point.atlas then
+        if not icon_cache[point.atlas] then
+            local texture, _, _, left, right, top, bottom = GetAtlasInfo(point.atlas)
+            icon_cache[point.atlas] = {
+                icon = texture,
+                tCoordLeft = left,
+                tCoordRight = right,
+                tCoordTop = top,
+                tCoordBottom = bottom,
+            }
+        end
+        return icon_cache[point.atlas]
+    end
     if point.item and ns.db.icon_item then
         local texture = select(10, GetItemInfo(point.item))
         if texture then
@@ -98,41 +111,38 @@ local function work_out_texture(point)
     end
     if point.follower then
         if not follower_texture then
-            local left, right, top, bottom = GetObjectIconTextureCoords(44)
+            local texture, _, _, left, right, top, bottom = GetAtlasInfo("GreenCross")
             follower_texture = {
-                icon = [[Interface\MINIMAP\OBJECTICONS]],
-                tCoordLeft = left + 0.018,
-                tCoordRight = right - 0.018,
-                tCoordTop = top + 0.018,
-                tCoordBottom = bottom - 0.018,
-                r = 0,
-                g = 1,
-                b = 0,
+                icon = texture,
+                tCoordLeft = left,
+                tCoordRight = right,
+                tCoordTop = top,
+                tCoordBottom = bottom,
             }
         end
         return follower_texture
     end
     if point.npc then
         if not npc_texture then
-            local left, right, top, bottom = GetObjectIconTextureCoords(41)
+            local texture, _, _, left, right, top, bottom = GetAtlasInfo("DungeonSkull")
             npc_texture = {
-                icon = [[Interface\MINIMAP\OBJECTICONS]],
-                tCoordLeft = left + 0.018,
-                tCoordRight = right - 0.018,
-                tCoordTop = top + 0.018,
-                tCoordBottom = bottom - 0.018,
+                icon = texture,
+                tCoordLeft = left,
+                tCoordRight = right,
+                tCoordTop = top,
+                tCoordBottom = bottom,
             }
         end
         return npc_texture
     end
     if not default_texture then
-        local left, right, top, bottom = GetObjectIconTextureCoords(40)
+        local texture, _, _, left, right, top, bottom = GetAtlasInfo("VignetteLoot")
         default_texture = {
-            icon = [[Interface\MINIMAP\OBJECTICONS]],
-            tCoordLeft = left + 0.018,
-            tCoordRight = right - 0.018,
-            tCoordTop = top + 0.018,
-            tCoordBottom = bottom - 0.018,
+            icon = texture,
+            tCoordLeft = left,
+            tCoordRight = right,
+            tCoordTop = top,
+            tCoordBottom = bottom,
         }
     end
     return default_texture
@@ -173,7 +183,7 @@ local function handle_tooltip(tooltip, point)
                 local quality = BAG_ITEM_QUALITY_COLORS[follower.quality]
                 tooltip:AddLine(follower.name, quality.r, quality.g, quality.b)
                 tooltip:AddDoubleLine(follower.className, UNIT_LEVEL_TEMPLATE:format(follower.level))
-                tooltip:AddLine(REWARD_FOLLOWER, 0, 1, 0)
+                tooltip:AddLine(REWARD_FOLLOWER:gsub(":", ""), 0, 1, 0)
             else
                 tooltip:AddLine(UNKNOWN, 1, 0, 0)
             end
@@ -342,6 +352,7 @@ function HL:OnInitialize()
 
     -- watch for LOOT_CLOSED
     self:RegisterEvent("LOOT_CLOSED")
+    self:RegisterEvent("GARRISON_FOLLOWER_ADDED")
 end
 
 function HL:Refresh()
@@ -349,5 +360,8 @@ function HL:Refresh()
 end
 
 function HL:LOOT_CLOSED()
+    self:Refresh()
+end
+function HL:GARRISON_FOLLOWER_ADDED()
     self:Refresh()
 end

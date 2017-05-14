@@ -177,17 +177,19 @@ local function ScanAllAchievements()
 	for _, categoryID in ipairs(cats) do
 		for i = 1, GetCategoryNumAchievements(categoryID) do
 			local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(categoryID, i)
-			ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
-
-			-- track previous steps of a progressive achievements
-			prevID = GetPreviousAchievement(achievementID)
-
-			while type(prevID) ~= "nil" do
-				local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(prevID)
-				if not achievementID then break end	-- exit the loop if id is invalid
-				
+			if achievementID then
 				ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
+
+				-- track previous steps of a progressive achievements
 				prevID = GetPreviousAchievement(achievementID)
+
+				while type(prevID) ~= "nil" do
+					local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(prevID)
+					if not achievementID then break end	-- exit the loop if id is invalid
+					
+					ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
+					prevID = GetPreviousAchievement(achievementID)
+				end
 			end
 		end
 	end
@@ -218,8 +220,8 @@ end
 
 local function OnAchievementEarned(event, id)
 	if id then
-		local _, _, _, achCompleted, month, day, year, _, flags  = GetAchievementInfo(id)
-		ScanSingleAchievement(id, true, month, day, year, flags)
+		local _, _, _, achCompleted, month, day, year, _, flags, _, _, _, wasEarnedByMe = GetAchievementInfo(id)
+		ScanSingleAchievement(id, true, month, day, year, flags, wasEarnedByMe)
 		ScanProgress()
 	end
 end

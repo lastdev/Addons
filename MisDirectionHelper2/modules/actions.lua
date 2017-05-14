@@ -70,6 +70,12 @@ function MDH:MDHtarget(button)
 	self:MDHShowToolTip()
 end
 
+function MDH:MDHHover()
+	MDH.db.profile.target3 = not MDH.db.profile.target3
+	MDH:MDHEditMacro()
+	MDH:MDHShowToolTip()
+end
+		
 function MDH:MDHtank(button)
 	local members = GetNumGroupMembers()
 	local mt, mth, canBeTank, maxHealth

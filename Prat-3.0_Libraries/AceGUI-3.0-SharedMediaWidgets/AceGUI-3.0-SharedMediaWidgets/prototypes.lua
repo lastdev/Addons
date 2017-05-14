@@ -1,17 +1,16 @@
 -- Widget created by Yssaril
---[===[@debug@
+--@debug@
 local DataVersion = 9001 -- dev version always overwrites everything else :)
---@end-debug@]===]
---@non-debug@
-local DataVersion = 49
---@end-non-debug@
+--@end-debug@
+--[===[@non-debug@
+local DataVersion = @project-revision@
+--@end-non-debug@]===]
 local AGSMW = LibStub:NewLibrary("AceGUISharedMediaWidgets-1.0", DataVersion)
 
 if not AGSMW then
   return	-- already loaded and no upgrade necessary
 end
 
-LoadAddOn("LibSharedMedia-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 local Media = LibStub("LibSharedMedia-3.0")
 
@@ -57,7 +56,6 @@ do
 		local frame = CreateFrame("Frame", nil, UIParent)
 		frame:SetHeight(44)
 		frame:SetWidth(200)
-		frame:SetPoint("CENTER", UIParent, "CENTER")
 
 		local label = frame:CreateFontString(nil,"OVERLAY","GameFontNormalSmall")
 			label:SetPoint("TOPLEFT",frame,"TOPLEFT",0,0)

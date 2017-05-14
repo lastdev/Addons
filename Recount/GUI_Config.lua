@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BC = {} -- = LibStub("LibBabble-Class-3.0"):GetLookupTable()
 
-local revision = tonumber(string.sub("$Revision: 1288 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1378 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -60,6 +60,7 @@ local EditableColors = {
 	},
 	["Class"] = {
 		"Deathknight",
+		"Demonhunter",
 		"Druid",
 		"Hunter",
 		"Mage",
@@ -78,6 +79,7 @@ local EditableColors = {
 
 local ClassStrings = {
 	["DEATHKNIGHT"] = true,
+	["DEMONHUNTER"] = true,
 	["DRUID"] = true,
 	["HUNTER"] = true,
 	["MAGE"] = true,
@@ -166,14 +168,14 @@ function me:CreateColorRow(parent, frame)
 
 	theFrame.Background = theFrame:CreateTexture(nil, "BACKGROUND")
 	theFrame.Background:SetAllPoints(theFrame)
-	theFrame.Background:SetTexture(1, 1, 1, 0.3)
+	theFrame.Background:SetColorTexture(1, 1, 1, 0.3)
 	theFrame.Background:Hide()
 
 	theFrame.Key = theFrame:CreateTexture(nil, "OVERLAY")
 	theFrame.Key:SetHeight(13)
 	theFrame.Key:SetWidth(13)
 	theFrame.Key:SetPoint("LEFT", theFrame, "LEFT", 0, 0)
-	theFrame.Key:SetTexture(1, 1, 1)
+	theFrame.Key:SetColorTexture(1, 1, 1)
 
 	theFrame.Text = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.Text:SetPoint("LEFT", theFrame, "LEFT", 16, 0)
@@ -218,9 +220,9 @@ function me:CreateWindowColorSelection(parent)
 		theFrame.Rows[i]:SetRow("Window", v)
 		theFrame.Rows[i]:SetPoint("TOP", theFrame, "TOP", 4, -2 - i * 14)
 		i = i + 1
-		if i > 16 then
+		--[[if i > 16 then
 			return
-		end
+		end]]
 	end
 	theFrame.DetailWindowTitle = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.DetailWindowTitle:SetPoint("TOP", theFrame, "TOP", 0, -4 - i * 14)
@@ -231,20 +233,125 @@ function me:CreateWindowColorSelection(parent)
 		theFrame.Rows[i]:SetRow("Other Windows", v)
 		theFrame.Rows[i]:SetPoint("TOP", theFrame, "TOP", 4, -4 - i * 14)
 		i = i + 1
-		if i > 16 then
+		--[[if i > 16 then
 			return
-		end
+		end]]
 	end
 
 	theFrame.ResetColButton = CreateFrame("Button", nil, theFrame, "OptionsButtonTemplate")
 	theFrame.ResetColButton:SetWidth(120)
 	theFrame.ResetColButton:SetHeight(18)
 	--theFrame.ResetColButton:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 40, -210)
-	theFrame.ResetColButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOMLEFT", 40, 12)
+	theFrame.ResetColButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOMLEFT", 40, 4)
 	theFrame.ResetColButton:SetScript("OnClick", function()
 		Recount:ResetDefaultWindowColors()
 	end)
 	theFrame.ResetColButton:SetText(L["Reset Colors"])
+end
+
+function me:CreateWindowModuleSelection(parent)
+	me.ModuleOptions = CreateFrame("Frame", nil, parent)
+
+	local theFrame = me.ModuleOptions
+
+	theFrame:SetHeight(parent:GetHeight() - 34)
+	theFrame:SetWidth(200)
+	theFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, -34)
+
+	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	theFrame.Title:SetText("Enabled Modules")
+	theFrame.Title:SetPoint("TOP", theFrame, "TOP", 0, -2)
+
+	theFrame.HealingTaken = me:CreateSavedCheckbox(L["Healing Taken"], theFrame, "Modules", "HealingTaken")
+	theFrame.HealingTaken:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 8, -20)
+	theFrame.HealingTaken:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.HealingTaken = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.HealingTaken = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
+	theFrame.OverhealingDone = me:CreateSavedCheckbox(L["Overhealing Done"], theFrame, "Modules", "OverhealingDone")
+	theFrame.OverhealingDone:SetPoint("TOPLEFT", theFrame.HealingTaken, "BOTTOMLEFT", 0, 0)
+	theFrame.OverhealingDone:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.OverhealingDone = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.OverhealingDone = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
+	theFrame.Deaths = me:CreateSavedCheckbox(L["Deaths"], theFrame, "Modules", "Deaths")
+	theFrame.Deaths:SetPoint("TOPLEFT", theFrame.OverhealingDone, "BOTTOMLEFT", 0, 0)
+	theFrame.Deaths:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.Deaths = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.Deaths = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
+	theFrame.DOTUptime = me:CreateSavedCheckbox(L["DOT Uptime"], theFrame, "Modules", "DOTUptime")
+	theFrame.DOTUptime:SetPoint("TOPLEFT", theFrame.Deaths, "BOTTOMLEFT", 0, 0)
+	theFrame.DOTUptime:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.DOTUptime = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.DOTUptime = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
+	theFrame.HOTUptime = me:CreateSavedCheckbox(L["HOT Uptime"], theFrame, "Modules", "HOTUptime")
+	theFrame.HOTUptime:SetPoint("TOPLEFT", theFrame.DOTUptime, "BOTTOMLEFT", 0, 0)
+	theFrame.HOTUptime:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.HOTUptime = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.HOTUptime = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
+	theFrame.Activity = me:CreateSavedCheckbox(L["Activity"], theFrame, "Modules", "Activity")
+	theFrame.Activity:SetPoint("TOPLEFT", theFrame.HOTUptime, "BOTTOMLEFT", 0, 0)
+	theFrame.Activity:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.Modules.Activity = true
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		else
+			this:SetChecked(false)
+			Recount.db.profile.Modules.Activity = false
+			Recount:SetupMainWindow()
+			Recount:RefreshMainWindow()
+		end
+	end)
 end
 
 function me:CreateClassColorSelection(parent)
@@ -268,9 +375,9 @@ function me:CreateClassColorSelection(parent)
 		theFrame.Rows[i]:SetRow("Bar", v)
 		theFrame.Rows[i]:SetPoint("TOP", theFrame, "TOP", 4, -2 - i * 14)
 		i = i + 1
-		if i > 16 then
+		--[[if i > 16 then
 			return
-		end
+		end]]
 	end
 
 	--theFrame.ClassTitle = theFrame:CreateFontString(nil, "OVERLAY",  "GameFontNormal")
@@ -282,9 +389,9 @@ function me:CreateClassColorSelection(parent)
 		theFrame.Rows[i]:SetRow("Class", v)
 		theFrame.Rows[i]:SetPoint("TOP", theFrame, "TOP", 4, -2 - i * 14)
 		i = i + 1
-		if i > 16 then
+		--[[if i > 16 then
 			return
-		end
+		end]]
 	end
 
 	i = i + 1
@@ -292,7 +399,7 @@ function me:CreateClassColorSelection(parent)
 	theFrame.ResetColButton:SetWidth(120)
 	theFrame.ResetColButton:SetHeight(18)
 	--theFrame.ResetColButton:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 40, -210)
-	theFrame.ResetColButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOMLEFT", 40, 12)
+	theFrame.ResetColButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOMLEFT", 40, 4)
 	theFrame.ResetColButton:SetScript("OnClick", function()
 		Recount:ResetDefaultClassColors()
 	end)
@@ -350,7 +457,7 @@ function me:CreateSavedCheckbox(Text, parent, VarTop, VarName)
 
 	Checkbox.Text = Checkbox:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	Checkbox.Text:SetText(Text)
-	Checkbox.Text:SetPoint("LEFT", Checkbox, "RIGHT", 8, 0)
+	Checkbox.Text:SetPoint("LEFT", Checkbox, "RIGHT", 2, 1)
 
 	SavedCheckVars[#SavedCheckVars + 1] = {Checkbox, VarTop, VarName}
 
@@ -709,7 +816,7 @@ function me:CreateBarSelection(parent)
 
 	--[[theFrame.Background = theFrame:CreateTexture(nil, "BACKGROUND")
 	theFrame.Background:SetAllPoints(theFrame)
-	theFrame.Background:SetTexture(0, 0, 0, 0.3)]]
+	theFrame.Background:SetColorTexture(0, 0, 0, 0.3)]]
 
 	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.Title:SetText(L["Bar Text Options"])
@@ -879,7 +986,7 @@ function me:CreateTextureSelection(parent)
 
 	--[[theFrame.Background = theFrame:CreateTexture(nil, "BACKGROUND")
 	theFrame.Background:SetAllPoints(theFrame)
-	theFrame.Background:SetTexture(0, 0, 0, 0.3)]]
+	theFrame.Background:SetColorTexture(0, 0, 0, 0.3)]]
 
 	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.Title:SetText(L["Bar Selection"])
@@ -943,7 +1050,7 @@ function me:CreateSelectFont(parent)
 	frame.Text:SetPoint("CENTER", frame, "CENTER")
 	frame.Texture = frame:CreateTexture(nil, "BACKGROUND")
 	frame.Texture:SetAllPoints(frame)
-	frame.Texture:SetTexture(1, 1, 1, 0.5)
+	frame.Texture:SetColorTexture(1, 1, 1, 0.5)
 	frame.SetFont = me.SetSelectFont
 	frame:EnableMouse(true)
 	frame:SetScript("OnMouseDown", function(this)
@@ -1384,7 +1491,7 @@ function me:SetupMiscOptions(parent)
 	local i = 0
 	for _, k in pairs(ZoneOrder) do
 		theFrame[k] = me:CreateSavedCheckbox(ZoneLabels[k], theFrame, "Data", k)
-		theFrame[k]:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 10, -59 - i * 16)
+		theFrame[k]:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -59 - i * 16)
 		theFrame[k]:SetScript("OnClick", function(this)
 			if this:GetChecked() then
 				this:SetChecked(true)
@@ -1400,12 +1507,12 @@ function me:SetupMiscOptions(parent)
 				Recount:RefreshMainWindow()
 			end
 		end)
-		i = i+1
+		i = i + 1
 	end
 
 	for k, v in ipairs(GroupLabels) do
 		theFrame[k] = me:CreateSavedCheckbox(v, theFrame, "Data", k)
-		theFrame[k]:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 10, -59 - i * 16)
+		theFrame[k]:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -59 - i * 16)
 		theFrame[k]:SetScript("OnClick", function(this)
 			if this:GetChecked() then
 				this:SetChecked(true)
@@ -1419,20 +1526,20 @@ function me:SetupMiscOptions(parent)
 				Recount:RefreshMainWindow()
 			end
 		end)
-		i = i+1
+		i = i + 1
 	end
 
 
 	theFrame.GlobalData = me:CreateSavedCheckbox(L["Global Data Collection"], theFrame, "Data", "GlobalData")
-	theFrame.GlobalData:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 10, -59 - i * 16 - 3)
+	theFrame.GlobalData:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -59 - i * 16 - 6)
 	theFrame.GlobalData:SetScript("OnClick", function(this)
 		Recount:SetGlobalDataCollect(this:GetChecked())
 	end)
 
-	i = i+1
+	i = i + 1
 
 	theFrame.HideCollect = me:CreateSavedCheckbox(L["Hide When Not Collecting"], theFrame, "Data", "HideCollect")
-	theFrame.HideCollect:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 10, -59 - i * 16 - 6)
+	theFrame.HideCollect:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -59 - i * 16 - 6)
 	theFrame.HideCollect:SetScript("OnClick", function(this)
 		if this:GetChecked() then
 			this:SetChecked(true)
@@ -1634,10 +1741,10 @@ function me:SetupButtonOptions(parent)
 	end)
 
 	theFrame.Close_Icon = theFrame:CreateTexture(nil, "OVERLAY")
-	theFrame.Close_Icon:SetWidth(16)
-	theFrame.Close_Icon:SetHeight(16)
+	theFrame.Close_Icon:SetWidth(20)
+	theFrame.Close_Icon:SetHeight(20)
 	theFrame.Close_Icon:SetTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
-	theFrame.Close_Icon:SetPoint("LEFT", theFrame.CloseButton, "RIGHT", 2, 0)
+	theFrame.Close_Icon:SetPoint("LEFT", theFrame.CloseButton, "RIGHT", 0, 0)
 
 	theFrame.Close_Text = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.Close_Text:SetText(L["Close"])
@@ -1653,15 +1760,16 @@ function me:SetupButtonOptions(parent)
 	slider:SetHeight(16)
 	slider:SetPoint("TOP", theFrame, "TOP", 0, -96 - 16) -- Elsia: TODO this number will need adjusting to accommodate the paging config change
 	slider:SetScript("OnValueChanged", function(this)
-		_G[this:GetName().."Text"]:SetText(L["Row Height"]..": "..math.floor(this:GetValue() + 0.5))
-		Recount.db.profile.MainWindow.RowHeight = math.floor(this:GetValue() + 0.5)
+		local value = math.floor(this:GetValue() + 0.5)
+		_G[this:GetName().."Text"]:SetText(L["Row Height"]..": "..value)
+		Recount.db.profile.MainWindow.RowHeight = value
 		Recount:BarsChanged()
 	end)
 	_G[slider:GetName().."High"]:SetText("35")
 	_G[slider:GetName().."Low"]:SetText("8")
 	_G[slider:GetName().."Text"]:SetText(L["Row Height"]..": "..math.floor(slider:GetValue() + 0.5))
 
-	slider = CreateFrame("Slider", "Recount_ConfigWindow_RowSpacing_Slider", theFrame, "OptionsSliderTemplate")
+	local slider = CreateFrame("Slider", "Recount_ConfigWindow_RowSpacing_Slider", theFrame, "OptionsSliderTemplate")
 	theFrame.RowSpacingSlider = slider
 	slider:SetOrientation("HORIZONTAL")
 	slider:SetMinMaxValues(0, 4)
@@ -1679,8 +1787,9 @@ function me:SetupButtonOptions(parent)
 	_G[slider:GetName().."Low"]:SetText("0")
 	_G[slider:GetName().."Text"]:SetText(L["Row Spacing"]..": "..math.floor(slider:GetValue()))
 
-	theFrame.TotalBar = CreateFrame("CheckButton",nil, theFrame)
-	me:ConfigureCheckbox(theFrame.TotalBar)
+	--theFrame.TotalBar = CreateFrame("CheckButton", nil, theFrame)
+	theFrame.TotalBar = me:CreateSavedCheckbox(L["Show Total Bar"], theFrame, "MainWindow", "HideTotalBar")
+	--me:ConfigureCheckbox(theFrame.TotalBar)
 	theFrame.TotalBar:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 12, -158 - 16)
 	theFrame.TotalBar:SetScript("OnClick", function(this)
 		if this:GetChecked() then
@@ -1696,12 +1805,13 @@ function me:SetupButtonOptions(parent)
 		end
 	end)
 
-	theFrame.TotalBarText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	theFrame.TotalBarText:SetText(L["Show Total Bar"])
-	theFrame.TotalBarText:SetPoint("LEFT", theFrame.TotalBar, "RIGHT", 8, 0)
+	--theFrame.TotalBarText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	--theFrame.TotalBarText:SetText(L["Show Total Bar"])
+	--theFrame.TotalBarText:SetPoint("LEFT", theFrame.TotalBar, "RIGHT", 8, 0)
 
-	theFrame.ShowSB = CreateFrame("CheckButton", nil, theFrame)
-	me:ConfigureCheckbox(theFrame.ShowSB)
+	--theFrame.ShowSB = CreateFrame("CheckButton", nil, theFrame)
+	theFrame.ShowSB = me:CreateSavedCheckbox(L["Show Scrollbar"], theFrame, "MainWindow", "ShowScrollbar")
+	--me:ConfigureCheckbox(theFrame.ShowSB)
 	theFrame.ShowSB:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 12, -175 - 16)
 	theFrame.ShowSB:SetScript("OnClick", function(this)
 		if this:GetChecked() then
@@ -1716,12 +1826,13 @@ function me:SetupButtonOptions(parent)
 		Recount:RefreshMainWindow()
 	end)
 
-	theFrame.ShowSBText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	theFrame.ShowSBText:SetText(L["Show Scrollbar"])
-	theFrame.ShowSBText:SetPoint("LEFT", theFrame.ShowSB, "RIGHT", 8, 0)
+	--theFrame.ShowSBText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	--theFrame.ShowSBText:SetText(L["Show Scrollbar"])
+	--theFrame.ShowSBText:SetPoint("LEFT", theFrame.ShowSB, "RIGHT", 8, 0)
 
-	theFrame.AutoHide = CreateFrame("CheckButton", nil, theFrame)
-	me:ConfigureCheckbox(theFrame.AutoHide)
+	--theFrame.AutoHide = CreateFrame("CheckButton", nil, theFrame)
+	theFrame.AutoHide = me:CreateSavedCheckbox(L["Autohide On Combat"], theFrame, "MainWindow", "AutoHide")
+	--me:ConfigureCheckbox(theFrame.AutoHide)
 	theFrame.AutoHide:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 12, -192 - 16)
 	theFrame.AutoHide:SetScript("OnClick", function(this)
 		if this:GetChecked() then
@@ -1732,9 +1843,10 @@ function me:SetupButtonOptions(parent)
 			Recount.db.profile.MainWindow.AutoHide = false
 		end
 	end)
-	theFrame.AutohideText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	theFrame.AutohideText:SetText(L["Autohide On Combat"])
-	theFrame.AutohideText:SetPoint("LEFT", theFrame.AutoHide, "RIGHT", 8, 0)
+
+	--theFrame.AutohideText = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	--theFrame.AutohideText:SetText(L["Autohide On Combat"])
+	--theFrame.AutohideText:SetPoint("LEFT", theFrame.AutoHide, "RIGHT", 8, 0)
 end
 
 
@@ -1768,6 +1880,8 @@ function me:HideOptions()
 	me.ConfigWindow.Window.Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
 	me.ConfigWindow.ColorOpt:Hide()
 	me.ConfigWindow.ColorOpt.Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
+	me.ConfigWindow.ModuleOpt:Hide()
+	me.ConfigWindow.ModuleOpt.Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
 end
 
 
@@ -1795,7 +1909,7 @@ function me:CreateDataOptions(parent)
 	Tab.Text:SetPoint("CENTER", Tab, "CENTER")
 	Tab.Text:SetText(L["Data"])
 	Tab.Background = Tab:CreateTexture(nil, "BACKGROUND")
-	Tab.Background:SetTexture(1, 1, 1, 0.3)
+	Tab.Background:SetColorTexture(1, 1, 1, 0.3)
 	Tab.Background:SetVertexColor(0.2, 1.0, 0.2)
 	Tab.Background:SetAllPoints(Tab)
 
@@ -1829,7 +1943,7 @@ function me:CreateAppearanceOptions(parent)
 	Tab.Text:SetPoint("CENTER", Tab, "CENTER")
 	Tab.Text:SetText(L["Appearance"])
 	Tab.Background = Tab:CreateTexture(nil, "BACKGROUND")
-	Tab.Background:SetTexture(1, 1, 1, 0.3)
+	Tab.Background:SetColorTexture(1, 1, 1, 0.3)
 	Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
 	Tab.Background:SetAllPoints(Tab)
 
@@ -1863,12 +1977,44 @@ function me:CreateColorOptions(parent)
 	Tab.Text:SetPoint("CENTER", Tab, "CENTER")
 	Tab.Text:SetText(L["Color"])
 	Tab.Background = Tab:CreateTexture(nil, "BACKGROUND")
-	Tab.Background:SetTexture(1, 1, 1, 0.3)
+	Tab.Background:SetColorTexture(1, 1, 1, 0.3)
 	Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
 	Tab.Background:SetAllPoints(Tab)
 
 	me:CreateWindowColorSelection(theFrame)
 	me:CreateClassColorSelection(theFrame)
+	theFrame:Hide()
+end
+
+function me:CreateModuleOptions(parent)
+	local theFrame = CreateFrame("FRAME", nil, parent)
+	parent.ModuleOpt = theFrame
+
+	theFrame:SetWidth(600)
+	theFrame:SetHeight(parent:GetHeight() - 22)
+	theFrame:SetPoint("TOP", parent, "TOP", 0, -22)
+
+	local Tab = CreateFrame("FRAME", nil, parent)
+	parent.ModuleOpt.Tab = Tab
+
+	Tab:SetWidth(100)
+	Tab:SetHeight(18)
+	Tab:SetPoint("TOPLEFT", parent, "TOPLEFT", 412, -35) -- Elsia: Check tab offset
+	Tab:EnableMouse(true)
+	Tab:SetScript("OnMouseDown", function(this)
+		me:HideOptions()
+		theFrame:Show()
+		this.Background:SetVertexColor(0.2, 1.0, 0.2)
+	end)
+	Tab.Text = Tab:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	Tab.Text:SetPoint("CENTER", Tab, "CENTER")
+	Tab.Text:SetText("Modules")
+	Tab.Background = Tab:CreateTexture(nil, "BACKGROUND")
+	Tab.Background:SetColorTexture(1, 1, 1, 0.3)
+	Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
+	Tab.Background:SetAllPoints(Tab)
+
+	me:CreateWindowModuleSelection(theFrame)
 	theFrame:Hide()
 end
 
@@ -1892,7 +2038,7 @@ function me:CreateWindowOptions(parent)
 	Tab.Text:SetPoint("CENTER", Tab, "CENTER")
 	Tab.Text:SetText(L["Window"])
 	Tab.Background = Tab:CreateTexture(nil, "BACKGROUND")
-	Tab.Background:SetTexture(1, 1, 1, 0.3)
+	Tab.Background:SetColorTexture(1, 1, 1, 0.3)
 	Tab.Background:SetVertexColor(1.0, 0.2, 0.2)
 	Tab.Background:SetAllPoints(Tab)
 
@@ -1911,9 +2057,9 @@ function me:CreateConfigWindow()
 
 	local theFrame = me.ConfigWindow
 
-	local lineheight = 286 + 16 + 16 - 53
-	Recount.Colors:RegisterTexture("Other Windows", "Title", Graph:DrawLine(theFrame, 200, 12, 200, lineheight, 24, {0.5, 0.0, 0.0, 1.0}, "ARTWORK"), {r = 0.5, g = 0.5, b = 0.5, a = 1}) -- Elsia: Changed 32->12 for longer separators given no save/revert
-	Recount.Colors:RegisterTexture("Other Windows", "Title", Graph:DrawLine(theFrame, 400, 12, 400, lineheight, 24, {0.5, 0.0, 0.0, 1.0}, "ARTWORK"), {r = 0.5, g = 0.5, b = 0.5, a = 1})
+	local lineheight = 286 + 16 + 16 - 53 - 1
+	Recount.Colors:RegisterTexture("Other Windows", "Title", Graph:DrawLine(theFrame, 200, 2, 200, lineheight, 24, {0.5, 0.0, 0.0, 1.0}, "ARTWORK"), {r = 0.5, g = 0.5, b = 0.5, a = 1}) -- Elsia: Changed 32->12 for longer separators given no save/revert
+	Recount.Colors:RegisterTexture("Other Windows", "Title", Graph:DrawLine(theFrame, 400, 2, 400, lineheight, 24, {0.5, 0.0, 0.0, 1.0}, "ARTWORK"), {r = 0.5, g = 0.5, b = 0.5, a = 1})
 	Recount.Colors:RegisterTexture("Other Windows", "Title", Graph:DrawLine(theFrame, 2, lineheight, 598, lineheight, 24, {0.5, 0.0, 0.0, 1.0}, "ARTWORK"), {r = 0.5, g = 0.5, b = 0.5, a = 1})
 
 	theFrame:Hide()
@@ -1923,6 +2069,7 @@ function me:CreateConfigWindow()
 	me:CreateAppearanceOptions(theFrame)
 	me:CreateWindowOptions(theFrame)
 	me:CreateColorOptions(theFrame)
+	me:CreateModuleOptions(theFrame)
 
 	theFrame:SetFrameStrata("DIALOG")
 
@@ -2015,6 +2162,13 @@ function me:LoadConfig()
 	me.BarOptions.Commas:SetChecked(Recount.db.profile.MainWindow.BarText.NumFormat == 2)
 	me.BarOptions.Short:SetChecked(Recount.db.profile.MainWindow.BarText.NumFormat == 3)
 	me.BarOptions.BarTextColorSwap:SetChecked(Recount.db.profile.BarTextColorSwap)
+
+	me.ModuleOptions.HealingTaken:SetChecked(Recount.db.profile.Modules.HealingTaken)
+	me.ModuleOptions.OverhealingDone:SetChecked(Recount.db.profile.Modules.OverhealingDone)
+	me.ModuleOptions.Deaths:SetChecked(Recount.db.profile.Modules.Deaths)
+	me.ModuleOptions.DOTUptime:SetChecked(Recount.db.profile.Modules.DOTUptime)
+	me.ModuleOptions.HOTUptime:SetChecked(Recount.db.profile.Modules.HOTUptime)
+	me.ModuleOptions.Activity:SetChecked(Recount.db.profile.Modules.Activity)
 end
 
 function me:SaveFilterConfig()

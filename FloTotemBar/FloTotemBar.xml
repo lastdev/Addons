@@ -11,49 +11,6 @@
 		<Size>
 			<AbsDimension x="44" y="44"/>
 		</Size>
-		<Frames>
-			<StatusBar name="$parentCountdown1" inherits="FloCountdown">
-				<Size>
-					<AbsDimension x="6" y="30"/>
-				</Size>
-			</StatusBar>
-			<StatusBar name="$parentCountdown2" inherits="FloCountdown">
-				<Size>
-					<AbsDimension x="6" y="30"/>
-				</Size>
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentCountdown1" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="2" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</StatusBar>
-			<StatusBar name="$parentCountdown3" inherits="FloCountdown">
-				<Size>
-					<AbsDimension x="6" y="30"/>
-				</Size>
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentCountdown2" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="2" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</StatusBar>
-			<StatusBar name="$parentCountdown4" inherits="FloCountdown">
-				<Size>
-					<AbsDimension x="6" y="30"/>
-				</Size>
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentCountdown3" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="2" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</StatusBar>
-		</Frames>
 		<Scripts>
 			<OnLoad>
 				FloTotemBar_OnLoad(self);
@@ -62,7 +19,7 @@
 				FloTotemBar_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				FloTotemBar_OnUpdate(self);
+				FloLib_OnUpdate(self);
 			</OnUpdate>
 		</Scripts>
 	</Frame>
@@ -71,9 +28,6 @@
 		<Size>
 			<AbsDimension x="44" y="44"/>
 		</Size>
-		<Frames>
-			<StatusBar name="$parentCountdown" inherits="FloCountdown"/>
-		</Frames>
 		<Scripts>
 			<OnLoad>
 				FloTotemBar_OnLoad(self);
@@ -82,7 +36,7 @@
 				FloTotemBar_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				FloTotemBar_OnUpdate(self);
+				FloLib_OnUpdate(self);
 			</OnUpdate>
 			<OnMouseUp>
 				if self.slot and IsAltKeyDown() then
@@ -99,56 +53,5 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-	</Frame>
-	<Frame name="FloBarFIRE" inherits="FloTotemBarTemplate">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="FloBarEARTH" relativePoint="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="10" y="0"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Frame>
-	<Frame name="FloBarWATER" inherits="FloTotemBarTemplate">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="FloBarFIRE" relativePoint="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="10" y="0"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Frame>
-	<Frame name="FloBarAIR" inherits="FloTotemBarTemplate">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="FloBarWATER" relativePoint="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="10" y="0"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Frame>
-
-	<Frame name="FloBarCALL" inherits="FloBarTemplate">
-		<Size>
-			<AbsDimension x="44" y="44"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPRIGHT" relativeTo="FloBarEARTH" relativePoint="TOPLEFT">
-				<Offset>
-					<AbsDimension x="-10" y="0"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Scripts>
-			<OnLoad>
-				FloTotemBar_OnLoad(self);
-			</OnLoad>
-			<OnEvent>
-				FloTotemBar_OnEvent(self, event, ...);
-			</OnEvent>
-			<OnUpdate>
-				FloTotemBar_OnUpdate(self);
-			</OnUpdate>
-		</Scripts>
 	</Frame>
 </Ui>

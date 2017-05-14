@@ -1,4 +1,4 @@
-﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
  http://wowprogramming.com/FrameXML/UI.xsd">
   <Script file="MizusRaidTracker_GUI.lua"/>
   <EditBox name="MRT_GUI_Editbox_Template" inherits="InputBoxTemplate" virtual="true" historyLines="0" enableKeyboard="true" enableMouse="true" letters="400">

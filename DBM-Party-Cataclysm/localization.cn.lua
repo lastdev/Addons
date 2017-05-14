@@ -103,10 +103,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "当乌比斯将军准备对你迅猛突袭时自动点击小地图"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "盯住了|cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -116,11 +112,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "巨龙，听从我的命令！接住我！",	-- Yell when Valiona is incoming
-	Add			= "%s开始施放"
-}
 
 ------------
 -- Erudax --
@@ -227,13 +218,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "5秒后进入第2阶段"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 		= "第2阶段开始"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "特殊警报：第2阶段即将开始（约5秒）",
-	timerPhase2 		= "计时条：第2阶段即将开始"
+	specWarnPhase2Soon	= "特殊警报：第2阶段即将开始（约5秒）"
 }
 
 -----------------------
@@ -370,14 +356,6 @@ L:SetOptionLocalization({
 -----------
 L= DBM:GetModLocalization(116)
 
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "特殊警报：$spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "跳！"
-})
-
 ---------------------------
 --  The Throne of Tides  --
 ---------------------------
@@ -410,8 +388,7 @@ L= DBM:GetModLocalization(186)
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
 	RangeFrame	= "距离监视器（10码）",
-	StormArrow	= "DBM箭头：$spell:43648",
-	SetIconOnEagle	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(97318)
+	StormArrow	= "DBM箭头：$spell:43648"
 }
 
 ---------------
@@ -543,8 +520,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "警报：幽灵剩余数量",
-	SpecWarnOhgan	= "警报：奥根的复活", -- check this, i'm not good at English
-	SetIconOnOhgan	= "当奥根复活时自动为其添加标记" 
+	SpecWarnOhgan	= "警报：奥根的复活"
 }
 
 ----------------------

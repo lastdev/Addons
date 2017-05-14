@@ -17,23 +17,7 @@ end
 
 function Outfitter.LDB:OnClick(pFrame, pButton)
 	if pButton == "LeftButton" then
-		if not self.Menu then
-			self.Menu = CreateFrame("Frame", "OutfitterLDBMenu", UIParent)
-			self.Menu:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 100, -100)
-			self.Menu:SetWidth(100)
-			self.Menu:SetHeight(20)
-			Outfitter.MinimapDropDown_OnLoad(self.Menu)
-			self.Menu.ChangedValueFunc = Outfitter.MinimapButton_ItemSelected
-		end
-		
-		ToggleDropDownMenu(nil, nil, self.Menu, "cursor")
-		
-		-- Hack to force the menu to position correctly.  UIDropDownMenu code
-		-- keeps thinking that it's off the screen and trying to reposition
-		-- it, which it does very poorly
-		
-		-- Outfitter.MinimapDropDown_AdjustScreenPosition(self.Menu)
-		
+		self:ToggleMenu()
 		PlaySound("igMainMenuOptionCheckBoxOn")
 	else
 		Outfitter:ToggleUI(true)
@@ -50,6 +34,55 @@ function Outfitter.LDB:OutfitEvent(pEvent, pOutfitName, pOutfit)
 		self.DataObj.text = Outfitter.cTitle
 		self.DataObj.icon = "Interface\\AddOns\\Outfitter\\Textures\\Icon"
 	end
+end
+
+function Outfitter.LDB:ToggleMenu()
+	if self.dropDownMenu then
+		self:HideMenu()
+	else
+		self:ShowMenu()
+	end
+end
+
+function Outfitter.LDB:ShowMenu()
+	assert(not self.dropDownMenu, "can't show the LDB menu while it's already up")
+
+	-- Create the items
+	items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
+		
+		-- Close the menu after a short delay when a menu item is selected
+		Outfitter.SchedulerLib:ScheduleTask(0.1, function ()
+			self:HideMenu()
+		end)
+	end)
+
+	-- Get the items
+	Outfitter:GetMinimapDropdownItems(items)
+
+	-- Get the cursor position
+	local cursorX, cursorY = GetCursorPosition()
+	local scaling = UIParent:GetEffectiveScale()
+	cursorX = cursorX / scaling
+	cursorY = cursorY / scaling
+
+	-- Use the screen quadrant as an anchor for the menu
+	local quadrant = Outfitter:GetScreenQuadrantFromCoordinates(cursorX, cursorY)
+
+	-- Show the menu
+	self.dropDownMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu)
+	self.dropDownMenu:Show(items, quadrant, UIParent, "BOTTOMLEFT", cursorX, cursorY)
+	self.dropDownMenu.cleanup = function ()
+		self.dropDownMenu = nil
+	end
+end
+
+function Outfitter.LDB:HideMenu()
+	if not self.dropDownMenu then
+		return
+	end
+
+	self.dropDownMenu:Hide()
+	self.dropDownMenu = nil
 end
 
 Outfitter.LDB:Initialize()

@@ -3,7 +3,7 @@ local Recount = _G.Recount
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 
-local revision = tonumber(string.sub("$Revision: 1261 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1311 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -14,7 +14,7 @@ local dbCombatants
 local srcRetention
 local dstRetention
 
-local DetailTitles = {}
+local DetailTitles = { }
 DetailTitles.Dispels = {
 	TopNames = L["Who"],
 	TopCount = "",
@@ -28,7 +28,6 @@ DetailTitles.Dispels = {
 
 
 function Recount:SpellAuraDispelledStolen(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool)
-
 	if eventtype == "SPELL_DISPEL_FAILED" then
 		return -- Not covering failures.
 	end
@@ -42,10 +41,9 @@ function Recount:SpellAuraDispelledStolen(timestamp, eventtype, srcGUID, srcName
 end
 
 function Recount:AddDispelData(source, victim, ability, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
-
-	--Friendly fire interrupt? (Duels)
-	local FriendlyFire = Recount:IsFriendlyFire(srcFlags,dstFlags)
-	--Before any further processing need to check if we are going to be placed in combat or in combat
+	-- Friendly fire interrupt? (Duels)
+	local FriendlyFire = Recount:IsFriendlyFire(srcFlags, dstFlags)
+	-- Before any further processing need to check if we are going to be placed in combat or in combat
 	if not Recount.InCombat and Recount.db.profile.RecordCombatOnly then
 		if (not FriendlyFire) and (Recount:InGroup(srcFlags) or Recount:InGroup(dstFlags)) then
 			Recount:PutInCombat()
@@ -63,7 +61,7 @@ function Recount:AddDispelData(source, victim, ability, srcGUID, srcFlags, dstGU
 	source, sourceowner, sourceownerID = Recount:DetectPet(source, srcGUID, srcFlags)
 	victim, victimowner, victimownerID = Recount:DetectPet(victim, dstGUID, dstFlags)
 
-	--Need to add events for potential deaths
+	-- Need to add events for potential deaths
 	Recount.cleventtext = source.." dispels "..victim.." "..ability
 
 	srcRetention = Recount.srcRetention
@@ -76,7 +74,7 @@ function Recount:AddDispelData(source, victim, ability, srcGUID, srcFlags, dstGU
 
 		if sourceData then
 			Recount:SetActive(sourceData)
-			--Fight tracking purposes to speed up leaving combat
+			-- Fight tracking purposes to speed up leaving combat
 			sourceData.LastFightIn = Recount.db2.FightNum
 
 			Recount:AddCurrentEvent(sourceData, "MISC", false, nil, Recount.cleventtext)
@@ -95,7 +93,7 @@ function Recount:AddDispelData(source, victim, ability, srcGUID, srcFlags, dstGU
 
 		if victimData then
 			Recount:SetActive(victimData)
-			--Fight tracking purposes to speed up leaving combat
+			-- Fight tracking purposes to speed up leaving combat
 			victimData.LastFightIn = Recount.db2.FightNum
 
 			Recount:AddCurrentEvent(victimData, "MISC", true, nil, Recount.cleventtext)
@@ -105,7 +103,7 @@ function Recount:AddDispelData(source, victim, ability, srcGUID, srcFlags, dstGU
 	end
 end
 
-local DataModes = {}
+local DataModes = { }
 
 function DataModes:Dispels(data, num)
 	if not data then
@@ -129,10 +127,10 @@ function DataModes:Dispelled(data, num)
 	return (data.Fights[Recount.db.profile.CurDataSet].Dispelled or 0), {{data.Fights[Recount.db.profile.CurDataSet].WhoDispelled, " "..L["was Dispelled by"], DetailTitles.Dispels}}
 end
 
-local TooltipFuncs = {}
+local TooltipFuncs = { }
 
 function TooltipFuncs:Dispels(name, data)
-	local SortedData, total
+	--local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
 	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Dispelled"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].DispelledWho, 3)
@@ -140,10 +138,10 @@ function TooltipFuncs:Dispels(name, data)
 end
 
 function TooltipFuncs:Dispelled(name, data)
-	local SortedData, total
+	--local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Dispelled By"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].WhoDispelled, 3)
+	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Dispelled By"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].WhoDispelled, 3)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 

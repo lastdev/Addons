@@ -1,14 +1,16 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
-local L = WeakAuras.L
-
-local dynamics = WeakAuras.dynamic_texts;
+local L = WeakAuras.L;
 
 local function createOptions(id, data)
     local options = {
         displayText = {
             type = "input",
             width = "double",
-            desc = L["Dynamic text tooltip"],
+            desc = function()
+                 local ret = L["Dynamic text tooltip"];
+                 ret = ret .. WeakAuras.GetAdditionalProperties(data);
+                 return ret
+            end,
             multiline = true,
             name = L["Display Text"],
             order = 10,
@@ -52,7 +54,7 @@ local function createOptions(id, data)
             order = 38,
             name = L["Expand Text Editor"],
             func = function()
-                WeakAuras.TextEditor(data, {"customText"})
+                WeakAuras.OpenTextEditor(data, {"customText"})
             end,
             hidden = function()
                 return not data.displayText:find("%%c")
@@ -90,15 +92,8 @@ local function createOptions(id, data)
             hasAlpha = true,
             order = 40
         },
-        outline = {
-            type = "toggle",
-            width = "half",
-            name = L["Outline"],
-            order = 42
-        },
         justify = {
             type = "select",
-            width = "half",
             name = L["Justify"],
             order = 43,
             values = WeakAuras.justify_types
@@ -118,6 +113,12 @@ local function createOptions(id, data)
             softMax = 72,
             step = 1
         },
+        outline = {
+            type = "select",
+            name = L["Outline"],
+            order = 48,
+            values = WeakAuras.font_flags
+        },
         spacer = {
             type = "header",
             name = "",
@@ -125,61 +126,61 @@ local function createOptions(id, data)
         }
     };
     options = WeakAuras.AddPositionOptions(options, id, data);
-    
+
     options.width = nil;
     options.height = nil;
-    
+
     return options;
 end
 
-local function createThumbnail(parent, fullCreate)
+local function createThumbnail(parent)
     local borderframe = CreateFrame("FRAME", nil, parent);
     borderframe:SetWidth(32);
     borderframe:SetHeight(32);
-    
+
     local border = borderframe:CreateTexture(nil, "OVERLAY");
     border:SetAllPoints(borderframe);
     border:SetTexture("Interface\\BUTTONS\\UI-Quickslot2.blp");
     border:SetTexCoord(0.2, 0.8, 0.2, 0.8);
-    
+
     local mask = CreateFrame("ScrollFrame", nil, borderframe);
     borderframe.mask = mask;
     mask:SetPoint("BOTTOMLEFT", borderframe, "BOTTOMLEFT", 2, 2);
     mask:SetPoint("TOPRIGHT", borderframe, "TOPRIGHT", -2, -2);
-    
+
     local content = CreateFrame("Frame", nil, mask);
     borderframe.content = content;
     content:SetPoint("CENTER", mask, "CENTER");
     mask:SetScrollChild(content);
-    
+
     local text = content:CreateFontString(nil, "OVERLAY");
     borderframe.text = text;
     text:SetNonSpaceWrap(true);
-    
+
     borderframe.values = {};
-    
+
     return borderframe;
 end
 
 local function modifyThumbnail(parent, borderframe, data, fullModify, size)
     local mask, content, text = borderframe.mask, borderframe.content, borderframe.text;
-    
+
     size = size or 28;
-    
+
     local fontPath = SharedMedia:Fetch("font", data.font) or data.font;
-    text:SetFont(fontPath, data.fontSize <= 25 and data.fontSize or 25, data.outline and "OUTLINE" or nil);
+    text:SetFont(fontPath, data.fontSize, data.outline and "OUTLINE" or nil);
     text:SetTextHeight(data.fontSize);
     text:SetText(data.displayText);
     text:SetTextColor(data.color[1], data.color[2], data.color[3], data.color[4]);
     text:SetJustifyH(data.justify);
-    
+
     text:ClearAllPoints();
     text:SetPoint("CENTER", UIParent, "CENTER");
     content:SetWidth(math.max(text:GetStringWidth(), size));
     content:SetHeight(math.max(text:GetStringHeight(), size));
     text:ClearAllPoints();
     text:SetPoint("CENTER", content, "CENTER");
-    
+
     local function rescroll()
         content:SetWidth(math.max(text:GetStringWidth(), size));
         content:SetHeight(math.max(text:GetStringHeight(), size));
@@ -192,10 +193,10 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
         mask:SetHorizontalScroll(xo);
         mask:SetVerticalScroll(mask:GetVerticalScrollRange() / 2);
     end
-    
+
     rescroll();
     mask:SetScript("OnScrollRangeChanged", rescroll);
-    
+
     local function UpdateText()
         local textStr = data.displayText
         for symbol, v in pairs(WeakAuras.dynamic_texts) do
@@ -208,7 +209,7 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
         text:SetText(textStr);
         rescroll();
     end
-    
+
     function borderframe:SetIcon(path)
         local icon = (
             WeakAuras.CanHaveAuto(data)
@@ -220,12 +221,12 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
         borderframe.values.icon = "|T"..icon..":12:12:0:0:64:64:4:60:4:60|t";
         UpdateText();
     end
-    
+
     function borderframe:SetName(name)
         borderframe.values.name = WeakAuras.CanHaveAuto(data) and name or data.id;
         UpdateText();
     end
-    
+
     UpdateText();
 end
 
@@ -238,13 +239,22 @@ local function createIcon()
         fontSize = 12,
         displayText = "World\nof\nWarcraft";
     };
-    
+
     local thumbnail = createThumbnail(UIParent);
     modifyThumbnail(UIParent, thumbnail, data);
     thumbnail.mask:SetPoint("BOTTOMLEFT", thumbnail, "BOTTOMLEFT", 3, 3);
     thumbnail.mask:SetPoint("TOPRIGHT", thumbnail, "TOPRIGHT", -3, -3);
-    
+
     return thumbnail;
 end
 
-WeakAuras.RegisterRegionOptions("text", createOptions, createIcon, L["Text"], createThumbnail, modifyThumbnail, L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"]);
+local templates = {
+  {
+    title = L["Default"],
+    description = L["Displays a text, works best in combination with other displays"],
+    data = {
+    };
+  }
+}
+
+WeakAuras.RegisterRegionOptions("text", createOptions, createIcon, L["Text"], createThumbnail, modifyThumbnail, L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"], templates);

@@ -1,4 +1,3 @@
--- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 
 -- Default settings
@@ -44,6 +43,7 @@ local default = {
   sparkOffsetY = 0,
   sparkRotationMode = "AUTO",
   sparkRotation = 0,
+  sparkHidden = "NEVER",
   borderColor = {1.0, 1.0, 1.0, 0.5},
   backdropColor = {1.0, 1.0, 1.0, 0.5},
   borderEdge = "None",
@@ -53,6 +53,7 @@ local default = {
   borderBackdrop = "Blizzard Tooltip",
   selfPoint = "CENTER",
   anchorPoint = "CENTER",
+  anchorFrameType = "SCREEN",
   xOffset = 0,
   yOffset = 0,
   stickyDuration = false,
@@ -60,7 +61,8 @@ local default = {
   icon_color = {1.0, 1.0, 1.0, 1.0},
   rotateText = "NONE",
   frameStrata = 1,
-  customTextUpdate = "update"
+  customTextUpdate = "update",
+  zoom = 0,
 };
 
 -- Returns tex Coord for 90° rotations + x or y flip
@@ -208,6 +210,17 @@ local barPrototype = {
       self.fg:SetHeight(yProgress > 0 and yProgress or 0.0001);
       self.spark:ClearAllPoints();
       self.spark:SetPoint("CENTER", self, alignSpark, (self.spark.sparkOffsetX or 0), sparkOffset + (self.spark.sparkOffsetY or 0));
+    end
+
+    local sparkHidden = self.spark.sparkHidden;
+    local sparkVisible = sparkHidden == "NEVER"
+                         or (sparkHidden == "FULL" and progress < 1)
+                         or (sparkHidden == "EMPTY" and progress > 0)
+                         or (sparkHidden == "BOTH" and progress < 1 and progress > 0);
+    if (sparkVisible) then
+      self.spark:Show();
+    else
+      self.spark:Hide();
     end
   end,
 
@@ -386,12 +399,34 @@ local function create(parent)
   region.duration = 0;
   region.expirationTime = math.huge;
 
+  local oldSetFrameLevel = region.SetFrameLevel;
+  function region.SetFrameLevel(self, frameLevel)
+    oldSetFrameLevel(self, frameLevel);
+    if region.barInFront then
+      iconFrame:SetFrameLevel(frameLevel + 1);
+      iconFrame:SetFrameLevel(frameLevel + 1);
+      bar:SetFrameLevel(frameLevel + 1);
+      border:SetFrameLevel(frameLevel);
+    else
+      iconFrame:SetFrameLevel(frameLevel);
+      iconFrame:SetFrameLevel(frameLevel);
+      bar:SetFrameLevel(frameLevel);
+      border:SetFrameLevel(frameLevel + 1);
+    end
+    if (self.__WAGlowFrame) then
+      self.__WAGlowFrame:SetFrameLevel(frameLevel + 1);
+    end
+  end
+
 -- Return new display/region
   return region;
 end
 
 -- Rotate object around its origin
-local function animRotate(object, degrees)
+local function animRotate(object, degrees, anchor)
+    if (not anchor) then
+        anchor = "CENTER";
+    end
   -- Something to rotate
     if object.animationGroup or degrees ~= 0 then
     -- Create AnimatioGroup and rotation animation
@@ -400,23 +435,15 @@ local function animRotate(object, degrees)
         group.rotate = group.rotate or group:CreateAnimation("rotation");
         local rotate = group.rotate;
 
-    -- Reset animation
-        group:Stop();
-        rotate:Stop();
-
-    -- Rotate around origin
-        if degrees ~= 0 then
-            rotate:SetOrigin("CENTER", 0, 0);
-            rotate:SetDegrees(degrees);
-            rotate:SetDuration(0);
-            rotate:SetEndDelay(0.1);
-            rotate:SetScript("OnUpdate", rotate.Pause);
-            rotate:Play();
-            group:Play();
-        end
+        rotate:SetOrigin(anchor, 0, 0);
+        rotate:SetDegrees(degrees);
+        rotate:SetDuration(0);
+        rotate:SetEndDelay(2147483647);
+        group:Play();
+        rotate:SetSmoothProgress(1);
+        group:Pause();
     end
 end
-WeakAuras.animRotate = animRotate;
 
 -- Calculate offset after rotation
 local function getRotateOffset(object, degrees, point)
@@ -493,7 +520,11 @@ local function orientHorizontalInverse(region, data)
 
   -- Text internal alignment
   if textDegrees == 0 then
-    text:SetWidth(bar:GetWidth() - (timer:GetWidth() + (data.textSize/2)));
+    local usedSpace = timer.visible and (timer:GetWidth() + (data.textSize/2)) or 0;
+    if (data.icon) then
+      usedSpace = usedSpace + math.min(data.height, data.width);
+    end
+    text:SetWidth(data.width - usedSpace);
     text:SetJustifyH("RIGHT");
   else
     text:SetWidth(0);
@@ -544,7 +575,11 @@ local function orientHorizontal(region, data)
 
   -- Text internal alignment
   if textDegrees == 0 then
-    text:SetWidth(bar:GetWidth() - (timer:GetWidth() + (data.textSize/2)));
+    local usedSpace = timer.visible and (timer:GetWidth() + (data.textSize/2)) or 0;
+    if (data.icon) then
+      usedSpace = usedSpace + math.min(data.height, data.width);
+    end
+    text:SetWidth(data.width - usedSpace);
     text:SetJustifyH("LEFT");
   else
     text:SetWidth(0);
@@ -668,8 +703,8 @@ local function UpdateText(region, data)
 
   -- Replace %-marks
   textStr = data.displayTextLeft or "";
-  for symbol, v in pairs(WeakAuras.dynamic_texts) do
-    textStr = textStr:gsub(symbol, region.values[v.value] or "");
+  if (textStr:find('%%')) then
+    textStr = WeakAuras.ReplacePlaceHolders(textStr, region.values, region.state);
   end
 
   -- Update left text
@@ -683,17 +718,17 @@ local function UpdateText(region, data)
 
   -- Replace %-marks
   textStr = data.displayTextRight or "";
-  for symbol, v in pairs(WeakAuras.dynamic_texts) do
-    textStr = textStr:gsub(symbol, region.values[v.value] or "");
+  if (textStr:find('%%')) then
+    textStr = WeakAuras.ReplacePlaceHolders(textStr, region.values, region.state);
   end
 
   -- Update right text
   if not timer.displayTextRight or #timer.displayTextRight ~= #textStr then
     shouldOrient = true;
   end
-  if timer.displayTextLeft ~= textStr then
+  if timer.displayTextRight ~= textStr then
     timer:SetText(textStr);
-    timer.displayTextLeft = textStr;
+    timer.displayTextRight = textStr;
   end
 
   -- Re-orientate
@@ -707,7 +742,7 @@ local function UpdateTime(region, data, inverse)
   -- Timing variables
   local remaining  = region.expirationTime - GetTime();
   local duration  = region.duration;
-  local progress  = duration ~= 0 and remaining / duration or 1;
+  local progress  = duration ~= 0 and remaining / duration or 0;
 
   -- Need to invert?
   if (
@@ -795,25 +830,25 @@ local function UpdateValue(region, data, value, total)
   UpdateText(region, data);
 end
 
+local function GetTexCoordZoom(texWidth)
+     local texCoord = {texWidth, texWidth, texWidth, 1 - texWidth, 1 - texWidth, texWidth, 1 - texWidth, 1 - texWidth}
+    return unpack(texCoord)
+end
+
 -- Modify a given region/display
 local function modify(parent, region, data)
   -- Localize
   local bar, border, timer, text, iconFrame, icon, stacks = region.bar, region.border, region.timer, region.text, region.iconFrame, region.icon, region.stacks;
 
-  -- Adjust framestrata
-    if data.frameStrata == 1 then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
-    end
+  region.useAuto = data.auto and WeakAuras.CanHaveAuto(data);
 
   -- Adjust region size
     region:SetWidth(data.width);
     region:SetHeight(data.height);
 
   -- Reset anchors
-    region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+  region:ClearAllPoints();
+  WeakAuras.AnchorFrame(data, region, parent);
 
   -- Set overall alpha
     region:SetAlpha(data.alpha);
@@ -849,11 +884,7 @@ local function modify(parent, region, data)
   bar.spark:SetVertexColor(data.sparkColor[1], data.sparkColor[2], data.sparkColor[3], data.sparkColor[4]); -- TODO introduce function?
   bar.spark:SetWidth(data.sparkWidth);
   bar.spark:SetHeight(data.sparkHeight);
-  if (data.spark) then
-    bar.spark:Show()
-  else
-    bar.spark:Hide()
-  end
+  bar.spark.sparkHidden = data.spark and data.sparkHidden or "ALWAYS";
   bar.spark:SetBlendMode(data.sparkBlendMode);
   bar.spark:SetDesaturated(data.sparkDesaturate);
   bar.spark.sparkOffsetX = data.sparkOffsetX;
@@ -863,15 +894,20 @@ local function modify(parent, region, data)
   bar.spark.sparkMirror = data.sparkMirror;
 
   -- Bar or Border (+Backdrop) in front
+  local frameLevel = region:GetFrameLevel();
   if data.barInFront then
-    iconFrame:SetFrameLevel(5);
-    bar:SetFrameLevel(5);
-    border:SetFrameLevel(2);
+    iconFrame:SetFrameLevel(frameLevel + 2);
+    iconFrame:SetFrameLevel(frameLevel + 2);
+    bar:SetFrameLevel(frameLevel + 2);
+    border:SetFrameLevel(frameLevel + 1);
   else
-    iconFrame:SetFrameLevel(2);
-    bar:SetFrameLevel(2);
-    border:SetFrameLevel(5);
+    iconFrame:SetFrameLevel(frameLevel + 1);
+    iconFrame:SetFrameLevel(frameLevel + 1);
+    bar:SetFrameLevel(frameLevel + 1);
+    border:SetFrameLevel(frameLevel + 2);
   end
+
+  region.barInFront = data.barInFront;
 
   -- Color update function
     region.Color = region.Color or function(self, r, g, b, a)
@@ -896,23 +932,29 @@ local function modify(parent, region, data)
   if data.text then
     -- Update text font
     text:SetFont(SharedMedia:Fetch("font", data.textFont), data.textSize, data.textFlags and data.textFlags ~= "None" and data.textFlags);
+    text:SetTextHeight(data.textSize);
     text:SetTextColor(data.textColor[1], data.textColor[2], data.textColor[3], data.textColor[4]);
     text:SetWordWrap(false);
     animRotate(text, textDegrees);
     text:Show();
+    text.visible = true;
   else
     text:Hide();
+    text.visible = false;
   end
 
   -- Update timer visibility
   if data.timer then
     -- Update timer font
     timer:SetFont(SharedMedia:Fetch("font", data.timerFont), data.timerSize, data.timerFlags and data.timerFlags ~= "None" and data.timerFlags);
+    timer:SetTextHeight(data.timerSize);
     timer:SetTextColor(data.timerColor[1], data.timerColor[2], data.timerColor[3], data.timerColor[4]);
     animRotate(timer, textDegrees);
     timer:Show();
+    timer.visible = true;
   else
     timer:Hide();
+    timer.visible = false;
   end
 
   -- Update icon visibility
@@ -921,13 +963,14 @@ local function modify(parent, region, data)
     local iconsize = math.min(data.height, data.width);
     icon:SetWidth(iconsize);
     icon:SetHeight(iconsize);
+    local texWidth = 0.25 * data.zoom;
+    icon:SetTexCoord(GetTexCoordZoom(texWidth))
 
     -- Icon update function
         function region:SetIcon(path)
       -- Set icon options
             local iconPath = (
-                WeakAuras.CanHaveAuto(data)
-                and data.auto
+                region.useAuto
                 and path ~= ""
                 and path
                 or data.displayIcon
@@ -950,6 +993,7 @@ local function modify(parent, region, data)
     if data.icon and data.stacks then
       -- Update stack font
       stacks:SetFont(SharedMedia:Fetch("font", data.stacksFont), data.stacksSize, data.stacksFlags and data.stacksFlags ~= "None" and data.stacksFlags);
+      stacks:SetTextHeight(data.stacksSize);
       stacks:SetTextColor(data.stacksColor[1], data.stacksColor[2], data.stacksColor[3], data.stacksColor[4]);
       animRotate(stacks, textDegrees);
 
@@ -979,7 +1023,7 @@ local function modify(parent, region, data)
         region.tooltipFrame:SetAllPoints(icon);
         region.tooltipFrame:EnableMouse(true);
         region.tooltipFrame:SetScript("OnEnter", function()
-            WeakAuras.ShowMouseoverTooltip(data, region, region.tooltipFrame, tooltipType);
+            WeakAuras.ShowMouseoverTooltip(region, region.tooltipFrame);
         end);
         region.tooltipFrame:SetScript("OnLeave", WeakAuras.HideTooltip);
 
@@ -1000,8 +1044,9 @@ local function modify(parent, region, data)
     -- Save custom text function
         region.UpdateCustomText = function()
       -- Evaluate and update text
-            WeakAuras.ActivateAuraEnvironment(data.id);
-            local custom = customTextFunc(region.expirationTime, region.duration, values.progress, values.duration, values.name, values.icon, values.stacks);
+            WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
+            local custom = customTextFunc(region.expirationTime, region.duration,
+              values.progress, values.duration, values.name, values.icon, values.stacks);
             WeakAuras.ActivateAuraEnvironment(nil);
             custom = WeakAuras.EnsureString(custom);
             if custom ~= values.custom then
@@ -1102,10 +1147,17 @@ local function modify(parent, region, data)
 
   -- Name update function
     function region:SetName(name)
-        region.values.name = WeakAuras.CanHaveAuto(data) and name or data.id;
+        region.values.name = name or data.id;
         UpdateText(self, data);
     end
 --  region:SetName("");
+
+    function region:OnUpdateHandler()
+        local value, total = self.customValueFunc(self.state.trigger);
+        value = type(value) == "number" and value or 0
+        total = type(value) == "number" and total or 0
+        UpdateValue(self, data, value, total);
+    end
 
   -- Duration update function
     function region:SetDurationInfo(duration, expirationTime, customValue, inverse)
@@ -1119,21 +1171,15 @@ local function modify(parent, region, data)
         if customValue then
       -- Update via custom OnUpdate handler
             if type(customValue) == "function" then
-                local value, total = customValue(data.trigger);
+                local value, total = customValue(region.state.trigger);
                 value = type(value) == "number" and value or 0
                 total = type(value) == "number" and total or 0
                 if total > 0 and value < total then
-                    self.customValueFunc = customValue;
-                    self:SetScript("OnUpdate", function()
-            -- Relay
-            local value, total = self.customValueFunc(data.trigger);
-            value = type(value) == "number" and value or 0
-            total = type(value) == "number" and total or 0
-            UpdateValue(self, data, value, total);
-          end);
+                  self.customValueFunc = customValue;
+                  self:SetScript("OnUpdate", region.OnUpdateHandler);
                 else
-                    UpdateValue(self, data, duration, expirationTime);
-                    self:SetScript("OnUpdate", nil);
+                  UpdateValue(self, data, duration, expirationTime);
+                  self:SetScript("OnUpdate", nil);
                 end
       -- Remove OnUpdate handler, call update once
             else

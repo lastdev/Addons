@@ -1,98 +1,159 @@
-
-
--- local spells = {
---         purple1 = { model = "spells\\seedofcorruption_state.m2", scale = 1 },
---         purple2 = { model = "spells\\gouge_precast_state_hand.m2", scale = 3 }, -- good, warlock, rogue
-
---         funnel1 = { model = "spells\\manafunnel_impact_chest.m2", scale = 1.8 }, -- monk
---         funnel2 = { model = "lifetap_state_chest.m2      funnel3 = { model = "spells\\soulfunnel_impact_chest.m2", scale = 3 },
---         funnel4 = { model = "spells\\healrag_state_chest.m2", scale = 1.8 },
-
---         green1 = { model = "spells\\nature_precast_chest.m2", scale = 2.5 },
---         spark1 = { model = "spells\\dispel_low_recursive.m2", scale = 30 }, 
---         spark2 = { model = "spells\\detectmagic_recursive.m2", scale = 30 },
---         fire1 = { model = "spells\\fire_blue_precast_uber_hand.m2", scale = 5 }, --blue
---         fire2 = { model = "spells\\fire_precast_uber_hand.m2", scale = 5 }, --orange
---         fire3 = { model = "spells\\fel_fire_precast_hand.m2", scale = 5 }, --green
-
-        -- electric1 = { model = "spells\\lightningboltivus_missile.m2", scale = .3 }, --blue long
-        -- electric2 = { model = "spells\\lightning_precast_low_hand.m2", scale = 6 }, --blue
-        -- electric3 = { model = "spells\\lightning_fel_precast_low_hand.m2", scale = 6 }, --green
-        -- electric4 = { model = "spells\\wrath_precast_hand.m2", scale = 6 }, --green long
-
-        -- spin1 = { model = "spells\\blessingoffreedom_state.m2", scale = 1 }, --paladin
-    -- }
 NugComboBar.presets = {
     --- model, cameraReset, scale, xOffset, yOffset
     ["glowPurple"] = {
-        NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
-        BIG = { "spells\\gouge_precast_state_hand.m2", true, 4, 0,0, 0.0 },
+        NORMAL = { "spells\\gouge_precast_state_hand.m2", false, 1, 0, 0, 0 },
+        BIG = { "spells\\gouge_precast_state_hand.m2", false, 1.2, 0, 0, 0 },
+        name = "(colored)",
     },
+    ["glowPurple2"] = {
+        NORMAL = { "spells\\gouge_precast_state_hand.m2", false, 1, 0, 0, 0 },
+        BIG = { "spells\\gouge_precast_state_hand.m2", false, 1.2, 0, 0, 0, "spells/7fx_nightborne_precasthand.m2", false, .75, 0.1,0,0},
+    },
+    ["glowShadowFlame"] = {
+        NORMAL = { "spells\\gouge_precast_state_hand.m2", false, 1, 0, 0, 0 },
+        BIG = { "spells\\gouge_precast_state_hand.m2", false, 1.2, 0, 0, 0, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28 },
+    },    
     ["glowHoly"] = {
-        LEFT = { "spells\\Holy_precast_med_hand_simple.m2", true, 2.8, 0,0, 0.0 },
-        NORMAL = { "spells\\Holy_precast_med_hand_simple.m2", true, 3.2, 0,0, 0.0 },
-        BIG = { "spells\\Holy_precast_med_hand_simple.m2", true, 3.7, 0,0, 0.0, "spells\\Paladin_headlinghands_state_01.m2", true, 1, 0,0,0 },
-        RIGHT = { "spells\\Holy_precast_med_hand_simple.m2", true, 2.8, 0,0, 0.0 },
+        LEFT = { "spells\\Holy_precast_med_hand_simple.m2", false, 1.3, 0, 0, 0 },
+        NORMAL = { "spells\\Holy_precast_med_hand_simple.m2", false, 1.6, 0, 0, 0 },
+        BIG = { "spells\\Holy_precast_med_hand_simple.m2", false, 1.7, 0, 0, 0, "spells\\Paladin_headlinghands_state_01.m2", false, 0.4, -0.3,-0.15,0 },
+        RIGHT = { "spells\\Holy_precast_med_hand_simple.m2", false, 1.3, 0, 0, 0 },
     },
-    ["funnelPurple"] = {
-        NORMAL = { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
-        BIG = { "spells\\soulfunnel_impact_chest.m2", true, 3 },
-    },
-    ["glow_funnelPurple"] = {
-        NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
-        BIG = { "spells\\soulfunnel_impact_chest.m2", true, 3, 0,0,0 , "spells\\gouge_precast_state_hand.m2", true, 2.5, 0,0, 0.0,},
-    },
-    ["funnelRed"] = {
-        NORMAL = { "spells\\healrag_state_chest.m2", true, 1.7 },
-        BIG = { "spells\\healrag_state_chest.m2", true, 3 },
-    },
-    ["funnelGreen"] = {
-        NORMAL = { "spells\\lifetap_state_chest.m2", true, 1.7 },
-        BIG = { "spells\\lifetap_state_chest.m2", true, 3 },
-    },
-    ["funnelBlue"] = {
-        NORMAL = { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
-        BIG = { "spells\\manafunnel_impact_chest.m2", true, 3 },
-    },
-    ["glowFreedom"] = {
-        NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
-        BIG = { "spells\\gouge_precast_state_hand.m2", true, 4, 0,0, 0.0, "spells\\blessingoffreedom_state.m2",  true,  .51, 0, -0.0004,0 },
-    },
-    ["fireBlue"] = {
-        NORMAL = { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
-        BIG = { "spells\\fire_blue_precast_uber_hand.m2", true, 5.5, 0, 0.0017 },
-    },
-    ["fireOrange"] = {
-        NORMAL = { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
-        BIG = { "spells\\fire_precast_uber_hand.m2", true, 5.5, 0, 0.0017 },
-    },
-    ["fireGreen"] = {
-        NORMAL = { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
-        BIG = { "spells\\fel_fire_precast_hand.m2", true, 5.5, 0, 0.0017 },
-    },
-    -- ["Shadowflame"] = {
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 4, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
-    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    -- ["_RuneCharger"] = {
+    --     NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 0, 1, 1, 0, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28 },
+    --     BIG = { "spells\\gouge_precast_state_hand.m2", true, 0, .77, .77, 0, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28 },
     -- },
-    -- ["electricBlueOld"] = {
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .4 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
-    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    ["_RuneCharger2"] = {
+        -- NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 0, 1, 1, 0, "spells\\blessingoffreedom_state.m2",  true,  .002, 12.6, 12.5, 0 },
+        -- NORMAL = { "spells\\fire_blue_precast_uber_hand.m2", true, 0.036, 0.70, 0.72, 0, "spells\\blessingoffreedom_state.m2",  true,  .003, 8.35, 8.4, 0 }, --"SPELLS/FlowingWater_High.m2", true, 0.04, .62, .64, 0 },
+        
+        -- NORMAL = { "spells/7fx_warlock_tormentedsoulspawn_missile.m2", false, 1, 0, 0, 0, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28, 1.3 },
+        NORMAL = { "SPELLS/Shadow_Strikes_State_Hand.m2", false, 0.7, -1.1, 0, -0.4, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28, 1.3 },
+        BIG = { "SPELLS/Shadow_Strikes_State_Hand.m2", false, 0.7, -1.1, 0, -0.4, "SPELLS/Shadowflame_Cast_Hand.m2", false, 1, 0, 0, 0.28, 1.3 },
+    },
+    -- ["frostFire"] = {
+        -- NORMAL = { 67635, false, 1, -13.7,0,-6},
+        -- BIG = { 67635, false, 1, -6.5,0,-2.9},
+    -- },
+    -- ["frostFireRed"] = {
+    --     NORMAL = { 58835, false, 1, -13.7,0,-6},
+    --     BIG = { 58835, false, 1, -6.5,0,-2.9},
+    -- },
+    -- ["fear"] = {
+    --     NORMAL = { "SPELLS/Fear_State_Base_V2.m2", true, 0.05, 0, 0, 0 },
+    --     BIG = { "SPELLS/FlowingWater_High.m2", true, 0.07, .35, .36, 0 },
+    -- },
+
+    ["blue"] = {
+        NORMAL = { "SPELLS/FlowingWater_High.m2", false, 3, 0.1, 0, 0 },
+        BIG = { "SPELLS/FlowingWater_High.m2", false, 3.6, 0.1, 0, 0 },
+    },
+    -- ["corrupted"] = {
+    --     NORMAL = { "SPELLS/Precast_Corrupted_01.m2", false, 1.1, 0, 0, 0 },
+    --     BIG = { "SPELLS/Precast_Corrupted_01.m2", false, 1.3, 0, 0, 0 },
+    -- },
+    ["furnace"] = {
+        NORMAL = { "spells/druid_wrath_impact_v2.m2", false, .7, 0,0,0, "spells/6fx_smallfire.m2", false, 0.27, -3.2, -.2, 0, true },
+        BIG = { "spells/druid_wrath_impact_v2.m2", false, 1, 0,0,0, "spells/6fx_smallfire.m2", false, 0.36, -2.4, -.2, 0, true },
+    },
+    ["furnace2"] = {
+        NORMAL = { "spells/cfx_mage_greaterpyroblast_missile.m2", false, 0.4, -0.9, -0.2,0 },
+        BIG = { "spells/cfx_mage_greaterpyroblast_missile.m2", false, 0.52, -0.7, -0.16,0 },
+    },
+    -- ["furnace3"] = {
+    --     NORMAL = { "spells/bloodlust_state_hand.m2", false, .6, 0,0,0, "spells/6fx_smallfire.m2", false, 0.27, -3.2, -.2, 0, true },
+    --     BIG = { "spells/bloodlust_state_hand.m2", false, .76, 0,0,0, "spells/6fx_smallfire.m2", false, 0.34, -3.2, -.2, 0, true },
+    -- },
+    ["chiBlast"] = {
+        NORMAL = { "SPELLS/Monk_ChiBlast_Precast_Jade.m2", false, 1.05, 0.05, 0, 0 },
+        BIG = { "SPELLS/Monk_ChiBlast_Precast_Jade.m2", false, 1.3, 0.03, 0, 0}
+    },
+    ["chiBlastBlue"] = {
+        NORMAL = { "SPELLS/Monk_ChiBlast_Precast.m2", false, 1.05, 0.15, 0, 0 },
+        BIG = { "SPELLS/Monk_ChiBlast_Precast.m2", false, 1.3, 0.1, 0, 0, "SPELLS/Monk_CracklingLightning_Impact_Blue.m2", false, 0.5, 0.5, -0.5, 0 },
+    },
+    -- ["scourge"] = {
+    --     NORMAL = { "spells/7fx_deathknight_scourgeofworlds_statechest.m2", true, 0.008, 3.1, 3.1, 0 },
+    --     -- BIG = { "SPELLS/Monk_ChiBlast_Precast_Jade.m2", true, 0.033, .77, .77, 0,} -- "SPELLS/Monk_CracklingLightning_Impact.m2", true, 0.012, 2.05, 2.05, 0 },
+    -- }
+
+    -- NORMAL = { "spells/7fx_cordana_glaive_missile.m2", true, 0.008, 3.1, 3.1, 0 },
+    ["void"] = {
+        -- /script NugComboBar.p[1].playermodel:SetModelScale(0.5); NugComboBar.p[1].playermodel:SetPosition(0,0,0);
+        -- scale controls black to purple glow ratio
+        -- actual scaling is done by moving camera back and forth
+        NORMAL = { "spells/7fx_warlock_shadow_missile.m2", false, 0.8, -0.32, 0, 0, "SPELLS/Shadow_Strikes_State_Hand.m2", false, 1, -1.1, 0, -0.4, true },
+        BIG = { "spells/7fx_warlock_shadow_missile.m2", false, 1, -0.32, 0, 0, "SPELLS/Shadow_Strikes_State_Hand.m2", false, 1, -0.2, 0.02, 0, true },
+    },
+    -- ["funnelPurple"] = {
+    --     NORMAL = { "spells\\soulfunnel_impact_chest.m2", true, 0.018, 1.4, 1.4, 0 },
+    --     BIG = { "spells\\soulfunnel_impact_chest.m2", true, 0.024, 1.05, 1.05, 0 },
+    -- },
+    -- ["funnelRed"] = {
+    --     NORMAL = { "spells\\healrag_state_chest.m2", true, 0.018, 1.4, 1.4, 0 },
+    --     BIG = { "spells\\healrag_state_chest.m2", true, 0.024, 1.05, 1.05, 0 },
+    -- },
+    ["glowGreen"] = {
+        NORMAL = { "spells/enchantments/greenflame_low.m2", false, 1, 2.2,0,1 },
+        BIG = { "spells/enchantments/greenflame_low.m2", false, 1, 2.9,0,1.3 },
+        name = "(colored)",
+    },
+    ["glowBlue"] = {
+        NORMAL = { "spells/enchantments/blueflame_low.m2", false, 1, 2.2,0,1 },
+        BIG = { "spells/enchantments/blueflame_low.m2", false, 1, 2.9,0,1.3 },
+        name = "(colored)",
+    },
+    ["glowOrange"] = {
+        NORMAL = { "spells/enchantments/redflame_low.m2", false, 1, 2.2,0,1 },
+        BIG = { "spells/enchantments/redflame_low.m2", false, 1, 2.9,0,1.3 },
+    },
+    ["glowWhite"] = {
+        NORMAL = { "spells/enchantments/whiteflame_low.m2", false, 1.3, 2.23,0.03,1, "spells/enchantments/whiteflame_low.m2", false, 1.3, 2.23,-0.03,1, true },
+        BIG = { "spells/enchantments/whiteflame_low.m2", false, 1.3, 2.9,0.03,1.3, "spells/enchantments/whiteflame_low.m2", false, 1.3, 2.2,-0.05,1, true },
+        name = "(colored)",
+    },
+    -- ["glowRed"] = {
+    --     NORMAL = { "spells/enchantments/redglow_high.m2", false, 1, 1.6,0, 0.7 },
+    --     BIG = { "spells/enchantments/redglow_high.m2", false, 1, 2.2,0,1 },
+    -- },
+    -- ["glowYellow"] = {
+    --     NORMAL = { "spells/enchantments/yellowflame_low.m2", false, 1, 2.2,0,1 },
+    --     BIG = { "spells/enchantments/yellowflame_low.m2", false, 1, 2.9,0,1.3 },
+    -- },
+    ["glowLifesteal"] = {
+        NORMAL = { "spells/enchantments/purpleflame_low.m2", false, 1, 2.2,0,1 },
+        BIG = { "spells/enchantments/purpleflame_low.m2", false, 1, 2.9,0,1.3 },
+        --BIG = { "spells\\lifetap_state_chest.m2", true, 0.024, 1.05, 1.05, 0 },
+    },
+    -- ["funnelBlue"] = {
+    --     NORMAL = { "spells/arcaneshot_missile.m2", false, 0.5, -0.35,0,0, "spells\\manafunnel_impact_chest.m2", false, 0.7, 0,0, 0, true },
+    --     BIG = { "spells\\manafunnel_impact_chest.m2", false, 0.95, 0,0, 0 },
+    -- },
+    ["glowFreedom"] = {
+        NORMAL = { "spells\\gouge_precast_state_hand.m2", false, 1, 0, 0, 0 },
+        
+        -- BIG = { "spells\\gouge_precast_state_hand.m2", false, 1.2, 0, 0, 0, "spells/monk_avertharm_state_base.m2",  false,  .5, -5.7,0,0},
+        BIG = { "spells\\gouge_precast_state_hand.m2", false, 1.2, 0, 0, 0, "spells/divineshield_v2_chest.m2",  false,  0.8, -11.2, 0, -5},        
+        -- BIG = { "spells\\gouge_precast_state_hand.m2", false, 0.1, 0, 0, 0, "spells/weaponenchant_pvppandarias2.m2",  false,  2, -0.1,0,0, true},        
+    },
+    ["arcanePink"] = {
+        NORMAL = { "spells/cast_arcane_pink_01.m2", false, 0.9, 0,0,0, "spells/antimagic_precast_hand_02red.m2", false, 2.3, 0,0,0, true },
+        BIG = { "spells/cast_arcane_pink_01.m2", false, 1.1, 0,0,0, "spells/antimagic_precast_hand_02red.m2", false, 2.8, 0,0,0, true },
+    },
+    ["glowArcshot"] = {
+        NORMAL = { "spells/arcaneshot_missile.m2", false, 0.5, -0.35,0,0, "spells/antimagic_precast_hand_02red.m2", false, 2.3, 0,0,0, true },
+        BIG = { "spells/arcaneshot_missile.m2", false, 0.65, -0.35,0,0, "spells/antimagic_precast_hand_02red.m2", false, 2.8, 0,0,0, true },
+        name = "(colored)",
+    },
+    
+    
+    -- ["fireGreen"] = {
+    --     NORMAL = { "spells\\fel_fire_precast_hand.m2", true, 0.036, 0.70, 0.72, 0 },
+    --     BIG = { "spells\\fel_fire_precast_hand.m2", true, 0.047, 0.53, 0.57, 0 },
     -- },
     ["electricBlue"] = {
-        NORMAL = { "spells\\lightningbolt_missile.m2", true, 2.3 },
-        BIG = { "spells\\lightningbolt_missile.m2", true, 3},
+        NORMAL = { "spells\\lightningbolt_missile.m2", false, .9, 0, 0, 0 },
+        BIG = { "spells\\lightningbolt_missile.m2", false, 1.1, 0, 0, 0 },
     },
 }
 
@@ -209,7 +270,7 @@ local pointtex = {
 
 
     -- second row
-    [SR1] = { -- 
+    [SR1] = { --
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {0, 26/256, 0, 1},
         role = "LEFT",
@@ -288,6 +349,7 @@ local pointtex = {
 
 function RotateTexture(coords, degrees)
         local l,r,t,b = unpack(coords)
+        -- return { l, b, r, b, l, t, r, t }
         return { r, t, l, t, r, b, l, b }
 end
 
@@ -305,13 +367,29 @@ local mappings = {
     [5] = { 1, 2, 3, 4, 6 },
     [6] = { 1, 2, 3, 4, 5, 6 },
     ["SHAMAN7"] = { 1, 2, 3, 4, 6, 7, 8 },
+    ["SHAMAN5"] = { 1, 2, 3, 6, 7 },
     ["SHAMANDOUBLE"] = { 1, 2, 3, 4, 6, SR1, SR2, SR3, SR4, SR6},
+    ["ROGUE53"] = { 1, 2, 3, 4, 6, SR1, SR2, SR8 },
+    ["ROGUE63"] = { 1, 2, 3, 4, 5, 6, SR1, SR2, SR8 },
     ["DKDOUBLE"] = { 1, 6, SR1, SR2, SR3, SR4, SR6},
     ["PALADIN"] = { 1, 2, 6, 7, 8 },
     ["ARCANE"] = { 1, 2, 3, 6, SR1, SR2, SR8 },
     ["4NO6"] = { 1, 2, 3, 8 },
     ["5NO6"] = { 1, 2, 3, 4, 8 },
+    ["6NO6"] = { 1, 2, 3, 4, 5, 8 },
+    ["MOONKIN"] = { 1, 2, 8, SR1, SR2, SR8 },
+    ["FIREMAGE2"] = { 1, 2, 6, SR1, SR8 },
+    ["FIREMAGE3"] = { 1, 2, 6, SR1, SR2, SR8 },
+    ["FIREMAGE4"] = { 1, 2, 6, SR1, SR2, SR3, SR8 },
 }
+
+
+function NugComboBar.MoveCharger(self, point)
+    self.bar:ClearAllPoints()
+    self.bar:SetPoint("TOP", point, "BOTTOM", 0,16)
+    self.bar:SetWidth(24)
+    self.bar:SetHeight(5)
+end
 
 
 function NugComboBar.SetMaxPoints(self, n, special, n2)
@@ -335,14 +413,22 @@ function NugComboBar.SetMaxPoints(self, n, special, n2)
     for i=1,totalpoints do
         local point = self.p[i]
         local popts = point.bg.settings
+        local toffset_x = popts.toffset_x or 0
+        local toffset_y = popts.toffset_y or 0
         point:Show()
         point.bg:Show()
-        framesize = framesize + popts.width
-        if popts.chainreset then prevt = nil end
+        if i <= n then
+            framesize = framesize + popts.width
+        end
+        if popts.chainreset then
+            prevt = nil
+            toffset_x = NugComboBarDB.bar2_x or toffset_x
+            toffset_y = NugComboBarDB.bar2_y or toffset_y
+        end
         if IsVertical() then
-            point.bg:SetPoint("BOTTOMLEFT", prevt or self, prevt and "TOPLEFT" or "BOTTOMLEFT", -(popts.toffset_y or 0), popts.toffset_x or 0)
+            point.bg:SetPoint("BOTTOMLEFT", prevt or self, prevt and "TOPLEFT" or "BOTTOMLEFT", -(toffset_y or 0), toffset_x or 0)
         else
-            point.bg:SetPoint("TOPLEFT", prevt or self, prevt and "TOPRIGHT" or "TOPLEFT", popts.toffset_x or 0, popts.toffset_y or 0)
+            point.bg:SetPoint("TOPLEFT", prevt or self, prevt and "TOPRIGHT" or "TOPLEFT", toffset_x or 0, toffset_y or 0)
         end
         prevt = point.bg
 
@@ -376,7 +462,7 @@ function NugComboBar.Create2DPoint(self, id, opts)
     local tex = [[Interface\Addons\NugComboBar\tex\ncbc_point]]
     local f = CreateFrame("Frame","NugComboBarPoint"..id,self)
     f:SetHeight(size); f:SetWidth(size);
-    
+
     local t1 = f:CreateTexture(nil,"ARTWORK")
     t1:SetTexture(tex)
     t1:SetAllPoints(f)
@@ -388,17 +474,19 @@ function NugComboBar.Create2DPoint(self, id, opts)
     g2:SetAllPoints(f2)
     g2:SetTexture[[Interface\Addons\NugComboBar\tex\ncbc_point_shine]]
     f2:SetPoint("CENTER",f,"CENTER",3,2)
-    
+
     f2:SetAlpha(0)
-    
+
     local g2aag = f2:CreateAnimationGroup()
     local g2a = g2aag:CreateAnimation("Alpha")
     g2a:SetStartDelay(0.18)
-    g2a:SetChange(1)
+    g2a:SetFromAlpha(1)
+    g2a:SetToAlpha(1)
     g2a:SetDuration(0.3)
     g2a:SetOrder(1)
     local g2d = g2aag:CreateAnimation("Alpha")
-    g2d:SetChange(-1)
+    g2d:SetToAlpha(0)
+    g2d:SetFromAlpha(1)
     g2d:SetDuration(0.4)
     g2d:SetOrder(2)
     --Required for 4.2
@@ -417,86 +505,142 @@ end
 -- 3D Point (Model Frame Type)
 ------------------------------
 
+
+-- This workaround waits 2 render passes, then calls :SetCamera(0) on all models that need it
+local modelsToReset = {}
+local nextrender_frame = CreateFrame("Frame")
+local nextrender_counter = 2
+local nextrender_func = function()
+    if nextrender_counter > 0 then
+        nextrender_counter = nextrender_counter - 1
+        return
+    end
+
+    while next(modelsToReset) do
+        local pm = next(modelsToReset)
+        modelsToReset[pm] = nil
+        -- print(pm:GetName(), "camera reset")
+        if not pm.camera_reset then
+            pm:SetModelScale(pm.model_scale)
+        else
+            pm:SetCamera(0)
+        end
+    end
+    nextrender_frame:SetScript("OnUpdate", nil)
+    nextrender_counter = 2
+end
+
+nextrender_frame.enqueue = function(self, frame)
+    modelsToReset[frame] = true
+    nextrender_frame:SetScript("OnUpdate", nextrender_func)
+    nextrender_counter = 5
+end
+
+nextrender_frame.dequeue = function(self, frame)
+    modelsToReset[frame] = nil
+end
+
 local SetPresetFunc = function ( self, name, noreset )
     local ps = NugComboBar.presets[name]
     if not ps then return false end
     local role = self.bg.settings.role
     if role and not ps[role] then role = "NORMAL" end
     local settings = ps[role] or ps[self.id]
-    local model, cameraReset, scale, ox, oy, oz, bgmodel, bgcameraReset, bgscale, bgox, bgoy, bgoz = unpack(settings)
+    local model, cameraReset, scale, ox, oy, oz, bgmodel, bgcameraReset, bgscale, bgox, bgoy, bgoz, doubleLayer = unpack(settings)
 
-    -- print(">>>>", self:GetModelScale(), "POS>", self:GetPosition(), "LIGHT>",self:GetLight())
-
-    -- self:SetModelScale(1)
-    -- self:SetPosition(0,0,0)
-    -- self:ClearModel()
-    -- self:ClearFog()
-    -- self:RefreshCamera()
-    -- if notreset and cameraReset then -- cameraReset here simply means Model frame type
-        -- if self.model:GetModel() == model then return end
-    -- end
     self.currentPreset = name
 
-    ox = ox or 0
-    oy = oy or 0
-    oz = oz or 0
-    if cameraReset then
-        -- self:SetCamera(0)
-        self.playermodel:Hide()
-        self.model:Show()
-        self.model:SetModel(model)
-        self.model:SetModelScale(0.01*scale)
-        
+    self.playermodel:Show()
+    self.model:Hide()
 
-        -- local x,y,z = unpack(self.model.position)
-        local x,y,z = NugComboBarDB_Global.adjustX/100, NugComboBarDB_Global.adjustY/100, 0
-        self.model:SetPosition(x+ox, y+oy, z)
+    self.playermodel.model_path = model
+    self.playermodel.model_scale = scale
+    self.playermodel.ox = ox or 0
+    self.playermodel.oy = oy or 0
+    self.playermodel.oz = oz or 0
+    self.playermodel.camera_reset = cameraReset
 
-        if self.bgmodel then
-            if bgmodel then
-                bgox = bgox or 0
-                bgoy = bgoy or 0
-                bgoz = bgoz or 0
-                self.bgmodel:SetModel(bgmodel)
-                self.bgmodel:SetModelScale(0.01*bgscale)
-                self.bgmodel:SetPosition(x+bgox, y+bgoy, z)
-                self.bgmodel:Show()
+    self.playermodel:Redraw()
+
+    if self.bgmodel then
+        if bgmodel then
+            if doubleLayer then
+                local v = type(doubleLayer) == "number" and doubleLayer or 1
+                self.bgmodel:SetScale(v)
+                self.bgmodel:SetFrameLevel(1)
             else
-                self.bgmodel:Hide()
+                self.bgmodel:SetScale(2)
+                self.bgmodel:SetFrameLevel(0)
             end
+
+            self.bgmodel.model_path = bgmodel
+            self.bgmodel.model_scale = bgscale
+            self.bgmodel.ox = bgox or 0
+            self.bgmodel.oy = bgoy or 0
+            self.bgmodel.oz = bgoz or 0
+            self.bgmodel.camera_reset = bgcameraReset
+
+            self.bgmodel:Redraw()
+            self.bgmodel:Show()
+        else
+            self.bgmodel:Hide()
         end
-
-        -- self.playermodel:ClearModel()
-        
-    else
-        self.playermodel:Show()
-        self.model:Hide()
-        self.playermodel:SetModel(model)
-        self.playermodel:SetModelScale(1*scale)
-        
-
-        self.playermodel:SetPosition(0+oz,0+ox,0+oz)
-
-        if self.bgmodel then
-            if bgmodel then
-                self.bgmodel:Hide()
-            end
-        end
-        -- self.model:ClearModel()
-        
     end
+
+
     return true
 end
+
+local Redraw = function(self)
+    -- print(self:GetName(), "Redraw")
+    if not self.model_path then return end
+
+    self:SetModelScale(1)
+    self:SetPosition(0,0,0)
+
+    if type(self.model_path) == "number" then
+        self:SetDisplayInfo(self.model_path)
+    else
+        self:SetModel(self.model_path)
+    end
+    self:SetModelScale(1)
+    self:SetPosition(self.ox, self.oy, self.oz)
+
+    nextrender_frame:enqueue(self)
+    -- old method (pre 7.2):
+    -- SetCamera(0) is a bugged function that was breaking model camera
+    -- and was resetting it to default position, thus turning some effects to the bottom view
+    -- new method:
+    -- doesn't break camera, and all is good, but...
+    -- All calls to SetModelScale before model was rendered do nothing.
+    -- Regardless of scale value model will appear as if it was 1.
+    -- And all following transformations will be relative to that value
+    -- So that's why model scale initially should be 1, and only after it was loaded it should be scaled.
+    if self.camera_reset then
+        self:SetCamera(0)
+    else
+        self:RefreshCamera()
+    end
+end
+
+local ResetTransformations = function(self)
+    -- print(self:GetName(), "hiding", self:GetCameraDistance(), self:GetCameraPosition())
+    self:SetModelScale(1)
+    self:SetPosition(0,0,0)
+end
+NugComboBar.Redraw = Redraw
+NugComboBar.ResetTransformations = ResetTransformations
 
 local SetColor3DFunc = function(self, r,g,b, force)
     local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB
     if NugComboBarDB.colors3d or force then
-        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, r,g,b, 1, r,g,b
+        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, r,g,b, 1, r,g,b
     else
-        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
     end
-    self.model:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    -- self.model:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
     self.playermodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    self.bgmodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
 end
 
 function NugComboBar.Create3DPoint(self, id, opts)
@@ -507,13 +651,18 @@ function NugComboBar.Create3DPoint(self, id, opts)
     -- :SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
     local enabled, omni, dirX, dirY, dirZ,
           ambIntensity, ambR, ambG, ambB,
-          dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+          dirIntensity, dirR, dirG, dirB = true, false, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
           -- dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 1.0, 0.0, 0.0, 1, 1.0, 1.0, 1.0
 
 
     local pm = CreateFrame("PlayerModel","NugComboBarPointPlayerModel"..id,f)
     pm:SetFrameLevel(2)
     pm:SetAllPoints(f)
+    pm:SetFrameLevel(3)
+
+    pm:SetModel("spells\\gouge_precast_state_hand.m2")
+    pm:SetModelScale(1)
+    pm:SetPosition(0,0,0)
     -- pm:SetScript("OnUpdateModel", function() print("PM model update")     end)
     pm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
 
@@ -523,16 +672,25 @@ function NugComboBar.Create3DPoint(self, id, opts)
     m:SetAllPoints(f)
     m:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
 
-    -- m.position = { 0.0205,0.021,0 }
-    -- m:SetPosition(unpack(m.position))
-
-
     f.playermodel = pm
     f.model = m
 
+    -- When PlayerFrame gets hidden, like during cutscenes or when map is opened, it will disappear
+    -- For it to appear, it needs to be loaded again. But at that moment all previous
+    -- transformations will "freeze" and fuck up all future transformations
+    f.playermodel:SetScript("OnHide", ResetTransformations)
+    f.playermodel:SetScript("OnShow", Redraw)
+    f.playermodel.Redraw = Redraw
+    f.playermodel.ResetTransformations = ResetTransformations
 
-    if opts.bgeffect then
-        local bgm = CreateFrame("Model","NugComboBarPointModel"..id,f)
+
+    -- hooksecurefunc(WorldMapFrame, "Hide", ReShowModels);
+    -- local movieWatchFrame = CreateFrame("Frame");
+    -- movieWatchFrame:RegisterEvent("PLAY_MOVIE");
+    -- movieWatchFrame:SetScript("OnEvent", ReShowModels);
+
+    -- if opts.bgeffect then
+        local bgm = CreateFrame("PlayerModel","NugComboBarPointBGModel"..id,f)
         bgm:SetFrameLevel(0)
         bgm:SetWidth(size)
         bgm:SetHeight(size)
@@ -540,82 +698,154 @@ function NugComboBar.Create3DPoint(self, id, opts)
         bgm:SetPoint("CENTER", f, "CENTER", 0, 0)
         bgm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
         f.bgmodel = bgm
-    end
 
-    -- if prev
-        -- then f:SetPoint("CENTER", prev, "CENTER", 50, 0)
-        -- else f:SetPoint("LEFT", self, "LEFT", 0, 0)
+        f.bgmodel:SetScript("OnHide", ResetTransformations)
+        f.bgmodel:SetScript("OnShow", Redraw)
+        f.bgmodel.Redraw = Redraw
+        f.bgmodel.ResetTransformations = ResetTransformations
     -- end
+
 
     -- local backdrop = {
     --     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
     --     tile = true, tileSize = 0,
     --     insets = {left = 0, right = 0, top = 0, bottom = 0},
-    -- }   
+    -- }
     -- f:SetBackdrop(backdrop)
     -- f:SetBackdropColor(0, 0, 0, 0.7)
 
-    f.SetColor = SetColor3DFunc --function() end
+    f.SetColor = SetColor3DFunc
     f.SetPreset = SetPresetFunc
 
     return f
 end
 
--- -------------------------------------
--- -- 3D Point (PlayerModel Frame Type)
--- -------------------------------------
+local CreateTextureBar = function(self)
+    local bar = CreateFrame("StatusBar",nil, self)
+    bar:SetWidth(38); bar:SetHeight(5)
+    bar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]], "ARTWORK")
+    bar:SetMinMaxValues(0,100)
+    bar:SetValue(50)
+    --
+    local barbg = bar:CreateTexture(nil, "BACKGROUND", nil, 3)
+    barbg:SetTexture[[Interface\TargetingFrame\UI-StatusBar]]
+    barbg:SetVertexColor(0,0,0)
+    barbg:SetAllPoints(bar)
+    bar.bg = barbg
 
--- local SetPresetFunc_PlayerModel = function ( self, name )
---     -- local ps = NugComboBar.presets[name]
---     -- if not ps then return false end
---     -- local settings = ps[self.id]
---     -- local model, scale, ox, oy = unpack(settings)
---     -- self:SetModel(model)
---     -- self:SetModelScale(0.01*scale)
---     -- ox = ox or 0
---     -- oy = oy or 0
---     -- local x,y,z = unpack(self.position)
---     -- self:SetPosition(x+ox, y+oy, z)
---     return true
+    local tb = bar:CreateTexture(nil, "ARTWORK", nil, 1)
+    tb:SetWidth(60); tb:SetHeight(24)
+    tb:SetTexture[[Interface\Addons\NugComboBar\tex\bar2.tga]]
+    tb:SetTexCoord(0/128, 60/128, 0/64, 24/64)
+    tb:SetPoint("TOPLEFT", bar, "TOPLEFT", -8, 6)
+
+    bar.SetColor = function(self, r,g,b)
+        self:SetStatusBarColor(r,g,b)
+        self.bg:SetVertexColor(r*.3,g*.3,b*.3)
+    end
+
+    return bar
+end
+
+
+local CreatePixelBar = function(self)
+    local bar = CreateFrame("StatusBar",nil, self)
+    --
+    -- local current = GetCurrentResolution()
+    -- if not current then return end
+    -- local resolutions = { GetScreenResolutions() }
+    -- local res = resolutions[current]
+    -- if not res then return end
+
+    -- local w,h = string.match(res, "(%d+)x(%d+)")
+    -- local p = (GetScreenHeight()/h) / UIParent:GetScale()
+    local p = 1
+    -- p = math.floor(p*100)/100
+    -- print("pixel len", p)
+
+    bar:SetWidth(45); bar:SetHeight(4)
+    bar:SetStatusBarTexture([[Interface\Addons\NugComboBar\tex\white]], "ARTWORK")
+    bar:SetMinMaxValues(0,100)
+    bar:SetValue(50)
+    --
+    local barbg = bar:CreateTexture(nil, "BACKGROUND", nil, 3)
+
+
+    barbg:SetTexture[[Interface\Addons\NugComboBar\tex\white]]
+    barbg:SetVertexColor(0,0,0)
+    barbg:SetAllPoints(bar)
+    -- barbg:SetPoint("TOPLEFT", bar, "TOPLEFT", 0, 0)
+    -- barbg:SetHeight(1)
+    -- barbg:SetPoint("BOTTOMLEFT", bar, "BOTTOMLEFT", 0, 0)
+    -- barbg:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0)
+    bar.bg = barbg
+    --
+    -- /dump NugComboBar.bar:Show()
+    local backdrop = {
+        bgFile = [[Interface\Addons\NugComboBar\tex\white]],
+        tile = true, tileSize = 0,
+        insets = {left = -1, right = -1, top = -1, bottom = -1},
+    }
+    -- print("p=", p)
+    bar:SetBackdrop(backdrop)
+    bar:SetBackdropColor(0, 0, 0, 1)
+
+    bar.SetColor = function(self, r,g,b)
+        self:SetStatusBarColor(r,g,b)
+        self.bg:SetVertexColor(r*0.3,g*0.3,b*0.3)
+        self:SetBackdropColor(0,0,0,1)
+    end
+
+    bar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 14*p, 0)
+    -- bar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 80, -35)
+
+    return bar
+end
+
+-- local cdOnUpdate = function(self,time)
+--     self._elapsed = self._elapsed + time
+--     if self._elapsed < 0.03 then return end
+--     self._elapsed = 0
+
+--     local t = self.texture
+--     local progress = (GetTime() - self.start)/self.duration
+--     if progress > 1 then progress = 1 end
+--     if progress < 0 then progress = 0 end
+--     print(progress)
+--     t:SetRotation(math.rad(-360*progress))
+
+--     -- print(progress)
+--     if progress == 1 then
+--         self:SetScript("OnUpdate", nil)
+--         self:Hide()
+--     -- else
+--         -- t:Show()
+--     end
 -- end
-
--- function NugComboBar.Create3DPoint_PlayerModel(self, id, opts)
---     local size = 64
---     local f = CreateFrame("Model","NugComboBarPointPM"..id,self)
---     f:SetHeight(size); f:SetWidth(size);
---     -- f:SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
---     f:SetLight( 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999 );
---     f:SetModel([[SPELLS/SnowFlakeCreature_Var1_Missile.m2]])
---     f:SetModelScale(0.01)
-
---     f.position = { 0.0205,0.021,0 }
---     f:SetPosition(unpack(f.position))
---     f:SetFacing(0)
-
---     f.SetColor = function() end
---     f.SetPreset = SetPresetFunc_PlayerModel
-
---     return f
--- end
-
 
 NugComboBar.Create = function(self)
+    NugComboBar:IsDefaultSkin(true)
+
     self:SetFrameStrata("MEDIUM")
-    -- if IsVertical() then
-        -- self:SetWidth(32)
-        -- self:SetHeight(164)
-    -- else
+    if IsVertical() then
+        self:SetWidth(32)
+        self:SetHeight(164)
+    else
         self:SetWidth(164)
         self:SetHeight(32)
-    -- end
+    end
 
     local initial = not _G["NugComboBarBackgroundTexture1"]
 
-    self.point = self.point or {}
-    self.point_map = mappings[6]
-    self.p = setmetatable({}, { __index = function(t,k)
-        return self.point[self.point_map[k]]
-    end})
+    local is3D = NugComboBarDB.enable3d
+
+    if initial then
+        self.point = self.point or {}
+        self.point_map = mappings[6]
+        self.p = setmetatable({}, { __index = function(t,k)
+            return self.point[self.point_map[k]]
+        end})
+    end
 
     local prevt
     for i=1,#pointtex do
@@ -642,12 +872,33 @@ NugComboBar.Create = function(self)
         t.settings = ts
         prevt = t
 
-        local is3D = NugComboBarDB.enable3d
         local f = self.point[i] or
                   (is3D  and self:Create3DPoint(i, ts) or self:Create2DPoint(i, ts))
         -- if is3D then
             -- ts.poffset_x = ts.poffset_x
             -- ts.poffset_y = ts.poffset_y
+        -- end
+        -- if not f.cd then
+
+        --     local cd = CreateFrame("Cooldown", nil, self)
+        --     local role = ts.role
+        --     -- cd:SetHeight(22);
+        --     -- cd:SetWidth(22);
+        --     cd:SetHeight(28);
+        --     cd:SetWidth(28);
+        --     if role == "BIG" then
+        --         cd:SetHeight(35)
+        --         cd:SetWidth(35)
+        --     end
+        --     cd:SetSwipeTexture([[Interface\AddOns\NugComboBar\tex\SwipeCircleFat.tga]])
+        --     cd:SetFrameStrata("MEDIUM")
+        --     cd:SetSwipeColor(1,.5,1, 0.4)
+        --     cd:SetHideCountdownNumbers(true)
+        --     cd.noCooldownCount = true
+        --     cd:SetPoint("CENTER", f, "CENTER", 0, 0)
+        --     cd:Show()
+
+        --     f.cd = cd
         -- end
 
         f:SetAlpha(0)
@@ -660,189 +911,101 @@ NugComboBar.Create = function(self)
         f.bg = t
         f.id = i
         self.point[i] = f
-        
+
         if initial then
-        local aag = f:CreateAnimationGroup()
-        f.aag = aag
-        local a1 = aag:CreateAnimation("Alpha")
-        a1:SetChange(1)
-        a1:SetDuration(0.4)
-        a1:SetOrder(1)
-        aag:SetScript("OnFinished",function(self)
-            self:GetParent():SetAlpha(1)
-        end)
-        
-        local dag = f:CreateAnimationGroup()
-        f.dag = dag
-        local d1 = dag:CreateAnimation("Alpha")
-        d1:SetChange(-1)
-        d1:SetDuration(0.5)
-        d1:SetOrder(1)
-        dag:SetScript("OnFinished",function(self)
-            self:GetParent():SetAlpha(0)
-        end)
-        
+            local aag = f:CreateAnimationGroup()
+            f.aag = aag
+            local a1 = aag:CreateAnimation("Alpha")
+            a1:SetFromAlpha(0)
+            a1:SetToAlpha(1)
+            a1:SetDuration(0.3)
+            a1:SetOrder(1)
+            aag:SetScript("OnFinished",function(self)
+                self:GetParent():SetAlpha(1)
+            end)
 
-        local rag = f:CreateAnimationGroup()
-        f.rag = rag
-        local r1 = rag:CreateAnimation("Alpha")
-        r1:SetChange(-0.7)
-        r1:SetDuration(0.20)
-        r1:SetOrder(1)
-        r1:SetScript("OnFinished", function(self)
-            local p = self:GetParent():GetParent()
-            p:ragfunc(p.ragfuncarg)
-        end)
-        local r2 = rag:CreateAnimation("Alpha")
-        r2:SetChange(0.7)
-        r2:SetDuration(0.40)
-        r2:SetOrder(2)
-        rag:SetScript("OnFinished",function(self)
-            self:GetParent():SetAlpha(1)
-        end)
+            local dag = f:CreateAnimationGroup()
+            f.dag = dag
+            local d1 = dag:CreateAnimation("Alpha")
+            d1:SetFromAlpha(1)
+            d1:SetToAlpha(0)
+            d1:SetDuration(0.5)
+            d1:SetOrder(1)
+            dag:SetScript("OnFinished",function(self)
+                self:GetParent():SetAlpha(0)
+            end)
 
-        end --endif intiial
-        
+
+            local rag = f:CreateAnimationGroup()
+            f.rag = rag
+            local r1 = rag:CreateAnimation("Alpha")
+            r1:SetFromAlpha(1)
+            r1:SetToAlpha(0.3)
+            r1:SetDuration(0.20)
+            r1:SetOrder(1)
+            r1:SetScript("OnFinished", function(self)
+                local p = self:GetParent():GetParent()
+                p:ragfunc(p.ragfuncarg)
+            end)
+            local r2 = rag:CreateAnimation("Alpha")
+            r2:SetFromAlpha(0.3)
+            r2:SetToAlpha(1)
+            r2:SetDuration(0.40)
+            r2:SetOrder(2)
+            rag:SetScript("OnFinished",function(self)
+                self:GetParent():SetAlpha(1)
+            end)
+
+        end
+
         f.Activate = ActivateFunc
         f.Deactivate = DeactivateFunc
         f.Reappear = ReappearFunc
     end
 
-    local bar = self.bar or CreateFrame("StatusBar",nil, self)
+    local bar = self.bar
     if initial then
-    local ts = pointtex["bar"]
-    bar:SetWidth(45); bar:SetHeight(7)
-    bar:SetStatusBarTexture([[Interface\AddOns\NugComboBar\tex\statusbar]], "ARTWORK")
-    bar:SetMinMaxValues(0,100)
-    bar:SetValue(50)
-
-    local barbg = bar:CreateTexture(nil, "BACKGROUND")
-    barbg:SetTexture[[Interface\AddOns\NugComboBar\tex\statusbar]]
-    --[[Interface\TargetingFrame\UI-StatusBar]]
-    --[[Interface\Addons\NugComboBar\tex\white]]
-    barbg:SetAllPoints(bar)
-    bar.bg = barbg
-
-
-    local backdrop = {
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        tile = true, tileSize = 0,
-        insets = {left = -2, right = -2, top = -2, bottom = -2},
-    }    
-    bar:SetBackdrop(backdrop)
-    bar:SetBackdropColor(0, 0, 0, 0.7)
-
-    bar.SetColor = function(self, r,g,b)
-        self:SetStatusBarColor(r,g,b)
-        self.bg:SetVertexColor(r*.5,g*.5,b*.5)
-    end
-
-    local text = bar:CreateFontString(nil, "OVERLAY")
-    text:SetFont([[Interface\AddOns\NugComboBar\tex\Emblem.ttf]],15)
-    text:SetPoint("TOPLEFT",bar,"TOPLEFT", 0,0)
-    text:SetPoint("BOTTOMRIGHT",bar,"BOTTOMRIGHT", -10,0)
-    text:SetJustifyH("RIGHT")
-    text:SetTextColor(1,1,1,0.2)
-    -- text:SetVertexColor(1,1,1)   
-    bar.text = text
-
-    bar.SetValue1 = bar.SetValue -- text should only be visible for demonology
-    bar.SetValue = function(self, v)
-        self:SetValue1(v)
-        if self.text:IsVisible() then
-            self.text:SetText(v)
+        if not bar then
+            bar = CreatePixelBar(self)
+            self.bar = bar
         end
-    end
 
-    local normalSetScale = self.SetScale
-    local normalSetAlpha = self.SetAlpha
-    local normalShow = self.Show
-    local normalHide = self.Hide
-    bar.Small = function(self)
-        if IsVertical() then
-            self:SetWidth(7); self:SetHeight(45);
-            self:SetOrientation("VERTICAL")
-            self:SetStatusBarTexture([[Interface\AddOns\NugComboBar\tex\vstatusbar]], "ARTWORK")
-        else
-            self:SetWidth(45); self:SetHeight(7);
-            self:SetOrientation("HORIZONTAL")
-            self:SetStatusBarTexture([[Interface\AddOns\NugComboBar\tex\statusbar]], "ARTWORK")
-        end
-        self.text:Hide()
-        self:SetParent(NugComboBar)
-        self:ClearAllPoints()
-        NugComboBar.SetScale = normalSetScale
-        NugComboBar.SetAlpha = normalSetAlpha
-        NugComboBar.Show = normalShow
-        NugComboBar.Hide = normalHide
-        -- if barBottom then 
-            -- self:SetPoint("TOPLEFT", NugComboBar, "BOTTOMLEFT", 14, 4)
+
+        -- if not IsVertical() then --only shows bar in horizontal
+            -- bar:SetPoint("BOTTOMLEFT", NugComboBar, "TOPLEFT", 14, 0)
         -- else
-        if IsVertical() then
-            self:SetPoint("BOTTOMRIGHT", NugComboBar, "BOTTOMLEFT", 0, 14)
-        else
-            self:SetPoint("BOTTOMLEFT", NugComboBar, "TOPLEFT", 14, 0)
-        end
+            -- bar:SetPoint("BOTTOMRIGHT", NugComboBar, "BOTTOMLEFT", 0, 14)
         -- end
-        NugComboBar:Show()
-    end
 
-    bar.Long = function(self)
-        self:Small()
-        if IsVertical() then
-            self:SetWidth(4); self:SetHeight(83);
-        else
-            self:SetWidth(83); self:SetHeight(4);
-        end
-    end
 
-    bar.Big = function(self)
-        if IsVertical() then
-            self:SetWidth(20); self:SetHeight(80);
-            self:SetOrientation("VERTICAL")
-            self:SetStatusBarTexture([[Interface\AddOns\NugComboBar\tex\vstatusbar]], "ARTWORK")
-            self.text:ClearAllPoints()
-            self.text:SetPoint("CENTER",bar,"TOP", 0,-10)
-            self.text:SetFont([[Interface\AddOns\NugComboBar\tex\Emblem.ttf]],10)
-        else
-            self:SetWidth(80); self:SetHeight(20);
-            self:SetOrientation("HORIZONTAL")
-            self:SetStatusBarTexture([[Interface\AddOns\NugComboBar\tex\statusbar]], "ARTWORK")
-            self.text:ClearAllPoints()
-            self.text:SetPoint("TOPLEFT",bar,"TOPLEFT", 0,0)
-            self.text:SetPoint("BOTTOMRIGHT",bar,"BOTTOMRIGHT", -10,0)
-            self.text:SetFont([[Interface\AddOns\NugComboBar\tex\Emblem.ttf]],15)
-        end
-        self:SetParent(UIParent)
-        -- I don't want to rewrite everything
-        -- just to make them siblings
-        self:SetScale(NugComboBar:GetScale())
-        NugComboBar.SetScale = function(self, scale)
-            self.bar:SetScale(scale)
-            normalSetScale(NugComboBar, scale)
-        end
-        self:SetAlpha(NugComboBar:GetAlpha())
-        NugComboBar.SetAlpha = function(self, alpha)
-            self.bar:SetAlpha(alpha)
-            normalSetAlpha(NugComboBar, alpha)
-        end
+        -- local cd = CreateFrame("Frame", nil, self)
+        -- cd:SetHeight(64); cd:SetWidth(64);
+        -- local cdt = cd:CreateTexture(nil, "ARTWORK", nil, 3)
+        -- cdt:SetTexture([[Interface\Addons\NugComboBar\tex\chargeArrow]])
+        -- cdt:SetBlendMode("ADD")
+        -- cdt:SetAllPoints(cd)
+        -- cd.texture = cdt
 
-        NugComboBar.Hide = function(self)
-            self.bar:Hide()
-        end
-        NugComboBar.Show = function(self)
-            self.bar:Show()
-        end
-        normalHide(NugComboBar)
+        -- local f = self.point[6]
 
-        self:ClearAllPoints()
-        if IsVertical() then
-            self:SetPoint("BOTTOMLEFT", NugComboBar, "BOTTOMLEFT", 3, 5)
-        else
-            self:SetPoint("TOPLEFT", NugComboBar, "TOPLEFT", 5, -3)
-        end
-        self.text:Show()
-    end
+        -- cd:SetPoint("CENTER", f, "CENTER",0,0)
+
+        -- cdt:SetVertexColor(1,0,0, 1)
+
+        -- cd.SetSwipeColor = function() end
+        -- cd.SetParent = function() end
+
+        -- cd._elapsed = 0
+        -- -- /script NugComboBar.p[2].cd:SetCooldown(GetTime(), 10); NugComboBar.p[2].cd:Show()
+        -- cd.SetCooldown = function(self, start, duration)
+        --     self.start = start
+        --     self.duration = duration
+        --     self:SetScript("OnUpdate", cdOnUpdate)
+        --     self:Show()
+        -- end
+
+        -- self.charger = cd
+
     end --endif intiial
 
 
@@ -852,13 +1015,11 @@ NugComboBar.Create = function(self)
     -- tb:SetTexCoord(unpack(ts.coords))
     -- tb:SetPoint("TOPLEFT", bar, "TOPLEFT", -5, 4)
 
-    bar:Small()
-    bar:SetColor(0.6,0,0)
+    -- bar:Small()
     -- bar.t = tb
-    self.bar = bar
-    bar:Hide()
+    if bar then bar:Hide() end
 
-    
+
     return self
 end
 
@@ -867,10 +1028,7 @@ end
 NugComboBar.themes = {}
 NugComboBar.themes["WARLOCK"] = {
     [0] = {
-        preset3d = "glowPurple",
-    },
-    [3] = {
-        preset3d = "funnelRed",
+        preset3d = "glowPurple2",
     },
 }
 
@@ -882,25 +1040,48 @@ NugComboBar.themes["PALADIN"] = {
 
 NugComboBar.themes["SHAMAN"] = {
     [0] = {
-        preset3d = "electricBlue",
-    }
-}
-
-NugComboBar.themes["PRIEST"] = {
-    [1] = {
-        preset3d = "glowFreedom",
-        colors3d = true,
-        colors = { normal = {0.43, 0.83, 0} },
-    },
-    [3] = {
-        preset3d = "glowPurple",
-        colors3d = true,
-        colors = { normal = {0.27, 1, 0.59} },
+        preset3d = "chiBlastBlue",
     }
 }
 
 NugComboBar.themes["MONK"] = {
     [0] = {
-        preset3d = "funnelGreen",
+        preset3d = "chiBlast",
+    },
+}
+
+NugComboBar.themes["ROGUE"] = {
+    [0] = {
+        preset3d = "glowPurple2",
+    },
+    [3] ={
+        preset3d = "glowPurple2",
+        preset3dpointbar2 = "void",
+    }
+}
+
+NugComboBar.themes["MAGE"] = {
+    [0] = {
+        preset3d = "glowPurple",
+    },
+    [1] ={
+        preset3d = "arcanePink",
+    },
+    [2] ={
+        preset3d = "furnace",
+        preset3dpointbar2 = "glowOrange",
+    }
+}
+
+
+NugComboBar.themes["WARRIOR"] = {
+    [0] = {
+        preset3d = "glowOrange",
+    },
+}
+
+NugComboBar.themes["DEATHKNIGHT"] = {
+    [0] = {
+        preset3d = "glowPurple",
     },
 }

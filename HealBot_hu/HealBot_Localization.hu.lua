@@ -537,6 +537,7 @@ function HealBot_Lang_huHU()
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Suppress sound"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Suppress errors"
     HEALBOT_OPTIONS_CRASHPROT               = "Összeomlás védelem"
+    HEALBOT_OPTIONS_USEGENERALMACRO         = "Use general macro slots"
     HEALBOT_CP_MACRO_LEN                    = "a Makro névnek 1 és 14 karakter között kell lennie"
     HEALBOT_CP_MACRO_BASE                   = "Alap makronév"
     HEALBOT_CP_MACRO_SAVE                   = "Utoljára mentve: "
@@ -613,6 +614,7 @@ function HealBot_Lang_huHU()
     HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%"
 
     HEALBOT_OPTION_IGNORE_AURA_RESTED       = "pihenés alatt aura események Figyelmen kivül hagyása"
+    HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Adjust unit max health"
 
     HEALBOT_WORD_ENABLE                     = "engedélyez"
     HEALBOT_WORD_DISABLE                    = "letiltás"

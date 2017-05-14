@@ -1,13 +1,13 @@
-## Interface: 60000
+## Interface: 70000
 ## Title: HandyNotes_Guild
 ## Notes: Display front-end for LibGuildPositions-1.0 using HandyNotes
 ## Author: Nevcairiel
-## Version: 1.8
+## Version: 1.9
 ## X-Category: Map
 ## X-Email: h.leppkes at gmail dot com
 ## Dependencies: HandyNotes
 ## OptionalDeps: LibGuildPositions-1.0
-## X-Curse-Packaged-Version: 1.8
+## X-Curse-Packaged-Version: 1.9
 ## X-Curse-Project-Name: HandyNotes_Guild
 ## X-Curse-Project-ID: handynotes_guild
 ## X-Curse-Repository-ID: wow/handynotes_guild/mainline

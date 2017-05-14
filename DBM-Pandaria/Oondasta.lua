@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(826, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 84 $"):sub(12, -3))
 mod:SetCreatureID(69161)
-mod:SetReCombatTime(20)
+mod:SetEncounterID(1587)
+mod:SetReCombatTime(20, 10)
 mod:SetZone()
 
 mod:RegisterCombat("combat_yell", L.Pull)
@@ -25,9 +26,9 @@ local specWarnPiercingRoar		= mod:NewSpecialWarningCast(137457, "SpellCaster")
 local specWarnFrillBlast		= mod:NewSpecialWarningSpell(137505, nil, nil, nil, 2)
 
 local timerCrush				= mod:NewTargetTimer(60, 137504, nil, false)
-local timerCrushCD				= mod:NewCDTimer(26, 137504, nil, "Tank")
+local timerCrushCD				= mod:NewCDTimer(26, 137504, nil, "Tank", nil, 5)
 local timerPiercingRoarCD		= mod:NewCDTimer(25, 137457)--25-60sec variation (i'm going to guess like all the rest of the variations, the timers are all types of fucked up when the boss is running around untanked, which delays casts of crush and frill blast, but makes him cast spitfire twice as often)
-local timerFrillBlastCD			= mod:NewCDTimer(25, 137505)--25-30sec variation
+local timerFrillBlastCD			= mod:NewCDTimer(25, 137505, nil, nil, nil, 5)--25-30sec variation
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddReadyCheckOption(32519, false)
@@ -35,8 +36,8 @@ mod:AddReadyCheckOption(32519, false)
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then--We know for sure this is an actual pull and not diving into in progress
 --		timerCrushCD:Start(-delay)--There was no tank, so he pretty much never cast this, just ran like a wild animal around area while corpse cannoned
-		timerPiercingRoarCD:Start(20-delay)
-		timerFrillBlastCD:Start(40-delay)
+		timerPiercingRoarCD:Start(15-delay)
+		timerFrillBlastCD:Start(30-delay)
 	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)--range is guessed. spell tooltip and EJ do not save what range is right now.

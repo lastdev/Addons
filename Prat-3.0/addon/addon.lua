@@ -48,6 +48,7 @@ local setmetatable, getmetatable = setmetatable, getmetatable
 local strfind = strfind
 local IsSecureCmd = IsSecureCmd
 local wipe = table.wipe
+local print = print
 
 -- Do something about the missing party guide chat type
 if CHAT_MSG_PARTY_GUIDE == nil and CHAT_PARTY_GUIDE_GET ~= nil then
@@ -85,7 +86,7 @@ Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]===]
 
 --@non-debug@
-Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.5.12".."|r)"
+Version = "Prat |cff8080ff3.0|r (|cff8080ff".."r1053".."|r)"
 --@end-non-debug@
 
 
@@ -267,8 +268,8 @@ function Format(smf, event, color, ...)
   if type(m) == "boolean" and m == true then
     return ""
   end
-  
-  CurrentMsg = m
+
+  CurrentMessage = m
 
   m.DONOTPROCESS = nil
   local process = true
@@ -450,8 +451,8 @@ function addon:PostEnable()
   end
 
   -- ItemRef Hooking
-  self:RawHook("SetItemRef", true)
 
+  self:RawHook(_G.ItemRefTooltip, "SetHyperlink", true)
 
   self:SecureHook("FCF_SetTemporaryWindowType")
 
@@ -500,8 +501,8 @@ function addon:PostEnable()
   end
 end
 
-function addon:SetItemRef(...)
-  return SetItemRefHook(self.hooks.SetItemRef, ...)
+function addon:SetHyperlink(frame, ...)
+  return SetHyperlinkHook(self.hooks[frame], frame, ...)
 end
 
 
@@ -525,7 +526,7 @@ function addon:ChatEdit_ParseText(editBox, send)
 
   local m = Prat.SplitMessageOut
   wipe(m)
-  CurrentMsg = m
+  CurrentMessage = m
 
 
   m.MESSAGE = command
@@ -545,11 +546,12 @@ function addon:ChatEdit_ParseText(editBox, send)
   editBox:SetAttribute("chatType", m.CTYPE)
   editBox:SetAttribute("tellTarget", m.TARGET)
   editBox:SetAttribute("channelTarget", m.CHANNEL)
+  editBox.languague = m.LANGUAGE
 
 
   editBox:SetText(m.MESSAGE)
 
-  CurrentMsg = nil
+  CurrentMessage = nil
 end
 
 
@@ -610,7 +612,7 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
     return self.hooks["ChatFrame_MessageEventHandler"](this, event, ...)
   else
     local m = message --SplitMessage
-    CurrentMsg = m
+    CurrentMessage = m
 
     -- Prat_FrameMessage is fired for every message going to the
     -- chatframe which is displayable (has a chat infotype)
@@ -674,7 +676,7 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
         -- for more flexibility in the customfilters module, speficially
         -- it allows for replacements to occur in blocked messages
 
-        callbacks:Fire(POST_ADDMESSAGE, m, this, message.EVENT, m.OUTPUT, r, g, b, id)
+        callbacks:Fire(POST_ADDMESSAGE, m, this, message.EVENT, m.OUTPUT, r, g, b, id, false, m.ACCESSID, m.TYPEID)
       end
 
     end
@@ -689,7 +691,7 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
   return CMEResult
 end
 
-
+ 
 addon.INFO = {
   r = 1.0,
   g = 1.0,

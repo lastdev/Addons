@@ -1,4 +1,4 @@
-﻿-- *******************************************************
+-- *******************************************************
 -- **          Mizus RaidTracker - deDE Local           **
 -- **          <http://nanaki.affenfelsen.de>           **
 -- *******************************************************
@@ -23,30 +23,23 @@ if GetLocale() ~= "deDE" then return end
 -----------------
 --  Bossyells  --
 -----------------
-_L.yells[529]["Algalon"] = "Ich sah Welten umhüllt von den Flammen der Schöpfer, sah ohne einen Hauch von Trauer ihre Bewohner vergehen. Ganze Planetensysteme geboren und vernichtet, während Eure sterblichen Herzen nur einmal schlagen. Doch immer war mein Herz kalt... ohne Mitgefühl. Ich - habe - nichts - gefühlt. Millionen, Milliarden Leben verschwendet. Trugen sie alle dieselbe Beharrlichkeit in sich, wie Ihr? Liebten sie alle das Leben so sehr, wie Ihr es tut?" -- Needs review
-_L.yells[529]["Freya"] = "Seine Macht über mich beginnt zu schwinden. Endlich kann ich wieder klar sehen. Ich danke Euch, Helden." -- Needs review
-_L.yells[529]["Hodir"] = "Ich... bin von ihm befreit... endlich." -- Needs review
-_L.yells[529]["Mimiron"] = "Es scheint, als wäre mir eine klitzekleine Fehlkalkulation unterlaufen. Ich habe zugelassen, dass das Scheusal im Gefängnis meine Primärdirektive überschreibt. Alle Systeme nun funktionstüchtig." -- Needs review
-_L.yells[529]["Thorim"] = "Senkt Eure Waffen! Ich ergebe mich!" -- Needs review
-
-_L.yells[543]["Faction Champions"] = "Ein tragischer Sieg. Wir wurden schwächer durch die heutigen Verluste. Wer außer dem Lichkönig profitiert von solchen Torheiten? Große Krieger gaben ihr Leben. Und wofür? Die wahre Bedrohung erwartet uns noch - der Lichkönig erwartet uns alle im Tod." -- Needs review
-
-_L.yells[604]["Dreamwalker"] = "ICH BIN GEHEILT! Ysera, erlaubt mir, diese üblen Kreaturen zu beseitigen!" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Sagt nicht, ich hätte Euch nicht gewarnt, Ihr Schurken! Vorwärts, Brüder und Schwestern!" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Horde"] = "Die Allianz wankt. Vorwärts zum Lichkönig!" -- Needs review
-
-_L.yells[609]["Halion"] = "Genießt euren Sieg, Sterbliche, denn es war euer letzter. Bei der Rückkehr des Meisters wird diese Welt brennen!" -- Needs review
-
-_L.yells[773]["Conclave Of Wind"] = "Das Konklave des Windes hat sich aufgelöst. Euer ehrenvolles Betragen sowie eure Entschlossenheit haben euch das Recht verschafft, mir in der Schlacht gegenüberzutreten, Sterbliche. Ich erwarte Euren Angriff auf meiner Plattform! Kommt!" -- Needs review
-
-_L.yells[800]["Ragnaros"] = "Zu früh!… Ihr kommt zu früh..." -- Needs review
-
-_L.yells[886]["Lei Shi"] = "Ich... ah... oh! Hab ich...? War ich...? Es war... so... trüb." -- Needs review
-_L.yells[886]["Tsulong"] = "Ich danke Euch, Fremdlinge. Ich wurde befreit." -- Needs review
-
-_L.yells[953]["Immerseus"] = "Ah, Ihr habt es geschafft! Das Wasser ist wieder rein." -- Needs review
-_L.yells[953]["Spoils of Pandaria"] = "System wird neu gestartet. Die Energieversorgung muss stabil bleiben, sonst fliegt die ganze Chose in die Luft." -- Needs review
-
+_L.yells[529]["Algalon"] = "Ich sah Welten umhüllt von den Flammen der Schöpfer, sah ohne einen Hauch von Trauer ihre Bewohner vergehen. Ganze Planetensysteme geboren und vernichtet, während Eure sterblichen Herzen nur einmal schlagen. Doch immer war mein Herz kalt... ohne Mitgefühl. Ich - habe - nichts - gefühlt. Millionen, Milliarden Leben verschwendet. Trugen sie alle dieselbe Beharrlichkeit in sich, wie Ihr? Liebten sie alle das Leben so sehr, wie Ihr es tut?"
+_L.yells[529]["Freya"] = "Seine Macht über mich beginnt zu schwinden. Endlich kann ich wieder klar sehen. Ich danke Euch, Helden."
+_L.yells[529]["Hodir"] = "Ich... bin von ihm befreit... endlich."
+_L.yells[529]["Mimiron"] = "Es scheint, als wäre mir eine klitzekleine Fehlkalkulation unterlaufen. Ich habe zugelassen, dass das Scheusal im Gefängnis meine Primärdirektive überschreibt. Alle Systeme nun funktionstüchtig."
+_L.yells[529]["Thorim"] = "Senkt Eure Waffen! Ich ergebe mich!"
+_L.yells[543]["Faction Champions"] = "Ein tragischer Sieg. Wir wurden schwächer durch die heutigen Verluste. Wer außer dem Lichkönig profitiert von solchen Torheiten? Große Krieger gaben ihr Leben. Und wofür? Die wahre Bedrohung erwartet uns noch - der Lichkönig erwartet uns alle im Tod."
+_L.yells[604]["Dreamwalker"] = "ICH BIN GEHEILT! Ysera, erlaubt mir, diese üblen Kreaturen zu beseitigen!"
+_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Sagt nicht, ich hätte Euch nicht gewarnt, Ihr Schurken! Vorwärts, Brüder und Schwestern!"
+_L.yells[604]["Icecrown Gunship Battle Horde"] = "Die Allianz wankt. Vorwärts zum Lichkönig!"
+_L.yells[609]["Halion"] = "Genießt euren Sieg, Sterbliche, denn es war euer letzter. Bei der Rückkehr des Meisters wird diese Welt brennen!"
+_L.yells[773]["Conclave Of Wind"] = "Das Konklave des Windes hat sich aufgelöst. Euer ehrenvolles Betragen sowie eure Entschlossenheit haben euch das Recht verschafft, mir in der Schlacht gegenüberzutreten, Sterbliche. Ich erwarte Euren Angriff auf meiner Plattform! Kommt!"
+_L.yells[800]["Ragnaros"] = "Zu früh!… Ihr kommt zu früh..."
+_L.yells[886]["Lei Shi"] = "Ich... ah... oh! Hab ich...? War ich...? Es war... so... trüb."
+_L.yells[886]["Tsulong"] = "Ich danke Euch, Fremdlinge. Ich wurde befreit."
+_L.yells[953]["Immerseus"] = "Ah, Ihr habt es geschafft! Das Wasser ist wieder rein."
+_L.yells[953]["Spoils of Pandaria"] = "System wird neu gestartet. Die Energieversorgung muss stabil bleiben, sonst fliegt die ganze Chose in die Luft."
+_L.yells[1026]["Hellfire Assault"] = "Alles muss man selbst machen..."
 
 
 ---------------------------------
@@ -95,7 +88,6 @@ MRT_L.Core["TakeSnapshot_CurrentRaidError"] = "Fehler: Es ist ein aktiver Raid v
 MRT_L.Core["TakeSnapshot_Done"] = "Snapshot angefertigt."
 MRT_L.Core["TakeSnapshot_NotInRaidError"] = "Fehler: Du bist nicht in einem Raid. Kein Snapshot möglich."
 MRT_L.Core["Trash Mob"] = "Trash Mob"
-
 
 
 -----------------------------------
@@ -151,16 +143,18 @@ MRT_L.Options["MP_Debug"] = "Aktiviere Debugnachrichten"
 MRT_L.Options["MP_Description"] = "Trackt Raids, Loot und Teilnehmer"
 MRT_L.Options["MP_Enabled"] = "Aktiviere automatisches Tracking"
 MRT_L.Options["MP_MinimapIcon"] = "Minimap-Symbol anzeigen"
-MRT_L.Options["MP_ResetGuiPos"] = "UI Position zurücksetzen" -- Needs review
+MRT_L.Options["MP_ResetGuiPos"] = "UI Position zurücksetzen"
 MRT_L.Options["MP_SlashCmd"] = "Slash Befehl"
 MRT_L.Options["TP_AskForDKPValue"] = "Frage nach Gegenstandskosten"
--- MRT_L.Options["TP_AskForDKPValuePersonal"] = "... if loot mode is personal loot"
+MRT_L.Options["TP_AskForDKPValuePersonal"] = "... auch im persönlichen Plündermodus"
 MRT_L.Options["TP_CreateNewRaidOnNewZone"] = "Erstelle einen neuen Raid nach einem Zonenwechsel."
 MRT_L.Options["TP_Log10MenRaids"] = "Logge 10 Spieler Raids"
 MRT_L.Options["TP_LogAVRaids"] = "Logge PVP-Schlachtzüge (AK, BF)"
--- MRT_L.Options["TP_LogCataclysmRaids"] = "Track Cataclysm raids"
+MRT_L.Options["TP_LogCataclysmRaids"] = "Logge Cataclysm Schlachtzüge"
 MRT_L.Options["TP_LogLFRRaids"] = "LFR Raids aufzeichnen"
--- MRT_L.Options["TP_LogLootModePersonal"] = "Track loot mode 'Personal'"
+MRT_L.Options["TP_LogLootModePersonal"] = "Logger Plündermodus 'persönlich'"
+MRT_L.Options["TP_LogMoPRaids"] = "Logge Pandaria Schlachtzüge"
+MRT_L.Options["TP_LogWarlordsRaids"] = "Logge Warlords of Draenor Schlachtzüge"
 MRT_L.Options["TP_LogWotLKRaids"] = "Logge WotLK-Schlachtzüge"
 MRT_L.Options["TP_MinItemQualityToGetCost_Desc"] = "Min. Itemqualität für die nach Kosten gefragt wird"
 MRT_L.Options["TP_MinItemQualityToLog_Desc"] = "Min. Itemqualität die getrackt wird"
@@ -193,7 +187,6 @@ MRT_L.Options["TT_MP_SlashCmd"] = [=[Kommando ohne führenden Schrägstrich.
 Nach dem Ändern des Wertes sollte ein Relog durchgeführt werden.]=]
 
 
-
 -------------------
 --  GUI strings  --
 -------------------
@@ -216,7 +209,6 @@ MRT_L.GUI["Button_StartNewRaid"] = "Starte neuen Raid"
 MRT_L.GUI["Button_TakeSnapshot"] = "Snapshot machen"
 MRT_L.GUI["Can not delete current raid"] = "Fehler: Kann laufenden Raid nicht löschen."
 MRT_L.GUI["Cell_Hard"] = "Hard"
--- MRT_L.GUI["Cell_LFR"] = "LFR"
 MRT_L.GUI["Cell_Normal"] = "Normal"
 MRT_L.GUI["Col_Cost"] = "Kosten"
 MRT_L.GUI["Col_Date"] = "Datum"
@@ -243,8 +235,8 @@ MRT_L.GUI["Item cost invalid"] = "Fehler: Itempreis ist keine Zahl"
 MRT_L.GUI["Itemlink"] = "Itemlink oder ItemID oder Itemname"
 MRT_L.GUI["Looter"] = "Looter"
 MRT_L.GUI["Modify loot data"] = "Modifiziere Lootdaten."
-MRT_L.GUI["No active raid."] = "Fehler: Kein aktiver Raid."
 MRT_L.GUI["No active raid in progress. Please enter time."] = "Fehler: Kein aktiver Raid. Bitte gib eine Uhrzeit an."
+MRT_L.GUI["No active raid."] = "Fehler: Kein aktiver Raid."
 MRT_L.GUI["No boss attendee selected"] = "Fehler: Kein Bossteilnehmer ausgewählt."
 MRT_L.GUI["No boss name entered"] = "Fehler: Kein Bossname eingegeben."
 MRT_L.GUI["No boss selected"] = "Fehler: Kein Boss ausgewählt."
@@ -253,10 +245,10 @@ MRT_L.GUI["No loot selected"] = "Fehler: Kein Item ausgewählt."
 MRT_L.GUI["No name entered"] = "Fehler: Kein Name eingegeben."
 MRT_L.GUI["No raid attendee selected"] = "Fehler: Kein Raidteilnehmer ausgewählt."
 MRT_L.GUI["No raid selected"] = "Fehler: Kein Raid ausgewählt."
-MRT_L.GUI["Note"] = "Notiz"
 MRT_L.GUI["No valid difficulty entered"] = "Fehler: Kein gültiger Wert für die Schwierigkeit eingegeben."
 MRT_L.GUI["No valid raid size"] = "Fehler: Keine gültiger Wert für die Raidgröße angegeben."
 MRT_L.GUI["No valid time entered"] = "Fehler: Keine gültige Zeit eingegeben."
+MRT_L.GUI["Note"] = "Notiz"
 MRT_L.GUI["Player not in raid."] = "Error: Du bist in keinem Raid."
 MRT_L.GUI["Raid size"] = "Raidgröße"
 MRT_L.GUI["Resuming last raid failed"] = "Fehler: Die Fortsetzung des letzten Raids ist fehlgeschlagen."
@@ -301,4 +293,3 @@ Funktioniert nicht, wenn die Schlachtzugbeobachung läuft.
 Füge in dem Fall ein Bossereignis hinzu.]=]
 MRT_L.GUI["Value"] = "Wert"
 MRT_L.GUI["Zone name"] = "Zonenname"
-

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(698, "DBM-Party-MoP", 5, 321)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(61398)
 mod:SetEncounterID(1441)
 mod:SetZone()
@@ -9,8 +9,8 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_START 119684",
+	"SPELL_CAST_SUCCESS 122959",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -24,9 +24,9 @@ local warnCrossbowTrap		= mod:NewSpellAnnounce("ej5974", 4)
 
 local specWarnSmash			= mod:NewSpecialWarningMove(119684, "Healer")
 
-local timerSmashCD			= mod:NewCDTimer(28, 119684)
-local timerStaffCD			= mod:NewCDTimer(23, "ej5973")--23~25 sec.
-local timerWhirlwindingAxe	= mod:NewNextTimer(15, 119374)
+local timerSmashCD			= mod:NewCDTimer(28, 119684, nil, nil, nil, 3)
+local timerStaffCD			= mod:NewCDTimer(23, "ej5973", nil, nil, nil, 3)--23~25 sec.
+local timerWhirlwindingAxe	= mod:NewNextTimer(15, 119374, nil, nil, nil, 3)
 --local timerRoarCD			= mod:NewCDTimer(48, 122959)--Need to confirm, i crashed during log and only got 2 casts, so only one CD, not enough confirmation for me.
 
 function mod:OnCombatStart(delay)

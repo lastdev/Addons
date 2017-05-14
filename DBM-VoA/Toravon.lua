@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Toravon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
 mod:SetCreatureID(38433)
 mod:SetEncounterID(1129)
 mod:SetModelID(31089)
@@ -22,8 +22,8 @@ local WarnFrostbite			= mod:NewAnnounce("Frostbite", 2, 72004, "Tank|Healer")
 
 local timerNextFrostbite	= mod:NewNextTimer(5, 72004, nil, "Tank")
 local timerFrostbite		= mod:NewTargetTimer(20, 72004, nil, "Tank|Healer")
-local timerWhiteout			= mod:NewNextTimer(38, 72034)
-local timerNextOrb			= mod:NewNextTimer(32, 72091)
+local timerWhiteout			= mod:NewNextTimer(38, 72034, nil, nil, nil, 2)
+local timerNextOrb			= mod:NewNextTimer(32, 72091, nil, nil, nil, 1)
 
 --local timerToravonEnrage	= mod:NewTimer(300, "ToravonEnrage", 26662)
 

@@ -827,6 +827,11 @@ GTFO.SpellID["138847"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["133017"] = {
+  --desc = "Explode (Battletron)";
+  sound = 3;
+};
+
 
 -- *****************************
 -- * Trove of the Thunder King *

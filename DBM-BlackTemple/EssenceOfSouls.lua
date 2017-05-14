@@ -1,41 +1,42 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 605 $"):sub(12, -3))
 mod:SetCreatureID(23420)
+mod:SetEncounterID(606)
 mod:SetModelID(21483)
 mod:SetZone()
 mod:SetUsedIcons(4, 5, 6, 7, 8)
 
-mod:RegisterCombat("yell", L.Pull)
+mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
-	"UNIT_SPELLCAST_SUCCEEDED target focus"
+	"SPELL_AURA_APPLIED 41305 41431 41376 41303 41294 41410",
+	"SPELL_AURA_REMOVED 41305",
+	"SPELL_CAST_START 41410 41426",
+	"SPELL_CAST_SUCCESS 41350 41337",
+	"SPELL_DAMAGE 41545",
+	"SPELL_MISSED 41545",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
-local warnFixate		= mod:NewTargetAnnounce(41294, 3)
+local warnFixate		= mod:NewTargetAnnounce(41294, 3, nil, "Tank|Healer")
 local warnDrain			= mod:NewTargetAnnounce(41303, 3)
 local warnEnrage		= mod:NewSpellAnnounce(41305, 4, 41292)
 local warnEnrageSoon	= mod:NewPreWarnAnnounce(41305, 5, 3)
 local warnEnrageEnd		= mod:NewEndAnnounce(41305, 3)
-local warnPhase2		= mod:NewPhaseAnnounce(2)
+
+local warnPhase2		= mod:NewPhaseAnnounce(2, 2)
 local warnMana			= mod:NewAnnounce("WarnMana", 4, 41350)
 local warnDeaden		= mod:NewTargetAnnounce(41410, 3)
-local warnShockCast		= mod:NewSpellAnnounce(41426, 3, false)
 local warnShield		= mod:NewSpellAnnounce(41431, 3)
-local warnPhase3		= mod:NewPhaseAnnounce(3)
+
+local warnPhase3		= mod:NewPhaseAnnounce(3, 2)
 local warnSoul			= mod:NewSpellAnnounce(41545, 3)
 local warnSpite			= mod:NewSpellAnnounce(41376, 3)
 
-local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "Melee")
-local specWarnShield	= mod:NewSpecialWarningDispel(41431)
+local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, "HasInterrupt", nil, 2)
+local specWarnShield	= mod:NewSpecialWarningDispel(41431, "MagicDispeller", nil, 2)
 local specWarnSpite		= mod:NewSpecialWarningYou(41376)
 
 local timerEnrage		= mod:NewBuffActiveTimer(15, 41305)
@@ -45,7 +46,7 @@ local timerNextDeaden	= mod:NewCDTimer(31, 41410)
 local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
 local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
-local timerNextShock	= mod:NewCDTimer(12, 41426)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
+local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 
 mod:AddBoolOption("DrainIcon", false)
 mod:AddBoolOption("SpiteIcon", false)
@@ -117,7 +118,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerDeaden:Start(args.destName)
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 41305 then
@@ -131,11 +131,8 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 41410 then
 		timerNextDeaden:Start()
 	elseif args.spellId == 41426 then
-		warnShockCast:Show()
 		timerNextShock:Start()
-		if self:GetUnitCreatureId("target") == 23419 or self:GetUnitCreatureId("focus") == 23419 then
-			specWarnShock:Show(args.sourceName)
-		end
+		specWarnShock:Show(args.sourceName)
 	end
 end
 

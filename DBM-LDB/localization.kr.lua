@@ -4,6 +4,7 @@ DBM_LDB_TOOLTIP_HELP2	= "<오른쪽-클릭> 설정 메뉴"
 
 DBM_LDB_LOAD_MODS		= "우두머리 경보 불러오기"
 
+DBM_LDB_CAT_WOD			= "드레노어의 전쟁군주"
 DBM_LDB_CAT_MOP			= "판다리아의 안개"
 DBM_LDB_CAT_CATA		= "대격변"
 DBM_LDB_CAT_WOTLK		= "리치왕의 분노"

@@ -1,9 +1,9 @@
-﻿--------------------------------------------------------------------------
+--------------------------------------------------------------------------
 -- zhCN.lua 
 --------------------------------------------------------------------------
 --[[
 GTFO Simplified Chinese Localization
-Translator: wowuicn, xazhaoyang, lsjyzjl
+Translator: wowuicn, xazhaoyang, lsjyzjl, Mini_Dragon
 ]]--
 
 if (GetLocale() == "zhCN") then
@@ -30,12 +30,12 @@ GTFOLocal =
 	Help_TestHigh = "播放一个测试音效 (高伤害)",
 	Help_TestLow = "播放一个测试音效 (低伤害)",
 	Help_Version = "显示其他团队中正在使用这个插件的人员",
-	LoadingPopup_Message = "你的GTFO设置已被重置为默认。你是否想要立即配置GTFO？",
 	Loading_Loaded = "v%s 载入完成.",
 	Loading_LoadedSuspended = "v%s 载入完成. (|cFFFF1111暂停|r)",
 	Loading_LoadedWithPowerAuras = "v%s 与 Power Auras 同时载入完成.",
 	Loading_NewDatabase = "v%s: 发现新的数据库版本, 重设为预设.",
 	Loading_OutOfDate = "v%s 发现一个新的版本下载!  |cFFFFFFFF请尽快更新.|r",
+	LoadingPopup_Message = "你的GTFO设置已被重置为默认。你是否想要立即配置GTFO？",
 	Loading_PowerAurasOutOfDate = "你的 |cFFFFFFFFPower Auras Classic|r 版本已过期!  GTFO & Power Auras 将无法同时加载.",
 	Recount_Environmental = "环境",
 	Recount_Name = "GTFO 警报",
@@ -60,15 +60,22 @@ GTFOLocal =
 	UI_HighDamageDescription = "当你于团队中处在一个高伤害站位时，立即启用这个警报音效.",
 	UI_LowDamage = "PvP/环境/低伤害 音效",
 	UI_LowDamageDescription = "当你在低危险环境/PVP环境的站位时，发出GTFO-boop音效",
+	UI_SoundChannel = "声音通道",
+	UI_SoundChannelDescription = "GTFO将会使用这个声道播放警告",
+	UI_SpecialAlerts = "特殊警报",
+	UI_SpecialAlertsHeader = "启用特殊警报",
 	UI_Test = "测试",
 	UI_TestDescription = "测试这个音效.",
 	UI_TestMode = "实验/测试 模式",
-	UI_TestModeDescription = "激活未测试的/未验证的警报.(Beta/PTR)",
+	UI_TestModeDescription = "激活未测试的/未验证的警报（BETA/PTR）",
 	UI_TestModeDescription2 = "请报告任何问题到 |cFF44FFFF%s@%s.%s|r",
-	UI_Trivial = "低等级报警",
+	UI_Trivial = "琐碎内容警报",
 	UI_TrivialDescription = "启用低等级的副本警报.",
+	UI_TrivialDescription2 = "设置伤害承受的最低HP百分比，警告会忽略较低的伤害。",
+	UI_TrivialSlider = "HP最低百分比 (玩家血量)",
 	UI_Unmute = "当静音时播放音效",
 	UI_UnmuteDescription = "如果你禁音了主音效，GTFO将临时开启来播放 GTFO 警报音效.",
+	UI_UnmuteDescription2 = "这个设定需要主音量高于 0%.",
 	UI_Volume = "GTFO 音量",
 	UI_VolumeDescription = "设置警报音效的音量.",
 	UI_VolumeLoud = "4: 高声",
@@ -78,21 +85,8 @@ GTFOLocal =
 	UI_VolumeNormal = "3: 默认 (推荐)",
 	UI_VolumeQuiet = "1: 安静",
 	UI_VolumeSoft = "2: 柔和",
-	-- 4.12
-	UI_SpecialAlerts = "特殊警报",
-	UI_SpecialAlertsHeader = "启用特殊警报",	
-	-- 4.12.3
-	Version_On = "开启版本更新提醒",
 	Version_Off = "关闭版本更新提醒",
-	-- 4.19.1
-	UI_TrivialSlider = "Minimum % of HP",
-	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
-	-- 4.32
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
-	UI_SoundChannel = "Sound Channel",
-	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
+	Version_On = "开启版本更新提醒",
 }
-
-
 
 end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: AprFrame.lua 5531 2014-12-10 15:27:31Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: AprFrame.lua 5704 2017-02-07 10:30:31Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -33,7 +33,9 @@ if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.Appraiser
 if not lib then return end
-local private = lib.Private
+local private = lib.Private_AprFrame
+if not private then return end
+lib.Private_AprFrame = nil
 local Const = AucAdvanced.Const
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 
@@ -78,10 +80,7 @@ function private.CreateFrames()
 			for slot=1,GetContainerNumSlots(bag) do
 				local link = GetContainerItemLink(bag,slot)
 				if link then
-					local isDirect = false
-					if frame.direct and frame.direct == link then
-						isDirect = true
-					end
+					local isDirect = frame.direct == link
 
 					if AucAdvanced.Post.IsAuctionable(bag, slot) or isDirect then
 						local sig, linkType = SigFromLink(link)
@@ -106,6 +105,9 @@ function private.CreateFrames()
 									if linkType == "item" then
 										local na, _,ra,_,_,_,_, st = GetItemInfo(link)
 										name, rarity, stack = na, ra, st
+										if not name then
+											private.needListRefresh = true
+										end
 									elseif linkType == "battlepet" then
 										local _, id, _, qu = strsplit(":", link)
 										id = tonumber(id)
@@ -150,8 +152,12 @@ function private.CreateFrames()
 
 					if not found then
 						local _,_,_,_,_,_,_,stack = GetItemInfo(itemId)
+						if not stack then
+							private.needListRefresh = true
+							stack = 1
+						end
 						local item = {
-							sig, name, texture, quality, stack or 1, count, link,
+							sig, name, texture, quality, stack, count, link,
 							auction=true
 						}
 						if get('util.appraiser.item.'..sig..".ignore") then
@@ -414,6 +420,12 @@ function private.CreateFrames()
 	-- Multiple updates without changing the selected item are throttled to 3 seconds
 	-- Exception: CheckImageUpdate allows the throttle to be overridden if required
 	local query = {} -- query table used for QueryImage
+	local tleftlookup = {
+		"|cff000001|cffe5e5e530m", -- 30m
+		"|cff000002|cffe5e5e52h",  --2h
+		"|cff000003|cffe5e5e512h", --12h
+		"|cff000004|cffe5e5e548h"  --48h
+	}
 	function private.DelayedImageUpdate()
 		local sig = frame.salebox.sig
 		if not sig then -- sanity check
@@ -483,12 +495,7 @@ function private.CreateFrames()
 		local style = {}
 		for i = 1, #results do
 			local result = results[i]
-			local tLeft = result[Const.TLEFT]
-			if (tLeft == 1) then tLeft = "30m"
-			elseif (tLeft == 2) then tLeft = "2h"
-			elseif (tLeft == 3) then tLeft = "12h"
-			elseif (tLeft == 4) then tLeft = "48h"
-			end
+			local tLeft = tleftlookup[result[Const.TLEFT]] or ""
 			local count = result[Const.COUNT]
 			data[i] = {
 				--result[Const.NAME],
@@ -655,7 +662,7 @@ function private.CreateFrames()
 
 		frame.UpdatePricing()
 		frame.UpdateDisplay()
-		frame.salebox.config = nil
+		frame.salebox.config = nil -- ### not used?
 	end
 
 	function frame.ShowOwnAuctionDetails(itemLink)
@@ -1032,7 +1039,6 @@ function private.CreateFrames()
 			local curNumber = frame.salebox.number:GetAdjustedValue()
 			-- used in GetDepositCost calls:
 			local depositHours = curDurationMins / 60
-			local depositFaction = AucAdvanced.GetFactionGroup()
 
 			if frame.salebox.stacksize > 1 then
 				local count = frame.salebox.count
@@ -1065,7 +1071,7 @@ function private.CreateFrames()
 						frame.manifest.lines:Clear()
 						frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks'):format(maxStax, curSize))--%d lots of %dx stacks:
 						buyVal, bidVal = lib.RoundBuyBid(curBuy * curSize, curBid * curSize)
-						depositVal = GetDepositCost(frame.salebox.link, depositHours, depositFaction, curSize)
+						depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, curSize)
 
 						r,g,b=nil,nil,nil
 						if colored then
@@ -1086,7 +1092,7 @@ function private.CreateFrames()
 					end
 					if curNumber == -1 and remain > 0 then
 						buyVal, bidVal = lib.RoundBuyBid(curBuy * remain, curBid * remain)
-						depositVal = GetDepositCost(frame.salebox.link, depositHours, depositFaction, remain)
+						depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, remain)
 
 						frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks') :format(1, remain))--%d lots of %dx stacks:
 						r,g,b=nil,nil,nil
@@ -1111,7 +1117,7 @@ function private.CreateFrames()
 					frame.manifest.lines:Clear()
 					frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks'):format(curNumber, curSize))--%d lots of %dx stacks:
 					buyVal, bidVal = lib.RoundBuyBid(curBuy * curSize, curBid * curSize)
-					depositVal = GetDepositCost(frame.salebox.link, depositHours, depositFaction, curSize)
+					depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, curSize)
 
 					r,g,b=nil,nil,nil
 					if colored then
@@ -1148,7 +1154,7 @@ function private.CreateFrames()
 					frame.manifest.lines:Clear()
 					frame.manifest.lines:Add(_TRANS('APPR_Interface_Items'):format(curNumber))--%d items
 					buyVal, bidVal = lib.RoundBuyBid(curBuy, curBid)
-					depositVal = GetDepositCost(frame.salebox.link, depositHours, depositFaction)
+					depositVal = GetDepositCost(frame.salebox.link, depositHours)
 
 					r,g,b=nil,nil,nil
 					if colored then
@@ -1215,13 +1221,13 @@ function private.CreateFrames()
 			canAuction = false
 		elseif warnvendor == "buyout" then
 			frame.salebox.warn:SetText("|cffff8010".._TRANS('APPR_Interface_NoteBuyoutLessVendor'))--Note: Buyout <= Vendor
-			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then 
-				canAuction = false 
+			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then
+				canAuction = false
 			end
 		elseif warnvendor == "bid" then
 			frame.salebox.warn:SetText("|cffeec900".._TRANS('APPR_Interface_NoteMinBidLessVendor'))--Note: Min Bid <= Vendor
-			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then 
-				canAuction = false 
+			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then
+				canAuction = false
 			end
 		else
 			frame.salebox.warn:SetText("")
@@ -1331,8 +1337,8 @@ function private.CreateFrames()
 		frame.GenerateList()
 	end
 
-	function frame.RefreshView(background,link)
-		local itemName, itemMinLevel, itemMinLevel, itemTypeId, itemSubId, itemRarity
+	function frame.RefreshView(background, link)
+		local itemName, filterData
 		if not link then
 			link = frame.salebox.link
 			if not link then
@@ -1343,55 +1349,44 @@ function private.CreateFrames()
 			end
 		end
 
-		if strmatch(link, "|Hitem:") then
-			local name, _, quality, _, minlevel, classname, subclassname = GetItemInfo(link)
-			if not name then
-				-- Reuse same error message as above
-			    aucPrint(_TRANS('APPR_Interface_NoItemsSelected') )--No items were selected for refresh.
-				frame.refresh:Enable()
-				return
+		local lType, itemID = strsplit(":", link)
+		itemID = tonumber(itemID)
+		lType = lType:sub(-4)
+		if not itemID then
+			-- do nothing - itemName is not set so we will display an error message and reset at the end of the function
+		elseif lType == "item" then
+			local name, _, _, _, _, _, _, _, _, _, _, classID, subClassID = GetItemInfo(link)
+			if name then
+				itemName = name
+				filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID)
 			end
-			itemName = name
-			itemMinLevel = minlevel
-			itemTypeId = AucAdvanced.Const.CLASSESREV[classname]
-			if itemTypeId then
-				itemSubId = AucAdvanced.Const.SUBCLASSESREV[classname][subclassname]
-			end
-			itemRarity = quality
-		else
-			local lType, speciesID, _, petQuality = strsplit(":", link)
-			lType = lType:sub(-9)
-			speciesID = tonumber(speciesID)
-			if lType == "battlepet" and speciesID then
-				-- it's a pet
-				local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
-				-- all caged pets should have the default pet name (custom names are removed when caging)
-				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-				if not petName then
-					-- Reuse same error message as above
-					aucPrint(_TRANS('APPR_Interface_NoItemsSelected') )--No items were selected for refresh.
-					frame.refresh:Enable()
-					return
-				end
+		elseif lType == "epet" then -- last 4 letters of "battlepet"
+			-- all caged pets should have the default pet name (custom names are removed when caging)
+			local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(itemID)
+			if petName then
 				itemName = petName
-				itemMinLevel = iMin
-				itemTypeId = AucAdvanced.Const.CLASSESREV[iType]
-				itemSubId = petType
-				itemRarity = tonumber(petQuality)
-			else
-				-- Reuse same error message as above
-			    aucPrint(_TRANS('APPR_Interface_NoItemsSelected') )--No items were selected for refresh.
-				frame.refresh:Enable()
-				return
+				filterData = AucAdvanced.Scan.QueryFilterFromID(LE_ITEM_CLASS_BATTLEPET, Const.AC_PetType2SubClassID[petType])
 			end
+		-- else do nothing - itemName will not be set
 		end
 
-		aucPrint(_TRANS('APPR_Interface_RefreshingView') :format(itemName))--Refreshing view of {{%s}}
-		if background and type(background) == 'boolean' then
-			AucAdvanced.Scan.StartPushedScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity, true)
+		if not itemName then
+			-- Reuse same error message as above
+			aucPrint(_TRANS('APPR_Interface_NoItemsSelected') )--No items were selected for refresh.
+			frame.refresh:Enable()
+			return
 		else
-			AucAdvanced.Scan.PushScan()
-			AucAdvanced.Scan.StartScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity, nil, true)
+			local exact = #itemName < 30 -- use exact match, except for very long names
+
+			aucPrint(_TRANS('APPR_Interface_RefreshingView') :format(itemName))--Refreshing view of {{%s}}
+			if background == true then
+				-- Usage: StartPushedScan(name, minLevel, maxLevel, isUsable, qualityIndex, exactMatch, filterData, options)
+				AucAdvanced.Scan.StartPushedScan(itemName, nil, nil, nil, nil, exact, filterData)
+			else
+				AucAdvanced.Scan.PushScan()
+				--Usage: StartScan(name, minUseLevel, maxUseLevel, isUsable, qualityIndex, GetAll, exactMatch, filterData, options)
+				AucAdvanced.Scan.StartScan(itemName, nil, nil, nil, nil, nil, exact, filterData)
+			end
 		end
 	end
 
@@ -1772,7 +1767,7 @@ function private.CreateFrames()
 				    button.batchTex:Hide();
 				end
 
-				button.name:SetText(hex.."["..item[2].."]|r")
+				button.name:SetText(hex..item[2].."|r")
 
 				button.size:SetText(stackX..item[6])
 
@@ -2042,6 +2037,7 @@ function private.CreateFrames()
 		item.name = item:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 		item.name:SetJustifyH("LEFT")
 		item.name:SetJustifyV("TOP")
+		item.name:SetWordWrap(false)
 		item.name:SetPoint("TOPLEFT", item.icon, "TOPRIGHT", 3,-1)
 		item.name:SetPoint("RIGHT", item, "RIGHT", -5,0)
 		item.name:SetText(_TRANS('APPR_Interface_None') )--[None]
@@ -2884,12 +2880,23 @@ function private.CreateFrames()
 	frame.ScanTab = CreateFrame("Button", "AuctionFrameTabUtilAppraiser", AuctionFrame, "AuctionTabTemplate")
 	frame.ScanTab:SetText(_TRANS('APPR_Interface_Appraiser') )--Appraiser
 	frame.ScanTab:Show()
-	PanelTemplates_DeselectTab(frame.ScanTab)
-
-	if get("util.appraiser.displayauctiontab") then
-		AucAdvanced.AddTab(frame.ScanTab, frame)
+	PanelTemplates_DeselectTab(frame.ScanTab) -- initialize tab layout
+	frame.ScanTab.isdisplayed = false
+	function frame.ScanTab:SetDisplay()
+		if get("util.appraiser.displayauctiontab") then
+			if not self.isdisplayed then
+				-- Avoid calling AddTab if tab is already displayed, as that would cause a warning chat message
+				AucAdvanced.AddTab(self, frame)
+				self.isdisplayed = true
+			end
+		else
+			if self.isdisplayed then
+				AucAdvanced.RemoveTab(self, frame)
+				self.isdisplayed = false
+			end
+		end
 	end
-
+	frame.ScanTab:SetDisplay()
 	function frame.ScanTab.OnClick(self)
 		local index = self:GetID()
 		local tab = _G["AuctionFrameTab"..index]
@@ -2972,4 +2979,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5531 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5704 $")

@@ -1,11 +1,7 @@
-## Interface: 60000
+## Interface: 70200
 ## Title: NugComboBarGUI
 ## Notes: NugComboBar Configuration Panel
 ## Dependencies: NugComboBar
 ## Author: d87
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.13a
-## X-Curse-Project-Name: NugComboBar
-## X-Curse-Project-ID: nugie-combo-bar
-## X-Curse-Repository-ID: wow/nugie-combo-bar/mainline
 gui.xml

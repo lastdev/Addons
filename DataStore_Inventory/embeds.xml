@@ -6,5 +6,5 @@
 <Script file="libs\LibPeriodicTable-3.1-CurrencyItems\LibPeriodicTable-3.1-CurrencyItems.lua"/>
 <Script file="libs\LibPeriodicTable-3.1-InstanceLoot\LibPeriodicTable-3.1-InstanceLoot.lua"/>
 <Script file="libs\LibPeriodicTable-3.1-InstanceLootHeroic\LibPeriodicTable-3.1-InstanceLootHeroic.lua"/>
-
+<Script file="libs\LibPeriodicTable-3.1-InstanceLootLFR\LibPeriodicTable-3.1-InstanceLootLFR.lua"/>
 </Ui>

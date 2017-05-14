@@ -1,23 +1,31 @@
 local mod = DBM:NewMod(530, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 606 $"):sub(12, -3))
 
 mod:SetCreatureID(24723)
+mod:SetEncounterID(1897)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"CHAT_MSG_MONSTER_EMOTE"
+	"SPELL_AURA_APPLIED 44320"
 )
 
-local warnChanneling		= mod:NewSpellAnnounce("ej5081", 4, 44314)
+local specWarnChannel		= mod:NewSpecialWarningSwitch("ej5081", "-Healer", nil, 3, 1, 2)
 
-local specWarnChannel		= mod:NewSpecialWarningSwitch("ej5081", false)
+local timerChannelCD		= mod:NewCDTimer(47, "ej5081", nil, nil, nil, 1, 44320)
 
-function mod:CHAT_MSG_MONSTER_EMOTE(msg)
-	if msg == L.ChannelCrystal then
-        warnChanneling:Show()
-        specWarnChannel:Show()
+local voiceChannel			= mod:NewVoice("ej5081", "-Healer")--targetchange
+
+function mod:OnCombatStart(delay)
+	timerChannelCD:Start(15-delay)
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args.spellId == 69029 then--Mana Rage, triggers right before CHAT_MSG_RAID_BOSS_EMOTE
+		specWarnChannel:Show()
+		voiceChannel:Play("targetchange")
+		timerChannelCD:Start()
 	end
 end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterTidyUp.lua 5485 2014-10-13 12:58:31Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCounterTidyUp.lua 5658 2016-08-13 14:25:12Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterTidyUp - Database clean up and maintenance functions
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterTidyUp.lua $","$Rev: 5485 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterTidyUp.lua $","$Rev: 5658 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private = lib.Private
@@ -143,6 +143,7 @@ local function pruneItemNameArrayHelper(itemID)
 		end
 	end
 end
+
 function private.pruneItemNameArray()
 	local  itemID, key
 	local del = {}
@@ -209,6 +210,7 @@ function private.compactDB(server, player)
 	end
 	debugPrint("Finished compressing Databases", server, player)
 end
+
 function private.removeUniqueID(datatoCompress, DB, server, player)
 	local TIME = time()--no need to call this for every loop
 	for itemString, itemStringData in pairs(datatoCompress) do
@@ -224,6 +226,7 @@ function private.removeUniqueID(datatoCompress, DB, server, player)
 		end
 	end
 end
+
 function private.removeOldData(datatoPurge, DB, server, player)
 	local months = get("monthstokeepdata") --doh, hard coded the value during testing
 	local expire = time() - (months * 30 * 24 * 60 * 60)
@@ -258,6 +261,7 @@ function private.sortArrayByDate(server, player)
 	end
 	debugPrint("Finished sorting database", server, player)
 end
+
 --Prune Old keys from postedXXXX tables
 --First we find a itemID that needs pruning then we check all other keys for that itemID and prune.
 function private.prunePostedDB(server, player)
@@ -269,6 +273,7 @@ function private.prunePostedDB(server, player)
 				for itemString, itemStringData in pairs(itemIDData) do
 					for i = #itemStringData, 1, -1 do
 						local _, _ ,_ ,_ ,_ ,TIME = strsplit(";",  itemStringData[i])
+						TIME = tonumber(TIME) or 0 -- hack to delete invalid strings which may have occurred in Preview version; cause should now be fixed
 						--While the entrys remain 40 days old remove entry
 						if (curTime - TIME) >= 3456000 then
 							table.remove(itemStringData, i)
@@ -290,6 +295,7 @@ function private.prunePostedDB(server, player)
 	end
 	debugPrint("Finished Cleaning Posted Databases", server, player)
 end
+
 --deletes all entries matching a itemLink from database for that server
 function private.deleteExactItem(itemLink)
 	if not itemLink or not itemLink:match("^(|c%x+|H.+|h%[.+%])") then return end
@@ -400,6 +406,7 @@ local integrityClean, integrityCount = true, 1
 	end
 
 end
+
 --look at each value and compare to the number, string, number pattern for that specific DB
 function private.IC(tbl, DB, text)
 	for i,v in pairs(tbl) do

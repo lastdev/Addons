@@ -1,6 +1,9 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local MSQ = LibStub("Masque", true);
 
+-- WoW API
+local _G = _G
+
 local default = {
     icon = true,
     desaturate = false,
@@ -15,6 +18,7 @@ local default = {
     stacksContainment = "INSIDE",
     selfPoint = "CENTER",
     anchorPoint = "CENTER",
+    anchorFrameType = "SCREEN",
     xOffset = 0,
     yOffset = 0,
     font = "Friz Quadrata TT",
@@ -26,9 +30,6 @@ local default = {
     customTextUpdate = "update"
 };
 
-local function SkinChanged(skinID, gloss, backdrop, colors, button)
-
-end
 
 local function GetTexCoord(region, texWidth)
     local texCoord
@@ -105,13 +106,28 @@ local function create(parent, data)
     cooldown:SetDrawEdge(false);
 
     local stacksFrame = CreateFrame("frame", nil, region);
-    stacksFrame:SetFrameLevel(cooldown:GetFrameLevel() + 1);
     local stacks = stacksFrame:CreateFontString(nil, "OVERLAY");
+    local cooldownFrameLevel = cooldown:GetFrameLevel() + 1
+    stacksFrame:SetFrameLevel(cooldownFrameLevel)
+    stacksFrame:SetFrameLevel(cooldownFrameLevel)
     region.stacks = stacks;
-
     region.values = {};
     region.duration = 0;
     region.expirationTime = math.huge;
+
+    local SetFrameLevel = region.SetFrameLevel;
+
+    function region.SetFrameLevel(self, level)
+      SetFrameLevel(region, level);
+      cooldown:SetFrameLevel(level);
+      stacksFrame:SetFrameLevel(level + 1);
+      if (self.__WAGlowFrame) then
+        self.__WAGlowFrame:SetFrameLevel(level + 1);
+      end
+      if button then
+        button:SetFrameLevel(level);
+      end
+    end
 
     return region;
 end
@@ -119,17 +135,13 @@ end
 local function modify(parent, region, data)
     local button, icon, cooldown, stacks = region.button, region.icon, region.cooldown, region.stacks;
 
+    region.useAuto = data.auto and WeakAuras.CanHaveAuto(data);
+
     if MSQ and not region.MSQGroup then
         region.MSQGroup = MSQ:Group("WeakAuras", region.frameId);
         region.MSQGroup:AddButton(button, {Icon = icon, Cooldown = cooldown});
 
         button.data = data
-    end
-
-    if(data.frameStrata == 1) then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
     end
 
     region:SetWidth(data.width);
@@ -142,7 +154,8 @@ local function modify(parent, region, data)
     icon:SetAllPoints();
 
     region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+
+    WeakAuras.AnchorFrame(data, region, parent);
 
     local fontPath = SharedMedia:Fetch("font", data.font);
     local sxo, syo = 0, 0;
@@ -164,6 +177,7 @@ local function modify(parent, region, data)
         stacks:SetPoint(selfPoint, icon, data.stacksPoint, -0.5 * sxo, -0.5 * syo);
     end
     stacks:SetFont(fontPath, data.fontSize, data.fontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or data.fontFlags);
+    stacks:SetTextHeight(data.fontSize);
     stacks:SetTextColor(data.textColor[1], data.textColor[2], data.textColor[3], data.textColor[4]);
 
     local texWidth = 0.25 * data.zoom;
@@ -174,7 +188,7 @@ local function modify(parent, region, data)
     if(tooltipType and data.useTooltip) then
         region:EnableMouse(true);
         region:SetScript("OnEnter", function()
-            WeakAuras.ShowMouseoverTooltip(data, region, region, tooltipType);
+            WeakAuras.ShowMouseoverTooltip(region, region);
         end);
         region:SetScript("OnLeave", WeakAuras.HideTooltip);
     else
@@ -190,7 +204,7 @@ local function modify(parent, region, data)
         region.color_a = a;
         icon:SetVertexColor(r, g, b, a);
         if MSQ then
-            button:SetAlpha(a);
+          button:SetAlpha(a or 1);
         end
     end
 
@@ -201,19 +215,23 @@ local function modify(parent, region, data)
 
     region:Color(data.color[1], data.color[2], data.color[3], data.color[4]);
 
-    local textStr;
-    local function UpdateText()
-        textStr = data.displayStacks or "";
-        for symbol, v in pairs(WeakAuras.dynamic_texts) do
-            textStr = textStr:gsub(symbol, region.values[v.value] or "");
-        end
+    local UpdateText;
+    if (data.displayStacks:find('%%')) then
+        UpdateText = function()
+            local textStr = data.displayStacks or "";
+            textStr = WeakAuras.ReplacePlaceHolders(textStr, region.values, region.state);
 
-        if(stacks.displayStacks ~= textStr) then
-            if stacks:GetFont() then
-                stacks:SetText(textStr);
-                stacks.displayStacks = textStr;
-            else end
+            if(stacks.displayStacks ~= textStr) then
+                if stacks:GetFont() then
+                    stacks:SetText(textStr);
+                    stacks.displayStacks = textStr;
+                end
+            end
         end
+    else
+      stacks:SetText(data.displayStacks);
+      stacks.displayStacks = data.displayStacks;
+      UpdateText = function() end
     end
 
     local customTextFunc = nil
@@ -223,8 +241,9 @@ local function modify(parent, region, data)
     if (customTextFunc) then
         local values = region.values;
         region.UpdateCustomText = function()
-            WeakAuras.ActivateAuraEnvironment(data.id);
-            local custom = customTextFunc(region.expirationTime, region.duration, values.progress, values.duration, values.name, values.icon, values.stacks);
+            WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
+            local custom = customTextFunc(region.expirationTime, region.duration,
+              values.progress, values.duration, values.name, values.icon, values.stacks);
             WeakAuras.ActivateAuraEnvironment(nil);
             custom = WeakAuras.EnsureString(custom);
             if(custom ~= values.custom) then
@@ -253,8 +272,7 @@ local function modify(parent, region, data)
 
     function region:SetIcon(path)
         local iconPath = (
-            WeakAuras.CanHaveAuto(data)
-            and data.auto
+            region.useAuto
             and path ~= ""
             and path
             or data.displayIcon
@@ -265,21 +283,22 @@ local function modify(parent, region, data)
         region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
         UpdateText();
     end
-    region:SetIcon()
 
     function region:SetName(name)
-        region.values.name = WeakAuras.CanHaveAuto(data) and name or data.id;
+        region.values.name = name or data.id;
         UpdateText();
     end
 
     local function UpdateTime()
         local remaining = region.expirationTime - GetTime();
-        local progress = remaining / region.duration;
-
-        if(data.inverse) then
-            progress = 1 - progress;
+        local progress
+        if region.duration > 0 then
+            progress = remaining / region.duration;
+            if(data.inverse) then
+                progress = 1 - progress;
+            end
+            progress = progress > 0.0001 and progress or 0.0001;
         end
-        progress = progress > 0.0001 and progress or 0.0001;
 
         local remainingStr = "";
         if(remaining == math.huge) then
@@ -335,7 +354,7 @@ local function modify(parent, region, data)
     end
 
     local function UpdateCustom()
-        UpdateValue(region.customValueFunc(data.trigger));
+        UpdateValue(region.customValueFunc(region.state.trigger));
     end
 
     local function UpdateDurationInfo(duration, expirationTime, customValue)
@@ -346,7 +365,7 @@ local function modify(parent, region, data)
 
         if(customValue) then
             if(type(customValue) == "function") then
-                local value, total = customValue(data.trigger);
+                local value, total = customValue(region.state.trigger);
                 if(total > 0 and value < total) then
                     region.customValueFunc = customValue;
                     region:SetScript("OnUpdate", UpdateCustom);
@@ -364,7 +383,7 @@ local function modify(parent, region, data)
                 region:SetScript("OnUpdate", UpdateTime);
             else
                 region:SetScript("OnUpdate", nil);
-                UpdateText();
+                UpdateTime();
             end
         end
     end

@@ -1,14 +1,10 @@
-﻿local addonName = "Altoholic"
+local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "deDE" then return end
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
 
 local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
@@ -17,7 +13,7 @@ addon.Suggestions = {
 	
 	-- source : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[TS.TAILORING] = {
 		{ 50, "bis zu 50: Leinenstoffballen" },
 		{ 70, "bis zu 70: Leinentasche" },
 		{ 75, "bis zu 75: Verstärktes Leinencape" },
@@ -44,7 +40,7 @@ addon.Suggestions = {
 		{ 360, "bis zu 360: Netherstofftunika\n|cFFFFD700Entzaubern um Arkanen Staub zu bekommen" },
 		{ 375, "bis zu 375: Magieerfüllte Netherstofftunika\nStelle das Set her, auf das du dich spezialisiert hast" }
 	},
-	[BI["Leatherworking"]] = {
+	[TS.LEATHERWORKING] = {
 		{ 35, "bis zu 35: Leichtes Rüstungsset" },
 		{ 55, "bis zu 55: Geschmeidiger leichter Balg" },
 		{ 85, "bis zu 85: Geprägte Lederhandschuhe" },
@@ -73,7 +69,7 @@ addon.Suggestions = {
 		{ 365, "bis zu 365: Schwere Grollhufstiefel\n|cFFFFD700Farme Grollhufleder in Nagrand" },
 		{ 375, "bis zu 375: Trommeln der Schlacht\n|cFFFFD700Benötigt Die Sha'tar - Wohlwollend" }
 	},
-	[BI["Engineering"]] = {
+	[TS.ENGINEERING] = {
 		{ 40, "bis zu 40: Raues Sprengpulver" },
 		{ 50, "bis zu 50: Eine Hand voll Kupferbolzen" },
 		{ 51, "Stelle einen Bogenlichtschraubenschlüssel her" },
@@ -105,7 +101,7 @@ addon.Suggestions = {
 		{ 360, "bis zu 360: Khoriumkraftkern\nUm 375 zu erreichen brauchst du 20 Stück davon" },
 		{ 375, "bis zu 375: Feldreparaturbot 110G" }
 	},
-	[BI["Jewelcrafting"]] = {
+	[TS.JEWELCRAFTING] = {
 		{ 20, "bis zu 20: Feiner Kupferdraht" },
 		{ 30, "bis zu 30: Raue Steinstatue" },
 		{ 50, "bis zu 50: Tigeraugenband" },
@@ -137,7 +133,7 @@ addon.Suggestions = {
 		{ 365, "bis zu 365: Ring des Arkanschutzes\nBenötigt Die Sha'tar - Wohlwollend" },
 		{ 375, "bis zu 375: Wandeln Sie Diamanten um\nWorld drops (blau)\nRespektvoll: Die Sha'tar, Ehrenfeste, Thrallmar" }
 	},
-	[BI["Enchanting"]] = {
+	[TS.ENCHANTING] = {
 		{ 2, "bis zu 2: Runenverzierte Kupferrute" },
 		{ 75, "bis zu 75: Armschiene - Schwache Gesundheit" },
 		{ 85, "bis zu 85: Armschiene - Schwache Abwehr" },
@@ -175,7 +171,7 @@ addon.Suggestions = {
 		{ 370, "bis zu 370: Handschuhe - Zauberschlag\nBenötigt Respektvoll bei Expedition des Cenarius" },
 		{ 375, "bis zu 375: Ring - Heilkraft\nBenötigt Respektvoll bei Die Sha'tar" }
 	},
-	[BI["Blacksmithing"]] = {	
+	[TS.BLACKSMITHING] = {	
 		{ 25, "bis zu 25: Rauer Wetzstein" },
 		{ 45, "bis zu 45: Rauer Schleifstein" },
 		{ 75, "bis zu 75: Kupferner Kettengürtel" },
@@ -208,7 +204,7 @@ addon.Suggestions = {
 		{ 370, "bis zu 370: Teufelsstahlhandschuhe (Auchenaikrypta)\nFlammenbannhandschuhe (Aldor - Wohlwollend)\nVerzauberter Adamantitgürtel (Seher - Freundlich)" },
 		{ 375, "bis zu 375: Teufelsstahlhandschuhe (Auchenaikrypta)\nFlammenbannbrustplatte (Aldor - Respektvoll)\nVerzauberter Adamantitgürtel (Seher - Freundlich)" }
 	},
-	[BI["Alchemy"]] = {	
+	[TS.ALCHEMY] = {	
 		{ 60, "bis zu 60: Schwacher Heiltrank" },
 		{ 110, "bis zu 110: Geringer Heiltrank" },
 		{ 140, "bis zu 140: Heiltrank" },
@@ -268,7 +264,7 @@ addon.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[TS.FIRSTAID] = {
 		{ 40, "bis zu 40: Leinenverbände" },
 		{ 80, "bis zu 80: Schwerer Leinenverband\nWerde Geselle mit 50" },
 		{ 115, "bis zu 115: Wollverband" },
@@ -282,7 +278,7 @@ addon.Suggestions = {
 		{ 360, "bis zu 360: Netherstoffverband\nKaufe das Buch im Tempel von Telhamat (A) oder in der Falkenwacht (H)" },
 		{ 375, "bis zu 375: Schwerer Netherstoffverband\nKaufe das Buch im Tempel von Telhamat (A) oder in der Falkenwacht (H)" }
 	},
-	[BI["Cooking"]] = {
+	[TS.COOKING] = {
 		{ 40, "bis zu 40: Gewürzbrot"	},
 		{ 85, "bis zu 85: Geräuchertes Bärenfleisch, Krebsküchlein" },
 		{ 100, "bis zu 100: Gekochte Krebsschere (A)\nGrubenratteneintopf (H)" },
@@ -298,7 +294,7 @@ addon.Suggestions = {
 		{ 375, "bis zu 375: Knusperschlange\nLeckerbissen der Mok'Nathal" }
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[TS.FISHING] = {
 		{ 50, "bis zu 50: Jedes Startgebiet" },
 		{ 75, "bis zu 75:\nDie Kanäle in Sturmwind\nDer Teich in Orgrimmar" },
 		{ 150, "bis zu 150: Vorgebirge des Hügellands' Fluss" },
@@ -312,7 +308,7 @@ addon.Suggestions = {
 		{ 375, "bis zu 375: Wälder von Terokkar, in der Hochebene\nFlugmount benötigt" }
 	},
 	
-	[BI["Archaeology"]] = {
+	[TS.ARCHAEOLOGY] = {
 		{ 300, "bis zu 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "bis zu 375: " .. continents[3]},
 		{ 450, "bis zu 450: " .. continents[4]},

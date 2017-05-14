@@ -1218,53 +1218,152 @@ end
 Addon.UIElementsLib._DropDownMenuItems = {}
 ----------------------------------------
 
-function Addon.UIElementsLib._DropDownMenuItems:Construct(pMenuFunc)
-	self.MenuFunc = pMenuFunc
-	self.Items = {}
-	self.Level = 1
-	self.MenuFunc(self, nil, self.Level)
+function Addon.UIElementsLib._DropDownMenuItems:Construct(closeFunc)
+	self.type = "group"
+	self.args = {}
+	self.closeFunc = closeFunc
 end
 
-function Addon.UIElementsLib._DropDownMenuItems:AddButton(pInfo)
-	table.insert(self.Items, pInfo)
+function Addon.UIElementsLib._DropDownMenuItems:AddItem(item, options)
+	-- Copy the options table over if it's provided
+	if options then
+		assert(type(options) == "table", "AddItem second parameter must be a table")
+
+		for k, v in pairs(options) do
+			item[k] = v
+		end
+	end
+
+	item.order = #self.args + 1
+	table.insert(self.args, item)
 end
 
-function Addon.UIElementsLib._DropDownMenuItems:AddCategoryItem(pText)
-	table.insert(self.Items, {text = pText, notCheckable = true, notClickable = true, colorCode = HIGHLIGHT_FONT_COLOR_CODE})
+function Addon.UIElementsLib._DropDownMenuItems:AddFunction(title, func, disabled, options)
+	self:AddItem({
+		name = title,
+		type = "execute",
+		func = function (...)
+			func(...)
+			if self.closeFunc then
+				self.closeFunc()
+			end
+		end,
+		disabled = disabled,
+	}, options)
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddCategoryTitle(title)
+	if not title then
+		Addon:ErrorMessage("Category must have title")
+		return
+	end
+
+	self:AddItem({
+		name = title,
+		type = "header",
+	})
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddSelect(title, values, get, set)
+	assert(title, "Category must have title")
+
+	if type(values) == "function" then
+		values = values()
+	end
+
+	self:AddItem({
+		name = title,
+		type = "select",
+		values = values,
+		get = get,
+		set = function (...)
+			set(...)
+			if self.closeFunc then
+				self.closeFunc()
+			end
+		end,
+	})
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddChildMenu(title, func)
+	assert(type(title) == "string", "AddChildMenu: First parameter must be a string")
+	assert(type(func) == "function", "AddChildMenu: Second parameter must be a function")
+
+	local items = Addon:New(Addon.UIElementsLib._DropDownMenuItems, self.closeFunc)
+	items.name = title
+	items.type = "group"
+	func(items)
+	
+	self:AddItem(items)
 end
 
 function Addon.UIElementsLib._DropDownMenuItems:AddDivider()
-	table.insert(self.Items, {text = " ", notCheckable = true, notClickable = true})
+	self:AddCategoryTitle(" ")
 end
 
-function Addon.UIElementsLib._DropDownMenuItems:AddNormalItem(pName, pID)
-	table.insert(self.Items, {text = pName, value = pID})
+function Addon.UIElementsLib._DropDownMenuItems:AddToggle(title, get, set, disabled, options)
+	local item = {
+		name = title,
+		type = "toggle",
+		get = get,
+		set = function (...)
+			set(...)
+			if self.closeFunc then
+				self.closeFunc()
+			end
+		end,
+		disabled = disabled,
+	}
+	self:AddItem(item, options)
+	return item
 end
 
-function Addon.UIElementsLib._DropDownMenuItems:AddChildMenu(pName, pID)
-	self.Level = self.Level + 1
-	if self.Level > 10 then
-		Addon:ErrorMessage("AddChildMenu adding recursively for id "..tostring(pID))
-		return
+function Addon.UIElementsLib._DropDownMenuItems:AddToggleWithIcon(title, icon, color, get, set, disabled, options)
+	local item = self:AddToggle(title, get, set, disabled, options)
+	item.icon = icon
+	item.color = color
+	return item
+end
+
+----------------------------------------
+Addon.UIElementsLib._DropDownMenu = {}
+----------------------------------------
+
+function Addon.UIElementsLib._DropDownMenu:Show(items, point, relativeTo, relativePoint, xOffset, yOffset)
+	-- Fail if it's already up
+	assert(not self.menuFrame, "DropDownMenu can't call Show if already shown")
+	assert(items and items.args, "DropDownMenu items must be DropDownMenuItems")
+
+	-- Play a sound
+	PlaySound("igMainMenuOptionCheckBoxOn")
+	
+	-- Show the menu
+	self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
+	self.menuFrame:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset)
+	self.menuFrame.cleanup = function ()
+		if self.cleanup then
+			self.cleanup()
+		end
 	end
-	local vParentItems = self.Items
-	self.Items = {}
-	table.insert(vParentItems, {text = pName, value = pID, menuTable = self.Items})
-	self.MenuFunc(self, pID, self.Level)
-	self.Items = vParentItems
-	self.Level = self.Level - 1
 end
 
-function Addon.UIElementsLib._DropDownMenuItems:GetNameForValue(pValue, pItems)
-	if not pItems then pItems = self.Items end
-	for _, vItem in ipairs(pItems) do
-		if vItem.value == pValue then
-			return vItem.text
-		end
-		if vItem.menuTable then
-			local vName = self:GetNameForValue(pValue, vItem.menuTable)
-			if vName then return vName end
-		end
+function Addon.UIElementsLib._DropDownMenu:Hide()
+	-- Fail if it's not  up
+	assert(self.menuFrame, "DropDownMenu can't call Hide if not shown")
+
+	-- Play a sound
+	PlaySound("igMainMenuOptionCheckBoxOn")
+	
+	-- Hide the menu and leave if it's currently up
+	self.menuFrame:Hide()
+	self.menuFrame = nil
+end
+
+function Addon.UIElementsLib._DropDownMenu:Toggle()
+	if self.menuFrame then
+		self:Hide()
+	else
+		self:Show()
 	end
 end
 
@@ -1279,31 +1378,32 @@ if not MC2UIElementsLib_Globals then
 	}
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:New(pParent, pMenuFunc, pWidth)
+function Addon.UIElementsLib._DropDownMenuButton:New(parent, menuFunc, width)
 	MC2UIElementsLib_Globals.NumDropDownMenuButtons = MC2UIElementsLib_Globals.NumDropDownMenuButtons + 1
+	local name = "MC2UIElementsLib_DropDownMenuButton"..MC2UIElementsLib_Globals.NumDropDownMenuButtons
 	
-	local vName = "MC2UIElementsLib_DropDownMenuButton"..MC2UIElementsLib_Globals.NumDropDownMenuButtons
-	
-	return CreateFrame("Frame", vName, pParent)
+	return CreateFrame("Frame", name, parent)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, pWidth)
-	local vButtonSize = 24
+	local buttonSize = 24
 	
-	if not pWidth then pWidth = vButtonSize end
+	if not pWidth then
+		pWidth = buttonSize
+	end
 	
-	if pWidth < vButtonSize then
-		vButtonSize = pWidth
+	if pWidth < buttonSize then
+		buttonSize = pWidth
 	end
 	
 	self.AutoSelectValue = true -- calls SetSelectedValue on item selection automatically
 	
 	self:SetWidth(pWidth)
-	self:SetHeight(vButtonSize)
+	self:SetHeight(buttonSize)
 	
 	self.Button = CreateFrame("Button", nil, self)
-	self.Button:SetWidth(vButtonSize)
-	self.Button:SetHeight(vButtonSize)
+	self.Button:SetWidth(buttonSize)
+	self.Button:SetHeight(buttonSize)
 	self.Button:SetPoint("RIGHT", self, "RIGHT", 1, 0)
 
 	self.Button:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
@@ -1326,144 +1426,55 @@ function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, p
 	self.Icon:SetPoint("TOPLEFT", self.LeftTexture, "TOPLEFT", 0, 0)
 	
 	self.MenuFunc = pMenuFunc
-	self.OrigHeight = self:GetHeight()
 	
-	self.UseWoWMenus = true
-	if self.UseWoWMenus then
-		UIDropDownMenu_Initialize(self, self.WoWMenuInitFunction)
-	else
-		self.initialize = self.WoWMenuInitFunction
-		self.items = {}
-		self.currentLevelItems = self.items
-	end
+	self.initialize = self.WoWMenuInitFunction
+	self.currentLevelItems = self.items
 	
-	self:SetHeight(self.OrigHeight)
+	self:SetScript("OnHide", function ()
+		if self.dropDownMenu then
+			self.dropDownMenu:Hide()
+			self.dropDownMenu = nil
+		end
+	end)
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:SetMenuFunc(pMenuFunc)
+function Addon.UIElementsLib._DropDownMenuButton:SetMenuFunc(menuFunc)
+	self.menuFunc = menuFunc
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:RefreshItems()
-	self.Items = Addon:New(Addon.UIElementsLib._DropDownMenuItems, self.MenuFunc)
+	self.items = Addon:New(Addon.UIElementsLib._DropDownMenuItems, function ()
+		Addon.SchedulerLib:ScheduleTask(0.1, function ()
+			self.dropDownMenu:Hide()
+			self.dropDownMenu = nil
+		end)
+	end)
+	self.MenuFunc(self.items)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:ToggleMenu()
 	PlaySound("igMainMenuOptionCheckBoxOn")
 	
+	-- Hide the menu and leave if it's currently up
+	if self.dropDownMenu then
+		self.dropDownMenu:Hide()
+		self.dropDownMenu = nil
+		return
+	end
+
+	-- Position the menu
 	self.relativeTo = self
 	self.point = self.AnchorPoint or "TOPRIGHT"
 	self.relativePoint = self.AnchorRelativePoint or "BOTTOMRIGHT"
 	self.xOffset = self.AnchorXOffset or 0
 	self.yOffset = self.AnchorYOffset or 9
 	
-	if self.UseWoWMenus then
-		ToggleDropDownMenu(nil, nil, self)
-	else
-		self.items = {}
-		self.currentLevelItems = self.items
-		self:MenuFunc()
-		if not self.MenuFrame then
-			self.MenuFrame = CreateFrame("Frame", "UIElementLibMenuFrame", UIParent, "UIDropDownMenuTemplate")
-		end
-		EasyMenu(self.items, self.MenuFrame, self.relativeTo, self.xOffset, self.yOffset)
-		Addon:DebugMessage("Toggle")
-	end
-end
+	-- Get the items
+	self:RefreshItems()
 
---[[
-info.text = [STRING]  --  The text of the button
-info.value = [ANYTHING]  --  The value that UIDROPDOWNMENU_MENU_VALUE is set to when the button is clicked
-info.func = [function()]  --  The function that is called when you click the button
-info.checked = [nil, true, function]  --  Check the button if true or function returns true
-info.isTitle = [nil, true]  --  If it's a title the button is disabled and the font color is set to yellow
-info.disabled = [nil, true]  --  Disable the button and show an invisible button that still traps the mouseover event so menu doesn't time out
-info.hasArrow = [nil, true]  --  Show the expand arrow for multilevel menus
-info.hasColorSwatch = [nil, true]  --  Show color swatch or not, for color selection
-info.r = [1 - 255]  --  Red color value of the color swatch
-info.g = [1 - 255]  --  Green color value of the color swatch
-info.b = [1 - 255]  --  Blue color value of the color swatch
-info.colorCode = [STRING] -- "|cAARRGGBB" embedded hex value of the button text color. Only used when button is enabled
-info.swatchFunc = [function()]  --  Function called by the color picker on color change
-info.hasOpacity = [nil, 1]  --  Show the opacity slider on the colorpicker frame
-info.opacity = [0.0 - 1.0]  --  Percentatge of the opacity, 1.0 is fully shown, 0 is transparent
-info.opacityFunc = [function()]  --  Function called by the opacity slider when you change its value
-info.cancelFunc = [function(previousValues)] -- Function called by the colorpicker when you click the cancel button (it takes the previous values as its argument)
-info.notClickable = [nil, 1]  --  Disable the button and color the font white
-info.notCheckable = [nil, 1]  --  Shrink the size of the buttons and don't display a check box
-info.owner = [Frame]  --  Dropdown frame that "owns" the current dropdownlist
-info.keepShownOnClick = [nil, 1]  --  Don't hide the dropdownlist after a button is clicked
-info.tooltipTitle = [nil, STRING] -- Title of the tooltip shown on mouseover
-info.tooltipText = [nil, STRING] -- Text of the tooltip shown on mouseover
-info.justifyH = [nil, "CENTER"] -- Justify button text
-info.arg1 = [ANYTHING] -- This is the first argument used by info.func
-info.arg2 = [ANYTHING] -- This is the second argument used by info.func
-info.fontObject = [FONT] -- font object replacement for Normal and Highlight
-info.menuTable = [TABLE] -- This contains an array of info tables to be displayed as a child menu
-]]
-
-function Addon.UIElementsLib._DropDownMenuButton:CreateInfo()
-	if self.UseWoWMenus then
-		return UIDropDownMenu_CreateInfo()
-	else
-		return {}
-	end
-end
-
-function Addon.UIElementsLib._DropDownMenuButton:AddButton(pInfo)
-	if self.UseWoWMenus then
-		UIDropDownMenu_AddButton(pInfo, UIDROPDOWNMENU_MENU_LEVEL)
-	else
-		table.insert(self.currentLevelItems, pInfo)
-	end
-end
-
-function Addon.UIElementsLib._DropDownMenuButton:AddNormalItem(pText, pID, pIcon, pChecked, pDisabled, pTooltipTitle, pTooltipText)
-	local vInfo = self:CreateInfo()
-	vInfo.text = pText
-	vInfo.value = pID
-	vInfo.func = function (item, ...) self:ItemClicked(...) end
-	vInfo.arg1 = pID
-	vInfo.colorCode = NORMAL_FONT_COLOR_CODE
-	vInfo.icon = pIcon
-	vInfo.checked = pChecked or (pID == self.selectedValue)
-	vInfo.disabled = pDisabled
-	vInfo.tooltipTitle = pTooltipTitle
-	vInfo.tooltipText = pTooltipText
-	
-	self:AddButton(vInfo)
-end
-
-function Addon.UIElementsLib._DropDownMenuButton:AddCategoryItem(pText)
-	local vInfo = self:CreateInfo()
-	
-	vInfo.text = pText
-	vInfo.notClickable = true
-	vInfo.notCheckable = true
-	vInfo.colorCode = HIGHLIGHT_FONT_COLOR_CODE
-	
-	self:AddButton(vInfo)
-end
-
-function Addon.UIElementsLib._DropDownMenuButton:AddChildMenu(pText, pID, pChecked)
-	local vInfo = self:CreateInfo()
-	
-	vInfo.text = pText
-	vInfo.value = pID
-	vInfo.hasArrow = true
-	vInfo.colorCode = NORMAL_FONT_COLOR_CODE
-	vInfo.checked = pChecked
-	
-	self:AddButton(vInfo)
-end
-
-function Addon.UIElementsLib._DropDownMenuButton:AddDivider()
-	local vInfo = self:CreateInfo()
-	
-	vInfo.text = " "
-	vInfo.notCheckable = true
-	vInfo.notClickable = true
-	
-	self:AddButton(vInfo)
+	-- Show the menu
+	self.dropDownMenu = Addon:New(Addon.UIElementsLib._DropDownMenu)
+	self.dropDownMenu:Show(self.items, self.point, self.relativeTo, self.relativePoint, self.xOffset, self.yOffset)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:ItemClicked(pValue)
@@ -1500,23 +1511,13 @@ function Addon.UIElementsLib._DropDownMenuButton:SetEnabled(pEnabled)
 	end
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:WoWMenuInitFunction(pLevel, pMenuList)
-	if not pLevel or pLevel == 1 then
-		self:MenuFunc(nil, pLevel)
-	else
-		self:MenuFunc(UIDROPDOWNMENU_MENU_VALUE, pLevel)
-	end
-	
-	self:SetHeight(self.OrigHeight)
-end
-
 ----------------------------------------
-Addon.UIElementsLib._DropDownMenu = {}
+Addon.UIElementsLib._TitledDropDownMenuButton = {}
 ----------------------------------------
 
-Addon.UIElementsLib._DropDownMenu.New = Addon.UIElementsLib._DropDownMenuButton.New
+Addon.UIElementsLib._TitledDropDownMenuButton.New = Addon.UIElementsLib._DropDownMenuButton.New
 
-function Addon.UIElementsLib._DropDownMenu:Construct(pParent, pMenuFunc, pWidth)
+function Addon.UIElementsLib._TitledDropDownMenuButton:Construct(pParent, pMenuFunc, pWidth)
 	self:Inherit(Addon.UIElementsLib._DropDownMenuButton, pParent, pMenuFunc, pWidth or 150)
 	
 	self.LeftTexture = self:CreateTexture(nil, "ARTWORK")
@@ -1550,15 +1551,16 @@ function Addon.UIElementsLib._DropDownMenu:Construct(pParent, pMenuFunc, pWidth)
 	self.Title:SetPoint("RIGHT", self.MiddleTexture, "LEFT", -11, 1)
 end
 
-function Addon.UIElementsLib._DropDownMenu:SetTitle(pTitle)
+function Addon.UIElementsLib._TitledDropDownMenuButton:SetTitle(pTitle)
 	self.Title:SetText(pTitle)
 end
 
-function Addon.UIElementsLib._DropDownMenu:SetCurrentValueText(pText)
+function Addon.UIElementsLib._TitledDropDownMenuButton:SetCurrentValueText(pText)
 	self.Text:SetText(pText)
 end
 
-function Addon.UIElementsLib._DropDownMenu:SetSelectedValue(pValue)
+function Addon.UIElementsLib._TitledDropDownMenuButton:SetSelectedValue(pValue)
+	assert(false)
 	if self.selectedValue == pValue then
 		return
 	end
@@ -1566,7 +1568,9 @@ function Addon.UIElementsLib._DropDownMenu:SetSelectedValue(pValue)
 	self.Inherited.SetSelectedValue(self, pValue)
 	
 	self:RefreshItems()
-	self:SetCurrentValueText(self.Items:GetNameForValue(pValue) or "")
+
+	local vCurrentValueText = self.items:GetNameForValue(pValue) or ""
+	self:SetCurrentValueText(vCurrentValueText)
 end
 
 ----------------------------------------
@@ -1880,14 +1884,14 @@ end
 function Addon.UIElementsLib._DatePicker:Construct(pParent, pLabel)
 	self.Enabled = true
 	
-	self.MonthMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:MonthMenuFunc(...) end)
+	self.MonthMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:MonthMenuFunc(...) end)
 	self.MonthMenu:SetWidth(120)
 	self.MonthMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:ValidateDay()
 		self:DateValueChanged()
 	end
 	
-	self.YearMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:YearMenuFunc(...) end)
+	self.YearMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:YearMenuFunc(...) end)
 	self.YearMenu:SetWidth(75)
 	self.YearMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:ValidateDay()
@@ -1896,7 +1900,7 @@ function Addon.UIElementsLib._DatePicker:Construct(pParent, pLabel)
 	
 	-- Create day last since it depends on month and year to populate itself
 	
-	self.DayMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:DayMenuFunc(...) end)
+	self.DayMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:DayMenuFunc(...) end)
 	self.DayMenu:SetWidth(55)
 	self.DayMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:DateValueChanged()
@@ -2012,21 +2016,21 @@ function Addon.UIElementsLib._TimePicker:Construct(pParent, pLabel)
 	self:SetWidth(185)
 	self:SetHeight(24)
 	
-	self.HourMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:HourMenuFunc(...) end)
+	self.HourMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:HourMenuFunc(...) end)
 	self.HourMenu:SetWidth(55)
 	self.HourMenu:SetPoint("LEFT", self, "LEFT")
 	self.HourMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:TimeValueChanged()
 	end
 	
-	self.MinuteMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:MinuteMenuFunc(...) end)
+	self.MinuteMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:MinuteMenuFunc(...) end)
 	self.MinuteMenu:SetWidth(55)
 	self.MinuteMenu:SetPoint("LEFT", self.HourMenu, "RIGHT", 8, 0)
 	self.MinuteMenu.ItemClickedFunc = function (pMenu, pValue)
 		self:TimeValueChanged()
 	end
 	
-	self.AMPMMenu = Addon:New(Addon.UIElementsLib._DropDownMenu, self, function (...) self:AMPMMenuFunc(...) end)
+	self.AMPMMenu = Addon:New(Addon.UIElementsLib._TitledDropDownMenuButton, self, function (...) self:AMPMMenuFunc(...) end)
 	self.AMPMMenu:SetWidth(55)
 	self.AMPMMenu:SetPoint("LEFT", self.MinuteMenu, "RIGHT", 8, 0)
 	self.AMPMMenu.ItemClickedFunc = function (pMenu, pValue)
@@ -2567,14 +2571,16 @@ function Addon.UIElementsLib._PowerDot:Construct(pParent)
 	-- Fade in
 	self.activate = self.OnTexture:CreateAnimationGroup("activate")
 	vAlphaAnimation = self.activate:CreateAnimation("Alpha")
-	vAlphaAnimation:SetChange(1)
+	vAlphaAnimation:SetFromAlpha(0)
+	vAlphaAnimation:SetToAlpha(1)
 	vAlphaAnimation:SetDuration(0.2)
 	vAlphaAnimation:SetOrder(1)
 	
 	-- Fade out
 	self.deactivate = self.OnTexture:CreateAnimationGroup("deactivate")
 	vAlphaAnimation = self.deactivate:CreateAnimation("Alpha")
-	vAlphaAnimation:SetChange(-1)
+	vAlphaAnimation:SetFromAlpha(1)
+	vAlphaAnimation:SetToAlpha(0)
 	vAlphaAnimation:SetDuration(0.3)
 	vAlphaAnimation:SetOrder(2)
 end

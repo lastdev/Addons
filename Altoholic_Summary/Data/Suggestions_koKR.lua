@@ -1,14 +1,10 @@
-﻿local addonName = "Altoholic"
+local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "koKR" then return end
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
 
 local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
@@ -17,7 +13,7 @@ addon.Suggestions = {
 
 	-- source : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[TS.TAILORING] = {
 		{ 50, "50 까지: 리넨 두루마리" },
 		{ 70, "70 까지: 리넨 가방" },
 		{ 75, "75 까지: 질긴 리넨 단망토" },
@@ -54,7 +50,7 @@ addon.Suggestions = {
 		{ 515, "515 까지: 칼날 자수" },
 		{ 525, "525 까지: 각종 꿈, 기술 올릴 수 있는 것 아무거나" }
 	},
-	[BI["Leatherworking"]] = {
+	[TS.LEATHERWORKING] = {
 		{ 35, "35 까지: 작은 방어구 키트" },
 		{ 55, "55 까지: 얇은 경화 가죽" },
 		{ 85, "85 까지: 새김무늬 가죽 장갑" },
@@ -89,7 +85,7 @@ addon.Suggestions = {
 		{ 425, "425 까지: 여러가지 모피 안감\n전문기술 가방들" },
 		{ 450, "450 까지: 필요한 것 위주로\n점수 얻을 수 있는 모든 것" }
 	},
-	[BI["Engineering"]] = {
+	[TS.ENGINEERING] = {
 		{ 40, "40 까지: 천연 화약" },
 		{ 50, "50 까지: 구리 나사 한 줌" },
 		{ 51, "만능 스패너 하나 제작" },
@@ -123,7 +119,7 @@ addon.Suggestions = {
 		{ 435, "435 까지: 마나 주사 도구" },
 		{ 450, "450 까지: 필요한 것 위주로,\n점수 얻을 수 있는 모든 것" }
 	},
-	[BI["Jewelcrafting"]] = {
+	[TS.JEWELCRAFTING] = {
 		{ 20, "20 까지: 가느다른 구리 철사" },
 		{ 30, "30 까지: 조잡한 돌 조각상" },
 		{ 50, "50 까지: 호안석 고리" },
@@ -160,7 +156,7 @@ addon.Suggestions = {
 		{ 475, "475 까지: Prospect Ore for Gems" },
 		{ 525, "525 까지: 보석세공 일일퀘스트에서 얻은 제조법" }
 	},
-	[BI["Enchanting"]] = {
+	[TS.ENCHANTING] = {
 		{ 2, "2 까지: 룬문자 구리마법막대" },
 		{ 75, "75 까지: 손목보호구 마법부여 - 최하급 생명력" },
 		{ 85, "85 까지: 손목보호구 마법부여 - 최하급 회피" },
@@ -206,7 +202,7 @@ addon.Suggestions = {
 		{ 515, "룬문자 엘레멘티움 마법막대 하나 제작" },
 		{ 525, "525 까지: Trade in Shards for Recipes" }
 	},
-	[BI["Blacksmithing"]] = {	
+	[TS.BLACKSMITHING] = {	
 		{ 25, "25 까지: 조잡한 숫돌" },
 		{ 45, "45 까지: 조잡한 연마석" },
 		{ 75, "75 까지: 구리 사슬 허리띠" },
@@ -251,7 +247,7 @@ addon.Suggestions = {
 		{ 500, "500 까지: Any skill-up will do" },
 		{ 525, "525 까지: Farm Ore for Recipes in 황혼의 고원" }
 	},
-	[BI["Alchemy"]] = {	
+	[TS.ALCHEMY] = {	
 		{ 60, "60 까지: 최하급 치유 물약" },
 		{ 110, "110 까지: 하급 치유 물약" },
 		{ 140, "140 까지: 치유 물약" },
@@ -391,7 +387,7 @@ addon.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[TS.FIRSTAID] = {
 		{ 40, "40 까지: 리넨 붕대" },
 		{ 80, "80 까지: 두꺼운 리넨 붕대\n50 에 중급" },
 		{ 115, "115 까지: 양모 붕대" },
@@ -409,7 +405,7 @@ addon.Suggestions = {
 		{ 475, "475 까지: 잿불비단 붕대" },
 		{ 525, "525 까지: 두꺼운 잿불비단 붕대" }
 	},
-	[BI["Cooking"]] = {
+	[TS.COOKING] = {
 		{ 40, "40 까지: 매콤한 빵"	},
 		{ 85, "85 까지: 곰고기 숯불구이, 게살 케이크" },
 		{ 100, "100 까지: 집게발 요리 (얼)\n들쥐 스튜 (호)" },
@@ -428,7 +424,7 @@ addon.Suggestions = {
 		{ 525, "525 까지: 스톰윈드 또는 오그리마 요리 일일퀘스트" }
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[TS.FISHING] = {
 		{ 50, "50 까지: 모든 시작 지역" },
 		{ 75, "75 까지:\n스톰윈드 안 운하\n오그리마 안 연못" },
 		{ 150, "150 까지: 언덕마루 구릉지' 강" },
@@ -445,7 +441,7 @@ addon.Suggestions = {
 		{ 525, "525 까지: 모든 대격변 지역\n스톰윈드 또는 오그리마 낚시 일일퀘스트" }
 	},
 	
-	[BI["Archaeology"]] = {
+	[TS.ARCHAEOLOGY] = {
 		{ 300, "300 까지: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "375 까지: " .. continents[3]},
 		{ 450, "450 까지: " .. continents[4]},

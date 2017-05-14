@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1309 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -20,36 +20,36 @@ function Recount:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 	theFrame:SetWidth(Width)
 
 	theFrame:SetBackdrop({
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,
-		edgeFile = "Interface\\AddOns\\Recount\\textures\\otravi-semi-full-border", edgeSize = 32,
+		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+		tile = true,
+		tileSize = 16,
+		edgeFile = "Interface\\AddOns\\Recount\\textures\\otravi-semi-full-border",
+		edgeSize = 32,
 		insets = {left = 1, right = 1, top = 20, bottom = 1},
 	})
 	theFrame:SetBackdropBorderColor(1.0, 0.0, 0.0)
 	theFrame:SetBackdropColor(24 / 255, 24 / 255, 24 / 255)
 
 	if Name == "Recount_MainWindow" then
-		Recount.Colors:RegisterBorder("Window","Title",theFrame)
-		Recount.Colors:RegisterBackground("Window","Background",theFrame)
+		Recount.Colors:RegisterBorder("Window", "Title", theFrame)
+		Recount.Colors:RegisterBackground("Window", "Background", theFrame)
 	else
-		Recount.Colors:RegisterBorder("Other Windows","Title",theFrame)
-		Recount.Colors:RegisterBackground("Other Windows","Background",theFrame)
+		Recount.Colors:RegisterBorder("Other Windows", "Title", theFrame)
+		Recount.Colors:RegisterBackground("Other Windows", "Background", theFrame)
 	end
 
 	theFrame:EnableMouse(true)
 	theFrame:SetMovable(true)
-	--theFrame:RegisterForDrag("LeftButton")
-	--theFrame:SetScript("OnDragStart",theFrame.StartMoving)
-	--theFrame:SetScript("OnDragStop",theFrame.StopMovingOrSizing)
 
 	theFrame:SetScript("OnMouseDown", function(this, button)
-		if (((not this.isLocked) or (this.isLocked == 0)) and (button == "LeftButton")) then
+		if (not this.isLocked or this.isLocked == 0) and button == "LeftButton" then
 			Recount:SetWindowTop(this)
 			this:StartMoving()
 			this.isMoving = true
 		end
 	end)
-	theFrame:SetScript("OnMouseUp", function(this) 
-		if (this.isMoving) then
+	theFrame:SetScript("OnMouseUp", function(this)
+		if this.isMoving then
 			this:StopMovingOrSizing()
 			this.isMoving = false
 
@@ -58,7 +58,7 @@ function Recount:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 			end
 		end
 	end)
-	theFrame.ShowFunc = ShowFunc	
+	theFrame.ShowFunc = ShowFunc
 	theFrame:SetScript("OnShow", function(this)
 		Recount:SetWindowTop(this)
 		if this.ShowFunc then
@@ -75,7 +75,7 @@ function Recount:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 			this:HideFunc()
 		end
 	end)
-	theFrame.Title = theFrame:CreateFontString(nil,"OVERLAY","GameFontNormal")
+	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	theFrame.Title:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -15)
 	theFrame.Title:SetTextColor(1.0, 1.0, 1.0, 1.0)
 	theFrame.Title:SetText(Title)
@@ -83,12 +83,12 @@ function Recount:CreateFrame(Name, Title, Height, Width, ShowFunc, HideFunc)
 
 	if Name == "Recount_MainWindow" then
 		Recount.Colors:UnregisterItem(theFrame.Title)
-		Recount.Colors:RegisterFont("Window","Title Text",theFrame.Title)
+		Recount.Colors:RegisterFont("Window", "Title Text", theFrame.Title)
 	else
 		Recount.Colors:UnregisterItem(theFrame.Title)
-		Recount.Colors:RegisterFont("Other Windows","Title Text",theFrame.Title)
+		Recount.Colors:RegisterFont("Other Windows", "Title Text", theFrame.Title)
 	end
-	
+
 	theFrame.CloseButton = CreateFrame("Button", nil, theFrame)
 	theFrame.CloseButton:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up.blp")
 	theFrame.CloseButton:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down.blp")
@@ -108,7 +108,7 @@ function Recount:SetupScrollbar(name)
 	local Thumb = _G[name.."ScrollBarThumbTexture"]
 	Thumb:SetTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-Knob")
 	Thumb:SetVertexColor(1, 0, 0)
-	Recount.Colors:RegisterTexture("Window","Title",Thumb)
+	Recount.Colors:RegisterTexture("Window", "Title", Thumb)
 
 	local Up = _G[name.."ScrollBarScrollUpButton"]
 	Up:SetNormalTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-ScrollUpButton-Up")
@@ -117,13 +117,13 @@ function Recount:SetupScrollbar(name)
 	Up:SetHighlightTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-ScrollUpButton-Highlight")
 
 	if not Up.Overlay then
-		Up.Overlay = Up:CreateTexture(nil,"OVERLAY")
+		Up.Overlay = Up:CreateTexture(nil, "OVERLAY")
 		Up.Overlay:SetAllPoints(Up)
 		Up.Overlay:SetTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-ScrollUpButton-Overlay")
 		Up.Overlay:SetVertexColor(1, 0, 0)
 		Up.Overlay:SetTexCoord(0.25, 0.75, 0.25, 0.75)
 		Up.Overlay:SetBlendMode("MOD")
-		Recount.Colors:RegisterTexture("Window","Title",Up.Overlay)
+		Recount.Colors:RegisterTexture("Window", "Title", Up.Overlay)
 	end
 
 	local Down = _G[name.."ScrollBarScrollDownButton"]
@@ -133,14 +133,14 @@ function Recount:SetupScrollbar(name)
 	Down:SetHighlightTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-ScrollDownButton-Highlight")
 
 	if not Down.Overlay then
-		Down.Overlay = Up:CreateTexture(nil,"OVERLAY")
+		Down.Overlay = Up:CreateTexture(nil, "OVERLAY")
 		Down.Overlay:SetAllPoints(Down)
 		Down.Overlay:SetTexture("Interface\\AddOns\\Recount\\textures\\scrollbar\\UI-ScrollBar-ScrollDownButton-Overlay")
 		Down.Overlay:SetVertexColor(1, 0, 0)
 		Down.Overlay:SetTexCoord(0.25, 0.75, 0.25, 0.75)
 		Down.Overlay:SetBlendMode("MOD")
 
-		Recount.Colors:RegisterTexture("Window","Title",Down.Overlay)
+		Recount.Colors:RegisterTexture("Window", "Title", Down.Overlay)
 	end
 end
 

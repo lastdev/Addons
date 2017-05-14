@@ -553,6 +553,7 @@ function HealBot_Lang_ptBR()
     HEALBOT_SUPPRESSSOUND                   = "Auto Berloque: Suprimir som"
     HEALBOT_SUPPRESSERROR                   = "Auto Berloque: Suprimir erros"
     HEALBOT_OPTIONS_CRASHPROT               = "Prote\195\167\195\163o de erros"
+    HEALBOT_OPTIONS_USEGENERALMACRO          = "Use general macro slots"
     HEALBOT_CP_MACRO_LEN                    = "Nome da macro deve conter de 1 a 14 caracteres"
     HEALBOT_CP_MACRO_BASE                   = "Nome da macro base"
     HEALBOT_CP_MACRO_SAVE                   = "?ltima grava\195\167\195\163o em: "
@@ -629,6 +630,7 @@ function HealBot_Lang_ptBR()
     HEALBOT_OPTIONS_LOWMANAINDICATOR6       = "*30% / **60% / ***90%"
 
     HEALBOT_OPTION_IGNORE_AURA_RESTED       = "Ignorar eventos de aura quando estiver descansando"
+    HEALBOT_OPTION_ADJUST_MAX_HEALTH        = "Adjust unit max health"
 
     HEALBOT_WORD_ENABLE                     = "Habilitar"
     HEALBOT_WORD_DISABLE                    = "Desabilitar"
@@ -837,7 +839,6 @@ function HealBot_Lang_ptBR()
                                   }
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Autor do Skin:"
-    HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Evitar\ncursor azul"
     HEALBOT_PLAYER_OF_REALM                 = "de"
     
     HEALBOT_OPTIONS_LANG                    = "Language"

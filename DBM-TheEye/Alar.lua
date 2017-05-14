@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod("Alar", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 538 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(19514)
+mod:SetEncounterID(730)
 mod:SetModelID(18945)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_HEAL"
+	"SPELL_AURA_APPLIED 34229 35383 35410",
+	"SPELL_AURA_REMOVED 35410",
+	"SPELL_HEAL 34342"
 )
 
 local warnPhase1		= mod:NewPhaseAnnounce(1)
@@ -24,9 +25,9 @@ local specWarnQuill		= mod:NewSpecialWarningSpell(34229)
 local specWarnFire		= mod:NewSpecialWarningMove(35383)
 
 local timerQuill		= mod:NewCastTimer(10, 34229)
-local timerMeteor		= mod:NewCDTimer(52, 35181)
-local timerArmor		= mod:NewTargetTimer(60, 35410)
-local timerNextPlatform	= mod:NewTimer(34, "NextPlatform", 40192)--This has no spell trigger, the target scanning bosses target is still required if loop isn't accurate enough.
+local timerMeteor		= mod:NewCDTimer(52, 35181, nil, nil, nil, 2)
+local timerArmor		= mod:NewTargetTimer(60, 35410, nil, "Tank", 2, 5)
+local timerNextPlatform	= mod:NewTimer(34, "NextPlatform", 40192, nil, nil, 6)--This has no spell trigger, the target scanning bosses target is still required if loop isn't accurate enough.
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -55,34 +56,33 @@ function mod:OnCombatStart(delay)
 	phase2 = false
 	warnPhase1:Show()
 	timerNextPlatform:Start(35-delay)
-end
-
-mod:RegisterOnUpdateHandler(function(self)
-	if self:IsInCombat() then
-		local foundIt
-		local target
-		for uId in DBM:GetGroupMembers() do
-			if self:GetUnitCreatureId(uId.."target") == 19514 then
-				foundIt = true
-				target = UnitName(uId.."targettarget")
-				if not target and UnitCastingInfo(uId.."target") == buffetName then
-					target = "Dummy"
+	self:RegisterOnUpdateHandler(function(self)
+		if self:IsInCombat() then
+			local foundIt
+			local target
+			for uId in DBM:GetGroupMembers() do
+				if self:GetUnitCreatureId(uId.."target") == 19514 then
+					foundIt = true
+					target = UnitName(uId.."targettarget")
+					if not target and UnitCastingInfo(uId.."target") == buffetName then
+						target = "Dummy"
+					end
+					break
 				end
-				break
+			end
+
+			if foundIt and not target and not phase2 and self:AntiSpam(30, 1) then--Al'ar is no longer targeting anything, which means he spawned an add and is moving platforms
+				Add()
+				--Could also be quills though, which is why we can't really put in an actual add warning.
+			elseif not target and type(phase2) == "number" and self:AntiSpam(30, 2) and (GetTime() - phase2) > 25 then--No target in phase 2 means meteor
+				warnMeteor:Show()
+				timerMeteor:Start()
+			elseif target and flying then--Al'ar has reached a platform and is once again targeting aggro player
+				Platform()
 			end
 		end
-		
-		if foundIt and not target and not phase2 and self:AntiSpam(30, 1) then--Al'ar is no longer targeting anything, which means he spawned an add and is moving platforms
-			Add()
-			--Could also be quills though, which is why we can't really put in an actual add warning.
-		elseif not target and type(phase2) == "number" and self:AntiSpam(30, 2) and (GetTime() - phase2) > 25 then--No target in phase 2 means meteor
-			warnMeteor:Show()
-			timerMeteor:Start()
-		elseif target and flying then--Al'ar has reached a platform and is once again targeting aggro player
-			Platform()
-		end
-	end
-end, 0.25)
+	end, 0.25)
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 34229 then

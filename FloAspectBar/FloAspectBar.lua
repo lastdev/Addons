@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "6.0.18"
+local VERSION = "7.2.21"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -46,6 +46,7 @@ function FloAspectBar_OnLoad(self)
 
 	self.spells = {};
 	self.SetupSpell = FloAspectBar_SetupSpell;
+	self.OnSetup = FloAspectBar_OnSetup;
 	self.UpdateState = FloAspectBar_UpdateState;
 	self.menuHooks = { SetPosition = FloAspectBar_SetPosition, SetBorders = FloAspectBar_SetBorders };
 	self:EnableMouse(1);
@@ -59,7 +60,7 @@ function FloAspectBar_OnLoad(self)
 		SlashCmdList["FLOASPECTBAR"] = FloAspectBar_ReadCmd;
 
 		self:RegisterEvent("ADDON_LOADED");
-		self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+		self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
 	end
 
@@ -72,6 +73,7 @@ function FloAspectBar_OnLoad(self)
 	self:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
 	self:RegisterEvent("UNIT_AURA");
 	self:RegisterEvent("UPDATE_BINDINGS");
+	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player");
 end
 
 function FloAspectBar_OnEvent(self, event, arg1, ...)
@@ -86,17 +88,23 @@ function FloAspectBar_OnEvent(self, event, arg1, ...)
 
 		-- Hook the UIParent_ManageFramePositions function
 		hooksecurefunc("UIParent_ManageFramePositions", FloAspectBar_UpdatePosition);
-		hooksecurefunc("SetActiveSpecGroup", function() changingSpec = true; end);
+		hooksecurefunc("SetSpecialization", function(specIndex, isPet) if not isPet then changingSpec = true end end);
+
+	elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+		if arg1 == "player" then
+			FloLib_StartTimer(self, ...);
+		end
 
 	elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
 		local spellName = ...;
-		if arg1 == "player" and (spellName == FLOLIB_ACTIVATE_SPEC_1 or spellName == FLOLIB_ACTIVATE_SPEC_2) then
+		if arg1 == "player" and (spellName == FLOLIB_ACTIVATE_SPEC) then
 			changingSpec = false;
 		end
 
-	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
-		if FLOASPECTBAR_OPTIONS.active ~= arg1 then
-			FloAspectBar_TalentGroupChanged(arg1);
+	elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
+                local spec = GetSpecialization();
+		if arg1 == "player" and FLOASPECTBAR_OPTIONS.active ~= spec then
+			FloAspectBar_TalentGroupChanged(spec);
 		end
 
 	elseif event == "UPDATE_BINDINGS" then
@@ -189,9 +197,23 @@ function FloAspectBar_SetupSpell(self, spell, pos)
 		icon:SetTexture(spell.texture);
 	end
 
-	self.spells[pos] = { name = spell.name };
-	self.spells[pos] = { id = spell.id, name = spell.name, addName = spell.addName, talented = spell.talented };
+	self.spells[pos] = { id = spell.id, name = spell.name, addName = spell.addName, talented = spell.talented, duration = spell.duration };
 
+        if spell.modifier then spell.modifier(self.spells[pos]) end
+
+end
+
+function FloAspectBar_OnSetup(self)
+
+	-- Avoid tainting
+	if not InCombatLockdown() then
+	        if next(self.spells) == nil then
+		        UnregisterStateDriver(self, "visibility")
+	        else
+		        local stateCondition = "nopetbattle,nooverridebar,novehicleui,nopossessbar"
+		        RegisterStateDriver(self, "visibility", "["..stateCondition.."] show; hide")
+	        end
+        end
 end
 
 function FloAspectBar_UpdateState(self, pos)
@@ -201,7 +223,9 @@ function FloAspectBar_UpdateState(self, pos)
 
 	if UnitBuff("player", spell.name) then
 		button:SetChecked(true);
-	else
+	elseif self["activeSpell"..pos] == pos then
+                FloLib_ResetTimer(self, pos);
+        else
 		button:SetChecked(false);
 	end
 end
@@ -221,7 +245,14 @@ function FloAspectBar_UpdatePosition()
 		yOffset = 110-UIParent:GetHeight();
 	else
 		anchorFrame = MainMenuBar;
-		if ReputationWatchBar:IsShown() and MainMenuExpBar:IsShown() then
+
+                local numWatchBars = 0;
+		numWatchBars = numWatchBars + (ReputationWatchBar:IsShown() and 1 or 0);
+		numWatchBars = numWatchBars + (HonorWatchBar:IsShown() and 1 or 0);
+		numWatchBars = numWatchBars + (ArtifactWatchBar:IsShown() and 1 or 0);
+                numWatchBars = numWatchBars + (MainMenuExpBar:IsShown() and 1 or 0);
+
+		if numWatchBars > 1 then
 			yOffset = yOffset + 9;
 		end
 

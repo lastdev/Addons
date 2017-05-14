@@ -151,6 +151,7 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "ADDON_LOADED" and select(1, ...) == "DBM-LDB" then
+		if not DBM or not DBM.AddOns then return end
 		for i, v in ipairs(DBM.AddOns) do
 			if not categories[v.category] then
 				categories[v.category] = {}
@@ -175,7 +176,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if button == "LeftButton" then
 					DBM:LoadGUI()
 				elseif button == "RightButton" then
-					UIDropDownMenu_Initialize(dropdownFrame, initialize, "MENU")
+					UIDropDownMenu_Initialize(dropdownFrame, initialize)
 					ToggleDropDownMenu(1, nil, dropdownFrame, "cursor", 5, -10)
 				end
 			end,

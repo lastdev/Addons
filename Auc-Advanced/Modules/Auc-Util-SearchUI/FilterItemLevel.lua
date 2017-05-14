@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemQuality
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: FilterItemLevel.lua 5481 2014-10-05 21:31:37Z ccox $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: FilterItemLevel.lua 5622 2016-07-29 18:06:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined parameters
@@ -38,7 +38,10 @@ lib.tabname = "ItemLevel"
 -- Set our defaults
 default("ignoreitemlevel.enable", false)
 
-local typename = Const.CLASSES
+--local typename = Const.CLASSES
+local classIDs = Const.AC_ClassIDList
+local classNames = Const.AC_ClassNameList
+
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
@@ -65,13 +68,18 @@ function lib:MakeGuiConfig(gui)
 		end
 	end
 
--- Assume valid minimum item level is 0 and valid max item level is 700.
+-- Assume valid minimum item level is 0 and valid max item level is Const.MAXITEMLEVEL.
 -- Configure slider controls to reflect this range of values.
 -- See norganna.org JIRA ASER-106 and ASER-132 for additional info about this value range.
 	gui:AddControl(id, "Subhead",     0,  "Minimum itemLevels by Type")
-	for i = 1, #typename do
-		default("ignoreitemlevel.minlevel."..typename[i], 61)
-		gui:AddControl(id, "WideSlider",   0, 1, "ignoreitemlevel.minlevel."..typename[i], 0, 700, 1, "Min iLevel for "..typename[i]..": %s")
+	for i = 1, #classIDs do
+		default("ignoreitemlevel.minlevel."..classIDs[i], 61)
+		gui:AddControl(id, "WideSlider",   0, 1, "ignoreitemlevel.minlevel."..classIDs[i], 0, Const.MAXITEMLEVEL, 1, "Min iLevel for "..classNames[i]..": %s")
+
+		-- ### Legion : try to delete obsolete settings,
+		-- we now use classID instead of class name (same as CoreScan)
+		-- to be removed after a suitable time interval...
+		set("ignoreitemlevel.minlevel."..classNames[i], nil, true)
 	end
 end
 
@@ -84,17 +92,17 @@ function lib.Filter(item, searcher)
 		return
 	end
 
-	local itype = item[Const.ITYPE]
+	local classID = item[Const.CLASSID]
 	local ilevel = item[Const.ILEVEL]
 
-	local minlevel = get("ignoreitemlevel.minlevel."..itype)
+	local minlevel = get("ignoreitemlevel.minlevel."..classID)
 	if not ilevel then
 		return true, "Error: no ilevel"
 	elseif not minlevel then
-		return true, "Error: no min level set for "..itype
+		return true, "Error: no min level set for "..classID
 	elseif ilevel < minlevel then
 		return true, "ItemLevel too low"
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemLevel.lua $", "$Rev: 5481 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemLevel.lua $", "$Rev: 5622 $")

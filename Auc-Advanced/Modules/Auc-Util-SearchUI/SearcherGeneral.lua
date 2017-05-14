@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher General
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherGeneral.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SearcherGeneral.lua 5656 2016-08-09 22:05:44Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -32,38 +32,42 @@
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("General")
 if not lib then return end
-local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local get,set,default,Const = AucSearchUI.GetSearchLocals()
 lib.tabname = "General"
 
 function private.getTypes()
-	if not private.typetable then
-		private.typetable = {GetAuctionItemClasses()}
-		table.insert(private.typetable,1, "All")
+	local typetable = private.typetable
+	if not typetable then
+		typetable = {{-1, "All"}}
+		private.typetable = typetable
+		local classIDs, classNames = Const.AC_ClassIDList, Const.AC_ClassNameList
+		for index, classID in ipairs(classIDs) do
+			tinsert(typetable, {classID, classNames[index]})
+		end
 	end
-	return private.typetable
+	return typetable
 end
 
 function private.getSubTypes()
-	local subtypetable, typenumber
-	local typename = get("general.type")
-	local typetable = private.getTypes()
-	if typename ~= "All" then
-		for i, j in pairs(typetable) do
-			if j == typename then
-				typenumber = i
-				break
+	local subtypetable
+	local classID = get("general.type")
+	if classID == private.lastsubtypeclass then subtypetable = private.subtypetable end
+	if not subtypetable then
+		subtypetable = {{-1, "All"}}
+		private.subtypetable = subtypetable
+		private.lastsubtypeclass = classID
+		local subClassIDs, subClassNames = Const.AC_SubClassIDLists[classID], Const.AC_SubClassNameLists[classID]
+		if subClassIDs then
+			for index, subClassID in ipairs(subClassIDs) do
+				tinsert(subtypetable, {subClassID, subClassNames[index]})
 			end
 		end
 	end
-	if typenumber then
-		subtypetable = {GetAuctionItemSubClasses(typenumber-1)}-- subtract 1 because 1 is the "All" category
-		table.insert(subtypetable, 1, "All")
-	else
-		subtypetable = {[1]="All"}
-	end
 	return subtypetable
 end
+
+--- ### todo: InventoryType table
 
 function private.getQuality()
 	return {
@@ -93,8 +97,8 @@ default("general.name", "")
 default("general.name.exact", false)
 default("general.name.regexp", false)
 default("general.name.invert", false)
-default("general.type", "All")
-default("general.subtype", "All")
+default("general.type", -1)
+default("general.subtype", -1)
 default("general.quality", -1)
 default("general.timeleft", 0)
 default("general.ilevel.min", 0)
@@ -145,12 +149,14 @@ function lib:MakeGuiConfig(gui)
 	gui:SetLast(id, last)
 	gui:AddControl(id, "Note",       0.3, 1, 100, 14, "SubType:")
 	gui:AddControl(id, "Selectbox",   0.3, 1, private.getSubTypes, "general.subtype")
-	gui:SetLast(id, last)
-	gui:AddControl(id, "Note",       0.7, 1, 100, 14, "TimeLeft:")
-	gui:AddControl(id, "Selectbox",  0.7, 1, private.getTimeLeft(), "general.timeleft")
 
+	last = gui:GetLast(id)
 	gui:AddControl(id, "Note",       0.0, 1, 100, 14, "Quality:")
 	gui:AddControl(id, "Selectbox",   0.0, 1, private.getQuality(), "general.quality")
+	gui:SetLast(id, last)
+	gui:AddControl(id, "Note",       0.3, 1, 100, 14, "TimeLeft:")
+	gui:AddControl(id, "Selectbox",  0.3, 1, private.getTimeLeft(), "general.timeleft")
+
 
 	last = gui:GetLast(id)
 	gui:SetControlWidth(0.37)
@@ -191,7 +197,7 @@ end
 function lib.Search(item)
 	private.debug = ""
 	if private.NameSearch("name", item[Const.NAME])
-			and private.TypeSearch(item[Const.ITYPE], item[Const.ISUB])
+			and private.TypeSearch(item[Const.CLASSID], item[Const.SUBCLASSID])
 			and private.TimeSearch(item[Const.TLEFT])
 			and private.QualitySearch(item[Const.QUALITY])
 			and private.LevelSearch("ilevel", item[Const.ILEVEL])
@@ -208,24 +214,38 @@ end
 --Rescan is an optional method a searcher can implement that allows it to queue a rescan of teh ah
 --Just pass any item you want rescaned
 function lib.Rescan()
+	local searchName, minUseLevel, maxUseLevel, searchQuality, exactMatch, filterData
+
 	local name = get("general.name")
-	local min = get("general.ulevel.min")
-	local max = get("general.ulevel.max")
-	local quality = get("general.quality")
-
-	--convert these to the AH API index #
-	local searchtype = get("general.type")
-	local searchsubtype = get("general.subtype")
-
-	local classIndex = AucAdvanced.Const.CLASSESREV[searchtype]
-	local subclassIndex
-	if classIndex then
-		subclassIndex = AucAdvanced.Const.SUBCLASSESREV[searchtype][searchsubtype]
+	if name and name ~= "" and not get("general.name.regexp") and not get("general.name.invert") then
+		searchName = name
+		if get("general.name.exact") and #searchName < 60 then
+			-- set exactMatch based on user setting, unless name is very long (names over 64 bytes will be truncated)
+			exactMatch = true
+		end
 	end
 
-	if name then
-		--print(name, min, max, nil, classIndex, subclassIndex, nil, quality)
-		AucSearchUI.RescanAuctionHouse(name, min, max, nil, classIndex, subclassIndex, nil, quality )
+	local minlevel, maxlevel = get("general.ulevel.min"), get("general.ulevel.max")
+	if minlevel ~= 0 then minUseLevel = minlevel end
+	if maxlevel ~= Const.MAXUSERLEVEL then maxUseLevel = maxlevel end
+
+	local quality = get("general.quality")
+	if quality > 0 then searchQuality = quality end
+
+	local classID, subClassID = get("general.type"), get("general.subtype")
+
+	-- following line is here in case we have old string values left behind from previous versions
+	-- ### todo : can be removed after a suitable time
+	classID, subClassID = tonumber(classID), tonumber(subClassID)
+
+	if classID ~= -1 then
+		if subClassID == -1 then subClassID = nil end
+		filterData = AucAdvanced.Scan.QueryFilterFromID(classID, subClassID) -- ### todo: add invType
+	end
+
+	if searchName or filterData then
+		-- Usage: RescanAuctionHouse(searchName, minUseLevel, maxUseLevel, isUsable, searchQuality, exactMatch, filterData)
+		AucSearchUI.RescanAuctionHouse(searchName, minUseLevel, maxUseLevel, nil, searchQuality, exactMatch, filterData)
 	end
 end
 
@@ -292,15 +312,16 @@ function private.NameSearch(nametype,itemName)
 	return false
 end
 
-function private.TypeSearch(itype, isubtype)
+-- ### todo: add invtypes
+function private.TypeSearch(classID, subClassID)
 	local searchtype = get("general.type")
-	if searchtype == "All" then
+	if searchtype == -1 then -- "All"
 		return true
-	elseif searchtype == itype then
+	elseif searchtype == classID then
 		local searchsubtype = get("general.subtype")
-		if searchsubtype == "All" then
+		if searchsubtype == -1 then -- "All"
 			return true
-		elseif searchsubtype == isubtype then
+		elseif searchsubtype == subClassID then
 			return true
 		else
 			private.debug = "Wrong Subtype"
@@ -358,4 +379,4 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5656 $")

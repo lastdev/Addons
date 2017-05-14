@@ -1,5 +1,5 @@
 
-TjOptions v0.42
+TjOptions v0.47
 ========================================
 
 Author: Tuhljin
@@ -186,11 +186,12 @@ Item Fields - general (for all items):
   name          String. The name of the global variable to give the new object. Use this if your addon needs
                 access to the object, but remember that it won't actually be created until it is needed.
 
-  tooltip       String or function. If a string, tooltip text to display. If a function, it is called after
+  tooltip       String, function, or table. If a string, tooltip text to display. If a function, it is called after
                 the tooltip's owner is set and is ready to have text added to it. The item's frame is passed as
                 the first argument and the tooltip object is passed as the second argument. Your function doesn't
                 need to show the tooltip ("GameTooltip:Show()") since that will be done for you by TjOptions.
-                Some item types, such as labels, do not use this field or tooltip2.
+                If a table, it should be numerically indexed and contain only strings. Some item types, such as
+                labels, do not use this field or tooltip2.
 
   tooltip2      String. Additional tooltip text (uses a smaller font). Used only if "tooltip" field is a string.
 
@@ -487,6 +488,22 @@ Example usage:
 
 Recent changes
 ================
+
+v0.47
+- Checkboxes now update the color of their text labels when they are enabled/disabled using checkboxframe:SetEnabled(value).
+
+v0.46
+- Item field "tooltip" can now be a table of numerically-indexed strings.
+
+v0.45
+- Fix background texture on scrollbar.
+
+v0.44
+- Fix failure to trigger panels' OnShow methods when first visible, resulting in panel contents not being built
+  until shown a second time (and other possible issues depending on usage).
+
+v0.43
+- Account for API changes in WoW 6.0.x.
 
 v0.42
 - Adjusted the size of the scrolling area to better utilize the space provided by the updated Interface Options UI.

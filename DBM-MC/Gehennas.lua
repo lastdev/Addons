@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Gehennas", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 549 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 597 $"):sub(12, -3))
 mod:SetCreatureID(12259)--, 11661
---mod:SetEncounterID(665)
+mod:SetEncounterID(665)
 mod:SetModelID(13030)
 mod:RegisterCombat("combat")
 
@@ -14,13 +14,13 @@ mod:RegisterEvents(
 
 local warnRainFire	= mod:NewSpellAnnounce(19717, 2, nil, false)
 local warnCurse		= mod:NewSpellAnnounce(19716, 3)
-local warnFist		= mod:NewTargetAnnounce("OptionVersion2", 20277, 2, nil, false)
+local warnFist		= mod:NewTargetAnnounce(20277, 2, nil, false, 2)
 
 local specWarnRoF	= mod:NewSpecialWarningMove(19717)
 
 local timerRoF		= mod:NewCDTimer(6, 19717, nil, false)
 local timerCurse	= mod:NewNextTimer(30, 19716)
-local timerFist		= mod:NewBuffActiveTimer("OptionVersion2", 4, 20277, nil, false)
+local timerFist		= mod:NewBuffActiveTimer(4, 20277, nil, false, 2)
 
 function mod:OnCombatStart(delay)
 	timerCurse:Start(6-delay)

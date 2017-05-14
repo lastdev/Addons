@@ -1,11 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local RED		= "|cFFFF0000"
 
 -- *** Dungeons ***
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
@@ -235,19 +232,25 @@ local Dungeons = {
 			{ id = 767, achID = 8533 },	--	Ordos
 			{ id = 768, achID = 8535 },	--	Celestials
 		},
-		{	-- [7] Flex raids
-			name = format("%s - %s", RAIDS, GetDifficultyInfo(DIFFICULTY_RAID_FLEX)),
-			{ id = 771, achID = 8458, bosses = 4 },	--	Vale of Eternal Sorrows
-			{ id = 772, achID = 8459, bosses = 4 },	--	Gates of Retribution
-			{ id = 773, achID = 8461, bosses = 3 },	--	The Underhold
-			{ id = 774, achID = 8462, bosses = 3 },	--	Downfall
+	},
+	{	-- [6]
+		name = EXPANSION_NAME5,	-- "Warlords of Draenor"
+		{	-- [1] LFR Raids
+			name = format("%s - %s", RAIDS, GetDifficultyInfo(DIFFICULTY_RAID_LFR)),
+			{ id = 849, achID = 8986, bosses = 3 },	--	Walled City
+			{ id = 850, achID = 8987, bosses = 3 },	--	Arcane Sanctum
+			{ id = 851, achID = 8988, bosses = 1 },	--	Imperator's Rise
+			{ id = 847, achID = 8989, bosses = 3 },	--	Slagworks
+			{ id = 846, achID = 8990, bosses = 3 },	--	The Black Forge
+			{ id = 848, achID = 8991, bosses = 3 },	--	Iron Assembly
+			{ id = 823, achID = 8992, bosses = 1 },	--	Blackhand's Crucible
+			{ id = 982, achID = 10023, bosses = 3 }, --  Hellbreach
+			{ id = 983, achID = 10024, bosses = 3 }, --  Halls of Blood
+			{ id = 984, achID = 10025, bosses = 3 }, --  Bastion of Shadows
+			{ id = 985, achID = 10026, bosses = 3 }, --  Destructor's Rise
+			{ id = 986, achID = 10027, bosses = 1 }, --  The Black Gate
 		},
 	},
-	
-	-- {	-- [6]
-		-- name = EXPANSION_NAME5,	-- "Warlords of Draenor"
-	-- },
-	
 }
 
 local view
@@ -258,6 +261,7 @@ local OPTION_RAIDS = "UI.Tabs.Grids.Dungeons.CurrentRaids"
 
 local currentDDMText
 local currentTexture
+local dropDownFrame
 
 local function BuildView()
 	view = view or {}
@@ -273,26 +277,24 @@ local function BuildView()
 	isViewValid = true
 end
 
-local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
-
 local function OnRaidListChange(self, xpackIndex, raidListIndex)
-	CloseDropDownMenus()
+	dropDownFrame:Close()
 
 	addon:SetOption(OPTION_XPACK, xpackIndex)
 	addon:SetOption(OPTION_RAIDS, raidListIndex)
 		
 	local raidList = Dungeons[xpackIndex][raidListIndex]
 	currentDDMText = raidList.name
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	
 	isViewValid = nil
-	addon.Tabs.Grids:Update()
+	AltoholicTabGrids:Update()
 end
 
-local function DropDown_Initialize(self, level)
+local function DropDown_Initialize(frame, level)
 	if not level then return end
 
-	local info = UIDropDownMenu_CreateInfo()
+	local info = frame:CreateInfo()
 	
 	local currentXPack = addon:GetOption(OPTION_XPACK)
 	local currentRaids = addon:GetOption(OPTION_RAIDS)
@@ -303,18 +305,20 @@ local function DropDown_Initialize(self, level)
 			info.hasArrow = 1
 			info.checked = (currentXPack == xpackIndex)
 			info.value = xpackIndex
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 		end
-		DDM_AddCloseMenu()
+		frame:AddCloseMenu()
 	
 	elseif level == 2 then
-		for raidListIndex, raidList in ipairs(Dungeons[UIDROPDOWNMENU_MENU_VALUE]) do
+		local menuValue = frame:GetCurrentOpenMenuValue()
+		
+		for raidListIndex, raidList in ipairs(Dungeons[menuValue]) do
 			info.text = raidList.name
 			info.func = OnRaidListChange
-			info.checked = ((currentXPack == UIDROPDOWNMENU_MENU_VALUE) and (currentRaids == raidListIndex))
-			info.arg1 = UIDROPDOWNMENU_MENU_VALUE
+			info.checked = ((currentXPack == menuValue) and (currentRaids == raidListIndex))
+			info.arg1 = menuValue
 			info.arg2 = raidListIndex
-			UIDropDownMenu_AddButton(info, level)
+			frame:AddButtonInfo(info, level)
 		end
 	end
 end
@@ -328,13 +332,13 @@ local callbacks = {
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentRaids = addon:GetOption(OPTION_RAIDS)
 			
-			addon.Tabs.Grids:SetStatus(format("%s / %s", Dungeons[currentXPack].name, Dungeons[currentXPack][currentRaids].name))
+			AltoholicTabGrids:SetStatus(format("%s / %s", Dungeons[currentXPack].name, Dungeons[currentXPack][currentRaids].name))
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
 			local dungeonID = view[dataRowID].id
 
-			rowFrame.Name.Text:SetText(WHITE .. GetLFGDungeonInfo(dungeonID))
+			rowFrame.Name.Text:SetText(colors.white .. GetLFGDungeonInfo(dungeonID))
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
 	RowOnEnter = function()	end,
@@ -358,12 +362,12 @@ local callbacks = {
 				button.Name:SetFontObject("NumberFontNormalLarge")
 
 				if view[dataRowID].bosses then
-					button.Name:SetText(GREEN..format("%s/%s", count, view[dataRowID].bosses))
+					button.Name:SetText(colors.green..format("%s/%s", count, view[dataRowID].bosses))
 				else
-					button.Name:SetText(GREEN..format("%s/%s", count, GetLFGDungeonNumEncounters(view[dataRowID].id)))
+					button.Name:SetText(colors.green..format("%s/%s", count, GetLFGDungeonNumEncounters(view[dataRowID].id)))
 				end
 				
-				-- button.Name:SetText(GREEN..count)
+				-- button.Name:SetText(colors.green..count)
 			else
 				button.Background:SetVertexColor(0.3, 0.3, 0.3)		-- greyed out
 				button.Name:SetJustifyH("CENTER")
@@ -394,10 +398,11 @@ local callbacks = {
 			for i = 1, GetLFGDungeonNumEncounters(dungeonID) do
 				local bossName = GetLFGDungeonEncounterInfo(dungeonID, i)
 				
+				-- current display is confusing, only show the "already looted" for the time being, skip the others until a better solution is possible
 				if DataStore:IsBossAlreadyLooted(character, dungeonID, bossName) then
-					AltoTooltip:AddDoubleLine(bossName, RED..ERR_LOOT_GONE)
-				else
-					AltoTooltip:AddDoubleLine(bossName, GREEN..BOSS_ALIVE)
+					AltoTooltip:AddDoubleLine(bossName, colors.red..ERR_LOOT_GONE)
+				-- else
+					-- AltoTooltip:AddDoubleLine(bossName, colors.green..BOSS_ALIVE)
 				end
 			end
 			
@@ -409,6 +414,7 @@ local callbacks = {
 			AltoTooltip:Hide() 
 		end,
 	InitViewDDM = function(frame, title) 
+			dropDownFrame = frame
 			frame:Show()
 			title:Show()
 
@@ -417,11 +423,11 @@ local callbacks = {
 			
 			currentDDMText = Dungeons[currentXPack][currentRaids].name
 			
-			UIDropDownMenu_SetWidth(frame, 100) 
-			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
-			addon:DDM_Initialize(frame, DropDown_Initialize)
+			frame:SetMenuWidth(100) 
+			frame:SetButtonWidth(20)
+			frame:SetText(currentDDMText)
+			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(6, callbacks)
+AltoholicTabGrids:RegisterGrid(6, callbacks)

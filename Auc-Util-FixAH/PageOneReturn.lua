@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Fix for searches not returning to page one in Blizzard code.
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: PageOneReturn.lua 5171 2011-05-31 11:29:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 

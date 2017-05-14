@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
 mod:SetCreatureID(36853)
 mod:SetEncounterID(1105)
 mod:SetModelID(30362)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH target focus mouseover",
+	"UNIT_HEALTH boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -28,9 +28,8 @@ local warnInstability			= mod:NewCountAnnounce(69766, 2, nil, false)
 local warnChilledtotheBone		= mod:NewCountAnnounce(70106, 2, nil, false)
 local warnMysticBuffet			= mod:NewCountAnnounce(70128, 2, nil, false)
 local warnFrostBeacon			= mod:NewTargetAnnounce(70126, 4)
-local warnBlisteringCold		= mod:NewSpellAnnounce(70123, 3)
 local warnFrostBreath			= mod:NewSpellAnnounce(69649, 2, nil, "Tank|Healer")
-local warnUnchainedMagic		= mod:NewTargetAnnounce("OptionVersion2", 69762, 2, nil, "SpellCaster")
+local warnUnchainedMagic		= mod:NewTargetAnnounce(69762, 2, nil, "SpellCaster", 2)
 
 local specWarnUnchainedMagic	= mod:NewSpecialWarningYou(69762)
 local specWarnFrostBeacon		= mod:NewSpecialWarningMoveAway(70126, nil, nil, nil, 3)
@@ -39,13 +38,13 @@ local specWarnChilledtotheBone	= mod:NewSpecialWarningStack(70106, nil, 4)
 local specWarnMysticBuffet		= mod:NewSpecialWarningStack(70128, false, 5)
 local specWarnBlisteringCold	= mod:NewSpecialWarningRun(70123, nil, nil, nil, 4)
 
-local timerNextAirphase			= mod:NewTimer(110, "TimerNextAirphase", 43810)
-local timerNextGroundphase		= mod:NewTimer(45, "TimerNextGroundphase", 43810)
-local timerNextFrostBreath		= mod:NewNextTimer(22, 69649, nil, "Tank|Healer")
-local timerNextBlisteringCold	= mod:NewCDTimer(67, 70123)
-local timerNextBeacon			= mod:NewNextTimer(16, 70126)
-local timerBlisteringCold		= mod:NewCastTimer(6, 70123)
-local timerUnchainedMagic		= mod:NewCDTimer(30, 69762)
+local timerNextAirphase			= mod:NewTimer(110, "TimerNextAirphase", 43810, nil, nil, 6)
+local timerNextGroundphase		= mod:NewTimer(45, "TimerNextGroundphase", 43810, nil, nil, 6)
+local timerNextFrostBreath		= mod:NewNextTimer(22, 69649, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerNextBlisteringCold	= mod:NewCDTimer(67, 70123, nil, nil, nil, 2)
+local timerNextBeacon			= mod:NewNextTimer(16, 70126, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerBlisteringCold		= mod:NewCastTimer(6, 70123, nil, nil, nil, 2)
+local timerUnchainedMagic		= mod:NewCDTimer(30, 69762, nil, nil, nil, 3)
 local timerInstability			= mod:NewBuffFadesTimer(5, 69766)
 local timerChilledtotheBone		= mod:NewBuffFadesTimer(8, 70106)
 local timerMysticBuffet			= mod:NewBuffFadesTimer(10, 70128)
@@ -221,7 +220,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnUnchainedTargets)
 		end
-	elseif args.spellId == 70106 then	--Chilled to the bone (melee)
+	elseif args.spellId == 70106 and not self:IsTrivial(100) then	--Chilled to the bone (melee)
 		if args:IsPlayer() then
 			warnChilledtotheBone:Show(args.amount or 1)
 			timerChilledtotheBone:Start()
@@ -229,7 +228,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnChilledtotheBone:Show(args.amount)
 			end
 		end
-	elseif args.spellId == 69766 then	--Instability (casters)
+	elseif args.spellId == 69766 and not self:IsTrivial(100) then	--Instability (casters)
 		if args:IsPlayer() then
 			warnInstability:Show(args.amount or 1)
 			timerInstability:Start()
@@ -266,8 +265,9 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 70117 then--Icy Grip Cast, not blistering cold, but adds an extra 1sec to the warning
-		warnBlisteringCold:Show()
-		specWarnBlisteringCold:Show()
+		if not self:IsTrivial(100) then
+			specWarnBlisteringCold:Show()
+		end
 		timerBlisteringCold:Start()
 		timerNextBlisteringCold:Start()
 	end

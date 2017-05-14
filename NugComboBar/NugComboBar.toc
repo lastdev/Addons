@@ -1,13 +1,9 @@
-## Interface: 60000
+## Interface: 70200
 ## Title: NugComboBar
 ## Notes: Combopoints counter
 ## Author: d87
 ## SavedVariablesPerCharacter: NugComboBarDB_Character
 ## SavedVariables: NugComboBarDB_Global
-## X-Curse-Packaged-Version: 6.0.13a
-## X-Curse-Project-Name: NugComboBar
-## X-Curse-Project-ID: nugie-combo-bar
-## X-Curse-Repository-ID: wow/nugie-combo-bar/mainline
 NugComboBar.lua
 skin.lua
 

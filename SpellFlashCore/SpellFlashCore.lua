@@ -268,14 +268,17 @@ local function RegisterFrames()
 			end
 		end
 	end
-	local LibActionButton = LibStub:GetLibrary("LibActionButton-1.0", true)
-	if LibActionButton then
-		for frame in pairs(LibActionButton:GetAllButtons()) do
-			if not DuplicateFrame(frame) then
-				ButtonFrames.Action[frame] = 1
-			end
-		end
-	end
+    local LAB = {
+        original = LibStub:GetLibrary("LibActionButton-1.0", true),
+        elvui = LibStub:GetLibrary("LibActionButton-1.0-ElvUI", true),
+    }
+    for _, lib in pairs(LAB) do
+        for frame in pairs(lib:GetAllButtons()) do
+            if not DuplicateFrame(frame) then
+                ButtonFrames.Action[frame] = 1
+            end
+        end
+    end
 	local frame = EnumerateFrames()
 	while frame do
 		if type(frame) == "table" and type(frame[0]) == "userdata" and frame.IsProtected and frame.GetObjectType and frame.GetScript and frame:GetObjectType() == "CheckButton" and frame:IsProtected() then

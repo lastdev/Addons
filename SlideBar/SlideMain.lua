@@ -1,7 +1,7 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SlideMain.lua 312 2011-06-14 07:33:25Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SlideMain.lua 406 2016-07-31 13:26:09Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -28,11 +28,11 @@
 ]]
 
 local LIBRARY_VERSION_MAJOR = "SlideBar"
-local LIBRARY_VERSION_MINOR = 10
+local LIBRARY_VERSION_MINOR = 13
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/SlideBar/SlideMain.lua $","$Rev: 312 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/SlideBar/SlideMain.lua $","$Rev: 406 $","6.0.DEV.", 'auctioneer', 'libs')
 
 -- Autoconvert existing nSideBar instances to SlideBar
 if LibStub.libs.nSideBar then
@@ -50,6 +50,13 @@ end
 local private = lib.private
 local frame
 local ldb = LibStub("LibDataBroker-1.1")
+
+local function toboolean(value)
+	if value and value ~= "0" and value ~= 0 then
+		return true
+	end
+	return false
+end
 
 
 
@@ -178,7 +185,7 @@ end
 function lib.HideButton(id)
 	local button = frame.buttons[id]
 	assert(button, "ButtonId "..id.." does not exist")
-	SlideBarConfig[id..".hide"] = 1
+	SlideBarConfig[id..".hide"] = true
 	lib.ApplyLayout()
 end
 
@@ -194,31 +201,16 @@ end
 --   useLayout = if set, uses the cached layout, otherwise regenerates it;
 --               if you hide, show, add or remove buttons, you should regenerate.
 function lib.ApplyLayout(useLayout)
-	local vis = SlideBarConfig.visibility or "0"
-	local wide = SlideBarConfig.maxWidth or 12
-	local side = SlideBarConfig.anchor or "right"
-	local position = SlideBarConfig.position or "180"
-	local active = SlideBarConfig.enabled or "1"
+	if not SlideBarConfig.enabled then
+		frame:Hide()
+		return
+	end
 
 	for k,v in pairs(SlideBarConfig) do
 		if not private.lastConfig[k] or private.lastConfig[k] ~= v then
 			useLayout = false
 		end
 		private.lastConfig[k] = v
-	end
-
-	position = tonumber(position) or 180
-	wide = tonumber(wide)
-	side = side:lower()
-	if not active or active == "0" or active == 0 then
-		active = false
-	else
-		active = true
-	end
-
-	if not active then
-		frame:Hide()
-		return
 	end
 
 	if not lib.private.layout then
@@ -228,11 +220,11 @@ function lib.ApplyLayout(useLayout)
 	local layout = lib.private.layout
 
 	if not useLayout then
-		for i = 1, #layout do table.remove(layout) end
+		for i = 1, #layout do tremove(layout) end
 		for id, button in pairs(frame.buttons) do
 			if not button.removed
 			and not SlideBarConfig[id..".hide"] then
-				table.insert(layout, button)
+				tinsert(layout, button)
 			elseif button:IsShown() then
 				button:Hide()
 			end
@@ -251,6 +243,7 @@ function lib.ApplyLayout(useLayout)
 		return
 	end
 
+	local wide = tonumber(SlideBarConfig.maxWidth) or 12
 	local width = wide
 	if (#layout < wide) then width = #layout end
 	local height = math.floor((#layout - 1) / wide) + 1
@@ -261,12 +254,14 @@ function lib.ApplyLayout(useLayout)
 		if (frame:GetAlpha() < 1) then
 			UIFrameFadeIn(frame, 0.25, frame:GetAlpha(), 1)
 		end
-	elseif (vis == "1") then
+	elseif SlideBarConfig.visibility then
 		if (frame:GetAlpha() > 0.2) then
 			UIFrameFadeOut(frame, 1.5, frame:GetAlpha(), 0.2)
 		end
 	end
 
+	local side = (SlideBarConfig.anchor or "right"):lower()
+	local position = tonumber(SlideBarConfig.position) or 180
 	frame:ClearAllPoints()
 	if (side == "top") then
 		frame:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", position, -1*distance)
@@ -310,7 +305,7 @@ function lib.ApplyLayout(useLayout)
 	for pos = 1, #layout do
 		button = layout[pos]
 		pos = pos - 1
-		local row = math.floor(pos / wide)
+		local row = floor(pos / wide)
 		local col = pos % wide
 
 		if (row == 0) then width = col end
@@ -340,7 +335,7 @@ end
 if lib.frame then
 	frame = lib.frame
 else
-	frame = CreateFrame("Frame", "", UIParent)
+	frame = CreateFrame("Frame", nil, UIParent)
 	frame:SetToplevel(true)
 	--frame:SetClampedToScreen(true)
 	frame:SetFrameStrata("TOOLTIP")
@@ -364,10 +359,22 @@ else
 			private.GUI() --create the configuration GUI
 			private.RescanLDBObjects() --scan LibDataBroker objects for any additions or changes.
 			frame:UnregisterEvent("PLAYER_LOGIN")
+			frame:SetScript("OnEvent", nil)
 		elseif event == "ADDON_LOADED" and arg == "SlideBar" then
-			--removed the needlessly complex string variable system. Were not using Cvar or embeded anymore
-			if not SlideBarConfig or type(SlideBarConfig) == "string" then
-				SlideBarConfig = {}
+			if type(SlideBarConfig) == "table" then
+				-- check/update existing saved vars
+				if SlideBarConfig.enabled == nil then
+					SlideBarConfig.enabled = true -- old default
+				else
+					SlideBarConfig.enabled = toboolean(SlideBarConfig.enabled)
+				end
+				SlideBarConfig.locked = toboolean(SlideBarConfig.locked)
+				SlideBarConfig.visibility = toboolean(SlideBarConfig.visibility)
+				SlideBarConfig.position = tonumber(SlideBarConfig.position)
+			else
+				SlideBarConfig = {
+					enabled = true, -- default to enabled
+				}
 			end
 			frame:UnregisterEvent("ADDON_LOADED")
 		end
@@ -376,7 +383,7 @@ else
 	frame:RegisterEvent("ADDON_LOADED")
 
 	frame.Tab = frame:CreateTexture()
-	frame.Tab:SetTexture(0.98, 0.78, 0)
+	frame.Tab:SetColorTexture(0.98, 0.78, 0)
 	frame.buttons = {}
 
 	SLASH_NSIDEBAR1 = "/sbar"
@@ -507,7 +514,7 @@ private.lastConfig = {}
 
 -- Functions to start and stop the sidebar drag
 function private:BeginMove(...)
-	if SlideBarConfig.locked == "1" then return end
+	if SlideBarConfig.locked then return end
 	local button = ...
 	if button == "LeftButton" then
 		private.moving = true
@@ -631,21 +638,9 @@ end
 
 -- Command processor
 function private.CommandHandler(msg)
-	local vis = SlideBarConfig.visibility or "0"
-	local wide = SlideBarConfig.maxWidth or 12
-	local side = SlideBarConfig.anchor or "right"
-	local position = SlideBarConfig.position or "180"
-	local active = SlideBarConfig.enabled or "1"
-
-	if not active or active=="0" or active=="" then
-		active = false
-	else
-		active = true
-	end
-
 	local save = false
 	if (not msg or msg == "") then msg = "help" end
-	local a, b, c = strsplit(" ", msg:lower())
+	local a, b = strsplit(" ", msg:lower())
 	if (a == "help") then
 		DEFAULT_CHAT_FRAME:AddMessage("/nsb top | left | bottom | right  |cff1020ff Set the anchor for the sidebar |r")
 		DEFAULT_CHAT_FRAME:AddMessage("/nsb config  |cff1020ff Display the GUI to show or hide buttons|r")
@@ -659,15 +654,17 @@ function private.CommandHandler(msg)
 	end
 
 	if a == "lock" then
-		SlideBarConfig.locked = "1"
+		SlideBarConfig.locked = true
 		save = true
 	elseif a == "unlock" then
-		SlideBarConfig.locked = "0"
+		SlideBarConfig.locked = false
 		save = true
 	end
 
 	if a == "reset" then
-		SlideBarConfig = {}
+		SlideBarConfig = {
+			enabled = true,
+		}
 		save = true
 	end
 
@@ -678,40 +675,39 @@ function private.CommandHandler(msg)
 		SlideBarConfig.anchor = a
 		save = true
 		if (tonumber(b)) then
-			a, b, c = b, nil, nil
+			a, b = b, nil
 		end
 	end
 	if (tonumber(a)) then
-		SlideBarConfig.position = math.min(math.abs(tonumber(a)), 1200)
+		SlideBarConfig.position = min(abs(tonumber(a)), 1200)
 		save = true
 	end
 	if (a == "fadeout" or a == "fade") then
-		SlideBarConfig.visibility = "1"
+		SlideBarConfig.visibility = true
 		save = true
 	elseif (a == "nofade") then
-		SlideBarConfig.visibility = "0"
+		SlideBarConfig.visibility = false
 		save = true
 	end
 	if (a == "size") then
-		if (tonumber(b)) then
-			wide = math.floor(tonumber(b))
-			if (wide < 1) then wide = 1 end
-			SlideBarConfig.maxWidth = wide
+		local wide = tonumber(b)
+		if wide and wide >= 1 then
+			SlideBarConfig.maxWidth = floor(wide)
 			save = true
 		end
 	end
 
 	if (a == "on") then
-		SlideBarConfig.enabled = "1"
+		SlideBarConfig.enabled = true
 		save = true
 	elseif (a == "off") then
-		SlideBarConfig.enabled = "0"
+		SlideBarConfig.enabled = false
 		save = true
 	elseif (a == "toggle") then
-		if active then
-			SlideBarConfig.enabled = "0"
+		if SlideBarConfig.enabled then
+			SlideBarConfig.enabled = false
 		else
-			SlideBarConfig.enabled = "1"
+			SlideBarConfig.enabled = true
 		end
 		save = true
 	end
@@ -783,44 +779,47 @@ function private.GUI()
 
 	frame.config.help = frame.config:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	frame.config.help:SetText("Click on a button above to Show or Hide it from the Slidebar addon")
-	frame.config.help:SetPoint("TOPLEFT", frame.config,"LEFT" , 15, 150)
-	frame.config.help:SetPoint("BOTTOMRIGHT", frame.config,"BOTTOMRIGHT" , -15, 0)
+	frame.config.help:SetPoint("TOPLEFT", frame.config,"TOPLEFT" , 15, -240)
 
 	frame.config.enableCheck = CreateFrame("CheckButton", "nSlideBarenableCheck", frame.config, "InterfaceOptionsCheckButtonTemplate")
 	nSlideBarenableCheckText:SetText("Enable SlideBar")
 	frame.config.enableCheck:SetPoint("LEFT", frame.config, "LEFT", 10, -80)
-	frame.config.enableCheck:SetChecked(SlideBarConfig.enabled or "1")
+	frame.config.enableCheck:SetChecked(SlideBarConfig.enabled)
 	function frame.config.enableCheck.setFunc(state)
-		SlideBarConfig.enabled = state
+		SlideBarConfig.enabled = toboolean(state)
 		lib.ApplyLayout()
 	end
 
-	frame.config.searchBox = CreateFrame("EditBox", "nSlideBarLengthEditBox", frame.config, "InputBoxTemplate") --has to have a name or the template bugs
-	frame.config.searchBox:SetMaxLetters(2)
-	frame.config.searchBox:SetNumeric(true)
-	local wide = SlideBarConfig.maxWidth or 12
-	frame.config.searchBox:SetNumber(wide)
-	frame.config.searchBox:SetAutoFocus(false)
-	frame.config.searchBox:SetPoint("TOP", frame.config.enableCheck, "BOTTOM", 40,-10)
-	frame.config.searchBox:SetWidth(22)
-	frame.config.searchBox:SetHeight(15)
-	frame.config.searchBox:SetScript("OnEnterPressed", function(self)
+	frame.config.widthBox = CreateFrame("EditBox", "nSlideBarLengthEditBox", frame.config, "InputBoxTemplate") --has to have a name or the template bugs
+	frame.config.widthBox:SetMaxLetters(2)
+	frame.config.widthBox:SetNumeric(true)
+	frame.config.widthBox:SetNumber(SlideBarConfig.maxWidth or 12)
+	frame.config.widthBox:SetAutoFocus(false)
+	frame.config.widthBox:SetPoint("TOP", frame.config.enableCheck, "BOTTOM", 40,-10)
+	frame.config.widthBox:SetWidth(22)
+	frame.config.widthBox:SetHeight(15)
+	frame.config.widthBox:SetScript("OnEnterPressed", function(self)
 									EditBox_ClearFocus(self)
+								end)
+	frame.config.widthBox:SetScript("OnEditFocusLost", function(self)
+									EditBox_ClearHighlight(self)
 									local wide = self:GetNumber()
-									if (wide < 1) then wide = 1 end
-									SlideBarConfig.maxWidth = wide
-									lib.ApplyLayout()
-									lib.FlashOpen(5)
-							end)
-	frame.config.searchBox.help = frame.config:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	frame.config.searchBox.help:SetPoint("LEFT", frame.config.searchBox, "RIGHT", 5, 0)
-	frame.config.searchBox.help:SetText("Number of buttons before a new row is started.")
+									if wide < 1 then wide = 1 end
+									if wide ~= SlideBarConfig.maxWidth then
+										SlideBarConfig.maxWidth = wide
+										lib.ApplyLayout()
+										lib.FlashOpen(5)
+									end
+								end)
+	frame.config.widthBox.help = frame.config:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	frame.config.widthBox.help:SetPoint("LEFT", frame.config.widthBox, "RIGHT", 5, 0)
+	frame.config.widthBox.help:SetText("Number of buttons before a new row is started.")
 
 	frame.config.lockCheck = CreateFrame("CheckButton", "nSlideBarlockCheck", frame.config, "InterfaceOptionsCheckButtonTemplate")
 	nSlideBarlockCheckText:SetText("Lock the Bar's location")
-	frame.config.lockCheck:SetPoint("TOP", frame.config.searchBox, "BOTTOM", 0, -10)
+	frame.config.lockCheck:SetPoint("TOP", frame.config.widthBox, "BOTTOM", 0, -10)
 	function frame.config.lockCheck.setFunc(state)
-		SlideBarConfig.locked = state
+		SlideBarConfig.locked = toboolean(state)
 		lib.ApplyLayout()
 	end
 	frame.config.lockCheck:SetChecked(SlideBarConfig.locked)
@@ -830,7 +829,7 @@ function private.GUI()
 	nSlideBarfadeCheckText:SetText("Fade the slidebar when not in use.")
 	frame.config.fadeCheck:SetPoint("TOP",frame.config.lockCheck, "BOTTOM")
 	function frame.config.fadeCheck.setFunc(state)
-		SlideBarConfig.visibility = state
+		SlideBarConfig.visibility = toboolean(state)
 		lib.ApplyLayout()
 	end
 	frame.config.fadeCheck:SetChecked(SlideBarConfig.visibility)
@@ -840,30 +839,44 @@ function private.GUI()
 	frame.config.reset:SetPoint("TOPLEFT",frame.config.fadeCheck, "BOTTOM", -50,-5)
 	frame.config.reset:SetText("RESET ALL SETTINGS")
 	frame.config.reset:SetScript("OnClick", function()
-						      SlideBarConfig = {}
-						      lib.ApplyLayout()
+							SlideBarConfig = {
+								enabled = true,
+							}
+							lib.ApplyLayout()
 						end)
 
-
-
 	frame.config.buttons = {}
+	local function IconGUIOnClick(self)
+		lib.FlashOpen(5)
+		local normtex = self:GetNormalTexture()
+		if SlideBarConfig[self.name..".hide"] then
+			if normtex then normtex:SetDesaturated(false) end
+			self.tex:Hide()
+			lib.ShowButton(self.name)
+		else
+			if normtex then normtex:SetDesaturated(true) end
+			self.tex:Show()
+			lib.HideButton(self.name)
+		end
+	end
+	local function IconGUIOnEnter(self)
+		if self.name then
+			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+			GameTooltip:SetText(self.name)
+		end
+	end
+	local function IconGUIOnLeave(self)
+		GameTooltip:Hide()
+	end
 	function private.createIconGUI()
 		local pos = #frame.config.buttons + 1
 		local button = CreateFrame("Button", nil, frame.config, "PopupButtonTemplate")
-		button:SetScript("OnClick", function(self)
-						lib.FlashOpen(5)
-						if self:GetNormalTexture():IsDesaturated() then
-							self:GetNormalTexture():SetDesaturated(false)
-							self.tex:Hide()
-							lib.ShowButton(self.name)
-						elseif self:GetNormalTexture() then
-							self:GetNormalTexture():SetDesaturated(true)
-							self.tex:Show()
-							lib.HideButton(self.name)
-						end
-					end)
+		button:SetScript("OnClick", IconGUIOnClick)
+		button:SetScript("OnEnter", IconGUIOnEnter)
+		button:SetScript("OnLeave", IconGUIOnLeave)
 		button.pos = pos
 		button:SetScale(.8)
+		button:Disable()
 
 		--should we use a X texture
 		button.tex = button:CreateTexture()
@@ -898,7 +911,6 @@ function private.GUI()
 				row = row + 45 + spacer
 				total = 0
 			end
-			--button[pos]:ClearAllPoints()
 
 			if column == 0 then
 				button[pos]:SetPoint("TOPLEFT", frame.config, "TOPLEFT",  column+20, -row - 20)
@@ -914,6 +926,7 @@ function private.GUI()
 
 	--apply GUI layout to match slidebars button order
 	--Blizzards frame calls this when options are opened
+	--Be aware that any errors triggered within this function will NOT be passed to the error handler
 	function frame.config.refresh()
 		local layout = {}
 		for id, button in pairs(frame.buttons) do
@@ -923,23 +936,29 @@ function private.GUI()
 
 		local GUI = frame.config.buttons
 		for pos = 1, #GUI do
+			local guibutton = GUI[pos]
 			local button = layout[pos]
-			if button then
-				if  GUI[pos] and button.icon then
-					GUI[pos]:Enable()
-					GUI[pos]:SetNormalTexture(button.icon:GetTexture())
-					GUI[pos].name = button.id
-					if SlideBarConfig[button.id..".hide"] then
-						GUI[pos]:GetNormalTexture():SetDesaturated(true)
-						if GUI[pos].tex then
-							GUI[pos].tex:Hide()
-						end
-					end
-				else
-					GUI[pos]:Disable()
+			if button and button.id and button.icon then
+				guibutton:Enable()
+				guibutton.name = button.id
+				guibutton:SetNormalTexture(button.icon:GetTexture())
+				local normtex = guibutton:GetNormalTexture()
+				if not normtex then
+					guibutton:SetNormalTexture("Interface\\Icons\\INV_Misc_QuestionMark")
+					normtex = guibutton:GetNormalTexture()
 				end
-			else
-				GUI[pos]:Disable()
+				if SlideBarConfig[button.id..".hide"] then
+					if normtex then normtex:SetDesaturated(true) end
+					guibutton.tex:Show()
+				else
+					if normtex then normtex:SetDesaturated(false) end
+					guibutton.tex:Hide()
+				end
+			elseif guibutton.name then
+				guibutton.name = nil
+				guibutton:SetNormalTexture()
+				guibutton:Disable()
+				guibutton.tex:Hide()
 			end
 		end
 	end

@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1361 $", 12, -3))
 if Recount.Version < revision
 	then Recount.Version = revision
 end
@@ -151,7 +151,7 @@ local function Color_Change()
 	Recount.Colors:SetColor(Cur_Branch, Cur_Name, TempColor)
 end
 
-local function Opacity_Change()	
+local function Opacity_Change()
 	local r, g, b = ColorPickerFrame:GetColorRGB()
 	local a = OpacitySliderFrame:GetValue()
 
@@ -328,7 +328,7 @@ function me:CreateRealtimeWindow(who, tracking, ending) -- Elsia: This function 
 		end
 	end)
 
-	local g = Graph:CreateGraphRealtime("Recount_Realtime_"..who.."_"..tracking, theFrame, "BOTTOM", "BOTTOM", 0, 2, 197, 199)
+	local g = Graph:CreateGraphRealtime("Recount_Realtime_"..who.."_"..tracking, theFrame, "BOTTOM", "BOTTOM", 0, 1, 197, 198)
 	g:SetAutoScale(true)
 	g:SetGridSpacing(1.0, 100)
 	g:SetYMax(120)

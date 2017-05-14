@@ -1,135 +1,15 @@
-local toggled = true
-local r,g,b,a = 1,0,1,1
-local options = {"foo", "bar", "foobar"}
-local optIndex = 1
-local rangeVal, rangeVal2 = 100, 10
-local inherits = {["inherittoggle"] = true}
+Outfitter._MinimapButton = {}
 
-Outfitter.MinimapDropdownTable = {
-   type = "group",
-   name = "group",
-   desc = "group",
-   args = {
-      foo = {
-         type = "input",
-         name = "text",
-         desc = "text desc",
-         get = function(info) return "texting!" end,
-         set = function(info, v) end
-      },
-      inherit = {
-         type = "group",
-         name = "inheritance test",
-         desc = "inheritance test",
-         get = function(info) ChatFrame1:AddMessage(("Got getter, getting %s (%s)"):format(tostring(info[#info]), tostring(inherits[info[#info]]))); return inherits[info[#info]] end,
-         set = function(info, v) ChatFrame1:AddMessage("Got setter:" .. tostring(v)); inherits[info[#info]] = v end,
-         args = {
-            inherittoggle = {
-               type = "toggle",
-               name = "inherit toggle",
-               desc = "inherit toggle"
-            },
-         }
-      },
-      exec = {
-         type = "execute",
-         name = "Say hi",
-         desc = "Execute, says hi",
-         func = function() ChatFrame1:AddMessage("Hi!") end
-      },
-      range = {
-         type = "range",
-         name = "Range slider",
-         desc = "Range slider",
-         min = 0,
-         max = 800,
-         bigStep = 50,
-         get = function(info) return rangeVal end,
-         set = function(info, v) rangeVal = v end,                      
-      },
-      range2 = {
-         type = "range",
-         name = "Range slider 2",
-         desc = "Range slider 2",
-         min = 0,
-         max = 80,
-         bigStep = 5,
-         get = function(info) return rangeVal2 end,
-         set = function(info, v) rangeVal2 = v end,                     
-      },                
-      toggle = {
-         type = "toggle",
-         name = "Toggle",
-         desc = "Toggle",
-         get = function() return toggled end,
-         set = function(info, v) toggled = v end,
-         disabled = function(info) return not toggled end
-      },
-      toggle3 = {
-         type = "toggle",
-         name = "Tristate Toggle Tristate Toggle Tristate Toggle",
-         desc = "Tristate Toggle",
-         tristate = true,
-         get = function() return toggled end,
-         set = function(info, v) toggled = v end
-      },                
-      select = {
-         type = "select",
-         name = "select",
-         desc = "select desc",
-         values = options,
-         get = function(info) return optIndex end,
-         set = function(info, v) optIndex = v end
-      },
-      color = {
-         type = "color",
-         name = "color swatch",
-         desc = "color swatch desc",
-         get = function(info) return r,g,b,a end,
-         set = function(info, _r,_g,_b,_a) r,g,b,a = _r,_g,_b,_a end
-      },
-      foo3 = {
-         type = "group",
-         name = "group!",
-         desc = "group desc",
-         args = {
-            toggle3 = {
-               type = "toggle",
-               name = "Tristate Toggle Tristate Toggle Tristate Toggle",
-               desc = "Tristate Toggle",
-               tristate = true,
-               get = function() return toggled end,
-               set = function(info, v) toggled = v end
-            },  
-         }
-      },
-      foo4 = {
-         type = "group",
-         name = "inline group!",
-         desc = "inline group desc",
-         inline = "true",
-         args = {
-            foo2 = {
-               type = "input",
-               name = "text3",
-               desc = "text3 desc",
-               get = function(info) return "texting!" end,
-               set = function(info, v) end
-            }
-         },
-         order = 500
-      },                
-      close = {
-         type = "execute",
-         name = "Close",
-         desc = "Close this menu",
-         func = function(self)  end,
-         order = 1000
-      }
-   }
-}
+function Outfitter._MinimapButton:Construct()
+	self:RegisterForDrag("LeftButton")
+	self.CurrentOutfitTexture = self:CreateTexture(nil, "BACKGROUND")
+	self.CurrentOutfitTexture:SetWidth(22)
+	self.CurrentOutfitTexture:SetHeight(22)
+	self.CurrentOutfitTexture:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -4)
+	SetPortraitToTexture(self.CurrentOutfitTexture, "Interface\\Icons\\INV_Chest_Cloth_21")
+end
 
-function Outfitter.MinimapButton_MouseDown(self)
+function Outfitter._MinimapButton:MouseDown()
 	-- Remember where the cursor was in case the user drags
 	
 	local vCursorX, vCursorY = GetCursorPosition()
@@ -149,15 +29,15 @@ function Outfitter.MinimapButton_MouseDown(self)
 	OutfitterMinimapButton.EnableFreeDrag = IsModifierKeyDown()
 end
 
-function Outfitter.MinimapButton_DragStart(self)
-	Outfitter.SchedulerLib:ScheduleUniqueRepeatingTask(0, Outfitter.MinimapButton_UpdateDragPosition, self)
+function Outfitter._MinimapButton:DragStart()
+	Outfitter.SchedulerLib:ScheduleUniqueRepeatingTask(0, self.UpdateDragPosition, self)
 end
 
-function Outfitter.MinimapButton_DragEnd(self)
-	Outfitter.SchedulerLib:UnscheduleTask(Outfitter.MinimapButton_UpdateDragPosition, self)
+function Outfitter._MinimapButton:DragEnd()
+	Outfitter.SchedulerLib:UnscheduleTask(self.UpdateDragPosition, self)
 end
 
-function Outfitter.MinimapButton_UpdateDragPosition(self)
+function Outfitter._MinimapButton:UpdateDragPosition()
 	-- Remember where the cursor was in case the user drags
 	
 	local vCursorX, vCursorY = GetCursorPosition()
@@ -174,13 +54,13 @@ function Outfitter.MinimapButton_UpdateDragPosition(self)
 	local vCenterY = OutfitterMinimapButton.CenterStartY + vCursorDeltaY
 	
 	if OutfitterMinimapButton.EnableFreeDrag then
-		Outfitter.MinimapButton_SetPosition(vCenterX, vCenterY)
+		self:SetPosition(vCenterX, vCenterY)
 	else
 		-- Calculate the angle and set the new position
 		
 		local vAngle = math.atan2(vCenterX, vCenterY)
 		
-		Outfitter.MinimapButton_SetPositionAngle(vAngle)
+		self:SetPositionAngle(vAngle)
 	end
 end
 
@@ -199,7 +79,7 @@ function Outfitter:RestrictAngle(pAngle, pRestrictStart, pRestrictEnd)
 	end
 end
 
-function Outfitter.MinimapButton_SetPosition(pX, pY)
+function Outfitter._MinimapButton:SetPosition(pX, pY)
 	gOutfitter_Settings.Options.MinimapButtonAngle = nil
 	gOutfitter_Settings.Options.MinimapButtonX = pX
 	gOutfitter_Settings.Options.MinimapButtonY = pY
@@ -207,7 +87,7 @@ function Outfitter.MinimapButton_SetPosition(pX, pY)
 	OutfitterMinimapButton:SetPoint("CENTER", Minimap, "CENTER", pX, pY)
 end
 
-function Outfitter.MinimapButton_SetPositionAngle(pAngle)
+function Outfitter._MinimapButton:SetPositionAngle(pAngle)
 	local vAngle = pAngle
 	
 	-- Restrict the angle from going over the date/time icon or the zoom in/out icons
@@ -245,59 +125,148 @@ function Outfitter.MinimapButton_SetPositionAngle(pAngle)
 	gOutfitter_Settings.Options.MinimapButtonAngle = vAngle
 end
 
-function Outfitter.MinimapButton_ToggleMenu(self)
-	if false then
-		if Outfitter.MinimapMenuFrame then
-			Outfitter.MinimapMenuFrame:Hide()
-			Outfitter.MinimapMenuFrame = nil
-		else
-			Outfitter.MinimapMenuFrame = LibStub("LibDropdown-1.0"):OpenAce3Menu(Outfitter.MinimapDropdownTable)
-			Outfitter.MinimapMenuFrame:SetPoint("TOPRIGHT", self, "TOPRIGHT", -20, -20)
-		end
-	else
-		if UIDROPDOWNMENU_OPEN_MENU == self and DropDownList1:IsShown() then
-			CloseDropDownMenus()
-		else
-			Outfitter.MinimapDropDown_OnLoad(self)
-			self.ChangedValueFunc = Outfitter.MinimapButton_ItemSelected
-			ToggleDropDownMenu(nil, nil, self, self, 22, 1)
+function Outfitter:GetMinimapDropdownItems(items)
+	-- Just return if not initialized yet
+	if not self.Initialized then
+		return
+	end
+	
+	-- Add controls for the addon
+	items:AddCategoryTitle(self.cTitleVersion)
+	items:AddFunction(self.cOpenOutfitter, function ()
+		self:OpenUI()
+		end)
+	items:AddToggle(self.cAutoSwitch,
+		function ()
+			return self.Settings.Options.DisableAutoSwitch
+		end, function (menu, value)
+			self:SetAutoSwitch(self.Settings.Options.DisableAutoSwitch)
+		end)
+	
+	-- Add the outfits
+	self:GetMinimapOutfitItems(items)
+end
+
+function Outfitter:GetMinimapOutfitItems(items)
+	-- Just return if not initialized yet
+	if not self.Initialized then
+		return
+	end
+	
+	--
+	local inventoryCache = self:GetInventoryCache()
+	local categoryOrder = self:GetCategoryOrder()
+		
+	for _, categoryID in ipairs(categoryOrder) do
+		local categoryName = self["c"..categoryID.."Outfits"]
+		local outfits = self:GetOutfitsByCategoryID(categoryID)
+
+		if self:HasVisibleOutfits(outfits) then
+			items:AddCategoryTitle(categoryName)
 			
-			-- Hack to force the menu to position correctly.  UIDropDownMenu code
-			-- keeps thinking that it's off the screen and trying to reposition
-			-- it, which it does very poorly
-			
-			Outfitter.MinimapDropDown_AdjustScreenPosition(self)
+			for vIndex, outfit in ipairs(outfits) do
+				if self:OutfitIsVisible(outfit) then
+					local wearingOutfit = Outfitter:WearingOutfit(outfit)
+					local missingItems, bankedItems = inventoryCache:GetMissingItems(outfit)
+					local itemColor = nil
+					
+					if missingItems then
+						itemColor = RED_FONT_COLOR
+					elseif bankedItems then
+						itemColor = Outfitter.BANKED_FONT_COLOR
+					end
+					
+					items:AddToggleWithIcon(outfit:GetName(), self.OutfitBar:GetOutfitTexture(outfit), itemColor,
+						function ()
+							return wearingOutfit
+						end, function (menu, value)
+							local categoryID = outfit.CategoryID
+							local doToggle = categoryID ~= "Complete"
+		
+							if IsModifierKeyDown() then
+								self:AskSetCurrent(outfit)
+							elseif doToggle
+							and self:WearingOutfit(outfit) then
+								self:RemoveOutfit(outfit)
+							else
+								self:WearOutfit(outfit)
+							end
+						end)
+					--[[
+					Outfitter:AddMenuItem(
+							pFrame,
+							outfit:GetName(),
+							{CategoryID = categoryID, Index = vIndex},
+							wearingOutfit, -- Checked
+							nil, -- Level
+							itemColor, -- Color
+							nil, -- Disabled
+							{icon = Outfitter.OutfitBar:GetOutfitTexture(outfit)})
+					]]
+				end
+			end
 		end
 	end
+end
+
+function Outfitter._MinimapButton:HideMenu()
+	if not self.dropDownMenu then
+		return
+	end
+
+	self.dropDownMenu:Hide()
+	self.dropDownMenu = nil
+end
+
+function Outfitter._MinimapButton:ShowMenu()
+	assert(not self.dropDownMenu, "can't show the minimap menu while it's already up")
+
+	-- Create the items
+	local items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
+		
+		-- Close the menu after a short delay when a menu item is selected
+		Outfitter.SchedulerLib:ScheduleTask(0.1, function ()
+			self:HideMenu()
+		end)
+	end)
+
+	-- Get the items
+	Outfitter:GetMinimapDropdownItems(items)
+
+	-- Show the menu
+	self.dropDownMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu)
+	self.dropDownMenu:Show(items, "TOPRIGHT", self, "TOPRIGHT", -20, -20)
+	self.dropDownMenu.cleanup = function ()
+		self.dropDownMenu = nil
+	end
+end
+
+function Outfitter._MinimapButton:ToggleMenu()
+	-- Play a sound
 	PlaySound("igMainMenuOptionCheckBoxOn")
-end
 
-function Outfitter.MinimapButton_ItemSelected(pMenu, pValue)
-	if type(pValue) == "table" then
-		local vCategoryID = pValue.CategoryID
-		local vIndex = pValue.Index
-		local vOutfit = gOutfitter_Settings.Outfits[vCategoryID][vIndex]
-		local vDoToggle = vCategoryID ~= "Complete"
-		
-		if IsModifierKeyDown() then
-			Outfitter:AskSetCurrent(vOutfit)
-		elseif vDoToggle
-		and Outfitter:WearingOutfit(vOutfit) then
-			Outfitter:RemoveOutfit(vOutfit)
-		else
-			Outfitter:WearOutfit(vOutfit)
-		end
-		
-		if vDoToggle then
-			return true
-		end
-	elseif pValue == 0 then -- Open Outfitter
-		Outfitter:OpenUI()
-	elseif pValue == -1 then -- Change AutoSwitch Value.
-		Outfitter:SetAutoSwitch(gOutfitter_Settings.Options.DisableAutoSwitch)
-		return true
+	-- Hide the menu if it's showing
+	if self.dropDownMenu then
+		self.dropDownMenu:Hide()
+		return
 	end
 
-	return false
-end
+	-- Get the items
+	items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
+		Outfitter.SchedulerLib:ScheduleTask(0.1, function ()
+			if not self.dropDownMenu then
+				return
+			end
 
+			self.dropDownMenu:Hide()
+		end)
+	end)
+	Outfitter:GetMinimapDropdownItems(items)
+
+	-- Show the menu
+	self.dropDownMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu)
+	self.dropDownMenu:Show(items, "TOPRIGHT", self, "TOPRIGHT", -20, -20)
+	self.dropDownMenu.cleanup = function ()
+		self.dropDownMenu = nil
+	end
+end

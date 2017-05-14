@@ -3,7 +3,7 @@ local Recount = _G.Recount
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1311 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -14,7 +14,7 @@ local dbCombatants
 local srcRetention
 local dstRetention
 
-local DetailTitles = {}
+local DetailTitles = { }
 DetailTitles.Ressed = {
 	TopNames = L["Ressed Who"],
 	TopCount = "",
@@ -31,8 +31,6 @@ function Recount:SpellResurrect(timestamp, eventtype, srcGUID, srcName, srcFlags
 end
 
 function Recount:AddRes(source, victim, ability, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
-	--Get the tables
-
 	-- Name and ID of pet owners
 	local sourceowner
 	local sourceownerID
@@ -55,13 +53,13 @@ function Recount:AddRes(source, victim, ability, srcGUID, srcFlags, dstGUID, dst
 
 			Recount:SetActive(sourceData)
 
-			Recount:AddAmount(sourceData,"Ressed",1)
-			Recount:AddTableDataSum(sourceData,"RessedWho",victim,ability,1)
+			Recount:AddAmount(sourceData, "Ressed", 1)
+			Recount:AddTableDataSum(sourceData, "RessedWho", victim,ability, 1)
 		end
 	end
 end
 
-local DataModes = {}
+local DataModes = { }
 
 function DataModes:Ressed(data, num)
 	if not data then
@@ -74,10 +72,10 @@ function DataModes:Ressed(data, num)
 	return (data.Fights[Recount.db.profile.CurDataSet].Ressed or 0), {{data.Fights[Recount.db.profile.CurDataSet].RessedWho, L["'s Resses"], DetailTitles.Ressed}}
 end
 
-local TooltipFuncs = {}
+local TooltipFuncs = { }
 
 function TooltipFuncs:Ressed(name, data)
-	local SortedData,total
+	--local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
 	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Ressed"], data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].RessedWho, 3)

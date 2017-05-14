@@ -1,7 +1,7 @@
 --[[
 Auctioneer - StatSimple
-Version: 5.21d.5538 (SanctimoniousSwamprat)
-Revision: $Id: StatSimple.lua 5477 2014-09-27 18:58:18Z brykrys $
+Version: 7.5.5714 (TasmanianThylacine)
+Revision: $Id: StatSimple.lua 5558 2015-05-13 14:08:02Z brykrys $
 URL: http://auctioneeraddon.com/
 
 This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -37,11 +37,17 @@ local libType, libName = "Stat", "Simple"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 
-local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, L = AucAdvanced.GetModuleLocals()
 local Resources = AucAdvanced.Resources
-local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
+local GetStoreKey = AucAdvanced.API.GetStoreKeyFromLinkB
+local ResolveServerKey = AucAdvanced.ResolveServerKey
 
-local PET_BAND = 4
+local DATABASE_VERSION = 3.0
+local DATA_DIVIDER = ";"
+local PROPERTY_DIVIDER = "@"
+local ITEM_DIVIDER = "_"
+local PET_BAND = 10
+local PUSHTIME = 57600 -- 60 * 60 * 16; schedule next "daily" push after 16 hours
 
 -- Constants used when creating a PDF:
 local BASE_WEIGHT = 1
@@ -51,57 +57,39 @@ local CLAMP_STDDEV_UPPER = 1
 -- Adjustments when seen count is very low (seen days in this case)
 local LOWSEEN_MINIMUM = 0 -- lowest possible count for a valid PDF
 -- Weight taper for low seen count
-local TAPER_THRESHOLD = 5 -- seen count at which we stop making adjustments
+local TAPER_THRESHOLD = 8 -- seen count at which we stop making adjustments
 local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
 local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
 local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
 -- StdDev Estimate for low seen count
-local ESTIMATE_THRESHOLD = 10
+local ESTIMATE_THRESHOLD = 13
 local ESTIMATE_FACTOR = 0.33
-local ESTIMATE_OFFSET = 1 -- offset divisor to avoid division by 0
 
 -- Eliminate some global lookups
-local select = select
 local sqrt = sqrt
 local ipairs = ipairs
 local unpack = unpack
 local tinsert = table.insert
-local assert = assert
 local tonumber = tonumber
 local pairs = pairs
-local type,time,wipe,ceil = type,time,wipe,ceil
-local concat=table.concat
-local strsplit,strfind=strsplit,strfind
+local time, wipe, ceil = time, wipe, ceil
+local tconcat = table.concat
+local strsplit = strsplit
 -- GLOBALS: AucAdvancedStatSimpleData
 
--- local reference to our saved stats table
-local SSRealmData
-
--- Wrapper around AucAdvanced.API.GetStoreKeyFromLink to customize it for Stat-Simple
-local GetStoreKey = function(link)
-	local id, property, linktype = AucGetStoreKeyFromLink(link, PET_BAND)
-	if linktype == "item" then
-		-- use number here so we don't need to convert older database
-		return tonumber(id), property
-	elseif linktype == "battlepet" then
-		-- add "P" marker to battlepet ID
-		return "P"..id, property
-	end
-end
-
 function lib.CommandHandler(command, ...)
-	local serverKey = Resources.ServerKeyCurrent
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+	local serverKey = Resources.ServerKey
+	local keyText = AucAdvanced.GetServerKeyText(serverKey)
 	if (command == "help") then
-		aucPrint(_TRANS('SIMP_Help_SlashHelp1') ) --Help for Auctioneer Advanced - Simple
+		aucPrint(L'SIMP_Help_SlashHelp1') --Help for Auctioneer Advanced - Simple
 		local line = AucAdvanced.Config.GetCommandLead(libType, libName)
-		aucPrint(line, "help}} - ".._TRANS('SIMP_Help_SlashHelp2') ) --this Simple help
-		aucPrint(line, "clear}} - ".._TRANS('SIMP_Help_SlashHelp3'):format(keyText) ) --clear current %s Simple price database
-		aucPrint(line, "push}} - ".._TRANS('SIMP_Help_SlashHelp4'):format(keyText) ) --force the %s Simple daily stats to archive (start a new day)
+		aucPrint(line, "help}} - "..L'SIMP_Help_SlashHelp2') --this Simple help
+		aucPrint(line, "clear}} - "..L('SIMP_Help_SlashHelp3'):format(keyText) ) --clear current %s Simple price database
+		aucPrint(line, "push}} - "..L('SIMP_Help_SlashHelp4'):format(keyText) ) --force the %s Simple daily stats to archive (start a new day)
 	elseif (command == "clear") then
 		lib.ClearData(serverKey)
 	elseif (command == "push") then
-		aucPrint(_TRANS('SIMP_Help_SlashHelp6'):format(keyText) ) --Archiving {{%s}} daily stats and starting a new day
+		aucPrint(L('SIMP_Help_SlashHelp6'):format(keyText) ) --Archiving {{%s}} daily stats and starting a new day
 		private.PushStats(serverKey)
 	end
 end
@@ -110,142 +98,190 @@ lib.Processors = {
 	itemtooltip = function(callbackType, ...)
 		private.ProcessTooltip(...)
 	end,
-	config = function(callbackType, ...)
-		private.SetupConfigGui(...)
+	config = function(callbackType, gui)
+		if private.SetupConfigGui then private.SetupConfigGui(gui) end
 	end,
 }
 lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
-lib.ScanProcessors = {}
-function lib.ScanProcessors.create(operation, itemData, oldData)
-	if not get("stat.simple.enable") then return end
+lib.ScanProcessors = {
+	create = function(operation, itemData, oldData)
+		if not get("stat.simple.enable") then return end
+		local buyout = itemData.buyoutPrice
+		if not buyout or buyout == 0 then return end -- We're only interested in items with buyouts
+		local storeID, storeProperty = GetStoreKey(itemData.link, PET_BAND)
+		if not storeID then return end -- Link does not produce a valid store key
 
-	-- We're only interested in items with buyouts.
-	local buyout = itemData.buyoutPrice
-	if not buyout or buyout == 0 then return end
-	local buyoutper = ceil(buyout/itemData.stackSize)
+		local stack = itemData.stackSize
+		local buyoutper = ceil(buyout/stack)
+		local serverKey = Resources.ServerKey
+		local data0, dataP = private.GetItemDataWrite(serverKey, storeID, storeProperty)
+		--[[ data = {
+			[1] = total buyout,
+			[2] = seen count,
+			[3] = today's minimum buyout,
+			[4] = auctions count, (only recorded if different from seen count)
+		}--]]
 
-	local keyId, property = GetStoreKey(itemData.link)
-	if not keyId then return end
+		if data0 then
+			local aucs = data0[4]
+			if aucs then
+				data0[4] = aucs + 1
+			elseif stack > 1 then
+				-- no recorded auctions count, so auctions count must have been equal to seen count up to this point
+				data0[4] = data0[2] + 1
+			end
+			local mbo = data0[3]
+			if mbo == 0 or buyoutper < mbo then
+				data0[3] = buyoutper
+			end
+			data0[2] = data0[2] + stack
+			data0[1] = data0[1] + buyout
+		end
 
-	local data = private.GetPriceData(Resources.ServerKeyCurrent)
-	if not data.daily[keyId] then data.daily[keyId] = "" end
-	local stats = private.UnpackStats(data.daily[keyId])
-	if not stats[property] then stats[property] = { 0, 0 , buyoutper } end
-	if not stats[property][3] then stats[property][3] = buyoutper end
-	stats[property][1] = stats[property][1] + buyout
-	stats[property][2] = stats[property][2] + itemData.stackSize
-	if stats[property][3] > buyoutper then stats[property][3] = buyoutper end
-	data.daily[keyId] = private.PackStats(stats)
-end
+		if dataP then
+			local aucs = dataP[4]
+			if aucs then
+				dataP[4] = aucs + 1
+			elseif stack > 1 then
+				-- no recorded auctions count, so auctions count must have been equal to seen count up to this point
+				dataP[4] = dataP[2] + 1
+			end
+			local mbo = dataP[3]
+			if mbo == 0 or buyoutper < mbo then
+				dataP[3] = buyoutper
+			end
+			dataP[2] = dataP[2] + stack
+			dataP[1] = dataP[1] + buyout
+		end
 
+		private.WriteItemData(serverKey, storeID, storeProperty)
+	end,
+}
 
-local dataset = {}
-
+local valueset, weightset = {}, {}
 function lib.GetPrice(hyperlink, serverKey)
 	if not get("stat.simple.enable") then return end
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+	local storeID, storeProperty, linktype = GetStoreKey(hyperlink, PET_BAND)
+	if not storeID then return end
+	if get("stat.simple.basemode") then storeProperty = "0" end -- change storeProperty to "0" if user requested base item (transmog) mode
+	local dailydata, meansdata = private.GetItemDataRead(serverKey, storeID, storeProperty)
+	if not (dailydata or meansdata) then
+		if storeProperty ~= "0" and get("stat.simple.fallback") then -- fallback mode: see if data exists for property "0"
+			dailydata, meansdata = private.GetItemDataRead(serverKey, storeID, "0")
+		end
+		if not (dailydata or meansdata) then
+			return
+		end
+	end
 
-	local keyId, property = GetStoreKey(hyperlink)
-	if not keyId then return end
-	serverKey = serverKey or Resources.ServerKeyCurrent
-	local data = private.GetPriceData(serverKey)
+	local dayTotal, dayCount, dayAverage, minBuyout,dayAuctions = 0, 0, 0, 0, 0
+	local seenDays, seenCount, avg3, avg7, avg14, avgmins, auctionsCount = 0, 0, 0, 0, 0, 0, 0
+	local mean, stddev = 0, 0
 
-	local dayTotal, dayCount, dayAverage, minBuyout = 0,0,0,0
-	local seenDays, seenCount, avg3, avg7, avg14, avgmins = 0,0,0,0,0,0
-	-- Stddev calculations for market price
-	local count=0	-- index into dataset[] (living static outside the function)
-	local daysUsed =  0 -- used to keep running track of which daily averages we have
-
-
-	if data.daily[keyId] then
-		local stats = private.UnpackStats(data.daily[keyId])
-		if stats[property] then
-			dayTotal, dayCount, minBuyout = unpack(stats[property])
+	if dailydata then
+		dayTotal, dayCount, minBuyout, dayAuctions = unpack(dailydata)
+		if dayCount > 0 then
 			dayAverage = dayTotal/dayCount
-			if not minBuyout then minBuyout = 0 end
-			-- Stddev calculations for market price
-			count=count+1
-			dataset[count] = dayAverage
-			daysUsed = 1
+		else
+			dailydata = nil -- this is an empty dummy entry (only possible for property "0"), unflag so we don't try to use it in calculations
 		end
+		dayAuctions = dayAuctions or dayCount
 	end
-	if data.means[keyId] then
-		local stats = private.UnpackStats(data.means[keyId])
-		if stats[property] then
-			seenDays, seenCount, avg3, avg7, avg14, avgmins = unpack(stats[property])
-			if not avgmins then avgmins = 0 end
-			-- Stddev calculations for market price
-			if seenDays >= 3 then
-				for n = 1, 3-daysUsed do
-					count=count+1
-					dataset[count] = avg3
-				end
-				daysUsed = 3
+	if meansdata then
+		seenDays, seenCount, avg3, avg7, avg14, avgmins, auctionsCount = unpack(meansdata)
+		auctionsCount = auctionsCount or seenCount
+		if seenDays <= 3 then -- Stat-Simple doesn't start calculating EMAs until day 4
+			mean = avg3
+			if dailydata then
+				mean = (mean * seenDays + dayAverage) / (seenDays + 1)
 			end
-			if seenDays >= 7 then
-				for n = 1, 7-daysUsed do
-					count=count+1
-					dataset[count] = avg7
-				end
-				daysUsed = 7
+		else
+			-- we have 4 or more days of data, potentially enough to perform mean and stddev calculations
+			local count = 0
+
+			-- include daily data if available
+			if dailydata then
+				count = 1
+				valueset[count] = dayAverage
+				weightset[count] = 1
 			end
-			if seenDays >= 14 then
-				for n = 1, 14-daysUsed do
-					count=count+1
-					dataset[count] = avg14
+
+			-- EMA3: standard weight 3, reduced if seenDays < 6, reduced if there was daily data, but never less than 1
+			local weight = 3 - count
+			if seenDays < 6 then
+				weight = seenDays - 3
+				if weight > 1 then
+					weight = weight - count
 				end
-				daysUsed = 14
+			end
+			count = count + 1
+			valueset[count] = avg3
+			weightset[count] = weight
+
+			-- EMA7: standard weight 4, reduced if seenDays < 10
+			if seenDays > 6 then
+				count = count + 1
+				valueset[count] = avg7
+				if seenDays < 10 then
+					weightset[count] = seenDays - 6
+				else
+					weightset[count] = 4
+				end
+			end
+
+			-- EMA14: standard weight 7, reduced if seenDays < 17
+			if seenDays > 10 then
+				count = count + 1
+				valueset[count] = avg14
+				if seenDays < 17 then
+					weightset[count] = seenDays - 10
+				else
+					weightset[count] = 7
+				end
+			end
+
+			if count >= 2 then
+				-- we will use a weighted incremental algorithm, based on sample code by West and Knuth http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+				local sumWeight, sumSquares = 0, 0 -- actually "sum of squares of differences from the (current) mean", but that's rather long for a variable name.
+				for i = 1, count do
+					local value, weight = valueset[i], weightset[i]
+					local nextweight = weight + sumWeight
+					local valuediff = value - mean
+					local meanadjust = valuediff * weight / nextweight
+					mean = mean + meanadjust
+					sumSquares = sumSquares + sumWeight * valuediff * meanadjust
+					sumWeight = nextweight
+				end
+
+				stddev = sqrt(sumSquares / sumWeight * count / (count - 1))
+			else -- only EMA3 was available
+				mean = avg3
 			end
 		end
-	end
-	local mean = 0
-	if count > 0 then
-		for n=1,count do
-			mean=mean+dataset[n]
-		end
-		mean = mean/count
-	end
-	local variance = 0
-	if count == 1 then
-		variance = 0
-	else
-		for n=1,count do
-			variance = variance + (mean - dataset[n])^2;
-		end
-		variance = sqrt(variance/(count-1))
+	else -- no means data, use only daily
+		mean = dayAverage
 	end
 
-	return dayAverage, avg3, avg7, avg14, minBuyout, avgmins, false, dayTotal, dayCount, seenDays, seenCount, mean, variance
+	return dayAverage, avg3, avg7, avg14, minBuyout, avgmins, false, dayTotal, dayCount, seenDays, seenCount, mean, stddev, dayAuctions, auctionsCount
 end
 
 function lib.GetPriceColumns()
-	return "Daily Avg", "3 Day Avg", "7 Day Avg", "14 Day Avg", "Min BO", "Avg MBO", false, "Daily Total", "Daily Count", "Seen Days", "Seen Count", "Mean", "StdDev"
+	return "Daily Avg", "3 Day Avg", "7 Day Avg", "14 Day Avg", "Min BO", "Avg MBO", false, "Daily Total", "Daily Count", "Seen Days", "Seen Count", "Mean", "StdDev", "Daily Auctions", "Auctions Count"
 end
 
 local array = {}
 function lib.GetPriceArray(hyperlink, serverKey)
-	if not get("stat.simple.enable") then return end
-	-- Clean out the old array
-	wipe(array)
-
-	-- Get our statistics
-	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount, mean, stddev = lib.GetPrice(hyperlink, serverKey)
-
-	--if nothing is returned, return nil
+	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount, mean, stddev, dayAuctions, auctionsCount = lib.GetPrice(hyperlink, serverKey)
 	if not dayCount then return end
 
-	-- If reportsafe is on use the mean of all 14 day samples. Else use the "traditional" Simple values.
-	if not get("stat.simple.reportsafe") then
-		if (avg3 and seenDays > 3) or dayCount == 0 then
-			array.price = avg3
-		elseif dayCount > 0 then
-			array.price = dayAverage
-		end
-	else
-		array.price = mean
-	end
+	wipe(array)
+	array.price = mean
 	array.stddev = stddev
 	array.seen = seenCount
+	array.auctions = auctionsCount
 	array.avgday = dayAverage
 	array.avg3 = avg3
 	array.avg7 = avg7
@@ -254,6 +290,7 @@ function lib.GetPriceArray(hyperlink, serverKey)
 	array.avgmins = avgmins
 	array.daytotal = dayTotal
 	array.daycount = dayCount
+	array.dayauctions = dayAuctions
 	array.seendays = seenDays
 
 	-- Return a temporary array. Data in this array is
@@ -274,7 +311,6 @@ local bellCurve = AucAdvanced.API.GenerateBellCurve()
 -- @return The upper limit of meaningful data for the PDF
 -- @return The area of the PDF
 function lib.GetItemPDF(hyperlink, serverKey)
-	if not get("stat.simple.enable") then return end
 	-- Calculate the SE estimated standard deviation & mean
 	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount, mean, stddev = lib.GetPrice(hyperlink, serverKey)
 
@@ -293,11 +329,17 @@ function lib.GetItemPDF(hyperlink, serverKey)
 	local clamplower, clampupper = mean * CLAMP_STDDEV_LOWER, mean * CLAMP_STDDEV_UPPER
 
 	if seenDays < ESTIMATE_THRESHOLD then
-		-- when seenDays is very low, stddev will typically be extremely low (or 0),
-		-- because the EMAs won't have had time to drift very far apart yet
+		-- when seenDays is low, stddev will typically be extremely low (or 0),
+		-- because the EMAs won't have had time to drift very far apart yet.
 		-- we shall estimate (i.e. fake) stddev based on mean and seenDays
-		-- note: seenDays can be 0, if we only have today's value, so we add ESTIMATE_OFFSET
-		clamplower = ESTIMATE_FACTOR * mean / (seenDays + ESTIMATE_OFFSET)
+		if seenDays <= 3 then
+			-- when seenDays is less than or equal to 3 there will not be any EMA7 or EMA14 data yet
+			-- 'real' stddev will normally be 0
+			-- use the maximum allowable 'fake' stddev
+			stddev = clampupper
+		else
+			clamplower = ESTIMATE_FACTOR * mean / (seenDays - 3)
+		end
 		-- todo: this is a very rough formula, can anyone improve it? (see also Stat-Purchased)
 		-- note: originally we only checked if stddev == 0,
 		-- in which case we substituted stddev = mean / sqrt(seenCount)
@@ -312,347 +354,188 @@ function lib.GetItemPDF(hyperlink, serverKey)
 	end
 
 	-- Calculate the lower and upper bounds as +/- 3 standard deviations
-	local lower, upper = mean - 3*stddev, mean + 3*stddev;
+	local lower, upper = mean - 3*stddev, mean + 3*stddev
 
 	bellCurve:SetParameters(mean, stddev, area)
 	return bellCurve, lower, upper, area
 end
 
 function lib.OnLoad(addon)
-	if SSRealmData then return end
+	if private.InitData then -- Load and check data
+		private.InitData()
+	else -- already loaded
+		return
+	end
 
 	-- Set defaults
 	default("stat.simple.tooltip", false)
+	default("stat.simple.average", true)
+
 	default("stat.simple.avg3", false)
 	default("stat.simple.avg7", false)
 	default("stat.simple.avg14", false)
 	default("stat.simple.minbuyout", true)
 	default("stat.simple.avgmins", true)
+	default("stat.simple.stddev", false)
 	default("stat.simple.quantmul", true)
+
 	default("stat.simple.enable", true)
-	default("stat.simple.reportsafe", false)
 
-	-- Load and check data
-	private.InitData()
+	default("stat.simple.fallback", true)
+	default("stat.simple.basemode", false)
+
+	set("stat.simple.reportsafe", nil)
 end
 
-function lib.ClearItem(hyperlink, serverKey)
-	local keyId, property = GetStoreKey(hyperlink)
-	if not keyId then return end
-
-	serverKey = serverKey or Resources.ServerKeyCurrent
-	local data = private.GetPriceData (serverKey)
-
-	local cleareditem = false
-
-	if data.daily[keyId] then
-		local stats = private.UnpackStats (data.daily[keyId])
-		if stats[property] then
-			stats[property] = nil
-			cleareditem = true
-			data.daily[keyId] = private.PackStats (stats)
-		end
-	end
-
-	if data.means[keyId] then
-		local stats = private.UnpackStats (data.means[keyId])
-		if stats[property] then
-			stats[property] = nil
-			cleareditem = true
-			data.means[keyId] = private.PackStats (stats)
-		end
-	end
-
-	if cleareditem then
-		local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
-		aucPrint(_TRANS('SIMP_Help_SlashHelpClearingData'):format(libType, hyperlink, keyText)) --%s - Simple: clearing data for %s for {{%s}}
-	end
-end
 
 function private.SetupConfigGui(gui)
+	private.SetupConfigGui = nil
 	local id = gui:AddTab(lib.libName, lib.libType.." Modules" )
 
+	gui:AddControl(id, "Header",     0,    L'SIMP_Interface_SimpleOptions')--Simple options'
+	gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
+	gui:AddControl(id, "Checkbox",   0, 1, "stat.simple.enable", L'SIMP_Interface_EnableSimpleStats')--Enable Simple Stats
+	gui:AddTip(id, L'SIMP_HelpTooltip_EnableSimpleStats')--Allow Simple Stats to gather and return price data
+
 	gui:AddHelp(id, "what simple stats",
-	_TRANS('SIMP_Help_SimpleStats') ,--What are simple stats?
-	_TRANS('SIMP_Help_SimpleStatsAnswer')
+	L'SIMP_Help_SimpleStats',--What are simple stats?
+	L'SIMP_Help_SimpleStatsAnswer'
 	)--Simple stats are the numbers that are generated by the Simple module, the Simple module averages all of the prices for items that it sees and provides moving 3, 7, and 14 day averages.  It also provides daily minimum buyout along with a running average minimum buyout within 10% variance.
 
 	--all options in here will be duplicated in the tooltip frame
-	function private.addTooltipControls(id)
+	local function addTooltipControls(id)
 		gui:AddHelp(id, "what moving day average",
-		_TRANS('SIMP_Help_MovingAverage') , --What does \'moving day average\' mean?
-		_TRANS('SIMP_Help_MovingAverageAnswer') --Moving average means that it places more value on yesterday\'s moving averagethan today\'s average.  The determined amount is then used for tomorrow\'s moving average calculation.
+		L'SIMP_Help_MovingAverage' , --What does \'moving day average\' mean?
+		L'SIMP_Help_MovingAverageAnswer' --Moving average means that it places more value on yesterday\'s moving averagethan today\'s average.  The determined amount is then used for tomorrow\'s moving average calculation.
 		)
 
 		gui:AddHelp(id, "how day average calculated",
-		_TRANS('SIMP_Help_HowAveragesCalculated') , --How is the moving day averages calculated exactly?
-		_TRANS('SIMP_Help_HowAveragesCalculatedAnswer') --Todays Moving Average is ((X-1)*YesterdaysMovingAverage + TodaysAverage) / X, where X is the number of days (3,7, or 14).
+		L'SIMP_Help_HowAveragesCalculated', --How is the moving day averages calculated exactly?
+		L'SIMP_Help_HowAveragesCalculatedAnswer' --Todays Moving Average is ((X-1)*YesterdaysMovingAverage + TodaysAverage) / X, where X is the number of days (3,7, or 14).
 		)
 
 		gui:AddHelp(id, "no day saved",
-		_TRANS('SIMP_Help_NoDaySaved') ,--So you aren't saving a day-to-day average?
-		_TRANS('SIMP_Help_NoDaySavedAnswer') )--No, that would not only take up space, but heavy calculations on each auction house scan, and this is only a simple model.
+		L'SIMP_Help_NoDaySaved',--So you aren't saving a day-to-day average?
+		L'SIMP_Help_NoDaySavedAnswer')--No, that would not only take up space, but heavy calculations on each auction house scan, and this is only a simple model.
 
 		gui:AddHelp(id, "minimum buyout",
-		_TRANS('SIMP_Help_MinimumBuyout') ,--Why do I need to know minimum buyout?
-		_TRANS('SIMP_Help_MinimumBuyoutAnswer')--While some items will sell very well at average within 2 days, others may sell only if it is the lowest price listed.  This was an easy calculation to do, so it was put in this module.
+		L'SIMP_Help_MinimumBuyout',--Why do I need to know minimum buyout?
+		L'SIMP_Help_MinimumBuyoutAnswer'--While some items will sell very well at average within 2 days, others may sell only if it is the lowest price listed.  This was an easy calculation to do, so it was put in this module.
 		)
 
 		gui:AddHelp(id, "average minimum buyout",
-		_TRANS('SIMP_Help_AverageMinimumBuyout') ,--What's the point in an average minimum buyout?
-		_TRANS('SIMP_Help_AverageMinimumBuyoutAnswer')--This way you know how good a market is dealing.  If the MBO (minimum buyout) is bigger than the average MBO, then it\'s usually a good time to sell, and if the average MBO is greater than the MBO, then it\'s a good time to buy.
+		L'SIMP_Help_AverageMinimumBuyout',--What's the point in an average minimum buyout?
+		L'SIMP_Help_AverageMinimumBuyoutAnswer'--This way you know how good a market is dealing.  If the MBO (minimum buyout) is bigger than the average MBO, then it\'s usually a good time to sell, and if the average MBO is greater than the MBO, then it\'s a good time to buy.
 		)
 
 		gui:AddHelp(id, "average minimum buyout variance",
-		_TRANS('SIMP_Help_MinimumBuyoutVariance') ,--What\'s the \'10% variance\' mentioned earlier for?
-		_TRANS('SIMP_Help_MinimumBuyoutVarianceAnswer')--If the current MBO is inside a 10% range of the running average, the current MBO is averaged in to the running average at 50% (normal).  If the current MBO is outside the 10% range, the current MBO will only be averaged in at a 12.5% rate.
+		L('SIMP_Help_MinimumBuyoutVariance') ,--What\'s the \'10% variance\' mentioned earlier for?
+		L('SIMP_Help_MinimumBuyoutVarianceAnswer')--If the current MBO is inside a 10% range of the running average, the current MBO is averaged in to the running average at 50% (normal).  If the current MBO is outside the 10% range, the current MBO will only be averaged in at a 12.5% rate.
 		)
 
 		gui:AddHelp(id, "why have variance",
-		_TRANS('SIMP_Help_WhyVariance') ,--What\'s the point of a variance on minimum buyout?
-		_TRANS('SIMP_Help_WhyVarianceAnswer') --Because some people put their items on the market for rediculous price (too low or too high), so this helps keep the average from getting out of hand.
+		L'SIMP_Help_WhyVariance',--What\'s the point of a variance on minimum buyout?
+		L'SIMP_Help_WhyVarianceAnswer' --Because some people put their items on the market for ridiculous price (too low or too high), so this helps keep the average from getting out of hand.
 		)
 
 		gui:AddHelp(id, "why multiply stack size simple",
-		_TRANS('SIMP_Help_WhyMultiplyStack') ,--Why have the option to multiply stack size?
-		_TRANS('SIMP_Help_WhyMultiplyStackAnswer') --The original Stat-Simple multiplied by the stack size of the item, but some like dealing on a per-item basis.
+		L'SIMP_Help_WhyMultiplyStack',--Why have the option to multiply stack size?
+		L'SIMP_Help_WhyMultiplyStackAnswer' --The original Stat-Simple multiplied by the stack size of the item, but some like dealing on a per-item basis.
 		)
 
-		gui:AddControl(id, "Header",     0,    _TRANS('SIMP_Interface_SimpleOptions') )--Simple options'
-		gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
-		gui:AddControl(id, "Checkbox",   0, 1, "stat.simple.enable", _TRANS('SIMP_Interface_EnableSimpleStats') )--Enable Simple Stats
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_EnableSimpleStats') )--Allow Simple Stats to gather and return price data
 		gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
 
-		gui:AddControl(id, "Checkbox",   0, 4, "stat.simple.tooltip", _TRANS('SIMP_Interface_Show') )--Show simple stats in the tooltips?
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_Show') )--Toggle display of stats from the Simple module on or off
-		gui:AddControl(id, "Checkbox",   0, 6, "stat.simple.avg3", _TRANS('SIMP_Interface_Toggle3Day') )--Display Moving 3 Day Average
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_Toggle3Day') )--Toggle display of 3-Day average from the Simple module on or off
-		gui:AddControl(id, "Checkbox",   0, 6, "stat.simple.avg7", _TRANS('SIMP_Interface_Toggle7Day') )--Display Moving 7 Day Average
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_Toggle7Day') )--Toggle display of 7-Day average from the Simple module on or off
-		gui:AddControl(id, "Checkbox",   0, 6, "stat.simple.avg14", _TRANS('SIMP_Interface_Toggle14Day') )--Display Moving 14 Day Average
-		gui:AddTip(id,_TRANS( 'SIMP_HelpTooltip_Toggle14Day') )--Toggle display of 14-Day average from the Simple module on or off
-		gui:AddControl(id, "Checkbox",   0, 6, "stat.simple.minbuyout", _TRANS('SIMP_Interface_MinBuyout') )--Display Daily Minimum Buyout
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_MinBuyout') )--Toggle display of Minimum Buyout from the Simple module on or offMultiplies by current stack size if on
-		gui:AddControl(id, "Checkbox",   0, 6, "stat.simple.avgmins", _TRANS('SIMP_Interface_MinBuyoutAverage') )--Display Average of Daily Minimum Buyouts
-		gui:AddTip(id,_TRANS( 'SIMP_HelpTooltip_MinBuyoutAverage') )--Toggle display of Minimum Buyout average from the Simple module on or off
-		gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
-		gui:AddControl(id, "Checkbox",   0, 4, "stat.simple.quantmul", _TRANS('SIMP_Interface_MultiplyStack') )--Multiply by stack size
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_MultiplyStack') )--Multiplies by current stack size if on
-		gui:AddControl(id, "Checkbox",   0, 4, "stat.simple.reportsafe", _TRANS('SIMP_Interface_LongerAverage') )--Report safer prices for low volume items
-		gui:AddTip(id, _TRANS('SIMP_HelpTooltip_LongerAverage') )--Returns longer averages (7-day, or even 14-day) for low-volume items
-		gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
+		gui:AddControl(id, "Checkbox",   0, 1, "stat.simple.tooltip", L"SIMP_Interface_Show")--Show simple stats in the tooltips?
+		gui:AddTip(id, L"SIMP_HelpTooltip_Show")--Toggle display of stats from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.average", L"SIMP_Interface_CombinedAverage") --Display Combined Average
+		gui:AddTip(id, L"SIMP_HelpTooltip_CombinedAverage") --Toggle display of combined average from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.avg3", L"SIMP_Interface_Toggle3Day")--Display Moving 3 Day Average
+		gui:AddTip(id, L"SIMP_HelpTooltip_Toggle3Day")--Toggle display of 3-Day average from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.avg7", L"SIMP_Interface_Toggle7Day")--Display Moving 7 Day Average
+		gui:AddTip(id, L"SIMP_HelpTooltip_Toggle7Day")--Toggle display of 7-Day average from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.avg14", L"SIMP_Interface_Toggle14Day")--Display Moving 14 Day Average
+		gui:AddTip(id,L"SIMP_HelpTooltip_Toggle14Day")--Toggle display of 14-Day average from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.minbuyout", L"SIMP_Interface_MinBuyout")--Display Daily Minimum Buyout
+		gui:AddTip(id, L"SIMP_HelpTooltip_MinBuyout")--Toggle display of Minimum Buyout from the Simple module on or offMultiplies by current stack size if on
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.avgmins", L"SIMP_Interface_MinBuyoutAverage")--Display Average of Daily Minimum Buyouts
+		gui:AddTip(id,L"SIMP_HelpTooltip_MinBuyoutAverage")--Toggle display of Minimum Buyout average from the Simple module on or off
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.stddev", L"SIMP_Interface_StdDev")--Display Standard Deviation
+		gui:AddTip(id, L"SIMP_HelpTooltip_StdDev")--Toggle Standard Deviation for the combined average on or off
+		gui:AddControl(id, "Note",       0, 1, nil, nil, "")
+		gui:AddControl(id, "Checkbox",   0, 3, "stat.simple.quantmul", L"SIMP_Interface_MultiplyStack")--Multiply by stack size
+		gui:AddTip(id, L"SIMP_HelpTooltip_MultiplyStack")--Multiplies by current stack size if on
+		gui:AddControl(id, "Note",       0, 1, nil, nil, "")
 	end
-	--This is the Tooltip tab provided by aucadvnced so all tooltip configuration is in one place
-	local tooltipID = AucAdvanced.Settings.Gui.tooltipID
 
-	--now we create a duplicate of these in the tooltip frame
-	private.addTooltipControls(id)
-	if tooltipID then private.addTooltipControls(tooltipID) end
+	addTooltipControls(id)
+	gui:AddControl(id, "Checkbox",   0, 1, "stat.simple.fallback", L"SIMP_Interface_Fallback")--Use fallback prices
+	gui:AddTip(id, L"SIMP_HelpTooltip_Fallback")--If there is no price info for the exact item, use the price for the base item if it is available
+	gui:AddControl(id, "Checkbox",   0, 1, "stat.simple.basemode", "Base item mode (Transmog/Petbreed mode)") -- ### -- experimental, do not localize
+	gui:AddTip(id,"Experimental: always use prices for the base item (ignoring item suffixes) or the pet breed (ignoring pet level or quality)") -- ###
+
+
+	--This is the Tooltip tab provided by aucadvanced so all tooltip configuration is in one place
+	local tooltipID = AucAdvanced.Settings.Gui.tooltipID
+	if tooltipID then
+		gui:AddControl(tooltipID, "Header", 0, L"SIMP_Interface_SimpleOptions")--Simple options
+		addTooltipControls(tooltipID)
+	end
 end
 
---[[ Local functions ]]--
-
 function private.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
-	-- In this function, you are afforded the opportunity to add data to the tooltip should you so
-	-- desire. You are passed a hyperlink, and it's up to you to determine whether or what you should
-	-- display in the tooltip.
-
 	if not get("stat.simple.tooltip") then return end
 
 	if not quantity or quantity < 1 then quantity = 1 end
 	if not get("stat.simple.quantmul") then quantity = 1 end
 
-	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount = lib.GetPrice(hyperlink, serverKey)
+	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount, mean, stddev, dayAuctions, auctionsCount = lib.GetPrice(hyperlink, serverKey)
+	if not dayAverage then return end
+	local dispAvgComb = get("stat.simple.average")
 	local dispAvg3 = get("stat.simple.avg3")
 	local dispAvg7 = get("stat.simple.avg7")
 	local dispAvg14 = get("stat.simple.avg14")
 	local dispMinB = get("stat.simple.minbuyout")
 	local dispAvgMBO = get("stat.simple.avgmins")
-	if (not dayAverage) then return end
+	local dispStdDev = get("stat.simple.stddev")
 
 	if (seenDays + dayCount > 0) then
-		tooltip:AddLine(_TRANS('SIMP_Tooltip_SimplePrices') )--Simple prices:
+		tooltip:AddLine(L"SIMP_Tooltip_SimplePrices")--Simple prices:
 
-		if (seenDays > 0) then
-			if (dayCount>0) then seenDays = seenDays + 1 end
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_SeenNumberDays'):format(seenCount+dayCount, seenDays) ) --Seen {{%s}} over {{%s}} days:
-
-		end
-		if (seenDays > 6) and dispAvg14 then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_14DayAverage') , avg14*quantity)--  14 day average
-		end
-		if (seenDays > 2) and dispAvg7 then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_7DayAverage') , avg7*quantity) --  7 day average
-		end
-		if (seenDays > 0) and dispAvg3 then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_3DayAverage') , avg3*quantity)--  3 day average
-		end
-		if (seenDays > 0) and (avgmins > 0) and dispAvgMBO then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_AverageMBO') , avgmins*quantity)--  Average MBO
+		if seenDays > 0 then
+			tooltip:AddLine("  "..L("SIMP_Tooltip_SeenNumberDays"):format(seenCount, seenDays) ) --Seen {{%s}} over {{%s}} days:
+			if dispAvgComb then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_CombinedAverage", mean * quantity) -- Combined average
+			end
+			if seenDays > 10 and dispAvg14 then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_14DayAverage", avg14*quantity)--  14 day average
+			end
+			if seenDays > 6 and dispAvg7 then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_7DayAverage", avg7*quantity) --  7 day average
+			end
+			if seenDays > 3 and dispAvg3 then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_3DayAverage", avg3*quantity)--  3 day average
+			end
+			if avgmins > 0 and dispAvgMBO then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_AverageMBO", avgmins*quantity)--  Average MBO
+			end
+			if stddev > 0 and dispStdDev then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_StdDev", stddev * quantity) -- Standard Deviation
+			end
 		end
 		if (dayCount > 0) then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_SeenToday'):format(dayCount) , dayAverage*quantity) --Seen {{%s}} today:
-		end
-		if (dayCount > 0) and (minBuyout > 0) and dispMinB then
-			tooltip:AddLine("  ".._TRANS('SIMP_Tooltip_TodaysMBO') , minBuyout*quantity)-- Today's Min BO
-		end
-	end
-end
-
--- This is a function which migrates the data from a daily average to the
--- Exponential Moving Averages over the 3, 7 and 14 day ranges.
-function private.PushStats(serverKey)
-	local dailyAvg
-
-	local data = private.GetPriceData(serverKey)
-
-	local pdata, fdata, temp
-	for keyId, stats in pairs(data.daily) do
-		if (keyId ~= "created") then
-			pdata = private.UnpackStats(stats)
-			fdata = private.UnpackStats(data.means[keyId] or "")
-			for property, info in pairs(pdata) do
-				dailyAvg = info[1] / info[2]
-				if not info[3] then info[3] = 0 end
-				if not fdata[property] then
-					fdata[property] = {
-					1,
-					info[2],
-					("%0.01f"):format(dailyAvg),
-					("%0.01f"):format(dailyAvg),
-					("%0.01f"):format(dailyAvg),
-					("%0.01f"):format(info[3])
-					}
-				else
-					fdata[property][1] = fdata[property][1] + 1
-					fdata[property][2] = fdata[property][2] + info[2]
-					fdata[property][3] = ("%0.01f"):format(((fdata[property][3] * 2) + dailyAvg)/3)
-					fdata[property][4] = ("%0.01f"):format(((fdata[property][4] * 6) + dailyAvg)/7)
-					fdata[property][5] = ("%0.01f"):format(((fdata[property][5] * 13) + dailyAvg)/14)
-					if not fdata[property][6] then fdata[property][6] = 0 end
-					temp = fdata[property][6]
-					if temp < 1 then
-						fdata[property][6] = info[3]
-					else
-						if info[3] ~= 0 then
-							if temp < info[3] then
-								if (temp*10/info[3]) < 9 then
-									fdata[property][6] = ("%0.01f"):format((temp+info[3])/2)
-								else
-									fdata[property][6] = ("%0.01f"):format((temp*7+info[3])/8)
-								end
-							else
-								if (info[3]*10/temp) < 9 then
-									fdata[property][6] = ("%0.01f"):format((temp+info[3])/2)
-								else
-									fdata[property][6] = ("%0.01f"):format((temp*7+info[3])/8)
-								end
-							end
-						end
-					end
-				end
-			end
-			data.means[keyId] = private.PackStats(fdata)
-		end
-	end
-	data.daily = {created = time()}
-end
-
-function private.UnpackStatIter(data, ...)
-	local c = select("#", ...)
-	local v
-	for i = 1, c do
-		v = select(i, ...)
-		local property, info = strsplit(":", v)
-		if (property and info) then
-			data[property] = {strsplit(";", info)}
-			local item
-			for i=1, #data[property] do
-				item = data[property][i]
-				data[property][i] = tonumber(item) or item
+			tooltip:AddLine("  "..L("SIMP_Tooltip_SeenToday"):format(dayCount) , dayAverage*quantity) --Seen {{%s}} today:
+			if minBuyout > 0 and dispMinB then
+				tooltip:AddLine("  "..L"SIMP_Tooltip_TodaysMBO", minBuyout*quantity)-- Today"s Min BO
 			end
 		end
 	end
 end
 
-function private.UnpackStats(dataItem)
-	local data = {}
-	private.UnpackStatIter(data, strsplit(",", dataItem))
-	return data
-end
 
-local tmp={}
-function private.PackStats(data)
-	local n=0
-	for property, info in pairs(data) do
-		n=n+1
-		tmp[n]=property..":"..concat(info, ";")
-	end
-	return concat(tmp,",",1,n)
-end
+--[[ Functions handling access to the permanent store data ]]--
 
--- The following Functions are the routines used to access the permanent store data
-
-function private.UpgradeDb()
-	private.UpgradeDb = nil
-	if type(AucAdvancedStatSimpleData) == "table" and AucAdvancedStatSimpleData.Version == "2.0" then return end
-
-	local newSave = {Version = "2.0", RealmData = {}}
-
-	-- Will only be run once per user account; however must run smoothly every time
-	-- Can afford to perform extra type-checking for safety
-	if type(AucAdvancedStatSimpleData) == "table" and AucAdvancedStatSimpleData.Version == "1.0" then
-		-- perform upgrade from "1.0" to "2.0"
-		for realm, realmData in pairs (AucAdvancedStatSimpleData.RealmData) do
-			if type (realm) == "string" and type (realmData) == "table" then
-				-- valid stats will only be stored in serverKeys which match realm
-				local realmPattern = realm.."%-%u%l"
-				for serverKey, data in pairs (realmData) do
-					if type (serverKey) == "string" and type (data) == "table" and strfind (serverKey, realmPattern) then
-						-- found a valid serverKey
-						-- ensure all required subtables are present
-						if type (data.means) ~= "table" then
-							data.means = {}
-						end
-						if type (data.daily) ~= "table" then
-							data.daily = {created = time()}
-						elseif type (data.daily.created) ~= "number" then
-							data.daily.created = time()
-						end
-						newSave.RealmData[serverKey] = data
-					end
-				end
-			end
-		end
-	end
-	AucAdvancedStatSimpleData = newSave
-end
-
-function lib.ClearData(serverKey)
-	serverKey = serverKey or Resources.ServerKeyCurrent
-	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
-		wipe(SSRealmData)
-		aucPrint(_TRANS('SIMP_Interface_ClearingSimple').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing Simple stats for // All realms
-	elseif SSRealmData[serverKey] then
-		local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
-		keyText = keyText or tostring(serverKey) -- avoid display error if database entry is not a valid serverKey (due to minor database corruption)
-		SSRealmData[serverKey] = nil
-		aucPrint(_TRANS('SIMP_Interface_ClearingSimple').." {{"..keyText.."}}") --Clearing Simple stats for
-	end
-end
-
-function private.GetPriceData(serverKey)
-	local data = SSRealmData[serverKey]
-	if not data then
-		if not AucAdvanced.SplitServerKey(serverKey) then
-			error("Invalid serverKey passed to Stat-Simple")
-		end
-		data = {means = {}, daily = {created = time ()}}
-		SSRealmData[serverKey] = data
-	end
-	return data
-end
+-- local reference to stored realm data
+local SSRealmData
 
 function private.InitData()
 	private.InitData = nil
@@ -665,50 +548,372 @@ function private.InitData()
 		error("Error loading or creating StatSimple database")
 	end
 
-	-- Note: database errors can occur if user tries to run an older version of StatSimple after the database is upgraded.
 	for serverKey, data in pairs (SSRealmData) do
-		if type(serverKey) ~= "string" or not strfind (serverKey, ".%-%u%l") then
-			-- not a valid serverKey - remove it
-			SSRealmData[serverKey] = nil
-		else
-			-- aggressive checks to strip out any data that is the wrong type
-			for key, _ in pairs (data) do
-				if key ~= "means" and key ~= "daily" then
-					data[key] = nil
-				end
-			end
-			if type(data.means) == "table" then
-				for id, packed in pairs (data.means) do
-					-- id type checking currently removed to allow for battlepets
-					if type(packed) ~= "string" then
-						data.means[id] = nil
-					end
-				end
-			else
-				data.means = {}
-			end
-			if type(data.daily) == "table" then
-				for id, packed in pairs (data.daily) do
-					-- id type checking currently removed to allow for battlepets
-					if id ~= "created" and type(packed) ~= "string" then
-						data.daily[id] = nil
-					end
-				end
-				if type(data.daily.created) ~= "number" then
-					data.daily.created = time ()
-				end
-			else
-				data.daily = {created = time()}
-			end
-
-			-- database maintenance
-			if time() - data.daily.created > 3600*16 then
-				-- This data is more than 16 hours old, we classify this as "yesterday's data"
-				private.PushStats(serverKey)
-			end
+		if time() > data.dailypush then
+			private.PushStats(serverKey)
 		end
 	end
 end
 
+function private.UpgradeDb()
+	private.UpgradeDb = nil
+	if type(AucAdvancedStatSimpleData) == "table" and AucAdvancedStatSimpleData.Version == DATABASE_VERSION then return end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5477 $")
+	-- "Upgrade" to Version 3.0: database format has changed so drastically that we shall wipe the data and start fresh
+	AucAdvancedStatSimpleData = {Version = DATABASE_VERSION, RealmData = {}}
+end
+
+-- Clear all stats for the requested item in the data for serverKey
+-- For items that can have multiple properties, there will also be a property "0" which represents combined stats for all the properties
+-- If we clear this "0" property, it would make no sense to leave any of the other properties uncleared
+-- Therefore, ClearItem will clear all data for the itemID, regardless of the property within the hyperlink
+function lib.ClearItem(hyperlink, serverKey)
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
+	local realmdata = SSRealmData[serverKey]
+	if not realmdata then return end
+	local storeID, storeProperty = GetStoreKey(hyperlink, PET_BAND)
+	if not storeID then return end
+
+	local cleareditem = false
+	if realmdata.daily[storeID] then
+		realmdata.daily[storeID] = nil
+		cleareditem = true
+	end
+	if realmdata.means[storeID] then
+		realmdata.means[storeID] = nil
+		cleareditem = true
+	end
+
+	if cleareditem then
+		local keyText = AucAdvanced.GetServerKeyText(serverKey)
+		aucPrint(L('SIMP_Help_SlashHelpClearingData'):format(libType, hyperlink, keyText)) --%s - Simple: clearing data for %s for {{%s}}
+	end
+end
+
+-- Clear data for the requested serverKey, or for ALL data
+function lib.ClearData(serverKey)
+	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
+		wipe(SSRealmData)
+		aucPrint(L"SIMP_Interface_ClearingSimple".." {{"..L"ADV_Interface_AllRealms".."}}") --Clearing Simple stats for // All realms
+	else
+		serverKey = ResolveServerKey(serverKey)
+		if serverKey and SSRealmData[serverKey] then
+			local keyText = AucAdvanced.GetServerKeyText(serverKey)
+			SSRealmData[serverKey] = nil
+			aucPrint(L"SIMP_Interface_ClearingSimple".." {{"..keyText.."}}") --Clearing Simple stats for
+		end
+	end
+end
+
+-- PushStats: migrates the data from a daily average to the Exponential Moving Averages over the 3, 7 and 14 day ranges
+local newstringtemplate6 = "%s"..PROPERTY_DIVIDER.."1"..DATA_DIVIDER.."%d"..DATA_DIVIDER.."%0.0f"..DATA_DIVIDER.."0"..DATA_DIVIDER.."0"..DATA_DIVIDER.."%0.0f"
+local newstringtemplate7 = newstringtemplate6..DATA_DIVIDER.."%d"
+local function numberformat(value) -- helper function
+	local stringvalue
+	if value >= 1000000 then
+		stringvalue = ("%0.0f"):format(value)
+	else -- less than 7 digits before the decimal point, keep 1 extra digit after
+		stringvalue = ("%0.1f"):format(value)
+		if stringvalue:byte(-1) == 48 then -- digit after the decimal point is "0"
+			stringvalue = stringvalue:sub(1, -3)
+		end
+	end
+	return stringvalue
+end
+function private.PushStats(serverKey)
+	local realmdata = SSRealmData[serverKey]
+	if not realmdata then return end
+	local daily, means = realmdata.daily, realmdata.means
+	local lookupmeansdata, lookupmeansindex = {}, {}
+
+	for storeID, itemstring in pairs(daily) do
+		-- find the means data for this storeID, and build lookup tables to help cross-index
+		-- we leave the last (DATA_DIVIDER) level of the data as strings for now; later we will fully unpack only the ones we need
+		local itemstoremeans
+		if means[storeID] then
+			itemstoremeans = {strsplit(ITEM_DIVIDER, means[storeID])}
+		else
+			itemstoremeans = {}
+		end
+		for index, propertystring in ipairs(itemstoremeans) do
+			local prop, datastringmeans = strsplit(PROPERTY_DIVIDER, propertystring)
+			lookupmeansdata[prop] = datastringmeans
+			lookupmeansindex[prop] = index -- remember where we got datastringmeans from, so we can put the revised datastring back in the same place
+		end
+
+		local itemsdaily = {strsplit(ITEM_DIVIDER, itemstring)}
+		for index, propertystring in ipairs(itemsdaily) do
+			-- extract daily data entries for this itemID & property
+			local prop, datastringdaily = strsplit(PROPERTY_DIVIDER, propertystring)
+			local dailybuy, dailyseen, dailymbo, dailyauctions = strsplit(DATA_DIVIDER, datastringdaily)
+			dailybuy, dailyseen, dailymbo, dailyauctions = tonumber(dailybuy), tonumber(dailyseen), tonumber(dailymbo), tonumber(dailyauctions)
+			local dailyavg = dailybuy
+			-- dailyseen may be 0 for certain unusual items which do not modify property "0"
+			-- our database format requires that there must always be a property "0" (which must always be at index 1)
+			-- if no items of that base type with property "0" were seen today, the entry will be empty (all 0)
+			if dailyseen > 0 then
+				dailyavg = dailyavg / dailyseen
+			end
+
+			-- look for existing means data for this property
+			local datastringmeans = lookupmeansdata[prop]
+			if datastringmeans then
+				if dailyseen > 0 then
+					datameans = {strsplit(DATA_DIVIDER, datastringmeans)} -- seendays, seencount, EMA3, EMA7, EMA14, avgminbuy [, seenauctions]
+					for k, v in ipairs(datameans) do
+						datameans[k] = tonumber(v)
+					end
+
+					-- update means data for this entry
+					local seendays = datameans[1]
+					local newseendays = seendays + 1
+					datameans[1] = newseendays
+					datameans[2] = datameans[2] + dailyseen
+					local seenauctions = datameans[7]
+					if seenauctions then
+						datameans[7] = seenauctions + (dailyauctions or dailyseen)
+					else
+						datameans[7] = dailyauctions -- may be nil
+					end
+
+					if seendays < 3 then
+						-- for first 3 days perform plain average insead of EMAs
+						datameans[3] = numberformat((datameans[3] * seendays + dailyavg) / newseendays) -- EMA3
+						datameans[6] = numberformat((datameans[6] * seendays + dailymbo) / newseendays) -- average minimum buyout
+						if newseendays == 3 then
+							-- this is the third day, prep other EMAs for next time
+							datameans[4] = datameans[3]
+							datameans[5] = datameans[3]
+						end
+					else
+						-- do normal EMA calculations
+						datameans[3] = numberformat((datameans[3] * 2 + dailyavg) / 3) -- EMA3
+						datameans[4] = numberformat((datameans[4] * 6 + dailyavg) / 7) -- EMA7
+						datameans[5] = numberformat((datameans[5] * 13 + dailyavg) / 14) -- EMA14
+
+						local avgmbo = datameans[6] -- average minimum buyout
+						if avgmbo < 1 then
+							datameans[6] = dailymbo
+						else
+							if dailymbo >= 1 then
+								if avgmbo < dailymbo then
+									if (avgmbo*10/dailymbo) < 9 then
+										datameans[6] = numberformat((avgmbo+dailymbo)/2)
+									else
+										datameans[6] = numberformat((avgmbo*7+dailymbo)/8)
+									end
+								else
+									if (dailymbo*10/avgmbo) < 9 then
+										datameans[6] = numberformat((avgmbo+dailymbo)/2)
+									else
+										datameans[6] = numberformat((avgmbo*7+dailymbo)/8)
+									end
+								end
+							end
+						end
+					end
+					itemstoremeans[lookupmeansindex[prop]] = prop..PROPERTY_DIVIDER..tconcat(datameans, DATA_DIVIDER)
+				end
+			else
+				-- this property has not been seen before, create a new entry for it
+				-- we don't need to use an intermediate table, we can build the datastring directly
+				-- there is no need to update lookupmeansdata[prop] or lookupmeansindex[prop], as each prop should only occur once for each storeID
+				if dailyauctions then
+					tinsert(itemstoremeans, newstringtemplate7:format(prop, dailyseen, dailyavg, dailymbo, dailyauctions)) -- represents data table with 7 entries
+				else
+					tinsert(itemstoremeans, newstringtemplate6:format(prop, dailyseen, dailyavg, dailymbo)) -- represents data table with 6 entries (missing seenauctions)
+				end
+			end
+		end
+
+		means[storeID] = tconcat(itemstoremeans, ITEM_DIVIDER)
+		wipe(lookupmeansdata)
+		wipe(lookupmeansindex)
+	end
+
+	realmdata.dailypush = time() + PUSHTIME
+	wipe(daily)
+end
+
+-- Get item data for reading for the requested serverKey/itemID/property
+-- Dedicated helper function for GetPrice
+-- returns daily and means datatables, if an entry exists (each return value may be a table or nil, independant of the other)
+function private.GetItemDataRead(serverKey, storeID, storeProperty)
+	local realmdata = SSRealmData[serverKey]
+	if not realmdata then return end
+
+	local dailydata, meansdata
+
+	local itemstring = realmdata.daily[storeID]
+	if itemstring then
+		local itemstore = {strsplit(ITEM_DIVIDER, itemstring)}
+		for index, propertystring in ipairs(itemstore) do
+			local prop, datastring = strsplit(PROPERTY_DIVIDER, propertystring)
+			if prop == storeProperty then
+				dailydata = {strsplit(DATA_DIVIDER, datastring)}
+				for k, v in ipairs(dailydata) do
+					dailydata[k] = tonumber(v)
+				end
+				break
+			end
+		end
+	end
+
+	itemstring = realmdata.means[storeID]
+	if itemstring then
+		local itemstore = {strsplit(ITEM_DIVIDER, itemstring)}
+		for index, propertystring in ipairs(itemstore) do
+			local prop, datastring = strsplit(PROPERTY_DIVIDER, propertystring)
+			if prop == storeProperty then
+				meansdata = {strsplit(DATA_DIVIDER, datastring)}
+				for k, v in ipairs(meansdata) do
+					meansdata[k] = tonumber(v)
+				end
+				break
+			end
+		end
+	end
+
+	return dailydata, meansdata
+end
+
+-- GetServerKeyList
+function lib.GetServerKeyList()
+	if not SSRealmData then return end
+	local list = {}
+	for serverKey in pairs(SSRealmData) do
+		tinsert(list, serverKey)
+	end
+	return list
+end
+
+-- ChangeServerKey
+function lib.ChangeServerKey(oldKey, newKey)
+	if not SSRealmData then return end
+	local oldData = SSRealmData[oldKey]
+	SSRealmData[oldKey] = nil
+	if oldData and newKey then
+		SSRealmData[newKey] = oldData
+		-- any prior data for newKey will be discarded (simplest implementation)
+	end
+end
+
+-- WriteStore retains data from GetItemDataWrite for use by WriteItemData
+local WriteStore = {} -- keys: storeID, storeProperty, serverKey, itemstore, data0, dataP, indexP
+
+-- Get daily item data table(s) for the requested serverKey/itemID/property, ready to be written to
+-- Dedicated helper function for ScanProcessors.create
+-- Returns one or two data tables; creates new data table(s) if they don't exist
+--    table1 represents property "0", may rarely be nil for certain unusual items
+--    table2 represents the requested storeProperty, if this is not "0"
+-- After modifying the data table(s), private.WriteItemData must be called to store the data
+-- Only one item may be open for writing at a time
+function private.GetItemDataWrite(serverKey, storeID, storeProperty)
+	local modify0 = true
+	if storeProperty == "0" then
+		storeProperty = nil
+	elseif storeProperty:byte(1) == 48 then -- has a leading 0
+		-- this item requires special handling; most likely it is an item with bonus data
+		-- unlike with suffixed items, items of this base type with property "0" do exist
+		-- therefore we should not modify data0 for this item
+		modify0 = nil
+	end
+
+	if WriteStore.storeID then
+		-- GetItemDataWrite called without calling WriteItemData on previous entry
+		-- assume caused by some error, previous data assumed to be corrupted
+		debugPrint("Stat-Simple GetItemDataWrite called without clearing previous WriteStore. ID="..WriteStore.storeID)
+		wipe(WriteStore)
+	end
+
+	local realmdata = SSRealmData[serverKey]
+	if not realmdata then
+		realmdata = {means = {}, daily = {}, dailypush = time() + PUSHTIME}
+		SSRealmData[serverKey] = realmdata
+	end
+
+	local itemstring = realmdata.daily[storeID]
+	local itemstore
+	if itemstring then
+		itemstore = {strsplit(ITEM_DIVIDER, itemstring)}
+	else
+		itemstore = {}
+	end
+	local itemstoremax = #itemstore
+
+
+	local data0, dataP, indexP
+
+	local propertystring = itemstore[1] -- 'index0' is always 1
+	if propertystring then
+		if modify0 then -- only do the processing if we are going to write to it
+			local prop, datastring = strsplit(PROPERTY_DIVIDER, propertystring)
+			if prop ~= "0" then
+				debugPrint("Stat-Simple GetItemDataWrite: property \"0\" not found at index 1. ID="..storeID)
+			end
+			data0 = {strsplit(DATA_DIVIDER, datastring)}
+			for k, v in ipairs(data0) do
+				data0[k] = tonumber(v)
+			end
+		end
+	else
+		-- property "0" does not yet exist, we must create an entry for it even if we are not going to write to it this time
+		data0 = {0, 0, 0} -- totalbuyout, seencount, minbuyout [, auctionscount]
+		itemstoremax = 1
+	end
+
+	if storeProperty then
+		for index = 2, itemstoremax do
+			local prop, datastring = strsplit(PROPERTY_DIVIDER, itemstore[index])
+			if prop == storeProperty then
+				dataP = {strsplit(DATA_DIVIDER, datastring)}
+				for k, v in ipairs(dataP) do
+					dataP[k] = tonumber(v)
+				end
+				indexP = index
+				break
+			end
+		end
+		if not indexP then
+			dataP = {0, 0, 0} -- totalbuyout, seencount, minbuyout [, auctionscount]
+			indexP = itemstoremax + 1
+		end
+	end
+
+	WriteStore.storeID = storeID
+	WriteStore.storeProperty = storeProperty -- may be nil (if it was originally "0")
+	WriteStore.serverKey = serverKey
+	WriteStore.itemstore = itemstore
+	WriteStore.data0 = data0 -- may be nil if modify0 is nil
+	WriteStore.dataP = dataP -- will be nil if storeProperty is nil
+	WriteStore.indexP = indexP -- will be nil if storeProperty is nil
+
+	return modify0 and data0, dataP
+end
+
+-- Write item data following a prior call to private.GetItemDataWrite, and modification of the data
+-- Dedicated helper function for ScanProcessors.create
+-- serverKey, storeID, storeProperty must match the ones used in GetItemDataWrite - this is used as a check
+function private.WriteItemData(serverKey, storeID, storeProperty)
+	if serverKey ~= WriteStore.serverKey or storeID ~= WriteStore.storeID or (storeProperty ~= "0" and storeProperty ~= WriteStore.storeProperty) then
+		debugPrint("Stat-Simple WriteItemData: parameters do not match WriteStore"..
+			format("\nParameters serverKey %s, storeID %s, storeProperty %s", tostringall(serverKey, storeID, storeProperty))..
+			format("\nWriteStore serverKey %s, storeID %s, storeProperty %s", tostringall(WriteStore.serverKey, WriteStore.storeID, WriteStore.storeProperty))
+		)
+		return
+	end
+
+	local itemstore = WriteStore.itemstore
+	if WriteStore.data0 then
+		itemstore[1] = "0"..PROPERTY_DIVIDER..tconcat(WriteStore.data0, DATA_DIVIDER)
+	end
+	if WriteStore.storeProperty then
+		itemstore[WriteStore.indexP] = WriteStore.storeProperty..PROPERTY_DIVIDER..tconcat(WriteStore.dataP, DATA_DIVIDER)
+	end
+	SSRealmData[serverKey].daily[WriteStore.storeID] = tconcat(itemstore, ITEM_DIVIDER)
+
+	wipe(WriteStore)
+end
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5558 $")

@@ -9,6 +9,7 @@
   <Script file="Localization\zhTW.lua" />
   <Script file="Localization\koKR.lua" />
   <Script file="Localization\ptBR.lua" />
+  <Script file="Localization\itIT.lua" />
   <Script file="Localization\Boss.lua" />
   <Script file="GTFO_Recount.lua" />
   <Script file="GTFO_Skada.lua" />
@@ -23,6 +24,7 @@
   <Script file="GTFO_Spells_CAT.lua" />
   <Script file="GTFO_Spells_MP.lua" />
   <Script file="GTFO_Spells_WOD.lua" />
+  <Script file="GTFO_Spells_LGN.lua" />
   <Script file="GTFO_Spells_Special.lua" />
   <Script file="GTFO_Fail_Generic.lua" />
   <Script file="GTFO_Fail_Classic.lua" />
@@ -31,11 +33,13 @@
   <Script file="GTFO_Fail_CAT.lua" />
   <Script file="GTFO_Fail_MP.lua" />
   <Script file="GTFO_Fail_WOD.lua" />
+  <Script file="GTFO_Fail_LGN.lua" />
   <Script file="GTFO_FF_BC.lua" />
   <Script file="GTFO_FF_LK.lua" />
   <Script file="GTFO_FF_CAT.lua" />
   <Script file="GTFO_FF_MP.lua" />
   <Script file="GTFO_FF_WOD.lua" />
+  <Script file="GTFO_FF_LGN.lua" />
   <Script file="GTFO_Mobs.lua" />
      <GameTooltip name="GTFOSpellTooltip" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="GameTooltipTemplate"/>
      <Frame name="GTFOFrame" parent="UIParent" hidden="false">

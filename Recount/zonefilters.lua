@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1309 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -73,7 +73,7 @@ function Recount:SetZoneGroupFilter(instanceType, groupType)
 	end
 end
 
--- Elsia: Main entry, call this to update main window visibility based on collection filters.
+-- Elsia: Main entry, call this to update main window visibility based on collection filters
 
 function Recount:UpdateZoneGroupFilter()
 	local groupType
@@ -87,7 +87,7 @@ function Recount:UpdateZoneGroupFilter()
 	end
 
 	local _, instanceType = IsInInstance()
-	if instanceType == nil then
+	if not instanceType then
 		_, instanceType = C_Scenario.IsInScenario()
 	end
 
@@ -97,10 +97,10 @@ function Recount:UpdateZoneGroupFilter()
 			instanceType = "pvp"
 		end
 	end
-	--Recount:DPrint("IT: "..instanceType)
+
 	if not UnitIsGhost(Recount.PlayerName) then
 		Recount:SetZoneGroupFilter(instanceType, groupType)
-	end -- Use zone-based filters.
+	end -- Use zone-based filters
 end
 
 function Recount:GetGroupState(groupType)

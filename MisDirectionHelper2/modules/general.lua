@@ -133,6 +133,7 @@ local function HandlerFunc(arg, button)
 	elseif arg == "b5" then MDH:PopUp(button)
 	elseif arg == "f" then MDH:MDHfocus(button)
 	elseif arg == "b6" then InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame)
+	elseif arg == "h" then MDH:MDHHover()
 	elseif arg == "c" then MDH:ClearTarget(button) end
 end
 
@@ -190,6 +191,15 @@ function MDH:MDHShowToolTip()
 	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("f", button) end)
 	tooltip:SetLineColor(y, theme.group1[1], theme.group1[2],theme.group1[3], theme.group1[4])
 
+	--y = tooltip:AddLine()
+	--if MDH.db.profile.target3 then
+		--tooltip:SetCell(y, 1, " " .. L["Disable Mouseover"])
+	--else
+		--tooltip:SetCell(y, 1, " " .. L["Enable Mouseover"])
+	--end
+	--tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("h", button) end)
+	--tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
+	
     y = tooltip:AddLine()
 	tooltip:SetCell(y, 1, "", "CENTER", 1)
 	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
@@ -233,6 +243,12 @@ function MDH:MDHShowToolTip()
 		tooltip:SetLineColor(y, theme.group4[1], theme.group4[2],theme.group4[3], theme.group4[4])
 	end
 
+	--if MDH.db.profile.target3 then
+		--y = tooltip:AddLine()
+		--tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. L["Mouseover Enabled"], "CENTER", 1)
+		--tooltip:SetLineColor(y, theme.group4[1], theme.group4[2],theme.group4[3], theme.group4[4])
+	--end
+	
     y = tooltip:AddLine()
 	tooltip:SetCell(y, 1, "", "CENTER", 1)
 	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])

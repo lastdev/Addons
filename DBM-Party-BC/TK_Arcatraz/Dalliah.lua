@@ -1,30 +1,36 @@
 local mod = DBM:NewMod(549, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
 
 mod:SetCreatureID(20885)
+mod:SetEncounterID(1913)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_CAST_START 39013 36144 36175 36142",
+	"SPELL_AURA_APPLIED 39009 36173",
+	"SPELL_AURA_REMOVED 39009 36173"
 )
 
-local warnHeal			= mod:NewSpellAnnounce(39013)
-local warnWhirlwind		= mod:NewSpellAnnounce(36175)
-local warnGift			= mod:NewTargetAnnounce(39009)
-local timerGift			= mod:NewTargetTimer(10, 39009)
+--LOG THIS, needs whirlwind CD timer
+local warnGift			= mod:NewTargetAnnounce(39009, 3)
 
-local specwarnWhirlwind	= mod:NewSpecialWarningRun(36175, "Melee", nil, nil, 4)
+local specwarnWhirlwind	= mod:NewSpecialWarningRun(36175, "Melee", nil, nil, 4, 6)
+local specwarnHeal		= mod:NewSpecialWarningInterrupt(39013, "-Healer", nil, nil, 1, 2)
+
+local timerGift			= mod:NewTargetTimer(10, 39009, nil, false, 2)
+
+local voiceHeal			= mod:NewVoice(39013, "-Healer")--kickcast
+local voiceWhirlwind	= mod:NewVoice(36175, "Melee")--Whirlwind
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(39013, 36144) then
-		warnHeal:Show()
+		specwarnHeal:Show()
+		voiceHeal:Play("kickcast")
 	elseif args:IsSpellID(36175, 36142) then
-		warnWhirlwind:Show()
 		specwarnWhirlwind:Show()
+		voiceWhirlwind:Play("whirlwind")--Probably get this sound file renamed to "whirlwind" in 7.0
 	end
 end
 
@@ -37,6 +43,6 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpellID(39009, 36173) then
-		timerGift:Cancel(args.destName)
+		timerGift:Stop(args.destName)
 	end
 end

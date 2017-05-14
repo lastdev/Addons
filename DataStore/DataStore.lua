@@ -35,16 +35,12 @@ local currentCharacterKey
 local currentGuildKey
 
 -- Message types
-local MSG_ANNOUNCELOGIN				= 1	-- broacast at login
+local MSG_ANNOUNCELOGIN				= 1	-- broadcast at login
 local MSG_LOGINREPLY					= 2	-- reply to MSG_ANNOUNCELOGIN
 
 local AddonDB_Defaults = {
 	global = {
-		Guilds = {
-			['*'] = {				-- ["Account.Realm.Name"]
-				faction = nil,
-			}
-		},
+		Guilds = {},				-- no 'magic key' ['*'] to avoid listing an additional "wrong" guild when the guild is actually on another realm
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
 				faction = nil,
@@ -55,7 +51,11 @@ local AddonDB_Defaults = {
 			--	["Account.Realm.Name"]  = true means the char is shared,
 			--	["Account.Realm.Name.Module"]  = true means the module is shared for that char
 		},
-		ConnectedRealms = {
+		ConnectedRealms = nil,
+		ShortToLongRealmNames = {
+			-- relationship between "short" and "long" realm names, 
+			-- ex: ["MarécagedeZangar"] = "Marécage de Zangar"
+			-- necessary for guild banks on other realms..
 		},
 	}
 }
@@ -169,12 +169,38 @@ local function OnPlayerGuildUpdate()
 	-- at login this event is called between OnEnable and PLAYER_ALIVE, where GetGuildInfo returns a wrong value
 	-- however, the value returned here is correct
 	if IsInGuild() and not currentGuildName then		-- the event may be triggered multiple times, and GetGuildInfo may return incoherent values in subsequent calls, so only save if we have no value.
-		currentGuildName = GetGuildInfo("player")
+		local realmName, _
+		currentGuildName, _, _, realmName = GetGuildInfo("player")		-- realmName will be nil if guild is on the same realm as the character
+		
 		if currentGuildName then
-			Guilds[GetKey(currentGuildName)].faction = UnitFactionGroup("player")
-			-- the first time a valid value is found, broadcast to guild, it must happen here for a standard login, but won't work here after a reloadui since this event is not triggered
-			GuildBroadcast(MSG_ANNOUNCELOGIN, GetAlts(currentGuildName))
-			addon:SendMessage("DATASTORE_ANNOUNCELOGIN", currentGuildName)
+			local guildKey
+			
+			if not realmName then
+				-- if realm is nil (= current realm), the guild key will be a classic key
+				guildKey = GetKey(currentGuildName)
+				
+			else
+				-- if realm is not nil, the guild key will use the long realm name
+				local longName = addon:GetLongRealmName(realmName)	
+			
+				if longName then
+					guildKey = GetKey(currentGuildName, longName)
+				end
+			end
+
+			-- guild key may be nil if the character is on a different realm than his guild, and he never logged on to that server
+			-- .. so the long realm name is unknown ..
+			if guildKey then
+				if not Guilds[guildKey] then
+					Guilds[guildKey] = {}
+				end
+
+				Guilds[guildKey].faction = UnitFactionGroup("player")
+				
+				-- the first time a valid value is found, broadcast to guild, it must happen here for a standard login, but won't work here after a reloadui since this event is not triggered
+				GuildBroadcast(MSG_ANNOUNCELOGIN, GetAlts(currentGuildName))
+				addon:SendMessage("DATASTORE_ANNOUNCELOGIN", currentGuildName)
+			end
 		end
 	end
 	Characters[GetKey()].guildName = currentGuildName
@@ -325,7 +351,8 @@ function addon:OnEnable()
 		end
 	end
 
-	addon:ClearConnectedRealms(THIS_REALM, THIS_REALM)
+	addon.db.global.ConnectedRealms = nil
+	addon:SetLongRealmName(THIS_REALM:gsub(" ", ""), THIS_REALM)
 end
 
 function addon:OnDisable()
@@ -450,7 +477,27 @@ function addon:GetCurrentCharacterKey()
 end
 
 function addon:GetCurrentGuildKey()
+	-- review if still necessary
 	return currentGuildKey
+end
+
+function addon:GetThisGuildKey()
+	-- return the correct guild key to use, with support for connected realms
+	local guild, _, _, realm = GetGuildInfo("player")
+	if not guild then return end
+	
+	if not realm then
+		-- realm = nil : guild is on the same realm as the player
+		return format("%s.%s.%s", THIS_ACCOUNT, GetRealmName(), guild)
+	end
+	
+	-- realm not nil : guild is on a connected realm
+	
+	-- guild "unknwon" if it's not possible to match its short name to its long name
+	local longName = addon:GetLongRealmName(realm)
+	if not longName then return end
+	
+	return format("%s.%s.%s", THIS_ACCOUNT, longName, guild)
 end
 
 function addon:GetCharacter(name, realm, account)
@@ -532,7 +579,7 @@ function addon:GetGuilds(realm, account)
 	local accountKey, realmKey, guildKey
 	for k, _ in pairs(Guilds) do
 		accountKey, realmKey, guildKey = strsplit(".", k)
-
+		
 		if accountKey and realmKey then
 			if accountKey == account and realmKey == realm then
 				out[guildKey] = k
@@ -611,8 +658,6 @@ function addon:ClearAllData()
 	-- main module data
 	WipeCharacterTable(Characters)
 	WipeGuildTable(Guilds)
-
-	addon:ClearAllConnectedRealms()
 end
 
 function addon:GetRealms(account)
@@ -806,50 +851,28 @@ function addon:GetNameOfMain(player)
 end
 
 -- *** Connected Realms ***
-function addon:SetConnectedRealms(realmA, realmB)
-	-- save the connection between 2 realms in both directions
-	-- cr["realmA.realmB"] = true
-	-- cr["realmB.realmA"] = true
-	if realmA == realmB then return end		-- don't save the entry if both realms are identical.
-
-	local cr = addon.db.global.ConnectedRealms
-
-	cr[format("%s.%s", realmA, realmB)] = true
-	cr[format("%s.%s", realmB, realmA)] = true
+function addon:SetLongRealmName(realm, name)
+	addon.db.global.ShortToLongRealmNames[realm] = name
 end
 
-function addon:AreRealmsConnected(realmA, realmB)
-	-- realms are connected if there is an entry for "realmA.realmB" or "realmB.realmA"
-	local cr = addon.db.global.ConnectedRealms
-
-	if cr[format("%s.%s", realmA, realmB)] then return true end
-	if cr[format("%s.%s", realmB, realmA)] then return true end
-	return false
+function addon:GetLongRealmName(realm)
+	return (realm) and addon.db.global.ShortToLongRealmNames[realm] or nil
 end
 
 function addon:GetRealmsConnectedWith(realm)
-	local cr = addon.db.global.ConnectedRealms
+	local realms = addon.db.global.ShortToLongRealmNames
 	local out = {}
 
-	local realmA, realmB
-	for realmLink, _ in pairs(cr) do	-- browse all links
-		realmA, realmB = strsplit(".", realmLink)
-
-		if realmA == realm then				-- if searched realm is found ..
-			table.insert(out, realmB)		-- .. add it to the list
+	local autoCompleteRealms = GetAutoCompleteRealms()		-- this could return nil..
+	if autoCompleteRealms then
+		for _, shortName in pairs(autoCompleteRealms) do
+			local longName = realms[shortName]
+			
+			if longName and longName ~= THIS_REALM then
+				table.insert(out, longName)
+			end
 		end
 	end
-
+	
 	return out
-end
-
-function addon:ClearConnectedRealms(realmA, realmB)
-	local cr = addon.db.global.ConnectedRealms
-
-	cr[format("%s.%s", realmA, realmB)] = nil
-	cr[format("%s.%s", realmB, realmA)] = nil
-end
-
-function addon:ClearAllConnectedRealms()
-	wipe(addon.db.global.ConnectedRealms)
 end

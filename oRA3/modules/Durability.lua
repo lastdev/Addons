@@ -1,14 +1,13 @@
 
--- Durability is transmitted when the player dies or zones or closes a merchant window
--- Durability information will be available from the oRA3 gui for everyone.
+-- Durability is requested/transmitted when opening the list.
+-- This module is a display wrapper for LibDurability.
 
 local addonName, scope = ...
 local oRA = scope.addon
-local util = oRA.util
+local inTable = oRA.util.inTable
 local module = oRA:NewModule("Durability")
 local L = scope.locale
-
-module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
+local LD = LibStub("LibDurability")
 
 local durability = {}
 
@@ -18,13 +17,11 @@ function module:OnRegister()
 		L.durability,
 		durability,
 		L.name,
-		L.average,
-		L.minimum,
+		L.durability,
 		L.broken
 	)
-	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
-	oRA.RegisterCallback(self, "OnCommReceived")
+	oRA.RegisterCallback(self, "OnListSelected")
 	oRA.RegisterCallback(self, "OnGroupChanged")
 
 	SLASH_ORADURABILITY1 = "/radur"
@@ -34,52 +31,50 @@ function module:OnRegister()
 	end
 end
 
-function module:OnGroupChanged()
+function module:OnGroupChanged(_, _, members)
+	for index = #durability, 1, -1 do
+		local player = durability[index][1]
+		if not inTable(members, player) then
+			tremove(durability, index)
+		end
+	end
 	oRA:UpdateList(L.durability)
 end
 
-function module:OnStartup()
-	self:RegisterEvent("PLAYER_DEAD", "CheckDurability")
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "CheckDurability")
-	self:RegisterEvent("MERCHANT_CLOSED", "CheckDurability")
-
-	self:CheckDurability()
-end
 
 function module:OnShutdown()
 	wipe(durability)
-	self:UnregisterAllEvents()
 end
 
-function module:CheckDurability()
-	local cur, max, broken, vmin = 0, 0, 0, 100
-	for i = 1, 18 do
-		local imin, imax = GetInventoryItemDurability(i)
-		if imin and imax then
-			vmin = math.min(math.floor(imin / imax * 100), vmin)
-			if imin == 0 then broken = broken + 1 end
-			cur = cur + imin
-			max = max + imax
+function module:OnListSelected(_, list)
+	if list == L.durability then
+		-- Fill the list with all players
+		for unit in self:IterateGroup() do
+			local player = self:UnitName(unit)
+			if player then
+				local k = inTable(durability, player, 1)
+				if not k then
+					k = #durability + 1
+					durability[k] = { player }
+				end
+			end
 		end
+
+		LD:RequestDurability()
 	end
-	local perc = math.floor(cur / max * 100)
-	self:SendComm("Durability", perc, vmin, broken)
 end
 
-function module:OnCommReceived(_, sender, prefix, perc, minimum, broken)
-	if prefix == "RequestUpdate" then
-		self:CheckDurability()
-	elseif prefix == "Durability" then
-		local k = util.inTable(durability, sender, 1)
+do
+	local function update(percent, broken, player)
+		local k = inTable(durability, player, 1)
 		if not k then
-			durability[#durability + 1] = { sender }
+			durability[#durability + 1] = { player }
 			k = #durability
 		end
-		durability[k][2] = tonumber(perc)
-		durability[k][3] = tonumber(minimum)
-		durability[k][4] = tonumber(broken)
+		durability[k][2] = floor(tonumber(percent))
+		durability[k][3] = tonumber(broken)
 
 		oRA:UpdateList(L.durability)
 	end
+	LD:Register(module, update)
 end
-

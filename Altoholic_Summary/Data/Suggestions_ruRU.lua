@@ -2,13 +2,9 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "ruRU" then return end
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
 
 local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
@@ -17,7 +13,7 @@ addon.Suggestions = {
 
 	-- source : http://forums.worldofwarcraft.com/thread.html?topicId=102789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[TS.TAILORING] = {
 		{ 50, "До 50: Рулон льняной ткани" },
 		{ 70, "До 70: Льняная сумка" },
 		{ 75, "До 75: Усиленная льняная накидка" },
@@ -50,7 +46,7 @@ addon.Suggestions = {
 		{ 425, "До 425: Иссиня-черная ткань, Лунный тюль, или Чароткань\nСумка из ледяной ткани" },
 		{ 450, "До 450: Изготовьте любую вещь для получения очка,\nв зависимости от ваших потребностей" }
 	},
-	[BI["Leatherworking"]] = {
+	[TS.LEATHERWORKING] = {
 		{ 35, "До 35: Накладки из тонкой кожи" },
 		{ 55, "До 55: Обработанная легкая шкура" },
 		{ 85, "До 85: Тисненые кожаные перчатки" },
@@ -85,7 +81,7 @@ addon.Suggestions = {
 		{ 425, "До 425: Любую Меховую подкладку\nСумки для профессий" },
 		{ 450, "До 450: Изготовте любую вещь для получения очка,\nв зависимости от ваших потребностей" }
 	},
-	[BI["Engineering"]] = {
+	[TS.ENGINEERING] = {
 		{ 40, "До 40: Грубое взрывчатое вещество" },
 		{ 50, "До 50: Горсть медных винтов" },
 		{ 51, "Изготовьте один Тангенциальный вращатель" },
@@ -119,7 +115,7 @@ addon.Suggestions = {
 		{ 435, "До 435: Детали для набора инъекций маны" },
 		{ 450, "До 450: Изготовьте любую вещь для получения очка,\nв зависимости от ваших потребностей" }
 	},
-	[BI["Jewelcrafting"]] = {
+	[TS.JEWELCRAFTING] = {
 		{ 20, "До 20: Delicate Copper Wire" },
 		{ 30, "До 30: Rough Stone Statue" },
 		{ 50, "До 50: Tigerseye Band" },
@@ -151,7 +147,7 @@ addon.Suggestions = {
 		{ 365, "До 365: Ring of Arcane Shielding\nThe Sha'tar - Уважение" },
 		{ 375, "До 375: Transmute diamonds\nWorld drops (blue quality)\nПочтение с Sha'tar, Honor Hold, Thrallmar" }
 	},
-	[BI["Enchanting"]] = {
+	[TS.ENCHANTING] = {
 		{ 2, "До 2: Рунический медный жезл" },
 		{ 75, "До 75: Чары для наручей - здоровье I" },
 		{ 85, "До 85: Чары для наручей - отражение I" },
@@ -189,7 +185,7 @@ addon.Suggestions = {
 		{ 370, "До 370: Чары для перчаток - точные удары\nТребуется Почтение с Кенарийской экспедицией" },
 		{ 375, "До 375: Чары для кольца - целительная сила\nТребуется Почтение с Ша'таром" }
 	},
-	[BI["Blacksmithing"]] = {	
+	[TS.BLACKSMITHING] = {	
 		{ 25, "До 25: Rough Sharpening Stones" },
 		{ 45, "До 45: Rough Grinding Stones" },
 		{ 75, "До 75: Copper Chain Belt" },
@@ -227,7 +223,7 @@ addon.Suggestions = {
 		{ 400, "До 400: Spiked Cobalt Belt" },
 		{ 410, "До 410: Spiked Cobalt Bracers" },
 	},
-	[BI["Alchemy"]] = {	
+	[TS.ALCHEMY] = {	
 		{ 60, "До 60: Minor Healing Potion" },
 		{ 110, "До 110: Lesser Healing Potion" },
 		{ 140, "До 140: Healing Potion" },
@@ -356,7 +352,7 @@ addon.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[TS.FIRSTAID] = {
 		{ 40, "До 40: Linen Bandages" },
 		{ 80, "До 80: Heavy Linen Bandages\nBecome Journeyman at 50" },
 		{ 115, "До 115: Wool Bandages" },
@@ -370,7 +366,7 @@ addon.Suggestions = {
 		{ 360, "До 360: Netherweave Bandages\nBuy the book in the Temple of Telhamat (A) or in Falcon Watch (H)" },
 		{ 375, "До 375: Heavy Netherweave Bandages\nBuy the book in the Temple of Telhamat (A) or in Falcon Watch (H)" }
 	},
-	[BI["Cooking"]] = {
+	[TS.COOKING] = {
 		{ 40, "До 40: Хлеб с пряностями"	},
 		{ 85, "До 85: Копченая медвежатина, Пирожок с мясом краба" },
 		{ 100, "До 100: Cooked Crab Claw (A)\nDig Rat Stew (H)" },
@@ -386,7 +382,7 @@ addon.Suggestions = {
 		{ 375, "До 375: Crunchy Serpent\nMok'nathal Treats" }
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[TS.FISHING] = {
 		{ 50, "До 50: Любая начальная зона" },
 		{ 75, "До 75:\nВ каналах Штормграда\nВ прудах Оргриммара" },
 		{ 150, "До 150: В реке Предгорья Хилсбрада" },
@@ -400,7 +396,7 @@ addon.Suggestions = {
 		{ 375, "До 375: Лесу Тероккар, в Скеттисе\nНужено летающее верховое животное" }
 	},
 	
-	[BI["Archaeology"]] = {
+	[TS.ARCHAEOLOGY] = {
 		{ 300, "До 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "До 375: " .. continents[3]},
 		{ 450, "До 450: " .. continents[4]},

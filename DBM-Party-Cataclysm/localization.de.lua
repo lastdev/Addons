@@ -95,10 +95,6 @@ L:SetOptionLocalization{
 	PingBlitz	= "Pingt die Minimap, wenn General Umbriss dich anstürmt"
 }
 
-L:SetMiscLocalization{
-	Blitz		= "richtet seine Augen auf |cFFFF0000(%S+)"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -108,11 +104,6 @@ L= DBM:GetModLocalization(132)
 -- Drahga Shadowburner --
 -------------------------
 L= DBM:GetModLocalization(133)
-
-L:SetMiscLocalization{
-	ValionaYell	= "Drache, Ihr werdet tun, was ich sage! Fangt mich!",
-	Add			= "%s wirkt den Zauber"
-}
 
 ------------
 -- Erudax --
@@ -219,13 +210,8 @@ L:SetWarningLocalization{
 	specWarnPhase2Soon	= "Phase 2 in 5 Sekunden"
 }
 
-L:SetTimerLocalization({
-	timerPhase2 		= "Phase 2 beginnt"
-})
-
 L:SetOptionLocalization{
-	specWarnPhase2Soon	= "Spezialwarnung für baldige Phase 2 (5 Sekunden)",
-	timerPhase2 		= "Zeige Timer für den Beginn von Phase 2"
+	specWarnPhase2Soon	= "Spezialwarnung für baldige Phase 2 (5 Sekunden)"
 }
 
 -----------------------
@@ -356,14 +342,6 @@ L= DBM:GetModLocalization(115)
 -- Asaad --
 -----------
 L= DBM:GetModLocalization(116)
-
-L:SetOptionLocalization({
-	SpecWarnStaticCling	= "Spezialwarnung für $spell:87618"
-})
-
-L:SetWarningLocalization({
-	SpecWarnStaticCling	= "SPRING!"
-})
 
 ---------------------------
 --  The Throne of Tides  --
@@ -529,8 +507,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarnRevive		= "Verkünde die Anzahl der verbleibenden Geisterwiederbelebungen",
-	SpecWarnOhgan	= "Zeige Warnung, wenn Ohgan wiederbelebt wird",
-	SetIconOnOhgan	= "Setze ein Zeichen auf Ohgan, wenn er wiederbelebt wird"
+	SpecWarnOhgan	= "Zeige Warnung, wenn Ohgan wiederbelebt wird"
 }
 
 ----------------------

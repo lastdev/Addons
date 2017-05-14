@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Horsemen", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 203 $"):sub(12, -3))
 mod:SetCreatureID(16063, 16064, 16065, 30549)
 mod:SetEncounterID(1121)
 mod:SetModelID(10729)
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 -- local warnMarkSoon			= mod:NewAnnounce("WarningMarkSoon", 1, 28835, false)
 -- local warnMarkNow			= mod:NewAnnounce("WarningMarkNow", 2, 28835)
 
-local specWarnMarkOnPlayer	= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer", nil, nil, true)
+local specWarnMarkOnPlayer		= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer")
 
 mod:AddBoolOption("HealthFrame", true)
 

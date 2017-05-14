@@ -1,14 +1,10 @@
-﻿local addonName = "Altoholic"
+local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "frFR" then return end		-- ** French translation by Laumac **
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
 
 local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
@@ -17,7 +13,7 @@ addon.Suggestions = {
 
 	-- source : http://forums.worldofwarcraft.com/th...02789457&sid=1
 	-- ** Primary professions **
-	[BI["Tailoring"]] = {
+	[TS.TAILORING] = {
 		{ 50, "Atteindre 50: Rouleau d'\195\169toffe en lin" },
 		{ 70, "Atteindre 70: Sac en lin" },
 		{ 75, "Atteindre 75: Cape en lin renforc\195\169" },
@@ -57,7 +53,7 @@ addon.Suggestions = {
 		{ 440, "Atteindre 440: Sac en tisse-givre\n|cFFFFD700Devient vert au-dessus de 430 mais reste rentable" },
 		{ 450, "Atteindre 450: N'importe quel craft \195\169pique de haut niveau\nSinon continuer \195\160 faire des sacs\nvoire le sac glaciaire apr\195\168s 445 (exalt\195\169 Fils de Hodir)" }
 	},
-	[BI["Leatherworking"]] = {
+	[TS.LEATHERWORKING] = {
 		{ 35, "Atteindre 35: Renfort d'armure l\195\169ger" },
 		{ 55, "Atteindre 55: Peau l\195\169g\195\168re trait\195\169e" },
 		{ 85, "Atteindre 85: Gants en cuir estamp\195\169" },
@@ -98,7 +94,7 @@ addon.Suggestions = {
 		{ 440, "Atteindre 440: Renforts de jambe givrepeau ou \nArmure de jambe en \195\169cailles de glace\nSinon continuer sur les Prot\195\168ge-mains surjet\195\169s ou \195\169quivalent" },
 		{ 450, "Atteindre 450: N'importe quel craft \195\169pique de haut niveau\nCela reste inutile car aucun craft n\195\169c\195\169ssite d'\195\170tre plus de 440" }
 	},
-	[BI["Engineering"]] = {
+	[TS.ENGINEERING] = {
 		{ 40, "Atteindre 40: Poudre d'explosion basique" },
 		{ 50, "Atteindre 50: Poign\195\169e de boulons en cuivre" },
 		{ 51, "Cr\195\169er une Cl\195\169 plate" },
@@ -143,7 +139,7 @@ addon.Suggestions = {
 		{ 435, "Atteindre 435: Machine \195\160 bruit\nUtiliser les composants mis de cot\195\169" },
 		{ 450, "Atteindre 450: Couteau de l'arm\195\169e gnome\nPr\195\169voir un point vers la fin pour le craft de t\195\170te" }
 	},
-	[BI["Jewelcrafting"]] = {
+	[TS.JEWELCRAFTING] = {
 		{ 20, "Atteindre 20: Fil de cuivre d\195\169licat" },
 		{ 30, "Atteindre 30: Statue de pierre brute" },
 		{ 50, "Atteindre 50: Bague d'oeil de tigre" },
@@ -182,7 +178,7 @@ addon.Suggestions = {
 		{ 425, "Atteindre 425: Toute nouvelle gemme de Norfendre de qualit\195\169 bleue\nLes plus interessantes sont Saphir c\195\169leste solide, Rubis \195\169carlate \195\169clatant..." },
 		{ 450, "Atteindre 450: Faire des m\195\169ta-gemmes\nPenser \195\160 faire les qu\195\170tes journali\195\168res de Dalaran" }
 	},
-	[BI["Enchanting"]] = {
+	[TS.ENCHANTING] = {
 		{ 2, "Atteindre 2: B\195\162tonnet runique en cuivre" },
 		{ 75, "Atteindre 75: Ench. de brassards (Vie mineure)" },
 		{ 85, "Atteindre 85: Ench. de brassards (D\195\169viation mineure)" },
@@ -236,7 +232,7 @@ addon.Suggestions = {
 		{ 445, "Atteindre 445: Enchantement. de gants (Homme d'armes)\n|cFFFFD700Disponible chez Vanessa Sellers \195\160 Dalaran pour 4 \195\169clats de r\195\170ve" },
 		{ 450, "Atteindre 450: Enchantement. de bottes (Assaut sup\195\169rieur)\n|cFFFFD700Disponible chez Vanessa Sellers \195\160 Dalaran pour 4 \195\169clats de r\195\170ve" }
 	},
-	[BI["Blacksmithing"]] = {
+	[TS.BLACKSMITHING] = {
 		{ 25, "Atteindre 25: Pierre \195\160 aiguiser brute" },
 		{ 45, "Atteindre 45: Pierre de lest brute" },
 		{ 75, "Atteindre 75: Ceinture en anneaux de cuivre" },
@@ -287,7 +283,7 @@ addon.Suggestions = {
 		{ 445, "Atteindre 445: Cuissards d'intimidation" },
 		{ 450, "Atteindre 450: Fabriquer des pi\195\168ces \195\169piques utiles\nSinon continuer Cuissards d'intimidation (mais vert)\n" }
 	},
-	[BI["Alchemy"]] = { 
+	[TS.ALCHEMY] = { 
 		{ 60, "Atteindre 60: Potion de soins mineure" },
 		{ 110, "Atteindre 110: Potion de soins inf\195\169rieure" },
 		{ 140, "Atteindre 140: Potion de soins" },
@@ -369,7 +365,7 @@ addon.Suggestions = {
 	},
 
 	-- ** Secondary professions **
-	[BI["First Aid"]] = {
+	[TS.FIRSTAID] = {
 		{ 40, "Atteindre 40: Bandages en lin" },
 		{ 80, "Atteindre 80: Bandage \195\169pais en lin\nDevenir compagnon \195\160 50" },
 		{ 115, "Atteindre 115: Bandages en laine" },
@@ -387,7 +383,7 @@ addon.Suggestions = {
 		{ 400, "Atteindre 400: Bandage en tisse-givre\nValider niveau suivant au donneur de qu\195\170te secourisme" },
 		{ 450, "Atteindre 450: Bandage \195\169pais en tisse-givre\nLe manuel est un butin mondial est n\195\169c\195\169ssite d'\195\170tre au moins 390\nCertains conseillent les trolls de Zul'drak pour le trouver" }
 	},
-	[BI["Cooking"]] = {
+	[TS.COOKING] = {
 		{ 40, "Atteindre 40: Pain \195\169pic\195\169" },
 		{ 85, "Atteindre 85: Viande d'ours fum\195\169e, Beignet de crabe" },
 		{ 100, "Atteindre 100: Pince de crabe farcie (A)\nBrouet de rat (H)" },
@@ -408,7 +404,7 @@ addon.Suggestions = {
 		{ 450, "Atteindre 450: Toutes les recettes disponibles via les qu\195\170tes journali\195\168res de Dalaran" }
 	}, 
 	-- source: http://www.wowguideonline.com/fishing.html
-	[BI["Fishing"]] = {
+	[TS.FISHING] = {
 		{ 50, "Atteindre 50: Toute zone de d\195\169part" },
 		{ 75, "Atteindre 75: Les canaux \195\160 Hurlevent (A)\nLe bassin d'eau d'Orgrimmar (H)" },
 		{ 150, "Atteindre 150: Rivi\195\168re des contreforts de hautebrande" },
@@ -425,7 +421,7 @@ addon.Suggestions = {
 		{ 450, "Atteindre 450: Avoir de la patience et des appats\nVoir le maitre des p\195\170cheurs, pas besoin de manuel" }
 	},
 	
-	[BI["Archaeology"]] = {
+	[TS.ARCHAEOLOGY] = {
 		{ 300, "Atteindre 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "Atteindre 375: " .. continents[3]},
 		{ 450, "Atteindre 450: " .. continents[4]},

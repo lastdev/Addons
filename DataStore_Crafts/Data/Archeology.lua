@@ -1,19 +1,62 @@
-﻿local addonName = "DataStore_Crafts"
+local addonName = "DataStore_Crafts"
 local addon = _G[addonName]
 
 addon.artifactDB = {}
 
-for i = 1, 12 do
+-- 2016/08/09 : do not use GetNumArchaeologyRaces(), it might not return the proper value at this stage.
+-- 7.0 = hardcoding 18 races
+for i = 1, 18 do
 	addon.artifactDB[i] = {}
 end
 
-local currentRace = 1
+local RACE_DEMONIC = 1
+local RACE_HIGHMOUNTAIN_TAUREN = 2
+local RACE_HIGHBORNE = 3
+local RACE_OGRE = 4
+local RACE_DRAENOR_CLANS = 5
+local RACE_ARAKKOA = 6
+local RACE_MOGU = 7
+local RACE_PANDAREN = 8
+local RACE_MANTID = 9
+local RACE_VRYKUL = 10
+local RACE_TROLL = 11
+local RACE_TOL_VIR = 12
+local RACE_ORC = 13
+local RACE_NERUBIAN = 14
+local RACE_NIGHT_ELF = 15
+local RACE_FOSSIL = 16
+local RACE_DRAENEI = 17
+local RACE_DWARF = 18
+
+local currentRace = 0
 
 local function AddArtifact(itemID, spellID, rarity, fragments)
 	table.insert(addon.artifactDB[currentRace], { itemID = itemID, spellID = spellID, rarity = rarity, fragments = fragments })
 end
 
 -- Data taken from Professor, code adjusted for my needs (rarity levels too)
+
+currentRace = RACE_DEMONIC
+AddArtifact(130917, 196481, 0,  85)  -- Flayed-Skin Chronicle
+AddArtifact(130920, 196484, 0, 170)  -- Houndstooth Hauberk
+AddArtifact(130916, 196480, 0,  60)  -- Imp's Cup
+AddArtifact(130918, 196482, 0,  95)  -- Malformed Abyssal
+AddArtifact(130919, 196483, 0, 140)  -- Orb of Inner Chaos
+
+currentRace = RACE_HIGHMOUNTAIN_TAUREN
+AddArtifact(130914, 196478, 0, 115)  -- Drogbar Gem-Roller
+AddArtifact(130913, 196477, 0,  50)  -- Hand-Smoothed Pyrestone
+AddArtifact(130912, 196476, 0,  30)  -- Moosebone Fish-Hook
+AddArtifact(130915, 196479, 0, 105)  -- Stonewood Bow
+AddArtifact(130911, 196475, 0,  65)  -- Trailhead Drum
+
+currentRace = RACE_HIGHBORNE
+AddArtifact(130907, 196471, 0,  45)  -- Inert Leystone Charm
+AddArtifact(130910, 196474, 0, 100)  -- Nobleman's Letter Opener
+AddArtifact(130909, 196473, 0, 120)  -- Pre-War Highborne Tapestry
+AddArtifact(130908, 196472, 0,  50)  -- Quietwine Vial
+
+currentRace = RACE_DWARF
 AddArtifact(64489, 91227, 4, 150)  -- Staff of Sorcerer-Thane Thaurissan
 AddArtifact(64373, 90553, 3, 100)  -- Chalice of the Mountain Kings
 AddArtifact(64372, 90521, 3, 100)  -- Clockwork Gnome
@@ -47,7 +90,7 @@ AddArtifact(63111, 88909, 0,  28)  -- Wooden Whistle
 AddArtifact(64486, 91224, 0,  45)  -- Word of Empress Zoe
 AddArtifact(63110, 86865, 0,  30)  -- Worn Hunting Knife
 
-currentRace = 2	-- draenei
+currentRace = RACE_DRAENEI
 AddArtifact(64456, 90983, 3, 124)  -- Arrival of the Naaru
 AddArtifact(64457, 90984, 3, 130)  -- The Last Relic of Argus
 
@@ -61,7 +104,7 @@ AddArtifact(64444, 90864, 0,  46)  -- Scepter of the Nathrezim
 AddArtifact(64443, 90861, 0,  46)  -- Strange Silver Paperweight
 
 
-currentRace = 3	-- fossil
+currentRace = RACE_FOSSIL
 AddArtifact(60954, 90619, 4, 100)  -- Fossilized Raptor
 AddArtifact(69764, 98533, 4, 150)  -- Extinct Turtle Shell
 AddArtifact(60955, 89693, 3,  85)  -- Fossilized Hatchling
@@ -82,7 +125,7 @@ AddArtifact(63527, 89895, 0,  35)  -- Twisted Ammonite Shell
 AddArtifact(64387, 90618, 0,  35)  -- Vicious Ancient Fish
 
 
-currentRace = 4	-- night elf
+currentRace = RACE_NIGHT_ELF
 AddArtifact(64651, 91773, 4, 150)  -- Wisp Amulet
 AddArtifact(64645, 91757, 4, 150)  -- Tyrande's Favorite Doll
 AddArtifact(64646, 91761, 4, 150)  -- Bones of Transformation
@@ -111,7 +154,7 @@ AddArtifact(64378, 90609, 0,  35)  -- String of Small Pink Pearls
 AddArtifact(64650, 91769, 0,  45)  -- Umbra Crescent
 
 
-currentRace = 5	-- nerubian
+currentRace = RACE_NERUBIAN
 AddArtifact(64481, 91214, 4, 140)  -- Blessing of the Old God
 AddArtifact(64482, 91215, 4, 140)  -- Puzzle Box of Yogg-Saron
 
@@ -124,7 +167,7 @@ AddArtifact(64474, 91133, 0,  45)  -- Spidery Sundial
 AddArtifact(64480, 91211, 0,  45)  -- Vizier's Scrawled Streamer
 
 
-currentRace = 6	-- orc
+currentRace = RACE_ORC
 AddArtifact(64644, 90843, 4, 130)  -- Headdress of the First Shaman
 
 AddArtifact(64436, 90831, 0,  45)  -- Fiendish Whip
@@ -138,7 +181,7 @@ AddArtifact(64437, 90832, 0,  45)  -- Tile of Glazed Clay
 AddArtifact(64389, 90622, 0,  45)  -- Tiny Bronze Scorpion
 
 
-currentRace = 7	-- tol'vir
+currentRace = RACE_TOL_VIR
 AddArtifact(60847, 92137, 4, 150)  -- Crawling Claw
 AddArtifact(64881, 92145, 4, 150)  -- Pendant of the Scarab Storm
 AddArtifact(64904, 92168, 4, 150)  -- Ring of the Boy Emperor
@@ -155,7 +198,7 @@ AddArtifact(64654, 91780, 0,  45)  -- Soapstone Scarab Necklace
 AddArtifact(64655, 91782, 0,  45)  -- Tiny Oasis Mosaic
 
 
-currentRace = 8	-- troll
+currentRace = RACE_TROLL
 AddArtifact(64377, 90608, 4, 150)  -- Zin'rokh, Destroyer of Worlds
 AddArtifact(69824, 98588, 3, 100)  -- Voodoo Figurine
 AddArtifact(69777, 98556, 3, 100)  -- Haunted War Drum
@@ -176,7 +219,7 @@ AddArtifact(64374, 90558, 0,  35)  -- Tooth with Gold Filling
 AddArtifact(63115, 88262, 0,  27)  -- Zandalari Voodoo Doll
 
 
-currentRace = 9	-- vrykul
+currentRace = RACE_VRYKUL
 AddArtifact(64460, 90997, 4, 130)  -- Nifflevar Bearded Axe
 AddArtifact(69775, 98569, 3, 100)  -- Vrykul Drinking Horn
 
@@ -186,7 +229,7 @@ AddArtifact(64459, 90988, 0,  45)  -- Intricate Treasure Chest Key
 AddArtifact(64461, 91008, 0,  45)  -- Scramseax
 AddArtifact(64467, 91084, 0,  45)  -- Thorned Necklace
 
-currentRace = 10	-- Mantid
+currentRace = RACE_MANTID
 AddArtifact(95391, 139786, 3, 180)	-- Mantid Sky Reaver
 AddArtifact(95392, 139787, 3, 180)	-- Sonic Pulse Generator
 
@@ -199,7 +242,7 @@ AddArtifact(95380, 139783, 0, 50)	-- Mantid Lamp
 AddArtifact(95381, 139784, 0, 50)	-- Pollen Collector
 AddArtifact(95382, 139785, 0, 50)	-- Kypari Sap Container
 
-currentRace = 11	-- Pandaren
+currentRace = RACE_PANDAREN
 AddArtifact(89685, 113981, 3, 180)  -- Spear of Xuen
 AddArtifact(89684, 113980, 3, 180)  -- Umbrella of Chi-Ji
 
@@ -215,7 +258,7 @@ AddArtifact(79899, 113973, 0,  50)  -- Walking Cane of Brewfather Ren Yun
 AddArtifact(79896, 113968, 0,  50)  -- Pandaren Tea Set
 
 
-currentRace = 12	-- Mogu
+currentRace = RACE_MOGU
 AddArtifact(89614, 113993, 3, 180)  -- Anatomical Dummy
 AddArtifact(89611, 113992, 3, 180)  -- Quilen Statuette
 
@@ -229,3 +272,56 @@ AddArtifact(79910, 113984, 0,  50)  -- Terracotta Arm
 AddArtifact(79912, 113986, 0,  50)  -- Thunder King Insignia
 AddArtifact(79915, 113989, 0,  50)  -- Warlord's Branding Iron
 AddArtifact(79917, 113991, 0,  50)  -- Worn Monument Ledger
+
+currentRace = RACE_ARAKKOA
+AddArtifact(117382, 168331, 3, 190)  -- Beakbreaker of Terokk
+AddArtifact(117354, 172460, 2, 250)  -- Ancient Nest Guardian
+
+AddArtifact(114197, 168321, 0, 45)  -- Dreamcatcher
+AddArtifact(114198, 168322, 0, 55)  -- Burial Urn
+AddArtifact(114199, 168323, 0, 50)  -- Decree Scrolls
+AddArtifact(114200, 168324, 0, 45)  -- Solar Orb
+AddArtifact(114201, 168325, 0, 60)  -- Sundial
+AddArtifact(114202, 168326, 0, 50)  -- Talonpriest Mask
+AddArtifact(114203, 168327, 0, 45)  -- Outcast Dreamcatcher
+AddArtifact(114204, 168328, 0, 70)  -- Apexis Crystal
+AddArtifact(114205, 168329, 0, 65)  -- Apexis Hieroglyph
+AddArtifact(114206, 168330, 0, 50)  -- Apexis Scroll
+
+currentRace = RACE_DRAENOR_CLANS
+AddArtifact(117380, 172466, 3, 175)  -- Ancient Frostwolf Fang
+AddArtifact(116985, 172459, 3, 180)  -- Headdress of the First Shaman
+
+AddArtifact(114141, 168290, 0, 50)  -- Fang-Scarred Frostwolf Axe
+AddArtifact(114143, 168291, 0, 60)  -- Frostwolf Ancestry Scrimshaw
+AddArtifact(114145, 168292, 0, 45)  -- Wolfskin Snowshoes
+AddArtifact(114147, 168293, 0, 45)  -- Warsinger's Drums
+AddArtifact(114149, 168294, 0, 55)  -- Screaming Bullroarer
+AddArtifact(114151, 168295, 0, 60)  -- Warsong Ceremonial Pike
+AddArtifact(114153, 168296, 0, 50)  -- Metalworker's Hammer
+AddArtifact(114155, 168297, 0, 65)  -- Elemental Bellows
+AddArtifact(114157, 168298, 0, 50)  -- Blackrock Razor
+AddArtifact(114159, 168299, 0, 45)  -- Weighted Chopping Axe
+AddArtifact(114161, 168300, 0, 60)  -- Hooked Dagger
+AddArtifact(114163, 168301, 0, 45)  -- Barbed Fishing Hook
+AddArtifact(114167, 168303, 0, 40)  -- Ceremonial Tattoo Needles
+AddArtifact(114169, 168304, 0, 45)  -- Cracked Ivory Idol
+AddArtifact(114171, 168305, 0, 55)  -- Ancestral Talisman
+AddArtifact(114173, 168306, 0, 50)  -- Flask of Blazegrease
+AddArtifact(114175, 168307, 0, 55)  -- Gronn-Tooth Necklace
+AddArtifact(114177, 168308, 0, 40)  -- Doomsday Prophecy
+
+currentRace = RACE_OGRE
+AddArtifact(117384, 168320, 3, 200)  -- Warmaul of the Warmaul Chieftain
+AddArtifact(117385, 168319, 3, 150)  -- Sorcerer-King Toe Ring
+
+AddArtifact(114181, 168309, 0, 40)  -- Stonemaul Succession Stone
+AddArtifact(114183, 168310, 0, 55)  -- Stone Manacles
+AddArtifact(114185, 168311, 0, 45)  -- Ogre Figurine
+AddArtifact(114187, 168312, 0, 55)  -- Pictogram Carving
+AddArtifact(114189, 168313, 0, 50)  -- Gladiator's Shield
+AddArtifact(114190, 168314, 0, 55)  -- Mortar and Pestle
+AddArtifact(114191, 168315, 0, 70)  -- Eye of Har'gunn the Blind
+AddArtifact(114192, 168316, 0, 50)  -- Stone Dentures
+AddArtifact(114193, 168317, 0, 55)  -- Rylak Riding Harness
+AddArtifact(114194, 168318, 0, 45)  -- Imperial Decree Stele

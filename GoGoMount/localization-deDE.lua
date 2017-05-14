@@ -10,8 +10,8 @@
 		Tailoring = "Schneiderei",
 	},
 	String = {
-		AutoExcludeFlyingMountsInNoFlyAreas = "Flugreittiere in Zonen, in denen diese nicht erlaubt sind, ausschließen", -- Needs review
-		AutoExcludeFlyingMountsInNoFlyAreas_Long = "Ist diese Option aktiviert, wird GoGoMount automatisch alle Flugreittiere aus der Zufallsliste enternen, wenn angenommen wird, dass du hier nicht fliegen kannst. Dies ist im Grunde das gleiche wie die Tastenzuweisung #2 von GoGoMount zu verwenden. Dies ist während des Levelns sinnvoll, in Schlachtfeldern, usw. Beachte, dass wenn deine Liste nur Flugreittiere enthält und du versuchst in einem Schlachtfeld ein Reittier zu benutzen, du gar nicht aufsteigen wirst.", -- Needs review
+		AutoExcludeFlyingMountsInNoFlyAreas = "Flugreittiere in Zonen, in denen diese nicht erlaubt sind, ausschließen",
+		AutoExcludeFlyingMountsInNoFlyAreas_Long = "Ist diese Option aktiviert, wird GoGoMount automatisch alle Flugreittiere aus der Zufallsliste entfernen, wenn angenommen wird, dass du hier nicht fliegen kannst. Dies ist im Grunde das gleiche, wie die Tastenzuweisung #2 von GoGoMount zu verwenden. Dies ist während des Levelns, in Schlachtfeldern usw. sinnvoll. Beachte, dass du gar nicht aufsteigen wirst, wenn deine Liste nur Flugreittiere enthält und du versuchst in einem Schlachtfeld ein Reittier zu benutzen.", -- Needs review
 		AutomaticallyRemoveBuffs = "Zauber, die das Aufsitzen verhindern, automatisch entfernen",
 		AutoStartCrusaderAura = "Aura des Kreuzfahrers automatisch verwenden",
 		AutoStartCrusaderAura_Long = "Aktiviert automatisch die Aura des Kreuzfahrers, wenn GoGoMount zum Aufsteigen verwendet wird.",
@@ -19,7 +19,7 @@
 		ClearGlobalFavoriteMounts = "Lösche global favorisierte Mounts",
 		CurrentZone = "Aktuelle Zone",
 		CurrentZoneDescription = "Reittiere, die hier als Zonenfavoriten markiert sind, sind die einzigen, die von GoGoMount in dieser Zone verwendet werden. Alle anderen Reittiere und Gestaltwandlungen werden ignoriert. Wird diese Liste geleert, kann GoGoMount wieder alle Reittiere verwenden (oder die globalen Favoriten, falls festgelegt).",
-		CurrentZoneExclusions = "Aktuelle Zonen Ausnahmen",
+		CurrentZoneExclusions = "Aktuelle Zonenausnahmen",
 		CurrentZoneFavorites = "Favoriten der aktuellen Zone",
 		DisableFlyingFromWater = "Verhindere Fliegen vom Wasser",
 		DisableInCombat = "GoGoMount-Buttons während des Kampfes deaktivieren",
@@ -42,7 +42,7 @@
 		NewVersionFound = "Eine aktualisierte Version von GoGoMount ist verfügbar und wird verwendet von ",
 		NoShapeInRandom = "Gestaltwandlung und Reittiere nicht gemeinsam in einer Zufallsliste verwenden.",
 		PaladinOptions = "Paladin-Einstellungen",
-		RemoveBuffs = "Entferne Buffs die das Aufsitzen verhindern",
+		RemoveBuffs = "Entferne Buffs, die das Aufsitzen verhindern",
 		RemoveBuffs_Long = "GoGoMount wird versuchen, aus Zaubern und Gegenständen resultierende Stärkungszauber und Gestaltwandlungen zu entfernen, die das Aufsteigen verhindern. Dies funktioniert nur für bekannte Stärkungszauber und in einigen Fällen muss der GoGoMount-Button zweimal geklickt werden.",
 		ShamanOptions = "Schamanen-Optionen",
 		ShamanSingleClick = "Mit einem Klick aus der Geisterwolf-Form aufsitzen anstatt abzusitzen",
@@ -57,7 +57,7 @@
 	},
 	Zone = {
 		AbyssalDepths = "Abyssische Tiefen",
-		AmaniMountains = "Amanipass", -- Needs review
+		AmaniMountains = "Amanipass",
 		AQ40 = "Tempel von Ahn'Qiraj",
 		AzuremystIsle = "Azurmythosinsel",
 		BloodmystIsle = "Blutmythosinsel",
@@ -94,7 +94,7 @@
 		TheVioletCitadel = "Die Violette Zitadelle",
 		TheVortexPinnacle = "Der Vortexgipfel",
 		TolBarad = "Tol Barad",
-		TolBaradPeninsula = "Tol Barad Halbinsel",
+		TolBaradPeninsula = "Halbinsel von Tol Barad",
 		TwistingNether = "Wirbelnder Nether",
 		Vashjir = "Vashj'ir",
 		Wintergrasp = "Tausendwintersee",

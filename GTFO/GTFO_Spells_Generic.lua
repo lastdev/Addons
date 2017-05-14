@@ -19,6 +19,7 @@ Sample:
 		trivialPercent = 0;
 		alwaysAlert = true;
 		applicationOnly = true;
+		ignoreApplication = true;
 		minimumStacks = 1;
 		maximumStacks = 5;
 		specificMobs = { 123, 234, 345 };
@@ -116,12 +117,14 @@ GTFO.SpellID["5740"] = {
 	--desc = "Rain of Fire (PvP)";
 	trivialPercent = 0;
 	sound = 2;
+	ignoreSelfInflicted = true;
 };
 
 GTFO.SpellID["42223"] = {
 	--desc = "Rain of Fire (PvP)";
 	trivialPercent = 0;
 	sound = 2;
+	ignoreSelfInflicted = true;
 };
 
 GTFO.SpellID["5857"] = {

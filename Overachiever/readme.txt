@@ -1,5 +1,5 @@
 
-Overachiever v0.81
+Overachiever v0.99.7
 ==============================
 
 Author: Tuhljin
@@ -26,13 +26,14 @@ Achievement-specific:
 * Automatically track exploration achievements as you travel (if desired).
 * Critters' tooltips remind you which ones you need to earn "To All The Squirrels I've Loved Before."
 * "Well Read" and "Higher Learning": Add whether you've read a relevant book to its tooltip.
-* "The Scavenger," "Outland Angler," and "Northrend Angler": Show whether you've fished a node in its tooltip.
+* "The Scavenger," "Outland Angler," and "Northrend Angler", etc.: Show whether you've fished a node in its tooltip.
 * "Let It Snow" and "Fistful of Love": Show whether you need to use a Handful of Snowflakes or a Handful of Rose
   Petals on players in their tooltips.
 * "Shake Your Bunny-Maker": Show whether you need to use Spring Flowers on players in their tooltips. Enemy players
   of an unknown level are assumed to be at least level 18.
 * "It's Happy Hour Somewhere" and "Tastes Like Chicken": Show whether you've consumed a food or drink item.
 * Select a sound effect to play when one of the above reminders show up in a tooltip if you need to do something.
+* And many more.
 
 Options can be found using the /oa command or at Interface Options -> AddOns tab -> Overachiever.
 
@@ -63,7 +64,7 @@ SLASH COMMANDS:
 
 - NEW: /achsilent, /achs
 
-  These commands silently search for the first matching achievement and display it, useful if you don't want text
+  These commands silently search for the first matching achievement and display it. Useful if you don't want text
   added to the chat log.
 
   Example A: /achs gold
@@ -107,11 +108,164 @@ Change log
 
 The change log lists changes of particular note to users, not every change made.
 
+v0.99.7
+- Holiday/Event Toasts:
+-- Added option to control the appearance of PvP Brawl toasts. Disabled by default.
+-- Fix certain timewalking events being treated as holidays instead of dungeon events.
+-- Fix failure to load texture for micro-holidays that take up two days in the calendar.
+
+v0.99.6
+- Updated for WoW patch 7.2.
+- "Compare progress in others' links" option no longer adds a line indicating you completed the achievement (and when) because WoW 7.2 has made that redundant.
+- Suggestions Tab:
+-- Added suggestions for Broken Shore, Cathedral of Eternal Night, and Tomb of Sargeras, and additional suggestions for class order halls.
+-- Suggest the new class armor set achievements in the appropriate instances, from Molten Core to Tomb of Sargeras.
+
+v0.99.5
+- New option added for toast notifications to control whether they will be hidden automatically (without interaction).
+- Made toast notifications more reliable.
+- Fix failure to load texture for one-day micro-holidays' toast nofications.
+- Suggestions Tab: Suggest "Roll Club" in Vale of Eternal Blossoms.
+
+v0.99.4
+- New feature: Toast notifications for today's holidays/events. By default, today's holidays are displayed upon entering the game world. Clicking their toast frames will display related achievements in the Suggestions tab. Notifications for micro-holidays, bonus events, and dungeon events are also available but they are disabled by default.
+- Separated battleground-win achievements from the option for auto-tracking timed achievements. The new option ("Auto-track timed battleground achievements") will also automatically untrack achievements it tracked upon leaving the battleground. The new implementation should fix an issue where the wrong achievements were automatically tracked in battlegrounds.
+- Suggestions Tab:
+-- Added suggestions for Brawler's Guild.
+-- Fixed suggestion for Temple of Ahn'Qiraj not appearing in the instance.
+-- Fixed criteria-specific suggestions for "Savage Hero".
+- "Adventurer of Highmountain": Fixed inadvertent swap of two criteria (related to recently spotted objectives).
+
+v0.99.3
+- Fix error on startup for characters Overachiever hasn't seen before.
+
+v0.99.2
+- There can now be multiple objectives per achievement marked as a "Recently spotted objective", each individually tracked for the purposes of the Recent Reminders expiration time.
+- Improved the way tooltip reminders are handled when the moused-over item has multiple associated achievements. Multiple lines should more reliably appear when applicable, and if two lines would be the same, they are consolidated (with extra text indicating the number of achievements that line applies to). (This should be extended to objects and players/NPCs in a future release.)
+- Recent Reminders now expire after 3 minutes, up from 2.
+- Suggestions Tab:
+-- Added suggestions for these holidays/events: Lunar Festival, Love is in the Air, Noblegarden, Children's Week, Midsummer Fire Festival, Pirates' Day.
+-- Fix suggestions for Assault on Violet Hold (dungeon) not showing automatically.
+-- Suggest "The Garrison Campaign" at the player garrison.
+-- When looking up suggestions while in an instance, try to first use instance name instead of zone name.
+- Attempt to prevent unneeded calls to time-consuming statistic-reading related to the consumed item tracking system by only proceeding if we detect a possible statistic change.
+
+v0.99.1
+- "Adventurer of Azsuna", "Adventurer of Val'sharah": Added "need to kill" reminders for the criteria that needed manual entry of mob IDs.
+- "Adventurer of Highmountain": Fixed incorrect "Recently spotted objective" text.
+- Suggestions Tab: Fix inconsistency with the filter where a complete achievement is considered incomplete if it was suggested because of a criteria (the criteria being specific to your location while the achievement's other criteria are for elsewhere) and that criteria is incomplete for the current character.
+
+v0.99
+* HIGHLIGHT: New feature! You can now hide specific suggestions so they aren't shown to the current character. Use the "Show Hidden" checkbox or enter "hidden" into the Location field to see what you've hidden and "unhide" it, as needed.
+- Moved key bindings to AddOns category.
+- Overachiever's dropdown menus now respond to clicks anywhere instead of only on the down-arrow button.
+- Made the default UI's "Achievement Filter" dropdown respond to clicks anywhere instead of only on the down-arrow button.
+- "Adventurer of Highmountain", "Adventurer of Stormheim", "Adventurer of Suramar": Added "need to kill" reminders for these achievements. (Unlike the other Legion "Adventurer" achievements, they require every mob ID to be entered manually.) At this time, their reminders are only for NPCs that need to be killed; does not show a tooltip for interacting with objects (but if an object spawns an NPC that should be killed, it will show on the NPC).
+- Suggestions Tab:
+-- Ability to hide suggestions, as mentioned above.
+-- Fix issue where the current instance's difficulty could be improperly detected, resulting in missing/wrong suggestions.
+-- Suggest "Underbelly Tycoon" in correct zone (Dalaran (Broken Isles)).
+-- Updated player garrison suggestions.
+-- Fix failure to show suggestions for subzones of Shadowmoon Valley (Draenor) and Frostfire Ridge other than the garrison.
+- Make TjBagWatch library a little more CPU efficient.
+
+v0.98
+- Updated for WoW patch 7.1.
+- Suggestions Tab: Added suggestions for Return to Karazhan (dungeon), Trial of Valor (raid), and the new Suramar storylines ("Insurrection").
+- Search Tab: "Name" field is now "Name or ID", allowing searches by achievement ID.
+
+v0.97
+- Suggestions Tab: Added additional suggestions for Draenor zones/dungeons/raids and Cataclysm raids. (Thanks to chrisnolanca for many of these.)
+- "Draenor Angler" (new): Added an option to display a reminder tooltip for fishing nodes that you need to fish from. The Recent Reminders that result will actually be for its criteria achievements, since it is a meta-achievement.
+- Now shows "Already fished" tooltip even if the entire achievement is complete (if the option is enabled) unless the achievement only required a certain number of fish from a list to be fished ("Limnologist", "Oceanographer").
+- Fix detection of fishing poles for non-English locales.
+- Fix "Pandarian Angler" reminder tooltips being shown based on the wrong option.
+- Fixed issue where the position of the draggable Achievement UI was not used despite the "Remember position" option being enabled. The option once again divorces the Achievement UI from the positioning system used by Character Info, the Spellbook, etc.
+- Attempt to fix addon compatibility issue resulting in an error message the first time the achievement frame is opened if Overachiever's draggable Achievement UI option is enabled.
+- Tabs module: Fix problem where an achievement that was given a blue background due to being a future step of a series continued to use that background after it became the current step (because an achievement was completed that session).
+
+v0.96
+- New option added to prevent the reminder sound from being triggered by needing to kill a creature when you're already in combat with it. (Enabled by default.)
+- Suggestions Tab: Fix failure to default to suggestions for Ironforge when in that zone.
+- Fix addon compatibility issue resulting in an error on startup for some users.
+
+v0.95
+- New option: Add tooltip in achievement UI giving your character's progress on quantity-based achievements which were earned on your account but not with the current character.
+- Tabs module: The new Related tab has been implemented, allowing you to better see a specified base achievement's related achievements. Ctrl+shift+click on an achievement in the UI or on an achievement link to specify the achievement and open the tab. ("Related" achievements are those that are in the same series as the base, are one of the criteria of the base or of another in its series, or have as one of their own criteria either the base or an achievement in its series).
+- Suggestions Tab:
+-- New option: Display graphical notices next to the achievement frame indicating today's holiday events. Click a notice to get related suggestions.
+-- Added suggestions for these holidays/events: Brewfest, Darkmoon Faire, Hallow's End, Day of the Dead, Pilgrim's Bounty, Feast of Winter Veil (alias Winter Veil). Ties in to the notice feature mentioned above or you can see them manually by entering the holiday name into the Suggestions tab.
+- Watch Tab: Fixed an issue where, when naming a new list, hitting Enter ignored whether the name was valid.
+- Slash command /oa now opens to the main options panel. However, the sub-panels list is expanded so you can easily get to Reminder Tooltips options.
+- Fixed some visual elements of the options panel and Tabs module (missing background colors, etc.).
+
+v0.94
+- "Draenor Cuisine" (new): Added to the consumed item tracking system.
+- "Brewfest Diet" (new): Added options to display a reminder tooltip for Brewfest food you need to eat.
+- "Fairegoer's Feast" (new): Added options to display a reminder tooltip for Darkmoon Faire food you need to eat.
+- The "Recently spotted objective" feature now works with items you need to consume.
+- Trade module: "The Draenor Gourmet" and "The Legion Menu" are now considered when determining if you need to cook a recipe.
+- Stopped a crash that could occur if you attempt to open to an achievement that is really a statistic.
+- Fixed an issue where your progress was being added to achievement tooltips when doing so was redundant.
+- The "Creature killed?" option for general Kill Creature Achievements now defaults to being enabled. (Your setting won't change if you are upgrading from a previous version of the addon.)
+- Suggestions Tab:
+-- Can now tell the different "Shadowmoon Valley" and "Nagrand" zones apart.
+-- Added several new suggestions for the Darkmoon Faire.
+-- Moved "Weed Whacker" suggestion to The Everbloom, where it belongs.
+-- Added other suggestions for The Everbloom so "Weed Whacker" doesn't feel lonely.
+-- Added suggestions for the player garrison.
+-- Added additional suggestions for some other Draenor zones.
+
+v0.93
+- Fix an issue where the tooltip disappears when it shouldn't. (When this was depends on user's other addons.)
+
+v0.92
+- New options: Can now react to the Achievement Progress toast by tracking the achievement, linking the achievement and showing the completed criteria in the chat log, and/or adding the achievement to the Suggestions tab as a "Recent Reminder".
+- Added a "Recently spotted objective" tooltip for certain types of achievements in the achievement UI when they are on the Recent Reminders list. The tooltip indicates what was seen that triggered the reminder. (E.g., it would show the name of the mob that you need to kill or the player you need to blast with your Turkey Shooter.) Helpful when you briefly run the mouse over something that triggers the reminder sound (if you turned that on!) but you don't know what it was.
+- Fixed reminder tooltips not showing for achievements that identified the mob by ID (non-critter "need to kill" achievements).
+- Fixed reminder tooltips for world objects disappearing after a short while due to the default tooltip resetting its text periodically.
+- Fixed reminder tooltips for world objects sometimes not showing if the tooltip previously showed mob data.
+- Attempt to fix compatibility issue with other addons resulting in an error that appears when the achievement frame is opened.
+- Fixed reminder tooltips for certain fishing nodes not showing. (Note that, like several other features, this is localization-dependent. If it doesn't work with a non-English locale, you can help fix this by contributing on CurseForge. The relevant phrase key in this case is "ACH_FISHSCHOOL_FORMAT". If you see a node I missed in English, let me know.)
+
+v0.91
+- Suggestions Tab:
+-- Added numerous suggestions for Legion zones, dungeons, and raids.
+-- Added "Mythic" to instance difficulty override dropdown.
+-- Now considers the different "Dalaran" zones individually (so suggestions for Dalaran in Northrend don't show in other Dalaran zones).
+
+v0.90
+- Updated for WoW patch 7.0.x. Updated TOC and fixed several errors. (Haven't added new suggestions yet.)
+- Fixed problem where reminder sounds didn't play.
+- Added some new reminder sounds (from existing sound effects).
+- "The Stockade" zone (instance) was renamed at some point to "Stormwind Stockade". Updated the related suggestion so it once again shows when in that zone.
+
+v0.84
+- Workaround for a WoW bug where the API gives the wrong count of achievements in a category. This should fix debug
+  message spam when doing an achievement search as well as an error when searching by achievement criteria (or
+  searching by "Any").
+
+v0.83
+- Updated for WoW patch 6.2.
+- Suggestions Tab: Added suggestions for Tanaan Jungle and the "storylines" and "bonus objectives" achievements for the
+  other Draenor zones.
+
+v0.82
+- Updated for WoW patch 6.1.
+- Suggestions Tab: Added suggestions for Ashran.
+- Attempt to fix an error that appeared upon completion of achievements and certain instances.
+- Fixed the options panels not being populated when first shown.
+- Fixed "/oa" and related slash commands not opening the correct options panel if the UI options window hadn't been
+  opened before in that session.
+
 v0.81
 - Suggestions Tab: Added new Darkmoon Faire suggestions.
-- Fixed issue where all checkboxes start as checked in the Overachiever options panels even if the saved option was really false/disabled.
-- Fixed an error related to auto-tracking. (This resulted in error messages when traveling from zone to zone if the exploration auto-tracking option was enabled.)
-- "Auto-track timed achievements" option is now enabled by default. (No change if not using a fresh install of the addon.)
+- Fixed issue where all checkboxes start as checked in the Overachiever options panels even if the saved option was
+  really false/disabled.
+- Fixed an error related to auto-tracking. (This resulted in error messages when traveling from zone to zone if the
+  exploration auto-tracking option was enabled.)
+- "Auto-track timed achievements" option is now enabled by default. (No change if not using a fresh install of the
+  addon.)
 
 v0.80
 - Initial updates for WoW patch 6.0.x. Fixes the most common errors.
@@ -450,8 +604,7 @@ v0.32
   names of any meta-achievements that list this achievement as a criteria.
 - Changed achievement sorting so that two strings beginning with numbers compare the numbers first. This means
   "5 Exalted Reputations" is now listed before "20 Exalted Reputations," for example.
-- Updated most localizations. Translations are generously provided by users like you! Please help contribute if you
-  are able: http://wow.curseforge.com/projects/overachiever/localization/
+- Updated most localizations. Translations are generously provided by users like you! Please help contribute if you  are able: http://wow.curseforge.com/projects/overachiever/localization/
 
 v0.31
 - Suggestions Tab: Many new suggestions based on your current location are possible, including those for: completing

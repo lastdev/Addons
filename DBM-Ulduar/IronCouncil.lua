@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 234 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
+mod:DisableEEKillDetection()--Fires for first one dying not last
 mod:SetModelID(28344)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
@@ -32,7 +33,7 @@ local warnChainlight			= mod:NewSpellAnnounce(64215, 1)
 local timerOverload				= mod:NewCastTimer(6, 63481)
 local timerLightningWhirl		= mod:NewCastTimer(5, 63483)
 local specwarnLightningTendrils	= mod:NewSpecialWarningRun(63486, nil, nil, nil, 4)
-local timerLightningTendrils	= mod:NewBuffActiveTimer(27, 63486)
+local timerLightningTendrils	= mod:NewBuffActiveTimer(27, 63486, nil, nil, nil, 6)
 local specwarnOverload			= mod:NewSpecialWarningRun(63481, nil, nil, nil, 4) 
 mod:AddBoolOption("AlwaysWarnOnOverload", false, "announce")
 
@@ -56,8 +57,8 @@ local warnShieldofRunes			= mod:NewSpellAnnounce(63489, 2)
 local warnRuneofSummoning		= mod:NewSpellAnnounce(62273, 3)
 local specwarnRuneofDeath		= mod:NewSpecialWarningMove(63490)
 local specWarnRuneofShields		= mod:NewSpecialWarningDispel(63967, "MagicDispeller")
-local timerRuneofDeath			= mod:NewCDTimer(30, 63490)
-local timerRuneofPower			= mod:NewCDTimer(30, 61974)
+local timerRuneofDeath			= mod:NewCDTimer(30, 63490, nil, nil, nil, 3)
+local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5)
 
 local enrageTimer				= mod:NewBerserkTimer(900)
 

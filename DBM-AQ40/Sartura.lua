@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Sartura", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 500 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
 mod:SetCreatureID(15516)
+mod:SetEncounterID(711)
 mod:SetModelID(15583)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH target focus mouseover"
+	"SPELL_CAST_SUCCESS 26083 26082 8269",
+	"UNIT_HEALTH boss1"
 )
 
 local warnEnrageSoon	= mod:NewSoonAnnounce(8269, 2)

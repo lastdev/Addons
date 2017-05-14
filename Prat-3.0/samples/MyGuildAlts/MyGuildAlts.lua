@@ -1,4 +1,4 @@
-﻿-- This is just an example, but you can fill it with alt = main entries
+-- This is just an example, but you can fill it with alt = main entries
 local alts = {
     somealt1 = "somemain1",
     somealt2 = "somemain2",

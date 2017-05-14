@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: EnchantrixBarker
-	Revision: $Id: BarkerStrings.lua 5402 2013-04-01 14:03:25Z brykrys $
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: BarkerStrings.lua 5641 2016-08-04 02:23:06Z ccox $
+	Version: 7.5.5714 (TasmanianThylacine)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -544,7 +544,7 @@ EnchantrixBarkerLocalizations = {
 		["EnchSearchDamage1"]	= "points? of damage";
 		["EnchSearchDamage2"]	= "\+[0-9]+ damage";
 		["EnchSearchDefense"]	= "defense";
-		["EnchSearchDMGAbsorption"]	= "absorption";
+		["EnchSearchDMGAbsorption"]	= "points of damage absorption";	-- CHANGE
 		["EnchSearchFireRes"]	= "fire resistance";
 		["EnchSearchFrostRes"]	= "frost resistance";
 		["EnchSearchHealing"]	= "healing";
@@ -593,6 +593,8 @@ EnchantrixBarkerLocalizations = {
 		["TwoHandWeapon"]	= "2H Weapon";
 		["Undercity"]	= "Undercity";
 		["Weapon"]	= "Weapon";
+		["Dalaran"] = "Dalaran";	-- NEW
+		["ShortDalaran"] = "Dal";	-- NEW
 
 		-- Section: Generic Messages
 		["BarkerLoaded"]	= "Enchantrix Barker Loaded...";
@@ -629,6 +631,7 @@ EnchantrixBarkerLocalizations = {
 		["SPI"]	= "SPI";
 		["STA"]	= "STA";
 		["STR"]	= "STR";
+		["Other"] = "Other";	-- NEW
 
 		-- Section: Tooltip Messages
 		["FrmtBarkerPrice"]	= "Barker Price (%d%% margin)";
@@ -705,7 +708,8 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsStrengthPriority"]	= "Strength";
 		["BarkerOptionsStrengthPriorityTooltip"]	= "The priority score for Strength enchants.";
 		["BarkerOptionsTab1Title"]	= "Profit and Price Priorities";
-
+		["BarkerCannotBeAppliedHigher"] = ". cannot be applied to items higher than level %d+.";	-- NEW
+		["BarkerAddionalPointsOf"] = "additional points- of ";	-- NEW
 	};
 
 	esES = {

@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
 mod:SetCreatureID(22887)
+mod:SetEncounterID(601)
 mod:SetModelID(21174)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -10,8 +11,8 @@ mod:SetUsedIcons(8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_AURA_APPLIED 39872 39837",
+	"SPELL_AURA_REMOVED 39837"
 )
 
 local warnShield		= mod:NewSpellAnnounce(39872, 4)
@@ -19,7 +20,8 @@ local warnShieldSoon	= mod:NewPreWarnAnnounce(39872, 10, 3)
 local warnSpine			= mod:NewTargetAnnounce(39837, 3)
 
 local yellSpine			= mod:NewYell(39837)
-local timerShield		= mod:NewCDTimer(58, 39872)
+
+local timerShield		= mod:NewCDTimer(58, 39872, nil, nil, nil, 5)
 
 local berserkTimer		= mod:NewBerserkTimer(480)
 

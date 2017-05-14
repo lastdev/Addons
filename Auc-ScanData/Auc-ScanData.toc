@@ -1,18 +1,18 @@
 ## Title: Auc:ScanData
 ## Notes: Allows Auctioneer to delay loading the, probably, large auction scan dataset until it is needed.
 ##
-## Interface: 60000
+## Interface: 70200
 ## LoadOnDemand: 1
 ## SavedVariables: AucScanData
 ## Dependencies: Auc-Advanced
 ## OptionalDeps: Auc-Util-PriceLevel
 ##
-## Version: 5.21d.5538 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-ScanData.toc 5503 2014-10-18 16:32:18Z brykrys $
+## Version: 7.5.5714 (TasmanianThylacine)
+## Revision: $Id: Auc-ScanData.toc 5712 2017-04-06 15:44:11Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 60000
+## X-Max-Interface: 70200
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

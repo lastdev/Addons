@@ -1,20 +1,14 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Recipes.lua"></Script>
 
  	<Button name="AltoCraftReagentTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="18" y="18"/>
-		</Size>
+		<Size x="18" y="18" />
 		<Layers>
 			<Layer level="BORDER">
 				<Texture name="$parentIconTexture"/>
 				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="2" y="1"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="2" y="1" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -50,20 +44,12 @@
 	</Button>	
 	
 	<Button name="AltoRecipesEntryTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="615" y="22"/>
-		</Size>
+		<Size x="615" y="22" />
 		<Frames>
 			<Button name="$parentCollapse" hidden="true">
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
+				<Size x="16" y="16" />
 				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" x="5" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -76,34 +62,18 @@
 			
 		 	<Button name="$parentCraft" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="10" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="10" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentRecipeLink" id="1">
-				<Size>
-					<AbsDimension x="270" y="18"/>
-				</Size>
+				<Size x="270" y="18" />
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="32" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="32" y="0" />
 				</Anchors>
 				<ButtonText name="$parentNormalText" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="270" y="18"/>
-					</Size>
+					<Size x="270" y="18" />
 					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="LEFT" x="0" y="0" />
 					</Anchors>
 				</ButtonText>
 				<Scripts>
@@ -121,108 +91,64 @@
 			</Button>
 			<Button name="$parentItem1" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentRecipeLink" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentRecipeLink" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem2" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem3" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem4" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem3" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem3" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem5" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem6" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem7" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem6" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem6" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentItem8" inherits="AltoCraftReagentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem7" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="20" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem7" relativePoint="TOPRIGHT" x="20" y="0" />
 				</Anchors>
 			</Button>
 		</Frames>
 	</Button>
 	
 	<Frame name="AltoholicFrameRecipes" parent="AltoholicTabCharacters" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="39" y="-105"/>
-				</Offset>
-			</Anchor>
+			<Anchor point="TOPRIGHT" x="39" y="-105" />
 		</Anchors>
 		<Frames>
 			<Frame name="$parentInfo">
-				<Size>
-					<AbsDimension x="200" y="60"/>
-				</Size>
+				<Size x="200" y="60" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" >
-						<Offset x="40" y="-20" />
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="40" y="-20" />
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parent_CollapseAllText" inherits="GameFontNormalSmall" justifyH="LEFT" text="ALL">
 							<Size x="50" y="20" />
 							<Anchors>
-								<Anchor point="TOPLEFT">
-									<Offset x="420" y="-13" />
-								</Anchor>
+								<Anchor point="TOPLEFT" x="420" y="-13" />
 							</Anchors>
 							<Color r="255" g="255" b="255" />
 						</FontString>
@@ -230,15 +156,9 @@
 				</Layers>
 				<Frames>
 					<Button name="$parent_ToggleAll">
-						<Size>
-							<AbsDimension x="16" y="16"/>
-						</Size>
+						<Size x="16" y="16" />
 						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="400" y="-15"/>
-								</Offset>
-							</Anchor>
+							<Anchor point="TOPLEFT" x="400" y="-15" />
 						</Anchors>
 						<Scripts>
 							<OnClick>
@@ -249,15 +169,9 @@
 						<HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
 					</Button>
 					<Button name="$parent_LinkButton">
-						<Size>
-							<AbsDimension x="32" y="16"/>
-						</Size>
+						<Size x="32" y="16" />
 						<Anchors>
-							<Anchor point="LEFT" relativeTo="$parent_CollapseAllText" relativePoint="RIGHT">
-								<Offset>
-									<AbsDimension x="5" y="0"/>
-								</Offset>
-							</Anchor>
+							<Anchor point="LEFT" relativeTo="$parent_CollapseAllText" relativePoint="RIGHT" x="5" y="0" />
 						</Anchors>
 						<Scripts>
 							<OnClick>
@@ -279,58 +193,25 @@
 							<TexCoords left="0" right="1.0" top="0.5" bottom="1.0"/>
 						</HighlightTexture>
 					</Button>
-
 				</Frames>
 			</Frame>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" />
-					<Anchor point="BOTTOMRIGHT" />
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="256"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="5"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="106"/>
-							</Size>
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="0"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
+			<ScrollFrame name="$parentScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 18, Altoholic.TradeSkills.Recipes.Update)
+						self:OnVerticalScroll(offset, 18, Altoholic.TradeSkills.Recipes.Update)
 					</OnVerticalScroll>
 				</Scripts>
+				<!--
+				<KeyValues>
+					<KeyValue key="numRows" value="14" type="number" />
+					<KeyValue key="rowTemplate" value="AltoRecipesEntryTemplate" />
+				</KeyValues>
+				-->
 			</ScrollFrame>
 			
 			<Button name="$parentEntry1" inherits="AltoRecipesEntryTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentEntry2" inherits="AltoRecipesEntryTemplate">
@@ -398,7 +279,6 @@
 					<Anchor point="TOPLEFT" relativeTo="$parentEntry13" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-
 		</Frames>
 	</Frame>
 

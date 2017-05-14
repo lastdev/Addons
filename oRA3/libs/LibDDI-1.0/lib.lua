@@ -116,8 +116,7 @@ do
 	local widgetType = "DDI-RaidIcon"
 	local function setText(self, text)
 		if icons[text] then
-			self.icon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
-			SetRaidTargetIconTexture(self.icon, icons[text])
+			self.icon:SetTexture(icons[text] + 137000) -- Texture id list for raid icons 1-8 is 137001-137008. Base texture path is Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_%d
 		else
 			self.icon:SetTexture()
 		end
@@ -169,11 +168,11 @@ do
 		sndButton.sound = frame.obj.text
 
 		local icon = sndButton:CreateTexture(nil, "BACKGROUND")
-		icon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
+		icon:SetTexture(130979) --"Interface\\Common\\VoiceChat-Speaker"
 		icon:SetAllPoints(sndButton)
 
 		local highlight = sndButton:CreateTexture(nil, "HIGHLIGHT")
-		highlight:SetTexture("Interface\\Common\\VoiceChat-On")
+		highlight:SetTexture(130977) --"Interface\\Common\\VoiceChat-On"
 		highlight:SetAllPoints(sndButton)
 
 		gui:RegisterAsWidget(self)

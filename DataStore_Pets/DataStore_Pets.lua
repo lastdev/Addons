@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Pets ***
+--[[	*** DataStore_Pets ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 22st, 2009
 --]]

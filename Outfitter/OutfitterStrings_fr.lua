@@ -256,8 +256,6 @@
 	Outfitter.cHide = "Hide"
 	Outfitter.cDontChange = "Don't change"
 
-	Outfitter.cHelm = "Helm"
-	Outfitter.cCloak = "Cloak"
 	Outfitter.cPlayerTitle = "Title"
 
 	Outfitter.cMore = "More"
@@ -275,16 +273,6 @@
 	Outfitter.cMinimapButtonTitle = "Outfitter"
 	Outfitter.cMinimapButtonDescription = "Cliquez pour séléctionner une autre tenue ou déplacez pour changer la position du bouton."
 
-	Outfitter.cClassName.DRUID = "Druide"
-	Outfitter.cClassName.HUNTER = "Chasseur"
-	Outfitter.cClassName.MAGE = "Mage"
-	Outfitter.cClassName.PALADIN = "Paladin"
-	Outfitter.cClassName.PRIEST = "Prêtre"
-	Outfitter.cClassName.ROGUE = "Voleur"
-	Outfitter.cClassName.SHAMAN = "Chaman"
-	Outfitter.cClassName.WARLOCK = "Démoniste"
-	Outfitter.cClassName.WARRIOR = "Guerrier"
-	
 	Outfitter.cBattleStance = "Posture de combat"
 	Outfitter.cDefensiveStance = "Posture défensive"
 	Outfitter.cBerserkerStance = "Posture berserker"

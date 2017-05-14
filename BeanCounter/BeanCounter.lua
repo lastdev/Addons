@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounter.lua 5485 2014-10-13 12:58:31Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCounter.lua 5661 2016-08-14 11:01:38Z brykrys $
 
 	BeanCounterCore - BeanCounter: Auction House History
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounter.lua $","$Rev: 5485 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounter.lua $","$Rev: 5661 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --AucAdvanced.Modules["Util"]["BeanCounter"]
 
@@ -91,6 +91,24 @@ local function debugPrint(...)
         private.debugPrint("BeanCounterCore",...)
     end
 end
+
+-- DEBUGGING
+--[[
+local DebugLib = LibStub("DebugLib")
+local debug, assert, printQuick
+if DebugLib then
+	debug, assert, printQuick = DebugLib("LibExtraTip")
+else
+	function debug() end
+	assert = debug
+	printQuick = debug
+end
+
+-- when you just want to print a message and don't care about the rest
+function DebugPrintQuick(...)
+	printQuick(...)
+end
+--]]
 
 --used to allow beancounter to recive Processor events from Auctioneer. Allows us to send a search request to BC GUI
 if AucAdvanced then
@@ -365,7 +383,7 @@ function private.attachMeta( itemLink, meta )
 							end
 
 							local newText = private.packString(STACK, NET, DEPOSIT, FEE, BUY, BID, SELLERNAME, TIME, REASON, META)
-
+							--DebugPrintQuick("Adding Meta for ", itemLink, meta, newText, STACK, NET, DEPOSIT, FEE, BUY, BID, SELLERNAME, TIME, REASON, META)
 							table.remove(data[itemID][itemString], i)
 							private.databaseAdd(DB, nil, itemString, newText)
 							--print(newText)
@@ -434,6 +452,7 @@ function private.onEvent(frame, event, arg, ...)
 		private.scriptframe:UnregisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
 	end
 end
+
 --scripts that handle recording DE events
 local inDEState = false
 function private.onEventDisenchant(frame, event, arg, spell, _, _, spellID)
@@ -442,7 +461,12 @@ function private.onEventDisenchant(frame, event, arg, spell, _, _, spellID)
 		private.bag = {}
 	elseif event == "ITEM_LOCK_CHANGED" and inDEState then
 		local bagID, slot = arg, spell
-		local link = GetContainerItemLink(bagID, slot)
+		local link
+		if slot then
+			link = GetContainerItemLink(bagID, slot)
+		else
+			link = GetInventoryItemLink("player", bagID)
+		end
 		private.bag["DElink"] = link
 	elseif event == "LOOT_OPENED" and inDEState then --what did it DE into
 		for slot = 1, GetNumLootItems() do
@@ -491,23 +515,25 @@ function private.packString(...)
 	end
 	return concat(tmp,";",1,num)
 end
+
 --Will split any string and return a table value, replace gsub with tbl compare, slightly faster this way.
 function private.unpackString(text)
 	if not text then return end
 	local stack,  money, deposit , fee, buyout , bid, buyer, Time, reason, meta = strsplit(";", text)
-	if stack == "" then stack = "0" end
-	if money == "" then money = "0" end
-	if deposit == "" then deposit = "0" end
-	if fee == "" then fee = "0" end
-	if buyout == "" then buyout = "0" end
-	if bid == "" then bid = "0" end
-	if buyer == "" then buyer = "0" end
-	if Time == "" then Time = "0" end
-	if reason == "" then reason = "0" end
-	if meta == "" then meta = "0" end
+	if not stack or stack == "" then stack = "0" end
+	if not money or money == "" then money = "0" end
+	if not deposit or deposit == "" then deposit = "0" end
+	if not fee or fee == "" then fee = "0" end
+	if not buyout or buyout == "" then buyout = "0" end
+	if not bid or bid == "" then bid = "0" end
+	if not buyer or buyer == "" then buyer = "0" end
+	if not Time or Time == "" then Time = "0" end
+	if not reason or reason == "" then reason = "0" end
+	if not meta or meta == "" then meta = "0" end
 
 	return stack, money, deposit , fee, buyout , bid, buyer, Time, reason, meta
 end
+
 --[[
 Adds data to the database in proper place, adds link to itemName array, optionally compresses the itemstring into compact format
 return false if data fails to write
@@ -515,9 +541,13 @@ Add at start of DB so its in newest to oldest order
 ]]
 function private.databaseAdd(key, itemLink, itemString, value, compress, server, player)
 	--if we are passed a link and not both then extract the string
+	--DebugPrintQuick("Adding Enry for ", key, itemLink, itemString )
+
 	if itemLink and not itemString then
 		itemString = lib.API.getItemString(itemLink)
 	end
+
+	--DebugPrintQuick("Updated String for ", key, itemLink, itemString )
 
 	if not key or not itemString or not value then
 		debugPrint("BeanCounter database add error: Missing required data")
@@ -532,11 +562,12 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 	local item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, tail = strsplit(":", itemString, 10)
 	--if this will be a compressed entry replace uniqueID with 0 or its scaling factor
 	if compress then
-		suffixID = tonumber(suffixID)
-		if suffixID < 0 then --scaling factor built into uniqueID, extract it and store so we can create properly scaled itemLinks
-			uniqueID = bit.band(uniqueID, 65535)
+		local suffixvalue = tonumber(suffixID)
+		uniqueID = tonumber(uniqueID)
+		if uniqueID and suffixvalue and suffixvalue < 0 then --scaling factor built into uniqueID, extract it and store so we can create properly scaled itemLinks
+			uniqueID = tostring(bit.band(uniqueID, 65535))
 		else
-			uniqueID = 0
+			uniqueID = ""
 		end
 		itemString = strjoin(":", item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, tail)
 	end
@@ -592,20 +623,30 @@ function private.storeReasonForBid(CallBack)
 	local itemString = lib.API.getItemString(itemLink)
 	local itemID, suffix = lib.API.decodeLink(itemLink)
 
+	--DebugPrintQuick("Storing Reason for ", itemLink, itemID, suffix, reason, CallBack, itemString)
+
 	if private.playerData.postedBids[itemID] and private.playerData.postedBids[itemID][itemString] then
 		for i, v in pairs(private.playerData.postedBids[itemID][itemString]) do
 			local postCount, postBid, postSeller, isBuyout, postTimeLeft, postTime, postReason = private.unpackString(v)
 			if postCount and postBid and itemID and price and count then
 				if postCount == count and postBid == price then
 					local text = private.packString(postCount, postBid, postSeller, isBuyout, postTimeLeft, postTime, reason)
-						--debugPrint("before", private.playerData.postedBids[itemID][itemString][i])
-						private.playerData.postedBids[itemID][itemString][i] = text
-						--debugPrint("after", private.playerData.postedBids[itemID][itemString][i])
+					--debugPrint("before", private.playerData.postedBids[itemID][itemString][i])
+					private.playerData.postedBids[itemID][itemString][i] = text
+					--DebugPrintQuick("Stored Reason for ", reason, CallBack, text)
+					--debugPrint("after", private.playerData.postedBids[itemID][itemString][i])
 					break
+				else
+					--DebugPrintQuick("item bids did not match", itemID, itemString, postCount, postBid, itemID, price, count)
 				end
+			else
+				--DebugPrintQuick("item bids were nil", itemID, itemString, postCount, postBid, itemID, price, count)
 			end
 		end
+	else
+		--DebugPrintQuick("Could not find item in bids", itemID, itemString, private.playerData.postedBids[itemID] )
 	end
+
 end
 
 --Get item Info or a specific subset. accepts itemID or "itemString" or "itemName ONLY IF THE ITEM IS IN PLAYERS BAG" or "itemLink"

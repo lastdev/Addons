@@ -1,29 +1,13 @@
-﻿local addonName = ...
+local addonName = ...
 local addon = _G[addonName]
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local colors = addon.Colors
 
-local WHITE		= "|cFFFFFFFF"
-local RED		= "|cFFFF0000"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
-local ORANGE	= "|cFFFF7F00"
-local TEAL		= "|cFF00FF9A"
-local GOLD		= "|cFFFFD700"
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local THIS_ACCOUNT = "Default"
 local THIS_REALM = GetRealmName()
 
-local Orig_GameTooltip_OnShow
-local Orig_GameTooltip_SetItem
-local Orig_GameTooltip_ClearItem
-local Orig_GameTooltip_SetCurrencyToken
--- local Orig_GameTooltip_SetSpell
-
-local Orig_ItemRefTooltip_OnShow
-local Orig_ItemRefTooltip_SetItem
-local Orig_ItemRefTooltip_ClearItem
--- local Orig_ItemRefTooltip_SetSpell
+local storedLink = nil
 
 local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, thanks to Tempus on wowace for gathering this.
 
@@ -184,7 +168,7 @@ local function WriteCounterLines(tooltip)
 	if addon:GetOption("UI.Tooltip.ShowItemCount") then			-- add count per character/guild
 		tooltip:AddLine(" ",1,1,1);
 		for _, line in ipairs (counterLines) do
-			tooltip:AddDoubleLine(line.owner,  TEAL .. line.info);
+			tooltip:AddDoubleLine(line.owner,  colors.teal .. line.info);
 		end
 	end
 end
@@ -228,22 +212,26 @@ local function GetCharacterItemCount(character, searchedID)
 		local isOtherRealm = (realm ~= THIS_REALM)
 		
 		if isOtherAccount and isOtherRealm then		-- other account AND other realm
-			name = format("%s%s (%s / %s)", name, YELLOW, account, realm)
+			name = format("%s%s (%s / %s)", name, colors.yellow, account, realm)
 		elseif isOtherAccount then							-- only other account
-			name = format("%s%s (%s)", name, YELLOW, account)
+			name = format("%s%s (%s)", name, colors.yellow, account)
 		elseif isOtherRealm then							-- only other realm
-			name = format("%s%s (%s)", name, YELLOW, realm)
+			name = format("%s%s (%s)", name, colors.yellow, realm)
 		end
 		
 		local t = {}
 		for k, v in pairs(itemCounts) do
 			if v > 0 then	-- if there are more than 0 items in this container
-				table.insert(t, WHITE .. itemCountsLabels[k] .. ": "  .. TEAL .. v)
+				table.insert(t, colors.white .. itemCountsLabels[k] .. ": "  .. colors.teal .. v)
 			end
 		end
 
-		-- charInfo should look like 	(Bags: 4, Bank: 8, Equipped: 1, Mail: 7), table concat takes care of this
-		AddCounterLine(name, format("%s (%s%s)", ORANGE .. charCount .. WHITE, table.concat(t, WHITE..", "), WHITE))
+		if addon:GetOption("UI.Tooltip.ShowSimpleCount") then
+			AddCounterLine(name, format("%s%s", colors.orange, charCount))
+		else
+			-- charInfo should look like 	(Bags: 4, Bank: 8, Equipped: 1, Mail: 7), table concat takes care of this
+			AddCounterLine(name, format("%s%s%s (%s%s)", colors.orange, charCount, colors.white, table.concat(t, colors.white..", "), colors.white))
+		end
 	end
 	
 	return charCount
@@ -293,18 +281,18 @@ local function GetItemCount(searchedID)
 						for tabID = 1, 8 do 
 							tabCount = DataStore:GetGuildBankTabItemCount(guildKey, tabID, searchedID)
 							if tabCount and tabCount > 0 then
-								table.insert(tabCounters,  format("%s: %s", WHITE .. DataStore:GetGuildBankTabName(guildKey, tabID), TEAL..tabCount))
+								table.insert(tabCounters,  format("%s: %s", colors.white .. DataStore:GetGuildBankTabName(guildKey, tabID), colors.teal..tabCount))
 							end
 						end
 						
 						if #tabCounters > 0 then
 							guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
-							AddCounterLine(GREEN..guildName, format("%s %s(%s%s)", ORANGE .. guildCount, WHITE, table.concat(tabCounters, ","), WHITE))
+							AddCounterLine(colors.green..guildName, format("%s %s(%s%s)", colors.orange .. guildCount, colors.white, table.concat(tabCounters, ","), colors.white))
 						end
 					else
 						guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
 						if guildCount > 0 then
-							AddCounterLine(GREEN..guildName, format("%s(%s: %s%s)", WHITE, GUILD_BANK, TEAL..guildCount, WHITE))
+							AddCounterLine(colors.green..guildName, format("%s(%s: %s%s)", colors.white, GUILD_BANK, colors.teal..guildCount, colors.white))
 						end
 					end
 						
@@ -386,39 +374,18 @@ local function GetRecipeOwnersText(professionName, link, recipeLevel)
 	
 	local lines = {}
 	if #know > 0 then
-		table.insert(lines, TEAL .. L["Already known by "] ..": ".. WHITE.. table.concat(know, ", ") .."\n")
+		table.insert(lines, colors.teal .. L["Already known by "] ..": ".. colors.white.. table.concat(know, ", ") .."\n")
 	end
 	
 	if #couldLearn > 0 then
-		table.insert(lines, YELLOW .. L["Could be learned by "] ..": ".. WHITE.. table.concat(couldLearn, ", ") .."\n")
+		table.insert(lines, colors.yellow .. L["Could be learned by "] ..": ".. colors.white.. table.concat(couldLearn, ", ") .."\n")
 	end
 	
 	if #willLearn > 0 then
-		table.insert(lines, RED .. L["Will be learnable by "] ..": ".. WHITE.. table.concat(willLearn, ", "))
+		table.insert(lines, colors.red .. L["Will be learnable by "] ..": ".. colors.white.. table.concat(willLearn, ", "))
 	end
 	
 	return table.concat(lines, "\n")
-end
-
-local function AddPetOwners(companionSpellID, companionType, tooltip)
-	local know = {}				-- list of alts who know this pet
-	local couldLearn = {}		-- list of alts who could learn it
-
-	for characterName, character in pairs(DataStore:GetCharacters()) do
-		if DataStore:IsPetKnown(character, companionType, companionSpellID) then
-			table.insert(know, characterName)
-		else
-			table.insert(couldLearn, characterName)
-		end
-	end
-	
-	if #know > 0 then
-		tooltip:AddLine(TEAL .. L["Already known by "] ..": ".. WHITE.. table.concat(know, ", "), 1, 1, 1, 1);
-	end
-	
-	if #couldLearn > 0 then
-		tooltip:AddLine(YELLOW .. L["Could be learned by "] ..": ".. WHITE.. table.concat(couldLearn, ", "), 1, 1, 1, 1);
-	end
 end
 
 local function AddGlyphOwners(itemID, tooltip)
@@ -437,12 +404,12 @@ local function AddGlyphOwners(itemID, tooltip)
 	
 	if #know > 0 then
 		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(TEAL .. L["Already known by "] ..": ".. WHITE.. table.concat(know, ", "), 1, 1, 1, 1);
+		tooltip:AddLine(colors.teal .. L["Already known by "] ..": ".. colors.white.. table.concat(know, ", "), 1, 1, 1, 1);
 	end
 	
 	if #couldLearn > 0 then
 		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(YELLOW .. L["Could be learned by "] ..": ".. WHITE.. table.concat(couldLearn, ", "), 1, 1, 1, 1);
+		tooltip:AddLine(colors.yellow .. L["Could be learned by "] ..": ".. colors.white.. table.concat(couldLearn, ", "), 1, 1, 1, 1);
 	end
 end
 
@@ -460,20 +427,35 @@ local function ShowGatheringNodeCounters()
 	-- check player bags to see how many times he owns this item, and where
 	if addon:GetOption("UI.Tooltip.ShowItemCount") or addon:GetOption("UI.Tooltip.ShowTotalItemCount") then
 		cachedCount = GetItemCount(itemID) -- if one of the 2 options is active, do the count
-		cachedTotal = (cachedCount > 0) and format("%s: %s", GOLD..L["Total owned"], TEAL..cachedCount) or nil
+		cachedTotal = (cachedCount > 0) and format("%s: %s", colors.gold..L["Total owned"], colors.teal..cachedCount) or nil
 	end
 	
 	WriteCounterLines(GameTooltip)
 	WriteTotal(GameTooltip)
 end
 
-local function ProcessTooltip(tooltip, name, link)
+local function ProcessTooltip(tooltip, link)
 	if Informant and isNodeDone then
 		return
 	end
 	
 	local itemID = addon:GetIDFromLink(link)
+	if not itemID then return end
 	
+	if (itemID == 0) and (TradeSkillFrame ~= nil) and TradeSkillFrame:IsVisible() then
+		if (GetMouseFocus():GetName()) == "TradeSkillSkillIcon" then
+			itemID = tonumber(GetTradeSkillItemLink(TradeSkillFrame.selectedSkill):match("item:(%d+):")) or nil
+		else
+			for i = 1, 8 do
+				if (GetMouseFocus():GetName()) == "TradeSkillReagent"..i then
+					itemID = tonumber(GetTradeSkillReagentItemLink(TradeSkillFrame.selectedSkill, i):match("item:(%d+):")) or nil
+					break
+				end
+			end
+		end
+	end
+	 
+	if (itemID == 0) then return end
 	-- if there's no cached item id OR if it's different from the previous one ..
 	if (not cachedItemID) or 
 		(cachedItemID and (itemID ~= cachedItemID)) then
@@ -488,14 +470,14 @@ local function ProcessTooltip(tooltip, name, link)
 			cachedItemID = itemID			-- we have searched this ID ..
 			if domain then
 				subDomain = (subDomain) and format(", %s", subDomain) or ""
-				cachedSource = format("%s: %s%s", GOLD..L["Source"], TEAL..domain, subDomain)
+				cachedSource = format("%s: %s%s", colors.gold..L["Source"], colors.teal..domain, subDomain)
 			end
 		end
 		
 		-- .. then check player bags to see how many times he owns this item, and where
 		if addon:GetOption("UI.Tooltip.ShowItemCount") or addon:GetOption("UI.Tooltip.ShowTotalItemCount") then
 			cachedCount = GetItemCount(itemID) -- if one of the 2 options is active, do the count
-			cachedTotal = (cachedCount > 0) and format("%s: %s", GOLD..L["Total owned"], TEAL..cachedCount) or nil
+			cachedTotal = (cachedCount > 0) and format("%s: %s", colors.gold..L["Total owned"], colors.teal..cachedCount) or nil
 		end
 	end
 
@@ -520,34 +502,23 @@ local function ProcessTooltip(tooltip, name, link)
 		
 		if iLevel then
 			tooltip:AddLine(" ",1,1,1);
-			tooltip:AddDoubleLine("Item ID: " .. GREEN .. itemID,  "iLvl: " .. GREEN .. iLevel);
+			tooltip:AddDoubleLine("Item ID: " .. colors.green .. itemID,  "iLvl: " .. colors.green .. iLevel);
 		end
 	end
 	
 	local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
 	
-	if itemType == BI["Miscellaneous"] then
-		if DataStore:IsModuleEnabled("DataStore_Pets") and addon:GetOption("UI.Tooltip.ShowKnownPets") then
-			-- item sub type is "Pet" in english, and "Companion" in deDE ...
-			if itemSubType == BI["Pet"] or itemSubType == BI["Companion"] then
-				local companionID = DataStore:GetCompanionSpellID(itemID)
-				if companionID then
-					tooltip:AddLine(" ",1,1,1);	
-					AddPetOwners(companionID, "CRITTER", tooltip)
-					return	-- it's certainly not a recipe if we passed here
-				end
-			end
-		end
+	-- 25/01/2015: Removed the code that displayed the pet owners, since they have been account wide for a while now..
 	
-	elseif itemType == BI["Glyph"] then
+	if itemType == GetItemClassInfo(LE_ITEM_CLASS_GLYPH) then
 		AddGlyphOwners(itemID, tooltip)
 		return
 	end
 	
 	if addon:GetOption("UI.Tooltip.ShowKnownRecipes") == false then return end -- exit if recipe information is not wanted
 	
-	if itemType ~= BI["Recipe"] then return end		-- exit if not a recipe
-	if itemSubType == BI["Book"] then return end		-- exit if it's a book
+	if itemType ~= L["ITEM_TYPE_RECIPE"] then return end		-- exit if not a recipe
+	if itemSubType == L["ITEM_SUBTYPE_BOOK"] then return end		-- exit if it's a book
 
 	if not cachedRecipeOwners then
 		cachedRecipeOwners = GetRecipeOwnersText(itemSubType, link, addon:GetRecipeLevel(link, tooltip))
@@ -560,32 +531,34 @@ local function ProcessTooltip(tooltip, name, link)
 end
 
 local function Hook_LinkWrangler(frame)
-	local name, link = frame:GetItem()
-	if name and link then
-		ProcessTooltip(frame, name, link)
+	local _, link = frame:GetItem()
+	if link then
+		ProcessTooltip(frame, link)
 	end
 end
 
 -- ** GameTooltip hooks **
 local function OnGameTooltipShow(tooltip, ...)
-	if Orig_GameTooltip_OnShow then
-		Orig_GameTooltip_OnShow(tooltip, ...)
-	end	
-	
 	ShowGatheringNodeCounters()
 	GameTooltip:Show()
 end
 
 local function OnGameTooltipSetItem(tooltip, ...)
-	if Orig_GameTooltip_SetItem then
-		Orig_GameTooltip_SetItem(tooltip, ...)
-	end
-	
 	if (not isTooltipDone) and tooltip then
-		local name, link = tooltip:GetItem()
 		isTooltipDone = true
+
+		local name, link = tooltip:GetItem()
+		-- Blizzard broke tooltip:GetItem() in 6.2. Detect and fix the bug if possible.
+		if name == "" then
+			local itemID = addon:GetIDFromLink(link)
+			if not itemID or itemID == 0 then
+				-- hooking SetRecipeResultItem & SetRecipeReagentItem is necessary for trade skill UI, link is captured and saved in storedLink
+				link = storedLink
+			end
+		end
+		
 		if link then
-			ProcessTooltip(tooltip, name, link)
+			ProcessTooltip(tooltip, link)
 		end
 	end
 end
@@ -593,12 +566,10 @@ end
 local function OnGameTooltipCleared(tooltip, ...)
 	isTooltipDone = nil
 	isNodeDone = nil		-- for informant
-	return Orig_GameTooltip_ClearItem(tooltip, ...)
+	storedLink = nil
 end
 
 local function Hook_SetCurrencyToken(self,index,...)
-	Orig_GameTooltip_SetCurrencyToken(self, index, ...)
-	
 	if not index then return end
 
 	local currency = GetCurrencyListInfo(index)
@@ -610,7 +581,7 @@ local function Hook_SetCurrencyToken(self,index,...)
 	for _, character in pairs(DataStore:GetCharacters()) do
 		local _, _, count = DataStore:GetCurrencyInfoByName(character, currency)
 		if count and count > 0 then
-			GameTooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character),  TEAL .. count);
+			GameTooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character),  colors.teal .. count);
 			total = total + count
 		end
 		
@@ -619,69 +590,93 @@ local function Hook_SetCurrencyToken(self,index,...)
 	if total > 0 then
 		GameTooltip:AddLine(" ",1,1,1);
 	end
-	GameTooltip:AddLine(format("%s: %s", GOLD..L["Total owned"], TEAL..total ) ,1,1,1);
+	GameTooltip:AddLine(format("%s: %s", colors.gold..L["Total owned"], colors.teal..total ) ,1,1,1);
 	GameTooltip:Show()
 end
 
 -- ** ItemRefTooltip hooks **
 local function OnItemRefTooltipShow(tooltip, ...)
-	if Orig_ItemRefTooltip_OnShow then
-		Orig_ItemRefTooltip_OnShow(tooltip, ...)
-	end
-
 	addon:ListCharsOnQuest( _G["ItemRefTooltipTextLeft1"]:GetText(), UnitName("player"), ItemRefTooltip)
 	ItemRefTooltip:Show()
 end
 
 local function OnItemRefTooltipSetItem(tooltip, ...)
-	if Orig_ItemRefTooltip_SetItem then
-		Orig_ItemRefTooltip_SetItem(tooltip, ...)
-	end
-	
 	if (not isTooltipDone) and tooltip then
-		local name, link = tooltip:GetItem()
+		local _, link = tooltip:GetItem()
 		isTooltipDone = true
 		if link then
-			ProcessTooltip(tooltip, name, link)
+			ProcessTooltip(tooltip, link)
 		end
 	end
 end
 
 local function OnItemRefTooltipCleared(tooltip, ...)
 	isTooltipDone = nil
-	return Orig_ItemRefTooltip_ClearItem(tooltip, ...)
 end
 
+-- install a pre-/post-hook on the given tooltip's method
+-- simplified version of LibExtraTip's hooking
+local function InstallHook(tooltip, method, prehook, posthook)
+	local orig = tooltip[method]
+	local stub = function(...)
+		if prehook then prehook(...) end
+		local a,b,c,d,e,f,g,h,i,j,k = orig(...)
+		if posthook then posthook(...) end
+		return a,b,c,d,e,f,g,h,i,j,k
+	end
+	tooltip[method] = stub
+end
 
 function addon:InitTooltip()
-	-- save all function pointers
-	Orig_GameTooltip_OnShow = GameTooltip:GetScript("OnShow")
-	Orig_GameTooltip_SetItem = GameTooltip:GetScript("OnTooltipSetItem")
-	Orig_GameTooltip_ClearItem = GameTooltip:GetScript("OnTooltipCleared")
-	Orig_GameTooltip_SetCurrencyToken = GameTooltip.SetCurrencyToken
-	-- Orig_GameTooltip_SetSpell = GameTooltip:GetScript("OnTooltipSetSpell")
+	-- hooking config, format: MethodName = { prehook, posthook }
+	local tooltipMethodHooks = {
+		SetCurrencyToken = {
+			nil,
+			Hook_SetCurrencyToken
+		},
+		SetQuestItem = {
+			function(self,type,index) storedLink = GetQuestItemLink(type,index) end,
+			nil
+		},
+		SetQuestLogItem = {
+			function(self,type,index) storedLink = GetQuestLogItemLink(type,index) end,
+			nil
+		},
+		SetRecipeResultItem = {
+			function(self, recipeID)
+				if recipeID then
+					storedLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
+				end
+			end,
+			nil
+		},
+		SetRecipeReagentItem = {
+			function(self, recipeID, reagentIndex)
+				if recipeID and reagentIndex then
+					storedLink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+				end
+			end,
+			nil
+		},
+	}
+	-- install all method hooks
+	for m, hooks in pairs(tooltipMethodHooks) do
+		InstallHook(GameTooltip, m, hooks[1], hooks[2])
+	end
 
-	Orig_ItemRefTooltip_OnShow = ItemRefTooltip:GetScript("OnShow")
-	Orig_ItemRefTooltip_SetItem = ItemRefTooltip:GetScript("OnTooltipSetItem")
-	Orig_ItemRefTooltip_ClearItem = ItemRefTooltip:GetScript("OnTooltipCleared")
-	-- Orig_ItemRefTooltip_SetSpell = ItemRefTooltip:GetScript("OnTooltipSetSpell")
+	-- script hooks
+	GameTooltip:HookScript("OnShow", OnGameTooltipShow)
+	GameTooltip:HookScript("OnTooltipSetItem", OnGameTooltipSetItem)
+	GameTooltip:HookScript("OnTooltipCleared", OnGameTooltipCleared)
 
-	-- set new function pointers
-	GameTooltip:SetScript("OnShow", OnGameTooltipShow)
-	GameTooltip:SetScript("OnTooltipSetItem", OnGameTooltipSetItem)
-	GameTooltip:SetScript("OnTooltipCleared", OnGameTooltipCleared)
-	GameTooltip.SetCurrencyToken = Hook_SetCurrencyToken
-	-- GameTooltip:SetScript("OnTooltipSetSpell", OnGameTooltipSetSpell)
-
-	ItemRefTooltip:SetScript("OnShow", OnItemRefTooltipShow)
-	ItemRefTooltip:SetScript("OnTooltipSetItem", OnItemRefTooltipSetItem)
-	ItemRefTooltip:SetScript("OnTooltipCleared", OnItemRefTooltipCleared)
-	-- ItemRefTooltip:SetScript("OnTooltipSetSpell", OnItemRefTooltipSetSpell)
+	ItemRefTooltip:HookScript("OnShow", OnItemRefTooltipShow)
+	ItemRefTooltip:HookScript("OnTooltipSetItem", OnItemRefTooltipSetItem)
+	ItemRefTooltip:HookScript("OnTooltipCleared", OnItemRefTooltipCleared)
 	
-	-- LinkWrangler supoprt
-   if LinkWrangler then
-      LinkWrangler.RegisterCallback ("Altoholic",  Hook_LinkWrangler, "refresh")
-   end
+	-- LinkWrangler support
+	if LinkWrangler then
+		LinkWrangler.RegisterCallback ("Altoholic",  Hook_LinkWrangler, "refresh")
+	end
 end
 
 function addon:RefreshTooltip()

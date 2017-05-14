@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 --
 -- Prat - A framework for World of Warcraft chat mods
 --
@@ -36,10 +36,10 @@ if PRAT_MODULE == nil then
     return 
 end
 
-local L = Prat:GetLocalizer({})
+local PL = Prat:GetLocalizer({})
 
 --[===[@debug@
-L:AddLocale("enUS", {
+PL:AddLocale("enUS", {
     ["ChatLog"] = true,
     ["A module to automaticaly enable chat and combat logging."] = true,
     ["Toggle Chat Log"] = true,
@@ -61,216 +61,176 @@ L:AddLocale("enUS", {
 -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
 
---@non-debug@
-L:AddLocale("enUS", 
-{
-	["A module to automaticaly enable chat and combat logging."] = true,
-	ChatLog = true,
-	["Chat Log: Disabled"] = true,
-	["Chat Log: Enabled"] = true,
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = true,
-	["Combat Log: Disabled"] = true,
-	["Combat Log: Enabled"] = true,
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = true,
-	quiet_desc = "Dont display any messages when this mod is enabled, or when it changes the log settings.",
-	quiet_name = "Suppress Feedback Messages",
-	["Toggle Chat Log"] = true,
-	["Toggle chat log on and off."] = true,
-	["Toggle Combat Log"] = true,
-	["Toggle combat log on and off."] = true,
-}
+  --@non-debug@
+do
+    local L
 
-)
-L:AddLocale("itIT", 
+L=
 {
-	-- ["A module to automaticaly enable chat and combat logging."] = "",
-	-- ChatLog = "",
-	-- ["Chat Log: Disabled"] = "",
-	-- ["Chat Log: Enabled"] = "",
-	-- ["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "",
-	-- ["Combat Log: Disabled"] = "",
-	-- ["Combat Log: Enabled"] = "",
-	-- ["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "",
-	-- quiet_desc = "",
-	-- quiet_name = "",
-	-- ["Toggle Chat Log"] = "",
-	-- ["Toggle chat log on and off."] = "",
-	-- ["Toggle Combat Log"] = "",
-	-- ["Toggle combat log on and off."] = "",
+["A module to automaticaly enable chat and combat logging."] = true,
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = true,
+["Chat Log: Disabled"] = true,
+["Chat Log: Enabled"] = true,
+["ChatLog"] = true,
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = true,
+["Combat Log: Disabled"] = true,
+["Combat Log: Enabled"] = true,
+["quiet_desc"] = "Dont display any messages when this mod is enabled, or when it changes the log settings.",
+["quiet_name"] = "Suppress Feedback Messages",
+["Toggle Chat Log"] = true,
+["Toggle chat log on and off."] = true,
+["Toggle Combat Log"] = true,
+["Toggle combat log on and off."] = true,
 }
+PL:AddLocale("enUS", L)
 
-)
-L:AddLocale("ptBR", 
+
+L=
 {
-	-- ["A module to automaticaly enable chat and combat logging."] = "",
-	-- ChatLog = "",
-	-- ["Chat Log: Disabled"] = "",
-	-- ["Chat Log: Enabled"] = "",
-	-- ["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "",
-	-- ["Combat Log: Disabled"] = "",
-	-- ["Combat Log: Enabled"] = "",
-	-- ["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "",
-	-- quiet_desc = "",
-	-- quiet_name = "",
-	-- ["Toggle Chat Log"] = "",
-	-- ["Toggle chat log on and off."] = "",
-	-- ["Toggle Combat Log"] = "",
-	-- ["Toggle combat log on and off."] = "",
 }
+PL:AddLocale("itIT", L)
 
-)
-L:AddLocale("frFR",  
+
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "Un module pour activer automatiquement la journalisation du chat et des combats",
-	ChatLog = true,
-	["Chat Log: Disabled"] = "Journalisation Chat : Désactivé",
-	["Chat Log: Enabled"] = "Journalisation Chat : Activé",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Journalisation du chat enregistré dans <WoW Installation>\\Logs\\WoWChatLog.txt jusqu'à la prochaine déconnexion",
-	["Combat Log: Disabled"] = "Journalisation des combats : Désactivé",
-	["Combat Log: Enabled"] = "Journalisation des combats : Activé",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Journalisation des combats enregistré dans <WoW Installation>\\Logs\\WoWChatLog.txt jusqu'à la prochaine déconnexion",
-	quiet_desc = "N'afficher aucun messages quand ce mod est activé ou quand il change les paramètres de journalisation",
-	quiet_name = "Supprimer les messages de feedback",
-	["Toggle Chat Log"] = "Activer la journalisation du chat",
-	["Toggle chat log on and off."] = "Activer/Désactiver la journalisation du chat",
-	["Toggle Combat Log"] = "Activer la journalisation des combat",
-	["Toggle combat log on and off."] = "Activer/Désactiver la journalisation des combats",
 }
+PL:AddLocale("ptBR", L)
 
-)
-L:AddLocale("deDE", 
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "Ein Modul, das automatisch das Speichern des Chat- und Kampflogs aktiviert.",
-	ChatLog = true,
-	["Chat Log: Disabled"] = "Chat-Log: Inaktiv",
-	["Chat Log: Enabled"] = "Chat-Log: Aktiv",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Speicherung des Chat-Logs in <WoW Installation>\\Logs\\WoWChatLog.txt nur während des Ausloggens.",
-	["Combat Log: Disabled"] = "Kampflog: Inaktiv",
-	["Combat Log: Enabled"] = "Kampflog: Aktiv",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Speicherung des Kampflogs in <WoW Installation>\\Logs\\WoWCombatLog.txt nur während des Ausloggens.",
-	quiet_desc = "Keinerlei Mitteilungen anzeigen, wenn dieser Modus aktiv ist, oder wenn es die Log-Einstellungen verändert.",
-	quiet_name = "Feedback-Mitteilungen unterdrücken",
-	["Toggle Chat Log"] = "Chat-Log umschalten",
-	["Toggle chat log on and off."] = "Chat-Log ein- und ausschalten.",
-	["Toggle Combat Log"] = "Kampflog umschalten",
-	["Toggle combat log on and off."] = "Kampflog ein- und ausschalten.",
+["A module to automaticaly enable chat and combat logging."] = "Un module pour activer automatiquement la journalisation du chat et des combats",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Journalisation du chat enregistré dans <WoW Installation>\\Logs\\WoWChatLog.txt jusqu'à la prochaine déconnexion",
+["Chat Log: Disabled"] = "Journalisation Chat : Désactivé",
+["Chat Log: Enabled"] = "Journalisation Chat : Activé",
+["ChatLog"] = true,
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Journalisation des combats enregistré dans <WoW Installation>\\Logs\\WoWChatLog.txt jusqu'à la prochaine déconnexion",
+["Combat Log: Disabled"] = "Journalisation des combats : Désactivé",
+["Combat Log: Enabled"] = "Journalisation des combats : Activé",
+["quiet_desc"] = "N'afficher aucun messages quand ce mod est activé ou quand il change les paramètres de journalisation",
+["quiet_name"] = "Supprimer les messages de feedback",
+["Toggle Chat Log"] = "Activer la journalisation du chat",
+["Toggle chat log on and off."] = "Activer/Désactiver la journalisation du chat",
+["Toggle Combat Log"] = "Activer la journalisation des combat",
+["Toggle combat log on and off."] = "Activer/Désactiver la journalisation des combats",
 }
+PL:AddLocale("frFR",L)
 
-)
-L:AddLocale("koKR",  
+
+
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "대화기록과 전투기록을 자동으로 켜는 모듈",
-	ChatLog = "대화기록",
-	["Chat Log: Disabled"] = "대화기록: 꺼짐",
-	["Chat Log: Enabled"] = "대화기록: 켜짐",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "대화기록은 접속종료 후, <와우폴더>\\Logs\\WoWChatLog.txt 에 저장됩니다.",
-	["Combat Log: Disabled"] = "전투기록: 꺼짐",
-	["Combat Log: Enabled"] = "전투기록: 켜짐",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "대화기록은 접속종료 후, <와우폴더>\\Logs\\WoWCombatLog.txt 에 저장됩니다.",
-	quiet_desc = "이 모드가 켜지거나 설정이 변경될 때, 알림 메시지를 표시하지 않습니다.",
-	quiet_name = "알림 메시지 끄기",
-	["Toggle Chat Log"] = "대화기록 끄고켜기",
-	["Toggle chat log on and off."] = "대화기록을 끄거나 켭니다.",
-	["Toggle Combat Log"] = "전투기록 끄고켜기",
-	["Toggle combat log on and off."] = "전투기록을 끄거나 켭니다.",
+["A module to automaticaly enable chat and combat logging."] = "Ein Modul, das automatisch das Speichern des Chat- und Kampflogs aktiviert.",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Speicherung des Chat-Logs in <WoW Installation>\\Logs\\WoWChatLog.txt nur während des Ausloggens.",
+["Chat Log: Disabled"] = "Chat-Log: Inaktiv",
+["Chat Log: Enabled"] = "Chat-Log: Aktiv",
+["ChatLog"] = true,
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Speicherung des Kampflogs in <WoW Installation>\\Logs\\WoWCombatLog.txt nur während des Ausloggens.",
+["Combat Log: Disabled"] = "Kampflog: Inaktiv",
+["Combat Log: Enabled"] = "Kampflog: Aktiv",
+["quiet_desc"] = "Zeigt keinerlei Mitteilungen an, wenn dieser Modus aktiv ist, oder wenn es die Log-Einstellungen verändert.",
+["quiet_name"] = "Feedback-Mitteilungen unterdrücken",
+["Toggle Chat Log"] = "Chat-Log umschalten",
+["Toggle chat log on and off."] = "Chat-Log ein- und ausschalten.",
+["Toggle Combat Log"] = "Kampflog umschalten",
+["Toggle combat log on and off."] = "Kampflog ein- und ausschalten.",
 }
+PL:AddLocale("deDE", L)
 
-)
-L:AddLocale("esMX",  
+L=
 {
-	-- ["A module to automaticaly enable chat and combat logging."] = "",
-	-- ChatLog = "",
-	-- ["Chat Log: Disabled"] = "",
-	-- ["Chat Log: Enabled"] = "",
-	-- ["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "",
-	-- ["Combat Log: Disabled"] = "",
-	-- ["Combat Log: Enabled"] = "",
-	-- ["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "",
-	-- quiet_desc = "",
-	-- quiet_name = "",
-	-- ["Toggle Chat Log"] = "",
-	-- ["Toggle chat log on and off."] = "",
-	-- ["Toggle Combat Log"] = "",
-	-- ["Toggle combat log on and off."] = "",
+["A module to automaticaly enable chat and combat logging."] = "대화 기록과 전투 기록을 자동으로 켜는 모듈입니다.",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "대화 기록은 접속종료 후, <와우폴더>\\Logs\\WoWChatLog.txt 에 저장됩니다.",
+["Chat Log: Disabled"] = "대화 기록: 꺼짐",
+["Chat Log: Enabled"] = "대화 기록: 켜짐",
+["ChatLog"] = "대화 기록 [ChatLog]",
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "전투 기록은 접속종료 후, <와우폴더>\\Logs\\WoWCombatLog.txt 에 저장됩니다.",
+["Combat Log: Disabled"] = "전투 기록: 꺼짐",
+["Combat Log: Enabled"] = "전투 기록: 켜짐",
+["quiet_desc"] = "이 모듈이 켜지거나 설정이 변경될 때 알림 메시지를 표시하지 않습니다.",
+["quiet_name"] = "알림 메시지 끄기",
+["Toggle Chat Log"] = "대화 기록 끄고 켜기",
+["Toggle chat log on and off."] = "대화 기록을 끄거나 켭니다.",
+["Toggle Combat Log"] = "전투 기록 끄고 켜기",
+["Toggle combat log on and off."] = "전투 기록을 끄거나 켭니다.",
 }
-
-)
-L:AddLocale("ruRU",  
+PL:AddLocale("koKR",L)
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "Модуль автоматического включения записи чата и журнала боя.",
-	ChatLog = "Логи чата",
-	["Chat Log: Disabled"] = "Запись чатa: выключена",
-	["Chat Log: Enabled"] = "Запись чатa: включена",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Запись чата, записано в <директория инсталляции WoW>\\Logs\\WoWChatLog.txt  (только после выхода из игры).",
-	["Combat Log: Disabled"] = "Запись журнала боя: выключена",
-	["Combat Log: Enabled"] = "Запись журнала боя: включена",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Журнал боя записывается в <директория инсталляции WoW>\\Logs\\WoWCombatLog.txt только до выхода из игры.",
-	quiet_desc = "Не отображать никаких сообщений, если данный модуль включен, или при изменении им настроек записи.",
-	quiet_name = "Подавлять инфо сообщения",
-	["Toggle Chat Log"] = "Запись чата",
-	["Toggle chat log on and off."] = "Вкл/Выкл запись чата.",
-	["Toggle Combat Log"] = "Запись журнала боя",
-	["Toggle combat log on and off."] = "Вкл/Выкл запись журнала боя.",
 }
-
-)
-L:AddLocale("zhCN",  
+PL:AddLocale("esMX",L)
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "自动启用聊天和战斗记录的模块",
-	ChatLog = "聊天记录",
-	["Chat Log: Disabled"] = "聊天记录：禁用",
-	["Chat Log: Enabled"] = "聊天记录：启用",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "退出游戏时保存聊天记录在<魔兽世界安装目录>\\Logs\\WoWChatLog.txt",
-	["Combat Log: Disabled"] = "战斗记录：禁用",
-	["Combat Log: Enabled"] = "战斗记录：启用",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "退出游戏后保存战斗记录在<魔兽世界安装目录>\\Logs\\WoWCombatLog.txt",
-	quiet_desc = "模块启用或改变记录设置时不显示任何信息",
-	quiet_name = "禁止反馈信息",
-	["Toggle Chat Log"] = "聊天记录",
-	["Toggle chat log on and off."] = "切换聊天记录开关",
-	["Toggle Combat Log"] = "战斗记录",
-	["Toggle combat log on and off."] = "切换战斗记录开关",
+["A module to automaticaly enable chat and combat logging."] = "Модуль автоматического включения записи чата и журнала боя.",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Запись чата, записано в <директория инсталляции WoW>\\Logs\\WoWChatLog.txt  (только после выхода из игры).",
+["Chat Log: Disabled"] = "Запись чатa: выключена",
+["Chat Log: Enabled"] = "Запись чатa: включена",
+["ChatLog"] = "Логи чата",
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Журнал боя записывается в <директория инсталляции WoW>\\Logs\\WoWCombatLog.txt только до выхода из игры.",
+["Combat Log: Disabled"] = "Запись журнала боя: выключена",
+["Combat Log: Enabled"] = "Запись журнала боя: включена",
+["quiet_desc"] = "Не отображать никаких сообщений, если данный модуль включен, или при изменении им настроек записи.",
+["quiet_name"] = "Подавлять инфо сообщения",
+["Toggle Chat Log"] = "Запись чата",
+["Toggle chat log on and off."] = "Вкл/Выкл запись чата.",
+["Toggle Combat Log"] = "Запись журнала боя",
+["Toggle combat log on and off."] = "Вкл/Выкл запись журнала боя.",
 }
-
-)
-L:AddLocale("esES",  
+PL:AddLocale("ruRU",L)
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "Un módulo que automáticamente activa el chat y el registro de combate.",
-	ChatLog = "Registro del Chat",
-	["Chat Log: Disabled"] = "Registro del Chat: Desactivado",
-	["Chat Log: Enabled"] = "Registro del Chat: Activado",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Registro del chat guardado en <Instalación WoW>\\Logs\\WoWChatLog.txt sólo al cierre de la sesión.",
-	["Combat Log: Disabled"] = "Registro de Combate: Desactivado",
-	["Combat Log: Enabled"] = "Registro de Combate: Activado",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Registro del combate guardado en <Instalación WoW>\\Logs\\WoWCombatLog.txt sólo al cierre de la sesión.",
-	quiet_desc = "No mostrar algún mensaje cuando este mod esté activdo, o cuando cambie la configuración del registro.",
-	quiet_name = "Suprimir Mensaje de Respuesta",
-	["Toggle Chat Log"] = "Alternar Registro del Chat",
-	["Toggle chat log on and off."] = "Alterna la activación del registro del chat.",
-	["Toggle Combat Log"] = "Alternar Registro de Combate",
-	["Toggle combat log on and off."] = "Alterna la activación del registro de combate.",
+["A module to automaticaly enable chat and combat logging."] = "自动启用聊天和战斗记录的模块",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "退出游戏时保存聊天记录在<魔兽世界安装目录>\\Logs\\WoWChatLog.txt",
+["Chat Log: Disabled"] = "聊天记录：禁用",
+["Chat Log: Enabled"] = "聊天记录：启用",
+["ChatLog"] = "聊天记录",
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "退出游戏后保存战斗记录在<魔兽世界安装目录>\\Logs\\WoWCombatLog.txt",
+["Combat Log: Disabled"] = "战斗记录：禁用",
+["Combat Log: Enabled"] = "战斗记录：启用",
+["quiet_desc"] = "模块启用或改变记录设置时不显示任何信息",
+["quiet_name"] = "禁止反馈信息",
+["Toggle Chat Log"] = "聊天记录",
+["Toggle chat log on and off."] = "切换聊天记录开关",
+["Toggle Combat Log"] = "战斗记录",
+["Toggle combat log on and off."] = "切换战斗记录开关",
 }
-
-)
-L:AddLocale("zhTW",  
+PL:AddLocale("zhCN",L)
+L=
 {
-	["A module to automaticaly enable chat and combat logging."] = "模組：自動啟用聊天以及戰鬥紀錄。",
-	ChatLog = "聊天記錄",
-	["Chat Log: Disabled"] = "聊天記錄：已停用",
-	["Chat Log: Enabled"] = "聊天記錄：已啟用",
-	["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "聊天紀錄至 <WoW Installation>\\Logs\\WoWChatLog.txt 僅於遊戲登出時。",
-	["Combat Log: Disabled"] = "戰鬥記錄：已停用",
-	["Combat Log: Enabled"] = "戰鬥記錄：已啟用",
-	["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "戰鬥紀錄至 <WoW Installation>\\Logs\\WoWChatLog.txt 僅於遊戲登出時。",
-	quiet_desc = "禁止顯示任何訊息當插件啟用時的訊息或者插件改變紀錄設定時。",
-	quiet_name = "禁止回饋訊息",
-	["Toggle Chat Log"] = "切換聊天記錄",
-	["Toggle chat log on and off."] = "切換聊天記錄啟用",
-	["Toggle Combat Log"] = "切換戰鬥記錄",
-	["Toggle combat log on and off."] = "切換戰鬥記錄啟用",
+["A module to automaticaly enable chat and combat logging."] = "Un módulo que automáticamente activa el chat y el registro de combate.",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "Registro del chat guardado en <Instalación WoW>\\Logs\\WoWChatLog.txt sólo al cierre de la sesión.",
+["Chat Log: Disabled"] = "Registro del Chat: Desactivado",
+["Chat Log: Enabled"] = "Registro del Chat: Activado",
+["ChatLog"] = "Registro del Chat",
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "Registro del combate guardado en <Instalación WoW>\\Logs\\WoWCombatLog.txt sólo al cierre de la sesión.",
+["Combat Log: Disabled"] = "Registro de Combate: Desactivado",
+["Combat Log: Enabled"] = "Registro de Combate: Activado",
+["quiet_desc"] = "No mostrar algún mensaje cuando este mod esté activdo, o cuando cambie la configuración del registro.",
+["quiet_name"] = "Suprimir Mensaje de Respuesta",
+["Toggle Chat Log"] = "Alternar Registro del Chat",
+["Toggle chat log on and off."] = "Alterna la activación del registro del chat.",
+["Toggle Combat Log"] = "Alternar Registro de Combate",
+["Toggle combat log on and off."] = "Alterna la activación del registro de combate.",
 }
-
-)
+PL:AddLocale("esES",L)
+L=
+{
+["A module to automaticaly enable chat and combat logging."] = "模組：自動啟用聊天以及戰鬥紀錄。",
+["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "聊天紀錄至 <WoW Installation>\\Logs\\WoWChatLog.txt 僅於遊戲登出時。",
+["Chat Log: Disabled"] = "聊天記錄：已停用",
+["Chat Log: Enabled"] = "聊天記錄：已啟用",
+["ChatLog"] = "聊天記錄",
+["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "戰鬥紀錄至 <WoW Installation>\\Logs\\WoWChatLog.txt 僅於遊戲登出時。",
+["Combat Log: Disabled"] = "戰鬥記錄：已停用",
+["Combat Log: Enabled"] = "戰鬥記錄：已啟用",
+["quiet_desc"] = "禁止顯示任何訊息當插件啟用時的訊息或者插件改變紀錄設定時。",
+["quiet_name"] = "禁止回饋訊息",
+["Toggle Chat Log"] = "切換聊天記錄",
+["Toggle chat log on and off."] = "切換聊天記錄啟用",
+["Toggle Combat Log"] = "切換戰鬥記錄",
+["Toggle combat log on and off."] = "切換戰鬥記錄啟用",
+}
+PL:AddLocale("zhTW",L)
+end
 --@end-non-debug@
 
 
@@ -287,25 +247,25 @@ Prat:SetModuleDefaults(module.name, {
 } )
 
 Prat:SetModuleOptions(module.name, {
-        name = L["ChatLog"],
-        desc = L["A module to automaticaly enable chat and combat logging."],
+        name = PL["ChatLog"],
+        desc = PL["A module to automaticaly enable chat and combat logging."],
         type = "group",
         args = {
             chat = {
-                name = L["Toggle Chat Log"],
-                desc = L["Toggle chat log on and off."],
+                name = PL["Toggle Chat Log"],
+                desc = PL["Toggle chat log on and off."],
                 type = "toggle",
                 set = "SetChatLog",
             },
             combat = {
-                name = L["Toggle Combat Log"],
-                desc = L["Toggle combat log on and off."],
+                name = PL["Toggle Combat Log"],
+                desc = PL["Toggle combat log on and off."],
                 type = "toggle",
                 set = "SetCombatLog",
             },
             quiet = {
-                name = L["quiet_name"],
-                desc = L["quiet_desc"],
+                name = PL["quiet_name"],
+                desc = PL["quiet_desc"],
                 type = "toggle",
             }
         }
@@ -330,12 +290,12 @@ end
 function module:SetChatLog(info, val)
     self.db.profile.chat = val
     if self.db.profile.chat then
-        self:Print(L["Chat Log: Enabled"])
-        self:Print(L["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."])
+        self:Print(PL["Chat Log: Enabled"])
+        self:Print(PL["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."])
         LoggingChat(true)
     else
         LoggingChat(false)
-        self:Print(L["Chat Log: Disabled"])
+        self:Print(PL["Chat Log: Disabled"])
     end
 end
 
@@ -343,12 +303,9 @@ end
 function module:SetCombatLog(info, val)
     self.db.profile.combat = val
     if self.db.profile.combat then
-        self:Print(L["Combat Log: Enabled"])
-        self:Print(L["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."])
+        self:Print(PL["Combat Log: Enabled"])
+        self:Print(PL["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."])
         LoggingCombat(true)
-    else
-        LoggingCombat(false)
-        self:Print(L["Combat Log: Disabled"])
     end
 end
 

@@ -35,15 +35,3 @@ GTFO.SpellID["71046"] = {
 	--desc = "Backlash (Sindragosa - 25H)";
 	sound = 1;
 };
-
-GTFO.SpellID["52659"] = {
-	--desc = "Static Overload (Ionar - Halls of Lightning)";
-	sound = 1;
-	tankSound = 0;
-};
-
-GTFO.SpellID["59796"] = {
-	--desc = "Static Overload (Ionar - Halls of Lightning Heroic)";
-	sound = 1;
-	tankSound = 0;
-};

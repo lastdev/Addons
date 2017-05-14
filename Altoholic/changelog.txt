@@ -7,7 +7,234 @@ IMPORTANT NOTE: As with every new expansion, many things have changed in the API
 This means cleaning the following files in \WTF\Account\<your_account>\SavedVariables : Altoholic.lua & All DataStore*.lua
 
 There WILL be bugs if you use your old files without cleaning them first. 
-Some fixes to work around API changes are too time consuming, so cleaning is required. A meager price to pay once per expansion.
+Some fixes to work around API changes are too time consuming, so cleaning is required. A meagre price to pay once per expansion.
+
+
+7.2.001 (29/03/2017)
+
+- DataStore_Talents : Fixed a few issues when scanning artifact data (Thanks AlexSUCF !)
+- DataStore_Talents : Fixed an issue when artifact XP was updated.
+
+Note: I haven't had time to play much tonight, but I did not discover urgent issues. I'll keep testing tomorrow & Friday and will post a fix if anything break.
+At the very least, I'll have to test the new reputation paragons to see if anything is broken on that side.
+
+7.1.004 (12/01/2017)
+
+Nine Year Anniversary Edition.
+
+The addon turned 9 a few weeks ago. It's sometimes been a bumpy ride, but I'm happy it brought me the things I expected from this experience when it all started.
+Looking at the changelog of the last 3 years, I have been less active than I hoped to, especially at the end of WoD, but I don't regret it.
+9 Years is a long commitment, and sometimes you need to recharge the batteries.
+I have no idea how long I will keep working on the addon, or just playing the game, but I know I'll keep doing it as long as I find it fun. :)
+
+Anyway, on to changelog:
+
+- Refined size and positioning of icons in the Achievements tab after the addition of the 12th column.
+- Fixed an issue where an artifact is scanned with 2 different names (ex: "Aluneth" & "Aluneth, Greatstaff of the Magna"). 
+If you saw duplicated names in the artifact tooltips, you will have to delete your alt via the account summary (right-click its name when NOT logged in with him) if it is affected by this. 
+- Reworked tracking of garrison missions, along with order hall missions. Tracking is visible in the Summary->Activity Panel, and also in the Characters tab.
+
+Important notes about artifact data:
+
+- Artifact data can only be read while you are viewing the artifact (using shift-right click), so I cannot automate refreshes.
+If you switch spec, and do not shift-right click your artifact, the addon will still think the old one is equipped.
+If your artifact gains a level, and you do not shift-right click it, the addon will not know about it.
+
+- Same thing for artifact knowledge.
+When you learn an artifact research note, or the whole new research compendium, no in-game event tells the addon that this has happened, so it cannot be refreshed automatically.
+
+- Finally, the delay until next research is also "only" for the very next research.
+If you queue 2 researches, the addon will tell you that the next one is in 3 days, but the game does not provide information about how long it will take for the one after that.
+So if you let 10 days pass, you will still see only 1/2 is ready for pickup, and no delay, because it is unknown.
+To update the delay until the next research, you have to view the Class Hall Report.
+
+These facts are clear annoyances, but given the constraints imposed by Blizzard, there is nothing I can do.
+Don't shoot the messenger :(
+
+
+7.1.003 (10/11/2016)
+
+- Added a row for the 12th character on both the achievements and grids tabs.
+
+Note: that's a quick implementation, I still want to update a few things under the hood, but I figured you guys had waited long enough already.
+
+7.1.002 (9/11/2016)
+
+- DataStore_Quests: Fixed a tainting issue that prevented players from queuing into battlegrounds.
+- DataStore_Talents: Added support for artifact data.
+- DataStore_Garrisons: Added support for tracking of next artifact research.
+- Summary tab: added an extra panel for artifact data.
+- Summary tab: added a tooltip for all column headers, and some OnClick actions behind a few buttons.
+- Summary tab: removed honor & conquest currencies, they were replaced by Order Hall resources & Seal of the Broken Fate.
+
+- Fixed a few other Lua errors.
+
+Note: I did some clean-up in the usage of localized strings in the Summary tab, some strings have to be translated, help appreciated :)
+
+It happens here : https://wow.curseforge.com/addons/altoholic/localization/
+
+7.1.001 (26/10/2016)
+
+- DataStore_Quests: added an option to select the hour at which daily quests are reset.
+- Updated the lists of achievements with the new ones added in Legion.
+- The talent panel is finally back. You can now also see the stat priority when mousing over the specialization name. 
+Note: The priorities come from Icy Veins, although I have not respected them 100%, based on my own experience, view, and discussions with guild mates.
+They are meant to be an indication for classes you do not play too often, and I do not wish to enter religious discussions about who is right or wrong, or about which stat is actually better :)
+ex: in some cases, Icy Veins indicated that the primary stat (STR, INT, ..) has a lesser priority than mastery or crit .. 
+well, I still kept the primary stat as #1 in the list, because in most cases, you WILL have this stat on each item.
+And if you reach the point where this difference matters, then you probably don't need the information any more, because you supposedly already know your class well enough.
+
+- DataStore_Talents: major overhaul to support the new panel. Old functions have obviously been deprecated.
+- LibCraftReagents is now deprecated, its functionality is now handled by DataStore_Crafts, which now has access to all recipes (even unlearned).
+It's now 100% accurate and maintains itself (yeah, less code to maintain \o/).
+Note: you should open each profession once to populate this internal reference table.
+- DataStore_Mails: Fixed the invalid attachment counts in the tooltip for mails sent by guild mates.
+- Removed LibBabble-Inventory, replaced the translations it provided by values returned by the game's API.
+- DataStore_Quests: Fixed scanning quest links, which caused a Lua error when clicking on a tooltip.
+Make sure to log in your alts once to fix their quest logs in the DB, this is what causes the tooltip issue.
+
+7.0.006 (09/08/2016)
+
+- DataStore: Fixed guild identification when the character is on a different realm than the guild.
+- Grids: Updated Archeology races and items for Legion.
+
+7.0.005 (31/07/2016)
+
+- DataStore: Fixed a lua error when getting AutoCompleteRealms.
+
+7.0.004 (31/07/2016)
+
+- Fixed issues related to connected realms (guild bank, tooltips, etc..)
+IMPORTANT NOTE: a guild bank will not be scanned if it's on a realm that is not known by the add-on.
+
+So if you have characters belonging to a guild from another realm, and you have no character on that realm, you will have to create a character on that other realm, and log him on once, just to identify the realm.
+
+The API provides absolutely no way of matching a short realm name to a long realm name.
+If your realm is a small name without spaces (like 'Dalaran'), then this might seem like a non-issue for you, but it makes it impossible to know precisely to which realm a guild belongs.
+Basically, my workaround is about making the addon know that "Marécage de Zangar" is also known as "MarécagedeZangar" by getting rid of spaces.
+
+This is an extremely imperfect solution, and I sincerely dislike it, but the API does not help in any way.
+The solution should hopefully work across all localizations, but I can't promise anything.
+
+Wanna help ? Relay this topic on the US forums :
+
+http://eu.battle.net/forums/en/wow/topic/17612943218
+
+and kindly bump.. 
+
+7.0.003 (27/07/2016)
+
+- Profession level cap raised to 800.
+- Fixed the counts not being shown in the item tooltip when mousing over a craft reagent in the tradeskill UI.
+- Fixed a Lua error when clicking on a recipe link in the chat log.
+- Fixed a Lua error when checking the guild bank tab.
+- DataStore_Talents: Rewrote scanning of talent information, UI will come back in a future release.
+
+7.0.002 (20/07/2016)
+
+- DataStore_Garrisons: Fixed a few Lua errors.
+- DataStore_Mails: Fixed the invalid attachment counts in the tooltip (note: you will have to visit the mailboxes that have a wrong count to correct it, it's not a display error, it's a database error)
+
+7.0.001 (19/07/2016)
+
+- REMINDER : CLEANING YOUR SAVED VARIABLES IS MANDATORY FOR 7.0 (YES I'M SHOUTING ! :D)
+- Various fixes to support 7.0 API changes.
+- Glyph UI has been removed.
+- Tabard UI has been removed.
+
+Note : I've been extremely busy with big projects & responsibilities at work in the past months (year ? .. almost!), but 21/07 is national day in Belgium so it's a long weekend over here, I'll have time to follow-up on 7.0 and release extra changes.
+I expect the rest of the year to keep quite busy given our current planning, hopefully 2017 should be quieter (and I'll have a long holiday in December, yay !).
+
+6.2.007 (12/09/2015)
+
+- Added Garona & Harrison Jones to the list of followers not recruited at the inn.
+- Fixed guild bank tab icons displayed as a red square instead of the tab's icon.
+- DataStore_Achievements: Fixed a Lua error at logon.
+
+6.2.006 (17/08/2015)
+
+Imported all changes made in the unofficial releases made during my absence.
+Many thanks to those who took it upon themselves to provide fixes for all those issues.
+To prevent confusing users, I will resume the version number based on Zwixx numbering, so if you used a version up to 6.2.005, you have to upgrade to this version.
+Some fixes made by me before the release I was supposed to make after 6.2 are also included, so make sure to upgrade.
+
+- DataStore_Reputations: added 6.2 factions. (Thanks Zwixx)
+- DataStore_Inventory: added LFR loots. (Thanks Zwixx)
+- DataStore_Garrisons: Fixed a Lua error when scanning followers. (Thanks Zwixx)
+- Fixed tooltip related issues. (Thanks Zwixx)
+
+- DataStore_Achievements: Fixed an issue where an earned achievement was not immediately saved to the DB, and was only read at next login.
+- Fixed a silly bug that prevented you from searching professions.
+- Account Summary -> Clicking on the level of any character toggles the display of decimals. This option is remembered across sessions.
+- Account Summary -> Clicking on the AiL of any character toggles the display of decimals. This option is remembered across sessions.
+- Created some extra templates to simplify the code (more on the way.. this happens bit by bit)
+
+6.1.006 (08/05/2015)
+
+- Updated list of archaeology projects with WoD projects. I apparently messed up and lost the file that contained the update in 6.1.001, it's now ok.
+- Moved several UI templates to their own folder.
+- Completely rewrote the Blizzard's DropDownMenu widget to use my own version. 
+I was tired of some of the constraints of their implementation, and of the loss of time it caused me every time I wanted to use one.
+So I invested some time in making it my way.
+- Account Summary -> The amount of uncollected garrison resources now appears in yellow when resources exceed 300, and in red when they exceed 450.
+- Account Summary -> Added icons with drop-down menus to filter your list of alts by faction, level, profession and class.
+- Account Summary -> Fixed the expand/collapse button that did not work any more after the complete rewrite of the pane.
+- Achievements lists updated ! (Thanks Bluemage29 for your help !!)
+- Fixed a Lua error when viewing the Guild tab with an character not in a guild.
+
+6.1.005 (20/04/2015)
+
+- The garrison mission tooltip now shows a red exclamation mark '!' when no missions are active.
+- In the account summary, the last column used to sort the view is now remembered, and is restored when you log in again.
+- Character's tab: fixed a lua error when mousing over the professions' icon of a character that does not have 2 professions.
+- Account Summary: modified the garrison followers pane to show followers at iLvl 675 and a column for their weapon/armor iLvl.
+
+6.1.004 (11/04/2015)
+
+- Fixed sorting the account summary by "Last Online" where the order was sometimes incorrect.
+- Added an option to show the tooltip counters without details (no 'equipped', 'bank', ..). Disabled by default.
+- No longer wiping the list of followers before scanning them.
+- Added a tooltip to the garrison resources in the account summary, it now shows when resources were last collected, and when you will reach the maximum of uncollected resources.
+- Fixed incorrect tooltip after multiple searches in the search tab.
+- DataStore_Garrisons: Some clean-up to properly report active missions.
+- The garrison mission tooltip that shows a '*' when missions are complete now shows it in red if all active missions are complete.
+
+6.1.003 (07/04/2015)
+
+REMINDER: If you are looking for a free Heroes of the Storm Beta key for the European Region, you should check the comments section on Curse & WoW Inteface.. I still have a few keys to give away.
+
+- Fixed a few lua errors in the account summary tab.
+- Added Draenor LFR dungeons to the Grids->Dungeon Finder pane.
+
+6.1.002 (06/04/2015)
+
+- Updated scanning of currencies (honor points), total no longer needs to be divided by 100 since 6.1.
+- Updated the garrison followers pane in the account summary to show followers with an iLvl greater than 660.
+- DataStore Characters: updated GetRestXPRate() to account for Pandaren extra rest xp.
+- Fixed Auction House scanning, and cleaning of expired auctions.
+- The summary tab has been fully rewritten so that all 6 panes use the same frames. 
+This will make the addition of future content much easier. 
+Some new features here and there while I was at it (quality of life improvements mostly), I'll let you discover them :)
+This is an update I wanted to do for a long time, and there are more things planned (more filters).. the other tabs will get an update too.
+
+
+6.1.001 (25/02/2015)
+
+- Added support for Garrison missions ! Warnings are not in yet, but available and active missions are now visible in the characters' tab.
+Note: Active missions can only be correctly tracked if the mission is started with this version of Altoholic, so currently active missions will be visible, but their expiration will not. Sorry, this info is not provided by the game, I have to "manually" keep track of it.
+- Fixed the spam of mail expiry warnings, this time for good (hopefully ! feedback appreciated on this one!).
+- Now refreshing the follower's pane immediately when the followers' list is updated.
+- Updated list of followers not recruited at the inn.
+- Updated list of archaeology projects with WoD projects.
+- Cleaned up the .pkgmeta of DataStore modules, my sources tell me this should prevent some problems with the Curse Client :) (Thanks Myrroddin !)
+- Removed "already known/could be learned by" information from tooltips for companions, as they have been account-wide for a while.
+- More code cleanup.
+
+Note: I made several attempts at fixing the double guild bank counters in the tooltip, thanks to all of you who sent me their SV files, the issue is now clear.
+Nevertheless, a complete perfect fix is not yet possible, as Blizzard does not provide the real/full realm name to which the guild actually belongs.
+The best I can get in my case is "MarécagedeZangar" when I actually expect "Marécage de Zangar", and that value is nowhere to be found in the API.
+Long story short, I have to come up with a way to work around this that does not force you guys to respect weird conditions to make it work..
+
 
 6.0.004 (09/01/2015)
 

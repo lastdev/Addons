@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Version: 7.5.5714 (TasmanianThylacine)
 	Revision: $Id: EnxCommand.lua 5071 2011-01-15 23:10:48Z ccox $
 	URL: http://enchantrix.org/
 

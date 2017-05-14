@@ -11,7 +11,10 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
 
-Recount.Version = tonumber(string.sub("$Revision: 1301 $", 12, -3))
+Recount.Version = tonumber(string.sub("$Revision: 1415 $", 12, -3))
+
+
+
 
 local _G = _G
 local abs = abs
@@ -185,11 +188,19 @@ local Default_Profile = {
 		MainWindowVis = true,
 		MainWindowMode = 1,
 		Locked = false,
-		EnableSync = true, -- Elsia: Default enable sync is set to true again now, thanks to lazy syncing
+		EnableSync = false, -- Elsia: Default enable sync is set to true again now, thanks to lazy syncing
 		GlobalDataCollect = true, -- Elsia: Global toggle for data collection
 		HideCollect = false, -- Elsia: Hide Recount window when not collecting data
 		Font = "Arial Narrow",
 		Scaling = 1,
+		Modules = {
+			HealingTaken = true,
+			OverhealingDone = true,
+			Deaths = true,
+			DOTUptime = true,
+			HOTUptime = true,
+			Activity = true,
+		},
 		MainWindow = {
 			Buttons = {
 				ReportButton = true,
@@ -276,7 +287,7 @@ local Default_Profile = {
 		GroupFilters = {
 			[1] = true, -- Solo
 			[2] = true, -- Party
-			[3] = true, -- Raid	
+			[3] = true, -- Raid
 		},
 		FilterDeathType = {
 			DAMAGE = true,
@@ -323,6 +334,10 @@ BINDING_NAME_RECOUNT_MANA = L["Display"].." "..L["Mana Gained"]
 BINDING_NAME_RECOUNT_ENERGY = L["Display"].." "..L["Energy Gained"]
 BINDING_NAME_RECOUNT_RAGE = L["Display"].." "..L["Rage Gained"]
 BINDING_NAME_RECOUNT_RUNICPOWER = L["Display"].." "..L["Runic Power Gained"]
+BINDING_NAME_RECOUNT_LUNAR_POWER = L["Display"].." "..L["Astral Power Gained"]
+BINDING_NAME_RECOUNT_MAELSTROM = L["Display"].." "..L["Maelstorm Gained"]
+BINDING_NAME_RECOUNT_FURY = L["Display"].." "..L["Fury Gained"]
+BINDING_NAME_RECOUNT_PAIN = L["Display"].." "..L["Pain Gained"]
 
 BINDING_NAME_RECOUNT_REPORT_MAIN = L["Report the Main Window Data"]
 BINDING_NAME_RECOUNT_REPORT_DETAILS = L["Report the Detail Window Data"]
@@ -331,6 +346,7 @@ BINDING_NAME_RECOUNT_SHOW_MAIN = L["Shows the main window"]
 BINDING_NAME_RECOUNT_HIDE_MAIN = L["Hides the main window"]
 BINDING_NAME_RECOUNT_TOGGLE_MAIN = L["Toggles the main window"]
 BINDING_NAME_RECOUNT_TOGGLE_PAUSE = L["Toggle pause of global data collection"]
+BINDING_NAME_RECOUNT_TOGGLE_MERGEPETS = L["Toggle merge pets"]
 
 local optFrame
 
@@ -565,7 +581,6 @@ Recount.consoleOptions = {
 				Recount:SetStrataAndClamp()
 			end,
 		},
-		
 	}
 }
 
@@ -1126,8 +1141,8 @@ function Recount:AddPetCombatant(nameGUID, petName, nameFlags, ownerGUID, owner,
 		lastSummonOwnerName = owner
 		lastSummonOwnerGUID = ownerGUID
 	end
-	local name = petName.." <"..owner..">"
-	local combatant = dbCombatants[name] or { }
+	--local name = petName.." <"..owner..">"
+	--local combatant = dbCombatants[name] or { }
 	--[[if bit_band(ownerFlags, COMBATLOG_OBJECT_AFFILIATION_MINE + COMBATLOG_OBJECT_AFFILIATION_PARTY + COMBATLOG_OBJECT_AFFILIATION_RAID+COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0 then
 		--return -- Elsia: We only keep affiliated or friendly pets. These flags can be horribly wrong unfortunately
 	end
@@ -1139,6 +1154,8 @@ function Recount:AddPetCombatant(nameGUID, petName, nameFlags, ownerGUID, owner,
 	if inheritowner then -- This should only happen for pets of pets such as greater elementals
 		owner = inheritowner 
 	end
+	local name = petName.." <"..owner..">"
+	local combatant = dbCombatants[name] or { }
 	--local elementschool = petName:match("(.*) Elemental Totem")
 	--Recount:Print(petName.." "..(elementschool or "nil").." "..nameGUID:sub(3,-1)) -- This line needs adjusted to 6.0.2 GUID system to ever function
 	--if bit_band(nameFlags, COMBATLOG_OBJECT_TYPE_GUARDIAN) then
@@ -1300,8 +1317,8 @@ function Recount:AddCombatant(name, owner, nameGUID, nameFlags, ownerGUID)
 				combatant.type = "Nontrivial"
 			end
 			combatant.enClass = "MOB"
-			 else
-			Recount:DPrint("Unknown spotted")
+		else
+			--Recount:DPrint("Unknown spotted")
 			combatant.type = "Unknown"
 			combatant.enClass = "UNKNOWN"
 		end
@@ -1657,7 +1674,6 @@ function Recount:InitCombatData()
 	Recount.db2.combatants = Recount.db2.combatants or { }
 	Recount.db2.CombatTimes = Recount.db2.CombatTimes or { }
 	Recount.db2.FoughtWho = Recount.db2.FoughtWho or { }
-	
 end
 
 function Recount.LocalizeCombatants()

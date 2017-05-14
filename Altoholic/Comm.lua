@@ -1,13 +1,9 @@
-﻿local addonName = ...
+local addonName = ...
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 -- local LibComp = LibStub:GetLibrary("LibCompress")
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local YELLOW	= "|cFFFFFF00"
-local TEAL		= "|cFF00FF9A"
 
 Altoholic.Comm = {}
 
@@ -257,25 +253,17 @@ function Altoholic.Comm.Sharing:RequestNext(player)
 	
 	Altoholic:SetLastAccountSharingInfo(player, GetRealmName(), self.account)
 	
-	Altoholic.Characters:BuildList()
-	Altoholic.Characters:BuildView()
-	Altoholic.Tabs.Summary:Refresh()
+	Altoholic.Characters:InvalidateView()
+	Altoholic.Summary:Update()
 end
 
-function Altoholic.Comm.Sharing:MsgBoxHandler(button)
-
-	local self = Altoholic.Comm.Sharing
-	
-	AltoMsgBox.ButtonHandler = nil		-- prevent any other call to msgbox from coming back here
-	local sender = AltoMsgBox.Sender
-	AltoMsgBox.Sender = nil
-	
+local function SharingRequestReceived_Handler(self, button, sender)
 	if not button then 
 		Whisper(sender, MSG_ACCOUNT_SHARING_REFUSED)
 		return 
 	end
 
-	self:SendSourceTOC(sender)
+	Altoholic.Comm.Sharing:SendSourceTOC(sender)
 end
 
 local AUTH_AUTO	= 1
@@ -302,13 +290,17 @@ function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 		self:SendSourceTOC(sender)
 	elseif auth == AUTH_ASK then
 		Altoholic:Print(format(L["Account sharing request received from %s"], sender))
-		AltoMsgBox:SetHeight(130)
-		AltoMsgBox_Text:SetHeight(60)
-		AltoMsgBox.ButtonHandler = Altoholic.Comm.Sharing.MsgBoxHandler
-		AltoMsgBox.Sender = sender
-		AltoMsgBox_Text:SetText(format(L["You have received an account sharing request\nfrom %s%s|r, accept it?"], WHITE, sender) .. "\n\n"
-								.. format(L["%sWarning:|r if you accept, %sALL|r information known\nby Altoholic will be sent to %s%s|r (bags, money, etc..)"], WHITE, GREEN, WHITE,sender))
-		AltoMsgBox:Show()
+		
+		AltoMessageBox:SetHeight(130)
+		AltoMessageBox.Text:SetHeight(60)
+		AltoMessageBox:SetHandler(SharingRequestReceived_Handler, sender)
+		AltoMessageBox:SetText(
+			format("%s\n\n%s",
+				format(L["You have received an account sharing request\nfrom %s%s|r, accept it?"], colors.white, sender),
+				format(L["%sWarning:|r if you accept, %sALL|r information known\nby Altoholic will be sent to %s%s|r (bags, money, etc..)"], colors.white, colors.green, colors.white,sender)
+			))
+		AltoMessageBox:Show()
+		
 	elseif auth == AUTH_NEVER then
 		Whisper(sender, MSG_ACCOUNT_SHARING_REFUSED)
 	end
@@ -496,10 +488,9 @@ function addon:DATASTORE_BANKTAB_REQUESTED(event, sender, tabName)
 		return
 	end
 
-	AltoMsgBox:SetHeight(130)
-	AltoMsgBox_Text:SetHeight(60)
-	
-	addon:SetMsgBoxHandler(function(self, button, sender, tabName)
+	AltoMessageBox:SetHeight(130)
+	AltoMessageBox.Text:SetHeight(60)
+	AltoMessageBox:SetHandler(function(self, button, sender, tabName)
 			if not button then 
 				DataStore:RejectBankTabRequest(sender)
 			else
@@ -507,14 +498,17 @@ function addon:DATASTORE_BANKTAB_REQUESTED(event, sender, tabName)
 			end
 		end, sender, tabName)
 	
-	AltoMsgBox_Text:SetText(format(L["%s%s|r has requested the bank tab %s%s|r\nSend this information ?"], WHITE, sender, WHITE, tabName) .. "\n\n"
-							.. format(L["%sWarning:|r make sure this user may view this information before accepting"], WHITE))
-	AltoMsgBox:Show()
+	AltoMessageBox:SetText(
+		format("%s\n\n%s",
+			format(L["%s%s|r has requested the bank tab %s%s|r\nSend this information ?"], colors.white, sender, colors.white, tabName),
+			format(L["%sWarning:|r make sure this user may view this information before accepting"], colors.white)
+		))
+	AltoMessageBox:Show()
 end
 
 function addon:DATASTORE_GUILD_MAIL_RECEIVED(event, sender, recipient)
 	if addon:GetOption("UI.Mail.GuildMailWarning") then
-		addon:Print(format(L["%s|r has received a mail from %s"], GREEN..recipient, GREEN..sender))
+		addon:Print(format(L["%s|r has received a mail from %s"], format("%s%s", colors.green, recipient), format("%s%s", colors.green, sender)))
 	end
 end
 
@@ -529,20 +523,21 @@ function addon:DATASTORE_GLOBAL_MAIL_EXPIRY(event, threshold)
 		return		-- no ? exit !
 	end
 	
-	AltoMsgBox:SetHeight(130)
-	AltoMsgBox_Text:SetHeight(60)
-	addon:SetMsgBoxHandler(function(self, button)
+	AltoMessageBox:SetHeight(130)
+	AltoMessageBox.Text:SetHeight(60)
+	AltoMessageBox:SetHandler(function(self, button)
 			if button then
 				addon:ToggleUI()
-				addon.Tabs.Summary:MenuItem_OnClick(4)
+				AltoholicTabSummary.MenuItem4:Item_OnClick()
 			end
 		end)
 	
-	AltoMsgBox_Text:SetText(format("%sAltoholic: %s%s", TEAL, WHITE, 
-		"\n" .. L["Mail is about to expire on at least one character."] .. "\n" 
-		.. L["Refer to the activity pane for more details."].. "\n\n")
-		.. L["Do you want to view it now ?"])
-	AltoMsgBox:Show()
+	AltoMessageBox:SetText(format("%sAltoholic: %s\n%s\n%s\n\n%s", colors.teal, colors.white, 
+		L["Mail is about to expire on at least one character."],
+		L["Refer to the activity pane for more details."],
+		L["Do you want to view it now ?"]))
+	
+	AltoMessageBox:Show()
 	
 	addon:SetOption("UI.Mail.LastExpiryWarning", now)
 end

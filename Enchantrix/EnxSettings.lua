@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnxSettings.lua 5536 2014-12-12 15:26:40Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnxSettings.lua 5644 2016-08-06 21:39:02Z ccox $
 	URL: http://enchantrix.org/
 
 	Settings GUI
@@ -63,7 +63,7 @@ Usage:
 
 ]]
 
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxSettings.lua $", "$Rev: 5536 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxSettings.lua $", "$Rev: 5644 $")
 
 local lib = {}
 Enchantrix.Settings = lib
@@ -118,23 +118,24 @@ local settingDefaults = {
 	['TooltipShowAuctValueMedian'] = true,
 	['TooltipShowBaselineValue'] = true,
 	['TooltipShowAuctAdvValue'] = true,
-	['TooltipShowDisenchantLevel'] = true,	-- should the item tooltip show the enchanting level needed to disenchant
-	['TooltipShowDisenchantMats'] = true,	-- should the item tooltip show what it disenchants into? (for those who are just greedy)
-	['TooltipShowMatSources'] = true,		-- should we show the source for enchant mats, gems, and inks?
+	['TooltipShowDisenchantLevel'] = true,		-- should the item tooltip show the enchanting level needed to disenchant
+	['TooltipShowDisenchantMats'] = true,		-- should the item tooltip show what it disenchants into? (for those who are just greedy)
+	['TooltipShowMatSources'] = true,			-- should we show the source for enchant mats, gems, and inks?
+	['TooltipShowItemDebugDetails'] = false,	-- debugging information that is sometimes useful, not exposed in UI
 
 	['TooltipShowProspecting'] = true,		-- should the tooltip show any prospecting data?
 	['TooltipProspectLevels'] = true,		-- should the tooltip show skill level needed to prospect?
 	['TooltipProspectValues'] = true,		-- should the tooltip show prospecting values
-	['TooltipProspectMats'] = true,			-- should the item tooltip show what it prospects into? (for those who are just greedy)
+	['TooltipProspectMats'] = true,			-- should the item tooltip show what it prospects into?
 	['TooltipProspectShowAuctValueHSP'] = true,
 	['TooltipProspectShowAuctValueMedian'] = true,
 	['TooltipProspectShowBaselineValue'] = true,
 	['TooltipProspectShowAuctAdvValue'] = true,
 
 	['TooltipShowMilling'] = true,		-- should the tooltip show any Milling data?
-	['TooltipMillingLevels'] = true,		-- should the tooltip show skill level needed to Milling?
-	['TooltipMillingValues'] = true,		-- should the tooltip show Millinging values
-	['TooltipMillingMats'] = true,			-- should the item tooltip show what it Millings into? (for those who are just greedy)
+	['TooltipMillingLevels'] = true,		-- should the tooltip show skill level needed to mill?
+	['TooltipMillingValues'] = true,		-- should the tooltip show Milling values
+	['TooltipMillingMats'] = true,			-- should the item tooltip show what it Mills into?
 	['TooltipMillingShowAuctValueHSP'] = true,
 	['TooltipMillingShowAuctValueMedian'] = true,
 	['TooltipMillingShowBaselineValue'] = true,

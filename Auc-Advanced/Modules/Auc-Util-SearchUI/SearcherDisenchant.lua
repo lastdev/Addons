@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Disenchant
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherDisenchant.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: SearcherDisenchant.lua 5671 2016-09-10 05:25:34Z ccox $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -146,7 +146,7 @@ function lib.Search(item)
 		return false, "Skill not high enough to disenchant"
 	end
 
-	local data = Enchantrix.Storage.GetItemDisenchants(item[Const.ITEMID])
+	local data = Enchantrix.Storage.GetItemDisenchants(item[Const.LINK])	-- was Const.ITEMID
 	if not data then
 		return false, "Item not Disenchantable"
 	end
@@ -190,4 +190,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherDisenchant.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherDisenchant.lua $", "$Rev: 5671 $")

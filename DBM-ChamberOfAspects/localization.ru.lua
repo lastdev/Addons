@@ -158,8 +158,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Предупреждать о применении заклинания $spell:77844",
 	AnnounceAlternatePhase	= "Показывать предупреждения и таймеры для обоих миров",
-	SetIconOnConsumption	= "Устанавливать метки на цели заклинаний $spell:74562 или $spell:74792",--So we can use single functions for both versions of spell.
-	WhisperOnConsumption	= "Шепот целям заклинаний $spell:74562 или $spell:74792 (требуется лидер рейда)"
+	SetIconOnConsumption	= "Устанавливать метки на цели заклинаний $spell:74562 или $spell:74792"--So we can use single functions for both versions of spell.
 })
 
 L:SetMiscLocalization({
@@ -168,7 +167,5 @@ L:SetMiscLocalization({
 	Phase2					= "В мире сумерек вы найдете лишь страдания! Входите, если посмеете!",
 	Phase3					= "Я есть свет и я есть тьма! Трепещите, ничтожные, перед посланником Смертокрыла!",
 	twilightcutter			= "Во вращающихся сферах пульсирует темная энергия!",
-	WhisperCombustion		= "Пылающий огонь на вас! Бегите к стене!",
-	WhisperConsumption		= "Пожирание души на вас! Бегите к стене!",
 	Kill					= "Это ваша последняя победа. Насладитесь сполна ее вкусом. Ибо когда вернется мой господин, этот мир сгинет в огне!"
 })

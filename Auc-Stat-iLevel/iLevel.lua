@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - iLevel Standard Deviation Statistics module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: iLevel.lua 5470 2014-09-05 16:39:23Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: iLevel.lua 5540 2015-01-21 21:13:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -44,10 +44,13 @@ local floor,abs,max = floor,abs,max
 local concat = table.concat
 local strmatch = strmatch
 
+local Resources = AucAdvanced.Resources
 local EquipEncode = AucAdvanced.Const.EquipEncode
-local GetFaction = AucAdvanced.GetFaction
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+local GetServerKeyText = AucAdvanced.GetServerKeyText
 
 local KEEP_NUM_POINTS = 250
+local DATABASE_VERSION = 2.0
 
 -- Constants used when creating a PDF:
 local BASE_WEIGHT = 0.2 -- iLevel starts with a lower weight than most other Stat modules
@@ -65,11 +68,12 @@ local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
 local ESTIMATE_THRESHOLD = 10
 local ESTIMATE_FACTOR = 0.33
 
+local WEAKVALUEMETA = {__mode="v"}
 local ZValues = {.063, .126, .189, .253, .319, .385, .454, .525, .598, .675, .756, .842, .935, 1.037, 1.151, 1.282, 1.441, 1.646, 1.962, 20, 20000}
 
 function lib.CommandHandler(command, ...)
-	local serverKey = GetFaction()
-	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
+	local serverKey = Resources.ServerKey
+	local keyText = GetServerKeyText(serverKey)
 	if (command == "help") then
 		aucPrint(_TRANS('ILVL_Help_SlashHelp1') )--Help for Auctioneer Advanced - iLevel
 		local line = AucAdvanced.Config.GetCommandLead(libType, libName)
@@ -82,34 +86,28 @@ end
 
 lib.Processors = {}
 function lib.Processors.itemtooltip(callbackType, ...)
-	lib.ProcessTooltip(...)
+	private.ProcessTooltip(...)
 end
-function lib.Processors.config(callbackType, ...)
+function lib.Processors.config(callbackType, gui)
 	if private.SetupConfigGui then -- only call it once
-		private.SetupConfigGui(...)
+		private.SetupConfigGui(gui)
 	end
 end
-function lib.Processors.scanstats(callbackType, ...)
+function lib.Processors.scanstats()
 	private.ResetCache()
 	private.RepackStats()
 end
-
-
+function lib.Processors.gameactive()
+	if private.LookForOldData then private.LookForOldData() end
+end
 
 lib.ScanProcessors = {}
 function lib.ScanProcessors.create(operation, itemData, oldData)
 	if not get("stat.ilevel.enable") then return end
-	-- This function is responsible for processing and storing the stats after each scan
-	-- Note: itemData gets reused over and over again, so do not make changes to it, or use
-	-- it in places where you rely on it. Make a deep copy of it if you need it after this
-	-- function returns.
 
-	-- We're only interested in items with buyouts.
+	-- We're only interested in items with buyouts, and with stack size 1
 	local buyout = itemData.buyoutPrice
-	if not buyout or buyout == 0 then return end
-	if (itemData.stackSize > 1) then
-		buyout = buyout.."/"..itemData.stackSize
-	end
+	if not buyout or buyout == 0 or itemData.stackSize ~= 1 then return end
 
 	-- Get the signature of this item and find it's stats.
 	local iLevel, quality, equipPos = itemData.itemLevel, itemData.quality, itemData.equipPos
@@ -118,8 +116,7 @@ function lib.ScanProcessors.create(operation, itemData, oldData)
 	if quality < 1 then return end
 	local itemSig = ("%d:%d"):format(equipPos, quality)
 
-	local serverKey = GetFaction()
-	local stats = private.GetUnpackedStats(serverKey, itemSig, true) -- read/write
+	local stats = private.GetUnpackedStats(Resources.ServerKey, itemSig, true) -- read/write
 	if not stats[iLevel] then stats[iLevel] = {} end
     local sz = #stats[iLevel]
 	stats[iLevel][sz+1] = buyout
@@ -130,10 +127,7 @@ local BellCurve = AucAdvanced.API.GenerateBellCurve()
 -- The PDF for standard deviation data, standard bell curve
 -----------------------------------------------------------------------------------
 function lib.GetItemPDF(hyperlink, serverKey)
-	if not get("stat.ilevel.enable") then return end
-	-- Get the data
 	local average, mean, _, stddev, variance, count, confidence = lib.GetPrice(hyperlink, serverKey)
-
 	if not (average and stddev and count) or average == 0 or count < LOWSEEN_MINIMUM then
 		return nil -- No data, cannot determine pricing
 	end
@@ -192,8 +186,7 @@ function private.GetCfromZ(Z)
 	end
 end
 
-local weakmeta = {__mode="kv"}
-local pricecache = setmetatable({}, weakmeta)
+local pricecache = setmetatable({}, WEAKVALUEMETA)
 function private.ResetCache()
 	wipe(pricecache)
 end
@@ -202,12 +195,13 @@ local datapoints_price = {}   -- used temporarily in .GetPrice() to avoid unpack
 local datapoints_stack = {}
 
 function lib.GetPrice(hyperlink, serverKey)
+	local average, mean, stdev, variance, count, confidence
+
 	if not get("stat.ilevel.enable") then return end
 	local itemSig, iLevel = private.GetItemDetail(hyperlink)
 	if not itemSig then return end
-	if not serverKey then serverKey = GetFaction() end
-
-	local average, mean, stdev, variance, count, confidence
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
 
 	local cacheSig = serverKey..itemSig..";"..iLevel
 	if pricecache[cacheSig] then
@@ -309,7 +303,7 @@ function private.SetupConfigGui(gui)
 		_TRANS('ILVL_Help_WhatFilteredAnswer') )--Items outside a (1.5*Standard) variance are ignored and assumed to be wrongly priced when calculating the deviation.
 
 	--all options in here will be duplicated in the tooltip frame
-	function private.addTooltipControls(id)
+	local function addTooltipControls(id)
 		gui:AddHelp(id, "what standard deviation",
 			_TRANS('ILVL_Help_WhatStdDev') ,--What is a Standard Deviation calculation?
 			_TRANS('ILVL_Help_WhatStdDevAnswer') )--In short terms, it is a distance to mean average calculation.
@@ -351,11 +345,11 @@ function private.SetupConfigGui(gui)
 	local tooltipID = AucAdvanced.Settings.Gui.tooltipID
 
 	--now we create a duplicate of these in the tooltip frame
-	private.addTooltipControls(id)
-	if tooltipID then private.addTooltipControls(tooltipID) end
+	addTooltipControls(id)
+	if tooltipID then addTooltipControls(tooltipID) end
 end
 
-function lib.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
+function private.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not get("stat.ilevel.tooltip") then return end
 
 	if not quantity or quantity < 1 then quantity = 1 end
@@ -403,20 +397,21 @@ function lib.OnLoad(addon)
 end
 
 function lib.OnUnload()
-	private.RepackStats()
+	private.OnLogout()
 end
 
 function lib.ClearItem(hyperlink, serverKey)
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then return end
 	local itemSig, iLevel, equipPos, quality = private.GetItemDetail(hyperlink)
 	if not itemSig then return end
 
-	if not serverKey then serverKey = GetFaction() end
 	local stats = private.GetUnpackedStats(serverKey, itemSig, true)
 	if stats[iLevel] then
 		stats[iLevel] = nil
 		private.RepackStats()
 		private.ResetCache()
-		local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
+		local keyText = GetServerKeyText(serverKey)
 		aucPrint(_TRANS('ILVL_Interface_ClearingItems'):format(iLevel, quality, equipPos, keyText))--Stat-iLevel: clearing data for iLevel=%d/quality=%d/equip=%d items for {{%s}}
 		return
 	end
@@ -430,24 +425,100 @@ local unpacked, updated = {}, {}
 
 function private.InitData()
 	private.InitData = nil
-	if not AucAdvancedStat_iLevelData then AucAdvancedStat_iLevelData = {} end
-	ILRealmData = AucAdvancedStat_iLevelData
+	if private.UpgradeDB then private.UpgradeDB() end
+	ILRealmData = AucAdvancedStat_iLevelData.RealmData
+	if not ILRealmData then
+		ILRealmData = {} -- dummy value to avoid more errors - will not get saved
+		error("Error loading or creating Stat-iLevel database")
+	end
+end
+
+function private.OnLogout()
+	private.RepackStats()
+	for serverKey, data in pairs(ILRealmData) do
+		if not next(data) then
+			ILRealmData[serverKey] = nil
+		end
+	end
+	if AucAdvancedStat_iLevelData.OldRealmData then
+		if not AucAdvancedStat_iLevelData.OldRealmData.expires or time() > AucAdvancedStat_iLevelData.OldRealmData.expires then
+			AucAdvancedStat_iLevelData.OldRealmData = nil
+		end
+	end
+end
+
+function private.UpgradeDB()
+	private.UpgradeDB = nil
+
+	local saved = AucAdvancedStat_iLevelData
+
+	if saved and saved.Version == DATABASE_VERSION then return end
+
+	AucAdvancedStat_iLevelData = {
+		Version = DATABASE_VERSION,
+		RealmData = {}
+	}
+
+	if saved and not saved.Version then
+		-- original version: should be a table with simple format [serverKey] = {<data>}
+		-- used old-style serverKeys; we want to upgrade to new-style
+		-- internal format of {<data>} is unchanged
+
+		for serverKey, data in pairs(saved) do
+			if type(data) ~= "table" or not next(data) then -- don't keep invalid entries or empty tables
+				saved[serverKey] = nil
+			else
+				local realm, faction = AucAdvanced.SplitServerKey(serverKey)
+				if not realm or faction == "Neutral" then -- don't keep invalid or neutral (old style) serverKeys
+					saved[serverKey] = nil
+				end
+			end
+		end
+
+		if next(saved) then
+			AucAdvancedStat_iLevelData.OldRealmData = saved
+			saved.expires = time() + 1209600 -- 60 * 60 * 24 * 14 = 14 days
+		end
+	end
+end
+
+function private.LookForOldData()
+	private.LookForOldData = nil
+
+	local oldrealms = AucAdvancedStat_iLevelData.OldRealmData
+	if not oldrealms then return end
+
+	local newKey = Resources.ServerKey
+	if  not ILRealmData[newKey] then
+		-- prefer home faction, but use opposing if no home data
+		ILRealmData[newKey] = oldrealms[Resources.ServerKeyHome] or oldrealms[Resources.ServerKeyOpposing]
+	end
+
+	oldrealms[Resources.ServerKeyHome] = nil
+	oldrealms[Resources.ServerKeyOpposing] = nil
 end
 
 function lib.ClearData(serverKey)
-	serverKey = serverKey or GetFaction()
 	private.ResetCache()
 	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
 		wipe(ILRealmData)
 		wipe(unpacked)
 		wipe(updated)
+		AucAdvancedStat_iLevelData.OldRealmData = nil
 		aucPrint(_TRANS('ILVL_Help_SlashHelp5').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing iLevel stats for // All realms
-	elseif ILRealmData[serverKey] then
-		ILRealmData[serverKey] = nil
-		unpacked[serverKey] = nil
-		-- 'updated' may contain orphaned entries - these will be cleaned up in next RepackStats
-		local _, _, keyText = AucAdvanced.SplitServerKey(serverKey)
-		aucPrint(_TRANS('ILVL_Help_SlashHelp5').." {{"..keyText.."}}") --Clearing iLevel stats for
+	else
+		local oldrealms = AucAdvancedStat_iLevelData.OldRealmData
+		if oldrealms then
+			oldrealms[serverKey] = nil -- silently delete any matching old data, if it exists
+		end
+		serverKey = ResolveServerKey(serverKey)
+		if ILRealmData[serverKey] then
+			ILRealmData[serverKey] = nil
+			unpacked[serverKey] = nil
+			-- 'updated' may contain orphaned entries - these will be cleaned up in next RepackStats
+			local keyText = GetServerKeyText(serverKey)
+			aucPrint(_TRANS('ILVL_Help_SlashHelp5').." {{"..keyText.."}}") --Clearing iLevel stats for
+		end
 	end
 end
 
@@ -470,6 +541,7 @@ end
 --[[
 stats = GetUnpackedStats (serverKey, itemSig, writing)
 Obtain a cached data table for itemSig in serverKey's data.
+From DataBase Version 2.0, serverKey should be new style, and should have been validated by caller
 Set writing to true if you intend to change the data
 Caution: if you set 'writing' to true, RepackStats() must be called before the end of the session to save the changes
 --]]
@@ -484,16 +556,13 @@ function private.GetUnpackedStats(serverKey, itemSig, writing)
 
 	local realmdata = ILRealmData[serverKey]
 	if not realmdata then
-		if not AucAdvanced.SplitServerKey(serverKey) then
-			error("Invalid serverKey passed to Stat-iLevel")
-		end
 		realmdata = {}
 		ILRealmData[serverKey] = realmdata
 	end
 
 	stats = private.UnpackStats(realmdata, itemSig)
 
-	if not unpacked[serverKey] then unpacked[serverKey] = {} end
+	if not unpacked[serverKey] then unpacked[serverKey] = setmetatable({}, WEAKVALUEMETA) end
 	unpacked[serverKey][itemSig] = stats
 	if writing then
 		updated[stats] = true
@@ -521,6 +590,27 @@ function private.RepackStats()
 		end
 	end
 	wipe(updated)
+end
+
+-- GetServerKeyList
+function lib.GetServerKeyList()
+	if not ILRealmData then return end
+	local list = {}
+	for serverKey in pairs(ILRealmData) do
+		tinsert(list, serverKey)
+	end
+	return list
+end
+
+-- ChangeServerKey
+function lib.ChangeServerKey(oldKey, newKey)
+	if not ILRealmData then return end
+	local oldData = ILRealmData[oldKey]
+	ILRealmData[oldKey] = nil
+	if oldData and newKey then
+		ILRealmData[newKey] = oldData
+		-- if there was data for newKey then it will be discarded (simplest implementation)
+	end
 end
 
 --[[ Subfunctions ]]--
@@ -559,4 +649,4 @@ function private.PackStats(data)
 	return concat(tmp, ",", 1, ntmp)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5470 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5540 $")

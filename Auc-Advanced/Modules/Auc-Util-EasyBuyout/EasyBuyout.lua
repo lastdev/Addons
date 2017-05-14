@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - EasyBuyout Utility Module
 	Version: 1.2.5 (GhostfromTexas)
-	Revision: $Id: EasyBuyout.lua 5507 2014-10-23 16:08:21Z brykrys $
+	Revision: $Id: EasyBuyout.lua 5576 2015-11-17 17:33:03Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows for the ability to purchase items from
@@ -294,7 +294,7 @@ end
 
 local function OrigAuctionOnClick(self, ...)
 	if ( IsModifiedClick() ) then
-		HandleModifiedItemClick(GetAuctionItemLink("owner", self:GetParent():GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame)));
+		HandleModifiedItemClick(GetAuctionItemLink("owner", self:GetParent():GetID() + GetEffectiveAuctionsScrollFrameOffset()));
 	else
 		AuctionsButton_OnClick(self, ...);
 	end
@@ -334,19 +334,22 @@ function private.EasyCancelMain()
 end
 
 function private.EasyCancel(self, button)
-
-	local link = GetAuctionItemLink("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame))
+	local index = self:GetID() + GetEffectiveAuctionsScrollFrameOffset() -- takes account of any WoWToken offset
+	if index <= 0 then
+		return private.EBMessage("Rightclick - Special auction. EasyCancel cannot be used on this type of auction")
+	end
+	local link = GetAuctionItemLink("owner", index)
 	if link then
-		local _,_,count = GetAuctionItemInfo("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame))
+		local _,_,count = GetAuctionItemInfo("owner", index)
 		private.EBMessage("Rightclick - cancelling auction of " .. (count or "?") .. "x" .. link)
 	else
 		return private.EBMessage("Rightclick - not finding anything to cancel. If you are mass clicking - try going from the bottom up!")
 	end
 
-	SetSelectedAuctionItem("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame));
+	SetEffectiveSelectedOwnerAuctionItemIndex(index) -- updates any WoWToken offset
 	CancelAuction(GetSelectedAuctionItem("owner"))
-	CloseAuctionStaticPopups();
-	AuctionFrameBid_Update();
+	CloseAuctionStaticPopups()
+	AuctionFrameAuctions_Update()
 end
 
 -- EasyBid Function - This section listed below is for EasyBid: the utility that allows users to easily bid on an item simply by double clicking on it.
@@ -422,4 +425,4 @@ function private.EBMessage(messageString)
 	print(messageString)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 5507 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 5576 $")

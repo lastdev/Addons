@@ -1,4 +1,4 @@
-﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabSearch.lua"></Script>
 	
 	<Frame name="AltoholicTabSearch" parent="AltoholicFrame" hidden="true">
@@ -46,112 +46,22 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="MenuItem1" inherits="AltoMenuItemTemplate" id="1">
-				<Anchors>
-					<Anchor point="TOPLEFT" x="23" y="-105" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem2" inherits="AltoMenuItemTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem3" inherits="AltoMenuItemTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem2" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem4" inherits="AltoMenuItemTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem5" inherits="AltoMenuItemTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem6" inherits="AltoMenuItemTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem7" inherits="AltoMenuItemTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem8" inherits="AltoMenuItemTemplate" id="8">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem7" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem9" inherits="AltoMenuItemTemplate" id="9">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem8" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem10" inherits="AltoMenuItemTemplate" id="10">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem9" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem11" inherits="AltoMenuItemTemplate" id="11">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem10" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem12" inherits="AltoMenuItemTemplate" id="12">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem11" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem13" inherits="AltoMenuItemTemplate" id="13">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem12" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem14" inherits="AltoMenuItemTemplate" id="14">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem13" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem15" inherits="AltoMenuItemTemplate" id="15">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem14" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<ScrollFrame name="AltoholicSearchMenuScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Size x="160" y="305" />
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="158" y="-105" />
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="256" />
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
-							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-						</Texture>
-						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size x="31" y="106" />
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
-							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-						</Texture>
-					</Layer>
-				</Layers>
+			<ScrollFrame parentKey="ScrollFrame" inherits="AltoMenuScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 20, Altoholic.Tabs.Search.Update)
+						self:OnVerticalScroll(offset, 20, Altoholic.Tabs.Search.Update)
 					</OnVerticalScroll>
 					<OnShow>
 						Altoholic.Tabs.Search:Update()
 					</OnShow>
 				</Scripts>
+				<KeyValues>
+					<KeyValue key="numRows" value="15" type="number" />
+					<KeyValue key="rowHeight" value="20" type="number" />
+					<KeyValue key="rowTemplate" value="AltoMenuItemTemplate" />
+					<KeyValue key="xOffset" value="23" type="number" />
+					<KeyValue key="yOffset" value="-105" type="number" />
+				</KeyValues>
 			</ScrollFrame>
 			
 			<EditBox parentKey="MinLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
@@ -223,55 +133,12 @@
 				</Scripts>
 			</Frame>		
 			
-			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" hidden="true" id="1">
-				<Size x="240" y="19" />
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" hidden="true" id="2">
-				<Size x="160" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" hidden="true" id="3">
-				<Size x="150" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" hidden="true" id="4">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort5" inherits="AltoSortButtonTemplate" hidden="true" id="5">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort4" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort6" inherits="AltoSortButtonTemplate" hidden="true" id="6">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort5" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort7" inherits="AltoSortButtonTemplate" hidden="true" id="7">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort6" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button name="$parent_Sort8" inherits="AltoSortButtonTemplate" hidden="true" id="8">
-				<Size x="50" y="19" />
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort7" relativePoint="RIGHT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			
+			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
+				<KeyValues>
+					<KeyValue key="numButtons" value="8" type="number" />
+					<KeyValue key="option" value="UI.Tabs.Search.SortAscending" />
+				</KeyValues>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>

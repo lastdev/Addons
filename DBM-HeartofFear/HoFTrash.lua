@@ -12,8 +12,6 @@ mod:RegisterEvents(
 	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
-local warnUnseenStrike			= mod:NewTargetAnnounce(122949, 4, 123017)
-
 local specWarnUnseenStrike		= mod:NewSpecialWarningYou(123017)
 local specWarnUnseenStrikeOther	= mod:NewSpecialWarningMoveTo(123017)
 local yellUnseenStrike			= mod:NewYell(122949)
@@ -22,7 +20,6 @@ local specWarnDispatch			= mod:NewSpecialWarningInterrupt(125877)
 local timerUnseenStrike			= mod:NewCastTimer(4.8, 123017)
 
 mod:RemoveOption("HealthFrame")
-mod:RemoveOption("SpeedKillTimer")
 mod:AddBoolOption("UnseenStrikeArrow")
 
 local spellName = GetSpellInfo(122949)
@@ -33,7 +30,6 @@ local function findUnseen()
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
 		if UnitDebuff(uId, spellName) then
-			warnUnseenStrike:Show(name)
 			if name == UnitName("player") then
 				specWarnUnseenStrike:Show()
 				yellUnseenStrike:Yell()

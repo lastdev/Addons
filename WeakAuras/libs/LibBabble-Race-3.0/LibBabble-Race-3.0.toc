@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 70000
 ## LoadOnDemand: 1
 ## Title: Lib: Babble-Race-3.0
 ## Notes: A library to help with localization of races.
@@ -9,10 +9,6 @@
 ## X-eMail: ckknight@gmail.com
 ## X-Category: Library
 ## X-License: MIT
-## X-Curse-Packaged-Version: r82
-## X-Curse-Project-Name: LibBabble-Race-3.0
-## X-Curse-Project-ID: libbabble-race-3-0
-## X-Curse-Repository-ID: wow/libbabble-race-3-0/mainline
 
 LibStub\LibStub.lua
 lib.xml

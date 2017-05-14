@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "zhTW" then return end
+if GetLocale() ~= "zhTW" then return end
 
 local addonName = "Altoholic"
 local addon = _G[addonName]

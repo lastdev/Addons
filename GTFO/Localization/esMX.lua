@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------------------------
+--------------------------------------------------------------------------
 -- esMX.lua 
 --------------------------------------------------------------------------
 --[[
@@ -30,12 +30,12 @@ GTFOLocal =
 	Help_TestHigh = "Reproducir un sonido de prueba (daño alto)",
 	Help_TestLow = "Reproducir un sonido de prueba (daño bajo)",
 	Help_Version = "Mostrar otras personas que tengan este addon",
-	LoadingPopup_Message = "Tu configuracion del GTFO se ha restablecido. ¿Deseas configurarlo ahora?",
 	Loading_Loaded = "v%s cargado.",
 	Loading_LoadedSuspended = "v%s cargado. (|cFFFF1111Suspended|r)",
 	Loading_LoadedWithPowerAuras = "v%s cargado con Power Auras.",
 	Loading_NewDatabase = "v%s: Nueva base de datos detectada, restableciendo por defecto.",
 	Loading_OutOfDate = "¡v%s esta disponible para descargar!  |cFFFFFFFFPlease update.|r",
+	LoadingPopup_Message = "Tu configuracion del GTFO se ha restablecido. ¿Deseas configurarlo ahora?",
 	Loading_PowerAurasOutOfDate = "¡Tu version de |cFFFFFFFFPower Auras Classic|r es antigua!  La integracion de GTFO & Power Auras no puede ser cargada.",
 	Recount_Environmental = "Zona",
 	Recount_Name = "Alertas del GTFO",
@@ -60,6 +60,10 @@ GTFOLocal =
 	UI_HighDamageDescription = "Activa el sonido del GTFO para zonas peligrosas donde deberias moverte inmediatamente.",
 	UI_LowDamage = "Sonidos de JcJ/Zona/Daño Bajo",
 	UI_LowDamageDescription = "Activa el sonido del GTFO -- Muevete con discrecion de la zona de poco daño.",
+	UI_SoundChannel = "Sound Channel", -- Requires localization
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.", -- Requires localization
+	UI_SpecialAlerts = "Special Alerts", -- Requires localization
+	UI_SpecialAlertsHeader = "Activate Special Alerts", -- Requires localization
 	UI_Test = "Prueba",
 	UI_TestDescription = "Prueba el sonido.",
 	UI_TestMode = "Modo Beta/Experimental",
@@ -67,8 +71,11 @@ GTFOLocal =
 	UI_TestModeDescription2 = "Por favor informa de cualquier problema a |cFF44FFFF%s@%s.%s|r",
 	UI_Trivial = "Alertas de contenido trivial",
 	UI_TrivialDescription = "Activa alertas para encuentros de bajo nivel que podrian ser triviales para un personaje de tu nivel.",
+	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.", -- Requires localization
+	UI_TrivialSlider = "Minimum % of HP", -- Requires localization
 	UI_Unmute = "Reproducir sonidos cuando esta en silencio",
-	UI_UnmuteDescription = "Si has silenciado todos los sonidos, o los efectos de sonido, GTFO activará temporalmente los sonidos para reproducir las alertas.", -- Needs review
+	UI_UnmuteDescription = "Si has silenciado todos los sonidos, o los efectos de sonido, GTFO activará temporalmente los sonidos para reproducir las alertas.",
+	UI_UnmuteDescription2 = "Requiere que las barras de volumen esten a mas del 0%",
 	UI_Volume = "Volumen del GTFO",
 	UI_VolumeDescription = "Configura el volumen de los sonidos.",
 	UI_VolumeLoud = "4: Alto",
@@ -78,20 +85,8 @@ GTFOLocal =
 	UI_VolumeNormal = "3: Normal (Recomendado)",
 	UI_VolumeQuiet = "1: Silencio",
 	UI_VolumeSoft = "2: Bajo",
-	-- 4.12
-	UI_SpecialAlerts = "Special Alerts",
-	UI_SpecialAlertsHeader = "Activate Special Alerts",	
-	-- 4.12.3
-	Version_On = "Version reminders on",
-	Version_Off = "Version reminders off",
-	-- 4.19.1
-	UI_TrivialSlider = "Minimum % of HP",
-	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
-	-- 4.32
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
-	UI_SoundChannel = "Sound Channel",
-	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
+	Version_Off = "Version update reminders off", -- Requires localization
+	Version_On = "Version update reminders on", -- Requires localization
 }
-
 
 end

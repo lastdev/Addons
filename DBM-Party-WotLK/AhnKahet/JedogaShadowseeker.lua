@@ -1,18 +1,20 @@
 local mod	= DBM:NewMod(582, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
 mod:SetCreatureID(29310)
-mod:SetEncounterID(214, 261)
+mod:SetEncounterID(214, 261, 1967)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_CAST_START"
+	"SPELL_CAST_SUCCESS 56926 60029",
+	"SPELL_CAST_START 56855 60030"
 )
 
+--TODO, GTFO for thundershock shit on ground
+--TODO, switch warning for add
 local warningThundershock	= mod:NewSpellAnnounce(56926, 3)
 local warningCycloneStrike	= mod:NewSpellAnnounce(56855, 3)
 

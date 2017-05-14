@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: Auc-Util-AutoMagic.lua 5390 2012-12-22 00:55:10Z kandoko $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: Auc-Util-AutoMagic.lua 5686 2016-10-31 17:13:27Z Prowell $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -212,7 +212,9 @@ function lib.merchantShow()
 	private.eventframe:RegisterEvent("BAG_UPDATE")
 	if (get("util.automagic.autovendor")) then
 		--first lib.vendorAction call will sell all grays, bypassing promopt. Run lib.vendorAction to add anything remaining to the prompt window
-		if (get("util.automagic.autosellgreynoprompt")) then
+		if (get("util.automagic.autosellgreynoprompt") or get("util.automagic.autoselllistnoprompt") 
+				or (get("util.automagic.vendorunusablebop") and get("util.automagic.autosellbopnoprompt"))
+				or (get("util.automagic.autosellreason") and get("util.automagic.autosellreasonnoprompt"))) then
 			lib.vendorAction(true)
 		end
 		lib.vendorAction()
@@ -240,9 +242,12 @@ function lib.mailShow()
 end
 
 function lib.mailClosed() --Fires on mail box closed event & hides mailgui
-	local x,y = lib.ammailgui:GetCenter()
-	set("util.automagic.ammailguix" ,x)
-	set("util.automagic.ammailguiy" ,y)
+	local x, y = lib.ammailgui:GetCenter()
+	if x and y then
+		-- round x, y to 1dp; the values returned by GetCenter vary in the very low order digits, even if frame hasn't moved
+		set("util.automagic.ammailguix", floor(x * 10) / 10)
+		set("util.automagic.ammailguiy", floor(y * 10) / 10)
+	end
 	lib.ammailgui:Hide()
 end
 
@@ -558,14 +563,14 @@ function lib.makeautosellgui()
 	local SelectBox = LibStub:GetLibrary("SelectBox")
 	local ScrollSheet = LibStub:GetLibrary("ScrollSheet")
 
-	
+
 	autosellframe.slot = CreateFrame("Button", "AutoSellFrameSlot", autosellframe, "PopupButtonTemplate")
 	autosellframe.slot:SetPoint("TOPLEFT", autosellframe, "TOPLEFT", 23, -50)
 	autosellframe.slot:SetWidth(38)
 	autosellframe.slot:SetHeight(38)
 	autosellframe.slot:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square.blp")
 	autosellframe.slot:SetScript("OnClick", lib.autoSellIconDrag)
-	autosellframe.slot:SetScript("OnReceiveDrag", lib.autoSellIconDrag)	
+	autosellframe.slot:SetScript("OnReceiveDrag", lib.autoSellIconDrag)
 
 	autosellframe.slot.help = autosellframe:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	autosellframe.slot.help:SetPoint("LEFT", autosellframe.slot, "RIGHT", 2, 7)
@@ -701,4 +706,4 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5390 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5686 $")

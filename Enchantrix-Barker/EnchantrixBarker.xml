@@ -3,8 +3,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnchantrixBarker.xml 5139 2011-05-01 18:22:28Z kandoko $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnchantrixBarker.xml 5567 2015-08-14 18:21:18Z brykrys $
 	URL: http://enchantrix.org/
 
 	License:
@@ -30,7 +30,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
 	<Script>
-		EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix-Barker/EnchantrixBarker.xml $", "$Rev: 5139 $")
+		EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix-Barker/EnchantrixBarker.xml $", "$Rev: 5567 $")
 	</Script>
 
 	<Button name="Enchantrix_BarkerDisplayButton" inherits="UIPanelButtonTemplate" hidden="true" text="Trade Barker">
@@ -59,10 +59,10 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 		<Scripts>
 			<OnClick>
 				PlaySound("igCharacterInfoTab");
-				
+
 				local frame = self:GetParent()
 				PanelTemplates_SetTab(frame, self:GetID());
-				
+
 				Enchantrix_BarkerOptions_Tab_OnClick(self);
 			</OnClick>
 		</Scripts>
@@ -224,7 +224,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<!--
 			<Frame name="Enchantrix_BarkerOptions_ChanFilterDropDown" inherits="UIDropDownMenuTemplate" id="1" enableMouse="true">
 				<Size>
@@ -248,7 +248,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 				</Scripts>
 			</Frame>
 			-->
-			
+
 			<Button name="Enchantrix_BarkerOptions_FrameTab1" inherits="Enchantrix_BarkerOptions_FrameTabTemplate" id="1" text="Pricing">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
@@ -397,6 +397,15 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 		</Scripts>
 	</Frame>
 
+	<!--Changes to the "CharacterFrameTabButtonTemplate" in 4.1 require a parent frame be specified  self:GetParent().maxTabWidth errors otherwise-->
+	<Button name="Enchantrix_BarkerOptions_TradeTab" inherits="CharacterFrameTabButtonTemplate" id="1" text="Trade Barker" parent="Enchantrix_BarkerOptions_Frame">
+		<Scripts>
+			<OnClick>
+				Enchantrix_BarkerOptions_OnClick(self);
+			</OnClick>
+		</Scripts>
+	</Button>
+
 	<Frame name="EnchantrixBarker" parent="UIParent" hidden="true">
 		<Scripts>
 			<OnLoad>
@@ -411,13 +420,5 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 			</OnEvent>
 		</Scripts>
 	</Frame>
-	<!--Changes to the "CharacterFrameTabButtonTemplate" in 4.1 require a parent frame be specified  self:GetParent().maxTabWidth errors otherwise-->
-	<Button name="Enchantrix_BarkerOptions_TradeTab" inherits="CharacterFrameTabButtonTemplate" id="1" text="Trade Barker" parent="Enchantrix_BarkerOptions_Frame">
-		<Scripts>
-			<OnClick>
-				Enchantrix_BarkerOptions_OnClick(self);
-			</OnClick>
-		</Scripts>
-	</Button>
 </Ui>
 

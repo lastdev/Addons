@@ -3,7 +3,7 @@ local Recount = _G.Recount
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 
-local revision = tonumber(string.sub("$Revision: 1254 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1311 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -14,7 +14,7 @@ local dbCombatants
 local srcRetention
 local dstRetention
 
-local DetailTitles = {}
+local DetailTitles = { }
 DetailTitles.Interrupts = {
 	TopNames = L["Interrupted Who"],
 	TopCount = "",
@@ -36,9 +36,9 @@ function Recount:SpellInterrupt(timestamp, eventtype, srcGUID, srcName, srcFlags
 end
 
 function Recount:AddInterruptData(source, victim, ability, srcGUID, srcFlags, dstGUID, dstFlags, spellId)
-	--Friendly fire interrupt? (Duels)
-	local FriendlyFire = Recount:IsFriendlyFire(srcFlags,dstFlags)
-	--Before any further processing need to check if we are going to be placed in combat or in combat
+	-- Friendly fire interrupt? (Duels)
+	local FriendlyFire = Recount:IsFriendlyFire(srcFlags, dstFlags)
+	-- Before any further processing need to check if we are going to be placed in combat or in combat
 	if not Recount.InCombat and Recount.db.profile.RecordCombatOnly then
 		if (not FriendlyFire) and (Recount:InGroup(srcFlags) or Recount:InGroup(dstFlags)) then
 			Recount:PutInCombat()
@@ -47,7 +47,7 @@ function Recount:AddInterruptData(source, victim, ability, srcGUID, srcFlags, ds
 		end
 	end
 
-	--Need to add events for potential deaths	
+	-- Need to add events for potential deaths	
 	Recount.cleventtext = source.." interrupts "..victim.." "..ability
 
 	-- Name and ID of pet owners
@@ -69,7 +69,7 @@ function Recount:AddInterruptData(source, victim, ability, srcGUID, srcFlags, ds
 		if sourceData then
 			Recount:SetActive(sourceData)
 			Recount:AddCurrentEvent(sourceData, "MISC", false, nil, Recount.cleventtext)
-			--Fight tracking purposes to speed up leaving combat
+			-- Fight tracking purposes to speed up leaving combat
 			sourceData.LastFightIn = Recount.db2.FightNum
 
 			Recount:AddAmount(sourceData, "Interrupts", 1)
@@ -89,13 +89,13 @@ function Recount:AddInterruptData(source, victim, ability, srcGUID, srcFlags, ds
 		if victimData then
 			Recount:SetActive(victimData)
 			Recount:AddCurrentEvent(victimData, "MISC", true, nil, Recount.cleventtext)
-			--Fight tracking purposes to speed up leaving combat
+			-- Fight tracking purposes to speed up leaving combat
 			victimData.LastFightIn = Recount.db2.FightNum
 		end
 	end
 end
 
-local DataModes = {}
+local DataModes = { }
 
 function DataModes:InterruptReturner(data, num)
 	if not data then
@@ -108,10 +108,10 @@ function DataModes:InterruptReturner(data, num)
 	return (data.Fights[Recount.db.profile.CurDataSet].Interrupts or 0), {{data.Fights[Recount.db.profile.CurDataSet].InterruptData, L["'s Interrupts"], DetailTitles.Interrupts}}
 end
 
-local TooltipFuncs = {}
+local TooltipFuncs = { }
 
 function TooltipFuncs:Interrupts(name, data)
-	local SortedData,total
+	--local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
 	Recount:AddSortedTooltipData(L["Top 3"].." "..L["Interrupted"],data and data.Fights[Recount.db.profile.CurDataSet] and data.Fights[Recount.db.profile.CurDataSet].InterruptData, 3)

@@ -1,4 +1,4 @@
-﻿--[[	*** DataStore_Reputations ***
+--[[	*** DataStore_Reputations ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 22st, 2009
 --]]
@@ -51,9 +51,11 @@ These UIDs have 2 purposes:
 - minimize the amount of data sent across the network when sharing accounts (since both sides have the same reference table)
 
 Note: Let the system manage the ids, DO NOT delete entries from this table, if a faction is removed from the game, mark it as OLD_ or whatever.
+
+Since WoD, GetFactionInfoByID does not return a value when an alliance player asks for an horde faction.
+Default to an english text.
 --]]
 
--- Since WoD, GetFactionInfoByID does not return a value when an alliance player asks for an horde function, so at least default to an english text
 
 
 local factions = {
@@ -193,6 +195,18 @@ local factions = {
 	{ id = 1682, name = GetFactionInfoByID(1682) },		-- Wrynn's Vanguard
 	{ id = 1708, name = GetFactionInfoByID(1708) },		-- Laughing Skull Orcs
 	{ id = 1681, name = GetFactionInfoByID(1681) },		-- Vol'jin's Spear
+	{ id = 1847, name = GetFactionInfoByID(1847) },		-- Hand of the Prophet
+	{ id = 1848, name = GetFactionInfoByID(1848) },		-- Vol'jin's Headhunters
+	{ id = 1849, name = GetFactionInfoByID(1849) },		-- Order of the Awakened
+	{ id = 1850, name = GetFactionInfoByID(1850) },		-- The Saberstalkers
+	
+	-- Legion
+	{ id = 1900, name = GetFactionInfoByID(1900) },		-- Court of Farondis
+	{ id = 1883, name = GetFactionInfoByID(1883) },		-- Dreamweavers
+	{ id = 1828, name = GetFactionInfoByID(1828) },		-- Highmountain Tribe
+	{ id = 1948, name = GetFactionInfoByID(1948) },		-- Valarjar
+	{ id = 1859, name = GetFactionInfoByID(1859) },		-- The Nightfallen
+	{ id = 1894, name = GetFactionInfoByID(1894) },		-- The Wardens
 }
 
 local FactionUIDsRev = {}

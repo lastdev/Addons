@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 573 $"):sub(12, -3))
 mod:SetCreatureID(24882)
 mod:SetModelID(22711)
 mod:SetMinSyncRevision(441)--Block bad pulls from old versions
@@ -30,7 +30,7 @@ local specWarnBurn		= mod:NewSpecialWarningYou(46394)
 local timerMeteorCD		= mod:NewCDTimer(12, 45150)
 local timerStompCD		= mod:NewCDTimer(31, 45185)
 local timerBurn			= mod:NewTargetTimer(60, 46394)
-local timerBurnCD		= mod:NewCDTimer(20, 46394)
+local timerBurnCD		= mod:NewCDTimer(20, 46394, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(360)
 

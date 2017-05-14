@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 556 $"):sub(12, -3))
-mod:SetCreatureID(21215, 21806)
+mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetCreatureID(21215)
+mod:SetEncounterID(625)
 mod:SetModelID(20514)
 mod:SetZone()
 mod:SetUsedIcons(5, 6, 7, 8)
@@ -11,7 +12,7 @@ mod:RegisterCombat("combat")
 
 --Not using RegisterEventsInCombat on purpose because it uses weird combat rules
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
+	"SPELL_AURA_APPLIED 37640 37676 37749",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
@@ -25,11 +26,11 @@ local warnPhase2		= mod:NewPhaseAnnounce(2)
 local specWarnWhirl		= mod:NewSpecialWarningRun(37640)
 local specWarnDemon		= mod:NewSpecialWarningYou(37676)
 
-local timerWhirlCD		= mod:NewCDTimer(27, 37640)
+local timerWhirlCD		= mod:NewCDTimer(27, 37640, nil, nil, nil, 2)
 local timerWhirl		= mod:NewBuffActiveTimer(12, 37640)
-local timerPhase		= mod:NewTimer(60, "TimerPhase", 39088)
-local timerDemonCD		= mod:NewCDTimer(23, 37676)
-local timerDemon		= mod:NewBuffFadesTimer(30, 37676)
+local timerPhase		= mod:NewTimer(60, "TimerPhase", 39088, nil, nil, 6)
+local timerDemonCD		= mod:NewCDTimer(23, 37676, nil, nil, nil, 6)
+local timerDemon		= mod:NewBuffFadesTimer(30, 37676, nil, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -136,7 +137,5 @@ function mod:UNIT_DIED(args)
 			timerPhase:Start(nil, L.Demon)
 			berserkTimer:Start()
 		end
-	elseif cId == 21215 and self:IsInCombat() then
-		DBM:EndCombat(self)
 	end
 end

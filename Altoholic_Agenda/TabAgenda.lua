@@ -3,97 +3,57 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local GREEN		= "|cFF00FF00"
+local function OnCalendarDataUpdated(frame, event, itemID)
+	frame.Calendar:InvalidateView()
+	frame:Refresh()
+end
 
-local parentName = "AltoholicTabAgenda"
-local parent
+local function _Init(frame)
+	frame.MenuItem1:SetText(L["Calendar"])
+	-- frame.MenuItem2:SetText("Contacts")
+	-- frame.MenuItem3:SetText("Tasks")
+	-- frame.MenuItem4:SetText("Notes")
+	-- frame.MenuItem5:SetText("Mail")
+	frame:MenuItem_Highlight(1)
+	
+	addon:RegisterMessage("DATASTORE_ITEM_COOLDOWN_UPDATED", OnCalendarDataUpdated, frame)
+	addon:RegisterMessage("DATASTORE_CALENDAR_SCANNED", OnCalendarDataUpdated, frame)
+end
 
-local currentMode
+local function _HideAll(frame)
+	frame.Calendar:Hide()
+	-- frame.Contacts:Hide()
+end
 
-local childrenFrames = {
-	"Calendar",
-	"Contacts",
-}
-
-local childrenObjects = {}		-- these are the tables that actually contain the BuildView & Update methods. Not really OOP, but enough for our needs
-
-addon.Tabs.Agenda = {}
-
-local ns = addon.Tabs.Agenda		-- ns = namespace
-
-function ns:MenuItem_OnClick(id)
-
-	for _, v in pairs(childrenFrames) do			-- hide all frames
-		if _G[ "AltoholicFrame" .. v] then
-			_G[ "AltoholicFrame" .. v]:Hide()
-		end
+local function _Refresh(frame)
+	if frame.Calendar:IsVisible() then
+		frame.Calendar:Update()
+	-- elseif frame.Contacts:IsVisible() then
+		-- frame.Contacts:Update()
 	end
+end
 
-	ns:SetMode(id)
-	
-	local f = _G[ "AltoholicFrame" .. childrenFrames[id]]
-	local o = childrenObjects[id]
-	
-	if o.BuildView then
-		o:BuildView()
-	end
-	f:Show()
-	o:Update()
-	
+local function _MenuItem_Highlight(frame, id)
+	-- highlight the current menu item
 	for i = 1, 5 do 
-		parent["MenuItem"..i]:UnlockHighlight()
+		frame["MenuItem"..i]:UnlockHighlight()
 	end
-	parent["MenuItem"..id]:LockHighlight()
+	frame["MenuItem"..id]:LockHighlight()
 end
 
-function ns:SetMode(mode)
-	currentMode = mode
-	
-	-- AltoholicTabSummaryStatus:SetText("")
-	-- AltoholicTabSummaryToggleView:Show()
-	-- AltoholicTabSummary_SelectLocation:Show()
-	-- AltoholicTabSummary_RequestSharing:Show()
-	-- AltoholicTabSummary_Options:Show()
-	-- AltoholicTabSummary_OptionsDataStore:Show()
+local function _MenuItem_OnClick(frame, id, panel)
+	frame:HideAll()
+	frame:MenuItem_Highlight(id)
 
-	-- if currentMode == 1 then
-	-- elseif currentMode == 2 then
-	-- elseif currentMode == 3 then
-	-- elseif currentMode == 4 then
-	-- elseif currentMode == 5 then
-	-- end
-end
-
-function ns:Refresh()
-	if AltoholicFrameCalendar:IsVisible() then
-		addon.Calendar:Update()
-	elseif AltoholicFrameContacts:IsVisible() then
-		addon.Contacts:Update()
+	if panel then
+		frame[panel]:Update()
 	end
 end
 
-function ns:RegisterChildPane(pane)
-	table.insert(childrenObjects, pane)
-end
-
-function ns:OnLoad()
-	parent = _G[parentName]
-	parent.MenuItem1:SetText(L["Calendar"])
-	parent.MenuItem2:SetText("Contacts")
-	parent.MenuItem3:SetText("Tasks")
-	parent.MenuItem4:SetText("Notes")
-	parent.MenuItem5:SetText("Mail")
-	
-	addon:RegisterMessage("DATASTORE_ITEM_COOLDOWN_UPDATED")
-	addon:RegisterMessage("DATASTORE_CALENDAR_SCANNED")
-end
-
-function addon:DATASTORE_ITEM_COOLDOWN_UPDATED(event, itemID)
-	addon.Calendar:InvalidateView()
-	ns:Refresh()
-end
-
-function addon:DATASTORE_CALENDAR_SCANNED(event)
-	addon.Calendar:InvalidateView()
-	ns:Refresh()
-end
+addon:RegisterClassExtensions("AltoTabAgenda", {
+	Init = _Init,
+	HideAll = _HideAll,
+	Refresh = _Refresh,
+	MenuItem_Highlight = _MenuItem_Highlight,
+	MenuItem_OnClick = _MenuItem_OnClick,
+})

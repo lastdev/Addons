@@ -1,99 +1,150 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
-local RED		= "|cFFFF0000"
 
 local parentName = "AltoholicTabSearch"
 local parent
 
-local view
 local highlightIndex
 
 addon.Tabs.Search = {}
 
 local ns = addon.Tabs.Search		-- ns = namespace
 
-local function BuildView()
-	view = view or {}
-	wipe(view)
-	
-	local itemClasses =  { GetAuctionItemClasses() };
-	local classNum = 1
-	for _, itemClass in pairs(itemClasses) do
-		table.insert(view, { name = itemClass, isCollapsed = true } )
-		table.insert(view, L["Any"] )
-		
-		local itemSubClasses =  { GetAuctionItemSubClasses(classNum) };
-		for _, itemSubClass in pairs(itemSubClasses) do
-			table.insert(view, itemSubClass )
-		end
-		
-		classNum = classNum + 1
-	end
-end
+local currentClass
+local currentSubClass
+
+-- from Blizzard_AuctionData.lua & LuaEnum.lua
+-- Note : review this later on, I suspect Blizzard will change this again
+local categories = {
+	{
+		name = AUCTION_CATEGORY_WEAPONS,
+		class = LE_ITEM_CLASS_WEAPON,
+		subClasses = {
+			LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_SWORD1H,
+			LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_SWORD2H, 
+			LE_ITEM_WEAPON_WARGLAIVE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_WAND,
+			LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_STAFF,
+			LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_THROWN,
+			LE_ITEM_WEAPON_FISHINGPOLE,
+		},
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_ARMOR,
+		class = LE_ITEM_CLASS_ARMOR,
+		subClasses = {
+			LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_CLOTH, 
+			LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_COSMETIC,
+		},
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_CONTAINERS,
+		class = LE_ITEM_CLASS_CONTAINER,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_CONTAINER) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_GEMS,
+		class = LE_ITEM_CLASS_GEM,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_GEM) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_ITEM_ENHANCEMENT,
+		class = LE_ITEM_CLASS_ITEM_ENHANCEMENT,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_ITEM_ENHANCEMENT) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_CONSUMABLES,
+		class = LE_ITEM_CLASS_CONSUMABLE,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_CONSUMABLE) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_GLYPHS,
+		class = LE_ITEM_CLASS_GLYPH,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_GLYPH) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_TRADE_GOODS,
+		class = LE_ITEM_CLASS_TRADEGOODS,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_TRADEGOODS) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_RECIPES,
+		class = LE_ITEM_CLASS_RECIPE,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_RECIPE) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_BATTLE_PETS,
+		class = LE_ITEM_CLASS_BATTLEPET,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_QUEST_ITEMS,
+		class = LE_ITEM_CLASS_QUESTITEM,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_QUESTITEM) },
+		isCollapsed = true,
+	},
+	{
+		name = AUCTION_CATEGORY_MISCELLANEOUS,
+		class = LE_ITEM_CLASS_MISCELLANEOUS,
+		subClasses = { GetAuctionItemSubClasses(LE_ITEM_CLASS_MISCELLANEOUS) },
+		isCollapsed = true,
+	},
+}
 
 local function Header_OnClick(frame)
-	local header = view[frame.itemTypeIndex]
+	local header = categories[frame.itemTypeIndex]
 	header.isCollapsed = not header.isCollapsed
-	
-	-- if header.isCollapsed == true then
-		-- header.isCollapsed = false
-	-- else
-		-- header.isCollapsed = true
-	-- end
+
 	ns:Update()
 end
 
 local function Item_OnClick(frame)
-	local itemType = frame.itemTypeIndex
-	local itemSubType = frame.itemSubTypeIndex
-
-	highlightIndex = itemSubType
+	local category = categories[frame.itemTypeIndex]
+	local class = category.class
+	local subClass = category.subClasses[frame.itemSubTypeIndex]
+	
+	-- 1005 = class 1, sub 5
+	highlightIndex = (frame.itemTypeIndex * 1000) + frame.itemSubTypeIndex
 	ns:Update()
 	
-	-- around 5-7 ms on the current realm, 25-40 ms in the loot tables
-	if view[itemSubType] == L["Any"] then
-		addon.Search:FindItem(view[itemType].name)
-	else
-		addon.Search:FindItem(view[itemType].name, view[itemSubType])
-	end
+	addon.Search:FindItem(GetItemClassInfo(class), GetItemSubClassInfo(class, subClass))
 end
 
 function ns:OnLoad()
 	parent = _G[parentName]
-	AltoholicTabSearch_Sort1:SetText(L["Item / Location"])
-	AltoholicTabSearch_Sort2:SetText(L["Character"])
-	AltoholicTabSearch_Sort3:SetText(L["Realm"])
+	parent.SortButtons.Sort1:SetText(L["Item / Location"])
+	parent.SortButtons.Sort2:SetText(L["Character"])
+	parent.SortButtons.Sort3:SetText(L["Realm"])
 	parent.Slot:SetText(L["Equipment Slot"])
 	parent.Location:SetText(L["Location"])
 end
 
 function ns:Update()
-	if not view then
-		BuildView()
-	end
-	
-	local numRows = 15
-
-	local itemTypeIndex				-- index of the item type in the menu table
 	local itemTypeCacheIndex		-- index of the item type in the cache table
 	local MenuCache = {}
 	
-	for k, v in pairs (view) do		-- rebuild the cache
-		if type(v) == "table" then		-- header
-			itemTypeIndex = k
-			table.insert(MenuCache, { linetype=1, nameIndex=k } )
-			itemTypeCacheIndex = #MenuCache
-		else
-			if view[itemTypeIndex].isCollapsed == false then
-				table.insert(MenuCache, { linetype=2, nameIndex=k, parentIndex=itemTypeIndex } )
+	for categoryIndex, category in ipairs (categories) do
+	
+		table.insert(MenuCache, { linetype = 1, dataIndex = categoryIndex } )
+		itemTypeCacheIndex = #MenuCache
+	
+		if category.isCollapsed == false then
+			for subCategoryIndex, subCategory in ipairs(category.subClasses) do
+				table.insert(MenuCache, { linetype = 2, dataIndex = subCategoryIndex, parentIndex = categoryIndex } )
 				
-				if (highlightIndex) and (highlightIndex == k) then
+				if (highlightIndex) and (highlightIndex == ((categoryIndex*1000)+ subCategoryIndex)) then
 					MenuCache[#MenuCache].needsHighlight = true
 					MenuCache[itemTypeCacheIndex].needsHighlight = true
 				end
@@ -106,13 +157,13 @@ function ns:Update()
 		buttonWidth = 136
 	end
 	
-	local frame = AltoholicTabSearch
-	local scrollFrame = AltoholicSearchMenuScrollFrame
-	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+	local scrollFrame = parent.ScrollFrame
+	local numRows = scrollFrame.numRows
+	local offset = scrollFrame:GetOffset()
 	local menuButton
 	
 	for rowIndex = 1, numRows do
-		menuButton = frame["MenuItem"..rowIndex]
+		menuButton = scrollFrame:GetRow(rowIndex)
 		
 		local line = rowIndex + offset
 		
@@ -130,21 +181,25 @@ function ns:Update()
 			end			
 			
 			if p.linetype == 1 then
-				menuButton.Text:SetText(WHITE .. view[p.nameIndex].name)
+				menuButton.Text:SetText(format("%s%s", colors.white, categories[p.dataIndex].name))
 				menuButton:SetScript("OnClick", Header_OnClick)
-				menuButton.itemTypeIndex = p.nameIndex
+				menuButton.itemTypeIndex = p.dataIndex
 			elseif p.linetype == 2 then
-				menuButton.Text:SetText("|cFFBBFFBB   " .. view[p.nameIndex])
+				local category = categories[p.parentIndex]
+				local class = category.class
+				local subClass = category.subClasses[p.dataIndex]
+			
+				menuButton.Text:SetText("|cFFBBFFBB   " .. GetItemSubClassInfo(class, subClass))
 				menuButton:SetScript("OnClick", Item_OnClick)
 				menuButton.itemTypeIndex = p.parentIndex
-				menuButton.itemSubTypeIndex = p.nameIndex
+				menuButton.itemSubTypeIndex = p.dataIndex
 			end
 
 			menuButton:Show()
 		end
 	end
 	
-	FauxScrollFrame_Update( scrollFrame, #MenuCache, numRows, 20)
+	scrollFrame:Update(#MenuCache)
 end
 
 function ns:Reset()
@@ -156,18 +211,14 @@ function ns:Reset()
 	addon.Search:ClearResults()
 	collectgarbage()
 	
-	if view then
-		for k, v in pairs(view) do			-- rebuild the cache
-			if type(v) == "table" then		-- header
-				v.isCollapsed = true
-			end
-		end
+	for _, category in pairs(categories) do			-- rebuild the cache
+		category.isCollapsed = true
 	end
 	highlightIndex = nil
 	
 	for i = 1, 8 do 
-		_G[ "AltoholicTabSearch_Sort"..i ]:Hide()
-		_G[ "AltoholicTabSearch_Sort"..i ].ascendingSort = nil
+		parent.SortButtons["Sort"..i]:Hide()
+		parent.SortButtons["Sort"..i].ascendingSort = nil
 	end
 	ns:Update()
 end
@@ -175,38 +226,37 @@ end
 function ns:DropDownRarity_Initialize()
 	local info = UIDropDownMenu_CreateInfo(); 
 
-	for i = 0, NUM_ITEM_QUALITIES do		-- Quality: 0 = poor .. 5 = legendary
-		info.text = ITEM_QUALITY_COLORS[i].hex .. _G["ITEM_QUALITY"..i.."_DESC"]
+	for i = 0, LE_ITEM_QUALITY_HEIRLOOM do		-- Quality: 0 = poor .. 5 = legendary ..
+		info.text = format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"])
 		info.value = i
 		info.func = function(self)	
-			UIDropDownMenu_SetSelectedValue(parent.SelectRarity, self.value);
+			UIDropDownMenu_SetSelectedValue(parent.SelectRarity, self.value)
 		end
 		info.checked = nil; 
 		info.icon = nil; 
-		UIDropDownMenu_AddButton(info, 1); 
+		UIDropDownMenu_AddButton(info, 1);
 	end
 end 
 
 local slotNames = {		-- temporary workaround
-	[1] = BI["Head"],			-- "INVTYPE_HEAD" 
-	[2] = BI["Shoulder"],	-- "INVTYPE_SHOULDER"
-	[3] = BI["Chest"],		-- "INVTYPE_CHEST",  "INVTYPE_ROBE"
-	[4] = BI["Wrist"],		-- "INVTYPE_WRIST"
-	[5] = BI["Hands"],		-- "INVTYPE_HAND"
-	[6] = BI["Waist"],		-- "INVTYPE_WAIST"
-	[7] = BI["Legs"],			-- "INVTYPE_LEGS"
-	[8] = BI["Feet"],			-- "INVTYPE_FEET"
-	
-	[9] = BI["Neck"],			-- "INVTYPE_NECK"
-	[10] = BI["Back"],		-- "INVTYPE_CLOAK"
-	[11] = BI["Ring"],		-- "INVTYPE_FINGER"
-	[12] = BI["Trinket"],	-- "INVTYPE_TRINKET"
-	[13] = BI["One-Hand"],	-- "INVTYPE_WEAPON"
-	[14] = BI["Two-Hand"],	-- "INVTYPE_2HWEAPON"
-	[15] = BI["Main Hand"],	-- "INVTYPE_WEAPONMAINHAND"
-	[16] = BI["Off Hand"],	-- "INVTYPE_WEAPONOFFHAND", "INVTYPE_HOLDABLE"
-	[17] = BI["Shield"],		-- "INVTYPE_SHIELD"
-	[18] = BI["Ranged"]		-- "INVTYPE_RANGED",  "INVTYPE_THROWN", "INVTYPE_RANGEDRIGHT", "INVTYPE_RELIC"
+	[1] = INVTYPE_HEAD,
+	[2] = INVTYPE_SHOULDER,
+	[3] = INVTYPE_CHEST,
+	[4] = INVTYPE_WRIST,
+	[5] = INVTYPE_HAND,
+	[6] = INVTYPE_WAIST,
+	[7] = INVTYPE_LEGS,
+	[8] = INVTYPE_FEET,
+	[9] = INVTYPE_NECK,
+	[10] = INVTYPE_CLOAK,
+	[11] = INVTYPE_FINGER,
+	[12] = INVTYPE_TRINKET,
+	[13] = INVTYPE_WEAPON,
+	[14] = INVTYPE_2HWEAPON,
+	[15] = INVTYPE_WEAPONMAINHAND,
+	[16] = INVTYPE_WEAPONOFFHAND,
+	[17] = INVTYPE_SHIELD,
+	[18] = INVTYPE_RANGED
 }
 
 function ns:DropDownSlot_Initialize()
@@ -237,8 +287,8 @@ function ns:DropDownLocation_Initialize()
 	local info = UIDropDownMenu_CreateInfo();
 	local text = {
 		L["This character"],
-		format("%s %s(%s)", L["This realm"], GREEN, L["This faction"]),
-		format("%s %s(%s)", L["This realm"], GREEN, L["Both factions"]),
+		format("%s %s(%s)", L["This realm"], colors.green, L["This faction"]),
+		format("%s %s(%s)", L["This realm"], colors.green, L["Both factions"]),
 		L["All realms"],
 		L["All accounts"],
 		L["Loot tables"]
@@ -258,51 +308,39 @@ end
 
 function ns:SetMode(mode)
 
-	local Columns = addon.Tabs.Columns
-	Columns:Init()
-	
 	-- sets the search mode, and prepares the frame accordingly (search update callback, column sizes, headers, etc..)
 	if mode == "realm" then
 		addon.Search:SetUpdateHandler("Realm_Update")
 		
-		Columns:Add(L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "name") end)
-		Columns:Add(L["Character"], 160, function(self) addon.Search:SortResults(self, "char") end)
-		Columns:Add(L["Realm"], 150, function(self) addon.Search:SortResults(self, "realm") end)
-
-		AltoholicTabSearch_Sort2:SetPoint("LEFT", AltoholicTabSearch_Sort1, "RIGHT", 5, 0)
-		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 5, 0)
+		parent.SortButtons:SetButton(1, L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "name") end)
+		parent.SortButtons:SetButton(2, L["Character"], 160, function(self) addon.Search:SortResults(self, "char") end)
+		parent.SortButtons:SetButton(3, L["Realm"], 150, function(self) addon.Search:SortResults(self, "realm") end)
 	
 	elseif mode == "loots" then
 		addon.Search:SetUpdateHandler("Loots_Update")
 		
-		Columns:Add(L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "item") end)
-		Columns:Add(L["Source"], 160, function(self) addon.Search:SortResults(self, "bossName") end)
-		Columns:Add(L["Item Level"], 150, function(self) addon.Search:SortResults(self, "iLvl") end)
-		
-		AltoholicTabSearch_Sort2:SetPoint("LEFT", AltoholicTabSearch_Sort1, "RIGHT", 5, 0)
-		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 5, 0)
+		parent.SortButtons:SetButton(1, L["Item / Location"], 240, function(self) addon.Search:SortResults(self, "item") end)
+		parent.SortButtons:SetButton(2, L["Source"], 160, function(self) addon.Search:SortResults(self, "bossName") end)
+		parent.SortButtons:SetButton(3, L["Item Level"], 150, function(self) addon.Search:SortResults(self, "iLvl") end)
 		
 	elseif mode == "upgrade" then
 		addon.Search:SetUpdateHandler("Upgrade_Update")
 
-		Columns:Add(L["Item / Location"], 200, function(self) addon.Search:SortResults(self, "item") end)
+		parent.SortButtons:SetButton(1, L["Item / Location"], 200, function(self) addon.Search:SortResults(self, "item") end)
 		
 		for i=1, 6 do 
 			local text = select(i, strsplit("|", addon.Equipment.FormatStats[addon.Search:GetClass()]))
 			
 			if text then
-				Columns:Add(string.sub(text, 1, 3), 50, function(self)
+				parent.SortButtons:SetButton(i+1, string.sub(text, 1, 3), 50, function(self)
 					addon.Search:SortResults(self, "stat") -- use a getID to know which stat
 				end)
 			else
-				Columns:Add(nil)
+				parent.SortButtons:SetButton(i+1, nil)
 			end
 		end
 		
-		AltoholicTabSearch_Sort2:SetPoint("LEFT", AltoholicTabSearch_Sort1, "RIGHT", 0, 0)
-		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 0, 0)
-
-		Columns:Add("iLvl", 50, function(self) addon.Search:SortResults(self, "iLvl") end)
+		parent.SortButtons:SetButton(8, "iLvl", 50, function(self) addon.Search:SortResults(self, "iLvl") end)
 	end
 end
 
@@ -323,12 +361,12 @@ function ns:TooltipStats(frame)
 			diff = tonumber(diff)
 
 			if diff < 0 then
-				color = RED
+				color = colors.red
 			elseif diff > 0 then 
-				color = GREEN
+				color = colors.green
 				diff = "+" .. diff
 			else
-				color = WHITE
+				color = colors.white
 			end
 			AltoTooltip:AddLine(format("%s%s %s", color, diff, text))
 		end

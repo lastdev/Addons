@@ -142,8 +142,6 @@
 	Outfitter.cHide = "숨기기"
 	Outfitter.cDontChange = "Don't change"
 	
-	Outfitter.cHelm = "투구"
-	Outfitter.cCloak = "망토"
 	Outfitter.cPlayerTitle = "Title"
 
 	Outfitter.cMore = "More"
@@ -164,16 +162,6 @@
 	Outfitter.cMinimapButtonTitle = "미니맵 버튼"
 	Outfitter.cMinimapButtonDescription = "클릭 : 세트 선택, 드래그 : 미니맵 버튼 이동"
 
-	Outfitter.cClassName.DRUID = "드루이드"
-	Outfitter.cClassName.HUNTER = "사냥꾼"
-	Outfitter.cClassName.MAGE = "마법사"
-	Outfitter.cClassName.PALADIN = "성기사"
-	Outfitter.cClassName.PRIEST = "사제"
-	Outfitter.cClassName.ROGUE = "도적"
-	Outfitter.cClassName.SHAMAN = "주술사"
-	Outfitter.cClassName.WARLOCK = "흑마법사"
-	Outfitter.cClassName.WARRIOR = "전사"
-	
 	Outfitter.cBattleStance = "전투 태세"
 	Outfitter.cDefensiveStance = "방어 태세"
 	Outfitter.cBerserkerStance = "광폭 태세"
@@ -295,4 +283,7 @@
 	Outfitter.cTooManyServerOutfits = "You cannot store more than %d outfits on the server."
 	
 	Outfitter.cNoItemsWithStat = "Couldn't generate an outfit because no items with that stat were found"
+
+	Outfitter.cRequiresPrefix = "요구 사항:"
+    Outfitter.cUniqueEquippedSearchPattern = "^고유 장착 아이템: (.*) %((%d+)%)$"
 end

@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 70200
 ## X-Min-Interface: 50200
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Throne of Thunder|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Престол Гроз|r
@@ -6,6 +6,7 @@
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0雷电王座|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Trône du tonnerre|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Thron des Donners|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Solio del Trueno|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0雷霆王座|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
@@ -18,7 +19,7 @@
 ## X-DBM-Mod-Has-LFR : 1
 ## X-DBM-Mod-Sort: 202
 ## X-DBM-Mod-MapID: 1098
-## X-DBM-Mod-MinCoreRevision: 12473
+## X-DBM-Mod-MinCoreRevision: 14569
 localization.en.lua
 localization.it.lua
 localization.kr.lua

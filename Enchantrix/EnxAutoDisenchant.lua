@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: EnxAutoDisenchant.lua 5484 2014-10-13 07:37:49Z ccox $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: EnxAutoDisenchant.lua 5683 2016-10-28 17:39:01Z brykrys $
 	URL: http://enchantrix.org/
 
 	Automatic disenchant scanner.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5484 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5683 $")
 
 local auto_de_session_ignore_list = {}
 local auto_de_frame
@@ -237,15 +237,16 @@ local function findItemInOneBag(bag, findLink)
 		local _, count = GetContainerItemInfo(bag, slot)
     	local link = GetContainerItemLink(bag, slot)
 		if link and (not findLink or link == findLink) then
-			if not findLink and link == auto_de_prompt.link and bag == auto_de_prompt.bag
-				and slot == auto_de_prompt.slot and count == auto_de_prompt.count then
+			if not findLink and link == auto_de_prompt.link
+				and bag == auto_de_prompt.bag and slot == auto_de_prompt.slot		-- WoW 6.x has a zombie problem for the same link, not just location
+				and count == auto_de_prompt.count then
 				-- items sometimes linger after they've been disenchanted and looted
-				debugSpam("Skipping zombie item " .. link)
+				debugSpam("Skipping zombie item ", link, bag, slot )
 			else
 				if (not isItemIgnored(link)) and isAutoDisenchantAllowed(link, count) then
 					local value, spell = getDisenchantOrProspectValue(link, count)
 					if value and value > 0 then
-						-- debugSpam("found auto item ", value, link );
+						debugSpam("found auto item ", value, link, bag, slot )
 						return link, bag, slot, value, spell
 					end
 				end
@@ -382,17 +383,18 @@ local function onEvent(...)
 		    local link = GetContainerItemLink(auto_de_prompt.bag, auto_de_prompt.slot)
 			if link ~= auto_de_prompt.link then
 				eventSpam(...)
-				debugSpam(auto_de_prompt.link, "moved/disappeared")
+				debugSpam(auto_de_prompt.link, "item changed/moved/disappeared")
 				hidePrompt()
 
 				local bag, slot, value, spell
 				link, bag, slot, value, spell = findItemInBags(auto_de_prompt.link)
 				if link then
 					-- moved
-					debugSpam("  found again at [" .. bag .. "," .. slot .. "]")
+					debugSpam("  found moved item at [" .. bag .. "," .. slot .. "]")
 					showPrompt(link, bag, slot, value, spell)
 				else
 					-- sold, traded, banked, destroyed, ...
+					debugSpam("  item not found, cancelling", link)
 					local spellName = auto_de_prompt.Yes:GetAttribute("spell")
 					if spellName == _ENCH('ArgSpellProspectingName') then
 						Enchantrix.Util.ChatPrint(_ENCH("FrmtAutoDeProspectCancelled"))
@@ -500,9 +502,13 @@ function showPrompt(link, bag, slot, value, spell)
 	auto_de_prompt.link, auto_de_prompt.bag, auto_de_prompt.slot, auto_de_prompt.count = link, bag, slot, count
 	auto_de_prompt.time = GetTime()		-- not yet used
 
-	local _, _, _, _, _, _, _, _, _, texture = GetItemInfo(auto_de_prompt.link)
+	local texture = GetItemIcon(auto_de_prompt.link)
 	auto_de_prompt.Item:SetNormalTexture(texture)
-	auto_de_prompt.Yes:SetAttribute("target-item", itemStringFromLink(auto_de_prompt.link))
+	debugSpam("item link used:", auto_de_prompt.link, itemStringFromLink(auto_de_prompt.link), auto_de_prompt.bag, auto_de_prompt.slot)
+	
+	-- auto_de_prompt.Yes:SetAttribute("target-item", itemStringFromLink(auto_de_prompt.link))	-- this sees zombies for identical links in WoW 6.x
+	auto_de_prompt.Yes:SetAttribute("target-bag", auto_de_prompt.bag)
+	auto_de_prompt.Yes:SetAttribute("target-slot", auto_de_prompt.slot)
 	auto_de_prompt.Yes:SetAttribute("spell", spell)
 
 	if spell == _ENCH('ArgSpellProspectingName') then

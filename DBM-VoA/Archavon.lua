@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archavon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
 mod:SetCreatureID(31125)
 mod:SetEncounterID(1126)
 mod:SetModelID(26967)
@@ -25,7 +25,7 @@ local timerShards			= mod:NewBuffActiveTimer(4, 58678)
 local warnLeap				= mod:NewSpellAnnounce(60894, 3)
 local warnStomp				= mod:NewSpellAnnounce(60880, 3)
 local warnStompSoon			= mod:NewPreWarnAnnounce(60880, 5, 2)
-local timerNextStomp		= mod:NewNextTimer(45, 60880)
+local timerNextStomp		= mod:NewNextTimer(45, 60880, nil, nil, nil, 2)
 
 local timerArchavonEnrage	= mod:NewTimer(300, "ArchavonEnrage", 26662)
 

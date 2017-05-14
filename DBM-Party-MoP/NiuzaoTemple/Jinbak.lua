@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(693, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(61567)
 mod:SetEncounterID(1465)
 mod:SetZone()
@@ -9,9 +9,9 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 119941",
+	"SPELL_AURA_APPLIED_DOSE 119941",
+	"SPELL_CAST_SUCCESS 120001",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -22,7 +22,7 @@ local specWarnSapResidue	= mod:NewSpecialWarningStack(119941, true, 6)
 local specWarnDetonate		= mod:NewSpecialWarningSpell(120001, "Healer", nil, nil, 2)
 local specWarnGlob			= mod:NewSpecialWarningSwitch("ej6494", "-Healer")
 
-local timerDetonateCD		= mod:NewNextTimer(45.5, 120001)
+local timerDetonateCD		= mod:NewNextTimer(45.5, 120001, nil, nil, nil, 2)
 local timerDetonate			= mod:NewCastTimer(5, 120001)
 local timerSapResidue		= mod:NewBuffFadesTimer(10, 119941)
 --local timerGlobCD			= mod:NewNextTimer(45.5, 119990)--Need more logs

@@ -21,7 +21,7 @@ SMARTBUFF_DEMONTYPE = "小鬼";
 SMARTBUFF_UNDEAD    = "不死";
 
 -- Classes
-SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "獵人寵物", "術士寵物", "死騎寵物", "坦克", "補師", "DD"};
+SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "恶魔猎手", "獵人寵物", "術士寵物", "死騎寵物", "坦克", "補師", "DD"};
 
 -- Templates and Instances
 SMARTBUFF_TEMPLATES = {"自我", "隊伍", "團隊", "戰場", "競技場", "ICC", "TOC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "自定義 1", "自定義 2", "自定義 3", "自定義 4", "自定義 5"};

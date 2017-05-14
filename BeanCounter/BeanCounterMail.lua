@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterMail.lua 5504 2014-10-19 11:07:29Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: BeanCounterMail.lua 5690 2016-12-10 13:41:45Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterMail - Handles recording of all auction house related mail
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterMail.lua $","$Rev: 5504 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterMail.lua $","$Rev: 5690 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals() --_BC localization function
@@ -55,6 +55,7 @@ local outbidLocale = AUCTION_OUTBID_MAIL_SUBJECT:gsub("%%s", "(.+)")
 local cancelledLocale = AUCTION_REMOVED_MAIL_SUBJECT:gsub("%%s", "")
 local successLocale = AUCTION_SOLD_MAIL_SUBJECT:gsub("%%s", "")
 local wonLocale = AUCTION_WON_MAIL_SUBJECT:gsub("%%s", "")
+local retrievingData = RETRIEVING_DATA
 
 local reportTotalMail, reportReadMail = 0, 0 --Used as a debug check on mail scanning engine
 
@@ -66,6 +67,8 @@ local factionEncode = {
 
 local senderAuctionHouse
 function private.isAuctionHouseMail(sender, subject)
+	if not sender or sender == "" then return end
+
 	if not senderAuctionHouse then
 		senderAuctionHouse = {}
 		senderAuctionHouse[_BC('MailSenderAuctionHouse')] = true -- from BeanCounterStrings.lua
@@ -85,7 +88,7 @@ function private.isAuctionHouseMail(sender, subject)
 	-- try to 'learn' Auction House sender localized name by inspecting subject
 	-- temporary fix - this is slow and will trigger for every non-AH mail
 	-- also, potentially prone to accidental matches?
-	if subject and subject ~= "" then
+	if subject and subject ~= "" and subject ~= retrievingData then
 		if subject:match(expiredLocale) or subject:match(outbidLocale) or subject:match(successLocale) or subject:match(wonLocale) or subject:match(cancelledLocale) then
 			if not BeanCounterMailPatch then
 				BeanCounterMailPatch = {}
@@ -157,43 +160,38 @@ end
 --Mailbox Snapshots
 function private.updateInboxStart()
 	reportTotalMail = GetInboxNumItems()
-	local skipString = ""
+	local skipString
 	for n = reportTotalMail, 1, -1 do
 		local _, _, sender, subject, money, _, daysLeft, _, wasRead, _, _, _ = GetInboxHeaderInfo(n)
-		if subject == "" then
-			if skipString == "" then
+		if not subject or subject == "" or subject == retrievingData then
+			-- mail info is incomplete, will be retried
+			if not skipString then
 				skipString = tostring(n)
 			else
 				skipString = tostring(n) .. "," .. skipString
 			end
-		end
-		if sender and subject and subject ~= "" and (not wasRead or private.mailReadOveride[n]) then -- subject ~= "" when the server fails, this will prevent us from reading the mail giving the server more time to get its shit togather
-			local auctionHouse --A, H, N flag for which AH the trxn came from
+		elseif not wasRead or private.mailReadOveride[n] then
 			if private.isAuctionHouseMail(sender, subject) then
-				auctionHouse = factionEncode[private.playerSettings.faction]
-			end
-
-
-			if auctionHouse then
 				private.HideMailGUI(true)
 				wasRead = wasRead and 1 or 0 -- three possible states 0=unread 1=read by addon 2=read by player
 				private.mailReadOveride[n] = false -- set back to false so we don't read the same message more than once
-				local itemLink = GetInboxItemLink(n, 1)
-				local _, _, stack, _, _ = GetInboxItem(n)
+				local itemLink = GetInboxItemLink(n, 1) -- We only check the 1st attachment, as AH mail should never have more than 1
+				local _, _, _, stack = GetInboxItem(n, 1)
 				local invoiceType, itemName, playerName, bid, buyout, deposit, consignment, retrieved, startTime = private.getInvoice(n,sender, subject)
 				--subject now can contain a stack size. Remove them so only itemName remains
 				subject = subject:gsub("%s-%(%d-%)", "") --strips off the count (x) from the itemName
 				tinsert(private.inboxStart, {["n"] = n, ["sender"]=sender, ["subject"]=subject,["money"]=money, ["read"]=wasRead, ["age"] = daysLeft,
 						["invoiceType"] = invoiceType, ["itemName"] = itemName, ["Seller/buyer"] = playerName, ['bid'] = bid, ["buyout"] = buyout,
-						["deposit"] = deposit, ["fee"] = consignment, ["retrieved"] = retrieved, ["startTime"] = startTime, ["itemLink"] = itemLink, ["stack"] = stack, ["auctionHouse"] = auctionHouse,
+						["deposit"] = deposit, ["fee"] = consignment, ["retrieved"] = retrieved, ["startTime"] = startTime, ["itemLink"] = itemLink,
+						["stack"] = stack, ["auctionHouse"] = factionEncode[private.playerSettings.faction],
 						})
 				private.GetInboxText(n) --read message
 				reportReadMail = reportReadMail + 1
 			end
 		end
-		private.lastCheckedMail = GetTime() --this keeps us from hiding the mail UI to early and causing flicker
+		private.lastCheckedMail = GetTime() --this keeps us from hiding the mail UI too early and causing flicker
 	end
-	if skipString ~= "" and skipString ~= private.lastSkipString then
+	if skipString and skipString ~= private.lastSkipString then
 		debugPrint("Skipping mail #", skipString, "The server is not sending the subject data. Mail will be left unread and we will retry")
 		private.lastSkipString = skipString
 	end

@@ -23,30 +23,22 @@ if GetLocale() ~= "frFR" then return end
 -----------------
 --  Bossyells  --
 -----------------
-_L.yells[529]["Algalon"] = "J'ai vu des mondes baigner dans les flammes" -- Needs review
-_L.yells[529]["Freya"] = "Son emprise sur moi se dissipe. J'y vois à nouveau clair. Merci, héros." -- Needs review
-_L.yells[529]["Hodir"] = "Je suis... libéré de son emprise... enfin." -- Needs review
-_L.yells[529]["Mimiron"] = "Il semblerait que j'aie pu faire une minime erreur de calcul." -- Needs review
-_L.yells[529]["Thorim"] = "Retenez vos coups ! Je me rends !" -- Needs review
-
-_L.yells[543]["Faction Champions"] = "Une victoire tragique et depourvue de sens. La perte subie aujourd'hui nous affaiblira tous, car qui d'autre que le roi-liche pourrait beneficier d'une telle folie?? De grands guerriers ont perdu la vie. Et pour quoi?? La vraie menace plane à l'horizon?: le roi-liche nous attend, tous, dans la mort." -- Needs review
-
-_L.yells[604]["Dreamwalker"] = "JE REVIS !" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Vous direz pas que j'vous avais pas prévenus, canailles ! Mes frères et sœurs, en avant !" -- Needs review
-_L.yells[604]["Icecrown Gunship Battle Horde"] = "L'Alliance baisse pavillon. Sus au roi-liche !" -- Needs review
-
-_L.yells[609]["Halion"] = "Savourez bien cette victoire mortels car ce serra votre dernière. Ce monde brulera au retour du maitre !" -- Needs review
-
-_L.yells[773]["Conclave Of Wind"] = "Le conclave du Vent est dissipé. Votre conduite honorable et votre détermination vous valent le droit de m'affronter, mortels. J'attends votre attaque sur ma plate-forme ! Venez !" -- Needs review
-
-_L.yells[800]["Ragnaros"] = "Trop tôt! ... Vous êtes venu trop tôt..." -- Needs review
-
-_L.yells[886]["Lei Shi"] = "Je… ah… oh ! J’ai… ? Tout était… si… embrouillé." -- Needs review
-_L.yells[886]["Tsulong"] = "Je vous remercie, étrangers. J'ai été libéré." -- Needs review
-
-_L.yells[953]["Immerseus"] = "Ah, vous avez réussi ! Les eaux ont retrouvé leur pureté." -- Needs review
-_L.yells[953]["Spoils of Pandaria"] = "Système en cours de réinitialisation. Veuillez ne pas le débrancher, ou il pourrait vous sauter à la figure." -- Needs review
-
+_L.yells[529]["Algalon"] = "J'ai vu des mondes baigner dans les flammes"
+_L.yells[529]["Freya"] = "Son emprise sur moi se dissipe. J'y vois à nouveau clair. Merci, héros."
+_L.yells[529]["Hodir"] = "Je suis... libéré de son emprise... enfin."
+_L.yells[529]["Mimiron"] = "Il semblerait que j'aie pu faire une minime erreur de calcul."
+_L.yells[529]["Thorim"] = "Retenez vos coups ! Je me rends !"
+_L.yells[543]["Faction Champions"] = "Une victoire tragique et depourvue de sens. La perte subie aujourd'hui nous affaiblira tous, car qui d'autre que le roi-liche pourrait beneficier d'une telle folie?? De grands guerriers ont perdu la vie. Et pour quoi?? La vraie menace plane à l'horizon?: le roi-liche nous attend, tous, dans la mort."
+_L.yells[604]["Dreamwalker"] = "JE REVIS !"
+_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Vous direz pas que j'vous avais pas prévenus, canailles ! Mes frères et sœurs, en avant !"
+_L.yells[604]["Icecrown Gunship Battle Horde"] = "L'Alliance baisse pavillon. Sus au roi-liche !"
+_L.yells[609]["Halion"] = "Savourez bien cette victoire mortels car ce serra votre dernière. Ce monde brulera au retour du maitre !"
+_L.yells[773]["Conclave Of Wind"] = "Le conclave du Vent est dissipé. Votre conduite honorable et votre détermination vous valent le droit de m'affronter, mortels. J'attends votre attaque sur ma plate-forme ! Venez !"
+_L.yells[800]["Ragnaros"] = "Trop tôt! ... Vous êtes venu trop tôt..."
+_L.yells[886]["Lei Shi"] = "Je… ah… oh ! J’ai… ? Tout était… si… embrouillé."
+_L.yells[886]["Tsulong"] = "Je vous remercie, étrangers. J'ai été libéré."
+_L.yells[953]["Immerseus"] = "Ah, vous avez réussi ! Les eaux ont retrouvé leur pureté."
+_L.yells[953]["Spoils of Pandaria"] = "Système en cours de réinitialisation. Veuillez ne pas le débrancher, ou il pourrait vous sauter à la figure."
 
 
 ---------------------------------
@@ -64,7 +56,7 @@ MRT_L.Core["DKP_Frame_OK_Button"] = "Ok"
 MRT_L.Core["DKP_Frame_Title"] = "Entrer le coût"
 MRT_L.Core["Export_AttendanceNote"] = [=[Dans le Raid-Log-Import-Settings, s'il vous plaît définir l'option
 "Temps en secondes, le butin appartient au Boss avant."
-ou inférieur à 180 secondes pour éviter les problèmes d'assiduité.]=] -- Needs review
+ou inférieur à 180 secondes pour éviter les problèmes d'assiduité.]=]
 MRT_L.Core["Export_Attendees"] = "Participants"
 MRT_L.Core["Export_Button"] = "Fermer"
 MRT_L.Core["Export_Explanation"] = [=[Ctrl+C pour copier les données vers le presse-papier
@@ -96,11 +88,10 @@ MRT_L.Core["TakeSnapshot_NotInRaidError"] = "Erreur : Vous n'êtes pas dans un r
 MRT_L.Core["Trash Mob"] = "Trash Mob"
 
 
-
 -----------------------------------
 --  Option panels local strings  --
 -----------------------------------
-MRT_L.Options["AP_GroupRestriction"] = "Suivre simplement les 2 premiers groupes (sur 5)" -- Needs review
+MRT_L.Options["AP_GroupRestriction"] = "Suivre simplement les 2 premiers groupes (sur 5)"
 MRT_L.Options["AP_GuildAttendance"] = "Activer la vérification des participants de la guilde"
 MRT_L.Options["AP_GuildAttendanceCustomTextTitle"] = "Texte personnalisé pour la présence de guilde :"
 MRT_L.Options["AP_GuildAttendanceDuration"] = "Durée de prise en compte des participants"
@@ -145,23 +136,18 @@ MRT_L.Options["ITP_IgnoreEnchantingMats"] = "Ignorer les matériaux d'enchanteme
 MRT_L.Options["ITP_IgnoreGems"] = "Ignorer les gemmes"
 MRT_L.Options["ITP_Title"] = "Suivi des objets"
 MRT_L.Options["ITP_TitleText"] = "MRT - Option du suivi des objets"
-MRT_L.Options["ITP_UseEPGP_GP_Values"] = "Utilisez les valeurs EPGP GP" -- Needs review
+MRT_L.Options["ITP_UseEPGP_GP_Values"] = "Utilisez les valeurs EPGP GP"
 MRT_L.Options["MP_AutoPrunning"] = "Suppression automatique des raid plus ancien que"
 MRT_L.Options["MP_Days"] = "jours"
 MRT_L.Options["MP_Debug"] = "Activer les messages de debug"
 MRT_L.Options["MP_Description"] = "Suits les raids, loot et participation"
 MRT_L.Options["MP_Enabled"] = "Activer le suivi automatique"
 MRT_L.Options["MP_MinimapIcon"] = "Afficher le bouton de la minicarte"
--- MRT_L.Options["MP_ResetGuiPos"] = "Reset GUI position"
 MRT_L.Options["MP_SlashCmd"] = "Commande \"slash\""
 MRT_L.Options["TP_AskForDKPValue"] = "Demander le prix des objets"
--- MRT_L.Options["TP_AskForDKPValuePersonal"] = "... if loot mode is personal loot"
 MRT_L.Options["TP_CreateNewRaidOnNewZone"] = "Créer un nouveau raid en entrant dans une nouvelle zone"
 MRT_L.Options["TP_Log10MenRaids"] = "Suivre les raids de 10 joueurs"
 MRT_L.Options["TP_LogAVRaids"] = "Suivre les raids JcJ (Archavon, Bastion de Baradin)"
--- MRT_L.Options["TP_LogCataclysmRaids"] = "Track Cataclysm raids"
--- MRT_L.Options["TP_LogLFRRaids"] = "Track LFR raids"
--- MRT_L.Options["TP_LogLootModePersonal"] = "Track loot mode 'Personal'"
 MRT_L.Options["TP_LogWotLKRaids"] = "Suivre les raids WotLK"
 MRT_L.Options["TP_MinItemQualityToGetCost_Desc"] = "Qualité minimum des objets à valoriser"
 MRT_L.Options["TP_MinItemQualityToLog_Desc"] = "Qualité minimum des objets à suivre"
@@ -197,7 +183,6 @@ Un rechargement de l'interface est recommandé
 après la modification de cette valeure.]=]
 
 
-
 -------------------
 --  GUI strings  --
 -------------------
@@ -221,7 +206,6 @@ MRT_L.GUI["Button_StartNewRaid"] = "Débuter un nouveau raid"
 MRT_L.GUI["Button_TakeSnapshot"] = "Prendre un instantané"
 MRT_L.GUI["Can not delete current raid"] = "Erreur : Impossible de supprimer le raid actuel."
 MRT_L.GUI["Cell_Hard"] = "Héroïque"
--- MRT_L.GUI["Cell_LFR"] = "LFR"
 MRT_L.GUI["Cell_Normal"] = "Normal"
 MRT_L.GUI["Col_Cost"] = "Coût"
 MRT_L.GUI["Col_Date"] = "Date"
@@ -248,8 +232,8 @@ MRT_L.GUI["Item cost invalid"] = "Erreur : le coût de l'objet n'est pas un nomb
 MRT_L.GUI["Itemlink"] = "Lien d'objet, ID d'objet ou nom d'objet"
 MRT_L.GUI["Looter"] = "Gagnant"
 MRT_L.GUI["Modify loot data"] = "Modifier les données de loot"
-MRT_L.GUI["No active raid."] = "Erreur : Pas de raid actif."
 MRT_L.GUI["No active raid in progress. Please enter time."] = "Erreur : Pas de raid actif en cours. SVP entrer une heure."
+MRT_L.GUI["No active raid."] = "Erreur : Pas de raid actif."
 MRT_L.GUI["No boss attendee selected"] = "Erreur : Pas de participant sur le boss sélectionné"
 MRT_L.GUI["No boss name entered"] = "Erreur : Pas de nom de boss saisi"
 MRT_L.GUI["No boss selected"] = "Erreur : Pas de boss sélectionné"
@@ -258,10 +242,10 @@ MRT_L.GUI["No loot selected"] = "Erreur : Pas d'objet sélectionné."
 MRT_L.GUI["No name entered"] = "Erreur : Aucun nom saisie"
 MRT_L.GUI["No raid attendee selected"] = "Erreur : Pas de participant sélectionné."
 MRT_L.GUI["No raid selected"] = "Erreur : Pas de raid sélectionné."
-MRT_L.GUI["Note"] = "Note"
 MRT_L.GUI["No valid difficulty entered"] = "Erreur : Pas de difficulté valide sélectionnée."
 MRT_L.GUI["No valid raid size"] = "Erreur : Taille de raid saisie invalide."
 MRT_L.GUI["No valid time entered"] = "Erreur : Pas d'heure valide sélectionnée."
+MRT_L.GUI["Note"] = "Note"
 MRT_L.GUI["Player not in raid."] = "Erreur : Vous n'êtes pas dans un raid."
 MRT_L.GUI["Raid size"] = "Taille du raid"
 MRT_L.GUI["Resuming last raid failed"] = "Reprise du dernier raid échoué"
@@ -306,4 +290,3 @@ Ne fonctionne pas si le suivie de raid est en cours.
 Dans ce cas, ajouter un évènement "boss".]=]
 MRT_L.GUI["Value"] = "Rareté"
 MRT_L.GUI["Zone name"] = "Nom de la Zone"
-

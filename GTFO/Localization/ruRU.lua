@@ -1,24 +1,9 @@
-﻿--------------------------------------------------------------------------
+--------------------------------------------------------------------------
 -- ruRU.lua 
 --------------------------------------------------------------------------
 --[[
 GTFO Russian Localization
 Translator: pcki11 and D_Angel and user_kh
-
-Change Log:
-	v2.8.1
-		- Added Russian localization
-	v3.2.2
-		- Added untranslated strings
-	v3.3
-		- Added untranslated strings
-	v4.7
-		- Fixed localization issues
-	v4.12
-		- Added untranslated strings
-	v4.32
-		- Added untranslated strings
-		
 ]]--
 
 if (GetLocale() == "ruRU") then
@@ -41,7 +26,7 @@ GTFOLocal =
 	Help_Suspend = "Выключить/включить аддон",
 	Help_Suspended = "Аддон приостановлен.",
 	Help_TestFail = "Тест звука (неудача)",
-	Help_TestFriendlyFire = "Тест звука (friendly fire)", -- Needs review
+	Help_TestFriendlyFire = "Тест звука (friendly fire)",
 	Help_TestHigh = "Тест звука (большие повреждения)",
 	Help_TestLow = "Тест звука (низкие повреждения)",
 	Help_Version = "Показать участников рейда с этим аддоном.",
@@ -90,7 +75,7 @@ GTFOLocal =
 	UI_TrivialSlider = "Минимальный % HP",
 	UI_Unmute = "Play sounds when muted", -- Requires localization
 	UI_UnmuteDescription = "If you have the master sound muted, GTFO will temporarily turn on sound briefly to play GTFO sounds.", -- Requires localization
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.", -- Requires localization
+	UI_UnmuteDescription2 = "This requires the master volume (and selected channel) sliders to be higher than 0%.", -- Requires localization
 	UI_Volume = "Громкость GTFO",
 	UI_VolumeDescription = "Установить громкость проигрываемых звуков.",
 	UI_VolumeLoud = "4: громко",
@@ -103,6 +88,5 @@ GTFOLocal =
 	Version_Off = "Version update reminders off", -- Requires localization
 	Version_On = "Version update reminders on", -- Requires localization
 }
-
 
 end

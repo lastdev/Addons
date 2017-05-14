@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 604 $"):sub(12, -3))
 mod:SetCreatureID(22917)
+mod:SetEncounterID(609)
 mod:SetModelID(21135)
 mod:SetUsedIcons(8)
 mod:SetZone()
@@ -14,12 +15,12 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
-	"UNIT_HEALTH target focus mouseover",
+	"SPELL_AURA_APPLIED 41917 41914 40585 40932 41083 40683 40695",
+	"SPELL_CAST_START 40904",
+	"SPELL_CAST_SUCCESS 39855",
+	"SPELL_DAMAGE 41131",
+	"SPELL_MISSED 41131",
+	"UNIT_HEALTH boss1",
 	"UNIT_DIED"
 )
 
@@ -50,12 +51,12 @@ local timerNextBarrage		= mod:NewCDTimer(44, 40585)
 local timerFlame			= mod:NewTargetTimer(60, 40932)
 local timerNextFlameBurst	= mod:NewCDTimer(20, 41131)
 local timerShadowDemon		= mod:NewCDTimer(34, 41117)
-local timerNextHuman		= mod:NewTimer(74, "TimerNextHuman", 2457)
-local timerNextDemon		= mod:NewTimer(60, "TimerNextDemon", 2457)
+local timerNextHuman		= mod:NewTimer(74, "TimerNextHuman", "Interface\\Icons\\ability_warrior_offensivestance", nil, nil, 6)
+local timerNextDemon		= mod:NewTimer(60, "TimerNextDemon", "Interface\\Icons\\ability_warrior_offensivestance", nil, nil, 6)
 local timerEnrage			= mod:NewBuffActiveTimer(10, 40683)
 local timerNextEnrage		= mod:NewCDTimer(40, 40683)
 local timerCaged			= mod:NewBuffActiveTimer(15, 40695)
-local timerPhase4			= mod:NewTimer(30, "TimerPhase4", 2457)
+local timerPhase4			= mod:NewPhaseTimer(30)
 
 local timerCombatStart		= mod:NewCombatTimer(36)
 local berserkTimer			= mod:NewBerserkTimer(1500)
@@ -159,6 +160,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 39855 and self:AntiSpam(4, 1) then
 		flamesDown = 0
+		warned_preP2 = true
 		warnPhase2:Show()
 		timerNextBarrage:Start(81)
 	end
@@ -204,6 +206,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:Schedule(74, humanForms)
 	elseif msg == L.Phase4 or msg:find(L.Phase4) then
 		phase4 = true
+		warned_preP4 = true
 		self:Unschedule(humanForms)
 		timerParasite:Cancel()
 		timerFlame:Cancel()
@@ -218,10 +221,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UNIT_HEALTH(uId)
-	if not warned_preP2 and self:GetUnitCreatureId(uId) == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.75 then
+	local cid = self:GetUnitCreatureId(uId)
+	if not warned_preP2 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.75 then
 		warned_preP2 = true
 		warnPhase2Soon:Show()
-	elseif not warned_preP4 and self:GetUnitCreatureId(uId) == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.35 then
+	elseif not warned_preP4 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.35 then
 		warned_preP4 = true
 		warnPhase4Soon:Show()
 	end

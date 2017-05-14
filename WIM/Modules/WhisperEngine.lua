@@ -31,6 +31,9 @@ local playerRealm = GetRealmName()
 -- set name space
 setfenv(1, WIM);
 
+--Quick and dirty fix for renames in legion to deal with renamed globals
+local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
+
 -- create WIM Module
 local WhisperEngine = CreateModule("WhisperEngine", true);
 
@@ -187,8 +190,8 @@ local function getWhisperWindowByUser(user, isBN)
     else
         -- otherwise, create a new one.
         Windows[user] = CreateWhisperWindow(user);
-	Windows[user].isBN = isBN;
-	Windows[user].bn = Windows[user].bn or {};
+		Windows[user].isBN = isBN;
+		Windows[user].bn = Windows[user].bn or {};
         if(db.whoLookups or lists.gm[user] or Windows[user].isBN) then
             Windows[user]:SendWho(); -- send who request
         end
@@ -247,11 +250,7 @@ function SendSplitMessage(PRIORITY, HEADER, theMsg, CHANNEL, EXTRA, to)
 			if(Windows[to] and Windows[to].isBN) then
 				_G.BNSendWhisper(Windows[to].bn.id, chunk);
 			else
-				if(CHANNEL == "BN_CONVERSATION") then
-					_G.BNSendConversationMessage(to, chunk);
-				else
 					_G.ChatThrottleLib:SendChatMessage(PRIORITY, HEADER, chunk, CHANNEL, EXTRA, to);
-				end
                         end
 			chunk = (splitMessage[i] or "").." ";
                 end
@@ -332,6 +331,7 @@ function WhisperEngine:CHAT_MSG_WHISPER_INFORM_CONTROLLER(eventItem, arg1, arg2,
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end
@@ -366,6 +366,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM_CONTROLLER(eventItem, arg1, ar
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end
@@ -398,6 +399,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_CONTROLLER(eventItem, ...)
     local curState = curState;
     curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
     if(WIM.db.pop_rules.whisper[curState].supress) then
+    	_G.FlashClientIcon()
         eventItem:BlockFromChatFrame();
     end
 end
@@ -548,7 +550,7 @@ local function replyTellTarget(TellNotTold)
     local bNetID;
     if (lastTell:find("^|K")) then
       lastTell = _G.BNTokenFindName(lastTell);
-      bNetID = _G.BNet_GetPresenceID(lastTell);
+      bNetID = BNet_GetPresenceID(lastTell);
     end
 
     if (lastTell ~= "" and db.pop_rules.whisper.intercept) then
@@ -574,7 +576,7 @@ function CF_ExtractTellTarget(editBox, msg)
 	--_G.DEFAULT_CHAT_FRAME:AddMessage("Raw: "..msg:gsub("|", ":")); -- debugging
 	if (target:find("^|K")) then
 		target, msg = _G.BNTokenFindName(target);
-		bNetID = _G.BNet_GetPresenceID(target);
+		bNetID = BNet_GetPresenceID(target);
 	else
 		--If we haven't even finished one word, we aren't done.
 		if (not target or not string.find(target, "%s") or (string.sub(target, 1, 1) == "|")) then

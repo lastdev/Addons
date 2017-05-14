@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 178 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 209 $"):sub(12, -3))
 
 mod:SetCreatureID(33113)
 mod:SetEncounterID(1132)
@@ -21,11 +21,11 @@ local pursueTargetWarn		= mod:NewAnnounce("PursueWarn", 2, 62374)
 local warnNextPursueSoon	= mod:NewAnnounce("warnNextPursueSoon", 3, 62374)
 
 local warnSystemOverload	= mod:NewSpecialWarningSpell(62475)
-local pursueSpecWarn		= mod:NewSpecialWarning("OptionVersion2", "SpecialPursueWarnYou", nil, nil, nil, 4)
+local pursueSpecWarn		= mod:NewSpecialWarning("SpecialPursueWarnYou", nil, nil, 2, 4)
 local warnWardofLife		= mod:NewSpecialWarning("warnWardofLife")
 
-local timerSystemOverload	= mod:NewBuffActiveTimer(20, 62475)
-local timerFlameVents		= mod:NewCastTimer(10, 62396)
+local timerSystemOverload	= mod:NewBuffActiveTimer(20, 62475, nil, nil, nil, 6)
+local timerFlameVents		= mod:NewCastTimer(10, 62396, nil, nil, nil, 2)
 local timerPursued			= mod:NewBuffFadesTimer(30, 62374)
 
 local guids = {}

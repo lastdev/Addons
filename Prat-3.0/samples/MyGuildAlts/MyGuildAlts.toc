@@ -1,8 +1,4 @@
-﻿## Interface: 60100
-## X-Curse-Packaged-Version: 3.5.12
-## X-Curse-Project-Name: Prat 3.0
-## X-Curse-Project-ID: prat-3-0
-## X-Curse-Repository-ID: wow/prat-3-0/mainline
+## Interface: 70100
 
 ## If you want to be a bit more efficient, you should:
 ## 1) Download the 'addonloader' addon http://wow.curse.com/downloads/wow-addons/details/addon-loader.aspx

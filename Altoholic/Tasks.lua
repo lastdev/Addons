@@ -1,4 +1,4 @@
-﻿-- Simple task manager
+-- Simple task manager
 -- Written by : Thaoky, EU-Marécages de Zangar
 
 local addonName = ...

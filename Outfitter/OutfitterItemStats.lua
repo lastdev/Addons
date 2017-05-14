@@ -61,8 +61,9 @@ function Outfitter:CalcOutfitScore(pOutfit, pStat)
 		return pStat:GetOutfitScore(pOutfit)
 	elseif pStat.GetItemScore then
 		local vTotalScore = 0
-		
-		for _, vItem in pairs(pOutfit:GetItems()) do
+		local vItems = pOutfit:GetItems()
+
+		for _, vItem in pairs(vItems) do
 			local vItemScore = pStat:GetItemScore(vItem)
 			
 			if vItemScore then
@@ -131,54 +132,62 @@ Outfitter._SimpleStat = {}
 ----------------------------------------
 
 function Outfitter._SimpleStat:GetItemScore(pItem)
-	-- Don't need to parse anything for item level
-	
-	if self.ID == "ITEM_LEVEL" then
-		if not pItem.Quality
-		or not pItem.Level
-		or pItem.Quality < 2 then
-			return
-		elseif pItem.Quality == 2 then -- Greens
-			return pItem.Level - 26
-		elseif pItem.Quality == 3 then -- Blues
-			return pItem.Level - 13
-		else
-			return pItem.Level
-		end
+	local vScore
+
+	-- Try to use a cached value
+	if pItem.ScoreCache then
+		vScore = pItem.ScoreCache[self]
 	end
-	
+
+	-- Calculate the value if the cache wasn't available
+	if not vScore then
+		vScore = self:GetUncachedItemScore(pItem) or 0
+		
+		-- Create the cache table if necessary
+		if not pItem.ScoreCache then
+			pItem.ScoreCache = {}
+			setmetatable(pItem.ScoreCache, {__mode = "k"}) -- use weak keys
+		end
+
+		-- Remember the score
+		pItem.ScoreCache[self] = vScore
+	end
+
+	-- Done
+	return vScore
+end
+
+function Outfitter._SimpleStat:GetUncachedItemScore(pItem)
 	-- Parse the stats
+	local vStats = Outfitter.ItemStatsLib:statsForLink(pItem.Link)
 	
-	local vStats = Outfitter.LibStatLogic:GetSum(pItem.Link)
-	
+	-- Leave if no stats
 	if not vStats then
 		return
 	end
 	
-	if pItem.Name == "Big Iron Fishing Pole" then
-		Outfitter:DebugTable(vStats)
+	-- Leave if the item is too high-level
+	if vStats.minLevel > UnitLevel("player") then
+		return
 	end
-	
+
+	-- Total stats
 	if self.ID == "TOTAL_STATS" then
-		-- Ignore items with no stats
-		
-		if not vStats.AGI
-		and not vStats.INT
-		and not vStats.SPI
-		and not vStats.STA
-		and not vStats.STR then
-			return
-		end
-		
-		-- Total the stats
-		
-		return (vStats.AGI or 0)
-		     + (vStats.INT or 0)
-		     + (vStats.SPI or 0)
-		     + (vStats.STA or 0)
-		     + (vStats.STR or 0)
+		return (vStats.values.STA or 0)
+		     + (vStats.values.STR or 0)
+		     + (vStats.values.INT or 0)
+		     + (vStats.values.AGI or 0)
+		     + (vStats.values.MAS or 0)
+		     + (vStats.values.HAS or 0)
+		     + (vStats.values.CRI or 0)
+		     + (vStats.values.VER or 0)
+		     + (vStats.values.SPI or 0)
+
+
+	-- Static stat values
 	else
-		return vStats[self.ID]
+		local value = tonumber(vStats.values[self.ID])
+		return value
 	end
 end
 
@@ -195,111 +204,114 @@ Outfitter.SimpleStatCategories =
 		Name = PLAYERSTAT_BASE_STATS,
 		Stats =
 		{
-			{ID = "AGI"},
-			{ID = "INT"},
-			{ID = "SPI"},
-			{ID = "STA"},
-			{ID = "STR"},
-			{ID = "MASTERY_RATING"},
+			{ID = "STA", Name = Outfitter.ItemStatsLib.strings.Stamina},
+			{ID = "STR", Name = Outfitter.ItemStatsLib.strings.Strength},
+			{ID = "INT", Name = Outfitter.ItemStatsLib.strings.Intellect},
+			{ID = "AGI", Name = Outfitter.ItemStatsLib.strings.Agility},
+
+			{ID = "SPI", Name = Outfitter.ItemStatsLib.strings.Spirit},
+			{ID = "HAS", Name = Outfitter.ItemStatsLib.strings.Haste},
+			{ID = "VER", Name = Outfitter.ItemStatsLib.strings.Versatility},
+			{ID = "MAS", Name = Outfitter.ItemStatsLib.strings.Mastery},
+			{ID = "CRI", Name = Outfitter.ItemStatsLib.strings.CriticalStrike},
 			{ID = "TOTAL_STATS", Name = Outfitter.cTotalStatsName},
 			{ID = "ITEM_LEVEL", Name = Outfitter.cItemLevelName},
-			{ID = "PVP_POWER"}
 		},
 	},
-	{
-		CategoryID = "Melee",
-		Name = PLAYERSTAT_MELEE_COMBAT,
-		Stats =
-		{
-			{ID = "MELEE_DMG"},
-			{ID = "MELEE_HASTE_RATING"},
-			{ID = "AP"},
-			{ID = "RANGED_AP"},
-			{ID = "MELEE_HIT_RATING"},
-			{ID = "MELEE_CRIT_RATING"},
-			{ID = "EXPERTISE_RATING"},
-			{ID = "ARMOR_PENETRATION_RATING"},
-		},
-	},
-	{
-		CategoryID = "Ranged",
-		Name = PLAYERSTAT_RANGED_COMBAT,
-		Stats =
-		{
-			{ID = "RANGED_DMG"},
-			{ID = "RANGED_HASTE_RATING"},
-			{ID = "RANGED_AP"},
-			{ID = "RANGED_HIT_RATING"},
-			{ID = "RANGED_CRIT_RATING"},
-		},
-	},
-	{
-		CategoryID = "Spell",
-		Name = PLAYERSTAT_SPELL_COMBAT,
-		Stats =
-		{
-			{ID = "SPELL_DMG"},
-			{ID = "HEAL"},
-			{ID = "SPELL_HIT_RATING"},
-			{ID = "SPELL_CRIT_RATING"},
-			{ID = "SPELL_HASTE_RATING"},
-			{ID = "SPELLPEN"},
-			{ID = "MANA"},
-			{ID = "MANA_REG"},
-		},
-	},
-	{
-		CategoryID = "Defense",
-		Name = PLAYERSTAT_DEFENSES,
-		Stats =
-		{
-			{ID = "ARMOR"},
-			{ID = "DEFENSE_RATING"},
-			{ID = "DODGE_RATING"},
-			{ID = "PARRY_RATING"},
-			{ID = "BLOCK_RATING"},
-			{ID = "RESILIENCE_RATING"},
-			{ID = "HEALTH"},
-			{ID = "HEALTH_REG"},
-		},
-	},
-	{
-		CategoryID = "Resist",
-		Name = Outfitter.cResistCategory,
-		Stats =
-		{
-			{ID = "ARCANE_RES"},
-			{ID = "FIRE_RES"},
-			{ID = "FROST_RES"},
-			{ID = "NATURE_RES"},
-			{ID = "SHADOW_RES"},
-		},
-	},
-	{
-		CategoryID = "Trade",
-		Name = Outfitter.cTradeCategory,
-		Stats =
-		{
-			{ID = "FISHING"},
-			{ID = "HERBALISM"},
-			{ID = "MINING"},
-			{ID = "SKINNING"},
-			{ID = "RUN_SPEED"},
-			{ID = "MOUNT_SPEED"},
-		},
-	},
+--	{
+--		CategoryID = "Melee",
+--		Name = PLAYERSTAT_MELEE_COMBAT,
+--		Stats =
+--		{
+--			{ID = "MELEE_DMG"},
+--			{ID = "MELEE_HASTE_RATING"},
+--			{ID = "AP"},
+--			{ID = "RANGED_AP"},
+--			{ID = "MELEE_HIT_RATING"},
+--			{ID = "MELEE_CRIT_RATING"},
+--			{ID = "EXPERTISE_RATING"},
+--			{ID = "ARMOR_PENETRATION_RATING"},
+--		},
+--	},
+--	{
+--		CategoryID = "Ranged",
+--		Name = PLAYERSTAT_RANGED_COMBAT,
+--		Stats =
+--		{
+--			{ID = "RANGED_DMG"},
+--			{ID = "RANGED_HASTE_RATING"},
+--			{ID = "RANGED_AP"},
+--			{ID = "RANGED_HIT_RATING"},
+--			{ID = "RANGED_CRIT_RATING"},
+--		},
+--	},
+--	{
+--		CategoryID = "Spell",
+--		Name = PLAYERSTAT_SPELL_COMBAT,
+--		Stats =
+--		{
+--			{ID = "SPELL_DMG"},
+--			{ID = "HEAL"},
+--			{ID = "SPELL_HIT_RATING"},
+--			{ID = "SPELL_CRIT_RATING"},
+--			{ID = "SPELL_HASTE_RATING"},
+--			{ID = "SPELLPEN"},
+--			{ID = "MANA"},
+--			{ID = "MANA_REG"},
+--		},
+--	},
+--	{
+--		CategoryID = "Defense",
+--		Name = PLAYERSTAT_DEFENSES,
+--		Stats =
+--		{
+--			{ID = "ARMOR"},
+--			{ID = "DEFENSE_RATING"},
+--			{ID = "DODGE_RATING"},
+--			{ID = "PARRY_RATING"},
+--			{ID = "BLOCK_RATING"},
+--			{ID = "RESILIENCE_RATING"},
+--			{ID = "HEALTH"},
+--			{ID = "HEALTH_REG"},
+--		},
+--	},
+--	{
+--		CategoryID = "Resist",
+--		Name = Outfitter.cResistCategory,
+--		Stats =
+--		{
+--			{ID = "ARCANE_RES"},
+--			{ID = "FIRE_RES"},
+--			{ID = "FROST_RES"},
+--			{ID = "NATURE_RES"},
+--			{ID = "SHADOW_RES"},
+--		},
+--	},
+--	{
+--		CategoryID = "Trade",
+--		Name = Outfitter.cTradeCategory,
+--		Stats =
+--		{
+--			{ID = "FISHING"},
+--			{ID = "HERBALISM"},
+--			{ID = "MINING"},
+--			{ID = "SKINNING"},
+--			{ID = "RUN_SPEED"},
+--			{ID = "MOUNT_SPEED"},
+--		},
+--	},
 }
 
 ----------------------------------------
 -- Install the simple stats
 ----------------------------------------
---[[
+
 for _, vStatCategory in ipairs(Outfitter.SimpleStatCategories) do
 	setmetatable(vStatCategory, Outfitter._SimpleStatCategoryMetaTable)
 	
 	for _, vStat in ipairs(vStatCategory.Stats) do
 		if not vStat.Name then
-			vStat.Name = Outfitter.LibStatLogic:GetStatNameFromID(vStat.ID)
+			vStat.Name = vStat.ID
 		end
 		
 		setmetatable(vStat, Outfitter._SimpleStatMetaTable)
@@ -307,7 +319,7 @@ for _, vStatCategory in ipairs(Outfitter.SimpleStatCategories) do
 	
 	table.insert(Outfitter.StatCategories, vStatCategory)
 end
-]]
+
 ----------------------------------------
 Outfitter.PawnScalesCategory =
 ----------------------------------------
@@ -345,6 +357,7 @@ function Outfitter.PawnScalesCategory:GetNumStats()
 end
 
 function Outfitter.PawnScalesCategory:GetIndexedStat(pIndex)
+	Outfitter:DebugTable(self.Scales[pIndex], "Stat "..pIndex)
 	return self.Scales[pIndex]
 end
 
@@ -353,23 +366,65 @@ Outfitter._PawnScaleStat = {}
 ----------------------------------------
 
 function Outfitter._PawnScaleStat:GetItemScore(pItem)
+	-- Ignore nil items
 	if not pItem or not pItem.Link then
 		return
 	end
 	
-	local vItemData = PawnGetItemData(pItem.Link)
-	
-	if not vItemData then
-		return
+	-- Get the score
+	local vScore
+
+	-- Try to use a cached value
+	if pItem.ScoreCache then
+		vScore = pItem.ScoreCache[self]
 	end
+
+	-- Calculate the value if the cache wasn't available
+	if not vScore then
+		-- Parse the stats
+		local vStats = Outfitter.ItemStatsLib:statsForLink(pItem.Link)
 	
-	for _, vEntry in pairs(vItemData.Values) do
-		local vScaleName, vValue, UnenchantedValue = vEntry[1], vEntry[2], vEntry[3]
+		-- Score zero if no stats
+		if not vStats then
+			vScore = 0
+
+		-- Ignore the item if it's too high level
+		elseif vStats.minLevel > UnitLevel("player") then
+			vScore = 0
+
+		-- Calculate the Pawn score
+		else
+			local vItemData = PawnGetItemData(pItem.Link)
+
+			-- Score is zero if no item data
+			if not vItemData then
+				vScore = 0
+
+			-- Search for the scale we're using
+			else
+				for _, vEntry in pairs(vItemData.Values) do
+					local vScaleName, vValue, UnenchantedValue = vEntry[1], vEntry[2], vEntry[3]
 		
-		if vScaleName == self.Name then
-			return vValue
+					if vScaleName == self.Name then
+						vScore = vValue
+						break
+					end
+				end
+			end
 		end
+		
+		-- Create the cache table if necessary
+		if not pItem.ScoreCache then
+			pItem.ScoreCache = {}
+			setmetatable(pItem.ScoreCache, {__mode = "k"}) -- use weak keys
+		end
+
+		-- Remember the score
+		pItem.ScoreCache[self] = vScore
 	end
+
+	-- Done
+	return vScore
 end
 
 Outfitter._PawnScaleStatMetaTable = {__index = Outfitter._PawnScaleStat}
@@ -410,7 +465,7 @@ function Outfitter.WeightsWatcherCategory:GetNumStats()
 	end
 	
 	if self.ActiveWeights then
-		Outfitter:EraseTable(self.ActiveWeights)
+		wipe(self.ActiveWeights)
 	else
 		self.ActiveWeights = {}
 	end
@@ -459,152 +514,6 @@ else
 		end
 	end)
 end
-
-----------------------------------------
-Outfitter._TankPointsStat = {}
-----------------------------------------
-
-Outfitter._TankPointsStat.Complex = true
-
-function Outfitter._TankPointsStat:Begin(pInventoryCache)
-	-- Calculate the TankPoints base stats
-	
-	self.TPSchool = _G[self.ID]
-	
-	assert(self.TPSchool, "TankPoints school "..tostring(self.ID).." couldn't be found")
-	
-	self.TPBaseData = TankPoints:GetSourceData(nil, nil, true)
-	
-	--Outfitter:DebugTable(self.TPBaseData, "TPOrigData")
-	
-	-- Subtract the current outfit to get the base stats
-	
-	local vTotalStats = {}
-	
-	for vInventorySlot, vSlotID in pairs(Outfitter.cSlotIDs) do
-		local vItemLink = GetInventoryItemLink("player", vSlotID)
-		local vStats = Outfitter.LibStatLogic:GetSum(vItemLink)
-		
-		if vStats then
-			for vField, vValue in pairs(vStats) do
-				if type(vValue) == "number" then
-					vTotalStats[vField] = (vTotalStats[vField] or 0) + vValue
-				else
-					vTotalStats[vField] = vValue
-				end
-			end
-		end
-	end
-	
-	-- Test by showing the starting TankPoints
-	
-	self.TPData = Outfitter:RecycleTable(self.TPData)
-	Outfitter:CopyTable(self.TPData, self.TPBaseData)
-	TankPoints:GetTankPoints(self.TPData, self.TPSchool)
-	
-	Outfitter:DebugMessage("Starting TankPoints: %s", self.TPData.tankPoints[self.TPSchool])
-	
-	-- Adjust the base
-	
-	local vTotalChanges = TankPointsTooltips:BuildChanges({}, vTotalStats)
-	local vNegativeChanges = {}
-	
-	for vField, vValue in pairs(vTotalChanges) do
-		vNegativeChanges[vField] = -vValue
-	end
-	
-	TankPoints:AlterSourceData(self.TPBaseData, vNegativeChanges, true)
-	
-	-- Test by showing the naked TankPoints
-	
-	self.TPData = Outfitter:RecycleTable(self.TPData)
-	Outfitter:CopyTable(self.TPData, self.TPBaseData)
-	TankPoints:GetTankPoints(self.TPData, self.TPSchool)
-	
-	Outfitter:DebugMessage("Naked TankPoints: %s", self.TPData.tankPoints[self.TPSchool])
-	
-	-- Test by re-applying the base changes
-	
-	self.TPData = Outfitter:RecycleTable(self.TPData)
-	Outfitter:CopyTable(self.TPData, self.TPBaseData)
-	TankPoints:AlterSourceData(self.TPData, vTotalChanges, true)
-	TankPoints:GetTankPoints(self.TPData, self.TPSchool)
-	
-	Outfitter:DebugMessage("Re-generated TankPoints: %s", self.TPData.tankPoints[self.TPSchool])
-	
-	--
-	
-	--Outfitter:DebugTable(self.TPBaseData, "TPBaseData")
-end
-
-function Outfitter._TankPointsStat:GetOutfitScore(pOutfit, pStatParams)
-	-- Sum up the changes
-	
-	self.TPChanges = Outfitter:RecycleTable(self.TPChanges)
-	
-	for vInventorySlot, vItem in pairs(pOutfit.Items) do
-		if not vItem.TPChanges then
-			local vStats = Outfitter.LibStatLogic:GetSum(vItem.Link)
-			
-			if vStats then
-				vItem.TPChanges = TankPointsTooltips:BuildChanges({}, vStats)
-			end
-		end
-		
-		if vItem.TPChanges then
-			for vStatID, vValue in pairs(vItem.TPChanges) do
-				self.TPChanges[vStatID] = (self.TPChanges[vStatID] or 0) + vValue
-			end
-		end
-	end
-	
-	-- Clone the base data and apply the changes
-	
-	self.TPData = Outfitter:RecycleTable(self.TPData)
-	Outfitter:CopyTable(self.TPData, self.TPBaseData)
-	TankPoints:AlterSourceData(self.TPData, self.TPChanges, true)
-	TankPoints:GetTankPoints(self.TPData, self.TPSchool)
-	
-	--
-	
-	pOutfit.TankPoints = self.TPData.tankPoints[self.TPSchool]
-	
-	return pOutfit.TankPoints
-end
-
-function Outfitter._TankPointsStat:CompareOutfits(pOldOutfit, pNewOutfit, pStatParams)
-	local vScore = self:GetOutfitScore(pNewOutfit)
-	
-	-- Return the result
-	
-	if not pOldOutfit then
-		return true
-	end
-	
-	if pNewOutfit.TankPoints <= pOldOutfit.TankPoints then
-		return false
-	end
-	
-	Outfitter:DebugMessage("Old outfit %s points, new outfit %s points", pOldOutfit.TankPoints, pNewOutfit.TankPoints)
-	
-	return true, string.format("%s TankPoints", Outfitter:FormatThousands(pNewOutfit.TankPoints))
-end
-
-function Outfitter._TankPointsStat:End(pInventoryCache)
-	-- Clear the cached TP data
-	
-	for vInventorySlot, vItems in pairs(pInventoryCache.ItemsBySlot) do
-		for _, vItem in ipairs(vItems) do
-			vItem.TPChanges = nil
-		end
-	end
-end
-
-function Outfitter._TankPointsStat:GetFilterStats()
-	return self.FilterStats
-end
-
-Outfitter._TankPointsStatMetaTable = {__index = Outfitter._TankPointsStat}
 
 ----------------------------------------
 Outfitter._MultiStat = {}
@@ -685,7 +594,7 @@ end
 ----------------------------------------
 -- Install TankPoints
 ----------------------------------------
-
+--[[
 if IsAddOnLoaded("TankPoints") then
 	table.insert(Outfitter.StatCategories, Outfitter.TankPointsCategory)
 else
@@ -695,7 +604,7 @@ else
 		end
 	end)
 end
-
+]]
 ----------------------------------------
 -- Tank Points
 ----------------------------------------

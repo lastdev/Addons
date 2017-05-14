@@ -1,117 +1,75 @@
 
-local GetRelativeThreat = TidyPlatesUtility.GetRelativeThreat
+--local GetRelativeThreat = TidyPlatesUtility.GetRelativeThreat
 local GetGroupInfo = TidyPlatesUtility.GetGroupInfo
 
-----------------------
--- FadeLater() - Registers a callback, which hides the specified frame in X seconds
-----------------------
-local FadeLater
-do
-		-- table constructions cause heap allocation; reuse tables
-	local Framelist = {}			-- Key = Frame, Value = Expiration Time
-	local Watcherframe = CreateFrame("Frame")
-	local WatcherframeActive = false
-	local select = select
-	local nextScheduledUpdate = 0
-	local updateInterval = .07
-	
-	local function CheckFramelist(self)
-		local curTime = GetTime()
-		if curTime < nextScheduledUpdate then return end
-		--print("Checking All Fade Frames")
-		local framecount = 0
-		local alpha = 0
-		local timeRemains = 0
-		nextScheduledUpdate = curTime + updateInterval
-		-- Cycle through the watchlist, hiding frames which are timed-out
-		for frame, expiration in pairs(Framelist) do
-			timeRemains = expiration - curTime
-			--print("Checking", frame, timeRemains)
-			if frame:IsShown() then
-				if timeRemains > 0 then 
-					framecount = framecount + 1 
-					--frame:SetAlpha(timeRemains/2)
-					if timeRemains < .5 then
-						frame:SetAlpha(timeRemains * 2)
-					end
-				else 
-					frame:SetAlpha(0)
-					Framelist[frame] = nil
-					--print("Fading", frame, "now, at", GetTime())
-				end
-			else
-				Framelist[frame] = nil
+
+------------------------
+-- Threat Function
+------------------------
+
+local function GetGroupThreatLeader(enemyUnitid)
+	-- tempUnitid, tempThreat
+	local friendlyUnitid, friendlyThreatval = nil, 0
+	local tempUnitid, tempThreat
+	local groupType, groupSize, startAt = nil, nil, 1
+
+	-- Get Group Type
+	if UnitInRaid("player") then
+		groupType = "raid"
+		groupSize = TidyPlatesUtility:GetNumRaidMembers()
+		startAt = 2
+	elseif UnitInParty("player") then
+		groupType = "party"
+		groupSize = TidyPlatesUtility:GetNumPartyMembers()
+	else
+		groupType = nil
+	end
+
+	-- Cycle through Party/Raid, picking highest threat holder
+	if groupType then
+		for allyIndex = startAt, groupSize do
+			tempUnitid = groupType..allyIndex
+			tempThreat = select(3, UnitDetailedThreatSituation(tempUnitid, enemyUnitid))
+			if tempThreat and tempThreat > friendlyThreatval then
+				friendlyThreatval = tempThreat
+				friendlyUnitid = tempUnitid
 			end
-
-		end
-		-- If no more frames to watch, unregister the OnUpdate script
-		if framecount == 0 then 
-			Watcherframe:SetScript("OnUpdate", nil)
-			WatcherframeActive = false 
 		end
 	end
-	
-	function FadeLater(frame, expiration)
-		--print("Fading", frame, " at ", expiration, GetTime())
-		frame:SetAlpha(1)
-		-- Register Frame
-		Framelist[ frame] = expiration
-		-- Init Watchframe
-		if WatcherframeActive then return 
-		else 
-			Watcherframe:SetScript("OnUpdate", CheckFramelist)
-			WatcherframeActive = true
+
+	-- Request Pet Threat (if possible)
+	if HasPetUI() and UnitExists("pet") then
+		tempThreat = select(3, UnitDetailedThreatSituation("pet", enemyUnitid)) or 0
+		if tempThreat > friendlyThreatval then
+			friendlyThreatval = tempThreat
+			friendlyUnitid = "pet"
 		end
 	end
-	
+
+	return friendlyUnitid, friendlyThreatval
+
 end
 
----------------
--- Roster Monitor
----------------
---[[
-local RaidTankList = {}
-local IsPlayerTank = false
-local IsPlayerInRaid = false
-local IsPlayerInGroup = false
 
-local function IsRaidTank(unitid)
-	--if UnitIsUnit("pet", unitid) then return true end		-- Testing
-	return RaidTankList[UnitName(unitid)]
-end
+local function GetRelativeThreat(enemyUnitid)		-- 'enemyUnitid' is a target/enemy
+	if not UnitExists(enemyUnitid) then return end
 
-do
-	local function UpdateRoster()
-		local index, size
-		if UnitInRaid("player") then
-			size = TidyPlatesUtility.GetNumRaidMembers() - 1
-			for index = 1, size do
-				local raidid = "raid"..tostring(index)
-				local isAssigned = GetPartyAssignment("MAINTANK", raidid) or ("TANK" == UnitGroupRolesAssigned(raidid))
-				if isAssigned then RaidTankList[UnitName(raidid)] = true 
-				else RaidTankList[UnitName(raidid)] = nil end
-			end			
-		else 
-			wipe(RaidTankList)
-			if HasPetUI("player") then RaidTankList[UnitName("pet")] = true end			-- Adds your pet to the list
+	local playerIsTanking, playerSituation, playerThreat = UnitDetailedThreatSituation("player", enemyUnitid)
+	if not playerThreat then return end
+
+	local friendlyUnitid, friendlyThreat = GetGroupThreatLeader(enemyUnitid)
+
+	-- Return the appropriate value
+	if playerThreat and friendlyThreat and friendlyUnitid then
+		if playerThreat >= 100 then 	-- The enemy is attacking you. You are tanking. 	Returns: 1. Your threat, plus your lead over the next highest person, 2. Your Unitid (since you're tanking)
+			return tonumber(playerThreat + (100-friendlyThreat)), "player"
+		else 	-- The enemy is not attacking you.  Returns: 1. Your scaled threat percent, 2. Who is On Top
+			return tonumber(playerThreat), friendlyUnitid
 		end
-		
-		IsPlayerInRaid = UnitInRaid("player")
-		IsPlayerTank = GetPartyAssignment("MAINTANK", "player")
-		
 	end
 
-	local RosterMonitor  = CreateFrame("Frame")
-	RosterMonitor:RegisterEvent("RAID_ROSTER_UPDATE")
-	RosterMonitor:RegisterEvent("PARTY_MEMBERS_CHANGED")
-	RosterMonitor:RegisterEvent("PARTY_CONVERTED_TO_RAID")
-	RosterMonitor:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-	RosterMonitor:SetScript("OnEvent", UpdateRoster)
 end
---]]
-	
-	
+
 
 ---------------------------------------------------------------------
 local font = "FONTS\\arialn.ttf"
@@ -122,6 +80,7 @@ local artCoordinates = {
 	Right = 	{.5,.75,0,1},
 	Left = 		{.25,.5,0,1},
 }
+
 local threatcolor
 
 ---------------------------------------------------------------------
@@ -137,10 +96,10 @@ local function UpdateThreatLine(frame, unitid)
 	--local maxwidth = frame._MaximumWidth
 	local length = 0
 	local anchor = "RIGHT"
-	local threat, targetOf  = GetRelativeThreat(unitid) -- ;if testMode then threat, targetOf =  .00000000000000000000000000000000001, "player" end	
-	
+	local threat, targetOf  = GetRelativeThreat(unitid) -- ;if testMode then threat, targetOf =  .00000000000000000000000000000000001, "player" end
+
 	if not(threat and targetOf) then frame:_Hide(); return end
-	
+
 	if threat >= 0 then
 
 		-- Get Positions and Size
@@ -153,31 +112,36 @@ local function UpdateThreatLine(frame, unitid)
 			threatcolor = frame._LowColor
 		end
 
-
 		frame.Line:ClearAllPoints()
 		frame.Line:SetWidth( max(1, min( maxwidth, length)))
 		frame.Line:SetPoint(anchor, frame, "CENTER")
-		
-		if targetOf and targetOf ~= "player" then 	
+
+		if targetOf and targetOf ~= "player" then
 			if UnitIsUnit(targetOf, "pet")
-				or GetPartyAssignment("MAINTANK", targetOf) 
+				or GetPartyAssignment("MAINTANK", targetOf)
 				or ("TANK" == UnitGroupRolesAssigned(targetOf)) then
-					threatcolor = frame._TankedColor 
+					threatcolor = frame._TankedColor
 			end
-					
+
 			frame.TargetText:SetText(UnitName(targetOf))								-- TP 6.1
 			frame.TargetText:SetTextColor(threatcolor.r, threatcolor.g, threatcolor.b)		-- TP 6.1
 		else frame.TargetText:SetText("") end
-		
+
 		-- Set Colors
 		frame.Left:SetVertexColor(threatcolor.r, threatcolor.g, threatcolor.b)
 		frame.Line:SetVertexColor(threatcolor.r, threatcolor.g, threatcolor.b)
 		frame.Right:SetVertexColor(threatcolor.r, threatcolor.g, threatcolor.b)
 		-- Set Fading
 		frame:Show()
-		frame.FadeTime = GetTime() + 2
-		frame:FadeLater(frame.FadeTime)
+		--frame.FadeTime = GetTime() + 2
+		--frame:FadeLater(frame.FadeTime)
 	else frame:_Hide() end
+end
+
+local function UpdateWidget(frame)
+	local unitid = frame.unitid
+
+	UpdateThreatLine(frame, unitid)
 end
 
 local function UpdateWidgetTarget(frame)
@@ -188,105 +152,44 @@ local function UpdateWidgetTarget(frame)
 	end
 end
 
--- Context Update (mouseover, target change)
 local function UpdateWidgetContext(frame, unit)
-	-- Filter
-	if testMode then UpdateThreatLine(frame); return end
-	if unit.reaction == "FRIENDLY" or (not InCombatLockdown()) or (not (UnitInParty("player") or HasPetUI())) then frame:_Hide(); return end
-	
-	-- Context Update
-	local guid = unit.guid
-	if guid then WidgetList[guid] = frame end
-	frame.guid = guid
-	frame.unit = unit
-	
-	--print("Updating Context", unit.name, unit.guid)
-	-- Update threat *now*, depending on context
-	if unit.isTarget then
-	--print("Update Line on Target", frame, unit.name, unit.guid)
-		UpdateThreatLine(frame, "target")
-	elseif unit.isMouseover then
-	--print("Update Line on Mouseover", frame, unit.name, unit.guid)
-		UpdateThreatLine(frame, "mouseover")
+	local unitid = unit.unitid
+
+	if unit.reaction == "FRIENDLY" or (not InCombatLockdown()) or (not (UnitInParty("player") or HasPetUI())) then
+		frame:_Hide()
+		return
 	end
+
+	frame.unitid = unitid
+
+	-- Make it self-aware
+	frame:UnregisterAllEvents()
+	frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
+	frame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+	frame:RegisterUnitEvent("UNIT_HEALTH", unitid)
+	frame:SetScript("OnEvent", UpdateWidget);
+
+	UpdateThreatLine(frame, unitid)
 end
 
 local function ClearWidgetContext(frame)
-	frame.unit = nil
-	local guid = frame.guid
-	if guid then
-		WidgetList[guid] = nil
-		frame.guid = nil
-	end
+	frame:UnregisterAllEvents()
+	frame:SetScript("OnEvent", nil);
 end
-
--- Watcher Frame
-local WatcherFrame = CreateFrame("Frame", nil, WorldFrame )
-local isEnabled = false
-WatcherFrame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-WatcherFrame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
 
 -- GUID/UnitID Lookup List
 local TargetList = {}
 local updateCap = 1
 local lastUpdate = 0
 
-local function WatcherFrameHandler(frame, event)
-
-	if event == "UNIT_THREAT_LIST_UPDATE" and (lastUpdate + updateCap) > GetTime() then return end
-	
-	local widget, unitid, guid
-	-- Reset the GUID/UnitID Lookup List
-	for guid in pairs(TargetList) do TargetList[guid] = nil end
-	
-	-- Build a list of links to Target GUIDs
-	guid = UnitGUID("target")
-	if guid then TargetList[guid] = "target" end
-
-	guid = UnitGUID("focus")
-	if guid then TargetList[guid] = "focus" end
-	
-	-- [[ This code enables full raid target watching
-	local groupType, groupSize = GetGroupInfo()
-	if groupType == "raid" then
-		for index = 1, groupSize do
-			unitid = "raid"..index.."target"
-			guid = UnitGUID(unitid)
-			if guid then TargetList[guid] = unitid end
-		end
-	end
-	--]]
-	
-	-- Reference the list of GUIDs to active widgets (with GUIDs and Hostile)
-	for guid, unitid in pairs(TargetList) do
-		widget = WidgetList[guid]
-		if widget then UpdateThreatLine(widget, unitid) end
-	end
-	
-	lastUpdate = GetTime()
-end
-
---[[
-
-	Can this be build into the core?
-	
-	unit.targetOf
-	-- unit.
-	
---]]
-
-local function EnableWatcherFrame(arg)
-	if arg then 
-		WatcherFrame:SetScript("OnEvent", WatcherFrameHandler); isEnabled = true
-	else WatcherFrame:SetScript("OnEvent", nil); isEnabled = false end
-end
-
 -- Widget Creation
-local function CreateWidgetFrame(parent)
+local function CreateWidgetFrame(extended)
+	--local parent = extended.widgetFrame
+	local parent = extended
 	-- Required Widget Code
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:Hide()
-	
+
 	-- Custom Code
 		frame:SetWidth(100)
 		frame:SetHeight(24)
@@ -311,7 +214,7 @@ local function CreateWidgetFrame(parent)
 		frame.Right:SetPoint("LEFT", frame.Line, "RIGHT" )
 		frame.Right:SetWidth(32)
 		frame.Right:SetHeight(32)
-		
+
 		-- Target-Of Text
 		frame.TargetText = frame:CreateFontString(nil, "OVERLAY")
 		frame.TargetText:SetFont(font, 8, "OUTLINE")
@@ -339,13 +242,13 @@ local function CreateWidgetFrame(parent)
 		frame._HighColor = {r = 1, g = .67, b = .14}
 		frame._ShowTargetOf = true
 	-- End Custom Code
-	
+
 	-- Required Widget Code
 	frame.UpdateContext = UpdateWidgetContext
 	frame.Update = UpdateWidgetTarget
 	frame._Hide = frame.Hide
 	frame.Hide = function() ClearWidgetContext(frame); frame:_Hide() end
-	if not isEnabled then EnableWatcherFrame(true) end
+	--if not isEnabled then EnableWatcherFrame(true) end
 	return frame
 end
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreConfig.lua 5534 2014-12-12 14:15:10Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreConfig.lua 5669 2016-09-03 11:52:14Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -32,6 +32,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
 if not AucAdvanced then return end
+AucAdvanced.CoreFileCheckIn("CoreConfig")
 local coremodule = AucAdvanced.GetCoreModule("CoreConfig")
 if not coremodule then return end -- Someone has explicitely broken us
 
@@ -118,7 +119,7 @@ function private.CommandHandler(editbox, command, subcommand, ...)
 		AucAdvanced.Settings.SetSetting("GetAllSpeed", subcommand)
 		AucAdvanced.Print("Setting GetAllSpeed to "..tostring(AucAdvanced.Settings.GetSetting("GetAllSpeed")))
 	elseif command == "getall" then
-		AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, nil, nil, nil, true)
+		AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, true)
 	else
 		if command ~= "" and subcommand then
 			local engineLib = AucAdvanced.GetModule(command, subcommand:lower(), "CommandHandler")
@@ -132,28 +133,25 @@ function private.CommandHandler(editbox, command, subcommand, ...)
 end
 
 function lib.ScanCommand(cat, subcat)
+	-- From WoW7.0/Legion, we use classID/subClassID instead of the old index values
 	cat = tonumber(cat)
 	subcat = tonumber(subcat)
 	local catName = nil
 	local subcatName = nil
+
 	--If there was a requested category to scan, we'll first check if its a valid category
 	if cat then
-		catName = AucAdvanced.Const.CLASSES[cat]
-		if catName then
-			if subcat then
-				subcatName = AucAdvanced.Const.SUBCLASSES[cat][subcat]
-				if not subcatName then
-					subcat = nil
-				end
-			end
-		else
+		catName = GetItemClassInfo(cat)
+		if not catName then
 			cat = nil
 			subcat = nil
+		elseif subcat then -- valid catName, check if subcat is valid
+			subcatName = GetItemSubClassInfo(cat, subcat)
+			if not subcatName then
+				subcat = nil
+			end
 		end
-	else
-		subcat = nil
 	end
-	--If the requested category was invalid, we'll scan the whole AH
 	if not cat then
 		private.Print("Beginning scanning: {{All categories}}")
 	elseif not subcat then
@@ -161,7 +159,8 @@ function lib.ScanCommand(cat, subcat)
 	else
 			private.Print("Beginning scanning: {{Category "..cat.."."..subcat.." ("..subcatName.." of "..catName..")}}")
 	end
-	AucAdvanced.Scan.StartScan(nil, nil, nil, nil, cat, subcat, nil, nil)
+	local filterData = AucAdvanced.Scan.QueryFilterFromID(cat, subcat)
+	AucAdvanced.Scan.StartScan(nil, nil, nil, nil, nil, nil, nil, filterData)
 end
 
 function lib.GetCommandLead(llibType, llibName)
@@ -193,4 +192,5 @@ coremodule.Processors = {
 	gameactive = function() private.Activate() end,
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreConfig.lua $", "$Rev: 5534 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreConfig.lua $", "$Rev: 5669 $")
+AucAdvanced.CoreFileCheckOut("CoreConfig")

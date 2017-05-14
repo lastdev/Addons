@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(171, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 158 $"):sub(12, -3))
 mod:SetCreatureID(41442)
 mod:SetEncounterID(1022)
 mod:SetZone()
@@ -44,8 +44,8 @@ local specWarnAddTargetable	= mod:NewSpecialWarningSwitch("ej3082", "Ranged")
 local timerSonarPulseCD		= mod:NewCDTimer(10, 77672)
 local timerSonicBreath		= mod:NewCDTimer(41, 78075)
 local timerSearingFlame		= mod:NewCDTimer(45, 77840)
-local timerAirphase			= mod:NewNextTimer(85, "ej3081", nil, nil, nil, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")--These both need more work
-local timerGroundphase		= mod:NewNextTimer(31.5, "ej3061", nil, nil, nil, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")--I just never remember to log and /yell at right times since they lack most accurate triggers.
+local timerAirphase			= mod:NewNextTimer(85, "ej3081", nil, nil, nil, nil, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")--These both need more work
+local timerGroundphase		= mod:NewNextTimer(31.5, "ej3061", nil, nil, nil, nil, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")--I just never remember to log and /yell at right times since they lack most accurate triggers.
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 

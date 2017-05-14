@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21d.5538 (SanctimoniousSwamprat)
-	Revision: $Id: CoreResources.lua 5285 2012-04-17 15:45:55Z brykrys $
+	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreResources.lua 5670 2016-09-03 11:59:41Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -49,7 +49,7 @@
 
 local AucAdvanced = AucAdvanced
 if not AucAdvanced then return end
-
+AucAdvanced.CoreFileCheckIn("CoreResources")
 local coremodule, internal = AucAdvanced.GetCoreModule("CoreResources")
 if not (coremodule and internal) then return end
 local Const = AucAdvanced.Const
@@ -86,12 +86,12 @@ local function SetFaction()
 	end
 
 	lib.PlayerFaction = playerFaction
-	lib.ServerKeyHome = PLAYER_REALM.."-"..playerFaction
+	lib.ServerKeyHome = PLAYER_REALM.."-"..playerFaction -- Deprecated: old-style serverKey
 	lib.OpposingFaction = opposingFaction
-	lib.ServerKeyOpposing = PLAYER_REALM.."-"..opposingFaction
+	lib.ServerKeyOpposing = PLAYER_REALM.."-"..opposingFaction -- Deprecated: old-style serverKey
 
 	lib.CurrentFaction = lib.PlayerFaction
-	lib.ServerKeyCurrent = lib.ServerKeyHome
+	lib.ServerKeyCurrent = lib.ServerKeyHome -- Deprecated: old-style serverKey
 
 	if playerFaction == "Alliance" or playerFaction == "Horde" then
 		SetFaction = nil
@@ -99,7 +99,7 @@ local function SetFaction()
 end
 SetFaction()
 -- really constants, but included in Resources along with other serverKey values:
-lib.ServerKeyNeutral = PLAYER_REALM.."-Neutral"
+lib.ServerKeyNeutral = PLAYER_REALM.."-Neutral" -- Deprecated: old-style serverKey
 lib.AHCutRate = CUT_HOME
 lib.AHCutAdjust = 1 - CUT_HOME
 
@@ -109,8 +109,6 @@ local function OnFactionSelect()
 	EventFrame:UnregisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
 	if SetFaction then
 		SetFaction()
-		-- issue serverkey message for compatibility
-		AucAdvanced.SendProcessorMessage("serverkey", lib.ServerKeyCurrent)
 	end
 	AucAdvanced.SendProcessorMessage("factionselect", lib.PlayerFaction)
 end
@@ -126,7 +124,6 @@ local function OnEvent(self, event, ...)
 		if lib.AuctionHouseOpen then
 			lib.AuctionHouseOpen = false
 			AucAdvanced.SendProcessorMessage("auctionclose")
-			internal.Scan.AHClosed()
 		end
 	elseif event == "MAIL_SHOW" then
 		lib.MailboxOpen = true
@@ -168,14 +165,15 @@ internal.Resources = {
 		else
 			OnFactionSelect = nil
 		end
-
-		-- issue serverkey message for compatibility
-		AucAdvanced.SendProcessorMessage("serverkey", lib.ServerKeyCurrent)
 	end,
 
 	-- SetResource: permits other Core files to set a resource
 	-- Other Cores/Modules must never modify AucAdvanced.Resources directly (or I may make it a read-only table in future!)
+	-- CoreServers will set ServerKey and ConnectedRealms resources
 	SetResource = function(key, value)
 		lib[key] = value
 	end
 }
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreResources.lua $", "$Rev: 5670 $")
+AucAdvanced.CoreFileCheckOut("CoreResources")

@@ -1,14 +1,12 @@
-﻿local addonName = ...
+local addonName = ...
 local addon = _G[addonName]
+local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
 local LCI = LibStub("LibCraftInfo-1.0")
 local LCL = LibStub("LibCraftLevels-1.0")
-
-local WHITE		= "|cFFFFFFFF"
-local GREEN		= "|cFF00FF00"
+local TS = addon.TradeSkills.Names
 
 -- Simplified loot table containing item ID's only, based on AtlasLoot v6.02.00
 local lootTable = {
@@ -121,9 +119,9 @@ local lootTable = {
 		[L["Miscellaneous"]] = { 21540, 21157, 21538, 21539, 21541, 21544, 21543, 21537, 21713, 21100 },
 		[L["Fireworks Pack"]] = { 21558, 21559, 21557, 21561, 21562, 21589, 21590, 21592, 21593, 21595 },
 		[L["Lucky Red Envelope"]] = { 21744, 21745 },
-		[BI["Engineering"]] = { 21738, 21724, 21725, 21726, 21727, 21728, 21729, 21737, 21730, 21731, 
+		[TS.ENGINEERING] = { 21738, 21724, 21725, 21726, 21727, 21728, 21729, 21737, 21730, 21731, 
 									21732, 21733, 21734, 21735 },
-		[BI["Tailoring"]] = { 21722, 21723 }
+		[TS.TAILORING] = { 21722, 21723 }
 	},
 	[L["Midsummer Fire Festival"]] = {	
 		[L["Miscellaneous"]] = { 34686, 23379, 23083, 23247, 23246, 23435, 23327, 23326, 
@@ -798,7 +796,7 @@ local function AddCurrentlyEquippedItem(itemID, class)
 			if tooltipText then
 				if string.find(tooltipText, BaseStat) ~= nil then
 					currentItemStats[BaseStat] = tonumber(string.sub(tooltipText, string.find(tooltipText, "%d+")))
-					statLine = string.gsub(statLine, "-s", WHITE .. currentItemStats[BaseStat], 1)
+					statLine = string.gsub(statLine, "-s", colors.white .. currentItemStats[BaseStat], 1)
 					
 					rawItemStats[j] = currentItemStats[BaseStat] .. "|0"
 					break
@@ -809,7 +807,7 @@ local function AddCurrentlyEquippedItem(itemID, class)
 			rawItemStats[j] = "0|0"
 		
 			currentItemStats[BaseStat] = 0 -- Set the current stat to zero if it was not found on the item
-			statLine = string.gsub(statLine, "-s", WHITE .. "0", 1)
+			statLine = string.gsub(statLine, "-s", colors.white .. "0", 1)
 		end
 		j = j + 1
 	end
@@ -908,7 +906,7 @@ function ns:FindUpgradeByStats(currentID, class)
 					addon.Search:AddResult( {
 						id = itemID,
 						iLvl = itemLevel,
-						dropLocation = Instance .. ", " .. GREEN .. Boss,
+						dropLocation = Instance .. ", " .. colors.green .. Boss,
 						stat1 = rawItemStats[1],
 						stat2 = rawItemStats[2],
 						stat3 = rawItemStats[3],
