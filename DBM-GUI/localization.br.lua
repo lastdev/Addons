@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "ptBR" then return end
+if GetLocale() ~= "ptBR" then return end
 
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
 
@@ -189,7 +189,6 @@ L.CountdownVoice2			= "Definir voz secundaria para sons de contagem"
 L.CountdownVoice3			= "Definir voz terciária para sons de contagem"
 L.VoicePackChoice			= "Definir pacote de vozes para avisos falados"
 L.Area_CountdownOptions		= "opções de contagens"
-L.ShowCountdownText			= "Exibir texto de contagem durante contagens primarias"
 L.Area_VoicePackOptions		= "Opções de pacotes de vozes (Pacotes de vozes de terceiros)"
 L.SpecWarn_NoSoundsWVoice	= "Filtrar avisos sonoros especiais para avisos que contem avisos falados ..."
 L.SWFNever					= "Nunca"

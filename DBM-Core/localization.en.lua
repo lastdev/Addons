@@ -18,7 +18,7 @@ DBM_CORE_LOAD_MOD_DISABLED			= "%s is installed but currently disabled. This mod
 DBM_CORE_LOAD_MOD_DISABLED_PLURAL	= "%s are installed but currently disabled. These mods will not be loaded unless you enable them."
 
 DBM_CORE_WHATS_NEW					= "New in this version: Fixed a bug that caused 'Major Patch' force update/disable to trigger wrongfully for non major patch updates. DBM will no longer filter Broken Shore cut scenes regardless of user settings. Added Demonic Invasions mod. Minor Text Fixes"
-DBM_CORE_WHATS_NEW_LINK				= "Reminder: Many features that relied on unit positions have been limited. You can read more about why by |HDBM:forumsnews|h|cff3588ffclicking here|r"
+DBM_CORE_WHATS_NEW_LINK				= "The recommended way to use DBM is with a voice pack. Read more on why and how this helps you by |HDBM:forumsnews|h|cff3588ffclicking here|r"
 
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
@@ -31,7 +31,7 @@ DBM_CORE_DYNAMIC_MULTIPLE			= "DBM has disabled multiple features on this fight 
 
 DBM_CORE_LOOT_SPEC_REMINDER			= "Your current spec is %s. Your current loot choice is %s."
 
-DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM has detected that you have raid icons turned on in both BigWigs and DBM. Please disable icons in one of them to avoid conflict with your group leader"
+DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM has detected that you have raid icons turned on in both BigWigs and DBM. Please disable icons in one of them to avoid conflicts"
 
 DBM_CORE_MOD_AVAILABLE				= "%s is available for this content. You can find on |HDBM:forums|h|cff3588ffdeadlybossmods.com|r or on Curse. This message will only display once."
 
