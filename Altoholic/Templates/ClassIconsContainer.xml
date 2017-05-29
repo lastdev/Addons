@@ -1,0 +1,37 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="ClassIconsContainer.lua"></Script>
+	
+	<Frame name="AltoClassIconsContainerTemplate" virtual="true">
+		<Size x="457" y="37" />
+		<Anchors>
+			<Anchor point="TOPLEFT" x="365" y="-55" />
+		</Anchors>
+		<KeyValues>
+			<KeyValue key="iconPrefix" value="Icon" />
+		</KeyValues>
+		<Scripts>
+			<OnLoad>
+				self.Update = Altoholic:GetClassExtension("AltoClassIconsContainer","Update")
+				self.ShowChildFrames = Altoholic:GetClassExtension("AltoFrame","ShowChildFrames")
+				self.HideChildFrames = Altoholic:GetClassExtension("AltoFrame","HideChildFrames")
+			
+				local prefix = self.iconPrefix
+			
+				-- auto create the sort buttons, with the quantity passed as key
+				for i = 1, self.numIcons do
+					local frame = CreateFrame("Button", nil, self, self.iconTemplate)
+					
+					if i == 1 then
+						frame:SetPoint("TOPLEFT")
+					else
+						-- attach to previous frame
+						frame:SetPoint("TOPLEFT", self[prefix..(i-1)], "TOPRIGHT", 5, 0)
+					end
+					
+					frame:SetID(i)
+					self[prefix..i] = frame
+				end
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

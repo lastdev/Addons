@@ -1,0 +1,90 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Button name="UnifiedTankFramesClickCastUnitTemplate" virtual="true" inherits="SecureActionButtonTemplate,SecureHandlerEnterLeaveTemplate">
+		<Attributes>
+			<Attribute name="_onenter" type="string" value="local snippet = self:GetAttribute('clickcast_onenter'); if snippet then self:Run(snippet) end" />
+			<Attribute name="_onleave" type="string" value="local snippet = self:GetAttribute('clickcast_onleave'); if snippet then self:Run(snippet) end" />
+		</Attributes>
+	</Button>
+
+	<Button name="UnifiedTankFramesTemplate" inherits="SecureUnitButtonTemplate" virtual="true">
+		<Frames>
+			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="1" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="useparent-unit" type="boolean" value="true" />
+					<Attribute name="unitsuffix" type="string" value="target" />
+					<Attribute name="initial-unitWatch" type="boolean" value="true" />
+					<Attribute name="type1" type="string" value="target" />
+				</Attributes>
+				<Frames>
+					<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="1" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Attributes>
+							<Attribute name="useparent-unit" type="boolean" value="true" />
+							<Attribute name="unitsuffix" type="string" value="targettarget" />
+							<Attribute name="initial-unitWatch" type="boolean" value="true" />
+							<Attribute name="type1" type="string" value="target" />
+						</Attributes>
+					</Button>
+				</Frames>
+			</Button>
+		</Frames>
+		<Attributes>
+			<Attribute name="type1" type="string" value="target"/>
+			<Attribute name="type2" type="string" value="showmenu"/>
+		</Attributes>
+	</Button>
+	<Button name="UnifiedTankFramesLeftTemplate" inherits="SecureUnitButtonTemplate" virtual="true">
+		<Frames>
+			<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="1" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Attributes>
+					<Attribute name="useparent-unit" type="boolean" value="true" />
+					<Attribute name="unitsuffix" type="string" value="target" />
+					<Attribute name="initial-unitWatch" type="boolean" value="true" />
+					<Attribute name="type1" type="string" value="target" />
+				</Attributes>
+				<Frames>
+					<Button name="$parentTarget" inherits="SecureUnitButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="$parent">
+								<Offset>
+									<AbsDimension x="1" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Attributes>
+							<Attribute name="useparent-unit" type="boolean" value="true" />
+							<Attribute name="unitsuffix" type="string" value="targettarget" />
+							<Attribute name="initial-unitWatch" type="boolean" value="true" />
+							<Attribute name="type1" type="string" value="target" />
+						</Attributes>
+					</Button>
+				</Frames>
+			</Button>
+		</Frames>
+		<Attributes>
+			<Attribute name="type1" type="string" value="target"/>
+			<Attribute name="type2" type="string" value="showmenu"/>
+		</Attributes>
+	</Button>
+</Ui>
+

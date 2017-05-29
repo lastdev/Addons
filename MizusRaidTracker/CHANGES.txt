@@ -1,0 +1,12 @@
+tag 985e5f9c0c07ff6a4055a57e768fedd45dc04b38 v0.71.4
+Author:	Mizukichan <mizukichan@arcor.de>
+Date:	Sun Feb 19 23:18:08 2017 +0100
+
+Tagging as v0.71.4
+
+commit b0db54a0f189010389c6d1bf93c751f1dcc8c94e
+Author: Mizukichan <mizukichan@arcor.de>
+Date:   Sun Feb 19 23:17:41 2017 +0100
+
+    Added "Echo of Time" to ignore list
+

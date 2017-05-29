@@ -1,0 +1,17 @@
+{
+  "name": "AchievementLocations",
+  "version": "0.4.19",
+  "description": "Shows location of incomplete World of Warcraft achievements and criteria.",
+  "main": "make.coffee",
+  "scripts": {
+    "make": "coffee make.coffee",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "coffee-script": "^1.10.0",
+    "google-spreadsheet": "^1.1.3"
+  }
+}

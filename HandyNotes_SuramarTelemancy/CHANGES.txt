@@ -1,0 +1,18 @@
+tag a06b463af47176354b607ac5030f6ce628cc1a98 v6.1
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Thu Apr 20 23:08:53 2017 -0500
+
+Tagging v6.1, for TOC
+
+commit 08a7dade155c325f2c0da1c606a201bccffc29da
+Author: David Lynch <kemayo@gmail.com>
+Date:   Thu Apr 20 23:06:23 2017 -0500
+
+    Use wowace localization app fully
+
+commit f1043a31115e499711eab814a2701bac62217163
+Author: David Lynch <kemayo@gmail.com>
+Date:   Thu Apr 20 22:53:57 2017 -0500
+
+    Also, 7.2
+

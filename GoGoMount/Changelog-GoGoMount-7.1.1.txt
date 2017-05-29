@@ -1,0 +1,78 @@
+------------------------------------------------------------------------
+r654 | tiker | 2016-10-26 02:39:19 +0000 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   A /tags/7.1.1 (from /trunk:653)
+
+Tagging as 7.1.1
+------------------------------------------------------------------------
+r653 | tiker | 2016-10-26 02:38:51 +0000 (Wed, 26 Oct 2016) | 6 lines
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+
+Added support for "White Hawkstrider"
+Added support for "Reins of the Charger"
+Added the zone IDs for the "Reins of the Charger" to work
+Updated "Clutch of Ji-Kun" to be seen as a ground mount as well
+Updated TOC version for release
+
+------------------------------------------------------------------------
+r652 | tiker | 2016-10-24 01:01:35 +0000 (Mon, 24 Oct 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support for "White Hawkstrider"
+
+------------------------------------------------------------------------
+r650 | tiker | 2016-10-24 00:38:10 +0000 (Mon, 24 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/GoGoMount.toc
+
+Updated TOC version for release
+------------------------------------------------------------------------
+r649 | tiker | 2016-10-24 00:34:05 +0000 (Mon, 24 Oct 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support for "Smoldering Ember Wyrm"
+
+------------------------------------------------------------------------
+r648 | tiker | 2016-10-24 00:29:27 +0000 (Mon, 24 Oct 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support for "Arcanist's Manasaber"
+
+------------------------------------------------------------------------
+r647 | tiker | 2016-10-24 00:26:40 +0000 (Mon, 24 Oct 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support for "Midnight"
+
+------------------------------------------------------------------------
+r646 | tiker | 2016-10-24 00:21:06 +0000 (Mon, 24 Oct 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support for "Rockspine Basilisk"
+
+------------------------------------------------------------------------
+r645 | tiker | 2016-10-24 00:16:51 +0000 (Mon, 24 Oct 2016) | 3 lines
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+
+Added support for "Darkwater Skate"
+Minor changes in preparation of future rewrite.
+
+------------------------------------------------------------------------
+r644 | tiker | 2016-09-11 13:39:48 +0000 (Sun, 11 Sep 2016) | 2 lines
+Changed paths:
+   M /trunk/GoGoMount.toc
+
+Updated version for release
+
+------------------------------------------------------------------------

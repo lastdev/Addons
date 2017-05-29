@@ -1,0 +1,470 @@
+commit 0b3367937dff2a7b9fb661307a6bcc7db2f44150
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Mar 31 13:47:17 2017 +0300
+
+    toc bump
+
+commit d5cf10d75ddf46444db7946749d63996e578d738
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Mar 2 09:08:12 2017 +0300
+
+    Update
+
+commit 039fcbe822d2b22d041fb24e8f416c769f0d88f5
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Jan 19 02:35:07 2017 +0300
+
+    toc update
+
+commit 939d21ef1b0533d2551443126ebf1aac434ddc79
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Dec 8 18:50:07 2016 +0300
+
+    Fix bug
+
+commit 81692dd989412a8f626f76c015ff1becafc1a6b7
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Oct 25 23:49:12 2016 +0300
+
+    - 7.1 update
+
+commit 4e2dafd3f5040c4831a735118d4497cca5ba3364
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Oct 14 17:04:20 2016 +0300
+
+    Fix
+
+commit fd27d811f48974eb6622641aa13ec3f281e6af13
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Oct 14 17:02:01 2016 +0300
+
+    Data update
+
+commit 9e3ea8df4cae2947bb49751baeff8fbbfb23f792
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Jul 21 18:51:39 2016 +0300
+
+    Those are in weird place, need to double check
+
+commit 6fff769110cdf830355e0947f928ee5c0e76782e
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Jul 19 19:38:00 2016 +0300
+
+    7.x update
+
+commit f6ce1e38eb3b5a8e74d1c1a55a98a03dcd47d8a4
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Jul 17 19:48:38 2016 +0300
+
+    Fix
+
+commit 474a75eb762d2a4af4d0221ddcc391b3934d4d07
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Jul 9 18:23:05 2016 +0300
+
+    Fix
+
+commit 5e1895fee1117efc52b4701dea8ca2a92059902a
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon May 30 02:04:59 2016 +0300
+
+    Fix
+
+commit 4727fb8672f04663adfa54ddbb8f497e5aa952ab
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon May 30 01:57:25 2016 +0300
+
+    Fix
+
+commit 6db8d1f1941ce0cfe42bde084c14191c3b492b9d
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon May 30 01:02:12 2016 +0300
+
+    Internal backend changes (support for per continent data)
+
+commit 5edabbaa6b83f576705bd5dc5ad65c2b0e03d3d0
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed May 4 08:56:27 2016 +0300
+
+    Fix
+
+commit e2fbef36ae3bf64e76b2463c5301b2baaa3def0e
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Mar 23 05:20:03 2016 +0300
+
+    toc bump
+
+commit dc007c40f8d7d8119b13b1270f76fa0cec7cc9b7
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Feb 21 03:41:52 2016 +0300
+
+    More cleanup
+
+commit e482c9a6840b35804d406ca88440aa70a3194889
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Jan 9 07:09:42 2016 +0300
+
+    Fix more dupes
+
+commit 67e6693d0a97a3af00515630787240b82fb1e991
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon Nov 30 18:42:22 2015 +0300
+
+    More data cleanup
+
+commit 96c45e6dbf936ff76d6a59e407d6d602d9a5d362
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Oct 27 00:30:08 2015 +0300
+
+    Disabled another duplicate
+
+commit 86575baf275f09b0f04987ab7b8b9e8940ef30e5
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Sep 17 13:53:07 2015 +0300
+
+    Kill another dupe
+
+commit 3999602d20421e2b51e61112748321999fbcdc38
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Sep 2 07:55:05 2015 +0300
+
+    Updated for 6.2.2
+
+commit 2f01690de01d0f929b503ed34b5a60d6a6ac991c
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Aug 4 20:34:19 2015 +0300
+
+    Disabled POI id 3105 (duplicate)
+
+commit 2f952fdec7f3a4279b7153505e123e317c0a75a2
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Jun 23 13:03:01 2015 +0300
+
+    toc bump
+
+commit 3ed345fda398e393987b8592bd1042f106cd19b1
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Jun 13 16:19:09 2015 +0300
+
+    Added slash command /drts hidepoi which puts closest treasure to "ignore" list.
+    Added slash command /drts clearhidden to clear list of ignored treasures.
+
+commit 4bed6d6db0755f6d2fb6b3df61d675916c65c670
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon Jun 1 13:32:49 2015 +0300
+
+    6.2 prep
+
+commit b7e550d78546c0a580ec1110155ba0b58fe1bbb9
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Apr 17 06:42:07 2015 +0300
+
+    Fix incorrect map id's
+
+commit c5c85c212b3ab66cfff4f95c6b7f8f83b623a240
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Apr 10 04:08:46 2015 +0300
+
+    Disable POI 3209 (duplicate)
+
+commit bc31136474d71850fa7b78280ba279a4162527df
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Apr 3 20:43:43 2015 +0300
+
+    Toggle
+
+commit 9568e2fc5c1b83ee5f12e1a3dc2ddd80644c8fca
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Apr 3 08:07:58 2015 +0300
+
+    Sometimes 2 loops are better than one
+
+commit 44f03b990ab22b1387e5fdb603a3826286643568
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Apr 2 19:43:12 2015 +0300
+
+    Fix
+
+commit 76f7ba779c6e6a750fba44a9121c1a6f75373b62
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Apr 2 19:12:05 2015 +0300
+
+    Fix
+
+commit 88d976f9df513c607f6649aadb7c26742fc321c2
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Mar 24 19:39:04 2015 +0300
+
+    Fix
+
+commit b6e271ea20d80f862e9933935975ae014030fa1e
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Mar 22 03:13:11 2015 +0300
+
+    Fix
+
+commit f465e78320a9fdf9a6992d9bea3a11f0aaf3541c
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Mar 22 01:53:51 2015 +0300
+
+    Optimize minimap icons code
+
+commit 2ea30e71db35bf8964f9038ee62f1b367f29741a
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Mar 21 06:25:06 2015 +0300
+
+    Split minimap logic from other code
+
+commit 21d7a9a3ccb8b320ed486afbf11ba0f672116785
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Mar 21 02:46:55 2015 +0300
+
+    Fix
+
+commit c5e2407a8a907485bd536f792c1215d87f99bdd0
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Mar 21 02:40:28 2015 +0300
+
+    Added minimap icons for treasures
+
+commit 68bc330363330a8aa591506b67a247df80541d9b
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Feb 25 01:17:10 2015 +0300
+
+    toc bump
+
+commit 03306d616f2f46d42ac2e95fe77517b835eaced4
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon Jan 26 16:57:46 2015 +0300
+
+    Disable POI 3190 (incorrect duplicate of Cargo of the Raven Queen)
+
+commit 93aa45cfc3434999f44de55d9ce5051c22cf32d3
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Mon Dec 29 23:59:45 2014 +0300
+
+    Some debug stuff
+
+commit 829bf1ca201da966c870d833e653d6249d86be46
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Dec 20 02:47:56 2014 +0300
+
+    Attempt to fix POI's: 3824, 4424, 4425
+
+commit 313cbe00f3049fd0a35b097336286e9f355415c8
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Dec 10 04:59:49 2014 +0300
+
+    Disable POI 3163
+
+commit b65972bbb0968510201948475c37df392acf13e3
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Dec 2 15:42:07 2014 +0300
+
+    Disable POI 4196
+
+commit 755bb2cb368354f60424672004debc9a650870ec
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Nov 30 00:08:52 2014 +0300
+
+    Fix POI 4027 (now requires Lumber Mill)
+
+commit 369e2086e76518816bd4d33e5893077f317b114b
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Nov 29 02:07:00 2014 +0300
+
+    Disable POI 4177
+
+commit d7779d9c38db070e8bc14df9eec5ace0df2833e9
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Nov 28 20:16:37 2014 +0300
+
+    Added option to ignore treasure map quest completion
+
+commit 90f96c17ff017c85026a45441dc2abe41f287301
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Nov 28 19:06:01 2014 +0300
+
+    Fix reversed req for Gorgrond treasures
+
+commit 1534ba488d1981b9cc495d63bd9c716dfbc33e29
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 25 16:58:19 2014 +0300
+
+    Fix
+
+commit d8481580f4fb55ecc6f596e3ee601f8a8bf0a695
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Nov 23 01:06:57 2014 +0300
+
+    Fix
+
+commit f9ac48fbef44ff74fd5c191923aad8d00a139399
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Nov 21 05:40:23 2014 +0300
+
+    Fix
+
+commit f2de2e67b1d881cf88d01145a16e6793ccbf7cae
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Nov 20 16:15:30 2014 +0300
+
+    Fix
+
+commit f020a86afbb265da2742ca092c46129db468aa1c
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Nov 20 00:49:10 2014 +0300
+
+    Fix arrow
+
+commit 837e5027269c82fea2e7bfe3da6dfcf04473a99a
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Nov 20 00:22:21 2014 +0300
+
+    Some reorganization
+
+commit 3b300fa8327d678259751af89aa4fe9ea3444f79
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Nov 19 19:51:46 2014 +0300
+
+    Fix
+
+commit d599e9c8120d990d9dc975df37e252fa4171b367
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 18 19:35:43 2014 +0300
+
+    More fixes
+
+commit 0fcfecb7c02036b86edf1402c53829ad67bf6091
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 18 19:04:42 2014 +0300
+
+    More fixes
+
+commit baf6b539728ae3db35bf3dae6a6e9d7c5cdff044
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 18 17:26:19 2014 +0300
+
+    Fix lua error
+
+commit e89f77f50bf1a804468176afb4d174fa87bdd06b
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 18 16:39:31 2014 +0300
+
+    Restore poi's 4417-4421
+
+commit 62df4744cf5da0ed7442aa6c03c93ba43114febc
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Nov 16 23:52:39 2014 +0300
+
+    Really fix Rook's Tacklebox
+
+commit 98e373f6265248ba3790555e507e3f8b6e26cea9
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Nov 16 21:37:39 2014 +0300
+
+    This should fix Rook's Tacklebox
+
+commit b3943123b734b54d7d1283429f29f89a80a55e36
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sat Nov 15 14:28:28 2014 +0300
+
+    Fix micro dungeons
+
+commit a0cb45ac1dbbff6d95558bd34602522195aee460
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Nov 14 05:32:41 2014 +0300
+
+    And those
+
+commit 870c8d74e215262cd3c32e15f716fd3f9c69e71c
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Nov 13 23:40:29 2014 +0300
+
+    Disable those for now
+
+commit 4755af109be2c1b69da0f487cdc3d6bf2e1f8285
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Thu Nov 13 04:52:45 2014 +0300
+
+    Fix distance
+
+commit 64d490db68015fae05445f686d04597349223a74
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Sun Nov 9 06:27:50 2014 +0300
+
+    Persistent settings
+
+commit 6313d3369d7ffbd8579e5762217bfba8661fac07
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Fri Nov 7 16:50:19 2014 +0300
+
+    Improve debug output
+
+commit 6225188cd8b83abe3a145b292f83bedc7d174b55
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Nov 5 01:22:45 2014 +0300
+
+    Fix
+
+commit 52aceca1b44690e8b7dccfb8316f49a596de521d
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Wed Nov 5 00:25:36 2014 +0300
+
+    Fix
+
+commit e4fdebdd61bac465d7fffbcf14aa2b05e008b075
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 23:44:47 2014 +0300
+
+    Fix
+
+commit e692b8ed52aca5c2494bfac476bb865c55fd891b
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 23:16:35 2014 +0300
+
+    Added data description
+    Don't show treasures if treasure map quest is completed to avoid duplicate icons
+
+commit 6a176c68952119dfc0e9fd18da2544b66a6f4dee
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 23:02:19 2014 +0300
+
+    Added debug slash command
+
+commit ee5301de16932d4716cbbd26c1950acf3d12e2be
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 20:33:10 2014 +0300
+
+    Added slash command to toggle arrow
+
+commit e0ec3963392edb04a7101d9995749ace4ac7d28e
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 20:03:57 2014 +0300
+
+    Refactoring
+
+commit ce5db7a311e887a7ed2ae9e39b375f783cdbd32e
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 16:32:06 2014 +0300
+
+    Added slash command and some fixes
+
+commit ce94a8adcd64390077f277072ae4cb52bf1ad3be
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 06:02:48 2014 +0300
+
+    Fix
+
+commit bf638912beace12c8b4d665b398b0257c9ad05d7
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 05:37:09 2014 +0300
+
+    Display on world map
+
+commit ddda52fcb159843f60df94b851212c92d9311a68
+Author: TOM_RUS <tomrus88@github.com>
+Date:   Tue Nov 4 01:16:24 2014 +0300
+
+    Initial commit
+

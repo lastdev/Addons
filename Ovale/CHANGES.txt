@@ -1,0 +1,156 @@
+tag 4ead901e05298e9e73a983ef48b25c6a704206e5 7.2.1.0
+Author:	Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:	Wed May 3 09:00:11 2017 +0200
+
+Merge contributions from kevindesmet, smadam, and ShmooDude
+
+commit 7602ef904c26bcb528b6d5393eff4d0850d5990f
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Wed May 3 08:57:07 2017 +0200
+
+    Update paladin talents
+
+commit 6f52ba09857d81b42a1a83ba950a96ab75737bcb
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Mon Apr 24 15:58:13 2017 +0200
+
+    addfury cost for wide eyes trait
+
+commit 14c57e2e832635d38380b8188d54f953e130582c
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sun Apr 16 15:50:36 2017 +0200
+
+    reorder cds again
+
+commit 0d9b52521e28a6a02e42142760321cfb14ac1fac
+Author: Adam Keech <smadam813@gmail.com>
+Date:   Mon Apr 10 21:28:38 2017 -0400
+
+    forgot to include souldshard cost
+
+commit 2ad37bc0481812f0bd8ada463f1787a83419d259
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Wed Mar 29 20:39:00 2017 +0200
+
+    Upgrade version
+
+commit 2ad37bc0481812f0bd8ada463f1787a83419d259
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Wed Mar 29 20:39:00 2017 +0200
+
+    Upgrade version
+
+commit 6f52ba09857d81b42a1a83ba950a96ab75737bcb
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Mon Apr 24 15:58:13 2017 +0200
+
+    addfury cost for wide eyes trait
+
+commit 1ea77933a37d94af517f59dbdcb1e07ba5463ed5
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Mon Apr 24 15:56:30 2017 +0200
+
+    introduce addpower
+
+commit 14c57e2e832635d38380b8188d54f953e130582c
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sun Apr 16 15:50:36 2017 +0200
+
+    reorder cds again
+
+commit d60463e3fd0c0285d78d4479e18d3236b32e6771
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sun Apr 16 06:19:04 2017 +0200
+
+    Update to latest havoc script
+
+commit 0d9b52521e28a6a02e42142760321cfb14ac1fac
+Author: Adam Keech <smadam813@gmail.com>
+Date:   Mon Apr 10 21:28:38 2017 -0400
+
+    forgot to include souldshard cost
+
+commit 03bdaf43ba02c0cec253b699696438b7f3e87524
+Author: Adam Keech <smadam813@gmail.com>
+Date:   Sun Apr 9 23:09:16 2017 -0400
+
+    Fixing Doomguard and Infernal Spells for 7.2
+
+commit e7c7b9ad131b08562501119574356669f49ef7bc
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Thu Apr 6 16:32:34 2017 +0200
+
+    SEF is off gcd
+
+commit 5414e6e5e87339e3ad207ef80ea62f3c604f7b17
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Thu Apr 6 15:39:58 2017 +0200
+
+    some spellinfo for ToD
+
+commit 5f18bf66f045a0ac96fdd5a7543e3f17473f179c
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Thu Apr 6 15:02:22 2017 +0200
+
+    can't ToD when already up
+
+commit 0df74549330ed9c7a49b9a8e03799d5f99224c33
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Thu Apr 6 15:02:10 2017 +0200
+
+    update to latest simc script
+
+commit 59493a687832f37d91d8923dc3eb080824ac76dd
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Mon Apr 3 13:14:42 2017 +0200
+
+    some issue with leg_sweep suggesting even if not talented
+
+commit 695561c6e99b08f2cd65a48ea4c869f3249e2a0c
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 13:20:47 2017 +0200
+
+    reorder cooldowns again
+
+commit 2ad37bc0481812f0bd8ada463f1787a83419d259
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Wed Mar 29 20:39:00 2017 +0200
+
+    Upgrade version
+
+commit ee45913b4a9597df0f44c729807551327ccbd032
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 13:14:29 2017 +0200
+
+    add leg sweep as BM interrupt
+
+commit ee45913b4a9597df0f44c729807551327ccbd032
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 13:14:29 2017 +0200
+
+    add leg sweep as BM interrupt
+
+commit 2f060232d2e5027ccc524163890eeec1dd1bca72
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 12:49:55 2017 +0200
+
+    purify during boss fights
+
+commit bf457751a6b45ca30f3551448c6fc5fafc31ca67
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 12:12:35 2017 +0200
+
+    better interrupts
+
+commit c55f99e753e461516b246d4b2fecead0de6dbabf
+Author: Kevin De Smet <kevin.de.smet@outlook.be>
+Date:   Sat Apr 1 12:12:21 2017 +0200
+
+    indicate Fundamental observation + reorder cds
+
+commit 2ad37bc0481812f0bd8ada463f1787a83419d259
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Wed Mar 29 20:39:00 2017 +0200
+
+    Upgrade version
+

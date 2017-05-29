@@ -1,0 +1,16 @@
+tag v1.3
+5b81c48bbf6c36c0815c8fba44af1495ab01b419
+Ethan Centaurai <ethancentaurai@outlook.com>
+2016-01-03 14:00:10 +0000
+
+Tagging as v1.3.
+
+
+--------------------
+
+Ethan Centaurai:
+	- Removed potentially pointless zone phasing check from Waypoint creation.
+	- Added control-rightclick to set waypoints to every unvisited bonfire.
+	- Removed pointless dropdown menu. Waypoints now only require one click!
+	- Delay collecting the list of completed quests until the last possible minute.
+	- Polite reminder that your installed copy of HandyNotes may be out of date, causing this plug-in to not work as expected.

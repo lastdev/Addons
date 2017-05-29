@@ -1,0 +1,20 @@
+tag 6b085e8808aebd5a17de3999733b62ebcbd3baf5 v1.4.4
+Author:	Ethan Centaurai <ethancentaurai@outlook.com>
+Date:	Sat Jan 21 22:09:16 2017 +0000
+
+Tagging as v1.4.4.
+
+commit afab05474120988ea5dec5024a66f82343e8df33
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Sat Jan 21 21:21:20 2017 +0000
+
+    Bump Interface number to 70100.
+
+commit 7039b6691a789b6bea61db90b1340176b714cdb4
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Sat Jan 21 21:18:48 2017 +0000
+
+    Fixed the tooltips showing incorrect names/places.
+    
+    Blizzard rearranged the achievement criteria (again).
+

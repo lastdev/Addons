@@ -1,0 +1,27 @@
+## Interface: 60200
+## Title: Lib AchievementLocations-1.0
+## Version: 0.4.19
+## Author: rbrian
+## X-License: Apache
+## X-Curse-Packaged-Version: v0.4.19-1
+## X-Curse-Project-Name: HandyNotes_Achievements
+## X-Curse-Project-ID: handynotes_achievements
+## X-Curse-Repository-ID: wow/handynotes_achievements/mainline
+
+AchievementLocations-1.0.lua
+AchievementLocations_data.lua
+AchievementLocations_cartography.lua
+AchievementLocations_soloable.lua
+AchievementLocations_group.lua
+AchievementLocations_pvp.lua
+
+AchievementLocations_seasonal.lua
+AchievementLocations_seasonal_brew.lua
+AchievementLocations_seasonal_children.lua
+AchievementLocations_seasonal_darkmoon.lua
+AchievementLocations_seasonal_hallow.lua
+AchievementLocations_seasonal_love.lua
+AchievementLocations_seasonal_lunar.lua
+AchievementLocations_seasonal_mid.lua
+AchievementLocations_seasonal_noble.lua
+AchievementLocations_seasonal_winter.lua

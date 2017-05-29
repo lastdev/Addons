@@ -1,0 +1,13 @@
+changeset:   1052:335787d36eb4
+tag:         3.6.26
+user:        sylvanaar <sylvanaar@mindspring.com>
+date:        Mon Dec 26 12:32:45 2016 -0800
+summary:     Fix the non-working clear module
+
+
+changeset:   1051:07ae8a8d27d9
+user:        sylvanaar <sylvanaar@mindspring.com>
+date:        Sat Dec 17 04:31:19 2016 -0800
+summary:     Added tag 3.6.25 for changeset dc3d94091c31
+
+

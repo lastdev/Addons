@@ -1,0 +1,12 @@
+tag 412617e74c70cd8d1151606664fe1625af5f0364 v70200-1.0.0
+Author:	Jim Whitehead <jnwhiteh@gmail.com>
+Date:	Thu Apr 6 18:52:14 2017 +0200
+
+Tagging v70200-1.0.0
+
+commit 6d2e98b474fa5da185fd3b5fc6abe8afa058f7b5
+Author: Jim Whitehead <jnwhiteh@gmail.com>
+Date:   Thu Apr 6 18:52:04 2017 +0200
+
+    Update TOC for 7.2
+

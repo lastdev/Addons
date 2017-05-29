@@ -1,0 +1,15 @@
+tag v1.2
+56b1174be7fea71bf171e12c1533bc6c38223150
+Ethan Centaurai <ethancentaurai@outlook.com>
+2016-01-03 12:17:02 +0000
+
+Tagging as v1.2.
+
+
+--------------------
+
+Ethan Centaurai:
+	- Refreshed upvalues.
+	- Added control-rightclick to set waypoints to every uncollected music roll.
+	- Removed pointless dropdown menu. Waypoints now only require one click!
+	- Polite reminder that your installed copy of HandyNotes may be out of date, causing this plug-in to not work as expected.

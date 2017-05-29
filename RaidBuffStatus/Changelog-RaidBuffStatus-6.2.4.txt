@@ -1,0 +1,38 @@
+------------------------------------------------------------------------
+r733 | oscarucb | 2016-05-10 22:32:59 +0000 (Tue, 10 May 2016) | 1 line
+Changed paths:
+   A /tags/6.2.4 (from /trunk:732)
+
+Tagging as 6.2.4
+------------------------------------------------------------------------
+r732 | oscarucb | 2016-05-05 00:52:03 +0000 (Thu, 05 May 2016) | 2 lines
+Changed paths:
+   M /trunk/locale.lua
+
+packager bump
+
+------------------------------------------------------------------------
+r731 | oscarucb | 2016-05-04 19:02:39 +0000 (Wed, 04 May 2016) | 2 lines
+Changed paths:
+   M /trunk/locale.lua
+
+fix to last
+
+------------------------------------------------------------------------
+r730 | oscarucb | 2016-05-04 19:02:07 +0000 (Wed, 04 May 2016) | 2 lines
+Changed paths:
+   M /trunk/locale.lua
+
+alias esMX to esES
+
+------------------------------------------------------------------------
+r729 | oscarucb | 2016-05-04 18:55:03 +0000 (Wed, 04 May 2016) | 5 lines
+Changed paths:
+   M /trunk/locale.lua
+
+localization improvements
+remove many obsolete phrases
+flatten namespaces at load time for efficiency
+add a warning for missing translations
+
+------------------------------------------------------------------------

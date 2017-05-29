@@ -1,0 +1,8 @@
+## Interface: 70200
+## Title: Simple Taunt Announce Config
+## Notes: Configuration panel for STA
+## Author: BeathsCurse (Saphod - Draenor EU)
+## Dependencies: SimpleTauntAnnounce
+## LoadOnDemand: 1
+
+ConfigurationPanel.lua

@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r65 | nevcairiel | 2016-08-16 19:28:59 +0000 (Tue, 16 Aug 2016) | 1 line
+Changed paths:
+   A /tags/1.9 (from /trunk:64)
+
+Tagging as 1.9
+------------------------------------------------------------------------
+r64 | nevcairiel | 2016-08-16 19:28:42 +0000 (Tue, 16 Aug 2016) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_Guild.toc
+
+TOC for 7.0
+------------------------------------------------------------------------
+r63 | nevcairiel | 2016-08-16 18:06:15 +0000 (Tue, 16 Aug 2016) | 1 line
+Changed paths:
+   M /trunk/GuildNotes.lua
+
+Properly ambiguate guild roster information
+------------------------------------------------------------------------

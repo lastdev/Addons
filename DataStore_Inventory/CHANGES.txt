@@ -1,0 +1,77 @@
+------------------------------------------------------------------------
+r49 | thaoky.altoholic@yahoo.com | 2017-04-28 12:32:11 -0500 (Fri, 28 Apr 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.lua
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+   M /trunk/locale.xml
+
+udpated load order in locale.xml
+------------------------------------------------------------------------
+r48 | thaoky.altoholic@yahoo.com | 2017-03-29 14:24:11 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.toc
+
+TOC Update
+------------------------------------------------------------------------
+r47 | thaoky | 2016-10-26 12:51:39 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.toc
+
+TOC Update
+------------------------------------------------------------------------
+r46 | thaoky | 2016-07-31 09:42:31 -0500 (Sun, 31 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.lua
+
+Fixed GetThisGuild()
+------------------------------------------------------------------------
+r45 | thaoky | 2016-07-27 12:35:12 -0500 (Wed, 27 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.lua
+
+Scan Transmog Collection Counters
+------------------------------------------------------------------------
+r44 | thaoky | 2016-07-18 11:09:30 -0500 (Mon, 18 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.toc
+
+7.0 Compatibility Release
+------------------------------------------------------------------------
+r43 | thaoky | 2015-08-17 11:20:25 -0500 (Mon, 17 Aug 2015) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Inventory.lua
+   M /trunk/DataStore_Inventory.toc
+   M /trunk/embeds.xml
+
+TOC Update
+Added LFR loots
+------------------------------------------------------------------------
+r42 | thaoky | 2015-02-25 12:26:15 -0600 (Wed, 25 Feb 2015) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Inventory.toc
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+6.1.001 Commit
+
+- Added support for options using <KeyValue>
+------------------------------------------------------------------------
+r41 | thaoky | 2015-01-09 11:11:55 -0600 (Fri, 09 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Inventory.lua
+   M /trunk/Options.xml
+
+- Fixed usage of options
+- XML frames cleanup
+------------------------------------------------------------------------
+r40 | thaoky | 2014-12-27 07:21:51 -0600 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+Modified options pane to use parentKey references
+------------------------------------------------------------------------
+

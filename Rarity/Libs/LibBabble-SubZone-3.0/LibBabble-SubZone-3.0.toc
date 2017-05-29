@@ -1,0 +1,44 @@
+﻿## Interface: 70100
+## LoadOnDemand: 1
+#@non-debug@
+## Title: @localization(locale="enUS", key="Title", namespace="ToC")@
+## Title-deDE: @localization(locale="deDE", key="Title", namespace="ToC")@
+## Title-esES: @localization(locale="esES", key="Title", namespace="ToC")@
+## Title-esMX: @localization(locale="esMX", key="Title", namespace="ToC")@
+## Title-frFR: @localization(locale="frFR", key="Title", namespace="ToC")@
+## Title-itIT: @localization(locale="itIT", key="Title", namespace="ToC")@
+## Title-koKR: @localization(locale="koKR", key="Title", namespace="ToC")@
+## Title-ptBR: @localization(locale="ptBR", key="Title", namespace="ToC")@
+## Title-ruRU: @localization(locale="ruRU", key="Title", namespace="ToC")@
+## Title-zhCN: @localization(locale="zhCN", key="Title", namespace="ToC")@
+## Title-zhTW: @localization(locale="zhTW", key="Title", namespace="ToC")@
+## Notes: @localization(locale="enUS", key="Description", namespace="ToC")@
+## Notes-deDE: @localization(locale="deDE", key="Description", namespace="ToC")@
+## Notes-esES: @localization(locale="esES", key="Description", namespace="ToC")@
+## Notes-esMX: @localization(locale="esMX", key="Description", namespace="ToC")@
+## Notes-frFR: @localization(locale="frFR", key="Description", namespace="ToC")@
+## Notes-itIT: @localization(locale="itIT", key="Description", namespace="ToC")@
+## Notes-koKR: @localization(locale="koKR", key="Description", namespace="ToC")@
+## Notes-ptBR: @localization(locale="ptBR", key="Description", namespace="ToC")@
+## Notes-ruRU: @localization(locale="ruRU", key="Description", namespace="ToC")@
+## Notes-zhCN: @localization(locale="zhCN", key="Description", namespace="ToC")@
+## Notes-zhTW: @localization(locale="zhTW", key="Description", namespace="ToC")@
+#@end-non-debug@
+#@debug@
+## Title: Lib: Babble-SubZone-3.0
+## Notes: A library to help with localization of in-game subzone names.
+## Notes-deDE: Eine Bibliothek, die dabei hilft, die Untergebiete des Spiels zu übersetzen.
+## Notes-koKR: 게임 내 세부 지역 이름의 지역화로 도움을 주는 라이브러리 입니다.
+## Notes-zhCN: 一个帮助游戏内子区域名称本地化的库。
+## Notes-zhTW: 為本地化服務的函式庫 [副區域名稱]
+#@end-debug@
+## Author: Arith
+## X-eMail: arithmandarjp at yahoo.co.jp
+## X-Category: Library
+## X-License: MIT
+## X-Date: @project-date-iso@
+## X-Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
+
+LibStub\LibStub.lua
+lib.xml
+

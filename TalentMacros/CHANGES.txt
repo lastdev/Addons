@@ -1,0 +1,12 @@
+tag 0279f00d0859c0b9c087193377189513fe15c74c v1.1.3
+Author:	Kyle Buller <bullerk@gmail.com>
+Date:	Tue Mar 28 19:18:39 2017 -0500
+
+Tagging as v1.1.3
+
+commit 3aeeb45ba172a50d82e801dbdd06ec0ceed5c203
+Author: Kyle Buller <bullerk@gmail.com>
+Date:   Tue Mar 28 19:17:44 2017 -0500
+
+    Update the TOC for 7.2
+

@@ -1,0 +1,371 @@
+﻿0.25.4 (26/05/2017)
+- The hotkey now makes the WQGF frame appear for the latest visited world quest
+- The hotkey now also removes the invite confirmation. No more clicking!
+- World boss WQ groups should now convert to raid
+- Localizations updated
+
+0.25.3 (21/05/2017)
+- The "Convert to raid" pop-up should no longer appear while doing non-raid world quests
+- The button now allows joining a group when invited
+- Fixed the group creation process when no application is answered
+- Removed the world boss WQ restriction
+- The Hotkey no longer works when the button is disabled
+- The WQGF frame is now closed when pressing escape
+- Minor bugfixes
+
+0.25.2 (20/05/2017)
+- The WQGF frame will no longer appear on unsupported WQs
+- The "create new group" button should no longer fail when multiple applications are active
+- Fixed WQ name's font for russian/korean/chinese localizations
+- Localizations updated
+
+0.25.1 (17/05/2017)
+- Back from my holidays, time to work again!
+- The button is now much larger and includes the current text (thanks VincentSDSH!)
+- Added some advice about the key binding in the configuration panel
+- More UI changes coming in the next few days, stay tuned!
+- Localizations updated
+
+0.24.3 (30/04/2017)
+- Removed auto-invite options as the groups are now using the WoW auto-invite function
+- The lock/unlock icons have been reversed
+- The frame will no longer hide after cancelling all the group applications
+- Several bugfixes
+
+0.24.2 (29/04/2017)
+- Added a short delay before the button is first clickable to prevent a bug that was sometimes causing the search to return no results
+- Updated localizations. Thanks again to the translators!
+
+0.24.1 (29/04/2017)
+- The WQGF frame will now appear above other UI elements
+- The WQGF frame is now lockable, and its position is remembered between sessions
+- It is now possible to bind the WQGF button (Key Bindings > AddOns > WorldQuestGroupFinder). Submitted by vincentSDSH, thanks!
+- Raid world quests groups are now automatically converted to raids
+- Removed broken options
+- The world quest area detection option now shows the WQGF frame and no longer a prompt
+- Lots of bugfixes
+
+0.24 (29/04/2017)
+- Back in business.
+- Trying to comply with the new UI restrictions. Guaranteed with 99% less automation!
+- This is a very early prototype, expect bugs!
+
+0.23 (28/04/2017)
+- Goodbye!
+
+0.22.6 (27/04/2017)
+- Leaders blacklist is now cleared after completing a world quest 
+- Updated WB list
+
+0.22.5 (24/04/2017)
+- Fixed an LUA error that was sometimes occuring
+
+0.22.4 (22/04/2017)
+- Fixed taint issues
+
+0.22.3 (22/04/2017)
+- The raid group issue should hopefully now be fixed
+
+0.22.2 (21/04/2017)
+- Fixed auto-invite broken for regular quests
+- Fixed groups sometimes being converted to raid
+- Auto-kick range is now 650yd
+- Possible fix for the eye minimap icon stuck blinking
+- Will no longer try to apply to more than 5 groups, removing the error message spam
+- Players lower than level 110 now get auto-invited for invasion world quests (Thanks Nimid!)
+- Removed text about blacklisted groups as it was confusing for some people
+- Updated quest blacklists
+- Updated localizations
+
+0.22.1 (31/03/2017)
+- Changed TOC to 7.2
+- Added new slash command to auto-kick out of range players : /wqgf autokick
+- Updated localizations
+- Known issue : There seems to be some occasionnal taint errors since the 7.2 patch. I'm currently investigating this and will release a fix as soon as possible.
+
+0.22 (17/03/2017)
+- This update is including a few changes by Nalumis (thanks!) :
+	- Group leader now has an additionnal button to auto-kick players who are 500+ yards away
+	- It is possible to force creating a new group by using the middle mouse click on the WQGF button (you should prefer joining another group though)
+	- Only level 110 will be auto-invited when doing World Quests
+- Updated localizations
+
+0.21.3 (25/02/2017)
+- Dropped support for World Bosses, as it was causing issues and was not optimal
+- Blacklisted the Nighthold world quests
+- Will no longer apply to groups with blizz auto-invite enabled
+- Localization updates
+
+0.21.2 (22/01/2017)
+- Bug fix
+
+0.21.1 (22/01/2017)
+- The find group icon will no longer overlap quest icons
+- Changed the button's strata to make it clickable on Kaliel's Tracker
+- Updated localizations
+
+0.21 (19/01/2017)
+- Added a custom "Join Group" button to prevent world map taint
+- Added a new slash command to toggle the world quest detection : /wqgf toggle
+- Realm type should now be correctly updated in the group's description
+- Updated strings to reflect regular quests support
+
+0.20.7 (18/01/2017)
+- Raid WQs list updated
+- Fix for Simplified Chinese localization
+
+0.20.6 (17/01/2017)
+- Fixed automatic group creation when the queue disappears after inviting someone (blizzard, please fix your game)
+- Updated localizations
+- Add Simplified Chinese translation by Evilbear@哈卡
+
+0.20.5 (16/01/2017)
+- Added an option to remove support for regular quests, removing the group find button
+- The "Hide init message" option has been removed and its effect is now included in the "Silent mode" option
+- Added additionnal measures to avoid taint
+- Updated blacklist
+
+0.20.4 (14/01/2017)
+- Fix for a rare bug sometimes causing WQGF to apply to incorrect groups
+
+0.20.3 (12/01/2017)
+- Moar updates!
+- The groups browser can now be called by right clicking on the button, and no longer by clicking with CTRL pressed.
+- Taint issues should be fixed (for real this time) (I hope) (please)
+
+0.20.2 (11/01/2017)
+- Fixed joining raid WQs with more than 5 players
+- Remove WQGF tag requirement in group descriptions to join them
+- Reduced waiting times for group search
+
+0.20.1 (11/01/2017)
+- Fixed group search for special WQs (like those at Eye of Azshara)
+- The group finder button should no longer appear while in a group for the current WQ
+- Hopefully, fix for taint issues
+- Error fixes
+
+0.20 (11/01/2017)
+- Updated for 7.1.5, overloading the new in-game WQ group search with all the WQGF features you love!
+- Now compatible with regular quests (experimental)
+- WQGF now displays the blizzard find group button on every compatible quest / world quest. Clicking it will start searching for a group. Clicking it with CTRL down will call the built-in group finding function.
+- Thanks to some new 7.1.5 interface functions other players will now see the name of the World Quest in your group's name in their own language
+- Updated localizations
+- Updated WQ blacklist
+
+0.19.6 (22/12/2016)
+- Added Korean localization by Mieow, NA-Tichondrius
+- Added Traditional Chinese localization by asgard1991
+- Updated WQs blacklist
+
+0.19.5 (13/12/2016)
+- In addition to middle click, it is now possible to use CTRL + left click on the objective tracker and world map to start searching for a group
+- Minor localization fixes
+
+0.19.4 (07/12/2016)
+- WQGF should now be compatible with the bugged WQs that don't appear on the world map
+- It is time to remove support for left clicking on the quest tracker :) Use the middle button now!
+- Updated blacklisted WQs list
+
+0.19.3 (29/11/2016)
+- Removed location restrictions to search for a WQ as it was causing issues to some users. Please don't abuse this!
+- Added this week's WB in the raid WQs list
+- Fixed german translation
+
+0.19.2 (25/11/2016)
+- Improved realm type detection for the "Avoid PvP servers" option. WQGF will no longer use the group author's realm to determine is a group is on a PvP realm. Instead, it now check the player's PvP flag which can almost everytime say if he is currently phased on a PvP realm or not. Additionally, the group's realm type flag is now refreshed if for some reason the group switches to another type of realm.
+- New WQ dialog will no longer appear in Ashran
+- Updated localizations
+- Updated raid WQs
+- Minor bugfixes
+
+0.19.1 (15/11/2016)
+- Raid mode is now allowed for this week's world boss WQ.
+- Internal code rework for localizations.
+
+0.19 (14/11/2016)
+- Added silent mode, which causes WQGF to only display the most important messages
+- Now translated into Spanish by Ooka (EU-DunModr)!
+- A new group entry should now be created when WoW bugs and drops the current group finder entry for some reason
+- Will no longer avoid PvP servers for PvP world quests
+- WoW Auto-Invite is now forced to disabled while doing a World Quest. Who wants realm hopppers?
+- Fixed Helheim World Quest group creation
+- Fixed a bug that was occuring when an applied group's author was unknown (due to a WoW bug once again!)
+
+0.18 (06/11/2016)
+- Now translated into German by Bullsei!
+- World quest zone entered dialog will no longer show while applying to a world quest group
+- WQGF buttons should no longer overlap world quest items
+- It is now possible to create the group again for a WQ if for some reason the group finder entry gets removed
+
+0.17.2 (01/11/2016)
+- This week's world boss WQ now supports raid mode,
+
+0.17.1 (01/11/2016)
+- Added button to stop looking for additional members
+- Fixed bug introduced in 0.17 that prevented WQGF from working properly in sub zones
+- Changed world quest completion message
+
+0.17 (31/10/2016)
+- It is now possible to search/create a group for a world quest by clicking on its world map POI with the middle mouse button
+- A button has been added on the WQ tracking to search for a new group for the current WQ. This button is replacing the same action in the right click menu.
+- Group apply timeout is now 15 seconds
+- Group invites will no longer be automatically accepted when in-combat
+
+0.16 (29/10/2016)
+- Internal changes for future WQGF integration in other World Quest addons
+
+0.15.1 (26/10/2016)
+- It is now possible to search/create a group by clicking on a world quest in the objective tracker with the middle mouse button, as the default behavior of left clicking on a world quest in the objective tracker is to open the map.
+	- As a result of this change, left mouse button click support might be removed in a future version of WQGF
+- Fixed the swapped dialog buttons since last update
+- Fixed error when applying to several groups at the same time
+- Should no longer sometimes invite too many players, converting the group into a raid when it's not wanted
+- Group leader now gets notified when a WQGF user joins the group instead of when he is invited
+- WQ block click should be functional after leaving a group for the same WQ
+- Fixed the "search another group" function not working properly when 2 or more groups exist for the WQ
+
+0.15 (26/10/2016)
+- Updated TOC for 7.1
+- Added a button to leave the group in the auto leave dialog
+
+0.14.1 (24/10/2016)
+- Fixed bug breaking WQ block click to search for a WQ group after declining zone-in dialog
+
+0.14 (23/10/2016)
+- Added a new option to automatically leave the group after completed a world quest. There's a 10 second delay so you can still choose to stay if you want to.
+- Changed current WQ background texture
+- Will no longer initiate a group search several times if the WQ block is clicked more than once
+- Fixed an issue with the auto join group functionality triggering multiple times
+
+0.13.2 (21/10/2016)
+- Removed debug print leftover at login
+- More changes done to avoid taint
+
+0.13.1 (20/10/2016)
+- Fixed issue relative to the new avoid PvP option
+- Updated portuguese translation
+
+0.13 (20/10/2016)
+- As requested by a lot of users, I have added a new option to avoid joining groups on PvP server
+- Now translated into Russian by Минтерм (EU-Soulflayer)! Thank you!
+
+0.12.1 (19/10/2016)
+- Raid mode warning will no longer appear when joining a raid group for a WQ that can be completed while in a raid.
+- The "Use WoW's auto-invite" option has been removed. 
+- Added this week's world boss WQ to the list of WQs that can be completed while in a raid.
+
+0.12 (18/10/2016)
+- Changed the way the addon detects the player entering a WQ area, which should hopefully improve compatibility with other addons and remove the need for the WQ objective tracker to be visible. 
+
+0.11.1 (18/10/2016)
+- Possible fix for taint issues (actions blocked by WQGF, like using the instant world quest or using a world quest item by clicking on the objective tracker). Let me know if these issues are fixed for you! :)
+
+0.11 (16/10/2016)
+- Is it now possible to search for another group (or create a new one if no other is available) by right clicking on the world quest tracking.
+- The group search will no longer use the language filters selected in the group finder interface. All languages are now automatically selected. An option to keep the previous behavior has been added in the addon's configuration window.
+- More raid quests added
+
+0.10.6 (05/10/2016)
+- World quest area entered dialog now shows while dead
+- Group search timeout is now 20 seconds
+- World bosses should now be doable in raid
+- Translations fixes
+
+0.10.5 (27/09/2016)
+- Fixed typos
+
+0.10.4 (27/09/2016)
+- Back from vacation! :)
+- The group creation loop bug should be fixed.
+
+0.10.3 (20/09/2016)
+- Fixed the sometimes occuring group creation failures on non-english game clients (caused by special characters; was occuring often on russian clients)
+- World quest ending process is now correctly triggered when the world quest was started by the group leader
+
+0.10.2 (20/09/2016)
+- Trade world quests added to the blacklist
+- "World quest completed" message added in 0.10.1 will no longer appear when debug is disabled, sorry!
+
+0.10.1 (19/09/2016)
+- It is now possible to use WQGF in the Eye of Azshara
+- All of the WQs that can be accomplished in a raid group should now be flagged as such in the addon
+
+0.10 (18/09/2016)
+- Added a new option to automatically accept group invites
+- The world quest frame's size now adjust when new objectives are added
+- Possible fix for LUA error that sometimes occurs when applying to multiple groups at the same time
+- More quests can now be done in a raid group
+- Raid mode group warning was broken and is back
+
+0.9.2 (17/09/2016) 
+- Added a list of world quests that are completable in raid mode. These will no longer be restricted to party mode and 5 players. The list will be filled over time when I test the WQs in raid mode. If you know some WQs that work in raid mode let me know their IDs!
+- Added an option to remove the init message at login
+
+0.9.1 (16/09/2016) 
+- Reverted previous change for elite quests. Looks like some of them aren't eligible for raid groups.
+- Group leader won't broadcast that the group is no longer doing the current world quest anymore when he completes it.
+- Added Portuguese translation by Lobeom. Thanks!
+
+0.9 (16/09/2016) 
+- Removed party mode restriction for elite world quests
+- Fixed LUA error when joining a WQ group after applying to multiple groups with auto-invite
+- Location names are now localized in the client's language
+- Added WQGF version in the description of created groups
+
+0.8 (16/09/2016)
+- Fixed a critical bug that was causing players from servers with spaces in the name to spam other players using the addon
+- Fixed a bug that could cause too many players to be auto-invited into the group and thus converting the party into a raid
+- The creation success of a new group finder entry is now checked, avoiding a rare bug that caused the addon to believe the player was currently grouped for a world quest even though the entry creation failed
+- The parameters labels have been updated to make them more understandable
+- Various small bug fixes
+
+0.7.1 (15/09/2016)
+- Clicking on a world quest with shift key down will no longer trigger the addon
+- Fixed the broken dialogs, sorry!
+
+0.7 (15/09/2016)
+- Added a custom auto-invite function which will automatically invite group applicants, prioritizing WQGF users. It will stop auto inviting when the group is full (and won't ask to switch to raid mode). Also, it should reduce the amount of realm hoppers encountered as the group is not listed as an "auto-invitation group". 
+	- "CONFIG_AUTOINVITE_EVERYONE" is now enabled by default
+	- It is still possible to choose use the default WoW auto-invite function in the addon's options. Choosing this will override the custom auto-invite function.
+- WQGF will now try to switch the group back to party mode if for whatever reason it is in raid mode.
+- Group applications will now be canceled after 45 seconds if no answer is given. WQGF will then try to find another group or will create your own.
+- WQGF will no longer apply for a group if you previously cancelled your apply or declined an invitation to join it
+- The "find group" dialog that appears when entering a world quest's area area will now disappear when leaving the area
+- Fixed the "find group" dialog appearing for blacklisted quests
+
+0.6 (15/09/2016)
+- WQGF won't try to find/create a group anymore when queued for a dungeon, raid or battleground
+- Added a world quest blacklist for WQs that don't require groups (like "Withered Army Training"). Will need to fill it over time :)
+- Profession world quests are now excluded
+- Fixed bug when changing current WQ while still currently doing another
+
+0.5.1 (14/09/2016)
+- Fixed an issue with default parameter values
+- All parameters are now account wide. As a result of this, your current parameters will be reset.
+
+0.5 (14/09/2016)
+- Added a new option (which is enabled by default) to automatically invite other WQGF users in your world quest groups
+- Users will now apply to existing groups with the roles they have selected in the dungeon finder tool window. If no role is selected, all available roles will be selected (as it was previously done)
+- Removed a leftover debug print from the code, sorry!
+
+0.4 (13/09/2016)
+- The current world quest is now always tracked and surrounded by a frame, indicating that it is the current quest being done by the group
+- Added internal party addon communication. If the leader of the group has the addon, every other user in the group will get notified when he starts doing a new world quest and will automatically start tracking it (if eligible)
+- Current world quest in now saved, so the addon won't lose track of it after reloading or reconnecting
+- It is not possible anymore to search/create a group if not the current group leader
+- It is now possible to find/create a group by right clicking on a quest in the objective tracker as the option has been added to the contextual menu. 
+- Various text issues have been fixed
+
+0.3 (13/09/2016)
+- WQGF will now ask the player if he wants to find a group when entering a new world quest zone. It is also possible to enable automatic group finding when entering a world quest zone. This is configurable in the addon's settings.
+- It is no longer possible to find/create groups for pet battle and dungeon world quests.
+
+0.2 (12/09/2016)
+- Fixed variable name typo
+- Bug fixes
+
+0.1.1 (12/09/2016)
+- Fixed French translation
+
+0.1 (12/09/2016)
+- First public version

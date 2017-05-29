@@ -1,0 +1,13 @@
+------------------------------------------------------------------------
+r1425 | Resike | 2017-05-20 18:01:47 -0500 (Sat, 20 May 2017) | 3 lines
+Changed paths:
+   M /trunk/GUI_Config.lua
+   M /trunk/Recount.lua
+   M /trunk/Recount_Modes.lua
+   M /trunk/Tracker.lua
+
+- Major changes in the DPS calculations.
+- Added mouse wheel functions for sliders.
+- Fixed some other issues.
+------------------------------------------------------------------------
+

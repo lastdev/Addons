@@ -1,0 +1,51 @@
+------------------------------------------------------------------------
+r35 | thaoky.altoholic@yahoo.com | 2017-04-28 12:31:25 -0500 (Fri, 28 Apr 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.lua
+
+Added support for broken shore currencies
+------------------------------------------------------------------------
+r34 | thaoky.altoholic@yahoo.com | 2017-03-29 14:23:47 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+TOC Update
+------------------------------------------------------------------------
+r33 | thaoky | 2016-11-09 07:00:14 -0600 (Wed, 09 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.lua
+
+Added support for Legion currencies
+------------------------------------------------------------------------
+r32 | thaoky | 2016-10-26 12:50:36 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+TOC Update
+------------------------------------------------------------------------
+r31 | thaoky | 2016-07-18 11:08:59 -0500 (Mon, 18 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+7.0 Compatibility Release
+------------------------------------------------------------------------
+r30 | thaoky | 2015-08-17 11:19:42 -0500 (Mon, 17 Aug 2015) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+TOC Update
+------------------------------------------------------------------------
+r29 | thaoky | 2015-04-06 10:43:49 -0500 (Mon, 06 Apr 2015) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.lua
+
+Updated specific scanning of some currencies
+------------------------------------------------------------------------
+r28 | thaoky | 2015-02-25 12:25:10 -0600 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Currencies.toc
+
+6.1.001 Commit
+------------------------------------------------------------------------
+

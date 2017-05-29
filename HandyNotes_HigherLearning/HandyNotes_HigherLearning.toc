@@ -1,0 +1,22 @@
+## Interface: 70100
+## Version: 7.1.0.0
+
+## Title: HandyNotes: Higher Learning
+## Notes: Shows the books you still need to read for the Higher Learning achievement.
+## Title-deDE: HandyNotes: Höheres Studium
+## Notes-deDE: Zeigt die Bücher an, die Ihr für den Erfolg "Höheres Studium" noch lesen müsst.
+## Title-esES: HandyNotes: Conocimiento superior
+## Notes-esES: Muestra los libros que todavía debes que leer para el logro "Conocimiento superior".
+## Title-esMX: HandyNotes: Conocimiento superior
+## Notes-esMX: Muestra los libros que todavía debes que leer para el logro "Conocimiento superior".
+
+## Author: Phanx
+## X-Email: addons@phanx.net
+## X-Copyright: Copyright (c) 2014-2016 Phanx. All rights reserved.
+## X-Website: https://github.com/Phanx/HandyNotes_HigherLearning
+## X-Curse-Project-ID: handynotes-higher-learning
+## X-WoWI-ID: 23267
+
+## Dependencies: HandyNotes
+
+Addon.lua

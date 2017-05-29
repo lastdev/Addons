@@ -1,0 +1,10 @@
+tag a0d30a59d5d2f17127a28b93e8a940c11881cfc3 7.2.0.2
+Author:	James D. Callahan III <jcallahan@curse.com>
+Date:	Mon May 1 10:07:02 2017 -0500
+
+commit c5b15225c85fcaefee6c31a67e2c9a1c2828696c
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Fri Apr 28 10:19:30 2017 -0500
+
+    Add missing factionGroup for Sergeant Curtis, Heggin Stonewhisker, Malgin Barleybrew, Digger Flameforge, Captain Gerogg Hammertoe, Jalinde Summerdrake, and Tamra Stormpike.
+

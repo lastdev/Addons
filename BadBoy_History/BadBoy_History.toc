@@ -1,0 +1,15 @@
+## Interface: 70100
+## Title: BadBoy_History
+## Notes: Log all chat that's removed by the various BadBoy addons.
+## Author: Funkydude
+## Dependencies: BadBoy
+## SavedVariables: BBHISTORY, BBGHISTORY, BBCCHISTORY
+## X-Category: Chat/Communication
+## X-License: All Rights Reserved
+## X-Curse-Packaged-Version: r36-release
+## X-Curse-Project-Name: BadBoy_History
+## X-Curse-Project-ID: badboy_history
+## X-Curse-Repository-ID: wow/badboy_history/mainline
+
+BadBoy_History.lua
+

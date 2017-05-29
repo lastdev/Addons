@@ -1,0 +1,15 @@
+## Interface: 70200
+## Title: |cffe840ffHandyNotes_EphemeralCrystals|r
+## Notes: Show on map the currently known spawn points of Ephemeral Crystals
+## Author: Zekla_WoW
+## Version: r01
+## SavedVariables: HandyNotes_EphemeralCrystalsDB
+## RequiredDeps: HandyNotes
+## DefaultState: enabled
+## X-Curse-Packaged-Version: r01
+## X-Curse-Project-Name: HandyNotes_EphemeralCrystals
+## X-Curse-Project-ID: handynotes_ephemeralcrystals
+## X-Curse-Repository-ID: wow/handynotes_ephemeralcrystals/mainline
+
+HandyNotes_EphemeralCrystals.lua
+Config.lua

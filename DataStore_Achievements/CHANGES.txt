@@ -1,0 +1,54 @@
+------------------------------------------------------------------------
+r45 | thaoky.altoholic@yahoo.com | 2017-03-29 14:19:14 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.toc
+
+TOC Update
+------------------------------------------------------------------------
+r44 | thaoky | 2016-10-26 13:31:54 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   D /trunk/Libs
+
+Unused
+------------------------------------------------------------------------
+r43 | thaoky | 2016-10-26 12:46:54 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.toc
+
+TOC Update
+------------------------------------------------------------------------
+r42 | thaoky | 2016-07-18 11:06:37 -0500 (Mon, 18 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Achievements.toc
+
+7.0 Compatibility Release
+------------------------------------------------------------------------
+r41 | thaoky | 2015-09-12 12:04:10 -0500 (Sat, 12 Sep 2015) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.lua
+
+Fixed Lua error at logon
+------------------------------------------------------------------------
+r40 | thaoky | 2015-08-17 11:18:04 -0500 (Mon, 17 Aug 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Achievements.lua
+   M /trunk/DataStore_Achievements.toc
+
+TOC Update
+Fixed an issue where an earned achievement was not immediately saved to the DB, and was only read at next login.
+------------------------------------------------------------------------
+r39 | thaoky | 2015-02-25 12:22:05 -0600 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Achievements.toc
+
+6.1.001 Commit
+------------------------------------------------------------------------
+r38 | thaoky | 2014-12-27 07:08:22 -0600 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.lua
+
+Fixed processing of achievement ids that are nil
+------------------------------------------------------------------------
+

@@ -1,0 +1,121 @@
+changeset:   385:55a74f62b864
+tag:         v55
+user:        rowaasr13
+date:        Sat Feb 04 12:02:58 2017 +0300
+summary:     v55 docs + toc + changelog
+
+
+changeset:   384:c467972699cd
+user:        rowaasr13
+date:        Sat Feb 04 09:56:33 2017 +0300
+summary:     no need to use full path - there's local for that
+
+
+changeset:   383:3dac9ec9fab6
+user:        rowaasr13
+date:        Sat Feb 04 09:53:17 2017 +0300
+summary:     switch changelog in .pkgmeta
+
+
+changeset:   382:b8cf8184e8a8
+user:        rowaasr13
+date:        Sat Feb 04 09:52:59 2017 +0300
+summary:     actual markdown changes + upcoming v54 partial log
+
+
+changeset:   381:c84534e55985
+user:        rowaasr13
+date:        Sat Feb 04 09:51:52 2017 +0300
+summary:     changelog is now in markdown
+
+
+changeset:   380:d21a7206f6bf
+user:        rowaasr13
+date:        Tue Jan 31 10:41:30 2017 +0300
+summary:     actual markdown changes + new curse links
+
+
+changeset:   379:cdf90540de94
+user:        rowaasr13
+date:        Tue Jan 31 10:40:46 2017 +0300
+summary:     docs are now in markdown
+
+
+changeset:   378:4e8a9024dcb8
+user:        rowaasr13
+date:        Fri Nov 25 11:53:06 2016 +0300
+summary:     aggressively update order hall mission page on events (depends on previous party saving fix)
+
+
+changeset:   377:a2364e0cf2d1
+user:        rowaasr13
+date:        Fri Nov 25 11:52:41 2016 +0300
+summary:     aggressively update order hall mission list on events
+
+
+changeset:   376:00bf39f5eda5
+user:        rowaasr13
+date:        Fri Nov 25 11:51:59 2016 +0300
+summary:     MissionList_Update_More_With_Settings is more obvious name
+
+
+changeset:   375:22c959f9bdcb
+user:        rowaasr13
+date:        Fri Nov 25 11:50:15 2016 +0300
+summary:     update_if_visible hooks for single delayed update for current visible frame on events
+
+
+changeset:   374:d71c1ceac87b
+user:        rowaasr13
+date:        Fri Nov 25 11:48:39 2016 +0300
+summary:     debug dump template
+
+
+changeset:   373:0ced14ca4b19
+user:        rowaasr13
+date:        Fri Nov 25 11:48:24 2016 +0300
+summary:     better maxed party detection in one more place
+
+
+changeset:   372:0eb7703482ef
+user:        rowaasr13
+date:        Fri Nov 25 11:46:32 2016 +0300
+summary:     fix and improve party saving/restoring before/after calculation
+
+
+changeset:   371:6a52be3d4b51
+user:        rowaasr13
+date:        Sat Nov 19 07:43:50 2016 +0300
+summary:     use postclick for direct call to CastSpellOnFollower instead of macro passthrough - should be more clean and probably avoids script warning popup
+
+
+changeset:   370:97d4fd06b398
+user:        rowaasr13
+date:        Sat Nov 19 07:40:54 2016 +0300
+summary:     move "upgrade items" code to prepared placeholder for shared code
+
+
+changeset:   369:290accf1c340
+user:        rowaasr13
+date:        Sat Nov 19 07:38:31 2016 +0300
+summary:     IsVisible is better for foreign frames
+
+
+changeset:   368:6f948b8f2a76
+user:        rowaasr13
+date:        Sat Nov 19 07:36:50 2016 +0300
+summary:     XP-only rewards optimization for overmax missions: prioritize more unmaxed champions while maintaining 100% rewards for faster burst leveling to 110 while sacrificing single-target XP bonus items
+
+
+changeset:   367:74c7ea0ff847
+user:        rowaasr13
+date:        Sat Nov 19 07:32:29 2016 +0300
+summary:     more prev_ cleanup and more robust all/not all followers in party maxed detection
+
+
+changeset:   366:30f44d9a0735
+user:        rowaasr13
+date:        Tue Nov 08 01:23:07 2016 +0300
+summary:     Added tag v54 for changeset ee6f91829d6e
+
+

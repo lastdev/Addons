@@ -1,0 +1,95 @@
+------------------------------------------------------------------------
+r63 | thaoky.altoholic@yahoo.com | 2017-04-28 12:35:47 -0500 (Fri, 28 Apr 2017) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+   M /trunk/locale.xml
+
+udpated load order in locale.xml
+------------------------------------------------------------------------
+r62 | thaoky.altoholic@yahoo.com | 2017-03-29 14:19:06 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore.toc
+
+TOC Update
+------------------------------------------------------------------------
+r61 | thaoky | 2016-11-09 07:00:49 -0600 (Wed, 09 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+
+Modified ToggleOption
+------------------------------------------------------------------------
+r60 | thaoky | 2016-10-26 12:46:43 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore.toc
+
+TOC Update
+------------------------------------------------------------------------
+r59 | thaoky | 2016-08-09 13:49:54 -0500 (Tue, 09 Aug 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore.lua
+
+Fixed cross-realm support (for good this time.. hopefully)
+------------------------------------------------------------------------
+r58 | thaoky | 2016-07-31 10:40:27 -0500 (Sun, 31 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore.lua
+
+Fixed GetRealmsConnectedWith()
+------------------------------------------------------------------------
+r57 | thaoky | 2016-07-31 09:43:48 -0500 (Sun, 31 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore.lua
+
+Fixed cross-realm support
+------------------------------------------------------------------------
+r56 | thaoky | 2016-07-18 11:06:22 -0500 (Mon, 18 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore.toc
+
+7.0 Compatibility Release
+------------------------------------------------------------------------
+r55 | thaoky | 2015-08-17 11:17:46 -0500 (Mon, 17 Aug 2015) | 1 line
+Changed paths:
+   M /trunk/DataStore.toc
+
+TOC Update
+------------------------------------------------------------------------
+r54 | thaoky | 2015-04-06 10:38:45 -0500 (Mon, 06 Apr 2015) | 3 lines
+Changed paths:
+   M /trunk/DataStore.lua
+   M /trunk/Options.lua
+
+- Added GetGuild()
+- Updated guild scanning
+- Modified Options to use booleans instead of numbers, where applicable
+------------------------------------------------------------------------
+r53 | thaoky | 2015-02-25 12:21:34 -0600 (Wed, 25 Feb 2015) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore.lua
+   M /trunk/DataStore.toc
+   M /trunk/Options.xml
+
+6.1.001 Commit
+
+- Added support for options using <KeyValue>
+------------------------------------------------------------------------
+r52 | thaoky | 2015-01-09 10:59:48 -0600 (Fri, 09 Jan 2015) | 3 lines
+Changed paths:
+   M /trunk/DataStore.lua
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+- Minor fix in GetMethodOwner()
+- Fixed ToggleOption()
+- XML frames cleanup
+------------------------------------------------------------------------
+r51 | thaoky | 2014-12-27 07:07:24 -0600 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore.lua
+   M /trunk/Options.lua
+
+Fixed 'Player not found' spam.
+------------------------------------------------------------------------
+

@@ -1,0 +1,13 @@
+tag v6
+c68096139d005c6546b356823738dfcb32813875
+David Lynch <kemayo@gmail.com>
+2016-07-22 03:33:33 -0500
+
+Tagging v6
+
+
+--------------------
+
+David Lynch:
+	- Bump TOC
+	- TOC

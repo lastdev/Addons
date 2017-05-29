@@ -1,0 +1,28 @@
+﻿## Interface: 70200
+## Title: Server Hop
+## Version: 7.2.4.1
+## Author: ChronoAS#2758 (EU)
+## Notes: Cross-server LFG tool. Includes: changing realm in the fastest way possible and improved automatic search.
+## Notes-ruRU: Инструмент для межсерверного поиска группы. Включает: почти мгновенную смену сервера и улучшенный автоматический поиск.
+## SavedVariables: ServerHopFavouritesList, ServerHopSettingsGlobal
+## SavedVariablesPerCharacter: ServerHopPosition, ServerHopSettings
+
+embeds.xml
+Locale.lua
+Realmlist.lua
+
+ServerHop_Init.lua
+
+SettingsFrame.lua
+SearchFrame.lua
+HostFrame.lua
+HopFrame.lua
+
+ServerHop_Status.lua
+ServerHop_Queue.lua
+ServerHop_Favourites.lua
+ServerHop_GroupCreation.lua
+ServerHop_Minimap.lua
+ServerHop_HopList.lua
+
+MainFrame.lua

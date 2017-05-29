@@ -1,0 +1,50 @@
+tag dbd813b666b9e3706695c0fac2a714db4c51dce8 1.2.2
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Tue May 2 00:46:04 2017 +0200
+
+Bug fixes
+
+commit 363269f0160900c8b32fdc50a7d4ec2fc4a96cd0
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Tue May 2 00:11:05 2017 +0200
+
+    Release Notes
+
+commit 682bbe595c67daaa3b8fa4de729e230c64c6cbd1
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Tue May 2 00:10:10 2017 +0200
+
+    Added type member to widgets
+    
+    Needed from Aurora_RealUI
+
+commit 259c491c9148b9f5db67f668a6d3e424b8514b65
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon May 1 23:34:05 2017 +0200
+
+    "Better party available" tooltip improvement
+    
+    Now also lists party composition
+
+commit b82346c00a610753a1a24de662fe307a774110fa
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon May 1 19:45:07 2017 +0200
+
+    https://wow.curseforge.com/projects/orderhallcommander/issues/47
+    
+    Fixed
+
+commit 1c50ae89d221bdd0028775f324c285edc2126066
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon May 1 19:29:01 2017 +0200
+
+    https://wow.curseforge.com/projects/orderhallcommander/issues/44
+    
+    Fixed
+
+commit 4718a79ca640d46acce1e63d73f6c4747823dca0
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Mon May 1 19:28:06 2017 +0200
+
+    Fixed "Not enough champions" message appearing too often
+

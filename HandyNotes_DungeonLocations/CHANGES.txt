@@ -1,0 +1,16 @@
+------------------------------------------------------------------------
+r44 | nagboy@gmail.com | 2017-05-13 11:16:39 -0500 (Sat, 13 May 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Added the other two Dire Maul entrances along side other internal changes.
+------------------------------------------------------------------------
+r43 | nagboy@gmail.com | 2017-05-13 11:08:37 -0500 (Sat, 13 May 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/HandyNotes_DungeonLocations.lua
+   M /trunk/HandyNotes_DungeonLocations.toc
+
+Added the other two Dire Maul entrances along side other internal changes.
+------------------------------------------------------------------------
+

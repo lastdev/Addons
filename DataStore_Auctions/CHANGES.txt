@@ -1,0 +1,70 @@
+------------------------------------------------------------------------
+r48 | thaoky.altoholic@yahoo.com | 2017-04-28 12:28:20 -0500 (Fri, 28 Apr 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+   M /trunk/locale.xml
+
+Updated handling of goblin auction houses
+------------------------------------------------------------------------
+r47 | thaoky.altoholic@yahoo.com | 2017-03-29 14:19:33 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.toc
+
+TOC Update
+------------------------------------------------------------------------
+r46 | thaoky | 2016-10-26 12:47:15 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.toc
+
+TOC Update
+------------------------------------------------------------------------
+r45 | thaoky | 2016-07-18 11:08:05 -0500 (Mon, 18 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.toc
+
+7.0 Compatibility Release
+------------------------------------------------------------------------
+r44 | thaoky | 2015-08-17 11:18:39 -0500 (Mon, 17 Aug 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Auctions.toc
+
+TOC Update
+
+------------------------------------------------------------------------
+r43 | thaoky | 2015-04-06 10:40:17 -0500 (Mon, 06 Apr 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+
+Fixed scanning of auction house items
+Fixed clearing expired items
+------------------------------------------------------------------------
+r42 | thaoky | 2015-02-25 12:22:34 -0600 (Wed, 25 Feb 2015) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Auctions.toc
+   M /trunk/Locales/repoenUS.lua
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+6.1.001 Commit
+
+- Added support for options using <KeyValue>
+------------------------------------------------------------------------
+r41 | thaoky | 2015-01-09 11:03:43 -0600 (Fri, 09 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+   M /trunk/Options.xml
+
+- Fixed usage of options
+- XML frames cleanup
+------------------------------------------------------------------------
+r40 | thaoky | 2014-12-27 07:17:28 -0600 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+Modified options pane to use parentKey references
+------------------------------------------------------------------------
+
