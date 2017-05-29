@@ -148,10 +148,15 @@ end
 -- *** Scanning functions ***
 local function ScanAuctions()
 	local AHZone = 0		-- 0 means faction AH
-	local zoneFaction = GetZonePVPInfo()	-- "friendly", "sanctuary", "contested" (PvP server) or nil (PvE server)
-	if ( zoneFaction ~= "friendly" ) and ( zoneFaction ~= "sanctuary" ) then
-		AHZone = 1			-- 1 means goblin AH
-	end
+	-- local zoneFaction = GetZonePVPInfo()	-- "friendly", "sanctuary", "contested" (PvP server) or nil (PvE server)
+	-- if ( zoneFaction ~= "friendly" ) and ( zoneFaction ~= "sanctuary" ) then
+		-- AHZone = 1			-- 1 means goblin AH
+	-- end
+	
+	local zoneID = GetCurrentMapAreaID()
+	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
+ 		AHZone = 1			-- 1 means goblin AH
+ 	end
 	
 	local character = addon.ThisCharacter
 	character.lastUpdate = time()
@@ -183,10 +188,15 @@ end
 
 local function ScanBids()
 	local AHZone = 0		-- 0 means faction AH
-	local zoneFaction = GetZonePVPInfo()	-- "friendly", "sanctuary", "contested" (PvP server) or nil (PvE server)
-	if ( zoneFaction ~= "friendly" ) and ( zoneFaction ~= "sanctuary" ) then
-		AHZone = 1			-- 1 means goblin AH
-	end
+	-- local zoneFaction = GetZonePVPInfo()	-- "friendly", "sanctuary", "contested" (PvP server) or nil (PvE server)
+	-- if ( zoneFaction ~= "friendly" ) and ( zoneFaction ~= "sanctuary" ) then
+		-- AHZone = 1			-- 1 means goblin AH
+	-- end
+	
+	local zoneID = GetCurrentMapAreaID()
+	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
+ 		AHZone = 1			-- 1 means goblin AH
+ 	end
 	
 	local character = addon.ThisCharacter
 	character.lastUpdate = time()

@@ -205,8 +205,9 @@ function getIDFromItemLink(itemLink)
 			return itemID
 		else
 			-- If not battle pet, report an API change.
-			if tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hkeystone:([0-9]+):.*")) == nil and
-				tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hbattlepet:([0-9]+):.*")) == nil then
+			if tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hbattlepet:([0-9]+):.*")) == nil
+        and tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hcurrency:([0-9]+):.*")) == nil
+        and tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hkeystone:([0-9]+):.*")) == nil then
 				dprint(string.match(itemLink, "|c[0-9a-fA-F]+|(H%a+):.*"))
 				error("New itemID type found: ".. string.match(itemLink, "|c[0-9a-fA-F]+|(H%a+):.*") ..". Please report to author.")
 			end

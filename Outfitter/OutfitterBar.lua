@@ -54,18 +54,21 @@ Outfitter.OutfitBar.cDefaultScriptIcons =
 
 function Outfitter.OutfitBar:Construct()
 	self.Settings = Outfitter.Settings
-	
+
 	if not self.Settings.OutfitBar then
 		self.Settings.OutfitBar = {}
 	end
 	
+	-- Keep the default position handy in one place
+	self.DefaultPosition = {
+		RelativePoint = "TOPLEFT",
+		x = 200,
+		y = -200,
+	}
+
+	-- Set the default position if it's missing
 	if not self.Settings.OutfitBar.Position then
-		self.Settings.OutfitBar.Position =
-		{
-			RelativePoint = "TOPLEFT",
-			x = 200,
-			y = -200,
-		}
+		self.Settings.OutfitBar.Position = self.DefaultPosition
 	end
 	
 	if self.Initialized
@@ -107,13 +110,18 @@ function Outfitter.OutfitBar:InitializeSettings()
 	self.Settings.OutfitBar =
 	{
 		ShowOutfitBar = false,
-		Position =
-		{
-			RelativePoint = "TOPLEFT",
-			x = 200,
-			y = -200,
-		},
+		Position = self.DefaultPosition
 	}
+end
+
+function Outfitter.OutfitBar:ResetPosition()
+	-- Set the position to the default
+	self.Settings.OutfitBar.Position = self.DefaultPosition
+
+	-- If the bar has been initialized then update it to reflect the new position
+	if self.Initialized then
+		self:UpdateBars2()
+	end
 end
 
 function Outfitter.OutfitBar:UpdateDragBarOrientation()

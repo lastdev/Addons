@@ -48,7 +48,7 @@ function(...)
 		
 		_G.BankFrameItemButton_Update_PASS = true
 		_G.DepositReagentBank()
-		print("Reagents deposited into Reagent Bank.")
+		ReagentRestocker:say("Reagents deposited into Reagent Bank.")
 	end
 	
 	--ReagentRestocker:triggerAction(BANKFRAME_OPENED_EVENT)

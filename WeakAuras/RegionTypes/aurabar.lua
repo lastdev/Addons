@@ -1,4 +1,5 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
+local L = WeakAuras.L;
 
 -- Default settings
 local default = {
@@ -65,29 +66,122 @@ local default = {
   zoom = 0,
 };
 
+local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
+
+local properties = {
+  barColor = {
+    display = L["Bar Color"],
+    setter = "Color",
+    type = "color",
+  },
+  icon_color = {
+    display = L["Icon Color"],
+    setter = "SetIconColor",
+    type = "color"
+  },
+  backgroundColor = {
+    display = L["Background Color"],
+    setter = "SetBackgroundColor",
+    type = "color"
+  },
+  sparkColor = {
+    display = L["Spark Color"],
+    setter = "SetSparkColor",
+    type = "color"
+  },
+  sparkHeight = {
+    display = L["Spark Height"],
+    setter = "SetSparkHeight",
+    type = "number",
+    min = 1,
+    softMax = screenHeight,
+    bigStep = 1
+  },
+  sparkWidth = {
+    display = L["Spark Width"],
+    setter = "SetSparkWidth",
+    type = "number",
+    min = 1,
+    softMax = screenWidth,
+    bigStep = 1
+  },
+  borderColor = {
+    display = L["Border Color"],
+    setter = "SetBorderColor",
+    type = "color"
+  },
+  backdropColor = {
+    display = L["Backdrop Color"],
+    setter = "SetBackdropColor",
+    type = "color"
+  },
+  textColor = {
+    display = L["First Text Color"],
+    setter = "SetTextColor",
+    type = "color"
+  },
+  timerColor = {
+    display = L["Second Text Color"],
+    setter = "SetTimerColor",
+    type = "color"
+  },
+  textSize = {
+    display = L["First Text Size"],
+    setter = "SetTextSize",
+    type = "number",
+    min = 6,
+    softMax = 72,
+    step = 1,
+  },
+  timerSize = {
+    display = L["Second Text Size"],
+    setter = "SetTimerSize",
+    type = "number",
+    min = 6,
+    softMax = 72,
+    step = 1,
+  },
+  width = {
+    display = L["Width"],
+    setter = "SetRegionWidth",
+    type = "number",
+    min = 1,
+    softMax = screenWidth,
+    bigStep = 1,
+  },
+  height = {
+    display = L["Height"],
+    setter = "SetRegionHeight",
+    type = "number",
+    min = 1,
+    softMax = screenHeight,
+    bigStep = 1
+  },
+};
+
 -- Returns tex Coord for 90° rotations + x or y flip
 
 local texCoords = { 0, 0, 1, 1,
-                    0, 0, 1, 1,
-                    0, 0, 1, 1 };
+  0, 0, 1, 1,
+  0, 0, 1, 1 };
 
 -- only supports multipliers of 90° degree
 -- returns in order: TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy
 local GetTexCoord = function(degree, mirror)
-    local offset = (degree or 0)/ 90
-    local TLx,  TLy = texCoords[2 + offset], texCoords[1 + offset]
-    local TRx,  TRy = texCoords[3 + offset], texCoords[2 + offset]
-    local BLx,  BLy = texCoords[1 + offset], texCoords[4 + offset]
-    local BRx,  BRy = texCoords[4 + offset], texCoords[3 + offset]
+  local offset = (degree or 0)/ 90
+  local TLx,  TLy = texCoords[2 + offset], texCoords[1 + offset]
+  local TRx,  TRy = texCoords[3 + offset], texCoords[2 + offset]
+  local BLx,  BLy = texCoords[1 + offset], texCoords[4 + offset]
+  local BRx,  BRy = texCoords[4 + offset], texCoords[3 + offset]
 
-    if (mirror) then
-        TLx, TRx = TRx, TLx
-        TLy, TRy = TRy, TLy
-        BLx, BRx = BRx, BLx
-        BLy, BRy = BRy, BLy
-    end
+  if (mirror) then
+    TLx, TRx = TRx, TLx
+    TLy, TRy = TRy, TLy
+    BLx, BRx = BRx, BLx
+    BLy, BRy = BRy, BLy
+  end
 
-    return TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy
+  return TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy
 end
 
 -- Emulate blizzard statusbar with advanced features (more grow directions)
@@ -177,10 +271,10 @@ local barPrototype = {
     local sparkMirror = self.spark.sparkMirror;
     local sparkRotationMode = self.spark.sparkRotationMode;
     if (sparkRotationMode == "AUTO") then
-        sTLx, sTLy, sBLx, sBLy, sTRx, sTRy, sBRx, sBRy = TLx, TLy, BLx, BLy, TRx, TRy, BRx, BRy;
+      sTLx, sTLy, sBLx, sBLy, sTRx, sTRy, sBRx, sBRy = TLx, TLy, BLx, BLy, TRx, TRy, BRx, BRy;
     else
-        local sparkRotation = tonumber(self.spark.sparkRotation);
-        sTLx, sTLy, sTRx, sTRy, sBLx, sBLy, sBRx, sBRy = GetTexCoord(sparkRotation, sparkMirror)
+      local sparkRotation = tonumber(self.spark.sparkRotation);
+      sTLx, sTLy, sTRx, sTRy, sBLx, sBLy, sBRx, sBRy = GetTexCoord(sparkRotation, sparkMirror)
     end
 
     -- Only width/height of parent changed
@@ -198,7 +292,7 @@ local barPrototype = {
 
       -- Stretch texture
       self.fg:SetTexCoord(TLx_, TLy_, BLx_, BLy_, TRx_, TRy_, BRx_, BRy_);
-     end
+    end
 
     -- Create statusbar illusion
     if xProgress then
@@ -214,9 +308,9 @@ local barPrototype = {
 
     local sparkHidden = self.spark.sparkHidden;
     local sparkVisible = sparkHidden == "NEVER"
-                         or (sparkHidden == "FULL" and progress < 1)
-                         or (sparkHidden == "EMPTY" and progress > 0)
-                         or (sparkHidden == "BOTH" and progress < 1 and progress > 0);
+      or (sparkHidden == "FULL" and progress < 1)
+      or (sparkHidden == "EMPTY" and progress > 0)
+      or (sparkHidden == "BOTH" and progress < 1 and progress > 0);
     if (sparkVisible) then
       self.spark:Show();
     else
@@ -264,9 +358,9 @@ local barPrototype = {
   -- Blizzard like SetOrientation (added: HORIZONTAL_INVERSE, VERTICAL_INVERSE)
   ["SetOrientation"] = function(self, orientation)
     if orientation == "HORIZONTAL"
-    or orientation == "HORIZONTAL_INVERSE"
-    or orientation == "VERTICAL"
-    or orientation == "VERTICAL_INVERSE"
+      or orientation == "HORIZONTAL_INVERSE"
+      or orientation == "VERTICAL"
+      or orientation == "VERTICAL_INVERSE"
     then
       self.orientation = orientation;
 
@@ -362,18 +456,18 @@ local function create(parent)
   bar:HookScript("OnSizeChanged", bar.OnSizeChanged);
   region.bar = bar;
 
--- Create border
+  -- Create border
   local border = CreateFrame("frame", nil, region);
   region.border = border;
 
--- Create timer text
+  -- Create timer text
   local timer = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight");
   region.timer = timer;
   timer:SetText("0.0");
   timer:SetNonSpaceWrap(true);
   timer:SetPoint("center");
 
--- Create (name) text
+  -- Create (name) text
   local text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight");
   region.text = text;
   text:SetText("Error");
@@ -387,14 +481,14 @@ local function create(parent)
   region.icon = icon;
   icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
 
--- Create stack text
+  -- Create stack text
   local stacks = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight");
   region.stacks = stacks;
   stacks:SetText(1);
   stacks:ClearAllPoints();
   stacks:SetPoint("CENTER", icon, "CENTER");
 
--- Region variables
+  -- Region variables
   region.values = {};
   region.duration = 0;
   region.expirationTime = math.huge;
@@ -418,61 +512,61 @@ local function create(parent)
     end
   end
 
--- Return new display/region
+  -- Return new display/region
   return region;
 end
 
 -- Rotate object around its origin
 local function animRotate(object, degrees, anchor)
-    if (not anchor) then
-        anchor = "CENTER";
-    end
+  if (not anchor) then
+    anchor = "CENTER";
+  end
   -- Something to rotate
-    if object.animationGroup or degrees ~= 0 then
+  if object.animationGroup or degrees ~= 0 then
     -- Create AnimatioGroup and rotation animation
-        object.animationGroup = object.animationGroup or object:CreateAnimationGroup();
-        local group = object.animationGroup;
-        group.rotate = group.rotate or group:CreateAnimation("rotation");
-        local rotate = group.rotate;
+    object.animationGroup = object.animationGroup or object:CreateAnimationGroup();
+    local group = object.animationGroup;
+    group.rotate = group.rotate or group:CreateAnimation("rotation");
+    local rotate = group.rotate;
 
-        rotate:SetOrigin(anchor, 0, 0);
-        rotate:SetDegrees(degrees);
-        rotate:SetDuration(0);
-        rotate:SetEndDelay(2147483647);
-        group:Play();
-        rotate:SetSmoothProgress(1);
-        group:Pause();
-    end
+    rotate:SetOrigin(anchor, 0, 0);
+    rotate:SetDegrees(degrees);
+    rotate:SetDuration(0);
+    rotate:SetEndDelay(2147483647);
+    group:Play();
+    rotate:SetSmoothProgress(1);
+    group:Pause();
+  end
 end
 
 -- Calculate offset after rotation
 local function getRotateOffset(object, degrees, point)
   -- Any rotation at all?
-    if degrees ~= 0 then
-        -- Basic offset
+  if degrees ~= 0 then
+    -- Basic offset
     local xo, yo;
-        local originoffset = object:GetStringHeight() / 2;
-        xo = -1 * originoffset * sin(degrees);
-        yo = originoffset * (cos(degrees) - 1);
+    local originoffset = object:GetStringHeight() / 2;
+    xo = -1 * originoffset * sin(degrees);
+    yo = originoffset * (cos(degrees) - 1);
 
     -- Alignment dependant offset
-        if point == "BOTTOM" then
-            yo = yo + (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
-        elseif point == "TOP" then
-            yo = yo - (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
-        elseif point == "RIGHT" then
-            xo = xo + (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
-        elseif point == "LEFT" then
-            xo = xo - (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
-        end
+    if point == "BOTTOM" then
+      yo = yo + (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
+    elseif point == "TOP" then
+      yo = yo - (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
+    elseif point == "RIGHT" then
+      xo = xo + (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
+    elseif point == "LEFT" then
+      xo = xo - (1 - cos(degrees)) * (object:GetStringWidth() / 2 - originoffset);
+    end
 
     -- Done
-        return xo, yo;
+    return xo, yo;
 
   -- No rotation
-    else
-        return 0, 0;
-    end
+  else
+    return 0, 0;
+  end
 end
 
 -- Orientation helper methods
@@ -501,7 +595,7 @@ local function orientHorizontalInverse(region, data)
     bar:SetPoint("TOPLEFT", region, "TOPLEFT");
   end
 
-    -- Save orientation
+  -- Save orientation
   region.orientation = "HORIZONTAL_INVERSE";
   bar:SetOrientation(region.orientation);
 
@@ -522,7 +616,7 @@ local function orientHorizontalInverse(region, data)
   if textDegrees == 0 then
     local usedSpace = timer.visible and (timer:GetWidth() + (data.textSize/2)) or 0;
     if (data.icon) then
-      usedSpace = usedSpace + math.min(data.height, data.width);
+      usedSpace = usedSpace + math.min(region.height, region.width);
     end
     text:SetWidth(data.width - usedSpace);
     text:SetJustifyH("RIGHT");
@@ -531,6 +625,7 @@ local function orientHorizontalInverse(region, data)
     text:SetJustifyH("CENTER");
   end
 end
+
 local function orientHorizontal(region, data)
   -- Localize
   local bar, timer, text, icon = region.bar, region.timer, region.text, region.icon;
@@ -556,7 +651,7 @@ local function orientHorizontal(region, data)
     bar:SetPoint("TOPLEFT", region, "TOPLEFT");
   end
 
-    -- Save orientation
+  -- Save orientation
   region.orientation = "HORIZONTAL";
   bar:SetOrientation(region.orientation);
 
@@ -577,7 +672,7 @@ local function orientHorizontal(region, data)
   if textDegrees == 0 then
     local usedSpace = timer.visible and (timer:GetWidth() + (data.textSize/2)) or 0;
     if (data.icon) then
-      usedSpace = usedSpace + math.min(data.height, data.width);
+      usedSpace = usedSpace + math.min(region.height, region.width);
     end
     text:SetWidth(data.width - usedSpace);
     text:SetJustifyH("LEFT");
@@ -611,7 +706,7 @@ local function orientVerticalInverse(region, data)
     bar:SetPoint("TOPLEFT", region, "TOPLEFT");
   end
 
-    -- Save orientation
+  -- Save orientation
   region.orientation = "VERTICAL_INVERSE";
   bar:SetOrientation("VERTICAL_INVERSE");
 
@@ -737,102 +832,9 @@ local function UpdateText(region, data)
   end
 end
 
--- Update time (status-bar and text)
-local function UpdateTime(region, data, inverse)
-  -- Timing variables
-  local remaining  = region.expirationTime - GetTime();
-  local duration  = region.duration;
-  local progress  = duration ~= 0 and remaining / duration or 0;
-
-  -- Need to invert?
-  if (
-      (data.inverse and not inverse)
-      or (inverse and not data.inverse)
-    )
-  then
-    progress = 1 - progress;
-  end
-  region.bar:SetValue(progress);
-
-  -- Format a remaining time string
-  local remainingStr     = "";
-  if remaining == math.huge then
-    remainingStr     = " ";
-  elseif remaining > 60 then
-    remainingStr     = string.format("%i:", math.floor(remaining / 60));
-    remaining       = remaining % 60;
-    remainingStr     = remainingStr..string.format("%02i", remaining);
-  elseif remaining > 0 then
-    -- remainingStr = remainingStr..string.format("%."..(data.progressPrecision or 1).."f", remaining);
-    if data.progressPrecision == 4 and remaining <= 3 then
-        remainingStr = remainingStr..string.format("%.1f", remaining);
-    elseif data.progressPrecision == 5 and remaining <= 3 then
-        remainingStr = remainingStr..string.format("%.2f", remaining);
-    elseif (data.progressPrecision == 4 or data.progressPrecision == 5) and remaining > 3 then
-        remainingStr = remainingStr..string.format("%d", remaining);
-    else
-        remainingStr = remainingStr..string.format("%."..(data.progressPrecision or 1).."f", remaining);
-    end
-  else
-    remainingStr     = " ";
-  end
-  region.values.progress   = remainingStr;
-
-  -- Format a duration time string
-  local durationStr     = "";
-  if duration > 60 then
-    durationStr     = string.format("%i:", math.floor(duration / 60));
-    duration       = duration % 60;
-    durationStr     = durationStr..string.format("%02i", duration);
-  elseif duration > 0 then
-    -- durationStr = durationStr..string.format("%."..(data.totalPrecision or 1).."f", duration);
-    if data.totalPrecision == 4 and duration <= 3 then
-        durationStr = durationStr..string.format("%.1f", duration);
-    elseif data.totalPrecision == 5 and duration <= 3 then
-        durationStr = durationStr..string.format("%.2f", duration);
-    elseif (data.totalPrecision == 4 or data.totalPrecision == 5) and duration > 3 then
-        durationStr = durationStr..string.format("%d", duration);
-    else
-        durationStr = durationStr..string.format("%."..(data.totalPrecision or 1).."f", duration);
-    end
-  else
-    durationStr     = " ";
-  end
-  region.values.duration   = durationStr;
-
-  -- Update text
-  UpdateText(region, data);
-end
-local function UpdateTimeInverse(region, data)
-  -- Relay
-  UpdateTime(region, data, true);
-end
-
--- Update current state (progress)
-local function UpdateValue(region, data, value, total)
-  -- Calc progress (percent)
-  local progress = 1
-  if total > 0 then
-    progress = value / total;
-  else
-        progress = 0;
-    end
-  if data.inverse then
-    progress = 1 - progress;
-  end
-
-  -- Save values
-  region.values.progress = value;
-  region.values.duration = total;
-  region.bar:SetValue(progress);
-
-  -- Update text
-  UpdateText(region, data);
-end
-
 local function GetTexCoordZoom(texWidth)
-     local texCoord = {texWidth, texWidth, texWidth, 1 - texWidth, 1 - texWidth, texWidth, 1 - texWidth, 1 - texWidth}
-    return unpack(texCoord)
+  local texCoord = {texWidth, texWidth, texWidth, 1 - texWidth, 1 - texWidth, texWidth, 1 - texWidth, 1 - texWidth}
+  return unpack(texCoord)
 end
 
 -- Modify a given region/display
@@ -843,17 +845,25 @@ local function modify(parent, region, data)
   region.useAuto = data.auto and WeakAuras.CanHaveAuto(data);
 
   -- Adjust region size
-    region:SetWidth(data.width);
-    region:SetHeight(data.height);
+  region:SetWidth(data.width);
+  region:SetHeight(data.height);
+  region.width = data.width;
+  region.height = data.height;
+  region.scalex = 1;
+  region.scaley = 1;
+
+  region.stickyDuration = data.stickyDuration;
+  region.progressPrecision = data.progressPrecision;
+  region.totalPrecision = data.totalPrecision;
 
   -- Reset anchors
   region:ClearAllPoints();
   WeakAuras.AnchorFrame(data, region, parent);
 
   -- Set overall alpha
-    region:SetAlpha(data.alpha);
+  region:SetAlpha(data.alpha);
 
-    -- Update border
+  -- Update border
   if data.border then
     border:SetBackdrop({
       edgeFile = SharedMedia:Fetch("border", data.borderEdge) or "",
@@ -871,7 +881,7 @@ local function modify(parent, region, data)
     border:SetBackdropBorderColor(data.borderColor[1], data.borderColor[2], data.borderColor[3], data.borderColor[4]);
     border:SetBackdropColor(data.backdropColor[1], data.backdropColor[2], data.backdropColor[3], data.backdropColor[4]);
     border:Show();
-    else
+  else
     border:Hide();
   end
 
@@ -881,7 +891,7 @@ local function modify(parent, region, data)
   bar:SetBackgroundColor(data.backgroundColor[1], data.backgroundColor[2], data.backgroundColor[3], data.backgroundColor[4]);
   -- Update spark settings
   bar.spark:SetTexture(data.sparkTexture);
-  bar.spark:SetVertexColor(data.sparkColor[1], data.sparkColor[2], data.sparkColor[3], data.sparkColor[4]); -- TODO introduce function?
+  bar.spark:SetVertexColor(data.sparkColor[1], data.sparkColor[2], data.sparkColor[3], data.sparkColor[4]);
   bar.spark:SetWidth(data.sparkWidth);
   bar.spark:SetHeight(data.sparkHeight);
   bar.spark.sparkHidden = data.spark and data.sparkHidden or "ALWAYS";
@@ -910,23 +920,23 @@ local function modify(parent, region, data)
   region.barInFront = data.barInFront;
 
   -- Color update function
-    region.Color = region.Color or function(self, r, g, b, a)
-        self.color_r = r;
-        self.color_g = g;
-        self.color_b = b;
-        self.color_a = a;
+  region.Color = region.Color or function(self, r, g, b, a)
+    self.color_r = r;
+    self.color_g = g;
+    self.color_b = b;
+    self.color_a = a;
     self.bar:SetForegroundColor(r, g, b, a);
-    end
+  end
   region.GetColor = region.GetColor or function(self)
-        return   self.color_r,
-        self.color_g,
-        self.color_b,
-        self.color_a;
-    end
+    return   self.color_r,
+      self.color_g,
+      self.color_b,
+      self.color_a;
+  end
   region:Color(data.barColor[1], data.barColor[2], data.barColor[3], data.barColor[4]);
 
   -- Rotate text
-    local textDegrees = data.rotateText == "LEFT" and 90 or data.rotateText == "RIGHT" and -90 or 0;
+  local textDegrees = data.rotateText == "LEFT" and 90 or data.rotateText == "RIGHT" and -90 or 0;
 
   -- Update text visibility
   if data.text then
@@ -958,36 +968,35 @@ local function modify(parent, region, data)
   end
 
   -- Update icon visibility
-    if data.icon then
+  if data.icon then
     -- Update icon
-    local iconsize = math.min(data.height, data.width);
+    local iconsize = math.min(region.height, region.width);
     icon:SetWidth(iconsize);
     icon:SetHeight(iconsize);
     local texWidth = 0.25 * data.zoom;
     icon:SetTexCoord(GetTexCoordZoom(texWidth))
+    icon:SetDesaturated(data.desaturate);
+    icon:SetVertexColor(data.icon_color[1], data.icon_color[2], data.icon_color[3], data.icon_color[4]);
 
     -- Icon update function
-        function region:SetIcon(path)
+    function region:SetIcon(path)
       -- Set icon options
-            local iconPath = (
-                region.useAuto
-                and path ~= ""
-                and path
-                or data.displayIcon
-                or "Interface\\Icons\\INV_Misc_QuestionMark"
-            );
-            self.icon:SetTexture(iconPath);
-            self.icon:SetDesaturated(data.desaturate);
-            self.icon:SetVertexColor(data.icon_color[1], data.icon_color[2], data.icon_color[3], data.icon_color[4]);
-            region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
+      local iconPath = (
+        region.useAuto
+        and path ~= ""
+        and path
+        or data.displayIcon
+        or "Interface\\Icons\\INV_Misc_QuestionMark"
+        );
+      self.icon:SetTexture(iconPath);
+      region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
 
       -- Update text
-            UpdateText(self, data);
-        end
---    region:SetIcon("");
+      UpdateText(self, data);
+    end
 
     -- Update icon visibility
-        icon:Show();
+    icon:Show();
 
     -- Update stack text visibility
     if data.icon and data.stacks then
@@ -1006,208 +1015,243 @@ local function modify(parent, region, data)
     else
       stacks:Hide();
     end
-  --
-    else
-        stacks:Hide();
-        icon:Hide();
-    end
+    --
+  else
+    stacks:Hide();
+    icon:Hide();
+  end
 
   -- Apply orientation alignment
-    orient(region, data);
+  orient(region, data);
 
   -- Update tooltip availability
-    local tooltipType = WeakAuras.CanHaveTooltip(data);
-    if tooltipType and data.useTooltip then
+  local tooltipType = WeakAuras.CanHaveTooltip(data);
+  if tooltipType and data.useTooltip then
     -- Create and enable tooltip-hover frame
-        region.tooltipFrame = region.tooltipFrame or CreateFrame("frame");
-        region.tooltipFrame:SetAllPoints(icon);
-        region.tooltipFrame:EnableMouse(true);
-        region.tooltipFrame:SetScript("OnEnter", function()
-            WeakAuras.ShowMouseoverTooltip(region, region.tooltipFrame);
-        end);
-        region.tooltipFrame:SetScript("OnLeave", WeakAuras.HideTooltip);
+    region.tooltipFrame = region.tooltipFrame or CreateFrame("frame");
+    region.tooltipFrame:SetAllPoints(icon);
+    region.tooltipFrame:EnableMouse(true);
+    region.tooltipFrame:SetScript("OnEnter", function()
+      WeakAuras.ShowMouseoverTooltip(region, region.tooltipFrame);
+    end);
+    region.tooltipFrame:SetScript("OnLeave", WeakAuras.HideTooltip);
 
   -- Disable tooltip
-    elseif region.tooltipFrame then
-        region.tooltipFrame:EnableMouse(false);
-    end
+  elseif region.tooltipFrame then
+    region.tooltipFrame:EnableMouse(false);
+  end
 
   -- Look for need to use custom text update
-    local customTextFunc = nil
-    if (data.displayTextLeft:find("%%c") or data.displayTextRight:find("%%c")) and data.customText then
+  local customTextFunc = nil
+  if (data.displayTextLeft:find("%%c") or data.displayTextRight:find("%%c")) and data.customText then
     -- Load custom code function
-        customTextFunc = WeakAuras.LoadFunction("return "..data.customText)
-    end
-    if (customTextFunc) then
-        local values = region.values;
+    customTextFunc = WeakAuras.LoadFunction("return "..data.customText, region.id)
+  end
+  if (customTextFunc) then
+    local values = region.values;
 
     -- Save custom text function
-        region.UpdateCustomText = function()
+    region.UpdateCustomText = function()
       -- Evaluate and update text
-            WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
-            local custom = customTextFunc(region.expirationTime, region.duration,
-              values.progress, values.duration, values.name, values.icon, values.stacks);
-            WeakAuras.ActivateAuraEnvironment(nil);
-            custom = WeakAuras.EnsureString(custom);
-            if custom ~= values.custom then
-                values.custom = custom;
-                UpdateText(region, data);
-            end
-        end
+      WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
+      local custom = customTextFunc(region.expirationTime, region.duration,
+        values.progress, values.duration, values.name, values.icon, values.stacks);
+      WeakAuras.ActivateAuraEnvironment(nil);
+      custom = WeakAuras.EnsureString(custom);
+      if custom ~= values.custom then
+        values.custom = custom;
+        UpdateText(region, data);
+      end
+    end
 
     -- Add/Remove custom text update
-        if data.customTextUpdate == "update" then
-            WeakAuras.RegisterCustomTextUpdates(region);
-        else
-            WeakAuras.UnregisterCustomTextUpdates(region);
-        end
-
-  -- Remove custom text update
+    if data.customTextUpdate == "update" then
+      WeakAuras.RegisterCustomTextUpdates(region);
     else
-        region.UpdateCustomText = nil;
-        WeakAuras.UnregisterCustomTextUpdates(region);
+      WeakAuras.UnregisterCustomTextUpdates(region);
     end
+
+    -- Remove custom text update
+  else
+    region.UpdateCustomText = nil;
+    WeakAuras.UnregisterCustomTextUpdates(region);
+  end
 
   -- Stack update function
-    function region:SetStacks(count)
+  function region:SetStacks(count)
     -- Update text content
-        if count and count > 0 then
-            self.values.stacks = count;
-            self.stacks:SetText(count);
-        else
-            self.values.stacks = 0;
-           self.stacks:SetText("");
-        end
-        UpdateText(self, data);
+    if count and count > 0 then
+      self.values.stacks = count;
+      self.stacks:SetText(count);
+    else
+      self.values.stacks = 0;
+      self.stacks:SetText("");
     end
---  region:SetStacks();
+    UpdateText(self, data);
+  end
+  --  region:SetStacks();
 
   -- Scale update function
-    function region:Scale(scalex, scaley)
+  function region:Scale(scalex, scaley)
+    region.scalex = scalex;
+    region.scaley = scaley;
     -- Icon size
-    local iconsize = math.min(data.height, data.width);
+    local iconsize = math.min(region.height, region.width);
 
     -- Re-orientate region
-        if scalex < 0 then
-            scalex = -scalex;
-            if data.orientation == "HORIZONTAL" then
-                if self.orientation ~= "HORIZONTAL_INVERSE" then
-                    orientHorizontalInverse(self, data);
-                end
-            elseif data.orientation == "HORIZONTAL_INVERSE" then
-                if self.orientation ~= "HORIZONTAL" then
-                    orientHorizontal(self, data);
-                end
-            end
-        else
-            if data.orientation == "HORIZONTAL" then
-                if self.orientation ~= "HORIZONTAL" then
-                    orientHorizontal(self, data);
-                end
-            elseif data.orientation == "HORIZONTAL_INVERSE" then
-                if self.orientation ~= "HORIZONTAL_INVERSE" then
-                    orientHorizontalInverse(self, data);
-                end
-            end
+    if scalex < 0 then
+      scalex = -scalex;
+      if data.orientation == "HORIZONTAL" then
+        if self.orientation ~= "HORIZONTAL_INVERSE" then
+          orientHorizontalInverse(self, data);
         end
+      elseif data.orientation == "HORIZONTAL_INVERSE" then
+        if self.orientation ~= "HORIZONTAL" then
+          orientHorizontal(self, data);
+        end
+      end
+    else
+      if data.orientation == "HORIZONTAL" then
+        if self.orientation ~= "HORIZONTAL" then
+          orientHorizontal(self, data);
+        end
+      elseif data.orientation == "HORIZONTAL_INVERSE" then
+        if self.orientation ~= "HORIZONTAL_INVERSE" then
+          orientHorizontalInverse(self, data);
+        end
+      end
+    end
 
     -- Update width
-        self:SetWidth(data.width * scalex);
-        icon:SetWidth(iconsize * scalex);
+    self:SetWidth(region.width * scalex);
+    icon:SetWidth(iconsize * scalex);
 
     -- Re-orientate region
-        if scaley < 0 then
-            scaley = -scaley;
-            if data.orientation == "VERTICAL" then
-                if self.orientation ~= "VERTICAL_INVERSE" then
-                    orientVerticalInverse(self, data);
-                end
-            elseif data.orientation == "VERTICAL_INVERSE" then
-                if self.orientation ~= "VERTICAL" then
-                    orientVertical(self, data);
-                end
-            end
-        else
-            if data.orientation == "VERTICAL" then
-                if self.orientation ~= "VERTICAL" then
-                    orientVertical(self, data);
-                end
-            elseif data.orientation == "VERTICAL_INVERSE" then
-                if self.orientation ~= "VERTICAL_INVERSE" then
-                    orientVerticalInverse(self, data);
-                end
-            end
+    if scaley < 0 then
+      scaley = -scaley;
+      if data.orientation == "VERTICAL" then
+        if self.orientation ~= "VERTICAL_INVERSE" then
+          orientVerticalInverse(self, data);
         end
+      elseif data.orientation == "VERTICAL_INVERSE" then
+        if self.orientation ~= "VERTICAL" then
+          orientVertical(self, data);
+        end
+      end
+    else
+      if data.orientation == "VERTICAL" then
+        if self.orientation ~= "VERTICAL" then
+          orientVertical(self, data);
+        end
+      elseif data.orientation == "VERTICAL_INVERSE" then
+        if self.orientation ~= "VERTICAL_INVERSE" then
+          orientVerticalInverse(self, data);
+        end
+      end
+    end
 
     -- Update height
-        self:SetHeight(data.height * scaley);
-        icon:SetHeight(iconsize * scaley);
-    end
---  region:Scale(1.0, 1.0);
+    self:SetHeight(region.height * scaley);
+    icon:SetHeight(iconsize * scaley);
+  end
+  --  region:Scale(1.0, 1.0);
 
   -- Name update function
-    function region:SetName(name)
-        region.values.name = name or data.id;
-        UpdateText(self, data);
-    end
---  region:SetName("");
+  function region:SetName(name)
+    region.values.name = name or data.id;
+    UpdateText(self, data);
+  end
+  --  region:SetName("");
 
-    function region:OnUpdateHandler()
-        local value, total = self.customValueFunc(self.state.trigger);
-        value = type(value) == "number" and value or 0
-        total = type(value) == "number" and total or 0
-        UpdateValue(self, data, value, total);
+  function region:SetValue(value, total)
+    local progress = (total > 0) and (value / total) or 0
+    if data.inverse then
+      progress = 1 - progress;
     end
+    region.bar:SetValue(progress);
+    UpdateText(region, data);
+  end
 
-  -- Duration update function
-    function region:SetDurationInfo(duration, expirationTime, customValue, inverse)
-    -- Update duration/expiration values
-        if duration <= 0 or duration > self.duration or not data.stickyDuration then
-            self.duration = duration;
-        end
-        self.expirationTime = expirationTime;
-
-    -- Use custom OnUpdate handler
-        if customValue then
-      -- Update via custom OnUpdate handler
-            if type(customValue) == "function" then
-                local value, total = customValue(region.state.trigger);
-                value = type(value) == "number" and value or 0
-                total = type(value) == "number" and total or 0
-                if total > 0 and value < total then
-                  self.customValueFunc = customValue;
-                  self:SetScript("OnUpdate", region.OnUpdateHandler);
-                else
-                  UpdateValue(self, data, duration, expirationTime);
-                  self:SetScript("OnUpdate", nil);
-                end
-      -- Remove OnUpdate handler, call update once
-            else
-                UpdateValue(self, data, duration, expirationTime);
-                self:SetScript("OnUpdate", nil);
-            end
-    -- Use default OnUpdate handler
-        else
-      -- Enable OnUpdate script
-            if duration > 0 then
-                if inverse then
-                    self:SetScript("OnUpdate", function() UpdateTimeInverse(self, data) end);
-                else
-                    self:SetScript("OnUpdate", function() UpdateTime(self, data, inverse) end);
-                end
-      -- Reset to full
-            else
-                bar:SetValue(1);
-                self:SetScript("OnUpdate", nil);
-                UpdateTime(self, data, inverse);
-            end
-        end
+  function region:SetTime(duration, expirationTime, inverse)
+    local remaining = expirationTime - GetTime();
+    local progress = duration ~= 0 and remaining / duration or 0;
+    -- Need to invert?
+    if (
+      (data.inverse and not inverse)
+      or (inverse and not data.inverse)
+      )
+    then
+      progress = 1 - progress;
     end
---  region:SetDurationInfo(1, 0, nil, nil);
+    region.bar:SetValue(progress);
+    UpdateText(region, data);
+  end
+
+  function region:TimerTick()
+    self:SetTime(region.duration, region.expirationTime, region.inverse);
+  end
+
+  function region:SetIconColor(r, g, b, a)
+    self.icon:SetVertexColor(r, g, b, a);
+  end
+
+  function region:SetBackgroundColor(r, g, b, a)
+    self.bar:SetBackgroundColor(r, g, b, a);
+  end
+
+  function region:SetSparkColor(r, g, b, a)
+    self.bar.spark:SetVertexColor(r, g, b, a);
+  end
+
+  function region:SetSparkHeight(height)
+    self.bar.spark:SetHeight(height);
+  end
+
+  function region:SetSparkWidth(width)
+    self.bar.spark:SetWidth(width);
+  end
+
+  function region:SetBorderColor(r, g, b, a)
+    self.border:SetBackdropBorderColor(r, g, b, a);
+  end
+
+  function region:SetBackdropColor(r, g, b, a)
+    self.border:SetBackdropColor(r, g, b, a);
+  end
+
+  function region:SetTextColor(r, g, b, a)
+    self.text:SetTextColor(r, g, b, a);
+  end
+
+  function region:SetTimerColor(r, g, b, a)
+    self.timer:SetTextColor(r, g, b, a);
+  end
+
+  function region:SetTextSize(size)
+    self.text:SetFont(SharedMedia:Fetch("font", data.textFont), size, data.textFlags and data.textFlags ~= "None" and data.textFlags);
+    self.text:SetTextHeight(size);
+    self.bar:Update();
+  end
+
+  function region:SetTimerSize(size)
+    timer:SetFont(SharedMedia:Fetch("font", data.timerFont), size, data.timerFlags and data.timerFlags ~= "None" and data.timerFlags);
+    timer:SetTextHeight(size);
+    self.bar:Update();
+  end
+
+  function region:SetRegionWidth(width)
+    self.width = width;
+    self:Scale(self.scalex, self.scaley);
+  end
+
+  function region:SetRegionHeight(height)
+    self.height = height;
+    self:Scale(self.scalex, self.scaley);
+  end
 
   -- Update internal bar alignment
   region.bar:Update();
 end
 
 -- Register new region type with WeakAuras
-WeakAuras.RegisterRegionType("aurabar", create, modify, default);
+WeakAuras.RegisterRegionType("aurabar", create, modify, default, properties);

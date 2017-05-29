@@ -229,6 +229,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(1948), icon = "achievements_zone_stormheim" },		-- Valarjar
 			{ name = DataStore:GetFactionName(1859), icon = "achievements_zone_suramar" },			-- The Nightfallen
 			{ name = DataStore:GetFactionName(1894), icon = "achievements_zone_brokenshore" },			-- The Wardens
+			{ name = DataStore:GetFactionName(2045), icon = "achievement_faction_legionfall" },			-- Armies of Legionfall
 		},		
 	},	
 	{	-- [8]

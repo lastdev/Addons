@@ -10,6 +10,19 @@ There WILL be bugs if you use your old files without cleaning them first.
 Some fixes to work around API changes are too time consuming, so cleaning is required. A meagre price to pay once per expansion.
 
 
+7.2.002 (25/04/2017)
+
+- Fixed a bug assigning gained artifact xp to the wrong artifact.
+- Fixed a Lua error when scanning an artifact's data.
+- Added the faction Armies of Legionfall.
+- Changed format of large numbers displayed in the Artifact pane.
+- Added support for Nethershards and Legionfall War Supplies (Thanks AlexSUCF !)
+- Sending a mail to an alt no longer update its last mailbox visit time
+- Added Legion fishing achievements
+- Moved enUS at the top of each locale.xml to load this locale first (never knew this was an issue :/)
+- Valor currencies now being properly tracked
+
+
 7.2.001 (29/03/2017)
 
 - DataStore_Talents : Fixed a few issues when scanning artifact data (Thanks AlexSUCF !)
@@ -111,7 +124,7 @@ So if you have characters belonging to a guild from another realm, and you have 
 
 The API provides absolutely no way of matching a short realm name to a long realm name.
 If your realm is a small name without spaces (like 'Dalaran'), then this might seem like a non-issue for you, but it makes it impossible to know precisely to which realm a guild belongs.
-Basically, my workaround is about making the addon know that "Marécage de Zangar" is also known as "MarécagedeZangar" by getting rid of spaces.
+Basically, my workaround is about making the addon know that "Marï¿½cage de Zangar" is also known as "Marï¿½cagedeZangar" by getting rid of spaces.
 
 This is an extremely imperfect solution, and I sincerely dislike it, but the API does not help in any way.
 The solution should hopefully work across all localizations, but I can't promise anything.
@@ -232,7 +245,7 @@ Note: Active missions can only be correctly tracked if the mission is started wi
 
 Note: I made several attempts at fixing the double guild bank counters in the tooltip, thanks to all of you who sent me their SV files, the issue is now clear.
 Nevertheless, a complete perfect fix is not yet possible, as Blizzard does not provide the real/full realm name to which the guild actually belongs.
-The best I can get in my case is "MarécagedeZangar" when I actually expect "Marécage de Zangar", and that value is nowhere to be found in the API.
+The best I can get in my case is "Marï¿½cagedeZangar" when I actually expect "Marï¿½cage de Zangar", and that value is nowhere to be found in the API.
 Long story short, I have to come up with a way to work around this that does not force you guys to respect weird conditions to make it work..
 
 
@@ -382,7 +395,7 @@ Ex: for 3 realms, send 1 mail from realm A to B, one from A to C, and one from B
 The mail can consist of just text, no attachment or gold required.
 - Added an option to show/hide item count from connected realms.
 - Added support for mails sent to/returned from alts on connected realms. 
-Note: Realm names are packed ("Marécage de Zangar" => "MarécagedeZangar") by Blizzard, this is supported.
+Note: Realm names are packed ("Marï¿½cage de Zangar" => "Marï¿½cagedeZangar") by Blizzard, this is supported.
 If you notice something weird with your realm, please report it.
 - Altoholic: removed LibBabble-Zone
 - Updated the internal loot table and removed duplicate entries also found in LPT.

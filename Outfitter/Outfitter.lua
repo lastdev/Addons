@@ -1517,7 +1517,7 @@ function Outfitter:ExecuteCommand(pCommand)
 		unwear = {useOutfit = true, func = self.RemoveOutfitNow},
 		toggle = {useOutfit = true, func = self.ToggleOutfitNow},
 		reset = {func = self.AskReset},
-		
+
 		deposit = {useOutfit = true, func = self.DepositOutfit},
 		depositunique = {useOutfit = true, func = self.DepositOutfitUnique},
 		depositothers = {useOutfit = true, func = self.DepositOtherOutfits},
@@ -1620,6 +1620,7 @@ function Outfitter:ShowCommandHelp()
 	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter unwear outfitName"..NORMAL_FONT_COLOR_CODE..": Remove an outfit")
 	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter toggle outfitName"..NORMAL_FONT_COLOR_CODE..": Wears or removes an outfit")
 	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter reset"..NORMAL_FONT_COLOR_CODE..": Resets Outfitter, restoring default settings and outfits")
+	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter reset bar"..NORMAL_FONT_COLOR_CODE..": Resets the position of the outfit bar")
 	self:NoteMessage("")
 	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter deposit outfitName"..NORMAL_FONT_COLOR_CODE..": Deposits an outfit to the bank")
 	self:NoteMessage(HIGHLIGHT_FONT_COLOR_CODE.."/outfitter depositunique outfitName"..NORMAL_FONT_COLOR_CODE..": Deposits an outfit to the bank, except for items used by other outfits")
@@ -3103,8 +3104,16 @@ StaticPopupDialogs.OUTFITTER_CONFIRM_RESET =
 	hideOnEscape = 1,
 }
 
-function Outfitter.AskReset()
-	StaticPopup_Show("OUTFITTER_CONFIRM_RESET")
+function Outfitter:AskReset(param)
+	-- Reset the bar position without prompting
+	if strlower(param) == "bar" then
+		self.OutfitBar:ResetPosition()
+		self:NoteMessage("Outfit bar position reset")
+
+	-- Ask the user if they're certain before resetting the entire addon
+	else
+		StaticPopup_Show("OUTFITTER_CONFIRM_RESET")
+	end
 end
 
 function Outfitter:Reset()
@@ -7430,50 +7439,53 @@ function Outfitter._ExtendedCompareTooltip:AddShoppingLink(pTitle, pItemName, pL
 	self.AnchorToTooltip = vTooltip
 end
 
-function Outfitter._ExtendedCompareTooltip:ShiftTooltipDown(pTooltip)
-	local vTooltipName = pTooltip:GetName()
-	local vNumLines = pTooltip:NumLines()
+function Outfitter._ExtendedCompareTooltip:ShiftTooltipDown(tooltip)
+	local name = tooltip:GetName()
+	local origNumLines = tooltip:NumLines()
 	
 	-- Make room for the last line
-	pTooltip:AddLine(" ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
-	
+	tooltip:AddLine("Test", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
+
 	-- Shift all lines down, starting from the bottom and going up
-	for vLine = vNumLines, 1, -1 do
-		local vTextLeft, vTextRight = _G[vTooltipName.."TextLeft"..vLine], _G[vTooltipName.."TextRight"..vLine]
-		local vNextTextLeft, vNextTextRight = _G[vTooltipName.."TextLeft"..(vLine + 1)], _G[vTooltipName.."TextRight"..(vLine + 1)]
+	for line = origNumLines, 1, -1 do
+		local textLeft, textRight = _G[name.."TextLeft"..line], _G[name.."TextRight"..line]
+		local nextTextLeft, nextTextRight = _G[name.."TextLeft"..(line + 1)], _G[name.."TextRight"..(line + 1)]
 		
-		self:CopyFontString(vTextLeft, vNextTextLeft)
-		self:CopyFontString(vTextRight, vNextTextRight)
+		self:CopyFontString(textLeft, nextTextLeft, line > 3)
+		self:CopyFontString(textRight, nextTextRight, false)
 	end
-	
+
 	-- Re-position any textures being used
-	for vIndex = 1, pTooltip:NumLines() do
-		local vTexture = _G[vTooltipName.."Texture"..vIndex]
+	for line = 1, tooltip:NumLines() do
+		local texture = _G[name.."Texture"..line]
 		
-		if not vTexture then
+		if not texture then
 			break
 		end
 		
-		if vTexture:IsVisible() then
-			local vPoint, vRelativeTo, vRelativePoint, vOffsetX, vOffsetY = vTexture:GetPoint(1)
+		if texture:IsVisible() then
+			local point, relativeTo, relativePoint, offsetX, offsetY = texture:GetPoint(1)
 			
-			vRelativeTo = vRelativeTo:GetName():gsub("(%d+)$", function (pIndex) return tonumber(pIndex) + 1 end)
+			relativeTo = relativeTo:GetName():gsub("(%d+)$", function (index) return tonumber(index) + 1 end)
 			
-			vTexture:ClearAllPoints()
-			vTexture:SetPoint(vPoint, vRelativeTo, vRelativePoint, vOffsetX, vOffsetY)
+			texture:ClearAllPoints()
+			texture:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY)
 		end
 	end
 end
 
-function Outfitter._ExtendedCompareTooltip:CopyFontString(pFromString, pToString)
-	-- pToString:SetFont(pFromString:GetFont())
-	-- pToString:SetJustifyH(pFromString:GetJustifyH())
-	-- pToString:SetJustifyV(pFromString:GetJustifyV())
-	-- pToString:SetShadowColor(pFromString:GetShadowColor())
-	-- pToString:SetShadowOffset(pFromString:GetShadowOffset())
-	-- pToString:SetSpacing(pFromString:GetSpacing())
-	pToString:SetTextColor(pFromString:GetTextColor())
-	pToString:SetText(pFromString:GetText())
+function Outfitter._ExtendedCompareTooltip:CopyFontString(from, to, copyWidth)
+	-- to:SetFont(from:GetFont())
+	-- to:SetJustifyH(from:GetJustifyH())
+	-- to:SetJustifyV(from:GetJustifyV())
+	-- to:SetShadowColor(from:GetShadowColor())
+	-- to:SetShadowOffset(from:GetShadowOffset())
+	-- to:SetSpacing(from:GetSpacing())
+	to:SetTextColor(from:GetTextColor())
+	to:SetText(from:GetText())
+	if copyWidth and from:GetWidth() then
+		to:SetWidth(from:GetWidth())
+	end
 end
 
 function Outfitter:NewEmptyOutfit(pName)

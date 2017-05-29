@@ -1009,11 +1009,11 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 end
 
 function Event.UNIT_SPELLCAST_SENT(event, unit, SpellName, rank, target, ID)
-	if SPELLCAST[unit] and type(ID) == "number" then		-- ICH
+	if SPELLCAST[unit] then
 		if ID > 0 then
 			local UnitID = s.UnitID(target)
 			if UnitID then
-				a.print(GetTime(), event, SpellName, ID)  -- comment out
+				--a.print(GetTime(), event, SpellName, ID)
 				SPELLCAST[unit][ID] = UnitGUID(UnitID)
 				return
 			end

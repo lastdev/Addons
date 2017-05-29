@@ -519,7 +519,9 @@ local function SendOwnMail(characterKey, subject, body)
 	end
 	
 	-- if the alt has never checked his mail before, this value won't be correct, so set it to make sure expiry returns proper results.
-	character.lastUpdate = time()
+	if not character.lastUpdate then
+		character.lastUpdate = time()
+	end
 	
 	table.sort(character.Mails, function(a, b)		-- show mails with the lowest expiry first
 		return a.daysLeft < b.daysLeft

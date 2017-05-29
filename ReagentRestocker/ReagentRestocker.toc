@@ -1,24 +1,20 @@
-## Interface: 60100
+## Interface: 70200
 ## Title: Reagent Restocker
 ## Notes: Automatically restocks your reagents, arrows, etc. when you visit the appropriate vendors or your bank.
 ## Author: CobraA1
-## Version: 10.2
+## Version: 10.3
 ## Dependencies: 
 ## OptionalDeps: Ace3, LibPeriodicTable-3.1, LibDBIcon-1.0
 ## SavedVariables: RRGlobal, RRAceDB
 ## SavedVariablesPerCharacter: ReagentRestockerDB
-## X-Interface: 60100
-## X-Compatible-With: 60100
+## X-Interface: 70200
+## X-Compatible-With: 70200
 ## X-Embeds: Ace3
 ## X-License: The MIT License
 ## X-Category: Inventory
 ## X-Credits: Myrren <Just Crusade>, Elune, cheeken
-## X-Website: http://wow.curse.com/downloads/wow-addons/details/reagent_restocker.aspx
+## X-Website: http://www.wowinterface.com/downloads/info7569-ReagentRestocker.html
 ## X-Bugs: http://wow.curseforge.com/addons/reagent_restocker/tickets/
-## X-Curse-Packaged-Version: v10.2
-## X-Curse-Project-Name: Reagent Restocker
-## X-Curse-Project-ID: reagent_restocker
-## X-Curse-Repository-ID: wow/reagent_restocker/mainline
 
 embeds.xml
 

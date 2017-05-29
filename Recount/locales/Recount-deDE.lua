@@ -404,6 +404,8 @@ L["Times"] = "Zeiten"
 L["Title"] = "Titel"
 L["Title Text"] = "Titeltext"
 L["Toggle"] = "Ein-/Ausblenden"
+--Translation missing 
+-- L["Toggle merge pets"] = "Toggle merge pets"
 L["Toggle pause of global data collection"] = "Pause für allgemeine Datensammlung an/aus"
 L["Toggles sending synchronization messages"] = "Schaltet die Synchronisation an/aus"
 L["Toggles the main window"] = "Hauptfenster ein-/ausblenden"
@@ -441,4 +443,5 @@ L["Window Options"] = "Fensteroptionen"
 L["Window Scaling"] = "Fensterskalierung"
 L["X Gridlines Represent"] = "X Rasterlinien bedeuten"
 L["Yes"] = "Ja"
+
 

@@ -404,6 +404,8 @@ L["Times"] = "시간"
 L["Title"] = "제목"
 L["Title Text"] = "제목 문자"
 L["Toggle"] = "전환"
+--Translation missing 
+-- L["Toggle merge pets"] = "Toggle merge pets"
 L["Toggle pause of global data collection"] = "전체적인 데이터 수집 일시 중지 전환"
 L["Toggles sending synchronization messages"] = "동기화 메세지를 보냄"
 L["Toggles the main window"] = "메인창을 표시/숨깁니다."
@@ -441,4 +443,5 @@ L["Window Options"] = "창 옵션"
 L["Window Scaling"] = "창 크기"
 L["X Gridlines Represent"] = "X 격자줄 표시"
 L["Yes"] = "예"
+
 

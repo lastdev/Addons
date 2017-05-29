@@ -440,8 +440,8 @@ function Outfitter._OutfitMethodsEM:GetName()
 	return self.Name
 end
 
-function Outfitter._OutfitMethodsEM:SetName(pName)
-	self.Name = pName
+function Outfitter._OutfitMethodsEM:SetName(name)
+	self.Name = name
 	
 	if self.equipmentSetID then
 		C_EquipmentSet.ModifyEquipmentSet(self.equipmentSetID, self.Name, self:GetIconTexture())
@@ -451,34 +451,26 @@ function Outfitter._OutfitMethodsEM:SetName(pName)
 end
 
 function Outfitter._OutfitMethodsEM:GetIcon()
-	if not self.equipmentSetID then
-		return 132662
+	-- Query the EM
+	local _, iconFileID = C_EquipmentSet.GetEquipmentSetInfo(self.equipmentSetID)
+		
+	-- Return nil if the icon is set to the default
+	if iconFileID == 134400 then
+		return
 	end
 
-	local _, iconFileID = C_EquipmentSet.GetEquipmentSetInfo(self.equipmentSetID)
-	
-	if not iconFileID then
-		return 132662
-	end
-	
+	-- Return the icon
 	return iconFileID
 end
 
-function Outfitter._OutfitMethodsEM:SetIcon(pTexture)
-	if not self:IsFullyEquipped() then
-		StaticPopupDialogs.OUTFITTER_CANT_SET_ICON.OnAccept = function ()
-			self:SetIcon2(pTexture)
-		end
-		
-		StaticPopup_Show("OUTFITTER_CANT_SET_ICON", tostring(self.Name))		
-	else
-		self:SetIcon2(pTexture)
+function Outfitter._OutfitMethodsEM:SetIcon(iconFileID)
+	-- Use the default ID if setting the icon to nil
+	if not iconFileID then
+		iconFileID = 134400
 	end
-end
 
-function Outfitter._OutfitMethodsEM:SetIcon2(pTexture)
-	self:MarkSlotsToIgnore()
-	self:SaveEquipmentSet(pTexture)
+	-- Set the icon
+	C_EquipmentSet.ModifyEquipmentSet(self.equipmentSetID, self.Name, iconFileID)
 end
 
 function Outfitter._OutfitMethodsEM:IsFullyEquipped()

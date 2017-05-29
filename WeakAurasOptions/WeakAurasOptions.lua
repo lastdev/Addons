@@ -22,10 +22,11 @@ local ADDON_NAME = "WeakAurasOptions";
 local font_close,yellow_font,red_font = FONT_COLOR_CODE_CLOSE,YELLOW_FONT_COLOR_CODE,RED_FONT_COLOR_CODE
 local ValidateNumeric = function(info,val)
   if not tonumber(val) then
-    return print(fmt("|cff9900FF"..ADDON_NAME..font_close..":"..yellow_font.." %s"..red_font.." is not a number!",tostring(val)))
+    return false;
   end
   return true
 end
+WeakAuras.ValidateNumeric = ValidateNumeric;
 
 local dynFrame = WeakAuras.dynFrame;
 WeakAuras.transmitCache = {};
@@ -290,8 +291,8 @@ AceGUI:RegisterLayout("AbsoluteList", function(content, children)
 end);
 
 AceGUI:RegisterLayout("ButtonsScrollLayout", function(content, children)
-  local yOffset = 0;
-  local scrollTop, scrollBottom = content.obj:GetScrollPos();
+  local yOffset = 0
+  local scrollTop, scrollBottom = content.obj:GetScrollPos()
   for i = 1, #children do
     local child = children[i]
     local frame = child.frame;
@@ -317,9 +318,9 @@ AceGUI:RegisterLayout("ButtonsScrollLayout", function(content, children)
 
   end
   if(content.obj.LayoutFinished) then
-    content.obj:LayoutFinished(nil, yOffset * -1);
+    content.obj:LayoutFinished(nil, yOffset * -1)
   end
-end);
+end)
 
 function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subSuffix, triggernum, triggertype, unevent)
   local trigger, untrigger;
@@ -819,7 +820,9 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           name = arg.display,
           order = order,
           values = values,
-          hidden = function() return hidden or trigger["use_"..realname] == false; end,
+          hidden = function()
+            return (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) or trigger["use_"..realname] == false;
+          end,
           disabled = function() return not trigger["use_"..realname]; end,
           get = function() return trigger["use_"..realname] and trigger[realname] and trigger[realname].single or nil; end,
           set = function(info, v)
@@ -849,7 +852,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           type = "multiselect",
           name = arg.display,
           order = order,
-          hidden = function() return hidden or trigger["use_"..realname] ~= false; end,
+          hidden = function() return (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) or trigger["use_"..realname] ~= false; end,
           values = values,
           -- width = "half",
           get = function(info, v)
@@ -877,7 +880,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           type = "execute",
           name = "",
           order = (order - 0.5),
-          hidden = function() return hidden or trigger["use_"..realname] ~= false; end,
+          hidden = function() return (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) or trigger["use_"..realname] ~= false; end,
           disabled = true,
           image = function() return "", 52, 52 end
         };
@@ -2079,6 +2082,12 @@ function WeakAuras.AddOption(id, data)
         type = "group",
         name = L["Trigger"],
         order = 20,
+        args = {}
+      },
+      conditions = {
+        type = "group",
+        name = L["Conditions"],
+        order = 25,
         args = {}
       },
       load = {
@@ -3884,6 +3893,18 @@ function WeakAuras.GetSpellTooltipText(id)
   return tooltipText;
 end
 
+function WeakAuras.DeleteConditionsForTrigger(data, triggernum)
+  for _, condition in ipairs(data.conditions) do
+    if (condition.trigger == triggernum) then
+      condition.trigger = nil;
+    end
+
+    if (condition.trigger and condition.trigger > triggernum) then
+      condition.trigger = condition.trigger - 1;
+    end
+  end
+end
+
 function WeakAuras.ReloadTriggerOptions(data)
   local id = data.id;
   local iconCache = spellCache.Get();
@@ -4873,6 +4894,9 @@ function WeakAuras.ReloadTriggerOptions(data)
             tremove(childData.additional_triggers, optionTriggerChoices[childId]);
             optionTriggerChoices[childId] = optionTriggerChoices[childId] - 1;
           end
+
+          WeakAuras.DeleteConditionsForTrigger(childData, optionTriggerChoices[childId]);
+
           childData.numTriggers = 1 + (childData.additional_triggers and #childData.additional_triggers or 0)
           WeakAuras.ReloadTriggerOptions(childData);
         end
@@ -4886,6 +4910,9 @@ function WeakAuras.ReloadTriggerOptions(data)
         tremove(data.additional_triggers, optionTriggerChoices[id]);
         optionTriggerChoices[id] = optionTriggerChoices[id] - 1;
       end
+
+      WeakAuras.DeleteConditionsForTrigger(data, optionTriggerChoices[id]);
+
       data.numTriggers = 1 + (data.additional_triggers and #data.additional_triggers or 0)
     end
     WeakAuras.Add(data);
@@ -4895,7 +4922,7 @@ function WeakAuras.ReloadTriggerOptions(data)
   local trigger_options = {
     disjunctive = {
       type = "select",
-      name = L["Required For Activation"],
+      name = L["Required for Activation"],
       width = "double",
       order = 0,
       hidden = function() return not (data.additional_triggers and #data.additional_triggers > 0) end,
@@ -4951,12 +4978,12 @@ function WeakAuras.ReloadTriggerOptions(data)
     },
     activeTriggerMode = {
       type = "select",
-      name = L["Dynamic information"],
+      name = L["Dynamic Information"],
       width = "double",
       order = 0.3,
       values = function()
         local vals = {};
-        vals[WeakAuras.trigger_modes.first_active] = L["Dynamic information from first Active Trigger"];
+        vals[WeakAuras.trigger_modes.first_active] = L["Dynamic information from first active trigger"];
         local numTriggers = data.additional_triggers and #data.additional_triggers or 0;
         for i=0,numTriggers do
           vals[i] = L["Dynamic information from Trigger %i"]:format(i + 1);
@@ -5337,7 +5364,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       type = "input",
       name = L["Duration (s)"],
       order = 13,
-      hidden = function() return not (trigger.type == "custom" and trigger.custom_type == "event" and trigger.custom_hide ~= "custom") end
+      hidden = function() return not (trigger.type == "custom" and trigger.custom_type == "event" and trigger.custom_hide ~= "custom") end,
     },
     custom_untrigger = {
       type = "input",
@@ -5827,7 +5854,7 @@ function WeakAuras.ReloadTriggerOptions(data)
           displayOptions[id].args.trigger.args.subeventSuffix.set = options_set;
         end
       else
-        print("No prototype for", trigger.event);
+        print("|cFF8800FFWeakAuras|r: No prototype for", trigger.event);
         displayOptions[id].args.trigger.args = union(trigger_options, {});
       end
     else
@@ -5862,6 +5889,10 @@ function WeakAuras.ReloadTriggerOptions(data)
       WeakAuras.UpdateDisplayButton(data);
     end;
   end
+
+
+  displayOptions[id].args.conditions.args = WeakAuras.GetConditionOptions(data);
+
   if(type(id) ~= "string") then
     displayOptions[id].args.group = nil;
   end
@@ -5960,7 +5991,7 @@ function WeakAuras.AddPositionOptions(input, id, data)
     },
     anchorFrameType = {
       type = "select",
-      name = L["anchored to"],
+      name = L["Anchored To"],
       order = 72,
       hidden = IsParentDynamicGroup,
       values = WeakAuras.anchor_frame_types
@@ -5996,11 +6027,11 @@ function WeakAuras.AddPositionOptions(input, id, data)
       type = "select",
       name = function()
         if (data.anchorFrameType == "SCREEN") then
-          return L["to screen's"]
+          return L["To Screen's"]
         elseif (data.anchorFrameType == "PRD") then
-          return L["to Personal Ressource Display's"];
+          return L["To Personal Ressource Display's"];
         elseif (data.anchorFrameType == "SELECTFRAME") then
-          return L["frame's"];
+          return L["To Frame's"];
         end
       end,
       order = 75,
@@ -6491,7 +6522,7 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
     containsFilter = false;
     local data = WeakAuras.GetData(id);
     if not(data) then
-      print("No data for", id);
+      print("|cFF8800FFWeakAuras|r: No data for", id);
     else
       if(filter and data.controlledChildren) then
         for index, childId in pairs(data.controlledChildren) do
@@ -6679,7 +6710,7 @@ function WeakAuras.EnsureDisplayButton(data)
       displayButtons[id]:SetData(data);
       displayButtons[id]:Initialize();
     else
-      print("Error creating button for", id);
+      print("|cFF8800FFWeakAuras|r: Error creating button for", id);
     end
   end
 end

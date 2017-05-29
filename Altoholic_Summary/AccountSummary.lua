@@ -20,6 +20,8 @@ local CURRENCY_ID_GARRISON = 824
 local CURRENCY_ID_SOTF = 994		-- Seals of Tempered Fate (WoD)
 local CURRENCY_ID_ORDER_HALL = 1220
 local CURRENCY_ID_SOBF = 1273		-- Seals of the Broken Fate (Legion)
+local CURRENCY_ID_NETHERSHARD = 1226
+local CURRENCY_ID_LFWS = 1342
 
 local INFO_REALM_LINE = 0
 local INFO_CHARACTER_LINE = 1
@@ -49,7 +51,7 @@ local artifactXPGain = {
 	3600,4550,5700,7200,9000,
 	11300,14200,17800,22300,24900, 
 	100000,130000,170000,220000,290000,
-	380000,490000,640000,830000,1800000,
+	380000,490000,640000,830000,1080000,
 	1400000,1820000,2370000,3080000,4000000,
 	5200000,6760000,8790000,11430000,14860000,
 	19320000,25120000,32660000,42460000,55200000 
@@ -107,7 +109,23 @@ local function FormatRankPoints(rank, tier)
 	local pointsPreviousLevel = C_ArtifactUI.GetCostForPointAtRank(rank-1, tier)
 	local percentage = ((points / pointsPreviousLevel) - 1) * 100
 	
-	return format("%s%s: %s%d %s+%2.1f%%", colors.white, rank, colors.green, points, colors.yellow, percentage)
+	if points >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
+		return format("%s%s: %s%d M %s+%2.0f%%", colors.white, rank, colors.green, points/1000000, colors.yellow, percentage)
+	else
+		return format("%s%s: %s%d %s+%2.1f%%", colors.white, rank, colors.green, points, colors.yellow, percentage)
+	end
+end
+
+local function FormatXPGain(level)
+	local gain = artifactXPGain[level]
+
+	if gain >= 4000000 then
+		return format("%2.1f M", gain/1000000)
+		-- return gain
+	elseif gain >= 100000 then		-- still want to show 24.900 and below as plain values
+		return format("%d k", gain/1000)
+	end
+	return gain
 end
 
 local function FormatAiL(level)
@@ -1552,42 +1570,42 @@ columns["CurrencyGarrison"] = {
 		end,
 }
 
-columns["CurrencyApexis"] = {
+columns["CurrencyNethershard"] = {
 	-- Header
-	headerWidth = 100,
-	headerLabel = "        " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_apexis_draenor", 18, 18),
+	headerWidth = 80,
+	headerLabel = "        " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_datacrystal01", 18, 18),
 	headerOnEnter = function(frame, tooltip)
-			CurrencyHeader_OnEnter(frame, CURRENCY_ID_APEXIS)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_NETHERSHARD)
 		end,
-	headerOnClick = function() SortView("CurrencyApexis") end,
-	headerSort = DataStore.GetApexisCrystals,
+	headerOnClick = function() SortView("CurrencyNethershard") end,
+	headerSort = DataStore.GetNethershards,
 	
 	-- Content
-	Width = 100,
+	Width = 80,
 	JustifyH = "CENTER",
 	GetText = function(character)
-			local amount = DataStore:GetCurrencyTotals(character, CURRENCY_ID_APEXIS) or 0
+			local amount = DataStore:GetCurrencyTotals(character, CURRENCY_ID_NETHERSHARD) or 0
 			local color = (amount == 0) and colors.grey or colors.white
 				
 			return format("%s%s", color, amount)
 		end,
 }
 
-columns["CurrencySOTF"] = {
+columns["CurrencyWarSupplies"] = {
 	-- Header
-	headerWidth = 60,
-	headerLabel = "   " .. format(TEXTURE_FONT, "Interface\\Icons\\ability_animusorbs", 18, 18),
+	headerWidth = 80,
+	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_misc_summonable_boss_token", 18, 18),
 	headerOnEnter = function(frame, tooltip)
-			CurrencyHeader_OnEnter(frame, CURRENCY_ID_SOTF)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_LFWS)
 		end,
-	headerOnClick = function() SortView("CurrencySOTF") end,
-	headerSort = DataStore.GetSealsOfFate,
+	headerOnClick = function() SortView("CurrencyWarSupplies") end,
+	headerSort = DataStore.GetWarSupplies,
 	
 	-- Content
-	Width = 60,
+	Width = 80,
 	JustifyH = "CENTER",
 	GetText = function(character)
-			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_SOTF)
+			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_LFWS)
 			local color = (amount == 0) and colors.grey or colors.white
 			
 			return format("%s%s%s/%s%s", color, amount, colors.white, colors.yellow, totalMax)
@@ -1922,8 +1940,13 @@ columns["ArtifactPower"] = {
 			local color = (level == 0) and colors.grey or colors.white
 			
 			local power = DataStore:GetEquippedArtifactPower(character) or 0
-
-			return format("%s%s%s/%s%s", color, power, colors.white, colors.yellow, C_ArtifactUI.GetCostForPointAtRank(level, tier))
+			local cost = C_ArtifactUI.GetCostForPointAtRank(level, tier)
+			
+			if cost >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
+				return format("%s%2.1f M%s/%s%s M", color, power/1000000, colors.white, colors.yellow, cost/1000000)
+			else
+				return format("%s%s%s/%s%s", color, power, colors.white, colors.yellow, cost)
+			end
 		end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -1999,14 +2022,14 @@ columns["ArtifactKnowledge"] = {
 
 			tooltip:AddDoubleLine(
 				format("%s%s: %s-", colors.white, 1, colors.green), 
-				format("%s%s: %s+%d%%", colors.white, 26, colors.green, artifactXPGain[26])
+				format("%s%s: %s+%s %s%%", colors.white, 26, colors.green, FormatXPGain(26), colors.yellow)
 			)
 			
 			local numRows = 24
 			for i = 1, numRows do
 				tooltip:AddDoubleLine(
-					format("%s%s: %s+%d%%", colors.white, i+1, colors.green, artifactXPGain[i+1]), 
-					format("%s%s: %s+%d%%", colors.white, i+2+numRows, colors.green, artifactXPGain[i+2+numRows])
+					format("%s%s: %s+%s %s%%", colors.white, i+1, colors.green, FormatXPGain(i+1), colors.yellow), 
+					format("%s%s: %s+%s %s%%", colors.white, i+2+numRows, colors.green, FormatXPGain(i+2+numRows), colors.yellow)
 				)
 			end
 		end,
@@ -2126,7 +2149,7 @@ local modes = {
 	[MODE_BAGS] = { "Name", "Level", "BagSlots", "FreeBagSlots", "BankSlots", "FreeBankSlots" },
 	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFirstAid", "ProfFishing", "ProfArchaeology" },
 	[MODE_ACTIVITY] = { "Name", "Level", "Mails", "LastMailCheck", "Auctions", "Bids", "AHLastVisit", "MissionTableLastVisit" },
-	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyApexis", "CurrencySOTF", "CurrencySOBF", "CurrencyOrderHall" },
+	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyNethershard", "CurrencyWarSupplies", "CurrencySOBF", "CurrencyOrderHall" },
 	[MODE_FOLLOWERS] = { "Name", "Level", "FollowersLV100", "FollowersEpic", "FollowersLV630", "FollowersLV660", "FollowersLV675", "FollowersItems" },
 	[MODE_ARTIFACT] = { "Name", "Level", "ArtifactRank", "ArtifactPower", "ArtifactKnowledge", "ArtifactNextResearch" },
 }

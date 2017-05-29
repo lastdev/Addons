@@ -11,7 +11,7 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
 
-Recount.Version = tonumber(string.sub("$Revision: 1415 $", 12, -3))
+Recount.Version = tonumber(string.sub("$Revision: 1425 $", 12, -3))
 
 
 
@@ -1196,6 +1196,7 @@ function Recount:AddPetCombatant(nameGUID, petName, nameFlags, ownerGUID, owner,
 		--Recount:DPrint("Pet1: "..name.." "..owner.." "..petName)
 		return
 	end
+	combatant.ownerName = owner
 	combatant.Name = petName
 	Recount:SetOwner(combatant, name, owner, ownerGUID, ownerFlags)
 	combatant.type = "Pet"
@@ -1242,6 +1243,7 @@ function Recount:AddCombatant(name, owner, nameGUID, nameFlags, ownerGUID)
 			Recount:AddAmount(dbCombatants[owner], "Damage", 0)
 			Recount:AddAmount(dbCombatants[owner], "Healing", 0)
 		end
+		combatant.ownerName = owner
 		combatant.type = "Pet"
 		combatant.enClass = "PET"
 		combatant.level = 1

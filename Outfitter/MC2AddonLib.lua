@@ -52,10 +52,7 @@ function Addon:duplicateTable(table, recurse, destTable)
 	local result
 	
 	if destTable then
-		if type(destTable) ~= "table" then
-			error("table expected for destTable")
-		end
-		
+		assert(type(destTable) == "table", "table expected for destTable")
 		result = destTable
 	else
 		result = {}

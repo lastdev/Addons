@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1398 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1425 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -1172,39 +1172,60 @@ function Recount:SetActive(who)
 	who.LastActive = Recount.CurTime
 end
 
-local Adding
-function Recount:AddTimeEvent(who, onWho, ability, friendly)
+function Recount:AddTimeEvent(who, onWho, ability, friendly, pet)
 	if not who then
 		return
 	end
 
+	local Adding
+
 	local eventtime = GetTime()
-	who.LastAbility = who.LastAbility or 0
-	Adding = eventtime - who.LastAbility
-
-	who.LastAbility = eventtime
-
-	if Adding > 3.5 then
-		Adding = 3.5
-	end
-
-	Adding = math_floor(100 * Adding + 0.5) / 100
-
-	if Recount.db.profile.EnableSync then
-		Recount:AddOwnerPetLazySyncAmount(who, "ActiveTime", Adding)
-		--Recount:AddSyncAmount(who, "ActiveTime", Adding)
-	end
-
-	Recount:AddAmount(who, "ActiveTime", Adding)
-	Recount:AddTableDataSum(who, "TimeSpent", onWho, ability, Adding)
 
 	if friendly then
-		Recount:AddAmount(who, "TimeHeal", Adding)
-		Recount:AddTableDataSum(who, "TimeHealing", onWho, ability, Adding)
+		who.LastHealTime = who.LastHealTime or 0
+		Adding = eventtime - who.LastHealTime
+
+		who.LastHealTime = eventtime
 	else
-		Recount:AddAmount(who, "TimeDamage", Adding)
-		Recount:AddTableDataSum(who, "TimeDamaging", onWho, ability, Adding)
+		who.LastDamageTime = who.LastDamageTime or 0
+		Adding = eventtime - who.LastDamageTime
+
+		who.LastDamageTime = eventtime
 	end
+
+	if Adding > 1.5 then
+		Adding = 1.5
+	end
+
+	if Adding ~= 0 then
+		Adding = math_floor(100 * Adding + 0.5) / 100
+
+		if Recount.db.profile.EnableSync then
+			Recount:AddOwnerPetLazySyncAmount(who, "ActiveTime", Adding)
+			--Recount:AddSyncAmount(who, "ActiveTime", Adding)
+		end
+
+		Recount:AddAmount(who, "ActiveTime", Adding)
+		--if not pet then
+			Recount:AddTableDataSum(who, "TimeSpent", onWho, ability, Adding)
+		--end
+
+		if friendly then
+			Recount:AddAmount(who, "TimeHeal", Adding)
+			--if not pet then
+				Recount:AddTableDataSum(who, "TimeHealing", onWho, ability, Adding)
+			--end
+		else
+			Recount:AddAmount(who, "TimeDamage", Adding)
+			--if not pet then
+				Recount:AddTableDataSum(who, "TimeDamaging", onWho, ability, Adding)
+			--end
+		end
+	end
+
+	--[[if Recount.db.profile.MergePets and who.ownerName then
+		self:AddTimeEvent(dbCombatants[who.ownerName], onWho, ability, friendly, true)
+	end]]
 end
 
 --Only care about event tracking for those we want to track deaths for

@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local Epsilon = 0.000000000000000001
 
-local revision = tonumber(string.sub("$Revision: 1419 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1425 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -224,15 +224,15 @@ function Recount:MergedPetDamageDPS(data, fight)
 	end
 	local PetAmount = 0
 	local PetTime = 0
-	local Time = data.Fights[fight].ActiveTime or 0
+	local Time = data.Fights[fight].TimeDamage or 0
 	if Recount.db.profile.MergePets and data.Pet then
 		for v, k in pairs(data.Pet) do
 			if dbCombatants[k] and dbCombatants[k].Fights and dbCombatants[k].Fights[fight] then
 				if dbCombatants[k].Fights[fight].Damage and dbCombatants[k].Fights[fight].Damage > 0 then -- Ignore pets which didn't do any damage like non-damage totems or idle pets.
 					PetAmount = PetAmount + (dbCombatants[k].Fights[fight].Damage or 0)
-					if (dbCombatants[k].Fights[fight].ActiveTime or 0) > PetTime then
-						PetTime = dbCombatants[k].Fights[fight].ActiveTime
-						--PetTime = PetTime + (dbCombatants[k].Fights[fight].ActiveTime or 0)
+					if (dbCombatants[k].Fights[fight].TimeDamage or 0) > PetTime then
+						PetTime = dbCombatants[k].Fights[fight].TimeDamage
+						--PetTime = PetTime + (dbCombatants[k].Fights[fight].TimeDamage or 0)
 					end
 				end
 			end
@@ -311,15 +311,15 @@ function Recount:MergedPetHealingDPS(data, fight)
 	end
 	local PetAmount = 0
 	local PetTime = 0
-	local Time = data.Fights[fight].ActiveTime or 0
+	local Time = data.Fights[fight].TimeHeal or 0
 	if Recount.db.profile.MergePets and data.Pet then
 		for v, k in pairs(data.Pet) do
 			if dbCombatants[k] and dbCombatants[k].Fights and dbCombatants[k].Fights[fight] then
 				if dbCombatants[k].Fights[fight].Healing and dbCombatants[k].Fights[fight].Healing > 0 then -- Ignore pets which didn't do any healing like non-healing totems or idle pets.
 					PetAmount = PetAmount + (dbCombatants[k].Fights[fight].Healing or 0)
-					if (dbCombatants[k].Fights[fight].ActiveTime or 0) > PetTime then
-						PetTime = dbCombatants[k].Fights[fight].ActiveTime
-						--PetTime = PetTime + (dbCombatants[k].Fights[fight].ActiveTime or 0)
+					if (dbCombatants[k].Fights[fight].TimeHeal or 0) > PetTime then
+						PetTime = dbCombatants[k].Fights[fight].TimeHeal
+						--PetTime = PetTime + (dbCombatants[k].Fights[fight].TimeHeal or 0)
 					end
 				end
 			end

@@ -207,6 +207,7 @@ local factions = {
 	{ id = 1948, name = GetFactionInfoByID(1948) },		-- Valarjar
 	{ id = 1859, name = GetFactionInfoByID(1859) },		-- The Nightfallen
 	{ id = 1894, name = GetFactionInfoByID(1894) },		-- The Wardens
+	{ id = 2045, name = GetFactionInfoByID(2045) },		-- Armies of Legionfall
 }
 
 local FactionUIDsRev = {}

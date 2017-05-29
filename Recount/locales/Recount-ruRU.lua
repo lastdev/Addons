@@ -194,6 +194,12 @@ L["Lines Reported"] = "Строк в отчете"
 L["Lines reported set to: "] = "Количество строк в отчете:"
 L["Lock"] = "Закрепить"
 L["Lock Windows"] = "Зафиксировать окна"
+--Translation missing 
+-- L["Maelstorm Abilities"] = "Maelstorm Abilities"
+--Translation missing 
+-- L["Maelstorm Gained"] = "Maelstorm Gained"
+--Translation missing 
+-- L["Maelstorm Sources"] = "Maelstorm Sources"
 L["Main"] = "Основное"
 L["Main Window"] = "Основное окно"
 L["Main Window Options"] = "Настройки основного окна"
@@ -326,6 +332,10 @@ L["'s HOT Uptime"] = " - Время действия ИЗВ"
 L["'s HPS"] = " - ИВС"
 L["'s HTPS"] = " - ПИВС"
 L["'s Interrupts"] = " - Прерывания"
+--Translation missing 
+-- L["'s Maelstorm Gained"] = "'s Maelstorm Gained"
+--Translation missing 
+-- L["'s Maelstorm Gained From"] = "'s Maelstorm Gained From"
 L["'s Mana Gained"] = " - Полученная мана"
 L["'s Mana Gained From"] = " - Источники маны"
 L["'s Network Traffic"] = " - Сетевой трафик"
@@ -399,6 +409,8 @@ L["Times"] = "Время"
 L["Title"] = "Заголовок"
 L["Title Text"] = "Заглавный текст"
 L["Toggle"] = "Переключить"
+--Translation missing 
+-- L["Toggle merge pets"] = "Toggle merge pets"
 L["Toggle pause of global data collection"] = "Вкл/Выкл паузу сбора данных"
 L["Toggles sending synchronization messages"] = "Вкл/Выкл отсылку сообщений синхронизации"
 L["Toggles the main window"] = "Отобразить основное окно"
@@ -436,4 +448,5 @@ L["Window Options"] = "Опции окна"
 L["Window Scaling"] = "Масштабирование окна"
 L["X Gridlines Represent"] = "X линии сетки"
 L["Yes"] = "Да"
+
 

@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1419 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1423 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -792,7 +792,11 @@ function Recount:CreateMainWindow()
 	theFrame.ResetButton:SetHeight(16)
 	theFrame.ResetButton:SetPoint("RIGHT", theFrame.LeftButton, "LEFT", 0, 0)
 	theFrame.ResetButton:SetScript("OnClick", function()
-		Recount:ShowReset()
+		if IsAltKeyDown() then
+			Recount:ResetData()
+		else
+			Recount:ShowReset()
+		end
 	end)
 	theFrame.ResetButton:SetFrameLevel(theFrame.ResetButton:GetFrameLevel() + 1)
 

@@ -154,8 +154,11 @@ local function RightShift(value, numBits)
 end
 
 local function GetArtifactName()
-	local info = C_ArtifactUI.GetEquippedArtifactArtInfo()
-	return info.titleName
+	-- local info = C_ArtifactUI.GetEquippedArtifactArtInfo()
+	local info = C_ArtifactUI.GetArtifactArtInfo()
+	if info then 
+		return info.titleName
+	end
 	-- return select(2, C_ArtifactUI.GetArtifactArtInfo())
 end
 
@@ -226,6 +229,7 @@ local function ScanArtifact()
 	local char = addon.ThisCharacter
 
 	local artifactName = GetArtifactName()
+	if not artifactName then return end
 
 	-- only save the name if the item viewed is the one equipped (since you can right-click an artifact in the bags)
 	if C_ArtifactUI.IsViewedArtifactEquipped() then
@@ -252,7 +256,9 @@ local function ScanArtifactXP()
 	-- local _, _, artifactName, _, remaining = C_ArtifactUI.GetEquippedArtifactInfo()
 	
 	local _, _, _, _, remaining = C_ArtifactUI.GetEquippedArtifactInfo()
-	local artifact = char.Artifacts[GetArtifactName()]
+	local artInfo = C_ArtifactUI.GetEquippedArtifactArtInfo()
+	local artifact = char.Artifacts[artInfo.titleName]
+	
 	if artifact then
 		artifact.pointsRemaining = remaining
 	end

@@ -2,7 +2,7 @@
 ## Title: DataStore_Currencies
 ## Notes: Stores information about character currencies
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r34
+## Version: r35
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_CurrenciesDB

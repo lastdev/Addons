@@ -120,6 +120,19 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "7.2.002 Changes",
+		bulletedList = {
+			"Fixed a bug assigning gained artifact xp to the wrong artifact.",
+			"Fixed a Lua error when scanning an artifact's data.",
+			"Added the faction Armies of Legionfall.",
+			"Changed format of large numbers displayed in the Artifact pane.",
+			"Added support for Nethershards and Legionfall War Supplies (Thanks AlexSUCF !)",
+			"Sending a mail to an alt no longer update its last mailbox visit time",
+			"Added Legion fishing achievements",
+			"Moved enUS at the top of each locale.xml to load this locale first (never knew this was an issue :/)",
+			"Valor currencies now being properly tracked",
+		},
+	},
 	{	name = "7.2.001 Changes",
 		bulletedList = {
 			"DataStore_Talents : Fixed a few issues when scanning artifact data",

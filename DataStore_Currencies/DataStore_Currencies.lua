@@ -12,12 +12,14 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 local CURRENCY_ID_JUSTICE = 395
-local CURRENCY_ID_VALOR = 396
+local CURRENCY_ID_VALOR = 1191
 local CURRENCY_ID_APEXIS = 823
 local CURRENCY_ID_GARRISON = 824
 local CURRENCY_ID_SOTF = 994		-- Seals of Tempered Fate (WoD)
 local CURRENCY_ID_ORDER_HALL = 1220
 local CURRENCY_ID_SOBF = 1273		-- Seals of the Broken Fate (Legion)
+local CURRENCY_ID_NETHERSHARD = 1226
+local CURRENCY_ID_LFWS = 1342
 
 local AddonDB_Defaults = {
 	global = {
@@ -106,6 +108,8 @@ local function ScanTotals()
 	ScanCurrencyTotals(CURRENCY_ID_SOTF)
 	ScanCurrencyTotals(CURRENCY_ID_ORDER_HALL)
 	ScanCurrencyTotals(CURRENCY_ID_SOBF)
+	ScanCurrencyTotals(CURRENCY_ID_NETHERSHARD)
+	ScanCurrencyTotals(CURRENCY_ID_LFWS)
 end
 
 local function ScanCurrencies()
@@ -203,7 +207,7 @@ local function _GetCurrencyInfo(character, index)
 	local count = RightShift(currency, 7)
 
 	local info = ref.Currencies[refIndex]
-	local name, icon = strsplit("|", info)
+	local name, icon = strsplit("|", info or "")
 	
 	return isHeader, name, count, icon
 end
@@ -289,6 +293,13 @@ local function _GetOrderHallResources(character)
 	return _GetCurrencyTotals(character, CURRENCY_ID_ORDER_HALL)
 end
 
+local function _GetNethershards(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_NETHERSHARD)
+end
+
+local function _GetWarSupplies(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_LFWS)
+end
 local PublicMethods = {
 	GetNumCurrencies = _GetNumCurrencies,
 	GetCurrencyInfo = _GetCurrencyInfo,
@@ -304,6 +315,8 @@ local PublicMethods = {
 	GetSealsOfFate = _GetSealsOfFate,
 	GetSealsOfBrokenFate = _GetSealsOfBrokenFate,
 	GetOrderHallResources = _GetOrderHallResources,
+	GetNethershards = _GetNethershards,
+	GetWarSupplies = _GetWarSupplies,
 }
 
 function addon:OnInitialize()
@@ -324,6 +337,8 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetSealsOfFate")
 	DataStore:SetCharacterBasedMethod("GetSealsOfBrokenFate")
 	DataStore:SetCharacterBasedMethod("GetOrderHallResources")
+	DataStore:SetCharacterBasedMethod("GetNethershards")
+	DataStore:SetCharacterBasedMethod("GetWarSupplies")
 end
 
 function addon:OnEnable()

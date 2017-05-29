@@ -1,4 +1,4 @@
--- DBM_Core
+﻿-- DBM_Core
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)

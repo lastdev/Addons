@@ -1,5 +1,9 @@
 
 
+== Version 7.0
+
+* Replaced all functionality with SpellFlashCore
+
 == Version 6.24.1
 
 * Reduced code size of ElvUI compatibility.

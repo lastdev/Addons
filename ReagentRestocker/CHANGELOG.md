@@ -11,6 +11,17 @@ other download sites.
 
  
 
+### v10.3
+
+-   Updated TOC.
+
+-   Fixed minor bugs.
+
+-   Updated website to WoW Interface until I can regain control of my curse.com
+    account.
+
+ 
+
 ### v10.2
 
 -   Updated TOC
