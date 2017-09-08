@@ -9,14 +9,13 @@ local DEBUG = false
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 if not HandyNotes then return end
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_DungeonLocations")
-local LibQTip = LibStub('LibQTip-1.0')
 
 local iconDefault = "Interface\\Icons\\TRADE_ARCHAEOLOGY_CHESTOFTINYGLASSANIMALS"
 --local iconDungeon = "Interface\\Addons\\HandyNotes_DungeonLocations\\dungeon.tga"
 --local iconRaid = "Interface\\Addons\\HandyNotes_DungeonLocations\\raid.tga"
 local iconDungeon = "Interface\\MINIMAP\\Dungeon"
 local iconRaid = "Interface\\MINIMAP\\Raid"
-local iconMerged = "Interface\\Addons\\HandyNotes_DungeonLocations\\merged.tga"
+local iconMixed = "Interface\\Addons\\HandyNotes_DungeonLocations\\merged.tga"
 local iconGray = "Interface\\Addons\\HandyNotes_DungeonLocations\\gray.tga"
 
 local db
@@ -25,11 +24,8 @@ local nodes = { }
 local minimap = { } -- For nodes that need precise minimap locations but would look wrong on zone or continent maps
 local alterName = { }
 local extraInfo = { }
+local mapLevels = { } -- Bad juju, I use this to hide nodes from appearing on the wrong map levels.  e.g the new Dalaran; definitely probably a better way to do this
 --local lockouts = { }
-
-local MERGED_DUNGEONS = 5 -- Where extra dungeon/raids ids start for merging
-
-
 
 if (DEBUG) then
  HNDL_NODES = nodes
@@ -89,22 +85,13 @@ function pluginHandler:OnEnter(mapFile, coord) -- Copied from handynotes
 	end
 	if (not nodeData) then return end
 	
-	--[[local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
+	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
 	if ( self:GetCenter() > UIParent:GetCenter() ) then -- compare X coordinate
 		tooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
 		tooltip:SetOwner(self, "ANCHOR_RIGHT")
-	end]]--
-	local tooltip = LibQTip:Acquire("HandyNotes_DungeonLocationsTooltip", 2, "LEFT", "RIGHT")
-	self.tooltip = tooltip
-	
+	end
 
-	
-	
-	--print("Node 1", nodeData[1])
-	--table.insert(instances, nodeData[1])
-	
-	 --tooltip:AddLine(nodeData[3], nil, nil, nil, true)
     if (not nodeData.name) then return end
 
 	local instances = { strsplit("\n", nodeData.name) }
@@ -118,30 +105,29 @@ function pluginHandler:OnEnter(mapFile, coord) -- Copied from handynotes
  	  if (LOCKOUTS[v]) then
 	   --print("Dungeon/Raid is locked")
 	   for a,b in pairs(LOCKOUTS[v]) do
- 	    tooltip:AddLine(v, a .. " " .. b)
+		--tooltip:AddLine(v .. ": " .. a .. " " .. b, nil, nil, nil, false)
+		tooltip:AddDoubleLine(v, a .. " " .. b, 1, 1, 1, 1, 1, 1)
  	   end
 	  end
 	  if (alterName[v] and LOCKOUTS[alterName[v]]) then
 	   for a,b in pairs(LOCKOUTS[alterName[v]]) do
- 	    tooltip:AddLine(v, a .. " " .. b)
+		--tooltip:AddLine(v .. ": " .. a .. " " .. b, nil, nil, nil, false)
+		tooltip:AddDoubleLine(v, a .. " " .. b, 1, 1, 1, 1, 1, 1)
  	   end
 	  end
 	 else
-	  tooltip:AddLine(v)
+	  tooltip:AddLine(v, nil, nil, nil, false)
 	 end
 	end
-	tooltip:SmartAnchorTo(self)
 	tooltip:Show()
 end
 
 function pluginHandler:OnLeave(mapFile, coord)
-	--[[if self:GetParent() == WorldMapButton then
-		WorldMapTooltip:Hide()
-	else
-		GameTooltip:Hide()
-	end]]--
-	LibQTip:Release(self.tooltip)
-	self.tooltip = nil
+ if self:GetParent() == WorldMapButton then
+  WorldMapTooltip:Hide()
+ else
+  GameTooltip:Hide()
+ end
 end
 
 do
@@ -151,44 +137,56 @@ do
 		
   local state, value = next(t, prestate)
   while state do
-   local icon
-   if (value.type == "Dungeon") then
-    icon = iconDungeon
-   elseif (value.type == "Raid") then
-    icon = iconRaid
-   elseif (value.type == "Merged") then
-    icon = iconMerged
-   else
-    icon = iconDefault
-   end
-  
-   local allLocked = true
-   local anyLocked = false
-   local instances = { strsplit("\n", value.name) }
-   for i, v in pairs(instances) do
-    if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
-	 allLocked = false
+   if (db.show[value.type]) then -- Only show types that are set to be shown in the options
+	local icon
+    if (value.type == "Dungeon") then
+     icon = iconDungeon
+    elseif (value.type == "Raid") then
+     icon = iconRaid
+    elseif (value.type == "Mixed") then
+     icon = iconMixed
     else
-	 anyLocked = true
-	end
-   end
+     icon = iconDefault
+    end
   
-   -- I feel like this inverted lockout thing could be done far better
-   if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
-    icon = iconGray
-   end
-   if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.uselockoutalpha) then
-    alpha = db.lockoutalpha
-   else
-    alpha = isContinent and db.continentAlpha or db.zoneAlpha
-   end
+    local allLocked = true
+    local anyLocked = false
+    local instances = { strsplit("\n", value.name) }
+    for i, v in pairs(instances) do
+     if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
+ 	 allLocked = false
+     else
+	  anyLocked = true
+	 end
+    end
+  
+    -- I feel like this inverted lockout thing could be done far better
+    if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
+     icon = iconGray
+    end
+    if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.uselockoutalpha) then
+     alpha = db.lockoutalpha
+    else
+     alpha = isContinent and db.continentAlpha or db.zoneAlpha
+    end
 		
-   return state, nil, icon, scale, alpha
-  --state, value = next(t, state)
+    return state, nil, icon, scale, alpha
+   end
+  state, value = next(t, state)
   end 
  end
- function pluginHandler:GetNodes(mapFile, isMinimapUpdate, dungeonLevel)
-  if (DEBUG) then print(mapFile) end
+ function pluginHandler:GetNodes(mapFile, isMinimapUpdate, mapLevel)
+  if (DEBUG) then
+   print(mapFile, mapLevel, isMinimapUpdate)
+   if (mapLevels[mapFile]) then
+    for k, v in pairs(mapLevels[mapFile]) do
+     print(k, v)
+    end
+   end
+  end
+  if (mapLevels[mapFile] and not mapLevels[mapFile][mapLevel]) then -- I put this here to stop nodes from showing up on other maplevels for certain zones e.g the new Dalaran
+   return iter
+  end
   local isContinent = continents[mapFile]
   scale = isContinent and db.continentScale or db.zoneScale
   alpha = isContinent and db.continentAlpha or db.zoneAlpha
@@ -269,6 +267,11 @@ local defaults = {
   hidePandaria = false,
   hideDraenor = false,
   hideBrokenIsles = false,
+  show = {
+   Dungeon = true,
+   Raid = true,
+   Mixed = true,
+  },
  },
 }
 
@@ -348,6 +351,35 @@ function Addon:PLAYER_LOGIN()
    desc = L["Allow left click to open journal to dungeon or raid"],
    order = 2,
   },
+  showheader = {
+   type = "header",
+   name = L["Filter Options"],
+   order = 24,
+  },
+  showDungeons = {
+   type = "toggle",
+   name = L["Show Dungeons"],
+   desc = L["Show dungeon locations on the map"],
+   order = 24.1,
+   get = function() return db.show["Dungeon"] end,
+   set = function(info, v) db.show["Dungeon"] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+  },
+  showRaids = {
+   type = "toggle",
+   name = L["Show Raids"],
+   desc = L["Show raid locations on the map"],
+   order = 24.2,
+   get = function() return db.show["Raid"] end,
+   set = function(info, v) db.show["Raid"] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+  },
+  showMixed = {
+   type = "toggle",
+   name = L["Show Mixed"],
+   desc = L["Show mixed (dungeons + raids) locations on the map"],
+   order = 24.2,
+   get = function() return db.show["Mixed"] end,
+   set = function(info, v) db.show["Mixed"] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+  },
   lockoutheader = {
    type = "header",
    name = L["Lockout Options"],
@@ -381,7 +413,7 @@ function Addon:PLAYER_LOGIN()
   invertlockout = {
    type = "toggle",
    name = L["Invert Lockout"],
-   desc = L["Turn merged icons grey when ANY dungeon or raid listed is locked"],
+   desc = L["Turn mixed icons grey when ANY dungeon or raid listed is locked"],
    order = 25.4,
   },
   hideheader = {
@@ -482,7 +514,7 @@ function Addon:PopulateTable()
 table.wipe(nodes)
 table.wipe(minimap)
 
--- [COORD] = { Dungeonname/ID, Type(Dungeon/Raid/Merged), hideOnContinent(Bool), LFGDungeonID if Applicable, nil placeholder for id later, other dungeons }
+-- [COORD] = { Dungeonname/ID, Type(Dungeon/Raid/Mixed), hideOnContinent(Bool), LFGDungeonID if Applicable, nil placeholder for id later, other dungeons }
 -- I feel like I should change all this to something like:
 -- [COORD] = {
 --  name = "Dungeon Name", -- after processing, wouldn't exist before
@@ -527,7 +559,7 @@ nodes["Barrens"] = {
 nodes["BurningSteppes"] = {
  [20303260] = {
   id = { 66, 228, 229, 559, 741, 742 },
-  type = "Merged", 
+  type = "Mixed", 
   hideOnContinent = true,
  }, -- Blackrock mountain dungeons and raids
  [23202630] = {
@@ -569,8 +601,14 @@ nodes["Dustwallow"] = {
 nodes["EasternPlaguelands"] = {
  [27201160] = {
   id = 236,
+  lfgid = 40,
   type = "Dungeon",
  }, -- Stratholme World 52902870
+ [43401940] = {
+  id = 246,
+  lfgid = 274,
+  type = "Dungeon", -- Stratholme Service Entrance
+ },
 }
 nodes["Feralas"] = {
  [65503530] = {
@@ -604,7 +642,7 @@ nodes["Orgrimmar"] = {
 nodes["SearingGorge"] = {
  [41708580] = {
   id = { 66, 228, 229, 559, 741, 742 },
-  type = "Merged",
+  type = "Mixed",
   hideOnContinent = true,
  },
  [43508120] = {
@@ -662,7 +700,7 @@ nodes["SwampOfSorrows"] = {
 nodes["Tanaris"] = {
  [65604870] = {
   id = { 279, 255, 251, 750, 184, 185, 186, 187 },
-  type = "Merged",
+  type = "Mixed",
  },
  --[[[61006210] = { "The Culling of Stratholme",
   type = "Dungeon" },  --65604870 May look more accurate and merge all CoT dungeons/raids
@@ -718,12 +756,12 @@ nodes["Westfall"] = {
   }, -- Scarlet Halls/Monastery
   [47316942] = {
    id = { 66, 73, 228, 229, 559, 741, 742 },
-   type = "Merged",
+   type = "Mixed",
   }, -- Blackrock mount instances, merged in blackwind descent at continent level
   --[38307750] = { 63,  type = "Dungeon" }, -- Deadmines 43707320,
   [49508190] = {
    id = { 745, 860 }, 
-   type = "Merged",
+   type = "Mixed",
   }, -- Karazhan/Return to Karazhan
  }
  nodes["Kalimdor"] = {
@@ -888,7 +926,7 @@ nodes["Hellfire"] = {
  --[46005180] = { 256,  type = "Dungeon" }, -- The Blood Furnace World 56305260
  [47205220] = {
   id = { 248, 256, 259, 747 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
  }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair
 }
@@ -950,9 +988,9 @@ nodes["Zangarmarsh"] = {
  --[51903280] = { 748,  type = "Raid" }, -- Serpentshrine Cavern World 35104280
  [50204100] = {
   id = { 260, 262, 748 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
- }, -- Merged Location
+ }, -- Mixed Location
 }
 minimap["Hellfire"] = {
  [47605360] = {
@@ -997,7 +1035,7 @@ if (not self.db.profile.hideNorthrend) then
 nodes["BoreanTundra"] = {
  [27602660] = {
   id = { 282, 756, 281 },
-  type = "Merged",
+  type = "Mixed",
  },
  -- Oculus same as eye of eternity
  --[27502610] = { "The Nexus",  type = "Dungeon" },
@@ -1127,7 +1165,7 @@ nodes["Northrend"] = {
  --[80407600] = { 285,  type = "Dungeon", false, 286 }, -- Utgarde Keep, Utgarde Pinnacle CONTINENT MERGE Location is slightly incorrect
  [47501750] = {
   id = { 757, 284 },
-  type = "Merged",
+  type = "Mixed",
  }, -- Trial of the Crusader and Trial of the Champion
 }
 end
@@ -1326,6 +1364,8 @@ nodes["TanaanJungle"] = {
 }
 end
 
+mapLevels["Dalaran70"] = { [10] = true, }
+
 if (not self.db.profile.hideBrokenIsles) then
 -- Legion Dungeons/Raids for minimap and continent map for consistency
 -- This seems to be the only legion raid that isn't shown at all
@@ -1428,17 +1468,17 @@ nodes["BrokenIsles"] = {
  }, -- Maw of Souls
  [35402850] = {
   id = { 762, 768 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
  }, -- The Emerald Nightmare 35102910
  [65003870] = {
   id = { 721, 861 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
  }, -- Halls of Valor/Trial of Valor Unmerged: 65203840 64703900
  [46704780] = {
   id = { 726, 786 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
  }, -- The Arcway/The Nighthold
  [49104970] = {
@@ -1460,7 +1500,7 @@ nodes["BrokenIsles"] = {
  --[56706120] = { 900,  type = "Dungeon"}, -- Cathedral of the Night
  [56506240] = {
   id = { 875, 900 },
-  type = "Merged",
+  type = "Mixed",
   hideOnMinimap = true,
  }, -- Tomb of Sargeras and Cathedral of the Night
 }

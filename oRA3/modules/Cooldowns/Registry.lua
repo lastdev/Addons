@@ -70,33 +70,7 @@ local function copyDefaults(dst, src)
 	end
 end
 
--- XXX locales as of r895
-local translateType = {
-	--esES
-	["Barras"] = "Bars",
-	["Iconos"] = "Icons",
-	["Grupos de iconos"] = "Icon Groups",
-	["Registro"] = "Log",
-	--deDE
-	["Leisten"] = "Bars",
-	["Icon Gruppen"] = "Icon Groups",
-	--frFR
-	["Barres"] = "Bars",
-	["Icônes"] = "Icons",
-	["Groupes d'icônes"] = "Icon Groups",
-	["Journal"] = "Log",
-}
-
 function module:CreateDisplay(type, name)
-	-- XXX I dun fucked up and localized my unique index
-	if not layoutRegistry[type] and translateType[type] then
-		local newType = translateType[type]
-		local db = module.db.profile.displays[name]
-		if db.type and db.type == type then
-			db.type = newType
-		end
-		type = newType
-	end
 	if layoutRegistry[type] then
 		local display = layoutRegistry[type](name)
 		display.name = name
@@ -105,7 +79,7 @@ function module:CreateDisplay(type, name)
 		display.version = layoutVersions[type]
 
 		-- init db
-		local moduleDB = module.db.profile
+		local moduleDB = self.db.profile
 		local db = moduleDB.displays[name]
 
 		-- reset settings on type change
@@ -321,7 +295,8 @@ do
 		end
 
 		bar.candyBarDuration:ClearAllPoints()
-		bar.candyBarDuration:SetPoint("RIGHT", bar.candyBarBar, "RIGHT", -2, 0)
+		bar.candyBarDuration:SetPoint("TOPLEFT", bar.candyBarBar, "TOPLEFT", 2, 0)
+		bar.candyBarDuration:SetPoint("BOTTOMRIGHT", bar.candyBarBar, "BOTTOMRIGHT", -2, 0)
 
 		bar.candyBarLabel:ClearAllPoints()
 		bar.candyBarLabel:SetPoint("TOPLEFT", bar.candyBarBar, "TOPLEFT", 2, 0)
@@ -350,7 +325,6 @@ do
 			icon:ClearAllPoints()
 			icon:SetPoint("BOTTOMRIGHT", bar, "BOTTOMLEFT", -5, 0)
 			icon:SetSize(16, 16)
-			icon:Show() -- XXX temp
 			bar:Set("ora3cd:restoreicon", tex)
 
 			local iconBd = bar.candyBarIconFrameBackdrop
@@ -364,15 +338,13 @@ do
 			iconBd:Show()
 		end
 
-		bar.candyBarLabel:SetJustifyH("LEFT")
 		bar.candyBarLabel:ClearAllPoints()
-		bar.candyBarLabel:SetPoint("LEFT", bar, "LEFT", 4, 10)
+		bar.candyBarLabel:SetPoint("LEFT", bar.candyBarBar, "LEFT", 2, 10)
+		bar.candyBarLabel:SetPoint("RIGHT", bar.candyBarBar, "RIGHT", -2, 10)
 
-		bar.candyBarDuration:SetJustifyH("RIGHT")
 		bar.candyBarDuration:ClearAllPoints()
-		bar.candyBarDuration:SetPoint("RIGHT", bar, "RIGHT", -4, 10)
-
-		--bar:SetTexture(media:Fetch("statusbar", "Blizzard"))
+		bar.candyBarDuration:SetPoint("RIGHT", bar.candyBarBar, "RIGHT", -2, 10)
+		bar.candyBarDuration:SetPoint("LEFT", bar.candyBarBar, "LEFT", 2, 10)
 	end
 
 	barStyles.MonoUI = {
@@ -534,7 +506,6 @@ do
 			icon:ClearAllPoints()
 			icon:SetPoint("BOTTOMRIGHT", bar, "BOTTOMLEFT", E and (E.PixelMode and -1 or -5) or -1, 0)
 			icon:SetSize(20, 20)
-			icon:Show() -- XXX temp
 			bar:Set("ora3cd:restoreicon", tex)
 
 			local iconBd = bar.candyBarIconFrameBackdrop

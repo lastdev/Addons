@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: Altoholic_Guild
 ## Notes: Altoholic's Guild UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r179
+## Version: r183
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements

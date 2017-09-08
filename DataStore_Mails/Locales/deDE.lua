@@ -24,3 +24,4 @@ L["SCAN_MAIL_BODY_ENABLED"] = "Der Text jeder Sendung wird gelesen, wenn der Bri
 L["SCAN_MAIL_BODY_LABEL"] = "Brieftext scannen (markiert als gelesen)"
 L["SCAN_MAIL_BODY_TITLE"] = "Brieftext scannen"
 L["Warn when mail expires in less days than this value"] = "Warnen, wenn Post verfällt in weniger Tagen als "
+

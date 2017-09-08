@@ -50,13 +50,19 @@ SpellList(potion_intellect_buff draenic_intellect_potion_buff jade_serpent_potio
 SpellList(potion_strength_buff draenic_strength_potion_buff golemblood_potion_buff)
 
 # Legion
-Define(augmentation 140587)
+Define(defiled_augmentation 140587)
+
+Define(deadly_grace_potion 127843)
+Define(old_war_potion 127844)
+Define(prolonged_power_potion 142117)
 Define(unbending_potion 127845)
+
+Define(prolonged_power_buff 229206)
 Define(unbending_potion_buff 188029)
 SpellList(potion_buff unbending_potion_buff)
 
 ###
-### Trinkets
+### Trinkets & OnUse Rings
 ###
 
 # Amplification trinket passive buff.
@@ -69,12 +75,17 @@ Define(cooldown_reduction_tank_buff 146025)
 
 Define(coagulated_nightwell_residue 137400)
 	ItemRequire(coagulated_nightwell_residue unusable 1=buff,!nightwell_energy_buff)
+Define(cunning_of_the_deceiver 242629)
 Define(convergence_of_fates 140806)
 Define(draught_of_souls 140808)
 Define(gnawed_thumb_ring 134526)
 	ItemInfo(gnawed_thumb_ring cd=180)
 Define(nightwell_energy_buff 214572)
-
+Define(shifting_cosmic_sliver 147026)
+Define(specter_of_betrayal 151190)
+Define(ring_of_collapsing_futures 142173)
+	ItemInfo(ring_of_collapsing_futures cd=15)
+	Define(temptation_buff 234143)
 
 ###
 ### Legendary Meta Gem
@@ -109,6 +120,14 @@ Define(archmages_greater_incandescence_str_buff 177175)
 	SpellInfo(archmages_greater_incandescence_str_buff duration=10)
 Define(archmages_incandescence_str_buff 177160)
 	SpellInfo(archmages_incandescence_str_buff duration=10)
+	
+###
+### Legendary Shared legiondaries
+###
+
+Define(sephuzs_secret 132452)
+Define(sephuzs_secret_buff 208051)
+	SpellInfo(sephuzs_secret_buff buff_cd=30 duration=10)
 
 ###
 ### Racials
@@ -129,8 +148,8 @@ Define(arcane_torrent_rage 69179)
 Define(arcane_torrent_runicpower 50613)
 	SpellInfo(arcane_torrent_runicpower cd=120 runicpower=-20)
 Define(arcane_torrent_dh 202719)
-	SpellInfo(arcane_torrent_pain cd=120 pain=-15 specialization=vengeance)
-	SpellInfo(arcane_torrent_pain cd=120 fury=-15 specialization=havoc)
+	SpellInfo(arcane_torrent_dh cd=120 pain=-15 specialization=vengeance)
+	SpellInfo(arcane_torrent_dh cd=120 fury=-15 specialization=havoc)
 Define(berserking 26297)
 	SpellInfo(berserking cd=180)
 	SpellAddBuff(berserking berserking_buff=1)

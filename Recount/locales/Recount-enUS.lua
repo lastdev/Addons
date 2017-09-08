@@ -171,6 +171,7 @@ L["Heals"] = true
 L["Health"] = true
 L["Hide"] = true
 L["Hide When Not Collecting"] = true
+L["Hide While In Pet Battle"] = true
 L["Hides the main window"] = true
 L["Hit"] = true
 L["Holy"] = true

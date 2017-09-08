@@ -7,10 +7,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local parentName = "AltoholicTabCharacters"
 local parent
 
-local currentCategory = 1	-- current category (characters, equipment, rep, currencies, etc.. )
 local currentView = 0		-- current view in the characters category
 local currentProfession
 
+local THIS_ACCOUNT = "Default"
+local currentAccount = THIS_ACCOUNT
+local currentRealm = GetRealmName()
 local currentAlt = UnitName("player")
 
 -- ** Icons Menus **
@@ -38,6 +40,7 @@ local BAG_ICONS = {
 	"Interface\\Icons\\INV_Misc_Bag_26_Spellfire",
 	"Interface\\Icons\\INV_Misc_Bag_33",
 	"Interface\\Icons\\inv_misc_basket_05",
+	"Interface\\Icons\\inv_tailoring_hexweavebag",
 }
 
 local ICON_BAGS_HALLOWSEND = "Interface\\Icons\\INV_Misc_Bag_28_Halloween"
@@ -51,31 +54,20 @@ addon.Tabs.Characters = {}
 local ns = addon.Tabs.Characters		-- ns = namespace
 
 -- *** Utility functions ***
-local lastButton
-
-local function StartAutoCastShine(button)
-	AutoCastShine_AutoCastStart(button.Shine);
-	lastButton = button
-end
-
-local function StopAutoCastShine()
-	-- stop autocast shine on the last button that was clicked
-	if lastButton then
-		AutoCastShine_AutoCastStop(lastButton.Shine)
-	end
-end
-
 local function HideAll()
+	
+	AltoholicTabCharacters.QuestLog:Hide()
+	AltoholicTabCharacters.Talents:Hide()
+	AltoholicTabCharacters.GarrisonMissions:Hide()
+	
 	AltoholicFrameContainers:Hide()
-	AltoholicFrameTalents:Hide()
+
 	AltoholicFrameMail:Hide()
-	AltoholicFrameQuests:Hide()
 	AltoholicFramePets:Hide()
 	AltoholicFrameAuctions:Hide()
 	AltoholicFrameRecipes:Hide()
 	-- AltoholicTabCharacters.Recipes:Hide()
 	AltoholicFrameSpellbook:Hide()
-	AltoholicFrameGarrisonMissions:Hide()
 end
 
 local function EnableIcon(frame)
@@ -89,20 +81,14 @@ local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 function ns:OnShow()
 	if currentView == 0 then
-		StartAutoCastShine(parent.Characters)
 		ns:ViewCharInfo(VIEW_BAGS)
 	end
 end
 
 function ns:MenuItem_OnClick(frame, button)
+	-- 2017/05/15 : frame no longer used, callers not yet updated
 	HideAll()
 	DropDownList1:Hide()		-- hide any right-click menu that could be open
-	
-	StopAutoCastShine()
-	StartAutoCastShine(frame)
-	
-	local id = frame:GetID()
-	currentCategory = id
 
 	local menuIcons = parent.MenuIcons
 	menuIcons.CharactersIcon:Show()
@@ -132,12 +118,9 @@ function ns:ShowCharInfo(view)
 		addon.Containers:Update()
 		
 	elseif view == VIEW_QUESTS then
-		AltoholicFrameQuests:Show()
-		addon.Quests:InvalidateView()
-		addon.Quests:Update()
-		
+		AltoholicTabCharacters.QuestLog:Update()
 	elseif view == VIEW_TALENTS then
-		AltoholicFrameTalents:Update()
+		AltoholicTabCharacters.Talents:Update()
 	
 	elseif view == VIEW_AUCTIONS then
 		addon.AuctionHouse:SetListType("Auctions")
@@ -168,7 +151,7 @@ function ns:ShowCharInfo(view)
 		-- AltoholicTabCharacters.Recipes:Update()
 				
 	elseif view == VIEW_GARRISONS then
-		AltoholicFrameGarrisonMissions:Update()
+		AltoholicTabCharacters.GarrisonMissions:Update()
 	end
 end
 
@@ -214,33 +197,29 @@ end
 
 -- ** DB / Get **
 function ns:GetAccount()
-	local account, realm = parent.SelectRealm:GetCurrentRealm()
-	return account
+	return currentAccount
 end
 
 function ns:GetRealm()
-	local account, realm = parent.SelectRealm:GetCurrentRealm()
-	return realm, account
+	return currentRealm, currentAccount
 end
 
 
 function ns:GetAlt()
-	local account, realm = parent.SelectRealm:GetCurrentRealm()
-	return currentAlt, realm, account
+	return currentAlt, currentRealm, currentAccount
 end
 
 function ns:GetAltKey()
-	local account, realm = parent.SelectRealm:GetCurrentRealm()
-	
-	if currentAlt and realm and account then
-		return format("%s.%s.%s", account, realm, currentAlt)
+	if currentAlt and currentRealm and currentAccount then
+		return format("%s.%s.%s", currentAccount, currentRealm, currentAlt)
 	end
 end
 
 -- ** DB / Set **
 function ns:SetAlt(alt, realm, account)
 	currentAlt = alt
-	parent.SelectRealm:SetCurrentRealm(realm, account)
+	currentRealm = realm
+	currentAccount = account
 end
 
 function ns:SetAltKey(key)
@@ -251,8 +230,8 @@ end
 -- ** Icon events **
 local function OnCharacterChange(self)
 	local oldAlt = currentAlt
-	local _, _, newAlt = strsplit(".", self.value)
-	currentAlt = newAlt
+	ns:SetAltKey(self.value)
+	local newAlt = currentAlt
 	
 	local menuIcons = parent.MenuIcons
 	EnableIcon(menuIcons.BagsIcon)
@@ -263,6 +242,8 @@ local function OnCharacterChange(self)
 	EnableIcon(menuIcons.SpellbookIcon)
 	EnableIcon(menuIcons.ProfessionsIcon)
 	EnableIcon(menuIcons.GarrisonIcon)
+	
+	DropDownList1:Hide()
 	
 	if (not oldAlt) or (oldAlt == newAlt) then return end
 
@@ -296,6 +277,14 @@ local function OnRarityChange(self)
 	addon:SetOption("UI.Tabs.Characters.ViewBagsRarity", self.value)
 	addon.Containers:Update()
 end
+
+local function OnQuestHeaderChange(self)
+	local headerIndex = self.value
+
+
+	ns:ViewCharInfo(VIEW_QUESTS)
+end
+
 
 local function OnTalentChange(self)
 	CloseDropDownMenus()
@@ -401,21 +390,49 @@ end
 
 -- ** Menu Icons **
 local function CharactersIcon_Initialize(self, level)
-	local account, realm = parent.SelectRealm:GetCurrentRealm()
 	
-	DDM_AddTitle(L["Characters"])
-	local nameList = {}		-- we want to list characters alphabetically
-	for _, character in pairs(DataStore:GetCharacters(realm, account)) do
-		table.insert(nameList, character)	-- we can add the key instead of just the name, since they will all be like account.realm.name, where account & realm are identical
-	end
-	table.sort(nameList)
-	
-	local currentCharacterKey = ns:GetAltKey()
-	for _, character in ipairs(nameList) do
-		DDM_Add(GetCharacterLoginText(character), character, OnCharacterChange, nil, (currentCharacterKey == character))
-	end
+	if level == 1 then
+		DDM_AddTitle(L["Characters"])
+		
+		for account in pairs(DataStore:GetAccounts()) do
+			for realm in pairs(DataStore:GetRealms(account)) do
 
-	DDM_AddCloseMenu()
+				local info = UIDropDownMenu_CreateInfo()
+
+				info.text = realm
+				info.hasArrow = 1
+				info.checked = nil
+				info.value = format("%s.%s", account, realm)
+				info.func = nil
+				UIDropDownMenu_AddButton(info, level)
+			end
+		end
+
+		DDM_AddCloseMenu()
+
+	elseif level == 2 then
+		local menuAccount, menuRealm = strsplit(".", UIDROPDOWNMENU_MENU_VALUE)
+		
+		local nameList = {}		-- we want to list characters alphabetically
+		for _, character in pairs(DataStore:GetCharacters(menuRealm, menuAccount)) do
+			table.insert(nameList, character)	-- we can add the key instead of just the name, since they will all be like account.realm.name, where account & realm are identical
+		end
+		table.sort(nameList)
+		
+		local currentCharacterKey = ns:GetAltKey()
+		for _, character in ipairs(nameList) do
+			
+			local info = UIDropDownMenu_CreateInfo()
+			
+			info.text		= GetCharacterLoginText(character)
+			info.value		= character
+			info.func		= OnCharacterChange
+			info.icon		= nil
+			info.checked	= (currentCharacterKey == character)
+			
+			UIDropDownMenu_AddButton(info, level)
+		end
+	end
 end
 
 local function BagsIcon_Initialize(self, level)
@@ -447,7 +464,12 @@ local function QuestsIcon_Initialize(self, level)
 	if not currentCharacterKey then return end
 	
 	DDM_AddTitle(format("%s / %s", QUESTS_LABEL, DataStore:GetColoredCharacterName(currentCharacterKey)))
-	DDM_Add(QUEST_LOG, VIEW_QUESTS, OnViewChange, nil, (currentView == VIEW_QUESTS))
+	-- DDM_Add(QUEST_LOG, VIEW_QUESTS, OnViewChange, nil, (currentView == VIEW_QUESTS))
+
+	DDM_Add(ALL, 0, OnQuestHeaderChange)
+	for headerIndex, header in pairs(DataStore:GetQuestHeaders(currentCharacterKey)) do
+		DDM_Add(header, headerIndex, OnQuestHeaderChange)
+	end
 	
 	DDM_AddTitle("|r ")
 	DDM_AddTitle(GAMEOPTIONS_MENU)
@@ -777,16 +799,6 @@ end
 function ns:OnLoad()
 	parent = _G[parentName]
 
-	-- Left Menu
-	parent.Text1:SetText(L["Realm"])
-	
-	parent.SelectRealm:RegisterClassEvent("RealmChanged", function() 
-			parent.Status:SetText("")
-			currentAlt = nil
-			currentProfession = nil
-			HideAll()
-		end)
-	
 	-- Menu Icons
 	-- mini easter egg, change the character icon depending on the time of year :)
 	-- if you find this code, please don't spoil it :)
@@ -815,10 +827,6 @@ function ns:OnLoad()
 	menuIcons.CharactersIcon.Icon:SetTexture(addon:GetCharacterIcon())
 	menuIcons.BagsIcon.Icon:SetTexture(bagIcon)
 	
-	-- ** Characters / Equipment / Reputations / Currencies **
-	parent.Characters.Icon:SetTexture(ICON_CHARACTERS)
-	parent.Characters.text = L["Characters"]
-	
 	addon:RegisterMessage("DATASTORE_RECIPES_SCANNED")
 	addon:RegisterMessage("DATASTORE_QUESTLOG_SCANNED")
 end
@@ -828,7 +836,9 @@ function addon:DATASTORE_RECIPES_SCANNED(event, sender, tradeskillName)
 end
 
 function addon:DATASTORE_QUESTLOG_SCANNED(event, sender)
-	addon.Quests:InvalidateView()
-	addon.Quests:Update()
+	-- addon.Quests:InvalidateView()
+	-- addon.Quests:Update()
+
+	AltoholicTabCharacters.QuestLog:Update()
 end
 

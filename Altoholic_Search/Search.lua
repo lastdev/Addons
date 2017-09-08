@@ -57,7 +57,7 @@ local function Realm_UpdateEx(self, offset, desc)
 			rowFrame.Stat1:SetText(color .. owner)
 			
 			local realm, account, faction = LineDesc:GetRealm(result)
-			local location = addon:GetFactionColour(faction) .. realm
+			local location = format("%s%s", colors[faction], realm)
 			if account ~= THIS_ACCOUNT then
 				location = location .. "\n" ..colors.white .. L["Account"] .. ": " ..colors.green.. account
 			end
@@ -67,8 +67,10 @@ local function Realm_UpdateEx(self, offset, desc)
 			itemButton = rowFrame.Item
 			itemButton.IconBorder:Hide()
 			
-			if result.id then
-				local _, _, itemRarity = GetItemInfo(result.id)
+			local item = result.link or result.id
+			
+			if item then
+				local _, _, itemRarity = GetItemInfo(item)
 				if itemRarity then
 					local r, g, b
 					r, g, b, hex = GetItemQualityColor(itemRarity)
@@ -82,11 +84,13 @@ local function Realm_UpdateEx(self, offset, desc)
 			
 			local name, source, sourceID = LineDesc:GetItemData(result, line)
 
-			rowFrame.Name:SetText(hex .. name)
-			rowFrame.Source.Text:SetText(source)
-			rowFrame.Source:SetID(sourceID)
-						
-			itemButton:SetInfo(LineDesc:GetItemID(result))
+			if name then
+				rowFrame.Name:SetText(hex .. name)
+				rowFrame.Source.Text:SetText(source)
+				rowFrame.Source:SetID(sourceID)
+			end
+			
+			itemButton:SetInfo(LineDesc:GetItemInfo(result))
 			itemButton:SetIcon(LineDesc:GetItemTexture(result))			
 			itemButton:SetCount(result.count)
 			
@@ -120,11 +124,23 @@ local RealmScrollFrame_Desc = {
 	Lines = {
 		[PLAYER_ITEM_LINE] = {
 			GetItemData = function(self, result)		-- GetItemData..just to avoid calling it GetItemInfo
+					local name
+					
+					if result.isBattlePet then
+						name = select(7, DataStore:GetBattlePetInfoFromLink(result.link))
+					else					
+						name = GetItemInfo(result.id)
+					end
+					
 					-- return name, source, sourceID
-					return GetItemInfo(result.id), colors.teal .. result.location, 0 
+					return name, colors.teal .. result.location, 0 
 				end,
 			GetItemTexture = function(self, result)
-					return (result.id) and GetItemIcon(result.id) or "Interface\\Icons\\Trade_Engraving"
+					if result.isBattlePet then
+						return result.id
+					else
+						return (result.id) and GetItemIcon(result.id) or "Interface\\Icons\\Trade_Engraving"
+					end
 				end,
 			GetCharacter = function(self, result)
 					local character = result.source
@@ -135,14 +151,22 @@ local RealmScrollFrame_Desc = {
 					local account, realm = strsplit(".", character)
 					return realm, account, DataStore:GetCharacterFaction(character)
 				end,
-			GetItemID = function(self, result)
-					return result.id
+			GetItemInfo = function(self, result)
+					return result.id, result.link
 				end,
 		},
 		[GUILD_ITEM_LINE] = {
 			GetItemData = function(self, result)		-- GetItemData..just to avoid calling it GetItemInfo
+					local name
+					
+					if result.isBattlePet then
+						name = select(7, DataStore:GetBattlePetInfoFromLink(result.link))
+					else					
+						name = GetItemInfo(result.id)
+					end			
+			
 					-- return name, source, sourceID
-					return GetItemInfo(result.id), colors.teal .. result.location, 0 
+					return name, colors.teal .. result.location, 0 
 				end,
 			GetItemTexture = function(self, result)
 					return (result.id) and GetItemIcon(result.id) or "Interface\\Icons\\Trade_Engraving"
@@ -157,8 +181,8 @@ local RealmScrollFrame_Desc = {
 					
 					return realm, account, DataStore:GetGuildBankFaction(guild)
 				end,
-			GetItemID = function(self, result)
-					return result.id
+			GetItemInfo = function(self, result)
+					return result.id, result.link
 				end,
 		},
 		[PLAYER_CRAFT_LINE] = {
@@ -188,7 +212,7 @@ local RealmScrollFrame_Desc = {
 		
 					return realm, account, DataStore:GetCharacterFaction(character)
 				end,
-			GetItemID = function(self, result)
+			GetItemInfo = function(self, result)
 					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
 					local itemID = DataStore:GetCraftResultItem(spellID)
 			
@@ -219,7 +243,7 @@ local RealmScrollFrame_Desc = {
 			GetRealm = function(self, result)
 					return GetRealmName(), THIS_ACCOUNT, UnitFactionGroup("player")
 				end,
-			GetItemID = function(self, result)
+			GetItemInfo = function(self, result)
 					return DataStore:GetCraftResultItem(result.spellID)
 				end,
 		},
@@ -610,24 +634,35 @@ local currentResultType			-- type of result currently being searched (eg: PLAYER
 local currentResultKey			-- key defining who is being searched (eg: a datastore character or guild key)
 local currentResultLocation	-- what is actually being searched (bags, bank, equipment, mail, etc..)
 
-local function VerifyItem(item, itemCount, itemLink)
+local MYTHIC_KEYSTONE = 138019
+
+local function VerifyItem(item, itemCount, itemLink, isBattlePet)
 	if type(item) == "string" then		-- convert a link to its item id, only data saved
-		item = tonumber(item:match("item:(%d+)"))
+	
+		if item:match("|Hkeystone:") then
+			item = MYTHIC_KEYSTONE			-- mythic keystones are actually all using the same item id
+		else
+			item = tonumber(item:match("item:(%d+)"))
+		end	
 	end
 	
 	if type(itemLink) ~= "string" then              -- a link is not a link - delete it
 		itemLink = nil
 	end
 	
-	filters:SetSearchedItem(item, itemLink)
-	if filters:ItemPassesFilters() then			-- All conditions ok ? save it
+	filters:SetSearchedItem(item, (item ~= MYTHIC_KEYSTONE) and itemLink or nil, isBattlePet)
+	-- local isOK = filters:ItemPassesFilters((item == 138019))	-- debug item 
+	local isOK = filters:ItemPassesFilters()
+	
+	if isOK then			-- All conditions ok ? save it
 		ns:AddResult( {
 			linetype = currentResultType,			-- PLAYER_ITEM_LINE or GUILD_ITEM_LINE 
 			id = item,
 			link = itemLink,
 			source = currentResultKey,				-- character or guild key in DataStore
 			count = itemCount,
-			location = currentResultLocation
+			location = currentResultLocation,
+			isBattlePet = isBattlePet
 		} )
 	end
 end
@@ -664,11 +699,12 @@ local function BrowseCharacter(character)
 			end
 		
 			for slotID = 1, container.size do
-				itemID, itemLink, itemCount = DataStore:GetSlotInfo(container, slotID)
+				itemID, itemLink, itemCount, isBattlePet = DataStore:GetSlotInfo(container, slotID)
 				
 				-- use the link before the id if there's one
 				if itemID then
-					VerifyItem(itemLink or itemID, itemCount, itemLink)
+					-- VerifyItem(itemLink or itemID, itemCount, itemLink, isBattlePet)
+					VerifyItem(itemID, itemCount, itemLink, isBattlePet)
 				end
 			end
 		end
@@ -744,12 +780,11 @@ local function BrowseRealm(realm, account, bothFactions)
 					local tab = DataStore:GetGuildBankTab(guild, tabID)
 					if tab.name then
 						for slotID = 1, 98 do
---							currentResultLocation = format("%s (%s - slot %d)", GUILD_BANK, tab.name, slotID)
 							currentResultLocation = format("%s, %s - col %d/row %d)", GUILD_BANK, tab.name, floor((slotID-1)/7)+1, ((slotID-1)%7)+1)
-							local id, link, count = DataStore:GetSlotInfo(tab, slotID)
+							local id, link, count, isBattlePet = DataStore:GetSlotInfo(tab, slotID)
 							if id then
 								link = link or id
-								VerifyItem(link, count, link)
+								VerifyItem(link, count, link, isBattlePet)
 							end
 						end
 					end

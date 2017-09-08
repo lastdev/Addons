@@ -1,13 +1,17 @@
 
 do
-	BadBoyGuildedConfigTitle:SetText("BadBoy_Guilded v7.2.0") -- Packager magic, replaced with tag version
+	BadBoyGuildedConfigTitle:SetText("BadBoy_Guilded v7.3.0") -- Packager magic, replaced with tag version
 
 	local guildedWhispers = CreateFrame("CheckButton", nil, BadBoyConfig, "OptionsBaseCheckButtonTemplate")
 	guildedWhispers:SetPoint("TOPLEFT", BadBoyGuildedConfigTitle, "BOTTOMLEFT")
 	guildedWhispers:SetScript("OnClick", function(frame)
 		local tick = frame:GetChecked()
 		BADBOY_GWHISPER = tick
-		PlaySound(tick and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+		if tick then
+			PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+		else
+			PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+		end
 	end)
 	guildedWhispers:SetScript("OnShow", function(frame)
 		frame:SetChecked(BADBOY_GWHISPER)
@@ -45,7 +49,11 @@ do
 	guildedInvites:SetScript("OnClick", function(frame)
 		local tick = frame:GetChecked()
 		SetAutoDeclineGuildInvites(tick)
-		PlaySound(tick and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+		if tick then
+			PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+		else
+			PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+		end
 	end)
 	guildedInvites:SetScript("OnShow", function(frame)
 		frame:SetChecked(GetAutoDeclineGuildInvites())

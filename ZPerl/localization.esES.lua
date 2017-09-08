@@ -27,10 +27,10 @@ if (GetLocale() == "esES" or GetLocale() == "esMX") then
 
 	XPERL_TYPE_NOT_SPECIFIED = "No indicado"
 	XPERL_TYPE_PET		= "Mascota"
-	XPERL_TYPE_BOSS 	= "Jefe"
+	XPERL_TYPE_BOSS		= "Jefe"
 	XPERL_TYPE_RAREPLUS 	= "Raro+"
 	XPERL_TYPE_ELITE	= "\195\137lite"
-	XPERL_TYPE_RARE 	= "Raro"
+	XPERL_TYPE_RARE		= "Raro"
 
 	XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = "Caverna Santuario Serpiente"
 	XPERL_LOC_ZONE_BLACK_TEMPLE = "El Templo Oscuro"
@@ -116,4 +116,6 @@ if (GetLocale() == "esES" or GetLocale() == "esMX") then
 	XPERL_RAID_TOOLTIP_WITHBUFF	= "Con ventaja: (%s)"
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Sin ventaja: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s ha usado la %s que expira en %s"	-- Name, buff name, time to expire
+
+	XPERL_NEW_VERSION_DETECTED = "Se detectó una nueva versión:"
 end

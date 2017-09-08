@@ -608,3 +608,4 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 
 ]=] ] = "La conferma verrà richiesta ogni volta che qualcuno richiederà informazioni."
 L["Zone"] = "Zona"
+

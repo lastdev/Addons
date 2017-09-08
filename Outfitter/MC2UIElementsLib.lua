@@ -204,14 +204,14 @@ function Addon.UIElementsLib._ModalDialogFrame:Construct(pParent, pTitle, pWidth
 	self.CancelButton = Addon:New(Addon.UIElementsLib._PushButton, self, CANCEL, 80)
 	self.CancelButton:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -15, 20)
 	self.CancelButton:SetScript("OnClick", function ()
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		self:Cancel()
 	end)
 	
 	self.DoneButton = Addon:New(Addon.UIElementsLib._PushButton, self, OKAY, 80)
 	self.DoneButton:SetPoint("RIGHT", self.CancelButton, "LEFT", -7, 0)
 	self.DoneButton:SetScript("OnClick", function ()
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		self:Done()
 	end)
 end
@@ -437,7 +437,7 @@ function Addon.UIElementsLib._Tabs:GetTabByValue(pValue)
 end
 
 function Addon.UIElementsLib._Tabs:Tab_OnClick(pTab, pButton)
-	PlaySound("igMainMenuOpen")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	self:SelectTabByValue(pTab.Value)
 end
 
@@ -584,7 +584,7 @@ function Addon.UIElementsLib._Scrollbar:Construct(pParent)
 	self.UpButton:SetPoint("BOTTOM", self, "TOP")
 	self.UpButton:SetScript("OnClick", function (pButtonFrame, pButton)
 		self:SetValue(self:GetValue() - self:GetHeight() * 0.5)
-		PlaySound("UChatScrollButton")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 	
 	self.DownButton = CreateFrame("Button", nil, self)
@@ -602,7 +602,7 @@ function Addon.UIElementsLib._Scrollbar:Construct(pParent)
 	self.DownButton:SetPoint("TOP", self, "BOTTOM")
 	self.DownButton:SetScript("OnClick", function (pButtonFrame, pButton)
 		self:SetValue(self:GetValue() + self:GetHeight() * 0.5)
-		PlaySound("UChatScrollButton")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 	
 	local vThumbTexture = self:CreateTexture(nil, "OVERLAY")
@@ -1335,7 +1335,7 @@ function Addon.UIElementsLib._DropDownMenu:Show(items, point, relativeTo, relati
 	assert(items and items.args, "DropDownMenu items must be DropDownMenuItems")
 
 	-- Play a sound
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	
 	-- Show the menu
 	self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
@@ -1352,7 +1352,7 @@ function Addon.UIElementsLib._DropDownMenu:Hide()
 	assert(self.menuFrame, "DropDownMenu can't call Hide if not shown")
 
 	-- Play a sound
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	
 	-- Hide the menu and leave if it's currently up
 	self.menuFrame:Hide()
@@ -1417,7 +1417,7 @@ function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, p
 	
 	self.Button:SetScript("OnClick", function (frame, button)
 		self:ToggleMenu()
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
 	self.Icon = self:CreateTexture(self:GetName().."Icon", "ARTWORK")
@@ -1453,7 +1453,7 @@ function Addon.UIElementsLib._DropDownMenuButton:RefreshItems()
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:ToggleMenu()
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	
 	-- Hide the menu and leave if it's currently up
 	if self.dropDownMenu then
@@ -1608,7 +1608,7 @@ function Addon.UIElementsLib._ContextMenu:Construct(pParent)
 end
 
 function Addon.UIElementsLib._ContextMenu:ToggleMenu(pFrame)
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	
 	self.displayMode = "MENU"
 	

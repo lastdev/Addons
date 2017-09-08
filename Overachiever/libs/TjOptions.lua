@@ -10,7 +10,7 @@
 --  See TjOptions.txt for documentation.
 --
 
-local THIS_VERSION = 0.47
+local THIS_VERSION = 0.48
 
 if (not TjOptions or TjOptions.Version < THIS_VERSION) then
   TjOptions = TjOptions or {};
@@ -43,7 +43,7 @@ if (not TjOptions or TjOptions.Version < THIS_VERSION) then
 
   local ItemGlobalName = "TjOptionsItemNumber"  -- Used to give unique global names to items that don't specify one.
   local ScrollFrameGlobalName = "TjOptionsScrollFrame"
-  local defaultSound = "igCharacterInfoTab";
+  local defaultSound = SOUNDKIT.IG_CHARACTER_INFO_TAB;
 
   local errorlog
   local function panelerror(panel, text, multishow)
@@ -792,9 +792,9 @@ if (not TjOptions or TjOptions.Version < THIS_VERSION) then
 
   local function CheckboxOnClick(self)
     if ( self:GetChecked() ) then
-      PlaySound("igMainMenuOptionCheckBoxOn");
+      PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
     else
-      PlaySound("igMainMenuOptionCheckBoxOff");
+      PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
     end
     TjOptions.ItemChanged(self)
   end

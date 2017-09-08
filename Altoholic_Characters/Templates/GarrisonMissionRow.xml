@@ -78,7 +78,7 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGarrisonMissionRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

@@ -439,6 +439,42 @@ GTFO.SpellID["197599"] = {
   sound = 3;
 };
 
+GTFO.SpellID["247673"] = {
+  --desc = "Molten Crash (Charredbone Goliath)";
+  sound = 3;
+};
+
+GTFO.SpellID["246942"] = {
+  --desc = "Carrion Swarm (Zorathides)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["248642"] = {
+  --desc = "Dark Eruption (Thalas Vylethorn)";
+  sound = 3;
+};
+
+GTFO.SpellID["247378"] = {
+  --desc = "Static Blast (Roobi Skizzelvolt)";
+  sound = 3;
+};
+
+GTFO.SpellID["52080"] = {
+  --desc = "Bone Crack (Bonesunder)";
+  sound = 3;
+};
+
+GTFO.SpellID["248716"] = {
+  --desc = "Infernal Strike (Zorathides)";
+  sound = 3;
+};
+
+GTFO.SpellID["247186"] = {
+  --desc = "Brutish Charge (Bloodfeast)";
+  sound = 3;
+};
+
 
 -- ********************
 -- * The Broken Shore *
@@ -1740,13 +1776,15 @@ GTFO.SpellID["234264"] = {
   --desc = "Melted Armor (Goroth)";
   applicationOnly = true;
   sound = 3;
-  negatingDebuffSpellID = 231363; -- Burning Armor
+  ignoreEvent = "BurningArmor";
 };
 
-GTFO.SpellID["233283"] = {
-  --desc = "Shattering Nova (Goroth)";
-  sound = 3;
-  test = true;
+GTFO.SpellID["231363"] = {
+  --desc = "Burning Armor (Goroth)";
+  soundFunction = function() 
+		GTFO_AddEvent("BurningArmor", 8);
+		return 0;
+	end;
 };
 
 GTFO.SpellID["233062"] = {
@@ -1855,12 +1893,82 @@ GTFO.SpellID["240209"] = {
   sound = 3;
 };
 
+GTFO.SpellID["235138"] = {
+  --desc = "Unstable Soul";
+  applicationOnly = true;
+  sound = 3;
+  test = true;
+};
+
 GTFO.SpellID["235125"] = {
   --desc = "Unstable Soul (Maiden of Vigiliance)";
   sound = 4;
+  test = true;
 };
 
 GTFO.SpellID["239486"] = {
   --desc = "Chaotic Eruption (Volatile Corruption)";
+  sound = 3;
+};
+
+GTFO.SpellID["235956"] = {
+  --desc = "Rupturing Slam (Reanimated Templar)";
+  sound = 3;
+};
+
+GTFO.SpellID["240706"] = {
+  --desc = "Arcane Ward";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["239144"] = {
+  --desc = "Tormented Eruption (Tormented Soul)";
+  sound = 3;
+};
+
+GTFO.SpellID["239852"] = {
+  --desc = "Demonic Obelisk (Demonic Obelisk)";
+  sound = 3;
+};
+
+GTFO.SpellID["242924"] = {
+  --desc = "Impact";
+  sound = 3;
+};
+
+GTFO.SpellID["233431"] = {
+  --desc = "Calcified Quills (Atrigan)";
+	applicationOnly = true;
+	soundFunction = function() 
+		-- Calcified Quills
+		GTFO_AddEvent("CalcifiedQuills", 8);
+		return 0;
+	end
+};
+
+GTFO.SpellID["233435"] = {
+  --desc = "Calcified Quills (Atrigan)";
+  sound = 3;
+	ignoreEvent = "CalcifiedQuills";
+};
+
+GTFO.SpellID["244974"] = {
+  --desc = "Shadow Crash (Unsettling Despair)";
+  sound = 3;
+};
+
+--- *********
+--- * Argus *
+--- *********
+
+GTFO.SpellID["251100"] = {
+  --desc = "Erupting Crack (Kar'aaz)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["244623"] = {
+  --desc = "Glaive Blast (Xeth'tal)";
   sound = 3;
 };

@@ -1,6 +1,7 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
@@ -38,9 +39,6 @@ local VIEW_SPELLS = 8
 local VIEW_PROFESSION = 9
 local VIEW_GARRISONS = 10
 
-local ICON_FACTION_HORDE = "Interface\\Icons\\INV_BannerPVP_01"
-local ICON_FACTION_ALLIANCE = "Interface\\Icons\\INV_BannerPVP_02"
-
 local TEXTURE_FONT = "|T%s:%s:%s|t"
 
 -- http://www.wowhead.com/currency=1171/artifact-knowledge
@@ -53,8 +51,11 @@ local artifactXPGain = {
 	100000,130000,170000,220000,290000,
 	380000,490000,640000,830000,1080000,
 	1400000,1820000,2370000,3080000,4000000,
-	5200000,6760000,8790000,11430000,14860000,
-	19320000,25120000,32660000,42460000,55200000 
+	16000000, 20800000, 27040000, 35150000, 45700000,
+	59400000, 77250000, 100400000, 130500000, 169650000,
+	220550000,286750000,372750000, 484600000, 630000000
+	-- 5200000,6760000,8790000,11430000,14860000,
+	-- 19320000,25120000,32660000,42460000,55200000 
 }
 
 addon.Summary = {}
@@ -109,7 +110,9 @@ local function FormatRankPoints(rank, tier)
 	local pointsPreviousLevel = C_ArtifactUI.GetCostForPointAtRank(rank-1, tier)
 	local percentage = ((points / pointsPreviousLevel) - 1) * 100
 	
-	if points >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
+	if points >= 2000000000 then	-- rank 56 is 1.9 B
+		return format("%s%s: %s%2.1f B %s+%2.0f%%", colors.white, rank, colors.green, points/1000000000, colors.yellow, percentage)
+	elseif points >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
 		return format("%s%s: %s%d M %s+%2.0f%%", colors.white, rank, colors.green, points/1000000, colors.yellow, percentage)
 	else
 		return format("%s%s: %s%d %s+%2.1f%%", colors.white, rank, colors.green, points, colors.yellow, percentage)
@@ -470,7 +473,7 @@ columns["Name"] = {
 	GetText = function(character) 
 			local name = DataStore:GetColoredCharacterName(character)
 			local class = DataStore:GetCharacterClass(character)
-			local icon = (DataStore:GetCharacterFaction(character) == "Alliance") and ICON_FACTION_ALLIANCE or ICON_FACTION_HORDE
+			local icon = icons[DataStore:GetCharacterFaction(character)]
 			
 			return format("%s %s (%s)", format(TEXTURE_FONT, icon, 18, 18), name, class)
 		end,
@@ -1918,7 +1921,7 @@ columns["ArtifactPower"] = {
 	headerOnEnter = function(frame, tooltip) 
 			tooltip:AddLine(" ")
 			
-			local numRows = 27	-- current maximum = 54 levels
+			local numRows = 35	-- current maximum = 54 levels
 			
 			for i = 1, numRows do
 				-- tooltip:AddDoubleLine(
@@ -1941,12 +1944,12 @@ columns["ArtifactPower"] = {
 			
 			local power = DataStore:GetEquippedArtifactPower(character) or 0
 			local cost = C_ArtifactUI.GetCostForPointAtRank(level, tier)
+			local isHighCost = (cost >= 2000000)
 			
-			if cost >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
-				return format("%s%2.1f M%s/%s%s M", color, power/1000000, colors.white, colors.yellow, cost/1000000)
-			else
-				return format("%s%s%s/%s%s", color, power, colors.white, colors.yellow, cost)
-			end
+			power = (isHighCost) and format("%2.1f M", power/1000000) or power
+			cost = (isHighCost) and format("%s M", cost/1000000) or cost
+			
+			return format("%s%s%s/%s%s", color, power, colors.white, colors.yellow, cost)
 		end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -1955,11 +1958,16 @@ columns["ArtifactPower"] = {
 			local level = DataStore:GetEquippedArtifactRank(character) or 0
 			if level == 0 then return end
 			
-			local power = DataStore:GetEquippedArtifactPower(character) or 0
 			local tier = DataStore:GetEquippedArtifactTier(character) or 2
+			local power = DataStore:GetEquippedArtifactPower(character) or 0
 			local equippedArtifact = DataStore:GetEquippedArtifact(character)
-			
+			local cost = C_ArtifactUI.GetCostForPointAtRank(level, tier)
+			local isHighCost = (cost >= 2000000)
 			local extraTraits = DataStore:GetNumArtifactTraitsPurchasableFromXP(level, power, tier)
+			
+			power = (isHighCost) and format("%2.1f M", power/1000000) or power
+			cost = (isHighCost) and format("%s M", cost/1000000) or cost
+			
 			
 			local tt = AltoTooltip
 			tt:ClearLines()
@@ -1973,34 +1981,42 @@ columns["ArtifactPower"] = {
 					format("%s%s %s(%s+%s%s)/%s%s", 
 						colors.green, power, 
 						colors.white, colors.cyan, extraTraits, 
-						colors.white, colors.yellow, C_ArtifactUI.GetCostForPointAtRank(level, tier))
+						colors.white, colors.yellow, cost)
 				)
 			
 			else 
 				tt:AddDoubleLine(
 					format("%s%s", colors.white, equippedArtifact), 
-					format("%s%s%s/%s%s", colors.green, power, colors.white, colors.yellow, C_ArtifactUI.GetCostForPointAtRank(level, tier))
+					format("%s%s%s/%s%s", colors.green, power, colors.white, colors.yellow, cost)
 				)
 			end
 			tt:AddLine(" ")
 			
 			for artifactName, artifactInfo in pairs(DataStore:GetKnownArtifacts(character)) do
 				if artifactName ~= equippedArtifact then
+					
 					tier = artifactInfo.tier or 2
+					power = artifactInfo.pointsRemaining
+					cost = C_ArtifactUI.GetCostForPointAtRank(artifactInfo.rank, tier)
+					isHighCost = (cost >= 2000000)
+					
+					power = (isHighCost) and format("%2.1f M", power/1000000) or power
+					cost = (isHighCost) and format("%s M", cost/1000000) or cost
+				
 					extraTraits = DataStore:GetNumArtifactTraitsPurchasableFromXP(artifactInfo.rank, artifactInfo.pointsRemaining, tier)
 					
 					if extraTraits > 0 then
 						tt:AddDoubleLine(
 							format("%s%s", colors.white, artifactName), 
 							format("%s%s %s(%s+%s%s)/%s%s", 
-								colors.green, artifactInfo.pointsRemaining, 
+								colors.green, power, 
 								colors.white, colors.cyan, extraTraits, 
-								colors.white, colors.yellow, C_ArtifactUI.GetCostForPointAtRank(artifactInfo.rank, tier))
+								colors.white, colors.yellow, cost)
 						)
 					else
 						tt:AddDoubleLine(
 							format("%s%s", colors.white, artifactName), 
-							format("%s%s%s/%s%s", colors.green, artifactInfo.pointsRemaining, colors.white, colors.yellow, C_ArtifactUI.GetCostForPointAtRank(artifactInfo.rank, tier))
+							format("%s%s%s/%s%s", colors.green, power, colors.white, colors.yellow, cost)
 						)
 					end
 				end
@@ -2020,16 +2036,16 @@ columns["ArtifactKnowledge"] = {
 			tooltip:AddLine(" ")
 			
 
-			tooltip:AddDoubleLine(
-				format("%s%s: %s-", colors.white, 1, colors.green), 
-				format("%s%s: %s+%s %s%%", colors.white, 26, colors.green, FormatXPGain(26), colors.yellow)
-			)
+			-- tooltip:AddDoubleLine(
+				-- format("%s%s: %s-", colors.white, 1, colors.green), 
+				-- format("%s%s: %s+%s %s%%", colors.white, 26, colors.green, FormatXPGain(26), colors.yellow)
+			-- )
 			
-			local numRows = 24
-			for i = 1, numRows do
+			local numRows = 27
+			for i = 2, numRows + 1 do
 				tooltip:AddDoubleLine(
-					format("%s%s: %s+%s %s%%", colors.white, i+1, colors.green, FormatXPGain(i+1), colors.yellow), 
-					format("%s%s: %s+%s %s%%", colors.white, i+2+numRows, colors.green, FormatXPGain(i+2+numRows), colors.yellow)
+					format("%s%s: %s+%s %s%%", colors.white, i, colors.green, FormatXPGain(i), colors.yellow), 
+					format("%s%s: %s+%s %s%%", colors.white, i + numRows, colors.green, FormatXPGain(i + numRows), colors.yellow)
 				)
 			end
 		end,
@@ -2197,7 +2213,7 @@ function ns:Update()
 	local container = AltoholicTabSummary.SortButtons
 	for i = 0, #currentMode do
 		if currentMode[i] == currentColumn then
-			container["Sort"..i].Arrow:Draw(sortOrder)
+			container["Sort"..i]:DrawArrow(sortOrder)
 		end
 	end
 	
@@ -2271,7 +2287,7 @@ function addon:AiLTooltip()
 	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME3), FormatAiL("333-372"))
 	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME4), FormatAiL("358-530"))
 	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME5), FormatAiL("550-720+"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME6), FormatAiL("805-900+"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME6), FormatAiL("805-940+"))
 	
 	-- tt:AddLine(colors.teal .. L["Level"] .. " 90",1,1,1);
 	-- tt:AddDoubleLine(colors.yellow .. "358", format("%s%s: %s", colors.white, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY1))

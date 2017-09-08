@@ -145,7 +145,7 @@
 --
 
 
-local THIS_VERSION = 0.56
+local THIS_VERSION = 0.57
 
 if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   TjDropDownMenu = TjDropDownMenu or {};
@@ -617,7 +617,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   end
 
   function TjDropDownMenu.DropBtnOnClick(self)
-    PlaySound("igMainMenuOptionCheckBoxOn");
+    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
     self:GetParent():OpenMenu();
   end
 

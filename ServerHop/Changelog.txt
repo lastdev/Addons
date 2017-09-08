@@ -1,9 +1,28 @@
-[[https://wow.curseforge.com/addons/server-hop/pages/changes-to-cross-realm-in-legion/|Read about hopping post 7.0.3]]
+Server Hop 7.2.5.1
+7.2.5 support added, thanks to the community for a fix.
 
-**Server Hop 7.2.4
-This is a very minor update, sorry it took so long. I'm doing something big, stay tuned.
-*Search mode:
-** Addon won't pop up on search results.
+Server Hop 7.2.4.1
+Addon options also close when you hide addon window.
+Fixed a wrong state in options, causing addon to hide a main frame.
+Cleared locale a bit more.
+
+Server Hop 7.2.4
+Addon became more lightweight, unused code was cleared. Hopping became more optimized.
+You can now literally spam hop button.
+
+Hop Mode:
+Hop Button can now also accept invites.
+Added click spam protection when you're entering the group. You won't be able to leave the group by accidental spamming in the first 5 seconds.
+Added safe time gap while you're leaving the group. During that time button is not clickable and macro won't do anything.
+Added spinner to indicate this.
+Recalculates groups when they're updated, also ignores delisted groups.
+
+Search Mode:
+REMOVED! Now it's a separate addon with better functionality. Check it out! https://wow.curseforge.com/projects/filter
+
+Minimap Icon:
+REMOVED! You can still open addon in the Premade Group Finder menu or by typing either /sh or /serverhop in chat.
+Explanation: there's no actual need to keep addon's window open once you've set it up. Just spam the macro.
 
 **Server Hop 7.2.3
 UNLEASH THE HOPPERS!

@@ -25,7 +25,7 @@ close:SetPoint("TOPRIGHT", badboy, "TOPRIGHT", -5, -5)
 
 local title = badboy:CreateFontString(nil, nil, "GameFontNormalLarge")
 title:SetPoint("TOPLEFT", 16, -16)
-title:SetText("BadBoy v7.2.78") -- packager magic, replaced with tag version
+title:SetText("BadBoy v7.3.3") -- packager magic, replaced with tag version
 
 --[[ Show spam checkbox ]]--
 local btnShowSpam = CreateFrame("CheckButton", nil, badboy, "OptionsBaseCheckButtonTemplate")
@@ -33,7 +33,11 @@ btnShowSpam:SetPoint("TOPLEFT", title, "BOTTOMLEFT")
 btnShowSpam:SetScript("OnClick", function(frame)
 	local tick = frame:GetChecked()
 	BADBOY_OPTIONS.tipSpam = tick
-	PlaySound(tick and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+	if tick then
+		PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+	else
+		PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+	end
 end)
 btnShowSpam:SetScript("OnShow", function(frame)
 	frame:SetChecked(BADBOY_OPTIONS.tipSpam)
@@ -49,7 +53,11 @@ btnNoAnim:SetPoint("TOPLEFT", btnShowSpam, "BOTTOMLEFT")
 btnNoAnim:SetScript("OnClick", function(frame)
 	local tick = frame:GetChecked()
 	BADBOY_OPTIONS.noAnim = tick
-	PlaySound(tick and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+	if tick then
+		PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+	else
+		PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+	end
 end)
 btnNoAnim:SetScript("OnShow", function(frame)
 	frame:SetChecked(BADBOY_OPTIONS.noAnim)
@@ -65,7 +73,11 @@ btnFreqButton:SetPoint("TOPLEFT", btnNoAnim, "BOTTOMLEFT")
 btnFreqButton:SetScript("OnClick", function(frame)
 	local tick = frame:GetChecked()
 	BADBOY_OPTIONS.freqBtn = tick
-	PlaySound(tick and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+	if tick then
+		PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+	else
+		PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+	end
 end)
 btnFreqButton:SetScript("OnShow", function(frame)
 	frame:SetChecked(BADBOY_OPTIONS.freqBtn)

@@ -124,11 +124,14 @@ local function UpdateSpread()
 				itemButton = rowFrame["Item"..j]
 				
 				local slotID = bagIndices[line].from - 3 + j
-				local itemID, itemLink, itemCount = DS:GetSlotInfo(container, slotID)
+				local itemID, itemLink, itemCount, isBattlePet = DS:GetSlotInfo(container, slotID)
 				
 				if (slotID <= containerSize) then 
 					itemButton:SetItem(itemID, itemLink, rarity)
 					itemButton:SetCount(itemCount)
+					if isBattlePet then
+						itemButton:SetIcon(itemID)	-- override the icon if one is returned by datastore
+					end
 					
 					local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
 					itemButton:SetCooldown(startTime, duration, isEnabled)
@@ -202,13 +205,17 @@ local function UpdateAllInOne()
 			local _, _, containerSize = DS:GetContainerInfo(character, containerID)
 
 			for slotID = 1, containerSize do
-				local itemID, itemLink, itemCount = DS:GetSlotInfo(container, slotID)
+				local itemID, itemLink, itemCount, isBattlePet = DS:GetSlotInfo(container, slotID)
+
 				if itemID then
 					currentSlotIndex = currentSlotIndex + 1
 					if (currentSlotIndex > minSlotIndex) and (rowIndex <= numRows) then
 						itemButton = frame["Entry"..rowIndex]["Item"..colIndex]
 						itemButton:SetItem(itemID, itemLink, rarity)
 						itemButton:SetCount(itemCount)
+						if isBattlePet then
+							itemButton:SetIcon(itemID)	-- override the icon if one is returned by datastore
+						end
 						
 						local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
 						itemButton:SetCooldown(startTime, duration, isEnabled)

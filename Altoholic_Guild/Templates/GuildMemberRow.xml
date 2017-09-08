@@ -91,7 +91,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGuildMemberRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.GuildMemberRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

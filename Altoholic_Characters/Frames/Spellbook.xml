@@ -108,7 +108,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoSpellbookPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.SpellbookPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

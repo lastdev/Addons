@@ -1,13 +1,13 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1413 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1441 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
 
 local pairs = pairs
 local string = string
-local table = table 
+local table = table
 local type = type
 
 local GetScreenWidth = GetScreenWidth
@@ -36,6 +36,7 @@ local TYPE_FONT = 5
 local Cur_Branch
 local Cur_Name
 local TempColor = {}
+local PreviousColor = {}
 
 local function Color_Change()
 	local r, g, b = ColorPickerFrame:GetColorRGB()
@@ -68,7 +69,7 @@ local function Fake_Change()
 end
 
 local function Color_Cancel()
-	Colors:SetColor(Cur_Branch, Cur_Name, ColorPickerFrame.previousValues)
+	Colors:SetColor(Cur_Branch, Cur_Name, PreviousColor)
 end
 
 function Colors:GetColor(Branch, Name)
@@ -339,7 +340,7 @@ function Colors:EditColor(Branch, Name, Attach)
 	Cur_Name = Name
 
 	ColorPickerFrame:Hide()
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(856)
 	local r, g, b = ColorPickerFrame:GetColorRGB()
 
 	local c = Colors:GetColor(Branch, Name)
@@ -355,7 +356,8 @@ function Colors:EditColor(Branch, Name, Attach)
 	ColorPickerFrame.func = Color_Change
 
 	ColorPickerFrame:SetColorRGB(c.r, c.g, c.b)
-	ColorPickerFrame.previousValues = c
+	--ColorPickerFrame.previousValues = c
+	PreviousColor.r, PreviousColor.g, PreviousColor.b = c.r, c.g, c.b
 	ColorPickerFrame.cancelFunc = Color_Cancel
 
 	ColorPickerFrame:ClearAllPoints()

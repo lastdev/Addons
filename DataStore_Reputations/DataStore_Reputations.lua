@@ -208,6 +208,8 @@ local factions = {
 	{ id = 1859, name = GetFactionInfoByID(1859) },		-- The Nightfallen
 	{ id = 1894, name = GetFactionInfoByID(1894) },		-- The Wardens
 	{ id = 2045, name = GetFactionInfoByID(2045) },		-- Armies of Legionfall
+	{ id = 2165, name = GetFactionInfoByID(2165) },		-- Army of the Light
+	{ id = 2170, name = GetFactionInfoByID(2170) },		-- Argussian Reach
 }
 
 local FactionUIDsRev = {}

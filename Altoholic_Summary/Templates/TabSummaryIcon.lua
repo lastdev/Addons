@@ -222,16 +222,14 @@ local menuIconCallbacks = {
 	DataStoreOptionsIcon_Initialize,
 }
 
-local function _Icon_OnEnter(frame)
-	local currentMenuID = frame:GetID()
-	
-	local menu = frame:GetParent().ContextualMenu
-	
-	menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
-	menu:Close()
-	menu:Toggle(frame, 0, 0)
-end
-
-addon:RegisterClassExtensions("AltoTabSummaryIcon", {
-	Icon_OnEnter = _Icon_OnEnter,
+addon:Controller("AltoholicUI.TabSummaryIcon", {
+	Icon_OnEnter = function(frame)
+		local currentMenuID = frame:GetID()
+		
+		local menu = frame:GetParent().ContextualMenu
+		
+		menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
+		menu:Close()
+		menu:Toggle(frame, 0, 0)
+	end,
 })

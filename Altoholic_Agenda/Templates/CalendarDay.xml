@@ -30,7 +30,7 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoCalendarDay")
+				Altoholic:BindViewToController(self, "AltoholicUI.CalendarDay")
 			</OnLoad>
 			<OnEnter>
 				self:Day_OnEnter()

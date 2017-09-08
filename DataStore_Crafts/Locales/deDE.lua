@@ -7,3 +7,4 @@ L["BROADCAST_PROFS_DISABLED"] = "Gar nichts wird versendet. Die Deaktivierung di
 L["BROADCAST_PROFS_ENABLED"] = "Die Berufe-Links deiner alternativen Charaktere werden 5 Sekunden nach dem Einloggen über den Gilden-Kanal versendet."
 L["BROADCAST_PROFS_TITLE"] = "Berufe-Links verbreiten"
 L["Secondary Skills"] = "Sekundäre Fertigkeiten"
+

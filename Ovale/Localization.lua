@@ -31,6 +31,8 @@ end
 local locale = GetLocale()
 
 if locale == "deDE" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "Numerische Anzeige"
 L["Affiche le temps de recharge sous forme numérique"] = "Zeige die verbleibende Zeit in numerischer Form"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "Zeige zwei Fähigkeiten und nicht nur eine"
@@ -40,7 +42,17 @@ L["aoe"] = "Flächenschaden"
 L["AOE"] = "Flächenschaden"
 L["Apparence"] = "Aussehen"
 L["arcane_mage_burn_phase"] = "Vorschlagen von Burn-Aktionen"
+--Translation missing 
+-- L["Artifact traits"] = ""
 L["Aura lag"] = "Aura-Verzögerung"
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Blut"
 L["buff"] = "Stärkungszauber"
 L["Cacher bouton vide"] = "Leere Buttons ausblenden"
@@ -57,6 +69,8 @@ L["Code"] = "Code"
 L["Colors"] = "Farben"
 L["Copier sur Script personnalisé"] = "In eigenes Skript kopieren"
 L["Correction de la latence"] = "Latenzkorrektur"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "Aura-Management nachverfolgen"
 L["Debug compile"] = "Wenn das Skript übersetzt wird, nachverfolgen"
 L["Debug enemies"] = "Feinderkennung nachverfolgen"
@@ -66,8 +80,18 @@ L["Debug unknown spells"] = "Warnen, wenn eine unbekannte Spell-ID im Skript ver
 L["Décalage horizontal des options"] = "Optionen horizontal verschieben"
 L["Décalage vertical des options"] = "Optionen vertikal verschieben"
 L["Défilement"] = "Scrollend"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "Existierendes eigenes Skript überschreiben?"
 L["En combat uniquement"] = "Nur im Kampf anzeigen"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "Aufblitz-Leuchtkraft"
 L["Flash size"] = "Aufblitz-Größe"
 L["Flash spells"] = "Aufblitzende Zauber"
@@ -75,11 +99,17 @@ L["Flash spells on action bars when they are ready to be cast. Requires SpellFla
 L["Flash threshold"] = "Aufblitz-Schwellenwert"
 L["Focus"] = "Fokus"
 L["Groupe d'icônes"] = "Icon-Gruppe"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "Icon"
 L["Ignorer les clics souris"] = "Mausklicks ignorieren"
 L["Illuminer l'icône"] = "Icon hervorheben"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Icon hervorheben, wenn Fähigkeit gespammt werden sollte"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Icon blinken lassen, wenn die Fähigkeit bereit ist"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "Unterbrechungen"
 L["Interrupts"] = "Unterbrechungen"
 L["Inverser la boîte à cocher "] = "Checkbox umschalten"
@@ -87,51 +117,102 @@ L["La taille des icônes"] = "Die Icongröße"
 L["La taille des petites icônes"] = "Die Größe der kleinen Icons"
 L["La taille des polices"] = "Die Schriftgröße"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "Verzögerung (in Millisekunden) zwischen Auslösen des Zaubers und dem Zeitpunkt, wenn der Effekt eintritt oder entfernt wird"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Die Icons scrollen"
 L["Long cooldown abilities"] = "Fähigkeiten mit langer Abklingzeit"
 L["main"] = "Hauptangriff"
 L["Main attack"] = "Hauptangriff"
 L["mana"] = "Managewinn"
 L["Marge entre deux icônes"] = "Abstand zwischen den Icons"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "Angriffe während der Bewegung"
 L["multidot"] = "Schaden über Zeit auf mehreren Zielen"
 L["None"] = "Nichts"
 L["not_in_melee_range"] = "nicht in Nahkampfreichweite"
 L["offgcd"] = [=[Fähigkeit ohne globalem Cooldown.
 Neben dem Hauptangriff benutzen.]=]
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
 L["Only count tagged enemies"] = "Zählt nur markierte Gegner"
 L["Opacité des icônes"] = "Undurchsichtigkeit der Icons"
 L["Opacité des options"] = "Undurchsichtigkeit der Optionen"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "Auswahl"
+--Translation missing 
+-- L["Output"] = ""
 L["Overrides"] = "Überschreibungen"
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "vorhersagen"
 L["Prédictif"] = "Zwei Fähigkeiten"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Tastaturkürzel"
 L["Reset"] = "zurücksetzen"
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "Rechts-Klick für Optionen"
 L["Script"] = "Skript"
 L["Script défaut"] = "Standardscript"
 L["Script personnalisé"] = "Eigenes Skript"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "Fähigkeiten mit kurzer Abklingzeit"
 L["shortcd"] = [=[Fähigkeiten mit kurzer Abklingzeit
 Benutzen, sobald sie bereit sind.]=]
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "zeige versteckte"
 L["Show minimap icon"] = "Minikartensymbol zeigen"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "Zeige das Warte-Icon"
 L["Si cible uniquement"] = "nur mit Ziel"
 L["SimulationCraft Profile"] = "SimulationCraft-Profil"
+--Translation missing 
+-- L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = ""
 L["Spellbook"] = "Zauberbuch"
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "Begleiter beschwören"
 L["Taille des icônes"] = "Icongröße"
 L["Taille des petites icônes"] = "Größe der kleinen Icons"
 L["Taille des polices"] = "Schriftgröße"
 L["Taille du second icône"] = "Größe des zweiten Icons"
+--Translation missing 
+-- L["Talents"] = ""
 L["The contents of a SimulationCraft profile."] = "Der Inhalt eines SimulationCraft-Profils."
 L["The script translated from the SimulationCraft profile."] = "Das Skript aus dem SimulationCraft Profil übersetzt."
 L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = "Zeit (ms) des Aufblitzens eines Zaubers, bevor er benutzbar ist."
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Position sperren"
 L["Vertical"] = "Vertikal"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "Sichtbarkeit"
+
 elseif locale == "enUS" then
 L["Action bar"] = "Action bar"
 L["Affichage numérique"] = "Numeric display"
@@ -275,6 +356,7 @@ L["Vertical"] = "Vertical"
 L["Vertical offset"] = "Vertical offset"
 L["Vertical offset from the center of the screen."] = "Vertical offset from the center of the screen."
 L["Visibilité"] = "Visibility"
+
 elseif locale == "esES" then
 L["Action bar"] = "Barra de acción"
 L["Affichage numérique"] = "Visualización numérica"
@@ -309,6 +391,8 @@ L["Code"] = "Código"
 L["Colors"] = "Colores"
 L["Copier sur Script personnalisé"] = "Copiar al script personalizado"
 L["Correction de la latence"] = "Correción de latencia"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "Comprobar gestión de auras."
 L["Debug compile"] = "Comprobar cuándo el script se compila."
 L["Debug enemies"] = "Comprobar la detección de enemigos."
@@ -319,8 +403,14 @@ L["Décalage horizontal des options"] = "Desplazamiento horizontal de las opcion
 L["Décalage vertical des options"] = "Desplazamiento vertical de las opciones"
 L["Défilement"] = "rueda de desclazamiento"
 L["Disabled"] = "Desactivado"
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "¿Deseas sobreescribir el script personalizado actual?"
 L["En combat uniquement"] = "Mostrar sólo en combate"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
 L["Enabled"] = "Activado"
 L["Flash brightness"] = "Brillo del destello"
 L["Flash size"] = "Tamaño del destello"
@@ -329,11 +419,17 @@ L["Flash spells on action bars when they are ready to be cast. Requires SpellFla
 L["Flash threshold"] = "Umbral del destello"
 L["Focus"] = "Foco"
 L["Groupe d'icônes"] = "Grupo de iconos"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "Icono"
 L["Ignorer les clics souris"] = "Ignorar las pulsaciones del ratón"
 L["Illuminer l'icône"] = "Iluminar el icono"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Iluminar el icono cuando la habilidad debe ser utilizada repetidamente"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Iluminar el icono cuando la habilidad esta lista"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "interrumpir"
 L["Interrupts"] = "interrupciones"
 L["Inverser la boîte à cocher "] = "Activar/desactivar la caja de selección"
@@ -341,48 +437,105 @@ L["La taille des icônes"] = "Tamaño de los iconos"
 L["La taille des petites icônes"] = "Tamaño de los iconos pequeños"
 L["La taille des polices"] = "Tamaño del texto"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "Retraso (en milisegundos) entre el lanzamiento de un hechizo y el momento en que el aura correspondiente es aplicada"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Los iconos pueden desplazarse"
 L["Long cooldown abilities"] = "Cooldowns largos"
 L["main"] = "principal"
 L["Main attack"] = "Ataque Principal"
 L["mana"] = "maná"
 L["Marge entre deux icônes"] = "Separación entre los iconos"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "Ataques a utilizar en situaciones de movimiento"
 L["multidot"] = "DOTs en múltiples objetivos"
 L["None"] = "Nada"
 L["not_in_melee_range"] = "Fuera del rango de melé"
 L["offgcd"] = "Habilidad fuera del cooldown global"
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "Opacidad de los iconos"
 L["Opacité des options"] = "Opacidad de las opciones"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "Opciones"
+--Translation missing 
+-- L["Output"] = ""
 L["Overrides"] = "Forzados"
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "predecir"
 L["Prédictif"] = "Dos habilidades"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Accesos directos de teclado"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "Pulsar con el botón derecho para mostrar opciones"
 L["Script"] = "Script"
 L["Script défaut"] = "Script por defecto"
 L["Script personnalisé"] = "Script personalizado"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "Habilidades de cooldown corto"
 L["shortcd"] = "cd corto"
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "Mostrar ocultos"
 L["Show minimap icon"] = "Mostrar el icono del minimapa"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "mostrar el icono de pausa"
 L["Si cible uniquement"] = "Si hay objetivo"
 L["SimulationCraft Profile"] = "Perfil de SimulationCraft"
 L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = "Utilizar el código insertado inmediatamente después de las sentencias Include() para forzar las definiciones estándar, p.e. |cFFFFFF00SpellInfo(tigers_fury tag=main)|r"
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "Invocar mascota"
 L["Taille des icônes"] = "Tamaño de los iconos"
 L["Taille des petites icônes"] = "Tamaño de los iconos pequeños"
 L["Taille des polices"] = "Tamaño del texto"
 L["Taille du second icône"] = "Tamaño del segundo icono"
+--Translation missing 
+-- L["Talents"] = ""
 L["The contents of a SimulationCraft profile."] = "Los contenidos del perfil de SimulationCraft"
 L["The script translated from the SimulationCraft profile."] = "El script traducido del perfil de SimulationCraft"
 L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = "Tiempo de antelación(en milisegundos) para que comience el destello de un hechizo antes de que esté listo"
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Bloquear posición"
 L["Vertical"] = "Vertical"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "Visibilidad"
+
 elseif locale == "esMX" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "Visualización numérica"
 L["Affiche le temps de recharge sous forme numérique"] = "Ver tiempo restante de forma numérica"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "Mostrar dos habilidades y no solo una"
@@ -393,7 +546,17 @@ Se adapta al número total de enemigos.]=]
 L["AOE"] = "Rotación multi-target"
 L["Apparence"] = "Apariencia"
 L["arcane_mage_burn_phase"] = "Acción de daño rápido sugerida"
+--Translation missing 
+-- L["Artifact traits"] = ""
 L["Aura lag"] = "Retardo de aura"
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Sangre"
 L["buff"] = "Buffs"
 L["Cacher bouton vide"] = "Ocultar botones vacíos"
@@ -407,8 +570,12 @@ L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible
 L["Click to select the script."] = "Haz clic para seleccionar el script."
 L["Cliquer pour afficher/cacher les options"] = "Click para ocultar/ver opciones"
 L["Code"] = "Código"
+--Translation missing 
+-- L["Colors"] = ""
 L["Copier sur Script personnalisé"] = "Copiar al script personalizado"
 L["Correction de la latence"] = "Correción de latencia"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "Comprobar gestión de auras."
 L["Debug compile"] = "Comprobar cuando el script se compila."
 L["Debug enemies"] = "Comprobar la detección de enemigos."
@@ -418,8 +585,18 @@ L["Debug unknown spells"] = "Avisar si se utiliza algún ID de hechizo desconoci
 L["Décalage horizontal des options"] = "Desplazamiento horizontal de las opciones"
 L["Décalage vertical des options"] = "Desplazamiento vertical de las opciones"
 L["Défilement"] = "Rueda de desplazamiento"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "¿Deseas sobrescribir el script personalizado actual?"
 L["En combat uniquement"] = "Mostrar sólo en combate"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "Brillo del destello"
 L["Flash size"] = "Tamaño del destello"
 L["Flash spells"] = "Destello del hechizo"
@@ -427,11 +604,17 @@ L["Flash spells on action bars when they are ready to be cast. Requires SpellFla
 L["Flash threshold"] = "Umbral del destello"
 L["Focus"] = "Foco"
 L["Groupe d'icônes"] = "Grupo de iconos"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "Icono"
 L["Ignorer les clics souris"] = "Ignorar las pulsaciones del ratón"
 L["Illuminer l'icône"] = "Iluminar el icono"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Iluminar el icono cuando la habilidad debe ser utilizada repetidamente"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Iluminar el icono cuando la habilidad está lista"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "Interrupciones"
 L["Interrupts"] = "Interrupciones"
 L["Inverser la boîte à cocher "] = "Activar/desactivar la caja de selección"
@@ -439,48 +622,103 @@ L["La taille des icônes"] = "Tamaño de los iconos"
 L["La taille des petites icônes"] = "Tamaño de los iconos pequeños"
 L["La taille des polices"] = "Tamaño del texto"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "Retraso (en milisegundos) entre el lanzamiento de un hechizo y el momento en que el aura correspondiente es aplicada o removida"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Los iconos pueden desplazarse"
 L["Long cooldown abilities"] = "Cooldowns largos"
 L["main"] = "Ataque principal"
 L["Main attack"] = "Ataque Principal"
 L["mana"] = "Aumento de maná"
 L["Marge entre deux icônes"] = "Separación entre los iconos"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "Ataques a utilizar en situaciones de movimiento"
 L["multidot"] = "DOTs en múltiples objetivos"
 L["None"] = "Nada"
 L["not_in_melee_range"] = "Fuera del rango de melé"
 L["offgcd"] = "Habilidad fuera del cooldown global"
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "Opacidad de los iconos"
 L["Opacité des options"] = "Opacidad de las opciones"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "Opciones"
+--Translation missing 
+-- L["Output"] = ""
 L["Overrides"] = "Forzados"
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "Siguiente ataque no de relleno."
 L["Prédictif"] = "Dos habilidades"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Atajos del teclado"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "Pulsar con el botón derecho para mostrar opciones."
 L["Script"] = "Script"
 L["Script défaut"] = "Script por defecto"
 L["Script personnalisé"] = "Script personalizado"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "Habilidades de cooldown corto"
 L["shortcd"] = [=[Habilidades de cooldown corto.
 Lánzalas tan pronto sea posible.]=]
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "Mostrar scripts ocultos"
 L["Show minimap icon"] = "Mostrar el icono del minimapa"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "Mostrar el icono de pausa"
 L["Si cible uniquement"] = "Si hay objetivo"
 L["SimulationCraft Profile"] = "Perfil de SimulationCraft"
 L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = "Utilizar el código insertado inmediatamente después de las sentencias Include() para forzar las definiciones estándar, ej: |cFFFFFF00SpellInfo(tigers_fury tag=main)|r"
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "Invocar mascota."
 L["Taille des icônes"] = "Tamaño de los iconos"
 L["Taille des petites icônes"] = "Tamaño de los iconos pequeños"
 L["Taille des polices"] = "Tamaño del texto"
 L["Taille du second icône"] = "Tamaño del segundo icono"
+--Translation missing 
+-- L["Talents"] = ""
 L["The contents of a SimulationCraft profile."] = "Contenidos del perfil de SimulationCraft"
 L["The script translated from the SimulationCraft profile."] = "Script traducido del perfil de SimulationCraft"
 L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = "Tiempo de antelación (en milisegundos) para que comience el destello de un hechizo antes de que esté listo"
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Bloquear posición"
 L["Vertical"] = "Vertical"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "Visibilidad"
+
 elseif locale == "frFR" then
 L["Action bar"] = "Barre d'action"
 L["Affichage numérique"] = "Affichage numérique"
@@ -623,7 +861,10 @@ L["Vertical"] = "Vertical"
 L["Vertical offset"] = "Décalage vertical"
 L["Vertical offset from the center of the screen."] = "Décalage vertical depuis le centre de l'écran"
 L["Visibilité"] = "Visibilité"
+
 elseif locale == "itIT" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "Esposizione Numerica"
 L["Affiche le temps de recharge sous forme numérique"] = "Mostra il tempo rimanente in forma numerica"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "Espone due abilita' e non solo una"
@@ -632,7 +873,19 @@ L["Afficher les raccourcis clavier dans le coin inférieur gauche des icônes"] 
 L["aoe"] = "Attacchi a Bersaglio Multiplo"
 L["AOE"] = "AdE"
 L["Apparence"] = "Apparenza"
+--Translation missing 
+-- L["arcane_mage_burn_phase"] = ""
+--Translation missing 
+-- L["Artifact traits"] = ""
 L["Aura lag"] = "Aura lag"
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Sangue"
 L["buff"] = "Benefici"
 L["Cacher bouton vide"] = "Nascondi bottoni vuoti"
@@ -646,8 +899,12 @@ L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible
 L["Click to select the script."] = "Clicca per selezionare lo script."
 L["Cliquer pour afficher/cacher les options"] = "Premere per nascondere/mostrare le opzioni"
 L["Code"] = "Codice"
+--Translation missing 
+-- L["Colors"] = ""
 L["Copier sur Script personnalisé"] = "Copia in script personalizzato"
 L["Correction de la latence"] = "Correzione Latenza"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "Debug aura"
 L["Debug compile"] = "Debug compilazione"
 L["Debug enemies"] = "Debug nemici"
@@ -657,18 +914,38 @@ L["Debug unknown spells"] = "Debug Incantesimi sconosciuti"
 L["Décalage horizontal des options"] = "Opzioni spostamento orizzontare"
 L["Décalage vertical des options"] = "Opzioni spostamento verticale"
 L["Défilement"] = "Scorrimento"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "Sovrascrivere lo script personalizzato esistente ?"
 L["En combat uniquement"] = "Mostra solo in combattimento"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "Mostra luminosità"
 L["Flash size"] = "Mostra grandezza"
 L["Flash spells"] = "Mostra incantesimi"
+--Translation missing 
+-- L["Flash spells on action bars when they are ready to be cast. Requires SpellFlashCore"] = ""
+--Translation missing 
+-- L["Flash threshold"] = ""
 L["Focus"] = "Focus"
 L["Groupe d'icônes"] = "Gruppo d'Icone"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "Icona"
 L["Ignorer les clics souris"] = "Ignora pressioni mouse"
 L["Illuminer l'icône"] = "Evidenzia icona"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Evidenzia icona quando l'abilita' dovrebbe essere spammata"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Illumina l'icona quando l'abilita' e' pronta"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "Interrompi"
 L["Interrupts"] = "Interrompi"
 L["Inverser la boîte à cocher "] = "Inverti spunta"
@@ -676,42 +953,113 @@ L["La taille des icônes"] = "La scala dell'icona"
 L["La taille des petites icônes"] = "La scala dell'icona piccola"
 L["La taille des polices"] = "La scala del carattere"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "Lag (in millisecondi) tra quando un incantesimo è lanciato e quando l'aura d'effetto è applicata o rimossa"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Scorri le icone"
 L["Long cooldown abilities"] = "Abilita' con cooldown lungo"
 L["main"] = "Attacco Principale"
 L["Main attack"] = "Attacco Principale"
 L["mana"] = "Guadagno Mana"
 L["Marge entre deux icônes"] = "Margine tra le icone"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "in movimento"
 L["multidot"] = "Danni a Tempo su bersagli multipli"
 L["None"] = "Nessuno"
 L["not_in_melee_range"] = "non in mischia"
 L["offgcd"] = [=[Abilita' fuori dal Cooldown globale.
 Da lanciare assieme agli attacchi principali.]=]
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "Opacita' icone"
 L["Opacité des options"] = "Opzioni di opacita'"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "Opzioni"
+--Translation missing 
+-- L["Output"] = ""
+--Translation missing 
+-- L["Overrides"] = ""
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "predizione"
 L["Prédictif"] = "Due abilita'"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Scorciatoie da tastiera"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "Click-Destro per opzioni."
 L["Script"] = "Script"
+--Translation missing 
+-- L["Script défaut"] = ""
 L["Script personnalisé"] = "Script Personalizzato"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "Recupero corto"
 L["shortcd"] = "recupero corto"
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "Mostra nascosti"
 L["Show minimap icon"] = "Mostra icona minimappa"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "mostra aspetta"
 L["Si cible uniquement"] = "Se si ha un bersaglio"
+--Translation missing 
+-- L["SimulationCraft Profile"] = ""
+--Translation missing 
+-- L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = ""
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "evoca pet"
 L["Taille des icônes"] = "Scala icone"
 L["Taille des petites icônes"] = "Scala piccole icone"
 L["Taille des polices"] = "Scala caratteri"
 L["Taille du second icône"] = "Dimensione seconda icona"
+--Translation missing 
+-- L["Talents"] = ""
+--Translation missing 
+-- L["The contents of a SimulationCraft profile."] = ""
+--Translation missing 
+-- L["The script translated from the SimulationCraft profile."] = ""
+--Translation missing 
+-- L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = ""
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Blocca Posizione"
 L["Vertical"] = "Verticale"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "Visibilità"
+
 elseif locale == "koKR" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "숫자 표시"
 L["Affiche le temps de recharge sous forme numérique"] = "숫자 형태로 남은 시간을 표시합니다."
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "두번째 능력을 표시합니다."
@@ -720,6 +1068,20 @@ L["Afficher les raccourcis clavier dans le coin inférieur gauche des icônes"] 
 L["aoe"] = "다중 대상 공격"
 L["AOE"] = "AOE"
 L["Apparence"] = "외형"
+--Translation missing 
+-- L["arcane_mage_burn_phase"] = ""
+--Translation missing 
+-- L["Artifact traits"] = ""
+--Translation missing 
+-- L["Aura lag"] = ""
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Blood"
 L["buff"] = "버프"
 L["Cacher bouton vide"] = "빈 버튼 숨김"
@@ -730,46 +1092,199 @@ L["Caractère de portée"] = "범위 지시기"
 L["cd"] = [=[긴 재사용 대기시간 능력입니다.
 Cast as soon as possible or keep for multiplied damage phases.]=]
 L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible est à portée"] = "이 문자는 대상이 범위에 있을때 아이콘에 표시됩니다."
+--Translation missing 
+-- L["Click to select the script."] = ""
 L["Cliquer pour afficher/cacher les options"] = "클릭시 옵션 숨김/표시"
 L["Code"] = "코드"
+--Translation missing 
+-- L["Colors"] = ""
+--Translation missing 
+-- L["Copier sur Script personnalisé"] = ""
 L["Correction de la latence"] = "대기시간 수정"
+--Translation missing 
+-- L["Debug"] = ""
+--Translation missing 
+-- L["Debug aura"] = ""
+--Translation missing 
+-- L["Debug compile"] = ""
+--Translation missing 
+-- L["Debug enemies"] = ""
+--Translation missing 
+-- L["Debug GUID"] = ""
+--Translation missing 
+-- L["Debug missing spells"] = ""
+--Translation missing 
+-- L["Debug unknown spells"] = ""
 L["Décalage horizontal des options"] = "가로 간격"
 L["Décalage vertical des options"] = "세로 간격"
 L["Défilement"] = "스크룰"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
+--Translation missing 
+-- L["Ecraser le Script personnalisé préexistant?"] = ""
 L["En combat uniquement"] = "전투 상태일때만 표시"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "번쩍임 밝기"
 L["Flash size"] = "번쩍임 크기"
 L["Flash spells"] = "주문 번쩍임"
+--Translation missing 
+-- L["Flash spells on action bars when they are ready to be cast. Requires SpellFlashCore"] = ""
+--Translation missing 
+-- L["Flash threshold"] = ""
 L["Focus"] = "주시 대상"
+--Translation missing 
+-- L["Groupe d'icônes"] = ""
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
+--Translation missing 
+-- L["Icône"] = ""
 L["Ignorer les clics souris"] = "마우스 클릭 무시"
 L["Illuminer l'icône"] = "아이콘 강조"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Hightlight icon when ability should be spammed"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "능력이 준비되면 아이콘을 반짝입니다."
+--Translation missing 
+-- L["Input"] = ""
+--Translation missing 
+-- L["interrupt"] = ""
+--Translation missing 
+-- L["Interrupts"] = ""
 L["Inverser la boîte à cocher "] = "체크 박스 토글"
 L["La taille des icônes"] = "아이콘 크기"
 L["La taille des petites icônes"] = "작은 아이콘의 크기를 설정합니다."
 L["La taille des polices"] = "폰크 크기"
+--Translation missing 
+-- L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = ""
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "아이콘 스크룰"
 L["Long cooldown abilities"] = "긴 재사용 대기시간 능력입니다"
 L["main"] = "Main Attack"
+--Translation missing 
+-- L["Main attack"] = ""
 L["mana"] = "마나 획득"
 L["Marge entre deux icônes"] = "아이콘 간격"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
+--Translation missing 
+-- L["moving"] = ""
 L["multidot"] = "Damage Over Time on multiple targets"
 L["None"] = "None"
+--Translation missing 
+-- L["not_in_melee_range"] = ""
 L["offgcd"] = [=[전역 재사용 대기시간 능력입니다.
 Cast alongside your Main Attack.]=]
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "아이콘 투명도"
 L["Opacité des options"] = "투명도 옵션을 설정합니다."
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
+--Translation missing 
+-- L["Options"] = ""
+--Translation missing 
+-- L["Output"] = ""
+--Translation missing 
+-- L["Overrides"] = ""
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
+--Translation missing 
+-- L["predict"] = ""
 L["Prédictif"] = "두번째 능력"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "키보드 단축키"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
+--Translation missing 
+-- L["Right-Click for options."] = ""
+--Translation missing 
+-- L["Script"] = ""
+--Translation missing 
+-- L["Script défaut"] = ""
+--Translation missing 
+-- L["Script personnalisé"] = ""
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
+--Translation missing 
+-- L["Short cooldown abilities"] = ""
+--Translation missing 
+-- L["shortcd"] = ""
+--Translation missing 
+-- L["Show"] = ""
+--Translation missing 
+-- L["Show hidden"] = ""
+--Translation missing 
+-- L["Show minimap icon"] = ""
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
+--Translation missing 
+-- L["showwait"] = ""
 L["Si cible uniquement"] = "만약 대상이 있다면"
+--Translation missing 
+-- L["SimulationCraft Profile"] = ""
+--Translation missing 
+-- L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = ""
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
+--Translation missing 
+-- L["summon_pet"] = ""
 L["Taille des icônes"] = "아이콘 크기"
 L["Taille des petites icônes"] = "작은 아이콘 크기"
 L["Taille des polices"] = "폰트 크기"
 L["Taille du second icône"] = "두번째 아이콘 크기"
+--Translation missing 
+-- L["Talents"] = ""
+--Translation missing 
+-- L["The contents of a SimulationCraft profile."] = ""
+--Translation missing 
+-- L["The script translated from the SimulationCraft profile."] = ""
+--Translation missing 
+-- L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = ""
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "위치 잠금"
 L["Vertical"] = "수직선"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
+--Translation missing 
+-- L["Visibilité"] = ""
+
 elseif locale == "ptBR" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "Mostrar números"
 L["Affiche le temps de recharge sous forme numérique"] = "Mostrar o tempo restante de forma numérica"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "Mostrar duas habilidades e não apenas uma"
@@ -778,6 +1293,20 @@ L["Afficher les raccourcis clavier dans le coin inférieur gauche des icônes"] 
 L["aoe"] = "Atacar alvos múltiplos"
 L["AOE"] = "AOE"
 L["Apparence"] = "Aparência"
+--Translation missing 
+-- L["arcane_mage_burn_phase"] = ""
+--Translation missing 
+-- L["Artifact traits"] = ""
+--Translation missing 
+-- L["Aura lag"] = ""
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Sangue"
 L["buff"] = "Buffs"
 L["Cacher bouton vide"] = "Esconder botões vazios"
@@ -788,47 +1317,198 @@ L["Caractère de portée"] = "Indicador de alcance"
 L["cd"] = [=[Habilidades de cooldown longo.
 Use assim que possível ou espere por fases com dano maior.]=]
 L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible est à portée"] = "Este texto é mostrado no ícone para apontar se o alvo está no alcance"
+--Translation missing 
+-- L["Click to select the script."] = ""
 L["Cliquer pour afficher/cacher les options"] = "Clique para mostrar/esconder opções"
 L["Code"] = "Código"
+--Translation missing 
+-- L["Colors"] = ""
+--Translation missing 
+-- L["Copier sur Script personnalisé"] = ""
 L["Correction de la latence"] = "Correção de latência"
+--Translation missing 
+-- L["Debug"] = ""
+--Translation missing 
+-- L["Debug aura"] = ""
+--Translation missing 
+-- L["Debug compile"] = ""
+--Translation missing 
+-- L["Debug enemies"] = ""
+--Translation missing 
+-- L["Debug GUID"] = ""
+--Translation missing 
+-- L["Debug missing spells"] = ""
+--Translation missing 
+-- L["Debug unknown spells"] = ""
 L["Décalage horizontal des options"] = "Opções de mudança horizontal"
 L["Décalage vertical des options"] = "Opções de mduança vertical"
 L["Défilement"] = "Rolagem"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
+--Translation missing 
+-- L["Ecraser le Script personnalisé préexistant?"] = ""
 L["En combat uniquement"] = "Mostrar só em combate"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "Intensidade do brilho"
 L["Flash size"] = "Tamanho do brilho"
 L["Flash spells"] = "Brilho do feitiço"
+--Translation missing 
+-- L["Flash spells on action bars when they are ready to be cast. Requires SpellFlashCore"] = ""
+--Translation missing 
+-- L["Flash threshold"] = ""
 L["Focus"] = "Foco"
+--Translation missing 
+-- L["Groupe d'icônes"] = ""
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
+--Translation missing 
+-- L["Icône"] = ""
 L["Ignorer les clics souris"] = "Ignorar cliques do mouse"
 L["Illuminer l'icône"] = "Iluminar ícone"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Iluminar ícone quando habilidade deverá ser spamada"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Iluminar ícone quando habilidade estiver pronta"
+--Translation missing 
+-- L["Input"] = ""
+--Translation missing 
+-- L["interrupt"] = ""
+--Translation missing 
+-- L["Interrupts"] = ""
 L["Inverser la boîte à cocher "] = "Alternar checar caixa"
 L["La taille des icônes"] = "Escala dos ícones"
 L["La taille des petites icônes"] = "Escala dos ícones pequenos"
 L["La taille des polices"] = "Escala da fonte"
+--Translation missing 
+-- L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = ""
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Rolar os ícones"
 L["Long cooldown abilities"] = "Habilidades de cooldown longo"
 L["main"] = "Ataque principal"
 L["Main attack"] = "Ataque principal"
 L["mana"] = "Ganho de mana"
 L["Marge entre deux icônes"] = "Margem entre ícones"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
+--Translation missing 
+-- L["moving"] = ""
 L["multidot"] = "Dano Através do Tempo em múltiplos alvos"
 L["None"] = "Nenhum"
+--Translation missing 
+-- L["not_in_melee_range"] = ""
 L["offgcd"] = [=[Habilidade fora do cooldown global.
 Use junto do seu Ataque Principal.]=]
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "Opacidade dos ícones"
 L["Opacité des options"] = "Opacidade das opções"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
+--Translation missing 
+-- L["Options"] = ""
+--Translation missing 
+-- L["Output"] = ""
+--Translation missing 
+-- L["Overrides"] = ""
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
+--Translation missing 
+-- L["predict"] = ""
 L["Prédictif"] = "Duas habilidades"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Atalhos do teclado"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
+--Translation missing 
+-- L["Right-Click for options."] = ""
+--Translation missing 
+-- L["Script"] = ""
+--Translation missing 
+-- L["Script défaut"] = ""
+--Translation missing 
+-- L["Script personnalisé"] = ""
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
+--Translation missing 
+-- L["Short cooldown abilities"] = ""
+--Translation missing 
+-- L["shortcd"] = ""
+--Translation missing 
+-- L["Show"] = ""
+--Translation missing 
+-- L["Show hidden"] = ""
+--Translation missing 
+-- L["Show minimap icon"] = ""
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
+--Translation missing 
+-- L["showwait"] = ""
 L["Si cible uniquement"] = "Se tiver alvo"
+--Translation missing 
+-- L["SimulationCraft Profile"] = ""
+--Translation missing 
+-- L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = ""
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
+--Translation missing 
+-- L["summon_pet"] = ""
 L["Taille des icônes"] = "Escala do ícone"
 L["Taille des petites icônes"] = "Escala do ícone pequeno"
 L["Taille des polices"] = "Escala da fonte"
 L["Taille du second icône"] = "Tamanho do segundo ícone"
+--Translation missing 
+-- L["Talents"] = ""
+--Translation missing 
+-- L["The contents of a SimulationCraft profile."] = ""
+--Translation missing 
+-- L["The script translated from the SimulationCraft profile."] = ""
+--Translation missing 
+-- L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = ""
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Travar posição"
 L["Vertical"] = "Vertical"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
+--Translation missing 
+-- L["Visibilité"] = ""
+
 elseif locale == "ruRU" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "Цифровой дисплей"
 L["Affiche le temps de recharge sous forme numérique"] = "Показать отсчет времени в цифровой форме"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "Показать две способности вместо одной"
@@ -838,7 +1518,17 @@ L["aoe"] = "Атака нескольких противников. Адапти
 L["AOE"] = "Приоритет при атаке нескольких противников"
 L["Apparence"] = "Внешний вид"
 L["arcane_mage_burn_phase"] = "Предложить действия для поджигания"
+--Translation missing 
+-- L["Artifact traits"] = ""
 L["Aura lag"] = "Задержка ауры"
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "Кровь"
 L["buff"] = "Баффы"
 L["Cacher bouton vide"] = "Скрыть пустые кнопки"
@@ -852,8 +1542,12 @@ L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible
 L["Click to select the script."] = "Клик для выбора скрипта"
 L["Cliquer pour afficher/cacher les options"] = "Нажмите, чтобы скрыть/показать опции"
 L["Code"] = "Код"
+--Translation missing 
+-- L["Colors"] = ""
 L["Copier sur Script personnalisé"] = "Скопировать в Пользовательский скрипт"
 L["Correction de la latence"] = "Коррекция задержки"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "Отслеживать управление аурами."
 L["Debug compile"] = "Отслеживать компиляцию скрипта."
 L["Debug enemies"] = "Отслеживать появление противников."
@@ -863,8 +1557,18 @@ L["Debug unknown spells"] = "Предупреждать о неизвестно�
 L["Décalage horizontal des options"] = "Горизонтальное смещение опций"
 L["Décalage vertical des options"] = "Вертикальное смещение опций"
 L["Défilement"] = "Прокрутка (Скроллинг)"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "Перезаписать существующий Пользовательский скрипт?"
 L["En combat uniquement"] = "Показывать только в бою"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "Яркость подсветки"
 L["Flash size"] = "Размер подсветки"
 L["Flash spells"] = "Подсветка умения"
@@ -872,11 +1576,17 @@ L["Flash spells on action bars when they are ready to be cast. Requires SpellFla
 L["Flash threshold"] = "Преддверие вспышкой"
 L["Focus"] = "Фокус"
 L["Groupe d'icônes"] = "Группа иконок"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "Иконка"
 L["Ignorer les clics souris"] = "Игнорировать клики мыши"
 L["Illuminer l'icône"] = "Подсветка иконок"
 L["Illuminer l'icône quand la technique doit être spammée"] = "Подсвечивать иконки когда способность должна \"спамиться\""
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "Мигать когда способность готова"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "Прерывания"
 L["Interrupts"] = "Прерывания"
 L["Inverser la boîte à cocher "] = "Переключить флажок"
@@ -884,12 +1594,18 @@ L["La taille des icônes"] = "Размер иконок"
 L["La taille des petites icônes"] = "Размер маленьких иконок"
 L["La taille des polices"] = "Размер шрифта"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "Задержка (в милисекундах) между произнесением заклинания и применением/пропаданием ауры"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "Переместить иконки"
 L["Long cooldown abilities"] = "Способности с большим кулдауном"
 L["main"] = "Основная атака"
 L["Main attack"] = "Основная атака"
 L["mana"] = "Мана (очки маны)"
 L["Marge entre deux icônes"] = "Расстояние между иконками"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "Атаки, используемые при движении"
 L["multidot"] = "ДОТы на нескольких целях"
 L["None"] = "Нет"
@@ -901,36 +1617,83 @@ L["Only count a mob as an enemy if it is directly affected by a player's spells.
 L["Only count tagged enemies"] = "Считать только помеченные цели."
 L["Opacité des icônes"] = "Прозрачность иконок"
 L["Opacité des options"] = "Прозрачность настроек"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "Опции"
+--Translation missing 
+-- L["Output"] = ""
 L["Overrides"] = "Перезаписанные"
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "Следующая не \"заполняющая\" атака."
 L["Prédictif"] = "Две способности"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "Горячие клавиши"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "Правая кнопка для настроек"
 L["Script"] = "Скрипт"
 L["Script défaut"] = "Скрипт по умолчанию"
 L["Script personnalisé"] = "Пользовательский скрипт"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "Способности с малым временем восстановления"
 L["shortcd"] = [=[Способности с малым временем восстановления.
 Используются так часто, как только возможно.]=]
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "показать скрытые скрипты"
 L["Show minimap icon"] = "Показать иконку на миникарте"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "Показывать иконку ожидания"
 L["Si cible uniquement"] = "Если выбрана цель"
 L["SimulationCraft Profile"] = "Профайл SimulationCraft"
 L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = "Код скрипта вставляется сразу после выражения Include() для перезаписи стандартных определений, например  |cFFFFFF00SpellInfo(tigers_fury tag=main)|r"
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "Призвать питомца."
 L["Taille des icônes"] = "Размер иконки"
 L["Taille des petites icônes"] = "Масштаб маленькой иконки"
 L["Taille des polices"] = "Размер шрифта"
 L["Taille du second icône"] = "Размер второй иконки"
+--Translation missing 
+-- L["Talents"] = ""
 L["The contents of a SimulationCraft profile."] = "Содержимре профайла SimulationCraft"
 L["The script translated from the SimulationCraft profile."] = "Преобразованный скрипт из профайла SimulationCraft"
 L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = "Время (в миллисекундах) за которое, до готовности, способность подсветится."
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "Блокировка позиции"
 L["Vertical"] = "Вертикально"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "Показывать"
+
 elseif locale == "zhCN" then
+--Translation missing 
+-- L["Action bar"] = ""
 L["Affichage numérique"] = "数字显示"
 L["Affiche le temps de recharge sous forme numérique"] = "用数字显示剩余时间"
 L["Affiche les deux prochains sorts et pas uniquement le suivant"] = "显示下2个需要释放的技能而不仅是1个"
@@ -939,7 +1702,19 @@ L["Afficher les raccourcis clavier dans le coin inférieur gauche des icônes"] 
 L["aoe"] = "多目标攻击"
 L["AOE"] = "AOE输出循环"
 L["Apparence"] = "环境"
+--Translation missing 
+-- L["arcane_mage_burn_phase"] = ""
+--Translation missing 
+-- L["Artifact traits"] = ""
 L["Aura lag"] = "触发与移除效果延迟"
+--Translation missing 
+-- L["Auras (player)"] = ""
+--Translation missing 
+-- L["Auras (target)"] = ""
+--Translation missing 
+-- L["Auras on the player"] = ""
+--Translation missing 
+-- L["Auras on the target"] = ""
 L["Blood"] = "鲜血"
 L["buff"] = "增益"
 L["Cacher bouton vide"] = "隐藏空按钮的背景"
@@ -953,8 +1728,12 @@ L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible
 L["Click to select the script."] = "点击以选取脚本"
 L["Cliquer pour afficher/cacher les options"] = "点击来隐藏/显示选项"
 L["Code"] = "代码"
+--Translation missing 
+-- L["Colors"] = ""
 L["Copier sur Script personnalisé"] = "复制到自定义脚本"
 L["Correction de la latence"] = "延迟修正"
+--Translation missing 
+-- L["Debug"] = ""
 L["Debug aura"] = "追踪光环管理."
 L["Debug compile"] = "追踪已编译脚本."
 L["Debug enemies"] = "追踪敌人侦测."
@@ -964,8 +1743,18 @@ L["Debug unknown spells"] = "脚本中使用了未知的法术ID时提醒."
 L["Décalage horizontal des options"] = "选项水平移位"
 L["Décalage vertical des options"] = "选项垂直移位"
 L["Défilement"] = "滑动动画显示下一个技能"
+--Translation missing 
+-- L["Disabled"] = ""
+--Translation missing 
+-- L["Display refresh statistics"] = ""
 L["Ecraser le Script personnalisé préexistant?"] = "覆盖已存在的自定义脚本?"
 L["En combat uniquement"] = "仅在战斗中显示"
+--Translation missing 
+-- L["Enable debugging messages for the %s module."] = ""
+--Translation missing 
+-- L["Enable profiling for the %s module."] = ""
+--Translation missing 
+-- L["Enabled"] = ""
 L["Flash brightness"] = "闪光亮度"
 L["Flash size"] = "闪光尺寸"
 L["Flash spells"] = "法术闪光"
@@ -973,11 +1762,17 @@ L["Flash spells on action bars when they are ready to be cast. Requires SpellFla
 L["Flash threshold"] = "闪光阈值"
 L["Focus"] = "焦点"
 L["Groupe d'icônes"] = "图标分组"
+--Translation missing 
+-- L["Horizontal offset"] = ""
+--Translation missing 
+-- L["Horizontal offset from the center of the screen."] = ""
 L["Icône"] = "图标"
 L["Ignorer les clics souris"] = "忽略鼠标点击"
 L["Illuminer l'icône"] = "高亮显示图标"
 L["Illuminer l'icône quand la technique doit être spammée"] = "当技能应重复使用时高亮显示图标"
 L["Illuminer l'icône quand le temps de recharge est écoulé"] = "技能就绪时闪烁图标"
+--Translation missing 
+-- L["Input"] = ""
 L["interrupt"] = "打断施法"
 L["Interrupts"] = "打断施法"
 L["Inverser la boîte à cocher "] = "开启/关闭选择框"
@@ -985,44 +1780,109 @@ L["La taille des icônes"] = "图标大小"
 L["La taille des petites icônes"] = "小型图标大小"
 L["La taille des polices"] = "字体大小"
 L["Lag (in milliseconds) between when an spell is cast and when the affected aura is applied or removed"] = "释放一个技能与其触发/移除效果之间的延迟"
+--Translation missing 
+-- L["Layout"] = ""
 L["Les icônes se déplacent"] = "滚动图标"
 L["Long cooldown abilities"] = "长CD的技能与物品"
 L["main"] = "主要攻击技能"
 L["Main attack"] = "主要攻击技能"
 L["mana"] = "法力获取"
 L["Marge entre deux icônes"] = "图标间距"
+--Translation missing 
+-- L["Middle-Click to toggle the script options panel."] = ""
+--Translation missing 
+-- L["Modules"] = ""
 L["moving"] = "移动中使用攻击"
 L["multidot"] = "多目标持续伤害"
 L["None"] = "无"
 L["not_in_melee_range"] = "脱离近战范围"
 L["offgcd"] = [=[无公共冷却的技能与物品
 可以在你使用主攻技能的同时使用。]=]
+--Translation missing 
+-- L["Only count a mob as an enemy if it is directly affected by a player's spells."] = ""
+--Translation missing 
+-- L["Only count tagged enemies"] = ""
 L["Opacité des icônes"] = "图标透明度"
 L["Opacité des options"] = "选项透明度"
+--Translation missing 
+-- L["Open configuration panel in a separate, movable window."] = ""
 L["Options"] = "选项"
+--Translation missing 
+-- L["Output"] = ""
+--Translation missing 
+-- L["Overrides"] = ""
+--Translation missing 
+-- L["Ping for Ovale users in group"] = ""
+--Translation missing 
+-- L["Power"] = ""
 L["predict"] = "下一个非填充性技能。"
 L["Prédictif"] = "两个技能"
+--Translation missing 
+-- L["Profiling"] = ""
 L["Raccourcis clavier"] = "快捷键"
+--Translation missing 
+-- L["Reset"] = ""
+--Translation missing 
+-- L["Reset the profiling statistics."] = ""
 L["Right-Click for options."] = "右键点击打开选项"
 L["Script"] = "脚本"
 L["Script défaut"] = "默认脚本"
 L["Script personnalisé"] = "自定义脚本"
+--Translation missing 
+-- L["Shift-Right-Click for the current trace log."] = ""
 L["Short cooldown abilities"] = "短CD技能"
 L["shortcd"] = [=[短CD技能.
 卡CD使用]=]
+--Translation missing 
+-- L["Show"] = ""
 L["Show hidden"] = "显示隐藏的脚本"
 L["Show minimap icon"] = "在小地图上显示图标"
+--Translation missing 
+-- L["Show the profiling statistics."] = ""
+--Translation missing 
+-- L["Show Trace Log"] = ""
+--Translation missing 
+-- L["Show version number"] = ""
 L["showwait"] = "显示等待图标"
 L["Si cible uniquement"] = "当目标存在时"
+--Translation missing 
+-- L["SimulationCraft Profile"] = ""
+--Translation missing 
+-- L["SIMULATIONCRAFT_OVERRIDES_DESCRIPTION"] = ""
+--Translation missing 
+-- L["Spellbook"] = ""
+--Translation missing 
+-- L["Stances"] = ""
+--Translation missing 
+-- L["Standalone options"] = ""
 L["summon_pet"] = "召唤宠物。"
 L["Taille des icônes"] = "图标大小"
 L["Taille des petites icônes"] = "小型图标大小"
 L["Taille des polices"] = "字体大小"
 L["Taille du second icône"] = "第二图标大小"
+--Translation missing 
+-- L["Talents"] = ""
+--Translation missing 
+-- L["The contents of a SimulationCraft profile."] = ""
+--Translation missing 
+-- L["The script translated from the SimulationCraft profile."] = ""
 L["Time (in milliseconds) to begin flashing the spell to use before it is ready."] = "在技能冷却时间结束之前开始闪光的提前量（毫秒）"
+--Translation missing 
+-- L["Top 3"] = ""
+--Translation missing 
+-- L["Trace"] = ""
+--Translation missing 
+-- L["Trace Log"] = ""
+--Translation missing 
+-- L["Trace the next frame update."] = ""
 L["Verrouiller position"] = "锁定位置"
 L["Vertical"] = "垂直"
+--Translation missing 
+-- L["Vertical offset"] = ""
+--Translation missing 
+-- L["Vertical offset from the center of the screen."] = ""
 L["Visibilité"] = "可见设置"
+
 elseif locale == "zhTW" then
 L["Action bar"] = "快捷列"
 L["Affichage numérique"] = "顯示數字"
@@ -1052,7 +1912,7 @@ L["cd"] = [=[冷卻時間長的技能 (大招)
 盡快施放，或在爆發期使用。]=]
 L["Ce caractère est affiché dans un coin de l'icône pour indiquer si la cible est à portée"] = "自訂一段文字，如果目標是在範圍內，這段文字會在圖示上顯示提醒你。"
 L["Click to select the script."] = "左鍵選擇腳本。"
-L["Cliquer pour afficher/cacher les options"] = "點擊隱藏/顯示選項"
+L["Cliquer pour afficher/cacher les options"] = "左鍵點擊 隱藏/顯示選項"
 L["Code"] = "程式碼"
 L["Colors"] = "顏色"
 L["Copier sur Script personnalisé"] = "複製到自訂腳本"
@@ -1166,4 +2026,5 @@ L["Vertical"] = "垂直圖示"
 L["Vertical offset"] = "垂直位置"
 L["Vertical offset from the center of the screen."] = "距離畫面正中央的垂直方向移動距離。"
 L["Visibilité"] = "顯示"
+
 end

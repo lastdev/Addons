@@ -296,6 +296,16 @@ local function ScanContainer(bagID, containerType)
 		if link then
 			bag.ids[index] = tonumber(link:match("item:(%d+)"))
 
+			if link:match("|Hkeystone:") then
+				-- mythic keystones are actually all using the same item id
+				bag.ids[index] = 138019
+
+			elseif link:match("|Hbattlepet:") then
+				-- special treatment for battle pets, save texture id instead of item id..
+				-- texture, itemCount, locked, quality, readable, _, _, isFiltered, noValue, itemID = GetContainerItemInfo(id, itemButton:GetID());
+				bag.ids[index] = GetContainerItemInfo(bagID, slotID)
+			end
+			
 			if IsEnchanted(link) then
 				bag.links[index] = link
 			end
@@ -308,7 +318,7 @@ local function ScanContainer(bagID, containerType)
 		
 		startTime, duration, isEnabled = Container:GetCooldown(slotID, bagID)
 		if startTime and startTime > 0 then
-			bag.cooldowns[index] = startTime .."|".. duration .. "|" .. 1
+			bag.cooldowns[index] = format("%s|%s|1", startTime, duration)
 		end
 	end
 	
@@ -607,8 +617,15 @@ local function _GetSlotInfo(bag, slotID)
 	assert(type(bag) == "table")		-- this is the pointer to a bag table, obtained through addon:GetContainer()
 	assert(type(slotID) == "number")
 
-	-- return itemID, itemLink, itemCount
-	return bag.ids[slotID], bag.links[slotID], bag.counts[slotID] or 1
+	local link = bag.links[slotID]
+	local isBattlePet
+	
+	if link then
+		isBattlePet = link:match("|Hbattlepet:")
+	end
+	
+	-- return itemID, itemLink, itemCount, isBattlePet
+	return bag.ids[slotID], link, bag.counts[slotID] or 1, isBattlePet
 end
 
 local function _GetContainerCooldownInfo(bag, slotID)

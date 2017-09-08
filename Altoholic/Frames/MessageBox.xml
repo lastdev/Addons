@@ -53,7 +53,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoMessageBox")
+				Altoholic:BindViewToController(self, "AltoholicUI.MessageBox")
 			</OnLoad>
 		</Scripts>
 	</Frame>

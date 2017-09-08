@@ -68,7 +68,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTalentSpecialization")
+				Altoholic:BindViewToController(self, "AltoholicUI.TalentSpecialization")
 			</OnLoad>
 		</Scripts>
 	</Frame>

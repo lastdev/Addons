@@ -135,7 +135,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoDropDownMenuButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.DropDownMenuButton")
 
 				self:SetFrameLevel(self:GetParent():GetFrameLevel()+2)
 			</OnLoad>
@@ -229,7 +229,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoDropDownList")
+				Altoholic:BindViewToController(self, "AltoholicUI.DropDownList")
 			</OnLoad>
 			<OnClick>
 				self:Hide()
@@ -346,7 +346,7 @@
 					<OnClick>
 						local parent = self:GetParent()
 						parent:Toggle()
-						PlaySound("igMainMenuOptionCheckBoxOn")
+						PlaySound(856)
 					</OnClick>
 				</Scripts>
 				<NormalTexture parentKey="NormalTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up">
@@ -377,7 +377,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoDropDownMenu")
+				Altoholic:BindViewToController(self, "AltoholicUI.DropDownMenu")
 			</OnLoad>
 			<OnHide>
 				self:Close()

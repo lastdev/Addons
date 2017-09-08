@@ -4,11 +4,7 @@
 	<Button name="AltoGuildBankIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoGuildBankIcon")
-			
-				self:SetIconSize(self.iconWidth, self.iconHeight)
-				self:SetIcon(self.iconFile)
+				Altoholic:BindViewToController(self, "AltoholicUI.GuildBankIcon", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				self:Icon_OnEnter()

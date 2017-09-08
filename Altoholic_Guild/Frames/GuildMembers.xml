@@ -135,17 +135,14 @@
 				</Frames>
 				<Scripts>
 					<OnLoad>
-						Altoholic:SetClassExtensions(self, "AltoGuildMemberEquipment")
-						self:Init()
+						Altoholic:BindViewToController(self, "AltoholicUI.GuildMemberEquipment")
 					</OnLoad>
 				</Scripts>
 			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGuildMembers")
-				self:Init()
-				self:Update()
+				Altoholic:BindViewToController(self, "AltoholicUI.GuildMembers")
 			</OnLoad>
 		</Scripts>
 	</Frame>

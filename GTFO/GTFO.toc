@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: GTFO
 ## Notes: GTFO, you're dying!
 ## Author: Zensunim of Dragonblight
-## Version: 4.42.14
+## Version: 4.43.1
 ## DefaultState: Enabled
 ## SavedVariables: GTFOData
 Localization\enUS.lua

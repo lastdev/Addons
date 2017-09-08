@@ -1,5 +1,5 @@
-## Interface: 70200
-## Version: v7.2.0
+## Interface: 70300
+## Version: v7.3.0
 ## Title: BadBoy_Guilded
 ## Notes: Removes guild advertising from public channels.
 ## Notes-frFR: Enlève les publicités des guildes des canaux publiques.

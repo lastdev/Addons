@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: oRA3
 ## Notes: Raid and Party Assist
 ## Notes-zhCN: Raid and Party Assist
@@ -6,16 +6,17 @@
 ## Notes-deDE: Raid and Party Assist
 ## Notes-frFR: Raid and Party Assist
 ## Notes-itIT: Raid and Party Assist
-## Notes-koKR: Raid and Party Assist
+## Notes-koKR: 공격대와 파티 도우미
 ## Notes-ruRU: Raid and Party Assist
 ## Notes-ptBR: Raid and Party Assist
 ## Notes-esES: Raid and Party Assist
 ## Notes-esMX: Raid and Party Assist
-## Version: v7.2.2
+## Version: v7.3.0
 ## Author: Funkydude, Nebula
 
 ## X-Credits: Cladhaire, Ammo, Rabbit
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/BigWigsMods/oRA3
 ## X-Curse-Project-ID: 15655
 ## X-WoWI-ID: 14635
 

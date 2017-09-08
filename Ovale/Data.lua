@@ -77,7 +77,7 @@ local STAT_SHORTNAME = {
 	strength = "str",
 	spirit = "spi",
 }
-local STAT_USE_NAMES = { "trinket_proc", "trinket_stacking_proc", "trinket_stacking_stat", "trinket_stat" }
+local STAT_USE_NAMES = { "trinket_proc", "trinket_stacking_proc", "trinket_stacking_stat", "trinket_stat", "trinket_stack_proc" }
 --<private-static-properties>
 
 --<public-static-properties>
@@ -595,8 +595,9 @@ function OvaleData:GetSpellInfoProperty(spellId, atTime, property, targetGUID)
 			end
 		end
 	end
-
-	return value * ratio
+	
+	local actual = (value > 0 and floor(value * ratio)) or ceil(value * ratio)
+	return actual
 end
 
 --Compute the damage of the given spell.
@@ -649,6 +650,10 @@ function OvaleData:GetBaseDuration(auraId, spellcast)
 		if si.adddurationholy and holy then
 			duration = duration + si.adddurationholy * (holy - 1)
 		end
+	end
+	if si and si.haste and spellcast then
+		local hasteMultiplier = OvalePaperDoll:GetHasteMultiplier(si.haste, spellcast)
+		duration = duration / hasteMultiplier
 	end
 	return duration
 end

@@ -1,13 +1,11 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 -- *** Dungeons ***
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
-
 local DIFFICULTY_DUNGEON_HEROIC = 2
 local DIFFICULTY_RAID_10P = 3
 local DIFFICULTY_RAID_25P = 4
@@ -373,7 +371,7 @@ local callbacks = {
 				button.Name:SetJustifyH("CENTER")
 				button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
 				button.Name:SetFontObject("GameFontNormalSmall")
-				button.Name:SetText(ICON_NOTREADY)
+				button.Name:SetText(icons.notReady)
 				button:SetID(0)
 				button.key = nil
 			end

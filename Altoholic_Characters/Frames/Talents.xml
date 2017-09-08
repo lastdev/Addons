@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Talents.lua"></Script>
 	
-	<Frame name="AltoholicFrameTalents" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="Talents" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
 		<Frames>
 			<Frame parentKey="Spec1" inherits="AltoTalentSpecializationTemplate">
 				<Anchors>
@@ -26,7 +26,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTalentPanel")
+				Altoholic:BindViewToController(self, "AltoholicUI.TalentPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

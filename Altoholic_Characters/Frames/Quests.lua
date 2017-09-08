@@ -208,3 +208,48 @@ function ns:Link_OnClick(frame, button)
 		end
 	end
 end
+
+addon:Controller("AltoholicUI.QuestLog", {
+	SetCategory = function(frame, categoryID)
+		-- for debug only
+		-- print(categoryID)
+		currentCategoryID = categoryID
+	end,
+	Update = function(frame)
+		local out = true
+		if out then return end	-- temporarily disable the update..
+				
+		local character = addon.Tabs.Characters:GetAltKey()
+
+		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), QUEST_LOG))
+
+		local scrollFrame = frame.ScrollFrame
+		local numRows = scrollFrame.numRows
+		local offset = scrollFrame:GetOffset()
+		
+		local questLogSize = DataStore:GetQuestLogSize(character)
+		
+		for rowIndex = 1, numRows do
+			local rowFrame = scrollFrame:GetRow(rowIndex)
+			local line = rowIndex + offset
+			
+			rowFrame:Hide()
+			
+			if line <= questLogSize then	-- if the line is visible
+				local questName, questID, link, groupName, level, money, groupSize, tagID, 
+						isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo = DataStore:GetQuestLogInfo(character, line)
+				
+				rowFrame:SetName(questName, level)
+				rowFrame:SetType(tagID)
+				-- rowFrame:SetLevel(level)
+
+				rowFrame:SetID(line)
+				rowFrame:Show()
+			end
+		end
+
+		scrollFrame:Update(questLogSize)
+		frame:Show()
+	end,
+})
+

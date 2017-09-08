@@ -19,3 +19,4 @@ L["SCAN_MAIL_BODY_ENABLED"] = "掃描時郵箱裡每個郵件的內容將被讀�
 L["SCAN_MAIL_BODY_LABEL"] = "掃描郵件內容 (標記為己讀取)"
 L["SCAN_MAIL_BODY_TITLE"] = "掃描郵件內容"
 L["Warn when mail expires in less days than this value"] = "當郵件屆滿少過此值的日數時發出警告"
+

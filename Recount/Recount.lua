@@ -1,4 +1,4 @@
-Recount = LibStub("AceAddon-3.0"):NewAddon("Recount", "AceConsole-3.0","AceEvent-3.0", "AceComm-3.0", "AceTimer-3.0")
+Recount = LibStub("AceAddon-3.0"):NewAddon("Recount", "AceConsole-3.0",--[["AceEvent-3.0",]] "AceComm-3.0", "AceTimer-3.0")
 local Recount = _G.Recount
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
@@ -11,9 +11,7 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
 
-Recount.Version = tonumber(string.sub("$Revision: 1425 $", 12, -3))
-
-
+Recount.Version = tonumber(string.sub("$Revision: 1443 $", 12, -3))
 
 
 local _G = _G
@@ -58,6 +56,16 @@ local InterfaceOptionsFrame = InterfaceOptionsFrame
 local UIParent = UIParent
 
 local RecountTempTooltip = RecountTempTooltip
+
+Recount.events = CreateFrame("Frame")
+
+Recount.events:SetScript("OnEvent", function(self, event, ...)
+	if not Recount[event] then
+		return
+	end
+
+	Recount[event](Recount, ...)
+end)
 
 local dbCombatants
 -- Elsia: This is straight from GUIDRegistryLib-0.1 by ArrowMaster
@@ -191,6 +199,7 @@ local Default_Profile = {
 		EnableSync = false, -- Elsia: Default enable sync is set to true again now, thanks to lazy syncing
 		GlobalDataCollect = true, -- Elsia: Global toggle for data collection
 		HideCollect = false, -- Elsia: Hide Recount window when not collecting data
+		HidePetBattle = false,
 		Font = "Arial Narrow",
 		Scaling = 1,
 		Modules = {
@@ -755,6 +764,30 @@ Recount.consoleOptions2.args.realtime = {
 	}
 }
 
+function Recount:PLAYER_REGEN_ENABLED()
+	Recount:ResetDataUnsafe()
+end
+
+function Recount:ZONE_CHANGED_NEW_AREA()
+	Recount:DetectInstanceChange()
+end
+
+function Recount:PLAYER_ENTERING_WORLD()
+	Recount:DetectInstanceChange()
+end
+
+function Recount:PET_BATTLE_OPENING_START()
+	Recount:PetBattleUpdate()
+end
+
+function Recount:PET_BATTLE_CLOSE()
+	Recount:PetBattleUpdate()
+end
+
+function Recount:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	Recount:BossFound()
+end
+
 function Recount:ReportVersions() -- Elsia: Functionified so GUI can use it too
 	if GetNumGroupMembers() == 0 then
 		Recount:Print(L["No other Recount users found."])
@@ -789,14 +822,14 @@ end
 
 function Recount:ResetData()
 	if UnitAffectingCombat("player") then
-		Recount:RegisterEvent("PLAYER_REGEN_ENABLED", "ResetDataUnsafe")
+		Recount.events:RegisterEvent("PLAYER_REGEN_ENABLED")
 	else
 		Recount:ResetDataUnsafe()
 	end
 end
 
 function Recount:ResetDataUnsafe()
-	Recount:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	Recount.events:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	if Recount.GraphWindow then
 		Recount.GraphWindow:Hide()
 		Recount.GraphWindow.LineGraph:LockXMin(false)
@@ -971,7 +1004,7 @@ function Recount:FindPetUnitFromFlags(unitFlags, unitGUID)
 	-- Check for raid and party pets.
 	if bit_band(unitFlags, COMBATLOG_OBJECT_TYPE_PET) ~= 0 and bit_band(unitFlags, COMBATLOG_OBJECT_AFFILIATION_PARTY + COMBATLOG_OBJECT_AFFILIATION_RAID + COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 then
 		if bit_band(unitFlags, COMBATLOG_OBJECT_AFFILIATION_RAID) ~= 0 then
-			local Num = GetNumRaidMembers() 
+			local Num = GetNumRaidMembers()
 			if IsInRaid() and Num > 0 then
 				for i = 1, Num do
 					if unitGUID == UnitGUID("raidpet"..i) then
@@ -1152,7 +1185,7 @@ function Recount:AddPetCombatant(nameGUID, petName, nameFlags, ownerGUID, owner,
 	end]]
 	local inheritowner = Recount:GetGuardianOwnerByGUID(ownerGUID)
 	if inheritowner then -- This should only happen for pets of pets such as greater elementals
-		owner = inheritowner 
+		owner = inheritowner
 	end
 	local name = petName.." <"..owner..">"
 	local combatant = dbCombatants[name] or { }
@@ -1773,23 +1806,38 @@ function Recount:OnEnable()
 	Recount.TimeTick() -- Elsia: Prevent that time data is not initialized when an event comes in before the first tick.
 	Recount:ScheduleTimer("GroupCheck", 2) -- Elsia: Lowered this and synced duration with party based collection check
 	Recount:ScheduleRepeatingTimer("TimeTick", 1)
-	--Recount:RegisterEvent("Threat_Activate") -- Elsia: Threat-1.0 deactivated until Threat-2.0 is ready.
-	--Recount:RegisterEvent("Threat_Deactivate")
-	--Recount:RegisterEvent("UNIT_PET")
-	--Recount:RegisterEvent("PLAYER_PET_CHANGED")
-	Recount:RegisterEvent("ZONE_CHANGED_NEW_AREA", "DetectInstanceChange") -- Elsia: This is needed for zone change deletion and collection
-	Recount:RegisterEvent("PLAYER_ENTERING_WORLD", "DetectInstanceChange") -- Attempt to fix Onyxia instance entrance which isn't a new zone.
+	--Recount.events:RegisterEvent("Threat_Activate") -- Elsia: Threat-1.0 deactivated until Threat-2.0 is ready.
+	--Recount.events:RegisterEvent("Threat_Deactivate")
+	--Recount.events:RegisterEvent("UNIT_PET")
+	--Recount.events:RegisterEvent("PLAYER_PET_CHANGED")
+	Recount.events:RegisterEvent("ZONE_CHANGED_NEW_AREA") -- Elsia: This is needed for zone change deletion and collection
+	Recount.events:RegisterEvent("PLAYER_ENTERING_WORLD") -- Attempt to fix Onyxia instance entrance which isn't a new zone.
+	Recount.events:RegisterEvent("PET_BATTLE_OPENING_START")
+	Recount.events:RegisterEvent("PET_BATTLE_CLOSE")
 	Recount:DetectInstanceChange() -- Elsia: We need to do this regardless for Zone filtering.
 	--if Recount.db.profile.DeleteJoinRaid or Recount.db.profile.DeleteJoinGroup then
 	Recount:ScheduleTimer("InitPartyBasedDeletion", 2) -- Elsia: Wait 2 seconds before enabling auto-delete to prevent startup popups.
 	--end -- Elsia: This is obsolete due to deletion code also handling visibility and solo collection checks.
 	-- Parser Events
-	Recount:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CombatLogEvent")
-	Recount:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "BossFound")
+	Recount.events:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	Recount.events:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
 	if RecountDeathTrack then
 		RecountDeathTrack:SetFight(Recount.db.profile.CurDataSet)
 	end
 	Recount.HasEnabled = true
+end
+
+function Recount:PetBattleUpdate()
+	if Recount.db.profile.HidePetBattle and C_PetBattles.IsInBattle() and Recount.MainWindow:IsShown() then
+		Recount.MainWindow:Hide()
+	else
+		if Recount.db.profile.HidePetBattle and not Recount.MainWindow:IsShown() then
+			Recount.MainWindow:Show()
+		end
+	end
+
+	Recount:UpdateZoneGroupFilter()
+	Recount:RefreshMainWindow()
 end
 
 function Recount:OnDisable()

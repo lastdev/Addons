@@ -834,3 +834,4 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 ]=] ] = "Deine Bestätigung wird weiterhin benötigt, wann immer jemand deine Informationen erbittet."
 L["Zelemar the Wrathful"] = "Zelemar der Hasserfüllte"
 L["Zone"] = true
+

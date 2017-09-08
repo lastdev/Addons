@@ -7,7 +7,7 @@ local L = DBM_GUI_Translations
 
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
-L.Website					= "|cFF73C2FBwww.deadlybossmods.com|r에서 토론장/사용자 지원 포럼을 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
+L.Website					= "디스코드 채널 |cFF73C2FBhttps://discord.gg/DF5mffk|r를 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
 L.WebsiteButton				= "포럼"
 
 L.OTabBosses	= "보스"
@@ -211,7 +211,7 @@ L.HUDAlphaSlider			= "투명도: %0.1f"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "음성 경보"
-L.Area_VoiceSelection		= "음성 선택"
+L.Area_VoiceSelection		= "음성 선택 (마우스 휠로 메뉴 스크롤)"
 L.CountdownVoice			= "1순위 초읽기 음성 설정"
 L.CountdownVoice2			= "2순위 초읽기 음성 설정"
 L.CountdownVoice3			= "3순위 초읽기 음성 설정"
@@ -309,7 +309,6 @@ L.AutoReplySound			= "DBM 자동 응답 귓속말을 받을 때 경고음 재생
 --
 L.TimerGeneral 				= "타이머 설정"
 L.SKT_Enabled				= "가능할 경우 현재 전투의 최고 승리 기록 타이머 표시"
-L.CRT_Enabled				= "다음 전투 부활 충전 타이머 표시"
 L.ShowRespawn				= "전멸 후 보스 재생성 타이머 표시"
 L.ShowQueuePop				= "입장 수락 남은 시간 타이머 표시 (공격대 찾기,전장 등)"
 --

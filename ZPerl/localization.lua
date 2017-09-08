@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "5.2.7 release"
+XPerl_VersionNumber		= "5.4.4 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -127,6 +127,8 @@ XPERL_RAID_TOOLTIP_WITHBUFF	= "With buff: (%s)"
 XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Without buff: (%s)"
 XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s's %s expires in %s"	-- Name, buff name, time to expire
 
+XPERL_NEW_VERSION_DETECTED = "New version detected:"
+
 
 -- Status highlight spells
 XPERL_HIGHLIGHT_SPELLS = {
@@ -134,7 +136,7 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
 		[GetSpellInfo(8936)] = 6,			-- Regrowth (old id 26980)
 		[GetSpellInfo(139)] = 12,			-- Renew (old id 25222)
-		[GetSpellInfo(48438)] = 7,			-- Wild Growth 
+		[GetSpellInfo(48438)] = 7,			-- Wild Growth
 		[GetSpellInfo(33763)] = 8,			-- Lifebloom
 		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
 		[GetSpellInfo(61295)] = 15,			-- Riptide

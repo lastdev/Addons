@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r36 | thaoky.altoholic@yahoo.com | 2017-09-04 12:28:51 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+TOC Update
+------------------------------------------------------------------------
 r35 | thaoky.altoholic@yahoo.com | 2017-04-28 12:31:25 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Currencies.lua

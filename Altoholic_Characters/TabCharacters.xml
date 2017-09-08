@@ -1,34 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabCharacters.lua"></Script>
 
- 	<Button name="AltoViewIconTemplate" inherits="AltoButtonTemplate" virtual="true">
-		<Size x="30" y="30" />
-		<Frames>
-			<Frame parentKey="Shine" name="$parentShine" inherits="AutoCastShineTemplate">
-				<Size x="28" y="28" />
-				<Anchors>
-					<Anchor point="CENTER" x="0" y="0" />
-				</Anchors>
-			</Frame>
-		</Frames>
-		<Scripts>
-			<OnEnter>
-				if self.text then
-					AltoTooltip:ClearLines();
-					AltoTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					AltoTooltip:AddLine(self.text,1,1,1);
-					AltoTooltip:Show();
-				end
-			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				Altoholic.Tabs.Characters:MenuItem_OnClick(self, button)
-			</OnClick>
-		</Scripts>
-	</Button>
-
 	<Button name="AltoTabCharactersIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
 			<OnEnter>
@@ -44,12 +16,6 @@
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Text1" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size x="100" y="18" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="35" y="-105" />
-					</Anchors>
-				</FontString>
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="24" />
 					<Anchors>
@@ -186,20 +152,7 @@
 			</Button>
 			-->
 		
-			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Text1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="menuWidth" value="120" type="number" />
-				</KeyValues>
-			</Frame>
-			
-			<Button parentKey="Characters" inherits="AltoViewIconTemplate" id="1">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="30" y="240" />
-				</Anchors>
-			</Button>
+
 			
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>

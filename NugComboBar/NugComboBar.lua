@@ -83,6 +83,7 @@ function NugComboBar:LoadClassSettings()
         local class = select(2,UnitClass("player"))
         self.MAX_POINTS = nil
         self:SetupClassTheme()
+        self.isTempDisabled = nil
         soundFullEnabled = false
         if self.bar then self.bar:SetColor(unpack(NugComboBarDB.colors.bar1)) end
         if class == "ROGUE" then
@@ -135,7 +136,9 @@ function NugComboBar:LoadClassSettings()
 				local maxFill = NugComboBarDB.maxFill
                 GetComboPoints = makeRCP(isAnticipation, isSub, maxFill, maxCP)--  RogueGetComboPoints
                 if isSub and NugComboBarDB.shadowDance then
-                    self:SetMaxPoints(maxCP, (maxCP == 6) and "ROGUE63" or "ROGUE53", 3)
+                    local maxShadowDance = IsPlayerSpell(238104) and 3 or 2
+                    local barSetup = "ROGUE"..maxCP..maxShadowDance
+                    self:SetMaxPoints(maxCP, barSetup, maxShadowDance)
                     self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
                     self:RegisterEvent("SPELL_UPDATE_CHARGES")
 					self:EnableBar(0, 6, 90, "Timer")
@@ -456,6 +459,14 @@ function NugComboBar:LoadClassSettings()
                 return UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
             end
 
+            local GetDestructionShards = function(unit)
+                local shards = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
+                local fragments = UnitPower(unit, SPELL_POWER_SOUL_SHARDS, true)
+                local rfragments = fragments - (shards*10)
+                if rfragments == 0 then rfragments = nil end
+                return shards, rfragments
+            end
+
             self:RegisterEvent("UNIT_POWER")
             self.UNIT_POWER = function(self,event,unit,ptype)
                 if unit ~= "player" then return end
@@ -477,6 +488,15 @@ function NugComboBar:LoadClassSettings()
                 self:SetMaxPoints(maxshards)
                 GetComboPoints = GetShards
                 self:UNIT_POWER(nil,allowedUnit, "SOUL_SHARDS" )
+                if GetSpecialization() == 3 then
+                    GetComboPoints = GetDestructionShards
+                    chargeCooldown = NugComboBarDB.chargeCooldown
+                    self:EnableBar(0, 10,"Small" )
+                else
+                    GetComboPoints = GetShards
+                    chargeCooldown = nil
+                    self:DisableBar()
+                end
             end
 
             self:SPELLS_CHANGED()
@@ -713,7 +733,7 @@ function NugComboBar:LoadClassSettings()
             self:SPELLS_CHANGED()
         else
             self:SetMaxPoints(2)
-			self:Disable()
+            self:Disable()
             return
         end
 end
@@ -759,6 +779,7 @@ local defaults = {
     showAlways = false,
     onlyCombat = false,
     disableProgress = false,
+    chargeCooldown = true,
     adjustX = 2.05,
     adjustY = 2.1,
     alpha = 1,
@@ -1351,7 +1372,7 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ...)
 
     -- print("progress", progress)
     -- print (comboPoints, defaultValue, comboPoints == defaultValue, (progress == nil or progress == defaultProgress), not UnitAffectingCombat("player"), not showEmpty)
-    local forceHide = C_PetBattles.IsInBattle()
+    local forceHide = C_PetBattles.IsInBattle() or self.isTempDisabled
     if forceHide or
         (
             not showAlways and
@@ -1819,28 +1840,33 @@ NugComboBar.Commands = {
     end,
 }
 
+local helpMessage = {
+    "|cff55ffff/ncb gui|r",
+    "|cff55ff55/ncb charspec|r",
+    "|cff55ff55/ncb lock|r",
+    "|cff55ff55/ncb unlock|r",
+    "|cff55ff55/ncb toggle3d|r",
+    "|cff55ff55/ncb preset3d <preset>|r",
+    "|cff55ff55/ncb scale|r <0.3 - 2.0>",
+    "|cff55ff55/ncb changecolor|r <1-6, 0 = all, -1 = 2nd bar>",
+    "|cff55ff55/ncb anchorpoint|r <left | right | top >",
+    "|cff55ff55/ncb showempty|r",
+    "|cff55ff55/ncb hideslowly|r",
+    "|cff55ff55/ncb vertical|r",
+    "|cff55ff55/ncb hidewotarget|r",
+    "|cff55ff55/ncb toggleblizz|r",
+    "|cff55ff55/ncb disable|enable|r (for current class)",
+    "|cff55ff55/ncb setpos|r point=CENTER parent=UIParent to=CENTER x=0 y=0",
+    "|cff55ff55/ncb reset|r",
+}
+
 function NugComboBar.SlashCmd(msg)
     k,v = string.match(msg, "([%w%+%-%=]+) ?(.*)")
     if not k or k == "help" then
-        print([[Usage:
-          |cff55ffff/ncb gui|r
-          |cff55ff55/ncb charspec|r
-          |cff55ff55/ncb lock|r
-          |cff55ff55/ncb unlock|r
-          |cff55ff55/ncb toggle3d|r
-          |cff55ff55/ncb preset3d <preset>|r
-          |cff55ff55/ncb scale|r <0.3 - 2.0>
-          |cff55ff55/ncb changecolor|r <1-6, 0 = all, -1 = 2nd bar>
-          |cff55ff55/ncb anchorpoint|r <left | right | top >
-          |cff55ff55/ncb showempty|r
-          |cff55ff55/ncb hideslowly|r
-          |cff55ff55/ncb vertical|r
-          |cff55ff55/ncb hidewotarget|r
-          |cff55ff55/ncb toggleblizz|r
-          |cff55ff55/ncb disable|enable|r (for current class)
-          |cff55ff55/ncb setpos|r point=CENTER parent=UIParent to=CENTER x=0 y=0
-          |cff55ff55/ncb reset|r]]
-        )
+        print("Usage:")
+        for k,v in ipairs(helpMessage) do
+            print(" - ",v)
+        end
     end
     if NugComboBar.Commands[k] then
         NugComboBar.Commands[k](v)
@@ -1943,7 +1969,7 @@ function NugComboBar:Disable()
 	-- self:UnregisterEvent("UNIT_POWER")
 	-- self:UnregisterEvent("SPELL_UPDATE_CHARGES")
 	-- self:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
-	-- self.isDisabled = true
+	self.isTempDisabled = true
 
 	self:DisableBar()
     if self.anchor then self.anchor:Hide() end

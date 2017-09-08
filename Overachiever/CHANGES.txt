@@ -1,18 +1,91 @@
 ------------------------------------------------------------------------
-r188 | Tuhljin | 2017-04-06 02:43:32 -0500 (Thu, 06 Apr 2017) | 4 lines
+r199 | Tuhljin | 2017-09-04 03:53:26 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   A /trunk/libs/LibBabble-SubZone-3.0
+   A /trunk/libs/LibBabble-SubZone-3.0/CHANGES.txt
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-3.0.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0.toc
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_deDE.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_esES.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_esMX.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_frFR.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_itIT.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_koKR.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_ptBR.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_ruRU.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_zhCN.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/LibBabble-SubZone-3.0_zhTW.lua
+   A /trunk/libs/LibBabble-SubZone-3.0/lib.xml
+
+- Directly include LibBabble-SubZone-3.0 library since .pkgmeta externals method isn't working properly.
+------------------------------------------------------------------------
+r198 | Tuhljin | 2017-09-04 03:31:52 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+- Attempting yet another tag for LibBabble-SubZone-3.0 library .pkgmeta (r212-alpha).
+------------------------------------------------------------------------
+r197 | Tuhljin | 2017-09-04 03:27:41 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+- Still getting wrong/corrupt LibBabble-SubZone-3.0 library so attempting a different tag in .pkgmeta (r212).
+------------------------------------------------------------------------
+r196 | Tuhljin | 2017-09-04 03:14:53 -0500 (Mon, 04 Sep 2017) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Tabs/localization.lua
+   M /trunk/Overachiever_Trade/localization.lua
+   M /trunk/localization.lua
+
+- CurseForge localization substitution problem persists. In previous commit, used the "proper" localization files to test if it was resolved. It is not. Committing the last working localization files again.
+- Change TOC reference to library LibStub so it looks in LibStub's own folder instead of a subfolder of library LibBabble-SubZone-3.0's folder.
+- Getting an error on load from LibBabble-SubZone-3.0. CurseForge appears to be inserting a different version of LBSZ than the one that appears as the latest on the site. Attempt to force builder to use the expected version by referencing it specifically in .pkgmeta (instead of "tag: latest").
+------------------------------------------------------------------------
+r195 | Tuhljin | 2017-09-04 02:41:24 -0500 (Mon, 04 Sep 2017) | 4 lines
+Changed paths:
+   M /trunk/Overachiever.lua
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Tabs/Related.lua
+   M /trunk/Overachiever_Tabs/Search.lua
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/Overachiever_Tabs/Watch.lua
+   M /trunk/Overachiever_Tabs/build.lua
+   M /trunk/Overachiever_Tabs/localization.lua
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/Overachiever_Trade/localization.lua
+   M /trunk/libs/TjAchieve.lua
+   M /trunk/libs/TjOptions.lua
+   M /trunk/libs/TjOptions.txt
+   M /trunk/libs/TjSharedMediaDropDown/TjDropDownMenu.lua
+   M /trunk/libs/TjThreads.lua
+   M /trunk/localization.lua
+   M /trunk/readme.txt
+
+- Updated for WoW patch 7.3.
+-- Updated TOC.
+-- API function PlaySound no longer takes strings. Made the necessary changes.
+- Added ability for advanced users to switch to have achievement criteria task be rushed on startup instead of being completed as a background task after entering the world (effectively acting more like it did before v0.99.8). See the the variable THROTTLE_ACHLOOKUP in Overachiever.lua. (This is a stopgap measure. A better solution is being worked on.)
+------------------------------------------------------------------------
+r194 | Tuhljin | 2017-06-27 03:35:52 -0500 (Tue, 27 Jun 2017) | 3 lines
 Changed paths:
    M /trunk/Calendar.lua
+   M /trunk/GameTip.lua
    M /trunk/Options.lua
    M /trunk/Overachiever.lua
    M /trunk/Overachiever.toc
    M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
    M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/libs/TjAchieve.lua
    M /trunk/localization.lua
    M /trunk/readme.txt
 
-- Holiday/Event Toasts:
--- Added option to control the appearance of PvP Brawl toasts. Disabled by default.
--- Fix certain timewalking events being treated as holidays instead of dungeon events.
--- Fix failure to load texture for micro-holidays that take up two days in the calendar.
+- Holiday/Event Toasts: Added option to control the appearance of Miscellaneous toasts (such as raid release days). Disabled by default.
+- Attempt to alleviate lag at startup for some users by stretching out the background work so it is less demanding each tick.
+- Prevent potential temporary freeze that could occur if the kill-criteria background task is still running and the tooltip for a killable NPC is requested. Previously, the task was forced to completion in that event to ensure the tooltip would accurately display whether the NPC needs to be killed for an achievement. Now, only the data compiled so far is considered when updating the tooltip. (This means tooltips presented may be incomplete for up to several seconds after startup, depending on the achievement, particularly for players on slower machines, but this seemed preferable to the freeze since it happened regardless of whether the NPC's tooltip ultimately needed an update.)
 ------------------------------------------------------------------------
 

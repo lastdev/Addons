@@ -1,7 +1,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
-
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 -- *** Event Handlers ***
@@ -37,80 +36,64 @@ local function OnRosterUpdate(frame)
 	frame:Refresh()
 end
 
--- ** Mixins **
+addon:Controller("AltoholicUI.TabGuild", {
+	OnBind = function(frame)
+		frame.MenuItem1:SetText(L["Guild Members"])
+		frame.MenuItem2:SetText(GUILD_BANK)
+		frame:MenuItem_Highlight(1)
+		frame:SetMode(1)
 
-local function _Init(frame)
-	frame.MenuItem1:SetText(L["Guild Members"])
-	frame.MenuItem2:SetText(GUILD_BANK)
-	frame:MenuItem_Highlight(1)
-	frame:SetMode(1)
+		addon:RegisterMessage("DATASTORE_GUILD_ALTS_RECEIVED", OnGuildAltsReceived, frame)
+		addon:RegisterMessage("DATASTORE_BANKTAB_REQUEST_ACK", OnBankTabRequestAck, frame)
+		addon:RegisterMessage("DATASTORE_BANKTAB_REQUEST_REJECTED", OnBankTabRequestRejected, frame)
+		addon:RegisterMessage("DATASTORE_BANKTAB_UPDATE_SUCCESS", OnBankTabUpdateSuccess, frame)
+		addon:RegisterMessage("DATASTORE_GUILD_MEMBER_OFFLINE", OnGuildMemberOffline, frame)
+		
+		if IsInGuild() then
+			addon:RegisterEvent("GUILD_ROSTER_UPDATE", OnRosterUpdate, frame)
+		end
+	end,
+	HideAll = function(frame)
+		frame.Members:Hide()
+		frame.Bank:Hide()
+	end,
+	Refresh = function(frame)
+		if frame.Members:IsVisible() then
+			frame.Members:Update()
+		elseif frame.Bank:IsVisible() then
+			frame.Bank:Update()
+		end
+	end,
+	SetMode = function(frame, mode)
+		if mode == 1 then
+			frame.SortButtons:ShowChildFrames()
+			frame.SortButtons:SetButton(1, NAME, 100, function() frame.Members:Sort("name") end)
+			frame.SortButtons:SetButton(2, LEVEL, 60, function() frame.Members:Sort("level") end)
+			frame.SortButtons:SetButton(3, "AiL", 65, function() frame.Members:Sort("averageItemLvl") end)
+			frame.SortButtons:SetButton(4, GAME_VERSION_LABEL, 80, function() frame.Members:Sort("version") end)
+			frame.SortButtons:SetButton(5, CLASS, 100, function() frame.Members:Sort("englishClass") end)
+		else
+			frame.SortButtons:HideChildFrames()
+		end
+	end,
+	SetStatus = function(frame, text)
+		frame.Status:SetText(text)
+	end,
+	MenuItem_Highlight = function(frame, id)
+		-- highlight the current menu item
+		for i = 1, 2 do 
+			frame["MenuItem"..i]:UnlockHighlight()
+		end
+		frame["MenuItem"..id]:LockHighlight()
+	end,
+	MenuItem_OnClick = function(frame, id, panel)
+		frame:HideAll()
+		frame:MenuItem_Highlight(id)
 
-	addon:RegisterMessage("DATASTORE_GUILD_ALTS_RECEIVED", OnGuildAltsReceived, frame)
-	addon:RegisterMessage("DATASTORE_BANKTAB_REQUEST_ACK", OnBankTabRequestAck, frame)
-	addon:RegisterMessage("DATASTORE_BANKTAB_REQUEST_REJECTED", OnBankTabRequestRejected, frame)
-	addon:RegisterMessage("DATASTORE_BANKTAB_UPDATE_SUCCESS", OnBankTabUpdateSuccess, frame)
-	addon:RegisterMessage("DATASTORE_GUILD_MEMBER_OFFLINE", OnGuildMemberOffline, frame)
-	
-	if IsInGuild() then
-		addon:RegisterEvent("GUILD_ROSTER_UPDATE", OnRosterUpdate, frame)
-	end
-end
-
-local function _HideAll(frame)
-	frame.Members:Hide()
-	frame.Bank:Hide()
-end
-
-local function _Refresh(frame)
-	if frame.Members:IsVisible() then
-		frame.Members:Update()
-	elseif frame.Bank:IsVisible() then
-		frame.Bank:Update()
-	end
-end
-
-local function _MenuItem_Highlight(frame, id)
-	-- highlight the current menu item
-	for i = 1, 2 do 
-		frame["MenuItem"..i]:UnlockHighlight()
-	end
-	frame["MenuItem"..id]:LockHighlight()
-end
-
-local function _MenuItem_OnClick(frame, id, panel)
-	frame:HideAll()
-	frame:MenuItem_Highlight(id)
-
-	frame:SetMode(id)
-	
-	if panel then
-		frame[panel]:Update()
-	end
-end
-
-local function _SetMode(frame, mode)
-	if mode == 1 then
-		frame.SortButtons:ShowChildFrames()
-		frame.SortButtons:SetButton(1, NAME, 100, function() frame.Members:Sort("name") end)
-		frame.SortButtons:SetButton(2, LEVEL, 60, function() frame.Members:Sort("level") end)
-		frame.SortButtons:SetButton(3, "AiL", 65, function() frame.Members:Sort("averageItemLvl") end)
-		frame.SortButtons:SetButton(4, GAME_VERSION_LABEL, 80, function() frame.Members:Sort("version") end)
-		frame.SortButtons:SetButton(5, CLASS, 100, function() frame.Members:Sort("englishClass") end)
-	else
-		frame.SortButtons:HideChildFrames()
-	end
-end
-
-local function _SetStatus(frame, text)
-	frame.Status:SetText(text)
-end
-
-addon:RegisterClassExtensions("AltoTabGuild", {
-	Init = _Init,
-	HideAll = _HideAll,
-	Refresh = _Refresh,
-	SetMode = _SetMode,
-	SetStatus = _SetStatus,
-	MenuItem_Highlight = _MenuItem_Highlight,
-	MenuItem_OnClick = _MenuItem_OnClick,
+		frame:SetMode(id)
+		
+		if panel then
+			frame[panel]:Update()
+		end
+	end,
 })

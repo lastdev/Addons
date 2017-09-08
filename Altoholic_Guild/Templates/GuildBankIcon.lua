@@ -293,26 +293,22 @@ local menuIconCallbacks = {
 	RarityIcon_Initialize,
 }
 
-local function _Icon_OnEnter(frame)
-	local currentMenuID = frame:GetID()
-	
-	local guildBank = frame:GetParent():GetParent()
-	local menu = guildBank.ContextualMenu
-	
-	menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
-	menu:Close()
-	menu:Toggle(frame, 0, 0)
-end
-
-local function _SetRarity(frame, rarity)
-	-- technically, this will only be applied to the rarity icon.. but I'll settle for a function a this level ..
-	
-	if rarityIcons[rarity] then
-		frame.Icon:SetTexture(rarityIcons[rarity])
-	end
-end
-
-addon:RegisterClassExtensions("AltoGuildBankIcon", {
-	Icon_OnEnter = _Icon_OnEnter,
-	SetRarity = _SetRarity,
+addon:Controller("AltoholicUI.GuildBankIcon", {
+	Icon_OnEnter = function(frame)
+		local currentMenuID = frame:GetID()
+		
+		local guildBank = frame:GetParent():GetParent()
+		local menu = guildBank.ContextualMenu
+		
+		menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
+		menu:Close()
+		menu:Toggle(frame, 0, 0)
+	end,
+	SetRarity = function(frame, rarity)
+		-- technically, this will only be applied to the rarity icon.. but I'll settle for a function a this level ..
+		
+		if rarityIcons[rarity] then
+			frame.Icon:SetTexture(rarityIcons[rarity])
+		end
+	end,
 })

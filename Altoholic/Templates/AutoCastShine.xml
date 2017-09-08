@@ -67,7 +67,7 @@
 		</Layers>				
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoAutoCastShine")
+				Altoholic:BindViewToController(self, "AltoholicUI.AutoCastShine")
 			</OnLoad>
 			<OnUpdate>
 				self:Shine_OnUpdate(elapsed)

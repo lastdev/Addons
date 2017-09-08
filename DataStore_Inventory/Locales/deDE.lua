@@ -17,3 +17,4 @@ L["EQUIP_REQ_TEXT"] = "Benachrichtigung, wenn jemand die Ausrüstung eines meine
 L["EQUIP_REQ_TITLE"] = "Benachrichtigung bei Ausrüstungsanfrage"
 L["Heroic"] = "Heroisch"
 L["Trash Mobs"] = "Trash-Mobs"
+

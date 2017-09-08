@@ -17,3 +17,4 @@ L["EQUIP_REQ_TEXT"] = "當有人查看你的角色的裝備時通知你."
 L["EQUIP_REQ_TITLE"] = "查看裝備通知"
 L["Heroic"] = "英雄"
 L["Trash Mobs"] = "一般怪物"
+

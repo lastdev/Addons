@@ -1,11 +1,10 @@
 ## Interface: 70200
 ## Title: HandyNotes_DungeonLocations
-## Version: 1.18
+## Version: 1.21
 ## Notes: Shows locations of old world dungeon and raid entrances
-## Author: Bartruby of Cairne
+## Author: Caliaha of Cairne
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_DungeonLocationsDB
 
-libs\LibQTip-1.0\LibQTip-1.0.lua
 locales\Locales.xml
 HandyNotes_DungeonLocations.lua

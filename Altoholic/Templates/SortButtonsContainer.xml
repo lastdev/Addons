@@ -8,23 +8,7 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				self.SetButton = Altoholic:GetClassExtension("AltoSortButtonsContainer","SetButton")
-				self.ShowChildFrames = Altoholic:GetClassExtension("AltoFrame","ShowChildFrames")
-				self.HideChildFrames = Altoholic:GetClassExtension("AltoFrame","HideChildFrames")
-			
-				-- auto create the sort buttons, with the quantity passed as key
-				for i = 1, self.numButtons do
-					local frame = CreateFrame("Button", nil, self, "AltoSortButtonTemplate")
-					
-					if i == 1 then
-						frame:SetPoint("TOPLEFT")
-					else
-						-- attach to previous frame
-						frame:SetPoint("LEFT", self["Sort"..(i-1)], "RIGHT", 0, 0)
-					end
-					
-					self["Sort"..i] = frame
-				end
+				Altoholic:BindViewToController(self, "AltoholicUI.SortButtonsContainer", "AltoholicUI.Frame")
 			</OnLoad>
 		</Scripts>
 	</Frame>

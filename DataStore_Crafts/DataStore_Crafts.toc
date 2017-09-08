@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: DataStore_Crafts
 ## Notes: Stores information about professions & crafts
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r77
+## Version: r78
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_CraftsDB, DataStore_CraftsRefDB

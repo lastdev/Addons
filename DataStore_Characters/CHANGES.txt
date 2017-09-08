@@ -1,4 +1,17 @@
 ------------------------------------------------------------------------
+r41 | thaoky.altoholic@yahoo.com | 2017-09-04 12:27:34 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Characters.lua
+   M /trunk/DataStore_Characters.toc
+
+Scanning time played at this level
+------------------------------------------------------------------------
+r40 | thaoky.altoholic@yahoo.com | 2017-06-01 05:58:35 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Characters.lua
+
+Fixed faction detection for low level pandarens
+------------------------------------------------------------------------
 r39 | thaoky.altoholic@yahoo.com | 2017-04-28 12:29:30 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Characters.lua

@@ -167,6 +167,8 @@ L["Heals"] = "치유량"
 L["Health"] = "체력"
 L["Hide"] = "숨김"
 L["Hide When Not Collecting"] = "수집되지 않을 때 숨김"
+--Translation missing 
+-- L["Hide While In Pet Battle"] = "Hide While In Pet Battle"
 L["Hides the main window"] = "메인창을 숨깁니다."
 L["Hit"] = "일반"
 L["Holy"] = "신성"

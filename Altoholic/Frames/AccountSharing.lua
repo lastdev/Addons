@@ -328,7 +328,7 @@ function Altoholic.Sharing.Content:BuildView()
 			local index = format("%s.%s.%s", THIS_ACCOUNT, realm, guildName)
 			
 			if not ContentCollapsedHeaders[index] then
-				for i=1, 6 do		-- add guild bank tabs
+				for i=1, 8 do		-- add guild bank tabs
 					local tabName = DS:GetGuildBankTabName(guild, i)
 					if tabName then
 						table.insert(self.view, { linetype = GUILD_BANKTAB_LINE, realm = realm, name = guildName, tabID = i } )
@@ -444,7 +444,7 @@ function Altoholic.Sharing.Content:CheckAll(self, button)
 			local index = format("%s.%s.%s", THIS_ACCOUNT, realm, guildName)
 			sc[index] = self.isChecked
 			
-			for i=1, 6 do		-- add guild bank tabs
+			for i=1, 8 do		-- add guild bank tabs
 				if DS:GetGuildBankTabName(guild, i) then
 					index = format("%s.%s.%s.%s", THIS_ACCOUNT, realm, guildName, i)
 					sc[index] = self.isChecked
@@ -497,7 +497,7 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 			if isGuildShared(realm, guildName) then
 				table.insert(toc, format("%s|%s", TOC_SETGUILD, guildName))
 				
-				for tabID = 1, 6 do		-- add guild bank tabs
+				for tabID = 1, 8 do		-- add guild bank tabs
 					local tabName = DS:GetGuildBankTabName(guild, tabID)
 					if tabName and isGuildBankTabShared(realm, guildName, tabID) then
 						serializedData = Altoholic:Serialize(DS:GetGuildBankTab(guild, tabID))

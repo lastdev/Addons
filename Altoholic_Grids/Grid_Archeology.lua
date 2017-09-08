@@ -1,8 +1,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
-
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
+local icons = addon.Icons
 
 local OPTION_RACE = "UI.Tabs.Grids.Archaeology.CurrentRace"
 local currentItemID
@@ -58,7 +56,7 @@ local callbacks = {
 			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
 			if DataStore:IsArtifactKnown(character, artifact.spellID) then
 				button.Background:SetVertexColor(1.0, 1.0, 1.0);
-				button.Name:SetText(ICON_READY)
+				button.Name:SetText(icons.ready)
 				
 				local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
 				if itemRarity and itemRarity >= 2 then
@@ -68,7 +66,7 @@ local callbacks = {
 				end
 			else
 				button.Background:SetVertexColor(0.4, 0.4, 0.4);
-				button.Name:SetText(ICON_NOTREADY)
+				button.Name:SetText(icons.notReady)
 			end
 			button.id = currentItemID
 		end,

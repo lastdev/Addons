@@ -39,8 +39,41 @@ When PLH becomes disabled, set isAnnouncer to false
 	
 Changelog
 
+20170902 - 1.32
+	Added 7.3 trinkets	
+	Updated PlaySound() calls to use IDs instead of strings, in accordance with Blizz API change in 7.3
+
+20170627 - 1.31
+	Added 7.2.5 trinkets
+	
+20170403 - 1.30
+	note:  commented out some extraneous debug info
+	
+20170401 - 1.29
+	Fixed bugs that were sometimes causing PLH to not properly cache equipped items for all players in the group
+		note: commented out extra call to PLH_InspectNextGroupMember in the outer loop portion of PLH_InspectNextGroupMember
+		note: Separated PLH_wait into multiple methods to eliminate concurrency issues
+		note: reduced DELAY_BETWEEN_INSPECTIONS from 3 to 1 (seconds)
+	
+20170331 - 1.28
+	Fixed new bug with 7.2 that was sometimes preventing PLH from activating when reloading UI or entering an instance
+		note: added ZONE_CHANGED_NEW_AREA and PLAYER_ENTERING_WORLD in Initialize()
+
+	Added sorting of names by ilvl when more than one person can use an item
+		note: in GetNames
+		
+	note: reduced NUM_EXPECTED_RELICS_110 from 3 to 2 so we reduce inspect retries; many people (in lfr at least) still don't have 3
+	note: increased MAX_INSPECT_LOOPS from 3 to 4
+	
+20170329 - 1.27
+	Increased inspect attempts back to 5; this may have been causing some characters' gear to not be fully inspected and thus missing recommendations
+	
+	Minor additional error checking
+		note: additional nil check in AskForRolls()
+
 20170328 - 1.26
 	Bug fixes to "coordinate rolls" mode - sometimes trades were being ignored
+		note: removed extra spaces in ProcessWhisper, added nil check for description in CheckForRolls
 	
 20170328 - 1.25
 	Added eligibility check for class-restricted gear (ex: tier)
@@ -377,15 +410,15 @@ local DEFAULT_HIGHLIGHT_SIZE = 20
 local TRADE_MESSAGE = 'TRADE'  -- added some hardcording in ProcessWhisper for various way people may offer to trade items; customize text there if needed (ex: foreign languages)
 local DELAY_BETWEEN_ROLLS = 4 -- in seconds
 local UNHIGHLIGHT_DELAY = 105  -- in seconds
-local DELAY_BETWEEN_INSPECTIONS = 3  -- in seconds
-local MAX_INSPECT_LOOPS = 3    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
+local DELAY_BETWEEN_INSPECTIONS = 1  -- in seconds
+local MAX_INSPECT_LOOPS = 4    -- maximum # of times to retry calling NotifyInspect on all members in the roster for whom we've cached fewer than the expected number of items
 local NUM_EXPECTED_ITEMS = 15 -- number of items we expect each person to have equipped (based on having something in every gear) plus 3 relics
 	-- slot; if we've cached fewer than that amount of items for a character, we'll include that character in additional
 	-- inspect loops.
 --local MAX_INSPECT_RETRIES = 2  -- maximum # of times to retry calling NotifyInspect for a specific character if we don't get an INSPECT_READY
-local NUM_EXPECTED_RELICS_110 = 3
+local NUM_EXPECTED_RELICS_110 = 2
 local NUM_EXPECTED_RELICS_101 = 1
-local MAX_INSPECTS_PER_CHARACTER = 3
+local MAX_INSPECTS_PER_CHARACTER = 5
 local MAX_NAMES_TO_SHOW = 4
 local PLH_RELICSLOT = 1000  -- for indexing relics in groupInfoCache
 
@@ -699,353 +732,6 @@ local ExpectedItemCount = {			-- number of items expected by spec, assuming pers
 	{ WARRIOR, 71, 15 },					-- arms
 	{ WARRIOR, 72, 16 },					-- fury
 	{ WARRIOR, 73, 16 }					-- protection
-}
-
---[[
-to easily populate these arrays:
-	wowhead search trinkets -> usable by "whichever" -> added in expansion/patch; also ID > 0
-	paste into OpenOffice
-	=concatenate(b1;", -- ";d1)
-	ensure curly quotes are off in tools -> autocorrect options -> localized options
-	to obtain IDs: http://www.wowhead.com/items/armor/trinkets/role:1?filter=166:151;7:1;0:0#0-3+2
-]]--	
-local TRINKET_AGILITY_DPS = {
-
-	-- 7.2 trinkets
-	147275, -- Beguiler's Talisman
-	144477, -- Splinters of Agronax
-	147011, -- Vial of Ceaseless Toxins
-	147012, -- Umbral Moonglaives
-	147016, -- Terror From Below
-	147017, -- Tarnished Sentinel Medallion
-	147018, -- Spectral Thurible
-	147009, -- Infernal Cinders
-	147015, -- Engine of Eradication
-	147010, -- Cradle of Anguish
-	
-	-- 7.1.5 and previously missed 7.1 trinkets
-	142506, -- Eye of Guarm
-	142166, -- Ethereal Urn
-	
-	-- 7.1 trinkets
-	140027, -- Ley Spark
-	142164, -- Toe Knee's Promise
-	142160, -- Mrrgria's Favor
-	142167, -- Eye of Command
-	142165, -- Deteriorated Construct Core
-	142159, -- Bloodstained Handkerchief
-	142157, -- Aran's Relaxing Ruby
-
-	137419, -- Chrono Shard
-	133642, -- Horn of Valor
-	141537, -- Thrice-Accursed Compass
-	141482, -- Unstable Arcanocrystal
-	140794, -- Arcanogolem Digit
-	140806, -- Convergence of Fates
-	140808, -- Draught of Souls
-	140796, -- Entwined Elemental Foci
-	140801, -- Fury of the Burning Sky
-	140798, -- Icon of Rot
-	140802, -- Nightblooming Frond
-	136258, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Conquest
-	136145, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Conquest
-	139329, -- Bloodthirsty Instinct
-	139334, -- Nature's Call
-	139320, -- Ravaged Seed Pod
-	139325, -- Spontaneous Appendages
-	139323, -- Twisting Wind
-	138224, -- Unstable Horrorslime
-	135806, -- Legion Season 1Vindictive Gladiator's Insignia of Conquest
-	135693, -- Legion Season 1Vindictive Gladiator's Insignia of Conquest
-	136716, -- Caged Horror
-	137459, -- Chaos Talisman
-	137446, -- Elementium Bomb Squirrel Generator
-	133641, -- Eye of Skovald
-	137539, -- Faulty Countermeasure
-	137329, -- Figurehead of the Naglfar
-	137369, -- Giant Ornamental Pearl
-	136975, -- Hunger of the Pack
-	137357, -- Mark of Dargrul
-	133644, -- Memento of Angerboda
-	137541, -- Moonlit Prism
-	137349, -- Naraxas' Spiked Tongue
-	137312, -- Nightmare Egg Shell
-	137306, -- Oakheart's Gnarled Root
-	137433, -- Obelisk of the Void
-	136715, -- Spiked Counterweight
-	137367, -- Stormsinger Fulmination Charge
-	137373, -- Tempered Egg of Serpentrix
-	137406, -- Terrorbound Nexus
-	140026, -- The Devilsaur's Bite
-	137439, -- Tiny Oozeling in a Jar
-	137537, -- Tirathon's Betrayal
-	137486, -- Windscar Whetstone
-	135919, -- Legion Season 1Vindictive Combatant's Insignia of Conquest
-	136032, -- Legion Season 1Vindictive Combatant's Insignia of Conquest
-	139630, -- Etching of SargerasDemon Hunter
-	128958, -- Lekos' LeashDemon Hunter
-	129044, -- Frothing Helhound's Fury
-	131803 -- Spine of Barax
-}
-
-local TRINKET_INTELLECT_DPS = {
-	-- 7.2 trinkets
-	147276, -- Spellbinder's Seal
-	144480, -- Dreadstone of Endless Shadows
-	147019, -- Tome of Unraveling Sanity
-	147016, -- Terror From Below
-	147017, -- Tarnished Sentinel Medallion
-	147018, -- Spectral Thurible
-	147002, -- Charm of the Rising Tide
-	
-	-- 7.1.5 and previously missed 7.1 trinkets
-	142166, -- Ethereal Urn
-
-	-- 7.1 trinkets
-	140031, -- Mana Spark
-	142160, -- Mrrgria's Favor
-	142165, -- Deteriorated Construct Core
-	142157, -- Aran's Relaxing Ruby
-	
-	137419, -- Chrono Shard
-	133642, -- Horn of Valor
-	141482, -- Unstable Arcanocrystal
-	141536, -- Padawsen's Unlucky Charm
-	132970, -- Runas' Nearly Depleted Ley Crystal
-	136038, -- Legion Season 1Vindictive Combatant's Insignia of Dominance
-	135925, -- Legion Season 1Vindictive Combatant's Insignia of Dominance
-	132895, -- The Watcher's Divine Inspiration
-	137367, -- Stormsinger Fulmination Charge
-	137398, -- Portable Manacracker
-	121810, -- Pocket Void Portal
-	137433, -- Obelisk of the Void
-	137306, -- Oakheart's Gnarled Root
-	137349, -- Naraxas' Spiked Tongue
-	137541, -- Moonlit Prism
-	137485, -- Infernal Writ
-	137329, -- Figurehead of the Naglfar
-	133641, -- Eye of Skovald
-	137446, -- Elementium Bomb Squirrel Generator
-	140030, -- Devilsaur Shock-Baton
-	137301, -- Corrupted Starlight
-	136716, -- Caged Horror
-	121652, -- Ancient Leaf
-	139326, -- Wriggling Sinew
-	140809, -- Whispers in the Dark
-	135699, -- Legion Season 1Vindictive Gladiator's Insignia of Dominance
-	136151, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Dominance
-	135812, -- Legion Season 1Vindictive Gladiator's Insignia of Dominance
-	136264, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Dominance
-	138224, -- Unstable Horrorslime
-	139323, -- Twisting Wind
-	139321, -- Swarming Plaguehive
-	140804, -- Star Gate
-	140800, -- Pharamere's Forbidden Grimore
-	140798, -- Icon of Rot
-	140801, -- Fury of the Burning Sky
-	140792, -- Erratic Metronome
-	139336 -- Bough of Corruption
-}
-
-local TRINKET_STRENGTH_DPS = {
-	-- 7.2 trinkets
-	147278, -- Stalwart Crest
-	144482, -- Fel-Oiled Infernal Machine
-	147011, -- Vial of Ceaseless Toxins
-	147012, -- Umbral Moonglaives
-	147009, -- Infernal Cinders
-	147015, -- Engine of Eradication
-	147010, -- Cradle of Anguish
-	
-	-- 7.1.5 and previously missed 7.1 trinkets
-	142166, -- Ethereal Urn
-	142508, -- Chains of the Valorous
-
-	-- 7.1 trinkets
-	140035, -- Fluctuating Arc Capacitor
-	142164, -- Toe Knee's Promise
-	142167, -- Eye of Command
-	142159, -- Bloodstained Handkerchief
-	
-	137419, -- Chrono Shard
-	133642, -- Horn of Valor
-	141482, -- Unstable Arcanocrystal
-	141535, -- Ettin Fingernail
-	137486, -- Windscar Whetstone
-	136041, -- Legion Season 1Vindictive Combatant's Insignia of Victory
-	135928, -- Legion Season 1Vindictive Combatant's Insignia of Victory
-	137439, -- Tiny Oozeling in a Jar
-	137406, -- Terrorbound Nexus
-	129260, -- Tenacity of Cursed Blood
-	136715, -- Spiked Counterweight
-	137312, -- Nightmare Egg Shell
-	121806, -- Mountain Rage Shaker
-	121570, -- Might of the Forsaken
-	133644, -- Memento of Angerboda
-	137357, -- Mark of Dargrul
-	140034, -- Impact Tremor
-	136975, -- Hunger of the Pack
-	137369, -- Giant Ornamental Pearl
-	137539, -- Faulty Countermeasure
-	137459, -- Chaos Talisman
-	135815, -- Legion Season 1Vindictive Gladiator's Insignia of Victory
-	135702, -- Legion Season 1Vindictive Gladiator's Insignia of Victory
-	136154, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Victory
-	136267, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Victory
-	139328, -- Ursoc's Rending Paw
-	139325, -- Spontaneous Appendages
-	139320, -- Ravaged Seed Pod
-	139334, -- Nature's Call
-	140799, -- Might of Krosus
-	140796, -- Entwined Elemental Foci
-	140808, -- Draught of Souls
-	140806, -- Convergence of Fates
-	140790 -- Claw of the Crystalline Scorpid
-}
-
-local TRINKET_HEALER = {
-	-- 7.2 trinkets
-	147276, -- Spellbinder's Seal
-	144480, -- Dreadstone of Endless Shadows
-	147019, -- Tome of Unraveling Sanity
-	147007, -- The Deceiver's Grand Design
-	147016, -- Terror From Below
-	147017, -- Tarnished Sentinel Medallion
-	147018, -- Spectral Thurible
-	147004, -- Sea Star of the Depthmother
-	147002, -- Charm of the Rising Tide
-	147005, -- Chalice of Moonlight
-	147003, -- Barbaric Mindslaver
-	147006, -- Archive of Faith
-	
-	-- 7.1.5 and previously missed 7.1 trinkets
-	142166, -- Ethereal Urn
-	142507, -- Brinewater Slime in a Bottle
-
-	-- 7.1 trinkets
-	140031, -- Mana Spark
-	142160, -- Mrrgria's Favor
-	142162, -- Fluctuating Energy
-	142158, -- Faith's Crucible
-	142165, -- Deteriorated Construct Core
-	142157, -- Aran's Relaxing Ruby
-	
-	137419, -- Chrono Shard
-	133642, -- Horn of Valor
-	141482, -- Unstable Arcanocrystal
-	141536, -- Padawsen's Unlucky Charm
-	132970, -- Runas' Nearly Depleted Ley Crystal
-	136038, -- Legion Season 1Vindictive Combatant's Insignia of Dominance
-	135925, -- Legion Season 1Vindictive Combatant's Insignia of Dominance
-	137452, -- Thrumming Gossamer
-	132895, -- The Watcher's Divine Inspiration
-	137367, -- Stormsinger Fulmination Charge
-	137398, -- Portable Manacracker
-	121810, -- Pocket Void Portal
-	137433, -- Obelisk of the Void
-	137306, -- Oakheart's Gnarled Root
-	133766, -- Nether Anti-Toxin
-	137349, -- Naraxas' Spiked Tongue
-	133645, -- Naglfar Fare
-	133646, -- Mote of Sanctification
-	137541, -- Moonlit Prism
-	137462, -- Jewel of Insatiable Desire
-	137485, -- Infernal Writ
-	137484, -- Flask of the Solemn Night
-	137329, -- Figurehead of the Naglfar
-	133641, -- Eye of Skovald
-	137446, -- Elementium Bomb Squirrel Generator
-	140030, -- Devilsaur Shock-Baton
-	137301, -- Corrupted Starlight
-	137540, -- Concave Reflecting Lens
-	136716, -- Caged Horror
-	137378, -- Bottled Hurricane
-	121652, -- Ancient Leaf
-	136714, -- Amalgam's Seventh Spine
-	139326, -- Wriggling Sinew
-	135812, -- Legion Season 1Vindictive Gladiator's Insignia of Dominance
-	136264, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Dominance
-	135699, -- Legion Season 1Vindictive Gladiator's Insignia of Dominance
-	136151, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Dominance
-	138222, -- Vial of Nightmare Fog
-	138224, -- Unstable Horrorslime
-	139323, -- Twisting Wind
-	139321, -- Swarming Plaguehive
-	140793, -- Perfectly Preserved Cake
-	139333, -- Horn of Cenarius
-	139330, -- Heightened Senses
-	140803, -- Etraeus' Celestial Map
-	140805, -- Ephemeral Paradox
-	139322, -- Cocoon of Enforced Solitude
-	139336, -- Bough of Corruption
-	140795 -- Aluriel's Mirror
-}
-
-local TRINKET_TANK = {
-	-- 7.2 trinkets
-	147278, -- Stalwart Crest
-	147275, -- Beguiler's Talisman
-	144477, -- Splinters of Agronax
-	144482, -- Fel-Oiled Infernal Machine
-	147026, -- Shifting Cosmic Sliver
-	147024, -- Reliquary of the Damned
-	147025, -- Recompiled Guardian Module
-	147023, -- Leviathan's Hunger
-	147022, -- Feverish Carapace
-	
-	-- 7.1.5 and previously missed 7.1 trinkets
-	142506, -- Eye of Guarm
-	142166, -- Ethereal Urn
-
-	-- 7.1 trinkets
-	140027, -- Ley Spark
-	140035, -- Fluctuating Arc Capacitor
-	142169, -- Raven Eidolon
-	142168, -- Majordomo's Dinner Bell
-	142161, -- Inescapable Dread
-	
-	137419, -- Chrono Shard
-	133642, -- Horn of Valor
-	141482, -- Unstable Arcanocrystal
-	137315, -- Writhing Heart of Darkness
-	136041, -- Legion Season 1Vindictive Combatant's Insignia of Victory
-	135928, -- Legion Season 1Vindictive Combatant's Insignia of Victory
-	136032, -- Legion Season 1Vindictive Combatant's Insignia of Conquest
-	135919, -- Legion Season 1Vindictive Combatant's Insignia of Conquest
-	140026, -- The Devilsaur's Bite
-	129260, -- Tenacity of Cursed Blood
-	137344, -- Talisman of the Cragshaper
-	131803, -- Spine of Barax
-	137440, -- Shivermaw's Jawbone
-	137338, -- Shard of Rokmora
-	137362, -- Parjesh's Medallion
-	137538, -- Orb of Torment
-	121806, -- Mountain Rage Shaker
-	121570, -- Might of the Forsaken
-	128958, -- Lekos' LeashDemon Hunter
-	137430, -- Impenetrable Nerubian Husk
-	140034, -- Impact Tremor
-	133647, -- Gift of Radiance
-	129044, -- Frothing Helhound's Fury
-	136978, -- Ember of Nullification
-	137400, -- Coagulated Nightwell Residue
-	135702, -- Legion Season 1Vindictive Gladiator's Insignia of Victory
-	136267, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Victory
-	135815, -- Legion Season 1Vindictive Gladiator's Insignia of Victory
-	136154, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Victory
-	135693, -- Legion Season 1Vindictive Gladiator's Insignia of Conquest
-	136258, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Conquest
-	135806, -- Legion Season 1Vindictive Gladiator's Insignia of Conquest
-	136145, -- Legion Season 1 EliteVindictive Gladiator's Insignia of Conquest
-	139327, -- Unbridled Fury
-	140791, -- Royal Dagger Haft
-	138225, -- Phantasmal Echo
-	140807, -- Infernal Contract
-	139335, -- Grotesque Statuette
-	139324, -- Goblet of Nightmarish Ichor
-	140797, -- Fang of Tichcondrius
-	139630, -- Etching of SargerasDemon Hunter
-	140789 -- Animated Exoskeleton
 }
 
 -- set up Frames that will listen for events
@@ -1382,15 +1068,15 @@ local function IsTrinketUsable(item, role)
 
 	local trinketList = nil
 	if role == 'AgilityDPS' then
-		trinketList = TRINKET_AGILITY_DPS
+		trinketList = PLH_TRINKET_AGILITY_DPS
 	elseif role == 'IntellectDPS' then
-		trinketList = TRINKET_INTELLECT_DPS
+		trinketList = PLH_TRINKET_INTELLECT_DPS
 	elseif role == 'StrengthDPS' then
-		trinketList = TRINKET_STRENGTH_DPS
+		trinketList = PLH_TRINKET_STRENGTH_DPS
 	elseif role == 'Healer' then
-		trinketList = TRINKET_HEALER
+		trinketList = PLH_TRINKET_HEALER
 	elseif role == 'Tank' then
-		trinketList = TRINKET_TANK
+		trinketList = PLH_TRINKET_TANK
 	end
 	
 	local i
@@ -1442,7 +1128,7 @@ local function IsEquippableItemForCharacter(fullItemInfo, characterName, current
 				spec = groupInfoCache[characterName]['Spec']
 				characterLevel = groupInfoCache[characterName]['Level']
 			else
-				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!!')
+				PLH_SendDebugMessage('Unable to determine class and spec in InEquippableItemForCharacter()!!!! for ' .. characterName)
 				return false  -- should never reach here, but if we do it means we're not looking up the player or anyone in cache
 			end
 			
@@ -1707,6 +1393,15 @@ local function IsPlayerInUpgradeList(list)
 	return false
 end
 
+-- creates a copy of the table
+local function ShallowCopy(t)
+	local t2 = {}
+	for k, v in pairs(t) do
+		t2[k] = v
+	end
+	return t2
+end
+
 -- returns the names from the given array, with 'and others' if array size > limit
 local function GetNames(namelist, limit)
 	local names = ''
@@ -1715,20 +1410,50 @@ local function GetNames(namelist, limit)
 			limit = #namelist
 		end
 		if namelist[1] ~= nil then
-			names = namelist[1]
-			local maxnames = min(#namelist, limit)
+			-- sort the array by ilvl first
+			local sortedNamelist = namelist
+			if #namelist > 1 then
+				local copiedNamelist = ShallowCopy(namelist)  -- we will destroy elements in the list while sorting, so copy it
+				sortedNamelist = {}
+				local lowestILVL
+				local lowestIndex
+				local ilvl
+				local i = 1
+				local size = #copiedNamelist
+				while i <= size do
+					lowestILVL = 1000000
+					lowestIndex = 1  -- we could be sorting a list without ilvls, in which case just keep the same order
+					for j = 1, #copiedNamelist do
+						if copiedNamelist[j] ~= nil then
+							ilvl = string.match(copiedNamelist[j], '(%d+)')
+							if ilvl ~= nil then
+								ilvl = tonumber(ilvl)
+								if ilvl < lowestILVL then
+									lowestILVL = ilvl
+									lowestIndex = j
+								end
+							end
+						end
+					end
+					table.insert(sortedNamelist, table.remove(copiedNamelist, lowestIndex))
+					i = i + 1
+				end
+			end
+		
+			names = sortedNamelist[1]
+			local maxnames = min(#sortedNamelist, limit)
 			for i = 2, maxnames do
-				if #namelist == 2 then
+				if #sortedNamelist == 2 then
 					names = names .. ' '
 				else
 					names = names .. ', '
 				end
-				if i == #namelist then -- last person
+				if i == #sortedNamelist then -- last person
 					names = names .. 'and '
 				end
-				names = names .. namelist[i]
+				names = names .. sortedNamelist[i]
 			end
-			if #namelist > limit then
+			if #sortedNamelist > limit then
 				names = names .. ', and others'
 			end
 		end
@@ -1859,10 +1584,10 @@ local function PerformNotify(fullItemInfo, characterName)
 
 			if characterName == PLH_GetUnitNameWithRealm('player') then  -- player can trade an item
 				PLH_SendAlert('You can trade ' .. item .. ', which is an ilvl upgrade for ' .. names)
-				PlaySound('GLUECREATECHARACTERBUTTON')
+				PlaySound(600)  -- 'GLUECREATECHARACTERBUTTON'
 			elseif IsPlayerInUpgradeList(isAnUpgradeForAnyCharacterNames) then  -- player can receive an item
 				PLH_SendAlert(PLH_GetNameWithoutRealm(characterName) .. ' can trade ' .. item .. ', which is an ilvl upgrade for you!')
-				PlaySound('LEVELUP')
+				PlaySound(888)  -- 'LEVELUP'
 				HighlightRaidFrames(characterName, item)
 			end
 		end
@@ -1932,7 +1657,7 @@ local function AskForRolls()
 		if fullItemInfo[FII_REAL_ILVL] ~= nil then
 			description = description .. fullItemInfo[FII_REAL_ILVL] .. " "
 		end
-		if fullItemInfo[FII_IS_RELIC] then
+		if fullItemInfo[FII_IS_RELIC] and fullItemInfo[FII_RELIC_TYPE] ~= nil then
 			description = description .. fullItemInfo[FII_RELIC_TYPE] .. " Relic"
 		else
 			if fullItemInfo[FII_CLASS] == LE_ITEM_CLASS_ARMOR then
@@ -2246,7 +1971,7 @@ local function InspectGroupMember(characterName)
 			if UnitIsVisible(characterName) then
 				NotifyInspect(characterName)
 				notifyInspectName = characterName
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+				PLH_wait2(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
 				return true
 			else
 				PLH_SendDebugMessage('   ' .. characterName .. ' out of range for inspect')
@@ -2323,7 +2048,6 @@ function PLH_InspectNextGroupMember()
 --				if inspectCount >= MAX_INSPECTS_PER_CHARACTER then
 --					PLH_SendDebugMessage('Discontinuing inspections for ' .. fullname .. ' due to max inspect limit')
 --				end
-				
 				if inspectCount < MAX_INSPECTS_PER_CHARACTER and (numCachedItems < expectedItemCount or numCachedRelics < expectedRelicCount) then  -- if we've already cached 15 or more items, don't bother refreshing
 					queuedAnInspection = InspectGroupMember(characterName)
 				end
@@ -2344,8 +2068,8 @@ function PLH_InspectNextGroupMember()
 				-- the inspectIndex counter so the next element that gets picked up when we come back into PLH_InspectNextGroupMember
 				-- is the 2nd
 			inspectLoop = inspectLoop + 1
-			if queuedAnInspection then  -- if we just queued someone for inspection, wait before we start the new loop
-				PLH_wait(DELAY_BETWEEN_INSPECTIONS, PLH_InspectNextGroupMember)
+			if queuedAnInspection then
+				-- if we just queued someone for inspection, we don't need to do anything else to start the new loop since InspectGroupMember will call PLH_InspectNextGroupMember()
 			else  -- otherwise start the new loop immediately
 				PLH_InspectNextGroupMember()
 			end
@@ -2430,13 +2154,17 @@ local function Disable()
 end
 
 local function EnableOrDisable()
+--	PLH_SendDebugMessage('Entering EnableOrDisable()')
 	local shouldBeEnabled = IsPersonalLoot()
 	if not isEnabled and shouldBeEnabled then	
+		PLH_SendDebugMessage('...Enabling PLH')
 		Enable()
 	elseif isEnabled and not shouldBeEnabled then
+		PLH_SendDebugMessage('...Disabling PLH')
 		Disable()
 	end
 	if isEnabled then 
+		PLH_SendDebugMessage('...Calling PopulateGroupInfoCache()')
 		PopulateGroupInfoCache()
 	end
 end
@@ -2545,6 +2273,8 @@ local function Initialize(self, event, addonName, ...)
 			rosterUpdatedEventFrame = CreateFrame('Frame')
 			rosterUpdatedEventFrame:SetScript('OnEvent', RosterUpdatedEvent)
 			rosterUpdatedEventFrame:RegisterEvent('GROUP_ROSTER_UPDATE')
+			rosterUpdatedEventFrame:RegisterEvent('ZONE_CHANGED_NEW_AREA')
+			rosterUpdatedEventFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 			
 			groupMemberInfoChangedEventFrame = CreateFrame('Frame')
 			groupMemberInfoChangedEventFrame:SetScript('OnEvent', GroupMemberInfoChangedEvent)
@@ -2615,6 +2345,7 @@ function PLH_RefreshCache()
 	groupInfoCache = {}
 	PopulateGroupInfoCache()
 end
+
 --[[
 function PLH_TestItems(characterIndex)
 	if characterIndex == nil then
@@ -2681,148 +2412,6 @@ function PLH_TestItems(characterIndex)
 				end
 			end
 		end
-	end
-end
-
-function PLH_TestRelic(relic, item)
-	local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(relic)
-	print('name ', name)
-	print('class ', class)  -- 'Gem'
---	print('iLevel ', iLevel)  -- gives wrong value
-	print('subclass ', subclass)  -- 'Artifact Relic'
---	print('equipSlot ', equipSlot)  -- nil
-	print('real ilvl is ', PLH_GetRealILVL(relic))  -- correct
-	print('IsEquippableItem	is ', IsEquippableItem(relic))  -- false, so we'll need to change where we do this check!
-	print('IsArtifactRelicItem is ', IsArtifactRelicItem(relic))  -- true; can add this where we check isEquippable
-	
-	local gemname, gemlink = GetItemGem(item, 1)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 2)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
-	local gemname, gemlink = GetItemGem(item, 3)  -- 2nd arg is index; does return gem link from artifact
-	print('gemname ', gemname)
-	print('gemlink ', gemlink)
-	print('real ilvl is ', PLH_GetRealILVL(gemlink))  -- correct
-
---	local slotId, texture, checkRelic = GetInventorySlotInfo("MainHandSlot")
---	print('checkRelic1 ', checkRelic)  -- false
-	
---	local slotId, texture, checkRelic = GetInventorySlotInfo("RangedSlot")
---	print('checkRelic2 ', checkRelic)  -- invalid slot error
-
-	-- following method not found even though it's in API docs
---	local gem1, gem2, gem3 = GetInventoryItemGems(INVSLOT_RANGED)	--18
---	local gem1, gem2, gem3 = GetInventoryItemGems(18)	--18
---	print('gem1 ', gem1)
---	print('gem2 ', gem2)
---	print('gem3 ', gem3)
-end
-]]--
---[[
-*********************************************************
-Code from BlizzBugsSuck.lua to resolve known blizzard bug when opening interface options
-*********************************************************
-]]--
--- Fix InterfaceOptionsFrame_OpenToCategory not actually opening the category (and not even scrolling to it)
--- Confirmed still broken in 6.2.2.20490 (6.2.2a)
---[[
-local doNotRun = false
-
-do
-	local function get_panel_name(panel)
-		local tp = type(panel)
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		if tp == "string" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p.name == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel
-					end
-				end
-			end
-		elseif tp == "table" then
-			for i = 1, #cat do
-				local p = cat[i]
-				if p == panel then
-					if p.parent then
-						return get_panel_name(p.parent)
-					else
-						return panel.name
-					end
-				end
-			end
-		end
-	end
-
-	local function InterfaceOptionsFrame_OpenToCategory_Fix(panel)
-		if doNotRun or InCombatLockdown() then return end
-		local panelName = get_panel_name(panel)
-		if not panelName then return end -- if its not part of our list return early
-		local noncollapsedHeaders = {}
-		local shownpanels = 0
-		local mypanel
-		local t = {}
-		local cat = INTERFACEOPTIONS_ADDONCATEGORIES
-		for i = 1, #cat do
-			local panel = cat[i]
-			if not panel.parent or noncollapsedHeaders[panel.parent] then
-				if panel.name == panelName then
-					panel.collapsed = true
-					t.element = panel
-					InterfaceOptionsListButton_ToggleSubCategories(t)
-					noncollapsedHeaders[panel.name] = true
-					mypanel = shownpanels + 1
-				end
-				if not panel.collapsed then
-					noncollapsedHeaders[panel.name] = true
-				end
-				shownpanels = shownpanels + 1
-			end
-		end
-		local Smin, Smax = InterfaceOptionsFrameAddOnsListScrollBar:GetMinMaxValues()
-		if shownpanels > 15 and Smin < Smax then
-			local val = (Smax/(shownpanels-15))*(mypanel-2)
-			InterfaceOptionsFrameAddOnsListScrollBar:SetValue(val)
-		end
-		doNotRun = true
-		InterfaceOptionsFrame_OpenToCategory(panel)
-		doNotRun = false
-	end
-
-	hooksecurefunc("InterfaceOptionsFrame_OpenToCategory", InterfaceOptionsFrame_OpenToCategory_Fix)
-end
-]]--
-
---[[
--- following only returns for some items (notably trinkets), and only returns spec IDs relevant to the player
-function PrintItemSpecInfo(item)
-	specs = {}
-	results = GetItemSpecInfo(item, specs)
-	print('results is ', results)
-	print('#results is ', #results)
-	print('#specs is ', #specs)
-	for i = 1, #results do
-		print(results[i])
-	end
-	for i = 1, #specs do
-		print(results[i])
-	end
-	for key, value in pairs(results) do
-		print('key = ', key)
-		print('value = ', value)
-	end
-	for key, value in pairs(specs) do
-		print('key2 = ', key)
-		print('value2 = ', value)
 	end
 end
 ]]--

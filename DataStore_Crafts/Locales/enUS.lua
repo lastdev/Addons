@@ -10,3 +10,4 @@ L["BROADCAST_PROFS_DISABLED"] = "Nothing will be sent at all. Disabling this opt
 L["BROADCAST_PROFS_ENABLED"] = "Your alts' known profession links will be sent on the guild channel 5 seconds after logon."
 L["BROADCAST_PROFS_TITLE"] = "Broadcast Profession Links"
 L["Secondary Skills"] = true
+

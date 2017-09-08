@@ -29,6 +29,10 @@ local AddonDB_Defaults = {
 		},
 		Reference = {
 			AppearancesCounters = {},				-- ex: ["MAGE"] = { [1] = "76/345" ... }	= category 1 => 76/345
+			CollectedSets = {},						-- ex: [setID] = true, list of collected sets
+			SetNumItems = {},							-- ex: [setID] = 8, number of pieces in a set
+			SetNumCollected = {},					-- ex: [setID] = 4, number of collected pieces in a set
+			SetIconIDs = {},							-- ex: [setID] = itemID, itemID of the icon that represents the set
 		},
 		Guilds = {
 			['*'] = {			-- ["Account.Realm.Name"] 
@@ -201,10 +205,66 @@ local function ScanTransmogCollection()
 	end
 end
 
+local classMasks = {
+	[1] = "WARRIOR",
+	[2] = "PALADIN",
+	[4] = "HUNTER",
+	[8] = "ROGUE",
+	[16] = "PRIEST",
+	[32] = "DEATHKNIGHT",
+	[64] = "SHAMAN",
+	[128] = "MAGE",
+	[256] = "WARLOCK",
+	[512] = "MONK",
+	[1024] = "DRUID",
+	[2048] = "DEMONHUNTER"
+}	
+
+local function ScanTransmogSets()
+	local _, englishClass = UnitClass("player")
+	local collectedSets = addon.db.global.Reference.CollectedSets
+	-- counters[englishClass] = counters[englishClass] or {}
+	-- local classCounters = counters[englishClass]
+
+	local sets = C_TransmogSets.GetAllSets()
+	if not sets then return end
+
+	for _, set in pairs(sets) do
+		local class = classMasks[set.classMask]
+
+		if class == englishClass then
+			local setID = set.setID
+
+			local sources = C_TransmogSets.GetSetSources(set.setID)
+			local numTotal = 0
+			local numCollected = 0
+
+			for sourceID, collected in pairs(sources) do
+				numTotal = numTotal + 1
+				if collected then
+					numCollected = numCollected + 1
+
+					collectedSets[setID] = collectedSets[setID] or {}
+					collectedSets[setID][sourceID] = true
+				end
+			end
+
+			if numTotal == numCollected then
+				collectedSets[setID] = nil	-- if set is complete, kill the table, the counters will tell it
+			end
+
+			addon.db.global.Reference.SetNumItems[setID] = numTotal
+			addon.db.global.Reference.SetNumCollected[setID] = (numCollected ~= 0) and numCollected or nil
+		end
+	end
+end
+
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanInventory()
 	ScanAverageItemLevel()
+	ScanTransmogSets()
 end
 
 local function OnPlayerEquipmentChanged(event, slot)
@@ -219,10 +279,12 @@ end
 
 local function OnTransmogCollectionLoaded()
 	ScanTransmogCollection()
+	ScanTransmogSets()
 end
 
 local function OnTransmogCollectionUpdated()
 	ScanTransmogCollection()
+	ScanTransmogSets()
 end
 
 
@@ -302,6 +364,61 @@ local function _GetGuildMemberAverageItemLevel(guild, member)
 	end
 end
 
+local function _GetSetIcon(setID)
+	local iconIDs = addon.db.global.Reference.SetIconIDs
+
+	-- no cached item id ? look for one
+	if not iconIDs[setID] then 
+		-- coming from Blizzard_Wardrobe.lua:
+		-- WardrobeSetsDataProviderMixin:GetSetSourceData
+		-- WardrobeSetsDataProviderMixin:GetSortedSetSources
+		local sources = C_TransmogSets.GetSetSources(setID)
+		
+		for sourceID, _ in pairs(sources) do
+			local info = C_TransmogCollection.GetSourceInfo(sourceID)
+			
+			-- 2 = head slot, couldn't find the constant for that :(
+			if info and info.invType == 2 then	
+				iconIDs[setID] = info.itemID
+				break	-- we found the item we were looking for, leave the loop
+			end
+		end
+	end
+
+	if iconIDs[setID] then
+		local _, _, _, _, icon = GetItemInfoInstant(iconIDs[setID])
+		return icon
+	end
+	return QUESTION_MARK_ICON
+end
+
+local function _IsSetCollected(setID)
+	local ref = addon.db.global.Reference
+
+	-- should not be nil, but default to -1 to fail comparison below
+	local numTotal = ref.SetNumItems[setID] or -1
+
+	-- may be nil (= 0 collected)
+	local numCollected = ref.SetNumCollected[setID] or 0
+
+	return (numCollected == numTotal)
+end
+
+local function _IsSetItemCollected(setID, sourceID)
+	local set = addon.db.global.Reference.CollectedSets[setID]
+	return (set and set[sourceID])
+end
+
+local function _GetCollectedSetInfo(setID)
+	local ref = addon.db.global.Reference
+
+	local numTotal = ref.SetNumItems[setID] or 0
+	local numCollected = ref.SetNumCollected[setID] or 0
+
+	return numCollected, numTotal
+end
+
+
 local PublicMethods = {
 	GetInventory = _GetInventory,
 	GetInventoryItem = _GetInventoryItem,
@@ -310,6 +427,10 @@ local PublicMethods = {
 	RequestGuildMemberEquipment = _RequestGuildMemberEquipment,
 	GetGuildMemberInventoryItem = _GetGuildMemberInventoryItem,
 	GetGuildMemberAverageItemLevel = _GetGuildMemberAverageItemLevel,
+	GetSetIcon = _GetSetIcon,
+	IsSetCollected = _IsSetCollected,
+	IsSetItemCollected = _IsSetItemCollected,
+	GetCollectedSetInfo = _GetCollectedSetInfo,
 }
 
 -- *** Guild Comm ***

@@ -11,3 +11,4 @@ L["TRACK_TURNINS_DISABLED"] = "L'historique de quêtes restera dans son état ac
 L["TRACK_TURNINS_ENABLED"] = "Les validations de quêtes sont sauvées dans l'historique, afin d'assurer qu'il soit toujours valide."
 L["TRACK_TURNINS_LABEL"] = "Suivre les validations de quêtes"
 L["TRACK_TURNINS_TITLE"] = "Suivre les validations de quêtes"
+

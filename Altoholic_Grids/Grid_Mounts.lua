@@ -1,11 +1,9 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 
 local spellList
 local currentSpellID
@@ -146,10 +144,10 @@ local callbacks = {
 			
 			if DataStore:IsPetKnown(character, "CRITTER", currentSpellID) then
 				button.Background:SetVertexColor(1.0, 1.0, 1.0);
-				button.Name:SetText(ICON_READY)
+				button.Name:SetText(icons.ready)
 			else
 				button.Background:SetVertexColor(0.4, 0.4, 0.4);
-				button.Name:SetText(ICON_NOTREADY)
+				button.Name:SetText(icons.notReady)
 			end
 			button.id = currentSpellID
 		end,

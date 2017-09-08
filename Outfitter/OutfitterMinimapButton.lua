@@ -243,7 +243,7 @@ end
 
 function Outfitter._MinimapButton:ToggleMenu()
 	-- Play a sound
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 
 	-- Hide the menu if it's showing
 	if self.dropDownMenu then

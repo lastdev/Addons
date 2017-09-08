@@ -5,7 +5,7 @@
 		<Size x="156" y="20" />
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTabSummaryMenuItem")
+				Altoholic:BindViewToController(self, "AltoholicUI.TabSummaryMenuItem")
 			</OnLoad>
 			<OnClick>
 				self:Item_OnClick()

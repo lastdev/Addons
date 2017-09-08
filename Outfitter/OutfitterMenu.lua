@@ -959,7 +959,7 @@ function Outfitter._DropDownListItem:OnClick(...)
 	
 	vFunc(self.arg1, self.arg2, vChecked)
 	
-	PlaySound("UChatScrollButton")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 end
 
 function Outfitter._DropDownListItem:OnEnter(...)

@@ -1,5 +1,5 @@
 Rarity = LibStub("AceAddon-3.0"):NewAddon("Rarity", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "LibSink-2.0", "AceBucket-3.0", "LibBars-1.0", "AceSerializer-3.0")
-Rarity.MINOR_VERSION = tonumber(("$Revision: 585 $"):match("%d+"))
+Rarity.MINOR_VERSION = tonumber(("$Revision: 599 $"):match("%d+"))
 local FORCE_PROFILE_RESET_BEFORE_REVISION = 1 -- Set this to one higher than the Revision on the line above this
 local L = LibStub("AceLocale-3.0"):GetLocale("Rarity")
 local R = Rarity
@@ -20,7 +20,7 @@ local lbct = LibStub("LibBabble-CreatureType-3.0"):GetUnstrictLookupTable()
 local lbb = LibStub("LibBabble-Boss-3.0"):GetUnstrictLookupTable()
 local hbd = LibStub("HereBeDragons-1.0")
 local compress = LibStub("LibCompress")
---
+---
 
 
 --[[
@@ -327,6 +327,8 @@ R.opennodes = {
 	[L["Crane Nest"]] = true,
 	[L["Timeless Chest"]] = true,
 	[L["Snow Mound"]] = true,
+	[L["Glimmering Treasure Chest"]] = true,
+	[L["Curious Wyrmtongue Cache"]] = true,
 }
 
 
@@ -554,6 +556,10 @@ do
 		self.db.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
 		self.db.RegisterCallback(self, "OnProfileDeleted", "OnProfileChanged")
 
+		-- Soft-disable the Group Finder auto-refresh checkbox
+		self.db.profile.showGroupFinderAutoRefresh = false
+		self.db.profile.enableGroupFinderAlert = false
+
   RequestArtifactCompletionHistory() -- Request archaeology info from the server
 		RequestRaidInfo() -- Request raid lock info from the server
 		RequestLFDPlayerLockInfo() -- Request LFD data from the server; this is used for holiday boss detection
@@ -697,6 +703,7 @@ function R:DelayedInit()
 	self:ScanStatistics("DELAYED INIT")
 	self:ScanCalendar("DELAYED INIT")
 	self:ScanToys("DELAYED INIT")
+	self:ScanTransmog("DELAYED INIT")
 	self:UpdateText()
  self:UpdateBar()
 end
@@ -1522,6 +1529,42 @@ function R:OnEvent(event, ...)
     self:OutputAttempts(v)
    end
   end
+
+		-- Handle opening Curious Wyrmtongue Cache
+		if fishing and opening and lastNode and (lastNode == L["Curious Wyrmtongue Cache"]) then
+  	local v = self.db.profile.groups.pets["Scraps"]
+   if v and type(v) == "table" and v.enabled ~= false then
+    if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+    self:OutputAttempts(v)
+   end
+		end
+
+		-- Handle opening Glimmering Treasure Chest
+		if fishing and opening and lastNode and (lastNode == L["Glimmering Treasure Chest"]) and select(8, GetInstanceInfo()) == 1626 then
+			local bigChest = false
+			for _, slot in pairs(GetLootInfo()) do
+				if slot.item == L["Ancient Mana"] and slot.quantity == 100 then
+					bigChest = true
+				end
+			end
+
+			if bigChest == true then
+				local names = {"Arcano-Shower", "Displacer Meditation Stone", "Kaldorei Light Globe", "Unstable Powder Box", "Wisp in a Bottle", "Ley Spider Eggs"}
+				for _, name in pairs(names) do
+					local v = self.db.profile.groups.items[name]
+					if v and type(v) == "table" and v.enabled ~= false then
+						if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+						self:OutputAttempts(v)
+					end
+				end
+
+				v = self.db.profile.groups.mounts["Torn Invitation"]
+				if v and type(v) == "table" and v.enabled ~= false then
+					if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+					self:OutputAttempts(v)
+				end
+			end
+		end
 
   -- HANDLE FISHING
   if fishing and opening == false then
@@ -3929,6 +3972,10 @@ function R:ScanExistingItems(reason)
 	self:ProfileStop2("Toys took %fms")
 	self:ProfileStart2()
 
+	self:ScanTransmog(reason)
+	self:ProfileStop2("Transmog took %fms")
+	self:ProfileStart2()
+
 	self:ScanCalendar(reason)
 	self:ProfileStop2("Calendar took %fms")
 	self:ProfileStart2()
@@ -3939,6 +3986,26 @@ function R:ScanExistingItems(reason)
 	self:ProfileStop("ScanExistingItems: Total time %fms")
 end
 
+
+function R:ScanTransmog(reason)
+ self:Debug("Scanning transmog ("..(reason or "")..")")
+ 
+	for k, v in pairs(R.db.profile.groups) do
+		if type(v) == "table" then
+			for kk, vv in pairs(v) do
+				if type(vv) == "table" then
+					if vv.itemId and not vv.repeatable and select(2, C_TransmogCollection.GetItemInfo(vv.itemId)) then -- Don't scan for items that aren't gear that have a transmog collection appearance
+						if C_TransmogCollection.PlayerHasTransmog(vv.itemId) then -- You have the appearance of the item you're tracking
+							vv.known = true
+							vv.enabled = false
+							vv.found = true
+						end
+					end
+				end
+			end
+		end
+	end
+end
 
 
 function R:ScanToys(reason)
@@ -3982,7 +4049,7 @@ function R:ScanCalendar(reason)
 	for i = 1, numEvents, 1 do
 		local _, _, _, calendarType, _, _, texture = CalendarGetDayEvent(monthOffset, day, i)
 
-		if calendarType == "HOLIDAY" then
+		if calendarType == "HOLIDAY" and texture ~= nil then
 			Rarity.holiday_textures[texture] = true
 		end
 	end

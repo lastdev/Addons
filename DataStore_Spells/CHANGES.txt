@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r31 | thaoky.altoholic@yahoo.com | 2017-09-04 12:32:58 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Spells.toc
+
+TOC Update
+------------------------------------------------------------------------
 r30 | thaoky.altoholic@yahoo.com | 2017-04-28 12:34:32 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Spells.lua

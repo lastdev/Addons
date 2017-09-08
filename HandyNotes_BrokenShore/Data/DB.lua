@@ -1,4 +1,4 @@
--- $Id: DB.lua 46 2017-05-08 13:57:38Z arith $
+-- $Id: DB.lua 69 2017-07-02 14:44:27Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -119,8 +119,25 @@ DB.points = {
 		[46402066] = {
 			npc = 117950,
 			label = L["Madam Viciosa <Master Pet Tamer>"],
-			others = true,
-			icon = private.constants.icon_texture["yellowButton"],
+			note = format("%s: %s, %s, %s", SHOW_PET_BATTLES_ON_MAP_TEXT, BATTLE_PET_DAMAGE_NAME_1, BATTLE_PET_DAMAGE_NAME_6, BATTLE_PET_DAMAGE_NAME_1),
+			tamer = true,
+			icon = private.constants.icon_texture["blueButton"],
+			scale = 0.6
+		},
+		[39487197] = {
+			npc = 117951,
+			label = L["Nameless Mystic <Master Pet Tamer>"],
+			note = format("%s: %s, %s, %s", SHOW_PET_BATTLES_ON_MAP_TEXT, BATTLE_PET_DAMAGE_NAME_6, BATTLE_PET_DAMAGE_NAME_6, BATTLE_PET_DAMAGE_NAME_7),
+			tamer = true,
+			icon = private.constants.icon_texture["blueButton"],
+			scale = 0.6
+		},
+		[70004761] = {
+			npc = 117934,
+			label = L["Sissix <Master Pet Tamer>"],
+			note = format("%s: %s, %s, %s", SHOW_PET_BATTLES_ON_MAP_TEXT, BATTLE_PET_DAMAGE_NAME_7, BATTLE_PET_DAMAGE_NAME_9, BATTLE_PET_DAMAGE_NAME_4),
+			tamer = true,
+			icon = private.constants.icon_texture["blueButton"],
 			scale = 0.6
 		},
 	},
@@ -131,6 +148,8 @@ DB.points = {
 -- /////////////////////////////////
 DB.treasures = {
 	[43364692] = { note=L["Inside the tower"] }, 
+	[41543460] = { note=L["Inside the tower"] }, 
+	[46175067] = { note=L["Inside the tower"] }, 
 	[48881860] = { }, 
 	[53321945] = { }, 
 	[31113202] = { }, -- Hidden Wyrmtongue Cache
@@ -166,18 +185,17 @@ DB.treasures = {
 	[53542790] = { }, 
 	[52302990] = { }, 
 	[36542434] = { }, 
-	[44603350] = { }, 
+	[44613358] = { }, 
 	[47593475] = { }, 
-	[62003910] = { note=L["Inside the tower"] }, 
+	[61943917] = { note=L["Inside the tower"] }, 
 	[64704550] = { }, 
-	[57434353] = { }, 
+	[57434353] = { note=L["Inside the tower"] }, 
 	[52024150] = { }, 
 	[53674568] = { }, 
 	[46054346] = { }, 
 	[45784677] = { }, 
 	[47494687] = { }, 
-	[46175067] = { }, 
-	[43545217] = { }, 
+	[43545217] = { hide_indoor = true, }, 
 	[61404996] = { }, 
 	[63215176] = { }, 
 	[62855389] = { }, 
@@ -220,7 +238,7 @@ DB.treasures = {
 	[90555868] = { },
 	[89634694] = { },
 	[61424307] = { },
-	[49804650] = { },
+	[49844639] = { },
 	[50324989] = { },
 	[42004277] = { },
 	[38613456] = { note=format(L["Inside %s"], BZ["Blood Nest"]),},
@@ -257,7 +275,7 @@ DB.rares = {
 	[89473084] = { npc = 117103, quest = 46102, label = L["Felcaller Zelthae"], },
 	[51814293] = { npc = 117086, quest = 46093, label = L["Emberfire"], },
 	[39194241] = { npc = 117091, quest = 46095, label = L["Felmaw Emberfiend"], },
-	[44645317] = { npc = 119629, quest = 46304, label = L["Lord Hel'Nurath"], },
+	[44645317] = { npc = 119629, quest = 46304, label = L["Lord Hel'Nurath"], hide_indoor = true, },
 	[58294288] = { npc = 117093, quest = 46099, label = L["Felbringer Xar'thok"], },
 	[77842292] = { npc = 121037, quest = 46995, label = L["Grossir"], }, 
 	[61913840] = { npc = 117089, quest = 46096, label = L["Inquisitor Chillbane"], },
@@ -335,9 +353,9 @@ DB.infernalCores = {
 	[33952901] = { },
 	[36542880] = { },
 	[46263981] = { },
-	[46425318] = { },
+	[46425318] = { hide_indoor = true, },
 	[52833097] = { },
-	[47625761] = { },
+	[47625761] = { hide_indoor = true, },
 	[54032693] = { },
 	[57173114] = { },
 }
@@ -349,3 +367,59 @@ for k, v in pairs(DB.infernalCores) do
 	DB.points[mapFile(1021)][k]["spell"] = 193713
 	DB.points[mapFile(1021)][k]["scale"] = 0.7
 end
+
+-- /////////////////////////////////
+-- Nether Portal
+-- /////////////////////////////////
+DB.netherPortals = {
+	[54756868] = { },
+	[35875749] = { },
+	[54344098] = { },
+	[56903555] = { },
+	[62295847] = { },
+	[66394273] = { },
+	[46946726] = { },
+	[68832629] = { },
+	[65843212] = { note = format(L["Inside %s"], BZ["Felsworn Vault"]) },
+	[44817662] = { },
+	[55592608] = { },
+	[55204623] = { },
+	--[74572905] = { },
+	[74173022] = { }, 
+	[41814931] = { },
+	[37884518] = { }, 
+	[85835436] = { }, 
+	
+	[67413527] = { }, 
+	[61465629] = { }, -- (cave) Lambent Felhunter
+	[58005500] = { }, -- (cave)
+	[43594284] = { }, 
+	[52411096] = { }, -- (crescent ruins)
+	[74043414] = { }, 
+	[86782758] = { }, 
+	
+	[36202380] = { },
+	[57205610] = { },
+	[63302640] = { },
+	[62604110] = { },
+	
+	[41971776] = { },
+	
+}
+
+for k, v in pairs(DB.netherPortals) do
+	DB.points[mapFile(1021)][k] = v
+	DB.points[mapFile(1021)][k]["netherPortal"] = true
+	DB.points[mapFile(1021)][k]["type"] = "netherPortal"
+	--DB.points[mapFile(1021)][k]["spell"] = 240605
+	DB.points[mapFile(1021)][k]["npc"] = 120751
+end
+
+-- /////////////////////////////////
+-- Doom Shroom
+-- /////////////////////////////////
+
+DB.shrooms = {
+	[66743705] = { },
+	[55264636] = { },
+}

@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Garrisons.lua"></Script>
 
-	<Frame name="AltoholicFrameGarrisonMissions" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame parentKey="GarrisonMissions" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
 		<Frames>
 			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate" hidden="true">
 				<Scripts>
@@ -19,8 +19,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGarrisonMissionsPanel")
-				self:Init()
+				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionsPanel")
 			</OnLoad>
 		</Scripts>
 	</Frame>

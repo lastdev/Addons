@@ -23,7 +23,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTalentRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.TalentRow")
 			</OnLoad>
 		</Scripts>
 	</Frame>

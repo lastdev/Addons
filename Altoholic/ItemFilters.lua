@@ -93,21 +93,35 @@ function ns:GetFilterValue(field)
 	return filters[field]
 end
 
+local NAMES = {}
+
 function ns:EnableFilter(filter)
 	if filterFunctions[filter] then
 		filters.list = filters.list or {}
 		table.insert(filters.list, filterFunctions[filter])
+		table.insert(NAMES, filter)
 	end
 end
 
-function ns:ItemPassesFilters()
+function ns:ItemPassesFilters(verbose)
+	-- verbose: for debug purposes only
+
 	-- Exclusive approach:
-	-- 	by default, it is considered that no item if filtered out unless a specific filter is enabled.
+	-- 	by default, it is considered that no item is filtered out unless a specific filter is enabled.
 	-- 	ex: if a user wants to filter items based on their level in the UI, it means he doesn't want to see items outside of the specifies boundaries, so the filter "Level" is enabled, and items are filtered out.
 
 	if filters.list then		-- there might not be any filter
-		for _, func in pairs(filters.list) do
+		for name, func in pairs(filters.list) do
+			if verbose then
+				print("Testing filter : " .. NAMES[name])
+			end
+		
 			if not func() then		-- if any of the filters returns false/nil, exit
+				if verbose then
+					print("exiting on " .. NAMES[name])
+					print(searchedItem["itemName"])
+					print(filters["itemName"])
+				end
 				return
 			end
 		end
@@ -126,12 +140,17 @@ function ns:TryFilter(filter)
 end
 
 -- currently searched item
-function ns:SetSearchedItem(itemID, itemLink)
+function ns:SetSearchedItem(itemID, itemLink, isBattlePet)
 	local s = searchedItem
 	local _
 
-	s.itemID = itemID
-	s.itemName, s.itemLink, s.itemRarity, s.itemLevel,	s.itemMinLevel, s.itemType, s.itemSubType, _, s.itemEquipLoc = GetItemInfo(itemLink or itemID)
+	-- dirty hack, this should go somewhere else
+	if isBattlePet then
+		_, _, s.itemRarity, _, _, _, s.itemName = DataStore:GetBattlePetInfoFromLink(itemLink)
+	else
+		s.itemID = itemID
+		s.itemName, s.itemLink, s.itemRarity, s.itemLevel,	s.itemMinLevel, s.itemType, s.itemSubType, _, s.itemEquipLoc = GetItemInfo(itemLink or itemID)
+	end
 end
 
 function ns:GetSearchedItemInfo(field)

@@ -4,14 +4,7 @@
 	<Frame name="AltoRealmPickerTemplate" inherits="AltoDropDownMenuTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoFrame")
-				Altoholic:SetClassExtensions(self, "AltoDropDownMenu")
-				Altoholic:SetClassExtensions(self, "AltoRealmPicker")
-				
-				self:SetMenuWidth(self.menuWidth) 
-				self:SetButtonWidth(20)
-				self:Initialize(self.DropDownRealm_Initialize)
-				self:SetCurrentRealm(GetRealmName())
+				Altoholic:BindViewToController(self, "AltoholicUI.RealmPicker", "AltoholicUI.Frame,AltoholicUI.DropDownMenu")
 			</OnLoad>
 		</Scripts>
 	</Frame>

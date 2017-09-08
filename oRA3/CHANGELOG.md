@@ -1,7 +1,7 @@
 # oRA3
 
-## [v7.2.2](https://github.com/BigWigsMods/oRA3/tree/v7.2.2) (2017-05-02) [](#top)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v7.2.1...v7.2.2)
+## [v7.3.0](https://github.com/BigWigsMods/oRA3/tree/v7.3.0) (2017-08-29)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v7.2.9...v7.3.0)
 
-- Update deDE (#26)  
-- Alerts: Add Spirit Cauldron  
+- bump toc  
+- remove compat code  

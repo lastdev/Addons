@@ -9,31 +9,26 @@ Author: Zensunim of Malygos
 GTFO.SpellID["40611"] = {
 	--desc = "Blaze (Illidan)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["41482"] = {
 	--desc = "Blizzard (Illidari Council)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["41481"] = {
 	--desc = "Flamestrike (Illidari Council)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["41541"] = {
 	--desc = "Consecration (Illidari Council)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["28865"] = {
 	--desc = "Consumption (Netherspite)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["31944"] = {
@@ -51,7 +46,6 @@ GTFO.SpellID["30129"] = {
 GTFO.SpellID["50746"] = {
 	--desc = "Burn (Illidan)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["51103"] = {
@@ -186,19 +180,16 @@ GTFO.SpellID["31340"] = {
 GTFO.SpellID["40265"] = {
 	--desc = "Molten Flame (Supremus - Black Temple)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["42052"] = {
 	--desc = "Volcanic Geyser (Supremus - Black Temple)";
 	sound = 1;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["42023"] = {
 	--desc = "Rain of Fire (Ashtongue Elementalist - Black Temple)";
 	sound = 2;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["32302"] = {
@@ -231,7 +222,6 @@ GTFO.SpellID["40871"] = {
 	--desc = "Fatal Attraction (Mother Shahraz - Black Temple)";
 	sound = 4;
 	ignoreSelfInflicted = true;
-	trivialLevel = 80;
 };
 
 GTFO.SpellID["38281"] = {
@@ -438,4 +428,9 @@ GTFO.SpellID["35383"] = {
 GTFO.SpellID["138561"] = {
 	--desc = "Kanrethad Ebonlocke (Black Temple)";
 	sound = 1;
+};
+
+GTFO.SpellID["40841"] = {
+  --desc = "Flame Crash (Black Temple)";
+  sound = 1;
 };

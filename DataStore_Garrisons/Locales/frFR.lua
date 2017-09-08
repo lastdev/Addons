@@ -7,3 +7,4 @@ L["REPORT_UNCOLLECTED_ENABLED"] = "Au logon, les personnages avec plus de 400 re
 L["REPORT_UNCOLLECTED_LABEL"] = "Signaler les ressources non collectées"
 L["REPORT_UNCOLLECTED_TITLE"] = "Signaler les ressources non collectées"
 L["UNCOLLECTED_RESOURCES_ALERT"] = "%s a %s ressources non collectées"
+

@@ -12,10 +12,7 @@
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-			
-				self:SetIconSize(self.iconWidth, self.iconHeight)
-				self:SetIcon(self.iconFile)
+				Altoholic:BindViewToController(self, "AltoholicUI.Button")
 			</OnLoad>
 		</Scripts>
 	</Button>

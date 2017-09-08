@@ -1,7 +1,73 @@
-$Id: ChangeLog.txt 47 2017-05-08 15:22:50Z arith $
+$Id: ChangeLog.txt 79 2017-08-31 14:53:46Z arith $
 
 Revision History:
 =================
+
+* v1.21 (Aug. 31, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+
+* v1.20 (Aug. 30, 2017)
+-----------------------
+- ToC update to support WoW 7.3.0
+- Lib Update: LibUIDropDownMenu, LibBabble-SubZone-3.0
+
+* v1.19 (Jul. 02, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+- Treasure data updated
+- Rare node enhanced
+- Nether portals' location tuning
+# For Development:
+  - Added iterCont() to allow POIs to be displayed on continent maps
+    (but for now I have not yet decided to activate this feature)
+
+* v1.18 (Jun. 13, 2017)
+-----------------------
+- Added Unstable Nether Portal's locations
+
+* v1.17 (Jun. 08, 2017)
+-----------------------
+- Localization update:
+  - Russian (DogmatX)
+
+* v1.16 (May 25, 2017)
+-----------------------
+- Lib update:
+  - Replace NoTaint_UIDropDownMenu with LibUIDropDownMenu
+- Enhanced dropdown menu's behavior when world map is changed or closed
+- Fixed issue that no-lib version was not able to locate LibBabble-SubZone-3.0
+
+* v1.15 (May 22, 2017)
+-----------------------
+- Fixed localization key issue. 
+
+* v1.14 (May 20, 2017)
+-----------------------
+- Lib update:
+  - NoTaint_UIDropDownMenu
+- Localization update:
+  - German (pas06)
+
+* v1.13 (May 18, 2017)
+-----------------------
+- Added Unstable Nether Portal's locations
+- Added toggle to show node's coordinate (mostly for debugging purpose)
+- Localization update:
+  - Korean (yuk6196)
+  - Russian (BLizzatron)
+
+* v1.12 (May 14, 2017)
+-----------------------
+- Added Pet Tamer
+- Added new treasure points
+- Replaced UIDropDown with NoTaint_UIDropDown
+- Revised iter function to return dungeonLevel value
+- Fixed the toggling of show infernal cores
+- Localization update:
+  - Simplified Chinese (dll32)
+  - Korean (yuk6196)
+  - Russian (BLizzatron)
 
 * v1.11 (May 08, 2017)
 -----------------------

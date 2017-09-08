@@ -69,14 +69,11 @@ local function QueueFrame_OnEnter(self)
 	GameTooltip:Show();
 end
 
-
-
-
 local function MakeQueueFrame(index)
-	local frame = CreateFrame("Button",nil,hopAddon,"UIMenuButtonStretchTemplate")
+	local frame = CreateFrame("Button",nil,ServerHop,"UIMenuButtonStretchTemplate")
 	local size = 40
 	frame:SetSize(size,size)
-	frame:SetPoint("BOTTOMLEFT", hopAddon, "TOPLEFT",4+(index-1)*(HOPADDON_WIDTH)/5,0)
+	frame:SetPoint("BOTTOMLEFT", ServerHop, "TOPLEFT",4+(index-1)*(SERVERHOP_WIDTH)/5,0)
 
 	frame.spinner = CreateFrame("Frame",nil,frame,"LoadingSpinnerTemplate")
 	frame.spinner:SetSize(40,40)
@@ -158,8 +155,8 @@ local function QueueFrames_EventSystem(self,event,...)
 end
 
 local lastUp = 0
-hopAddon.queueFrame = CreateFrame("Frame")
-hopAddon.queueFrame:SetScript("OnUpdate",function(self,elapsed)
+ServerHop.queueFrame = CreateFrame("Frame")
+ServerHop.queueFrame:SetScript("OnUpdate",function(self,elapsed)
 	lastUp=lastUp+elapsed
 	if lastUp > 1 then
 		for i=1,5 do
@@ -177,5 +174,5 @@ hopAddon.queueFrame:SetScript("OnUpdate",function(self,elapsed)
 		end
 	end
 end)
-hopAddon.queueFrame:SetScript("OnEvent", QueueFrames_EventSystem)
-hopAddon.queueFrame:RegisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED")
+ServerHop.queueFrame:SetScript("OnEvent", QueueFrames_EventSystem)
+ServerHop.queueFrame:RegisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED")

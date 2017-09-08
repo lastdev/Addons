@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1361 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1435 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -158,6 +158,10 @@ function Recount:PartyMembersChanged()
 	end -- Elsia: Reevaluate group flagging on group changes.
 end
 
+function Recount:GROUP_ROSTER_UPDATE()
+	Recount:PartyMembersChanged()
+end
+
 function Recount:InitPartyBasedDeletion()
 	Recount.inGroup = false
 	Recount.inRaid = false
@@ -176,7 +180,7 @@ function Recount:InitPartyBasedDeletion()
 
 		Recount:RegisterEvent("RAID_ROSTER_UPDATE","PartyMembersChanged")
 	end]]
-	Recount:RegisterEvent("GROUP_ROSTER_UPDATE", "PartyMembersChanged")
+	Recount.events:RegisterEvent("GROUP_ROSTER_UPDATE")
 	Recount:UpdateZoneGroupFilter()
 end
 

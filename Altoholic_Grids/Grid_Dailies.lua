@@ -1,9 +1,8 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
 
 local questList
@@ -41,8 +40,8 @@ end
 
 local callbacks = {
 	OnUpdate = function() 
+			BuildView()
 			if not questList then
-				BuildView()
 				addon:RegisterMessage("DATASTORE_QUEST_TURNED_IN")
 			end
 		end,
@@ -50,7 +49,7 @@ local callbacks = {
 	RowSetup = function(self, rowFrame, dataRowID)
 			local name = questList[ view[dataRowID] ].title
 			if name then
-				rowFrame.Name.Text:SetText(colors.white .. name)
+				rowFrame.Name.Text:SetText(format("%s%s", colors.white, name))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -65,21 +64,16 @@ local callbacks = {
 			button.Background:SetTexture(ICON_VIEW_QUESTS)
 			
 			if questList[view[dataRowID]].completedBy[character]  then
-				button.Background:SetVertexColor(1.0, 1.0, 1.0);
-				button.Name:SetText(ICON_READY)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
+				button.Name:SetText(icons.ready)
 			else
-				button.Background:SetVertexColor(0.4, 0.4, 0.4);
-				button.Name:SetText(ICON_NOTREADY)
+				button.Background:SetVertexColor(0.4, 0.4, 0.4)
+				button.Name:SetText(icons.notReady)
 			end
 		end,
-	OnEnter = function(self) 
-			self.link = nil
-			addon:Item_OnEnter(self) 
-		end,
+	OnEnter = nil,
 	OnClick = nil,
-	OnLeave = function(self)
-			GameTooltip:Hide() 
-		end,
+	OnLeave = nil,
 		
 	InitViewDDM = function(frame, title) 
 			frame:Hide()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HellfireCitadelTrash", "DBM-HellfireCitadel")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 5 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 16 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -26,7 +26,7 @@ local warnDarkFate					= mod:NewTargetAnnounce(182644, 3)
 local warnPhantasmalCorruption		= mod:NewTargetAnnounce(187990, 3)
 local warnPhantasmalFelBomb			= mod:NewTargetAnnounce(179219, 3)
 
-local specWarnCrowdControl			= mod:NewSpecialWarningSpell(189595, nil, nil, nil, 1, 2)--Maybe use a custom "Look Away" warning
+local specWarnCrowdControl			= mod:NewSpecialWarningLookAway(189595, nil, nil, nil, 1, 2)
 local specWarnSeverSoul				= mod:NewSpecialWarningYou(189533, nil, nil, nil, 1, 2)
 local specWarnSeverSoulOther		= mod:NewSpecialWarningTaunt(189533, nil, nil, nil, 1, 2)
 local specWarnBadBreathOther		= mod:NewSpecialWarningTaunt(188476, nil, nil, nil, 1, 2)

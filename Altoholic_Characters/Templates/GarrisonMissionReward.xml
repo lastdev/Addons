@@ -20,9 +20,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGarrisonMissionReward")
-				self.Item_OnEnter = Altoholic:GetClassExtension("AltoItemIcon","Item_OnEnter")
-				self.Item_OnClick = Altoholic:GetClassExtension("AltoItemIcon","Item_OnClick")
+				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionReward", "AltoholicUI.ItemIcon")
 			</OnLoad>
 			<OnEnter>
 				if self.itemID then

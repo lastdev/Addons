@@ -73,6 +73,7 @@ L["WQGF_FRAME_CREATE_WAIT"] = "You'll be able to create a new group if you get n
 L["WQGF_FRAME_FOUND_GROUPS"] = "Found %d group(s). Click the button to apply."
 L["WQGF_FRAME_GROUPS_LEFT"] = "%d group(s) left, keep clicking!"
 L["WQGF_FRAME_INIT_SEARCH"] = "Click the button to initialize the search"
+L["WQGF_FRAME_RELIST_GROUP"] = "Click the button to relist the group"
 L["WQGF_FRAME_NO_GROUPS"] = "No groups found, click the button to create a new group."
 L["WQGF_FRAME_SEARCH_GROUPS"] = "Click the button to search for groups..."
 L["WQGF_GLOBAL_CONFIGURATION"] = "Global configuration:"

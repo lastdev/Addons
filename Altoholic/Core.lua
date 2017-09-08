@@ -1,11 +1,11 @@
 local addonName = ...
 
-_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0", "AceTimer-3.0")
+_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0", "AceTimer-3.0", "LibMVC-1.0")
 
 local addon = _G[addonName]
 
-addon.Version = "v7.2.002"
-addon.VersionNum = 702002
+addon.Version = "v7.3.001"
+addon.VersionNum = 703001
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -125,7 +125,10 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Garrisons.CurrentBuildings"] = 1,				-- Current building type
 			["UI.Tabs.Grids.Garrisons.CurrentFollowers"] = 1,				-- Current follower type
 			["UI.Tabs.Grids.Garrisons.CurrentStats"] = 1,					-- Current stats (abilities = 1, traits = 2, counters = 3)
-			
+			["UI.Tabs.Grids.Sets.IncludePVE"] = true,							-- Include PVE Sets
+			["UI.Tabs.Grids.Sets.IncludePVP"] = true,							-- Include PVP Sets
+			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack 
+
 			-- ** Tooltip options **
 			["UI.Tooltip.ShowItemSource"] = true,
 			["UI.Tooltip.ShowItemCount"] = true,
@@ -205,6 +208,19 @@ addon.Colors = {
 	epic = "|cFFA335EE",
 	legendary = "|cFFFF8000",
 	heirloom = "|cFFE6CC80",
+
+	Alliance = "|cFF2459FF",
+	Horde = "|cFFFF0000"
+}
+
+addon.Icons = {
+	ready = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t",
+	waiting = "\124TInterface\\RaidFrame\\ReadyCheck-Waiting:14\124t",
+	notReady = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t",
+	questionMark = "Interface\\RaidFrame\\ReadyCheck-Waiting",
+
+	Alliance = "Interface\\Icons\\INV_BannerPVP_02",
+	Horde = "Interface\\Icons\\INV_BannerPVP_01",
 }
 
 -- ** LDB Launcher **

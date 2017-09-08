@@ -19,7 +19,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoAchievements")
+				Altoholic:BindViewToController(self, "AltoholicUI.Achievements")
 			</OnLoad>
 		</Scripts>
 	</Frame>

@@ -1,4 +1,209 @@
 ------------------------------------------------------------------------
+r183 | thaoky.altoholic@yahoo.com | 2017-09-04 12:34:19 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.toc
+   M /trunk/Altoholic.xml
+   M /trunk/Core.lua
+   M /trunk/Frames/AccountSharing.lua
+   M /trunk/Frames/MessageBox.xml
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/ItemFilters.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.xml
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementButton.xml
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementRow.xml
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Agenda/Frames/Calendar.xml
+   M /trunk/Modules/Altoholic_Agenda/Frames/Contacts.xml
+   M /trunk/Modules/Altoholic_Agenda/TabAgenda.xml
+   M /trunk/Modules/Altoholic_Agenda/Templates/CalendarDay.xml
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Characters/Frames/Containers.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.xml
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionFollower.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionRow.xml
+   A /trunk/Modules/Altoholic_Characters/Templates/QuestLogRow.lua
+   A /trunk/Modules/Altoholic_Characters/Templates/QuestLogRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/UITemplates.xml
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Grids/Grid_Emissaries.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Equipment.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Sets.lua
+   M /trunk/Modules/Altoholic_Grids/Templates/TabGridsMenuIcon.xml
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildBank.lua
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildBank.xml
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildMembers.xml
+   M /trunk/Modules/Altoholic_Guild/TabGuild.xml
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankIcon.xml
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankTabIcon.xml
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneRow.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryIcon.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryMenuItem.xml
+   M /trunk/Services/Formatter.lua
+   M /trunk/Services/Services.xml
+   M /trunk/Templates/ClassIconsContainer.xml
+   M /trunk/Templates/DropDownMenu.lua
+   M /trunk/Templates/DropDownMenu.xml
+   M /trunk/Templates/ItemIcon.lua
+   M /trunk/Templates/ItemIcon.xml
+   M /trunk/Templates/RealmPicker.xml
+   M /trunk/Templates/ScrollFrames.xml
+   M /trunk/Templates/SortButton.xml
+   M /trunk/Templates/SortButtonsContainer.xml
+   M /trunk/changelog.txt
+
+7.3.001 Commit
+------------------------------------------------------------------------
+r182 | thaoky.altoholic@yahoo.com | 2017-06-01 11:54:15 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Core.lua
+   M /trunk/Frames/MinimapButton.lua
+   M /trunk/Frames/MinimapButton.xml
+   M /trunk/changelog.txt
+
+7.2.003b Commit
+------------------------------------------------------------------------
+r181 | thaoky.altoholic@yahoo.com | 2017-06-01 06:18:26 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+
+TOC Update
+------------------------------------------------------------------------
+r180 | thaoky.altoholic@yahoo.com | 2017-06-01 06:09:59 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/MessageBox.lua
+   M /trunk/Frames/MessageBox.xml
+   M /trunk/Frames/MinimapButton.lua
+   M /trunk/Frames/MinimapButton.xml
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.xml
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.lua
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.xml
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementButton.lua
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementButton.xml
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementRow.lua
+   M /trunk/Modules/Altoholic_Achievements/Templates/AchievementRow.xml
+   M /trunk/Modules/Altoholic_Agenda/Frames/Calendar.lua
+   M /trunk/Modules/Altoholic_Agenda/Frames/Calendar.xml
+   A /trunk/Modules/Altoholic_Agenda/Frames/CalendarEventList.lua
+   M /trunk/Modules/Altoholic_Agenda/TabAgenda.lua
+   M /trunk/Modules/Altoholic_Agenda/TabAgenda.xml
+   M /trunk/Modules/Altoholic_Agenda/Templates/CalendarDay.lua
+   M /trunk/Modules/Altoholic_Agenda/Templates/CalendarDay.xml
+   M /trunk/Modules/Altoholic_Agenda/Templates/CalendarEvent.lua
+   M /trunk/Modules/Altoholic_Agenda/Templates/CalendarEvent.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.xml
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionFollower.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionFollower.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionReward.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionReward.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionRow.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/GarrisonMissionRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/SpellButton.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/SpellButton.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentButton.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentButton.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentRow.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentSpecialization.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/TalentSpecialization.xml
+   M /trunk/Modules/Altoholic_Grids/Grid_Archeology.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Dailies.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Dungeons.lua
+   A /trunk/Modules/Altoholic_Grids/Grid_Emissaries.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Mounts.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   A /trunk/Modules/Altoholic_Grids/Grid_Sets.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Tradeskills.lua
+   M /trunk/Modules/Altoholic_Grids/Grids.xml
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.xml
+   M /trunk/Modules/Altoholic_Grids/Templates/TabGridsMenuIcon.lua
+   M /trunk/Modules/Altoholic_Grids/Templates/TabGridsMenuIcon.xml
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildBank.lua
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildBank.xml
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildMembers.lua
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildMembers.xml
+   M /trunk/Modules/Altoholic_Guild/TabGuild.lua
+   M /trunk/Modules/Altoholic_Guild/TabGuild.xml
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankIcon.lua
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankIcon.xml
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankTabIcon.lua
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildBankTabIcon.xml
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildMemberRow.lua
+   M /trunk/Modules/Altoholic_Guild/Templates/GuildMemberRow.xml
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneButton.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneButton.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneRow.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneRow.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryIcon.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryIcon.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryMenuItem.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryMenuItem.xml
+   A /trunk/Services
+   A /trunk/Services/Formatter.lua
+   A /trunk/Services/Services.xml
+   M /trunk/Templates/AutoCastShine.lua
+   M /trunk/Templates/AutoCastShine.xml
+   M /trunk/Templates/Button.lua
+   M /trunk/Templates/Button.xml
+   M /trunk/Templates/ClassIcon.lua
+   M /trunk/Templates/ClassIcon.xml
+   M /trunk/Templates/ClassIconsContainer.lua
+   M /trunk/Templates/ClassIconsContainer.xml
+   M /trunk/Templates/DropDownMenu.lua
+   M /trunk/Templates/DropDownMenu.xml
+   M /trunk/Templates/Frame.lua
+   M /trunk/Templates/ItemIcon.lua
+   M /trunk/Templates/ItemIcon.xml
+   M /trunk/Templates/RealmPicker.lua
+   M /trunk/Templates/RealmPicker.xml
+   M /trunk/Templates/ScrollFrames.lua
+   M /trunk/Templates/ScrollFrames.xml
+   M /trunk/Templates/SortButton.lua
+   M /trunk/Templates/SortButton.xml
+   M /trunk/Templates/SortButtonsContainer.lua
+   M /trunk/Templates/SortButtonsContainer.xml
+   M /trunk/Templates/ToggleButton.lua
+   M /trunk/Templates/ToggleButton.xml
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+   M /trunk/embeds.xml
+
+7.2.003 Commit
+------------------------------------------------------------------------
 r179 | thaoky.altoholic@yahoo.com | 2017-04-28 12:39:46 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/Core.lua
@@ -2206,33 +2411,5 @@ Changed paths:
    M /trunk/changelog.txt
 
 3.3.002 svn push, refer to changelog.txt for a list of changes.
-------------------------------------------------------------------------
-r82 | pompachomp | 2010-02-19 12:38:36 -0600 (Fri, 19 Feb 2010) | 1 line
-Changed paths:
-   M /trunk/Altoholic.toc
-   D /trunk/local.xml
-   A /trunk/locale.xml (from /trunk/local.xml:80)
-
-Changed references to local.xml to locale.xml and changed the locals directory path to locales
-------------------------------------------------------------------------
-r81 | pompachomp | 2010-02-19 12:34:15 -0600 (Fri, 19 Feb 2010) | 1 line
-Changed paths:
-   A /trunk/Locales (from /trunk/Locals:80)
-   D /trunk/Locals
-
-Locals->Locales
-------------------------------------------------------------------------
-r80 | thaoky | 2010-02-15 12:06:16 -0600 (Mon, 15 Feb 2010) | 1 line
-Changed paths:
-   M /trunk/Altoholic.lua
-   M /trunk/Frames/Activity.lua
-
-Fixed a typo in Activity.lua. Now correctly displaying the number of expired mails in the tooltip.
-------------------------------------------------------------------------
-r79 | pompachomp | 2010-02-13 19:11:26 -0600 (Sat, 13 Feb 2010) | 1 line
-Changed paths:
-   M /trunk/Frames/Mails.lua
-
-Fixed an accidental replacement of "Altoholic" with "addon"
 ------------------------------------------------------------------------
 

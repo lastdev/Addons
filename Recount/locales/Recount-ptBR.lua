@@ -173,6 +173,8 @@ L["Heals"] = "Curas"
 L["Health"] = "Saúde"
 L["Hide"] = "Esconder"
 L["Hide When Not Collecting"] = "Esconder quando s/ coleta"
+--Translation missing 
+-- L["Hide While In Pet Battle"] = "Hide While In Pet Battle"
 L["Hides the main window"] = "Esconde a janela principal"
 L["Hit"] = "Golpe"
 L["Holy"] = "Sagrado"

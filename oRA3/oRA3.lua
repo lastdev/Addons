@@ -765,7 +765,7 @@ local function setupGUI()
 	end)
 
 	local function selectPanel(self)
-		PlaySound("igCharacterInfoTab")
+		PlaySound(841) -- SOUNDKIT.IG_CHARACTER_INFO_TAB
 		addon:SelectPanel(self:GetText())
 	end
 	for i, tab in ipairs(panels) do
@@ -838,7 +838,7 @@ local function setupGUI()
 	barmiddle:SetTexCoord(0.29296875, 1, 0, 0.25)
 
 	frame:SetScript("OnShow", function(self)
-		PlaySound("igCharacterInfoTab")
+		PlaySound(841) -- SOUNDKIT.IG_CHARACTER_INFO_TAB
 		local w = (contentFrame:GetWidth() - 10) / #lists
 		for i, list in next, lists do
 			list.button:SetWidth(w)
@@ -846,7 +846,7 @@ local function setupGUI()
 		addon:SelectPanel()
 	end)
 	frame:SetScript("OnHide", function()
-		PlaySound("igMainMenuClose")
+		PlaySound(851) -- SOUNDKIT.IG_MAINMENU_CLOSE
 		for i, tab in next, panels do
 			if type(tab.hide) == "function" then
 				tab.hide()
@@ -855,7 +855,7 @@ local function setupGUI()
 	end)
 
 	local function listButtonClick(self)
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
 		addon:SelectList(self.listIndex)
 	end
 	for i, list in next, lists do
@@ -1140,7 +1140,7 @@ local function toggleColumn(header)
 	else
 		table.sort(list.contents, sortDesc)
 	end
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
 	addon:UpdateScroll()
 end
 

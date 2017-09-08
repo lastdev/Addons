@@ -7,3 +7,4 @@ L["BROADCAST_PROFS_DISABLED"] = "將沒有任何發送. 禁用此選項大大降
 L["BROADCAST_PROFS_ENABLED"] = "你角色已知的專業鏈接將在你上線的5秒後發送到公會頻道."
 L["BROADCAST_PROFS_TITLE"] = "廣播專業聯繫"
 L["Secondary Skills"] = "次要技能"
+

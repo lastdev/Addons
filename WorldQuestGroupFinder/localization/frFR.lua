@@ -74,6 +74,7 @@ L["WQGF_FRAME_FOUND_GROUPS"] = "%d groupe(s) trouvé(s). Cliquez sur le bouton p
 L["WQGF_FRAME_GROUPS_LEFT"] = "Encore %d groupe(s), continuez à cliquer !"
 L["WQGF_FRAME_INIT_SEARCH"] = "Cliquez sur le bouton pour initialiser la recherche"
 L["WQGF_FRAME_NO_GROUPS"] = "Aucun groupe trouvé, cliquez sur le bouton pour en créer un nouveau."
+L["WQGF_FRAME_RELIST_GROUP"] = "Cliquez sur le bouton pour réinscrire le groupe"
 L["WQGF_FRAME_SEARCH_GROUPS"] = "Cliquez sur le bouton pour rechercher un groupe..."
 L["WQGF_GLOBAL_CONFIGURATION"] = "Configuration globale:"
 L["WQGF_GROUP_CREATION_ERROR"] = "Une erreur a été rencontrée lors de la tentative de création d'un nouveau groupe. Merci de réessayer."
@@ -101,7 +102,7 @@ L["WQGF_QUEST_COMPLETE_LEAVE_DIALOG"] = [=[Vous avez terminé la quête.
 Souhaitez-vous quitter le groupe ?]=]
 L["WQGF_QUEST_COMPLETE_LEAVE_OR_DELIST_DIALOG"] = [=[Vous avez terminé la quête.
 
-Souhaitez-vous quitter le groupe ou le désinscrire de l'outil recherche de groupe ?"]=]
+Souhaitez-vous quitter le groupe ou le désinscrire de l'outil recherche de groupe ?]=]
 L["WQGF_RAID_MODE_WARNING"] = "|c0000ffffATTENTION:|c00ffffff Ce groupe est en mode raid, ce qui signifie que vous ne serez pas en mesure d'effectuer des quêtes et expéditions. Vous devriez demander au chef de groupe de revenir en mode Groupe si cela est possible. Le retour en mode Groupe sera automatiquement effectué si vous devenez le chef de groupe."
 L["WQGF_REFRESH_TOOLTIP"] = "Trouver un autre groupe"
 L["WQGF_SEARCH_OR_CREATE_GROUP"] = "Rechercher ou créer un groupe"

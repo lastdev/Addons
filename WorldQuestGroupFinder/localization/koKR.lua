@@ -75,6 +75,7 @@ L["WQGF_FRAME_FOUND_GROUPS"] = "%d개 파티를 찾았습니다. 적용하려면
 L["WQGF_FRAME_GROUPS_LEFT"] = "%d개 파티 남음, 클릭하고 계세요!"
 L["WQGF_FRAME_INIT_SEARCH"] = "검색하려면 버튼을 클릭하세요"
 L["WQGF_FRAME_NO_GROUPS"] = "파티를 찾지 못했습니다, 새로운 파티를 만드려면 버튼을 클릭하세요."
+L["WQGF_FRAME_RELIST_GROUP"] = "파티를 다시 나열하려면 버튼을 클릭하세요"
 L["WQGF_FRAME_SEARCH_GROUPS"] = "파티를 찾으려면 버튼을 클릭하세요..."
 L["WQGF_GLOBAL_CONFIGURATION"] = "공통 설정:"
 L["WQGF_GROUP_CREATION_ERROR"] = "새로운 파티 찾기 항목을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."

@@ -1,12 +1,11 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
 local LCI = LibStub("LibCraftInfo-1.0")
 local LCL = LibStub("LibCraftLevels-1.0")
 
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 
 local xPacks = {
@@ -175,7 +174,7 @@ local callbacks = {
 			
 			button.Background:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
 
-			local text = ICON_NOTREADY
+			local text = icons.notReady
 			local vc = 0.25	-- vertex color
 			local tradeskills = addon.TradeSkills.spellIDs
 			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
@@ -192,7 +191,7 @@ local callbacks = {
 				
 				if DataStore:IsCraftKnown(profession, currentList[dataRowID]) then
 					vc = 1.0
-					text = ICON_READY
+					text = icons.ready
 				else
 					vc = 0.4
 				end

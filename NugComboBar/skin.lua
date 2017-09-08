@@ -371,6 +371,8 @@ local mappings = {
     ["SHAMANDOUBLE"] = { 1, 2, 3, 4, 6, SR1, SR2, SR3, SR4, SR6},
     ["ROGUE53"] = { 1, 2, 3, 4, 6, SR1, SR2, SR8 },
     ["ROGUE63"] = { 1, 2, 3, 4, 5, 6, SR1, SR2, SR8 },
+    ["ROGUE52"] = { 1, 2, 3, 4, 6, SR1, SR8 },
+    ["ROGUE62"] = { 1, 2, 3, 4, 5, 6, SR1, SR8 },
     ["DKDOUBLE"] = { 1, 6, SR1, SR2, SR3, SR4, SR6},
     ["PALADIN"] = { 1, 2, 6, 7, 8 },
     ["ARCANE"] = { 1, 2, 3, 6, SR1, SR2, SR8 },
@@ -1027,6 +1029,10 @@ NugComboBar.themes = {}
 NugComboBar.themes["WARLOCK"] = {
     [0] = {
         preset3d = "glowPurple2",
+        colors = {
+            normal = { 0.5, 0.5 , 1 },
+            ["bar1"] = { 0.6, 0, 1 },
+        },
     },
 }
 
@@ -1044,7 +1050,11 @@ NugComboBar.themes["SHAMAN"] = {
 
 NugComboBar.themes["MONK"] = {
     [0] = {
-        preset3d = "chiBlast",
+        preset3d = "glowBlue",
+        colors = {
+            normal = { 0, 1, 0.3 },
+            ["bar1"] = { 0, 0.66, 0.43 },
+        },
     },
 }
 
@@ -1055,6 +1065,10 @@ NugComboBar.themes["ROGUE"] = {
     [3] ={
         preset3d = "glowPurple2",
         preset3dpointbar2 = "void",
+        colors = {
+            -- normal = { 0, 0, 0 },
+            ["bar1"] = { 0.6, 0, 1 },
+        },
     }
 }
 
@@ -1081,5 +1095,8 @@ NugComboBar.themes["WARRIOR"] = {
 NugComboBar.themes["DEATHKNIGHT"] = {
     [0] = {
         preset3d = "glowPurple",
+        colors = {
+            normal = { 0.7, 0.2, 0.2 },
+        }
     },
 }

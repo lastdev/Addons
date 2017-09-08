@@ -2,12 +2,10 @@
 	<Script file="AchievementButton.lua"></Script>
 	
 	<Button name="AltoAchievementButtonTemplate" hidden="true" virtual="true">
-		<!-- <Size x="34" y="34" /> -->
 		<Size x="32" y="32" />
 		<Layers> 
 			<Layer level="BACKGROUND"> 
 				<Texture parentKey="Background">
-					<!-- <Size x="29" y="29" /> -->
 					<Size x="28" y="28" />
 					<Anchors>
 						<Anchor point="LEFT" x="2" y="0" />
@@ -36,7 +34,6 @@
 				<AbsValue val="8"/>
 			</EdgeSize>
 			<TileSize>
-				<!-- <AbsValue val="33"/> -->
 				<AbsValue val="30"/>
 			</TileSize>
 			<BackgroundInsets>
@@ -46,7 +43,7 @@
 		</Backdrop>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoAchievementButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.AchievementButton")
 				
 				local level = self:GetParent():GetFrameLevel()
 				self:SetFrameLevel(level + 1)

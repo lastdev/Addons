@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------
+r51 | thaoky.altoholic@yahoo.com | 2017-09-04 12:29:29 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.toc
+
+TOC Update
+------------------------------------------------------------------------
+r50 | thaoky.altoholic@yahoo.com | 2017-06-01 05:58:56 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Inventory.lua
+
+Added support for set transmogs
+------------------------------------------------------------------------
 r49 | thaoky.altoholic@yahoo.com | 2017-04-28 12:32:11 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Inventory.lua

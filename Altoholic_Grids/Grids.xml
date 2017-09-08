@@ -10,6 +10,8 @@
 	<Script file="Grid_GarrisonArchitect.lua"></Script>
 	<Script file="Grid_GarrisonFollowers.lua"></Script>
 	<Script file="Grid_FollowerAbilities.lua"></Script>
+	<Script file="Grid_Emissaries.lua"></Script>
+	<Script file="Grid_Sets.lua"></Script>
 	
 	<Frame name="AltoholicFrameGrids" parent="AltoholicTabGrids" hidden="true">
 		<Size x="615" y="306" />

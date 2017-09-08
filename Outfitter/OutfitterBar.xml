@@ -151,7 +151,7 @@
 				<Scripts>
 					<OnClick>
 						self:GetParent():Close()
-						PlaySound("gsTitleOptionOK")
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -170,7 +170,7 @@
 					<OnClick>
 						self:GetParent():Save()
 						self:GetParent():Close()
-						PlaySound("gsTitleOptionOK")
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 					</OnClick>
 				</Scripts>
 			</Button>

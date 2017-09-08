@@ -43,10 +43,10 @@
 			</OnDragStop>
 			<OnShow>
 				Altoholic:OnShow()
-				PlaySound("UChatScrollButton")
+				PlaySound(1115)
 			</OnShow>
 			<OnHide>
-				PlaySound("UChatScrollButton")
+				PlaySound(1115)
 			</OnHide>
 		</Scripts>
 		<Layers>

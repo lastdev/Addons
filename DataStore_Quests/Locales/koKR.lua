@@ -8,3 +8,4 @@ L["AUTO_UPDATE_LABEL"] = "기록 자동 갱신"
 L["AUTO_UPDATE_TITLE"] = "퀘스트 기록 자동 갱신"
 L["DAILY_QUESTS_RESET_LABEL"] = "일일 퀘스트 초기화 시간"
 L["TRACK_TURNINS_DISABLED"] = "퀘스트 기록은 비거나 오래된 현 상태로 유지됩니다."
+

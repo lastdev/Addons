@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
-r333 | Zensunim | 2017-05-27 16:50:40 -0500 (Sat, 27 May 2017) | 3 lines
+r345 | Zensunim | 2017-09-02 23:31:22 -0500 (Sat, 02 Sep 2017) | 2 lines
 Changed paths:
    M /trunk/GTFO.lua
    M /trunk/GTFO.toc
@@ -7,26 +7,7 @@ Changed paths:
    M /trunk/GTFO_Spells_LGN.lua
    M /trunk/ReadMe.txt
 
-4.42.14
-* Added Legion spells for The Broken Isles (world)
-* Added Legion spells for Tomb of Sargeras
-------------------------------------------------------------------------
-r332 | Zensunim | 2017-05-15 17:57:44 -0500 (Mon, 15 May 2017) | 1 line
-Changed paths:
-   M /trunk/GTFO.lua
-   M /trunk/GTFO.toc
-   M /trunk/GTFO_Fail_LGN.lua
-   M /trunk/GTFO_Spells_LGN.lua
-   M /trunk/ReadMe.txt
-
-Added Legion spells for The Broken Isles (world)
-------------------------------------------------------------------------
-r331 | Zensunim | 2017-05-10 02:05:27 -0500 (Wed, 10 May 2017) | 2 lines
-Changed paths:
-   M /trunk/GTFO_Fail_LGN.lua
-   M /trunk/GTFO_Spells_LGN.lua
-
-Added Legion spells for Broken Isles (world)
-
+4.43.1
+* Added Legion spells for Argus
 ------------------------------------------------------------------------
 

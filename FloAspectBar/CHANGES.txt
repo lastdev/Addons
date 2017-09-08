@@ -1,18 +1,12 @@
-tag 4f6c6741e4abf0249049e4ba7f8b96c97370fb18 7.2.21
+tag 235e3b5a2890f9196dbb8883396ac668d68c76ee 7.3.21
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Wed Mar 29 19:54:32 2017 +0200
+Date:	Sun Sep 3 14:49:15 2017 +0200
 
-Tagging for release of 7.2.21
+Tagging for release of 7.3.21
 
-commit 22df5641a8a4833243af8ed75afb584ab3686d80
+commit 8a23030e1e7a543dc4ad0956585f35a0800899d7
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Wed Mar 29 19:53:55 2017 +0200
-
-    Updated TOC
-
-commit 0db42774c0d0437bd0aec59f3a85e4e1fb4118a2
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Wed Mar 29 19:52:46 2017 +0200
+Date:   Sun Sep 3 12:29:24 2017 +0200
 
     Updated TOC
 

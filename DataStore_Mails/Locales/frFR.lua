@@ -24,3 +24,4 @@ L["SCAN_MAIL_BODY_ENABLED"] = "Le corps de chaque lettre sera lu durant le scan 
 L["SCAN_MAIL_BODY_LABEL"] = "Lire le courrier (le marque comme lu)"
 L["SCAN_MAIL_BODY_TITLE"] = "Lire le corps du courrier"
 L["Warn when mail expires in less days than this value"] = "Avertir quand du courrier arrive à expiration dans moins de jours que cette valeur"
+

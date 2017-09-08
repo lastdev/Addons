@@ -1,4 +1,11 @@
 ------------------------------------------------------------------------
+r26 | thaoky.altoholic@yahoo.com | 2017-09-04 12:26:45 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Agenda.lua
+   M /trunk/DataStore_Agenda.toc
+
+Scanning info about challenge mode
+------------------------------------------------------------------------
 r25 | thaoky.altoholic@yahoo.com | 2017-03-29 14:19:24 -0500 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Agenda.toc

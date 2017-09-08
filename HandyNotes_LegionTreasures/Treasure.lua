@@ -2,11 +2,13 @@ local myname, ns = ...
 
 -- note to self: I like Garr_TreasureIcon...
 
-local ORDER = 1220; -- order resources currency
+local ORDER = 1220 -- order resources currency
+local ARGUNITE = 1508
 local ARTIFACT = 'ARTIFACT'
 local CHEST = 'Treasure Chest'
 local CHEST_SM = 'Small Treasure Chest'
 local CHEST_GLIM = 'Glimmering Treasure Chest'
+local LEGION_SUPPLIES = 'Legion War Supplies'
 local REQ_GRAPPLE = 'Requires: Stormforged Grapple Launcher'
 local path = function(questid, label, atlas, note, scale)
     label = label or "Path to treasure"
@@ -106,6 +108,7 @@ ns.points = {
     ["Highmountain"] = {
         [36616213] = {quest=40488, currency=ARTIFACT, label=CHEST},
         [37353381] = {quest=40477, currency=ARTIFACT, label=CHEST_SM},
+        [39005450] = {quest=44731, currency=ARTIFACT, label=CHEST, note="Path up behind Nesingwary's camp"},
         [39307621] = {quest=40473, currency=ARTIFACT, label=CHEST, note="Hard to reach; try from behind the totem"},
         [39376229] = {quest=40474, currency=ARTIFACT, label=CHEST},
         [39555744] = {quest=39812, currency=ARTIFACT, label=CHEST},
@@ -260,7 +263,7 @@ ns.points = {
         [48143399] = {quest=43853, currency=ARTIFACT, label=CHEST_SM},
         [48288261] = {quest=43866, currency=ARTIFACT, label=CHEST_SM, note="Grapple from 48.4, 82.2"},
         [48408220] = grapple(43866),
-        [48297121] = {quest=44324, currency=ARTIFACT, label=CHEST, note="Jumping puzzle! I recommend starting on the bookshelf."},
+        [48297121] = {quest=44324, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [48587217] = {quest=44323, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [48957379] = {quest=43867, currency=ARTIFACT, label=CHEST, note="Upstairs"},
         [49988493] = {quest=43864, currency=ARTIFACT, label=CHEST_SM, note="Grapple from 50.0, 84.5"},
@@ -300,12 +303,13 @@ ns.points = {
         [43225488] = {quest=39084, currency=ARTIFACT, label=CHEST, note="Top of wall"},
         [43397589] = {quest=38363, currency=ARTIFACT, label=CHEST_SM},
         [44358257] = {quest=38387, currency=ARTIFACT, item=141892, label=CHEST, note="Cave under the inn; entrance behind the building"},
+        [45106120] = {quest=39083, currency=ARTIFACT, label=CHEST_SM, note="Hidden in the tree"},
         [46448630] = {quest=38277, currency=ARTIFACT, label=CHEST_SM},
         [48687381] = {quest=38366, currency=ARTIFACT, label=CHEST_SM, note="Under tree roots"},
         [48998615] = {quest=38886, currency=ARTIFACT, label=CHEST_SM},
         [51247777] = {quest=38388, currency=ARTIFACT, label=CHEST_SM, note="Cave entrance @ 50.9, 77.0"},
         [50907700] = path(38388),
-        [54003489] = {quest=38390, currency=ARTIFACT, label=CHEST_GLIM, note="Cave entrance @ 53.2, 38.0"},
+        [54003489] = {quest=38390, item=141891, currency=ARTIFACT, label=CHEST_GLIM, note="Cave entrance @ 53.2, 38.0"},
         [53203800] = path(38390),
         [54187061] = {quest=39093, currency=ARTIFACT, label=CHEST_SM, note="In cave"},
         [54417419] = {quest=38359, currency=ARTIFACT, label=CHEST_SM, note="In house behind the fence"},
@@ -344,10 +348,34 @@ ns.points = {
         [69475999] = {quest=38781, currency=ARTIFACT, label=CHEST_SM},
         [70225704] = {quest=38783, currency=ARTIFACT, label=CHEST_SM},
     },
-
+    ["ArgusSurface"] = { -- Krokuun
+        [48505890] = {quest=48886, currency=ARGUNITE, label="Lost Krokun Chest"},
+        [67606990] = {quest=48000, currency=ARGUNITE, label="Eredar War Supplies", note="Up on the ridge"},
+    },
+    ["ArgusCore"] = { -- Antoran Wastes
+        [72404210] = {quest=48387, currency=ARGUNITE, label=LEGION_SUPPLIES},
+        [76465651] = {quest=48390, currency=ARGUNITE, label=LEGION_SUPPLIES}, -- Verify me...
+    },
+    ["ArgusCitadelSpire"] = { -- Nath'raxas Spire
+    },
+    ["ArgusMacAree"] = { -- MacAree
+        [27284015] = {quest=48750, label="Shattered House Chest", currency=ARGUNITE},
+        [70245976] = {quest=48748, label="Augari Secret Stash", currency=ARGUNITE},
+    },
     -- Small zones
     ["Dalaran70"] = {
         [47404120] = {quest=45365, item=143534, toy=true, note="On the table on the second floor of the Legerdemain Lounge", level=10},
+        -- Dog pebble, questid is for showing Dog the pebble, not looting it
+        [38102920] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [42104440] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [41005320] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [46205390] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [49406940] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [51706220] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [54505320] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [54304080] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [47702920] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
+        [44601820] = {quest=46952, item=147420, note="Show to Dog in your Draenor garrison", level=10, hide_before=30526},
     },
     ["Darkpens"] = { -- Val'sharah
         [42018849] = {quest=39085, currency=ARTIFACT, label=CHEST_SM, note="In water at bottom of stairs"},

@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 974 $")
+XPerl_SetModuleRevision("$Revision: 1055 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -154,7 +154,6 @@ end
 
 -- XPerl_Check_Setup
 function XPerl_Check_Setup()
-
 	SlashCmdList["XPERLITEM"] = XPerl_ItemCheck
 	SLASH_XPERLITEM1 = "/xpitem"
 	SLASH_XPERLITEM2 = "/raitem"
@@ -587,12 +586,11 @@ function XPerl_Check_OnClickItem(button)
 
 	if (button == "LeftButton") then
 		if (IsShiftKeyDown()) then
-                        -- ticket 658: Patch 3.3.5 ChatFrameEditBox obsoleted fix. 
-                        local activeWindow = ChatEdit_GetActiveWindow();
-                        if ( activeWindow ) then
-                                activeWindow:Insert(GetCursorItemLink());
-                        end
-                
+			local activeWindow = ChatEdit_GetActiveWindow()
+			if ( activeWindow ) then
+				activeWindow:Insert(GetCursorItemLink())
+			end
+
 		elseif (IsControlKeyDown()) then
 			DressUpItemLink(GetCursorItemLink())
 

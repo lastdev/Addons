@@ -51,8 +51,7 @@
 		</HighlightTexture>
 		<Scripts>
 			<OnLoad>
-				self.Arrow:Hide()
-				self.Arrow.Draw = Altoholic:GetClassExtension("AltoSortButton","Draw")
+				Altoholic:BindViewToController(self, "AltoholicUI.SortButton")
 			</OnLoad>
 			<OnClick>
 				local parent = self:GetParent()
@@ -65,7 +64,7 @@
 				Altoholic:ToggleOption(nil, option)
 
 				local ascending = Altoholic:GetOption(option)
-				self.Arrow:Draw(ascending)
+				self:DrawArrow(ascending)
 	
 				if self.func then
 					self.func(self)

@@ -13,6 +13,7 @@ local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local THIS_ACCOUNT = "Default"
+local THIS_REALM = GetRealmName()
 
 local AddonDB_Defaults = {
 	global = {
@@ -26,6 +27,9 @@ local AddonDB_Defaults = {
 				lastUpdate = nil,
 				Quests = {},
 				QuestLinks = {},
+				QuestHeaders = {},
+				QuestTags = {},
+				Emissaries = {},
 				Rewards = {},
 				Dailies = {},
 				History = {},		-- a list of completed quests, hash table ( [questID] = true )
@@ -37,9 +41,28 @@ local AddonDB_Defaults = {
 	}
 }
 
+local emissaryQuests = {
+	[42420] = true,
+	[42421] = true,
+	[42422] = true,
+	[42233] = true,
+	[42234] = true,
+	[42170] = true,
+	[43179] = true,
+	[46743] = true,
+	[46745] = true,
+	[46746] = true,
+	[46747] = true,
+	[46748] = true,
+	[46749] = true,
+	[46777] = true
+}
+
 -- *** Utility functions ***
 local bAnd = bit.band
 local bOr = bit.bor
+local RShift = bit.rshift
+local LShift = bit.lshift
 
 local function GetOption(option)
 	return addon.db.global.Options[option]
@@ -56,10 +79,9 @@ local function GetQuestLogIndexByName(name)
 end
 
 local function TestBit(value, pos)
-   local mask = 2^pos
-   if bAnd(value, mask) == mask then
-      return true
-   end
+	-- note: this function works up to bit 51
+	local mask = 2 ^ pos		-- 0-based indexing
+	return value % (mask + mask) >= mask
 end
 
 local function ClearExpiredDailies()
@@ -89,10 +111,12 @@ local function ClearExpiredDailies()
 
 	for characterKey, character in pairs(addon.Characters) do
 		-- browse dailies history backwards, to avoid messing up the indexes when removing
-		for i = #character.Dailies, 1, -1 do
-
-			if (now - character.Dailies[i].timestamp) > gap then
-				table.remove(character.Dailies, i)
+		local dailies = character.Dailies
+		
+		for i = #dailies, 1, -1 do
+			local quest = dailies[i]
+			if (now - quest.timestamp) > gap then
+				table.remove(dailies, i)
 			end
 		end
 	end
@@ -120,6 +144,37 @@ local function DailyResetDropDown_Initialize(self)
 		UIDropDownMenu_AddButton(info)
 	end
 end
+
+local function GetQuestTagID(questID, isComplete, frequency)
+
+	local tagID = GetQuestTagInfo(questID)
+	if tagID then	
+		-- if there is a tagID, process it
+		if tagID == QUEST_TAG_ACCOUNT then
+			local factionGroup = GetQuestFactionGroup(questID)
+			if factionGroup then
+				return (factionGroup == LE_QUEST_FACTION_HORDE) and "HORDE" or "ALLIANCE"
+			else
+				return QUEST_TAG_ACCOUNT
+			end
+		end
+		return tagID	-- might be raid/dungeon..
+	end
+
+	if isComplete and isComplete ~= 0 then
+		return (isComplete < 0) and "FAILED" or "COMPLETED"
+	end
+
+	-- at this point, isComplete is either nil or 0
+	if frequency == LE_QUEST_FREQUENCY_DAILY then
+		return "DAILY"
+	end
+
+	if frequency == LE_QUEST_FREQUENCY_WEEKLY then
+		return "WEEKLY"
+	end
+end
+
 
 -- *** Scanning functions ***
 local headersState = {}
@@ -153,90 +208,123 @@ local function RestoreHeaders()
 	wipe(headersState)
 end
 
-local REWARD_TYPE_CHOICE = "c"
-local REWARD_TYPE_REWARD = "r"
-local REWARD_TYPE_SPELL = "s"
+local function ScanChoices(rewards)
+	-- rewards = out parameter
+
+	-- these are the actual item choices proposed to the player
+	for i = 1, GetNumQuestLogChoices() do
+		local _, _, numItems, _, isUsable = GetQuestLogChoiceInfo(i)
+		isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
+		local link = GetQuestLogItemLink("choice", i)
+		if link then
+			local id = tonumber(link:match("item:(%d+)"))
+			if id then
+				table.insert(rewards, format("c|%d|%d|%d", id, numItems, isUsable))
+			end
+		end
+	end
+end
+
+local function ScanRewards(rewards)
+	-- rewards = out parameter
+
+	-- these are the rewards given anyway
+	for i = 1, GetNumQuestLogRewards() do
+		local _, _, numItems, _, isUsable = GetQuestLogRewardInfo(i)
+		isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
+		local link = GetQuestLogItemLink("reward", i)
+		if link then
+			local id = tonumber(link:match("item:(%d+)"))
+			if id then
+				table.insert(rewards, format("r|%d|%d|%d", id, numItems, isUsable))
+			end
+		end
+	end
+end
+
+local function ScanRewardSpells(rewards)
+	-- rewards = out parameter
+			
+	for index = 1, GetNumQuestLogRewardSpells() do
+		local _, _, isTradeskillSpell, isSpellLearned = GetQuestLogRewardSpell(index)
+		if isTradeskillSpell or isSpellLearned then
+			local link = GetQuestLogSpellLink(index)
+			if link then
+				local id = tonumber(link:match("spell:(%d+)"))
+				if id then
+					table.insert(rewards, format("s|%d", id))
+				end
+			end
+		end
+	end
+end
 
 local function ScanQuests()
 	local char = addon.ThisCharacter
 	local quests = char.Quests
 	local links = char.QuestLinks
+	local headers = char.QuestHeaders
 	local rewards = char.Rewards
+	local tags = char.QuestTags
+	local emissaries = char.Emissaries
 
 	wipe(quests)
 	wipe(links)
+	wipe(headers)
 	wipe(rewards)
+	wipe(tags)
+	wipe(emissaries)
 
 	local currentSelection = GetQuestLogSelection()		-- save the currently selected quest
 	SaveHeaders()
 
-	local RewardsCache = {}
-	
-	local numEntries, numQuests = GetNumQuestLogEntries()
+	local rewardsCache = {}
+	local lastHeaderIndex = 0
+	local lastQuestIndex = 0
 	
 	for i = 1, GetNumQuestLogEntries() do
-		-- 7.1
-		-- local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, 
-		--		isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(questLogIndex)
-		local title, _, groupSize, isHeader, _, isComplete, isDaily, questID = GetQuestLogTitle(i)
+		local title, level, groupSize, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, 
+				isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(i)
 
 		if isHeader then
-			quests[i] = "0|" .. (title or "")
+			table.insert(headers, title or "")
+			lastHeaderIndex = lastHeaderIndex + 1
 		else
 			SelectQuestLogEntry(i)
-			local money = GetQuestLogRewardMoney()
-			quests[i] = format("1|%d|%d|%d", groupSize, money, isComplete or 0)
-			links[i] = GetQuestLink(questID)
-
-			wipe(RewardsCache)
-			local num = GetNumQuestLogChoices()		-- these are the actual item choices proposed to the player
-			if num > 0 then
-				for i = 1, num do
-					local _, _, numItems, _, isUsable = GetQuestLogChoiceInfo(i)
-					isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
-					local link = GetQuestLogItemLink("choice", i)
-					if link then
-						local id = tonumber(link:match("item:(%d+)"))
-						if id then
-							table.insert(RewardsCache, REWARD_TYPE_CHOICE .."|"..id.."|"..numItems.."|"..isUsable)
-						end
-					end
-				end
-			end
-
-			num = GetNumQuestLogRewards()				-- these are the rewards given anyway
-			if num > 0 then
-				for i = 1, num do
-					local _, _, numItems, _, isUsable = GetQuestLogRewardInfo(i)
-					isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
-					local link = GetQuestLogItemLink("reward", i)
-					if link then
-						local id = tonumber(link:match("item:(%d+)"))
-						if id then
-							table.insert(RewardsCache, REWARD_TYPE_REWARD .. "|"..id.."|"..numItems.."|"..isUsable)
-						end
-					end
-				end
-			end
 			
-			num = GetNumQuestLogRewardSpells()
-			if num > 0 then
-				for i = 1, num do
-					local _, _, isTradeskillSpell, isSpellLearned = GetQuestLogRewardSpell(i)
-					if isTradeskillSpell or isSpellLearned then
-						local link = GetQuestLogSpellLink(i)
-						if link then
-							local id = tonumber(link:match("spell:(%d+)"))
-							if id then
-								table.insert(RewardsCache, REWARD_TYPE_SPELL .. "|"..id)
-							end
-						end
-					end
-				end
+			local value = (isComplete and isComplete > 0) and 1 or 0		-- bit 0 : isComplete
+			value = value + LShift((frequency == LE_QUEST_FREQUENCY_DAILY) and 1 or 0, 1)		-- bit 1 : isDaily
+			value = value + LShift(isTask and 1 or 0, 2)						-- bit 2 : isTask
+			value = value + LShift(isBounty and 1 or 0, 3)					-- bit 3 : isBounty
+			value = value + LShift(isStory and 1 or 0, 4)					-- bit 4 : isStory
+			value = value + LShift(isHidden and 1 or 0, 5)					-- bit 5 : isHidden
+			value = value + LShift((groupSize == 0) and 1 or 0, 6)		-- bit 6 : isSolo
+			-- bit 7 : unused, reserved
+
+			value = value + LShift(groupSize, 8)							-- bits 8-10 : groupSize, 3 bits, shouldn't exceed 5
+			value = value + LShift(lastHeaderIndex, 11)					-- bits 11-15 : index of the header (zone) to which this quest belongs
+			value = value + LShift(level, 16)								-- bits 16-23 : level
+			value = value + LShift(GetQuestLogRewardMoney(), 24)		-- bits 24+ : money
+
+			table.insert(quests, value)
+			lastQuestIndex = lastQuestIndex + 1
+			
+			tags[lastQuestIndex] = GetQuestTagID(questID, isComplete, frequency)
+			links[lastQuestIndex] = GetQuestLink(questID)
+
+			-- is the quest an emissary quest ?
+			if emissaryQuests[questID] then
+				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+				emissaries[questID] = format("%d|%d|%d|%s", numFulfilled, numRequired, C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or "")
 			end
 
-			if #RewardsCache > 0 then
-				rewards[i] = table.concat(RewardsCache, ",")
+			wipe(rewardsCache)
+			ScanChoices(rewardsCache)
+			ScanRewards(rewardsCache)
+			ScanRewardSpells(rewardsCache)
+
+			if #rewardsCache > 0 then
+				rewards[lastQuestIndex] = table.concat(rewardsCache, ",")
 			end
 		end
 	end
@@ -311,14 +399,31 @@ local function _GetQuestLogInfo(character, index)
 	local quest = character.Quests[index]
 	if not quest then return end
 	
+	local isComplete = TestBit(quest, 0)
+	local isDaily = TestBit(quest, 1)
+	local isTask = TestBit(quest, 2)
+	local isBounty = TestBit(quest, 3)
+	local isStory = TestBit(quest, 4)
+	local isHidden = TestBit(quest, 5)
+	local isSolo = TestBit(quest, 6)
+
+	local groupSize = bAnd(RShift(quest, 8), 7)			-- 3-bits mask
+	local headerIndex = bAnd(RShift(quest, 11), 31)		-- 5-bits mask
+	local level = bAnd(RShift(quest, 16), 255)			-- 8-bits mask
+	local money = RShift(quest, 24)
+	
+	local groupName = character.QuestHeaders[headerIndex]		-- This is most often the zone name, or the profession name
+	
+	local tag = character.QuestTags[index]
 	local link = character.QuestLinks[index]
-	local isHeader, groupSize, money, isComplete = strsplit("|", quest)
+	local questID = link:match("quest:(%d+)")
+	local questName = link:match("%[(.+)%]")
+	
+	return questName, questID, link, groupName, level, money, groupSize, tag, isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo
+end
 
-	if isHeader == "0" then
-		return true, groupSize	-- groupSize contains the title in a header line (clean this code, it works but is not clean)
-	end
-
-	return nil, link, tonumber(groupSize), tonumber(money), tonumber(isComplete)
+local function _GetQuestHeaders(character)
+	return character.QuestHeaders
 end
 
 local function _GetQuestLogNumRewards(character, index)
@@ -392,9 +497,70 @@ local function _IsQuestCompletedBy(character, questID)
 	end
 end
 
+local function _GetEmissaryQuests()
+	return emissaryQuests
+end
+
+local function _GetEmissaryQuestInfo(character, questID)
+	local quest = character.Emissaries[questID]
+	if not quest then return end
+
+	local numFulfilled, numRequired, timeLeft, objective = strsplit("|", quest)
+
+	numFulfilled = tonumber(numFulfilled) or 0
+	numRequired = tonumber(numRequired) or 0
+	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
+	
+	if timeLeft > 0 then
+		local secondsSinceLastUpdate = time() - character.lastUpdate
+		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
+			character.Emissaries[questID] = nil			-- .. clear the entry
+			return
+		end
+		
+		timeLeft = timeLeft - secondsSinceLastUpdate
+	end
+
+	return numFulfilled, numRequired, timeLeft, objective
+end
+
+local function _IsCharacterOnQuest(character, questID)
+	for index, link in pairs(character.QuestLinks) do
+		local id = link:match("quest:(%d+)")
+		if questID == tonumber(id) then
+			return true, index		-- return 'true' if the id was found, also return the index at which it was found
+		end
+	end
+end
+
+local function _GetCharactersOnQuest(questName, player, realm, account)
+	-- Get the characters of the current realm that are also on a given quest
+	local out = {}
+	account = account or THIS_ACCOUNT
+	realm = realm or THIS_REALM
+
+	for characterKey, character in pairs(addon.Characters) do
+		local accountName, realmName, characterName = strsplit(".", characterKey)
+		
+		-- all players except the one passed as parameter on that account & that realm
+		if account == accountName and realm == realmName and player ~= characterName then
+			local questLogSize = _GetQuestLogSize(character) or 0
+			for i = 1, questLogSize do
+				local name = _GetQuestLogInfo(character, i)
+				if questName == name then		-- same quest found ?
+					table.insert(out, characterKey)	
+				end
+			end
+		end
+	end
+
+	return out
+end
+
 local PublicMethods = {
 	GetQuestLogSize = _GetQuestLogSize,
 	GetQuestLogInfo = _GetQuestLogInfo,
+	GetQuestHeaders = _GetQuestHeaders,
 	GetQuestLogNumRewards = _GetQuestLogNumRewards,
 	GetQuestLogRewardInfo = _GetQuestLogRewardInfo,
 	GetQuestInfo = _GetQuestInfo,
@@ -405,6 +571,10 @@ local PublicMethods = {
 	GetDailiesHistory = _GetDailiesHistory,
 	GetDailiesHistorySize = _GetDailiesHistorySize,
 	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
+	GetEmissaryQuests = _GetEmissaryQuests,
+	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
+	IsCharacterOnQuest = _IsCharacterOnQuest,
+	GetCharactersOnQuest = _GetCharactersOnQuest,
 }
 
 function addon:OnInitialize()
@@ -413,6 +583,7 @@ function addon:OnInitialize()
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetQuestLogSize")
 	DataStore:SetCharacterBasedMethod("GetQuestLogInfo")
+	DataStore:SetCharacterBasedMethod("GetQuestHeaders")
 	DataStore:SetCharacterBasedMethod("GetQuestLogNumRewards")
 	DataStore:SetCharacterBasedMethod("GetQuestLogRewardInfo")
 	DataStore:SetCharacterBasedMethod("GetQuestHistory")
@@ -421,6 +592,8 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetDailiesHistory")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
+	DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
+	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
 end
 
 function addon:OnEnable()
@@ -460,26 +633,26 @@ end
 -- GetQuestReward is the function that actually turns in a quest
 hooksecurefunc("GetQuestReward", function(choiceIndex)
 	local questID = GetQuestID() -- returns the last displayed quest dialog's questID
-	if GetOption("TrackTurnIns") and questID then
-		local history = addon.ThisCharacter.History
-		local bitPos  = (questID % 32)
-		local index   = ceil(questID / 32)
 
-		if type(history[index]) == "boolean" then		-- temporary workaround for all players who have not cleaned their SV for 4.0
-			history[index] = 0
-		end
+	if not GetOption("TrackTurnIns") or not questID then return end
+	
+	local history = addon.ThisCharacter.History
+	local bitPos  = (questID % 32)
+	local index   = ceil(questID / 32)
 
-		-- mark the current quest ID as completed
-		history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
-
-		-- track daily quests turn-ins
-		if QuestIsDaily() then
-			local dailies = addon.ThisCharacter.Dailies
-
-			table.insert(dailies, { title = GetTitleText(), id = questID, timestamp = time() })
-		end
-		-- TODO: there's also QuestIsWeekly() which should probably also be tracked
-
-		addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
+	if type(history[index]) == "boolean" then		-- temporary workaround for all players who have not cleaned their SV for 4.0
+		history[index] = 0
 	end
+
+	-- mark the current quest ID as completed
+	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
+
+	-- track daily quests turn-ins
+	if QuestIsDaily() or emissaryQuests[questID] then
+		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
+		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
+	end
+	-- TODO: there's also QuestIsWeekly() which should probably also be tracked
+
+	addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 end)

@@ -51,6 +51,7 @@ local API_UnitCreatureFamily = UnitCreatureFamily
 local API_UnitCreatureType = UnitCreatureType
 local API_UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local API_UnitExists = UnitExists
+local API_UnitInRaid = UnitInRaid
 local API_UnitIsDead = UnitIsDead
 local API_UnitIsFriend = UnitIsFriend
 local API_UnitIsPVP = UnitIsPVP
@@ -422,6 +423,9 @@ do
 	-- @param excludeTarget Optional. Sets whether to ignore the current target when scanning targets.
 	--     Defaults to excludeTarget=0.
 	--     Valid values: 0, 1.
+	-- @param count Optional. Sets whether a count or a fractional value is returned.
+	--     Defaults to count=1.
+	--     Valid values: 0, 1.
 	-- @return The total aura count.
 	-- @return A boolean value for the result of the comparison.
 	-- @see DebuffCountOnAny
@@ -430,9 +434,10 @@ do
 		local auraId, comparator, limit = positionalParams[1], positionalParams[2], positionalParams[3]
 		local _, filter, mine = ParseCondition(positionalParams, namedParams, state)
 		local excludeUnitId = (namedParams.excludeTarget == 1) and state.defaultTarget or nil
+		local fractional = (namedParams.count == 0) and true or false
 
 		local count, stacks, startChangeCount, endingChangeCount, startFirst, endingLast = state:AuraCount(auraId, filter, mine, namedParams.stacks, atTime, excludeUnitId)
-		if count > 0 and startChangeCount < INFINITY then
+		if count > 0 and startChangeCount < INFINITY and fractional then
 			local origin = startChangeCount
 			local rate = -1 / (endingChangeCount - startChangeCount)
 			local start, ending = startFirst, endingLast
@@ -1027,6 +1032,8 @@ do
 end
 
 do
+	local IMBUED_BUFF_ID = 214336
+	
 	--- Test whether the target's classification matches the given classification.
 	-- @name Classification
 	-- @paramsig boolean
@@ -1051,11 +1058,16 @@ do
 		elseif API_UnitExists("boss1") and OvaleGUID:UnitGUID(target) == OvaleGUID:UnitGUID("boss1") then
 			targetClassification = "worldboss"
 		else
-			targetClassification = API_UnitClassification(target)
-			if targetClassification == "rareelite" then
-				targetClassification = "elite"
-			elseif targetClassification == "rare" then
-				targetClassification = "normal"
+			local aura = state:GetAura(target, IMBUED_BUFF_ID, "debuff", false)
+			if state:IsActiveAura(aura, atTime) then
+				targetClassification = "worldboss"
+			else 
+				targetClassification = API_UnitClassification(target)
+				if targetClassification == "rareelite" then
+					targetClassification = "elite"
+				elseif targetClassification == "rare" then
+					targetClassification = "normal"
+				end
 			end
 		end
 		local boolean = (targetClassification == classification)
@@ -2673,7 +2685,7 @@ do
 	local function PTR(positionalParams, namedParams, state, atTime)
 		local comparator, limit = positionalParams[1], positionalParams[2]
 		local _, _, _, uiVersion = API_GetBuildInfo()
-		local value = (uiVersion > 70100) and 1 or 0
+		local value = (uiVersion > 70200) and 1 or 0
 		return Compare(value, comparator, limit)
 	end
 
@@ -3805,9 +3817,28 @@ do
 		end
 		return Compare(count, comparator, limit)
 	end
+	
+		--- Get the number of seconds before the player reaches the given amount of runes.
+	-- @name TimeToRunes
+	-- @paramsig number or boolean
+	-- @param runes. The amount of runes to reach.
+	-- @param operator Optional. Comparison operator: less, atMost, equal, atLeast, more.
+	-- @param number Optional. The number to compare against.
+	-- @return The number of seconds.
+	-- @return A boolean value for the result of the comparison.
+	-- @usage
+	-- if TimeToRunes(2) > 5 Spell(horn_of_winter)
+
+	local function TimeToRunes(positionalParams, namedParams, state, atTime)
+		local runes, comparator, limit = positionalParams[1], positionalParams[2], positionalParams[3]
+		local seconds = state:GetRunesCooldown(atTime, runes)
+		if seconds < 0 then seconds = 0 end
+		return Compare(seconds, comparator, limit)
+	end
 
 	OvaleCondition:RegisterCondition("rune", false, Rune)
 	OvaleCondition:RegisterCondition("runecount", false, RuneCount)
+	OvaleCondition:RegisterCondition("timetorunes", false, TimeToRunes)
 end
 
 do
@@ -4806,6 +4837,7 @@ do
 		end
 	end
 
+
 	--- Get the number of seconds before the player reaches the given energy level for feral druids, non-mistweaver monks and rogues.
 	-- @name TimeToEnergy
 	-- @paramsig number or boolean
@@ -4875,7 +4907,7 @@ do
 		local level = OvalePower.maxPower[powerType] or 0
 		return TimeToPower(powerType, level, comparator, limit, state, atTime)
 	end
-
+	
 	OvaleCondition:RegisterCondition("timetoenergy", false, TimeToEnergy)
 	OvaleCondition:RegisterCondition("timetofocus", false, TimeToFocus)
 	OvaleCondition:RegisterCondition("timetomaxenergy", false, TimeToMaxEnergy)
@@ -5284,4 +5316,34 @@ do
 	end
 	
 	OvaleCondition:RegisterCondition("race", false, Race)
+end
+
+do
+	--- Check if the unit is in raid
+	-- @param target Optional. Sets the target to check. The target may also be given as a prefix to the condition.
+	--     Defaults to target=player.
+	--     Valid values: player, target, focus, pet.
+	-- @usage
+	-- if UnitInRaid(player) Spell(bloodlust)
+	local function UnitInRaid(positionalParams, namedParams, state, atTime)
+		local target = namedParams.target or "player"
+		local raidIndex = API_UnitInRaid(target)
+		
+		return TestBoolean(raidIndex ~= nul, "yes")
+	end
+	
+	OvaleCondition:RegisterCondition("unitinraid", false, UnitInRaid)
+end
+
+do
+	--- Check the amount of Soul Fragments for Vengeance DH
+	-- @usage
+	-- if SoulFragments() > 3 Spell(spirit_bomb)
+	local function SoulFragments(positionalParams, namedParams, state, atTime)
+		local comparator, limit = positionalParams[1], positionalParams[2]
+		local value = state:SoulFragments(atTime)
+		return Compare(value, comparator, limit)
+	end
+	
+	OvaleCondition:RegisterCondition("soulfragments", false, SoulFragments)
 end

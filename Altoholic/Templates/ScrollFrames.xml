@@ -14,7 +14,7 @@
 						local parent = self:GetParent()
 						local scrollStep = parent.scrollStep or (parent:GetHeight() / 2)
 						parent:SetValue(parent:GetValue() - scrollStep)
-						PlaySound("UChatScrollButton")
+						PlaySound(1115)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -27,7 +27,7 @@
 						local parent = self:GetParent()
 						local scrollStep = parent.scrollStep or (parent:GetHeight() / 2)
 						parent:SetValue(parent:GetValue() + scrollStep)
-						PlaySound("UChatScrollButton")
+						PlaySound(1115)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -62,33 +62,7 @@
 		</KeyValues>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoUIPanelScrollFrame")
-				
-				self:OnLoad()
-				
-				if not self.numRows or not self.rowTemplate then 
-					return 
-				end
-			
-				local prefix = self.rowPrefix
-				local parent = self:GetParent()
-				local xOffset = self.xOffset or 0
-				local yOffset = self.yOffset or 0
-				
-				-- auto create the buttons, with the quantity passed as key
-				for i = 1, self.numRows do
-					local frame = CreateFrame("Button", nil, parent, self.rowTemplate)
-					
-					if i == 1 then
-						frame:SetPoint("TOPLEFT", xOffset, yOffset)
-					else
-						-- attach to previous frame
-						frame:SetPoint("TOPLEFT", parent[prefix..(i-1)], "BOTTOMLEFT", 0, 0)
-					end
-					
-					frame:SetID(i)
-					parent[prefix..i] = frame
-				end
+				Altoholic:BindViewToController(self, "AltoholicUI.UIPanelScrollFrame")
 			</OnLoad>
 			<OnScrollRangeChanged>
 				self:OnScrollRangeChanged(xrange, yrange)

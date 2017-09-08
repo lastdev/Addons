@@ -1,5 +1,5 @@
 ﻿-- JUST DO IT YES YOU CAN NOTHING IS IMPOSSIBLE DO IT
-hopAddon_Subregions = {
+ServerHop_Subregions = {
 	-- US
 	{ "Oceania", "Pacific", "Mountain", "Central", "Eastern", "3", "4" },
 	
@@ -18,7 +18,7 @@ hopAddon_Subregions = {
 	  "Battle Group 21" },
 };
 
-hopAddon_Realmlist = {
+ServerHop_Realmlist = {
 	-- US
 		{ name = "Dreadmaul", region = 1, pvp = true, lang = 2}, 
 		{ name = "Caelestrasz", region = 1, pvp = false, lang = 2}, 

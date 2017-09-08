@@ -4,11 +4,7 @@
 	<Button name="AltoTabSummaryIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoTabSummaryIcon")
-			
-				self:SetIconSize(self.iconWidth, self.iconHeight)
-				self:SetIcon(self.iconFile)
+				Altoholic:BindViewToController(self, "AltoholicUI.TabSummaryIcon", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				self:Icon_OnEnter()

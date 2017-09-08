@@ -1,14 +1,14 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="MinimapButton.lua"></Script>
 	
-	<Button parentKey="AltoholicButton" parent="Minimap" frameStrata="MEDIUM" toplevel="true">
+	<Button parentKey="AltoholicButton" parent="Minimap" name="AltoholicMinimapButton" frameStrata="MEDIUM" toplevel="true">
 		<Size x="33" y="33" />
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="Minimap" relativePoint="RIGHT" x="5" y="0" />
 		</Anchors>		
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoMinimapButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.MinimapButton")
 				self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
 				self:RegisterForDrag("RightButton")
 			</OnLoad>

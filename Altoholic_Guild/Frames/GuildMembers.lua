@@ -202,228 +202,209 @@ local function OnPlayerEquipmentReceived(frame, event, sender, player)
 	frame.Equipment:Update(player)
 end
 
-local function _Init(frame)
-	addon:RegisterMessage("DATASTORE_PLAYER_EQUIPMENT_RECEIVED", OnPlayerEquipmentReceived, frame)
-end
-
-local function _Update(frame)
-	if not isViewValid then
-		BuildView()
-	end
-	
-	local scrollFrame = frame.ScrollFrame
-	local numRows = scrollFrame.numRows
-	
-	AltoholicTabGuild.Status:SetText(L["Click a character's AiL to see its equipment"])
-	
-	if #view == 0 then
-		-- Hides all entries of the scrollframe, and updates it accordingly
-		for rowIndex = 1, numRows do
-			local rowFrame = scrollFrame:GetRow(rowIndex) 
-			rowFrame:Hide()
+addon:Controller("AltoholicUI.GuildMembers", {
+	OnBind = function(frame)
+		addon:RegisterMessage("DATASTORE_PLAYER_EQUIPMENT_RECEIVED", OnPlayerEquipmentReceived, frame)
+		frame:Update()
+	end,
+	Sort = function(frame, field)
+		viewSortField = field
+		viewSortOrder = addon:GetOption("UI.Tabs.Guild.SortAscending")
+		
+		frame:InvalidateView()
+		frame:Update()
+	end,
+	Update = function(frame)
+		if not isViewValid then
+			BuildView()
 		end
-		scrollFrame:Update(numRows)
-		return
-	end
-	
-	local offset = scrollFrame:GetOffset()
-	local numDisplayedLines = 0
-	local numVisibleLines = 0
-	local DrawAlts
-	local rowIndex = 1
-	local i=1
-	
-	local guild = DataStore:GetGuild()
-	
-	for lineIndex, v in pairs(view) do
-		local rowFrame = scrollFrame:GetRow(rowIndex)
 		
-		local lineType = mod(v.lineType, 2)
-	
-		if (offset > 0) or (numDisplayedLines >= numRows) then		-- if the line will not be visible
-			if v.lineType == NORMALPLAYER_LINE then
-				numVisibleLines = numVisibleLines + 1
-				offset = offset - 1		-- no further control, nevermind if it goes negative
-			elseif lineType == HEADER_LINE then							-- then keep track of counters
-				if expandedHeaders[v.name] then
-					DrawAlts = true
-				else
-					DrawAlts = false
+		local scrollFrame = frame.ScrollFrame
+		local numRows = scrollFrame.numRows
+		
+		AltoholicTabGuild.Status:SetText(L["Click a character's AiL to see its equipment"])
+		
+		if #view == 0 then
+			-- Hides all entries of the scrollframe, and updates it accordingly
+			for rowIndex = 1, numRows do
+				local rowFrame = scrollFrame:GetRow(rowIndex) 
+				rowFrame:Hide()
+			end
+			scrollFrame:Update(numRows)
+			return
+		end
+		
+		local offset = scrollFrame:GetOffset()
+		local numDisplayedLines = 0
+		local numVisibleLines = 0
+		local DrawAlts
+		local rowIndex = 1
+		local i=1
+		
+		local guild = DataStore:GetGuild()
+		
+		for lineIndex, v in pairs(view) do
+			local rowFrame = scrollFrame:GetRow(rowIndex)
+			
+			local lineType = mod(v.lineType, 2)
+		
+			if (offset > 0) or (numDisplayedLines >= numRows) then		-- if the line will not be visible
+				if v.lineType == NORMALPLAYER_LINE then
+					numVisibleLines = numVisibleLines + 1
+					offset = offset - 1		-- no further control, nevermind if it goes negative
+				elseif lineType == HEADER_LINE then							-- then keep track of counters
+					if expandedHeaders[v.name] then
+						DrawAlts = true
+					else
+						DrawAlts = false
+					end
+					numVisibleLines = numVisibleLines + 1
+					offset = offset - 1		-- no further control, nevermind if it goes negative
+				elseif DrawAlts then
+					numVisibleLines = numVisibleLines + 1
+					offset = offset - 1		-- no further control, nevermind if it goes negative
 				end
-				numVisibleLines = numVisibleLines + 1
-				offset = offset - 1		-- no further control, nevermind if it goes negative
-			elseif DrawAlts then
-				numVisibleLines = numVisibleLines + 1
-				offset = offset - 1		-- no further control, nevermind if it goes negative
-			end
-		else		-- line will be displayed
-			local member = v.name
-			local _, _, _, level, class, _, _, _, _, _, englishClass = DataStore:GetGuildMemberInfo(member)
-			level = level or 0
-			
-			local classText = L["N/A"]
-			if class and englishClass then
-				classText = format("%s%s", DataStore:GetClassColor(englishClass), class)
-			end
-			
-			local version = addon:GetGuildMemberVersion(member) or L["N/A"]
-			local averageItemLvl = DataStore:GetGuildMemberAverageItemLevel(guild, member) or 0
-		
-			if v.lineType == NORMALPLAYER_LINE then
-			
-				rowFrame:SetMember(member, colors.yellow, false)
-				rowFrame:SetMemberInfo(level, averageItemLvl, version, classText)
-				rowFrame:SetID(lineIndex)
-				rowFrame:Show()
+			else		-- line will be displayed
+				local member = v.name
+				local _, _, _, level, class, _, _, _, _, _, englishClass = DataStore:GetGuildMemberInfo(member)
+				level = level or 0
 				
-				rowIndex = rowIndex + 1
-				numVisibleLines = numVisibleLines + 1
-				numDisplayedLines = numDisplayedLines + 1
-				
-			elseif lineType == HEADER_LINE then
-				if expandedHeaders[member] then
-					rowFrame.Collapse:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
-					DrawAlts = true
-				else
-					rowFrame.Collapse:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
-					DrawAlts = false
+				local classText = L["N/A"]
+				if class and englishClass then
+					classText = format("%s%s", DataStore:GetClassColor(englishClass), class)
 				end
 				
-				rowFrame:SetMember(member, colors.yellow, true)
-				if member == L["Offline Members"] then
-					rowFrame:SetMemberInfo("", nil, "", "")
-				else
+				local version = addon:GetGuildMemberVersion(member) or L["N/A"]
+				local averageItemLvl = DataStore:GetGuildMemberAverageItemLevel(guild, member) or 0
+			
+				if v.lineType == NORMALPLAYER_LINE then
+				
+					rowFrame:SetMember(member, colors.yellow, false)
 					rowFrame:SetMemberInfo(level, averageItemLvl, version, classText)
-				end
-				rowFrame:SetID(lineIndex)
-				rowFrame:Show()
-				
-				rowIndex = rowIndex + 1
-				numVisibleLines = numVisibleLines + 1
-				numDisplayedLines = numDisplayedLines + 1
+					rowFrame:SetID(lineIndex)
+					rowFrame:Show()
+					
+					rowIndex = rowIndex + 1
+					numVisibleLines = numVisibleLines + 1
+					numDisplayedLines = numDisplayedLines + 1
+					
+				elseif lineType == HEADER_LINE then
+					if expandedHeaders[member] then
+						rowFrame.Collapse:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
+						DrawAlts = true
+					else
+						rowFrame.Collapse:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+						DrawAlts = false
+					end
+					
+					rowFrame:SetMember(member, colors.yellow, true)
+					if member == L["Offline Members"] then
+						rowFrame:SetMemberInfo("", nil, "", "")
+					else
+						rowFrame:SetMemberInfo(level, averageItemLvl, version, classText)
+					end
+					rowFrame:SetID(lineIndex)
+					rowFrame:Show()
+					
+					rowIndex = rowIndex + 1
+					numVisibleLines = numVisibleLines + 1
+					numDisplayedLines = numDisplayedLines + 1
 
-			elseif DrawAlts then
-		
-				if v.lineType == ALTO_ALT_LINE then
-					rowFrame:SetMember(member, colors.lightBlue, false)
-				else
-					rowFrame:SetMember(member, colors.grey, false)
-				end				
-				
-				rowFrame:SetMemberInfo(level, averageItemLvl, version, classText)		
-				rowFrame:SetID(lineIndex)
-				rowFrame:Show()
-				
-				rowIndex = rowIndex + 1
-				numVisibleLines = numVisibleLines + 1
-				numDisplayedLines = numDisplayedLines + 1
+				elseif DrawAlts then
+			
+					if v.lineType == ALTO_ALT_LINE then
+						rowFrame:SetMember(member, colors.lightBlue, false)
+					else
+						rowFrame:SetMember(member, colors.grey, false)
+					end				
+					
+					rowFrame:SetMemberInfo(level, averageItemLvl, version, classText)		
+					rowFrame:SetID(lineIndex)
+					rowFrame:Show()
+					
+					rowIndex = rowIndex + 1
+					numVisibleLines = numVisibleLines + 1
+					numDisplayedLines = numDisplayedLines + 1
+				end
 			end
 		end
-	end
-	
-	while rowIndex <= numRows do
-		local rowFrame = scrollFrame:GetRow(rowIndex) 
 		
-		rowFrame:SetID(0)
-		rowFrame:Hide()
-		rowIndex = rowIndex + 1
-	end
-	scrollFrame:Update(numVisibleLines)
-	frame:Show()
-end
+		while rowIndex <= numRows do
+			local rowFrame = scrollFrame:GetRow(rowIndex) 
+			
+			rowFrame:SetID(0)
+			rowFrame:Hide()
+			rowIndex = rowIndex + 1
+		end
+		scrollFrame:Update(numVisibleLines)
+		frame:Show()
+	end,
+	InvalidateView = function()
+		isViewValid = nil
+	end,
+	TogglePlayerAlts = function(frame, rowID)
+		if rowID == 0 then return end
+		local line = view[rowID]
+		
+		if expandedHeaders[line.name] then		-- toggle header
+			expandedHeaders[line.name] = nil
+		else
+			expandedHeaders[line.name] = true
+		end
+		frame:Update()
+	end,
+	ShowPlayerEquipment = function(frame, rowID, characterName)
+		if rowID == 0 or not characterName then return end
+		
+		local line = view[rowID]
+		if line.lineType == NORMALPLAYER_LINE then return end
 
-local function _Sort(frame, field)
-	viewSortField = field
-	viewSortOrder = addon:GetOption("UI.Tabs.Guild.SortAscending")
-	
-	frame:InvalidateView()
-	frame:Update()
-end
-
-local function _TogglePlayerAlts(frame, rowID)
-	if rowID == 0 then return end
-	local line = view[rowID]
-	
-	if expandedHeaders[line.name] then		-- toggle header
-		expandedHeaders[line.name] = nil
-	else
-		expandedHeaders[line.name] = true
-	end
-	frame:Update()
-end
-
-local function _ShowPlayerEquipment(frame, rowID, characterName)
-	if rowID == 0 or not characterName then return end
-	
-	local line = view[rowID]
-	if line.lineType == NORMALPLAYER_LINE then return end
-
-	DataStore:RequestGuildMemberEquipment(characterName)
-	frame.Equipment.Name:SetText(characterName)
-end
-
-local function _InvalidateView()
-	isViewValid = nil
-end
-
-addon:RegisterClassExtensions("AltoGuildMembers", {
-	Init = _Init,
-	Sort = _Sort,
-	Update = _Update,
-	Collapse_OnClick = _Collapse_OnClick,
-	InvalidateView = _InvalidateView,
-	TogglePlayerAlts = _TogglePlayerAlts,
-	ShowPlayerEquipment = _ShowPlayerEquipment,
+		DataStore:RequestGuildMemberEquipment(characterName)
+		frame.Equipment.Name:SetText(characterName)
+	end,
 })
 
-
--- *** Equipment ***
-
-local function _Init(frame)
-	-- Set the default textures of equipment icons
-	for _, button in pairs(frame.Items) do
-		button:SetIcon(addon:GetEquipmentSlotIcon(button:GetID()))
-		button:Show()
-	end
-end
-
-local function _Update(frame, member)
---[[
-	button layout				equipment table layout
-	
-	1	5	9							1	10	11
-	2	6	10 						3	6	12
-	3	7	11							5	7	13
-	4	8	12 						9	8	14
-	
-	15 13 14 16						2 15 4 19
-	
-	17 18 19							16 17 18
---]]
-
-	local guild = DataStore:GetGuild()
-	
-	for _, button in pairs(frame.Items) do
-		local id = button:GetID()
-		button.Count:Hide()
-		button.IconBorder:Hide()
-	
-		local itemID = DataStore:GetGuildMemberInventoryItem(guild, member, id)
-		if itemID then
-			-- display the coloured border
-			local _, _, itemRarity, itemLevel = GetItemInfo(itemID)
-			button:SetItem(itemID, nil, itemRarity)
-			button:SetCount(itemLevel)
-		else
-			button:SetIcon(addon:GetEquipmentSlotIcon(id))
-			button:SetInfo(nil, nil)
+addon:Controller("AltoholicUI.GuildMemberEquipment", {
+	OnBind = function(frame)
+		-- Set the default textures of equipment icons
+		for _, button in pairs(frame.Items) do
+			button:SetIcon(addon:GetEquipmentSlotIcon(button:GetID()))
+			button:Show()
 		end
-		
-		button:Show()
-	end
-end
+	end,
+	Update = function(frame, member)
+		--[[
+			button layout				equipment table layout
+			
+			1	5	9							1	10	11
+			2	6	10 						3	6	12
+			3	7	11							5	7	13
+			4	8	12 						9	8	14
+			
+			15 13 14 16						2 15 4 19
+			
+			17 18 19							16 17 18
+		--]]
 
-addon:RegisterClassExtensions("AltoGuildMemberEquipment", {
-	Init = _Init,
-	Update = _Update,
+		local guild = DataStore:GetGuild()
+		
+		for _, button in pairs(frame.Items) do
+			local id = button:GetID()
+			button.Count:Hide()
+			button.IconBorder:Hide()
+		
+			local itemID = DataStore:GetGuildMemberInventoryItem(guild, member, id)
+			if itemID then
+				-- display the coloured border
+				local _, _, itemRarity, itemLevel = GetItemInfo(itemID)
+				button:SetItem(itemID, nil, itemRarity)
+				button:SetCount(itemLevel)
+			else
+				button:SetIcon(addon:GetEquipmentSlotIcon(id))
+				button:SetInfo(nil, nil)
+			end
+			
+			button:Show()
+		end
+	end,
 })

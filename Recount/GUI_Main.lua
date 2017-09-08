@@ -1,12 +1,12 @@
 local Recount = _G.Recount
 
 local SM = LibStub:GetLibrary("LibSharedMedia-3.0")
-local Events = LibStub("AceEvent-3.0")
+--local Events = LibStub("AceEvent-3.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1423 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1435 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end

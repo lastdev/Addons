@@ -1,6 +1,6 @@
-﻿## Interface: 70200
+﻿## Interface: 70300
 ## Title: World Quest Group Finder
-## Version: 0.25.4
+## Version: 0.27
 ## Notes: Makes it easy to find groups for World Quests by using the Group Finder tool.
 ## Notes-frFR: Permet de trouver facilement des groupes pour les expéditions en utilisant l'outil de recherche de groupe.
 ## Notes-ptBR: Torna facil achar grupos para Missões Mundiais usando a ferramenta de Busca de Grupo.

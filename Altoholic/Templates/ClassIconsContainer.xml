@@ -11,26 +11,7 @@
 		</KeyValues>
 		<Scripts>
 			<OnLoad>
-				self.Update = Altoholic:GetClassExtension("AltoClassIconsContainer","Update")
-				self.ShowChildFrames = Altoholic:GetClassExtension("AltoFrame","ShowChildFrames")
-				self.HideChildFrames = Altoholic:GetClassExtension("AltoFrame","HideChildFrames")
-			
-				local prefix = self.iconPrefix
-			
-				-- auto create the sort buttons, with the quantity passed as key
-				for i = 1, self.numIcons do
-					local frame = CreateFrame("Button", nil, self, self.iconTemplate)
-					
-					if i == 1 then
-						frame:SetPoint("TOPLEFT")
-					else
-						-- attach to previous frame
-						frame:SetPoint("TOPLEFT", self[prefix..(i-1)], "TOPRIGHT", 5, 0)
-					end
-					
-					frame:SetID(i)
-					self[prefix..i] = frame
-				end
+				Altoholic:BindViewToController(self, "AltoholicUI.ClassIconsContainer", "AltoholicUI.Frame")
 			</OnLoad>
 		</Scripts>
 	</Frame>

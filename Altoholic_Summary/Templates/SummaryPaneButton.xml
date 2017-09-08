@@ -12,7 +12,7 @@
 		</ButtonText>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoSummaryPaneButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.SummaryPaneButton")
 				self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
 			</OnLoad>
 			<OnLeave>

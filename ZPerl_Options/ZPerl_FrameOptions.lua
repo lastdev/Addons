@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1031 $")
+XPerl_SetModuleRevision("$Revision: 1076 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -10,6 +10,7 @@ for k, v in pairs(localGroups) do
 	WoWclassCount = WoWclassCount + 1
 end
 
+local protected = { }
 
 function XPerl_OptionsFrame_DisableSlider(slider)
 	local name = slider:GetName()
@@ -57,7 +58,6 @@ end
 
 -- XPerl_OptionsSetMyText
 function XPerl_OptionsSetMyText(f, str, keep)
-
 	if (f and str) then
 		local textFrame = _G[f:GetName().."Text"]
 
@@ -135,7 +135,6 @@ end
 
 -- XPerl_Options_EnableSibling
 function XPerl_Options_EnableSibling(self, sibling, check2nd, check3rd)
-
 	local siblingName = self:GetParent():GetName().."_"..sibling
 	local siblingFrame = _G[siblingName]
 	local second = true
@@ -191,6 +190,10 @@ function XPerl_Options_EnableSibling(self, sibling, check2nd, check3rd)
 			end
 		else
 			DEFAULT_CHAT_FRAME:AddMessage("|c00FF0000X-Perl|r - No code to disable '"..siblingFrame:GetName().."' type: "..(siblingFrame.GetFrameType or siblingFrame.GetObjectType)(siblingFrame))
+		end
+
+		if siblingFrame.protected then
+			protected[siblingFrame] = result
 		end
 	else
 		DEFAULT_CHAT_FRAME:AddMessage("|c00FF0000X-Perl|r - No sibling found called '"..siblingName.."'")
@@ -253,7 +256,7 @@ end
 function XPerl_Options_CheckRadio(self,buttons)
 	local prefix = self:GetParent():GetName().."_"
 
-	for i,name in pairs(buttons) do
+	for i, name in pairs(buttons) do
 		if (prefix..name == self:GetName()) then
 			_G[prefix..name]:SetChecked(true)
 		else
@@ -282,7 +285,6 @@ end
 
 -- XPerl_Options_OnUpdate
 function XPerl_Options_OnUpdate(self, arg1)
-
 	if (self.Fading) then
 		local alpha = self:GetAlpha()
 		if (self.Fading == "in") then
@@ -470,7 +472,6 @@ end
 
 -- XPerl_Options_RegisterScalingSlider
 function XPerl_Options_RegisterScalingSlider(self, min, max)
-
 	XPerl_Options_RegisterProtected(self)
 
 	Sliders[self:GetName()] = self
@@ -596,44 +597,36 @@ end
 function XPerl_Options_Anchor_OnLoad(self)
 	self.displayMode = "MENU"
 	Lib_UIDropDownMenu_Initialize(self, XPerl_Options_Anchor_Initialize)
-	Lib_UIDropDownMenu_SetSelectedID(self, MyIndex, 1)
+	local current = self.varGet() or "TOP"
+	Lib_UIDropDownMenu_SetSelectedName(self, current, 1)
 	Lib_UIDropDownMenu_SetWidth(self, 100)
 end
 
--- XPerl_Options_Anchor_OnLoad
-function XPerl_Options_Anchor_Initialize()
+-- XPerl_Options_Anchor_Initialize
+function XPerl_Options_Anchor_Initialize(dropdown)
 	local info
-	local current = XPerl_Options_Party_Anchor.varGet() or "TOP"
+	local current = dropdown.varGet() or "TOP"
 
 	for k, v in pairs(XPerl_AnchorList) do
 		info = { }
 		info.text = v
-		info.func = XPerl_Options_Anchor_OnClick
+		info.func = function(self)
+			dropdown.varSet(XPerl_AnchorList[self:GetID()])
 
-		if (current == v) then
-			MyIndex = k
+			Lib_UIDropDownMenu_SetSelectedName(dropdown, v, 1)
+
+			XPerl_ProtectedCall(dropdown.setFunc)
+
+			if (XPerl_Party_Virtual) then
+				XPerl_Party_Virtual(true)
+			end
+
+			if (XPerl_RaidTitles) then
+				XPerl_RaidTitles()
+			end
 		end
 
 		Lib_UIDropDownMenu_AddButton(info)
-	end
-end
-
--- XPerl_Options_Anchor_OnClick
-function XPerl_Options_Anchor_OnClick(self)
-	local obj = LIB_UIDROPDOWNMENU_OPEN_MENU
-
-	obj.varSet(XPerl_AnchorList[self:GetID()])
-	MyIndex = self:GetID()
-	Lib_UIDropDownMenu_SetSelectedID(obj, MyIndex, 1)
-
-	XPerl_ProtectedCall(obj.setFunc)
-
-	if (XPerl_Party_Virtual) then
-		XPerl_Party_Virtual(true)
-	end
-
-	if (XPerl_RaidTitles) then
-		XPerl_RaidTitles()
 	end
 end
 
@@ -776,8 +769,8 @@ end
 
 -- XPerl_Options_EnableTab
 function XPerl_Options_EnableTab(self, enable)
-	for i,y in pairs({"Enabled", "Disabled"}) do
-		for j,z in pairs({"Left", "Right", "Middle"}) do
+	for i, y in pairs({"Enabled", "Disabled"}) do
+		for j, z in pairs({"Left", "Right", "Middle"}) do
 			local f = _G[self:GetName()..y..z]
 
 			if ((i == 1 and enable) or (i == 2 and not enable)) then
@@ -788,8 +781,6 @@ function XPerl_Options_EnableTab(self, enable)
 		end
 	end
 end
-
-local protected = {}
 
 -- XPerl_Options_InCombatChange
 function XPerl_Options_InCombatChange(inCombat)
@@ -821,6 +812,8 @@ function XPerl_Options_InCombatChange(inCombat)
 
 				if (k.wasChecked) then
 					k:SetChecked(true)
+
+					k.wasChecked = nil
 				end
 			end
 		elseif ((k.GetFrameType or k.GetObjectType)(k) == "Slider") then
@@ -885,6 +878,8 @@ function XPerl_Options_RegisterProtected(self)
 	end
 
 	protected[self] = self:IsEnabled()
+
+	self.protected = true
 
 	if not self.combatIcon then
 		self.combatIcon = self:CreateTexture(self:GetName().."CombatIcon", "OVERLAY")
@@ -1078,7 +1073,6 @@ end
 
 -- XPerl_Options_RaidSelectAll
 function XPerl_Options_RaidSelectAll(self, enable)
-
 	local val
 	local prefix = self:GetParent():GetName().."_"
 
@@ -1086,7 +1080,6 @@ function XPerl_Options_RaidSelectAll(self, enable)
 		local f = _G[prefix.."Grp"..i]
 		if (f) then
 			f:SetChecked(enable)
-			--print(f:GetChecked(), enable)
 			if f:GetChecked() then
 				XPerlDB.raid.group[i] = 1
 			else
@@ -1097,7 +1090,6 @@ function XPerl_Options_RaidSelectAll(self, enable)
 		f = _G[prefix.."ClassSel"..i.."_Enable"]
 		if (f) then
 			f:SetChecked(enable)
-			--print(f:GetChecked(), enable)
 			if f:GetChecked() then
 				XPerlDB.raid.class[i].enable = 1
 			else
@@ -1112,7 +1104,6 @@ end
 
 -- XPerl_Options_SetupStatsFrames
 function XPerl_Options_SetupStatsFrames()
-
 	if (XPerl_Player) then
 		XPerl_StatsFrameSetup(XPerl_Player, {XPerl_Player.statsFrame.druidBar, XPerl_Player.statsFrame.xpBar, XPerl_Player.statsFrame.repBar})
 	end
@@ -3284,16 +3275,16 @@ if (XPerl_UpgradeSettings) then
 			if (oldVersion < "3.1.2") then
 				old.xperlOldroleicons = 1
 			end
-			
+
 			if (oldVersion < "3.7.1") then
 				old.raid.sortByRole = nil
 			end
-			
+
 			if (oldVersion < "3.7.3") then
 				old.raid.precisionPercent = 1
 				old.raid.precisionManaPercent = 1
 			end
-			
+
 			if (oldVersion < "3.7.5") then
 				old.targettargettarget.debuffs.enable = old.targettargettarget.buffs.enable
 				old.pettarget.debuffs.enable = old.pettarget.buffs.enable

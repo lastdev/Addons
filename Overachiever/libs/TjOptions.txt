@@ -1,5 +1,5 @@
 
-TjOptions v0.47
+TjOptions v0.48
 ========================================
 
 Author: Tuhljin
@@ -488,6 +488,9 @@ Example usage:
 
 Recent changes
 ================
+
+v0.48
+- Update for WoW 7.3. (PlaySound has changed.)
 
 v0.47
 - Checkboxes now update the color of their text labels when they are enabled/disabled using checkboxframe:SetEnabled(value).

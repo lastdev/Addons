@@ -10,3 +10,4 @@ L["TRACK_TURNINS_DISABLED"] = "Der Questverlauf wird den aktuellen Status beibeh
 L["TRACK_TURNINS_ENABLED"] = "Abgegebene Quests werden im Verlauf gespeichert, um sicherzustellen, dass dieser ständig gültig bleibt."
 L["TRACK_TURNINS_LABEL"] = "Quest-Abgaben verfolgen"
 L["TRACK_TURNINS_TITLE"] = "Quest-Abgaben verfolgen"
+

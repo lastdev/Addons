@@ -9,3 +9,4 @@ L["REPORT_UNCOLLECTED_ENABLED"] = "Beim Anmelden werden Spielfiguren mit mehr al
 L["REPORT_UNCOLLECTED_LABEL"] = "Berichte nicht eingezogene Ressourcen"
 L["REPORT_UNCOLLECTED_TITLE"] = "Berichte nicht eingezogene Ressourcen"
 L["UNCOLLECTED_RESOURCES_ALERT"] = "%s hat %s Resourcen nicht eingezogen"
+

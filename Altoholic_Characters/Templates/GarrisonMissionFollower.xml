@@ -23,7 +23,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGarrisonMissionFollower")
+				Altoholic:BindViewToController(self, "AltoholicUI.GarrisonMissionFollower")
 			</OnLoad>
 			<OnEnter>
 				Altoholic:DrawFollowerTooltip(self)

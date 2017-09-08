@@ -1,6 +1,6 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: Overachiever
-## Version: 0.99.7
+## Version: 0.99.9
 ## Author: Tuhljin
 ## Notes: Tools and tweaks to make the lives of players seeking Achievements a little bit easier.
 ## Notes-zhTW: 使玩家尋求成就可以稍微輕鬆點的微調工具。
@@ -11,7 +11,7 @@
 ## X-WoWI-ID: 11361
 
 #@no-lib-strip@
-libs\LibBabble-SubZone-3.0\LibStub\LibStub.lua
+libs\LibStub\LibStub.lua
 libs\LibBabble-SubZone-3.0\lib.xml
 libs\LibBabble-Inventory-3.0\lib.xml
 #@end-no-lib-strip@
@@ -20,6 +20,8 @@ libs\TjOptions.lua
 libs\TjSharedMediaDropDown\lib.xml
 libs\TjDragIt.lua
 libs\TjBagWatch.lua
+libs\TjThreads.lua
+libs\TjAchieve.lua
 libs\TjCalendar.lua
 
 localization.lua

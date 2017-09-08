@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1036 $")
+end, "$Revision: 1066 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -50,7 +50,6 @@ function XPerl_Party_Events_OnLoad(self)
 		"UNIT_CONNECTION",
 		"UNIT_PHASE",
 		"UNIT_COMBAT",
-		"UNIT_SPELLMISS",
 		"UNIT_FACTION",
 		"UNIT_FLAGS",
 		"UNIT_AURA",
@@ -81,7 +80,7 @@ function XPerl_Party_Events_OnLoad(self)
 	--partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
 
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- IMPORTANT! Stops raid framerate lagging when members join/leave/zone
-	
+
 	for i = 1, 4 do
 		XPerl_BlizzFrameDisable(_G["PartyMemberFrame"..i])
 	end
@@ -424,7 +423,7 @@ function XPerl_Party_SetDebuffLocation(self)
 				end
 			end
 		else
-			if (self.petFrame and self.petFrame:IsVisible()) then
+			if (self.petFrame and self.petFrame:IsShown()) then
 				if (pconf.flip) then
 					debuff1:SetPoint("TOPRIGHT", self.petFrame.nameFrame, "TOPLEFT", 0, -4)
 				else
@@ -606,7 +605,7 @@ local function UpdateAssignedRoles(self)
 	if (instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
-		
+
 		-- According to http://forums.worldofwarcraft.com/thread.html?topicId=26560499864
 		-- this is the new way to check for roles
 		-- Port this from XPerl_Player.lua by PlayerLin
@@ -675,7 +674,7 @@ end
 local function UpdatePhasingDisplays(self)
 	local unit = self.partyid
 	local inPhase = UnitInPhase(unit)
-	
+
 	if ( inPhase or not UnitExists(unit) or not UnitIsConnected(unit)) then
 		self.phasingIcon:Hide()
 	else
@@ -685,7 +684,7 @@ end
 
 -- XPerl_Party_UpdateLeader
 local function XPerl_Party_UpdateLeader(self)
-	
+
 	if (UnitIsGroupLeader(self.partyid)) then
 		self.nameFrame.leaderIcon:Show()
 	else
@@ -693,13 +692,13 @@ local function XPerl_Party_UpdateLeader(self)
 	end
 
 	local lootMethod, lootMaster, raidLootMaster = GetLootMethod()
-	
+
 	if (lootMethod == "master" and lootMaster) then
 		if (self.partyid == "party"..lootMaster) then
 			self.nameFrame.masterIcon:Show()
 		else
 			self.nameFrame.masterIcon:Hide()
-		end	
+		end
 	end
 	-- Removed the call to UpdateAllAssignedRoles because UpdateLeader() is called by UpdateDisplay()
 	-- and UpdateDisplay() already call the UpdateAssignedRoles() function
@@ -809,9 +808,9 @@ local function XPerl_Party_UpdateMana(self)
 	if (self.afk and not UnitIsAFK(self.partyid)) then
 		XPerl_Party_UpdatePlayerFlags(self)
 	end
-	
+
 	local pType = XPerl_GetDisplayedPowerType(self.partyid)
-	
+
 	local Partymana = UnitPower(self.partyid, pType)
 	local Partymanamax = UnitPowerMax(self.partyid, pType)
 
@@ -903,7 +902,7 @@ local function CheckRaid()
 		partyAnchor:StopMovingOrSizing()
 
 		local singleGroup = XPerl_Party_SingleGroup()
-		
+
 		if (not pconf or ((pconf.inRaid and IsInRaid()) or (pconf.smallRaid and singleGroup) or (GetNumGroupMembers() > 0 and not IsInRaid()))) then -- or GetNumGroupMembers() > 0
 			if not C_PetBattles.IsInBattle() then
 				if (not partyHeader:IsShown()) then
@@ -925,8 +924,8 @@ end
 -- XPerl_Party_TargetUpdateHealth
 local function XPerl_Party_TargetUpdateHealth(self)
 	local tf = self.targetFrame
-	local hp, hpMax = UnitHealth(self.targetid), UnitHealthMax(self.targetid)
-	tf.lastHP, tf.lastHPMax = hp, hpMax
+	local hp, hpMax, heal, abosrb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+	tf.lastHP, tf.lastHPMax, tf.lastHeal, tf.lastAbsorb = hp, hpMax, heal, abosrb
 	tf.lastUpdate = GetTime()
 
 	--tf.healthBar:SetMinMaxValues(0, hpMax)
@@ -945,12 +944,15 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	end
 	--tf.healthBar:SetAlpha(1)
 	-- end division by 0 check
-	if (hpMax > 0) then 
+	if (hpMax > 0) then
 		tf.healthBar.text:SetFormattedText(percD, 100 * percent)	-- XPerl_Percent[floor(100 * hp / hpMax)])
 		tf.healthBar:SetMinMaxValues(0, hpMax)
 		tf.healthBar:SetValue(hp)
 	end
 	tf.healthBar.text:Show()
+
+	XPerl_Party_TargetUpdateAbsorbPrediction(self.targetFrame)
+	XPerl_Party_TargetUpdateHealPrediction(self.targetFrame)
 
 	if (UnitIsDeadOrGhost(self.targetid)) then
 		tf.healthBar:SetStatusBarColor(0.5, 0.5, 0.5, 1)
@@ -973,13 +975,31 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	else
 		tf.combatIcon:Hide()
 	end
-	
+
 	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.targetid) and "FFA") or (UnitIsPVP(self.targetid) and (UnitFactionGroup(self.targetid) ~= "Neutral") and UnitFactionGroup(self.targetid)))
 	if (pvp) then
 		tf.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		tf.pvpIcon:Show()
 	else
 		tf.pvpIcon:Hide()
+	end
+end
+
+-- XPerl_Party_TargetUpdateHealPrediction
+function XPerl_Party_TargetUpdateHealPrediction(self)
+	if pconf.healprediction then
+		XPerl_SetExpectedHealth(self)
+	else
+		self.expectedHealth:Hide()
+	end
+end
+
+-- XPerl_Party_TargetUpdateAbsorbPrediction
+function XPerl_Party_TargetUpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.expectedAbsorbs:Hide()
 	end
 end
 
@@ -1030,9 +1050,9 @@ function XPerl_Party_OnUpdate(self, elapsed)
 			XPerl_Party_UpdatePlayerFlags(self)
 		end
 
-		if (pconf.target.large and self.targetFrame:IsVisible()) then
-			local hp, hpMax = UnitHealth(self.targetid), UnitHealthMax(self.targetid)
-			if (hp ~= self.targetFrame.lastHP or hpMax ~= self.targetFrame.lastHPMax or GetTime() > self.targetFrame.lastUpdate + 5000) then
+		if (pconf.target.large and self.targetFrame:IsShown()) then
+			local hp, hpMax, heal, absorb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+			if (hp ~= self.targetFrame.lastHP or hpMax ~= self.targetFrame.lastHPMax or heal ~= self.targetFrame.lastHeal or absorb ~= self.targetFrame.lastAbsorb or GetTime() > self.targetFrame.lastUpdate + 5000) then
 				XPerl_Party_TargetUpdateHealth(self)
 			end
 		end
@@ -1136,7 +1156,7 @@ end
 -- PARTY_LEADER_CHANGED
 -- fix by Sontix this portion of code was never called becuse the even PARTY_LEDAER_CHANGED is not registered
 -- because Xperl rearrange the party members order to keep always on top the leader, UpdateDisplay() was need
--- to not mess-up party frame 
+-- to not mess-up party frame
 -- (in that function the Leader Icon is updated, so there's no need to listen to this event)
 -- function XPerl_Party_Events:PARTY_LEADER_CHANGED()
 --	for i,frame in pairs(PartyFrames) do
@@ -1204,7 +1224,7 @@ XPerl_Party_Events.READY_CHECK_FINISHED = XPerl_Party_Events.READY_CHECK
 -- UNIT_COMBAT
 function XPerl_Party_Events:UNIT_COMBAT(...)
 	local action, descriptor, damage, damageType = ...
-	
+
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 	end
@@ -1214,13 +1234,6 @@ function XPerl_Party_Events:UNIT_COMBAT(...)
 		XPerl_Party_CombatFlash(self, 0, true, true)
 	elseif (damage and damage > 0) then
 		XPerl_Party_CombatFlash(self, 0, true)
-	end
-end
-
--- UNIT_SPELLMISS
-function XPerl_Party_Events:UNIT_SPELLMISS(...)
-	if (pconf.hitIndicator and pconf.portrait) then
-		CombatFeedback_OnSpellMissEvent(self, ...)
 	end
 end
 
@@ -1284,7 +1297,7 @@ end
 -- PLAYER_ENTERING_WORLD
 function XPerl_Party_Events:PLAYER_ENTERING_WORLD()
 	UIParent:UnregisterEvent("GROUP_ROSTER_UPDATE") -- Re-do, in case
-	
+
 	if (not startupDone) then
 		startupDone = true
 		XPerl_ProtectedCall(XPerl_Party_SetInitialAttributes)
@@ -1396,18 +1409,6 @@ XPerl_Party_Events.UNIT_FLAGS = XPerl_Party_Events.UNIT_FACTION
 function XPerl_Party_Events:UNIT_TARGET()
 	XPerl_Party_UpdateTarget(self)
 	updatePartyThreat(true)
-end
-
-function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
-	if (pconf.healprediction and unit == self.partyid) then
-		XPerl_SetExpectedHealth(self)
-	end
-end
-
-function XPerl_Party_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
-	if (pconf.absorbs and unit == self.partyid) then
-		XPerl_SetExpectedAbsorbs(self)
-	end
 end
 
 function XPerl_Party_Events:UNIT_HEAL_PREDICTION(unit)
@@ -1723,19 +1724,19 @@ function XPerl_Party_SetInitialAttributes()
 
 	--[[partyHeader.initialConfigFunction = function(self)
 		-- This is the only place we're allowed to set attributes whilst in combat
-	
+
 		self:SetAttribute("*type1", "target")
 		self:SetAttribute("type2", "menu")
 		self.menu = XPerl_ShowGenericMenu
 		XPerl_RegisterClickCastFrame(self)
-	
+
 		-- Does AllowAttributeChange work for children?
 		self.nameFrame:SetAttribute("useparent-unit", true)
 		self.nameFrame:SetAttribute("*type1", "target")
 		self.nameFrame:SetAttribute("type2", "menu")
 		self.nameFrame.menu = XPerl_ShowGenericMenu
 		XPerl_RegisterClickCastFrame(self.nameFrame)
-	
+
 		--self:SetAttribute("initial-height", CalcHeight())
 		--self:SetAttribute("initial-width", CalcWidth())
 	end]]
@@ -1855,11 +1856,15 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if (not pconf.healprediction) then
+	if pconf.healprediction then
+		XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
+	else
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
 	end
 
-	if (not pconf.absorbs) then
+	if pconf.absorbs then
+		XPerl_Party_Events_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	else
 		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 	end
 

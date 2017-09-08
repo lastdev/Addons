@@ -213,7 +213,7 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_MiscItem15          = GetItemInfo(128482); --"Empowered Augment Rune"
   SMARTBUFF_MiscItem16          = GetItemInfo(122298); --"Bodyguard Miniaturization Device"
   SMARTBUFF_MiscItem17          = GetItemInfo(141652); --"Mana Divining Stone"
-  SMARTBUFF_MiscItem18           = GetItemInfo(147707);  --"Repurposed Fel Focuser"
+  SMARTBUFF_MiscItem18          = GetItemInfo(147707);  --"Repurposed Fel Focuser"
 
   SMARTBUFF_FLASK1              = GetItemInfo(46377);  --"Flask of Endless Rage"
   SMARTBUFF_FLASK2              = GetItemInfo(46376);  --"Flask of the Frost Wyrm"
@@ -943,8 +943,8 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_MiscItem6, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem6},
     {SMARTBUFF_MiscItem7, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem7},
     {SMARTBUFF_MiscItem8, 5, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem8},
-    {SMARTBUFF_MiscItem11, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_MiscItem11, S.LinkFlaskMoP},
-    {SMARTBUFF_MiscItem18, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_MiscItem18, S.LinkFlaskMoP},
+    {SMARTBUFF_MiscItem11, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_MiscItem11, S.LinkFlaskWoD},
+    {SMARTBUFF_MiscItem18, 60, SMARTBUFF_CONST_SCROLL, nil, 242551, S.LinkFlaskLegion},
     {SMARTBUFF_SOAGILITY9, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},
     {SMARTBUFF_SOAGILITY8, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},
     {SMARTBUFF_SOAGILITY7, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},

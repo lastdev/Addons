@@ -14,3 +14,4 @@ L["TRACK_TURNINS_DISABLED"] = "The quest history will remain in its current stat
 L["TRACK_TURNINS_ENABLED"] = "Turned-in quests are saved into the history, to make sure it remains constantly valid."
 L["TRACK_TURNINS_LABEL"] = "Track Quest Turn-ins"
 L["TRACK_TURNINS_TITLE"] = "Track Quest Turn-ins"
+

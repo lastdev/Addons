@@ -77,7 +77,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoRecipeRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.RecipeRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

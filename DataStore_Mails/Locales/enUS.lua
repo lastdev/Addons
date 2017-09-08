@@ -27,3 +27,4 @@ L["SCAN_MAIL_BODY_ENABLED"] = "The body of each mail will be read when the mailb
 L["SCAN_MAIL_BODY_LABEL"] = "Scan mail body (marks it as read)"
 L["SCAN_MAIL_BODY_TITLE"] = "Scan Mail Body"
 L["Warn when mail expires in less days than this value"] = true
+

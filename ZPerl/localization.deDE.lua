@@ -22,7 +22,7 @@ if (GetLocale() == "deDE") then
 	XPERL_MINIMENU_RAIDSORT 		= "Sortierung des Schlachtzugs"
 	XPERL_MINIMENU_RAIDSORT_GROUP 	= "Nach Gruppe sortieren"
 	XPERL_MINIMENU_RAIDSORT_CLASS 	= "Nach Klasse sortieren"
-	
+
 	XPERL_TYPE_NOT_SPECIFIED		= "Nicht spezifiziert"
 	XPERL_TYPE_PET					= PET			-- "Begleiter"
 	XPERL_TYPE_BOSS 				= BOSS
@@ -119,4 +119,5 @@ if (GetLocale() == "deDE") then
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF   	= "Ohne Buff: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING		= "%s's %s schwindet in %s"	-- Name, buff name, time to expire
 
+	XPERL_NEW_VERSION_DETECTED			= "Neue Version erkannt:"
 end

@@ -42,8 +42,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoSpellButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.SpellButton", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				if self.spellID then 

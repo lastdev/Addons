@@ -272,3 +272,8 @@ GTFO.SpellID["236338"] = {
   --desc = "Boiling Tar (Tar Tyrant - Un'goro Madness)";
   sound = 1;
 };
+
+GTFO.SpellID["244954"] = {
+  --desc = "Wailing Wall (Death Metal Knight - Darkmoon Faire)";
+  sound = 3;
+};

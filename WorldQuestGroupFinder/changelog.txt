@@ -1,4 +1,28 @@
-﻿0.25.4 (26/05/2017)
+﻿0.27
+- New TOC for 7.3
+- Localizations updated
+
+0.26.3 (25/06/2017)
+- Fix for error at login 
+- Localizations updated
+
+0.26.2 (22/06/2017)
+- The "Relist" frame will no longer appear after creating a new group
+- The "cannot be accomplished in a group" false error should no longer occur (need feedback!)
+- Localizations updated
+
+0.26.1 (17/06/2017)
+- The WQGF frame now appears again when someone leaves the party and the group is no longer listed to allow the leader to relist the group
+- The "Too many players" pop-up will no longer appear
+- Localizations updated
+- Known issue: raid quests get delisted when 5 players are in the group. This is due to a change in 7.2.5 and it's not caused by WQGF.
+
+0.26 (14/06/2017)
+- Fixed for 7.2.5
+- Removed debug output when creating a new group
+- Updated blacklist
+
+0.25.4 (26/05/2017)
 - The hotkey now makes the WQGF frame appear for the latest visited world quest
 - The hotkey now also removes the invite confirmation. No more clicking!
 - World boss WQ groups should now convert to raid

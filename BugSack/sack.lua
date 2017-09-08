@@ -185,10 +185,10 @@ local function createBugSack()
 	window:SetScript("OnDragStart", window.StartMoving)
 	window:SetScript("OnDragStop", window.StopMovingOrSizing)
 	window:SetScript("OnShow", function()
-		PlaySound("igQuestLogOpen")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 	window:SetScript("OnHide", function()
-		PlaySound("igQuestLogClose")
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		currentErrorObject = nil
 		currentSackSession = nil
 		currentSackContents = nil

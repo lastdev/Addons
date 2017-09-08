@@ -91,7 +91,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoAchievementRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.AchievementRow")
 			</OnLoad>
 		</Scripts>
 	</Button>

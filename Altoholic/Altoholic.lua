@@ -337,10 +337,15 @@ function addon:OnEnable()
 	local key = format("%s.%s.%s", THIS_ACCOUNT, realm, player)
 	addon.ThisCharacter = addon.db.global.Characters[key]
 
-	addon:RestoreOptionsToUI()
-
-	Minimap.AltoholicButton:Init()
+	-- Do not move this line, minimap initialization must happen AFTER OnEnable, otherwise options are not yet ready
+	if addon:GetOption("UI.Minimap.ShowIcon") then
+		Minimap.AltoholicButton:Move()
+		Minimap.AltoholicButton:Show()
+	else
+		Minimap.AltoholicButton:Hide()
+	end
 	
+	addon:RestoreOptionsToUI()
 	addon:RegisterEvent("CHAT_MSG_LOOT", OnChatMsgLoot)
 	
 	BuildUnsafeItemList()
@@ -507,6 +512,7 @@ function addon:GetSpellIDFromRecipeLink(link)
 	return LCI:GetRecipeLearnedSpell(recipeID)
 end
 
+-- copied to formatter service
 function addon:GetMoneyString(copper, color, noTexture)
 	copper = copper or 0
 	color = color or colors.gold
@@ -528,6 +534,7 @@ function addon:GetMoneyString(copper, color, noTexture)
 	return format("%s %s %s", gold, silver, copper)
 end
 
+-- copied to formatter service
 function addon:GetTimeString(seconds)
 	seconds = seconds or 0
 
@@ -541,14 +548,7 @@ function addon:GetTimeString(seconds)
 	return format("%s%s|rd %s%s|rh %s%s|rm", colors.white, days, colors.white, hours, colors.white, minutes)
 end
 
-function addon:GetFactionColour(faction)
-	if faction == "Alliance" then
-		return "|cFF2459FF"
-	else
-		return colors.red
-	end
-end
-
+-- copied to formatter service
 function addon:FormatDelay(timeStamp)
 	-- timeStamp = value when time() was last called for a given variable (ex: last time the mailbox was checked)
 	if not timeStamp then
@@ -621,28 +621,15 @@ end
 
 function addon:ListCharsOnQuest(questName, player, tooltip)
 	if not questName then return nil end
-	
-	local DS = DataStore
-	local CharsOnQuest = {}
-	for characterName, character in pairs(DS:GetCharacters(realm)) do
-		if characterName ~= player then
-			local questLogSize = DS:GetQuestLogSize(character) or 0
-			for i = 1, questLogSize do
-				local isHeader, link = DS:GetQuestLogInfo(character, i)
-				if not isHeader then
-					local altQuestName = DS:GetQuestInfo(link)
-					if altQuestName == questName then		-- same quest found ?
-						table.insert(CharsOnQuest, DS:GetColoredCharacterName(character))	
-					end
-				end
-			end
+
+	local charsOnQuest = DataStore:GetCharactersOnQuest(questName, player)
+	if #charsOnQuest > 0 then
+		tooltip:AddLine(" ",1,1,1)
+		tooltip:AddLine(format("%s%s", colors.green, L["Are also on this quest:"]))
+		
+		for _, character in pairs(charsOnQuest) do
+			tooltip:AddLine(DataStore:GetColoredCharacterName(character))
 		end
-	end
-	
-	if #CharsOnQuest > 0 then
-		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(colors.green .. L["Are also on this quest:"],1,1,1);
-		tooltip:AddLine(table.concat(CharsOnQuest, "\n"),1,1,1);
 	end
 end
 

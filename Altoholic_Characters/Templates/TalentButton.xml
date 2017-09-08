@@ -31,8 +31,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoTalentButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.TalentButton", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				if not self.talentID then return end

@@ -10,3 +10,4 @@ L["TRACK_TURNINS_DISABLED"] = "任務繳交將繼續留在目前的狀態，無�
 L["TRACK_TURNINS_ENABLED"] = "已繳交的任務被保存到任務紀錄，以確保它仍然不斷地有效."
 L["TRACK_TURNINS_LABEL"] = "追踪任務繳交"
 L["TRACK_TURNINS_TITLE"] = "追踪繳交"
+

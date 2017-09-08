@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1425 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1435 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -358,7 +358,7 @@ local AbsorbSpellDuration = {
 	[31002]		= 300, -- Pendant of the Null Rune
 	[30999]		= 300, -- Pendant of Withering
 	[30994]		= 300, -- Pendant of Thawing
-	[31000]		= 300, -- 
+	[31000]		= 300, --
 	[23506]		= 20, -- Arena Grand Master Usage (Aura of Protection)
 	[12561]		= 60, -- Goblin Construction Helmet usage
 	[31771]		= 20, -- Runed Fungalcap usage
@@ -376,7 +376,7 @@ local AbsorbSpellDuration = {
 	[26467]		= 30, -- Scarab Brooch proc
 	[27539]		= 6, -- Thick Obsidian Breatplate proc
 	[28810]		= 30, -- Faith Set Proc Armor of Faith
-	[54808]		= 12, -- Noise Machine proc Sonic Shield 
+	[54808]		= 12, -- Noise Machine proc Sonic Shield
 	[55019]		= 12, -- Sonic Shield (one of these too ought to be wrong)
 	[64411]		= 15, -- Blessing of the Ancient (Val'anyr Hammer of Ancient Kings equip effect)
 	[64413]		= 8, -- Val'anyr, Hammer of Ancient Kings proc Protection of Ancient Kings
@@ -405,7 +405,7 @@ end
 
 -- Base Events: SWING‚ These events relate to melee swings, commonly called‚ White Damage. RANGE‚ These events relate to hunters shooting their bow or a warlock shooting their wand. SPELL‚ These events relate to spells and abilities. SPELL_CAST‚ These events relate to spells starting and failing. SPELL_AURA‚ These events relate to buffs and debuffs. SPELL_PERIODIC‚ These events relate to HoT, DoTs and similar effects. DAMAGE_SHIELD‚ These events relate to damage shields, such as Thorns ENCHANT‚ These events relate to temporary and permanent item buffs. ENVIRONMENTAL‚ This is any damage done by the world. Fires, Lava, Falling, etc.
 -- Suffixes: _DAMAGE‚ If the event resulted in damage, here it is. _MISSED - If the event resulted in failure, such as missing, resisting or being blocked. _HEAL‚ If the event resulted in a heal. _ENERGIZE‚ If the event resulted in a power restoration. _LEECH‚ If the event transferred health or power. _DRAIN‚ If the event reduces power, but did not transfer it.
--- Special Events: PARTY_KILL‚ Fired when you or a party member kills something. UNIT_DIED‚ Fired when any nearby unit dies. 
+-- Special Events: PARTY_KILL‚ Fired when you or a party member kills something. UNIT_DIED‚ Fired when any nearby unit dies.
 
 local SPELLSCHOOL_PHYSICAL = 1
 local SPELLSCHOOL_HOLY = 2
@@ -905,7 +905,7 @@ function Recount:SpellCastFailed(timestamp, eventtype, srcGUID, srcName, srcFlag
 end
 
 function Recount:EnchantAppliedRemoved(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellName, itemId, itemName)
-	-- Not sure yet how to handle this, 
+	-- Not sure yet how to handle this,
 end
 
 function Recount:PartyKill(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags)
@@ -1084,7 +1084,7 @@ function Recount:CheckRetentionFromFlags(nameFlags, name, nameGUID)
 			return true
 		end
 	elseif bit_band(nameFlags, COMBATLOG_OBJECT_CONTROL_NPC) ~= 0 then
-		local isBoss = Recount.IsBoss(nameGUID) 
+		local isBoss = Recount.IsBoss(nameGUID)
 		if not isBoss and (filters["Trivial"] or filters["Nontrivial"]) then
 			return true
 		elseif isBoss and filters["Boss"] then
@@ -1099,7 +1099,7 @@ Recount.dstRetention = false
 local srcRetention = Recount.srcRetention
 local dstRetention = Recount.dstRetention
 
-function Recount:CombatLogEvent(_, timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function Recount:COMBAT_LOG_EVENT_UNFILTERED(timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if not Recount.db.profile.GlobalDataCollect or not Recount.CurrentDataCollect then
 		return
 	end
@@ -1111,11 +1111,11 @@ function Recount:CombatLogEvent(_, timestamp, eventtype, hideCaster, srcGUID, sr
 	-- Pre-4.2 CLEU compat start
 	--[[if TOC < 40100 and hideCaster ~= dummyTable then
 		-- Insert a dummy for the new argument introduced in 4.1 and perform a tail call
-		return self:CombatLogEvent(_, timestamp, eventtype, dummyTable, hideCaster, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+		return self:COMBAT_LOG_EVENT_UNFILTERED(timestamp, eventtype, dummyTable, hideCaster, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	elseif TOC < 40200 and TOC > 40000 and not loopprevent then
 		loopprevent = true -- Prevent infinite recursion...
 		-- Also make it compatible with 4.1 by dropping the raid flags that don't exist in it.
-		return self:CombatLogEvent(_, timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+		return self:COMBAT_LOG_EVENT_UNFILTERED(timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	end]]
 	-- Pre-4.2 CLEU compat end
 
@@ -1342,7 +1342,7 @@ function Recount:AddAmount(who, datatype, amount)
 	--end
 end
 
---Meant for like elemental data and this type isn't expected to be initialized 
+--Meant for like elemental data and this type isn't expected to be initialized
 function Recount:AddAmount2(who, datatype, secondary, amount)
 	if not who then
 		return
@@ -1790,7 +1790,7 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 		damage = damage - absorbed
 	end]]
 
-	--Before any further processing need to check if we are going to be placed in combat or in combat 
+	--Before any further processing need to check if we are going to be placed in combat or in combat
 	if not Recount.InCombat and Recount.db.profile.RecordCombatOnly then
 		if (not FriendlyFire) and (Recount:InGroup(srcFlags) or Recount:InGroup(dstFlags)) then
 			Recount:PutInCombat()
@@ -2150,7 +2150,7 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 			Recount:AddCurrentEvent(victimData, "HEAL", true, amount, Recount.cleventtext)
 		end
 
-		--Before any further processing need to check if we are in combat 
+		--Before any further processing need to check if we are in combat
 		if not Recount.InCombat and Recount.db.profile.RecordCombatOnly then
 			return
 		end
@@ -2295,7 +2295,7 @@ function Recount:AddDeathData(source, victim, skill, srcGUID, srcFlags, dstGUID,
 	if not Recount.db.profile.Modules.Deaths then
 		return
 	end
-	--Before any further processing need to check if we are in combat 
+	--Before any further processing need to check if we are in combat
 
 	--Recount:DPrint("Add Death: "..victim)
 

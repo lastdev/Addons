@@ -9,3 +9,4 @@ L["EXPIRY_CHECK_TITLE"] = "우편 만료 검사"
 L["SCAN_MAIL_BODY_LABEL"] = "우편 내용을 검사 (읽은 것으로 표시)"
 L["SCAN_MAIL_BODY_TITLE"] = "우편 내용 검사"
 L["Warn when mail expires in less days than this value"] = "우편이 이 날짜 안에 만료되면 경고"
+

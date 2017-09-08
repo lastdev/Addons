@@ -52,59 +52,54 @@ local function BuildView()
 	end
 end
 
-local function OnGarrisonMissionListUpdate()
-	if AltoholicFrameGarrisonMissions:IsVisible() then
-		AltoholicFrameGarrisonMissions:Update()
-	end
-end
-
-local function _Init(frame)
-	addon:RegisterEvent("GARRISON_MISSION_LIST_UPDATE", OnGarrisonMissionListUpdate)
-end
-
-local function _Update(frame)
-
-	local character = addon.Tabs.Characters:GetAltKey()
-	local mode = addon:GetOption("UI.Tabs.Characters.GarrisonMissions")
-	local api = modes[mode]
-	
-	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character),
-		format(api.GetName(), api.GetNumMissions(character))))
-
-	BuildView()
-
-	local scrollFrame = frame.ScrollFrame
-	local numRows = scrollFrame.numRows
-	local offset = scrollFrame:GetOffset()
-	
-	for rowIndex = 1, numRows do
-		local rowFrame = scrollFrame:GetRow(rowIndex)
-		local line = rowIndex + offset
-	
-		rowFrame:Hide()
-		
-		if line <= #view then
-			local missionID = view[line]
-			local info = DataStore:GetMissionInfo(missionID)
-			local followers, remainingTime, successChance = DataStore:GetActiveMissionInfo(character, missionID)
-			
-			rowFrame:SetName(missionID, info.durationSeconds)
-			rowFrame:SetType(info.typeAtlas)
-			rowFrame:SetLevel(info.level, info.iLevel)
-			rowFrame:SetRemainingTime(remainingTime)
-			rowFrame:SetSuccessChance(successChance)
-			rowFrame:SetCost(info.cost)
-			rowFrame:SetFollowers(followers, missionID, character)
-			rowFrame:SetRewards(info.rewards)
-			rowFrame:Show()
+addon:Controller("AltoholicUI.GarrisonMissionsPanel", {
+	OnBind = function(frame)
+		local function OnGarrisonMissionListUpdate()
+			if frame:IsVisible() then
+				frame:Update()
+			end
 		end
-	end
 	
-	scrollFrame:Update(#view)
-	frame:Show()
-end
+		addon:RegisterEvent("GARRISON_MISSION_LIST_UPDATE", OnGarrisonMissionListUpdate)
+	end,
+	Update = function(frame)
+		local character = addon.Tabs.Characters:GetAltKey()
+		local mode = addon:GetOption("UI.Tabs.Characters.GarrisonMissions")
+		local api = modes[mode]
+		
+		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character),
+			format(api.GetName(), api.GetNumMissions(character))))
 
-addon:RegisterClassExtensions("AltoGarrisonMissionsPanel", {
-	Init = _Init,
-	Update = _Update,
+		BuildView()
+
+		local scrollFrame = frame.ScrollFrame
+		local numRows = scrollFrame.numRows
+		local offset = scrollFrame:GetOffset()
+		
+		for rowIndex = 1, numRows do
+			local rowFrame = scrollFrame:GetRow(rowIndex)
+			local line = rowIndex + offset
+		
+			rowFrame:Hide()
+			
+			if line <= #view then
+				local missionID = view[line]
+				local info = DataStore:GetMissionInfo(missionID)
+				local followers, remainingTime, successChance = DataStore:GetActiveMissionInfo(character, missionID)
+				
+				rowFrame:SetName(missionID, info.durationSeconds)
+				rowFrame:SetType(info.typeAtlas)
+				rowFrame:SetLevel(info.level, info.iLevel)
+				rowFrame:SetRemainingTime(remainingTime)
+				rowFrame:SetSuccessChance(successChance)
+				rowFrame:SetCost(info.cost)
+				rowFrame:SetFollowers(followers, missionID, character)
+				rowFrame:SetRewards(info.rewards)
+				rowFrame:Show()
+			end
+		end
+		
+		scrollFrame:Update(#view)
+		frame:Show()
+	end,
 })

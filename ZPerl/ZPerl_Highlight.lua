@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1021 $")
+end, "$Revision: 1053 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -326,7 +326,7 @@ function xpHigh:SetHighlight(frame, guid)
 			local r1, g1, b1, r2, g2, b2, t1
 			for k, v in pairs(r) do
 				if k == "TARGET" then
-					if frame == XPerl_Player or frame == XPerl_Player_Pet or frame == XPerl_Target or frame == XPerl_TargetTarget or frame == XPerl_TargetTargetTarget or frame == XPerl_Focus or frame == XPerl_FocusTarget then
+					if frame == XPerl_Player or frame == XPerl_Player_Pet or frame == XPerl_Target or frame == XPerl_TargetTarget or frame == XPerl_TargetTargetTarget or frame == XPerl_Focus or frame == XPerl_FocusTarget or frame == XPerl_partypet1 or frame == XPerl_partypet2 or frame == XPerl_partypet3 or frame == XPerl_partypet4 or frame == XPerl_partypet5 then
 						return
 					end
 				end
@@ -437,7 +437,7 @@ local function hotBarOnUpdate(self, elapsed)
 			self:Hide()
 			return
 		end
-	
+
 		self:SetValue(val)
 	end
 
@@ -1097,7 +1097,7 @@ local function sparkOnUpdate(self, elapsed)
 		local x, y = self:GetCenter()
 		x = x * self:GetEffectiveScale()
 		y = y * self:GetEffectiveScale()
-    
+
 		y = y + elapsed * self.speed
 
 		self:ClearAllPoints()
@@ -1247,7 +1247,7 @@ function xpHigh:ShowHotSparks(frame, show)
 			if (not h) then
 				return
 			end
-	
+
 			self:SparkleArea(h, 0.4, "evaporate", 0.1)
 		end
 	end
@@ -1372,11 +1372,11 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 				if (self:HasEffect(dstGUID, "HOT") and conf.highlight.extraSparkles) then
 					self:Add(dstGUID, "HOTSPARKS", 0.1)
 				elseif (not self:HasEffect(dstGUID, "HOT")) then
-					-- Spikeles: Our HOT has healed someone but there is no HOT notification, 
+					-- Spikeles: Our HOT has healed someone but there is no HOT notification,
 					-- so, add our flashy. BUT if there is a HOT, then there is a buff on them, and that HOT has an expiration time, so lets grab
 					-- it and use it as the time left for the flashy otherwise we can't be sure of the exact time of the spell left when this
 					-- was triggered
-					
+
 					-- Find our HOT and get the duration left for it, then add a flashy!
 					local name, rank, tex, count, buffType, dur, endTime, isMine
 					local checkName = dstName;
@@ -1392,7 +1392,7 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 					end
 
 					name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(checkName, spellName, "", "PLAYER")
-					
+
 					if (isMine) then
 						-- Figure out how many seconds are left in the HOT so we can ensure the flashy only stays up as long as the HOT is active
 						local secondsLeft = endTime - GetTime();

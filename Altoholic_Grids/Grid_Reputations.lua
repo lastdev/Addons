@@ -1,13 +1,11 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
+local icons = addon.Icons
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 -- *** Reputations ***
-local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
-local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
-
 local Factions = {
 	-- Factions reference table, based on http://www.wowwiki.com/Factions
 	{	-- [1]
@@ -230,6 +228,8 @@ local Factions = {
 			{ name = DataStore:GetFactionName(1859), icon = "achievements_zone_suramar" },			-- The Nightfallen
 			{ name = DataStore:GetFactionName(1894), icon = "achievements_zone_brokenshore" },			-- The Wardens
 			{ name = DataStore:GetFactionName(2045), icon = "achievement_faction_legionfall" },			-- Armies of Legionfall
+			{ name = DataStore:GetFactionName(2165), icon = "achievement_admiral_of_the_light" },			-- Army of the Light
+			{ name = DataStore:GetFactionName(2170), icon = "achievement_master_of_argussian_reach" },			-- Argussian Reach
 		},		
 	},	
 	{	-- [8]
@@ -483,7 +483,7 @@ local callbacks = {
 			if status and rate then 
 				local text
 				if status == FACTION_STANDING_LABEL8 then
-					text = ICON_READY
+					text = icons.ready
 				else
 					button.Background:SetDesaturated(true)
 					button.Name:SetFontObject("NumberFontNormalSmall")
@@ -505,7 +505,7 @@ local callbacks = {
 				button.Name:SetText(color..text)
 			else
 				button.Background:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
-				button.Name:SetText(ICON_NOTREADY)
+				button.Name:SetText(icons.notReady)
 				button:SetID(0)
 				button.key = nil
 			end
@@ -535,7 +535,7 @@ local callbacks = {
 			end
 			
 			AltoTooltip:AddLine(" ",1,1,1)
-			AltoTooltip:AddLine(format("%s = %s", ICON_NOTREADY, UNKNOWN), 0.8, 0.13, 0.13)
+			AltoTooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL1, 0.8, 0.13, 0.13)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL2, 1.0, 0.0, 0.0)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL3, 0.93, 0.4, 0.13)
@@ -543,7 +543,7 @@ local callbacks = {
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
-			AltoTooltip:AddLine(format("%s = %s", ICON_READY, FACTION_STANDING_LABEL8), 1, 1, 1)
+			AltoTooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
 			
 			AltoTooltip:AddLine(" ",1,1,1)
 			AltoTooltip:AddLine(colors.green .. L["Shift+Left click to link"])

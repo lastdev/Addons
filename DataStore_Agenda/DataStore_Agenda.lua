@@ -28,6 +28,7 @@ local AddonDB_Defaults = {
 				DungeonIDs = {},		-- raid timers
 				ItemCooldowns = {},	-- mysterious egg, disgusting jar, etc..
 				LFGDungeons = {},		-- info about LFG dungeons/raids
+				ChallengeMode = {},	-- info about mythic+
 								
 				Notes = {},
 				Tasks = {},
@@ -206,6 +207,19 @@ local function ScanCalendar()
 	addon:SendMessage("DATASTORE_CALENDAR_SCANNED")
 end
 
+local function ScanChallengeModeMaps()
+	local challengeMode = addon.ThisCharacter.ChallengeMode
+	local maps = C_ChallengeMode.GetMapTable()
+
+	for _, dungeonID in pairs(maps) do
+   	local _, weeklyBestTime, weeklyBestLevel = C_ChallengeMode.GetMapPlayerStats(dungeonID)
+
+		challengeMode.weeklyBestTime = weeklyBestTime
+		challengeMode.weeklyBestLevel = weeklyBestLevel
+	end
+end
+
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanContacts()
@@ -278,6 +292,11 @@ local function OnChatMsgLoot(event, arg)
 		end
 	end
 end
+
+local function OnChallengeModeMapsUpdate(event)
+	ScanChallengeModeMaps()
+end
+
 
 -- ** Mixins **
 
@@ -609,6 +628,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("ENCOUNTER_END", OnEncounterEnd)
 		
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
+	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
 
 	ClearExpiredDungeons()
 	

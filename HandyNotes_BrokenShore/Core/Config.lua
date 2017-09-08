@@ -1,4 +1,4 @@
--- $Id: Config.lua 37 2017-05-02 05:48:52Z arith $
+-- $Id: Config.lua 55 2017-05-17 11:57:08Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -95,11 +95,23 @@ config.options = {
 					desc = L["Show Ancient Shrine's locations."],
 					order = 14,
 				},
-				show_shrine = {
+				show_infernalCores = {
 					type = "toggle",
 					name = L["Smoldering Infernal Core"],
 					desc = L["Show Smoldering Infernal Core's locations."],
 					order = 15,
+				},
+				show_tamer = {
+					type = "toggle",
+					name = SHOW_PET_BATTLES_ON_MAP_TEXT,
+					desc = L["Show Master Pet Tamer's location."],
+					order = 16,
+				},
+				show_netherPortals = {
+					type = "toggle",
+					name = L["Unstable Nether Portal"],
+					desc = L["Show Unstable Nether Portal's location."],
+					order = 17,
 				},
 				show_others = {
 					type = "toggle",
@@ -132,6 +144,12 @@ config.options = {
 					name = L["Hide looted mobs"],
 					desc = L["Hide the rare elite mobs which have been killed and looted today."],
 					order = 15,
+				},
+				show_coords = {
+					type = "toggle",
+					name = L["Show coordinate"],
+					desc = L["Show node's coordinate information."],
+					order = 16,
 				},
 				unhide = {
 					type = "execute",

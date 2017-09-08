@@ -1,5 +1,5 @@
 
-Overachiever v0.99.7
+Overachiever v0.99.9
 ==============================
 
 Author: Tuhljin
@@ -107,6 +107,22 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v0.99.9
+- Updated for WoW patch 7.3. (Updated TOC and fixed common errors.)
+- Holiday/Event Toasts: Added option to control the appearance of Miscellaneous toasts (such as raid release days). Disabled by default.
+- Attempt to alleviate lag at startup for some users by stretching out the background work so it is less demanding each tick.
+-- Some users with a high number of achievement points have reported problems with the background task. If the changes introduced in this version do not alleviate the problem, then advanced users can switch back to having the work done all at once on startup by changing the value of the variable THROTTLE_ACHLOOKUP in Overachiever.lua to false. (A better solution is being worked on.)
+- Prevent potential temporary freeze that could occur if the kill-criteria background task is still running and the tooltip for a killable NPC is requested. Previously, the task was forced to completion in that event to ensure the tooltip would accurately display whether the NPC needs to be killed for an achievement. Now, only the data compiled so far is considered when updating the tooltip. (This means tooltips presented may be incomplete for up to several seconds after startup, depending on the achievement, but this seemed preferable to the freeze since it happened regardless of whether the NPC's tooltip ultimately needed an update.)
+
+v0.99.8
+- Updated for WoW patch 7.2.5. (Correct a problem with holiday/event toasts.)
+- To reduce loading times, the process that examines achievement criteria has been removed from startup. It now does its work incrementally, in the background, until its task is complete.
+- The Holiday/Event Toasts options "Do not automatically hide" and "Require click to hide" now default to disabled. (This only affects new installations of the addon. Current users' options are preserved.)
+- The exploration achievement associated with Thunder Totem is now that of its parent zone, Highmountain.
+- Suggestions Tab:
+-- Added suggestions for the Blight Boar concert at the Darkmoon Faire, Black Temple timewalking, and The Deaths of Chromie scenario.
+-- The zone Thunder Totem now shows suggestions from its parent zone, Highmountain.
 
 v0.99.7
 - Holiday/Event Toasts:

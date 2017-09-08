@@ -70,9 +70,8 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoSummaryPaneRow")
+				Altoholic:BindViewToController(self, "AltoholicUI.SummaryPaneRow")
 			</OnLoad>
 		</Scripts>
 	</Button>
-
 </Ui>

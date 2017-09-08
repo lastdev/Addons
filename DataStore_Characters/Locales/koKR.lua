@@ -9,3 +9,4 @@ L["REQUEST_PLAYTIME_DISABLED"] = "플레이 시간은 접속 시 조회되지 �
 L["REQUEST_PLAYTIME_ENABLED"] = "플레이 시간은 접속할 때마다 조회됩니다."
 L["REQUEST_PLAYTIME_TEXT"] = "접속 시 플레이 시간을 요청합니다."
 L["REQUEST_PLAYTIME_TITLE"] = "플레이 시간 요청"
+

@@ -148,8 +148,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGuildBank")
-				self:Init()
+				Altoholic:BindViewToController(self, "AltoholicUI.GuildBank")
 			</OnLoad>
 		</Scripts>
 	</Frame>

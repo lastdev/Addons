@@ -173,6 +173,8 @@ L["Heals"] = "Sanaciones"
 L["Health"] = "Vida"
 L["Hide"] = "Ocultar"
 L["Hide When Not Collecting"] = "Oculto cuando no recolecta"
+--Translation missing 
+-- L["Hide While In Pet Battle"] = "Hide While In Pet Battle"
 L["Hides the main window"] = "Oculta la ventana principal"
 L["Hit"] = "Golpe"
 L["Holy"] = "Sagrado"

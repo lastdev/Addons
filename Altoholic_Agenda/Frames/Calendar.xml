@@ -1,4 +1,5 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="CalendarEventList.lua"></Script>
 	<Script file="Calendar.lua"></Script>
 
 	<Texture name="AltoWeekdayBackgroundTemplate" file="Interface\Calendar\CalendarBackground" virtual="true">
@@ -148,7 +149,7 @@
 				</Frames>
 				<Scripts>
 					<OnLoad>
-						Altoholic:SetClassExtensions(self, "AltoCalendarEventList")
+						Altoholic:BindViewToController(self, "AltoholicUI.CalendarEventList")
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -377,9 +378,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoCalendar")
-				self:Init()
-				self:Update()
+				Altoholic:BindViewToController(self, "AltoholicUI.Calendar")
 			</OnLoad>
 		</Scripts>
 	</Frame>

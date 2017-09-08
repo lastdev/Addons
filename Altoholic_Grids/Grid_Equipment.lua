@@ -395,6 +395,12 @@ local callbacks = {
 					button.IconBorder:SetVertexColor(r, g, b, 0.5)
 					button.IconBorder:Show()
 				end
+				
+				-- This returns a correct iLvl for upgraded items
+				-- There are mistakes though, sometimes for leveling items, it returns an iLvl higher than what is shown in the tooltip (+10, +20)
+				if type(item) == "string" then
+					itemLevel = GetDetailedItemLevelInfo(item)
+				end
 
 				button.Name:SetText(itemLevel)
 			else

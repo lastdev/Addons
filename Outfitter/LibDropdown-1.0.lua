@@ -369,7 +369,7 @@ do
 	local function click(self)
 		if self.OnClick and self.clickable then
 			self.OnClick(self)
-			PlaySound("igMainMenuOptionCheckBoxOn")
+			PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 			self:GetParent():GetRoot():Refresh()
 		end
 	end

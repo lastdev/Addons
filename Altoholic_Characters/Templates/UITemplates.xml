@@ -5,6 +5,7 @@
 	<Include file="GarrisonMissionFollower.xml"/>
 	<Include file="GarrisonMissionReward.xml"/>
 	<Include file="GarrisonMissionRow.xml"/>
+	<Include file="QuestLogRow.xml"/>
 	<Include file="SpellButton.xml"/>
 	<Include file="TalentButton.xml"/>
 	<Include file="TalentRow.xml"/>

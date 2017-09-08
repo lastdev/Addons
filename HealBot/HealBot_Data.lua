@@ -466,6 +466,7 @@ function HealBot_Data_InitVars()
                 [HEALBOT_CULTIVATION]=2,
                 [HEALBOT_INNERVATE]=4,
                 [HEALBOT_ESSENCE_OF_GHANIR]=2,
+				[HEALBOT_FOCUSED_GROWTH]=2,
             },
             ["HUNT"] = {
                 [HEALBOT_MENDPET]=2,
@@ -498,7 +499,8 @@ function HealBot_Data_InitVars()
                 [HEALBOT_BLESSING_OF_SACRIFICE]=2,
                 [HEALBOT_BESTOW_FAITH]=2,
                 [HEALBOT_BEACON_OF_VIRTUE]=2,
-                [HEALBOT_TYRS_DELIVERANCE]=2,	          
+                [HEALBOT_TYRS_DELIVERANCE]=2,
+				[HEALBOT_SACRED_DAWN]=2,                     				
             },
             ["PRIE"] = {
                 [HEALBOT_GUARDIAN_SPIRIT]=2,
@@ -538,6 +540,8 @@ function HealBot_Data_InitVars()
                 [HEALBOT_ANGELIC_FEATHER]=2,
                 [HEALBOT_ALMAIESH_THE_CORD_OF_HOPE]=2,
                 [HEALBOT_VESTMANTS_OF_DISCIPLINE]=2,
+                [HEALBOT_RAMMALS_ULTERIOR_MOTIVE]=2,
+				[HEALBOT_SPIRIT_OF_REDEMPTION]=2,
             },
             ["ROGU"] = {
                 [HEALBOT_VANISH]=2,
@@ -553,6 +557,8 @@ function HealBot_Data_InitVars()
                 [HEALBOT_UNLEASH_LIFE]=2,
                 [HEALBOT_ASTRAL_SHIFT]=2,
                 [HEALBOT_ELEMENTAL_MASTERY]=2,
+                [HEALBOT_FLAMETONGUE]=2,
+                [HEALBOT_FROSTBRAND]=2,
                 [HEALBOT_HEALING_RAIN]=2,
                 [HEALBOT_SPIRITWALKERS_GRACE]=2,
                 --WoD Added
@@ -610,6 +616,14 @@ function HealBot_Data_InitVars()
                 [HEALBOT_SHROUD_OF_THE_NAGLFAR]=2,
                 [HEALBOT_SPIRIT_FRAGMENT]=2,
                 [HEALBOT_NORGANNONS_FORESIGHT]=2,
+                [HEALBOT_VELENS_FUTURE_SIGHT]=2,
+                [HEALBOT_SEPHUZS_SECRET]=2,
+                [HEALBOT_DELICIOUS_CAKE]=2,
+                [HEALBOT_GUIDING_HAND]=2,
+                [HEALBOT_FRUITFUL_MACHINATIONS]=2,
+                [HEALBOT_OCEANS_EMBRACE]=2,
+                --[HEALBOT_AOF_INFUSION_OF_LIGHT]=2,
+				[HEALBOT_CONCORDANCE_OF_THE_LEGIONFALL]=2,
             },
         },
     };

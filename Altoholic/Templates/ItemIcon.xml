@@ -31,18 +31,14 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoItemIcon")
-			
-				self:SetIconSize(self.iconWidth, self.iconHeight)
---				self:SetIcon(self.iconFile)
-				self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+				Altoholic:BindViewToController(self, "AltoholicUI.ItemIcon", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				self:Item_OnEnter()
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
+				BattlePetTooltip:Hide()
 			</OnLeave>
 			<OnClick>
 				self:Item_OnClick(button)

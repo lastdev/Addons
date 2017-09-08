@@ -1,6 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Contacts.lua"></Script>
-
+	
+	<!--
 	<Button name="AltoContactEntryTemplate" hidden="true" virtual="true">
 		<Size x="615" y="41" />
 		<Layers>
@@ -73,5 +74,6 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
+	 -->
 	
 </Ui>

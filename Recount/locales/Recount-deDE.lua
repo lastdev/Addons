@@ -167,6 +167,8 @@ L["Heals"] = "Heilung"
 L["Health"] = "Gesundheit"
 L["Hide"] = "Verstecke"
 L["Hide When Not Collecting"] = "Verstecken (bei keinen Daten)"
+--Translation missing 
+-- L["Hide While In Pet Battle"] = "Hide While In Pet Battle"
 L["Hides the main window"] = "Versteckt Hauptfenster"
 L["Hit"] = "Treffer"
 L["Holy"] = "Heilig"

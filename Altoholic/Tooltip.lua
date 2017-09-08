@@ -12,14 +12,12 @@ local storedLink = nil
 local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, thanks to Tempus on wowace for gathering this.
 
 	-- Mining nodes
-	[L["Adamantite Deposit"]]              = 23425, -- Adamantite Ore
+	-- Classic
 	[L["Copper Vein"]]                     =  2770, -- Copper Ore
 	[L["Dark Iron Deposit"]]               = 11370, -- Dark Iron Ore
-	[L["Fel Iron Deposit"]]                = 23424, -- Fel Iron Ore
 	[L["Gold Vein"]]                       =  2776, -- Gold Ore
 	[L["Hakkari Thorium Vein"]]            = 10620, -- Thorium Ore
 	[L["Iron Deposit"]]                    =  2772, -- Iron Ore
-	[L["Khorium Vein"]]                    = 23426, -- Khorium Ore
 	[L["Mithril Deposit"]]                 =  3858, -- Mithril Ore
 	[L["Ooze Covered Gold Vein"]]          =  2776, -- Gold Ore
 	[L["Ooze Covered Mithril Deposit"]]    =  3858, -- Mithril Ore
@@ -27,7 +25,6 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Ooze Covered Silver Vein"]]        =  2775, -- Silver Ore
 	[L["Ooze Covered Thorium Vein"]]       = 10620, -- Thorium Ore
 	[L["Ooze Covered Truesilver Deposit"]] =  7911, -- Truesilver Ore
-	[L["Rich Adamantite Deposit"]]         = 23425, -- Adamantite Ore
 	[L["Rich Thorium Vein"]]               = 10620, -- Thorium Ore
 	[L["Silver Vein"]]                     =  2775, -- Silver Ore
 	[L["Small Thorium Vein"]]              = 10620, -- Thorium Ore
@@ -37,26 +34,56 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Lesser Bloodstone Deposit"]]       =  4278, -- Lesser Bloodstone Ore
 	[L["Incendicite Mineral Vein"]]        =  3340, -- Incendicite Ore
 	[L["Indurium Mineral Vein"]]           =  5833, -- Indurium Ore
-	[L["Nethercite Deposit"]]              = 32464, -- Nethercite Ore
-	[L["Large Obsidian Chunk"]]				= 22203,	-- Large Obsidian Shard	Both drop on both nodes..
-	[L["Small Obsidian Chunk"]]				= 22202,	-- Small Obsidian Shard
+	[L["Large Obsidian Chunk"]]            = 22203, -- Large Obsidian Shard. Both drop on both nodes.
+	[L["Small Obsidian Chunk"]]            = 22202, -- Small Obsidian Shard. Both drop on both nodes.
 	
-	-- wotlk
-	["Cobalt Deposit"]							= 36909, -- Cobalt Ore
-	["Rich Cobalt Deposit"]						= 36909, -- Cobalt Ore
-	["Saronite Deposit"]							= 36912, -- Saronite Ore
-	["Rich Saronite Deposit"]					= 36912, -- Saronite Ore
-	["Titanium Vein"]								= 36910, -- Titanium Ore
+	-- TBC
+	[L["Adamantite Deposit"]]              = 23425, -- Adamantite Ore
+	[L["Fel Iron Deposit"]]                = 23424, -- Fel Iron Ore
+	[L["Khorium Vein"]]                    = 23426, -- Khorium Ore
+	[L["Nethercite Deposit"]]              = 32464, -- Nethercite Ore
+	[L["Rich Adamantite Deposit"]]         = 23425, -- Adamantite Ore
+	
+	-- WotLK
+	["Cobalt Deposit"]                     = 36909, -- Cobalt Ore
+	["Rich Cobalt Deposit"]                = 36909, -- Cobalt Ore
+	["Saronite Deposit"]                   = 36912, -- Saronite Ore
+	["Rich Saronite Deposit"]              = 36912, -- Saronite Ore
+	["Titanium Vein"]                      = 36910, -- Titanium Ore
 
-	-- cata
-	["Obsidium Deposit"]					= 53038, -- Obsidium Ore
-	["Rich Obsidium Deposit"]				= 53038, -- Obsidium Ore
-	["Elementium Vein"]						= 52185, -- Elementium Ore
-	["Rich Elementium Vein"]				= 52185, -- Elementium Ore
-	["Pyrite Deposit"]						= 52183, -- Pyrite Ore
-	["Rich Pyrite Deposit"]					= 52183, -- Pyrite Ore
+	-- Cataclysm
+	["Obsidium Deposit"]                   = 53038, -- Obsidium Ore
+	["Rich Obsidium Deposit"]              = 53038, -- Obsidium Ore
+	["Elementium Vein"]                    = 52185, -- Elementium Ore
+	["Rich Elementium Vein"]               = 52185, -- Elementium Ore
+	["Pyrite Deposit"]                     = 52183, -- Pyrite Ore
+	["Rich Pyrite Deposit"]                = 52183, -- Pyrite Ore
+
+	-- MoP
+	["Ghost Iron Deposit"]                 = 72092, -- Ghost Iron Ore
+	["Rich Ghost Iron Deposit"]            = 72092, -- Ghost Iron Ore
+	["Kyparite Deposit"]                   = 72093, -- Kyparite Ore
+	["Rich Kyparite Deposit"]              = 72093, -- Kyparite Ore
+	["Trillium Vein"]                      = 72095, -- Trillium Bar, because this node produces two ores
+	["Rich Trillium Vein"]                 = 72095, -- Trillium Bar, because this node produces two ores
+
+	-- WoD
+	["Blackrock Deposit"]                  = 109118, -- Blackrock Ore
+	["Rich Blackrock Deposit"]             = 109118, -- Blackrock Ore
+	["True Iron Deposit"]                  = 109119, -- True Iron Ore 
+	["Rich True Iron Deposit"]             = 109119, -- True Iron Ore
+	["Smoldering True Iron Deposit"]       = 109119, -- True Iron Ore
+
+	-- Legion
+	["Leystone Deposit"]                   = 123918, -- Leystone Ore
+	["Leystone Seam"]                      = 123918, -- Leystone Ore
+	["Rich Leystone Deposit"]              = 123918, -- Leystone Ore
+	["Felslate Deposit"]                   = 123919, -- Felslate
+	["Felslate Seam"]                      = 123919, -- Felslate
+	["Rich Felslate Deposit"]              = 123919, -- Felslate
+	
 	-- Herbs
-	[L["Ancient Lichen"]]       = 22790,
+	-- Classic
 	[L["Arthas' Tears"]]        =  8836,
 	[L["Black Lotus"]]          = 13468,
 	[L["Blindweed"]]            =  8839,
@@ -64,12 +91,9 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Briarthorn"]]           =  2450,
 	[L["Bruiseweed"]]           =  2453,
 	[L["Dreamfoil"]]            = 13463,
-	[L["Dreaming Glory"]]       = 22786,
 	[L["Earthroot"]]            =  2449,
 	[L["Fadeleaf"]]             =  3818,
-	[L["Felweed"]]              = 22785,
 	[L["Firebloom"]]            =  4625,
-	[L["Flame Cap"]]            = 22788,
 	[L["Ghost Mushroom"]]       =  8845,
 	[L["Golden Sansam"]]        = 13464,
 	[L["Goldthorn"]]            =  3821,
@@ -80,43 +104,78 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Kingsblood"]]           =  3356,
 	[L["Liferoot"]]             =  3357,
 	[L["Mageroyal"]]            =   785,
-	[L["Mana Thistle"]]         = 22793,
 	[L["Mountain Silversage"]]  = 13465,
-	[L["Netherbloom"]]          = 22791,
-	[L["Nightmare Vine"]]       = 22792,
 	[L["Peacebloom"]]           =  2447,
 	[L["Plaguebloom"]]          = 13466,
 	[L["Purple Lotus"]]         =  8831,
-	[L["Ragveil"]]              = 22787,
 	[L["Silverleaf"]]           =   765,
 	[L["Stranglekelp"]]         =  3820,
 	[L["Sungrass"]]             =  8838,
-	[L["Terocone"]]             = 22789,
 	[L["Wild Steelbloom"]]      =  3355,
 	[L["Wintersbite"]]          =  3819,
 
+	-- TBC
+	[L["Ancient Lichen"]]       = 22790,
+	[L["Dreaming Glory"]]       = 22786,
+	[L["Felweed"]]              = 22785,
+	[L["Flame Cap"]]            = 22788,
 	[L["Glowcap"]]              = 24245,
+	[L["Mana Thistle"]]         = 22793,
+	[L["Netherbloom"]]          = 22791,
 	[L["Netherdust Bush"]]      = 32468, -- Netherdust Pollen
+	[L["Nightmare Vine"]]       = 22792,
+	[L["Ragveil"]]              = 22787,
 	[L["Sanguine Hibiscus"]]    = 24246,
+	[L["Terocone"]]             = 22789,
 
-	["Fel Lotus"]					= 22794,
-	["Goldclover"]					= 36901,
-	["Adder's Tongue"]			= 36903,
-	["Tiger Lily"]					= 36904,
-	["Lichbloom"]					= 36905,
-	["Icethorn"]					= 36906,
-	["Talandra's Rose"]			= 36907,
-	["Frost Lotus"]				= 36908,
-	["Firethorn"]					= 39970,
-	["Cinderbloom"]				= 52983,
-	["Stormvine"]				= 52984,
-	["Azshara's Veil"]			= 52985,
-	["Heartblossom"]			= 52986,
-	["Twilight Jasmine"]		= 52987,
-	["Whiptail"]				= 52988,
-	["Deathspore Pod"]			= 52989,
-	["Green Tea Leaf"]			= 72234,
-	["Snow Lily"]					= 79010,
+	-- WotLK
+	["Goldclover"]              = 36901,
+	["Adder's Tongue"]          = 36903,
+	["Tiger Lily"]              = 36904,
+	["Lichbloom"]               = 36905,
+	["Icethorn"]                = 36906,
+	["Talandra's Rose"]         = 36907,
+	["Frost Lotus"]             = 36908,
+	["Firethorn"]               = 39970,
+
+	-- Cataclysm
+	["Cinderbloom"]             = 52983,
+	["Stormvine"]               = 52984,
+	["Azshara's Veil"]          = 52985,
+	["Heartblossom"]            = 52986,
+	["Twilight Jasmine"]        = 52987,
+	["Whiptail"]                = 52988,
+	["Deathspore Pod"]          = 52989,
+
+	-- MoP
+	["Green Tea Leaf"]          = 72234,
+	["Silkweed"]                = 72235,
+	["Rain Poppy"]              = 72237,
+	["Snow Lily"]               = 79010,
+	["Fool's Cap"]              = 79011,
+
+	-- WoD
+	["Frostweed"]               = 109124,
+	["Fireweed"]                = 109125,
+	["Gorgrond Flytrap"]        = 109126,
+	["Starflower"]              = 109127,
+	["Nagrand Arrowbloom"]      = 109128,
+	["Talador Orchid"]          = 109129,
+
+	-- Legion
+	["Aethril"]                 = 124101,
+	["Dreamleaf"]               = 124102,
+	["Foxflower"]               = 124103,
+	["Fjarnskaggl"]             = 124104,
+	["Starlight Rose"]          = 124105,	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 -- *** Utility functions ***

@@ -1,4 +1,4 @@
--- $Id: Constants.lua 46 2017-05-08 13:57:38Z arith $
+-- $Id: Constants.lua 70 2017-07-02 14:53:21Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -33,8 +33,12 @@ constants.defaults = {
 		show_treasure = true,
 		show_shrine = true,
 		show_infernalCores = true,
+		show_tamer = true,
+		show_netherPortals = true,
 		ignore_InOutDoor = false,
 		hide_completed = true,
+		show_coords = false,
+		showNodesOnContinentMap = false,
 	},
 	char = {
 		hidden = {
@@ -43,33 +47,44 @@ constants.defaults = {
 	},
 }
 
+local OBJECTICONS = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS"
+
 constants.icon_texture = {
 	flight 		= "Interface\\MINIMAP\\TRACKING\\FlightMaster",
 	entrance 	= "Interface\\MINIMAP\\Suramar_Door_Icon",
 	ramp 		= "Interface\\MINIMAP\\MiniMap-VignetteArrow",
 	greenButton 	= { 
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0, tCoordBottom = 0.125 },
+		icon = OBJECTICONS,
+		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	blueButton 	= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0, tCoordBottom = 0.125 },
+		icon = OBJECTICONS,
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	redButton 	= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0, tCoordBottom = 0.125 },
+		icon = OBJECTICONS,
+		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0, tCoordBottom = 0.125,
+	},
 	yellowButton 	= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.5, tCoordBottom = 0.625 },
+		icon = OBJECTICONS,
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.5, tCoordBottom = 0.625,
+	},
 	portal 		= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.875, tCoordBottom = 1 },
+		icon = OBJECTICONS,
+		tCoordLeft = 0.125, tCoordRight = 0.25, tCoordTop = 0.875, tCoordBottom = 1,
+	},
 	rare 		= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.875, tCoordRight = 1, tCoordTop = 0.75, tCoordBottom = 0.875 },
-	--treasure 	= "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\treasure",
+		icon = OBJECTICONS,
+		tCoordLeft = 0.875, tCoordRight = 1, tCoordTop = 0.75, tCoordBottom = 0.875,
+	},
 	treasure	= {
-		icon = "Interface\\AddOns\\HandyNotes_BrokenShore\\Images\\OBJECTICONS",
-		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0.625, tCoordBottom = 0.75 },
-
+		icon = OBJECTICONS,
+		tCoordLeft = 0.25, tCoordRight = 0.375, tCoordTop = 0.625, tCoordBottom = 0.75,
+	},
+	netherPortal	= {
+		icon = OBJECTICONS,
+		tCoordLeft = 0.5, tCoordRight = 0.625, tCoordTop = 0.75, tCoordBottom = 0.875,
+	},
 }
 
 -- Define the default icon here
@@ -83,4 +98,5 @@ constants.events = {
 	-- such as a bridge or building and onto terrain or another object.
 	"NEW_WMO_CHUNK",
 	"ENCOUNTER_LOOT_RECEIVED",
-};
+	"CLOSE_WORLD_MAP",
+}

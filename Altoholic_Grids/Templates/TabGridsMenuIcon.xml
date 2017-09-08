@@ -13,11 +13,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoTabGridsMenuIcon")
-			
-				self:SetIconSize(self.iconWidth, self.iconHeight)
-				self:SetIcon(self.iconFile)
+				Altoholic:BindViewToController(self, "AltoholicUI.TabGridsMenuIcon", "AltoholicUI.Button")
 			</OnLoad>
 			<OnEnter>
 				if self.text then

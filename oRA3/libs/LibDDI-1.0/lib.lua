@@ -75,9 +75,9 @@ local function onClick(this, button)
 	if self.disabled then return end
 	self.value = not self.value
 	if self.value then
-		PlaySound("igMainMenuOptionCheckBoxOn")
+		PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
 	else
-		PlaySound("igMainMenuOptionCheckBoxOff")
+		PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
 	end
 	updateToggle(self)
 	self:Fire("OnValueChanged", self.value)

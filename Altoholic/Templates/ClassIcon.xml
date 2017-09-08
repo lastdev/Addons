@@ -14,8 +14,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoButton")
-				Altoholic:SetClassExtensions(self, "AltoClassIcon")
+				Altoholic:BindViewToController(self, "AltoholicUI.ClassIcon", "AltoholicUI.Button")
 			
 				local level = self:GetParent():GetFrameLevel()
 				self:SetFrameLevel(level + 1)

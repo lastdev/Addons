@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r78 | thaoky.altoholic@yahoo.com | 2017-09-04 12:28:37 -0500 (Mon, 04 Sep 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Crafts.toc
+
+TOC Update
+------------------------------------------------------------------------
 r77 | thaoky.altoholic@yahoo.com | 2017-04-28 12:30:51 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Crafts.lua

@@ -110,6 +110,16 @@ local function _GetCompanionLink(spellID)
 	return format("|cff71d5ff|Hspell:%s|h[%s]|h|r", spellID, name)
 end
 
+local function _GetBattlePetInfoFromLink(link)
+	if not link then return end
+
+	local speciesID, level, breedQuality, maxHealth, power, speed = link:match("|Hbattlepet:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+)")
+	if speciesID then
+		local name = link:match("%[(.+)%]")
+		return tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), name
+	end
+end
+
 local PublicMethods = {
 	GetPets = _GetPets,
 	GetNumPets = _GetNumPets,
@@ -118,6 +128,7 @@ local PublicMethods = {
 	GetCompanionList = _GetCompanionList,
 	GetCompanionSpellID = _GetCompanionSpellID,
 	GetCompanionLink = _GetCompanionLink,
+	GetBattlePetInfoFromLink = _GetBattlePetInfoFromLink,
 }
 
 function addon:OnInitialize()

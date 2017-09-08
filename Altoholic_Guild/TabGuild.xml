@@ -52,8 +52,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTabGuild")
-				self:Init()
+				Altoholic:BindViewToController(self, "AltoholicUI.TabGuild")
 			</OnLoad>
 		</Scripts>
 	</Frame>

@@ -261,7 +261,7 @@ local spells = {
 		[191241] = {30, 75, 255, 13}, -- Sticky Bomb
 		[19386] = {45, 75, {253, 254}, 14}, -- Wyvern Sting
 		[19577] = {60, 75, 253, 15}, -- Intimidation
-		[191241] = {60, 75, {254, 255}, 15}, -- Camouflage
+		[199483] = {60, 75, {254, 255}, 15}, -- Camouflage
 		[131894] = {60, 90, {253, 254}, 16, true}, -- A Murder of Crows (not-Survival): (16) If the target dies while under attack, the cooldown is reset.
 		[120360] = {20, 90, {253, 254}, 17}, -- Barrage
 		[194855] = {30, 90, 255, 17}, -- Dragonsfire Grenade
@@ -312,7 +312,7 @@ local spells = {
 		[198929] = {9, 90, 63, 20}, -- Cinderstorm
 		[153626] = {20, 100, 62, 21}, -- Arcane Orb
 		[153561] = {45, 100, 63, 21}, -- Meteor
-		[153561] = {30, 100, 64, 21}, -- Comet Storm
+		[153595] = {30, 100, 64, 21}, -- Comet Storm
 	},
 	MONK = {
 		[101545] = {25, 10, 269}, -- Flying Serpent Kick
@@ -949,7 +949,7 @@ do
 		showPane()
 	end
 
-	local function onOptionChanged(widget, event, value, ...)
+	local function onOptionChanged(widget, event, value)
 		local key = widget:GetUserData("key")
 		if key then
 			local display = activeDisplays[CURRENT_DISPLAY]
@@ -1240,7 +1240,7 @@ do
 			return
 		end
 
-		if not CURRENT_DISPLAY then
+		if not activeDisplays[CURRENT_DISPLAY] then
 			CURRENT_DISPLAY = "Default"
 		end
 		local display = activeDisplays[CURRENT_DISPLAY]
@@ -1326,6 +1326,116 @@ end
 -- Module
 --
 
+local function upgradeDB(db)
+	-- convert db, a little awkward due to the "*" defaults
+	if not next(db.displays) then
+
+		-- set spells
+		local spellDB = {}
+		for k, v in next, db.spells do
+			spellDB[k] = v or nil
+		end
+		db.spells = { Default = spellDB }
+
+		-- set filters
+		local filterDB = db.filters.Default
+		filterDB.onlyShowMine = db.onlyShowMine
+		filterDB.neverShowMine = db.neverShowMine
+
+		-- set up a display with our old bar settings
+		local displayDB = db.displays.Default
+		displayDB.type = "Bars"
+		displayDB.showDisplay = true
+		displayDB.lockDisplay = false
+		for k, v in next, db do
+			if k ~= "displays" and k ~= "spells" and k ~= "filters" then
+				if k:find("^bar") then
+					displayDB[k] = type(db[k]) == "table" and CopyTable(db[k]) or db[k]
+				end
+				db[k] = nil
+			end
+		end
+
+		db.enabled = true
+
+		-- update position
+		if oRA.db.profile.positions.oRA3CooldownFrame then
+			oRA.db.profile.positions.oRA3CooldownFrameBarsDefault = CopyTable(oRA.db.profile.positions.oRA3CooldownFrame)
+			oRA.db.profile.positions.oRA3CooldownFrame = nil
+		end
+
+		module:ScheduleTimer(function()
+			print("oRA3 Cooldowns has been redesigned and now supports multiple displays and different formats! You can open the options panel with /racd and move it around by dragging the title bar.")
+		end, 9)
+	end
+
+	-- remove unused spells from the db
+	for displayName, dspells in next, db.spells do
+		for spell in next, dspells do
+			if not classLookup[spell] then
+				dspells[spell] = nil
+			end
+		end
+	end
+end
+
+function module:OnProfileUpdate(event)
+	-- tear down displays
+	self:OnShutdown()
+	for displayName, display in next, activeDisplays do
+		display:Hide()
+		if type(display.OnDelete) == "function" then
+			display:OnDelete()
+		end
+		display.frame = nil
+		activeDisplays[displayName] = nil
+	end
+
+	-- make sure the db is converted
+	upgradeDB(self.db.profile)
+
+	-- build displays
+	for displayName, db in next, self.db.profile.displays do
+		local display = self:CreateDisplay(db.type, displayName)
+		activeDisplays[displayName] = display
+		display:Hide()
+	end
+	if IsInGroup() then
+		self:OnStartup()
+	end
+
+	-- update options
+	if frame then
+		frame = frame:Release()
+		showPane()
+	end
+end
+
+do
+	local function removeDefaults(db, defaults)
+		if not db or not defaults then return end
+		for k, v in next, defaults do
+			if type(v) == "table" and type(db[k]) == "table" then
+				removeDefaults(db[k], v)
+				if next(db[k]) == nil then
+					db[k] = nil
+				end
+			else
+				if db[k] == defaults[k] then
+					db[k] = nil
+				end
+			end
+		end
+	end
+
+	function module:OnProfileShutdown()
+		-- clean up display db defaults (ideally, the logic for this would be in Registery.lua)
+		for displayName, display in next, activeDisplays do
+			removeDefaults(self.db.profile.displays[displayName], display.defaultDB)
+		end
+	end
+end
+
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("Cooldowns", {
 		profile = {
@@ -1400,7 +1510,11 @@ function module:OnRegister()
 		}
 	})
 
-	-- persist on reloads
+	self.db.RegisterCallback(self, "OnProfileShutdown")
+	oRA.RegisterCallback(self, "OnProfileUpdate")
+	self:OnProfileUpdate()
+
+	-- persist cds on reloads
 	spellsOnCooldown = self.db.global.spellsOnCooldown
 	chargeSpellsOnCooldown = self.db.global.chargeSpellsOnCooldown
 	if not self.db.global.lastTime or self.db.global.lastTime > GetTime() then -- probably restarted or crashed, trash times
@@ -1408,64 +1522,6 @@ function module:OnRegister()
 		wipe(chargeSpellsOnCooldown)
 	end
 	self.db.global.lastTime = nil
-
-	-- convert db, a little awkward due to the "*" defaults
-	if not next(self.db.profile.displays) then
-		local db = self.db.profile
-
-		-- set spells
-		local spellDB = {}
-		for k, v in next, db.spells do
-			spellDB[k] = v or nil
-		end
-		db.spells = { Default = spellDB }
-
-		-- set filters
-		local filterDB = db.filters.Default
-		filterDB.onlyShowMine = db.onlyShowMine
-		filterDB.neverShowMine = db.neverShowMine
-
-		-- set up a display with our old bar settings
-		local displayDB = db.displays.Default
-		displayDB.type = "Bars"
-		displayDB.showDisplay = true
-		displayDB.lockDisplay = false
-		for k, v in next, db do
-			if k ~= "displays" and k ~= "spells" and k ~= "filters" then
-				if k:find("^bar") then
-					displayDB[k] = type(db[k]) == "table" and CopyTable(db[k]) or db[k]
-				end
-				db[k] = nil
-			end
-		end
-
-		db.enabled = true
-
-		-- update position
-		if oRA.db.profile.positions.oRA3CooldownFrame then
-			oRA.db.profile.positions.oRA3CooldownFrameBarsDefault = CopyTable(oRA.db.profile.positions.oRA3CooldownFrame)
-			oRA.db.profile.positions.oRA3CooldownFrame = nil
-		end
-
-		self:ScheduleTimer(function()
-			print("oRA3 Cooldowns has been redesigned and now supports multiple displays and different formats! You can open the options panel with /racd and move it around by dragging the title bar.")
-		end, 9)
-	end
-
-	-- remove unused spells from the db
-	for displayName, dspells in next, self.db.profile.spells do
-		for spell in next, dspells do
-			if not classLookup[spell] then
-				dspells[spell] = nil
-			end
-		end
-	end
-
-	for displayName, db in next, self.db.profile.displays do
-		local display = self:CreateDisplay(db.type, displayName)
-		activeDisplays[displayName] = display
-		display:Hide()
-	end
 
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
@@ -1482,6 +1538,7 @@ end
 
 function module:OnStartup(_, groupStatus)
 	if not self.db.profile.enabled then return end
+	self.enabled = true
 
 	if next(syncSpells) then
 		self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
@@ -1505,7 +1562,8 @@ function module:OnStartup(_, groupStatus)
 end
 
 function module:OnShutdown()
-	if not self.db.profile.enabled then return end
+	if not self.enabled then return end
+	self.enabled = nil
 
 	callbacks:Fire("OnShutdown")
 
@@ -1514,6 +1572,7 @@ function module:OnShutdown()
 	oRA.UnregisterCallback(self, "OnPlayerUpdate")
 	oRA.UnregisterCallback(self, "OnPlayerRemove")
 
+	self:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
 	--self:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	--self:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	self:UnregisterEvent("UNIT_HEALTH_FREQUENT")
@@ -1528,54 +1587,32 @@ function module:OnShutdown()
 	wipe(deadies)
 end
 
--- db cleanup
-do
-	local function removeDefaults(db, defaults)
-		if not db or not defaults then return end
-		for k, v in next, defaults do
-			if type(v) == "table" and type(db[k]) == "table" then
-				removeDefaults(db[k], v)
-				if next(db[k]) == nil then
-					db[k] = nil
-				end
-			else
-				if db[k] == defaults[k] then
-					db[k] = nil
-				end
-			end
+function module:PLAYER_LOGOUT()
+	self:OnProfileShutdown()
+
+	-- cleanup db spell cds
+	local t = GetTime()
+	for spellId, players in next, spellsOnCooldown do
+		if next(players) == nil then
+			spellsOnCooldown[spellId] = nil
 		end
 	end
-
-	function module:PLAYER_LOGOUT()
-		-- db settings
-		for displayName, display in next, activeDisplays do
-			removeDefaults(self.db.profile.displays[displayName], display.defaultDB)
-		end
-
-		-- spell cds
-		local t = GetTime()
-		for spellId, players in next, spellsOnCooldown do
-			if next(players) == nil then
-				spellsOnCooldown[spellId] = nil
-			end
-		end
-		for spellId, players in next, chargeSpellsOnCooldown do
-			for guid, expires in next, players do
-				for i, e in next, expires do
-					if e < t then
-						tremove(expires, i)
-					end
-				end
-				if next(expires) == nil then
-					players[guid] = nil
+	for spellId, players in next, chargeSpellsOnCooldown do
+		for guid, expires in next, players do
+			for i, e in next, expires do
+				if e < t then
+					tremove(expires, i)
 				end
 			end
-			if next(players) == nil then
-				chargeSpellsOnCooldown[spellId] = nil
+			if next(expires) == nil then
+				players[guid] = nil
 			end
 		end
-		self.db.global.lastTime = t
+		if next(players) == nil then
+			chargeSpellsOnCooldown[spellId] = nil
+		end
 	end
+	self.db.global.lastTime = t
 end
 
 --------------------------------------------------------------------------------

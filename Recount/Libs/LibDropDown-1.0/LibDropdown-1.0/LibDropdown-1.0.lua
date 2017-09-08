@@ -89,9 +89,9 @@ end
 -- Make the frame match the tooltip
 local function InitializeFrame(frame)
 	local backdrop = GameTooltip:GetBackdrop()
-	
+
 	frame:SetBackdrop(backdrop)
-	
+
 	if backdrop then
 		frame:SetBackdropColor(GameTooltip:GetBackdropColor())
 		frame:SetBackdropBorderColor(GameTooltip:GetBackdropBorderColor())
@@ -107,7 +107,7 @@ local function AcquireInput()
 		frame.released = false
 		return frame
 	end
-	
+
 	frame = CreateFrame("EditBox", "LibDropDownEditBox"..editBoxCount, UIParent, "InputBoxTemplate")
 	frame:SetAutoFocus(false)
 	editBoxCount = editBoxCount + 1
@@ -115,7 +115,7 @@ local function AcquireInput()
 		self:ClearFocus()
 		self:GetParent():GetRoot():Refresh()
 	end)
-	
+
 	frame:SetScript("OnEnterPressed", function(self)
 		if self.ValueChanged then
 			self:ValueChanged(self:GetText())
@@ -131,7 +131,7 @@ local function AcquireSlider()
 		frame.released = false
 		return frame
 	end
-	
+
 	local frame = CreateFrame("Slider", nil, UIParent)
 	frame:SetWidth(10)
 	frame:SetHeight(150)
@@ -147,12 +147,12 @@ local function AcquireSlider()
 	frame:SetThumbTexture([[Interface\Buttons\UI-SliderBar-Button-Vertical]])
 	frame:EnableMouseWheel()
 	frame:Show()
-	
+
 	local text = frame:CreateFontString(nil, nil, "GameFontNormalSmall")
 	text:SetPoint("TOP", frame, "BOTTOM")
 	text:SetTextColor(1, 1, 1, 1)
 	frame.text = text
-	
+
 	frame:SetScript("OnMouseWheel", function(self, direction, ...)
 		if not direction then return end -- huh?
 		local mn, mx = self:GetMinMaxValues()
@@ -338,7 +338,7 @@ do
 		end
 		GameTooltip:Show()
 	end
-	
+
 	local function leaveButton(self)
 		GameTooltip:Hide()
 		local p = self:GetParent()
@@ -365,15 +365,15 @@ do
 	local function click(self)
 		if self.OnClick and self.clickable then
 			self.OnClick(self)
-			PlaySound("igMainMenuOptionCheckBoxOn")
+			PlaySound(856)
 			self:GetParent():GetRoot():Refresh()
 		end
 	end
-	
+
 	local function settext(self, t)
 		self.text:SetText(t)
 	end
-	
+
 	local function disable(self)
 		self.enabled = false
 		self:SetScript("OnMouseDown", nil)
@@ -383,7 +383,7 @@ do
 		self.expand:SetDesaturated(true)
 		self:oldDisable()
 	end
-	
+
 	local function enable(self)
 		self.enabled = true
 		self:SetScript("OnMouseDown", pushText)
@@ -394,11 +394,11 @@ do
 		self.expand:SetDesaturated(false)
 		self:oldEnable()
 	end
-	
+
 	local function revert()
 		--ColorPickerFrame.previousValues.frame
 	end
-	
+
 	local function setColor()
 		local r, g, b = ColorPickerFrame:GetColorRGB()
 		local a = ColorPickerFrame.opacity or 1
@@ -408,14 +408,14 @@ do
 			f:GetParent():OnClick(r, g, b, a)
 		end
 	end
-	
+
 	local function revert()
 		local p = ColorPickerFrame.previousValues
 		ColorPickerFrame:SetColorRGB(p.r, p.g, p.b)
 		ColorPickerFrame.opacity = p.opacity
 		setColor()
 	end
-	
+
 	local function openColorPicker(self)
 		local p = self:GetParent()
 		p.r, p.g, p.b, p.a = self:GetNormalTexture():GetVertexColor()
@@ -453,7 +453,7 @@ do
 		self.clickable = false
 		if t then self.text:SetText(t) end
 	end
-	
+
 	local function makeButton(self, t)
 		local text, frame, check, expand = self.text, self, self.check, self.expand
 		text:ClearAllPoints()
@@ -474,7 +474,7 @@ do
 		-- frame:SetDisabledTextColor(0.5, 0.5, 0.5, 1) -- Removed in 3.0
 		frame:SetPushedTextOffset(3,-3)
 		frame:SetHeight(18)
-		
+
 		local check = frame.check or frame:CreateTexture()
 		check:SetTexture([[Interface\Buttons\UI-CheckBox-Check]])
 		check:SetWidth(18)
@@ -548,11 +548,11 @@ function ReleaseFrame(f)
 	f.data = nil
 	f.dataname = nil
 	f.rootMenu = nil
-	
+
 	f:Hide()
 	f:SetParent(UIParent)
 	f:ClearAllPoints()
-	
+
 	tinsert(framePool, f)
 	for i = 1, #f.buttons do
 		local button = tremove(f.buttons)
@@ -592,7 +592,7 @@ function ReleaseButton(b)
 		b.groupFrame.Showing = nil
 		b.groupFrame = b.groupFrame:Release()
 	end
-	
+
 end
 
 local function frameReleaseOnHide(self)
@@ -739,7 +739,7 @@ do
 		function Ace3.group(k, v, parent)
 			local b = setup(k, v, parent)
 			if v.inline then
-				-- TODO: Add heading 
+				-- TODO: Add heading
 				local b2 = parent:AcquireButton()
 				b:MakeTitle(k)
 				b2.refresh = noop
@@ -750,7 +750,7 @@ do
 			b.refresh = refresh
 		end
 	end
-	
+
 	-- execute
 	function Ace3.execute(k, v, parent)
 		local b = setup(k, v, parent)
@@ -762,27 +762,27 @@ do
 			self:GetRoot():Refresh()
 		end
 	end
-	
+
 	-- input
 	do
 		local function refresh(self)
 			grefresh(self)
 			self.input:SetText(runHandler(self, "get") or "")
 		end
-		
+
 		local function inputValueChanged(self, val)
 			initInfo('input')
 			runHandler(self:GetParent():GetParent(), "set", val)
 			self:GetParent():GetRoot():Refresh()
 		end
-		
+
 		function Ace3.input(k, v, parent)
 			local b = setup(k, v, parent)
 			b:SetGroup(v, lib.Ace3InputShow)
 			b.input = AcquireInput()
 			b.refresh = refresh
 		end
-		
+
 		local function showInput(frame)
 			local data = frame.data
 			local input = frame:GetParent().input
@@ -803,7 +803,7 @@ do
 			parent.Showing = showInput
 		end
 	end
-	
+
 	-- toggle
 	do
 		local function refresh(self)
@@ -820,7 +820,7 @@ do
 			initInfo('toggle')
 			if self.data.tristate then
 				local val = runHandler(self, "get")
-				local sv 
+				local sv
 				if val == nil then sv = true
 				elseif val == true then sv = false
 				else sv = nil end
@@ -888,7 +888,7 @@ do
 			b:SetGroup(v.values, lib.Ace3MenuSelect)
 			b.refresh = refresh
 		end
-		
+
 		local function buttonRefresh(self)
 			initInfo('select')
 			self:SetChecked( runHandler(self:GetParent():GetParent(), "get") == self.value )
@@ -948,7 +948,7 @@ do
 			runHandler(self:GetParent():GetParent(), "set", val)
 			self:GetParent():GetRoot():Refresh()
 		end
-		
+
 		local function showSlider(frame)
 			local data = frame.data
 			local slider = frame:GetParent().slider
@@ -969,12 +969,12 @@ do
 			slider:SetMinMaxValues(data.min or 0, data.max or 100)
 			slider:SetValueStep(data.bigStep or data.step or 1)
 			slider.ValueChanged = sliderValueChanged
-			
+
 			frame:EnableMouseWheel(true)
 			frame:SetScript("OnMouseWheel", onWheel)
 			frame.Hiding = removeMousewheelFuncs
 			frame:SetHeight(180)
-			
+
 			slider:Show()
 			refresh(frame:GetParent())
 		end

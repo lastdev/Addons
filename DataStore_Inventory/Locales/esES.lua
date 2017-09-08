@@ -8,3 +8,4 @@ L["CLEAR_INVENTORY_TEXT"] = "Borrar automáticamente el equipamiento de los miem
 L["CLEAR_INVENTORY_TITLE"] = "Borrado del equipamiento de los miembros de la hermandad"
 L["Heroic"] = "Heroico"
 L["Trash Mobs"] = "Enemigos de relleno"
+

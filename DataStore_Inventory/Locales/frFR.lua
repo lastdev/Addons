@@ -17,3 +17,4 @@ L["EQUIP_REQ_TEXT"] = "Etre informé quand quelqu'un inspecte l'équipement d'un
 L["EQUIP_REQ_TITLE"] = "Avertissement de requête d'équipement."
 L["Heroic"] = "Heroïque"
 L["Trash Mobs"] = true
+

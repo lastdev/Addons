@@ -1,5 +1,13 @@
 # Changelog
 
+## Changed in v12
+
+* TOC for 7.3
+* Rares on Argus, still mostly missing treasures
+* Include Dog's pebble in Dalaran, if you've done the quests to have Dog available in your garrison
+* Missing chest in Val'sharah
+* Missing chest in Highmountain
+
 ## Changed in v11
 
 * TOC for 7.2

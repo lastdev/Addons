@@ -164,6 +164,24 @@
 					<KeyValue key="iconFile" value="Interface\Icons\spell_shadow_shadowwordpain" />
 				</KeyValues>
 			</Button>
+			<Button parentKey="Emissaries" inherits="AltoTabGridsMenuIconTemplate" id="12">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.FollowerAbilities" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_legion_cache_dreamweavers" />
+					<KeyValue key="text" value="BOUNTY_BOARD_LOCKED_TITLE" type="global" />
+				</KeyValues>
+			</Button>
+			
+			<Button parentKey="Sets" inherits="AltoTabGridsMenuIconTemplate" id="13">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="120" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_81" />
+				</KeyValues>
+			</Button>
 			
 			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
 			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">
@@ -234,28 +252,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoTabGrids")
-				
-				local L = LibStub("AceLocale-3.0"):GetLocale("Altoholic")
-				
-				self.Label1:SetText(L["Realm"])
-				self.Equipment.text = L["Equipment"]
-				self.Factions.text = L["Reputations"]
-				self.Archeology.text = GetSpellInfo(78670)
-				self.Dailies.text = "Daily Quests"
-				self.FollowerAbilities.text = format("%s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
-				
-				self.SelectRealm:RegisterClassEvent("RealmChanged", function()
-						self.Status:SetText("")
-						self:Update()
-					end)
-				
-				self.ClassIcons.OnCharacterChanged = function()
-						self:Update()
-					end
-					
-				self.Equipment:StartAutoCastShine()
-				self.currentGridID = 1
+				Altoholic:BindViewToController(self, "AltoholicUI.TabGrids")
 			</OnLoad>
 			<OnShow>
 				self:UpdateMenuIcons()

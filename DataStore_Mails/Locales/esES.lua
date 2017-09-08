@@ -19,3 +19,4 @@ L["SCAN_MAIL_BODY_ENABLED"] = "Los correos serán completamente escaneados al ab
 L["SCAN_MAIL_BODY_LABEL"] = "Escanear el contenido de los correos (marcarlos como leídos)"
 L["SCAN_MAIL_BODY_TITLE"] = "Escaneo Completo del Correo"
 L["Warn when mail expires in less days than this value"] = "Avisar cuando el correo sea borrado en menos días que los indicados"
+

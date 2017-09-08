@@ -10,7 +10,84 @@ There WILL be bugs if you use your old files without cleaning them first.
 Some fixes to work around API changes are too time consuming, so cleaning is required. A meagre price to pay once per expansion.
 
 
-7.2.002 (25/04/2017)
+7.3.001 (04/09/2017)
+
+- Caged pets are now properly recognized in the inventory.
+- Search tab : fixed caged pets not being returned in the search results.
+Note: caged pets stored in the guild bank are not correctly visible. This is due to the game returning different item information for the caged pet when it is stored in the guild bank vs in your bags.
+If someone knows a way around this, I'm all ears :)
+- Search tab : fixed mythic keystones not being returned in the search results.
+- Made some improvements to the emissaries' panel, progress is now shown for each alt/zone. Quests are now sorted by expiry time (closest to expiry at the top). Thanks Paintstorm & Caspianroach for the suggestions.
+- Account Summary : Improved formatting of artifact power in the tooltip.
+- Grids -> Sets : added some extra filters for sets (faction + PVP type).
+- Characters -> Quests : the panel is being rewritten, but I have to face the facts, it won't be ready anytime soon, and the release has been delayed long enough.
+If you cannot live with this panel, edit the file Altoholic_Characters\Frames\Quests.lua, and delete lines 219+220 in the Update function.
+Note: rendering is primitive, you just have a list of quests, and the filter in the "Quests" icon does not work. Categories are listed, but that's all.
+Sorry, I had hoped this would have been ready for 7.3 .. but Blizzard released sooner than I had expected.
+
+7.2.003b (01/06/2017)
+
+- Fixed minimap icon not being properly restored at logon.
+
+7.2.003 (01/06/2017)
+
+- Fixed a bug where searched results were not shown in the proper quality (ex: upgraded items).
+- Changed the navigation of the characters' tab. In order to win some real estate for future updates, I have removed the drop down list that allows you to select the realm.
+	You can now select alts from other realms directly from the character icon.
+- Updated Herb and Mining Nodes, that was long overdue. (Thanks 2TailedFox !) 
+- Fixed a lua error in the search tab.
+- Fixed Midsummer achievements.
+- DataStore_Quests: now tracking emissary quests
+	Notes about emissary quests:
+	- There are 2 places to view the status of your emissary quests: Grids -> Daily quests & Grids -> Emissary quests
+	- In the 'Daily quests' panel, you can view the emissaries that you have COMPLETED TODAY, they will be reset every day, like any other daily quest.
+		Since there is no way to determine when they should actually reset, it's the best compromise.
+	- In the 'Emissary quests' panel, you can view the emissaries that are in your characters' quest logs, meaning that these are the quests NOT YET COMPLETED.
+		Because the quest log is only scanned when you log on, make sure that you log on with your alts on a regular basis, otherwise you will see outdated information in this panel.
+	- These 2 panels complement each other, it is intentional that they show you what has been completed vs what has not.
+
+- Brought back a name to the minimap button frame, goes against my principles, but I love you guys that much!
+	(the fear of an army of angry users armed with pitchforks may have changed my mind though :P)
+- Added a new panel in the grids tab : Sets !
+	In this panel you can see all the transmog sets you collected, across all classes.
+	This panel shows you all set variations that exist, even some that are normally hidden until they have been collected (Tier 3, darkmoon faire, other faction ..).
+	If you were wondering what to do with all those marks of honor.. here is your chance to spend them :p
+	The whole thing was quite complex to implement and required a deep dive in the data, and a crapload of manual work.
+	Mapping the whole table of sets took me a few days.
+	Some days I believe Blizzard organizes their data in such a way in order to mentally torture addon authors..
+	But anyway, I'm quite happy with the result, and hope you'll enjoy it too :)
+	
+	A few notes about this panel :
+	- Due to the amount of manual work, it is possible I have mistakenly copy-pasted a wrong set ID. If you identify one, please let me know.
+	- If you mouse over a set and see "Fetching item data ..", mouse away and over it again, this is due to the way the game handles the item cache. Nothing I can do about it.
+	
+!! Important tip for the crazy set transmog collectors out there (like me :p) :
+	I was not really sure if looting a given piece of equipment that is not for your class is actually registered into your list of transmogs.
+	While running Sunwell with my mage, I dropped a piece that was part of the warlock set, and it actually counted.
+	I could not see it directly in the addon, because I only read data for the current alt, but when I logged my warlock, the piece was definitely there.
+	It also means that if you are hunting for specific parts, you can run a legacy raid with alts having the same armor type.
+	That will not work for all pieces, but for some, it helps :)
+
+	It clearly does not work for weapon types you can't equip. I looted a nice bow with my mage, but my hunter did not have the transmog.
+	
+	
+- Added a new library : LibMVC
+	LibMVC modifies the way frame templates are implemented. 
+	Previous version relied on "class extensions", which were a first step towards a proper MVC pattern.
+	This is something I wanted to do ever since Blizzard added the 'parentKey' attribute in XML.
+	The current version is getting close to AngularJS and class extensions are now called controllers (as they should).
+	A goal I have had for a long time but never had time to implement was to support some sort of inheritance,
+	so that the OnLoad of a frame could call the OnLoad of the frames it derives from. 
+	There is no way to do this natively, hence this new library. 
+	Using AngularJS a lot at work has helped seeing clearer through this.
+	LibMVC also supports injecting services into controllers, as in Angular.
+	I have not decided yet if I will implement data binding, that might happen, but at a later stage.
+
+This is 100% transparent for users. Devs on the other hand may be interested in checking the simple implementation.
+The whole addon has not yet been corrected to support this, so those who are curious should check the Guild or Achievements tabs, they're pretty clean.
+
+
+7.2.002 (28/04/2017)
 
 - Fixed a bug assigning gained artifact xp to the wrong artifact.
 - Fixed a Lua error when scanning an artifact's data.

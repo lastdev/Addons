@@ -1,4 +1,19 @@
 ------------------------------------------------------------------------
+r43 | thaoky.altoholic@yahoo.com | 2017-09-04 12:32:15 -0500 (Mon, 04 Sep 2017) | 3 lines
+Changed paths:
+   M /trunk/DataStore_Quests.lua
+   M /trunk/DataStore_Quests.toc
+
+Better tracking of emissaries
+Reworked the database format to support the new quest log panel in Altoholic
+(back-end mostly complete, front-end not)
+------------------------------------------------------------------------
+r42 | thaoky.altoholic@yahoo.com | 2017-06-01 05:59:12 -0500 (Thu, 01 Jun 2017) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.lua
+
+Added support for emissary quests
+------------------------------------------------------------------------
 r41 | thaoky.altoholic@yahoo.com | 2017-04-28 12:33:29 -0500 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/Options.lua

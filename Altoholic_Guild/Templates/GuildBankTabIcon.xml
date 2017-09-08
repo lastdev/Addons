@@ -4,7 +4,7 @@
 	<Button name="AltoGuildBankTabIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoGuildBankTabIcon")
+				Altoholic:BindViewToController(self, "AltoholicUI.GuildBankTabIcon")
 			</OnLoad>
 			<OnEnter>
 				self:Icon_OnEnter()

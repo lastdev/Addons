@@ -5,7 +5,7 @@
 		<Size x="16" y="16" />
 		<Scripts>
 			<OnLoad>
-				Altoholic:SetClassExtensions(self, "AltoToggleButton")
+				Altoholic:BindViewToController(self, "AltoholicUI.ToggleButton")
 			</OnLoad>
 		</Scripts>
 		<NormalTexture parentKey="Icon" file="Interface\Buttons\UI-MinusButton-UP" />

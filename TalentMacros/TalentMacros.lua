@@ -61,7 +61,7 @@ local function GetOptions()
 				get = function() return db.disablepush end,
 				set = function(info, value)
 					db.disablepush = value
-					TalentMacros:UpdateFlyin()
+					TalentMacros:UpdateFlyin(true)
 				end,
 				order = 3,
 				width = "full",
@@ -170,10 +170,10 @@ function TalentMacros:Print(...)
 	print("|cff33ff99TalentMacros|r:", ...)
 end
 
-function TalentMacros:UpdateFlyin()
+function TalentMacros:UpdateFlyin(toggle)
 	if db.disablepush then
 		IconIntroTracker:UnregisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
-	else
+	elseif toggle then
 		IconIntroTracker:RegisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
 	end
 end
