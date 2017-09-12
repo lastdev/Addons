@@ -1,0 +1,34 @@
+## Interface: 70200
+## LoadOnDemand: 1
+#@non-debug@
+## Title: HandyNotes - Legion Class Order Halls
+## Title-deDE: HandyNotes - Legion Klassenordenshallen
+## Title-koKR: HandyNotes - 군단 직업 조합 전당
+## Title-ruRU: HandyNotes - Классовые оплоты Легиона
+## Title-zhCN: HandyNotes - 职业大厅
+## Title-zhTW: HandyNotes - 職業大廳
+## Notes: Shows the NPC locations and major POIs in Class Order Halls
+## Notes-deDE: Zeigt die Positionen von NSCs und anderen interessanten Orten in Klassenordenshallen.
+## Notes-koKR: 직업 조합 전당의 NPC 위치와 주요 관심 지점을 표시합니다
+## Notes-ruRU: Показывает расположение НИП и основные объекты в оплоте класса
+## Notes-zhCN: 显示各职业大厅里 NPC 与主要的 POI 的位置
+## Notes-zhTW: 顯示各職業大廳裡 NPC 與主要的 POI 的位置
+#@end-non-debug@
+#@debug@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Title: Lib: Babble-SubZone-3.0
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Notes: A library to help with localization of in-game subzone names.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Notes-deDE: Eine Bibliothek, die dabei hilft, die Untergebiete des Spiels zu übersetzen.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Notes-koKR: 게임 내 세부 지역 이름의 지역화로 도움을 주는 라이브러리 입니다.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Notes-zhCN: 一个帮助游戏内子区域名称本地化的库。
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ## Notes-zhTW: 為本地化服務的函式庫 [副區域名稱]
+#@end-debug@
+## Author: Arith
+## X-eMail: arithmandarjp at yahoo.co.jp
+## X-Category: Library
+## X-License: MIT
+## X-Date: 2017-03-26T18:42:30Z
+## X-Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
+
+LibStub\LibStub.lua
+lib.xml
+

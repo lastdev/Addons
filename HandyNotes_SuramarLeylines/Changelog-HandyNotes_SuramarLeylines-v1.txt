@@ -1,0 +1,15 @@
+tag v1
+1a3e730db44dac5376ff92db3ce96b0ac0638392
+David Lynch <kemayo@gmail.com>
+2016-09-22 10:54:07 -0500
+
+Tagging v1
+
+
+--------------------
+
+David Lynch:
+	- Fix pkgmeta package-as
+	- Show Falanaar points inside the tunnels as well
+	- Fix completeness display check to use the achievement criteria
+	- Initial commit

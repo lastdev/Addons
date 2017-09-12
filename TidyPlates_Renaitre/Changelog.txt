@@ -1,0 +1,15 @@
+5.4.8
+-use newer Android L version of Roboto Condensed Bold
+-organize textures
+
+5.4.7
+-code cleanup
+
+5.4.2bet
+-changed castbar and castbar background textures
+
+5.4.2be
+-changed castbar and castbar background
+
+5.4.2b
+-initial public upload

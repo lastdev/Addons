@@ -1,0 +1,113 @@
+------------------------------------------------------------------------
+r188 | elkano | 2016-07-24 08:48:33 +0000 (Sun, 24 Jul 2016) | 3 lines
+Changed paths:
+   M /trunk/SharedMedia.toc
+   M /trunk/fonts/deja_vu/DejaVuLGCSans.ttf
+   M /trunk/fonts/deja_vu/DejaVuLGCSerif.ttf
+   M /trunk/fonts/deja_vu/LICENSE
+   M /trunk/fonts/font info.txt
+   M /trunk/fonts/hack/Hack-Regular.ttf
+
+[TOC] for WoW 7.0.3
+[FONT] DejaVu -> v2.36
+[FONT] Hack -> v2.020
+------------------------------------------------------------------------
+r187 | elkano | 2015-11-18 15:33:53 +0000 (Wed, 18 Nov 2015) | 18 lines
+Changed paths:
+   M /trunk/SharedMedia.lua
+   M /trunk/SharedMedia.toc
+   D /trunk/fonts/Adventure.ttf
+   D /trunk/fonts/Bazooka.ttf
+   D /trunk/fonts/BlackChancery.TTF
+   D /trunk/fonts/CelestiaMediumRedux1.55.ttf
+   D /trunk/fonts/DORISPP.TTF
+   D /trunk/fonts/Enigma__2.TTF
+   D /trunk/fonts/Fitzgerald.ttf
+   D /trunk/fonts/Gentium.TTF
+   D /trunk/fonts/HookedUp.ttf
+   D /trunk/fonts/LiberationSans.ttf
+   D /trunk/fonts/SFAtarianSystem.ttf
+   D /trunk/fonts/SFCovington.ttf
+   D /trunk/fonts/SFMoviePoster-Bold.ttf
+   D /trunk/fonts/SFWonderComic.ttf
+   D /trunk/fonts/VeraSe.ttf
+   D /trunk/fonts/YELLOWJACKET.TTF
+   A /trunk/fonts/adventure
+   A /trunk/fonts/adventure/Adventure.ttf
+   A /trunk/fonts/adventure/license.txt
+   A /trunk/fonts/all_hooked_up
+   A /trunk/fonts/all_hooked_up/HookedUp.ttf
+   A /trunk/fonts/all_hooked_up/legal_ah.txt
+   A /trunk/fonts/bazooka
+   A /trunk/fonts/bazooka/Bazooka.ttf
+   A /trunk/fonts/black_chancery
+   A /trunk/fonts/black_chancery/BlackChancery.ttf
+   A /trunk/fonts/celestia_medium_redux
+   A /trunk/fonts/celestia_medium_redux/CelestiaMediumRedux1.55.ttf
+   A /trunk/fonts/deja_vu
+   A /trunk/fonts/deja_vu/DejaVuLGCSans.ttf
+   A /trunk/fonts/deja_vu/DejaVuLGCSerif.ttf
+   A /trunk/fonts/deja_vu/LICENSE
+   A /trunk/fonts/doris_pp
+   A /trunk/fonts/doris_pp/DorisPP.ttf
+   A /trunk/fonts/enigmatic
+   A /trunk/fonts/enigmatic/EnigmaU_2.TTF
+   A /trunk/fonts/enigmatic/legal_eu.txt
+   A /trunk/fonts/fitzgerald
+   A /trunk/fonts/fitzgerald/Fitzgerald.ttf
+   A /trunk/fonts/fitzgerald/legal_fz.txt
+   D /trunk/fonts/font info and licenses
+   A /trunk/fonts/font info.txt
+   A /trunk/fonts/gentium_plus
+   A /trunk/fonts/gentium_plus/GentiumPlus-R.ttf
+   A /trunk/fonts/gentium_plus/OFL.txt
+   A /trunk/fonts/hack
+   A /trunk/fonts/hack/Hack-Regular.ttf
+   A /trunk/fonts/liberation
+   A /trunk/fonts/liberation/LICENSE
+   A /trunk/fonts/liberation/LiberationSans-Regular.ttf
+   A /trunk/fonts/liberation/LiberationSerif-Regular.ttf
+   A /trunk/fonts/sf_atarian_system
+   A /trunk/fonts/sf_atarian_system/SFAtarianSystem.ttf
+   A /trunk/fonts/sf_atarian_system/ShyFoundry Freeware EULA.pdf
+   A /trunk/fonts/sf_covington
+   A /trunk/fonts/sf_covington/SFCovington.ttf
+   A /trunk/fonts/sf_covington/ShyFoundry Freeware EULA.pdf
+   A /trunk/fonts/sf_movie_poster
+   A /trunk/fonts/sf_movie_poster/SFMoviePoster-Bold.ttf
+   A /trunk/fonts/sf_movie_poster/ShyFoundry Freeware EULA.pdf
+   A /trunk/fonts/sf_wonder_comic
+   A /trunk/fonts/sf_wonder_comic/SFWonderComic.ttf
+   A /trunk/fonts/sf_wonder_comic/ShyFoundry Freeware EULA.pdf
+   A /trunk/fonts/swf!t
+   A /trunk/fonts/swf!t/SWF!T___.TTF
+   A /trunk/fonts/swf!t/license.txt
+   D /trunk/fonts/swfit.ttf
+   A /trunk/fonts/wen_quan_yi_zen_hei
+   A /trunk/fonts/wen_quan_yi_zen_hei/COPYING
+   A /trunk/fonts/wen_quan_yi_zen_hei/README
+   A /trunk/fonts/wen_quan_yi_zen_hei/wqy-zenhei.ttf
+   D /trunk/fonts/wqy-zenhei.ttf
+   A /trunk/fonts/yellowjacket
+   A /trunk/fonts/yellowjacket/yellow.ttf
+   A /trunk/fonts/yellowjacket/yellow.txt
+
+- updated TOC for 6.2.x
+- large cleanup regarding fonts: added source URLs to most, updated files, adjusted names, ...
+
+[renamed] Atarian System -> SF Atarian System
+[renamed] Celestia Redux -> Celestia Medium Redux
+[renamed] Covington -> SF Covington
+[NEW] DejaVu Sans
+[NEW] DejaVu Serif
+[updated] Enigmatic
+[renamed/updated] Gentium -> Gentium Plus
+[NEW] Hack
+[renamed] Hooked Up -> All Hooked Up
+[updated] Liberation Sans
+[NEW] Liberation Serif
+[renamed] Movie Poster -> SF Movie Poster
+[REMOVED] Vera Serif (replaced by DejaVu Sans)
+[renamed] Wonder Comic -> SF Wonder Comic
+
+------------------------------------------------------------------------

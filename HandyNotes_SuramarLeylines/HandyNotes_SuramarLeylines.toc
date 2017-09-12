@@ -1,0 +1,18 @@
+## Interface: 70000
+## Title: HandyNotes_SuramarLeylines
+## Notes: Leyline feeds in Suramar? Sure, why not?
+## Author: Kemayo
+## Version: 1
+## DefaultState: enabled
+## X-Category: Achievements
+## X-eMail: kemayo @ gmail DOT com
+## SavedVariables: HandyNotes_SuramarLeylinesDB
+## RequiredDeps: HandyNotes
+## X-Curse-Packaged-Version: v1
+## X-Curse-Project-Name: HandyNotes_SuramarLeylines
+## X-Curse-Project-ID: handynotes_suramarleylines
+## X-Curse-Repository-ID: wow/handynotes_suramarleylines/mainline
+
+handler.lua
+config.lua
+nodes.lua

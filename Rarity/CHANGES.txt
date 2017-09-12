@@ -1,0 +1,9 @@
+------------------------------------------------------------------------
+r602 | Allara | 2017-09-06 20:07:21 -0500 (Wed, 06 Sep 2017) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+
+- Updating .pkgmeta to pull the latest alpha of LibBabble-Subzone in the hopes that it corrects the build error
+- This is NOT a 7.3 update for Rarity yet. It is coming soon.
+------------------------------------------------------------------------
+
