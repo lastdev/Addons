@@ -1,0 +1,10 @@
+## Title: MaxDps_Priest
+## Version: 8.0.3
+## Author: Kaminaris
+## Interface: 80000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## X-Curse-Project-ID: 98744
+## X-WoWI-ID: 24648
+
+main.lua

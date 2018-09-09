@@ -1,0 +1,12 @@
+tag 89fd4c4be02b2579b5baf58ef18a74ca5287ddd3 v1.3
+Author:	Ethan Centaurai <ethancentaurai@outlook.com>
+Date:	Sun Jul 22 12:28:46 2018 +0100
+
+Tagging as v1.3.
+
+commit 81b70ffd234da31af3297d5c48210f0c867ba8bc
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Wed Jul 18 21:46:50 2018 +0100
+
+    Updated for Patch 8.0.
+

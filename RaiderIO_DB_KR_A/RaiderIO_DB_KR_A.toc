@@ -1,0 +1,12 @@
+## Interface: 80000
+## X-Min-Interface: 70300
+## Title: Raider.IO Mythic Plus (Korea - Alliance)
+## Notes: Raider.IO Mythic Plus Scores DB for Korea - Alliance. Updated nightly.
+## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Region: Korea
+## X-Faction: Alliance
+## X-Website: https://raider.io
+../RaiderIO/db/db_kr_alliance_characters.lua
+../RaiderIO/db/db_kr_alliance_lookup.lua

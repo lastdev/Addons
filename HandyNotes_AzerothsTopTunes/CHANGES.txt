@@ -1,0 +1,24 @@
+tag 237abe0763f6bc7be9b8975dec6ef142517ba9d9 v1.2.2
+Author:	Ethan Centaurai <ethancentaurai@outlook.com>
+Date:	Thu Aug 9 20:07:01 2018 +0100
+
+Tagging as v1.2.2.
+
+commit b66db4ad46db1662d3e731be47ecbb9702914831
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Thu Aug 9 19:21:22 2018 +0100
+
+    Fixed a copy/paste fail.
+
+commit 9a2ac0cae1dbc225d3c2338fb669956a784d99eb
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Wed Aug 1 21:48:57 2018 +0100
+
+    Bump Interface number to 80000.
+
+commit 7f5c7d2eb82adcccfcbe94e86f6965788560345f
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Wed Aug 1 21:48:44 2018 +0100
+
+    Update HandyNotes version check.
+

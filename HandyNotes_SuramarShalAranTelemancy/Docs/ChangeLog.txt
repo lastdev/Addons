@@ -1,0 +1,112 @@
+$Id: ChangeLog.txt 57 2018-08-06 15:32:45Z arith $
+
+Revision History:
+=================
+
+* v1.19 (Aug. 06, 2018)
+-----------------------
+- Remove LibUIDropDown
+- Fixed TomTom waypoint's function call issue
+- Convert map date to use MapID
+
+* v1.18 (Jul. 27, 2018)
+-----------------------
+- Fixed RequiredDeps issue
+
+* v1.17 (Jul. 26, 2018)
+-----------------------
+- Toc update to support WoW 8.0.1
+- Remove listening to CLOSE_WORLD_MAP event as no longer supported
+- Update ToC to revise the LibUIDropDown's name and move it with LibBabble-SubZone to RequiredDeps
+
+* v1.16 (Apr. 25, 2018)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+
+* v1.15 (Aug. 31, 2017)
+-----------------------
+- Lib Update: LibUIDropDownMenu
+
+* v1.14 (Aug. 29, 2017)
+-----------------------
+- Fixed LibBabble-SubZone-3.0's packaging issue
+
+* v1.13 (Aug. 29, 2017)
+-----------------------
+- ToC update to support WoW 7.3.0
+- Lib Update: LibUIDropDownMenu, LibBabble-SubZone-3.0
+- Localization update:
+  - French (X0larinf)
+
+* v1.12 (Jul. 19, 2017)
+-----------------------
+- Lib update: LibUIDropDownMenu
+
+* v1.11 (Jun. 19, 2017)
+-----------------------
+- Fixed icon issue
+
+* v1.10 (May 25, 2017)
+-----------------------
+- Fixed issue that no-lib version was not able to locate LibBabble-SubZone-3.0
+
+* v1.09 (May 24, 2017)
+-----------------------
+- Lib update:
+  - Replace NoTaint_UIDropDownMenu with LibUIDropDownMenu
+- Enhanced dropdown menu's behavior when world map is changed or closed
+
+* v1.08 (May 20, 2017)
+-----------------------
+- Lib update:
+  - NoTaint_UIDropDownMenu
+
+* v1.07 (May 14, 2017)
+-----------------------
+- Replaced UIDropDown with NoTaint_UIDropDown
+- Revised iter function to return dungeonLevel value
+- Localization update:
+  - German (pas06)
+  - French (Stuxz)
+
+* v1.06 (May 03, 2017)
+-----------------------
+- Revised the portals' displaying information
+- Added to retrieve spell name
+- Added config option to show / hide portals inside Shal'Aran
+- Localization update:
+  - German (pas06)
+  - Russian (BLizzatron)
+
+* v1.05 (Apr. 28, 2017)
+-----------------------
+- Re-organized config options
+- Standardize localization key style
+- Changed the registered name to HandyNotes
+- Localization update:
+  - German (pas06, FireEmerald)
+
+* v1.04 (Apr. 26, 2017)
+-----------------------
+- Added more showing options (suggested by FireEmerald)
+- Localization update:
+  - German (pas06, FireEmerald)
+  - Russian (BLizzatron)
+
+* v1.03 (Apr. 25, 2017)
+-----------------------
+- Fixed the wrong texture path issue
+
+* v1.02 (Apr. 24, 2017)
+-----------------------
+- Added cave's entrance
+
+* v1.01 (Apr. 24, 2017)
+-----------------------
+- Localization update
+  - German (pas06)
+  - Simplified Chinese
+
+* v1.00 (Apr. 21, 2017)
+-----------------------
+- Initial version which support WoW 7.2.0

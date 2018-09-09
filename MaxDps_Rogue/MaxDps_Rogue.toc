@@ -1,0 +1,8 @@
+## Title: MaxDps_Rogue
+## Version: 7.3.5
+## Author: Kaminari
+## Interface: 70300
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+
+main.lua

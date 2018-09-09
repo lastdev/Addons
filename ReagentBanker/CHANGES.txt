@@ -1,0 +1,15 @@
+------------------------------------------------------------------------
+r9 | Tuhljin | 2018-07-22 02:44:56 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   A /trunk/readme.txt
+
+- Add readme.txt for proper change log.
+------------------------------------------------------------------------
+r8 | Tuhljin | 2018-07-21 15:24:44 +0000 (Sat, 21 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/ReagentBanker.lua
+   M /trunk/ReagentBanker.toc
+
+- Improve compatibility with addons that change bank display, such as Bagnon.
+------------------------------------------------------------------------
+

@@ -1,0 +1,19 @@
+## Interface: 70200
+## Title: SharedMediaAdditionalSounds
+## Notes: Inserts additionnal sounds into SharedMediaLib's storage.
+## Version: 7.0
+## Author: Stassart
+## OptionalDeps: LibSharedMedia-3.0, LibSharedMedia-2.0, SharedMediaLib
+## X-Category: Audio & Video
+## X-eMail: addon (a) stassart o org
+## X-Website: http://www.curse.com/addons/wow/sharedmediaadditionalsounds
+## X-Credits: pb_ee1
+## LoadOnDemand: 0
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+Core.lua
+SharedMediaAdditionalSounds.lua
+

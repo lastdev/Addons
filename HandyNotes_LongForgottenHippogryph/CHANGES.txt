@@ -1,0 +1,18 @@
+tag cffe19249b60005d9014c81be7763c167e5de798 v3
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Fri Jul 20 11:31:42 2018 -0500
+
+Tagging v3
+
+commit dcc5de8840f872c49592096fff72a6388613f7fb
+Author: David Lynch <kemayo@gmail.com>
+Date:   Fri Jul 20 11:31:27 2018 -0500
+
+    Fix hiding nodes
+
+commit b6ee0d76fc7f7aa192be3ea728497315aaf44269
+Author: David Lynch <kemayo@gmail.com>
+Date:   Fri Jul 20 11:28:13 2018 -0500
+
+    Fix for Battle for Azeroth
+

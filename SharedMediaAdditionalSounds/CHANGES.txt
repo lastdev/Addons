@@ -1,0 +1,38 @@
+------------------------------------------------------------------------
+r17 | allinonemighty | 2017-03-29 22:26:42 -0500 (Wed, 29 Mar 2017) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.toc
+
+Updated TOC
+------------------------------------------------------------------------
+r16 | pb_ee1 | 2016-10-26 13:32:12 -0500 (Wed, 26 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.toc
+
+Updated TOC
+------------------------------------------------------------------------
+r15 | stassart | 2016-07-19 20:53:12 -0500 (Tue, 19 Jul 2016) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.toc
+
+Updated ToC for Legion.
+------------------------------------------------------------------------
+r14 | stassart | 2015-06-28 18:38:11 -0500 (Sun, 28 Jun 2015) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.toc
+
+Updated ToC for 6.2.
+------------------------------------------------------------------------
+r13 | stassart | 2015-03-04 05:15:36 -0600 (Wed, 04 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.lua
+
+Updated sound filenames.  Required by LibSharedMedia update.
+------------------------------------------------------------------------
+r12 | stassart | 2015-03-04 04:16:58 -0600 (Wed, 04 Mar 2015) | 1 line
+Changed paths:
+   M /trunk/SharedMediaAdditionalSounds.toc
+
+Updated version. Also create a version where the tag matches.
+------------------------------------------------------------------------
+

@@ -1,0 +1,16 @@
+## Title: Configator |cff224477(lib)
+## Notes: Configator allows authors to easily construct a graphical user configuration interface.
+##
+## Interface: 80000
+## LoadOnDemand: 0
+##
+## Version: 7.7.6057 (SwimmingSeadragon)
+## Revision: $Id: Configator.toc 6057 2018-08-29 01:26:34Z none $
+## Author: Norganna's AddOns
+## X-Part-Of: Libraries
+## X-Category: Library
+## X-Max-Interface: 80000
+## X-URL: http://zip.norganna.org/libs/Configator/
+## X-Feedback: http://forums.norganna.org
+##
+Load.xml

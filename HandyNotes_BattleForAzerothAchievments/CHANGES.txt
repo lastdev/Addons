@@ -1,0 +1,33 @@
+# Changelog
+## Changed in v7 (beta)
+
+*added other languages (I thought there would be a fall back)
+
+## Changed in v6 (beta)
+
+*fixed messed up notes from Achievement "Dune Rider"
+*fixed some naming things messing up saved vars
+*added the Achievement "Hoppin' Sad"
+
+## Changed in v5 (beta)
+
+*added english local file (didn't know this has to be)
+*fixed some typos
+
+## Changed in v4 (beta)
+
+*a problem corrected with non-disappearing icons 
+
+## Changed in v3 (beta)
+
+*added the Achievement "A Loa of a Tale"
+*added the Achievement "Drust the Facts, Ma'am"
+
+## Changed in v2 (beta)
+
+*added the Achievement "Carved in Stone, Written in Blood"
+*switched from diffrent files to one file for Data
+
+## Changed in v1 (alpha)
+
+* Created with the Achievement "Dune Rider"

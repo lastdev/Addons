@@ -1,0 +1,10 @@
+## Title: MaxDps_Paladin
+## Version: 8.0.2
+## Author: Kaminaris
+## Interface: 80000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## X-Curse-Project-ID: 98895
+## X-WoWI-ID: 24646
+
+main.lua

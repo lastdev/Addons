@@ -1,0 +1,28 @@
+tag e92d59440af3ffd71b2268f463761e36fa716259 8.0.1.10
+Author:	James D. Callahan III <jcallahan@curse.com>
+Date:	Sat Sep 1 02:02:33 2018 -0500
+
+commit d3c8ceea99837d4013829f214d6014d2d0d68560
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 1 02:01:11 2018 -0500
+
+    Add vignetteIDs for Executioner Blackwell, Captain Leadfist, Haywire Golem, and Gorged Boar.
+
+commit 340f0e02e572a58e63ae27488e41cdb54fe08290
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 1 01:17:31 2018 -0500
+
+    Change update logic to only update the target button's source text if it doesn't exist or is an empty string to avoid, for example, updating from Minimap to Unit Nameplates since the former would be the actual source.
+
+commit 2711b3cd09414b84f7601836b439d9d237cda8d8
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 1 01:05:24 2018 -0500
+
+    Add the ability to map multiple NPCs to a vignetteID, check the vignette mapping before checking the vignette's NPC ID, and always pass the vignette name to the processing handler no matter the method of detection.
+
+commit 6ea0d297ebc24a91dbb8bf03f1e683037b140c6c
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Fri Aug 31 13:36:23 2018 -0500
+
+    Add vignetteID and fix questID for Scaleclaw Broodmother in Vol'dun.
+

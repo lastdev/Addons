@@ -1,0 +1,13 @@
+## Interface: 80000
+## Title: Reagent Banker
+## Version: 1.0.2
+## Author: Tuhljin
+## Notes: Automate your Reagent Bank.
+## SavedVariables: ReagentBanker_Settings
+
+libs\TjOptions.lua
+libs\TjDropDownMenu.lua
+
+localization.lua
+ReagentBanker.lua
+Options.lua

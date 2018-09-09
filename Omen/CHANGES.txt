@@ -1,0 +1,86 @@
+tag bfcaf3a290279a055fbbf685bc15959cbbe0a0e3 v3.2.1
+Author:	Hendrik Leppkes <h.leppkes@gmail.com>
+Date:	Thu Aug 9 09:45:09 2018 +0200
+
+Tag as v3.2.1
+
+commit 2abb8428f5dea9faf7d572f6ec4556b5176d056d
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Tue Jul 17 21:34:49 2018 +0200
+
+    Update TOC and version
+
+commit e3baee7143a55d8e5e11734638229b80b045689e
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 21:22:12 2018 +0200
+
+    Fix Mirror Image duration
+
+commit fc6970886944596c1c2d55b9d7a1933c0603bb1d
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 21:21:33 2018 +0200
+
+    Disable tricks/misdirect threat redirection handling
+    
+    The threat is now permanent, and as such the threat APIs report it accurately.
+
+commit 9e3b3699abf0be9cd05d3c4b738bab8e93508b8d
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 21:06:43 2018 +0200
+
+    Remove Hand of Salvation, it hasn't existed for a while
+
+commit 8c740f5fcc9d1774c25464e0040abab82b285227
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 21:06:21 2018 +0200
+
+    Fix CLEU on 8.0
+
+commit f435ff00f53facc51961700425efd1c276b555bc
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:53:41 2018 +0200
+
+    Update locale
+
+commit 6a05889cbb73f447687b1034543092758906c69f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:48:52 2018 +0200
+
+    Hide Omen when starting a pet battle
+
+commit c8f39cd1ffe886f73e5152ca6264d321407c8bcd
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:33:29 2018 +0200
+
+    Fix item-based range check
+
+commit 8895e8ad8361fee30f7e9794518e3321238cff1a
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:29:45 2018 +0200
+
+    Use floats to format threat numbers, avoids integer overflows
+
+commit cc49e37f715187be10661304c47f9e6f876ca33f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:26:25 2018 +0200
+
+    Remove zone based threat modification, it was not used
+
+commit 26764039dda0e4f1eb272731a8cf43e18b480a6e
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Sat Jun 23 20:22:30 2018 +0200
+
+    Remove ItemRefTooltip hack to load item info, GetItemInfo already does that
+
+commit 2511f9f66d8b1d13b1722b4396ffe9ee33c72d75
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Tue Mar 14 13:06:42 2017 +0100
+
+    Update toc for 7.1
+
+commit 1c28940dead2bc730b5585170be1e9e6cd512e0d
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Tue Mar 14 13:06:07 2017 +0100
+
+    Simplify tank check to be based on current spec
+

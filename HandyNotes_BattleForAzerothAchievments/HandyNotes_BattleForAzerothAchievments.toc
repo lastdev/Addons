@@ -1,0 +1,17 @@
+## Interface: 80000
+## Version: v7
+
+## Title: HandyNotes: Battle for Azeroth Achievments
+## Notes: Where are the Items for the diffrent BfA Achievments
+## Notes-deDE: Zeigt an, wo die verschiedenen Gegenstände für diverse Erfolge von Battle for Azeroth zu finden sind
+
+## Author: Strandmaus-Azshara
+## DefaultState: enabled
+## X-Category: Map
+## SavedVariables: HandyNotes_BattleForAzerothAchievmentsDB
+## RequiredDeps: HandyNotes
+
+locales\Locales.xml
+HandyNotes_BattleForAzerothAchievments_Handler.lua
+HandyNotes_BattleForAzerothAchievments_Config.lua
+HandyNotes_BattleForAzerothAchievments_Data.lua

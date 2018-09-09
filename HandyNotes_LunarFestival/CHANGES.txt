@@ -1,0 +1,18 @@
+tag f97016e200e173645e96b2a19b202af32fb006ae v1.5
+Author:	Ethan Centaurai <ethancentaurai@outlook.com>
+Date:	Sun Jul 22 12:28:09 2018 +0100
+
+Tagging as v1.5.
+
+commit aeeb1026bfa46f881b9d9defe7416b060aca3ed9
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Sun Jul 22 12:16:26 2018 +0100
+
+    Updated for Patch 8.0.
+
+commit d4eec9d1b24b1a5bcae76ce7d9c5674f6d56de6a
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Mon Feb 19 23:07:31 2018 +0000
+
+    Added Zidormi to Silithus.
+

@@ -1,0 +1,12 @@
+## Interface: 80000
+## X-Min-Interface: 70300
+## Title: Raider.IO Mythic Plus (Taiwan - Horde)
+## Notes: Raider.IO Mythic Plus Scores DB for Taiwan - Horde. Updated nightly.
+## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Region: Taiwan
+## X-Faction: Horde
+## X-Website: https://raider.io
+../RaiderIO/db/db_tw_horde_characters.lua
+../RaiderIO/db/db_tw_horde_lookup.lua

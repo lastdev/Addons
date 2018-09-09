@@ -1,0 +1,10 @@
+## Title: MaxDps_DeathKnight
+## Version: 8.0.0
+## Author: Kaminaris
+## Interface: 80000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## X-Curse-Project-ID: 258275
+## X-WoWI-ID: 24638
+
+main.lua

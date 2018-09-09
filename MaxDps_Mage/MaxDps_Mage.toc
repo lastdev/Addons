@@ -1,0 +1,8 @@
+## Title: MaxDps_Mage
+## Version: 7.3.0
+## Author: Kaminaris
+## Interface: 70300
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+
+main.lua

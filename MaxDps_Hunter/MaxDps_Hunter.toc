@@ -1,0 +1,10 @@
+## Title: MaxDps_Hunter
+## Version: 8.0.0
+## Author: Kaminaris
+## Interface: 80000
+## Dependencies: MaxDps
+## LoadOnDemand: 1
+## X-Curse-Project-ID: 98966
+## X-WoWI-ID: 24642
+
+main.lua
