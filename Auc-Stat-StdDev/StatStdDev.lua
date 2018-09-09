@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Standard Deviation Statistics module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: StatStdDev.lua 5552 2015-03-28 18:04:32Z brykrys $
+	Version: 7.7.6086 (SwimmingSeadragon)
+	Revision: $Id: StatStdDev.lua 6086 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -49,9 +49,15 @@ local MAX_DATAPOINTS = 100
 
 -- Constants used when creating a PDF:
 local BASE_WEIGHT = 1
+local STDDEV_PDF_SCALE = 1 -- tuning value to adjust the stddev used in the PDF function
+	-- for future - intended to be used to balance the PDF against other Stat modules (currently set to 1 for 'no effect')
+	-- reducing STDDEV_PDF_SCALE makes the PDF 'stronger' compared to other modules, inceasing makes it 'weaker' - without adjusting the area/weight
 -- Clamping limits for stddev relative to mean
-local CLAMP_STDDEV_LOWER = 0.01
+local CLAMP_STDDEV_LOWER = 0.02
 local CLAMP_STDDEV_UPPER = 1
+local OVERCLAMP_WEIGHT_FACTOR = 0.5 -- tuning value to control how rapidly weight gets reduced as (stddev/mean) increases beyond the upper clamp limit.
+	-- a lower value of OVERCLAMP_WEIGHT_FACTOR causes the weight to fall more slowly as stddev rises, and the lowest possible weight will tend toward (1-OVERCLAMP_WEIGHT_FACTOR)
+	-- has no effect in cases where stddev does not exceed the upper clamp limit
 -- Adjustments when seen count is very low (in this case, auctionscount)
 local LOWSEEN_MINIMUM = 1 -- lowest possible count for a valid PDF
 -- Weight taper for low seen count
@@ -60,6 +66,7 @@ local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
 local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
 local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
 -- StdDev Estimate for low seen count
+-- Note: ESTIMATE_FACTOR / (ESTIMATE_THRESHOLD - 1) should be >= CLAMP_STDDEV_LOWER
 local ESTIMATE_THRESHOLD = 10
 local ESTIMATE_FACTOR = 0.33
 
@@ -164,6 +171,9 @@ function lib.GetItemPDF(hyperlink, serverKey)
 		area = area * (count * TAPER_SLOPE + TAPER_OFFSET)
 	end
 
+	-- We also allow the StdDev used by the PDF to be scaled, as another method of adjusting relative weight (lower STDDEV_PDF_SCALE gives higher weight)
+	stddev = stddev * STDDEV_PDF_SCALE
+
 	-- Extremely large or small values of stddev can cause problems with GetMarketValue
 	-- we shall apply limits relative to the mean of the bellcurve (local 'average')
 	local clamplower, clampupper = average * CLAMP_STDDEV_LOWER, average * CLAMP_STDDEV_UPPER
@@ -176,7 +186,8 @@ function lib.GetItemPDF(hyperlink, serverKey)
 		stddev = clamplower
 	elseif stddev > clampupper then
 		-- Note that even with this adjustment, 'lower' can still be significantly negative!
-		area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		--area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		area = area * (1 + OVERCLAMP_WEIGHT_FACTOR * (clampupper / stddev - 1)) -- as we're hard capping the stddev, reduce weight to compensate
 		stddev = clampupper
 	end
 
@@ -594,4 +605,4 @@ function lib.ChangeServerKey(oldKey, newKey)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5552 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 6086 $")

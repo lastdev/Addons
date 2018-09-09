@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 local LIBNAME = "LibExtraTip"
 local VERSION_MAJOR = 1
-local VERSION_MINOR = 342
+local VERSION_MINOR = 344
 -- Minor Version cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
 
@@ -37,7 +37,7 @@ local LIBSTRING = LIBNAME.."_"..VERSION_MAJOR.."_"..VERSION_MINOR
 local lib = LibStub:NewLibrary(LIBNAME.."-"..VERSION_MAJOR, VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 423 $","5.15.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/LibExtraTip/LibExtraTip.lua $","$Rev: 6056 $","5.15.DEV.", 'auctioneer', 'libs')
 
 -- Call function to deactivate any outdated version of the library.
 -- (calls the OLD version of this function, NOT the one defined in this
@@ -377,7 +377,7 @@ if not lib.hookStore or lib.hookStore.version ~= HOOKSTORE_VERSION then
 end
 
 -- Called to install/modify a pre-/post-hook on the given tooltip's method
-local function hook(tip, method, prehook, posthook)
+local function hookmethod(tip, method, prehook, posthook)
 	if not lib.hookStore[tip] then lib.hookStore[tip] = {} end
 	local control
 	-- check for existing hook
@@ -392,7 +392,7 @@ local function hook(tip, method, prehook, posthook)
 	if not orig then
 		-- There should be an original method - abort if it's missing
 		if nLog then
-			nLog.AddMessage("LibExtraTip", "Hooks", N_NOTICE, "Missing method", "LibExtraTip:hook detected missing method: "..tostring(method))
+			nLog.AddMessage("LibExtraTip", "Hooks", N_NOTICE, "Missing method", "LibExtraTip:hookmethod detected missing method: "..tostring(method))
 		end
 		return
 	end
@@ -419,6 +419,35 @@ local function hook(tip, method, prehook, posthook)
 	(i.e. they might get called or they might not...)
 	--]]
 end
+
+-- Called to install/modify a secure post-hook on the given tooltip's method (pre-hooks cannot be applied securely)
+local function hooksecure(tip, method, posthook)
+	if not lib.hookStore[tip] then lib.hookStore[tip] = {} end
+	-- check for existing hook
+	local methodkey = "#"..method -- use modified key to avoid conflict with old hook stubs
+	local control = lib.hookStore[tip][methodkey]
+	if control then
+		control[1] = posthook or control[1]
+		return
+	end
+	if not tip[method] then
+		-- There should be an original method - abort if it's missing
+		if nLog then
+			nLog.AddMessage("LibExtraTip", "Hooks", N_NOTICE, "Missing method", "LibExtraTip:hooksecure detected missing method: "..tostring(method))
+		end
+		return
+	end
+	control = {posthook}
+	lib.hookStore[tip][methodkey] = control
+	-- install hook stub
+	local stub = function(...)
+		local hook = control[1]
+		if hook then hook(...) end
+	end
+	hooksecurefunc(tip, method, stub)
+	-- Using control table protects against multiple hooking and allows us to change or disable the hook
+end
+
 
 -- Called to deactivate our stub hook for the given tooltip's method
 -- The stub is left in place: we assume we are undergoing a version upgrade, and that the stubs will be reused
@@ -477,8 +506,7 @@ local function hookglobal(func, posthook)
 		return
 	end
 	local stub = function(...)
-		local hook
-		hook = control[1]
+		local hook = control[1]
 		if hook then hook(...) end
 	end
 	-- As we only need post-hooks we can use hooksecurefunc
@@ -530,13 +558,13 @@ function lib:RegisterTooltip(tooltip)
 			hookscript(tooltip,"OnTooltipSetSpell",OnTooltipSetSpell)
 			hookscript(tooltip,"OnTooltipCleared",OnTooltipCleared)
 			hookscript(tooltip,"OnSizeChanged",OnSizeChanged)
-			hook(tooltip, "Show", nil, ShowCalled) -- posthook
+			hooksecure(tooltip, "Show", ShowCalled)
 
 			for k,v in pairs(tooltipMethodPrehooks) do
-				hook(tooltip,k,v)
+				hookmethod(tooltip,k,v)
 			end
 			for k,v in pairs(tooltipMethodPosthooks) do
-				hook(tooltip,k,nil,v)
+				hookmethod(tooltip,k,nil,v)
 			end
 		end
 		return true
@@ -1232,7 +1260,13 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			local minMade, maxMade = C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
 			reg.additional.minMade = minMade
 			reg.additional.maxMade = maxMade
-			reg.quantity = (minMade + maxMade) / 2 -- ### todo: may not be an integer, if this causes problems may need to math.floor it
+			if minMade and maxMade then -- protect against nil values
+				reg.quantity = (minMade + maxMade) / 2 -- ### todo: may not be an integer, if this causes problems may need to math.floor it
+			elseif maxMade then
+				reg.quantity = maxMade
+			else
+				reg.quantity = minMade -- note: may still be nil
+			end
 			reg.additional.link = C_TradeSkillUI.GetRecipeItemLink(recipeID) -- Workaround [LTT-56], Remove when fixed by Blizzard
 		end,
 
@@ -1308,6 +1342,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			reg.additional.eventIndex = index
 		end,
 
+		--[[ disabled due to probable taint issues
 		SetSpellBookItem = function(self,index,booktype)
 			OnTooltipCleared(self)
 			local reg = tooltipRegistry[self]
@@ -1320,6 +1355,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 				SetSpellDetail(reg, link)
 			end
 		end,
+		--]]
 
 		SetTalent = function(self, index, isInspect, talentGroup, inspectedUnit, classID)
 			OnTooltipCleared(self)
@@ -1359,6 +1395,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 		end,
 		--]]
 
+		--[[ disabled due to possible taint issues
 		SetUnitBuff = function(self, unit, index, filter)
 			OnTooltipCleared(self)
 			local reg = tooltipRegistry[self]
@@ -1378,6 +1415,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			reg.additional.eventIndex = index
 			reg.additional.eventFilter = filter
 		end,
+		--]]
 	}
 
 	local function posthookClearIgnore(self)
@@ -1415,13 +1453,13 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 		SetQuestLogRewardSpell = posthookClearIgnore,
 		SetQuestRewardSpell = posthookClearIgnore,
 		SetShapeshift = posthookClearIgnore,
-		SetSpellBookItem = posthookClearIgnore,
+		--SetSpellBookItem = posthookClearIgnore,
 		SetTalent = posthookClearIgnore,
 		SetTrainerService = posthookClearIgnore,
 		--SetUnit = posthookClearIgnore,
 		--SetUnitAura = posthookClearIgnore,
-		SetUnitBuff = posthookClearIgnore,
-		SetUnitDebuff = posthookClearIgnore,
+		--SetUnitBuff = posthookClearIgnore,
+		--SetUnitDebuff = posthookClearIgnore,
 	}
 
 end

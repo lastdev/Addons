@@ -8,12 +8,15 @@ local parentName = "AltoholicTabCharacters"
 local parent
 
 local currentView = 0		-- current view in the characters category
-local currentProfession
+local currentProfession			-- currently selected profession
+local currentMenuProfession	-- profession currently being navigated in the DDM
 
 local THIS_ACCOUNT = "Default"
 local currentAccount = THIS_ACCOUNT
 local currentRealm = GetRealmName()
 local currentAlt = UnitName("player")
+
+local SKILL_ANY = 4
 
 -- ** Icons Menus **
 local VIEW_BAGS = 1
@@ -58,16 +61,15 @@ local function HideAll()
 	
 	AltoholicTabCharacters.QuestLog:Hide()
 	AltoholicTabCharacters.Talents:Hide()
+	AltoholicTabCharacters.Spellbook:Hide()
 	AltoholicTabCharacters.GarrisonMissions:Hide()
+	AltoholicTabCharacters.Recipes:Hide()
 	
 	AltoholicFrameContainers:Hide()
 
 	AltoholicFrameMail:Hide()
 	AltoholicFramePets:Hide()
 	AltoholicFrameAuctions:Hide()
-	AltoholicFrameRecipes:Hide()
-	-- AltoholicTabCharacters.Recipes:Hide()
-	AltoholicFrameSpellbook:Hide()
 end
 
 local function EnableIcon(frame)
@@ -138,17 +140,14 @@ function ns:ShowCharInfo(view)
 		addon.Mail:Update()
 		
 	elseif view == VIEW_SPELLS then
-		AltoholicFrameSpellbook:Update()
+		AltoholicTabCharacters.Spellbook:Update()
 
 	elseif view == VIEW_COMPANIONS then
 		addon.Pets:SetSinglePetView("CRITTER")
 		addon.Pets:UpdatePets()
 
 	elseif view == VIEW_PROFESSION then
-		AltoholicFrameRecipes:Show()
-		addon.TradeSkills.Recipes:InvalidateView()
-		addon.TradeSkills.Recipes:Update()
-		-- AltoholicTabCharacters.Recipes:Update()
+		AltoholicTabCharacters.Recipes:Update()
 				
 	elseif view == VIEW_GARRISONS then
 		AltoholicTabCharacters.GarrisonMissions:Update()
@@ -187,12 +186,18 @@ function ns:SetMode(mode)
 end
 
 function ns:SetCurrentProfession(prof)
+	if not prof then return end
+	
 	currentProfession = prof
 
-	if currentProfession then
-		addon.TradeSkills.Recipes:SetCurrentProfession(currentProfession)
-		ns:ViewCharInfo(VIEW_PROFESSION)
-	end
+	local recipes = AltoholicTabCharacters.Recipes
+	recipes:SetCurrentProfession(currentProfession)
+	recipes:SetMainCategory(0)
+	recipes:SetSubCategory(0)
+	recipes:SetCurrentColor(SKILL_ANY)
+	recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
+	
+	ns:ViewCharInfo(VIEW_PROFESSION)
 end
 
 -- ** DB / Get **
@@ -296,7 +301,7 @@ local function OnSpellTabChange(self)
 	CloseDropDownMenus()
 	
 	if self.value then
-		AltoholicFrameSpellbook:SetSchool(self.value)
+		AltoholicTabCharacters.Spellbook:SetSchool(self.value)
 		ns:ViewCharInfo(VIEW_SPELLS)
 	end
 end
@@ -309,28 +314,54 @@ end
 local function OnProfessionColorChange(self)
 	CloseDropDownMenus()
 	
-	if self.value then
-		addon.TradeSkills.Recipes:SetCurrentColor(self.value)
-		ns:ViewCharInfo(VIEW_PROFESSION)
-	end
+	if not self.value then return end
+	
+	AltoholicTabCharacters.Recipes:SetCurrentColor(self.value)
+	ns:ViewCharInfo(VIEW_PROFESSION)
 end
 
 local function OnProfessionSlotChange(self)
 	CloseDropDownMenus()
 	
-	if self.value then
-		addon.TradeSkills.Recipes:SetCurrentSlots(self.value)
-		ns:ViewCharInfo(VIEW_PROFESSION)
-	end
+	if not self.value then return end
+	
+	AltoholicTabCharacters.Recipes:SetCurrentSlots(self.value)
+	ns:ViewCharInfo(VIEW_PROFESSION)
 end
 
-local function OnProfessionSubClassChange(self)
+local function OnProfessionCategoryChange(self)
 	CloseDropDownMenus()
 	
-	if self.value then
-		addon.TradeSkills.Recipes:SetCurrentSubClass(self.value)
-		ns:ViewCharInfo(VIEW_PROFESSION)
+	if not self.value then return end
+	
+	currentView = VIEW_PROFESSION
+	HideAll()
+	ns:SetMode(VIEW_PROFESSION)
+	
+	local previousProfession = currentProfession
+	local professionName, mainCategory, subCategory = strsplit(",", self.value)
+	currentProfession = professionName
+	
+	local recipes = AltoholicTabCharacters.Recipes
+	-- if profession has changed, reset the slots filter
+	if previousProfession and previousProfession ~= currentProfession then
+		recipes:SetCurrentColor(SKILL_ANY)
+		recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
 	end
+	recipes:SetCurrentProfession(currentProfession)
+	recipes:SetMainCategory(tonumber(mainCategory))
+	recipes:SetSubCategory(tonumber(subCategory))
+	recipes:Update()
+end
+
+local function OnShowLearned(self)
+	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewLearnedRecipes")
+	ns:ViewCharInfo(VIEW_PROFESSION)
+end
+
+local function OnShowUnlearned(self)
+	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewUnlearnedRecipes")
+	ns:ViewCharInfo(VIEW_PROFESSION)
 end
 
 local function OnGarrisonMenuChange(self)
@@ -578,36 +609,42 @@ local function ProfessionsIcon_Initialize(self, level)
 	local currentCharacterKey = ns:GetAltKey()
 	if not currentCharacterKey then return end
 	
+	local recipes = AltoholicTabCharacters.Recipes
+	
 	if level == 1 then
 		DDM_AddTitle(format("%s / %s", TRADE_SKILLS, DataStore:GetColoredCharacterName(currentCharacterKey)))
 
 		local last = DataStore:GetModuleLastUpdateByKey("DataStore_Crafts", currentCharacterKey)
-
-		local rank
+		local rank, professionName, _
 
 		-- Cooking
 		rank = DataStore:GetCookingRank(currentCharacterKey)
 		if last and rank then
-			DDM_Add(format("%s %s(%s)", PROFESSIONS_COOKING, colors.green, rank ), PROFESSIONS_COOKING, OnProfessionChange, nil, (PROFESSIONS_COOKING == (currentProfession or "")))
+			local info = UIDropDownMenu_CreateInfo()
+			
+			info.text = format("%s %s(%s)", PROFESSIONS_COOKING, colors.green, rank )
+			info.hasArrow = 1
+			info.checked = (PROFESSIONS_COOKING == (currentProfession or ""))
+			info.value = PROFESSIONS_COOKING
+			info.func = OnProfessionChange
+			UIDropDownMenu_AddButton(info, level)
+			
 		else
 			DDM_Add(colors.grey..PROFESSIONS_COOKING, nil, nil)
 		end
 		
-		-- First Aid
-		rank = DataStore:GetFirstAidRank(currentCharacterKey)
-		if last and rank then
-			DDM_Add(format("%s %s(%s)", PROFESSIONS_FIRST_AID, colors.green, rank ), PROFESSIONS_FIRST_AID, OnProfessionChange, nil, (PROFESSIONS_FIRST_AID == (currentProfession or "")))
-		else
-			DDM_Add(colors.grey..PROFESSIONS_FIRST_AID, nil, nil)
-		end
-		
-		-- rank = DataStore:GetArchaeologyRank(currentCharacterKey)
-		
 		-- Profession 1
-		local rank, professionName, _
 		rank, _, _, professionName = DataStore:GetProfession1(currentCharacterKey)
 		if last and rank and professionName then
-			DDM_Add(format("%s %s(%s)", professionName, colors.green, rank ), professionName, OnProfessionChange, nil, (professionName == (currentProfession or "")))
+			local info = UIDropDownMenu_CreateInfo()
+			
+			info.text = format("%s %s(%s)", professionName, colors.green, rank )
+			info.hasArrow = 1
+			info.checked = (professionName == (currentProfession or ""))
+			info.value = professionName
+			info.func = OnProfessionChange
+			UIDropDownMenu_AddButton(info, level)
+			
 		elseif professionName then
 			DDM_Add(colors.grey..professionName, nil, nil)
 		end
@@ -615,97 +652,96 @@ local function ProfessionsIcon_Initialize(self, level)
 		-- Profession 2
 		rank, _, _, professionName = DataStore:GetProfession2(currentCharacterKey)
 		if last and rank and professionName then
-			DDM_Add(format("%s %s(%s)", professionName, colors.green, rank ), professionName, OnProfessionChange, nil, (professionName == (currentProfession or "")))
+			local info = UIDropDownMenu_CreateInfo()
+			
+			info.text = format("%s %s(%s)", professionName, colors.green, rank )
+			info.hasArrow = 1
+			info.checked = (professionName == (currentProfession or ""))
+			info.value = professionName
+			info.func = OnProfessionChange
+			UIDropDownMenu_AddButton(info, level)
+			
 		elseif professionName then
 			DDM_Add(colors.grey..professionName, nil, nil)
 		end
 		
+		DDM_AddTitle(" ")
+		DDM_Add(TRADE_SKILLS_LEARNED_TAB, nil, OnShowLearned, nil, addon:GetOption("UI.Tabs.Characters.ViewLearnedRecipes"))
+		DDM_Add(TRADE_SKILLS_UNLEARNED_TAB, nil, OnShowUnlearned, nil, addon:GetOption("UI.Tabs.Characters.ViewUnlearnedRecipes"))
 		DDM_AddTitle(" ")
 		DDM_AddTitle(FILTERS)
 		
 		if currentProfession then		-- if a profession is visible, display filters
 			local info = UIDropDownMenu_CreateInfo()
 
-			info.text = colors.white..COLOR
+			info.text = format("%s%s", colors.white, COLOR)
 			info.hasArrow = 1
 			info.checked = nil
-			info.value = 1
+			info.value = "colors"
 			info.func = nil
 			UIDropDownMenu_AddButton(info, level)
 
-			info.text = colors.white..SLOT_ABBR
+			info.text = format("%s%s", colors.white, SLOT_ABBR)
 			info.hasArrow = 1
 			info.checked = nil
-			info.value = 2
-			info.func = nil
-			UIDropDownMenu_AddButton(info, level)
-
-			info.text = colors.white..SUBCATEGORY
-			info.hasArrow = 1
-			info.checked = nil
-			info.value = 3
+			info.value = "slots"
 			info.func = nil
 			UIDropDownMenu_AddButton(info, level)
 			
 		else		-- grey out filters
-			DDM_Add(colors.grey..COLOR, nil, nil)
-			DDM_Add(colors.grey..SLOT_ABBR, nil, nil)
-			DDM_Add(colors.grey..SUBCATEGORY, nil, nil)
+			DDM_Add(format("%s%s", colors.grey, COLOR), nil, nil)
+			DDM_Add(format("%s%s", colors.grey, SLOT_ABBR), nil, nil)
 		end
-
+		
 		DDM_AddCloseMenu()
 		
 	elseif level == 2 then	-- ** filters **
 		local info = UIDropDownMenu_CreateInfo()
 
-		if UIDROPDOWNMENU_MENU_VALUE == 1 then		-- colors
+		if UIDROPDOWNMENU_MENU_VALUE == "colors" then
 			for index = 0, 3 do 
-				info.text = addon.TradeSkills.Recipes:GetRecipeColorName(index)
+				info.text = recipes:GetRecipeColorName(index)
 				info.value = index
-				info.checked = (addon.TradeSkills.Recipes:GetCurrentColor() == index)
+				info.checked = (recipes:GetCurrentColor() == index)
 				info.func = OnProfessionColorChange
 				UIDropDownMenu_AddButton(info, level)
 			end
 
 			info.text = L["Any"]
-			info.value = 4
-			info.checked = (addon.TradeSkills.Recipes:GetCurrentColor() == 4)
+			info.value = SKILL_ANY
+			info.checked = (recipes:GetCurrentColor() == SKILL_ANY)
 			info.func = OnProfessionColorChange
 			UIDropDownMenu_AddButton(info, level)
 			
-		elseif UIDROPDOWNMENU_MENU_VALUE == 2 then	-- slots
+		elseif UIDROPDOWNMENU_MENU_VALUE == "slots" then
 			info.text = ALL_INVENTORY_SLOTS
 			info.value = ALL_INVENTORY_SLOTS
-			info.checked = (addon.TradeSkills.Recipes:GetCurrentSlots() == ALL_INVENTORY_SLOTS)
+			info.checked = (recipes:GetCurrentSlots() == ALL_INVENTORY_SLOTS)
 			info.func = OnProfessionSlotChange
 			UIDropDownMenu_AddButton(info, level)
 			
 			local invSlots = {}
 			local profession = DataStore:GetProfession(currentCharacterKey, currentProfession)
-				
-			for index = 1, DataStore:GetNumCraftLines(profession) do
-				local isHeader, _, recipeID = DataStore:GetCraftLineInfo(profession, index)
-				
-				if not isHeader then		-- NON header !!
-					local itemID = DataStore:GetCraftResultItem(recipeID)
+			
+			DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
+				local color, recipeID = DataStore:GetRecipeInfo(recipeData)
+				local itemID = DataStore:GetCraftResultItem(recipeID)
+				if not itemID then return end
 					
-					if itemID then
-						local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
-						
-						if itemEquipLoc and strlen(itemEquipLoc) > 0 then
-							local slot = Altoholic.Equipment:GetInventoryTypeName(itemEquipLoc)
-							if slot then
-								invSlots[slot] = itemEquipLoc
-							end
-						end
+				local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
+
+				if itemEquipLoc and strlen(itemEquipLoc) > 0 then
+					local slot = Altoholic.Equipment:GetInventoryTypeName(itemEquipLoc)
+					if slot then
+						invSlots[slot] = itemEquipLoc
 					end
 				end
-			end
-			
+			end)
+
 			for k, v in pairs(invSlots) do		-- add all the slots found
 				info.text = k
 				info.value = v
-				info.checked = (addon.TradeSkills.Recipes:GetCurrentSlots() == v)
+				info.checked = (recipes:GetCurrentSlots() == v)
 				info.func = OnProfessionSlotChange
 				UIDropDownMenu_AddButton(info, level)
 			end
@@ -713,30 +749,49 @@ local function ProfessionsIcon_Initialize(self, level)
 			--NONEQUIPSLOT = "Created Items"; -- Items created by enchanting
 			info.text = NONEQUIPSLOT
 			info.value = NONEQUIPSLOT
-			info.checked = (addon.TradeSkills.Recipes:GetCurrentSlots() == NONEQUIPSLOT)
+			info.checked = (recipes:GetCurrentSlots() == NONEQUIPSLOT)
 			info.func = OnProfessionSlotChange
 			UIDropDownMenu_AddButton(info, level)
 			
-		elseif UIDROPDOWNMENU_MENU_VALUE == 3 then	-- subclass
-		
-			info.text = ALL
-			info.value = ALL
-			info.checked = (addon.TradeSkills.Recipes:GetCurrentSubClass() == ALL)
-			info.func = OnProfessionSubClassChange
-			UIDropDownMenu_AddButton(info, level)
-		
-			local profession = DataStore:GetProfession(currentCharacterKey, currentProfession)
-			for index = 1, DataStore:GetNumCraftLines(profession) do
-				local isHeader, _, name = DataStore:GetCraftLineInfo(profession, index)
+		else
+			local profession = DataStore:GetProfession(currentCharacterKey, UIDROPDOWNMENU_MENU_VALUE)
+			
+			for index = 1, DataStore:GetNumRecipeCategories(profession) do
+				local categoryID, name, rank, maxRank = DataStore:GetRecipeCategoryInfo(profession, index)
 				
-				if isHeader then
-					info.text = name
-					info.value = name
-					info.checked = (addon.TradeSkills.Recipes:GetCurrentSubClass() == name)
-					info.func = OnProfessionSubClassChange
-					UIDropDownMenu_AddButton(info, level)
+				if rank and maxRank then
+					local color = (maxRank == 0) and colors.red or colors.green
+					name = format("%s (%s%s|r / %s%s|r)", name, color, rank, color, maxRank)
 				end
+				
+				info.text = name
+				info.value = format("%s,%d,0", UIDROPDOWNMENU_MENU_VALUE, index)		-- "Tailoring,1,0"
+				info.hasArrow = (DataStore:GetNumRecipeCategorySubItems(profession, index) > 0) and 1 or nil
+				info.checked = ((recipes:GetCurrentProfession() == UIDROPDOWNMENU_MENU_VALUE) and (recipes:GetMainCategory() == index))
+				info.func = OnProfessionCategoryChange
+				UIDropDownMenu_AddButton(info, level)	
 			end
+		end
+	
+	elseif level == 3 then	-- ** filters **
+		
+		local info = UIDropDownMenu_CreateInfo()
+		local professionName, categoryIndex = strsplit(",", UIDROPDOWNMENU_MENU_VALUE)
+		
+		local profession = DataStore:GetProfession(currentCharacterKey, professionName)
+		categoryIndex = tonumber(categoryIndex)
+		
+		for subCatIndex = 1, DataStore:GetNumRecipeCategorySubItems(profession, categoryIndex) do
+			local categoryID, name = DataStore:GetRecipeSubCategoryInfo(profession, categoryIndex, subCatIndex)
+			info.text = name
+			info.value = format("%s,%d,%d", professionName, categoryIndex, subCatIndex)		-- "Tailoring,1,2"
+			info.checked = (
+				(recipes:GetCurrentProfession() == professionName) and 
+				(recipes:GetMainCategory() == categoryIndex) and 
+				(recipes:GetSubCategory() == subCatIndex)
+			)
+			info.func = OnProfessionCategoryChange
+			UIDropDownMenu_AddButton(info, level)	
 		end
 	end
 end
@@ -760,6 +815,12 @@ local function GarrisonIcon_Initialize(self, level)
 				3, OnGarrisonMenuChange, nil, (currentMenu == 3))
 	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_7_0)), 
 				4, OnGarrisonMenuChange, nil, (currentMenu == 4))
+	DDM_AddTitle(" ")
+	DDM_AddTitle(WAR_CAMPAIGN)
+	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_8_0)), 
+				5, OnGarrisonMenuChange, nil, (currentMenu == 5))
+	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_8_0)), 
+				6, OnGarrisonMenuChange, nil, (currentMenu == 6))
 	
 	DDM_AddCloseMenu()
 end
@@ -832,7 +893,10 @@ function ns:OnLoad()
 end
 
 function addon:DATASTORE_RECIPES_SCANNED(event, sender, tradeskillName)
-	addon.TradeSkills.Recipes:InvalidateView()
+	local recipes = AltoholicTabCharacters.Recipes
+	if recipes:IsVisible() then
+		recipes:Update()
+	end
 end
 
 function addon:DATASTORE_QUESTLOG_SCANNED(event, sender)

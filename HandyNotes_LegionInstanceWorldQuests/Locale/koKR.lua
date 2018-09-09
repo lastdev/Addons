@@ -37,8 +37,4 @@ L["Torn Page"] = "찢어진 책장 한 쪽"
 L["What to display"] = "표시할 내용"
 L["Worn-Edged Page"] = "가장자리가 닳은 책장 한 쪽"
 
--- ToC
-L["Description"] = "군단 인스턴스에서 전역 퀘스트 관련 희귀 우두머리의 위치와 퀘스트를 표시합니다"
-L["Title"] = "HandyNotes - 군단 인스턴스 전역 퀘스트"
-
 end

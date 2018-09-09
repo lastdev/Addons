@@ -6,38 +6,6 @@ local SPELLS_PER_PAGE = 12
 local currentSchool
 local currentPage
 
-local function SetPage(frame, pageNum)
-	currentPage = pageNum
-	
-	local character = addon.Tabs.Characters:GetAltKey()
-	
-	if currentPage == 1 then
-		frame.PrevPage:Disable()
-	else
-		frame.PrevPage:Enable()
-	end
-	
-	local maxPages = 1
-
-	if currentSchool then
-		maxPages = ceil(DataStore:GetNumSpells(character, currentSchool) / SPELLS_PER_PAGE)
-	end
-	
-	if maxPages == 0 then
-		maxPages = 1
-	end
-	
-	if currentPage == maxPages then
-		frame.NextPage:Disable()
-	else
-		frame.NextPage:Enable()
-	end
-
-	frame.PageNumber:SetText(format(PAGE_NUMBER, currentPage))	
-	
-	if currentSchool then _Update(frame) end
-end
-
 addon:Controller("AltoholicUI.SpellbookPanel", {
 	Update = function(frame)
 		local character = addon.Tabs.Characters:GetAltKey()
@@ -76,13 +44,57 @@ addon:Controller("AltoholicUI.SpellbookPanel", {
 		frame:Show()
 	end,
 	GoToPreviousPage = function(frame)
-		SetPage(frame, currentPage - 1)
+		frame:SetPage(currentPage - 1)
 	end,
 	GoToNextPage = function(frame)
-		SetPage(frame, currentPage + 1)
+		frame:SetPage(currentPage + 1)
+	end,
+	SetPage = function(frame, pageNum)
+		currentPage = pageNum
+		
+		local character = addon.Tabs.Characters:GetAltKey()
+
+		-- fix minimum page number
+		currentPage = (currentPage < 1) and 1 or currentPage
+		
+		if currentPage == 1 then
+			frame.PrevPage:Disable()
+		else
+			frame.PrevPage:Enable()
+		end
+		
+		local maxPages = 1
+
+		if currentSchool then
+			maxPages = ceil(DataStore:GetNumSpells(character, currentSchool) / SPELLS_PER_PAGE)
+		end
+		
+		if maxPages == 0 then
+			maxPages = 1
+		end
+		
+		-- fix maximum page number
+		currentPage = (currentPage > maxPages) and maxPages or currentPage
+		
+		if currentPage == maxPages then
+			frame.NextPage:Disable()
+		else
+			frame.NextPage:Enable()
+		end
+
+		frame.PageNumber:SetText(format(PAGE_NUMBER, currentPage))	
+		
+		if currentSchool then frame:Update() end
 	end,
 	SetSchool = function(frame, school)
 		currentSchool = school
-		SetPage(frame, 1)
+		frame:SetPage(1)
+	end,
+	OnMouseWheel = function(frame, delta)
+		if (delta > 0) then
+			frame:GoToPreviousPage()
+		else
+			frame:GoToNextPage()
+		end
 	end,
 })

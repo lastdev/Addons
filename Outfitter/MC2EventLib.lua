@@ -2,149 +2,156 @@ local _, Addon = ...
 
 Addon.EventLib =
 {
-	Version = 1,
-	Handlers = {},
+	Version = 2,
+	Events = {},
 	Iterators = {},
 	EventFrame = CreateFrame("FRAME", nil, UIParent),
 }
 
-function Addon.EventLib:DispatchEvent(pEventID, ...)
-	local vHandlers = self.Handlers[pEventID]
-	
-	if not vHandlers then
+function Addon.EventLib:DispatchEvent(eventID, ...)
+	local event = self.Events[eventID]
+	if not event then
 		return
 	end
 	
-	local vIterator = self.Iterators[pEventID]
-	
-	if vIterator then
+	local iterator = self.Iterators[eventID]
+	if iterator then
 		return
 	end
 	
-	-- Addon:DebugMessage("Dispatching event %s", pEventID)
+	-- Addon:DebugMessage("Dispatching event %s", eventID)
 	
-	vIterator = {Index = 1, Count = #vHandlers}
-	
-	self.Iterators[pEventID] = vIterator
-	
-	while vIterator.Index <= vIterator.Count do
-		local vHandler = vHandlers[vIterator.Index]
+	local handlers = event.Handlers
+
+	iterator = {Index = 1, Count = #handlers}
+	self.Iterators[eventID] = iterator
+	while iterator.Index <= iterator.Count do
+		local handler = handlers[iterator.Index]
 		
-		if vHandler.Blind then
-			if vHandler.RefParam ~= nil then
-				vHandler.Function(vHandler.RefParam, ...)
+		if handler.Blind then
+			if handler.RefParam ~= nil then
+				handler.Function(handler.RefParam, ...)
 			else
-				vHandler.Function(...)
+				handler.Function(...)
 			end
 		else
-			if vHandler.RefParam ~= nil then
-				vHandler.Function(vHandler.RefParam, pEventID, ...)
+			if handler.RefParam ~= nil then
+				handler.Function(handler.RefParam, eventID, ...)
 			else
-				vHandler.Function(pEventID, ...)
+				handler.Function(eventID, ...)
 			end
 		end
 		
-		vIterator.Index = vIterator.Index + 1
+		iterator.Index = iterator.Index + 1
 	end
 	
-	self.Iterators[pEventID] = nil
+	self.Iterators[eventID] = nil
 
 	if self.PerfMonitor then
-		local vEndTime = GetTime()
+		local endTime = GetTime()
 		
-		self.PerfMonitor:FunctionExit(vEndTime)
+		self.PerfMonitor:FunctionExit(endTime)
 		
 		if not self.LastDumpTime
-		or vEndTime - self.LastDumpTime > 2 then
-			self.LastDumpTime = vEndTime
+		or endTime - self.LastDumpTime > 2 then
+			self.LastDumpTime = endTime
 			
 			self.PerfMonitor:DumpValue()
 		end
 	end
 end
 
-function Addon.EventLib:RegisterEvent(pEventID, pFunction, pRefParam, pBlind)
-	if not pFunction then
-		error(string.format("Attempted to register a nil function pointer for event %s", pEventID or "unknown"))
+function Addon.EventLib:RegisterCustomEvent(eventID, handlerFunction, refParam, blind)
+	self:RegisterEvent(eventID, handlerFunction, refParam, blind, true)
+end
+
+function Addon.EventLib:RegisterEvent(eventID, handlerFunction, refParam, blind, isCustomEvent)
+	if not handlerFunction then
+		error(string.format("Attempted to register a nil function pointer for event %s", eventID or "unknown"))
 	end
 	
-	local vIsRegistered, vIndex = self:EventIsRegistered(pEventID, pFunction, pRefParam)
+	local isRegistered, index = self:EventIsRegistered(eventID, handlerFunction, refParam)
 	
-	if vIsRegistered then
-		error(string.format("Attempted to register a handler twice for %s", pEventID))
+	if isRegistered then
+		error(string.format("Attempted to register a handler twice for %s", eventID))
 	end
 	
-	local vHandlers = self.Handlers[pEventID]
-	
-	if not vHandlers then
-		vHandlers = {}
-		self.Handlers[pEventID] = vHandlers
+	local event = self.Events[eventID]
+	if not event then
+		event = {}
+		event.IsCustomEvent = isCustomEvent
+		event.Handlers = {}
+
+		self.Events[eventID] = event
 		
-		if self.EventFrame then
-			self.EventFrame:RegisterEvent(pEventID)
+		if self.EventFrame and not isCustomEvent then
+			self.EventFrame:RegisterEvent(eventID)
 		end
 	end
 	
-	local vHandler =
+	local handler =
 	{
-		Function = pFunction,
-		RefParam = pRefParam,
-		Blind = pBlind,
+		Function = handlerFunction,
+		RefParam = refParam,
+		Blind = blind,
+		IsCustomEvent = isCustomEvent
 	}
-	
-	table.insert(vHandlers, vHandler)
+	table.insert(event.Handlers, handler)
 end
 
-function Addon.EventLib:EventIsRegistered(pEventID, pFunction, pRefParam)
-	local vHandlers = self.Handlers[pEventID]
-	
-	if not vHandlers then
+function Addon.EventLib:EventIsRegistered(eventID, handlerFunction, refParam)
+	local event = self.Events[eventID]
+	if not event then
 		return false
 	end
 	
-	for vIndex, vHandler in ipairs(vHandlers) do
-		if (not pFunction or vHandler.Function == pFunction)
-		and (not pRefParam or vHandler.RefParam == pRefParam) then
-			return true, vIndex
+	for index, handler in ipairs(event.Handlers) do
+		if (not handlerFunction or handler.Function == handlerFunction)
+		and (not refParam or handler.RefParam == refParam) then
+			return true, index
 		end
 	end
 	
 	return false
 end
 
-function Addon.EventLib:UnregisterEvent(pEventID, pFunction, pRefParam)
-	local vIsRegistered, vIndex = self:EventIsRegistered(pEventID, pFunction, pRefParam)
-	
-	if not vIsRegistered then
+function Addon.EventLib:UnregisterCustomEvent(eventID, handlerFunction, refParam)
+	self:UnregisterEvent(eventID, handlerFunction, refParam)
+end
+
+function Addon.EventLib:UnregisterEvent(eventID, handlerFunction, refParam)
+	local isRegistered, index = self:EventIsRegistered(eventID, handlerFunction, refParam)
+	if not isRegistered then
 		return
 	end
 	
-	local vHandlers = self.Handlers[pEventID]
+	local event = self.Events[eventID]
+	local handlers = event.Handlers
+
+	table.remove(handlers, index)
 	
-	table.remove(vHandlers, vIndex)
-	
-	if #vHandlers == 0 then
-		self.Handlers[pEventID] = nil
+	if #handlers == 0 then
+		self.Events[eventID] = nil
 		
-		if self.EventFrame then
-			self.EventFrame:UnregisterEvent(pEventID)
+		if self.EventFrame and not event.IsCustomEvent then
+			self.EventFrame:UnregisterEvent(eventID)
 		end
 	end
 	
-	local vIterator = self.Iterators[pEventID]
+	local iterator = self.Iterators[eventID]
 	
-	if vIterator then
-		if vIndex <= vIterator.Index then
-			vIterator.Index = vIterator.Index - 1
+	if iterator then
+		if index <= iterator.Index then
+			iterator.Index = iterator.Index - 1
 		end
 		
-		vIterator.Count = vIterator.Count - 1
+		iterator.Count = iterator.Count - 1
 	end
 end
 
-function Addon.EventLib:UnregisterAllEvents(pFunction, pRefParam)
-	for vEventID, vHandlers in pairs(self.Handlers) do
-		self:UnregisterEvent(vEventID, pFunction, pRefParam)
+function Addon.EventLib:UnregisterAllEvents(handlerFunction, refParam)
+	for eventID, event in pairs(self.Events) do
+		self:UnregisterEvent(eventID, handlerFunction, refParam)
 	end
 end
 
@@ -156,9 +163,9 @@ Addon.EventLib.HardwareEvents =
 	["TRADE_SKILL_CLOSE"] = true,
 }
 
-Addon.EventLib.EventFrame:SetScript("OnEvent", function (pFrame, pEvent, ...)
-	local vHadHWEvent = Addon.HasHWEvent
-	Addon.HasHWEvent = Addon.HasHWEvent or Addon.EventLib.HardwareEvents[pEvent]
-	pFrame.EventLib:DispatchEvent(pEvent, ...)
-	Addon.HasHWEvent = vHadHWEvent
+Addon.EventLib.EventFrame:SetScript("OnEvent", function (frame, eventID, ...)
+	local hadHardwareEvent = Addon.HasHWEvent
+	Addon.HasHWEvent = Addon.HasHWEvent or Addon.EventLib.HardwareEvents[eventID]
+	frame.EventLib:DispatchEvent(eventID, ...)
+	Addon.HasHWEvent = hadHardwareEvent
 end)

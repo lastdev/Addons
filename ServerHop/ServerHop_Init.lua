@@ -23,7 +23,7 @@ toggleButton:SetSize(70,22)
 toggleButton:SetPoint("BOTTOM",LFGListFrame,"BOTTOM",-4,5)
 toggleButton:SetText(" ServerHop")
 toggleButton:SetScript("OnClick", function(btn)
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 
 	if ServerHop:IsShown() then
 		ServerHop:Hide()

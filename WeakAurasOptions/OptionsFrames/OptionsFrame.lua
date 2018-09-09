@@ -66,15 +66,34 @@ local function CreateDecorationWide(frame)
   return deco1
 end
 
-local function CreateFrameSizer(frame, callback)
+local function CreateFrameSizer(frame, callback, position)
   callback = callback or (function() end)
 
+  local left, right, top, bottom, xOffset1, yOffset1, xOffset2, yOffset2;
+  if (position == "BOTTOMLEFT") then
+    left, right, top, bottom = 1, 0, 0, 1
+    xOffset1, yOffset1 = 6, 6
+    xOffset2, yOffset2 = 0, 0
+  elseif (position == "BOTTOMRIGHT") then
+    left, right, top, bottom = 0, 1, 0, 1
+    xOffset1, yOffset1 = 0, 6
+    xOffset2, yOffset2 = -6, 0
+  elseif (position == "TOPLEFT") then
+    left, right, top, bottom = 1, 0, 1, 0
+    xOffset1, yOffset1 = 6, 0
+    xOffset2, yOffset2 = 0, -6
+  elseif (position == "TOPRIGHT") then
+    left, right, top, bottom = 0, 1, 1, 0
+    xOffset1, yOffset1 = 0, 0
+    xOffset2, yOffset2 = -6, -6
+  end
+
   local handle = CreateFrame("BUTTON", nil, frame)
-  handle:SetPoint("BOTTOMLEFT", frame)
+  handle:SetPoint(position, frame)
   handle:SetSize(25, 25)
   handle:EnableMouse()
 
-  handle:SetScript("OnMouseDown", function() frame:StartSizing("BOTTOMLEFT") end)
+  handle:SetScript("OnMouseDown", function() frame:StartSizing(position) end)
   handle:SetScript("OnMouseUp", function()
     frame:StopMovingOrSizing()
     callback()
@@ -82,27 +101,30 @@ local function CreateFrameSizer(frame, callback)
 
   local normal = handle:CreateTexture(nil, "OVERLAY")
   normal:SetTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
-  normal:SetTexCoord(1, 0, 0, 1)
-  normal:SetPoint("BOTTOMLEFT", handle, 6, 6)
-  normal:SetPoint("TOPRIGHT", handle)
+  normal:SetTexCoord(left, right, top, bottom)
+  normal:SetPoint("BOTTOMLEFT", handle, xOffset1, yOffset1)
+  normal:SetPoint("TOPRIGHT", handle, xOffset2, yOffset2)
   handle:SetNormalTexture(normal)
 
   local pushed = handle:CreateTexture(nil, "OVERLAY")
   pushed:SetTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
-  pushed:SetTexCoord(1, 0, 0, 1)
-  pushed:SetPoint("BOTTOMLEFT", handle, 6, 6)
-  pushed:SetPoint("TOPRIGHT", handle)
+  pushed:SetTexCoord(left, right, top, bottom)
+  pushed:SetPoint("BOTTOMLEFT", handle, xOffset1, yOffset1)
+  pushed:SetPoint("TOPRIGHT", handle, xOffset2, yOffset2)
   handle:SetPushedTexture(pushed)
 
   local highlight = handle:CreateTexture(nil, "OVERLAY")
   highlight:SetTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
-  highlight:SetTexCoord(1, 0, 0, 1)
-  highlight:SetPoint("BOTTOMLEFT", handle, 6, 6)
-  highlight:SetPoint("TOPRIGHT", handle)
+  highlight:SetTexCoord(left, right, top, bottom)
+  highlight:SetPoint("BOTTOMLEFT", handle, xOffset1, yOffset1)
+  highlight:SetPoint("TOPRIGHT", handle, xOffset2, yOffset2)
   handle:SetHighlightTexture(highlight)
 
   return handle
 end
+
+local defaultWidth = 730
+local defaultHeight = 665
 
 function WeakAuras.CreateFrame()
   local WeakAuras_DropDownMenu = CreateFrame("frame", "WeakAuras_DropDownMenu", nil, "UIDropDownMenuTemplate");
@@ -110,7 +132,8 @@ function WeakAuras.CreateFrame()
   local db = savedVars.db;
   local odb = savedVars.odb;
   -------- Mostly Copied from AceGUIContainer-Frame--------
-  frame = CreateFrame("FRAME", nil, UIParent);
+  frame = CreateFrame("FRAME", "WeakAurasOptions", UIParent);
+  tinsert(UISpecialFrames, frame:GetName());
   frame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
@@ -132,18 +155,46 @@ function WeakAuras.CreateFrame()
     xOffset, yOffset = db.frame.xOffset, db.frame.yOffset;
   end
   if not(xOffset and yOffset) then
-    xOffset = (610 - GetScreenWidth()) / 2;
-    yOffset = (492 - GetScreenHeight()) / 2;
+    xOffset = (defaultWidth - GetScreenWidth()) / 2;
+    yOffset = (defaultHeight - GetScreenHeight()) / 2;
   end
   frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", xOffset, yOffset);
   frame:Hide();
+
+  frame:SetScript("OnHide", function()
+    WeakAuras.UnlockUpdateInfo();
+    WeakAuras.SetDragging()
+
+    local tutFrame = WeakAuras.TutorialsFrame and WeakAuras.TutorialsFrame();
+    if(tutFrame and tutFrame:IsVisible()) then
+      tutFrame:Hide();
+    end
+
+    WeakAuras.PauseAllDynamicGroups();
+
+    for id, data in pairs(WeakAuras.regions) do
+      data.region:Collapse();
+    end
+
+    WeakAuras.ResumeAllDynamicGroups();
+
+    WeakAuras.ReloadAll();
+    WeakAuras.Resume();
+
+    if (WeakAuras.mouseFrame) then
+      WeakAuras.mouseFrame:OptionsClosed();
+    end
+    if (WeakAuras.personalRessourceDisplayFrame) then
+      WeakAuras.personalRessourceDisplayFrame:OptionsClosed();
+    end
+  end);
 
   local width, height;
   if(db.frame) then
     width, height = db.frame.width, db.frame.height;
   end
   if not(width and height) then
-    width, height = 630, 492;
+    width, height = defaultWidth, defaultHeight;
   end
   frame:SetWidth(width);
   frame:SetHeight(height);
@@ -171,19 +222,20 @@ function WeakAuras.CreateFrame()
   importbutton:SetHitRectInsets(0,0,0,0)
   importbutton:SetChecked(db.import_disabled)
 
-  importbutton:SetScript("PostClick", function(self)
-    if self:GetChecked() then
+  importbutton.SetValue = function(importbutton)
+    if importbutton:GetChecked() then
       PlaySound(856)
       db.import_disabled = true
     else
       PlaySound(857)
       db.import_disabled = nil
     end
-  end)
+    WeakAuras.RefreshTooltipButtons()
+  end
   importbutton:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    GameTooltip:SetText("Disable Import")
-    GameTooltip:AddLine("If this option is enabled, you are no longer able to import auras.", 1, 1, 1)
+    GameTooltip:SetText(L["Disable Import"])
+    GameTooltip:AddLine(L["If this option is enabled, you are no longer able to import auras."], 1, 1, 1)
     GameTooltip:Show()
   end)
   importbutton:SetScript("OnLeave", GameTooltip_Hide)
@@ -228,9 +280,10 @@ function WeakAuras.CreateFrame()
 
   local titletext = title:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   titletext:SetPoint("TOP", titlebg, "TOP", 0, -14)
-  titletext:SetText(L["WeakAurasOptions"]);
+  titletext:SetText("WeakAuras " .. WeakAuras.versionString);
 
-  frame.sizer = CreateFrameSizer(frame, commitWindowChanges);
+  CreateFrameSizer(frame, commitWindowChanges, "BOTTOMLEFT");
+  CreateFrameSizer(frame, commitWindowChanges, "BOTTOMRIGHT");
 
   local minimize = CreateDecoration(frame)
   minimize:SetPoint("TOPRIGHT", -65, 12)
@@ -312,7 +365,8 @@ function WeakAuras.CreateFrame()
       if not(IsAddOnLoaded("WeakAurasTutorials")) then
         local loaded, reason = LoadAddOn("WeakAurasTutorials");
         if not(loaded) then
-          print("|cff9900FF".."WeakAurasTutorials"..FONT_COLOR_CODE_CLOSE.." could not be loaded: "..RED_FONT_COLOR_CODE.._G["ADDON_"..reason]);
+          reason = string.lower("|cffff2020" .. _G["ADDON_" .. reason] .. "|r.")
+          print(WeakAuras.printPrefix .. "Tutorials could not be loaded, the addon is " .. reason);
           return;
         end
       end
@@ -323,7 +377,7 @@ function WeakAuras.CreateFrame()
   local container = AceGUI:Create("InlineGroup");
   container.frame:SetParent(frame);
   container.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 12);
-  container.frame:SetPoint("TOPLEFT", frame, "TOPRIGHT", -423, -10);
+  container.frame:SetPoint("TOPLEFT", frame, "TOPRIGHT", -423, -14);
   container.frame:Show();
   container.frame:SetClipsChildren(true);
   container.titletext:Hide();
@@ -342,7 +396,7 @@ function WeakAuras.CreateFrame()
   buttonsContainer:SetWidth(170);
   buttonsContainer.frame:SetParent(frame);
   buttonsContainer.frame:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 17, 12);
-  buttonsContainer.frame:SetPoint("TOP", frame, "TOP", 0, -10);
+  buttonsContainer.frame:SetPoint("TOP", frame, "TOP", 0, -14);
   buttonsContainer.frame:SetPoint("right", container.frame, "left", -17);
   buttonsContainer.frame:Show();
   frame.buttonsContainer = buttonsContainer;
@@ -359,8 +413,8 @@ function WeakAuras.CreateFrame()
   filterInput:SetScript("OnEnterPressed", function(...) filterInput:ClearFocus() end);
   filterInput:SetScript("OnEscapePressed", function(...) filterInput:SetText(""); filterInput:ClearFocus() end);
   filterInput:SetWidth(150);
-  filterInput:SetPoint("BOTTOMLEFT", buttonsContainer.frame, "TOPLEFT", 2, -18);
-  filterInput:SetPoint("TOPLEFT", buttonsContainer.frame, "TOPLEFT", 2, -2);
+  filterInput:SetPoint("BOTTOMLEFT", buttonsContainer.frame, "TOPLEFT", 6, -14);
+  filterInput:SetPoint("TOPLEFT", buttonsContainer.frame, "TOPLEFT", 6, -2);
   filterInput:SetTextInsets(16, 0, 0, 0);
 
   local searchIcon = filterInput:CreateTexture(nil, "overlay");
@@ -368,8 +422,8 @@ function WeakAuras.CreateFrame()
   searchIcon:SetVertexColor(0.6, 0.6, 0.6);
   searchIcon:SetWidth(14);
   searchIcon:SetHeight(14);
-  searchIcon:SetPoint("left", filterInput, "left", 3, -1);
-  filterInput:SetFont("Fonts\\FRIZQT__.TTF", 10);
+  searchIcon:SetPoint("left", filterInput, "left", 2, -2);
+  filterInput:SetFont(STANDARD_TEXT_FONT, 10);
   frame.filterInput = filterInput;
   filterInput:Hide();
 
@@ -377,7 +431,7 @@ function WeakAuras.CreateFrame()
   frame.filterInputClear = filterInputClear;
   filterInputClear:SetWidth(12);
   filterInputClear:SetHeight(12);
-  filterInputClear:SetPoint("left", filterInput, "right", 0, -1);
+  filterInputClear:SetPoint("left", filterInput, "right", 4, -1);
   filterInputClear:SetNormalTexture("Interface\\Common\\VoiceChat-Muted");
   filterInputClear:SetHighlightTexture("Interface\\BUTTONS\\UI-Panel-MinimizeButton-Highlight.blp");
   filterInputClear:SetScript("OnClick", function() filterInput:SetText(""); filterInput:ClearFocus() end);
@@ -410,7 +464,7 @@ function WeakAuras.CreateFrame()
   buttonsScroll.SetScroll = function(self, value)
     if (self:GetScrollPos() ~= value) then
       oldSetScroll(self, value);
-      self:DoLayout();
+      self.LayoutFunc(self.content, self.children, true);
     end
   end
 
@@ -437,8 +491,6 @@ function WeakAuras.CreateFrame()
     self.content:SetPoint("TOPRIGHT", 0, status.offset);
 
     status.scrollvalue = status.offset / ((height - viewheight) / 1000.0);
-
-    self:FixScroll();
   end
 
   local newButton = AceGUI:Create("WeakAurasNewHeaderButton");
@@ -478,6 +530,7 @@ function WeakAuras.CreateFrame()
   loadedButton:SetExpandDescription(L["Expand all loaded displays"]);
   loadedButton:SetCollapseDescription(L["Collapse all loaded displays"]);
   loadedButton:SetViewClick(function()
+    WeakAuras.PauseAllDynamicGroups();
     if(loadedButton.view.func() == 2) then
       for id, child in pairs(displayButtons) do
         if(loaded[id] ~= nil) then
@@ -491,6 +544,7 @@ function WeakAuras.CreateFrame()
         end
       end
     end
+    WeakAuras.ResumeAllDynamicGroups();
   end);
   loadedButton:SetViewTest(function()
     local none, all = true, true;
@@ -537,13 +591,13 @@ function WeakAuras.CreateFrame()
   unloadedButton:SetViewClick(function()
     if(unloadedButton.view.func() == 2) then
       for id, child in pairs(displayButtons) do
-        if(loaded[id] == nil) then
+        if (loaded[id] == nil) then
           child:PriorityHide(2);
         end
       end
     else
       for id, child in pairs(displayButtons) do
-        if not(loaded[id] == nil) then
+        if (loaded[id] == nil) then
           child:PriorityShow(2);
         end
       end
@@ -576,6 +630,22 @@ function WeakAuras.CreateFrame()
     AceConfig:RegisterOptionsTable("WeakAuras", optionTable);
     AceConfigDialog:Open("WeakAuras", container);
     container:SetTitle("");
+  end
+
+  frame.ClearPick = function(self, id)
+    local index = nil;
+    for i, childId in pairs(tempGroup.controlledChildren) do
+      if (childId == id) then
+        index = i;
+        break;
+      end
+    end
+
+    tremove(tempGroup.controlledChildren, index);
+    displayButtons[id]:ClearPick();
+
+    WeakAuras.ReloadTriggerOptions(tempGroup);
+    self:FillOptions(displayOptions[tempGroup.id]);
   end
 
   frame.ClearPicks = function(self, except)
@@ -612,14 +682,32 @@ function WeakAuras.CreateFrame()
       container:AddChild(containerScroll);
 
       if(GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") ~= 0) then
+        local simpleLabel = AceGUI:Create("Label");
+        simpleLabel:SetFont(STANDARD_TEXT_FONT, 24, "OUTLINE");
+        simpleLabel:SetColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+        simpleLabel:SetText(L["Simple"]);
+        simpleLabel:SetFullWidth(true)
+        containerScroll:AddChild(simpleLabel);
+
         local button = AceGUI:Create("WeakAurasNewButton");
-        button:SetTitle(L["From Template"]);
+        button:SetTitle('|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t' .. L["From Template"]);
         button:SetDescription(L["Offer a guided way to create auras for your class"])
         button:SetIcon("Interface\\Icons\\INV_Misc_Book_06");
         button:SetClick(function()
           WeakAuras.OpenTriggerTemplate();
         end);
         containerScroll:AddChild(button);
+
+        local spacer1Label = AceGUI:Create("Label");
+        spacer1Label:SetText("")
+        containerScroll:AddChild(spacer1Label)
+
+        local advancedLabel = AceGUI:Create("Label");
+        advancedLabel:SetFont(STANDARD_TEXT_FONT, 24, "OUTLINE");
+        advancedLabel:SetColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+        advancedLabel:SetText(L["Advanced"]);
+        advancedLabel:SetFullWidth(true)
+        containerScroll:AddChild(advancedLabel);
       end
 
       for regionType, regionData in pairs(regionOptions) do
@@ -632,31 +720,33 @@ function WeakAuras.CreateFrame()
         end
         button:SetDescription(regionData.description);
         button:SetClick(function()
-          local new_id = "New";
-          local num = 2;
-          while(db.displays[new_id]) do
-            new_id = "New "..num;
-            num = num + 1;
-          end
-
-          local data = {
-            id = new_id,
-            regionType = regionType,
-            activeTriggerMode = WeakAuras.trigger_modes.first_active,
-            disjunctive = "all",
-            trigger = {
-              type = "aura",
-              unit = "player",
-              debuffType = "HELPFUL"
-            },
-            load = {}
-          };
+          local new_id = WeakAuras.FindUnusedId("New")
+          local data = {id = new_id, regionType = regionType}
+          WeakAuras.DeepCopy(WeakAuras.data_stub, data)
+          data.internalVersion = WeakAuras.InternalVersion();
+          WeakAuras.validate(data, WeakAuras.regionTypes[regionType].default)
           WeakAuras.Add(data);
           WeakAuras.NewDisplayButton(data);
           WeakAuras.PickAndEditDisplay(new_id);
         end);
         containerScroll:AddChild(button);
       end
+
+      local spacer2Label = AceGUI:Create("Label");
+      spacer2Label:SetText("")
+      containerScroll:AddChild(spacer2Label)
+
+      local externalLabel = AceGUI:Create("Label");
+      externalLabel:SetFont(STANDARD_TEXT_FONT, 24, "OUTLINE");
+      externalLabel:SetColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+      externalLabel:SetText(L["External"]);
+      externalLabel:SetFullWidth(true)
+      containerScroll:AddChild(externalLabel);
+
+      local spacer3Label = AceGUI:Create("Label");
+      spacer3Label:SetText("")
+      containerScroll:AddChild(spacer3Label)
+
       local importButton = AceGUI:Create("WeakAurasNewButton");
       importButton:SetTitle(L["Import"]);
 

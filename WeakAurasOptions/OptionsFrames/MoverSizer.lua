@@ -7,17 +7,11 @@ local IsShiftKeyDown, CreateFrame =  IsShiftKeyDown, CreateFrame
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 local WeakAuras = WeakAuras
-local L = WeakAuras.L
 
 local moversizer
 local mover
 
-local displayButtons = WeakAuras.displayButtons
-local displayOptions = WeakAuras.displayOptions
-local loaded = WeakAuras.loaded
-local regionOptions = WeakAuras.regionOptions
 local savedVars = WeakAuras.savedVars
-local tempGroup = WeakAuras.tempGroup
 
 local function EnsureTexture(self, texture)
   if(texture) then
@@ -305,22 +299,13 @@ local function ConstructMoverSizer(parent)
 
   frame.AnchorPoints = function(self, region, data)
     local scale = region:GetEffectiveScale() / UIParent:GetEffectiveScale();
-    local xOff, yOff;
-    mover.selfPoint, mover.anchor, mover.anchorPoint, xOff, yOff = region:GetPoint(1);
-    mover:ClearAllPoints();
-    frame:ClearAllPoints();
     if(data.regionType == "group") then
       mover:SetWidth((region.trx - region.blx) * scale);
       mover:SetHeight((region.try - region.bly) * scale);
-      mover:SetPoint(mover.selfPoint, mover.anchor, mover.anchorPoint, (xOff + region.blx) * scale, (yOff + region.bly) * scale);
     else
       mover:SetWidth(region:GetWidth() * scale);
       mover:SetHeight(region:GetHeight() * scale);
-      mover:SetPoint(mover.selfPoint, mover.anchor, mover.anchorPoint, xOff * scale, yOff * scale);
     end
-    frame:SetPoint("BOTTOMLEFT", mover, "BOTTOMLEFT", -8, -8);
-    frame:SetPoint("TOPRIGHT", mover, "TOPRIGHT", 8, 8);
-    frame:ScaleCorners(region:GetWidth(), region:GetHeight());
   end
 
   frame.SetToRegion = function(self, region, data)
@@ -567,8 +552,8 @@ local function ConstructMoverSizer(parent)
       self.interims[i]:SetPoint("CENTER", self.anchorPointIcon, "CENTER", x, y);
       self.interims[i]:Show();
     end
-
-    self.text:SetText(("(%.2f, %.2f)"):format(dX, dY));
+    local regionScale = self.moving.region:GetScale()
+    self.text:SetText(("(%.2f, %.2f)"):format(dX*1/regionScale, dY*1/regionScale));
     local midx = (distance / 2) * cos(angle);
     local midy = (distance / 2) * sin(angle);
     self.text:SetPoint("CENTER", self.anchorPointIcon, "CENTER", midx, midy);

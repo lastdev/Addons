@@ -1,18 +1,12 @@
-tag 4ee0c9b2c4b80887b47597b171d7653a02695918 v1.1.4
+tag 3f4ff88c41d3d35872f9ae72476c3a01388845dc v1.1.6
 Author:	Kyle Buller <bullerk@gmail.com>
-Date:	Wed Aug 30 23:40:20 2017 -0500
+Date:	Sun Jul 22 20:38:41 2018 -0500
 
-Tagging as v1.1.4
+Tagging as v1.1.6
 
-commit 739c828fce6cf46ad3c8db46411f0a9e9e5655e8
+commit 5bdf990d5bad37a48d742131d25fe6325d38cde1
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Wed Aug 30 23:39:07 2017 -0500
+Date:   Sun Jul 22 20:16:35 2018 -0500
 
-    Update TOC for 7.3
-
-commit 0248e87e82aa108c68b92f5100ebd781a0f75109
-Author: Kyle Buller <bullerk@gmail.com>
-Date:   Wed Aug 30 23:38:53 2017 -0500
-
-    Only re-register SPELL_PUSHED_TO_ACTIONBAR the option is toggled
+    Tweak options so we don't get a scroll bar
 

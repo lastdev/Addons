@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreBuy.lua 5685 2016-10-31 17:11:06Z Prowell $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreBuy.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -369,7 +369,7 @@ function private.PushSearch()
 		private.QueueRemove(1)
 		return
 	end
-	
+
 	local isScanning, isGetAll = AucAdvanced.Scan.IsScanning()
 	if (isScanning and isGetAll) then return end -- we must wait on getall, and PushScan failure is too noisy for something fired every frame
 
@@ -638,7 +638,7 @@ local function OnUpdate()
 	end
 end
 
-local function OnEvent(frame, event, message, ...)
+local function OnEvent(frame, event, message, message2)
 	if event == "AUCTION_ITEM_LIST_UPDATE" then
 		local request = private.CurRequest
 		if request then
@@ -674,14 +674,14 @@ local function OnEvent(frame, event, message, ...)
 		 	private.onBidAccepted()
 		end
 	elseif event == "UI_ERROR_MESSAGE" then
-		if (message == ERR_ITEM_NOT_FOUND or
-			message == ERR_NOT_ENOUGH_MONEY or
-			message == ERR_AUCTION_BID_OWN or
-			message == ERR_AUCTION_HIGHER_BID or
-			message == ERR_AUCTION_BID_INCREMENT or
-			message == ERR_AUCTION_MIN_BID or
-			message == ERR_ITEM_MAX_COUNT) then
-			private.onBidFailed(message)
+		if (message2 == ERR_ITEM_NOT_FOUND or
+			message2 == ERR_NOT_ENOUGH_MONEY or
+			message2 == ERR_AUCTION_BID_OWN or
+			message2 == ERR_AUCTION_HIGHER_BID or
+			message2 == ERR_AUCTION_BID_INCREMENT or
+			message2 == ERR_AUCTION_MIN_BID or
+			message2 == ERR_ITEM_MAX_COUNT) then
+			private.onBidFailed(message2)
 		end
 	end
 end
@@ -828,5 +828,5 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5685 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreBuy.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreBuy")

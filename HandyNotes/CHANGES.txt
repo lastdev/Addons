@@ -1,20 +1,32 @@
 ------------------------------------------------------------------------
-r279 | nevcairiel | 2017-08-29 16:23:33 -0500 (Tue, 29 Aug 2017) | 1 line
+r305 | nevcairiel | 2018-07-24 12:05:59 +0000 (Tue, 24 Jul 2018) | 1 line
 Changed paths:
-   M /trunk/HandyNotes.toc
+   M /trunk/HandyNotes.lua
 
-Update TOC for 7.3
+style nit
 ------------------------------------------------------------------------
-r278 | nevcairiel | 2017-07-12 07:18:31 -0500 (Wed, 12 Jul 2017) | 1 line
+r304 | nevcairiel | 2018-07-24 12:04:36 +0000 (Tue, 24 Jul 2018) | 1 line
 Changed paths:
-   M /trunk/Locales/Locale-deDE.lua
-   M /trunk/Locales/Locale-esES.lua
-   M /trunk/Locales/Locale-frFR.lua
-   M /trunk/Locales/Locale-koKR.lua
-   M /trunk/Locales/Locale-ruRU.lua
-   M /trunk/Locales/Locale-zhCN.lua
-   M /trunk/Locales/Locale-zhTW.lua
+   M /trunk/HandyNotes.lua
 
-Switch to ignoring missing locale strings
+Clean out commented code
+------------------------------------------------------------------------
+r303 | nevcairiel | 2018-07-24 12:02:03 +0000 (Tue, 24 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Support all mouse buttons for clicks
+------------------------------------------------------------------------
+r302 | nevcairiel | 2018-07-24 09:10:11 +0000 (Tue, 24 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Verify that coordinates are valid before creating pins
+------------------------------------------------------------------------
+r301 | nevcairiel | 2018-07-20 07:25:09 +0000 (Fri, 20 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Protect against errors when the addon is disabled
 ------------------------------------------------------------------------
 

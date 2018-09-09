@@ -166,6 +166,4 @@ L["Yancey Grillsen <Bloodsail Recruiter>"] = "Yancey Gradelha <Recrutador da V
 L["Yaris Darkclaw <Recruiter>"] = "Yaris Garrumbra <Recrutador>"
 L["Zen'kiki"] = "Zen'Kiki"
 
--- ToC
-
 end

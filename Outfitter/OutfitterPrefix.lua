@@ -1,5 +1,5 @@
 ----------------------------------------
--- Outfitter Copyright 2009, 2010, 2011 John Stephen, wobbleworks.com
+-- Outfitter Copyright 2009-2018 John Stephen
 -- All rights reserved, unauthorized redistribution is prohibited
 ----------------------------------------
 

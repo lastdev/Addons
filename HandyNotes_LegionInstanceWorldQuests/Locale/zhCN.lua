@@ -27,6 +27,4 @@ L["These settings control the look and feel of the icon."] = "以下的设定控
 L["These settings control what type of icons to be displayed."] = "以下的设定控制了哪些类型的节点要被显示。"
 L["What to display"] = "哪些要被呈现"
 
--- ToC
-
 end

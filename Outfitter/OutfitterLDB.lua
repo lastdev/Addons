@@ -18,7 +18,7 @@ end
 function Outfitter.LDB:OnClick(pFrame, pButton)
 	if pButton == "LeftButton" then
 		self:ToggleMenu()
-		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	else
 		Outfitter:ToggleUI(true)
 	end

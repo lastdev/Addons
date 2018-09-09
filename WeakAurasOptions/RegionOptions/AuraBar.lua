@@ -9,7 +9,7 @@ local function createOptions(id, data)
     texture = {
       type = "select",
       dialogControl = "LSM30_Statusbar",
-      order = 0,
+      order = 1,
       width = "double",
       name = L["Bar Texture"],
       values = AceGUIWidgetLSMlists.statusbar
@@ -67,34 +67,7 @@ local function createOptions(id, data)
       values = WeakAuras.text_check_types,
       order = 10.1
     },
-    customText = {
-      type = "input",
-      width = "normal",
-      hidden = function()
-        return not (
-          data.displayTextLeft:find("%%c")
-          or data.displayTextRight:find("%%c")
-          );
-      end,
-      multiline = true,
-      name = L["Custom Function"],
-      order = 10.2,
-      control = "WeakAurasMultiLineEditBox"
-    },
-    customText_expand = {
-      type = "execute",
-      order = 10.3,
-      name = L["Expand Text Editor"],
-      func = function()
-        WeakAuras.OpenTextEditor(data, {"customText"})
-      end,
-      hidden = function()
-        return not (
-          data.displayTextLeft:find("%%c")
-          or data.displayTextRight:find("%%c")
-          );
-      end
-    },
+    -- code editor added below
     progressPrecision = {
       type = "select",
       order = 11,
@@ -217,12 +190,12 @@ local function createOptions(id, data)
     symbol_header = {
       type = "header",
       name = L["Symbol Settings"],
-      order = 38.1
+      order = 38.01
     },
     icon = {
       type = "toggle",
       name = L["Icon"],
-      order = 38.1
+      order = 38.1,
     },
     auto = {
       type = "toggle",
@@ -249,18 +222,9 @@ local function createOptions(id, data)
         WeakAuras.SetIconNames(data);
       end
     },
-    displaySpace = {
-      type = "execute",
-      name = "",
-      width = "half",
-      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
-      image = function() return data.displayIcon and tostring(data.displayIcon) or "", 18, 18 end,
-      order = 38.4
-    },
     chooseIcon = {
       type = "execute",
       name = L["Choose"],
-      width = "half",
       hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
       disabled = function() return not data.icon end,
       order = 38.5,
@@ -472,18 +436,6 @@ local function createOptions(id, data)
       disabled = function() return not data.spark end,
       hidden = function() return not data.spark end,
     },
-    border_header = {
-      type = "header",
-      name = L["Border Settings"],
-      order = 46.0
-    },
-    barInFront  = {
-      type = "toggle",
-      name = L["Bar in Front"],
-      order = 46.7,
-      disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
-    },
     text_header = {
       type = "header",
       name = function()
@@ -659,23 +611,56 @@ local function createOptions(id, data)
       disabled = function() return not data.stacks end,
       hidden = function() return not data.stacks end,
     },
-    spacer = {
-      type = "header",
-      name = "",
-      order = 58
-    },
   };
+
+  local function hideCustomTextEditor()
+    return not (
+      data.displayTextLeft:find("%%c")
+      or data.displayTextRight:find("%%c")
+      );
+  end
+
+  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", 10.2,  hideCustomTextEditor, {"customText"}, false);
 
   options = WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, 36.5);
 
-  -- Positioning options
-  options = WeakAuras.AddPositionOptions(options, id, data);
+  local overlayInfo = WeakAuras.GetOverlayInfo(data);
+  if (overlayInfo and next(overlayInfo)) then
+    options["overlayheader"] = {
+      type = "header",
+      name = L["Overlays"],
+      order = 58
+    }
+    local index = 0.01
+    for id, display in ipairs(overlayInfo) do
+      options["overlaycolor" .. id] = {
+        type = "color",
+        name = string.format(L["%s Color"], display),
+        hasAlpha = true,
+        order = 58 + index,
+        get = function()
+          if (data.overlays and data.overlays[id]) then
+            return unpack(data.overlays[id]);
+          end
+          return 1, 1, 1, 1;
+        end,
+        set = function(info, r, g, b, a)
+          if (not data.overlays) then
+            data.overlays = {};
+          end
+          data.overlays[id] = { r, g, b, a};
+          WeakAuras.Add(data);
+        end
+      }
+      index = index + 0.01
+    end
+  end
 
-  -- Border options
-  options = WeakAuras.AddBorderOptions(options, id, data);
-
-  -- Return options
-  return options;
+  return {
+    aurabar = options,
+    position = WeakAuras.PositionOptions(id, data),
+    border = WeakAuras.BorderOptions(id, data, true);
+  };
 end
 
 -- Create preview thumbnail
@@ -743,9 +728,6 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, width, hei
       region:SetPoint("BOTTOM", borderframe, "BOTTOM", 0, 2);
     end
   end
-
-  -- Fake bar alpha
-  region:SetAlpha(data.alpha);
 
   -- Fake status-bar style
   texture:SetTexture(SharedMedia:Fetch("statusbar", data.texture));
@@ -859,24 +841,13 @@ end
 
 local templates = {
   {
-    title = L["Default"],
-    data = {
-    };
-  },
-  {
-    title = L["Horizontal Blizzard Raid Bar"],
-    data = {
-      texture = "Blizzard Raid Bar",
-      width = 200,
-      height = 15,
-    };
-  },
-  {
     title = L["Horizontal Bar"],
     data = {
       width = 200,
       height = 30,
-      barColor = { 1, 1, 0, 1}
+      barColor = { 0, 1, 0, 1},
+      inverse = true,
+      smoothProgress = true,
     }
   },
   {
@@ -887,8 +858,8 @@ local templates = {
       barColor = { 0, 1, 0, 1},
       rotateText = "LEFT",
       orientation = "VERTICAL_INVERSE",
-      texture = "Blizzard Raid Bar",
-      icon = false
+      inverse = true,
+      smoothProgress = true,
     }
   },
 }

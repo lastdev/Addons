@@ -1,5 +1,5 @@
 ----------------------------------------
--- Outfitter Copyright 2006-2014 John Stephen, wobbleworks.com
+-- Outfitter Copyright 2006-2018 John Stephen
 -- All rights reserved, unauthorized redistribution is prohibited
 ----------------------------------------
 
@@ -101,6 +101,15 @@ Outfitter.CreditPlayersByRealm =
 		["saltorio"] = 1,
 		["elusif"] = 1,
 		["DanoPDX"] = 1,
+	},
+	[""] =
+	{
+		["Kristi H."] = 3,
+		["Lawrence C."] = 3,
+		["Hellrush"] = 3,
+		["Fusyion"] = 3,
+		["Matt R."] = 3,
+		["Richard F.\n<Greatest Addon Supporter>"] = 3,
 	},
 	["Alterac Mountains"] =
 	{
@@ -448,6 +457,107 @@ Outfitter.cInitializationEvents =
 	["PLAYER_ALIVE"] = true,
 }
 
+-- Beginning in patch 8.0, WoW throws errors when registering for events which don't exist. This table contains all builtin event IDs so they can be avoided when registering events.
+Outfitter.BuiltinEvents = {
+	["TIMER"] = true,
+
+	["GAMETOOLTIP_SHOW"] = true,
+	["GAMETOOLTIP_HIDE"] = true,
+
+	["BATTLEGROUND"] = true,
+	["NOT_BATTLEGROUND"] = true,
+
+	["BATTLEGROUND_AV"] = true,
+	["NOT_BATTLEGROUND_AV"] = true,
+
+	["BATTLEGROUND_AB"] = true,
+	["NOT_BATTLEGROUND_AB"] = true,
+
+	["BATTLEGROUND_ARENA"] = true,
+	["NOT_BATTLEGROUND_ARENA"] = true,
+
+	["BATTLEGROUND_BLADESEDGE"] = true,
+	["NOT_BATTLEGROUND_BLADESEDGE"] = true,
+
+	["BATTLEGROUND_EOTS"] = true,
+	["NOT_BATTLEGROUND_EOTS"] = true,
+
+	["BATTLEGROUND_GILNEAS"] = true,
+	["NOT_BATTLEGROUND_GILNEAS"] = true,
+
+	["BATTLEGROUND_IOC"] = true,
+	["NOT_BATTLEGROUND_IOC"] = true,
+
+	["BATTLEGROUND_NAGRAND"] = true,
+	["NOT_BATTLEGROUND_NAGRAND"] = true,
+
+	["BATTLEGROUND_LORDAERON"] = true,
+	["NOT_BATTLEGROUND_LORDAERON"] = true,
+
+	["BATTLEGROUND_ROV"] = true,
+	["NOT_BATTLEGROUND_ROV"] = true,
+
+	["BATTLEGROUND_SEWERS"] = true,
+	["NOT_BATTLEGROUND_SEWERS"] = true,
+
+	["BATTLEGROUND_SOTA"] = true,
+	["NOT_BATTLEGROUND_SOTA"] = true,
+
+	["BATTLEGROUND_TWINPEAKS"] = true,
+	["NOT_BATTLEGROUND_TWINPEAKS"] = true,
+
+	["BATTLEGROUND_WG"] = true,
+	["NOT_BATTLEGROUND_WG"] = true,
+
+	["BATTLEGROUND_WSG"] = true,
+	["NOT_BATTLEGROUND_WSG"] = true,
+
+	["CASTER_FORM"] = true,
+	["NOT_CASTER_FORM"] = true,
+	
+	["BEAR_FORM"] = true,
+	["NOT_BEAR_FORM"] = true,
+	
+	["CAT_FORM"] = true,
+	["NOT_CAT_FORM"] = true,
+	
+	["TRAVEL_FORM"] = true,
+	["NOT_TRAVEL_FORM"] = true,
+	
+	["MOONKIN_FORM"] = true,
+	["NOT_MOONKIN_FORM"] = true,
+
+	["TREE_FORM"] = true,
+	["NOT_TREE_FORM"] = true,
+
+	["STEALTH"] = true,
+	["NOT_STEALTH"] = true,
+
+	["MOUNTED"] = true,
+	["NOT_MOUNTED"] = true,
+
+	["SPIRIT_REGEN"] = true,
+	["NOT_SPIRIT_REGEN"] = true,
+
+	["GHOST_WOLF"] = true,
+	["NOT_GHOST_WOLF"] = true,
+
+	["FEIGN_DEATH"] = true,
+	["NOT_FEIGN_DEATH"] = true,
+
+	["SWIMMING"] = true,
+	["NOT_SWIMMING"] = true,
+
+	["CITY"] = true,
+	["NOT_CITY"] = true,
+
+	["EVOCATE"] = true,
+	["NOT_EVOCATE"] = true,
+
+	["DINING"] = true,
+	["NOT_DINING"] = true,
+}
+
 Outfitter.BANKED_FONT_COLOR = CreateColor(0.25, 0.2, 1.0)
 Outfitter.BANKED_FONT_COLOR_CODE = "|cff4033ff"
 Outfitter.OUTFIT_MESSAGE_COLOR = CreateColor(0.2, 0.75, 0.3)
@@ -640,9 +750,9 @@ StaticPopupDialogs.OUTFITTER_CANT_SET_ICON =
 
 StaticPopupDialogs.OUTFITTER_CONFIRM_DELETE =
 {
-	text = TEXT(Outfitter.cConfirmDeleteMsg),
-	button1 = TEXT(DELETE),
-	button2 = TEXT(CANCEL),
+	text = Outfitter.cConfirmDeleteMsg,
+	button1 = DELETE,
+	button2 = CANCEL,
 	OnAccept = function() Outfitter:DeleteSelectedOutfit() end,
 	timeout = 0,
 	whileDead = 1,
@@ -651,9 +761,9 @@ StaticPopupDialogs.OUTFITTER_CONFIRM_DELETE =
 
 StaticPopupDialogs.OUTFITTER_CONFIRM_REBUILD =
 {
-	text = TEXT(Outfitter.cConfirmRebuildMsg),
-	button1 = TEXT(Outfitter.cRebuild),
-	button2 = TEXT(CANCEL),
+	text = Outfitter.cConfirmRebuildMsg,
+	button1 = Outfitter.cRebuild,
+	button2 = CANCEL,
 	OnAccept = function() Outfitter:RebuildOutfit(Outfitter.OutfitToRebuild) Outfitter.OutfitToRebuild = nil end,
 	timeout = 0,
 	whileDead = 1,
@@ -662,9 +772,9 @@ StaticPopupDialogs.OUTFITTER_CONFIRM_REBUILD =
 
 StaticPopupDialogs.OUTFITTER_CONFIRM_SET_CURRENT =
 {
-	text = TEXT(Outfitter.cConfirmSetCurrentMsg),
-	button1 = TEXT(Outfitter.cSetCurrent),
-	button2 = TEXT(CANCEL),
+	text = Outfitter.cConfirmSetCurrentMsg,
+	button1 = Outfitter.cSetCurrent,
+	button2 = CANCEL,
 	OnAccept = function() Outfitter:SetOutfitToCurrent(Outfitter.OutfitToRebuild); Outfitter.OutfitToRebuild = nil end,
 	timeout = 0,
 	whileDead = 1,
@@ -814,6 +924,7 @@ Outfitter.cIgnoredUnusedItems =
 	[20406] = "Twilight Cultist Mantle",
 	[20407] = "Twilight Cultist Robe",
 	[20408] = "Twilight Cultist Cowl",
+	[136350] = "Brumdysla, Hammer of Vrorsk"
 }
 
 Outfitter.cSmartOutfits =
@@ -972,6 +1083,7 @@ Outfitter.cZoneSpecialIDs =
 
 Outfitter.cZoneSpecialIDMap =
 {
+--[[
 	[GetMapNameByID(22)] = {"ArgentDawn"}, -- Western Plaguelands
 	[GetMapNameByID(23)] = {"ArgentDawn"}, -- Eastern Plaguelands
 	[GetMapNameByID(765)] = {"ArgentDawn"}, -- Stratholme
@@ -980,16 +1092,16 @@ Outfitter.cZoneSpecialIDMap =
 	[GetMapNameByID(401)] = {"Battleground", "AV"}, -- Alterac Valley
 	[GetMapNameByID(461)] = {"Battleground", "AB"}, -- Arathi Basin
 	[GetMapNameByID(443)] = {"Battleground", "WSG"}, -- Warsong Gulch
-	[Outfitter.LSZ["Silverwing Hold"]] = {"Battleground", "WSG"}, -- Silverwing Hold
-	[Outfitter.LSZ["Warsong Lumber Mill"]] = {"Battleground", "WSG"}, -- Warsong Lumber Mill
+	[Outfitter.LSZ["Silverwing Hold"] ] = {"Battleground", "WSG"}, -- Silverwing Hold
+	[Outfitter.LSZ["Warsong Lumber Mill"] ] = {"Battleground", "WSG"}, -- Warsong Lumber Mill
 	[GetMapNameByID(482)] = {"Battleground", "EotS"}, -- Eye of the Storm
 	[GetMapNameByID(512)] = {"Battleground", "SotA"}, -- Strand of the Ancients
 	[GetMapNameByID(540)] = {"Battleground", "IoC"}, -- Isle of Conquest
 	[GetMapNameByID(501)] = {"Battleground", "Wintergrasp"}, -- Wintergrasp
 	[GetMapNameByID(736)] = {"Battleground", "Gilneas"}, -- Battle for Gilneas
 	[GetMapNameByID(626)] = {"Battleground", "TwinPeaks"}, -- Twin Peaks
-	[Outfitter.LSZ["Wildhammer Stronghold"]] = {"Battleground", "TwinPeaks"}, -- Wildhammer Stronghold
-	[Outfitter.LSZ["Dragonmaw Stronghold"]] = {"Battleground", "TwinPeaks"}, -- Dragonmaw Stronghold
+	[Outfitter.LSZ["Wildhammer Stronghold"] ] = {"Battleground", "TwinPeaks"}, -- Wildhammer Stronghold
+	[Outfitter.LSZ["Dragonmaw Stronghold"] ] = {"Battleground", "TwinPeaks"}, -- Dragonmaw Stronghold
 	
 	-- Arenas
 --	[GetMapNameByID(Dalaran Sewers)] = {"Battleground", "Arena", "Sewers"}, -- Dalaran Sewers
@@ -999,8 +1111,8 @@ Outfitter.cZoneSpecialIDMap =
 --	[GetMapNameByID(Ruins of Lordaeron)] = {"Battleground", "LordaeronArena", "Arena"}, -- Ruins of Lordaeron
 	
 	[GetMapNameByID(341)] = {"City"}, -- Ironforge
-	[Outfitter.LSZ["City of Ironforge"]] = {"City"}, -- City of Ironforge
-	[Outfitter.LSZ["Miwana's Longhouse"]] = {"City"}, -- Miwana's Longhouse
+	[Outfitter.LSZ["City of Ironforge"] ] = {"City"}, -- City of Ironforge
+	[Outfitter.LSZ["Miwana's Longhouse"] ] = {"City"}, -- Miwana's Longhouse
 	[GetMapNameByID(381)] = {"City"}, -- Darnassus
 --	[GetMapNameByID(Stormwind)] = {"City"}, -- Stormwind
 	[GetMapNameByID(301)] = {"City"}, -- Stormwind City
@@ -1013,6 +1125,7 @@ Outfitter.cZoneSpecialIDMap =
 	[GetMapNameByID(504)] = {"City"}, -- Dalaran
 	[GetMapNameByID(903)] = {"City"}, -- Shrine of Two Moons
 	[GetMapNameByID(905)] = {"City"}, -- Shrine of Seven Stars
+]]
 }
 
 -- As of patch 3.3 automated combat swaps aren't allowed.  I'm
@@ -3095,9 +3208,9 @@ end
 
 StaticPopupDialogs.OUTFITTER_CONFIRM_RESET =
 {
-	text = TEXT(Outfitter.cConfirmResetMsg),
-	button1 = TEXT(Outfitter.cReset),
-	button2 = TEXT(CANCEL),
+	text = Outfitter.cConfirmResetMsg,
+	button1 = Outfitter.cReset,
+	button2 = CANCEL,
 	OnAccept = function() Outfitter:Reset() end,
 	timeout = 0,
 	whileDead = 1,
@@ -4291,20 +4404,7 @@ function Outfitter:UpdateZone()
 	local vCurrentZone = GetZoneText()
 	local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID = GetInstanceInfo()
 
-	-- Treat Vault of Archavon as its own zone so
-	-- that it doesn't register as the Wintergrasp
-	-- PvP zone
-	
-	if vCurrentZone == GetMapNameByID(501) then -- Wintergrasp
-		local vMinimapZone = GetMinimapZoneText()
-		
-		if vMinimapZone == GetMapNameByID(532) then -- Vault of Archavon
-			vCurrentZone = vMinimapZone
-		end
-	end
-	
 	-- Just return if the zone isn't changing
-	
 	if vCurrentZone == self.CurrentZone then
 		return
 	end
@@ -4700,7 +4800,7 @@ function Outfitter:Initialize()
 	self.EventLib:RegisterEvent("PLAYER_UNGHOST", self.PlayerAlive, self)
 	
 	self.EventLib:RegisterEvent("UNIT_INVENTORY_CHANGED", self.UnitInventoryChanged, self, true) -- Register as a blind event handler (no event id param)
-	self.EventLib:RegisterEvent("OUTFITTER_INVENTORY_CHANGED", self.InventoryChanged, self, true) -- Register as a blind event handler (no event id param)
+	self.EventLib:RegisterCustomEvent("OUTFITTER_INVENTORY_CHANGED", self.InventoryChanged, self, true) -- Register as a blind event handler (no event id param)
 
 	-- For indicating which outfits are missing items
 	
@@ -6683,7 +6783,7 @@ function Outfitter:TooltipContainsLine(pTooltip, pText)
 			local vColor = {}
 			vColor.r, vColor.g, vColor.b = vText:GetTextColor()
 			local vHSVColor = Outfitter:RGBToHSV(vColor)
-			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150)
+			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150), pText == vTextString
 		end
 	end
 end
@@ -7714,15 +7814,6 @@ function Outfitter:Run(pText)
 	
 end
 
-function Outfitter:LookupZoneID(name)
-	for i = 1, 2000 do
-		local idName = GetMapNameByID(i)
-		if idName and idName == name then
-			return i
-		end
-	end
-end
-
 ----------------------------------------
 Outfitter._ListItem = {}
 ----------------------------------------
@@ -7740,6 +7831,8 @@ function Outfitter._ListItem:construct()
 	self.SecureAction:HookScript("PostClick", function (frame, ...)
 		self:OnClick(...)
 	end)
+
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	self:HookScript("PreClick", self.PreClick)
 	self:HookScript("PostClick", self.OnClick)
 	self.SecureAction:HookScript("OnEnter", function (frame, ...)

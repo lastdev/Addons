@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: Auc-Util-AutoMagic.lua 5686 2016-10-31 17:13:27Z Prowell $
+	Version: 7.7.6109 (SwimmingSeadragon)
+	Revision: $Id: Auc-Util-AutoMagic.lua 6109 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -84,7 +84,7 @@ function lib.OnLoad()
 	default("util.automagic.chatspam", true) --Supposed to default on has to be unchecked if you don't want the chat text.
 	default("util.automagic.ammailguix", 100) --Used for storing mailgui location
 	default("util.automagic.ammailguiy", 100) --Used for storing mailgui location
-	default("util.automagic.uierrormsg", 0) --Keeps track of ui error msg's
+	--default("util.automagic.uierrormsg", 0) --Keeps track of ui error msg's -- ### this is not used anywhere
 	default("util.automagic.overidebtmmail", false) -- Item AI for mail rule instead of BTM rule.
 
 
@@ -100,7 +100,7 @@ function lib.onEventDo(this, event)
 	if event == 'MERCHANT_CLOSED' 	then lib.merchantClosed()				end
 	if event == 'MAIL_SHOW' 			then lib.mailShow() 					end
 	if event == 'MAIL_CLOSED' 		then lib.mailClosed() 					end
-	if event == 'UI_ERROR_MESSAGE'	then set("util.automagic.uierrormsg", 1) 	end
+	--if event == 'UI_ERROR_MESSAGE'	then set("util.automagic.uierrormsg", 1) 	end -- ### this is not used
 	if event == 'BAG_UPDATE'  then if lib.confirmsellui:IsVisible()  then lib.vendorAction() end	end --bags changed make sure vendor items are in order
 end
 
@@ -706,4 +706,4 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5686 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 6109 $")

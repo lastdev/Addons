@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d620", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 85 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1135)
@@ -23,9 +23,8 @@ local timerStoneSmash		= mod:NewCastTimer(3, 139777, nil, false)
 
 local countdownEvent		= mod:NewCountdownFades(299, 140000, nil, nil, 10)
 
-mod:RemoveOption("HealthFrame")
-
 local timerStarted = false
+local timerDebuff = DBM:GetSpellInfo(140000)
 
 local function endCombatDelay()
 	DBM:EndCombat(mod)
@@ -58,14 +57,13 @@ function mod:LOADING_SCREEN_DISABLED()
 end
 
 do
-	local timerDebuff = GetSpellInfo(140000)
 	--Apparently this doesn't fire in combat log, have to use UNIT_AURA instead.
 	function mod:UNIT_AURA(uId)
-		if UnitDebuff("player", timerDebuff) and not timerStarted then
+		if DBM:UnitDebuff("player", timerDebuff) and not timerStarted then
 			timerStarted = true
 			timerEvent:Start()
 			countdownEvent:Start()
-		elseif not UnitDebuff("player", timerDebuff) and timerStarted then
+		elseif not DBM:UnitDebuff("player", timerDebuff) and timerStarted then
 			timerStarted = false
 			timerEvent:Cancel()
 			countdownEvent:Cancel()

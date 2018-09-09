@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: Overachiever
-## Version: 0.99.9
+## Version: 1.0.3
 ## Author: Tuhljin
-## Notes: Tools and tweaks to make the lives of players seeking Achievements a little bit easier.
+## Notes: Tools and tweaks to make the lives of players seeking achievements a little bit easier.
 ## Notes-zhTW: 使玩家尋求成就可以稍微輕鬆點的微調工具。
 ## Notes-zhCN: 使玩家寻求成就可以稍微轻松点的微调工具。
 ## SavedVariables: Overachiever_Settings, Overachiever_CharVars_Default
@@ -32,3 +32,4 @@ AchieveTip.lua
 GameTip.lua
 Options.lua
 Calendar.lua
+AchieveSearch.lua

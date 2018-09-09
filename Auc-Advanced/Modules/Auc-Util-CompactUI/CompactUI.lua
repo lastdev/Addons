@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CompactUI.lua 5694 2016-12-23 15:15:14Z brykrys $
+	Version: 7.7.6078 (SwimmingSeadragon)
+	Revision: $Id: CompactUI.lua 6078 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -40,7 +40,11 @@ local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS
 local CalcPriceLevel
 AucAdvanced.RegisterModuleCallback("pricelevel", function(lib) CalcPriceLevel = lib.CalcLevel end)
 local IsPlayerIgnored = AucAdvanced.NOPFUNCTION
-AucAdvanced.RegisterModuleCallback("basic", function(lib) IsPlayerIgnored = lib.IsPlayerIgnored end)
+local PromptSellerIgnore
+AucAdvanced.RegisterModuleCallback("basic", function(lib)
+	IsPlayerIgnored = lib.IsPlayerIgnored
+	PromptSellerIgnore = lib.PromptSellerIgnore
+end)
 
 private.cachePriceLevel = {}
 private.pageContents = {}
@@ -135,7 +139,7 @@ function private.HookAH()
 	end
 
 	AuctionFrameBrowse_Update = private.MyAuctionFrameUpdate
-	local button, lastButton, origButton
+	local button, lastButton
 	local line
 
 	local function HideBlizzardColumnHeaders()
@@ -160,14 +164,16 @@ function private.HookAH()
 
 	local NEW_NUM_BROWSE = 14
 	for i = 1, NEW_NUM_BROWSE do
-		if (i <= NUM_BROWSE_TO_DISPLAY) then
-			origButton = _G["BrowseButton"..i]
+		local buttonName = "BrowseButton"..i
+		local origButton = _G[buttonName]
+		if origButton then
 			origButton:Hide()
-			_G["BrowseButton"..i] = nil
-		else
-			origButton = nil
+			_G[buttonName] = nil
+			_G[buttonName.."Item"] = nil
+			_G[buttonName.."ItemIconTexture"] = nil
+			_G[buttonName.."Highlight"] = nil
 		end
-		button = CreateFrame("Button", "BrowseButton"..i, AuctionFrameBrowse)
+		button = CreateFrame("Button", buttonName, AuctionFrameBrowse)
 		button.Orig = origButton
 		button.pos = i
 		private.buttons[i] = button
@@ -180,11 +186,17 @@ function private.HookAH()
 		button:SetHeight(19)
 		button:EnableMouse(true)
 		button.LineTexture = button:CreateTexture()
-		button.LineTexture:SetPoint("TOPLEFT", 0,-1)
-		button.LineTexture:SetPoint("BOTTOMRIGHT")
+		button.LineTexture:SetPoint("TOPLEFT", 0, 0)
+		button.LineTexture:SetPoint("BOTTOMRIGHT", 0, 1)
 		button.AddTexture = button:CreateTexture()
-		button.AddTexture:SetPoint("TOPLEFT", 0,-1)
-		button.AddTexture:SetPoint("BOTTOMRIGHT")
+		button.AddTexture:SetPoint("TOPLEFT", 0, 0)
+		button.AddTexture:SetPoint("BOTTOMRIGHT", 0, 1)
+
+		button.HighlightTexture = button:CreateTexture(buttonName.."Highlight")
+		button.HighlightTexture:SetPoint("TOPLEFT", 0, 0)
+		button.HighlightTexture:SetPoint("BOTTOMRIGHT", 0, 1)
+		button.HighlightTexture:SetColorTexture(1, 1, 0.3, 0.2)
+		button:SetHighlightTexture(button.HighlightTexture, "ADD")
 
 		button.Count = button:CreateFontString(nil,nil,"GameFontHighlight")
 		button.Count:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
@@ -192,17 +204,22 @@ function private.HookAH()
 		button.Count:SetHeight(19)
 		button.Count:SetJustifyH("RIGHT")
 		button.Count:SetFont(STANDARD_TEXT_FONT, 11)
-		button.IconButton = CreateFrame("Button", "AppraiserIconButton"..i, button)
+
+		button.IconButton = CreateFrame("Button", buttonName.."Item", button)
 		button.IconButton:SetPoint("TOPLEFT", button, "TOPLEFT", 30, 0)
 		button.IconButton:SetWidth(16)
 		button.IconButton:SetHeight(19)
+		button.IconButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
 		button.IconButton:SetScript("OnEnter", private.IconEnter)
 		button.IconButton:SetScript("OnLeave", private.IconLeave)
 		button.IconButton:SetScript("OnClick", private.IconClick)
 		button.IconButton:SetFrameLevel(button.IconButton:GetFrameLevel() + 5)
-		button.Icon = button.IconButton:CreateTexture()
-		button.Icon:SetPoint("TOPLEFT", button.IconButton, "TOPLEFT", 0,-2)
-		button.Icon:SetPoint("BOTTOMRIGHT", button.IconButton, "BOTTOMRIGHT" , 0, 1)
+		button.Icon = button.IconButton:CreateTexture(buttonName.."ItemIconTexture", "ARTWORK")
+		button.Icon:SetPoint("TOPLEFT", 0, -1)
+		button.Icon:SetWidth(16)
+		button.Icon:SetHeight(16)
+		button.IconButton.IconBorder = button.IconButton:CreateTexture(nil, "OVERLAY") -- added so as to not break certain skinning AddOns
+
 		button.Name = button:CreateFontString(nil,nil,"GameFontHighlight")
 		button.Name:SetPoint("TOPLEFT", button, "TOPLEFT", 50, 0)
 		button.Name:SetWidth(220)
@@ -488,8 +505,8 @@ end
 function private.OwnerClick(self, mouseButton)
 	local mainButton = self:GetParent()
 	if mouseButton == "LeftButton" and IsAltKeyDown() then
-		if AucAdvanced.Modules.Filter.Basic then
-			AucAdvanced.Modules.Filter.Basic.PromptSellerIgnore(mainButton.Owner:GetText(), mainButton, "TOPLEFT", mainButton.Owner, "TOPRIGHT")
+		if PromptSellerIgnore then
+			PromptSellerIgnore(mainButton.Owner:GetText(), mainButton, "TOPLEFT", mainButton.Owner, "TOPRIGHT")
 		end
 	else
 		private.ButtonClick(mainButton, mouseButton)
@@ -689,7 +706,9 @@ function private.RetrievePage()
 end
 
 function private.SetAuction(button, pos)
-	local id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
+	local id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel,
+		timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid,
+		buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
 
 	if not id then
 		button:Hide()
@@ -703,7 +722,7 @@ function private.SetAuction(button, pos)
 	else
 		button.LineTexture:SetColorTexture(0,0,0.1, 0.1)
 	end
-	button.id = id
+	button.id = id -- id is the index from GetAuctionItemInfo("list", id)
 
 	local showBid
 	if (get("util.compactui.bidrequired")) then
@@ -911,4 +930,4 @@ function lib.GetButtons()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5694 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 6078 $")

@@ -1,7 +1,7 @@
-﻿## Interface: 70200
+﻿## Interface: 80000
 ## Title: Server Hop
-## Version: 7.2.5.1
-## Author: ChronoAS#2758 (EU)
+## Version: 8.0.1.1
+## Author: Chronoexplosion
 ## Notes: Cross-server tool. Includes: changing realm to non visited only in a automatic way.
 ## Notes-ruRU: Инструмент для смены игрового мира. Включает: автоматизированную смену сервера на не посещенный.
 ## SavedVariables: ServerHopSettingsGlobal

@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1066 $")
+end, "$Revision: 1096 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -312,9 +312,9 @@ function XPerl_Party_UpdateHealth(self)
 	if (not UnitIsConnected(partyid)) then
 		reason = XPERL_LOC_OFFLINE
 	else
-		if (UnitBuff(partyid, feignDeath) and conf.showFD) then
+		--[[if (UnitBuff(partyid, feignDeath) and conf.showFD) then
 			reason = XPERL_LOC_FEIGNDEATH
-		elseif (self.afk and conf.showAFK) then
+		else--]]if (self.afk and conf.showAFK) then
 			reason = CHAT_MSG_AFK
 		elseif (UnitIsDead(partyid)) then
 			reason = XPERL_LOC_DEAD
@@ -322,8 +322,8 @@ function XPerl_Party_UpdateHealth(self)
 			reason = XPERL_LOC_GHOST
 		elseif ((Partyhealth == 1) and (Partyhealthmax == 1)) then
 			reason = XPERL_LOC_UPDATING
-		elseif (UnitBuff(partyid, spiritOfRedemption)) then
-			reason = XPERL_LOC_DEAD
+		--[[elseif (UnitBuff(partyid, spiritOfRedemption)) then
+			reason = XPERL_LOC_DEAD--]]
 		end
 	end
 
@@ -553,7 +553,7 @@ local function XPerl_Party_Buff_UpdateAll(self)
 			XPerl_Party_BuffPositions(self)
 		end
 
-		if conf.showFD then
+		--[[if conf.showFD then
 			local _, class = UnitClass(self.partyid)
 			if (class == "HUNTER") then
 				local feigning = UnitBuff(self.partyid, feignDeath)
@@ -562,7 +562,7 @@ local function XPerl_Party_Buff_UpdateAll(self)
 					XPerl_Party_UpdateHealth(self)
 				end
 			end
-		end
+		end--]]
 
 		if (conf.highlightDebuffs.enable) then
 			XPerl_CheckDebuffs(self, self.partyid)
@@ -709,53 +709,25 @@ local function XPerl_Party_UpdatePVP(self)
 	local partyid = self.partyid
 
 	local pvpIcon = self.nameFrame.pvpIcon
-	local prestigeIcon = self.nameFrame.prestigueIcon
 
 	local factionGroup, factionName = UnitFactionGroup(partyid)
 
 	if pconf.pvpIcon and UnitIsPVPFreeForAll(partyid) then
-		local prestige = UnitPrestige(partyid)
-
-		if prestige > 0 then
-			prestigeIcon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-			pvpIcon:Show()
-		end
+		pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+		pvpIcon:Show()
 	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
-		local prestige = UnitPrestige(partyid)
+		pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if prestige > 0 then
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					factionGroup = "Alliance"
-				elseif factionGroup == "Alliance" then
-					factionGroup = "Horde"
-				end
+		if UnitIsMercenary(partyid) then
+			if factionGroup == "Horde" then
+				pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+			elseif factionGroup == "Alliance" then
+				pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
 			end
-
-			prestigeIcon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
-
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
-				elseif factionGroup == "Alliance" then
-					pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
-				end
-			end
-
-			pvpIcon:Show()
 		end
+
+		pvpIcon:Show()
 	else
-		prestigeIcon:Hide()
 		pvpIcon:Hide()
 	end
 

@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1111 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -696,22 +696,43 @@ local function XPerl_Player_UpdateRep(self)
 	if (pconf and pconf.repBar) then
 		local rb = self.statsFrame.repBar
 		if (rb) then
-			local name, reaction, min, max, value = GetWatchedFactionInfo()
+			local name, reaction, min, max, value, factionID = GetWatchedFactionInfo()
 			local color
+			local perc
 
-			if (name) then
-				color = FACTION_BAR_COLORS[reaction]
-			else
-				name = XPERL_LOC_NONEWATCHED
-				max = 1
-				min = 0
-				value = 0
-				color = FACTION_BAR_COLORS[4]
+			--[[if not min or not max or not value then
+				return
+			end]]
+
+			if max == 43000 then
+				max = 42000
 			end
 
-			value = value - min
-			max = max - min
-			min = 0
+			if (factionID == 1733 or factionID == 1736 or factionID == 1737 or factionID == 1738 or factionID == 1739 or factionID == 1740 or factionID == 1741) and min == 20000 and max == 21000 and value == 20000 then
+				min = 21000
+				value = 21000
+			end
+
+			if name then
+				color = FACTION_BAR_COLORS[reaction]
+				if min > 0 and max > 0 and value > 0 and min ~= max and min ~= value then
+					value = value - min
+					max = max - min
+				end
+				min = 0
+				if value > 0 and max > 0 then
+					perc = (value * 100) / max
+				else
+					perc = 100
+				end
+			else
+				name = XPERL_LOC_NONEWATCHED
+				value = 0
+				max = 1
+				min = 0
+				color = FACTION_BAR_COLORS[4]
+				perc = 0
+			end
 
 			rb:SetMinMaxValues(min, max)
 			rb:SetValue(value)
@@ -719,22 +740,24 @@ local function XPerl_Player_UpdateRep(self)
 			rb:SetStatusBarColor(color.r, color.g, color.b, 1)
 			rb.bg:SetVertexColor(color.r, color.g, color.b, 0.25)
 
-			local perc = (value * 100) / max
-
 			if perc < 0 then
 				perc = 0
 			elseif perc > 100 then
 				perc = 100
 			end
 
-			rb.percent:SetFormattedText(perc1F, perc)
-
 			rb.tex:SetTexCoord(0, perc / 100, 0, 1)
 
-			if (max == 1) then
+			if max == 1 then
 				rb.text:SetText(name)
 			else
 				rb.text:SetFormattedText("%d/%d", value, max)
+			end
+
+			if perc < 100 then
+				rb.percent:SetFormattedText(perc1F, perc)
+			else
+				rb.percent:SetFormattedText(percD, perc)
 			end
 		end
 	end
@@ -846,53 +869,25 @@ local function XPerl_Player_UpdatePVP(self)
 	end
 
 	local pvpIcon = self.nameFrame.pvp
-	local prestigeIcon = self.nameFrame.prestige
 
 	local factionGroup, factionName = UnitFactionGroup("player")
 
 	if pconf.pvpIcon and UnitIsPVPFreeForAll("player") then
-		local prestige = UnitPrestige("player")
-
-		if prestige > 0 then
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-			pvpIcon:Show()
-		end
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+		pvpIcon:Show()
 	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP("player") then
-		local prestige = UnitPrestige("player")
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if prestige > 0 then
-			if UnitIsMercenary("player") then
-				if factionGroup == "Horde" then
-					factionGroup = "Alliance"
-				elseif factionGroup == "Alliance" then
-					factionGroup = "Horde"
-				end
+		if UnitIsMercenary("player") then
+			if factionGroup == "Horde" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+			elseif factionGroup == "Alliance" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
 			end
-
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
-
-			if UnitIsMercenary("player") then
-				if factionGroup == "Horde" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
-				elseif factionGroup == "Alliance" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
-				end
-			end
-
-			pvpIcon:Show()
 		end
+
+		pvpIcon:Show()
 	else
-		prestigeIcon:Hide()
 		pvpIcon:Hide()
 	end
 
@@ -1038,7 +1033,8 @@ local function XPerl_Player_UpdateMana(self)
 	end
 	-- end division by 0 check
 
-	mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
+	--mb.text:SetFormattedText("%d/%d", playermana, playermanamax)
+	XPerl_SetValuedText(mb.text, playermana, playermanamax)
 
 	if (pType >= 1 or UnitPowerMax(self.partyid, pType) < 1) then
 		mb.percent:SetText(playermana)
@@ -1085,10 +1081,10 @@ function XPerl_Player_UpdateHealth(self)
 		greyMsg = XPERL_LOC_GHOST
 	elseif (UnitIsAFK("player") and conf.showAFK) then
 		greyMsg = CHAT_MSG_AFK
-	elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+	--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 		greyMsg = XPERL_LOC_FEIGNDEATHSHORT
 	elseif (UnitBuff(partyid, spiritOfRedemption)) then
-		greyMsg = XPERL_LOC_DEAD
+		greyMsg = XPERL_LOC_DEAD--]]
 	end
 
 	if (greyMsg) then
@@ -1349,7 +1345,6 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UNIT_FACTION",
 		"UNIT_PORTRAIT_UPDATE",
 		"UNIT_FLAGS",
-		"UNIT_SPELLCAST_SUCCEEDED",
 		"PLAYER_FLAGS_CHANGED",
 		"UNIT_ENTERED_VEHICLE",
 		"UNIT_EXITING_VEHICLE",
@@ -1360,7 +1355,6 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UPDATE_EXHAUSTION",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
-		"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -1474,19 +1468,6 @@ function XPerl_Player_Events:UNIT_FACTION()
 end
 XPerl_Player_Events.UNIT_FLAGS = XPerl_Player_Events.UNIT_FACTION
 
--- HONOR_PRESTIGE_UPDATE
-function XPerl_Player_Events:HONOR_PRESTIGE_UPDATE()
-	XPerl_Player_UpdatePVP(self)
-end
-
-function XPerl_Player_Events:UNIT_SPELLCAST_SUCCEEDED(spell, rank, lineID, spellID)
-	if spellID == 191477 then
-		XPerl_Unit_UpdatePortrait(self, true)
-
-		--C_Timer.After(1, XPerl_Unit_UpdatePortrait(self, true))
-	end
-end
-
 function XPerl_Player_Events:PLAYER_FLAGS_CHANGED()
 	XPerl_Player_UpdateHealth(self)
 	XPerl_Player_UpdatePVPTimer(self)
@@ -1514,7 +1495,11 @@ function XPerl_Player_Events:UPDATE_SHAPESHIFT_FORM()
 		XPerl_Player_DruidBarUpdate(self)
 	end
 
-	XPerl_Unit_UpdatePortrait(self, true)
+	--[[if playerClass ~= "DRUID" then
+		return
+	end
+
+	XPerl_Unit_UpdatePortrait(self, true)]]
 end
 
 -- PLAYER_ENTER_COMBAT, PLAYER_LEAVE_COMBAT
@@ -1546,8 +1531,11 @@ end
 function XPerl_Player_Events:PLAYER_SPECIALIZATION_CHANGED()
 	if not InCombatLockdown() then
 		self.state:SetAttribute("playerSpec", GetSpecialization())
-
 		XPerl_Player_Set_Bits(self)
+
+		if ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
+			C_Timer.After(0.5, function() XPerl_Player_Set_Bits(self) end)
+		end
 	end
 
 	if XPerl_Player_Buffs_Position then
@@ -1558,7 +1546,7 @@ end
 function XPerl_Player_Events:UNIT_AURA()
 	XPerl_Player_UpdateBuffs(self)
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(self.partyid)
 		if (class == "HUNTER") then
 			local feigning = UnitBuff(self.partyid, feignDeath)
@@ -1567,7 +1555,7 @@ function XPerl_Player_Events:UNIT_AURA()
 				XPerl_Player_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 end
 
 -- PLAYER_CONTROL_LOST
@@ -1815,6 +1803,7 @@ function XPerl_Player_Set_Bits(self)
 	self:SetHeight(max(h1, h2))
 
 	if (pconf.extendPortrait --[[or (self.runes and pconf.showRunes and pconf.dockRunes)]]) then
+		local druidBarExtra
 		if (UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) and ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
 			druidBarExtra = 1
 		else
@@ -1969,7 +1958,7 @@ function XPerl_Player_InitWarlock(self)
 				self:SetMovable(true)
 				--self:SetUserPlaced(true)
 				self:ClearAllPoints()
-				self:SetPoint("TOP", XPerl_Player.runes, "TOP", 0, -1)
+				self:SetPoint("TOP", XPerl_Player.runes, "TOP", 0, 0)
 				self:SetMovable(false)
 				moving = nil
 			end)
@@ -1977,7 +1966,7 @@ function XPerl_Player_InitWarlock(self)
 
 		WarlockPowerFrame:SetParent(self.runes)
 		WarlockPowerFrame:ClearAllPoints()
-		WarlockPowerFrame:SetPoint("TOP", self.runes, "TOP", 0, -1)
+		WarlockPowerFrame:SetPoint("TOP", self.runes, "TOP", 0, 0)
 	end
 end
 

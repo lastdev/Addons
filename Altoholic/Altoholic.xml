@@ -103,32 +103,6 @@
 						<Anchor point="TOPLEFT" x="350" y="-16" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentTotals" inherits="GameFontNormal" >
-					<Size x="60" y="24" />
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-270" y="13" />
-					</Anchors>
-				</FontString>
-				<FontString name="$parentTotalLv" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="80" y="24" />
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-200" y="13" />
-					</Anchors>
-				</FontString>
-				<FontString name="$parentTotalGold" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="100" y="24" />
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-120" y="13" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
-				<FontString name="$parentTotalPlayed" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="80" y="24" />
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-30" y="13" />
-					</Anchors>
-					<Color r="255" g="255" b="255" />
-				</FontString>
 				<FontString name="$parentSearchLabel" inherits="GameFontNormalSmall">
 					<Size x="120" y="20" />
 					<Anchors>

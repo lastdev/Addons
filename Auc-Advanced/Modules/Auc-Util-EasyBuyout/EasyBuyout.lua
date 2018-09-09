@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - EasyBuyout Utility Module
 	Version: 1.2.5 (GhostfromTexas)
-	Revision: $Id: EasyBuyout.lua 5576 2015-11-17 17:33:03Z brykrys $
+	Revision: $Id: EasyBuyout.lua 6067 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows for the ability to purchase items from
@@ -63,7 +63,7 @@ function lib.Processors.configchanged(callbackType, ...)
 end
 
 function lib.OnLoad()
-	print("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
+	--print("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
 
 	-- Silent Mode Option
 	AucAdvanced.Settings.SetDefault("util.EasyBuyout.silentmode", false);
@@ -425,4 +425,4 @@ function private.EBMessage(messageString)
 	print(messageString)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 5576 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 6067 $")

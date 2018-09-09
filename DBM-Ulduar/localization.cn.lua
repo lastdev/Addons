@@ -392,8 +392,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "为第3阶段开始显示计时条",
 	TimeToPhase4			= "为第4阶段开始显示计时条",
 	MagneticCore			= "提示磁核的拾取者",
-	HealthFramePhase4		= "显示第4阶段的首领血量框架",
-	AutoChangeLootToFFA		= "第3阶段自动转换拾取方式为自由拾取",
 	WarnBombSpawn			= "为炸弹机器人显示警报",
 	TimerHardmode			= "为困难模式显示计时条",
 	ShockBlastWarningInP1		= "为第1阶段的$spell:63631显示特别警报",
@@ -407,9 +405,6 @@ L:SetMiscLocalization{
 	MobPhase3			= "空中指挥单位",
 	YellPull			= "我们时间不多了，朋友们！来帮忙测试一下我所发明的最新型、最强大的机体吧。在你们改变主意之前，请允许我提醒一下，你们把XT-002搞得一团糟，应该算是欠我个人情吧。",
 	YellHardPull			= "嘿，你们为什么要这么做啊？没看到上面写着“不要按这个按钮”吗？你们激活了自毁系统，还怎么完成测试呀？",
-	YellPhase2			= "太棒了！测试结果非常好！外壳完整率百分之九十八点九！几乎没有划伤！继续。",
-	YellPhase3			= "非常感谢，朋友们！你们的帮助使我获得了一些极其珍贵的数据！下面，我要让你们——咦，我把它放哪去了？哦！这里。",
-	YellPhase4			= "初步测试阶段完成。真正的测试开始啦！",
 	LootMsg				= "(.+)获得了物品：.*Hitem:(%d+)"
 }
 
@@ -498,7 +493,6 @@ L:SetOptionLocalization{
 	specWarnBrainPortalSoon		= "为下一次脑部传送门显示特别警报",
 	NextPortal			= "为下一次传送门显示计时条",
 	SetIconOnFervorTarget		= "为萨拉的热情的目标设置标记",
-	ShowSaraHealth			= "显示萨拉在第1阶段的血量 (必须至少有一名团队成员设置首领为焦点目标)",
 	SetIconOnBrainLinkTarget		= "为$spell:63802的目标设置标记",
 	MaladyArrow			= "当你附近的人中了$spell:63881时显示DBM箭头"
 }

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -16,8 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 105248 105490 105479",
 	"SPELL_AURA_APPLIED_DOSE 105248",
 	"SPELL_AURA_REMOVED 105490 105479",
-	"SPELL_HEAL",
-	"SPELL_PERIODIC_HEAL",
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
 	"SWING_DAMAGE",
@@ -50,18 +48,19 @@ local countdownGrip			= mod:NewCountdown("Alt32", 105490, "-Tank")--Can get conf
 
 mod:AddBoolOption("InfoFrame", true)
 mod:AddBoolOption("SetIconOnGrip", true)
-mod:AddBoolOption("ShowShieldInfo", false)--on 25 man this is quite frankly a spammy nightmare, especially on heroic. off by default since it's really only sensible in 10 man. Besides I may be adding an alternate frame option for "grip damage needed"
 
-local sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 23)
+mod.vb.shieldCount = 0
+local sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 local gripTargets = {}
 local gripIcon = 6
 local corruptionActive = {}
 local residueNum = 0
 local diedOozeGUIDS = {}
 local numberOfPlayers = 1
+local tendrilDebuff = DBM:GetSpellInfo(105563)
 
 local function checkTendrils()
-	if not UnitDebuff("player", GetSpellInfo(105563)) and not UnitIsDeadOrGhost("player") then
+	if not DBM:UnitDebuff("player", tendrilDebuff) and not UnitIsDeadOrGhost("player") then
 		specWarnTendril:Show()
 	end
 end
@@ -102,66 +101,17 @@ local function countCorruptionActive()
 	return count
 end
 
-local clearPlasmaTarget, setPlasmaTarget, clearPlasmaVariables
-do
-	local plasmaTargets = {}
-	local healed = {}
-	
-	function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, _, _, _, _, _, absorbed)
-		if plasmaTargets[destGUID] then
-			healed[destGUID] = healed[destGUID] + (absorbed or 0)
-			DBM.BossHealth:Update()
-		end
-	end
-	mod.SPELL_PERIODIC_HEAL = mod.SPELL_HEAL
-
-	local function updatePlasmaTargets()
-		if not mod.Options.ShowShieldInfo then return end
-		local maxAbsorb =	mod:IsDifficulty("heroic25") and 420000 or
-							mod:IsDifficulty("heroic10") and 280000 or
-							mod:IsDifficulty("normal25") and 300000 or
-							mod:IsDifficulty("normal10") and 200000 or 1
-		DBM.BossHealth:Clear()
-		if not DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Show(L.name)
-		end
-		for i,v in pairs(plasmaTargets) do
-			DBM.BossHealth:AddBoss(function() return math.max(1, math.floor((healed[i] or 0) / maxAbsorb * 100))	end, L.PlasmaTarget:format(v))
-		end
-	end
-
-	function setPlasmaTarget(guid, name)
-		plasmaTargets[guid] = name
-		healed[guid] = 0
-		updatePlasmaTargets()
-	end
-
-	function clearPlasmaTarget(guid, name)
-		plasmaTargets[guid] = nil
-		healed[guid] = nil
-		updatePlasmaTargets()
-	end
-
-	function clearPlasmaVariables()
-		table.wipe(plasmaTargets)
-		table.wipe(healed)
-		updatePlasmaTargets()
-	end
-end
-
 function mod:OnCombatStart(delay)
+	self.vb.shieldCount = 0
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	if self:IsDifficulty("lfr25") then
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 34.5)
+		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 34.5)
 	else
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(GetSpellInfo(105847), 23)
+		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 	end
 	table.wipe(gripTargets)
 	table.wipe(corruptionActive)
 	table.wipe(diedOozeGUIDS)
-	if self.Options.ShowShieldInfo then
-		clearPlasmaVariables()
-	end
 	gripIcon = 6
 	residueNum = 0
 end
@@ -247,8 +197,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:Unschedule(showGripWarning)
 		self:Schedule(0.3, showGripWarning)
 	elseif spellId == 105479 then
-		if self.Options.ShowShieldInfo then
-			setPlasmaTarget(args.destGUID, args.destName)
+		self.vb.shieldCount = self.vb.shieldCount + 1
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(6, "playerabsorb", args.spellName, select(16, DBM:UnitDebuff(args.destName, args.spellName)))
 		end
 	end
 end		
@@ -272,8 +224,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 105479 then
-		if self.Options.ShowShieldInfo then
-			clearPlasmaTarget(args.destGUID, args.destName)
+		self.vb.shieldCount = self.vb.shieldCount - 1
+		if self.Options.InfoFrame and self.vb.shieldCount == 0 then
+			DBM.InfoFrame:Hide()
 		end
 	end
 end	
@@ -298,19 +251,22 @@ function mod:RAID_BOSS_EMOTE(msg)
 		self:Unschedule(checkTendrils)--In case you manage to spam spin him, we don't want to get a bunch of extra stuff scheduled.
 		self:Unschedule(clearTendrils)--^
 		countdownRoll:Cancel()--^
-		specWarnRoll:Show()--Warn you right away.
+		if self:AntiSpam(3, 1) then
+			specWarnRoll:Show()--Warn you right away.
+		end
 		self:Schedule(3, checkTendrils)--After 3 seconds of roll starting, check tendrals, you should have leveled him out by now if this wasn't on purpose.
-		self:Schedule(12, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		if numberOfPlayers > 1 then
 			timerBarrelRoll:Start(5)
 			countdownRoll:Start(5)
+			self:Schedule(8, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		else
 			timerBarrelRoll:Start(10)
 			countdownRoll:Start(10)
+			self:Schedule(13, clearTendrils)--Clearing 3 seconds after the roll should be sufficent
 		end
 		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
-			DBM.InfoFrame:SetHeader(L.NoDebuff:format(GetSpellInfo(105563)))
-			DBM.InfoFrame:Show(5, "playergooddebuff", 105563)
+			DBM.InfoFrame:SetHeader(L.NoDebuff:format(tendrilDebuff))
+			DBM.InfoFrame:Show(5, "playergooddebuff", tendrilDebuff)
 		end
 	elseif msg == L.DLevels or msg:find(L.DLevels) then
 		self:Unschedule(checkTendrils)

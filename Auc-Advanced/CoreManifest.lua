@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreManifest.lua 5697 2017-01-10 19:55:02Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreManifest.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -52,9 +52,9 @@ AucAdvanced = {Modules = {Filter={}, Match={}, Stat={}, Util={}}, Data = {}}
 local lib = AucAdvanced
 
 -- Manifest Constants
-local DEV_VERSION = "7.4.DEV"
-local MINIMUM_TOC = 70100
-local MINIMUM_CLIENT = "7.1.0"
+local DEV_VERSION = "7.7.DEV"
+local MINIMUM_TOC = 80000
+local MINIMUM_CLIENT = "8.0.0"
 -- MINIMUM_BUILD is optional, and should only be used where TOC is not sufficient; otherwise it should be commented out
 -- local MINIMUM_BUILD = 00000
 
@@ -87,7 +87,7 @@ end
 lib.CoreFileCheckIn("CoreManifest") -- check CoreManifest in as early as possible
 
 -- Version checking
-lib.Version="7.5.5714";
+lib.Version="7.7.6112";
 if lib.Version:byte(1) == 60 then -- 60 = '<'
 	lib.Version = DEV_VERSION
 end
@@ -97,8 +97,10 @@ lib.MinorVersion = minor
 lib.RelVersion = release
 lib.Revision = revision
 
--- Single instance of a 'no operation' function
+-- Single instance of a 'no operation' dummy function
 lib.NOPFUNCTION = function() end
+-- Dummy function that returns the first parameter
+lib.RETFUNCTION = function(x) return x end
 
 -- Check TOC version meets minimum requirements
 local _,build,_,tocVersion = GetBuildInfo()
@@ -280,5 +282,5 @@ function lib.ValidateInstall()
 end
 
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreManifest.lua $", "$Rev: 5697 $")
+lib.RegisterRevision("$URL: Auc-Advanced/CoreManifest.lua $", "$Rev: 6112 $")
 lib.CoreFileCheckOut("CoreManifest")

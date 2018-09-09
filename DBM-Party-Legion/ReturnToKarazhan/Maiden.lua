@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1825, "DBM-Party-Legion", 11, 860)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16481 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(113971)
 mod:SetEncounterID(1954)
 mod:SetZone()
@@ -40,11 +40,10 @@ local timerHolyWrath				= mod:NewCastTimer(10, 227823, nil, nil, nil, 4, nil, DB
 
 local countdownHolyWrath			= mod:NewCountdown(10, 227823)
 
-local voiceHolyShock				= mod:NewVoice(227800, "HasInterrupt")--kickcast
-local voiceHolyWrath				= mod:NewVoice(227823, "HasInterrupt")--kickcast
-
 mod:AddRangeFrameOption(8, 227809)--TODO, keep looking for a VALID 6 yard item/spell
-mod:AddBoolOption("HealthFrame", true)
+mod:AddInfoFrameOption(227817, true)
+
+local sacredGround = DBM:GetSpellInfo(227789)
 
 function mod:OnCombatStart(delay)
 	timerSacredGroundCD:Start(10.9)
@@ -59,6 +58,9 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -66,9 +68,9 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 227800 then
 		timerHolyShockCD:Start()
 		specWarnHolyShock:Show(args.sourceName)
-		voiceHolyShock:Play("kickcast")
+		specWarnHolyShock:Play("kickcast")
 	elseif spellId == 227508 then
-		specWarnRepentance:Show(GetSpellInfo(227789))
+		specWarnRepentance:Show(sacredGround)
 		timerRepentanceCD:Start()
 	elseif spellId == 227823 then
 		warnHolyWrath:Show()
@@ -81,18 +83,23 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 227817 and DBM.BossHealth:IsShown() then
-		self:ShowShieldHealthBar(args.destGUID, args.spellName, 4680000)
+	if spellId == 227817 then
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, 4680000)
+		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 227817 then
-		self:RemoveShieldHealthBar(args.destGUID)
 		if UnitCastingInfo("boss1") then
 			specWarnHolyWrath:Show(L.name)
-			voiceHolyWrath:Play("kickcast")
+			specWarnHolyWrath:Play("kickcast")
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
 		end
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d616", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1095)
@@ -37,9 +37,6 @@ local timerAddsCD			= mod:NewTimer(60, "timerAddsCD", 2457)
 local timerDeathNova		= mod:NewCastTimer(20, 133804)
 --Rak'gor Bloodrazor
 local timerFixateCD			= mod:NewNextTimer(20, 132984)
-
-
-mod:RemoveOption("HealthFrame")
 
 function mod:CHAT_MSG_MONSTER_SAY(msg)
 	if msg == L.LizardLord or msg:find(L.LizardLord) then
@@ -85,7 +82,7 @@ end
 
 --"<78.3 22:22:54> [CHAT_MSG_RAID_BOSS_EMOTE] CHAT_MSG_RAID_BOSS_EMOTE#The Darkhatched Lizard-Lord calls for help!#Darkhatched Lizard-Lord#####0#0##0#987#nil#0#false#false"]
 --"<78.3 22:22:54> [UNIT_SPELLCAST_SUCCEEDED] Darkhatched Lizard-Lord [[target:Summon Adds Dummy::0:133091]]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 133091 and self:AntiSpam() then
 		self:SendSync("LizardAdds")
 	end

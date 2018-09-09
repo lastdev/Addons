@@ -45,7 +45,7 @@
 -- @class file
 -- @name LibDDI-1.0
 
-local ddiVersion = 1
+local ddiVersion = 2
 local prototype = LibStub("AceGUI-3.0-DropDown-ItemBase"):GetItemBase()
 local version = ddiVersion + prototype.version
 
@@ -70,8 +70,8 @@ local function onRelease(self)
 	prototype.OnRelease(self)
 	self:SetValue(nil)
 end
-local function onClick(this, button)
-	local self = this.obj
+local function onClick(frame)
+	local self = frame.obj
 	if self.disabled then return end
 	self.value = not self.value
 	if self.value then

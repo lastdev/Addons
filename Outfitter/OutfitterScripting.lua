@@ -434,9 +434,9 @@ if event == "GAMETOOLTIP_SHOW" then
     -- Check the tooltip for an orange or red tradeskill message
     -- and equip the outfit if there is one
 
-    local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, "]]..pTooltipGatherMessage..[[")
+    local hasText, isDifficult, isExact = Outfitter:TooltipContainsLine(GameTooltip, "]]..pTooltipGatherMessage..[[")
 
-    if hasText and (setting.ignoreDifficulty or isDifficult) then
+    if hasText and isExact and (setting.ignoreDifficulty or isDifficult) then
         equip = true
     end
 
@@ -681,19 +681,6 @@ end
 
 if didEquip and equip == nil then
    equip = false
-end
-]],
-	},
-	{
-		Name = Outfitter.cArgentDawnOutfit,
-		ID = "ArgentDawn",
-		Category = "QUEST",
-		Script = Outfitter:GenerateScriptHeader("ARGENT_DAWN NOT_ARGENT_DAWN", Outfitter.cArgentDawnOutfitDescription)..
-[[
-if event == "ARGENT_DAWN" then
-    equip = true
-elseif didEquip then
-    equip = false
 end
 ]],
 	},
@@ -2112,6 +2099,8 @@ function Outfitter._ScriptContext:RegisterEvent(pEventID)
 		end
 		
 		Outfitter.OutfitScriptEvents[pEventID][self.Outfit] = self
+	elseif Outfitter.BuiltinEvents[pEventID] then
+		Outfitter.EventLib:RegisterCustomEvent(pEventID, self.Function, self)
 	else
 		Outfitter.EventLib:RegisterEvent(pEventID, self.Function, self)
 	end
@@ -2121,6 +2110,8 @@ function Outfitter._ScriptContext:UnregisterEvent(pEventID)
 	if pEventID == "OUTFIT_EQUIPPED"
 	or pEventID == "OUTFIT_UNEQUIPPED" then
 		Outfitter.OutfitScriptEvents[pEventID][self.Outfit] = nil
+	elseif Outfitter.BuiltinEvents[pEventID] then
+		Outfitter.EventLib:UnregisterCustomEvent(pEventID, self.Function, self)
 	else
 		Outfitter.EventLib:UnregisterEvent(pEventID, self.Function, self)
 	end

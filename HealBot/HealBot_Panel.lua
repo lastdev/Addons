@@ -86,13 +86,15 @@ function HealBot_Panel_clickToFocus(status)
 end
 
 function HealBot_GetMyHealTargets()
-    --local x=HealBot_Options_copyTable(HealBot_MyHealTargets)
-    --return x;
     return HealBot_MyHealTargets
 end
 
 function HealBot_Panel_GetMainTanks()
     return HealBot_MainTanks;
+end
+
+function HealBot_Panel_IsTank(xGUID)
+    return HealBot_MainTanks[xGUID]
 end
 
 function HealBot_Panel_SetSubSortPlayer()
@@ -340,7 +342,6 @@ function HealBot_Action_SetClassIconTexture(button)
             local _,classEN = UnitClass(xUnit)
             iconName:SetTexture(classTextures[classEN]);
         end
-        --iconName:SetAlpha(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["HA"]);
     end
 end
 
@@ -697,8 +698,6 @@ function HealBot_Panel_TestBarsOn()
             if healGroups[gl]["STATE"] then
                 HealBot_Panel_testAddButton(HEALBOT_CUSTOM_CASTBY_ENEMY,HEALBOT_CUSTOM_CASTBY_ENEMY,1,HealBot_Globals.TestBars["ENEMY"],HEALBOT_CUSTOM_CASTBY_ENEMY)
             end
-    --    elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_TARGETHEALS_en and healGroups[gl]["STATE"] then
-    --        HealBot_Panel_testAddButton(HEALBOT_OPTIONS_TARGETHEALS,HEALBOT_DISABLED_TARGET,1,1)
         end
     end
     
@@ -708,7 +707,6 @@ end
 
 function HealBot_Panel_testAddButton(gName,bName,minBar,maxBar,tRole)
     local k=i[hbCurrentFrame]
-    --if not HealBot_BottomAnchors[hbCurrentFrame] then HeaderPos[hbCurrentFrame][i+1] = gName end
     for j=minBar,maxBar do
         if noBars>0 then
             local tstb=HealBot_Action_SetTestButton(hbCurrentFrame, HEALBOT_WORD_TEST.." "..bName.." "..j)
@@ -1254,8 +1252,10 @@ function HealBot_Panel_setTanks()
                 if (HealBot_unitRole[xGUID] or "x")==hbRole[HEALBOT_MAINTANK] then
                     if xGUID==HealBot_Data["PGUID"] then
                         HealBot_MainTanks[xGUID]="player"
+                        HealBot_SetTankUnit("player")
                     else
                         HealBot_MainTanks[xGUID]="raid"..j
+                        HealBot_SetTankUnit("raid"..j)
                     end
                 end
             end
@@ -1266,6 +1266,7 @@ function HealBot_Panel_setTanks()
             if xGUID then
                 if (HealBot_unitRole[xGUID] or "x")==hbRole[HEALBOT_MAINTANK] then
                     HealBot_MainTanks[xGUID]=xUnit
+                    HealBot_SetTankUnit(xUnit)
                 end
             end
         end

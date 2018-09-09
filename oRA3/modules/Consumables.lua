@@ -9,7 +9,7 @@ local format = string.format
 local tconcat, sort, wipe = table.concat, table.sort, table.wipe
 local GetSpellInfo, GetSpellDescription = GetSpellInfo, GetSpellDescription
 local UnitIsUnit, IsInGroup, IsInRaid, IsInInstance = UnitIsUnit, IsInGroup, IsInRaid, IsInInstance
-local UnitBuff, UnitName, UnitIsConnected, UnitIsVisible = UnitBuff, UnitName, UnitIsConnected, UnitIsVisible
+local UnitName, UnitIsConnected, UnitIsVisible = UnitName, UnitIsConnected, UnitIsVisible
 local GetTime, UnitIsDeadOrGhost = GetTime, UnitIsDeadOrGhost
 
 --luacheck: globals oRA3CheckButton ChatFrame_AddMessageEventFilter
@@ -41,72 +41,85 @@ local getVantus, getVantusBoss
 do
 	local runes = {
 		-- Emerald Nightmare
-		[spells[192761]] = 1703, -- Nythndra
-		[spells[192765]] = 1744, -- Elerethe
-		[spells[191464]] = 1667, -- Ursoc
-		[spells[192762]] = 1738, -- Il'gynoth
-		[spells[192763]] = 1704, -- Dragons
-		[spells[192766]] = 1750, -- Cenarius
-		[spells[192764]] = 1726, -- Xavius
+		[192761] = 1703, -- Nythndra
+		[192765] = 1744, -- Elerethe
+		[191464] = 1667, -- Ursoc
+		[192762] = 1738, -- Il'gynoth
+		[192763] = 1704, -- Dragons
+		[192766] = 1750, -- Cenarius
+		[192764] = 1726, -- Xavius
 		-- Trial of Valor
-		[spells[229174]] = 1819, -- Odyn
-		[spells[229175]] = 1830, -- Guarm
-		[spells[229176]] = 1829, -- Helya
+		[229174] = 1819, -- Odyn
+		[229175] = 1830, -- Guarm
+		[229176] = 1829, -- Helya
 		-- Nighthold
-		[spells[192767]] = 1706, -- Skorpyron
-		[spells[192768]] = 1725, -- Chronomatic Anomaly
-		[spells[192769]] = 1731, -- Trilliax
-		[spells[192770]] = 1751, -- Aluriel
-		[spells[192771]] = 1762, -- Tichondrius
-		[spells[192773]] = 1713, -- Krosus
-		[spells[192772]] = 1761, -- Tel'arn
-		[spells[192774]] = 1732, -- Etraeus
-		[spells[192775]] = 1743, -- Elisande
-		[spells[192776]] = 1737, -- Gul'dan
+		[192767] = 1706, -- Skorpyron
+		[192768] = 1725, -- Chronomatic Anomaly
+		[192769] = 1731, -- Trilliax
+		[192770] = 1751, -- Aluriel
+		[192771] = 1762, -- Tichondrius
+		[192773] = 1713, -- Krosus
+		[192772] = 1761, -- Tel'arn
+		[192774] = 1732, -- Etraeus
+		[192775] = 1743, -- Elisande
+		[192776] = 1737, -- Gul'dan
 		-- Tomb of Sargeras
-		[spells[237821]] = 1862, -- Goroth
-		[spells[237828]] = 1867, -- Demonic Inquisition
-		[spells[237824]] = 1856, -- Harjatan
-		[spells[237826]] = 1861, -- Sassz'ine
-		[spells[237822]] = 1903, -- Sisters of the Moon
-		[spells[237827]] = 1896, -- The Desolate Host
-		[spells[237823]] = 1897, -- Maiden of Vigilance
-		[spells[237820]] = 1873, -- Fallen Avatar
-		[spells[237825]] = 1898, -- Kil'jaeden
+		[237821] = 1862, -- Goroth
+		[237828] = 1867, -- Demonic Inquisition
+		[237824] = 1856, -- Harjatan
+		[237826] = 1861, -- Sassz'ine
+		[237822] = 1903, -- Sisters of the Moon
+		[237827] = 1896, -- The Desolate Host
+		[237823] = 1897, -- Maiden of Vigilance
+		[237820] = 1873, -- Fallen Avatar
+		[237825] = 1898, -- Kil'jaeden
+		-- Antorus
+		[250153] = 1992, -- Garothi Worldbreaker
+		[250156] = 1987, -- Felhounds of Sargeras
+		[250167] = 1997, -- Antoran High Command
+		[250160] = 1985, -- Portal Keeper Hasabel
+		[250150] = 2025, -- Eonar the Lifebinder
+		[250158] = 2009, -- Imonar the Soulhunter
+		[250148] = 2004, -- Kin'garoth
+		[250165] = 1983, -- Varimathras
+		[250163] = 1986, -- The Coven of Shivarra
+		[250144] = 1984, -- Aggramar
+		[250146] = 2031, -- Argus the Unmaker
 	}
 
+	local buffs = {}
+	for k in next, runes do
+		buffs[#buffs + 1] = k
+	end
+
 	function getVantus(player)
-		for spellName in next, runes do
-			local id = select(11, UnitBuff(player, spellName))
-			if id then
-				return id
-			end
+		local _, _, id = module:UnitBuffByIDs(player, buffs)
+		if id then
+			return id
 		end
 		return false
 	end
 
-	function getVantusBoss(rune)
-		local spellId = GetSpellInfo(rune)
-		local id = runes[spellId]
-		if not id then
+	function getVantusBoss(runeId)
+		local ejId = runes[runeId]
+		if not ejId then
 			return false
 		end
-		return (EJ_GetEncounterInfo(id))
+		return (EJ_GetEncounterInfo(ejId))
 	end
 end
 
 local getRune
 do
 	local runes = {
-		spells[224001], -- Defiled Augmentation
+		224001, -- Defiled Augmentation (Legion)
+		-- 270058, -- Battle-Scarred Augmentation (BfA)
 	}
 
 	function getRune(player)
-		for _, spellName in next, runes do
-			local id = select(11, UnitBuff(player, spellName))
-			if id then
-				return id
-			end
+		local _, _, id = module:UnitBuffByIDs(player, runes)
+		if id then
+			return id
 		end
 		return false
 	end
@@ -115,18 +128,22 @@ end
 local getFlask
 do
 	local flasks = {
-		spells[188031], -- Flask of the Whispered Pact    (Intellect)
-		spells[188033], -- Flask of the Seventh Demon     (Agility)
-		spells[188034], -- Flask of the Countless Armies  (Strength)
-		spells[188035], -- Flask of Ten Thousand Scars    (Stamina)
+		-- Legion
+		188031, -- Flask of the Whispered Pact    (Intellect)
+		188033, -- Flask of the Seventh Demon     (Agility)
+		188034, -- Flask of the Countless Armies  (Strength)
+		188035, -- Flask of Ten Thousand Scars    (Stamina)
+		-- BfA
+		-- 251836, -- Flask of the Currents          (Agility)
+		-- 251837, -- Flask of Endless Fathoms       (Intellect)
+		-- 251838, -- Flask of the Vast Horizon      (Stamina)
+		-- 251839, -- Flask of the Undertow          (Strength)
 	}
 
 	function getFlask(player)
-		for _, spellName in next, flasks do
-			local id = select(11, UnitBuff(player, spellName))
-			if id then
-				return id
-			end
+		local _, expires, id = module:UnitBuffByIDs(player, flasks)
+		if id then
+			return id, expires
 		end
 		return false
 	end
@@ -134,51 +151,15 @@ end
 
 local getFood
 do
-	local eating = spells[192002] -- Food & Drink (Eating)
-	local wellFed = spells[19705] -- Well Fed
-	-- local food = {
-	-- 	-- crit
-	-- 	[201223] = 225,
-	-- 	[225597] = 300,
-	-- 	[225602] = 375,
-	-- 	-- mastery
-	-- 	[201332] = 225,
-	-- 	[225599] = 300,
-	-- 	[225604] = 375,
-	-- 	-- haste
-	-- 	[201330] = 225,
-	-- 	[225598] = 300,
-	-- 	[225603] = 375,
-	-- 	-- versatility
-	-- 	[201334] = 225,
-	-- 	[225600] = 300,
-	-- 	[225605] = 375,
-	-- 	-- aoe damage
-	-- 	[201336] = true, -- ~10k
-	-- 	[225601] = true, -- ~13.5k
-	-- 	[201336] = true, -- ~17k
-	-- 	-- stats (feast)
-	-- 	-- str
-	-- 	[201634] = 150,
-	-- 	[201638] = 200,
-	-- 	-- agi
-	-- 	[201635] = 150,
-	-- 	[201639] = 200,
-	-- 	-- int
-	-- 	[201636] = 150,
-	-- 	[201640] = 200,
-	-- 	-- sta
-	-- 	[201637] = 225,
-	-- 	[201641] = 300,
-	-- }
+	local eating = { spells[192002] } -- Food & Drink (Eating)
+	local wellFed = { spells[19705] } -- Well Fed
 
 	function getFood(player)
-		-- return 17 is the stat value
-		local id = select(11, UnitBuff(player, wellFed))
+		local _, _, id = module:UnitBuffByNames(player, wellFed)
 		if id then
 			return id
 		else -- should probably map food -> well fed buffs but bleeh
-			id = select(11, UnitBuff(player, eating))
+			_, _, id = module:UnitBuffByNames(player, eating)
 			if id then
 				return -id -- negative value for eating, not well fed yet
 			end
@@ -344,13 +325,22 @@ end
 do
 	local maxFoods = {
 		[225602] = true, -- crit
-		[225604] = true, -- mastery
 		[225603] = true, -- haste
+		[225604] = true, -- mastery
 		[225605] = true, -- versatility
 		[201638] = true, -- str
 		[201639] = true, -- agi
 		[201640] = true, -- int
 		-- [201641] = true, -- sta
+		[185736] = true, -- versatility (Sugar-Crusted Fish Feast, gives +1%)
+		-- [257410] = true, -- crit
+		-- [257415] = true, -- haste
+		-- [257420] = true, -- mastery
+		-- [257424] = true, -- versatility
+		-- [259454] = true, -- agi
+		-- [259455] = true, -- int
+		-- [259456] = true, -- str
+		-- -- [259457] = true, -- sta
 	}
 	-- 1300 stat flask
 	local maxFlasks = {
@@ -358,6 +348,10 @@ do
 		[188033] = true, -- Flask of the Seventh Demon     (Agility)
 		[188034] = true, -- Flask of the Countless Armies  (Strength)
 		[188035] = true, -- Flask of Ten Thousand Scars    (Stamina)
+		-- [251836] = true, -- Flask of the Currents          (Agility)
+		-- [251837] = true, -- Flask of Endless Fathoms       (Intellect)
+		-- [251838] = true, -- Flask of the Vast Horizon      (Stamina)
+		-- [251839] = true, -- Flask of the Undertow          (Strength)
 	}
 
 	function module:IsBest(id)
@@ -420,8 +414,7 @@ do
 					if noFlasks[player] then
 						warnings[#warnings + 1] = L.noFlask
 					else
-						local flask = getFlask(player)
-						local _, _, _, _, _, _, expires = UnitBuff(player, spells[flask])
+						local flask, expires = getFlask(player)
 						local remaining = expires and (expires - t) or 0
 						if remaining > 0 and remaining < 600 then -- triggers weirdly sometimes, not sure why
 							whisper(player, L.flaskExpires)

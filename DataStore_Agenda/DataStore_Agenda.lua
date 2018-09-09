@@ -165,9 +165,11 @@ end
 
 local function ScanCalendar()
 	-- Save the current month
-	local currentMonth, currentYear = CalendarGetMonth()
-	local _, thisMonth, thisDay, thisYear = CalendarGetDate()
-	CalendarSetAbsMonth(thisMonth, thisYear)
+	local CurDateInfo = C_Calendar.GetMonthInfo()
+	local currentMonth, currentYear = CurDateInfo.month, CurDateInfo.year
+	local DateInfo = C_Calendar.GetDate()
+	local thisMonth, thisDay, thisYear = DateInfo.month, DateInfo.monthDay, DateInfo.year
+	C_Calendar.SetAbsMonth(thisMonth, thisYear)
 
 	local calendar = addon.ThisCharacter.Calendar
 	wipe(calendar)
@@ -177,16 +179,20 @@ local function ScanCalendar()
 
 	-- Save this month (from today) + 6 following months
 	for monthOffset = 0, 6 do
-		local month, year, numDays = CalendarGetMonth(monthOffset)
+		local charMonthInfo = C_Calendar.GetMonthInfo(monthOffset)
+		local month, year, numDays = charMonthInfo.month, charMonthInfo.year, charMonthInfo.numDays
 		local startDay = (monthOffset == 0) and thisDay or 1
 
 		for day = startDay, numDays do
-			for i = 1, CalendarGetNumDayEvents(monthOffset, day) do		-- number of events that day ..
+			for i = 1, C_Calendar.GetNumDayEvents(monthOffset, day) do		-- number of events that day ..
 				-- http://www.wowwiki.com/API_CalendarGetDayEvent
-				local title, hour, minute, calendarType, _, eventType, _, _, inviteStatus = CalendarGetDayEvent(monthOffset, day, i)
-				if calendarType ~= "HOLIDAY" and calendarType ~= "RAID_LOCKOUT"
+				local title, hour, minute, calendarType, _, eventType, _, _, inviteStatus = C_Calendar.GetDayEvent(monthOffset, day, i)
+				
+				-- 8.0 : for some events, the calendar type may be nil, filter them out
+				if calendarType and calendarType ~= "HOLIDAY" and calendarType ~= "RAID_LOCKOUT"
 					and calendarType ~= "RAID_RESET" and inviteStatus ~= CALENDAR_INVITESTATUS_INVITED
 					and inviteStatus ~= CALENDAR_INVITESTATUS_DECLINED then
+										
 					-- don't save holiday events, they're the same for all chars, and would be redundant..who wants to see 10 fishing contests every sundays ? =)
 
 					local eventDate = format("%04d-%02d-%02d", year, month, day)
@@ -194,7 +200,7 @@ local function ScanCalendar()
 
 					-- Only add events older than "now"
 					if eventDate > today or (eventDate == today and eventTime > now) then
-						table.insert(calendar, format("%s|%s|%s|%d|%d", eventDate, eventTime, title, eventType, inviteStatus ))
+						table.insert(calendar, format("%s|%s|%s|%d|%d", eventDate, eventTime, title.title, eventType, inviteStatus ))
 					end
 				end
 			end
@@ -202,7 +208,7 @@ local function ScanCalendar()
 	end
 
 	-- Restore current month
-	CalendarSetAbsMonth(currentMonth, currentYear)
+	C_Calendar.SetAbsMonth(currentMonth, currentYear)
 
 	addon:SendMessage("DATASTORE_CALENDAR_SCANNED")
 end
@@ -212,10 +218,14 @@ local function ScanChallengeModeMaps()
 	local maps = C_ChallengeMode.GetMapTable()
 
 	for _, dungeonID in pairs(maps) do
-   	local _, weeklyBestTime, weeklyBestLevel = C_ChallengeMode.GetMapPlayerStats(dungeonID)
+		-- deprecated in 8.0
+   	-- local _, weeklyBestTime, weeklyBestLevel = C_ChallengeMode.GetMapPlayerStats(dungeonID)
+		
+		-- replaced by (but needs testing !)
+		-- local weeklyBestTime, weeklyBestLevel = C_MythicPlus.GetWeeklyBestForMap(dungeonID)
 
-		challengeMode.weeklyBestTime = weeklyBestTime
-		challengeMode.weeklyBestLevel = weeklyBestLevel
+		-- challengeMode.weeklyBestTime = weeklyBestTime
+		-- challengeMode.weeklyBestLevel = weeklyBestLevel
 	end
 end
 
@@ -270,12 +280,16 @@ end
 local trackedItems = {
 	[39878] = 259200, -- Mysterious Egg, 3 days
 	[44717] = 259200, -- Disgusting Jar, 3 days
+	[94295] = 259200, -- Primal Egg, 3 days
+	[153190] = 432000, -- Fel-Spotted Egg, 5 days
 }
 
 local lootMsg = gsub(LOOT_ITEM_SELF, "%%s", "(.+)")
+local purchaseMsg = gsub(LOOT_ITEM_PUSHED_SELF, "%%s", "(.+)")
 
 local function OnChatMsgLoot(event, arg)
 	local _, _, link = strfind(arg, lootMsg)
+	if not link then _, _, link = strfind(arg, purchaseMsg) end
 	if not link then return end
 
 	local id = tonumber(link:match("item:(%d+)"))
@@ -294,7 +308,7 @@ local function OnChatMsgLoot(event, arg)
 end
 
 local function OnChallengeModeMapsUpdate(event)
-	ScanChallengeModeMaps()
+	-- ScanChallengeModeMaps()
 end
 
 
@@ -457,7 +471,8 @@ local function SetClientServerTimeGap()
 	lastServerMinute = nil	-- won't be needed anymore
 	timerHandle = nil
 
-	local _, ServerMonth, ServerDay, ServerYear = CalendarGetDate()
+	local DateInfo = C_Calendar.GetDate()
+	local ServerMonth, ServerDay, ServerYear = DateInfo.month, DateInfo.monthDay, DateInfo.year
 	timeTable.year = ServerYear
 	timeTable.month = ServerMonth
 	timeTable.day = ServerDay
@@ -633,8 +648,10 @@ function addon:OnEnable()
 	ClearExpiredDungeons()
 	
 	-- Calendar (only register after setting the current month)
-	local _, thisMonth, _, thisYear = CalendarGetDate()
-	CalendarSetAbsMonth(thisMonth, thisYear)
+	local DateInfo = C_Calendar.GetDate()
+	local thisMonth,thisYear = DateInfo.month, DateInfo.year
+
+	C_Calendar.SetAbsMonth(thisMonth, thisYear)
 	addon:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", OnCalendarUpdateEventList)
 
 	-- Item Cooldowns

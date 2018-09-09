@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Milling
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: SearcherMilling.lua 5606 2016-06-13 16:33:33Z brykrys $
+	Version: 7.7.6099 (SwimmingSeadragon)
+	Revision: $Id: SearcherMilling.lua 6099 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -195,4 +195,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherMilling.lua $", "$Rev: 5606 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherMilling.lua $", "$Rev: 6099 $")

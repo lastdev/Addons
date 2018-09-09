@@ -88,11 +88,12 @@ combatLogMap.SPELL_AURA_APPLIED = {
 	[62124] = "Taunt",  -- Hand of Reckoning (Paladin)
 	[116189] = "Taunt", -- Provoke (Monk)
 	[118635] = "TauntAE", -- Provoke (Monk, Black Ox Statue)
-	[185245] = "Taunt", -- Torment (Demon Hunter)
+	[185245] = "Taunt", -- Torment (Vengeance Demon Hunter)
+	[281854] = "Taunt", -- Torment (Havoc Demon Hunter)
 	-- Pet Taunts
 	[17735] = "TauntPet",   -- Suffering (Warlock Pet)
 	[2649] = "TauntPet",    -- Growl (Hunter Pet)
-	[196727] = "TauntMiss", -- Provoke (Niuzao, Monk Pet)
+	[196727] = "TauntPet", -- Provoke (Niuzao, Monk Pet)
 }
 combatLogMap.SPELL_CREATE = {
 	-- Portals
@@ -135,7 +136,6 @@ combatLogMap.SPELL_RESURRECT = {
 	[20484] = "CombatResurrect",  -- Rebirth (Druid)
 	[61999] = "CombatResurrect",  -- Raise Ally (Death Knight)
 	[95750] = "CombatResurrect",  -- Soulstone Resurrection (Warlock)
-	[126393] = "CombatResurrect", -- Eternal Guardian (Hunter Quilen Pet)
 	[159931] = "CombatResurrect", -- Dust to Life (Hunter Moth Pet)
 	[159956] = "CombatResurrect", -- Gift of Chi-Ji (Hunter Crane Pet)
 }
@@ -413,28 +413,26 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 
 	-- stuff I pulled out of my fork of Deadened (Antiarc probably did most of the immunity coding, pretty old stuff)
 	local immunities = {
-		[(GetSpellInfo(642))] = true, -- Divine Shield
-		[(GetSpellInfo(710))] = true, -- Banish
-		[(GetSpellInfo(1022))] = true, -- Blessing of Protection
-		[(GetSpellInfo(204018))] = true, -- Blessing of Spellwarding
-		[(GetSpellInfo(33786))] = true, -- Cyclone (PvP)
-		[(GetSpellInfo(45438))] = true, -- Ice Block
-		[(GetSpellInfo(217832))] = true, -- Imprision (PvP)
+		642, -- Divine Shield
+		710, -- Banish
+		1022, -- Blessing of Protection
+		204018, -- Blessing of Spellwarding
+		33786, -- Cyclone (PvP)
+		45438, -- Ice Block
+		217832, -- Imprision (PvP)
 	}
 	local function getMissReason(unit)
-		for immunity in next, immunities do
-			local name, _, _, _, _, _, expires = UnitBuff(unit, immunity)
-			if name then
-				expires = expires and tonumber(("%.1f"):format(expires - GetTime())) or 0
-				if expires < 1 then expires = nil end
-				return name, expires
-			end
+		local name, expires = module:UnitBuffByIDs(unit, immunities)
+		if name then
+			expires = expires and tonumber(("%.1f"):format(expires - GetTime())) or 0
+			if expires < 1 then expires = nil end
+			return name, expires
 		end
 	end
 
 	-- aaand where all the magic happens
 	local FILTER_GROUP = bit_bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
-	combatLogHandler:SetScript("OnEvent", function(self, _, _, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId, extraSpellName)
+	local handler = function(_, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId, extraSpellName)
 		-- first check if someone died
 		if event == "UNIT_DIED" or event == "UNIT_DESTROYED" then
 			if soulstoneList[dstName] then
@@ -496,6 +494,9 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 			return module[handler](module, srcOutput, dstOutput, spellOutput, extraSpellOuput)
 		end
 
+	end
+	combatLogHandler:SetScript("OnEvent", function(self, event)
+		handler(CombatLogGetCurrentEventInfo())
 	end)
 
 	-- Codex handling
@@ -634,8 +635,10 @@ do
 	-- player becomes alive (not UnitIsDead) in that time period, we report
 	-- them as having used the Soulstone!
 
-	local spiritOfRedemption = GetSpellInfo(27827)
-	local feignDeath = GetSpellInfo(5384)
+	local buffs = {
+		27827, -- Spirit of Redemption
+		5384, -- Feign Death
+	}
 
 	local soulstone = GetSpellLink(20707)
 
@@ -653,7 +656,7 @@ do
 			for name, expires in next, soulstoneList do
 				if now > expires or UnitIsGhost(name) or not UnitIsConnected(name) then -- expired (waited 60 seconds, now i don't care) or released or dc'd
 					soulstoneList[name] = nil
-				elseif not UnitIsDead(name) and UnitIsConnected(name) and not UnitIsFeignDeath(name) and not UnitBuff(name, feignDeath) and not UnitBuff(name, spiritOfRedemption) then
+				elseif not UnitIsDead(name) and UnitIsConnected(name) and not UnitIsFeignDeath(name) and not module:UnitBuffByIDs(name, buffs) then
 					soulstoneList[name] = nil
 					name = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
 					local srcOutput = ("|cff40ff40%s|r"):format(name)
@@ -716,25 +719,16 @@ function module:OnRegister()
 	})
 	oRA:RegisterModuleOptions("Alerts", GetOptions)
 
-	-- Enable shift-clicking the line to print in chat. Raw hooked because
-	-- otherwise SetItemRef will also fire on other |H's in the message.
-	local orig_SetItemRef = SetItemRef
-	SetItemRef = function(link, ...)
-		if strsub(link, 1, 3) ~= "ora" then
-			return orig_SetItemRef(link, ...)
-		end
-		if not IsShiftKeyDown() then return end
-
-		local _, msg = strsplit(":", link, 2)
-		msg = msg:gsub("@", "|")
-		local editBox = _G.ChatEdit_ChooseBoxForSend()
-		if editBox:IsShown() and editBox:GetText() ~= "" then
-			editBox:Insert(" "..msg)
-		else
+	-- Enable shift-clicking the line to print in chat.
+	hooksecurefunc("SetItemRef", function(link)
+		if strsub(link, 1, 3) == "ora" and IsModifiedClick("CHATLINK") then
+			local _, msg = strsplit(":", link, 2)
+			msg = msg:gsub("@", "|")
+			local editBox = _G.ChatEdit_ChooseBoxForSend()
 			_G.ChatEdit_ActivateChat(editBox)
 			editBox:SetText(msg)
 		end
-	end
+	end)
 end
 
 function module:OnEnable()
@@ -837,7 +831,7 @@ function GetOptions()
 	end
 	for i = 1, GetNumDisplayChannels() do
 		local name, _, _, index, _, _, category = GetChannelDisplayInfo(i)
-		if category == "CHANNEL_CATEGORY_CUSTOM" then
+		if index and category == "CHANNEL_CATEGORY_CUSTOM" then
 			outputValuesWithChannels["c"..index] = ("/%d %s"):format(index, name)
 		end
 	end

@@ -1,11 +1,7 @@
 ﻿-- Last update by GlitterStorm @ Azralon on Feb,28th,2015
 if GetLocale() ~= "ptBR" then return end
 
-DBM_CORE_NEED_LOCALS				= "Are you good with programming or languages? If yes, the DBM team needs your help to keep DBM the best boss mod for WoW. Join the team by visiting |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_HOW_TO_USE_MOD					= "Bem vindo ao DBM. Digite /dbm help para obter uma lista dos comandos disponíveis. Para acessar as opções, digite /dbm no seu chat para começar a configuração. Carregue zonas específicas manualmente para configurar opções específicas de cada chefe para o seu gosto pessoal. O DBM tenta fazer isso automaticamente para você, observando sua spec na primeira vez que é executado. De qualquer forma, você pode querer habilitar outras opções."
-
-DBM_FORUMS_MESSAGE					= "Achou um bug, tradução ruim ou temporizadores de chefes incorretos? Acha que alguma mod de chefe precisa de aviso adicional, temporizador ou recurso especial? me mande por correio se for de Azralon @ GlitterStorm ou \nVisit the new Deadly Boss Mods discussion, bug report and feature request forums at |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (you can click the link to copy the URL)"
-DBM_FORUMS_COPY_URL_DIALOG			= "Come visit our discussion and support forums"
 
 DBM_CORE_LOAD_MOD_ERROR				= "Erro ao carregar módulo %s: %s "
 DBM_CORE_LOAD_MOD_SUCCESS			= "Módulo '%s' carregado. Para mais opções, digite /dbm ou /dbm help no chat"
@@ -97,7 +93,6 @@ DBM_CORE_GENERIC_TIMER_BERSERK		= "Frenético"
 DBM_CORE_OPTION_TIMER_BERSERK		= "Exibir cronógrafo para $spell:26662"
 DBM_CORE_GENERIC_TIMER_COMBAT		= "Combate começou"
 DBM_CORE_OPTION_TIMER_COMBAT		= "Exibir cronógrafo para começo do combate"
-DBM_CORE_OPTION_HEALTH_FRAME		= "Exibir quadro de vida do chefe"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "Barras"
 DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Categoria de anúncios"
@@ -214,8 +209,6 @@ DBM_CORE_TIMER_USAGE	= {
 
 DBM_ERROR_NO_PERMISSION				= "Você não tem as permissões necessárias para fazer isso."
 
-DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Esconder quadro de vida"
-
 DBM_CORE_ALLIANCE					= "Aliança"
 DBM_CORE_HORDE						= "Horda"
 
@@ -244,7 +237,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cast			= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.active		= "%s acaba" --Buff/Debuff/event on boss
 DBM_CORE_AUTO_TIMER_TEXTS.fades			= "%s desvanece" --Buff/Debuff on players
 DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s recarrega"
-DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s recarrega (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s recarrega (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s recarrega: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Próx. %s"
 DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Próx. %s (%%s)"

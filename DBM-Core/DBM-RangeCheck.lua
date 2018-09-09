@@ -76,6 +76,7 @@ local GetRaidTargetIndex = GetRaidTargetIndex
 local GetTime = GetTime
 local CheckInteractDistance, IsItemInRange, UnitInRange = CheckInteractDistance, IsItemInRange, UnitInRange
 local max, sin, cos, pi, pi2 = math.max, math.sin, math.cos, math.pi, math.pi * 2
+local GetBestMapForUnit = C_Map.GetBestMapForUnit
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
@@ -531,7 +532,7 @@ do
 				local _, class = UnitClass(uId)
 				local icon = GetRaidTargetIndex(uId)
 				dot.class = class
-				if icon then
+				if icon and icon < 9 then
 					dot.icon = icon
 					dot:SetTexture(format("Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d", icon))
 					dot:SetTexCoord(0, 1, 0, 1)
@@ -573,7 +574,7 @@ do
 			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange, mainFrame.redCircleNumPlayers))
 		end
 
-		local playerMapId = GetPlayerMapAreaID("player") or 0
+		local playerMapId = GetBestMapForUnit("player") or 0
 		if not restricted then
 			rotation = pi2 - (GetPlayerFacing() or 0)
 		end
@@ -588,7 +589,7 @@ do
 		for i = 1, numPlayers do
 			local uId = unitList[i]
 			local dot = dots[i]
-			local mapId = GetPlayerMapAreaID(uId) or playerMapId
+			local mapId = GetBestMapForUnit(uId) or 0
 			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
 				local range--Juset set to a number in case any api fails and returns nil
 				if restricted then--API restrictions are in play, so pretend we're back in BC
@@ -698,7 +699,7 @@ end
 updater = mainFrame:CreateAnimationGroup()
 updater:SetLooping("REPEAT")
 local anim = updater:CreateAnimation()
-anim:SetDuration(0.05)
+anim:SetDuration(0.1)
 
 mainFrame:SetScript("OnEvent", function(self, event, ...)
 	if event == "GROUP_ROSTER_UPDATE" or event == "RAID_TARGET_UPDATE" then
@@ -709,7 +710,7 @@ end)
 -----------------------
 --  Check functions  --
 -----------------------
-local getDistanceBetween
+local getDistanceBetween, getDistanceBetweenALL
 do
 	local function itsBCAgain(uId)
 		if IsItemInRange(37727, uId) then return 5
@@ -726,7 +727,24 @@ do
 		elseif IsItemInRange(35278, uId) then return 80
 		else return 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
 	end
-	--TODO, add some check in 7.1 to return before calling UnitPosition, if in restricted area.
+	
+	function getDistanceBetweenALL(checkrange)
+		local range = 1000
+		for uId in DBM:GetGroupMembers() do
+			if UnitExists(uId) and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) then
+				if DBM:HasMapRestrictions() then--API restrictions are in play, so pretend we're back in BC
+					range = itsBCAgain(uId)
+				else
+					range = UnitDistanceSquared(uId) ^ 0.5
+				end
+				if checkrange < (range+0.5) then
+					return true--return and end once anyone found
+				end
+			end
+		end
+		return false--No one was foundi nrnage
+	end
+	
 	function getDistanceBetween(uId, x, y)
 		local restrictionsActive = DBM:HasMapRestrictions()
 		if not x then--If only one arg then 2nd arg is always assumed to be player
@@ -884,4 +902,8 @@ end
 -- GetDistance(uId, uId2) -- distance between the two uIds
 function rangeCheck:GetDistance(...)
 	return getDistanceBetween(...)
+end
+
+function rangeCheck:GetDistanceAll(...)
+	return getDistanceBetweenALL(...)
 end

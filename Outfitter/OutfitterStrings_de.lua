@@ -95,7 +95,6 @@
 	Outfitter.cSpecialThanksTitle = "Besonderen Dank für ihre Unterstützung geht an"
 	Outfitter.cSpecialThanksNames = "%s"
 	Outfitter.cTranslationCredit = "Übersetzung: %s"
-	Outfitter.cURL = "wobbleworks.com"
 
 	Outfitter.cOpenOutfitter = "Outfitter öffnen"
 

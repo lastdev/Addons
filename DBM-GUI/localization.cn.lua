@@ -1,8 +1,9 @@
-﻿-- Diablohu(diablohudream@gmail.com) 
+-- Diablohu(diablohudream@gmail.com) 
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Oct 08 2016, 03:05 UTC@15334
+-- Last update: 2018/08/23
+-- Last update: 2018/08/23
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -13,8 +14,8 @@ L.MainFrame 				= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "翻译:"
 L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
-L.Website					= "拜访我们的论坛|cFF73C2FBwww.deadlybossmods.com|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
-L.WebsiteButton				= "论坛"
+L.Website					= "拜访我们的Discord |cFF73C2FBhttps://discord.gg/deadlybossmods|r. 在Twitter上关注 @deadlybossmods 或 @MysticalOS"
+L.WebsiteButton				= "网页"
 
 L.OTabBosses				= "模块"
 L.OTabOptions				= "选项"
@@ -51,6 +52,7 @@ L.Statistic_Kills			= "击杀:"
 L.Statistic_Wipes			= "失败:"
 L.Statistic_Incompletes		= "未完成:"
 L.Statistic_BestKill		= "最好成绩:"
+L.Statistic_BestRank		= "最高评级:"
 
 -- Tab: General Options
 L.General 					= "DBM核心综合设置"
@@ -59,7 +61,7 @@ L.UseSoundChannel			= "设置DBM使用的声道"
 L.UseMasterChannel			= "主声道"
 L.UseDialogChannel			= "对话声道"
 L.UseSFXChannel				= "音效声道"
-L.Latency_Text				= "设定启用同步功能的最高延迟阈值：%d"
+L.Latency_Text				= "设定团队之间DBM最高延迟阈值：%d"
 
 L.ModelOptions				= "3D模型选项"
 L.EnableModels				= "在首领选项中启用3D模型"
@@ -92,8 +94,9 @@ L.Warn_FontType				= "选择字体"
 L.Warn_FontStyle			= "选择样式"
 L.Warn_FontShadow			= "阴影"
 L.Warn_FontSize				= "字体大小: %d"
-L.Warn_Duration				= "警告持续时间: %d 秒"
+L.Warn_Duration				= "警告持续时间: %0.1f 秒"
 L.None						= "无"
+L.Random					= "Random"
 L.Outline					= "描边"
 L.ThickOutline				= "加粗描边"
 L.MonochromeOutline			= "单色描边"
@@ -113,7 +116,8 @@ L.WhisperMessages			= "密语信息设置"
 L.AutoRespond 				= "在战斗中自动回复私聊"
 L.EnableStatus 				= "回复“status”私聊当前战斗信息"
 L.WhisperStats 				= "在回复的私聊中包含击杀或灭团次数统计信息"
-L.DisableStatusWhisper 		= "屏蔽全团成员的自动回复私聊(需要团长权限)。只对普通/英雄/神话团队和挑战/神话五人小队有效。"
+L.DisableStatusWhisper 		= "屏蔽全团成员的status私聊(需要团长权限)。只对普通/英雄/神话团队和挑战/神话五人小队有效。"
+L.DisableGuildStatus 		= "屏蔽通报团队进度信息到工会(需要团长权限)。"
 
 -- Tab: Barsetup
 L.BarSetup   				= "计时条设置"
@@ -200,21 +204,6 @@ L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播�
 L.SpecialWarnSound4			= "特殊警报: 快跑啊 小女孩"
 L.SpecialWarnSound5			= "使用自定义注记特殊警报的声音"
 
--- Tab: Heads Up Display Frame
-L.Panel_HUD					= "抬头显示设置(HUD)"
-L.Area_HUDOptions			= "HUD 选项"
-L.HUDColorOverride			= "全局HUD颜色"
-L.HUDSizeOverride			= "全局HUD大小"
-L.HUDAlphaOverride			= "全局HUD透明度"
-L.HUDTextureOverride		= "全局HUD材质 (当团队标记作为材质时不适用)"
-L.HUDColorSelect			= "HUD 颜色 %d"
-L.HUDTextureSelect1			= "选择主要HUD材质"
-L.HUDTextureSelect2			= "选择次要HUD材质"
-L.HUDTextureSelect3			= "选择第三HUD材质"
-L.HUDTextureSelect4			= "选择'跑向'HUD材质"
-L.HUDSizeSlider				= "圆环半径 %0.1f."
-L.HUDAlphaSlider			= "透明度: %0.1f"
-
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
 L.Area_VoiceSelection		= "语音选择"
@@ -230,29 +219,45 @@ L.SWFDefaultOnly			= "当特殊警报使用默认声音时(允许自定义语音
 L.SWFAll					= "当特殊警报使用任何默认声音时"
 L.SpecWarn_AlwaysVoice		= "总是播放所有语音警告(覆盖Boss特定的选项,建议指挥使用)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
+L.Area_GetVEM				= "获取夏一可语音包(普通话最新)"
+L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-yike|r"
+L.Area_BrowseOtherVP		= "获取其他语音包"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.Area_BrowseOtherCT		= "获取其他倒计时语音包"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
 
--- Tab: HealthFrame
-L.Panel_HPFrame				= "生命值框体"
-L.Area_HPFrame				= "生命值框体选项"
-L.HP_Enabled				= "总是显示生命值框体（无论该首领的相关设置如何）"
-L.HP_GrowUpwards			= "向上扩展"
-L.HP_ShowDemo				= "显示框体"
-L.BarWidth					= "计量条宽度: %d"
+-- Tab: Event Sounds
+L.Panel_EventSounds			= "事件音效"
+L.Area_SoundSelection		= "音效选择(使用鼠标滚轮滚动选择)"
+L.EventVictorySound			= "设置战斗胜利音效"
+L.EventWipeSound			= "设置灭团音效"
+L.EventEngageSound			= "设置开战音效"
+L.EventDungeonMusic			= "设置在副本内播放的音乐"
+L.EventEngageMusic			= "设置战斗过程中的音乐"
+L.Area_EventSoundsExtras	= "事件音效选项"
+L.EventMusicCombined		= "允许在副本内播放在音乐选项中的全部音效(需要reload)"
+L.Area_EventSoundsFilters	= "事件音效过滤条件"
+L.EventFilterDungMythicMusic= "不要在M/M+难度下播放副本音乐"
+L.EventFilterMythicMusic	= "不要在M/M+难度下播放战斗音乐"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "DBM全局过滤"
 L.Area_SpamFilter_Outgoing	= "DBM全局过滤设置"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
-L.SpamBlockNoSpecWarn		= "不要显示特殊特殊警报和特殊警报音效"
-L.SpamBlockNoShowTimers		= "不显示计时器"
-L.SpamBlockNoSetIcon		= "不设定标记在目标上"
+L.SpamBlockNoShowTgtAnnounce= "不显示针对目标类型的警报或播放警报音效(上面那个优先级比这个高)"
+L.SpamBlockNoSpecWarn		= "不要显示特殊警报和特殊警报音效"
+L.SpamBlockNoSpecWarnText	= "不要显示特殊警报，但允许语音包(上面那个优先级比这个高)"
+L.SpamBlockNoShowTimers		= "不显示DBM原装计时条"
+L.SpamBlockNoShowUTimers	= "不显示用户自定生成的计时条"
+L.SpamBlockNoSetIcon		= "不在目标上设定标记"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
-L.SpamBlockNoHealthFrame	= "不显示生命值监视器"
-L.SpamBlockNoCountdowns		= "不要播放倒数语音"
-L.SpamBlockNoYells			= "不要再战斗中大喊我中了..."
+L.SpamBlockNoNameplate		= "不要显示姓名面板高亮"
+L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
+L.SpamBlockNoYells			= "不要再战斗中大喊"
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
+L.SpamBlockNoReminders		= "不显示任何登陆, 过期信息(不推荐)"
 
 L.Area_Restore				= "DBM战斗结束重置设置"
 L.SpamBlockNoIconRestore	= "当战斗结束后不保存团队标记状态并重置"
@@ -262,15 +267,16 @@ L.SpamBlockNoRangeRestore	= "当Boss模块隐藏距离窗体时不重置窗体�
 L.Area_SpamFilter			= "信息过滤设置"
 L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
-L.SpamBlockBossWhispers		= "战斗中过滤DBM密语警报"
-L.BlockVersionUpdateNotice	= "禁用DBM过期窗口并改在聊天窗口提示"
 
 L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
-L.FilterInterrupts			= "当目标没有被选中或设置为焦点时，过滤掉打断提示 (注意: 这对那些不打断就灭团的技能无效)"
+L.FilterInterruptsHeader	= "基于行为偏好的打断技能提示过滤"
+L.FilterInterrupts			= "如果被打断对象不是当前目标/焦点(总是)"
+L.FilterInterrupts2			= "如果被打断对象不是当前目标/焦点(总是)或者打断技能正在冷却(限Boss)"
+L.FilterInterrupts3			= "如果被打断对象不是当前目标/焦点(总是)或者打断技能正在冷却(Boss和小怪)"
 L.FilterInterruptNoteName	= "当自定义注记内没有包含你的名字的时候，过滤掉打断提示 (带计数)"
 L.FilterDispels				= "当驱散技能在冷却时, 过滤掉驱散提示"
-L.FilterSelfHud				= "把自己从HudMap中过滤掉 (不包括和距离有关的功能)"
+L.FilterTrashWarnings		= "当进入普通或英雄副本时，过滤掉所有小怪警报"
 
 L.Area_PullTimer			= "开怪和倒计时过滤设置"
 L.DontShowPTNoID			= "不显示不同区域发送的倒计时"
@@ -289,7 +295,6 @@ L.HideGuildChallengeUpdates	= "Boss战斗中隐藏工会挑战成功信息"
 L.HideQuestTooltips			= "Boss战斗中隐藏鼠标提示窗体(tooltips)中的任务进度"
 L.HideTooltips				= "Boss战斗中完全隐藏鼠标提示窗体(tooltips)"
 L.DisableSFX				= "Boss战斗中关闭音效"
-L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信息"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
@@ -330,14 +335,6 @@ L.Area_Advanced				= "高级选项"
 L.FakeBW					= "当检查Bigwig时，假装DBM就是Bigwig"
 L.AITimer					= "DBM为没遇见过的战斗使用人工智能自动产生计时器(在初期的Beta或PTR的Boss测试非常有帮助)。此功能不会对多目标技能生效。"
 L.AutoCorrectTimer			= "自动校正时间过长的计时器(适合在公会正在进行全新副本而DBM模块还没被更新至可靠的程度)。这选项可能会使某些计时器错乱，如Boss在阶段转换时重置技能CD而DBM实在无能为力o_O"
-
-L.PizzaTimer_Headline 		= '创造一个自定义计时器'
-L.PizzaTimer_Title			= '名字 (如 “泡面倒计时”)'
-L.PizzaTimer_Hours 			= "小时"
-L.PizzaTimer_Mins 			= "分钟"
-L.PizzaTimer_Secs 			= "秒"
-L.PizzaTimer_ButtonStart	= "开始计时"
-L.PizzaTimer_BroadCast		= "向全团广播"
 
 L.Panel_Profile				= "配置文件"
 L.Area_CreateProfile        = "创建DBM核心配置"

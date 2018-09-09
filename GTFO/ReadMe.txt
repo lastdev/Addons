@@ -1253,3 +1253,96 @@ Change Log:
 
 4.43.1
 * Added Legion spells for Argus
+
+4.43.2
+* Added Legion spells for Argus
+
+4.43.3
+* Added Legion spells for Argus
+* Added Legion spells for Seat of the Triumvirate
+* Added Legion spells for Tomb of Sargeras
+
+4.43.4
+* Added Legion spells for Argus
+* Added Legion spells for Tomb of Sargeras
+
+4.43.5
+* Added Legion spells for Argus
+* Added Legion spells for Tomb of Sargeras
+
+4.43.6
+* Added Legion spells for Argus
+* Added Legion spells for Tomb of Sargeras
+
+4.43.7
+* Added Classic spells for Azeroth (world)
+
+4.43.8
+* Added Legion spells for Argus
+* Added Legion spells for Antorus, The Burning Throne
+
+4.43.9
+* Added Legion spells for Antorus, The Burning Throne
+
+4.44
+* Added Legion spells for Antorus, The Burning Throne
+
+4.44.1
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for Antorus, The Burning Throne
+
+4.44.2
+* Added Legion spells for Antorus, The Burning Throne
+
+4.44.3
+* Added Legion spells for Antorus, The Burning Throne
+
+4.44.4
+* Added Legion spells for Antorus, The Burning Throne
+
+4.45
+* Added support for Battle for Azeroth
+* Added BFA spells for Shrine of the Storm
+* Added BFA spells for Waycrest Manor
+* Added BFA spells for Freehold
+
+4.45.1
+* Fixed BFA crash with UnitBuff/UnitDebuff
+
+4.45.2
+* Added Battle for Azeroth spells (world)
+* Added BFA spells for Tol Dagor
+* Added BFA spells for The Underrot
+* Added BFA spells for Temple of Sethraliss
+* Added BFA spells for The MOTHERLODE!!
+* Added BFA spells for Atal'Dazar
+
+4.45.3
+* Added Battle for Azeroth spells (world)
+* Added BFA spells for Shrine of the Storm
+
+4.45.4
+* Added Battle for Azeroth spells (world)
+
+4.46
+* Added Legion spells for Brawler's Guild (a little late...)
+* Added Battle for Azeroth spells (world)
+* Updated for patch 8.0
+
+4.46.1
+* Added Battle for Azeroth launch event spells (special)
+
+4.46.2
+* Added Battle for Azeroth launch event spells (special)
+
+4.46.3
+* Added Battle for Azeroth spells (world)
+* Added BFA spells for Uldir
+* Added BFA spells for King's Rest
+* Added BFA spells for Siege of Boralus
+* Added BFA spells for Freehold
+* Added BFA spells for The Underrot
+
+4.46.4
+* Fixed BFA spells for Siege of Boralus
+* Added BFA spells for Siege of Boralus

@@ -18,8 +18,8 @@ end
 
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: Example.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: <%version%> (<%codename%>)
+	Revision: $Id$
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that does something nifty.
@@ -187,4 +187,4 @@ end
 function private.Baz()
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/Auc-Util-Example/Example.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL$", "$Rev$")

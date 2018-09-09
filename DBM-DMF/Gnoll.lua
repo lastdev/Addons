@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gnoll", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14037 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 17623 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -19,14 +19,12 @@ local warnGnoll					= mod:NewAnnounce("warnGnoll", 2, nil, false)
 
 local specWarnHogger			= mod:NewSpecialWarning("specWarnHogger")
 
-local timerGame					= mod:NewBuffActiveTimer(60, 101612)
+local timerGame					= mod:NewBuffActiveTimer(60, 101612, nil, nil, nil, 6)
 
 local countdownGame				= mod:NewCountdownFades(60, 101612)
 
 local gameEarnedPoints = 0
 local gameMaxPoints = 0
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 101612 and args:IsPlayer() then
@@ -51,13 +49,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellID)
-	if spellID == 102044 then--Hogger
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+	if spellId == 102044 then--Hogger
 		gameMaxPoints = gameMaxPoints + 3
 		if self:AntiSpam(2, 1) then
 			specWarnHogger:Show()
 		end
-	elseif spellID == 102036 then--Gnoll
+	elseif spellId == 102036 then--Gnoll
 		gameMaxPoints = gameMaxPoints + 1
 		warnGnoll:Show()
 	end

@@ -22,11 +22,11 @@ local conf, rconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 1053 $")
+end, "$Revision: 1098 $")
 
-if type(RegisterAddonMessagePrefix) == "function" then
+--[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
-end
+end--]]
 
 --[===[@debug@
 local function d(...)
@@ -543,7 +543,7 @@ function XPerl_Raid_UpdateHealth(self)
 				XPerl_Raid_UpdateName(self)
 			end
 			return
-		elseif (UnitBuff(partyid, feignDeath) and conf.showFD) then
+		--[[elseif (UnitBuff(partyid, feignDeath) and conf.showFD) then
 			XPerl_NoFadeBars(true)
 			self.statsFrame.healthBar.text:SetText(XPERL_LOC_FEIGNDEATH)
 			self.statsFrame:SetGrey()
@@ -551,7 +551,7 @@ function XPerl_Raid_UpdateHealth(self)
 		elseif (UnitBuff(partyid, spiritOfRedemption)) then
 			self.dead = true
 			XPerl_Raid_ShowFlags(self, XPERL_LOC_DEAD)
-			XPerl_Raid_UpdateName(self)
+			XPerl_Raid_UpdateName(self)--]]
 		elseif (UnitIsDead(partyid)) then
 			self.dead = true
 			XPerl_Raid_ShowFlags(self, XPERL_LOC_DEAD)
@@ -561,7 +561,7 @@ function XPerl_Raid_UpdateHealth(self)
 			XPerl_Raid_ShowFlags(self, XPERL_LOC_GHOST)
 			XPerl_Raid_UpdateName(self)
 		else
-			if (self.dead or (myRoster and ((UnitBuff(partyid, feignDeath) and conf.showFD) or myRoster.ressed))) then
+			if (self.dead or (myRoster and (--[[(UnitBuff(partyid, feignDeath) and conf.showFD) or --]]myRoster.ressed))) then
 				XPerl_Raid_UpdateManaType(self, true)
 			end
 			self.dead = nil
@@ -902,7 +902,7 @@ local function UpdateBuffs(self)
 	if (show) then
 		if (show == "b") then
 			if (rconf.buffs.untilDebuffed) then
-				local name, rank, buff = XPerl_UnitDebuff(partyid, 1, cureCast, true)
+				local name, buff = XPerl_UnitDebuff(partyid, 1, cureCast, true)
 				if (name) then
 					self.debuffsForced = true
 					show = "d"
@@ -911,11 +911,11 @@ local function UpdateBuffs(self)
 		end
 
 		for buffnum = 1, maxBuff do
-			local name, rank, buff
+			local name, buff
 			if (show == "b") then
-				name, rank, buff = XPerl_UnitBuff(partyid, buffnum, cureCast, true)
+				name, buff = XPerl_UnitBuff(partyid, buffnum, cureCast, true)
 			else
-				name, rank, buff = XPerl_UnitDebuff(partyid, buffnum, cureCast, true)
+				name, buff = XPerl_UnitDebuff(partyid, buffnum, cureCast, true)
 			end
 			local button = GetBuffButton(self, buffnum, buff)	-- 'buff' flags whether to create icon
 			if (button) then
@@ -1008,7 +1008,7 @@ local function UpdateBuffs(self)
 		end
 	end
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(partyid)
 		if class == "HUNTER" then
 			local feigning = UnitBuff(partyid, feignDeath)
@@ -1017,7 +1017,7 @@ local function UpdateBuffs(self)
 				XPerl_Raid_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 end
 
 ------------------
@@ -1662,7 +1662,7 @@ local function SetResStatus(resserName, resTargetName, ignoreCounter)
 end
 
 -- UNIT_SPELLCAST_START
-function XPerl_Raid_Events:UNIT_SPELLCAST_START(unit, spell, rank)
+function XPerl_Raid_Events:UNIT_SPELLCAST_START(unit, lineGUID, spellID)
 	local unitName, realm = UnitName(unit)
 	if realm and realm ~= "" then
 		unitName = unitName.."-"..realm
@@ -1672,7 +1672,7 @@ function XPerl_Raid_Events:UNIT_SPELLCAST_START(unit, spell, rank)
 		SetResStatus(unitName)
 	end
 
-	local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
+	local name, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
 	if (resSpells[name]) then
 		local u = unit.."target"
 		local unitTargetName, realm = UnitName(u)
@@ -2422,7 +2422,7 @@ function XPerl_RaidTipExtra(unitid)
 				end
 			end
 
-			if (UnitIsDeadOrGhost(unitid) and not UnitBuff(unitid, feignDeath)) then
+			if (UnitIsDeadOrGhost(unitid) --[[and not UnitBuff(unitid, feignDeath)--]]) then
 				if (stats.resCount) then
 					GameTooltip:AddLine(XPERL_LOC_RESURRECTED.." x"..stats.resCount)
 				end
@@ -2454,7 +2454,9 @@ local function SetMainHeaderAttributes(self)
 
 	self:SetAttribute("showRaid", true)
 
-	self:SetAttribute("point", rconf.anchor)
+	if rconf.anchor ~= "BOTTOM" then
+		self:SetAttribute("point", rconf.anchor)
+	end
 	self:SetAttribute("minWidth", 80)
 	self:SetAttribute("minHeight", 10)
 	local titleFrame = self:GetParent()

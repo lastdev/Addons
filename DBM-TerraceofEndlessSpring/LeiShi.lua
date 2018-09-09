@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -36,12 +36,9 @@ local timerScaryFogCD					= mod:NewNextTimer(10, 123705)
 
 local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("HealthFrame", true)
-mod:AddBoolOption("GWHealthFrame", true)
 mod:AddBoolOption("RangeFrame", true)
 mod:AddSetIconOption("SetIconOnProtector", "ej6224", false, true)
 
-local getAwayHP = 0 -- because max health is different between Asian and US 25-man encounter. Calculate manually.
 local specialsCast = 0
 local hideActive = false
 local lastProtect = 0
@@ -49,6 +46,7 @@ local specialRemaining = 0
 local lostHealth = 0
 local prevlostHealth = 0
 local hideTime = 0
+local hideName = DBM:GetSpellInfo(123244)
 
 local bossTank
 do
@@ -70,7 +68,6 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(3, bossTank)
 	end
 	hideTime = 0
-	getAwayHP = 0
 	specialsCast = 0
 	hideActive = false
 	lastProtect = 0
@@ -115,10 +112,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			timerGetAway:Start()
 		end
-		if DBM.BossHealth:IsShown() and self.Options.GWHealthFrame then
-			local getAwayHealth = math.floor(UnitHealthMax("boss1") * 0.04)
-			self:ShowDamagedHealthBar(args.sourceGUID, args.spellName, getAwayHealth)
-		end
 	elseif spellId == 123121 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId, "boss1") then--Only want sprays that are on tanks, not bads standing on tanks.
@@ -129,7 +122,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if amount >= 6 and args:IsPlayer() then
 					specWarnSpray:Show(amount)
 				else
-					if amount >= 6 and not UnitDebuff("player", GetSpellInfo(123121)) and not UnitIsDeadOrGhost("player") then
+					if amount >= 6 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 						specWarnSprayOther:Show(args.destName)
 					end
 				end
@@ -157,9 +150,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSpray:Cancel(args.destName)
 	elseif spellId == 123461 then
 		timerGetAway:Cancel()
-		if DBM.BossHealth:IsShown() and self.Options.GWHealthFrame then
-			self:RemoveDamagedHealthBar()
-		end
 	end
 end
 
@@ -193,7 +183,7 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 127524 then
 		DBM:EndCombat(self)
 	end	
@@ -208,7 +198,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT(event)
 	end
 	self:SetWipeTime(3)
 	self:UnregisterShortTermEvents()--Once boss appears, unregister event, so we ignore the next two that will happen, which will be 2nd time after reappear, and right before next Hide.
-	warnHideOver:Show(GetSpellInfo(123244))
+	warnHideOver:Show(hideName)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)--Go back to showing only tanks
 	end

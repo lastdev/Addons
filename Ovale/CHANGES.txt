@@ -1,12 +1,10 @@
-tag 5298eaa63ce9fe32e06200d4f2f1cd6df82931a1 7.3.0.2
+lightweight tag 99e5c56fe8f6e3ef69075001d30ff17d671cd4cb 8.0.20
 Author:	Sidoine De Wispelaere <sidoine@sidoine.net>
-Date:	Mon Sep 4 08:48:39 2017 +0200
+Date:	Thu Aug 30 09:05:14 2018 +0200
 
-Fixes for feral by Crruthe
+commit 99e5c56fe8f6e3ef69075001d30ff17d671cd4cb
+Author: Sidoine De Wispelaere <sidoine@sidoine.net>
+Date:   Thu Aug 30 09:05:14 2018 +0200
 
-commit 72bcffb1a751b6e8318970b4ada1a69f8dc3a740
-Author: Kevin De Smet <kevin.de.smet@outlook.be>
-Date:   Sun Sep 3 02:27:34 2017 +0200
-
-    Obliteration tag=cd
+    Fixes #524 issue with replaced spells
 

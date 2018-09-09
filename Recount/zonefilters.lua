@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1309 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1445 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -109,6 +109,6 @@ function Recount:GetGroupState(groupType)
 	elseif groupType == 2 then
 		return not Recount.inRaid and Recount.inGroup
 	else
-		return not Recount.inRaid and not Recount.inGroup 
+		return not Recount.inRaid and not Recount.inGroup
 	end
 end

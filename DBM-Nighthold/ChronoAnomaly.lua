@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16253 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 mod:SetZone()
@@ -22,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_STOP boss1 boss2 boss3 boss4 boss5"
 )
 
---TODO, figure out how often tanks need to swap, adjust warnings accordingly
 --TODO, More data to complete sequences of timers on LFR/Heroic/Normal
 --(ability.id = 206618 or ability.id = 206610 or ability.id = 206614) and type = "cast" or ability.id = 211927
 local warnNormal					= mod:NewCountAnnounce(207012, 2)
@@ -38,8 +37,7 @@ local specWarnPowerOverwhelming		= mod:NewSpecialWarningSpell(211927, nil, nil, 
 local specWarnTimeBomb				= mod:NewSpecialWarningMoveAway(206617, nil, nil, 2, 3, 2)--When close to expiring, not right away
 local yellTimeBomb					= mod:NewFadesYell(206617)
 local specWarnWarp					= mod:NewSpecialWarningInterrupt(207228, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBigAdd				= mod:NewSpecialWarningSwitch(206700, "-Healer", nil, nil, 1, 2)--Switch to waning time particle when section info known
-local specWarnSmallAdd				= mod:NewSpecialWarningSwitch(206699, "Tank", nil, nil, 1, 2)
+local specWarnBigAdd				= mod:NewSpecialWarningSwitch("ej13022", "-Healer", nil, nil, 1, 2)--Switch to waning time particle when section info known
 
 local timerTemporalOrbsCD			= mod:NewNextCountTimer(30, 219815, nil, nil, nil, 2)
 local timerPowerOverwhelmingCD		= mod:NewNextCountTimer(60, 211927, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
@@ -54,12 +52,6 @@ local timerNextPhase				= mod:NewPhaseTimer(74)--Used anywhere phase change is N
 local countdownBigAdd				= mod:NewCountdown(30, 206700)--Switch to waning time particle when section info known
 local countdownTimeBomb				= mod:NewCountdownFades("AltTwo30", 206617)
 
-local voiceTemporalOrbs				= mod:NewVoice(219815)--watchstep
-local voicePowerOverwhelming		= mod:NewVoice(211927)--aesoon
-local voiceTimeBomb					= mod:NewVoice(206617)--runout
-local voiceWarp						= mod:NewVoice(207228, "HasInterrupt")--kickcast
-local voiceBigAdd					= mod:NewVoice(206700, "-Healer")
-local voiceSmallAdd					= mod:NewVoice(206699, "Tank")
 mod:AddRangeFrameOption(10, 206617)
 mod:AddInfoFrameOption(206610)
 mod:AddDropdownOption("InfoFrameBehavior", {"TimeRelease", "TimeBomb"}, "TimeRelease", "misc")
@@ -70,18 +62,19 @@ mod.vb.slowCount = 0
 mod.vb.currentPhase = 2
 mod.vb.interruptCount = 0
 mod.vb.timeBombDebuffCount = 0
-local timeBombDebuff = GetSpellInfo(206617)
+local timeBombDebuff = DBM:GetSpellInfo(206617)
+local timeRelease = DBM:GetSpellInfo(206610)
 local function updateTimeBomb(self)
-	local _, _, _, _, _, _, expires = UnitDebuff("player", timeBombDebuff)
+	local _, _, _, _, _, expires = DBM:UnitDebuff("player", timeBombDebuff)
 	if expires then
 		specWarnTimeBomb:Cancel()
-		voiceTimeBomb:Cancel()
+		specWarnTimeBomb:CancelVoice()
 		timerTimeBomb:Stop()
 		countdownTimeBomb:Cancel()
 		yellTimeBomb:Cancel()
 		local debuffTime = expires - GetTime()
 		specWarnTimeBomb:Schedule(debuffTime - 5)	-- Show "move away" warning 5secs before explode
-		voiceTimeBomb:Schedule(debuffTime - 5, "runout")
+		specWarnTimeBomb:ScheduleVoice(debuffTime - 5, "runout")
 		timerTimeBomb:Start(debuffTime)
 		countdownTimeBomb:Start(debuffTime)
 		yellTimeBomb:Schedule(debuffTime-1, 1)
@@ -98,7 +91,6 @@ function mod:OnCombatStart(delay)
 	self.vb.slowCount = 0
 	self.vb.timeBombDebuffCount = 0
 	if self.Options.InfoFrame and self.Options.InfoFrameBehavior == "TimeRelease" then
-		local timeRelease = GetSpellInfo(206610)
 		DBM.InfoFrame:SetHeader(timeRelease)
 		DBM.InfoFrame:Show(10, "playerabsorb", timeRelease)
 	end
@@ -118,10 +110,10 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 211927 then
 		timerChronoPartCD:Stop()--Will be used immediately when this ends.
 		specWarnPowerOverwhelming:Show()
-		voicePowerOverwhelming:Play("aesoon")
-	elseif spellId == 207228 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnPowerOverwhelming:Play("aesoon")
+	elseif spellId == 207228 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnWarp:Show(args.sourceName)
-		voiceWarp:Play("kickcast")
+		specWarnWarp:Play("kickcast")
 	end
 end
 
@@ -129,7 +121,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 219815 then
 		specWarnTemporalOrbs:Show()
-		voiceTemporalOrbs:Play("watchstep")
+		specWarnTemporalOrbs:Play("watchstep")
 	end
 end
 
@@ -167,7 +159,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.timeBombDebuffCount = self.vb.timeBombDebuffCount - 1
 		if args:IsPlayer() then
 			specWarnTimeBomb:Cancel()
-			voiceTimeBomb:Cancel()
+			specWarnTimeBomb:CancelVoice()
 			timerTimeBomb:Stop()
 			countdownTimeBomb:Cancel()
 			yellTimeBomb:Cancel()
@@ -194,8 +186,8 @@ local function delayedOrbs(self, time, count)
 	timerTemporalOrbsCD:Start(time, count)
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 207012 then--Speed: Normal
 		self.vb.currentPhase = 2
 		self.vb.interruptCount = 0
@@ -465,12 +457,9 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		updateTimeBomb(self)
 		self:Schedule(2, updateTimeBomb, self)
 		self:Schedule(5, updateTimeBomb, self)
-	elseif spellId == 206699 then--Summon Haste Add (Small Adds)
-		specWarnSmallAdd:Show()
-		voiceSmallAdd:Play("mobsoon")
 	elseif spellId == 206700 then--Summon Slow Add (Big Adds)
 		specWarnBigAdd:Show()
-		voiceBigAdd:Play("bigmobsoon")
+		specWarnBigAdd:Play("bigmobsoon")
 	elseif spellId == 207972 then--Full Power, he's just gonna run in circles aoeing the raid and stop using abilities
 		timerBigAddCD:Stop()
 		countdownBigAdd:Cancel()
@@ -487,8 +476,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	end
 end
 
-function mod:UNIT_SPELLCAST_CHANNEL_STOP(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_CHANNEL_STOP(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 211927 then--Power Overwhelming
 		self.vb.interruptCount = self.vb.interruptCount + 1
 		if self.vb.currentPhase == 1 then--slow

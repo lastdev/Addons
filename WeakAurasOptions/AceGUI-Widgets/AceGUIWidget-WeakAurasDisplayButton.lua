@@ -2,12 +2,216 @@ local tinsert, tconcat, tremove, wipe = table.insert, table.concat, table.remove
 local select, pairs, next, type, unpack = select, pairs, next, type, unpack
 local tostring, error = tostring, error
 
-local Type, Version = "WeakAurasDisplayButton", 29
+local Type, Version = "WeakAurasDisplayButton", 38
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
 local L = WeakAuras.L;
 local fullName;
+local clipboard = {};
+
+local function IsRegionAGroup(data)
+  return data and (data.regionType == "group" or data.regionType == "dynamicgroup");
+end
+
+local ignoreForCopyingDisplay = {
+  trigger = true,
+  untrigger = true,
+  conditions = true,
+  load = true,
+  actions = true,
+  animation = true,
+  id = true,
+  parent = true,
+  activeTriggerMode = true,
+  numTriggers = true,
+  controlledChildren = true,
+  customTriggerLogic = true,
+  disjunctive = true,
+  additional_triggers = true,
+  disjunctive = true,
+  uid = true,
+}
+
+local function copyAuraPart(source, destination, part)
+  local all = (part == "all");
+  if (part == "display" or all) then
+    for k, v in pairs(source) do
+      if (not ignoreForCopyingDisplay[k]) then
+        if (type(v) == "table") then
+          destination[k] = CopyTable(v);
+        else
+          destination[k] = v;
+        end
+      end
+    end
+  end
+  if (part == "trigger" or all) and not IsRegionAGroup(source) then
+    destination.trigger = {};
+    WeakAuras.DeepCopy(source.trigger, destination.trigger);
+    if (source.additional_triggers) then
+      destination.additional_triggers = {};
+      WeakAuras.DeepCopy(source.additional_triggers, destination.additional_triggers);
+    else
+      destination.additional_triggers = nil;
+    end
+    destination.untrigger = {};
+    WeakAuras.DeepCopy(source.untrigger, destination.untrigger);
+    destination.activeTriggerMode = source.activeTriggerMode;
+    destination.numTriggers = source.numTriggers;
+    destination.customTriggerLogic = source.customTriggerLogic;
+    destination.disjunctive = source.disjunctive;
+  end
+  if (part == "condition" or all) and not IsRegionAGroup(source) then
+    destination.conditions = {};
+    WeakAuras.DeepCopy(source.conditions, destination.conditions);
+  end
+  if (part == "load" or all) and not IsRegionAGroup(source) then
+    destination.load = {};
+    WeakAuras.DeepCopy(source.load, destination.load);
+  end
+  if (part == "action" or all) and not IsRegionAGroup(source) then
+    destination.actions = {};
+    WeakAuras.DeepCopy(source.actions, destination.actions);
+  end
+  if (part == "animation" or all) and not IsRegionAGroup(source) then
+    destination.animation = {};
+    WeakAuras.DeepCopy(source.animation, destination.animation);
+  end
+end
+
+local function CopyToClipboard(part, description)
+  clipboard.part = part;
+  clipboard.pasteText = description;
+  clipboard.source = {};
+  WeakAuras.DeepCopy(clipboard.current, clipboard.source);
+end
+
+clipboard.pasteMenuEntry = {
+  text = nil, -- Hidden by default
+  notCheckable = true,
+  func = function()
+    if (not IsRegionAGroup(clipboard.source) and IsRegionAGroup(clipboard.current)) then
+      -- Copy from a single aura to a group => paste it to each individual aura
+      for index, childId in pairs(clipboard.current.controlledChildren) do
+        local childData = WeakAuras.GetData(childId);
+        copyAuraPart(clipboard.source, childData, clipboard.part);
+        WeakAuras.Add(childData);
+      end
+    else
+      copyAuraPart(clipboard.source, clipboard.current, clipboard.part);
+      WeakAuras.Add(clipboard.current);
+    end
+
+    WeakAuras.ScanForLoads();
+    WeakAuras.SortDisplayButtons();
+    WeakAuras.PickDisplay(clipboard.current.id);
+    WeakAuras.UpdateDisplayButton(clipboard.current.id);
+  end
+}
+
+clipboard.copyEverythingEntry = {
+  text = L["Everything"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("all", L["Paste Settings"])
+  end
+};
+
+clipboard.copyGroupEntry = {
+  text = L["Group"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("display", L["Paste Group Settings"])
+  end
+};
+
+clipboard.copyDisplayEntry = {
+  text = L["Display"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("display", L["Paste Display Settings"])
+  end
+};
+
+clipboard.copyTriggerEntry = {
+  text = L["Trigger"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("trigger", L["Paste Trigger Settings"])
+  end
+};
+
+clipboard.copyConditionsEntry = {
+  text = L["Conditions"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("condition", L["Paste Condition Settings"])
+  end
+};
+
+clipboard.copyLoadEntry = {
+  text = L["Load"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("load", L["Paste Load Settings"])
+  end
+};
+
+clipboard.copyActionsEntry = {
+  text = L["Actions"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("action", L["Paste Action Settings"])
+  end
+};
+
+clipboard.copyAnimationsEntry = {
+  text = L["Animations"],
+  notCheckable = true,
+  func = function()
+    WeakAuras_DropDownMenu:Hide();
+    CopyToClipboard("animation", L["Paste Animations Settings"])
+  end
+};
+
+local function UpdateClipboardMenuEntry(data)
+  clipboard.current = data;
+
+  if (IsRegionAGroup(clipboard.source) and not IsRegionAGroup(clipboard.current)) then
+    -- Don't copy from a group to a non group
+    clipboard.pasteMenuEntry.text = nil;
+  else
+    clipboard.pasteMenuEntry.text = clipboard.pasteText;
+  end
+
+  if (IsRegionAGroup(clipboard.current)) then
+    clipboard.copyEverythingEntry.text = nil;
+    clipboard.copyDisplayEntry.text = nil;
+    clipboard.copyTriggerEntry.text = nil;
+    clipboard.copyConditionsEntry.text = nil;
+    clipboard.copyLoadEntry.text = nil;
+    clipboard.copyActionsEntry.text = nil;
+    clipboard.copyAnimationsEntry.text = nil;
+    clipboard.copyGroupEntry.text = L["Group"];
+  else
+    clipboard.copyEverythingEntry.text = L["Everything"];
+    clipboard.copyDisplayEntry.text = L["Display"];
+    clipboard.copyTriggerEntry.text = L["Trigger"];
+    clipboard.copyConditionsEntry.text = L["Conditions"];
+    clipboard.copyLoadEntry.text = L["Load"];
+    clipboard.copyActionsEntry.text = L["Actions"];
+    clipboard.copyAnimationsEntry.text = L["Animations"];
+    clipboard.copyGroupEntry.text = nil;
+  end
+end
 
 local function Hide_Tooltip()
   GameTooltip:Hide();
@@ -275,7 +479,11 @@ local methods = {
 
     function self.callbacks.OnClickNormal(_, mouseButton)
       if(IsControlKeyDown() and not data.controlledChildren) then
-        WeakAuras.PickDisplayMultiple(data.id);
+        if (WeakAuras.IsDisplayPicked(data.id)) then
+          WeakAuras.ClearPick(data.id);
+        else
+          WeakAuras.PickDisplayMultiple(data.id);
+        end
         self:ReloadTooltip();
       elseif(IsShiftKeyDown()) then
         local editbox = GetCurrentKeyBoardFocus();
@@ -292,6 +500,7 @@ local methods = {
           if(WeakAuras.IsDisplayPicked(data.id) and WeakAuras.IsPickedMultiple()) then
             EasyMenu(WeakAuras.MultipleDisplayTooltipMenu(), WeakAuras_DropDownMenu, self.frame, 0, 0, "MENU");
           else
+            UpdateClipboardMenuEntry(data);
             EasyMenu(self.menu, WeakAuras_DropDownMenu, self.frame, 0, 0, "MENU");
             if not(WeakAuras.IsDisplayPicked(data.id)) then
               WeakAuras.PickDisplay(data.id);
@@ -302,24 +511,6 @@ local methods = {
           self:ReloadTooltip();
         end
       end
-    end
-
-    function self.callbacks.OnClickCopying()
-      if (WeakAuras.IsImporting()) then return end;
-      WeakAuras.Copy(data.id, self.copying.id);
-      WeakAuras.ScanForLoads();
-      WeakAuras.SetIconNames(self.copying);
-      WeakAuras.SortDisplayButtons();
-      WeakAuras.AddOption(self.copying.id, self.copying);
-      WeakAuras.OptionsFrame():PickDisplay(self.copying.id);
-      WeakAuras.UpdateDisplayButton(self.copying);
-      WeakAuras.SetCopying();
-      self:ReloadTooltip();
-    end
-
-    function self.callbacks.OnClickCopyingSelf()
-      WeakAuras.SetCopying();
-      self:ReloadTooltip();
     end
 
     function self.callbacks.UpdateExpandButton()
@@ -338,6 +529,10 @@ local methods = {
       childButton:SetGroupOrder(#data.controlledChildren, #data.controlledChildren);
       self.callbacks.UpdateExpandButton();
       self.grouping.parent = data.id;
+      if (data.regionType == "dynamicgroup") then
+        self.grouping.xOffset = 0;
+        self.grouping.yOffset = 0;
+      end
       WeakAuras.Add(data);
       WeakAuras.Add(self.grouping);
       WeakAuras.SetGrouping();
@@ -346,16 +541,12 @@ local methods = {
       WeakAuras.UpdateGroupOrders(data);
       WeakAuras.SortDisplayButtons();
       self:ReloadTooltip();
+      WeakAuras.ResetMoverSizer();
     end
 
     function self.callbacks.OnClickGroupingSelf()
       WeakAuras.SetGrouping();
       self:ReloadTooltip();
-    end
-
-    function self.callbacks.OnCopyClick()
-      WeakAuras.PickDisplay(data.id);
-      WeakAuras.SetCopying(data);
     end
 
     function self.callbacks.OnGroupClick()
@@ -365,74 +556,14 @@ local methods = {
 
     function self.callbacks.OnDeleteClick()
       if (WeakAuras.IsImporting()) then return end;
-      local parentData = data.parent and WeakAuras.GetData(data.parent);
-      local parentButton = data.parent and WeakAuras.GetDisplayButton(data.parent);
-      WeakAuras.DeleteOption(data);
-      if(parentData) then
-        WeakAuras.UpdateGroupOrders(parentData);
-      end
-      if(parentButton) then
-        parentButton.callbacks.UpdateExpandButton();
-      end
+      local toDelete = {data}
+      local parents = data.parent and {[data.parent] = true}
+      WeakAuras.ConfirmDelete(toDelete, parents)
     end
 
     function self.callbacks.OnDuplicateClick()
       if (WeakAuras.IsImporting()) then return end;
-      local base_id = data.id .. " ";
-      local num = 2;
-
-      -- if the old id ends with a number increment the number
-      local matchName, matchNumber = string.match(data.id, "^(.-)(%d*)$")
-      matchNumber = tonumber(matchNumber)
-      if (matchName ~= "" and matchNumber ~= nil) then
-        base_id = matchName;
-        num = matchNumber + 1
-      end
-
-      local new_id = base_id .. num;
-      while(WeakAuras.GetData(new_id)) do
-        new_id = base_id .. num;
-        num = num + 1;
-      end
-
-      local newData = {};
-      WeakAuras.DeepCopy(data, newData);
-      newData.id = new_id;
-      newData.parent = nil;
-      WeakAuras.Add(newData);
-      WeakAuras.NewDisplayButton(newData);
-      if(data.parent) then
-        local parentData = WeakAuras.GetData(data.parent);
-        local index;
-        for i, childId in pairs(parentData.controlledChildren) do
-          if(childId == data.id) then
-            index = i;
-            break;
-          end
-        end
-        if(index) then
-          local newIndex = index + 1;
-          if(newIndex > #parentData.controlledChildren) then
-            tinsert(parentData.controlledChildren, newData.id);
-          else
-            tinsert(parentData.controlledChildren, index + 1, newData.id);
-          end
-          newData.parent = data.parent;
-          WeakAuras.Add(parentData);
-          WeakAuras.Add(newData);
-
-          for index, id in pairs(parentData.controlledChildren) do
-            local childButton = WeakAuras.GetDisplayButton(id);
-            childButton:SetGroup(parentData.id, parentData.regionType == "dynamicgroup");
-            childButton:SetGroupOrder(index, #parentData.controlledChildren);
-          end
-
-          local button = WeakAuras.GetDisplayButton(parentData.id);
-          button.callbacks.UpdateExpandButton();
-          WeakAuras.UpdateDisplayButton(parentData);
-          WeakAuras.ReloadGroupRegionOptions(parentData);
-        end
-      end
+      local new_id = WeakAuras.DuplicateAura(data);
       WeakAuras.SortDisplayButtons();
       WeakAuras.DoConfigUpdate();
       WeakAuras.PickAndEditDisplay(new_id);
@@ -440,6 +571,7 @@ local methods = {
 
     function self.callbacks.OnDeleteAllClick()
       if (WeakAuras.IsImporting()) then return end;
+      local toDelete = {}
       if(data.controlledChildren) then
 
         local region = WeakAuras.regions[data.id];
@@ -447,15 +579,12 @@ local methods = {
           region:Pause();
         end
 
-        local toDelete = {};
-        for index, id in pairs(data.controlledChildren) do
-          toDelete[index] = WeakAuras.GetData(id);
-        end
-        for index, childData in pairs(toDelete) do
-          WeakAuras.DeleteOption(childData);
+        for _, id in pairs(data.controlledChildren) do
+          tinsert(toDelete, WeakAuras.GetData(id));
         end
       end
-      WeakAuras.DeleteOption(data);
+      tinsert(toDelete, data)
+      WeakAuras.ConfirmDelete(toDelete);
     end
 
     function self.callbacks.OnUngroupClick()
@@ -508,8 +637,8 @@ local methods = {
             WeakAuras.SortDisplayButtons();
             local updata = {duration = 0.15, type = "custom", use_translate = true, x = 0, y = -32};
             local downdata = {duration = 0.15, type = "custom", use_translate = true, x = 0, y = 32};
-            WeakAuras.Animate("button", parentData.controlledChildren[index-1], "main", updata, self.frame, true, function() WeakAuras.SortDisplayButtons() end);
-            WeakAuras.Animate("button", parentData.controlledChildren[index], "main", downdata, otherbutton.frame, true, function() WeakAuras.SortDisplayButtons() end);
+            WeakAuras.Animate("button", WeakAuras.GetData(parentData.controlledChildren[index-1]), "main", updata, self.frame, true, function() WeakAuras.SortDisplayButtons() end);
+            WeakAuras.Animate("button", WeakAuras.GetData(parentData.controlledChildren[index]), "main", downdata, otherbutton.frame, true, function() WeakAuras.SortDisplayButtons() end);
             WeakAuras.UpdateDisplayButton(parentData);
           end
         else
@@ -545,8 +674,8 @@ local methods = {
             WeakAuras.SortDisplayButtons()
             local updata = {duration = 0.15, type = "custom", use_translate = true, x = 0, y = -32};
             local downdata = {duration = 0.15, type = "custom", use_translate = true, x = 0, y = 32};
-            WeakAuras.Animate("button", parentData.controlledChildren[index+1], "main", downdata, self.frame, true, function() WeakAuras.SortDisplayButtons() end);
-            WeakAuras.Animate("button", parentData.controlledChildren[index], "main", updata, otherbutton.frame, true, function() WeakAuras.SortDisplayButtons() end);
+            WeakAuras.Animate("button", WeakAuras.GetData(parentData.controlledChildren[index+1]), "main", downdata, self.frame, true, function() WeakAuras.SortDisplayButtons() end);
+            WeakAuras.Animate("button", WeakAuras.GetData(parentData.controlledChildren[index]), "main", updata, otherbutton.frame, true, function() WeakAuras.SortDisplayButtons() end);
             WeakAuras.UpdateDisplayButton(parentData);
           end
         else
@@ -630,7 +759,6 @@ local methods = {
           end
         end
 
-        WeakAuras.SetCopying();
         WeakAuras.SetGrouping();
         WeakAuras.SortDisplayButtons();
         WeakAuras.PickDisplay(newid);
@@ -657,7 +785,7 @@ local methods = {
     self.frame.terribleCodeOrganizationHackTable = {};
 
     function self.frame.terribleCodeOrganizationHackTable.IsGroupingOrCopying()
-      return self.grouping or self.copying;
+      return self.grouping;
     end
 
     function self.frame.terribleCodeOrganizationHackTable.SetNormalTooltip()
@@ -672,6 +800,16 @@ local methods = {
       WeakAuras.CollapseAllClones(data.id);
     end
 
+    local copyEntries = {};
+    tinsert(copyEntries, clipboard.copyEverythingEntry);
+    tinsert(copyEntries, clipboard.copyGroupEntry);
+    tinsert(copyEntries, clipboard.copyDisplayEntry);
+    tinsert(copyEntries, clipboard.copyTriggerEntry);
+    tinsert(copyEntries, clipboard.copyConditionsEntry);
+    tinsert(copyEntries, clipboard.copyLoadEntry);
+    tinsert(copyEntries, clipboard.copyActionsEntry);
+    tinsert(copyEntries, clipboard.copyAnimationsEntry);
+
     self:SetTitle(data.id);
     self.menu = {
       {
@@ -680,11 +818,15 @@ local methods = {
         func = self.callbacks.OnRenameClick
       },
       {
-        text = L["Copy settings from..."],
+        text = L["Copy settings..."],
         notCheckable = 1,
-        func = self.callbacks.OnCopyClick
+        hasArrow = true,
+        menuList = copyEntries;
       },
     };
+
+    tinsert(self.menu, clipboard.pasteMenuEntry);
+
     if (not data.controlledChildren) then
       local convertMenu = {};
       for regionType, regionData in pairs(WeakAuras.regionOptions) do
@@ -814,6 +956,16 @@ local methods = {
       for index, childId in pairs(data.controlledChildren) do
         tinsert(namestable, {" ", childId});
       end
+
+      if (#namestable > 30) then
+        local size = #namestable;
+        namestable[26] = {" ", "[...]"};
+        namestable[27] = {L[string.format(L["%s total auras"], #data.controlledChildren)], " " }
+        for i = 28, size do
+          namestable[i] = nil;
+        end
+      end
+
       if(#namestable > 0) then
         namestable[1][1] = L["Children:"];
       else
@@ -907,26 +1059,6 @@ local methods = {
   else
     Show_Long_Tooltip(self.frame, self.frame.description);
   end
-  end,
-  ["SetCopying"] = function(self, copyingData)
-    self.copying = copyingData;
-    if(self.copying) then
-      if(self.data.id == self.copying.id) then
-        self:SetDescription(L["Cancel"], L["Do not copy any settings"]);
-        self.frame:SetScript("OnClick", self.callbacks.OnClickCopyingSelf);
-      else
-        if(self.data.regionType == self.copying.regionType) then
-          self:SetDescription(self.data.id, L["Copy settings from %s"]:format(self.data.id));
-          self.frame:SetScript("OnClick", self.callbacks.OnClickCopying);
-        else
-          self:Disable();
-        end
-      end
-    else
-      self:SetNormalTooltip();
-      self.frame:SetScript("OnClick", self.callbacks.OnClickNormal);
-      self:Enable();
-    end
   end,
   ["SetGrouping"] = function(self, groupingData)
     self.grouping = groupingData;
@@ -1053,7 +1185,7 @@ local methods = {
     WeakAuras.SortDisplayButtons()
   end,
   ["GetGroupOrCopying"] = function(self)
-    return self.group or self.copying;
+    return self.group;
   end,
   ["SetTitle"] = function(self, title)
     self.titletext = title;
@@ -1226,12 +1358,12 @@ local methods = {
     self.downgroup.texture:SetVertexColor(1, 1, 1);
   end,
   ["DisableLoaded"] = function(self)
-    self.loaded.title = "Not Loaded";
+    self.loaded.title = L["Not Loaded"];
     self.loaded.desc = L["This display is not currently loaded"];
     self.loaded:SetNormalTexture("Interface\\BUTTONS\\UI-GuildButton-OfficerNote-Disabled.blp");
   end,
   ["EnableLoaded"] = function(self)
-    self.loaded.title = "Loaded";
+    self.loaded.title = L["Loaded"];
     self.loaded.desc = L["This display is currently loaded"];
     self.loaded:SetNormalTexture("Interface\\BUTTONS\\UI-GuildButton-OfficerNote-Up.blp");
   end,
@@ -1366,6 +1498,9 @@ local function Constructor()
   view:SetScript("OnLeave", Hide_Tooltip);
   view.visibility = 0;
   view.PriorityShow = function(self, priority)
+    if (not WeakAuras.IsOptionsOpen()) then
+      return;
+    end
     if(priority >= self.visibility) then
       self.visibility = priority;
       if(self.region and self.region.Expand) then
@@ -1381,6 +1516,9 @@ local function Constructor()
     end
   end
   view.PriorityHide = function(self, priority)
+    if (not WeakAuras.IsOptionsOpen()) then
+      return;
+    end
     if(priority >= self.visibility) then
       self.visibility = 0;
       if(self.region and self.region.Collapse) then
@@ -1425,7 +1563,7 @@ local function Constructor()
   renamebox:SetPoint("TOP", button, "TOP");
   renamebox:SetPoint("LEFT", icon, "RIGHT", 6, 0);
   renamebox:SetPoint("RIGHT", button, "RIGHT", -4, 0);
-  renamebox:SetFont("Fonts\\FRIZQT__.TTF", 10);
+  renamebox:SetFont(STANDARD_TEXT_FONT, 10);
   renamebox:Hide();
 
   renamebox.func = function() --[[By default, do nothing!]] end;

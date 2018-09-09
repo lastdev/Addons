@@ -1,6 +1,6 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: HandyNotes_TimelessIsleChests
-## Version: 1.17
+## Version: 1.20
 ## Notes: Shows location of treasure chests on the Timeless Isle
 ## Author: Bartruby of Cairne
 ## OptionalDeps: Ace3
@@ -19,4 +19,5 @@ libs\AceDB-3.0\AceDB-3.0.xml
 libs\AceConsole-3.0\AceConsole-3.0.xml
 #@end-no-lib-strip@
 
+Localization\Include.xml
 HandyNotes_TimelessIsleChests.lua

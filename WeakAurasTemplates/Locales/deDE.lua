@@ -5,123 +5,144 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	L[" (Channeling)"] = "(Kanalisiert)"
-	L[" (Healing received increase)"] = " (erhaltene Heilung erhöht)"
-	L["- Any"] = "Irgendein(e)"
-	L["- Death Knight 2P Bonus"] = "- Todesritter 2er-Bonus"
-	--Translation missing 
-	-- L["- Death Knight T20 Blood 2P Bonus"] = ""
-	L["- Death Knight Unholy 4P Bonus"] = "- Todesritter Unheilig 4er-Bonus"
-	L["- Deathknight 2P Bonus"] = "- Todesritter 2er-Bonus"
-	L["- Deathknight Unholy 4P Bonus"] = "- Todesritter Unheilig 4er-Bonus"
-	L["- Holy Word: Chastise"] = "- Segenswort: Züchtigung"
-	L["- Holy Word: Sanctify"] = "- Segenswort: Heiligung"
-	L["- Holy Word: Serenity"] = "- Segenswort: Epiphanie"
-	--Translation missing 
-	-- L["- Hunter T20 Marksman 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Arcane 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Fire 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Frost 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Monk T20 Mistweaver 2P Bonus"] = ""
-	L["- Monk Windwalker 4P Bonus"] = "- Mönch Windläufer 4er-Bonus"
-	L["- Paladin Protection 2P Bonus"] = "- Paladin Schutz 2er-Bonus"
-	L["- Paladin Retribution 2P Bonus"] = "- Paladin Vergeltung 2er-Bonus"
-	L["- Paladin T19 Retribution 4P Bonus"] = "- Paladin T19 Vergeltung 4er-Bonus"
-	--Translation missing 
-	-- L["- Paladin T20 Holy 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Paladin T20 Protection 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Paladin T20 Retribution 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Priest T20 Discipline 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Priest T20 Shadow 2P Bonus"] = ""
-	L["- Rogue Assassination/Outlaw 4P Bonus"] = "- Schurke Meucheln/Gesetzlosigkeit 4er-Bonus"
-	L["- Rogue Subtlety 4P Bonus"] = "- Schurke Täuschung 4er-Bonus"
-	L["- Rogue T19 Outlaw 4P Bonus"] = "- Schurke T19 Gesetzlosigkeit 4er-Bonus"
-	L["- Shaman Elemental 4P Bonus"] = "- Schamane Elementar 4er-Bonus"
-	L["- Shaman Enhancement 2P Bonus"] = "- Schamane Verstärkung 2er-Bonus"
-	--Translation missing 
-	-- L["- Shaman T20 Elemental 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Enhancement 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Enhancement 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Restoration 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Restoration 4P Bonus"] = ""
-	L["- T19 Druid Guardian 4P Bonus"] = "- Druide T19 Wächter 4er-Bonus"
-	L["- Warlock Affliction 4P/Demonology 2P Bonus"] = "- Hexenmeister Gebrechen 4er- / Dämonologie 2er-Bonus"
-	L["- Warlock T19 Destruction 4P Bonus"] = "- Hexenmeister T19 Zerstörung 4er-Bonus"
-	--Translation missing 
-	-- L["- Warlock T20 Affliction 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Warlock T20 Demonology 4P Bonus"] = ""
-	L["- Warrior 2P Bonus"] = "- Krieger 2er-Bonus"
-	L["- Warrior T19 Fury 2P Bonus"] = "- Krieger T19 Furor 2er-Bonus"
-	--Translation missing 
-	-- L["- Warrior T20 Fury 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Warrior T20 Protection 2P Bonus"] = ""
-	L["(Pet)"] = "(Begleiter)"
-	L["(Water Elemental)"] = "(Wasserelementar)"
 	L["Ability Charges"] = "Aufladungen der Fähigkeit"
 	L["Add Triggers"] = "Auslöser hinzufügen"
 	L["Always Active"] = "Immer aktiv"
+	--[[Translation missing --]]
+	L["Always Show"] = "Always Show"
+	--[[Translation missing --]]
+	L["Always show the aura, highlight it if debuffed."] = "Always show the aura, highlight it if debuffed."
+	--[[Translation missing --]]
+	L["Always show the aura, turns grey if on cooldown."] = "Always show the aura, turns grey if on cooldown."
+	--[[Translation missing --]]
+	L["Always show the aura, turns grey if the debuff not active."] = "Always show the aura, turns grey if the debuff not active."
+	--[[Translation missing --]]
+	L["Always shows the aura, grey if buff not active."] = "Always shows the aura, grey if buff not active."
+	--[[Translation missing --]]
+	L["Always shows the aura, highlight it if buffed."] = "Always shows the aura, highlight it if buffed."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey if on cooldown."] = "Always shows the aura, turns grey if on cooldown."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "Always shows the aura, turns grey if the ability is not usable and red when out of range."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey if the ability is not usable."] = "Always shows the aura, turns grey if the ability is not usable."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey when on cooldown, blue when unusable."] = "Always shows the aura, turns grey when on cooldown, blue when unusable."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey when on zero charges, blue when usable."] = "Always shows the aura, turns grey when on zero charges, blue when usable."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey when on zero charges, highlight when active, blue on insufficient resources."] = "Always shows the aura, turns grey when on zero charges, highlight when active, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns grey when on zero charges, red when out of range, blue on insufficient resources."] = "Always shows the aura, turns grey when on zero charges, red when out of range, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns greys on zero charges, blue on insufficient resources."] = "Always shows the aura, turns greys on zero charges, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Always shows the aura, turns red when out of range, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Always shows the aura, turns red when out of range."] = "Always shows the aura, turns red when out of range."
 	L["Back"] = "Zurück"
-	L["Bleed"] = "Blutung"
-	L["BloodLust/Heroism"] = "Kampfrausch/Heldentum"
+	--[[Translation missing --]]
+	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
 	L["Bloodlust/Heroism"] = "Kampfrausch/Heldentum"
-	L["buff"] = "Stärkungszauber"
-	L["Buff"] = "Stärkungszauber"
-	L["Buffs"] = "Stärkungszauber"
+	L["buff"] = "buff"
+	L["Buff"] = "Buff"
+	L["Buffs"] = "Buffs"
 	L["Cancel"] = "Abbrechen"
 	L["Cast"] = "Zauberwirken"
-	L["Concordance of the Legionfall"] = "Einigkeit der Legionsrichter"
+	--[[Translation missing --]]
+	L["Charge and Buff Tracking"] = "Charge and Buff Tracking"
+	--[[Translation missing --]]
+	L["Charge and Debuff Tracking"] = "Charge and Debuff Tracking"
+	--[[Translation missing --]]
+	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "Abklingzeit"
+	--[[Translation missing --]]
+	L["Cooldown Tracking"] = "Cooldown Tracking"
 	L["Cooldowns"] = "Abklingzeiten"
-	L["Crimson Vial Item Count"] = "Gegenstandsanzahl Blutrote Phiole "
-	L["Damage Trinkets"] = "Schadensverursacher-Schmuckstücke"
-	L["debuff"] = "Schwächungszauber"
-	L["Debuffs"] = "Schwächungszauber"
+	L["Debuffs"] = "Debuffs"
 	L["Enchants"] = "Verzauberungen"
 	L["General"] = "Allgemein"
-	L["Healer Trinkets"] = "Heiler-Schmuckstücke"
+	--[[Translation missing --]]
+	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "Gesundheit"
+	--[[Translation missing --]]
+	L["Highlight while buffed, red when out of range."] = "Highlight while buffed, red when out of range."
+	--[[Translation missing --]]
+	L["Highlight while buffed."] = "Highlight while buffed."
+	--[[Translation missing --]]
+	L["Highlight while debuffed, red when out of range."] = "Highlight while debuffed, red when out of range."
+	--[[Translation missing --]]
+	L["Highlight while debuffed."] = "Highlight while debuffed."
 	L["Keeps existing triggers intact"] = "Verändert existierende Auslöser nicht"
-	L["Legendaries"] = "Legendäre Ggst."
-	L["Legion Sets"] = "Legion-Sets"
-	L["Nimble Brew Item Count"] = "Gegenstandsanzahl Schlüpfriges Gebräu"
+	--[[Translation missing --]]
+	L["On Procc Trinkets (Buff)"] = "On Procc Trinkets (Buff)"
+	--[[Translation missing --]]
+	L["On Use Trinkets (Buff)"] = "On Use Trinkets (Buff)"
+	--[[Translation missing --]]
+	L["On Use Trinkets (CD)"] = "On Use Trinkets (CD)"
+	--[[Translation missing --]]
+	L["Only show the aura if the target has the debuff."] = "Only show the aura if the target has the debuff."
+	--[[Translation missing --]]
+	L["Only show the aura when the item is on cooldown."] = "Only show the aura when the item is on cooldown."
+	--[[Translation missing --]]
+	L["Only shows the aura if the target has the buff."] = "Only shows the aura if the target has the buff."
+	--[[Translation missing --]]
+	L["Only shows the aura when the ability is on cooldown."] = "Only shows the aura when the ability is on cooldown."
 	L["Pet alive"] = "Begleiter am Leben"
 	L["Pet Behavior"] = "Begleiterverhalten"
-	L["PVP Set"] = "PvP-Set"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "PvP-Talente"
-	L["PVP Trinkets"] = "PvP-Schmuckstücke"
+	--[[Translation missing --]]
+	L["PVP Trinkets (Buff)"] = "PVP Trinkets (Buff)"
+	--[[Translation missing --]]
+	L["PVP Trinkets (CD)"] = "PVP Trinkets (CD)"
 	L["Replace all existing triggers"] = "Ersetzt alle vorhandenen Auslöser "
 	L["Replace Triggers"] = "Auslöser ersetzen"
 	L["Resources"] = "Ressourcen"
 	L["Resources and Shapeshift Form"] = "Ressourcen und Gestaltwandlungsform"
-	L["Rooted"] = "Bewegungsunfähig"
 	L["Runes"] = "Runen"
 	L["Shapeshift Form"] = "Gestaltwandlungsform"
-	L["Slowed"] = "Verlangsamt"
-	--Translation missing 
-	-- L["Stagger"] = ""
-	--Translation missing 
-	-- L["Stun"] = ""
-	L["T19 Damage Trinkets"] = "T19 Schadensverursacher-Schmuckstücke"
-	L["T19 Healer Trinkets"] = "T19 Heiler-Schmuckstücke"
-	L["T19 Sets"] = "T19-Sets"
-	L["T19 Tank Trinkets"] = "T19 Tank-Schmuckstücke"
-	L["Tank Trinkets"] = "Tank-Schmuckstücke"
-	L["Totem"] = "Totem"
+	--[[Translation missing --]]
+	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
+	--[[Translation missing --]]
+	L["Show Charges with Range Tracking"] = "Show Charges with Range Tracking"
+	--[[Translation missing --]]
+	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff"] = "Show Cooldown and Buff"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff and Check for Target"] = "Show Cooldown and Buff and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff and Check Usable"] = "Show Cooldown and Buff and Check Usable"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check for Target"] = "Show Cooldown and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check Usable"] = "Show Cooldown and Check Usable"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check Usable & Target"] = "Show Cooldown and Check Usable & Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Debuff"] = "Show Cooldown and Debuff"
+	--[[Translation missing --]]
+	L["Show Cooldown and Debuff and Check for Target"] = "Show Cooldown and Debuff and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
+	--[[Translation missing --]]
+	L["Show Only if Buffed"] = "Show Only if Buffed"
+	--[[Translation missing --]]
+	L["Show Only if Debuffed"] = "Show Only if Debuffed"
+	--[[Translation missing --]]
+	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
+	--[[Translation missing --]]
+	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	L["Specific Azerite Traits"] = "Spezifische Azerit Traits"
+	--[[Translation missing --]]
+	L["Stagger"] = "Stagger"
 	L["Totems"] = "Totems"
+	--[[Translation missing --]]
+	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."
 	L["Unknown Item"] = "Unbekannter Gegenstand"
 	L["Unknown Spell"] = "Unbekannter Zauber"
 

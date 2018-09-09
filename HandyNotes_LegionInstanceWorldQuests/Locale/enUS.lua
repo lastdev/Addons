@@ -36,8 +36,4 @@ L["Torn Page"] = "Torn Page"
 L["What to display"] = "What to display"
 L["Worn-Edged Page"] = "Worn-Edged Page"
 
--- ToC
-L["Description"] = "Shows the World Quest related rare bosses' locations and quests in Legion instances"
-L["Title"] = "HandyNotes - Legion Instance World Quests"
-
 end

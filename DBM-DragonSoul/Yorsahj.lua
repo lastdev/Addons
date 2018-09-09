@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(325, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 169 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 192 $"):sub(12, -3))
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -33,8 +33,8 @@ local specWarnManaVoid		= mod:NewSpecialWarningSpell(105530, "ManaUser")
 local specWarnPurple		= mod:NewSpecialWarningSpell(104896, "Tank|Healer")
 
 local timerOozesCD			= mod:NewNextTimer(90, "ej3978", nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
-local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON) -- varies (7.0~8.5)
-local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, DBM_CORE_DAMAGE_ICON) -- varies (7.0~8.5)
+local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, DBM_CORE_DAMAGE_ICON)
 local timerAcidCD			= mod:NewNextTimer(8.3, 105573, nil, nil, nil, 2)--Green ooze aoe
 local timerSearingCD		= mod:NewNextTimer(6, 105033, nil, nil, nil, 2)--Red ooze aoe
 local timerVoidBoltCD		= mod:NewNextTimer(6, 104849, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
@@ -126,7 +126,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 104849 then
 		local amount = args.amount or 1
 		warnVoidBolt:Show(args.destName, amount)
-		local _, _, _, _, _, duration, expires = UnitDebuff(args.destName, args.spellName)--This is now consistently 12 seconds, but it's been nerfed twice without warning, i'm just gonna leave this here to make the mod continue to auto correct it when/if it changes more.
+		local _, _, _, _, duration, expires = DBM:UnitDebuff(args.destName, args.spellName)--This is now consistently 12 seconds, but it's been nerfed twice without warning, i'm just gonna leave this here to make the mod continue to auto correct it when/if it changes more.
 		if duration then
 			timerVoidBolt:Start(duration, args.destName)
 		end
@@ -205,7 +205,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if oozeColors[spellId] then
 		table.wipe(oozesHitTable)
 		specWarnOozes:Show()
@@ -225,7 +225,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 end
 
 -- support Yor'sahj raid leading tools (eg YorsahjAnnounce) who want to broadcast a target arrow
-RegisterAddonMessagePrefix("DBM-YORSAHJARROW")
+C_ChatInfo.RegisterAddonMessagePrefix("DBM-YORSAHJARROW")
 --mod:RegisterEvents("CHAT_MSG_ADDON") -- for debugging
 local oozePos = {
 	["BLUE"] = 	{ 71, 34 },

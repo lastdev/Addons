@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16481 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetZone()
@@ -26,9 +26,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
---TODO, figure out voice to use for specWarnHeartPhaseBegin
 --TODO, fix more adds timers (especially corruptors/deathglarers)
---TODO, improve spew corruption to work like thogar bombs (continous alerts/yells)
 --Stage One: The Ruined Ground
 --(ability.id = 208697 or ability.id = 208929 or ability.id = 218415) and type = "begincast" or ability.id = 209915
 local warnNightmareGaze				= mod:NewSpellAnnounce(210931, 3, nil, false)--Something tells me this is just something it spam casts
@@ -48,7 +46,7 @@ local warnCursedBlood				= mod:NewTargetAnnounce(215128, 3)
 local specWarnNightmareCorruption	= mod:NewSpecialWarningMove(212886, nil, nil, nil, 1, 2)
 local specWarnFixate				= mod:NewSpecialWarningMoveTo(210099, nil, nil, nil, 1, 2)
 local specWarnNightmareHorror		= mod:NewSpecialWarningSwitch("ej13188", "-Healer", nil, nil, 1, 2)--spellId for summon 210289
-local specWarnEyeOfFate				= mod:NewSpecialWarningStack(210984, nil, 2)
+local specWarnEyeOfFate				= mod:NewSpecialWarningStack(210984, nil, 2, nil, nil, 1, 6)
 local specWarnEyeOfFateOther		= mod:NewSpecialWarningTaunt(210984, nil, nil, nil, 1, 2)
 local specWarnMindFlay				= mod:NewSpecialWarningInterrupt(208697, "HasInterrupt", nil, 2, 1, 2)
 --local specWarnCorruptorTentacle		= mod:NewSpecialWarningSwitch("ej13191", false, nil, nil, 1)
@@ -88,16 +86,6 @@ local countdownDeathBlossom			= mod:NewCountdown("AltTwo15", 218415)
 --Stage Two: The Heart of Corruption
 local countdownDarkRecon			= mod:NewCountdown("Alt50", 210781, nil, nil, 10)
 
---Stage One: The Ruined Ground
-local voiceNightmareCorruption		= mod:NewVoice(212886)--runaway
-local voiceFixate					= mod:NewVoice(210099)--targetyou
-local voiceNightmareHorror			= mod:NewVoice("ej13188", "-Healer")--bigmob
-local voiceEyeOfFate				= mod:NewVoice(210984)--changemt
-local voiceMindFlay					= mod:NewVoice(208697, "HasInterrupt", nil, 2)--kickcast
-local voiceSpewCorruption			= mod:NewVoice(208929)--runout
-local voiceNightmarishFury			= mod:NewVoice(210984)--defensive
-local voiceGroundSlam				= mod:NewVoice(208689)--targetyou/watchwave
-
 mod:AddSetIconOption("SetIconOnSpew", 208929, false)
 mod:AddSetIconOption("SetIconOnOoze", "ej13186", false)
 mod:AddBoolOption("SetIconOnlyOnce2", true)
@@ -115,8 +103,8 @@ mod.vb.IchorCount = 0
 --Not to be confused with counts above, this is SPANW count not add total count like above
 mod.vb.DeathglareSpawn = 0
 mod.vb.CorruptorSpawn = 0
-local UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitExists, UnitGUID, UnitDetailedThreatSituation
-local eyeName = EJ_GetSectionInfo(13185)
+local UnitExists, UnitGUID = UnitExists, UnitGUID
+local eyeName = DBM:EJ_GetSectionInfo(13185)
 local addsTable = {}
 local phase1EasyDeathglares = {26, 62, 85, 55}--Normal/LFR OCT 16
 local phase1HeroicDeathglares = {21, 51.5, 51}--VERIFIED Nov 18
@@ -144,6 +132,7 @@ local phase2DeathBlossom = {80, 75}--VERIFIED Oct 16
 local autoMarkScannerActive = false
 local autoMarkBlocked = false
 local autoMarkFilter = {}
+local infoFrameSpell = DBM:GetSpellInfo(210099)
 
 local updateInfoFrame
 do
@@ -154,7 +143,7 @@ do
 		lines[key] = value
 		sortedLines[#sortedLines + 1] = key
 	end
-	local DominatorTentacle, CorruptorTentacle, DeathglareTentacle, NightmareHorror, NightmareIchor = EJ_GetSectionInfo(13189), EJ_GetSectionInfo(13191), EJ_GetSectionInfo(13190), EJ_GetSectionInfo(13188), EJ_GetSectionInfo(13186)
+	local DominatorTentacle, CorruptorTentacle, DeathglareTentacle, NightmareHorror, NightmareIchor = DBM:EJ_GetSectionInfo(13189), DBM:EJ_GetSectionInfo(13191), DBM:EJ_GetSectionInfo(13190), DBM:EJ_GetSectionInfo(13188), DBM:EJ_GetSectionInfo(13186)
 	updateInfoFrame = function()
 		table.wipe(lines)
 		table.wipe(sortedLines)
@@ -187,7 +176,7 @@ end
 
 local autoMarkOozes
 do
-	local UnitHealth, UnitHealthMax, UnitGUID, UnitCastingInfo, UnitIsUnit = UnitHealth, UnitHealthMax, UnitGUID, UnitCastingInfo, UnitIsUnit
+	local UnitHealth, UnitHealthMax, UnitIsUnit = UnitHealth, UnitHealthMax, UnitIsUnit
 	autoMarkOozes = function(self)
 		self:Unschedule(autoMarkOozes)
 		if self.vb.IchorCount == 0 then
@@ -276,8 +265,8 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		if self.Options.InfoFrameBehavior == "Fixates" then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(210099))
-			DBM.InfoFrame:Show(10, "playerbaddebuff", 210099)
+			DBM.InfoFrame:SetHeader(infoFrameSpell)
+			DBM.InfoFrame:Show(10, "playerbaddebuff", infoFrameSpell)
 		else
 			DBM.InfoFrame:SetHeader(UNIT_NAMEPLATES_SHOW_ENEMY_MINIONS)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, false, true)
@@ -314,9 +303,9 @@ function mod:SPELL_CAST_START(args)
 			autoMarkOozes(self)
 		end
 	elseif spellId == 208697 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnMindFlay:Show(args.sourceName)
-			voiceMindFlay:Play("kickcast")
+			specWarnMindFlay:Play("kickcast")
 		end
 		if not addsTable[args.sourceGUID] and not self.vb.insideActive then
 			addsTable[args.sourceGUID] = true
@@ -414,7 +403,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnSpewCorruption:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnSpewCorruption:Show()
-			voiceSpewCorruption:Play("runout")
+			specWarnSpewCorruption:Play("runout")
 			yellSpewCorruption:Yell()
 		end
 		if self.Options.SetIconOnSpew then
@@ -444,7 +433,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFixate:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnFixate:Show(eyeName)
-			voiceFixate:Play("targetyou")
+			specWarnFixate:Play("targetyou")
 		end
 		if not addsTable[args.sourceGUID] then
 			addsTable[args.sourceGUID] = true
@@ -464,11 +453,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			if amount >= 2 then
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnEyeOfFate:Show(amount)
+					specWarnEyeOfFate:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					local _, _, _, _, _, _, expireTime = UnitDebuff("player", args.spellName)
+					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", args.spellName)
 					if not UnitIsDeadOrGhost("player") and (not expireTime or expireTime and expireTime-GetTime() < 10) then
 						specWarnEyeOfFateOther:Show(args.destName)
-						voiceEyeOfFate:Play("changemt")
+						specWarnEyeOfFateOther:Play("changemt")
 					else
 						warnEyeOfFate:Show(args.destName, amount)
 					end
@@ -484,9 +474,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		--Hopefully this has a boss unitID
 		for i = 1, 5 do
 			local bossUnitID = "boss"..i
-			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
+			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and self:IsTanking("player", bossUnitID, nil, true) then--We are highest threat target
 				specWarnNightmarishFury:Show()
-				voiceNightmarishFury:Play("defensive")
+				specWarnNightmarishFury:Play("defensive")
 				break
 			end
 		end
@@ -506,7 +496,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 212886 and args:IsPlayer() and self:AntiSpam(2, 1) then
 		specWarnNightmareCorruption:Show()
-		voiceNightmareCorruption:Play("runaway")
+		specWarnNightmareCorruption:Play("runaway")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -534,7 +524,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 212886 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnNightmareCorruption:Show()
-		voiceNightmareCorruption:Play("runaway")
+		specWarnNightmareCorruption:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -562,7 +552,7 @@ function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:208689") then
 		specWarnGroundSlam:Show()
 		yellGroundSlam:Yell()
-		voiceGroundSlam:Play("targetyou")
+		specWarnGroundSlam:Play("targetyou")
 	end
 end
 
@@ -616,11 +606,11 @@ end
 
 do
 	--This method is still 4 seconds faster than using Seeping Corruption
-	local NightmareHorror = EJ_GetSectionInfo(13188)
+	local NightmareHorror = DBM:EJ_GetSectionInfo(13188)
 	function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetname)
 		if targetname == NightmareHorror then
 			specWarnNightmareHorror:Show()
-			voiceNightmareHorror:Play("bigmob")
+			specWarnNightmareHorror:Play("bigmob")
 			if self:IsMythic() then
 				timerNightmareHorrorCD:Start(250)
 			else
@@ -640,7 +630,7 @@ function mod:OnTranscriptorSync(msg, targetName)
 		targetName = Ambiguate(targetName, "none")
 		if self:CheckNearby(5, targetName) then
 			specWarnGroundSlamNear:Show(targetName)
-			voiceGroundSlam:Play("watchwave")
+			specWarnGroundSlamNear:Play("watchwave")
 		else
 			warnGroundSlam:CombinedShow(1, targetName)
 		end

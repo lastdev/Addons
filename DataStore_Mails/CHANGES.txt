@@ -1,11 +1,23 @@
 ------------------------------------------------------------------------
-r50 | thaoky.altoholic@yahoo.com | 2017-09-04 12:29:49 -0500 (Mon, 04 Sep 2017) | 1 line
+r52 | thaoky.altoholic@yahoo.com | 2018-08-12 13:16:27 +0000 (Sun, 12 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Mails.lua
+
+minor code cleanup
+------------------------------------------------------------------------
+r51 | thaoky.altoholic@yahoo.com | 2018-07-22 11:24:21 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Mails.toc
+
+8.0.001 Commit
+------------------------------------------------------------------------
+r50 | thaoky.altoholic@yahoo.com | 2017-09-04 17:29:49 +0000 (Mon, 04 Sep 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r49 | thaoky.altoholic@yahoo.com | 2017-04-28 12:32:57 -0500 (Fri, 28 Apr 2017) | 1 line
+r49 | thaoky.altoholic@yahoo.com | 2017-04-28 17:32:57 +0000 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.lua
    M /trunk/Options.lua
@@ -14,13 +26,13 @@ Changed paths:
 
 changed handling of an alt's mailbox last update
 ------------------------------------------------------------------------
-r48 | thaoky.altoholic@yahoo.com | 2017-03-29 14:24:21 -0500 (Wed, 29 Mar 2017) | 1 line
+r48 | thaoky.altoholic@yahoo.com | 2017-03-29 19:24:21 +0000 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r47 | thaoky | 2016-10-26 12:52:28 -0500 (Wed, 26 Oct 2016) | 2 lines
+r47 | thaoky | 2016-10-26 17:52:28 +0000 (Wed, 26 Oct 2016) | 2 lines
 Changed paths:
    M /trunk/DataStore_Mails.lua
    M /trunk/DataStore_Mails.toc
@@ -28,38 +40,38 @@ Changed paths:
 TOC Update
 Fixed an invalid attachment count
 ------------------------------------------------------------------------
-r46 | thaoky | 2016-07-31 09:42:06 -0500 (Sun, 31 Jul 2016) | 1 line
+r46 | thaoky | 2016-07-31 14:42:06 +0000 (Sun, 31 Jul 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.lua
 
 Fixed cross-realm support
 ------------------------------------------------------------------------
-r45 | thaoky | 2016-07-20 14:48:34 -0500 (Wed, 20 Jul 2016) | 1 line
+r45 | thaoky | 2016-07-20 19:48:34 +0000 (Wed, 20 Jul 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.lua
 
 Fixed invalid attachment count during scan.
 ------------------------------------------------------------------------
-r44 | thaoky | 2016-07-18 11:09:51 -0500 (Mon, 18 Jul 2016) | 1 line
+r44 | thaoky | 2016-07-18 16:09:51 +0000 (Mon, 18 Jul 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.toc
 
 7.0 Compatibility Release
 ------------------------------------------------------------------------
-r43 | thaoky | 2015-08-17 11:20:40 -0500 (Mon, 17 Aug 2015) | 1 line
+r43 | thaoky | 2015-08-17 16:20:40 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r42 | thaoky | 2015-02-25 13:10:39 -0600 (Wed, 25 Feb 2015) | 1 line
+r42 | thaoky | 2015-02-25 19:10:39 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/Options.lua
    M /trunk/Options.xml
 
 Fixed EXPIRY_CHECK_LABEL
 ------------------------------------------------------------------------
-r41 | thaoky | 2015-02-25 12:27:24 -0600 (Wed, 25 Feb 2015) | 4 lines
+r41 | thaoky | 2015-02-25 18:27:24 +0000 (Wed, 25 Feb 2015) | 4 lines
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/DataStore_Mails.lua
@@ -73,7 +85,7 @@ Changed paths:
 - Added support for options using <KeyValue>
 - Fixed reporting of mails about to expire on invalid character keys.
 ------------------------------------------------------------------------
-r40 | thaoky | 2015-01-09 11:14:31 -0600 (Fri, 09 Jan 2015) | 4 lines
+r40 | thaoky | 2015-01-09 17:14:31 +0000 (Fri, 09 Jan 2015) | 4 lines
 Changed paths:
    M /trunk/DataStore_Mails.lua
    M /trunk/Options.lua
@@ -84,7 +96,7 @@ Changed paths:
 - XML frames cleanup
 
 ------------------------------------------------------------------------
-r39 | thaoky | 2014-12-27 07:22:45 -0600 (Sat, 27 Dec 2014) | 1 line
+r39 | thaoky | 2014-12-27 13:22:45 +0000 (Sat, 27 Dec 2014) | 1 line
 Changed paths:
    M /trunk/DataStore_Mails.lua
    M /trunk/Options.lua

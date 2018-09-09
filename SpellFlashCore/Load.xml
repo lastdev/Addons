@@ -3,5 +3,4 @@
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
 	<Script file="Localization.lua"/>
 	<Script file="SpellFlashCore.lua"/>
-	<Script file="Old_SpellFlashCore.lua"/>
 </Ui>

@@ -1,5 +1,5 @@
-## Interface: 70300
-## Version: 1.1
+## Interface: 80000
+## Version: 1.3
 ## Title: HandyNotes_LegionMagePortals
 ## Notes: Shows Teleportation Nexus Portals
 ## Author: Tsaavik (based on work by Kemayo)

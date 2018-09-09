@@ -177,10 +177,10 @@ local TransmogSets = {
 		{ setID = 1180, tier = 17, isPVP = true },	-- Warlords Season 2 H
 		{ setID = 53, tier = 18, isPVP = true },		-- Warlords Season 3 A
 		{ setID = 54, tier = 18, isPVP = true },		-- Warlords Season 3 H
-		{ setID = 100, tier = 18, isPVP = true },		-- Warlords Season 3 A
-		{ setID = 99, tier = 18, isPVP = true },		-- Warlords Season 3 H
-		{ setID = 1179, tier = 18, isPVP = true },	-- Warlords Season 3 A
-		{ setID = 1180, tier = 18, isPVP = true },	-- Warlords Season 3 H
+		{ setID = 122, tier = 18, isPVP = true },		-- Warlords Season 3 A
+		{ setID = 121, tier = 18, isPVP = true },		-- Warlords Season 3 H
+		{ setID = 1210, tier = 18, isPVP = true },	-- Warlords Season 3 A
+		{ setID = 1211, tier = 18, isPVP = true },	-- Warlords Season 3 H
 	},
 	{	-- [7] Legion
 		{ setID = 160 },							-- Legion Invasions
@@ -197,6 +197,12 @@ local TransmogSets = {
 		{ setID = 1321, tier = 20 },			-- Tomb of Sargeras
 		{ setID = 1324, tier = 20 },			-- Tomb of Sargeras
 		{ setID = 1322, tier = 20 },			-- Tomb of Sargeras
+		{ setID = 1491, tier = 21 },			-- Antorus
+		{ setID = 1488, tier = 21 },			-- Antorus
+		{ setID = 1489, tier = 21 },			-- Antorus
+		{ setID = 1490, tier = 21 },			-- Antorus
+		
+		
 		{ setID = 1137, tier = "19+20", isPVP = true,
 			["DEATHKNIGHT"] = 1163,				-- Manual fix, this set has no proper label in the table returned by the game
 		},		-- Legion Season 1 and 2 A
@@ -211,6 +217,10 @@ local TransmogSets = {
 		{ setID = 1250, tier = "21+22", isPVP = true },		-- Legion Season 3 and 4 H
 		{ setID = 1251, tier = "21+22", isPVP = true },		-- Legion Season 3 and 4 A
 		{ setID = 1252, tier = "21+22", isPVP = true },		-- Legion Season 3 and 4 H
+		{ setID = 1364, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 A
+		{ setID = 1365, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 H
+		{ setID = 1384, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 A
+		{ setID = 1385, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 H
 	},
 }
 

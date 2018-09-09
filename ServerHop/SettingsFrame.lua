@@ -29,7 +29,7 @@ ServerHop.optionsFrame.closeButton.Icon:SetPoint("CENTER",0,0)
 ServerHop.optionsFrame.closeButton.Icon:SetTexture("Interface\\Buttons\\UI-StopButton")
 ServerHop.optionsFrame.closeButton:SetScript("OnClick", function(btn)
 	ServerHop.optionsFrame:Hide()
-	PlaySound("igMainMenuOptionCheckBoxOn")	
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end)
 
 ServerHop.optionsFrame:SetMovable(true)
@@ -166,7 +166,7 @@ slider:SetScript("OnValueChanged", function(self,value)
 	self.value = value;
 	_G[name.."Text"]:SetText(SERVERHOP_QUEUEWAITTIME.." ("..ceil(value).." "..SECONDS..")")
 	if (self:IsVisible()) then
-		PlaySound("igMainMenuOptionCheckBoxOn");
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
 
 end)
@@ -182,7 +182,7 @@ hopOptions.autoInviteCheck:SetScript("OnClick", function(self)
 		Slider_Disable(slider)
 	end
 
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end)
 
 
@@ -236,7 +236,7 @@ slider:SetScript("OnValueChanged", function(self,value)
 	end
 		
 	if (self:IsVisible()) then
-		PlaySound("igMainMenuOptionCheckBoxOn");
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
 
 end)
@@ -353,5 +353,5 @@ ServerHop.buttonOptions:SetScript("OnClick", function(button)
 	else
 		ServerHop.optionsFrame:Hide()	
 	end
-	PlaySound("igMainMenuOptionCheckBoxOn")	
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end)

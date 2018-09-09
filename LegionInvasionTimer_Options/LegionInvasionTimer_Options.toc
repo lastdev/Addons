@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: LegionInvasionTimer_Options
 ## Author: Funkydude
 ## Notes: LegionInvasionTimer Configuration Options.
@@ -12,7 +12,7 @@
 ## Notes-koKR: LegionInvasionTimer|1을;를; 설정하는 옵션입니다.
 ## Notes-ptBR: LegionInvasionTimer Opções de Configuração.
 ## Notes-ruRU: LegionInvasionTimer параметры настроек.
-## Version: v7.3.0
+## Version: v8.0.3
 ## X-Category: Miscellaneous
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
 ## X-Curse-Project-ID: 101625

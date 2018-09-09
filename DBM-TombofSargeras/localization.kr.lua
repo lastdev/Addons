@@ -6,17 +6,6 @@ local L
 ---------------------------
 L= DBM:GetModLocalization(1862)
 
-L:SetTimerLocalization({
-	timerComboWamboCD =	"다음 유성/가시 (%d)"
-})
-
-L:SetOptionLocalization({
-	timerComboWamboCD =	"다음 몰아치는 유성/지옥불 가시 타이머 바 보기"
-})
-
-L:SetMiscLocalization({
-})
-
 ---------------------------
 -- Demonic Inquisition --
 ---------------------------
@@ -64,6 +53,14 @@ L:SetMiscLocalization({
 -- Kil'jaeden --
 ---------------------------
 L= DBM:GetModLocalization(1898)
+
+L:SetWarningLocalization({
+	warnSingularitySoon		= "%d초 후 넉백"
+})
+
+L:SetOptionLocalization({
+	warnSingularitySoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(235059)
+})
 
 L:SetMiscLocalization({
 	Obelisklasers	= "방첨탑 레이저"

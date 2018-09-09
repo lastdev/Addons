@@ -1,11 +1,16 @@
 ------------------------------------------------------------------------
-r540 | mysticalos | 2017-09-04 23:03:26 -0500 (Mon, 04 Sep 2017) | 1 line
+r557 | mysticalos | 2018-07-27 20:26:46 +0000 (Fri, 27 Jul 2018) | 1 line
 Changed paths:
    M /trunk/ChangeLog.lua
-   M /trunk/Modules/ChatEngine.lua
    M /trunk/WIM.lua
    M /trunk/WIM.toc
 
-missed a GuildControlSetRank
+bump version
+------------------------------------------------------------------------
+r556 | mysticalos | 2018-07-27 20:11:58 +0000 (Fri, 27 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/Modules/URLHandler.lua
+
+Fix link copying
 ------------------------------------------------------------------------
 

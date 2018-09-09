@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber		= "5.4.4 release"
+XPerl_VersionNumber		= "5.6.1 release"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -128,12 +128,15 @@ XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Without buff: (%s)"
 XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s's %s expires in %s"	-- Name, buff name, time to expire
 
 XPERL_NEW_VERSION_DETECTED = "New version detected:"
+XPERL_DOWNLOAD_LATEST = "You can download the latest version from:"
+XPERL_DOWNLOAD_LOCATION = "https://mods.curse.com/addons/wow/zperl"
 
 
 -- Status highlight spells
 XPERL_HIGHLIGHT_SPELLS = {
 	hotSpells  = {
 		[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
+		[GetSpellInfo(155777)] = 12,		-- Rejuvenation Germination
 		[GetSpellInfo(8936)] = 6,			-- Regrowth (old id 26980)
 		[GetSpellInfo(139)] = 12,			-- Renew (old id 25222)
 		[GetSpellInfo(48438)] = 7,			-- Wild Growth
@@ -143,7 +146,7 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(119611)] = 18,		-- Renewing Mist
 		[GetSpellInfo(115175)] = 8,			-- Soothing Mist
 		[GetSpellInfo(124682)] = 6,			-- Enveloping Mist
-		[GetSpellInfo(114163)] = 30			-- Eternal Flame
+		--[GetSpellInfo(114163)] = 30			-- Eternal Flame
 	},
 	pomSpells = {
 		[GetSpellInfo(33076)] = 30,			-- Prayer of Mending
@@ -161,7 +164,7 @@ XPERL_HIGHLIGHT_SPELLS = {
 
 -- Default spells for range checking in the healer visual out-of-range cues.
 XPerl_DefaultRangeSpells = {
-	DRUID	= {spell = GetSpellInfo(5185)},				-- Healing Touch
+	DRUID	= {spell = GetSpellInfo(774)},				--Rejuvenation
 	PALADIN = {spell = GetSpellInfo(19750)},			-- Flash of Light
 	PRIEST	= {spell = GetSpellInfo(2061)},				-- Flash Heal
 	SHAMAN	= {spell = GetSpellInfo(8004)},				-- Healing Surge

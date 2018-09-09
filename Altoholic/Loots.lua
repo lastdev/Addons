@@ -38,7 +38,7 @@ local lootTable = {
 		[L["Porfus the Gem Gorger"]] = { 31557, 31939, 31938, 31936, 31935, 31937, 31957, 31928, 31929, 31925, 31926, 31927 },
 		[L["Wrathbringer Laz-tarash"]] = { 32520, 31939, 31938, 31936, 31935, 31937, 31957, 31928, 31929, 31925, 31926, 31927 }
 	},
-	[L["Abyssal Council"] .. " (" .. GetMapNameByID(261) .. ")"] = {	--  "Silithus"
+	[L["Abyssal Council"] .. " (" .. C_Map.GetMapInfo(81).name .. ")"] = {	--  "Silithus"
 		[L["Crimson Templar (Fire)"]] = { 20657, 20655, 20656	},
 		[L["Azure Templar (Water)"]] = { 20654, 20652, 20653 },
 		[L["Hoary Templar (Wind)"]] = { 20658, 20659, 20660 },
@@ -53,10 +53,10 @@ local lootTable = {
 		[BB["Baron Kazum"] .. " (Earth)"] = { 20688, 20515, 20686, 20687 }
 	},
 	[L["Elemental Invasion"]] = {	
-		[BB["Baron Charr"] .. " (" .. GetMapNameByID(201) .. ")"] = {	18671, 19268, 18672 },	-- "Un'Goro Crater"
-		[BB["Princess Tempestria"] .. " (" .. GetMapNameByID(281) .. ")"] = { 18678, 19268, 21548, 18679 }, -- "Winterspring"
-		[BB["Avalanchion"] .. " (" .. GetMapNameByID(181) .. ")"] = { 18673, 19268, 18674 },	--  "Azshara"
-		[BB["The Windreaver"] .. " (" .. GetMapNameByID(261) .. ")"] = { 18676, 19268, 21548, 18677 }	-- "Silithus"
+		[BB["Baron Charr"] .. " (" .. C_Map.GetMapInfo(78).name .. ")"] = {	18671, 19268, 18672 },	-- "Un'Goro Crater"
+		[BB["Princess Tempestria"] .. " (" .. C_Map.GetMapInfo(83).name .. ")"] = { 18678, 19268, 21548, 18679 }, -- "Winterspring"
+		[BB["Avalanchion"] .. " (" .. C_Map.GetMapInfo(76).name .. ")"] = { 18673, 19268, 18674 },	--  "Azshara"
+		[BB["The Windreaver"] .. " (" .. C_Map.GetMapInfo(81).name .. ")"] = { 18676, 19268, 21548, 18677 }	-- "Silithus"
 	},
 	[L["Gurubashi Arena"]] = {	
 		[L["Booty Run"]] = { 18709, 18710, 18711, 18712, 18706, 19024 }
@@ -148,7 +148,7 @@ local lootTable = {
 	},
 	
 	-- ** Sets & PVP ***
-	[GetMapNameByID(401)] = {	-- "Alterac Valley"
+	[C_Map.GetMapInfo(91).name] = {	-- "Alterac Valley"
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = { 19045, 19032 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	19046, 19031 },
 		[L["Miscellaneous"]] = { 19316, 17348, 17349, 19301, 19307, 19317, 17351, 17352, 19318	},
@@ -160,7 +160,7 @@ local lootTable = {
 		[L["Epic Rewards"].." (" .. FACTION_HORDE .. ")"] = { 19029 },
 		[L["Epic Rewards"]] = {	19325, 19312, 19308, 19309, 19324, 19321, 21563, 19315, 19311, 19310, 19323 }
 	},
-	[GetMapNameByID(461)] = {	--  "Arathi Basin"
+	[C_Map.GetMapInfo(93).name] = {	--  "Arathi Basin"
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = {	17349, 17352, 20225, 20227, 20226, 20243, 20237, 20244 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	17349, 17352, 20222, 20224, 20223, 20234, 20232, 20235 },
 		[format(L["Lv %s Rewards"], "20-29").." (" .. FACTION_ALLIANCE .. ")"] = {	20099, 20096, 20117, 20105, 20120, 20090, 20114, 20102, 20123, 20093, 
@@ -190,7 +190,7 @@ local lootTable = {
 		[L["PVP Plate Sets"].." (" .. FACTION_ALLIANCE .. ")"] = { 20057, 20041, 20048, 20058, 20042, 20049 },
 		[L["PVP Plate Sets"].." (" .. FACTION_HORDE .. ")"] = { 20212, 20204, 20208 }
 	},
-	[GetMapNameByID(443)] = {	--  "Warsong Gulch"
+	[C_Map.GetMapInfo(92).name] = {	--  "Warsong Gulch"
 		[L["Miscellaneous"].." (" .. FACTION_ALLIANCE .. ")"] = {	19506 },
 		[L["Miscellaneous"].." (" .. FACTION_HORDE .. ")"] = {	19505 },
 		[L["Miscellaneous"]] = { 17348, 17349, 19060, 19062, 19067, 17351, 17352, 19061, 19066, 19068 },
@@ -457,7 +457,7 @@ local lootTable = {
 				42614, 42852, 42620, 42597, 42607, 42602 },
 		
 		-- "Wintergrasp"
-		[GetMapNameByID(501)] = { 43956, 44077, 44066, 44075, 44069, 44068, 44067, 44081, 44084, 44082,
+		[C_Map.GetMapInfo(123).name] = { 43956, 44077, 44066, 44075, 44069, 44068, 44067, 44081, 44084, 44082,
 				44076, 44078, 44087, 44088, 44089, 41730, 41732, 41733, 41735, 41739,
 				41736, 41738, 41734, 41727, 41740, 41728, 41742, 41743, 41744, 44107,
 				44103, 44105, 44102, 44101, 44100, 44099, 44098, 44097, 44091, 44096,
@@ -466,7 +466,7 @@ local lootTable = {
 				44896, 44897, 44898, 44901, 44902, 44894, 44895, },
 		
 		-- "Grizzly Hills"
-		[GetMapNameByID(490)] = { 38354, 38355, 38353, 38358, 38359, 38357, 38356, 38360, 38365, 38366,
+		[C_Map.GetMapInfo(116).name] = { 38354, 38355, 38353, 38358, 38359, 38357, 38356, 38360, 38365, 38366,
 				38364, 38363, 38362, 37836, 38368, 38367, 38361, 40875, 40822, 40867 },
 	},
 	

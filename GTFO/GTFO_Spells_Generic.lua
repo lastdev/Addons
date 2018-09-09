@@ -34,6 +34,7 @@ Sample:
 		category = "TestSpell";
 		casterOnly = true;
 		meleeOnly = true;
+		spellType = "SPELL_AURA_REFRESH";
 	};
 		
 ]]--

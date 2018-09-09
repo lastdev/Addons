@@ -82,8 +82,7 @@
 						local result = Altoholic.Search:GetResult(id)
 						
 						if result.linetype == 3 then
-							local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-							link = Altoholic:GetRecipeLink(spellID, result.professionName)
+							link = Altoholic:GetRecipeLink(result.spellID, result.professionName)
 						elseif result.linetype == 4 then
 							local LTL = LibStub("LibTradeLinks-1.0")
 							link = Altoholic:GetRecipeLink(result.spellID, LTL:GetSkillName(result.skillID))
@@ -111,8 +110,7 @@
 								local result = Altoholic.Search:GetResult(id)
 								
 								if result.linetype == 3 then
-									local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-									link = Altoholic:GetRecipeLink(spellID, result.professionName)
+									link = Altoholic:GetRecipeLink(result.spellID, result.professionName)
 								elseif result.linetype == 4 then
 									local LTL = LibStub("LibTradeLinks-1.0")
 									link = Altoholic:GetRecipeLink(result.spellID, LTL:GetSkillName(result.skillID))

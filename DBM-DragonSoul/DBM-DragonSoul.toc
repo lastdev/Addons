@@ -1,5 +1,5 @@
-﻿## Interface: 70300
-## X-Min-Interface: 50001
+﻿## Interface: 80000
+## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dragon Soul|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Drachenseele|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Alma de Dragón|r
@@ -19,7 +19,7 @@
 ## X-DBM-Mod-Category: CATA
 ## X-DBM-Mod-Has-LFR : 1
 ## X-DBM-Mod-MapID: 967
-## X-DBM-Mod-Sort: 300
+## X-DBM-Mod-Sort: 801
 ## X-DBM-Mod-MinCoreRevision: 14002
 localization.en.lua
 localization.de.lua

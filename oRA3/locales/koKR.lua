@@ -40,14 +40,6 @@ oRA3는 빠른 공격대 진행을 위해 슬래시 명령어를 제공합니다
 |cff44ff44/rarinv <등급 이름>|r - 주어진 등급의 길드원을 초대합니다.
 ]]
 
--- Guild Repairs module
-L.guildRepairs = "길드 수리"
-L.ensureRepair = "공격대에 있는 모든 등급에 길드 수리가 활성화되어 있는지 확인"
-L.ensureRepairDesc = "당신이 길드장이면서 공격대 그룹에 합류하고 부공격대장 이상의 권한을 얻을 때마다 공격대를 진행하는 동안 길드 수리를 활성화합니다. 그룹을 떠나면 이 상태는 |cffff4411공격대 중에 변경하지 않은|r 원래의 상태로 복구됩니다"
-L.repairEnabled = "이 공격대를 진행하는 동안 %s 등급에 길드 수리를 활성화합니다."
-L.repairAmount = "수리 제한"
-L.repairAmountDesc = "플레이어 별로 수리에 허용할 골드의 최대 금액입니다."
-
 -- Ready Check module
 L.playersNotReady = "다음 플레이어는 아직 준비되지 않았습니다: %s"
 L.readyCheckSeconds = "전투 준비 (%d초)"
@@ -156,6 +148,7 @@ L.hideDead = "죽음 숨기기"
 L.hideOffline = "접속 종료 숨기기"
 L.hideOutOfCombat = "비 전투 숨기기"
 L.hideOutOfRange = "거리 벗어남 숨기기"
+-- L.hideInGroupDesc = "Hide cooldowns in this type of group."
 L.hideInInstanceDesc = "이 유형의 인스턴스에서 생존기를 숨깁니다."
 L.hideRolesDesc = "이 역할의 플레이어의 생존기를 숨깁니다."
 L.hideGroupDesc = "이 그룹의 플레이어의 생존기를 숨깁니다."
@@ -219,11 +212,6 @@ L.showCooldownTextDesc = "블리자드 재사용 대기시간 문자를 표시�
 
 -- Zone module
 L.zone = "지역"
-
--- Loot module
-L.makeLootMaster = "자신이 전리품 담당자가 되려면 빈 칸으로 남겨두세요."
-L.autoLootMethod = "파티에 참여하면 자동으로 전리품 모드를 설정"
-L.autoLootMethodDesc = "oRA3가 파티나 공격대에 참여하면 아래에서 선택한 전리품 획득 방법으로 자동으로 설정하도록 허용합니다."
 
 -- Tanks module
 L.tanks = "방어 전담"

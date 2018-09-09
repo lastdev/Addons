@@ -71,10 +71,11 @@ local function ScanStats()
 	t[5] = GetCombatRating(CR_HASTE_SPELL)
 	t[6] = floor(GetManaRegen() * 5.0)
 	stats["Spell"] = table.concat(t, "|")	--	["Spell"] = "+Damage | +Healing | Hit | Crit chance | Haste | Mana Regen"
-	
+		
 	-- *** defenses stats ***
 	t[1] = UnitArmor("player")
-	t[2] = UnitDefense("player")
+	-- t[2] = UnitDefense("player")	deprecated in 8.0
+	t[2] = 0
 	t[3] = GetDodgeChance()
 	t[4] = GetParryChance()
 	t[5] = GetBlockChance()

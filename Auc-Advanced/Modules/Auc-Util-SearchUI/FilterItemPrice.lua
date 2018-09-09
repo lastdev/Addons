@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: FilterItemPrice.lua 5706 2017-02-10 12:29:06Z brykrys $
+	Version: 7.7.6099 (SwimmingSeadragon)
+	Revision: $Id: FilterItemPrice.lua 6099 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -292,4 +292,4 @@ function lib.PostFilter(item, searcher, buyorbid)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5706 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 6099 $")

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - ScanData
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: ScanData.lua 5603 2016-06-01 15:58:21Z brykrys $
+	Version: 7.7.6082 (SwimmingSeadragon)
+	Revision: $Id: ScanData.lua 6082 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -377,11 +377,13 @@ end
 
 private.dataCache = {}
 function lib.GetScanData(serverKey)
-	if not private.isLoaded then return end
+	if not private.isLoaded then
+		return nil, "Not Loaded"
+	end
 	serverKey = ResolveServerKey(serverKey)
 	if not serverKey then
 		debugPrint("AucScanData: invalid serverKey passed to GetScanData", "ScanData", "Invalid serverKey", "Error")
-		return
+		return nil, "Invalid serverKey"
 	end
 
 	local cache = private.dataCache[serverKey]
@@ -401,7 +403,10 @@ function lib.GetScanData(serverKey)
 			scandata = clone
 		end
 	else -- no scandata for this serverKey
-		if not livedata then return end -- don't create new scandata if not 'live'
+		if not livedata then
+			-- don't create new scandata if not 'live'
+			return nil, "No Data"
+		end
 		scandata = {image = {}, scanstats = {ImageUpdated = time()}}
 		AucScanData.scans[serverKey] = scandata
 	end
@@ -539,7 +544,7 @@ local function OnLoadRunOnce()
 	aucPrint("Auctioneer: {{ScanData}} loaded.")
 	private.UpgradeDB()
 	if LookForOldData then LookForOldData() end
-	private.isLoaded = Resources.Active
+	private.isLoaded = private.isLoaded or Resources.Active
 	lib.GetScanData() -- force unpack of home data
 end
 function lib.OnLoad()
@@ -678,4 +683,4 @@ function ChangeServerKey(oldKey, newKey)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5603 $")
+AucAdvanced.RegisterRevision("$URL: Auc-ScanData/ScanData.lua $", "$Rev: 6082 $")

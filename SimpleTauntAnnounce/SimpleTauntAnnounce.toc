@@ -1,8 +1,8 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: Simple Taunt Announce
 ## Notes: A simple taunt announcer
 ## Author: BeathsCurse (Saphod - Draenor EU)
-## Version: 1.0.32
+## Version: 1.0.38
 ## SavedVariablesPerCharacter: STACFG
 
 SimpleTauntAnnounce.lua

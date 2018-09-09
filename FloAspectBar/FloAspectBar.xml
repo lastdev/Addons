@@ -7,7 +7,7 @@
 	<Script file="data.lua"/>
 	<Script file="FloAspectBar.lua"/>
 
-	<Frame name="FloAspectBar" inherits="FloBarTemplate">
+	<Frame name="FloAspectBar" inherits="FloBarTemplateA">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT">
 				<Offset>

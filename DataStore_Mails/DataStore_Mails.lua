@@ -222,7 +222,7 @@ local function OnBagUpdate(event, bag)
 	end
 end
 
-local function OnMailInboxUpdate(a, b, c)
+local function OnMailInboxUpdate()
 	-- process only one occurence of the event, right after MAIL_SHOW
 	addon:UnregisterEvent("MAIL_INBOX_UPDATE")
 	ScanMailbox()

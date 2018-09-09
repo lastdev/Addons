@@ -187,15 +187,12 @@ local RealmScrollFrame_Desc = {
 		},
 		[PLAYER_CRAFT_LINE] = {
 			GetItemData = function(self, result, line)
-					-- return name, source, sourceID
-					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-					local source = addon:GetRecipeLink(spellID, result.professionName)
+					local source = addon:GetRecipeLink(result.spellID, result.professionName)
 					
-					return GetSpellInfo(spellID), source, line
+					return GetSpellInfo(result.spellID), source, line
 				end,
 			GetItemTexture = function(self, result)
-					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-					local itemID = DataStore:GetCraftResultItem(spellID)
+					local itemID = DataStore:GetCraftResultItem(result.spellID)
 			
 					return (itemID) and GetItemIcon(itemID) or "Interface\\Icons\\Trade_Engraving"
 				end,
@@ -213,9 +210,9 @@ local RealmScrollFrame_Desc = {
 					return realm, account, DataStore:GetCharacterFaction(character)
 				end,
 			GetItemInfo = function(self, result)
-					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-					local itemID = DataStore:GetCraftResultItem(spellID)
-			
+					-- return the itemID
+					local itemID = DataStore:GetCraftResultItem(result.spellID)
+					-- do not make a direct return of the result					
 					return itemID
 				end,
 		},
@@ -244,7 +241,9 @@ local RealmScrollFrame_Desc = {
 					return GetRealmName(), THIS_ACCOUNT, UnitFactionGroup("player")
 				end,
 			GetItemInfo = function(self, result)
-					return DataStore:GetCraftResultItem(result.spellID)
+					local itemID = DataStore:GetCraftResultItem(result.spellID)
+					-- do not make a direct return of the result					
+					return itemID
 				end,
 		},
 	}
@@ -738,21 +737,19 @@ local function BrowseCharacter(character)
 		local professions = DataStore:GetProfessions(character)
 		if professions then
 			for professionName, profession in pairs(professions) do
-				for index = 1, DataStore:GetNumCraftLines(profession) do
-					local isHeader, _, spellID = DataStore:GetCraftLineInfo(profession, index)
-					
-					if not isHeader then
-						if CraftMatchFound(spellID, currentValue) then
-							ns:AddResult(	{
-								linetype = PLAYER_CRAFT_LINE,
-								char = currentResultKey,
-								professionName = professionName,
-								profession = profession,
-								craftIndex = index,
-							} )
-						end
+			
+				DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
+					local _, spellID, isLearned = DataStore:GetRecipeInfo(recipeData)
+					if isLearned and CraftMatchFound(spellID, currentValue) then
+						ns:AddResult(	{
+							linetype = PLAYER_CRAFT_LINE,
+							char = currentResultKey,
+							professionName = professionName,
+							profession = profession,
+							spellID = spellID
+						} )
 					end
-				end
+				end)
 			end
 		end
 	end

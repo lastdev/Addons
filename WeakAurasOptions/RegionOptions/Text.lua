@@ -1,6 +1,8 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
 
+local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
+
 local function createOptions(id, data)
   local options = {
     displayText = {
@@ -39,28 +41,7 @@ local function createOptions(id, data)
       values = WeakAuras.text_check_types,
       order = 36
     },
-    customText = {
-      type = "input",
-      width = "normal",
-      hidden = function()
-        return not data.displayText:find("%%c")
-      end,
-      multiline = true,
-      name = L["Custom Function"],
-      order = 37,
-      control = "WeakAurasMultiLineEditBox"
-    },
-    customText_expand = {
-      type = "execute",
-      order = 38,
-      name = L["Expand Text Editor"],
-      func = function()
-        WeakAuras.OpenTextEditor(data, {"customText"})
-      end,
-      hidden = function()
-        return not data.displayText:find("%%c")
-      end,
-    },
+    -- code editor added below
     progressPrecision = {
       type = "select",
       order = 39,
@@ -114,24 +95,42 @@ local function createOptions(id, data)
       softMax = 72,
       step = 1
     },
+    automaticWidth = {
+      type = "select",
+      name = L["Width"],
+      order = 47.1,
+      values = WeakAuras.text_automatic_width
+    },
+    fixedWidth = {
+      name = L["Width"],
+      order = 47.2,
+      type = "range",
+      min = 1,
+      softMax = screenWidth,
+      bigStep = 1,
+      hidden = function() return data.automaticWidth  ~= "Fixed" end
+    },
+    wordWrap = {
+      type = "select",
+      name = L["Overflow"],
+      order = 47.2,
+      values = WeakAuras.text_word_wrap,
+      hidden = function() return data.automaticWidth  ~= "Fixed" end
+    },
     outline = {
       type = "select",
       name = L["Outline"],
       order = 48,
       values = WeakAuras.font_flags
     },
-    spacer = {
-      type = "header",
-      name = "",
-      order = 50
-    }
   };
-  options = WeakAuras.AddPositionOptions(options, id, data);
 
-  options.width = nil;
-  options.height = nil;
+  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", 37, function() return not data.displayText:find("%%c") end, {"customText"}, false);
 
-  return options;
+  return {
+    text = options;
+    position = WeakAuras.PositionOptions(id, data, true);
+  };
 end
 
 local function createThumbnail(parent)
@@ -199,6 +198,8 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
   mask:SetScript("OnScrollRangeChanged", rescroll);
 
   local function UpdateText()
+    local textStr = data.displayText;
+    textStr = WeakAuras.ReplacePlaceHolders(textStr, borderframe);
     text:SetText(textStr);
     rescroll();
   end

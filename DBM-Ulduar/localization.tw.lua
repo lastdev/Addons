@@ -307,8 +307,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "為第3階段開始顯示計時器",
 	TimeToPhase4			= "為第4階段開始顯示計時器",
 	MagneticCore			= "提示磁能之核的拾取者",
-	HealthFramePhase4		= "顯示第4階段的首領血量框架",
-	AutoChangeLootToFFA		= "第3階段自動轉換拾取方式為自由拾取",
 	WarnBombSpawn			= "為炸彈機器人顯示警告",
 	TimerHardmode			= "為困難模式顯示計時器",
 	ShockBlastWarningInP1	= "為第1階段的$spell:63631顯示特別警告",
@@ -322,9 +320,6 @@ L:SetMiscLocalization{
 	MobPhase3		= "空中指揮裝置",
 	YellPull		= "我們沒有太多時間，朋友們!你們要幫我測試我最新也是最偉大的創作。在你們改變心意之前，別忘了就是你們把XT-002搞得一團糟，你們欠我一次。",
 	YellHardPull	= "為什麼你要做出這種事?難道你沒看見標示上寫著「請勿觸碰這個按鈕!」嗎?現在自爆裝置已經啟動了，我們要怎麼完成測試呢?",
-	YellPhase2		= "太好了!絕妙的良好結果!外殼完整度98.9%!幾乎只有一點擦痕!繼續下去。",
-	YellPhase3		= "感謝你，朋友們!我們的努力讓我獲得了一些絕佳的資料!現在，我把東西放在哪兒了--噢，在這裡。",
-	YellPhase4		= "初步測試階段完成。現在要玩真的啦!",
 	LootMsg			= "(.+)拾取了物品:.*Hitem:(%d+)"
 }
 
@@ -404,6 +399,5 @@ L:SetOptionLocalization{
 	SpecWarnFervorCast				= "當薩拉的熱誠正在對你施放時顯示特別警告(必須有最少一名團隊成員設置目標或專注目標)",
 	specWarnBrainPortalSoon			= "為下一次腦部傳送門顯示特別警告",
 	NextPortal						= "為下一次傳送門顯示計時器",
-	ShowSaraHealth					= "顯示薩拉在第1階段的血量(必須有最少一名團隊成員設置目標或專注目標)",
 	MaladyArrow						= "當你附近的人中了$spell:63881時顯示DBM箭頭"
 }

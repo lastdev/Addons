@@ -97,7 +97,10 @@ School of %s
 	MSG_OPENINGTO = "Opening to: ";
 	MSG_ONEFOUND = "1 other achievement found: ";
 	MSG_NUMFOUNDLIST = "%s other achievements found:";
+	MSG_NOOPEN = "Could not open to an achievement. None visible in UI.";
+	MSG_NOOPEN_LIST = "%s |4achievement:achievements; found:";
 	MSG_ACHNOTFOUND = "Achievement not found.";
+
 	MSG_CRITERIAPROGRESS = "|cff7eff00Achievement Progress:|r %s (%s)";
 
 	OPTPANEL_REMINDERTOOLTIPS = "Reminder Tooltips";
@@ -122,9 +125,9 @@ School of %s
 
 	OPT_LABEL_TRACKING = "Achievement Tracking";
 	OPT_AUTOTRACKTIMED = "Auto-track timed achievements (non-battleground)";
-	OPT_AUTOTRACKTIMED_TIP = "Automatically track achievements with timed criteria when the timer starts. If you are already tracking the maximum number of achievements, it will attempt to take the place of an auto-tracked exploration achievement; otherwise, it won't be tracked.|n|nExcludes achievements that require a battleground win.";
+	OPT_AUTOTRACKTIMED_TIP = "Automatically track achievements with timed criteria when the timer starts. If you are already tracking the maximum number of achievements, it will attempt to take the place of an auto-tracked exploration achievement; otherwise, it won't be tracked.|n|nExcludes battleground-specific achievements.";
 	OPT_AUTOTRACKTIMED_BG = "Auto-track timed battleground achievements";
-	OPT_AUTOTRACKTIMED_TIP_BG = "When a battleground match starts, automatically track the achievement for winning it in a set amount of time (if it is incomplete).|n|nThe achievement is untracked upon leaving the battleground.";
+	OPT_AUTOTRACKTIMED_TIP_BG = "Automatically track battleground achievements with timed criteria when the timer starts. (For example, those for winning the match or capturing a flag within a set time.)|n|nThe achievement is untracked upon leaving the battleground.";
 	OPT_AUTOTRACKEXPLORE = "Auto-track exploration achievements as you travel";
 	OPT_AUTOTRACKEXPLORE_TIP = "When you enter a zone, automatically track its exploration achievement. If already tracking an exploration achievement, this will replace the previous automatically-tracked one if there is one or another exploration achievement otherwise.";
 	OPT_AUTOTRACKEXPLORE_COMPLETED = "Including completed achievements";
@@ -173,11 +176,16 @@ School of %s
 	OPT_KILLCREATURETIPS_TIP = "Add a line to the tooltips of creatures (excluding critters) that need to be killed to meet the criteria of an incomplete achievement indicating whether you still need to kill them.";
 	OPT_KILLCREATURETIPS_TIP2 = "Note: At startup (or when this is option is enabled), every achievement is scanned to find unit IDs. Not all achievements provide such IDs. Most do, but the tooltips of creatures which are the criteria of those that don't won't be altered by this option.";
 
+	OPT_KILLCREATURETIPS_EXCLUDE_GUILD = "Exclude guild achievements";
+
 	OPT_LABEL_MAINUI = "Main Achievement UI Modifications";
 	OPT_UI_SERIESTIP = "Tooltip for achievements that are part of a series";
 	OPT_UI_SERIESTIP_TIP = "When the cursor is over an achievement that is part of a series, display the names of others in the series and its relation to them.";
 	OPT_UI_REQUIREDFORMETATIP = "Tooltip for achievements required by others";
 	OPT_UI_REQUIREDFORMETATIP_TIP = "When the cursor is over an achievement that is required to earn another achievement, display the name of the meta-achievement.";
+	--OPT_UI_REQUIREDFORMETATIP_FACTIONICON = "Add an icon when exclusive to one faction";
+	--OPT_UI_REQUIREDFORMETATIP_FACTIONICON_TIP = "Add an Alliance or Horde icon when the requirement is exclusive to one faction."
+	--OPT_UI_REQUIREDFORMETATIP_FACTIONICON_TIP2 = "|nRequires the |cffffffffCache module|r to be enabled.";
 	OPT_UI_PROGRESSIFOTHERCOMPLETED = "Tooltip for quantity-based progress if completed by another";
 	OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP = "When the cursor is over a quantity-based achievement (e.g. critera of \"Obtain 10 mounts\") that was completed but not by the current character, display the current character's progress.";
 	OPT_DRAGGABLE = "Make draggable";
@@ -217,6 +225,14 @@ School of %s
 	OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP = "Don't play reminder sound from fishing nodes if your fishing pole is equipped.";
 	OPT_SELECTSOUND_CHECKCOMBAT = "Exclude kill reminders if in combat with creature";
 	OPT_SELECTSOUND_CHECKCOMBAT_TIP = "Don't play reminder sound from needing to kill a creature while you are in combat with it.";
+
+	OPT_LABEL_MISC = "Miscellaneous";
+	OPT_THROTTLE_ACHLOOKUP = "Startup: Throttle achievement lookup";
+	OPT_THROTTLE_ACHLOOKUP_TIP = "Overachiever looks up certain data on startup. If this is unchecked, lookup happens while the UI is first loading. If checked, data is gathered over time after the player enters the world.";
+	OPT_THROTTLE_ACHLOOKUP_TIP2 = "|nThe advantage to throttled lookup is a faster initial loading time, but, for some users and on some characters, this can noticeably impact performance for several seconds at the start of a session.|n|nIf the |cffffffffCache module|r is enabled, then throttling doesn't improve loading time as significantly unless the cache needs to be rebuilt. The cache is rebuilt after each new WoW build is released.";
+	OPT_SLASHSEARCH_TAB = "Slash commands use Search tab";
+	OPT_SLASHSEARCH_TAB_TIP = "Use the Search tab to show search results from slash commands like \"/ach food\". If this is unchecked, results are output to the chat log instead (unless a silent output command like \"/achs\" is used).";
+	OPT_SLASHSEARCH_TIP2 = "|cffffffffTabs module with Search tab is required.|r";
 
 	SOUND_BELL_ALLIANCE = "Bell - Alliance";
 	SOUND_BELL_HORDE = "Bell - Horde";
@@ -318,6 +334,8 @@ L["MSG_ACHNOTFOUND"] = "Erfolg nicht gefunden."
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00Erfolgsfortschritt:|r %s (%s)"
 L["MSG_INVALIDID"] = "Ungültige Eingabe: Kein Erfolg mit dieser ID."
 L["MSG_NAMENOTFOUND"] = "Es wurde kein Erfolg gefunden, dessen Name \"|cffffffff%s|r\" enthält."
+L["MSG_NOOPEN"] = "Der Erfolg konnte nicht angezeigt werden. Er ist im UI nicht sichtbar."
+L["MSG_NOOPEN_LIST"] = "%s |4Erfolg:Erfolge; gefunden:"
 L["MSG_NUMFOUNDLIST"] = "%s weitere Erfolge gefunden:"
 L["MSG_ONEFOUND"] = "1 weiterer Erfolg gefunden: "
 L["MSG_OPENINGTO"] = "Öffnen nach: "
@@ -354,6 +372,7 @@ L["OPT_DRAGSAVE"] = "Position merken"
 L["OPT_FISTFULOFLOVETIPS"] = "Handvoll Rosenblüten angewendet?"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Spielers der Hinweis angezeigt, ob bei seinem Volk bzw. Klasse noch eine Handvoll Rosenblüten angewendet werden muss."
 L["OPT_KILLCREATURETIPS"] = "Kreatur getötet?"
+L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Gildenerfolge ausschließen"
 L["OPT_KILLCREATURETIPS_TIP"] = "Zeigt im Tooltip einer Kreatur (außer Kleintiere) den Hinweis an, ob sie für einen Erfolg noch getötet werden muss."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Anmerkung: Beim Start (oder wenn diese Option aktiviert ist), wird jeder Erfolg gescannt, um die IDs der Einheiten festzustellen. Nicht alle Erfolge liefern derartige IDs. Die meisten tun es, aber Tooltips von Kreaturen, deren IDs nicht ermittelt werden konnten, bleiben unverändert."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -365,6 +384,7 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" und \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Reaktion auf Fortschritt (Nicht verfolgte)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Teilerfolge"
 L["OPT_LABEL_MAINUI"] = "Besondere UI-Modifikationen für Erfolge"
+L["OPT_LABEL_MISC"] = "Sonstiges"
 L["OPT_LABEL_NEEDTOKILL"] = "Erfolge für's Kreaturen töten (\"%s,\" \"%s,\" etc.)"
 L["OPT_LABEL_SEASONALACHS"] = "WELTEREIGNIS-ERFOLGE"
 L["OPT_LABEL_STARTTOAST"] = "Feiertag/Veranstaltung Toasts"
@@ -389,18 +409,32 @@ L["OPT_SHOWPROGRESS"] = "Deinen Fortschritt hinzufügen"
 L["OPT_SHOWPROGRESS_OTHER"] = "Den Fortschritt in Links von anderen Spielern vergleichen"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Deinen Fortschritt hinzufügen, wenn die Erfolge von einem anderen Spieler stammen."
 L["OPT_SHOWPROGRESS_TIP"] = "Deinen Fortschritt hinzufügen, wenn ein Erfolg mengenbasierende Kriterien enthält, wie zum Beispiel \"Erhaltet 10 Reittiere.\""
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+L["OPT_SLASHSEARCH_TIP2"] = "|cffffffffTabs-Modul mit Such-Tab wird benötigt.|r"
 L["OPT_STARTTOAST_BONUS"] = "Zeigt die heutigen Bonus-Events"
 L["OPT_STARTTOAST_BONUS_TIP"] = "Zeigt die heutigen Bonus-Events in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
 L["OPT_STARTTOAST_DUNGEON"] = "Zeigt die heutigen Dungeon-Events"
 L["OPT_STARTTOAST_DUNGEON_TIP"] = "Zeigt die heutigen Dungeon-Events in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
-L["OPT_STARTTOAST_HOLIDAY"] = "Zeigt den heutigen Festag"
-L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Zeigt den heutigen Festag in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
-L["OPT_STARTTOAST_MICROHOLIDAY"] = "Zeigt den heutigen Mini-Festag"
-L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Zeigt den heutigen Mini-Festag in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
+L["OPT_STARTTOAST_HOLIDAY"] = "Zeigt die heutigen Feiertage"
+L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Zeigt die heutigen Feiertage in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
+L["OPT_STARTTOAST_MICROHOLIDAY"] = "Zeigt die heutigen Mini-Feiertage"
+L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Zeigt die heutigen Mini-Feiertage in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
+L["OPT_STARTTOAST_MISC"] = "Zeigt die heutigen sonstigen Feiertage"
+L["OPT_STARTTOAST_MISC_TIP"] = "Zeigt die heutigen sonstigen \"Feiertagsereignisse\" in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
+L["OPT_STARTTOAST_MISC_TIP2"] = "Es sind Events die im Standardkalender als \"Feiertage\" angegeben sind, aber weder als ganze Feiertage zählen noch in eine andere Kategorie hier passen. Beispiele wären hier die WoW-Geburtstage und Schlachtzugeröffnungstage (für neue Schlachtzüge oder Schwierigkeitsgrade aber nicht die wöchentlichen Zurücksetzungen)."
 L["OPT_STARTTOAST_ONLYCLICKFADE"] = "Klick, um zu verbergen"
 L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "Hindert Toast-Benachrichtigungen am Verblassen, wenn diese nicht links- oder rechtsgeklickt werden. (Wenn diese Option nicht aktiviert ist, werden sie auch verblassen, wenn der Mauszeiger über sie geht und sich dann wegbewegt)."
+L["OPT_STARTTOAST_PVPBRAWL"] = "Zeigt die heutigen PvP-Raufereien"
+L["OPT_STARTTOAST_PVPBRAWL_TIP"] = "Zeigt die heutigen PvP-Raufereien in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
 L["OPT_STARTTOAST_TIMEFADE"] = "Nicht automatisch verbergen"
 L["OPT_STARTTOAST_TIMEFADE_TIP"] = "Vermeidet, dass Toast-Benachrichtigungen, mit denen du nicht interagierst, nach ein paar Sekunden verblassen."
+L["OPT_THROTTLE_ACHLOOKUP"] = "Beim Start: Gebremste Durchsicht der Erfolge"
+L["OPT_THROTTLE_ACHLOOKUP_TIP"] = "Overachiever sammelt beim Starten gewisse Daten. Wenn diese Option nicht ausgewählt ist, findet diese Durchsicht sofort, wenn das UI zum ersten Mal geladen wird, statt. Wenn dies ausgewählt ist, werden Daten nach und nach gesammelt, nachdem der Spieler die Welt betreten hat.|n|nDer Vorteil gegenüber der gebremsten Durchsicht besteht in einer schnelleren Anfangsladezeit, aber bei einigen Benutzern und bei manchen Charakteren kann sich das vorübergehend auf die Leistung auswirken."
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Noch zu kochende Rezepte kennzeichnen, um Erfolge vervollständigen zu können"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Wenn Overarchievers Handelsmodul aktiviert ist, erscheint ein Symbol neben den Rezepten, die noch gekocht werden müssen, um diverse Erfolge abzuschließen. Wenn die Option aktiviert ist, erscheinen diese Symbole auch dann noch neben ungekochten Rezepten, wenn der dazugehörige Erfolg schon abgeschlossen sein sollte. "
 L["OPT_TURKEYLURKEYTIPS"] = "Truthahnbüchse angewendet?"
@@ -461,11 +495,12 @@ L["WILDPET"] = "Wildtier"
 L["YOURPROGRESS"] = "Dein Fortschritt"
 
 
+
 elseif (locale == "frFR") then  -- French
 -- Thanks to Atropyne (EU-Garona) for many of these translations:
 L["ACH_ANGLER_COMPLETE"] = "Déjà pêché"
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COUNT"] = ""--]] 
 L["ACH_ANGLER_INCOMPLETE"] = "Doit être pêché"
 L["ACH_BUNNYMAKER_COMPLETE"] = "A déjà utilisé les Fleurs printanières"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "Doit utiliser les Fleurs printanières"
@@ -492,65 +527,69 @@ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Ouvrir l'onglet des suggestion
 L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Ouvre l'onglet de suivi"
 L["COMPLETEDATE"] = "Accompli le %1$d/%2$02d/%3$02d"
 L["CRITTER"] = "Bestiole"
---Translation missing 
--- L["HOLIDAY_BREWFEST"] = ""
---Translation missing 
--- L["HOLIDAY_CHILDRENSWEEK"] = ""
---Translation missing 
--- L["HOLIDAY_DARKMOONFAIRE"] = ""
---Translation missing 
--- L["HOLIDAY_DAYOFTHEDEAD"] = ""
---Translation missing 
--- L["HOLIDAY_HALLOWSEND"] = ""
---Translation missing 
--- L["HOLIDAY_LOVEISINTHEAIR"] = ""
---Translation missing 
--- L["HOLIDAY_LUNARFESTIVAL"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER_SHORT"] = ""
---Translation missing 
--- L["HOLIDAY_NOBLEGARDEN"] = ""
---Translation missing 
--- L["HOLIDAY_PIGRIMSBOUNTY"] = ""
---Translation missing 
--- L["HOLIDAY_PIRATESDAY"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL_SHORT"] = ""
+--[[Translation missing --]]
+--[[ L["HOLIDAY_BREWFEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_CHILDRENSWEEK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DARKMOONFAIRE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DAYOFTHEDEAD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_HALLOWSEND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LOVEISINTHEAIR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LUNARFESTIVAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER_SHORT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_NOBLEGARDEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIGRIMSBOUNTY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIRATESDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL_SHORT"] = ""--]] 
 L["INCOMPLETE"] = "Inachevés"
 L["KILL_COMPLETE"] = "Déjà tué"
 L["KILL_INCOMPLETE"] = "Doit tuer"
 L["MSG_ACHNOTFOUND"] = "Haut fait introuvable."
---Translation missing 
--- L["MSG_CRITERIAPROGRESS"] = ""
+--[[Translation missing --]]
+--[[ L["MSG_CRITERIAPROGRESS"] = ""--]] 
 L["MSG_INVALIDID"] = "Entrée invalide : aucun haut fait ne correspond à cette ID."
 L["MSG_NAMENOTFOUND"] = "Aucun haut fait contenant le nom \"|cffffffff%s|r\" n'a été trouvé."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "%s autres haut faits trouvés :"
 L["MSG_ONEFOUND"] = "1 autre haut fait trouvé : "
 L["MSG_OPENINGTO"] = "Ouverture de : "
---Translation missing 
--- L["MULTI_NEED"] = ""
+--[[Translation missing --]]
+--[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<Inconnu>"
 L["OPT_ANGLERTIPS"] = "Ajoute à l'infobulle d'un banc de poisson s'il a déjà été pêché"
 L["OPT_ANGLERTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des bancs de poissons concernés pour indiquer si vous devez y pêcher."
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""--]] 
 L["OPT_AUTOTRACKEXPLORE"] = "Suivi automatique des haut faits d'exploration quand vous voyagez"
 L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = "Inclure les haut faits accomplis"
 L["OPT_AUTOTRACKEXPLORE_TIP"] = "Quand vous entrez dans une zone, active automatiquement le suivi du haut fait d'exploration associé. Ne s'active pas si vous suivez déjà autre chose qu'un autre haut fait d'exploration."
 L["OPT_AUTOTRACKTIMED"] = "Suivi automatique des hauts faits chronométrés"
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_BG"] = ""--]] 
 L["OPT_AUTOTRACKTIMED_TIP"] = "Active automatiquement le suivi des hauts faits chronométrés lorsque le décompte commence. Ne s'active pas si un autre haut fait est en cours de suivi à moins que celui-ci n'ait été activé par Overachiever."
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""--]] 
 L["OPT_BUNNYMAKERTIPS"] = "Ajoute si devez utiliser les Fleurs printanières"
 L["OPT_BUNNYMAKERTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des joueurs des genre et niveau appropriés pour indiquer si vous devez encore utiliser les Fleurs printanières sur eux. Notez que les joueurs ennemis qui ont 10 niveaux de plus que vous ou davantage sont considérés comme étant au moins de niveau 18."
 L["OPT_CHECKYOURHEADTIPS"] = "Ajoute si vous devez utiliser une citrouille de la Sanssaint lestée"
@@ -559,14 +598,14 @@ L["OPT_CONSUMEITEMTIPS"] = "Ajoute à l'infobulle des objets s'ils doivent être
 L["OPT_CONSUMEITEMTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des objets concernés pour indiquer si vous avez besoin de les consommer."
 L["OPT_CONSUMEITEMTIPS_TIP2"] = "Les objets pour l'utilisation desquels votre niveau est insuffisant ne déclenchent pas de rappel sonore."
 L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = "Afficher même si le haut fait est accompli."
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""--]] 
 L["OPT_CRITTERTIPS"] = "Ajouter le statut /amour dans l'infobulle des bestioles "
 L["OPT_CRITTERTIPS_TIP"] = "Si ce haut fait est inachevé, ajoute une ligne à l'infobulle des bestioles concernées pour indiquer qu'elles ont toujours besoin d' /amour."
 L["OPT_DRAGGABLE"] = "Rendre mobile"
@@ -574,25 +613,29 @@ L["OPT_DRAGSAVE"] = "Sauver la position"
 L["OPT_FISTFULOFLOVETIPS"] = "Vous signale si vous avez besoin de lancer une Poignée de pétales de rose"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des joueurs des combinaisons race/classe concernées pour vous indiquer si vous devez utiliser une Poignée de pétales de rose sur eux."
 L["OPT_KILLCREATURETIPS"] = "Ajoute si vous devez tuer une créature"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Ajoute une ligne à l'infobulle des créatures (hormis les bestioles) qui doivent être tuées pour atteindre l'objectif d'un haut fait inachevé pour indiquer si vous devez encore les tuer."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note : Au démarrage (ou lorsque cette option est activée) tous les hauts faits sont analysés afin de découvrir les IDs des \"unités\". Ils n'en fournissent pas tous. La plupart le font, mais les infobulles des créatures concernées par ceux qui ne le font pas ne seront pas affectées par cette option."
---Translation missing 
--- L["OPT_LABEL_ACHFIVE"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
---Translation missing 
--- L["OPT_LABEL_ACHSEVEN"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHSEVEN"] = ""--]] 
 L["OPT_LABEL_ACHSIX"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" et|n\"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" et \"%s\""
---Translation missing 
--- L["OPT_LABEL_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_LABEL_DRAENORANGLER"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modifications de l'IU principale des Hauts faits"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "Hauts faits d'élimination de monstres (\"%s,\" \"%s,\" etc.)"
 L["OPT_LABEL_SEASONALACHS"] = "SAISON ACHEVÉES"
---Translation missing 
--- L["OPT_LABEL_STARTTOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_STARTTOAST"] = ""--]] 
 L["OPT_LABEL_TOOLTIPS"] = "Infobulles et liens des haut faits"
 L["OPT_LABEL_TRACKING"] = "Suivi des haut faits"
 L["OPT_LABEL_TRADESKILLUI"] = "Modifications de l'UI des professions"
@@ -605,10 +648,10 @@ L["OPT_SATISFIEDTIPS_TIP"] = "Ajoute une ligne dans l'infobulle des objets qui f
 L["OPT_SELECTSOUND"] = "Rappel sonore de haut fait inachevé"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "Exclure les rappels des banc de poissons si une canne à pêche est équipée"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = "Ne pas jouer le rappel sonore des bancs de poissons si votre canne à pêche est équipée."
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""--]] 
 L["OPT_SELECTSOUND_TIP"] = "Jouer le son choisi lorsque le rappel d'un haut fait incomplet est ajouté à l'infobulle."
 L["OPT_SELECTSOUND_TIP2"] = "Les sons ne seront joués qu'une fois toutes les 15 secondes."
 L["OPT_SHOWID"] = "Montrer les IDs des hauts faits"
@@ -616,46 +659,68 @@ L["OPT_SHOWPROGRESS"] = "Ajouter votre progression"
 L["OPT_SHOWPROGRESS_OTHER"] = "Comparer la progression via les liens d'autres joueurs"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Ajouter votre progression quand les informations du haut fait affiché sont celles d'un autre joueur."
 L["OPT_SHOWPROGRESS_TIP"] = "Ajouter votre progression quand un haut fait est basé sur une quantité, comme \"Obtenir 10 montures\"."
---Translation missing 
--- L["OPT_STARTTOAST_BONUS"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Indique les recettes non préparées pour compléter les haut-faits"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Si le module Professions de Overachiever est activé, une icône de haut-fait apparaît près des recettes que vous devez cuisiner pour obtenir certains haut-faits. Si cette option est cochée, ces icônes apparaîtront près des recettes non préparées même si le haut-fait associé est déjà complété."
 L["OPT_TURKEYLURKEYTIPS"] = "Dindoflingue utilisé ?"
 L["OPT_TURKEYLURKEYTIPS_TIP"] = "Si le haut fait n'est pas terminé, ajoute une ligne à l'infobulle des joueurs pour indiquer si vous devez encore utiliser le Dindoflingue sur eux."
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""--]] 
 L["OPT_UI_REQUIREDFORMETATIP"] = "Infobulle pour les hauts faits qui en requièrent d'autres"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Lorsque le curseur passe sur un haut fait qui est requis pour en accomplir un autre, affiche le nom du méta-haut fait."
 L["OPT_UI_SERIESTIP"] = "Infobulle pour les hauts faits qui font partie d'une série"
@@ -663,25 +728,25 @@ L["OPT_UI_SERIESTIP_TIP"] = "Lorsque le curseur passe sur un haut fait qui fait 
 L["OPT_WELLREADTIPS"] = "Ajoute à l'infobulle d'un livre si vous l'avez lu"
 L["OPT_WELLREADTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne dans l'infobulle des livres concernés pour vous signaler si vous avez besoin de les lire."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Rappel des info-bulles"
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_TOAST"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_TOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_TOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_TOAST"] = ""--]] 
 L["PROGRESS"] = "Progression"
---Translation missing 
--- L["PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["RECENTREMINDERCRITERIA"] = ""
+--[[Translation missing --]]
+--[[ L["PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RECENTREMINDERCRITERIA"] = ""--]] 
 L["REQUIREDFORMETATIP"] = "Requis pour :"
 L["SERIESTIP"] = "Partie d'une série :"
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_PULLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_WARNING"] = ""--]] 
 L["SOUND_ALARM1"] = "Alarme 1"
 L["SOUND_ALARM2"] = "Alarme 2"
 L["SOUND_ALARM3"] = "Alarme 3"
@@ -692,50 +757,51 @@ L["SOUND_BELL_HORDE"] = "Cloche - Horde"
 L["SOUND_BELL_KARA"] = "Cloche de Karazhan"
 L["SOUND_BELL_MELLOW"] = "Cloches douces"
 L["SOUND_BELL_NIGHTELF"] = "Cloche - Elfe de la nuit"
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_BGTIMER"] = ""--]] 
 L["SOUND_DING_AUCTION"] = "Carillon - HV"
 L["SOUND_DRUMHIT"] = "Battement de tambour"
 L["SOUND_ENTERQUEUE"] = "Entrer dans la file"
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MINOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MINOR"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_GARRISON_INVASION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MINOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MINOR"] = ""--]] 
 L["SOUND_GONG_TROLL"] = "Gong - Troll"
 L["SOUND_HEARTHBIND"] = "Son - Pierre de foyer"
 L["SOUND_MAP_PING"] = "Ping de la carte"
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_MEDAL_EXPIRES"] = ""--]] 
 L["SOUND_SIMON_DING"] = "Simon - Carillon"
 L["SOUND_SIMON_STARTGAME"] = "Simon - Nouveau Jeu"
 L["SOUND_SIMON_STARTLEVEL"] = "Simon - Nouveau Niveau"
 L["SOUND_YAR"] = "Yarrrr"
---Translation missing 
--- L["STARTTOAST_EVENT"] = ""
+--[[Translation missing --]]
+--[[ L["STARTTOAST_EVENT"] = ""--]] 
 L["WILDPET"] = "Pet sauvage"
 L["YOURPROGRESS"] = "Votre progression"
+
 
 
 elseif (locale == "zhTW") then  -- Traditional Chinese
 -- Thanks to user xyrho at wowinterface.com and laincat at curse.com for many of these translations:
 L["ACH_ANGLER_COMPLETE"] = "已釣過"
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COUNT"] = ""--]] 
 L["ACH_ANGLER_INCOMPLETE"] = "未釣過"
 L["ACH_BUNNYMAKER_COMPLETE"] = "已經使用春日鮮花"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "需要使用春日鮮花"
 L["ACH_CHECKYOURHEAD_COMPLETE"] = "已經使用增重的南瓜燈籠"
 L["ACH_CHECKYOURHEAD_INCOMPLETE"] = "需要使用增重的南瓜燈籠"
---Translation missing 
--- L["ACH_CONSUME_91_COMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_91_INCOMPLETE"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_91_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_91_INCOMPLETE"] = ""--]] 
 L["ACH_CONSUME_COMPLETE"] = "已使用過"
 L["ACH_CONSUME_INCOMPLETE"] = "需要使用"
 L["ACH_CONSUME_INCOMPLETE_EXTRA"] = "未使用過"
@@ -755,52 +821,56 @@ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "開啟建議標籤頁面"
 L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "開啟觀察標籤頁面"
 L["COMPLETEDATE"] = "已完成 %2$d/%1$02d/%3$02d"
 L["CRITTER"] = "小動物"
---Translation missing 
--- L["HOLIDAY_BREWFEST"] = ""
---Translation missing 
--- L["HOLIDAY_CHILDRENSWEEK"] = ""
---Translation missing 
--- L["HOLIDAY_DARKMOONFAIRE"] = ""
---Translation missing 
--- L["HOLIDAY_DAYOFTHEDEAD"] = ""
---Translation missing 
--- L["HOLIDAY_HALLOWSEND"] = ""
---Translation missing 
--- L["HOLIDAY_LOVEISINTHEAIR"] = ""
---Translation missing 
--- L["HOLIDAY_LUNARFESTIVAL"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER_SHORT"] = ""
---Translation missing 
--- L["HOLIDAY_NOBLEGARDEN"] = ""
---Translation missing 
--- L["HOLIDAY_PIGRIMSBOUNTY"] = ""
---Translation missing 
--- L["HOLIDAY_PIRATESDAY"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL_SHORT"] = ""
+--[[Translation missing --]]
+--[[ L["HOLIDAY_BREWFEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_CHILDRENSWEEK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DARKMOONFAIRE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DAYOFTHEDEAD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_HALLOWSEND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LOVEISINTHEAIR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LUNARFESTIVAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER_SHORT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_NOBLEGARDEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIGRIMSBOUNTY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIRATESDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL_SHORT"] = ""--]] 
 L["INCOMPLETE"] = "未完成"
 L["KILL_COMPLETE"] = "已擊殺"
 L["KILL_INCOMPLETE"] = "需要擊殺"
 L["MSG_ACHNOTFOUND"] = "找不到該成就。"
---Translation missing 
--- L["MSG_CRITERIAPROGRESS"] = ""
+--[[Translation missing --]]
+--[[ L["MSG_CRITERIAPROGRESS"] = ""--]] 
 L["MSG_INVALIDID"] = "無效輸入：沒有成就有這編號。"
 L["MSG_NAMENOTFOUND"] = "沒有包含 \"|cffffffff%s|r\" 的成就名稱被找到。"
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "另外找到 %s 項成就："
 L["MSG_ONEFOUND"] = "找到 1 項成就："
 L["MSG_OPENINGTO"] = "開啟："
---Translation missing 
--- L["MULTI_NEED"] = ""
+--[[Translation missing --]]
+--[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<未知>"
 L["OPT_ANGLERTIPS"] = "提示魚點是否釣過？"
 L["OPT_ANGLERTIPS_TIP"] = "如果成就有缺少，新增一行提示到魚點的標準說明從任何你需要來釣魚的魚點。"
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
 L["OPT_AUTOTRACK_CRITERIATOAST"] = "自動追蹤彈出的 \"成就進度\""
 L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = "\"成就進度\" 訊息彈出時，自動追蹤成就 (沒有超過追蹤數量上限時)。"
 L["OPT_AUTOTRACKEXPLORE"] = "自動追蹤探索成就"
@@ -829,20 +899,24 @@ L["OPT_DRAGSAVE"] = "記住視窗位置"
 L["OPT_FISTFULOFLOVETIPS"] = "提示是否需要使用一把玫瑰花瓣"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "增加玩家提示說明。"
 L["OPT_KILLCREATURETIPS"] = "新增您是否需要殺死的怪物"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "新增一行動物提示(不包括小動物 )需要加以殺害，以符合標準的未完成的成就說明，表明您是否仍然需要殺死他們。"
 L["OPT_KILLCREATURETIPS_TIP2"] = "注意：在啟動時(或是這設定啟用)，每個成就會被掃描來找出單位編號。並非所有成就提供編號。大部分如此，但是其中的生物的提示不會因為這設定而有改變。"
---Translation missing 
--- L["OPT_LABEL_ACHFIVE"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
---Translation missing 
--- L["OPT_LABEL_ACHSEVEN"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHSEVEN"] = ""--]] 
 L["OPT_LABEL_ACHSIX"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" 和 \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" 和 \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "進度相關動作 (不追蹤)"
---Translation missing 
--- L["OPT_LABEL_DRAENORANGLER"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "成就視窗微調"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "擊殺怪物成就 (\"%s\",\"%s\",及其他)"
 L["OPT_LABEL_SEASONALACHS"] = "世界事件成就"
 L["OPT_LABEL_STARTTOAST"] = "節慶/事件彈出通知"
@@ -854,8 +928,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "如果成就尚未完成，在適當種族與職�
 L["OPT_PESTCONTROLTIPS"] = "顯示是否需要擊殺害蟲的提示"
 L["OPT_PESTCONTROLTIPS_TIP"] = "如果這個成就尚未完成，在那些害蟲的提示訊息中提示你是否需要擊殺牠們。"
 L["OPT_SATISFIEDTIPS"] = "1000%滿足?"
---Translation missing 
--- L["OPT_SATISFIEDTIPS_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SATISFIEDTIPS_TIP"] = ""--]] 
 L["OPT_SELECTSOUND"] = "缺少成就提醒音效"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "裝備魚竿時不提示釣魚成就"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = "裝備魚竿時不聲音提示釣魚成就"
@@ -868,6 +942,12 @@ L["OPT_SHOWPROGRESS"] = "顯示進度"
 L["OPT_SHOWPROGRESS_OTHER"] = "比較其他人的進度連結"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "在別人的成就訊息連結說明中顯示自己的進度."
 L["OPT_SHOWPROGRESS_TIP"] = "在提示說明中顯示成就進度."
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_BONUS"] = "顯示今天的獎勵事件"
 L["OPT_STARTTOAST_BONUS_TIP"] = "進入遊戲時顯示今天的獎勵事件彈出通知。"
 L["OPT_STARTTOAST_DUNGEON"] = "顯示今天的地城事件"
@@ -876,10 +956,26 @@ L["OPT_STARTTOAST_HOLIDAY"] = "顯示今天的節慶"
 L["OPT_STARTTOAST_HOLIDAY_TIP"] = "進入遊戲時顯示顯示今天的節慶彈出通知。"
 L["OPT_STARTTOAST_MICROHOLIDAY"] = "顯示今天的小型節慶"
 L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "進入遊戲時顯示今天的小型節慶彈出通知。"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_ONLYCLICKFADE"] = "需要滑鼠點擊來隱藏通知"
 L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "彈出通知不會自動消失除非使用滑鼠左鍵或右鍵點擊。 (停用時，滑鼠游標指向通知然後移開便會消失。)"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
 L["OPT_STARTTOAST_TIMEFADE"] = "不要自動隱藏"
 L["OPT_STARTTOAST_TIMEFADE_TIP"] = "避免尚未使用滑鼠指向或點擊的彈出通知在幾秒後隱藏。"
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "標示未烹飪食譜來完成成就"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "如果Overachiever_Trade模組啟用，那麼成就圖示顯示在你需要烹飪的食譜旁邊為了獲得一些成就。如果設定被勾選，那麼這些圖示會顯示在未被烹飪食譜旁邊即使相關成就已經完成。"
 L["OPT_TURKEYLURKEYTIPS"] = "提示是否需要使用火雞獵槍"
@@ -897,24 +993,24 @@ L["OPT_UI_SERIESTIP_TIP"] = "當滑鼠指向一個系列成就時，顯示系列
 L["OPT_WELLREADTIPS"] = "提示書本是否閱讀過"
 L["OPT_WELLREADTIPS_TIP"] = "增加書本提示說明."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "滑鼠提示提醒"
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_TOAST"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_TOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_TOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_TOAST"] = ""--]] 
 L["PROGRESS"] = "進度"
 L["PROGRESSIFOTHERCOMPLETED"] = "%s的進度"
---Translation missing 
--- L["RECENTREMINDERCRITERIA"] = ""
+--[[Translation missing --]]
+--[[ L["RECENTREMINDERCRITERIA"] = ""--]] 
 L["REQUIREDFORMETATIP"] = "需要："
 L["SERIESTIP"] = "系列成就:"
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_PULLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_WARNING"] = ""--]] 
 L["SOUND_ALARM1"] = "鬧鈴聲 1"
 L["SOUND_ALARM2"] = "鬧鈴聲 2"
 L["SOUND_ALARM3"] = "鬧鈴聲 3"
@@ -925,41 +1021,42 @@ L["SOUND_BELL_HORDE"] = "提示音效 - 部落"
 L["SOUND_BELL_KARA"] = "卡拉贊音效"
 L["SOUND_BELL_MELLOW"] = "柔和的鈴聲"
 L["SOUND_BELL_NIGHTELF"] = "提示音效 - 夜精靈"
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_BGTIMER"] = ""--]] 
 L["SOUND_DING_AUCTION"] = "拍賣場音效"
 L["SOUND_DRUMHIT"] = "擊鼓聲"
 L["SOUND_ENTERQUEUE"] = "進入佇列"
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MINOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MINOR"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_GARRISON_INVASION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MINOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MINOR"] = ""--]] 
 L["SOUND_GONG_TROLL"] = "銅鑼音效"
 L["SOUND_HEARTHBIND"] = "爐石束縛"
 L["SOUND_MAP_PING"] = "點擊地圖音效"
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_MEDAL_EXPIRES"] = ""--]] 
 L["SOUND_SIMON_DING"] = "賽門音效"
 L["SOUND_SIMON_STARTGAME"] = "賽門遊戲開始音效"
 L["SOUND_SIMON_STARTLEVEL"] = "賽門等級開始音效"
 L["SOUND_YAR"] = "Yarrrr音效"
 L["STARTTOAST_EVENT"] = "今日正在舉行"
---Translation missing 
--- L["WILDPET"] = ""
+--[[Translation missing --]]
+--[[ L["WILDPET"] = ""--]] 
 L["YOURPROGRESS"] = "你的進度"
+
 
 
 elseif (locale == "zhCN") then  -- Simplified Chinese
 -- Thanks to user Miste(晨光麦) at wowinterface.com and yeah-chen and chrisccc at curse.com for many of these translations:
 L["ACH_ANGLER_COMPLETE"] = "已钓过"
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COUNT"] = ""--]] 
 L["ACH_ANGLER_INCOMPLETE"] = "未钓过"
 L["ACH_BUNNYMAKER_COMPLETE"] = "已使用过春季花束"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "需要使用春季花束"
@@ -1007,6 +1104,10 @@ L["MSG_ACHNOTFOUND"] = "找不到该成就。"
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00成就进度:|r %s (%s)"
 L["MSG_INVALIDID"] = "无效输入：没有此成就ID。"
 L["MSG_NAMENOTFOUND"] = "找不到含有 \"|cffffffff%s|r\" 的成就。"
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "另外找到%s项成就："
 L["MSG_ONEFOUND"] = "找到1项成就："
 L["MSG_OPENINGTO"] = "开启："
@@ -1014,8 +1115,8 @@ L["MULTI_NEED"] = "%s (还需要 %s 成就)"
 L["OPT_ACHUNKNOWN"] = "<未知>"
 L["OPT_ANGLERTIPS"] = "提示渔点是否钓过"
 L["OPT_ANGLERTIPS_TIP"] = "提示渔点是否钓过。"
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
 L["OPT_AUTOTRACK_CRITERIATOAST"] = "自动追踪奖杯的\"成就进度\""
 L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = "当奖杯的\"成就进度\"出现时，自动追踪该成就(假如允许追踪的话)."
 L["OPT_AUTOTRACKEXPLORE"] = "自动追踪探索成就"
@@ -1044,6 +1145,8 @@ L["OPT_DRAGSAVE"] = "记住位置"
 L["OPT_FISTFULOFLOVETIPS"] = "提示是否需要使用一堆玫瑰花瓣"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "提示是否需要使用一堆玫瑰花瓣。"
 L["OPT_KILLCREATURETIPS"] = "新增需要杀死的怪物"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "新增需要杀死的怪物提示（不包括小动物）。"
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note: At startup (or when this is option is enabled), every achievement is scanned to find unit IDs. Not all achievements provide such IDs. Most do, but the tooltips of creatures which are the criteria of those that don't won't be altered by this option."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -1055,6 +1158,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\"和\"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "进度反馈 (非跟踪)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" 子成就"
 L["OPT_LABEL_MAINUI"] = "主成就界面修改"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "击杀怪物成就（\"%s\"、\"%s\"及其它）"
 L["OPT_LABEL_SEASONALACHS"] = "节日成就"
 L["OPT_LABEL_STARTTOAST"] = "节日/事件庆典"
@@ -1079,41 +1184,58 @@ L["OPT_SHOWPROGRESS"] = "显示进度"
 L["OPT_SHOWPROGRESS_OTHER"] = "与其他人的进度链接进行比较"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "在別人的成就链接说明中显示自己的进度。"
 L["OPT_SHOWPROGRESS_TIP"] = "在提示说明中显示成就进度。"
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_BONUS"] = "显示今日奖励事件"
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
+L["OPT_STARTTOAST_BONUS_TIP"] = "在进入游戏时，会以通知形式显示今天的奖励事件。"
+L["OPT_STARTTOAST_DUNGEON"] = "显示今天的地下城事件"
+L["OPT_STARTTOAST_DUNGEON_TIP"] = "在进入游戏时，显示今天的地下城事件。"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+L["OPT_STARTTOAST_ONLYCLICKFADE"] = "需要点击隐藏"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+L["OPT_STARTTOAST_TIMEFADE"] = "不要自动隐藏"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "已完成的烹饪成就仍然提示"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "即使烹饪成就已完成，仍然在技能旁显示提示图标。"
 L["OPT_TURKEYLURKEYTIPS"] = "提示是否需要使用火鸡枪"
 L["OPT_TURKEYLURKEYTIPS_TIP"] = "提示是否需要使用火鸡枪。"
 L["OPT_UI_HOLIDAYNOTICE"] = "如果节日事件是进行中的则显示通知"
 L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = "只限于tab建议"
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""--]] 
 L["OPT_UI_HOLIDAYNOTICE_TIP2"] = "|cffffffffTab建议是必须的tab模块.|r"
 L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = "数量进度会显示在鼠标提示上，假如完成另一个"
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""--]] 
 L["OPT_UI_REQUIREDFORMETATIP"] = "提示成就树"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "当鼠标滑过一个需要先决条件的成就时，显示成就树的名称。"
 L["OPT_UI_SERIESTIP"] = "提示系列成就"
@@ -1162,6 +1284,7 @@ L["SOUND_YAR"] = "啊啊啊啊啊……"
 L["STARTTOAST_EVENT"] = "今日所发生的事情"
 L["WILDPET"] = "小动物"
 L["YOURPROGRESS"] = "你的进度"
+
 
 
 elseif (locale == "ruRU") then  -- Russian
@@ -1223,6 +1346,10 @@ L["MSG_ACHNOTFOUND"] = "Достижение не найдено"
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00Прогресс достижения:|r %s (%s)"
 L["MSG_INVALIDID"] = "Неверный ввод: достижения с таким ID не существует."
 L["MSG_NAMENOTFOUND"] = "Достижений с названием, содержащим \"|cffffffff%s|r\", не существует."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "Ещё %s других достижений найдено:"
 L["MSG_ONEFOUND"] = "Найдено ещё одно достижение: "
 L["MSG_OPENINGTO"] = "Результат поиска: "
@@ -1259,6 +1386,8 @@ L["OPT_DRAGSAVE"] = "Запомнить позицию"
 L["OPT_FISTFULOFLOVETIPS"] = "Добавляет, нужно ли вам использовать горсть розовых лепестков"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку игрокам, подходящих по расе/классу, будет добавлена строка, указывающая на необходимость использования горсти розовых лепестков."
 L["OPT_KILLCREATURETIPS"] = "Добавлять строку о необходимости убить существо"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку существам (исключая спутников) добавится строка, уведомляющая о необходимости убить их."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Заметка: Вначале (или когда эта опция включена), каждое достижение сканируется на поиск Номера НПС. Не все достижения предоставляют правильные номера. Поэтому подсказки для существ, которые подходят по критериям, не будут отображаться этой опцией."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -1270,6 +1399,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" и \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Прогресс Реакции (Без Отслеживания)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Cуб-Достижение"
 L["OPT_LABEL_MAINUI"] = "Модификации главного интерфейса достижений"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "Достижения по убийству существ (\"%s,\" \"%s,\" и т.д.)"
 L["OPT_LABEL_SEASONALACHS"] = "СЕЗОННЫЕ ДОСТИЖЕНИЯ"
 L["OPT_LABEL_STARTTOAST"] = "Праздник/Всплывающие Событие"
@@ -1294,6 +1425,12 @@ L["OPT_SHOWPROGRESS"] = "Добавлять ваш прогресс"
 L["OPT_SHOWPROGRESS_OTHER"] = "Сравнивать прогресс в чужих ссылках"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Добавлять ваш прогресс в информацию о достижениях других игроков."
 L["OPT_SHOWPROGRESS_TIP"] = "Добавлять ваш прогресс в достижения, основанные на количественном критерии, например, \"Соберите 10 питомцев\"."
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_BONUS"] = "Показать сегодняшние бонус событие"
 L["OPT_STARTTOAST_BONUS_TIP"] = "Показать сегодняшние бонус событие в всплывающие уведомления при входе, в игровой мир."
 L["OPT_STARTTOAST_DUNGEON"] = "Показать сегодняшние подземелье событие"
@@ -1302,10 +1439,26 @@ L["OPT_STARTTOAST_HOLIDAY"] = "Показать сегодняшние праз�
 L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Показать сегодняшние праздники в всплывающие уведомления при входе, в игровой мир."
 L["OPT_STARTTOAST_MICROHOLIDAY"] = "Показать сегодняшние маленькие праздники"
 L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Показать сегодняшние маленькие праздники в всплывающие уведомления при входе, в игровой мир."
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_ONLYCLICKFADE"] = "Требуется клик, чтобы скрыть"
 L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "Эти всплывающие уведомления не будут исчезать, если только левой или правой кнопкой, не кликните. (Если отключено, то они будут также исчезать, если мышь проходит над ними, и после пропадают.)"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
 L["OPT_STARTTOAST_TIMEFADE"] = "При отключенной функции, уведомление будут пропадать автоматически"
 L["OPT_STARTTOAST_TIMEFADE_TIP"] = "Предотвращает всплывающие уведомления, с которыми Вы не взаимодействуете, задержка исчезновения около нескольких секунд."
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Отображает не приготовленные рецепты для завершения достижений"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Если торговый модуль Overachiever'а включен, иконка достижения появится рядом с рецептом, который необходимо приготовить для получения соответствующего достижения. Если эта опция включена, то иконки появляться рядом с еще не приготовленными рецептами даже если эти достижения завершены."
 L["OPT_TURKEYLURKEYTIPS"] = "Добавлять строку о необходимости использовать индейкомет"
@@ -1366,6 +1519,7 @@ L["WILDPET"] = "Дикий питомец"
 L["YOURPROGRESS"] = "Ваш прогресс"
 
 
+
 elseif (locale == "koKR") then  -- Korean
 L["ACH_ANGLER_COMPLETE"] = "낚시 완료"
 L["ACH_ANGLER_COUNT"] = [=[9455=화염 암모나이트 떼
@@ -1423,9 +1577,13 @@ L["INCOMPLETE"] = "업적 진행 중"
 L["KILL_COMPLETE"] = "처치 완료"
 L["KILL_INCOMPLETE"] = "처치 필요"
 L["MSG_ACHNOTFOUND"] = "업적을 찾을 수 없습니다."
-L["MSG_CRITERIAPROGRESS"] = "cff7eff00업적 진행상황:|r %s (%s)"
+L["MSG_CRITERIAPROGRESS"] = "|cff7eff00업적 진행상황:|r %s (%s)"
 L["MSG_INVALIDID"] = "올바르지 않은 값: 해당 ID와 업적이 존재하지 않습니다."
 L["MSG_NAMENOTFOUND"] = "\"|cffffffff%s|r\"을 포함하는 업적을 찾을 수 없습니다."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "%s개의 다른 업적을 찾았습니다:"
 L["MSG_ONEFOUND"] = "1개의 다른 업적을 찾았습니다: "
 L["MSG_OPENINGTO"] = "열기: "
@@ -1462,6 +1620,8 @@ L["OPT_DRAGSAVE"] = "위치 저장"
 L["OPT_FISTFULOFLOVETIPS"] = "붉은 꽃잎 한 줌 사용 표시"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "업적을 완료하지 않은 경우 해당하는 종족/직업의 플레이어 툴팁에 붉은 꽃잎 한 줌을 사용할 필요가 있는지 표시합니다."
 L["OPT_KILLCREATURETIPS"] = "몬스터를 죽인 횟수 표시"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "업적이 완료되지 않았다면 업적에 몬스터를 죽인 횟수를 표시합니다."
 L["OPT_KILLCREATURETIPS_TIP2"] = "주의: 게임 시작시(설정에서 사용한 후 부터), 매 업적마다 유닛 ID를 찾습니다."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -1473,6 +1633,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\"|1과;와; \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "진행상황 반응 (비 추적)"
 L["OPT_LABEL_DRAENORANGLER"] = "\\\"%s\\\"의 하위 업적"
 L["OPT_LABEL_MAINUI"] = "기본 업적창 툴팁 변경"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "처치 업적 (\"%s,\" \"%s,\" 등.)"
 L["OPT_LABEL_SEASONALACHS"] = "계절 이벤트 업적"
 L["OPT_LABEL_STARTTOAST"] = "기념일/이벤트 팝업"
@@ -1497,6 +1659,12 @@ L["OPT_SHOWPROGRESS"] = "자신의 진행 상태 추가"
 L["OPT_SHOWPROGRESS_OTHER"] = "다른 업적 링크와 비교"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "다른 사람의 업적 링크를 볼때 자신의 진행 상태를 추가합니다."
 L["OPT_SHOWPROGRESS_TIP"] = "\"탈 것 10개 획득\"과 같은, 업적 달성이 수량 기준일 때 자신의 진행 상태를 추가합니다."
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_BONUS"] = "오늘의 보너스 이벤트 표시"
 L["OPT_STARTTOAST_BONUS_TIP"] = "게임에 접속할 때 오늘은 보너스 이벤트를 팝업으로 표시합니다."
 L["OPT_STARTTOAST_DUNGEON"] = "오늘의 던전 이벤트 표시"
@@ -1505,10 +1673,26 @@ L["OPT_STARTTOAST_HOLIDAY"] = "오늘의 기념일 표시"
 L["OPT_STARTTOAST_HOLIDAY_TIP"] = "게임에 접속할 때 오늘의 기념일을 팝업으로 표시합니다."
 L["OPT_STARTTOAST_MICROHOLIDAY"] = "오늘의 작은 기념일 표시"
 L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "게임에 접속할 때 오늘의 작은 기념일을 팝업으로 표시합니다."
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
 L["OPT_STARTTOAST_ONLYCLICKFADE"] = "클릭해야만 사라지도록 설정"
 L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "팝업 알림은 왼쪽 또는 오른쪽 마우스를 클릭하지 않으면 사라지지 않습니다.(체크하지 않으면 마우스를 멀리 이동하면 사라집니다.)"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
 L["OPT_STARTTOAST_TIMEFADE"] = "자동으로 숨기지 않음"
 L["OPT_STARTTOAST_TIMEFADE_TIP"] = "이벤트 알림 팝업창을 자동으로 숨기지 않습니다."
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "업적이 요구하는 요리 중에서 요리하지 않은 요리법 표시"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Overachiever의 거래 모듈이 활성화되어 있으면, 업적 아이콘은 업적이 요구하는 특정한 요리를 획득하기 위해 요리를 해야 하는 요리법 옆에 나타납니다. 이 옵션이 표시되어 있으면, 이 아이콘은 관련 업적이 완료된 경우에도 요리하지 않은 요리법 옆에 나타납니다."
 L["OPT_TURKEYLURKEYTIPS"] = "칠면조 사냥총 사용 표시"
@@ -1569,11 +1753,13 @@ L["WILDPET"] = "야생 동물"
 L["YOURPROGRESS"] = "자신의 진행 상태"
 
 
+
+
 elseif (locale == "esES" or locale == "esMX") then  -- Spanish
 -- Thanks to user PatoDaia at wowinterface.com for many of these translations:
 L["ACH_ANGLER_COMPLETE"] = "Ya lo has pescado"
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COUNT"] = ""--]] 
 L["ACH_ANGLER_INCOMPLETE"] = "Necesitas pescarlo"
 L["ACH_BUNNYMAKER_COMPLETE"] = "Ya has usado Flores primaverales"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "Necesitas usar Flores primaverales"
@@ -1600,65 +1786,69 @@ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Abrir pestaña de Sugerencias"
 L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Abrir pestaña de Seguimiento"
 L["COMPLETEDATE"] = "Completado en %1$02d/%2$02d/%3$02d"
 L["CRITTER"] = "Alimaña"
---Translation missing 
--- L["HOLIDAY_BREWFEST"] = ""
---Translation missing 
--- L["HOLIDAY_CHILDRENSWEEK"] = ""
---Translation missing 
--- L["HOLIDAY_DARKMOONFAIRE"] = ""
---Translation missing 
--- L["HOLIDAY_DAYOFTHEDEAD"] = ""
---Translation missing 
--- L["HOLIDAY_HALLOWSEND"] = ""
---Translation missing 
--- L["HOLIDAY_LOVEISINTHEAIR"] = ""
---Translation missing 
--- L["HOLIDAY_LUNARFESTIVAL"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER_SHORT"] = ""
---Translation missing 
--- L["HOLIDAY_NOBLEGARDEN"] = ""
---Translation missing 
--- L["HOLIDAY_PIGRIMSBOUNTY"] = ""
---Translation missing 
--- L["HOLIDAY_PIRATESDAY"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL_SHORT"] = ""
+--[[Translation missing --]]
+--[[ L["HOLIDAY_BREWFEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_CHILDRENSWEEK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DARKMOONFAIRE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DAYOFTHEDEAD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_HALLOWSEND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LOVEISINTHEAIR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LUNARFESTIVAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER_SHORT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_NOBLEGARDEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIGRIMSBOUNTY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIRATESDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL_SHORT"] = ""--]] 
 L["INCOMPLETE"] = "Incompleto"
 L["KILL_COMPLETE"] = "Ya lo has matado"
 L["KILL_INCOMPLETE"] = "Necesitas matarlo"
 L["MSG_ACHNOTFOUND"] = "Logro no encontrado."
---Translation missing 
--- L["MSG_CRITERIAPROGRESS"] = ""
+--[[Translation missing --]]
+--[[ L["MSG_CRITERIAPROGRESS"] = ""--]] 
 L["MSG_INVALIDID"] = "Entrada errónea: No hay ningún logro con esa ID."
 L["MSG_NAMENOTFOUND"] = "No se ha encontrado ningún logro cuyo nombre contenga \"|cffffffff%s|r\"."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "%s logros adicionales encontrados:"
 L["MSG_ONEFOUND"] = "1 logro adicional encontrado: "
 L["MSG_OPENINGTO"] = "Abriendo a: "
---Translation missing 
--- L["MULTI_NEED"] = ""
+--[[Translation missing --]]
+--[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<Desconocido>"
 L["OPT_ANGLERTIPS"] = "Añadir si ya has pescado un banco de peces a su tooltip"
 L["OPT_ANGLERTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los bancos de peces incluidos en el logro, para indicar que necesitas pescar en él."
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""--]] 
 L["OPT_AUTOTRACKEXPLORE"] = "Auto-seguir logros de exploración conforme viajas"
 L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = "Incluir logros completados"
 L["OPT_AUTOTRACKEXPLORE_TIP"] = "Sigue automáticamente el logro de exploración asociado a una zona cuando entras en ella. No cambia si actualmente se está siguiendo otro logro que no sea de exploración."
 L["OPT_AUTOTRACKTIMED"] = "Auto-seguir logros temporizados."
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_BG"] = ""--]] 
 L["OPT_AUTOTRACKTIMED_TIP"] = "Sigue automáticamente los logros por tiempo cuando el temporizador comienza. No cambia si actualmente se está siguiendo otro logro a menos que fuese seguido automáticamente por Overachiever."
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""--]] 
 L["OPT_BUNNYMAKERTIPS"] = "Añadir si aún necesitas usar Flores primaverales"
 L["OPT_BUNNYMAKERTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los jugadores del nivel y raza apropiados para indicar que necesitas usar un Flores primaverales sobre él. Se asumirá que los jugadores enemigos que sean superiores a tí por 10 niveles o más serán al menos de nivel 18."
 L["OPT_CHECKYOURHEADTIPS"] = "Añadir si aún necesitas usar una Calabaza iluminada pesada"
@@ -1667,14 +1857,14 @@ L["OPT_CONSUMEITEMTIPS"] = "Añadir si aún necesitas ingerir un consumible a su
 L["OPT_CONSUMEITEMTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los consumibles incluidos en el logro, para indicar que necesitas comerlo o beberlo."
 L["OPT_CONSUMEITEMTIPS_TIP2"] = "Los consumibles para los que no tienes suficiente nivel no activaran un sonido recordatorio."
 L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = "Mostrar incluso si el logro ha sido completado"
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""--]] 
 L["OPT_CRITTERTIPS"] = "Añadir estado de /amor al tooltip de las alimañas"
 L["OPT_CRITTERTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de las alimañas incluidas en el logro, para indicar que aún necesitas hacer /amor sobre ellas."
 L["OPT_DRAGGABLE"] = "Permitir moverlo."
@@ -1682,25 +1872,29 @@ L["OPT_DRAGSAVE"] = "Recordar posición"
 L["OPT_FISTFULOFLOVETIPS"] = "Añadir si aún necesitas usar un Puñado de Pétalos de Rosa"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los jugadores con la combinación de clase/raza incluida en el logro, para indicar que necesitas usar un Puñado de Pétalos de Rosa sobre él."
 L["OPT_KILLCREATURETIPS"] = "Añadir si necesitas matar una criatura a su tooltip"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Añade una linea al tooltip de las criaturas (excluyendo alimañas) que necesitan ser matadas para cumplir los requisitos de un logro incompleto, para indicar que aún necesitas matarlas."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: Al inicio (o cuando esta opción es activada), cada logro es escaneado para encontrar la ID de las criaturas afectadas. No todos los logros informan de esas IDs. Muchos lo hacen, pero los tooltips de las criaturas que son necesarias para los logros que no lo hacen no serán afectadas por esta opción."
---Translation missing 
--- L["OPT_LABEL_ACHFIVE"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
---Translation missing 
--- L["OPT_LABEL_ACHSEVEN"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHSEVEN"] = ""--]] 
 L["OPT_LABEL_ACHSIX"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" y \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" y \"%s\""
---Translation missing 
--- L["OPT_LABEL_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_LABEL_DRAENORANGLER"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modificiaciones del interface de Logros"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "Logros de matar criaturas (\"%s,\" \"%s,\" etc.)"
 L["OPT_LABEL_SEASONALACHS"] = "LOGROS DE TEMPORADA"
---Translation missing 
--- L["OPT_LABEL_STARTTOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_STARTTOAST"] = ""--]] 
 L["OPT_LABEL_TOOLTIPS"] = "Tooltips y Enlaces de Logros"
 L["OPT_LABEL_TRACKING"] = "Seguimiento de Logros"
 L["OPT_LABEL_TRADESKILLUI"] = "Modificaciones del interface de profesiones"
@@ -1713,10 +1907,10 @@ L["OPT_SATISFIEDTIPS_TIP"] = "Añade una linea al tooltip de los objetos que son
 L["OPT_SELECTSOUND"] = "Sonido Recordatorio de Logro Incompleto"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "Excluir recordatorio de pesca si esta equipada una caña"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = "No reproduce el sonido recordatorio de los bancos de peces si llevas equipada una caña de pescar."
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""--]] 
 L["OPT_SELECTSOUND_TIP"] = "Reproduce el sonido seleccionado cuando el recordatorio para un logro incompleto es añadido al tooltip."
 L["OPT_SELECTSOUND_TIP2"] = "El sonido recordatorio sólo se reproducirá una vez cada 15 segundos."
 L["OPT_SHOWID"] = "Mostrar las IDs de los logros"
@@ -1724,46 +1918,68 @@ L["OPT_SHOWPROGRESS"] = "Añadir tu progreso"
 L["OPT_SHOWPROGRESS_OTHER"] = "Comparar progreso con los logros de otros jugadores"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Añade tu progreso cuando se muestre la información de un logro para otro jugador."
 L["OPT_SHOWPROGRESS_TIP"] = "Añade tu progreso cuando un logro esta basado en un criterio cuantitativo, como \"Obtener 10 monturas.\""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Indica las recetas sin cocinar para logros completados"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Si el módulo Overachiever - Trade está activado, aparecerá el icono de logro junto a las recetas que necesites cocinar para obtener ciertos logros. Si esta opción está  seleccionada, esos iconos aparecerán junto a las recetas sin cocinar incluso si el logro asociado a ellas ya ha sido completado."
 L["OPT_TURKEYLURKEYTIPS"] = "Añadir si aún necesitas usar una Pavopistola"
 L["OPT_TURKEYLURKEYTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los jugadores para indicar que necesitas usar tu Pavopistola sobre él."
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""--]] 
 L["OPT_UI_REQUIREDFORMETATIP"] = "Tooltip en los logros requeridos por otros logros."
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Cuando el cursor esta sobre un logro que es requerido para obtener otro logro, muestra el nombre del meta-logro."
 L["OPT_UI_SERIESTIP"] = "Mostrar tooltip sobre logros que son parte de una serie"
@@ -1771,25 +1987,25 @@ L["OPT_UI_SERIESTIP_TIP"] = "Cuando el cursor esta sobre un logro que es parte d
 L["OPT_WELLREADTIPS"] = "Añadir si ya has leido un libro a su tooltip"
 L["OPT_WELLREADTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los libros incluidos en el logro, para indicar que necesitas leerlos."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Tooltips recordatorios"
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_TOAST"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_TOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_TOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_TOAST"] = ""--]] 
 L["PROGRESS"] = "Progreso"
---Translation missing 
--- L["PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["RECENTREMINDERCRITERIA"] = ""
+--[[Translation missing --]]
+--[[ L["PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RECENTREMINDERCRITERIA"] = ""--]] 
 L["REQUIREDFORMETATIP"] = "Requerido para:"
 L["SERIESTIP"] = "Parte de una serie:"
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_PULLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_WARNING"] = ""--]] 
 L["SOUND_ALARM1"] = "Alarma de Reloj 1"
 L["SOUND_ALARM2"] = "Alarma de Reloj 2"
 L["SOUND_ALARM3"] = "Alarma de Reloj 3"
@@ -1800,423 +2016,460 @@ L["SOUND_BELL_HORDE"] = "Campana - Horda"
 L["SOUND_BELL_KARA"] = "Campana Karazhan"
 L["SOUND_BELL_MELLOW"] = "Campanilla"
 L["SOUND_BELL_NIGHTELF"] = "Campana - Elfo de la Noche"
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_BGTIMER"] = ""--]] 
 L["SOUND_DING_AUCTION"] = "Tintineo de Subasta"
 L["SOUND_DRUMHIT"] = "Golpe de Tambor"
 L["SOUND_ENTERQUEUE"] = "Esperar en la Fila"
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MINOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MINOR"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_GARRISON_INVASION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MINOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MINOR"] = ""--]] 
 L["SOUND_GONG_TROLL"] = "Gong - Troll"
 L["SOUND_HEARTHBIND"] = "Enlazar Piedra de Hogar"
 L["SOUND_MAP_PING"] = "Ping del Mapa"
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_MEDAL_EXPIRES"] = ""--]] 
 L["SOUND_SIMON_DING"] = "Simon - Ding"
 L["SOUND_SIMON_STARTGAME"] = "Simon - Inicio de Juego"
 L["SOUND_SIMON_STARTLEVEL"] = "Simon - Inicio de Nivel"
 L["SOUND_YAR"] = "Yarrrr"
---Translation missing 
--- L["STARTTOAST_EVENT"] = ""
+--[[Translation missing --]]
+--[[ L["STARTTOAST_EVENT"] = ""--]] 
 L["WILDPET"] = "Mascota salvaje"
 L["YOURPROGRESS"] = "Tu progreso"
 
 
+
 	if (locale == "esMX") then  -- Spanish (Mexican)
---Translation missing 
--- L["ACH_ANGLER_COMPLETE"] = ""
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
---Translation missing 
--- L["ACH_ANGLER_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_BUNNYMAKER_COMPLETE"] = ""
---Translation missing 
--- L["ACH_BUNNYMAKER_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_CHECKYOURHEAD_COMPLETE"] = ""
---Translation missing 
--- L["ACH_CHECKYOURHEAD_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_91_COMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_91_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_COMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_CONSUME_INCOMPLETE_EXTRA"] = ""
---Translation missing 
--- L["ACH_FISHSCHOOL_FORMAT"] = ""
---Translation missing 
--- L["ACH_FISTFULOFLOVE_COMPLETE"] = ""
---Translation missing 
--- L["ACH_FISTFULOFLOVE_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_LETITSNOW_COMPLETE"] = ""
---Translation missing 
--- L["ACH_LETITSNOW_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_LOVECRITTERS_COMPLETE"] = ""
---Translation missing 
--- L["ACH_LOVECRITTERS_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_TURKEYLURKEY_COMPLETE"] = ""
---Translation missing 
--- L["ACH_TURKEYLURKEY_INCOMPLETE"] = ""
---Translation missing 
--- L["ACH_WELLREAD_COMPLETE"] = ""
---Translation missing 
--- L["ACH_WELLREAD_INCOMPLETE"] = ""
---Translation missing 
--- L["BINDING_NAME_OVERACHIEVER_TAB_SEARCH"] = ""
---Translation missing 
--- L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = ""
---Translation missing 
--- L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = ""
---Translation missing 
--- L["COMPLETEDATE"] = ""
---Translation missing 
--- L["CRITTER"] = ""
---Translation missing 
--- L["HOLIDAY_BREWFEST"] = ""
---Translation missing 
--- L["HOLIDAY_CHILDRENSWEEK"] = ""
---Translation missing 
--- L["HOLIDAY_DARKMOONFAIRE"] = ""
---Translation missing 
--- L["HOLIDAY_DAYOFTHEDEAD"] = ""
---Translation missing 
--- L["HOLIDAY_HALLOWSEND"] = ""
---Translation missing 
--- L["HOLIDAY_LOVEISINTHEAIR"] = ""
---Translation missing 
--- L["HOLIDAY_LUNARFESTIVAL"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER_SHORT"] = ""
---Translation missing 
--- L["HOLIDAY_NOBLEGARDEN"] = ""
---Translation missing 
--- L["HOLIDAY_PIGRIMSBOUNTY"] = ""
---Translation missing 
--- L["HOLIDAY_PIRATESDAY"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL_SHORT"] = ""
---Translation missing 
--- L["INCOMPLETE"] = ""
---Translation missing 
--- L["KILL_COMPLETE"] = ""
---Translation missing 
--- L["KILL_INCOMPLETE"] = ""
---Translation missing 
--- L["MSG_ACHNOTFOUND"] = ""
---Translation missing 
--- L["MSG_CRITERIAPROGRESS"] = ""
---Translation missing 
--- L["MSG_INVALIDID"] = ""
---Translation missing 
--- L["MSG_NAMENOTFOUND"] = ""
---Translation missing 
--- L["MSG_NUMFOUNDLIST"] = ""
---Translation missing 
--- L["MSG_ONEFOUND"] = ""
---Translation missing 
--- L["MSG_OPENINGTO"] = ""
---Translation missing 
--- L["MULTI_NEED"] = ""
---Translation missing 
--- L["OPT_ACHUNKNOWN"] = ""
---Translation missing 
--- L["OPT_ANGLERTIPS"] = ""
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKEXPLORE"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKEXPLORE_TIP"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKTIMED"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_BG"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP"] = ""
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""
---Translation missing 
--- L["OPT_BUNNYMAKERTIPS"] = ""
---Translation missing 
--- L["OPT_BUNNYMAKERTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_CHECKYOURHEADTIPS"] = ""
---Translation missing 
--- L["OPT_CHECKYOURHEADTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_CONSUMEITEMTIPS"] = ""
---Translation missing 
--- L["OPT_CONSUMEITEMTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_CONSUMEITEMTIPS_TIP2"] = ""
---Translation missing 
--- L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""
---Translation missing 
--- L["OPT_CRITTERTIPS"] = ""
---Translation missing 
--- L["OPT_CRITTERTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_DRAGGABLE"] = ""
---Translation missing 
--- L["OPT_DRAGSAVE"] = ""
---Translation missing 
--- L["OPT_FISTFULOFLOVETIPS"] = ""
---Translation missing 
--- L["OPT_FISTFULOFLOVETIPS_TIP"] = ""
---Translation missing 
--- L["OPT_KILLCREATURETIPS"] = ""
---Translation missing 
--- L["OPT_KILLCREATURETIPS_TIP"] = ""
---Translation missing 
--- L["OPT_KILLCREATURETIPS_TIP2"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHFIVE"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHFOUR"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHSEVEN"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHSIX"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHTHREE"] = ""
---Translation missing 
--- L["OPT_LABEL_ACHTWO"] = ""
---Translation missing 
--- L["OPT_LABEL_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_LABEL_DRAENORANGLER"] = ""
---Translation missing 
--- L["OPT_LABEL_MAINUI"] = ""
---Translation missing 
--- L["OPT_LABEL_NEEDTOKILL"] = ""
---Translation missing 
--- L["OPT_LABEL_SEASONALACHS"] = ""
---Translation missing 
--- L["OPT_LABEL_STARTTOAST"] = ""
---Translation missing 
--- L["OPT_LABEL_TOOLTIPS"] = ""
---Translation missing 
--- L["OPT_LABEL_TRACKING"] = ""
---Translation missing 
--- L["OPT_LABEL_TRADESKILLUI"] = ""
---Translation missing 
--- L["OPT_LETITSNOWTIPS"] = ""
---Translation missing 
--- L["OPT_LETITSNOWTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_PESTCONTROLTIPS"] = ""
---Translation missing 
--- L["OPT_PESTCONTROLTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_SATISFIEDTIPS"] = ""
---Translation missing 
--- L["OPT_SATISFIEDTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_TIP2"] = ""
---Translation missing 
--- L["OPT_SHOWID"] = ""
---Translation missing 
--- L["OPT_SHOWPROGRESS"] = ""
---Translation missing 
--- L["OPT_SHOWPROGRESS_OTHER"] = ""
---Translation missing 
--- L["OPT_SHOWPROGRESS_OTHER_TIP"] = ""
---Translation missing 
--- L["OPT_SHOWPROGRESS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
---Translation missing 
--- L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = ""
---Translation missing 
--- L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = ""
---Translation missing 
--- L["OPT_TURKEYLURKEYTIPS"] = ""
---Translation missing 
--- L["OPT_TURKEYLURKEYTIPS_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
---Translation missing 
--- L["OPT_UI_REQUIREDFORMETATIP"] = ""
---Translation missing 
--- L["OPT_UI_REQUIREDFORMETATIP_TIP"] = ""
---Translation missing 
--- L["OPT_UI_SERIESTIP"] = ""
---Translation missing 
--- L["OPT_UI_SERIESTIP_TIP"] = ""
---Translation missing 
--- L["OPT_WELLREADTIPS"] = ""
---Translation missing 
--- L["OPT_WELLREADTIPS_TIP"] = ""
---Translation missing 
--- L["OPTPANEL_REMINDERTOOLTIPS"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_TOAST"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_TOAST"] = ""
---Translation missing 
--- L["PROGRESS"] = ""
---Translation missing 
--- L["PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["RECENTREMINDERCRITERIA"] = ""
---Translation missing 
--- L["REQUIREDFORMETATIP"] = ""
---Translation missing 
--- L["SERIESTIP"] = ""
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
---Translation missing 
--- L["SOUND_ALARM1"] = ""
---Translation missing 
--- L["SOUND_ALARM2"] = ""
---Translation missing 
--- L["SOUND_ALARM3"] = ""
---Translation missing 
--- L["SOUND_BELL_ALLIANCE"] = ""
---Translation missing 
--- L["SOUND_BELL_AUCTION"] = ""
---Translation missing 
--- L["SOUND_BELL_BOATARRIVED"] = ""
---Translation missing 
--- L["SOUND_BELL_HORDE"] = ""
---Translation missing 
--- L["SOUND_BELL_KARA"] = ""
---Translation missing 
--- L["SOUND_BELL_MELLOW"] = ""
---Translation missing 
--- L["SOUND_BELL_NIGHTELF"] = ""
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
---Translation missing 
--- L["SOUND_DING_AUCTION"] = ""
---Translation missing 
--- L["SOUND_DRUMHIT"] = ""
---Translation missing 
--- L["SOUND_ENTERQUEUE"] = ""
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MINOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MINOR"] = ""
---Translation missing 
--- L["SOUND_GONG_TROLL"] = ""
---Translation missing 
--- L["SOUND_HEARTHBIND"] = ""
---Translation missing 
--- L["SOUND_MAP_PING"] = ""
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
---Translation missing 
--- L["SOUND_SIMON_DING"] = ""
---Translation missing 
--- L["SOUND_SIMON_STARTGAME"] = ""
---Translation missing 
--- L["SOUND_SIMON_STARTLEVEL"] = ""
---Translation missing 
--- L["SOUND_YAR"] = ""
---Translation missing 
--- L["STARTTOAST_EVENT"] = ""
---Translation missing 
--- L["WILDPET"] = ""
---Translation missing 
--- L["YOURPROGRESS"] = ""
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_COUNT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ANGLER_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_BUNNYMAKER_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_BUNNYMAKER_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CHECKYOURHEAD_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CHECKYOURHEAD_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_91_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_91_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_CONSUME_INCOMPLETE_EXTRA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_FISHSCHOOL_FORMAT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_FISTFULOFLOVE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_FISTFULOFLOVE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_LETITSNOW_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_LETITSNOW_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_LOVECRITTERS_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_LOVECRITTERS_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_TURKEYLURKEY_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_TURKEYLURKEY_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_WELLREAD_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_WELLREAD_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_OVERACHIEVER_TAB_SEARCH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["COMPLETEDATE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["CRITTER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_BREWFEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_CHILDRENSWEEK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DARKMOONFAIRE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_DAYOFTHEDEAD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_HALLOWSEND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LOVEISINTHEAIR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_LUNARFESTIVAL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_MIDSUMMER_SHORT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_NOBLEGARDEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIGRIMSBOUNTY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_PIRATESDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["HOLIDAY_WINTERVEIL_SHORT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["KILL_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["KILL_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_ACHNOTFOUND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_CRITERIAPROGRESS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_INVALIDID"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NAMENOTFOUND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NUMFOUNDLIST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_ONEFOUND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_OPENINGTO"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MULTI_NEED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACHUNKNOWN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKEXPLORE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKEXPLORE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_BG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_BUNNYMAKERTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_BUNNYMAKERTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CHECKYOURHEADTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CHECKYOURHEADTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CONSUMEITEMTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CONSUMEITEMTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CONSUMEITEMTIPS_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITTERTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITTERTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_DRAGGABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_DRAGSAVE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_FISTFULOFLOVETIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_FISTFULOFLOVETIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHFOUR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHSEVEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHSIX"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHTHREE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_ACHTWO"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MAINUI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_NEEDTOKILL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_SEASONALACHS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_STARTTOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_TOOLTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_TRACKING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_TRADESKILLUI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LETITSNOWTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LETITSNOWTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_PESTCONTROLTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SATISFIEDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SATISFIEDTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SHOWID"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SHOWPROGRESS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SHOWPROGRESS_OTHER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SHOWPROGRESS_OTHER_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SHOWPROGRESS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_TURKEYLURKEYTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_TURKEYLURKEYTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_REQUIREDFORMETATIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_REQUIREDFORMETATIP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_SERIESTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_SERIESTIP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_WELLREADTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_WELLREADTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPTPANEL_REMINDERTOOLTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_INSTALLED_TOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_MSG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OVERACHIEVER_UPDATED_TOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["PROGRESS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RECENTREMINDERCRITERIA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REQUIREDFORMETATIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SERIESTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_PULLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_WARNING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_ALARM1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_ALARM2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_ALARM3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_ALLIANCE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_AUCTION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_BOATARRIVED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_HORDE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_KARA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_MELLOW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_NIGHTELF"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_BGTIMER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_DING_AUCTION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_DRUMHIT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_ENTERQUEUE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GARRISON_INVASION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_CREATE_MINOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MAJOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GLYPH_DESTROY_MINOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GONG_TROLL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_HEARTHBIND"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_MAP_PING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_MEDAL_EXPIRES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_SIMON_DING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_SIMON_STARTGAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_SIMON_STARTLEVEL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_YAR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STARTTOAST_EVENT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["WILDPET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["YOURPROGRESS"] = ""--]] 
+
 	end
 
 elseif (locale == "ptBR") then  -- Brazilian Portuguese
 L["ACH_ANGLER_COMPLETE"] = "Já foi pescado"
---Translation missing 
--- L["ACH_ANGLER_COUNT"] = ""
+L["ACH_ANGLER_COUNT"] = [=[9455=Cardume de Amonitas de Fogo
+9456=Cardume de Enguias Abissais,Cardume de Enguias Abissais Oleosas
+9457=Cardume de Azorragues Aguanegra
+9458=Cardume de Esturjões Cegos do Lago
+9459=Cardume de Pestanas Gordos
+9460=Cardume de Sorrateiros Sem-queixo
+9461=Cardume de Escorpiões do Mar,Cardume de Escorpiões do Mar Oleosos]=]
 L["ACH_ANGLER_INCOMPLETE"] = "Precisa pescar"
 L["ACH_BUNNYMAKER_COMPLETE"] = "Já usou Flores de Primavera"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "Precisa usar Flores de Primavera"
@@ -2227,7 +2480,9 @@ L["ACH_CONSUME_91_INCOMPLETE"] = "Eu te desafio a comer 91 de uma vez!"
 L["ACH_CONSUME_COMPLETE"] = "Já foi consumido"
 L["ACH_CONSUME_INCOMPLETE"] = "Precisa consumir"
 L["ACH_CONSUME_INCOMPLETE_EXTRA"] = "Ainda não consumido"
-L["ACH_FISHSCHOOL_FORMAT"] = "Cardume de %s"
+L["ACH_FISHSCHOOL_FORMAT"] = [=[Cardume de %s
+Grande Cardume de %s
+Cardume Enorme de %s]=]
 L["ACH_FISTFULOFLOVE_COMPLETE"] = "Punhado de Pétalas de Rosa já utilizado"
 L["ACH_FISTFULOFLOVE_INCOMPLETE"] = "Precisa usar Punhado de Pétalas de Rosa"
 L["ACH_LETITSNOW_COMPLETE"] = "Punhado de Flocos de Neve já utilizado"
@@ -2243,65 +2498,48 @@ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Abrir Aba de Sugestões"
 L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Abrir Aba de Vigia"
 L["COMPLETEDATE"] = "Completado em  %1$02d/%2$d/%3$02d"
 L["CRITTER"] = "Bicho"
---Translation missing 
--- L["HOLIDAY_BREWFEST"] = ""
---Translation missing 
--- L["HOLIDAY_CHILDRENSWEEK"] = ""
---Translation missing 
--- L["HOLIDAY_DARKMOONFAIRE"] = ""
---Translation missing 
--- L["HOLIDAY_DAYOFTHEDEAD"] = ""
---Translation missing 
--- L["HOLIDAY_HALLOWSEND"] = ""
---Translation missing 
--- L["HOLIDAY_LOVEISINTHEAIR"] = ""
---Translation missing 
--- L["HOLIDAY_LUNARFESTIVAL"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER"] = ""
---Translation missing 
--- L["HOLIDAY_MIDSUMMER_SHORT"] = ""
---Translation missing 
--- L["HOLIDAY_NOBLEGARDEN"] = ""
---Translation missing 
--- L["HOLIDAY_PIGRIMSBOUNTY"] = ""
---Translation missing 
--- L["HOLIDAY_PIRATESDAY"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL"] = ""
---Translation missing 
--- L["HOLIDAY_WINTERVEIL_SHORT"] = ""
+L["HOLIDAY_BREWFEST"] = "CervaFest"
+L["HOLIDAY_CHILDRENSWEEK"] = "Semana das Crianças"
+L["HOLIDAY_DARKMOONFAIRE"] = "Feira de Negraluna"
+L["HOLIDAY_DAYOFTHEDEAD"] = "Dia dos Mortos"
+L["HOLIDAY_HALLOWSEND"] = "Noturnália"
+L["HOLIDAY_LOVEISINTHEAIR"] = "O Amor Está No Ar"
+L["HOLIDAY_LUNARFESTIVAL"] = "Festival da Lua"
+L["HOLIDAY_MIDSUMMER"] = "Festival do Fogo do Solstício"
+L["HOLIDAY_MIDSUMMER_SHORT"] = "Solstício"
+L["HOLIDAY_NOBLEGARDEN"] = "Jardinova"
+L["HOLIDAY_PIGRIMSBOUNTY"] = "Festa da Fartura"
+L["HOLIDAY_PIRATESDAY"] = "Dia dos Piratas"
+L["HOLIDAY_WINTERVEIL"] = "Festa do Véu de Inverno"
+L["HOLIDAY_WINTERVEIL_SHORT"] = "Véu de Inverno"
 L["INCOMPLETE"] = "Incompleto"
 L["KILL_COMPLETE"] = "Já matou"
 L["KILL_INCOMPLETE"] = "Precisa matar"
 L["MSG_ACHNOTFOUND"] = "Conquista não encontrada."
---Translation missing 
--- L["MSG_CRITERIAPROGRESS"] = ""
+L["MSG_CRITERIAPROGRESS"] = "|cff7eff00Progresso da conquista:|r %s (%s)"
 L["MSG_INVALIDID"] = "Dados inválidos: Nenhuma conquista com esse ID."
 L["MSG_NAMENOTFOUND"] = "Nenhuma conquista cujo nome contenha \"|cffffffff%s|r\" foi encontrada."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "%s outras conquistas encontradas:"
 L["MSG_ONEFOUND"] = "1 outra conquista encontrada:"
 L["MSG_OPENINGTO"] = "Abrindo para:"
---Translation missing 
--- L["MULTI_NEED"] = ""
+L["MULTI_NEED"] = "%s (requisito de %s conquistas)"
 L["OPT_ACHUNKNOWN"] = "<desconhecido>"
 L["OPT_ANGLERTIPS"] = "Cardume pescado?"
 L["OPT_ANGLERTIPS_TIP"] = "Se uma conquista estiver incompleta, adiciona uma linha às dicas de tela dos pontos de pesca que fazem parte dos critérios da conquista para indicar se você precisa pescar neste lugar."
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""
+L["OPT_ANGLERTIPS_TIP_ALWAYS"] = "Adiciona uma linha à dica de tela dos pontos de pesca que são parte dos critérios, para indicar se você precisa pescá-los."
+L["OPT_AUTOTRACK_CRITERIATOAST"] = "Listar autom. após mostrar \"Progresso de Conquista\""
+L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = "Quando o aviso de \"Progresso da conquista\" aparece na tela, começa a listar a conquista automaticamente (se o limite de conquistas listadas permitir)."
 L["OPT_AUTOTRACKEXPLORE"] = "Listar automaticamente conquistas de exploração enquanto você viaja"
 L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = "Incluindo conquistas completadas"
 L["OPT_AUTOTRACKEXPLORE_TIP"] = "Quando você entra em uma zona, lista automaticamente sua conquista de exploração. Se já estiver listando uma conquista de exploração, isto vai substituir a conquista previamente listada automaticamente."
-L["OPT_AUTOTRACKTIMED"] = "Listar automaticamente conquistas temporizadas"
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_BG"] = ""
+L["OPT_AUTOTRACKTIMED"] = "Listar automaticamente conquistas temporizadas (fora CB)"
+L["OPT_AUTOTRACKTIMED_BG"] = "Listar automaticamente conquistas temporizadas de campos de batalha"
 L["OPT_AUTOTRACKTIMED_TIP"] = "Listar automaticamente conquistas com critérios temporizados quando o cronômetro iniciar. Se você já estiver listando o número máximo de conquistas, esta vai tentar tomar o lugar de uma conquista de exploração listada automaticamente; caso contrário, não será listada."
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""
+L["OPT_AUTOTRACKTIMED_TIP_BG"] = "No início de uma partida de campo de batalha, lista automaticamente a conquista para vencê-la em tempo determinado (se estiver incompleta).|n|nA conquista é removida da lista após sair do campo de batalha."
 L["OPT_BUNNYMAKERTIPS"] = "Flores de Primavera já usadas?"
 L["OPT_BUNNYMAKERTIPS_TIP"] = "Se a conquista está incompleta, adiciona uma linha às dicas de tela de jogadores do gênero e nível apropriados para indicar se você precisa usar Flores de primavera neles. Note que jogadores inimigos que são 10 níveis ou mais acima de você são considerados como sendo no mínimo nível 18."
 L["OPT_CHECKYOURHEADTIPS"] = "Lanterna de Abóbora com Peso usada?"
@@ -2310,43 +2548,38 @@ L["OPT_CONSUMEITEMTIPS"] = "Item consumido?"
 L["OPT_CONSUMEITEMTIPS_TIP"] = "Se a conquista estiver incompleta, adicionar uma linha às dicas de tela dos itens que são parte dos seus critérios para indicar se você precisa consumi-los."
 L["OPT_CONSUMEITEMTIPS_TIP2"] = "Os itens que você tem o nível muito baixo para consumir não vão disparar um som de lembrete."
 L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = "Mostrar mesmo se a conquista estiver completa"
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""
+L["OPT_CRITERIATOAST_CHATLOG"] = "Adicionar ao registro de chat"
+L["OPT_CRITERIATOAST_CHATLOG_TIP"] = "Quando o aviso de \"Progresso de conquista\" aparecer, cria um link da conquista e mostra o critério completado na área de chat."
+L["OPT_CRITERIATOAST_SUGGEST"] = "Adicionar a lembretes recentes (Sugestões)"
+L["OPT_CRITERIATOAST_SUGGEST_TIP"] = "Quando o aviso \"Progresso da conquista\" aparecer, adiciona a conquista temporariamente à aba de sugestões como um \"Lembrete recente\"."
 L["OPT_CRITTERTIPS"] = "Criatura /amada?"
-L["OPT_CRITTERTIPS_TIP"] = "Se essa conquista estiver incompleta, adicione uma linha às dicas de tela de bichos que são parte dos seus critérios para indicar se você ainda precisa /amar esse tipo de bicho."
+L["OPT_CRITTERTIPS_TIP"] = "Se essa conquista estiver incompleta, adiciona uma linha às dicas de tela de bichos que são parte dos seus critérios para indicar se você ainda precisa /amar esse tipo de bicho."
 L["OPT_DRAGGABLE"] = "Tornar arrastável"
-L["OPT_DRAGSAVE"] = "Lembrar Posição"
-L["OPT_FISTFULOFLOVETIPS"] = "Punhado de Pétalas de Rosa usado?"
-L["OPT_FISTFULOFLOVETIPS_TIP"] = "Se a conquista estiver incompleta, acrescentar uma linha às dicas de tela de jogadores da combinação de raça/classe apropriada para indicar se você precisa usar um Buquê de Rosas neles."
+L["OPT_DRAGSAVE"] = "Lembrar posição"
+L["OPT_FISTFULOFLOVETIPS"] = "Punhado de Pétalas de Rosas usado?"
+L["OPT_FISTFULOFLOVETIPS_TIP"] = "Se a conquista estiver incompleta, acrescenta uma linha às dicas de tela de jogadores da combinação de raça/classe apropriada para indicar se você precisa usar um Punhado de Pétalas de Rosas neles."
 L["OPT_KILLCREATURETIPS"] = "Criatura morta?"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Adiciona uma linha às dicas de telas de criaturas (excluindo bichos) que precisam ser mortas para satisfazer os critérios de uma conquista incompleta, indicando se você ainda precisa matá-las."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: Ao iniciar (ou quando esta opção está marcada), cada conquista é escaneada para encontrar IDs de unidades. Nem todas as conquistas fornecem estas IDs. A maioria sim, mas as dicas de tela de criaturas que são critério das que não fornecem não serão alteradas por esta opção."
---Translation missing 
--- L["OPT_LABEL_ACHFIVE"] = ""
+L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
---Translation missing 
--- L["OPT_LABEL_ACHSEVEN"] = ""
+L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
 L["OPT_LABEL_ACHSIX"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" e \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" e \"%s\""
---Translation missing 
--- L["OPT_LABEL_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_LABEL_DRAENORANGLER"] = ""
+L["OPT_LABEL_CRITERIATOAST"] = "Reação a progresso (sem rastreio)"
+L["OPT_LABEL_DRAENORANGLER"] = "Subconquistas de \"%s\""
 L["OPT_LABEL_MAINUI"] = "Modificações da Página Principal das Conquistas"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "Conquistas de Matar criaturas (\"%s,\" \"%s,\" etc.)"
 L["OPT_LABEL_SEASONALACHS"] = "CONQUISTAS SAZONAIS"
---Translation missing 
--- L["OPT_LABEL_STARTTOAST"] = ""
+L["OPT_LABEL_STARTTOAST"] = "Avisos de feriados/eventos"
 L["OPT_LABEL_TOOLTIPS"] = "Dicas de tela e vínculos para Conquistas"
-L["OPT_LABEL_TRACKING"] = "Listagem de Conquistas"
-L["OPT_LABEL_TRADESKILLUI"] = "Modificações nas páginas das Profissões"
+L["OPT_LABEL_TRACKING"] = "Listagem de conquistas"
+L["OPT_LABEL_TRADESKILLUI"] = "Modificações nas tela das profissões"
 L["OPT_LETITSNOWTIPS"] = "Punhado de Flocos de Neve utilizado?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Se a conquista estiver incompleta, acrescentar uma linha às dicas de tela de jogadores da combinação de raça/classe apropriada para indicar se você precisa um Punhado de Flocos de Neve neles."
 L["OPT_PESTCONTROLTIPS"] = "Praga exterminada?"
@@ -2354,12 +2587,10 @@ L["OPT_PESTCONTROLTIPS_TIP"] = "Se essa conquista está incompleta, adicionar um
 L["OPT_SATISFIEDTIPS"] = "1000% Satisfeito?"
 L["OPT_SATISFIEDTIPS_TIP"] = "Adiciona uma linha nas dicas de tela dos itens que são parte dos critérios da conquista para indicar se você precisa consumí-los."
 L["OPT_SELECTSOUND"] = "Som de Lembrete de Conquista Incompleta"
-L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "Excluir lembretes de cardume se a vara estiver equipada"
-L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = "Não tocar som de lembrete de cardumes se sua vara de pescar estiver equipada."
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""
+L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "Ignorar lembretes de cardume se a vara estiver equipada"
+L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = "Não tocar som de lembrete de cardumes se sua vara de pesca estiver equipada."
+L["OPT_SELECTSOUND_CHECKCOMBAT"] = "Ignorar lembretes de abate se estiver em combate com criatura"
+L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = "Não toca um som de lembrete para matar uma criatura enquanto você estiver em combate com ela."
 L["OPT_SELECTSOUND_TIP"] = "Tocar o som selecionado quando um lembrete de conquista incompleta for adicionado à dica de tela."
 L["OPT_SELECTSOUND_TIP2"] = "Os sons tocarão apenas uma vez a cada 15 segundos."
 L["OPT_SHOWID"] = "Mostrar ID das Conquistas"
@@ -2367,46 +2598,50 @@ L["OPT_SHOWPROGRESS"] = "Adicionar seu progresso"
 L["OPT_SHOWPROGRESS_OTHER"] = "Comparar o progresso nos vínculos de outros"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Adiciona seu progresso quando a informação de conquista mostrada é de um outro jogador."
 L["OPT_SHOWPROGRESS_TIP"] = "Adiciona seu progresso quando uma conquista tem critérios baseados em quantidade, como \"Obter 10 montarias\"."
---Translation missing 
--- L["OPT_STARTTOAST_BONUS"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
+L["OPT_STARTTOAST_BONUS"] = "Mostrar eventos bônus de hoje"
+L["OPT_STARTTOAST_BONUS_TIP"] = "Mostra os eventos bônus de hoje em avisos na tela assim que entrar no jogo."
+L["OPT_STARTTOAST_DUNGEON"] = "Mostrar eventos de masmorras de hoje"
+L["OPT_STARTTOAST_DUNGEON_TIP"] = "Mostra os eventos de masmorra de hoje em avisos na tela assim que entrar no jogo."
+L["OPT_STARTTOAST_HOLIDAY"] = "Mostrar feriados de hoje"
+L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Mostra os feriados de hoje em avisos na tela assim que entrar no jogo."
+L["OPT_STARTTOAST_MICROHOLIDAY"] = "Mostrar os microferiados de hoje"
+L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Mostra os microferiados de hoje em avisos na tela assim que entrar no jogo."
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+L["OPT_STARTTOAST_ONLYCLICKFADE"] = "Exigir clique para ocultar"
+L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "Impede que notificações de aviso na tela desapareçam sozinhas a não ser que sejam clicadas com um botão do mouse. (Se desmarcada, os avisos também desaparecerão quando o ponteiro passa por cima deles e depois sai.)"
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+L["OPT_STARTTOAST_TIMEFADE"] = "Não ocultar automaticamente"
+L["OPT_STARTTOAST_TIMEFADE_TIP"] = "Impede que os avisos na tela com os quais você não interagir desapareçam depois de alguns segundos."
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Indicar receitas não cozinhadas para completar conquistas"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Se o módulo Overachiever Trade estiver habilitado, então um ícone da conquista aparece próximo às receitas que você precisa cozinhar para ganhar certas conquistas. Se esta opção estiver marcada, então estes ícones aparecerão próximos às receitas não cozinhadas mesmo que a conquista associadas esteja completa."
 L["OPT_TURKEYLURKEYTIPS"] = "Atirador de Peru usado?"
 L["OPT_TURKEYLURKEYTIPS_TIP"] = "Se a conquista está incompleta, adiciona uma linha nas dicas de tela dos jogadores para indicar se você precisa usar seu Atirador de Peru neles."
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
+L["OPT_UI_HOLIDAYNOTICE"] = "Mostrar um aviso se um evento está acontecendo"
+L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = "Apenas na aba Sugestões"
+L["OPT_UI_HOLIDAYNOTICE_TIP"] = "Se tiver um evento de feriado hoje (como CervaFest ou Feira de Negraluna), um aviso gráfico aparece próximo à tela de conquistas. Clicar nele mostrará as conquistas para esse evento. Posicione o ponteiro do mouse sobre ele para mais detalhes."
+L["OPT_UI_HOLIDAYNOTICE_TIP2"] = "|cffffffffMódulo de abas com a aba Sugestões é necessário.|r"
+L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = "Dica de tela para progresso baseado em quantidades se completado por outra"
+L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = "Quando o ponteiro do mouse está sobre uma conquista baseada em quantidade (ex. critério de \"Obter 10 montarias\") que foi completado mas não pelo personagem atual, mostra apenas o progresso do personagem atual."
 L["OPT_UI_REQUIREDFORMETATIP"] = "Dica de tela para conquistas requeridas por outros"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Quando o cursor está sobre uma conquista que é requerida para obter outra conquista, mostrar o nome da meta-conquista."
 L["OPT_UI_SERIESTIP"] = "Dica de tela para conquistas que fazem parte de uma série"
@@ -2414,25 +2649,17 @@ L["OPT_UI_SERIESTIP_TIP"] = "Quando o cursor estiver sobre uma conquista que faz
 L["OPT_WELLREADTIPS"] = "Livro lido?"
 L["OPT_WELLREADTIPS_TIP"] = "Se a conquista estiver incompleta, adicionar uma linha às dicas de tela de livros que fazem parte dos seus critérios para indicar se você precisa lê-los."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Dicas de tela"
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_INSTALLED_TOAST"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_MSG"] = ""
---Translation missing 
--- L["OVERACHIEVER_UPDATED_TOAST"] = ""
+L["OVERACHIEVER_INSTALLED_MSG"] = "|cff7eff00Overachiever|r v%s foi instalado."
+L["OVERACHIEVER_INSTALLED_TOAST"] = "OVERACHIEVER INSTALADO!"
+L["OVERACHIEVER_UPDATED_MSG"] = "|cff7eff00Overachiever|r foi atualizado para v%s."
+L["OVERACHIEVER_UPDATED_TOAST"] = "OVERACHIEVER ATUALIZADO!"
 L["PROGRESS"] = "Progresso"
---Translation missing 
--- L["PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["RECENTREMINDERCRITERIA"] = ""
+L["PROGRESSIFOTHERCOMPLETED"] = "Progresso de %s:"
+L["RECENTREMINDERCRITERIA"] = "Objetivo avistado recentemente:"
 L["REQUIREDFORMETATIP"] = "Requerido para:"
 L["SERIESTIP"] = "Parte de uma série:"
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
+L["SOUND_AGGRO_PULLED"] = "Aggro puxado"
+L["SOUND_AGGRO_WARNING"] = "Aviso de aggro "
 L["SOUND_ALARM1"] = "Despertador 1"
 L["SOUND_ALARM2"] = "Despertador 2"
 L["SOUND_ALARM3"] = "Despertador 3"
@@ -2443,34 +2670,27 @@ L["SOUND_BELL_HORDE"] = "Sino - Horda"
 L["SOUND_BELL_KARA"] = "Sino de Karazhan"
 L["SOUND_BELL_MELLOW"] = "Sinos suaves"
 L["SOUND_BELL_NIGHTELF"] = "Sino - Elfo Noturno"
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
+L["SOUND_BGTIMER"] = "Timer de Campo de Batalha"
 L["SOUND_DING_AUCTION"] = "Tinido de leilão"
 L["SOUND_DRUMHIT"] = "Toque de Tambor"
 L["SOUND_ENTERQUEUE"] = "Entrar na fila"
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_CREATE_MINOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MAJOR"] = ""
---Translation missing 
--- L["SOUND_GLYPH_DESTROY_MINOR"] = ""
+L["SOUND_GARRISON_INVASION"] = "Alerta de invasão de Guarnição"
+L["SOUND_GLYPH_CREATE_MAJOR"] = "Criar Glifo Maior"
+L["SOUND_GLYPH_CREATE_MINOR"] = "Criar Glifo Menor"
+L["SOUND_GLYPH_DESTROY_MAJOR"] = "Destruir Glifo Maior"
+L["SOUND_GLYPH_DESTROY_MINOR"] = "Destruir Glifo Menor"
 L["SOUND_GONG_TROLL"] = "Gongo - Troll"
 L["SOUND_HEARTHBIND"] = "Vínculo da Pedra de Regresso"
 L["SOUND_MAP_PING"] = "Sibilo do mapa"
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
+L["SOUND_MEDAL_EXPIRES"] = "Expirar medalha"
 L["SOUND_SIMON_DING"] = "Simon: Tinir"
 L["SOUND_SIMON_STARTGAME"] = "Simon: Início do jogo"
 L["SOUND_SIMON_STARTLEVEL"] = "Simon: Início do nível"
 L["SOUND_YAR"] = "Yarrrr"
---Translation missing 
--- L["STARTTOAST_EVENT"] = ""
+L["STARTTOAST_EVENT"] = "Acontecendo hoje"
 L["WILDPET"] = "Mascote Selvagem"
 L["YOURPROGRESS"] = "Seu Progresso"
+
 
 
 elseif (locale == "itIT") then  -- Italian
@@ -2529,6 +2749,10 @@ L["MSG_ACHNOTFOUND"] = "Impresa non trovata."
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00Progresso Impresa:|r %s (%s)"
 L["MSG_INVALIDID"] = "Input non valido: non esiste un'impresa con quell'ID."
 L["MSG_NAMENOTFOUND"] = "Nessuna impresa con nome contenente \"|cffffffff%s|r\" è stata trovata."
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MSG_NOOPEN_LIST"] = ""--]] 
 L["MSG_NUMFOUNDLIST"] = "%s altre imperse trovate:"
 L["MSG_ONEFOUND"] = "1 altra impresa trovata:"
 L["MSG_OPENINGTO"] = "Apertura in:"
@@ -2536,21 +2760,21 @@ L["MULTI_NEED"] = "%s (richiesti per %s imprese)"
 L["OPT_ACHUNKNOWN"] = "<Sconosciuto>"
 L["OPT_ANGLERTIPS"] = "Aggiungi se hai già pescato da un nodo al suo tooltip"
 L["OPT_ANGLERTIPS_TIP"] = "Se l'impresa è incompleta, aggiungi una linea ai tooltip dei nodi di pesca che fanno parte del suo criterio per indicare se hai bisogno o meno di pescarli."
---Translation missing 
--- L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST"] = ""
---Translation missing 
--- L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_ANGLERTIPS_TIP_ALWAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACK_CRITERIATOAST_TIP"] = ""--]] 
 L["OPT_AUTOTRACKEXPLORE"] = "Autotraccia le imprese di esplorazione mentre viaggi"
 L["OPT_AUTOTRACKEXPLORE_COMPLETED"] = "Includi imprese completate."
 L["OPT_AUTOTRACKEXPLORE_TIP"] = "Quando entri in una zona, verrà tracciato automaticamente l'impresa di esplorazione associata. Non cambierà se stai tracciando qualcos'altro diverso da un'impresa di esplorazione."
 L["OPT_AUTOTRACKTIMED"] = "Traccia automaticamente le imprese a tempo"
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_BG"] = ""--]] 
 L["OPT_AUTOTRACKTIMED_TIP"] = "Traccia automaticamente imprese con criteri di tempo quando il timer viene avviato. Se stai già monitorando il numero massimo di risultati, tenterà di prendere il posto di un risultato del rilevamento automatico di esplorazione; in caso contrario, non verrà tracciato."
---Translation missing 
--- L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""--]] 
 L["OPT_BUNNYMAKERTIPS"] = "Fiori di Primavera usati?"
 L["OPT_BUNNYMAKERTIPS_TIP"] = "Se l'impresa non è completa, aggiungere una riga nel tooltip del giocatoredel sesso appropriato per indicare se è necessario utilizzare i Fiori di Primavera su di loro. Nota che i giocatori nemici che sono 10 o più livelli superiori sono considerati livello almeno 18."
 L["OPT_CHECKYOURHEADTIPS"] = "Utilizzare la lanterna poderata jack-o'?"
@@ -2559,14 +2783,14 @@ L["OPT_CONSUMEITEMTIPS"] = "Aggiungi se gli oggetti devono essere consumati ai l
 L["OPT_CONSUMEITEMTIPS_TIP"] = "Se l'obiettivo è incompleto, aggiungi una linea al tooltip degli oggetti che fanno parte dei criteri indicati se devi consumarli."
 L["OPT_CONSUMEITEMTIPS_TIP2"] = "Gli oggetti che non puoi consumare perchè sei di basso livello non faranno riprodurre un suono."
 L["OPT_CONSUMEITEMTIPS_WHENCOMPLETE"] = "Mostra anche se l'impresa è completata"
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST"] = ""
---Translation missing 
--- L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_CHATLOG_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_CRITERIATOAST_SUGGEST_TIP"] = ""--]] 
 L["OPT_CRITTERTIPS"] = "Creatura /amata?"
 L["OPT_CRITTERTIPS_TIP"] = "Se questa impresa è incompleta, aggiungi una riga nel tooltip delle creature che fanno parte di quell'impresa per indicare se quel tipo di creatura ancora necessita di /amore."
 L["OPT_DRAGGABLE"] = "Rendi trascinabile"
@@ -2574,6 +2798,8 @@ L["OPT_DRAGSAVE"] = "Ricorda la posizione"
 L["OPT_FISTFULOFLOVETIPS"] = "Manciata di Petali di Rosa usata?"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Se l'impresa è incompleta, aggiungere una riga nel tooltip del giocatore con la combo razza/classe appropriata per indicare se è necessario utilizzare una manciata di petali di rosa su di loro."
 L["OPT_KILLCREATURETIPS"] = "Creatura uccisa?"
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Aggiungere una riga nel tooltip delle creature (escluse i critter) che devono essere uccisi per soddisfare i criteri di un'impresa non completa che indica se hai ancora bisogno di ucciderli."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: All'avvio (o quando questa è l'opzione è abilitata), ogni realizzazione viene analizzata per individuare gli ID di unità. Non tutte le realizzazioni forniscono tali ID. La maggior parte fanno, ma le descrizioni comandi di creature che sono i criteri di coloro che non lo fanno non sarà alterato da questa opzione."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -2582,83 +2808,107 @@ L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s
 L["OPT_LABEL_ACHSIX"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" e \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" e \"%s\""
---Translation missing 
--- L["OPT_LABEL_CRITERIATOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
 L["OPT_LABEL_DRAENORANGLER"] = "Sottoimprese \"%s\""
 L["OPT_LABEL_MAINUI"] = "Modifiche Pannello Interfaccia Imprese"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_MISC"] = ""--]] 
 L["OPT_LABEL_NEEDTOKILL"] = "Uccidi la creatura dell'Impresa (\"%s,\" \"%s,\" ecc.)"
 L["OPT_LABEL_SEASONALACHS"] = "IMPRESE STAGIONALI"
---Translation missing 
--- L["OPT_LABEL_STARTTOAST"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_STARTTOAST"] = ""--]] 
 L["OPT_LABEL_TOOLTIPS"] = "Link e descrizioni di Imprese"
 L["OPT_LABEL_TRACKING"] = "Tracciatore di Imprese"
 L["OPT_LABEL_TRADESKILLUI"] = "Modifiche Interfaccia Professioni"
 L["OPT_LETITSNOWTIPS"] = "Manciata di Fiocchi di Neve usata"
 L["OPT_LETITSNOWTIPS_TIP"] = "Se l'impresa è incompleta, aggiungere una riga nel tooltip del giocatore con la combo razza/classe appropriata per indicare se è necessario utilizzare una manciata di fiocchi di neve su di loro."
---Translation missing 
--- L["OPT_PESTCONTROLTIPS"] = ""
---Translation missing 
--- L["OPT_PESTCONTROLTIPS_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_PESTCONTROLTIPS_TIP"] = ""--]] 
 L["OPT_SATISFIEDTIPS"] = "Soddisfatto al 1000%?"
 L["OPT_SATISFIEDTIPS_TIP"] = "Aggiungere una riga alle descrizioni degli elementi che fanno parte il raggiungimento di criteri per indicare se è necessario consumarli"
 L["OPT_SELECTSOUND"] = "Suono di avviso per Impresa Incompleta"
 L["OPT_SELECTSOUND_ANGLERCHECKPOLE"] = "Escludi promemoria nodo di pesca se la canna da pesca è equipaggiata"
---Translation missing 
--- L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""
---Translation missing 
--- L["OPT_SELECTSOUND_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_ANGLERCHECKPOLE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_CHECKCOMBAT_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SELECTSOUND_TIP"] = ""--]] 
 L["OPT_SELECTSOUND_TIP2"] = "I suoni verranno riprodotti solo ogni 15 secondi"
 L["OPT_SHOWID"] = "Mostra gli ID delle Imprese"
 L["OPT_SHOWPROGRESS"] = "Aggiungi il tuo progresso"
 L["OPT_SHOWPROGRESS_OTHER"] = "Confronta il tuo progresso con quello dei link degli altri"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Aggiungi il tuo progresso quando le informazioni di un'impresa mostrate sono quelle di un altro giocatore."
 L["OPT_SHOWPROGRESS_TIP"] = "Aggiungi il tuo progresso quando un'impresa ha dei criteri basati sulle quantità, come \"Ottieni 10 cavalcature.\""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_BONUS_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_DUNGEON_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE"] = ""
---Translation missing 
--- L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_BONUS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_DUNGEON_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_STARTTOAST_TIMEFADE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Indica le ricette non cucinate per completare le imprese"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Se il modulo del commercio Overachiever è abilitata, l'icona appare accanto al risultato ricette che è necessario per cucinare, al fine di ottenere obiettivi determinati. Se questa opzione è selezionata, queste icone apparirà accanto alle ricette crudi, anche se il risultato associato è completa."
 L["OPT_TURKEYLURKEYTIPS"] = "Usare il fucile sul tacchino?"
 L["OPT_TURKEYLURKEYTIPS_TIP"] = "Se l'impresa non è completata, aggiungere una riga al tooltip del giocatore per indicare se è necessario utilizzare il vostro fucile tacchino su di loro."
 L["OPT_UI_HOLIDAYNOTICE"] = "Mostra avviso se è attivo un evento festivo"
 L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = "Solo nella scheda Suggerimenti"
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""
---Translation missing 
--- L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""
---Translation missing 
--- L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""
---Translation missing 
--- L["OPT_UI_REQUIREDFORMETATIP"] = ""
---Translation missing 
--- L["OPT_UI_REQUIREDFORMETATIP_TIP"] = ""
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_HOLIDAYNOTICE_TIP2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_PROGRESSIFOTHERCOMPLETED_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_REQUIREDFORMETATIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_UI_REQUIREDFORMETATIP_TIP"] = ""--]] 
 L["OPT_UI_SERIESTIP"] = "Mostra tooltip per le imprese che fanno parte di una serie"
 L["OPT_UI_SERIESTIP_TIP"] = "Quando il cursore è su un'impresa che fa parte di una serie, mostra i nomi delle altre della serie e la relazione con loro."
 L["OPT_WELLREADTIPS"] = "Libro letto?"
@@ -2673,10 +2923,10 @@ L["PROGRESSIFOTHERCOMPLETED"] = "Progresso di %s:"
 L["RECENTREMINDERCRITERIA"] = "Obiettivi recentemente individuati:"
 L["REQUIREDFORMETATIP"] = "Richiesto per:"
 L["SERIESTIP"] = "Parte di una serie:"
---Translation missing 
--- L["SOUND_AGGRO_PULLED"] = ""
---Translation missing 
--- L["SOUND_AGGRO_WARNING"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_PULLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_AGGRO_WARNING"] = ""--]] 
 L["SOUND_ALARM1"] = "Allarme 1"
 L["SOUND_ALARM2"] = "Allarme 2"
 L["SOUND_ALARM3"] = "Allarme 3"
@@ -2685,36 +2935,37 @@ L["SOUND_BELL_AUCTION"] = "Campane Casa d'Aste"
 L["SOUND_BELL_BOATARRIVED"] = "Campane - Arrivo Nave"
 L["SOUND_BELL_HORDE"] = "Campana - Orda"
 L["SOUND_BELL_KARA"] = "Campana Karazhan"
---Translation missing 
--- L["SOUND_BELL_MELLOW"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_BELL_MELLOW"] = ""--]] 
 L["SOUND_BELL_NIGHTELF"] = "Campan - Elfo della Notte"
---Translation missing 
--- L["SOUND_BGTIMER"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_BGTIMER"] = ""--]] 
 L["SOUND_DING_AUCTION"] = "Campana - Asta"
 L["SOUND_DRUMHIT"] = "Colpo di Tamburo"
---Translation missing 
--- L["SOUND_ENTERQUEUE"] = ""
---Translation missing 
--- L["SOUND_GARRISON_INVASION"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_ENTERQUEUE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_GARRISON_INVASION"] = ""--]] 
 L["SOUND_GLYPH_CREATE_MAJOR"] = "Crea Glifo Maggiore"
 L["SOUND_GLYPH_CREATE_MINOR"] = "Crea Glifo Minore"
 L["SOUND_GLYPH_DESTROY_MAJOR"] = "Distruggi Glifo Maggiore"
 L["SOUND_GLYPH_DESTROY_MINOR"] = "Distruggi Glifo Minore"
 L["SOUND_GONG_TROLL"] = "Gong - Troll"
---Translation missing 
--- L["SOUND_HEARTHBIND"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_HEARTHBIND"] = ""--]] 
 L["SOUND_MAP_PING"] = "Bling Mappa"
---Translation missing 
--- L["SOUND_MEDAL_EXPIRES"] = ""
---Translation missing 
--- L["SOUND_SIMON_DING"] = ""
+--[[Translation missing --]]
+--[[ L["SOUND_MEDAL_EXPIRES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SOUND_SIMON_DING"] = ""--]] 
 L["SOUND_SIMON_STARTGAME"] = "Inizio Gioco Simon"
 L["SOUND_SIMON_STARTLEVEL"] = "Inizio Livello Simon"
 L["SOUND_YAR"] = "Arrrr"
---Translation missing 
--- L["STARTTOAST_EVENT"] = ""
+--[[Translation missing --]]
+--[[ L["STARTTOAST_EVENT"] = ""--]] 
 L["WILDPET"] = "Mascotte Selvatica"
 L["YOURPROGRESS"] = "Il tuo progresso"
+
 
 
 end

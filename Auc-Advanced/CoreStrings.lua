@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Auctioneer
-	Revision: $Id: CoreStrings.lua 5684 2016-10-28 18:21:28Z brykrys $
-	Version: 7.5.5714 (TasmanianThylacine)
+	Revision: $Id: CoreStrings.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 7.7.6112 (SwimmingSeadragon)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -1039,7 +1039,9 @@ AuctioneerLocalizations = {
 		["SHTG_HelpTooltip_EnableHistogram"]	= "Erlaubt Histogram Preisdaten zu sammeln und wiederzugeben";
 		["SHTG_HelpTooltip_MultiplyStack"]	= "Multipliziert mit der aktuellen Stapelgröße, wenn aktiviert";
 		["SHTG_HelpTooltip_ShowHistogramTooltips"]	= "Schaltet die Anzeige der Statistiken aus dem Histogram-Modul ein oder aus";
+		["SIMP_HelpTooltip_CombinedAverage"]	= "Schaltet  die Anzeige des kombinierten Durschnitts des einfachen Moduls ein oder aus";
 		["SIMP_HelpTooltip_EnableSimpleStats"]	= "Erlaubt Simple-Stats Preisdaten zu sammeln und wiederzugeben";
+		["SIMP_HelpTooltip_Fallback"]	= "Wenn keine Preisinformation für dieses bestimmte Item vorhanden ist, benutze den Preis für das Basisitem wenn vorhanden";
 		["SIMP_HelpTooltip_LongerAverage"]	= "Gibt längere Durchschnittswerte (7-Tage, oder sogar 14-Tage) für Gegenstände mit kleiner Stückzahl zurück";
 		["SIMP_HelpTooltip_MinBuyout"]	= "Schaltet die Anzeige des minimalen Sofortkaufs des Simple-Moduls ein oder aus";
 		["SIMP_HelpTooltip_MinBuyoutAverage"]	= "Schaltet die Anzeige des durchschnittlichen minimalen Sofortkaufs des Simple-Moduls ein oder aus";
@@ -1458,7 +1460,7 @@ AuctioneerLocalizations = {
 		["ADV_Tooltip_HourDepositCost"]	= "%dhr Gebühr";
 		["ADV_Tooltip_NotAvailable"]	= "nicht verfügbar";
 		["ADV_Tooltip_SeenBrackets"]	= "%s mal gesehen";
-		["ADV_Tooltip_UnknownDepositCost"]	= "weiß keine Höhe der Gebühr";
+		["ADV_Tooltip_UnknownDepositCost"]	= "unbekannte Höhe der Gebühr";
 		["APPR_Tooltip_AppraiserCurModel"]	= "Appraiser ({{%s}}x{{%s}})";
 		["APPR_Tooltip_PostedCount"]	= "%2d eingestellt zu avg/ea %s";
 		["APPR_Tooltip_StartingBid"]	= "Startgebot x {{%d}}";
@@ -1501,9 +1503,11 @@ AuctioneerLocalizations = {
 		["SIMP_Tooltip_3DayAverage"]	= "3-Tages-Mittel";
 		["SIMP_Tooltip_7DayAverage"]	= "7-Tages-Mittel";
 		["SIMP_Tooltip_AverageMBO"]	= "Durchschnitts-MBO";
+		["SIMP_Tooltip_CombinedAverage"]	= "gemeinsamer Durschnitt";
 		["SIMP_Tooltip_SeenNumberDays"]	= "{{%s}} gesehen über {{%s}} Tage:";
 		["SIMP_Tooltip_SeenToday"]	= "{{%s}} heute gesehen:";
 		["SIMP_Tooltip_SimplePrices"]	= "Einfache Preise:";
+		["SIMP_Tooltip_StdDev"]	= "Standardabweichung";
 		["SIMP_Tooltip_TodaysMBO"]	= "Heutiger Tagestiefstpreis";
 		["UCUT_Tooltip_CannotUndercut"]	= "Unterbieten: %s Kann nicht unterbieten";
 		["UCUT_Tooltip_CompetitionAbove"]	= "Unterbieten: %s Konkurrenz über Markt";
@@ -6341,14 +6345,16 @@ AuctioneerLocalizations = {
 		["SHTG_Tooltip_Median"]	= "mediano:";
 		["SHTG_Tooltip_Precision"]	= "precisão:";
 		["SHTG_Tooltip_Prices"]	= "Histograma preços x {{%s}}) : (visto {{%s}})";
-		["SHTG_Tooltip_PricesSeenOnce"]	= "Histogram prices: (seen {{%s}}) \nHistograma preços:(visto {{%s}})";
+		["SHTG_Tooltip_PricesSeenOnce"]	= "Histograma de preços:(visto {{%s}})";
 		["SIMP_Tooltip_14DayAverage"]	= "média de 14 dias";
 		["SIMP_Tooltip_3DayAverage"]	= "média de 3 dias";
 		["SIMP_Tooltip_7DayAverage"]	= "média de 7 dias";
 		["SIMP_Tooltip_AverageMBO"]	= "Média MBO";
+		["SIMP_Tooltip_CombinedAverage"]	= "Média combinada";
 		["SIMP_Tooltip_SeenNumberDays"]	= "Visto {{%s}} em {{%s}} dias:";
 		["SIMP_Tooltip_SeenToday"]	= "Visto {{%s}} hoje:";
 		["SIMP_Tooltip_SimplePrices"]	= "Preços simples:";
+		["SIMP_Tooltip_StdDev"]	= "Desvio Padrão";
 		["SIMP_Tooltip_TodaysMBO"]	= "AR min de hoje";
 		["UCUT_Tooltip_CannotUndercut"]	= "Pechincha: %s Pechincha impossivel.";
 		["UCUT_Tooltip_CompetitionAbove"]	= "Pechincha: %s Competição acima do mercado";

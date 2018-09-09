@@ -1,42 +1,48 @@
 ------------------------------------------------------------------------
-r46 | thaoky.altoholic@yahoo.com | 2017-09-04 12:26:01 -0500 (Mon, 04 Sep 2017) | 1 line
+r47 | thaoky.altoholic@yahoo.com | 2018-07-22 11:18:31 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.toc
+
+8.0.001 Commit
+------------------------------------------------------------------------
+r46 | thaoky.altoholic@yahoo.com | 2017-09-04 17:26:01 +0000 (Mon, 04 Sep 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Achievements.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r45 | thaoky.altoholic@yahoo.com | 2017-03-29 14:19:14 -0500 (Wed, 29 Mar 2017) | 1 line
+r45 | thaoky.altoholic@yahoo.com | 2017-03-29 19:19:14 +0000 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Achievements.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r44 | thaoky | 2016-10-26 13:31:54 -0500 (Wed, 26 Oct 2016) | 1 line
+r44 | thaoky | 2016-10-26 18:31:54 +0000 (Wed, 26 Oct 2016) | 1 line
 Changed paths:
    D /trunk/Libs
 
 Unused
 ------------------------------------------------------------------------
-r43 | thaoky | 2016-10-26 12:46:54 -0500 (Wed, 26 Oct 2016) | 1 line
+r43 | thaoky | 2016-10-26 17:46:54 +0000 (Wed, 26 Oct 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Achievements.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r42 | thaoky | 2016-07-18 11:06:37 -0500 (Mon, 18 Jul 2016) | 1 line
+r42 | thaoky | 2016-07-18 16:06:37 +0000 (Mon, 18 Jul 2016) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/DataStore_Achievements.toc
 
 7.0 Compatibility Release
 ------------------------------------------------------------------------
-r41 | thaoky | 2015-09-12 12:04:10 -0500 (Sat, 12 Sep 2015) | 1 line
+r41 | thaoky | 2015-09-12 17:04:10 +0000 (Sat, 12 Sep 2015) | 1 line
 Changed paths:
    M /trunk/DataStore_Achievements.lua
 
 Fixed Lua error at logon
 ------------------------------------------------------------------------
-r40 | thaoky | 2015-08-17 11:18:04 -0500 (Mon, 17 Aug 2015) | 2 lines
+r40 | thaoky | 2015-08-17 16:18:04 +0000 (Mon, 17 Aug 2015) | 2 lines
 Changed paths:
    M /trunk/DataStore_Achievements.lua
    M /trunk/DataStore_Achievements.toc
@@ -44,14 +50,14 @@ Changed paths:
 TOC Update
 Fixed an issue where an earned achievement was not immediately saved to the DB, and was only read at next login.
 ------------------------------------------------------------------------
-r39 | thaoky | 2015-02-25 12:22:05 -0600 (Wed, 25 Feb 2015) | 1 line
+r39 | thaoky | 2015-02-25 18:22:05 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/DataStore_Achievements.toc
 
 6.1.001 Commit
 ------------------------------------------------------------------------
-r38 | thaoky | 2014-12-27 07:08:22 -0600 (Sat, 27 Dec 2014) | 1 line
+r38 | thaoky | 2014-12-27 13:08:22 +0000 (Sat, 27 Dec 2014) | 1 line
 Changed paths:
    M /trunk/DataStore_Achievements.lua
 

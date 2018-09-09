@@ -1,12 +1,48 @@
-tag 235e3b5a2890f9196dbb8883396ac668d68c76ee 7.3.21
+tag 80208c25b9bb94828605347779bf5b1adb6aba20 8.0.21
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Sun Sep 3 14:49:15 2017 +0200
+Date:	Mon Jul 16 18:56:16 2018 +0200
 
-Tagging for release of 7.3.21
+Tagging for release of version 8.0.21
 
-commit 8a23030e1e7a543dc4ad0956585f35a0800899d7
+commit cdd6c44d54ebc1c4bc4f186d779da634827a8934
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Sun Sep 3 12:29:24 2017 +0200
+Date:   Mon Jun 25 23:30:22 2018 +0200
 
-    Updated TOC
+    Update durations of aspects
+
+commit ed17717070bb62be58b4ea91c79d4f050c71e6c5
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon Jun 25 23:10:30 2018 +0200
+
+    Adapt to spellcat event changes
+
+commit 49a421d254f9f76a9646b0868b99813192f3573e
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon May 7 12:04:36 2018 +0200
+
+    Change anchor point for auto positionning
+
+commit 224e126b8ae325fea86f06cb6acbc8de87647d7c
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon May 7 11:10:11 2018 +0200
+
+    Use FloLib_UnitHasBuff function
+
+commit 796a97a02f2c263c213873c95d429f25c3d73dc3
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon May 7 11:09:55 2018 +0200
+
+    Add FloLib_UnitHasBuff function
+
+commit fee719fde7df64a0b154bf597bcb9a02c13d72bb
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon May 7 10:40:35 2018 +0200
+
+    Rename Templates to avoid name collision
+
+commit 7164474719136172d10e1c5a841edc7762ea79f9
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon May 7 10:32:17 2018 +0200
+
+    Update toc version to 8.0
 

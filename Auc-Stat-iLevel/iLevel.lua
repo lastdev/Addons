@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - iLevel Standard Deviation Statistics module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: iLevel.lua 5540 2015-01-21 21:13:48Z brykrys $
+	Version: 7.7.6087 (SwimmingSeadragon)
+	Revision: $Id: iLevel.lua 6087 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -50,7 +50,7 @@ local ResolveServerKey = AucAdvanced.ResolveServerKey
 local GetServerKeyText = AucAdvanced.GetServerKeyText
 
 local KEEP_NUM_POINTS = 250
-local DATABASE_VERSION = 2.0
+local DATABASE_VERSION = 3
 
 -- Constants used when creating a PDF:
 local BASE_WEIGHT = 0.2 -- iLevel starts with a lower weight than most other Stat modules
@@ -96,9 +96,6 @@ end
 function lib.Processors.scanstats()
 	private.ResetCache()
 	private.RepackStats()
-end
-function lib.Processors.gameactive()
-	if private.LookForOldData then private.LookForOldData() end
 end
 
 lib.ScanProcessors = {}
@@ -454,48 +451,22 @@ function private.UpgradeDB()
 
 	if saved and saved.Version == DATABASE_VERSION then return end
 
+	local _,_,_,wowversion = GetBuildInfo()
+	if wowversion >= 80000 then
+		-- WoW 8.0 Stat Wipe
+		-- due to the iLevel squish all stats from before WoW 8.0 are invalid
+		AucAdvancedStat_iLevelData = {
+			Version = DATABASE_VERSION,
+			RealmData = {}
+		}
+		return
+	end
+
+	if saved and saved.Version == 2 then return end
 	AucAdvancedStat_iLevelData = {
-		Version = DATABASE_VERSION,
+		Version = 2,
 		RealmData = {}
 	}
-
-	if saved and not saved.Version then
-		-- original version: should be a table with simple format [serverKey] = {<data>}
-		-- used old-style serverKeys; we want to upgrade to new-style
-		-- internal format of {<data>} is unchanged
-
-		for serverKey, data in pairs(saved) do
-			if type(data) ~= "table" or not next(data) then -- don't keep invalid entries or empty tables
-				saved[serverKey] = nil
-			else
-				local realm, faction = AucAdvanced.SplitServerKey(serverKey)
-				if not realm or faction == "Neutral" then -- don't keep invalid or neutral (old style) serverKeys
-					saved[serverKey] = nil
-				end
-			end
-		end
-
-		if next(saved) then
-			AucAdvancedStat_iLevelData.OldRealmData = saved
-			saved.expires = time() + 1209600 -- 60 * 60 * 24 * 14 = 14 days
-		end
-	end
-end
-
-function private.LookForOldData()
-	private.LookForOldData = nil
-
-	local oldrealms = AucAdvancedStat_iLevelData.OldRealmData
-	if not oldrealms then return end
-
-	local newKey = Resources.ServerKey
-	if  not ILRealmData[newKey] then
-		-- prefer home faction, but use opposing if no home data
-		ILRealmData[newKey] = oldrealms[Resources.ServerKeyHome] or oldrealms[Resources.ServerKeyOpposing]
-	end
-
-	oldrealms[Resources.ServerKeyHome] = nil
-	oldrealms[Resources.ServerKeyOpposing] = nil
 end
 
 function lib.ClearData(serverKey)
@@ -649,4 +620,4 @@ function private.PackStats(data)
 	return concat(tmp, ",", 1, ntmp)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5540 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Stat-iLevel/iLevel.lua $", "$Rev: 6087 $")

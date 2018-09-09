@@ -20,6 +20,7 @@ local function GetFactionTotals(f, line)
 	local money = 0
 	local played = 0
 	
+	-- to fix : this does not take filters into account !
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do
 		if DataStore:GetCharacterFaction(character) == f then
 			level = level + DataStore:GetCharacterLevel(character)
@@ -42,23 +43,40 @@ local function ShowTotals(frame)
 	local aLevels, aMoney, aPlayed = GetFactionTotals("Alliance", line)
 	local hLevels, hMoney, hPlayed = GetFactionTotals("Horde", line)
 	
-	tt:AddLine(" ",1,1,1)
-	tt:AddDoubleLine(colors.white..L["Levels"] , format("%s|r (%s %s|r, %s %s|r)", 
-		addon.Characters:GetField(line, "level"),
-		TEXTURE_ALLIANCE, colors.white..aLevels,
-		TEXTURE_HORDE, colors.white..hLevels))
 	
-	tt:AddLine(" ",1,1,1)
-	tt:AddDoubleLine(colors.white..MONEY, format("%s|r (%s %s|r, %s %s|r)", 
-		addon:GetMoneyString(addon.Characters:GetField(line, "money"), colors.white, true),
-		TEXTURE_ALLIANCE, addon:GetMoneyString(aMoney, colors.white, true),
-		TEXTURE_HORDE, addon:GetMoneyString(hMoney, colors.white, true)))
+	tt:AddLine(" ")
+	tt:AddDoubleLine(format("%s%s", colors.white, L["Levels"]), format("%s%s", colors.white, addon.Characters:GetField(line, "level")))
+	tt:AddDoubleLine(TEXTURE_ALLIANCE, format("%s%s", colors.white, aLevels))
+	tt:AddDoubleLine(TEXTURE_HORDE, format("%s%s", colors.white, hLevels))
 	
-	tt:AddLine(" ",1,1,1)
-	tt:AddDoubleLine(colors.white..PLAYED , format("%s|r (%s %s|r, %s %s|r)",
-		addon.Characters:GetField(line, "played"),
-		TEXTURE_ALLIANCE, addon:GetTimeString(aPlayed),
-		TEXTURE_HORDE, addon:GetTimeString(hPlayed)))
+	tt:AddLine(" ")
+	tt:AddDoubleLine(format("%s%s", colors.white, MONEY), addon:GetMoneyString(addon.Characters:GetField(line, "money")))
+	tt:AddDoubleLine(TEXTURE_ALLIANCE, addon:GetMoneyString(aMoney, colors.white))
+	tt:AddDoubleLine(TEXTURE_HORDE, addon:GetMoneyString(hMoney, colors.white))
+	
+	tt:AddLine(" ")
+	tt:AddDoubleLine(format("%s%s", colors.white, PLAYED), addon.Characters:GetField(line, "played"))
+	tt:AddDoubleLine(TEXTURE_ALLIANCE, addon:GetTimeString(aPlayed))
+	tt:AddDoubleLine(TEXTURE_HORDE, addon:GetTimeString(hPlayed))
+	
+	
+	-- tt:AddLine(" ",1,1,1)
+	-- tt:AddDoubleLine(colors.white..L["Levels"] , format("%s|r (%s %s|r, %s %s|r)", 
+		-- addon.Characters:GetField(line, "level"),
+		-- TEXTURE_ALLIANCE, colors.white..aLevels,
+		-- TEXTURE_HORDE, colors.white..hLevels))
+	
+	-- tt:AddLine(" ",1,1,1)
+	-- tt:AddDoubleLine(colors.white..MONEY, format("%s|r (%s %s|r, %s %s|r)", 
+		-- addon:GetMoneyString(addon.Characters:GetField(line, "money"), colors.white, true),
+		-- TEXTURE_ALLIANCE, addon:GetMoneyString(aMoney, colors.white, true),
+		-- TEXTURE_HORDE, addon:GetMoneyString(hMoney, colors.white, true)))
+	
+	-- tt:AddLine(" ",1,1,1)
+	-- tt:AddDoubleLine(colors.white..PLAYED , format("%s|r (%s %s|r, %s %s|r)",
+		-- addon.Characters:GetField(line, "played"),
+		-- TEXTURE_ALLIANCE, addon:GetTimeString(aPlayed),
+		-- TEXTURE_HORDE, addon:GetTimeString(hPlayed)))
 	
 	tt:Show()
 end

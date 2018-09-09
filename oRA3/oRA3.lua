@@ -65,10 +65,28 @@ function util.inTable(t, value, subindex)
 	return nil
 end
 
+do
+	local UnitName = UnitName
+	--- Get the full name of a unit.
+	-- @param unit unit token or name
+	-- @return unit name with the server appended if appropriate
+	function addon:UnitName(unit)
+		local name, server = UnitName(unit)
+		if not name then
+			return
+		elseif server and server ~= "" then
+			name = name .."-".. server
+		end
+		return name
+	end
+end
+
 -- Locals
 
-local playerName = UnitName("player")
+local playerName = addon:UnitName("player")
 local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
+local SendAddonMessage = C_ChatInfo.SendAddonMessage
+local PlaySound, IsInGroup = PlaySound, IsInGroup
 
 local guildMemberList = {} -- Name:RankIndex
 local guildRanks = {} -- Index:RankName
@@ -250,7 +268,7 @@ function addon:OnInitialize()
 	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, "oRA")
 
 	-- Comm register
-	RegisterAddonMessagePrefix("oRA")
+	C_ChatInfo.RegisterAddonMessagePrefix("oRA")
 
 	-- callbackhandler for comm
 	self.callbacks = CallbackHandler:New(self)
@@ -377,24 +395,6 @@ end
 do
 	local playerCache = {}
 
-	local function guidToUnit(guid)
-		local info = playerCache[guid]
-		if info and UnitGUID(info.unit) == guid then
-			return info.unit
-		end
-
-		local token = IsInRaid() and "raid%d" or "party%d"
-		for i = 1, GetNumGroupMembers() do
-			local unit = token:format(i)
-			if UnitGUID(unit) == guid then
-				return unit
-			end
-		end
-		if UnitGUID("player") == guid then
-			return "player"
-		end
-	end
-
 	function addon:OnGroupJoined()
 		for guid, info in next, playerCache do
 			-- check for stale entries
@@ -404,22 +404,24 @@ do
 			end
 		end
 		self:OnGroupChanged()
-		LGIST:Rescan() -- requeue previously inspected players
+		self:ScheduleTimer("InspectGroup", 10) -- delayed refresh for LFG groups
 	end
 
 	function addon:OnGroupChanged()
-		for _, player in next, groupMembers do
-			local guid = UnitGUID(player)
-			local _, class = UnitClass(player)
-			if guid and not playerCache[guid] and class then
-				local unit = guidToUnit(guid) or ""
+		local token = IsInRaid() and "raid%d" or "party%d"
+		for i = 1, GetNumGroupMembers() do
+			local unit = token:format(i)
+			local guid = UnitGUID(unit)
+			local _, class = UnitClass(unit)
+			if not playerCache[guid] and class then
+				local _, race = UnitRace(unit)
 				playerCache[guid] = {
 					guid = guid,
-					unit = unit,
-					name = player,
+					name = self:UnitName(unit),
 					class = class,
-					level = UnitLevel(player),
-					glyphs = {},
+					race = race,
+					level = UnitLevel(unit),
+					unit = unit,
 					talents = {},
 				}
 				-- initial update with no inspect info
@@ -434,24 +436,19 @@ do
 		if not playerCache[guid] then
 			playerCache[guid] = {
 				guid = guid,
-				unit = "",
-				glyphs = {},
+				class = info.class,
+				race = info.race,
 				talents = {},
 			}
 		end
 		local cache = playerCache[guid]
 		cache.name = info.name
-		cache.class = info.class
 		cache.level = UnitLevel(unit)
-		cache.unit = unit ~= "player" and unit or guidToUnit(guid) or ""
+		cache.unit = unit
 
 		if info.global_spec_id and info.global_spec_id > 0 then
 			cache.spec = info.global_spec_id
 
-			wipe(cache.glyphs)
-			for spellId in next, info.glyphs do
-				cache.glyphs[spellId] = true
-			end
 			wipe(cache.talents)
 			for talentId, talentInfo in next, info.talents do
 				-- easier to look up by index than to try and check multiple talent spell ids
@@ -471,8 +468,8 @@ do
 		self.callbacks:Fire("OnPlayerInspect", guid, unit)
 	end
 
-	function addon:InspectGroup()
-		LGIST:Rescan()
+	function addon:InspectGroup(guid)
+		LGIST:Rescan(guid)
 	end
 
 	function addon:GetPlayerInfo(guid)
@@ -564,8 +561,7 @@ do
 		elseif IsInGroup() then
 			tinsert(tmpGroup, playerName)
 			for i = 1, 4 do
-				local n,s = UnitName(("party%d"):format(i))
-				if s and s ~= "" then n = n.."-"..s end
+				local n = self:UnitName(("party%d"):format(i))
 				if n then tmpGroup[#tmpGroup + 1] = n end
 			end
 		end

@@ -64,7 +64,7 @@
 				</KeyValues>
 			</ScrollFrame>
 			
-			<EditBox parentKey="MinLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
+			<EditBox parentKey="MinLevel" letters="3" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="RIGHT" x="10" y="0" />
@@ -75,7 +75,7 @@
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
-			<EditBox parentKey="MaxLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
+			<EditBox parentKey="MaxLevel" letters="3" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent.MinLevel" relativePoint="RIGHT" x="12" y="0" />

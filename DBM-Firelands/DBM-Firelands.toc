@@ -1,5 +1,5 @@
-﻿## Interface: 70300
-## X-Min-Interface: 50001
+﻿## Interface: 80000
+## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Firelands|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Feuerlande|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Tierras de Fuego|r
@@ -26,7 +26,7 @@
 ## X-DBM-Mod-Name-zhCN: 火焰之地
 ## X-DBM-Mod-Name-frFR: Terres de Feu
 ## X-DBM-Mod-Name-ptBR: Terras do Fogo
-## X-DBM-Mod-Sort: 301
+## X-DBM-Mod-Sort: 802
 ## X-DBM-Mod-MapID: 720,951
 ## X-DBM-Mod-MinCoreRevision: 14002
 localization.en.lua

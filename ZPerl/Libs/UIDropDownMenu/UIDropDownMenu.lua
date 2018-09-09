@@ -4,7 +4,7 @@
 -- ----------------------------------------------------------------------------
 local _G = getfenv(0)
 local strsub, strlen, strmatch, gsub = strsub, strlen, strmatch, gsub
-local max, match = max, match
+local max = max
 local securecall, issecure = securecall, issecure
 local tonumber = tonumber
 local type = type

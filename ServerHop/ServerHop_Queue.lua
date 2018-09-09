@@ -99,7 +99,7 @@ local function MakeQueueFrame(index)
 			self:Hide()
 			local id, appStatus, pendingStatus, appDuration, role = C_LFGList.GetApplicationInfo(self.result);
 			if appStatus == "applied" or pendingStatus == "applied" then
-				PlaySound("igMainMenuOptionCheckBoxOn")
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 				C_LFGList.CancelApplication(self.result)
 			elseif pendingStatus == "invited" or appStatus == "invited" then
 				LFGListInviteDialog.DeclineButton:Click()

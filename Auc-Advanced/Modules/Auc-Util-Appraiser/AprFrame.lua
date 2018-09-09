@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: AprFrame.lua 5704 2017-02-07 10:30:31Z brykrys $
+	Version: 7.7.6065 (SwimmingSeadragon)
+	Revision: $Id: AprFrame.lua 6065 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -1921,7 +1921,7 @@ function private.CreateFrames()
 	frame.itembox.showAuctions:SetScript("OnClick", function(self)
 		frame.showAuctions = self:GetChecked()
 		frame.GenerateList(true)
-		PlaySound(frame.showAuctions and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff");
+		PlaySound(frame.showAuctions and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
 	end)
 
 	-- "Show Hidden" checkbox
@@ -1936,7 +1936,7 @@ function private.CreateFrames()
 	frame.itembox.showHidden:SetScript("OnClick", function(self)
 		frame.showHidden = self:GetChecked()
 		frame.GenerateList(true)
-		PlaySound(frame.showHidden and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff");
+		PlaySound(frame.showHidden and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
 	end)
 
 	-- "Show:" label
@@ -2979,4 +2979,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5704 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 6065 $")

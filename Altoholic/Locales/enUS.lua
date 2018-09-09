@@ -363,6 +363,7 @@ L["Fireworks Pack"] = true
 L["First Prize"] = true
 L["Fishing"] = true
 L["Fishing Extravaganza"] = true
+L["Fishing Masters"] = true
 L["Fishing Poles"] = true
 L["Flame Cap"] = true
 L["Flame Guard"] = true

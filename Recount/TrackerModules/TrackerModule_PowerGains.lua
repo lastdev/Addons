@@ -3,7 +3,7 @@ local Recount = _G.Recount
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 
-local revision = tonumber(string.sub("$Revision: 1386 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1453 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -63,7 +63,7 @@ local PowerTypeName = { -- Elsia: Do NOT localize this, it breaks functionality!
 	[POWERTYPE_PAIN] = "Pain",
 }
 
-function Recount:SpellEnergize(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags,spellId, spellName, spellSchool, amount, powerType)
+function Recount:SpellEnergize(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overEnergized, powerType)
 	Recount:AddGain(dstName, srcName, spellName, amount, PowerTypeName[powerType], dstGUID, dstFlags, srcGUID, srcFlags, spellId)
 end
 
@@ -123,14 +123,14 @@ function Recount:AddGain(source, victim, ability, amount, attribute,srcGUID,srcF
 	if srcRetention then
 
 		if not dbCombatants[source] then
-			Recount:AddCombatant(source,sourceowner,srcGUID,srcFlags,sourceownerID)
+			Recount:AddCombatant(source, sourceowner, srcGUID, srcFlags, sourceownerID)
 		end -- Elsia: Until here is if pets heal anybody.
 		local sourceData = dbCombatants[source]
 		Recount:SetActive(sourceData)
 
 		Recount:AddAmount(sourceData,DataAmount,amount)
-		Recount:AddTableDataSum(sourceData,DataTable,ability,victim,amount)
-		Recount:AddTableDataSum(sourceData,DataTable2,victim,ability,amount)
+		Recount:AddTableDataSum(sourceData, DataTable, ability, victim, amount)
+		Recount:AddTableDataSum(sourceData, DataTable2, victim, ability, amount)
 	end
 end
 

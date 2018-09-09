@@ -61,8 +61,4 @@ L["Veiled Wyrmtongue Chest"] = "Veiled Wyrmtongue Chest"
 L["What to display"] = "What to display"
 L["Wyrmtongue Chest"] = "Wyrmtongue Chest"
 
--- ToC
-L["Description"] = "Shows the POIs in Broken Shore"
-L["Title"] = "HandyNotes - Broken Shore"
-
 end

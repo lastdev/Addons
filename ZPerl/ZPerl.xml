@@ -13,7 +13,7 @@
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="XPerl_MinitmapButton_Icon" file="Interface\Icons\INV_Misc_Gem_Pearl_02">
+				<Texture name="XPerl_MinimapButton_Icon" file="Interface\Icons\INV_Misc_Gem_Pearl_02">
 					<Size>
 						<AbsDimension x="21" y="21"/>
 					</Size>
@@ -57,10 +57,10 @@
 				GameTooltip:Hide()
 			</OnLeave>
 			<OnMouseDown>
-				XPerl_MinitmapButton_Icon:SetTexCoord(0,1,0,1)
+				XPerl_MinimapButton_Icon:SetTexCoord(0,1,0,1)
 			</OnMouseDown>
 			<OnMouseUp>
-				XPerl_MinitmapButton_Icon:SetTexCoord(.075,.925,.075,.925)
+				XPerl_MinimapButton_Icon:SetTexCoord(.075,.925,.075,.925)
 			</OnMouseUp>
 			<OnDragStart>
 				self.dragging = true
@@ -69,12 +69,12 @@
 			<OnDragStop>
 				self.dragging = false
 				self:SetScript("OnUpdate", XPerl_MinimapButton_OnUpdate)
-				XPerl_MinitmapButton_Icon:SetTexCoord(.075,.925,.075,.925)
+				XPerl_MinimapButton_Icon:SetTexCoord(.075,.925,.075,.925)
 			</OnDragStop>
 			<OnClick>
 				--XPerl_Toggle()
 				XPerl_MinimapButton_OnClick(self, button)
-				XPerl_MinitmapButton_Icon:SetTexCoord(.075,.925,.075,.925)
+				XPerl_MinimapButton_Icon:SetTexCoord(.075,.925,.075,.925)
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -101,8 +101,8 @@
 		<Anchors>
 			<Anchor point="TOP"/>
 		</Anchors>
-		<Scripts>
+		<!--<Scripts>
 			<OnLoad function="XPerl_GenericDropDown_OnLoad"/>
-		</Scripts>
+		</Scripts>-->
 	</Frame>
 </Ui>

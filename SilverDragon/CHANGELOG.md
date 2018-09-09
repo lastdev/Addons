@@ -1,7 +1,52 @@
 # Changelog
 
-## Changed in v4.0.2
+## Changed in v4.0.13
+* Extend the range of vignettes on your minimap, so we don't keep on alerting for things without giving you any clue as to where they are.
+* Questids added for (almost) all the BfA Adventurer mobs
 
+## Changed in v4.0.12
+* Adventurer achievements for BfA, to track whether you've killed those mobs already
+* Bad mapids: Isle of Thunder, Deepholm
+
+## Changed in v4.0.11
+* Bug in a few areas where vignettes exist but don't provide information
+* More Timeless Isle questids
+* Bad map ids in Frostfire Ridge
+* Update embedded version of LibStub-2.0 to fix an error with chat channels
+
+## Changed in v4.0.10
+* Broker tooltip sorts mobs alphabetically
+* Add questid tracking to (most) Timeless Isle mobs
+* Various bad map ids: Vale of Eternal Blossoms, Krasarang Wilds, Ghostlands, Underbelly, Westlands, Blackrock Mountain
+* TomTom integration via HandyNotes was broken
+
+## Changed in v4.0.9
+* Vignettes with different names from their associated mob should now be detected on non-English locales.
+* Elwynn Forest rares were in the wrong zone
+
+## Changed in v4.0.8
+* You Won't Believe This One Simple Trick To Increase Vignette Detection Range!
+* Also, fix for lua error in combat related to vignette positions
+
+## Changed in v4.0.7
+* ...stupid typo in the TOC broke everything.
+
+## Changed in v4.0.6
+* Some map function related issues in BfA.
+
+## Changed in v4.0.5
+* Updated for Battle for Azeroth
+* New option: ignore all mobs in a given module. (E.g. "please shut up about every single Legion rare".)
+* Filled in lots of completion data for the Legion Adventurer achievements
+* Added the Commander of Argus achievement
+* Adjust colors in the dropdown and handynotes: red for not-complete, yellow for partially-complete (quest / achievement), green for fully complete
+
+## Changed in v4.0.3
+* Updated for 7.3
+* Argus mobs
+* Some new backend support for hiding junk rares (i.e. the Treasure Goblins, and some class-specific ones)
+
+## Changed in v4.0.2
 * TOC for 7.2
 * Questids for various world bosses
 

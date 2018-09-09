@@ -1,10 +1,11 @@
 local myname, ns = ...
 
 local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
-local module = core:NewModule("Announce", "AceTimer-3.0", "LibSink-2.0", "LibToast-1.0")
+local module = core:NewModule("Announce", "AceTimer-3.0", "LibSink-2.0")
 local Debug = core.Debug
 
 local LSM = LibStub("LibSharedMedia-3.0")
+local HBD = LibStub("HereBeDragons-2.0")
 
 if LSM then
 	-- Register some media
@@ -56,7 +57,6 @@ function module:OnInitialize()
 	})
 
 	self:SetSinkStorage(self.db.profile.sink_opts)
-	self:DefineSinkToast("Rare seen!", [[Interface\Icons\INV_Misc_Head_Dragon_01]])
 
 	core.RegisterCallback(self, "Seen")
 
@@ -181,9 +181,22 @@ function module:ShouldAnnounce(id, zone, x, y, is_dead)
 	end
 
 	if not self.db.profile.already then
-		local completed, completion_knowable = ns:IsMobComplete(id)
-		if completion_knowable and completed then
-			return
+		-- hide already-completed mobs
+		local quest, achievement = ns:CompletionStatus(id)
+		if quest ~= nil or achievement ~= nil then
+			-- knowable
+			if achievement ~= nil then
+				-- achievement knowable
+				if quest ~= nil then
+					-- quest also knowable
+					return not quest
+				end
+				-- can just fall back on achievement
+				return not achievement
+			else
+				-- just quest knowable
+				return not quest
+			end
 		end
 	end
 
@@ -199,7 +212,7 @@ core.RegisterCallback("SD Announce Sink", "Announce", function(callback, id, zon
 	if source:match("^sync") then
 		local channel, player = source:match("sync:(.+):(.+)")
 		if channel and player then
-			local localized_zone = GetMapNameByID(zone) or UNKNOWN
+			local localized_zone = HBD:GetLocalizedMap(zone) or UNKNOWN
 			source = "by " .. player .. " in your " .. strlower(channel) .. "; " .. localized_zone
 		end
 	end
@@ -207,9 +220,6 @@ core.RegisterCallback("SD Announce Sink", "Announce", function(callback, id, zon
 		source = source .. " @ " .. core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
 	end
 	local prefix = "Rare seen: "
-	if module.db.profile.sink_opts.sink20OutputSink == "LibToast-1.0" then
-		prefix = ""
-	end
 	module:Pour((prefix .. "%s%s (%s)"):format(core:GetMobLabel(id) or UNKNOWN, dead and "... but it's dead" or '', source or ''))
 end)
 

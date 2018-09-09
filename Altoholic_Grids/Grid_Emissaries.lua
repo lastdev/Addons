@@ -27,7 +27,7 @@ local function BuildView()
 	questList = {}
 	view = {}
 	
-	local account, realm = AltoholicTabGrids:GetRealm()
+	--[[local account, realm = AltoholicTabGrids:GetRealm()
 	
 	-- parse the emissary quests
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
@@ -67,7 +67,7 @@ local function BuildView()
 
 	table.sort(view, function(a,b) 
 		return questList[a].timeLeft < questList[b].timeLeft
-	end)
+	end)]]
 end
 
 local callbacks = {

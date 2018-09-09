@@ -51,7 +51,8 @@ local GetItemInfo = SpellFlashCore.GetItemInfo
 
 function SpellFlashCore.SpellName(GlobalSpellID, NoSubName)
 	if type(GlobalSpellID) == "number" then
-		local SpellName, SubName = GetSpellInfo(GlobalSpellID)
+		local SpellName = GetSpellInfo(GlobalSpellID)
+		local SubName = GetSpellSubtext(GlobalSpellID)
 		if not NoSubName and SubName and SubName ~= "" then
 			return SpellName.."("..SubName..")"
 		end
@@ -719,7 +720,8 @@ function SpellFlashCore.Flashable(SpellName, NoMacros)
 	elseif FRAMESREGISTERED and BUTTONSREGISTERED then
 		local SpellName, PlainName = SpellName, SpellName
 		if type(SpellName) == "number" then
-			local name, second = GetSpellInfo(SpellName)
+			local name = GetSpellInfo(SpellName)
+			local second =  GetSpellSubtext(SpellName)
 			if name then
 				PlainName = name
 				if second and second ~= "" then
@@ -773,7 +775,8 @@ function SpellFlashCore.FlashAction(SpellName, color, size, brightness, blink, N
 	elseif FRAMESREGISTERED and BUTTONSREGISTERED then
 		local SpellName, PlainName = SpellName, SpellName
 		if type(SpellName) == "number" then
-			local name, second = GetSpellInfo(SpellName)
+			local name = GetSpellInfo(SpellName)
+			local second =  GetSpellSubtext(SpellName)
 			if name then
 				PlainName = name
 				if second and second ~= "" then
@@ -888,10 +891,7 @@ function SpellFlashCore.FlashPet(SpellName, color, size, brightness, blink)
 		end
 		if type(SpellName) == "string" and SpellName ~= "" then
 			for n = 1, NUM_PET_ACTION_SLOTS do
-				local name, subtext = GetPetActionInfo(n)
-				if subtext and subtext ~= "" then
-					name = name.."("..subtext..")"
-				end
+				local name = GetPetActionInfo(n)
 				if ( a.PetActions[SpellName] or SpellName ) == name then
 					for frame in pairs(ButtonFrames.Pet) do
 						if frame.id then

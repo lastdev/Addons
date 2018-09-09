@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreAPI.lua 5698 2017-01-10 19:57:32Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreAPI.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -1179,12 +1179,7 @@ do -- Store key style 'B'
 end
 
 do -- Auctioneer bonusID handling functions
-	local bonusIDPatterns = {
-		["1"] = "%d+",
-		["2"] = "%d+:%d+",
-		["3"] = "%d+:%d+:%d+",
-		["4"] = "%d+:%d+:%d+:%d+",
-	}
+	local bonusIDPatterns, ParseTail = AucAdvanced.GetBonusIDStringTools()
 	local LookupSuffix, LookupStat, LookupTier, LookupStage = {}, {}, {}, {}
 	local LookupWarforged, LookupSocket, LookupTertiary = {}, {}, {}
 	local LookupTierB = {} -- used by GetBonusIDPropertyB
@@ -1224,36 +1219,16 @@ do -- Auctioneer bonusID handling functions
 		end
 	end
 
-	-- todo: this is a temporary function, in future need to develop a more useable public lib version
 	function private.GetBonuses(s13, s14) -- expects the s13 and s14 results from strsplit, see above
 		if not s14 or s14 == "" or s13 == "" or s13 == 0 then return end
-		-- Code from TipHelper
 		-- s13 contains count of bonusIDs, s14 contains tail of string starting with bonusIDs plus other stuff after
-		-- we need to snip the bonudIDs off the front of s14
+		-- Refer to LibAucsplitBonus.lua in Tiphelper for more info
 		local pattern = bonusIDPatterns[s13]
 		if pattern then -- for small numbers of bonusIDs we can look up a pattern to save time
 			return s14:match(pattern)
 		else
-			-- we have to search for the end of the bonusIDs section within s14
-			-- if there are x bonusIDs, they should have x-1 ':' separators
-			-- look for the position x'th ':' seperator; we want everything before that point
-			local count = tonumber(s13)
-			if not count then -- probably an incomplete or invalid link, but can occur for certain obscure valid links too in 6.2.4
-				return
-			else
-				local found = 0
-				for i = 1, count do
-					found = s14:find(":", found + 1)
-					if not found then break end
-				end
-				if found and found > 0 then
-					return s14:sub(1, found - 1)
-				else
-					return s14:match("([^|]+)")
-				end
-			end
+			return ParseTail(s13, s14)
 		end
-
 	end
 
 	-- Function to identify bonusIDs representing suffixes, and to return a normlized version of that suffix
@@ -1557,5 +1532,5 @@ do
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreAPI.lua $", "$Rev: 5698 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreAPI.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreAPI")

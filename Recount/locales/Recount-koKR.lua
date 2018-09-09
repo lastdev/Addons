@@ -167,8 +167,7 @@ L["Heals"] = "치유량"
 L["Health"] = "체력"
 L["Hide"] = "숨김"
 L["Hide When Not Collecting"] = "수집되지 않을 때 숨김"
---Translation missing 
--- L["Hide While In Pet Battle"] = "Hide While In Pet Battle"
+L["Hide While In Pet Battle"] = "애완동물 전투중 숨김"
 L["Hides the main window"] = "메인창을 숨깁니다."
 L["Hit"] = "일반"
 L["Holy"] = "신성"
@@ -406,8 +405,8 @@ L["Times"] = "시간"
 L["Title"] = "제목"
 L["Title Text"] = "제목 문자"
 L["Toggle"] = "전환"
---Translation missing 
--- L["Toggle merge pets"] = "Toggle merge pets"
+--[[Translation missing --]]
+--[[ L["Toggle merge pets"] = "Toggle merge pets"--]] 
 L["Toggle pause of global data collection"] = "전체적인 데이터 수집 일시 중지 전환"
 L["Toggles sending synchronization messages"] = "동기화 메세지를 보냄"
 L["Toggles the main window"] = "메인창을 표시/숨깁니다."

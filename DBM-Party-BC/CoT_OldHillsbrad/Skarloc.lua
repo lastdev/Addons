@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(539, "DBM-Party-BC", 11, 251)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17862)
 mod:SetEncounterID(1907)
 
@@ -17,14 +17,15 @@ mod:RegisterEventsInCombat(
 
 local warnHammer                = mod:NewTargetAnnounce(13005, 2)
 
-local specWarnHeal				= mod:NewSpecialWarningInterrupt(29427, "HasInterrupt")
-local specWarnConsecration		= mod:NewSpecialWarningMove(38385)
+local specWarnHeal				= mod:NewSpecialWarningInterrupt(29427, "HasInterrupt", nil, nil, 1, 2)
+local specWarnConsecration		= mod:NewSpecialWarningMove(38385, nil, nil, nil, 1, 2)
 
-local timerHammer               = mod:NewTargetTimer(6, 13005)
+local timerHammer               = mod:NewTargetTimer(6, 13005, nil, nil, nil, 3)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 29427 then
 		specWarnHeal:Show(args.sourceName)
+		specWarnHeal:Play("kickcast")
 	end
 end
 
@@ -44,6 +45,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 38385 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnConsecration:Show()
+		specWarnConsecration:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

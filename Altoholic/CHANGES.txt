@@ -1,5 +1,142 @@
 ------------------------------------------------------------------------
-r183 | thaoky.altoholic@yahoo.com | 2017-09-04 12:34:19 -0500 (Mon, 04 Sep 2017) | 1 line
+r189 | thaoky.altoholic@yahoo.com | 2018-08-15 14:32:15 +0000 (Wed, 15 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryIcon.lua
+   M /trunk/changelog.txt
+
+8.0.006 Commit
+------------------------------------------------------------------------
+r188 | thaoky.altoholic@yahoo.com | 2018-08-12 13:23:06 +0000 (Sun, 12 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Loots.lua
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.lua
+   M /trunk/Modules/Altoholic_Agenda/Frames/Calendar.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Search/TabSearch.xml
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Templates/SummaryPaneRow.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+8.0.005 Commit
+------------------------------------------------------------------------
+r187 | thaoky.altoholic@yahoo.com | 2018-08-08 17:26:43 +0000 (Wed, 08 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.xml
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.xml
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Summary/Characters.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhCN.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhTW.lua
+   M /trunk/Services/Formatter.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+8.0.004 Commit
+------------------------------------------------------------------------
+r186 | thaoky.altoholic@yahoo.com | 2018-08-05 13:05:58 +0000 (Sun, 05 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.xml
+   M /trunk/Core.lua
+   M /trunk/Events.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.xml
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.lua
+   M /trunk/Modules/Altoholic_Characters/Templates/RecipeRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/UITemplates.xml
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Characters.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.xml
+   M /trunk/Modules/Altoholic_Summary/Templates/TabSummaryIcon.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+8.0.003 Commit
+------------------------------------------------------------------------
+r185 | thaoky.altoholic@yahoo.com | 2018-07-24 17:49:48 +0000 (Tue, 24 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/Events.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Agenda/Frames/Calendar.lua
+   M /trunk/Modules/Altoholic_Agenda/Frames/CalendarEventList.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.xml
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Emissaries.lua
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Search/Search.xml
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/changelog.txt
+
+8.0.002 Commit
+------------------------------------------------------------------------
+r184 | thaoky.altoholic@yahoo.com | 2018-07-22 11:31:26 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Loots.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.lua
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Spellbook.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Talents.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/QuestLogRow.xml
+   M /trunk/Modules/Altoholic_Characters/Templates/SpellButton.lua
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Sets.lua
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhCN.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhTW.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.xml
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+8.0.001 Commit
+------------------------------------------------------------------------
+r183 | thaoky.altoholic@yahoo.com | 2017-09-04 17:34:19 +0000 (Mon, 04 Sep 2017) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -69,7 +206,7 @@ Changed paths:
 
 7.3.001 Commit
 ------------------------------------------------------------------------
-r182 | thaoky.altoholic@yahoo.com | 2017-06-01 11:54:15 -0500 (Thu, 01 Jun 2017) | 1 line
+r182 | thaoky.altoholic@yahoo.com | 2017-06-01 16:54:15 +0000 (Thu, 01 Jun 2017) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Core.lua
@@ -79,13 +216,13 @@ Changed paths:
 
 7.2.003b Commit
 ------------------------------------------------------------------------
-r181 | thaoky.altoholic@yahoo.com | 2017-06-01 06:18:26 -0500 (Thu, 01 Jun 2017) | 1 line
+r181 | thaoky.altoholic@yahoo.com | 2017-06-01 11:18:26 +0000 (Thu, 01 Jun 2017) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r180 | thaoky.altoholic@yahoo.com | 2017-06-01 06:09:59 -0500 (Thu, 01 Jun 2017) | 1 line
+r180 | thaoky.altoholic@yahoo.com | 2017-06-01 11:09:59 +0000 (Thu, 01 Jun 2017) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -204,7 +341,7 @@ Changed paths:
 
 7.2.003 Commit
 ------------------------------------------------------------------------
-r179 | thaoky.altoholic@yahoo.com | 2017-04-28 12:39:46 -0500 (Fri, 28 Apr 2017) | 1 line
+r179 | thaoky.altoholic@yahoo.com | 2017-04-28 17:39:46 +0000 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -216,7 +353,7 @@ Changed paths:
 
 7.2.002 Commit
 ------------------------------------------------------------------------
-r178 | thaoky.altoholic@yahoo.com | 2017-03-29 14:37:31 -0500 (Wed, 29 Mar 2017) | 1 line
+r178 | thaoky.altoholic@yahoo.com | 2017-03-29 19:37:31 +0000 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -359,13 +496,13 @@ Changed paths:
 
 7.2.001 Commit
 ------------------------------------------------------------------------
-r177 | thaoky.altoholic@yahoo.com | 2017-01-12 13:59:50 -0600 (Thu, 12 Jan 2017) | 1 line
+r177 | thaoky.altoholic@yahoo.com | 2017-01-12 19:59:50 +0000 (Thu, 12 Jan 2017) | 1 line
 Changed paths:
    M /trunk/Locales/repoenUS.lua
 
 Added one missing translation
 ------------------------------------------------------------------------
-r176 | thaoky.altoholic@yahoo.com | 2017-01-12 13:42:17 -0600 (Thu, 12 Jan 2017) | 1 line
+r176 | thaoky.altoholic@yahoo.com | 2017-01-12 19:42:17 +0000 (Thu, 12 Jan 2017) | 1 line
 Changed paths:
    A /trunk/Frames/MessageBox.lua
    A /trunk/Frames/MessageBox.xml
@@ -374,7 +511,7 @@ Changed paths:
 
 Added missing files in previous commit.
 ------------------------------------------------------------------------
-r175 | thaoky.altoholic@yahoo.com | 2017-01-12 13:36:09 -0600 (Thu, 12 Jan 2017) | 1 line
+r175 | thaoky.altoholic@yahoo.com | 2017-01-12 19:36:09 +0000 (Thu, 12 Jan 2017) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -424,7 +561,7 @@ Changed paths:
 
 7.1.004 Commit
 ------------------------------------------------------------------------
-r174 | thaoky | 2016-11-10 10:44:36 -0600 (Thu, 10 Nov 2016) | 1 line
+r174 | thaoky | 2016-11-10 16:44:36 +0000 (Thu, 10 Nov 2016) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -441,7 +578,7 @@ Changed paths:
 
 7.1.003 Commit
 ------------------------------------------------------------------------
-r173 | thaoky | 2016-11-09 07:07:43 -0600 (Wed, 09 Nov 2016) | 1 line
+r173 | thaoky | 2016-11-09 13:07:43 +0000 (Wed, 09 Nov 2016) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Core.lua
@@ -464,7 +601,7 @@ Changed paths:
 
 7.1.002 Commit
 ------------------------------------------------------------------------
-r172 | thaoky | 2016-10-26 13:11:12 -0500 (Wed, 26 Oct 2016) | 1 line
+r172 | thaoky | 2016-10-26 18:11:12 +0000 (Wed, 26 Oct 2016) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -550,7 +687,7 @@ Changed paths:
 
 7.1.001 Commit
 ------------------------------------------------------------------------
-r171 | thaoky | 2016-08-09 13:50:40 -0500 (Tue, 09 Aug 2016) | 1 line
+r171 | thaoky | 2016-08-09 18:50:40 +0000 (Tue, 09 Aug 2016) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -558,7 +695,7 @@ Changed paths:
 
 7.0.006 Commit
 ------------------------------------------------------------------------
-r170 | thaoky | 2016-07-31 10:40:46 -0500 (Sun, 31 Jul 2016) | 1 line
+r170 | thaoky | 2016-07-31 15:40:46 +0000 (Sun, 31 Jul 2016) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -566,7 +703,7 @@ Changed paths:
 
 7.0.005 Commit
 ------------------------------------------------------------------------
-r169 | thaoky | 2016-07-31 09:44:25 -0500 (Sun, 31 Jul 2016) | 1 line
+r169 | thaoky | 2016-07-31 14:44:25 +0000 (Sun, 31 Jul 2016) | 1 line
 Changed paths:
    M /trunk/Altoholic.xml
    M /trunk/Core.lua
@@ -577,7 +714,7 @@ Changed paths:
 
 7.0.004 Commit
 ------------------------------------------------------------------------
-r168 | thaoky | 2016-07-27 12:36:31 -0500 (Wed, 27 Jul 2016) | 1 line
+r168 | thaoky | 2016-07-27 17:36:31 +0000 (Wed, 27 Jul 2016) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -592,7 +729,7 @@ Changed paths:
 
 7.0.003 Commit
 ------------------------------------------------------------------------
-r167 | thaoky | 2016-07-20 14:50:11 -0500 (Wed, 20 Jul 2016) | 1 line
+r167 | thaoky | 2016-07-20 19:50:11 +0000 (Wed, 20 Jul 2016) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -602,7 +739,7 @@ Changed paths:
 
 7.0.002 Commit
 ------------------------------------------------------------------------
-r166 | thaoky | 2016-07-18 11:18:15 -0500 (Mon, 18 Jul 2016) | 3 lines
+r166 | thaoky | 2016-07-18 16:18:15 +0000 (Mon, 18 Jul 2016) | 3 lines
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -642,7 +779,7 @@ Changed paths:
 - Glyph UI has been removed.
 - Tabard UI has been removed.
 ------------------------------------------------------------------------
-r165 | thaoky | 2015-09-12 12:08:05 -0500 (Sat, 12 Sep 2015) | 1 line
+r165 | thaoky | 2015-09-12 17:08:05 +0000 (Sat, 12 Sep 2015) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -652,20 +789,20 @@ Changed paths:
 
 6.2.007 Commit
 ------------------------------------------------------------------------
-r164 | thaoky | 2015-08-17 11:52:23 -0500 (Mon, 17 Aug 2015) | 1 line
+r164 | thaoky | 2015-08-17 16:52:23 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
 
 Fixed the .toc of the Grids module
 ------------------------------------------------------------------------
-r163 | thaoky | 2015-08-17 11:47:04 -0500 (Mon, 17 Aug 2015) | 1 line
+r163 | thaoky | 2015-08-17 16:47:04 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
    M /trunk/changelog.txt
 
 Fixed .toc for the Summary module
 ------------------------------------------------------------------------
-r162 | thaoky | 2015-08-17 11:38:04 -0500 (Mon, 17 Aug 2015) | 1 line
+r162 | thaoky | 2015-08-17 16:38:04 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    A /trunk/Templates/AutoCastShine.lua
    A /trunk/Templates/AutoCastShine.xml
@@ -675,7 +812,7 @@ Changed paths:
 
 Added missing templates in previous commit
 ------------------------------------------------------------------------
-r161 | thaoky | 2015-08-17 11:23:23 -0500 (Mon, 17 Aug 2015) | 1 line
+r161 | thaoky | 2015-08-17 16:23:23 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -738,7 +875,7 @@ Changed paths:
 
 6.2.006 Commit
 ------------------------------------------------------------------------
-r160 | thaoky | 2015-05-08 11:43:25 -0500 (Fri, 08 May 2015) | 1 line
+r160 | thaoky | 2015-05-08 16:43:25 +0000 (Fri, 08 May 2015) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -797,7 +934,7 @@ Changed paths:
 
 6.1.006 Commit
 ------------------------------------------------------------------------
-r159 | thaoky | 2015-04-20 03:38:04 -0500 (Mon, 20 Apr 2015) | 1 line
+r159 | thaoky | 2015-04-20 08:38:04 +0000 (Mon, 20 Apr 2015) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -851,7 +988,7 @@ Changed paths:
 
 6.1.005 Commit
 ------------------------------------------------------------------------
-r158 | thaoky | 2015-04-11 12:35:51 -0500 (Sat, 11 Apr 2015) | 1 line
+r158 | thaoky | 2015-04-11 17:35:51 +0000 (Sat, 11 Apr 2015) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -864,7 +1001,7 @@ Changed paths:
 
 6.1.004 Commit
 ------------------------------------------------------------------------
-r157 | thaoky | 2015-04-07 12:16:23 -0500 (Tue, 07 Apr 2015) | 1 line
+r157 | thaoky | 2015-04-07 17:16:23 +0000 (Tue, 07 Apr 2015) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Modules/Altoholic_Grids/Grid_Dungeons.lua
@@ -873,7 +1010,7 @@ Changed paths:
 
 6.1.003 Commit
 ------------------------------------------------------------------------
-r156 | thaoky | 2015-04-06 10:50:21 -0500 (Mon, 06 Apr 2015) | 1 line
+r156 | thaoky | 2015-04-06 15:50:21 +0000 (Mon, 06 Apr 2015) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.xml
@@ -903,20 +1040,20 @@ Changed paths:
 
 6.1.002 Commit
 ------------------------------------------------------------------------
-r155 | thaoky | 2015-02-25 13:27:38 -0600 (Wed, 25 Feb 2015) | 1 line
+r155 | thaoky | 2015-02-25 19:27:38 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/Modules/Altoholic_Characters/Frames/Garrisons.lua
 
 Fixed a Lua error in the garrison missions' frame.
 ------------------------------------------------------------------------
-r154 | thaoky | 2015-02-25 13:14:40 -0600 (Wed, 25 Feb 2015) | 1 line
+r154 | thaoky | 2015-02-25 19:14:40 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    A /trunk/Modules/Altoholic_Characters/Frames/Garrisons.lua
    A /trunk/Modules/Altoholic_Characters/Frames/Garrisons.xml
 
 Forgot to add garrison frames to SVN..
 ------------------------------------------------------------------------
-r153 | thaoky | 2015-02-25 12:37:55 -0600 (Wed, 25 Feb 2015) | 1 line
+r153 | thaoky | 2015-02-25 18:37:55 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -1016,7 +1153,7 @@ Changed paths:
 
 6.1.001 Commit
 ------------------------------------------------------------------------
-r152 | thaoky | 2015-01-09 11:25:15 -0600 (Fri, 09 Jan 2015) | 1 line
+r152 | thaoky | 2015-01-09 17:25:15 +0000 (Fri, 09 Jan 2015) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.xml
@@ -1088,7 +1225,7 @@ Changed paths:
 
 6.0.004 Commit
 ------------------------------------------------------------------------
-r151 | thaoky | 2014-12-27 07:28:47 -0600 (Sat, 27 Dec 2014) | 1 line
+r151 | thaoky | 2014-12-27 13:28:47 +0000 (Sat, 27 Dec 2014) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Core.lua
@@ -1106,13 +1243,13 @@ Changed paths:
 
 6.0.003 Commit
 ------------------------------------------------------------------------
-r150 | thaoky | 2014-12-24 08:51:45 -0600 (Wed, 24 Dec 2014) | 1 line
+r150 | thaoky | 2014-12-24 14:51:45 +0000 (Wed, 24 Dec 2014) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
 
 Fixed .pkgmeta to include DataStore_Garrisons (oops !)
 ------------------------------------------------------------------------
-r149 | thaoky | 2014-12-24 08:43:37 -0600 (Wed, 24 Dec 2014) | 1 line
+r149 | thaoky | 2014-12-24 14:43:37 +0000 (Wed, 24 Dec 2014) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/AltoholicTemplates.xml
@@ -1143,13 +1280,13 @@ Changed paths:
 
 6.0.002 Commit
 ------------------------------------------------------------------------
-r148 | thaoky | 2014-10-17 12:19:53 -0500 (Fri, 17 Oct 2014) | 1 line
+r148 | thaoky | 2014-10-17 17:19:53 +0000 (Fri, 17 Oct 2014) | 1 line
 Changed paths:
    M /trunk/changelog.txt
 
 Added missing changelog.txt
 ------------------------------------------------------------------------
-r147 | thaoky | 2014-10-17 12:10:23 -0500 (Fri, 17 Oct 2014) | 1 line
+r147 | thaoky | 2014-10-17 17:10:23 +0000 (Fri, 17 Oct 2014) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1188,13 +1325,13 @@ Changed paths:
 
 6.0.001 Commit
 ------------------------------------------------------------------------
-r146 | thaoky | 2014-08-08 10:13:16 -0500 (Fri, 08 Aug 2014) | 1 line
+r146 | thaoky | 2014-08-08 15:13:16 +0000 (Fri, 08 Aug 2014) | 1 line
 Changed paths:
    M /trunk/Frames/TabOptions.lua
 
 Updated "what's new" info.
 ------------------------------------------------------------------------
-r145 | thaoky | 2014-08-08 09:58:21 -0500 (Fri, 08 Aug 2014) | 1 line
+r145 | thaoky | 2014-08-08 14:58:21 +0000 (Fri, 08 Aug 2014) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Modules/Altoholic_Summary/TabSummary.lua
@@ -1202,7 +1339,7 @@ Changed paths:
 
 5.4.009 commit
 ------------------------------------------------------------------------
-r144 | thaoky | 2014-07-27 08:29:42 -0500 (Sun, 27 Jul 2014) | 1 line
+r144 | thaoky | 2014-07-27 13:29:42 +0000 (Sun, 27 Jul 2014) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1229,7 +1366,7 @@ Changed paths:
 
 5.4.008 Commit
 ------------------------------------------------------------------------
-r143 | thaoky | 2014-07-24 11:24:31 -0500 (Thu, 24 Jul 2014) | 1 line
+r143 | thaoky | 2014-07-24 16:24:31 +0000 (Thu, 24 Jul 2014) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.toc
@@ -1257,7 +1394,7 @@ Changed paths:
 
 5.4.007 Commit
 ------------------------------------------------------------------------
-r142 | thaoky | 2014-07-22 08:30:51 -0500 (Tue, 22 Jul 2014) | 1 line
+r142 | thaoky | 2014-07-22 13:30:51 +0000 (Tue, 22 Jul 2014) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -1266,7 +1403,7 @@ Changed paths:
 
 5.4.006 Commit
 ------------------------------------------------------------------------
-r141 | thaoky | 2014-07-21 05:31:00 -0500 (Mon, 21 Jul 2014) | 1 line
+r141 | thaoky | 2014-07-21 10:31:00 +0000 (Mon, 21 Jul 2014) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.toc
@@ -1298,7 +1435,7 @@ Changed paths:
 
 5.4.005 commit.
 ------------------------------------------------------------------------
-r140 | seashop | 2013-12-19 11:10:33 -0600 (Thu, 19 Dec 2013) | 12 lines
+r140 | seashop | 2013-12-19 17:10:33 +0000 (Thu, 19 Dec 2013) | 12 lines
 Changed paths:
    M /trunk/Events.lua
 
@@ -1315,20 +1452,20 @@ Debug:
    [C]: ?
 
 ------------------------------------------------------------------------
-r139 | thaoky | 2013-10-07 11:03:58 -0500 (Mon, 07 Oct 2013) | 1 line
+r139 | thaoky | 2013-10-07 16:03:58 +0000 (Mon, 07 Oct 2013) | 1 line
 Changed paths:
    M /trunk/Core.lua
    M /trunk/changelog.txt
 
 5.4.004 commit.
 ------------------------------------------------------------------------
-r138 | thaoky | 2013-10-07 11:00:49 -0500 (Mon, 07 Oct 2013) | 1 line
+r138 | thaoky | 2013-10-07 16:00:49 +0000 (Mon, 07 Oct 2013) | 1 line
 Changed paths:
    M /trunk/Loots.lua
 
 Updated GetItemSource() to correctly use LibCraftInfo
 ------------------------------------------------------------------------
-r137 | thaoky | 2013-10-06 02:28:38 -0500 (Sun, 06 Oct 2013) | 3 lines
+r137 | thaoky | 2013-10-06 07:28:38 +0000 (Sun, 06 Oct 2013) | 3 lines
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -1348,7 +1485,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r136 | thaoky | 2013-09-17 11:19:29 -0500 (Tue, 17 Sep 2013) | 3 lines
+r136 | thaoky | 2013-09-17 16:19:29 +0000 (Tue, 17 Sep 2013) | 3 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/changelog.txt
@@ -1357,7 +1494,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r135 | thaoky | 2013-09-11 10:30:17 -0500 (Wed, 11 Sep 2013) | 1 line
+r135 | thaoky | 2013-09-11 15:30:17 +0000 (Wed, 11 Sep 2013) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1374,7 +1511,7 @@ Changed paths:
 
 5.4.001 Commit
 ------------------------------------------------------------------------
-r134 | thaoky | 2013-08-01 07:59:31 -0500 (Thu, 01 Aug 2013) | 3 lines
+r134 | thaoky | 2013-08-01 12:59:31 +0000 (Thu, 01 Aug 2013) | 3 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Events.lua
@@ -1388,7 +1525,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r133 | thaoky | 2013-05-29 13:19:35 -0500 (Wed, 29 May 2013) | 3 lines
+r133 | thaoky | 2013-05-29 18:19:35 +0000 (Wed, 29 May 2013) | 3 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/changelog.txt
@@ -1397,7 +1534,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r132 | thaoky | 2013-05-28 12:16:05 -0500 (Tue, 28 May 2013) | 3 lines
+r132 | thaoky | 2013-05-28 17:16:05 +0000 (Tue, 28 May 2013) | 3 lines
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1421,7 +1558,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r131 | thaoky | 2013-03-12 04:51:02 -0500 (Tue, 12 Mar 2013) | 3 lines
+r131 | thaoky | 2013-03-12 09:51:02 +0000 (Tue, 12 Mar 2013) | 3 lines
 Changed paths:
    M /trunk/Modules/Altoholic_Grids/Grid_Archeology.lua
    A /trunk/Modules/Altoholic_Grids/Grid_Dailies.lua
@@ -1435,7 +1572,7 @@ Changed paths:
 
 - Added 'grids' updates forgotten in previous commit.
 ------------------------------------------------------------------------
-r130 | thaoky | 2013-03-12 04:21:56 -0500 (Tue, 12 Mar 2013) | 3 lines
+r130 | thaoky | 2013-03-12 09:21:56 +0000 (Tue, 12 Mar 2013) | 3 lines
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1460,7 +1597,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r129 | thaoky | 2013-02-24 06:10:39 -0600 (Sun, 24 Feb 2013) | 3 lines
+r129 | thaoky | 2013-02-24 12:10:39 +0000 (Sun, 24 Feb 2013) | 3 lines
 Changed paths:
    M /trunk/AltoholicTemplates.xml
    M /trunk/Core.lua
@@ -1478,7 +1615,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r128 | thaoky | 2012-11-29 10:33:21 -0600 (Thu, 29 Nov 2012) | 1 line
+r128 | thaoky | 2012-11-29 16:33:21 +0000 (Thu, 29 Nov 2012) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1493,7 +1630,7 @@ Changed paths:
 
 5.1 ToC update
 ------------------------------------------------------------------------
-r127 | thaoky | 2012-11-28 12:00:46 -0600 (Wed, 28 Nov 2012) | 3 lines
+r127 | thaoky | 2012-11-28 18:00:46 +0000 (Wed, 28 Nov 2012) | 3 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/changelog.txt
@@ -1502,13 +1639,13 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r126 | JCinDE | 2012-11-02 19:11:07 -0500 (Fri, 02 Nov 2012) | 1 line
+r126 | JCinDE | 2012-11-03 00:11:07 +0000 (Sat, 03 Nov 2012) | 1 line
 Changed paths:
    M /trunk/Modules/Altoholic_Search/TabSearch.lua
 
 Re-fixed searching for heirlooms
 ------------------------------------------------------------------------
-r125 | thaoky | 2012-10-06 05:44:09 -0500 (Sat, 06 Oct 2012) | 3 lines
+r125 | thaoky | 2012-10-06 10:44:09 +0000 (Sat, 06 Oct 2012) | 3 lines
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1528,7 +1665,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r124 | thaoky | 2012-09-13 12:58:12 -0500 (Thu, 13 Sep 2012) | 3 lines
+r124 | thaoky | 2012-09-13 17:58:12 +0000 (Thu, 13 Sep 2012) | 3 lines
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1562,7 +1699,7 @@ Changed paths:
 
 See changelog.txt for details.
 ------------------------------------------------------------------------
-r123 | thaoky | 2012-09-03 11:46:01 -0500 (Mon, 03 Sep 2012) | 3 lines
+r123 | thaoky | 2012-09-03 16:46:01 +0000 (Mon, 03 Sep 2012) | 3 lines
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1573,7 +1710,7 @@ Changed paths:
 
 See changelog.txt for details
 ------------------------------------------------------------------------
-r122 | thaoky | 2012-09-02 12:28:55 -0500 (Sun, 02 Sep 2012) | 3 lines
+r122 | thaoky | 2012-09-02 17:28:55 +0000 (Sun, 02 Sep 2012) | 3 lines
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1593,7 +1730,7 @@ Changed paths:
 
 See changelog.txt for details
 ------------------------------------------------------------------------
-r121 | thaoky | 2012-09-02 05:54:04 -0500 (Sun, 02 Sep 2012) | 3 lines
+r121 | thaoky | 2012-09-02 10:54:04 +0000 (Sun, 02 Sep 2012) | 3 lines
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -1673,7 +1810,7 @@ Changed paths:
 
 See changelog.txt for details
 ------------------------------------------------------------------------
-r120 | jcinde | 2012-05-30 13:05:07 -0500 (Wed, 30 May 2012) | 2 lines
+r120 | jcinde | 2012-05-30 18:05:07 +0000 (Wed, 30 May 2012) | 2 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/ItemFilters.lua
@@ -1682,7 +1819,7 @@ Changed paths:
 Added Heirloom quality to search.
 Fixed search bug that referenced not-yet-loaded Equipment module.
 ------------------------------------------------------------------------
-r119 | thaoky | 2012-05-05 04:33:44 -0500 (Sat, 05 May 2012) | 2 lines
+r119 | thaoky | 2012-05-05 09:33:44 +0000 (Sat, 05 May 2012) | 2 lines
 Changed paths:
    M /trunk/Core.lua
    M /trunk/Frames/TabOptions.lua
@@ -1694,7 +1831,7 @@ Changed paths:
 Added filter for mounts & pets in the Grids tab
 Fixed Pets.xml removed by mistake from a TOC file
 ------------------------------------------------------------------------
-r118 | thaoky | 2012-05-04 09:33:20 -0500 (Fri, 04 May 2012) | 1 line
+r118 | thaoky | 2012-05-04 14:33:20 +0000 (Fri, 04 May 2012) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.toc
@@ -1746,7 +1883,7 @@ Changed paths:
 
 4.3.003 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r117 | thaoky | 2012-01-29 04:31:47 -0600 (Sun, 29 Jan 2012) | 1 line
+r117 | thaoky | 2012-01-29 10:31:47 +0000 (Sun, 29 Jan 2012) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1765,7 +1902,7 @@ Changed paths:
 
 4.3.002 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r116 | thaoky | 2011-12-10 08:58:19 -0600 (Sat, 10 Dec 2011) | 1 line
+r116 | thaoky | 2011-12-10 14:58:19 +0000 (Sat, 10 Dec 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1781,7 +1918,7 @@ Changed paths:
 
 4.3.001 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r115 | thaoky | 2011-10-30 05:41:18 -0500 (Sun, 30 Oct 2011) | 1 line
+r115 | thaoky | 2011-10-30 10:41:18 +0000 (Sun, 30 Oct 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1799,7 +1936,7 @@ Changed paths:
 
 4.2.002 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r114 | thaoky | 2011-06-29 13:01:17 -0500 (Wed, 29 Jun 2011) | 1 line
+r114 | thaoky | 2011-06-29 18:01:17 +0000 (Wed, 29 Jun 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1820,7 +1957,7 @@ Changed paths:
 
 4.2.001 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r113 | thaoky | 2011-05-01 10:23:33 -0500 (Sun, 01 May 2011) | 1 line
+r113 | thaoky | 2011-05-01 15:23:33 +0000 (Sun, 01 May 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1830,13 +1967,13 @@ Changed paths:
 
 4.1.001b commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r112 | thaoky | 2011-04-30 13:16:32 -0500 (Sat, 30 Apr 2011) | 1 line
+r112 | thaoky | 2011-04-30 18:16:32 +0000 (Sat, 30 Apr 2011) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
 
 Fixed .pkgmeta for Altoholic_Agenda
 ------------------------------------------------------------------------
-r111 | thaoky | 2011-04-30 13:06:06 -0500 (Sat, 30 Apr 2011) | 1 line
+r111 | thaoky | 2011-04-30 18:06:06 +0000 (Sat, 30 Apr 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1869,7 +2006,7 @@ Changed paths:
 
 4.1.001 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r110 | seashop | 2011-04-03 18:01:02 -0500 (Sun, 03 Apr 2011) | 1 line
+r110 | seashop | 2011-04-03 23:01:02 +0000 (Sun, 03 Apr 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Locales/koKR.lua
@@ -1877,7 +2014,7 @@ Changed paths:
 
 Suggestions localized to Korean.
 ------------------------------------------------------------------------
-r109 | thaoky | 2011-04-03 00:49:26 -0500 (Sun, 03 Apr 2011) | 1 line
+r109 | thaoky | 2011-04-03 05:49:26 +0000 (Sun, 03 Apr 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Altoholic.xml
@@ -1887,7 +2024,7 @@ Changed paths:
 
 Repack of 4.0.006b
 ------------------------------------------------------------------------
-r108 | thaoky | 2011-04-01 13:05:51 -0500 (Fri, 01 Apr 2011) | 1 line
+r108 | thaoky | 2011-04-01 18:05:51 +0000 (Fri, 01 Apr 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Altoholic.xml
@@ -1902,13 +2039,13 @@ Changed paths:
 
 4.0.006b commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r107 | thaoky | 2011-03-02 07:49:27 -0600 (Wed, 02 Mar 2011) | 1 line
+r107 | thaoky | 2011-03-02 13:49:27 +0000 (Wed, 02 Mar 2011) | 1 line
 Changed paths:
    M /trunk/changelog.txt
 
 changelog.txt omitted in previous commit.
 ------------------------------------------------------------------------
-r106 | thaoky | 2011-03-02 07:39:45 -0600 (Wed, 02 Mar 2011) | 1 line
+r106 | thaoky | 2011-03-02 13:39:45 +0000 (Wed, 02 Mar 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1938,7 +2075,7 @@ Changed paths:
 
 4.0.006 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r105 | thaoky | 2011-02-16 10:04:35 -0600 (Wed, 16 Feb 2011) | 1 line
+r105 | thaoky | 2011-02-16 16:04:35 +0000 (Wed, 16 Feb 2011) | 1 line
 Changed paths:
    M /trunk/Frames/TabOptions.lua
    M /trunk/Loots.lua
@@ -1947,7 +2084,7 @@ Changed paths:
 
 Fixed tooltip issue introduced in 4.0.005c
 ------------------------------------------------------------------------
-r104 | thaoky | 2011-02-15 07:20:36 -0600 (Tue, 15 Feb 2011) | 1 line
+r104 | thaoky | 2011-02-15 13:20:36 +0000 (Tue, 15 Feb 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -1964,7 +2101,7 @@ Changed paths:
 
 4.0.005c commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r103 | thaoky | 2011-02-11 09:01:52 -0600 (Fri, 11 Feb 2011) | 1 line
+r103 | thaoky | 2011-02-11 15:01:52 +0000 (Fri, 11 Feb 2011) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -1983,7 +2120,7 @@ Changed paths:
 
 4.0.005b commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r102 | thaoky | 2010-12-03 09:10:15 -0600 (Fri, 03 Dec 2010) | 1 line
+r102 | thaoky | 2010-12-03 15:10:15 +0000 (Fri, 03 Dec 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -2003,7 +2140,7 @@ Changed paths:
 
 4.0.005 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r101 | thaoky | 2010-11-24 12:16:48 -0600 (Wed, 24 Nov 2010) | 1 line
+r101 | thaoky | 2010-11-24 18:16:48 +0000 (Wed, 24 Nov 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -2012,14 +2149,14 @@ Changed paths:
 
 Updated achievement list for 4.0.3a.
 ------------------------------------------------------------------------
-r100 | thaoky | 2010-11-21 07:54:33 -0600 (Sun, 21 Nov 2010) | 1 line
+r100 | thaoky | 2010-11-21 13:54:33 +0000 (Sun, 21 Nov 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
 
 Updated version number to 4.0.004b
 ------------------------------------------------------------------------
-r99 | thaoky | 2010-11-21 07:50:03 -0600 (Sun, 21 Nov 2010) | 2 lines
+r99 | thaoky | 2010-11-21 13:50:03 +0000 (Sun, 21 Nov 2010) | 2 lines
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Core.lua
@@ -2031,7 +2168,7 @@ Changed paths:
 - Fixed Auctioneer compatibility issue.
 - Added 2 options (Category: Miscellaneous) to enable/disable recipe coloring at the AH/vendors. 
 ------------------------------------------------------------------------
-r98 | thaoky | 2010-11-20 07:09:09 -0600 (Sat, 20 Nov 2010) | 1 line
+r98 | thaoky | 2010-11-20 13:09:09 +0000 (Sat, 20 Nov 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Altoholic.toc
@@ -2072,7 +2209,7 @@ Changed paths:
 
 4.0.004 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r97 | thaoky | 2010-10-26 05:33:14 -0500 (Tue, 26 Oct 2010) | 1 line
+r97 | thaoky | 2010-10-26 10:33:14 +0000 (Tue, 26 Oct 2010) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -2135,13 +2272,13 @@ Changed paths:
 
 4.0.003 commit, see changelog.txt for details.
 ------------------------------------------------------------------------
-r96 | thaoky | 2010-10-17 10:06:53 -0500 (Sun, 17 Oct 2010) | 1 line
+r96 | thaoky | 2010-10-17 15:06:53 +0000 (Sun, 17 Oct 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
 
 Fixed a drop down error in the characters' tab.
 ------------------------------------------------------------------------
-r95 | thaoky | 2010-10-17 04:21:05 -0500 (Sun, 17 Oct 2010) | 1 line
+r95 | thaoky | 2010-10-17 09:21:05 +0000 (Sun, 17 Oct 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -2151,19 +2288,19 @@ Changed paths:
 
 Glyph tooltip is now showing "already know by/could be learned by" information.
 ------------------------------------------------------------------------
-r94 | thaoky | 2010-10-16 09:30:52 -0500 (Sat, 16 Oct 2010) | 1 line
+r94 | thaoky | 2010-10-16 14:30:52 +0000 (Sat, 16 Oct 2010) | 1 line
 Changed paths:
    M /trunk/Frames/AccountSharing.lua
 
 Removed DataStore_Skills from shareable modules. Fixes account sharing.
 ------------------------------------------------------------------------
-r93 | thaoky | 2010-10-15 10:00:57 -0500 (Fri, 15 Oct 2010) | 1 line
+r93 | thaoky | 2010-10-15 15:00:57 +0000 (Fri, 15 Oct 2010) | 1 line
 Changed paths:
    M /trunk/Comm.lua
 
 Fixed a missing color constant.
 ------------------------------------------------------------------------
-r92 | thaoky | 2010-10-15 08:49:37 -0500 (Fri, 15 Oct 2010) | 1 line
+r92 | thaoky | 2010-10-15 13:49:37 +0000 (Fri, 15 Oct 2010) | 1 line
 Changed paths:
    M /trunk/Frames/AccountSummary.lua
    M /trunk/Frames/Activity.lua
@@ -2178,7 +2315,7 @@ Changed paths:
 
 Missing files in previous commit.
 ------------------------------------------------------------------------
-r91 | thaoky | 2010-10-15 08:33:01 -0500 (Fri, 15 Oct 2010) | 3 lines
+r91 | thaoky | 2010-10-15 13:33:01 +0000 (Fri, 15 Oct 2010) | 3 lines
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Altoholic.lua
@@ -2272,7 +2409,7 @@ Changed paths:
 - SV clean-up mandatory !
 - Refer to changelog.txt for details
 ------------------------------------------------------------------------
-r90 | Thaoky | 2010-07-06 12:50:10 -0500 (Tue, 06 Jul 2010) | 1 line
+r90 | Thaoky | 2010-07-06 17:50:10 +0000 (Tue, 06 Jul 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.toc
    M /trunk/Core.lua
@@ -2281,7 +2418,7 @@ Changed paths:
 
 Version number update/what's new/etc..
 ------------------------------------------------------------------------
-r89 | Thaoky | 2010-07-01 11:38:46 -0500 (Thu, 01 Jul 2010) | 1 line
+r89 | Thaoky | 2010-07-01 16:38:46 +0000 (Thu, 01 Jul 2010) | 1 line
 Changed paths:
    M /trunk/Altoholic.lua
    M /trunk/Frames/AuctionHouse.lua
@@ -2301,115 +2438,5 @@ Changed paths:
    M /trunk/Modules/Altoholic_Achievements/TabAchievements.lua
 
 Fixed the ChatFrameEditBox issue caused by 3.3.5
-------------------------------------------------------------------------
-r88 | thaoky | 2010-04-12 13:02:22 -0500 (Mon, 12 Apr 2010) | 1 line
-Changed paths:
-   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
-
-Added missing raid achievements.
-------------------------------------------------------------------------
-r87 | thaoky | 2010-04-12 12:13:59 -0500 (Mon, 12 Apr 2010) | 1 line
-Changed paths:
-   M /trunk/Frames/Search.lua
-
-Fixed a Lua error when using the search feature.
-------------------------------------------------------------------------
-r86 | thaoky | 2010-04-12 12:02:29 -0500 (Mon, 12 Apr 2010) | 2 lines
-Changed paths:
-   M /trunk/Altoholic.lua
-   M /trunk/Frames/Mails.lua
-   M /trunk/Frames/Mails.xml
-   M /trunk/Frames/TabCharacters.lua
-   M /trunk/Locales/repoenUS.lua
-   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
-
-- Fixed invalid achievement id in Reputations/BC
-- Slightly modified the expiries in the mail pane.
-------------------------------------------------------------------------
-r85 | thaoky | 2010-04-05 08:49:52 -0500 (Mon, 05 Apr 2010) | 1 line
-Changed paths:
-   M /trunk/Frames/Activity.lua
-   M /trunk/Frames/Calendar.lua
-   M /trunk/Frames/TabOptions.lua
-
-Fixed a few Lua errors.
-------------------------------------------------------------------------
-r84 | thaoky | 2010-03-28 09:51:21 -0500 (Sun, 28 Mar 2010) | 1 line
-Changed paths:
-   M /trunk/Frames/Activity.lua
-   M /trunk/Frames/GuildBank.lua
-   M /trunk/Frames/Skills.lua
-   M /trunk/Frames/TabCharacters.lua
-
-Fixed a few Lua errors.
-------------------------------------------------------------------------
-r83 | thaoky | 2010-03-09 04:32:14 -0600 (Tue, 09 Mar 2010) | 1 line
-Changed paths:
-   M /trunk/.pkgmeta
-   M /trunk/Altoholic.lua
-   M /trunk/Altoholic.toc
-   M /trunk/Altoholic.xml
-   M /trunk/AltoholicTemplates.xml
-   A /trunk/Characters.lua
-   M /trunk/Comm.lua
-   M /trunk/Core.lua
-   M /trunk/Frames/AccountSummary.lua
-   M /trunk/Frames/AccountSummary.xml
-   D /trunk/Frames/Achievements.lua
-   D /trunk/Frames/Achievements.xml
-   M /trunk/Frames/Activity.lua
-   M /trunk/Frames/Activity.xml
-   M /trunk/Frames/AuctionHouse.lua
-   M /trunk/Frames/BagUsage.lua
-   M /trunk/Frames/BagUsage.xml
-   M /trunk/Frames/Containers.lua
-   M /trunk/Frames/Currencies.lua
-   M /trunk/Frames/Equipment.lua
-   M /trunk/Frames/GuildBank.lua
-   M /trunk/Frames/GuildBankTabs.lua
-   M /trunk/Frames/GuildMembers.lua
-   M /trunk/Frames/GuildMembers.xml
-   M /trunk/Frames/GuildProfessions.lua
-   M /trunk/Frames/Mails.lua
-   M /trunk/Frames/Pets.lua
-   M /trunk/Frames/Pets.xml
-   M /trunk/Frames/Quests.lua
-   M /trunk/Frames/Quests.xml
-   M /trunk/Frames/Recipes.lua
-   M /trunk/Frames/Recipes.xml
-   M /trunk/Frames/Reputations.lua
-   M /trunk/Frames/Search.lua
-   M /trunk/Frames/Skills.lua
-   M /trunk/Frames/Skills.xml
-   D /trunk/Frames/TabAchievements.lua
-   D /trunk/Frames/TabAchievements.xml
-   M /trunk/Frames/TabCharacters.lua
-   M /trunk/Frames/TabGuildBank.lua
-   M /trunk/Frames/TabOptions.lua
-   M /trunk/Frames/TabOptions.xml
-   M /trunk/Frames/TabSearch.lua
-   M /trunk/Frames/TabSummary.lua
-   M /trunk/Frames/TabSummary.xml
-   M /trunk/Frames/Talents.lua
-   A /trunk/ItemFilters.lua
-   M /trunk/Loots.lua
-   A /trunk/Modules
-   A /trunk/Modules/Altoholic_Achievements
-   A /trunk/Modules/Altoholic_Achievements/Achievements.lua
-   A /trunk/Modules/Altoholic_Achievements/Achievements.xml
-   A /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
-   A /trunk/Modules/Altoholic_Achievements/TabAchievements.lua
-   A /trunk/Modules/Altoholic_Achievements/TabAchievements.xml
-   M /trunk/Suggestions.lua
-   M /trunk/Suggestions_deDE.lua
-   M /trunk/Suggestions_frFR.lua
-   M /trunk/Suggestions_koKR.lua
-   M /trunk/Suggestions_ruRU.lua
-   M /trunk/Suggestions_zhCN.lua
-   M /trunk/Suggestions_zhTW.lua
-   M /trunk/Tooltip.lua
-   M /trunk/changelog.txt
-
-3.3.002 svn push, refer to changelog.txt for a list of changes.
 ------------------------------------------------------------------------
 

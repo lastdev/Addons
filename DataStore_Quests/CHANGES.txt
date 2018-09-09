@@ -1,5 +1,17 @@
 ------------------------------------------------------------------------
-r43 | thaoky.altoholic@yahoo.com | 2017-09-04 12:32:15 -0500 (Mon, 04 Sep 2017) | 3 lines
+r45 | thaoky.altoholic@yahoo.com | 2018-08-12 13:18:34 +0000 (Sun, 12 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.lua
+
+Fixed list of emissary quests
+------------------------------------------------------------------------
+r44 | thaoky.altoholic@yahoo.com | 2018-07-22 11:25:04 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.toc
+
+8.0.001 Commit
+------------------------------------------------------------------------
+r43 | thaoky.altoholic@yahoo.com | 2017-09-04 17:32:15 +0000 (Mon, 04 Sep 2017) | 3 lines
 Changed paths:
    M /trunk/DataStore_Quests.lua
    M /trunk/DataStore_Quests.toc
@@ -8,13 +20,13 @@ Better tracking of emissaries
 Reworked the database format to support the new quest log panel in Altoholic
 (back-end mostly complete, front-end not)
 ------------------------------------------------------------------------
-r42 | thaoky.altoholic@yahoo.com | 2017-06-01 05:59:12 -0500 (Thu, 01 Jun 2017) | 1 line
+r42 | thaoky.altoholic@yahoo.com | 2017-06-01 10:59:12 +0000 (Thu, 01 Jun 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.lua
 
 Added support for emissary quests
 ------------------------------------------------------------------------
-r41 | thaoky.altoholic@yahoo.com | 2017-04-28 12:33:29 -0500 (Fri, 28 Apr 2017) | 1 line
+r41 | thaoky.altoholic@yahoo.com | 2017-04-28 17:33:29 +0000 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/Options.lua
    M /trunk/Options.xml
@@ -22,25 +34,25 @@ Changed paths:
 
 udpated load order in locale.xml
 ------------------------------------------------------------------------
-r40 | thaoky.altoholic@yahoo.com | 2017-03-29 14:26:17 -0500 (Wed, 29 Mar 2017) | 1 line
+r40 | thaoky.altoholic@yahoo.com | 2017-03-29 19:26:17 +0000 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r39 | thaoky | 2016-10-30 05:02:47 -0500 (Sun, 30 Oct 2016) | 1 line
+r39 | thaoky | 2016-10-30 10:02:47 +0000 (Sun, 30 Oct 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.lua
 
 Fixed the tainting issue that prevented from queuing into battlegrounds.
 ------------------------------------------------------------------------
-r38 | thaoky | 2016-10-26 14:02:41 -0500 (Wed, 26 Oct 2016) | 1 line
+r38 | thaoky | 2016-10-26 19:02:41 +0000 (Wed, 26 Oct 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.lua
 
 Fixed scanning the quest links.
 ------------------------------------------------------------------------
-r37 | thaoky | 2016-10-26 12:53:11 -0500 (Wed, 26 Oct 2016) | 2 lines
+r37 | thaoky | 2016-10-26 17:53:11 +0000 (Wed, 26 Oct 2016) | 2 lines
 Changed paths:
    M /trunk/DataStore_Quests.lua
    M /trunk/DataStore_Quests.toc
@@ -50,26 +62,26 @@ Changed paths:
 TOC Update
 added an option to select the hour at which daily quests are reset.
 ------------------------------------------------------------------------
-r36 | thaoky | 2016-07-18 11:10:19 -0500 (Mon, 18 Jul 2016) | 1 line
+r36 | thaoky | 2016-07-18 16:10:19 +0000 (Mon, 18 Jul 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.lua
    M /trunk/DataStore_Quests.toc
 
 7.0 Compatibility Release
 ------------------------------------------------------------------------
-r35 | thaoky | 2015-08-17 11:21:18 -0500 (Mon, 17 Aug 2015) | 1 line
+r35 | thaoky | 2015-08-17 16:21:18 +0000 (Mon, 17 Aug 2015) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r34 | thaoky | 2015-02-25 13:04:20 -0600 (Wed, 25 Feb 2015) | 1 line
+r34 | thaoky | 2015-02-25 19:04:20 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.toc
 
 ToC update (silly me !)
 ------------------------------------------------------------------------
-r33 | thaoky | 2015-02-25 12:27:59 -0600 (Wed, 25 Feb 2015) | 3 lines
+r33 | thaoky | 2015-02-25 18:27:59 +0000 (Wed, 25 Feb 2015) | 3 lines
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/Locales/repoenUS.lua
@@ -80,7 +92,7 @@ Changed paths:
 
 - Added support for options using <KeyValue>
 ------------------------------------------------------------------------
-r32 | thaoky | 2015-01-09 11:17:00 -0600 (Fri, 09 Jan 2015) | 2 lines
+r32 | thaoky | 2015-01-09 17:17:00 +0000 (Fri, 09 Jan 2015) | 2 lines
 Changed paths:
    M /trunk/DataStore_Quests.lua
    M /trunk/Options.xml
@@ -88,7 +100,7 @@ Changed paths:
 - Fixed usage of options
 - XML frames cleanup
 ------------------------------------------------------------------------
-r31 | thaoky | 2014-12-27 07:24:51 -0600 (Sat, 27 Dec 2014) | 1 line
+r31 | thaoky | 2014-12-27 13:24:51 +0000 (Sat, 27 Dec 2014) | 1 line
 Changed paths:
    M /trunk/Options.lua
    M /trunk/Options.xml

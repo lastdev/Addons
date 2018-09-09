@@ -1,37 +1,66 @@
 
 
+== Version 8.0.1
+
+* Bumped toc version number.
+* Include latest SpellFlashCore.
+
+
+== Version 8.0.0
+
+* Bumped toc version number.
+* make CheckAura work again (hopefully)
+* most Lua error squashed most instances of changed functions touched
+* updated break-on-damage CC updated Training Dummies
+* fixed s.SpellCost()
+* fixed Lua error in UNIT_SPELLCAST_SENT
+
+
+== Version 7.0.1
+
+* Bumped toc version number.
+
+
 == Version 7.0
 
 * Replaced all functionality with SpellFlashCore
+
 
 == Version 6.24.1
 
 * Reduced code size of ElvUI compatibility.
 
+
 == Version 6.24
 
 * Fixed compatibility with ElvUI.
+
 
 == Version 6.23
 
 * bump the toc for patch
 
+
 == Version 6.22
 
 * bump the toc for patch 6.1
 
+
 == Version 6.20
 
 * fix class module loading
+
 
 == Version 6.19
 
 * fix lua error that occurred when libButtonGlow isn't installed.
   - thought I tested it enough, but nope.
 
+  
 == Version 6.18
 
 * support new libButtonGlow-1.0 as used in Bartender4 (and maybe other addons)
+
 
 == Version 6.17
 

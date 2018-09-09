@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreSettings.lua 5709 2017-02-16 16:40:23Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreSettings.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -153,7 +153,7 @@ local settingDefaults = {
 	["core.scan.stage1throttle"] = Const.ALEVEL_OFF,
 	["core.scan.stage3garbage"] = Const.ALEVEL_OFF,
 	["core.scan.stage5garbage"] = false,
-	["core.scan.keepinfocacheonclose"] = false,
+	--["core.scan.keepinfocacheonclose"] = true, -- ### setting temporarily disabled
 	["core.tooltip.altchatlink_leftclick"] = false,
 	["core.tooltip.enableincombat"] = false,
 	["core.tooltip.depositcost"] = true,
@@ -605,8 +605,10 @@ function private._MakeGuiConfig() -- Name mangled to block gui creation at first
 	gui:AddTip(id, "Perform extra memory cleanup during Processing Stage 3. Will cause momentary freezes, and will cause Processing to take longer")
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.stage5garbage", "Processing Finished: Extra memory cleanup")
 	gui:AddTip(id, "Perform extra memory cleanup when scan processing finishes. Will cause a momentary freeze at the end of every scan")
+	--[[ ### temporarily disabled: we're converting to the LibAucItemCache lib, which doesn't have this capability yet
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.keepinfocacheonclose", "Keep data in Item Info cache when AuctionHouse closed")
 	gui:AddTip(id, "Auctioneer Scanner stores some item data to help reduce the number of server calls it makes. Normally this is cleared when the AuctionHouse is closed, to free up some memory. Enabling this option retains the data until the end of the session.")
+	--]]
 
 
 
@@ -804,5 +806,5 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5709 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreSettings.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreSettings")

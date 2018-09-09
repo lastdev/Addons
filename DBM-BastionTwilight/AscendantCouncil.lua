@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetZone()
@@ -24,11 +24,11 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH boss1 boss2 boss3 boss4"
 )
 
-local Ignacious = EJ_GetSectionInfo(3118)
-local Feludius = EJ_GetSectionInfo(3110)
-local Arion = EJ_GetSectionInfo(3128)
-local Terrastra = EJ_GetSectionInfo(3135)
-local Monstrosity = EJ_GetSectionInfo(3145)
+local Ignacious = DBM:EJ_GetSectionInfo(3118)
+local Feludius = DBM:EJ_GetSectionInfo(3110)
+local Arion = DBM:EJ_GetSectionInfo(3128)
+local Terrastra = DBM:EJ_GetSectionInfo(3135)
+local Monstrosity = DBM:EJ_GetSectionInfo(3145)
 
 --Feludius
 local warnHeartIce			= mod:NewTargetAnnounce(82665, 3, nil, false)
@@ -38,7 +38,6 @@ local warnFrozen			= mod:NewTargetAnnounce(82772, 3, nil, "Healer")
 --Ignacious
 local warnBurningBlood		= mod:NewTargetAnnounce(82660, 3, nil, false)
 local warnFlameTorrent		= mod:NewSpellAnnounce(82777, 2, nil, "Tank|Healer")--Not too useful to announce but will leave for now. CD timer useless.
-local warnAegisFlame		= mod:NewSpellAnnounce(82631, 4)
 --Terrastra
 local warnEruption			= mod:NewSpellAnnounce(83675, 2, nil, "Melee")
 local warnHardenSkin		= mod:NewSpellAnnounce(83718, 3, nil, "Tank")
@@ -66,7 +65,7 @@ local specWarnWaterLogged	= mod:NewSpecialWarningYou(82762)
 local specWarnHydroLance	= mod:NewSpecialWarningInterrupt(82752, "Melee")
 --Ignacious
 local specWarnBurningBlood	= mod:NewSpecialWarningYou(82660, false)
-local specWarnAegisFlame	= mod:NewSpecialWarningSpell(82631, nil, nil, nil, true)
+local specWarnAegisFlame	= mod:NewSpecialWarningSwitch(82631, nil, nil, nil, 1)
 local specWarnRisingFlames	= mod:NewSpecialWarningInterrupt(82636)
 --Terrastra
 local specWarnEruption		= mod:NewSpecialWarningSpell(83675, false)
@@ -127,7 +126,6 @@ local timerStaticOverloadCD	= mod:NewNextTimer(20, 92067, nil, nil, nil, 3, nil,
 local timerFlameStrikeCD	= mod:NewNextTimer(20, 92212, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
 local timerFrostBeaconCD	= mod:NewNextTimer(20, 92307, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
 
-mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("HeartIceIcon")
 mod:AddBoolOption("BurningBloodIcon")
 mod:AddBoolOption("LightningRodIcon")
@@ -150,8 +148,7 @@ local isBeacon = false
 local isRod = false
 local infoFrameUpdated = false
 local phase = 1
-local groundedName = GetSpellInfo(83581)
-local searingName = GetSpellInfo(83500)
+local groundedName, searingName = DBM:GetSpellInfo(83581), DBM:GetSpellInfo(83500)
 
 local shieldHealth = {
 	["heroic25"] = 2000000,
@@ -180,47 +177,31 @@ local function showGravityCrushWarning()
 	gravityCrushIcon = 8
 end
 
-local function checkGrounded()
-	if not UnitDebuff("player", groundedName) and not UnitIsDeadOrGhost("player") then
+local function checkGrounded(self)
+	if not DBM:UnitDebuff("player", groundedName) and not UnitIsDeadOrGhost("player") then
 		specWarnGrounded:Show()
 	end
-	if mod.Options.InfoFrame and not infoFrameUpdated then
+	if self.Options.InfoFrame and not infoFrameUpdated then
 		infoFrameUpdated = true
 		DBM.InfoFrame:SetHeader(L.WrongDebuff:format(groundedName))
-		DBM.InfoFrame:Show(5, "playergooddebuff", 83581)
+		DBM.InfoFrame:Show(5, "playergooddebuff", groundedName)
 	end
 end
 
-local function checkSearingWinds()
-	if not UnitDebuff("player", searingName) and not UnitIsDeadOrGhost("player") then
+local function checkSearingWinds(self)
+	if not DBM:UnitDebuff("player", searingName) and not UnitIsDeadOrGhost("player") then
 		specWarnSearingWinds:Show()
 	end
-	if mod.Options.InfoFrame and not infoFrameUpdated then
+	if self.Options.InfoFrame and not infoFrameUpdated then
 		infoFrameUpdated = true
 		DBM.InfoFrame:SetHeader(L.WrongDebuff:format(searingName))
-		DBM.InfoFrame:Show(5, "playergooddebuff", 83500)
-	end
-end
-
-local function updateBossFrame()
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		if phase == 1 then
-			DBM.BossHealth:AddBoss(43687, Feludius)
-			DBM.BossHealth:AddBoss(43686, Ignacious)
-		elseif phase == 2 then
-			DBM.BossHealth:AddBoss(43688, Arion)
-			DBM.BossHealth:AddBoss(43689, Terrastra)
-		elseif phase == 3 then
-			DBM.BossHealth:AddBoss(43735, Monstrosity)
-		end
+		DBM.InfoFrame:Show(5, "playergooddebuff", searingName)
 	end
 end
 
 function mod:OnCombatStart(delay)
 	DBM:GetModByName("BoTrash"):SetFlamestrike(true)
 	phase = 1
-	updateBossFrame()
 	table.wipe(frozenTargets)
 	table.wipe(lightningRodTargets)
 	table.wipe(gravityCrushTargets)
@@ -308,11 +289,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFlameTorrent:Show()
 		end
 	elseif args.spellId == 82631 then--Aegis of Flame
-		warnAegisFlame:Show()
 		specWarnAegisFlame:Show()
-		if DBM.BossHealth:IsShown() then
-			self:ShowShieldHealthBar(args.destGUID, args.spellName, shieldHealth[(DBM:GetCurrentInstanceDifficulty())])
-			self:ScheduleMethod(20, "RemoveShieldHealthBar", args.destGUID)
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:SetHeader(args.spellName)
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, shieldHealth[(DBM:GetCurrentInstanceDifficulty())])
 		end
 	elseif args.spellId == 82762 and args:IsPlayer() then
 		specWarnWaterLogged:Show()
@@ -496,10 +476,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif args.spellId == 82631 then	-- Shield Removed
-		self:UnscheduleMethod("RemoveShieldHealthBar", args.destGUID)
-		self:RemoveShieldHealthBar(args.destGUID)
 		if self:IsMelee() and (self:GetUnitCreatureId("target") == 43686 or self:GetUnitCreatureId("focus") == 43686) or not self:IsMelee() then
 			specWarnRisingFlames:Show(args.sourceName)--Only warn for melee targeting him or exclicidly put him on focus, else warn regardless if he's your target/focus or not if you aren't a melee
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:Hide()
 		end
 	end
 end
@@ -535,7 +516,7 @@ function mod:SPELL_CAST_START(args)
 		timerQuakeCD:Cancel()
 		timerQuakeCast:Start()
 		timerThundershockCD:Start()
-		self:Schedule(5, checkGrounded)
+		self:Schedule(5, checkGrounded, self)
 	elseif args.spellId == 83087 then
 		warnDisperse:Show()
 		timerDisperse:Start()
@@ -549,7 +530,7 @@ function mod:SPELL_CAST_START(args)
 		timerThundershockCD:Cancel()
 		timerThundershockCast:Start()
 		timerQuakeCD:Start()
-		self:Schedule(5, checkSearingWinds)
+		self:Schedule(5, checkSearingWinds, self)
 	elseif args.spellId == 84913 then
 		warnLavaSeed:Show()
 		timerLavaSeedCD:Start()
@@ -573,23 +554,23 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if (msg == L.Quake or msg:find(L.Quake)) and phase == 2 then
 		timerQuakeCD:Update(23, 33)
 		warnQuakeSoon:Show()
-		checkSearingWinds()
+		checkSearingWinds(self)
 		if self:IsDifficulty("heroic10", "heroic25") then
-			self:Schedule(3.3, checkSearingWinds)
-			self:Schedule(6.6, checkSearingWinds)
+			self:Schedule(3.3, checkSearingWinds, self)
+			self:Schedule(6.6, checkSearingWinds, self)
 		end
 	elseif (msg == L.Thundershock or msg:find(L.Thundershock)) and phase == 2 then
 		timerThundershockCD:Update(23, 33)
 		warnThundershockSoon:Show()
-		checkGrounded()
+		checkGrounded(self)
 		if self:IsDifficulty("heroic10", "heroic25") then
-			self:Schedule(3.3, checkGrounded)
-			self:Schedule(6.6, checkGrounded)
+			self:Schedule(3.3, checkGrounded, self)
+			self:Schedule(6.6, checkGrounded, self)
 		end
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	"<60.5> Feludius:Possible Target<nil>:boss1:Frost Xplosion (DND)::0:94739"
 	if spellId == 94739 and self:AntiSpam(2, 2) then -- Frost Xplosion (Phase 2 starts)
 		self:SendSync("Phase2")
@@ -620,7 +601,6 @@ function mod:OnSync(msg, boss)
 		specWarnBossLow:Show(boss)
 	elseif msg == "Phase2" and self:IsInCombat() then
 		phase = 2
-		updateBossFrame()
 		timerWaterBomb:Cancel()
 		timerGlaciate:Cancel()
 		timerAegisFlame:Cancel()
@@ -650,7 +630,6 @@ function mod:OnSync(msg, boss)
 		end
 	elseif msg == "Phase3" and self:IsInCombat() then
 		phase = 3
-		updateBossFrame()
 		timerFrostBeaconCD:Cancel()--Cancel here to avoid problems with orbs that spawn during the transition.
 		timerLavaSeedCD:Start(18)
 		timerGravityCrushCD:Start(28)

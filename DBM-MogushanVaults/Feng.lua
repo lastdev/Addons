@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(689, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60009)--60781 Soul Fragment
 mod:SetEncounterID(1390)
 mod:SetZone()
@@ -109,6 +109,7 @@ local sparkCount = 0
 local fragmentCount = 5
 local specialCount = 0
 local arcaneResonanceTargets = {}
+local nullBarrier = DBM:GetSpellInfo(115811)
 
 local function warnWildfire()
 	warnWildfireInfusion:Cancel()
@@ -172,7 +173,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specialCount = specialCount + 1
 		timerDrawFlame:Start()
 		specWarnDrawFlame:Show(specialCount)
-		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
+		if DBM:UnitBuff(nullBarrier, "player") and self:IsDifficulty("lfr25") then
 			specWarnBarrierNow:Show()
 		end
 	elseif spellId == 116821 then
@@ -194,7 +195,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specialCount = specialCount + 1
 		specWarnArcaneVelocity:Show(specialCount)
 		timerArcaneVelocity:Start()
-		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
+		if DBM:UnitBuff(nullBarrier, "player") and self:IsDifficulty("lfr25") then
 			specWarnBarrierNow:Show()
 		end
 	end
@@ -211,17 +212,18 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		if args:IsPlayer() and amount >= 2 then
 			specWarnLightningLash:Show(amount)
 		else
-			if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(131788)) then
+			if amount >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 				specWarnLightningLashOther:Show(args.destName)
 			end
 		end
+	elseif spellId == 116942 then
 		warnFlamingSpear:Show(args.destName, amount)
 		timerFlamingSpear:Start(args.destName)
 		timerFlamingSpearCD:Start()
 		if args:IsPlayer() and amount >= 2 then
 			specWarnFlamingSpear:Show(amount)
 		else
-			if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(116942)) then
+			if amount >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 				specWarnFlamingSpearOther:Show(args.destName)
 			end
 		end
@@ -232,7 +234,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		if args:IsPlayer() and amount >= 2 then
 			specWarnArcaneShock:Show(amount)
 		else
-			if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(131790)) then
+			if amount >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 				specWarnArcaneShockOther:Show(args.destName)
 			end
 		end
@@ -243,7 +245,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		if args:IsPlayer() and amount >= 2 then
 			specWarnShadowBurn:Show(amount)
 		else
-			if amount >= 2 and not UnitIsDeadOrGhost("player") or not UnitDebuff("player", GetSpellInfo(131792)) then
+			if amount >= 2 and not UnitIsDeadOrGhost("player") or not DBM:UnitDebuff("player", args.spellName) then
 				specWarnShadowBurnOther:Show(args.destName)
 			end
 		end
@@ -288,7 +290,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnEpicenter:Show(specialCount)
 		timerEpicenter:Start()
 		timerEpicenterCD:Start(nil, specialCount + 1)
-		if UnitBuff(GetSpellInfo(115811), "player") and self:IsDifficulty("lfr25") then
+		if DBM:UnitBuff(nullBarrier, "player") and self:IsDifficulty("lfr25") then
 			specWarnBarrierNow:Schedule(2)
 		end
 	elseif args:IsSpellID(116157, 116295) then
@@ -377,7 +379,7 @@ function mod:OnSync(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 117203 then--Siphoning Shield
 		specialCount = specialCount + 1
 		specWarnSiphoningShield:Show(specialCount)

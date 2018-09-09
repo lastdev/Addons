@@ -4,11 +4,6 @@
 --[[
 GTFO Ignore List
 Author: Zensunim of Malygos
-
-Change Log:
-	v4.12
-		- Implemented ignore list system
-	
 ]]--
 
 GTFO.IgnoreSpellCategory["HagaraWateryEntrenchment"] = {
@@ -60,6 +55,9 @@ GTFO.IgnoreScan["203124"] = true; -- Mark of Lethon
 GTFO.IgnoreScan["204766"] = true; -- Energy Surge (Skorpyron)
 GTFO.IgnoreScan["218503"] = true; -- Recursive Strikes
 GTFO.IgnoreScan["218508"] = true; -- Recursive Strikes
+GTFO.IgnoreScan["186416"] = true; -- Torment of Flames
+GTFO.IgnoreScan["80354"] = true; -- Time Warp
+GTFO.IgnoreScan["258018"] = true; -- Sense of Dread
 
 
 

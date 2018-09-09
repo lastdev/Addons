@@ -1,17 +1,17 @@
 ## Title: Auc:Util:AHWindowControl
 ## Notes: Add general utilities to the Auction House Frame - protects from closing, allows repositioning, and limited scaling.
 ##
-## Interface: 70200
+## Interface: 80000
 ## LoadOnDemand: 0
 ## Disabled: 0
 ## Dependencies: Auc-Advanced
 ##
-## Version: 7.5.5714 (TasmanianThylacine)
+## Version: 7.7.6076 (SwimmingSeadragon)
 ## Revision: $Id: Auc-Util-AHWindowControl.toc
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 70200
+## X-Max-Interface: 80000
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

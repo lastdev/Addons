@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "7.3.37"
+local VERSION = "8.0.37"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -92,9 +92,7 @@ function FloTotemBar_OnLoad(self)
 	self:RegisterEvent("SPELL_UPDATE_COOLDOWN");
 	self:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
 	self:RegisterEvent("UPDATE_BINDINGS");
-	self:RegisterEvent("GLYPH_ADDED");
-	self:RegisterEvent("GLYPH_REMOVED");
-
+	
 	if self.totemtype ~= "CALL" then
 		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player");
 		self:RegisterEvent("PLAYER_DEAD");
@@ -110,7 +108,7 @@ end
 
 function FloTotemBar_OnEvent(self, event, arg1, ...)
 
-	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" or event == "GLYPH_ADDED" or event == "GLYPH_REMOVED" or event == "PLAYER_TALENT_UPDATE" or event == "PLAYER_PVP_TALENT_UPDATE" then
+	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" or event == "PLAYER_TALENT_UPDATE" or event == "PLAYER_PVP_TALENT_UPDATE" then
 		if not changingSpec then
 			FloLib_Setup(self);
 		end
@@ -121,7 +119,8 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 		end
 
 	elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
-		local spellName = ...;
+		local _, spellId = ...;
+		local spellName = GetSpellInfo(spellId);
 		if arg1 == "player" and spellName == FLOLIB_ACTIVATE_SPEC then
 			changingSpec = false;
 		end
@@ -421,30 +420,16 @@ function FloTotemBar_UpdatePosition(self)
 
 	self:ClearAllPoints();
 	if self == FloBarEARTH or self == FloBarTRAP then
-		local yOffset = -3;
+		local yOffset = 0;
 		local yOffset1 = 0;
 		local yOffset2 = 0;
 		local anchorFrame;
 
 		if not MainMenuBar:IsShown() and not (VehicleMenuBar and VehicleMenuBar:IsShown()) then
 			anchorFrame = UIParent;
-			yOffset = 110-UIParent:GetHeight();
+			yOffset = 110 - UIParent:GetHeight();
 		else
 			anchorFrame = MainMenuBar;
-
-                        local numWatchBars = 0;
-		        numWatchBars = numWatchBars + (ReputationWatchBar:IsShown() and 1 or 0);
-		        numWatchBars = numWatchBars + (HonorWatchBar:IsShown() and 1 or 0);
-		        numWatchBars = numWatchBars + (ArtifactWatchBar:IsShown() and 1 or 0);
-                        numWatchBars = numWatchBars + (MainMenuExpBar:IsShown() and 1 or 0);
-
-			if numWatchBars > 1 then
-				yOffset = yOffset + 9;
-			end
-
-			if MainMenuBarMaxLevelBar:IsShown() then
-				yOffset = yOffset - 5;
-			end
 
 			if SHOW_MULTI_ACTIONBAR_2 then
 				yOffset2 = yOffset2 + 45;
@@ -456,11 +441,11 @@ function FloTotemBar_UpdatePosition(self)
 		end
 
 		if FLO_CLASS_NAME == "HUNTER" then
-                        if FloAspectBar ~= nil then
-                                self:SetPoint("LEFT", FloAspectBar, "RIGHT", 10/ACTIVE_OPTIONS.scale, 0);
-                        else
-			        self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
-                        end
+            if FloAspectBar ~= nil then
+                self:SetPoint("LEFT", FloAspectBar, "RIGHT", 10/ACTIVE_OPTIONS.scale, 0);
+            else
+			    self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
+            end
 		else
 			self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 464, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale);
 		end

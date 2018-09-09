@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: AskPrice.lua 5599 2016-05-23 16:50:35Z brykrys $
+	Version: 7.7.6070 (SwimmingSeadragon)
+	Revision: $Id: AskPrice.lua 6070 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	Auctioneer AskPrice created by Mikezter and merged into
@@ -38,7 +38,6 @@ local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
 
-private.whisperList = {}
 private.sentRequest = {}
 private.requestQueue = {}
 private.sentAskPriceAd = {}
@@ -77,9 +76,8 @@ function lib.OnLoad(addon)
 	private.frame:SetScript("OnEvent", private.onEvent)
 	private.frame:SetScript("OnUpdate", private.onUpdate)
 
-	AucAdvanced.Const.PLAYERLANGUAGE = GetDefaultLanguage("player")
 
-	Stubby.RegisterFunctionHook("ChatFrame_OnEvent", -200, private.onEventHook)
+	AucAdvanced.Const.PLAYERLANGUAGE = GetDefaultLanguage("player")
 
 	do
 		local function filter(self, event, message, ...)
@@ -297,14 +295,6 @@ function private.sendResponse(link, count, player, answerCount, totalSeenCount, 
 	end
 end
 
-function private.onEventHook(_, _, self, event, arg1, ...)
-	if (event == "CHAT_MSG_WHISPER_INFORM" or event == "CHAT_MSG_BN_WHISPER_INFORM") then
-		if (private.whisperList[arg1]) then
-			private.whisperList[arg1] = nil
-		end
-	end
-end
-
 function private.getData(itemLink)
 	local marketValue, seenCount = AucAdvanced.API.GetMarketValue(itemLink)
 	local vendorPrice = GetSellValue and GetSellValue(itemLink)
@@ -330,7 +320,6 @@ function private.getItems(str)
 end
 
 function private.sendWhisper(message, player)
-	private.whisperList[message] = true
 	if not private.getOption('util.askprice.whispers') then
 		AskPriceSentMessages[message] = true
 	end
@@ -341,6 +330,7 @@ function private.sendWhisper(message, player)
 		ChatThrottleLib:SendChatMessage("ALERT", "AucAdvAskPrice", message, "WHISPER", AucAdvanced.Const.PLAYERLANGUAGE, player)
 	end
 end
+
 
 function private.sendAddOnMessage(channel, ...)
 	local message = string.join(";", ...)
@@ -470,7 +460,7 @@ end
 
 --This function changed after AskPrice revision 2825 to include AucAdvanced's revision number in adition to AskPrice's
 function private.GetVersion()
-	return tonumber(("$Revision: 5599 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
+	return tonumber(("$Rev: 6070 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
 end
 
 --This function is used to check if the received request (which should be lowercased before the function is called) is a valid SmartWords request
@@ -591,4 +581,4 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, _TRANS('ASKP_HelpTooltip_Whisper')) --"Shows (enabled) or hides (disabled) outgoing whispers from Askprice."
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5599 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 6070 $")

@@ -7,8 +7,30 @@ local CALENDAR_WEEKDAY_NORMALIZED_TEX_WIDTH	= 90 / 256 - 0.001		-- fudge factor 
 local CALENDAR_WEEKDAY_NORMALIZED_TEX_HEIGHT	= 28 / 256 - 0.001		-- fudge factor to prevent texture seams
 
 local CALENDAR_MAX_DAYS_PER_MONTH			= 42	-- 6 weeks
-local CALENDAR_MONTH_NAMES = { CalendarGetMonthNames() }
-local CALENDAR_WEEKDAY_NAMES = { CalendarGetWeekdayNames() }
+local CALENDAR_MONTH_NAMES = {
+	MONTH_JANUARY,
+	MONTH_FEBRUARY,
+	MONTH_MARCH,
+	MONTH_APRIL,
+	MONTH_MAY,
+	MONTH_JUNE,
+	MONTH_JULY,
+	MONTH_AUGUST,
+	MONTH_SEPTEMBER,
+	MONTH_OCTOBER,
+	MONTH_NOVEMBER,
+	MONTH_DECEMBER,
+}
+
+local CALENDAR_WEEKDAY_NAMES = {
+	WEEKDAY_SUNDAY,
+	WEEKDAY_MONDAY,
+	WEEKDAY_TUESDAY,
+	WEEKDAY_WEDNESDAY,
+	WEEKDAY_THURSDAY,
+	WEEKDAY_FRIDAY,
+	WEEKDAY_SATURDAY,
+}
 
 local CALENDAR_FULLDATE_MONTH_NAMES = {
 	-- month names show up differently for full date displays in some languages
@@ -51,11 +73,16 @@ addon:Controller("AltoholicUI.Calendar", {
 	Update = function(frame)
 		-- taken from CalendarFrame_Update() in Blizzard_Calendar.lua, adjusted for my needs.
 		
-		local presentWeekday, presentMonth, presentDay, presentYear = CalendarGetDate()
-		local prevMonth, prevYear, prevNumDays = CalendarGetMonth(-1)
-		local nextMonth, nextYear, nextNumDays = CalendarGetMonth(1)
-		local month, year, numDays, firstWeekday = CalendarGetMonth()
-
+		local DateInfo = C_Calendar.GetDate()
+		local presentWeekday, presentMonth, presentDay, presentYear = DateInfo.weekday, DateInfo.month, DateInfo.monthDay, DateInfo.year
+		
+		local CurMonthInfo = C_Calendar.GetMonthInfo()
+		local PrevMonthInfo = C_Calendar.GetMonthInfo(-1)
+		local NextMonthInfo = C_Calendar.GetMonthInfo(1)
+		local prevMonth, prevYear, prevNumDays = PrevMonthInfo.month, PrevMonthInfo.year, PrevMonthInfo.numDays
+		local nextMonth, nextYear, nextNumDays = NextMonthInfo.month, NextMonthInfo.year, NextMonthInfo.numDays
+		local month, year, numDays, firstWeekday = CurMonthInfo.month, CurMonthInfo.year, CurMonthInfo.numDays, CurMonthInfo.firstWeekday
+		
 		-- set title
 		frame.MonthYear:SetText(format("%s %s", CALENDAR_MONTH_NAMES[month], year))
 		

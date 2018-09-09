@@ -63,7 +63,7 @@ function spellCache.GetIcon(name)
       for spellId, icon in pairs(icons) do
         if (not bestMatch) then
           bestMatch = spellId
-        elseif(IsSpellKnown(spellId)) then
+        elseif(type(spellId) == "number" and IsSpellKnown(spellId)) then
           bestMatch = spellId
         end
       end
@@ -126,20 +126,16 @@ local function Lev(str1, str2)
 end
 
 function spellCache.BestKeyMatch(nearkey)
-  for key, value in pairs(cache) do
-    if(nearkey == key) then
-      return key;
-    end
-  end
-  for key, value in pairs(cache) do
-    if(nearkey:lower() == key:lower()) then
-      return key;
-    end
-  end
   local bestKey = "";
   local bestDistance = math.huge;
   local partialMatches = {};
+  if cache[nearkey] then
+    return nearkey
+  end
   for key, value in pairs(cache) do
+    if key:lower() == nearkey:lower() then
+      return key
+    end
     if(key:lower():find(nearkey:lower(), 1, true)) then
       partialMatches[key] = value;
     end

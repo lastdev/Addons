@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreConst.lua 5693 2016-12-22 23:00:47Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreConst.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -132,7 +132,6 @@ local lib = {
 	-- Temporary flags (only used during processing - higher values to leave lower ones free for permanent flags)
 	FLAG_DIRTY = 64,
 	FLAG_EXPIRED = 128,
-	FLAG_CORRUPT = 256,
 
 	ALEVEL_OFF = 0,
 	ALEVEL_MIN = 1,
@@ -142,8 +141,8 @@ local lib = {
 	ALEVEL_MAX = 5,
 
 	MAXSKILLLEVEL = 800,
-	MAXUSERLEVEL = 110,
-	MAXITEMLEVEL = 950,
+	MAXUSERLEVEL = 120,
+	MAXITEMLEVEL = 1100,
 	MAXBIDPRICE = 99999999999, -- copy from Blizzard_AuctionUI.lua, so it is available before AH loads
 }
 AucAdvanced.Const = lib
@@ -243,5 +242,5 @@ end
 -- ### todo: keep checking this conversion is correct, otherwise will have to hard-code lookup table
 lib.AC_PetType2SubClassID = {GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET)}
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreConst.lua $", "$Rev: 5693 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreConst.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreConst")

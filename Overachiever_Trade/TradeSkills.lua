@@ -1,6 +1,6 @@
 
 local L = OVERACHIEVER_STRINGS
-local GetAchievementInfo = Overachiever.GetAchievementInfo
+local GetAchievementInfo = GetAchievementInfo
 local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 local LBI = LibStub:GetLibrary("LibBabble-Inventory-3.0"):GetReverseLookupTable()
 
@@ -17,12 +17,13 @@ do
       GourmetPandaren = true,
 	  GourmetDraenor = true,
 	  LegionMenu = true,
+	  BattleMenu = true,
     }
   }
-  local lookup, id, name, _, completed
+  local id, name, _, completed
   for tradeName, list in pairs(TradeSkillAch) do
     TradeSkillLookup[tradeName] = {}
-    lookup = TradeSkillLookup[tradeName]
+    local lookup = TradeSkillLookup[tradeName]
     for ach in pairs(list) do
       id = OVERACHIEVER_ACHID[ach]
       for i=1,GetAchievementNumCriteria(id) do
@@ -54,8 +55,9 @@ do
 end
 
 local function getOpenTradeskill()
-	local _, name = C_TradeSkillUI.GetTradeSkillLine()
-	return name
+	return select(7, C_TradeSkillUI.GetTradeSkillLine())
+	--local _, name = C_TradeSkillUI.GetTradeSkillLine()
+	--return name
 end
 
 

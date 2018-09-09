@@ -218,7 +218,22 @@ local classMasks = {
 	[512] = "MONK",
 	[1024] = "DRUID",
 	[2048] = "DEMONHUNTER"
-}	
+}
+
+local classArmorMask = {
+	["WARRIOR"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
+	["PALADIN"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
+	["DEATHKNIGHT"] = 35, -- Warrior (1) + Paladin (2) + DeathKnight (32)
+	["HUNTER"] = 68, -- Hunter (4) + Shaman (64)
+	["SHAMAN"] = 68, -- Hunter (4) + Shaman (64)
+	["PRIEST"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
+	["MAGE"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
+	["WARLOCK"] = 400, -- Priest (16) + Mage (128) + Warlock (256)
+	["ROGUE"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
+	["MONK"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
+	["DRUID"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
+	["DEMONHUNTER"] = 3592, -- Rogue (8) + Monk (512) + Druid (1024) + DemonHunter (2048)
+}
 
 local function ScanTransmogSets()
 	local _, englishClass = UnitClass("player")
@@ -231,6 +246,8 @@ local function ScanTransmogSets()
 
 	for _, set in pairs(sets) do
 		local class = classMasks[set.classMask]
+		
+		if classArmorMask[englishClass] == set.classMask then class = englishClass end
 
 		if class == englishClass then
 			local setID = set.setID
@@ -494,8 +511,8 @@ end
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", OnPlayerEquipmentChanged)
-	addon:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY", OnPlayerAilReady)
-	addon:RegisterEvent("TRANSMOG_COLLECTION_LOADED", OnTransmogCollectionLoaded)
+	-- addon:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY", OnPlayerAilReady)
+	-- addon:RegisterEvent("TRANSMOG_COLLECTION_LOADED", OnTransmogCollectionLoaded)
 	addon:RegisterEvent("TRANSMOG_COLLECTION_UPDATED", OnTransmogCollectionUpdated)
 	
 	addon:SetupOptions()

@@ -6,7 +6,7 @@ local function createOptions(id, data)
       type = "input",
       width = "double",
       name = L["Texture"],
-      order = 0
+      order = 1
     },
     desaturate = {
       type = "toggle",
@@ -46,16 +46,19 @@ local function createOptions(id, data)
       name = L["Mirror"],
       order = 20
     },
+    alpha = {
+      type = "range",
+      name = L["Alpha"],
+      order = 25,
+      min = 0,
+      max = 1,
+      bigStep = 0.01,
+      isPercent = true
+    },
     rotate = {
       type = "toggle",
       name = L["Allow Full Rotation"],
-      order = 25
-    },
-    space3 = {
-      type = "execute",
-      name = "",
-      order = 30,
-      image = function() return "", 0, 0 end,
+      order = 30
     },
     rotation = {
       type = "range",
@@ -76,15 +79,12 @@ local function createOptions(id, data)
       order = 35,
       hidden = function() return data.rotate end
     },
-    spacer = {
-      type = "header",
-      name = "",
-      order = 50
-    }
   };
-  options = WeakAuras.AddPositionOptions(options, id, data);
 
-  return options;
+  return {
+    texture = options,
+    position = WeakAuras.PositionOptions(id, data),
+  };
 end
 
 local function createThumbnail(parent)
@@ -117,7 +117,7 @@ local function modifyThumbnail(parent, region, data, fullModify, size)
     region.texture:SetHeight(scale * data.height);
   end
 
-  region.texture:SetTexture(data.texture);
+  WeakAuras.SetTextureOrAtlas(region.texture, data.texture);
   region.texture:SetVertexColor(data.color[1], data.color[2], data.color[3], data.color[4]);
   region.texture:SetBlendMode(data.blendMode);
 

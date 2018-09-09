@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16256 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetZone()
@@ -24,9 +24,6 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, more review on Feast of Blood
---TODO, voices similar to 184964a/b/c but for Brand of argus instead of torment. Or better. Maybe generic with no spell name just "break first" "break second" that works for similar spell in future
---TODO, determine how often tanks swap for 216024 (Volatile Wound), if at all
---TODO, figure out ring of shadow
 --TODO, redo/update LFR/Normal timers since they probably also have phase 2 and phase 3 variations
  --(ability.id = 212997 or ability.id = 213238 or ability.id = 208230 or ability.id = 213531 or ability.id = 206365) and type = "begincast"
 local warnCarrionPlague				= mod:NewTargetAnnounce(206480, 3)
@@ -72,18 +69,6 @@ local countdownFeastOfBlood			= mod:NewCountdown("AltTwo25", 208230, "Tank")
 local countdownNightPhase			= mod:NewCountdown(32, 206365, nil, nil, 10)
 local countdownCarrionNightmare 	= mod:NewCountdown("Alt4", 215988, false, 2, 3)
 
-local voiceCarrionPlague			= mod:NewVoice(206480)--scatter
-local voiceSeekerSwarm				= mod:NewVoice(213238)--targetyou/farfromline
-local voiceFeastOfBlood				= mod:NewVoice(208230)--runout/tauntboss
-local voiceEchoesOfVoid				= mod:NewVoice(213531)--findshelter
-local voiceAdds						= mod:NewVoice(216726, "-Healer", DBM_CORE_AUTO_VOICE3_OPTION_TEXT)--killmob
-local voiceCarrionNightmare			= mod:NewVoice(215988)--watchstep
---Nightborne
-local voiceBlastNova				= mod:NewVoice(216034)--kickcast
-local voiceNetherZone				= mod:NewVoice(216027)--runaway
---The Legion
-local voiceBurningSoul				= mod:NewVoice(216040)--runout
-
 mod:AddRangeFrameOption(8, 216040)
 mod:AddSetIconOption("SetIconOnBrandOfArgus", 212794, true)
 mod:AddInfoFrameOption(212794)
@@ -106,7 +91,7 @@ local P3SharedCastTimers = {0, 25.6, 36.1, 22.5}--Seeker, Brand, Feast
 --Normal/LFR HAD different timers. Normal now matches heroic so assume LFR also does for now
 --local sharedCastTimersFaster = {0, 15, 25, 14.5}--Carrion Plague, feast of blood, Seeker Swarm (faster on normal/LFR since no brand of argus)
 local argusTargets = {}
-local carrionDebuff = GetSpellInfo(206480)
+local carrionDebuff, argusDebuff, batsName, essenceOfNightDebuff = DBM:GetSpellInfo(206480), DBM:GetSpellInfo(212794), DBM:EJ_GetSectionInfo(13528), DBM:GetSpellInfo(206466)
 mod.vb.phase = 1
 mod.vb.darkPhase = false
 mod.vb.carrionPlagueCast = 0
@@ -122,7 +107,6 @@ mod.vb.CarrionPlagueCount = 0
 
 local updateInfoFrame, breakMarks
 do
-	local argusDebuff, batsName, essenceOfNightDebuff = GetSpellInfo(212794), EJ_GetSectionInfo(13528), GetSpellInfo(206466)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)
@@ -144,7 +128,7 @@ do
 		for i = 1, #argusTargets do
 			local name = argusTargets[i]
 			local uId = DBM:GetRaidUnitId(name)
-			if uId and UnitDebuff(uId, argusDebuff) then
+			if uId and DBM:UnitDebuff(uId, argusDebuff) then
 				addLine(name, i)
 			end
 		end
@@ -217,7 +201,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 215988 then
 		self.vb.carrionNightmare = self.vb.carrionNightmare + 1
 		specWarnCarrionNightmare:Show()
-		voiceCarrionNightmare:Play("watchstep")
+		specWarnCarrionNightmare:Play("watchstep")
 		if self.vb.carrionNightmare < 6 then
 			timerCarrionNightmare:Start(nil, self.vb.carrionNightmare+1)
 			countdownCarrionNightmare:Start()
@@ -266,16 +250,16 @@ function mod:SPELL_CAST_START(args)
 			timerSeekerSwarmCD:Start(timer, self.vb.seekerSwarmCast+1)
 			countdownSeekerSwarm:Start(timer)
 		end
-		if UnitDebuff("player", carrionDebuff) then
+		if DBM:UnitDebuff("player", carrionDebuff) then
 			yellSeekerSwarm:Yell()
-			voiceSeekerSwarm:Play("targetyou")
+			specWarnSeekerSwarm:Play("targetyou")
 		else
-			voiceSeekerSwarm:Play("farfromline")
+			specWarnSeekerSwarm:Play("farfromline")
 		end
 	elseif spellId == 213531 then
 		self.vb.echoesOfVoidCast = self.vb.echoesOfVoidCast + 1
 		specWarnEchoesOfVoid:Show(self.vb.echoesOfVoidCast)
-		voiceEchoesOfVoid:Play("findshelter")
+		specWarnEchoesOfVoid:Play("findshelter")
 		if self.vb.echoesOfVoidCast == 1 then
 			--Only cast twice per cycle
 			if self.vb.phase == 1 then
@@ -307,9 +291,9 @@ function mod:SPELL_CAST_START(args)
 		countdownNightPhase:Start()
 		timerCarrionNightmare:Start(6, 1)
 		countdownCarrionNightmare:Start(6)
-	elseif spellId == 216034 and self:CheckInterruptFilter(args.sourceGUID) then
+	elseif spellId == 216034 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBlastNova:Show(args.sourceName)
-		voiceBlastNova:Play("kickcast")
+		specWarnBlastNova:Play("kickcast")
 	elseif spellId == 216723 then
 		warnRingOfShadow:Show()
 	end
@@ -367,7 +351,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnCarrionPlague:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnCarrionPlague:Show()
-			voiceCarrionPlague:Play("scatter")
+			specWarnCarrionPlague:Play("scatter")
 		end
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Update()
@@ -382,16 +366,16 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 208230 then
 		if args:IsPlayer() then
 			specWarnFeastOfBlood:Show()
-			voiceFeastOfBlood:Play("runout")
+			specWarnFeastOfBlood:Play("runout")
 		else
 			specWarnFeastOfBloodOther:Show(args.destName)
-			voiceFeastOfBlood:Play("tauntboss")
+			specWarnFeastOfBloodOther:Play("tauntboss")
 		end
 	elseif spellId == 216040 then
 		if args:IsPlayer() then
 			specWarnBurningSoul:Show()
 			yellBurningSoul:Yell()
-			voiceBurningSoul:Play("runout")
+			specWarnBurningSoul:Play("runout")
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
 			end
@@ -439,7 +423,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 216027 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnNetherZoneGTFO:Show()
-		voiceNetherZone:Play("runaway")
+		specWarnNetherZoneGTFO:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -468,7 +452,7 @@ function mod:OnSync(msg, targetname)
 	if msg == "Adds" then
 		self.vb.addsCount = self.vb.addsCount + 1
 		specWarnAdds:Show()
-		voiceAdds:Play("killmob")
+		specWarnAdds:Play("killmob")
 		if self.vb.phase == 2 then
 			if self.vb.addsCount == 1 then
 				timerAddsCD:Start(47)

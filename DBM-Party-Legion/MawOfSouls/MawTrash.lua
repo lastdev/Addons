@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MawTrash", "DBM-Party-Legion", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15917 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 --mod:SetEncounterID(1823)
 mod:SetZone()
 
@@ -14,19 +14,14 @@ mod:RegisterEvents(
 local specWarnScream			= mod:NewSpecialWarningInterrupt(198405, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDefiantStrike		= mod:NewSpecialWarningDodge(195031, nil, nil, nil, 1, 2)
 
-local voiceScream				= mod:NewVoice(198405, "HasInterrupt")--kickcast
-local voiceDefiantStrike		= mod:NewVoice(195031)--chargemove (eh, kind of a charge?)
-
-mod:RemoveOption("HealthFrame")
-
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 198405 and self:CheckInterruptFilter(args.sourceGUID) then
+	if spellId == 198405 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnScream:Show(args.sourceName)
-		voiceScream:Play("kickcast")
+		specWarnScream:Play("kickcast")
 	elseif spellId == 195031 and self:AntiSpam(3, 1) then
 		specWarnDefiantStrike:Show()
-		voiceDefiantStrike:Play("chargemove")
+		specWarnDefiantStrike:Play("chargemove")
 	end
 end

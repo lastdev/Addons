@@ -6,6 +6,16 @@
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Totals" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="400" y="24" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="30" y="13" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
 		<Frames>
 			<Button parentKey="MenuItem1" inherits="AltoTabSummaryMenuItemTemplate" id="1">
 				<Anchors>
@@ -37,11 +47,11 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem7" inherits="AltoTabSummaryMenuItemTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
+			<!-- <Button parentKey="MenuItem7" inherits="AltoTabSummaryMenuItemTemplate" id="7"> -->
+				<!-- <Anchors> -->
+					<!-- <Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" /> -->
+				<!-- </Anchors> -->
+			<!-- </Button> -->
 			
 			<Button parentKey="RealmsIcon" inherits="AltoTabSummaryIconTemplate" id="1">
 				<Anchors>
@@ -177,7 +187,7 @@
 				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)
 				
 				-- "Artifacts"
-				self.MenuItem7:SetText(GetCategoryInfo(15256))	
+				-- self.MenuItem7:SetText(GetCategoryInfo(15256))	
 				self.RequestSharing:SetText(L["Account Sharing"])
 				
 				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())

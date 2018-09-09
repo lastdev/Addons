@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -68,9 +68,9 @@ local yellHuntersMark				= mod:NewYell(143882, nil, false)
 local specWarnHuntersMarkOther		= mod:NewSpecialWarningTarget(143882, false)
 
 --Nazgrim Core Abilities
-local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 1, 2457)
+local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 1, "Interface\\Icons\\ability_warrior_offensivestance")
 local timerSunder					= mod:NewTargetTimer(30, 143494, nil, "Tank|Healer")
-local timerSunderCD					= mod:NewCDTimer(8, 143494, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSunderCD					= mod:NewCDTimer(7.5, 143494, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerExecuteCD				= mod:NewCDTimer(18, 143502, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerBoneCD					= mod:NewCDTimer(30, 143638, nil, false, nil, 5)
 local timerBattleStanceCD			= mod:NewNextTimer(60, 143589, nil, nil, nil, 6)
@@ -91,7 +91,7 @@ mod:AddInfoFrameOption("ej7909")
 
 --Upvales, don't need variables
 local UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation
-local sunder = GetSpellInfo(143494)
+local spellName1, spellName2, spellName3, spellName4, sunder = DBM:GetSpellInfo(143500), DBM:GetSpellInfo(143536), DBM:GetSpellInfo(143503), DBM:GetSpellInfo(143872), DBM:GetSpellInfo(143494)
 --Tables, can't recover
 local dotWarned = {}
 --Important, needs recover
@@ -107,84 +107,94 @@ local addsTable = {
 	[71656] = 4,--Sniper (Heroic)
 }
 
-local bossPower = 0--Will be moved into updateinfoframe function when test code removed
-local lines = {}
-local function updateInfoFrame()
-	table.wipe(lines)
-	if UnitExists("boss1") then
-		bossPower = UnitPower("boss1")
+local updateInfoFrame
+do
+	local bossPower = 0
+	local lines = {}
+	local sortedLines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
 	end
-	if bossPower < 50 then
-		lines["|cFF088A08"..GetSpellInfo(143500).."|r"] = bossPower--Green
-		lines[GetSpellInfo(143536)] = 50
-		lines[GetSpellInfo(143503)] = 70
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower < 70 then
-		lines[GetSpellInfo(143500)] = 25
-		lines["|cFF088A08"..GetSpellInfo(143536).."|r"] = bossPower--Green (Would yellow be too hard to see on this?)
-		lines[GetSpellInfo(143503)] = 70
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower < 100 then
-		lines[GetSpellInfo(143500)] = 25
-		lines[GetSpellInfo(143536)] = 50
-		lines["|cFF088A08"..GetSpellInfo(143503).."|r"] = bossPower--Green (Maybe change to orange?)
-		lines[GetSpellInfo(143872)] = 100
-	elseif bossPower == 100 then
-		lines[GetSpellInfo(143500)] = 25
-		lines[GetSpellInfo(143536)] = 50
-		lines[GetSpellInfo(143503)] = 70
-		lines["|cFFFF0000"..GetSpellInfo(143872).."|r"] = bossPower--Red (definitely work making this one red, it's really the only critically bad one)
-	end
-	if mod:IsMythic() then--Same on 10 heroic? TODO, get normal LFR and flex adds info verified
-		if mod.vb.addsCount == 0 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 1 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.hunter
-		elseif mod.vb.addsCount == 2 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 3 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.hunter
-		elseif mod.vb.addsCount == 4 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 5 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.hunter
-		elseif mod.vb.addsCount == 6 then
-			lines[L.nextAdds] = L.rogue..", "..L.hunter..", "..L.warrior
-		elseif mod.vb.addsCount == 7 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 8 then
-			lines[L.nextAdds] = L.shaman..", "..L.hunter..", "..L.warrior
-		elseif mod.vb.addsCount == 9 then
-			lines[L.nextAdds] = L.mage..", "..L.hunter..", "..L.warrior
-		else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
-			lines[""] = ""
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		if UnitExists("boss1") then
+			bossPower = UnitPower("boss1")
 		end
-	else--Not heroic
-		if mod.vb.addsCount == 0 then
-			lines[L.nextAdds] = L.mage..", "..L.warrior
-		elseif mod.vb.addsCount == 1 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 2 then
-			lines[L.nextAdds] = L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 3 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman
-		elseif mod.vb.addsCount == 4 then
-			lines[L.nextAdds] = L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 5 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue
-		elseif mod.vb.addsCount == 6 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.rogue
-		elseif mod.vb.addsCount == 7 then
-			lines[L.nextAdds] = L.shaman..", "..L.rogue..", "..L.warrior
-		elseif mod.vb.addsCount == 8 then
-			lines[L.nextAdds] = L.mage..", "..L.shaman..", "..L.warrior
-		elseif mod.vb.addsCount == 9 then
-			lines[L.nextAdds] = L.mage..", "..L.rogue..", "..L.warrior
-		else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
-			lines[""] = ""
+		if bossPower < 50 then
+			addLine("|cFF088A08"..spellName1.."|r", bossPower)--Green
+			addLine(spellName2, 50)
+			addLine(spellName3, 70)
+			addLine(spellName4, 100)
+		elseif bossPower < 70 then
+			addLine(spellName1, 25)
+			addLine("|cFF088A08"..spellName2.."|r", bossPower)--Green (Would yellow be too hard to see on this?)
+			addLine(spellName3, 70)
+			addLine(spellName4, 100)
+		elseif bossPower < 100 then
+			addLine(spellName1, 25)
+			addLine(spellName2, 50)
+			addLine("|cFF088A08"..spellName3.."|r", bossPower)--Green (Maybe change to orange?)
+			addLine(spellName4, 100)
+		elseif bossPower == 100 then
+			addLine(spellName1, 25)
+			addLine(spellName2, 50)
+			addLine(spellName3, 70)
+			addLine("|cFFFF0000"..spellName4.."|r", bossPower)--Red (definitely work making this one red, it's really the only critically bad one)
 		end
+		if mod:IsMythic() then--Same on 10 heroic? TODO, get normal LFR and flex adds info verified
+			if mod.vb.addsCount == 0 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 1 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.hunter)
+			elseif mod.vb.addsCount == 2 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 3 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.hunter)
+			elseif mod.vb.addsCount == 4 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 5 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.hunter)
+			elseif mod.vb.addsCount == 6 then
+				addLine(L.nextAdds, L.rogue..", "..L.hunter..", "..L.warrior)
+			elseif mod.vb.addsCount == 7 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 8 then
+				addLine(L.nextAdds, L.shaman..", "..L.hunter..", "..L.warrior)
+			elseif mod.vb.addsCount == 9 then
+				addLine(L.nextAdds, L.mage..", "..L.hunter..", "..L.warrior)
+			else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
+				addLine("", "")
+			end
+		else--Not heroic
+			if mod.vb.addsCount == 0 then
+				addLine(L.nextAdds, L.mage..", "..L.warrior)
+			elseif mod.vb.addsCount == 1 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 2 then
+				addLine(L.nextAdds, L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 3 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman)
+			elseif mod.vb.addsCount == 4 then
+				addLine(L.nextAdds, L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 5 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue)
+			elseif mod.vb.addsCount == 6 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.rogue)
+			elseif mod.vb.addsCount == 7 then
+				addLine(L.nextAdds, L.shaman..", "..L.rogue..", "..L.warrior)
+			elseif mod.vb.addsCount == 8 then
+				addLine(L.nextAdds, L.mage..", "..L.shaman..", "..L.warrior)
+			elseif mod.vb.addsCount == 9 then
+				addLine(L.nextAdds, L.mage..", "..L.rogue..", "..L.warrior)
+			else--Already had all 10 adds sets now we're just going to get no more adds (except for 10%)
+				addLine("", "")
+			end
+		end
+		return lines, sortedLines
 	end
-	return lines
 end
 
 function mod:LeapTarget(targetname, uId)
@@ -253,7 +263,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnBattleStance:Show()
 		timerBerserkerStanceCD:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143589))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143594 then
@@ -265,7 +275,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDefensiveStanceSoon:Schedule(58, 2)
 		warnDefensiveStanceSoon:Schedule(59, 1)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143594))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143593 then
@@ -282,7 +292,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnDefensiveStance:Show()
 		timerBattleStanceCD:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(143593))
+			DBM.InfoFrame:SetHeader(args.spellName)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 143536 then
@@ -310,7 +320,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnSunder:Show(amount)
 			end
 		else--Taunt as soon as stacks are clear, regardless of stack count.
-			if amount >= 3 and not UnitDebuff("player", sunder) and not UnitIsDeadOrGhost("player") then
+			if amount >= 3 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnSunderOther:Show(args.destName)
 			end
 		end
@@ -354,7 +364,7 @@ function mod:SPELL_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _, spellId
 	if spellId == 143873 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnRavagerMove:Show()
 	elseif sourceGUID == UnitGUID("player") and destGUID == UnitGUID("boss1") and self:AntiSpam(3, 1) then--If you've been in LFR at all, you'll see that even 3 is generous. 8 is WAY too leaniant.
-		if not UnitDebuff("player", sunder) and self.vb.defensiveActive then
+		if not DBM:UnitDebuff("player", sunder) and self.vb.defensiveActive then
 			specWarnDefensiveStanceAttack:Show(destName)
 		end
 	end
@@ -364,7 +374,7 @@ mod.SWING_DAMAGE = mod.SPELL_DAMAGE
 
 function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _, spellId)--Prevent spam on DoT
 	if sourceGUID == UnitGUID("player") and destGUID == UnitGUID("boss1") and self:AntiSpam(3, 1) then
-		if not UnitDebuff("player", sunder) and self.vb.defensiveActive and not dotWarned[spellId] then
+		if not DBM:UnitDebuff("player", sunder) and self.vb.defensiveActive and not dotWarned[spellId] then
 			dotWarned[spellId] = true
 			specWarnDefensiveStanceAttack:Show(destName)
 		end
@@ -378,7 +388,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 143500 then--Faster than combat log by 0.3-0.5 seconds
 		self:BossTargetScanner(71515, "LeapTarget", 0.05, 16)
 	end

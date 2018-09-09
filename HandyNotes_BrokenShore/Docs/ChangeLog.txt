@@ -1,7 +1,44 @@
-$Id: ChangeLog.txt 79 2017-08-31 14:53:46Z arith $
+$Id: ChangeLog.txt 98 2018-08-11 17:12:26Z arith $
 
 Revision History:
 =================
+
+* v1.29 (Aug. 12, 2018)
+-----------------------
+- Lib Update: LibBabble-SubZone-3.0
+
+* v1.28 (Aug. 06, 2018)
+-----------------------
+- Remove LibUIDropDown
+- Fixed TomTom waypoint's function call issue
+
+* v1.27 (Jul. 27, 2018)
+-----------------------
+- Update codes to synch with latest HandyNotes and use MapID, GetNodes2
+- Convert map date to use MapID
+
+* v1.26 (Jul. 27, 2018)
+-----------------------
+- Fixed RequiredDeps issue
+
+* v1.25 (Jul. 26, 2018)
+-----------------------
+- Toc update to support WoW 8.0.1
+- Remove listening to CLOSE_WORLD_MAP event as no longer supported
+- Update ToC to revise the LibUIDropDown's name and move it with LibBabble-SubZone to RequiredDeps
+
+* v1.24 (Apr. 25, 2018)
+-----------------------
+- Lib update: LibUIDropDownMenu
+
+* v1.23 (Jan. 22, 2018)
+-----------------------
+- Translation update:
+  - Portuguese (cleitontf)
+
+* v1.22 (Nov. 09, 2017)
+-----------------------
+- Set libs to be packaged by curseforge packager
 
 * v1.21 (Aug. 31, 2017)
 -----------------------

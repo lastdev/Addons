@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 72 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -21,17 +21,10 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
-local Sul = EJ_GetSectionInfo(7049)
-local Malakk = EJ_GetSectionInfo(7047)
-local Marli = EJ_GetSectionInfo(7050)
-local Kazrajin = EJ_GetSectionInfo(7048)
-
-mod:SetBossHealthInfo(
-	69078, Sul,
-	69131, Malakk,
-	69132, Marli,
-	69134, Kazrajin
-)
+local Sul = DBM:EJ_GetSectionInfo(7049)
+local Malakk = DBM:EJ_GetSectionInfo(7047)
+local Marli = DBM:EJ_GetSectionInfo(7050)
+local Kazrajin = DBM:EJ_GetSectionInfo(7048)
 
 --All
 local warnPossessed					= mod:NewStackAnnounce(136442, 2, nil, nil, "warnPossessed")
@@ -94,14 +87,12 @@ local timerFrigidAssaultCD			= mod:NewCDTimer(30, 136904, nil, "Tank|Healer", ni
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 
-mod:AddBoolOption("HealthFrame", true)
-mod:AddBoolOption("PHealthFrame", true)
 mod:AddBoolOption("RangeFrame")--For Sand Bolt and charge and biting cold
 mod:AddBoolOption("SetIconOnBitingCold", true)
 mod:AddBoolOption("SetIconOnFrostBite", true)
 mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
-local lingeringPresence = GetSpellInfo(136467)
+local lingeringPresence = DBM:GetSpellInfo(136467)
 local boltCasts = 0
 local kazraPossessed = false
 local possessesDone = 0
@@ -170,8 +161,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		possessesDone = possessesDone + 1
 		warnPossessed:Show(args.destName, possessesDone)
 		specWarnPossessed:Show(args.spellName, args.destName)
-		if uid and UnitBuff(uid, lingeringPresence) then
-			local _, _, _, stack = UnitBuff(uid, lingeringPresence)
+		if uid and DBM:UnitBuff(uid, lingeringPresence) then
+			local _, _, stack = DBM:UnitBuff(uid, lingeringPresence)
 			if self:IsHeroic() then
 				timerDarkPowerCD:Start(math.floor(68/(0.15*stack+1.0)+0.5))--(68, 59, 52, 47)
 			elseif self:IsDifficulty("normal25") then
@@ -215,10 +206,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			dischargeCount = 0
 			kazraPossessed = true
 		end
-		if DBM.BossHealth:IsShown() and self.Options.PHealthFrame then
-			local bossHealth = math.floor(UnitHealthMax(uid or "boss4") * 0.25)
-			self:ShowDamagedHealthBar(args.destGUID, args.spellName.." : "..args.destName, bossHealth)
-		end
 	elseif spellId == 136903 then--Player Debuff version, not cast version
 		local amount = args.amount or 1
 		timerFrigidAssault:Start(args.destName)
@@ -229,7 +216,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnFrigidAssault:Show(amount)
 				end
 			else
-				if amount >= 9 and not UnitDebuff("player", GetSpellInfo(136903)) and not UnitIsDeadOrGhost("player") then
+				if amount >= 9 and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 					specWarnFrigidAssaultOther:Show(args.destName)
 				end
 			end
@@ -305,9 +292,6 @@ function mod:SPELL_AURA_REMOVED(args)
 			kazraPossessed = false
 			timerRecklessChargeCD:Cancel()--Because it's not going to be 25 sec anymore. It'll go back to 6 seconds. He'll probably do it right away since more than likely it'll be off CD
 		end
-		if DBM.BossHealth:IsShown() and self.Options.PHealthFrame then
-			self:RemoveDamagedHealthBar()
-		end
 	elseif spellId == 136903 then
 		timerFrigidAssault:Cancel(args.destName)
 	elseif spellId == 136904 then
@@ -352,7 +336,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 137107 then--Pre cast trigger. there are other later spellids but they aren't consistent, only this one is.
 		warnRecklessCharge:Schedule(2)--warning 4 seconds early on something cast every 6 seconds seems silly. Lets warn 2 seconds early.
 		if kazraPossessed then--While possessed he gains "Overload" which will make his charge cd way different.

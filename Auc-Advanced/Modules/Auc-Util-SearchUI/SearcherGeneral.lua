@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher General
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: SearcherGeneral.lua 5656 2016-08-09 22:05:44Z brykrys $
+	Version: 7.7.6099 (SwimmingSeadragon)
+	Revision: $Id: SearcherGeneral.lua 6099 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -379,4 +379,4 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5656 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 6099 $")

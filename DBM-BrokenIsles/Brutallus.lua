@@ -1,14 +1,11 @@
-local wowTOC, testBuild = DBM:GetTOC()
-if not testBuild and wowTOC < 70200 then return end
 local mod	= DBM:NewMod(1883, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15968 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(117239)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
 mod:SetZone()
---mod:SetMinSyncRevision(11969)
 
 mod:RegisterCombat("combat")
 
@@ -26,10 +23,6 @@ local timerMeteorSlashCD		= mod:NewCDTimer(18.3, 233484, nil, nil, nil, 5)--18.3
 local timerCrashingEmbersCD		= mod:NewCDTimer(17.2, 233515, nil, nil, nil, 3)--17.2-19.6
 local timerRuptureCD			= mod:NewCDTimer(18.3, 233566, nil, nil, nil, 3)--18.3-19.6 (might also be 17.2)
 
-local voiceMeteorSlash			= mod:NewVoice(233484)--gathershare
-local voiceCrashingEmbers		= mod:NewVoice(233515)--watchstep
-local voiceRupture				= mod:NewVoice(233566)--watchstep
-
 --mod:AddReadyCheckOption(37460, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
@@ -42,11 +35,11 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 233484 then
 		specWarnMeteorSlash:Show()
-		voiceMeteorSlash:Play("gathershare")
+		specWarnMeteorSlash:Play("gathershare")
 		timerMeteorSlashCD:Start()
 	elseif spellId == 233566 then
 		specWarnRupture:Show()
-		voiceRupture:Play("watchstep")
+		specWarnRupture:Play("watchstep")
 		timerRuptureCD:Start()
 	end
 end
@@ -55,7 +48,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 233515 then
 		specWarnCrashingEmbers:Show()
-		voiceCrashingEmbers:Play("watchstep")
+		specWarnCrashingEmbers:Play("watchstep")
 		timerCrashingEmbersCD:Start()
 	end
 end

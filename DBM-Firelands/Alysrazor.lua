@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(194, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 mod:SetZone()
@@ -57,11 +57,11 @@ local countdownCataclysm		= mod:NewCountdown("Alt31", 102111)
 mod:AddBoolOption("InfoFrame", false)
 
 local initiatesSpawned = 0
-local initiate = EJ_GetSectionInfo(2834)
+local initiate = DBM:EJ_GetSectionInfo(2834)
 local cataCast = 0
 local clawCast = 0
 local moltCast = 0
-local PowerLevel = GetSpellInfo(98734)
+local PowerLevel = DBM:GetSpellInfo(98734)
 
 local initiateSpawns = {
 	[1] = L.Both,

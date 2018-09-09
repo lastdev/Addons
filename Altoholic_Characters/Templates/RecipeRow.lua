@@ -3,24 +3,55 @@ local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 addon:Controller("AltoholicUI.RecipeRow", {
-	Update = function(frame, profession, recipeID, color)
+	Update = function(frame, profession, recipeID, color, isLearned, recipeRank, totalRanks)
+		
 		-- ** set the crafted item **
-		local craftedItemID = DataStore:GetCraftResultItem(recipeID)
+		local craftedItemID, maxMade = DataStore:GetCraftResultItem(recipeID)
 		local itemName, itemLink, itemRarity
 		
 		if craftedItemID then
 			frame.CraftedItem:SetIcon(GetItemIcon(craftedItemID))
-			frame.CraftedItem.id = craftedItemID
-			frame.CraftedItem:Show()
+			frame.CraftedItem.itemID = craftedItemID
 			
 			itemName, itemLink, itemRarity = GetItemInfo(craftedItemID)
+			
+			local vc = (isLearned) and 1 or 0.3
+			frame.CraftedItem.Icon:SetVertexColor(vc, vc, vc)
+			if itemRarity then
+				frame.CraftedItem:SetRarity(itemRarity)
+			end
+			
+			if maxMade > 1 then
+				frame.CraftedItem.Count:SetText(maxMade)
+				frame.CraftedItem.Count:Show()
+			else
+				frame.CraftedItem.Count:Hide()
+			end
+			frame.CraftedItem:Show()
 		else
 			frame.CraftedItem:Hide()
 		end
 		
+		-- ** set the stars **
+		if totalRanks > 1 then
+			frame.IsLearned:SetPoint("TOPLEFT", frame, "TOPLEFT", 100, -15)
+			
+			for i, starFrame in ipairs(frame.StarsFrame.Stars) do
+				starFrame.EarnedStar:SetShown(i <= recipeRank)
+			end
+			frame.StarsFrame:Show()
+		else
+			frame.IsLearned:SetPoint("TOPLEFT", frame, "TOPLEFT", 42, -15)
+			frame.StarsFrame:Hide()
+		end
+		
+		-- ** set the UNLEARNED text, if needed **
+		frame.IsLearned:SetText(isLearned and "" or TRADE_SKILLS_UNLEARNED_TAB)
+		
 		-- ** set the recipe link **
 		if recipeID then
-			local link = addon:GetRecipeLink(recipeID, profession, color)
+			-- local link = addon:GetRecipeLink(recipeID, profession, color)
+			local link = addon:GetRecipeLink(recipeID, profession, nil)
 			local recipeText
 			
 			if itemName then
@@ -51,7 +82,7 @@ addon:Controller("AltoholicUI.RecipeRow", {
 				if reagentID then
 					reagentCount = tonumber(reagentCount)
 					
-					reagentIcon.id = reagentID
+					reagentIcon.itemID = reagentID
 					reagentIcon:SetIcon(GetItemIcon(reagentID))
 					reagentIcon.Count:SetText(reagentCount)
 					reagentIcon.Count:Show()

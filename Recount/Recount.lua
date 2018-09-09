@@ -11,7 +11,7 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
 
-Recount.Version = tonumber(string.sub("$Revision: 1443 $", 12, -3))
+Recount.Version = tonumber(string.sub("$Revision: 1459 $", 12, -3))
 
 
 local _G = _G
@@ -157,6 +157,8 @@ local Default_Profile = {
 				["SHAMAN"] = { r = 0.14, g = 0.35, b = 1.0, a = 1 },
 				["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, a = 1 },
 				["DEATHKNIGHT"] = { r = 0.77, g = 0.12, b = 0.23, a = 1 },
+				["MONK"] = { r = 0, g = 1.0, b = 0.59, a = 1 },
+				["DEMONHUNTER"] = { r = 0.64, g = 0.19, b = 0.79, a = 1 },
 				["PET"] = { r = 0.09, g = 0.61, b = 0.55, a = 1 },
 				--["GUARDIAN"] = { r = 0.61, g = 0.09, b = 0.09 },
 				["MOB"] = { r = 0.58, g = 0.24, b = 0.63, a = 1 },
@@ -1830,13 +1832,16 @@ end
 function Recount:PetBattleUpdate()
 	if Recount.db.profile.HidePetBattle and C_PetBattles.IsInBattle() and Recount.MainWindow:IsShown() then
 		Recount.MainWindow:Hide()
+
+		Recount.MainWindow.wasHidden = true
 	else
-		if Recount.db.profile.HidePetBattle and not Recount.MainWindow:IsShown() then
+		if Recount.db.profile.HidePetBattle and not Recount.MainWindow:IsShown() and Recount.MainWindow.wasHidden then
 			Recount.MainWindow:Show()
+
+			Recount.MainWindow.wasHidden = nil
 		end
 	end
 
-	Recount:UpdateZoneGroupFilter()
 	Recount:RefreshMainWindow()
 end
 

@@ -1,29 +1,36 @@
 local mod	= DBM:NewMod("ThreeBugs", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(15544, 15511, 15543)
 mod:SetEncounterID(710)
 mod:SetModelID(15657)
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 26580",
 	"SPELL_AURA_APPLIED 26580",
-	"SPELL_CAST_START 25807"
-)
-mod:SetBossHealthInfo(
-	15543, L.Yauj,
-	15544, L.Vem,
-	15511, L.Kri
+	"SPELL_CAST_START 25807",
+	"UNIT_DIED"
 )
 
-local warnFear	= mod:NewSpellAnnounce(26580, 2)
-local warnHeal	= mod:NewCastAnnounce(25807, 3)
+local warnFear			= mod:NewSpellAnnounce(26580, 2)
+local warnHeal			= mod:NewCastAnnounce(25807, 3)
 
-local timerFear	= mod:NewBuffActiveTimer(8, 26580)
-local timerHeal	= mod:NewCastTimer(2, 25807)
+local specWarnHeal		= mod:NewSpecialWarningInterrupt(25807, "HasInterrupt", nil, nil, 1, 2)
+
+local timerFearCD		= mod:NewCDTimer(20.5, 26580, nil, nil, nil, 2)
+local timerFear			= mod:NewBuffActiveTimer(8, 26580, nil, nil, nil, 2)
+local timerHeal			= mod:NewCastTimer(2, 25807, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 function mod:OnCombatStart(delay)
+	timerFearCD:Start(10-delay)
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 26580 and self:AntiSpam() then
+		timerFearCD:Start()
+	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -35,7 +42,19 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 25807 then
-		warnHeal:Show()
+		if self.Options.SpecWarn25807interrupt then
+			specWarnHeal:Show(args.sourceName)
+			specWarnHeal:Play("kickcast")
+		else
+			warnHeal:Show()
+		end
 		timerHeal:Start()
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 15543 then
+		timerFearCD:Stop()
 	end
 end

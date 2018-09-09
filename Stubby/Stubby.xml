@@ -3,8 +3,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: Stubby.xml 130 2008-10-11 12:38:07Z Norganna $
+	Version: 7.7.6094 (SwimmingSeadragon)
+	Revision: $Id: Stubby.xml 6094 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 
 	License:
@@ -30,7 +30,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
 	<Script>
-		LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Stubby/Stubby.xml $","$Rev: 130 $","5.1.DEV.", 'auctioneer', 'libs')
+		LibStub("LibRevision"):Set("$URL: Stubby/Stubby.xml $","$Rev: 6094 $","5.1.DEV.", 'auctioneer', 'libs')
 	</Script>
 
 	<Frame name="StubbyFrame" parent="UIParent" hidden="true">

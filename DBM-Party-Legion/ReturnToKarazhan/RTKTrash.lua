@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RTKTrash", "DBM-Party-Legion", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16664 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -37,50 +37,35 @@ local specWarnCurseofDoom			= mod:NewSpecialWarningDispel(229716, "Healer", nil,
 local specWarnRoyalty				= mod:NewSpecialWarningSwitch(229489, nil, nil, nil, 1, 2)
 local specWarnFlashlight			= mod:NewSpecialWarningLookAway(227966, nil, nil, nil, 1, 2)
 
-local voiceSoulLeech				= mod:NewVoice(228255, "HasInterrupt")--kickcast
-local voiceTerrifyingWail			= mod:NewVoice(228239, "HasInterrupt")--kickcast
-local voicePoetrySlam				= mod:NewVoice(227917, "HasInterrupt")--kickcast
-local voiceBansheeWail				= mod:NewVoice(228625, "HasInterrupt")--kickcast
-local voiceHealingTouch				= mod:NewVoice(228606, "HasInterrupt")--kickcast
-local voiceConsumeMagic				= mod:NewVoice(229714, "HasInterrupt")--kickcast
-local voiceVolatileCharge			= mod:NewVoice(228331)--runout
-local voiceBurningBrand				= mod:NewVoice(228610)--runout
-local voiceFinalCurtain				= mod:NewVoice(227925, "Melee")--runout
-local voiceLeechLife				= mod:NewVoice(228606, "Healer")--dispelnow
-local voiceCurseofDoom				= mod:NewVoice(229716, "Healer")--dispelnow
-local voiceFlashLight				= mod:NewVoice(227966)--turnaway
-
 local timerAchieve					= mod:NewBuffActiveTimer(480, 229074)
-
-mod:RemoveOption("HealthFrame")
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 228255 and self:CheckInterruptFilter(args.sourceGUID) then
+	if spellId == 228255 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnSoulLeech:Show(args.sourceName)
-		voiceSoulLeech:Play("kickcast")
-	elseif spellId == 228239 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnSoulLeech:Play("kickcast")
+	elseif spellId == 228239 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnTerrifyingWail:Show(args.sourceName)
-		voiceTerrifyingWail:Play("kickcast")
-	elseif spellId == 227917 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnTerrifyingWail:Play("kickcast")
+	elseif spellId == 227917 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnPoetrySlam:Show(args.sourceName)
-		voicePoetrySlam:Play("kickcast")
-	elseif spellId == 228625 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnPoetrySlam:Play("kickcast")
+	elseif spellId == 228625 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnBansheeWail:Show(args.sourceName)
-		voiceBansheeWail:Play("kickcast")
-	elseif spellId == 228606 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnBansheeWail:Play("kickcast")
+	elseif spellId == 228606 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnHealingTouch:Show(args.sourceName)
-		voiceHealingTouch:Play("kickcast")
-	elseif spellId == 229714 and self:CheckInterruptFilter(args.sourceGUID) then
+		specWarnHealingTouch:Play("kickcast")
+	elseif spellId == 229714 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnConsumeMagic:Show(args.destName)
-		voiceConsumeMagic:Play("kickcast")
+		specWarnConsumeMagic:Play("kickcast")
 	elseif spellId == 227925 and self:AntiSpam(3, 1) then
 		specWarnFinalCurtain:Show()
-		voiceFinalCurtain:Play("runout")
+		specWarnFinalCurtain:Play("runout")
 	elseif spellId == 227966 and self:AntiSpam(3, 2) then
 		specWarnFlashlight:Show()
-		voiceFlashLight:Play("turnaway")
+		specWarnFlashlight:Play("turnaway")
 	end
 end
 
@@ -91,24 +76,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnVolatileCharge:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnVolatileCharge:Show()
-			voiceVolatileCharge:Play("runout")
+			specWarnVolatileCharge:Play("runout")
 			yellVolatileCharge:Yell()
 		end
 	elseif spellId == 228610 then
 		if args:IsPlayer() then
 			specWarnBurningBrand:Show()
-			voiceBurningBrand:Play("runout")
+			specWarnBurningBrand:Play("runout")
 			yellBurningBrand:Yell()
 		end
 	elseif spellId == 229706 then
 		specWarnLeechLife:Show(args.destName)
-		voiceLeechLife:Play("dispelnow")
+		specWarnLeechLife:Play("dispelnow")
 	elseif spellId == 229716 then
 		specWarnCurseofDoom:Show(args.destName)
-		voiceCurseofDoom:Play("dispelnow")
+		specWarnCurseofDoom:Play("dispelnow")
 	elseif spellId == 229074 and self:AntiSpam(3, 3) then
 		local uId = DBM:GetRaidUnitId(args.destName)
-		local _, _, _, _, _, _, expires = UnitBuff(uId, args.spellName)
+		local _, _, _, _, _, expires = DBM:UnitBuff(uId, args.spellName)
 		if expires then
 			local debuffTime = expires - GetTime()
 			timerAchieve:Stop()
@@ -139,22 +124,3 @@ function mod:OnSync(msg)
 		timerAchieve:Start()
 	end
 end
-
---[[
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if not self.Options.Enabled then return end
-	if spellId == 204762 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
-		specWarnFelEnergy:Show()
-		voiceFelEnergy:Play("runaway")
-	end
-end
-mod.SPELL_MISSED = mod.SPELL_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = mod:GetCIDFromGUID(args.destGUID)
-	if cid == 102246 then
-
-	end
-end
-
---]]

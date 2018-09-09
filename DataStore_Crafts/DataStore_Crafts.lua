@@ -12,9 +12,6 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 
-local SECONDSPERDAY = 86400
-local THREEOCLOCK = 10800
-
 local AddonDB_Defaults = {
 	global = {
 		Guilds = {
@@ -50,7 +47,9 @@ local AddonDB_Defaults = {
 local ReferenceDB_Defaults = {
 	global = {
 		Reagents = {},		-- [recipeID] = "itemID1,count1 | itemID2,count2 | ..."
-		ResultItems = {}	-- [recipeID] = itemID
+		ResultItems = {},	-- [recipeID] = itemID
+		Recipes = {},		-- [recipeID] = 
+		RecipeCategoryNames = {},		-- [categoryID] = name
 	}
 }
 
@@ -68,7 +67,6 @@ local SPELL_ID_MINING = 2575
 local SPELL_ID_HERBALISM = 2366
 local SPELL_ID_SMELTING = 2656
 local SPELL_ID_COOKING = 2550
-local SPELL_ID_FIRSTAID = 3273
 local SPELL_ID_FISHING = 131474
 local SPELL_ID_ARCHAEOLOGY = 78670
 
@@ -88,7 +86,6 @@ local ProfessionSpellID = {
 	["Smelting"] = SPELL_ID_SMELTING,
 
 	["Cooking"] = SPELL_ID_COOKING,
-	["First Aid"] = SPELL_ID_FIRSTAID,
 	["Fishing"] = SPELL_ID_FISHING,
 }
 
@@ -96,6 +93,12 @@ local ProfessionSpellID = {
 local bAnd = bit.band
 local LShift = bit.lshift
 local RShift = bit.rshift
+
+local function TestBit(value, pos)
+	-- note: this function works up to bit 51
+	local mask = 2 ^ pos		-- 0-based indexing
+	return value % (mask + mask) >= mask
+end
 
 local function GetOption(option)
 	return addon.db.global.Options[option]
@@ -157,43 +160,41 @@ local function LocalizeProfessionSpellIDs()
 	end
 end
 
--- *** Scanning functions ***
+local function GetRecipeRank(info)
+	local currentRank = 0
+	local totalRanks = 1
+	local highestRankID = info.recipeID
 
-local function ScanCooldowns()
-	-- Updated by RGriedel
-	local tradeskillName = C_TradeSkillUI.GetTradeSkillLine()
-	local char = addon.ThisCharacter
-	local profession = char.Professions[tradeskillName]
-
-	local serverClock = time()
-	-- local locYear, locMonth, locDay, locHour, locMinute, locSecond = string.match(date("%Y %m %d %H %M %S"), "(%d*) (%d*) (%d*) (%d*) (%d*) (%d*)")
-	local hour, minute, second = string.match(date("%H %M %S"), "(%d*) (%d*) (%d*)")
-	local serverDate = floor ( serverClock / SECONDSPERDAY ) * SECONDSPERDAY
-	local serverTime = serverClock - serverDate
-	local localTime = second + ( minute + ( hour * 60 )) * 60
-	local timediff = localTime - serverTime
-	
-	wipe(profession.Cooldowns)
-	for i = 1, GetNumTradeSkills() do
-		local skillName, skillType = GetTradeSkillInfo(i)
-		
-		if skillType ~= "header" then
-			local cooldown = GetTradeSkillCooldown(i)
-			if cooldown then
-				local cooldownTime = localTime + cooldown
-				if math.abs (( cooldownTime < THREEOCLOCK and SECONDSPERDAY or 0 ) + cooldownTime - SECONDSPERDAY ) < 300 then
-					if serverTime > THREEOCLOCK then
-						table.insert(profession.Cooldowns, skillName .. "|" .. THREEOCLOCK .. "|" .. serverDate - timediff + SECONDSPERDAY)
-					else
-						table.insert(profession.Cooldowns, skillName .. "|" .. THREEOCLOCK .. "|" .. serverDate - timediff)
-					end
-				else
-					table.insert(profession.Cooldowns, skillName .. "|" .. cooldown .. "|" .. serverClock)
-				end
-			end
-		end
+	-- Go back to the first rank of the recipe
+	while info.previousRecipeID do
+		info = C_TradeSkillUI.GetRecipeInfo(info.previousRecipeID)
 	end
+
+	-- if this happens, the level 1 recipe is not known, so set it as highest rank (even if we came from level 2)
+	if not info.learned then
+		highestRankID = info.recipeID
+	end
+	
+	-- Loop until the last rank
+	while info.nextRecipeID do
+		totalRanks = totalRanks + 1
+		if info.learned then
+			currentRank = currentRank + 1
+			highestRankID = info.recipeID
+		end
+		info = C_TradeSkillUI.GetRecipeInfo(info.nextRecipeID)
+	end
+	
+	-- process the last item
+	if info.learned then
+		currentRank = currentRank + 1
+		highestRankID = info.recipeID
+	end
+	
+	return currentRank, totalRanks, highestRankID
 end
+
+-- *** Scanning functions ***
 
 local function ScanProfessionInfo(index, mainIndex)
 	local char = addon.ThisCharacter
@@ -204,14 +205,13 @@ local function ScanProfessionInfo(index, mainIndex)
 
 	if not char or not index then return end
 	
-	local profName, texture, rank, maxRank = GetProfessionInfo(index);
+	local profName, texture, rank, maxRank, _, _, _, _, _, _, currentLevelName = GetProfessionInfo(index);
 	local profession = char.Professions[profName]
-	profession.Rank = rank
-	profession.MaxRank = maxRank
+	profession.CurrentLevelName = currentLevelName
 	
-	local profLink = select(2, GetSpellLink(profName))
-	if profLink then	-- sometimes a nil value may be returned, so keep the old one if nil
-		profession.FullLink = profLink
+	if profName == GetSpellInfo(SPELL_ID_ARCHAEOLOGY) then
+		profession.Rank = rank
+		profession.MaxRank = maxRank
 	end
 	
 	if mainIndex then
@@ -220,10 +220,9 @@ local function ScanProfessionInfo(index, mainIndex)
 end
 
 local function ScanProfessionLinks()
-	local prof1, prof2, arch, fish, cook, firstAid = GetProfessions()
+	local prof1, prof2, arch, fish, cook = GetProfessions()
 
 	ScanProfessionInfo(cook)
-	ScanProfessionInfo(firstAid)
 	ScanProfessionInfo(fish)
 	ScanProfessionInfo(arch)
 	ScanProfessionInfo(prof1, 1)
@@ -239,27 +238,75 @@ local SkillTypeToColor = {
 	["optimal"] = 3,		-- orange
 }
 
+local function ScanRecipeCategories(profession)
+	-- clear storage
+	profession.Categories = profession.Categories or {}
+	wipe(profession.Categories)
+	
+	local names = addon.ref.global.RecipeCategoryNames
+	local cumulatedRank = 0
+	local cumulatedMaxRank = 0
+	
+	-- loop through this profession's categories
+	for _, id in ipairs( { C_TradeSkillUI.GetCategories() } ) do
+		local info = C_TradeSkillUI.GetCategoryInfo(id)
+		
+		cumulatedRank = cumulatedRank + (info.skillLineCurrentLevel or 0)
+		cumulatedMaxRank = cumulatedMaxRank + (info.skillLineMaxLevel or 0)
+		names[info.categoryID] = info.name
+	
+		-- save the names of subcategories
+		local subCats = { C_TradeSkillUI.GetSubCategories(info.categoryID) }
+		for _, subCatID in pairs(subCats) do
+			local subCatInfo = C_TradeSkillUI.GetCategoryInfo(subCatID)
+			
+			names[subCatInfo.categoryID] = subCatInfo.name
+		end
+	
+		table.insert(profession.Categories, { 
+			id = info.categoryID, 
+			Rank = info.skillLineCurrentLevel, 
+			MaxRank = info.skillLineMaxLevel,
+			SubCategories = subCats
+		})
+	end
+	
+	profession.Rank = cumulatedRank
+	profession.MaxRank = cumulatedMaxRank
+end
+
 local function ScanRecipes()
-	local _, tradeskillName = C_TradeSkillUI.GetTradeSkillLine()
+	
+	local tradeskillName = select(7, C_TradeSkillUI.GetTradeSkillLine())
 	if not tradeskillName or tradeskillName == "UNKNOWN" then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
 
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
+	
+	ScanRecipeCategories(profession)
+	
+	-- Get profession link
+	local profLink = C_TradeSkillUI.GetTradeSkillListLink()
+	if profLink then	-- sometimes a nil value may be returned, so keep the old one if nil
+		profession.FullLink = profLink
+	end
+	
 	local crafts = profession.Crafts
 	wipe(crafts)
-	
+		
 	local recipes = C_TradeSkillUI.GetAllRecipeIDs()
 	if not recipes or (#recipes == 0) then return end
 	
-	local categoryCount = 0
-	local categoryID = -1
-	
 	local resultItems = addon.ref.global.ResultItems
 	local reagentsDB = addon.ref.global.Reagents
+	
+	addon.ref.global.Recipes[tradeskillName] = addon.ref.global.Recipes[tradeskillName] or {}
+	local recipesDB = addon.ref.global.Recipes[tradeskillName]
 	local reagentsInfo = {}
 	
+	wipe(profession.Cooldowns)
+	
 	for i, recipeID in pairs(recipes) do
-		local info = C_TradeSkillUI.GetRecipeInfo(recipeID)
 		
 		-- scan reagents for all recipes (even unlearned)
 		wipe(reagentsInfo)
@@ -282,37 +329,47 @@ local function ScanRecipes()
 		-- Resulting item ID
 		local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 		if itemLink then
-			resultItems[recipeID] = tonumber(itemLink:match("item:(%d+)"))
+			local _, maxMade = C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
+			if maxMade > 255 then maxMade = 255 end
+			
+			local itemID = tonumber(itemLink:match("item:(%d+)"))
+			if itemID then
+				resultItems[recipeID] = maxMade + LShift(itemID, 8) 	-- bits 0-7 = maxMade, bits 8+ = item id
+			end
 		end
 		
-		if info.learned then
-			
-			-- save the category
-			if categoryID ~= info.categoryID then	-- if it's not the same id as the previous recipe ..
-				categoryID = info.categoryID			-- .. set the id ..
+		-- Get recipe info
+		local info = C_TradeSkillUI.GetRecipeInfo(recipeID)
+		local recipeRank, totalRanks, highestRankID = GetRecipeRank(info)
 		
-				local category = C_TradeSkillUI.GetCategoryInfo(categoryID)
-				
-				-- code is working, but don't save parent at the moment
-				-- if category.parentCategoryID then
-					-- local parentCategory = C_TradeSkillUI.GetCategoryInfo(category.parentCategoryID)
-					-- table.insert(crafts, format("%s|%s", parentCategory.numIndents, parentCategory.name))
-				-- end
-				
-				table.insert(crafts, format("%s|%s", category.numIndents, category.name))
-			end
+		-- if we are rank 2 out of 3 for a recipe, do not save rank 1 and rank 3
+		if recipeID == highestRankID then
 		
 			-- save the recipe
-			table.insert(crafts, SkillTypeToColor[info.difficulty] + LShift(recipeID, 2))
+			crafts[info.categoryID] = crafts[info.categoryID] or {}
+			table.insert(crafts[info.categoryID], 
+				SkillTypeToColor[info.difficulty] 
+				+ LShift((info.learned == true) and 1 or 0, 2) 	-- bit 2 => 1 = learned, 0 = not learned
+				+ LShift(recipeRank, 3)		-- bits 3-4 = recipe rank
+				+ LShift(totalRanks, 5)		-- bits 5-6 = max rank
+				+ LShift(recipeID, 7))		-- bits 7+ = recipeID
+		end
+		
+		-- scan cooldown
+		local cooldown = C_TradeSkillUI.GetRecipeCooldown(recipeID)
+		if cooldown then
+			-- ex: "Hexweave Cloth|86220|1533539676" expire at "now + cooldown"
+			table.insert(profession.Cooldowns, format("%s|%d|%d", info.name, cooldown, cooldown + time()))
 		end
 	end
 	
 	addon:SendMessage("DATASTORE_RECIPES_SCANNED", char, tradeskillName)
 end
 
+
+
 local function ScanTradeSkills()
 	ScanRecipes()
-	-- ScanCooldowns()
 	
 	addon.ThisCharacter.lastUpdate = time()
 end
@@ -339,8 +396,13 @@ local function ScanArcheologyItems()
 			end
 			
 			for artifactIndex = 1, GetNumArtifactsByRace(raceIndex) do
-				local artifactName, _, _, _, _,  _, _, _, completionCount = GetArtifactInfoByRace(raceIndex, artifactIndex)
+				local artifactName, _, _, _, _, _, _, _, _, completionCount = GetArtifactInfoByRace(raceIndex, artifactIndex)
 
+				-- debug only
+				-- if not names[artifactName] then
+					-- print(artifactName .. " not found")
+				-- end
+				
 				if names[artifactName] and completionCount > 0 then
 					items[names[artifactName]] = true
 				end
@@ -356,26 +418,13 @@ end
 
 local function OnTradeSkillClose()
 	addon:UnregisterEvent("TRADE_SKILL_CLOSE")
-	addon:UnregisterEvent("TRADE_SKILL_UPDATE")
 	addon.isOpen = nil
-end
-
-local updateCooldowns
-
-local function OnTradeSkillUpdate()
-	-- The hook in DoTradeSkill will set this flag so that we only update skills once.
-	if updateCooldowns then
-		ScanCooldowns()	-- only cooldowns need to be refreshed
-		updateCooldowns = nil
-	end
 end
 
 local function OnTradeSkillShow()
 	if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
 	
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
-	-- we are not interested in this event if the TS pane is not shown.
-	addon:RegisterEvent("TRADE_SKILL_UPDATE", OnTradeSkillUpdate)	
 	addon.isOpen = true
 end
 
@@ -469,40 +518,91 @@ local function _GetProfessionInfo(profession)
 		link = profession
 	end
 	
-	if link then
+	if link and type(link) ~= "number" then
 		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
 		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
 	end
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
 end
-
-local function _GetNumCraftLines(profession)
-	return #profession.Crafts
+	
+local function _GetNumRecipeCategories(profession)
+	return (profession.Categories) and #profession.Categories or 0
 end
+
+local function GetCategoryName(id)
+	return addon.ref.global.RecipeCategoryNames[id]
+end
+
+local function _GetRecipeCategoryInfo(profession, index)
+	local category = profession.Categories[index]
+	return category.id, GetCategoryName(category.id), category.Rank, category.MaxRank
+end
+
+local function _GetNumRecipeCategorySubItems(profession, index)
+	local category = profession.Categories[index]
+	return #category.SubCategories
+end
+
+local function _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
+	local catID = profession.Categories[catIndex].SubCategories[subCatIndex]
 	
-local function _GetCraftLineInfo(profession, index)
-	local craft = profession.Crafts[index]
-	if type(craft) == "string" then	-- headers are stored as strings
-		local indent, header = strsplit("|", craft)
-		return true, nil, header, indent
+	-- return real category id, name, and list of recipes
+	return catID, GetCategoryName(catID), profession.Crafts[catID]
+end
+
+local function _GetRecipeInfo(recipeData)
+	local color = bAnd(recipeData, 3)			-- Bits 0-1 = color
+	local isLearned = TestBit(recipeData, 2) 	-- Bit 2 = isLearned
+	local recipeRank = bAnd(RShift(recipeData, 3), 3)		-- bits 3-4 = recipe rank
+	local totalRanks = bAnd(RShift(recipeData, 5), 3)		-- bits 5-6 = max rank
+	-- local minMade = bAnd(RShift(recipeData, 7), 255)		-- bits 7-14 = minMade (8 bits)
+	-- local maxMade = bAnd(RShift(recipeData, 15), 255)		-- bits 15-22 = maxMade (8 bits)
+	local recipeID = RShift(recipeData, 7)		-- bits 7+ = recipeID
+	
+	return color, recipeID, isLearned, recipeRank, totalRanks, minMade, maxMade
+end
+
+-- Iterate through all recipes, and callback a function for each of them
+local function _IterateRecipes(profession, mainCategory, subCategory, callback)
+	-- mainCategory : category index (or 0 for all)
+	-- subCategory : sub-category index (or 0 for all)
+	local crafts = profession.Crafts
+	
+	-- loop through categories
+	for catIndex = 1, _GetNumRecipeCategories(profession) do
+		-- if there is no filter on main category, or if it is just the one we want to see
+		if (mainCategory == 0) or (mainCategory == catIndex) then
+			-- loop through subcategories
+			for subCatIndex = 1, _GetNumRecipeCategorySubItems(profession, catIndex) do
+				-- if there is no filter on sub category, or if it is just the one we want to see
+				if (subCategory == 0) or (subCategory == subCatIndex) then
+					local subCatID, _, recipes = _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
+					
+					if type(recipes) == "table" then
+						-- loop through recipes
+						for i = 1, #recipes do
+							local stop = callback(recipes[i])
+							
+							-- exit if the callback returns true
+							if stop then return end
+						end
+					end
+				end
+			end
+		end
 	end
-	
-	local color = bAnd(craft, 3)	-- first 2 bits = color
-	local recipeID = RShift(craft, 2)	-- other bits = recipeID
-	
-	return false, color, recipeID
 end
 
 local function _GetCraftCooldownInfo(profession, index)
 	local cooldown = profession.Cooldowns[index]
-	local name, reset, lastCheck = strsplit("|", cooldown)
+	local name, resetsIn, expiresAt = strsplit("|", cooldown)
 	
-	reset = tonumber(reset)
-	lastCheck = tonumber(lastCheck)
-	local expiresIn = reset - (time() - lastCheck)
+	resetsIn = tonumber(resetsIn)
+	expiresAt = tonumber(expiresAt)	
+	local expiresIn = expiresAt - time()
 	
-	return name, expiresIn, reset, lastCheck
+	return name, expiresIn, resetsIn, expiresAt
 end
 
 local function _GetNumActiveCooldowns(profession)
@@ -525,27 +625,27 @@ local function _GetNumRecipesByColor(profession)
 	-- counts the number of orange, yellow, green and grey recipes.
 	local counts = { [0] = 0, [1] = 0, [2] = 0, [3] = 0 }
 	
-	for i = 1, _GetNumCraftLines(profession) do
-		local isHeader, color = _GetCraftLineInfo(profession, i)
-		
-		if not isHeader then
-			counts[color] = counts[color] + 1
-		end
-	end
+	_IterateRecipes(profession, 0, 0, function(recipeData) 
+		local color = _GetRecipeInfo(recipeData)
+		counts[color] = counts[color] + 1
+	end)
+	
 	return counts[3], counts[2], counts[1], counts[0]		-- orange, yellow, green, grey
 end
 
 local function _IsCraftKnown(profession, spellID)
 	-- returns true if a given spell ID is known in the profession passed as first argument
-	for i = 1, _GetNumCraftLines(profession) do
-		local isHeader, _, info = _GetCraftLineInfo(profession, i)
-		
-		if not isHeader then
-			if info == spellID then
-				return true
-			end
+	local isKnown
+	
+	_IterateRecipes(profession, 0, 0, function(recipeData) 
+		local _, recipeID, isLearned = _GetRecipeInfo(recipeData)
+		if recipeID == spellID and isLearned then
+			isKnown = true
+			return true	-- stop iteration
 		end
-	end
+	end)
+
+	return isKnown
 end
 
 local function _GetGuildCrafters(guild)
@@ -571,6 +671,7 @@ end
 
 local function _GetProfession1(character)
 	local profession = _GetProfession(character, character.Prof1)
+
 	if profession then
 		local rank, maxRank, spellID = _GetProfessionInfo(profession)
 		return rank or 0, maxRank or 0, spellID, character.Prof1
@@ -585,13 +686,6 @@ local function _GetProfession2(character)
 		return rank or 0, maxRank or 0, spellID, character.Prof2
 	end
 	return 0, 0, nil, nil
-end
-
-local function _GetFirstAidRank(character)
-	local profession = _GetProfession(character, GetSpellInfo(SPELL_ID_FIRSTAID))
-	if profession then
-		return _GetProfessionInfo(profession)
-	end
 end
 
 local function _GetCookingRank(character)
@@ -636,7 +730,15 @@ local function _GetCraftReagents(recipeID)
 end
 
 local function _GetCraftResultItem(recipeID)
-	return addon.ref.global.ResultItems[recipeID]
+	local itemData = addon.ref.global.ResultItems[recipeID]
+	local itemID, maxMade
+	
+	if itemData then
+		maxMade = bAnd(itemData, 255)		-- bits 0-7 = maxMade (8 bits)
+		itemID = RShift(itemData, 8)		-- bits 8+ = recipeID
+	end
+
+	return itemID, maxMade
 end
 
 
@@ -644,19 +746,22 @@ local PublicMethods = {
 	GetProfession = _GetProfession,
 	GetProfessions = _GetProfessions,
 	GetProfessionInfo = _GetProfessionInfo,
-	GetNumCraftLines = _GetNumCraftLines,
-	GetCraftLineInfo = _GetCraftLineInfo,
 	GetCraftCooldownInfo = _GetCraftCooldownInfo,
 	GetNumActiveCooldowns = _GetNumActiveCooldowns,
 	ClearExpiredCooldowns = _ClearExpiredCooldowns,
 	GetNumRecipesByColor = _GetNumRecipesByColor,
-	IsCraftKnown = _IsCraftKnown,
+	GetNumRecipeCategories = _GetNumRecipeCategories,
+	GetRecipeCategoryInfo = _GetRecipeCategoryInfo,
+	GetNumRecipeCategorySubItems = _GetNumRecipeCategorySubItems,
+	GetRecipeSubCategoryInfo = _GetRecipeSubCategoryInfo,
+	GetRecipeInfo = _GetRecipeInfo,
+	IterateRecipes = _IterateRecipes,
+	IsCraftKnown = _IsCraftKnown,		-- needs update
 	GetGuildCrafters = _GetGuildCrafters,
 	GetGuildMemberProfession = _GetGuildMemberProfession,
 	GetProfessionSpellID = _GetProfessionSpellID,
 	GetProfession1 = _GetProfession1,
 	GetProfession2 = _GetProfession2,
-	GetFirstAidRank = _GetFirstAidRank,
 	GetCookingRank = _GetCookingRank,
 	GetFishingRank = _GetFishingRank,
 	GetArchaeologyRank = _GetArchaeologyRank,
@@ -678,7 +783,6 @@ function addon:OnInitialize()
 	
 	DataStore:SetCharacterBasedMethod("GetProfession1")
 	DataStore:SetCharacterBasedMethod("GetProfession2")
-	DataStore:SetCharacterBasedMethod("GetFirstAidRank")
 	DataStore:SetCharacterBasedMethod("GetCookingRank")
 	DataStore:SetCharacterBasedMethod("GetFishingRank")
 	DataStore:SetCharacterBasedMethod("GetArchaeologyRank")
@@ -698,9 +802,9 @@ function addon:OnEnable()
 	local _, _, arch = GetProfessions()
 
 	if arch then
-		addon:RegisterEvent("ARTIFACT_HISTORY_READY", OnArtifactHistoryReady)
-		addon:RegisterEvent("ARTIFACT_COMPLETE", OnArtifactComplete)
-		RequestArtifactCompletionHistory()		-- this will trigger ARTIFACT_HISTORY_READY
+		addon:RegisterEvent("RESEARCH_ARTIFACT_HISTORY_READY", OnArtifactHistoryReady)
+		addon:RegisterEvent("RESEARCH_ARTIFACT_COMPLETE", OnArtifactComplete)
+		RequestArtifactCompletionHistory()		-- this will trigger RESEARCH_ARTIFACT_HISTORY_READY
 	end
 	
 --	addon:SetupOptions()
@@ -720,9 +824,3 @@ function addon:IsTradeSkillWindowOpen()
 	-- note : maybe there's a function in the WoW API to test this, but I did not find it :(
 	return addon.isOpen
 end
-
--- *** Hooks ***
--- Disabled 7.0
--- hooksecurefunc("DoTradeSkill", function(index, repeatCount, ...)
-	-- updateCooldowns = true
--- end)

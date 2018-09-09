@@ -15,6 +15,8 @@ local GARRISON_MISSIONS_STORAGE = "AvailableMissions"
 local GARRISON_ACTIVE_MISSIONS_STORAGE = "ActiveMissions"
 local ORDERHALL_MISSIONS_STORAGE = "AvailableOrderHallMissions"
 local ORDERHALL_ACTIVE_MISSIONS_STORAGE = "ActiveOrderHallMissions"
+local WARCAMPAIGN_MISSIONS_STORAGE = "AvailableWarCampaignMissions"
+local WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE = "ActiveWarCampaignMissions"
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
@@ -46,10 +48,12 @@ local AddonDB_Defaults = {
 				
 				Buildings = {},				-- List of buildings
 				Followers = {},				-- List of followers
-				[GARRISON_MISSIONS_STORAGE] = {},					-- List of available missions
-				[GARRISON_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress missions
-				[ORDERHALL_MISSIONS_STORAGE] = {},					-- List of available order hall missions
-				[ORDERHALL_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress order hall missions
+				[GARRISON_MISSIONS_STORAGE] = {},					-- List of available missions (6.0)
+				[GARRISON_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress missions (6.0)
+				[ORDERHALL_MISSIONS_STORAGE] = {},					-- List of available order hall missions (7.0)
+				[ORDERHALL_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress order hall missions (7.0)
+				[WARCAMPAIGN_MISSIONS_STORAGE] = {},				-- List of available war campaign missions (8.0)
+				[WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE] = {},		-- List of active/in-progress war campaign missions (8.0)
 				MissionsStartTimes = {},		-- List of start times for active/in-progress missions
 				MissionsInfo = {},				-- Extra information about active/in-progress missions (ex: success rate, active followers..)
 				
@@ -172,11 +176,13 @@ local buildingTypes = {
 local availableMissionsStorage = {
 	[LE_FOLLOWER_TYPE_GARRISON_6_0] = GARRISON_MISSIONS_STORAGE,
 	[LE_FOLLOWER_TYPE_GARRISON_7_0] = ORDERHALL_MISSIONS_STORAGE,
+	[LE_FOLLOWER_TYPE_GARRISON_8_0] = WARCAMPAIGN_MISSIONS_STORAGE,
 }
 
 local activeMissionsStorage = {
 	[LE_FOLLOWER_TYPE_GARRISON_6_0] = GARRISON_ACTIVE_MISSIONS_STORAGE,
 	[LE_FOLLOWER_TYPE_GARRISON_7_0] = ORDERHALL_ACTIVE_MISSIONS_STORAGE,
+	[LE_FOLLOWER_TYPE_GARRISON_8_0] = WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE,
 }
 
 -- *** Utility functions ***
@@ -708,6 +714,7 @@ end
 local function OnGarrisonUpdate(event)
 	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE)
 	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0, ORDERHALL_MISSIONS_STORAGE)
+	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
 end
 
 local function OnGarrisonMissionStarted(event, followerType, missionID)
@@ -988,8 +995,10 @@ function addon:OnEnable()
 			-- To avoid the long list of GARRISON_MISSION_LIST_UPDATE at startup, make the initial scan 3 seconds later ..
 			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE)
 			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0, ORDERHALL_MISSIONS_STORAGE)
+			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
 			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
 			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
+			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_8_0)
 
 			-- .. then register the event
 			-- note, at logon, GARRISON_UPDATE is fired before MISSION_LIST_UPDATE

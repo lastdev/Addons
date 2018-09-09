@@ -401,6 +401,43 @@ GTFO.SpellID["234422"] = {
   sound = 2;
 };
 
+GTFO.SpellID["199349"] = {
+  --desc = "Fel Flames";
+  sound = 1;
+};
+
+GTFO.SpellID["234441"] = {
+  --desc = "Shadow Sweep";
+  sound = 2;
+};
+
+GTFO.SpellID["234675"] = {
+  --desc = "Netherstomp";
+  sound = 1;
+};
+
+GTFO.SpellID["243091"] = {
+  --desc = "Fel Lava";
+  sound = 1;
+};
+
+GTFO.SpellID["236161"] = {
+  --desc = "Plague Zone";
+  sound = 1;
+};
+
+GTFO.SpellID["235263"] = {
+  --desc = "Fel Lava";
+  sound = 1;
+};
+
+GTFO.SpellID["238443"] = {
+  --desc = "Gas Cloud";
+  sound = 1;
+};
+
+
+
 -- **********
 -- * Mardum *
 -- **********
@@ -1522,7 +1559,7 @@ GTFO.SpellID["236241"] = {
 GTFO.SpellID["236464"] = {
   --desc = "Soulbind (Engine of Souls)";
   sound = 4;
-  test = true;
+  negatingDebuffSpellID = 236459; -- Soulbind
 };
 
 GTFO.SpellID["235989"] = {
@@ -1648,6 +1685,38 @@ GTFO.SpellID["245253"] = {
   damageMinimum = 1;
 };
 
+GTFO.SpellID["238028"] = {
+  --desc = "Light Remanence (Maiden of Vigiliance)";
+  sound = 1;
+};
+
+GTFO.SpellID["238408"] = {
+  --desc = "Fel Remanence (Maiden of Vigiliance)";
+  sound = 1;
+};
+
+GTFO.SpellID["239212"] = {
+  --desc = "Lingering Darkness (Fallen Avatar)";
+  sound = 1;
+};
+
+GTFO.SpellID["242017"] = {
+  --desc = "Black Winds (Fallen Avatar)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["243294"] = {
+  --desc = "Fel Slicer (Accusator Gnazh)";
+  sound = 1;
+};
+
+GTFO.SpellID["240262"] = {
+  --desc = "Burning (Kil'jaeden)";
+  sound = 1;
+};
+
+
 --- *********
 --- * Argus *
 --- *********
@@ -1667,3 +1736,234 @@ GTFO.SpellID["251701"] = {
   --desc = "Fel Lava";
   sound = 1;
 };
+
+GTFO.SpellID["243842"] = {
+  --desc = "Laser Field";
+  sound = 1;
+};
+
+GTFO.SpellID["252122"] = {
+  --desc = "Maddening Spores";
+  sound = 1;
+};
+
+GTFO.SpellID["252119"] = {
+  --desc = "Spore Pool";
+  sound = 1;
+};
+
+GTFO.SpellID["239281"] = {
+  --desc = "Viscous Webs";
+  sound = 2;
+};
+
+GTFO.SpellID["250686"] = {
+  --desc = "Crush (Deep Terror)";
+  sound = 3;
+  damageMinimum = 1;
+};
+
+GTFO.SpellID["251564"] = {
+  --desc = "Crippling Cold";
+  applicationOnly = true;
+	minimumStacks = 14;
+  sound = 1;
+};
+
+GTFO.SpellID["249398"] = {
+  --desc = "Rain of Fire (Vel'thrak the Punisher)";
+  sound = 1;
+};
+
+GTFO.SpellID["242973"] = {
+  --desc = "Fel Infused";
+  sound = 1;
+  damageMinimum = 1;
+};
+
+GTFO.SpellID["251682"] = {
+  --desc = "Blizzard";
+  tankSound = 2;
+  sound = 1;
+};
+
+GTFO.SpellID["249263"] = {
+  --desc = "Wake of Blood";
+  sound = 1;
+};
+
+GTFO.SpellID["251901"] = {
+  --desc = "Molten Lava";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["249067"] = {
+  --desc = "Eye of Darkness (Harbinger Drel'nathar)";
+  sound = 1;
+};
+
+GTFO.SpellID["248700"] = {
+  --desc = "Fel Lightning (Fel Spike)";
+  sound = 1;
+};
+
+GTFO.SpellID["247330"] = {
+  --desc = "Eye Sore";
+  sound = 1;
+};
+
+GTFO.SpellID["247372"] = {
+  --desc = "Phantasm";
+  sound = 1;
+};
+
+GTFO.SpellID["248504"] = {
+  --desc = "Fel Flames";
+  sound = 1;
+};
+
+GTFO.SpellID["253989"] = {
+  --desc = "Kicking Up Dust";
+  sound = 2;
+};
+
+GTFO.SpellID["248770"] = {
+  --desc = "Flame Fissure (Flameweaver Verathix)";
+  sound = 1;
+};
+
+GTFO.SpellID["248759"] = {
+  --desc = "Lava Waves (Flameweaver Verathix)";
+  sound = 1;
+};
+
+GTFO.SpellID["253990"] = {
+  --desc = "Beaming Gaze (Beaming Eye)";
+  sound = 1;
+};
+
+--- ***************************
+--- * Seat of the Triumvirate *
+--- ***************************
+
+GTFO.SpellID["244588"] = {
+  --desc = "Void Sludge (Zuraal the Ascended)";
+  sound = 1;
+};
+
+GTFO.SpellID["244906"] = {
+  --desc = "Collapsing Void (Viceroy Nezhar)";
+  sound = 1;
+};
+
+GTFO.SpellID["250820"] = {
+  --desc = "Growing Pressure";
+  applicationOnly = true;
+  sound = 1;
+};
+
+-- *******************************
+-- * Antorus, the Burning Throne *
+-- *******************************
+
+GTFO.SpellID["245861"] = {
+  --desc = "Searing Rend";
+  sound = 1;
+};
+
+GTFO.SpellID["244590"] = {
+  --desc = "Molten Hot Fel";
+  sound = 1;
+};
+
+GTFO.SpellID["244131"] = {
+  --desc = "Consuming Sphere (Shatug)";
+  sound = 1;
+};
+
+GTFO.SpellID["254403"] = {
+  --desc = "Consuming Sphere (Shatug)";
+  sound = 1;
+};
+
+GTFO.SpellID["253039"] = {
+  --desc = "Bladestorm (Felblade Shocktrooper)";
+  sound = 1;
+  tankSound = 2;
+};
+
+GTFO.SpellID["258021"] = {
+  --desc = "Purging Protocol (Kin'garoth)";
+  sound = 1;
+};
+
+GTFO.SpellID["246840"] = {
+  --desc = "Ruiner (Kin'garoth)";
+  sound = 1;
+};
+
+GTFO.SpellID["249297"] = {
+  --desc = "Flames of Reorigination";
+  spellType = "SPELL_AURA_REFRESH";
+  sound = 4;
+};
+
+GTFO.SpellID["243963"] = {
+  --desc = "Alone in the Darkness (Varimathras)";
+  sound = 1;
+};
+
+GTFO.SpellID["245674"] = {
+  --desc = "Flames of Khaz'goroth (Torment of Khaz'goroth)";
+  sound = 1;
+};
+
+GTFO.SpellID["245921"] = {
+  --desc = "Spectral Army of Norgannon (Norgannon)";
+  sound = 1;
+};
+
+GTFO.SpellID["245634"] = {
+  --desc = "Whirling Saber (Noura)";
+  sound = 1;
+};
+
+GTFO.SpellID["248167"] = {
+  --desc = "Death Fog (Argus the Unmaker)";
+  sound = 1;
+};
+
+GTFO.SpellID["246199"] = {
+  --desc = "Burning Winds (Dark Keeper Aedis)";
+  sound = 1;
+};
+
+GTFO.SpellID["255646"] = {
+  --desc = "Golganneth's Wrath (Argus the Unmaker)";
+  sound = 1;
+};
+
+GTFO.SpellID["248795"] = {
+  --desc = "Fel Wake (Eonar)";
+  sound = 1;
+};
+
+GTFO.SpellID["253020"] = {
+  --desc = "Storm of Darkness (Asara, Mother of Night)";
+  sound = 1;
+};
+
+GTFO.SpellID["253538"] = {
+  --desc = "Fulimating Pulse (Noura, Mother of Flames)";
+  soundFunction = function() -- Prevent Fulminating Burst
+    GTFO_AddEvent("Fulminating", 3);
+    return 0;
+  end
+};
+
+GTFO.SpellID["245916"] = {
+  --desc = "Molten Remnants (Aggramar)";
+  sound = 1;
+};
+

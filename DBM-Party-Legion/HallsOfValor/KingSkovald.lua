@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1488, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16092 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(95675)
 mod:SetEncounterID(1808)
 mod:SetZone()
@@ -16,6 +16,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 193702",
 	"SPELL_PERIODIC_MISSED 193702"
 )
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
 
 --TODO, longer/more pulls, a timer sequence may be better than on fly timer correction.
 local warnAegis						= mod:NewTargetAnnounce(202711, 1)
@@ -27,13 +30,10 @@ local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil
 local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2)
 local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
 
+local timerRP						= mod:NewRPTimer(34.4)
 local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
 local timerSavageBladeCD			= mod:NewCDTimer(19, 193668, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--23 unless delayed by claim aegis or ragnarok
 local timerRagnarokCD				= mod:NewCDTimer(51, 193826, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--60 now? or maybe health based?
-
-local voiceSavageBlade				= mod:NewVoice(193668, "Tank")--defensive
-local voiceRagnarok					= mod:NewVoice(193826)--findshield
-local voiceFlames					= mod:NewVoice(193702)--runaway
 
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end
@@ -86,7 +86,7 @@ function mod:SPELL_CAST_START(args)
 		--end
 	elseif spellId == 193668 then
 		specWarnSavageBlade:Show()
-		voiceSavageBlade:Play("defensive")
+		specWarnSavageBlade:Play("defensive")
 		local elapsed, total = timerRagnarokCD:GetTime()
 		local remaining = total - elapsed
 		if remaining < 20 then
@@ -96,7 +96,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 193826 then
 		specWarnRagnarok:Show(SHIELDSLOT)
-		voiceRagnarok:Play("findshield")
+		specWarnRagnarok:Play("findshield")
 		timerRushCD:Stop()
 		timerSavageBladeCD:Stop()
 		timerSavageBladeCD:Start(12)
@@ -108,7 +108,19 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 193702 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnFlames:Show()
-		voiceFlames:Play("runaway")
+		specWarnFlames:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+
+function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
+	if (msg == L.SkovaldRP or msg:find(L.SkovaldRP)) then
+		self:SendSync("SkovaldRP")--Syncing to help unlocalized clients
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "SkovaldRP" and self:AntiSpam(10, 2) then
+		timerRP:Start()
+	end
+end

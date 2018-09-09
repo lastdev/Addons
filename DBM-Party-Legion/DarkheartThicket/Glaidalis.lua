@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1654, "DBM-Party-Legion", 2, 762)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16091 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(96512)
 mod:SetEncounterID(1836)
 mod:SetZone()
@@ -27,9 +27,6 @@ local specWarnRampage			= mod:NewSpecialWarningDefensive(198379, "Tank", nil, ni
 local timerLeapCD				= mod:NewCDTimer(14, 196346, nil, nil, nil, 3)
 local timerRampageCD			= mod:NewCDTimer(15.8, 198379, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerNightfallCD			= mod:NewCDTimer(14.5, 198401, nil, nil, nil, 3)
-
-local voiceNightFall			= mod:NewVoice(198408)--runaway
-local voiceRampage				= mod:NewVoice(198379, "Tank")--defensive
 
 function mod:LeapTarget(targetname, uId)
 	if not targetname then
@@ -65,7 +62,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 198379 then
 		specWarnRampage:Show()
-		voiceRampage:Play("defensive")
+		specWarnRampage:Play("defensive")
 		timerRampageCD:Start()
 	end
 end
@@ -73,13 +70,13 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 198408 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnNightfall:Show()
-		voiceNightFall:Play("runaway")
+		specWarnNightfall:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	--"<13.84 02:50:50> [UNIT_SPELLCAST_SUCCEEDED] Arch-Druid Glaidalis(Omegal) [[boss1:Grievous Leap::3-2084-1466-6383-196346-000018A4DA:196346]]", -- [47]
 	if spellId == 196346 then
 		self:BossTargetScanner(96512, "LeapTarget", 0.05, 12, true, nil, nil, nil, true)

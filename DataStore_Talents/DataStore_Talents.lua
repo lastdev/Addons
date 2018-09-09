@@ -225,45 +225,6 @@ local function ScanTalentReference()
 	end
 end
 
-local function ScanArtifact()
-	local char = addon.ThisCharacter
-
-	local artifactName = GetArtifactName()
-	if not artifactName then return end
-
-	-- only save the name if the item viewed is the one equipped (since you can right-click an artifact in the bags)
-	if C_ArtifactUI.IsViewedArtifactEquipped() then
-		char.EquippedArtifact = artifactName
-	end
-	
-	char.ArtifactKnowledge = C_ArtifactUI.GetArtifactKnowledgeLevel()
-	char.ArtifactKnowledgeMultiplier = C_ArtifactUI.GetArtifactKnowledgeMultiplier()
-	
-	local artifact = char.Artifacts[artifactName]
-	
-	artifact.rank = C_ArtifactUI.GetTotalPurchasedRanks()
-	artifact.pointsRemaining = C_ArtifactUI.GetPointsRemaining()
-	artifact.tier = select(13, C_ArtifactUI.GetEquippedArtifactInfo())
-end
-
-local function ScanArtifactXP()
-	local char = addon.ThisCharacter
-	
-	-- This method provides the right data, except the name because Blizzard is "AGAIN" not consistent in the names it returns.
-	-- Ex: Arcane mage: 
-	--   C_ArtifactUI.GetArtifactArtInfo() => returns Aluneth, Great staff of ...
-	--   C_ArtifactUI.GetEquippedArtifactInfo() => returns only "Aluneth"
-	-- local _, _, artifactName, _, remaining = C_ArtifactUI.GetEquippedArtifactInfo()
-	
-	local _, _, _, _, remaining = C_ArtifactUI.GetEquippedArtifactInfo()
-	local artInfo = C_ArtifactUI.GetEquippedArtifactArtInfo()
-	local artifact = char.Artifacts[artInfo.titleName]
-	
-	if artifact then
-		artifact.pointsRemaining = remaining
-	end
-end
-
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanTalents()
@@ -273,14 +234,6 @@ end
 local function OnPlayerSpecializationChanged()
 	ScanTalents()
 	ScanTalentReference()
-end
-
-local function OnArtifactUpdate()
-	ScanArtifact()
-end
-
-local function OnArtifactXPUpdate()
-	ScanArtifactXP()
 end
 
 -- ** Mixins **
@@ -474,13 +427,10 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("PLAYER_TALENT_UPDATE", ScanTalents)
 	addon:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", OnPlayerSpecializationChanged)
-	addon:RegisterEvent("ARTIFACT_UPDATE", OnArtifactUpdate)
-	addon:RegisterEvent("ARTIFACT_XP_UPDATE", OnArtifactXPUpdate)
 end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("PLAYER_TALENT_UPDATE")
 	addon:UnregisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-	addon:UnregisterEvent("ARTIFACT_UPDATE")
 end

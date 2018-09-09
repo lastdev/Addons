@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 87 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -31,7 +31,6 @@ local timerFixatedCD			= mod:NewNextTimer(15, 140306, nil, nil, nil, 3)
 local timerConductiveShield		= mod:NewTargetTimer(10, 140296)
 local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)--On 25 man, it always 20, But 10 man, it variables.
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("RangeFrame")
 
 local function hideRangeFrame()
@@ -123,7 +122,7 @@ function mod:UNIT_DIED(args)
 end
 
 --"<1.0 17:57:05> [UNIT_SPELLCAST_SUCCEEDED] Gastropod [[target:Fixated::0:140306]]", -- [23]
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if not self.Options.Enabled then return end
 	if spellId == 140306 and self:AntiSpam(3, 2) then
 		self:SendSync("OMGSnail", UnitGUID(uId))

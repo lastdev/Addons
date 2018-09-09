@@ -1,12 +1,52 @@
-tag 412617e74c70cd8d1151606664fe1625af5f0364 v70200-1.0.0
-Author:	Jim Whitehead <jnwhiteh@gmail.com>
-Date:	Thu Apr 6 18:52:14 2017 +0200
+lightweight tag 4972a01e803fb0c00d462bb2d318717d74932f00 v80001-1.0.2
+Author:	Ludovicus <ludovicus.maior@gmail.com>
+Date:	Sun Aug 5 17:56:16 2018 -0400
 
-Tagging v70200-1.0.0
+commit 4972a01e803fb0c00d462bb2d318717d74932f00
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sun Aug 5 17:56:16 2018 -0400
 
-commit 6d2e98b474fa5da185fd3b5fc6abe8afa058f7b5
-Author: Jim Whitehead <jnwhiteh@gmail.com>
-Date:   Thu Apr 6 18:52:04 2017 +0200
+    Add the floatOnEdge back to minimap.  Display Pins on WORLDMAP on WORLD
 
-    Update TOC for 7.2
+commit 3a417d631d164969b9a20044a4bc72bd0a3a54a9
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 16:03:35 2018 -0400
+
+    If a profile.arrow.alpha < 0.1 is seen, reset to 1.0 .  No invisible arrows!
+
+commit a1c72bbc294ef2c4fc40e597465d1ee09948c0b6
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 16:02:24 2018 -0400
+
+    Do not allow the waypoint arrow alpha to go below 0.1 .
+
+commit fe7904ae63c33ca7f3b755c2d0b6eb2beb051f02
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 16:01:14 2018 -0400
+
+    Correct the POI Integration to use the RIGHT button, as per the control panel.
+
+commit 7c0f8c67e2910ecca0521925b776ca7ae92952ba
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 14:59:17 2018 -0400
+
+    RainbowMagicMarker Issue #381: /cway not working and very quiet.
+
+commit 237821036c50261d17f9cab77d4c03697276548a
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 13:31:52 2018 -0400
+
+    sigprof issue #357: Death in the Ritual of Doom.
+
+commit 66dd5ba9998b59cb3654169b769653c8c8a92c80
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 12:53:44 2018 -0400
+
+    Fix Saroana #374 issue with profile reference at load time.
+
+commit 47e845496a48d4caac232701eec7b32c20b5455f
+Author: Ludovicus <ludovicus.maior@gmail.com>
+Date:   Sat Aug 4 12:35:08 2018 -0400
+
+    Fix JonasJSK26849 #383 Issue with SendWaypoint
 

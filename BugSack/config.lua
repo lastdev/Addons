@@ -11,8 +11,13 @@ frame:SetScript("OnShow", function(frame)
 	local function newCheckbox(label, description, onClick)
 		local check = CreateFrame("CheckButton", "BugSackCheck" .. label, frame, "InterfaceOptionsCheckButtonTemplate")
 		check:SetScript("OnClick", function(self)
-			PlaySound(self:GetChecked() and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
-			onClick(self, self:GetChecked() and true or false)
+			local tick = self:GetChecked()
+			onClick(self, tick and true or false)
+			if tick then
+				PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+			else
+				PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+			end
 		end)
 		check.label = _G[check:GetName() .. "Text"]
 		check.label:SetText(label)
@@ -87,7 +92,7 @@ frame:SetScript("OnShow", function(frame)
 	dropdown:SetPoint("LEFT", fontSizeDropdown, "RIGHT", 150, 0)
 	dropdown.initialize = function()
 		wipe(info)
-		for idx, sound in next, LibStub("LibSharedMedia-3.0"):List("sound") do
+		for _, sound in next, LibStub("LibSharedMedia-3.0"):List("sound") do
 			info.text = sound
 			info.value = sound
 			info.func = function(self)

@@ -13,6 +13,11 @@ echo You can now put your media files into the subfolders found at World of Warc
 goto end_of_file
 
 :has_folder
+echo Creating the TOC...
+echo ## Interface: 70300 > ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
+echo ## Title: SharedMedia_MyMedia >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
+echo ## Dependencies: SharedMedia >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
+echo MyMedia.lua >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
 echo Creating the file...
 echo local LSM = LibStub("LibSharedMedia-3.0") > ..\SharedMedia_MyMedia\MyMedia.lua
 

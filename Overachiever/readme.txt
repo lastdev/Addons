@@ -1,5 +1,5 @@
 
-Overachiever v0.99.9
+Overachiever v1.0.3
 ==============================
 
 Author: Tuhljin
@@ -51,7 +51,9 @@ SLASH COMMANDS:
 
 - ALTERED: /ach and its aliases (/achieve, /achievement, and /achievements)
 
-  You can now add the name, part of the name, or the # sign next to the ID number of an achievement to search for it.
+  You can now add the name, part of the name, or the numerical ID of an achievement to search for it. If you put the "#"
+sign before the ID, then achievements that contain the number in the name aren't included (useful if you want to see
+the achievement with ID 500 but not achievements like "500 Fish" and "500 Quests Completed", for example).
 
   Example A: /ach
    - Result: Toggle visibility of the main achievement UI.
@@ -107,6 +109,56 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v1.0.3
+- Trade module: "The Kul Tiran Menu" or "The Zandalari Menu" is now considered when determining if you need to cook a recipe.
+- Fixed an issue where some of the opposing faction's achievements were sometimes automatically tracked in battlegrounds.
+- Cache module:
+-- This module now improves the accuracy of cross-faction data. For instance, the meta-achievement "Master of Warsong Gulch" requires a different version of "Quick Cap" for each faction. Without the cache module, only the "Quick Cap" for your own faction indicates that it is required by another achievement. With Overachiever_Cache enabled, both versions now indicate this.
+-- For a complete cache, you will need to have logged into both an Alliance and a Horde character. (Most of the time, this is a non-issue. Most cached data is not faction specific. Even faction-specific achievements usually provide the same data to both factions.)
+-- The tooltip indicating an achievement is required for a meta-achievement can now display an Alliance or Horde icon to show when the cache indicates the requirement is exclusive to one faction.
+-- Fixed an issue where populating the cache while logged into a character of one faction prevented data from the other faction from being added.
+
+v1.0.2
+- Correct an issue that prevents the cache module from being loaded.
+
+v1.0.1
+- A new module has been added, Overachiever_Cache. When enabled (which it is by default), it should reduce load times once its cache is populated. The cache is rebuilt whenever Overachiever runs after a new build of WoW was released. (If the option "Startup: Throttle achievement lookup" is enabled, then this may improve performance instead of load time.)
+- Trade module: Fix achievement information not showing in Cooking window.
+- Suggestions Tab:
+-- Added numerous suggestions for Battle for Azeroth zones.
+-- Add more suggestions to the Draenor garrison.
+-- Suggest "Choppin' Even More Logs" to Horde characters in their garrison instead of "Choppin' Some Logs" since the wrong faction's version was showing if the series progressed. (WoW API gives Alliance version as part of the series regardless of your faction.)
+-- Suggest "Chromie Homie" at Wyrmrest Temple in Dragonblight (instead of only when actually inside The Deaths of Chromie scenario).
+- Added achievements for Battle for Azeroth zones to exploration auto-tracking.
+
+v1.0.0
+- Updated for Battle for Azeroth beta and pre-patch, WoW patch 8.0.x. Updated TOC and made many required changes.
+- This release is backward compatible with Legion. (This may not be the case for future releases.)
+- Reworked the achievement search system. Searches should generally take less time and they now allow other activity to continue during a search.
+- Search Tab:
+-- "Personal" type split into "Personal" and "Other." The latter are achievements that do not have a category which belongs in the base UI. (Since all of them are unlisted achievements, selecting the "Other" type causes the search to include unlisted achievements even when the box to do so is unchecked.)
+-- Added an option to direct searches started by slash commands (like "/ach") to the Search tab.
+- When not directed to the Search tab, slash commands that searched for achievements will now also search through unlisted achievements. Excludes the "silent" slash commands such as "/achs". (When directed to the tab, whether they include unlisted achievements is determined by the relevant checkbox found there.)
+- Minimap tooltips are now properly supported by the tooltip reminders feature. Up/down arrows (indicating a node's relative vertical position) do not prevent the reminder from showing and multiple nodes showing in the tooltip at once are now handled.
+- Suggestions Tab: Added suggestions for Seething Shore.
+- Tabs module: Added text overlay to indicate when the achievement completion filter (earned or incomplete) has caused an achievement to be omitted from the Suggestions or Related tabs.
+- Improved ability to toggle tracking an achievement by ctrl+clicking on its link. Overachiever will now attempt to toggle tracking when the selected achievement is part of a series to which the linked achievement belongs (rather than requiring the linked achievement itself to be selected).
+- Option "Startup: Throttle achievement lookup" is now disabled by default and it is automatically disabled for users upgrading from a pre-1.0 version of Overachiever.
+
+v0.99.11
+- New option added to exclude guild achievements from "need to kill" reminders.
+- Added achievements for Argus zones to exploration auto-tracking.
+- Fixed an issue where taint could be introduced when clicking a hyperlink.
+- Suggestions Tab:
+-- Added suggestions for Argus zones, the Seat of the Triumvirate, and Antorus, the Burning Throne.
+-- Updated suggestions for Ulduar to account for 10- and 25-man achievements being replaced by new any-raid-size achievements.
+- Tabs module: Added text overlay to indicate when the achievement completion filter (earned or incomplete) has caused an achievement to be omitted from the Search results or a Watch list.
+- Fixed an error that can occur if the Tabs module is disabled and a holiday toast is clicked.
+
+v0.99.10
+- Change the way consumed item tracking works in an attempt to improve performance when bag contents change.
+- Added option "Startup: Throttle achievement lookup" to replace the special variable THROTTLE_ACHLOOKUP. (For details on its purpose, see notes for v0.99.9.)
 
 v0.99.9
 - Updated for WoW patch 7.3. (Updated TOC and fixed common errors.)

@@ -6,6 +6,4 @@ if not L then return end
 
 if L then
 
--- ToC
-
 end

@@ -1,5 +1,5 @@
 --[[	*** LibCraftLevels ***
-Written by : Thaoky, EU-Marï¿½cages de Zangar
+Written by : Thaoky, EU-Marécages de Zangar
 September 21st, 2013
 
 This library contains a database of craft levels.

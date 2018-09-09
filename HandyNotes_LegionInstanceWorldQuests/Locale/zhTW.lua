@@ -37,8 +37,4 @@ L["Torn Page"] = "撕開的書頁"
 L["What to display"] = "哪些要被呈現"
 L["Worn-Edged Page"] = "邊緣磨損的書頁"
 
--- ToC
-L["Description"] = "顯示軍臨天下副本裡的世界任務相關稀有菁英位置與任務的資訊"
-L["Title"] = "HandyNotes - 軍臨天下副本世界任務"
-
 end

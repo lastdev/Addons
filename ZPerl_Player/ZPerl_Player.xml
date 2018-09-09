@@ -61,8 +61,8 @@
 					<OnLoad>
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
-						XPerl_RegisterUnitText(getglobal(self:GetName().."group"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
+						XPerl_RegisterUnitText(_G[self:GetName().."group"])
 						self:SetScript("OnEnter", function(self)
 							ZPerl_Unit_OnEnter(self:GetParent())
 						end)
@@ -148,42 +148,6 @@
 						<Layers>
 							<Layer level="ARTWORK">
 								<FontString name="$parenttext" inherits="GameFontNormal">
-									<Anchors>
-										<Anchor point="TOPLEFT">
-											<Offset>
-												<AbsDimension x="5" y="-12"/>
-											</Offset>
-										</Anchor>
-									</Anchors>
-									<Color r="1" g="1" b="1" />
-								</FontString>
-							</Layer>
-						</Layers>
-					</Frame>
-					<!-- Prestige Icon -->
-					<Frame name="$parentprestige" hidden="true">
-						<Scripts>
-							<OnLoad>
-								self:SetScale(0.7)
-								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 2)
-							</OnLoad>
-						</Scripts>
-						<Size>
-							<AbsDimension x="38" y="38"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="-2" y="2"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Layers>
-							<Layer level="BACKGROUND">
-								<Texture name="$parenticon" setAllPoints="true"/>
-							</Layer>
-							<Layer level="ARTWORK">
-								<FontString name="$parenttimer" inherits="GameFontNormal">
 									<Anchors>
 										<Anchor point="TOPLEFT">
 											<Offset>
@@ -330,7 +294,7 @@
 				</Backdrop>
 				<Scripts>
 					<OnLoad>
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -414,7 +378,7 @@
 				</Layers>
 				<Scripts>
 					<OnLoad>
-						XPerl_RegisterUnitText(getglobal(self:GetName().."text"))
+						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>

@@ -1,4 +1,4 @@
--- $Id: DB.lua 69 2017-07-02 14:44:27Z arith $
+-- $Id: DB.lua 94 2018-07-27 14:59:32Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -29,17 +29,13 @@ local function GetLocaleLibBabble(typ)
 end
 local BZ = GetLocaleLibBabble("LibBabble-SubZone-3.0")
 
-local function mapFile(mapID)
-	return HandyNotes:GetMapIDtoMapFile(mapID)
-end
-
 local DB = {}
 
 private.DB = DB
 
 DB.points = {
 	--[[ structure:
-	[mapFile] = { -- "_terrain1" etc will be stripped from attempts to fetch this
+	[mapID] = { -- "_terrain1" etc will be stripped from attempts to fetch this
 		[coord] = {
 			label = [string], 		-- label: text that'll be the label, optional
 			npc = [id], 				-- related npc id, used to display names in tooltip
@@ -49,7 +45,7 @@ DB.points = {
 		},
 	},
 	--]]
-	[mapFile(1021)] = {
+	[646] = {
 		-- /////////////////////////////////
 		-- ramp
 		-- /////////////////////////////////
@@ -255,8 +251,8 @@ DB.treasures = {
 }
 
 for k, v in pairs(DB.treasures) do
-	DB.points[mapFile(1021)][k] = v
-	DB.points[mapFile(1021)][k]["treasure"] = true
+	DB.points[646][k] = v
+	DB.points[646][k]["treasure"] = true
 end
 
 -- /////////////////////////////////
@@ -292,8 +288,8 @@ DB.rares = {
 }
 
 for k, v in pairs(DB.rares) do
-	DB.points[mapFile(1021)][k] = v
-	DB.points[mapFile(1021)][k]["rare"] = true
+	DB.points[646][k] = v
+	DB.points[646][k]["rare"] = true
 end
 
 -- /////////////////////////////////
@@ -312,8 +308,8 @@ DB.entrances = {
 }
 
 for k, v in pairs(DB.entrances) do
-	DB.points[mapFile(1021)][k] = v
-	DB.points[mapFile(1021)][k]["entrance"] = true
+	DB.points[646][k] = v
+	DB.points[646][k]["entrance"] = true
 end
 
 -- /////////////////////////////////
@@ -336,13 +332,13 @@ DB.shrines = {
 }
 
 for k, v in pairs(DB.shrines) do
-	DB.points[mapFile(1021)][k] = v
-	--DB.points[mapFile(1021)][k]["label"] = L["Ancient Shrine"]
-	DB.points[mapFile(1021)][k]["shrine"] = true
-	DB.points[mapFile(1021)][k]["type"] = "greenButton"
-	DB.points[mapFile(1021)][k]["object"] = 268435
-	DB.points[mapFile(1021)][k]["spell"] = 239933
-	DB.points[mapFile(1021)][k]["scale"] = 0.7
+	DB.points[646][k] = v
+	--DB.points[646][k]["label"] = L["Ancient Shrine"]
+	DB.points[646][k]["shrine"] = true
+	DB.points[646][k]["type"] = "greenButton"
+	DB.points[646][k]["object"] = 268435
+	DB.points[646][k]["spell"] = 239933
+	DB.points[646][k]["scale"] = 0.7
 end
 
 -- /////////////////////////////////
@@ -361,11 +357,11 @@ DB.infernalCores = {
 }
 
 for k, v in pairs(DB.infernalCores) do
-	DB.points[mapFile(1021)][k] = v
-	DB.points[mapFile(1021)][k]["infernalCore"] = true
-	DB.points[mapFile(1021)][k]["type"] = "redButton"
-	DB.points[mapFile(1021)][k]["spell"] = 193713
-	DB.points[mapFile(1021)][k]["scale"] = 0.7
+	DB.points[646][k] = v
+	DB.points[646][k]["infernalCore"] = true
+	DB.points[646][k]["type"] = "redButton"
+	DB.points[646][k]["spell"] = 193713
+	DB.points[646][k]["scale"] = 0.7
 end
 
 -- /////////////////////////////////
@@ -408,11 +404,11 @@ DB.netherPortals = {
 }
 
 for k, v in pairs(DB.netherPortals) do
-	DB.points[mapFile(1021)][k] = v
-	DB.points[mapFile(1021)][k]["netherPortal"] = true
-	DB.points[mapFile(1021)][k]["type"] = "netherPortal"
-	--DB.points[mapFile(1021)][k]["spell"] = 240605
-	DB.points[mapFile(1021)][k]["npc"] = 120751
+	DB.points[646][k] = v
+	DB.points[646][k]["netherPortal"] = true
+	DB.points[646][k]["type"] = "netherPortal"
+	--DB.points[646][k]["spell"] = 240605
+	DB.points[646][k]["npc"] = 120751
 end
 
 -- /////////////////////////////////

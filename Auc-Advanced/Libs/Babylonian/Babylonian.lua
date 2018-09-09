@@ -1,7 +1,7 @@
 --[[
 	Babylonian - A sub-addon that manages the locales for other addons.
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: Babylonian.lua 332 2012-09-02 22:14:59Z Esamynn $
+	Version: 7.7.6058 (SwimmingSeadragon)
+	Revision: $Id: Babylonian.lua 6058 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -32,7 +32,7 @@ local LIBRARY_VERSION_MINOR = 3
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Babylonian/Babylonian.lua $","$Rev: 332 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Babylonian/Babylonian.lua $","$Rev: 6058 $","5.1.DEV.", 'auctioneer', 'libs')
 
 if not lib.private then
 	lib.private = {}

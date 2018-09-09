@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Fathomlord", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 594 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(21214)
 mod:SetEncounterID(626)
 mod:SetModelID(20662)
@@ -15,25 +15,15 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 38236"
 )
 
-mod:SetBossHealthInfo(
-	21214, L.name,
-	21964, L.Caribdis,
-	21965, L.Tidalvess,
-	21966, L.Sharkkis
-)
-
-local warnHeal			= mod:NewSpellAnnounce(38330, 2)
 local warnTotem			= mod:NewTargetAnnounce(38236, 4)
 local warnCariPower		= mod:NewSpellAnnounce(38451, 3)
 local warnTidalPower	= mod:NewSpellAnnounce(38452, 3)
 local warnSharPower		= mod:NewSpellAnnounce(38455, 3)
 
-local specWarnHeal		= mod:NewSpecialWarningInterrupt(38330, false)
-local specWarnTotem		= mod:NewSpecialWarningSpell(38236)
+local specWarnHeal		= mod:NewSpecialWarningInterrupt(38330, "HasInterrupt", nil, nil, 1, 2)
+--local specWarnTotem		= mod:NewSpecialWarningSpell(38236)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
-
-mod:AddBoolOption("HealthFrame", false)
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
@@ -51,9 +41,9 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 38330 then
-		warnHeal:Show()
-		if self:GetUnitCreatureId("target") == 21964 then
+		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnHeal:Show(args.sourceName)
+			specWarnHeal:Play("kickcast")
 		end
 	end
 end

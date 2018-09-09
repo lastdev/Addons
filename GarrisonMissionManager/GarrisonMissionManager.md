@@ -1,23 +1,20 @@
-[![Donate to the author of Garrison Mission Manager](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cn=Add+special+instructions+to+the+addon+author%28s%29&business=rowaasr13%40gmail.com&bn=PP-DonationsBF%3Abtn_donateCC_LG.gif%3ANonHosted&lc=US&cmd=_donations&rm=1&no_shipping=1&currency_code=USD&return=https%3A%2F%2Fwww.curse.com%2Faddons%2Fwow%2Fgarrison-mission-manager&cancel_return=https%3A%2F%2Fwww.curse.com%2Faddons%2Fwow%2Fgarrison-mission-manager&item_name=Garrison+Mission+Manager+%28from+Curse.com%29) [![Support author of Garrison Mission Manager on Patreon](https://media-elerium.cursecdn.com/attachments/192/601/support-on-patreon26.png)](https://www.patreon.com/rowaasr13)
+[![Donate to the author of Garrison Mission Manager](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cn=Add+special+instructions+to+the+addon+author%28s%29&business=rowaasr13%40gmail.com&bn=PP-DonationsBF%3Abtn_donateCC_LG.gif%3ANonHosted&lc=US&cmd=_donations&rm=1&no_shipping=1&currency_code=USD&return=https%3A%2F%2Fwww.curse.com%2Faddons%2Fwow%2Fgarrison-mission-manager&cancel_return=https%3A%2F%2Fwww.curse.com%2Faddons%2Fwow%2Fgarrison-mission-manager&item_name=Garrison+Mission+Manager+%28from+Curse.com%29) [![Support author of Garrison Mission Manager on Patreon](https://media-elerium.cursecdn.com/attachments/192/602/support-on-patreon26.png)](https://www.patreon.com/rowaasr13)
 
-Garrison Mission Manager, v55
+Garrison Mission Manager, v58
 
 * http://www.curse.com/addons/wow/garrison-mission-manager
 * http://www.wowinterface.com/downloads/info23375-GarrisonMissionManager.html
 
+A tool to assists you with selecting best team for Battle for Azeroth mission table, Legion's Class Hall and WoD's Garrison/Shipyard missions and other followers management tasks.
+
 # Additional downloads
 * [LibTTScan](https://mods.curse.com/addons/wow/libttscan-1) - to show Artifact Power amount on mission rewards.
-* [GMM - Load On Login](https://mods.curse.com/addons/wow/gmm-on-login) - to make GMM load on login and make features like Artifact Research Notes reminder or right-clicking for WoD available right from entering the game instead of delaying load until you interact with Blizzard UI.
+* [GMM - Load On Login](https://mods.curse.com/addons/wow/gmm-on-login) - to make GMM load on login and make all its features available right from entering the game instead of delaying load until you interact with Blizzard UI.
 
 # Best team selection
-The core of GMM is team selection: mission list will have one button and individual mission page will have top 3 buttons in Class Hall, Shipyard and Garrison. Clicking any of those button set suggested team. Each button will show you success rate along with icons of bonuses gained by that team or reduced time. Hovering over those buttons will show tooltip with suggested team.
+The core of GMM is team selection: mission list will have one button and individual mission page will have top 3 buttons at Battle for Azeroth mission table, Class Hall, Shipyard and Garrison. Clicking any of those button set suggested team. Each button will show you success rate along with icons of bonuses gained by that team or reduced time. Hovering over those buttons will show tooltip with suggested team.
 
 GMM checks all combinations of all followers and selects those that give best total success chance reported directly from WoW. This takes care of each and every trait and ability your followers have, present and future, without any need for special updates.
-
-# Class Hall-specific features
-
-## Artifact Research Notes tracker
-Picking up fresh notes and activating them before gaining any new AP is probably the most important thing about your shipments. A small scroll icon will be displayed over minimap button when there's notes ready and waiting to be picked up or if notes are still unused in your bags. Scroll will turn orange if there are less than 2 shipments running and red if there are none. (Just like all other feature this requires GMM to be loaded -  i.e. you need any garrison interface or landing page at least once or install [GMM - Load On Login](https://mods.curse.com/addons/wow/gmm-on-login)).
 
 # Shared features
 

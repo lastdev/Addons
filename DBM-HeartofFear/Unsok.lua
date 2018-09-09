@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
@@ -99,9 +99,9 @@ local Totems = nil
 local Guardians = nil
 local Pets = nil
 local TPTPNormal = nil
-local amberExplosion = GetSpellInfo(122402)
-local Monstrosity = EJ_GetSectionInfo(6254)
-local MutatedConstruct = EJ_GetSectionInfo(6249)
+local amberExplosion = DBM:GetSpellInfo(122402)
+local Monstrosity = DBM:EJ_GetSectionInfo(6254)
+local MutatedConstruct = DBM:EJ_GetSectionInfo(6249)
 local canInterrupt = {}
 
 function mod:AmberExplosionAMWarning()
@@ -261,9 +261,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerFlingCD:Start(33)
 		warnAmberExplosionSoon:Schedule(50.5)
 		timerAmberExplosionAMCD:Start(55.5, amberExplosion)
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(62711, Monstrosity)
-		end
 	elseif spellId == 122395 and Phase < 3 and not playerIsConstruct then
 		warnStruggleForControl:Show(args.destName)
 		timerStruggleForControl:Start(args.destName)
@@ -273,7 +270,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnReshapeLife:Show(args.spellName, args.destName, constructCount)
 		if args:IsPlayer() then
 			self:RegisterShortTermEvents(
-				"UNIT_POWER player"
+				"UNIT_POWER_FREQUENT player"
 			)
 			playerIsConstruct = true
 			warnedWill = true -- fix bad low will special warning on entering Construct. After entering vehicle, this will be return to false. (on alt.power changes)
@@ -335,9 +332,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerDestabalize:Cancel(Monstrosity, amDestabalizeStack)
 		warnAmberExplosionSoon:Cancel()
 		self:ScheduleMethod(0.2, "ReshapeTimerRestart")
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(62711)
-		end
 		--He does NOT reset reshape live cd here, he finishes out last CD first, THEN starts using new one.
 	end
 end
@@ -415,7 +409,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_POWER(uId)
+function mod:UNIT_POWER_FREQUENT(uId)
 	local playerWill = UnitPower(uId, ALTERNATE_POWER_INDEX)
 	if playerWill > willNumber then willNumber = playerWill end--Will power has gone up since last warning so reset that warning.
 	if playerWill == 80 and willNumber > 80 then
@@ -441,7 +435,7 @@ function mod:UNIT_POWER(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_STOP(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_STOP(uId, _, spellId)
 	if spellId == 122402 then--SPELL_INTERRUPT not always fires, so use UNIT_SPELLCAST_STOP
 		timerAmberExplosion:Cancel()
 		self:UnscheduleMethod("AmberExplosionAMWarning")

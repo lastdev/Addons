@@ -40,9 +40,9 @@ local source = {
 	end,
 	GetUnitNameEx = function(self, unit)
 		local name, realm = UnitName(unit)
-		-- check if we are in a party group and if the given player is a cross realm player
-		if self.raid == 0 and self.party > 0 and name and realm then
-			-- ok we are in a party but not a raid and its a cross realm player, so append the realm name
+		-- check if if the given player is a cross realm player
+		if name and realm and #realm > 0 then
+			-- its a cross realm player, so append the realm name
 			name = name.."-"..realm
 		end
 		return name
@@ -84,7 +84,7 @@ local source = {
 		if self.raid > 0 then
 			for i=1, MAX_RAID_MEMBERS do
 				local role = UnitGroupRolesAssigned("raid"..i)
-				local name = UnitName("raid"..i)
+				local name = self:GetUnitNameEx("raid"..i)
 				if name then
 					if role == "TANK" then
 						addon:AddTank(name, "BlizzRole")
@@ -109,11 +109,14 @@ local source = {
 		["GROUP_ROSTER_UPDATE"] = function(self, addon, event) 
             local n = GetNumGroupMembers()
             self.party = n
+						self.raid = IsInRaid() and n or 0
             if self.raid == 0 and self.party == 0 then
                 addon:ClearTanks("BlizzRole")
                 self.list = {};
             elseif self.raid == 0 then
                 self:CheckPartyRoles(addon)
+						else
+            		self:CheckRaidRoles(addon)
             end
 		end,
 	},

@@ -1,19 +1,13 @@
-<<<<<<< .mine
-## Interface: 70100
-||||||| .r76
-﻿## Interface: 70100
-=======
-﻿## Interface: 70200
->>>>>>> .r78
+﻿## Interface: 70300
 
 ## Title: Lib: Compress
 ## Notes: Compression and Decompression library
 ## Author: Galmok at Stormrage-EU (Horde) and JJSheets
-## Version: latest
+## Version: @project-version@
 ## X-Website: http://www.wowace.com/addons/libcompress/
 ## X-Category: Library
 ## X-eMail: galmok AT gmail DOT com, sheets DOT jeff AT gmail DOT com
-## X-License: LGPL v2.1
+## X-License: GPL v2
 ## LoadOnDemand: 1
 
 LibStub\LibStub.lua

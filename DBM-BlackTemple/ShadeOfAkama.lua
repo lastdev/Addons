@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akama", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 621 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 mod:SetCreatureID(22841)
 mod:SetEncounterID(603)
 mod:SetModelID(21357)
@@ -29,16 +29,14 @@ local timerAddsCD		= mod:NewAddsCustomTimer(25, 216726)--NewAddsCustomTimer
 local timerDefenderCD	= mod:NewNextTimer(25, "ej15615", nil, nil, nil, 1, 41180)
 local timerSorcCD		= mod:NewNextTimer(25, "ej15606", nil, nil, nil, 1, 40520)
 
-local voiceAdds			= mod:NewVoice(216726, "-Healer", DBM_CORE_AUTO_VOICE3_OPTION_TEXT)--killmob
-
 mod.vb.phase = 1
 mod.vb.AddsWestCount = 0
 
 local function addsWestLoop(self)
 	self.vb.AddsWestCount = self.vb.AddsWestCount + 1
 	specWarnAdds:Show(DBM_CORE_WEST)
-	voiceAdds:Play("killmob")
-	voiceAdds:Schedule(1, "west")
+	specWarnAdds:Play("killmob")
+	specWarnAdds:ScheduleVoice(1, "west")
 	if self.vb.AddsWestCount == 2 then--Special
 		self:Schedule(51, addsWestLoop, self)
 		timerAddsCD:Start(51, DBM_CORE_WEST)
@@ -50,8 +48,8 @@ end
 
 local function addsEastLoop(self)
 	specWarnAdds:Show(DBM_CORE_EAST)
-	voiceAdds:Play("killmob")
-	voiceAdds:Schedule(1, "east")
+	specWarnAdds:Play("killmob")
+	specWarnAdds:ScheduleVoice(1, "east")
 	self:Schedule(51, addsEastLoop, self)
 	timerAddsCD:Start(51, DBM_CORE_EAST)
 end
@@ -76,11 +74,6 @@ function mod:OnCombatStart(delay)
 		"SWING_MISSED",
 		"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 	)
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:Show(L.name)
-		DBM.BossHealth:AddBoss(22841, L.name)
-	end
 	self:Schedule(1, defenderLoop, self)
 	self:Schedule(1, sorcLoop, self)
 	self:Schedule(1, addsWestLoop, self)
@@ -116,7 +109,7 @@ function mod:SWING_DAMAGE(_, sourceName)
 end
 mod.SWING_MISSED = mod.SWING_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if (spellId == 40607 or spellId == 40955) and self.vb.phase == 1 then--Fixate/Summon Shade of Akama Trigger
 		self:UnregisterShortTermEvents()
 		self.vb.phase = 2

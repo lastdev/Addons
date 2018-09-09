@@ -1,5 +1,5 @@
 --[[	*** LibMVC ***
-Written by : Thaoky, EU-Marï¿½cages de Zangar
+Written by : Thaoky, EU-Marécages de Zangar
 April 30th, 2017
 
 License: Public Domain

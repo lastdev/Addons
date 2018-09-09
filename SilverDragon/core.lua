@@ -1,14 +1,45 @@
 local myname, ns = ...
 
-local HBD = LibStub("HereBeDragons-1.0")
+local HBD = LibStub("HereBeDragons-2.0")
 
 local addon = LibStub("AceAddon-3.0"):NewAddon("SilverDragon", "AceEvent-3.0", "AceTimer-3.0", "AceConsole-3.0")
 SilverDragon = addon
 addon.events = LibStub("CallbackHandler-1.0"):New(addon)
 
-local debugf = tekDebug and tekDebug:GetFrame("SilverDragon")
-local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end end
-addon.Debug = Debug
+do
+	local TextDump = LibStub("LibTextDump-1.0")
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v4.0.13'
+	local window
+	local function GetDebugWindow()
+		if not window then
+			window = TextDump:New(myname)
+		end
+		return window
+	end
+	addon.GetDebugWindow = GetDebugWindow
+	addon.Debug = function(...)
+		if not debuggable then return end
+		-- if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end
+		GetDebugWindow():AddLine(string.join(', ', tostringall(...)))
+	end
+	addon.DebugF = function(...)
+		if not debuggable then return end
+		Debug(string.format(...))
+	end
+	function addon:ShowDebugWindow()
+		local window = self.GetDebugWindow()
+		if window:Lines() == 0 then
+			window:AddLine("Nothing has happened yet")
+			window:Display()
+			window:Clear()
+			return
+		end
+		window:Display()
+	end
+	addon.debuggable = debuggable
+end
+
+Debug = addon.Debug
 
 local mfloor, mpow, mabs = math.floor, math.pow, math.abs
 local tinsert, tremove = table.insert, table.remove
@@ -31,7 +62,8 @@ addon.datasources = {
 			notes = "notes",
 			mount = hasMount,
 			boss = isBoss,
-			locations = {[zoneid] = {coord,...}}
+			locations = {[zoneid] = {coord,...}},
+			hidden = isHidden,
 		},
 		...
 	}
@@ -40,7 +72,7 @@ addon.datasources = {
 local mobdb = setmetatable({}, {
 	__index = function(t, id)
 		for source, data in pairs(addon.datasources) do
-			if data[id] and addon.db.global.datasources[source] then
+			if data[id] and addon.db.global.datasources[source] and not data[id].hidden then
 				t[id] = data[id]
 				return data[id]
 			end
@@ -65,49 +97,57 @@ ns.vignetteMobLookup = vignetteMobLookup
 function addon:RegisterMobData(source, data)
 	addon.datasources[source] = data
 end
-function addon:BuildLookupTables()
-	wipe(mobdb)
-	wipe(mobsByZone)
-	wipe(questMobLookup)
-	wipe(vignetteMobLookup)
-	for source, data in pairs(addon.datasources) do
-		if addon.db.global.datasources[source] then
-			for mobid, mobdata in pairs(data) do
-				self:NameForMob(mobid) -- prime cache
-
-				mobdata.id = mobid
-				mobdata.source = source
-
-				if mobdata.locations then
-					for zoneid, coords in pairs(mobdata.locations) do
-						if not mobsByZone[zoneid] then
-							mobsByZone[zoneid] = {}
-						end
-						mobsByZone[zoneid][mobid] = coords
-					end
+do
+	local function addMobToLookups(mobid, mobdata)
+		if mobdata.hidden then
+			return
+		end
+		if mobdata.locations then
+			for zoneid, coords in pairs(mobdata.locations) do
+				if not mobsByZone[zoneid] then
+					mobsByZone[zoneid] = {}
 				end
-				-- In the olden days, we had one mob per quest and/or vignette. Alas...
-				if mobdata.quest then
-					local questMobs = questMobLookup[mobdata.quest]
-					if not questMobs then
-						questMobs = {}
-						questMobLookup[mobdata.quest] = questMobs
-					end
-					questMobs[mobid] = true
-				end
-				if mobdata.vignette then
-					local vignetteMobs = vignetteMobLookup[mobdata.vignette]
-					if not vignetteMobs then
-						vignetteMobs = {}
-						vignetteMobLookup[mobdata.vignette] = vignetteMobs
-					end
-					vignetteMobs[mobid] = true
+				mobsByZone[zoneid][mobid] = coords
+			end
+		end
+		-- In the olden days, we had one mob per quest and/or vignette. Alas...
+		if mobdata.quest then
+			local questMobs = questMobLookup[mobdata.quest]
+			if not questMobs then
+				questMobs = {}
+				questMobLookup[mobdata.quest] = questMobs
+			end
+			questMobs[mobid] = true
+		end
+		if mobdata.vignette then
+			local vignetteMobs = vignetteMobLookup[mobdata.vignette]
+			if not vignetteMobs then
+				vignetteMobs = {}
+				vignetteMobLookup[mobdata.vignette] = vignetteMobs
+			end
+			vignetteMobs[mobid] = true
+		end
+	end
+	function addon:BuildLookupTables()
+		wipe(mobdb)
+		wipe(mobsByZone)
+		wipe(questMobLookup)
+		wipe(vignetteMobLookup)
+		for source, data in pairs(addon.datasources) do
+			if addon.db.global.datasources[source] then
+				for mobid, mobdata in pairs(data) do
+					self:NameForMob(mobid) -- prime cache
+
+					mobdata.id = mobid
+					mobdata.source = source
+
+					addMobToLookups(mobid, mobdata)
 				end
 			end
 		end
-	end
 
-	self.events:Fire("Ready")
+		self.events:Fire("Ready")
+	end
 end
 
 local globaldb
@@ -130,6 +170,7 @@ function addon:OnInitialize()
 				[64403] = true, -- Alani
 				[62346] = true, -- Galleon (spawns every 2 hourish)
 --				[62346] = true, -- Oondasta (spawns every 2 hoursish now)
+				[123087] = true, -- Al'Abas in rogue class hall
 				--Throne of Thunder Weekly bosses
 				[70243] = true,--Agony and Anima (Archritualist Kelada)
 				[70238] = true,--Eyes of the Thunder King
@@ -139,6 +180,9 @@ function addon:OnInitialize()
 				[70429] = true,--Something Foul is Afoot (Flesh'rok the Diseased)
 				[70276] = true,--Taming the Tempest (No'ku Stormsayer)
 				[69843] = true,--Zao'cho the Wicked (Zao'cho)
+			},
+			ignore_datasource = {
+				-- "BurningCrusade" = true,
 			},
 		},
 		locale = {
@@ -208,10 +252,13 @@ do
 			return text
 		end
 	end
-	function addon:NameForMob(id)
+	function addon:NameForMob(id, unit)
 		if not self.db.locale.mob_name[id] then
 			local name = TextFromHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
-			if name then
+			if unit and not name then
+				name = UnitName(unit)
+			end
+			if name and name ~= UNKNOWNOBJECT then
 				self.db.locale.mob_name[id] = name
 			end
 		end
@@ -306,7 +353,7 @@ do
 end
 do
 	local zone_ignores = {
-		[950] = {
+		[550] = {
 			[32491] = true, -- Time-Lost
 		},
 	}
@@ -319,8 +366,16 @@ do
 			return true
 		end
 		--Maybe add an option for this later. This checks unit faction and ignores mobs your faction cannot do anything with.
-		if mobdb[id] and mobdb[id].faction == faction then
-			return true
+		if mobdb[id] then
+			if mobdb[id].hidden then
+				return true
+			end
+			if mobdb[id].faction == faction then
+				return true
+			end
+			if mobdb[id].source and globaldb.ignore_datasource[mobdb[id].source] then
+				return true
+			end
 		end
 	end
 end
@@ -346,8 +401,8 @@ do
 		if not guid then return end
 		local unit_type, id = guid:match("(%a+)-%d+-%d+-%d+-%d+-(%d+)-.+")
 		if not (unit_type and valid_unit_types[unit_type]) then
-	 		return
-	 	end
+			return
+		end
 		return tonumber(id)
 	end
 	ns.IdFromGuid = npcIdFromGuid

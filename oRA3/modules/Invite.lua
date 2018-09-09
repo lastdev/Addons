@@ -135,14 +135,10 @@ end
 
 local function inviteRank(rank, name, only)
 	if not canInvite() then return end
-	GuildRoster()
-	GuildControlSetRank(rank)
-	local _, _, ochat = GuildControlGetRankFlags()
-	local channel = ochat and "OFFICER" or "GUILD"
 	if only then
-		SendChatMessage((L.invitePrintRankOnly):format(name), channel)
+		SendChatMessage((L.invitePrintRankOnly):format(name), "GUILD")
 	else
-		SendChatMessage((L.invitePrintRank):format(name), channel)
+		SendChatMessage((L.invitePrintRank):format(name), "GUILD")
 	end
 	module:ScheduleTimer(doGuildInvites, 10, nil, nil, rank-1, only)
 end

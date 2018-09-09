@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemauctionhistory
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: FilterItemAuctionHistory.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 7.7.6099 (SwimmingSeadragon)
+	Revision: $Id: FilterItemAuctionHistory.lua 6099 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -138,4 +138,4 @@ function lib.Filter(item, searcher)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 6099 $")

@@ -102,7 +102,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CalendarSetMonth(-1)
+						C_Calendar.SetMonth(-1)
 						self:GetParent():Update()
 					</OnClick>
 				</Scripts>
@@ -118,7 +118,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CalendarSetMonth(1)
+						C_Calendar.SetMonth(1)
 						self:GetParent():Update()
 					</OnClick>
 				</Scripts>

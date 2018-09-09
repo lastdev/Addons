@@ -1,8 +1,8 @@
-## Interface: 70000
+## Interface: 70300
 ## Title: TidyPlates_Simple
 ## Notes: Simple TidyPlates skin with some built-in Healer functionality.
 ## Author: FunkyCold
-## Version: 7.0
+## Version: 7.3.0
 ## Dependencies: TidyPlates, TidyPlatesWidgets
 
 TidyPlates_Simple.lua

@@ -1,26 +1,24 @@
 local mod	= DBM:NewMod("CThun", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 596 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 647 $"):sub(12, -3))
 mod:SetCreatureID(15589, 15727)
 mod:SetEncounterID(717)
 mod:RegisterCombat("combat")
 mod:SetWipeTime(25)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_EMOTE",
 	"UNIT_DIED"
 )
 
-local warnDarkGlare			= mod:NewSpellAnnounce(26029, 4)
 local warnEyeTentacle		= mod:NewAnnounce("WarnEyeTentacle", 2)
 --local warnClawTentacle		= mod:NewAnnounce("WarnClawTentacle", 2)
 --local warnGiantEyeTentacle	= mod:NewAnnounce("WarnGiantEyeTentacle", 3)
 --local warnGiantClawTentacle	= mod:NewAnnounce("WarnGiantClawTentacle", 3)
 local warnPhase2			= mod:NewPhaseAnnounce(2)
-local warnWeakened			= mod:NewAnnounce("WarnWeakened", 4)
 
-local specWarnDarkGlare		= mod:NewSpecialWarningSpell(26029, nil, nil, nil, 3)
+local specWarnDarkGlare		= mod:NewSpecialWarningSpell(26029, nil, nil, nil, 3)--Dodge?
 local specWarnWeakened		= mod:NewSpecialWarning("SpecWarnWeakened", nil, nil, nil, 2)
 
 local timerDarkGlareCD		= mod:NewNextTimer(86, 26029)
@@ -33,10 +31,10 @@ local timerWeakened			= mod:NewTimer(45, "TimerWeakened")
 
 mod:AddBoolOption("RangeFrame", true)
 
-local phase2
+mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
-	phase2 = false
+	self.vb.phase = 1
 	--timerClawTentacle:Start(-delay)
 	timerEyeTentacle:Start(45-delay)
 	timerDarkGlareCD:Start(48-delay)
@@ -44,10 +42,6 @@ function mod:OnCombatStart(delay)
 	self:ScheduleMethod(48-delay, "DarkGlare")
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)
-	end
-	if DBM.BossHealth:IsShown() then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(15589, L.Eye)
 	end
 end
 
@@ -64,7 +58,6 @@ function mod:EyeTentacle()
 end
 
 function mod:DarkGlare()
-	warnDarkGlare:Show()
 	specWarnDarkGlare:Show()
 	timerDarkGlare:Start()
 	timerDarkGlareCD:Start()
@@ -73,7 +66,6 @@ end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if msg:find(L.Weakened) then
-		warnWeakened:Show()
 		specWarnWeakened:Show()
 		timerWeakened:Start()
 	end
@@ -82,13 +74,9 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 15589 then
-		phase2 = true
+		self.vb.phase = 2
 		warnPhase2:Show()
 		self:UnscheduleMethod("EyeTentacle")
 		self:UnscheduleMethod("DarkGlare")
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:Clear()
-			DBM.BossHealth:AddBoss(15727, L.name)
-		end
 	end
 end

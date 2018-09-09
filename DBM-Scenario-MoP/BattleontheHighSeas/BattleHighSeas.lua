@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d652", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1099)
@@ -37,8 +37,6 @@ local timerThrowBombCD			= mod:NewNextTimer(6, 132995, nil, false)
 local timerVerticalSlashCD		= mod:NewCDTimer(18, 141187)--18-20 second variation
 local timerCounterShot			= mod:NewCastTimer(1.5, 136473)
 
-mod:RemoveOption("HealthFrame")
-
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 141438 then
 		warnSwashbuckling:Show()
@@ -69,7 +67,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 132995 and self:AntiSpam() then
 		self:SendSync("ThrowBomb")
 	end

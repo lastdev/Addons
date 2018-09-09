@@ -1,4 +1,4 @@
--- $Id: enUS.lua 70 2017-06-21 17:55:46Z arith $
+-- $Id: enUS.lua 80 2017-09-10 12:27:35Z arith $
 
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("HandyNotes_LegionClassOrderHalls", "enUS", true, true);
@@ -172,6 +172,7 @@ L["Moira Thaurissan <Queen of the Dark Iron>"] = "Moira Thaurissan <Queen of the
 L["Morgl the Oracle <The Earthen Ring>"] = "Morgl the Oracle <The Earthen Ring>"
 L["Murr"] = "Murr"
 L["Mylune"] = "Mylune"
+L["Navigation Console"] = "Navigation Console"
 L["Neptulon"] = "Neptulon"
 L["Nighthuntress Silus <Nightborne Hunters Recruiter>"] = "Nighthuntress Silus <Nightborne Hunters Recruiter>"
 L["Night-Stalker Ku'nanji <Rogue Trainer>"] = "Night-Stalker Ku'nanji <Rogue Trainer>"
@@ -246,6 +247,7 @@ L["Show all nodes that you manually hid by right-clicking on them and choosing \
 L["Show all the other POIs."] = "Show all the other POIs."
 L["Show all workorder NPCs' locations even the corresponding order hall advancement has not been researched."] = "Show all workorder NPCs' locations even the corresponding order hall advancement has not been researched."
 L["Show flight master's location."] = "Show flight master's location."
+L["Show Navigation Console's location in the Vindicaar."] = "Show Navigation Console's location in the Vindicaar."
 L["Show note"] = "Show note"
 L["Show portal's locations."] = "Show portal's locations."
 L["Show the Champion Armaments NPC's location."] = "Show the Champion Armaments NPC's location."
@@ -310,9 +312,5 @@ L["Yancey Grillsen <Bloodsail Recruiter>"] = "Yancey Grillsen <Bloodsail Recruit
 L["Yaris Darkclaw <Recruiter>"] = "Yaris Darkclaw <Recruiter>"
 L["Yushi <Seal of Broken Fate Shipment>"] = "Yushi <Seal of Broken Fate Shipment>"
 L["Zen'kiki"] = "Zen'kiki"
-
--- ToC
-L["Description"] = "Shows the NPC locations and major POIs in Class Order Halls"
-L["Title"] = "HandyNotes - Legion Class Order Halls"
 
 end

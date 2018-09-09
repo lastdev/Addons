@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: Appraiser.lua 5702 2017-01-14 21:44:42Z brykrys $
+	Version: 7.7.6065 (SwimmingSeadragon)
+	Revision: $Id: Appraiser.lua 6065 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -480,4 +480,4 @@ Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.
 lib.Private_AprFrame = private
 lib.Private_AprSettings = private
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5702 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 6065 $")

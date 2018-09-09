@@ -40,6 +40,10 @@ L:SetGeneralLocalization{
 	name	= "幼龍領主勒西雷爾"
 }
 
+L:SetMiscLocalization{
+	Pull	= "你怎麼進來的?你們這種生物不能進來!我要毀滅你們!"
+}
+
 ---------------
 --  Firemaw  --
 ---------------
@@ -99,16 +103,14 @@ L:SetGeneralLocalization{
 	name = "奈法利安"
 }
 L:SetWarningLocalization{
-	WarnClassCall		= "%s呼喊",
-	WarnPhase			= "第%s階段"
+	WarnClassCall		= "%s呼喊"
 }
 L:SetTimerLocalization{
-	TimerClassCall		= "%s呼喊"
+	TimerClassCall		= "%s呼喊結束"
 }
 L:SetOptionLocalization{
 	TimerClassCall		= "為職業呼喊持續時間顯示計時器",
-	WarnClassCall		= "提示職業呼喊",
-	WarnPhase			= "提示轉換階段"
+	WarnClassCall		= "提示職業呼喊"
 }
 L:SetMiscLocalization{
 	YellP2		= "幹得好，我的手下。凡人的勇氣開始消退!現在，現在讓我們看看他們如何應對黑石之王的力量!!!",

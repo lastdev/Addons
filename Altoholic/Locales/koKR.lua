@@ -45,8 +45,7 @@ Altoholic will attempt to query the server for 5 new items.
 
 ]=] ] = [=[|cFFFFFFFFIf 전리품을 검색하는 중에
 로컬 아이템 캐시에 있지 않은 아이템이 발견되면,
-Altoholic이 새 아이템 5개를 서버에 질의 시도할 것입니다.
-]=]
+Altoholic이 새 아이템 5개를 서버에 질의 시도할 것입니다.]=]
 L[ [=[|cFFFFFFFFWhen |cFF00FF00enabled|cFFFFFFFF, this option will allow other Altoholic users
 to send you account sharing requests.
 ]=] ] = [=[|cFF00FF00설정 |cFFFFFFFF하면|cFFFFFFFF, 이 옵션은 다른 Altoholic 사용자들이 당신에게
@@ -107,7 +106,7 @@ L["Auctions %s(%d)"] = "경매 %s(%d)"
 L["Automatically authorize guild bank updates"] = "길드 은행 업데이트를 자동 승인"
 L["AutoQuery server |cFFFF0000(disconnection risk)"] = "AutoQuery 서버 |cFFFF0000(연결이 끊길 수도 있음)"
 L["Avatar of the Martyred"] = "순교자의 화신"
-L["Average Item Level"] = "아이템 레벨 평균"
+L["Average Item Level"] = "평균 아이템 레벨"
 L["Azure Templar (Water)"] = "청명 기사단"
 L["Baelog's Chest"] = "밸로그의 괴짝"
 L["Bag Usage"] = "가방 사용"
@@ -394,7 +393,7 @@ L["Goldthorn"] = "황금가시"
 L["Gordok Brewery"] = "고르독 양조장"
 L["Grave Moss"] = "무덤이끼"
 L["Green Dragon Mail"] = "녹색용 쇠사슬 갑옷"
-L["Grids"] = "그리드"
+L["Grids"] = "대조표"
 L["Gromsblood"] = "그롬의 피"
 L["Guild %s successfully deleted"] = "%s 길드를 성공적으로 삭제함"
 L["Guild Bank not visited yet (or not guilded)"] = "아직 길드 은행 미방문(또는 길드 미가입)"
@@ -443,7 +442,7 @@ L["Increases attack power by %d+"] = "공격력 증가 %d+"
 L["Increases damage and healing done by magical spells and effects by up to %d+"] = "마법 주문과 효과에 의한 피해량과 치유량 증가 %d+"
 L["Increases healing done by up to %d+"] = "치유량 증가 %d+"
 L["Indurium Mineral Vein"] = "인듀리움 광맥"
-L["Information saved in DataStore has been completely deleted !"] = "DataStore에 저장된 정보들이 완전히 지워졌습니다!"
+L["Information saved in DataStore has been completely deleted !"] = "DataStore에 저장된 정보가 완전히 지워졌습니다!"
 L["Inscription"] = "주문각인"
 L["Invalid tradeskill link"] = "잘못된 전문/보조기술 링크"
 L["Iron Deposit"] = "철 광맥"
@@ -826,7 +825,7 @@ L["Will be learnable by "] = "향 후 배움 가능"
 L["Windhawk Armor"] = "바람매 갑옷"
 L["Winter Veil Gift"] = "겨울맞이 축제 선물"
 L["Wintersbite"] = "겨울서리풀"
-L["WIPE_DATABASE"] = "데이터베이스를 지울까요?\\n경고: 모든 정보가 지워집니다!"
+L["WIPE_DATABASE"] = "데이터베이스를 지울까요?\\n경고: 모든 정보가 손실됩니다!"
 L["World Drops"] = "월드 드랍"
 L["World PVP"] = "월드 PvP"
 L["WoW Collector Edition"] = "WoW 컬렉터 에디션"

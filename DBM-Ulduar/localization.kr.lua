@@ -307,8 +307,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "3 단계 바 보기",
 	TimeToPhase4			= "4 단계 바 보기",
 	MagneticCore			= "자기 증폭기 획득자 알림 보기",
-	HealthFramePhase4		= "4 단계 에서 각 부분별 체력 바 보기",
-	AutoChangeLootToFFA		= "3 단계에서 전리품 획득 설정 자동으로 변경",
 	WarnBombSpawn			= "폭탄 로봇 생성 알림 보기",
 	TimerHardmode			= "영웅 난이도 광폭화 바 보기",
 	ShockBlastWarningInP1	= "$spell:63631 특수 경고 보기(1 단계)",
@@ -322,9 +320,6 @@ L:SetMiscLocalization{
 	MobPhase3 		= "공중지휘기",
 	YellPull		= "시간이 없어, 친구들! 내가 최근에 만든 기막힌 발명품을 시험하게 도와 주겠지? 자, 마음 바꿀 생각은 말라고. XT-002를 그 꼬락서니로 만들었으니, 너흰 나한테 빚진 셈이란 걸 잊지 마!",
 	YellHardPull	= "자폭 절차를 시작합니다.",
-	YellPhase2		= "멋지군! 참으로 경이적인 결과야! 차체 내구도 98.9 퍼센트라! 손상이라고 보기도 어렵지! 계속하자고.",
-	YellPhase3		= "고맙다, 친구들! 너희 덕분에 멋진 자료를 좀 얻었어! 자, 그걸 어디 뒀더라... 아, 여기 있군.",
-	YellPhase4		= "예비 시험은 이걸로 끝이다. 자, 이제부터가 진짜라고!",
 	LootMsg			= "([^%s]+).*Hitem:(%d+)"
 }
 
@@ -397,7 +392,6 @@ L:SetOptionLocalization{
 	SpecWarnFervorCast				= "$spell:63138을 대상이 된 경우 특수 경고 보기<br/>(공격대원 중 최소 한명이 사라를 대상 또는 주시대상으로 설정해야 함)",
 	specWarnBrainPortalSoon			= "차원문 이전에 특수 경고 보기",
 	NextPortal						= "다음 차원문 바 보기",
-	ShowSaraHealth					= "우두머리 체력 바 사용시 사라의 체력 바도 함께 보기<br/>(공격대원 중 최소 한명이 사라를 대상 또는 주시대상으로 설정해야 함)",
 	MaladyArrow						= "$spell:63881 대상이 가까이 있을 경우 DBM 화살표 보기"
 }
 

@@ -62,7 +62,7 @@
 --     Returns an array with the set of unit ids for the current group.
 --]]
 
-local MAJOR, MINOR = "LibGroupInSpecT-1.1", tonumber (("$Revision: 89 $"):match ("(%d+)") or 0)
+local MAJOR, MINOR = "LibGroupInSpecT-1.1", 90
 
 if not LibStub then error(MAJOR.." requires LibStub") end
 local lib = LibStub:NewLibrary (MAJOR, MINOR)
@@ -172,6 +172,7 @@ local UnitIsConnected                 = _G.UnitIsConnected
 local UnitIsPlayer                    = _G.UnitIsPlayer
 local UnitIsUnit                      = _G.UnitIsUnit
 local UnitName                        = _G.UnitName
+local SendAddonMessage                = C_ChatInfo and C_ChatInfo.SendAddonMessage or SendAddonMessage -- XXX 8.0 compat
 
 
 local global_spec_id_roles_detailed = {
@@ -254,7 +255,11 @@ function lib:PLAYER_LOGIN ()
   frame:RegisterEvent ("UNIT_NAME_UPDATE")
   frame:RegisterEvent ("UNIT_AURA")
   frame:RegisterEvent ("CHAT_MSG_ADDON")
-  RegisterAddonMessagePrefix (COMMS_PREFIX)
+  if C_ChatInfo then -- XXX 8.0 compat
+    C_ChatInfo.RegisterAddonMessagePrefix (COMMS_PREFIX)
+  else
+    RegisterAddonMessagePrefix (COMMS_PREFIX)
+  end
 
   local guid = UnitGUID ("player")
   local info = self:BuildInfo ("player")

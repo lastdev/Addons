@@ -42,20 +42,16 @@ local AddonDB_Defaults = {
 }
 
 local emissaryQuests = {
-	[42420] = true,
-	[42421] = true,
-	[42422] = true,
-	[42233] = true,
-	[42234] = true,
-	[42170] = true,
-	[43179] = true,
-	[46743] = true,
-	[46745] = true,
-	[46746] = true,
-	[46747] = true,
-	[46748] = true,
-	[46749] = true,
-	[46777] = true
+	[42420] = true, -- Court of Farondis
+	[42421] = true, -- Nightfallen
+	[42422] = true, -- The Wardens
+	[42233] = true, -- Highmountain Tribes
+	[42234] = true, -- Valarjar
+	[42170] = true, -- Dreamweavers
+	[43179] = true, -- Kirin Tor
+	[48642] = true, -- Argussian Reach
+	[48641] = true, -- Armies of Legionfall
+	[48639] = true, -- Army of the Light
 }
 
 -- *** Utility functions ***
@@ -397,7 +393,7 @@ end
 
 local function _GetQuestLogInfo(character, index)
 	local quest = character.Quests[index]
-	if not quest then return end
+	if not quest or type(quest) == "string" then return end
 	
 	local isComplete = TestBit(quest, 0)
 	local isDaily = TestBit(quest, 1)

@@ -220,7 +220,7 @@ local function createOptions(id, data)
       name = L["General Text Settings"],
       hidden = function()
         return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "cpt"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "cpt")))
+          or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "cpt")))
       end,
     },
     customTextUpdate = {
@@ -228,36 +228,13 @@ local function createOptions(id, data)
       width = "double",
       hidden = function()
         return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "c"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "c")))
+          or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "c")))
       end,
       name = L["Update Custom Text On..."],
       values = WeakAuras.text_check_types,
       order = 43.1
     },
-    customText = {
-      type = "input",
-      width = "normal",
-      hidden = function()
-        return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "c"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "c")))
-      end,
-      multiline = true,
-      name = L["Custom Function"],
-      order = 43.2,
-      control = "WeakAurasMultiLineEditBox"
-    },
-    customText_expand = {
-      type = "execute",
-      order = 43.3,
-      name = L["Expand Text Editor"],
-      func = function()
-        WeakAuras.OpenTextEditor(data, {"customText"})
-      end,
-      hidden = function()
-        return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "c"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "c")))
-      end,
-    },
+    -- Code Editor added below
     progressPrecision = {
       type = "select",
       order = 44,
@@ -266,7 +243,7 @@ local function createOptions(id, data)
       get = function() return data.progressPrecision or 1 end,
       hidden = function()
         return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "pt"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "pt")))
+          or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "pt")))
       end,
       disabled = function()
         return not (WeakAuras.ContainsPlaceHolders(data.text1, "p") or WeakAuras.ContainsPlaceHolders(data.text2, "p"));
@@ -280,7 +257,7 @@ local function createOptions(id, data)
       get = function() return data.totalPrecision or 1 end,
       hidden = function()
         return not ((data.text1Enabled and WeakAuras.ContainsPlaceHolders(data.text1, "pt"))
-                    or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "pt")))
+          or (data.text2Enabled and WeakAuras.ContainsPlaceHolders(data.text2, "pt")))
       end,
       disabled = function()
         return not (WeakAuras.ContainsPlaceHolders(data.text1, "t") or WeakAuras.ContainsPlaceHolders(data.text2, "t"));
@@ -312,11 +289,16 @@ local function createOptions(id, data)
         return not Masque;
       end
     },
+    keepAspectRatio = {
+      type = "toggle",
+      name = L["Keep Aspect Ratio"],
+      order = 49.1
+    },
     stickyDuration = {
       type = "toggle",
       name = L["Sticky Duration"],
       desc = L["Prevents duration information from decreasing when an aura refreshes. May cause problems if used with multiple auras with different durations."],
-      order = 49.2
+      order = 49.4
     },
     useTooltip = {
       type = "toggle",
@@ -324,15 +306,28 @@ local function createOptions(id, data)
       hidden = function() return not WeakAuras.CanHaveTooltip(data) end,
       order = 49.5
     },
-    spacer = {
-      type = "header",
-      name = "",
-      order = 50
-    }
+    alpha = {
+      type = "range",
+      name = L["Icon Alpha"],
+      order = 49.6,
+      min = 0,
+      max = 1,
+      bigStep = 0.01,
+      isPercent = true
+    },
   };
-  options = WeakAuras.AddPositionOptions(options, id, data);
 
-  return options;
+  local function hideCustomTextEditor()
+    return not ((data.text1Enabled and data.text1:find("%%c"))
+             or (data.text2Enabled and data.text2:find("%%c")))
+  end
+
+  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", 43.2,  hideCustomTextEditor, {"customText"}, false);
+
+  return {
+    icon = options,
+    position = WeakAuras.PositionOptions(id, data),
+  };
 end
 
 local function createThumbnail(parent)
@@ -359,6 +354,8 @@ local templates = {
     title = L["Default"],
     icon = "Interface\\ICONS\\Temp.blp",
     data = {
+      cooldown = true,
+      inverse = true,
     };
   },
   {
@@ -368,7 +365,8 @@ local templates = {
     data = {
       width = 20,
       height = 20,
-      cooldown = true
+      cooldown = true,
+      inverse = true,
     };
   },
   {
@@ -378,7 +376,8 @@ local templates = {
     data = {
       width = 32,
       height = 32,
-      cooldown = true
+      cooldown = true,
+      inverse = true,
     };
   },
   {
@@ -388,7 +387,8 @@ local templates = {
     data = {
       width = 40,
       height = 40,
-      cooldown = true
+      cooldown = true,
+      inverse = true,
     };
   },
   {
@@ -398,7 +398,8 @@ local templates = {
     data = {
       width = 48,
       height = 48,
-      cooldown = true
+      cooldown = true,
+      inverse = true,
     };
   },
   {
@@ -408,7 +409,8 @@ local templates = {
     data = {
       width = 64,
       height = 64,
-      cooldown = true
+      cooldown = true,
+      inverse = true,
     };
   }
 }

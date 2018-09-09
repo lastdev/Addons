@@ -183,7 +183,7 @@ Outfitter.cUnequipOutfitMessageFormat = "Outfitter: %s unequipped"
 
 Outfitter.cAboutTitle = "About Outfitter %s"
 Outfitter.cAboutAuthor = "Designed and written by John Stephen"
-Outfitter.cAboutCopyright = "Copyright 2006 - 2016 John Stephen"
+Outfitter.cAboutCopyright = "Copyright 2006 - 2018 John Stephen"
 Outfitter.cAboutThanks = "Many thanks to all fans and supporters."
 
 Outfitter.cGermanLocalization = "German Localization"

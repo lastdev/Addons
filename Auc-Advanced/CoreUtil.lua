@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreUtil.lua 5670 2016-09-03 11:59:41Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreUtil.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -35,8 +35,16 @@
 local lib = AucAdvanced
 if not lib then return end
 lib.CoreFileCheckIn("CoreUtil")
+
+-- Predefine some dummy functions to protect against a load error cascade
+-- These will be overwritten by the real functions, unless an error or ABORTLOAD condition occurs
+lib.NewModule = lib.NOPFUNCTION
+lib.SendProcessorMessage = lib.NOPFUNCTION
+lib.localizations = lib.RETFUNCTION
+-- End dummy functions
+
 local private, internalUtil = {}, {}
-local tooltip = lib.Libraries.TipHelper
+local tooltip = lib.Libraries.TipHelper or {}
 local Const = lib.Const
 local Resources = lib.Resources
 
@@ -88,10 +96,6 @@ if Babylonian then
 		local locale = lib.Settings.GetSetting("SelectedLocale")--locales are user choose-able
 		-- translated key or english Key or Raw Key
 		return babylonian(locale, stringKey) or babylonian[stringKey] or stringKey
-	end
-else
-	function lib.localizations(stringKey)
-		return stringKey
 	end
 end
 
@@ -281,6 +285,17 @@ function lib.DecodeLink(...) return tooltip:DecodeLink(...) end
 function lib.GetLinkQuality(...) return tooltip:GetLinkQuality(...) end
 function lib.ShowItemLink(...) return tooltip:ShowItemLink(...) end
 function lib.ShowPetLink(...) return tooltip:ShowPetLink(...) end
+
+-- Caching for GetItemInfo, provided by LibAucItemCache (via TipHelper)
+-- returns = lib.GetItemInfoCache(item, select)
+	-- item is the parameter to be used in GetItemInfo
+	-- select specifies the first return value, like the lua select function (i.e. if select = 11, only return values 11 - 17 will be returned)
+lib.GetItemInfoCache = tooltip.GetItemInfoCache
+
+-- Tools for splitting BonusIDs (from LibAucSplitBonus)
+-- BONUSIDPATTERNS : lookup table containg match templates
+-- ParseToBonusIDString(BonusIDCount, Tail) : function
+lib.GetBonusIDStringTools = function() return tooltip.BONUSIDPATTERNS, tooltip.ParseToBonusIDString end
 
 do -- Faction related functions
 	local lookupfaction = {
@@ -600,10 +615,7 @@ do -- Module Functions
 	  Note: the caller must always check the return return from NewModule, and abort loading if it is nil
 
 	--]]
-	if lib.ABORTLOAD then
-		-- if we have a load abort error condition, block registration of modules to avoid unnecessary additional errors
-		lib.NewModule = lib.NOPFUNCTION
-	else
+	if not lib.ABORTLOAD then -- don't install if there is an error condition
 		function lib.NewModule(libType, libName, libTable, noExtras, addonName)
 			local tmp = moduleTypeLookup[libType] -- use a temp variable so we can report libType in the error message
 			if not tmp then
@@ -618,7 +630,7 @@ do -- Module Functions
 			end
 			local lowerName = libName:lower()
 			if moduleNameLower[lowerName] then
-				error("Module name "..lowerName.." already in use by NewModule", 2)
+				error("Module name '"..lowerName.."' already in use by NewModule", 2)
 			end
 			if moduleTypeLookup[lowerName] then
 				-- block using one of the libTypes as a name (may add more reserved names in future)
@@ -860,10 +872,7 @@ end -- end of Module Functions
 
 
 local spmArray = {}
-if lib.ABORTLOAD then
-	-- if we have a load abort error condition, block all processor messages to avoid unnecessary additional errors
-	lib.SendProcessorMessage = lib.NOPFUNCTION
-else
+if not lib.ABORTLOAD then -- don't install function if there is an error condtion
 	function lib.SendProcessorMessage(spmMsg, ...)
 		local spmp = spmArray[spmMsg]
 		if (spmp) then
@@ -949,5 +958,5 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreUtil.lua $", "$Rev: 5670 $")
+lib.RegisterRevision("$URL: Auc-Advanced/CoreUtil.lua $", "$Rev: 6112 $")
 lib.CoreFileCheckOut("CoreUtil")

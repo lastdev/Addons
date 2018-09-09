@@ -9,6 +9,10 @@
 			<OnEnter>
 				self:Icon_OnEnter()
 			</OnEnter>
+			<OnClick>
+				-- make that configurable
+				--self:Icon_OnEnter()
+			</OnClick>
 		</Scripts>
 	</Button>
 	

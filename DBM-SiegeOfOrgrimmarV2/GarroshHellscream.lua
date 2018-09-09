@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 89 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -122,11 +122,10 @@ mod:AddBoolOption("InfoFrame", "Healer")
 --mod:AddBoolOption("RangeFrame")
 
 --Upvales, don't need variables
-local UnitExists, UnitDebuff, UnitIsDeadOrGhost = UnitExists, UnitDebuff, UnitIsDeadOrGhost
+local UnitExists, UnitIsDeadOrGhost = UnitExists, UnitIsDeadOrGhost
 local bombardCD = {55, 40, 40, 25, 25}
-local spellName1 = GetSpellInfo(149004)
-local spellName2 = GetSpellInfo(148983)
-local spellName3 = GetSpellInfo(148994)
+local spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
+local starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
 --Tables, can't recover
 local lines = {}
 --Not important, don't need to recover
@@ -145,22 +144,22 @@ mod.vb.phase4Correction = false
 local function updateInfoFrame()
 	table.wipe(lines)
 	for uId in DBM:GetGroupMembers() do
-		if not (UnitDebuff(uId, spellName1) or UnitDebuff(uId, spellName2) or UnitDebuff(uId, spellName3)) and not UnitIsDeadOrGhost(uId) then
+		if not DBM:UnitDebuff(uId, spellName1, spellName2, spellName3) and not UnitIsDeadOrGhost(uId) then
 			lines[UnitName(uId)] = ""
 		end
 	end
 	return lines
 end
 
-local function showInfoFrame()
-	if mod.Options.InfoFrame and mod:IsInCombat() then
+local function showInfoFrame(self)
+	if self.Options.InfoFrame and self:IsInCombat() then
 		DBM.InfoFrame:SetHeader(L.NoReduce)
 		DBM.InfoFrame:Show(10, "function", updateInfoFrame)
 	end
 end
 
-local function hideInfoFrame()
-	if mod.Options.InfoFrame then
+local function hideInfoFrame(self)
+	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
 end
@@ -217,7 +216,7 @@ function mod:OnCombatEnd()
 	if self.Options.ShowDesecrateArrow then
 		DBM.Arrow:Hide()
 	end
-	hideInfoFrame()
+	hideInfoFrame(self)
 	self:UnregisterShortTermEvents()
 end
 
@@ -263,7 +262,7 @@ function mod:SPELL_CAST_START(args)
 		countdownBombardment:Start(bombardCD[count] or 15)
 		timerClumpCheck:Start()
 	elseif spellId == 147011 then
-		if UnitDebuff("player", GetSpellInfo(147665)) then--Kiting an Unstable Iron Star
+		if DBM:UnitDebuff("player", starFixate) then--Kiting an Unstable Iron Star
 			specWarnManifestRage:Show()
 		else
 			warnManifestRage:Show()
@@ -336,7 +335,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnGrippingDespair:Show(amount)
 			else
-				if not (UnitDebuff("player", GetSpellInfo(145183)) or UnitDebuff("player", GetSpellInfo(145195))) and not UnitIsDeadOrGhost("player") then
+				if not DBM:UnitDebuff("player", grippingDespair, empGrippingDespair) and not UnitIsDeadOrGhost("player") then
 					specWarnGrippingDespairOther:Show(args.destName)
 				end
 			end
@@ -373,7 +372,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerGrippingDespair:Cancel(args.destName)
 	elseif spellId == 144945 then
 		warnYShaarjsProtectionFade:Show()
-		showInfoFrame()
+		showInfoFrame(self)
 	elseif args:IsSpellID(145065, 145171) and self.Options.SetIconOnMC then
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 147209 then
@@ -404,7 +403,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 144821 then--Warsong. Does not show in combat log
 		specWarnHellscreamsWarsong:Show()--Want this warning when adds get buff
 	elseif spellId == 145235 then--Throw Axe At Heart
@@ -436,7 +435,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			self.vb.whirlCount = 0
 			self.vb.desecrateCount = 0
 			self.vb.mindControlCount = 0
-			hideInfoFrame()
+			hideInfoFrame(self)
 			timerDesecrateCD:Start(10, 1)
 			countdownDesecrate:Start(10)
 			if numberOfPlayers > 1 then

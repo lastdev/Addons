@@ -67,21 +67,18 @@ do
 			if t-prev > 15 then
 				prev = t
 				self:SendComm("QueryGear")
+				oRA:InspectGroup()
 			end
 		end
 	end
 end
 
--- we're just piggy-backing off Cooldowns (and any other inspect request)
--- should probably handle requeueing people that give us incomplete info
--- but odds are something will trigger it for us (eg, mouseover talent scanning)
-function module:OnPlayerInspect(_, guid, unit)
+function module:OnPlayerInspect(_, _, unit)
 	local player = self:UnitName(unit)
-	if not player or syncList[player] or not CheckInteractDistance(unit, 1) then return end
-	if inTable(gearTbl, player, 1) then return end
+	if not player or syncList[player] then return end
 
-	local enchants, gems, ilvl = self:ScanGear(unit, 1)
-	if ilvl and ilvl > 0 then
+	local enchants, gems, ilvl = self:ScanGear(unit)
+	if ilvl then
 		local k = inTable(gearTbl, player, 1)
 		if not k then
 			k = #gearTbl + 1
@@ -97,7 +94,7 @@ end
 
 function module:OnCommReceived(_, sender, prefix, ilvl, gems, enchants)
 	if prefix == "QueryGear" then
-		local missingEnchants, emptySockets, equipped = self:ScanGear("player", 0)
+		local missingEnchants, emptySockets, equipped = self:ScanGear("player")
 		self:SendComm("Gear", floor(equipped), emptySockets, missingEnchants)
 	elseif prefix == "Gear" then
 		local k = inTable(gearTbl, sender, 1)
@@ -115,30 +112,10 @@ function module:OnCommReceived(_, sender, prefix, ilvl, gems, enchants)
 end
 
 do
-	-- Let the game figure out the item level
-	local tooltip = CreateFrame("GameTooltip", "oRA3GearTooltipScanner", nil, "GameTooltipTemplate")
-	tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-
-	local ITEM_LEVEL_PATTERN = "^"..ITEM_LEVEL:gsub("%%d", "(.-)").."$"
-	function module:GetItemLevel(unit, slot)
-		local item = tooltip:SetInventoryItem(unit, slot, true)
-		if not item then return 0 end
-		for i = 2, tooltip:NumLines() do
-			local text = _G["oRA3GearTooltipScannerTextLeft"..i]:GetText()
-			local ilvl = text and text:match(ITEM_LEVEL_PATTERN)
-			if ilvl then
-				return tonumber(ilvl)
-			end
-		end
-		return 0
-	end
-end
-
-do
 	local statsTable = {}
 	local enchantableItems = {
 		false, -- INVSLOT_HEAD -- 1
-		true, -- INVSLOT_NECK -- 2
+		false, -- INVSLOT_NECK -- 2
 		false, -- INVSLOT_SHOULDER -- 3
 		false, -- INVSLOT_BODY -- 4
 		false, -- INVSLOT_CHEST -- 5
@@ -151,21 +128,23 @@ do
 		true, -- INVSLOT_FINGER2 -- 12
 		false, -- INVSLOT_TRINKET1 -- 13
 		false, -- INVSLOT_TRINKET2 -- 14
-		true, -- INVSLOT_BACK -- 15
-		false, -- INVSLOT_MAINHAND -- 16
+		false, -- INVSLOT_BACK -- 15
+		true, -- INVSLOT_MAINHAND -- 16
 		false, -- INVSLOT_OFFHAND -- 17
 	}
-	function module:ScanGear(unit, count)
-		if count > 5 then return end
-		local isInspecting = unit ~= "player"
 
-		local missingEnchants, emptySockets, averageItemLevel, missingSlots = 0, 0, 0, 0
-		local hasOffhand = false
+	function module:ScanGear(unit)
+		local missingEnchants, emptySockets, averageItemLevel = 0, 0, 0
+		local hasOffhand, totalItemLevel, missingSlots = false, 0, 0
+		local artifactItemLevel = 0
+
 		for i = 1, 17 do
 			local itemLink = GetInventoryItemLink(unit, i)
-			if not itemLink then
+			local itemLevel = itemLink and GetDetailedItemLevelInfo(itemLink)
+			if not itemLevel and i ~= 4 and i ~= 17 then
 				missingSlots = missingSlots + 1
-			elseif i ~= 4 then -- skip the shirt
+			end
+			if itemLevel and i ~= 4 then -- skip the shirt
 				-- http://www.wowpedia.org/ItemString
 				-- item:itemID:enchantID:gemID1:gemID2:gemID3:gemID4:suffixID:uniqueID:linkLevel:specializationID:upgradeTypeID:instanceDifficultyID:numBonusIDs:bonusID1:bonusID2:...[:upgradeValue]:unknown1:unknown2:unknown3
 				-- |cffff8000|Hitem:102247::::::::100:105:4:::493|h[Jina-Kang, Kindness of Chi-Ji]|h|r
@@ -194,29 +173,34 @@ do
 				end
 
 				-- Handle item level
-				if isInspecting then
-					local itemLevel = self:GetItemLevel(unit, i)
-					averageItemLevel = averageItemLevel + itemLevel
+				if i == 17 then
+					hasOffhand = true
+				end
 
-					if i == 17 then
-						hasOffhand = true
-					end
+				-- For artifacts with an offhand, one will be 750 the other will be the actual item level
+				if (i == 16 or i == 17) and GetInventoryItemQuality(unit, i) == LE_ITEM_QUALITY_ARTIFACT then
+					artifactItemLevel = max(artifactItemLevel, itemLevel)
+					hasOffhand = false
+				else
+					totalItemLevel = totalItemLevel + itemLevel
 				end
 			end
 		end
 
-		if not isInspecting then
+		if unit == "player" then
 			local _, equipped = GetAverageItemLevel()
 			averageItemLevel = equipped
-		elseif averageItemLevel == 0 or missingSlots > 2 then -- shirt + off hand
-			-- try and filter out people still out of range
-			self:ScanGear(unit, count + 1)
+		elseif totalItemLevel == 0 or (UnitLevel(unit) > 60 and missingSlots > 5) then
+			-- Requeue the inspect
+			local guid = UnitGUID(unit)
+			if guid then
+				oRA:ScheduleTimer("InspectGroup", 3, guid)
+			end
 			return
 		else
-			averageItemLevel = averageItemLevel / (hasOffhand and 16 or 15)
+			averageItemLevel = (totalItemLevel + artifactItemLevel) / (hasOffhand and 16 or 15)
 		end
 
 		return missingEnchants, emptySockets, averageItemLevel
 	end
 end
-

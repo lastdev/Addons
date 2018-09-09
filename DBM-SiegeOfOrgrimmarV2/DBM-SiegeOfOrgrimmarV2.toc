@@ -1,5 +1,5 @@
-﻿## Interface: 70300
-## X-Min-Interface: 60000
+﻿## Interface: 80000
+## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Siege of Orgrimmar V2|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Осада Оргриммара|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Schlacht um Orgrimmar|r
@@ -16,7 +16,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-Mythic : 1
-## X-DBM-Mod-Sort: 201
+## X-DBM-Mod-Sort: 701
 ## X-DBM-Mod-MapID: 1136
 ## X-DBM-Mod-MinCoreRevision: 14002
 localization.en.lua

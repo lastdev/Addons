@@ -1,5 +1,5 @@
-## Interface: 70200
-## Version: 7.0
+## Interface: 80000
+## Version: 8.0.1
 ## Author: BigRedBrent
 ## Title: |cFF00FFFFSpellFlash|r
 ## Notes: This addon is able to make suggestions of what spell you may want to cast next by flashing on top of the spell buttons.

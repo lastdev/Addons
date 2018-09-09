@@ -101,13 +101,11 @@
 	Outfitter.cEquipOutfitMessageFormat = "Outfitter: %s 장비됨"
 	Outfitter.cUnequipOutfitMessageFormat = "Outfitter: %s 해제됨"
 
-	Outfitter.cURL = "wobbleworks.com"
 	Outfitter.cAboutTitle = "Outfitter 정보"
 	Outfitter.cAuthor = "Designed and written by John Stephen and Bruce Quinton with contributions by %s"
 	Outfitter.cTestersTitle = "Outfitter testers"
 	Outfitter.cSpecialThanksTitle = "Special thanks to"
 	Outfitter.cTranslationCredit = "Translations by %s"
-	Outfitter.cURL = "wobbleworks.com"
 
 	Outfitter.cOpenOutfitter = "Outfitter 열기"
 

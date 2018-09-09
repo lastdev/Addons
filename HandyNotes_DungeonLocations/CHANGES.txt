@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------
-r52 | nagboy@gmail.com | 2017-06-23 17:19:47 -0500 (Fri, 23 Jun 2017) | 1 line
+r81 | Caliaha | 2018-08-04 00:27:28 +0000 (Sat, 04 Aug 2018) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
 
-Added Stratholme service entrance.
+Fixed issue with Tomb of Sargeras Node
+
 ------------------------------------------------------------------------
 

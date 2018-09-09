@@ -3,11 +3,102 @@ Altoholic Changelog (dates in dd/mm/yyyy)
 
 Join the #altoholic IRC channel on Freenode : irc://irc.freenode.net:6667/
 
-IMPORTANT NOTE: As with every new expansion, many things have changed in the API, and it is REQUIRED to clear your Saved Variables for the addon.
+IMPORTANT NOTE FOR 8.0 : As with every new expansion, many things have changed in the API, and it is REQUIRED to clear your Saved Variables for the addon.
 This means cleaning the following files in \WTF\Account\<your_account>\SavedVariables : Altoholic.lua & All DataStore*.lua
 
 There WILL be bugs if you use your old files without cleaning them first. 
 Some fixes to work around API changes are too time consuming, so cleaning is required. A meagre price to pay once per expansion.
+
+How to support Altoholic's development :
+
+- For a single donation : Use the donate button either on Curse or on WoW Interface.
+- For a repeated donation : Support me on Patreon : https://www.patreon.com/Thaoky 
+- Make a gift from my amazon's wish list : http://amzn.eu/7xWdnbZ
+
+
+8.0.007 (22/08/2018)
+
+- Account Summary : Removed a test that prevented the herbalism & skinning tooltip from showing the proper per expansion information.
+
+
+8.0.006 (15/08/2018)
+
+- Restored the emissaries panel.
+- Fixed the "All levels" filter in the account summary being limited to 110.
+- Added support for War Campaign Missions.
+
+8.0.005 (12/08/2018)
+
+- Closed a lot of bugs from the Curse issues list, and implemented a lot of smaller fixes (thanks to all who contributed !).
+Note: if you had opened one of these issues, even from a super long time ago, and you feel it is still not fixed in 8.0, then by all means reopen it.
+It was late when I did this work, and I may have closed 1 or 2 a bit too fast..
+- Fixed guild bank counters being displayed in the tooltip for guild banks from other factions, when the options were set not to display them. (Thanks Leo!)
+- Reorganized several achievement categories (Thanks AlexSUCF !!)
+- Added Legion Fishing Masters reputations (Thanks AlexSUCF !!)
+- Search tab: Character level edit boxes now accept 3-digit values (Thanks AlexSUCF !!)
+- Fixed scanning of transmog sets (Thanks AlexSUCF !!)
+- Fixed several smaller issues (Thanks AlexSUCF !!)
+- DataStore_Agenda: fixed calendar scanning of events with an invalid "calendar type". This fixes the spam of events you were maybe getting at logon. Just open your calendar on the affected alts, and you will be fine.
+- Added support for paragon reputation levels (Thanks all4atlantis !!)
+- Fixed the auto-completion of alt's names on the same realm, this should fix the "This character might be someone you don't know." problem.
+
+8.0.004 (08/08/2018)
+
+- Fixed a Lua error when mousing over a recipe in the search panel. (Thanks KaraKaori !)
+- Archaelogy is back on its feet :)
+- Quick note about fishing: Fishing now seems to be seen as a series of recipes, like the other professions, even though there are no actual recipes.
+This means you actually have to press the "Fishing Skills" button in the profession UI to get its proper level.
+- Fixed the "known by" tooltips, which did not properly left out "unlearned" recipes.
+- Removed the last occurences of first aid in a few places.
+- Fixed a Lua error when visiting merchants selling recipes.
+- The amount of gold displayed in various places is now shown with a thousands' separator.
+
+8.0.003 (05/08/2018)
+
+- Slightly modified the "totals" that appear at the bottom right so that it now fully belongs to the Summary tab.
+This means the totals are now only visible when the Summary tab is visible. This frees room on the other tabs.
+- Characters tab : the profession panel has been fully reworked.
+- Professions can now be filtered by categories, subcategories, color, inventory slot, learned/unlearned, and by their actual name.
+- Profession cooldowns should be ok, but I did not have enough material at hand for tangible testing. Please let me know if you notice anything weird.
+- Recipe tooltips like "Could be learned by" etc.. should now be fully functioning again. 
+
+Note : sadly I had to make several modifications in DataStore_Crafts to support the new UI. 
+The good news is that thanks to Blizzard changes, it should now be future proof.
+The bad news is that you will have to reload your professions. Sorry, but I can't avoid it :(
+
+
+8.0.002 (24/07/2018)
+
+- Fixed a Lua error in DataStore_Agenda.
+- Fixed DataStore_Containers not properly scanning some bank content (bug #998 on Curse) (Thanks Vince & probably a few others :))
+- Fixed DataStore_Agenda not properly scanning WotLK item cooldowns. (Thanks Mapekz)
+- Fixed Item cooldowns breaking the agenda view (bug #1006 on Curse). (Thanks Mapekz) 
+- Fixed the errors in the Agenda tab.
+- DataStore_Crafts: now properly scanning profession data, UI still being worked on.
+- Fixed several UI errors related to professions. Some things are still being worked on, but not Lua errors should be triggered :)
+
+8.0.001 (22/07/2018)
+
+As mentioned on Curse : 
+
+Huge project at work since the last 3 years, leading to an imminent huge go-live + more responsibilities = little time.
+I am also looking for a place to live, since my landlord is selling all the appartments of the building I am now renting.
+So my spare time goes to finding a place to buy.
+
+Consequence : until the end of the year, I will only release sporadically, and my focus will go to stability, don't expect new features (or maybe a few if implementation is fast).
+
+.. on to the changes.
+
+First of all : 
+
+Many thanks to Darth_Predator for the fixes he made before my release, they saved me some time :)
+Many thanks to Laileena for the help on the new reputations and gathering nodes
+
+- Fixed a ton of Lua errors.
+- Summary tab : the artifact menu has been disabled, since no data can be retrieved anymore.
+- Summary tab : the first aid profession has been removed.
+
+Quests and professions are still being reworked, but I did not want to delay the release anymore.
 
 
 7.3.001 (04/09/2017)

@@ -153,7 +153,7 @@ local function ScanAuctions()
 		-- AHZone = 1			-- 1 means goblin AH
 	-- end
 	
-	local zoneID = GetCurrentMapAreaID()
+	local zoneID = C_Map.GetBestMapForUnit("player")
 	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
  		AHZone = 1			-- 1 means goblin AH
  	end
@@ -193,7 +193,7 @@ local function ScanBids()
 		-- AHZone = 1			-- 1 means goblin AH
 	-- end
 	
-	local zoneID = GetCurrentMapAreaID()
+	local zoneID = C_Map.GetBestMapForUnit("player")
 	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
  		AHZone = 1			-- 1 means goblin AH
  	end

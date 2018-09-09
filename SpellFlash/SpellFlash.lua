@@ -115,9 +115,6 @@ local UnitPowerType = UnitPowerType
 local UnitRace = UnitRace
 local WorldFrame = WorldFrame
 local NUM_PET_ACTION_SLOTS = NUM_PET_ACTION_SLOTS
-local SPELL_POWER_MANA = SPELL_POWER_MANA
-
-
 
 function a.print(...)
 	print(a.AddonTitleHeader, ...)
@@ -125,7 +122,7 @@ end
 
 local MELEESPELL = {
 	DEATHKNIGHT = 45462--[[Plague Strike]],
-	DRUID = 33876--[[Mangle]],
+	DRUID = 33917--[[Mangle]],
 	MONK = 100780--[[Jab]],
 	PALADIN = 35395--[[Crusader Strike]],
 	ROGUE = 1752--[[Sinister Strike]],
@@ -148,22 +145,31 @@ local ALTERNATEFORM = {
 
 a.ImmunityDebuffs = {
 	710--[[Banish]],
-	33786--[[Cyclone]],
-	--605--[[Mind Control]],
 }
 
 a.BreakOnDamage = {
-	19503--[[Scatter Shot]],
-	1499--[[Freezing Trap]],
-	6358--[[Seduction]],
+	111673--[[Control Undead]],
+	217832--[[Imprison]],
+	339--[[Entangling Roots]],
+	3355--[[Freezing Trap]],
+	118--[[Polymorph]],
+	28272--[[Polymorph]],
+	61305--[[Polymorph]],
+	161354--[[Polymorph]],
+	61721--[[Polymorph]],
+	126819--[[Polymorph]],
+	161353--[[Polymorph]],
+	28271--[[Polymorph]],
+	161372--[[Polymorph]],
+	161355--[[Polymorph]],
+	61025--[[Polymorph]],
+	61780--[[Polymorph]],
+	115078--[[Paralysis]],
+	20066--[[Repentance]],
 	9484--[[Shackle Undead]],
 	6770--[[Sap]],
-	118--[[Polymorph]],
 	51514--[[Hex]],
-	2094--[[Blind]],
-	2637--[[Hibernate]],
-	76780--[[Bind Elemental]],
-	19386--[[Wyvern Sting]],
+	6358--[[Seduction]],
 }
 
 a.Fear = {
@@ -171,7 +177,6 @@ a.Fear = {
 	5484--[[Howl of Terror]],
 	8122--[[Psychic Scream]],
 	1513--[[Scare Beast]],
-	10326--[[Turn Evil]],
 	5246--[[Intimidating Shout]],
 }
 
@@ -270,6 +275,50 @@ a.DummyIDNumbers = {
 	[89078] = "Training Dummy",
 	[5652] = "Undercity Practice Dummy",
 	[32543] = "Veteran's Training Dummy",
+	[87320] = "Raider's Training Dummy <Damage>",
+	[87329] = "Raider's Training Dummy <Tanking>",
+	[87762] = "Raider's Training Dummy <Damage>",
+	[88837] = "Raider's Training Dummy <Tanking>",
+	[92166] = "Raider's Training Dummy <Damage>",
+	[87320] = "Raider's Training Dummy <Damage>",
+	[113860] = "Raider's Training Dummy <Damage>",
+	[113864] = "Raider's Training Dummy <Damage>",
+	[113964] = "Raider's Training Dummy <Tanking>",
+	[92165] = "Dungeoneer's Training Dummy <Damage>",
+	[92168] = "Dungeoneer's Training Dummy <Tanking>",
+	[113966] = "Dungeoneer's Training Dummy <Damage>",
+	[113859] = "Dungeoneer's Training Dummy <Damage>",
+	[113863] = "Dungeoneer's Training Dummy <Damage>",
+	[113871] = "Bombardier's Training Dummy <Damage>",
+	[114832] = "PvP Training Dummy",
+	[114840] = "PvP Training Dummy",
+	[111824] = "Training Dummy",
+	[113862] = "Training Dummy <Damage>",
+	[113858] = "Training Dummy <Damage>",
+	[92164] = "Training Dummy <Damage>",
+	[102045] = "Rebellious Wrathguard <Dungeoneer's Training Dummy>",
+	[101956] = "Rebellious Fel Lord <Raider's Training Dummy>",
+	[102048] = "Rebellious Felguard <Training Dummy>",
+	[102052] = "Rebellious Imp <AoE Training Dummy>",
+	[113676] = "Imprisoned Weaver <Training Dummy>",
+	[113674] = "Imprisoned Centurion <Dungeoneer's Training Dummy>",
+	[113647] = "Imprisoned Eradicator <Raider's Tanking Dummy>",
+	[113673] = "Imprisoned Executioner <Dungeoneer's Tanking Dummy>",
+	[113636] = "Imprisoned Forgefiend <Raider's Training Dummy>",
+	[113687] = "Imprisoned Imp <Swarm Training Dummy>",
+	[103404] = "Bulwark Construct <Dungeoneer's Training Dummy>",
+	[103397] = "Greater Bulwark Construct <Raider's Training Dummy>",
+	[103402] = "Lesser Bulwark Construct <Training Dummy>",
+	[100441] = "Dungeoneer's Training Bag",
+	[100451] = "Raider's Training Bag",
+	[100440] = "Training Bag",
+	[107484] = "Greater Sparring Partner <Raider's Training Dummy>",
+	[114558] = "Greater Sparring Partner <Tanking>",
+	[114559] = "Lesser Sparring Partner <Tanking>",
+	[107483] = "Lesser Sparring Partner <Training Dummy>",
+	[107555] = "Bound Void Wraith <Training Dummy>",
+	[107556] = "Bound Void Walker <Raider's Training Dummy>",
+	[107202] = "Reanimated Monstrosity <Raider's Training Dummy>",
 }
 
 
@@ -614,7 +663,7 @@ local function RegisterForm()
 	if not n or n == 0 then
 		CURRENTFORM = nil
 	else
-		CURRENTFORM = select(2, GetShapeshiftFormInfo(n))
+		CURRENTFORM = s.SpellName(select(4, GetShapeshiftFormInfo(n)))
 	end
 	SpellFlashCore.debug("Now in "..( CURRENTFORM or "Caster Form" ).."!")
 end
@@ -646,7 +695,7 @@ local function RegisterSpells()
 				SPELLS[spellName or spellId] = 1
 				SPELLS[s.SpellName(spellId) or spellName or spellId] = 1
 				SPELLS[spellId or spellName] = 1
-				--a.print(BOOKTYPE_SPELL, i, spellName, skillType, spellId)
+				-- a.print(BOOKTYPE_SPELL, i, spellName, skillType, spellId)
 			end
 		end
 	end
@@ -917,11 +966,7 @@ end
 
 function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	local Time = GetTime()
-	local Event = select(2, ...)
-	local sourceGUID = select(4, ...)
-	local GUID = select(8, ...)
-	local SpellName = select(13, ...)
-	local EventType = select(15, ...)
+	local _, Event, _, sourceGUID, _, _, _, GUID, _, _, _, _, SpellName, _, EventType = CombatLogGetCurrentEventInfo()
 	local FromMe
 	if sourceGUID == UnitGUID("player") then
 		FromMe = "player"
@@ -1008,64 +1053,69 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	end
 end
 
-function Event.UNIT_SPELLCAST_SENT(event, unit, SpellName, rank, target, ID)
-	if SPELLCAST[unit] then
-		if ID > 0 then
+function Event.UNIT_SPELLCAST_SENT(event, unitTarget, target, castGUID, spellID)
+	if SPELLCAST[unitTarget] then
+		if spellID then
 			local UnitID = s.UnitID(target)
 			if UnitID then
-				--a.print(GetTime(), event, SpellName, ID)
-				SPELLCAST[unit][ID] = UnitGUID(UnitID)
+				local SpellName = GetSpellInfo(spellID)
+				--a.print(GetTime(), event, SpellName, spellID, UnitID)
+				SPELLCAST[unitTarget][spellID] = UnitGUID(UnitID)
 				return
 			end
 		end
-		SPELLCAST[unit][ID] = nil
+		SPELLCAST[unitTarget][spellID] = nil
 	end
 end
 
-function Event.UNIT_SPELLCAST_START(event, unit, SpellName, rank, ID)
-	if SPELLCAST[unit] then
-		local GUID = SPELLCAST[unit][ID]
+function Event.UNIT_SPELLCAST_START(event, unitTarget, castGUID, spellID)
+	if SPELLCAST[unitTarget] then
+		local GUID = SPELLCAST[unitTarget][spellID]
 		if GUID then
-			--a.print(GetTime(), event, SpellName, ID)
-			RegisterSpellCast(SpellName, GUID, 1, GetTime(), ( select(6, UnitCastingInfo(unit)) or 0 ) / 1000)
-			SPELLCAST[unit].CURRENT = ID
+			local SpellName = GetSpellInfo(spellID)
+			--a.print(GetTime(), event, SpellName, spellID)
+			RegisterSpellCast(SpellName, GUID, 1, GetTime(), ( select(5, UnitCastingInfo(unitTarget)) or 0 ) / 1000)
+			SPELLCAST[unitTarget].CURRENT = spellID
 		end
 	end
 end
 
-function Event.UNIT_SPELLCAST_DELAYED(event, unit, SpellName, rank, ID)
-	if SPELLCAST[unit] then
-		if SPELLCAST[unit].CURRENT == ID then
-			--a.print(GetTime(), event, SpellName, ID)
-			local GUID = SPELLCAST[unit][ID]
-			RegisterSpellCast(SpellName, GUID, 0, GetTime(), ( select(6, UnitCastingInfo(unit)) or 0 ) / 1000)
+function Event.UNIT_SPELLCAST_DELAYED(event, unitTarget, castGUID, spellID)
+	if SPELLCAST[unitTarget] then
+		if SPELLCAST[unitTarget].CURRENT == spellID then
+			local SpellName = GetSpellInfo(spellID)
+			--a.print(GetTime(), event, SpellName, spellID)
+			local GUID = SPELLCAST[unitTarget][spellID]
+			RegisterSpellCast(SpellName, GUID, 0, GetTime(), ( select(5, UnitCastingInfo(unitTarget)) or 0 ) / 1000)
 		end
 	end
 end
 
-function Event.UNIT_SPELLCAST_INTERRUPTED(event, unit, SpellName, rank, ID)
-	if SPELLCAST[unit] then
-		if not UnitCastingInfo(unit) then
-			if SPELLCAST[unit].CURRENT == ID then
-				--a.print(GetTime(), event, SpellName, ID)
-				SPELLCAST[unit].CURRENT = nil
-				local GUID = SPELLCAST[unit][ID]
+function Event.UNIT_SPELLCAST_INTERRUPTED(event, unitTarget, castGUID, spellID)
+	if SPELLCAST[unitTarget] then
+		if not UnitCastingInfo(unitTarget) then
+			if SPELLCAST[unitTarget].CURRENT == spellID then
+				local SpellName = GetSpellInfo(spellID)
+				--a.print(GetTime(), event, SpellName, spellID)
+				SPELLCAST[unitTarget].CURRENT = nil
+				local GUID = SPELLCAST[unitTarget][spellID]
 				RegisterSpellCast(SpellName, GUID)
 			end
-			SPELLCAST[unit][ID] = nil
+			SPELLCAST[unitTarget][spellID] = nil
  		end
 	end
 end
 
-function Event.UNIT_SPELLCAST_SUCCEEDED(event, unit, SpellName, rank, ID)
-	if SPELLCAST[unit] then
-		if SPELLCAST[unit].CURRENT == ID then
-			--a.print(GetTime(), event, SpellName, ID)
-			SPELLCAST[unit].CURRENT = nil
-			local GUID = SPELLCAST[unit][ID]
+function Event.UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellID)
+	if SPELLCAST[unitTarget] then
+		if SPELLCAST[unitTarget].CURRENT == spellID then
+			local SpellName = GetSpellInfo(spellID)
+			--a.print(GetTime(), event, SpellName, spellID)
+			SPELLCAST[unitTarget].CURRENT = nil
+			local GUID = SPELLCAST[unitTarget][spellID]
 			RegisterSpellCast(SpellName, GUID, 3, GetTime())
 		end
-		SPELLCAST[unit][ID] = nil
+		SPELLCAST[unitTarget][spellID] = nil
 	end
 end
 
@@ -1098,7 +1148,6 @@ local function StartUp()
 						Event.PLAYER_SPECIALIZATION_CHANGED = RegisterAll
 						Event.UPDATE_MACROS = RegisterAll
 						Event.PET_BAR_UPDATE = RegisterPetSpells
-						Event.PET_TALENT_UPDATE = RegisterPetSpells
 						for event in pairs(Event) do
 							EventFrame:RegisterEvent(event)
 						end
@@ -1380,8 +1429,14 @@ local function CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealabl
 		end
 		local SpellName = s.SpellName(SpellName, 1)
 		if SpellName then
-			local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitAura(u, SpellName, nil, d..m..c)
-			if name then
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID
+			for i = 1, 40 do
+				name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID = UnitAura(u, i, nil, d..m..c)
+				if not name or name == SpellName then
+					break
+				end
+			end
+			if name == SpellName then
 				if not id or id == spellID then
 					if ( not Type or Type:lower() == tostring(debuffType):lower() )
 					and ( not Stealable or isStealable )
@@ -1407,10 +1462,10 @@ local function CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealabl
 		end
 		if not SpellName or id then
 			local i = 1
-			local spellID = select(11, UnitAura(u, i, d))
+			local spellID = select(10, UnitAura(u, i, d))
 			while spellID do
 				if not id or id == spellID then
-					local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(u, i, d..m..c)
+					local name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(u, i, d..m..c)
 					if name
 					and ( not Type or Type:lower() == tostring(debuffType):lower() )
 					and ( not Stealable or isStealable )
@@ -1433,7 +1488,7 @@ local function CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealabl
 					end
 				end
 				i = i + 1
-				spellID = select(11, UnitAura(u, i, d))
+				spellID = select(10, UnitAura(u, i, d))
 			end
 		end
 	end
@@ -1499,7 +1554,7 @@ function SpellFlashAddon.ShowBuffs(unit, Debuff)
 		msg = UnitName(unit).."'s Buff Slot"
 	end
 	local c = 1
-	local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster = UnitAura(unit, c, Debuff)
+	local name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitAura(unit, c, Debuff)
 	if name then
 		while name do
 			local caster = ""
@@ -1508,7 +1563,7 @@ function SpellFlashAddon.ShowBuffs(unit, Debuff)
 			end
 			a.print(msg.." "..c..": "..name..caster)
 			c = c + 1
-			name, rank, icon, count, debuffType, duration, expirationTime, unitCaster = UnitAura(unit, c, Debuff)
+			name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitAura(unit, c, Debuff)
 		end
 	else
 		a.print("All "..msg.."'s are empty.")
@@ -1931,41 +1986,97 @@ end
 -- the guts of the tooltip to get it.  Blizzard, why? whyyyy?
 local SpellCostTip = CreateFrame('GameTooltip')
 local SpellCostText = SpellCostTip:CreateFontString()
+local PowerGenerationText = SpellCostTip:CreateFontString()
 SpellCostTip:AddFontStrings(
         SpellCostTip:CreateFontString(),
         SpellCostTip:CreateFontString())
 SpellCostTip:AddFontStrings(
         SpellCostText,
         SpellCostTip:CreateFontString())
+SpellCostTip:AddFontStrings(
+        SpellCostTip:CreateFontString(),
+        SpellCostTip:CreateFontString())
+SpellCostTip:AddFontStrings(
+        SpellCostTip:CreateFontString(),
+        SpellCostTip:CreateFontString())
+SpellCostTip:AddFontStrings(
+        PowerGenerationText,
+        SpellCostTip:CreateFontString())
 
 -- patterns to extract power by type, extra brackets because gsub has multiple
 -- return values, and we don't want the '1' sneaking into our tables.
 local PowerPatterns = {
-        [-2] = {(HEALTH_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [0]  = {(MANA_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [1]  = {(RAGE_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [2]  = {(FOCUS_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [3]  = {(ENERGY_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [5]  = {(RUNE_COST_BLOOD:gsub('%%d', '([.,%%d]+)', 1)),
-                (RUNE_COST_CHROMATIC:gsub('%%d', '([.,%%d]+)', 1)),
-                (RUNE_COST_FROST:gsub('%%d', '([.,%%d]+)', 1)),
-                (RUNE_COST_UNHOLY:gsub('%%d', '([.,%%d]+)', 1))},
-        [6]  = {(RUNIC_POWER_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [7]  = {(SOUL_SHARDS_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [9]  = {(HOLY_POWER_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [12] = {(CHI_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [13] = {(SHADOW_ORBS_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [14] = {(BURNING_EMBERS_COST:gsub('%%d', '([.,%%d]+)', 1))},
-        [15] = {(DEMONIC_FURY_COST:gsub('%%d', '([.,%%d]+)', 1))},
+		["WARRIOR"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Rage]  = (RAGE_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["PALADIN"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.HolyPower]  = (HOLY_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["HUNTER"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Focus]  = (FOCUS_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["ROGUE"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.ComboPoints]  = (COMBO_POINTS_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["PRIEST"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Insanity] = (INSANITY_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["DEATHKNIGHT"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Runes]  = (RUNE_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.RunicPower]  = (RUNIC_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["SHAMAN"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Maelstrom] = (MAELSTROM_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["MAGE"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.ArcaneCharges] = (ARCANE_CHARGES_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["WARLOCK"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.SoulShards]  = (SOUL_SHARDS_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["MONK"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Chi] = (CHI_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["DRUID"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Rage]  = (RAGE_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.ComboPoints]  = (COMBO_POINTS_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.LunarPower]  = (LUNAR_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
+		["DEMONHUNTER"] = {
+	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Fury] = (FURY_COST:gsub('%%s', '([.,%%d]+)', 1)),
+	        [Enum.PowerType.Pain] = (PAIN_COST:gsub('%%s', '([.,%%d]+)', 1)),
+		},
 }
 
-function s.SpellCost(SpellName, DesiredPowerType)
+function s.SpellCost(SpellName)
         if not SpellName then return 0 end
 
-        -- hopefully this will stay working, since it isn't fully documented.
         local _, _, _, _, _, _, id = GetSpellInfo(SpellName)
+
         if not id then
-                return 0
+			return 0
         end
 
         -- make the tooltip work...
@@ -1974,25 +2085,60 @@ function s.SpellCost(SpellName, DesiredPowerType)
 
         local text = SpellCostText:GetText()
         if not text then
-                return 0
+			return 0
         end
 
         -- if not specified, default to our main power type.
-        local patterns = PowerPatterns[DesiredPowerType or UnitPowerType("player")]
+        local patterns = PowerPatterns[CLASS]
         if not patterns then
-                -- if you encounter this, fix the table?
-                return 0
+			-- if you encounter this, fix the table?
+			return 0
         end
 
-        local cost = 0
-        for _, pattern in ipairs(patterns) do
-                local match = text:match(pattern)
-                if match then cost = match:gsub('%D', '') + cost end
+        for powertype, pattern in pairs(patterns) do
+			local match = text:match(pattern)
+			if match then
+				return 0 + match:gsub('%D', ''), powertype
+			end
         end
 
-        return cost
+        return 0
 end
 
+function s.PowerGeneration(SpellName)
+        if not SpellName then return 0 end
+
+        local _, _, _, _, _, _, id = GetSpellInfo(SpellName)
+
+        if not id then
+			return 0
+        end
+
+        -- make the tooltip work...
+        SpellCostTip:SetOwner(WorldFrame, 'ANCHOR_NONE')
+        SpellCostTip:SetSpellByID(id)
+
+        local text = PowerGenerationText:GetText()
+        if not text then
+			return 0
+        end
+
+        -- if not specified, default to our main power type.
+        local patterns = PowerPatterns[CLASS]
+        if not patterns then
+			-- if you encounter this, fix the table?
+			return 0
+        end
+
+        for powertype, pattern in pairs(patterns) do
+			local match = text:match(pattern)
+			if match then
+				return 0 + match:gsub('%D', ''), powertype
+			end
+        end
+
+        return 0
+end
 
 function s.HasGlyph(GlyphName)
 	local GlyphName = s.SpellName(GlyphName, 1)
@@ -2160,7 +2306,8 @@ function s.CurrentVehicle(VehicleSpellName)
 end
 
 function s.Casting(SpellName, unit, interruptible, NoSubName)
-	local name, subtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(s.UnitSelection(unit))
+	local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(s.UnitSelection(unit))
+	local subtext = GetSpellSubtext(SpellName)
 	if name and ( not interruptible or not notInterruptible ) then
 		if not SpellName then
 			return (endTime / 1000) - GetTime()
@@ -2182,7 +2329,8 @@ function s.Casting(SpellName, unit, interruptible, NoSubName)
 end
 
 function s.Channeling(SpellName, unit, interruptible, NoSubName)
-	local name, subtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(s.UnitSelection(unit))
+	local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(s.UnitSelection(unit))
+	local subtext = GetSpellSubtext(SpellName)
 	if name and ( not interruptible or not notInterruptible ) then
 		if not SpellName then
 			return (endTime / 1000) - GetTime()
@@ -2220,7 +2368,8 @@ function s.GetCastingOrChanneling(SpellName, unit, interruptible, NoSubName)
 end
 
 function s.CastingName(SpellName, unit, interruptible, NoSubName)
-	local name, subtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(s.UnitSelection(unit))
+	local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(s.UnitSelection(unit))
+	local subtext = GetSpellSubtext(SpellName)
 	if name and ( not interruptible or not notInterruptible ) then
 		if not NoSubName and subtext and subtext ~= "" then
 			name = name.."("..subtext..")"
@@ -2242,7 +2391,8 @@ function s.CastingName(SpellName, unit, interruptible, NoSubName)
 end
 
 function s.ChannelingName(SpellName, unit, interruptible, NoSubName)
-	local name, subtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(s.UnitSelection(unit))
+	local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(s.UnitSelection(unit))
+	local subtext = GetSpellSubtext(SpellName)
 	if name and ( not interruptible or not notInterruptible ) then
 		if not NoSubName and subtext and subtext ~= "" then
 			name = name.."("..subtext..")"
@@ -3030,10 +3180,7 @@ function s.PetCastable(SpellName, PetFrameNeeded, PetHealthNotNeeded, GlobalPetC
 	local SpellName = s.SpellName(SpellName)
 	if type(SpellName) == "string" and SpellName ~= "" and ( a.PetActions[SpellName] or s.HasSpell(SpellName) ) and not s.CastingOrChanneling(SpellName, "pet") and ( PetHealthNotNeeded or UnitHealth("pet") > 0 ) and ( not PetFrameNeeded or UnitExists("pet") ) then
 		for n = 1, NUM_PET_ACTION_SLOTS do
-			local name, subtext, texture, isToken, isActive = GetPetActionInfo(n)
-			if subtext and subtext ~= "" then
-				name = name.."("..subtext..")"
-			end
+			local name, texture, isToken, isActive = GetPetActionInfo(n)
 			if ( a.PetActions[SpellName] or SpellName ) == name then
 				local globalcooldown = nil
 				local GlobalCooldownSpell = s.SpellName(GlobalPetCooldownSpell)
@@ -3115,8 +3262,8 @@ function s.CheckIfSpellCastable(z)
 		return false
 	end
 	--local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
-	local name, rank, icon, castTime = GetSpellInfo(z.ID)
-	local cost = s.SpellCost(z.ID)
+	local name, _, icon, castTime = GetSpellInfo(z.ID)
+	local cost, powertype = s.SpellCost(z.ID)
 	if not castTime or castTime < 0 then
 		castTime = 0
 	end
@@ -3246,7 +3393,7 @@ function s.CheckIfSpellCastable(z)
 	local isUsable, notEnoughPower = s.UsableSpell(z.ID)
 	return ( z.EvenIfNotUsable or isUsable or ( not z.Conditional and notEnoughPower ) )
 		and ( not z.Melee or s.MeleeDistance(z.Unit) )
-		and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("player") + CastRegenPower >= (cost or 0) + s.SpellCost(s.CastingName(nil, "player")) )
+		and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("player", powertype) + CastRegenPower >= (cost or 0) + s.SpellCost(s.CastingName(nil, "player")) )
 		and ( SUPPRESS_SPEED_CHECK or not z.NotWhileMoving or not s.Moving("player") )
 		and ( cooldown <= Lag + CastingTimeLeft or ( not globalcooldown and duration <= 1.5 ) or ( globalcooldown and cooldown <= globalcooldown ) )
 		and ( SUPPRESS_RANGE_CHECK or z.NoRangeCheck or UnitIsUnit(z.Unit, "player") or UnitIsUnit(z.Unit, "vehicle") or not s.SpellHasRange(z.Name) or s.SpellInRange(z.Name, z.Unit) )
@@ -3585,10 +3732,7 @@ function s.CheckIfPetSpellCastable(z)
 	end
 	if ( z.PetHealthNotNeeded or UnitHealth("pet") > 0 ) and ( not z.PetFrameNeeded or UnitExists("pet") ) then
 		for n = 1, NUM_PET_ACTION_SLOTS do
-			local name, subtext, texture, isToken, isActive = GetPetActionInfo(n)
-			if subtext and subtext ~= "" then
-				name = name.."("..subtext..")"
-			end
+			local name, texture, isToken, isActive = GetPetActionInfo(n)
 			if ( a.PetActions[z.Name] or z.Name ) == name then
 				--local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
 				local name, rank, icon, castTime = GetSpellInfo(z.ID)

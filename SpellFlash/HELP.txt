@@ -28,6 +28,6 @@ You may send donations of $12 or more with this link:
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&item_name=SpellFlash&hosted_button_id=4962619
 
 You may send donations of less than $12 with this micro payment link:
-https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&item_name=SpellFlash+-+Micro+Payment&hosted_button_id=3HD6FEDT7EJXQ
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&item_name=SpellFlash%20-%20Micro%20Payment&hosted_button_id=3HD6FEDT7EJXQ
 
 Donations are not required to use this addon, but they are very much appreciated.

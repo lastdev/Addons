@@ -34,7 +34,6 @@ local function InitLocalization()
 	AltoAccountSharingText4:SetText(colors.orange.."Date")
 	AltoAccountSharing_UseNameText:SetText(L["Character"])
 	
-	AltoholicFrameTotals:SetText(L["Totals"])
 	AltoholicFrameSearchLabel:SetText(L["Search Containers"])
 	AltoholicFrame_ResetButton:SetText(L["Reset"])
 
@@ -134,6 +133,7 @@ SendMailNameEditBox:SetScript("OnChar", function(self, ...)
 		for characterName, character in pairs(DataStore:GetCharacters()) do
 			if DataStore:GetCharacterFaction(character) == currentFaction then
 				if ( strfind(strupper(characterName), strupper(text), 1, 1) == 1 ) then
+					-- SendMailNameEditBox:SetText(format("%s-%s", characterName, GetRealmName()))
 					SendMailNameEditBox:SetText(characterName)
 					SendMailNameEditBox:HighlightText(textlen, -1)
 					return;
@@ -529,7 +529,7 @@ function addon:GetMoneyString(copper, color, noTexture)
 	else
 		copper = color..format(COPPER_AMOUNT_TEXTURE, copper, 13, 13)
 		silver = color..format(SILVER_AMOUNT_TEXTURE, silver, 13, 13)
-		gold = color..format(GOLD_AMOUNT_TEXTURE, gold, 13, 13)
+		gold = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
 	end
 	return format("%s %s %s", gold, silver, copper)
 end
@@ -623,7 +623,7 @@ function addon:ListCharsOnQuest(questName, player, tooltip)
 	if not questName then return nil end
 
 	local charsOnQuest = DataStore:GetCharactersOnQuest(questName, player)
-	if #charsOnQuest > 0 then
+	if charsOnQuest and #charsOnQuest > 0 then
 		tooltip:AddLine(" ",1,1,1)
 		tooltip:AddLine(format("%s%s", colors.green, L["Are also on this quest:"]))
 		

@@ -26,7 +26,7 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
-local Revision = ("$Revision: 108 $"):sub(12, -3)
+local Revision = ("$Revision: 117 $"):sub(12, -3)
 
 local IsInRaid = IsInRaid
 local IsInInstance = IsInInstance
@@ -42,22 +42,13 @@ local default_settings = {
 	own_bargroup = false,
 	show_portal = true,
 	spells = {
-		{ spell = 48792, bartext = "%spell on %player", cooldown = 8 },-- Death Knight: Icebound Fortitude Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 61336, bartext = "%spell on %player", cooldown = 6 },-- Druid: Survival Instincts Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 6940, bartext = "%spell on %target", cooldown = 12 }, -- Paladin: Hand of Sacrifice Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 498, bartext = "%spell on %player", cooldown = 8 },	-- Paladin: Divine Protection Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 31850, bartext = "%spell on %player", cooldown = 10 },-- Paladin: Argent Defender Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 86659, bartext = "%spell on %player", cooldown = 8 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31821, bartext = default_bartext, cooldown = 180 },	-- Paladin: Devotion Aura
 		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
 		{ spell = 73325, bartext = default_bartext, cooldown = 90 },	-- Priest: Leap of Faith (Life Grip)
-		{ spell = 33206, bartext = "%spell on %target", cooldown = 8 }, -- Priest: Pain Suppression Duration (for Healers to see how long cooldown runs)
-		{ spell = 47788, bartext = "%spell on %target", cooldown = 10 },-- Priest: Guardian Spirit (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 62618, bartext = default_bartext, cooldown = 180 },	-- Priest: Power Word: Barrier
 		{ spell = 98008, bartext = default_bartext, cooldown = 180 },	-- Shaman: Spirit Link Totem
 		{ spell = 20608, bartext = default_bartext, cooldown = 1800 },	-- Shaman: Reincarnation
-		{ spell = 871, bartext = "%spell on %player", cooldown = 8 },	-- Warrior: Shieldwall Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 12975, bartext = "%spell on %player", cooldown = 15 },-- Warrior: Last Stand Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 97462, bartext = default_bartext, cooldown = 180 },	-- Warrior: Rallying Cry CD (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 22700, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 74A
 		{ spell = 44389, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 110G
@@ -200,7 +191,7 @@ do
 					settings.spells[self.guikey] = settings.spells[self.guikey] or {}
 					if field == "bartext" and settings.spells[self.guikey].spell and settings.spells[self.guikey].spell > 0 then
 						local text = settings.spells[self.guikey][field] or ""
-						local spellinfo = GetSpellInfo(settings.spells[self.guikey].spell)
+						local spellinfo = DBM:GetSpellInfo(settings.spells[self.guikey].spell)
 						if spellinfo == nil then
 							DBM:AddMsg("Illegal SpellID found. Please remove the Spell "..settings.spells[self.guikey].spell.." from your DBM Options GUI (spelltimers)");
 						else
@@ -316,8 +307,8 @@ do
 		if event == "ADDON_LOADED" and select(1, ...) == "DBM-SpellTimers" then
 			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 			self:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
-			--self:RegisterEvent("ENCOUNTER_START")
-			--self:RegisterEvent("ENCOUNTER_END")
+			self:RegisterEvent("ENCOUNTER_START")
+			self:RegisterEvent("ENCOUNTER_END")
 
 			-- Update settings of this Addon
 			settings = DBM_SpellTimers_Settings
@@ -352,55 +343,40 @@ do
 
 			rebuildSpellIDIndex()
 		elseif settings.enabled and event == "ENCOUNTER_START" then--Encounter Started
+			clearAllSpellBars() 
 			--Reset all CDs that are >= 3 minutes EXCEPT shaman reincarnate (20608)
+			self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 		elseif settings.enabled and event == "ENCOUNTER_END" then--Encounter Ended
 			--Reset all CDs that are > 3 minutes EXCEPT shaman reincarnate (20608)
-		elseif settings.enabled and event == "COMBAT_LOG_EVENT_UNFILTERED" and spellEvents[select(2, ...)] then
-			-- first some exeptions (we don't want to see any skill around the world)
-			if settings.only_from_raid and not IsInRaid() then return end
-			if not settings.active_in_pvp and (select(2, IsInInstance()) == "pvp" or select(2, IsInInstance()) == "arena") then return end
+			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		elseif settings.enabled and event == "PLAYER_ENTERING_BATTLEGROUND" then
+		  -- spell cooldowns all reset on entering an arena or bg
+		  clearAllSpellBars()
+		elseif settings.enabled and event == "COMBAT_LOG_EVENT_UNFILTERED" then
+			local _, event, _, _, sourceName, _, _, _, destName, _, _, extraArg1, extraArg2 = CombatLogGetCurrentEventInfo()
+			if spellEvents[event] then
+				-- first some exeptions (we don't want to see any skill around the world)
+				if settings.only_from_raid and not IsInRaid() then return end
+				if not settings.active_in_pvp and (select(2, IsInInstance()) == "pvp" or select(2, IsInInstance()) == "arena") then return end
 
-			local fromplayer = select(5, ...)
-			local toplayer = select(9, ...)		-- Added by Florin Patan
-			local spellid = select(12, ...)
+				local fromplayer = sourceName
+				local toplayer = destName		-- Added by Florin Patan
+				local spellid = extraArg1
 
-			-- now we filter if cast is from outside raidgrp (we don't want to see mass spam in Dalaran/...)
-			if settings.only_from_raid and not DBM:GetRaidUnitId(fromplayer) then return end
+				-- now we filter if cast is from outside raidgrp (we don't want to see mass spam in Dalaran/...)
+				if settings.only_from_raid and not DBM:GetRaidUnitId(fromplayer) then return end
 
-			guikey = SpellIDIndex[spellid]
-			v = (guikey and settings.spells[guikey])
-			if v and v.enabled == true then
-				if v.spell ~= spellid then
-					print("DBM-SpellTimers Index mismatch error! "..guikey.." "..spellid)
-				end
-				local spellinfo, _, icon = GetSpellInfo(spellid)
-				spellinfo = spellinfo or "UNKNOWN SPELL"
-				fromplayer = fromplayer or "UNKNOWN SOURCE"
-				toplayer = toplayer or "UNKNOWN TARGET"
-				local bartext = v.bartext:gsub("%%spell", spellinfo):gsub("%%player", fromplayer):gsub("%%target", toplayer)	-- Changed by Florin Patan
-				SpellBarIndex[bartext] = SpellBars:CreateBar(v.cooldown, bartext, icon, nil, true)
-
-				if settings.showlocal then
-					local msg =  L.Local_CastMessage:format(bartext)
-					if not lastmsg or lastmsg ~= msg then
-						DBM:AddMsg(msg)
-						lastmsg = msg
+				guikey = SpellIDIndex[spellid]
+				v = (guikey and settings.spells[guikey])
+				if v and v.enabled == true then
+					if v.spell ~= spellid then
+						print("DBM-SpellTimers Index mismatch error! "..guikey.." "..spellid)
 					end
-				end
-			end
-
-		elseif settings.enabled and event == "COMBAT_LOG_EVENT_UNFILTERED" and settings.show_portal and select(2, ...) == "SPELL_CREATE" then
-			if settings.only_from_raid and not IsInRaid() then return end
-
-			local fromplayer = select(5, ...)
-			local toplayer = select(9, ...)		-- Added by Florin Patan
-			local spellid = select(12, ...)
-			
-			if settings.only_from_raid and DBM:GetRaidUnitId(fromplayer) == "none" then return end
-
-			for k,v in pairs(myportals) do
-				if v.spell == spellid then
-					local spellinfo, _, icon = GetSpellInfo(spellid)
+					local spellinfo = extraArg2
+					local icon = GetSpellTexture(spellid)
+					spellinfo = spellinfo or "UNKNOWN SPELL"
+					fromplayer = fromplayer or "UNKNOWN SOURCE"
+					toplayer = toplayer or "UNKNOWN TARGET"
 					local bartext = v.bartext:gsub("%%spell", spellinfo):gsub("%%player", fromplayer):gsub("%%target", toplayer)	-- Changed by Florin Patan
 					SpellBarIndex[bartext] = SpellBars:CreateBar(v.cooldown, bartext, icon, nil, true)
 
@@ -412,10 +388,32 @@ do
 						end
 					end
 				end
+			elseif settings.show_portal and event == "SPELL_CREATE" then
+				if settings.only_from_raid and not IsInRaid() then return end
+
+				local fromplayer = sourceName
+				local toplayer = destName		-- Added by Florin Patan
+				local spellid = extraArg1
+			
+				if settings.only_from_raid and DBM:GetRaidUnitId(fromplayer) == "none" then return end
+
+				for k,v in pairs(myportals) do
+					if v.spell == spellid then
+						local spellinfo = extraArg2
+						local icon = GetSpellTexture(spellid)
+						local bartext = v.bartext:gsub("%%spell", spellinfo):gsub("%%player", fromplayer):gsub("%%target", toplayer)	-- Changed by Florin Patan
+						SpellBarIndex[bartext] = SpellBars:CreateBar(v.cooldown, bartext, icon, nil, true)
+
+						if settings.showlocal then
+							local msg =  L.Local_CastMessage:format(bartext)
+							if not lastmsg or lastmsg ~= msg then
+								DBM:AddMsg(msg)
+								lastmsg = msg
+							end
+						end
+					end
+				end
 			end
-		elseif settings.enabled and event == "PLAYER_ENTERING_BATTLEGROUND" then
-		  -- spell cooldowns all reset on entering an arena or bg
-		  clearAllSpellBars() 
 		end
 	end)
 	mainframe:RegisterEvent("ADDON_LOADED")

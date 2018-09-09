@@ -1,4 +1,4 @@
-﻿-- English localization file for enUS and enGB.
+-- English localization file for enUS and enGB.
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("Omen", "enUS", true)
 if not L then return end
@@ -125,6 +125,7 @@ L["Show Classes..."] = true
 L["SHOW_CLASSES_DESC"] = "Show Omen threat bars for the following classes. The classes here refer to those people in your party/raid only with the exception of the 'Not In Party' option."
 L["Show bars for these classes"] = true
 L["DEATHKNIGHT"] = "Death Knight"
+L["DEMONHUNTER"] =  "Demon Hunter"
 L["DRUID"] = "Druid"
 L["HUNTER"] = "Hunter"
 L["MAGE"] = "Mage"
@@ -179,7 +180,7 @@ L["The background color for pets"] = true
 L["Use !ClassColors"] = true
 L["Use !ClassColors addon for class colors for the background color of threat bars"] = true
 L["Temp Threat Bar Color"] = true
-L["The background color for players under the effects of Fade, Mirror Image, glyphed Hand of Salvation, Tricks of the Trade and Misdirection"] = true
+L["The background color for players under the effects of Fade, Mirror Image, Tricks of the Trade and Misdirection"] = true
 L["Bar BG Color"] = true
 L["The background color for all threat bars"] = true
 L["Always Show Self"] = true
@@ -226,12 +227,7 @@ L["SFX"] = true
 L["Ambience"] = true
 L["Music"] = true
 L["Disable while tanking"] = true
-local TOC = select(4, GetBuildInfo())
-if TOC < 40000 then
-L["DISABLE_WHILE_TANKING_DESC"] = "Do not give out any warnings if Defensive Stance, Bear Form, Righteous Fury or Frost Presence is active."
-else
-L["DISABLE_WHILE_TANKING_DESC"] = "Do not give out any warnings if Defensive Stance, Bear Form, Righteous Fury or Blood Presence is active."
-end
+L["DISABLE_WHILE_TANKING_DESC"] = "Do not give out any warnings if you are on a tank spec."
 L["Test warnings"] = true
 
 -- Config strings, for Fubar

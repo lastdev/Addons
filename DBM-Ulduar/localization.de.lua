@@ -133,6 +133,7 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
+	HealthInfo				= "Heilen für Sterne",
 	YellPull				= "Euer Handeln ist unlogisch. Alle Möglichkeiten dieser Begegnung wurden berechnet. Das Pantheon wird die Nachricht des Beobachters erhalten, ungeachtet des Ausgangs.",
 	YellKill				= "Ich sah Welten umhüllt von den Flammen der Schöpfer, sah ohne einen Hauch von Trauer ihre Bewohner vergehen. Ganze Planetensysteme geboren und vernichtet, während Eure sterblichen Herzen nur einmal schlagen. Doch immer war mein Herz kalt... ohne Mitgefühl. Ich - habe - nichts - gefühlt. Millionen, Milliarden Leben verschwendet. Trugen sie alle dieselbe Beharrlichkeit in sich, wie Ihr? Liebten sie alle das Leben so sehr, wie Ihr es tut?",
 	Emote_CollapsingStar	= "%s beginnt damit, kollabierende Sterne zu beschwören!",
@@ -290,7 +291,6 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{
 	MagneticCore		= ">%s< hat den Magnetischen Kern",
-	WarningShockBlast	= "Schockschlag - Lauf weg!",
 	WarnBombSpawn		= "Bombenbot erschienen"
 }
 
@@ -306,12 +306,8 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Zeige Zeit bis Phase 3",
 	TimeToPhase4			= "Zeige Zeit bis Phase 4",
 	MagneticCore			= "Verkünde Spieler, die Magnetische Kerne plündern",
-	HealthFramePhase4		= "Zeige Lebensanzeige in Phase 4",
-	AutoChangeLootToFFA		= "Plündermodus in Phase 3 automatisch auf 'Jeder gegen jeden' einstellen",
 	WarnBombSpawn			= "Zeige Warnung für Bombenbot",
 	TimerHardmode			= "Zeige Timer für Hard Mode",
-	ShockBlastWarningInP1	= "Spezialwarnung für $spell:63631 in Phase 1",
-	ShockBlastWarningInP4	= "Spezialwarnung für $spell:63631 in Phase 4",
 	RangeFrame				= "Zeige Abstandsfenster in Phase 1 (6m)"
 }
 
@@ -321,9 +317,6 @@ L:SetMiscLocalization{
 	MobPhase3		= "Luftkommandoeinheit",
 	YellPull		= "Wir haben nicht viel Zeit, Freunde! Ihr werdet mir dabei helfen, meine neueste und großartigste Kreation zu testen. Bevor Ihr nun Eure Meinung ändert, denkt daran, dass Ihr mir etwas schuldig seid, nach dem Unfug, den Ihr mit dem XT-002 angestellt habt.",
 	YellHardPull	= "Warum habt Ihr das denn jetzt gemacht? Habt Ihr das Schild nicht gesehen, auf dem steht \"DIESEN KNOPF NICHT DRÜCKEN!\"? Wie sollen wir die Tests abschließen, solange der Selbstzerstörungsmechanismus aktiv ist?",
-	YellPhase2		= "WUNDERBAR! Das sind Ergebnisse nach meinem Geschmack! Integrität der Hülle bei 98,9 Prozent! So gut wie keine Dellen! Und weiter geht's.",
-	YellPhase3		= "Danke Euch, Freunde! Eure Anstrengungen haben fantastische Daten geliefert! So, wo habe ich noch gleich... Ah, hier ist…",
-	YellPhase4		= "Vorversuchsphase abgeschlossen. Jetzt kommt der eigentliche Test!",
 	LootMsg			= "([^%s]+).*Hitem:(%d+)"
 }
 
@@ -340,20 +333,10 @@ L:SetTimerLocalization{
 	hardmodeSpawn = "Saronitanimus erscheint"
 }
 
-L:SetWarningLocalization{
-	SpecialWarningShadowCrash		= "Schattengeschoss auf dir - Lauf weg!",
-	SpecialWarningShadowCrashNear	= "Schattengeschoss in deiner Nähe - Aufpassen!",
-	SpecialWarningLLNear			= "Mal der Gesichtslosen auf >%s< in deiner Nähe!"
-}
-
 L:SetOptionLocalization{
 	SetIconOnShadowCrash			= "Setze Zeichen auf Ziele von $spell:62660 (Totenkopf)",
 	SetIconOnLifeLeach				= "Setze Zeichen auf Ziele von $spell:63276 (Kreuz)",
-	SpecialWarningShadowCrash		= "Spezialwarnung, wenn du von $spell:62660 betroffen bist (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
-	SpecialWarningShadowCrashNear	= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:62660 betroffen ist",
-	SpecialWarningLLNear			= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:63276 betroffen ist",
-	hardmodeSpawn					= "Zeige Zeit bis zum Erscheinen des Saronitanimus (Hard Mode)",
-	CrashArrow						= "Zeige DBM-Pfeil, wenn $spell:62660 in deiner Nähe ist"
+	hardmodeSpawn					= "Zeige Zeit bis zum Erscheinen des Saronitanimus (Hard Mode)"
 }
 
 L:SetMiscLocalization{
@@ -374,11 +357,8 @@ L:SetWarningLocalization{
 	WarningCrusherTentacleSpawned	= "Schmettertentakel erschienen",
 	WarningSanity 					= "%d Geistige Gesundheit übrig",
 	SpecWarnSanity 					= "%d Geistige Gesundheit übrig",
-	SpecWarnGuardianLow				= "Diesen Wächter nicht mehr angreifen!",
 	SpecWarnMadnessOutNow			= "Wahnsinn hervorrufen - LAUF RAUS!",
 	WarnBrainPortalSoon				= "Gehirnportale in 3 Sek",	
-	SpecWarnFervor					= "Saras Eifer auf dir!",
-	SpecWarnFervorCast				= "Saras Eifer wird auf dich gewirkt",
 	specWarnBrainPortalSoon			= "Gehirnportale bald"
 }
 
@@ -391,14 +371,10 @@ L:SetOptionLocalization{
 	WarningCrusherTentacleSpawned	= "Zeige Warnung, wenn ein Schmettertentakel erscheint",
 	WarningSanity					= "Zeige Warnung, wenn deine $spell:63050 niedrig ist",
 	SpecWarnSanity					= "Spezialwarnung, wenn deine $spell:63050 sehr niedrig ist",
-	SpecWarnGuardianLow				= "Spezialwarnung, wenn ein Wächter des Yogg-Saron (Phase 1) fast tot ist (für DDs)",
 	WarnBrainPortalSoon				= "Zeige Vorwarnung für Gehirnportale",
 	SpecWarnMadnessOutNow			= "Spezialwarnung kurz bevor $spell:64059 zu Ende gewirkt wird",
-	SpecWarnFervorCast				= "Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
 	specWarnBrainPortalSoon			= "Spezialwarnung für nächste Gehirnportale",
-	NextPortal						= "Zeige Zeit bis nächste Gehirnportale",
-	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1 (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
-	MaladyArrow						= "Zeige DBM-Pfeil, wenn $spell:63881 in deiner Nähe ist"
+	NextPortal						= "Zeige Zeit bis nächste Gehirnportale"
 }
 
 L:SetMiscLocalization{

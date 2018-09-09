@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Taunt Announce
 --
--- Copyright 2011-2016 BeathsCurse (Saphod - Draenor EU)
+-- Copyright 2011-2018 BeathsCurse (Saphod - Draenor EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -85,7 +85,9 @@ local tauntAuras = {
 	[118585]=1,	-- Monk, Leer of the Ox (glyph, spell 115543)
 	[118635]=1,	-- Monk, AoE Provoke through Black Ox Statue (spell 115546)
 	[123588]=1,	-- Hunter, Distracting Shot (glyphed, spell 20736)
+	[171014]=1,	-- Warlock Infernal, Seethe
 	[185245]=1,	-- Demon Hunter, Torment
+	[204079]=1,	-- Paladin, Final Stand
 }
 
 -- Table of taunt spell IDs
@@ -104,6 +106,7 @@ local tauntSpells = {
 	[114198]=1,	-- Warrior, Mocking Banner
 	[115543]=1,	-- Monk, Leer of the Ox (glyph, aura 118585)
 	[115546]=1,	-- Monk, Provoke (auras 116189 and 118635)
+	[171014]=1,	-- Warlock Infernal, Seethe
 	[185245]=1,	-- Demon Hunter, Torment
 }
 
@@ -152,6 +155,7 @@ local lastTime, lastSpellID
 local mockingBanners = {}
 
 -- Local names for globals used in CLEU handler
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetSpellLink = GetSpellLink
 local GetZonePVPInfo = GetZonePVPInfo
 local IsInGroup = IsInGroup
@@ -287,6 +291,12 @@ end
 -- Note: Naming the args was faster than select, and Lua adjusts the number
 -- of arguments automatically.
 function frame:COMBAT_LOG_EVENT_UNFILTERED(timeStamp, subEvent, _, _, sourceName, sourceFlags, _, _, destName, _, destRaidFlags, spellID, _, _, missType)
+	-- In BfA, CLEU no longer provides any parameters, and you have to call
+	-- CombatLogGetCurrentEventInfo() to retrieve them. This is a workaround
+	-- to support both the live version and the BfA beta.
+	if CombatLogGetCurrentEventInfo then
+		timeStamp, subEvent, _, _, sourceName, sourceFlags, _, _, destName, _, destRaidFlags, spellID, _, _, missType = CombatLogGetCurrentEventInfo()
+	end
 	local failString
 
 --[[
@@ -434,7 +444,7 @@ function frame:AnnounceTaunt(mode, msg, sound)
 		SendChatMessage(msg, mode:upper())
 	end
 	if sound ~= '' then
-		PlaySoundFile(sound)
+		PlaySoundFile(sound, 'MASTER')
 	end
 end
 

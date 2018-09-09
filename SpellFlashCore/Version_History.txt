@@ -1,12 +1,19 @@
 
 
+== Version 2.1.6
+
+* Bumped toc version number.
+
+
 == Version 2.1.5
 
 * Fixed version number.
 
+
 == Version 2.1.4
 
 * Bumped toc version number.
+
 
 == Version 2.1.3
 

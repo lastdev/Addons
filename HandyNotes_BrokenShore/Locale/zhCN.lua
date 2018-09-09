@@ -53,8 +53,4 @@ L["Veiled Wyrmtongue Chest"] = "隐蔽的虫语者箱子"
 L["What to display"] = "哪些要被呈现"
 L["Wyrmtongue Chest"] = "虫语者箱子"
 
--- ToC
-L["Description"] = "顯示破碎海滩的 POI 位置"
-L["Title"] = "HandyNotes - 破碎海滩"
-
 end

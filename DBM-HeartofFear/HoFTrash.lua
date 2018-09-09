@@ -9,7 +9,7 @@ mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 125877",
-	"UNIT_SPELLCAST_SUCCEEDED target focus"
+	"UNIT_SPELLCAST_SUCCEEDED target focus mouseover"
 )
 
 local specWarnUnseenStrike		= mod:NewSpecialWarningYou(123017)
@@ -19,17 +19,16 @@ local specWarnDispatch			= mod:NewSpecialWarningInterrupt(125877)
 
 local timerUnseenStrike			= mod:NewCastTimer(4.8, 123017)
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("UnseenStrikeArrow")
 
-local spellName = GetSpellInfo(122949)
 local scanTime = 0
 
-local function findUnseen()
+local function findUnseen(spellName)
+	if not spellName then return end
 	scanTime = scanTime + 1
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		if UnitDebuff(uId, spellName) then
+		if DBM:UnitDebuff(uId, spellName) then
 			if name == UnitName("player") then
 				specWarnUnseenStrike:Show()
 				yellUnseenStrike:Yell()
@@ -56,16 +55,16 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if not self.Options.Enabled then return end
 	if spellId == 122949 and self:AntiSpam() and self:GetCIDFromGUID(UnitGUID(uId)) == 64340 then
-		self:SendSync("UnseenTrash")
+		self:SendSync("UnseenTrash", DBM:GetSpellInfo(spellId))
 	end
 end
 
-function mod:OnSync(msg)
+function mod:OnSync(msg, spellName)
 	if msg == "UnseenTrash" then
 		scanTime = 0
-		findUnseen()
+		findUnseen(spellName)
 	end
 end

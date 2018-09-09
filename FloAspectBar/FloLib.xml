@@ -5,7 +5,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="FloLib_localization.lua"/>
 	<Script file="FloLib.lua"/>
-	<CheckButton name="FloButtonTemplate" inherits="ActionButtonTemplate, SecureActionButtonTemplate" virtual="true">
+	<CheckButton name="FloButtonTemplateA" inherits="ActionButtonTemplate, SecureActionButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="30" y="30"/>
 		</Size>
@@ -53,7 +53,7 @@
 			</OnLeave>
 		</Scripts>
 	</CheckButton>
-	<StatusBar name="FloCountdown" drawLayer="BORDER" orientation="VERTICAL" enableMouse="true" virtual="true">
+	<StatusBar name="FloCountdownA" drawLayer="BORDER" orientation="VERTICAL" enableMouse="true" virtual="true">
 		<Size>
 			<AbsDimension x="4" y="30"/>
 		</Size>
@@ -110,13 +110,13 @@
 			</OnDragStop>
 		</Scripts>
 	</StatusBar>
-        <Frame name="FloBarTemplate" parent="UIParent" enableMouse="true" movable="true" hidden="true" virtual="true">
+        <Frame name="FloBarTemplateA" parent="UIParent" enableMouse="true" movable="true" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="44" y="44"/>
 		</Size>
 		<Frames>
-			<StatusBar name="$parentCountdown1" inherits="FloCountdown"/>
-			<CheckButton name="$parentButton1" inherits="FloButtonTemplate" id="1">
+			<StatusBar name="$parentCountdown1" inherits="FloCountdownA"/>
+			<CheckButton name="$parentButton1" inherits="FloButtonTemplateA" id="1">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown1" relativePoint="RIGHT">
 						<Offset>
@@ -125,7 +125,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown2" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown2" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton1" relativePoint="RIGHT">
 						<Offset>
@@ -134,7 +134,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton2" inherits="FloButtonTemplate" id="2">
+			<CheckButton name="$parentButton2" inherits="FloButtonTemplateA" id="2">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown2" relativePoint="RIGHT">
 						<Offset>
@@ -143,7 +143,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown3" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown3" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton2" relativePoint="RIGHT">
 						<Offset>
@@ -152,7 +152,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton3" inherits="FloButtonTemplate" id="3">
+			<CheckButton name="$parentButton3" inherits="FloButtonTemplateA" id="3">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown3" relativePoint="RIGHT">
 						<Offset>
@@ -161,7 +161,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown4" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown4" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton3" relativePoint="RIGHT">
 						<Offset>
@@ -170,7 +170,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton4" inherits="FloButtonTemplate" id="4">
+			<CheckButton name="$parentButton4" inherits="FloButtonTemplateA" id="4">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown4" relativePoint="RIGHT">
 						<Offset>
@@ -179,7 +179,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown5" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown5" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton4" relativePoint="RIGHT">
 						<Offset>
@@ -188,7 +188,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton5" inherits="FloButtonTemplate" id="5">
+			<CheckButton name="$parentButton5" inherits="FloButtonTemplateA" id="5">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown5" relativePoint="RIGHT">
 						<Offset>
@@ -197,7 +197,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown6" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown6" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton5" relativePoint="RIGHT">
 						<Offset>
@@ -206,7 +206,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton6" inherits="FloButtonTemplate" id="6">
+			<CheckButton name="$parentButton6" inherits="FloButtonTemplateA" id="6">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown6" relativePoint="RIGHT">
 						<Offset>
@@ -215,7 +215,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown7" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown7" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton6" relativePoint="RIGHT">
 						<Offset>
@@ -224,7 +224,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton7" inherits="FloButtonTemplate" id="7">
+			<CheckButton name="$parentButton7" inherits="FloButtonTemplateA" id="7">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown7" relativePoint="RIGHT">
 						<Offset>
@@ -233,7 +233,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown8" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown8" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton7" relativePoint="RIGHT">
 						<Offset>
@@ -242,7 +242,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton8" inherits="FloButtonTemplate" id="8">
+			<CheckButton name="$parentButton8" inherits="FloButtonTemplateA" id="8">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown8" relativePoint="RIGHT">
 						<Offset>
@@ -251,7 +251,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown9" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown9" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton8" relativePoint="RIGHT">
 						<Offset>
@@ -260,7 +260,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton9" inherits="FloButtonTemplate" id="9">
+			<CheckButton name="$parentButton9" inherits="FloButtonTemplateA" id="9">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown9" relativePoint="RIGHT">
 						<Offset>
@@ -269,7 +269,7 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<StatusBar name="$parentCountdown10" inherits="FloCountdown">
+			<StatusBar name="$parentCountdown10" inherits="FloCountdownA">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentButton9" relativePoint="RIGHT">
 						<Offset>
@@ -278,7 +278,7 @@
 					</Anchor>
 				</Anchors>
                         </StatusBar>
-			<CheckButton name="$parentButton10" inherits="FloButtonTemplate" id="10">
+			<CheckButton name="$parentButton10" inherits="FloButtonTemplateA" id="10">
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parentCountdown10" relativePoint="RIGHT">
 						<Offset>

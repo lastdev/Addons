@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1435 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1457 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -1100,6 +1100,10 @@ local srcRetention = Recount.srcRetention
 local dstRetention = Recount.dstRetention
 
 function Recount:COMBAT_LOG_EVENT_UNFILTERED(timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+	Recount:CombatLogEvent(CombatLogGetCurrentEventInfo())
+end
+
+function Recount:CombatLogEvent(timestamp, eventtype, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	if not Recount.db.profile.GlobalDataCollect or not Recount.CurrentDataCollect then
 		return
 	end
@@ -1193,12 +1197,12 @@ function Recount:AddTimeEvent(who, onWho, ability, friendly, pet)
 		who.LastDamageTime = eventtime
 	end
 
-	if Adding > 1.5 then
-		Adding = 1.5
-	end
-
-	if Adding ~= 0 then
+	if Adding > 0 then
 		Adding = math_floor(100 * Adding + 0.5) / 100
+
+		if Adding > 1.5 then
+			Adding = 1.5
+		end
 
 		if Recount.db.profile.EnableSync then
 			Recount:AddOwnerPetLazySyncAmount(who, "ActiveTime", Adding)

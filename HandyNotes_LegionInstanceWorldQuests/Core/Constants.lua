@@ -1,4 +1,4 @@
--- $Id: Constants.lua 28 2017-05-24 15:30:01Z arith $
+-- $Id: Constants.lua 43 2018-07-27 16:59:36Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -52,5 +52,5 @@ constants.icon_texture = {
 constants.defaultIcon = constants.icon_texture["skull"]
 
 constants.events = {
-	"CLOSE_WORLD_MAP",
-};
+--	"CLOSE_WORLD_MAP",
+}

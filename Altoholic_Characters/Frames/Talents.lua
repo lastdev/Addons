@@ -31,6 +31,13 @@ addon:Controller("AltoholicUI.TalentPanel", {
 				frame["Spec" .. i]:SetWidth(150)
 				frame["Spec" .. i]:Update(character, currentClass, i)
 			end
+		elseif currentClass == "DEMONHUNTER" then
+			for i = 1, 2 do
+				frame["Spec" .. i]:SetWidth(300)
+				frame["Spec" .. i]:Update(character, currentClass, i)
+			end
+			frame.Spec3:Hide()
+			frame.Spec4:Hide()
 		else
 			for i = 1, 3 do
 				frame["Spec" .. i]:SetWidth(210)

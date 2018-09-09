@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: DataBonusIDs.lua 5692 2016-12-22 22:57:26Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: DataBonusIDs.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -665,4 +665,4 @@ data.BonusTertiaryStatList = {
 	43, -- Indestructible
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/DataBonusIDs.lua $", "$Rev: 5692 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/DataBonusIDs.lua $", "$Rev: 6112 $")

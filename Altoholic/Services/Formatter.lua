@@ -20,7 +20,7 @@ addon:Service("AltoholicUI.Formatter",  function()
 			else
 				copper = color..format(COPPER_AMOUNT_TEXTURE, copper, 13, 13)
 				silver = color..format(SILVER_AMOUNT_TEXTURE, silver, 13, 13)
-				gold = color..format(GOLD_AMOUNT_TEXTURE, gold, 13, 13)
+				gold = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
 			end
 			return format("%s %s %s", gold, silver, copper)
 		end,

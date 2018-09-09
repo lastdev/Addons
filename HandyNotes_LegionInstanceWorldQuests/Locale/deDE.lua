@@ -35,7 +35,4 @@ L["Torn Page"] = "Ausgerissene Seite"
 L["What to display"] = "Was soll angezeigt werden"
 L["Worn-Edged Page"] = "Seite mit abgenutztem Rand"
 
--- ToC
-L["Description"] = "Zeigt die Positionen von weltquestbezogenen seltenenen Bossen und Quests in Legion-Instanzen"
-
 end

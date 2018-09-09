@@ -1,7 +1,7 @@
 --[[
 	Norganna's Tooltip Helper class
 	Version: 1,4
-	Revision: $Id: nTipHelper.lua 405 2016-07-27 17:59:43Z brykrys $
+	Revision: $Id: nTipHelper.lua 6059 2018-08-29 01:26:34Z none $
 	URL: http://norganna.org/tthelp
 
 	This is a slide-in helper class for the Norganna's AddOns family of AddOns
@@ -48,7 +48,7 @@ local LIBSTRING = MAJOR..":"..MINOR
 
 -- REVISION cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
-local REVISION = 8
+local REVISION = 9
 
 local lib = LibStub:NewLibrary(LIBSTRING,REVISION)
 if not lib then return end
@@ -67,6 +67,8 @@ do -- tooltip class definition
 	end
 	local MoneyViewClass = LibStub("LibMoneyFrame-1")
 	local libACL = LibStub("LibAltChatLink")
+	local libAICache = LibStub("LibAucItemCache")
+	local libASB = LibStub("LibAucSplitBonus")
 
 	local curFrame = nil
 	local asText = false
@@ -162,17 +164,11 @@ do -- tooltip class definition
 	end
 
 	-- DecodeLink last item cache
-	-- the return values have different meanings for different link type, so they are just numbered
+	-- the return values have different meanings for different link types, so they are just numbered
 	-- where they are assigned values, comments will show what each one represents
 	local lastDecodeLink
 	local linkType,ret1,ret2,ret3,ret4,ret5,ret6,ret7,ret8,ret9,ret10
-	-- Fixed patterns to lift out BonusIDs from the tail of the string.
-	local bonusIDPatterns = {
-		["1"] = "%d+",
-		["2"] = "%d+:%d+",
-		["3"] = "%d+:%d+:%d+",
-		["4"] = "%d+:%d+:%d+:%d+",
-	}
+	local bonusIDPatterns, ParseToBonusIDString = libASB.BONUSIDPATTERNS, libASB.ParseToBonusIDString
 	function lib:DecodeLink(link, info, bonus)
 		if not link then
 			return
@@ -202,34 +198,17 @@ do -- tooltip class definition
 						ret2 = tonumber(s7) or 0 -- suffix
 						ret5 = tonumber(s8) or 0 -- seed
 						-- s9 (uLevel), s10 (specializationID), s11 (upgrades), s12 (instanceID) not used
+						ret10 = nil
 						if s14 and s14 ~= "" and s13 ~= "" and s13 ~= "0" then
 							-- s13 contains count of bonusIDs, s14 contains tail of string starting with bonusIDs plus other stuff after
 							-- we need to snip the bonudIDs off the front of s14
 							local pattern = bonusIDPatterns[s13]
 							if pattern then -- for small numbers of bonusIDs we can look up a pattern to save time
 								ret10 = s14:match(pattern)
-							else
-								-- we have to search for the end of the bonusIDs section within s14
-								-- if there are x bonusIDs, they should have x-1 ':' separators
-								-- look for the position x'th ':' seperator; we want everything before that point
-								local count = tonumber(s13)
-								if not count then -- probably an incomplete or invalid link, but can occur for certain obscure valid links too in 6.2.4
-									ret10 = nil
-								else
-									local found = 0
-									for i = 1, count do
-										found = s14:find(":", found + 1)
-										if not found then break end
-									end
-									if found and found > 0 then
-										ret10 = s14:sub(1, found - 1)
-									else
-										ret10 = s14:match("([^|]+)")
-									end
-								end
 							end
-						else
-							ret10 = nil
+							if not ret10 then
+								ret10 = ParseToBonusIDString(s13, s14)
+							end
 						end
 						ret3 = lib:GetFactor(ret2, ret5) -- factor
 						linkType = "item"
@@ -510,6 +489,8 @@ do -- tooltip class definition
 		return m
 	end
 
+	-- Attach LibAltChatLink
+
 	function lib:AltChatLinkRegister(callback)
 		-- 'callback' is a function which should take the same parameters as SetItemRef
 		-- and should return one of the LibAltChatLink constants (may return nil instead of NO_ACTION)
@@ -520,6 +501,29 @@ do -- tooltip class definition
 		return libACL.OPEN_TOOLTIP, libACL.NO_ACTION, libACL.BLOCK_TOOLTIP
 	end
 
+	-- Attach LibAucItemCache
+	-- Note this lib uses '.' for access, not ':'
+
+	-- ... = lib.GetItemInfoCache(item, select, mode) -- mode is NYI
+	lib.GetItemInfoCache = libAICache.GetItemInfoCache
+	-- lib.AIC_CacheFlush()
+	lib.AIC_CacheFlush = libAICache.CacheFlush
+	-- lib.AIC_CacheControl(???) -- NYI
+	lib.AIC_CacheControl = libAICache.CacheControl
+	-- version = lib.AIC_GetVersion()
+	lib.AIC_GetVersion = libAICache.GetVersion
+	-- PerformanceMonitorTable = lib.AIC_GetPerformance()
+	-- PerformanceReportString = lib.AIC_GetPerformance(true)
+	lib.AIC_GetPerformance = libAICache.GetPerformance
+
+	-- Attach LibAucSplitBonus
+	-- Note this lib uses '.' for access, not ':'
+
+	lib.ParseToBonusIDString = libASB.ParseToBonusIDString
+	lib.ParseToBonusIDTable = libASB.ParseToBonusIDTable
+	lib.QuickToBonusIDTable = libASB.QuickToBonusIDTable
+	lib.BONUSIDPATTERNS = libASB.BONUSIDPATTERNS
+
 end -- tooltip class definition
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 405 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/TipHelper/nTipHelper.lua $","$Rev: 6059 $","5.12.DEV.", 'auctioneer', 'libs')

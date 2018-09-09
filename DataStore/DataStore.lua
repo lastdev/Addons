@@ -340,8 +340,8 @@ function addon:OnEnable()
 		addon:RegisterComm(commPrefix, GuildCommHandler)
 
 		-- since 4.1, required !
-		if not IsAddonMessagePrefixRegistered(commPrefix) then
-			RegisterAddonMessagePrefix(commPrefix)
+		if not C_ChatInfo.IsAddonMessagePrefixRegistered(commPrefix) then
+			C_ChatInfo.RegisterAddonMessagePrefix(commPrefix)
 		end
 
 		local guild = GetGuildInfo("player")		-- will be nil in a standard login (called too soon), but ok for a reloadui.

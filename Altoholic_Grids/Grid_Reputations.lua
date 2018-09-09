@@ -4,6 +4,7 @@ local colors = addon.Colors
 local icons = addon.Icons
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local PARAGON_LABEL = "Paragon"
 
 -- *** Reputations ***
 local Factions = {
@@ -87,7 +88,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(947), icon = "Spell_Misc_HellifrePVPThrallmarFavor" },	-- "Thrallmar" 
 		},
 		{	-- [2]
-			name = GetMapNameByID(481),	-- "Shattrath City"
+			name = C_Map.GetMapInfo(111).name,	-- "Shattrath City"
 			{ name = DataStore:GetFactionName(1011), icon = "Achievement_Zone_Terrokar" },		-- "Lower City" 
 			{ name = DataStore:GetFactionName(1031), icon = "Ability_Hunter_Pet_NetherRay" },		-- "Sha'tari Skyguard" 
 			{ name = DataStore:GetFactionName(1077), icon = "INV_Shield_48" },		-- "Shattered Sun Offensive" 
@@ -131,7 +132,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(1085), icon = "Achievement_Zone_BoreanTundra_03" },		-- "Warsong Offensive" 
 		},
 		{	-- [4]
-			name = GetMapNameByID(493),	-- "Sholazar Basin"
+			name = C_Map.GetMapInfo(119).name,	-- "Sholazar Basin"
 			{ name = DataStore:GetFactionName(1104), icon = "Ability_Mount_WhiteDireWolf" },		-- "Frenzyheart Tribe" 
 			{ name = DataStore:GetFactionName(1105), icon = "Achievement_Reputation_MurlocOracle" },	-- "The Oracles" 
 		},
@@ -231,6 +232,16 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2165), icon = "achievement_admiral_of_the_light" },			-- Army of the Light
 			{ name = DataStore:GetFactionName(2170), icon = "achievement_master_of_argussian_reach" },			-- Argussian Reach
 		},		
+		{ -- [2]
+			name = L["Fishing Masters"],
+			{ name = DataStore:GetFactionName(1975), icon = "inv_elemental_primal_water" }, -- Conjurer Margoss
+			{ name = DataStore:GetFactionName(2097), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Ilyssia of the Waters
+			{ name = DataStore:GetFactionName(2099), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Akule Riverhorn
+			{ name = DataStore:GetFactionName(2101), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Sha'leth
+			{ name = DataStore:GetFactionName(2100), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Corbyn
+			{ name = DataStore:GetFactionName(2102), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Impus
+			{ name = DataStore:GetFactionName(2098), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Keeper Raynae
+		},
 	},	
 	{	-- [8]
 		name = GUILD,
@@ -252,6 +263,7 @@ local VertexColors = {
 	[FACTION_STANDING_LABEL6] = { r = 0.0, g = 0.6, b = 0.6 },		-- honored
 	[FACTION_STANDING_LABEL7] = { r = 0.9, g = 0.3, b = 0.9 },		-- revered
 	[FACTION_STANDING_LABEL8] = { r = 1.0, g = 1.0, b = 1.0 },		-- exalted
+	[PARAGON_LABEL] = { r = 1.0, g = 1.0, b = 1.0 },					-- Paragon
 }
 
 local view
@@ -484,6 +496,15 @@ local callbacks = {
 				local text
 				if status == FACTION_STANDING_LABEL8 then
 					text = icons.ready
+				elseif status == PARAGON_LABEL then
+					if rate >= 100 then
+						text = icons.waiting
+					else
+						button.Name:SetFontObject("NumberFontNormalSmall")
+						button.Name:SetJustifyH("RIGHT")
+						button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
+						text = format("%2d%%", floor(rate))
+					end
 				else
 					button.Background:SetDesaturated(true)
 					button.Name:SetFontObject("NumberFontNormalSmall")
@@ -498,6 +519,8 @@ local callbacks = {
 				local color = colors.white
 				if status == FACTION_STANDING_LABEL1 or status == FACTION_STANDING_LABEL2 then
 					color = colors.darkred
+				elseif status == PARAGON_LABEL then
+					color = colors.epic
 				end
 
 				button.key = character
@@ -544,6 +567,7 @@ local callbacks = {
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
 			AltoTooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
+			AltoTooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
 			
 			AltoTooltip:AddLine(" ",1,1,1)
 			AltoTooltip:AddLine(colors.green .. L["Shift+Left click to link"])

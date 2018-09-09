@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1867, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16650 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(116691, 116689)--Belac (116691), Atrigan (116689)
 mod:SetEncounterID(2048)
 mod:SetZone()
@@ -25,9 +25,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_POWER_FREQUENT player"
 )
 
---TODO, Handling of Confess and Cage?
---TODO, target scan Scythe Sweep? or is it always on tank and should only be tank warning?
---TODO, countdown options for relevant timers. If balac doesn't get reliable timers just put countdowns on all 3 of Atrigans spells?
 --[[
 (ability.id = 233426 or ability.id = 234015 or ability.id = 239401) and type = "begincast"or
 (ability.id = 233431 or ability.id = 233983 or ability.id = 233894) and type = "cast" or
@@ -62,38 +59,23 @@ local specWarnSoulCorruption		= mod:NewSpecialWarningStack(248713, nil, 10, nil,
 local specWarnTorment				= mod:NewSpecialWarningStack(233104, nil, 75, nil, nil, 1, 6)
 
 --Atrigan
-mod:AddTimerLine(EJ_GetSectionInfo(14645))
-local timerScytheSweepCD			= mod:NewCDTimer(23, 233426, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+mod:AddTimerLine(DBM:EJ_GetSectionInfo(14645))
+local timerScytheSweepCD			= mod:NewCDCountTimer(23, 233426, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerCalcifiedQuillsCD		= mod:NewCDTimer(20.2, 233431, nil, nil, nil, 3)--20.2-20.5 unless delayed by scythe, or bone saw
-local timerBoneSawCD				= mod:NewCDTimer(45.4, 233441, nil, nil, nil, 2)
+local timerBoneSawCD				= mod:NewCDCountTimer(45.4, 233441, nil, nil, nil, 2)
 local timerBoneSaw					= mod:NewBuffActiveTimer(15, 233441, nil, nil, nil, 2)
 --Belac
-mod:AddTimerLine(EJ_GetSectionInfo(14646))
+mod:AddTimerLine(DBM:EJ_GetSectionInfo(14646))
 local timerEchoingAnguishCD			= mod:NewCDTimer(22.9, 233983, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 local timerSuffocatingDarkCD		= mod:NewCDTimer(24, 233894, nil, nil, nil, 3)
-local timerTormentingBurstCD		= mod:NewCDTimer(17.0, 234015, nil, nil, nil, 2)
-local timerFelSquallCD				= mod:NewCDTimer(45.7, 235230, nil, nil, nil, 2)
+local timerTormentingBurstCD		= mod:NewCDCountTimer(17.0, 234015, nil, nil, nil, 2)
+local timerFelSquallCD				= mod:NewCDCountTimer(45.7, 235230, nil, nil, nil, 2)
 local timerFelSquall				= mod:NewBuffActiveTimer(15, 235230, nil, nil, nil, 2)
 
 local berserkTimer					= mod:NewBerserkTimer(720)--482 in log, rounding to 8 even for now
 
 --Atrigan
 local countdownBoneSaw				= mod:NewCountdown(45, 233441)
-
---Atrigan
-local voiceScytheSweep				= mod:NewVoice(233426, "Tank", nil, 2)--shockwave
-local voiceCalcifiedQuills			= mod:NewVoice(233431)--runout
-local voiceAttackAtrigan			= mod:NewVoice("ej14645", "Dps")--targetchange
-local voiceBoneSaw					= mod:NewVoice(233441)--runout/keepmove
---Belac
-local voicePangsofGuilt				= mod:NewVoice(239401, "HasInterrupt")--kickcast
-local voiceEchoingAnguish			= mod:NewVoice(233983)--runout
-local voiceAttackBelac				= mod:NewVoice("ej14646", "Dps")--targetchange
-local voiceFelSquall				= mod:NewVoice(235230)--runout/stopattack
-local voiceTormentingBurst			= mod:NewVoice(234015)--aesoon
---Phase
-local voiceSoulCorruption			= mod:NewVoice(248713)--stackhigh
-local voiceTorment					= mod:NewVoice(233104)--stackhigh
 
 mod:AddSetIconOption("SetIconOnQuills", 233431, true)
 mod:AddSetIconOption("SetIconOnAnguish", 233983, true)
@@ -105,29 +87,31 @@ mod.vb.scytheCount = 0
 mod.vb.pangCount = 0
 mod.vb.anguishIcon = 1
 mod.vb.SoulsRemaining = 0
+mod.vb.squallCount = 0
+mod.vb.BonesawCount = 0
 
 local function updateAllAtriganTimers(self, ICD, ignoreBoneSaw)
 	DBM:Debug("updateAllAtriganTimers running", 3)
-	if timerScytheSweepCD:GetRemaining() < ICD then--4
-		local elapsed, total = timerScytheSweepCD:GetTime()
+	if timerScytheSweepCD:GetRemaining(self.vb.scytheCount+1) < ICD then--4
+		local elapsed, total = timerScytheSweepCD:GetTime(self.vb.scytheCount+1)
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerScytheSweepCD extended by: "..extend, 2)
 		timerScytheSweepCD:Stop()
-		timerScytheSweepCD:Update(elapsed, total+extend)
+		timerScytheSweepCD:Update(elapsed, total+extend, self.vb.scytheCount+1)
 	end
-	if timerCalcifiedQuillsCD:GetRemaining() < ICD then--3
+	if timerCalcifiedQuillsCD:GetRemaining() < ICD then--5
 		local elapsed, total = timerCalcifiedQuillsCD:GetTime()
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerCalcifiedQuillsCD extended by: "..extend, 2)
 		timerCalcifiedQuillsCD:Stop()
 		timerCalcifiedQuillsCD:Update(elapsed, total+extend)
 	end
-	if not ignoreBoneSaw and timerBoneSawCD:GetRemaining() < ICD then--16
-		local elapsed, total = timerBoneSawCD:GetTime()
+	if not ignoreBoneSaw and timerBoneSawCD:GetRemaining(self.vb.BonesawCount+1) < ICD then--16
+		local elapsed, total = timerBoneSawCD:GetTime(self.vb.BonesawCount+1)
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerBoneSawCD extended by: "..extend, 2)
 		timerBoneSawCD:Stop()
-		timerBoneSawCD:Update(elapsed, total+extend)
+		timerBoneSawCD:Update(elapsed, total+extend, self.vb.BonesawCount+1)
 		countdownBoneSaw:Cancel()
 		countdownBoneSaw:Start(ICD)
 	end
@@ -151,20 +135,20 @@ local function updateAllBelacTimers(self, ICD, ignoreFelSquall)
 		timerSuffocatingDarkCD:Stop()
 		timerSuffocatingDarkCD:Update(elapsed, total+extend)
 	end
-	local tormentingRemaining = timerTormentingBurstCD:GetRemaining()
+	local tormentingRemaining = timerTormentingBurstCD:GetRemaining(self.vb.burstCount+1)
 	if tormentingRemaining ~= 0 and tormentingRemaining < ICD then--2 (Cast Start)
-		local elapsed, total = timerTormentingBurstCD:GetTime()
+		local elapsed, total = timerTormentingBurstCD:GetTime(self.vb.burstCount+1)
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerTormentingBurstCD extended by: "..extend, 2)
 		timerTormentingBurstCD:Stop()
-		timerTormentingBurstCD:Update(elapsed, total+extend)
+		timerTormentingBurstCD:Update(elapsed, total+extend, self.vb.burstCount+1)
 	end
-	if not ignoreFelSquall and timerFelSquallCD:GetRemaining() < ICD then--16
-		local elapsed, total = timerFelSquallCD:GetTime()
+	if not ignoreFelSquall and timerFelSquallCD:GetRemaining(self.vb.squallCount+1) < ICD then--16
+		local elapsed, total = timerFelSquallCD:GetTime(self.vb.squallCount+1)
 		local extend = ICD - (total-elapsed)
 		DBM:Debug("timerFelSquallCD extended by: "..extend, 2)
 		timerFelSquallCD:Stop()
-		timerFelSquallCD:Update(elapsed, total+extend)
+		timerFelSquallCD:Update(elapsed, total+extend, self.vb.squallCount+1)
 	end
 end
 
@@ -174,18 +158,20 @@ function mod:OnCombatStart(delay)
 	self.vb.pangCount = 0
 	self.vb.anguishIcon = 1
 	self.vb.SoulsRemaining = 0
-	timerScytheSweepCD:Start(5.2-delay)
+	self.vb.squallCount = 0
+	self.vb.BonesawCount = 0
+	timerScytheSweepCD:Start(5.2-delay, 1)
 	if not self:IsEasy() then
 		timerCalcifiedQuillsCD:Start(8.5-delay)--8.5-11
 	end
-	timerBoneSawCD:Start(64.5-delay)
+	timerBoneSawCD:Start(64.5-delay, 1)
 	countdownBoneSaw:Start(64.5-delay)
 --	timerEchoingAnguishCD:Start(1-delay)--6-20
 --	timerSuffocatingDarkCD:Start(1-delay)--13-48
---	timerTormentingBurstCD:Start(1-delay)--8-20
-	timerFelSquallCD:Start(35-delay)--Always same, at least
+--	timerTormentingBurstCD:Start(1-delay, 1)--8-20
+	timerFelSquallCD:Start(35-delay, 1)--Always same, at least
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(GetSpellInfo(233104))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(233104))
 		DBM.InfoFrame:Show(8, "playerpower", 5, ALTERNATE_POWER_INDEX)
 	end
 	--https://www.warcraftlogs.com/reports/JgyrYdDCB63kx8Tb#fight=38&type=summary&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20248671&view=events
@@ -208,14 +194,14 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 233426 then
 		self.vb.scytheCount = self.vb.scytheCount + 1
 		specWarnScytheSweep:Show()
-		voiceScytheSweep:Play("shockwave")
-		timerScytheSweepCD:Start()--23 unless affected by something
+		specWarnScytheSweep:Play("shockwave")
+		timerScytheSweepCD:Start(nil, self.vb.scytheCount+1)--23 unless affected by something
 		updateAllAtriganTimers(self, 4)
 	elseif spellId == 234015 then
 		self.vb.burstCount = self.vb.burstCount + 1
 		specWarnTormentingBurst:Show(self.vb.burstCount)
-		voiceTormentingBurst:Play("aesoon")
-		timerTormentingBurstCD:Start()
+		specWarnTormentingBurst:Play("aesoon")
+		timerTormentingBurstCD:Start(nil, self.vb.burstCount+1)
 		updateAllBelacTimers(self, 2)
 	elseif spellId == 239401 then
 		self.vb.pangCount = self.vb.pangCount + 1
@@ -226,11 +212,11 @@ function mod:SPELL_CAST_START(args)
 			local kickCount = self.vb.pangCount
 			specWarnPangsofGuilt:Show(args.sourceName, kickCount)
 			if kickCount == 1 then
-				voicePangsofGuilt:Play("kick1r")
+				specWarnPangsofGuilt:Play("kick1r")
 			elseif kickCount == 2 then
-				voicePangsofGuilt:Play("kick2r")
+				specWarnPangsofGuilt:Play("kick2r")
 			elseif kickCount == 3 then
-				voicePangsofGuilt:Play("kick3r")
+				specWarnPangsofGuilt:Play("kick3r")
 			end
 		end
 	elseif spellId == 233983 then
@@ -252,42 +238,44 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 233441 then
+		self.vb.BonesawCount = self.vb.BonesawCount + 1
 		--Redundant warnings if still on wrong boss (or tank)
 		if UnitGUID("target") == args.sourceGUID then
 			specWarnBoneSawMelee:Show()
 			specWarnBoneSawEveryoneElse:Show(args.sourceName)
 			if self:IsMelee() then
-				voiceBoneSaw:Play("runout")
+				specWarnBoneSawMelee:Play("runout")
 			end
-			voiceBoneSaw:Schedule(1, "stopattack")
+			specWarnBoneSawEveryoneElse:ScheduleVoice(1, "stopattack")
 		end
-		timerBoneSaw:Start()
+		timerBoneSaw:Start(nil, self.vb.BonesawCount+1)
 		updateAllAtriganTimers(self, 16, true)
 		for i = 1, 2 do
 			local bossUnitID = "boss"..i
-			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
-				voiceBoneSaw:Schedule(2, "keepmove")--The active tank doesn't just run out, they keep kiting
+			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and self:IsTanking("player", bossUnitID, nil, true) then--We are highest threat target
+				specWarnBoneSawMelee:Schedule(2, "keepmove")--The active tank doesn't just run out, they keep kiting
 				break
 			end
 		end
 	elseif spellId == 235230 then
+		self.vb.squallCount = self.vb.squallCount + 1
 		--Redundant warnings if still on wrong boss (or tank)
 		if UnitGUID("target") == args.sourceGUID then
 			specWarnFelSquallMelee:Show()
 			specWarnFelSquallEveryoneElse:Show(args.sourceName)
 			if self:IsMelee() then
-				voiceFelSquall:Play("runout")
+				specWarnFelSquallMelee:Play("runout")
 			end
-			voiceFelSquall:Schedule(1, "stopattack")
+			specWarnFelSquallEveryoneElse:ScheduleVoice(1, "stopattack")
 		end
-		timerFelSquall:Start()
+		timerFelSquall:Start(nil, self.vb.squallCount+1)
 		updateAllBelacTimers(self, 16, true)
 	elseif spellId == 233983 then
 		warnEchoingAnguish:CombinedShow(0.3, args.destName)
 		local currentIcon = self.vb.anguishIcon
 		if args:IsPlayer() then
 			specWarnEchoingAnguish:Show()
-			voiceEchoingAnguish:Play("runout")
+			specWarnEchoingAnguish:Play("runout")
 			yellEchoingAnguish:Yell(currentIcon, args.spellName, currentIcon)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
@@ -300,7 +288,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 233431 then
 		if args:IsPlayer() then
 			specWarnCalcifiedQuills:Show()
-			voiceCalcifiedQuills:Play("runout")
+			specWarnCalcifiedQuills:Play("runout")
 			yellCalcifiedQuills:Yell()
 		else
 			warnQuills:Show(args.destName)
@@ -312,7 +300,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if args:IsPlayer() and amount >= 10 then
 			specWarnSoulCorruption:Show(amount)
-			voiceSoulCorruption:Play("stackhigh")
+			specWarnSoulCorruption:Play("stackhigh")
 		end
 	elseif spellId == 236283 then
 		if args:IsPlayer() then
@@ -326,7 +314,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 233441 then--Bone Saw
 		specWarnAttackAtrigan:Show()
-		voiceAttackAtrigan:Play("targetchange")
+		specWarnAttackAtrigan:Play("targetchange")
 		timerBoneSaw:Stop()
 		timerBoneSawCD:Start()
 		countdownBoneSaw:Start()
@@ -341,7 +329,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 235230 then
 		specWarnAttackBelac:Show()
-		voiceAttackBelac:Play("targetchange")
+		specWarnAttackBelac:Play("targetchange")
 		timerFelSquallCD:Start()
 	elseif spellId == 233431 then
 		if self.Options.SetIconOnQuills then
@@ -360,7 +348,7 @@ do
 			if not warned and playerPower >= 75 then
 				warned = true
 				specWarnTorment:Show(playerPower)
-				voiceTorment:Play("stackhigh")
+				specWarnTorment:Play("stackhigh")
 			elseif warned and playerPower < 30 then
 				warned = false
 			end
@@ -375,19 +363,8 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
---		specWarnDancingBlade:Show()
---		voiceDancingBlade:Play("runaway")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 233895 then
 		warnSuffocatingDark:Show()
 		timerSuffocatingDarkCD:Start()

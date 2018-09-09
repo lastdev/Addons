@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: Overachiever - Tabs
-## Version: 0.99.9
+## Version: 1.0.3
 ## Author: Tuhljin
-## Notes: Achievement frame tabs module.
+## Notes: Add tabs (Search, Suggestions, etc.) to the Achievements window.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_AchievementUI
 ## Dependencies: Overachiever

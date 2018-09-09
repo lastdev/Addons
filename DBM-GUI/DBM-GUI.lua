@@ -43,7 +43,7 @@
 --
 
 
-local revision =("$Revision: 16623 $"):sub(12, -3)
+local revision =("$Revision: 17735 $"):sub(12, -3)
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -72,7 +72,6 @@ end
 --------------------------------------------------------
 --  Cache frequently used global variables in locals  --
 --------------------------------------------------------
-local GetSpellInfo, EJ_GetSectionInfo = GetSpellInfo, EJ_GetSectionInfo
 local tinsert, tremove, tsort, twipe = table.insert, table.remove, table.sort, table.wipe
 local mfloor, mmax = math.floor, math.max
 
@@ -240,6 +239,7 @@ local function MixinSharedMedia3(mediatype, mediatable)
 	if not soundsRegistered then
 		local LSM = LibStub("LibSharedMedia-3.0")
 		soundsRegistered = true
+		--Internal Game Media
 		LSM:Register("sound", "Headless Horseman: Laugh", [[Sound\Creature\HeadlessHorseman\Horseman_Laugh_01.ogg]])
 		LSM:Register("sound", "Yogg Saron: Laugh", [[Sound\Creature\YoggSaron\UR_YoggSaron_Slay01.ogg]])
 		LSM:Register("sound", "Loatheb: I see you", [[Sound\Creature\Loathstare\Loa_Naxx_Aggro02.ogg]])
@@ -248,7 +248,16 @@ local function MixinSharedMedia3(mediatype, mediatable)
 		LSM:Register("sound", "Void Reaver: Marked", [[Sound\Creature\VoidReaver\TEMPEST_VoidRvr_Aggro01.ogg]])
 		LSM:Register("sound", "Kaz'rogal: Marked", [[Sound\Creature\KazRogal\CAV_Kaz_Mark02.ogg]])
 		LSM:Register("sound", "C'Thun: You Will Die!", [[Sound\Creature\CThun\CThunYouWillDIe.ogg]])
-		--Do to terrible coding in LSM formating, it's not possible to do this a nice looking way
+		--Embedded Sound Clip media
+		LSM:Register("sound", "Jaina: Beware", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware.ogg]])
+		LSM:Register("sound", "Jaina: Beware (reverb)", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware_with_reverb.ogg]])
+		LSM:Register("sound", "Thrall: That's Incredible!", [[Interface\AddOns\DBM-Core\sounds\SoundClips\incredible.ogg]])
+		LSM:Register("sound", "Saurfang: Don't Die", [[Interface\AddOns\DBM-Core\sounds\SoundClips\dontdie.ogg]])
+		--Blakbyrd
+		LSM:Register("sound", "Blakbyrd Alert 1", [[Interface\AddOns\DBM-Core\sounds\BlakbyrdAlerts\Alert1.ogg]])
+		LSM:Register("sound", "Blakbyrd Alert 2", [[Interface\AddOns\DBM-Core\sounds\BlakbyrdAlerts\Alert2.ogg]])
+		LSM:Register("sound", "Blakbyrd Alert 3", [[Interface\AddOns\DBM-Core\sounds\BlakbyrdAlerts\Alert3.ogg]])
+		--User Media
 		if DBM.Options.CustomSounds >= 1 then
 			LSM:Register("sound", "DBM: Custom 1", [[Interface\AddOns\DBM-CustomSounds\Custom1.ogg]])
 		end
@@ -348,30 +357,6 @@ do
 		GameTooltip:SetPoint("BOTTOMLEFT", nil, "BOTTOMLEFT", x + 5, y + 2)
 	end
 
-	local function onHyperlinkClick(self, data, link)
-		if IsShiftKeyDown() then
-			local msg = link:gsub("|h(.*)|h", "|h[%1]|h")
-			local chatWindow = ChatEdit_GetActiveWindow()
-			if chatWindow then
-				chatWindow:Insert(msg)
-			end
-		elseif not IsShiftKeyDown() then
-			local linkType = strsplit(":", data)
-			if linkType == "http" then
-				local ChatFrameEditBox = ChatEdit_ChooseBoxForSend()
-				if (not ChatFrameEditBox:IsShown()) then
-					ChatEdit_ActivateChat(ChatFrameEditBox)
-				end
-				ChatFrameEditBox:Insert(data)
-				ChatFrameEditBox:HighlightText()
-				return
-			end
-			if cursorInHitBox(self:GetParent()) then
-				self:GetParent():Click()
-			end
-		end
-	end
-
 	local function onHyperlinkEnter(self, data, link)
 		GameTooltip:SetOwner(self, "ANCHOR_NONE") -- I want to anchor BOTTOMLEFT of the tooltip to the cursor... (not BOTTOM as in ANCHOR_CURSOR)
 		local linkType = strsplit(":", data)
@@ -381,7 +366,7 @@ do
 		else -- "journal:contentType:contentID:difficulty"
 			local _, contentType, contentID = strsplit(":", data)
 			if contentType == "2" then -- EJ section
-				local name, description = EJ_GetSectionInfo(tonumber(contentID))
+				local name, description = DBM:EJ_GetSectionInfo(tonumber(contentID))
 				GameTooltip:AddLine(name or DBM_CORE_UNKNOWN, 255, 255, 255, 0)
 				GameTooltip:AddLine(" ")
 				GameTooltip:AddLine(description or DBM_CORE_UNKNOWN, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
@@ -407,7 +392,7 @@ do
 
 	local function replaceSpellLinks(id)
 		local spellId = tonumber(id)
-		local spellName = GetSpellInfo(spellId)
+		local spellName = DBM:GetSpellInfo(spellId)
 		if not spellName then
 			spellName = DBM_CORE_UNKNOWN
 			DBM:Debug("Spell ID does not exist: "..spellId)
@@ -416,11 +401,11 @@ do
 	end
 
 	local function replaceJournalLinks(id)
-		local check = EJ_GetSectionInfo(tonumber(id))
+		local check = DBM:EJ_GetSectionInfo(tonumber(id))
 		if not check then
 			DBM:Debug("Journal ID does not exist: "..id)
 		end
-		local link = select(9, EJ_GetSectionInfo(tonumber(id))) or DBM_CORE_UNKNOWN
+		local link = select(9, DBM:EJ_GetSectionInfo(tonumber(id))) or DBM_CORE_UNKNOWN
 		return link:gsub("|h%[(.*)%]|h", "|h%1|h")
 	end
 
@@ -463,14 +448,14 @@ do
 		if name:find("%$spell:") then
 			if not isTimer and modvar then
 				local spellId = string.match(name, "spell:(%d+)")
-				noteSpellName = GetSpellInfo(spellId)
+				noteSpellName = DBM:GetSpellInfo(spellId)
 			end
 			name = name:gsub("%$spell:(%d+)", replaceSpellLinks)
 		end
 		if name:find("%$journal:") then
 			if not isTimer and modvar then
 				local spellId = string.match(name, "journal:(%d+)")
-				noteSpellName = EJ_GetSectionInfo(spellId)
+				noteSpellName = DBM:EJ_GetSectionInfo(spellId)
 			end
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
@@ -497,7 +482,7 @@ do
 					noteButton:SetWidth(25)
 					noteButton:SetHeight(25)
 					noteButton.myheight = 0--Tells SetAutoDims that this button needs no additional space
-					noteButton:SetText("|TInterface/FriendsFrame/UI-FriendsFrame-Note.blp:14:0:3:-1|t")
+					noteButton:SetText("|TInterface/FriendsFrame/UI-FriendsFrame-Note.blp:14:0:2:-1|t")
 					noteButton.mytype = "button"
 					noteButton:SetScript("OnClick", function(self)
 						local noteText = mod.Options[modvar.."SWNote"]
@@ -532,7 +517,6 @@ do
 			html = _G[buttonName.."Text"]
 			html:SetFontObject("GameFontNormal")
 			html:SetHyperlinksEnabled(true)
-			html:SetScript("OnHyperlinkClick", onHyperlinkClick)
 			html:SetScript("OnHyperlinkEnter", onHyperlinkEnter)
 			html:SetScript("OnHyperlinkLeave", onHyperlinkLeave)
 			html:SetHeight(25)
@@ -672,7 +656,6 @@ function PanelPrototype:CreateScrollingMessageFrame(width, height, insertmode, f
 	scrollframe:EnableMouse(true)
 	scrollframe:EnableMouseWheel(1)
 
-	scrollframe:SetScript("OnHyperlinkClick", ChatFrame_OnHyperlinkShow)
 	scrollframe:SetScript("OnMouseWheel", function(self, delta)
 		if delta == 1 then
 			self:ScrollUp()
@@ -990,16 +973,6 @@ local UpdateAnimationFrame, CreateAnimationFrame
 function UpdateAnimationFrame(mod)
 	DBM_BossPreview.currentMod = mod
 	local displayId = nil
-
---[[ This way will break the Encounter Journal GUI .. needs a "fix" before activating
-	if mod.encounterId and mod.instanceId then
-		EJ_SetDifficulty(true, true)
-		EncounterJournal.instanceID = mod.instanceId
-		EncounterJournal_Refresh(EncounterJournal.encounter)
-		EncounterJournal.encounterID = mod.encounterId
-		EncounterJournal_Refresh(EncounterJournal.encounter)
-		displayId = EncounterJournal.encounter["creatureButton1"].displayInfo
-	end]]
 
 	DBM_BossPreview:Show()
 	DBM_BossPreview:ClearModel()
@@ -1331,10 +1304,10 @@ local function CreateOptionsMenu()
 		local MiniMapIcon				= generaloptions:CreateCheckButton(L.EnableMiniMapIcon, true)
 		MiniMapIcon:SetScript("OnClick", function(self)
 			DBM:ToggleMinimapButton()
-			self:SetChecked( DBM.Options.ShowMinimapButton )
+			self:SetChecked( not DBM_MinimapIcon.hide )
 		end)
 		MiniMapIcon:SetScript("OnShow", function(self)
-			self:SetChecked( DBM.Options.ShowMinimapButton )
+			self:SetChecked( not DBM_MinimapIcon.hide )
 		end)
 		local soundChannelsList = {
 			{	text	= L.UseMasterChannel,	value 	= "Master"},
@@ -1423,11 +1396,13 @@ local function CreateOptionsMenu()
 		generalMessagesArea:CreateCheckButton(L.ShowEngageMessage, true, nil, "ShowEngageMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowDefeatMessage, true, nil, "ShowDefeatMessage")
 		generalMessagesArea:CreateCheckButton(L.ShowGuildMessages, true, nil, "ShowGuildMessages")
+		generalMessagesArea:CreateCheckButton(L.ShowGuildMessagesPlus, true, nil, "ShowGuildMessagesPlus")
 		local generalWhispersArea = generalWarningPanel:CreateArea(L.WhisperMessages, nil, 135, true)
 		generalWhispersArea:CreateCheckButton(L.AutoRespond, true, nil, "AutoRespond")
 		generalWhispersArea:CreateCheckButton(L.EnableStatus, true, nil, "StatusEnabled")
 		generalWhispersArea:CreateCheckButton(L.WhisperStats, true, nil, "WhisperStats")
 		generalWhispersArea:CreateCheckButton(L.DisableStatusWhisper, true, nil, "DisableStatusWhisper")
+		generalWhispersArea:CreateCheckButton(L.DisableGuildStatus, true, nil, "DisableGuildStatus")
 		generalCoreArea:AutoSetDimension()
 		generalMessagesArea:AutoSetDimension()
 		generalWhispersArea:AutoSetDimension()
@@ -1518,17 +1493,17 @@ local function CreateOptionsMenu()
 		end
 
 		-- RaidWarn Duration
-		local durationSlider = raidwarnoptions:CreateSlider(L.Warn_Duration, 1, 20, 1, 200)
+		local durationSlider = raidwarnoptions:CreateSlider(L.Warn_Duration, 1, 10, 0.5, 200)
 		durationSlider:SetPoint('TOPLEFT', FontDropDown, "TOPLEFT", 20, -170)
 		do
 			local firstshow = true
 			durationSlider:SetScript("OnShow", function(self)
 				firstshow = true
-				self:SetValue(DBM.Options.WarningDuration)
+				self:SetValue(DBM.Options.WarningDuration2)
 			end)
 			durationSlider:HookScript("OnValueChanged", function(self)
 				if firstshow then firstshow = false return end
-				DBM.Options.WarningDuration = self:GetValue()
+				DBM.Options.WarningDuration2 = self:GetValue()
 				DBM:UpdateWarningOptions()
 				DBM:AddWarning(DBM_CORE_MOVE_WARNING_MESSAGE)
 			end)
@@ -2514,23 +2489,23 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFontSize2 = self:GetValue()
 				DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning()--Pass with no sound, disabling both flash and sound play. This is a font slider so it only needs font
+				--DBM:ShowTestSpecialWarning()--Pass with no sound, disabling both flash and sound play. This is a font slider so it only needs font
 			end)
 		end
 
-		local durationSlider = specArea:CreateSlider(L.Warn_Duration, 1, 20, 1, 150)
+		local durationSlider = specArea:CreateSlider(L.Warn_Duration, 1, 10, 0.5, 150)
 		durationSlider:SetPoint("LEFT", fontSizeSlider, "RIGHT", 20, 0)
 		do
 			local firstshow = true
 			durationSlider:SetScript("OnShow", function(self)
 				firstshow = true
-				self:SetValue(DBM.Options.SpecialWarningDuration)
+				self:SetValue(DBM.Options.SpecialWarningDuration2)
 			end)
 			durationSlider:HookScript("OnValueChanged", function(self)
 				if firstshow then firstshow = false return end
-				DBM.Options.SpecialWarningDuration = self:GetValue()
+				DBM.Options.SpecialWarningDuration2 = self:GetValue()
 				DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning()--Pass with no sound, disabling both flash and sound play. This is a duration slider so it only needs font
+				--DBM:ShowTestSpecialWarning()--Pass with no sound, disabling both flash and sound play. This is a duration slider so it only needs font
 			end)
 		end
 
@@ -2689,12 +2664,12 @@ local function CreateOptionsMenu()
 			end)
 		end
 
-		-- SpecialWarn Sound
 		local Sounds = MixinSharedMedia3("sound", {
 			{	text	= L.NoSound,			value	= "" },
-			{	text	= "Default",			value 	= "Sound\\Spells\\PVPFlagTaken.ogg", 		sound=true },
+			{	text	= "PvP Flag",			value 	= "Sound\\Spells\\PVPFlagTaken.ogg", 		sound=true },
 			{	text	= "Blizzard",			value 	= "Sound\\interface\\UI_RaidBossWhisperWarning.ogg", 		sound=true },
 			{	text	= "Beware!",			value 	= "Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_BHole01.ogg", 		sound=true },
+			{	text	= "AirHorn",			value 	= "Interface\\AddOns\\DBM-Core\\sounds\\AirHorn.ogg", 		sound=true },
 			{	text	= "Destruction",		value 	= "Sound\\Creature\\KilJaeden\\KILJAEDEN02.ogg", 		sound=true },
 			{	text	= "NotPrepared",		value 	= "Sound\\Creature\\Illidan\\BLACK_Illidan_04.ogg", 		sound=true },
 			{	text	= "NotPrepared2",		value 	= "Sound\\Creature\\Illidan_Stormrage\\VO_703_Illidan_Stormrage_03.ogg", 		sound=true },
@@ -2721,7 +2696,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashDura1 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 1, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 1, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2737,7 +2712,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashAlph1 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 1, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 1, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2760,7 +2735,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashDura2 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 2, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 2, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2776,7 +2751,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashAlph2 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 2, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 2, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2799,7 +2774,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashDura3 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 3, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 3, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2815,7 +2790,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashAlph3 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 3, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 3, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2838,7 +2813,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashDura4 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 4, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 4, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2854,7 +2829,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashAlph4 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 4, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 4, true)--Pass with flash but no sound
 			end)
 		end
 		
@@ -2877,7 +2852,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashDura5 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 5, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 5, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2893,7 +2868,7 @@ local function CreateOptionsMenu()
 				if firstshow then firstshow = false return end
 				DBM.Options.SpecialWarningFlashAlph5 = self:GetValue()
 				--DBM:UpdateSpecialWarningOptions()
-				DBM:ShowTestSpecialWarning(nil, 5, true)--Pass with flash but no sound
+				--DBM:ShowTestSpecialWarning(nil, 5, true)--Pass with flash but no sound
 			end)
 		end
 
@@ -2972,330 +2947,8 @@ local function CreateOptionsMenu()
 	end
 
 	do
-		local hudPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HUD, "option")
-		local hudArea = hudPanel:CreateArea(L.Area_HUDOptions, nil, 560, true)
-		local check1 = hudArea:CreateCheckButton(L.HUDColorOverride, true, nil, "HUDColorOverride")
-		local check2 = hudArea:CreateCheckButton(L.HUDSizeOverride, true, nil, "HUDSizeOverride")
-		local check3 = hudArea:CreateCheckButton(L.HUDAlphaOverride, true, nil, "HUDAlphaOverride")
-		local check4 = hudArea:CreateCheckButton(L.HUDTextureOverride, true, nil, "HUDTextureOverride")
-
-		local showbutton = hudArea:CreateButton(L.SpecWarn_DemoButton, 120, 16)
-		showbutton:SetPoint('TOPRIGHT', hudArea.frame, "TOPRIGHT", -5, -5)
-		showbutton:SetNormalFontObject(GameFontNormalSmall)
-		showbutton:SetHighlightFontObject(GameFontNormalSmall)
-		showbutton:SetScript("OnClick", function() DBM:ShowTestHUD() end)
-
-		local Textures = {
-			{	text	= "Default (Alert Circle)",		value 	= "highlight" },
-			{	text	= "Gradient Circle",			value 	= "glow" },
-			{	text	= "Party Raid Blip",			value 	= "party" },
-			{	text	= "Ring",						value 	= "ring" },
-			{	text	= "Rune 1",						value 	= "rune1" },
-			{	text	= "Rune 2",						value 	= "rune2" },
-			{	text	= "Rune 3",						value 	= "rune3" },
-			{	text	= "Rune 4",						value 	= "rune4" },
-			{	text	= "Paw",						value 	= "paw" },
-			{	text	= "Cyan Star",					value 	= "cyanstar" },
-			{	text	= "Summon",						value 	= "summon" },
-			{	text	= "Reticle",					value 	= "reticle" },
-			{	text	= "Fuzzy Ring",					value 	= "fuzzyring" },
-			{	text	= "Fat Ring",					value 	= "fatring" },
-			{	text	= "Swords",						value 	= "swords" },
-		}
-		--Begin Row 1
-		local color1 = hudArea:CreateColorSelect(64)
-		color1:SetPoint('TOPLEFT', hudArea.frame, "TOPLEFT", 20, -140)
-		local color1text = hudArea:CreateText(L.HUDColorSelect:format(1), 80)
-		color1text:SetPoint("BOTTOM", color1, "TOP", 5, 4)
-		local color1reset = hudArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
-		color1reset:SetPoint('TOP', color1, "BOTTOM", 5, -10)
-		color1reset:SetScript("OnClick", function(self)
-				DBM.Options.HUDColor1[1] = DBM.DefaultOptions.HUDColor1[1]
-				DBM.Options.HUDColor1[2] = DBM.DefaultOptions.HUDColor1[2]
-				DBM.Options.HUDColor1[3] = DBM.DefaultOptions.HUDColor1[3]
-				color1:SetColorRGB(DBM.Options.HUDColor1[1], DBM.Options.HUDColor1[2], DBM.Options.HUDColor1[3])
-		end)
-		do
-			local firstshow = true
-			color1:SetScript("OnShow", function(self)
-					firstshow = true
-					self:SetColorRGB(DBM.Options.HUDColor1[1], DBM.Options.HUDColor1[2], DBM.Options.HUDColor1[3])
-			end)
-			color1:SetScript("OnColorSelect", function(self)
-					if firstshow then firstshow = false return end
-					DBM.Options.HUDColor1[1] = select(1, self:GetColorRGB())
-					DBM.Options.HUDColor1[2] = select(2, self:GetColorRGB())
-					DBM.Options.HUDColor1[3] = select(3, self:GetColorRGB())
-					color1text:SetTextColor(self:GetColorRGB())
-			end)
-		end
-		
-		local Texture1DropDown = hudArea:CreateDropdown(L.HUDTextureSelect1, Textures, "DBM", "HUDTexture1", function(value)
-			DBM.Options.HUDTexture1 = value
-		end)
-		Texture1DropDown:SetPoint("TOPLEFT", hudArea.frame, "TOPLEFT", 100, -136)
-		
-		local hudSizeSlider1 = hudArea:CreateSlider(L.HUDSizeSlider, 2, 5, 0.5, 160)   -- (text , min_value , max_value , step , width)
-		hudSizeSlider1:SetPoint('TOPLEFT', Texture1DropDown, "TOPLEFT", 20, -50)
-		do
-			local firstshow = true
-			hudSizeSlider1:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDSize1)
-			end)
-			hudSizeSlider1:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDSize1 = self:GetValue()
-			end)
-		end
-		local huddalphaSlider1 = hudArea:CreateSlider(L.HUDAlphaSlider, 0.1, 1, 0.1, 160)   -- (text , min_value , max_value , step , width)
-		huddalphaSlider1:SetPoint('BOTTOMLEFT', hudSizeSlider1, "BOTTOMLEFT", 180, -0)
-		do
-			local firstshow = true
-			huddalphaSlider1:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDAlpha1)
-			end)
-			huddalphaSlider1:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDAlpha1 = self:GetValue()
-			end)
-		end		
-
-		--Being Row 2
-		local color2 = hudArea:CreateColorSelect(64)
-		color2:SetPoint('TOPLEFT', color1, "TOPLEFT", 0, -105)
-		local color2text = hudArea:CreateText(L.HUDColorSelect:format(2), 80)
-		color2text:SetPoint("BOTTOM", color2, "TOP", 5, 4)
-		local color2reset = hudArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
-		color2reset:SetPoint('TOP', color2, "BOTTOM", 5, -10)
-		color2reset:SetScript("OnClick", function(self)
-				DBM.Options.HUDColor2[1] = DBM.DefaultOptions.HUDColor2[1]
-				DBM.Options.HUDColor2[2] = DBM.DefaultOptions.HUDColor2[2]
-				DBM.Options.HUDColor2[3] = DBM.DefaultOptions.HUDColor2[3]
-				color2:SetColorRGB(DBM.Options.HUDColor2[1], DBM.Options.HUDColor2[2], DBM.Options.HUDColor2[3])
-		end)
-		do
-			local firstshow = true
-			color2:SetScript("OnShow", function(self)
-					firstshow = true
-					self:SetColorRGB(DBM.Options.HUDColor2[1], DBM.Options.HUDColor2[2], DBM.Options.HUDColor2[3])
-			end)
-			color2:SetScript("OnColorSelect", function(self)
-					if firstshow then firstshow = false return end
-					DBM.Options.HUDColor2[1] = select(1, self:GetColorRGB())
-					DBM.Options.HUDColor2[2] = select(2, self:GetColorRGB())
-					DBM.Options.HUDColor2[3] = select(3, self:GetColorRGB())
-					color2text:SetTextColor(self:GetColorRGB())
-			end)
-		end
-		
-		local Texture2DropDown = hudArea:CreateDropdown(L.HUDTextureSelect2, Textures, "DBM", "HUDTexture2", function(value)
-			DBM.Options.HUDTexture2 = value
-		end)
-		Texture2DropDown:SetPoint("TOPLEFT", hudArea.frame, "TOPLEFT", 100, -241)
-		
-		local hudSizeSlider2 = hudArea:CreateSlider(L.HUDSizeSlider, 2, 5, 0.5, 160)   -- (text , min_value , max_value , step , width)
-		hudSizeSlider2:SetPoint('TOPLEFT', Texture2DropDown, "TOPLEFT", 20, -50)
-		do
-			local firstshow = true
-			hudSizeSlider2:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDSize2)
-			end)
-			hudSizeSlider2:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDSize2 = self:GetValue()
-			end)
-		end
-		local huddalphaSlider2 = hudArea:CreateSlider(L.HUDAlphaSlider, 0.1, 1, 0.1, 160)   -- (text , min_value , max_value , step , width)
-		huddalphaSlider2:SetPoint('BOTTOMLEFT', hudSizeSlider2, "BOTTOMLEFT", 180, -0)
-		do
-			local firstshow = true
-			huddalphaSlider2:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDAlpha2)
-			end)
-			huddalphaSlider2:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDAlpha2 = self:GetValue()
-			end)
-		end	
-
-		--Begin Row 3
-		local color3 = hudArea:CreateColorSelect(64)
-		color3:SetPoint('TOPLEFT', color2, "TOPLEFT", 0, -105)
-		local color3text = hudArea:CreateText(L.HUDColorSelect:format(3), 80)
-		color3text:SetPoint("BOTTOM", color3, "TOP", 5, 4)
-		local color3reset = hudArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
-		color3reset:SetPoint('TOP', color3, "BOTTOM", 5, -10)
-		color3reset:SetScript("OnClick", function(self)
-				DBM.Options.HUDColor3[1] = DBM.DefaultOptions.HUDColor3[1]
-				DBM.Options.HUDColor3[2] = DBM.DefaultOptions.HUDColor3[2]
-				DBM.Options.HUDColor3[3] = DBM.DefaultOptions.HUDColor3[3]
-				color3:SetColorRGB(DBM.Options.HUDColor3[1], DBM.Options.HUDColor3[2], DBM.Options.HUDColor3[3])
-		end)
-		do
-			local firstshow = true
-			color3:SetScript("OnShow", function(self)
-					firstshow = true
-					self:SetColorRGB(DBM.Options.HUDColor3[1], DBM.Options.HUDColor3[2], DBM.Options.HUDColor3[3])
-			end)
-			color3:SetScript("OnColorSelect", function(self)
-					if firstshow then firstshow = false return end
-					DBM.Options.HUDColor3[1] = select(1, self:GetColorRGB())
-					DBM.Options.HUDColor3[2] = select(2, self:GetColorRGB())
-					DBM.Options.HUDColor3[3] = select(3, self:GetColorRGB())
-					color3text:SetTextColor(self:GetColorRGB())
-			end)
-		end
-		
-		local Texture3DropDown = hudArea:CreateDropdown(L.HUDTextureSelect3, Textures, "DBM", "HUDTexture3", function(value)
-			DBM.Options.HUDTexture3 = value
-		end)
-		Texture3DropDown:SetPoint("TOPLEFT", hudArea.frame, "TOPLEFT", 100, -346)
-		
-		local hudSizeSlider3 = hudArea:CreateSlider(L.HUDSizeSlider, 2, 5, 0.5, 160)   -- (text , min_value , max_value , step , width)
-		hudSizeSlider3:SetPoint('TOPLEFT', Texture3DropDown, "TOPLEFT", 20, -50)
-		do
-			local firstshow = true
-			hudSizeSlider3:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDSize3)
-			end)
-			hudSizeSlider3:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDSize3 = self:GetValue()
-			end)
-		end
-		local huddalphaSlider3 = hudArea:CreateSlider(L.HUDAlphaSlider, 0.1, 1, 0.1, 160)   -- (text , min_value , max_value , step , width)
-		huddalphaSlider3:SetPoint('BOTTOMLEFT', hudSizeSlider3, "BOTTOMLEFT", 180, -0)
-		do
-			local firstshow = true
-			huddalphaSlider3:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDAlpha3)
-			end)
-			huddalphaSlider3:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDAlpha3 = self:GetValue()
-			end)
-		end	
-
-		--Begin Row 4
-		local color4 = hudArea:CreateColorSelect(64)
-		color4:SetPoint('TOPLEFT', color3, "TOPLEFT", 0, -105)
-		local color4text = hudArea:CreateText(L.HUDColorSelect:format(4), 80)
-		color4text:SetPoint("BOTTOM", color4, "TOP", 5, 4)
-		local color4reset = hudArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
-		color4reset:SetPoint('TOP', color4, "BOTTOM", 5, -10)
-		color4reset:SetScript("OnClick", function(self)
-				DBM.Options.HUDColor4[1] = DBM.DefaultOptions.HUDColor4[1]
-				DBM.Options.HUDColor4[2] = DBM.DefaultOptions.HUDColor4[2]
-				DBM.Options.HUDColor4[3] = DBM.DefaultOptions.HUDColor4[3]
-				color4:SetColorRGB(DBM.Options.HUDColor4[1], DBM.Options.HUDColor4[2], DBM.Options.HUDColor4[3])
-		end)
-		do
-			local firstshow = true
-			color4:SetScript("OnShow", function(self)
-					firstshow = true
-					self:SetColorRGB(DBM.Options.HUDColor4[1], DBM.Options.HUDColor4[2], DBM.Options.HUDColor4[3])
-			end)
-			color4:SetScript("OnColorSelect", function(self)
-					if firstshow then firstshow = false return end
-					DBM.Options.HUDColor4[1] = select(1, self:GetColorRGB())
-					DBM.Options.HUDColor4[2] = select(2, self:GetColorRGB())
-					DBM.Options.HUDColor4[3] = select(3, self:GetColorRGB())
-					color4text:SetTextColor(self:GetColorRGB())
-			end)
-		end
-		
-		local Texture4DropDown = hudArea:CreateDropdown(L.HUDTextureSelect4, Textures, "DBM", "HUDTexture4", function(value)
-			DBM.Options.HUDTexture4 = value
-		end)
-		Texture4DropDown:SetPoint("TOPLEFT", hudArea.frame, "TOPLEFT", 100, -451)
-		
-		local hudSizeSlider4 = hudArea:CreateSlider(L.HUDSizeSlider, 2, 5, 0.5, 160)   -- (text , min_value , max_value , step , width)
-		hudSizeSlider4:SetPoint('TOPLEFT', Texture4DropDown, "TOPLEFT", 20, -50)
-		do
-			local firstshow = true
-			hudSizeSlider4:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDSize4)
-			end)
-			hudSizeSlider4:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDSize4 = self:GetValue()
-			end)
-		end
-		local huddalphaSlider4 = hudArea:CreateSlider(L.HUDAlphaSlider, 0.1, 1, 0.1, 160)   -- (text , min_value , max_value , step , width)
-		huddalphaSlider4:SetPoint('BOTTOMLEFT', hudSizeSlider4, "BOTTOMLEFT", 180, -0)
-		do
-			local firstshow = true
-			huddalphaSlider4:HookScript("OnShow", function(self)
-				firstshow = true
-				self:SetValue(DBM.Options.HUDAlpha4)
-			end)
-			huddalphaSlider4:HookScript("OnValueChanged", function(self)
-				if firstshow then firstshow = false return end
-				DBM.Options.HUDAlpha4 = self:GetValue()
-			end)
-		end	
-
-		--End Rows
-		local resetbutton = hudArea:CreateButton(L.SpecWarn_ResetMe, 120, 16)
-		resetbutton:SetPoint('BOTTOMRIGHT', hudArea.frame, "BOTTOMRIGHT", -5, 5)
-		resetbutton:SetNormalFontObject(GameFontNormalSmall)
-		resetbutton:SetHighlightFontObject(GameFontNormalSmall)
-		resetbutton:SetScript("OnClick", function()
-			DBM.Options.HUDColorOverride = DBM.DefaultOptions.HUDColorOverride
-			DBM.Options.HUDSizeOverride = DBM.DefaultOptions.HUDSizeOverride
-			DBM.Options.HUDAlphaOverride = DBM.DefaultOptions.HUDAlphaOverride
-			DBM.Options.HUDTextureOverride = DBM.DefaultOptions.HUDTextureOverride
-			DBM.Options.HUDColor1 = DBM.DefaultOptions.HUDColor1
-			DBM.Options.HUDColor2 = DBM.DefaultOptions.HUDColor2
-			DBM.Options.HUDColor3 = DBM.DefaultOptions.HUDColor3
-			DBM.Options.HUDColor4 = DBM.DefaultOptions.HUDColor4
-			DBM.Options.HUDSize1 = DBM.DefaultOptions.HUDSize1
-			DBM.Options.HUDSize2 = DBM.DefaultOptions.HUDSize2
-			DBM.Options.HUDSize3 = DBM.DefaultOptions.HUDSize3
-			DBM.Options.HUDSize4 = DBM.DefaultOptions.HUDSize4
-			DBM.Options.HUDAlpha1 = DBM.DefaultOptions.HUDAlpha1
-			DBM.Options.HUDAlpha2 = DBM.DefaultOptions.HUDAlpha2
-			DBM.Options.HUDAlpha3 = DBM.DefaultOptions.HUDAlpha3
-			DBM.Options.HUDAlpha4 = DBM.DefaultOptions.HUDAlpha4
-			DBM.Options.HUDTexture1 = DBM.DefaultOptions.HUDTexture1
-			DBM.Options.HUDTexture2 = DBM.DefaultOptions.HUDTexture2
-			DBM.Options.HUDTexture3 = DBM.DefaultOptions.HUDTexture3
-			DBM.Options.HUDTexture4 = DBM.DefaultOptions.HUDTexture4
-			check1:SetChecked(DBM.Options.HUDColorOverride)
-			check2:SetChecked(DBM.Options.HUDSizeOverride)
-			check3:SetChecked(DBM.Options.HUDAlphaOverride)
-			check4:SetChecked(DBM.Options.HUDTextureOverride)
-			color1:SetColorRGB(DBM.Options.HUDColor1[1], DBM.Options.HUDColor1[2], DBM.Options.HUDColor1[3])
-			color2:SetColorRGB(DBM.Options.HUDColor2[1], DBM.Options.HUDColor2[2], DBM.Options.HUDColor2[3])
-			color3:SetColorRGB(DBM.Options.HUDColor3[1], DBM.Options.HUDColor3[2], DBM.Options.HUDColor3[3])
-			color4:SetColorRGB(DBM.Options.HUDColor4[1], DBM.Options.HUDColor4[2], DBM.Options.HUDColor4[3])
-			hudSizeSlider1:SetValue(DBM.DefaultOptions.HUDSize1)
-			hudSizeSlider2:SetValue(DBM.DefaultOptions.HUDSize2)
-			hudSizeSlider3:SetValue(DBM.DefaultOptions.HUDSize3)
-			hudSizeSlider4:SetValue(DBM.DefaultOptions.HUDSize4)
-			huddalphaSlider1:SetValue(DBM.DefaultOptions.HUDAlpha1)
-			huddalphaSlider2:SetValue(DBM.DefaultOptions.HUDAlpha2)
-			huddalphaSlider3:SetValue(DBM.DefaultOptions.HUDAlpha3)
-			huddalphaSlider4:SetValue(DBM.DefaultOptions.HUDAlpha4)
-			Texture1DropDown:SetSelectedValue(DBM.Options.HUDTexture1)
-			Texture2DropDown:SetSelectedValue(DBM.Options.HUDTexture2)
-			Texture3DropDown:SetSelectedValue(DBM.Options.HUDTexture3)
-			Texture4DropDown:SetSelectedValue(DBM.Options.HUDTexture4)
-		end)
-			
-		hudPanel:SetMyOwnHeight()
-	end
-
-	do
 		local spokenAlertsPanel 	= DBM_GUI_Frame:CreateNewPanel(L.Panel_SpokenAlerts, "option")
-		local spokenGeneralArea		= spokenAlertsPanel:CreateArea(L.Area_VoiceSelection, nil, 110, true)
+		local spokenGeneralArea		= spokenAlertsPanel:CreateArea(L.Area_VoiceSelection, nil, 105, true)
 
 		local CountSoundDropDown = spokenGeneralArea:CreateDropdown(L.CountdownVoice, DBM.Counts, "DBM", "CountdownVoice", function(value)
 			DBM.Options.CountdownVoice = value
@@ -3325,7 +2978,7 @@ local function CreateOptionsMenu()
 		end)
 		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -45)
 
-		local voiceFilterArea		= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 100, true)
+		local voiceFilterArea		= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 97, true)
 		local VPF1 					= voiceFilterArea:CreateCheckButton(L.SpecWarn_AlwaysVoice, true, nil, "AlwaysPlayVoice")
 		local voiceSWOptions = {
 			{	text	= L.SWFNever,		value 	= "None"},
@@ -3336,66 +2989,107 @@ local function CreateOptionsMenu()
 			DBM.Options.VoiceOverSpecW2 = value
 		end)
 		SWFilterDropDown:SetPoint("TOPLEFT", VPF1, "TOPLEFT", 0, -45)
-
-		--spokenGeneralArea:AutoSetDimension()
+		
+		local VPUrlArea1		= spokenAlertsPanel:CreateArea(L.Area_GetVEM, nil, 28, true)
+		local VPDownloadUrl1	= VPUrlArea1:CreateText(L.VEMDownload, 405, nil, nil, "LEFT")
+		VPDownloadUrl1:SetPoint("TOPLEFT", VPUrlArea1.frame, "TOPLEFT", 10, -7)
+		VPUrlArea1.frame:SetScript("OnMouseUp", function(...) DBM:ShowUpdateReminder(nil, nil, L.Area_GetVEM, "https://wow.curseforge.com/projects/dbm-voicepack-vem") end)
+		
+		local VPUrlArea2		= spokenAlertsPanel:CreateArea(L.Area_BrowseOtherVP, nil, 28, true)
+		local VPDownloadUrl2	= VPUrlArea2:CreateText(L.BrowseOtherVPs, 405, nil, nil, "LEFT")
+		VPDownloadUrl2:SetPoint("TOPLEFT", VPUrlArea2.frame, "TOPLEFT", 10, -7)
+		VPUrlArea2.frame:SetScript("OnMouseUp", function(...) DBM:ShowUpdateReminder(nil, nil, L.Area_BrowseOtherVP, "https://wow.curseforge.com/search?search=dbm+voice") end)
+		
+		local VPUrlArea3		= spokenAlertsPanel:CreateArea(L.Area_BrowseOtherCT, nil, 28, true)
+		local VPDownloadUrl3	= VPUrlArea3:CreateText(L.BrowseOtherCTs, 405, nil, nil, "LEFT")
+		VPDownloadUrl3:SetPoint("TOPLEFT", VPUrlArea3.frame, "TOPLEFT", 10, -7)
+		VPUrlArea3.frame:SetScript("OnMouseUp", function(...) DBM:ShowUpdateReminder(nil, nil, L.Area_BrowseOtherCT, "https://wow.curseforge.com/search?search=dbm+count+pack") end)
+		
 		spokenAlertsPanel:SetMyOwnHeight()
 	end
-
+	
 	do
-		local hpPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HPFrame, "option")
-		local hpArea = hpPanel:CreateArea(L.Area_HPFrame, nil, 150, true)
-		local alwaysbttn = hpArea:CreateCheckButton(L.HP_Enabled, true, nil, "AlwaysShowHealthFrame")
-		local growbttn = hpArea:CreateCheckButton(L.HP_GrowUpwards, true)
-		growbttn:SetScript("OnShow",  function(self) self:SetChecked(DBM.Options.HealthFrameGrowUp) end)
-		growbttn:SetScript("OnClick", function(self)
-				DBM.Options.HealthFrameGrowUp = not not self:GetChecked()
-				DBM.BossHealth:UpdateSettings()
-		end)
+		local Sounds = MixinSharedMedia3("sound", {
+			{	text	= L.NoSound,						value	= "" },
+			{	text	= "Muradin: Charge",				value 	= "Sound\\Creature\\MuradinBronzebeard\\IC_Muradin_Saurfang02.ogg", 		sound=true },
+		})
 
-		local BarWidthSlider = hpArea:CreateSlider(L.BarWidth, 150, 275, 1)
-		BarWidthSlider:SetPoint("TOPLEFT", hpArea.frame, "TOPLEFT", 20, -75)
-		BarWidthSlider:SetScript("OnShow", function(self) self:SetValue(DBM.Options.HealthFrameWidth or 100) end)
-		BarWidthSlider:HookScript("OnValueChanged", function(self)
-				DBM.Options.HealthFrameWidth = self:GetValue()
-				DBM.BossHealth:UpdateSettings()
-		end)
+		local eventSoundsPanel	 	= DBM_GUI_Frame:CreateNewPanel(L.Panel_EventSounds, "option")
+		local eventSoundsGeneralArea	= eventSoundsPanel:CreateArea(L.Area_SoundSelection, nil, 145, true)
 
-		local resetbutton = hpArea:CreateButton(L.Reset, 120, 16)
-		resetbutton:SetPoint('BOTTOMRIGHT', hpArea.frame, "BOTTOMRIGHT", -5, 5)
-		resetbutton:SetNormalFontObject(GameFontNormalSmall)
-		resetbutton:SetHighlightFontObject(GameFontNormalSmall)
-		resetbutton:SetScript("OnClick", function()
-				DBM.Options.HPFramePoint = DBM.DefaultOptions.HPFramePoint
-				DBM.Options.HPFrameX = DBM.DefaultOptions.HPFrameX
-				DBM.Options.HPFrameY = DBM.DefaultOptions.HPFrameY
-				DBM.Options.AlwaysShowHealthFrame = DBM.DefaultOptions.AlwaysShowHealthFrame
-				DBM.Options.HealthFrameGrowUp = DBM.DefaultOptions.HealthFrameGrowUp
-				DBM.Options.HealthFrameWidth = DBM.DefaultOptions.HealthFrameWidth
-				alwaysbttn:SetChecked(DBM.Options.AlwaysShowHealthFrame)
-				growbttn:SetChecked(DBM.Options.HealthFrameGrowUp)
-				BarWidthSlider:SetValue(DBM.Options.HealthFrameWidth)
-				DBM.BossHealth:UpdateSettings()
+		local VictorySoundDropdown = eventSoundsGeneralArea:CreateDropdown(L.EventVictorySound, DBM.Victory, "DBM", "EventSoundVictory2", function(value)
+			DBM.Options.EventSoundVictory2 = value
+			if value ~= "Random" then
+				DBM:PlaySoundFile(value)
+			end
 		end)
-
-		local function createDummyFunc(i) return function() return i end end
-		local showbutton = hpArea:CreateButton(L.HP_ShowDemo, 120, 16)
-		showbutton:SetPoint('BOTTOM', resetbutton, "TOP", 0, 5)
-		showbutton:SetNormalFontObject(GameFontNormalSmall)
-		showbutton:SetHighlightFontObject(GameFontNormalSmall)
-		showbutton:SetScript("OnClick", function()
-				DBM.BossHealth:Show("Health Frame")
-				DBM.BossHealth:AddBoss(createDummyFunc(25), "TestBoss 1")
-				DBM.BossHealth:AddBoss(createDummyFunc(50), "TestBoss 2")
-				DBM.BossHealth:AddBoss(createDummyFunc(75), "TestBoss 3")
-				DBM.BossHealth:AddBoss(createDummyFunc(100), "TestBoss 4")
+		VictorySoundDropdown:SetPoint("TOPLEFT", eventSoundsGeneralArea.frame, "TOPLEFT", 0, -20)
+		
+		local VictorySoundDropdown2 = eventSoundsGeneralArea:CreateDropdown(L.EventWipeSound, DBM.Defeat, "DBM", "EventSoundWipe", function(value)
+			DBM.Options.EventSoundWipe = value
+			if value ~= "Random" then
+				DBM:PlaySoundFile(value)
+			end
 		end)
+		VictorySoundDropdown2:SetPoint("LEFT", VictorySoundDropdown, "RIGHT", 70, 0)
+		
+		local useCombined = DBM.Options.EventSoundMusicCombined
+		local DungeonMusicDropDown = eventSoundsGeneralArea:CreateDropdown(L.EventDungeonMusic, useCombined and DBM.Music or DBM.DungeonMusic, "DBM", "EventSoundDungeonBGM", function(value)
+			DBM.Options.EventSoundDungeonBGM = value
+			if value ~= "Random" then
+				if not DBM.Options.tempMusicSetting then
+					DBM.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic"))
+					if DBM.Options.tempMusicSetting == 0 then
+						SetCVar("Sound_EnableMusic", 1)
+					else
+						DBM.Options.tempMusicSetting = nil--Don't actually need it
+					end
+				end
+				PlayMusic(value)
+			end
+		end)
+		DungeonMusicDropDown:SetPoint("TOPLEFT", VictorySoundDropdown, "TOPLEFT", 0, -45)
+		
+		local MusicDropDown = eventSoundsGeneralArea:CreateDropdown(L.EventEngageMusic, useCombined and DBM.Music or DBM.BattleMusic, "DBM", "EventSoundMusic", function(value)
+			DBM.Options.EventSoundMusic = value
+			if value ~= "Random" then
+				if not DBM.Options.tempMusicSetting then
+					DBM.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic"))
+					if DBM.Options.tempMusicSetting == 0 then
+						SetCVar("Sound_EnableMusic", 1)
+					else
+						DBM.Options.tempMusicSetting = nil--Don't actually need it
+					end
+				end
+				PlayMusic(value)
+			end
+		end)
+		MusicDropDown:SetPoint("TOPLEFT", VictorySoundDropdown2, "TOPLEFT", 0, -45)
+		
+		local VictorySoundDropdown3 = eventSoundsGeneralArea:CreateDropdown(L.EventEngageSound, Sounds, "DBM", "EventSoundEngage", function(value)
+			DBM.Options.EventSoundEngage = value
+			DBM:PlaySoundFile(DBM.Options.EventSoundEngage)
+		end)
+		VictorySoundDropdown3:SetPoint("TOPLEFT", DungeonMusicDropDown, "TOPLEFT", 0, -45)
+		
+		local eventSoundsExtrasArea	= eventSoundsPanel:CreateArea(L.Area_EventSoundsExtras, nil, 52, true)
+		local combineMusic			= eventSoundsExtrasArea:CreateCheckButton(L.EventMusicCombined, true, nil, "EventSoundMusicCombined")
+		
+		local eventSoundsFiltersArea= eventSoundsPanel:CreateArea(L.Area_EventSoundsFilters, nil, 72, true)
+		local musicDungMythicFilter	= eventSoundsFiltersArea:CreateCheckButton(L.EventFilterDungMythicMusic, true, nil, "EventDungMusicMythicFilter")
+		local musicMythicFilter		= eventSoundsFiltersArea:CreateCheckButton(L.EventFilterMythicMusic, true, nil, "EventMusicMythicFilter")
+		
+		eventSoundsPanel:SetMyOwnHeight()
 	end
+	
 
 	do
 		local spamPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpamFilter, "option")
-		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 190, true)
+		local spamOutArea = spamPanel:CreateArea(L.Area_SpamFilter_Outgoing, nil, 230, true)
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTgtAnnounce, true, nil, "DontShowTargetAnnouncements")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarn, true, nil, "DontShowSpecialWarnings")
+		spamOutArea:CreateCheckButton(L.SpamBlockNoSpecWarnText, true, nil, "DontShowSpecialWarningText")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowTimers, true, nil, "DontShowBossTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
@@ -3403,7 +3097,6 @@ local function CreateOptionsMenu()
 		spamOutArea:CreateCheckButton(L.SpamBlockNoInfoFrame, true, nil, "DontShowInfoFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoHudMap, true, nil, "DontShowHudMap2")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoNameplate, true, nil, "DontShowNameplateIcons")
-		spamOutArea:CreateCheckButton(L.SpamBlockNoHealthFrame, true, nil, "DontShowHealthFrame")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoYells, true, nil, "DontSendYells")
 		spamOutArea:CreateCheckButton(L.SpamBlockNoNoteSync, true, nil, "BlockNoteShare")
@@ -3416,14 +3109,23 @@ local function CreateOptionsMenu()
 		local spamArea = spamPanel:CreateArea(L.Area_SpamFilter, nil, 170, true)
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
-		spamArea:CreateCheckButton(L.SpamBlockBossWhispers, true, nil, "SpamBlockBossWhispers")
 
-		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 120, true)
+		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 140, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
-		spamSpecArea:CreateCheckButton(L.FilterInterrupts, true, nil, "FilterInterrupt")
-		spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
 		spamSpecArea:CreateCheckButton(L.FilterDispels, true, nil, "FilterDispel")
-		spamSpecArea:CreateCheckButton(L.FilterSelfHud, true, nil, "FilterSelfHud")
+		spamSpecArea:CreateCheckButton(L.FilterTrashWarnings, true, nil, "FilterTrashWarnings2")
+		local FilterInterruptNote = spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
+		
+		local interruptOptions = {
+			{	text	= L.SWFNever,			value 	= "None"},
+			{	text	= L.FilterInterrupts,	value 	= "onlyTandF"},
+			{	text	= L.FilterInterrupts2,	value 	= "TandFandBossCooldown"},
+			{	text	= L.FilterInterrupts3,	value 	= "TandFandAllCooldown"},
+		}
+		local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
+			DBM.Options.FilterInterrupt2 = value
+		end)
+		interruptDropDown:SetPoint("TOPLEFT", FilterInterruptNote, "TOPLEFT", 0, -45)
 
 		local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer, nil, 180, true)
 		spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")
@@ -3447,15 +3149,14 @@ local function CreateOptionsMenu()
 
 	do
 		local hideBlizzPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_HideBlizzard, "option")
-		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 315, true)
-		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame")
+		local hideBlizzArea = hideBlizzPanel:CreateArea(L.Area_HideBlizzard, nil, 295, true)
+		hideBlizzArea:CreateCheckButton(L.HideBossEmoteFrame, true, nil, "HideBossEmoteFrame2")
 		hideBlizzArea:CreateCheckButton(L.HideWatchFrame, true, nil, "HideObjectivesFrame")
 		hideBlizzArea:CreateCheckButton(L.HideGarrisonUpdates, true, nil, "HideGarrisonToasts")
 		hideBlizzArea:CreateCheckButton(L.HideGuildChallengeUpdates, true, nil, "HideGuildChallengeUpdates")
 		hideBlizzArea:CreateCheckButton(L.HideQuestTooltips, true, nil, "HideQuestTooltips")
 		hideBlizzArea:CreateCheckButton(L.HideTooltips, true, nil, "HideTooltips")
-		hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
-		local filterYell	= hideBlizzArea:CreateCheckButton(L.SpamBlockSayYell, true, nil, "FilterSayAndYell")
+		local DisableSFX	= hideBlizzArea:CreateCheckButton(L.DisableSFX, true, nil, "DisableSFX")
 
 		local movieOptions = {
 			{	text	= L.Disable,	value 	= "Never"},
@@ -3465,7 +3166,7 @@ local function CreateOptionsMenu()
 		local blockMovieDropDown = hideBlizzArea:CreateDropdown(L.DisableCinematics, movieOptions, "DBM", "MovieFilter", function(value)
 			DBM.Options.MovieFilter = value
 		end)
-		blockMovieDropDown:SetPoint("TOPLEFT", filterYell, "TOPLEFT", 0, -40)
+		blockMovieDropDown:SetPoint("TOPLEFT", DisableSFX, "TOPLEFT", 0, -40)
 
 		--hideBlizzArea:AutoSetDimension()
 		hideBlizzPanel:SetMyOwnHeight()
@@ -3515,46 +3216,6 @@ local function CreateOptionsMenu()
 		local AITimers				= advancedArea:CreateCheckButton(L.AITimer, true, nil, "AITimer")
 		local ACTimers				= advancedArea:CreateCheckButton(L.AutoCorrectTimer, true, nil, "AutoCorrectTimer")
 
-		-- Pizza Timer (create your own timer menu)
-		local pizzaarea = extraFeaturesPanel:CreateArea(L.PizzaTimer_Headline, nil, 85, true)
-
-		local textbox = pizzaarea:CreateEditBox(L.PizzaTimer_Title, "Pizza!", 175)
-		local hourbox = pizzaarea:CreateEditBox(L.PizzaTimer_Hours, "0", 25)
-		local minbox  = pizzaarea:CreateEditBox(L.PizzaTimer_Mins, "15", 25)
-		local secbox  = pizzaarea:CreateEditBox(L.PizzaTimer_Secs, "0", 25)
-
-		textbox:SetMaxLetters(17)
-		textbox:SetPoint('TOPLEFT', 30, -25)
-		hourbox:SetNumeric()
-		hourbox:SetMaxLetters(2)
-		hourbox:SetPoint('TOPLEFT', textbox, "TOPRIGHT", 20, 0)
-		minbox:SetNumeric()
-		minbox:SetMaxLetters(2)
-		minbox:SetPoint('TOPLEFT', hourbox, "TOPRIGHT", 20, 0)
-		secbox:SetNumeric()
-		secbox:SetMaxLetters(2)
-		secbox:SetPoint('TOPLEFT', minbox, "TOPRIGHT", 20, 0)
-
-		local BcastTimer = pizzaarea:CreateCheckButton(L.PizzaTimer_BroadCast)
-		local okbttn  = pizzaarea:CreateButton(L.PizzaTimer_ButtonStart)
-		okbttn:SetPoint('TOPLEFT', textbox, "BOTTOMLEFT", -7, -8)
-		BcastTimer:SetPoint("TOPLEFT", okbttn, "TOPRIGHT", 10, 3)
-
-		pizzaarea.frame:SetScript("OnShow", function(self)
-			if DBM:GetRaidRank() == 0 then
-				BcastTimer:Hide()
-			else
-				BcastTimer:Show()
-			end
-		end)
-
-		okbttn:SetScript("OnClick", function()
-			local time = (hourbox:GetNumber() * 60*60) + (minbox:GetNumber() * 60) + secbox:GetNumber()
-			if textbox:GetText() and time > 0 then
-				DBM:CreatePizzaTimer(time,  textbox:GetText(), BcastTimer:GetChecked())
-			end
-		end)
-		-- END Pizza Timer
 		chatAlertsArea:AutoSetDimension()
 		soundAlertsArea:AutoSetDimension()
 		generaltimeroptions:AutoSetDimension()
@@ -3667,7 +3328,7 @@ local function CreateOptionsMenu()
 	DBM_GUI_OptionsFrameWebsite:SetText(L.Website)
 	local frame = CreateFrame("Frame", nil, DBM_GUI_OptionsFrame)
 	frame:SetAllPoints(DBM_GUI_OptionsFrameWebsite)
-	frame:SetScript("OnMouseUp", function(...) DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG) end)
+	frame:SetScript("OnMouseUp", function(...) DBM:ShowUpdateReminder(nil, nil, DBM_COPY_URL_DIALOG, "https://discord.gg/deadlybossmods") end)
 end
 DBM:RegisterOnGuiLoadCallback(CreateOptionsMenu, 1)
 
@@ -3799,7 +3460,7 @@ do
 				bottom2value1:SetText( stats.timewalkerKills )
 				bottom2value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
 				bottom2value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )	
-			elseif statsType == 11 then--Party: Mythic, Mythic+ (7.0 mythic only dungeons)
+			elseif statsType == 11 then--Party: Mythic, Mythic+ (7.0/8.0 mythic only dungeons)
 				top1value1:SetText( stats.mythicKills )
 				top1value2:SetText( stats.mythicPulls-stats.mythicKills )
 				top1value3:SetText( stats.mythicBestTime and ("%d:%02d"):format(mfloor(stats.mythicBestTime / 60), stats.mythicBestTime % 60) or "-" )
@@ -3810,7 +3471,7 @@ do
 				else
 					top2value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-")
 				end
-			elseif statsType == 12 then--Party: Normal, Heroic, Mythic instance (Assault Violet Hold in legion. Basically a mythic dungeon that has no challenge mode/mythic+)
+			elseif statsType == 12 then--Party: Normal, Heroic, Mythic instance (Basically a mythic dungeon that has no challenge mode/mythic+ or an isle expedition)
 				top1value1:SetText( stats.normalKills )
 				top1value2:SetText( stats.normalPulls - stats.normalKills )
 				top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
@@ -3834,16 +3495,16 @@ do
 				else
 					top3value3:SetText( stats.challengeBestTime and ("%d:%02d"):format(mfloor(stats.challengeBestTime / 60), stats.challengeBestTime % 60) or "-")
 				end
-			else--Legacy 10/25 raids with heroic difficulty
+			else--Legacy 10/25 raids
 				top1value1:SetText( stats.normalKills )
 				top1value2:SetText( stats.normalPulls - stats.normalKills )
 				top1value3:SetText( stats.normalBestTime and ("%d:%02d"):format(mfloor(stats.normalBestTime / 60), stats.normalBestTime % 60) or "-" )
 				top2value1:SetText( stats.normal25Kills )
 				top2value2:SetText( stats.normal25Pulls - stats.normal25Kills )
 				top2value3:SetText( stats.normal25BestTime and ("%d:%02d"):format(mfloor(stats.normal25BestTime / 60), stats.normal25BestTime % 60) or "-" )
-				top3value1:SetText( stats.lfr25Kills )
-				top3value2:SetText( stats.lfr25Pulls-stats.lfr25Kills )
-				top3value3:SetText( stats.lfr25BestTime and ("%d:%02d"):format(mfloor(stats.lfr25BestTime / 60), stats.lfr25BestTime % 60) or "-" )
+				top3value1:SetText( stats.timewalkerKills )
+				top3value2:SetText( stats.timewalkerPulls-stats.timewalkerKills )
+				top3value3:SetText( stats.timewalkerBestTime and ("%d:%02d"):format(mfloor(stats.timewalkerBestTime / 60), stats.timewalkerBestTime % 60) or "-" )
 				bottom1value1:SetText( stats.heroicKills )
 				bottom1value2:SetText( stats.heroicPulls-stats.heroicKills )
 				bottom1value3:SetText( stats.heroicBestTime and ("%d:%02d"):format(mfloor(stats.heroicBestTime / 60), stats.heroicBestTime % 60) or "-" )
@@ -4202,7 +3863,7 @@ do
 								Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline)-(L.FontHeight*10*doubleline))
 								area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*10 )
 								doubleline = doubleline + 1
-							elseif mod.imaspecialsnowflake then--Normal, heroic, Mythic. rule soley for Assault Violet Hold which is only dungeon in game with this layout
+							elseif mod.imaspecialsnowflake or mod.addon.isExpedition then--Normal, heroic, Mythic. Assault of violetHold or island expeditions
 								statsType = 12
 								--Use top1, top2, top3 area.
 								top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
@@ -4511,31 +4172,62 @@ do
 						singleline = singleline + 1
 					end
 				elseif mod.addon.type == "RAID" and mod.addon.noHeroic and not mod.addon.hasMythic then--Early wrath
-					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
-					--Use top1 and top2 area.
-					top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
-					top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
-					top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
-					top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
-					top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
-					top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
-					top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
-					top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
-					top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
-					top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
-					top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
-					top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
-					top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
-					top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
-					--Set header text.
-					top1header:SetText(RAID_DIFFICULTY1)
-					top2header:SetText(RAID_DIFFICULTY2)
+					if mod.addon.hasTimeWalker then--Timewalking wrath raid like Ulduar
+						--Use top1 and top2 and top 3 area.
+						--10 Player, 25 Player, TimeWalker
+						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+						top2header:SetPoint("LEFT", top1header, "LEFT", 150, 0)
+						top2text1:SetPoint("LEFT", top1text1, "LEFT", 150, 0)
+						top2text2:SetPoint("LEFT", top1text2, "LEFT", 150, 0)
+						top2text3:SetPoint("LEFT", top1text3, "LEFT", 150, 0)
+						top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+						top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+						top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+						top3header:SetPoint("LEFT", top2header, "LEFT", 150, 0)
+						top3text1:SetPoint("LEFT", top2text1, "LEFT", 150, 0)
+						top3text2:SetPoint("LEFT", top2text2, "LEFT", 150, 0)
+						top3text3:SetPoint("LEFT", top2text3, "LEFT", 150, 0)
+						top3value1:SetPoint("TOPLEFT", top3text1, "TOPLEFT", 80, 0)
+						top3value2:SetPoint("TOPLEFT", top3text2, "TOPLEFT", 80, 0)
+						top3value3:SetPoint("TOPLEFT", top3text3, "TOPLEFT", 80, 0)
+						--Set header text.
+						top1header:SetText(RAID_DIFFICULTY1)
+						top2header:SetText(RAID_DIFFICULTY2)
+						top3header:SetText(PLAYER_DIFFICULTY_TIMEWALKER)
+					else
+						--Use top1 and top2 area.
+						--10 Player, 25 Player
+						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
+						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
+						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
+						top1text3:SetPoint("TOPLEFT", top1text2, "BOTTOMLEFT", 0, -5)
+						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
+						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
+						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+						top2header:SetPoint("LEFT", top1header, "LEFT", 220, 0)
+						top2text1:SetPoint("LEFT", top1text1, "LEFT", 220, 0)
+						top2text2:SetPoint("LEFT", top1text2, "LEFT", 220, 0)
+						top2text3:SetPoint("LEFT", top1text3, "LEFT", 220, 0)
+						top2value1:SetPoint("TOPLEFT", top2text1, "TOPLEFT", 80, 0)
+						top2value2:SetPoint("TOPLEFT", top2text2, "TOPLEFT", 80, 0)
+						top2value3:SetPoint("TOPLEFT", top2text3, "TOPLEFT", 80, 0)
+						--Set header text.
+						top1header:SetText(RAID_DIFFICULTY1)
+						top2header:SetText(RAID_DIFFICULTY2)
+					end
 					--Set Dims
+					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline))
 					area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
 					singleline = singleline + 1
-				elseif mod.addon.type == "RAID" and not mod.addon.hasLFR and not mod.addon.hasMythic then--Cata(except DS) and some wrath raids
+				elseif mod.addon.type == "RAID" and not mod.addon.hasLFR and not mod.addon.hasMythic then--Cata(except DS) and some wrath raids (ICC, ToGC)
 					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10-(L.FontHeight*6*singleline)-(L.FontHeight*10*doubleline))
-					if mod.onlyHeroic then
+					if mod.onlyHeroic then--Sinestra
 						--Use top1, top2 area
 						bottom1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
 						bottom1text1:SetPoint("TOPLEFT", bottom1header, "BOTTOMLEFT", 20, -5)
@@ -4559,8 +4251,9 @@ do
 						--Set Dims
 						area.frame:SetHeight( area.frame:GetHeight() + L.FontHeight*6 )
 						singleline = singleline + 1
-					elseif mod.onlyNormal then
+					elseif mod.onlyNormal then--Used?
 						--Use top1, top2 area
+						--10 Player, 25 Player
 						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
 						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
 						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
@@ -4583,6 +4276,7 @@ do
 						singleline = singleline + 1
 					else
 						--Use top1, top2, bottom1 and bottom2 area.
+						--10 Player, 25 Player, 10 Player Heroic, 25 Player Heroic
 						top1header:SetPoint("TOPLEFT", Title, "BOTTOMLEFT", 20, -5)
 						top1text1:SetPoint("TOPLEFT", top1header, "BOTTOMLEFT", 20, -5)
 						top1text2:SetPoint("TOPLEFT", top1text1, "BOTTOMLEFT", 0, -5)
@@ -4782,11 +4476,13 @@ do
 			if not Categories[addon.category] then
 				-- Create a Panel for "Wrath of the Lich King" "Burning Crusade" ...
 				local expLevel = GetExpansionLevel()
-				if expLevel == 6 then--Choose default expanded category based on players current expansion is.
+				if expLevel == 7 then--Choose default expanded category based on players current expansion is.
+					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="BFA"))
+				elseif expLevel == 6 then
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="LEG"))
-				elseif expLevel == 5 then--Choose default expanded category based on players current expansion is.
+				elseif expLevel == 5 then
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="WOD"))
-				elseif expLevel == 4 then--Choose default expanded category based on players current expansion is.
+				elseif expLevel == 4 then
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="MOP"))
 				elseif expLevel == 3 then
 					Categories[addon.category] = DBM_GUI:CreateNewPanel(L["TabCategory_"..addon.category:upper()] or L.TabCategory_Other, nil, (addon.category:upper()=="CATA"))

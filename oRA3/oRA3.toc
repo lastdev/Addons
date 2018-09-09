@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: oRA3
 ## Notes: Raid and Party Assist
 ## Notes-zhCN: Raid and Party Assist
@@ -11,7 +11,7 @@
 ## Notes-ptBR: Raid and Party Assist
 ## Notes-esES: Raid and Party Assist
 ## Notes-esMX: Raid and Party Assist
-## Version: v7.3.0
+## Version: v8.0.4
 ## Author: Funkydude, Nebula
 
 ## X-Credits: Cladhaire, Ammo, Rabbit
@@ -44,8 +44,6 @@ modules\Alerts.lua
 modules\BattleRes.lua
 modules\Consumables.lua
 modules\Cooldowns\module.xml
-modules\GuildRepairs.lua
-modules\Loot.lua
 modules\ReadyCheck.lua
 # modules with no settings
 modules\Difficulty.lua

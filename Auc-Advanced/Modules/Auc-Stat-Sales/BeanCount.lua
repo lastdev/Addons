@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Stat-Sales module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: BeanCount.lua 5598 2016-04-29 10:21:38Z brykrys $
+	Version: 7.7.6079 (SwimmingSeadragon)
+	Revision: $Id: BeanCount.lua 6079 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer statistic module calculates a price statistics for items
@@ -557,4 +557,4 @@ function private.SetupConfigGui(gui)
 	if tooltipID then private.addTooltipControls(tooltipID) end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5598 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 6079 $")

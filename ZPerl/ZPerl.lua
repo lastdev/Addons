@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1076 $")
-XPerl_SetModuleRevision("$Revision: 1076 $")
+end, "$Revision: 1111 $")
+XPerl_SetModuleRevision("$Revision: 1111 $")
 
 -- Upvalus
 local _G = _G
@@ -360,12 +360,13 @@ local function DoRangeCheck(unit, opt)
 	end
 
 	if (not range) then
-		local playerRealm = UnitDebuff("player", SpiritRealm)
-		local unitRealm = UnitDebuff(unit, SpiritRealm)
+		--local playerRealm = UnitDebuff("player", SpiritRealm)
+		--local unitRealm = UnitDebuff(unit, SpiritRealm)
 
-		if playerRealm ~= unitRealm then
+		--[[if playerRealm ~= unitRealm then
 			range = nil
-		elseif (opt.interact) then
+		else--]]
+		if (opt.interact) then
 			if (opt.interact == 6) then
 				--[[range, checkedRange = UnitInRange(unit) -- 40 yards
 				if not checkedRange then
@@ -458,8 +459,23 @@ local function DoRangeCheck(unit, opt)
 			-- 3 = Duel = 7 yards
 			-- 4 = Follow = 28 yards
 			-- 5 = ??? = 7 yards
-		elseif (opt.spell and UnitCanAssist("player", unit)) then
-			range = IsSpellInRange(opt.spell, unit)
+		elseif (opt.spell) then
+			if UnitCanAssist("player", unit) then
+				range = IsSpellInRange(opt.spell, unit)
+				if range == nil then
+					-- Fallback (28y)
+					range = CheckInteractDistance(unit, 1)
+				end
+			elseif UnitCanAttack("player", unit) then
+				range = IsSpellInRange(opt.spell, unit)
+				if range == nil then
+					-- Fallback (28y)
+					range = CheckInteractDistance(unit, 1)
+				end
+			else
+				-- Fallback (28y)
+				range = CheckInteractDistance(unit, 1)
+			end
 		elseif (opt.item and UnitCanAssist("player", unit)) then
 			range = IsItemInRange(opt.item, unit)
 		else
@@ -1121,9 +1137,9 @@ end
 --	return unpack(ClassPos[class] or ClassPos.none)
 --end
 
-local ClassPos = CLASS_ICON_TCOORDS
-function XPerl_ClassPos(class)
-	local b = ClassPos[class]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
+local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
+function XPerl_ClassPos(unitClass)
+	local b = CLASS_ICON_TCOORDS[unitClass]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
 	if (b) then
 		return unpack(b)
 	end
@@ -1558,18 +1574,18 @@ function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
 end
 
 local ManaColours = {
-	[SPELL_POWER_MANA] = "mana",
-	[SPELL_POWER_RAGE] = "rage",
-	[SPELL_POWER_FOCUS] = "focus",
-	[SPELL_POWER_ENERGY] = "energy",
-	[SPELL_POWER_RUNES] = "runes",
-	[SPELL_POWER_RUNIC_POWER] = "runic_power",
-	[SPELL_POWER_INSANITY] = "insanity",
-	[SPELL_POWER_LUNAR_POWER] = "lunar",
-	[SPELL_POWER_MAELSTROM] = "maelstrom",
-	[SPELL_POWER_FURY] = "fury",
-	[SPELL_POWER_PAIN] = "pain",
-	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
+	[Enum.PowerType.Mana] = "mana",
+	[Enum.PowerType.Rage] = "rage",
+	[Enum.PowerType.Focus] = "focus",
+	[Enum.PowerType.Energy] = "energy",
+	[Enum.PowerType.Runes] = "runes",
+	[Enum.PowerType.RunicPower] = "runic_power",
+	[Enum.PowerType.Insanity] = "insanity",
+	[Enum.PowerType.LunarPower] = "lunar",
+	[Enum.PowerType.Maelstrom] = "maelstrom",
+	[Enum.PowerType.Fury] = "fury",
+	[Enum.PowerType.Pain] = "pain",
+	[Enum.PowerType.Alternate] = "energy", -- used by some bosses, show it as energy bar
 }
 
 -- XPerl_SetManaBarType
@@ -1985,7 +2001,7 @@ function XPerl_CheckDebuffs(self, unit, resetBorders)
 	local _, unitClass = UnitClass(unit)
 
 	for i = 1, 40 do
-		local debuffName, _, debuff, debuffStack, debuffType = UnitDebuff(unit, i)
+		local debuffName, debuff, debuffStack, debuffType = UnitDebuff(unit, i)
 		if (not debuff) then
 			break
 		end
@@ -2275,14 +2291,14 @@ local RaidFrameIgnores = {
 -- BuffException
 local showInfo
 local function BuffException(unit, index, flag, func, exceptions, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, isMine, isStealable
+	local name, buff, count, debuffType, dur, max, isMine, isStealable
 	if (flag ~= "RAID") then
 		-- Not filtered, just return it
-		name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index)
-		return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, index
+		name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index)
+		return name, buff, count, debuffType, dur, max, isMine, isStealable, index
 	end
 
-	name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index, "RAID")
+	name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, index, "RAID")
 	if (buff) then
 		-- We need the index of the buff unfiltered later for tooltips
 		for i = 1, 40 do
@@ -2296,7 +2312,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 			end
 		end
 
-		return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, index
+		return name, buff, count, debuffType, dur, max, isMine, isStealable, index
 	end
 
 	-- See how many filtered buffs WoW has returned by default
@@ -2315,7 +2331,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	local classExceptions = exceptions[playerClass]
 	local allExceptions = exceptions.ALL
 	for i = 1, 40 do
-		name, rank, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, i)
+		name, buff, count, debuffType, dur, max, isMine, isStealable = func(unit, i)
 		if (not name) then
 			break
 		end
@@ -2341,7 +2357,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 		if (good) then
 			foundValid = foundValid + 1
 			if (foundValid + normalBuffFilterCount == index) then
-				return name, rank, buff, count, debuffType, dur, max, isMine, isStealable, i
+				return name, buff, count, debuffType, dur, max, isMine, isStealable, i
 			end
 		end
 	end
@@ -2349,17 +2365,17 @@ end
 
 -- DebuffException
 local function DebuffException(unit, start, flag, func, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, caster, isStealable, index
+	local name, buff, count, debuffType, dur, max, caster, isStealable, index
 	local valid = 0
 	for i = 1, 40 do
-		name, rank, buff, count, debuffType, dur, max, caster, isStealable, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
+		name, buff, count, debuffType, dur, max, caster, isStealable, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
 		if (not name) then
 			break
 		end
 		if (not SeasonalDebuffs[name] and not (raidFrames and RaidFrameIgnores[name])) then
 			valid = valid + 1
 			if (valid == start) then
-				return name, rank, buff, count, debuffType, dur, max, caster, isStealable, index
+				return name, buff, count, debuffType, dur, max, caster, isStealable, index
 			end
 		end
 	end
@@ -2381,7 +2397,7 @@ end
 -- XPerl_TooltipSetUnitBuff
 -- Retreives the index of the actual unfiltered buff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitBuff(self, unit, ind, filter, raidFrames)
-	local name, rank, buff, count, _, dur, max, caster, isStealable, index = BuffException(unit, ind, filter, UnitBuff, BuffExceptions, raidFrames)
+	local name, buff, count, _, dur, max, caster, isStealable, index = BuffException(unit, ind, filter, UnitBuff, BuffExceptions, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitBuff) then
 			Utopia_SetUnitBuff(self, unit, index)
@@ -2394,7 +2410,7 @@ end
 -- XPerl_TooltipSetUnitDebuff
 -- Retreives the index of the actual unfiltered debuff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitDebuff(self, unit, ind, filter, raidFrames)
-	local name, rank, buff, count, debuffType, dur, max, caster, isStealable, index = XPerl_UnitDebuff(unit, ind, filter, raidFrames)
+	local name, buff, count, debuffType, dur, max, caster, isStealable, index = XPerl_UnitDebuff(unit, ind, filter, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitDebuff) then
 			Utopia_SetUnitDebuff(self, unit, index)
@@ -2584,9 +2600,9 @@ end
 
 -- Hide set focus from the raid dropdown
 local function HideSetFocus()
-	local unit = UIDROPDOWNMENU_INIT_MENU.unit
-	if unit and strsub(unit, 0, 4) == "raid" and string.find(UIDROPDOWNMENU_INIT_MENU:GetName(), "XPerl") then
-		for index, value in ipairs(UnitPopupMenus[UIDROPDOWNMENU_INIT_MENU.which]) do
+	local unit = LIB_UIDROPDOWNMENU_INIT_MENU.unit
+	if unit and strsub(unit, 0, 4) == "raid" and string.find(LIB_UIDROPDOWNMENU_INIT_MENU:GetName(), "XPerl") then
+		for index, value in ipairs(UnitPopupMenus[LIB_UIDROPDOWNMENU_INIT_MENU.which]) do
 			if (UnitPopupShown[1][index] == 1) then
 				if (value == "SET_FOCUS") then
 					UnitPopupShown[1][index] = 0
@@ -2598,11 +2614,11 @@ local function HideSetFocus()
 end
 --hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
 
--- TODO: Marked to delete --[=[
+--[=[
 -- XPerl_GenericDropDown_OnLoad
 function XPerl_GenericDropDown_OnLoad(self)
 	--Lib_UIDropDownMenu_Initialize(self, XPerl_GenericDropDown_Initialize, "MENU")
-	tinsert(UnitPopupFrames, "XPerl_DropDown")
+	--tinsert(UnitPopupFrames, "XPerl_DropDown")
 end
 
 -- XPerl_GenericDropDown_Initialize
@@ -2831,7 +2847,7 @@ local function AuraButtonOnShow(self)
 		cd.countdown:SetTextColor(1, 1, 0)
 	end
 
-	local name, rank, buff, count, _, duration, endTime, caster, isStealable = UnitAura("player", self.xindex, self.xfilter)
+	local name, buff, count, _, duration, endTime, caster, isStealable = UnitAura("player", self.xindex, self.xfilter)
 	if endTime and duration then
 		local start = endTime - duration
 		XPerl_CooldownFrame_SetTimer(self.cooldown, start, duration, 1, caster == "player")
@@ -3163,7 +3179,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 				-- our own buffs.
 				for buffnum = 1, maxBuffs do
 					local filter = castableOnly == 1 and "RAID" or nil
-					local name, rank, buff, count, _, duration, endTime, isMine, isStealable = XPerl_UnitBuff(partyid, buffnum, filter)
+					local name, buff, count, _, duration, endTime, isMine, isStealable = XPerl_UnitBuff(partyid, buffnum, filter)
 					if (not name) then
 						if (mine == 1) then
 							maxBuffs = buffnum - 1
@@ -3277,7 +3293,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 
 				for buffnum = 1, maxDebuffs do
 					local filter = (isFriendly and curableOnly == 1) and "RAID" or nil
-					local name, rank, debuff, debuffApplications, debuffType, duration, endTime, isMine, isStealable = XPerl_UnitDebuff(partyid, buffnum, filter)
+					local name, debuff, debuffApplications, debuffType, duration, endTime, isMine, isStealable = XPerl_UnitDebuff(partyid, buffnum, filter)
 					if (not name) then
 						if (mine == 1) then
 							maxDebuffs = buffnum - 1

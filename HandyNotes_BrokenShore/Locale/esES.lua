@@ -43,8 +43,4 @@ L["What to display"] = "Qué mostrar"
 L["Wyrmtongue Chest"] = [=[Mostrar Cofre de Lenguavermis Velado
 ]=]
 
--- ToC
-L["Description"] = "Mostrar los POI de la Costa Abrupta"
-L["Title"] = "HandyNotes - Costa Abrupta"
-
 end

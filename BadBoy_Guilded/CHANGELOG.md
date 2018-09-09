@@ -1,7 +1,7 @@
 # BadBoy_Guilded
 
-## [v7.3.0](https://github.com/funkydude/BadBoy_Guilded/tree/v7.3.0) (2017-08-29)
-[Full Changelog](https://github.com/funkydude/BadBoy_Guilded/compare/v7.2.1...v7.3.0)
+## [v8.0.0](https://github.com/funkydude/BadBoy_Guilded/tree/v8.0.0) (2018-07-17)
+[Full Changelog](https://github.com/funkydude/BadBoy_Guilded/compare/v7.3.1...v8.0.0)
 
-- bump toc  
-- remove compat code  
+- update travis file  
+- bump version  

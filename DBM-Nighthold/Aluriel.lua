@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16271 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetZone()
@@ -25,9 +25,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, possibly dump UNIT_AURA unless that proves to actualy be better way to manage range frame
---TODO, add fixate on mythic. No debuff. Player sees eyes but no debuff. Might have to do nameplate/accro target scanning to warn who has it
---TODO, probably fix more timers. Especially mythic fire and arcane.
 --[[
 (ability.id = 213853 or ability.id = 213567 or ability.id = 213564 or ability.id = 213852 or ability.id = 212735 or ability.id = 213275 or ability.id = 213390 or ability.id = 213083 or ability.id = 212492 or ability.id = 230951 or ability.id = 230504) and type = "begincast" or
 ability.id = 230403 and type = "cast" or
@@ -36,9 +33,9 @@ ability.id = 230403 and type = "cast" or
 ability.id = 230951 and type = "removebuff" or ability.id = 230414
 --]]
 --Phases/General
-local warnFrostPhase				= mod:NewSpellAnnounce(213864, 2)
-local warnFirePhase					= mod:NewSpellAnnounce(213867, 2)
-local warnArcanePhase				= mod:NewSpellAnnounce(213869, 2)
+local warnFrostPhase				= mod:NewSpellAnnounce(213864, 2, nil, nil, nil, nil, nil, 2)
+local warnFirePhase					= mod:NewSpellAnnounce(213867, 2, nil, nil, nil, nil, nil, 2)
+local warnArcanePhase				= mod:NewSpellAnnounce(213869, 2, nil, nil, nil, nil, nil, 2)
 local warnAnnihilate				= mod:NewStackAnnounce(212492, 2, nil, "Tank")
 --Debuffs
 local warnMarkOfFrostChosen			= mod:NewTargetAnnounce(212531, 3)
@@ -115,30 +112,6 @@ local countdownSearingBrand			= mod:NewCountdown("Alt30", 213148, nil, nil, 3)
 local countdownAnnihilate			= mod:NewCountdown("Alt30", 212492, "Tank")
 local countdownArmageddon			= mod:NewCountdown("AltTwo33", 213568)
 
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceAnnihilate				= mod:NewVoice(212492, "Tank")--defensive/tauntboss
---Debuffs
-local voiceMarkOfFrost				= mod:NewVoice(212531)--scatter/??? (??? not used yet, need to determine stacks for grouping up to clear then make voice maybe that says "stand near another mark of frost" maybe?)
-local voiceFrostbitten				= mod:NewVoice(212647)--stackhigh
-local voiceSearingBrand				= mod:NewVoice(213148)--scatter/farfromline
-local voiceArcaneOrb				= mod:NewVoice(213519)--watchorb
---Detonates
-local voiceFrostDetonate			= mod:NewVoice(212735)--runout
-local voiceFireDetonate				= mod:NewVoice(213275)--runout
-local voiceArcaneDetonate			= mod:NewVoice(213390)--watchorb
---GTFOs
-local voicePoolOfFrost				= mod:NewVoice(212736)--runaway
-local voiceBurningGround			= mod:NewVoice(213278)--runaway
-local voiceArcaneFog				= mod:NewVoice(213504)--runaway
-local voiceFelStomp					= mod:NewVoice(230414)--runaway
---Animates
-local voiceAnimateFrost				= mod:NewVoice(213853)--mobsoon
-local voiceAnimateFire				= mod:NewVoice(213567)--mobsoon
-local voiceAnimateArcane			= mod:NewVoice(213564)--mobsoon
---Mythic
-local voiceDecimate					= mod:NewVoice(230504)--carefly
-local voiceFelLash					= mod:NewVoice(230403)--gathershare
-
 mod:AddRangeFrameOption("8")
 mod:AddSetIconOption("SetIconOnFrozenTempest", 213083, true, true)
 mod:AddSetIconOption("SetIconOnSearingDetonate", 213275, true)
@@ -150,9 +123,7 @@ mod.vb.annihilateCount = 0
 mod.vb.armageddonAdds = 0
 mod.vb.felLashCount = 0
 mod.vb.lastPhase = 1
-local MarkOfFrostDebuff = GetSpellInfo(212587)
-local SearingBrandDebuff = GetSpellInfo(213166)
-local annihilatedDebuff = GetSpellInfo(215458)
+local MarkOfFrostDebuff, SearingBrandDebuff, annihilatedDebuff, frostBitten = DBM:GetSpellInfo(212587), DBM:GetSpellInfo(213166), DBM:GetSpellInfo(215458), DBM:GetSpellInfo(212647)
 local rangeShowAll = false
 local chargeTable = {}
 local annihilateTimers = {8.0, 45.0, 40.0, 44.0, 38.0, 37.0, 33.0, 47.0, 41.0, 44.0, 38.0, 37.0, 33.0}--Need longer pulls/more data. However this pattern did prove to always be same
@@ -161,25 +132,24 @@ local felLashTimers = {21, 10.9, 6, 11, 6}
 local searingDetonateIcons = {}
 
 local debuffFilter
-local UnitDebuff = UnitDebuff
 do
 	debuffFilter = function(uId)
-		if UnitDebuff(uId, MarkOfFrostDebuff) or UnitDebuff(uId, SearingBrandDebuff) then
+		if DBM:UnitDebuff(uId, MarkOfFrostDebuff) or DBM:UnitDebuff(uId, SearingBrandDebuff) then
 			return true
 		end
 	end
 end
 
 local function findSearingMark(self)
-	if UnitDebuff("player", SearingBrandDebuff) then
+	if DBM:UnitDebuff("player", SearingBrandDebuff) then
 		specWarnFireDetonate:Show()
-		voiceFireDetonate:Play("runout")
+		specWarnFireDetonate:Play("runout")
 		yellFireDetonate:Yell()
 	end
 	table.wipe(searingDetonateIcons)
 	if self.Options.SetIconOnSearingDetonate then
 		for uId in DBM:GetGroupMembers() do
-			if UnitDebuff(uId, SearingBrandDebuff) then
+			if DBM:UnitDebuff(uId, SearingBrandDebuff) then
 				local name = DBM:GetUnitFullName(uId)
 				searingDetonateIcons[#searingDetonateIcons+1] = name
 				self:SetIcon(name, #searingDetonateIcons, 3)
@@ -221,24 +191,24 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 213853 then--Mark of Frost (Animate)
 		specWarnAnimateFrost:Show()
-		voiceAnimateFrost:Play("mobsoon")--using this trigger, mobsoon
+		specWarnAnimateFrost:Play("mobsoon")--using this trigger, mobsoon
 	elseif spellId == 213567 then--Animate: Searing Brand
 		specWarnAnimateFire:Show()
-		voiceAnimateFire:Play("mobsoon")
+		specWarnAnimateFire:Play("mobsoon")
 	elseif spellId == 213564 then--Animate: Arcane Orb
 		specWarnAnimateArcane:Show()
-		voiceAnimateArcane:Play("mobsoon")
+		specWarnAnimateArcane:Play("mobsoon")
 		if not self:IsEasy() then
 			timerArmageddon:Start()
 			countdownArmageddon:Start()
 		end
 	elseif spellId == 213852 then--Replicate: Arcane Orb
 		specWarnArcaneOrb:Show()
-		voiceArcaneOrb:Play("watchorb")
+		specWarnArcaneOrb:Play("watchorb")
 	elseif spellId == 212735 then--Detonate: Mark of Frost
-		if UnitDebuff("player", MarkOfFrostDebuff) then
+		if DBM:UnitDebuff("player", MarkOfFrostDebuff) then
 			specWarnFrostdetonate:Show()
-			voiceFrostDetonate:Play("runout")
+			specWarnFrostdetonate:Play("runout")
 			yellFrostDetonate:Yell()
 		end
 	elseif spellId == 213083 then--Frozen Tempest
@@ -248,19 +218,15 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 212492 then--Annihilate
 		local targetName, uId, bossuid = self:GetBossTarget(104881, true)
-		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
-		if tanking or (status == 3) then--Player is current target
+		if bossuid and self:IsTanking("player", bossuid, nil, true) then
 			specWarnAnnihilate:Show(self.vb.annihilateCount+1)
-			voiceAnnihilate:Play("defensive")
+			specWarnAnnihilate:Play("defensive")
 		end
 	elseif spellId == 230504 then
 		local targetName, uId, bossuid = self:GetBossTarget(115905)
-		if bossuid then
-			local tanking, status = UnitDetailedThreatSituation("player", bossuid)
-			if tanking or (status == 3) then--Player is current target
-				specWarnDecimate:Show()
-				voiceDecimate:Play("carefly")
-			end
+		if bossuid and self:IsTanking("player", bossuid, nil, true) then
+			specWarnDecimate:Show()
+			specWarnDecimate:Play("carefly")
 		end
 		if self.vb.lastPhase == 3 then
 			timerDecimateCD:Start(17)
@@ -277,7 +243,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		local timer = felLashTimers[self.vb.felLashCount+1]
 		if timer then
 			specWarnFelLash:Schedule(timer-3)
-			voiceFelLash:Schedule(timer-3, "gathershare")
+			specWarnFelLash:ScheduleVoice(timer-3, "gathershare")
 			timerFelLashCD:Start(timer, self.vb.felLashCount+1)
 			countdownFelLash:Start(timer)
 		end
@@ -304,7 +270,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 213864 or spellId == 216389 then--Icy enchantment
 		self.vb.lastPhase = 1
 		warnFrostPhase:Show()
-		voicePhaseChange:Play("phasechange")
+		warnFrostPhase:Play("phasechange")
 		if spellId == 216389 then--First icy
 			timerMarkOfFrostCD:Start(18)
 			if self:IsMythic() then
@@ -337,13 +303,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.RangeCheck:Show(8, debuffFilter)
 		end
 		if self.Options.InfoFrame and not self:IsLFR() then
-			DBM.InfoFrame:SetHeader(GetSpellInfo(212647))
-			DBM.InfoFrame:Show(6, "playerdebuffstacks", 212647)
+			DBM.InfoFrame:SetHeader(frostBitten)
+			DBM.InfoFrame:Show(6, "playerdebuffstacks", frostBitten)
 		end
 	elseif spellId == 213867 then--Fiery Enchantment
 		self.vb.lastPhase = 2
 		warnFirePhase:Show()
-		voicePhaseChange:Play("phasechange")
+		warnFirePhase:Play("phasechange")
 		if self:IsMythic() then
 			timerFelSoulCD:Start(15)
 			timerSearingBrandCD:Start(17.8)
@@ -367,19 +333,19 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 213869 then--Magic Enchantment
 		self.vb.lastPhase = 3
 		warnArcanePhase:Show()
-		voicePhaseChange:Play("phasechange")
+		warnArcanePhase:Play("phasechange")
 		if self:IsMythic() then
 			self.vb.felLashCount = 0
 			timerFelSoulCD:Start(12)
 			--Arcane orb not started here, started somewhere else so timer is actually useful
 			timerArcaneOrbRepCD:Start(15)
 			specWarnFelLash:Schedule(18)
-			voiceFelLash:Schedule(18, "gathershare")
+			specWarnFelLash:ScheduleVoice(18, "gathershare")
 			timerFelLashCD:Start(21, 1)
 			countdownFelLash:Start(21)
 			timerArcaneOrbDetonateCD:Start(35)--Not in combat log, So difficult to fix until transcriptor. Needs verification
 			specWarnArcaneDetonate:Schedule(35)--^^
-			voiceArcaneDetonate:Schedule(35, "watchorb")--^^
+			specWarnArcaneDetonate:ScheduleVoice(35, "watchorb")--^^
 			timerAnimateArcaneCD:Start(55)--Oddly slightly longer on mythic than others
 			timerFrostPhaseCD:Start(70)
 		else
@@ -387,7 +353,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerArcaneOrbRepCD:Start(15)
 			timerArcaneOrbDetonateCD:Start(35)--Not in combat log, but this is when yell occurs
 			specWarnArcaneDetonate:Schedule(35)
-			voiceArcaneDetonate:Schedule(35, "watchorb")
+			specWarnArcaneDetonate:ScheduleVoice(35, "watchorb")
 			timerAnimateArcaneCD:Start(51.9)
 			timerFrostPhaseCD:Start(70)
 		end
@@ -400,7 +366,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnMarkOfFrostChosen:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnMarkOfFrost:Show()
-			voiceMarkOfFrost:Play("targetyou")
+			specWarnMarkOfFrost:Play("targetyou")
 			countdownMarkOfFrost:Start(5)
 			self:AntiSpam(7, args.destName)
 			yellMarkofFrost:Yell()
@@ -408,14 +374,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 212587 then
 		if args:IsPlayer() and self:AntiSpam(7, args.destName) then
 			specWarnMarkOfFrost:Show()
-			voiceMarkOfFrost:Play("targetyou")
+			specWarnMarkOfFrost:Play("targetyou")
 			yellMarkofFrost:Yell()
 		end
 	elseif spellId == 213148 then--Searing Brand (5sec Targetting Debuff)
 		warnSearingBrandChosen:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnSearingBrand:Show()
-			voiceSearingBrand:Play("scatter")
+			specWarnSearingBrand:Play("scatter")
 			countdownSearingBrand:Start()
 		end
 	elseif spellId == 213569 then--Armageddon Applied to mobs
@@ -434,14 +400,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		if args:IsPlayer() and amount % 2 == 0 and amount >= 6 and amount ~= 8 then
 			specWarnFrostbitten:Show(amount)
-			voiceFrostbitten:Play("stackhigh")
+			specWarnFrostbitten:Play("stackhigh")
 		end
 	elseif spellId == 215458 then
 		local amount = args.amount or 1
 		if amount >= 2 then
-			if not UnitDebuff("player", args.spellName) and not args:IsPlayer() then
+			if not DBM:UnitDebuff("player", args.spellName) and not args:IsPlayer() then
 				specWarnAnnihilateOther:Show(args.destName)
-				voiceAnnihilate:Play("tauntboss")
+				specWarnAnnihilateOther:Play("tauntboss")
 			else
 				warnAnnihilate:Show(args.destName, amount)
 			end
@@ -478,16 +444,16 @@ do
 	function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		if spellId == 212736 and destGUID == playerGUID and self:AntiSpam(2, 1) then
 			specWarnPoolOfFrost:Show()
-			voicePoolOfFrost:Play("runaway")
+			specWarnPoolOfFrost:Play("runaway")
 		elseif spellId == 213278 and destGUID == playerGUID and self:AntiSpam(2, 2) then
 			specWarnBurningGround:Show()
-			voiceBurningGround:Play("runaway")
+			specWarnBurningGround:Play("runaway")
 		elseif spellId == 213504 and destGUID == playerGUID and self:AntiSpam(2, 3) then
 			specWarnArcaneFog:Show()
-			voiceArcaneFog:Play("runaway")
+			specWarnArcaneFog:Play("runaway")
 		elseif spellId == 230414 and destGUID == playerGUID and self:AntiSpam(2, 4) then
 			specWarnFelStomp:Show()
-			voiceFelStomp:Play("runaway")
+			specWarnFelStomp:Play("runaway")
 		end
 	end
 	mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -495,7 +461,7 @@ do
 	function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		if spellId == 213520 and destGUID == playerGUID and self:AntiSpam(2, 1) then
 			specWarnArcaneFog:Show()
-			voiceArcaneFog:Play("runaway")
+			specWarnArcaneFog:Play("runaway")
 		end
 	end
 	mod.SPELL_MISSED = mod.SPELL_DAMAGE
@@ -503,7 +469,7 @@ end
 
 --More accurate way to do this for now, too many spell Ids right now don't know what's what for sure. However a simple spell NAME check should work fairly reliable for test purposes
 function mod:UNIT_AURA(uId)
-	local hasDebuff = UnitDebuff("player", MarkOfFrostDebuff) or UnitDebuff("player", SearingBrandDebuff)
+	local hasDebuff = DBM:UnitDebuff("player", MarkOfFrostDebuff) or DBM:UnitDebuff("player", SearingBrandDebuff)
 	if hasDebuff and not rangeShowAll then--Has 1 or more debuff, show all players on range frame
 		rangeShowAll = true
 		if self.Options.RangeFrame then
@@ -517,14 +483,14 @@ function mod:UNIT_AURA(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 215455 then--Arcane Orb
 		specWarnArcaneOrb:Show()
-		voiceArcaneOrb:Play("watchorb")
+		specWarnArcaneOrb:Play("watchorb")
 	elseif spellId == 213390 then--Detonate: Arcane Orb (still missing from combat log, although this event is 3 seconds slower than scheduling or using yell)
 		self:ScheduleMethod(15, "ScanForMobs", 107287, 0, 8, 8, 0.1, 12, "SetIconOnBurstOfMagic")
 --		specWarnArcaneDetonate:Show()
---		voiceArcaneDetonate:Play("watchorb")
+--		specWarnArcaneDetonate:Play("watchorb")
 	end
 end

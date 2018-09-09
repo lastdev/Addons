@@ -75,7 +75,7 @@ local function updateSackDisplay(forceRefresh)
 	end
 	if not eo then eo = currentSackContents[currentErrorIndex] end
 	if not eo then eo = currentSackContents[size] end
-	if currentSackSession == -1 then currentSackSession = eo.session end
+	if currentSackSession == -1 and eo then currentSackSession = eo.session end
 
 	if size > 0 then
 		local source = nil
@@ -124,7 +124,7 @@ end
 hooksecurefunc(addon, "UpdateDisplay", function()
 	if not window or not window:IsShown() then return end
 	-- can't just hook it right in because it would pass |self| as forceRefresh
-	updateSackDisplay()
+	updateSackDisplay(true)
 end)
 
 -- Only invoked when actually clicking a tab
@@ -133,10 +133,10 @@ local function setActiveMethod(tab)
 	searchBox:Hide()
 	sessionLabel:Show()
 	wipe(searchResults)
-	if searchThrough then
+	--[[if searchThrough then
 		wipe(searchThrough)
 		searchThrough = nil
-	end
+	end]]
 
 	state = type(tab) == "table" and tab:GetName() or tab
 	updateSackDisplay(true)
@@ -185,13 +185,13 @@ local function createBugSack()
 	window:SetScript("OnDragStart", window.StartMoving)
 	window:SetScript("OnDragStop", window.StopMovingOrSizing)
 	window:SetScript("OnShow", function()
-		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+		PlaySound(844) -- SOUNDKIT.IG_QUEST_LOG_OPEN
 	end)
 	window:SetScript("OnHide", function()
-		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 		currentErrorObject = nil
 		currentSackSession = nil
 		currentSackContents = nil
+		PlaySound(845) -- SOUNDKIT.IG_QUEST_LOG_CLOSE
 	end)
 
 	local titlebg = window:CreateTexture(nil, "BORDER")
@@ -273,17 +273,17 @@ local function createBugSack()
 	sessionLabel = CreateFrame("Button", nil, window)
 	sessionLabel:SetNormalFontObject("GameFontNormalLeft")
 	sessionLabel:SetHighlightFontObject("GameFontHighlightLeft")
-	sessionLabel:SetPoint("TOPLEFT", titlebg, 6, -4)
-	sessionLabel:SetPoint("BOTTOMRIGHT", countLabel, "BOTTOMLEFT", -4, 1)
+	sessionLabel:SetPoint("TOPLEFT", titlebg, 6, -1)
+	sessionLabel:SetPoint("BOTTOMRIGHT", titlebg, "BOTTOMRIGHT", -26, 1)
 	sessionLabel:SetScript("OnHide", function()
 		window:StopMovingOrSizing()
 	end)
-	sessionLabel:SetScript("OnMouseUp", function()
+	--[[sessionLabel:SetScript("OnMouseUp", function()
 		window:StopMovingOrSizing()
 	end)
 	sessionLabel:SetScript("OnMouseDown", function()
 		window:StartMoving()
-	end)
+	end)]]
 	sessionLabel:SetScript("OnDoubleClick", function()
 		sessionLabel:Hide()
 		searchLabel:Show()
@@ -334,7 +334,7 @@ local function createBugSack()
 	searchBox:SetScript("OnTextChanged", filterSack)
 	searchBox:SetAutoFocus(false)
 	searchBox:SetPoint("TOPLEFT", searchLabel, "TOPRIGHT", 6, 1)
-	searchBox:SetPoint("BOTTOMRIGHT", countLabel, "BOTTOMLEFT", -3, -1)
+	searchBox:SetPoint("BOTTOMRIGHT", titlebg, "BOTTOMRIGHT", -26, 1)
 	searchBox:Hide()
 
 	nextButton = CreateFrame("Button", "BugSackNextButton", window, "UIPanelButtonTemplate")
@@ -442,7 +442,7 @@ local function show()
 		createBugSack()
 		createBugSack = nil
 	end
-	updateSackDisplay()
+	updateSackDisplay(true)
 	window:Show()
 end
 
@@ -450,7 +450,7 @@ function addon:CloseSack()
 	window:Hide()
 end
 
-function addon:OpenSack(errorObject)
+function addon:OpenSack()
 	if window and window:IsShown() then
 		-- Window is already open, we just need to update various texts.
 		return

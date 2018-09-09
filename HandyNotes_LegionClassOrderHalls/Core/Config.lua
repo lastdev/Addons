@@ -1,4 +1,4 @@
--- $Id: Config.lua 67 2017-06-18 11:25:51Z arith $
+-- $Id: Config.lua 80 2017-09-10 12:27:35Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -137,6 +137,12 @@ config.options = {
 					desc = L["Show all workorder NPCs' locations even the corresponding order hall advancement has not been researched."],
 					order = 31,
 				},
+				show_beacon = {
+					type = "toggle",
+					name = L["Navigation Console"],
+					desc = L["Show Navigation Console's location in the Vindicaar."],
+					order = 31,
+				},
 				show_others = {
 					type = "toggle",
 					name = L["Others"],
@@ -161,7 +167,7 @@ config.options = {
 					type = "toggle",
 					name = L["Show note"],
 					desc = L["Show the node's additional notes when it's available."],
-					order = 40,
+					order = 11,
 				},
 				unhide = {
 					type = "execute",

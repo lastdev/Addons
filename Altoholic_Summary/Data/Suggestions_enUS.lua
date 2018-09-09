@@ -12,8 +12,26 @@ if (GetLocale() == "frFR") or
 	(GetLocale() == "zhCN") or
 	(GetLocale() == "zhTW") then return end				-- exit to use zhCN, zhTW or frFR instead of enUS
 
-local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
-
+local continents = { 		-- this gets localized names, also avoids hardcoding them.
+	[1] = 12,
+	[2] = C_Map.GetMapInfo(12).name,
+	[3] = 13,
+	[4] = C_Map.GetMapInfo(13).name,
+	[5] = 101,
+	[6] = C_Map.GetMapInfo(101).name,
+	[7] = 113,
+	[8] = C_Map.GetMapInfo(113).name,
+	[9] = 424,
+	[10] = C_Map.GetMapInfo(424).name,
+	[11] = 572,
+	[12] = C_Map.GetMapInfo(572).name,
+	[13] = 619,
+	[14] = C_Map.GetMapInfo(619).name,
+	[15] = 875,
+	[16] = C_Map.GetMapInfo(875).name,
+	[17] = 876,
+	[18] = C_Map.GetMapInfo(876).name,
+};
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
 addon.Suggestions = {
 
@@ -392,24 +410,6 @@ addon.Suggestions = {
 	},
 	
 	-- ** Secondary professions **
-	[TS.FIRSTAID] = {
-		{ 40, "Up to 40: Linen Bandages" },
-		{ 80, "Up to 80: Heavy Linen Bandages\nBecome Journeyman at 50" },
-		{ 115, "Up to 115: Wool Bandages" },
-		{ 150, "Up to 150: Heavy Wool Bandages" },
-		{ 180, "Up to 180: Silk Bandages" },
-		{ 210, "Up to 210: Heavy Silk Bandages" },
-		{ 240, "Up to 240: Mageweave Bandages" },
-		{ 260, "Up to 260: Heavy Mageweave Bandages" },
-		{ 290, "Up to 290: Runecloth Bandages" },
-		{ 330, "Up to 330: Heavy Runecloth Bandages" },
-		{ 360, "Up to 360: Netherweave Bandages" },
-		{ 375, "Up to 375: Heavy Netherweave Bandages" },
-		{ 400, "Up to 400: Frostweave Bandages" },
-		{ 425, "Up to 425: Heavy Frostweave Bandages" },
-		{ 475, "Up to 475: Embersilk Bandages" },
-		{ 525, "Up to 525: Heavy Embersilk Bandages" },
-	},
 	[TS.COOKING] = {
 		{ 40, "Up to 40: Spice Bread"	},
 		{ 85, "Up to 85: Smoked Bear Meat, Crab Cake" },
@@ -452,32 +452,32 @@ addon.Suggestions = {
 		{ 300, "Up to 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "Up to 375: " .. continents[3]},
 		{ 450, "Up to 450: " .. continents[4]},
-		{ 525, "Up to 525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 525, "Up to 525: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(720).name .. "\n" .. C_Map.GetMapInfo(700).name},
 		{ 600, "Up to 600: " .. continents[6]},
 	},
 
 	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
 	["Leveling"] = {
 		{ 10, "Up to 10: Any starting zone" },
-		{ 15, "Up to 15: " .. GetMapNameByID(39)},
-		{ 16, "Up to 16: " .. GetMapNameByID(684)},
-		{ 20, "Up to 20: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
-							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
-							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
-		{ 25, "Up to 25: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
-							.. "\n" .. GetMapNameByID(24)},
-		{ 30, "Up to 30: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
-		{ 35, "Up to 35: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
-							.. "\n" .. GetMapNameByID(607)},
-		{ 40, "Up to 40: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
-		{ 45, "Up to 45: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
-		{ 48, "Up to 48: " .. GetMapNameByID(17)},
-		{ 50, "Up to 50: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
-		{ 52, "Up to 52: " .. GetMapNameByID(29)},
-		{ 54, "Up to 54: " .. GetMapNameByID(38)},
-		{ 55, "Up to 55: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
-		{ 58, "Up to 58: " .. GetMapNameByID(19)},
-		{ 60, "Up to 60: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		{ 15, "Up to 15: " .. C_Map.GetMapInfo(39).name},
+		{ 16, "Up to 16: " .. C_Map.GetMapInfo(684).name},
+		{ 20, "Up to 20: " .. C_Map.GetMapInfo(181).name .. "\n" .. C_Map.GetMapInfo(35).name .. "\n" .. C_Map.GetMapInfo(476).name
+							.. "\n" .. C_Map.GetMapInfo(42).name .. "\n" .. C_Map.GetMapInfo(21).name .. "\n" .. C_Map.GetMapInfo(11).name
+							.. "\n" .. C_Map.GetMapInfo(463).name .. "\n" .. C_Map.GetMapInfo(36).name},
+		{ 25, "Up to 25: " .. C_Map.GetMapInfo(34).name .. "\n" .. C_Map.GetMapInfo(40).name .. "\n" .. C_Map.GetMapInfo(43).name 
+							.. "\n" .. C_Map.GetMapInfo(24).name},
+		{ 30, "Up to 30: " .. C_Map.GetMapInfo(16).name .. "\n" .. C_Map.GetMapInfo(37).name .. "\n" .. C_Map.GetMapInfo(81).name},
+		{ 35, "Up to 35: " .. C_Map.GetMapInfo(673).name .. "\n" .. C_Map.GetMapInfo(101).name .. "\n" .. C_Map.GetMapInfo(26).name
+							.. "\n" .. C_Map.GetMapInfo(607).name},
+		{ 40, "Up to 40: " .. C_Map.GetMapInfo(141).name .. "\n" .. C_Map.GetMapInfo(121).name .. "\n" .. C_Map.GetMapInfo(22).name},
+		{ 45, "Up to 45: " .. C_Map.GetMapInfo(23).name .. "\n" .. C_Map.GetMapInfo(61).name},
+		{ 48, "Up to 48: " .. C_Map.GetMapInfo(17).name},
+		{ 50, "Up to 50: " .. C_Map.GetMapInfo(161).name .. "\n" .. C_Map.GetMapInfo(182).name .. "\n" .. C_Map.GetMapInfo(28).name},
+		{ 52, "Up to 52: " .. C_Map.GetMapInfo(29).name},
+		{ 54, "Up to 54: " .. C_Map.GetMapInfo(38).name},
+		{ 55, "Up to 55: " .. C_Map.GetMapInfo(201).name .. "\n" .. C_Map.GetMapInfo(281).name},
+		{ 58, "Up to 58: " .. C_Map.GetMapInfo(19).name},
+		{ 60, "Up to 60: " .. C_Map.GetMapInfo(32).name .. "\n" .. C_Map.GetMapInfo(241).name .. "\n" .. C_Map.GetMapInfo(261).name},
 		
 		-- Outland
 		-- 465 Hellfire Peninsula 
@@ -488,12 +488,12 @@ addon.Suggestions = {
 		-- 479 Netherstorm 
 		-- 473 Shadowmoon Valley 
 		
-		{ 63, "Up to 63: " .. GetMapNameByID(465)},
-		{ 64, "Up to 64: " .. GetMapNameByID(467)},
-		{ 65, "Up to 65: " .. GetMapNameByID(478)},
-		{ 67, "Up to 67: " .. GetMapNameByID(477)},
-		{ 68, "Up to 68: " .. GetMapNameByID(475)},
-		{ 70, "Up to 70: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
+		{ 63, "Up to 63: " .. C_Map.GetMapInfo(465).name},
+		{ 64, "Up to 64: " .. C_Map.GetMapInfo(467).name},
+		{ 65, "Up to 65: " .. C_Map.GetMapInfo(478).name},
+		{ 67, "Up to 67: " .. C_Map.GetMapInfo(477).name},
+		{ 68, "Up to 68: " .. C_Map.GetMapInfo(475).name},
+		{ 70, "Up to 70: " .. C_Map.GetMapInfo(479).name .. "\n" .. C_Map.GetMapInfo(473).name .. "\n" .. C_Map.GetMapInfo(499).name .. "\n" .. C_Map.GetMapInfo(32).name},
 
 		-- Northrend
 		-- 491 Howling Fjord 
@@ -506,11 +506,11 @@ addon.Suggestions = {
 		-- 495 The Storm Peaks 
 		-- 492 Icecrown 
 		
-		{ 72, "Up to 72: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
-		{ 75, "Up to 75: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
-		{ 76, "Up to 76: " .. GetMapNameByID(496)},
-		{ 78, "Up to 78: " .. GetMapNameByID(493)},
-		{ 80, "Up to 80: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		{ 72, "Up to 72: " .. C_Map.GetMapInfo(491).name .. "\n" .. C_Map.GetMapInfo(486).name},
+		{ 75, "Up to 75: " .. C_Map.GetMapInfo(488).name .. "\n" .. C_Map.GetMapInfo(490).name},
+		{ 76, "Up to 76: " .. C_Map.GetMapInfo(496).name},
+		{ 78, "Up to 78: " .. C_Map.GetMapInfo(493).name},
+		{ 80, "Up to 80: " .. C_Map.GetMapInfo(510).name .. "\n" .. C_Map.GetMapInfo(495).name .. "\n" .. C_Map.GetMapInfo(492).name},
 		
 		-- Cataclysm
 		-- 606 Mount Hyjal 
@@ -519,10 +519,10 @@ addon.Suggestions = {
 		-- 720 Uldum 
 		-- 700 Twilight Highlands 
 		
-		{ 82, "Up to 82: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
-		{ 83, "Up to 83: " .. GetMapNameByID(640)},
-		{ 84, "Up to 84: " .. GetMapNameByID(720)},
-		{ 85, "Up to 85: " .. GetMapNameByID(700)},
+		{ 82, "Up to 82: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(613).name},
+		{ 83, "Up to 83: " .. C_Map.GetMapInfo(640).name},
+		{ 84, "Up to 84: " .. C_Map.GetMapInfo(720).name},
+		{ 85, "Up to 85: " .. C_Map.GetMapInfo(700).name},
 
 		-- Pandaria
 		-- 806 The Jade Forest 
@@ -532,10 +532,10 @@ addon.Suggestions = {
 		-- 810 Townlong Steppes 
 		-- 858 Dread Wastes 
 		
-		{ 86, "Up to 86: " .. GetMapNameByID(806)},
-		{ 87, "Up to 87: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
-		{ 88, "Up to 88: " .. GetMapNameByID(809)},
-		{ 89, "Up to 89: " .. GetMapNameByID(810)},
-		{ 90, "Up to 90: " .. GetMapNameByID(858)},
+		{ 86, "Up to 86: " .. C_Map.GetMapInfo(806).name},
+		{ 87, "Up to 87: " .. C_Map.GetMapInfo(807).name .. "\n" .. C_Map.GetMapInfo(857).name},
+		{ 88, "Up to 88: " .. C_Map.GetMapInfo(809).name},
+		{ 89, "Up to 89: " .. C_Map.GetMapInfo(810).name},
+		{ 90, "Up to 90: " .. C_Map.GetMapInfo(858).name},
 	},
 }

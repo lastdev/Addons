@@ -30,7 +30,7 @@ local function createOptions(id, data)
       name = L["Constant Factor"],
       order = 10,
       values = WeakAuras.circular_group_constant_factor_types,
-      hidden = function() return data.grow ~= "CIRCLE" or data.grow == "COUNTERCIRCLE" end
+      hidden = function() return data.grow ~= "CIRCLE" and data.grow ~= "COUNTERCIRCLE" end
     },
     space = {
       type = "range",
@@ -141,28 +141,49 @@ local function createOptions(id, data)
       values = function()
         return data.controlledChildren
       end,
-      get = function(info, id)
-        return data.sortHybridTable and data.sortHybridTable [id] or false;
+      get = function(info, index)
+        local id = data.controlledChildren[index]
+        return data.sortHybridTable and data.sortHybridTable[id] or false;
       end,
-      set = function(info, id)
+      set = function(info, index)
         if not data.sortHybridTable then data.sortHybridTable = {}; end
+        local id = data.controlledChildren[index]
         local cur = data.sortHybridTable and data.sortHybridTable[id] or false;
         data.sortHybridTable[id] = not(cur);
       end,
     },
+    scale = {
+      type = "range",
+      name = L["Group Scale"],
+      order = 50,
+      min = 0.05,
+      softMax = 2,
+      bigStep = 0.05,
+      get = function()
+        return data.scale or 1
+      end,
+      set = function(info, v)
+        data.scale = data.scale or 1
+        local change = 1 - (v/data.scale)
+        data.xOffset = data.xOffset/(1-change)
+        data.yOffset = data.yOffset/(1-change)
+        data.scale = v
+        WeakAuras.Add(data);
+        WeakAuras.SetThumbnail(data);
+        WeakAuras.ResetMoverSizer();
+      end
+    },
     spacer = {
       type = "header",
       name = "",
-      order = 50
+      order = 51
     }
   };
-  options = WeakAuras.AddPositionOptions(options, id, data);
 
-  options.width = nil;
-  options.height = nil;
-  options.selfPoint.disabled = true;
-
-  return options;
+  return {
+    dynamicgroup = options,
+    position = WeakAuras.PositionOptions(id, data, true, true),
+  };
 end
 
 local function createThumbnail(parent)
@@ -187,6 +208,9 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
   local region = borderframe.region;
   size = size or 24;
 
+  for _, child in pairs(region.children) do
+    child:Hide()
+  end
   local selfPoint;
   if(data.grow == "RIGHT" or data.grow == "HORIZONTAL") then
     selfPoint = "LEFT";
@@ -236,18 +260,19 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
   end
   for index, childId in ipairs(data.controlledChildren) do
     local childData = WeakAuras.GetData(childId);
-    if(childData) then
+    local childRegion = WeakAuras.GetRegion(childId)
+    if(childData and childRegion) then
       if(data.grow == "LEFT" or data.grow == "RIGHT" or data.grow == "HORIZONTAL") then
-        maxWidth = maxWidth + childData.width;
+        maxWidth = maxWidth + (childData.width or childRegion.width);
         maxWidth = maxWidth + (index > 1 and data.space or 0);
-        maxHeight = math.max(maxHeight, childData.height);
+        maxHeight = math.max(maxHeight, (childData.height or childRegion.height));
       elseif(data.grow == "UP" or data.grow == "DOWN" or data.grow == "VERTICAL") then
-        maxHeight = maxHeight + childData.height;
+        maxHeight = maxHeight + (childData.height or childRegion.height);
         maxHeight = maxHeight + (index > 1 and data.space or 0);
-        maxWidth = math.max(maxWidth, childData.width);
+        maxWidth = math.max(maxWidth, (childData.width or childRegion.width));
       elseif(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
-        maxWidth = math.max(maxWidth, childData.width);
-        maxHeight = math.max(maxHeight, childData.height);
+        maxWidth = math.max(maxWidth, (childData.width or childRegion.width));
+        maxHeight = math.max(maxHeight, (childData.height or childRegion.height));
       end
     end
   end
@@ -330,6 +355,8 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
         region.children[index].texture = region.children[index]:CreateTexture(nil, "OVERLAY");
         region.children[index].texture:SetAllPoints(region.children[index]);
       end
+      local childRegion = region.children[index]
+      childRegion:Show()
       local r, g, b;
       if(childData.color) then
         r, g, b = childData.color[1], childData.color[2], childData.color[3];
@@ -340,23 +367,23 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
       end
       r, g, b = r or 0.2, g or 0.8, b or 0.2;
 
-      region.children[index].texture:SetColorTexture(r, g, b);
+      childRegion.texture:SetColorTexture(r, g, b);
 
-      region.children[index]:ClearAllPoints();
-      region.children[index]:SetPoint(selfPoint, region, selfPoint, xOffset * scale, yOffset * scale);
-      region.children[index]:SetWidth(childData.width * scale);
-      region.children[index]:SetHeight(childData.height * scale);
+      childRegion:ClearAllPoints();
+      childRegion:SetPoint(selfPoint, region, selfPoint, xOffset * scale, yOffset * scale);
+      childRegion:SetWidth((childData.width or childRegion.width or 0) * scale);
+      childRegion:SetHeight((childData.height or childRegion.height or 0) * scale);
       if(data.grow == "RIGHT" or data.grow == "HORIZONTAL") then
-        xOffset = xOffset + (childData.width + data.space);
+        xOffset = xOffset + ((childData.width or childRegion.width or 0) + data.space);
         yOffset = yOffset + data.stagger;
       elseif(data.grow == "LEFT") then
-        xOffset = xOffset - (childData.width + data.space);
+        xOffset = xOffset - ((childData.width or childRegion.width or 0) + data.space);
         yOffset = yOffset + data.stagger;
       elseif(data.grow == "UP") then
-        yOffset = yOffset + (childData.height + data.space);
+        yOffset = yOffset + ((childData.height or childRegion.height or 0) + data.space);
         xOffset = xOffset + data.stagger;
       elseif(data.grow == "DOWN" or data.grow == "VERTICAL") then
-        yOffset = yOffset - (childData.height + data.space);
+        yOffset = yOffset - ((childData.height or childRegion.height or 0) + data.space);
         xOffset = xOffset + data.stagger;
       end
     end
@@ -370,6 +397,7 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
   end
   region.children[index].texture:SetColorTexture(1, 1, 1);
   region.children[index]:ClearAllPoints();
+  region.children[index]:Show()
   if(data.grow == "RIGHT" or data.grow == "LEFT" or data.grow == "HORIZONTAL") then
     region.children[index]:SetWidth(size);
     region.children[index]:SetHeight(1);

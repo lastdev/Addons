@@ -1,11 +1,11 @@
-## Interface: 50001
+## Interface: 70000
 ## Title: UnifiedTankFrames
 ## Notes: Shows a list of tank frames combined from Blizzard, oRA3, oRA2 and CTRA. No matter in what way tanks are set, you will see them!
 ## Author: Jos, Glineas EU
-## Version: 1.3
+## Version: 1.3.4
 ## OptionalDeps: oRA2, oRA3, CT_RaidAssist, Clique
 ## SavedVariables: UnifiedTankFrames_Config
-## X-Curse-Packaged-Version: 1.3.0.50001-Release
+## X-Curse-Packaged-Version: 1.3.4.70000-Release
 ## X-Curse-Project-Name: UnifiedTankFrames
 ## X-Curse-Project-ID: unifiedtankframes
 ## X-Curse-Repository-ID: wow/unifiedtankframes/mainline

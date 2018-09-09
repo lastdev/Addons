@@ -182,7 +182,6 @@ if GetLocale() == "zhTW" then
 	Outfitter.cSpecialThanksTitle = "特別感謝"
 	Outfitter.cSpecialThanksNames = "%s"
 	Outfitter.cTranslationCredit = "翻譯 %s"
-	Outfitter.cURL = "wobbleworks.com"
 
 	Outfitter.cOpenOutfitter = "開啟 換裝管理"
 

@@ -4,6 +4,8 @@ local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("Mobs", "AceConsole-3.0")
 local Debug = core.Debug
 
+local HBD = LibStub("HereBeDragons-2.0")
+
 local desc, toggle
 
 local function toggle_mob(id)
@@ -148,7 +150,8 @@ function module:BuildMobList(options)
 			args = {
 				enabled = {
 					type = "toggle",
-					name = "Enabled",
+					name = ENABLE,
+					desc = "If you disable this, SilverDragon will just not know about these mobs. They'll still be announced when you mouse over them, like any unknown rare.",
 					arg = source,
 					get = function(info) return core.db.global.datasources[info.arg] end,
 					set = function(info, value)
@@ -156,6 +159,20 @@ function module:BuildMobList(options)
 						core:BuildLookupTables()
 					end,
 					disabled = false,
+				},
+				ignore = {
+					type = "toggle",
+					name = IGNORE,
+					desc = "Ignore every mob provided by this module. This will make them all not be announced, regardless of any other settings.",
+					arg = source,
+					get = function(info) return core.db.global.ignore_datasource[info.arg] end,
+					set = function(info, value)
+						core.db.global.ignore_datasource[info.arg] = value
+						core:BuildLookupTables()
+					end,
+					disabled = function(info)
+						return not core.db.global.datasources[info.arg]
+					end,
 				},
 				zones = {
 					type = "group",
@@ -166,22 +183,25 @@ function module:BuildMobList(options)
 				},
 			},
 		}
+		local mob_toggle_disabled = function(info)
+			return not core.db.global.datasources[info[#info - 3]]
+		end
 		for id, mob in pairs(data) do
-			for zone in pairs(mob.locations) do
-				if not group.args.zones.args["map"..zone] then
-					group.args.zones.args["map"..zone] = {
-						type = "group",
-						inline = false,
-						name = GetMapNameByID(zone),
-						desc = "ID: " .. zone,
-						args = {},
-					}
+			if not mob.hidden then
+				for zone in pairs(mob.locations) do
+					if not group.args.zones.args["map"..zone] then
+						group.args.zones.args["map"..zone] = {
+							type = "group",
+							inline = false,
+							name = HBD:GetLocalizedMap(zone),
+							desc = "ID: " .. zone,
+							args = {},
+						}
+					end
+					local toggle = toggle_mob(id)
+					toggle.disabled = mob_toggle_disabled
+					group.args.zones.args["map"..zone].args["mob"..id] = toggle
 				end
-				local toggle = toggle_mob(id)
-				toggle.disabled = function(info)
-					return not core.db.global.datasources[info[#info - 3]]
-				end
-				group.args.zones.args["map"..zone].args["mob"..id] = toggle
 			end
 		end
 		options.plugins.mobs.mobs.args[source] = group

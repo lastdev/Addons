@@ -3,7 +3,7 @@ local myname, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true)
 
 local LibQTip = LibStub("LibQTip-1.0")
-local HBD = LibStub("HereBeDragons-1.0")
+local HBD = LibStub("HereBeDragons-2.0")
 
 local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("LDB")
@@ -83,38 +83,92 @@ function module:SetupDataObject()
 		text = "",
 	})
 
+	local ShieldCellProvider, ShieldCellPrototype = LibQTip:CreateCellProvider()
+	function ShieldCellPrototype:InitializeCell()
+		self.texture = self:CreateTexture(nil, 'ARTWORK')
+		self.texture:SetSize(16, 16)
+		self.texture:SetPoint("CENTER", self)
+		self.texture:Show()
+	end
+	function ShieldCellPrototype:ReleaseCell()
+	end
+	function ShieldCellPrototype:SetupCell(tooltip, value)
+		self.texture:SetTexture("Interface\\AchievementFrame\\UI-Achievement-TinyShield")
+		self.texture:SetTexCoord(0, 0.625, 0, 0.625)
+		return self.texture:GetSize()
+	end
+	local QuestCellProvider, QuestCellPrototype = LibQTip:CreateCellProvider(ShieldCellProvider)
+	function QuestCellPrototype:SetupCell(tooltip, value)
+		self.texture:SetAtlas("QuestNormal")
+		return self.texture:GetSize()
+	end
+
+	local function mob_sorter(aid, bid)
+		local aname = core:NameForMob(aid)
+		local bname = core:NameForMob(bid)
+		if not aname or not bname then
+			return false
+		end
+		return tostring(aname):lower() < tostring(bname):lower()
+	end
+
 	local rares_seen = {}
+	local sorted_mobs = {}
 	local tooltip
 	function dataobject:OnEnter()
-		local zone = HBD:GetPlayerZone()
-
-		if not (core.db and ns.mobsByZone[zone]) then
+		if not core.db then
 			return
 		end
 
-		tooltip = LibQTip:Acquire("SilverDragonTooltip", 6, "LEFT", "CENTER", "RIGHT", "CENTER", "RIGHT", "RIGHT")
-		tooltip:AddHeader("Name", "Count", "Last Seen")
-		
-		local n = 0
-		for id in pairs(ns.mobsByZone[zone]) do
-			n = n + 1
-			local name, questid, vignette, tameable, last_seen, times_seen = core:GetMobInfo(id)
-			local index = tooltip:AddLine(core:GetMobLabel(id) or UNKNOWN,
-				times_seen,
-				core:FormatLastSeen(last_seen),
-				(tameable and 'Tameable' or '')
-			)
-			local completed, completion_knowable = ns:IsMobComplete(id)
-			if completion_knowable then
-				if completed then
-					tooltip:SetLineColor(index, 0, 1, 0)
-				else
-					tooltip:SetLineColor(index, 1, 0, 0)
+		tooltip = LibQTip:Acquire("SilverDragonTooltip", 8, "LEFT", "CENTER", "RIGHT", "CENTER", "RIGHT", "RIGHT", "RIGHT", "RIGHT")
+
+		local zone = HBD:GetPlayerZone()
+		if ns.mobsByZone[zone] then
+			tooltip:AddHeader("Nearby")
+			tooltip:AddHeader("Name", "Count", "Last Seen")
+
+			wipe(sorted_mobs)
+			for id in pairs(ns.mobsByZone[zone]) do
+				table.insert(sorted_mobs, id)
+			end
+			table.sort(sorted_mobs, mob_sorter)
+
+			for _, id in ipairs(sorted_mobs) do
+				local name, questid, vignette, tameable, last_seen, times_seen = core:GetMobInfo(id)
+				local index, col = tooltip:AddLine(
+					core:GetMobLabel(id) or UNKNOWN,
+					times_seen,
+					core:FormatLastSeen(last_seen),
+					(tameable and 'Tameable' or '')
+				)
+				local quest, achievement = ns:CompletionStatus(id)
+				if quest ~= nil or achievement ~= nil then
+					if achievement ~= nil then
+						index, col = tooltip:SetCell(index, col, achievement, ShieldCellProvider)
+					else
+						index, col = tooltip:SetCell(index, col, '')
+					end
+					if quest ~= nil then
+						index, col = tooltip:SetCell(index, col, quest, QuestCellProvider)
+					else
+						index, col = tooltip:SetCell(index, col, '')
+					end
+					if quest or achievement then
+						if (quest and achievement) or (quest == nil or achievement == nil) then
+							-- full completion
+							tooltip:SetLineColor(index, 0.33, 1, 0.33) -- green
+						else
+							-- partial completion
+							tooltip:SetLineColor(index, 1, 1, 0.33) -- yellow
+						end
+					else
+						tooltip:SetLineColor(index, 1, 0.33, 0.33) -- red
+					end
 				end
 			end
-		end
-		if n == 0 then
-			tooltip:AddLine("None")
+			if #sorted_mobs == 0 then
+				tooltip:AddLine("None")
+			end
 		end
 
 		if #rares_seen > 0 then
@@ -123,7 +177,7 @@ function module:SetupDataObject()
 			for i,rare in ipairs(rares_seen) do
 				tooltip:AddLine(
 					core:GetMobLabel(rare.id) or core:NameForMob(rare.id) or UNKNOWN,
-					GetMapNameByID(rare.zone) or UNKNOWN,
+					HBD:GetLocalizedMap(rare.zone) or UNKNOWN,
 					(rare.x and rare.y) and (core.round(rare.x * 100, 1) .. ', ' .. core.round(rare.y * 100, 1)) or UNKNOWN,
 					core:FormatLastSeen(rare.when),
 					rare.source or UNKNOWN
@@ -131,6 +185,14 @@ function module:SetupDataObject()
 			end
 		else
 			tooltip:AddHeader("None seen this session")
+		end
+
+		tooltip:AddSeparator()
+		local index = tooltip:AddLine("Right-click to open settings")
+		tooltip:SetLineTextColor(index, 0, 1, 1)
+		if core.debuggable then
+			index = tooltip:AddLine("Shift-right-click to view debug information")
+			tooltip:SetLineTextColor(index, 0, 1, 1)
 		end
 
 		tooltip:SmartAnchorTo(self)
@@ -146,9 +208,13 @@ function module:SetupDataObject()
 		if button ~= "RightButton" then
 			return
 		end
-		local config = core:GetModule("Config", true)
-		if config then
-			config:ShowConfig()
+		if IsShiftKeyDown() then
+			core:ShowDebugWindow()
+		else
+			local config = core:GetModule("Config", true)
+			if config then
+				config:ShowConfig()
+			end
 		end
 	end
 

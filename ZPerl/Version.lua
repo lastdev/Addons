@@ -17,7 +17,7 @@ function ZPerl:ADDON_LOADED(addon)
 		return
 	end
 
-	RegisterAddonMessagePrefix("ZPerlVersion")
+	C_ChatInfo.RegisterAddonMessagePrefix("ZPerlVersion")
 
 	self:RegisterEvents()
 
@@ -28,20 +28,28 @@ function ZPerl:ADDON_LOADED(addon)
 end
 
 function ZPerl:PLAYER_ENTERING_WORLD()
-	if self:GetScript("OnUpdate") then
-		self.timer = 0
-	else
-		self:SetScript("OnUpdate", self.VersionOnUpdate)
-	end
+	self.timer = C_Timer.NewTimer(3, self.SendVersion)
 
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
+function ZPerl:GROUP_MEMBERS_JOINED()
+	if self.timer and self.timer.Cancel then
+		self.timer:Cancel()
+	end
+
+	self.timer = C_Timer.NewTimer(3, self.SendVersion)
+end
+
 function ZPerl:GROUP_ROSTER_UPDATE()
-	if self:GetScript("OnUpdate") then
-		self.timer = 0
-	else
-		self:SetScript("OnUpdate", self.VersionOnUpdate)
+	local num = GetNumGroupMembers()
+
+	if num ~= self.groupSize then
+		if num > 1 and self.groupSize and num > self.groupSize then
+			self:GROUP_MEMBERS_JOINED()
+		end
+
+		self.groupSize = num
 	end
 end
 
@@ -51,7 +59,7 @@ function ZPerl:CHAT_MSG_ADDON(prefix, msg, channel, sender)
 	end
 
 	if self:CompareVersion(msg) then
-		print("|cFF50C0FFZ-Perl|r:", XPERL_NEW_VERSION_DETECTED, "|cFFFF0000"..msg.."|r")
+		print("|cFF50C0FFZ-Perl|r:", XPERL_NEW_VERSION_DETECTED, "|cFFFF0000"..msg.."|r", XPERL_DOWNLOAD_LATEST, XPERL_DOWNLOAD_LOCATION)
 
 		self.newVersion = msg
 
@@ -63,18 +71,6 @@ function ZPerl:RegisterEvents()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 	self:RegisterEvent("CHAT_MSG_ADDON")
-end
-
-function ZPerl:VersionOnUpdate(elapsed)
-	self.time = (self.time or 0) + elapsed
-	if self.time < 3 then
-		return
-	end
-	self.time = 0
-
-	ZPerl:SendVersion()
-
-	self:SetScript("OnUpdate", nil)
 end
 
 function ZPerl:CompareVersion(version)
@@ -115,12 +111,12 @@ function ZPerl:SendVersion()
 	end
 
 	if channel then
-		local version = self.version
+		local version = ZPerl.version
 
-		if self.newVersion then
-			version = self.newVersion
+		if ZPerl.newVersion then
+			version = ZPerl.newVersion
 		end
 
-		SendAddonMessage("ZPerlVersion", version, channel)
+		C_ChatInfo.SendAddonMessage("ZPerlVersion", version, channel)
 	end
 end

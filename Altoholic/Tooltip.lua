@@ -82,6 +82,22 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	["Felslate Seam"]                      = 123919, -- Felslate
 	["Rich Felslate Deposit"]              = 123919, -- Felslate
 	
+	["Empyrium Deposit"]                   = 151564, -- Empyrium
+	["Empyrium Seam"]                      = 151564, -- Empyrium
+	["Rich Empyrium Deposit"]              = 151564, -- Empyrium
+	["Astral Glory"]     				      = 151565,	
+	
+	-- Battle for Azeroth
+	["Monelite Deposit"]				   		= 152512, -- Monelite Ore
+	["Rich Monelite Deposit"]			   	= 152512, -- Monelite Ore
+	["Monelite Seam"]					   		= 152512, -- Monelite Ore
+	["Storm Silver Deposit"]			   	= 152579, -- Storm Silver Ore
+	["Rich Storm Silver Deposit"]		   	= 152579, -- Storm Silver Ore
+	["Storm Silver Seam"]				   	= 152579, -- Storm Silver Ore
+	["Platinum Deposit"]				   		= 152513, -- Platinum Ore
+	["Rich Platinum Deposit"]			   	= 152513, -- Platinum Ore
+
+	
 	-- Herbs
 	-- Classic
 	[L["Arthas' Tears"]]        =  8836,
@@ -169,13 +185,14 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	["Fjarnskaggl"]             = 124104,
 	["Starlight Rose"]          = 124105,	
 	
-	
-	
-	
-	
-	
-	
-	
+	-- Battle for Azeroth
+	["Akunda's Bite"]           = 152507,
+	["Anchor Weed"]             = 152510,
+	["Riverbud"]                = 152505,
+	["Sea Stalk"]               = 152511,
+	["Siren's Pollen"]          = 152509,	
+	["Star Moss"]               = 152506,	
+	["Winter's Kiss"]           = 152508,	
 }
 
 -- *** Utility functions ***
@@ -325,12 +342,18 @@ local function GetItemCount(searchedID)
 	else
 		count = GetAccountItemCount(THIS_ACCOUNT, searchedID)
 	end
-		
+	
+	local showCrossFaction = addon:GetOption("UI.Tooltip.ShowCrossFactionCount")
+	
 	if addon:GetOption("UI.Tooltip.ShowGuildBankCount") then
 		for _, realm in pairs(GetRealmsList()) do
 			for guildName, guildKey in pairs(DataStore:GetGuilds(realm)) do
 				local altoGuild = addon:GetGuild(guildName)
-				if not altoGuild or (altoGuild and not altoGuild.hideInTooltip) then
+				local bankFaction = DataStore:GetGuildBankFaction(guildKey)
+								
+				-- do not show cross faction counters for guild banks if they were not requested
+				if (showCrossFaction or (not showCrossFaction and (DataStore:GetGuildBankFaction(guildKey) == UnitFactionGroup("player")))) 
+					and (not altoGuild or (altoGuild and not altoGuild.hideInTooltip)) then
 					local guildCount = 0
 					
 					if addon:GetOption("UI.Tooltip.ShowGuildBankCountPerTab") then
@@ -393,18 +416,15 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 			if spellID then			-- if spell id is known, just find its equivalent in the professions
 				isKnownByChar = DataStore:IsCraftKnown(profession, spellID)
 			else
-				for i = 1, DataStore:GetNumCraftLines(profession) do
-					local isHeader, _, info = DataStore:GetCraftLineInfo(profession, i)
-					
-					if not isHeader then
-						local skillName = GetSpellInfo(info) or ""
+				DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
+					local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
+					local skillName = GetSpellInfo(recipeID) or ""
 
-						if string.lower(skillName) == string.lower(craftName) then
-							isKnownByChar = true
-							break
-						end				
+					if string.lower(skillName) == string.lower(craftName) and isLearned then
+						isKnownByChar = true
+						return true	-- stop iteration
 					end
-				end
+				end)
 			end
 
 			local coloredName = DataStore:GetColoredCharacterName(character)

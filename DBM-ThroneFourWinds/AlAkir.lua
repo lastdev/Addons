@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:SetZone()
@@ -41,7 +41,7 @@ local yellLightningRod		= mod:NewYell(89668)
 local timerWindBurst		= mod:NewCastTimer(5, 87770, nil, nil, nil, 2)
 local timerWindBurstCD		= mod:NewCDTimer(25, 87770, nil, nil, nil, 2)		-- 25-30 Variation
 local timerAddCD			= mod:NewCDTimer(20, 88272, nil, nil, nil, 1)
-local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
 local timerAcidRainStack	= mod:NewNextTimer(15, 88301, nil, isDKorPaly)
 local timerLightningRod		= mod:NewTargetTimer(5, 89668, nil, false)
 local timerLightningRodCD	= mod:NewNextTimer(15, 89668, nil, nil, nil, 3)
@@ -173,7 +173,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 91129 and self:AntiSpam(2, 3) then -- Squall Line (Tornados)
 		warnSquallLine:Show()
 		if not phase2Started then

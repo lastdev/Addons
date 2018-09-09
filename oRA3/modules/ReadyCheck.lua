@@ -33,6 +33,7 @@ local lastUpdate = 0
 local playerName = UnitName("player")
 local _, playerClass = UnitClass("player")
 local topMemberFrames, bottomMemberFrames = {}, {} -- ready check member frames
+local delayedSpellUpdates = {}
 
 local roleIcons = {
 	TANK = INLINE_TANK_ICON,
@@ -208,7 +209,17 @@ local function Frame_Tooltip(self)
 	if self.name then
 		GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
 		local unit = self:GetParent().player
-		GameTooltip:SetUnitBuff(unit, self.name)
+		for i = 1, 40 do
+			local name = UnitBuff(unit, i)
+			if not name then
+				GameTooltip:SetText(self.name) -- we're out of sync
+				break
+			end
+			if name == self.name then
+				GameTooltip:SetUnitBuff(unit, i)
+				break
+			end
+		end
 		if self.tooltip then
 			GameTooltip:AddLine("\n"..self.tooltip)
 		end
@@ -353,7 +364,25 @@ local function getStatValue(id)
 	local desc = GetSpellDescription(id)
 	if desc then
 		local value = tonumber(desc:match("%d+")) or 0
-		return value >= 75 and value
+		return value >= 10 and value
+	end
+end
+
+function module:SPELL_DATA_LOAD_RESULT(spellId, success)
+	-- this mirrors Blizzard logic (ie, errors aren't my fault >.>)
+	if success then
+		local frames = delayedSpellUpdates[spellId]
+		if frames then
+			delayedSpellUpdates[spellId] = nil
+			for i = 1, #frames do
+				frames[i]:SetText(getStatValue(spellId) or "")
+			end
+			for i = #frames, 1, -1 do
+				frames[i] = nil
+			end
+		end
+	else
+		delayedSpellUpdates[spellId] = nil
 	end
 end
 
@@ -390,7 +419,13 @@ local function setMemberStatus(num, bottom, name, class, update)
 
 			f.FoodBuff:SetSpell(food)
 			if food then
-				f.FoodBuff.text:SetText(getStatValue(food) or "")
+				if not C_Spell.IsSpellDataCached(food) then
+					if not delayedSpellUpdates[food] then delayedSpellUpdates[food] = {} end
+					tinsert(delayedSpellUpdates[food], f.FoodBuff.text)
+					C_Spell.RequestLoadSpellData(food)
+				else
+					f.FoodBuff.text:SetText(getStatValue(food) or "")
+				end
 				if food < 0 then
 					f.FoodBuff:Show()
 					ready = false
@@ -720,6 +755,7 @@ local function createWindow()
 		updateWindow()
 	end)
 	f:SetScript("OnHide", function(self)
+		wipe(delayedSpellUpdates)
 		animUpdater:Stop()
 		animFader:Stop()
 	end)
@@ -808,6 +844,7 @@ function module:OnEnable()
 	self:RegisterEvent("READY_CHECK_CONFIRM")
 	self:RegisterEvent("READY_CHECK_FINISHED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:RegisterEvent("SPELL_DATA_LOAD_RESULT")
 
 	SLASH_ORAREADYCHECK1 = "/rar"
 	SLASH_ORAREADYCHECK2 = "/raready"

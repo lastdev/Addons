@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: TalentMacros
 ## Notes: Automagical macros for each talent tier.
 ## Author: Neb
-## Version: v1.1.4
+## Version: v1.1.6
 ## OptionalDeps: Ace3, LibDualSpec-1.0
 ## SavedVariables: TalentMacrosDB
 

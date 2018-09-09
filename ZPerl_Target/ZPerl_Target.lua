@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1109 $")
 
 -- Upvalues
 local _G = _G
@@ -138,7 +138,6 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_NAME_UPDATE",
 		--"PET_BATTLE_OPENING_START"
 		--"PET_BATTLE_CLOSE",
-		"HONOR_PRESTIGE_UPDATE",
 	}
 
 	for i, event in pairs(events) do
@@ -330,7 +329,7 @@ function XPerl_Target_UpdateCombo(self)
 	if not count then
 		count = 0
 	end]]
-	local combopoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	local combopoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 	--local combopoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player", self.partyid) + count
 	local r, g, b = GetComboColour(combopoints)
 	if (tconf.combo.enable) then
@@ -364,7 +363,7 @@ end
 
 -- XPerl_UnitDebuffInformation
 local function TargetDebuffInformation(debuff)
-	local name, rank, tex, count = UnitDebuff("target", debuff)
+	local name, tex, count = UnitDebuff("target", debuff)
 	return name and count or 0
 end
 
@@ -422,53 +421,25 @@ local function XPerl_Target_UpdatePVP(self)
 	local partyid = self.partyid
 
 	local pvpIcon = self.nameFrame.pvp
-	local prestigeIcon = self.nameFrame.prestige
 
 	local factionGroup, factionName = UnitFactionGroup(partyid)
 
 	if self.conf.pvpIcon and UnitIsPVPFreeForAll(partyid) then
-		local prestige = UnitPrestige(partyid)
-
-		if prestige > 0 then
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-			pvpIcon:Show()
-		end
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+		pvpIcon:Show()
 	elseif self.conf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
-		local prestige = UnitPrestige(partyid)
+		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if prestige > 0 then
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					factionGroup = "Alliance"
-				elseif factionGroup == "Alliance" then
-					factionGroup = "Horde"
-				end
+		if UnitIsMercenary(partyid) then
+			if factionGroup == "Horde" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+			elseif factionGroup == "Alliance" then
+				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
 			end
-
-			prestigeIcon.icon:SetTexture(GetPrestigeInfo(prestige))
-			prestigeIcon:Show()
-			pvpIcon:Hide()
-		else
-			prestigeIcon:Hide()
-			pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
-
-			if UnitIsMercenary(partyid) then
-				if factionGroup == "Horde" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
-				elseif factionGroup == "Alliance" then
-					pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
-				end
-			end
-
-			pvpIcon:Show()
 		end
+
+		pvpIcon:Show()
 	else
-		prestigeIcon:Hide()
 		pvpIcon:Hide()
 	end
 
@@ -815,7 +786,7 @@ local function XPerl_Target_UpdateType(self)
 				self.bossFrame:SetWidth(self.bossFrame.text:GetStringWidth() + 10)
 			else
 				if (UnitIsPlayer(partyid) or not UnitPlayerControlled(partyid)) then
-					local l, r, t, b = XPerl_ClassPos(PlayerClass)
+					local l, r, t, b = XPerl_ClassPos(LocalClass)
 					self.typeFramePlayer.classTexture:SetTexCoord(l, r, t, b)
 					self.typeFramePlayer:Show()
 				end
@@ -942,12 +913,12 @@ function XPerl_Target_UpdateHealth(self)
 		if (UnitIsGhost(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_GHOST)
-		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 			--self.statsFrame.manaBar.percent:Hide()
 			--hb.percent:SetText(XPERL_LOC_DEAD)
-			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
-			self.statsFrame.manaBar.percent:Hide()
+			--self.statsFrame.manaBar.percent:Hide()
 			hb.percent:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
@@ -961,8 +932,8 @@ function XPerl_Target_UpdateHealth(self)
 	else
 		if (UnitIsGhost(partyid)) then
 			hbt:SetText(XPERL_LOC_GHOST)
-		elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
-			hbt:SetText(XPERL_LOC_FEIGNDEATH)
+		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
+			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
 			hbt:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
@@ -1357,7 +1328,7 @@ local missIndex = {
 }
 
 -- DoEvent
-local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+local function DoEvent(self, timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, destRaidFlags, ...)
 	local feedbackText = self.feedbackText
 	local fontHeight = self.feedbackFontHeight
 	local text
@@ -1366,7 +1337,7 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 	local b = 1
 
 	if (event == "SWING_DAMAGE" or event == "RANGE_DAMAGE" or event == "SPELL_DAMAGE" or event == "DAMAGE_SHIELD" or event == "ENVIRONMENTAL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE") then
-		local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike = select(amountIndex[event], ...)
+		local amount, overkill, spellSchool, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike = select(amountIndex[event], ...)
 		if (amount and amount ~= 0) then
 			if (critical or crushing) then
 				fontHeight = fontHeight * 1.5
@@ -1382,11 +1353,14 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 	elseif (event == "SWING_MISSED" or event == "RANGE_MISSED" or event == "SPELL_MISSED" or event == "SPELL_PERIODIC_MISSED") then
 		local missType = select(missIndex[event], ...)
 		if (missType) then
+			if (event ~= "SWING_MISSED" and event ~= "RANGE_MISSED") then
+				b = 0
+			end
 			text = CombatFeedbackText[missType]
 		end
 
 	elseif (event == "SPELL_HEAL" or event == "SPELL_PERIODIC_HEAL") then
-		local _, _, _, amount, overhealing, absorbed, critical = ...
+		local spellID, spellName, spellSchool, amount, overhealing, absorbed, critical = ...
 		if (amount and amount ~= 0) then
 			if (critical) then
 				fontHeight = fontHeight * 1.5
@@ -1410,10 +1384,11 @@ local function DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGU
 end
 
 -- COMBAT_LOG_EVENT_UNFILTERED
-function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
+function XPerl_Target_Events:COMBAT_LOG_EVENT_UNFILTERED()
 	if (self.conf.hitIndicator and self.conf.portrait) then
-		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) then
-			DoEvent(self, timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
+		local _, _, _, _, _, srcFlags, _, _, _, dstFlags = CombatLogGetCurrentEventInfo()
+		if (bit_band(dstFlags, self.combatMask) ~= 0 and bit_band(srcFlags, 0x00000001) ~= 0) or (UnitIsUnit("player", self.partyid) and bit_band(dstFlags, 0x00000001)) then
+			DoEvent(self, CombatLogGetCurrentEventInfo())
 		end
 	end
 end
@@ -1452,7 +1427,7 @@ function XPerl_Target_Events:PLAYER_TARGET_CHANGED()
 		end
 	end
 
-	self.feigning = UnitBuff(self.partyid, feignDeath)
+	--self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(self)
 	XPerl_Target_UpdateDisplay(self)
@@ -1483,7 +1458,7 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 		end
 	end
 
-	self.feigning = UnitBuff(self.partyid, feignDeath)
+	--self.feigning = UnitBuff(self.partyid, feignDeath)
 	self.PlayerFlash = 0
 	XPerl_CombatFlashSetFrames(self)
 	XPerl_Target_UpdateDisplay(self)
@@ -1582,7 +1557,7 @@ function XPerl_Target_Events:UNIT_AURA()
 	XPerl_Targets_BuffUpdate(self)
 	--XPerl_Target_DebuffUpdate(self)
 
-	if conf.showFD then
+	--[[if conf.showFD then
 		local _, class = UnitClass(self.partyid)
 		if class == "HUNTER" then
 			local feigning = UnitBuff(self.partyid, feignDeath)
@@ -1591,7 +1566,7 @@ function XPerl_Target_Events:UNIT_AURA()
 				XPerl_Target_UpdateHealth(self)
 			end
 		end
-	end
+	end--]]
 end
 
 -- UNIT_FACTION
@@ -1806,7 +1781,7 @@ end
 
 function XPerl_Target_ComboFrame_Update()
 	--local comboPoints = GetComboPoints(UnitHasVehicleUI("player") and "vehicle" or "player")
-	local comboPoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", SPELL_POWER_COMBO_POINTS)
+	local comboPoints = UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 	if comboPoints > 0 and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
 		if not ComboFrame:IsShown() then
 			ComboFrame:Show()

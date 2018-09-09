@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 76 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
 mod:SetEncounterID(1395)
 mod:SetZone()
@@ -46,15 +46,15 @@ mod:AddBoolOption("ArrowOnJasperChains")
 mod:AddBoolOption("InfoFrame")
 
 local expectedBosses = 3
-local Jade = EJ_GetSectionInfo(5773)
-local Jasper = EJ_GetSectionInfo(5774)
-local Cobalt = EJ_GetSectionInfo(5771)
-local Amethyst = EJ_GetSectionInfo(5691)
+local Jade = DBM:EJ_GetSectionInfo(5773)
+local Jasper = DBM:EJ_GetSectionInfo(5774)
+local Cobalt = DBM:EJ_GetSectionInfo(5771)
+local Amethyst = DBM:EJ_GetSectionInfo(5691)
 local Overload = {
-	["Cobalt"] = GetSpellInfo(115840),
-	["Jade"] = GetSpellInfo(115842),
-	["Jasper"] = GetSpellInfo(115843),
-	["Amethyst"] = GetSpellInfo(115844)
+	["Cobalt"] = DBM:GetSpellInfo(115840),
+	["Jade"] = DBM:GetSpellInfo(115842),
+	["Jasper"] = DBM:GetSpellInfo(115843),
+	["Amethyst"] = DBM:GetSpellInfo(115844)
 }
 local activePetrification = nil
 local playerHasChains = false
@@ -83,16 +83,27 @@ local function warnJasperChainsTargets()
 	table.wipe(jasperChainsTargets)
 end
 
-local function updateInfoFrame()
+local updateInfoFrame
+do
 	local lines = {}
-	for i = 1, 5 do
-		if UnitExists("boss"..i) then
-			lines[UnitName("boss"..i)] = UnitPower("boss"..i)
-		end
+	local sortedLines = {}
+	local function addLine(key, value)
+		-- sort by insertion order
+		lines[key] = value
+		sortedLines[#sortedLines + 1] = key
 	end
-	lines[UnitName("player")] = UnitPower("player", ALTERNATE_POWER_INDEX)
+	updateInfoFrame = function()
+		table.wipe(lines)
+		table.wipe(sortedLines)
+		for i = 1, 5 do
+			if UnitExists("boss"..i) then
+				addLine(UnitName("boss"..i), UnitPower("boss"..i))
+			end
+		end
+		addLine(UnitName("player"), UnitPower("player", ALTERNATE_POWER_INDEX))
 
-	return lines
+		return lines, sortedLines
+	end
 end
 
 function mod:ThreeBossStart(delay)
@@ -253,7 +264,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 115852 then
 		activePetrification = "Cobalt"
 		timerPetrification:Start()

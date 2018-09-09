@@ -1,3 +1,11 @@
+Server Hop 8.0.1.1
+Battle for Azeroth support added.
+There's still a problem with a UIGoldBorderButtonTemplate, gonna look at it later.
+
+Server Hop 7.3.0.1
+7.3.0 support added.
+Replaced strings with SOUNDKIT table.
+
 Server Hop 7.2.5.1
 7.2.5 support added, thanks to the community for a fix.
 

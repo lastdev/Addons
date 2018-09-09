@@ -6,7 +6,7 @@ local function createOptions(id, data)
       type = "input",
       width = "double",
       name = L["Model"],
-      order = 0
+      order = 0.5
     },
     space2 = {
       type = "execute",
@@ -51,7 +51,7 @@ local function createOptions(id, data)
     },
     api = {
       type = "toggle",
-      name = L["Use SetTransform (will change behaviour in 7.3)"],
+      name = L["Use SetTransform"],
       order = 7,
       width = "double"
     },
@@ -167,22 +167,13 @@ local function createOptions(id, data)
       order = 26,
       hidden = function() return not data.api end
     },
-    border_header = {
-      type = "header",
-      name = L["Border Settings"],
-      order = 46
-    },
-    spacer = {
-      type = "header",
-      name = "",
-      order = 50
-    }
   };
 
-  options = WeakAuras.AddPositionOptions(options, id, data);
-  options = WeakAuras.AddBorderOptions(options, id, data);
-
-  return options;
+  return {
+    model = options,
+    position = WeakAuras.PositionOptions(id, data),
+    border = WeakAuras.BorderOptions(id, data);
+  };
 end
 
 local function createThumbnail(parent)

@@ -1,7 +1,7 @@
 --[[
 	SelectBox
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: SelectBox.lua 396 2015-10-01 16:35:24Z brykrys $
+	Version: 7.7.6057 (SwimmingSeadragon)
+	Revision: $Id: SelectBox.lua 6057 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -26,11 +26,11 @@
 --]]
 
 local LIBRARY_VERSION_MAJOR = "SelectBox"
-local LIBRARY_VERSION_MINOR = 5
+local LIBRARY_VERSION_MINOR = 6
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/SelectBox.lua $","$Rev: 396 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/SelectBox.lua $","$Rev: 6057 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local NUM_MENU_ITEMS = 15
 local SCROLLTIME = 0.2
@@ -148,7 +148,7 @@ function buttonKit:Open()
 	if not box.items then box = self:GetParent() end
 	if not box.items then error("Unable to open menu") end
 
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	lib.menu:ClearAllPoints()
 	lib.menu:SetPoint("TOPLEFT", box, "TOPLEFT", 0, 0)
 	lib.menu:SetWidth(box:GetWidth())
@@ -162,7 +162,7 @@ function buttonKit:Open()
 end
 
 function lib:Create(name, parent, width, callback, list, current)
-	local frame = CreateFrame("Frame", name, parent, "SelectBoxTemplate_v1")
+	local frame = lib:CreateTemplate(name, parent)
 	if (not width) then width = 100 end
 	frame.items = list
 	frame.value = current
@@ -330,4 +330,56 @@ if not lib.menu then
 		l:SetScript("OnClick", lib.OnClick)
 		l:Show()
 	end
+end
+
+-- Conversion of XML template to Lua equivalent, with some minor modifications
+-- todo: Consider merging this into lib:Create
+-- todo: Consider removing names from Artwork - they take up space in Global - could be attached as key/value instead
+local function OnClick(self) self:Open() end
+local function OnHide(self) self:OnClose() end
+function lib:CreateTemplate(name, parent)
+	local frame = CreateFrame("Frame", name, parent)
+	frame:SetWidth(40)
+	frame:SetHeight(32)
+	frame:SetScript("OnHide", OnHide)
+	-- Layers
+	local left = frame:CreateTexture(name.."Left", "ARTWORK")
+	left:SetWidth(25)
+	left:SetHeight(64)
+	left:SetPoint("TOPLEFT", 0, 17)
+	left:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+	left:SetTexCoord(0, 0.1953125, 0, 1)
+
+	local middle = frame:CreateTexture(name.."Middle", "ARTWORK")
+	middle:SetWidth(115)
+	middle:SetHeight(64)
+	middle:SetPoint("LEFT", left, "RIGHT")
+	middle:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+	middle:SetTexCoord(0.1953125, 0.8046875, 0, 1)
+
+	local right = frame:CreateTexture(name.."Right", "ARTWORK")
+	right:SetWidth(25)
+	right:SetHeight(64)
+	right:SetPoint("LEFT", middle, "RIGHT")
+	right:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame")
+	right:SetTexCoord(0.8046875, 1, 0, 1)
+
+	local text = frame:CreateFontString(name.."Text", "ARTWORK", "GameFontHighlightSmall")
+	text:SetWidth(0)
+	text:SetHeight(10)
+	text:SetPoint("RIGHT", right, "RIGHT", -43, 1)
+	text:SetJustifyH("RIGHT")
+
+	-- Button
+	local button = CreateFrame("Button", name.."Button", frame)
+	button:SetWidth(24)
+	button:SetHeight(24)
+	button:SetPoint("TOPRIGHT", right, "TOPRIGHT", -16, -18)
+	button:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+	button:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+	button:SetDisabledTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
+	button:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+	button:SetScript("OnClick", OnClick)
+
+	return frame
 end

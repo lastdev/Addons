@@ -1,7 +1,7 @@
 --[[
 	PanelScroller
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: PanelScroller.lua 312 2011-06-14 07:33:25Z brykrys $
+	Version: 7.7.6057 (SwimmingSeadragon)
+	Revision: $Id: PanelScroller.lua 6057 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -26,11 +26,11 @@
 --]]
 
 local LIBRARY_VERSION_MAJOR = "PanelScroller"
-local LIBRARY_VERSION_MINOR = 3
+local LIBRARY_VERSION_MINOR = 4
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/PanelScroller.lua $","$Rev: 312 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/PanelScroller.lua $","$Rev: 6057 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local kit = {
 	hPos = 0, hSize = 0, hWin = 0, hType = "AUTO",
@@ -233,11 +233,163 @@ function kit:Update()
 end
 
 function lib:Create(name, parent)
-	local scroller = CreateFrame("ScrollFrame", name, parent, "PanelScrollerTemplate_v1")
+	local scroller = lib:CreateTemplate(name, parent)
 	scroller.hScroll = _G[name.."HorizontalScrollBar"];
 	scroller.vScroll = _G[name.."VerticalScrollBar"];
 	for k,v in pairs(kit) do
 		scroller[k] = v
 	end
 	return scroller
+end
+
+-- Conversion of XML templates to Lua equivalent, requiring some structuring modifications
+-- todo: Consider merging this into lib:Create
+-- todo: Consider removing names from sub-frames and artwork - they take up space in Global - could be attached as key/value instead
+-- todo: Option to only create Vertical or Horizontal scrllbars, where we know the other bar will never be used
+
+-- OnScript functions
+local function LeftButtonOnClick(self)
+	self:GetParent():GetParent():ScrollByPercent("HORIZONTAL", -0.25)
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+end
+
+local function RightButtonOnClick(self)
+	self:GetParent():GetParent():ScrollByPercent("HORIZONTAL", 0.25)
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+end
+
+local function UpButtonOnClick(self)
+	self:GetParent():GetParent():ScrollByPercent("VERTICAL", -0.25)
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+end
+
+local function DownDuttonOnClick(self)
+	self:GetParent():GetParent():ScrollByPercent("VERTICAL", 0.25)
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+end
+
+local function ScrollBarOnValueChanged(self, value)
+	self:GetParent():ScrollToCoords(value, nil)
+end
+
+local function ScrollUpdate(self)
+	self:Update()
+end
+
+local function OnMouseWheel(self, delta)
+	self:MouseScroll(delta)
+end
+
+-- Widget template creation functions
+
+local function ButtonTemplate(name, parent, normalPath, pushedPath, disabledPath, highlightPath)
+	local button = CreateFrame("Button", name, parent)
+	button:SetWidth(16)
+	button:SetHeight(16)
+
+	button:SetNormalTexture(normalPath)
+	button:GetNormalTexture():SetTexCoord(.25, .75, .25, .75)
+
+	button:SetPushedTexture(pushedPath)
+	button:GetPushedTexture():SetTexCoord(.25, .75, .25, .75)
+
+	if disabledPath then
+		button:SetDisabledTexture(disabledPath)
+		button:GetDisabledTexture():SetTexCoord(.25, .75, .25, .75)
+	end
+
+	button:SetHighlightTexture(highlightPath, "ADD")
+	button:GetHighlightTexture():SetTexCoord(.25, .75, .25, .75)
+
+	return button
+end
+
+local function KnobTemplate(name, parent)
+	local knobTex = parent:CreateTexture(name)
+	knobTex:SetTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
+	knobTex:SetTexCoord(.25, .75, .25, .75)
+	knobTex:SetHeight(16)
+	knobTex:SetWidth(16)
+
+	return knobTex
+end
+
+local function HorizontalScrollBarTemplate(name, parent)
+	local scrollbar = CreateFrame("Slider", name , parent)
+	scrollbar:SetOrientation("HORIZONTAL")
+	scrollbar:SetWidth(0)
+	scrollbar:SetHeight(16)
+
+	local leftButton = ButtonTemplate(name.."ScrollLeftButton", scrollbar,
+		"Interface\\Glues\\Common\\Glue-LeftArrow-Button-Up",
+		"Interface\\Glues\\Common\\Glue-LeftArrow-Button-Down",
+		nil,
+		"Interface\\Glues\\Common\\Glue-LeftArrow-Button-Highlight"
+	)
+	leftButton:SetPoint("RIGHT", scrollbar, "LEFT")
+	leftButton:SetScript("OnClick", LeftButtonOnClick)
+	scrollbar.decrButton = leftButton
+
+	local rightButton = ButtonTemplate(name.."ScrollRightButton", scrollbar,
+		"Interface\\Glues\\Common\\Glue-RightArrow-Button-Up",
+		"Interface\\Glues\\Common\\Glue-RightArrow-Button-Down",
+		nil,
+		"Interface\\Glues\\Common\\Glue-RightArrow-Button-Highlight"
+	)
+	rightButton:SetPoint("LEFT", scrollbar, "RIGHT")
+	rightButton:SetScript("OnClick", RightButtonOnClick)
+	scrollbar.incrButton = rightButton
+
+	scrollbar:SetThumbTexture(KnobTemplate(name.."ThumbTexture", scrollbar))
+	scrollbar:SetScript("OnValueChanged", ScrollBarOnValueChanged)
+	return scrollbar
+end
+
+local function VerticalScrollBarTemplate(name, parent)
+	local scrollbar = CreateFrame("Slider", name , parent)
+	scrollbar:SetOrientation("VERTICAL")
+	scrollbar:SetWidth(16)
+	scrollbar:SetHeight(0)
+
+	local upButton = ButtonTemplate(name.."ScrollUpButton", scrollbar,
+		"Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Up",
+		"Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Down",
+		"Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Disabled",
+		"Interface\\Buttons\\UI-ScrollBar-ScrollUpButton-Highlight"
+	)
+	upButton:SetPoint("BOTTOM", scrollbar, "TOP")
+	upButton:SetScript("OnClick", UpButtonOnClick)
+	scrollbar.incrButton = upButton
+
+	local downButton = ButtonTemplate(name.."ScrollDownButton", scrollbar,
+		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Up",
+		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Down",
+		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Disabled",
+		"Interface\Buttons\UI-ScrollBar-ScrollDownButton-Highlight"
+	)
+	downButton:SetPoint("TOP", scrollbar, "BOTTOM")
+	downButton:SetScript("OnClick", DownDuttonOnClick)
+	scrollbar.decrButton = downButton
+
+	scrollbar:SetThumbTexture(KnobTemplate(name.."ThumbTexture", scrollbar))
+	scrollbar:SetScript("OnValueChanged", ScrollBarOnValueChanged)
+	return scrollbar
+end
+
+function lib:CreateTemplate(name, parent)
+	local frame = CreateFrame("ScrollFrame", name, parent)
+
+	local hbar = HorizontalScrollBarTemplate(name.."HorizontalScrollBar", frame)
+	hbar:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 16, -1)
+	hbar:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", -16, -1)
+
+	local vbar = VerticalScrollBarTemplate(name.."VerticalScrollBar", frame)
+	vbar:SetPoint("TOPLEFT", frame, "TOPRIGHT", 1, -16)
+	vbar:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 1, 16)
+
+	frame:SetScript("OnScrollRangeChanged", ScrollUpdate)
+	frame:SetScript("OnVerticalScroll", ScrollUpdate) -- ### todo: why was this only setup for vertical?
+	frame:SetScript("OnMouseWheel", OnMouseWheel)
+
+	return frame
 end

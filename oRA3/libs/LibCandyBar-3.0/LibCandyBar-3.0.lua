@@ -20,18 +20,16 @@ local CreateFrame, error, setmetatable, UIParent = CreateFrame, error, setmetata
 if not LibStub then error("LibCandyBar-3.0 requires LibStub.") end
 local cbh = LibStub:GetLibrary("CallbackHandler-1.0")
 if not cbh then error("LibCandyBar-3.0 requires CallbackHandler-1.0") end
-local lib, old = LibStub:NewLibrary("LibCandyBar-3.0", 93) -- Bump minor on changes
+local lib = LibStub:NewLibrary("LibCandyBar-3.0", 95) -- Bump minor on changes
 if not lib then return end
 lib.callbacks = lib.callbacks or cbh:New(lib)
 local cb = lib.callbacks
--- ninjaed from LibBars-1.0
 lib.dummyFrame = lib.dummyFrame or CreateFrame("Frame")
 lib.barFrameMT = lib.barFrameMT or {__index = lib.dummyFrame}
 lib.barPrototype = lib.barPrototype or setmetatable({}, lib.barFrameMT)
 lib.barPrototype_mt = lib.barPrototype_mt or {__index = lib.barPrototype}
 lib.barCache = lib.barCache or {}
 
-local bar = {}
 local barPrototype = lib.barPrototype
 local barPrototype_meta = lib.barPrototype_mt
 local barCache = lib.barCache
@@ -42,10 +40,12 @@ local scripts = {
 	"OnShow", "OnMouseDown", "OnMouseUp",
 	"OnMouseWheel", "OnSizeChanged", "OnEvent"
 }
+local numScripts = #scripts
 local GameFontHighlightSmallOutline = GameFontHighlightSmallOutline
 local _fontName, _fontSize = GameFontHighlightSmallOutline:GetFont()
 local _fontShadowX, _fontShadowY = GameFontHighlightSmallOutline:GetShadowOffset()
 local _fontShadowR, _fontShadowG, _fontShadowB, _fontShadowA = GameFontHighlightSmallOutline:GetShadowColor()
+local SetWidth, SetHeight, SetSize = UIParent.SetWidth, UIParent.SetHeight, UIParent.SetSize
 
 local function stopBar(bar)
 	bar.updater:Stop()
@@ -139,18 +139,37 @@ end
 
 local function restyleBar(self)
 	if not self.running then return end
+	self.candyBarIconFrame:ClearAllPoints()
+	self.candyBarBar:ClearAllPoints()
 	-- In the past we used a :GetTexture check here, but as of WoW v5 it randomly returns nil, so use our own trustworthy variable.
 	if self.candyBarIconFrame.icon then
-		self.candyBarBar:SetPoint("TOPLEFT", self.candyBarIconFrame, "TOPRIGHT")
-		self.candyBarBar:SetPoint("BOTTOMLEFT", self.candyBarIconFrame, "BOTTOMRIGHT")
 		self.candyBarIconFrame:SetWidth(self.height)
+		if self.iconPosition == "RIGHT" then
+			self.candyBarIconFrame:SetPoint("TOPRIGHT", self)
+			self.candyBarIconFrame:SetPoint("BOTTOMRIGHT", self)
+			self.candyBarBar:SetPoint("TOPRIGHT", self.candyBarIconFrame, "TOPLEFT")
+			self.candyBarBar:SetPoint("BOTTOMRIGHT", self.candyBarIconFrame, "BOTTOMLEFT")
+			self.candyBarBar:SetPoint("TOPLEFT", self)
+			self.candyBarBar:SetPoint("BOTTOMLEFT", self)
+		else
+			self.candyBarIconFrame:SetPoint("TOPLEFT")
+			self.candyBarIconFrame:SetPoint("BOTTOMLEFT")
+			self.candyBarBar:SetPoint("TOPLEFT", self.candyBarIconFrame, "TOPRIGHT")
+			self.candyBarBar:SetPoint("BOTTOMLEFT", self.candyBarIconFrame, "BOTTOMRIGHT")
+			self.candyBarBar:SetPoint("TOPRIGHT", self)
+			self.candyBarBar:SetPoint("BOTTOMRIGHT", self)
+		end
 		self.candyBarIconFrame:Show()
 	else
 		self.candyBarBar:SetPoint("TOPLEFT", self)
-		self.candyBarBar:SetPoint("BOTTOMLEFT", self)
+		self.candyBarBar:SetPoint("BOTTOMRIGHT", self)
+		self.candyBarIconFrame:Hide()
 	end
-	if self.candyBarLabel:GetText() then self.candyBarLabel:Show()
-	else self.candyBarLabel:Hide() end
+	if self.candyBarLabel then
+		self.candyBarLabel:Show()
+	else
+		self.candyBarLabel:Hide()
+	end
 	if self.showTime then
 		self.candyBarDuration:Show()
 	else
@@ -211,6 +230,31 @@ function barPrototype:SetTexture(texture)
 	self.candyBarBar:SetStatusBarTexture(texture)
 	self.candyBarBackground:SetTexture(texture)
 end
+--- Sets the width of the bar.
+-- This should only be needed on running bars that get changed on the fly.
+-- @param width Width of the bar.
+function barPrototype:SetWidth(width)
+	self.width = width
+	SetWidth(self, width)
+end
+--- Sets the height of the bar.
+-- This should only be needed on running bars that get changed on the fly.
+-- @param height Height of the bar.
+function barPrototype:SetHeight(height)
+	self.height = height
+	SetHeight(self, height)
+	restyleBar(self)
+end
+--- Sets the size of the bar.
+-- This should only be needed on running bars that get changed on the fly.
+-- @param width Width of the bar.
+-- @param height Height of the bar.
+function barPrototype:SetSize(width, height)
+	self.width = width
+	self.height = height
+	SetSize(self, width, height)
+	restyleBar(self)
+end
 --- Returns the label (text) currently set on the bar.
 function barPrototype:GetLabel()
 	return self.candyBarLabel.text
@@ -220,7 +264,11 @@ end
 function barPrototype:SetLabel(text)
 	self.candyBarLabel.text = text
 	self.candyBarLabel:SetText(text)
-	restyleBar(self)
+	if text then
+		self.candyBarLabel:Show()
+	else
+		self.candyBarLabel:Hide()
+	end
 end
 --- Returns the icon texture path currently set on the bar, if it has an icon set.
 function barPrototype:GetIcon()
@@ -239,10 +287,23 @@ function barPrototype:SetIcon(icon, ...)
 	end
 	restyleBar(self)
 end
+--- Sets which side of the bar the icon should appear.
+-- @param position Position of the icon according to the bar, either "LEFT" or "RIGHT" as a string. Set to "LEFT" by default.
+function barPrototype:SetIconPosition(position)
+	self.iconPosition = position
+	restyleBar(self)
+end
 --- Sets wether or not the time indicator on the right of the bar should be shown.
 -- Time is shown by default.
 -- @param bool true to show the time, false/nil to hide the time.
-function barPrototype:SetTimeVisibility(bool) self.showTime = bool; restyleBar(self) end
+function barPrototype:SetTimeVisibility(bool)
+	self.showTime = bool
+	if bool then
+		self.candyBarDuration:Show()
+	else
+		self.candyBarDuration:Hide()
+	end
+end
 --- Sets the duration of the bar.
 -- This can also be used while the bar is running to adjust the time remaining, within the bounds of the original duration.
 -- @param duration Duration of the bar in seconds.
@@ -397,15 +458,16 @@ function lib:New(texture, width, height)
 	-- RESET ALL THE THINGS!
 	bar.fill = nil
 	bar.showTime = true
-	for i = 1, 12 do -- Update if scripts table is changed, faster than doing #scripts
+	bar.iconPosition = nil
+	for i = 1, numScripts do -- Update if scripts table is changed, faster than doing #scripts
 		bar:SetScript(scripts[i], nil)
 	end
 
 	bar.candyBarBackground:SetVertexColor(0.5, 0.5, 0.5, 0.3)
 	bar.candyBarBar:SetStatusBarColor(0.5, 0.5, 0.5, 1)
 	bar:ClearAllPoints()
-	bar:SetWidth(width)
-	bar:SetHeight(height)
+	SetWidth(bar, width)
+	SetHeight(bar, height)
 	bar:SetMovable(1)
 	bar:SetScale(1)
 	bar:SetAlpha(1)

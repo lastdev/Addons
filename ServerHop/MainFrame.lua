@@ -8,7 +8,7 @@ ServerHop.buttonChangeMode:SetText("_")
 -- hop/search mode toggle button
 ServerHop.buttonChangeMode:SetScript("OnClick", function(self)
 
-	PlaySound("igMainMenuOptionCheckBoxOn")
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 end)
 
 ]]
@@ -23,7 +23,7 @@ ServerHop.closeButton.Icon:SetPoint("CENTER",0,0)
 ServerHop.closeButton.Icon:SetTexture("Interface\\Buttons\\UI-StopButton")
 ServerHop.closeButton:SetScript("OnClick", function(self)
 	ServerHop.optionsFrame:Hide()
-	PlaySound("igMainMenuOptionCheckBoxOn");
+	PlaySound(SOUNDKIT.GS_TITLE_OPTION_EXIT);
 	ServerHop:Hide()
 end)
 
@@ -107,4 +107,3 @@ ServerHop:SetScript("OnEvent", ServerHop_EventSystem)
 ServerHop:RegisterEvent("ADDON_LOADED")
 ServerHop:RegisterEvent("PLAYER_LOGIN")
 ServerHop:RegisterEvent("PLAYER_LOGOUT")
-ServerHop:RegisterEvent("DISCONNECTED_FROM_SERVER")

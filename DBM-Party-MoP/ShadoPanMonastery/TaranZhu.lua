@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(686, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(56884)
 mod:SetEncounterID(1306)
 mod:SetZone()
@@ -28,7 +28,7 @@ local timerGrippingHatredCD	= mod:NewNextTimer(45.5, 115002, nil, nil, nil, 1)
 
 mod:AddBoolOption("InfoFrame", true)
 
-local Hate = EJ_GetSectionInfo(5827)
+local Hate = DBM:EJ_GetSectionInfo(5827)
 
 function mod:OnCombatStart(delay)
 	if self.Options.InfoFrame then
@@ -66,7 +66,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 125891 then
 		DBM:EndCombat(self)
 	end

@@ -180,7 +180,6 @@
 	Outfitter.cSpecialThanksTitle = "Специальное спасибо"
 	Outfitter.cSpecialThanksNames = "%s"
 	Outfitter.cTranslationCredit = "Переводы %s"
-	Outfitter.cURL = "wobbleworks.com"
 
 	Outfitter.cOpenOutfitter = "Открыть Outfitter"
 
@@ -225,7 +224,7 @@
 	Outfitter.cShowInOutfitBar = "Показывать в комплект-панели"
 	Outfitter.cChangeIcon = "Выбрать иконку..."
 
-	Outfitter.cMinimapButtonTitle = "Значек Outfitter на мини-карте"
+	Outfitter.cMinimapButtonTitle = "Значок Outfitter на мини-карте"
 	Outfitter.cMinimapButtonDescription = "Щелкните для выбора различных комплектов или тяните для перестаскивания иконки."
 
 	Outfitter.cBattleStance = "Боевая стойка"

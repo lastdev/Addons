@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CorePost.lua 5691 2016-12-18 15:49:59Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CorePost.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -1005,7 +1005,7 @@ function private.LoadAuctionSlot(request)
 			return nil, "NotEnough", nil
 		end
 	end
-	if GetMoney() < CalculateAuctionDeposit(request.duration, request.count) * request.stacks then
+	if GetMoney() < GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks) then
 		-- not enough money to pay the deposit
 		private.ClearAuctionSlot() -- Put it back in the bags
 		private.QueueRemove()
@@ -1035,7 +1035,7 @@ function private.VerifyAuctionSlot(request)
 	if totalCount < request.count * request.stacks then
 		return nil, "NotEnough"
 	end
-	if GetMoney() < CalculateAuctionDeposit(request.duration, request.count) * request.stacks then
+	if GetMoney() < GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks) then
 		return nil, "PayDeposit"
 	end
 
@@ -1118,7 +1118,7 @@ end
 function private.StartAuction(request)
 	debugPrint("Starting auction "..private.RequestDisplayString(request), "CorePost", "Starting Auction", "Info")
 	private.lastUIError = nil
-	StartAuction(request.bid, request.buy, request.duration, request.count, request.stacks)
+	PostAuction(request.bid, request.buy, request.duration, request.count, request.stacks)
 	if private.IsBlockingError(private.lastUIError) then
 		-- UI Error is one of the known Auction errors that prevent posting
 		private.ClearAuctionSlot() -- Put it back in the bags
@@ -1232,7 +1232,7 @@ local function EventHandler(self, event, arg1, arg2)
 			private.TrackPostingSuccess()
 		end
 	elseif event == "UI_ERROR_MESSAGE" then
-		private.lastUIError = arg1
+		private.lastUIError = arg2
 	elseif event == "AUCTION_MULTISELL_START" then
 		if AuctionProgressFrame.fadeOut then
 			-- stop the fade and set alpha back to full
@@ -1425,5 +1425,5 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5691 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CorePost.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CorePost")

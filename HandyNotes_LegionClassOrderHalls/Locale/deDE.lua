@@ -173,6 +173,7 @@ L["Moira Thaurissan <Queen of the Dark Iron>"] = "Moira Thaurissan <Königin de
 L["Morgl the Oracle <The Earthen Ring>"] = "Morgl das Orakel <Der Irdene Ring>"
 L["Murr"] = "Murr"
 L["Mylune"] = "Mylune"
+L["Navigation Console"] = "Navigationskonsole"
 L["Neptulon"] = "Neptulon"
 L["Nighthuntress Silus <Nightborne Hunters Recruiter>"] = "Nachtjägerin Silus <Rekrutiererin für Jägerinnen der Nachtgeborenen>"
 L["Night-Stalker Ku'nanji <Rogue Trainer>"] = "Nachtpirscher Ku'nanji <Schurkenlehrer>"
@@ -246,6 +247,7 @@ L["Sharak Tor <Recruiter>"] = "Sharak Tor <Rekrutierer>"
 L["Show all nodes that you manually hid by right-clicking on them and choosing \"hide\"."] = "Zeigt alle manuell ausgeblendeten Knoten wieder an. (Ausblenden ist mittels Rechtsklick auf ein Symbol möglich.)"
 L["Show all the other POIs."] = "Zeigt alle anderen interessanten Orte."
 L["Show flight master's location."] = "Zeigt die Position des Flugmeisters."
+L["Show Navigation Console's location in the Vindicaar."] = "Zeigt die Position der Navigationskonsole in der Vindikaar."
 L["Show note"] = "Anmerkung anzeigen"
 L["Show portal's locations."] = "Zeigt die Positionen der Portale."
 L["Show the Champion Armaments NPC's location."] = "Zeigt die Position von NSCs für Waffen für Champions."
@@ -281,6 +283,7 @@ L["The Great Akazamzarak"] = "Der Große Akazamzarak"
 L["The scale of the icons"] = "Die Skalierung der Symbole"
 L["These settings control the look and feel of the icon."] = "Diese Einstellungen verändern das Aussehen und Verhalten des Symbols."
 L["These settings control what type of icons to be displayed."] = "Diese Einstellungen legen fest, welche Art von Symbolen auf der Welt- und Minikarte angezeigt werden."
+L["Tianili <Celestial Trainer>"] = "Tianili <Lehrer der Erhabenen>"
 L["Tianji <Ox Troop Trainer>"] = "Tianji <Ochsentruppenausbilderin>"
 L["Tormented Shivarra <Shivarra Recruiter>"] = "Gepeinigte Shivarra <Rekrutiererin der Shivarra>"
 L["Training Dummies"] = "Trainingsattrappen"
@@ -308,9 +311,5 @@ L["Yancey Grillsen <Bloodsail Recruiter>"] = "Yancey Grillsen <Anwerber der Bl
 L["Yaris Darkclaw <Recruiter>"] = "Yaris Dunkelklaue <Rekrutierer>"
 L["Yushi <Seal of Broken Fate Shipment>"] = "Yushi <Lieferung: Siegel des verheerten Schicksals>"
 L["Zen'kiki"] = "Zen'kiki"
-
--- ToC
-L["Description"] = "Zeigt die Positionen von NSCs und anderen interessanten Orten in Klassenordenshallen."
-L["Title"] = "HandyNotes - Legion Klassenordenshallen"
 
 end

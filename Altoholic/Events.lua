@@ -129,43 +129,9 @@ local eventTypes = {
 			end,
 	},
 	[CONNECTMMO_LINE] = {
-		GetReadyNowWarning = function(self, event)
-				local c = addon:GetCharacterTable(event.char, event.realm)
-				local _, _, title = strsplit("|", c.ConnectMMO[event.parentID])
-				return format(CALENDAR_EVENTNAME_FORMAT_START .. " (%s/%s)", title, event.char, event.realm)
-			end,
-		GetReadySoonWarning = function(self, event, minutes)
-				local c = addon:GetCharacterTable(event.char, event.realm)
-				local _, _, title = strsplit("|", c.ConnectMMO[event.parentID])
-				return format(L["%s starts in %d minutes (%s on %s)"], title, minutes, event.char, event.realm)
-			end,
-		GetInfo = function(self, event)
-				local c = addon:GetCharacterTable(event.char, event.realm)
-				local _, _, title, eventType, eventDesc, attendees = strsplit("|", c.ConnectMMO[event.parentID])
-				
-				local numPlayers, minLvl, maxLvl, privateToFriends, privateToGuild = strsplit(",", eventDesc)
-				local eventTable = {}
-			
-				table.insert(eventTable, colors.white .. format(L["Number of players: %s"], colors.green .. numPlayers))
-				table.insert(eventTable, colors.white .. format(L["Minimum Level: %s"], colors.green .. minLvl))
-				table.insert(eventTable, colors.white .. format(L["Maximum Level: %s"], colors.green .. maxLvl))
-				table.insert(eventTable, colors.white .. format(L["Private to friends: %s"], colors.green .. (tonumber(privateToFriends) == 1 and YES or NO)))
-				table.insert(eventTable, colors.white .. format(L["Private to guild: %s"], colors.green .. (tonumber(privateToGuild) == 1 and YES or NO)))
-
-				local attendeesTable = { strsplit(",", attendees) }
-				
-				if #attendeesTable > 0 then
-					table.insert(eventTable, "")
-					table.insert(eventTable, colors.white..L["Attendees: "].."|r")
-					for _, name in pairs(attendeesTable) do
-						table.insert(eventTable, " " .. name )
-					end
-					table.insert(eventTable, "")
-					table.insert(eventTable, colors.green .. L["Left-click to invite attendees"])
-				end
-				
-				return title, table.concat(eventTable, "\n")
-			end,
+		GetReadyNowWarning = function(self, event) end,
+		GetReadySoonWarning = function(self, event, minutes) end,
+		GetInfo = function(self, event) end,
 	},
 	[TIMER_LINE] = {
 		GetReadyNowWarning = function(self, event)
@@ -338,28 +304,6 @@ local function ToggleWarningThreshold(self)
 	addon:SetOption("WarningType"..id, table.concat(t, "|"))		-- Sets something like "15|5|10|1"
 end
 
-local function GetTimeToCooldownExpiry()
-	-- returns the amount of seconds to profession cooldown expiry 
-	-- now set at 3am since 5.1, but wrongly returned by the game's API
-	local timeTable = {}
-	
-	timeTable.year = date("%Y")
-	timeTable.month = date("%m")
-	timeTable.day = date("%d")
-	timeTable.hour = 3
-	timeTable.min = 0
-
-	local now = time()
-	local resetTime = time(timeTable)
-
-	if now >= resetTime then				-- it's now 9am, reset was earlier ..
-		return resetTime + 86400			-- so add 1 day
-	else											-- it's now 1am, reset to happen in 2 hours
-		return resetTime
-	end
-end
-
-
 function ns:Get(index)
 	return eventList[index]
 end
@@ -476,22 +420,17 @@ function ns:BuildList()
 					if supportsSharedCD then
 						local sharedCDFound		-- is there a shared cd for this profession ?
 						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							-- local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
-							-- local expires = reset + lastCheck + timeGap
-							local expires = GetTimeToCooldownExpiry()
+							local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
 
 							if not sharedCDFound then
 								sharedCDFound = true
-								AddEvent(SHARED_CD_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, nil, professionName)
+								AddEvent(SHARED_CD_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, nil, professionName)
 							end
 						end
 					else
 						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							-- local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
-							-- local expires = reset + lastCheck + timeGap
-							local expires = GetTimeToCooldownExpiry()
-
-							AddEvent(COOLDOWN_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, i, profession)
+							local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
+							AddEvent(COOLDOWN_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, i, profession)
 						end
 					end
 				end
@@ -519,7 +458,7 @@ function ns:BuildList()
 			-- Other timers (like mysterious egg, etc..)
 			num = DataStore:GetNumItemCooldowns(character) or 0
 			for i = 1, num do
-				local _, lastCheck, duration = DataStore:GetItemCooldownInfo(character, key)
+				local _, lastCheck, duration = DataStore:GetItemCooldownInfo(character, i)
 				if duration == nil then
 					duration = 0
 				end
@@ -527,7 +466,7 @@ function ns:BuildList()
 					lastCheck = 0
 				end
 				local expires = duration + lastCheck + timeGap
-				AddEvent(TIMER_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, k)
+				AddEvent(TIMER_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, i)
 			end
 		end
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
@@ -42,11 +42,11 @@ local specWarnEggWeaken		= mod:NewSpecialWarningSwitch("ej3238", "Ranged")
 local specWarnIndomitable	= mod:NewSpecialWarningDispel(90045, "RemoveEnrage")
 
 local timerBreathCD			= mod:NewCDTimer(21, 90125, nil, nil, nil, 2)
-local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852, nil, nil, 3, DBM_CORE_DEADLY_ICON)
 local timerWrack			= mod:NewNextTimer(61, 89421, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerExtinction		= mod:NewCastTimer(16, 86227)
 local timerEggWeakening		= mod:NewTimer(4, "TimerEggWeakening", 61357)
-local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
 local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil, nil, 1, 69002)
 local timerRedEssenceCD		= mod:NewNextTimer(22, 87946)--21-23 seconds after red egg dies
 local timerRedEssence		= mod:NewBuffFadesTimer(180, 87946)
@@ -58,11 +58,10 @@ mod:AddBoolOption("InfoFrame", false)--Does not filter tanks. not putting ugly h
 
 local eggDown = 0
 local eggRemoved = false
-local calenGUID = 0
 local orbList = {}
 local orbWarned = nil
 local playerWarned = nil
-local wrackName = GetSpellInfo(89421)
+local wrackName = DBM:GetSpellInfo(89421)
 local wrackTargets = {}
 
 local function resetPlayerOrbStatus()
@@ -169,7 +168,6 @@ end
 function mod:OnCombatStart(delay)
 	eggDown = 0
 	eggRemoved = false
-	calenGUID = 0
 	timerDragon:Start(16-delay)
 	timerBreathCD:Start(21-delay)
 	timerOrbs:Start(29-delay)
@@ -232,15 +230,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnOrbs then
 			self:ClearIcons()
 		end
-	elseif args.spellId == 87231 and not args:IsDestTypePlayer() then
-		calenGUID = args.sourceGUID
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 	elseif args.spellId == 87654 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
-		end
 		if self:AntiSpam(3) then
 			timerDragon:Cancel()
 			if eggRemoved then
@@ -281,14 +271,8 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 46842 then
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(args.destGUID)
-		end
 		eggDown = eggDown + 1
 		if eggDown >= 2 then
-			if DBM.BossHealth:IsShown() then
-				DBM.BossHealth:RemoveBoss(calenGUID)
-			end
 			timerEggWeaken:Cancel()
 			warnPhase3:Show()
 			timerBreathCD:Start()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 57 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetZone()
@@ -23,11 +23,6 @@ mod:RegisterEventsInCombat(
 
 local Lulin = select(2, EJ_GetCreatureInfo(1, 829))
 local Suen = select(2, EJ_GetCreatureInfo(2, 829))
-
-mod:SetBossHealthInfo(
-	68905, Lulin,
-	68904, Suen
-)
 
 --Darkness
 local warnNight							= mod:NewAnnounce("warnNight", 2, 108558)
@@ -90,15 +85,12 @@ local berserkTimer						= mod:NewBerserkTimer(600)
 mod:AddBoolOption("RangeFrame")--For various abilities that target even melee. UPDATE, cosmic barrage (worst of the 3 abilities) no longer target melee. However, light of day and tears of teh sun still do. melee want to split into 2-3 groups (depending on how many) but no longer have to stupidly spread about all crazy and out of range of boss during cosmic barrage to avoid dying. On that note, MAYBE change this to ranged default instead of all.
 
 local phase3Started = false
-local invokeTiger = GetSpellInfo(138264)
-local invokeCrane = GetSpellInfo(138189)
-local invokeSerpent = GetSpellInfo(138267)
-local invokeOx = GetSpellInfo(138254)
+local invokeTiger, invokeCrane, invokeSerpent, invokeOx = DBM:GetSpellInfo(138264), DBM:GetSpellInfo(138189), DBM:GetSpellInfo(138267), DBM:GetSpellInfo(138254)
 local infernoCount = 0
 local cosmicCount = 0
 
 local function isRunner(unit)
-	if UnitDebuff(unit, invokeTiger) or UnitDebuff(unit, invokeCrane) or UnitDebuff(unit, invokeSerpent) or UnitDebuff(unit, invokeOx) then
+	if DBM:UnitDebuff(unit, invokeTiger, invokeCrane, invokeSerpent, invokeOx) then
 		return true
 	end
 	return false
@@ -166,7 +158,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnFanOfFlames:Show(args.destName, amount)
 			end
 		else
-			if amount >= threatamount and not UnitDebuff("player", GetSpellInfo(137408)) and not UnitIsDeadOrGhost("player") then
+			if amount >= threatamount and not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") then
 				specWarnFanOfFlamesOther:Show(args.destName)
 			else
 				warnFanOfFlames:Show(args.destName, amount)
@@ -253,7 +245,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 137105 then--Suen Ports away (Night Phase)
 		warnNight:Show()
 		timerDayCD:Start()

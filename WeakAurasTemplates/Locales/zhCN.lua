@@ -5,128 +5,111 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	L[" (Channeling)"] = "（引导）"
-	L[" (Healing received increase)"] = "（受到治疗增加）"
-	L["- Any"] = "- 任意"
-	L["- Death Knight 2P Bonus"] = "- 死亡骑士两件套效果"
-	--Translation missing 
-	-- L["- Death Knight T20 Blood 2P Bonus"] = ""
-	L["- Death Knight Unholy 4P Bonus"] = "- 死亡骑士邪恶天赋 4 件套效果"
-	L["- Deathknight 2P Bonus"] = "-死亡骑士2件套奖励"
-	L["- Deathknight Unholy 4P Bonus"] = "-邪恶死亡骑士4件套奖励"
-	L["- Holy Word: Chastise"] = "-圣言术：罚"
-	L["- Holy Word: Sanctify"] = "-圣言术：神圣化身"
-	L["- Holy Word: Serenity"] = "-圣言术：静"
-	--Translation missing 
-	-- L["- Hunter T20 Marksman 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Arcane 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Fire 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Mage T20 Frost 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Monk T20 Mistweaver 2P Bonus"] = ""
-	L["- Monk Windwalker 4P Bonus"] = "-风行武僧4件套奖励"
-	L["- Paladin Protection 2P Bonus"] = "-防护圣骑士2件套奖励"
-	L["- Paladin Retribution 2P Bonus"] = "-惩戒圣骑士2件套奖励"
-	L["- Paladin T19 Retribution 4P Bonus"] = "-惩戒圣骑士T19  2件套奖励"
-	--Translation missing 
-	-- L["- Paladin T20 Holy 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Paladin T20 Protection 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Paladin T20 Retribution 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Priest T20 Discipline 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Priest T20 Shadow 2P Bonus"] = ""
-	L["- Rogue Assassination/Outlaw 4P Bonus"] = "-刺杀/狂徒潜行者4件套奖励"
-	L["- Rogue Subtlety 4P Bonus"] = "-敏锐潜行者4件套奖励"
-	L["- Rogue T19 Outlaw 4P Bonus"] = "-狂徒潜行者T19 4件套奖励"
-	L["- Shaman Elemental 4P Bonus"] = "-元素萨满4件套奖励"
-	L["- Shaman Enhancement 2P Bonus"] = "-增强萨满2件套奖励"
-	--Translation missing 
-	-- L["- Shaman T20 Elemental 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Enhancement 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Enhancement 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Restoration 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Shaman T20 Restoration 4P Bonus"] = ""
-	L["- T19 Druid Guardian 4P Bonus"] = "-守护德鲁伊T19 4件套奖励"
-	L["- Warlock Affliction 4P/Demonology 2P Bonus"] = "-痛苦术士4件套/恶魔术士2件套奖励"
-	L["- Warlock T19 Destruction 4P Bonus"] = "-毁灭术士T19 4件套奖励"
-	--Translation missing 
-	-- L["- Warlock T20 Affliction 4P Bonus"] = ""
-	--Translation missing 
-	-- L["- Warlock T20 Demonology 4P Bonus"] = ""
-	L["- Warrior 2P Bonus"] = "-战士2件套奖励"
-	L["- Warrior T19 Fury 2P Bonus"] = "-狂怒战士2件套奖励"
-	--Translation missing 
-	-- L["- Warrior T20 Fury 2P Bonus"] = ""
-	--Translation missing 
-	-- L["- Warrior T20 Protection 2P Bonus"] = ""
-	L["(Pet)"] = "（宠物）"
-	L["(Water Elemental)"] = "（水元素）"
 	L["Ability Charges"] = "充能"
 	L["Add Triggers"] = "添加触发器"
 	L["Always Active"] = "总是激活"
+	L["Always Show"] = "总是显示"
+	L["Always show the aura, highlight it if debuffed."] = "总是显示光环，如果有减益效果则高亮显示"
+	L["Always show the aura, turns grey if on cooldown."] = "总是显示光环，如果在冷却中则变灰显示"
+	L["Always show the aura, turns grey if the debuff not active."] = "总是显示光环，如果减益效果未被激活则变灰显示"
+	L["Always shows the aura, grey if buff not active."] = "总是显示光环，如果增益效果未被激活则变灰显示"
+	L["Always shows the aura, highlight it if buffed."] = "总是显示光环，如果有增益效果则高亮显示"
+	L["Always shows the aura, turns grey if on cooldown."] = "总是显示光环，如果在冷却中则变灰显示"
+	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "总是显示光环，如果技能不可用则变灰显示而超出距离时变红显示"
+	L["Always shows the aura, turns grey if the ability is not usable."] = "总是显示光环，如果技能不可用则变灰显示"
+	L["Always shows the aura, turns grey when on cooldown, blue when unusable."] = "总是显示光环，如果在冷却中则变灰显示，不可用时变蓝显示"
+	L["Always shows the aura, turns grey when on zero charges, blue when usable."] = "总是显示光环，如果技能没有可用次数则变灰显示，不可用时变蓝显示"
+	L["Always shows the aura, turns grey when on zero charges, highlight when active, blue on insufficient resources."] = "总是显示光环，如果技能没有可用次数则变灰显示，在激活时高亮显示，资源不足时变蓝显示"
+	L["Always shows the aura, turns grey when on zero charges, red when out of range, blue on insufficient resources."] = "总是显示光环，如果技能没有可用次数则变灰显示，超出距离时变红显示，资源不足时变蓝显示"
+	L["Always shows the aura, turns greys on zero charges, blue on insufficient resources."] = "总是显示光环，如果技能没有可用次数则变灰显示，资源不足时变蓝显示"
+	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "总是显示光环，超出距离时变红显示，资源不足时变蓝显示"
+	L["Always shows the aura, turns red when out of range."] = "总是显示光环，超出距离时变红显示"
 	L["Back"] = "返回"
-	L["Bleed"] = "流血"
-	L["BloodLust/Heroism"] = "嗜血/英勇"
-	--Translation missing 
-	-- L["Bloodlust/Heroism"] = ""
+	L["Basic Show On Cooldown"] = "冷却中显示基本信息"
+	L["Bloodlust/Heroism"] = "嗜血/英勇"
 	L["buff"] = "增益"
 	L["Buff"] = "增益"
 	L["Buffs"] = "增益（复数）"
 	L["Cancel"] = "取消"
 	L["Cast"] = "施放"
-	--Translation missing 
-	-- L["Concordance of the Legionfall"] = ""
+	L["Charge and Buff Tracking"] = "可用次数充能和增益效果追踪"
+	L["Charge and Debuff Tracking"] = "可用次数充能和减益效果追踪"
+	L["Charge Tracking"] = "可用次数充能追踪"
 	L["cooldown"] = "冷却"
+	L["Cooldown Tracking"] = "冷却追踪"
 	L["Cooldowns"] = "冷却"
-	L["Crimson Vial Item Count"] = "猩红之甁计数"
-	--Translation missing 
-	-- L["Damage Trinkets"] = ""
-	L["debuff"] = "减益"
 	L["Debuffs"] = "减益"
 	L["Enchants"] = "附魔"
 	L["General"] = "总体"
-	--Translation missing 
-	-- L["Healer Trinkets"] = ""
+	L["General Azerite Traits"] = "通用艾泽里特特质"
 	L["Health"] = "生命值"
+	L["Highlight while buffed, red when out of range."] = "获得增益效果时高亮，超出范围变红显示"
+	L["Highlight while buffed."] = "获得增益效果时高亮"
+	L["Highlight while debuffed, red when out of range."] = "获得减益效果时高亮，超出范围变红显示"
+	L["Highlight while debuffed."] = "获得减益效果时高亮"
 	L["Keeps existing triggers intact"] = "保持现存触发器完整"
-	L["Legendaries"] = "传奇"
-	--Translation missing 
-	-- L["Legion Sets"] = ""
-	--Translation missing 
-	-- L["Nimble Brew Item Count"] = ""
+	L["On Procc Trinkets (Buff)"] = "当饰品增益效果触发"
+	L["On Use Trinkets (Buff)"] = "当饰品增益效果被使用"
+	L["On Use Trinkets (CD)"] = "当饰品正在冷却中"
+	L["Only show the aura if the target has the debuff."] = "只有在目标拥有减益效果时才显示此光环"
+	L["Only show the aura when the item is on cooldown."] = "只有当物品在冷却中时才显示此光环"
+	L["Only shows the aura if the target has the buff."] = "只有当目标拥有增益效果是才显示此光环"
+	L["Only shows the aura when the ability is on cooldown."] = "只有当技能在冷却中时才显示此光环"
 	L["Pet alive"] = "宠物存活"
 	L["Pet Behavior"] = "宠物行为"
-	L["PVP Set"] = "PVP套装"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "PVP天赋"
-	L["PVP Trinkets"] = "PVP饰品"
+	--[[Translation missing --]]
+	L["PVP Trinkets (Buff)"] = "PVP Trinkets (Buff)"
+	--[[Translation missing --]]
+	L["PVP Trinkets (CD)"] = "PVP Trinkets (CD)"
 	L["Replace all existing triggers"] = "替换所有现存的触发器"
 	L["Replace Triggers"] = "替换触发器"
 	L["Resources"] = "资源"
 	L["Resources and Shapeshift Form"] = "资源和变形形态"
-	L["Rooted"] = "被定身"
 	L["Runes"] = "符文"
 	L["Shapeshift Form"] = "变形形态"
-	L["Slowed"] = "被减速"
+	--[[Translation missing --]]
+	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
+	--[[Translation missing --]]
+	L["Show Charges with Range Tracking"] = "Show Charges with Range Tracking"
+	--[[Translation missing --]]
+	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff"] = "Show Cooldown and Buff"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff and Check for Target"] = "Show Cooldown and Buff and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Buff and Check Usable"] = "Show Cooldown and Buff and Check Usable"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check for Target"] = "Show Cooldown and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check Usable"] = "Show Cooldown and Check Usable"
+	--[[Translation missing --]]
+	L["Show Cooldown and Check Usable & Target"] = "Show Cooldown and Check Usable & Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Debuff"] = "Show Cooldown and Debuff"
+	--[[Translation missing --]]
+	L["Show Cooldown and Debuff and Check for Target"] = "Show Cooldown and Debuff and Check for Target"
+	--[[Translation missing --]]
+	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
+	--[[Translation missing --]]
+	L["Show Only if Buffed"] = "Show Only if Buffed"
+	--[[Translation missing --]]
+	L["Show Only if Debuffed"] = "Show Only if Debuffed"
+	--[[Translation missing --]]
+	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
+	--[[Translation missing --]]
+	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	--[[Translation missing --]]
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	L["Stagger"] = "眩晕"
-	L["Stun"] = "昏迷"
-	L["T19 Damage Trinkets"] = "T19伤害输出饰品"
-	L["T19 Healer Trinkets"] = "T19治疗饰品"
-	L["T19 Sets"] = "T19套装"
-	L["T19 Tank Trinkets"] = "T19坦克饰品"
-	--Translation missing 
-	-- L["Tank Trinkets"] = ""
-	L["Totem"] = "图腾"
 	L["Totems"] = "图腾（复数）"
+	--[[Translation missing --]]
+	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."
+	--[[Translation missing --]]
+	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."
 	L["Unknown Item"] = "未知物品"
 	L["Unknown Spell"] = "未知法术"
 

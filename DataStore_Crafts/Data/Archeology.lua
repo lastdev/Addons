@@ -4,29 +4,33 @@ local addon = _G[addonName]
 addon.artifactDB = {}
 
 -- 2016/08/09 : do not use GetNumArchaeologyRaces(), it might not return the proper value at this stage.
--- 7.0 = hardcoding 18 races
-for i = 1, 18 do
+-- 2018/08/06 : note for later .. in 8.0, bliz added the 2 new races at the beginning of the list, so all races were shifted down by 2
+-- .. might happen again later
+-- 8.0 = hardcoding 20 races
+for i = 1, 20 do
 	addon.artifactDB[i] = {}
 end
 
-local RACE_DEMONIC = 1
-local RACE_HIGHMOUNTAIN_TAUREN = 2
-local RACE_HIGHBORNE = 3
-local RACE_OGRE = 4
-local RACE_DRAENOR_CLANS = 5
-local RACE_ARAKKOA = 6
-local RACE_MOGU = 7
-local RACE_PANDAREN = 8
-local RACE_MANTID = 9
-local RACE_VRYKUL = 10
-local RACE_TROLL = 11
-local RACE_TOL_VIR = 12
-local RACE_ORC = 13
-local RACE_NERUBIAN = 14
-local RACE_NIGHT_ELF = 15
-local RACE_FOSSIL = 16
-local RACE_DRAENEI = 17
-local RACE_DWARF = 18
+local RACE_DRUST = 1
+local RACE_ZANDALARI = 2
+local RACE_DEMONIC = 3
+local RACE_HIGHMOUNTAIN_TAUREN = 4
+local RACE_HIGHBORNE = 5
+local RACE_OGRE = 6
+local RACE_DRAENOR_CLANS = 7
+local RACE_ARAKKOA = 8
+local RACE_MOGU = 9
+local RACE_PANDAREN = 10
+local RACE_MANTID = 11
+local RACE_VRYKUL = 12
+local RACE_TROLL = 13
+local RACE_TOL_VIR = 14
+local RACE_ORC = 15
+local RACE_NERUBIAN = 16
+local RACE_NIGHT_ELF = 17
+local RACE_FOSSIL = 18
+local RACE_DRAENEI = 19
+local RACE_DWARF = 20
 
 local currentRace = 0
 
@@ -35,6 +39,16 @@ local function AddArtifact(itemID, spellID, rarity, fragments)
 end
 
 -- Data taken from Professor, code adjusted for my needs (rarity levels too)
+
+currentRace = RACE_DRUST
+AddArtifact(160751, 273852, 3,  85)  -- Dance of the Dead
+AddArtifact(161089, 273854, 3,  85)  -- Pile of Bones
+AddArtifact(160833, 273855, 3,  85)  -- Fetish of the Tormented Mind
+
+currentRace = RACE_ZANDALARI
+AddArtifact(160740, 273815, 3,  85)  -- Croak Crock
+AddArtifact(161080, 273817, 3,  85)  -- Intact Direhorn Egg
+AddArtifact(160753, 273819, 3,  85)  -- Sanguinating Totem
 
 currentRace = RACE_DEMONIC
 AddArtifact(130917, 196481, 0,  85)  -- Flayed-Skin Chronicle

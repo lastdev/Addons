@@ -22,7 +22,8 @@ local URL = CreateModule("URLHandler", true);
 armoryLinks = {
     {
         title = "WoW Armory",
-        url = "http://{eu/us}.battle.net/wow/character/{realm-}/{user}/advanced"
+        --https://worldofwarcraft.com/en-us/character/stormrage/Omegall
+        url = "https://worldofwarcraft.com/{armeu/armus}/character/{realm-}/{user}"
     },
     {
         title = "WoW-Heroes",
@@ -176,7 +177,7 @@ local function displayURL(link)
     _G.StaticPopupDialogs["WIM_SHOW_URL"] = {
     	preferredIndex = STATICPOPUP_NUMDIALOGS,
         text = "URL : %s",
-        button2 = _G.TEXT(_G.ACCEPT),
+        button2 = _G.ACCEPT,
         hasEditBox = 1,
         hasWideEditBox = 1,
 		editBoxWidth = 350,
@@ -219,6 +220,7 @@ end
 local function MENU_ARMORY_CLICKED(self)
     local eu_www = isUS and "www" or "eu";
     local eu_us = isUS and "us" or "eu";
+    local armory_eu_us = isUS and "en-us" or "en-gb";
     local user, realm;
     if(MENU_ARMORY_USER:find("-")) then
         user, realm = string.split("-", MENU_ARMORY_USER);
@@ -232,6 +234,7 @@ local function MENU_ARMORY_CLICKED(self)
     link = link:gsub("{realm%-}", ""..realm:gsub(" ","-"));
     link = link:gsub("{user}", user);
     link = link:gsub("{eu/us}", eu_us);
+    link = link:gsub("{armeu/armus}", armory_eu_us);
     link = link:gsub("{EU/US}", string.upper(eu_us));
     displayURL("wim_url:"..link);
 end

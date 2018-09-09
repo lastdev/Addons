@@ -232,8 +232,4 @@ L["Yancey Grillsen <Bloodsail Recruiter>"] = "扬希·格里尔森 <血帆征兵
 L["Yaris Darkclaw <Recruiter>"] = "亚里斯·黑爪 <征募官>"
 L["Zen'kiki"] = "赞吉吉 <私人助理>"
 
--- ToC
-L["Description"] = "显示各职业大厅里 NPC 与主要的 POI 的位置"
-L["Title"] = "HandyNotes - 职业大厅"
-
 end

@@ -231,10 +231,12 @@ local ContainerTypes = {
 				return freeSlots, bagType
 			end,
 		GetLink = function(self, slotID)
-				return GetInventoryItemLink("player", slotID)
+				-- return GetInventoryItemLink("player", slotID)
+				return GetContainerItemLink(-1, slotID)
 			end,
 		GetCount = function(self, slotID)
-				return GetInventoryItemCount("player", slotID)
+				-- return GetInventoryItemCount("player", slotID)
+				return select(2, GetContainerItemInfo(-1, slotID))
 			end,
 		GetCooldown = function(self, slotID)
 				local startTime, duration, isEnabled = GetInventoryItemCooldown("player", slotID)
@@ -287,7 +289,8 @@ local function ScanContainer(bagID, containerType)
 	bag.freeslots, bag.bagtype = Container:GetFreeSlots(bagID)
 	
 	-- Scan from 1 to bagsize for normal bags or guild bank tabs, but from 40 to 67 for main bank slots
-	local baseIndex = (containerType == BANK) and 39 or 0
+	-- local baseIndex = (containerType == BANK) and 39 or 0
+	local baseIndex = 0
 	local index
 	
 	for slotID = baseIndex + 1, baseIndex + bag.size do

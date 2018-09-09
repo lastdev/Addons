@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 
 ## Title: SharedMedia Additional Fonts
 ## Notes: Inserts additionnal fonts into SharedMediaLib's storage.
-## Version: 1.0.24
+## Version: 1.0.26
 ## Author: Lots of people, maintained by pb_ee1.
 ## X-Category: Miscellaneous
 ## X-Credits: elsia
@@ -13,4 +13,3 @@ Libs\LibStub\LibStub.lua
 
 Core.lua
 SharedMediaAdditionalFonts.lua
-MyAdditionalFonts.lua

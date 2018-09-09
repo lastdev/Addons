@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1419 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1447 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -16,6 +16,7 @@ local date = date
 local math = math
 local pairs = pairs
 local type = type
+local wipe = wipe
 
 
 local CreateFrame = CreateFrame
@@ -1679,7 +1680,7 @@ function Recount:CreateDetailWindow()
 	PieMode.TopRowLabels = CreateFrame("FRAME", nil, PieMode)
 	local Labels = PieMode.TopRowLabels
 
-	Labels:SetPoint("TOPLEFT", PieMode, "TOP", -70-25, 0)
+	Labels:SetPoint("TOPLEFT", PieMode, "TOP", -70-25, -1)
 	Labels:SetWidth(270 + 50)
 	Labels:SetHeight(RowHeight)
 
@@ -1713,7 +1714,7 @@ function Recount:CreateDetailWindow()
 	Labels.Percent:SetText("%")
 	Recount:AddFontString(Labels.Percent)
 
-	PieMode.TopRows = {}
+	PieMode.TopRows = { }
 
 	for i = 1, 8 do
 		local Row = CreateFrame("FRAME", nil, PieMode)

@@ -17,9 +17,9 @@
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="320" y="24" />
+					<Size x="600" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMLEFT" x="190" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>

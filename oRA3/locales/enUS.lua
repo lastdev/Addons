@@ -41,14 +41,6 @@ oRA3 sports a range of slash commands to aid you in fast-paced raiding. In case 
 |cff44ff44/rarinv <rank name>|r - Invites guild members of the given rank.
 ]]
 
--- Guild Repairs module
-L.guildRepairs = "Guild Repairs"
-L.ensureRepair = "Ensure guild repairs are enabled for all ranks present in raid"
-L.ensureRepairDesc = "If you are the Guild Master, whenever you join a raid group and are the leader or promoted, you will ensure that guild repairs are enabled for the duration of the raid. Once you leave the group, the flags will be restored to their original state |cffff4411provided you have not crashed during the raid.|r"
-L.repairEnabled = "Enabled guild repairs for %s for the duration of this raid."
-L.repairAmount = "Repair Limit"
-L.repairAmountDesc = "The maximum amount of gold per player that is allowed for repairs."
-
 -- Ready Check module
 L.playersNotReady = "The following players are Not Ready: %s"
 L.readyCheckSeconds = "Ready Check (%d seconds)"
@@ -157,6 +149,7 @@ L.hideDead = "Hide dead"
 L.hideOffline = "Hide disconnected"
 L.hideOutOfCombat = "Hide out of combat"
 L.hideOutOfRange = "Hide out of range"
+L.hideInGroupDesc = "Hide cooldowns in this type of group."
 L.hideInInstanceDesc = "Hide cooldowns in this type of instance."
 L.hideRolesDesc = "Hide cooldowns from players in this role."
 L.hideGroupDesc = "Hide cooldowns from players in this group."
@@ -220,11 +213,6 @@ L.showCooldownTextDesc = "Show the Blizzard cooldown text. This will be disabled
 
 -- Zone module
 L.zone = "Zone"
-
--- Loot module
-L.makeLootMaster = "Leave empty to make yourself the Master Looter."
-L.autoLootMethod = "Set the loot mode automatically when joining a group"
-L.autoLootMethodDesc = "Allow oRA3 to automatically set the loot method to the one you specify below when entering a party or raid."
 
 -- Tanks module
 L.tanks = "Tanks"

@@ -1,7 +1,7 @@
-## Interface: 70200
+## Interface: 80000
 ## Title: SilverDragon (Legion)
 ## Notes: Mobs for Legion
-## Version: v4.0.2
+## Version: v4.0.13
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

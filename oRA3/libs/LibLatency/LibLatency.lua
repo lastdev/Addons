@@ -24,10 +24,11 @@ local callbackMap = LL.callbackMap
 local frame = LL.frame
 
 local next, type, error, tonumber, format, match = next, type, error, tonumber, string.format, string.match
-local Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage = Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid, SendAddonMessage
+local Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid = Ambiguate, GetTime, GetNetStats, IsInGroup, IsInRaid
+local SendAddonMessage = C_ChatInfo.SendAddonMessage
 local pName = UnitName("player")
 
-RegisterAddonMessagePrefix("Lag")
+C_ChatInfo.RegisterAddonMessagePrefix("Lag")
 frame:SetScript("OnEvent", function(_, _, prefix, msg, channel, sender)
 	if prefix == "Lag" and throttleTable[channel] then
 		if msg == "R" then

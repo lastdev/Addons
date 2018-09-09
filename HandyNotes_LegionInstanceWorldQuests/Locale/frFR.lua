@@ -20,6 +20,4 @@ L["The scale of the icons"] = "L'échelle des icônes"
 L["These settings control the look and feel of the icon."] = "Ces paramètres contrôlent l'apparence des icônes."
 L["What to display"] = "Qu'afficher"
 
--- ToC
-
 end

@@ -10,8 +10,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-
 local THIS_ACCOUNT = "Default"
+local PARAGON_LABEL = "Paragon"
 
 local AddonDB_Defaults = {
 	global = {
@@ -39,9 +39,10 @@ local BottomLevelNames = {
 	[9000] = FACTION_STANDING_LABEL6,	 -- "Honored"
 	[21000] = FACTION_STANDING_LABEL7,	 -- "Revered"
 	[42000] = FACTION_STANDING_LABEL8,	 -- "Exalted"
+	[43000] = PARAGON_LABEL,	 -- "Paragon"
 }
 
-local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000 }
+local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000, 43000 }
 
 local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
 
@@ -210,6 +211,26 @@ local factions = {
 	{ id = 2045, name = GetFactionInfoByID(2045) },		-- Armies of Legionfall
 	{ id = 2165, name = GetFactionInfoByID(2165) },		-- Army of the Light
 	{ id = 2170, name = GetFactionInfoByID(2170) },		-- Argussian Reach
+	{ id = 1975, name = GetFactionInfoByID(1975) }, 	-- Conjurer Margoss
+	{ id = 2097, name = GetFactionInfoByID(2097) }, 	-- Ilyssia of the Waters
+	{ id = 2099, name = GetFactionInfoByID(2099) }, 	-- Akule Riverhorn
+	{ id = 2101, name = GetFactionInfoByID(2101) }, 	-- Sha'leth
+	{ id = 2100, name = GetFactionInfoByID(2100) }, 	-- Corbyn
+	{ id = 2102, name = GetFactionInfoByID(2102) }, 	-- Impus
+	{ id = 2098, name = GetFactionInfoByID(2098) }, 	-- Keeper Raynae
+	
+	-- Battle for Azeroth
+	{ id = 2159, name = GetFactionInfoByID(2159) },		-- A  - 7th Legion
+	{ id = 2164, name = GetFactionInfoByID(2164) },		-- AH - Champions of Azeroth
+	{ id = 2161, name = GetFactionInfoByID(2161) },		-- A  - Order of Embers	(alternate ID: 2264 but this seems unused on wowhead)
+	{ id = 2160, name = GetFactionInfoByID(2160) },		-- A  - Proudmoore Admiralty (alternate ID: 2120 but this seems unused on wowhead)
+	{ id = 2162, name = GetFactionInfoByID(2162) },		-- A  - Storm's Wake (alternate ID: 2265 but this seems unused on wowhead)
+	{ id = 2156, name = GetFactionInfoByID(2156) },		-- H  - Talanji's Expedition
+	{ id = 2157, name = GetFactionInfoByID(2157) },		-- H  - The Honorbound
+	{ id = 2163, name = GetFactionInfoByID(2163) },		-- AH - Tortollan Seekers
+	{ id = 2158, name = GetFactionInfoByID(2158) },		-- H  - Voldunai
+	{ id = 2103, name = GetFactionInfoByID(2103) },		-- H  - Zandalari Empire
+ 
 }
 
 local FactionUIDsRev = {}
@@ -274,7 +295,7 @@ end
 
 local function GetLimits(earned)
 	-- return the bottom & top values of a given rep level based on the amount of earned rep
-	local top = 43000
+	local top = 53000
 	local index = #BottomLevels
 	
 	while (earned < BottomLevels[index]) do
@@ -302,10 +323,23 @@ local function ScanReputations()
 	wipe(f)
 	
 	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
-		local name, _, _, _, _, earned = GetFactionInfo(i)
+		local name, _, _, _, _, earned, _, _, _, _, _, _, _, factionID = GetFactionInfo(i)
 		if (earned and earned > 0) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
 			if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
-				f[FactionUIDsRev[name]] = earned
+				-- check paragon factions
+				if (C_Reputation.IsFactionParagon(factionID)) then
+					local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+					while (currentValue >= 10000) do
+						currentValue = currentValue - 10000
+					end
+				
+					if hasRewardPending then
+						currentValue = currentValue + 10000
+					end
+					f[FactionUIDsRev[name]] = 43000 + currentValue
+				else
+					f[FactionUIDsRev[name]] = earned
+				end			
 			end
 		end
 	end

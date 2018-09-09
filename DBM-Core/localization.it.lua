@@ -1,5 +1,4 @@
 if GetLocale() ~= "itIT" then return end
-DBM_CORE_NEED_LOCALS				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando |HDBM:localizersneeded|h|cff3588ffhere|r"
 DBM_HOW_TO_USE_MOD					= "Benvenuto in DBM. Scrivi /dbm help per avere una lista dei comandi supportati. Per accedere alle opzioni scrivi in chat /dbm. Carica le zone specifiche per configurare manualmente ogni settaggio di ogni boss. DBM prova a farlo per te controllando la tua specializzazione alla prima esecuzione, ma alcuni potrebbero volere alcune opzioni attivate."
 
 DBM_CORE_LOAD_MOD_ERROR				= "Errore nel caricamento del Boss Mod per %s: %s"
@@ -28,7 +27,6 @@ DBM_CORE_OK							= "Ok"
 DBM_CORE_GENERIC_WARNING_BERSERK	= "Furia in %s %s"
 DBM_CORE_GENERIC_TIMER_BERSERK		= "Furia"
 DBM_CORE_OPTION_TIMER_BERSERK		= "Visualizza Timer per $spell:26662"
-DBM_CORE_OPTION_HEALTH_FRAME		= "Visualizza il frame della Vita del Boss"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "Barre"
 DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Annunci"
@@ -105,8 +103,6 @@ DBM_CORE_SLASHCMD_HELP				= {
 
 DBM_ERROR_NO_PERMISSION				= "Non hai i permessi per eseguire questo comando."
 
-DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Chiudi Finestra della Vita"
-
 DBM_CORE_ALLIANCE					= "Alleanza"
 DBM_CORE_HORDE						= "Orda"
 
@@ -134,7 +130,7 @@ DBM_CORE_AUTO_TIMER_TEXTS.cast			= "%s"
 DBM_CORE_AUTO_TIMER_TEXTS.active		= "%s finisce" --Buff/Debuff/event on boss
 DBM_CORE_AUTO_TIMER_TEXTS.fades			= "%s svanisce" --Buff/Debuff on players
 DBM_CORE_AUTO_TIMER_TEXTS.cd			= "%s CD"
-DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s CD (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "%s CD (%%s)"
 DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "%s CD: >%%s<"
 DBM_CORE_AUTO_TIMER_TEXTS.next			= "Prossimo %s"
 DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Prossimo %s (%%s)"
@@ -254,3 +250,14 @@ DBM_INSTANCE_INFO_STATS_AWAY		= "In pausa: %s"
 DBM_INSTANCE_INFO_STATS_NO_RESPONSE	= "Nessuna versione di DBM installata: %s"
 DBM_INSTANCE_INFO_RESULTS			= "Risultati della Scansione ID di Incursione. Guarda che le istanze potrebbero essere riportate piu' volte se ci sono dei client di gioco localizzati nella tua incursione."
 DBM_INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s\n|HDBM:showRaidIdResults|h|cff3588ff[Show results now]|r|h"
+
+--LDB
+DBM_LDB_TOOLTIP_HELP1	= "Click per aprire DBM"
+DBM_LDB_TOOLTIP_HELP2	= "Click-DX per aprire il menu'"
+
+DBM_LDB_LOAD_MODS		= "Carica i Moduli dei Boss"
+
+DBM_LDB_CAT_OTHER		= "Altri Boss Mods"
+
+DBM_LDB_CAT_GENERAL		= "Generale"
+DBM_LDB_ENABLE_BOSS_MOD	= "Abilita Modulo Boss"

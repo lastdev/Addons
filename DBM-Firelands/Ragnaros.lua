@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
 mod:SetZone()
@@ -125,16 +125,11 @@ local phase2Started = false
 local blazingHeatIcon = 2
 local seedsActive = false
 local meteorWarned = false
-local dreadflame = GetSpellInfo(100675)
-local meteorTarget = GetSpellInfo(99849)
-local staffDebuff = GetSpellInfo(101109)
-local seedCast = GetSpellInfo(98333)
-local deluge = GetSpellInfo(100713)
+local dreadflame, meteorTarget, staffDebuff, seedCast, deluge = DBM:GetSpellInfo(100675), DBM:GetSpellInfo(99849), DBM:GetSpellInfo(101109), DBM:GetSpellInfo(98333), DBM:GetSpellInfo(100713)
 local dreadFlameTimer = 45
-local UnitDebuff = UnitDebuff
 
 local function showRangeFrame()
-	if UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't change their range finder from 8.
+	if DBM:UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't change their range finder from 8.
 	if mod.Options.RangeFrame then
 		if phase == 1 and mod:IsRanged() then
 			DBM.RangeCheck:Show(6)--For wrath of rag, only for ranged.
@@ -145,7 +140,7 @@ local function showRangeFrame()
 end
 
 local function hideRangeFrame()
-	if UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't hide it either.
+	if DBM:UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't hide it either.
 	if mod.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -453,7 +448,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		if self.Options.MeteorFrame and meteorSpawned == 1 then--Show meteor frame and clear any health or aggro frame because nothing is more important then meteors.
 			DBM.InfoFrame:SetHeader(L.MeteorTargets)
-			DBM.InfoFrame:Show(6, "playerbaddebuff", 99849)--If you get more then 6 chances are you're screwed unless it's normal mode and he's at like 11%. Really anything more then 4 is chaos and wipe waiting to happen.
+			DBM.InfoFrame:Show(6, "playerbaddebuff", meteorTarget)--If you get more then 6 chances are you're screwed unless it's normal mode and he's at like 11%. Really anything more then 4 is chaos and wipe waiting to happen.
 		end
 	elseif spellId == 100714 then
 		warnCloudBurst:Show()
@@ -479,7 +474,7 @@ function mod:SPELL_DAMAGE(sourceGUID, _, _, _, destGUID, _, _, _, spellId)
 		specWarnScorchedGround:Show()
 	elseif spellId == 99144 and destGUID == UnitGUID("player") and self:AntiSpam(5, 2) then
 		specWarnBlazingHeatMV:Show()
-	elseif spellId == 100941 and destGUID == UnitGUID("player") and self:AntiSpam(5, 2) and not UnitBuff("player", deluge) then
+	elseif spellId == 100941 and destGUID == UnitGUID("player") and self:AntiSpam(5, 2) and not DBM:UnitBuff("player", deluge) then
 		specWarnDreadFlame:Show()
 	elseif spellId == 98981 and self:AntiSpam(3, 1) then--Reuse anti spam ID 1 again because lava bolts and wraths are never near eachother.
 		timerLavaBoltCD:Start()
@@ -538,11 +533,11 @@ function mod:UNIT_HEALTH(uId)
 end
 
 function mod:UNIT_AURA(uId)
-	if UnitDebuff("player", meteorTarget) and not meteorWarned then--Warn you that you have a meteor
+	if DBM:UnitDebuff("player", meteorTarget) and not meteorWarned then--Warn you that you have a meteor
 		specWarnFixate:Show()
 		yellFixate:Yell()
 		meteorWarned = true
-	elseif not UnitDebuff("player", meteorTarget) and meteorWarned then--reset warned status if you don't have debuff
+	elseif not DBM:UnitDebuff("player", meteorTarget) and meteorWarned then--reset warned status if you don't have debuff
 		meteorWarned = false
 	end
 end
@@ -551,8 +546,9 @@ local function clearSeedsActive()
 	seedsActive = false
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--TODO, switch to spellid once verified spellid is always same
+	local spellName = DBM:GetSpellInfo(spellId)--TEMP, just get right spellID at some point
 	if spellName == seedCast and not seedsActive then -- The true molten seeds cast.
 		seedsActive = true
 		timerMoltenInferno:Start(11.5)--1.5-2.5 variation, we use lowest +10 seconds

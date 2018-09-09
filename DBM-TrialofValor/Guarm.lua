@@ -1,14 +1,13 @@
 local mod	= DBM:NewMod(1830, "DBM-TrialofValor", nil, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16089 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(114323)
 mod:SetEncounterID(1962)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(15651)
 mod.respawnTime = 15
-mod:SetMinSyncRevision(15635)
 
 mod:RegisterCombat("combat")
 
@@ -60,11 +59,6 @@ local berserkTimer					= mod:NewBerserkTimer(300)
 local countdownBreath				= mod:NewCountdown(20.5, 228187)
 local countdownFangs				= mod:NewCountdown("Alt20", 227514, "Tank")
 
-local voiceBreath					= mod:NewVoice(228187)--breathsoon
-local voiceCharge					= mod:NewVoice(227816)--chargemove
-local voiceFlameLick				= mod:NewVoice(228228)--runout
-local voiceFrostLick				= mod:NewVoice(228248)--helpdispel
-
 mod:AddSetIconOption("SetIconOnFoam", "ej14535", true)
 mod:AddBoolOption("YellActualRaidIcon", false)
 mod:AddBoolOption("FilterSameColor", true)
@@ -82,28 +76,27 @@ mod.vb.two = "None"
 mod.vb.three = "None"
 
 local updateInfoFrame
-local fireFoam, frostFoam, shadowFoam = GetSpellInfo(228744), GetSpellInfo(228810), GetSpellInfo(228818)
-local fireDebuff, frostDebuff, shadowDebuff = GetSpellInfo(227539), GetSpellInfo(227566), GetSpellInfo(227570)
-local UnitDebuff = UnitDebuff
+local fireFoam, frostFoam, shadowFoam = DBM:GetSpellInfo(228744), DBM:GetSpellInfo(228810), DBM:GetSpellInfo(228818)
+local fireDebuff, frostDebuff, shadowDebuff = DBM:GetSpellInfo(227539), DBM:GetSpellInfo(227566), DBM:GetSpellInfo(227570)
 do
 	local lines = {}
 	updateInfoFrame = function()
 		table.wipe(lines)
 		for uId in DBM:GetGroupMembers() do
-			if UnitDebuff(uId, fireFoam) then
-				if mod.Options.FilterSameColor and UnitDebuff(uId, fireDebuff) then
+			if DBM:UnitDebuff(uId, fireFoam) then
+				if mod.Options.FilterSameColor and DBM:UnitDebuff(uId, fireDebuff) then
 					--Do nothing
 				else
 					lines[UnitName(uId)] = "|cffff0000"..STRING_SCHOOL_FIRE.."|r"
 				end
-			elseif UnitDebuff(uId, frostFoam) then
-				if mod.Options.FilterSameColor and UnitDebuff(uId, frostDebuff) then
+			elseif DBM:UnitDebuff(uId, frostFoam) then
+				if mod.Options.FilterSameColor and DBM:UnitDebuff(uId, frostDebuff) then
 					--Do nothing
 				else
 					lines[UnitName(uId)] = "|cff0000ff"..STRING_SCHOOL_FROST.."|r"
 				end
-			elseif UnitDebuff(uId, shadowFoam) then
-				if mod.Options.FilterSameColor and UnitDebuff(uId, shadowDebuff) then
+			elseif DBM:UnitDebuff(uId, shadowFoam) then
+				if mod.Options.FilterSameColor and DBM:UnitDebuff(uId, shadowDebuff) then
 					--Do nothing
 				else
 					lines[UnitName(uId)] = "|cFF9932CD"..STRING_SCHOOL_SHADOW.."|r"
@@ -133,7 +126,7 @@ function mod:OnCombatStart(delay)
 			--timerLickCD:Start(12.4, 1)
 			berserkTimer:Start(240-delay)
 			if self.Options.InfoFrame then
-				DBM.InfoFrame:SetHeader(GetSpellInfo(228824))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(228824))
 				DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true)
 			end
 			if UnitIsGroupLeader("player") then
@@ -183,7 +176,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 227816 then
 		specWarnCharge:Show()
-		voiceCharge:Play("chargemove")
+		specWarnCharge:Play("chargemove")
 	elseif spellId == 228824 then
 		self.vb.foamCast = self.vb.foamCast + 1
 		if self.vb.foamCast < 3 then
@@ -211,7 +204,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if spellId == 228744 or spellId == 228794 then
-			if self.Options.FilterSameColor and UnitDebuff(uId, fireDebuff) then
+			if self.Options.FilterSameColor and DBM:UnitDebuff(uId, fireDebuff) then
 				if icon == 1 then
 					self.vb.one = "None"
 				elseif icon == 2 then
@@ -235,7 +228,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				self:SetIcon(args.destName, icon)
 			end
 		elseif spellId == 228810 or spellId == 228811 then
-			if self.Options.FilterSameColor and UnitDebuff(uId, frostDebuff) then
+			if self.Options.FilterSameColor and DBM:UnitDebuff(uId, frostDebuff) then
 				if icon == 1 then
 					self.vb.one = "None"
 				elseif icon == 2 then
@@ -259,7 +252,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				self:SetIcon(args.destName, icon)
 			end
 		elseif spellId == 228818 or spellId == 228819 then
-			if self.Options.FilterSameColor and UnitDebuff(uId, shadowDebuff) then
+			if self.Options.FilterSameColor and DBM:UnitDebuff(uId, shadowDebuff) then
 				if icon == 1 then
 					self.vb.one = "None"
 				elseif icon == 2 then
@@ -290,7 +283,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 228228 then
 		if args:IsPlayer() then
 			specWarnFlameLick:Show()
-			voiceFlameLick:Play("runout")
+			specWarnFlameLick:Play("runout")
 			yellFlameLick:Yell()
 		end
 	elseif spellId == 228253 then
@@ -303,7 +296,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.specwarn228248dispel then
 			specWarnFrostLickDispel:CombinedShow(0.3, args.destName)
 			if self:AntiSpam(3, 1) then
-				voiceFrostLick:Play("helpdispel")
+				specWarnFrostLickDispel:Play("helpdispel")
 			end
 		else
 			warnFrostLick:CombinedShow(0.3, args.destName)
@@ -319,7 +312,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if (spellId == 228744 or spellId == 228794 or spellId == 228810 or spellId == 228811 or spellId == 228818 or spellId == 228819) and args:IsDestTypePlayer() then
 		local uId = DBM:GetRaidUnitId(args.destName)
-		if self.Options.SetIconOnFoam and not (UnitDebuff(uId, fireFoam) or UnitDebuff(uId, frostFoam) or UnitDebuff(uId, shadowFoam)) then
+		if self.Options.SetIconOnFoam and not (DBM:UnitDebuff(uId, fireFoam) or DBM:UnitDebuff(uId, frostFoam) or DBM:UnitDebuff(uId, shadowFoam)) then
 			if args.destName == self.vb.one then
 				self.vb.one = "None"
 			elseif args.destName == self.vb.two then
@@ -343,12 +336,12 @@ Might be inversed depending on perspective.
 --]]
 
 --Better to just assume things aren't in cobmat log anymore, then switch if they actually are.
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 227573 then--Guardian's Breath (pre cast used for all 6 versions of breath. Not a bad guess for my drycode huh? :) )
 		self.vb.breathCast = self.vb.breathCast + 1
 		specWarnBreath:Show(self.vb.breathCast)
-		voiceBreath:Play("breathsoon")
+		specWarnBreath:Play("breathsoon")
 		if self.vb.breathCast == 1 then
 			timerBreathCD:Start(nil, 2)
 			countdownBreath:Start()

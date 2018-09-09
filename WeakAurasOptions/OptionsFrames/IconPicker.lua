@@ -33,12 +33,21 @@ local function ConstructIconPicker(frame)
     local distances = {};
     local names = {};
 
-    subname = tonumber(subname) and GetSpellInfo(tonumber(subname)) or subname;
-    subname = subname:lower();
+    -- Work around special numbers such as inf and nan
+    if (tonumber(subname)) then
+      local spellId = tonumber(subname);
+      if (abs(spellId) < math.huge and tostring(spellId) ~= "nan") then
+        subname = GetSpellInfo(spellId)
+      end
+    end
+
+    if subname then
+      subname = subname:lower();
+    end
 
     local usedIcons = {};
     local num = 0;
-    if(subname ~= "") then
+    if(subname and subname ~= "") then
       for name, icons in pairs(spellCache.Get()) do
         local bestDistance = math.huge;
         local bestName;

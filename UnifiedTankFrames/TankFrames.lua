@@ -18,6 +18,7 @@ local allFrames = {}
 
 addon.config = {
 	lock = {name = "Lock Position", default = false, func = function(s,v) if not InCombatLockdown() then addon.mover:EnableDrag(not v) end end},
+	lockAlt = {name = "Always allow to move frames with ALT-key pressed", default = false, tooltip="When enabled, you can always move the frames with ALT-key pressed, even if they are locked, by dragging the (hidden) title right top of the tank frames."},
 	showHp = {name = "Show Hitpoint Percentage"..RED_FONT_COLOR_CODE.." (Needs Reload!)"..FONT_COLOR_CODE_CLOSE, default = true},
 	bar = {name = "Texture", default = "Interface\\AddOns\\UnifiedTankFrames\\Textures\\statusbar"},
 	scale = {name = "Scale", default = .85, min = 0, max = 2, step = .05, func = function() if not InCombatLockdown() then local m = addon.mover m:SetScale(db.scale) local s = m:GetEffectiveScale() m:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", db.x / s, db.y / s)end end},
@@ -277,13 +278,24 @@ local function createFrames()
 	mover:EnableMouse(true)
 	mover:SetMovable(true)
 	mover:RegisterForDrag("LeftButton")
+	mover.ShouldAllowDrag = function()
+		if db.lock then
+			if db.lockAlt then
+				return IsAltKeyDown() and not InCombatLockdown()
+			else
+				return false
+			end
+		else
+			return true
+		end
+	end
 	mover:SetScript("OnDragStart", function(self)
-		if db.lock then return end
+		if not mover.ShouldAllowDrag() then return end
 		self:SetFrameStrata("DIALOG")
 		self:StartMoving()
 	end)
 	mover:SetScript("OnDragStop", function(self)
-		if db.lock then return end
+		if not mover.ShouldAllowDrag() then return end
 		self:SetFrameStrata("LOW")
 		self:StopMovingOrSizing()
 		local s = self:GetEffectiveScale()

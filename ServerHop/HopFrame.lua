@@ -4,7 +4,7 @@
 --=====================--
 -- Standard mode frame --
 --=====================--
-ServerHop.hopFrame = CreateFrame("Frame",nil,ServerHop)
+ServerHop.hopFrame = CreateFrame("Frame","ServerHop.hopFrame",ServerHop)
 local hopFrame = ServerHop.hopFrame
 
 hopFrame.lastUpdate = 0
@@ -97,13 +97,13 @@ UIDropDownMenu_SetText(ServerHop.hopFrame.dropDown,SERVERHOP_ANYSIZE)
 UIDropDownMenu_SetWidth(ServerHop.hopFrame.dropDown,100)
 UIDropDownMenu_SetAnchor(ServerHop.hopFrame.dropDown,0,10,"TOPRIGHT",ServerHop.hopFrame.dropDown,"BOTTOMRIGHT")
 
--- Button to do the hopping 
-ServerHop.hopFrame.buttonHop = CreateFrame("Button",nil,ServerHop.hopFrame,"UIGoldBorderButtonTemplate")
+-- Button to do the hopping
+ServerHop.hopFrame.buttonHop = CreateFrame("Button","hopFramebuttonHop",ServerHop.hopFrame,"UIGoldBorderButtonTemplate")
 ServerHop.hopFrame.buttonHop:SetSize(94,24)
 ServerHop.hopFrame.buttonHop:SetPoint("BOTTOM",-54,36)
 ServerHop.hopFrame.buttonHop:SetText(SEARCH)
 
-ServerHop.hopFrame.buttonHop.spinner = CreateFrame("Frame",nil,ServerHop.hopFrame.buttonHop,"LoadingSpinnerTemplate")
+ServerHop.hopFrame.buttonHop.spinner = CreateFrame("Frame","hopFramebuttonHopSpinner",ServerHop.hopFrame.buttonHop,"LoadingSpinnerTemplate")
 ServerHop.hopFrame.buttonHop.spinner:SetSize(30,30)
 ServerHop.hopFrame.buttonHop.spinner:SetPoint("RIGHT",24,0)
 hopFrame.buttonHop.spinner:Hide()
@@ -116,6 +116,7 @@ hopFrame.blacklistString:SetJustifyH("LEFT")
 hopFrame.blacklistString:SetText(SERVERHOP_INBLACKLIST.."|cFFFFFFFF0|r")
 
 -- Button to reset blacklist
+
 ServerHop.hopFrame.buttonResetBL = CreateFrame("Button","sh_clearblbut",ServerHop.hopFrame,"BrowserButtonTemplate")
 ServerHop.hopFrame.buttonResetBL:SetSize(25,25)
 ServerHop.hopFrame.buttonResetBL:SetPoint("BOTTOMRIGHT",-15,35)
@@ -476,7 +477,7 @@ local function SH_ManageApplications()
 	if summ == 5 then return end
 
 	local tank, heal, dd = C_LFGList.GetAvailableRoles()
-	C_LFGList.ApplyToGroup(HopList[1], "", tank, heal, dd)	
+	C_LFGList.ApplyToGroup(HopList[1], tank, heal, dd)	
 	table.remove(HopList,1)
 
 	if ServerHop.optionsFrame.hopSearchOptionsFrame.chatNotifButton:GetChecked() then
@@ -572,7 +573,6 @@ StaticPopupDialogs["SERVERHOP_CLEARBL_DIAG"] = {
   OnAccept = function()
       ClearBlackList()
   end,
-  sound = "levelup2",
   whileDead = true,
   hideOnEscape = true,
 }

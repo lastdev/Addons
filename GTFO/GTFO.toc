@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: GTFO
 ## Notes: GTFO, you're dying!
 ## Author: Zensunim of Dragonblight
-## Version: 4.43.1
+## Version: 4.46.4
 ## DefaultState: Enabled
 ## SavedVariables: GTFOData
 Localization\enUS.lua
@@ -29,6 +29,7 @@ GTFO_Spells_LK.lua
 GTFO_Spells_CAT.lua
 GTFO_Spells_MP.lua
 GTFO_Spells_LGN.lua
+GTFO_Spells_BFA.lua
 GTFO_Spells_Special.lua
 GTFO_Fail_Generic.lua
 GTFO_Fail_Classic.lua
@@ -37,10 +38,12 @@ GTFO_Fail_LK.lua
 GTFO_Fail_CAT.lua
 GTFO_Fail_MP.lua
 GTFO_Fail_LGN.lua
+GTFO_Fail_BFA.lua
 GTFO_FF_BC.lua
 GTFO_FF_LK.lua
 GTFO_FF_CAT.lua
 GTFO_FF_MP.lua
 GTFO_FF_LGN.lua
+GTFO_FF_BFA.lua
 GTFO_Mobs.lua
 GTFO.xml

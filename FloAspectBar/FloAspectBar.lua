@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "7.3.21"
+local VERSION = "8.0.21"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -96,7 +96,8 @@ function FloAspectBar_OnEvent(self, event, arg1, ...)
 		end
 
 	elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
-		local spellName = ...;
+		local _, spellId = ...;
+		local spellName = GetSpellInfo(spellId);
 		if arg1 == "player" and (spellName == FLOLIB_ACTIVATE_SPEC) then
 			changingSpec = false;
 		end
@@ -221,11 +222,11 @@ function FloAspectBar_UpdateState(self, pos)
 	local button = _G[self:GetName().."Button"..pos];
 	local spell = self.spells[pos];
 
-	if UnitBuff("player", spell.name) then
+	if FloLib_UnitHasBuff("player", spell.name) then
 		button:SetChecked(true);
 	elseif self["activeSpell"..pos] == pos then
-                FloLib_ResetTimer(self, pos);
-        else
+            FloLib_ResetTimer(self, pos);
+    else
 		button:SetChecked(false);
 	end
 end
@@ -237,28 +238,14 @@ function FloAspectBar_UpdatePosition()
 		return;
 	end
 
-	local yOffset = -3;
+	local yOffset = 0;
 	local anchorFrame;
 
 	if not MainMenuBar:IsShown() and not (VehicleMenuBar and VehicleMenuBar:IsShown()) then
 		anchorFrame = UIParent;
-		yOffset = 110-UIParent:GetHeight();
+		yOffset = 110 - UIParent:GetHeight();
 	else
 		anchorFrame = MainMenuBar;
-
-                local numWatchBars = 0;
-		numWatchBars = numWatchBars + (ReputationWatchBar:IsShown() and 1 or 0);
-		numWatchBars = numWatchBars + (HonorWatchBar:IsShown() and 1 or 0);
-		numWatchBars = numWatchBars + (ArtifactWatchBar:IsShown() and 1 or 0);
-                numWatchBars = numWatchBars + (MainMenuExpBar:IsShown() and 1 or 0);
-
-		if numWatchBars > 1 then
-			yOffset = yOffset + 9;
-		end
-
-		if MainMenuBarMaxLevelBar:IsShown() then
-			yOffset = yOffset - 5;
-		end
 
 		if SHOW_MULTI_ACTIONBAR_2 then
 			yOffset = yOffset + 45;

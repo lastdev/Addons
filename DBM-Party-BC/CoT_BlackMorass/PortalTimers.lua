@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod("PT", "DBM-Party-BC", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 592 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 653 $"):sub(12, -3))
 
 mod:RegisterEvents(
-	"UPDATE_WORLD_STATES",
+	"UPDATE_UI_WIDGET",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -18,7 +18,6 @@ local warnBossPortal		= mod:NewAnnounce("WarnBossPortal", 4, 33341)
 local timerNextPortal		= mod:NewTimer(120, "TimerNextPortal", 57687, nil, nil, 6)
 
 --mod:AddBoolOption("ShowAllPortalTimers", false, "timer")
-mod:RemoveOption("HealthFrame")
 
 local lastPortal = 0
 
@@ -33,15 +32,17 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(2))
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 527 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	local text = widgetInfo.text
 	if not text then return end
-	local _, _, currentPortal = string.find(text, L.PortalCheck)
+	local currentPortal = text:match("(%d+).+18")
 	if not currentPortal then 
 		currentPortal = 0 
 	end
 	currentPortal = tonumber(currentPortal)
-	lastPortal = tonumber(lastPortal)
 	if currentPortal > lastPortal then
 		warnWavePortalSoon:Cancel()
 		timerNextPortal:Cancel()

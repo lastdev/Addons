@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1702, "DBM-Party-Legion", 9, 777)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15203 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(102431)
 mod:SetEncounterID(1855)
 mod:SetZone()
@@ -25,12 +25,10 @@ local warnCallBlood					= mod:NewSpellAnnounce(203381, 2)
 
 local specWarnEssenceoftheBloodQueen= mod:NewSpecialWarningYou(202779)
 local specWarnBloodthirst			= mod:NewSpecialWarningYou(202792, nil, nil, nil, 3)
-local yellBloodThirst				= mod:NewFadesYell(202792)
+local yellBloodThirst				= mod:NewShortFadesYell(202792)
 
 local timerHunger					= mod:NewBuffFadesTimer(20, 202792, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
 local timerBloodCallCD				= mod:NewNextTimer(30, 203381, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
-
---local voiceCurtainOfFlame			= mod:NewVoice(153392)
 
 function mod:OnCombatStart(delay)
 	if not self:IsNormal() then
@@ -86,7 +84,8 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 153500 then
 
 	end

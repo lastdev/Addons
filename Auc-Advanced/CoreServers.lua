@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreServers.lua 5693 2016-12-22 23:00:47Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreServers.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -568,5 +568,5 @@ AucAdvanced.GetServerKeyText = GetServerKeyText
 AucAdvanced.SplitServerKey = SplitServerKey
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreServers.lua $", "$Rev: 5693 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreServers.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreServers")

@@ -324,8 +324,6 @@ L:SetOptionLocalization{
 	TimeToPhase3			= "Mostrar temporizador para el cambio a Fase 3",
 	TimeToPhase4			= "Mostrar temporizador para el cambio a Fase 4",
 	MagneticCore			= "Anunciar jugadores que despojen Núcleos magnéticos",
-	HealthFramePhase4		= "Mostrar marco de salud en Fase 4",
-	AutoChangeLootToFFA		= "Cambiar botín a libre en Fase 3 (requiere líder)",
 	WarnBombSpawn			= "Mostrar aviso cuando aparezcan Bombabots",
 	TimerHardmode			= "Mostrar temporizador para la autodestrucción del modo difícil",
 	ShockBlastWarningInP1	= "Mostrar aviso especial para $spell:63631 en Fase 1",
@@ -341,9 +339,6 @@ L:SetMiscLocalization{
 	MobPhase3		= "Unidad de mando aérea",
 	YellPull		= "¡No tenemos mucho tiempo, amigos! Vais a ayudarme a probar mi última y mayor creación. Ahora, antes de que cambiéis de parecer, recordad que en cierta forma, me lo debéis después del desastre que causasteis con el XA-002.",
 	YellHardPull	= "Secuencia de autodestrucción iniciada",
-	YellPhase2		= "¡Contemplad el cañón de asalto antipersonal VX-001! Puede que queráis poneros a cubierto.",
-	YellPhase3		= "¡Gracias amigos! ¡Vuestros esfuerzos me han proporcionado unos datos fantásticos! Veamos, ¿dónde puse?...ah, ahí está.",
-	YellPhase4		= "Fase de prueba preliminar completada. ¡Ahora comienza la verdadera prueba!",
 	LootMsg			= "([^%s]+).*Hitem:(%d+)"
 }
 
@@ -421,7 +416,6 @@ L:SetOptionLocalization{
 	specWarnBrainPortalSoon			= "Mostrar aviso especial para los siguientes portales",
 	NextPortal						= "Mostrar temporizador para los siguientes portales",
 	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
-	ShowSaraHealth					= "Mostrar marco de salud de Sara en Fase 1",
 	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
 	MaladyArrow						= "Mostrar flecha cuando $spell:63881 ocurra cerca de ti"
 }

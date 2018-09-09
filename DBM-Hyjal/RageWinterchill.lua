@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Rage", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
 mod:SetCreatureID(17767)
 mod:SetEncounterID(618)
 mod:SetModelID(17444)
@@ -19,11 +19,10 @@ mod:RegisterEventsInCombat(
 local warnIceBolt		= mod:NewSpellAnnounce(31249, 3)
 local warnDnd			= mod:NewSpellAnnounce(31258, 3)
 
-local timerDnd			= mod:NewBuffActiveTimer(16, 31258)
-local timerDndCD		= mod:NewCDTimer(46, 31258, nil, nil, nil, 3)
+local specWarnIceBolt	= mod:NewSpecialWarningYou(31249, nil, nil, nil, 1, 2)
+local specWarnDnD		= mod:NewSpecialWarningMove(31258, nil, nil, nil, 1, 2)
 
-local specWarnIceBolt	= mod:NewSpecialWarningYou(31249)
-local specWarnDnD		= mod:NewSpecialWarningMove(31258)
+local timerDndCD		= mod:NewCDTimer(46, 31258, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -35,15 +34,18 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 31249 then
-		warnIceBolt:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnIceBolt:Show()
+			specWarnIceBolt:Play("stunsoon")
+		else
+			warnIceBolt:Show(args.destName)
 		end
 		if self.Options.IceBoltIcon then
 			self:SetIcon(args.destName, 8)
 		end
 	elseif args.spellId == 31258 and args:IsPlayer() and self:AntiSpam() then
 		specWarnDnD:Show()
+		specWarnDnD:Play("runaway")
 	end
 end
 
@@ -58,7 +60,6 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 31258 then
 		warnDnd:Show()
-		timerDnd:Start()
 		timerDndCD:Start()
 	end
 end

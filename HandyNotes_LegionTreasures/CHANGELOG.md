@@ -1,5 +1,21 @@
 # Changelog
 
+## Changes in v14
+
+* Flagged all the non-achievement Argus treasure chests as junk, and hid them by default
+* New config options: show/hide icons on the world map or minimap, and show/hide treasure
+* Achievement criteria based labels display better
+* Fixed some world map tooltip issues
+* Fixed TomTom right click integration
+
+## Changed in v13
+
+* Updated for 8.0.1
+* Left-click on rares to open up the group finder searching for them by name (thanks znf)
+* Many more treasures in Argus (thanks znf)
+* Missing from Azsuna
+* You know what, Broken Shore too. Bit out of order, but there we go.
+
 ## Changed in v12
 
 * TOC for 7.3

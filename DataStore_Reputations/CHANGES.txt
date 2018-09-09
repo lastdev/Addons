@@ -1,24 +1,37 @@
 ------------------------------------------------------------------------
-r41 | thaoky.altoholic@yahoo.com | 2017-09-04 12:32:44 -0500 (Mon, 04 Sep 2017) | 1 line
+r43 | thaoky.altoholic@yahoo.com | 2018-08-12 13:19:00 +0000 (Sun, 12 Aug 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Reputations.lua
+
+Added support for paragon reputation levels
+------------------------------------------------------------------------
+r42 | thaoky.altoholic@yahoo.com | 2018-07-22 11:25:28 +0000 (Sun, 22 Jul 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Reputations.lua
+   M /trunk/DataStore_Reputations.toc
+
+8.0.001 Commit
+------------------------------------------------------------------------
+r41 | thaoky.altoholic@yahoo.com | 2017-09-04 17:32:44 +0000 (Mon, 04 Sep 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Reputations.lua
    M /trunk/DataStore_Reputations.toc
 
 Added 7.3 factions
 ------------------------------------------------------------------------
-r40 | thaoky.altoholic@yahoo.com | 2017-04-28 12:34:05 -0500 (Fri, 28 Apr 2017) | 1 line
+r40 | thaoky.altoholic@yahoo.com | 2017-04-28 17:34:05 +0000 (Fri, 28 Apr 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Reputations.lua
 
 Added broken shore faction
 ------------------------------------------------------------------------
-r39 | thaoky.altoholic@yahoo.com | 2017-03-29 14:26:25 -0500 (Wed, 29 Mar 2017) | 1 line
+r39 | thaoky.altoholic@yahoo.com | 2017-03-29 19:26:25 +0000 (Wed, 29 Mar 2017) | 1 line
 Changed paths:
    M /trunk/DataStore_Reputations.toc
 
 TOC Update
 ------------------------------------------------------------------------
-r38 | thaoky | 2016-10-26 12:53:54 -0500 (Wed, 26 Oct 2016) | 2 lines
+r38 | thaoky | 2016-10-26 17:53:54 +0000 (Wed, 26 Oct 2016) | 2 lines
 Changed paths:
    M /trunk/DataStore_Reputations.lua
    M /trunk/DataStore_Reputations.toc
@@ -26,13 +39,13 @@ Changed paths:
 TOC Update
 Added a few missing factions
 ------------------------------------------------------------------------
-r37 | thaoky | 2016-07-18 11:11:02 -0500 (Mon, 18 Jul 2016) | 1 line
+r37 | thaoky | 2016-07-18 16:11:02 +0000 (Mon, 18 Jul 2016) | 1 line
 Changed paths:
    M /trunk/DataStore_Reputations.toc
 
 7.0 Compatibility Release
 ------------------------------------------------------------------------
-r36 | thaoky | 2015-08-17 11:21:45 -0500 (Mon, 17 Aug 2015) | 2 lines
+r36 | thaoky | 2015-08-17 16:21:45 +0000 (Mon, 17 Aug 2015) | 2 lines
 Changed paths:
    M /trunk/DataStore_Reputations.lua
    M /trunk/DataStore_Reputations.toc
@@ -40,7 +53,7 @@ Changed paths:
 TOC Update
 Added 6.2 factions
 ------------------------------------------------------------------------
-r35 | thaoky | 2015-02-25 12:29:24 -0600 (Wed, 25 Feb 2015) | 1 line
+r35 | thaoky | 2015-02-25 18:29:24 +0000 (Wed, 25 Feb 2015) | 1 line
 Changed paths:
    M /trunk/.pkgmeta
    M /trunk/DataStore_Reputations.lua

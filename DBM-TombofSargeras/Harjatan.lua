@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1856, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16650 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(116407)
 mod:SetEncounterID(2036)
 mod:SetZone()
@@ -26,11 +26,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, splashy cleave for Gladiator?
---TODO, escalate Frosty Spittle warning to special warning from taskmaster?
---TODO, Improve mythic stuff with warnings for specific tadpole colors more of stuff they do besides fixate?
---TODO, see if hatching is affected by draw in when it does succeed in pulling Frost stacks
---TODO< see if taskmaster is affected by draw in when it does succeed in pulling frost stacks
 --[[
 (ability.id = 232174 or ability.id = 231904) and type = "begincast" or
 (ability.id = 231854 or ability.id = 232061) and type = "cast" or
@@ -49,7 +44,7 @@ local warnDrivenAssault				= mod:NewTargetAnnounce(234016, 3, nil, false)--Spamm
 local warnSicklyFixate				= mod:NewTargetAnnounce(241600, 4)
 
 --Harjatan
-local specWarnJaggedAbrasion		= mod:NewSpecialWarningStack(231998, nil, 4, nil, nil, 1, 2)
+local specWarnJaggedAbrasion		= mod:NewSpecialWarningStack(231998, nil, 4, nil, nil, 1, 6)
 local specWarnJaggedAbrasionOther	= mod:NewSpecialWarningTaunt(231998, nil, nil, nil, 1, 2)
 local specWarnUncheckedRage			= mod:NewSpecialWarningCount(231854, nil, nil, nil, 2, 2)
 local specWarnDrenchingWaters		= mod:NewSpecialWarningMove(231768, nil, nil, nil, 1, 2)
@@ -88,25 +83,6 @@ local berserkTimer					= mod:NewBerserkTimer(360)
 --Harjatan
 local countdownUncheckedRage		= mod:NewCountdown(20, 231854)
 
---Harjatan
-local voiceJaggedAbrasion			= mod:NewVoice(231998)--tauntboss/stackhigh
-local voiceUncheckedRage			= mod:NewVoice(231854)--gathershare
-local voiceDrenchingWaters			= mod:NewVoice(231768)--runaway
-local voiceCommandingroar			= mod:NewVoice(232192, "-Healer")--killmob
-local voiceDrawIn					= mod:NewVoice(232061)--phasechange
-local voiceFrostyDischarge			= mod:NewVoice(232174)--phasechange
---Razorjaw Wavemender
-local voiceAqueousBurst				= mod:NewVoice(231729)--runout
-local voiceTendWounds				= mod:NewVoice(231904)--kickcast/dispelnow
---Razorjaw Gladiator
-local voiceDrivenAssault			= mod:NewVoice(234016)--justrun/keepmove
---Darkscale Taskmaster
---local voiceTaskMaster				= mod:NewVoice("ej14725", "-Healer")--bigmob
---Mythic (Eggs and tadpoles)
-local voiceHatching					= mod:NewVoice(240319, nil, nil, 2)--killmob
-local voiceSicklyFixate				= mod:NewVoice(241600)--justrun/keepmove
-local voiceTantrum					= mod:NewVoice(241590)--aesoon
-
 --mod:AddSetIconOption("SetIconOnShield", 228270, true)
 --mod:AddInfoFrameOption(227503, true)
 --mod:AddRangeFrameOption("5/8/15")
@@ -123,7 +99,7 @@ function mod:OnCombatStart(delay)
 	timerUncheckedRageCD:Start(-delay, 1)
 	countdownUncheckedRage:Start()
 	specWarnUncheckedRage:Schedule(16-delay, 1)
-	voiceUncheckedRage:Schedule(16-delay, "gathershare")
+	specWarnUncheckedRage:ScheduleVoice(16-delay, "gathershare")
 	timerCommandingRoarCD:Start(17.3-delay)
 	timerDrawInCD:Start(58-delay)
 	if not self:IsEasy() then
@@ -155,28 +131,28 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 232174 then
 		specWarnFrostyDischarge:Show()
-		voiceFrostyDischarge:Play("phasechange")
+		specWarnFrostyDischarge:Play("phasechange")
 		self.vb.rageCount = 0
 		timerCommandingRoarCD:Start(17.1)
 		timerUncheckedRageCD:Start(21.1, 1)--21.1-23.5
 		countdownUncheckedRage:Start(21)
 		specWarnUncheckedRage:Schedule(17, 1)
-		voiceUncheckedRage:Play(17, "gathershare")
+		specWarnUncheckedRage:Play(17, "gathershare")
 		timerDrawInCD:Start()
 		if self:IsMythic() then
 			timerHatchingCD:Start(30)
 		end
 	elseif spellId == 231904 then
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnTendWounds:Show(args.sourceName)
-			voiceTendWounds:Play("kickcast")
+			specWarnTendWounds:Play("kickcast")
 		end
 	elseif spellId == 234194 then
 		--warnFrostySpittle:Show()
 		--timerFrostySpittleCD:Start(nil, args.sourceGUID)
 	elseif spellId == 241590 then
 		specWarnTantrum:Show()
-		voiceTantrum:Play("aesoon")
+		specWarnTantrum:Play("aesoon")
 	end
 end
 
@@ -189,7 +165,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerUncheckedRageCD:Start(nil, self.vb.rageCount+1)
 		countdownUncheckedRage:Start()
 		specWarnUncheckedRage:Schedule(17, self.vb.rageCount+1)
-		voiceUncheckedRage:Schedule(17, "gathershare")
+		specWarnUncheckedRage:ScheduleVoice(17, "gathershare")
 	elseif spellId == 234129 then
 		timerSplashCleaveCD:Start(nil, args.sourceGUID)
 	end
@@ -204,11 +180,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			if amount >= 4 then--Lasts 30 seconds, cast every 5 seconds, swapping will be at 6
 				if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 					specWarnJaggedAbrasion:Show(amount)
-					voiceJaggedAbrasion:Play("stackhigh")
+					specWarnJaggedAbrasion:Play("stackhigh")
 				else--Taunt as soon as stacks are clear, regardless of stack count.
-					if not UnitIsDeadOrGhost("player") and not UnitDebuff("player", args.spellName) then
+					if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", args.spellName) then
 						specWarnJaggedAbrasionOther:Show(args.destName)
-						voiceJaggedAbrasion:Play("tauntboss")
+						specWarnJaggedAbrasionOther:Play("tauntboss")
 					else
 						warnJaggedAbrasion:Show(args.destName, amount)
 					end
@@ -223,21 +199,21 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnAqueousBurst:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnAqueousBurst:Show()
-			voiceAqueousBurst:Play("runout")
+			specWarnAqueousBurst:Play("runout")
 			yellAqueousBurst:Yell()
 		end
 	elseif spellId == 231904 then
 		specWarnTendWoundsDispel:Show(args.destName)
 		if self.Options.SpecWarn231904dispel then
-			voiceTendWounds:Play("dispelnow")
+			specWarnTendWoundsDispel:Play("dispelnow")
 		end
 	elseif spellId == 234016 then
 		timerDrivenAssault:Start(10, args.destName)
 		warnDrivenAssault:CombinedShow(1, args.destName)
 		if args:IsPlayer() and self:AntiSpam(3, 4) then
 			specWarnDrivenAssault:Show()
-			voiceDrivenAssault:Play("justrun")
-			voiceDrivenAssault:Schedule(1, "keepmove")
+			specWarnDrivenAssault:Play("justrun")
+			specWarnDrivenAssault:ScheduleVoice(1, "keepmove")
 		end
 		if self.Options.NPAuraOnDrivenAssault then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
@@ -246,8 +222,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnSicklyFixate:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() and self:AntiSpam(3, 3) then
 			specWarnSicklyFixate:Show()
-			voiceSicklyFixate:Play("justrun")
-			voiceSicklyFixate:Schedule(1, "keepmove")
+			specWarnSicklyFixate:Play("justrun")
+			specWarnSicklyFixate:ScheduleVoice(1, "keepmove")
 		end
 		if self.Options.NPAuraOnSicklyFixate then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
@@ -256,11 +232,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerUncheckedRageCD:Stop()
 		countdownUncheckedRage:Cancel()
 		specWarnUncheckedRage:Cancel()
-		voiceUncheckedRage:Cancel()
+		specWarnUncheckedRage:CancelVoice()
 		timerCommandingRoarCD:Stop()
 		timerDrawInCD:Stop()
 		specWarnDrawIn:Show()
-		voiceDrawIn:Play("phasechange")
+		specWarnDrawIn:Play("phasechange")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -289,7 +265,7 @@ mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 231768 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnDrenchingWaters:Show()
-		voiceDrenchingWaters:Play("runaway")
+		specWarnDrenchingWaters:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -328,15 +304,15 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 232192 then--Commanding Roar
 		specWarnCommandingroar:Show()
-		voiceCommandingroar:Play("killmob")
+		specWarnCommandingroar:Play("killmob")
 		timerCommandingRoarCD:Start()
 	elseif spellId == 240347 then--Warn Players of Hatching Eggs
 		specWarnHatching:Show()
-		voiceHatching:Play("killmob")
+		specWarnHatching:Play("killmob")
 		timerHatchingCD:Start()
 	end
 end

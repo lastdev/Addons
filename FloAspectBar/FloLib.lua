@@ -4,13 +4,13 @@
 
 -- Some shared functions
 -- Prevent multi-loading
-if not FLOLIB_VERSION or FLOLIB_VERSION < 1.35 then
+if not FLOLIB_VERSION or FLOLIB_VERSION < 1.37 then
 
 local _
 local NUM_SPELL_SLOTS = 10;
 local SCHOOL_COLORS = { 1.0, 0.7, 0.0 };
 
-FLOLIB_VERSION = 1.35;
+FLOLIB_VERSION = 1.37;
 
 FLOLIB_ACTIVATE_SPEC = GetSpellInfo(200749);
 
@@ -420,7 +420,7 @@ function FloLib_Button_SetTooltip(self)
 	end
 end
 
-function FloLib_StartTimer(self, spellName, rank, guid, spellid)
+function FloLib_StartTimer(self, guid, spellid)
 
 	local founded = false;
 	local haveTotem, name, startTime, duration, icon;
@@ -683,6 +683,20 @@ function FloLib_BarDropDown_Show(self, button)
 
 	-- Close all dropdowns
 	CloseDropDownMenus();
+end
+
+function FloLib_UnitHasBuff(unit, name)
+
+	local i = 1;
+	local buff = UnitBuff(unit, i);
+	while buff do
+		if buff == name then
+			return true;
+		end
+		i = i + 1;
+		buff = UnitBuff(unit, i);
+	end
+	return false;
 end
 
 end

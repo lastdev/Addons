@@ -1,8 +1,8 @@
 ﻿--[[
 	DebugLib - An embedded library which works as a higher layer for nLog,
 	by providing easier usage of debugging features.
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: DebugLib.lua 337 2012-09-10 19:58:45Z Esamynn $
+	Version: 7.7.6055 (SwimmingSeadragon)
+	Revision: $Id: DebugLib.lua 6055 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	Manual:
@@ -129,7 +129,7 @@ local LIBRARY_VERSION_MINOR = 2
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/DebugLib/DebugLib.lua $","$Rev: 337 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/DebugLib/DebugLib.lua $","$Rev: 6055 $","5.1.DEV.", 'auctioneer', 'libs')
 
 if not lib.private then
 	lib.private = {}

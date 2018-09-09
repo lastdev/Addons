@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 174 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 190 $"):sub(12, -3))
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:SetZone()
@@ -35,8 +35,8 @@ local specWarnTormented		= mod:NewSpecialWarningYou(99257, "Healer")
 local specWarnDecimation	= mod:NewSpecialWarningSpell(99352, "Tank")
 
 local timerBladeActive		= mod:NewTimer(15, "TimerBladeActive", 99352)
-local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)	-- either Decimation Blade or Inferno Blade
-local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
+local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5, DBM_CORE_TANK_ICON)	-- either Decimation Blade or Inferno Blade
+local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5, DBM_CORE_TANK_ICON)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
 local timerShardsTorment	= mod:NewNextCountTimer(34, 99259, nil, nil, nil, 5)
 local timerCountdown		= mod:NewBuffFadesTimer(8, 99516)
 local timerCountdownCD		= mod:NewNextTimer(45, 99516, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
@@ -54,7 +54,7 @@ mod:AddBoolOption("SetIconOnCountdown")
 mod:AddBoolOption("SetIconOnTorment")
 mod:AddBoolOption("ArrowOnCountdown")
 
-local bladesName = nil
+local bladesName
 local lastStrike = 0--Custom, no prototype
 local currentStrike = 0--^^
 local lastStrikeDiff = 0--^^
@@ -63,7 +63,7 @@ local shardCount = 0
 local tormentIcon = 8
 local countdownIcon = 2
 local countdownTargets = {}
-local tormentDebuff = GetSpellInfo(99257)
+local tormentDebuff, stackDebuff1, stackDebuff2 = DBM:GetSpellInfo(99257), DBM:GetSpellInfo(99262), DBM:GetSpellInfo(99263)
 
 local function showCountdownWarning()
 	warnCountdown:Show(table.concat(countdownTargets, "<, >"))
@@ -74,12 +74,11 @@ end
 local tormentDebuffFilter
 do
 	tormentDebuffFilter = function(uId)
-		return UnitDebuff(uId, tormentDebuff)
+		return DBM:UnitDebuff(uId, tormentDebuff)
 	end
 end
 
 function mod:OnCombatStart(delay)
-	bladesName = nil
 	lastStrike = 0
 	currentStrike = 0
 	lastStrikeDiff = 0
@@ -95,8 +94,8 @@ function mod:OnCombatStart(delay)
 		end
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(L.VitalSpark)
-		DBM.InfoFrame:Show(5, "playerbuffstacks", 99262, 99263, 1)
+		--DBM.InfoFrame:SetHeader(L.VitalSpark)
+		DBM.InfoFrame:Show(5, "playerbuffstacks", stackDebuff1, stackDebuff2, 1)
 	end
 end
 
@@ -140,7 +139,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 99263 and args:IsPlayer() then
 		timerVitalFlame:Start()
 	elseif spellId == 99352 then--Decimation Blades
-		bladesName = GetSpellInfo(99353)
+		bladesName = DBM:GetSpellInfo(99353)
 		lastStrike = GetTime()--Set last strike here too
 		strikeCount = 0--Reset count.
 		if self:IsDifficulty("normal25", "heroic25") then--The very first timer is subject to inaccuracis do to variation. But they are minor, usually within 0.5sec
@@ -149,7 +148,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerStrikeCD:Start(6, bladesName)--6 seconds on 10 man
 		end
 	elseif spellId == 99350 then--Inferno Blades
-		bladesName = GetSpellInfo(99351)
+		bladesName = DBM:GetSpellInfo(99351)
 		lastStrike = GetTime()--Set last strike here too
 		strikeCount = 0--Reset count.
 		timerStrikeCD:Start(2.5, bladesName)

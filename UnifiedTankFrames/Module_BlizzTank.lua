@@ -46,11 +46,14 @@ local source = {
 				--local name, rank, subgroup, level, class, fileName, zone, online, isDead, role = GetRaidRosterInfo(i);
 				local name, _, _, _, _, _, _, _, _, role = GetRaidRosterInfo(i);
 				--local name, realm = UnitName("raid"..i)
-				if (self.config.mainTank and role == "MAINTANK") or (self.config.mainAssist and role == "MAINASSIST") then
-					num = num + 1
-					new[name] = role
-					if self.list[name] == nil then
-						addon:AddTank(name, "BlizzTank", num)
+				if name and role then
+					role = strupper(role)
+					if (self.config.mainTank and role == "MAINTANK") or (self.config.mainAssist and role == "MAINASSIST") then
+						num = num + 1
+						new[name] = role
+						if self.list[name] == nil then
+							addon:AddTank(name, "BlizzTank", num)
+						end
 					end
 				end
 			end

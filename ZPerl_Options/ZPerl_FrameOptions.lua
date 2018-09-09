@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1076 $")
+XPerl_SetModuleRevision("$Revision: 1098 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -3369,6 +3369,15 @@ if (XPerl_UpgradeSettings) then
 
 			if (oldVersion < "5.1.7") then
 				old.raid.inParty = nil
+			end
+
+			if (oldVersion < "5.4.8") then
+				if not old.custom.zones then
+					return
+				end
+
+				old.custom.zones[EJ_GetInstanceInfo(946)] = {[246220] = true, [248819] = true, [248815] = true, [244768] = true, [244071] = true, [244086] = true, [248861] = true, [248326] = true, [247552] = true, [248068] = true, [253600] = true, [249297] = true, [252760] = true, [246687] = true, [243961] = true, [245586] = true, [245995] = true, [251570] = true, [250669] = true, [255199] = true}
+				old.custom.zones[EJ_GetInstanceInfo(875)] = {[236449] = true, [235213] = true, [235240] = true, [240209] = true, [235222] = true, [238429] = true}
 			end
 		end
 	end

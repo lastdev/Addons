@@ -27,6 +27,16 @@ local modes = {
 		GetMissions = function(c) return DataStore:GetActiveMissions(c, LE_FOLLOWER_TYPE_GARRISON_7_0) end,
 		GetNumMissions = function(c) return DataStore:GetNumActiveMissions(c, LE_FOLLOWER_TYPE_GARRISON_7_0) end,
 	},
+	[5] = {	-- available missions
+		GetName = function() return GARRISON_LANDING_AVAILABLE end,
+		GetMissions = function(c) return DataStore:GetAvailableMissions(c, LE_FOLLOWER_TYPE_GARRISON_8_0) end,
+		GetNumMissions = function(c) return DataStore:GetNumAvailableMissions(c, LE_FOLLOWER_TYPE_GARRISON_8_0) end,
+	},
+	[6] = {	-- active missions
+		GetName = function() return GARRISON_LANDING_IN_PROGRESS end,
+		GetMissions = function(c) return DataStore:GetActiveMissions(c, LE_FOLLOWER_TYPE_GARRISON_8_0) end,
+		GetNumMissions = function(c) return DataStore:GetNumActiveMissions(c, LE_FOLLOWER_TYPE_GARRISON_8_0) end,
+	},
 }
 
 local function BuildView()
@@ -43,7 +53,7 @@ local function BuildView()
 		table.insert(view, id)
 	end
 	
-	if mode == 2 or mode == 4 then
+	if mode == 2 or mode == 4 or mode == 6 then
 		table.sort(view, function(a,b) 
 				local remainingA = select(2, DataStore:GetActiveMissionInfo(character, a)) or 0
 				local remainingB = select(2, DataStore:GetActiveMissionInfo(character, b)) or 0

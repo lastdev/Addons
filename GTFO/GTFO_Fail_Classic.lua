@@ -99,3 +99,29 @@ GTFO.SpellID["168338"] = {
 	--desc = "Artillery Blast";
 	sound = 3;
 };
+
+GTFO.SpellID["248320"] = {
+  --desc = "Lethargy (Ysondre)";
+  applicationOnly = true;
+  sound = 3;
+};
+
+GTFO.SpellID["243401"] = {
+  --desc = "Noxious Breath (Ysondre)";
+  soundFunction = function() -- Fail for non-tanks, fail for tanks after more than 1 stack
+		if (GTFO.TankMode) then
+			local stacks = GTFO_DebuffStackCount("player", 243401); 
+			if (stacks > 1) then
+				return 3;
+			end
+			return 0;
+		else
+			return 3;
+		end
+	end
+};
+
+GTFO.SpellID["243411"] = {
+  --desc = "Tail Sweep (Ysondre)";
+  sound = 3;
+};

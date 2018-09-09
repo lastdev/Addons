@@ -1,8 +1,8 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: Overachiever - Trade
-## Version: 0.99.9
+## Version: 1.0.3
 ## Author: Tuhljin
-## Notes: Trade Skills module.
+## Notes: Add achievement information to the Cooking window.
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_TradeSkillUI
 ## Dependencies: Overachiever

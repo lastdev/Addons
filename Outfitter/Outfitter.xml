@@ -4,7 +4,7 @@
 	<Button name="OutfitterTabTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
 		<Scripts>
 			<OnClick>
-				PlaySound("igMainMenuOpen", "SFCX")
+				PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
 				Outfitter:ShowPanel(self:GetID())
 			</OnClick>
 		</Scripts>
@@ -214,7 +214,7 @@
 					<OnClick>
 						local parent = self:GetParent()
 						parent:SetValue(parent:GetValue() - 1)
-						PlaySound("UChatScrollButton", "SFCX")
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -226,7 +226,7 @@
 					<OnClick>
 						local parent = self:GetParent()
 						parent:SetValue(parent:GetValue() + 1)
-						PlaySound("UChatScrollButton", "SFCX")
+						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -324,11 +324,11 @@
 				elseif delta > 0 then -- up,down = 1,-1
 					local parent = scrollbarupbutton:GetParent()
 					parent:SetValue(parent:GetValue() - 1)
-					PlaySound("UChatScrollButton", "SFCX")
+					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 				else
 					local parent = scrollbardownbutton:GetParent()
 					parent:SetValue(parent:GetValue() + 1)
-					PlaySound("UChatScrollButton", "SFCX")
+					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 				end
 				Outfitter:ListButton_OnLeave(self)
 				Outfitter:ListButton_OnEnter(self)
@@ -381,7 +381,7 @@
 			<Frame name="$parentItem" hidden="true" setAllPoints="true">
 				<Layers>
 					<Layer level="OVERLAY">
-						<Texture name="$parentIcon" file="">
+						<Texture name="$parentIcon">
 							<Size>
 								<AbsDimension x="16" y="16"/>
 							</Size>
@@ -425,7 +425,7 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<Texture name="$parentScriptIcon" file="">
+						<Texture name="$parentScriptIcon">
 							<Size>
 								<AbsDimension x="16" y="16"/>
 							</Size>
@@ -788,7 +788,7 @@
 								</Anchors>
 								<Scripts>
 									<OnClick>
-										PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 										Outfitter:CreateNewOutfit()
 									</OnClick>
 								</Scripts>
@@ -1061,7 +1061,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 								Outfitter:SetAllSlotEnables(false)
 							</OnClick>
 						</Scripts>
@@ -1075,7 +1075,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 								Outfitter:SetAllSlotEnables(true)
 							</OnClick>
 						</Scripts>
@@ -1458,7 +1458,7 @@
 				self:SetText(string.format(Outfitter.cInsertFormat, self.GetTextFunc()))
 			</OnEvent>
 			<OnClick>
-				PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+				PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 				local	vEditBox = getglobal(self:GetParent():GetName().."EditBox")
 				vEditBox:Insert(self.GetTextFunc().."\n")
 			</OnClick>
@@ -1489,7 +1489,7 @@
 			<OnClick>
 				local vTab = self:GetParent()
 				
-				PlaySound("igMainMenuOpen", "SFCX")
+				PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
 				PanelTemplates_Tab_OnClick(self, vTab)
 				vTab:SetPanelIndex(vTab.selectedTab)
 			</OnClick>
@@ -1642,7 +1642,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 						self:GetParent():Close()
 					</OnClick>
 				</Scripts>
@@ -1660,7 +1660,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("igMainMenuOptionCheckBoxOn", "SFCX")
+						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 						self:GetParent():Done()
 					</OnClick>
 				</Scripts>

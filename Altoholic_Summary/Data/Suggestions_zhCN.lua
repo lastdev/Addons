@@ -6,7 +6,26 @@ local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "zhCN" then return end
 
-local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
+local continents = { 		-- this gets localized names, also avoids hardcoding them.
+	[1] = 12,
+	[2] = C_Map.GetMapInfo(12).name,
+	[3] = 13,
+	[4] = C_Map.GetMapInfo(13).name,
+	[5] = 101,
+	[6] = C_Map.GetMapInfo(101).name,
+	[7] = 113,
+	[8] = C_Map.GetMapInfo(113).name,
+	[9] = 424,
+	[10] = C_Map.GetMapInfo(424).name,
+	[11] = 572,
+	[12] = C_Map.GetMapInfo(572).name,
+	[13] = 619,
+	[14] = C_Map.GetMapInfo(619).name,
+	[15] = 875,
+	[16] = C_Map.GetMapInfo(875).name,
+	[17] = 876,
+	[18] = C_Map.GetMapInfo(876).name,
+};
 
 -- 以下为声望值、等级、技能等的建议
 addon.Suggestions = {
@@ -266,20 +285,6 @@ addon.Suggestions = {
 	},
 	
 	-- ** 辅助技能 **
-	[TS.FIRSTAID] = {
-		{ 40, "1~40: 亚麻绷带" },
-		{ 80, "41~80: 厚亚麻绷带\n50的时候学急救(中级)" },
-		{ 115, "81~115: 绒线绷带" },
-		{ 150, "116~150: 厚绒线绷带\n125的时候去买教材<中级急救教材 - 绷带缚体>和2个配方\n配方购于：\n德尼布·沃克:阿拉希高地,激流堡<27,58>\n格鲁克卡恩:尘泥沼泽,蕨墙村<35,30>\n巴莱·洛克维:尘泥沼泽,蕨墙村<36,30>" },
-		{ 180, "151~180: 丝质绷带" },
-		{ 210, "181~210: 厚丝质绷带\n200的时候满35级，做任务学会急救(专家级)\n地点：塞拉摩岛(联盟)|落锤镇(部落)" },
-		{ 240, "211~240: 魔纹绷带\n" },
-		{ 260, "241~260: 厚魔纹绷带" },
-		{ 290, "261~290: 符文布绷带" },
-		{ 330, "291~330: 厚符文布绷带\n300的时候去买教材<大师级急救手册 - 私人医生>\n配方购于：\n阿蕾瑟拉:地狱火半岛,塔哈玛特神殿<26,62>\n布尔库:地狱火半岛,猎鹰岗哨<22,39>" },
-		{ 360, "331~360: 灵纹布绷带\n购买<手册：灵纹布绷带>\n配方购于：\n阿蕾瑟拉:地狱火半岛,塔哈玛特神殿<26,62>\n布尔库:地狱火半岛,猎鹰岗哨<22,39>" },
-		{ 375, "361~375: 厚灵纹布绷带\n购买<手册：厚灵纹布绷带>\n配方购于：\n阿蕾瑟拉:地狱火半岛,塔哈玛特神殿<26,62>\n布尔库:地狱火半岛,猎鹰岗哨<22,39>" }
-	},
 	[TS.COOKING] = {
 		{ 40, "1~40: 香料面包\n(1×面粉|1×甜香料)×70" },
 		{ 75, "41~75: 熏熊肉\n(1×熊肉)×30\n配方购于：\n德拉克·卷刃:洛克莫丹<35,49>\n安德鲁·希尔伯特:银松森林<43,40>" },
@@ -317,7 +322,7 @@ addon.Suggestions = {
 		{ 300, "1~300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "301~375: " .. continents[3]},
 		{ 450, "376~450: " .. continents[4]},
-		{ 525, "451~525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 525, "451~525: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(720).name .. "\n" .. C_Map.GetMapInfo(700).name},
 		{ 600, "526~600: " .. continents[6]},
 	},
 	
@@ -326,25 +331,25 @@ addon.Suggestions = {
 	["Leveling"] = {
 		{ 10, "1~10级: 所有起始地区" },
 		
-		{ 15, "15级: " .. GetMapNameByID(39)},
-		{ 16, "16级: " .. GetMapNameByID(684)},
-		{ 20, "20级: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
-							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
-							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
-		{ 25, "25级: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
-							.. "\n" .. GetMapNameByID(24)},
-		{ 30, "30级: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
-		{ 35, "35级: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
-							.. "\n" .. GetMapNameByID(607)},
-		{ 40, "40级: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
-		{ 45, "45级: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
-		{ 48, "48级: " .. GetMapNameByID(17)},
-		{ 50, "50级: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
-		{ 52, "52级: " .. GetMapNameByID(29)},
-		{ 54, "54级: " .. GetMapNameByID(38)},
-		{ 55, "55级: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
-		{ 58, "58级: " .. GetMapNameByID(19)},
-		{ 60, "60级: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		{ 15, "15级: " .. C_Map.GetMapInfo(39).name},
+		{ 16, "16级: " .. C_Map.GetMapInfo(684).name},
+		{ 20, "20级: " .. C_Map.GetMapInfo(181).name .. "\n" .. C_Map.GetMapInfo(35).name.. "\n" .. C_Map.GetMapInfo(476).name
+							.. "\n" .. C_Map.GetMapInfo(42).name .. "\n" .. C_Map.GetMapInfo(21).name .. "\n" .. C_Map.GetMapInfo(11).name
+							.. "\n" .. C_Map.GetMapInfo(463).name .. "\n" .. C_Map.GetMapInfo(36).name},
+		{ 25, "25级: " .. C_Map.GetMapInfo(34).name .. "\n" .. C_Map.GetMapInfo(40).name .. "\n" .. C_Map.GetMapInfo(43).name
+							.. "\n" .. C_Map.GetMapInfo(24).name},
+		{ 30, "30级: " .. C_Map.GetMapInfo(16).name .. "\n" .. C_Map.GetMapInfo(37).name .. "\n" .. C_Map.GetMapInfo(81).name},
+		{ 35, "35级: " .. C_Map.GetMapInfo(673).name .. "\n" .. C_Map.GetMapInfo(101).name .. "\n" .. C_Map.GetMapInfo(26).name
+							.. "\n" .. C_Map.GetMapInfo(607).name},
+		{ 40, "40级: " .. C_Map.GetMapInfo(141).name .. "\n" .. C_Map.GetMapInfo(121).name .. "\n" .. C_Map.GetMapInfo(22).name},
+		{ 45, "45级: " .. C_Map.GetMapInfo(23).name .. "\n" .. C_Map.GetMapInfo(61).name},
+		{ 48, "48级: " .. C_Map.GetMapInfo(17).name},
+		{ 50, "50级: " .. C_Map.GetMapInfo(161).name .. "\n" .. C_Map.GetMapInfo(182).name .. "\n" .. C_Map.GetMapInfo(28).name},
+		{ 52, "52级: " .. C_Map.GetMapInfo(29).name},
+		{ 54, "54级: " .. C_Map.GetMapInfo(38).name},
+		{ 55, "55级: " .. C_Map.GetMapInfo(201).name .. "\n" .. C_Map.GetMapInfo(281).name},
+		{ 58, "58级: " .. C_Map.GetMapInfo(19).name},
+		{ 60, "60级: " .. C_Map.GetMapInfo(32).name .. "\n" .. C_Map.GetMapInfo(241).name .. "\n" .. C_Map.GetMapInfo(261).name},
 		
 		-- Outland
 		-- 465 Hellfire Peninsula 
@@ -355,12 +360,12 @@ addon.Suggestions = {
 		-- 479 Netherstorm 
 		-- 473 Shadowmoon Valley 
 		
-		{ 63, "63级: " .. GetMapNameByID(465)},
-		{ 64, "64级: " .. GetMapNameByID(467)},
-		{ 65, "65级: " .. GetMapNameByID(478)},
-		{ 67, "67级: " .. GetMapNameByID(477)},
-		{ 68, "68级: " .. GetMapNameByID(475)},
-		{ 70, "70级: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
+		{ 63, "63级: " .. C_Map.GetMapInfo(465).name},
+		{ 64, "64级: " .. C_Map.GetMapInfo(467).name},
+		{ 65, "65级: " .. C_Map.GetMapInfo(478).name},
+		{ 67, "67级: " .. C_Map.GetMapInfo(477).name},
+		{ 68, "68级: " .. C_Map.GetMapInfo(475).name},
+		{ 70, "70级: " .. C_Map.GetMapInfo(479).name .. "\n" .. C_Map.GetMapInfo(473).name .. "\n" .. C_Map.GetMapInfo(499).name .. "\n" .. C_Map.GetMapInfo(32).name},
 
 		-- Northrend
 		-- 491 Howling Fjord 
@@ -373,11 +378,11 @@ addon.Suggestions = {
 		-- 495 The Storm Peaks 
 		-- 492 Icecrown 
 		
-		{ 72, "72级: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
-		{ 75, "75级: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
-		{ 76, "76级: " .. GetMapNameByID(496)},
-		{ 78, "78级: " .. GetMapNameByID(493)},
-		{ 80, "80级: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		{ 72, "72级: " .. C_Map.GetMapInfo(491).name .. "\n" .. C_Map.GetMapInfo(486).name},
+		{ 75, "75级: " .. C_Map.GetMapInfo(488).name .. "\n" .. C_Map.GetMapInfo(490).name},
+		{ 76, "76级: " .. C_Map.GetMapInfo(496).name},
+		{ 78, "78级: " .. C_Map.GetMapInfo(493).name},
+		{ 80, "80级: " .. C_Map.GetMapInfo(510).name .. "\n" .. C_Map.GetMapInfo(495).name .. "\n" .. C_Map.GetMapInfo(492).name},
 		
 		-- Cataclysm
 		-- 606 Mount Hyjal 
@@ -386,10 +391,10 @@ addon.Suggestions = {
 		-- 720 Uldum 
 		-- 700 Twilight Highlands 
 		
-		{ 82, "82级: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
-		{ 83, "83级: " .. GetMapNameByID(640)},
-		{ 84, "84级: " .. GetMapNameByID(720)},
-		{ 85, "85级: " .. GetMapNameByID(700)},
+		{ 82, "82级: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(613).name},
+		{ 83, "83级: " .. C_Map.GetMapInfo(640).name},
+		{ 84, "84级: " .. C_Map.GetMapInfo(720).name},
+		{ 85, "85级: " .. C_Map.GetMapInfo(700).name},
 
 		-- Pandaria
 		-- 806 The Jade Forest 
@@ -399,10 +404,10 @@ addon.Suggestions = {
 		-- 810 Townlong Steppes 
 		-- 858 Dread Wastes 
 		
-		{ 86, "86级: " .. GetMapNameByID(806)},
-		{ 87, "87级: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
-		{ 88, "88级: " .. GetMapNameByID(809)},
-		{ 89, "89级: " .. GetMapNameByID(810)},
-		{ 90, "90级: " .. GetMapNameByID(858)},
+		{ 86, "86级: " .. C_Map.GetMapInfo(806).name},
+		{ 87, "87级: " .. C_Map.GetMapInfo(807).name .. "\n" .. C_Map.GetMapInfo(857).name},
+		{ 88, "88级: " .. C_Map.GetMapInfo(809).name},
+		{ 89, "89级: " .. C_Map.GetMapInfo(810).name},
+		{ 90, "90级: " .. C_Map.GetMapInfo(858).name},
 	},
 }

@@ -173,6 +173,7 @@ L["Moira Thaurissan <Queen of the Dark Iron>"] = "茉艾拉·索瑞森 <黑鐵�
 L["Morgl the Oracle <The Earthen Ring>"] = "神諭者莫哥 <陶土議會>"
 L["Murr"] = "穆爾"
 L["Mylune"] = "蜜露恩"
+L["Navigation Console"] = "導航控制台"
 L["Neptulon"] = "奈普圖隆"
 L["Nighthuntress Silus <Nightborne Hunters Recruiter>"] = "暗夜女獵手希樂絲 <夜裔獵人招募員>"
 L["Night-Stalker Ku'nanji <Rogue Trainer>"] = "暗夜潛獵者庫南吉 <盜賊訓練師>"
@@ -247,6 +248,7 @@ L["Show all nodes that you manually hid by right-clicking on them and choosing \
 L["Show all the other POIs."] = "顯示所有其他的 POI 點。"
 L["Show all workorder NPCs' locations even the corresponding order hall advancement has not been researched."] = "顯示所有可下訂單的 NPC 位置，即便其對應的職業大廳升級未被研究。"
 L["Show flight master's location."] = "顯示飛行管理員位置。"
+L["Show Navigation Console's location in the Vindicaar."] = "顯示導航控制台在梵迪卡爾的位置。"
 L["Show note"] = "顯示說明"
 L["Show portal's locations."] = "顯示傳送門位置。"
 L["Show the Champion Armaments NPC's location."] = "顯示勇士武裝徵調員的位置。"
@@ -311,9 +313,5 @@ L["Yancey Grillsen <Bloodsail Recruiter>"] = "楊希·貴爾森 <血帆招募員
 L["Yaris Darkclaw <Recruiter>"] = "亞里斯·暗爪 <招募員>"
 L["Yushi <Seal of Broken Fate Shipment>"] = "遊曦 <破碎命運徽印貨物>"
 L["Zen'kiki"] = "贊基奇"
-
--- ToC
-L["Description"] = "顯示各職業大廳裡 NPC 與主要的 POI 的位置"
-L["Title"] = "HandyNotes - 職業大廳"
 
 end

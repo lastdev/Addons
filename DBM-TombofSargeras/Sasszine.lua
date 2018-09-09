@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16687 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetZone()
@@ -19,10 +19,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO: Do more with who has Buffer fish?
---TODO, automate Hydra Shot and assigning of soakers?
---TODO, target scan dark depths?
---TODO, hydra shot lowered to 30 on mythic, see if still 40 in other modes
 --[[
 (ability.id = 230273 or ability.id = 232722 or ability.id = 230384 or ability.id = 232746 or ability.id = 232757 or ability.id = 232827 or ability.id = 232756 or ability.id = 230358) and type = "begincast" or
 (ability.id = 230201 or ability.id = 232745) and type = "cast" or
@@ -38,11 +34,11 @@ local warnFromtheAbyss				= mod:NewSpellAnnounce(230227, 2)
 local warnThunderingShock			= mod:NewTargetAnnounce(230362, 2, nil, false)
 local warnConsumingHunger			= mod:NewTargetAnnounce(230384, 2)
 --Stage Two: Terrors of the Deep
-local warnPhase2					= mod:NewPhaseAnnounce(2, 2)
+local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnSummonOssunet				= mod:NewSpellAnnounce(232913, 2)
 local warnBefoulingInk				= mod:NewTargetAnnounce(232916, 2, nil, false)--Optional warning if you want to know who's carrying ink
 --Stage three
-local warnPhase3					= mod:NewPhaseAnnounce(3, 2)
+local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 
 --General Stuff
 local specWarnHydraShot				= mod:NewSpecialWarningYouPos(230139, nil, nil, nil, 1, 2)
@@ -91,19 +87,6 @@ local countdownBurdenofPain			= mod:NewCountdown("Alt28", 230201, "Tank")
 --Stage One: Ten Thousand Fangs
 local countdownSlicingTorando		= mod:NewCountdown("AltTwo43", 232722)
 
---General Stuff
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceHydraShot				= mod:NewVoice(230139)--targetyou/mm
-local voiceBurdenofPain				= mod:NewVoice(230201)--defensive/tauntboss
-local voiceDreadShark				= mod:NewVoice(239436)--watchstep/takedamage
---Stage One: Ten Thousand Fangs
-local voiceSlicingTornado			= mod:NewVoice(232722)--watchwave?
-local voiceThunderingShock			= mod:NewVoice(230362, nil, nil, 2)--helpdispel/movetojelly/watchstep
-local voiceConsumingHunger			= mod:NewVoice(230384)--movetojelly (move to jellyfish)
---Stage Two: Terrors of the Deep
-local voiceDevouringMaw				= mod:NewVoice(234621)-- inktoshark (bring ink to shark) too long?
-local voiceCrashingWave				= mod:NewVoice(232827)--chargemove
-
 mod:AddSetIconOption("SetIconOnHydraShot", 230139, true)
 mod:AddBoolOption("TauntOnPainSuccess", false)
 --mod:AddInfoFrameOption(227503, true)
@@ -115,17 +98,10 @@ mod.vb.hydraShotCount = 0
 mod.vb.burdenCount = 0
 mod.vb.tornadoCount = 0
 mod.vb.mawCount = 0
-local thunderingShock = GetSpellInfo(230358)
-local consumingHunger = GetSpellInfo(230384)
+local thunderingShock, consumingHunger, bufferFish = DBM:GetSpellInfo(230358), DBM:GetSpellInfo(230384), DBM:GetSpellInfo(239375)
 local hydraIcons = {}
 local eventsRegistered = false
-
---/run DBM:GetModByName("1861"):TestHydraShot(1)
-function mod:TestHydraShot(icon)
-	specWarnHydraShot:Show(self:IconNumToTexture(icon))
-	yellHydraShot:Yell(icon, "Hydra Shot", icon)
-	yellHydraShotFades:Countdown(5, 4, icon)
-end
+local p3MythicCrashingWave = {30.9, 30.9, 40.6, 35.8, 30.9}--All minus 2 because timer starts at SUCCESS but is for START
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
@@ -174,7 +150,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 232722 then
 		self.vb.tornadoCount = self.vb.tornadoCount + 1
 		specWarnSlicingTornado:Show()
-		voiceSlicingTornado:Play("watchwave")
+		specWarnSlicingTornado:Play("watchwave")
 		if self:IsMythic() then
 			timerSlicingTornadoCD:Start(34, self.vb.tornadoCount+1)
 			countdownSlicingTorando:Start(34)
@@ -187,30 +163,29 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 232746 and self:AntiSpam(10, 5) then
 		self.vb.mawCount = self.vb.mawCount + 1
 		specWarnDevouringMaw:Show(self.vb.mawCount)
-		voiceDevouringMaw:Play("inktoshark")
+		specWarnDevouringMaw:Play("inktoshark")
 	elseif spellId == 232757 and self:AntiSpam(10, 6) then
 		specWarnCrashingWave:Show()
-		voiceCrashingWave:Play("chargemove")
+		specWarnCrashingWave:Play("chargemove")
 	elseif spellId == 230358 then
-		if UnitDebuff("player", consumingHunger) then
+		if DBM:UnitDebuff("player", consumingHunger) then
 			specWarnConsumingHunger:Show(thunderingShock)
-			voiceConsumingHunger:Play("movetojelly")
+			specWarnConsumingHunger:Play("movetojelly")
 		else
 			specWarnThunderingShock:Show()
-			voiceThunderingShock:Play("watchstep")
+			specWarnThunderingShock:Play("watchstep")
 		end
 		timerThunderingShockCD:Start()
 	elseif spellId == 230201 then
-		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
-		if tanking or (status == 3) then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnBurdenofPain:Show()
-			voiceBurdenofPain:Play("defensive")
+			specWarnBurdenofPain:Play("defensive")
 		else
 			if not self.Options.TauntOnPainSuccess then
 				local targetName = UnitName("boss1target") or DBM_CORE_UNKNOWN
-				if self:AntiSpam(5, targetName) then
+				if self:AntiSpam(5, targetName) and UnitName("player") ~= targetName then
 					specWarnBurdenofPainTaunt:Show(targetName)
-					voiceBurdenofPain:Play("tauntboss")
+					specWarnBurdenofPainTaunt:Play("tauntboss")
 				end
 			end
 		end
@@ -237,7 +212,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 232757 then
 		self.vb.crashingWaveCount = self.vb.crashingWaveCount + 1
 		if self:IsMythic() and self.vb.phase == 3 then
-			timerCrashingWaveCD:Start(31.5, self.vb.crashingWaveCount+1)--33-45
+			local timer = p3MythicCrashingWave[self.vb.crashingWaveCount+1]
+			if timer then
+				timerCrashingWaveCD:Start(timer, self.vb.crashingWaveCount+1)
+			else
+				timerCrashingWaveCD:Start(30.9, self.vb.crashingWaveCount+1)
+			end
 		else
 			timerCrashingWaveCD:Start(nil, self.vb.crashingWaveCount+1)
 		end
@@ -270,9 +250,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnHydraShot:Show(self:IconNumToTexture(count))
 			if self:IsHard() then
-				voiceHydraShot:Play("mm"..count)
+				specWarnHydraShot:Play("mm"..count)
 			else
-				voiceHydraShot:Play("targetyou")
+				specWarnHydraShot:Play("targetyou")
 			end
 			yellHydraShot:Yell(count, args.spellName, count)
 			yellHydraShotFades:Countdown(6, nil, count)
@@ -283,13 +263,13 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 230201 then
 		if not args:IsPlayer() and self:AntiSpam(5, args.destName) then
 			specWarnBurdenofPainTaunt:Show(args.destName)
-			voiceBurdenofPain:Play("tauntboss")
+			specWarnBurdenofPainTaunt:Play("tauntboss")
 		end
 	elseif spellId == 230362 then
 		if self.Options.SpecWarn230362dispel then
 			specWarnThunderingShock:CombinedShow(0.3, args.destName)
 			if self:AntiSpam(3, 2) and self:IsHealer() then
-				voiceThunderingShock:Play("helpdispel")
+				specWarnThunderingShock:Play("helpdispel")
 			end
 		else
 			warnThunderingShock:CombinedShow(0.3, args.destName)
@@ -298,7 +278,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnConsumingHunger:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnConsumingHunger:Show(thunderingShock)
-			voiceConsumingHunger:Play("movetojelly")
+			specWarnConsumingHunger:Play("movetojelly")
 		end
 	elseif spellId == 232916 then--Person is carrying ink
 		warnBefoulingInk:CombinedShow(1, args.destName)
@@ -336,8 +316,8 @@ function mod:SPELL_DAMAGE(sourceGUID, _, _, _, _, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 230227 and self:AntiSpam(3, 3) then
 		warnFromtheAbyss:Show()
 		timerFromtheAbyssCD:Start()
@@ -356,10 +336,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		if self:IsMythic() then
 			--Every two sharks
 			specWarnDreadShark:Show()
-			if UnitDebuff("player", GetSpellInfo(239375)) then--Has bufferfish
-				voiceDreadShark:Play("takedamage")
+			if DBM:UnitDebuff("player", bufferFish) then--Has bufferfish
+				specWarnDreadShark:Play("takedamage")
 			else
-				voiceDreadShark:Play("watchstep")
+				specWarnDreadShark:Play("watchstep")
 			end
 			self.vb.phase = self.vb.phase + 0.5
 			timerBufferSpawn:Start(21)
@@ -371,7 +351,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			self.vb.crashingWaveCount = 0
 			self.vb.hydraShotCount = 0
 			warnPhase2:Show()
-			voicePhaseChange:Play("ptwo")
+			warnPhase2:Play("ptwo")
 			timerThunderingShockCD:Stop()
 			timerSlicingTornadoCD:Stop()
 			countdownSlicingTorando:Cancel()
@@ -401,7 +381,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 			self.vb.crashingWaveCount = 0
 			self.vb.hydraShotCount = 0
 			warnPhase3:Show()
-			voicePhaseChange:Play("pthree")
+			warnPhase3:Play("pthree")
 			timerCrashingWaveCD:Stop()
 			timerInkCD:Stop()
 			timerHydraShotCD:Stop()
@@ -420,7 +400,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 				countdownBurdenofPain:Start(23.5)
 			end
 			timerFromtheAbyssCD:Start(28)
-			timerCrashingWaveCD:Start(30, 1)
+			timerCrashingWaveCD:Start(30, 1)--START
 			timerConsumingHungerCD:Start(39)--SUCCESS
 			timerSlicingTornadoCD:Start(51, self.vb.tornadoCount+1)
 			countdownSlicingTorando:Start(51)

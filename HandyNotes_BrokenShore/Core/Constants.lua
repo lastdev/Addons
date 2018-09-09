@@ -1,4 +1,4 @@
--- $Id: Constants.lua 70 2017-07-02 14:53:21Z arith $
+-- $Id: Constants.lua 90 2018-07-26 13:45:11Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -98,5 +98,5 @@ constants.events = {
 	-- such as a bridge or building and onto terrain or another object.
 	"NEW_WMO_CHUNK",
 	"ENCOUNTER_LOOT_RECEIVED",
-	"CLOSE_WORLD_MAP",
+--	"CLOSE_WORLD_MAP",
 }

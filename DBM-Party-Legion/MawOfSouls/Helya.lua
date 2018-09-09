@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1663, "DBM-Party-Legion", 8, 727)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16180 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(96759)
 mod:SetEncounterID(1824)
 mod:SetZone()
@@ -34,10 +34,6 @@ local timerTorrentCD					= mod:NewCDTimer(9.7, 198495, nil, nil, nil, 4, nil, DB
 
 local countdownBreath					= mod:NewCountdown(22, 227233)
 
-local voiceBrackwaterBarrage			= mod:NewVoice(202088)--breathsoon
-local voiceBreath						= mod:NewVoice(227233)--breathsoon
-local voiceTorrent						= mod:NewVoice(198495, "HasInterrupt")--kickcast
-
 mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
@@ -49,19 +45,19 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 227233 then
 		specWarnBreath:Show()
-		voiceBreath:Play("breathsoon")
+		specWarnBreath:Play("breathsoon")
 		timerBreathCD:Start()
 		countdownBreath:Start()
 	elseif spellId == 202088 then
 		specWarnBrackwaterBarrage:Show()
-		voiceBrackwaterBarrage:Play("breathsoon")
+		specWarnBrackwaterBarrage:Play("breathsoon")
 		--timerBreathCD:Start()
 		--countdownBreath:Start()
 	elseif spellId == 198495 then
 		timerTorrentCD:Start()
-		if self:CheckInterruptFilter(args.sourceGUID) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnTorrent:Show(args.sourceName)
-			voiceTorrent:Play("kickcast")
+			specWarnTorrent:Play("kickcast")
 		end
 	end
 end
@@ -101,8 +97,8 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, bfaSpellId, _, legacySpellId)
+	local spellId = legacySpellId or bfaSpellId
 	if spellId == 197596 then--Piercing Tentacle
 		if self.vb.phase == 1 then
 			timerPiercingTentacleCD:Start()

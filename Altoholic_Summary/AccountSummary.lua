@@ -11,9 +11,8 @@ local MODE_SKILLS = 3
 local MODE_ACTIVITY = 4
 local MODE_CURRENCIES = 5
 local MODE_FOLLOWERS = 6
-local MODE_ARTIFACT = 7
 
-local SKILL_CAP = 800
+local SKILL_CAP = 900
 local CURRENCY_ID_JUSTICE = 395
 local CURRENCY_ID_VALOR = 396
 local CURRENCY_ID_APEXIS = 823
@@ -40,23 +39,6 @@ local VIEW_PROFESSION = 9
 local VIEW_GARRISONS = 10
 
 local TEXTURE_FONT = "|T%s:%s:%s|t"
-
--- http://www.wowhead.com/currency=1171/artifact-knowledge
-local artifactXPGain = { 
-	25,50,90,140,200,
-	275,375,500,650,850,
-	1100,1400,1775,2250,2850,
-	3600,4550,5700,7200,9000,
-	11300,14200,17800,22300,24900, 
-	100000,130000,170000,220000,290000,
-	380000,490000,640000,830000,1080000,
-	1400000,1820000,2370000,3080000,4000000,
-	16000000, 20800000, 27040000, 35150000, 45700000,
-	59400000, 77250000, 100400000, 130500000, 169650000,
-	220550000,286750000,372750000, 484600000, 630000000
-	-- 5200000,6760000,8790000,11430000,14860000,
-	-- 19320000,25120000,32660000,42460000,55200000 
-}
 
 addon.Summary = {}
 
@@ -101,36 +83,6 @@ local function FormatBagSlots(size, free)
 	return format(L["NUM_SLOTS_AND_FREE"], colors.cyan, size, colors.white, colors.green, free, colors.white)
 end
 
-local function FormatRankPoints(rank, tier)
-	local points = C_ArtifactUI.GetCostForPointAtRank(rank, tier)
-	if rank == 1 then
-		return format("%s%s: %s%d", colors.white, rank, colors.green, points)
-	end
-	
-	local pointsPreviousLevel = C_ArtifactUI.GetCostForPointAtRank(rank-1, tier)
-	local percentage = ((points / pointsPreviousLevel) - 1) * 100
-	
-	if points >= 2000000000 then	-- rank 56 is 1.9 B
-		return format("%s%s: %s%2.1f B %s+%2.0f%%", colors.white, rank, colors.green, points/1000000000, colors.yellow, percentage)
-	elseif points >= 2000000 then	-- rank 35 is 1.915.000, still want to show it fully
-		return format("%s%s: %s%d M %s+%2.0f%%", colors.white, rank, colors.green, points/1000000, colors.yellow, percentage)
-	else
-		return format("%s%s: %s%d %s+%2.1f%%", colors.white, rank, colors.green, points, colors.yellow, percentage)
-	end
-end
-
-local function FormatXPGain(level)
-	local gain = artifactXPGain[level]
-
-	if gain >= 4000000 then
-		return format("%2.1f M", gain/1000000)
-		-- return gain
-	elseif gain >= 100000 then		-- still want to show 24.900 and below as plain values
-		return format("%d k", gain/1000)
-	end
-	return gain
-end
-
 local function FormatAiL(level)
 	return format("%s%s %s%s", colors.yellow, L["COLUMN_ILEVEL_TITLE_SHORT"], colors.green, level)
 end
@@ -167,7 +119,7 @@ local function Tradeskill_OnEnter(frame, skillName, showRecipeStats)
 	tt:AddLine(format("%s%s/%s", GetSkillRankColor(curRank), curRank, maxRank),1,1,1)
 	
 	if showRecipeStats then	-- for primary skills + cooking & first aid
-		if DataStore:GetProfessionSpellID(skillName) ~= 2366 and skillName ~= GetSpellInfo(8613) then		-- no display for herbalism & skinning
+		-- if DataStore:GetProfessionSpellID(skillName) ~= 2366 and skillName ~= GetSpellInfo(8613) then		-- no display for herbalism & skinning
 			tt:AddLine(" ")
 			
 			if not profession then
@@ -175,19 +127,32 @@ local function Tradeskill_OnEnter(frame, skillName, showRecipeStats)
 				tt:Show()
 				return
 			end
-		
-			if DataStore:GetNumCraftLines(profession) == 0 then
+
+			local numCategories = DataStore:GetNumRecipeCategories(profession)
+			if numCategories == 0 then
 				tt:AddLine(format("%s: 0 %s", L["No data"], TRADESKILL_SERVICE_LEARN),1,1,1)
 			else
+				for i = 1, numCategories do
+					local _, name, rank, maxRank = DataStore:GetRecipeCategoryInfo(profession, i)
+					
+					if name and rank and maxRank then
+						local color = (maxRank == 0) and colors.red or colors.green
+						tt:AddDoubleLine(name, format("%s%s|r / %s%s", color, rank, color, maxRank))
+					-- else
+						-- tt:AddLine(name)
+					end
+				end
+			
 				local orange, yellow, green, grey = DataStore:GetNumRecipesByColor(profession)
 				
+				tt:AddLine(" ")
 				tt:AddLine(orange+yellow+green+grey .. " " .. TRADESKILL_SERVICE_LEARN,1,1,1)
 				tt:AddLine(format("%s%d %s%s|r / %s%d %s%s|r / %s%d %s%s",
 					colors.white, green, colors.recipeGreen, L["COLOR_GREEN"],
 					colors.white, yellow, colors.yellow, L["COLOR_YELLOW"],
 					colors.white, orange, colors.recipeOrange, L["COLOR_ORANGE"]))
 			end
-		end
+		-- end
 	end
 
 	local suggestion = addon:GetSuggestion(skillName, curRank)
@@ -222,7 +187,7 @@ local function Tradeskill_OnClick(frame, skillName)
 	if not skillName or not DataStore:GetModuleLastUpdateByKey("DataStore_Crafts", character) then return end
 
 	local profession = DataStore:GetProfession(character, skillName)
-	if not profession or DataStore:GetNumCraftLines(profession) == 0 then		-- if profession hasn't been scanned (or scan failed), exit
+	if not profession or DataStore:GetNumRecipeCategories(profession) == 0 then		-- if profession hasn't been scanned (or scan failed), exit
 		return
 	end
 	
@@ -250,7 +215,7 @@ local function CurrencyHeader_OnEnter(frame, currencyID)
 	tt:ClearLines()
 	tt:SetOwner(frame, "ANCHOR_BOTTOM")
 	-- tt:AddLine(select(1, GetCurrencyInfo(currencyID)), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-	tt:SetHyperlink(GetCurrencyLink(currencyID))
+	tt:SetHyperlink(GetCurrencyLink(currencyID,0))
 	tt:Show()
 end
 
@@ -473,8 +438,8 @@ columns["Name"] = {
 	GetText = function(character) 
 			local name = DataStore:GetColoredCharacterName(character)
 			local class = DataStore:GetCharacterClass(character)
-			local icon = icons[DataStore:GetCharacterFaction(character)]
-			
+			local icon = icons[DataStore:GetCharacterFaction(character)] or "Interface/Icons/INV_BannerPVP_03"
+
 			return format("%s %s (%s)", format(TEXTURE_FONT, icon, 18, 18), name, class)
 		end,
 	OnEnter = function(frame)
@@ -1088,31 +1053,6 @@ columns["ProfCooking"] = {
 		end,
 }
 
-columns["ProfFirstAid"] = {
-	-- Header
-	headerWidth = 60,
-	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(3273), 18, 18),
-	tooltipTitle = GetSpellInfo(3273),
-	tooltipSubTitle = nil,
-	headerOnEnter = TradeskillHeader_OnEnter,
-	headerOnClick = function() SortView("ProfFirstAid") end,
-	headerSort = DataStore.GetFirstAidRank,
-	
-	-- Content
-	Width = 60,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			local rank = DataStore:GetFirstAidRank(character)
-			return format("%s%s", GetSkillRankColor(rank), rank)
-		end,
-	OnEnter = function(frame)
-			Tradeskill_OnEnter(frame, GetSpellInfo(3273), true)
-		end,
-	OnClick = function(frame, button)
-			Tradeskill_OnClick(frame, GetSpellInfo(3273))
-		end,
-}
-
 columns["ProfFishing"] = {
 	-- Header
 	headerWidth = 60,
@@ -1131,7 +1071,7 @@ columns["ProfFishing"] = {
 			return format("%s%s", GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
-			Tradeskill_OnEnter(frame, GetSpellInfo(131474))
+			Tradeskill_OnEnter(frame, GetSpellInfo(131474), true)
 		end,
 }
 
@@ -1864,275 +1804,6 @@ columns["FollowersItems"] = {
 }
 
 
--- ** Artifact **
-
-columns["ArtifactRank"] = {
-	-- Header
-	headerWidth = 60,
-	headerLabel = L["COLUMN_ARTIFACT_RANK_TITLE_SHORT"],
-	tooltipTitle = L["COLUMN_ARTIFACT_RANK_TITLE"],
-	tooltipSubTitle = L["COLUMN_ARTIFACT_RANK_SUBTITLE"],
-	headerOnClick = function() SortView("ArtifactRank") end,
-	headerSort = DataStore.GetEquippedArtifactRank,
-	
-	-- Content
-	Width = 60,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			local level = DataStore:GetEquippedArtifactRank(character) or 0
-			local color = (level == 0) and colors.grey or colors.white
-
-			return format("%s%s", color, level)
-		end,
-	OnEnter = function(frame)
-			local character = frame:GetParent().character
-			if not character then return end
-			
-			local level = DataStore:GetEquippedArtifactRank(character) or 0
-			if level == 0 then return end
-			
-			local equippedArtifact = DataStore:GetEquippedArtifact(character)
-			
-			local tt = AltoTooltip
-			tt:ClearLines()
-			tt:SetOwner(frame, "ANCHOR_RIGHT")
-			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), L["COLUMN_ARTIFACT_RANK_TITLE"])
-			tt:AddLine(" ")
-			tt:AddLine(CURRENTLY_EQUIPPED, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-			tt:AddDoubleLine(format("%s%s", colors.white, equippedArtifact), format("%s%d", colors.green, level))
-			tt:AddLine(" ")
-			
-			for artifactName, artifactInfo in pairs(DataStore:GetKnownArtifacts(character)) do
-				if artifactName ~= equippedArtifact then
-					tt:AddDoubleLine(format("%s%s", colors.white, artifactName), format("%s%d", colors.green, artifactInfo.rank))
-				end
-			end
-			
-			tt:Show()
-		end,
-}
-
-columns["ArtifactPower"] = {
-	-- Header
-	headerWidth = 130,
-	headerLabel = L["COLUMN_ARTIFACT_POWER_TITLE_SHORT"],
-	tooltipTitle = L["COLUMN_ARTIFACT_POWER_TITLE"],
-	tooltipSubTitle = L["COLUMN_ARTIFACT_POWER_SUBTITLE"],
-	headerOnEnter = function(frame, tooltip) 
-			tooltip:AddLine(" ")
-			
-			local numRows = 35	-- current maximum = 54 levels
-			
-			for i = 1, numRows do
-				-- tooltip:AddDoubleLine(
-					-- format("%s%s: %s%d", colors.white, i, colors.green, C_ArtifactUI.GetCostForPointAtRank(i)), 
-					-- format("%s%s: %s%d", colors.white, i+numRows, colors.green, C_ArtifactUI.GetCostForPointAtRank(i+numRows))
-				-- )
-				tooltip:AddDoubleLine(FormatRankPoints(i, 2), FormatRankPoints(i+numRows, 2))
-			end
-		end,
-	headerOnClick = function() SortView("ArtifactPower") end,
-	headerSort = DataStore.GetEquippedArtifactPower,
-	
-	-- Content
-	Width = 130,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			local level = DataStore:GetEquippedArtifactRank(character) or 0
-			local tier = DataStore:GetEquippedArtifactTier(character) or 2
-			local color = (level == 0) and colors.grey or colors.white
-			
-			local power = DataStore:GetEquippedArtifactPower(character) or 0
-			local cost = C_ArtifactUI.GetCostForPointAtRank(level, tier)
-			local isHighCost = (cost >= 2000000)
-			
-			power = (isHighCost) and format("%2.1f M", power/1000000) or power
-			cost = (isHighCost) and format("%s M", cost/1000000) or cost
-			
-			return format("%s%s%s/%s%s", color, power, colors.white, colors.yellow, cost)
-		end,
-	OnEnter = function(frame)
-			local character = frame:GetParent().character
-			if not character then return end
-			
-			local level = DataStore:GetEquippedArtifactRank(character) or 0
-			if level == 0 then return end
-			
-			local tier = DataStore:GetEquippedArtifactTier(character) or 2
-			local power = DataStore:GetEquippedArtifactPower(character) or 0
-			local equippedArtifact = DataStore:GetEquippedArtifact(character)
-			local cost = C_ArtifactUI.GetCostForPointAtRank(level, tier)
-			local isHighCost = (cost >= 2000000)
-			local extraTraits = DataStore:GetNumArtifactTraitsPurchasableFromXP(level, power, tier)
-			
-			power = (isHighCost) and format("%2.1f M", power/1000000) or power
-			cost = (isHighCost) and format("%s M", cost/1000000) or cost
-			
-			
-			local tt = AltoTooltip
-			tt:ClearLines()
-			tt:SetOwner(frame, "ANCHOR_RIGHT")
-			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), L["COLUMN_ARTIFACT_POWER_TITLE"])
-			tt:AddLine(" ")
-			tt:AddLine(CURRENTLY_EQUIPPED, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
-			if extraTraits > 0 then
-				tt:AddDoubleLine(
-					format("%s%s", colors.white, equippedArtifact), 
-					format("%s%s %s(%s+%s%s)/%s%s", 
-						colors.green, power, 
-						colors.white, colors.cyan, extraTraits, 
-						colors.white, colors.yellow, cost)
-				)
-			
-			else 
-				tt:AddDoubleLine(
-					format("%s%s", colors.white, equippedArtifact), 
-					format("%s%s%s/%s%s", colors.green, power, colors.white, colors.yellow, cost)
-				)
-			end
-			tt:AddLine(" ")
-			
-			for artifactName, artifactInfo in pairs(DataStore:GetKnownArtifacts(character)) do
-				if artifactName ~= equippedArtifact then
-					
-					tier = artifactInfo.tier or 2
-					power = artifactInfo.pointsRemaining
-					cost = C_ArtifactUI.GetCostForPointAtRank(artifactInfo.rank, tier)
-					isHighCost = (cost >= 2000000)
-					
-					power = (isHighCost) and format("%2.1f M", power/1000000) or power
-					cost = (isHighCost) and format("%s M", cost/1000000) or cost
-				
-					extraTraits = DataStore:GetNumArtifactTraitsPurchasableFromXP(artifactInfo.rank, artifactInfo.pointsRemaining, tier)
-					
-					if extraTraits > 0 then
-						tt:AddDoubleLine(
-							format("%s%s", colors.white, artifactName), 
-							format("%s%s %s(%s+%s%s)/%s%s", 
-								colors.green, power, 
-								colors.white, colors.cyan, extraTraits, 
-								colors.white, colors.yellow, cost)
-						)
-					else
-						tt:AddDoubleLine(
-							format("%s%s", colors.white, artifactName), 
-							format("%s%s%s/%s%s", colors.green, power, colors.white, colors.yellow, cost)
-						)
-					end
-				end
-			end
-			
-			tt:Show()
-		end,
-}
-
-columns["ArtifactKnowledge"] = {
-	-- Header
-	headerWidth = 90,
-	headerLabel = L["COLUMN_ARTIFACT_KNOWLEDGE_TITLE_SHORT"],
-	tooltipTitle = L["COLUMN_ARTIFACT_KNOWLEDGE_TITLE"],
-	tooltipSubTitle = L["COLUMN_ARTIFACT_KNOWLEDGE_SUBTITLE"],
-	headerOnEnter = function(frame, tooltip) 
-			tooltip:AddLine(" ")
-			
-
-			-- tooltip:AddDoubleLine(
-				-- format("%s%s: %s-", colors.white, 1, colors.green), 
-				-- format("%s%s: %s+%s %s%%", colors.white, 26, colors.green, FormatXPGain(26), colors.yellow)
-			-- )
-			
-			local numRows = 27
-			for i = 2, numRows + 1 do
-				tooltip:AddDoubleLine(
-					format("%s%s: %s+%s %s%%", colors.white, i, colors.green, FormatXPGain(i), colors.yellow), 
-					format("%s%s: %s+%s %s%%", colors.white, i + numRows, colors.green, FormatXPGain(i + numRows), colors.yellow)
-				)
-			end
-		end,
-	headerOnClick = function() SortView("ArtifactKnowledge") end,
-	headerSort = DataStore.GetArtifactKnowledgeLevel,
-	
-	-- Content
-	Width = 90,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			local level = DataStore:GetArtifactKnowledgeLevel(character) or 0
-			local color = (level == 0) and colors.grey or colors.white
-
-			return format("%s%s", color, level)
-		end,
-	OnEnter = function(frame)
-			local character = frame:GetParent().character
-			if not character then return end
-			
-			local level = DataStore:GetArtifactKnowledgeLevel(character) or 0
-			if level == 0 then return end
-			
-			local tt = AltoTooltip
-			tt:ClearLines()
-			tt:SetOwner(frame, "ANCHOR_RIGHT")
-			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), L["COLUMN_ARTIFACT_KNOWLEDGE_TITLE"])
-			tt:AddLine(" ")
-		
-			tt:AddLine(ARTIFACTS_KNOWLEDGE_TOOLTIP_LEVEL:format(level), HIGHLIGHT_FONT_COLOR:GetRGB())
-			tt:AddLine(ARTIFACTS_KNOWLEDGE_TOOLTIP_DESC:format(BreakUpLargeNumbers(artifactXPGain[level])), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
-			tt:Show()
-		end,
-}
-
-columns["ArtifactNextResearch"] = {
-	-- Header
-	headerWidth = 100,
-	headerLabel = L["COLUMN_ARTIFACT_RESEARCH_TITLE_SHORT"],
-	tooltipTitle = L["COLUMN_ARTIFACT_RESEARCH_TITLE"],
-	tooltipSubTitle = L["COLUMN_ARTIFACT_RESEARCH_SUBTITLE"],
-	headerOnEnter = function(frame, tooltip)
-			tooltip:AddLine(" ")
-			tooltip:AddLine(format("%s* %s= %s", colors.green, colors.white, L["COLUMN_ARTIFACT_RESEARCH_DETAIL_1"]))
-			tooltip:AddLine(format("%s* %s= %s", colors.red, colors.white, L["COLUMN_ARTIFACT_RESEARCH_DETAIL_2"]))
-		end,
-	headerOnClick = function() SortView("ArtifactNextResearch") end,
-	headerSort = DataStore.GetArtifactResearchInfo,
-	
-	-- Content
-	Width = 100,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			local remaining, shipmentsReady, shipmentsTotal = DataStore:GetArtifactResearchInfo(character)
-			local color = (remaining == 0) and colors.grey or colors.white
-
-			local text = ""
-			if shipmentsReady > 0 then		-- add a '*' to show that there are some completed missions
-				if shipmentsReady == shipmentsTotal then
-					text = format(" %s*", colors.red)	-- red if ALL active missions are complete
-				else
-					text = format(" %s*", colors.green)
-				end
-			end
-			
-			return format("%s%s%s", color, SecondsToTime(remaining), text)
-		end,
-	OnEnter = function(frame)
-			local character = frame:GetParent().character
-			if not character then return end
-			
-			local level = DataStore:GetArtifactKnowledgeLevel(character) or 0
-			-- if level == 0 then return end		-- the level can actually be zero.. when you haven't learned the first point yet !
-			
-			local title = GetItemInfo(139390)
-			local remaining, shipmentsReady, shipmentsTotal = DataStore:GetArtifactResearchInfo(character)
-			
-			local tt = AltoTooltip
-			tt:ClearLines()
-			tt:SetOwner(frame, "ANCHOR_RIGHT")
-			tt:AddDoubleLine(DataStore:GetColoredCharacterName(character), title)
-			tt:AddLine(" ")
-			tt:AddLine(format(GARRISON_LANDING_COMPLETED, shipmentsReady, shipmentsTotal), 1,1,1)
-			tt:Show()
-		end,
-}
-
-
 local function ColumnHeader_OnEnter(frame)
 	local column = frame.column
 	if not frame.column then return end		-- invalid data ? exit
@@ -2163,11 +1834,11 @@ end
 local modes = {
 	[MODE_SUMMARY] = { "Name", "Level", "RestXP", "Money", "Played", "AiL", "LastOnline" },
 	[MODE_BAGS] = { "Name", "Level", "BagSlots", "FreeBagSlots", "BankSlots", "FreeBankSlots" },
-	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFirstAid", "ProfFishing", "ProfArchaeology" },
+	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFishing", "ProfArchaeology" },
+	-- [MODE_SKILLS] = { "Name", "Level", "ProfCooking", "ProfFishing", "ProfArchaeology" },
 	[MODE_ACTIVITY] = { "Name", "Level", "Mails", "LastMailCheck", "Auctions", "Bids", "AHLastVisit", "MissionTableLastVisit" },
 	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyNethershard", "CurrencyWarSupplies", "CurrencySOBF", "CurrencyOrderHall" },
 	[MODE_FOLLOWERS] = { "Name", "Level", "FollowersLV100", "FollowersEpic", "FollowersLV630", "FollowersLV660", "FollowersLV675", "FollowersItems" },
-	[MODE_ARTIFACT] = { "Name", "Level", "ArtifactRank", "ArtifactPower", "ArtifactKnowledge", "ArtifactNextResearch" },
 }
 
 function ns:SetMode(mode)
@@ -2281,26 +1952,12 @@ function addon:AiLTooltip()
 	local tt = AltoTooltip
 	
 	tt:AddLine(" ")
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME0), FormatAiL("60-92"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME1), FormatAiL("115-154"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME2), FormatAiL("200-284"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME3), FormatAiL("333-372"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME4), FormatAiL("358-530"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME5), FormatAiL("550-720+"))
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME6), FormatAiL("805-940+"))
-	
-	-- tt:AddLine(colors.teal .. L["Level"] .. " 90",1,1,1);
-	-- tt:AddDoubleLine(colors.yellow .. "358", format("%s%s: %s", colors.white, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY1))
-	-- tt:AddDoubleLine(colors.yellow .. "425", format("%s%s: %s", colors.white, GUILD_CHALLENGE_TYPE4, PLAYER_DIFFICULTY1))
-	-- tt:AddDoubleLine(colors.yellow .. "435", format("%s%s: %s", colors.white, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY2))
-	-- tt:AddDoubleLine(colors.yellow .. "480", format("%s%s: %s", colors.white, GUILD_CHALLENGE_TYPE4, PLAYER_DIFFICULTY2))
-	-- tt:AddLine(" ");
-	-- tt:AddDoubleLine(colors.yellow .. "460", format("%s%s: %s", colors.white, GetMapNameByID(896), PLAYER_DIFFICULTY3))	-- "Mogu'shan Vaults"
-	-- tt:AddDoubleLine(colors.yellow .. "470", format("%s%s: %s", colors.white, GetMapNameByID(897), PLAYER_DIFFICULTY3))	-- "Heart of Fear"
-	-- tt:AddDoubleLine(colors.yellow .. "470", format("%s%s: %s", colors.white, GetMapNameByID(886), PLAYER_DIFFICULTY3))	-- "Terrace of Endless Spring"
-	-- tt:AddDoubleLine(colors.yellow .. "480", format("%s%s: %s", colors.white, GetMapNameByID(930), PLAYER_DIFFICULTY3))	-- "Throne of Thunder"
-	-- tt:AddDoubleLine(colors.yellow .. "496", format("%s%s: %s", colors.white, GetMapNameByID(953), PLAYER_DIFFICULTY3))	-- "Siege of Ogrimmar"
-	-- tt:AddDoubleLine(colors.yellow .. "510", format("%s%s: %s", colors.white, GetMapNameByID(953), "10"))
-	-- tt:AddDoubleLine(colors.yellow .. "520", format("%s%s: %s", colors.white, GetMapNameByID(953), PLAYER_DIFFICULTY4))
-	-- tt:AddDoubleLine(colors.yellow .. "530", format("%s%s: %s", colors.white, GetMapNameByID(953), "25"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME0), FormatAiL("1-62"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME1), FormatAiL("63-94"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME2), FormatAiL("95-102"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME3), FormatAiL("103-114"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME4), FormatAiL("115-130"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME5), FormatAiL("131-149"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME6), FormatAiL("150-265"))
+	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME7), FormatAiL("266+"))
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -91,10 +91,7 @@ mod.vb.thrashCount = 0
 mod.vb.submergeCount = 0
 mod.vb.specialCount = 0
 local huddleIcon = 8
-local wallLight = GetSpellInfo(117964)
-local fearless = GetSpellInfo(118977)
-local waterspout = GetSpellInfo(120519)
-local huddleinterror = GetSpellInfo(120629)
+local wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
 local ominousCackleTargets = {}
 local platformGUIDs = {}
 local waterspoutTargets = {}
@@ -165,13 +162,13 @@ end
 
 function mod:CheckWall()
 	local fearlessTime = timerFearless:GetTime()
-	if not onPlatform and not UnitBuff("player", wallLight) and (fearlessTime == 0 or fearlessTime > 21.5) and not UnitIsDeadOrGhost("player") then
+	if not onPlatform and not DBM:UnitBuff("player", wallLight) and (fearlessTime == 0 or fearlessTime > 21.5) and not UnitIsDeadOrGhost("player") then
 		specWarnBreathOfFearSoon:Show()
 	end
 end
 
 function mod:CheckPlatformLeaved()--Check you are leaved platform by Wall of Light buff. Failsafe for some siturations./
-	if UnitBuff("player", wallLight) then
+	if DBM:UnitBuff("player", wallLight) then
 		self:UnscheduleMethod("CheckPlatformLeaved")
 		self:LeavePlatform()
 	else
@@ -182,18 +179,13 @@ end
 function mod:LeavePlatform()
 	if not self:IsInCombat() then return end--Because sometimes this still gets scheduled on combat end
 	if onPlatform then
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(61038)
-			DBM.BossHealth:RemoveBoss(61042)
-			DBM.BossHealth:RemoveBoss(61046)
-		end
 		table.wipe(platformGUIDs)
 		platformSent = false
 		onPlatform = false
 		MobID = nil
 		--Breath of fear timer recovery
 		if not self.Options.warnBreathOnPlatform then
-			local fearlessApplied = UnitBuff("player", fearless)
+			local fearlessApplied = DBM:UnitBuff("player", fearless)
 			local shaPower = UnitPower("boss1") --Get Boss Power
 			shaPower = shaPower / 3 --Divide it by 3 (cause he gains 3 power per second and we need to know how many seconds to subtrack from fear CD)
 			if (not fearlessApplied and shaPower < 30.3) or (fearlessApplied and shaPower < 5) then--If you have no fearless and breath timer less then 3s, you may not reach to wall. So ignore below 3 sec. Also if you have fearless and breath timer less then 28.3s, not need to warn breath.
@@ -414,9 +406,6 @@ function mod:SPELL_CAST_START(args)
 		platformGUIDs[args.sourceGUID] = true
 		MobID = self:GetCIDFromGUID(args.sourceGUID)
 		timerDreadSprayCD:Start(10.5, args.sourceGUID)--We can accurately start perfectly accurate spray cd bar off their first shoot cast.
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:AddBoss(MobID, args.sourceName)
-		end
 	elseif spellId == 119888 and MobID and MobID == args:GetSrcCreatureID() then
 		specWarnDeathBlossom:Show()
 		self:ScheduleMethod(40, "CheckPlatformLeaved")--you may leave platform soon after Death Blossom casted. failsafe for UNIT_DIED not fire, and fearless fails.
@@ -480,7 +469,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 114936 and self:AntiSpam(10, 2) then--Heroic Phase 2
 		self.vb.phase = 2
 		platformSent = false
@@ -502,11 +491,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		berserkTimer:Start() -- currently, seems phase 2 berserk also 15 min.
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
-		end
-		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(61038)
-			DBM.BossHealth:RemoveBoss(61042)
-			DBM.BossHealth:RemoveBoss(61046)
 		end
 	end
 end

@@ -7,56 +7,69 @@ local core = LibStub("AceAddon-3.0"):GetAddon("SilverDragon")
 local module = core:NewModule("HandyNotes", "AceEvent-3.0")
 local Debug = core.Debug
 
-local HBD = LibStub("HereBeDragons-1.0")
+local HBDMigrate = LibStub("HereBeDragons-Migrate", true)
 
 local db
 -- local icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01"
-local icon, icon_mount
+local icon, icon_mount, icon_partial, icon_mount_partial, icon_done, icon_mount_done
 
 local nodes = {}
 module.nodes = nodes
 
 local handler = {}
 do
-	local currentLevel, currentZone
 	local function should_show_mob(id)
-		if db.hidden[id] then
+		if db.hidden[id] or (ns.mobdb[id] and ns.mobdb[id].hidden) then
 			return false
 		end
-		local _, questid = core:GetMobInfo(id)
-		if questid then
-			return module.db.profile.questcomplete or not IsQuestFlaggedCompleted(questid)
+		local quest, achievement = ns:CompletionStatus(id)
+		if quest ~= nil and achievement ~= nil then
+			-- we have a quest *and* an achievement; we're going to treat "show achieved" as "show achieved if I can still loot them"
+			return (module.db.profile.questcomplete or not quest) and (module.db.profile.achieved or not achievement)
 		end
-		local achievement, achievement_name, completed = ns:AchievementMobStatus(id)
-		if achievement then
-			return not completed or module.db.profile.achieved
+		if quest ~= nil then
+			return module.db.profile.questcomplete or not quest
+		end
+		if achievement ~= nil then
+			return module.db.profile.achieved or not achievement
 		end
 		return module.db.profile.achievementless
 	end
 	local function icon_for_mob(id)
 		if not icon then
-			local texture, _, _, left, right, top, bottom = GetAtlasInfo("DungeonSkull")
-			icon = {
-				icon = texture,
-				tCoordLeft = left,
-				tCoordRight = right,
-				tCoordTop = top,
-				tCoordBottom = bottom,
-				r = 1,
-				g = 0.33,
-				b = 0.33,
-				a = 0.9,
-			}
-			local texture, _, _, left, right, top, bottom = GetAtlasInfo("VignetteKillElite")
-			icon_mount = {
-				icon = texture,
-				tCoordLeft = left,
-				tCoordRight = right,
-				tCoordTop = top,
-				tCoordBottom = bottom,
-			}
+			local function tex(atlas, r, g, b)
+				local texture, _, _, left, right, top, bottom = GetAtlasInfo(atlas)
+				return {
+					icon = texture,
+					tCoordLeft = left, tCoordRight = right, tCoordTop = top, tCoordBottom = bottom,
+					r = r, g = g, b = b, a = 0.9,
+				}
+			end
+			icon = tex("DungeonSkull", 1, 0.33, 0.33) -- red skull
+			icon_partial = tex("DungeonSkull", 1, 1, 0.33) -- yellow skull
+			icon_done = tex("DungeonSkull", 0.33, 1, 0.33) -- green skull
+			icon_mount = tex("VignetteKillElite", 1, 0.33, 0.33) -- red shiny skull
+			icon_mount_partial = tex("VignetteKillElite", 1, 1, 0.33) -- yellow shiny skull
+			icon_mount_done = tex("VignetteKillElite", 0.33, 1, 0.33) -- green shiny skull
 		end
-		return (ns.mobdb[id] and ns.mobdb[id].mount) and icon_mount or icon
+		if not ns.mobdb[id] then
+			return icon
+		end
+		local quest, achievement = ns:CompletionStatus(id)
+		if quest or achievement then
+			if (quest and achievement) or (quest == nil or achievement == nil) then
+				-- full completion
+				return ns.mobdb[id].mount and icon_mount_done or icon_done
+			end
+			-- partial completion
+			return ns.mobdb[id].mount and icon_mount_partial or icon_partial
+		end
+		return ns.mobdb[id].mount and icon_mount or icon
+
+		-- local achievement, name, completed = ns:AchievementMobStatus(id)
+		-- if achievement and completed then
+		-- 	return ns.mobdb[id].mount and icon_mount_found or icon_found
+		-- end
 	end
 	local function iter(t, prestate)
 		if not t then return nil end
@@ -72,26 +85,27 @@ do
 		end
 		return nil, nil, nil, nil, nil
 	end
-	function handler:GetNodes(mapFile, minimap, level)
-		-- Debug("HandyNotes GetNodes", mapFile, HBD:GetMapIDFromFile(mapFile), nodes[mapFile])
-		currentZone = mapFile
-		currentLevel = level
-		return iter, nodes[mapFile], nil
+	function handler:GetNodes2(uiMapID, minimap)
+		Debug("HandyNotes GetNodes2", uiMapID, minimap)
+		return iter, nodes[uiMapID], nil
 	end
 end
 
-function handler:OnEnter(mapFile, coord)
-	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
+function handler:OnEnter(uiMapID, coord)
+	local tooltip = self:GetParent() == WorldMapFrame:GetCanvas() and WorldMapTooltip or GameTooltip
 	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
 		tooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
 		tooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
-	local zoneid = HBD:GetMapIDFromFile(mapFile)
-	local id, name, questid, _, _, lastseen = core:GetMobByCoord(zoneid, coord)
+	if HBDMigrate and type(uiMapID) == "string" then
+		-- ...HandyNotes seems to be giving old mapfile stuff to minimap pins. So, compatibility layer.
+		uiMapID = HBDMigrate:GetUIMapIDFromMapFile(uiMapID)
+	end
+	local id, name, questid, _, _, lastseen = core:GetMobByCoord(uiMapID, coord)
 	if not name then
 		tooltip:AddLine(UNKNOWN)
-		tooltip:AddDoubleLine("At", zoneid .. ':' .. coord)
+		tooltip:AddDoubleLine("At", uiMapID .. ':' .. coord)
 		return tooltip:Show()
 	end
 	tooltip:AddLine(name)
@@ -107,8 +121,8 @@ function handler:OnEnter(mapFile, coord)
 	tooltip:Show()
 end
 
-function handler:OnLeave(mapFile, coord)
-	if self:GetParent() == WorldMapButton then
+function handler:OnLeave(uiMapID, coord)
+	if self:GetParent() == WorldMapFrame:GetCanvas() then
 		WorldMapTooltip:Hide()
 	else
 		GameTooltip:Hide()
@@ -118,21 +132,19 @@ end
 local clicked_zone, clicked_coord
 local info = {}
 
-local function hideMob(button, mapFile, coord)
-	local zoneid = HBD:GetMapIDFromFile(mapFile)
-	local id = core:GetMobByCoord(zoneid, coord)
+local function hideMob(button, uiMapID, coord)
+	local id = core:GetMobByCoord(uiMapID, coord)
 	if id then
 		db.hidden[id] = true
 		module:SendMessage("HandyNotes_NotifyUpdate", "SilverDragon")
 	end
 end
 
-local function createWaypoint(button, mapFile, coord)
+local function createWaypoint(button, uiMapID, coord)
 	if TomTom then
-		local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
 		local x, y = HandyNotes:getXY(coord)
-		local id, name = core:GetMobByCoord(mapId, coord)
-		TomTom:AddMFWaypoint(mapId, nil, x, y, {
+		local id, name = core:GetMobByCoord(uiMapID, coord)
+		TomTom:AddWaypoint(uiMapID, x, y, {
 			title = name,
 			persistent = nil,
 			minimap = true,
@@ -188,9 +200,9 @@ end
 local dropdown = CreateFrame("Frame")
 dropdown.displayMode = "MENU"
 dropdown.initialize = generateMenu
-function handler:OnClick(button, down, mapFile, coord)
+function handler:OnClick(button, down, uiMapID, coord)
 	if button == "RightButton" and not down then
-		clicked_zone = mapFile
+		clicked_zone = uiMapID
 		clicked_coord = coord
 		ToggleDropDownMenu(1, nil, dropdown, self, 0, 0)
 	end
@@ -312,17 +324,11 @@ end
 function module:UpdateNodes()
 	wipe(nodes)
 	for zone, mobs in pairs(ns.mobsByZone) do
-		local mapFile = HBD:GetMapFileFromID(zone)
-		Debug("UpdateNodes", zone, mapFile)
-		if mapFile then
-			nodes[mapFile] = {}
-			for id, locs in pairs(mobs) do
-				for _, loc in ipairs(locs) do
-					nodes[mapFile][loc] = id
-				end
+		nodes[zone] = {}
+		for id, locs in pairs(mobs) do
+			for _, loc in ipairs(locs) do
+				nodes[zone][loc] = id
 			end
-		else
-			Debug("No mapfile for zone!", zone)
 		end
 	end
 	self.nodes = nodes

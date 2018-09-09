@@ -44,7 +44,8 @@ local function GetDay(fullday)
 	local refMonthFirstDay
 	local _
 	
-	refDate.month, refDate.year, _, refMonthFirstDay = CalendarGetMonth()
+	local CurMonthInfo = C_Calendar.GetMonthInfo()
+	refDate.month, refDate.year, refMonthFirstDay = CurMonthInfo.month, CurMonthInfo.year, CurMonthInfo.firstWeekday
 	refDate.day = 1
 
 	local t = {}

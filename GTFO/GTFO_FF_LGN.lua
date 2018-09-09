@@ -39,3 +39,12 @@ GTFO.FFSpellID["208501"] = {
   --desc = "Sterilize (Trilliax)";
   sound = 1;
 };
+
+-- *******************************
+-- * Antorus, the Burning Throne *
+-- *******************************
+
+GTFO.FFSpellID["249297"] = {
+  --desc = "Flames of Reorigination";
+  sound = 1;
+};

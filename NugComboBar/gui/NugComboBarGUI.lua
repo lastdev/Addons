@@ -1,5 +1,13 @@
 local L = NugComboBar.L
 
+
+-- local layoutChoices = { }
+-- for k,v in pairs(NugComboBar.mappings) do
+--         table.insert(layoutChoices, tostring(k))
+-- end
+-- table.sort(layoutChoices)
+-- table.insert(layoutChoices, 1, "Default" )
+
 do
     local opt = {
         type = "group",
@@ -179,6 +187,20 @@ do
                         set = function(info, s) NugComboBar.Commands.chargecooldown() end,
                         order = 12.5,
                     },
+                    enablePrettyRunes = {
+                        name = L"Pretty Runes",
+                        desc = L"If disabled, rune charge timers will be displayed as simple bars",
+                        width = "full",
+                        type = "toggle",
+                        confirm = true,
+						confirmText = "Warning: Requires UI reloading.",
+                        get = function(info) return NugComboBarDB.enablePrettyRunes end,
+                        set = function(info, s)
+                            NugComboBarDB.enablePrettyRunes = not NugComboBarDB.enablePrettyRunes
+                            ReloadUI()
+                        end,
+                        order = 12.6,
+                    },
                     -- vertical = {
                     --     name = L"Vertical",
                     --     type = "toggle",
@@ -244,14 +266,6 @@ do
                     },
                 }
             },
-            classThemes = {
-                        name = "|cffff5555"..L"Use NCB Class Themes".."|r",
-                        type = 'toggle',
-                        width = "double",
-                        order = 2.5,
-                        get = function(info) return NugComboBarDB.classThemes end,
-                        set = function(info, s) NugComboBar.Commands.classthemes() end,
-                    },
             resourcesGroup = {
                 type = "group",
                 name = L"Additional Resources",
@@ -282,14 +296,14 @@ do
                         get = function(info) return NugComboBarDB.infernoBlast end,
                         set = function(info, s) NugComboBar.Commands.infernoblast() end,
                     },
-                    detailedRunes = {
-                        name = "|cffaa0000"..L"Rune Cooldowns".."|r",
-                        type = 'toggle',
-                        -- width = "double",
-                        order = 4,
-                        get = function(info) return NugComboBarDB.enableFullRuneTracker end,
-                        set = function(info, s) NugComboBar.Commands.runecooldowns() end,
-                    },
+                    -- detailedRunes = {
+                    --     name = "|cffaa0000"..L"Rune Cooldowns".."|r",
+                    --     type = 'toggle',
+                    --     -- width = "double",
+                    --     order = 4,
+                    --     get = function(info) return NugComboBarDB.enableFullRuneTracker end,
+                    --     set = function(info, s) NugComboBar.Commands.runecooldowns() end,
+                    -- },
                     meatcleaver = {
                         name = "|cffff3333"..GetSpellInfo(85739).."|r",
                         type = 'toggle',
@@ -466,7 +480,7 @@ do
                 -- disabled = function() return NugComboBar:IsDefaultSkin() and NugComboBarDB.classThemes and NugComboBarDB.enable3d end,
                 guiInline = true,
                 order = 6,
-                args = {
+                args = {                    
 
                     preset = {
                         name = L"Preset",
@@ -516,30 +530,27 @@ do
                         set = function( info, v ) NugComboBar.Commands.preset3dpointbar2(v) end,
                     },
 
+                    classThemes = {
+                        name = "|cffff5555"..L"Use NCB Class Themes".."|r",
+                        type = 'toggle',
+                        width = "double",
+                        order = 4,
+                        get = function(info) return NugComboBarDB.classThemes end,
+                        set = function(info, s) NugComboBar.Commands.classthemes() end,
+                    },
+
                     colors3d = {
                         name = L"Use colors",
                         desc = L"Only some effects can be altered using colored lighting.\nfireXXXX presets are good for it",
+                        width = "double",
                         type = 'toggle',
-                        order = 4,
+                        order = 5,
                         get = function(info) return NugComboBarDB.colors3d end,
                         set = function( info, v ) NugComboBar.Commands.colors3d(v) end,
                     },
                 },
             },
-
-                    soundChannel = {
-                        name = L"Sound Channel",
-                        type = 'select',
-                        order = 6.4,
-                        values = {
-                            SFX = L"SFX",
-                            Music = L"Music",
-                            Ambience = L"Ambience",
-                            Master = L"Master",
-                        },
-                        get = function(info) return NugComboBarDB.soundChannel end,
-                        set = function( info, v ) NugComboBarDB.soundChannel = v end,
-                    },
+           
             sound = {
                 type = "group",
                 name = L"Sounds",
@@ -570,11 +581,16 @@ do
                         order = 1.5,
                         disabled = function() return (NugComboBarDB.soundNameFull == "none") end,
                         func = function()
-                        local sound = NugComboBar.soundFiles[NugComboBarDB.soundNameFull]
-                        if sound == "custom" then
-                            sound = NugComboBarDB.soundNameFullCustom
-                        end
-                        PlaySoundFile(sound, NugComboBarDB.soundChannel) end,
+                            local sound = NugComboBar.soundFiles[NugComboBarDB.soundNameFull]
+                            if sound == "custom" then
+                                sound = NugComboBarDB.soundNameFullCustom
+                                PlaySoundFile(sound, NugComboBarDB.soundChannel)
+                            else
+                                if type(sound) == "number" then
+                                    PlaySound(sound, NugComboBarDB.soundChannel)
+                                end
+                            end
+                        end,
                     },
                     customsoundNameFull = {
                         name = L"Custom Sound",
@@ -589,6 +605,32 @@ do
                     },
                 },
             },
+            -- overrideLayout = {
+            --     type = "group",
+            --     name = "",
+            --     guiInline = true,
+            --     disabled = function() return not NugComboBar:IsDefaultSkin() end,
+            --     order = 6.9,
+            --     args = {
+            --         overridePointLayout = {
+            --             name = L"Override Layout",
+            --             type = 'select',
+            --             order = 6.4,
+            --             values = layoutChoices,
+            --             get = function(info)
+            --                 local overrideLayout = NugComboBarDB.overrideLayout
+            --                 if not overrideLayout then return 1 end
+            --                 for i,v in ipairs(layoutChoices) do
+            --                     if v == overrideLayout then return i end
+            --                 end
+            --             end,
+            --             set = function( info, v )
+            --                 local newLayout = layoutChoices[v]
+            --                 NugComboBar.Commands.overridelayout(newLayout)
+            --             end,
+            --         },
+            --     },
+            -- },
 
             disable = {
                 type = "group",

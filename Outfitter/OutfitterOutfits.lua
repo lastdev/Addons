@@ -1,5 +1,5 @@
 ----------------------------------------
--- Outfitter Copyright 2009, 2010, 2011 John Stephen, wobbleworks.com
+-- Outfitter Copyright 2009-2018 John Stephen
 -- All rights reserved, unauthorized redistribution is prohibited
 ----------------------------------------
 
@@ -349,7 +349,7 @@ end
 function Outfitter._OutfitMethods:StoreOnServer()
 	-- Just leave if there's no room
 	
-	if GetNumEquipmentSets() >= MAX_EQUIPMENT_SETS_PER_PLAYER then
+	if C_EquipmentSet.GetNumEquipmentSets() >= MAX_EQUIPMENT_SETS_PER_PLAYER then
 		StaticPopup_Show("OUTFITTER_SERVER_FULL", MAX_EQUIPMENT_SETS_PER_PLAYER)		
 		return
 	end
@@ -433,7 +433,7 @@ Outfitter._OutfitMetaTableEM = {__index = Outfitter._OutfitMethodsEM}
 ----------------------------------------
 
 function Outfitter._OutfitMethodsEM:Delete()
-	DeleteEquipmentSet(self.Name)
+	C_EquipmentSet.DeleteEquipmentSet(self.equipmentSetID)
 end
 
 function Outfitter._OutfitMethodsEM:GetName()
@@ -580,7 +580,7 @@ function Outfitter._OutfitMethodsEM:SetItems(pItems)
 	self:CancelTemporaryItems()
 	
 	self.TemporaryItems = pItems
-	Outfitter.EventLib:RegisterEvent("OUTFITTER_SWAP_COMPLETE", self.SetItemsSwapComplete, self)
+	Outfitter.EventLib:RegisterCustomEvent("OUTFITTER_SWAP_COMPLETE", self.SetItemsSwapComplete, self)
 	
 	Outfitter:WearOutfit(self)
 	
@@ -602,7 +602,7 @@ function Outfitter._OutfitMethodsEM:CancelTemporaryItems()
 	end
 	
 	self.TemporaryItems = nil
-	Outfitter.EventLib:UnregisterEvent("OUTFITTER_SWAP_COMPLETE", self.SetItemsSwapComplete, self)
+	Outfitter.EventLib:UnregisterCustomEvent("OUTFITTER_SWAP_COMPLETE", self.SetItemsSwapComplete, self)
 end
 
 function Outfitter._OutfitMethodsEM:SetInventoryItem(pSlotName)

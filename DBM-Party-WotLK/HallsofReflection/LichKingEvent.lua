@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(603, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 236 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 280 $"):sub(12, -3))
 --mod:SetEncounterID(843, 844, 1990)
 
 mod:RegisterEvents(
@@ -13,13 +13,11 @@ local WarnWave		= mod:NewAnnounce("WarnWave", 2)
 
 local timerEscape	= mod:NewAchievementTimer(360, 4526, "achievementEscape")
 
-mod:RemoveOption("HealthFrame")
-
 mod.vb.waveCount = 0
 
-local ragingGoul = EJ_GetSectionInfo(7276)
-local witchDoctor = EJ_GetSectionInfo(7278)
-local abomination = EJ_GetSectionInfo(7282)
+local ragingGoul = DBM:EJ_GetSectionInfo(7276)
+local witchDoctor = DBM:EJ_GetSectionInfo(7278)
+local abomination = DBM:EJ_GetSectionInfo(7282)
 
 local addWaves = {
 	[1] = { "6 "..ragingGoul, "1 "..witchDoctor },
@@ -37,8 +35,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
-	local spellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 69768 then--Summon Ice Wall
 		self.vb.waveCount = self.vb.waveCount + 1
 		if self.vb.waveCount == 1 then

@@ -1,14 +1,11 @@
-local wowTOC, testBuild = DBM:GetTOC()
-if not testBuild and wowTOC < 70200 then return end
 local mod	= DBM:NewMod(1884, "DBM-BrokenIsles", nil, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 16362 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(117303)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
 mod:SetZone()
---mod:SetMinSyncRevision(11969)
 
 mod:RegisterCombat("combat")
 
@@ -32,26 +29,23 @@ local specWarnVirulentInfection		= mod:NewSpecialWarningMove(233850, nil, nil, n
 
 local timerIncitePanicCD			= mod:NewCDTimer(14.6, 233568, nil, nil, nil, 1)
 local timerPestilenceCD				= mod:NewCDTimer(14.2, 233614, nil, nil, nil, 3)
-local timerShadowBarrageCD			= mod:NewCDTimer(17.1, 234452, nil, nil, nil, 2)
-
-local voiceIncitePanic				= mod:NewVoice(233568)--scatter?
-local voiceVirulentInfection		= mod:NewVoice(233850)--runaway
+local timerShadowBarrageCD			= mod:NewCDTimer(16.7, 234452, nil, nil, nil, 2)
 
 --mod:AddReadyCheckOption(37460, false)
 mod:AddRangeFrameOption(8, 233568)
+local PanicDebuff = DBM:GetSpellInfo(233568)
 
 local debuffFilter
 do
-	local UnitDebuff = UnitDebuff
-	local PanicDebuff = GetSpellInfo(233568)
 	debuffFilter = function(uId)
-		if UnitDebuff(uId, PanicDebuff) then
+		if DBM:UnitDebuff(uId, PanicDebuff) then
 			return true
 		end
 	end
 end
 
 function mod:OnCombatStart(delay, yellTriggered)
+	PanicDebuff = DBM:GetSpellInfo(233568)
 	if yellTriggered then
 
 	end
@@ -90,12 +84,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnIncitePanic:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnIncitePanic:Show()
-			voiceIncitePanic:Play("scatter")
+			specWarnIncitePanic:Play("scatter")
 			yellIncitePanic:Yell()
-		elseif self:CheckNearby(10, args.destName) and not UnitDebuff("player", args.spellName) then
+		elseif self:CheckNearby(10, args.destName) and not DBM:UnitDebuff("player", args.spellName) then
 			specWarnIncitePanicNear:CombinedShow(0.5, args.destName)
 			if self:AntiSpam(3, 1) then
-				voiceIncitePanic:Play("scatter")
+				specWarnIncitePanicNear:Play("scatter")
 			end
 		end
 	end
@@ -104,7 +98,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 233850 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnVirulentInfection:Show()
-		voiceVirulentInfection:Play("runaway")
+		specWarnVirulentInfection:Play("runaway")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

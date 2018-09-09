@@ -3,7 +3,7 @@
 --
 -- Manages AddOn chat output to keep player from getting kicked off.
 --
--- ChatThrottleLib.SendChatMessage/.SendAddonMessage functions that accept 
+-- ChatThrottleLib:SendChatMessage/:SendAddonMessage functions that accept 
 -- a Priority ("BULK", "NORMAL", "ALERT") as well as prefix for SendChatMessage.
 --
 -- Priorities get an equal share of available bandwidth when fully loaded.
@@ -11,7 +11,7 @@
 -- get round-robinned. (Destination only matters for whispers and channels,
 -- obviously)
 --
--- Will install hooks for SendChatMessage and SendAdd[Oo]nMessage to measure
+-- Will install hooks for SendChatMessage and SendAddonMessage to measure
 -- bandwidth bypassing the library and use less bandwidth itself.
 --
 --
@@ -20,20 +20,40 @@
 --
 -- Can run as a standalone addon also, but, really, just embed it! :-)
 --
+-- LICENSE: ChatThrottleLib is released into the Public Domain
+--
 
-local CTL_VERSION = 20
+local CTL_VERSION = 24
 
-if _G.ChatThrottleLib and _G.ChatThrottleLib.version >= CTL_VERSION then
-	-- There's already a newer (or same) version loaded. Buh-bye.
-	return
+local _G = _G
+
+if _G.ChatThrottleLib then
+	if _G.ChatThrottleLib.version >= CTL_VERSION then
+		-- There's already a newer (or same) version loaded. Buh-bye.
+		return
+	elseif not _G.ChatThrottleLib.securelyHooked then
+		print("ChatThrottleLib: Warning: There's an ANCIENT ChatThrottleLib.lua (pre-wow 2.0, <v16) in an addon somewhere. Get the addon updated or copy in a newer ChatThrottleLib.lua (>=v16) in it!")
+		-- ATTEMPT to unhook; this'll behave badly if someone else has hooked...
+		-- ... and if someone has securehooked, they can kiss that goodbye too... >.<
+		_G.SendChatMessage = _G.ChatThrottleLib.ORIG_SendChatMessage
+		if _G.ChatThrottleLib.ORIG_SendAddonMessage then
+			_G.SendAddonMessage = _G.ChatThrottleLib.ORIG_SendAddonMessage
+		end
+	end
+	_G.ChatThrottleLib.ORIG_SendChatMessage = nil
+	_G.ChatThrottleLib.ORIG_SendAddonMessage = nil
 end
 
 if not _G.ChatThrottleLib then
 	_G.ChatThrottleLib = {}
 end
 
-ChatThrottleLib = _G.ChatThrottleLib  -- in case some addon does "local ChatThrottleLib" above use and we're copypasted (AceComm-2, sigh)
+ChatThrottleLib = _G.ChatThrottleLib  -- in case some addon does "local ChatThrottleLib" above us and we're copypasted (AceComm-2, sigh)
 local ChatThrottleLib = _G.ChatThrottleLib
+
+ChatThrottleLib.version = CTL_VERSION
+
+
 
 ------------------ TWEAKABLES -----------------
 
@@ -53,8 +73,10 @@ local math_min = math.min
 local math_max = math.max
 local next = next
 local strlen = string.len
-
-ChatThrottleLib.version = CTL_VERSION
+local GetFramerate = GetFramerate
+local strlower = string.lower
+local unpack,type,pairs,wipe = unpack,type,pairs,wipe
+local UnitInRaid,UnitInParty = UnitInRaid,UnitInParty
 
 
 -----------------------------------------------------------------------
@@ -97,24 +119,20 @@ end
 
 -----------------------------------------------------------------------
 -- Recycling bin for pipes 
--- A pipe is a plain integer-indexed queue, which also happens to be a ring member
+-- A pipe is a plain integer-indexed queue of messages
+-- Pipes normally live in Rings of pipes  (3 rings total, one per priority)
 
 ChatThrottleLib.PipeBin = nil -- pre-v19, drastically different
 local PipeBin = setmetatable({}, {__mode="k"})
 
 local function DelPipe(pipe)
-	for i = #pipe, 1, -1 do
-		pipe[i] = nil
-	end
-	pipe.prev = nil
-	pipe.next = nil
-	
 	PipeBin[pipe] = true
 end
 
 local function NewPipe()
 	local pipe = next(PipeBin)
 	if pipe then
+		wipe(pipe)
 		PipeBin[pipe] = nil
 		return pipe
 	end
@@ -152,7 +170,7 @@ end
 
 
 function ChatThrottleLib:Init()	
-	
+
 	-- Set up queues
 	if not self.Prio then
 		self.Prio = {}
@@ -160,12 +178,12 @@ function ChatThrottleLib:Init()
 		self.Prio["NORMAL"] = { ByName = {}, Ring = Ring:New(), avail = 0 }
 		self.Prio["BULK"] = { ByName = {}, Ring = Ring:New(), avail = 0 }
 	end
-	
+
 	-- v4: total send counters per priority
 	for _, Prio in pairs(self.Prio) do
 		Prio.nTotalSent = Prio.nTotalSent or 0
 	end
-	
+
 	if not self.avail then
 		self.avail = 0 -- v5
 	end
@@ -173,7 +191,7 @@ function ChatThrottleLib:Init()
 		self.nTotalSent = 0 -- v5
 	end
 
-	
+
 	-- Set up a frame to get OnUpdate events
 	if not self.Frame then
 		self.Frame = CreateFrame("Frame")
@@ -185,21 +203,25 @@ function ChatThrottleLib:Init()
 	self.OnUpdateDelay = 0
 	self.LastAvailUpdate = GetTime()
 	self.HardThrottlingBeginTime = GetTime()	-- v11: Throttle hard for a few seconds after startup
-	
+
 	-- Hook SendChatMessage and SendAddonMessage so we can measure unpiped traffic and avoid overloads (v7)
-	if not self.ORIG_SendChatMessage then
-		-- use secure hooks instead of insecure hooks (v16)
+	if not self.securelyHooked then
+		-- Use secure hooks as of v16. Old regular hook support yanked out in v21.
 		self.securelyHooked = true
 		--SendChatMessage
-		self.ORIG_SendChatMessage = SendChatMessage
 		hooksecurefunc("SendChatMessage", function(...)
 			return ChatThrottleLib.Hook_SendChatMessage(...)
 		end)
-		self.ORIG_SendAddonMessage = SendAddonMessage
 		--SendAddonMessage
-		hooksecurefunc("SendAddonMessage", function(...)
-			return ChatThrottleLib.Hook_SendAddonMessage(...)
-		end)
+		if _G.C_ChatInfo then
+			hooksecurefunc(_G.C_ChatInfo, "SendAddonMessage", function(...)
+				return ChatThrottleLib.Hook_SendAddonMessage(...)
+			end)
+		else
+			hooksecurefunc("SendAddonMessage", function(...)
+				return ChatThrottleLib.Hook_SendAddonMessage(...)
+			end)
+		end
 	end
 	self.nBypass = 0
 end
@@ -207,24 +229,27 @@ end
 
 -----------------------------------------------------------------------
 -- ChatThrottleLib.Hook_SendChatMessage / .Hook_SendAddonMessage
+
+local bMyTraffic = false
+
 function ChatThrottleLib.Hook_SendChatMessage(text, chattype, language, destination, ...)
+	if bMyTraffic then
+		return
+	end
 	local self = ChatThrottleLib
 	local size = strlen(tostring(text or "")) + strlen(tostring(destination or "")) + self.MSG_OVERHEAD
 	self.avail = self.avail - size
 	self.nBypass = self.nBypass + size	-- just a statistic
-	if not self.securelyHooked then
-		self.ORIG_SendChatMessage(text, chattype, language, destination, ...)
-	end
 end
 function ChatThrottleLib.Hook_SendAddonMessage(prefix, text, chattype, destination, ...)
+	if bMyTraffic then
+		return
+	end
 	local self = ChatThrottleLib
 	local size = tostring(text or ""):len() + tostring(prefix or ""):len();
 	size = size + tostring(destination or ""):len() + self.MSG_OVERHEAD
 	self.avail = self.avail - size
 	self.nBypass = self.nBypass + size	-- just a statistic
-	if not self.securelyHooked then
-		self.ORIG_SendAddonMessage(prefix, text, chattype, destination, ...)
-	end
 end
 
 
@@ -250,24 +275,28 @@ function ChatThrottleLib:UpdateAvail()
 		avail = math_min(self.BURST, avail + newavail)
 		self.bChoking = false
 	end
-	
+
 	avail = math_max(avail, 0-(MAX_CPS*2))	-- Can go negative when someone is eating bandwidth past the lib. but we refuse to stay silent for more than 2 seconds; if they can do it, we can.
-	
+
 	self.avail = avail
 	self.LastAvailUpdate = now
-	
+
 	return avail
 end
 
 
 -----------------------------------------------------------------------
 -- Despooling logic
+-- Reminder:
+-- - We have 3 Priorities, each containing a "Ring" construct ...
+-- - ... made up of N "Pipe"s (1 for each destination/pipename)
+-- - and each pipe contains messages
 
 function ChatThrottleLib:Despool(Prio)
 	local ring = Prio.Ring
 	while ring.pos and Prio.avail > ring.pos[1].nSize do
-		local msg = table_remove(Prio.Ring.pos, 1)
-		if not Prio.Ring.pos[1] then
+		local msg = table_remove(ring.pos, 1)
+		if not ring.pos[1] then  -- did we remove last msg in this pipe?
 			local pipe = Prio.Ring.pos
 			Prio.Ring:Remove(pipe)
 			Prio.ByName[pipe.name] = nil
@@ -275,16 +304,32 @@ function ChatThrottleLib:Despool(Prio)
 		else
 			Prio.Ring.pos = Prio.Ring.pos.next
 		end
-		Prio.avail = Prio.avail - msg.nSize
-		msg.f(unpack(msg, 1, msg.n))
-		Prio.nTotalSent = Prio.nTotalSent + msg.nSize
-		DelMsg(msg)
+		local didSend=false
+		local lowerDest = strlower(msg[3] or "")
+		if lowerDest == "raid" and not UnitInRaid("player") then
+			-- do nothing
+		elseif lowerDest == "party" and not UnitInParty("player") then
+			-- do nothing
+		else
+			Prio.avail = Prio.avail - msg.nSize
+			bMyTraffic = true
+			msg.f(unpack(msg, 1, msg.n))
+			bMyTraffic = false
+			Prio.nTotalSent = Prio.nTotalSent + msg.nSize
+			DelMsg(msg)
+			didSend = true
+		end
+		-- notify caller of delivery (even if we didn't send it)
+		if msg.callbackFn then
+			msg.callbackFn (msg.callbackArg, didSend)
+		end
+		-- USER CALLBACK MAY ERROR
 	end
 end
 
 
 function ChatThrottleLib.OnEvent(this,event)
-	-- v11: We know that the rate limiter is touchy after login. Assume that it's touch after zoning, too.
+	-- v11: We know that the rate limiter is touchy after login. Assume that it's touchy after zoning, too.
 	local self = ChatThrottleLib
 	if event == "PLAYER_ENTERING_WORLD" then
 		self.HardThrottlingBeginTime = GetTime()	-- Throttle hard for a few seconds after zoning
@@ -295,27 +340,27 @@ end
 
 function ChatThrottleLib.OnUpdate(this,delay)
 	local self = ChatThrottleLib
-	
+
 	self.OnUpdateDelay = self.OnUpdateDelay + delay
 	if self.OnUpdateDelay < 0.08 then
 		return
 	end
 	self.OnUpdateDelay = 0
-	
+
 	self:UpdateAvail()
-	
+
 	if self.avail < 0  then
 		return -- argh. some bastard is spewing stuff past the lib. just bail early to save cpu.
 	end
 
-	-- See how many of our priorities have queued messages
+	-- See how many of our priorities have queued messages (we only have 3, don't worry about the loop)
 	local n = 0
 	for prioname,Prio in pairs(self.Prio) do
 		if Prio.Ring.pos or Prio.avail < 0 then 
 			n = n + 1 
 		end
 	end
-	
+
 	-- Anything queued still?
 	if n<1 then
 		-- Nope. Move spillover bandwidth to global availability gauge and clear self.bQueueing
@@ -327,16 +372,17 @@ function ChatThrottleLib.OnUpdate(this,delay)
 		self.Frame:Hide()
 		return
 	end
-	
+
 	-- There's stuff queued. Hand out available bandwidth to priorities as needed and despool their queues
 	local avail = self.avail/n
 	self.avail = 0
-	
+
 	for prioname, Prio in pairs(self.Prio) do
 		if Prio.Ring.pos or Prio.avail < 0 then
 			Prio.avail = Prio.avail + avail
 			if Prio.Ring.pos and Prio.avail > Prio.Ring.pos[1].nSize then
 				self:Despool(Prio)
+				-- Note: We might not get here if the user-supplied callback function errors out! Take care!
 			end
 		end
 	end
@@ -349,7 +395,6 @@ end
 -----------------------------------------------------------------------
 -- Spooling logic
 
-
 function ChatThrottleLib:Enqueue(prioname, pipename, msg)
 	local Prio = self.Prio[prioname]
 	local pipe = Prio.ByName[pipename]
@@ -360,76 +405,111 @@ function ChatThrottleLib:Enqueue(prioname, pipename, msg)
 		Prio.ByName[pipename] = pipe
 		Prio.Ring:Add(pipe)
 	end
-	
+
 	pipe[#pipe + 1] = msg
-	
+
 	self.bQueueing = true
 end
 
-
-
-function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, language, destination, queueName)
+function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, language, destination, queueName, callbackFn, callbackArg)
 	if not self or not prio or not prefix or not text or not self.Prio[prio] then
 		error('Usage: ChatThrottleLib:SendChatMessage("{BULK||NORMAL||ALERT}", "prefix", "text"[, "chattype"[, "language"[, "destination"]]]', 2)
 	end
-	
+	if callbackFn and type(callbackFn)~="function" then
+		error('ChatThrottleLib:ChatMessage(): callbackFn: expected function, got '..type(callbackFn), 2)
+	end
+
 	local nSize = text:len()
-	
-	assert(nSize<=255, "text length cannot exceed 255 bytes");
-	
+
+	if nSize>255 then
+		error("ChatThrottleLib:SendChatMessage(): message length cannot exceed 255 bytes", 2)
+	end
+
 	nSize = nSize + self.MSG_OVERHEAD
-	
+
 	-- Check if there's room in the global available bandwidth gauge to send directly
 	if not self.bQueueing and nSize < self:UpdateAvail() then
 		self.avail = self.avail - nSize
-		self.ORIG_SendChatMessage(text, chattype, language, destination)
+		bMyTraffic = true
+		_G.SendChatMessage(text, chattype, language, destination)
+		bMyTraffic = false
 		self.Prio[prio].nTotalSent = self.Prio[prio].nTotalSent + nSize
+		if callbackFn then
+			callbackFn (callbackArg, true)
+		end
+		-- USER CALLBACK MAY ERROR
 		return
 	end
-	
+
 	-- Message needs to be queued
 	local msg = NewMsg()
-	msg.f = self.ORIG_SendChatMessage
+	msg.f = _G.SendChatMessage
 	msg[1] = text
 	msg[2] = chattype or "SAY"
 	msg[3] = language
 	msg[4] = destination
 	msg.n = 4
 	msg.nSize = nSize
+	msg.callbackFn = callbackFn
+	msg.callbackArg = callbackArg
 
 	self:Enqueue(prio, queueName or (prefix..(chattype or "SAY")..(destination or "")), msg)
 end
 
 
-function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target, queueName)
+function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target, queueName, callbackFn, callbackArg)
 	if not self or not prio or not prefix or not text or not chattype or not self.Prio[prio] then
-		error('Usage: ChatThrottleLib:SendAddonMessage("{BULK||NORMAL||ALERT}", "prefix", "text", "chattype"[, "target"])', 0)
+		error('Usage: ChatThrottleLib:SendAddonMessage("{BULK||NORMAL||ALERT}", "prefix", "text", "chattype"[, "target"])', 2)
 	end
-	
-	local nSize = prefix:len() + 1 + text:len();
-	
-	assert(nSize<=255, "prefix + text length cannot exceed 254 bytes");
-	
+	if callbackFn and type(callbackFn)~="function" then
+		error('ChatThrottleLib:SendAddonMessage(): callbackFn: expected function, got '..type(callbackFn), 2)
+	end
+
+	local nSize = text:len();
+
+	if C_ChatInfo or RegisterAddonMessagePrefix then
+		if nSize>255 then
+			error("ChatThrottleLib:SendAddonMessage(): message length cannot exceed 255 bytes", 2)
+		end
+	else
+		nSize = nSize + prefix:len() + 1
+		if nSize>255 then
+			error("ChatThrottleLib:SendAddonMessage(): prefix + message length cannot exceed 254 bytes", 2)
+		end
+	end
+
 	nSize = nSize + self.MSG_OVERHEAD;
-	
+
 	-- Check if there's room in the global available bandwidth gauge to send directly
 	if not self.bQueueing and nSize < self:UpdateAvail() then
 		self.avail = self.avail - nSize
-		self.ORIG_SendAddonMessage(prefix, text, chattype, target)
+		bMyTraffic = true
+		if _G.C_ChatInfo then
+			_G.C_ChatInfo.SendAddonMessage(prefix, text, chattype, target)
+		else
+			_G.SendAddonMessage(prefix, text, chattype, target)
+		end
+		bMyTraffic = false
 		self.Prio[prio].nTotalSent = self.Prio[prio].nTotalSent + nSize
+		if callbackFn then
+			callbackFn (callbackArg, true)
+		end
+		-- USER CALLBACK MAY ERROR
 		return
 	end
-	
+
 	-- Message needs to be queued
 	local msg = NewMsg()
-	msg.f = self.ORIG_SendAddonMessage
+	msg.f = _G.C_ChatInfo and _G.C_ChatInfo.SendAddonMessage or _G.SendAddonMessage
 	msg[1] = prefix
 	msg[2] = text
 	msg[3] = chattype
 	msg[4] = target
 	msg.n = (target~=nil) and 4 or 3;
 	msg.nSize = nSize
-	
+	msg.callbackFn = callbackFn
+	msg.callbackArg = callbackArg
+
 	self:Enqueue(prio, queueName or (prefix..chattype..(target or "")), msg)
 end
 

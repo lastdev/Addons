@@ -18,8 +18,8 @@ end
 
 --[[
 	Auctioneer - Stat's API Example module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: StatExample2.lua 5590 2016-04-12 14:32:46Z brykrys $
+	Version: <%version%> (<%codename%>)
+	Revision: $Id$
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that does something nifty.
@@ -256,4 +256,4 @@ end
 function private.Baz()
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5590 $")
+AucAdvanced.RegisterRevision("$URL$", "$Rev$")

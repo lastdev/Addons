@@ -28,9 +28,9 @@
 		<Scripts>
 			<OnClick>
 				if ( self:GetChecked() ) then
-					PlaySound("igMainMenuOptionCheckBoxOn");
+					PlaySound(856);
 				else
-					PlaySound("igMainMenuOptionCheckBoxOff");
+					PlaySound(857);
 				end
 				BlizzardOptionsPanel_CheckButton_OnClick(self);
 			</OnClick>
@@ -180,7 +180,7 @@
 					<OnClick>
 						local parent = self:GetParent();
 						parent:SetValue(parent:GetValue() - (parent:GetHeight() / 2));
-						PlaySound("UChatScrollButton");
+						PlaySound(1115);
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -192,7 +192,7 @@
 					<OnClick>
 						local parent = self:GetParent();
 						parent:SetValue(parent:GetValue() + (parent:GetHeight() / 2));
-						PlaySound("UChatScrollButton");
+						PlaySound(1115);
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -468,6 +468,14 @@
 				<Scripts>
 					<OnClick>
 						self:GetParent():Hide()
+						if DBM.Options.tempMusicSetting then
+							SetCVar("Sound_EnableMusic", DBM.Options.tempMusicSetting)
+							DBM.Options.tempMusicSetting = nil
+						end
+						if DBM.Options.musicPlaying then
+							StopMusic()
+							DBM.Options.musicPlaying = nil
+						end
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -487,7 +495,7 @@
 						self:SetText(DBM_GUI_Translations.WebsiteButton)
 					</OnShow>
 					<OnClick>
-						DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG)
+						DBM:ShowUpdateReminder(nil, nil, DBM_COPY_URL_DIALOG)
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -739,7 +747,7 @@
 			</OnClick>
 		</Scripts>
 		<Frames>
-			<Button name="$parentToggle" inherits="InterfaceOptionsToggleButtonTemplate">
+			<Button name="$parentToggle" inherits="UIPanelButtonTemplate">
 				<Size>
 					<AbsDimension x="14" y="14"/>
 				</Size>

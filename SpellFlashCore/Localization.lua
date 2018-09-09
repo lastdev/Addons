@@ -27,6 +27,7 @@ L["Spell Flashing"] = "Brilho do Feitiço"
 L["SpellFlash settings have been reset for all players"] = "Brilho do Feitiço foram redefinidas para todos os jogadores"
 L["This module has not been updated to work with the latest expansion:"] = "Este módulo não foi atualizado para trabalhar com a mais recente expansão:"
 L["Use All Class Modules"] = "Use todos os módulos de classe"
+
 elseif GetLocale() == "frFR" then -- French
 L["<SPELL> has not been defined in a table!"] = "<SPELL> n'a pas été défini dans une table ! "
 L["Asleep"] = "Endormi"
@@ -46,6 +47,7 @@ L["Spell Flashing"] = "Flash du sort"
 L["SpellFlash settings have been reset for all players"] = "Les paramètres de Flash du sort ont été réinitialisés pour tous les personnages"
 L["This module has not been updated to work with the latest expansion:"] = "Ce module n'a pas été mis à jour pour fonctionner avec la dernière extension :"
 L["Use All Class Modules"] = "Utiliser tous les modules de classe"
+
 elseif GetLocale() == "deDE" then -- German
 L["<SPELL> has not been defined in a table!"] = "<SPELL> wurde in keiner Liste definiert!"
 L["Asleep"] = "Schlafend"
@@ -65,11 +67,16 @@ L["Spell Flashing"] = "Aufblitzende Zauber"
 L["SpellFlash settings have been reset for all players"] = "SpellFlash-Einstellungen wurden für alle Spieler zurückgesetzt."
 L["This module has not been updated to work with the latest expansion:"] = "Dieses Modul ist nicht aktualisiert worden, um mit der neuesten Erweiterung kompatibel zu sein:"
 L["Use All Class Modules"] = "Alle Klassen-Module verwenden"
+
 elseif GetLocale() == "koKR" then -- Korean
+--[[Translation missing --]]
+--[[ L["<SPELL> has not been defined in a table!"] = ""--]] 
 L["Asleep"] = "수면"
 L["Blink Spells"] = "주문 깜박거림"
 L["Configure Class Module"] = "직업 모듈 설정"
 L["Default Proc Highlighting"] = "기본 발동 효과 강조"
+--[[Translation missing --]]
+--[[ L["Error loading:"] = ""--]] 
 L["Flash Brightness:"] = "번쩍임 밝기:"
 L["Flash Macros"] = "매크로 번쩍임"
 L["Flash Size:"] = "번쩍임 크기:"
@@ -80,7 +87,10 @@ L["Selected Class Module:"] = "선택된 직업 모듈:"
 L["Shields"] = "방패"
 L["Spell Flashing"] = "주문 번쩍임"
 L["SpellFlash settings have been reset for all players"] = "SpellFlash 설정이 모든 플레이어에 대해 초기화 되었습니다."
+--[[Translation missing --]]
+--[[ L["This module has not been updated to work with the latest expansion:"] = ""--]] 
 L["Use All Class Modules"] = "모든 직업 모듈 사용"
+
 elseif GetLocale() == "esMX" then -- Latin American Spanish
 L["<SPELL> has not been defined in a table!"] = "¡<SPELL> no se ha definido en una tabla!"
 L["Asleep"] = "Dormido"
@@ -100,6 +110,7 @@ L["Spell Flashing"] = "Destello de hechizo"
 L["SpellFlash settings have been reset for all players"] = "Las opciones de SpellFlash han sido reiniciadas para todos los personajes"
 L["This module has not been updated to work with the latest expansion:"] = "Este módulo no ha sido actualizado para trabajar con la última expansión:"
 L["Use All Class Modules"] = "Usar todos los módulos de clase"
+
 elseif GetLocale() == "ruRU" then -- Russian
 L["<SPELL> has not been defined in a table!"] = "Заклинание <SPELL> не найдено в списке!"
 L["Asleep"] = "Сон"
@@ -119,6 +130,7 @@ L["Spell Flashing"] = "Подсветка заклинания"
 L["SpellFlash settings have been reset for all players"] = "Настройки SpellFlash были сброшены для всех игроков"
 L["This module has not been updated to work with the latest expansion:"] = "Этот модуль не был обновлен для работы с последним дополнением:"
 L["Use All Class Modules"] = "Использовать все модули классов"
+
 elseif GetLocale() == "zhCN" then -- Simplified Chinese
 L["<SPELL> has not been defined in a table!"] = "<SPELL> 还没有定义在函数式中"
 L["Asleep"] = "睡眠"
@@ -138,6 +150,7 @@ L["Spell Flashing"] = "法术闪动"
 L["SpellFlash settings have been reset for all players"] = "重置所有角色的SpellFlash设定"
 L["This module has not been updated to work with the latest expansion:"] = "这个模组没有升级至最新版本,可能无法正常工作:"
 L["Use All Class Modules"] = "使用所有职业分类"
+
 elseif GetLocale() == "esES" then -- Spanish
 L["<SPELL> has not been defined in a table!"] = "¡<SPELL> no ha sido definido en la tabla!"
 L["Asleep"] = "Dormido"
@@ -157,6 +170,7 @@ L["Spell Flashing"] = "Destello de Hechizo"
 L["SpellFlash settings have been reset for all players"] = "Las opciones de SpellFlash han sido reiniciadas para todos los personajes"
 L["This module has not been updated to work with the latest expansion:"] = "Este módulo no ha sido actualizado para funcionar con la última expansión:"
 L["Use All Class Modules"] = "Usar Todos los Módulos de Clase"
+
 elseif GetLocale() == "zhTW" then -- Traditional Chinese
 L["<SPELL> has not been defined in a table!"] = "<SPELL> 還沒有定義在函式中"
 L["Asleep"] = "睡眠"
@@ -176,4 +190,5 @@ L["Spell Flashing"] = "法術閃爍"
 L["SpellFlash settings have been reset for all players"] = "重設所有角色的法術閃爍設定"
 L["This module has not been updated to work with the latest expansion:"] = "這個模組沒有升級至最新版本,可能無法正常使用:"
 L["Use All Class Modules"] = "使用所有職業模組"
+
 end

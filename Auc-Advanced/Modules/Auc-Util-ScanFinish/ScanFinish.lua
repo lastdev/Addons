@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: ScanFinish.lua 5588 2016-04-07 17:24:07Z brykrys $
+	Version: 7.7.6061 (SwimmingSeadragon)
+	Revision: $Id: ScanFinish.lua 6061 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a few event functionalities
@@ -76,7 +76,7 @@ lib.Processors = {
 }
 
 function lib.OnLoad()
-	aucPrint("Auctioneer: {{"..libType..":"..libName.."}} loaded!")
+	--aucPrint("Auctioneer: {{"..libType..":"..libName.."}} loaded!")
 	default("util.scanfinish.activated", true)
 	default("util.scanfinish.shutdown", false)
 	default("util.scanfinish.logout", false)
@@ -136,12 +136,29 @@ end
 
 function private.AlertShutdownOrLogOff()
 	if (get("util.scanfinish.shutdown")) then
-		PlaySound("TellMessage")
+		PlaySound(PlaySoundKitID and "TellMessage" or SOUNDKIT.TELL_MESSAGE) -- HYBRID73
 		aucPrint("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: Shutdown is enabled. World of Warcraft will be shut down once the current scan successfully completes.")
 	elseif (get("util.scanfinish.logout")) then
-		PlaySound("TellMessage")
+		PlaySound(PlaySoundKitID and "TellMessage" or SOUNDKIT.TELL_MESSAGE) -- HYBRID73
 		aucPrint("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: LogOut is enabled. This character will be logged off once the current scan successfully completes.")
 	end
+end
+
+
+-- Conversion table for PlaySound change -- HYBRID73
+local lookupSound
+if SOUNDKIT then
+	lookupSound = {
+		["QUESTCOMPLETED"] = 619, -- not in SOUNDKIT
+		["LEVELUP"] = 888, -- not in SOUNDKIT
+		["AuctionWindowOpen"] = SOUNDKIT.AUCTION_WINDOW_OPEN,
+		["AuctionWindowClose"] = SOUNDKIT.AUCTION_WINDOW_CLOSE,
+		["ReadyCheck"] = SOUNDKIT.READY_CHECK,
+		["RaidWarning"] = SOUNDKIT.RAID_WARNING,
+		["LOOTWINDOWCOINSOUND"] = SOUNDKIT.LOOT_WINDOW_COIN_SOUND,
+	}
+else
+	lookupSound = {}
 end
 
 function private.PlayCompleteSound()
@@ -153,7 +170,7 @@ function private.PlayCompleteSound()
 		if strConfiguredSoundPath == "AuctioneerClassic" then
 			PlaySoundFile(strAucClassicPath)
 		else
-			PlaySound(strConfiguredSoundPath)
+			PlaySound(lookupSound[strConfiguredSoundPath] or strConfiguredSoundPath) -- HYBRID73
 		end
 	end
 end
@@ -260,4 +277,4 @@ function private.ConfigChanged(fullsetting, value, setting, module, base)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5588 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 6061 $")

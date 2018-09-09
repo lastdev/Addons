@@ -62,8 +62,4 @@ L["Veiled Wyrmtongue Chest"] = "隱密的蟲舌魔寶箱"
 L["What to display"] = "哪些要被呈現"
 L["Wyrmtongue Chest"] = "蟲舌魔寶箱"
 
--- ToC
-L["Description"] = "顯示破碎海岸的 POI 位置"
-L["Title"] = "HandyNotes - 破碎海岸"
-
 end

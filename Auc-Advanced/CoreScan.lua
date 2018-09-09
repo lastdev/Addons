@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.5.5714 (TasmanianThylacine)
-	Revision: $Id: CoreScan.lua 5709 2017-02-16 16:40:23Z brykrys $
+	Version: 7.7.6112 (SwimmingSeadragon)
+	Revision: $Id: CoreScan.lua 6112 2018-08-29 01:26:34Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -195,8 +195,8 @@ function private.LoadScanData()
 			private.FallbackScanData = reason
 		else
 			private.loadingScanData = "block" -- prevents re-entry to this function during the LoadAddOn call
-			load, reason = LoadAddOn("Auc-ScanData")
-			if load then
+			local loaded, reason = LoadAddOn("Auc-ScanData")
+			if loaded then
 				private.loadingScanData = "loading"
 			elseif reason then
 				private.loadingScanData = "fallback"
@@ -236,6 +236,8 @@ function private.LoadScanData()
 			serverKey = ResolveServerKey(serverKey)
 			if serverKey == Resources.ServerKey then
 				return scandata
+			else
+				return nil, "No Fallback Data"
 			end
 		end
 		-- fallback message
@@ -268,8 +270,11 @@ function private.GetScanData(serverKey)
 		local newfunc = private.LoadScanData()
 		if newfunc then
 			return newfunc(serverKey)
+		else
+			return nil, "Stub Loader Still Loading"
 		end
 	end
+	return nil, "Stub Loader Failed"
 end
 
 -- AucAdvanced.Scan.ClearScanData(serverKey)
@@ -395,7 +400,7 @@ function lib.PopScan()
 	end
 end
 
---[[This function is now in core API]]
+--[[Deprecated This function is now in core API]]
 function lib.ProgressBars(name, value, show, text, options)
 	AucAdvanced.API.ProgressBars(name, value, show, text, options)
 end
@@ -934,6 +939,7 @@ end
 
 
 private.CommitQueue = {}
+private.sessionFirstScan = true
 
 local CommitRunning = false
 local Commitfunction = function()
@@ -980,8 +986,18 @@ local Commitfunction = function()
 	end
 
 	local serverKey = Resources.ServerKey
-	local scandata = private.GetScanData(serverKey)
-	assert(scandata, "Critical error: scandata does not exist for serverKey "..serverKey)
+	local scandata, reason = private.GetScanData(serverKey)
+	if not scandata then
+		-- Critical Error Diagnostics
+		local scandatatext = "Unloaded"
+		local scanmodule = AucAdvanced.Modules.Util.ScanData
+		if scanmodule and scanmodule.GetAddOnInfo then
+			local ready, version = scanmodule.GetAddOnInfo()
+			scandatatext = strjoin(" ", "Loaded", tostringall(ready, version))
+		end
+		error(format("Critical error: scandata does not exist for serverKey %s\nReason = %s\nAuc-ScanData = %s\nFallback = %s , %s",
+			tostringall(serverKey, reason, scandatatext, private.FallbackScanData, private.loadingScanData)))
+	end
 	local now = time()
 	if get("scancommit.progressbar") then
 		lib.ProgressBars("CommitProgressBar", 0, true)
@@ -990,14 +1006,59 @@ local Commitfunction = function()
 	local oldCount = #scandata.image
 	local scanCount = #TempcurScan
 
+	if wasGetAll and scanCount < 100 then
+		-- Quick test for a Blizzard error that appeared in Patch 7.3.5 (now fixed, but in case something similar happens again)
+		-- GetAll scans were returning no data, which wiped scandata and thereby caused false updates in Stat modules
+		-- Assume a GetAll should return a LOT of entries; tag as an error if the count is suspiciously low
+		hadGetError = true
+		wasIncomplete = true
+	end
+
 	local progresscounter = 0
-	local progresstotal = 3*oldCount + 7*scanCount
-	if progresstotal == 0 then progresstotal = 1 end -- dummy value to avoid potential div0. ### this needs a better solution
+	local progresstotal = 2*oldCount + 6*scanCount
+	if progresstotal == 0 then progresstotal = 1 end -- dummy value to avoid potential div0. ### this needs a better solution (if this is 0 can we just bail out??)
 
 	local filterOldCount, filterNewCount, updateCount, sameCount, newCount, updateRecoveredCount, sameRecoveredCount, missedCount = 0,0,0,0, 0,0,0,0
 	local unresolvedCount = 0
-	local dirtyCount, undirtyCount, expiredCount, corruptCount, matchedCount = 0, 0, 0, 0, 0
+	local dirtyCount, undirtyCount, matchedCount = 0, 0, 0
 	local filterDeleteCount, earlyDeleteCount, expiredDeleteCount, corruptDeleteCount = 0, 0, 0, 0
+
+	local printSummary, scanSize = false, ""
+	scanSize = TempcurQuery.qryinfo.scanSize
+	if scanSize=="Full" then
+		printSummary = get("scandata.summaryonfull");
+	elseif scanSize=="Partial" then
+		printSummary = get("scandata.summaryonpartial")
+	else -- scanSize=="Micro"
+		printSummary = get("scandata.summaryonmicro")
+	end
+	if (wasEndPagesOnly) then
+		scanSize = "TailScan-"..scanSize
+		printSummary = get("scandata.summaryonpartial") -- todo: do we want a separate "summary on end pages only" option?
+	elseif (TempcurQuery.qryinfo.nosummary) then
+		printSummary = false
+		scanSize = "NoSum-"..scanSize
+	end
+
+	local processors = {}
+	local modules = AucAdvanced.GetAllModules("AuctionFilter", "Filter")
+	for pos, engineLib in ipairs(modules) do
+		if (not processors.Filter) then processors.Filter = {} end
+		local x = {}
+		x.Name = engineLib.GetName()
+		x.Func = engineLib.AuctionFilter
+		tinsert(processors.Filter, x)
+	end
+	modules = AucAdvanced.GetAllModules("ScanProcessors")
+	for pos, engineLib in ipairs(modules) do
+		for op, func in pairs(engineLib.ScanProcessors) do
+			if (not processors[op]) then processors[op] = {} end
+			local x = {}
+			x.Name = engineLib.GetName()
+			x.Func = func
+			tinsert(processors[op], x)
+		end
+	end
 
 	do --[[ *** Stage 1 : pre-process the new scan ]]--
 		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
@@ -1156,7 +1217,7 @@ local Commitfunction = function()
 				end
 				tremove(TempcurScan, pos)
 				unresolvedCount = unresolvedCount + 1
-				progresscounter = progresscounter + 5 -- We just wiped the entry from the db, so other steps won't see it.
+				progresscounter = progresscounter + 4 -- We just wiped the entry from the db, so Stage 3 won't see it.
 			end
 		end
 		local tolerance = 0
@@ -1172,267 +1233,259 @@ local Commitfunction = function()
 		end
 	end --[[ of Stage 1 ]]--
 
-	--[[ *** Stage 2 : Pre-process image table : Mark all matching auctions as DIRTY, and build a LookUpTable *** ]]--
-	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
-	coroutine.yield() -- yield to allow updated bar to display
+	-- Send ScanProcessor message "begin"
+	-- This was previously sent before Stage 3, but has been moved to before Stage 2
+	-- (this means matchCount can no longer be included)
+	coroutine.yield()
+	local querySizeInfo = {
+		wasIncomplete = wasIncomplete,
+		wasGetAll = wasGetAll,
+		scanStarted = scanStarted,
+		wasUnrestricted = wasUnrestricted,
+		wasEarlyTerm = wasEarlyTerm,
+		hadGetError = hadGetError,
+		wasEndPagesOnly = wasEndPagesOnly,
+		Query = TempcurCommit.Query,
+		scanCount = scanCount,
+		printSummary = printSummary,
+		FallbackScanData = private.FallbackScanData,
+	}
+	processBeginEndStats(processors, "begin", querySizeInfo, nil)
 
+	-- Stage 2 will build the following tables for use in Stages 3 and 4
 	local lut = {}
+	local workingImage = {} -- local copy of image; we do not modify scandata.image until scan is complete (Stage 5)
 
-	nextPause = debugprofilestop() + processingTime
-	for pos, data in ipairs(scandata.image) do
-		if debugprofilestop() > nextPause then
-			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
-			coroutine.yield()
-			nextPause = debugprofilestop() + processingTime
-		end
-		local link = data[Const.LINK]
-		local flags = data[Const.FLAG]
-		progresscounter = progresscounter + 1
-		if link and flags then
-			if private.IsInQuery(TempcurQuery, data) then
-				matchedCount = matchedCount + 1
+	do --[[ *** Stage 2 : Pre-process image table ***
+		Copy entries from image into workingImage
+		Do not copy expired (or corrupt) entries; issue "delete" processor message for these
+		Identify auctions that match the scan query and mark as DIRTY
+		Build a LookUpTable ]]
+		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
+		coroutine.yield() -- yield to allow updated bar to display
 
+		local firstscan = private.sessionFirstScan
+		private.sessionFirstScan = nil
+
+		-- Put flag constants into block locals to avoid multiple upvalue/table lookups within the loop
+		-- Todo: some of these would be useful in other Stages
+		local C_LINK, C_FLAG, C_TIME, C_TLEFT = Const.LINK, Const.FLAG, Const.TIME, Const.TLEFT
+		local F_DIRTY, F_FILTER, F_EXPIRED = Const.FLAG_DIRTY, Const.FLAG_FILTER, Const.FLAG_EXPIRED
+		local F_NOT_DIRTY = bitnot(F_DIRTY) -- bitmask for removing DIRTY flag
+		local AucMaxTimes = Const.AucMaxTimes
+
+		nextPause = debugprofilestop() + processingTime
+		for _, data in ipairs(scandata.image) do
+			if debugprofilestop() > nextPause then
+				lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 2")
+				coroutine.yield()
+				nextPause = debugprofilestop() + processingTime
+			end
+			progresscounter = progresscounter + 1
+
+			local keep, inquery = true, false
+			local flags = data[C_FLAG]
+
+			-- Test for corrupt entries : Same test as used in Stage 1 for new scan
+			-- Only done for first scan of the session, in case of file corruption
+			if firstscan then
+				for i = 1, Const.LASTENTRY, 1 do
+					if not (data[i] or ItemDataAllowedNil[i]) then
+						keep = false
+						corruptDeleteCount = corruptDeleteCount + 1
+						break
+					end
+				end
+			end
+
+			if keep then
+				-- Test for match
+				if private.IsInQuery(TempcurQuery, data) then
+					matchedCount = matchedCount + 1
+					inquery = true
+				end
 				-- Test for expired
-				local auctionmaxtime = Const.AucMaxTimes[data[Const.TLEFT]] or 172800
-				if not data[Const.TIME] or (now - data[Const.TIME] > auctionmaxtime) then
-					data[Const.FLAG] = bitor(flags, Const.FLAG_EXPIRED)
-					expiredCount = expiredCount + 1
-				else
-					-- Mark dirty
-					data[Const.FLAG] = bitor(flags, Const.FLAG_DIRTY)
-					dirtyCount = dirtyCount+1
+				local auctionmaxtime = AucMaxTimes[data[C_TLEFT]] or 172800
+				if now - data[C_TIME] > auctionmaxtime then
+					keep = false
+					data[C_FLAG] = bitor(flags, F_EXPIRED) -- only really needed in case a "delete" processor looks for it
+					if bitand(flags, F_FILTER) ~= 0 then
+						filterDeleteCount = filterDeleteCount + 1
+					else
+						expiredDeleteCount = expiredDeleteCount + 1
+						processStats(processors, "delete", data)
+					end
+				end
+			end
 
-					-- Build lookup table
+			if keep then
+				-- Copy entry into working image. Any entries not copied are effectively "deleted" when scandata.image is replaced by workingImage (Stage 5)
+				tinsert(workingImage, data)
+
+				if inquery then
+					-- Mark Dirty
+					data[C_FLAG] = bitor(flags, F_DIRTY)
+					dirtyCount = dirtyCount + 1
+
+					-- Build lookup table for links into workingImage
+					local link = data[C_LINK]
 					local list = lut[link]
 					if (not list) then
-						lut[link] = pos
+						lut[link] = #workingImage
 					else
 						if (type(list) == "number") then
 							lut[link] = {}
 							tinsert(lut[link], list)
 						end
-						tinsert(lut[link], pos)
+						tinsert(lut[link], #workingImage)
 					end
+				else -- not in query
+					-- Ensure marked NOT Dirty - Stage 4 should be clearing the Dirty flag, but it was not always doing so
+					data[C_FLAG] = bitand(flags, F_NOT_DIRTY)
 				end
-			else
-				-- Mark NOT dirty
-				data[Const.FLAG] = bitand(flags, bitnot(Const.FLAG_DIRTY))
 			end
-		else
-			-- corrupt entry
-			data[Const.FLAG] = bitor(flags or 0, Const.FLAG_CORRUPT)
-			corruptCount = corruptCount + 1
 		end
-	end
+	end -- of Stage 2
 
+	do --[[ *** Stage 3 : Merge new scan into ScanData *** ]]
+		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
+		coroutine.yield()
 
-	--[[ *** Stage 3 : Merge new scan into ScanData *** ]]
-	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
-	coroutine.yield()
+		local maskNotDirtyUnseen = bitnot(bitor(Const.FLAG_DIRTY, Const.FLAG_UNSEEN)) -- only calculate mask for clearing these flags once
+		local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
 
-	local processors = {}
-	local modules = AucAdvanced.GetAllModules("AuctionFilter", "Filter")
-	for pos, engineLib in ipairs(modules) do
-		if (not processors.Filter) then processors.Filter = {} end
-		local x = {}
-		x.Name = engineLib.GetName()
-		x.Func = engineLib.AuctionFilter
-		tinsert(processors.Filter, x)
-	end
-	modules = AucAdvanced.GetAllModules("ScanProcessors")
-	for pos, engineLib in ipairs(modules) do
-		for op, func in pairs(engineLib.ScanProcessors) do
-			if (not processors[op]) then processors[op] = {} end
-			local x = {}
-			x.Name = engineLib.GetName()
-			x.Func = func
-			tinsert(processors[op], x)
+		local garbageinterval
+		local stage3garbage = get("core.scan.stage3garbage")
+		if stage3garbage >= Const.ALEVEL_HI then
+			garbageinterval = 1000
+		elseif stage3garbage >= Const.ALEVEL_MED then
+			garbageinterval = 5000
+		elseif stage3garbage >= Const.ALEVEL_LOW then
+			garbageinterval = 10000
 		end
-	end
 
-	local printSummary, scanSize = false, ""
-	scanSize = TempcurQuery.qryinfo.scanSize
-	if scanSize=="Full" then
-		printSummary = get("scandata.summaryonfull");
-	elseif scanSize=="Partial" then
-		printSummary = get("scandata.summaryonpartial")
-	else -- scanSize=="Micro"
-		printSummary = get("scandata.summaryonmicro")
-	end
-	if (wasEndPagesOnly) then
-		scanSize = "TailScan-"..scanSize
-		printSummary = get("scandata.summaryonpartial") -- todo: do we want a separate "summary on end pages only" option?
-	elseif (TempcurQuery.qryinfo.nosummary) then
-		printSummary = false
-		scanSize = "NoSum-"..scanSize
-	end
-
-	local querySizeInfo = { }
-	querySizeInfo.wasIncomplete = wasIncomplete
-	querySizeInfo.wasGetAll = wasGetAll
-	querySizeInfo.scanStarted = scanStarted
-	querySizeInfo.wasUnrestricted = wasUnrestricted
-	querySizeInfo.wasEarlyTerm = wasEarlyTerm
-	querySizeInfo.hadGetError = hadGetError
-	querySizeInfo.wasEndPagesOnly = wasEndPagesOnly
-	querySizeInfo.Query = TempcurCommit.Query
-	querySizeInfo.matchCount = dirtyCount
-	querySizeInfo.scanCount = scanCount
-	querySizeInfo.printSummary = printSummary
-	querySizeInfo.FallbackScanData = private.FallbackScanData
-
-	local maskNotDirtyUnseen = bitnot(bitor(Const.FLAG_DIRTY, Const.FLAG_UNSEEN)) -- only calculate mask for clearing these flags once
-	local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
-
-	local garbageinterval
-	local stage3garbage = get("core.scan.stage3garbage")
-	if stage3garbage >= Const.ALEVEL_HI then
-		garbageinterval = 1000
-	elseif stage3garbage >= Const.ALEVEL_MED then
-		garbageinterval = 5000
-	elseif stage3garbage >= Const.ALEVEL_LOW then
-		garbageinterval = 10000
-	end
-
-	processBeginEndStats(processors, "begin", querySizeInfo, nil)
-
-	coroutine.yield()
-	nextPause = debugprofilestop() + processingTime
-	lastTime = time()
-	for index, data in ipairs(TempcurScan) do
-		local doYield = false
-		if garbageinterval and index % garbageinterval == 0 then
-			coroutine.yield() -- yield before and after collectgarbage to smooth things a little, as it tends to cause small freezes
-			collectgarbage()
-			doYield = true
-		else
-			local checkprofile = debugprofilestop()
-			if checkprofile > nextPause then
-				checkprofile = (checkprofile - nextPause) / processingTime
-				if checkprofile > 2 then
-					-- double yield if last processing cycle took more than 2 * the permitted time
-					coroutine.yield()
-				end
-				if checkprofile > 4 then
-					-- triple yield if last processing cycle took more than 4 * the permitted time
-					coroutine.yield()
-				end
+		nextPause = debugprofilestop() + processingTime
+		lastTime = time()
+		for index, data in ipairs(TempcurScan) do
+			local doYield = false
+			if garbageinterval and index % garbageinterval == 0 then
+				coroutine.yield() -- yield before and after collectgarbage to smooth things a little, as it tends to cause small freezes
+				collectgarbage()
 				doYield = true
-			elseif time() > lastTime then
-				doYield = true
-			end
-		end
-		if doYield then
-			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
-			coroutine.yield()
-			nextPause = debugprofilestop() + processingTime
-			lastTime = time()
-		end
-		local itemPos = lib.FindItem(data, scandata.image, lut)
-		progresscounter = progresscounter + 4
-
-		if (itemPos) then
-			local oldItem = scandata.image[itemPos]
-			data[Const.FLAG] = bitand(oldItem[Const.FLAG], maskNotDirtyUnseen)
-			undirtyCount = undirtyCount + 1
-			if data[Const.SELLER] == "" then -- unknown seller name in new data; copy the old name if it exists
-				data[Const.SELLER] = oldItem[Const.SELLER]
-			end
-
-			if data[Const.QUALITY] == -1 then -- invalid quality value in new data; copy the old quality
-				data[Const.QUALITY] = oldItem[Const.QUALITY]
-			end
-			if (bitand(data[Const.FLAG], Const.FLAG_FILTER)==Const.FLAG_FILTER) then
-				filterOldCount = filterOldCount + 1
 			else
-				if not private.IsIdentical(oldItem, data) then
-					if processStats(processors, "update", data, oldItem) then
-						updateCount = updateCount + 1
+				local checkprofile = debugprofilestop()
+				if checkprofile > nextPause then
+					checkprofile = (checkprofile - nextPause) / processingTime
+					if checkprofile > 2 then
+						-- double yield if last processing cycle took more than 2 * the permitted time
+						coroutine.yield()
 					end
-					if bitand(oldItem[Const.FLAG] or 0, Const.FLAG_UNSEEN) == Const.FLAG_UNSEEN then
-						updateRecoveredCount = updateRecoveredCount + 1
+					if checkprofile > 4 then
+						-- triple yield if last processing cycle took more than 4 * the permitted time
+						coroutine.yield()
 					end
-				else
-					if processStats(processors, "leave", data) then
-						sameCount = sameCount + 1
-					end
-					if bitand(oldItem[Const.FLAG] or 0, Const.FLAG_UNSEEN) == Const.FLAG_UNSEEN then
-						sameRecoveredCount = sameRecoveredCount + 1
-					end
+					doYield = true
+				elseif time() > lastTime then
+					doYield = true
 				end
 			end
-			scandata.image[itemPos] = data
-		else
-			if (processStats(processors, messageCreate, data)) then
-				newCount = newCount + 1
-			else -- processStats(processors, "create"...) filtered the auction: flag it
-				data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_FILTER)
-				filterNewCount = filterNewCount + 1
+			if doYield then
+				lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
+				coroutine.yield()
+				nextPause = debugprofilestop() + processingTime
+				lastTime = time()
 			end
-			data[Const.FLAG] = bitand(data[Const.FLAG], maskNotDirtyUnseen)
-			tinsert(scandata.image, data)
-		end
-	end
-	lut = nil -- release some memory
+			local itemPos = lib.FindItem(data, workingImage, lut)
+			progresscounter = progresscounter + 4
 
-
-	--[[ *** Stage 4 : Cleanup deleted auctions *** ]]
-	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 4")
-	coroutine.yield() -- as above
-	local progressstep = 1
-	if #scandata.image > 0 then -- (avoid potential div0)
-		-- #scandata.image is probably now larger than when we originally calculated progresstotal -- adjust the step size to compensate
-		progressstep = (progresstotal - progresscounter) / #scandata.image
-	end
-	local loopBegin, loopEnd, loopDirection = #scandata.image, 1, -1
-	local keepmodeImage
-	--[[ Keep mode test
-		Using tremove is extremely inefficient when there are a large number of deletions (particularly if the number of kept entries is also large).
-		If we estimate this will be the case, switch to Keep mode, where we copy the entries we want to keep into a new image, which then replaces the old one.
-
-		Test version 1: use keep mode if scan is complete, and if number of remaining dirty entries exceeds a fixed threshold
-		Test version 2: Test for expired in Stage 2; expiredCount is now available to decide whether to use keep mode
-	--]]
-	if (expiredCount + corruptCount) > 1000 or (not wasIncomplete and (expiredCount + corruptCount + dirtyCount - undirtyCount) > 1000) then
-		loopBegin, loopEnd, loopDirection = 1, #scandata.image, 1 -- process Keep mode in ascending order to keep the new table in the same order
-		keepmodeImage = {} -- new image table; also acts as a flag for Keep mode
-	end
-	nextPause = debugprofilestop() + processingTime
-	lastTime = time()
-	for pos = loopBegin, loopEnd, loopDirection do
-		if debugprofilestop() > nextPause or time() > lastTime then
-			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 4")
-			coroutine.yield()
-			nextPause = debugprofilestop() + processingTime
-			lastTime = time()
-		end
-		local data = scandata.image[pos]
-		local flags = data[Const.FLAG] -- *caution* if we modify data[Const.FLAG] below, be sure to set flags to the same value again
-		local dodelete = false
-		progresscounter = progresscounter + progressstep
-		if bitand(flags, Const.FLAG_CORRUPT) ~= 0 then
-			dodelete = true
-			corruptDeleteCount = corruptDeleteCount + 1
-		elseif bitand(flags, Const.FLAG_EXPIRED) ~= 0 then
-			dodelete = true
-			if bitand(flags, Const.FLAG_FILTER) ~= 0 then
-				filterDeleteCount = filterDeleteCount + 1
-			else
-				expiredDeleteCount = expiredDeleteCount + 1
-			end
-		elseif bitand(flags, Const.FLAG_DIRTY) ~= 0  then
-			if wasIncomplete then
-				missedCount = missedCount + 1
-			elseif wasOnePage then
-				-- a *completed* one-page scan should not have missed any auctions
-				dodelete = true
-				if bitand(flags, Const.FLAG_FILTER) ~= 0 then
-					filterDeleteCount = filterDeleteCount + 1
-				else
-					earlyDeleteCount = earlyDeleteCount + 1
+			if (itemPos) then
+				local oldItem = workingImage[itemPos]
+				data[Const.FLAG] = bitand(oldItem[Const.FLAG], maskNotDirtyUnseen)
+				undirtyCount = undirtyCount + 1
+				if data[Const.SELLER] == "" then -- unknown seller name in new data; copy the old name if it exists
+					data[Const.SELLER] = oldItem[Const.SELLER]
 				end
+
+				if data[Const.QUALITY] == -1 then -- invalid quality value in new data; copy the old quality
+					data[Const.QUALITY] = oldItem[Const.QUALITY]
+				end
+				if bitand(data[Const.FLAG], Const.FLAG_FILTER) ~= 0 then
+					filterOldCount = filterOldCount + 1
+				else
+					if not private.IsIdentical(oldItem, data) then
+						if processStats(processors, "update", data, oldItem) then
+							updateCount = updateCount + 1
+						end
+						if bitand(oldItem[Const.FLAG], Const.FLAG_UNSEEN) ~= 0 then
+							updateRecoveredCount = updateRecoveredCount + 1
+						end
+					else
+						if processStats(processors, "leave", data) then
+							sameCount = sameCount + 1
+						end
+						if bitand(oldItem[Const.FLAG], Const.FLAG_UNSEEN) ~= 0 then
+							sameRecoveredCount = sameRecoveredCount + 1
+						end
+					end
+				end
+				workingImage[itemPos] = data
 			else
-				if bitand(flags, Const.FLAG_UNSEEN) ~= 0 then
+				if (processStats(processors, messageCreate, data)) then
+					newCount = newCount + 1
+				else -- processStats(processors, "create"...) filtered the auction: flag it
+					data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_FILTER)
+					filterNewCount = filterNewCount + 1
+				end
+				data[Const.FLAG] = bitand(data[Const.FLAG], maskNotDirtyUnseen)
+				tinsert(workingImage, data)
+			end
+		end
+		lut = nil -- release some memory
+	end -- of Stage 3
+
+	do --[[ *** Stage 4 : Cleanup deleted auctions *** ]]
+		lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 4")
+		coroutine.yield()
+		local progressstep = 1
+		if #workingImage > 0 then -- (avoid potential div0)
+			-- #workingImage is now different than oldCount, which was used to calculate progresstotal -- adjust the step size to compensate
+			progressstep = (progresstotal - progresscounter) / #workingImage
+		end
+		local loopBegin, loopEnd, loopDirection = #workingImage, 1, -1
+		local keepmodeImage
+		--[[ Keep mode test
+			Using tremove is extremely inefficient when there are a large number of deletions (particularly if the number of kept entries is also large).
+			If we estimate this will be the case, switch to Keep mode, where we copy the entries we want to keep into a new image, which then replaces the old one.
+
+			Test version 1: use keep mode if scan is complete, and if number of remaining dirty entries exceeds a fixed threshold
+			Test version 2: Test for expired in Stage 2; expiredCount is now available to decide whether to use keep mode
+			Test version 3: Stage 2 now actually deletes expired auctions; back to just checking remaining dirty entries, but we now work on workingImage
+		--]]
+		if not wasIncomplete and dirtyCount - undirtyCount > 1000 then
+			loopBegin, loopEnd, loopDirection = 1, #workingImage, 1 -- process Keep mode in ascending order to keep the new table in the same order
+			keepmodeImage = {} -- new image table; also acts as a flag for Keep mode
+		end
+		nextPause = debugprofilestop() + processingTime
+		lastTime = time()
+		for pos = loopBegin, loopEnd, loopDirection do
+			if debugprofilestop() > nextPause or time() > lastTime then
+				lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 4")
+				coroutine.yield()
+				nextPause = debugprofilestop() + processingTime
+				lastTime = time()
+			end
+			local data = workingImage[pos]
+			local flags = data[Const.FLAG] -- *caution* if we modify data[Const.FLAG] below, be sure to set flags to the same value again
+			local dodelete = false
+			progresscounter = progresscounter + progressstep
+			-- Corrupt and Expired checking/processing now occurs in Stage 2
+			if bitand(flags, Const.FLAG_DIRTY) ~= 0 then
+				if wasIncomplete then
+					flags = bitand(flags, bitnot(Const.FLAG_DIRTY)) -- Clear Dirty flag
+					data[Const.FLAG] = flags
+					missedCount = missedCount + 1
+				elseif wasOnePage then
+					-- a *completed* one-page scan should not have missed any auctions
 					dodelete = true
 					if bitand(flags, Const.FLAG_FILTER) ~= 0 then
 						filterDeleteCount = filterDeleteCount + 1
@@ -1440,29 +1493,38 @@ local Commitfunction = function()
 						earlyDeleteCount = earlyDeleteCount + 1
 					end
 				else
-					flags = bitor(bitand(flags, bitnot(Const.FLAG_DIRTY)), Const.FLAG_UNSEEN)
-					data[Const.FLAG] = flags
-					missedCount = missedCount + 1
+					if bitand(flags, Const.FLAG_UNSEEN) ~= 0 then
+						dodelete = true
+						if bitand(flags, Const.FLAG_FILTER) ~= 0 then
+							filterDeleteCount = filterDeleteCount + 1
+						else
+							earlyDeleteCount = earlyDeleteCount + 1
+						end
+					else
+						-- clear Dirty flag, and mark as Unseen
+						flags = bitor(bitand(flags, bitnot(Const.FLAG_DIRTY)), Const.FLAG_UNSEEN)
+						data[Const.FLAG] = flags
+						missedCount = missedCount + 1
+					end
+				end
+			end
+			if dodelete then
+				if bitand(flags, Const.FLAG_FILTER) == 0 then
+					processStats(processors, "delete", data)
+				end
+				if not keepmodeImage then
+					tremove(workingImage, pos)
+				end
+			else -- keep
+				if keepmodeImage then
+					tinsert(keepmodeImage, data)
 				end
 			end
 		end
-		if dodelete then
-			if bitand(flags, Const.FLAG_FILTER) == 0 then
-				processStats(processors, "delete", data)
-			end
-			if not keepmodeImage then
-				tremove(scandata.image, pos)
-			end
-		else -- keep
-			if keepmodeImage then
-				tinsert(keepmodeImage, data)
-			end
+		if keepmodeImage then
+			workingImage = keepmodeImage
 		end
-	end
-	if keepmodeImage then
-		scandata.image = keepmodeImage
-	end
-
+	end -- of Stage 4
 
 	--[[ *** Stage 5 : Reports *** ]]
 	lib.ProgressBars("CommitProgressBar", 100, true, "Auctioneer: Processing Finished")
@@ -1478,32 +1540,36 @@ local Commitfunction = function()
 		coroutine.yield()
 	end
 
+	-- Store workingImage into the scandata record (replacing the old image)
+	scandata.image = workingImage
+
+	local currentCount = #scandata.image
+	if oldCount - earlyDeleteCount - expiredDeleteCount - corruptDeleteCount + newCount + filterNewCount - filterDeleteCount ~= currentCount then
+		local msg = ("%d old count - %d deleted - %d expired - %d corrupt + %d new + %d filtered new - %d filtered deleted != %d current count"):format(
+			oldCount, earlyDeleteCount, expiredDeleteCount, corruptDeleteCount, newCount, filterNewCount, filterDeleteCount, currentCount)
+		if nLog then
+			nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "Image Count Discrepancy", msg)
+		end
+		geterrorhandler()("CoreScan Image Count Discrepancy\n"..msg)
+	end
+
+	if updateCount + sameCount + newCount + filterNewCount + filterOldCount + unresolvedCount ~= scanCount then
+		local msg = ("%d updated + %d same + %d new + %d filtered + %d unresolved != %d scanned"):format(
+			updateCount, sameCount, newCount, filterOldCount+filterNewCount, unresolvedCount, scanCount)
+		if nLog then
+			nLog.AddMessage("Auctioneer", "Scan", N_WARNING, "Scan Count Discrepancy", msg)
+		end
+		geterrorhandler()("CoreScan Scan Count Discrepancy\n"..msg)
+	end
+
 	if scanTimeSecs < 1 then
 		scanTimeSecs = floor(scanTimeSecs*10)/10
 	else
 		scanTimeSecs = floor(scanTimeSecs)
 		scanTimeMins = floor(scanTimeSecs / 60)
-		scanTimeSecs =  mod(scanTimeSecs, 60)
+		scanTimeSecs = mod(scanTimeSecs, 60)
 		scanTimeHours = floor(scanTimeMins / 60)
 		scanTimeMins = mod(scanTimeMins, 60)
-	end
-
-	local currentCount = #scandata.image
-	if (updateCount + sameCount + newCount + filterNewCount + filterOldCount + unresolvedCount ~= scanCount) then
-		if _G.nLog then
-			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "Scan Count Discrepency Seen",
-				("%d updated + %d same + %d new + %d filtered + %d unresolved != %d scanned"):format(updateCount, sameCount,
-					newCount, filterOldCount+filterNewCount, unresolvedCount, scanCount))
-		end
-	end
-
-	-- image contains filtered items now.  Need to account for new entries that are flagged as filtered (not shown to stats modules)
-	if (oldCount - earlyDeleteCount - expiredDeleteCount - corruptDeleteCount + newCount + filterNewCount - filterDeleteCount ~= currentCount) then
-		if _G.nLog then
-			_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "Current Count Discrepency Seen",
-				("%d - %d - %d + %d + %d - %d != %d"):format(oldCount, earlyDeleteCount, expiredDeleteCount,
-					newCount, filterNewCount, filterDeleteCount, currentCount))
-		end
 	end
 
 	--Hides the end of scan summary if user is not interested
@@ -1648,7 +1714,7 @@ local Commitfunction = function()
 	end
 
 	scanstats.LastScan = endTimeStamp
-	if oldCount ~= currentCount or scanCount > 0 or dirtyCount > 0 or expiredCount > 0 or corruptCount > 0 then
+	if oldCount ~= currentCount or scanCount > 0 or dirtyCount > 0 or expiredDeleteCount > 0 or corruptDeleteCount > 0 then
 		scanstats.ImageUpdated = endTimeStamp
 	end
 	if wasUnrestricted and not wasIncomplete then scanstats.LastFullScan = endTimeStamp end
@@ -1769,42 +1835,35 @@ end
 
 -- Mechanism to limit repeated calls to GetItemInfo and C_PetJournal.GetPetInfoBySpeciesID during processing
 do
-	local ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
+	local PetInfoCache, ItemTried, PetTried = {}, {}, {}
 	local lookupPetType2SubClassID = Const.AC_PetType2SubClassID
 	local GetPetInfoBySpeciesID = C_PetJournal.GetPetInfoBySpeciesID
+	local GetItemInfoCacheLib = AucAdvanced.GetItemInfoCache
 
 	function private.ResetItemInfoCache()
-		ItemInfoCache, PetInfoCache, ItemTried, PetTried = {}, {}, {}, {}
+		-- clear all caches and reset everything
+		-- note the ItemInfo cache is currently not cleared
+		PetInfoCache, ItemTried, PetTried = {}, {}, {}
 	end
 	function private.InitItemInfoCache()
 		wipe(ItemTried)
 		wipe(PetTried)
 	end
-	local function GetItemInfoCache(link, itemID, bonuses, scanthrottle)
-		if bonuses and bonuses ~= "" then
-			-- for now we won't try to cache items with bonusIDs
-			local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
-			return classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0
-		end
-		local data = ItemInfoCache[itemID]
-		if data then
-			return unpack(data, 1, 5)
-		end
+
+	local function GetItemInfoCacheWrapper(link, itemID, scanthrottle)
 		if scanthrottle and ItemTried and ItemTried[itemID] then
 			-- if GetItemInfo previously failed for a link with this cachekey in this processing pass (ItemTried is reset each pass)
 			return
 		end
-		local _,_,_,iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfo(link)
+		local iLevel,uLevel,_,_,_,equipLoc,_,_,classID,subClassID = GetItemInfoCacheLib(link, 4) -- start from 4th return value
 		if not classID then
 			if scanthrottle then
 				ItemTried[itemID] = true
 			end
 			return
 		end
-		-- not all values are used; only store the ones we want
-		data = {classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0}
-		ItemInfoCache[itemID] = data
-		return unpack(data, 1, 5)
+
+		return classID, subClassID, Const.EquipEncode[equipLoc], iLevel, uLevel or 0
 	end
 
 	local function GetPetInfoCache(speciesID, scanthrottle)
@@ -1890,7 +1949,7 @@ do
 				end
 			end
 			if not itemData[Const.CLASSID] then
-				local classID, subClassID, equipCode, iLevel, uLevel = GetItemInfoCache(itemLink, itemID, itemData[Const.BONUSES], scanthrottle) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
+				local classID, subClassID, equipCode, iLevel, uLevel = GetItemInfoCacheWrapper(itemLink, itemID, scanthrottle) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
 				if classID then
 					itemData[Const.CLASSID] = classID
 					itemData[Const.SUBCLASSID] = subClassID
@@ -3271,9 +3330,13 @@ end
 
 function coremodule.Processors.auctionclose(event)
 	-- clearup memory usage when AH closed
-	if not get("core.scan.keepinfocacheonclose") then
+	--if not get("core.scan.keepinfocacheonclose") then -- ### setting temporarily disabled as not supported by LibAucItemCache
 		private.ResetItemInfoCache()
-	end
+	--end
+	--[[ ### debug start
+	local performance = AucAdvanced.Libraries.TipHelper.AIC_GetPerformance(true) -- get performance string
+	if performance then debugPrint(performance) end
+	-- ### debug end ]]
 	private.clearImageCaches(event)
 	lib.Interrupt()
 end
@@ -3300,5 +3363,5 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5709 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreScan.lua $", "$Rev: 6112 $")
 AucAdvanced.CoreFileCheckOut("CoreScan")

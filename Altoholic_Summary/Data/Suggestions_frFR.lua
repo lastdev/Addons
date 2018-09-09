@@ -6,7 +6,26 @@ local TS = addon.TradeSkills.Names
 
 if GetLocale() ~= "frFR" then return end		-- ** French translation by Laumac **
 
-local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
+local continents = { 		-- this gets localized names, also avoids hardcoding them.
+	[1] = 12,
+	[2] = C_Map.GetMapInfo(12).name,
+	[3] = 13,
+	[4] = C_Map.GetMapInfo(13).name,
+	[5] = 101,
+	[6] = C_Map.GetMapInfo(101).name,
+	[7] = 113,
+	[8] = C_Map.GetMapInfo(113).name,
+	[9] = 424,
+	[10] = C_Map.GetMapInfo(424).name,
+	[11] = 572,
+	[12] = C_Map.GetMapInfo(572).name,
+	[13] = 619,
+	[14] = C_Map.GetMapInfo(619).name,
+	[15] = 875,
+	[16] = C_Map.GetMapInfo(875).name,
+	[17] = 876,
+	[18] = C_Map.GetMapInfo(876).name,
+};
 
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
 addon.Suggestions = {
@@ -365,24 +384,6 @@ addon.Suggestions = {
 	},
 
 	-- ** Secondary professions **
-	[TS.FIRSTAID] = {
-		{ 40, "Atteindre 40: Bandages en lin" },
-		{ 80, "Atteindre 80: Bandage \195\169pais en lin\nDevenir compagnon \195\160 50" },
-		{ 115, "Atteindre 115: Bandages en laine" },
-		{ 150, "Atteindre 150: Bandages \195\169pais en laine\nObtenir le manuel de secourisme expert \195\160 125\nAcheter le manuel \195\160 Stormgarde (A) ou \195\160 Mur-de-foug\195\168res (H)" },
-		{ 180, "Atteindre 180: Bandage en soie" },
-		{ 210, "Atteindre 210: Bandage \195\169pais en soie" },
-		{ 240, "Atteindre 240: Bandages en tisse-mage\nQu\195\170te de secourisme au niveau 35\nIle de Theramore (A) ou Tr\195\169pas d'Orgrim (H)" },
-		{ 260, "Atteindre 260: Bandage \195\169pais en tisse-mage\nValider niveau suivant au donneur de qu\195\170te secourisme" },
-		{ 290, "Atteindre 290: Bandage en \195\169toffe runique\nValider niveau suivant au donneur de qu\195\170te secourisme" },
------------     OUTRETERRE
-		{ 330, "Atteindre 330: Bandage \195\169pais en \195\169toffe runique\nAcheter le manuel de maitre en secourisme\nTemple de Telhamat (A) Guet de l'\195\169pervier (H)" },
-		{ 360, "Atteindre 360: Bandage en tisse-n\195\169ant\nAcheter le manuel au Temple de Telhamat (A) ou au Guet de l'\195\169pervier (H)" },
-		{ 375, "Atteindre 375: Bandage \195\169pais en tisse-n\195\169ant\nAcheter le manuel au Temple de Telhamat (A) ou au Guet de l'\195\169pervier (H)" },
------------     NORFENDRE
-		{ 400, "Atteindre 400: Bandage en tisse-givre\nValider niveau suivant au donneur de qu\195\170te secourisme" },
-		{ 450, "Atteindre 450: Bandage \195\169pais en tisse-givre\nLe manuel est un butin mondial est n\195\169c\195\169ssite d'\195\170tre au moins 390\nCertains conseillent les trolls de Zul'drak pour le trouver" }
-	},
 	[TS.COOKING] = {
 		{ 40, "Atteindre 40: Pain \195\169pic\195\169" },
 		{ 85, "Atteindre 85: Viande d'ours fum\195\169e, Beignet de crabe" },
@@ -425,32 +426,32 @@ addon.Suggestions = {
 		{ 300, "Atteindre 300: " .. continents[1] .. "\n" .. continents[2]},
 		{ 375, "Atteindre 375: " .. continents[3]},
 		{ 450, "Atteindre 450: " .. continents[4]},
-		{ 525, "Atteindre 525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 525, "Atteindre 525: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(720).name .. "\n" .. C_Map.GetMapInfo(700).name},
 		{ 600, "Atteindre 600: " .. continents[6]},
 	},
 	
 	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
 	["Leveling"] = {
 		{ 10, "Atteindre 10: Toute zone de d\195\169part" },
-		{ 15, "Atteindre 15: " .. GetMapNameByID(39)},
-		{ 16, "Atteindre 16: " .. GetMapNameByID(684)},
-		{ 20, "Atteindre 20: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
-							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
-							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
-		{ 25, "Atteindre 25: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
-							.. "\n" .. GetMapNameByID(24)},
-		{ 30, "Atteindre 30: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
-		{ 35, "Atteindre 35: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
-							.. "\n" .. GetMapNameByID(607)},
-		{ 40, "Atteindre 40: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
-		{ 45, "Atteindre 45: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
-		{ 48, "Atteindre 48: " .. GetMapNameByID(17)},
-		{ 50, "Atteindre 50: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
-		{ 52, "Atteindre 52: " .. GetMapNameByID(29)},
-		{ 54, "Atteindre 54: " .. GetMapNameByID(38)},
-		{ 55, "Atteindre 55: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
-		{ 58, "Atteindre 58: " .. GetMapNameByID(19)},
-		{ 60, "Atteindre 60: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		{ 15, "Atteindre 15: " .. C_Map.GetMapInfo(39).name},
+		{ 16, "Atteindre 16: " .. C_Map.GetMapInfo(684).name},
+		{ 20, "Atteindre 20: " .. C_Map.GetMapInfo(181).name .. "\n" .. C_Map.GetMapInfo(35).name .. "\n" .. C_Map.GetMapInfo(476).name
+							.. "\n" .. C_Map.GetMapInfo(42).name .. "\n" .. C_Map.GetMapInfo(21).name .. "\n" .. C_Map.GetMapInfo(11).name
+							.. "\n" .. C_Map.GetMapInfo(463).name .. "\n" .. C_Map.GetMapInfo(36).name},
+		{ 25, "Atteindre 25: " .. C_Map.GetMapInfo(34).name .. "\n" .. C_Map.GetMapInfo(40).name .. "\n" .. C_Map.GetMapInfo(43).name 
+							.. "\n" .. C_Map.GetMapInfo(24).name},
+		{ 30, "Atteindre 30: " .. C_Map.GetMapInfo(16).name .. "\n" .. C_Map.GetMapInfo(37).name .. "\n" .. C_Map.GetMapInfo(81).name},
+		{ 35, "Atteindre 35: " .. C_Map.GetMapInfo(673).name .. "\n" .. C_Map.GetMapInfo(101).name .. "\n" .. C_Map.GetMapInfo(26).name
+							.. "\n" .. C_Map.GetMapInfo(607).name},
+		{ 40, "Atteindre 40: " .. C_Map.GetMapInfo(141).name .. "\n" .. C_Map.GetMapInfo(121).name .. "\n" .. C_Map.GetMapInfo(22).name},
+		{ 45, "Atteindre 45: " .. C_Map.GetMapInfo(23).name .. "\n" .. C_Map.GetMapInfo(61).name},
+		{ 48, "Atteindre 48: " .. C_Map.GetMapInfo(17).name},
+		{ 50, "Atteindre 50: " .. C_Map.GetMapInfo(161).name .. "\n" .. C_Map.GetMapInfo(182).name .. "\n" .. C_Map.GetMapInfo(28).name},
+		{ 52, "Atteindre 52: " .. C_Map.GetMapInfo(29).name},
+		{ 54, "Atteindre 54: " .. C_Map.GetMapInfo(38).name},
+		{ 55, "Atteindre 55: " .. C_Map.GetMapInfo(201).name .. "\n" .. C_Map.GetMapInfo(281).name},
+		{ 58, "Atteindre 58: " .. C_Map.GetMapInfo(19).name},
+		{ 60, "Atteindre 60: " .. C_Map.GetMapInfo(32).name .. "\n" .. C_Map.GetMapInfo(241).name .. "\n" .. C_Map.GetMapInfo(261).name},
 		
 		-- Outland
 		-- 465 Hellfire Peninsula 
@@ -461,12 +462,12 @@ addon.Suggestions = {
 		-- 479 Netherstorm 
 		-- 473 Shadowmoon Valley 
 		
-		{ 63, "Atteindre 63: " .. GetMapNameByID(465)},
-		{ 64, "Atteindre 64: " .. GetMapNameByID(467)},
-		{ 65, "Atteindre 65: " .. GetMapNameByID(478)},
-		{ 67, "Atteindre 67: " .. GetMapNameByID(477)},
-		{ 68, "Atteindre 68: " .. GetMapNameByID(475)},
-		{ 70, "Atteindre 70: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
+		{ 63, "Atteindre 63: " .. C_Map.GetMapInfo(465).name},
+		{ 64, "Atteindre 64: " .. C_Map.GetMapInfo(467).name},
+		{ 65, "Atteindre 65: " .. C_Map.GetMapInfo(478).name},
+		{ 67, "Atteindre 67: " .. C_Map.GetMapInfo(477).name},
+		{ 68, "Atteindre 68: " .. C_Map.GetMapInfo(475).name},
+		{ 70, "Atteindre 70: " .. C_Map.GetMapInfo(479).name .. "\n" .. C_Map.GetMapInfo(473).name .. "\n" .. C_Map.GetMapInfo(499).name .. "\n" .. C_Map.GetMapInfo(32).name},
 
 		-- Northrend
 		-- 491 Howling Fjord 
@@ -479,11 +480,11 @@ addon.Suggestions = {
 		-- 495 The Storm Peaks 
 		-- 492 Icecrown 
 		
-		{ 72, "Atteindre 72: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
-		{ 75, "Atteindre 75: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
-		{ 76, "Atteindre 76: " .. GetMapNameByID(496)},
-		{ 78, "Atteindre 78: " .. GetMapNameByID(493)},
-		{ 80, "Atteindre 80: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		{ 72, "Atteindre 72: " .. C_Map.GetMapInfo(491).name .. "\n" .. C_Map.GetMapInfo(486).name},
+		{ 75, "Atteindre 75: " .. C_Map.GetMapInfo(488).name .. "\n" .. C_Map.GetMapInfo(490).name},
+		{ 76, "Atteindre 76: " .. C_Map.GetMapInfo(496).name},
+		{ 78, "Atteindre 78: " .. C_Map.GetMapInfo(493).name},
+		{ 80, "Atteindre 80: " .. C_Map.GetMapInfo(510).name .. "\n" .. C_Map.GetMapInfo(495).name .. "\n" .. C_Map.GetMapInfo(492).name},
 		
 		-- Cataclysm
 		-- 606 Mount Hyjal 
@@ -492,10 +493,10 @@ addon.Suggestions = {
 		-- 720 Uldum 
 		-- 700 Twilight Highlands 
 		
-		{ 82, "Atteindre 82: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
-		{ 83, "Atteindre 83: " .. GetMapNameByID(640)},
-		{ 84, "Atteindre 84: " .. GetMapNameByID(720)},
-		{ 85, "Atteindre 85: " .. GetMapNameByID(700)},
+		{ 82, "Atteindre 82: " .. C_Map.GetMapInfo(606).name .. "\n" .. C_Map.GetMapInfo(613).name},
+		{ 83, "Atteindre 83: " .. C_Map.GetMapInfo(640).name},
+		{ 84, "Atteindre 84: " .. C_Map.GetMapInfo(720).name},
+		{ 85, "Atteindre 85: " .. C_Map.GetMapInfo(700).name},
 
 		-- Pandaria
 		-- 806 The Jade Forest 
@@ -505,10 +506,10 @@ addon.Suggestions = {
 		-- 810 Townlong Steppes 
 		-- 858 Dread Wastes 
 		
-		{ 86, "Atteindre 86: " .. GetMapNameByID(806)},
-		{ 87, "Atteindre 87: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
-		{ 88, "Atteindre 88: " .. GetMapNameByID(809)},
-		{ 89, "Atteindre 89: " .. GetMapNameByID(810)},
-		{ 90, "Atteindre 90: " .. GetMapNameByID(858)},
+		{ 86, "Atteindre 86: " .. C_Map.GetMapInfo(806).name},
+		{ 87, "Atteindre 87: " .. C_Map.GetMapInfo(807).name .. "\n" .. C_Map.GetMapInfo(857).name},
+		{ 88, "Atteindre 88: " .. C_Map.GetMapInfo(809).name},
+		{ 89, "Atteindre 89: " .. C_Map.GetMapInfo(810).name},
+		{ 90, "Atteindre 90: " .. C_Map.GetMapInfo(858).name},
 	},
 }
