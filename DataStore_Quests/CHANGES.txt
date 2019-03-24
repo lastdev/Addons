@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r46 | thaoky.altoholic@yahoo.com | 2018-09-19 17:00:33 +0000 (Wed, 19 Sep 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.lua
+
+Added BfA emissaries
+------------------------------------------------------------------------
 r45 | thaoky.altoholic@yahoo.com | 2018-08-12 13:18:34 +0000 (Sun, 12 Aug 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Quests.lua

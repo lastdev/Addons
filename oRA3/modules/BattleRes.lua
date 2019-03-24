@@ -12,10 +12,21 @@ local badBuffs = {
 	27827, -- Spirit of Redemption
 	5384, -- Feign Death
 }
+local resSpells = {
+	[20484] = true,  -- Rebirth
+	[61999] = true,  -- Raise Ally
+	[95750] = true,  -- Soulstone Resurrection
+}
 local theDead = {}
 local updateFunc
 local brez
 local inCombat = false
+local active = {
+	[8] = true, -- Mythic+
+	[14] = true, -- Normal
+	[15] = true, -- Heroic
+	[16] = true, -- Mythic
+}
 
 local function createFrame()
 	brez = CreateFrame("Frame", "oRA3BattleResMonitor", UIParent)
@@ -110,12 +121,6 @@ local options = {
 	type = "group",
 	name = L.battleResTitle,
 	get = function(k) return module.db.profile[k[#k]] end,
-	set = function(k, v)
-		module.db.profile[k[#k]] = v
-		toggleLock()
-		toggleShow()
-		module:CheckOpen()
-	end,
 	args = {
 		header = {
 			type = "description",
@@ -140,26 +145,38 @@ local options = {
 				end
 			end,
 			disabled = function()
-				local inInstance, instanceType =  IsInInstance()
-				return not module.db.profile.showDisplay or (inInstance and instanceType == "raid")
+				local _, _, diff = GetInstanceInfo()
+				return not module.db.profile.showDisplay or active[diff]
 			end,
-			order = 0.5,
+			order = 1,
 		},
 		showDisplay = {
 			type = "toggle",
 			name = colorize(L.showMonitor),
 			desc = L.battleResShowDesc,
-			width = "full",
 			descStyle = "inline",
-			order = 1,
+			set = function(_, v)
+				module.db.profile.showDisplay = v
+				if v then
+					module:CheckOpen()
+				else
+					module:Close()
+				end
+			end,
+			order = 2,
+			width = "full",
 		},
 		lock = {
 			type = "toggle",
 			name = colorize(L.lockMonitor),
 			desc = L.battleResLockDesc,
-			width = "full",
 			descStyle = "inline",
-			order = 2,
+			set = function(_, v)
+				module.db.profile.lock = v
+				toggleLock()
+			end,
+			order = 3,
+			width = "full",
 		},
 	}
 }
@@ -173,11 +190,15 @@ end
 
 function module:OnStartup()
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "CheckOpen")
+	self:RegisterEvent("CHALLENGE_MODE_START", "CheckOpen")
+	oRA.RegisterCallback(self, "OnGroupChanged", "CheckOpen")
 	self:CheckOpen()
 end
 
 function module:OnShutdown()
 	self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+	self:UnregisterEvent("CHALLENGE_MODE_START")
+	oRA.UnregisterCallback(self, "OnGroupChanged")
 	self:Close()
 end
 
@@ -195,8 +216,9 @@ do
 			for k, v in next, theDead do
 				if module:UnitBuffByIDs(k, badBuffs) or UnitIsFeignDeath(k) then -- The backup plan, you need one with Blizz
 					theDead[k] = nil
-				elseif not UnitIsDeadOrGhost(k) and UnitIsConnected(k) and UnitAffectingCombat(k) then
-					if v ~= "br" then
+				elseif not UnitIsDeadOrGhost(k) and UnitIsConnected(k) then
+					local _, type = GetInstanceInfo()
+					if v == true and (type == "raid" and UnitAffectingCombat(k)) or (type == "party" and UnitHealth(k)/UnitHealthMax(k) < .7) then -- Soulstone is 60% hp, releasing is 80%
 						brez.scroll:AddMessage(("%s >> %s"):format(GetSpellLink(20707), coloredNames[k])) -- Soulstone
 					end
 					theDead[k] = nil
@@ -236,9 +258,19 @@ do
 		end
 	end
 
+	local function canGroupRes()
+		for _, player in next, oRA:GetGroupMembers() do
+			local _, class = UnitClass(player)
+			if class == "DRUID" or class == "DEATHKNIGHT" or class == "WARLOCK" then
+				return true
+			end
+		end
+		return false
+	end
+
 	function module:CheckOpen()
-		local _, type = GetInstanceInfo()
-		if type == "raid" and self.db.profile.showDisplay then
+		local _, _, diff = GetInstanceInfo()
+		if self.db.profile.showDisplay and active[diff] and canGroupRes() then
 			if not inCombat then self:CancelAllTimers() end
 
 			if not brez then
@@ -266,51 +298,27 @@ function module:Close()
 	end
 end
 
-do
-	local function getPetOwner(pet, guid)
-		if UnitGUID("pet") == guid then
-			return UnitName("player")
-		end
-
-		local owner
-		if IsInRaid() then
-			for i=1, GetNumGroupMembers() do
-				if UnitGUID(("raid%dpet"):format(i)) == guid then
-					owner = ("raid%d"):format(i)
-					break
-				end
-			end
-		else
-			for i=1, GetNumSubgroupMembers() do
-				if UnitGUID(("party%dpet"):format(i)) == guid then
-					owner = ("party%d"):format(i)
-					break
-				end
-			end
-		end
-		if owner then
-			return module:UnitName(owner)
-		end
-		return pet
-	end
-
-	updateFunc = function()
-		local _, event, _, sGuid, name, _, _, tarGuid, tarName, _, _, spellId = CombatLogGetCurrentEventInfo()
-		if event == "SPELL_RESURRECT" then
-			if spellId == 159931 or spellId == 159956 then -- Gift of Chi-Ji, Dust of Life
-				name = getPetOwner(name, sGuid)
-			end
-
+updateFunc = function()
+	local ts, event, _, _, name, _, _, tarGuid, tarName, _, _, spellId = CombatLogGetCurrentEventInfo()
+	if event == "SPELL_RESURRECT" then
+		if resSpells[spellId] then
 			brez.scroll:AddMessage(("%s >> %s"):format(coloredNames[name], coloredNames[tarName]))
-			theDead[tarName] = "br"
-
-		elseif event == "SPELL_CAST_SUCCESS" and spellId == 21169 then -- Reincarnation
-			brez.scroll:AddMessage(("%s >> %s"):format(GetSpellLink(20608), coloredNames[name]))
-			theDead[name] = nil
-
-		-- Lots of lovely checks before adding someone to the deaths table
-		elseif event == "UNIT_DIED" and UnitIsPlayer(tarName) and UnitGUID(tarName) == tarGuid and not UnitIsFeignDeath(tarName) and not module:UnitBuffByIDs(tarName, badBuffs) then
-			theDead[tarName] = true
 		end
+		theDead[tarName] = nil
+
+	elseif event == "SPELL_CAST_SUCCESS" and spellId == 21169 then -- Reincarnation
+		brez.scroll:AddMessage(("%s >> %s"):format(GetSpellLink(20608), coloredNames[name]))
+		theDead[name] = nil
+
+	-- Lots of lovely checks before adding someone to the deaths table
+	elseif event == "UNIT_DIED" and UnitIsPlayer(tarName) and UnitGUID(tarName) == tarGuid and not UnitIsFeignDeath(tarName) and not module:UnitBuffByIDs(tarName, badBuffs) then
+		if tonumber(theDead[tarName]) and ts < theDead[tarName] then
+			theDead[tarName] = true
+		else
+			theDead[tarName] = nil
+		end
+
+	elseif event == "SPELL_AURA_REMOVED" and spellId == 20707 then -- Soulstone
+		theDead[tarName] = ts + 1 -- timeout for REMOVED->DIED
 	end
 end

@@ -99,8 +99,8 @@ do
 			if frame.db.profile.tooltip12hr then
 				for i = 1, 4 do
 					tip:AddDoubleLine(
-						_G["WEEKDAY_"..upper(date("%A", t))].." "..date("%I:%M", t) .. _G["TIMEMANAGER_"..upper(date("%p", t))],
-						_G["WEEKDAY_"..upper(date("%A", t+66600))].." "..date("%I:%M", t+66600) .. _G["TIMEMANAGER_"..upper(date("%p", t+66600))],
+						_G["WEEKDAY_"..upper(date("%A", t))].." "..date("%I:%M", t) .. " " .. _G["TIMEMANAGER_"..upper(date("%p", t))],
+						_G["WEEKDAY_"..upper(date("%A", t+66600))].." "..date("%I:%M", t+66600) .. " " .. _G["TIMEMANAGER_"..upper(date("%p", t+66600))],
 						1, 1, 1, 1, 1, 1
 					)
 					t = t + 66600 + 66600
@@ -181,6 +181,7 @@ do
 		bar.candyBarLabel:SetJustifyH(frame.db.profile.alignText)
 		bar.candyBarDuration:SetJustifyH(frame.db.profile.alignTime)
 		bar:SetDuration(timeLeft)
+		bar:Set("LegionInvasionTimer:icon", icon)
 		if rewardQuestID > 0 then
 			if IsQuestFlaggedCompleted(rewardQuestID) then
 				bar:SetColor(unpack(frame.db.profile.colorComplete))
@@ -199,6 +200,7 @@ do
 			bar:SetIconPosition(frame.db.profile.alignIcon)
 		end
 		bar:SetTimeVisibility(frame.db.profile.timeText)
+		bar:SetLabelVisibility(frame.db.profile.labelText)
 		bar:SetFill(frame.db.profile.fill)
 		local flags = nil
 		if frame.db.profile.monochrome and frame.db.profile.outline ~= "NONE" then
@@ -217,7 +219,7 @@ do
 		elseif rewardQuestID > 0 then -- Invasion duration bars
 			bar:Start(21600) -- 6hrs = 60*6 = 360min = 360*60 = 21,600sec
 		else -- Next invasion bars
-			bar:Start()
+			bar:Start(45000) -- 12.5hrs = 60*12.5 = 750min = 750*60 = 45,000sec
 		end
 		RearrangeBar()
 		if hiddenBars then
@@ -260,7 +262,7 @@ end
 local FindInvasion
 local justLoggedIn = true
 do
-	local GetAreaPOITimeLeft = C_AreaPoiInfo.GetAreaPOITimeLeft
+	local GetAreaPOISecondsLeft = C_AreaPoiInfo.GetAreaPOISecondsLeft
 	local isWaiting = false
 	local zonePOIIds = {
 		5177, -- Highmountain
@@ -285,19 +287,19 @@ do
 		local found = false
 
 		for i = 1, #zonePOIIds do
-			local timeLeftMinutes = GetAreaPOITimeLeft(zonePOIIds[i])
-			if timeLeftMinutes and timeLeftMinutes > 0 and timeLeftMinutes < 361 then -- On some realms timeLeftMinutes can return massive values during the initialization of a new event
-				local t = timeLeftMinutes * 60
+			local timeLeftSeconds = GetAreaPOISecondsLeft(zonePOIIds[i])
+			-- On some realms timeLeftSeconds can return massive values during the initialization of a new event
+			if timeLeftSeconds and timeLeftSeconds > 60 and timeLeftSeconds < 21601 then -- 6 hours: (6*60)*60 = 21600
 				if mode == 2 then
-					StartBroker(zoneNames[i], t, 236292) -- 236292 = Interface\\Icons\\Ability_Warlock_DemonicEmpowerment
+					StartBroker(zoneNames[i], timeLeftSeconds, 236292) -- 236292 = Interface\\Icons\\Ability_Warlock_DemonicEmpowerment
 				else
-					StartBar(zoneNames[i], t, questIds[i], 236292) -- 236292 = Interface\\Icons\\Ability_Warlock_DemonicEmpowerment
+					StartBar(zoneNames[i], timeLeftSeconds, questIds[i], 236292) -- 236292 = Interface\\Icons\\Ability_Warlock_DemonicEmpowerment
 					frame:RegisterEvent("QUEST_TURNED_IN")
 				end
-				Timer(t+60, FindInvasion)
+				Timer(timeLeftSeconds+60, FindInvasion)
 				found = true
-				-- Not fighting a boss, didn't just log in, legion assault has just spawned (safety), feature is enabled
-				if not IsEncounterInProgress() and not justLoggedIn and timeLeftMinutes > 350 and frame.db.profile.zoneWarnings then
+				-- Not fighting a boss, didn't just log in, legion assault has just spawned (6hrs - 10min), feature is enabled
+				if not IsEncounterInProgress() and not justLoggedIn and timeLeftSeconds > 21000 and frame.db.profile.zoneWarnings then
 					FlashClientIcon()
 					local text = "|T236292:15:15:0:0:64:64:4:60:4:60|t ".. ZONE_UNDER_ATTACK:format(zoneNames[i])
 					print("|cFF33FF99LegionInvasionTimer|r:", text)
@@ -306,10 +308,11 @@ do
 				end
 				justLoggedIn = false
 
-				local t = time()
-				local elapsed = 360-timeLeftMinutes
-				t = t - (elapsed * 60)
-				LegionInvasionTime = t
+				local curTime = time()
+				local elapsed = 21600-timeLeftSeconds
+				local latestInvasionTime = curTime - elapsed
+				LegionInvasionTime = latestInvasionTime
+				break
 			end
 		end
 
@@ -324,7 +327,7 @@ do
 
 				if t > 45000 then -- 12hrs * 60min = 720min = +30min = 750min = *60sec = 45,000sec
 					-- If it's longer than 45k then an invasion is currently active.
-					-- Loop every second until GetAreaPOITimeLeft responds with valid results.
+					-- Loop every second until the API call responds with valid results.
 					Timer(1, FindInvasion)
 					if not isWaiting then
 						isWaiting = true
@@ -339,9 +342,9 @@ do
 				end
 
 				if mode == 2 then
-					StartBroker(NEXT, t, 132177) -- 132177 = Interface\\Icons\\Ability_Hunter_MasterMarksman
+					StartBroker(L.next, t, 132177) -- 132177 = Interface\\Icons\\Ability_Hunter_MasterMarksman
 				else
-					StartBar(NEXT, t, 0, 132177) -- 132177 = Interface\\Icons\\Ability_Hunter_MasterMarksman
+					StartBar(L.next, t, 0, 132177) -- 132177 = Interface\\Icons\\Ability_Hunter_MasterMarksman
 					frame:UnregisterEvent("QUEST_TURNED_IN")
 				end
 
@@ -381,11 +384,6 @@ end
 frame:SetScript("OnEvent", function(f)
 	f:UnregisterEvent("PLAYER_LOGIN")
 
-	if type(legionTimerDB) == "table" and legionTimerDB.prev then
-		LegionInvasionTime = legionTimerDB.prev
-	end
-	legionTimerDB = nil -- XXX remove old DB
-
 	-- saved variables database setup
 	local defaults = {
 		profile = {
@@ -400,6 +398,7 @@ frame:SetScript("OnEvent", function(f)
 			height = 20,
 			icon = true,
 			timeText = true,
+			labelText = true,
 			fill = false,
 			growUp = false,
 			alignText = "LEFT",
@@ -410,11 +409,11 @@ frame:SetScript("OnEvent", function(f)
 			colorIncomplete = {1,0,0,1},
 			colorNext = {0.25,0.33,0.68,1},
 			colorBarBackground = {0,0,0,0.75},
-			tooltip12hr = false,
+			tooltip12hr = true,
 			tooltipHideAchiev = false,
 			tooltipHideNethershard = false,
 			tooltipHideWarSupplies = false,
-			zoneWarnings = true,
+			zoneWarnings = false,
 			hideInRaid = false,
 			mode = 1,
 		},

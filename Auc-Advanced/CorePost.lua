@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CorePost.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CorePost.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -85,8 +85,9 @@ local POST_TIMEOUT = 8 -- seconds general timeout after starting an auction, bef
 local POST_ERROR_PAUSE = 5 -- seconds pause after an error before trying next request
 local POST_THROTTLE = 0 -- time before starting to post the next item in the queue
 local POST_TIMER_INTERVAL = 0.5 -- default interval of updates from the timer
-local MINIMUM_DEPOSIT = 100 -- 1 silver minimum deposit
-local PROMPT_HEIGHT = 120
+local MINIMUM_DEPOSIT = 100 -- 1 silver minimum deposit, used in deposit cost calculation
+local MAX_EXTRA_FEE = 10000000 -- cap the extra fee for stackable tradegoods, used in deposit cost calculation
+local PROMPT_HEIGHT = 140
 local PROMPT_MIN_WIDTH = 400
 
 -- Used to check for bound items in bags - only checks for strings indicating item is already bound
@@ -487,9 +488,14 @@ function lib.PostAuctionClick(sig, size, bid, buyout, duration, multiple)
 		private.Wait(0)
 		success, reason, special = private.LoadAuctionSlot(request)
 		if success then
-			success, reason, special = private.StartAuction(request)
-			if success then
+			if special == -1 then -- indicates a deposit cost mismatch, prompt before posting (prompt shows deposit)
+				private.ShowPrompt(request)
 				return id
+			else
+				success, reason, special = private.StartAuction(request)
+				if success then
+					return id
+				end
 			end
 		end
 		if noqueue and not reason then
@@ -593,56 +599,120 @@ function lib.CountAvailableItems(sig)
 	return (totalCount - unpostableCount - queuedCount - siglockCount), totalCount, unpostableCount, queuedCount, siglockCount, unpostableError
 end
 
--- lookup table used by GetDepositCost to avoid a large if/elseif block
-local depositDurationMultiplier = {
-	3,	--[1]
-	6,	--[2]
-	12,	--[3]
-	[12] = 3,
-	[24] = 6,
-	[48] = 12,
-	[720] = 3,
-	[1440] = 6,
-	[2880] = 12,
-}
---[[
-    GetDepositCost(item, duration, unused, count)
-    item: itemID or "itemString" or "itemName" or "itemLink" [Required]
-	duration: 1, 2, 3 (Blizzard auction duration codes), 12, 24, 48 (hours), 720, 1440, 2880 (minutes) [defaults to 2]
-    count: <stacksize> [defaults to 1]
-]]
-function GetDepositCost(item, duration, unused, count)
-	if not item then return end
+do --[[ Deposit Cost Calculator ]]--
+	-- lookup table to convert posting durations
+	local lookupDuration = {
+		1,	--[1]
+		2,	--[2]
+		4,	--[3]
+		[12] = 1,
+		[24] = 2,
+		[48] = 4,
+		[720] = 1,
+		[1440] = 2,
+		[2880] = 4,
+	}
+
+	local lookupExcludeSubclass, lookupExceptionID = {}, {}
+	function private.InitDepositCostData()
+		local Data = AucAdvanced.Data
+		InitDepositCostData = nil
+
+		-- lookup table for subclasses of tradeskill reagents that do NOT have increased deposit
+		-- these must be numbers, to match the subclassID return from GetItemInfo
+		-- Source table is in DataPostDeposit.lua, in List form - convert to lookup
+		for _, subclass in ipairs(Data.DepositExcludedSubclasses) do
+			lookupExcludeSubclass[subclass] = true
+		end
+		Data.DepositExcludedSubclasses = nil
+
+		-- lookup table for itemIDs in a subclass that usually has an increased deposit cost, but which actually have base deposit cost (exceptions)
+		-- these must be strings to match the itemID extracted from the itemLink
+		-- Source table is in DataPostDeposit.lua in List for, convert to lookup, and convert each entry to a string
+		for _, item in ipairs(Data.DepositItemIDExceptions) do
+			lookupExceptionID[tostring(item)] = true
+		end
+		Data.DepositItemIDExceptions = nil
+
+	end
+	AucAdvanced.Data.DepositCalcAlgorithmDebugVersion = 2 -- ### used by debugging tools, stored in an out-of-the-way place
+
 	--[[
-	Deposit Cost = RoundDown(0.15 * VendorPrice * StackSize, 3) * DurationMultiplier
-	DurationMultiplier = (1 for 12hrs, 2 for 24hrs, 4 for 48hrs)
-	However as there is no lua function for "round down to the nearest multiple of 3",
-	we shall implement this by dividing the constant multiplier by 3 (0.15 / 3 = 0.05)
-	using 'floor' to round down to the nearest integer
-	and then multiplying the DurationMultiplier by 3 (3, 6 and 12) - [see lookup table above]
-	--]]
+		lib.GetDepositCost(item, duration, bidprice, buyprice, stacksize, numstacks)
+		item: itemID or "itemString" or "itemName" or "itemLink" [Required]
+		duration: 1, 2, 3 (Blizzard auction duration codes), 12, 24, 48 (hours), 720, 1440, 2880 (minutes) [defaults to 2]
+		bidprice, buyprice: prices for the stack
+		stacksize: [defaults to 1]
+		numstacks: [defaults to 1]
 
-	-- Set up function defaults if not specifically provided
-	duration = depositDurationMultiplier[duration] or 6
-	count = count or 1
+	]]
+	function lib.GetDepositCost(item, duration, bidprice, buyprice, stacksize, numstacks)
+		local vendor, classID, subclassID, itemID
+		--[[
+		Base Deposit = 0.15 * VendorPrice * StackSize * DurationMultiplier
+			DurationMultiplier = (1 for 12hrs, 2 for 24hrs, 4 for 48hrs)
+		Extra Deposit = 0.2 * max(StackBidPrice, StackBuyPrice) / StackSize
+			Extra Deposit is added to some Trade goods
 
-	local _,_,_,_,_,_,_,_,_,_,gsv = GetItemInfo(item)
-	if not gsv then
-		if type(item) == "string" and strmatch(item, "battlepet") then
-			gsv = 0
-		elseif GetSellValue then
-			-- if item is not in local cache, fallback to GetSellValue
-			-- some people may still be using a GetSellValue provider with a saved price database
-			gsv = GetSellValue(item)
+		-- ### todo: figure out proper rounding algorithm
+		--]]
+
+		local itype = type(item)
+		if itype == "number" then
+			itemID = tostring(item)
+			vendor, classID, subclassID = AucAdvanced.GetItemInfoCache(item, 11)
+		elseif itype == "string" then
+			local head, id, _ = strsplit(":", item, 3)
+			local ltype = head:sub(-4)
+			if ltype == "epet" then -- battlepet
+				vendor = 0
+			elseif ltype == "item" then
+				vendor, classID, subclassID = AucAdvanced.GetItemInfoCache(item, 11)
+				itemID = id
+			else
+				return
+			end
+		else
+			return
+		end
+
+		if vendor then
+			duration = lookupDuration[duration] or 2
+			if not stacksize or stacksize < 1 then stacksize = 1 end
+
+			local deposit = 0.15 * vendor * stacksize * duration
+
+			if classID == LE_ITEM_CLASS_TRADEGOODS then
+				-- additional deposit fee for certain tradegoods
+				if not (lookupExcludeSubclass[subclassID] or lookupExceptionID[itemID]) then
+					local extra = max(bidprice or 1, buyprice or 0)
+					extra = .2 * extra / stacksize -- extra fee is not affected by auction duration
+					if extra > MAX_EXTRA_FEE then
+						extra = MAX_EXTRA_FEE
+					end
+					deposit = deposit + extra
+				end
+			end
+
+			deposit = floor(deposit) -- ### try rounding as last thing...
+
+			if deposit < MINIMUM_DEPOSIT then
+				deposit = MINIMUM_DEPOSIT
+			end
+			return deposit * (numstacks or 1)
 		end
 	end
-	if gsv then
-		local deposit = floor(0.05 * gsv * count) * duration
-		if deposit < MINIMUM_DEPOSIT then
-			deposit = MINIMUM_DEPOSIT
-		end
-		return deposit
+	function GetDepositCost(item, duration, unused, count)
+		-- ### temporary wrapper until we convert all our calls
+		-- calls lib.GetDepositCost inserting default (i.e. fake) values for missing arguaments
+		return lib.GetDepositCost(item, duration, 10000 * count, 0, count, 1)
 	end
+	lib.DepositCostDebugVersion = 2 -- ### temp value for use by debugging tools for GetDepositCost
+end
+function GetDepositCost(item, duration, unused, count)
+	-- ### temporary wrapper until we convert all our calls
+	-- calls lib.GetDepositCost inserting default (i.e. fake) values for missing arguaments
+	return lib.GetDepositCost(item, duration, 10000 * count, 0, count, 1)
 end
 
 do
@@ -1005,7 +1075,8 @@ function private.LoadAuctionSlot(request)
 			return nil, "NotEnough", nil
 		end
 	end
-	if GetMoney() < GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks) then
+	local depositBlizz = GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks)
+	if GetMoney() < depositBlizz then
 		-- not enough money to pay the deposit
 		private.ClearAuctionSlot() -- Put it back in the bags
 		private.QueueRemove()
@@ -1018,7 +1089,12 @@ function private.LoadAuctionSlot(request)
 	request.name = name -- used by the Prompt sanity checks
 	request.quality = quality
 	request.texture = texture -- displayed in the Prompt
+	request.depositB = depositBlizz
 
+	local depositCalc = lib.GetDepositCost(link, request.duration, request.bid, request.buy, request.count, request.stacks)
+	if depositBlizz and depositBlizz > depositCalc * 1.05 then -- ### for now we test with a small leeway to allow for round - we don't know the rounding algorithm yet
+		return true, nil, -1 -- flag to prevent immediate posting (should popup the positng prompt instead, which will display deposit cost)
+	end
 	return true
 end
 
@@ -1035,7 +1111,7 @@ function private.VerifyAuctionSlot(request)
 	if totalCount < request.count * request.stacks then
 		return nil, "NotEnough"
 	end
-	if GetMoney() < GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks) then
+	if GetMoney() < GetAuctionDeposit(request.duration, request.bid, request.buy, request.count, request.stacks) then -- ### use request.depositB here?
 		return nil, "PayDeposit"
 	end
 
@@ -1089,11 +1165,13 @@ function private.ShowPrompt(request)
 	private.Prompt:Show()
 	private.Prompt.Text1:SetText("Ready to post "..private.RequestDisplayString(request))
 	private.Prompt.Text2:SetText("Min Bid "..AucAdvanced.Coins(request.bid, true)..", Buyout "..AucAdvanced.Coins(request.buy, true))
+	private.Prompt.Text3:SetText("Deposit "..AucAdvanced.Coins(request.depositB, true))
 	private.Prompt.Item.tex:SetTexture(request.texture)
 	local headwidth = (private.Prompt.Heading:GetStringWidth() or 0) + 70
 	local width1 = (private.Prompt.Text1:GetStringWidth() or 0) + 70
 	local width2 = (private.Prompt.Text2:GetStringWidth() or 0) + 70
-	private.Prompt.Frame:SetWidth(max(headwidth, width1, width2, PROMPT_MIN_WIDTH))
+	local width3 = (private.Prompt.Text3:GetStringWidth() or 0) + 70
+	private.Prompt.Frame:SetWidth(max(headwidth, width1, width2, width3, PROMPT_MIN_WIDTH))
 end
 
 --[[ PRIVATE: HidePrompt()
@@ -1305,6 +1383,12 @@ function coremodule.OnLoad(addon)
 	end
 end
 
+coremodule.Processors = {
+	gameactive = function()
+		private.InitDepositCostData()
+	end,
+}
+
 -- Other hooks
 private.hook_CancelSell = CancelSell
 CancelSell = function(...)
@@ -1388,14 +1472,18 @@ private.Prompt.Item.tex:SetPoint("TOPLEFT", private.Prompt.Item, "TOPLEFT", 0, 0
 private.Prompt.Item.tex:SetPoint("BOTTOMRIGHT", private.Prompt.Item, "BOTTOMRIGHT", 0, 0)
 
 private.Prompt.Heading = private.Prompt:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-private.Prompt.Heading:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, 30)
+private.Prompt.Heading:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, 38)
 private.Prompt.Heading:SetText("Auctioneer needs a confirmation to continue posting")
 
 private.Prompt.Text1 = private.Prompt:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-private.Prompt.Text1:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, 10)
+private.Prompt.Text1:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, 18)
 
 private.Prompt.Text2 = private.Prompt:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-private.Prompt.Text2:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, -10)
+private.Prompt.Text2:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, -2)
+
+private.Prompt.Text3 = private.Prompt:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+private.Prompt.Text3:SetPoint("CENTER", private.Prompt.Frame, "CENTER", 20, -22)
+
 
 -- Yes and No buttons are named to allow macros to /click them
 private.Prompt.Yes = CreateFrame("Button", "AuctioneerPostPromptYes", private.Prompt, "OptionsButtonTemplate")
@@ -1425,5 +1513,5 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CorePost.lua $", "$Rev: 6112 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CorePost.lua $", "$Rev: 6201 $")
 AucAdvanced.CoreFileCheckOut("CorePost")

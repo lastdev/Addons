@@ -3,8 +3,8 @@
 ## OptionalDependencies:
 ## Dependencies: Auc-Advanced
 ##
-## Version: 7.7.6069 (SwimmingSeadragon)
-## Revision: $Id: Auc-Util-ItemSuggest.toc 6069 2018-08-29 01:26:34Z none $
+## Version: 8.1.6216 (SwimmingSeadragon)
+## Revision: $Id: Auc-Util-ItemSuggest.toc 6216 2019-03-04 00:20:18Z none $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House

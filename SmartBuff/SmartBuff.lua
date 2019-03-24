@@ -40,8 +40,8 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v7.0a";
-SMARTBUFF_VERSIONNR     = 70000;
+SMARTBUFF_VERSION       = "v8.0f1";
+SMARTBUFF_VERSIONNR     = 80000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you or party/raid members/pets";
@@ -61,8 +61,8 @@ SMARTBUFF_BOOK_TYPE_SPELL = "spell";
 local GlobalCd = 1.5;
 local maxSkipCoolDown = 3;
 local maxRaid = 40;
-local maxBuffs = 36;
-local maxScrollButtons = 50;
+local maxBuffs = 40;
+local maxScrollButtons = 23;
 local numBuffs = 0;
 
 local isLoaded = false;
@@ -256,7 +256,7 @@ end
 
 local function CS()
   if (currentSpec == nil) then
-    currentSpec = GetActiveSpecGroup();
+    currentSpec = GetSpecialization();
   end
   if (currentSpec == nil) then
     currentSpec = 1;
@@ -413,7 +413,9 @@ function SMARTBUFF_OnLoad(self)
   --self:RegisterEvent("PLAYER_AURAS_CHANGED");
   --self:RegisterEvent("ACTIONBAR_UPDATE_STATE");
     
-  self:RegisterEvent("CHAT_MSG_SPELL_FAILED_LOCALPLAYER");
+--  self:RegisterEvent("CHAT_MSG_SPELL_FAILED_LOCALPLAYER");
+--  self:RegisterEvent("UI_ERROR_MESSAGE");
+  self:RegisterEvent("UNIT_SPELLCAST_FAILED");
   self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
   
   --One of them allows SmartBuff to be closed with the Escape key
@@ -508,8 +510,8 @@ function SMARTBUFF_OnEvent(self, event, ...)
     if(SmartBuffOptionsFrame:IsVisible()) then
       SmartBuffOptionsFrame:Hide();
     end
-    if (currentSpec ~= GetActiveSpecGroup()) then
-      currentSpec = GetActiveSpecGroup();
+    if (currentSpec ~= GetSpecialization()) then
+      currentSpec = GetSpecialization();
       if (B[currentSpec] == nil) then
         B[currentSpec] = { };
       end
@@ -536,7 +538,8 @@ function SMARTBUFF_OnEvent(self, event, ...)
     -- checks if aspect of cheetah or pack is active and cancel it if someone gets dazed
     if (sPlayerClass == "HUNTER" and O.AntiDaze and (arg1 == "player" or string.find(arg1, "^party") or string.find(arg1, "^raid") or string.find(arg1, "pet"))) then
       --SMARTBUFF_AddMsgD("Checking: " .. arg1);
-      if (SMARTBUFF_IsDebuffTexture(arg1, "Spell_Frost_Stun")) then
+	  local _, _, stuntex = GetSpellInfo(1604); --get Dazed icon
+      if (SMARTBUFF_IsDebuffTexture(arg1, stuntex)) then
         buff = nil;
         if (arg1 == "player" and SMARTBUFF_CheckBuff(arg1, SMARTBUFF_AOTC)) then
           buff = SMARTBUFF_AOTC;
@@ -560,8 +563,14 @@ function SMARTBUFF_OnEvent(self, event, ...)
     end    
   end
     
-  if (event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER") then
-    SMARTBUFF_AddMsgD("Spell failed: " .. arg1);
+  if (event == "UI_ERROR_MESSAGE") then
+    SMARTBUFF_AddMsgD(string.format("Error message: %s",arg1));
+  end
+
+--  if (event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER") then
+  if (event == "UNIT_SPELLCAST_FAILED") then
+    currentUnit = arg1;
+    SMARTBUFF_AddMsgD(string.format("Spell failed: %s",arg1));
     if (currentUnit and (string.find(currentUnit, "party") or string.find(currentUnit, "raid") or (currentUnit == "target" and O.Debug))) then
       if (UnitName(currentUnit) ~= sPlayerName and O.BlacklistTimer > 0) then
         cBlacklist[currentUnit] = GetTime();
@@ -628,6 +637,15 @@ end
 
 
 function SMARTBUFF_OnUpdate(self, elapsed)
+  if not self.Elapsed then 
+    self.Elapsed = 0.2
+  end
+  self.Elapsed = self.Elapsed - elapsed
+  if self.Elapsed > 0 then 
+    return 
+  end
+  self.Elapsed = 0.2
+  
   if (not isInit) then
     if (isLoaded and GetTime() > tAutoBuff + 0.5) then
       tAutoBuff = GetTime();
@@ -1035,7 +1053,7 @@ function SMARTBUFF_SetBuffs()
 end
 
 function SMARTBUFF_SetBuff(buff, i, ia)
-  if (buff == nil or buff[1] == nil or i > maxScrollButtons) then return i; end  
+  if (buff == nil or buff[1] == nil) then return i; end  
   
   cBuffs[i] = nil;
   cBuffs[i] = { }; 
@@ -1537,7 +1555,8 @@ function SMARTBUFF_IsShapeshifted()
   elseif (sPlayerClass == "DRUID") then
     local i;
     for i = 1, GetNumShapeshiftForms(), 1 do
-      local icon, name, active, castable = GetShapeshiftFormInfo(i);
+      local icon, active, castable, spellId = GetShapeshiftFormInfo(i);
+	  local name = GetSpellInfo(spellId);
       if (active and castable and name ~= SMARTBUFF_DRUID_TREANT) then
         return true, name;
       end
@@ -1798,7 +1817,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
           cds = 0;
           if (cBuff.IDS) then
             cds, cd = GetSpellCooldown(buffnS);
-            cd = (cds + cd) - time;
+            cd = (cds + cd) - GetTime();
             if (cd < 0) then
               cd = 0;
             end
@@ -1908,7 +1927,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                       buff = buffnS;
                       if (cBuff.Type == SMARTBUFF_CONST_ITEMGROUP or cBuff.Type == SMARTBUFF_CONST_SCROLL) then
                         cds, cd = GetItemCooldown(iid);
-                        cd = (cds + cd) - time;
+                        cd = (cds + cd) - GetTime();
                         --SMARTBUFF_AddMsgD(cr.." "..buffnS.." found, cd = "..cd);
                         if (cd > 0) then
                           buff = nil;
@@ -2318,7 +2337,7 @@ function SMARTBUFF_SetMissingBuffMessage(target, buff, icon, bCanCharge, nCharge
   
   -- play sound
   if (O.ToggleAutoSound) then
-    PlaySound(SMARTBUFF_CONST_AUTOSOUND);
+    PlaySound(1141);
   end
 end
 
@@ -2422,6 +2441,16 @@ end
 -- END SMARTBUFF_IsPlayer
 
 
+function UnitBuffByBuffName(target,buffname,filter)
+  for i = 1,40 do
+    name = UnitBuff(target, i, filter);
+    if not name then return end
+    if name == buffname then
+      return UnitBuff(target, i, filter);
+    end
+  end
+end
+
 -- Will return the name of the buff to cast
 function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
   if (not unit or (not buffN and not buffL)) then return end
@@ -2495,9 +2524,14 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
       for n, v in pairs(buffL) do
         if (v and v ~= defBuff) then
           SMARTBUFF_AddMsgD("Check linked buff ("..uname.."): "..v);
-          buff, _, icon, count, _, duration, timeleft, caster = UnitBuff(unit, v);
+          buff, icon, count, _, duration, timeleft, caster = UnitBuffByBuffName(unit, v);
           if (buff) then
-            timeleft = timeleft - time;
+            timeleft = timeleft - GetTime();
+  if (timeleft > 0) then
+	timeleft = timeleft;
+  else
+    timeleft = time;
+  end
             SMARTBUFF_AddMsgD("Linked buff found: "..buff..", "..timeleft..", "..icon);
             return nil, n, defBuff, timeleft, count;
           end
@@ -2533,9 +2567,14 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
   -- Check default buff
   if (defBuff) then
     SMARTBUFF_AddMsgD("Check default buff ("..uname.."): "..defBuff);
-    buff, _, icon, count, _, duration, timeleft, caster = UnitBuff(unit, defBuff);
+    buff, icon, count, _, duration, timeleft, caster = UnitBuffByBuffName(unit, defBuff);
     if (buff) then
-      timeleft = timeleft - time;
+      timeleft = timeleft - GetTime();
+  if (timeleft > 0) then
+	timeleft = timeleft;
+  else
+    timeleft = time;
+  end
       if (SMARTBUFF_IsPlayer(caster)) then
         SMARTBUFF_UpdateBuffDuration(defBuff, duration);
       end
@@ -2560,9 +2599,14 @@ function SMARTBUFF_CheckBuffLink(unit, defBuff, buffT, buffL)
       for n, v in pairs(buffL) do
         if (v and v ~= defBuff) then
           SMARTBUFF_AddMsgD("Check linked buff ("..uname.."): "..v);
-          buff, _, icon, count, _, duration, timeleft, caster = UnitBuff(unit, v);
+          buff, icon, count, _, duration, timeleft, caster = UnitBuffByBuffName(unit, v);
           if (buff) then
-            timeleft = timeleft - time;
+            timeleft = timeleft - GetTime();
+  if (timeleft > 0) then
+	timeleft = timeleft;
+  else
+    timeleft = time;
+  end
             SMARTBUFF_AddMsgD("Linked buff found: "..buff..", "..timeleft..", "..icon);
             return nil, n, defBuff, timeleft, count;
           end
@@ -2605,15 +2649,30 @@ function SMARTBUFF_UpdateBuffDuration(buff, duration)
 end
 
 
+function UnitAuraBySpellName(target,spellname,filter)
+  for i = 1,40 do
+    name = UnitAura(target, i, filter);
+    if not name then return end
+    if name == spellname then
+      return UnitAura(target, i, filter);
+    end
+  end
+end
+
 function SMARTBUFF_CheckBuff(unit, buffName, isMine) 
   if (not unit or not buffName) then
     return false, 0;
   end
-  local buff, _, _, _, _, _, timeleft, caster = UnitAura(unit, buffName, nil, "HELPFUL");
+  local buff, _, _, _, _, timeleft, caster = UnitAuraBySpellName(unit, buffName, "HELPFUL");
   if (buff) then
     SMARTBUFF_AddMsgD(UnitName(unit).." buff found: "..buff, 0, 1, 0.5);
     if (buff == buffName) then
       timeleft = timeleft - GetTime();
+  if (timeleft > 0) then
+	timeleft = timeleft;
+  else
+    timeleft = time;
+  end
       if (isMine and caster) then
         if (SMARTBUFF_IsPlayer(caster)) then
           return true, timeleft, caster;
@@ -2711,7 +2770,7 @@ function SMARTBUFF_IsDebuffTexture(unit, debufftex)
   local name, icon;
   -- name,rank,icon,count,type = UnitDebuff("unit", id or "name"[,"rank"])
   while (UnitDebuff(unit, i)) do
-    name, _, icon, _, _ = UnitDebuff(unit, i);
+    name, icon, _, _ = UnitDebuff(unit, i);
     --SMARTBUFF_AddMsgD(i .. ". " .. name .. ", " .. icon);  
     if (string.find(icon, debufftex)) then
       active = true;
@@ -2994,7 +3053,7 @@ function SMARTBUFF_Options_Init(self)
   end 
   
   currentTemplate = O.LastTemplate;
-  currentSpec = GetActiveSpecGroup();  
+  currentSpec = GetSpecialization();  
   
   if (O.OldWheelUp == nil) then O.OldWheelUp = ""; end
   if (O.OldWheelDown == nil) then O.OldWheelDown = ""; end
@@ -4362,6 +4421,7 @@ function SMARTBUFF_MinimapButton_OnUpdate(self, move)
   end
 
   local xpos, ypos;
+self:ClearAllPoints()
   if (move or O.MMCPosX == nil) then
     local pos, r
     local xmin, ymin = Minimap:GetLeft(), Minimap:GetBottom();
@@ -4416,8 +4476,8 @@ local function CreateScrollButton(name, parent, cBtn, onClick, onDragStop)
 	btn:SetWidth(ScrBtnSize);
 	btn:SetHeight(ScrBtnSize);
   --btn:RegisterForClicks("LeftButtonUp");
-	--btn:SetScript("OnClick", onClick);
-	btn:SetScript("OnMouseUp", onClick);
+	btn:SetScript("OnClick", onClick);
+--	btn:SetScript("OnMouseUp", onClick);
   
   if (onDragStop ~= nil) then
     btn:SetMovable(true);
@@ -4481,7 +4541,7 @@ local function OnScroll(self, cData, sBtnName)
     numToDisplay = maxScrollButtons;
   end
   
-  FauxScrollFrame_Update(self, num, numToDisplay, ScrLineHeight);
+  FauxScrollFrame_Update(self, num, floor(numToDisplay/3+0.5), ScrLineHeight);
   local t = B[CS()][CT()];
   for i = 1, maxScrollButtons, 1 do
     n = i + FauxScrollFrame_GetOffset(self);

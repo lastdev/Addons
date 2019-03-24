@@ -2,7 +2,7 @@
 Simple Taunt Announce
 =====================
 
-Copyright 2011-2018 BeathsCurse (Saphod - Draenor EU)
+Copyright 2011-2019 BeathsCurse (Bowmore - Silvermoon EU)
 
 
 Introduction

@@ -20,12 +20,15 @@ Overachiever.DefaultSettings = {
   CritterTip_loved = true;
   CritterTip_killed = true;
   WellReadTip_read = true;
+  EatYourGreensTip_eat = true;
   AnglerTip_fished = true;
   SchoolTip_fished = true;
   DraenorAnglerTip_fished = true;
   Item_consumed = true;
   Item_consumed_whencomplete = false;
   Item_satisfied = true;
+  Item_acquired = true;
+  Mission_complete = true;
   CreatureTip_killed = true;
   CreatureTip_killed_exclude_guild = false;
   LetItSnow_flaked = false;
@@ -131,12 +134,12 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
   }
 
   local items_reminders = {
-	{ type = "Oa_AchLabel", text = L.OPT_LABEL_NEEDTOKILL, topBuffer = 4, id1 = IDs.MediumRare, id2 = IDs.NorthernExposure, id3 = IDs.Glorious },
+	{ type = "Oa_AchLabel", text = L.OPT_LABEL_NEEDTOKILL, topBuffer = 4, id1 = IDs.MediumRare, id2 = IDs.NorthernExposure, id3 = IDs.Glorious, id4 = IDs.BattleMonsters },
 	{ variable = "CreatureTip_killed", text = L.OPT_KILLCREATURETIPS, tooltip = L.OPT_KILLCREATURETIPS_TIP,
 	  tooltip2 = L.OPT_KILLCREATURETIPS_TIP2, OnChange = BuildCriteriaLookupTab_check, xOffset = 28 },
 	{ variable = "CreatureTip_killed_exclude_guild", text = L.OPT_KILLCREATURETIPS_EXCLUDE_GUILD, xOffset = 39 },
 
-	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHFOUR, topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
+	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
 	{ variable = "CritterTip_loved", text = L.OPT_CRITTERTIPS, tooltip = L.OPT_CRITTERTIPS_TIP, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.PestControl, xOffset = 0 },
@@ -144,6 +147,9 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTWO, topBuffer = 4, id1 = IDs.WellRead, id2 = IDs.HigherLearning, xOffset = 0 },
 	{ variable = "WellReadTip_read", text = L.OPT_WELLREADTIPS, tooltip = L.OPT_WELLREADTIPS_TIP, xOffset = 28 },
+
+	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.EatYourGreens, xOffset = 0 },
+	{ variable = "EatYourGreensTip_eat", text = L.OPT_EATYOURGREENSTIPS, tooltip = L.OPT_EATYOURGREENSTIPS_TIP, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHFOUR, topBuffer = 4, id1 = IDs.Scavenger, id2 = IDs.OutlandAngler, id3 = IDs.NorthrendAngler, id4 = IDs.PandarianAngler, xOffset = 0 },
 	{ variable = "AnglerTip_fished", text = L.OPT_ANGLERTIPS, tooltip = L.OPT_ANGLERTIPS_TIP_ALWAYS, xOffset = 28 },
@@ -163,6 +169,12 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 
 	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.RightAsRain, xOffset = 0 },
 	{ variable = "Item_satisfied", text = L.OPT_SATISFIEDTIPS, tooltip = L.OPT_SATISFIEDTIPS_TIP, xOffset = 28 },
+
+	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.ThreeSheetsToTheWind, xOffset = 0 },
+	{ variable = "Item_acquired", text = L.OPT_ACQUIREDTIPS, tooltip = L.OPT_ACQUIREDTIPS_TIP, xOffset = 28 },
+
+	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTHREE, topBuffer = 4, id1 = IDs.MissionBarrens, id2 = IDs.MissionLordaeron, id3 = IDs.MissionKalimdor, xOffset = 0 },
+	{ variable = "Mission_complete", text = L.OPT_MISSIONCOMPLETE, tooltip = L.OPT_MISSIONCOMPLETE_TIP, xOffset = 28 },
 
 	{ type = "labelwrap", text = L.OPT_LABEL_SEASONALACHS, justifyH = "CENTER", topBuffer = 16, xOffset = 0 },
 
@@ -323,8 +335,16 @@ do
 
       local text = data.text
       if (not text) then
-        local _, n = GetAchievementInfo(data.id1)
-        text = '"'..(n or L.OPT_ACHUNKNOWN)..'"'
+	    local i = 1
+		local v = data["id"..i]
+		text = ""
+		while (v) do
+		  if (text ~= "") then  text = text .. ",|n";  end
+		  local _, n = GetAchievementInfo(v)
+          text = text .. '"'..(n or L.OPT_ACHUNKNOWN)..'"'
+		  i = i + 1
+		  v = data["id"..i]
+		end
       else
         d, count = data, 0
         text = text:gsub("(%%s)", achsub)

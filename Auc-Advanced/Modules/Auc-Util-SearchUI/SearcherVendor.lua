@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Vendor
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherVendor.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherVendor.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -34,7 +34,7 @@ local lib, parent, private = AucSearchUI.NewSearcher("Vendor")
 if not lib then return end
 --local aucPrint,decode,_,_,replicate,_,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local get,set,default,Const = AucSearchUI.GetSearchLocals()
-local GetItemInfo = GetItemInfo
+local GetItemInfoCache = AucAdvanced.GetItemInfoCache
 lib.tabname = "Vendor"
 -- Set our defaults
 default("vendor.profit.min", 1)
@@ -85,7 +85,7 @@ function lib.Search(item)
 		return false, "Does not meet bid/buy requirements"
 	end
 
-	local _,_,_,_,_,_,_,_,_,_,market = GetItemInfo(item[Const.ITEMID])
+	local market = GetItemInfoCache(item[Const.LINK], 11)
 	-- If there's no price, then we obviously can't sell it, ignore!
 	if not market or market == 0 then
 		return false, "No vendor price"
@@ -105,4 +105,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 6245 $")

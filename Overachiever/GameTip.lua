@@ -46,9 +46,10 @@ do
         cache[achID][n] = i  -- Creating lookup table
       end
     end
-    if (cache[achID][name]) then
-      local _, _, complete = GetAchievementCriteriaInfo(achID, cache[achID][name])
-      return true, complete
+	local crit = cache[achID][name]
+    if (crit) then
+      local _, _, complete = GetAchievementCriteriaInfo(achID, crit)
+      return crit, complete
     end
   end
 end
@@ -71,9 +72,10 @@ do
 		end
       end
     end
-    if (cache[achID][name]) then
-      local _, _, complete = GetAchievementCriteriaInfo(achID, cache[achID][name])
-      return true, complete
+	local crit = cache[achID][name]
+    if (crit) then
+      local _, _, complete = GetAchievementCriteriaInfo(achID, crit)
+      return crit, complete
     end
   end
 end
@@ -92,10 +94,11 @@ do
         cache[achID][a] = i  -- Creating lookup table
       end
     end
-    if (cache[achID][assetID]) then
+	local crit = cache[achID][assetID]
+    if (crit) then
       local complete
-      _, _, complete = GetAchievementCriteriaInfo(achID, cache[achID][assetID])
-      return true, complete
+      _, _, complete = GetAchievementCriteriaInfo(achID, crit)
+      return crit, complete
     end
   end
 end
@@ -127,7 +130,7 @@ local function isCriteria_hidden(achID, name)
   repeat
     i = i + 1
     n, t, complete = GetAchievementCriteriaInfo(achID, i)
-    if (n == name) then  return true, complete;  end
+    if (n == name) then  return i, complete;  end
   until (not n)
 end
 --]]
@@ -174,23 +177,34 @@ local RecentReminders = Overachiever.RecentReminders
 --Overachiever.RecentReminders_Criteria = {}
 --local RecentReminders_Criteria = Overachiever.RecentReminders_Criteria
 
-function Overachiever.GetRecentReminders(id, getNames)
+function Overachiever.GetRecentReminders(id, getNames, checkCompletion)
 	--Overachiever.RecentReminders_Check() -- Don't do this; the ID is used in at least one case where the achievement is showing already as a Recent Reminder, so it wouldn't make sense to not show the related objectives even if normal expiration time passed.
 	if (RecentReminders[id]) then
-		local results = {}
+		local results
+		local anycomplete
 		for nameOrCritID,t in pairs(RecentReminders[id]) do
-			if (getNames) then
+			local name, _, complete
+			if (getNames or checkCompletion) then
 				if (type(nameOrCritID) == "number") then
 					if (nameOrCritID > 0) then
-						nameOrCritID = GetAchievementCriteriaInfo(id, nameOrCritID)
+						name, _, complete = GetAchievementCriteriaInfo(id, nameOrCritID)
+						if (getNames) then  nameOrCritID = name;  end
+						if (complete) then  anycomplete = true;  end
 					else
-						nameOrCritID = nil
+						if (getNames) then  nameOrCritID = nil;  end
 					end
 				end
 			end
-			if (nameOrCritID) then  results[#results+1] = nameOrCritID;  end
+			if (nameOrCritID) then
+				results = results or {}
+				if (checkCompletion) then
+					results[#results+1] = { nameOrCritID, complete }  -- complete should be true if complete, false it not, or nil if we couldn't check
+				else
+					results[#results+1] = nameOrCritID
+				end
+			end
 		end
-		return results
+		return results, anycomplete
 	end
 end
 
@@ -227,7 +241,7 @@ local storeTooltip, outputTooltip
 do
 	local tipComplete, tipIncomplete
 
-	function storeTooltip(tooltip, id, text, complete, name, noSound)
+	function storeTooltip(tooltip, id, text, complete, nameOrCritID, noSound)
 		local tab
 		if (complete) then
 			tab = tipComplete
@@ -251,7 +265,7 @@ do
 		end
 
 		if (not complete and tooltip == GameTooltip) then
-			flagReminder(id, name)  --if (name) then  flagReminder(id, name);  end
+			flagReminder(id, nameOrCritID)  --if (nameOrCritID) then  flagReminder(id, nameOrCritID);  end
 			if (not noSound) then  PlayReminder();  end
 		end
 	end
@@ -381,11 +395,11 @@ local function CritterCheck(ach, name)
     CritterAch[ach] = nil;
     return;
   end
-  local isCrit, complete = isCriteria(id, name)
-  if (isCrit) then
+  local crit, complete = isCriteria(id, name)
+  if (crit) then
     local tip = complete and CritterAch[ach][2] or CritterAch[ach][3]
     if (Overachiever_Debug) then  tip = tip .. " (" .. id .. ")";  end
-    return id, tip, complete
+    return id, tip, complete, crit
   end
 end
 
@@ -454,7 +468,7 @@ local function RaceClassCheck(ach, tab, raceclass, race, unit)
   for i,c in ipairs(tab[4]) do
     if (c == text) then
       local _, _, complete = GetAchievementCriteriaInfo(id, i)
-      return id, complete and tab[2] or tab[3], complete
+      return id, complete and tab[2] or tab[3], complete, i
     end
   end
 end
@@ -464,7 +478,7 @@ function Overachiever.ExamineSetUnit(tooltip)
   tooltip = tooltip or GameTooltip  -- Workaround since another addon is known to break this
   local name, unit = tooltip:GetUnit()
   if (not unit) then  return;  end
-  local id, text, complete, needtipshow
+  local id, text, complete, crit, needtipshow
 
   if (UnitIsPlayer(unit)) then
     local raceName, r = UnitRace(unit)
@@ -473,7 +487,7 @@ function Overachiever.ExamineSetUnit(tooltip)
       local raceclass = r.." "..c
       for key,tab in pairs(RaceClassAch) do
         if (Overachiever_Settings[ tab[1] ]) then
-          id, text, complete = RaceClassCheck(key, tab, raceclass, r, unit)
+          id, text, complete, crit = RaceClassCheck(key, tab, raceclass, r, unit)
           if (text) then
             local r, g, b
             if (complete) then
@@ -495,10 +509,12 @@ function Overachiever.ExamineSetUnit(tooltip)
 
   elseif (name) then
     local type = UnitCreatureType(unit)
-    if (type == L.CRITTER or type == L.WILDPET) then
+    --if (type == L.CRITTER or type == L.WILDPET) then
+    if (type == L.CRITTER or type == L.WILDPET or UnitLevel(unit) < 10) then  -- Some critters aren't called critters any more for some reason. The unit level check should help.
       for key,tab in pairs(CritterAch) do
         if (Overachiever_Settings[ tab[1] ]) then
-          id, text, complete = CritterCheck(key, name)
+		  local critNum
+          id, text, complete, critNum = CritterCheck(key, name)
           if (text) then
             local r, g, b
             if (complete) then
@@ -506,7 +522,7 @@ function Overachiever.ExamineSetUnit(tooltip)
             else
               r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
               PlayReminder()
-              flagReminder(id, name)
+              flagReminder(id, critNum) --flagReminder(id, name)
             end
             tooltip:AddLine(text, r, g, b)
             tooltip:AddTexture(AchievementIcon)
@@ -592,6 +608,7 @@ local WorldObjAch = {
   --   4. bool: fishing, 5. possible criteria format, 6. bool: show nothing if entire achievement is complete }
   WellRead = { "WellReadTip_read", L.ACH_WELLREAD_COMPLETE, L.ACH_WELLREAD_INCOMPLETE },
   HigherLearning = { "WellReadTip_read", L.ACH_WELLREAD_COMPLETE, L.ACH_WELLREAD_INCOMPLETE },
+  EatYourGreens = { "EatYourGreensTip_eat", L.ACH_EATYOURGREENS_COMPLETE, L.ACH_EATYOURGREENS_INCOMPLETE },
   Scavenger = { "AnglerTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true },
   OutlandAngler = { "AnglerTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true },
   NorthrendAngler = { "AnglerTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true },
@@ -640,15 +657,15 @@ local function WorldObjCheck(ach, text)
     end
     local isCrit
     if (data[5]) then
-      isCrit, complete = isCriteria_formatted(id, text, data[5])
+      crit, complete = isCriteria_formatted(id, text, data[5])
     else
-      isCrit, complete = isCriteria(id, text)
+      crit, complete = isCriteria(id, text)
     end
-    if (not isCrit) then  return;  end
+    if (not crit) then  return;  end
 	complete = complete or achComplete
   end
 
-  return id, complete and data[2] or data[3], complete, data[4]
+  return id, complete and data[2] or data[3], complete, data[4], crit
 end
 
 
@@ -658,7 +675,7 @@ do
   local tooltipUsed, sizeAdjusted
 
   local function examineLine(line)
-      local id, text, complete, angler
+      local id, text, complete, angler, crit
 
 	  -- Remove up or down arrow from front of text (as given when above/below something on the minimap):
 	  local tiptext
@@ -670,17 +687,17 @@ do
 	    tiptext = line
 	  end
 
-	  id, text, complete, angler = WorldObjCheck(nil, tiptext)
+	  id, text, complete, angler, crit = WorldObjCheck(nil, tiptext)
 	  if (not text) then
         for key,tab in pairs(WorldObjAch) do
           if (Overachiever_Settings[ tab[1] ]) then
-            id, text, complete, angler = WorldObjCheck(key, tiptext)
+            id, text, complete, angler, crit = WorldObjCheck(key, tiptext)
             if (text) then  break;  end
           end
         end
 	  end
 
-      return text and { line = line, cleantip = tiptext, id = id, text = text, complete = complete, angler = angler } or nil
+      return text and { line = line, cleantip = tiptext, id = id, crit = crit, text = text, complete = complete, angler = angler } or nil
   end
 
   function Overachiever.ExamineOneLiner(tooltip)
@@ -740,7 +757,7 @@ do
 				else
 					r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
 					--if (t ~= last_check) then -- Different from previous check since reminder's "last seen" time (from flagReminder) should be reset if you mouse over the object again.
-						flagReminder(arr.id, arr.cleantip, t)
+						flagReminder(arr.id, arr.crit, t)  --flagReminder(arr.id, arr.cleantip, t)
 						if (not arr.angler or not Overachiever_Settings.SoundAchIncomplete_AnglerCheckPole or not IsEquippedItemType(LBI["Fishing Poles"])) then
 							needSound = true
 						end
@@ -834,6 +851,9 @@ local ConsumeItemAch = {
   DraenorCuisine = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, {} },
   BrewfestDiet = { "Brewfest_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, {} },
   DarkmoonFaireFeast = { "Darkmoon_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, {} },
+
+  -- Item-related achievements that aren't actually about consuming items, but the system should work for them fine:
+  ThreeSheetsToTheWind = { "Item_acquired", L.ACH_ACQUIRE_COMPLETE, L.ACH_ACQUIRE_INCOMPLETE, L.ACH_ACQUIRE_INCOMPLETE_EXTRA, {} },
 };
 
 local MiscItemAch = {
@@ -1061,19 +1081,19 @@ local function ItemConsumedCheck(key, tab, itemID)
 	if (achcomplete and not Overachiever_Settings[ tab[1].."_whencomplete" ]) then  return;  end
 	local complete = tab[5][itemID]
 	if (complete ~= nil) then
+		local crit
 		if (complete == true) then
 			-- If we already know it's complete, no need to look anything up since while it could change from incomplete to complete, the inverse isn't true.
 		elseif (not tab[6]) then -- For criteria given by the API:
-			local isCrit
-			isCrit, complete = isCriteria_asset(id, itemID)
-			if (not isCrit) then  return;  end  -- That should never happen
+			crit, complete = isCriteria_asset(id, itemID)
+			if (not crit) then  return;  end  -- That should never happen
 			if (complete) then  tab[5][itemID] = true;  end  -- If complete, update the table so we don't have to look this criteria up again.
 		else
 			complete = false
 		end
 		local tip = complete and tab[2] or achcomplete and tab[4] or tab[3]
 		--if (Overachiever_Debug) then  tip = tip .. " [ID:" .. id .. "]";  end
-		return id, tip, complete, achcomplete
+		return id, tip, complete, achcomplete, crit
 	end
 end
 
@@ -1098,11 +1118,13 @@ function Overachiever.ExamineItem(tooltip)
 	local itemMinLevel
 
 	for key,tab in pairs(ConsumeItemAch) do
-		local id, text, complete, achcomplete = ItemConsumedCheck(key, tab, itemID)
-		if (text) then
-			if (itemMinLevel == nil) then  itemMinLevel = select(5, GetItemInfo(link)) or 0;  end
-			--print("itemMinLevel",itemMinLevel,id,name,UnitLevel("player"))
-			storeTooltip(tooltip, id, text, complete, name, (achcomplete or itemMinLevel > UnitLevel("player")))
+		if (Overachiever_Settings[ tab[1] ]) then
+			local id, text, complete, achcomplete, crit = ItemConsumedCheck(key, tab, itemID)
+			if (text) then
+				if (itemMinLevel == nil) then  itemMinLevel = select(5, GetItemInfo(link)) or 0;  end
+				--print("itemMinLevel",itemMinLevel,id,name,UnitLevel("player"))
+				storeTooltip(tooltip, id, text, complete, crit, (achcomplete or itemMinLevel > UnitLevel("player")))
+			end
 		end
 	end
 
@@ -1336,6 +1358,114 @@ end
 --]]
 
 TjBagWatch.RegisterFunc(BagUpdate, true)
+
+
+-- MISSIONS
+-------------
+
+local missionsFrame = CreateFrame("frame")
+Overachiever.MissionsFrame = missionsFrame
+
+
+local MissionAch = {
+	MissionBarrens = true,
+	MissionLordaeron = true,
+	MissionKalimdor = true
+}
+
+local function MissionCheck(key, missionID)
+	local id = OVERACHIEVER_ACHID[key]
+	local achcomplete = select(4, GetAchievementInfo(id))
+	if (achcomplete and not Overachiever_Settings[ "Mission_complete_whencomplete" ]) then  return;  end
+	local crit, complete = isCriteria_asset(id, missionID)
+	if (not crit) then  return;  end
+	local tip = complete and L.ACH_MISSIONCOMPLETE_COMPLETE or achcomplete and L.ACH_MISSIONCOMPLETE_INCOMPLETE_EXTRA or L.ACH_MISSIONCOMPLETE_INCOMPLETE
+	return id, tip, complete, achcomplete, crit
+end
+
+local function getMissionID(button)
+	if (button.info) then
+		return button.info.missionID
+	else
+		if (GarrisonLandingPageReport and GarrisonLandingPageReport.List) then
+			-- See function GarrisonLandingPageReportMission_OnEnter in Blizzard_GarrisonLandingPage.lua:
+			local items = GarrisonLandingPageReport.List.items
+			if GarrisonLandingPageReport.selectedTab == GarrisonLandingPageReport.Available then
+				items = GarrisonLandingPageReport.List.AvailableItems;
+			end
+			local item = items[button.id]
+			if (item) then
+				return item.missionID
+			end
+		end
+	end
+	return false
+	--GarrisonLandingPageReport.List.AvailableItems
+end
+
+local function missionButtonOnEnter(self, ...)
+	--print("missionButtonOnEnter", self.id)
+	if (Overachiever_Settings.Mission_complete) then
+		--local name = self.info and self.info.name or self.Title and self.Title:GetText()
+		local missionID = getMissionID(self)
+		if (missionID) then
+			local id, text, complete
+			for key,tab in pairs(MissionAch) do
+				local id, text, complete, achComplete, crit = MissionCheck(key, missionID)
+				if (text) then
+					local r, g, b
+					if (complete) then
+						r, g, b = tooltip_complete.r, tooltip_complete.g, tooltip_complete.b
+					else
+						r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
+					end
+					GameTooltip:AddLine(" ")
+					GameTooltip:AddLine(text, r, g, b)
+					GameTooltip:AddTexture(AchievementIcon)
+					GameTooltip:Show()
+
+					if (not complete) then
+						flagReminder(id, crit)
+						--[[
+						-- Two ways to get the name; both of them work.
+						--local info = C_Garrison.GetBasicMissionInfo(missionID)
+						--flagReminder(id, info.name)
+						-- Went with this way since it seems less likely there'd be a localization problem, though I'm pretty sure the other way is fine, too:
+						local name = self.info and self.info.name or self.Title and self.Title:GetText()
+						flagReminder(id, name)
+						--]]
+					end
+
+					break
+				end
+			end
+		end
+	end
+	-- If we want to check by name instead:
+	--local name = self.Title and self.Title:GetText()
+	-- self.info.missionID : Can see it on BFAMissionFrameMissionsListScrollFrameButton1 but not GarrisonLandingPageReportListListScrollFrameButton1, so we
+	-- have to rely on name. (Likewise, we see self.info.name on the former but not the latter, so we get the name from self.Title:GetText() instead.)
+end
+
+
+missionsFrame:RegisterEvent("ADDON_LOADED")
+
+missionsFrame:SetScript("OnEvent", function(self, event, arg1, ...)
+	--print("MissionsFrame OnEvent", event, arg1, ...)
+	if (event == "ADDON_LOADED" and arg1 == "Blizzard_GarrisonUI") then
+		missionsFrame:UnregisterEvent("ADDON_LOADED")
+		Overachiever.MissionsFrame, missionsFrame = nil, nil
+		for k,v in pairs(BFAMissionFrameMissionsListScrollFrame.buttons) do
+			-- BFAMissionFrameMissionsListScrollFrameButton1 thru ...Button9
+			v:HookScript("OnEnter", missionButtonOnEnter)
+			--print(v:GetName())
+		end
+		for k,v in pairs(GarrisonLandingPageReportListListScrollFrame.buttons) do
+			-- GarrisonLandingPageReportListListScrollFrameButton1 thru ...Button10
+			v:HookScript("OnEnter", missionButtonOnEnter)
+		end
+	end
+end)
 
 
 -- Register some Blizzard sounds

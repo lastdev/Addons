@@ -428,7 +428,7 @@ local function BuildCriteriaLookupTab_check()
 	end
 	if (Overachiever_Settings.CreatureTip_killed and not TjAchieve.IsCritAssetCacheReady(TjAchieve.CRITTYPE_KILL)) then
 		local data
-		if (Overachiever.GetCache) then  data = Overachiever.GetCache("kill");  end
+		if (Overachiever.GetCache) then  data = Overachiever.GetCache("kill", true);  end
 		if (data) then
 			TjAchieve.PopulateCritAssetCache(TjAchieve.CRITTYPE_KILL, data)
 			if (Overachiever_Debug) then  chatprint("BuildCriteriaLookupTab_check: kill cache populated from saved variables");  end
@@ -439,7 +439,7 @@ local function BuildCriteriaLookupTab_check()
 				if (not Overachiever_Settings.Throttle_AchLookup) then
 					TjAchieve.RushBuildCritAssetCache(TjAchieve.CRITTYPE_KILL, true)
 					if (Overachiever_Debug) then  chatprint("BuildCriteriaLookupTab_check: kill caching rushed");  end
-					if (Overachiever.SaveCache) then  Overachiever.SaveCache("kill");  end
+					if (Overachiever.SaveCache) then  Overachiever.SaveCache("kill", true);  end
 				else
 					if (Overachiever_Debug) then
 						chatprint("BuildCriteriaLookupTab_check: kill caching started")
@@ -449,7 +449,7 @@ local function BuildCriteriaLookupTab_check()
 					end
 					if (Overachiever.SaveCache) then
 						TjAchieve.AddBuildCritAssetCacheListener(TjAchieve.CRITTYPE_KILL, function()
-							Overachiever.SaveCache("kill")
+							Overachiever.SaveCache("kill", true)
 						end)
 					end
 				end
@@ -519,6 +519,7 @@ function Overachiever.GetKillCriteriaLookup(doNotRush)
 				--]]
 			else
 				AchLookup_kill[mobID] = list
+				numCopy = numCopy + 1
 			end
 		end
 		if (Overachiever_Debug) then  chatprint('GetKillCriteriaLookup: Copied '..numCopy..' entries from OVERACHIEVER_MOB_CRIT.');  end
@@ -680,10 +681,11 @@ function Overachiever.CheckDraggable_AchFrame_redo()
   end
 end
 
-local orig_AchievementFrame_OnShow
+local AchievementUI_OnShow_post_called
 
-local function AchievementUI_FirstShown_post()
-  Overachiever.MainFrame:Hide()
+local function AchievementUI_OnShow_post()
+  if (AchievementUI_OnShow_post_called) then  return;  end
+  AchievementUI_OnShow_post_called = true
   -- Delayed setting the area attribute until now so that if Blizzard_AchievementUI was loaded just before the
   -- AchievementFrame is to be shown, AchievementFrame wouldn't be set as the current UI panel by code in
   -- UIParent.lua, which causes problems when we don't want it to interact with other UI panels in the standard
@@ -706,9 +708,11 @@ local function AchievementUI_FirstShown_post()
     --orig_AchievementFrame_area = nil
   end
   CheckDraggable_AchFrame(nil, nil, nil, nil, true)
-  if (not Overachiever_Settings.DragSave_AchFrame) then
+  --if (not Overachiever_Settings.DragSave_AchFrame) then
+  if (Overachiever_Settings.Draggable_AchFrame and not Overachiever_Settings.DragSave_AchFrame) then
   -- If we aren't saving the position, then re-open the frame to put it in the standard place. (It'll do this
   -- automatically from now on.)
+  -- This is needed in case some other frame that modifies the position is already open (like the character panel).
     local prevfunc = AchievementFrame:GetScript("OnHide")
     AchievementFrame:SetScript("OnHide", nil)
     HideUIPanel(AchievementFrame)
@@ -718,19 +722,6 @@ local function AchievementUI_FirstShown_post()
     ShowUIPanel(AchievementFrame)
     AchievementFrame:SetScript("OnShow", prevfunc)
   end
-end
-
-local function AchievementUI_FirstShown(...)
-  AchievementFrame:SetScript("OnShow", orig_AchievementFrame_OnShow)
-  --[[ Pre-3.1 method:
-  AchievementFrame_OnShow = orig_AchievementFrame_OnShow
-  --]]
-  orig_AchievementFrame_OnShow = nil
-  -- Delayed call to AchievementUI_FirstShown_post() - let everything else process first:
-  Overachiever.MainFrame:Show()
-  -- Call original function:
-  AchievementFrame_OnShow(...)
-  AchievementUI_FirstShown = nil
 end
 
 
@@ -935,12 +926,15 @@ local function ReactToCriteriaToast(achievementID, criteriaString)
     chatprint("", L.MSG_CRITERIAPROGRESS:format(link, criteriaString))
   end
   if (Overachiever_Settings.ProgressToast_Suggest) then
-    Overachiever.FlagReminder(achievementID, criteriaString)
+    local crit = Overachiever.IsCriteria(achievementID, criteriaString)
+    Overachiever.FlagReminder(achievementID, crit or criteriaString)
   end
   if (Overachiever_Settings.ProgressToast_AutoTrack) then
     setTracking(achievementID)
   end
 end
+--TEST_ReactToCriteriaToast = ReactToCriteriaToast
+--/dump TEST_ReactToCriteriaToast(12510, "A Golden Opportunity")
 
 
 -- META-CRITERIA TOOLTIP
@@ -995,6 +989,7 @@ do
 	  --local notInUI
       for i,ach in ipairs(list) do
         _, name, _, completed = GetAchievementInfo(ach)
+		if (Overachiever_Debug) then  name = name .. " (" .. ach .. ")";  end
         if (completed) then
           anycomplete = true
         else
@@ -1032,11 +1027,11 @@ do
 	    --if (notInUI and notInUI[name]) then  name = IconNotReadyX .. " " .. name;  end
         if (completed) then
           tooltip:AddLine(name, r_com, g_com, b_com)
-          tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready");
+          tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
         else
           tooltip:AddLine(name, 1, 1, 1) --, r_inc, g_inc, b_inc)
           if (anycomplete) then
-            tooltip:AddTexture(""); -- fake texture to push the text over
+            tooltip:AddTexture("") -- fake texture to push the text over
           end
         end
       end
@@ -1045,6 +1040,7 @@ do
     else
 	  local ach = list
       local _, name, _, completed = GetAchievementInfo(ach)
+	  if (Overachiever_Debug) then  name = name .. " (" .. ach .. ")";  end
 
 	  --local alteredName
 	  if (Overachiever.GetCachedFactionForData) then
@@ -1067,7 +1063,7 @@ do
 	  --]]
       if (completed) then
         tooltip:AddLine(name, r_com, g_com, b_com)
-        tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready");
+        tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
       else
         tooltip:AddLine(name, 1, 1, 1) --, r_inc, g_inc, b_inc)
       end
@@ -1136,10 +1132,10 @@ do
           GameTooltip:AddLine(name, r_inc, g_inc, b_inc)
         end
         if (completed) then
-          GameTooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready");
+          GameTooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
           anycomplete = true
         elseif (anycomplete) then
-          GameTooltip:AddTexture(""); -- fake texture to push the text over
+          GameTooltip:AddTexture("") -- fake texture to push the text over
         end
         ach, completed = GetNextAchievement(ach)
       end
@@ -1192,15 +1188,22 @@ do
 	  end
     end
 
-    local reminders = Overachiever.GetRecentReminders(id, true)
+    local reminders, anycomplete = Overachiever.GetRecentReminders(id, true, true)
     if (reminders) then
       if (tipset == 1) then  GameTooltip:AddLine(" ");  end
       tipset = 2 --tipset + 1
       GameTooltip:AddLine(L.RECENTREMINDERCRITERIA)
       GameTooltip:AddLine(" ")
-      for i,s in ipairs(reminders) do
-        --if (type(s) == "number") then  s = GetAchievementCriteriaInfo(id, s);  end
-		GameTooltip:AddLine(s, 1, 1, 1)
+      for i,critArr in ipairs(reminders) do
+	    if (critArr[2]) then
+		  GameTooltip:AddLine(critArr[1], r_com, g_com, b_com)
+		  GameTooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
+		else
+		  GameTooltip:AddLine(critArr[1], 1, 1, 1)
+		  if (anycomplete) then
+		    GameTooltip:AddTexture("") -- fake texture to push the text over
+		  end
+		end
       end
       GameTooltip:AddLine(" ")
     end
@@ -1613,19 +1616,14 @@ function Overachiever.OnEvent(self, event, arg1, ...)
     tinsert(UISpecialFrames, "AchievementFrame");
 
     -- Make main achievement UI draggable:
-    -- - Prevent UIParent.lua from seeing area field (or it'll do things that mess up making the frame draggable). (Not sure if that's true any more, but setting orig_AchievementFrame_area is still useful.)
+    -- - Prevent UIParent.lua from seeing area field (or it'll do things that mess up making the frame draggable, at least when you want the position to be saved: it snaps to another position when another panel, e.g. Character, opens).
     if (UIPanelWindows["AchievementFrame"]) then  -- This if statement prevents error messages when the addon MoveAnything is used to move AchievementFrame.
       orig_AchievementFrame_area = UIPanelWindows["AchievementFrame"].area
       UIPanelWindows["AchievementFrame"].area = nil
     end
-    -- - Hook the first OnShow call to complete this. (Not done now in case saved variables aren't ready or the frame
+    -- - Hook the first OnShow call to complete this. (Function not called now in case saved variables aren't ready or the frame
     --   isn't showing right away.)
-    orig_AchievementFrame_OnShow = AchievementFrame:GetScript("OnShow")
-    AchievementFrame:SetScript("OnShow", AchievementUI_FirstShown)
-    --[[ Pre-3.1 method:
-    orig_AchievementFrame_OnShow = AchievementFrame_OnShow
-    AchievementFrame_OnShow = AchievementUI_FirstShown
-    --]]
+    AchievementFrame:HookScript("OnShow", AchievementUI_OnShow_post)
 
     -- Make the default UI's "Achievement Filter" dropdown respond to clicks anywhere instead of only on the down-arrow button:
     --AchievementFrameFilterDropDownButton:SetWidth( AchievementFrameFilterDropDown:GetWidth() )
@@ -1655,10 +1653,10 @@ function Overachiever.OnEvent(self, event, arg1, ...)
       Overachiever_CharVars.TrackedAch = nil
     end
    --]]
-  
+
   --else
     --chatprint(event)
-  
+
   end
 end
 
@@ -2016,7 +2014,6 @@ Overachiever.MainFrame:RegisterEvent("CRITERIA_EARNED")
 Overachiever.MainFrame:RegisterEvent("PLAYER_LOGOUT")
 
 Overachiever.MainFrame:SetScript("OnEvent", Overachiever.OnEvent)
-Overachiever.MainFrame:SetScript("OnUpdate", AchievementUI_FirstShown_post)
 
 --Overachiever.MainFrame:RegisterEvent("PLAYER_LOGIN")
 

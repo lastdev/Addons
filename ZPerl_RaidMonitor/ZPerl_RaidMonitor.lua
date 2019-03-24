@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 1086 $")
+XPerl_SetModuleRevision("$Revision: 1121 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -671,8 +671,8 @@ function cast:PLAYER_TARGET_CHANGED()
 	self:OnUpdate(1)
 end
 
--- cast:UNIT_HEALTH
-function cast:UNIT_HEALTH(unit)
+-- cast:UNIT_HEALTH_FREQUENT
+function cast:UNIT_HEALTH_FREQUENT(unit)
 	self.doneHealth = nil
 	local bar = self:GetTarget(unit)
 	if (bar and bar:IsShown()) then
@@ -680,7 +680,7 @@ function cast:UNIT_HEALTH(unit)
 	end
 end
 
-cast.UNIT_HEALTHMAX = cast.UNIT_HEALTH
+cast.UNIT_MAXHEALTH = cast.UNIT_HEALTH_FREQUENT
 
 -- cast:OnUpdate
 function cast:OnUpdate(elapsed)
@@ -816,8 +816,8 @@ function cast:EnableDisable()
 		"UNIT_POWER_FREQUENT",
 		"UNIT_MAXPOWER",
 		"UNIT_MANA",
-		"UNIT_HEALTH",
-		--"UNIT_HEALTHMAX",
+		"UNIT_HEALTH_FREQUENT",
+		"UNIT_MAXHEALTH",
 		"UNIT_TARGET",
 		"PLAYER_TARGET_CHANGED",
 		"UNIT_SPELLCAST_START",

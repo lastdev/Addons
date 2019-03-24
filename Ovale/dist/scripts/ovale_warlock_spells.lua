@@ -4,7 +4,7 @@ local __Scripts = LibStub:GetLibrary("ovale/Scripts")
 local OvaleScripts = __Scripts.OvaleScripts
 __exports.register = function()
     local name = "ovale_warlock_spells"
-    local desc = "[8.0] Ovale: Warlock spells"
+    local desc = "[8.1] Ovale: Warlock spells"
     local code = [[Define(agony 980)
 # Inflicts increasing agony on the target, causing up to o1*u Shadow damage over 18 seconds. Damage starts low and increases over the duration. Refreshing Agony maintains its current damage level.rnrn|cFFFFFFFFAgony damage sometimes generates 1 Soul Shard.|r
 # Rank 2: Agony may now ramp up to s1+6 stacks.
@@ -17,16 +17,20 @@ Define(battle_potion_of_intellect 279151)
   # Intellect increased by w1.
   SpellAddBuff(battle_potion_of_intellect battle_potion_of_intellect=1)
 Define(berserking 26297)
-# Increases your haste by s1 for 10 seconds.
-  SpellInfo(berserking cd=180 duration=10 gcd=0 offgcd=1)
+# Increases your haste by s1 for 12 seconds.
+  SpellInfo(berserking cd=180 duration=12 gcd=0 offgcd=1)
   # Haste increased by s1.
   SpellAddBuff(berserking berserking=1)
 Define(bilescourge_bombers 267211)
-# Tear open a portal to the nether above the target location, from which several Bilescourge will pour out of and crash into the ground over 6 seconds, dealing (14.000000000000002 of Spell Power) Shadow damage to all enemies within 267213A1 yards.
+# Tear open a portal to the nether above the target location, from which several Bilescourge will pour out of and crash into the ground over 6 seconds, dealing (21 of Spell Power) Shadow damage to all enemies within 267213A1 yards.
   SpellInfo(bilescourge_bombers soulshards=2 cd=30 duration=6 talent=bilescourge_bombers_talent)
 Define(call_dreadstalkers 104316)
 # Summons s1 ferocious Dreadstalkers to attack the target for 12 seconds.
   SpellInfo(call_dreadstalkers soulshards=2 cd=20)
+Define(cascading_calamity_buff 275376)
+# Casting Unstable Affliction on a target affected by your Unstable Affliction increases your Haste by s1 for 15 seconds
+  SpellInfo(cascading_calamity_buff channel=-0.001 gcd=0 offgcd=1)
+
 Define(cataclysm 152108)
 # Calls forth a cataclysm at the target location, dealing (180 of Spell Power) Shadowflame damage to all enemies within A1 yards and afflicting them with ?s980[Agony and Unstable Affliction][]?s104315[Corruption][]?s348[Immolate][]?!s980&!s104315&!s348[Agony, Unstable Affliction, Corruption, or Immolate][].
   SpellInfo(cataclysm cd=30 talent=cataclysm_talent)
@@ -38,7 +42,7 @@ Define(chaos_bolt 116858)
 # Unleashes a devastating blast of chaos, dealing a critical strike for 2*(120 of Spell Power) Chaos damage. Damage is further increased by your critical strike chance.
   SpellInfo(chaos_bolt soulshards=2)
 Define(conflagrate 17962)
-# Triggers an explosion on the target, dealing (90 of Spell Power) Fire damage.?s196406[rnrnReduces the cast time of your next Incinerate or Chaos Bolt by 117828s1 for 10 seconds.][]rnrn|cFFFFFFFFGenerates 245330s1 Soul Shard Fragments.|r
+# Triggers an explosion on the target, dealing (100 of Spell Power) Fire damage.?s196406[rnrnReduces the cast time of your next Incinerate or Chaos Bolt by 117828s1 for 10 seconds.][]rnrn|cFFFFFFFFGenerates 245330s1 Soul Shard Fragments.|r
 # Rank 2: Conflagrate has s1+1 charges.
   SpellInfo(conflagrate cd=12.96)
 Define(corruption 172)
@@ -65,7 +69,7 @@ Define(deathbolt 264106)
 # Launches a bolt of death at the target, dealing s2 of the total remaining damage of your damage over time effects on the target.?s196103[rnrnCounts up to s3 sec of your Corruption's damage.][]
   SpellInfo(deathbolt cd=30 talent=deathbolt_talent)
 Define(demonbolt 264178)
-# Send the fiery soul of a fallen demon at the enemy, causing (57.99999999999999 of Spell Power) Shadowflame damage.?c2[rnrn|cFFFFFFFFGenerates 2 Soul Shards.|r][]
+# Send the fiery soul of a fallen demon at the enemy, causing (66.7 of Spell Power) Shadowflame damage.?c2[rnrn|cFFFFFFFFGenerates 2 Soul Shards.|r][]
   SpellInfo(demonbolt)
 Define(demonic_calling_buff 205146)
 # Shadow Bolt?s264178[ and Demonbolt have][ has] a h chance to make your next Call Dreadstalkers cost s1 less Soul Shard and have no cast time.
@@ -97,13 +101,15 @@ Define(drain_soul 198590)
   SpellInfo(drain_soul duration=5 channel=5 tick=1 talent=drain_soul_talent)
   # Suffering w1 Shadow damage every t1 seconds.
   SpellAddTargetDebuff(drain_soul drain_soul=1)
+Define(explosive_potential 275398)
+# When your Implosion consumes 3 or more Imps, gain s1 Haste for 15 seconds.
+  SpellInfo(explosive_potential duration=15 channel=15 gcd=0 offgcd=1)
+  # Haste increased by w1.
+  SpellAddBuff(explosive_potential explosive_potential=1)
+
 Define(fireblood 265221)
 # Removes all poison, disease, curse, magic, and bleed effects and increases your ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by 265226s1*3 and an additional 265226s1 for each effect removed. Lasts 8 seconds. 
   SpellInfo(fireblood cd=120 gcd=0 offgcd=1)
-Define(forbidden_knowledge_buff 279665)
-# Call Dreadstalkers has a 279665h chance to make your next non-instant Demonbolt deal s1 additional damage.
-  SpellInfo(forbidden_knowledge_buff channel=-0.001 gcd=0 offgcd=1)
-
 Define(grimoire_felguard 111898)
 # Summons a Felguard who attacks the target for s1 sec that deals 216187s1 increased damage.rnrnThis Felguard will stun their target when summoned.
   SpellInfo(grimoire_felguard soulshards=1 cd=120 duration=17 talent=grimoire_felguard_talent)
@@ -125,26 +131,26 @@ Define(havoc 80240)
   # Spells cast by the Warlock also hit this target for s1 of normal initial damage.
   SpellAddTargetDebuff(havoc havoc=1)
 Define(immolate 348)
-# Burns the enemy, causing (36 of Spell Power) Fire damage immediately and an additional 157736o1 Fire damage over 18 seconds.rnrn|cFFFFFFFFPeriodic damage generates 1 Soul Shard Fragment and has a s2 chance to generate an additional 1 on critical strikes.|r
+# Burns the enemy, causing (40 of Spell Power) Fire damage immediately and an additional 157736o1 Fire damage over 18 seconds.rnrn|cFFFFFFFFPeriodic damage generates 1 Soul Shard Fragment and has a s2 chance to generate an additional 1 on critical strikes.|r
   SpellInfo(immolate)
 Define(implosion 196277)
 # Demonic forces suck all of your Wild Imps toward the target, and then cause them to violently explode, dealing 196278s2 Shadowflame damage to all enemies within 196278A3 yards.
   SpellInfo(implosion)
 Define(incinerate 29722)
-# Draws fire toward the enemy, dealing (58.275 of Spell Power) Fire damage.rnrn|cFFFFFFFFGenerates 244670s1 Soul Shard Fragments and an additional 1 on critical strikes.|r
+# Draws fire toward the enemy, dealing (64.1 of Spell Power) Fire damage.rnrn|cFFFFFFFFGenerates 244670s1 Soul Shard Fragments and an additional 1 on critical strikes.|r
   SpellInfo(incinerate max_stacks=5)
   SpellInfo(shadow_bolt replaced_by=incinerate)
 Define(inevitable_demise_buff 273522)
-# Damaging an enemy with Corruption increases the damage of your next Drain Life by s1. This effect stacks up to 273525u times.
+# Damaging an enemy with Agony increases the damage of your next Drain Life by s1. This effect stacks up to 273525u times.
   SpellInfo(inevitable_demise_buff channel=-0.001 gcd=0 offgcd=1)
-
+  SpellAddBuff(inevitable_demise_buff inevitable_demise_buff=1)
 Define(inner_demons 267216)
 # You passively summon a Wild Imp to fight for you every t1 sec, and have a s1 chance to also summon an additional Demon to fight for you for s2 sec.
   SpellInfo(inner_demons channel=0 gcd=0 offgcd=1 tick=12 talent=inner_demons_talent)
   SpellAddBuff(inner_demons inner_demons=1)
 Define(nether_portal 267217)
-# Tear open a portal to the Twisting Nether for 20 seconds. Every time you spend Soul Shards, you will also command demons from the Nether to come out and fight for you.
-  SpellInfo(nether_portal soulshards=3 cd=180 duration=20 talent=nether_portal_talent)
+# Tear open a portal to the Twisting Nether for 15 seconds. Every time you spend Soul Shards, you will also command demons from the Nether to come out and fight for you.
+  SpellInfo(nether_portal soulshards=1 cd=180 duration=15 talent=nether_portal_talent)
 Define(nightfall_buff 213784)
 # Your damaging spells have a chance to pull a nightmare star from the sky, creating a pool of corruption that deals 10*213786s1 Shadow damage to all enemies in the area over 10 seconds.
   SpellInfo(nightfall_buff channel=0 gcd=0 offgcd=1)
@@ -168,7 +174,7 @@ Define(seed_of_corruption 27243)
   # Embeded with a demon seed that will soon explode, dealing Shadow damage to the caster's enemies within 27285A1 yards, and applying Corruption to them.rnrnThe seed will detonate early if the target is hit by other detonations, or takes w3 damage from your spells.
   SpellAddTargetDebuff(seed_of_corruption seed_of_corruption=1)
 Define(shadow_bolt 686)
-# Sends a shadowy bolt at the enemy, causing (30 of Spell Power) Shadow damage.?c2[rnrn|cFFFFFFFFGenerates 1 Soul Shard.|r][]
+# Sends a shadowy bolt at the enemy, causing (34.5 of Spell Power) Shadow damage.?c2[rnrn|cFFFFFFFFGenerates 1 Soul Shard.|r][]
   SpellInfo(shadow_bolt)
 Define(shadowburn 17877)
 # Blasts a target for (60 of Spell Power) Shadowflame damage. rnrnIf the target dies within 5 seconds and yields experience or honor, Shadowburn's cooldown is reset.rnrn|cFFFFFFFFGenerates 245731s1 Soul Shard Fragments.|r
@@ -187,7 +193,7 @@ Define(soul_strike 264057)
 # Command your Felguard to strike into the soul of its enemy, dealing <damage> Shadow damage.?c2[rnrn|cFFFFFFFFGenerates 1 Soul Shard.|r][]
   SpellInfo(soul_strike cd=10 talent=soul_strike_talent)
 Define(summon_darkglare 205180)
-# Summons a Darkglare from the Twisting Nether that extends the duration of your damage over time effects on all enemies by s2 sec.rnrnThe Darkglare will serve you for 20 seconds, blasting its target for (40 of Spell Power) Shadow damage, increased by s3 for every damage over time effect you have active on any target.
+# Summons a Darkglare from the Twisting Nether that extends the duration of your damage over time effects on all enemies by s2 sec.rnrnThe Darkglare will serve you for 20 seconds, blasting its target for (32 of Spell Power) Shadow damage, increased by s3 for every damage over time effect you have active on any target.
   SpellInfo(summon_darkglare cd=180 duration=20)
   # Summons a Darkglare from the Twisting Nether that blasts its target for Shadow damage, dealing increased damage for every damage over time effect you have active on any target.
   SpellAddBuff(summon_darkglare summon_darkglare=1)
@@ -201,14 +207,14 @@ Define(summon_imp 688)
 # Summons an Imp under your command that casts ranged Firebolts.
   SpellInfo(summon_imp soulshards=1)
 Define(summon_infernal 1122)
-# Summons an Infernal from the Twisting Nether, impacting for (60 of Spell Power) Fire damage and stunning all enemies in the area for 2 seconds.rnrnThe Infernal will serve you for 30 seconds, dealing (50 of Spell Power) damage to all nearby enemies every 19483t1 sec and generating 264365s1 Soul Shard Fragment every 264364t1 sec.
+# Summons an Infernal from the Twisting Nether, impacting for (60 of Spell Power) Fire damage and stunning all enemies in the area for 2 seconds.rnrnThe Infernal will serve you for 30 seconds, dealing (50 of Spell Power)*(100+137046s3)/100 damage to all nearby enemies every 19483t1 sec and generating 264365s1 Soul Shard Fragment every 264364t1 sec.
   SpellInfo(summon_infernal cd=180 duration=0.25 channel=0.25)
 
 Define(summon_vilefiend 264119)
 # Summon a Vilefiend to fight for you for the next 15 seconds.
   SpellInfo(summon_vilefiend soulshards=1 cd=45 duration=15 talent=summon_vilefiend_talent)
 Define(unstable_affliction 30108)
-# Afflicts the target with 233490o1 Shadow damage over 8 seconds. You may afflict a target with up to s2 Unstable Afflictions at once.rnrnYou deal s3 increased damage to targets affected by your Unstable Affliction.rnrnIf dispelled, deals (16 of Spell Power)*s1/100 damage to the dispeller and silences them for 4 seconds.?a231791[rnrn|cFFFFFFFFRefunds 231791m1 Soul LShard:Shards; if the target dies while afflicted.|r][]
+# Afflicts the target with 233490o1 Shadow damage over 8 seconds. You may afflict a target with up to s2 Unstable Afflictions at once.rnrnYou deal s3 increased damage to targets affected by your Unstable Affliction.rnrnIf dispelled, deals (14.499999999999998 of Spell Power)*s1/100 damage to the dispeller and silences them for 4 seconds.?a231791[rnrn|cFFFFFFFFRefunds 231791m1 Soul LShard:Shards; if the target dies while afflicted.|r][]
 # Rank 2: Unstable Affliction refunds m1 Soul LShard:Shards; if the target dies.
   SpellInfo(unstable_affliction soulshards=1 max_stacks=10)
 Define(vile_taint 278350)
@@ -219,7 +225,7 @@ Define(vile_taint 278350)
 Define(absolute_corruption_talent 5) #21180
 # Corruption is now permanent and deals s2 increased damage.rnrnDuration reduced to s1 sec against players.
 Define(bilescourge_bombers_talent 3) #23138
-# Tear open a portal to the nether above the target location, from which several Bilescourge will pour out of and crash into the ground over 6 seconds, dealing (14.000000000000002 of Spell Power) Shadow damage to all enemies within 267213A1 yards.
+# Tear open a portal to the nether above the target location, from which several Bilescourge will pour out of and crash into the ground over 6 seconds, dealing (21 of Spell Power) Shadow damage to all enemies within 267213A1 yards.
 Define(cataclysm_talent 12) #23143
 # Calls forth a cataclysm at the target location, dealing (180 of Spell Power) Shadowflame damage to all enemies within A1 yards and afflicting them with ?s980[Agony and Unstable Affliction][]?s104315[Corruption][]?s348[Immolate][]?!s980&!s104315&!s348[Agony, Unstable Affliction, Corruption, or Immolate][].
 Define(channel_demonfire_talent 20) #23144
@@ -234,6 +240,8 @@ Define(deathbolt_talent 3) #23141
 # Launches a bolt of death at the target, dealing s2 of the total remaining damage of your damage over time effects on the target.?s196103[rnrnCounts up to s3 sec of your Corruption's damage.][]
 Define(demonic_calling_talent 4) #22045
 # Shadow Bolt?s264178[ and Demonbolt have][ has] a h chance to make your next Call Dreadstalkers cost s1 less Soul Shard and have no cast time.
+Define(demonic_consumption_talent 20) #22479
+# Your Demonic Tyrant now destroys and absorbs the remaining power of all of your Wild Imps to empower himself.
 Define(demonic_strength_talent 2) #22048
 # Infuse your Felguard with demonic strength and command it to charge your target and unleash a Felstorm that will deal s2 increased damage.
 Define(doom_talent 6) #23158
@@ -261,7 +269,7 @@ Define(inner_demons_talent 17) #23146
 Define(internal_combustion_talent 5) #21695
 # Chaos Bolt consumes up to s1 sec of Immolate's damage over time effect on your target, instantly dealing that much damage.
 Define(nether_portal_talent 21) #23091
-# Tear open a portal to the Twisting Nether for 20 seconds. Every time you spend Soul Shards, you will also command demons from the Nether to come out and fight for you.
+# Tear open a portal to the Twisting Nether for 15 seconds. Every time you spend Soul Shards, you will also command demons from the Nether to come out and fight for you.
 Define(phantom_singularity_talent 11) #19292
 # Places a phantom singularity above the target, which consumes the life of all enemies within 205246A2 yards, dealing 8*(18 of Spell Power) damage over 16 seconds, healing you for 205246e2*100 of the damage done.
 Define(power_siphon_talent 5) #21694
@@ -288,7 +296,8 @@ Define(writhe_in_agony_talent 4) #22044
 # Agony's damage may now ramp up to s2 stacks.
 Define(wilfreds_sigil_of_superior_summoning_item 132369)
 Define(cascading_calamity_trait 275372)
-Define(forbidden_knowledge_trait 278738)
+Define(pandemic_invocation_trait 289364)
+Define(explosive_potential_trait 275395)
     ]]
     code = code .. [[
 # Aliases
@@ -371,9 +380,8 @@ Define(demonic_gateway 111771)
 	SpellAddPetBuff(demonic_strength demonic_strength_buff=1)
 Define(demonic_strength_buff 267171)
 
-	#SpellInfo(doom soulshards=-1) #TODO generates 1 soulshard after 30s
 	SpellAddTargetDebuff(doom doom_debuff=1)
-Define(doom_debuff 603)
+Define(doom_debuff 265412)
 	SpellInfo(doom_debuff duration=30)
 
 
@@ -517,7 +525,7 @@ Define(vile_taint_debuff 278350)
 
 # Azerite Traits
 Define(cascading_calamity_trait 275376)
-Define(cascading_calamity_buff 275376) #TODO verify buff id
+ #TODO verify buff id
 
 Define(forbidden_knowledge_buff 278738) #TODO verify buff id
 Define(inevitable_demise_trait 273521)

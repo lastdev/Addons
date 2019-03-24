@@ -1,4 +1,4 @@
-﻿if GetLocale() == "frFR" then
+if GetLocale() == "frFR" then
 	Outfitter.cTitle = "Outfitter"
 	Outfitter.cTitleVersion = Outfitter.cTitle.." "..Outfitter.cVersion
 

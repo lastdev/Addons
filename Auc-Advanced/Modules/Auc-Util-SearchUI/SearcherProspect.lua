@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Prospect
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherProspect.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherProspect.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -158,24 +158,24 @@ function lib.Search(item)
 	local market, deposit = 0, 0
 
 	-- prep locals to speed up access inside the loop
-	local depositAucLength, depositRelistTimes, depositFaction
+	local depositAucLength, depositRelistTimes
 	local includeDeposit = get("prospect.adjust.deposit")
 	if includeDeposit then
 		depositAucLength = get("prospect.adjust.deplength")
 		depositRelistTimes = get("prospect.adjust.listings")
-		depositFaction = resources.Faction
 	end
 	local model = get("prospect.model")
 	local GetPrice = resources.lookupPriceModel[model]
 
 	for result, yield in pairs(prospects) do
 		local price = GetPrice(model, result) or 0
-		market = market + price * yield
+		local stackprice = price * yield
+		market = market + stackprice
 
 		-- calculate deposit for each result
 		if includeDeposit then
-			local aadvdepcost = GetDepositCost(result, depositAucLength) or 0
-			deposit = deposit + aadvdepcost * yield * depositRelistTimes
+			local aadvdepcost = AucAdvanced.Post.GetDepositCost(result, depositAucLength, stackprice, 0, yield) or 0
+			deposit = deposit + aadvdepcost * depositRelistTimes
 		end
 	end
 
@@ -196,4 +196,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 6245 $")

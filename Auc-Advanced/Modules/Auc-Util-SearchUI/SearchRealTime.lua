@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Realtime module
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearchRealTime.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearchRealTime.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows the user to search the current Browse tab
@@ -548,4 +548,4 @@ function private.HookAH()
 	BrowseRTSButton:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPLEFT", 310, -15)
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 6245 $")

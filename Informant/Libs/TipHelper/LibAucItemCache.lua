@@ -143,6 +143,12 @@ function lib.GetItemInfoCache(item, sel, mode) -- *** Note this uses '.' not ':'
 		return
 	end
 	Monitor.returned = Monitor.returned + 1 -- #monitor
+	
+	-- ### Temporary Fix - do not cache items with bonusIDs ###
+	if bonuses then
+		return unpack(values, sel, NUM_RETURNS)
+	end
+	-- ### end fix
 
 	if cachekey then
 		usecache[cachekey] = values

@@ -2,14 +2,18 @@ local L = WeakAuras.L
 
 local function createOptions(id, data)
   local options = {
+    __title = L["Dynamic Group Settings"],
+    __order = 1,
     grow = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Grow"],
       order = 5,
       values = WeakAuras.grow_types
     },
     align = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Align"],
       order = 10,
       values = WeakAuras.align_types,
@@ -18,6 +22,7 @@ local function createOptions(id, data)
     },
     rotated_align = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Align"],
       order = 10,
       values = WeakAuras.rotated_align_types,
@@ -27,6 +32,7 @@ local function createOptions(id, data)
     },
     constantFactor = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Constant Factor"],
       order = 10,
       values = WeakAuras.circular_group_constant_factor_types,
@@ -34,6 +40,7 @@ local function createOptions(id, data)
     },
     space = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Space"],
       order = 15,
       softMin = 0,
@@ -43,6 +50,7 @@ local function createOptions(id, data)
     },
     rotation = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Rotation"],
       order = 15,
       min = 0,
@@ -52,6 +60,7 @@ local function createOptions(id, data)
     },
     stagger = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Stagger"],
       order = 20,
       min = -50,
@@ -62,6 +71,7 @@ local function createOptions(id, data)
     },
     radius = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Radius"],
       order = 20,
       softMin = 0,
@@ -71,12 +81,13 @@ local function createOptions(id, data)
     },
     animate = {
       type = "toggle",
-      width = "double",
+      width = WeakAuras.doubleWidth,
       name = L["Animated Expand and Collapse"],
       order = 30
     },
     border = {
       type = "select",
+      width = WeakAuras.normalWidth,
       dialogControl = "LSM30_Border",
       name = L["Border"],
       order = 35,
@@ -84,6 +95,7 @@ local function createOptions(id, data)
     },
     background = {
       type = "select",
+      width = WeakAuras.normalWidth,
       dialogControl = "LSM30_Background",
       name = L["Background"],
       order = 40,
@@ -99,6 +111,7 @@ local function createOptions(id, data)
     },
     borderOffset = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Border Offset"],
       order = 45,
       softMin = 0,
@@ -107,6 +120,7 @@ local function createOptions(id, data)
     },
     backgroundInset = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Background Inset"],
       order = 47,
       softMin = 0,
@@ -115,12 +129,14 @@ local function createOptions(id, data)
     },
     sort = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Sort"],
       order = 48,
       values = WeakAuras.group_sort_types
     },
     hybridPosition = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Hybrid Position"],
       order = 48.1,
       values = WeakAuras.group_hybrid_position_types,
@@ -128,6 +144,7 @@ local function createOptions(id, data)
     },
     hybridSortMode = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Hybrid Sort Mode"],
       order = 48.2,
       values = WeakAuras.group_hybrid_sort_types,
@@ -135,6 +152,7 @@ local function createOptions(id, data)
     },
     sortHybrid = {
       type = "multiselect",
+      width = "full",
       name = L["Select the auras you always want to be listed first"],
       order = 49,
       hidden = function() return not(data.sort == "hybrid") end,
@@ -154,6 +172,7 @@ local function createOptions(id, data)
     },
     scale = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Group Scale"],
       order = 50,
       min = 0.05,
@@ -182,7 +201,7 @@ local function createOptions(id, data)
 
   return {
     dynamicgroup = options,
-    position = WeakAuras.PositionOptions(id, data, true, true),
+    position = WeakAuras.PositionOptions(id, data, nil, true, true),
   };
 end
 

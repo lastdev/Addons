@@ -19,6 +19,7 @@ end
 function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, order)
   options.useAdjustededMin = {
     type = "toggle",
+    width = WeakAuras.normalWidth,
     name = L["Set Minimum Progress"],
     desc = L["Values/Remaining Time below this value are displayed as no progress."],
     order = order
@@ -26,6 +27,7 @@ function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, ord
 
   options.adjustedMin = {
     type = "range",
+    width = WeakAuras.normalWidth,
     min = 0,
     softMax = 200,
     bigStep = 1,
@@ -36,7 +38,7 @@ function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, ord
 
   options.useAdjustedMinSpacer = {
     type = "description",
-    width = "normal",
+    width = WeakAuras.normalWidth,
     name = "",
     order = order + 0.02,
     hidden = function() return not (not data.useAdjustededMin and data.useAdjustededMax) end,
@@ -44,6 +46,7 @@ function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, ord
 
   options.useAdjustededMax = {
     type = "toggle",
+    width = WeakAuras.normalWidth,
     name = L["Set Maximum Progress"],
     desc = L["Values/Remaining Time above this value are displayed as full progress."],
     order = order + 0.03
@@ -51,6 +54,7 @@ function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, ord
 
   options.adjustedMax = {
     type = "range",
+    width = WeakAuras.normalWidth,
     min = 0,
     softMax = 200,
     bigStep = 1,
@@ -61,7 +65,7 @@ function WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, ord
 
   options.useAdjustedMaxSpacer = {
     type = "description",
-    width = "normal",
+    width = WeakAuras.normalWidth,
     name = "",
     order = order + 0.05,
     hidden = function() return not (data.useAdjustededMin and not data.useAdjustededMax) end,
@@ -269,6 +273,10 @@ local function SetRegionAlpha(self, alpha)
   self:SetAlpha(self.animAlpha or self.alpha or 1);
 end
 
+local function GetRegionAlpha(self)
+  return self.animAlpha or self.alpha or 1;
+end
+
 local function SetAnimAlpha(self, alpha)
   if (self.animAlpha == alpha) then
     return;
@@ -293,6 +301,7 @@ function WeakAuras.regionPrototype.create(region)
   region.GetYOffset = GetYOffset;
   region.ResetPosition = ResetPosition;
   region.SetRegionAlpha = SetRegionAlpha;
+  region.GetRegionAlpha = GetRegionAlpha;
   region.SetAnimAlpha = SetAnimAlpha;
 end
 
@@ -307,8 +316,16 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
   local hasAdjustedMin = defaultsForRegion and defaultsForRegion.useAdjustededMin ~= nil and data.useAdjustededMin;
   local hasAdjustedMax = defaultsForRegion and defaultsForRegion.useAdjustededMax ~= nil and data.useAdjustededMax;
 
-  region.adjustedMin = hasAdjustedMin and data.adjustedMin and data.adjustedMin > 0 and data.adjustedMin;
-  region.adjustedMax = hasAdjustedMax and data.adjustedMax and data.adjustedMax > 0 and data.adjustedMax;
+  if (hasAdjustedMin) then
+    region.adjustedMin = data.adjustedMin and data.adjustedMin >= 0 and data.adjustedMin;
+  else
+    region.adjustedMin = nil;
+  end
+  if (hasAdjustedMax) then
+    region.adjustedMax = data.adjustedMax and data.adjustedMax >= 0 and data.adjustedMax;
+  else
+    region.adjustedMax = nil;
+  end
   region.inverse = false;
 
   region:SetOffset(data.xOffset or 0, data.yOffset or 0);
@@ -428,7 +445,7 @@ function WeakAuras.regionPrototype.AddSetDurationInfo(region)
       else
         UpateRegionValues(region);
         local adjustMin = region.adjustedMin or 0;
-        region:SetTime((region.adjustedMax or duration) - adjustMin, expirationTime - adjustMin, inverse);
+        region:SetTime((duration ~= 0 and region.adjustedMax or duration) - adjustMin, expirationTime - adjustMin, inverse);
         if duration > 0 then
           self:SetScript("OnUpdate", function() WeakAuras.TimerTick(region) end);
         else
@@ -446,7 +463,7 @@ end
 
 -- Expand/Collapse function
 
-function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, parent, parentRegionType)
+function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, parent, parentRegionType)
   local indynamicgroup = parentRegionType == "dynamicgroup";
   local ingroup = parentRegionType == "group";
 
@@ -457,17 +474,23 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, 
   local hideRegion;
   if(indynamicgroup) then
     hideRegion = function()
+      if region.PreHide then
+        region:PreHide()
+      end
       region:Hide();
       if (cloneId) then
-        WeakAuras.ReleaseClone(id, cloneId, data.regionType);
+        WeakAuras.ReleaseClone(region.id, cloneId, data.regionType);
       end
       parent:ControlChildren();
     end
   else
     hideRegion = function()
+      if region.PreHide then
+        region:PreHide()
+      end
       region:Hide();
       if (cloneId) then
-        WeakAuras.ReleaseClone(id, cloneId, data.regionType);
+        WeakAuras.ReleaseClone(region.id, cloneId, data.regionType);
       end
     end
   end
@@ -503,7 +526,7 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, 
 
       parent:EnsureTrays();
       region.justCreated = nil;
-      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(id));
+      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(region.id));
       WeakAuras.PerformActions(data, "start", region);
       if not(WeakAuras.Animate("display", data, "start", data.animation.start, region, true, startMainAnimation, nil, cloneId)) then
         startMainAnimation();
@@ -544,7 +567,7 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, id, cloneId, 
       if(region.PreShow) then
         region:PreShow();
       end
-      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(id));
+      region:SetFrameLevel(WeakAuras.GetFrameLevelFor(region.id));
       region:Show();
       WeakAuras.PerformActions(data, "start", region);
       if not(WeakAuras.Animate("display", data, "start", data.animation.start, region, true, startMainAnimation, nil, cloneId)) then
@@ -567,11 +590,11 @@ end
 
 -- WORKAROUND Texts don't get the right size by default in WoW 7.3
 function WeakAuras.regionPrototype.SetTextOnText(text, str)
-  text:SetWidth(0); -- This makes the text use its internal text size calculation
+  if (text:GetText() == str) then
+    return
+  end
+
   text:SetText(str);
-  local w = text:GetWidth();
-  w = w + max(15, w / 20);
-  text:SetWidth(w); -- But that internal text size calculation is wrong, see ticket 1014
 end
 
 function WeakAuras.SetTextureOrAtlas(texture, path, wrapModeH, wrapModeV)

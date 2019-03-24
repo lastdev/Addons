@@ -1,7 +1,7 @@
 --[[
-$Id: LibBabble-SubZone-3.0.lua 216 2018-08-11 17:17:38Z arith $
+$Id: LibBabble-SubZone-3.0.lua 218 2018-08-12 09:41:21Z arith $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 216 $
+Revision: $Rev: 218 $
 Maintainers: arith
 Last updated by: $Author: arith $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
@@ -10,7 +10,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-SubZone-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 216 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 218 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local _, private = ...
@@ -116,6 +116,7 @@ lib:SetBaseTranslations
 	["Alliance Mercenary Ship to Vashj'ir"] = "Alliance Mercenary Ship to Vashj'ir",
 	["Alliance Mine"] = "Alliance Mine",
 	["Alliance PVP Barracks"] = "Alliance PVP Barracks",
+	["Alliance Shipyard Taxi"] = "Alliance Shipyard Taxi",
 	["Alliance Submarine"] = "Alliance Submarine",
 	["Alliance Submarine (7.1.5 Boat Holiday)"] = "Alliance Submarine (7.1.5 Boat Holiday)",
 	["Allied - Dark Iron Dwarf Unlock"] = "Allied - Dark Iron Dwarf Unlock",
@@ -307,6 +308,7 @@ lib:SetBaseTranslations
 	["Astromancer's Rise"] = "Astromancer's Rise",
 	["Ata'gar Promontory"] = "Ata'gar Promontory",
 	["Atal'Dazar"] = "Atal'Dazar",
+	["Atal'dazar"] = "Atal'dazar",
 	["Atal'Gral"] = "Atal'Gral",
 	["Atal'Jani"] = "Atal'Jani",
 	["Ata'mal Terrace"] = "Ata'mal Terrace",
@@ -887,6 +889,7 @@ lib:SetBaseTranslations
 	["Circle of Wills"] = "Circle of Wills",
 	["Citrine Bay"] = "Citrine Bay",
 	["City"] = "City",
+	["City Center"] = "City Center",
 	["City of Ironforge"] = "City of Ironforge",
 	["City Siege - Mogu Island Progression Scenario"] = "City Siege - Mogu Island Progression Scenario",
 	["Clackbrine Coast"] = "Clackbrine Coast",
@@ -1261,6 +1264,7 @@ lib:SetBaseTranslations
 	["Detention Block"] = "Detention Block",
 	["Dev Map - G"] = "Dev Map - G",
 	["Development Land"] = "Development Land",
+	["Devoted Sanctuary"] = "Devoted Sanctuary",
 	["Diamond Island"] = "Diamond Island",
 	["Diamondhead River"] = "Diamondhead River",
 	["Dig One"] = "Dig One",
@@ -1352,6 +1356,7 @@ lib:SetBaseTranslations
 	["Dreadmist Den"] = "Dreadmist Den",
 	["Dreadmist Peak"] = "Dreadmist Peak",
 	["Dreadmurk Shore"] = "Dreadmurk Shore",
+	["Dreadpearl"] = "Dreadpearl",
 	["Dreadpearl Shallows"] = "Dreadpearl Shallows",
 	["Dreadroot"] = "Dreadroot",
 	["Dreadscar Rift"] = "Dreadscar Rift",
@@ -1719,6 +1724,7 @@ lib:SetBaseTranslations
 	["Firebeard Cemetery"] = "Firebeard Cemetery",
 	["Firebeard's Patrol"] = "Firebeard's Patrol",
 	["Firebough Nook"] = "Firebough Nook",
+	["Firebreaker Expedition"] = "Firebreaker Expedition",
 	["Firefly Tavern"] = "Firefly Tavern",
 	["Firegut Furnace"] = "Firegut Furnace",
 	["Firelands"] = "Firelands",
@@ -2305,6 +2311,7 @@ lib:SetBaseTranslations
 	["Hammond Farmstead"] = "Hammond Farmstead",
 	["Hangar"] = "Hangar",
 	["Hangman's Point"] = "Hangman's Point",
+	["Harbor"] = "Harbor",
 	["Harbormaster's Office"] = "Harbormaster's Office",
 	["Hardknuckle Clearing"] = "Hardknuckle Clearing",
 	["Hardwrench Hideaway"] = "Hardwrench Hideaway",
@@ -3284,6 +3291,7 @@ lib:SetBaseTranslations
 	["Nesingwary Base Camp"] = "Nesingwary Base Camp",
 	["Nesingwary Safari"] = "Nesingwary Safari",
 	["Nesingwary's Expedition"] = "Nesingwary's Expedition",
+	["Nesingwary's Gameland"] = "Nesingwary's Gameland",
 	["Nesingwary's Retreat"] = "Nesingwary's Retreat",
 	["Nesingwary's Safari"] = "Nesingwary's Safari",
 	["Nesingwary's Trek"] = "Nesingwary's Trek",
@@ -4094,8 +4102,10 @@ lib:SetBaseTranslations
 	["Secret Treasure Lair"] = "Secret Treasure Lair",
 	["Seekers' Expedition"] = "Seekers' Expedition",
 	["Seeker's Folly"] = "Seeker's Folly",
+	["Seeker's Outpost"] = "Seeker's Outpost",
 	["Seekers' Outpost"] = "Seekers' Outpost",
 	["Seeker's Point"] = "Seeker's Point",
+	["Seekers Vista"] = "Seekers Vista",
 	["Seekers' Vista"] = "Seekers' Vista",
 	["Seething Shore"] = "Seething Shore",
 	["Seething Strand"] = "Seething Strand",
@@ -6152,8 +6162,9 @@ lib:SetBaseTranslations
 	["Throne of the Witch Lord"] = "Throne of the Witch Lord",
 	["Throne of Thunder"] = "Throne of Thunder",
 	["Throne of Tides"] = "Throne of Tides",
-	["Thros, the Blighted Lands"] = "Thros, the Blighted Lands",
+	["Throne Room"] = "Throne Room",
 	["Thros, The Blighted Lands"] = "Thros, The Blighted Lands",
+	["Thros, the Blighted Lands"] = "Thros, the Blighted Lands",
 	["Thrym's End"] = "Thrym's End",
 	["Thunder Axe Fortress"] = "Thunder Axe Fortress",
 	["Thunder Bluff"] = "Thunder Bluff",
@@ -6622,6 +6633,7 @@ lib:SetBaseTranslations
 	["Vileprey Village"] = "Vileprey Village",
 	["Village in the Vines"] = "Village in the Vines",
 	["Vim'gol's Circle"] = "Vim'gol's Circle",
+	["Vindicaar"] = "Vindicaar",
 	["Vindicator's Rest"] = "Vindicator's Rest",
 	["Violet Citadel Balcony"] = "Violet Citadel Balcony",
 	["Violet Hold"] = "Violet Hold",
@@ -6951,6 +6963,7 @@ lib:SetBaseTranslations
 	["Xibala"] = "Xibala",
 	["Xibala Shallows"] = "Xibala Shallows",
 	["Xumanu's Hideout"] = "Xumanu's Hideout",
+	["xxOLD - Zuldazar"] = "xxOLD - Zuldazar",
 	["Xylem's Tower"] = "Xylem's Tower",
 	["Yan-Zhe River"] = "Yan-Zhe River",
 	["Yeti Mountain Basecamp"] = "Yeti Mountain Basecamp",
@@ -7022,6 +7035,7 @@ lib:SetBaseTranslations
 	["Zul'Farrak"] = "Zul'Farrak",
 	["Zul'Farrak Entrance"] = "Zul'Farrak Entrance",
 	["Zul'Gurub"] = "Zul'Gurub",
+	["Zul'jan"] = "Zul'jan",
 	["Zul'jan Ruins"] = "Zul'jan Ruins",
 	["Zul'Mashar"] = "Zul'Mashar",
 	["Zul'Nazman"] = "Zul'Nazman",

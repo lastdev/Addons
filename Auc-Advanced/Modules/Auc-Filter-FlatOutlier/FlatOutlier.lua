@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - FlatOutlier Filter
-	Version: 7.7.6075 (SwimmingSeadragon)
-	Revision: $Id: FlatOutlier.lua 6075 2018-08-29 01:26:34Z none $
+	Version: 8.1.6222 (SwimmingSeadragon)
+	Revision: $Id: FlatOutlier.lua 6222 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is scaning filter plugin for Auctioneer.
@@ -282,4 +282,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Filter-FlatOutlier/FlatOutlier.lua $", "$Rev: 6075 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Filter-FlatOutlier/FlatOutlier.lua $", "$Rev: 6222 $")

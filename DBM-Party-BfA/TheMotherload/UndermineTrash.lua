@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("UndermineTrash", "DBM-Party-BfA", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17738 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18395 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 268709 268129 263275 267433 263103 263066 268865 268797 269090 262540 262554 262092",
+	"SPELL_CAST_START 268709 268129 263275 267433 263103 263066 268865 268797 269090 262540 262554 262092 263202 267354",
 	"SPELL_AURA_APPLIED 268702 262947 262540 262092",
 	"SPELL_CAST_SUCCESS 280604 262515"
 )
@@ -17,9 +17,11 @@ local warnActivateMech				= mod:NewCastAnnounce(267433, 4)
 local warnRepair					= mod:NewCastAnnounce(262554, 4)
 local warnAzeriteHeartseeker		= mod:NewTargetNoFilterAnnounce(262515, 3)
 
---local yellArrowBarrage				= mod:NewYell(200343)
+--local yellArrowBarrage			= mod:NewYell(200343)
+local specWarnHailofFlechettes		= mod:NewSpecialWarningSpell(267354, nil, nil, nil, 2, 2)
 local specWarnCover					= mod:NewSpecialWarningMove(263275, "Tank", nil, nil, 1, 2)
 local specWarnEarthShield			= mod:NewSpecialWarningInterrupt(268709, "HasInterrupt", nil, nil, 1, 2)
+local specWarnRockLance				= mod:NewSpecialWarningInterrupt(263202, false, nil, nil, 1, 2)
 local specWarnIcedSpritzer			= mod:NewSpecialWarningInterrupt(280604, "HasInterrupt", nil, nil, 1, 2)
 local specWarnCola					= mod:NewSpecialWarningInterrupt(268129, "HasInterrupt", nil, nil, 1, 2)
 local specWarnFuriousQuake			= mod:NewSpecialWarningInterrupt(268702, "HasInterrupt", nil, nil, 1, 2)
@@ -32,7 +34,7 @@ local specWarnInhaleVapors			= mod:NewSpecialWarningInterrupt(262092, "HasInterr
 local specWarnForceCannon			= mod:NewSpecialWarningDodge(268865, nil, nil, nil, 2, 2)
 local specWarnAzeriteInjection		= mod:NewSpecialWarningDispel(262947, "MagicDispeller", nil, nil, 1, 2)
 local specWarnOverchargeDispel		= mod:NewSpecialWarningDispel(262540, "MagicDispeller", nil, nil, 1, 2)
-local specWarnInhaleVaporsDispel	= mod:NewSpecialWarningDispel(262092, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnInhaleVaporsDispel	= mod:NewSpecialWarningDispel(262092, "RemoveEnrage", nil, 2, 1, 2)
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
@@ -61,6 +63,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 262092 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnInhaleVapors:Show(args.sourceName)
 		specWarnInhaleVapors:Play("kickcast")
+	elseif spellId == 263202 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnRockLance:Show(args.sourceName)
+		specWarnRockLance:Play("kickcast")
 	elseif spellId == 263275 and self:IsValidWarning(args.sourceGUID) then
 		specWarnCover:Show()
 		specWarnCover:Play("moveboss")
@@ -71,6 +76,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 268865 and self:IsValidWarning(args.sourceGUID) and self:AntiSpam(4, 3) then
 		specWarnForceCannon:Show()
 		specWarnForceCannon:Play("shockwave")
+	elseif spellId == 267354 and self:IsValidWarning(args.sourceGUID) and self:AntiSpam(4, 5) then
+		specWarnHailofFlechettes:Show()
+		specWarnHailofFlechettes:Play("stilldanger")--Not great, I can't find the old "crowdcontrol" sound.
 	end
 end
 
@@ -80,14 +88,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 268702 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnFuriousQuake:Show(args.sourceName)
 		specWarnFuriousQuake:Play("kickcast")
-	elseif spellId == 262947 and not args:IsDestTypePlayer() then
-		specWarnAzeriteInjection:Show(args.sourceName)
+	elseif spellId == 262947 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnAzeriteInjection:Show(args.destName)
 		specWarnAzeriteInjection:Play("helpdispel")
-	elseif spellId == 262540 and not args:IsDestTypePlayer() then
-		specWarnOverchargeDispel:Show(args.sourceName)
+	elseif spellId == 262540 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnOverchargeDispel:Show(args.destName)
 		specWarnOverchargeDispel:Play("helpdispel")
-	elseif spellId == 262092 and self:AntiSpam(4, 4) then
-		specWarnInhaleVaporsDispel:Show(args.sourceName)
+	elseif spellId == 262092 and not args:IsDestTypePlayer() and self:AntiSpam(3, 4) then
+		specWarnInhaleVaporsDispel:Show(args.destName)
 		specWarnInhaleVaporsDispel:Play("helpdispel")
 	end
 end

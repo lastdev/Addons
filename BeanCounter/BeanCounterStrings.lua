@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: BeanCounter
-	Revision: $Id: BeanCounterStrings.lua 6110 2018-08-29 01:26:34Z none $
-	Version: 7.7.6110 (SwimmingSeadragon)
+	Revision: $Id: BeanCounterStrings.lua 6236 2019-03-04 00:20:18Z none $
+	Version: 8.1.6236 (SwimmingSeadragon)
 
 	License:
 		This program is free software; you can redistribute it and/or

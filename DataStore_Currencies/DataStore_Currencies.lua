@@ -20,6 +20,11 @@ local CURRENCY_ID_ORDER_HALL = 1220
 local CURRENCY_ID_SOBF = 1273		-- Seals of the Broken Fate (Legion)
 local CURRENCY_ID_NETHERSHARD = 1226
 local CURRENCY_ID_LFWS = 1342
+local CURRENCY_ID_BFA_WAR_RES = 1560			-- BfA: War Resources
+local CURRENCY_ID_BFA_SOWF = 1580				-- BfA: Seals of the Wartorn Fate
+local CURRENCY_ID_BFA_DUBLOONS = 1710			-- BfA: Seafarer's Dubloon
+local CURRENCY_ID_BFA_WAR_SUPPLIES = 1587		-- BfA: War Supplies
+local CURRENCY_ID_BFA_AZERITE = 1565			-- BfA: Rich Azerite Fragment
 
 local AddonDB_Defaults = {
 	global = {
@@ -110,6 +115,11 @@ local function ScanTotals()
 	ScanCurrencyTotals(CURRENCY_ID_SOBF)
 	ScanCurrencyTotals(CURRENCY_ID_NETHERSHARD)
 	ScanCurrencyTotals(CURRENCY_ID_LFWS)
+	ScanCurrencyTotals(CURRENCY_ID_BFA_WAR_RES)
+	ScanCurrencyTotals(CURRENCY_ID_BFA_SOWF)
+	ScanCurrencyTotals(CURRENCY_ID_BFA_DUBLOONS)
+	ScanCurrencyTotals(CURRENCY_ID_BFA_WAR_SUPPLIES)
+	ScanCurrencyTotals(CURRENCY_ID_BFA_AZERITE)
 end
 
 local function ScanCurrencies()
@@ -300,6 +310,27 @@ end
 local function _GetWarSupplies(character)
 	return _GetCurrencyTotals(character, CURRENCY_ID_LFWS)
 end
+
+local function _GetBfAWarResources(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_RES)
+end
+
+local function _GetBfASealsOfWartornFate(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_SOWF)
+end
+
+local function _GetBfADubloons(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_DUBLOONS)
+end
+
+local function _GetBfAWarSupplies(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_SUPPLIES)
+end
+
+local function _GetBfARichAzerite(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_AZERITE)
+end
+
 local PublicMethods = {
 	GetNumCurrencies = _GetNumCurrencies,
 	GetCurrencyInfo = _GetCurrencyInfo,
@@ -317,6 +348,11 @@ local PublicMethods = {
 	GetOrderHallResources = _GetOrderHallResources,
 	GetNethershards = _GetNethershards,
 	GetWarSupplies = _GetWarSupplies,
+	GetBfAWarResources = _GetBfAWarResources,
+	GetBfASealsOfWartornFate = _GetBfASealsOfWartornFate,
+	GetBfADubloons = _GetBfADubloons,
+	GetBfAWarSupplies = _GetBfAWarSupplies,
+	GetBfARichAzerite = _GetBfARichAzerite,
 }
 
 function addon:OnInitialize()
@@ -339,6 +375,11 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetOrderHallResources")
 	DataStore:SetCharacterBasedMethod("GetNethershards")
 	DataStore:SetCharacterBasedMethod("GetWarSupplies")
+	DataStore:SetCharacterBasedMethod("GetBfAWarResources")
+	DataStore:SetCharacterBasedMethod("GetBfASealsOfWartornFate")
+	DataStore:SetCharacterBasedMethod("GetBfADubloons")
+	DataStore:SetCharacterBasedMethod("GetBfAWarSupplies")
+	DataStore:SetCharacterBasedMethod("GetBfARichAzerite")
 end
 
 function addon:OnEnable()

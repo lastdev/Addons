@@ -5,8 +5,8 @@ local __Debug = LibStub:GetLibrary("ovale/Debug")
 local OvaleDebug = __Debug.OvaleDebug
 local __Profiler = LibStub:GetLibrary("ovale/Profiler")
 local OvaleProfiler = __Profiler.OvaleProfiler
-local __Artifact = LibStub:GetLibrary("ovale/Artifact")
-local OvaleArtifact = __Artifact.OvaleArtifact
+local __AzeriteArmor = LibStub:GetLibrary("ovale/AzeriteArmor")
+local OvaleAzerite = __AzeriteArmor.OvaleAzerite
 local __AST = LibStub:GetLibrary("ovale/AST")
 local OvaleAST = __AST.OvaleAST
 local PARAMETER_KEYWORD = __AST.PARAMETER_KEYWORD
@@ -45,6 +45,7 @@ local kpairs = pairs
 local find = string.find
 local match = string.match
 local sub = string.sub
+local insert = table.insert
 local GetSpellInfo = GetSpellInfo
 local __tools = LibStub:GetLibrary("ovale/tools")
 local isLuaArray = __tools.isLuaArray
@@ -115,7 +116,7 @@ local function TestConditionEquipped(value)
 end
 local function TestConditionTrait(value)
     local trait, required = RequireNumber(value)
-    local hasTrait = OvaleArtifact:HasTrait(trait)
+    local hasTrait = OvaleAzerite:HasTrait(trait)
     return (required and hasTrait) or ( not required and  not hasTrait)
 end
 local TEST_CONDITION_DISPATCH = {
@@ -272,10 +273,15 @@ local function EvaluateItemRequire(node)
         local count = 0
         local ii = OvaleData:ItemInfo(itemId)
         local tbl = ii.require[property] or {}
+        local arr = nil
         for k, v in kpairs(namedParams) do
             if  not checkToken(PARAMETER_KEYWORD, k) then
-                tbl[k] = v
-                count = count + 1
+                arr = tbl[k] or {}
+                if isLuaArray(arr) then
+                    insert(arr, v)
+                    tbl[k] = arr
+                    count = count + 1
+                end
             end
         end
         if count > 0 then
@@ -381,7 +387,7 @@ local function EvaluateSpellInfo(node)
                 if value then
                     local realValue = value
                     if namedParams.pertrait ~= nil then
-                        realValue = value * OvaleArtifact:TraitRank(namedParams.pertrait)
+                        realValue = value * OvaleAzerite:TraitRank(namedParams.pertrait)
                     end
                     local addDuration = si.add_duration or 0
                     si.add_duration = addDuration + realValue
@@ -419,7 +425,7 @@ local function EvaluateSpellInfo(node)
                 if value then
                     local realValue = value
                     if namedParams.pertrait ~= nil then
-                        realValue = value * OvaleArtifact:TraitRank(namedParams.pertrait)
+                        realValue = value * OvaleAzerite:TraitRank(namedParams.pertrait)
                     end
                     local power = si[k] or 0
                     si[k] = power + realValue
@@ -442,10 +448,15 @@ local function EvaluateSpellRequire(node)
         local count = 0
         local si = OvaleData:SpellInfo(spellId)
         local tbl = si.require[property] or {}
+        local arr = nil
         for k, v in kpairs(namedParams) do
             if  not checkToken(PARAMETER_KEYWORD, k) then
-                tbl[k] = v
-                count = count + 1
+                arr = tbl[k] or {}
+                if isLuaArray(arr) then
+                    insert(arr, v)
+                    tbl[k] = arr
+                    count = count + 1
+                end
             end
         end
         if count > 0 then
@@ -562,8 +573,7 @@ __exports.OvaleCompileClass = __class(OvaleCompileClassBase, {
         self:UnregisterMessage("Ovale_TalentsChanged")
     end,
     Ovale_ScriptChanged = function(self, event)
-        local specName = OvalePaperDoll:GetSpecialization()
-        self:CompileScript(Ovale.db.profile.source[specName])
+        self:CompileScript(Ovale.db.profile.source[Ovale.playerClass .. "_" .. OvalePaperDoll:GetSpecialization()])
         self:EventHandler(event)
     end,
     Ovale_StanceChanged = function(self, event)
@@ -608,7 +618,6 @@ __exports.OvaleCompileClass = __class(OvaleCompileClassBase, {
         local changed = false
         ast = ast or self.ast
         if ast and (forceEvaluation or  not self.serial or self.serial < self_serial) then
-            self:Debug("Evaluating script.")
             changed = true
             local ok = true
             self_compileOnStances = false

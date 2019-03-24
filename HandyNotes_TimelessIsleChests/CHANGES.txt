@@ -1,33 +1,9 @@
 ------------------------------------------------------------------------
-r45 | Caliaha | 2018-08-18 15:14:34 +0000 (Sat, 18 Aug 2018) | 2 lines
+r47 | Caliaha | 2018-12-18 17:10:22 +0000 (Tue, 18 Dec 2018) | 2 lines
 Changed paths:
-   M /trunk/HandyNotes_TimelessIsleChests.lua
-
-Added Data from TimelessIsle_RareElites
-
-------------------------------------------------------------------------
-r44 | Caliaha | 2018-08-18 15:08:29 +0000 (Sat, 18 Aug 2018) | 2 lines
-Changed paths:
-   A /trunk/Artwork/0circle.tga
-   A /trunk/Artwork/0cross.tga
-   A /trunk/Artwork/0diamond.tga
-   A /trunk/Artwork/0moon.tga
-   A /trunk/Artwork/0skull.tga
-   A /trunk/Artwork/0square.tga
-   A /trunk/Artwork/0star.tga
-   A /trunk/Artwork/0triangle.tga
-   A /trunk/Artwork/readme.txt
    M /trunk/HandyNotes_TimelessIsleChests.toc
-   A /trunk/Localization
-   A /trunk/Localization/Include.xml
-   A /trunk/Localization/deDE.lua
-   A /trunk/Localization/enGB.lua
-   A /trunk/Localization/enUS.lua
-   A /trunk/Localization/frFR.lua
-   A /trunk/Localization/ruRU.lua
-   A /trunk/Localization/zhCN.lua
 
-Added data from TimelessIsle_RareElites
+TOC Bump
 
 ------------------------------------------------------------------------
 

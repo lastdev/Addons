@@ -1,14 +1,14 @@
-## Interface: 80000
-## X-Min-Interface: 70300
-## Title: Raider.IO Mythic Plus
-## Notes: Shows Raider.IO Mythic+ Scores in-game. Make sure to load one or more region DB.
-## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
-## Version: 8.0.1 (v201809020600)
-## SavedVariables: RaiderIO_Config
+## Interface: 80100
+## Title: Raider.IO Mythic Plus and Raiding
+## Notes: Shows Raider.IO Mythic+ Score and Raid Progress in-game. Make sure to load one or more region DB.
+## Author: Vladinator (Voidzone-Ravencrest), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
+## Version: 8.1.0 (v201903100600)
+## SavedVariables: RaiderIO_Config, RaiderIO_LastCharacter
 ## X-Website: https://raider.io
 
 db/db_regions.lua
 db/db_realms.lua
+db/db_dungeons.lua
 db/db_score_tiers.lua
 db/db_score_stats.lua
 
@@ -24,10 +24,14 @@ locale/ruRU.lua
 locale/zhCN.lua
 locale/zhTW.lua
 
+config.lua
 core.lua
-debug.lua
-
-GuildBest.xml
+profile.lua
+search.lua
+client.lua
+guildbest.lua
+guildbest.xml
+exportjson.lua
 
 db/db_client_characters.lua
 db/db_client_guilds.lua

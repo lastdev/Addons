@@ -83,6 +83,7 @@ Outfitter.CreditPlayersByRealm =
 		["elaundar"] = 1,
 		["Bodar"] = 1,
 		["chullah"] = 1,
+		["AoR_Derangement"] = 1,
 	},
 	["Tester"] =
 	{
@@ -1152,19 +1153,16 @@ Outfitter.cPanelFrames =
 	"OutfitterAboutFrame",
 }
 
-Outfitter.cShapeshiftTextureInfo =
-{
-	-- Druids
-	[132276] = {ID = "Bear", MaybeInCombat = true},
-	[132115] = {ID = "Cat"},
-	[132144] = {ID = "Travel"},
-	[1394966] = {ID = "Travel"},
-	[132145] = {ID = "Tree"},
+Outfitter.cShapeshiftIDInfo = {
+	-- Druid
+	[5487] = {ID = "Bear", MaybeInCombat = true},
+	[768] = {ID = "Cat"},
+	[783] = {ID = "Travel"},
+	[24858] = {ID = "Moonkin"},
 	CasterForm = {ID = "Caster"}, -- this is a psuedo-form which is active when no other druid form is
-	
-	-- Rogues
-	Ability_Stealth = {ID = "Stealth"},
-	Spell_Nature_Invisibility = {ID = "Stealth"},
+
+	-- Rogue
+	[1784] = {ID = "Stealth"},
 }
 
 function Outfitter:ToggleOutfitterFrame()
@@ -3841,6 +3839,28 @@ function Outfitter:NewEmptyItemInfo()
 	}
 end
 
+function Outfitter.AzeriteCodesMatch(azeriteCodes1, azeriteCodes2)
+	if not azeriteCodes1 and not azeriteCodes2 then
+		return true
+	end
+
+	if not azeriteCodes1 or not azeriteCodes2 then
+		return false
+	end
+
+	if #azeriteCodes1 ~= #azeriteCodes2 then
+		return false
+	end
+
+	for powerID, _ in pairs(azeriteCodes1) do
+		if not azeriteCodes2[powerID] then
+			return false
+		end
+	end
+
+	return true
+end
+
 function Outfitter:GetInventoryOutfit(pName, pOutfit)
 	local vOutfit
 	
@@ -3876,7 +3896,8 @@ function Outfitter:GetInventoryOutfit(pName, pOutfit)
 			or vExistingItem.InstanceDifficultyID ~= vItemInfo.InstanceDifficultyID
 			or vExistingItem.BonusIDs ~= vItemInfo.BonusIDs
 			or vExistingItem.UpgradeID ~= vItemInfo.UpgradeID
-			or vExistingItem.ReforgeID ~= vItemInfo.ReforgeID then
+			or vExistingItem.ReforgeID ~= vItemInfo.ReforgeID
+			or not Outfitter.AzeriteCodesMatch(vExistingItem.AzeriteCodes, vItemInfo.AzeriteCodes) then
 				vOutfit:AddItem(vInventorySlot, vItemInfo)
 			end
 		end
@@ -4269,52 +4290,47 @@ function Outfitter:UpdateShapeshiftState()
 	if not self.Settings.ShapeshiftIndexInfo then
 		self.Settings.ShapeshiftIndexInfo = {}
 	end
-	
-	local vNumForms = GetNumShapeshiftForms()
-	
-	-- Deactivate the previous shapeshift form first
-	
-	local vActiveForm
-	
-	--self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", vNumForms)
-	for vIndex = 1, vNumForms do
-		local vTexture, vName, vIsActive, vIsCastable = GetShapeshiftFormInfo(vIndex)
+
+	-- Search for the active shapeshift form, plus while searching deactivate any forms which aren't the active one
+	local activeForm
+	local numForms = GetNumShapeshiftForms()
+	--self:DebugMessage("Outfitter:UpdateShapeshiftState(): %d forms", numForms)
+	for index = 1, numForms do
+		local texture, isActive, isCastable, shapeshiftID = GetShapeshiftFormInfo(index)
 		local _
 		
-		--self:DebugMessage("%d: %s texture = %s (%d) %s", vIndex, vName, vTexture, vTexture:len(), vIsActive and "ACTIVE" or "not active")
+		--self:DebugMessage("%s: %s texture = %s %s", tostring(index), tostring(shapeshiftID), tostring(texture), isActive and "ACTIVE" or "not active")
 		
-		local vShapeshiftInfo = self.cShapeshiftTextureInfo[vTexture]
+		local shapeshiftInfo = self.cShapeshiftIDInfo[shapeshiftID]
 		
-		if vShapeshiftInfo then
-			self.Settings.ShapeshiftIndexInfo[vIndex] = vShapeshiftInfo
+		if shapeshiftInfo then
+			self.Settings.ShapeshiftIndexInfo[index] = shapeshiftInfo
 		else
-			vShapeshiftInfo = self.Settings.ShapeshiftIndexInfo[vIndex]
+			shapeshiftInfo = self.Settings.ShapeshiftIndexInfo[index]
 		end
 		
-		if vShapeshiftInfo then
-			if not vIsActive then
-				self:UpdateShapeshiftInfo(vShapeshiftInfo, false)
+		if shapeshiftInfo then
+			if not isActive then
+				self:UpdateShapeshiftInfo(shapeshiftInfo, false)
 			else
-				vActiveForm = vShapeshiftInfo
+				activeForm = shapeshiftInfo
 			end
 		end
 	end
 	
 	-- Substitute the druid caster pseudo-form if necessary or deactivate it
 	-- if it's not
-	
 	if self.PlayerClass == "DRUID" then
-		if not vActiveForm then
-			vActiveForm = self.cShapeshiftTextureInfo.CasterForm
+		if not activeForm then
+			activeForm = self.cShapeshiftIDInfo.CasterForm
 		else
-			self:UpdateShapeshiftInfo(self.cShapeshiftTextureInfo.CasterForm, false)
+			self:UpdateShapeshiftInfo(self.cShapeshiftIDInfo.CasterForm, false)
 		end
 	end
 	
 	-- Activate the new form
-	
-	if vActiveForm then
-		self:UpdateShapeshiftInfo(vActiveForm, true)
+	if activeForm then
+		self:UpdateShapeshiftInfo(activeForm, true)
 	end
 	
 	self:EndEquipmentUpdate()
@@ -4631,7 +4647,7 @@ function Outfitter:Initialize()
 	end
 	
 	-- Make sure they're not upgrading with a reloadui when there are new files
-	if tonumber(GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 1 then
+	if tonumber(GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 2 then
 		OutfitterMinimapButton:Hide() -- Remove access to Outfitter so more errors don't start coming up
 		OutfitterButtonFrame:Hide()
 		StaticPopup_Show("OUTFITTER_CANT_RELOADUI")
@@ -6783,7 +6799,7 @@ function Outfitter:TooltipContainsLine(pTooltip, pText)
 			local vColor = {}
 			vColor.r, vColor.g, vColor.b = vText:GetTextColor()
 			local vHSVColor = Outfitter:RGBToHSV(vColor)
-			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150), pText == vTextString
+			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150), pText == vTextString, vLine
 		end
 	end
 end
@@ -7648,16 +7664,16 @@ function Outfitter:GetMountIDByName(name)
 	end
 end
 
-function Outfitter:GetCompanionIDByName(pName)
-	local vNumPets = C_PetJournal.GetNumPets(false)
-	local vLowerName = pName:lower()
-	for vIndex = 1, vNumPets do
-		local vPetID, vSpeciesID, vIsOwned, vCustomName, vLevel, vFavorite, vIsRevoked, vName = C_PetJournal.GetPetInfoByIndex(vIndex, false)
-		if vName:lower() == vLowerName then
-			return vPetID
+function Outfitter:GetCompanionIDByName(nameToFind)
+	local numPets = C_PetJournal.GetNumPets(false)
+	local lowerName = nameToFind:lower()
+	for index = 1, numPets do
+		local petID, speciesID, isOwned, customName, level, favorite, isRevoked, name = C_PetJournal.GetPetInfoByIndex(index, false)
+		if name:lower() == lowerName then
+			return petID
 		end
 	end
-	Outfitter:DebugMessage("GetCompanionByName(%s): Not found", tostring(pName))
+	Outfitter:DebugMessage("GetCompanionByName(%s): Not found", tostring(nameToFind))
 end
 
 function Outfitter:GetSummonedCompanionID()

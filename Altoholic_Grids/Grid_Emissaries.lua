@@ -27,14 +27,14 @@ local function BuildView()
 	questList = {}
 	view = {}
 	
-	--[[local account, realm = AltoholicTabGrids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
-	-- parse the emissary quests
+	-- parse the emissary quests, but only the ones that have NOT been completed
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
 		for questID, _ in pairs(DataStore:GetEmissaryQuests()) do
 			local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
 			local _, _, timeLeft = DataStore:GetEmissaryQuestInfo(character, questID)
-
+			
 			if isOnQuest and timeLeft and timeLeft > 0 then
 				local questName = DataStore:GetQuestLogInfo(character, questLogIndex)
 
@@ -67,7 +67,7 @@ local function BuildView()
 
 	table.sort(view, function(a,b) 
 		return questList[a].timeLeft < questList[b].timeLeft
-	end)]]
+	end)
 end
 
 local callbacks = {

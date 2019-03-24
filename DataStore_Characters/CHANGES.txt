@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r43 | thaoky.altoholic@yahoo.com | 2018-09-19 16:59:26 +0000 (Wed, 19 Sep 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Characters.lua
+
+- Improved calculation of rest XP.
+------------------------------------------------------------------------
 r42 | thaoky.altoholic@yahoo.com | 2018-07-22 11:20:26 +0000 (Sun, 22 Jul 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Characters.toc

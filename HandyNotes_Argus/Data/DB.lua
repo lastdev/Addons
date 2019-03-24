@@ -29,17 +29,13 @@ local function GetLocaleLibBabble(typ)
 end
 local BZ = GetLocaleLibBabble("LibBabble-SubZone-3.0")
 
-local function mapFile(mapID)
-	return HandyNotes:GetMapIDtoMapFile(mapID)
-end
-
 local DB = {}
 
 private.DB = DB
 
 DB.points = {
 	--[[ structure:
-	[mapFile] = { -- "_terrain1" etc will be stripped from attempts to fetch this
+	[mapID] = { -- "_terrain1" etc will be stripped from attempts to fetch this
 		[coord] = {
 			label=[string], 		-- label: text that'll be the label, optional
 			npc=[id], 				-- related npc id, used to display names in tooltip
@@ -50,16 +46,16 @@ DB.points = {
 	},
 	--]]
 	-- Krokuun 
-	[mapFile(1135)] = { 
+	[830] = { 
 		[63118106] = { portal=true, label=format(L["Portal to %s"], BZ["The Vindicaar"]), },
 		[62348230] = { portal=true, label=format(L["Portal to %s"], BZ["Dalaran"]), },
 	},
 	-- Mac'Aree
-	[mapFile(1170)] = { 
+	[882] = { 
 		[55468299] = { portal=true, label=format(L["Portal to %s"], BZ["The Vindicaar"]), },
 	},
 	-- Antoran Wastes
-	[mapFile(1171)] = { 
+	[885] = { 
 	},
 }
 
@@ -210,8 +206,8 @@ DB.treasures.Krokuun = {
 	[47604190] = { label=L["Eredar War Supplies"] },
 }
 for k, v in pairs(DB.treasures.Krokuun) do
-	DB.points[mapFile(1135)][k] = v
-	DB.points[mapFile(1135)][k]["treasure"] = true
+	DB.points[830][k] = v
+	DB.points[830][k]["treasure"] = true
 end
 
 DB.treasures.AntoranWastes = {
@@ -285,8 +281,8 @@ DB.treasures.AntoranWastes = {
 	[73504670] = { label=L["Legion War Supplies"] },
 }
 for k, v in pairs(DB.treasures.AntoranWastes) do
-	DB.points[mapFile(1171)][k] = v
-	DB.points[mapFile(1171)][k]["treasure"] = true
+	DB.points[885][k] = v
+	DB.points[885][k]["treasure"] = true
 end
 
 DB.treasures.MacAree = {
@@ -425,8 +421,8 @@ DB.treasures.MacAree = {
 
 }
 for k, v in pairs(DB.treasures.MacAree) do
-	DB.points[mapFile(1170)][k] = v
-	DB.points[mapFile(1170)][k]["treasure"] = true
+	DB.points[882][k] = v
+	DB.points[882][k]["treasure"] = true
 end
 
 -- /////////////////////////////////
@@ -450,8 +446,8 @@ DB.rares.Krokuun = {
 	[42406990] = { npc=125820, quest=48666, label=L["Imp Mother Laglath"], },
 }
 for k, v in pairs(DB.rares.Krokuun) do
-	DB.points[mapFile(1135)][k] = v
-	DB.points[mapFile(1135)][k]["rare"] = true
+	DB.points[830][k] = v
+	DB.points[830][k]["rare"] = true
 end
 -- Antoran Wastes
 DB.rares.AntoranWastes = {
@@ -476,8 +472,8 @@ DB.rares.AntoranWastes = {
 	[50905530] = { npc=127118, quest=48820, label=L["Worldsplitter Skuul"], },
 	[61406510] = { npc=126338, quest=48814, label=L["Wrath-Lord Yarez"], },}
 for k, v in pairs(DB.rares.AntoranWastes) do
-	DB.points[mapFile(1171)][k] = v
-	DB.points[mapFile(1171)][k]["rare"] = true
+	DB.points[885][k] = v
+	DB.points[885][k]["rare"] = true
 end
 -- Mac'Aree
 DB.rares.MacAree = {
@@ -486,8 +482,8 @@ DB.rares.MacAree = {
 	[41331224] = { npc=126864, quest=48702, label=L["Feasel the Muffin Thief"], },
 }
 for k, v in pairs(DB.rares.MacAree) do
-	DB.points[mapFile(1170)][k] = v
-	DB.points[mapFile(1170)][k]["rare"] = true
+	DB.points[882][k] = v
+	DB.points[882][k]["rare"] = true
 end
 
 -- /////////////////////////////////
@@ -499,8 +495,8 @@ DB.entrances = {
 }
 
 for k, v in pairs(DB.entrances) do
-	DB.points[mapFile(1135)][k] = v
-	DB.points[mapFile(1135)][k]["entrance"] = true
+	DB.points[830][k] = v
+	DB.points[830][k]["entrance"] = true
 end
 ]]
 
@@ -513,18 +509,18 @@ DB.felbloom.Krokuun = {
 	[54635520] = {  },
 }
 for k, v in pairs(DB.felbloom.Krokuun) do
-	DB.points[mapFile(1135)][k] = v
-	DB.points[mapFile(1135)][k]["felbloom"] = true
-	DB.points[mapFile(1135)][k]["label"] = L["Felbloom"]
+	DB.points[830][k] = v
+	DB.points[830][k]["felbloom"] = true
+	DB.points[830][k]["label"] = L["Felbloom"]
 end
 
 DB.felbloom.AntoranWastes = {
 	[69013346] = {},
 }
 for k, v in pairs(DB.felbloom.AntoranWastes) do
-	DB.points[mapFile(1171)][k] = v
-	DB.points[mapFile(1171)][k]["felbloom"] = true
-	DB.points[mapFile(1171)][k]["label"] = L["Felbloom"]
+	DB.points[885][k] = v
+	DB.points[885][k]["felbloom"] = true
+	DB.points[885][k]["label"] = L["Felbloom"]
 end
 
 -- Fallen Soldier, Blessing if the Righteous

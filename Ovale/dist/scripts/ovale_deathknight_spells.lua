@@ -4,7 +4,7 @@ local __Scripts = LibStub:GetLibrary("ovale/Scripts")
 local OvaleScripts = __Scripts.OvaleScripts
 __exports.register = function()
     local name = "ovale_deathknight_spells"
-    local desc = "[8.0] Ovale: Death Knight spells"
+    local desc = "[8.1] Ovale: Death Knight spells"
     local code = [[Define(apocalypse 275699)
 # Bring doom upon the enemy, dealing sw1 Shadow damage and bursting up to s2 Festering Wounds on the target.rnrnSummons an Army of the Dead ghoul for 15 seconds for each burst Festering Wound.
   SpellInfo(apocalypse cd=90)
@@ -23,8 +23,8 @@ Define(battle_potion_of_strength 279153)
   # Strength increased by w1.
   SpellAddBuff(battle_potion_of_strength battle_potion_of_strength=1)
 Define(berserking 26297)
-# Increases your haste by s1 for 10 seconds.
-  SpellInfo(berserking cd=180 duration=10 gcd=0 offgcd=1)
+# Increases your haste by s1 for 12 seconds.
+  SpellInfo(berserking cd=180 duration=12 gcd=0 offgcd=1)
   # Haste increased by s1.
   SpellAddBuff(berserking berserking=1)
 Define(blinding_sleet 207167)
@@ -41,7 +41,7 @@ Define(blooddrinker 206931)
   # Draining s1 health from the target every t1 sec.
   SpellAddTargetDebuff(blooddrinker blooddrinker=1)
 Define(bonestorm 194844)
-# A whirl of bone and gore batters nearby enemies, dealing 196528s1 Shadow damage every t3 sec, and healing you for 196545s1 of your maximum health every time it deals damage. Lasts t3 sec per s3 Runic Power spent.
+# A whirl of bone and gore batters nearby enemies, dealing 196528s1 Shadow damage every t3 sec, and healing you for 196545s1 of your maximum health every time it deals damage (up to s1*s4). Lasts t3 sec per s3 Runic Power spent.
   SpellInfo(bonestorm runicpower=10 cd=60 duration=1 tick=1 talent=bonestorm_talent)
 
 Define(breath_of_sindragosa 152279)
@@ -59,7 +59,7 @@ Define(clawing_shadows 207311)
 Define(cold_heart_buff 281209)
 # Every t1 sec, gain a stack of Cold Heart, causing your next Chains of Ice to deal 281210s1 Frost damage. Stacks up to 281209u times.
   SpellInfo(cold_heart_buff max_stacks=20 gcd=0 offgcd=1)
-  # Your next Chains of Ice will deal 281210s1 Fost damage.
+  # Your next Chains of Ice will deal 281210s1 Frost damage.
   SpellAddBuff(cold_heart_buff cold_heart_buff=1)
 Define(consumption 274156)
 # Strikes all enemies in front of you with a hungering attack that deals sw1 Physical damage and heals you for e1*100 of that damage.
@@ -76,7 +76,7 @@ Define(dark_transformation 63560)
   # ?w2>0[Transformed into an undead monstrosity.][Gassy.]rnDamage dealt increased by w1.
   SpellAddBuff(dark_transformation dark_transformation=1)
 Define(death_and_decay 43265)
-# Corrupts the targeted ground, causing 52212m1*11 Shadow damage over 10 seconds to targets within the area.rnrnWhile you remain within the area, your ?c1[Heart Strike will hit up to 188290m3 additional targets.]?s207311[Clawing Shadows will hit all enemies near the target.][Scourge Strike will hit all enemies near the target.]
+# Corrupts the targeted ground, causing 52212m1*11 Shadow damage over 10 seconds to targets within the area.rnrnWhile you remain within the area, your ?s223829[Necrotic Strike and ][]?c1[Heart Strike will hit up to 188290m3 additional targets.]?s207311[Clawing Shadows will hit all enemies near the target.][Scourge Strike will hit all enemies near the target.]
   SpellInfo(death_and_decay runes=1 runicpower=-10 cd=30 duration=10 tick=1)
   SpellAddBuff(death_and_decay death_and_decay=1)
 Define(death_coil 47541)
@@ -84,7 +84,7 @@ Define(death_coil 47541)
   SpellInfo(death_coil runicpower=40)
 Define(death_strike 49998)
 # Focuses dark power into a strike?s137006[ with both weapons, that deals a total of s1+66188s1][ that deals s1] Physical damage and heals you for s2 of all damage taken in the last s4 sec, minimum s3 of maximum health.
-# Rank 2: Death Strike's healing is increased by s1.
+# Rank 2: Death Strike's cost is reduced by s3/-10, and its healing is increased by s1.
   SpellInfo(death_strike runicpower=45)
 Define(defile 152280)
 # Defile the targeted ground, dealing (156000s1*(10 seconds+1)/t3) Shadow damage to all enemies over 10 seconds.rnrnWhile you remain within your Defile, your ?s207311[Clawing Shadows][Scourge Strike] will hit all enemies near the target.rnrnIf any enemies are standing in the Defile, it grows in size every sec.
@@ -93,7 +93,7 @@ Define(defile 152280)
 Define(empower_rune_weapon 47568)
 # Empower your rune weapon, gaining s3 Haste and generating s1 LRune:Runes; and m2/10 Runic Power instantly and every t1 sec for 20 seconds.
   SpellInfo(empower_rune_weapon cd=120 duration=20 tick=5)
-  # Haste increased by s3.rnGgenerating s1 LRune:Runes; and m2/10 Runic Power and every t1 sec.
+  # Haste increased by s3.rnGenerating s1 LRune:Runes; and m2/10 Runic Power every t1 sec.
   SpellAddBuff(empower_rune_weapon empower_rune_weapon=1)
 Define(epidemic 207317)
 # Causes each of your Virulent Plagues to flare up, dealing 212739s1 Shadow damage to the infected enemy, and an additional 215969s2 Shadow damage to all other enemies near them.
@@ -133,6 +133,10 @@ Define(horn_of_winter 57330)
 Define(howling_blast 49184)
 # Blast the target with a frigid wind, dealing s1*<CAP>/AP ?s204088[Frost damage and applying Frost Fever to the target.][Frost damage to that foe, and 237680s1*<CAP>/AP Frost damage to all other enemies within 237680A1 yards, infecting all targets with Frost Fever.]rnrn|Tinterfaceiconsspell_deathknight_frostfever.blp:24|t |cFFFFFFFFFrost Fever|rrnA disease that deals o1*<CAP>/AP Frost damage over 24 seconds and has a chance to grant the Death Knight 195617m1/10 Runic Power each time it deals damage.
   SpellInfo(howling_blast runes=1 runicpower=-10)
+Define(icy_citadel_buff 272719)
+# When Pillar of Frost expires, your Strength is increased by s1 for 6 seconds. This effect lasts s2/1000 sec longer for each Obliterate and Frostscythe critical strike during Pillar of Frost.
+  SpellInfo(icy_citadel_buff channel=-0.001 gcd=0 offgcd=1)
+
 Define(icy_talons_buff 194879)
 # Your Runic Power spending abilities increase your melee attack speed by 194879s1 for 6 seconds, stacking up to 194879u times.
   SpellInfo(icy_talons_buff duration=6 max_stacks=3 gcd=0 offgcd=1)
@@ -165,9 +169,9 @@ Define(raise_dead 46584)
 # Raises ?s207313[an abomination]?s58640[a geist][a ghoul] to fight by your side. You can have a maximum of one ?s207313[abomination]?s58640[geist][ghoul] at a time.
   SpellInfo(raise_dead cd=30)
 Define(remorseless_winter 196770)
-# Drain the warmth of life from all nearby enemies, dealing 9*196771s1*<CAP>/AP Frost damage over 8 seconds and reducing their movement speed by 211793s1.
+# Drain the warmth of life from all nearby enemies within 196771A1 yards, dealing 9*196771s1*<CAP>/AP Frost damage over 8 seconds and reducing their movement speed by 211793s1.
   SpellInfo(remorseless_winter runes=1 runicpower=-10 cd=20 duration=8 tick=1)
-  # Dealing 196771s1 Frost damage to enemies each second.
+  # Dealing 196771s1 Frost damage to enemies within 196771A1 yards each second.
   SpellAddBuff(remorseless_winter remorseless_winter=1)
 Define(rime_buff 59052)
 # Your next Howling Blast will consume no Runes, generate no Runic Power, and deal s2 additional damage.
@@ -221,11 +225,11 @@ Define(blinding_sleet_talent 9) #22519
 Define(blooddrinker_talent 2) #19166
 # Drains o1 health from the target over 3 seconds.rnrnYou can move, parry, dodge, and use defensive abilities while channeling this ability.
 Define(bonestorm_talent 21) #21209
-# A whirl of bone and gore batters nearby enemies, dealing 196528s1 Shadow damage every t3 sec, and healing you for 196545s1 of your maximum health every time it deals damage. Lasts t3 sec per s3 Runic Power spent.
+# A whirl of bone and gore batters nearby enemies, dealing 196528s1 Shadow damage every t3 sec, and healing you for 196545s1 of your maximum health every time it deals damage (up to s1*s4). Lasts t3 sec per s3 Runic Power spent.
 Define(breath_of_sindragosa_talent 21) #22537
 # Continuously deal 155166s2*<CAP>/AP Frost damage every t1 sec to enemies in a cone in front of you. Deals reduced damage to secondary targets. You will continue breathing until your Runic Power is exhausted or you cancel the effect.
 Define(bursting_sores_talent 4) #22027
-# Festering Wounds deal s1 more damage when burst, and all enemies within 207267A1 yds of a burst Festering Wound suffer 207267s1 Shadow damage.
+# Bursting a Festering Wound deals s1 more damage, and deals 207267s1 Shadow damage to all nearby targets.
 Define(clawing_shadows_talent 3) #22026
 # Deals s2 Shadow damage and causes 1 Festering Wound to burst.
 Define(cold_heart_talent 3) #22018
@@ -272,7 +276,8 @@ Define(unholy_blight_talent 6) #22029
 # Surrounds yourself with a vile swarm of insects for 6 seconds, stinging all nearby enemies and infecting them with an unholy disease that deals 115994o1 damage over 14 seconds.
 Define(unholy_frenzy_talent 20) #22110
 # Incites you into a killing frenzy for 12 seconds, increasing Haste by s1 and causing your auto attacks to infect the target with a Festering Wound.
-Define(taktheritrixs_shoulderpads_item 137075)
+Define(frozen_tempest_trait 278487)
+Define(icy_citadel_trait 272718)
     ]]
     code = code .. [[
 
@@ -355,6 +360,7 @@ Define(dark_transformation_buff 63560)
 	SpellRequire(death_and_decay runes 0=buff,crimson_scourge_buff)
 	SpellRequire(death_and_decay cd_percent 0=buff,crimson_scourge_buff)
 	SpellAddTargetDebuff(death_and_decay death_and_decay_debuff=1)
+	SpellAddBuff(death_and_decay death_and_decay_buff=1)
 Define(death_and_decay_buff 188290)
 Define(death_and_decay_debuff 43265)
 
@@ -371,7 +377,7 @@ Define(death_pact_debuff 48743)
 	SpellInfo(death_pact_debuff duration=15)
 
 	
-	SpellRequire(death_strike add_runicpower -5=buff,death_strike_cost)
+	SpellRequire(death_strike add_runicpower_from_aura -5=buff,death_strike_cost)
 	SpellAddBuff(death_strike blood_shield_buff=1 specialization=blood)
 	SpellAddBuff(death_strike voracius_buff=1 talent=voracious_talent specialization=blood)
 SpellList(death_strike_cost ossuary_buff gravewarden_buff)
@@ -477,7 +483,7 @@ Define(pillar_of_frost_buff 51271)
 	SpellInfo(pillar_of_frost duration=15)
 Define(raise_ally 61999)
 
-	
+    SpellRequire(raise_dead unusable 1=pet_health_pct,!0)
 Define(razorice_debuff 51714)
 
 	SpellInfo(remorseless_winter cd=20 runes=1 runicpower=-10)
@@ -547,9 +553,6 @@ Define(unholy_strength_buff 53365)
 	SpellInfo(unholy_strength_buff duration=15)
 
 ## Items
-
-Define(cold_heart_buff 235592)
-	SpellInfo(cold_heart_buff max_stacks=20)
 Define(consorts_cold_core 144293)
 Define(koltiras_newfound_will 132366)
 Define(lanathels_lament_item 133974)

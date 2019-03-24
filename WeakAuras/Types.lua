@@ -99,13 +99,6 @@ WeakAuras.trigger_modes = {
   ["first_active"] = -10,
 }
 
-WeakAuras.trigger_types = {
-  aura = L["Aura"],
-  status = L["Status"],
-  event = L["Event"],
-  custom = L["Custom"]
-}
-
 WeakAuras.debuff_types = {
   HELPFUL = L["Buff"],
   HARMFUL = L["Debuff"]
@@ -141,12 +134,34 @@ WeakAuras.unit_types = {
   multi = L["Multi-target"]
 }
 
+WeakAuras.unit_types_bufftrigger_2 = {
+  player = L["Player"],
+  target = L["Target"],
+  focus = L["Focus"],
+  group = L["Group"],
+  boss = L["Boss"],
+  arena = L["Arena"],
+  nameplate = L["Nameplate"],
+  pet = L["Pet"],
+  member = L["Specific Unit"],
+  multi = L["Multi-target"]
+}
+
 WeakAuras.actual_unit_types_with_specific = {
   player = L["Player"],
   target = L["Target"],
   focus = L["Focus"],
   pet = L["Pet"],
   member = L["Specific Unit"]
+}
+
+WeakAuras.actual_unit_types_with_specific_and_multi = {
+  player = L["Player"],
+  target = L["Target"],
+  focus = L["Focus"],
+  pet = L["Pet"],
+  member = L["Specific Unit"],
+  multi = L["Multi-target"]
 }
 
 WeakAuras.actual_unit_types = {
@@ -182,7 +197,7 @@ do
 end
 
 local function LBR(key)
-  return LBR_Locale[key] or LBR_Base[key];
+  return LBR_Locale[key] or LBR_Base[key]
 end
 
 WeakAuras.race_types = {
@@ -667,7 +682,15 @@ WeakAuras.texture_types = {
     ["Spells\\Strength_128"] = "Crossed Swords",
     ["Spells\\StunWhirl_reverse"] = "Stun Whirl",
     ["Spells\\T_Star3"] = "Star",
-    ["Spells\\Spirit1"] = "Spirit"
+    ["Spells\\Spirit1"] = "Spirit",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\cancel-icon.tga"] = "Cancel Icon",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\cancel-mark.tga"] = "Cancel Mark",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\emoji.tga"] = "Emoji",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\exclamation-mark.tga"] = "Exclamation Mark",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\eyes.tga"] = "Eyes",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\ok-icon.tga"] = "Ok Icon",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\targeting-mark.tga"] = "Targeting Mark",
+
   },
   ["Runes"] = {
     ["Spells\\starrune"] = "Star Rune",
@@ -835,7 +858,11 @@ WeakAuras.texture_types = {
     ["Spells\\TEXTURES\\Beam_VineGreen"] = "Green Vine",
     ["Spells\\TEXTURES\\Beam_VineRed"] = "Red Vine",
     ["Spells\\TEXTURES\\Beam_WaterBlue"] = "Blue Water Beam",
-    ["Spells\\TEXTURES\\Beam_WaterGreen"] = "Green Water Beam"
+    ["Spells\\TEXTURES\\Beam_WaterGreen"] = "Green Water Beam",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\rainbowbar"] = "Rainbow Bar",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\StripedTexture"] = "Striped Bar",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stripe-bar.tga"] = "Striped Bar 2",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stripe-rainbow-bar.tga"] = "Rainbow Bar 2",
   },
   ["Shapes"] = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_Smooth"] = "Smooth Circle",
@@ -850,7 +877,18 @@ WeakAuras.texture_types = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_Squirrel"] = "Spiralled Square",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_Squirrel_Border"] = "Spiralled Square with Border",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_White"] = "Square",
-    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_White_Border"] = "Square with Border"
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_White_Border"] = "Square with Border",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_FullWhite"] = "Full White Square",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Triangle45"] = "45° Triangle",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\triangle-border.tga"] = "Triangle with Border",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\triangle.tga"] = "Triangle",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_Smooth2.tga"] = "Smoohth Circle Small",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\circle_border5.tga"] = "Circle Border",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\ring_glow3.tga"] = "Circle Border Glow",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\square_mini.tga"] = "Small Square",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator.tga"] = "Target Indicator",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator_glow.tga"] = "Target Indicator Glow",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\arrows_target.tga"] = "Arrows Target",
   },
   ["Sparks"] = {
     ["Interface\\CastingBar\\UI-CastingBar-Spark"] = "Blizzard Spark",
@@ -1070,7 +1108,7 @@ WeakAuras.rune_specific_types = {
 WeakAuras.custom_trigger_types = {
   ["event"] = L["Event"],
   ["status"] = L["Status"],
-  ["stateupdate"] = L["Trigger State Updater"]
+  ["stateupdate"] = L["Trigger State Updater (Advanced)"]
 }
 
 WeakAuras.eventend_types = {
@@ -1334,6 +1372,33 @@ LSM:Register("sound", "Torch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Tor
 LSM:Register("sound", "Warning Siren", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\WarningSiren.ogg")
 LSM:Register("sound", "Lich King Apocalypse", "Sound\\Creature\\LichKing\\IC_Lich King_Special01.ogg")
 
+LSM:Register("sound", "Voice: Adds", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Adds.ogg")
+LSM:Register("sound", "Voice: Boss", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Boss.ogg")
+LSM:Register("sound", "Voice: Circle", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Circle.ogg")
+LSM:Register("sound", "Voice: Cross", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Cross.ogg")
+LSM:Register("sound", "Voice: Diamond", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Diamond.ogg")
+LSM:Register("sound", "Voice: Don't Release", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\DontRelease.ogg")
+LSM:Register("sound", "Voice: Empowered", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Empowered.ogg")
+LSM:Register("sound", "Voice: Focus", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Focus.ogg")
+LSM:Register("sound", "Voice: Idiot", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Idiot.ogg")
+LSM:Register("sound", "Voice: Left", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Left.ogg")
+LSM:Register("sound", "Voice: Moon", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Moon.ogg")
+LSM:Register("sound", "Voice: Next", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Next.ogg")
+LSM:Register("sound", "Voice: Portal", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Portal.ogg")
+LSM:Register("sound", "Voice: Protected", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Protected.ogg")
+LSM:Register("sound", "Voice: Release", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Release.ogg")
+LSM:Register("sound", "Voice: Right", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Right.ogg")
+LSM:Register("sound", "Voice: Run Away", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\RunAway.ogg")
+LSM:Register("sound", "Voice: Skull", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Skull.ogg")
+LSM:Register("sound", "Voice: Spread", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Spread.ogg")
+LSM:Register("sound", "Voice: Square", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Square.ogg")
+LSM:Register("sound", "Voice: Stack", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Stack.ogg")
+LSM:Register("sound", "Voice: Star", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Star.ogg")
+LSM:Register("sound", "Voice: Switch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Switch.ogg")
+LSM:Register("sound", "Voice: Taunt", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Taunt.ogg")
+LSM:Register("sound", "Voice: Triangle", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Triangle.ogg")
+
+
 if(WeakAuras.PowerAurasSoundPath ~= "") then
   LSM:Register("sound", "Aggro", WeakAuras.PowerAurasSoundPath.."aggro.ogg")
   LSM:Register("sound", "Arrow Swoosh", WeakAuras.PowerAurasSoundPath.."Arrow_swoosh.ogg")
@@ -1434,10 +1499,50 @@ WeakAuras.cooldown_progress_behavior_types = {
   showAlways = L["Always"]
 }
 
+WeakAuras.cooldown_types = {
+  auto = L["Auto"],
+  charges = L["Charges"],
+  cooldown = L["Cooldown"]
+}
+
 WeakAuras.bufftrigger_progress_behavior_types = {
   showOnActive = L["Buffed/Debuffed"],
   showOnMissing = L["Missing"],
   showAlways= L["Always"]
+}
+
+WeakAuras.bufftrigger_2_progress_behavior_types = {
+  showOnActive = L["Aura(s) Found"],
+  showOnMissing = L["Aura(s) Missing"],
+  showAlways = L["Always"],
+  showOnMatches = L["Match Count"]
+}
+
+WeakAuras.bufftrigger_2_preferred_match_types =
+{
+  showLowest = L["Least remaining time"],
+  showHighest = L["Most remaining time"]
+}
+
+WeakAuras.bufftrigger_2_combine_types = {
+  showLowest = L["Show lowest time left"],
+  showHighest = L["Show longest time left"],
+  showClones = L["Show all Matches"]
+}
+
+WeakAuras.bufftrigger_2_per_unit_mode = {
+  affected = L["Affected"],
+  unaffected = L["Unaffected"],
+  all = L["All"]
+}
+
+WeakAuras.bufftrigger_2_combine_group_types = {
+  showLowest = L["Show lowest time left over all units"],
+  showHighest = L["Show longest time left over all units"],
+  showClones = L["Show all Matches from all Units"],
+  showLowestPerUnit = L["Show lowest time left per unit"],
+  showHighestPerUnit = L["Show longest time left per unit"],
+  showCombineAll = L["Combine all matches"],
 }
 
 WeakAuras.item_slot_types = {
@@ -1499,6 +1604,7 @@ WeakAuras.mythic_plus_affixes = {
   [13] = true,
   [14] = true,
   [16] = true,
+  [117] = true -- Reaping
 }
 
 for k in pairs(WeakAuras.mythic_plus_affixes) do
@@ -1521,50 +1627,62 @@ WeakAuras.update_categories = {
       "fontSize",
       "scale",
     },
+    default = false,
     label = L["Size & Position"],
+  },
+  {
+    name = "userconfig",
+    fields = {"config"},
+    default = false,
+    label = L["Custom Configuration"],
   },
   {
     name = "name",
     fields = {"id"},
+    default = true,
     label = L["Aura Names"],
   },
   {
     name = "display",
     fields = {},
+    default = true,
     label = L["Display"],
   },
   {
     name = "trigger",
-    fields = {
-      "trigger",
-      "untrigger",
-      "disjunctive",
-      "additional_triggers",
-      "activeTriggerMode",
-      "numTriggers",
-      "customTriggerLogic"
-    },
+    fields = {"triggers"},
+    default = true,
     label = L["Trigger"],
   },
   {
     name = "conditions",
     fields = {"conditions"},
+    default = true,
     label = L["Conditions"],
   },
   {
     name = "load",
     fields = {"load"},
+    default = true,
     label = L["Load Conditions"],
   },
   {
     name = "action",
     fields = {"actions"},
+    default = true,
     label = L["Actions"],
   },
   {
     name = "animation",
     fields = {"animation"},
+    default = true,
     label = L["Animations"],
+  },
+  {
+    name = "authoroptions",
+    fields = {"authorOptions"},
+    default = true,
+    label = L["Author Options"]
   },
   {
     name = "arrangement",
@@ -1580,16 +1698,19 @@ WeakAuras.update_categories = {
       "constantFactor",
       "hybridSortMode",
     },
+    default = true,
     label = L["Group Arrangement"],
   },
   {
     name = "oldchildren",
     fields = {},
+    default = true,
     label = L["Remove Obsolete Auras"],
   },
   {
     name = "newchildren",
     fields = {},
+    default = true,
     label = L["Add Missing Auras"],
   },
   {
@@ -1599,6 +1720,7 @@ WeakAuras.update_categories = {
       "desc",
       "version",
     },
+    default = true,
     label = L["Meta Data"],
   },
 }
@@ -1611,24 +1733,29 @@ WeakAuras.internal_fields = {
   sortHybridTable = true,
   expanded = true,
   parent = true,
-  init_started = true,
+  authorMode = true,
+  skipWagoUpdate = true,
+  ignoreWagoUpdate = true
 }
 
 WeakAuras.data_stub = {
   -- note: this is the minimal data stub which prevents false positives in WeakAuras.diff upon reimporting an aura.
   -- pending a refactor of other code which adds unnecessary fields, it is possible to shrink it
-  trigger = {
-    type = "aura",
-    names = {},
-    event = "Health",
-    subeventPrefix = "SPELL",
-    subeventSuffix = "_CAST_START",
-    spellIds = {},
-    unit = "player",
-    debuffType = "HELPFUL",
+  triggers = {
+    {
+      trigger = {
+        type = "aura2",
+        names = {},
+        event = "Health",
+        subeventPrefix = "SPELL",
+        subeventSuffix = "_CAST_START",
+        spellIds = {},
+        unit = "player",
+        debuffType = "HELPFUL",
+      },
+      untrigger = {},
+    },
   },
-  numTriggers = 1,
-  untrigger = {},
   load = {
     size = {
       multi = {},
@@ -1660,5 +1787,163 @@ WeakAuras.data_stub = {
     },
   },
   conditions = {},
+  config = {},
+  authorOptions = {},
 }
 
+WeakAuras.author_option_types = {
+  toggle = L["Toggle"],
+  input = L["String"],
+  number = L["Number"],
+  range = L["Slider"],
+  description = L["Description"],
+  color = L["Color"],
+  select = L["Dropdown Menu"],
+  space = L["Space"],
+  multiselect = L["Toggle List"],
+  header = L["Separator"],
+}
+
+WeakAuras.author_option_fields = {
+  common = {
+    type = true,
+    name = true,
+    useDesc = true,
+    desc = true,
+    key = true,
+    width = true,
+  },
+  number = {
+    min = 0,
+    max = 1,
+    step = .05,
+    default = 0,
+  },
+  range = {
+    min = 0,
+    max = 1,
+    step = .05,
+    default = 0,
+    step = .05,
+  },
+  input = {
+    default = "",
+    useLength = false,
+    length = 10,
+  },
+  toggle = {
+    default = false,
+  },
+  description = {
+    text = "",
+    fontSize = "medium",
+  },
+  color = {
+    default = {1, 1, 1, 1},
+  },
+  select = {
+    values = {"val1"},
+    default = 1,
+  },
+  space = {
+    variableWidth = true,
+    useHeight = false,
+    height = 1,
+  },
+  multiselect = {
+    default = {true},
+    values = {"val1"},
+  },
+  header = {
+    useName = false,
+    text = "",
+  },
+}
+
+WeakAuras.difficulty_info = {
+  [1] = {
+    size = "party",
+    difficulty = "normal",
+  },
+  [2] = {
+    size = "party",
+    difficulty = "heroic",
+  },
+  [3] = {
+    size = "ten",
+    difficulty = "normal",
+  },
+  [4] = {
+    size = "twentyfive",
+    difficulty = "normal",
+  },
+  [5] = {
+    size = "ten",
+    difficulty = "heroic",
+  },
+  [6] = {
+    size = "twentyfive",
+    difficulty = "heroic",
+  },
+  [7] = {
+    size = "twentyfive",
+    difficulty = "lfr",
+  },
+  [8] = {
+    size = "party",
+    difficulty = "challenge",
+  },
+  [9] = {
+    size = "fortyman",
+    difficulty = "normal",
+  },
+  [11] = {
+    size = "scenario",
+    difficulty = "heroic",
+  },
+  [12] = {
+    size = "scenario",
+    difficulty = "normal",
+  },
+  nil, -- 13 is unused
+  [14] = {
+    size = "flexible",
+    difficulty = "normal",
+  },
+  [15] = {
+    size = "flexible",
+    difficulty = "heroic",
+  },
+  [16] = {
+    size = "twenty",
+    difficulty = "mythic",
+  },
+  [17] = {
+    size = "flexible",
+    difficulty = "lfr",
+  },
+  [23] = {
+    size = "party",
+    difficulty = "mythic",
+  },
+  [24] = {
+    size = "party",
+    difficulty = "timewalking",
+  },
+  [33] = {
+    size = "flexible",
+    difficulty = "timewalking",
+  },
+}
+
+WeakAuras.glow_types = {
+  ACShine = L["Autocast Shine"],
+  Pixel = L["Pixel Glow"],
+  buttonOverlay = L["Action Button Glow"],
+}
+
+WeakAuras.font_sizes = {
+  small = L["Small"],
+  medium = L["Medium"],
+  large = L["Large"],
+}

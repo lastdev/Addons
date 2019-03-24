@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CoreManifest.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CoreManifest.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -87,7 +87,7 @@ end
 lib.CoreFileCheckIn("CoreManifest") -- check CoreManifest in as early as possible
 
 -- Version checking
-lib.Version="7.7.6112";
+lib.Version="8.1.6201";
 if lib.Version:byte(1) == 60 then -- 60 = '<'
 	lib.Version = DEV_VERSION
 end
@@ -282,5 +282,5 @@ function lib.ValidateInstall()
 end
 
 
-lib.RegisterRevision("$URL: Auc-Advanced/CoreManifest.lua $", "$Rev: 6112 $")
+lib.RegisterRevision("$URL: Auc-Advanced/CoreManifest.lua $", "$Rev: 6201 $")
 lib.CoreFileCheckOut("CoreManifest")

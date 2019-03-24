@@ -210,7 +210,7 @@
 	</Frame>
 
 	<!-- These two frames add to X-Perl UnitFrames. If X-Perl not loaded, then WoW will just ignore these without error -->
-	<Button name="XPerl_Player_TargettingFrame" parent="XPerl_Player" enableMouse="true" text="0" hidden="true">
+	<Button name="XPerl_Player_TargettingFrame" enableMouse="true" text="0" hidden="true">
 		<Size>
 			<AbsDimension x="27" y="20"/>
 		</Size>
@@ -219,13 +219,13 @@
 		<HighlightTexture file="Interface\Addons\ZPerl\Images\XPerl_Highlight" alphaMode="ADD">
 			<TexCoords left="0" right="0.25" top="0" bottom="0.5"/>
 		</HighlightTexture>
-		<Anchors>
+		<!--<Anchors>
 			<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="XPerl_PlayerportraitFrame">
 				<Offset>
 					<AbsDimension x="2" y="-19"/>
 				</Offset>
 			</Anchor>
-		</Anchors>
+		</Anchors>-->
 		<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
 				<AbsValue val="16"/>
@@ -239,6 +239,10 @@
 		</Backdrop>
 		<Scripts>
 			<OnLoad>
+				if IsAddOnLoaded("ZPerl_Player") then
+					self:SetParent(XPerl_Player)
+					self:SetPoint("TOPRIGHT", XPerl_PlayerportraitFrame, "TOPLEFT", 2, -19)
+				end
 				if (XPerl_RegisterUnitText) then
 					XPerl_RegisterUnitText(self)
 				end

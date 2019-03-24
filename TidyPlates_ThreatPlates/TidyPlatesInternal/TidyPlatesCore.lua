@@ -69,7 +69,7 @@ local RaidIconCoordinate = {
 }
 
 -- Constants
-local CASTBAR_FLASH_DURATION = 1.2
+local CASTBAR_INTERRUPT_HOLD_TIME = 1
 --local CASTBAR_FLASH_MIN_ALPHA = 0.4
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -548,11 +548,22 @@ do
 
 	-- UpdateIndicator_RaidIcon
 	function UpdateIndicator_RaidIcon()
+--    if unit.isMarked and RaidIconCoordinate[unit.raidIcon] == nil then
+--      ThreatPlates.DEBUG("UpdateIndicator_RaidIcon:", unit.unitid, "- isMarked:", unit.isMarked, "/ raidIcon:", unit.raidIcon)
+--      ThreatPlates.DEBUG("UpdateIndicator_RaidIcon: RaidIconCoordinate:", RaidIconCoordinate[unit.raidIcon])
+--    end
+
 		if unit.isMarked and style.raidicon.show then
-			visual.raidicon:Show()
-			local iconCoord = RaidIconCoordinate[unit.raidIcon]
-			visual.raidicon:SetTexCoord(iconCoord.x, iconCoord.x + 0.25, iconCoord.y,  iconCoord.y + 0.25)
-		else visual.raidicon:Hide() end
+      local iconCoord = RaidIconCoordinate[unit.raidIcon]
+      if iconCoord then
+        visual.raidicon:Show()
+        visual.raidicon:SetTexCoord(iconCoord.x, iconCoord.x + 0.25, iconCoord.y,  iconCoord.y + 0.25)
+      else
+        visual.raidicon:Hide()
+      end
+		else
+      visual.raidicon:Hide()
+    end
 	end
 
 
@@ -1003,10 +1014,10 @@ do
           castbar:SetValue(max_val)
           local color = TidyPlatesThreat.db.profile.castbarColorInterrupted
           castbar:SetStatusBarColor(color.r, color.g, color.b, color.a)
-          castbar.FlashTime = CASTBAR_FLASH_DURATION
-          castbar:Show() -- OnStopCasting is hiding the castbar and triggered before SPELL_INTERRUPT, so we have to show the castbar again
-          --castbar:SetAllColors(1, 0, 1, 1, 0, 0, 0, 1)
-          --castbar.Flash:Play()
+          castbar.FlashTime = CASTBAR_INTERRUPT_HOLD_TIME
+          -- OnStopCasting is hiding the castbar and may be triggered before or after SPELL_INTERRUPT
+          -- So we have to show the castbar again or not hide it if the interrupt message should still be shown.
+          castbar:Show()
         end
       end
     end

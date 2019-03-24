@@ -39,6 +39,8 @@ OVERACHIEVER_STRINGS = {
 
 	ACH_WELLREAD_INCOMPLETE = "Needs to be read";
 	ACH_WELLREAD_COMPLETE = "Already read";
+	ACH_EATYOURGREENS_INCOMPLETE = "Need to eat";
+	ACH_EATYOURGREENS_COMPLETE = "Already eaten";
 
 	ACH_ANGLER_INCOMPLETE = "Need to fish";
 	ACH_ANGLER_COMPLETE = "Already fished";
@@ -65,6 +67,13 @@ School of %s
 
 	ACH_CONSUME_91_INCOMPLETE = "I dare you to eat 91 all at once!";
 	ACH_CONSUME_91_COMPLETE = "Gluttony already proven"; --"1000% Satisfied";
+
+	ACH_ACQUIRE_INCOMPLETE = "Need to acquire";
+	ACH_ACQUIRE_COMPLETE = "Already acquired";
+	ACH_ACQUIRE_INCOMPLETE_EXTRA = "Haven't acquired";
+
+	ACH_MISSIONCOMPLETE_INCOMPLETE = "Need to complete";
+	ACH_MISSIONCOMPLETE_COMPLETE = "Previously completed";
 
 	ACH_LETITSNOW_INCOMPLETE = "Need to use Handful of Snowflakes";
 	ACH_LETITSNOW_COMPLETE = "Already used Handful of Snowflakes";
@@ -146,6 +155,9 @@ School of %s
 	OPT_PESTCONTROLTIPS_TIP = "If this achievement is incomplete, add a line to the tooltips of critters that are part of its criteria to indicate whether you still need to exterminate them.";
 	OPT_WELLREADTIPS = "Book read?";
 	OPT_WELLREADTIPS_TIP = "If the achievement is incomplete, add a line to the tooltips of books that are part of its criteria to indicate whether you need to read them.";
+	OPT_EATYOURGREENSTIPS = "Green eaten?";
+	OPT_EATYOURGREENSTIPS_TIP = "If the achievement is incomplete, add a line to the tooltips of plants in Nazmir that you need to eat.";
+
 	OPT_ANGLERTIPS = "Fishing node fished?";
 	OPT_ANGLERTIPS_TIP = "If the achievement is incomplete, add a line to the tooltips of fishing nodes that are part of its criteria to indicate whether you need to fish from them.";
 	OPT_ANGLERTIPS_TIP_ALWAYS = "Add a line to the tooltips of fishing nodes that are part of its criteria to indicate whether you need to fish from them.";
@@ -171,10 +183,16 @@ School of %s
 	OPT_SATISFIEDTIPS = "1000% Satisfied?";
 	OPT_SATISFIEDTIPS_TIP = "Add a line to the tooltips of items that are part the achievement's criteria to indicate whether you need to consume them.";
 
+	OPT_ACQUIREDTIPS = "Item acquired?";
+	OPT_ACQUIREDTIPS_TIP = "Add a line to the tooltips of items to indicate whether you need to acquire them for an achievement.";
+
+	OPT_MISSIONCOMPLETE = "Mission completed?";
+	OPT_MISSIONCOMPLETE_TIP = "Add a line to the tooltips of missions to indicate whether you need to complete them for an achievement.";
+
 	OPT_LABEL_NEEDTOKILL = 'Kill Creature Achievements ("%s," "%s," etc.)';
 	OPT_KILLCREATURETIPS = "Creature killed?";
-	OPT_KILLCREATURETIPS_TIP = "Add a line to the tooltips of creatures (excluding critters) that need to be killed to meet the criteria of an incomplete achievement indicating whether you still need to kill them.";
-	OPT_KILLCREATURETIPS_TIP2 = "Note: At startup (or when this is option is enabled), every achievement is scanned to find unit IDs. Not all achievements provide such IDs. Most do, but the tooltips of creatures which are the criteria of those that don't won't be altered by this option.";
+	OPT_KILLCREATURETIPS_TIP = "Add a line to the tooltips of creatures (excluding critters) indicating whether you need to kill them for an incomplete achievement.";
+	OPT_KILLCREATURETIPS_TIP2 = "|nNote: This relies on achievements providing mob IDs. Many kill-achievements do, but not all. Creatures needed for those that don't will not have updated tooltips, with a few exceptions where the data has been manually entered into Overachiever.";
 
 	OPT_KILLCREATURETIPS_EXCLUDE_GUILD = "Exclude guild achievements";
 
@@ -277,6 +295,12 @@ end
 
 if (locale == "deDE") then  -- German
 -- Thanks to users Svensn and Farook at wowinterface.com for many of these translations:
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "Bereits geangelt"
 L["ACH_ANGLER_COUNT"] = [=[9455=Ein Schwarm Feuerammoniten
 9456=Ein Schwarm ölige Tiefseeschluckaale,Ein Schwarm ölige Tiefseeschluckaale
@@ -304,6 +328,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "Handvoll Schneeflocken bereits angewendet"
 L["ACH_LETITSNOW_INCOMPLETE"] = "Handvoll Schneeflocken noch anzuwenden"
 L["ACH_LOVECRITTERS_COMPLETE"] = "Wurde bereits geliebt"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Braucht etwas /liebe"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Bereits mit Federn beschossen"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Noch mit Federn zu beschießen"
 L["ACH_WELLREAD_COMPLETE"] = "Bereits gelesen"
@@ -341,6 +369,10 @@ L["MSG_ONEFOUND"] = "1 weiterer Erfolg gefunden: "
 L["MSG_OPENINGTO"] = "Öffnen nach: "
 L["MULTI_NEED"] = "%s (Benötigt für %s Errungenschaften)"
 L["OPT_ACHUNKNOWN"] = "<Unbekannt>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "Fischschwarm geangelt?"
 L["OPT_ANGLERTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Fischschwarms der Hinweis angezeigt, ob er für den Erfolg noch geangelt werden muss."
 L["OPT_ANGLERTIPS_TIP_ALWAYS"] = "Fügt eine Zeile in den Tooltips von noch zu angelnden Fischschwärmen ein, die zu den Kriterien des Erfolgs gehören."
@@ -393,6 +425,10 @@ L["OPT_LABEL_TRACKING"] = "Erfolg: Verfolgung"
 L["OPT_LABEL_TRADESKILLUI"] = "Berufe UI Modifikationen"
 L["OPT_LETITSNOWTIPS"] = "Handvoll Schneeflocken angewendet?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Spielers der Hinweis angezeigt, ob bei seinem Volk bzw. Klasse noch eine Handvoll Schneeflocken angewendet werden muss."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Ungeziefer getötet?"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Wenn dieser Erfolg noch nicht abgeschlossen ist, wird im Tooltip des Ungeziefers angezeigt, ob es noch getötet werden muss."
 L["OPT_SATISFIEDTIPS"] = "1000% zufriedengestellt?"
@@ -498,6 +534,12 @@ L["YOURPROGRESS"] = "Dein Fortschritt"
 
 elseif (locale == "frFR") then  -- French
 -- Thanks to Atropyne (EU-Garona) for many of these translations:
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "Déjà pêché"
 --[[Translation missing --]]
 --[[ L["ACH_ANGLER_COUNT"] = ""--]] 
@@ -518,6 +560,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "A déjà reçu une Poignée de flocons de neige"
 L["ACH_LETITSNOW_INCOMPLETE"] = "Doit lancer une Poignée de flocons de neige"
 L["ACH_LOVECRITTERS_COMPLETE"] = "A déjà reçu de l' /amour"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "A besoin d' /amour"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Déjà Dindonisé"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Doit être Dindonisé"
 L["ACH_WELLREAD_COMPLETE"] = "Déjà lu"
@@ -527,34 +573,20 @@ L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Ouvrir l'onglet des suggestion
 L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Ouvre l'onglet de suivi"
 L["COMPLETEDATE"] = "Accompli le %1$d/%2$02d/%3$02d"
 L["CRITTER"] = "Bestiole"
---[[Translation missing --]]
---[[ L["HOLIDAY_BREWFEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_CHILDRENSWEEK"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_DARKMOONFAIRE"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_DAYOFTHEDEAD"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_HALLOWSEND"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_LOVEISINTHEAIR"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_LUNARFESTIVAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_MIDSUMMER"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_MIDSUMMER_SHORT"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_NOBLEGARDEN"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_PIGRIMSBOUNTY"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_PIRATESDAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_WINTERVEIL"] = ""--]] 
---[[Translation missing --]]
---[[ L["HOLIDAY_WINTERVEIL_SHORT"] = ""--]] 
+L["HOLIDAY_BREWFEST"] = "Fête des Brasseurs"
+L["HOLIDAY_CHILDRENSWEEK"] = "Semaine des enfants"
+L["HOLIDAY_DARKMOONFAIRE"] = "Foire de Sombrelune"
+L["HOLIDAY_DAYOFTHEDEAD"] = "Jour des morts"
+L["HOLIDAY_HALLOWSEND"] = "Sanssaint"
+L["HOLIDAY_LOVEISINTHEAIR"] = "De l'amour dans l'air"
+L["HOLIDAY_LUNARFESTIVAL"] = "Fête lunaire"
+L["HOLIDAY_MIDSUMMER"] = "Fête du Feu du solstice d'été"
+L["HOLIDAY_MIDSUMMER_SHORT"] = "Solstice d'été"
+L["HOLIDAY_NOBLEGARDEN"] = "Le Jardin des nobles"
+L["HOLIDAY_PIGRIMSBOUNTY"] = "Les Bienfaits du pèlerin"
+L["HOLIDAY_PIRATESDAY"] = "Jour des pirates"
+L["HOLIDAY_WINTERVEIL"] = "Voile d'hiver"
+L["HOLIDAY_WINTERVEIL_SHORT"] = "Voile d'hiver"
 L["INCOMPLETE"] = "Inachevés"
 L["KILL_COMPLETE"] = "Déjà tué"
 L["KILL_INCOMPLETE"] = "Doit tuer"
@@ -573,6 +605,10 @@ L["MSG_OPENINGTO"] = "Ouverture de : "
 --[[Translation missing --]]
 --[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<Inconnu>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "Ajoute à l'infobulle d'un banc de poisson s'il a déjà été pêché"
 L["OPT_ANGLERTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des bancs de poissons concernés pour indiquer si vous devez y pêcher."
 --[[Translation missing --]]
@@ -613,8 +649,7 @@ L["OPT_DRAGSAVE"] = "Sauver la position"
 L["OPT_FISTFULOFLOVETIPS"] = "Vous signale si vous avez besoin de lancer une Poignée de pétales de rose"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des joueurs des combinaisons race/classe concernées pour vous indiquer si vous devez utiliser une Poignée de pétales de rose sur eux."
 L["OPT_KILLCREATURETIPS"] = "Ajoute si vous devez tuer une créature"
---[[Translation missing --]]
---[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
+L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Exclure les hauts faits de guilde"
 L["OPT_KILLCREATURETIPS_TIP"] = "Ajoute une ligne à l'infobulle des créatures (hormis les bestioles) qui doivent être tuées pour atteindre l'objectif d'un haut fait inachevé pour indiquer si vous devez encore les tuer."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note : Au démarrage (ou lorsque cette option est activée) tous les hauts faits sont analysés afin de découvrir les IDs des \"unités\". Ils n'en fournissent pas tous. La plupart le font, mais les infobulles des créatures concernées par ceux qui ne le font pas ne seront pas affectées par cette option."
 --[[Translation missing --]]
@@ -630,8 +665,7 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" et \"%s\""
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modifications de l'IU principale des Hauts faits"
---[[Translation missing --]]
---[[ L["OPT_LABEL_MISC"] = ""--]] 
+L["OPT_LABEL_MISC"] = "Divers"
 L["OPT_LABEL_NEEDTOKILL"] = "Hauts faits d'élimination de monstres (\"%s,\" \"%s,\" etc.)"
 L["OPT_LABEL_SEASONALACHS"] = "SAISON ACHEVÉES"
 --[[Translation missing --]]
@@ -641,6 +675,10 @@ L["OPT_LABEL_TRACKING"] = "Suivi des haut faits"
 L["OPT_LABEL_TRADESKILLUI"] = "Modifications de l'UI des professions"
 L["OPT_LETITSNOWTIPS"] = "Vous signale si vous avez besoin de lancer une Poignée de flocons de neige"
 L["OPT_LETITSNOWTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à l'infobulle des joueurs des combinaisons de race/classe concernées pour vous indiquer si vous devez utiliser une Poignée de flocons de neige sur eux."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Ajoute à l'infobulle des nuisibles si vous les avez déjà exterminés"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Si ce haut fait est inachevé, ajoute une ligne à l'infobulle des nuisibles concernés pour indiquer si vous devez encore les exterminer."
 L["OPT_SATISFIEDTIPS"] = "Satisfait à 1000% ?"
@@ -730,12 +768,10 @@ L["OPT_WELLREADTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne dan
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Rappel des info-bulles"
 --[[Translation missing --]]
 --[[ L["OVERACHIEVER_INSTALLED_MSG"] = ""--]] 
---[[Translation missing --]]
---[[ L["OVERACHIEVER_INSTALLED_TOAST"] = ""--]] 
+L["OVERACHIEVER_INSTALLED_TOAST"] = "OVERACHIEVER INSTALLÉ !"
 --[[Translation missing --]]
 --[[ L["OVERACHIEVER_UPDATED_MSG"] = ""--]] 
---[[Translation missing --]]
---[[ L["OVERACHIEVER_UPDATED_TOAST"] = ""--]] 
+L["OVERACHIEVER_UPDATED_TOAST"] = "MISE À JOUR D'OVERACHIEVER !"
 L["PROGRESS"] = "Progression"
 --[[Translation missing --]]
 --[[ L["PROGRESSIFOTHERCOMPLETED"] = ""--]] 
@@ -790,6 +826,12 @@ L["YOURPROGRESS"] = "Votre progression"
 
 elseif (locale == "zhTW") then  -- Traditional Chinese
 -- Thanks to user xyrho at wowinterface.com and laincat at curse.com for many of these translations:
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "已釣過"
 --[[Translation missing --]]
 --[[ L["ACH_ANGLER_COUNT"] = ""--]] 
@@ -812,6 +854,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "已用過一捧雪花"
 L["ACH_LETITSNOW_INCOMPLETE"] = "需使用一捧雪花"
 L["ACH_LOVECRITTERS_COMPLETE"] = "已 /愛 過"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "需要 /愛"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "已經使用過火雞獵槍"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "需要使用火雞獵槍"
 L["ACH_WELLREAD_COMPLETE"] = "已讀過"
@@ -867,6 +913,10 @@ L["MSG_OPENINGTO"] = "開啟："
 --[[Translation missing --]]
 --[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<未知>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "提示魚點是否釣過？"
 L["OPT_ANGLERTIPS_TIP"] = "如果成就有缺少，新增一行提示到魚點的標準說明從任何你需要來釣魚的魚點。"
 --[[Translation missing --]]
@@ -925,6 +975,10 @@ L["OPT_LABEL_TRACKING"] = "成就追蹤"
 L["OPT_LABEL_TRADESKILLUI"] = "專業視窗微調"
 L["OPT_LETITSNOWTIPS"] = "提示是否需要使用一捧雪花？"
 L["OPT_LETITSNOWTIPS_TIP"] = "如果成就尚未完成，在適當種族與職業組合玩家的提示訊息中提示你是否需要使用一捧雪花。"
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "顯示是否需要擊殺害蟲的提示"
 L["OPT_PESTCONTROLTIPS_TIP"] = "如果這個成就尚未完成，在那些害蟲的提示訊息中提示你是否需要擊殺牠們。"
 L["OPT_SATISFIEDTIPS"] = "1000%滿足?"
@@ -1054,6 +1108,9 @@ L["YOURPROGRESS"] = "你的進度"
 
 elseif (locale == "zhCN") then  -- Simplified Chinese
 -- Thanks to user Miste(晨光麦) at wowinterface.com and yeah-chen and chrisccc at curse.com for many of these translations:
+L["ACH_ACQUIRE_COMPLETE"] = "已获得"
+L["ACH_ACQUIRE_INCOMPLETE"] = "需要获得"
+L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = "未获得"
 L["ACH_ANGLER_COMPLETE"] = "已钓过"
 --[[Translation missing --]]
 --[[ L["ACH_ANGLER_COUNT"] = ""--]] 
@@ -1074,6 +1131,8 @@ L["ACH_LETITSNOW_COMPLETE"] = "已使用过一捧雪花"
 L["ACH_LETITSNOW_INCOMPLETE"] = "需要使用一捧雪花"
 L["ACH_LOVECRITTERS_COMPLETE"] = "已 /爱 过"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "需要 /爱"
+L["ACH_MISSIONCOMPLETE_COMPLETE"] = "此前已完成"
+L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "需要完成"
 L["ACH_TURKEYLURKEY_COMPLETE"] = "已使用过火鸡枪"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "需要使用火鸡枪"
 L["ACH_WELLREAD_COMPLETE"] = "已读过"
@@ -1104,15 +1163,16 @@ L["MSG_ACHNOTFOUND"] = "找不到该成就。"
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00成就进度:|r %s (%s)"
 L["MSG_INVALIDID"] = "无效输入：没有此成就ID。"
 L["MSG_NAMENOTFOUND"] = "找不到含有 \"|cffffffff%s|r\" 的成就。"
---[[Translation missing --]]
---[[ L["MSG_NOOPEN"] = ""--]] 
---[[Translation missing --]]
---[[ L["MSG_NOOPEN_LIST"] = ""--]] 
+L["MSG_NOOPEN"] = "无法打开至一项成就。在UI中无可见的。"
+L["MSG_NOOPEN_LIST"] = "%s |4成就：成就；已找到："
 L["MSG_NUMFOUNDLIST"] = "另外找到%s项成就："
 L["MSG_ONEFOUND"] = "找到1项成就："
 L["MSG_OPENINGTO"] = "开启："
 L["MULTI_NEED"] = "%s (还需要 %s 成就)"
 L["OPT_ACHUNKNOWN"] = "<未知>"
+L["OPT_ACQUIREDTIPS"] = "获得物品？"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "提示渔点是否钓过"
 L["OPT_ANGLERTIPS_TIP"] = "提示渔点是否钓过。"
 --[[Translation missing --]]
@@ -1145,8 +1205,7 @@ L["OPT_DRAGSAVE"] = "记住位置"
 L["OPT_FISTFULOFLOVETIPS"] = "提示是否需要使用一堆玫瑰花瓣"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "提示是否需要使用一堆玫瑰花瓣。"
 L["OPT_KILLCREATURETIPS"] = "新增需要杀死的怪物"
---[[Translation missing --]]
---[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
+L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "排除公会成就"
 L["OPT_KILLCREATURETIPS_TIP"] = "新增需要杀死的怪物提示（不包括小动物）。"
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note: At startup (or when this is option is enabled), every achievement is scanned to find unit IDs. Not all achievements provide such IDs. Most do, but the tooltips of creatures which are the criteria of those that don't won't be altered by this option."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -1158,8 +1217,7 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\"和\"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "进度反馈 (非跟踪)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" 子成就"
 L["OPT_LABEL_MAINUI"] = "主成就界面修改"
---[[Translation missing --]]
---[[ L["OPT_LABEL_MISC"] = ""--]] 
+L["OPT_LABEL_MISC"] = "杂项"
 L["OPT_LABEL_NEEDTOKILL"] = "击杀怪物成就（\"%s\"、\"%s\"及其它）"
 L["OPT_LABEL_SEASONALACHS"] = "节日成就"
 L["OPT_LABEL_STARTTOAST"] = "节日/事件庆典"
@@ -1168,6 +1226,10 @@ L["OPT_LABEL_TRACKING"] = "成就追踪"
 L["OPT_LABEL_TRADESKILLUI"] = "专业技能窗口修改"
 L["OPT_LETITSNOWTIPS"] = "提示是否需要使用一捧雪花"
 L["OPT_LETITSNOWTIPS_TIP"] = "提示是否需要使用一捧雪花。"
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "提示是否需要击杀害虫"
 L["OPT_PESTCONTROLTIPS_TIP"] = "提示是否需要击杀害虫。"
 L["OPT_SATISFIEDTIPS"] = "提示是否需要吃曲奇"
@@ -1194,8 +1256,7 @@ L["OPT_STARTTOAST_BONUS"] = "显示今日奖励事件"
 L["OPT_STARTTOAST_BONUS_TIP"] = "在进入游戏时，会以通知形式显示今天的奖励事件。"
 L["OPT_STARTTOAST_DUNGEON"] = "显示今天的地下城事件"
 L["OPT_STARTTOAST_DUNGEON_TIP"] = "在进入游戏时，显示今天的地下城事件。"
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_HOLIDAY"] = ""--]] 
+L["OPT_STARTTOAST_HOLIDAY"] = "显示今天的节日"
 --[[Translation missing --]]
 --[[ L["OPT_STARTTOAST_HOLIDAY_TIP"] = ""--]] 
 --[[Translation missing --]]
@@ -1211,8 +1272,7 @@ L["OPT_STARTTOAST_DUNGEON_TIP"] = "在进入游戏时，显示今天的地下城
 L["OPT_STARTTOAST_ONLYCLICKFADE"] = "需要点击隐藏"
 --[[Translation missing --]]
 --[[ L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
+L["OPT_STARTTOAST_PVPBRAWL"] = "显示今天的PvP乱斗"
 --[[Translation missing --]]
 --[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
 L["OPT_STARTTOAST_TIMEFADE"] = "不要自动隐藏"
@@ -1289,6 +1349,9 @@ L["YOURPROGRESS"] = "你的进度"
 
 elseif (locale == "ruRU") then  -- Russian
 -- Thanks to user Swix at wowinterface.com for many of these translations:
+L["ACH_ACQUIRE_COMPLETE"] = "Уже получено"
+L["ACH_ACQUIRE_INCOMPLETE"] = "Нужно получить"
+L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = "Не получено"
 L["ACH_ANGLER_COMPLETE"] = "Уже выловлено"
 L["ACH_ANGLER_COUNT"] = [=[9455=Косяк огненного аммонита
 9456=Косяк масляного глубинного угря-мешкорота,Косяк глубинного угря-мешкорота
@@ -1297,7 +1360,7 @@ L["ACH_ANGLER_COUNT"] = [=[9455=Косяк огненного аммонита
 9459=Косяк толстопузика
 9460=Косяк безротого скрытиуса
 9461=Косяк морских скорпионов,Косяк жирных морских скорпионов]=]
-L["ACH_ANGLER_INCOMPLETE"] = "Надо выловить"
+L["ACH_ANGLER_INCOMPLETE"] = "Нужно выловить"
 L["ACH_BUNNYMAKER_COMPLETE"] = "Весенние цветы уже использованы"
 L["ACH_BUNNYMAKER_INCOMPLETE"] = "Нужно использовать весенние цветы"
 L["ACH_CHECKYOURHEAD_COMPLETE"] = "Уже надевали тыкву на голову"
@@ -1316,13 +1379,15 @@ L["ACH_LETITSNOW_COMPLETE"] = "Горсть снежинок уже исполь
 L["ACH_LETITSNOW_INCOMPLETE"] = "Воспользуйтесь горстью снежинок"
 L["ACH_LOVECRITTERS_COMPLETE"] = "Уже /любите"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Выразите /любовь"
+L["ACH_MISSIONCOMPLETE_COMPLETE"] = "Уже выполнено"
+L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "Нужно выполнить"
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Уже расстрелян"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Нужно расстрелять"
 L["ACH_WELLREAD_COMPLETE"] = "Прочитано"
 L["ACH_WELLREAD_INCOMPLETE"] = "Нужно прочитать"
-L["BINDING_NAME_OVERACHIEVER_TAB_SEARCH"] = "Открыть вкладку поиска"
-L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Открыть вкладку предположений"
-L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Открывает закладку Наблюдений"
+L["BINDING_NAME_OVERACHIEVER_TAB_SEARCH"] = "Открыть вкладку \"Поиск\""
+L["BINDING_NAME_OVERACHIEVER_TAB_SUGGESTIONS"] = "Открыть вкладку \"Предположения\""
+L["BINDING_NAME_OVERACHIEVER_TAB_WATCH"] = "Открыть вкладку \"Наблюдение\""
 L["COMPLETEDATE"] = "Дата выполнения: %1$d/%2$02d/%3$02d"
 L["CRITTER"] = "Существо"
 L["HOLIDAY_BREWFEST"] = "Хмельной фестиваль"
@@ -1341,20 +1406,20 @@ L["HOLIDAY_WINTERVEIL"] = "Праздник Зимнего Покрова"
 L["HOLIDAY_WINTERVEIL_SHORT"] = "Зимний Покров"
 L["INCOMPLETE"] = "Не выполнено"
 L["KILL_COMPLETE"] = "Уже убит"
-L["KILL_INCOMPLETE"] = "Надо убить"
+L["KILL_INCOMPLETE"] = "Нужно убить"
 L["MSG_ACHNOTFOUND"] = "Достижение не найдено"
 L["MSG_CRITERIAPROGRESS"] = "|cff7eff00Прогресс достижения:|r %s (%s)"
 L["MSG_INVALIDID"] = "Неверный ввод: достижения с таким ID не существует."
 L["MSG_NAMENOTFOUND"] = "Достижений с названием, содержащим \"|cffffffff%s|r\", не существует."
---[[Translation missing --]]
---[[ L["MSG_NOOPEN"] = ""--]] 
---[[Translation missing --]]
---[[ L["MSG_NOOPEN_LIST"] = ""--]] 
+L["MSG_NOOPEN"] = "Не удалось открыть достижение. Не отображается в пользовательском интерфейсе."
+L["MSG_NOOPEN_LIST"] = "%s |4достижение:достижения; найдено:"
 L["MSG_NUMFOUNDLIST"] = "Ещё %s других достижений найдено:"
 L["MSG_ONEFOUND"] = "Найдено ещё одно достижение: "
 L["MSG_OPENINGTO"] = "Результат поиска: "
 L["MULTI_NEED"] = "%s (необходимы для %s достижениях)"
 L["OPT_ACHUNKNOWN"] = "<Неизвестно>"
+L["OPT_ACQUIREDTIPS"] = "Предмет приобретен?"
+L["OPT_ACQUIREDTIPS_TIP"] = "Добавить строку в подсказки предметов, чтобы указать, нужно ли их получить для достижения."
 L["OPT_ANGLERTIPS"] = "Отмечать посещённые места поклёвки в подсказках"
 L["OPT_ANGLERTIPS_TIP"] = "Если эти достижения не выполнены, во всплывающую подсказку к местам поклёвки будет добавляться строка, показывающая, ловили ли вы рыбу оттуда."
 L["OPT_ANGLERTIPS_TIP_ALWAYS"] = "Добавляет строку к подсказки, рыболовному косяку, которые являются частью его критериев, чтобы указать, нужна ли рыба от них."
@@ -1386,8 +1451,7 @@ L["OPT_DRAGSAVE"] = "Запомнить позицию"
 L["OPT_FISTFULOFLOVETIPS"] = "Добавляет, нужно ли вам использовать горсть розовых лепестков"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку игрокам, подходящих по расе/классу, будет добавлена строка, указывающая на необходимость использования горсти розовых лепестков."
 L["OPT_KILLCREATURETIPS"] = "Добавлять строку о необходимости убить существо"
---[[Translation missing --]]
---[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
+L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Исключить достижения гильдии"
 L["OPT_KILLCREATURETIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку существам (исключая спутников) добавится строка, уведомляющая о необходимости убить их."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Заметка: Вначале (или когда эта опция включена), каждое достижение сканируется на поиск Номера НПС. Не все достижения предоставляют правильные номера. Поэтому подсказки для существ, которые подходят по критериям, не будут отображаться этой опцией."
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
@@ -1399,8 +1463,7 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" и \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Прогресс Реакции (Без Отслеживания)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Cуб-Достижение"
 L["OPT_LABEL_MAINUI"] = "Модификации главного интерфейса достижений"
---[[Translation missing --]]
---[[ L["OPT_LABEL_MISC"] = ""--]] 
+L["OPT_LABEL_MISC"] = "Разное"
 L["OPT_LABEL_NEEDTOKILL"] = "Достижения по убийству существ (\"%s,\" \"%s,\" и т.д.)"
 L["OPT_LABEL_SEASONALACHS"] = "СЕЗОННЫЕ ДОСТИЖЕНИЯ"
 L["OPT_LABEL_STARTTOAST"] = "Праздник/Всплывающие Событие"
@@ -1409,6 +1472,8 @@ L["OPT_LABEL_TRACKING"] = "Отслеживание достижений"
 L["OPT_LABEL_TRADESKILLUI"] = "Изменения интерфейса профессии"
 L["OPT_LETITSNOWTIPS"] = "Добавляет, нужно ли вам использовать горсть снежинок"
 L["OPT_LETITSNOWTIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку игрокам будет добавляться строка, уведомляющая о необходимости использования горсти снежинок."
+L["OPT_MISSIONCOMPLETE"] = "Миссия завершена?"
+L["OPT_MISSIONCOMPLETE_TIP"] = "Добавить строку в подсказки миссий, чтобы указать, нужно ли выполнять их для достижения."
 L["OPT_PESTCONTROLTIPS"] = "Добавлять строку о необходимости убийства существа"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку существам будет добавляться строка, уведомляющая о необходимости убить данное существо."
 L["OPT_SATISFIEDTIPS"] = "1000% удовлетворены?"
@@ -1425,40 +1490,29 @@ L["OPT_SHOWPROGRESS"] = "Добавлять ваш прогресс"
 L["OPT_SHOWPROGRESS_OTHER"] = "Сравнивать прогресс в чужих ссылках"
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Добавлять ваш прогресс в информацию о достижениях других игроков."
 L["OPT_SHOWPROGRESS_TIP"] = "Добавлять ваш прогресс в достижения, основанные на количественном критерии, например, \"Соберите 10 питомцев\"."
---[[Translation missing --]]
---[[ L["OPT_SLASHSEARCH_TAB"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_SLASHSEARCH_TAB_TIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_SLASHSEARCH_TIP2"] = ""--]] 
-L["OPT_STARTTOAST_BONUS"] = "Показать сегодняшние бонус событие"
-L["OPT_STARTTOAST_BONUS_TIP"] = "Показать сегодняшние бонус событие в всплывающие уведомления при входе, в игровой мир."
-L["OPT_STARTTOAST_DUNGEON"] = "Показать сегодняшние подземелье событие"
-L["OPT_STARTTOAST_DUNGEON_TIP"] = "Показать сегодняшние событие подземелья в всплывающие уведомления при входе, в игровой мир."
+L["OPT_SLASHSEARCH_TAB"] = "Слэш-команды используют вкладку \"Поиск\""
+L["OPT_SLASHSEARCH_TAB_TIP"] = "Используйте вкладку \"Поиск\" для отображения результатов поиска из слэш-команд, таких как  \"/ach food \". Если этот флажок не установлен, результаты выводятся в журнал чата (если не используется команда \"/achs\")."
+L["OPT_SLASHSEARCH_TIP2"] = "|cffffffffНеобходим модуль вкладок с вкладкой Поиск.|r"
+L["OPT_STARTTOAST_BONUS"] = "Показать сегодняшние бонусные события"
+L["OPT_STARTTOAST_BONUS_TIP"] = "Показывает сегодняшние бонусные события в всплывающих уведомлениях при входе в игровой мир."
+L["OPT_STARTTOAST_DUNGEON"] = "Показать сегодняшние события \"Подземелья\""
+L["OPT_STARTTOAST_DUNGEON_TIP"] = "Показывает сегодняшние события \"Подземелья\" в всплывающих уведомлениях при входе в игровой мир."
 L["OPT_STARTTOAST_HOLIDAY"] = "Показать сегодняшние праздники"
-L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Показать сегодняшние праздники в всплывающие уведомления при входе, в игровой мир."
+L["OPT_STARTTOAST_HOLIDAY_TIP"] = "Показывает сегодняшние праздники в всплывающие уведомления при входе в игровой мир."
 L["OPT_STARTTOAST_MICROHOLIDAY"] = "Показать сегодняшние маленькие праздники"
-L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Показать сегодняшние маленькие праздники в всплывающие уведомления при входе, в игровой мир."
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_MISC"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_MISC_TIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_MISC_TIP2"] = ""--]] 
-L["OPT_STARTTOAST_ONLYCLICKFADE"] = "Требуется клик, чтобы скрыть"
+L["OPT_STARTTOAST_MICROHOLIDAY_TIP"] = "Показывает сегодняшние маленькие праздники в всплывающих уведомлениях при входе в игровой мир."
+L["OPT_STARTTOAST_MISC"] = "Показать сегодняшние разные праздники"
+L["OPT_STARTTOAST_MISC_TIP"] = "Показывает различные события \"Праздник\" в всплывающих уведомлениях при входе в игровой мир."
+L["OPT_STARTTOAST_MISC_TIP2"] = "Эти события, найденные в календаре по умолчанию, как  \"праздники\", но не считаются полными праздниками и не охвачены другой категорией, приведенной здесь. Примеры включают в себя годовщины WoW и дни релиза рейдов (для новых рейдов или сложностей, а не еженедельный сброс)."
+L["OPT_STARTTOAST_ONLYCLICKFADE"] = "Требовать нажатие чтобы скрыть"
 L["OPT_STARTTOAST_ONLYCLICKFADE_TIP"] = "Эти всплывающие уведомления не будут исчезать, если только левой или правой кнопкой, не кликните. (Если отключено, то они будут также исчезать, если мышь проходит над ними, и после пропадают.)"
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_PVPBRAWL"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_STARTTOAST_PVPBRAWL_TIP"] = ""--]] 
+L["OPT_STARTTOAST_PVPBRAWL"] = "Показать сегодняшнюю PvP потасовку"
+L["OPT_STARTTOAST_PVPBRAWL_TIP"] = "Показывает сегодняшнюю PvP потасовку в всплывающих уведомлениях при входе в игровой мир."
 L["OPT_STARTTOAST_TIMEFADE"] = "При отключенной функции, уведомление будут пропадать автоматически"
 L["OPT_STARTTOAST_TIMEFADE_TIP"] = "Предотвращает всплывающие уведомления, с которыми Вы не взаимодействуете, задержка исчезновения около нескольких секунд."
---[[Translation missing --]]
---[[ L["OPT_THROTTLE_ACHLOOKUP"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_THROTTLE_ACHLOOKUP_TIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = ""--]] 
+L["OPT_THROTTLE_ACHLOOKUP"] = "Запуск: Регулирование отслеживания достижений"
+L["OPT_THROTTLE_ACHLOOKUP_TIP"] = "Overachiever просматривает определенные данные при запуске. Если этот флажок не установлен, поиск выполняется во время загрузки пользовательского интерфейса. Если флажок установлен, данные собираются со временем после входа игрока в мир."
+L["OPT_THROTTLE_ACHLOOKUP_TIP2"] = "|nПреимуществом регулирования поиска является более быстрая начальная загрузка, но для некоторых пользователей и некоторых персонажей это может заметно повлиять на производительность в течение нескольких секунд в начале сеанса.|n|nЕсли |cffffffffмодуль Кэш|r включен, регулирование не улучшает время загрузки, если не требуется перестроить кэш. Кэш будет перестроен после того, как будет выпущена новая сборка WoW."
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING"] = "Отображает не приготовленные рецепты для завершения достижений"
 L["OPT_TRADESKILL_SHOWCOMPLETEDACH_COOKING_TIP"] = "Если торговый модуль Overachiever'а включен, иконка достижения появится рядом с рецептом, который необходимо приготовить для получения соответствующего достижения. Если эта опция включена, то иконки появляться рядом с еще не приготовленными рецептами даже если эти достижения завершены."
 L["OPT_TURKEYLURKEYTIPS"] = "Добавлять строку о необходимости использовать индейкомет"
@@ -1521,6 +1575,12 @@ L["YOURPROGRESS"] = "Ваш прогресс"
 
 
 elseif (locale == "koKR") then  -- Korean
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "낚시 완료"
 L["ACH_ANGLER_COUNT"] = [=[9455=화염 암모나이트 떼
 9456=심연 풍선장어 떼,기름투성이 심연 풍선장어 떼
@@ -1550,6 +1610,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "눈송이 한 줌 사용 완료"
 L["ACH_LETITSNOW_INCOMPLETE"] = "눈송이 한 줌 사용 필요"
 L["ACH_LOVECRITTERS_COMPLETE"] = "/사랑 완료"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "/사랑 필요"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "칠면조 사냥총 사용 완료"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "칠면조 사냥총 사용 필요"
 L["ACH_WELLREAD_COMPLETE"] = "독서 완료"
@@ -1589,6 +1653,10 @@ L["MSG_ONEFOUND"] = "1개의 다른 업적을 찾았습니다: "
 L["MSG_OPENINGTO"] = "열기: "
 L["MULTI_NEED"] = "%s (%s 업적에 필요)"
 L["OPT_ACHUNKNOWN"] = "<무엇인가>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "물고기 떼 낚시 표시"
 L["OPT_ANGLERTIPS_TIP"] = "업적을 완료하지 않은 경우 해당 물고기 떼에 마우스를 가져가면 툴팁에 낚시가 필요한 지 표시해줍니다."
 L["OPT_ANGLERTIPS_TIP_ALWAYS"] = "일부 물고기떼에서 낚시할 때 툴팁에 업적에 포함되는지 표시합니다."
@@ -1643,6 +1711,10 @@ L["OPT_LABEL_TRACKING"] = "업적 추적"
 L["OPT_LABEL_TRADESKILLUI"] = "전문 기술 창에 표시"
 L["OPT_LETITSNOWTIPS"] = "눈송이 한 줌 사용 표시"
 L["OPT_LETITSNOWTIPS_TIP"] = "업적을 완료하지 않은 경우 해당하는 종족/직업의 플레이어 툴팁에 눈송이 한 줌을 사용할 필요가 있는지 표시합니다."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "처치 상태 표시"
 L["OPT_PESTCONTROLTIPS_TIP"] = "업적을 완료하지 않은 경우 해당 동물에 마우스를 가져다대면 툴팁에 처치가 필요한지 표시합니다."
 L["OPT_SATISFIEDTIPS"] = "기분 1000% 상승"
@@ -1757,6 +1829,12 @@ L["YOURPROGRESS"] = "자신의 진행 상태"
 
 elseif (locale == "esES" or locale == "esMX") then  -- Spanish
 -- Thanks to user PatoDaia at wowinterface.com for many of these translations:
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "Ya lo has pescado"
 --[[Translation missing --]]
 --[[ L["ACH_ANGLER_COUNT"] = ""--]] 
@@ -1777,6 +1855,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "Ya has usado un Puñado de Copos de Nieve"
 L["ACH_LETITSNOW_INCOMPLETE"] = "Necesitas usar un Puñado de Copos de Nieve"
 L["ACH_LOVECRITTERS_COMPLETE"] = "Ya la has /amado"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Necesita algo de /amor"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Ya emplumado"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Necesita unas plumas"
 L["ACH_WELLREAD_COMPLETE"] = "Ya lo has leído"
@@ -1832,6 +1914,10 @@ L["MSG_OPENINGTO"] = "Abriendo a: "
 --[[Translation missing --]]
 --[[ L["MULTI_NEED"] = ""--]] 
 L["OPT_ACHUNKNOWN"] = "<Desconocido>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "Añadir si ya has pescado un banco de peces a su tooltip"
 L["OPT_ANGLERTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los bancos de peces incluidos en el logro, para indicar que necesitas pescar en él."
 --[[Translation missing --]]
@@ -1900,6 +1986,10 @@ L["OPT_LABEL_TRACKING"] = "Seguimiento de Logros"
 L["OPT_LABEL_TRADESKILLUI"] = "Modificaciones del interface de profesiones"
 L["OPT_LETITSNOWTIPS"] = "Añadir si aún necesitas usar un Puñado de Copos de Nieve"
 L["OPT_LETITSNOWTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los jugadores con la combinación de clase/raza incluida en el logro, para indicar que necesitas usar un Puñado de Copos de Nieve sobre él."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Añadir si ya has eliminado una alimaña a su tooltip."
 L["OPT_PESTCONTROLTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de las alimañas incluidas en el logro, para indicar que aún necesitas exterminarlas."
 L["OPT_SATISFIEDTIPS"] = "¿ Satisfecho al 1000% ?"
@@ -2049,6 +2139,12 @@ L["YOURPROGRESS"] = "Tu progreso"
 
 	if (locale == "esMX") then  -- Spanish (Mexican)
 --[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["ACH_ANGLER_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_ANGLER_COUNT"] = ""--]] 
@@ -2086,6 +2182,10 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["ACH_LOVECRITTERS_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_LOVECRITTERS_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_TURKEYLURKEY_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
@@ -2160,6 +2260,10 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["MULTI_NEED"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_ACHUNKNOWN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_ANGLERTIPS"] = ""--]] 
 --[[Translation missing --]]
@@ -2264,6 +2368,10 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["OPT_LETITSNOWTIPS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LETITSNOWTIPS_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
 --[[Translation missing --]]
@@ -2462,6 +2570,12 @@ L["YOURPROGRESS"] = "Tu progreso"
 	end
 
 elseif (locale == "ptBR") then  -- Brazilian Portuguese
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "Já foi pescado"
 L["ACH_ANGLER_COUNT"] = [=[9455=Cardume de Amonitas de Fogo
 9456=Cardume de Enguias Abissais,Cardume de Enguias Abissais Oleosas
@@ -2489,6 +2603,10 @@ L["ACH_LETITSNOW_COMPLETE"] = "Punhado de Flocos de Neve já utilizado"
 L["ACH_LETITSNOW_INCOMPLETE"] = "Precisa usar Punhado de Flocos de Neve"
 L["ACH_LOVECRITTERS_COMPLETE"] = "Já /amou"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Precisa /amar"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Já \"empenado\""
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Precisa de penas"
 L["ACH_WELLREAD_COMPLETE"] = "Já lido"
@@ -2528,6 +2646,10 @@ L["MSG_ONEFOUND"] = "1 outra conquista encontrada:"
 L["MSG_OPENINGTO"] = "Abrindo para:"
 L["MULTI_NEED"] = "%s (requisito de %s conquistas)"
 L["OPT_ACHUNKNOWN"] = "<desconhecido>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "Cardume pescado?"
 L["OPT_ANGLERTIPS_TIP"] = "Se uma conquista estiver incompleta, adiciona uma linha às dicas de tela dos pontos de pesca que fazem parte dos critérios da conquista para indicar se você precisa pescar neste lugar."
 L["OPT_ANGLERTIPS_TIP_ALWAYS"] = "Adiciona uma linha à dica de tela dos pontos de pesca que são parte dos critérios, para indicar se você precisa pescá-los."
@@ -2582,6 +2704,10 @@ L["OPT_LABEL_TRACKING"] = "Listagem de conquistas"
 L["OPT_LABEL_TRADESKILLUI"] = "Modificações nas tela das profissões"
 L["OPT_LETITSNOWTIPS"] = "Punhado de Flocos de Neve utilizado?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Se a conquista estiver incompleta, acrescentar uma linha às dicas de tela de jogadores da combinação de raça/classe apropriada para indicar se você precisa um Punhado de Flocos de Neve neles."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Praga exterminada?"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Se essa conquista está incompleta, adicionar uma linha às dicas de tela de bichos que fazem parte de seus critérios para indicar se você precisa exterminá-los."
 L["OPT_SATISFIEDTIPS"] = "1000% Satisfeito?"
@@ -2694,6 +2820,12 @@ L["YOURPROGRESS"] = "Seu Progresso"
 
 
 elseif (locale == "itIT") then  -- Italian
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_ACQUIRE_INCOMPLETE_EXTRA"] = ""--]] 
 L["ACH_ANGLER_COMPLETE"] = "Già pescato"
 L["ACH_ANGLER_COUNT"] = [=[9455=Banco di Ammoniti del Fuoco
 9456=Banco di Anguille Abissali delle Profondità,Banco di Anguille Abissali delle Profondità Oleose
@@ -2712,13 +2844,17 @@ L["ACH_CONSUME_91_INCOMPLETE"] = "Ti sfido a mangiarne 91 tutti in una volta!"
 L["ACH_CONSUME_COMPLETE"] = "Già consumato"
 L["ACH_CONSUME_INCOMPLETE"] = "Da consumare"
 L["ACH_CONSUME_INCOMPLETE_EXTRA"] = "Non consumato"
-L["ACH_FISHSCHOOL_FORMAT"] = "%s Scuola"
+L["ACH_FISHSCHOOL_FORMAT"] = "Banco di %s"
 L["ACH_FISTFULOFLOVE_COMPLETE"] = "Già usato la Manciata di Petali di Rosa"
 L["ACH_FISTFULOFLOVE_INCOMPLETE"] = "Hai bisogno di usare la Manciata di Petali di Rosa"
 L["ACH_LETITSNOW_COMPLETE"] = "Già usato la Manciata di Petali di Rosa"
 L["ACH_LETITSNOW_INCOMPLETE"] = "Hai bisogno di usare la Manciata di Petali di Rosa"
 L["ACH_LOVECRITTERS_COMPLETE"] = "Già /amato"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Richiede un po' di /love"
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Hai già le piume"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Richiede piume"
 L["ACH_WELLREAD_COMPLETE"] = "Già letto"
@@ -2758,6 +2894,10 @@ L["MSG_ONEFOUND"] = "1 altra impresa trovata:"
 L["MSG_OPENINGTO"] = "Apertura in:"
 L["MULTI_NEED"] = "%s (richiesti per %s imprese)"
 L["OPT_ACHUNKNOWN"] = "<Sconosciuto>"
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_ACQUIREDTIPS_TIP"] = ""--]] 
 L["OPT_ANGLERTIPS"] = "Aggiungi se hai già pescato da un nodo al suo tooltip"
 L["OPT_ANGLERTIPS_TIP"] = "Se l'impresa è incompleta, aggiungi una linea ai tooltip dei nodi di pesca che fanno parte del suo criterio per indicare se hai bisogno o meno di pescarli."
 --[[Translation missing --]]
@@ -2777,7 +2917,7 @@ L["OPT_AUTOTRACKTIMED_TIP"] = "Traccia automaticamente imprese con criteri di te
 --[[ L["OPT_AUTOTRACKTIMED_TIP_BG"] = ""--]] 
 L["OPT_BUNNYMAKERTIPS"] = "Fiori di Primavera usati?"
 L["OPT_BUNNYMAKERTIPS_TIP"] = "Se l'impresa non è completa, aggiungere una riga nel tooltip del giocatoredel sesso appropriato per indicare se è necessario utilizzare i Fiori di Primavera su di loro. Nota che i giocatori nemici che sono 10 o più livelli superiori sono considerati livello almeno 18."
-L["OPT_CHECKYOURHEADTIPS"] = "Utilizzare la lanterna poderata jack-o'?"
+L["OPT_CHECKYOURHEADTIPS"] = "Jack Lanterna Appesantito usato?"
 L["OPT_CHECKYOURHEADTIPS_TIP"] = "Se l'impresa non è completata, aggiungi una riga nel tooltip del giocatore per indicare se è necessario utilizzare un lanterna poderata Jack-o'-su di loro."
 L["OPT_CONSUMEITEMTIPS"] = "Aggiungi se gli oggetti devono essere consumati ai loro tooltip"
 L["OPT_CONSUMEITEMTIPS_TIP"] = "Se l'obiettivo è incompleto, aggiungi una linea al tooltip degli oggetti che fanno parte dei criteri indicati se devi consumarli."
@@ -2823,6 +2963,10 @@ L["OPT_LABEL_TRACKING"] = "Tracciatore di Imprese"
 L["OPT_LABEL_TRADESKILLUI"] = "Modifiche Interfaccia Professioni"
 L["OPT_LETITSNOWTIPS"] = "Manciata di Fiocchi di Neve usata"
 L["OPT_LETITSNOWTIPS_TIP"] = "Se l'impresa è incompleta, aggiungere una riga nel tooltip del giocatore con la combo razza/classe appropriata per indicare se è necessario utilizzare una manciata di fiocchi di neve su di loro."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
 --[[Translation missing --]]

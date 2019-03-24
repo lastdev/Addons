@@ -1,36 +1,36 @@
-## Interface: 80000
+## Interface: 80100
 ## Author: John Stephen
 ## Title: Outfitter
-## Version: 5.20.3
+## Version: 5.22.1
 ## Notes: Clothing and weapon management and automated equipment changes
-## OptionalDeps: Titan, FuBar, TankPoints, ButtonFacade
+## OptionalDeps: 
 ## RequiredDeps: 
 ## SavedVariablesPerCharacter: gOutfitter_Settings
 ## SavedVariables: gOutfitter_GlobalSettings
-## X-ReloadTag: 1
+## X-ReloadTag: 2
 
-utf8data.lua
-utf8.lua
+Libraries/UTF8/utf8data.lua
+Libraries/UTF8/utf8.lua
 
-LibStub.lua
-CallbackHandler-1.0.lua
-LibDataBroker-1.1.lua
-LibBabble-3.0.lua
-LibBabble-SubZone-3.0.lua
-LibBabble-Inventory-3.0.lua
-LibTipHooker-1.1.lua
-LibDropdown-1.0.lua
+Libraries/LibStub.lua
+Libraries/CallbackHandler-1.0.lua
+Libraries/LibDataBroker-1.1.lua
+Libraries/LibBabble-3.0.lua
+Libraries/LibBabble-SubZone-3.0.lua
+Libraries/LibBabble-Inventory-3.0.lua
+Libraries/LibTipHooker-1.1.lua
+Libraries/LibDropdown-1.0.lua
 
 OutfitterPrefix.lua
 
-MC2AddonLib.lua
-MC2DebugLib.lua
-MC2SchedulerLib.lua
-MC2EventLib.lua
-MC2UIElementsLib.lua
-MC2ItemLinkLib.lua
-MC2TooltipLib.lua
-MC2ItemStatsLib.lua
+Libraries/MC2AddonLib/MC2AddonLib.lua
+Libraries/MC2DebugLib/MC2DebugLib.lua
+Libraries/MC2SchedulerLib/MC2SchedulerLib.lua
+Libraries/MC2EventLib/MC2EventLib.lua
+Libraries/MC2UIElementsLib/MC2UIElementsLib.lua
+Libraries/MC2ItemLinkLib/MC2ItemLinkLib.lua
+Libraries/MC2TooltipLib/MC2TooltipLib.lua
+Libraries/MC2ItemStatsLib/MC2ItemStatsLib.lua
 
 OutfitterStrings.lua
 OutfitterStrings_de.lua

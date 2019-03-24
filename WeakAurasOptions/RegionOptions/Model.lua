@@ -2,14 +2,17 @@ local L = WeakAuras.L;
 
 local function createOptions(id, data)
   local options = {
+    __title = L["Model Settings"],
+    __order = 1,
     model_path = {
       type = "input",
-      width = "double",
+      width = WeakAuras.doubleWidth,
       name = L["Model"],
       order = 0.5
     },
     space2 = {
       type = "execute",
+      width = WeakAuras.normalWidth,
       name = "",
       order = 1,
       image = function() return "", 0, 0 end,
@@ -17,6 +20,7 @@ local function createOptions(id, data)
     },
     chooseModel = {
       type = "execute",
+      width = WeakAuras.normalWidth,
       name = L["Choose"],
       order = 2,
       func = function()
@@ -26,21 +30,25 @@ local function createOptions(id, data)
     },
     modelIsUnit = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Show model of unit "],
       order = 3
     },
     portraitZoom = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Portrait Zoom"],
       order = 4,
     },
     advance = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Animate"],
       order = 5,
     },
     sequence = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Animation Sequence"],
       min = 0,
       max = 150,
@@ -53,11 +61,12 @@ local function createOptions(id, data)
       type = "toggle",
       name = L["Use SetTransform"],
       order = 7,
-      width = "double"
+      width = WeakAuras.doubleWidth
     },
     -- old settings
     model_z = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Z Offset"],
       softMin = -20,
       softMax = 20,
@@ -68,6 +77,7 @@ local function createOptions(id, data)
     },
     model_x = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["X Offset"],
       softMin = -20,
       softMax = 20,
@@ -78,6 +88,7 @@ local function createOptions(id, data)
     },
     model_y = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Y Offset"],
       softMin = -20,
       softMax = 20,
@@ -88,6 +99,7 @@ local function createOptions(id, data)
     },
     rotation = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Rotation"],
       min = 0,
       max = 360,
@@ -99,6 +111,7 @@ local function createOptions(id, data)
     -- New Settings
     model_st_tx = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["X Offset"],
       softMin = -1000,
       softMax = 1000,
@@ -109,6 +122,7 @@ local function createOptions(id, data)
     },
     model_st_ty = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Y Offset"],
       softMin = -1000,
       softMax = 1000,
@@ -119,6 +133,7 @@ local function createOptions(id, data)
     },
     model_st_tz = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Z Offset"],
       softMin = -1000,
       softMax = 1000,
@@ -129,6 +144,7 @@ local function createOptions(id, data)
     },
     model_st_rx = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["X Rotation"],
       min = 0,
       max = 360,
@@ -139,6 +155,7 @@ local function createOptions(id, data)
     },
     model_st_ry = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Y Rotation"],
       min = 0,
       max = 360,
@@ -149,6 +166,7 @@ local function createOptions(id, data)
     },
     model_st_rz = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Z Rotation"],
       min = 0,
       max = 360,
@@ -159,6 +177,7 @@ local function createOptions(id, data)
     },
     model_st_us = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Scale"],
       min = 5,
       max = 1000,
@@ -171,8 +190,8 @@ local function createOptions(id, data)
 
   return {
     model = options,
-    position = WeakAuras.PositionOptions(id, data),
     border = WeakAuras.BorderOptions(id, data);
+    position = WeakAuras.PositionOptions(id, data),
   };
 end
 

@@ -19,8 +19,9 @@ GoGo_Variables.WaterSpeed = {}
 GoGo_Variables.WaterSurfaceSpeed = {}
 GoGo_Variables.Debug = 0
 GoGo_Variables.DebugTimer = 0
-GoGo_Variables.TestVersion = false
-
+GoGo_Variables.TestVersion = true
+--GoGo_Variables.Zones = {}	-- Defined below
+--GoGo_Variables.ZoneMapID = {}	-- Defined below
 ---------
 function GoGo_GetMountDB()
 ---------
@@ -603,7 +604,7 @@ function GoGo_GetMountDB()
 
 		[147595] = {[9]=true, [38]=true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Stormcrow
 
-	-- Spells, shape forms, etc
+		-- Spells, shape forms, etc
 		[40120] = {[7] = true, [9] = true, [300] = true, [403] = true, [9998] = true, ["FlightOnly"] = true, [10003]=380},  -- Druid Swift Flight Form
 		[33943] = {[7] = true, [9] = true, [300] = true, [301] = true, [403] = true, [9998] = true, ["FlightOnly"] = true, [10003]=250},  -- Druid Flight Form
 		[165962] = {[7] = true, [9] = true, [300] = true, [301] = true, [403] = true, [501] = true, [9998] = true, ["FlightOnly"] = true, [10003]=250},  -- Druid Flight Form  (new form that appears with Glyph of the Stag with patch 6.0)
@@ -616,11 +617,10 @@ function GoGo_GetMountDB()
 		[87840] = {[14] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Running Wild (Worgen Racial)
 		[125883] = {[7]=true, [9]=true, [403]=true, ["FlightOnly"]=true, [10003]=160},	-- Zen Flight (Monk glyph)
 
-	-- Other ...
+		-- Other ...
 		[163016] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67, [9999]=true},  -- Warforged Nightmare
 
-
-	-- 6.0.0 Mounts (may change before expansion is released)
+		-- 6.0.0 Mounts (may change before expansion is released)
 		[150926] = {[9] = true, [36]=true, ["FlightOnly"] = true, [300]=true, [301]=true, [403]=true, [10003]=250},  -- Draenor Chimera
 		[163025] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Grinning Reaver
 		[163024] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Warforged Nightmare
@@ -671,7 +671,7 @@ function GoGo_GetMountDB()
 		[171633] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Wild Goretusk
 		[171616] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Witherhide Cliffstomper
 
--- 6.2
+		-- 6.2
 		[182912] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Felsteel Annihilator
 		[183117] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Corrupted Dreadwing
 		[183889] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Mechanostrider
@@ -685,7 +685,7 @@ function GoGo_GetMountDB()
 		[189044] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Warmongering Gladiator's Felblood Gronnling
 		[189043] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Wild Gladiator's Felblood Gronnling
 		
--- 6.2.1
+		-- 6.2.1
 		[194046] = {[9] = true, [35] = true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Swift Spectral Rylak  (may not be player useable, might be for dead players only.. added for now to prevent GoGoMount from detecting as misisng mount)
 		[191314] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Minion of Grumpus
 		[142910] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Ironbound Wraithcharger
@@ -693,10 +693,10 @@ function GoGo_GetMountDB()
 		[189999] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Grove Warden
 		[194464] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Eclipse Dragonhawk
 
--- 6.2.3
+		-- 6.2.3
 		[201098] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Infinite Timereaver
 		
--- 7.0.1 - Legion
+		-- 7.0.1 - Legion
 		[193007] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Demonsaber
 		[190710] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Enchanted Chicken
 		[200175] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Felsaber
@@ -753,21 +753,220 @@ function GoGo_GetMountDB()
 		[215545] = {[999]=true, [9999]=true},  -- Fel Bat (Test)
 		[220508] = {[38] = true, [203]=true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=139505},  -- 7.0 Paladin Order Hall Mount Dummy
 
-		
--- 7.1.?
+		-- 7.1.5
 		[228919] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Darkwater Skate
-		[230844] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Rockspine Basilisk
 		[229499] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Midnight
+		[230401] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- White Hawkstrider
+		[230844] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Rockspine Basilisk // Brawler's Burly Basilisk
 		[230987] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Arcanist's Manasaber
 		[231428] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Smoldering Ember Wyrm
-		[230401] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- White Hawkstrider
 
+		-- 7.2.0
+		[232519] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Abyss Worm
+		[229376] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Archmage's Prismatic Disc
+		[229385] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Ban-Lu, Grandmaster's Companion
+		[229388] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Battlelord's Bloodthirsty War Wyrm
+		[242881] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Cloudwing Hippogryph
+		[229387] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Deathlord's Vilebrood Vanquisher
+		[231442] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Farseer's Raging Tempest
+		[229377] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- High Priest's Lightsworn Seeker
+		[231435] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Highlord's Golden Charger
+		[231589] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Highlord's Valorous Charger
+		[231587] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Highlord's Vengeful Charger
+		[231588] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Highlord's Vigilant Charger
+		[242874] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Highmountain Elderhorn
+		[229439] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Huntmaster's Dire Wolfhawk
+		[229438] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Huntmaster's Fierce Wolfhawk
+		[229386] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Huntmaster's Loyal Wolfhawk
+		[233364] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Leywoven Flying Carpet
+		[238454] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Netherlord's Accursed Wrathsteed
+		[238452] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Netherlord's Brimstone Wrathsteed
+		[232412] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Netherlord's Chaotic Wrathsteed
+		[232405] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Primal Flamesaber
+		[243025] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Riddler's Mind-Worm
+		[231524] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shadowblade's Baneful Omen
+		[231525] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shadowblade's Crimson Omen
+		[231523] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shadowblade's Lethal Omen
+		[231434] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shadowblade's Murderous Omen
+		[229417] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Slayer's Felbroken Shrieker
+		[239363] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Swift Spectral Hippogryph
+		[242882] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Valarjar Stormwing
+		[229487] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Bear
+		[229486] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Bear
+		[229512] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Lion
+		[230988] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Scorpion
+		[232525] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Turtle
+		[232523] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Turtle
+		[242875] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Wild Dreamrunner
 
+		-- 7.3.0
+		[235764] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Darkspore Mana Ray
+		[239013] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Lightforged Warframe
+		[242305] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Sable Ruinstrider
+		[242896] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Fox
+		[242897] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Fox
+		[243201] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Demonic Gladiator's Storm Dragon
+		[243512] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Luminous Starseeker
+		[243651] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shackled Ur'zul
+		[243652] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vile Fiend
+		[245723] = {[2] = true, [9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Stormwind Skychaser
+		[245725] = {[2] = true, [9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Orgrimmar Interceptor
+		[247402] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Lucid Nightmare
+		[247448] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Darkmoon Dirigible
+		[253004] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Amethyst Ruinstrider
+		[253005] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Beryl Ruinstrider
+		[253006] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Russet Ruinstrider
+		[253007] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Cerulean Ruinstrider
+		[253008] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Umber Ruinstrider
+		[253058] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Maddened Chaosrunner
+		[253087] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Antoran Gloomhound
+		[253088] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Antoran Charhound
+		[253106] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Vibrant Mana Ray
+		[253107] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Lambent Mana Ray
+		[253108] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Felglow Mana Ray
+		[253109] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Scintillating Mana Ray
+		[253639] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Violet Spellwing
+		[253660] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Biletooth Gnasher
+		[253661] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Crimson Slavermaw
+		[253662] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Acid Belcher
+		[253711] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Pond Nettle
+		[254069] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Glorious Felcrusher
+		[254258] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Blessed Felcrusher
+		[254259] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Avenging Felcrusher
+		[254260] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bleakhoof Ruinstrider
+
+		-- 7.3.5.25996
+		[239766] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Blue Qiraji War Tank
+		[239770] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Black Qiraji War Tank
+
+		-- 8.0.1.25902
+		[237286] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Dune Scavenger
+		[237287] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Alabaster Hyena
+		[237288] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Reins of the Onyx War Hyena
+		[239049] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Obsidian Krolusk
+		[239766] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=151626},  -- Blue Qiraji War Tank
+		[239767] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=151625},  -- Red Qiraji War Tank
+		[243795] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Leaping Veinseeker
+		[250735] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bloodgorged Crawg
+		[254811] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Squawks
+		[254813] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Summon Sharkbait
+		[255695] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Seabraid Stallion
+		[255696] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Gilded Ravasaur
+		[258022] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Lightforged Felcrusher
+		[258060] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Highmountain Thunderhoof
+		[258845] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Nightborne Manasaber
+		[259202] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Starcursed Voidstrider
+		[259213] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Admiralty Stallion
+		[259395] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Shu-Zen, the Divine Sentinel
+		[259740] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Green Marsh Hopper
+		[260172] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Dapple Gray
+		[260173] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Smoky Charger
+		[260174] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Terrified Pack Mule
+		[260175] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Goldenmane
+		[261395] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- The Hivemind
+		[261433] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Basilisk
+		[261434] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Basilisk
+		[262022] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Dread Gladiator's Proto-Drake
+		[263707] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Zandalari Direhorn
+		[264058] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mighty Caravan Brutosaur
+		[272472] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Undercity Plaguebat
+		[274610] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Teldrassil Hippogryph
+
+		-- 8.0.1.26032
+		[266058] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Tomb Stalker
+		[267270] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Kua'fon
+		[267274] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mag'har Direwolf
+
+		-- 8.0.1.26367
+		[270560] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Clefthoof
+		[270562] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Summon Darkforge Ram
+		[270564] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Summon Dawnforge Ram
+		[271646] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Dark Iron Core Hound
+		[272481] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Riverbeast
+
+		-- 8.0.1.26433
+		[273541] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Underrot Crawg
+
+		-- 8.0.1.26522
+		[275623] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Nazjatar Blood Serpent
+		[275837] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Cobalt Pterrordax
+		[275841] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Expedition Bloodswarmer
+
+		-- 8.0.1.26624
+		[278803] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Great Sea Ray
+		[278966] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Tempestuous Skystallion
+		[278979] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Surf Jelly
+		[279454] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Conquerer's Scythemaw
+		[279456] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Highland Mustang
+		[279457] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Broken Highland Mustang
+		[279466] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Twilight Avenger
+		[279467] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Craghorn Chasm-Leaper
+		[279469] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Qinsho's Eternal Hound
+		[279474] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Palehide Direhorn
+
+		-- 8.0.1.26714
+		[279569] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Swift Albino Raptor
+		[279608] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Lil' Donkey
+		[279611] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Skullripper
+		[279868] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Witherbark Direwing
 		
-		
+		-- 8.0.1.26788
+		[280729] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Frenzied Feltalon
+		[280730] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Pureheart Courser
+		[281044] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Prestigious Bloodforged Courser
+
+		-- 8.0.1.27602
+		[261437] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Mecha-Mogul Mk2
+		[272770] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- The Dreadwake
+
+		-- 8.1.0.27826
+		[281887] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious Black Warsaber
+		[281888] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious White Warsaber
+		[281889] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious White Bonesteed
+		[281890] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious Black Bonesteed
+
+		-- 8.1.0.28151
+		[288438] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Blackpaw
+		[288495] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Ashenvale Chimaera
+		[288499] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Frightened Kodo
+		[288503] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Umber Nightsaber
+		[288505] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Kaldorei Nightsaber
+		[288506] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Sandy Nightsaber
+		[288587] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Blue Marsh Hopper
+		[288589] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Yellow Marsh Hopper
+
+		-- 8.1.0.28202
+		[288711] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Saltwater Seahorse
+		[288712] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Stonehide Elderhorn
+		[288714] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bloodthirsty Dreadwing
+		[288720] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bloodgorged Hunter
+		[288721] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Island Thunderscale
+		[288722] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Risen Mare
+		[288735] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Rubyshell Krolusk
+		[288736] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Azureshell Krolusk
+		[288740] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Priestess' Moonsaber
+		[289083] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- G.M.O.D.
+		[289101] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Dazar'alor Windreaver
+
+		-- 8.1.0.28294
+		[289555] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Glacial Tidestorm
+
+		-- 8.1.0.28616
+		[281554] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Meat Wagon
+
+		-- 8.1.0.28724
+		[290133] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Vulpine Familiar
+
+		-- 8.1.5.28938
+		[282682] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Kul Tiran Charger
+		[289639] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bruce
+
+		-- 8.1.5.28938
+		[290134] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Hogrus, Swine of Good Fortune
+
 --		[123456] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Standard Ground Mount template
 --		[123456] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Standard Air & Ground Mount template
-
+--		[123456] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Standard Water (surface and submerged) Mount template
 	}
 end --if
 
@@ -790,6 +989,8 @@ GoGo_Variables.MountItemIDs = {
 	[101675] = {[50000]=145133, [51000] = true},  -- Shimmering Moonstone
 	[139421] = {[50000]=220124, [51000] = true},	-- Ratstallion Harness (item casts spell id 220123 but mount is 220124)
 	[139505] = {[50000]=220508, [51000] = true},	-- Reins of the Charger
+	[151625] = {[50000]=239767, [51000] = true},  	-- Ruby Qiraji Resonating Crystal
+	[151626] = {[50000]=239766, [51000] = true},  	-- Sapphire Qiraji Resonating Crystal
 }
 
 
@@ -907,4 +1108,943 @@ GoGo_Variables.WaterSurfaceSpeed = {
 	108,  -- Subdued Seahorse
 	91,  -- Master Angler
 	67,  -- Water normal
+}
+
+GoGo_Variables.ZoneMapID = {
+	[1] = 4,
+	[2] = 4,
+	[3] = 4,
+	[4] = 4,
+	[5] = 4,
+	[6] = 4,
+	[7] = 9,
+	[8] = 9,
+	[9] = 9,
+	[10] = 11,
+	[11] = 11,
+	[12] = 13,
+	[13] = 14,
+	[14] = 16,
+	[15] = 17,
+	[16] = 17,
+	[17] = 19,
+	[18] = 20,
+	[19] = 20,
+	[20] = 20,
+	[21] = 21,
+	[22] = 22,
+	[23] = 23,
+	[24] = 23,
+	[25] = 24,
+	[26] = 26,
+	[27] = 27,
+	[28] = 27,
+	[29] = 27,
+	[30] = 27,
+	[31] = 27,
+	[32] = 28,
+	[33] = 28,
+	[34] = 28,
+	[35] = 28,
+	[36] = 29,
+	[37] = 30,
+	[38] = 30,
+	[39] = 30,
+	[40] = 30,
+	[41] = 30,
+	[42] = 32,
+	[43] = 32,
+	[44] = 32,
+	[45] = 32,
+	[46] = 32,
+	[47] = 34,
+	[48] = 35,
+	[49] = 36,
+	[50] = 37,
+	[51] = 38,
+	[52] = 39,
+	[53] = 39,
+	[54] = 39,
+	[55] = 39,
+	[56] = 40,
+	[57] = 41,
+	[58] = 41,
+	[59] = 41,
+	[60] = 41,
+	[61] = 41,
+	[62] = 42,
+	[63] = 43,
+	[64] = 61,
+	[65] = 81,
+	[66] = 101,
+	[67] = 101,
+	[68] = 101,
+	[69] = 121,
+	[70] = 141,
+	[71] = 161,
+	[72] = 161,
+	[73] = 161,
+	[74] = 161,
+	[75] = 161,
+	[76] = 181,
+	[77] = 182,
+	[78] = 201,
+	[79] = 201,
+	[80] = 241,
+	[81] = 261,
+	[82] = 261,
+	[83] = 281,
+	[84] = 301,
+	[85] = 321,
+	[86] = 321,
+	[87] = 341,
+	[88] = 362,
+	[89] = 381,
+	[90] = 382,
+	[91] = 401,
+	[92] = 443,
+	[93] = 461,
+	[94] = 462,
+	[95] = 463,
+	[96] = 463,
+	[97] = 464,
+	[98] = 464,
+	[99] = 464,
+	[100] = 465,
+	[101] = 466,
+	[102] = 467,
+	[103] = 471,
+	[104] = 473,
+	[105] = 475,
+	[106] = 476,
+	[107] = 477,
+	[108] = 478,
+	[109] = 479,
+	[110] = 480,
+	[111] = 481,
+	[112] = 482,
+	[113] = 485,
+	[114] = 486,
+	[115] = 488,
+	[116] = 490,
+	[117] = 491,
+	[118] = 492,
+	[119] = 493,
+	[120] = 495,
+	[121] = 496,
+	[122] = 499,
+	[123] = 501,
+	[124] = 502,
+	[125] = 504,
+	[126] = 504,
+	[127] = 510,
+	[128] = 512,
+	[129] = 520,
+	[130] = 521,
+	[131] = 521,
+	[132] = 522,
+	[133] = 523,
+	[134] = 523,
+	[135] = 523,
+	[136] = 524,
+	[137] = 524,
+	[138] = 525,
+	[139] = 525,
+	[140] = 526,
+	[141] = 527,
+	[142] = 528,
+	[143] = 528,
+	[144] = 528,
+	[145] = 528,
+	[146] = 528,
+	[147] = 529,
+	[148] = 529,
+	[149] = 529,
+	[150] = 529,
+	[151] = 529,
+	[152] = 529,
+	[153] = 530,
+	[154] = 530,
+	[155] = 531,
+	[156] = 532,
+	[157] = 533,
+	[158] = 533,
+	[159] = 533,
+	[160] = 534,
+	[161] = 534,
+	[162] = 535,
+	[163] = 535,
+	[164] = 535,
+	[165] = 535,
+	[166] = 535,
+	[167] = 535,
+	[168] = 536,
+	[169] = 540,
+	[170] = 541,
+	[171] = 542,
+	[172] = 543,
+	[173] = 543,
+	[174] = 544,
+	[175] = 544,
+	[176] = 544,
+	[177] = 544,
+	[178] = 544,
+	[179] = 545,
+	[180] = 545,
+	[181] = 545,
+	[182] = 545,
+	[183] = 601,
+	[184] = 602,
+	[185] = 603,
+	[186] = 604,
+	[187] = 604,
+	[188] = 604,
+	[189] = 604,
+	[190] = 604,
+	[191] = 604,
+	[192] = 604,
+	[193] = 604,
+	[194] = 605,
+	[195] = 605,
+	[196] = 605,
+	[197] = 605,
+	[198] = 606,
+	[199] = 607,
+	[200] = 609,
+	[201] = 610,
+	[202] = 611,
+	[203] = 613,
+	[204] = 614,
+	[205] = 615,
+	[206] = 626,
+	[207] = 640,
+	[208] = 640,
+	[209] = 640,
+	[210] = 673,
+	[213] = 680,
+	[217] = 684,
+	[218] = 685,
+	[219] = 686,
+	[220] = 687,
+	[221] = 688,
+	[222] = 688,
+	[223] = 688,
+	[224] = 689,
+	[225] = 690,
+	[226] = 691,
+	[227] = 691,
+	[228] = 691,
+	[229] = 691,
+	[230] = 692,
+	[231] = 692,
+	[232] = 696,
+	[233] = 697,
+	[234] = 699,
+	[235] = 699,
+	[236] = 699,
+	[237] = 699,
+	[238] = 699,
+	[239] = 699,
+	[240] = 699,
+	[241] = 700,
+	[242] = 704,
+	[243] = 704,
+	[244] = 708,
+	[245] = 709,
+	[246] = 710,
+	[247] = 717,
+	[248] = 718,
+	[249] = 720,
+	[250] = 721,
+	[251] = 721,
+	[252] = 721,
+	[253] = 721,
+	[254] = 721,
+	[255] = 721,
+	[256] = 722,
+	[257] = 722,
+	[258] = 723,
+	[259] = 723,
+	[260] = 724,
+	[261] = 725,
+	[262] = 726,
+	[263] = 727,
+	[264] = 727,
+	[265] = 728,
+	[266] = 729,
+	[267] = 730,
+	[268] = 730,
+	[269] = 731,
+	[270] = 731,
+	[271] = 731,
+	[272] = 732,
+	[273] = 733,
+	[274] = 734,
+	[275] = 736,
+	[276] = 737,
+	[277] = 747,
+	[279] = 749,
+	[280] = 750,
+	[281] = 750,
+	[282] = 752,
+	[283] = 753,
+	[284] = 753,
+	[285] = 754,
+	[286] = 754,
+	[287] = 755,
+	[288] = 755,
+	[289] = 755,
+	[290] = 755,
+	[291] = 756,
+	[292] = 756,
+	[293] = 757,
+	[294] = 758,
+	[295] = 758,
+	[296] = 758,
+	[297] = 759,
+	[298] = 759,
+	[299] = 759,
+	[300] = 760,
+	[301] = 761,
+	[302] = 762,
+	[303] = 762,
+	[304] = 762,
+	[305] = 762,
+	[306] = 763,
+	[307] = 763,
+	[308] = 763,
+	[309] = 763,
+	[310] = 764,
+	[311] = 764,
+	[312] = 764,
+	[313] = 764,
+	[314] = 764,
+	[315] = 764,
+	[316] = 764,
+	[317] = 765,
+	[318] = 765,
+	[319] = 766,
+	[320] = 766,
+	[321] = 766,
+	[322] = 767,
+	[323] = 767,
+	[324] = 768,
+	[325] = 769,
+	[327] = 772,
+	[328] = 773,
+	[329] = 775,
+	[330] = 776,
+	[331] = 779,
+	[332] = 780,
+	[333] = 781,
+	[334] = 782,
+	[335] = 789,
+	[336] = 789,
+	[337] = 793,
+	[338] = 795,
+	[339] = 796,
+	[340] = 796,
+	[341] = 796,
+	[342] = 796,
+	[343] = 796,
+	[344] = 796,
+	[345] = 796,
+	[346] = 796,
+	[347] = 797,
+	[348] = 798,
+	[349] = 798,
+	[350] = 799,
+	[351] = 799,
+	[352] = 799,
+	[353] = 799,
+	[354] = 799,
+	[355] = 799,
+	[356] = 799,
+	[357] = 799,
+	[358] = 799,
+	[359] = 799,
+	[360] = 799,
+	[361] = 799,
+	[362] = 799,
+	[363] = 799,
+	[364] = 799,
+	[365] = 799,
+	[366] = 799,
+	[367] = 800,
+	[368] = 800,
+	[369] = 800,
+	[370] = 803,
+	[371] = 806,
+	[372] = 806,
+	[373] = 806,
+	[374] = 806,
+	[375] = 806,
+	[376] = 807,
+	[377] = 807,
+	[378] = 808,
+	[379] = 809,
+	[380] = 809,
+	[381] = 809,
+	[382] = 809,
+	[383] = 809,
+	[384] = 809,
+	[385] = 809,
+	[386] = 809,
+	[387] = 809,
+	[388] = 810,
+	[389] = 810,
+	[390] = 811,
+	[391] = 811,
+	[392] = 811,
+	[393] = 811,
+	[394] = 811,
+	[395] = 811,
+	[396] = 811,
+	[397] = 813,
+	[398] = 816,
+	[399] = 819,
+	[400] = 819,
+	[401] = 820,
+	[402] = 820,
+	[403] = 820,
+	[404] = 820,
+	[405] = 820,
+	[406] = 820,
+	[407] = 823,
+	[408] = 823,
+	[409] = 824,
+	[410] = 824,
+	[411] = 824,
+	[412] = 824,
+	[413] = 824,
+	[414] = 824,
+	[415] = 824,
+	[416] = 851,
+	[417] = 856,
+	[418] = 857,
+	[419] = 857,
+	[420] = 857,
+	[421] = 857,
+	[422] = 858,
+	[423] = 860,
+	[424] = 862,
+	[425] = 864,
+	[426] = 864,
+	[427] = 866,
+	[428] = 866,
+	[429] = 867,
+	[430] = 867,
+	[431] = 871,
+	[432] = 871,
+	[433] = 873,
+	[434] = 873,
+	[435] = 874,
+	[436] = 874,
+	[437] = 875,
+	[438] = 875,
+	[439] = 876,
+	[440] = 876,
+	[441] = 876,
+	[442] = 876,
+	[443] = 877,
+	[444] = 877,
+	[445] = 877,
+	[446] = 877,
+	[447] = 878,
+	[448] = 880,
+	[449] = 881,
+	[450] = 882,
+	[451] = 883,
+	[452] = 884,
+	[453] = 885,
+	[454] = 885,
+	[455] = 885,
+	[456] = 886,
+	[457] = 887,
+	[458] = 887,
+	[459] = 887,
+	[460] = 888,
+	[461] = 889,
+	[462] = 890,
+	[463] = 891,
+	[464] = 891,
+	[465] = 892,
+	[466] = 892,
+	[467] = 893,
+	[468] = 894,
+	[469] = 895,
+	[470] = 895,
+	[471] = 896,
+	[472] = 896,
+	[473] = 896,
+	[474] = 897,
+	[475] = 897,
+	[476] = 898,
+	[477] = 898,
+	[478] = 898,
+	[479] = 898,
+	[480] = 899,
+	[481] = 900,
+	[482] = 900,
+	[483] = 906,
+	[486] = 911,
+	[487] = 912,
+	[488] = 914,
+	[489] = 914,
+	[490] = 919,
+	[491] = 919,
+	[492] = 919,
+	[493] = 919,
+	[494] = 919,
+	[495] = 919,
+	[496] = 919,
+	[497] = 919,
+	[498] = 920,
+	[499] = 922,
+	[500] = 922,
+	[501] = 924,
+	[502] = 924,
+	[503] = 925,
+	[504] = 928,
+	[505] = 928,
+	[506] = 928,
+	[507] = 929,
+	[508] = 930,
+	[509] = 930,
+	[510] = 930,
+	[511] = 930,
+	[512] = 930,
+	[513] = 930,
+	[514] = 930,
+	[515] = 930,
+	[516] = 933,
+	[517] = 933,
+	[518] = 934,
+	[519] = 935,
+	[520] = 937,
+	[521] = 937,
+	[522] = 938,
+	[523] = 939,
+	[524] = 940,
+	[525] = 941,
+	[526] = 941,
+	[527] = 941,
+	[528] = 941,
+	[529] = 941,
+	[530] = 941,
+	[531] = 941,
+	[532] = 941,
+	[533] = 941,
+	[534] = 945,
+	[535] = 946,
+	[536] = 946,
+	[537] = 946,
+	[538] = 946,
+	[539] = 947,
+	[540] = 947,
+	[541] = 947,
+	[542] = 948,
+	[543] = 949,
+	[544] = 949,
+	[545] = 949,
+	[546] = 949,
+	[547] = 949,
+	[548] = 949,
+	[549] = 949,
+	[550] = 950,
+	[551] = 950,
+	[552] = 950,
+	[553] = 950,
+	[554] = 951,
+	[555] = 951,
+	[556] = 953,
+	[557] = 953,
+	[558] = 953,
+	[559] = 953,
+	[560] = 953,
+	[561] = 953,
+	[562] = 953,
+	[563] = 953,
+	[564] = 953,
+	[565] = 953,
+	[566] = 953,
+	[567] = 953,
+	[568] = 953,
+	[569] = 953,
+	[570] = 953,
+	[571] = 955,
+	[572] = 962,
+	[573] = 964,
+	[574] = 969,
+	[575] = 969,
+	[576] = 969,
+	[577] = 970,
+	[578] = 970,
+	[579] = 971,
+	[580] = 971,
+	[581] = 971,
+	[582] = 973,
+	[585] = 976,
+	[586] = 976,
+	[587] = 976,
+	[588] = 978,
+	[589] = 978,
+	[590] = 980,
+	[592] = 983,
+	[593] = 984,
+	[594] = 986,
+	[595] = 987,
+	[596] = 988,
+	[597] = 988,
+	[598] = 988,
+	[599] = 988,
+	[600] = 988,
+	[601] = 989,
+	[602] = 989,
+	[606] = 993,
+	[607] = 993,
+	[608] = 993,
+	[609] = 993,
+	[610] = 994,
+	[611] = 994,
+	[612] = 994,
+	[613] = 994,
+	[614] = 994,
+	[615] = 994,
+	[616] = 995,
+	[617] = 995,
+	[618] = 995,
+	[619] = 1007,
+	[620] = 1008,
+	[621] = 1008,
+	[622] = 1009,
+	[623] = 1010,
+	[624] = 1011,
+	[625] = 1014,
+	[626] = 1014,
+	[627] = 1014,
+	[628] = 1014,
+	[629] = 1014,
+	[630] = 1015,
+	[631] = 1015,
+	[632] = 1015,
+	[633] = 1015,
+	[634] = 1017,
+	[635] = 1017,
+	[636] = 1017,
+	[637] = 1017,
+	[638] = 1017,
+	[639] = 1017,
+	[640] = 1017,
+	[641] = 1018,
+	[642] = 1018,
+	[643] = 1018,
+	[644] = 1018,
+	[645] = 1020,
+	[646] = 1021,
+	[647] = 1021,
+	[648] = 1021,
+	[649] = 1022,
+	[650] = 1024,
+	[651] = 1024,
+	[652] = 1024,
+	[653] = 1024,
+	[654] = 1024,
+	[655] = 1024,
+	[656] = 1024,
+	[657] = 1024,
+	[658] = 1024,
+	[659] = 1024,
+	[660] = 1024,
+	[661] = 1026,
+	[662] = 1026,
+	[663] = 1026,
+	[664] = 1026,
+	[665] = 1026,
+	[666] = 1026,
+	[667] = 1026,
+	[668] = 1026,
+	[669] = 1026,
+	[670] = 1026,
+	[671] = 1027,
+	[672] = 1028,
+	[673] = 1028,
+	[674] = 1028,
+	[675] = 1028,
+	[676] = 1031,
+	[677] = 1032,
+	[678] = 1032,
+	[679] = 1032,
+	[680] = 1033,
+	[681] = 1033,
+	[682] = 1033,
+	[683] = 1033,
+	[684] = 1033,
+	[685] = 1033,
+	[686] = 1033,
+	[687] = 1033,
+	[688] = 1033,
+	[689] = 1033,
+	[690] = 1033,
+	[691] = 1033,
+	[692] = 1033,
+	[693] = 1033,
+	[694] = 1034,
+	[695] = 1035,
+	[696] = 1037,
+	[697] = 1038,
+	[698] = 1039,
+	[699] = 1039,
+	[700] = 1039,
+	[701] = 1039,
+	[702] = 1040,
+	[703] = 1041,
+	[704] = 1041,
+	[705] = 1041,
+	[706] = 1042,
+	[707] = 1042,
+	[708] = 1042,
+	[709] = 1044,
+	[710] = 1045,
+	[711] = 1045,
+	[712] = 1045,
+	[713] = 1046,
+	[714] = 1047,
+	[715] = 1048,
+	[716] = 1049,
+	[717] = 1050,
+	[718] = 1051,
+	[719] = 1052,
+	[720] = 1052,
+	[721] = 1052,
+	[723] = 1054,
+	[725] = 1056,
+	[726] = 1057,
+	[728] = 1059,
+	[729] = 1060,
+	[731] = 1065,
+	[732] = 1066,
+	[733] = 1067,
+	[734] = 1068,
+	[735] = 1068,
+	[736] = 1069,
+	[737] = 1070,
+	[738] = 1071,
+	[739] = 1072,
+	[740] = 1073,
+	[741] = 1073,
+	[742] = 1075,
+	[743] = 1075,
+	[744] = 1076,
+	[745] = 1076,
+	[746] = 1076,
+	[747] = 1077,
+	[748] = 1078,
+	[749] = 1079,
+	[750] = 1080,
+	[751] = 1081,
+	[752] = 1081,
+	[753] = 1081,
+	[754] = 1081,
+	[755] = 1081,
+	[756] = 1081,
+	[757] = 1082,
+	[758] = 1084,
+	[759] = 1085,
+	[760] = 1086,
+	[761] = 1087,
+	[762] = 1087,
+	[763] = 1087,
+	[764] = 1088,
+	[765] = 1088,
+	[766] = 1088,
+	[767] = 1088,
+	[768] = 1088,
+	[769] = 1088,
+	[770] = 1088,
+	[771] = 1088,
+	[772] = 1088,
+	[773] = 1090,
+	[774] = 1090,
+	[775] = 1091,
+	[776] = 1092,
+	[777] = 1094,
+	[778] = 1094,
+	[779] = 1094,
+	[780] = 1094,
+	[781] = 1094,
+	[782] = 1094,
+	[783] = 1094,
+	[784] = 1094,
+	[785] = 1094,
+	[786] = 1094,
+	[787] = 1094,
+	[788] = 1094,
+	[789] = 1094,
+	[790] = 1096,
+	[791] = 1097,
+	[792] = 1097,
+	[793] = 1099,
+	[794] = 1100,
+	[795] = 1100,
+	[796] = 1100,
+	[797] = 1100,
+	[798] = 1102,
+	[799] = 1104,
+	[800] = 1104,
+	[801] = 1104,
+	[802] = 1104,
+	[803] = 1104,
+	[804] = 1105,
+	[805] = 1105,
+	[806] = 1114,
+	[807] = 1114,
+	[808] = 1114,
+	[809] = 1115,
+	[810] = 1115,
+	[811] = 1115,
+	[812] = 1115,
+	[813] = 1115,
+	[814] = 1115,
+	[815] = 1115,
+	[816] = 1115,
+	[817] = 1115,
+	[818] = 1115,
+	[819] = 1115,
+	[820] = 1115,
+	[821] = 1115,
+	[822] = 1115,
+	[823] = 1116,
+	[824] = 1126,
+	[825] = 1127,
+	[826] = 1129,
+	[827] = 1130,
+	[828] = 1131,
+	[829] = 1132,
+	[830] = 1135,
+	[831] = 1135,
+	[832] = 1135,
+	[833] = 1135,
+	[834] = 1136,
+	[835] = 1137,
+	[836] = 1137,
+	[837] = 1139,
+	[838] = 1140,
+	[839] = 1142,
+	[840] = 1143,
+	[841] = 1143,
+	[842] = 1143,
+	[843] = 1144,
+	[844] = 1145,
+	[845] = 1146,
+	[846] = 1146,
+	[847] = 1146,
+	[848] = 1146,
+	[849] = 1146,
+	[850] = 1147,
+	[851] = 1147,
+	[852] = 1147,
+	[853] = 1147,
+	[854] = 1147,
+	[855] = 1147,
+	[856] = 1147,
+	[857] = 1148,
+	[858] = 1149,
+	[859] = 1150,
+	[860] = 1151,
+	[861] = 1152,
+	[862] = 1153,
+	[863] = 1154,
+	[864] = 1155,
+	[865] = 1156,
+	[866] = 1156,
+	[867] = 1157,
+	[868] = 1158,
+	[869] = 1159,
+	[870] = 1159,
+	[871] = 1160,
+	[872] = 1161,
+	[873] = 1161,
+	[874] = 1161,
+	[875] = 1162,
+	[876] = 1163,
+	[877] = 1164,
+	[878] = 1165,
+	[879] = 1165,
+	[880] = 1165,
+	[881] = 1166,
+	[882] = 1170,
+	[883] = 1170,
+	[884] = 1170,
+	[885] = 1171,
+	[886] = 1171,
+	[887] = 1171,
+	[888] = 1172,
+	[889] = 1173,
+	[890] = 1173,
+	[891] = 1174,
+	[892] = 1174,
+	[893] = 1174,
+	[894] = 1174,
+	[895] = 1175,
+	[896] = 1176,
+	[897] = 1177,
+	[898] = 1177,
+	[899] = 1177,
+	[900] = 1177,
+	[901] = 1177,
+	[902] = 1177,
+	[903] = 1178,
+	[904] = 1183,
+	[905] = 1184,
+	[906] = 1185,
+	[907] = 1186,
+	[908] = 1187,
+	[909] = 1188,
+	[910] = 1188,
+	[911] = 1188,
+	[912] = 1188,
+	[913] = 1188,
+	[914] = 1188,
+	[915] = 1188,
+	[916] = 1188,
+	[917] = 1188,
+	[918] = 1188,
+	[919] = 1188,
+	[920] = 1188,
+	[921] = 1190,
+	[922] = 1191,
+	[923] = 1192,
+	[924] = 1193,
+	[925] = 1194,
+	[926] = 1195,
+	[927] = 1196,
+	[928] = 1197,
+	[929] = 1198,
+	[930] = 1199,
+	[931] = 1200,
+	[932] = 1201,
+	[933] = 1202,
+	[934] = 1204,
+	[935] = 1204,
+	[936] = 1205,
+	[938] = 1210,
+	[939] = 1211,
+	[940] = 1212,
+	[941] = 1212,
+	[942] = 1213,
+	[943] = 1214,
+	[971] = 1215,
+	[972] = 1216,
+	[973] = 1217,
+	[974] = 1219,
+	[975] = 1219,
+	[976] = 1219,
+	[977] = 1219,
+	[978] = 1219,
+	[979] = 1219,
+	[980] = 1219,
+	[981] = 1220,
+	[994] = 1184,
+	[998] = 382
 }

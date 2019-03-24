@@ -22,6 +22,11 @@ local CURRENCY_ID_ORDER_HALL = 1220
 local CURRENCY_ID_SOBF = 1273		-- Seals of the Broken Fate (Legion)
 local CURRENCY_ID_NETHERSHARD = 1226
 local CURRENCY_ID_LFWS = 1342
+local CURRENCY_ID_BFA_WAR_RES = 1560			-- BfA: War Resources
+local CURRENCY_ID_BFA_SOWF = 1580				-- BfA: Seals of the Wartorn Fate
+local CURRENCY_ID_BFA_DUBLOONS = 1710			-- BfA: Seafarer's Dubloon
+local CURRENCY_ID_BFA_WAR_SUPPLIES = 1587		-- BfA: War Supplies
+local CURRENCY_ID_BFA_AZERITE = 1565			-- BfA: Rich Azerite Fragment
 
 local INFO_REALM_LINE = 0
 local INFO_CHARACTER_LINE = 1
@@ -46,18 +51,26 @@ local ns = addon.Summary		-- ns = namespace
 
 -- *** Utility functions ***
 local function GetRestedXP(character)
-	local rate = DataStore:GetRestXPRate(character)
+	local rate, savedXP, savedRate, rateEarnedResting, xpEarnedResting, maxXP, isFullyRested, timeUntilFullyRested = DataStore:GetRestXPRate(character)
 
+	-- display in 100% or 150% mode ?
 	local coeff = 1
 	if addon:GetOption("UI.Tabs.Summary.ShowRestXP150pc") then
 		coeff = 1.5
 	end
-	rate = rate * coeff
+	
+	-- coefficient remains the same for pandaren, only the max should be increased
+	local maxCoeff = coeff
+	if DataStore:GetCharacterRace(character) == "Pandaren" then 
+		maxCoeff = maxCoeff * 2 -- show as "200%" or "300%" for pandaren, who can accumulate 3 levels instead of 1.5
+	end
+	
+	rate = rate * maxCoeff
 	
 	-- second return value = the actual percentage of rest xp, as a numeric value (1 to 100, not 150)
 	local color = colors.green
-	if rate >= (100 * coeff) then 
-		rate = 100 * coeff
+	if rate >= (100 * maxCoeff) then 
+		rate = 100 * maxCoeff
 	else
 		if rate < (30 * coeff) then
 			color = colors.red
@@ -66,7 +79,7 @@ local function GetRestedXP(character)
 		end
 	end
 
-	return format("%s%d", color, rate).."%", rate
+	return format("%s%2.0f", color, rate).."%", rate, savedXP, savedRate * maxCoeff, rateEarnedResting * maxCoeff, xpEarnedResting, maxXP, isFullyRested, timeUntilFullyRested
 end
 
 local function FormatBagType(link, bagType)
@@ -583,17 +596,28 @@ columns["RestXP"] = {
 			end
 
 			local restXP = DataStore:GetRestXP(character)
-			if not restXP or restXP == 0 then return end
+			-- if not restXP or restXP == 0 then return end
+			if not restXP or DataStore:GetCharacterLevel(character) == MAX_PLAYER_LEVEL then return end
 
 			local tt = AltoTooltip
 			tt:ClearLines()
 			tt:SetOwner(frame, "ANCHOR_RIGHT")
 			tt:AddLine(DataStore:GetColoredCharacterName(character),1,1,1)
 			tt:AddLine(" ")
-			tt:AddLine(format("%s: %s%s", L["Rest XP"], colors.green, restXP),1,1,1)
+			
+			local rate, _, savedXP, savedRate, rateEarnedResting, xpEarnedResting, maxXP, isFullyRested, timeUntilFullyRested = GetRestedXP(character)
+			
+			tt:AddLine(format("%s: %s%d", L["Maximum Rest XP"], colors.green, maxXP),1,1,1)
+			tt:AddLine(format("%s: %s%d %s(%2.1f%%)", L["Saved Rest XP"], colors.green, savedXP, colors.yellow, savedRate),1,1,1)
+			tt:AddLine(format("%s: %s%d %s(%2.1f%%)", L["XP earned while resting"], colors.green, xpEarnedResting, colors.yellow, rateEarnedResting),1,1,1)
+			tt:AddLine(" ")
+			if isFullyRested then
+				tt:AddLine(format("%s", L["Fully rested"]),1,1,1)
+			else
+				tt:AddLine(format("%s%s: %s", colors.white, L["Fully rested in"], addon:GetTimeString(timeUntilFullyRested)))
+			end
+			
 			tt:Show()
-		-- - Improve "rested xp"
-			-- - tooltip : Fully rested in 4 days 12 hours (18 days if not left in an inn) on 29.05.09 4:00 pm
 		end,
 	OnClick = function(frame, button)
 			addon:ToggleOption(nil, "UI.Tabs.Summary.ShowRestXP150pc")
@@ -1534,14 +1558,14 @@ columns["CurrencyNethershard"] = {
 		end,
 }
 
-columns["CurrencyWarSupplies"] = {
+columns["CurrencyLegionWarSupplies"] = {
 	-- Header
 	headerWidth = 80,
 	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_misc_summonable_boss_token", 18, 18),
 	headerOnEnter = function(frame, tooltip)
 			CurrencyHeader_OnEnter(frame, CURRENCY_ID_LFWS)
 		end,
-	headerOnClick = function() SortView("CurrencyWarSupplies") end,
+	headerOnClick = function() SortView("CurrencyLegionWarSupplies") end,
 	headerSort = DataStore.GetWarSupplies,
 	
 	-- Content
@@ -1647,6 +1671,112 @@ columns["CurrencyOrderHall"] = {
 			end
 			
 			tt:Show()
+		end,
+}
+
+
+columns["CurrencyBfAWarResources"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\inv__faction_warresources", 18, 18),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_BFA_WAR_RES)
+		end,
+	headerOnClick = function() SortView("CurrencySOBF") end,
+	headerSort = DataStore.GetBfAWarResources,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount = DataStore:GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_RES)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s", color, amount)
+		end,
+}
+
+columns["CurrencyBfASOWF"] = {
+	-- Header
+	headerWidth = 60,
+	headerLabel = "   " .. format(TEXTURE_FONT, "Interface\\Icons\\timelesscoin_yellow", 18, 18),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_BFA_SOWF)
+		end,
+	headerOnClick = function() SortView("CurrencySOBF") end,
+	headerSort = DataStore.GetBfASealsOfWartornFate,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_BFA_SOWF)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s%s/%s%s", color, amount, colors.white, colors.yellow, totalMax)
+		end,
+}
+
+columns["CurrencyBfADubloons"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_misc_azsharacoin", 18, 18),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_BFA_DUBLOONS)
+		end,
+	headerOnClick = function() SortView("CurrencySOBF") end,
+	headerSort = DataStore.GetBfADubloons,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount = DataStore:GetCurrencyTotals(character, CURRENCY_ID_BFA_DUBLOONS)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s", color, amount)
+		end,
+}
+
+columns["CurrencyBfAWarSupplies"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\pvpcurrency-conquest-horde", 18, 18),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_BFA_WAR_SUPPLIES)
+		end,
+	headerOnClick = function() SortView("CurrencySOBF") end,
+	headerSort = DataStore.GetBfAWarSupplies,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_BFA_WAR_SUPPLIES)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s%s/%s%s", color, amount, colors.white, colors.yellow, totalMax)
+		end,
+}
+
+columns["CurrencyBfARichAzerite"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = "      " .. format(TEXTURE_FONT, "Interface\\Icons\\inv_smallazeriteshard", 18, 18),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, CURRENCY_ID_BFA_AZERITE)
+		end,
+	headerOnClick = function() SortView("CurrencySOBF") end,
+	headerSort = DataStore.GetBfARichAzerite,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_BFA_AZERITE)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s%s/%s%s", color, amount, colors.white, colors.yellow, totalMax)
 		end,
 }
 
@@ -1837,7 +1967,8 @@ local modes = {
 	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFishing", "ProfArchaeology" },
 	-- [MODE_SKILLS] = { "Name", "Level", "ProfCooking", "ProfFishing", "ProfArchaeology" },
 	[MODE_ACTIVITY] = { "Name", "Level", "Mails", "LastMailCheck", "Auctions", "Bids", "AHLastVisit", "MissionTableLastVisit" },
-	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyNethershard", "CurrencyWarSupplies", "CurrencySOBF", "CurrencyOrderHall" },
+	-- [MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyNethershard", "CurrencyLegionWarSupplies", "CurrencySOBF", "CurrencyOrderHall" },
+	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyBfAWarResources", "CurrencyBfASOWF", "CurrencyBfADubloons", "CurrencyBfAWarSupplies", "CurrencyBfARichAzerite" },
 	[MODE_FOLLOWERS] = { "Name", "Level", "FollowersLV100", "FollowersEpic", "FollowersLV630", "FollowersLV660", "FollowersLV675", "FollowersItems" },
 }
 

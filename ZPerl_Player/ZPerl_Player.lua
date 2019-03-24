@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 1111 $")
+end, "$Revision: 1121 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -59,9 +59,15 @@ function XPerl_Player_OnLoad(self)
 
 	CombatFeedback_Initialize(self, self.hitIndicator.text, 30)
 
+	self.portraitFrame:SetAttribute("*type1", "target")
+	self.portraitFrame:SetAttribute("type2", "togglemenu")
+	self.portraitFrame:SetAttribute("unit", self.partyid)
 	self.nameFrame:SetAttribute("*type1", "target")
 	self.nameFrame:SetAttribute("type2", "togglemenu")
 	self.nameFrame:SetAttribute("unit", self.partyid)
+	self.statsFrame:SetAttribute("*type1", "target")
+	self.statsFrame:SetAttribute("type2", "togglemenu")
+	self.statsFrame:SetAttribute("unit", self.partyid)
 	self:SetAttribute("*type1", "target")
 	self:SetAttribute("type2", "togglemenu")
 	self:SetAttribute("unit", self.partyid)
@@ -435,7 +441,9 @@ function XPerl_Player_OnLoad(self)
 	--RegisterAttributeDriver(self.nameFrame, "unit", "[vehicleui] vehicle; player")
 	RegisterAttributeDriver(self, "unit", "[vehicleui] vehicle; player")
 
+	XPerl_RegisterClickCastFrame(self.portraitFrame)
 	XPerl_RegisterClickCastFrame(self.nameFrame)
+	XPerl_RegisterClickCastFrame(self.statsFrame)
 	XPerl_RegisterClickCastFrame(self)
 
 	self:RegisterEvent("VARIABLES_LOADED")
@@ -1393,7 +1401,7 @@ end
 XPerl_Player_Events.PARTY_LEADER_CHANGED	= XPerl_Player_Events.PARTY_LOOT_METHOD_CHANGED
 XPerl_Player_Events.GROUP_ROSTER_UPDATE		= XPerl_Player_Events.PARTY_LOOT_METHOD_CHANGED
 
--- UNIT_HEALTH, UNIT_MAXHEALTH
+-- UNIT_HEALTH_FREQUENT, UNIT_MAXHEALTH
 function XPerl_Player_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Player_UpdateHealth(self)
 end

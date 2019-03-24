@@ -2,6 +2,8 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MisDirectionHelper", "itIT")
 
 if not L then return end
 
+--[[Translation missing --]]
+L["%s casts %s on %s"] = "\"player\" casts \"spell\" on \"target\""
 L["%s casts Tricks of the Trade on %s"] = "%s applica Trucchi del Mestiere su %s"
 L["%s Misdirects to %s"] = "%s: Depistaggio su %s"
 L["Author"] = "Autore"
@@ -12,9 +14,13 @@ L["Clear both targets when joining a raid / party"] = "Resetta entrambi i bersag
 L["Clear Target"] = "Rimuovi Bersaglio"
 L["Clear when joining group"] = "Resetta quando entri in Gruppo"
 L["Copy theme"] = "Copia Tema"
+--[[Translation missing --]]
+L["Disable Mouseover"] = "Disable Mouseover"
 L["Display a reminder to set targets on entering an instance / raid"] = "Visualizza un messaggio per impostare i bersagli quando entri in una spedizione / incursione"
 L["Dividers"] = "Divisori"
 L["Edit"] = "Modifica"
+--[[Translation missing --]]
+L["Enable Mouseover"] = "Enable Mouseover"
 L["Enter Player Name"] = "Immetti nome Giocatore"
 L["Export"] = "Esporta"
 L["Export theme"] = "Esporta Tema"
@@ -28,18 +34,24 @@ L["Left Click Each Text To Activate"] = "Clicca ogni testo per attivare"
 L["Left click target: %s"] = "Bersaglio Click Sinistro: %s"
 L["Left/Right Click"] = "Click Sinistro/Destro"
 L["Left/Right Click target"] = "Click Sinistro/Destro sul Bersaglio"
+--[[Translation missing --]]
+L["Line font"] = "Line font"
 L["Macro bypass key"] = "Tasto bypass Macro"
 L["Macro name"] = "Nome Macro"
 L["MDH is set to: %s"] = "Depistaggio su: %s"
 L["Minimap Icon"] = "Icona Minimappa"
 L["Misdirection"] = "Depistaggio"
 L["Misdirection macro icon"] = "Icona Macro Depistaggio"
+--[[Translation missing --]]
+L["Mouseover Enabled"] = "Mouseover Enabled"
 L["Name to use for the macro"] = "Nome da usare per la Macro"
 L["Nobody"] = "Nessuno"
 L["Player to cast Tricks of the Trade on"] = "Giocatore a cui mettere Trucchi del Mestiere"
 L["Player to Misdirect to"] = "Giocatore su ciu fare Depistaggio"
 L["Please enter a valid theme name"] = "Per favore immetti un nome tema valido"
 L["Profiles"] = "Profili"
+--[[Translation missing --]]
+L["Project description"] = "Use Misdirection / Tricks of the Trade with one click without losing your target. Create Smart Macros for Applying and Announcing Misdirection / Tricks of the Trade."
 L["Right Click For MDH Options"] = "Click destro per le Opzioni"
 L["Right click target: %s"] = "Bersaglio Click Destro: %s"
 L["Select"] = "Seleziona"
@@ -63,10 +75,11 @@ L["Theme"] = "Tema"
 L["Theme data"] = "Dati del Tema"
 L["Theme deleted"] = "Tema cancellato"
 L["Theme name"] = "Nome del Tema"
-L["Theme name already in use"] = "Nome del tema gi\\224 utilizzato"
+L["Theme name already in use"] = "Nome del tema gi\195\160 utilizzato"
 L["Theme saved"] = "Tema salvato"
 L["Themes"] = "Temi"
 L["Toggle Minimap icon"] = "Attiva/Disattiva Icona Minimappa"
 L["Toggle Misdirection Applied Announcment"] = "Attiva/Disattiva Annuncio Applicazione Depistaggio"
 L["Tricks of the Trade"] = "Trucchi del Mestiere"
 L["Tricks of the Trade macro icon"] = "Icona Macro Trucchi del Mestiere"
+

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AH-WindowControl
-	Version: 7.7.6076 (SwimmingSeadragon)
-	Revision: $Id: Auc-Util-AHWindowControl.lua 6076 2018-08-29 01:26:34Z none $
+	Version: 8.1.6223 (SwimmingSeadragon)
+	Revision: $Id: Auc-Util-AHWindowControl.lua 6223 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds the abilty to drag and reposition the Auction House Frame.
@@ -305,4 +305,4 @@ function private.AdjustProtection()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 6076 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 6223 $")

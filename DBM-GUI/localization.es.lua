@@ -6,7 +6,7 @@ local L = DBM_GUI_Translations
 L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
-L.TranslationBy 	= "Saispai (ordentradus@gmail.com)"
+L.TranslationBy 			= "Saispai"
 L.Website					= "Visita nuestro canal de Discord: |cFF73C2FBhttps://discord.gg/deadlybossmods|r."
 L.WebsiteButton				= "Página web"
 
@@ -15,32 +15,32 @@ L.OTabBosses	= "Jefes"
 L.TabCategory_Options	 	= "Opciones generales"
 L.TabCategory_OTHER    		= "Otros módulos"
 
-L.BossModLoaded 	= "Estadísticas de %s"
-L.BossModLoad_now 	= [[Este módulo no está cargado. 
+L.BossModLoaded 			= "Estadísticas de %s"
+L.BossModLoad_now 			= [[Este módulo no está cargado. 
 Se cargará al entrar en la estancia. 
 También puedes hacer clic en el botón para cargar el módulo manualmente.]]
 
-L.PosX = 'Posición X'
-L.PosY = 'Posición Y'
+L.PosX 						= 'Posición X'
+L.PosY 						= 'Posición Y'
 
-L.MoveMe 		= 'Posición'
-L.Button_OK 		= 'Aceptar'
-L.Button_Cancel 	= 'Cancelar'
-L.Button_LoadMod 	= 'Cargar módulo'
-L.Mod_Enabled		= "Habilitar módulo"
-L.Mod_Reset		= "Cargar opciones por defecto"
-L.Reset 		= "Restaurar"
+L.MoveMe 					= 'Posición'
+L.Button_OK 				= 'Aceptar'
+L.Button_Cancel 			= 'Cancelar'
+L.Button_LoadMod 			= 'Cargar módulo'
+L.Mod_Enabled				= "Habilitar módulo"
+L.Mod_Reset					= "Cargar opciones por defecto"
+L.Reset 					= "Restaurar"
 
-L.NoSound		= "Sin sonido"
+L.NoSound					= "Sin sonido"
 
-L.IconsInUse	= "Iconos usados por este módulo"
+L.IconsInUse				= "Iconos usados por este módulo"
 
 -- Tab: Boss Statistics
-L.BossStatistics	= "Estadísticas"
-L.Statistic_Kills	= "Victorias:"
-L.Statistic_Wipes	= "Derrotas:"
+L.BossStatistics			= "Estadísticas"
+L.Statistic_Kills			= "Victorias:"
+L.Statistic_Wipes			= "Derrotas:"
 L.Statistic_Incompletes		= "Inacabados:"--For scenarios, TODO, figure out a clean way to replace any Statistic_Wipes with Statistic_Incompletes for scenario mods
-L.Statistic_BestKill	= "Mejor victoria:"
+L.Statistic_BestKill		= "Mejor victoria:"
 L.Statistic_BestRank		= "Mejor nivel:"--Maybe not get used, not sure yet, localize anyways
 
 -- Tab: General Core Options
@@ -155,6 +155,7 @@ L.ExpandUpwards				= "Expandir arriba"
 L.FillUpBars				= "Rellenar"
 L.ClickThrough				= "Deshabilitar clic en barras"
 L.Bar_Decimal				= "Mostrar decimales bajo: %d s"
+L.Bar_Alpha					= "Transparencia de barra: %0.1f"
 L.Bar_DBMOnly				= "Estas opciones solo funcionan con el estilo de barras DBM"
 L.Bar_EnlargeTime			= "Agrandar barras bajo tiempo: %d s"
 L.Bar_EnlargePercent		= "Agrandar barras bajo %%: %0.1f%%"
@@ -164,6 +165,9 @@ L.BarSort					= "Ordenar por tiempo restante"
 L.BarColorByType			= "Color por tipo"
 L.BarInlineIcons			= "Iconos en barras"
 L.ShortTimerText			= "Texto de temporizador breve"
+L.KeepBar					= "Mantener hasta que se lance la habilidad"
+L.KeepBar2					= "(siempre que el módulo lo permita)"
+L.FadeBar					= "Desteñir barras de habilidades lejanas"
 
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "Avisos especiales"
@@ -218,9 +222,10 @@ L.Panel_EventSounds			= "Sonidos de eventos"
 L.Area_SoundSelection		= "Selección de sonidos"
 L.EventVictorySound			= "Sonido de victoria de encuentro"
 L.EventWipeSound			= "Sonido de derrota de encuentro"
-L.EventEngageSound			= "Sonido de inicio de encuentro (la lista es larga; usa la rueda del ratón para verla entera)"
+L.EventEngageSound			= "Sonido de inicio de encuentro"
 L.EventDungeonMusic			= "Música de fondo en mazmorras y bandas"
 L.EventEngageMusic			= "Música de fondo en encuentros"
+L.EventTurtleMusic			= "Música de fondo en 'Cabeza de playa'"
 L.Area_EventSoundsExtras	= "Opciones de sonidos de eventos"
 L.EventMusicCombined		= "Mostrar toda la selección de música (escribe /reload en el chat para que esta opción surta efecto)"
 L.Area_EventSoundsFilters	= "Filtros de sonidos de evento"
@@ -264,17 +269,17 @@ L.FilterInterrupts2			= "Si no es tu objetivo o foco (siempre) o no puedes inter
 L.FilterInterrupts3			= "Si no es tu objetivo o foco (siempre) o no puedes interrumpir (todos los enemigos)"
 L.FilterInterruptNoteName	= "Ocultar avisos de facultades interrumpibles con orden de interrupciones si el aviso no contiene tu nombre en la nota"
 L.FilterDispels				= "Ocular avisos de facultades disipables si tu disipación no está disponible"
+L.FilterTrashWarnings		= "Ocultar todos los avisos de enemigos menores en mazmorras normales y heroicas"
 L.FilterSelfHud				= "Excluirte de los indicadores (los indicadores de distancia no te tendrán en cuenta)"
 
 L.Area_PullTimer			= "Opciones de filtros de inicio de encuentro, descanso, combate y personalizados"
 L.DontShowPTNoID			= "Ocultar temporizadores de inicio de encuentro que se inicien en zonas distintas"
 L.DontShowPT				= "Ocultar barras de temporizadores de inicio de encuentro y descanso"
 L.DontShowPTText			= "Ocultar anuncios de temporizadores de inicio de encuentro y descanso"
-L.DontPlayPTCountdown		= "Desactivar sonidos de cuenta atrás de temporizadores de inicio de encuentro, descanso, combate y personalizados"
 L.DontShowPTCountdownText	= "Ocultar texto de cuenta atrás de temporizadores de inicio de encuentro, descanso, combate y personalizados"
+L.DontPlayPTCountdown		= "Desactivar sonidos de cuenta atrás de temporizadores de inicio de encuentro, descanso, combate y personalizados"
 L.PT_Threshold				= "Ocultar temporizadores por encima de: %d s"
 
--- Tab: Blizzard Disable & Hide
 L.Panel_HideBlizzard		= "Interfaz y funciones de Blizzard"
 L.Area_HideBlizzard			= "Opciones de interfaz y funciones de Blizzard"
 L.HideBossEmoteFrame		= "Ocultar avisos de encuentro de mazmorra y banda"
@@ -285,12 +290,17 @@ L.HideQuestTooltips			= "Ocultar objetivos de misión en en descripciones emerge
 L.HideTooltips				= "Ocultar por completo las descripciones emergentes en encuentros"
 L.DisableSFX				= "Desactivar el canal de efectos de sonido en encuentros"
 L.DisableCinematics			= "Saltar cinemáticas automáticamente"
-L.AfterFirst				= "Tras ver la cinemática por primera vez"
+L.OnlyFight					= "Solo en combate, tras haber visto la cinemática por primera vez"
+L.AfterFirst				= "Tras haber visto la cinemática por primera vez"
 L.Always					= ALWAYS
 L.CombatOnly				= "En combate"
 L.RaidCombat				= "En combate (solo en jefes)"
+L.HideBonusHeader			= "Ocultar ventana de tirada bonus en"
+L.TrivialContent			= "Mazmorras no míticas"
+L.NormalRaider				= "LFR y mazmorras míticas inferiores a +5"
+L.HeroicRaider				= "Bandas inferiores a heroico, mazmorras míticas inferiores a +10 y jefes de mundo (<400)"
+L.MythicRaider				= "Todo lo inferior a banda mítica"
 
--- Tab: Extra Features
 L.Panel_ExtraFeatures		= "Funciones adicionales"
 --
 L.Area_ChatAlerts			= "Opciones de alertas de texto"

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 7.7.6070 (SwimmingSeadragon)
-	Revision: $Id: AskPrice.lua 6070 2018-08-29 01:26:34Z none $
+	Version: 8.1.6217 (SwimmingSeadragon)
+	Revision: $Id: AskPrice.lua 6217 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	Auctioneer AskPrice created by Mikezter and merged into
@@ -41,10 +41,11 @@ local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = 
 private.sentRequest = {}
 private.requestQueue = {}
 private.sentAskPriceAd = {}
+local AskPriceSentMessages = {}
 private.timeToWaitForPrices = 2
 private.timeToWaitForResponse = 5
-private.playerName = UnitName("player")
-local AskPriceSentMessages = {}
+private.playerName = NIL     -- because realm isn't always set here!
+
 
 lib.Processors = {
 	config = function(callbackType, gui)
@@ -55,14 +56,17 @@ lib.Processors = {
 function lib.OnLoad(addon)
 	private.frame = CreateFrame("Frame")
 
+    -- because realm STILL isn't always set here!
+
 	private.frame:RegisterEvent("CHAT_MSG_RAID_LEADER")
 	private.frame:RegisterEvent("CHAT_MSG_IGNORED")
 	private.frame:RegisterEvent("CHAT_MSG_WHISPER")
 	private.frame:RegisterEvent("CHAT_MSG_OFFICER")
 	private.frame:RegisterEvent("CHAT_MSG_PARTY")
-	private.frame:RegisterEvent("CHAT_MSG_GUILD")
+	private.frame:RegisterEvent("CHAT_MSG_GUILD")     -- guild messages also send CLUB_MESSAGE_ADDED in 8.0, if
 	private.frame:RegisterEvent("CHAT_MSG_RAID")
-	private.frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
+	private.frame:RegisterEvent("CHAT_MSG_BN_WHISPER")  -- says removed, but very much in use
+--	private.frame:RegisterEvent("CLUB_MESSAGE_ADDED")  -- new in 8.0, and kinda undocumented -- appears to be only event for communities chat
 
 	--Do our addon message event registration
 	private.frame:RegisterEvent("CHAT_MSG_ADDON")
@@ -101,6 +105,7 @@ end
 function private.onUpdate(frame, secondsSinceLastUpdate)
 	--Check the request queue for timeouts (We've finished waiting for other clients to send prices)
 	for request, details in pairs(private.requestQueue) do
+        --print("AskPrice processing queue: "..tostring(details.querySeenBy).." "..tostring(private.playerName) )
 		if ((GetTime() - details.timer) >= private.timeToWaitForPrices) then
 			if (details.querySeenBy == private.playerName) then --If we were the one who claimed the original query, then respond, else destroy the request.
 				private.sendRequest(request, details)
@@ -117,11 +122,19 @@ function private.onUpdate(frame, secondsSinceLastUpdate)
 	end
 end
 
+
 function private.onEvent(frame, event, ...)
 	--Nothing to do if AskPrice is disabled
 	if (not private.getOption('util.askprice.activated')) then
 		return
 	end
+
+    -- realm does seem to be set by this point
+	if (not private.playerName) then
+        local name,realm = UnitFullName("player")  -- there really should be an API to return name-realm form
+        name = name.."-"..realm
+        private.playerName = name
+    end
 
 	local msg = ...;
 
@@ -131,30 +144,41 @@ function private.onEvent(frame, event, ...)
 	elseif (event == "CHAT_MSG_IGNORED") then
 		return private.beingIgnored(...)
 
-	elseif (event == "CHAT_MSG_BN_WHISPER") then
+--	elseif (event == "CHAT_MSG_BN_WHISPER") then
 		-- TODO later
 	end
 
 	return private.chatEvent(event, msg, select(2, ...))
 end
 
+
 -- PresenceID is only for battlenet whispers
 function private.chatEvent(event, text, player, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, presenceID)
 	local channel
+    --print("ChatEvent received: "..tostring(event).." "..tostring(text).." "..tostring(player) )
 	if (event == "CHAT_MSG_RAID") or (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_RAID_LEADER") then
 		channel = "RAID"
-	end
-
-	if (event == "CHAT_MSG_GUILD") or (event == "CHAT_MSG_OFFICER") then
+	elseif (event == "CHAT_MSG_GUILD") or (event == "CHAT_MSG_OFFICER") then
+        --print("ChatEvent guild message: "..tostring(event).." "..tostring(text))
 		channel = "GUILD"
-	end
-
-	if (event == "CHAT_MSG_WHISPER") then
+	elseif (event == "CHAT_MSG_WHISPER") then
 		channel = "WHISPER"
+	elseif (event == "CHAT_MSG_BN_WHISPER") then
+		channel = "BN";
+	elseif (event == "CLUB_MESSAGE_ADDED") then
+		channel = "GUILD"
+		local clubId, streamId, messageId = text, player, arg3;
+		local message = C_Club.GetMessageInfo(clubId, streamId, messageId);
+		player = message.author.name;
+        -- message.author.name,  message.author.memberId, message.author.bnetAccountId
+		text = message.content;
+        --print("ChatEvent community message: "..tostring(event).." "..tostring(text).." "..tostring(player))
+        -- NOTE - this won't work easily, because the player name here is the battle.net name and not the local player name, BNGetInfo
 	end
 
-	if (event == "CHAT_MSG_BN_WHISPER") then
-		channel = "BN";
+	if (not channel) then
+        --print("ChatEvent channel unknown: "..tostring(event).." "..tostring(text).." "..tostring(player) )
+	    return
 	end
 
 	-- Trim out spaces at the beginning
@@ -172,12 +196,16 @@ function private.chatEvent(event, text, player, arg3, arg4, arg5, arg6, arg7, ar
 		return
 	end
 
+    --print("ChatEvent AskPrice trigger seen: "..tostring(text).." "..tostring(player) )
+
 	local items = private.getItems(text)
+    --print("ChatEvent items: "..tostring(#items))
 	if (channel == "GUILD") or (channel == "RAID") then
 		for i = 1, #items, 2 do
 			local count = items[i]
 			local link = items[i+1]
 
+            ---print("ChatEvent sending item: "..tostring(link))
 			private.sendAddOnMessage(channel, "QUERY", link, count, player, channel)
 		end
 
@@ -190,6 +218,7 @@ function private.chatEvent(event, text, player, arg3, arg4, arg5, arg6, arg7, ar
 		end
 	end
 end
+
 
 function private.sendRequest(request, details)
 	local link = details.itemLink
@@ -207,9 +236,12 @@ function private.sendRequest(request, details)
 	details.timer = GetTime()
 	private.sentRequest[request] = details
 
+    --print("askPrice sending response: "..tostring(player).." "..tostring(link).." "..tostring(totalPrice))
 	--Send the response
 	return private.sendResponse(link, count, player, answerCount, totalSeenCount, totalPrice, vendorPrice)
 end
+
+
 --recreate the simple coin value function from EH TT. Askprice is pretty much the only module that needs to whisper non-color coin values
 --look into adding this into nTipHelper
 local function coins(money)
@@ -229,6 +261,8 @@ local function coins(money)
 	end
 	return gsc
 end
+
+
 function private.sendResponse(link, count, player, answerCount, totalSeenCount, totalPrice, vendorPrice)
 	local marketPrice = totalPrice
 
@@ -267,7 +301,7 @@ function private.sendResponse(link, count, player, answerCount, totalSeenCount, 
 	end
 
 	--Send out vendor info if we have it
-	if --[[private.getOption('util.askprice.vendor') and ]](vendorPrice and (vendorPrice > 0)) then --Vendor pricing option is still disabled
+	if (vendorPrice and (vendorPrice > 0)) then
 
 		local strVendOne
 		--Again if the stack Size is greater than one, add the unit price to the message
@@ -354,6 +388,7 @@ function private.addOnEvent(prefix, message, sourceChannel, sourcePlayer)
 	end
 
 	if (requestType == "QUERY") then --AskPrice query was received by someone and is requesting prices for that query.
+        --print("Askprice addon msg QUERY: "..tostring(message).." channel: "..sourceChannel.." player: "..sourcePlayer)
 		private.requestQueue[request] = private.requestQueue[request] or {
 			timer = GetTime(),
 			querySeenBy = sourcePlayer,
@@ -375,9 +410,12 @@ function private.addOnEvent(prefix, message, sourceChannel, sourcePlayer)
 		end
 
 	elseif (requestType == "PRICE") then --AskPrice users are responding to the query. We only listen to these if we were the first to send out the QUERY event that pertains to this PRICE event (see above)
+        --print("Askprice addon msg PRICE: "..tostring(message).." channel: "..sourceChannel.." player: "..sourcePlayer)
 		local request = private.requestQueue[request]
 		if (request and (request.querySeenBy == private.playerName)) then
 			if not (request.priceProviders and request.priceProviders:find(sourcePlayer)) then
+
+                --print("Askprice addon msg PRICE getting totals: ")
 				--Better stat average formula for each response: total = total + (price * seen); count = count + seen; average = total/count
 				local count = request.totalSeenCount + totalSeenCount
 				local total = request.totalPrice + (totalPrice * totalSeenCount)
@@ -460,7 +498,7 @@ end
 
 --This function changed after AskPrice revision 2825 to include AucAdvanced's revision number in adition to AskPrice's
 function private.GetVersion()
-	return tonumber(("$Rev: 6070 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
+	return tonumber(("$Rev: 6217 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
 end
 
 --This function is used to check if the received request (which should be lowercased before the function is called) is a valid SmartWords request
@@ -581,4 +619,4 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, _TRANS('ASKP_HelpTooltip_Whisper')) --"Shows (enabled) or hides (disabled) outgoing whispers from Askprice."
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 6070 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 6217 $")

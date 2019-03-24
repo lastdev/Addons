@@ -224,6 +224,17 @@ local function _GetRestXPRate(character)
 		-- multiply by 1.5				136 * 1.5 = 204
 		-- divide rest xp by this value	20400 / 204 = 100	==> rest xp rate
 	
+	--[[
+		17/09/2018 : After even more extensive tests since right after the launch of BfA, it is now clear that Blizzard is not 
+		consistent in their reporting of rest xp.
+		
+		A simple example: my 110 druid with exactly 0xp / 717.000 should be able to earn 1.5 levels of rest xp at current level rate.
+		This should set the maximum at 1.075.500 xp.
+		Nevertheless, my druid actually has 1.505.792 xp, and this is not a value that I actually process in datastore before saving it.
+		I had the same issue a week ago on my horde monk, which had 2.9M rest xp for a maximum of 3 levels (2.1M xp).
+	
+	--]] 
+	
 	local rate = 0
 	local multiplier = 1.5
 	
@@ -231,23 +242,59 @@ local function _GetRestXPRate(character)
 		multiplier = 3
 	end
 	
+	local savedXP = 0
+	local savedRate = 0
+	local maxXP = character.XPMax * multiplier
 	if character.RestXP then
-		rate = (character.RestXP / ((character.XPMax / 100) * multiplier))
+		rate = character.RestXP / (maxXP / 100)
+		savedXP = character.RestXP
+		savedRate = rate
 	end
 	
 	-- get the known rate of rest xp (the one saved at last logout) + the rate represented by the elapsed time since last logout
 	-- (elapsed time / 3600) * 0.625 * (2/3)  simplifies to elapsed time / 8640
 	-- 0.625 comes from 8 hours rested = 5% of a level, *2/3 because 100% rested = 150% of xp (1.5 level)
 
+	local xpEarnedResting = 0
+	local rateEarnedResting = 0
+	local isFullyRested = false
+	local timeUntilFullyRested = 0
+	local now = time()
+	
 	-- time since last logout, MAX_LOGOUT_TIMESTAMP for current char, <> for all others
 	if character.lastLogoutTimestamp ~= MAX_LOGOUT_TIMESTAMP then	
-		if character.isResting then
-			rate = rate + ((time() - character.lastLogoutTimestamp) / 8640)
+		local oneXPBubble = character.XPMax / 20		-- 5% at current level 
+		local elapsed = (now - character.lastLogoutTimestamp)		-- time since last logout, in seconds
+		local numXPBubbles = elapsed / 28800		-- 28800 seconds = 8 hours => get the number of xp bubbles earned
+		
+		xpEarnedResting = numXPBubbles * oneXPBubble
+		
+		if not character.isResting then
+			xpEarnedResting = xpEarnedResting / 4
+		end
+
+		-- cap earned XP
+		if (xpEarnedResting + savedXP) > maxXP then
+			xpEarnedResting = xpEarnedResting - ((xpEarnedResting + savedXP) - maxXP)
+		end
+	
+		-- non negativity
+		if xpEarnedResting < 0 then xpEarnedResting = 0 end
+		
+		rateEarnedResting = xpEarnedResting / (maxXP / 100)
+		
+		if (savedXP + xpEarnedResting) >= maxXP then
+			isFullyRested = true
+			rate = 100
 		else
-			rate = rate + ((time() - character.lastLogoutTimestamp) / 34560)	-- 4 times less if not at an inn
+			local xpUntilFullyRested = maxXP - (savedXP + xpEarnedResting)
+			timeUntilFullyRested = math.floor((xpUntilFullyRested / oneXPBubble) * 28800) -- num bubbles * duration of one bubble in seconds
+			
+			rate = rate + rateEarnedResting
 		end
 	end
-	return rate
+	
+	return rate, savedXP, savedRate, rateEarnedResting, xpEarnedResting, maxXP, isFullyRested, timeUntilFullyRested
 end
 
 local function _IsResting(character)

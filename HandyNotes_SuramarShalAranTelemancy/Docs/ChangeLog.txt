@@ -1,7 +1,11 @@
-$Id: ChangeLog.txt 57 2018-08-06 15:32:45Z arith $
+$Id: ChangeLog.txt 59 2018-12-21 16:02:06Z arith $
 
 Revision History:
 =================
+
+* v1.20 (Dec. 21, 2018)
+-----------------------
+- Toc update to support WoW 8.1.0
 
 * v1.19 (Aug. 06, 2018)
 -----------------------

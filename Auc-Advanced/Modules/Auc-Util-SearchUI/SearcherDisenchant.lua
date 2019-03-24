@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Disenchant
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherDisenchant.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherDisenchant.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -175,9 +175,13 @@ function lib.Search(item)
 	if get("disenchant.adjust.brokerage") then
 		market = market * resources.CutAdjust
 	end
-	--adjust for deposit costs - for simplicity this is just (1 silver * relist times)
+	--adjust for deposit costs
+	-- ### todo : to rework this better we really need to know what size stacks the results will be posted in,
+	-- ### we know that deposit will be 20% of cost of 1 item in the stack,
+	-- ### so for a stack of 10 the deposit will be stackprice * 0.1 * 0.2
+	-- ### in future we should use the AucAdvanced.Post.GetDepositCost call
 	if get("disenchant.adjust.deposit") then
-		market = market - 100 * get("disenchant.adjust.listings")
+		market = market - (market * 0.02 * get("disenchant.adjust.listings"))
 	end
 
 	-- check amount of profit
@@ -190,4 +194,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherDisenchant.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherDisenchant.lua $", "$Rev: 6245 $")

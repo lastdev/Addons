@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1121 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -85,7 +85,7 @@ local function UpdateUnit(self,forcedUpdate)
 	if (forcedUpdate) then
 		local time = GetTime()
 		if (self.update and time < self.update + 0.2) then
-			-- Since we catch UNIT_HEALTH changes, we don't need to update always
+			-- Since we catch UNIT_HEALTH_FREQUENT changes, we don't need to update always
 			return
 		end
 	end
@@ -702,7 +702,7 @@ end
 -- Registration
 local function Registration()
 	local list = {
-		"UNIT_HEALTH",
+		"UNIT_HEALTH_FREQUENT",
 		"UNIT_MAXHEALTH",
 		"UNIT_TARGET",
 		"PLAYER_TARGET_CHANGED",
@@ -778,8 +778,8 @@ function Events:GROUP_ROSTER_UPDATE()
 	--XPerlRaidHelperCheck:show()
 end
 
--- UNIT_HEALTH
-function Events:UNIT_HEALTH(unit)
+-- UNIT_HEALTH_FREQUENT
+function Events:UNIT_HEALTH_FREQUENT(unit)
 	if not unit then
 		return
 	end
@@ -794,7 +794,7 @@ function Events:UNIT_HEALTH(unit)
 	end
 end
 
-Events.UNIT_MAXHEALTH = Events.UNIT_HEALTH
+Events.UNIT_MAXHEALTH = Events.UNIT_HEALTH_FREQUENT
 
 -- UNIT_FACTION
 function Events:UNIT_FACTION(unit)

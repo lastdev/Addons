@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r38 | thaoky.altoholic@yahoo.com | 2018-09-19 16:59:41 +0000 (Wed, 19 Sep 2018) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.lua
+
+Added BfA currencies
+------------------------------------------------------------------------
 r37 | thaoky.altoholic@yahoo.com | 2018-07-22 11:23:00 +0000 (Sun, 22 Jul 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Currencies.lua

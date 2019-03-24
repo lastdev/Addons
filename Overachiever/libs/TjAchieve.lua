@@ -906,8 +906,10 @@ do
 		for i=1,orig_GetAchievementNumCriteria(id) do
 			if (pattern == TjAchieve.ANY_NON_BLANK) then  return true;  end -- Alternative: Also check if critString isn't blank? Ignore single status bar w/o displayed text?
 			critString = GetAchievementCriteriaInfo(id, i)
-			foundCrit = strfind(strlower(critString), pattern, 1, true)
-			if (foundCrit) then  return true;  end
+			if (critString) then
+				foundCrit = strfind(strlower(critString), pattern, 1, true)
+				if (foundCrit) then  return true;  end
+			end
 		end
 	end
 

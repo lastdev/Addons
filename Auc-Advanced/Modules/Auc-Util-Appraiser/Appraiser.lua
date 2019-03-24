@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 7.7.6065 (SwimmingSeadragon)
-	Revision: $Id: Appraiser.lua 6065 2018-08-29 01:26:34Z none $
+	Version: 8.1.6212 (SwimmingSeadragon)
+	Revision: $Id: Appraiser.lua 6212 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -47,8 +47,8 @@ local GetMarketValue = AucAdvanced.API.GetMarketValue
 local GetAlgorithmValue = AucAdvanced.API.GetAlgorithmValue
 local GetBestMatch = AucAdvanced.API.GetBestMatch
 local GetSigFromLink = AucAdvanced.API.GetSigFromLink
-local GetDepositCost = GetDepositCost
-local GetItemInfo = GetItemInfo
+local GetDepositCost = AucAdvanced.Post.GetDepositCost
+local GetItemInfoCache = AucAdvanced.GetItemInfoCache
 
 local pricecache -- cache for GetPrice; only used in certain circumstances
 local tooltipcache = {} -- cache for ProcessTooltip
@@ -340,7 +340,7 @@ function private.GetPriceCore(sig, link, serverKey, match)
 	elseif curModel == "fixed" then
 		newBuy = get("util.appraiser.item."..sig..".fixed.buy")
 		newBid = get("util.appraiser.item."..sig..".fixed.bid")
-		seen = 99
+		seen = 0
 	elseif curModel == "market" then
 		newBuy, seen = GetMarketValue(link, serverKey)
 	else
@@ -376,7 +376,7 @@ function private.GetPriceCore(sig, link, serverKey, match)
 	-- other return values
 	local stack = get("util.appraiser.item."..sig..".stack") or get("util.appraiser.stack")
 	local number = get("util.appraiser.item."..sig..".number") or get("util.appraiser.number")
-	local  _, _, _, _, _, _, _, maxStack = GetItemInfo(link)
+	local  maxStack, _, _, vendor = GetItemInfoCache(link, 8)
 	if not maxStack then maxStack = 1 end
 	--we only officially accept "max" or a number, but user could have input any random string, so add some sanitization
 	stack = tonumber(stack)
@@ -404,8 +404,8 @@ function private.GetPriceCore(sig, link, serverKey, match)
 			local subtract = get("util.appraiser.bid.subtract") or 0
 			local deposit = 0
 			if get("util.appraiser.bid.deposit") then
-				local dep = GetDepositCost(link, duration, nil, stack)
-				if dep and stack then
+				local dep = GetDepositCost(link, duration, 1, newBuy * stack, stack)
+				if dep then
 					deposit = dep / stack
 				end
 			end
@@ -416,10 +416,9 @@ function private.GetPriceCore(sig, link, serverKey, match)
 			end
 		end
 
-		if GetSellValue and get("util.appraiser.bid.vendor") then
-			local vendor = GetSellValue(link)
+		if get("util.appraiser.bid.vendor") then
 			if vendor and vendor>0 then
-				vendor = ceil(vendor / (1 - (AucAdvanced.cutRate or 0.05)))
+				vendor = ceil(vendor / Resources.AHCutAdjust)
 				if newBid < vendor then
 					newBid = vendor
 				end
@@ -480,4 +479,4 @@ Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.
 lib.Private_AprFrame = private
 lib.Private_AprSettings = private
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 6065 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 6212 $")

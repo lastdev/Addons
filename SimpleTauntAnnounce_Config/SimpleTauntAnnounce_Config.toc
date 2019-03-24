@@ -1,7 +1,7 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: Simple Taunt Announce Config
 ## Notes: Configuration panel for STA
-## Author: BeathsCurse (Saphod - Draenor EU)
+## Author: BeathsCurse (Bowmore - Silvermoon EU)
 ## Dependencies: SimpleTauntAnnounce
 ## LoadOnDemand: 1
 

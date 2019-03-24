@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CoreBuy.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CoreBuy.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -828,5 +828,5 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreBuy.lua $", "$Rev: 6112 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreBuy.lua $", "$Rev: 6201 $")
 AucAdvanced.CoreFileCheckOut("CoreBuy")

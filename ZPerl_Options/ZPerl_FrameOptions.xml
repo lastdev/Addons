@@ -606,7 +606,7 @@
 			<OnShow>
 				self:SetText(_G["XPERL_CONF_TITLE"..self:GetID()])
 				local f = _G[self:GetName().."Text"]
-				self:SetWidth(f:GetStringWidth() + 18)
+				self:SetWidth(f:GetStringWidth() + 13.5)
 				XPerl_Options_SetTabColor(self, XPerlDB.optionsColour)
 				self:SetScript("OnShow", nil)
 			</OnShow>
@@ -623,7 +623,7 @@
 				_G[self:GetName().."Text"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 				if self.flashFrame and not InCombatLockdown() then
 					local array
-					if table.getn(self.flashFrame) == 0 then
+					if #self.flashFrame == 0 then
 						array = {self.flashFrame}
 					else
 						array = self.flashFrame
@@ -2274,7 +2274,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="$parent_Anchor" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_BiggerGap" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -2414,7 +2414,7 @@
 						</Layers>
 					</Frame>
 
-					<Frame name="$parent_Anchor" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 								<Offset>
@@ -2993,7 +2993,7 @@
 						}
 
 						self.SelectTab = function(self, id)
-							for i=1,table.getn(self.frameNames) do
+							for i = 1, #self.frameNames do
 								local frame = _G[self:GetParent():GetName()..self.frameNames[i]]
 
 								local tab = _G[self:GetName()..i]
@@ -4864,7 +4864,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="XPerl_Options_DropDown_LoadSettings" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_DropDown_LoadSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Reset" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -4907,7 +4907,7 @@
 						</Scripts>
 					</Frame>
 
-					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="Lib_UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeTo="XPerl_Options_DropDown_LoadSettings" relativePoint="TOPLEFT">
 								<Offset>

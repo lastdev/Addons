@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 7.7.6092 (SwimmingSeadragon)
-	Revision: $Id: InfMain.lua 6092 2018-08-29 01:26:34Z none $
+	Version: 8.1.6246 (SwimmingSeadragon)
+	Revision: $Id: InfMain.lua 6246 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	License:
@@ -27,9 +27,9 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: Informant/InfMain.lua $","$Rev: 6092 $")
+Informant_RegisterRevision("$URL: Informant/InfMain.lua $","$Rev: 6246 $")
 
-INFORMANT_VERSION = "7.7.6092"
+INFORMANT_VERSION = "8.1.6246"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end
@@ -864,6 +864,7 @@ local function updateMerchantName()
 	-- TODO - we are not currently using the faction information for vendors
 
 	local vendorGUID = UnitGUID("NPC")
+	if not vendorGUID then return end -- very rarely this may be nil; bail out (and hope we get a valid ID in an update event)
 	local vendorID = select(6,strsplit("-", vendorGUID))
 	vendorID = tonumber(vendorID)
 
@@ -888,6 +889,7 @@ local function doUpdateMerchant()
 	if (not Informant.Settings.GetSetting('auto-update')) then return end
 
 	local vendorID = updateMerchantName()
+	if not vendorID then return end
 	updateBuyPricesFromMerchant( vendorID )
 	updateSellPricesFromMerchant()
 

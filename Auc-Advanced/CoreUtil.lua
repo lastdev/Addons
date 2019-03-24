@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CoreUtil.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CoreUtil.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -958,5 +958,5 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: Auc-Advanced/CoreUtil.lua $", "$Rev: 6112 $")
+lib.RegisterRevision("$URL: Auc-Advanced/CoreUtil.lua $", "$Rev: 6201 $")
 lib.CoreFileCheckOut("CoreUtil")

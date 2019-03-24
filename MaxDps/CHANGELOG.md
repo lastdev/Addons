@@ -1,7 +1,6 @@
 # MaxDps
 
-## [v8.0.7](https://github.com/kaminaris/MaxDps/tree/v8.0.7) (2018-09-01)
-[Full Changelog](https://github.com/kaminaris/MaxDps/compare/v8.0.6...v8.0.7)
+## [v8.1.3](https://github.com/kaminaris/MaxDps/tree/v8.1.3) (2019-03-06)
+[Full Changelog](https://github.com/kaminaris/MaxDps/compare/v8.1.2.1...v8.1.3)
 
-- v8.0.7  
-- v8.0.7 - Percent HP fixes  
+- v8.1.3 - Color fixes  

@@ -120,6 +120,28 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "8.0.008 Changes",
+		bulletedList = {
+			"Added BfA factions. (Thanks AlexSUCF !!)",
+			"Added BfA currencies.",
+			"Added BfA emissary quests.",
+			"Some quest achievements for BfA were rearranged to better reflect a character's progress.",
+			"Fixed the percentage of rest xp for pandaren to now properly show 200% or 300% depending on the mode.",
+			"Reworked the way rest xp is displayed in the addon, there is now a tooltip giving more info about rest xp, including when an alt will be fully rested."
+		},
+	},
+	{	name = "8.0.007 Changes",
+		bulletedList = {
+			"Account Summary : Removed a test that prevented the herbalism & skinning tooltip from showing the proper per expansion information.",
+		},
+	},
+	{	name = "8.0.006 Changes",
+		bulletedList = {
+			"Restored the emissaries panel.",
+			"Fixed the 'All levels' filter in the account summary being limited to 110.",
+			"Added support for War Campaign Missions."
+		},
+	},
 	{	name = "8.0.005 Changes",
 		bulletedList = {
 			"Closed a lot of bugs from the Curse issues list, and implemented a lot of smaller fixes (thanks to all who contributed !).",

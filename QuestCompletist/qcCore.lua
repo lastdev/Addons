@@ -23,9 +23,8 @@ local qcToastTooltip = nil
 local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
-
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.16
+local QCADDON_VERSION = 109.21
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -667,22 +666,28 @@ function qcQuestClick(qcButtonIndex)
 			end
 		end
   else
-    --print(string.format("%sLooking for Tom Tom.",QCADDON_CHAT_TITLE))
-    if (IsAddOnLoaded('TomTom')) then
-      --print(string.format("%sLooking for quest in db.",QCADDON_CHAT_TITLE))
-      for qcMapIndex, qcMapEntry in pairs(qcPinDB) do
-        for qcInitiatorIndex, qcInitiatorEntry in pairs(qcPinDB[qcMapIndex]) do
-          for qcInitiatorQuestIndex, qcInitiatorQuestEntry in pairs(qcPinDB[qcMapIndex][qcInitiatorIndex][7]) do
-            if (qcInitiatorQuestEntry == qcQuestID) then
-              --print(string.format("%sFound quest. Initiator: %s",QCADDON_CHAT_TITLE, qcInitiatorEntry[4]))
-              TomTom:AddMFWaypoint(qcMapIndex, 0, qcInitiatorEntry[5]/100, qcInitiatorEntry[6]/100, {title=qcInitiatorEntry[4]})
-              break
-            end
-          end
-        end
-      end
-      TomTom:SetClosestWaypoint()
-    end
+		-- print(string.format("%sLooking for Tom Tom.",QCADDON_CHAT_TITLE))
+		if (IsAddOnLoaded('TomTom')) then
+			local addedWayPoint;
+			-- print(string.format("%sLooking for quest in db.",QCADDON_CHAT_TITLE))
+			for qcMapIndex, qcMapEntry in pairs(qcPinDB) do
+				for qcInitiatorIndex, qcInitiatorEntry in pairs(qcPinDB[qcMapIndex]) do
+					for qcInitiatorQuestIndex, qcInitiatorQuestEntry in pairs(qcPinDB[qcMapIndex][qcInitiatorIndex][7]) do
+						if (qcInitiatorQuestEntry == qcQuestID) then
+							-- print(string.format("%sFound quest. Initiator: %s",QCADDON_CHAT_TITLE, qcInitiatorEntry[4]))
+							-- print("/way " .. qcInitiatorEntry[5] .. qcInitiatorEntry[6])
+							--TomTom:AddWaypoint(qcMapIndex, 0, qcInitiatorEntry[5]/100, qcInitiatorEntry[6]/100, {title=qcInitiatorEntry[4]})
+							TomTom:AddWaypointToCurrentZone(qcInitiatorEntry[5], qcInitiatorEntry[6], qcInitiatorEntry[4])
+							addedWayPoint = true
+							break
+						end
+					end
+				end
+			end
+			if (addedWayPoint) then
+				TomTom:SetClosestWaypoint()
+			end
+		end
 	end
 
   --print(string.format("%sUpdating quest list",QCADDON_CHAT_TITLE))

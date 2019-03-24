@@ -1,4 +1,4 @@
--- $Id: DB.lua 91 2018-07-26 16:44:52Z arith $
+-- $Id: DB.lua 98 2018-12-21 15:58:07Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -39,7 +39,7 @@ private.DB = DB
 
 DB.points = {
 	--[[ structure:
-	[mapFile] = { -- "_terrain1" etc will be stripped from attempts to fetch this
+	[mapID] = { -- "_terrain1" etc will be stripped from attempts to fetch this
 		[coord] = {
 			label=[string], 		-- label: text that'll be the label, optional
 			npc=[id], 				-- related npc id, used to display names in tooltip
@@ -421,7 +421,7 @@ DB.points = {
 		[62322271] = { portal=true, label=format(L["Portal to %s"], BZ["Emerald Dreamway"]), class="DRUID" },
 	},
 	-- World
-	[947] = {
+	[947] = { -- need to check if this map ID is correct
 		[56593757] = { portal=true, L["Portal"], class="DRUID" }, -- The Dreamgrove
 		[57091776] = { portal=true, L["Portal"], class="DRUID" }, -- Grizzly Hills
 		[15106137] = { portal=true, L["Portal"], class="DRUID" }, -- Feralas

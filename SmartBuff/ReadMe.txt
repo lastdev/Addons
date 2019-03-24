@@ -163,6 +163,19 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+8.0f1	2018-08-23	Added many LEgionand BfA toys
+					Fixed issue with scroll frame when many buffs/toys were available
+
+8.0f	2018-07-25	Fixes for Battle for Azeroth Pre-Patch
+					Updated buffs
+					Fixed ToyBox
+					Fixed issues with Druid shapeshifting
+
+7.2a    2017-04-13  Updated TOC
+                    Updated buff lists
+                    Updated item lists
+                    Corrected Priest Shadow Form
+
 7.0a    2016-08-16  Updated TOC
                     Added Demon Hunter class
                     Fixed LUA errors

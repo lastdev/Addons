@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 7.7.6062 (SwimmingSeadragon)
-	Revision: $Id: ScanButton.lua 6062 2018-08-29 01:26:34Z none $
+	Version: 8.1.6209 (SwimmingSeadragon)
+	Revision: $Id: ScanButton.lua 6209 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a textual scan progress
@@ -537,4 +537,4 @@ function private.AuctionFrameFilters_UpdateClasses()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 6062 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 6209 $")

@@ -5,47 +5,12 @@
 		<Size x="615" y="43" />
 		<Layers>
 			<Layer level="BACKGROUND">
-			<!--
-				<FontString parentKey="Name" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString parentKey="Info" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="32" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="45" y="6" />
+						<Anchor point="TOPLEFT" x="45" y="-10" />
 					</Anchors>
 				</FontString> 
-			-->
-				<FontString parentKey="Level" inherits="GameFontNormal" justifyH="LEFT" hidden="true">
-					<Size x="30" y="32" />
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="13" />
-					</Anchors>
-				</FontString>
-
-				<!-- 
-				<Texture parentKey="CostIcon" file="Interface\Icons\inv_garrison_resource" hidden="true" alphaMode="ADD">
-					<Size x="16" y="16"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="6" />
-					</Anchors>
-				</Texture>
-				<FontString parentKey="Cost" inherits="GameFontNormal" justifyH="LEFT" hidden="true">
-					<Size x="220" y="32" />
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.CostIcon" relativePoint="TOPRIGHT" x="2" y="7" />
-					</Anchors>
-				</FontString>
-				<FontString parentKey="Remaining" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="120" y="32" />
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="110" y="0" />
-					</Anchors>
-				</FontString>
-				<FontString parentKey="Success" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="120" y="32" />
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="110" y="-16" />
-					</Anchors>
-				</FontString>
-				-->
 			</Layer>
 		</Layers>
 		<Frames>
@@ -76,6 +41,9 @@
 					<OnLeave>
 						GameTooltip:Hide()
 					</OnLeave>
+					<OnClick>
+						self:GetParent():Name_OnClick(button)
+					</OnClick>
 				</Scripts>
 			</Button>
 

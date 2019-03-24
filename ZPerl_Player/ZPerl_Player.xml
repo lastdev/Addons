@@ -36,7 +36,30 @@
 			</OnDragStop>
 		</Scripts>
 		<Frames>
-			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template_Secure">
+			<Button name="$parentportraitFrame" inherits="XPerl_Portrait_Template_Secure">
+				<Scripts>
+					<OnLoad>
+						XPerl_SetChildMembers(self)
+						self:RegisterForClicks("AnyUp")
+						self:RegisterForDrag("LeftButton")
+						self:SetScript("OnEnter", function(self)
+							ZPerl_Unit_OnEnter(self:GetParent())
+						end)
+						self:SetScript("OnLeave", function(self)
+							ZPerl_Unit_OnLeave(self:GetParent())
+						end)
+					</OnLoad>
+					<OnDragStart>
+						if (XPerlLocked == 0) then
+							XPerl_Player:StartMoving()
+						end
+					</OnDragStart>
+					<OnDragStop>
+						XPerl_Player:StopMovingOrSizing()
+						XPerl_SwitchAnchor(XPerl_Player, "TOPLEFT")
+						XPerl_SavePosition(XPerl_Player)
+					</OnDragStop>
+				</Scripts>
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
@@ -55,7 +78,7 @@
 						<AbsInset left="3" right="3" top="3" bottom="3"/>
 					</BackgroundInsets>
 				</Backdrop>
-			</Frame>
+			</Button>
 			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
 				<Scripts>
 					<OnLoad>
@@ -327,7 +350,30 @@
 				</Backdrop>
 			</Frame>
 			<!-- Player Stats -->
-			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template_Secure">
+			<Button name="$parentstatsFrame" inherits="XPerl_Stats_Template_Secure">
+				<Scripts>
+					<OnLoad>
+						XPerl_StatsFrame_Setup(self)
+						self:RegisterForClicks("AnyUp")
+						self:RegisterForDrag("LeftButton")
+						self:SetScript("OnEnter", function(self)
+							ZPerl_Unit_OnEnter(self:GetParent())
+						end)
+						self:SetScript("OnLeave", function(self)
+							ZPerl_Unit_OnLeave(self:GetParent())
+						end)
+					</OnLoad>
+					<OnDragStart>
+						if (XPerlLocked == 0) then
+							XPerl_Player:StartMoving()
+						end
+					</OnDragStart>
+					<OnDragStop>
+						XPerl_Player:StopMovingOrSizing()
+						XPerl_SwitchAnchor(XPerl_Player, "TOPLEFT")
+						XPerl_SavePosition(XPerl_Player)
+					</OnDragStop>
+				</Scripts>
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentnameFrame">
 						<Offset>
@@ -346,7 +392,7 @@
 						<AbsInset left="3" right="3" top="3" bottom="3"/>
 					</BackgroundInsets>
 				</Backdrop>
-			</Frame>
+			</Button>
 			<Frame name="$parentgroupFrame" hidden="true">
 				<Size>
 					<AbsDimension x="65" y="18"/>

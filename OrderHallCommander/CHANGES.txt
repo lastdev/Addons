@@ -1,12 +1,12 @@
-tag f422b3105033a58805a295599d6dda681a1861be 1.7.2
+tag 80b175f09e2726947c8748010290226f522f138d 1.7.3
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Mon Aug 20 16:37:40 2018 +0200
+Date:	Sun Dec 16 18:29:47 2018 +0100
 
-Fix: OrderHallCommander\tutorials.lua:498: '<eof>' expected near 'end'
+TOC BUMP
 
-commit b8d6ab02b5eebe961a50a38d0aebcbbe786f63fd
+commit 319a38dcb95765d20effe80e4a86c891b7adf7f9
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon Aug 20 16:37:07 2018 +0200
+Date:   Sun Dec 16 18:29:13 2018 +0100
 
-    Fix: OrderHallCommander\tutorials.lua:498: '<eof>' expected near 'end'
+    TOC BUMP
 

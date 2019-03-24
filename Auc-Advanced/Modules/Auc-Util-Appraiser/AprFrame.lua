@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 7.7.6065 (SwimmingSeadragon)
-	Revision: $Id: AprFrame.lua 6065 2018-08-29 01:26:34Z none $
+	Version: 8.1.6212 (SwimmingSeadragon)
+	Revision: $Id: AprFrame.lua 6212 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -1071,7 +1071,7 @@ function private.CreateFrames()
 						frame.manifest.lines:Clear()
 						frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks'):format(maxStax, curSize))--%d lots of %dx stacks:
 						buyVal, bidVal = lib.RoundBuyBid(curBuy * curSize, curBid * curSize)
-						depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, curSize)
+						depositVal = AucAdvanced.Post.GetDepositCost(frame.salebox.link, depositHours, bidVal, buyVal, curSize, 1)
 
 						r,g,b=nil,nil,nil
 						if colored then
@@ -1092,7 +1092,7 @@ function private.CreateFrames()
 					end
 					if curNumber == -1 and remain > 0 then
 						buyVal, bidVal = lib.RoundBuyBid(curBuy * remain, curBid * remain)
-						depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, remain)
+						depositVal = AucAdvanced.Post.GetDepositCost(frame.salebox.link, depositHours, bidVal, buyVal, remain, 1)
 
 						frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks') :format(1, remain))--%d lots of %dx stacks:
 						r,g,b=nil,nil,nil
@@ -1117,7 +1117,7 @@ function private.CreateFrames()
 					frame.manifest.lines:Clear()
 					frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks'):format(curNumber, curSize))--%d lots of %dx stacks:
 					buyVal, bidVal = lib.RoundBuyBid(curBuy * curSize, curBid * curSize)
-					depositVal = GetDepositCost(frame.salebox.link, depositHours, nil, curSize)
+					depositVal = AucAdvanced.Post.GetDepositCost(frame.salebox.link, depositHours, bidVal, buyVal, curSize, 1)
 
 					r,g,b=nil,nil,nil
 					if colored then
@@ -1154,7 +1154,7 @@ function private.CreateFrames()
 					frame.manifest.lines:Clear()
 					frame.manifest.lines:Add(_TRANS('APPR_Interface_Items'):format(curNumber))--%d items
 					buyVal, bidVal = lib.RoundBuyBid(curBuy, curBid)
-					depositVal = GetDepositCost(frame.salebox.link, depositHours)
+					depositVal = AucAdvanced.Post.GetDepositCost(frame.salebox.link, depositHours, curBid, curBuy, 1, 1)
 
 					r,g,b=nil,nil,nil
 					if colored then
@@ -2979,4 +2979,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 6065 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 6212 $")

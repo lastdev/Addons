@@ -242,7 +242,34 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2102), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Impus
 			{ name = DataStore:GetFactionName(2098), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Keeper Raynae
 		},
-	},	
+	},
+	{	-- [8]
+		name = EXPANSION_NAME7,	-- "Battle for Azeroth"
+		{	-- [1]
+			name = FACTION_ALLIANCE,
+			{ name = DataStore:GetFactionName(2159), icon = "Inv_tabard_alliancewareffort" },
+			{ name = DataStore:GetFactionName(2160), icon = "Inv_tabard_proudmoore" },
+			{ name = DataStore:GetFactionName(2161), icon = "Inv_tabard_orderoftheembers" },
+			{ name = DataStore:GetFactionName(2162), icon = "Inv_tabard_stormswake" },
+			{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
+			{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
+		},
+		{	-- [2]
+			name = FACTION_HORDE,
+			{ name = DataStore:GetFactionName(2157), icon = "Inv_tabard_hordewareffort" },
+			{ name = DataStore:GetFactionName(2103), icon = "Inv_tabard_zandalariempire" },
+			{ name = DataStore:GetFactionName(2156), icon = "Inv_tabard_talanjisexpedition" },
+			-- temp fix, on Alliance, 2158 returns nil
+			{ name = DataStore:GetFactionName(2158) or "Voldunai", icon = "Inv_tabard_vulpera" },
+			{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
+			{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
+		},
+		-- {	-- [3]
+		-- 	name = OTHER,
+		-- 	{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
+		-- 	{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
+		-- },
+	},
 	{	-- [8]
 		name = GUILD,
 		{	-- [1]

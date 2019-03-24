@@ -1,12 +1,58 @@
 ------------------------------------------------------------------------
-r228 | Tuhljin | 2018-08-17 04:42:13 +0000 (Fri, 17 Aug 2018) | 1 line
+r238 | Tuhljin | 2018-12-31 06:29:24 +0000 (Mon, 31 Dec 2018) | 1 line
+Changed paths:
+   M /trunk/libs/TjAchieve.lua
+   M /trunk/readme.txt
+
+- Search Tab: Fixed bug introduced in WoW 8.1 where searching by achievement criteria gives an error.
+------------------------------------------------------------------------
+r237 | Tuhljin | 2018-12-31 05:43:02 +0000 (Mon, 31 Dec 2018) | 4 lines
+Changed paths:
+   M /trunk/GameTip.lua
+   M /trunk/Overachiever.lua
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Cache/Overachiever_Cache.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/readme.txt
+
+- Updated TOC for WoW patch 8.1.
+- Recent Reminders feature:
+-- If a recently spotted objective is complete, then its tooltip text is now colored green and will have a checkmark next to it.
+-- Fixed an issue where reminders triggered by a timer resulted in a tooltip indicating recently spotted objectives but with none listed.
+------------------------------------------------------------------------
+r236 | Tuhljin | 2018-10-02 05:13:00 +0000 (Tue, 02 Oct 2018) | 5 lines
 Changed paths:
    M /trunk/AchieveID.lua
-   M /trunk/Overachiever_Cache/Cache.lua
-   M /trunk/Overachiever_Trade/TradeSkills.lua
+   M /trunk/GameTip.lua
+   M /trunk/Options.lua
+   M /trunk/Overachiever_Tabs/Suggestions.lua
    M /trunk/localization.lua
    M /trunk/readme.txt
 
-- Trade module: "The Kul Tiran Menu" or "The Zandalari Menu" is now considered when determining if you need to cook a recipe.
+- "Eat Your Greens" (new): Added an option to display a reminder tooltip for eating plants in Nazmir.
+- Suggestions Tab:
+-- Added suggestions for the dungeons Freehold, Shrine of the Storm, Waycrest Manor, Siege of Boralus, Atal'Dazar, The MOTHERLODE!!, The Underrot, Temple of Sethraliss, and Kings' Rest.
+-- Added more suggestions for Tol Dagor (dungeon).
+- Battle for Azeroth's "Adventurer of..." achievements: Added "need to kill" reminders for the criteria that needed manual entry of mob IDs.
+------------------------------------------------------------------------
+r235 | Tuhljin | 2018-09-29 04:23:26 +0000 (Sat, 29 Sep 2018) | 5 lines
+Changed paths:
+   M /trunk/AchieveID.lua
+   M /trunk/GameTip.lua
+   M /trunk/Options.lua
+   M /trunk/Overachiever.lua
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Cache/Overachiever_Cache.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/readme.txt
+
+- Suggestions Tab: Added suggestions for the Battle for Stromgarde warfront.
+- "To All the Squirrels..." achievements: Fix reminder tooltip not showing for certain critters that aren't / are no longer technically classed as critters (such as the sheep in Elwynn Forest).
+- "Azeroth at War..." achievements: Missions can now be flagged as recently spotted objectives for the Recent Reminders feature.
+- Attempt to make the draggable achievement frame feature more compatible with other addons.
+- Options: Update "Oa_AchLabel" TjOptions item type so it dynamically pulls from id[#] when text isn't specified, putting each achievement name on a new line.
 ------------------------------------------------------------------------
 

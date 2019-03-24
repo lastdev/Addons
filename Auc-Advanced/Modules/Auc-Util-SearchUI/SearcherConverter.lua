@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Converter
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherConverter.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherConverter.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -56,7 +56,7 @@ do
 	local LETERNAL = 16202
 	local LMAGIC = 10938
 	local LILLUSION = 16204
-	local RILLUSION = 156930		
+	local RILLUSION = 156930
 	--Motes/Primals
 	local PAIR = 22451
 	local MAIR = 22572
@@ -302,7 +302,7 @@ function lib.Search (item)
 	end
 	if get("converter.adjust.deposit") then
 		-- note: GetDepositCost can handle numerical itemIDs instead of links
-		local amount = GetDepositCost(newID, get("converter.adjust.deplength"), nil, count)
+		local amount = AucAdvanced.Post.GetDepositCost(newID, get("converter.adjust.deplength"), market, 0, count)
 		if amount then
 			market = market - amount * get("converter.adjust.listings")
 		end
@@ -317,4 +317,4 @@ function lib.Search (item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 6245 $")

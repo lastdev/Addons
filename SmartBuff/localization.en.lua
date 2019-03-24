@@ -4,12 +4,8 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Updated TOC\n\n"
-  .."- Added Demon Hunter class\n\n"
-  .."- Fixed LUA errors\n\n"
-  .."- This release will restore basic functionality, but unfortunately it does not contain all the new aura changes, sorry.\n\n"
-  .."\n- Due to I am not playing WoW atm, please report any missing auras, items, etc. and be patient, thanks!\n\n"
-  .."- Thanks to all who have helped me to keep it alive.\n\n"
+  .."- Added many Legion and BfA toys\n\n"
+  .."- Fixed issued with scroll frame and massive amoutn of buffs nwo existing.\n\n"
   
   --[[
   .."- Thanks for donation:\n"

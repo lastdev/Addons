@@ -19,7 +19,7 @@ local PLAYER_CHECK_THROTTLE = 0.3
 
 local consumablesList = {}
 local playerBuffs = {}
-local missingFood, missingFlasks, missingRunes = {}, {}, {}
+local missingFood, missingFlasks, missingRunes, missingBuffs = {}, {}, {}, {}
 
 local YES = ("|cff20ff20%s|r"):format(YES)
 local NO = ("|cffff2020%s|r"):format(NO)
@@ -40,51 +40,30 @@ local spells = setmetatable({}, {
 local getVantus, getVantusBoss
 do
 	local runes = {
-		-- Emerald Nightmare
-		[192761] = 1703, -- Nythndra
-		[192765] = 1744, -- Elerethe
-		[191464] = 1667, -- Ursoc
-		[192762] = 1738, -- Il'gynoth
-		[192763] = 1704, -- Dragons
-		[192766] = 1750, -- Cenarius
-		[192764] = 1726, -- Xavius
-		-- Trial of Valor
-		[229174] = 1819, -- Odyn
-		[229175] = 1830, -- Guarm
-		[229176] = 1829, -- Helya
-		-- Nighthold
-		[192767] = 1706, -- Skorpyron
-		[192768] = 1725, -- Chronomatic Anomaly
-		[192769] = 1731, -- Trilliax
-		[192770] = 1751, -- Aluriel
-		[192771] = 1762, -- Tichondrius
-		[192773] = 1713, -- Krosus
-		[192772] = 1761, -- Tel'arn
-		[192774] = 1732, -- Etraeus
-		[192775] = 1743, -- Elisande
-		[192776] = 1737, -- Gul'dan
-		-- Tomb of Sargeras
-		[237821] = 1862, -- Goroth
-		[237828] = 1867, -- Demonic Inquisition
-		[237824] = 1856, -- Harjatan
-		[237826] = 1861, -- Sassz'ine
-		[237822] = 1903, -- Sisters of the Moon
-		[237827] = 1896, -- The Desolate Host
-		[237823] = 1897, -- Maiden of Vigilance
-		[237820] = 1873, -- Fallen Avatar
-		[237825] = 1898, -- Kil'jaeden
-		-- Antorus
-		[250153] = 1992, -- Garothi Worldbreaker
-		[250156] = 1987, -- Felhounds of Sargeras
-		[250167] = 1997, -- Antoran High Command
-		[250160] = 1985, -- Portal Keeper Hasabel
-		[250150] = 2025, -- Eonar the Lifebinder
-		[250158] = 2009, -- Imonar the Soulhunter
-		[250148] = 2004, -- Kin'garoth
-		[250165] = 1983, -- Varimathras
-		[250163] = 1986, -- The Coven of Shivarra
-		[250144] = 1984, -- Aggramar
-		[250146] = 2031, -- Argus the Unmaker
+		-- Uldir
+		[269276] = 2168, -- Taloc
+		[269405] = 2167, -- MOTHER
+		[269407] = 2169, -- Zek'voz
+		[269408] = 2146, -- Fetid Devourer
+		[269409] = 2166, -- Vectis
+		[269411] = 2195, -- Zul
+		[269412] = 2194, -- Mythrax
+		[269413] = 2147, -- G'hunn
+		-- Battle of Dazar'alor
+		[285535] = 2333, -- Champion of the Light
+		[285536] = 2325, -- Grong, the Jungle Lord (Horde)
+		[289194] = 2340, -- Grong, the Revenant (Alliance)
+		[285537] = 2323, -- Jadefire Masters
+		[289196] = 2323, -- Jadefire Masters
+		[285538] = 2342, -- Opulence
+		[285539] = 2330, -- Conclave of the Chosen
+		[285540] = 2335, -- King Rastakhan
+		[285541] = 2334, -- High Tinker Mekkatorque
+		[285542] = 2337, -- Stormwall Blockade
+		[285543] = 2343, -- Lady Jaina Proudmoore
+		-- Crucible of Storms
+		[285900] = 2328, -- The Restless Cabal
+		[285901] = 2332, -- Uu'nat, Harbinger of the Void
 	}
 
 	local buffs = {}
@@ -112,8 +91,7 @@ end
 local getRune
 do
 	local runes = {
-		224001, -- Defiled Augmentation (Legion)
-		-- 270058, -- Battle-Scarred Augmentation (BfA)
+		270058, -- Battle-Scarred Augmentation (BfA)
 	}
 
 	function getRune(player)
@@ -128,16 +106,10 @@ end
 local getFlask
 do
 	local flasks = {
-		-- Legion
-		188031, -- Flask of the Whispered Pact    (Intellect)
-		188033, -- Flask of the Seventh Demon     (Agility)
-		188034, -- Flask of the Countless Armies  (Strength)
-		188035, -- Flask of Ten Thousand Scars    (Stamina)
-		-- BfA
-		-- 251836, -- Flask of the Currents          (Agility)
-		-- 251837, -- Flask of Endless Fathoms       (Intellect)
-		-- 251838, -- Flask of the Vast Horizon      (Stamina)
-		-- 251839, -- Flask of the Undertow          (Strength)
+		251836, -- Flask of the Currents          (Agility)
+		251837, -- Flask of Endless Fathoms       (Intellect)
+		251838, -- Flask of the Vast Horizon      (Stamina)
+		251839, -- Flask of the Undertow          (Strength)
 	}
 
 	function getFlask(player)
@@ -167,6 +139,26 @@ do
 		return false
 	end
 end
+
+local raidBuffs = {
+	{ -- Intellect
+		1459,   -- Arcane Intellect
+		264760, -- War-Scroll of Intellect
+	},
+	{ -- Stamina
+		21562,  -- Power Word: Fortitude
+		264764, -- War-Scroll of Fortitude
+	},
+	{ -- Attack Power
+		6673,   -- Battle Shout
+		264761, -- War-Scroll of Battle Shout
+	},
+}
+local raidBuffNames = {
+	ITEM_MOD_INTELLECT_SHORT,
+	ITEM_MOD_STAMINA_SHORT,
+	ITEM_MOD_ATTACK_POWER_SHORT,
+}
 
 ---------------------------------------
 -- Options
@@ -236,6 +228,12 @@ local options = {
 					desc = L.checkRuneDesc,
 					order = 3,
 				},
+				checkBuffs = {
+					type = "toggle",
+					name = L.raidBuffs,
+					desc = L.checkBuffsDesc,
+					order = 4,
+				},
 			},
 		}, -- checks
 	},
@@ -250,6 +248,7 @@ function module:OnRegister()
 			checkFood = true,
 			checkFlask = true,
 			checkRune = false,
+			checkBuffs = true,
 			output = 1, -- 1 = disabled
 			checkReadyCheck = 2, -- 2 = started by you
 			whisper = false,
@@ -264,7 +263,8 @@ function module:OnRegister()
 		L.food,
 		L.flask,
 		L.rune,
-		L.vantus
+		L.vantus,
+		L.raidBuffs
 	)
 
 	oRA.RegisterCallback(self, "OnStartup")
@@ -310,6 +310,7 @@ function module:OnShutdown()
 	wipe(missingFlasks)
 	wipe(missingFood)
 	wipe(missingRunes)
+	wipe(missingBuffs)
 end
 
 function module:READY_CHECK(sender)
@@ -323,39 +324,31 @@ end
 -- API
 
 do
-	local maxFoods = {
-		[225602] = true, -- crit
-		[225603] = true, -- haste
-		[225604] = true, -- mastery
-		[225605] = true, -- versatility
-		[201638] = true, -- str
-		[201639] = true, -- agi
-		[201640] = true, -- int
-		-- [201641] = true, -- sta
-		[185736] = true, -- versatility (Sugar-Crusted Fish Feast, gives +1%)
-		-- [257410] = true, -- crit
-		-- [257415] = true, -- haste
-		-- [257420] = true, -- mastery
-		-- [257424] = true, -- versatility
-		-- [259454] = true, -- agi
-		-- [259455] = true, -- int
-		-- [259456] = true, -- str
-		-- -- [259457] = true, -- sta
-	}
-	-- 1300 stat flask
-	local maxFlasks = {
-		[188031] = true, -- Flask of the Whispered Pact    (Intellect)
-		[188033] = true, -- Flask of the Seventh Demon     (Agility)
-		[188034] = true, -- Flask of the Countless Armies  (Strength)
-		[188035] = true, -- Flask of Ten Thousand Scars    (Stamina)
-		-- [251836] = true, -- Flask of the Currents          (Agility)
-		-- [251837] = true, -- Flask of Endless Fathoms       (Intellect)
-		-- [251838] = true, -- Flask of the Vast Horizon      (Stamina)
-		-- [251839] = true, -- Flask of the Undertow          (Strength)
+	local best = {
+		-- Food
+		[257410] = true, -- crit
+		[257415] = true, -- haste
+		[257420] = true, -- mastery
+		[257424] = true, -- versatility
+		[259454] = true, -- agi
+		[259455] = true, -- int
+		[259456] = true, -- str
+		[288075] = true, -- sta (stamina is not gained from feasts now)
+
+		--Flasks
+		[251836] = true, -- agi
+		[251837] = true, -- int
+		[251838] = true, -- sta
+		[251839] = true, -- str
+
+		-- Buffs
+		[1459] = true,   -- Arcane Intellect
+		[21562] = true,  -- Power Word: Fortitude
+		[264761] = true, -- War-Scroll of Battle Shout
 	}
 
 	function module:IsBest(id)
-		return maxFoods[id] or maxFlasks[id]
+		return best[id]
 	end
 end
 
@@ -397,7 +390,7 @@ do
 			if not oRA:IsPromoted() or oRA:IsPromoted() == 1 then return end
 		end
 
-		local noFood, noFlasks, noRunes = self:CheckGroup()
+		local noFood, noFlasks, noRunes, noBuffs = self:CheckGroup()
 
 		local db = self.db.profile
 		if db.whisper then
@@ -441,6 +434,9 @@ do
 		if db.checkRune then
 			out(L.noRune, noRunes)
 		end
+		if db.checkBuffs then
+			out(L.missingBuffs, noBuffs)
+		end
 	end
 end
 
@@ -451,9 +447,9 @@ function module:CheckPlayer(player)
 	local cache = playerBuffs[player]
 	local t = GetTime()
 	if cache and t-cache[0] < PLAYER_CHECK_THROTTLE then
-		local food, flask, rune = unpack(cache)
-		return food, flask, rune
+		return unpack(cache)
 	end
+
 	if not cache then
 		playerBuffs[player] = {}
 		cache = playerBuffs[player]
@@ -463,14 +459,20 @@ function module:CheckPlayer(player)
 	local food = getFood(player)
 	local rune = getRune(player)
 	local vantus = getVantus(player)
+	local buffs = cache[5] or {}
+	for i = 1, #raidBuffs do
+		local _, _, id = self:UnitBuffByIDs(player, raidBuffs[i])
+		buffs[i] = id or false
+	end
 
 	cache[0] = t
 	cache[1] = food
 	cache[2] = flask
 	cache[3] = rune
 	cache[4] = vantus
+	cache[5] = buffs
 
-	return food, flask, rune, vantus
+	return food, flask, rune, vantus, buffs
 end
 
 -------------------
@@ -479,18 +481,19 @@ end
 do
 	local prev = 0
 
+	-- XXX this need to be updated for async loading
 	local function getStatValue(id)
 		local desc = GetSpellDescription(id)
 		if desc then
 			local value = tonumber(desc:match("%d+")) or 0
-			return value >= 75 and value or YES
+			return value >= 75 and tostring(value) or YES
 		end
 	end
 
 	function module:CheckGroup()
 		local t = GetTime()
 		if t-prev < GROUP_CHECK_THROTTLE then
-			return missingFood, missingFlasks, missingRunes
+			return missingFood, missingFlasks, missingRunes, missingBuffs
 		end
 		prev = t
 
@@ -498,20 +501,14 @@ do
 		wipe(missingFlasks)
 		wipe(missingFood)
 		wipe(missingRunes)
+		wipe(missingBuffs)
 
 		local groupMembers = oRA:GetGroupMembers()
 		if not groupMembers[1] then groupMembers[1] = UnitName("player") end
 		for _, player in next, groupMembers do
 			if UnitIsConnected(player) and not UnitIsDeadOrGhost(player) and UnitIsVisible(player) then
-				local food, flask, rune, vantus = self:CheckPlayer(player)
-
-				consumablesList[#consumablesList + 1] = {
-					player:gsub("%-.*", ""),
-					food and (getStatValue(food) or spells[161715]) or NO, -- 161715 = Eating
-					flask and (getStatValue(flask) or YES) or NO,
-					rune and YES or NO,
-					getVantusBoss(vantus) or NO,
-				}
+				local food, flask, rune, vantus, buffs = self:CheckPlayer(player)
+				local numBuffs = 0
 
 				if not food then
 					missingFood[player] = true
@@ -524,9 +521,26 @@ do
 				if not rune then
 					missingRunes[player] = true
 				end
+
+				for i = 1, #buffs do
+					if not buffs[i] then
+						missingBuffs[raidBuffNames[i]] = true
+					else
+						numBuffs = numBuffs + 1
+					end
+				end
+
+				consumablesList[#consumablesList + 1] = {
+					player:gsub("%-.*", ""),
+					food and (getStatValue(food) or spells[161715]) or NO, -- 161715 = Eating
+					flask and (getStatValue(flask) or YES) or NO,
+					rune and YES or NO,
+					getVantusBoss(vantus) or NO,
+					("%d/%d"):format(numBuffs, #buffs),
+				}
 			end
 		end
 
-		return missingFood, missingFlasks, missingRunes
+		return missingFood, missingFlasks, missingRunes, missingBuffs
 	end
 end

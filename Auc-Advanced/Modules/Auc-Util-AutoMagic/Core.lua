@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 7.7.6109 (SwimmingSeadragon)
-	Revision: $Id: Core.lua 6109 2018-08-29 01:26:34Z none $
+	Version: 8.1.6224 (SwimmingSeadragon)
+	Revision: $Id: Core.lua 6224 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -665,4 +665,4 @@ end
 
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AutoMagic/Core.lua $", "$Rev: 6109 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AutoMagic/Core.lua $", "$Rev: 6224 $")

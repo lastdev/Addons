@@ -19,8 +19,8 @@ local L = WeakAuras.L
 local ADDON_NAME = "WeakAurasOptions";
 local prettyPrint = WeakAuras.prettyPrint
 
-local ValidateNumeric = function(info,val)
-  if not tonumber(val) then
+local ValidateNumeric = function(info, val)
+  if val ~= nil and val ~= "" and (not tonumber(val) or tonumber(val) >= 2^31) then
     return false;
   end
   return true
@@ -50,7 +50,9 @@ local tempGroup = {
   regionType = "group",
   controlledChildren = {},
   load = {},
-  trigger = {},
+  triggers = {{}},
+  config = {},
+  authorOptions = {},
   anchorPoint = "CENTER",
   anchorFrameType = "SCREEN",
   xOffset = 0,
@@ -66,6 +68,7 @@ function WeakAuras.MultipleDisplayTooltipDesc()
   desc[2][1] = L["Children:"]
   tinsert(desc, " ");
   tinsert(desc, {" ", "|cFF00FFFF"..L["Right-click for more options"]});
+  tinsert(desc, {" ", "|cFF00FFFF"..L["Drag to move"]});
   return desc;
 end
 
@@ -91,7 +94,7 @@ function WeakAuras.DuplicateAura(data)
   WeakAuras.DeepCopy(data, newData);
   newData.id = new_id;
   newData.parent = nil;
-  newData.uid = nil
+  newData.uid = WeakAuras.GenerateUniqueID();
   WeakAuras.Add(newData);
   WeakAuras.NewDisplayButton(newData);
   if(data.parent) then
@@ -135,18 +138,9 @@ function WeakAuras.MultipleDisplayTooltipMenu()
       text = L["Add to new Group"],
       notCheckable = 1,
       func = function()
-        local new_id = tempGroup.controlledChildren[1].." Group";
-        local num = 2;
-        while(WeakAuras.GetData(new_id)) do
-          new_id = "New "..num;
-          num = num + 1;
-        end
-
         local data = {
-          id = new_id,
+          id = WeakAuras.FindUnusedId(tempGroup.controlledChildren[1].." Group"),
           regionType = "group",
-          trigger = {},
-          load = {}
         };
         WeakAuras.Add(data);
         WeakAuras.NewDisplayButton(data);
@@ -177,18 +171,9 @@ function WeakAuras.MultipleDisplayTooltipMenu()
       text = L["Add to new Dynamic Group"],
       notCheckable = 1,
       func = function()
-        local new_id = tempGroup.controlledChildren[1].." Group";
-        local num = 2;
-        while(WeakAuras.GetData(new_id)) do
-          new_id = "New "..num;
-          num = num + 1;
-        end
-
         local data = {
-          id = new_id,
+          id = WeakAuras.FindUnusedId(tempGroup.controlledChildren[1].." Group"),
           regionType = "dynamicgroup",
-          trigger = {},
-          load = {}
         };
 
         WeakAuras.Add(data);
@@ -216,7 +201,7 @@ function WeakAuras.MultipleDisplayTooltipMenu()
         WeakAuras.ReloadGroupRegionOptions(data);
         WeakAuras.SortDisplayButtons();
         button:Expand();
-        WeakAuras.PickDisplay(new_id);
+        WeakAuras.PickDisplay(data.id);
       end
     },
     {
@@ -290,7 +275,6 @@ function WeakAuras.MultipleDisplayTooltipMenu()
   return menu;
 end
 
-local trigger_types = WeakAuras.trigger_types;
 local point_types = WeakAuras.point_types;
 local operator_types = WeakAuras.operator_types;
 local operator_types_without_equal = WeakAuras.operator_types_without_equal;
@@ -367,44 +351,84 @@ AceGUI:RegisterLayout("ButtonsScrollLayout", function(content, children, skipLay
   end
 end)
 
-function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subSuffix, triggernum, triggertype, unevent)
+function WeakAuras.MultipleDisplayTooltipDesc()
+  local desc = {{L["Multiple Displays"], L["Temporary Group"]}};
+  for index, id in pairs(tempGroup.controlledChildren) do
+    desc[index + 1] = {" ", id};
+  end
+  desc[2][1] = L["Children:"]
+  tinsert(desc, " ");
+  tinsert(desc, {" ", "|cFF00FFFF"..L["Right-click for more options"]});
+  tinsert(desc, {" ", "|cFF00FFFF"..L["Drag to move"]});
+  return desc;
+end
+
+function WeakAuras.ConstructOptions(prototype, data, startorder, triggernum, triggertype, unevent)
   local trigger, untrigger;
   if(data.controlledChildren) then
     trigger, untrigger = {}, {};
   elseif(triggertype == "load") then
     trigger = data.load;
-  else
-    if(triggernum == 0) then
-      data.untrigger = data.untrigger or {};
-      if(triggertype == "untrigger") then
-        trigger = data.untrigger;
-      else
-        trigger = data.trigger;
-        untrigger = data.untrigger;
-      end
-    elseif(triggernum >= 1) then
-      data.additional_triggers[triggernum].untrigger = data.additional_triggers[triggernum].untrigger or {};
-      if(triggertype == "untrigger") then
-        trigger = data.additional_triggers[triggernum].untrigger;
-      else
-        trigger = data.additional_triggers[triggernum].trigger;
-        untrigger = data.additional_triggers[triggernum].untrigger;
-      end
+  elseif data.triggers[triggernum] then
+    if(triggertype == "untrigger") then
+      trigger = data.triggers[triggernum].untrigger
     else
-      error("Improper argument to WeakAuras.ConstructOptions - trigger number not in range");
+      trigger, untrigger = data.triggers[triggernum].trigger, data.triggers[triggernum].untrigger
     end
+  else
+    error("Improper argument to WeakAuras.ConstructOptions - trigger number not in range");
   end
   unevent = unevent or trigger.unevent;
   local options = {};
   local order = startorder or 10;
+
+  local isCollapsedFunctions;
   for index, arg in pairs(prototype.args) do
     local hidden = nil;
-    if(type(arg.enable) == "function") then
+    if(arg.collapse and isCollapsedFunctions[arg.collapse] and type(arg.enable) == "function") then
+      local isCollapsed = isCollapsedFunctions[arg.collapse]
+      hidden = function()
+        return isCollapsed() or not arg.enable(trigger)
+      end
+    elseif(type(arg.enable) == "function") then
       hidden = function() return not arg.enable(trigger) end;
+    elseif(arg.collapse and isCollapsedFunctions[arg.collapse]) then
+      hidden = isCollapsedFunctions[arg.collapse]
     end
     local name = arg.name;
     local reloadOptions = arg.reloadOptions;
-    if(name and not arg.hidden) then
+    if (name and arg.type == "collapse") then
+      options["summary_" .. arg.name] = {
+        type = "description",
+        width = WeakAuras.doubleWidth - 0.15,
+        name = type(arg.display) == "function" and arg.display(trigger) or arg.display,
+        order = order,
+      }
+      order = order + 1;
+      options["button_" .. arg.name] = {
+        type = "execute",
+        width = 0.15,
+        name = "",
+        order = order,
+        image = function()
+          local collapsed = WeakAuras.IsCollapsed("trigger", name, "", true)
+          return collapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\edit" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\editdown"
+        end,
+        imageWidth = 24,
+        imageHeight = 24,
+        func = function()
+          local collapsed = WeakAuras.IsCollapsed("trigger", name, "", true)
+          WeakAuras.SetCollapsed("trigger", name, "", not collapsed)
+          WeakAuras.ReloadTriggerOptions(data);
+        end
+      }
+      order = order + 1;
+
+      isCollapsedFunctions = isCollapsedFunctions or {};
+      isCollapsedFunctions[name] = function()
+        return WeakAuras.IsCollapsed("trigger", name, "", true);
+      end
+    elseif(name and not arg.hidden) then
       local realname = name;
       if(triggertype == "untrigger") then
         name = "untrigger_"..name;
@@ -413,6 +437,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         -- Ensure new line for non-toggle options
         options["spacer_"..name] = {
           type = "description",
+          width = WeakAuras.doubleWidth,
           name = "",
           order = order,
           hidden = hidden,
@@ -422,6 +447,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       if(arg.type == "tristate") then
         options["use_"..name] = {
           type = "toggle",
+          width = WeakAuras.normalWidth,
           name = function(input)
             local value = trigger["use_"..realname];
             if(value == nil) then return arg.display;
@@ -461,6 +487,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       elseif(arg.type == "multiselect") then
         options["use_"..name] = {
           type = "toggle",
+          width = WeakAuras.normalWidth,
           name = arg.display,
           desc = function()
             local v = trigger["use_"..realname];
@@ -510,12 +537,14 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       elseif (arg.type == "description") then
         options["description_space_"..name] = {
           type = "description",
+          width = WeakAuras.doubleWidth,
           name = "",
           order = order,
           hidden = hidden,
         }
         options["description_title_"..name] = {
           type = "description",
+          width = WeakAuras.doubleWidth,
           name = arg.display,
           order = order,
           hidden = hidden,
@@ -524,6 +553,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         order = order + 1;
         options["description_"..name] = {
           type = "description",
+          width = WeakAuras.doubleWidth,
           name = arg.text,
           order = order,
           hidden = hidden,
@@ -532,6 +562,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       else
         options["use_"..name] = {
           type = "toggle",
+          width = WeakAuras.normalWidth,
           name = arg.display,
           order = order,
           hidden = hidden,
@@ -552,7 +583,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         };
       end
       if(arg.type == "toggle" or arg.type == "tristate") then
-        options["use_"..name].width = arg.width or "double";
+        options["use_"..name].width = arg.width or WeakAuras.doubleWidth;
       end
       if(arg.required) then
         trigger["use_"..realname] = true;
@@ -568,8 +599,8 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         if (not arg.noOperator) then
           options[name.."_operator"] = {
             type = "select",
+            width = WeakAuras.halfWidth,
             name = L["Operator"],
-            width = "half",
             order = order,
             hidden = hidden,
             values = arg.operator_types_without_equal and operator_types_without_equal or operator_types,
@@ -607,9 +638,9 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         end
         options[name] = {
           type = "input",
+          width = arg.noOperator and WeakAuras.normalWidth or WeakAuras.halfWidth,
           validate = ValidateNumeric,
           name = arg.display,
-          width = arg.noOperator and "normal" or "half",
           order = order,
           hidden = hidden,
           disabled = function() return not trigger["use_"..realname]; end,
@@ -646,6 +677,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       elseif(arg.type == "string") then
         options[name] = {
           type = "input",
+          width = WeakAuras.normalWidth,
           name = arg.display,
           order = order,
           hidden = hidden,
@@ -684,6 +716,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
       elseif(arg.type == "longstring") then
         options[name.."_operator"] = {
           type = "select",
+          width = WeakAuras.normalWidth,
           name = L["Operator"],
           order = order,
           hidden = hidden,
@@ -721,8 +754,8 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         order = order + 1;
         options[name] = {
           type = "input",
+          width = WeakAuras.doubleWidth,
           name = arg.display,
-          width = "double",
           order = order,
           hidden = hidden,
           disabled = function() return not trigger["use_"..realname]; end,
@@ -761,10 +794,10 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           if (arg.showExactOption) then
             options["exact"..name] = {
               type = "toggle",
+              width = WeakAuras.normalWidth - 0.1,
               name = L["Exact Spell Match"],
               order = order,
               hidden = hidden,
-              width = 0.9,
               get = function()
                 return trigger["use_exact_"..realname];
               end,
@@ -782,10 +815,10 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           end
           options["icon"..name] = {
             type = "execute",
+            width = 0.1,
             name = "",
             order = order,
             hidden = hidden,
-            width = 0.1,
             image = function()
               if(trigger["use_"..realname] and trigger[realname]) then
                 if(arg.type == "aura") then
@@ -807,10 +840,10 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           order = order + 1;
           options[name] = {
             type = "input",
+            width = WeakAuras.doubleWidth,
             name = arg.display,
             order = order,
             hidden = hidden,
-            width = "double",
             disabled = function() return not trigger["use_"..realname]; end,
             get = function()
               if(arg.type == "item") then
@@ -819,6 +852,10 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
                   if(name) then
                     return name;
                   else
+                    local itemId = tonumber(trigger[realname])
+                    if itemId and itemId ~= 0 then
+                      return tostring(trigger[realname])
+                    end
                     return L["Invalid Item Name/ID/Link"];
                   end
                 else
@@ -879,6 +916,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         end
         options[name] = {
           type = "select",
+          width = WeakAuras.normalWidth,
           name = arg.display,
           order = order,
           hidden = hidden,
@@ -954,6 +992,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         if(arg.type == "unit" and not (arg.required and triggertype == "untrigger")) then
           options["use_specific_"..name] = {
             type = "toggle",
+            width = WeakAuras.normalWidth,
             name = L["Specific Unit"],
             order = order,
             hidden = function() return (not trigger["use_specific_"..realname]) or (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) end,
@@ -966,6 +1005,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           order = order + 1;
           options["specific_"..name] = {
             type = "input",
+            width = WeakAuras.normalWidth,
             name = L["Specific Unit"],
             desc = L["Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."],
             order = order,
@@ -993,6 +1033,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         end
         options[name] = {
           type = "select",
+          width = WeakAuras.normalWidth,
           name = arg.display,
           order = order,
           values = values,
@@ -1034,10 +1075,10 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         options["multiselect_"..name] = {
           type = "multiselect",
           name = arg.display,
+          width = WeakAuras.doubleWidth,
           order = order,
           hidden = function() return (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) or trigger["use_"..realname] ~= false; end,
           values = values,
-          -- width = "half",
           get = function(info, v)
             if(trigger["use_"..realname] == false and trigger[realname] and trigger[realname].multi) then
               return trigger[realname].multi[v];
@@ -1062,14 +1103,6 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
             WeakAuras.UpdateDisplayButton(data);
             WeakAuras.SortDisplayButtons();
           end
-        };
-        options["multiselectspace_"..name] = {
-          type = "execute",
-          name = "",
-          order = (order - 0.5),
-          hidden = function() return (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) or trigger["use_"..realname] ~= false; end,
-          disabled = true,
-          image = function() return "", 52, 52 end
         };
         if(arg.required and not triggertype) then
           options[name].set = function(info, v)
@@ -1108,24 +1141,25 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
   if not(triggertype or prototype.automaticrequired) then
     options.unevent = {
       type = "select",
+      width = WeakAuras.doubleWidth,
       name = L["Hide"],
-      width = "double",
       order = order
     };
     order = order + 1;
     if(unevent == "timed") then
-      options.unevent.width = "normal";
+      options.unevent.width = WeakAuras.normalWidth;
       options.duration = {
         type = "input",
+        width = WeakAuras.normalWidth,
         name = L["Duration (s)"],
         order = order
       }
       order = order + 1;
     else
-      options.unevent.width = "double";
+      options.unevent.width = WeakAuras.doubleWidth;
     end
     if(unevent == "custom") then
-      local unevent_options = WeakAuras.ConstructOptions(prototype, data, order, subPrefix, subSuffix, triggernum, "untrigger");
+      local unevent_options = WeakAuras.ConstructOptions(prototype, data, order, triggernum, "untrigger");
       options = union(options, unevent_options);
     end
     if(prototype.automatic) then
@@ -1211,6 +1245,148 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
     end
   end
 end);
+
+function WeakAuras.MultipleDisplayTooltipMenu()
+  local frame = frame;
+  local menu = {
+    {
+      text = L["Add to new Group"],
+      notCheckable = 1,
+      func = function()
+        local data = {
+          id = WeakAuras.FindUnusedId(tempGroup.controlledChildren[1].." Group"),
+          regionType = "group",
+        };
+        WeakAuras.Add(data);
+        WeakAuras.NewDisplayButton(data);
+
+        for index, childId in pairs(tempGroup.controlledChildren) do
+          local childData = WeakAuras.GetData(childId);
+          tinsert(data.controlledChildren, childId);
+          childData.parent = data.id;
+          WeakAuras.Add(data);
+          WeakAuras.Add(childData);
+        end
+
+        for index, id in pairs(data.controlledChildren) do
+          local childButton = WeakAuras.GetDisplayButton(id);
+          childButton:SetGroup(data.id, data.regionType == "dynamicgroup");
+          childButton:SetGroupOrder(index, #data.controlledChildren);
+        end
+
+        local button = WeakAuras.GetDisplayButton(data.id);
+        button.callbacks.UpdateExpandButton();
+        WeakAuras.UpdateDisplayButton(data);
+        WeakAuras.ReloadGroupRegionOptions(data);
+        WeakAuras.SortDisplayButtons();
+        button:Expand();
+      end
+    },
+    {
+      text = L["Add to new Dynamic Group"],
+      notCheckable = 1,
+      func = function()
+        local data = {
+          id = WeakAuras.FindUnusedId(tempGroup.controlledChildren[1].." Group"),
+          regionType = "dynamicgroup",
+        };
+
+        WeakAuras.Add(data);
+        WeakAuras.NewDisplayButton(data);
+
+        for index, childId in pairs(tempGroup.controlledChildren) do
+          local childData = WeakAuras.GetData(childId);
+          tinsert(data.controlledChildren, childId);
+          childData.parent = data.id;
+          childData.xOffset = 0;
+          childData.yOffset = 0;
+          WeakAuras.Add(data);
+          WeakAuras.Add(childData);
+        end
+
+        for index, id in pairs(data.controlledChildren) do
+          local childButton = WeakAuras.GetDisplayButton(id);
+          childButton:SetGroup(data.id, data.regionType == "dynamicgroup");
+          childButton:SetGroupOrder(index, #data.controlledChildren);
+        end
+
+        local button = WeakAuras.GetDisplayButton(data.id);
+        button.callbacks.UpdateExpandButton();
+        WeakAuras.UpdateDisplayButton(data);
+        WeakAuras.ReloadGroupRegionOptions(data);
+        WeakAuras.SortDisplayButtons();
+        button:Expand();
+        WeakAuras.PickDisplay(data.id);
+      end
+    },
+    {
+      text = L["Duplicate All"],
+      notCheckable = 1,
+      func = function()
+        local toDuplicate = {};
+        for index, id in pairs(tempGroup.controlledChildren) do
+          toDuplicate[index] = id;
+        end
+
+        local duplicated = {};
+
+        for index, id in ipairs(toDuplicate) do
+          local childData = WeakAuras.GetData(id);
+          duplicated[index] = WeakAuras.DuplicateAura(childData);
+        end
+
+        WeakAuras.ClearPicks();
+        frame:PickDisplayBatch(duplicated);
+      end
+    },
+    {
+      text = " ",
+      notCheckable = 1,
+      notClickable = 1
+    },
+    {
+      text = L["Delete all"],
+      notCheckable = 1,
+      func = function()
+        local toDelete = {};
+        local parents = {};
+        for index, id in pairs(tempGroup.controlledChildren) do
+          local childData = WeakAuras.GetData(id);
+          toDelete[index] = childData;
+          if(childData.parent) then
+            parents[childData.parent] = true;
+          end
+        end
+        WeakAuras.ConfirmDelete(toDelete, parents)
+      end
+    },
+    {
+      text = " ",
+      notClickable = 1,
+      notCheckable = 1,
+    },
+    {
+      text = L["Close"],
+      notCheckable = 1,
+      func = function() WeakAuras_DropDownMenu:Hide() end
+    }
+  };
+  local anyGrouped = false;
+  for index, id in pairs(tempGroup.controlledChildren) do
+    local childData = WeakAuras.GetData(id);
+    if(childData and childData.parent) then
+      anyGrouped = true;
+      break;
+    end
+  end
+  if(anyGrouped) then
+    menu[1].notClickable = 1;
+    menu[1].text = "|cFF777777"..menu[1].text;
+    menu[2].notClickable = 1;
+    menu[2].text = "|cFF777777"..menu[2].text;
+  end
+  return menu;
+end
 
 function WeakAuras.DeleteOption(data)
   local id = data.id;
@@ -1352,12 +1528,25 @@ function WeakAuras.ShowOptions(msg)
   end
 
   frame:Show();
-  frame:PickOption("New");
+  if (frame.pickedDisplay) then
+    if (WeakAuras.IsPickedMultiple()) then
+      local children = {}
+      for k,v in pairs(tempGroup.controlledChildren) do
+        children[k] = v
+      end
+      frame:PickDisplayBatch(children);
+    else
+      WeakAuras.PickDisplay(frame.pickedDisplay);
+    end
+  else
+    frame:PickOption("New");
+  end
   if not(firstLoad) then
+    -- Show what was last shown
     WeakAuras.PauseAllDynamicGroups();
     for id, button in pairs(displayButtons) do
-      if(loaded[id] ~= nil) then
-        button:PriorityShow(1);
+      if (button:GetVisibility() > 0) then
+        button:PriorityShow(button:GetVisibility());
       end
     end
     WeakAuras.ResumeAllDynamicGroups();
@@ -1414,14 +1603,24 @@ function WeakAuras.DoConfigUpdate()
     end
   end
 
+  -- Auras that are hidden because of e.g. conditions or straight up alpha
+  -- settings, do look very strange in the options So boost their alpha to 0.5
+  local function ApplyFakeAlpha(region)
+    if (region.GetRegionAlpha and region:GetRegionAlpha() < 0.5) then
+      region:SetAlpha(0.5);
+    end
+  end
+
   for id, region in pairs(WeakAuras.regions) do
     local data = db.displays[id];
     if(data) then
       GiveDynamicInfo(id, region.region, data);
+      ApplyFakeAlpha(region.region);
 
       if(WeakAuras.clones[id]) then
         for cloneNum, cloneRegion in pairs(WeakAuras.clones[id]) do
           GiveDynamicInfo(id, cloneRegion, data, cloneNum);
+          ApplyFakeAlpha(cloneRegion);
         end
       end
     end
@@ -1445,6 +1644,30 @@ function WeakAuras.UnlockUpdateInfo()
   if frame then
     frame:SetScript("OnUpdate", nil);
   end
+  local function RestoreAlpha(region)
+    if (region.GetRegionAlpha) then
+      region:SetAlpha(region:GetRegionAlpha());
+    end
+  end
+
+  for id, region in pairs(WeakAuras.regions) do
+    local data = db.displays[id];
+    if(data) then
+      RestoreAlpha(region.region);
+      if(region.SetDurationInfo) then
+        region.region:SetDurationInfo(0, math.huge);
+      end
+      if(WeakAuras.clones[id]) then
+        for cloneNum, cloneRegion in pairs(WeakAuras.clones[id]) do
+          RestoreAlpha(cloneRegion);
+          if(region.SetDurationInfo) then
+            cloneRegion:SetDurationInfo(0, math.huge);
+          end
+        end
+      end
+    end
+  end
+
 end
 
 function WeakAuras.SetIconNames(data)
@@ -1601,6 +1824,10 @@ function WeakAuras.LayoutDisplayButtons(msg)
       for id, button in pairs(displayButtons) do
         if(loaded[id] ~= nil) then
           button:PriorityShow(1);
+        end
+        if WeakAurasCompanion and not button.data.parent then
+          -- initialize update icons on top level buttons
+          button:RefreshUpdate()
         end
       end
     end
@@ -2003,11 +2230,19 @@ local function replaceNameDescFuncs(intable, data)
           if (not name) then
           -- Do nothing
           elseif(first) then
-            combinedName = name;
-            first = false;
+            if (combinedName ~= "") then
+              combinedName = name;
+              first = false;
+            end
             foundNames[name] = true;
           elseif not(foundNames[name]) then
-            combinedName = combinedName .. "/" .. name;
+            if (name ~= "") then
+              if (childOption.type == "description") then
+                combinedName = combinedName .. "\n\n" .. name;
+              else
+                combinedName = combinedName .. " / " .. name;
+              end
+            end
             foundNames[name] = true;
           end
         end
@@ -2125,6 +2360,10 @@ local function replaceNameDescFuncs(intable, data)
                         local display = childOptionTable[i].get(info) or L["None"];
                         if(type(display) == "number") then
                           display = math.floor(display * 100) / 100;
+                        else
+                          if #display > 50 then
+                            display = display:sub(1, 50) .. "..."
+                          end
                         end
                         tinsert(values, "|cFFE0E000"..childId..": |r"..display);
                       end
@@ -2203,7 +2442,10 @@ local function replaceValuesFuncs(intable, data)
 
         childOption = getChildOption(childOption, info);
         if (childOption) then
-          local values = childOption.values(info);
+          local values = childOption.values;
+          if (type(values) == "function") then
+            values = values(info);
+          end
           if(first) then
             for k, v in pairs(values) do
               handledValues[k] = handledValues[k] or {};
@@ -2266,7 +2508,7 @@ function WeakAuras.AddCodeOption(args, data, name, prefix, order, hiddenFunc, pa
 
   args[prefix .. "_custom"] = {
     type = "input",
-    width = "double",
+    width = WeakAuras.doubleWidth,
     name = name,
     order = order,
     multiline = true,
@@ -2319,7 +2561,7 @@ function WeakAuras.AddCodeOption(args, data, name, prefix, order, hiddenFunc, pa
       local _, errorString = loadstring(code);
       return errorString and "|cFFFF0000"..errorString or "";
     end,
-    width = "double",
+    width = WeakAuras.doubleWidth,
     order = order + 0.002,
     hidden = function()
       if (hiddenFunc()) then
@@ -2347,94 +2589,85 @@ function WeakAuras.AddCodeOption(args, data, name, prefix, order, hiddenFunc, pa
   };
 end
 
-local function copyOptionTable(input, orderAdjustment)
+local function addCollapsibleHeader(options, key, title, order, isGroupTab)
+  options[key .. "collapseSpacer"] = {
+    type = "description",
+    name = "",
+    order = order,
+    width = "full",
+  }
+  options[key .. "collapseButton"] = {
+    type = "execute",
+    name = "",
+    order = order + 0.1,
+    width = 0.15,
+    func = function(info)
+      local isCollapsed = WeakAuras.IsCollapsed("collapse", "region", key, false)
+      WeakAuras.SetCollapsed("collapse", "region", key, not isCollapsed)
+      WeakAuras.RefillOptions()
+    end,
+    image = function()
+      local isCollapsed = WeakAuras.IsCollapsed("collapse", "region", key, false)
+      return isCollapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\expand" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\collapse", 18, 18
+    end
+  }
+
+  options[key] = {
+    type = "description",
+    name = title,
+    order = order + 0.2,
+    width = WeakAuras.doubleWidth - 0.15,
+    fontSize = "large"
+  }
+  return function()
+    return WeakAuras.IsCollapsed("collapse", "region", key, false)
+  end
+end
+
+local function copyOptionTable(input, orderAdjustment, collapsedFunc)
   local resultOption = {};
   WeakAuras.DeepCopy(input, resultOption);
   resultOption.order = orderAdjustment + resultOption.order;
+  if collapsedFunc then
+    local oldHidden = resultOption.hidden;
+    if oldHidden ~= nil then
+      local oldFunc
+      if type(oldHidden) ~= "function" then
+        oldFunc = function(...) return oldHidden end
+      else
+        oldFunc = oldHidden
+      end
+      resultOption.hidden = function(...)
+        if collapsedFunc() then
+          return true
+        else
+          return oldFunc(...)
+        end
+      end
+    else
+      resultOption.hidden = collapsedFunc;
+    end
+  end
   return resultOption;
 end
 
-local function flattenRegionOptions(allOptions, withoutHeader)
+local function flattenRegionOptions(allOptions, isGroupTab)
   local result = {};
+  local base = 1000;
 
-  local base = 100;
+  for optionGroup, options in pairs(allOptions) do
+    local groupBase = base * options.__order
 
-  for regionType, options in pairs(allOptions) do
-    if (regionType ~= "border" and regionType ~= "position") then
-      for optionName, option in pairs(options) do
-        result[regionType .. "." .. optionName] = copyOptionTable(option, base);
+    local collapsedFunc = addCollapsibleHeader(result, optionGroup, options.__title, groupBase, isGroupTab)
+
+    for optionName, option in pairs(options) do
+      if not optionName:find("^__") then
+        result[optionGroup .. "." .. optionName] = copyOptionTable(option, groupBase, collapsedFunc);
       end
-
-      base = base + 100;
-    end
-  end
-
-  if (allOptions["border"]) then
-    for optionName, option in pairs(allOptions["border"]) do
-      result["border." .. optionName] = copyOptionTable(option, base);
-    end
-    base = base + 100;
-  end
-
-  if (allOptions["position"]) then
-    for optionName, option in pairs(allOptions["position"]) do
-      result["position." .. optionName] = copyOptionTable(option, base);
     end
   end
 
   return result;
-end
-
-local function addHeadersForRegionOptions(allOptions, output)
-  local base = 100;
-  for regionType, options in pairs(allOptions) do
-    if (regionType ~= "border" and regionType ~= "position") then
-      if (base > 100) then
-        output[regionType .. "_spacer"] = {
-          type = "description",
-          name = " ",
-          width = "double",
-          fontSize = "large",
-          order = base,
-          hidden = false
-        }
-      end
-      output[regionType .. "_title"] = {
-        type = "description",
-        name = regionOptions[regionType].displayName,
-        width = "double",
-        order = base + 0.01,
-        fontSize = "large",
-        hidden = false
-      }
-      output[regionType .. "_title_header"] = {
-        type = "header",
-        name = "",
-        width = "double",
-        order = base + 0.02,
-        hidden = false
-      }
-      base = base + 100;
-    end
-  end
-
-  output["common_spacer"] = {
-    type = "description",
-    name = " ",
-    width = "double",
-    fontSize = "large",
-    order = base,
-    hidden = false
-  }
-
-  output["common_title"] = {
-    type = "description",
-    name = L["Common Options"],
-    width = "double",
-    order = base + 0.01,
-    fontSize = "large",
-    hidden = false
-  }
 end
 
 local function removePrefix(input)
@@ -2502,7 +2735,7 @@ function WeakAuras.AddOption(id, data)
           end
           WeakAuras.ResetMoverSizer();
         end,
-        args = flattenRegionOptions(regionOption, false);
+        args = flattenRegionOptions(regionOption, true);
       },
       trigger = {
         type = "group",
@@ -2530,6 +2763,11 @@ function WeakAuras.AddOption(id, data)
         end,
         args = {}
       },
+      authorOptions = {
+        type = "group",
+        name = WeakAuras.newFeatureString .. L["Custom Options"],
+        order = 100
+      }
     }
   };
 
@@ -2624,41 +2862,37 @@ function WeakAuras.ReloadTriggerOptions(data)
   local iconCache = spellCache.Get();
   WeakAuras.EnsureOptions(id);
 
-  local trigger, untrigger, appendToTriggerPath, appendToUntriggerPath;
+  local appendToTriggerPath, appendToUntriggerPath;
   if(data.controlledChildren) then
     optionTriggerChoices[id] = nil;
     for index, childId in pairs(data.controlledChildren) do
       if not(optionTriggerChoices[id]) then
         optionTriggerChoices[id] = optionTriggerChoices[childId];
-        trigger = WeakAuras.GetData(childId).trigger;
-        untrigger = WeakAuras.GetData(childId).untrigger;
       else
         if(optionTriggerChoices[id] ~= optionTriggerChoices[childId]) then
-          trigger, untrigger = {}, {};
           optionTriggerChoices[id] = -1;
           break;
         end
       end
     end
 
-    optionTriggerChoices[id] = optionTriggerChoices[id] or 0;
+    optionTriggerChoices[id] = optionTriggerChoices[id] or 1;
 
-    local commonOptionTriggerChoice = optionTriggerChoices[id] >= 0 and optionTriggerChoices[id];
+    local commonOptionTriggerChoice = optionTriggerChoices[id] >= 1 and optionTriggerChoices[id];
     for index, childId in pairs(data.controlledChildren) do
       local childData = WeakAuras.GetData(childId);
       if(childData) then
-        optionTriggerChoices[childId] = commonOptionTriggerChoice or optionTriggerChoices[childId] or 0;
+        optionTriggerChoices[childId] = commonOptionTriggerChoice or optionTriggerChoices[childId] or 1;
         WeakAuras.ReloadTriggerOptions(childData);
       end
     end
   else
-    optionTriggerChoices[id] = min(optionTriggerChoices[id] or 0, (data.numTriggers or 1) - 1);
-    if(optionTriggerChoices[id] == 0) then
-      trigger = data.trigger;
-      untrigger = data.untrigger;
-    else
-      trigger = data.additional_triggers and data.additional_triggers[optionTriggerChoices[id]].trigger or data.trigger;
-      untrigger = data.additional_triggers and data.additional_triggers[optionTriggerChoices[id]].untrigger or data.untrigger;
+    optionTriggerChoices[id] = min(optionTriggerChoices[id] or 1, #data.triggers);
+    local triggerChoice = optionTriggerChoices[id]
+    -- TODO: remove this once legacy aura trigger is removed
+    local button = displayButtons[id]
+    if (button) then
+      button:RefreshBT2UpgradeIcon()
     end
   end
 
@@ -2667,38 +2901,16 @@ function WeakAuras.ReloadTriggerOptions(data)
       for index, childId in pairs(data.controlledChildren) do
         local childData = WeakAuras.GetData(childId);
         if(childData) then
-          if (optionTriggerChoices[childId] == 0) then
-            if (childData.additional_triggers and childData.additional_triggers[1] and childData.additional_triggers[1].trigger) then
-              childData.trigger = childData.additional_triggers[1].trigger;
-              childData.untrigger = childData.additional_triggers[1].untrigger;
-              tremove(childData.additional_triggers, 1);
-            end
-          else
-            if (childData.additional_triggers) then
-              tremove(childData.additional_triggers, optionTriggerChoices[childId]);
-              optionTriggerChoices[childId] = optionTriggerChoices[childId] - 1;
-            end
-          end
-
+          tremove(childData.triggers, optionTriggerChoices[childId])
           WeakAuras.DeleteConditionsForTrigger(childData, optionTriggerChoices[childId]);
-
-          childData.numTriggers = 1 + (childData.additional_triggers and #childData.additional_triggers or 0)
+          optionTriggerChoices[childId] = max(1, optionTriggerChoices[childId] - 1)
           WeakAuras.ReloadTriggerOptions(childData);
         end
       end
     else
-      if (optionTriggerChoices[id] == 0) then
-        data.trigger = data.additional_triggers[1].trigger;
-        data.untrigger = data.additional_triggers[1].untrigger;
-        tremove(data.additional_triggers, 1);
-      else
-        tremove(data.additional_triggers, optionTriggerChoices[id]);
-        optionTriggerChoices[id] = optionTriggerChoices[id] - 1;
-      end
-
+      tremove(data.triggers, optionTriggerChoices[id])
       WeakAuras.DeleteConditionsForTrigger(data, optionTriggerChoices[id]);
-
-      data.numTriggers = 1 + (data.additional_triggers and #data.additional_triggers or 0)
+      optionTriggerChoices[id] = max(1, optionTriggerChoices[id] - 1)
     end
     WeakAuras.Add(data);
     WeakAuras.ReloadTriggerOptions(data);
@@ -2718,25 +2930,10 @@ function WeakAuras.ReloadTriggerOptions(data)
   end
 
   local function moveTriggerDownImpl(data, i)
-    if (i < 0 or i + 1 >= data.numTriggers) then
+    if (i < 1 or i >= #data.triggers) then
       return false;
     end
-
-    if (i == 0) then
-      local tmp = data.additional_triggers[1];
-      tremove(data.additional_triggers, 1);
-      tinsert(data.additional_triggers, 1, {
-        trigger = data.trigger,
-        untrigger = data.untrigger
-      });
-      data.trigger = tmp.trigger;
-      data.untrigger = tmp.untrigger;
-    else
-      local tmp = data.additional_triggers[i + 1];
-      tremove(data.additional_triggers, i + 1);
-      tinsert(data.additional_triggers, i, tmp);
-    end
-
+    data.triggers[i], data.triggers[i + 1] = data.triggers[i + 1], data.triggers[i]
     for _, condition in ipairs(data.conditions) do
       moveTriggerDownConditionCheck(condition.check, i);
     end
@@ -2766,7 +2963,7 @@ function WeakAuras.ReloadTriggerOptions(data)
     local hasMultipleTriggers = false;
     for index, id in pairs(data.controlledChildren) do
       local childData = WeakAuras.GetData(id);
-      if (childData.numTriggers ~=1) then
+      if (#childData.triggers ~=1) then
         hasMultipleTriggers = true;
         break;
       end
@@ -2775,7 +2972,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       chooseTriggerWidth = chooseTriggerWidth + 0.45;
     end
   else
-    if (data.numTriggers == 1) then
+    if (#data.triggers == 1) then
       chooseTriggerWidth = chooseTriggerWidth + 0.45;
     end
   end
@@ -2784,27 +2981,38 @@ function WeakAuras.ReloadTriggerOptions(data)
     chooseTriggerWidth = chooseTriggerWidth + 0.15;
   end
 
+  local trigger;
+  if (not data.controlledChildren) then
+    local triggerNum = optionTriggerChoices[id];
+    trigger = data.triggers[triggerNum].trigger;
+  end
+
+  local trigger_types = {};
+  for type, triggerSystem in pairs(WeakAuras.triggerTypes) do
+    trigger_types[type] = triggerSystem.GetName(type);
+  end
   local trigger_options = {
     disjunctive = {
       type = "select",
       name = L["Required for Activation"],
-      width = "double",
+      width = WeakAuras.doubleWidth,
       order = 0,
       values = function()
-        if (data.additional_triggers and #data.additional_triggers > 0) then
+        if #data.triggers > 1 then
           return WeakAuras.trigger_require_types;
+        else
+          return  WeakAuras.trigger_require_types_one;
         end
-        return  WeakAuras.trigger_require_types_one;
       end,
       get = function()
-        if (data.additional_triggers and #data.additional_triggers > 0) then
-          return data.disjunctive or "all";
+        if #data.triggers > 1 then
+          return data.triggers.disjunctive or "all";
         else
-          return (data.disjunctive and data.disjunctive ~= "all") and data.disjunctive or "any";
+          return (data.triggers.disjunctive and data.triggers.disjunctive ~= "all") and data.triggers.disjunctive or "any";
         end
       end,
       set = function(info, v)
-        data.disjunctive = v;
+        data.triggers.disjunctive = v;
         WeakAuras.Add(data);
       end
     },
@@ -2812,43 +3020,42 @@ function WeakAuras.ReloadTriggerOptions(data)
     activeTriggerMode = {
       type = "select",
       name = L["Dynamic Information"],
-      width = "double",
+      width = WeakAuras.doubleWidth,
       order = 0.3,
       values = function()
         local vals = {};
         vals[WeakAuras.trigger_modes.first_active] = L["Dynamic information from first active trigger"];
-        local numTriggers = data.additional_triggers and #data.additional_triggers or 0;
-        for i=0,numTriggers do
-          vals[i] = L["Dynamic information from Trigger %i"]:format(i + 1);
+        for i = 1, #data.triggers do
+          vals[i] = L["Dynamic information from Trigger %i"]:format(i);
         end
         return vals;
       end,
       get = function()
-        return data.activeTriggerMode or WeakAuras.trigger_modes.first_active;
+        return data.triggers.activeTriggerMode or WeakAuras.trigger_modes.first_active;
       end,
       set = function(info, v)
-        data.activeTriggerMode = v;
+        data.triggers.activeTriggerMode = v;
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
-      hidden = function() return data.numTriggers <= 1 end
+      hidden = function() return #data.triggers <= 1 end
     },
     chooseTrigger = {
       type = "select",
       name = L["Choose Trigger"],
       order = 0.5,
       values = function()
-        local ret = {[0] = L["Trigger %d"]:format(1)};
+        local ret = {};
         if(data.controlledChildren) then
-          for index=1,(data.numTriggers and data.numTriggers + 1 or 9) do
+          for index = 1, #data.triggers do
             local all, none, any = true, true, false;
             for _, childId in pairs(data.controlledChildren) do
               local childData = WeakAuras.GetData(childId);
               if(childData) then
                 none = false;
-                if(childData.additional_triggers and childData.additional_triggers[index]) then
+                if childData.triggers[index] then
                   any = true;
                 else
                   all = false;
@@ -2857,22 +3064,22 @@ function WeakAuras.ReloadTriggerOptions(data)
             end
             if not(none) then
               if(all) then
-                ret[index] = L["Trigger %d"]:format(index + 1);
+                ret[index] = L["Trigger %d"]:format(index);
               elseif(any) then
-                ret[index] = "|cFF777777"..L["Trigger %d"]:format(index + 1);
+                ret[index] = "|cFF777777"..L["Trigger %d"]:format(index);
               end
             end
           end
-        elseif(data.additional_triggers) then
-          for index, trigger in pairs(data.additional_triggers) do
-            ret[index] = L["Trigger %d"]:format(index + 1);
+        else
+          for i = 1, #data.triggers do
+            ret[i] = L["Trigger %d"]:format(i);
           end
         end
         return ret;
       end,
       get = function() return optionTriggerChoices[id]; end,
       set = function(info, v)
-        if(v == 0 or (data.additional_triggers and data.additional_triggers[v])) then
+        if data.triggers[v] then
           optionTriggerChoices[id] = v;
           WeakAuras.ReloadTriggerOptions(data);
         end
@@ -2895,18 +3102,14 @@ function WeakAuras.ReloadTriggerOptions(data)
           for index, childId in pairs(data.controlledChildren) do
             local childData = WeakAuras.GetData(childId);
             if(childData) then
-              childData.additional_triggers = childData.additional_triggers or {};
-              tinsert(childData.additional_triggers, {trigger = {}, untrigger = {}});
-              childData.numTriggers = 1 + (childData.additional_triggers and #childData.additional_triggers or 0)
-              optionTriggerChoices[childId] = #childData.additional_triggers;
+              tinsert(childData.triggers, {trigger = {}, untrigger = {}});
+              optionTriggerChoices[childId] = #childData.triggers;
               WeakAuras.ReloadTriggerOptions(childData);
             end
           end
         else
-          data.additional_triggers = data.additional_triggers or {};
-          tinsert(data.additional_triggers, {trigger = {}, untrigger = {}});
-          data.numTriggers = 1 + (data.additional_triggers and #data.additional_triggers or 0)
-          optionTriggerChoices[id] = #data.additional_triggers;
+          tinsert(data.triggers, {trigger = {}, untrigger = {}});
+          optionTriggerChoices[id] = #data.triggers;
         end
         WeakAuras.ReloadTriggerOptions(data);
       end,
@@ -2922,7 +3125,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       order = 1.1,
       func = deleteTrigger,
       hidden = function()
-        return data.numTriggers == 1
+        return #data.triggers < 2
       end,
       width = 0.15,
       image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\delete",
@@ -2951,14 +3154,14 @@ function WeakAuras.ReloadTriggerOptions(data)
           for index, childId in pairs(data.controlledChildren) do
             local childData = WeakAuras.GetData(childId);
             if(childData) then
-              if (optionTriggerChoices[childId] ~= 0) then
+              if (optionTriggerChoices[childId] ~= 1) then
                 return false;
               end
             end
           end
           return true;
         else
-          if (optionTriggerChoices[id] == 0) then
+          if (optionTriggerChoices[id] == 1) then
             return true;
           else
             return false;
@@ -2966,7 +3169,7 @@ function WeakAuras.ReloadTriggerOptions(data)
         end
       end,
       hidden = function()
-        return data.numTriggers == 1
+        return #data.triggers < 2
       end,
       width = 0.15,
       image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\moveup",
@@ -2995,22 +3198,22 @@ function WeakAuras.ReloadTriggerOptions(data)
           for index, childId in pairs(data.controlledChildren) do
             local childData = WeakAuras.GetData(childId);
             if(childData) then
-              if (optionTriggerChoices[childId] ~= childData.numTriggers -1) then
+              if (optionTriggerChoices[childId] ~= #childData.triggers) then
                 return false;
               end
             end
           end
           return true;
         else
-          if (optionTriggerChoices[id] == data.numTriggers - 1) then
-            return true;
-          else
+          if (optionTriggerChoices[id] ~= #data.triggers) then
             return false;
+          else
+            return true;
           end
         end
       end,
       hidden = function()
-        return data.numTriggers == 1
+        return #data.triggers < 2
       end,
       width = 0.15,
       image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\movedown",
@@ -3039,17 +3242,14 @@ function WeakAuras.ReloadTriggerOptions(data)
         if(info == "default") then
           return L["Multiple Triggers"];
         else
-          if(optionTriggerChoices[id] == 0) then
-            return L["Trigger %d"]:format(1);
-          else
-            return L["Trigger %d"]:format(optionTriggerChoices[id] + 1);
-          end
+          return L["Trigger %d"]:format(optionTriggerChoices[id]);
         end
       end,
       order = 2
     },
     typedesc = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Type"],
       order = 5,
       disabled = true,
@@ -3057,6 +3257,7 @@ function WeakAuras.ReloadTriggerOptions(data)
     },
     type = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Type"],
       desc = L["The type of trigger"],
       order = 6,
@@ -3083,11 +3284,9 @@ function WeakAuras.ReloadTriggerOptions(data)
   };
 
   local function hideTriggerCombiner()
-    return not (data.disjunctive == "custom")
+    return not (data.triggers.disjunctive == "custom")
   end
-  WeakAuras.AddCodeOption(trigger_options, data, L["Custom"], "custom_trigger_combination", 0.1, hideTriggerCombiner, {"customTriggerLogic"}, false);
-
-  trigger_options = union(trigger_options, WeakAuras.GetGenericTriggerOptions(data, trigger, untrigger));
+  WeakAuras.AddCodeOption(trigger_options, data, L["Custom"], "custom_trigger_combination", 0.1, hideTriggerCombiner, {"triggers", "customTriggerLogic"}, false);
 
   local order = 81;
 
@@ -3101,64 +3300,40 @@ function WeakAuras.ReloadTriggerOptions(data)
       WeakAuras.ReloadTriggerOptions(data);
     end
 
-    removeFuncs(displayOptions[id]);
+    local commontriggerSystemOptionsFunction = nil;
+    local first = true;
 
-    if(optionTriggerChoices[id] >= 0 and getAll(data, {"trigger", "type"}) == "aura") then
-      local aura_options = WeakAuras.GetBuffTriggerOptions(data, trigger);
-      displayOptions[id].args.trigger.args = union(trigger_options, aura_options);
-      removeFuncs(displayOptions[id].args.trigger);
-      displayOptions[id].args.trigger.args.type.set = options_set;
-    elseif(optionTriggerChoices[id] >= 0 and (getAll(data, {"trigger", "type"}) == "event" or getAll(data, {"trigger", "type"}) == "status")) then
-      local event = getAll(data, {"trigger", "event"});
-      local unevent = getAll(data, {"trigger", "unevent"});
-      if(event and WeakAuras.event_prototypes[event]) then
-        local trigger_options_created;
-        if(event == "Combat Log") then
-          local subeventPrefix = getAll(data, {"trigger", "subeventPrefix"});
-          local subeventSuffix = getAll(data, {"trigger", "subeventSuffix"});
-          if(subeventPrefix and subeventSuffix) then
-            trigger_options_created = true;
-            displayOptions[id].args.trigger.args = union(trigger_options, WeakAuras.ConstructOptions(WeakAuras.event_prototypes[event], data, 10, subeventPrefix, subeventSuffix, optionTriggerChoices[id], nil, unevent));
-          end
-        end
-
-        if not(trigger_options_created) then
-          displayOptions[id].args.trigger.args = union(trigger_options, WeakAuras.ConstructOptions(WeakAuras.event_prototypes[event], data, 10, nil, nil, optionTriggerChoices[id], nil, unevent));
-        end
-      else
-        displayOptions[id].args.trigger.args = union(trigger_options, {});
-        removeFuncs(displayOptions[id].args.trigger);
+    local anyOldAuraTriggers = false;
+    for index, childId in ipairs(data.controlledChildren) do
+      local triggerChoice = optionTriggerChoices[childId];
+      local childData = WeakAuras.GetData(childId);
+      local trigger = triggerChoice and childData.triggers[triggerChoice].trigger;
+      local triggerSystemOptionsFunction = trigger.type and WeakAuras.triggerTypesOptions[trigger.type];
+      if (trigger.type == "aura") then
+        anyOldAuraTriggers = true;
       end
-      removeFuncs(displayOptions[id].args.trigger);
-      replaceNameDescFuncs(displayOptions[id].args.trigger, data);
-      replaceImageFuncs(displayOptions[id].args.trigger, data);
-      replaceValuesFuncs(displayOptions[id].args.trigger, data);
-
-      if(displayOptions[id].args.trigger.args.unevent) then
-        displayOptions[id].args.trigger.args.unevent.set = options_set;
-      end
-      if(displayOptions[id].args.trigger.args.subeventPrefix) then
-        displayOptions[id].args.trigger.args.subeventPrefix.set = function(info, v)
-          if not(subevent_actual_prefix_types[v]) then
-            data.trigger.subeventSuffix = "";
-          end
-          options_set(info, v);
+      if (triggerSystemOptionsFunction) then
+        if (first) then
+          commontriggerSystemOptionsFunction = triggerSystemOptionsFunction
+          first = false;
+        elseif(commontriggerSystemOptionsFunction ~= triggerSystemOptionsFunction) then
+          commontriggerSystemOptionsFunction = nil;
         end
       end
-      if(displayOptions[id].args.trigger.args.subeventSuffix) then
-        displayOptions[id].args.trigger.args.subeventSuffix.set = options_set;
-      end
-
-      if(displayOptions[id].args.trigger.args.type) then
-        displayOptions[id].args.trigger.args.type.set = options_set;
-      end
-      if(displayOptions[id].args.trigger.args.event) then
-        displayOptions[id].args.trigger.args.event.set = options_set;
-      end
-    else
-      displayOptions[id].args.trigger.args = trigger_options;
-      removeFuncs(displayOptions[id].args.trigger);
     end
+
+    if (commontriggerSystemOptionsFunction) then
+      trigger_options = union(trigger_options, commontriggerSystemOptionsFunction(data, optionTriggerChoices));
+    end
+    if (anyOldAuraTriggers) then
+      trigger_options = union(trigger_options, WeakAuras.GetBuffConversionOptions(data, optionTriggerChoices));
+    end
+    displayOptions[id].args.trigger.args = trigger_options;
+
+    removeFuncs(displayOptions[id]);
+    replaceNameDescFuncs(displayOptions[id], data);
+    replaceImageFuncs(displayOptions[id], data);
+    replaceValuesFuncs(displayOptions[id], data);
 
     displayOptions[id].get = function(info, ...) return getAll(data, info, ...); end;
     displayOptions[id].set = function(info, ...)
@@ -3173,14 +3348,12 @@ function WeakAuras.ReloadTriggerOptions(data)
     displayOptions[id].disabled = function(info, ...) return disabledAll(data, info, ...); end;
 
     displayOptions[id].args.trigger.args.chooseTrigger.set = options_set;
-    displayOptions[id].args.trigger.args.type.set = options_set;
+    if (displayOptions[id].args.trigger.args.type) then
+      displayOptions[id].args.trigger.args.type.set = options_set;
+    end
     if (displayOptions[id].args.trigger.args.event) then
       displayOptions[id].args.trigger.args.event.set = options_set;
     end
-
-    replaceNameDescFuncs(displayOptions[id], data);
-    replaceImageFuncs(displayOptions[id], data);
-    replaceValuesFuncs(displayOptions[id], data);
 
     local regionOption;
     if (regionOptions[data.regionType]) then
@@ -3237,7 +3410,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       multi = {},
     }
 
-    displayOptions[id].args.load.args = WeakAuras.ConstructOptions(WeakAuras.load_prototype, data, 10, nil, nil, optionTriggerChoices[id], "load");
+    displayOptions[id].args.load.args = WeakAuras.ConstructOptions(WeakAuras.load_prototype, data, 10, optionTriggerChoices[id], "load");
     removeFuncs(displayOptions[id].args.load);
     replaceNameDescFuncs(displayOptions[id].args.load, data);
     replaceImageFuncs(displayOptions[id].args.load, data);
@@ -3245,6 +3418,8 @@ function WeakAuras.ReloadTriggerOptions(data)
 
     WeakAuras.ReloadGroupRegionOptions(data);
   else -- One aura selected
+    local triggerChoice = optionTriggerChoices[id];
+    local trigger, untrigger = data.triggers[triggerChoice].trigger, data.triggers[triggerChoice].untrigger;
     local function options_set(info, v)
       trigger[info[#info]] = v;
       WeakAuras.Add(data);
@@ -3253,40 +3428,16 @@ function WeakAuras.ReloadTriggerOptions(data)
       WeakAuras.UpdateDisplayButton(data);
       WeakAuras.ReloadTriggerOptions(data);
     end
-    local triggernum = optionTriggerChoices[id];
-    if(trigger.type == "aura") then
-      local aura_options = WeakAuras.GetBuffTriggerOptions(data, trigger);
-      displayOptions[id].args.trigger.args = union(trigger_options, aura_options);
-    elseif(trigger.type == "event" or trigger.type == "status") then
-      if(WeakAuras.event_prototypes[trigger.event]) then
-        if(trigger.event == "Combat Log") then
-          displayOptions[id].args.trigger.args = union(trigger_options, WeakAuras.ConstructOptions(WeakAuras.event_prototypes[trigger.event], data, 10, (trigger.subeventPrefix or ""), (trigger.subeventSuffix or ""), optionTriggerChoices[id]));
-        else
-          displayOptions[id].args.trigger.args = union(trigger_options, WeakAuras.ConstructOptions(WeakAuras.event_prototypes[trigger.event], data, 10, nil, nil, optionTriggerChoices[id]));
-        end
-        if(displayOptions[id].args.trigger.args.unevent) then
-          displayOptions[id].args.trigger.args.unevent.set = options_set;
-        end
-        if(displayOptions[id].args.trigger.args.subeventPrefix) then
-          displayOptions[id].args.trigger.args.subeventPrefix.set = function(info, v)
-            if not(subevent_actual_prefix_types[v]) then
-              trigger.subeventSuffix = "";
-            end
-            options_set(info, v);
-          end
-        end
-        if(displayOptions[id].args.trigger.args.subeventSuffix) then
-          displayOptions[id].args.trigger.args.subeventSuffix.set = options_set;
-        end
-      else
-        print("|cFF8800FFWeakAuras|r: No prototype for", trigger.event);
-        displayOptions[id].args.trigger.args = union(trigger_options, {});
-      end
-    else
-      displayOptions[id].args.trigger.args = union(trigger_options, {});
+    local triggerSystemOptionsFunction = trigger.type and WeakAuras.triggerTypesOptions[trigger.type];
+    if (triggerSystemOptionsFunction) then
+      trigger_options = union(trigger_options, triggerSystemOptionsFunction(data, optionTriggerChoices));
+    end
+    if (trigger.type == "aura") then
+      trigger_options = union(trigger_options, WeakAuras.GetBuffConversionOptions(data, optionTriggerChoices));
     end
 
-    displayOptions[id].args.load.args = WeakAuras.ConstructOptions(WeakAuras.load_prototype, data, 10, nil, nil, optionTriggerChoices[id], "load");
+    displayOptions[id].args.trigger.args = trigger_options;
+    displayOptions[id].args.load.args = WeakAuras.ConstructOptions(WeakAuras.load_prototype, data, 10, optionTriggerChoices[id], "load");
 
     if (displayOptions[id].args.trigger.args.event) then
       displayOptions[id].args.trigger.args.event.set = function(info, v, ...)
@@ -3312,8 +3463,18 @@ function WeakAuras.ReloadTriggerOptions(data)
       WeakAuras.SetThumbnail(data);
       WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
+      WeakAuras.ReloadTriggerOptions(data);
     end;
   end
+
+  displayOptions[id].args.authorOptions.args = {}
+  displayOptions[id].args.authorOptions.hidden = function()
+    return false;
+  end
+  displayOptions[id].args.authorOptions.disabled = function()
+    return false;
+  end
+  WeakAuras.GetAuthorOptions(data, displayOptions[id].args.authorOptions.args, 0)
 
   displayOptions[id].args.conditions.args = {};
   -- We never want the condition options to use the hiddenAll, disabledAll functions
@@ -3330,65 +3491,84 @@ function WeakAuras.ReloadTriggerOptions(data)
   end
 end
 
+local function fixMetaOrders(allOptions)
+  -- assumes that the results from create methods are contiguous in __order fields
+  -- shifts __order fields such that each optionGroup is ordered correctly relative
+  -- to its peers, but has a unique __order number in the combined option table.
+  local groupOrders = {}
+  local maxGroupOrder = 0
+  for optionGroup, options in pairs(allOptions) do
+    local metaOrder = options.__order
+    groupOrders[metaOrder] = groupOrders[metaOrder] or {}
+    maxGroupOrder = max(maxGroupOrder, metaOrder)
+    tinsert(groupOrders[metaOrder], optionGroup)
+  end
+
+  local index = 0
+  local newOrder = 1
+  while index <= maxGroupOrder do
+    index = index + 1
+    if groupOrders[index] then
+      table.sort(groupOrders[index])
+      for _, optionGroup in ipairs(groupOrders[index]) do
+        allOptions[optionGroup].__order = newOrder
+        newOrder = newOrder + 1
+      end
+    end
+  end
+end
+
 function WeakAuras.ReloadGroupRegionOptions(data)
   local regionTypes = {};
-  local regionTypeCount = 0;
+  local id = data.id;
+  WeakAuras.EnsureOptions(id);
+  local options = displayOptions[id];
+  local allOptions = {};
+  local unsupportedCount = 0
   for index, childId in ipairs(data.controlledChildren) do
     local childData = WeakAuras.GetData(childId);
-    if(childData) then
-      if (not regionTypes[childData.regionType]) then
-        regionTypes[childData.regionType] = true;
-        regionTypeCount = regionTypeCount +1;
+    if childData and not regionTypes[childData.regionType] then
+      regionTypes[childData.regionType] = true;
+      if regionOptions[childData.regionType] then
+        allOptions = union(allOptions, regionOptions[childData.regionType].create(id, data));
+      else
+        unsupportedCount = unsupportedCount + 1
+        allOptions["__unsupported" .. unsupportedCount] =  {
+          __title = "|cFFFFFF00" .. childData.regionType,
+          __order = 1,
+          warning = {
+            type = "description",
+            name = L["Regions of type \"%s\" are not supported."]:format(childData.regionType),
+            order = 1
+          },
+        }
       end
     end
   end
 
-  local id = data.id;
-  WeakAuras.EnsureOptions(id);
-  local options = displayOptions[id];
-
-  local allOptions = {};
-  for regionType in pairs(regionTypes) do
-    if(regionOptions[regionType]) then
-      allOptions = union(allOptions, regionOptions[regionType].create(id, data));
-    else
-      regionType = {
-        unsupported = {
-          type = "description",
-          name = L["Regions of type \"%s\" are not supported."]:format(regionType);
-        }
-      };
-    end
-  end
-
+  fixMetaOrders(allOptions);
   local regionOption = flattenRegionOptions(allOptions, false);
-
   replaceNameDescFuncs(regionOption, data);
   replaceImageFuncs(regionOption, data);
   replaceValuesFuncs(regionOption, data);
   removeFuncs(regionOption);
 
-  if (regionTypeCount > 1) then
-    addHeadersForRegionOptions(allOptions, regionOption);
-  end
-
   options.args.region.args = regionOption;
 end
 
-function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
+function WeakAuras.PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint)
+  local metaOrder = 100
   local function IsParentDynamicGroup()
     return data.parent and db.displays[data.parent] and db.displays[data.parent].regionType == "dynamicgroup";
   end
 
   local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
   local positionOptions = {
-    position_header = {
-      type = "header",
-      name = L["Position Settings"],
-      order = 46.0
-    },
+    __title = L["Position Settings"],
+    __order = metaOrder,
     width = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Width"],
       order = 60,
       min = 1,
@@ -3398,6 +3578,7 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     },
     height = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Height"],
       order = 65,
       min = 1,
@@ -3407,22 +3588,25 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     },
     selfPoint = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Anchor"],
       order = 70,
       hidden = IsParentDynamicGroup,
       values = point_types,
-      disabled = disableSelfPoint
+      disabled = disableSelfPoint,
     },
     anchorFrameType = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Anchored To"],
       order = 72,
       hidden = IsParentDynamicGroup,
-      values = WeakAuras.anchor_frame_types
+      values = WeakAuras.anchor_frame_types,
     },
     -- Input field to select frame to anchor on
     anchorFrameFrame = {
       type = "input",
+      width = WeakAuras.normalWidth,
       name = L["Frame"],
       order = 72.2,
       hidden = function()
@@ -3435,6 +3619,7 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     -- Button to select frame to anchor on
     chooseAnchorFrameFrame = {
       type = "execute",
+      width = WeakAuras.normalWidth,
       name = L["Choose"],
       order = 72.4,
       hidden = function()
@@ -3449,6 +3634,7 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     },
     anchorPoint = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = function()
         if (data.anchorFrameType == "SCREEN") then
           return L["To Screen's"]
@@ -3473,6 +3659,7 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     },
     anchorPointGroup = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = function() return L["to group's"] end,
       order = 75,
       hidden = function()
@@ -3490,6 +3677,7 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
     },
     anchorFrameParent = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Set Parent to Anchor"],
       desc = L["Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visiblility and scale."],
       order = 77,
@@ -3497,17 +3685,19 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
         return data.anchorFrameParent or data.anchorFrameParent == nil;
       end,
       hidden = function()
-        return (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE");
+        return (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE" or IsParentDynamicGroup());
       end,
     },
     frameStrata = {
       type = "select",
+      width = WeakAuras.normalWidth,
       name = L["Frame Strata"],
       order = 78,
       values = WeakAuras.frame_strata_types
     },
     anchorFrameSpace = {
       type = "execute",
+      width = WeakAuras.normalWidth,
       name = "",
       order = 79,
       image = function() return "", 0, 0 end,
@@ -3515,109 +3705,14 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
         return not (data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup());
       end
     },
-    -- IsParentDynamicGroup => xOffset4 / yOffset4
-    -- InGroup/Attached to mouse/PRD/SELECTFRAME => -screen -- +screen
-    -- Attached to Screen => depends on anchorPoint
-    --   LEFT/BOTTOM => 0 -- +screen
-    --   CENTER => -screen/2 -- +screen / 2
-    --   RIGHT/TOP => -screen -- +screen
-    xOffset1 = {
+    xOffset = {
       type = "range",
-      name = L["X Offset"],
-      order = 80,
-      softMin = 0,
-      softMax = screenWidth,
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return not data.anchorPoint:find("LEFT")
-      end,
-      get = function() return data.xOffset end,
-      set = function(info, v)
-        data.xOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    xOffset2 = {
-      type = "range",
-      name = L["X Offset"],
-      order = 80,
-      softMin = ((-1/2) * screenWidth),
-      softMax = ((1/2) * screenWidth),
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return (data.anchorPoint:find("LEFT") or data.anchorPoint:find("RIGHT"));
-      end,
-      get = function() return data.xOffset end,
-      set = function(info, v)
-        data.xOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    xOffset3 = {
-      type = "range",
-      name = L["X Offset"],
-      order = 80,
-      softMin = (-1 * screenWidth),
-      softMax = 0,
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return not data.anchorPoint:find("RIGHT");
-      end,
-      get = function() return data.xOffset end,
-      set = function(info, v)
-        data.xOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    xOffset4 = {
-      type = "range",
+      width = WeakAuras.normalWidth,
       name = L["X Offset"],
       order = 80,
       softMin = (-1 * screenWidth),
       softMax = screenWidth,
       bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return false;
-        end
-        return true;
-      end,
       get = function() return data.xOffset end,
       set = function(info, v)
         data.xOffset = v;
@@ -3633,103 +3728,14 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
         end
       end
     },
-    yOffset1 = {
+    yOffset = {
       type = "range",
-      name = L["Y Offset"],
-      order = 85,
-      softMin = 0,
-      softMax = screenHeight,
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return not data.anchorPoint:find("BOTTOM");
-      end,
-      get = function() return data.yOffset end,
-      set = function(info, v)
-        data.yOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    yOffset2 = {
-      type = "range",
-      name = L["Y Offset"],
-      order = 85,
-      softMin = ((-1/2) * screenHeight),
-      softMax = ((1/2) * screenHeight),
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return data.anchorPoint:find("BOTTOM") or data.anchorPoint:find("TOP");
-      end,
-      get = function() return data.yOffset end,
-      set = function(info, v)
-        data.yOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    yOffset3 = {
-      type = "range",
-      name = L["Y Offset"],
-      order = 85,
-      softMin = (-1 * screenHeight),
-      softMax = 0,
-      bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return true;
-        end
-        return not data.anchorPoint:find("TOP");
-      end,
-      get = function() return data.yOffset end,
-      set = function(info, v)
-        data.yOffset = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.ResetMoverSizer();
-        if(data.parent) then
-          local parentData = WeakAuras.GetData(data.parent);
-          if(parentData) then
-            WeakAuras.Add(parentData);
-            WeakAuras.SetThumbnail(parentData);
-          end
-        end
-      end
-    },
-    yOffset4 = {
-      type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Y Offset"],
       order = 85,
       softMin = (-1 * screenHeight),
       softMax = screenHeight,
       bigStep = 10,
-      hidden = function()
-        if (data.parent or data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup()) then
-          return false;
-        end
-        return true;
-      end,
       get = function() return data.yOffset end,
       set = function(info, v)
         data.yOffset = v;
@@ -3750,109 +3756,101 @@ function WeakAuras.PositionOptions(id, data, hideWidthHeight, disableSelfPoint)
   return positionOptions;
 end
 
-function WeakAuras.AddPositionOptions(input, id, data)
-  return union(input, WeakAuras.PositionOptions(id, data));
-end
-
-function WeakAuras.BorderOptions(id, data, showBackDropOptions)
+function WeakAuras.BorderOptions(id, data, _, showBackDropOptions)
+  local metaOrder = 99
   local borderOptions = {
-    border_header = {
-      type = "header",
-      name = L["Border Settings"],
-      order = 46.0
-    },
+    __title = L["Border Settings"],
+    __order = metaOrder,
     border = {
       type = "toggle",
-      name = L["Border"],
+      width = WeakAuras.doubleWidth,
+      name = L["Enable"],
       order = 46.05
     },
     borderEdge = {
       type = "select",
+      width = WeakAuras.normalWidth,
       dialogControl = "LSM30_Border",
       name = L["Border Style"],
       order = 46.1,
       values = AceGUIWidgetLSMlists.border,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderBackdrop = {
       type = "select",
+      width = WeakAuras.normalWidth,
       dialogControl = "LSM30_Background",
       name = L["Backdrop Style"],
       order = 46.2,
       values = AceGUIWidgetLSMlists.background,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderOffset = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Border Offset"],
       order = 46.3,
       softMin = 0,
       softMax = 32,
       bigStep = 1,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderSize = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Border Size"],
       order = 46.4,
       softMin = 1,
       softMax = 64,
       bigStep = 1,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderInset = {
       type = "range",
+      width = WeakAuras.normalWidth,
       name = L["Border Inset"],
       order = 46.5,
       softMin = 1,
       softMax = 32,
       bigStep = 1,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderColor = {
       type = "color",
+      width = WeakAuras.normalWidth,
       name = L["Border Color"],
       hasAlpha = true,
       order = 46.6,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
     borderInFront  = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Border in Front"],
       order = 46.7,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border or not showBackDropOptions  end,
+      hidden = function() return not showBackDropOptions end,
     },
     backdropInFront  = {
       type = "toggle",
+      width = WeakAuras.normalWidth,
       name = L["Backdrop in Front"],
       order = 46.75,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border or not showBackDropOptions end,
+      hidden = function() return not showBackDropOptions end,
     },
     backdropColor = {
       type = "color",
+      width = WeakAuras.normalWidth,
       name = L["Backdrop Color"],
       hasAlpha = true,
       order = 46.8,
       disabled = function() return not data.border end,
-      hidden = function() return not data.border end,
     },
   }
 
   return borderOptions;
 end
-
-function WeakAuras.AddBorderOptions(input, id, data)
-  return union(input, WeakAuras.BorderOptions(id, data));
-end
-
 
 function WeakAuras.OpenTextEditor(...)
   frame.texteditor:Open(...);
@@ -3880,10 +3878,13 @@ function WeakAuras.ConvertDisplay(data, newType)
   -- thumbnails[id].region:SetScript("OnUpdate", nil);
   thumbnails[id].region:Hide();
   thumbnails[id] = nil;
+  local visibility = displayButtons[id]:GetVisibility();
+  displayButtons[id]:PriorityHide(0);
 
   WeakAuras.Convert(data, newType);
   displayButtons[id]:SetViewRegion(WeakAuras.regions[id].region);
   displayButtons[id]:Initialize();
+  displayButtons[id]:PriorityShow(visibility);
   displayOptions[id] = nil;
   WeakAuras.AddOption(id, data);
   frame:FillOptions(displayOptions[id]);
@@ -4101,13 +4102,15 @@ function WeakAuras.IsDisplayPicked(id)
   end
 end
 
-function WeakAuras.PickDisplay(id)
-  frame:PickDisplay(id);
+function WeakAuras.PickDisplay(id, tab) -- TODO: remove tab parametter once legacy aura trigger is removed
+  frame:PickDisplay(id, tab);
+  WeakAuras.UpdateButtonsScroll()
 end
 
 function WeakAuras.PickAndEditDisplay(id)
   frame:PickDisplay(id);
   displayButtons[id].callbacks.OnRenameClick();
+  WeakAuras.UpdateButtonsScroll()
 end
 
 function WeakAuras.ClearPick(id)
@@ -4120,6 +4123,75 @@ end
 
 function WeakAuras.PickDisplayMultiple(id)
   frame:PickDisplayMultiple(id);
+end
+
+function WeakAuras.RefillOptions()
+  frame:RefillOptions()
+end
+
+function WeakAuras.PickDisplayMultipleShift(target)
+  if (frame.pickedDisplay) then
+    -- get first aura selected
+    local first;
+    if (WeakAuras.IsPickedMultiple()) then
+      first = tempGroup.controlledChildren[#tempGroup.controlledChildren];
+    else
+      first = frame.pickedDisplay;
+    end
+    if (first and first ~= target) then
+      -- check if target and first are in same group and are not a group
+      local firstData = WeakAuras.GetData(first);
+      local targetData = WeakAuras.GetData(target);
+      if (firstData.parent == targetData.parent and not targetData.controlledChildren and not firstData.controlledChildren) then
+        local batchSelection = {};
+        -- in a group
+        if (firstData.parent) then
+          local group = WeakAuras.GetData(targetData.parent);
+          for index, child in ipairs(group.controlledChildren) do
+            -- 1st button
+            if (child == target or child == first) then
+              table.insert(batchSelection, child);
+              for i = index + 1, #group.controlledChildren do
+                local current = group.controlledChildren[i];
+                table.insert(batchSelection, current);
+                -- last button: stop selection
+                if (current == target or current == first) then
+                  break;
+                end
+              end
+              break;
+            end
+          end
+        elseif (firstData.parent == nil and targetData.parent == nil) then
+          -- top-level
+          for index, button in ipairs(frame.buttonsScroll.children) do
+            local data = button.data;
+            -- 1st button
+            if (data and (data.id == target or data.id == first)) then
+              table.insert(batchSelection, data.id);
+              for i = index + 1, #frame.buttonsScroll.children do
+                local current = frame.buttonsScroll.children[i];
+                local currentData = current.data;
+                if currentData and not currentData.parent and not currentData.controlledChildren then
+                  table.insert(batchSelection, currentData.id);
+                  -- last button: stop selection
+                  if (currentData.id == target or currentData.id == first) then
+                    break;
+                  end
+                end
+              end
+              break;
+            end
+          end
+        end
+        if #batchSelection > 0 then
+          frame:PickDisplayBatch(batchSelection);
+        end
+      end
+    end
+  else
+    WeakAuras.PickDisplay(target);
+  end
 end
 
 function WeakAuras.FillOptions(id)
@@ -4157,15 +4229,61 @@ function WeakAuras.EnsureDisplayButton(data)
 end
 
 function WeakAuras.SetGrouping(data)
-  for id, button in pairs(displayButtons) do
-    button:SetGrouping(data);
+  if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0 and data) then
+    local children = {};
+    -- set grouping for selected buttons
+    for index, childId in ipairs(tempGroup.controlledChildren) do
+      local button = WeakAuras.GetDisplayButton(childId);
+      button:SetGrouping(tempGroup.controlledChildren, true);
+      children[childId] = true;
+    end
+    -- set grouping for non selected buttons
+    for id, button in pairs(displayButtons) do
+      if not children[button.data.id] then
+        button:SetGrouping(tempGroup.controlledChildren);
+      end
+    end
+  else
+    for id, button in pairs(displayButtons) do
+      button:SetGrouping(data);
+    end
+  end
+end
+
+function WeakAuras.Ungroup(data)
+  if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0) then
+    for index, childId in ipairs(tempGroup.controlledChildren) do
+      local button = WeakAuras.GetDisplayButton(childId);
+      button:Ungroup(data);
+    end
+  else
+    local button = WeakAuras.GetDisplayButton(data.id);
+    button:Ungroup(data);
   end
 end
 
 function WeakAuras.SetDragging(data, drop)
   WeakAuras_DropDownMenu:Hide()
-  for id, button in pairs(displayButtons) do
-    button:SetDragging(data, drop)
+  if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0) then
+    local children = {};
+    local size = #tempGroup.controlledChildren;
+    -- set dragging for selected buttons in reverse for ordering
+    for index = size, 1, -1 do
+      local childId = tempGroup.controlledChildren[index];
+      local button = WeakAuras.GetDisplayButton(childId);
+      button:SetDragging(data, drop, size);
+      children[childId] = true;
+    end
+    -- set dragging for non selected buttons
+    for id, button in pairs(displayButtons) do
+      if not children[button.data.id] then
+        button:SetDragging(data, drop);
+      end
+    end
+  else
+    for id, button in pairs(displayButtons) do
+      button:SetDragging(data, drop);
+    end
   end
 end
 
@@ -4198,6 +4316,11 @@ function WeakAuras.UpdateDisplayButton(data)
   local button = displayButtons[id];
   if (button) then
     button:SetIcon(WeakAuras.SetThumbnail(data));
+    if WeakAurasCompanion and button:IsGroup() then
+      button:RefreshUpdate()
+    end
+    -- TODO: remove this once legacy aura trigger is removed
+    button:RefreshBT2UpgradeIcon()
   end
 end
 
@@ -4263,7 +4386,7 @@ function WeakAuras.CloseCodeReview(data)
   frame.codereview:Close();
 end
 
-function WeakAuras.OpenTriggerTemplate(data)
+function WeakAuras.OpenTriggerTemplate(data, targetId)
   if not(IsAddOnLoaded("WeakAurasTemplates")) then
     local loaded, reason = LoadAddOn("WeakAurasTemplates");
     if not(loaded) then
@@ -4273,6 +4396,7 @@ function WeakAuras.OpenTriggerTemplate(data)
     end
     frame.newView = WeakAuras.CreateTemplateView(frame);
   end
+  frame.newView.targetId = targetId;
   frame.newView:Open(data);
 end
 
@@ -4297,18 +4421,9 @@ function WeakAuras.ShowCloneDialog(data)
       button2 = L["No"],
       button3 = L["Never"],
       OnAccept = function()
-        local new_id = data.id.." Group";
-        local num = 2;
-        while(WeakAuras.GetData(new_id)) do
-          new_id = "New "..num;
-          num = num + 1;
-        end
-
         local parentData = {
-          id = new_id,
+          id = WeakAuras.FindUnusedId(data.id.." Group"),
           regionType = "dynamicgroup",
-          trigger = {},
-          load = {}
         };
         WeakAuras.Add(parentData);
         WeakAuras.NewDisplayButton(parentData);
@@ -4343,4 +4458,144 @@ function WeakAuras.ShowCloneDialog(data)
 
     StaticPopup_Show("WEAKAURAS_CLONE_OPTION_ENABLED");
   end
+end
+
+function WeakAuras.NewAura(sourceData, regionType, targetId)
+  local function ensure(t, k, v)
+    return t and k and v and t[k] == v
+  end
+  local new_id = WeakAuras.FindUnusedId("New")
+  local data = {id = new_id, regionType = regionType, uid = WeakAuras.GenerateUniqueID()}
+  WeakAuras.DeepCopy(WeakAuras.data_stub, data);
+  if (sourceData) then
+    WeakAuras.DeepCopy(sourceData, data);
+  end
+  data.internalVersion = WeakAuras.InternalVersion();
+  WeakAuras.validate(data, WeakAuras.regionTypes[regionType].default);
+  if (data.regionType ~= "group" and data.regionType ~= "dynamicgroup" and targetId) then
+    local target = WeakAuras.GetDisplayButton(targetId);
+    local group
+    if (target) then
+      if (target:IsGroup()) then
+        group = target;
+      else
+        group = WeakAuras.GetDisplayButton(target.data.parent);
+      end
+      if (group) then
+        local children = group.data.controlledChildren;
+        local index = target:GetGroupOrder();
+        if (ensure(children, index, target.data.id)) then
+          -- account for insert position
+          index = index + 1;
+          tinsert(children, index, data.id);
+        else
+          -- move source into group as the first child
+          tinsert(children, 1, data.id);
+        end
+        data.parent = group.data.id;
+        WeakAuras.Add(data);
+        WeakAuras.Add(group.data);
+        WeakAuras.NewDisplayButton(data);
+        WeakAuras.UpdateGroupOrders(group.data);
+        WeakAuras.ReloadGroupRegionOptions(group.data);
+        WeakAuras.UpdateDisplayButton(group.data);
+        group.callbacks.UpdateExpandButton();
+        group:Expand();
+        group:ReloadTooltip();
+        WeakAuras.PickAndEditDisplay(data.id);
+      else
+        -- move source into the top-level list
+        WeakAuras.Add(data);
+        WeakAuras.NewDisplayButton(data);
+        WeakAuras.PickAndEditDisplay(data.id);
+      end
+    else
+      error("Calling 'WeakAuras.NewAura' with invalid groupId. Reload your UI to fix the display list.")
+    end
+  else
+    -- move source into the top-level list
+    WeakAuras.Add(data);
+    WeakAuras.NewDisplayButton(data);
+    WeakAuras.PickAndEditDisplay(data.id);
+  end
+end
+
+local collapsedOptions = {}
+function WeakAuras.ResetCollapsed(id)
+  if id then
+    collapsedOptions[id] = nil
+  end
+end
+
+function WeakAuras.IsCollapsed(id, namespace, key, default)
+  local tmp = collapsedOptions[id]
+  if tmp == nil then return default end
+
+  tmp = tmp[namespace]
+  if tmp == nil then return default end
+
+  tmp = tmp[key]
+  return tmp == nil and default or tmp
+end
+
+function WeakAuras.SetCollapsed(id, namespace, key, v)
+  collapsedOptions[id] = collapsedOptions[id] or {}
+  collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
+  collapsedOptions[id][namespace][key] = v
+end
+
+function WeakAuras.MoveCollapseDataUp(id, namespace, key)
+  collapsedOptions[id] = collapsedOptions[id] or {}
+  collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
+  collapsedOptions[id][namespace][key], collapsedOptions[id][namespace][key - 1] = collapsedOptions[id][namespace][key - 1], collapsedOptions[id][namespace][key]
+end
+
+function WeakAuras.MoveCollapseDataDown(id, namespace, key)
+  collapsedOptions[id] = collapsedOptions[id] or {}
+  collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
+  collapsedOptions[id][namespace][key], collapsedOptions[id][namespace][key + 1] = collapsedOptions[id][namespace][key + 1], collapsedOptions[id][namespace][key]
+end
+
+function WeakAuras.RemoveCollapsed(id, namespace, key)
+  local data = collapsedOptions[id] and collapsedOptions[id][namespace]
+  if not data then
+    return
+  end
+
+  local maxKey = 0
+  for k in pairs(data) do
+    maxKey = max(maxKey, k)
+  end
+
+  while key <= maxKey do
+    data[key] = data[key + 1]
+    key = key + 1
+  end
+end
+
+function WeakAuras.InsertCollapsed(id, namespace, key, value)
+  local data = collapsedOptions[id] and collapsedOptions[id][namespace]
+  if not data then
+    return
+  end
+
+  local index = key
+  for k in pairs(data) do
+    index = max(index, k)
+  end
+
+  while index > key do
+    data[index + 1] = data[index]
+    index = index - 1
+  end
+  data[key] = value
+end
+
+function WeakAuras.RenameCollapsedData(oldid, newid)
+  collapsedOptions[newid] = collapsedOptions[oldid]
+  collapsedOptions[oldid] = nil
+end
+
+function WeakAuras.DeleteCollapsedData(id)
+  collapsedOptions[id] = nil
 end

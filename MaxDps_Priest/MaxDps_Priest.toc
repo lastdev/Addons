@@ -1,5 +1,5 @@
 ## Title: MaxDps_Priest
-## Version: 8.0.3
+## Version: 8.0.4.1
 ## Author: Kaminaris
 ## Interface: 80000
 ## Dependencies: MaxDps

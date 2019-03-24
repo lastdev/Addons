@@ -563,6 +563,16 @@ for eventname in pairs(panelevents) do TidyPlatesInterfacePanel:RegisterEvent(ev
 
 TidyPlatesSlashCommands = {}
 
+function TidyPlatesSlashCommands.debug_on()
+	TidyPlatesDebug = true
+end
+
+
+function TidyPlatesSlashCommands.debug_off()
+	TidyPlatesDebug = false
+end
+
+
 function slash_TidyPlates(arg)
 	if type(TidyPlatesSlashCommands[arg]) == 'function' then
 		TidyPlatesSlashCommands[arg]()

@@ -1,3 +1,11 @@
+== Version 8.0.2
+
+* Bumped toc version number.
+* fixed melee range detection for paladins
+* fixed melee range detection for death knights
+* fixed melee range detection for monks
+* fixed melee range detection for rogues
+* fixed melee range detection for warriors
 
 
 == Version 8.0.1

@@ -15,11 +15,35 @@ How to support Altoholic's development :
 - For a repeated donation : Support me on Patreon : https://www.patreon.com/Thaoky 
 - Make a gift from my amazon's wish list : http://amzn.eu/7xWdnbZ
 
+If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #OneManArmy
+
+8.0.008 (19/09/2018)
+
+- Added BfA factions. (Thanks AlexSUCF !!)
+- Added BfA currencies.
+- Added BfA emissary quests.
+- Some quest achievements for BfA were rearranged to better reflect a character's progress. If I made a mistake on the horde side, please let me know.
+- Fixed the percentage of rest xp for pandaren to now properly show 200% or 300% depending on the mode.
+- Reworked the way rest xp is displayed in the addon, there is now a tooltip giving more info about rest xp, including when an alt will be fully rested.
+
+Note: I have spent a lot of time checking the values behind rest xp (almost every day for about 20 days in a row), following a few reports that the addon was not correctly returning this information.
+It turns out that while there was no issue in the calculation itself, there was an issue in displaying it.
+It also turns out that in some cases I was unable to determine, Blizzard sometimes returns an incorrect value for the rest XP.
+I found out that on at least two of my alts, the rest xp returned was beyond the maximum rest XP.
+Ex: On my 110 Monk, at 0/717k xp for that level, I should be able to earn a maximum of 3 times that amount (2.1M), yet the game returned me 2.9M
+Same story on my 110 Druid. Some time later, I logged in again and values were correct.
+
+What I can say is that this seems to happen for alts that you have not logged in a long time. 
+For example with the alts that I logged in right after BfA launch, to trigger the earning of rest xp, and did not play anymore for many days.
+I took 2 horde alts, one that I logged in every day to check the rest xp (returned vs expected), and it was always correct.
+The other (monk), I checked in parallel without logging him in, and after 7 days, it was ok, but after 14 days, I had this 2.9M incorrect value.
+Go figure .. :(
+
+So when in doubt, log in your alt again, as I really can't fix those cases where blue is wrong.
 
 8.0.007 (22/08/2018)
 
 - Account Summary : Removed a test that prevented the herbalism & skinning tooltip from showing the proper per expansion information.
-
 
 8.0.006 (15/08/2018)
 

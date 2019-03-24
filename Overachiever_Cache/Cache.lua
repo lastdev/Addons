@@ -76,7 +76,7 @@ end
 
 local function isCacheCompatible(thisVer, cacheVer, thisBuild, cacheBuild)
 	if (thisBuild ~= cacheBuild) then  return false;  end
-	if (cacheVer < "1.0.3") then  return false;  end
+	if (cacheVer < "1.0.4") then  return false;  end
 	return thisVer >= cacheVer -- Discard cache if it claims to be "from the future"
 end
 
@@ -103,7 +103,7 @@ local function getCachePart(name, subname, ver, build)
 end
 
 
-function Overachiever.SaveCache(name, skipPopulate)
+function Overachiever.SaveCache(name, populateExcludeOtherFaction)
 	-- Careful: Don't call this unless TjAchieve's cache was gathered this session and not possibly populated with data from the opposing faction.
 	-- (This function will populate such data in some cases, so it's safest to not call it twice in a session. Also don't call it if GetCache was used for that.)
 
@@ -186,8 +186,8 @@ function Overachiever.SaveCache(name, skipPopulate)
 
 		if (Overachiever_Debug) then  Overachiever.chatprint("- Saved data for all factions.");  end
 
-		if (not skipPopulate) then
-			local data = Overachiever.GetCache(name)
+		if (populateExcludeOtherFaction ~= 0) then
+			local data = Overachiever.GetCache(name, populateExcludeOtherFaction)
 			if (data) then
 				TjAchieve.PopulateCritAssetCache(critType, data)
 				if (Overachiever_Debug) then  Overachiever.chatprint("- Populated TjAchieve cache for asset " .. critType .. ".");  end
@@ -197,7 +197,7 @@ function Overachiever.SaveCache(name, skipPopulate)
 
 end
 
-function Overachiever.GetCache(name)
+function Overachiever.GetCache(name, excludeOtherFaction)
 
 	if (Overachiever_Debug) then  Overachiever.chatprint("|cffffffffGetCache|r called for \"" .. name .. "\".");  end
 
@@ -223,31 +223,42 @@ function Overachiever.GetCache(name)
 	if (not factionData) then  return false;  end  -- Need to rebuild cache if we don't have a part we can use for this faction, regardless of other parts. (Even if all the achievement IDs are in "both" somehow, this should at least be an empty table.)
 
 	local anyFactionData = getCachePart(name, "both", ver, build)
-	local otherFactionData = getCachePart(name, otherFaction, ver, build)
+
+	local otherFactionData
+	if (not excludeOtherFaction) then  otherFactionData = getCachePart(name, otherFaction);  end
+	-- Note that we allow old data (omit ver and build arguments). We'll accept old data from the other faction, since we can't read it as the current character
+	-- and it's better to have old data than no data.
 
 	local data = tCopy(factionData)
 	if (anyFactionData) then  data = mergeCache(data, anyFactionData);  end
-	if (otherFactionData) then
-		data = mergeCache(data, otherFactionData)
-	end
+	if (otherFactionData) then  data = mergeCache(data, otherFactionData);  end
 
 	return data
 end
 
 function Overachiever.GetCachedFactionForData(name, key, ...)
-	if (not getCachePart(name, "both")) then  return nil;  end  -- If we don't have "both" data, then we won't know for sure if this is faction-specific.
-	local set
+	--if (not getCachePart(name, "both")) then  return nil;  end
+	-- If we don't have "both" data, then we won't know for sure if this is faction-specific, but it's still most likely faction-specific if it's in the
+	-- data for the opposing faction and not for the current one, so that's good enough in that case.
+	local set, inAlliance, inHorde
 	local allianceData = getCachePart(name, "Alliance")
 	if (allianceData and allianceData[key]) then
 		set = TjSetList:CreateSet(...)
 		local setList = createSetList(allianceData[key])
-		if (setList:contains(set)) then  return "Alliance";  end
+		if (setList:contains(set)) then  inAlliance = true;  end
 	end
 	local hordeData = getCachePart(name, "Horde")
 	if (hordeData and hordeData[key]) then
 		set = set or TjSetList:CreateSet(...)
 		local setList = createSetList(hordeData[key])
-		if (setList:contains(set)) then  return "Horde";  end
+		if (setList:contains(set)) then  inHorde = true;  end
+	end
+	if (inAlliance and inHorde) then  return nil;  end
+	if (allianceData) then
+		if (inHorde) then  return "Horde";  end
+	end
+	if (hordeData) then
+		if (inAlliance) then  return "Alliance";  end
 	end
 	return nil
 end

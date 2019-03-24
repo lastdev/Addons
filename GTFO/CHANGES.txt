@@ -1,15 +1,13 @@
 ------------------------------------------------------------------------
-r417 | Zensunim | 2018-08-26 18:37:40 +0000 (Sun, 26 Aug 2018) | 3 lines
+r446 | Zensunim | 2019-02-03 06:51:42 +0000 (Sun, 03 Feb 2019) | 2 lines
 Changed paths:
    M /trunk/GTFO.lua
    M /trunk/GTFO.toc
-   M /trunk/GTFO_FF_BFA.lua
    M /trunk/GTFO_Fail_BFA.lua
    M /trunk/GTFO_Spells_BFA.lua
    M /trunk/ReadMe.txt
 
-4.46.4
-* Fixed BFA spells for Siege of Boralus
-* Added BFA spells for Siege of Boralus
+4.46.17
+* Added BFA spells for Battle of Dazar'alor
 ------------------------------------------------------------------------
 

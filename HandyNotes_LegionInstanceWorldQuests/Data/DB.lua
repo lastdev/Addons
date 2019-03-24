@@ -1,4 +1,4 @@
--- $Id: DB.lua 45 2018-08-06 15:34:00Z arith $
+-- $Id: DB.lua 49 2018-10-03 16:21:32Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -585,9 +585,11 @@ DB.points = {
 			label = L["Sludge Face"],
 		},
 		-- The Arcway: Creeping Suspicions
+			-- several locations
+			-- quest=43640,
 		-- The Arcway: Silver Serpent
 		[48004236] = {
-			quest = 43640,
+			quest = 43638,
 			npc = 111052,
 			label = L["Silver Serpent"],
 		},

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 7.7.6066 (SwimmingSeadragon)
-	Revision: $Id: AucSimple.lua 6066 2018-08-29 01:26:34Z none $
+	Version: 8.1.6213 (SwimmingSeadragon)
+	Revision: $Id: AucSimple.lua 6213 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -280,4 +280,4 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, "Displays the old-style \"Scan\" button at the bottom of the browse window.")
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 6066 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 6213 $")

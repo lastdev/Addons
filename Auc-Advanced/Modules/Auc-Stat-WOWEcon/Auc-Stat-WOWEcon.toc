@@ -2,8 +2,8 @@
 ## Interface: 80000
 ## Dependancies: Auc-Advanced
 ##
-## Version: 7.7.6064 (SwimmingSeadragon)
-## Revision: $Id: Auc-Stat-WOWEcon.toc 6064 2018-08-29 01:26:34Z none $
+## Version: 8.1.6211 (SwimmingSeadragon)
+## Revision: $Id: Auc-Stat-WOWEcon.toc 6211 2019-03-04 00:20:18Z none $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House

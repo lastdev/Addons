@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Resale
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherResale.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherResale.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -141,7 +141,7 @@ function lib.Search(item)
 		market = market * resources.CutAdjust
 	end
 	if get("resale.adjust.deposit") then
-		local amount = GetDepositCost(link, get("resale.adjust.deplength"), nil, count)
+		local amount = AucAdvanced.Post.GetDepositCost(link, get("resale.adjust.deplength"), market, 0, count)
 		if amount then
 			market = market - amount * get("resale.adjust.listings")
 		end
@@ -156,4 +156,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherResale.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherResale.lua $", "$Rev: 6245 $")

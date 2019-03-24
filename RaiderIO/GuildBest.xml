@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-    <Frame name="GuildBestRunTemplate" parentArray="GuildBests" virtual="true" mixin="GuildBestRunMixin">
+    <Frame name="RaiderIO_GuildBestRunTemplate" parentArray="GuildBests" virtual="true" mixin="RaiderIO_GuildBestRunMixin">
         <Size x="80" y="13"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -24,16 +24,27 @@
             <OnLeave function="GameTooltip_Hide"/>
         </Scripts>
     </Frame>
-    <Frame name="GuildBestFrame" parentKey="GuildBest" mixin="GuildBestMixin" hidden="true">
-        <Size x="90" y="105" />
+    <Frame name="RaiderIO_GuildBestFrame" parentKey="GuildBest" mixin="RaiderIO_GuildBestMixin" frameStrata="HIGH" hidden="true">
+        <Size x="100" y="115" />
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+            <EdgeSize>
+                <AbsValue val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="16"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="4" right="4" top="4" bottom="4"/>
+            </BackgroundInsets>
+        </Backdrop>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture atlas="ChallengeMode-guild-background" setAllPoints="true" alpha="0.4"/>
+                <Texture parentKey="Background" atlas="ChallengeMode-guild-background" setAllPoints="true" alpha="0.5" hidden="true" />
             </Layer>
             <Layer level="ARTWORK">
-                <FontString parentKey="Title" inherits="GameFontNormalTiny2" text="RaiderIO Records" justifyH="CENTER">
+                <FontString parentKey="Title" inherits="GameFontNormalTiny2" justifyH="CENTER">
                     <Anchors>
-                        <Anchor point="TOPLEFT" x="5" y="-4" />
+                        <Anchor point="TOPLEFT" x="10" y="-8" />
                     </Anchors>
                     <Color r="1.0" g="0.85" b="0.0"/>
                     <Shadow>
@@ -43,9 +54,9 @@
                         <Color r="0" g="0" b="0"/>
                     </Shadow>
                 </FontString>
-                <FontString parentKey="SubTitle" inherits="GameFontNormalTiny2" text="Guild: Season Best" justifyH="CENTER">
+                <FontString parentKey="SubTitle" inherits="GameFontNormalTiny2" justifyH="CENTER">
                     <Anchors>
-                        <Anchor point="TOPLEFT" x="5" y="-15" />
+                        <Anchor point="TOPLEFT" x="10" y="-18" />
                     </Anchors>
                     <Color r="1.0" g="0.85" b="0.0" a="0.8" />
                     <Shadow>
@@ -62,7 +73,7 @@
                 <Size x="80" y="13"/>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <FontString parentKey="Text" text="No data" inherits="GameFontNormalTiny2" justifyH="LEFT">
+                        <FontString parentKey="Text" inherits="GameFontNormalTiny2" justifyH="LEFT">
                             <Size x="150" y="0"/>
                             <Color r="1.0" g="1.0" b="1.0"/>
                             <Anchors>
@@ -75,14 +86,14 @@
                     <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" y="-14"/>
                 </Anchors>
             </Frame>
-            <Frame inherits="GuildBestRunTemplate" hidden="true">
+            <Frame inherits="RaiderIO_GuildBestRunTemplate" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" y="-14"/>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" y="-13"/>
                 </Anchors>
             </Frame>
-            <CheckButton parentKey="SwitchGuildBest" inherits="UICheckButtonTemplate" mixin="SwitchGuildBestMixin">
+            <CheckButton parentKey="SwitchGuildBest" inherits="UICheckButtonTemplate" mixin="RaiderIO_SwitchGuildBestMixin">
                 <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="3" />
+                    <Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="8" y="5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad method="OnLoad"/>
@@ -94,5 +105,9 @@
                 </Scripts>
             </CheckButton>
         </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnMouseWheel method="OnMouseWheel"/>
+        </Scripts>
     </Frame>
 </Ui>

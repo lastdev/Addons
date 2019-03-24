@@ -275,6 +275,8 @@ L["Rage Sources"] = "분노 출처"
 L["Raid"] = "공격대"
 L["Raid Instances"] = "공격대 인던"
 L["Rank Number"] = "순위 번호"
+--[[Translation missing --]]
+--[[ L["RealID"] = "RealID"--]] 
 L["Realtime"] = "실시간"
 L["Record Buffs/Debuffs"] = "버프/디버프 기록"
 L["Record Data"] = "데이터 기록"

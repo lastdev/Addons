@@ -2,10 +2,10 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1098 $")
+XPerl_SetModuleRevision("$Revision: 1119 $")
 
-if type(RegisterAddonMessagePrefix) == "function" then
-	RegisterAddonMessagePrefix("CTRA")
+if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
+	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
 end
 
 ZPerl_CheckItems = {}
@@ -257,7 +257,7 @@ local function XPerl_CheckOnUpdate(self, elapsed)
 				local sub = XPerl_MsgQueue[1]
 
 				if (strlen(msg..sub) > 220) and UnitInRaid("player") then
-					SendAddonMessage("CTRA", msg, "RAID")
+					C_ChatInfo.SendAddonMessage("CTRA", msg, "RAID")
 					break
 				else
 					count = count + 1
@@ -271,7 +271,7 @@ local function XPerl_CheckOnUpdate(self, elapsed)
 			end
 
 			if (msg ~= "") and UnitInRaid("player") then
-				SendAddonMessage("CTRA", msg, "RAID")
+				C_ChatInfo.SendAddonMessage("CTRA", msg, "RAID")
 			end
 		end
 
@@ -418,11 +418,9 @@ end
 
 -- XPerl_PickupContainerItem
 local PickupBag, PickupSlot
-hooksecurefunc("PickupContainerItem",
-	function(bagID, slot)
-		PickupBag, PickupSlot = bagID, slot
-	end
-)
+hooksecurefunc("PickupContainerItem", function(bagID, slot)
+	PickupBag, PickupSlot = bagID, slot
+end)
 
 -- sortItems
 -- Fixed entries at top, followed by last current queried, followed by rest. Alphabetical within this.
@@ -2022,9 +2020,9 @@ function XPerl_Check_Channels_OnLoad(self)
 	end
 
 	self.displayMode = "MENU"
-	Lib_UIDropDownMenu_Initialize(self, XPerl_Check_Channels_Initialize)
-	Lib_UIDropDownMenu_SetSelectedID(self, outputChannelSelection)
-	Lib_UIDropDownMenu_SetWidth(XPerl_CheckButtonChannel, 100)
+	UIDropDownMenu_Initialize(self, XPerl_Check_Channels_Initialize)
+	UIDropDownMenu_SetSelectedID(self, outputChannelSelection)
+	UIDropDownMenu_SetWidth(XPerl_CheckButtonChannel, 100)
 	XPerl_CheckButtonChannelText:SetTextColor(unpack(outputChannelColour))
 end
 
@@ -2034,7 +2032,7 @@ local function XPerl_Channel_OnClick(self)
 	outputChannel = v.channel
 	outputChannelIndex = v.index
 	outputChannelSelection = self:GetID()
-	Lib_UIDropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
+	UIDropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
 
 	XPerl_CheckButtonChannelText:SetTextColor(v.red, v.green, v.blue)
 end
@@ -2053,11 +2051,11 @@ function XPerl_Check_Channels_Initialize()
 			end
 		end
 
-		local info = Lib_UIDropDownMenu_CreateInfo()
+		local info = UIDropDownMenu_CreateInfo()
 		info.text = entry.display
 		info.func = XPerl_Channel_OnClick
 		info.value = {channel = entry.channel, index = entry.index, red = r, green = g, blue = b}
 		info.colorCode = format("|cFF%02X%02X%02X", r * 255, g * 255, b * 255)
-		Lib_UIDropDownMenu_AddButton(info)
+		UIDropDownMenu_AddButton(info)
 	end
 end

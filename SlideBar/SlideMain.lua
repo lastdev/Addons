@@ -1,7 +1,7 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 7.7.6093 (SwimmingSeadragon)
-	Revision: $Id: SlideMain.lua 6093 2018-08-29 01:26:34Z none $
+	Version: 8.1.6239 (SwimmingSeadragon)
+	Revision: $Id: SlideMain.lua 6239 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -32,7 +32,7 @@ local LIBRARY_VERSION_MINOR = 13
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: SlideBar/SlideMain.lua $","$Rev: 6093 $","6.0.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: SlideBar/SlideMain.lua $","$Rev: 6239 $","6.0.DEV.", 'auctioneer', 'libs')
 
 -- Autoconvert existing nSideBar instances to SlideBar
 if LibStub.libs.nSideBar then

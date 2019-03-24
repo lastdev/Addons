@@ -96,10 +96,6 @@ L:SetTimerLocalization({
 ---------------------
 L= DBM:GetModLocalization(131)
 
-L:SetOptionLocalization{
-	PingBlitz	= "С эмитировать импульс на мини-карте, если Умбрисс собирается применить на вас $spell:74670"
-}
-
 --------------------------
 -- Forgemaster Throngus --
 --------------------------
@@ -285,7 +281,6 @@ L:SetOptionLocalization({
 	WarnSubmerge	= "Показывать предупреждения о погружении",
 	TimerEmerge		= "Показывать таймер до появления",
 	TimerSubmerge	= "Показывать таймер до погружения",
-	CrystalArrow	= "Показать стрелку DBM когда $spell:81634 около вас",
 	RangeFrame		= "Окно проверки дистанции (5м)"
 })
 
@@ -379,8 +374,7 @@ L= DBM:GetModLocalization(186)
 
 L:SetOptionLocalization{
 	StormIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(43648),
-	RangeFrame	= "Окно проверки дистанции (10м)",
-	StormArrow	= "Показывать стрелку DBM для $spell:43648"
+	RangeFrame	= "Окно проверки дистанции (10м)"
 }
 
 ---------------
@@ -494,11 +488,6 @@ L:SetMiscLocalization{
 -- High Priest Venoxis --
 -------------------------
 L= DBM:GetModLocalization(175)
-
-L:SetOptionLocalization{
-	SetIconOnToxicLink	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(96477),
-	LinkArrow			= "Показывать стрелку DBM, когда на вас $spell:96477"
-}
 
 ------------------------
 -- Bloodlord Mandokir --

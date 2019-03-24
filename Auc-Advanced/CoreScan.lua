@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CoreScan.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CoreScan.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -2891,19 +2891,19 @@ function ClickAuctionSellItemButton(...)
 	return private.Hook.ClickAuctionSellItemButton(...)
 end
 
-private.Hook.StartAuction = StartAuction
-function StartAuction(minBid, buyoutPrice, runTime, ...)
+private.Hook.PostAuction = PostAuction
+function PostAuction(minBid, buyoutPrice, runTime, stackSize, numStacks, ...)
 	local itemData, price = lib.GetAuctionSellItem(minBid, buyoutPrice, runTime)
 	if itemData then
 		private.Unpack(itemData, statItem)
 		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		for pos, engineLib in ipairs(modules) do
 			if engineLib.ScanProcessors["newauc"] then
-				pcall(engineLib.ScanProcessors["newauc"],"newauc", statItem, minBid, buyoutPrice, runTime, price)
+				pcall(engineLib.ScanProcessors["newauc"],"newauc", statItem, minBid, buyoutPrice, runTime, price, stackSize, numStacks)
 			end
 		end
 	end
-	return private.Hook.StartAuction(minBid, buyoutPrice, runTime, ...)
+	return private.Hook.PostAuction(minBid, buyoutPrice, runTime, stackSize, numStacks, ...)
 end
 
 private.Hook.TakeInboxMoney = TakeInboxMoney
@@ -3363,5 +3363,5 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreScan.lua $", "$Rev: 6112 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreScan.lua $", "$Rev: 6201 $")
 AucAdvanced.CoreFileCheckOut("CoreScan")

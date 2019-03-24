@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2131, "DBM-Party-BfA", 8, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17712 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18026 $"):sub(12, -3))
 mod:SetCreatureID(131817)
 mod:SetEncounterID(2118)
 mod:SetZone()
@@ -22,10 +22,10 @@ local specWarnIndigestion			= mod:NewSpecialWarningSpell(260793, "Tank", nil, ni
 local specWarnCharge				= mod:NewSpecialWarningDodge(260292, nil, nil, nil, 3, 2)
 local specWarnTantrum				= mod:NewSpecialWarningSpell(260333, nil, nil, nil, 2, 2)
 --local yellSwirlingScythe			= mod:NewYell(195254)
---local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 2)
+--local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 local timerIndigestionCD			= mod:NewCDTimer(70, 260793, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerChargeCD					= mod:NewCDTimer(23.1, 260292, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerChargeCD					= mod:NewCDTimer(20.7, 260292, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerTantrumCD				= mod:NewCDTimer(13, 260333, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 
 --mod:AddRangeFrameOption(5, 194966)
@@ -91,7 +91,7 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
 		specWarnGTFO:Show()
-		specWarnGTFO:Play("runaway")
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

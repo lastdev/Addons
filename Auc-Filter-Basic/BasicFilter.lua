@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - BasicFilter
-	Version: 7.7.6081 (SwimmingSeadragon)
-	Revision: $Id: BasicFilter.lua 6081 2018-08-29 01:26:34Z none $
+	Version: 8.1.6228 (SwimmingSeadragon)
+	Revision: $Id: BasicFilter.lua 6228 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -429,4 +429,4 @@ private.IgnorePrompt.no:SetPoint("BOTTOMRIGHT", private.IgnorePrompt, "BOTTOMRIG
 private.IgnorePrompt.no:SetScript("OnClick", private.OnPromptNo)
 private.IgnorePrompt.no:SetText(NO)
 
-AucAdvanced.RegisterRevision("$URL: Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 6081 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 6228 $")

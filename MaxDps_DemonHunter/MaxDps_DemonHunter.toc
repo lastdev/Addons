@@ -1,8 +1,10 @@
 ## Title: MaxDps_DemonHunter
-## Version: 7.3.0
+## Version: 8.1.0
 ## Author: Kaminaris
-## Interface: 70300
+## Interface: 80100
 ## Dependencies: MaxDps
 ## LoadOnDemand: 1
+## X-Curse-Project-ID: 255102
+## X-WoWI-ID: 24644
 
 main.lua

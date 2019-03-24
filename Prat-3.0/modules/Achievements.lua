@@ -320,7 +320,7 @@ Prat:AddModuleToLoad(function()
 		["grats_have_4"] = "Bienvenue au club %s",
 		["grats_have_5"] = "Je me souviens encore de la fois où j'ai réalisé ce HF %s",
 		["grats_have_6"] = "Celui là est un incontournable %s",
-		["grats_have_7"] = "Ça fait un baille que je bosse sur celui là %s, gg !",
+		["grats_have_7"] = "J'ai mis du temps à l'obtenir celui là %s, gg !",
 		["grats_have_8"] = "Je me souviens encore de la fois où je l'ai réalisé, %s, gg !",
 		["grats_have_9"] = "Bien joué %s",
 		["grats_link"] = "dire gg",

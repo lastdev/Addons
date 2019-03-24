@@ -12,7 +12,7 @@
 ## Notes-esES: Move the Blizzard buff frame.
 ## Notes-esMX: Move the Blizzard buff frame.
 ## Author: Funkydude
-## Version: v8.0.0
+## Version: v8.0.1
 ## X-Category: Buffs
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
 ## X-Curse-Project-ID: 13503

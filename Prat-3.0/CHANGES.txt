@@ -1,7 +1,7 @@
-changeset:   1188:e92567b759bc
-tag:         3.7.17
+changeset:   1194:9cd72a076bce
+tag:         3.7.20
 user:        sylvanaar <sylvanaar@mindspring.com>
-date:        Sun Sep 02 08:30:39 2018 -0700
-summary:     Fix small logic error in achievments which prevented links from being displayed
+date:        Wed Dec 26 14:32:27 2018 -0800
+summary:     TOC 80100
 
 

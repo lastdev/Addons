@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 7.7.6104 (SwimmingSeadragon)
-	Revision: $Id: EnxStorage.lua 6104 2018-08-29 01:26:34Z none $
+	Version: 8.1.6237 (SwimmingSeadragon)
+	Revision: $Id: EnxStorage.lua 6237 2019-03-04 00:20:18Z none $
 	URL: http://enchantrix.org/
 
 	Database functions and saved variables.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxStorage.lua $", "$Rev: 6104 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxStorage.lua $", "$Rev: 6237 $")
 
 --[[
 Usages:

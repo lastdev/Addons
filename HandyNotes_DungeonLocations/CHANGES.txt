@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
-r81 | Caliaha | 2018-08-04 00:27:28 +0000 (Sat, 04 Aug 2018) | 2 lines
+r99 | Caliaha | 2018-12-18 17:12:24 +0000 (Tue, 18 Dec 2018) | 2 lines
 Changed paths:
-   M /trunk/HandyNotes_DungeonLocations.lua
+   M /trunk/HandyNotes_DungeonLocations.toc
 
-Fixed issue with Tomb of Sargeras Node
+TOC Bump
 
 ------------------------------------------------------------------------
 

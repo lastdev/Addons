@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 7.7.6110 (SwimmingSeadragon)
-	Revision: $Id: PostMonitor.lua 6110 2018-08-29 01:26:34Z none $
+	Version: 8.1.6236 (SwimmingSeadragon)
+	Revision: $Id: PostMonitor.lua 6236 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	PostMonitor - Records items posted up for auction
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/PostMonitor.lua $","$Rev: 6110 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/PostMonitor.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --[[Most of this code is from BC classic]]--
 local libName = "BeanCounter"
@@ -43,10 +43,10 @@ local function debugPrint(...)
 end
 
 -------------------------------------------------------------------------------
--- Called before StartAuction()
+-- Called before PostAuction()
 -------------------------------------------------------------------------------
 local nameMulti, countMulti, minBidMulti, buyoutPriceMulti, runTimeMulti, depositMulti --these store the last auction for the new Multi auction processor added in wow 3.3.3
-function private.preStartAuctionHook(_, _, minBid, buyoutPrice, runTime, count, stackNumber)
+function private.prePostAuctionHook(_, _, minBid, buyoutPrice, runTime, count, stackNumber)
 	local name, texture, countSlotted, quality, canUse, price = GetAuctionSellItemInfo()
 	--debugPrint("1",minBid, buyoutPrice,"Prehook Fired, starting auction creation", name, count)
 
@@ -76,7 +76,7 @@ function private.preStartAuctionHook(_, _, minBid, buyoutPrice, runTime, count, 
 			return
 		end
 
-		local deposit = CalculateAuctionDeposit (runTime, count)
+		local deposit = GetAuctionDeposit (runTime, minBid, buyoutPrice, count, 1)
 		debugPrint(itemLink, "deposit", deposit, "for", count, "x", stackNumber, "duration", runTime)
 
 		--TEMP PATCH to fix run time changes till I can change teh mail lua to work with new system

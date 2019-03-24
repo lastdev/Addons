@@ -1,8 +1,8 @@
  --[[
-$Id: LibBabble-SubZone-3.0_itIT.lua 215 2018-08-11 17:09:04Z arith $
+$Id: LibBabble-SubZone-3.0_itIT.lua 218 2018-08-12 09:41:21Z arith $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 215 $
-Maintainers: arith, dynaletik
+Revision: $Rev: 218 $
+Maintainers: arith
 Last updated by: $Author: arith $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
 Dependencies: None
@@ -47,7 +47,7 @@ lib:SetCurrentTranslations
 	["Abyssion's Lair"] = "Antro di Abyssion",
 	["Access Shaft Zeon"] = "Pozzo d'Accesso Zeon",
 	["Acherus"] = "Acherus",
-	["Acherus: The Ebon Hold"] = "Acherus, la Roccaforte d'Ebano",
+	["Acherus: The Ebon Hold"] = "Acherus",
 	["Addington Shipyards"] = "Cantieri Navali degli Addington",
 	["Addle's Stead"] = "Cascina degli Addle",
 	["Aderic's Repose"] = "Cimitero di Aderic",
@@ -108,6 +108,7 @@ lib:SetCurrentTranslations
 	["Alliance Mercenary Ship to Vashj'ir"] = "Nave Mercenaria Alleata per Vashj'ir",
 	["Alliance Mine"] = "Miniera dell'Alleanza",
 	["Alliance PVP Barracks"] = "Caserme PvP dell'Alleanza",
+	["Alliance Shipyard Taxi"] = "Trasporto Cantiere Navale dell'Alleanza",
 	["Alliance Submarine"] = "Sottomarino dell'Alleanza",
 	["Alliance Submarine (7.1.5 Boat Holiday)"] = "Sottomarino dell'Alleanza (7.1.5 Giornata in Barca)",
 	--[[Translation missing --]]
@@ -301,6 +302,7 @@ lib:SetCurrentTranslations
 	["Astromancer's Rise"] = "Quartieri dell'Astromante",
 	["Ata'gar Promontory"] = "Promontorio di Ata'gar",
 	["Atal'Dazar"] = "Atal'dazar",
+	["Atal'dazar"] = "Atal'dazar",
 	["Atal'Gral"] = "Atal'gral",
 	["Atal'Jani"] = "Atal'jani",
 	["Ata'mal Terrace"] = "Terrazza di Ata'mal",
@@ -884,6 +886,7 @@ lib:SetCurrentTranslations
 	["Circle of Wills"] = "Circolo delle Volontà",
 	["Citrine Bay"] = "Baia di Citrino",
 	["City"] = "Città",
+	["City Center"] = "Centro Cittadino",
 	["City of Ironforge"] = "Forgiardente",
 	["City Siege - Mogu Island Progression Scenario"] = "Assedio della Cittadella - Progresso Scenario Isola del Tuono",
 	["Clackbrine Coast"] = "Costa degli Schioccabrina",
@@ -1260,6 +1263,7 @@ lib:SetCurrentTranslations
 	["Detention Block"] = "Blocco di Detenzione",
 	["Dev Map - G"] = "Dev Map - G",
 	["Development Land"] = "Terreni di Sviluppo",
+	["Devoted Sanctuary"] = "Santuario dei Devoti",
 	["Diamond Island"] = "Isola dei Diamanti",
 	["Diamondhead River"] = "Fiume Diamante",
 	["Dig One"] = "Primo Scavo",
@@ -1351,6 +1355,7 @@ lib:SetCurrentTranslations
 	["Dreadmist Den"] = "Antro di Brumafunesta",
 	["Dreadmist Peak"] = "Picco di Brumafunesta",
 	["Dreadmurk Shore"] = "Costa di Acquatruce",
+	["Dreadpearl"] = "Perlatruce",
 	["Dreadpearl Shallows"] = "Litorale delle Perle",
 	["Dreadroot"] = "Ceppo del Terrore",
 	["Dreadscar Rift"] = "Faglia Malosfregio",
@@ -1720,6 +1725,7 @@ lib:SetCurrentTranslations
 	["Firebeard Cemetery"] = "Cimitero dei Barbafiamma",
 	["Firebeard's Patrol"] = "Bastione dei Barbafiamma",
 	["Firebough Nook"] = "Radura di Bosco Ardente",
+	["Firebreaker Expedition"] = "Spedizione Spezzafiamme",
 	["Firefly Tavern"] = "Taverna Lucciola",
 	["Firegut Furnace"] = "Fornace dei Rodifuoco",
 	["Firelands"] = "Terre del Fuoco",
@@ -2308,6 +2314,7 @@ lib:SetCurrentTranslations
 	["Hammond Farmstead"] = "Tenuta degli Hammond",
 	["Hangar"] = "Aviorimessa",
 	["Hangman's Point"] = "Presidio dell'Impiccato",
+	["Harbor"] = "Porto",
 	["Harbormaster's Office"] = "Ufficio del Maestro del Porto",
 	["Hardknuckle Clearing"] = "Radura dei Noccadura",
 	["Hardwrench Hideaway"] = "Rifugio di Serrabullona",
@@ -2404,7 +2411,7 @@ lib:SetCurrentTranslations
 	["High Mountain Scenario"] = "Scenario di Alto Monte",
 	["High Perch"] = "Alto Osservatorio",
 	["High Wilderness"] = "Altopiano Selvaggio",
-	["Highbank"] = "Altariva",
+	["Highbank"] = "Banco Superiore",
 	["Highland Flats"] = "Distese delle Alture",
 	["Highland Forest"] = "Altobosco",
 	["Highland Pass"] = "Passo d'Alta Montagna",
@@ -3290,6 +3297,7 @@ lib:SetCurrentTranslations
 	["Nesingwary Base Camp"] = "Campo Base di Nesingwary",
 	["Nesingwary Safari"] = "Bivacco di Nesingwary",
 	["Nesingwary's Expedition"] = "Spedizione di Nesingwary",
+	["Nesingwary's Gameland"] = "Terreni di Caccia di Nesingwary",
 	["Nesingwary's Retreat"] = "Rifugio di Nesingwary",
 	["Nesingwary's Safari"] = "Accampamento di Nesingwary",
 	["Nesingwary's Trek"] = "Percorso di Nesingwary",
@@ -3770,7 +3778,7 @@ lib:SetCurrentTranslations
 	["Render's Crater"] = "Cratere della Valle di Rend",
 	["Render's Rock"] = "Roccia di Rend",
 	["Render's Valley"] = "Valle di Rend",
-	["Rensai's Watchpost"] = "Posto di Guardia di Rensai",
+	["Rensai's Watchpost"] = "Crocevia di Ming-Chi",
 	["Rescue Koltira"] = "Salvezza di Koltira",
 	["Rethban Caverns"] = "Caverne di Rethban",
 	["Rethress Sanctum"] = "Santuario di Rethress",
@@ -4103,8 +4111,10 @@ lib:SetCurrentTranslations
 	["Secret Treasure Lair"] = "Antro del Tesoro Segreto",
 	["Seekers' Expedition"] = "Spedizione dei Cercatori",
 	["Seeker's Folly"] = "Follia del Cercatore",
+	["Seeker's Outpost"] = "Avamposto del Cercatore",
 	["Seekers' Outpost"] = "Avamposto dei Cercatori",
 	["Seeker's Point"] = "Bivacco del Cercatore",
+	["Seekers Vista"] = "Veduta dei Cercatori",
 	["Seekers' Vista"] = "Veduta dei Cercatori",
 	["Seething Shore"] = "Spiaggia Ribollente",
 	["Seething Strand"] = "Spiaggia Ribollente",
@@ -6165,8 +6175,9 @@ lib:SetCurrentTranslations
 	["Throne of the Witch Lord"] = "Trono del Signore degli Stregoni",
 	["Throne of Thunder"] = "Regno del Tuono",
 	["Throne of Tides"] = "Trono delle Maree",
-	["Thros, the Blighted Lands"] = "Thros, le Terre Ammorbate",
+	["Throne Room"] = "Sala del Trono",
 	["Thros, The Blighted Lands"] = "Thros, le Terre Ammorbate",
+	["Thros, the Blighted Lands"] = "Thros, le Terre Ammorbate",
 	["Thrym's End"] = "Riposo di Thrym",
 	["Thunder Axe Fortress"] = "Fortezza Ascia del Tuono",
 	["Thunder Bluff"] = "Picco del Tuono",
@@ -6637,6 +6648,7 @@ lib:SetCurrentTranslations
 	["Vileprey Village"] = "Vilpreda",
 	["Village in the Vines"] = "Villaggio dei Viticci",
 	["Vim'gol's Circle"] = "Cerchio di Vim'gol",
+	["Vindicaar"] = "Vindicaar",
 	["Vindicator's Rest"] = "Riposo del Vendicatore",
 	["Violet Citadel Balcony"] = "Balcone della Cittadella Violacea",
 	["Violet Hold"] = "Fortezza Violacea",
@@ -6966,6 +6978,7 @@ lib:SetCurrentTranslations
 	["Xibala"] = "Xibala",
 	["Xibala Shallows"] = "Secca di Xibala",
 	["Xumanu's Hideout"] = "Rifugio di Xumanu",
+	["xxOLD - Zuldazar"] = "Zuldazar",
 	["Xylem's Tower"] = "Torre di Xylem",
 	["Yan-Zhe River"] = "Fiume Yan-Zhe",
 	["Yeti Mountain Basecamp"] = "Campo Base Monte Yeti",
@@ -7038,6 +7051,7 @@ lib:SetCurrentTranslations
 	["Zul'Farrak"] = "Zul'farrak",
 	["Zul'Farrak Entrance"] = "Ingresso a Zul'farrak",
 	["Zul'Gurub"] = "Zul'gurub",
+	["Zul'jan"] = "Zul'jan",
 	["Zul'jan Ruins"] = "Rovine di Zul'jan",
 	["Zul'Mashar"] = "Zul'mashar",
 	["Zul'Nazman"] = "Zul'nazman",

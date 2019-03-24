@@ -5,8 +5,8 @@
 ## LoadOnDemand: 0
 ## OptionalDependencies: !nLog
 ##
-## Version: 7.7.6055 (SwimmingSeadragon)
-## Revision: $Id: DebugLib.toc 6055 2018-08-29 01:26:34Z none $
+## Version: 8.1.6202 (SwimmingSeadragon)
+## Revision: $Id: DebugLib.toc 6202 2019-03-04 00:20:18Z none $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries
 ## X-Category: Library

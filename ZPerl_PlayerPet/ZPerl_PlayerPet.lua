@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 1059 $")
+end, "$Revision: 1121 $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -97,7 +97,7 @@ function XPerl_Player_Pet_OnLoad(self)
 
 	--RegisterUnitWatch(self)
 	local events = {
-		"UNIT_HEALTH",
+		"UNIT_HEALTH_FREQUENT",
 		"UNIT_MAXHEALTH",
 		"UNIT_LEVEL",
 		"UNIT_POWER_FREQUENT",
@@ -400,12 +400,12 @@ function XPerl_Player_Pet_Events:UNIT_PORTRAIT_UPDATE()
 	XPerl_Unit_UpdatePortrait(self, true)
 end
 
--- UNIT_HEALTH, UNIT_MAXHEALTH
-function XPerl_Player_Pet_Events:UNIT_HEALTH()
+-- UNIT_HEALTH_FREQUENT, UNIT_MAXHEALTH
+function XPerl_Player_Pet_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Player_Pet_UpdateHealth(self)
 end
 
-XPerl_Player_Pet_Events.UNIT_MAXHEALTH = XPerl_Player_Pet_Events.UNIT_HEALTH
+XPerl_Player_Pet_Events.UNIT_MAXHEALTH = XPerl_Player_Pet_Events.UNIT_HEALTH_FREQUENT
 
 -- Ticket 735 Player Pet frame's power bar fix.
 -- Thanks Brounks pointed out again... -.- By PlayerLin

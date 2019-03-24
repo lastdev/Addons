@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 7.7.6066 (SwimmingSeadragon)
-	Revision: $Id: SimpFrame.lua 6066 2018-08-29 01:26:34Z none $
+	Version: 8.1.6213 (SwimmingSeadragon)
+	Revision: $Id: SimpFrame.lua 6213 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -45,6 +45,7 @@ local GetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
 local GetAuctionItem = AucAdvanced.Scan.GetAuctionItem
 local QueryImage = AucAdvanced.API.QueryImage
 local CountAvailableItems = AucAdvanced.Post.CountAvailableItems
+local GetDepositCost = AucAdvanced.Post.GetDepositCost
 local QueueBuy = AucAdvanced.Buy.QueueBuy
 local StartScan = AucAdvanced.Scan.StartScan
 local StartPushedScan = AucAdvanced.Scan.StartPushedScan
@@ -341,7 +342,7 @@ function private.UpdateDisplay()
 	end
 	frame.info:SetText(text)
 
-	local deposit = GetDepositCost(oLink, duration, nil, cStack)
+	local deposit = GetDepositCost(oLink, duration, cBid, cBuy, cStack, 1)
 	if not deposit then
 		frame.fees:SetText("Unknown deposit cost")
 	elseif cNum > 1 then
@@ -1356,4 +1357,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 6066 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 6213 $")

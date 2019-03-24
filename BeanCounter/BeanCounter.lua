@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 7.7.6110 (SwimmingSeadragon)
-	Revision: $Id: BeanCounter.lua 6110 2018-08-29 01:26:34Z none $
+	Version: 8.1.6236 (SwimmingSeadragon)
+	Revision: $Id: BeanCounter.lua 6236 2019-03-04 00:20:18Z none $
 
 	BeanCounterCore - BeanCounter: Auction House History
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounter.lua $","$Rev: 6110 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounter.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --AucAdvanced.Modules["Util"]["BeanCounter"]
 
@@ -200,7 +200,7 @@ function lib.OnLoad(addon)
 	--Bids
 	Stubby.RegisterFunctionHook("PlaceAuctionBid", 50, private.postPlaceAuctionBidHook)
 	--Posting
-	Stubby.RegisterFunctionHook("StartAuction", -100, private.preStartAuctionHook)
+	Stubby.RegisterFunctionHook("PostAuction", -100, private.prePostAuctionHook)
 	--Vendor
 	--hooksecurefunc("BuyMerchantItem", private.merchantBuy)
 

@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 1053 $")
+XPerl_SetModuleRevision("$Revision: 1121 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -192,7 +192,7 @@ local function ImportOldConfigs()
 end
 
 -- XPerl_UnitEvents
-local unitEvents = {}
+--[[local unitEvents = {}
 function XPerl_UnitEvents(self, eventArray, eventList)
 
 	local unit = self.partyid
@@ -220,9 +220,9 @@ function XPerl_UnitEvents(self, eventArray, eventList)
 		XPerl_Globals:RegisterEvent(v)
 	end
 end
-
+--]]
 -- XPerl_UnitEvent
-local function XPerl_UnitEvent(unit, event, a, b, c, d)
+--[[local function XPerl_UnitEvent(unit, event, a, b, c, d)
 	local a = unitEvents[unit]
 	if (a) then
 		local selves = a[event]
@@ -236,10 +236,10 @@ local function XPerl_UnitEvent(unit, event, a, b, c, d)
 			end
 		end
 	end
-end
+end--]]
 
 -- XPerl_RegisterBasics
-function XPerl_RegisterBasics(self, eventArray)
+--[[function XPerl_RegisterBasics(self, eventArray)
 	local events = {
 		"UNIT_POWER", "UNIT_MAXPOWER", "UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"
 	}
@@ -248,7 +248,7 @@ function XPerl_RegisterBasics(self, eventArray)
 		tinsert(events, "UNIT_POWER")
 	end
 	XPerl_UnitEvents(self, eventArray, events)
-end
+end--]]
 
 -- onEventPostSetup
 local function onEventPostSetup(self, event, unit, ...)

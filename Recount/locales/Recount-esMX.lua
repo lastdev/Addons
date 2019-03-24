@@ -288,6 +288,8 @@ L["Rage Sources"] = "Fuentes de ira"
 L["Raid"] = "Banda"
 L["Raid Instances"] = "Instancias de banda"
 L["Rank Number"] = "Número de rango"
+--[[Translation missing --]]
+--[[ L["RealID"] = "RealID"--]] 
 L["Realtime"] = "Tiempo real"
 L["Record Buffs/Debuffs"] = "Grabar beneficios/perjuicios"
 L["Record Data"] = "Grabar datos"

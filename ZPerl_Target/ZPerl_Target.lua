@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1109 $")
+end, "$Revision: 1121 $")
 
 -- Upvalues
 local _G = _G
@@ -1474,7 +1474,7 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 	end
 end
 
--- UNIT_HEALTH, UNIT_MAXHEALTH
+-- UNIT_HEALTH_FREQUENT, UNIT_MAXHEALTH
 function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Target_UpdateHealth(self)
 end

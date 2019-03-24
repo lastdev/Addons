@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 974 $")
+end, "$Revision: 1123 $")
 
 local myClass
 local playerAggro, petAggro
@@ -199,7 +199,7 @@ end
 
 -- XPerl_ShowAssists()
 function XPerl_ShowAssists()
-	if (ZPerlConfigHelper.AssistsFrame == 1 or ZPerlConfigHelper.TargettingFrame == 1) then
+	if (ZPerlConfigHelper and (ZPerlConfigHelper.AssistsFrame == 1 or ZPerlConfigHelper.TargettingFrame == 1)) then
 		if (ZPerlConfigHelper.AssistsFrame == 1 and XPerl_Assists_Frame.assists ~= nil) then
 			FillList(XPerl_Assists_Frame.assists, "Assists", XPERL_TOOLTIP_ASSISTING)
 		end

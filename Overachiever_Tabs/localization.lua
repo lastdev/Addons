@@ -297,20 +297,17 @@ elseif (locale == "frFR") then  -- French
 --[[ L["EVENTNOTICE_ENDS_TIME"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_HELP"] = ""--]] 
---[[Translation missing --]]
---[[ L["EVENTNOTICE_ONGOING"] = ""--]] 
+L["EVENTNOTICE_ONGOING"] = "Cet évènement est en cours."
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_STARTED_TODAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["EVENTNOTICE_STARTS_HOURS"] = ""--]] 
+L["EVENTNOTICE_STARTS_HOURS"] = "Cet évènement commence dans |cff7eff00 %s |4heure:heures;|r."
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_STARTS_MINUTES"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_TIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELATED_BASE"] = ""--]] 
---[[Translation missing --]]
---[[ L["RELATED_CLOSE"] = ""--]] 
+L["RELATED_CLOSE"] = "Fermer"
 --[[Translation missing --]]
 --[[ L["RELATED_FILTERED_OUT"] = ""--]] 
 --[[Translation missing --]]
@@ -335,21 +332,18 @@ L["SEARCH_NAME"] = "Nom :"
 L["SEARCH_RESET"] = "Réinitialiser"
 L["SEARCH_RESULTS"] = "%s |4haut fait trouvé:hauts faits trouvés;."
 L["SEARCH_REWARD"] = "Récompense :"
---[[Translation missing --]]
---[[ L["SEARCH_SEARCHING"] = ""--]] 
+L["SEARCH_SEARCHING"] = "Recherche..."
 L["SEARCH_SUBMIT"] = "Chercher"
 L["SEARCH_TAB"] = "Recherches"
 L["SEARCH_TYPE"] = "Type :"
 L["SEARCH_TYPE_ALL"] = "Tout"
 L["SEARCH_TYPE_GUILD"] = "Guilde"
 L["SEARCH_TYPE_INDIV"] = "Personnel"
---[[Translation missing --]]
---[[ L["SEARCH_TYPE_OTHER"] = ""--]] 
+L["SEARCH_TYPE_OTHER"] = "Autre"
 L["SUGGESTIONS_DIFFICULTY"] = "Difficulté d'instance :"
 L["SUGGESTIONS_DIFFICULTY_AUTO"] = "Auto-détection"
 L["SUGGESTIONS_DIFFICULTY_HEROIC"] = "Héroïque"
---[[Translation missing --]]
---[[ L["SUGGESTIONS_DIFFICULTY_MYTHIC"] = ""--]] 
+L["SUGGESTIONS_DIFFICULTY_MYTHIC"] = "Mythique"
 L["SUGGESTIONS_DIFFICULTY_NORMAL"] = "Normale"
 L["SUGGESTIONS_EMPTY"] = "Overachiever n'a aucune suggestion pour le moment"
 L["SUGGESTIONS_EMPTY_TRADESKILL"] = " %s: Overachiever n'a aucune suggestion à faire pour le moment."
@@ -383,20 +377,14 @@ L["SUGGESTIONS_RESULTS_TRADESKILL"] = " %s: %d |4suggestion trouvée:suggestions
 --[[Translation missing --]]
 --[[ L["SUGGESTIONS_SHOWHIDDEN_TIP2"] = ""--]] 
 L["SUGGESTIONS_TAB"] = "Suggestions"
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_DALARAN_BROKENISLES"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_DALARAN_NORTHREND"] = ""--]] 
+L["SUGGESTIONS_ZONERENAME_DALARAN_BROKENISLES"] = "Dalaran (Îles Brisées)"
+L["SUGGESTIONS_ZONERENAME_DALARAN_NORTHREND"] = "Dalaran (Norfendre)"
 --[[Translation missing --]]
 --[[ L["SUGGESTIONS_ZONERENAME_KARAZHAN_LEGION"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_NAGRAND_DRAENOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_NAGRAND_OUTLAND"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_SHADOWMOONVALLEY_DRAENOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_ZONERENAME_SHADOWMOONVALLEY_OUTLAND"] = ""--]] 
+L["SUGGESTIONS_ZONERENAME_NAGRAND_DRAENOR"] = "Nagrand (Draenor)"
+L["SUGGESTIONS_ZONERENAME_NAGRAND_OUTLAND"] = "Nagrand (Outreterre)"
+L["SUGGESTIONS_ZONERENAME_SHADOWMOONVALLEY_DRAENOR"] = "Vallée d’Ombrelune (Draenor)"
+L["SUGGESTIONS_ZONERENAME_SHADOWMOONVALLEY_OUTLAND"] = "Vallée d’Ombrelune (Outreterre)"
 L["TAB_HELP"] = "|cffffffffCtrl-click|r sur un haut fait pour l'afficher dans l'IU standard.|n|nUn |cfffffffffond bleu|r signifie qu'il fait partie d'une série dont vous n'avez pas encore effectué une étape précédente.|n|nUn |cfffffffffond rouge|r signifie qu'il ne peut pas être trouvé dans l'IU standard de ce personnage car il est propre à la faction adverse ou bien il s'agit d'un Tour de force non accompli.|n|nA |cfffffffffond vert|r signifie qu'un rappel pour ce haut fait a été affiché récemment dans une infobulle ou qu'il possède une alarme qui s'est déclenchée il y a peu."
 L["TAB_SORT"] = "Trier par :"
 L["TAB_SORT_COMPLETE"] = "Date d'accomplissement"
@@ -655,16 +643,14 @@ L["SEARCH_NAME"] = "名称或者ID："
 L["SEARCH_RESET"] = "重置"
 L["SEARCH_RESULTS"] = "找到 %s 个成就。"
 L["SEARCH_REWARD"] = "奖励："
---[[Translation missing --]]
---[[ L["SEARCH_SEARCHING"] = ""--]] 
+L["SEARCH_SEARCHING"] = "搜索中……"
 L["SEARCH_SUBMIT"] = "搜索"
 L["SEARCH_TAB"] = "搜索"
 L["SEARCH_TYPE"] = "类型："
 L["SEARCH_TYPE_ALL"] = "全部"
 L["SEARCH_TYPE_GUILD"] = "公会"
 L["SEARCH_TYPE_INDIV"] = "个人"
---[[Translation missing --]]
---[[ L["SEARCH_TYPE_OTHER"] = ""--]] 
+L["SEARCH_TYPE_OTHER"] = "其它"
 L["SUGGESTIONS_DIFFICULTY"] = "地下城难度："
 L["SUGGESTIONS_DIFFICULTY_AUTO"] = "自动检测"
 L["SUGGESTIONS_DIFFICULTY_HEROIC"] = "英雄"
@@ -768,16 +754,15 @@ L["EVENTNOTICE_ENDS_DAYS"] = "Оно заканчивается в|cffff2020 %s 
 L["EVENTNOTICE_ENDS_HOURS"] = "Оно заканчивается в|cffff2020 %s |4часа:часов;|r."
 L["EVENTNOTICE_ENDS_MINUTES"] = "Оно заканчивается в|cffff2020 %s |4минут:минуты;|r."
 L["EVENTNOTICE_ENDS_TIME"] = "Оно заканчивается сегодня в %3$s (серверному времени)."
-L["EVENTNOTICE_HELP"] = "|cffffffffКлик|r чтобы увидеть связанные достижения.|n|cffffffffCtrl-клик|r для открытия календаря.|n|cffffffffShift-правый клик|r чтобы временно скрыть это уведомление."
+L["EVENTNOTICE_HELP"] = "|cffffffffЩелкните|r, чтобы просмотреть связанные достижения.|n|cffffffffCTRL+ЛКМ|r, чтобы открыть календарь.|n|cffffffffShift+ПКМ|r, чтобы временно скрыть это уведомление."
 L["EVENTNOTICE_ONGOING"] = "Это событие продолжается."
 L["EVENTNOTICE_STARTED_TODAY"] = "Это событие началось сегодня."
 L["EVENTNOTICE_STARTS_HOURS"] = "Это событие начинается в|cff7eff00 %s |4часа:часов;|r."
 L["EVENTNOTICE_STARTS_MINUTES"] = "Это событие начинается в|cff7eff00 %s |4минута:минуты;|r."
-L["EVENTNOTICE_TIP"] = "Удерживать |cffffffffShift|r для получения более подробной информации."
+L["EVENTNOTICE_TIP"] = "Удерживайте |cffffffffShift|r для получения дополнительных сведений."
 L["RELATED_BASE"] = "Базовые достижения:"
 L["RELATED_CLOSE"] = "Закрыть"
---[[Translation missing --]]
---[[ L["RELATED_FILTERED_OUT"] = ""--]] 
+L["RELATED_FILTERED_OUT"] = "%s |4достижение было:достижения были; пропущено(ы) фильтром."
 L["RELATED_HELP"] = "На этой вкладке показаны достижения, которые связаны друг с другом. Одно из достижения было выбрано в качестве базового. Остальные в той же серии, что и базовые, являются являются одним из серии базовых, или имеют в качестве одного из своих собственных критериев, либо достижение в своей серии."
 L["RELATED_RECURSIVE"] = "Расширенный"
 L["RELATED_RECURSIVE_TIP"] = "Сделать рекурсивный поиск, так что все достижения, которые косвенно связанны с достижением базового, также будут включены."
@@ -786,8 +771,7 @@ L["RELATED_TAB"] = "Связанный"
 L["SEARCH_ANY"] = "Всё перечисленное:"
 L["SEARCH_CRITERIA"] = "Критерий:"
 L["SEARCH_DESC"] = "Описание:"
---[[Translation missing --]]
---[[ L["SEARCH_FILTERED_OUT"] = ""--]] 
+L["SEARCH_FILTERED_OUT"] = "%s |4достижение было:достижения были; пропущено(ы) фильтром."
 L["SEARCH_FULLLIST"] = "Включить отсутствующие|nв списке достижения"
 L["SEARCH_FULLLIST_TIP"] = "В поиск будут включаться все достижения, включая не представленные в стандартном интерфейсе (например, достижения для противоположной фракции или невыполнимые)."
 L["SEARCH_HELP"] = "Воспользуйтесь этой вкладкой для поиска достижений. Вы также можете искать достижения по имени или номеру, используя команды чата. Более подробную информацию вы найдёте в файле readme.txt в папке аддона."
@@ -795,16 +779,14 @@ L["SEARCH_NAME"] = "Название или ID:"
 L["SEARCH_RESET"] = "Сбросить"
 L["SEARCH_RESULTS"] = "Найдено достижений: %s."
 L["SEARCH_REWARD"] = "Награда:"
---[[Translation missing --]]
---[[ L["SEARCH_SEARCHING"] = ""--]] 
+L["SEARCH_SEARCHING"] = "Поиск..."
 L["SEARCH_SUBMIT"] = "Поиск"
 L["SEARCH_TAB"] = "Поиск"
 L["SEARCH_TYPE"] = "Тип:"
 L["SEARCH_TYPE_ALL"] = "Все"
 L["SEARCH_TYPE_GUILD"] = "Гильдия"
 L["SEARCH_TYPE_INDIV"] = "Лично"
---[[Translation missing --]]
---[[ L["SEARCH_TYPE_OTHER"] = ""--]] 
+L["SEARCH_TYPE_OTHER"] = "Другие"
 L["SUGGESTIONS_DIFFICULTY"] = "Сложность подземелья:"
 L["SUGGESTIONS_DIFFICULTY_AUTO"] = "Автоопределение"
 L["SUGGESTIONS_DIFFICULTY_HEROIC"] = "Героический"
@@ -812,10 +794,8 @@ L["SUGGESTIONS_DIFFICULTY_MYTHIC"] = "Мифический"
 L["SUGGESTIONS_DIFFICULTY_NORMAL"] = "Нормальный"
 L["SUGGESTIONS_EMPTY"] = "В данный момент подходящих достижений не обнаружено."
 L["SUGGESTIONS_EMPTY_TRADESKILL"] = "%s: Overachiever в данный момент не имеет для вас предложений."
---[[Translation missing --]]
---[[ L["SUGGESTIONS_FILTERED_OUT_EARNED"] = ""--]] 
---[[Translation missing --]]
---[[ L["SUGGESTIONS_FILTERED_OUT_INCOMPLETE"] = ""--]] 
+L["SUGGESTIONS_FILTERED_OUT_EARNED"] = "%s |4достижение было:достижения были; уже получено(ы)."
+L["SUGGESTIONS_FILTERED_OUT_INCOMPLETE"] = "Отображение ЗАВЕРШЕННЫХ достижений. %s |4достижение было:достижения были; отфильтровано(ы)."
 L["SUGGESTIONS_HELP"] = "Предполагаемые достижения, указанные здесь, основаны на вашем текущем местоположении. Также перечислены все \"последнее напоминание\" достижений.|n|n|cffffffffShift-правый клик|r в предлагаемом достижении, чтобы скрыть его. (Это зависит по персонажу и влияет на все местоположения.)"
 L["SUGGESTIONS_HIDDENLOCATION"] = "Скрытая"
 L["SUGGESTIONS_LOCATION"] = "Локация:"
@@ -860,8 +840,7 @@ L["WATCH_DISPLAYEDLIST"] = "Отображаемый лист:"
 L["WATCH_EMPTY"] = "Ваш список наблюдений пуст. Нажмите на достижение Alt+Клик для наблюдения за ним, а также, получите ссылку на достижения в чат, чтобы посмотреть его."
 L["WATCH_EMPTY_SHORT"] = "Пустой лист"
 L["WATCH_ERR_INVALIDID"] = "Удален \"%s\" из списка: не удалось найти достижение с таким ID"
---[[Translation missing --]]
---[[ L["WATCH_FILTERED_OUT"] = ""--]] 
+L["WATCH_FILTERED_OUT"] = "%s |4достижение было:достижения были; пропущено(ы) фильтром."
 L["WATCH_HELP"] = "Создайте ваш список наблюдений нажав  |cffffffffalt+клик|r по достижению в других закладках или по ссылке в чате. Нажав |cffffffffAlt+клик|r по одному из присутствующих достижений вы удалите его из списка."
 L["WATCH_LIST_GLOBAL"] = "Общее"
 L["WATCH_LIST_PERCHAR"] = "По персонажу"

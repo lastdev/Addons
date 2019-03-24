@@ -1,70 +1,181 @@
 --- @type MaxDps MaxDps
+local _, MaxDps = ...;
 
 -- Global cooldown spell id
-_GlobalCooldown		= 61304;
+local _GlobalCooldown	= 61304;
 
 -- Bloodlust effects
-_Bloodlust			= 2825;
-_TimeWrap			= 80353;
-_Heroism			= 32182;
-_AncientHysteria	= 90355;
-_Netherwinds		= 160452;
-_DrumsOfFury		= 178207;
-_Exhaustion			= 57723;
+local _Bloodlust		= 2825;
+local _TimeWrap			= 80353;
+local _Heroism			= 32182;
+local _AncientHysteria	= 90355;
+local _Netherwinds		= 160452;
+local _DrumsOfFury		= 178207;
+local _Exhaustion		= 57723;
 
-local INF = 2147483647;
 
 local _Bloodlusts = {_Bloodlust, _TimeWrap, _Heroism, _AncientHysteria, _Netherwinds, _DrumsOfFury};
+
+-- Global functions
+local UnitAura = UnitAura;
+local pairs = pairs;
+local ipairs = ipairs;
+local StringSplit = strsplit;
+local Select = select;
+local TableInsert = tinsert;
+local GetTalentInfo = GetTalentInfo;
+local C_AzeriteEmpoweredItem = C_AzeriteEmpoweredItem;
+local GetSpecialization = GetSpecialization;
+local GetSpecializationInfo = GetSpecializationInfo;
+local AzeriteUtil = AzeriteUtil;
+local UnitCastingInfo = UnitCastingInfo;
+local GetTime = GetTime;
+local GetSpellCooldown = GetSpellCooldown;
+local GetSpellInfo = GetSpellInfo;
+local UnitGUID = UnitGUID;
+local GetSpellBaseCooldown = GetSpellBaseCooldown;
+local IsSpellInRange = IsSpellInRange;
+local UnitSpellHaste = UnitSpellHaste;
+local GetSpellCharges = GetSpellCharges;
+local C_NamePlate = C_NamePlate;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local IsEquippedItem = IsEquippedItem;
+local GetManaRegen = GetManaRegen;
+local GetSpellTabInfo = GetSpellTabInfo;
+local GetSpellBookItemInfo = GetSpellBookItemInfo;
+local GetSpellBookItemName = GetSpellBookItemName;
+local IsInInstance = IsInInstance;
+local IsItemInRange = IsItemInRange;
+local UnitThreatSituation = UnitThreatSituation;
+
 
 -----------------------------------------------------------------
 --- Internal replacement for UnitAura that no longer has ability
 --- to filter by spell name
 -----------------------------------------------------------------
 
-function MaxDps:IntUnitAura(unit, nameOrId, filter)
-	for i = 1, 40 do
-		local sname, icon, count, debuffType, duration, expirationTime, _, _, _, sId = UnitAura(unit, i, filter);
+function MaxDps:IntUnitAura(unit, nameOrId, filter, timeShift)
+	local aura = {
+		name           = nil,
+		up             = false,
+		count          = 0,
+		expirationTime = 0,
+		remains        = 0,
+		refreshable    = true -- well if it doesn't exist, then it is refreshable
+	};
 
-		if sname == nameOrId or sId == nameOrId then
-			return {
-				name = sname,
-				count = count,
-				expirationTime = expirationTime
-			};
-		end
+	local i = 1;
+	local t = GetTime();
 
-		if not sname then
-			return nil;
-		end
-	end
-
-	return nil;
-end
-
-function MaxDps:CollectAura(unit)
-	local auras = {};
-	local filter = unit == 'target' and 'PLAYER|HARMFUL' or nil;
-
-	for i = 1, 40 do
-		local name, _, count, _, _, expirationTime, _, _, _, id = UnitAura(unit, i, filter);
-
+	while true do
+		local name, _, count, _, duration, expirationTime, _, _, _, id = UnitAura(unit, i, filter);
 		if not name then
 			break;
 		end
 
-		auras[id] = {
-			name = name,
-			count = count,
-			expirationTime = expirationTime
-		};
+		if name == nameOrId or id == nameOrId then
+			local remains = 0;
+
+			if expirationTime == nil then
+				remains = 0;
+			elseif (expirationTime - t) > timeShift then
+				remains = expirationTime - t - timeShift;
+			elseif expirationTime == 0 then
+				remains = 99999;
+			end
+
+			if count == 0 then
+				count = 1;
+			end
+
+			return {
+				name           = name,
+				up             = remains > 0,
+				count          = count,
+				expirationTime = expirationTime,
+				remains        = remains,
+				refreshable    = remains < 0.3 * duration,
+			};
+		end
+
+		i = i + 1;
 	end
 
-	return auras;
+	return aura;
 end
 
+function MaxDps:CollectAura(unit, timeShift, output, filter)
+	filter = filter and filter or (unit == 'target' and 'PLAYER|HARMFUL' or nil);
+
+	local t = GetTime();
+	local i = 1;
+	for k, v in pairs(output) do output[k] = nil; end
+
+	while true do
+		local name, _, count, _, duration, expirationTime, _, _, _, id = UnitAura(unit, i, filter);
+		if not name then
+			break;
+		end
+
+		local remains = 0;
+
+		if expirationTime == nil then
+			remains = 0;
+		elseif (expirationTime - t) > timeShift then
+			remains = expirationTime - t - timeShift;
+		elseif expirationTime == 0 then
+			remains = 99999;
+		end
+
+		if count == 0 then
+			count = 1;
+		end
+
+		output[id] = {
+			name           = name,
+			up             = remains > 0,
+			count          = count,
+			expirationTime = expirationTime,
+			remains        = remains,
+			duration       = duration,
+			refreshable    = remains < 0.3 * duration,
+		};
+
+		i = i + 1;
+	end
+end
+
+local auraMetaTable = {
+	__index = function()
+		return {
+			up          = false,
+			count       = 0,
+			remains     = 0,
+			duration    = 0,
+			refreshable = true,
+		};
+	end
+};
+
+MaxDps.PlayerAuras = setmetatable({}, auraMetaTable);
+MaxDps.TargetAuras = setmetatable({}, auraMetaTable);
+MaxDps.PlayerCooldowns = setmetatable({}, {
+	__index = function(table, key)
+		return MaxDps:CooldownConsolidated(key, MaxDps.FrameData.timeShift);
+	end
+});
+MaxDps.ActiveDots = setmetatable({}, {
+	__index = function(table, key)
+		return MaxDps:DebuffCounter(key, MaxDps.FrameData.timeShift);
+	end
+});
+
 function MaxDps:CollectAuras()
-	self.PlayerAuras = self:CollectAura('player');
-	self.TargetAuras = self:CollectAura('target');
+	self:CollectAura('player', self.FrameData.timeShift, self.PlayerAuras);
+	self:CollectAura('target', self.FrameData.timeShift, self.TargetAuras);
 	return self.PlayerAuras, self.TargetAuras;
 end
 
@@ -97,10 +208,30 @@ function MaxDps:CheckTalents()
 		for talentCol = 1, 3 do
 			local _, name, _, sel, _, id = GetTalentInfo(talentRow, talentCol, 1);
 			if sel then
-				self.PlayerTalents[id] = name;
+				self.PlayerTalents[id] = 1;
 			end
 		end
 	end
+end
+
+MaxDps.isMelee = false;
+function MaxDps:CheckIsPlayerMelee()
+	self.isMelee = false;
+	local class = select(3, UnitClass('player'));
+	local spec = GetSpecialization();
+
+	-- Warrior, Paladin, Rogue, DeathKnight, Monk, Demon Hunter
+	if class == 1 or class == 2 or class == 4 or class == 6 or class == 10 or class == 12 then
+		self.isMelee = true;
+	elseif class == 3 and spec == 3 then -- Survival Hunter
+		self.isMelee = true;
+	elseif class == 7 and spec == 2 then -- Enh Shaman
+		self.isMelee = true;
+	elseif class == 11 and (spec == 2 or spec == 3) then -- Guardian or Feral Druid
+		self.isMelee = true;
+	end
+
+	return self.isMelee;
 end
 
 function MaxDps:HasTalent(talent)
@@ -111,44 +242,50 @@ function MaxDps:TalentEnabled(talent)
 	self:Print(self.Colors.Error .. 'MaxDps:TalentEnabled is deprecated, please use table `talents` to check talents');
 end
 
+function MaxDps:GetAzeriteTraits()
+	local t = setmetatable({}, {__index = function() return 0; end});
+
+	for equipSlotIndex, itemLocation in AzeriteUtil.EnumerateEquipedAzeriteEmpoweredItems() do
+		local tierInfo = C_AzeriteEmpoweredItem.GetAllTierInfo(itemLocation);
+		for i = 1, #tierInfo do
+			for x = 1, #tierInfo[i].azeritePowerIDs do
+				local powerId = tierInfo[i].azeritePowerIDs[x];
+				if C_AzeriteEmpoweredItem.IsPowerSelected(itemLocation, powerId) then
+					local spellId = C_AzeriteEmpoweredItem.GetPowerInfo(powerId).spellID;
+					if t[spellId] then
+						t[spellId] = t[spellId] + 1;
+					else
+						t[spellId] = 1;
+					end
+
+				end
+
+			end
+		end
+	end
+
+	self.AzeriteTraits = t;
+	return t;
+end
+
+function MaxDps:DumpAzeriteTraits()
+	for id, rank in pairs(self.AzeriteTraits) do
+		local n = GetSpellInfo(id);
+		print(n .. ' (' .. id .. '): ' .. rank);
+	end
+end
+
 -----------------------------------------------------------------
 --- Aura helper functions
 -----------------------------------------------------------------
 
 -- Aura on specific unit
+-- @deprecated
 function MaxDps:UnitAura(auraId, timeShift, unit, filter)
 	timeShift = timeShift or 0;
-	local aura;
+	local aura = self:IntUnitAura(unit, auraId, filter, timeShift);
 
-	if unit == 'target' then
-		aura = self.TargetAuras[auraId];
-	elseif unit == 'player' then
-		aura = self.PlayerAuras[auraId];
-	else
-		aura = self:IntUnitAura(unit, auraId, filter);
-	end
-
-	local t = GetTime();
-
-	if not aura then
-		return false, 0, 0;
-	end
-
-	if aura.expirationTime == nil then
-		return true, aura.count, 0;
-	elseif (aura.expirationTime - t) > timeShift then
-		local cd = aura.expirationTime - t - timeShift;
-
-		return true, aura.count, cd;
-	elseif aura.expirationTime == 0 then
-		local count = 1;
-		if aura.count > 0 then
-			count = aura.count;
-		end
-		return true, count, 99999; -- Persistent auras
-	end
-
-	return false, 0, 0;
+	return aura.up, aura.count, aura.remains;
 end
 
 -- Aura on player
@@ -172,6 +309,9 @@ function MaxDps:EndCast(target)
 	local c = t * 1000;
 	local gcd = 0;
 	local _, _, _, _, endTime, _, _, _, spellId = UnitCastingInfo(target or 'player');
+	if not spellId then
+		_, _, _, _, endTime, _, _, spellId = UnitChannelInfo(target or 'player');
+	end
 
 	-- we can only check player global cooldown
 	if target == 'player' then
@@ -193,13 +333,6 @@ function MaxDps:EndCast(target)
 	end
 
 	return timeShift, spellId, gcd;
-end
-
-function MaxDps:SameSpell(spell1, spell2)
-	self:Print('MaxDps:SameSpell is deprecated, please compare spellId directly');
-	local spellName1 = GetSpellInfo(spell1);
-	local spellName2 = GetSpellInfo(spell2);
-	return spellName1 == spellName2;
 end
 
 function MaxDps:GlobalCooldown(spellId)
@@ -226,6 +359,58 @@ end
 --- Spell helpers
 -----------------------------------------------------------------
 
+function MaxDps:CooldownConsolidated(spellId, timeShift)
+	timeShift = timeShift or 0;
+	local remains = 100000;
+	local t = GetTime();
+
+	local enabled;
+	local charges, maxCharges, start, duration = GetSpellCharges(spellId);
+	local fullRecharge, partialRecharge = 0, 0;
+
+	if charges == nil then
+		start, duration, enabled = GetSpellCooldown(spellId);
+		maxCharges = 1;
+
+		if enabled and duration == 0 and start == 0 then
+			remains = 0;
+		elseif enabled then
+			remains = duration - (t - start) - timeShift;
+		end;
+
+		fullRecharge = remains;
+		partialRecharge = remains;
+	else
+		remains = duration - (t - start) - timeShift;
+
+		if remains > duration then
+			remains = 0;
+		end
+
+		if remains > 0 then
+			charges = charges + (1 - (remains / duration));
+		end
+
+		fullRecharge = (maxCharges - charges) * duration;
+		partialRecharge = remains;
+
+		if charges >= 1 then
+			remains = 0;
+		end
+	end
+
+	return {
+		duration        = GetSpellBaseCooldown(spellId) / 1000,
+		ready           = remains <= 0,
+		remains         = remains,
+		fullRecharge    = fullRecharge,
+		partialRecharge = partialRecharge,
+		charges         = charges,
+		maxCharges      = maxCharges
+	};
+end
+
+-- @deprecated
 function MaxDps:Cooldown(spell, timeShift)
 	local start, duration, enabled = GetSpellCooldown(spell);
 	if enabled and duration == 0 and start == 0 then
@@ -237,6 +422,7 @@ function MaxDps:Cooldown(spell, timeShift)
 	end;
 end
 
+-- @deprecated
 function MaxDps:SpellCharges(spell, timeShift)
 	local currentCharges, maxCharges, cooldownStart, cooldownDuration = GetSpellCharges(spell);
 
@@ -261,6 +447,7 @@ function MaxDps:SpellCharges(spell, timeShift)
 	return cd, currentCharges, maxCharges;
 end
 
+-- @deprecated
 function MaxDps:SpellAvailable(spell, timeShift)
 	local cd = MaxDps:Cooldown(spell, timeShift);
 	return cd <= 0, cd;
@@ -376,12 +563,85 @@ end
 
 function MaxDps:TargetsInRange(spell)
 	local count = 0;
-	for i, frame in pairs(C_NamePlate.GetNamePlates()) do
-		if frame:IsVisible() and MaxDps:IsSpellInRange(spell, frame.UnitFrame.unit) == 1 then
+
+	for i, unit in ipairs(self.visibleNameplates) do
+		if MaxDps:IsSpellInRange(spell, unit) == 1 then
 			count = count + 1;
 		end
 	end
 
+	return count;
+end
+
+function MaxDps:ThreatCounter()
+	local count = 0;
+	local units = {};
+
+	for i, unit in ipairs(self.visibleNameplates) do
+		if UnitThreatSituation('player', unit) ~= nil then
+			count = count + 1;
+			TableInsert(units, unit);
+		else
+			local npcId = Select(6, StringSplit('-', UnitGUID(unit)));
+			npcId = tonumber(npcId);
+			-- Risen Soul, Tormented Soul, Lost Soul
+			if npcId == 148716 or npcId == 148893 or npcId == 148894 then
+				count = count + 1;
+				TableInsert(units, unit);
+			end
+		end
+	end
+
+	return count, units;
+end
+
+function MaxDps:DebuffCounter(spellId, timeShift)
+	local count, totalRemains, totalCount, totalCountRemains = 0, 0, 0, 0;
+
+	for i, unit in ipairs(self.visibleNameplates) do
+		local aura = MaxDps:IntUnitAura(unit, spellId, 'PLAYER|HARMFUL', timeShift);
+		if aura.up then
+			count = count + 1;
+			totalCount = totalCount + aura.count;
+			totalRemains = totalRemains + aura.remains;
+			totalCountRemains = totalRemains + (aura.remains * aura.count);
+		end
+	end
+
+	return count, totalRemains, totalCount, totalCountRemains;
+end
+
+function MaxDps:SmartAoe(itemId)
+	if self.db.global.forceSingle then
+		return 1;
+	end
+
+	local inInstance, instanceType = IsInInstance();
+	local count, units = self:ThreatCounter();
+
+	local itemToCheck = itemId or 18904;
+
+	-- 5 man content, we count battleground also as small party
+	if self.isMelee then
+		-- 8 yards range
+		itemToCheck = itemId or 61323;
+	elseif instanceType == 'pvp' or instanceType == 'party' then
+		-- 30 yards range
+		itemToCheck = itemId or 7734;
+	elseif instanceType == 'arena' and instanceType == 'raid' then
+		-- 35 yards range
+		itemToCheck = itemId or 18904;
+	end
+
+	count = 0;
+	for i = 1, #units do
+		-- 8 yards range check
+		if IsItemInRange(itemToCheck, units[i]) then
+			count = count + 1;
+		end
+	end
+
+	if WeakAuras then WeakAuras.ScanEvents('MAXDPS_TARGET_COUNT', count); end
 	return count;
 end
 

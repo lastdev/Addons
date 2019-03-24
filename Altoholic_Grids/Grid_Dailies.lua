@@ -14,6 +14,7 @@ local function BuildView()
 	
 	local account, realm = AltoholicTabGrids:GetRealm()
 	
+	-- Dailies are actual dailies that have been completed, + emissaries that have been completed
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
 		local num = DataStore:GetDailiesHistorySize(character) or 0
 		for i = 1, num do
@@ -62,7 +63,7 @@ local callbacks = {
 			button.Background:SetDesaturated(false)
 			button.Background:SetTexCoord(0, 1, 0, 1)
 			button.Background:SetTexture(ICON_VIEW_QUESTS)
-			
+
 			if questList[view[dataRowID]].completedBy[character]  then
 				button.Background:SetVertexColor(1.0, 1.0, 1.0)
 				button.Name:SetText(icons.ready)

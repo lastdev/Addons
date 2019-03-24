@@ -1,3 +1,22 @@
+**r1123**
+* Fixing a minor issues with assist frames.
+
+**r1121**
+* Health update fixes.
+
+**r1119**
+* Updated for 8.1.0.
+
+**r1117**
+* Fixed an issue with AFK status for the player frame.
+
+**r1115**
+* Fixed FrameXML errors with the player frame.
+* Some fixes related to assist frames.
+
+**r1113**
+* Fixed an issue with the Raid Helper frames.
+
 **r1111**
 * Fixed an issue with the player portrait reseting.
 

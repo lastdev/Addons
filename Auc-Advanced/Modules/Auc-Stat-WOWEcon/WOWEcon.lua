@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - WoWEcon price statistics module
-	Version: 7.7.6064 (SwimmingSeadragon)
-	Revision: $Id: WOWEcon.lua 6064 2018-08-29 01:26:34Z none $
+	Version: 8.1.6211 (SwimmingSeadragon)
+	Revision: $Id: WOWEcon.lua 6211 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer statistic module that returns a price based on
@@ -62,7 +62,7 @@ function lib.OnLoad(addon)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Stat-WOWEcon/WOWEcon.lua $", "$Rev: 6064 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Stat-WOWEcon/WOWEcon.lua $", "$Rev: 6211 $")
 
 --[[ The following localizer keys are now obsolete too:
 		'WECN_Help_WhatGlobalPrices'

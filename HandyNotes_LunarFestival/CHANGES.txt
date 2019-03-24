@@ -1,18 +1,32 @@
-tag f97016e200e173645e96b2a19b202af32fb006ae v1.5
+tag 0a46d764c12c0b4a37cead0448fa71f2e1b2290d v1.6.1
 Author:	Ethan Centaurai <ethancentaurai@outlook.com>
-Date:	Sun Jul 22 12:28:09 2018 +0100
+Date:	Mon Jan 28 20:10:55 2019 +0000
 
-Tagging as v1.5.
+Tagging as v1.6.1.
 
-commit aeeb1026bfa46f881b9d9defe7416b060aca3ed9
+commit 87b12778990b1ae774ed156a7c670a50101b573f
 Author: Ethan Centaurai <ethancentaurai@outlook.com>
-Date:   Sun Jul 22 12:16:26 2018 +0100
+Date:   Mon Jan 28 20:10:05 2019 +0000
 
-    Updated for Patch 8.0.
+    Updated the markers for Elder Morndeep.
 
-commit d4eec9d1b24b1a5bcae76ce7d9c5674f6d56de6a
+commit ce6ec2778c173fc39a945908bb12809c84d176b4
 Author: Ethan Centaurai <ethancentaurai@outlook.com>
-Date:   Mon Feb 19 23:07:31 2018 +0000
+Date:   Mon Jan 28 19:52:17 2019 +0000
 
-    Added Zidormi to Silithus.
+    Added a note for Elder Bellowrage.
+
+commit 8157f9b88d8e9475062bca372273d7fd939aaacf
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Mon Jan 28 19:51:46 2019 +0000
+
+    Updated note for Elder Stonefort.
+
+commit a29b81d9215c4f80f9058d5b7a7182f98273e1e5
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Mon Jan 28 12:37:28 2019 +0000
+
+    Fixed a typo.
+    
+    Remotely editing code while at work, woo!
 

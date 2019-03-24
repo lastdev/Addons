@@ -1,10 +1,9 @@
-## Interface: 80000
-## X-Min-Interface: 70300
-## Title: Raider.IO Mythic Plus (Americas - Alliance)
-## Notes: Raider.IO Mythic Plus Scores DB for Americas - Alliance. Updated nightly.
+## Interface: 80100
+## Title: Raider.IO |cffFFFFFFMythic Plus|r (Americas - Alliance)
 ## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
 ## Dependencies: RaiderIO
 ## DefaultState: enabled
+## X-Type: Mythic Plus
 ## X-Region: Americas
 ## X-Faction: Alliance
 ## X-Website: https://raider.io

@@ -13,11 +13,11 @@ function HealBot_Init_retSmartCast_MassRes()
     return SmartCast_MassRes
 end
 
-function HealBot_FindSpellRangeCast(id, spellName, spellBookId)
+local function HealBot_FindSpellRangeCast(id, spellName, spellBookId)
 
     if ( not id ) then return nil; end
 
-    local spell, _, _, msCast, _, _ = HealBot_GetSpellInfo(id);
+    local spell, _, _, msCast, _, _ = GetSpellInfo(id);
     if ( not spell ) then return nil; end
     if not spellName then spellName=spell end
    
@@ -43,6 +43,16 @@ function HealBot_FindSpellRangeCast(id, spellName, spellBookId)
     HealBot_Spells[spellName].Mana=hbMana or 0
 
     return true
+end
+
+local function HealBot_Init_Spells_addSpell(spellId, spellName, spellBookId)
+    local skipSpells={ [HEALBOT_BLESSING_OF_MIGHT]=true}
+    if not skipSpells[spellName] then
+        if HealBot_FindSpellRangeCast(spellId, spellName, spellBookId) then
+            HealBot_Spells[spellName].id=spellId
+            HealBot_Spells[spellName].known=IsSpellKnown(spellId)
+        end
+    end
 end
 
 function HealBot_Init_Spells_Defaults()
@@ -72,16 +82,6 @@ function HealBot_Init_Spells_Defaults()
                     end
                 end
             end
-        end
-    end
-end
-
-function HealBot_Init_Spells_addSpell(spellId, spellName, spellBookId)
-    local skipSpells={ [HEALBOT_BLESSING_OF_MIGHT]=true}
-    if not skipSpells[spellName] then
-        if HealBot_FindSpellRangeCast(spellId, spellName, spellBookId) then
-            HealBot_Spells[spellName].id=spellId
-            HealBot_Spells[spellName].known=IsSpellKnown(spellId)
         end
     end
 end

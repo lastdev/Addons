@@ -1,19 +1,7 @@
-changeset:   311:19e1bed70fba
-tag:         tip
-user:        Tercio
-date:        Thu Aug 30 10:54:11 2018 -0300
-summary:     - Fixed an issue where world in the world map won't show for some characters.
-
-
-changeset:   310:4eea84a94106
-user:        Tercio
-date:        Wed Aug 29 19:32:42 2018 -0300
-summary:     - Fixed the Failed to load due to an extra space character in the .toc file.
-
-
-changeset:   309:4937dbf56eb0
-user:        Tercio
-date:        Tue Aug 28 20:17:20 2018 -0300
-summary:     - Fixing broken version, tested the version before sent.
+changeset:   362:50a860389853
+tag:         v8.1.0.362
+user:        Tercioo
+date:        Fri Mar 01 17:25:10 2019 -0300
+summary:     - Added accessibility option for an extra icon above the quest location for color blind users.
 
 

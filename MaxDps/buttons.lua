@@ -1,3 +1,7 @@
+local _, MaxDps = ...;
+
+local CustomGlow = LibStub('LibCustomGlow-1.0');
+
 MaxDps.Spells = {};
 MaxDps.Flags = {};
 MaxDps.SpellsGlowing = {};
@@ -32,8 +36,9 @@ function MaxDps:CreateOverlay(parent, id, texture, type, color)
 	end
 
 	t:SetAllPoints(frame);
-
-	if type then
+	if color then
+		t:SetVertexColor(color.r, color.g, color.b, color.a);
+	elseif type then
 		frame.ovType = type;
 		if type == 'normal' then
 			local c = self.db.global.highlightColor;
@@ -41,11 +46,7 @@ function MaxDps:CreateOverlay(parent, id, texture, type, color)
 		elseif type == 'cooldown' then
 			local c = self.db.global.cooldownColor;
 			t:SetVertexColor(c.r, c.g, c.b, c.a);
-		else
-			t:SetVertexColor(color.r, color.r, color.r, color.r);
 		end
-	else
-		t:SetVertexColor(color.r, color.g, color.b, color.a);
 	end
 
 	tinsert(self.Frames, frame);
@@ -69,7 +70,7 @@ function MaxDps:DestroyAllOverlays()
 end
 
 function MaxDps:ApplyOverlayChanges()
-	for key, frame in pairs(self.Frames) do
+	for _, frame in pairs(self.Frames) do
 		local sizeMult = self.db.global.sizeMult or 1.4;
 		frame:SetWidth(frame:GetParent():GetWidth() * sizeMult);
 		frame:SetHeight(frame:GetParent():GetHeight() * sizeMult);
@@ -122,6 +123,47 @@ function MaxDps:UpdateButtonGlow()
 end
 
 function MaxDps:Glow(button, id, texture, type, color)
+	local opts = self.db.global;
+	if opts.customGlow then
+		local col = color and {color.r, color.g, color.b, color.a} or nil;
+		if not color and type then
+			if type == 'normal' then
+				local c = self.db.global.highlightColor;
+				col = {c.r, c.g, c.b, c.a};
+			elseif type == 'cooldown' then
+				local c = self.db.global.cooldownColor;
+				col = {c.r, c.g, c.b, c.a};
+			end
+		end
+
+		if opts.customGlowType == 'pixel' then
+			CustomGlow.PixelGlow_Start(
+				button,
+				col,
+				opts.customGlowLines,
+				opts.customGlowFrequency,
+				opts.customGlowLength,
+				opts.customGlowThickness,
+				0,
+				0,
+				false,
+				id
+			);
+		else
+			CustomGlow.AutoCastGlow_Start(
+				button,
+				col,
+				math.ceil(opts.customGlowParticles),
+				opts.customGlowParticleFrequency,
+				opts.customGlowScale,
+				0,
+				0,
+				id
+			);
+		end
+		return;
+	end
+
 	if button.MaxDpsOverlays and button.MaxDpsOverlays[id] then
 		button.MaxDpsOverlays[id]:Show();
 	else
@@ -135,6 +177,16 @@ function MaxDps:Glow(button, id, texture, type, color)
 end
 
 function MaxDps:HideGlow(button, id)
+	local opts = self.db.global;
+	if opts.customGlow then
+		if opts.customGlowType == 'pixel' then
+			CustomGlow.PixelGlow_Stop(button, id);
+		else
+			CustomGlow.AutoCastGlow_Stop(button, id);
+		end
+		return;
+	end
+
 	if button.MaxDpsOverlays and button.MaxDpsOverlays[id] then
 		button.MaxDpsOverlays[id]:Hide();
 	end
@@ -227,6 +279,10 @@ function MaxDps:Fetch()
 		self:FetchDiabolic();
 	end
 
+	if IsAddOnLoaded('AzeriteUI') then
+		self:FetchAzeriteUI();
+	end
+
 	if self.rotationEnabled then
 		self:EnableRotationTimer();
 		self:InvokeNextSpell();
@@ -250,6 +306,15 @@ function MaxDps:FetchDominos()
 
 	for i = 1, 60 do
 		local button = _G['DominosActionButton' .. i];
+		if button then
+			self:AddStandardButton(button);
+		end
+	end
+end
+
+function MaxDps:FetchAzeriteUI()
+	for i = 1, 24 do
+		local button = _G['AzeriteUIActionButton' .. i];
 		if button then
 			self:AddStandardButton(button);
 		end
@@ -370,18 +435,20 @@ function MaxDps:ClearGlowIndependent(spellId, id)
 	end
 end
 
-function MaxDps:GlowCooldown(spellId, condition)
+function MaxDps:GlowCooldown(spellId, condition, color)
 	if self.Flags[spellId] == nil then
 		self.Flags[spellId] = false;
 	end
 	if condition and not self.Flags[spellId] then
 		self.Flags[spellId] = true;
-		self:GlowIndependent(spellId, spellId);
+		self:GlowIndependent(spellId, spellId, nil, color);
 	end
 	if not condition and self.Flags[spellId] then
 		self.Flags[spellId] = false;
 		self:ClearGlowIndependent(spellId, spellId);
 	end
+
+	if WeakAuras then WeakAuras.ScanEvents('MAXDPS_COOLDOWN_UPDATE', self.Flags); end
 end
 
 function MaxDps:GlowSpell(spellId)

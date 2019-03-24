@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "8.0.21"
+local VERSION = "8.0.22"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -50,6 +50,7 @@ function FloAspectBar_OnLoad(self)
 	self.UpdateState = FloAspectBar_UpdateState;
 	self.menuHooks = { SetPosition = FloAspectBar_SetPosition, SetBorders = FloAspectBar_SetBorders };
 	self:EnableMouse(1);
+	PetActionBarFrame:EnableMouse(false);
 
 	if SHOW_WELCOME then
 		DEFAULT_CHAT_FRAME:AddMessage( "FloAspectBar "..VERSION.." loaded." );
@@ -248,7 +249,7 @@ function FloAspectBar_UpdatePosition()
 		anchorFrame = MainMenuBar;
 
 		if SHOW_MULTI_ACTIONBAR_2 then
-			yOffset = yOffset + 45;
+			yOffset = yOffset + 40;
 		end
 	end
 

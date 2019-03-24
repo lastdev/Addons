@@ -1,4 +1,55 @@
 ﻿------------------------------------------------------
+9.0.20
+------------------------------------------------------
+* Aura for Asphyxiate (Frost and Unholy Death Knight) is now correctly recognized as crowd-control aura [Pull Request #103, thanks to xeropresence].
+
+------------------------------------------------------
+9.0.19
+------------------------------------------------------
+* Aura for Imprison (Demon Hunter) is now correctly recognized as crowd-control auras when the PvP talent Detainment was selected [Comment #1602].
+* Auras for Sin and Punishment (Priest) and Unstable Affliction silence effect (Warlock) are now correctly recognized as crowd-control auras.
+
+------------------------------------------------------
+9.0.18
+------------------------------------------------------
+* All auras for Demon Hunter, Rogues, Hunter, Death Knight, Paladin, Priest, Shaman, Monk, and Druid are now correctly recognized as crowd-control auras [Comment #1560, #1556, #1541].
+* Fixed a Lua error that occured when a unit got a nameplate and was target marked at the same time [Issue #304].
+
+------------------------------------------------------
+9.0.17
+------------------------------------------------------
+* Aura for Asphyxiate (Death Knight) as well as several Mage and Warrior auras are now correctly recognized as crowd-control auras.
+* Fixed a bug with Auras widget where stacks were not shown on auras with unlimited duration.
+* Fixed a bug with Auras widget where the stack count in bar mode was shown as "..." when it's size exceeded the size of the aura icon [Issue #297].
+
+------------------------------------------------------
+9.0.16
+------------------------------------------------------
+* Aura for Stormbolt (Warrior) is now correctly recognized as crowd-control auras [Issue #290].
+
+------------------------------------------------------
+9.0.15
+------------------------------------------------------
+* Fixed a bug with OmniCC cooldown numbers being shown on the Auras widget [Comment #1409].
+
+------------------------------------------------------
+9.0.14
+------------------------------------------------------
+* Aura for Fear (Warlock), Bull Rush (Highmountain Tauren), War Stomp (Tauren), Polymorph (Direhorn, Mage), and Polymorph (Bumblebee, Mage) are now correctly recognized as crowd-control auras [Issue #278, #280].
+* Fixed a Lua error with scaling (e.g., in Auras or Combo Points widget) when a scaling value less or equal to 0 was entered manually [Issue #282].
+
+------------------------------------------------------
+9.0.13
+------------------------------------------------------
+* Fixed a bug where the threat system was disabled for all mobs when threat feedback for neutral mobs was disabled [Issue #264].
+* (Mostly) Fixed a bug with interrupted message on the castbar which was not shown reliably when the same unit was interrupted multiple times [Issue #268].
+* Fixed a bug in quest widget where the nameplate color of quest units was not updated reset after the player completed the quest [Comment #1269].
+* Changed priority of healthbar coloring with regard to Quest widget so that tapped units no longer are shown with quest target color.
+* Added Sigil of Misery and Sigil of Silence from Vengeance demon hunters to the Auras widget as CC auras [Issue #261].
+* The aura for Repentance is now correctly recognized as crowd-control aura [Issue #261].
+* Updated the /tptpol command to switch between nameplate overlapping and stacking (nameplate motion only works for enemy nameplates).
+
+------------------------------------------------------
 9.0.12
 ------------------------------------------------------
 * Fixed a bug with the cooldown spiral of auras being not shown consistently.

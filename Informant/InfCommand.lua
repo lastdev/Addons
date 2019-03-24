@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 7.7.6092 (SwimmingSeadragon)
-	Revision: $Id: InfCommand.lua 6092 2018-08-29 01:26:34Z none $
+	Version: 8.1.6246 (SwimmingSeadragon)
+	Revision: $Id: InfCommand.lua 6246 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Command handler. Assumes responsibility for allowing the user to set the
@@ -30,7 +30,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: Informant/InfCommand.lua $", "$Rev: 6092 $")
+Informant_RegisterRevision("$URL: Informant/InfCommand.lua $", "$Rev: 6246 $")
 
 -- function prototypes
 local commandHandler, cmdHelp, onOff, genVarSet, chatPrint, restoreDefault, cmdLocale, setLocale, isValidLocale

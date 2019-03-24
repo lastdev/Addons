@@ -55,7 +55,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1089 $")
+end, "$Revision: 1121 $")
 
 local buffSetup
 
@@ -66,7 +66,7 @@ function ZPerl_TargetTarget_OnLoad(self)
 	XPerl_SetChildMembers(self)
 
 	local events = {
-		"UNIT_HEALTH",
+		"UNIT_HEALTH_FREQUENT",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_AURA",
 		"UNIT_TARGET"
@@ -522,7 +522,7 @@ function XPerl_TargetTarget_OnEvent(self, event, unitID, ...)
 			XPerl_TargetTarget_UpdateDisplay(self, true)
 			XPerl_NoFadeBars()
 		end
-	elseif event == "UNIT_HEAL_PREDICTION" or event == "UNIT_HEALTH" then
+	elseif event == "UNIT_HEAL_PREDICTION" or event == "UNIT_HEALTH_FREQUENT" then
 		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
 			XPerl_Target_UpdateHealth(self)
 		elseif unitID == "focus" and self == XPerl_FocusTarget then

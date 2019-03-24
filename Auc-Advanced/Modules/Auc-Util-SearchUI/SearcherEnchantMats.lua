@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher EnchantMats
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearcherEnchantMats.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearcherEnchantMats.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -411,4 +411,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 6245 $")

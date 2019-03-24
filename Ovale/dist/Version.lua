@@ -28,7 +28,7 @@ local self_printTable = {}
 local self_userVersion = {}
 local self_timer
 local MSG_PREFIX = Ovale.MSG_PREFIX
-local OVALE_VERSION = "8.0.20"
+local OVALE_VERSION = "8.1.0"
 local REPOSITORY_KEYWORD = "@" .. "project-version" .. "@"
 do
     local actions = {

@@ -1,10 +1,10 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: NugEnergy
 ## Notes: Energy monitor
 ## Author: d87
 ## SavedVariables: NugEnergyDB
 ## SavedVariablesPerCharacter: NugEnergyDB_Character
-## Version: 8.0.1
+## Version: 8.1.0
 
 ## X-WoWI-ID: 9099
 

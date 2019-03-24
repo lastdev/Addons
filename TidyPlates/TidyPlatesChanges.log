@@ -1,6 +1,65 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
+Copy command:		cp -R TidyPlates* ~/tidyplates
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp   *.zip
 
+
+See TidyPlatesChanges.log for cumulative changes:
+
+
+
+---------------------------
+6.19.3
+---------------------------
+
+New Features:
+* Core: Damage Absorbs: Absorbs will appear as a lighter shade of the current bar color.
+* Core: Added feature to statusbar widget (Tail Bar) enabling Absorb Display (11.30.2018)
+
+Changes:
+* Unit Filter: Inactive Units: Quest Mobs are considered 'Active', unless you are in an instance
+* Hub: Renamed Color.lua to ColorThreat.lua
+
+
+
+---------------------------
+6.19.2
+---------------------------
+
+* Core: nil frame bugs
+* Hub Widgets: Fixed duplicate code
+* AuraWidget: Fixed "Absolute Corruption"
+* Aura Widget: Purgeable Effects: Needs testing!
+* /hub should now bring you to the current profile panel, rather than always going to "Damage"
+* Debuff coloring should look correct now; Fixed the tga file color
+* Combo Point Widget now uses a single graphical frame, and re-parents to the target nameplate.  
+	- This is to prepare for a large combo widget update
+	- The new widget will be called "Combat Widget", since it'll display more than just combo points
+	- This update, no new features are added; I just want to see if the anchoring system has issues
+* Unit Filter: Removed QuestInfo override on Inactive Units
+
+
+
+---------------------------
+6.19.1
+---------------------------
+
+* Fixed Hub PlaySound Error
+
+---------------------------
+6.19.Alpha2
+---------------------------
+
+* Aura Widget: Migrated to 8.0 UnitAura function 
+
+---------------------------
+6.19.Alpha1
+---------------------------
+
+* HealerTrack - Error Fix - Needs testing
+* Tank Track - Error Fix - Needs Testing
+* Combo Point Widget - Fixed errors, events, combat event update - Needs more testing
+* Changed castbar catcher to use new return value structure (Fixes Statusbar error)
+* Updated sounds to SOUNDKIT ( IG_MAINMENU_OPTION_CHECKBOX_ON = 856)  (Fixes TidyPlatesUtility error)
 
 ---------------------------
 6.18.11

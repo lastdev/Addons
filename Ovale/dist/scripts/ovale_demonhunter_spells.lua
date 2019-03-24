@@ -4,7 +4,7 @@ local __Scripts = LibStub:GetLibrary("ovale/Scripts")
 local OvaleScripts = __Scripts.OvaleScripts
 __exports.register = function()
     local name = "ovale_demonhunter_spells"
-    local desc = "[8.0] Ovale: DemonHunter spells"
+    local desc = "[8.1] Ovale: DemonHunter spells"
     local code = [[Define(annihilation 201427)
 # Slice your target for 227518s1+201428s1 Chaos damage. Annihilation has a 197125h chance to refund 193840s1 Fury.
   SpellInfo(annihilation fury=40)
@@ -28,10 +28,6 @@ Define(chaos_strike 162794)
 # Slice your target for 222031s1+199547s1 Chaos damage. Chaos Strike has a 197125h chance to refund 193840s1 Fury.
   SpellInfo(chaos_strike fury=40)
 
-Define(chaos_strike_havoc 197125)
-# Slice your target for 222031s1+199547s1 Chaos damage. Chaos Strike has a 197125h chance to refund 193840s1 Fury.
-  SpellInfo(chaos_strike_havoc channel=0 gcd=0 offgcd=1)
-  SpellAddBuff(chaos_strike_havoc chaos_strike_havoc=1)
 Define(consume_magic 278326)
 # Consume m1 beneficial Magic effect from the target, removing it and granting you ?c1[s2 Fury][s3/10 Pain].
   SpellInfo(consume_magic cd=10 fury=-20 pain=-20)
@@ -144,7 +140,7 @@ Define(steelskin_potion 251231)
   SpellAddBuff(steelskin_potion steelskin_potion=1)
 Define(vengeful_retreat 198793)
 # Remove all snares and vault away. Nearby enemies take 198813s2 Physical damage and have their movement speed reduced by 198813s1 for 3 seconds.?a203551[rnrn|cFFFFFFFFGenerates (203650s1/5)*10 seconds Fury over 10 seconds if you damage an enemy.|r][]
-  SpellInfo(vengeful_retreat cd=25 duration=1 channel=1 gcd=0.5)
+  SpellInfo(vengeful_retreat cd=25 duration=1 channel=1 gcd=0 offgcd=1)
   SpellAddBuff(vengeful_retreat vengeful_retreat=1)
 Define(blind_fury_talent 1) #21854
 # Eye Beam generates s3/5 Fury every sec. and its duration is increased by s1.
@@ -180,18 +176,20 @@ Define(spirit_bomb_talent 17) #22513
 # Consume up to s2 Soul Fragments within s1 yds and then explode, afflicting nearby enemies with Frailty for 20 seconds and damaging them for 247455s1 Fire per fragment.rnrnYou heal for 247456s1 of all damage you deal to enemies with Frailty.
 Define(trail_of_ruin_talent 7) #22909
 # The final slash of Blade Dance inflicts an additional 258883o1 Chaos damage over 4 seconds.
-Define(unbound_chaos_trait 275144)
+Define(chaotic_transformation_trait 288754)
+Define(revolving_blades_trait 279581)
     ]]
     code = code .. [[
 
 ItemRequire(shifting_cosmic_sliver unusable 1=oncooldown,!metamorphosis_veng,buff,!metamorphosis_veng_buff)	
 
 Define(annihilation 201427)
-	
+    SpellRequire(annihilation add_fury_from_aura -1=buff,thirsting_blades_buff)
 
 	SpellInfo(blade_dance replace death_sweep=buff,metamorphosis_havoc_buff)
 	SpellInfo(blade_dance fury=35 cd=9 cd_haste=melee)
 	SpellInfo(blade_dance add_fury=-20 talent=first_blood_talent)
+    SpellRequire(blade_dance add_fury_from_aura -3=buff,revolving_blades_buff)
 	SpellAddTargetDebuff(blade_dance blade_dance_debuff)
 Define(blade_dance_debuff 258883)
 	SpellInfo(blade_dance_debuff duration=4 tick=1)
@@ -206,7 +204,7 @@ Define(chaos_nova_debuff 179057)
 	SpellInfo(chaos_nova_debuff duration=2)
 
 	SpellInfo(chaos_strike replace annihilation=buff,metamorphosis_havoc_buff)
-	
+	SpellRequire(chaos_strike add_fury_from_aura -1=buff,thirsting_blades_buff)
 
 	SpellInfo(consume_magic cd=10)
 
@@ -219,6 +217,7 @@ Define(darkness 196718)
 
 	SpellInfo(death_sweep fury=35 cd=9 cd_haste=melee)
 	SpellInfo(death_sweep add_fury=-20 talent=first_blood_talent)
+    SpellRequire(death_sweep add_fury_from_aura -3=buff,revolving_blades_buff)
 
 	SpellInfo(demon_spikes cd_haste=melee haste=melee specialization=vengeance cd=20 gcd=0 offgcd=1 charges=2)
 	SpellAddBuff(demon_spikes demon_spikes_buff=1)
@@ -245,17 +244,23 @@ Define(feast_of_souls_buff 207693)
 
 	SpellInfo(fel_rush cd=10 charges=2)
 	SpellAddBuff(fel_rush momentum_buff=1 talent=momentum_talent specialization=havoc)
+	SpellRequire(fel_rush unusable 1=lossofcontrol,root)
 
 	SpellInfo(felblade cd=15 cd_haste=melee fury=-40 pain=-30)
+	SpellRequire(felblade unusable 1=lossofcontrol,root)
 
 	SpellInfo(fiery_brand cd=60 gcd=0)
-	SpellAddTargetDebuff(fiery_brand fiery_brand_debuff=1)
-Define(fiery_brand_debuff 207771)
+	SpellAddTargetDebuff(fiery_brand fiery_brand_debuff=1 talent=!burning_alive_talent)
+    SpellAddTargetDebuff(fiery_brand fiery_demise_debuff=1 talent=burning_alive_talent)
+Define(fiery_brand_debuff 207744)
 	SpellInfo(fiery_brand_debuff duration=8)
-	
+Define(fiery_demise_debuff 207771)
+    SpellInfo(fiery_demise_debuff duration=8)
 Define(frailty_debuff 247456)
 	SpellInfo(frailty_debuff duration=20)
 
+    SpellAddBuff(fracture soul_fragments=2)
+    
 	SpellInfo(immolation_aura cd=15 cd_haste=melee)
 	SpellAddBuff(immolation_aura immolation_aura_buff=1)
 Define(immolation_aura_buff 178740)
@@ -270,9 +275,11 @@ Define(immolation_aura_havoc_buff 258920)
 
 	SpellInfo(infernal_strike cd=20 charges=2 offgcd=1)
 	SpellInfo(infernal_strike add_cd=8 talent=abyssal_strike_talent)
+	SpellRequire(infernal_strike unusable 1=lossofcontrol,root)
 Define(metamorphosis_havoc 191427)
 	SpellInfo(metamorphosis_havoc cd=240)
 	SpellAddBuff(metamorphosis_havoc metamorphosis_havoc_buff=1)
+	SpellRequire(metamorphosis_havoc unusable 1=lossofcontrol,root)
 Define(metamorphosis_havoc_buff 162264)
 	SpellInfo(metamorphosis_havoc_buff duration=30)
 Define(metamorphosis_veng 187827)
@@ -297,12 +304,17 @@ Define(pick_up_fragment 210788)
 	SpellInfo(prepared_buff duration=10)
 Define(razor_spikes_debuff 210003)
 	SpellInfo(razor_spikes_debuff duration=6)
+Define(revolving_blades_buff 279584)
+    SpellInfo(revolving_blades_buff duration=15)
 
-
+    SpellAddBuff(shear soul_fragments=1)
+    
 	SpellInfo(sigil_of_chains cd=90)
 
 	SpellInfo(sigil_of_flame cd=30)
 	SpellInfo(sigil_of_flame cd=24 talent=quickened_sigils_talent)
+Define(sigil_of_flame_concentrated 204513)
+    SpellInfo(sigil_of_flame replaced_by=sigil_of_flame_concentrated talent=concentrated_sigils_talent)
 Define(sigil_of_flame_debuff 204598)
 	SpellInfo(sigil_of_flame_debuff duration=6)
 	SpellInfo(sigil_of_flame_debuff duration=8 talent=concentrated_sigils_talent)
@@ -323,18 +335,19 @@ Define(soul_barrier 263648)
 	SpellAddBuff(soul_barrier soul_fragments=0)
 Define(soul_barrier_buff 263648)
 	SpellInfo(soul_barrier_buff duration=12)
-
 	
 	SpellAddBuff(soul_cleave soul_fragments=-2)
 	SpellAddBuff(soul_cleave feast_of_souls_buff=1 talent=feast_of_souls_talent)
+    SpellAddTargetDebuff(soul_cleave void_reaver_debuff=1 talent=void_reaver_talent)
 Define(soul_fragments 203981)
-	SpellInfo(soul_fragments duration=20)		
 Define(spectral_sight 188501)
 	SpellInfo(spectral_sight cd=30)
 
 	SpellRequire(spirit_bomb unusable 1=buff,!soul_fragments)
-	SpellAddBuff(spirit_bomb soul_fragments=-5)
+	SpellAddBuff(spirit_bomb soul_fragments=0)
 	SpellAddTargetDebuff(spirit_bomb frailty_debuff=1)
+Define(thirsting_blades_buff 278736)
+    SpellInfo(thirsting_blades_buff max_stacks=40)
 Define(throw_glaive_veng 204157)
 	SpellInfo(throw_glaive_veng cd=3 cd_haste=melee)
 Define(throw_glaive_havoc 185123)
@@ -349,7 +362,10 @@ Define(throw_glaive_havoc_debuff 213405)
 	SpellAddTargetDebuff(vengeful_retreat vengeful_retreat_debuff=1)
 Define(vengeful_retreat_debuff 198813)
 	SpellInfo(vengeful_retreat_debuff duration=3)
-
+	SpellRequire(vengeful_retreat unusable 1=lossofcontrol,root)
+Define(void_reaver_debuff 268178)
+    SpellInfo(void_reaver_debuff duration=12)
+	
 #items
 Define(oblivions_embrace_item 151799)
 	SpellInfo(demon_spikes charges=3 if_equipped=oblivions_embrace)
@@ -404,7 +420,8 @@ Define(void_reaver_talent 20)
 # Tags
 SpellInfo(dark_slash tag=main)
 SpellInfo(demon_spikes tag=shortcd)
-SpellInfo(fel_barrage tag=main)
+SpellInfo(immolation_aura_havoc tag=main)
+SpellInfo(fel_barrage tag=shortcd)
 SpellInfo(fel_eruption tag=main)
 SpellInfo(fel_rush tag=main)
 SpellInfo(felblade tag=main)

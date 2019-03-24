@@ -36,12 +36,6 @@ local UNKNOWN = ("(%s)"):format(_G.UNKNOWN)
 local soulstoneList = {}
 
 local combatLogMap = {}
-combatLogMap.SPELL_CAST_START = {
-	-- Feasts
-	[175215] = "Feast", -- Savage Feast (+100)
-	[201351] = "Feast", -- Hearty Feast (+150)
-	[201352] = "Feast", -- Lavish Suramar Feast (+200)
-}
 combatLogMap.SPELL_CAST_SUCCESS = {
 	-- Repair Bots
 	[22700] = "Repair",  -- Field Repair Bot 74A
@@ -78,6 +72,14 @@ combatLogMap.SPELL_CAST_SUCCESS = {
 	[212036] = "MassResurrection", -- Mass Resurrection (Priest)
 	[212051] = "MassResurrection", -- Reawaken (Monk)
 	[212040] = "MassResurrection", -- Revitalize (Druid)
+	-- Bloodlust
+	[2825] = "Bloodlust", -- Bloodlust
+	[32182] = "Bloodlust", -- Heroism
+	[80353] = "Bloodlust", -- Time Warp
+	[264667] = "Bloodlust", -- Primal Rage
+	[178207] = "Bloodlust", -- Drums of Fury (WoD)
+	[230935] = "Bloodlust", -- Drums of the Mountain (Legion)
+	[256740] = "Bloodlust", -- Drums of the Maelstrom (BfA)
 }
 combatLogMap.SPELL_AURA_APPLIED = {
 	-- Taunts
@@ -114,15 +116,22 @@ combatLogMap.SPELL_CREATE = {
 	[88346] = "Portal", -- Tol Barad (Horde)
 	[132620] = "Portal",-- Vale Blossom (Alliance)
 	[132626] = "Portal",-- Vale Blossom (Horde)
-	[176248] = "Portal", -- Stormshield
-	[176242] = "Portal", -- Warspear
+	[176244] = "Portal", -- Warspear
+	[176246] = "Portal", -- Stormshield
 	[120146] = "Portal", -- Dalaran (Crater)
 	[224871] = "Portal", -- Dalaran (Broken Isles)
-
+	[281400] = "Portal", -- Boralus
+	[281402] = "Portal", -- Dazar'alor
+	-- Feasts
+	[201351] = "Feast", -- Hearty Feast (+18)
+	[201352] = "Feast", -- Lavish Suramar Feast (+22)
+	[259409] = "Feast", -- Galley Banquet (+75)
+	[259410] = "Feast", -- Bountiful Captain's Feast (+100)
+	[286050] = "Feast", -- Sanguinated Feast (+100)
 	-- Instant Rituals
 	[29893] = "Feast", -- Create Soulwell (Warlock)
-	[43987] = "Feast", -- Conjure Refreshment Table (Mage)
-	[188036] = "Feast", -- Spirit Cauldron
+	[190336] = "Feast", -- Conjure Refreshment (Mage)
+	[276972] = "Feast", -- Mystical Cauldron
 }
 combatLogMap.SPELL_RESURRECT = {
 	["*"] = "Resurrect",
@@ -144,9 +153,21 @@ combatLogMap.SPELL_AURA_REMOVED = {
 }
 combatLogMap.SPELL_DISPEL = {
 	["*"] = "Dispel",
-	[32375] = "MassDispel", -- friendly dispel? (the main spell id, next two trigger off it)
-	[39897] = "MassDispel", -- offensive dispel?
-	[32592] = "MassDispel", -- why are there so many ids?!
+	[115310] = "MassDispel", -- Revival (Monk)
+	-- Mass Dispel (Priest)
+	[32375] = "MassDispel",
+	[39897] = "MassDispel",
+	[32592] = "MassDispel",
+	-- Arcane Torrent
+	[28730] = "MassDispel",  -- Mage, Warlock
+	[25046] = "MassDispel",  -- Rogue
+	[50613] = "MassDispel",  -- Death Knight
+	[69179] = "MassDispel",  -- Warrior
+	[80483] = "MassDispel",  -- Hunter
+	[129597] = "MassDispel", -- Monk
+	[155145] = "MassDispel", -- Paladin
+	[202719] = "MassDispel", -- Demon Hunter
+	[232633] = "MassDispel", -- Priest
 }
 combatLogMap.SPELL_STOLEN = combatLogMap.SPELL_DISPEL
 combatLogMap.SPELL_INTERRUPT = {
@@ -399,6 +420,7 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 	end
 
 	local extraUnits = {"target", "focus", "focustarget", "mouseover", "boss1", "boss2", "boss3", "boss4", "boss5"}
+	for i = 1, 40 do extraUnits[#extraUnits + 1] = "nameplate"..i end
 	local function getUnit(guid)
 		for i = 1, #extraUnits do
 			local unit = extraUnits[i]
@@ -406,33 +428,39 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 		end
 
 		for unit in module:IterateGroup() do
-			local target = unit .."target"
+			local target = unit.."target"
 			if UnitGUID(target) == guid then return target end
 		end
 	end
 
-	-- stuff I pulled out of my fork of Deadened (Antiarc probably did most of the immunity coding, pretty old stuff)
 	local immunities = {
 		642, -- Divine Shield
 		710, -- Banish
 		1022, -- Blessing of Protection
 		204018, -- Blessing of Spellwarding
+		5277, -- Evasion
+		31224, -- Cloak of Shadows
 		33786, -- Cyclone (PvP)
 		45438, -- Ice Block
-		217832, -- Imprision (PvP)
+		104773, -- Unending Resolve
+		186265, -- Aspect of the Turtle
+		196555, -- Netherwalk
+		221527, -- Imprision (PvP)
 	}
 	local function getMissReason(unit)
 		local name, expires = module:UnitBuffByIDs(unit, immunities)
 		if name then
-			expires = expires and tonumber(("%.1f"):format(expires - GetTime())) or 0
-			if expires < 1 then expires = nil end
+			if expires then
+				expires = tonumber(("%.1f"):format(expires - GetTime()))
+				if expires < 1 then expires = nil end
+			end
 			return name, expires
 		end
 	end
 
 	-- aaand where all the magic happens
 	local FILTER_GROUP = bit_bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
-	local handler = function(_, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId, extraSpellName)
+	local function handler(self, _, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId)
 		-- first check if someone died
 		if event == "UNIT_DIED" or event == "UNIT_DESTROYED" then
 			if soulstoneList[dstName] then
@@ -446,8 +474,8 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 		if not e then return end
 
 		local handler = e[spellId]
-		if handler == nil then handler = e["*"] end
-		if handler and (not module.db.profile.groupOnly or bit_band(bit_bor(srcFlags, dstFlags), FILTER_GROUP) ~= 0) then
+		if handler == nil then handler = e["*"] end -- can be false to ignore
+		if handler and (not self.db.profile.groupOnly or bit_band(bit_bor(srcFlags, dstFlags), FILTER_GROUP) ~= 0) then
 			-- special cases
 			if handler == "AssignOwner" then
 				if bit_band(srcFlags, FILTER_GROUP) ~= 0 then
@@ -455,8 +483,12 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 				end
 				return
 			elseif handler == "Soulstone" then
-				module:Soulstone(dstName)
+				self:Soulstone(dstName)
 				return
+			elseif handler == "Dispel" then
+				if extraSpellId == 1604 then -- Dazed
+					return
+				end
 			elseif handler == "Interrupt" then
 				-- ignore players getting interrupted
 				if bit_band(dstFlags, FILTER_FRIENDLY_PLAYERS) == FILTER_FRIENDLY_PLAYERS then
@@ -464,17 +496,20 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 				end
 			elseif handler == "InterruptCast" then -- not casting alert
 				local unit = getUnit(dstGUID)
-				if not unit or UnitCastingInfo(unit) then return end
-			elseif handler == "InterruptMiss" and extraSpellId == "IMMUNE" then
+				if not unit or UnitCastingInfo(unit) then
+					return
+				end
+			elseif handler == "InterruptMiss" then
 				local unit = getUnit(dstGUID)
-				if not unit or not UnitCastingInfo(unit) then return end -- don't care if the mob is immune if it's not casting
-				local reason, timeleft = getMissReason(unit)
-				if reason then
-					handler = "InterruptImmune"
-					if timeleft then
-						extraSpellId = ("%s - %s, %ss remaining"):format(_G.ACTION_SPELL_MISSED_IMMUNE, reason, timeleft)
-					else
-						extraSpellId = ("%s - %s"):format(_G.ACTION_SPELL_MISSED_IMMUNE, reason)
+				if unit and UnitCastingInfo(unit) then
+					local reason, timeleft = getMissReason(unit)
+					if reason then
+						handler = "InterruptImmune"
+						if timeleft then
+							extraSpellId = ("%s - %s, %ss remaining"):format(_G.ACTION_SPELL_MISSED_IMMUNE, reason, timeleft)
+						else
+							extraSpellId = ("%s - %s"):format(_G.ACTION_SPELL_MISSED_IMMUNE, reason)
+						end
 					end
 				end
 			end
@@ -483,26 +518,26 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 			local srcOutput = ("%s%s"):format(getIconString(srcRaidFlags), getName(srcName, srcGUID, srcFlags, "ff40ff40"))
 			local dstOutput = ("%s%s"):format(getIconString(dstRaidFlags), getName(dstName, dstGUID, dstFlags, "ffff4040"))
 			local spellOutput = GetSpellLink(spellId)
-			local extraSpellOuput
-			if tonumber(extraSpellId) then -- kind of hacky, pretty print the extra spell for interrupts/breaks/dispels
+			local extraSpellOuput = nil
+			if event == "SPELL_DISPEL" or event == "SPELL_STOLEN" or event == "SPELL_INTERRUPT" or event == "SPELL_AURA_BROKEN_SPELL" then
 				extraSpellOuput = GetSpellLink(extraSpellId)
-			elseif (extraSpellId ~= "BUFF" and extraSpellId ~= "DEBUFF") then
-				extraSpellOuput = extraSpellId
+			elseif event == "SPELL_MISSED" then
+				extraSpellOuput = extraSpellId -- missType
 			end
 
 			-- execute!
-			return module[handler](module, srcOutput, dstOutput, spellOutput, extraSpellOuput)
+			return self[handler](self, srcOutput, dstOutput, spellOutput, extraSpellOuput)
 		end
 
 	end
-	combatLogHandler:SetScript("OnEvent", function(self, event)
-		handler(CombatLogGetCurrentEventInfo())
+	combatLogHandler:SetScript("OnEvent", function()
+		handler(module, CombatLogGetCurrentEventInfo())
 	end)
 
 	-- Codex handling
 	local prev = nil
-	function module:UNIT_SPELLCAST_SUCCEEDED(unit, spellName, _, spellCastGUID, spellId)
-		if spellId == 226241 and spellCastGUID ~= prev then -- Codex of the Tranquil Mind
+	function module:UNIT_SPELLCAST_SUCCEEDED(unit, spellCastGUID, spellId)
+		if (spellId == 226241 or spellId == 256230) and spellCastGUID ~= prev then -- Codex of the Tranquil/Quiet Mind
 			prev = spellCastGUID
 			local srcName, srcGUID, srcRaidFlags = self:UnitName(unit), UnitGUID(unit), 0
 			local icon = GetRaidTargetIndex(unit)
@@ -547,8 +582,8 @@ function module:TauntAE(srcOutput, dstOutput, spellOutput)
 	self:SpamMultiCast("taunt", srcOutput, dstOutput, spellOutput)
 end
 
-function module:TauntMiss(srcOutput, dstOutput, spellOutput, extraSpell)
-	self:Spam("taunt", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, _G["ACTION_SPELL_MISSED_"..extraSpell]))
+function module:TauntMiss(srcOutput, dstOutput, spellOutput, missType)
+	self:Spam("taunt", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, _G["ACTION_SPELL_MISSED_"..missType]))
 end
 
 function module:Dispel(srcOutput, dstOutput, spellOutput, extraSpellOuput)
@@ -567,12 +602,12 @@ function module:InterruptCast(srcOutput, dstOutput, spellOutput)
 	self:Spam("interruptMiss", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, L["Not casting"]))
 end
 
-function module:InterruptMiss(srcOutput, dstOutput, spellOutput, extraSpell)
-	self:Spam("interruptMiss", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, _G["ACTION_SPELL_MISSED_"..extraSpell]))
+function module:InterruptMiss(srcOutput, dstOutput, spellOutput, missType)
+	self:Spam("interruptMiss", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, _G["ACTION_SPELL_MISSED_"..missType]))
 end
 
-function module:InterruptImmune(srcOutput, dstOutput, spellOutput, extraSpell)
-	self:Spam("interruptMiss", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, extraSpell))
+function module:InterruptImmune(srcOutput, dstOutput, spellOutput, extraSpellOuput)
+	self:Spam("interruptMiss", L["%s missed %s on %s (%s)"]:format(srcOutput, spellOutput, dstOutput, extraSpellOuput))
 end
 
 do
@@ -604,6 +639,10 @@ do
 		-- setAlive(dstOutput)
 		self:Spam("combatRes", L["%s used %s"]:format(srcOutput, spellOutput))
 	end
+end
+
+function module:Bloodlust(srcOutput, _, spellOutput)
+	self:Spam("bloodlust", L["%s cast %s"]:format(srcOutput, spellOutput))
 end
 
 function module:Portal(srcOutput, _, spellOutput)
@@ -640,8 +679,6 @@ do
 		5384, -- Feign Death
 	}
 
-	local soulstone = GetSpellLink(20707)
-
 	local total = 0
 	local function checkDead(self, elapsed)
 		total = elapsed + total
@@ -658,9 +695,9 @@ do
 					soulstoneList[name] = nil
 				elseif not UnitIsDead(name) and UnitIsConnected(name) and not UnitIsFeignDeath(name) and not module:UnitBuffByIDs(name, buffs) then
 					soulstoneList[name] = nil
-					name = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
-					local srcOutput = ("|cff40ff40%s|r"):format(name)
-					module:Spam("combatRes", L["%s used %s"]:format(srcOutput, soulstone))
+					local srcOutput = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
+					local spellOutput = GetSpellLink(20707) -- Soulstone
+					module:Spam("combatRes", L["%s used %s"]:format(srcOutput, spellOutput))
 				end
 			end
 
@@ -679,11 +716,40 @@ end
 
 
 ---------------------------------------
+-- Who pulled?
+
+do
+	local encounter = nil
+	local encounterStart = 0
+
+	function module:UNIT_FLAGS(unit)
+		if (unit == "player" or unit:match("^raid") or unit:match("^party")) and UnitAffectingCombat(unit) then
+			if encounter and GetTime() - encounterStart < 6 then -- timeout for safety's sake
+				local name = self:UnitName(unit:gsub("pet$", ""))
+				local source = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
+				local boss = ("|cffff8000%s|r"):format(encounter) -- would be nice to turn this into proper EJ link
+				self:Spam("pulled", L["%s engaged %s"]:format(source, boss))
+			end
+			encounter = nil
+			self:UnregisterEvent("UNIT_FLAGS")
+		end
+	end
+
+	function module:ENCOUNTER_START(_, name)
+		encounter = name
+		encounterStart = GetTime()
+		self:RegisterEvent("UNIT_FLAGS")
+	end
+end
+
+
+---------------------------------------
 -- Init
 
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("Alerts", {
 		profile = {
+			pulled = true,
 			crowdControl = true,
 			misdirect = true,
 			taunt = false,
@@ -692,6 +758,7 @@ function module:OnRegister()
 			interruptMiss = false,
 			dispel = false,
 			combatRes = true,
+			bloodlust = true,
 			portal = true,
 			repair = true,
 			feast = true,
@@ -740,7 +807,7 @@ end
 
 function module:PLAYER_ENTERING_WORLD()
 	wipe(petOwnerMap) -- clear out the cache every now and again
-	self:CheckEnable()
+	UpdatePets()
 end
 
 function module:CheckEnable()
@@ -766,6 +833,7 @@ function module:CheckEnable()
 		self:RegisterEvent("GROUP_ROSTER_UPDATE", UpdatePets)
 		self:RegisterEvent("UNIT_PET")
 		self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+		self:RegisterEvent("ENCOUNTER_START")
 		combatLogHandler:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 		UpdatePets()
 	else
@@ -773,6 +841,7 @@ function module:CheckEnable()
 		self:UnregisterEvent("GROUP_ROSTER_UPDATE")
 		self:UnregisterEvent("UNIT_PET")
 		self:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+		self:UnregisterEvent("ENCOUNTER_START")
 		combatLogHandler:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	end
 end
@@ -781,44 +850,48 @@ end
 ---------------------------------------
 -- Options
 
-local function createAlertSettings(alertKey, alertName, alertDescription, alertOrder)
-	if module.db.profile.separateOutputs then
-		return {
-			--name = alertName,
-			name = "", -- side effect of a blank inline group name is no border? i'll take it
-			type = "group",
-			inline = true,
-			order = alertOrder,
-			args = {
-				enable = {
-					name = alertName,
-					desc = alertDescription,
-					type = "toggle",
-					get = function(info) return module.db.profile[alertKey] end,
-					set = function(info, value) module.db.profile[alertKey] = value end,
-					order = 10,
+local createAlertSettings do
+	local order = 0
+	function createAlertSettings(key, name, desc)
+		order = order + 1
+		if module.db.profile.separateOutputs then
+			return {
+				type = "group",
+				--name = name,
+				name = "", -- side effect of a blank inline group name is no border? i'll take it
+				inline = true,
+				order = order,
+				args = {
+					enable = {
+						type = "toggle",
+						name = name,
+						desc = desc,
+						get = function(info) return module.db.profile[key] end,
+						set = function(info, value) module.db.profile[key] = value end,
+						order = 10,
+					},
+					outputSelect = {
+						type = "select",
+						name = L["Output"],
+						desc = L["Set where the alert output is sent."],
+						values = outputValuesWithChannels,
+						get = function(info) return module.db.profile.outputs[key] or module.db.profile.output end,
+						set = function(info, value) module.db.profile.outputs[key] = value:lower() end,
+						disabled = function() return not module.db.profile[key] end,
+						order = 20,
+					},
 				},
-				outputSelect = {
-					name = L["Output"],
-					desc = L["Set where the alert output is sent."],
-					type = "select",
-					values = outputValuesWithChannels,
-					get = function(info) return module.db.profile.outputs[alertKey] or module.db.profile.output end,
-					set = function(info, value) module.db.profile.outputs[alertKey] = value:lower() end,
-					disabled = function() return not module.db.profile[alertKey] end,
-					order = 20,
-				},
-			},
-		}
-	else
-		return {
-			type = "toggle",
-			name = alertName,
-			desc = alertDescription,
-			get = function(info) return module.db.profile[alertKey] end,
-			set = function(info, value) module.db.profile[alertKey] = value end,
-			order = alertOrder,
-		}
+			}
+		else
+			return {
+				type = "toggle",
+				name = name,
+				desc = desc,
+				get = function(info) return module.db.profile[key] end,
+				set = function(info, value) module.db.profile[key] = value end,
+				order = order,
+			}
+		end
 	end
 end
 
@@ -840,7 +913,7 @@ function GetOptions()
 		local _, _, _, _, _, _, shown = _G.GetChatWindowInfo(i)
 		if frame ~= _G.COMBATLOG and (shown or frame.isDocked) then
 			local key = frame == _G.DEFAULT_CHAT_FRAME and "self" or "t"..i
-			outputValuesWithChannels[key] = "ChatFrame: " ..frame.name
+			outputValuesWithChannels[key] = L["ChatFrame: %s"]:format(frame.name)
 		end
 	end
 
@@ -989,14 +1062,16 @@ function GetOptions()
 				type = "group",
 				order = 2,
 				args = {
-					crowdControl = createAlertSettings("crowdControl", L["Crowd Control"], L["Report when a player breaks a crowd control effect."], 1),
-					misdirect = createAlertSettings("misdirect", L["Misdirects"], L["Report who gains Misdirection."], 2),
-					taunt = createAlertSettings("taunt", L["Taunts"], L["Report taunts."], 3),
-					tauntPet = createAlertSettings("tauntPet", L["Pet Taunts"], L["Report pet taunts."], 4),
-					interrupt = createAlertSettings("interrupt", L["Interrupts"], L["Report interrupts."], 5),
-					interruptMiss = createAlertSettings("interruptMiss", L["Missed Interrupts"], L["Report missed interrupts."], 5),
-					dispel = createAlertSettings("dispel", L["Dispels"], L["Report dispels and Spellsteal."], 6),
-					combatRes = createAlertSettings("combatRes", L["Combat Resurrections"], L["Report combat resurrections."], 7),
+					crowdControl = createAlertSettings("crowdControl", L["Crowd Control"], L["Report when a player breaks a crowd control effect."]),
+					misdirect = createAlertSettings("misdirect", L["Misdirects"], L["Report who gains Misdirection."]),
+					taunt = createAlertSettings("taunt", L["Taunts"], L["Report taunts."]),
+					tauntPet = createAlertSettings("tauntPet", L["Pet Taunts"], L["Report pet taunts."]),
+					interrupt = createAlertSettings("interrupt", L["Interrupts"], L["Report interrupts."]),
+					interruptMiss = createAlertSettings("interruptMiss", L["Missed Interrupts"], L["Report missed interrupts."]),
+					dispel = createAlertSettings("dispel", L["Dispels"], L["Report dispels and Spellsteal."]),
+					combatRes = createAlertSettings("combatRes", L["Combat Resurrections"], L["Report combat resurrections."]),
+					bloodlust = createAlertSettings("bloodlust", L["Bloodlust"], L["Report Bloodlust casts."]),
+					pulled = createAlertSettings("pulled", L["Started Encounter"], L["Report the first person to go into combat when starting a boss encounter."]),
 				},
 			},
 
@@ -1006,12 +1081,12 @@ function GetOptions()
 				type = "group",
 				order = 3,
 				args = {
-					feast = createAlertSettings("feast", L["Consumables"], L["Report when a player uses a feast."], 1),
-					repair = createAlertSettings("repair", L["Repair Bots"], L["Report when a player uses a repair bot."], 2),
-					portal = createAlertSettings("portal", L["Portals"], L["Report when a Mage opens a portal."], 3),
-					summon = createAlertSettings("summon", L["Rituals"], L["Report when a player needs assistance summoning an object."], 4),
-					resurrect = createAlertSettings("resurrect", L["Resurrections"], L["Report resurrections."], 5),
-					codex = createAlertSettings("codex", L["Codex"], L["Report when a player uses a Codex of the Tranquil Mind."], 6),
+					feast = createAlertSettings("feast", L["Consumables"], L["Report when a player uses a feast."]),
+					repair = createAlertSettings("repair", L["Repair Bots"], L["Report when a player uses a repair bot."]),
+					portal = createAlertSettings("portal", L["Portals"], L["Report when a Mage opens a portal."]),
+					summon = createAlertSettings("summon", L["Rituals"], L["Report when a player needs assistance summoning an object."]),
+					resurrect = createAlertSettings("resurrect", L["Resurrections"], L["Report resurrections."]),
+					codex = createAlertSettings("codex", L["Codex"], L["Report when a player uses a Codex of the Tranquil Mind."]),
 				},
 			},
 

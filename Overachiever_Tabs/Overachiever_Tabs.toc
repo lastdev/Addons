@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: Overachiever - Tabs
-## Version: 1.0.3
+## Version: 1.0.5
 ## Author: Tuhljin
 ## Notes: Add tabs (Search, Suggestions, etc.) to the Achievements window.
 ## LoadOnDemand: 1

@@ -1,36 +1,128 @@
 local GlobalAddonName, WQLdb = ...
 
+--- some functions
+
+local GetAratiState, GetDarkshoreState
+do
+	local aratiState = nil
+	function GetAratiState()
+		--1: horde; 2 alliance
+		if aratiState then
+			return aratiState
+		end
+		if C_Map.GetBestMapForUnit("player") == 14 then
+			for i=1,40 do
+				local spellID = select(10,UnitAura("player",i))
+				if spellID == 281115 or spellID == 281114 then
+					aratiState = 2
+					return aratiState
+				elseif spellID == 281116 or spellID == 281117 then
+					aratiState = 1
+					return aratiState
+				elseif not spellID then
+					break
+				end
+			end
+		end
+		return UnitFactionGroup("player") == "Alliance" and 2 or 1
+	end
+
+	local darkshoreState = nil
+	function GetDarkshoreState()
+		--1: horde; 2 alliance
+		if darkshoreState then
+			return darkshoreState
+		end
+		if C_Map.GetBestMapForUnit("player") == 62 then
+			for i=1,40 do
+				local spellID = select(10,UnitAura("player",i))
+				if spellID == 281115 or spellID == 281114 then
+					darkshoreState = 2
+					return darkshoreState
+				elseif spellID == 281116 or spellID == 281117 then
+					darkshoreState = 1
+					return darkshoreState
+				elseif not spellID then
+					break
+				end
+			end
+		end
+		return UnitFactionGroup("player") == "Alliance" and 2 or 1
+	end
+end
+
+--- data
+
 WQLdb.TreasureData = {		--x,y,name,type,reward,note,questID if done,special checks func
+	[62] = {
+{0.56527996063232,0.30748003721237,"Alash'anir",2,166432,nil,54696},
+{0.37740075588226,0.84719133377075,"Aman",2,nil,nil,54406},
+{0.57480000000000,0.15960000000000,"Amberclaw",1,nil,nil,54286},
+{0.41666728258133,0.76661956310272,"Athil Dewfire",1,{166803,166449},nil,54431,function() return (UnitFactionGroup("player") ~= "Alliance") and (GetDarkshoreState() == 1) end},
+{0.58489817380905,0.24409544467926,"Athrikus Narassin",2,166784,nil,54279},
+{0.49616008996964,0.24908626079559,"Blackpaw",1,166428,nil,54890},
+{0.41500000000000,0.76700000000000,"Burninator Mark V",1,nil,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+{0.37969249486923,0.76327884197235,"Commander Drald",1,166790,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+{0.37969249486923,0.76327884197235,"Commander Ral'esh",1,166787,nil,54427,function() return (UnitFactionGroup("player") ~= "Alliance") and (GetDarkshoreState() == 1) end},
+{0.39248669147491,0.62232792377472,"Conflagros",2,166451,nil,54233},
+{0.50600000000000,0.32400000000000,"Croz Bloodrage",1,166435,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+{0.43757051229477,0.53581535816193,"Cyclarus",2,166448,nil,54230},
+{0.43455624580383,0.19595342874527,"Glimmerspine",1,nil,nil,54885},
+{0.48351514339447,0.55572640895844,"Granokk",2,nil,nil,54235},
+{0.40909188985825,0.56425130367279,"Gren Tornfur",1,166785,nil,54429},
+{0.50733828544617,0.32470279932022,"Grimhorn",1,166525,nil,54891},
+{0.52402138710022,0.32150042057037,"Hydrath",2,166452,nil,54228},
+{0.41287386417389,0.36067444086075,"Ivus the Forest Lord",2,nil,nil,54861},
+{0.43969452381134,0.48376560211182,"Madfeather",1,nil,nil,54888},
+{0.63500000000000,0.20000000000000,"Moxo the Beheader",1,166434,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+{0.35837829113007,0.81759828329086,"Mrggr'marr",1,nil,nil,54409},
+{0.45226317644119,0.74962311983109,"Onu",2,166453,nil,54291,function() return (UnitFactionGroup("player") ~= "Alliance") and (GetDarkshoreState() == 1) end},
+{0.39900000000000,0.34100000000000,"Orwell Stevenson",1,166528,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+{0.32956749200821,0.83929133415222,"Sapper Odette",1,166788,nil,54452,function() return (UnitFactionGroup("player") ~= "Alliance") and (GetDarkshoreState() == 1) end},
+{0.47633451223373,0.44683212041855,"Scalefiend",1,nil,nil,54894},
+{0.39801687002182,0.32878673076630,"Shadowclaw",1,166435,nil,54892,function() return (UnitFactionGroup("player") ~= "Alliance") and (GetDarkshoreState() == 1) end},
+{0.43531250953674,0.29385536909103,"Shattershard",2,nil,nil,54290},
+{0.40616178512573,0.85275912284851,"Soggoth the Slitherer",2,166454,nil,54321},
+{0.45545989274979,0.59064185619354,"Stonebinder Ssra'vess",1,nil,nil,54248},
+{0.62122869491577,0.16493034362793,"Thelar Moonstrike",1,166790,nil,54252},
+{0.40605354309082,0.82768523693085,"Twilight Prophet Graeme",1,166455,nil,54398},
+{0.62300000000000,0.09800000000000,"Zim'kaga",2,166453,nil,nil,function() return (UnitFactionGroup("player") == "Alliance") and (GetDarkshoreState() == 2) end},
+	},
 	[14] = {	--Arati
 --by varenne, wowhead
-{0.2593,0.3532,"Horrific Apparition",1,163736,"19.4 61.2 if Horde zone control",nil},
-{0.1841,0.2794,"Ragebeak",2,nil,nil,nil},
-{0.2175,0.2217,"Branchlord Aldrus",2,nil,nil,nil},
-{0.1327,0.3534,"Yogursa",2,nil,nil,nil},
-{0.2989,0.4495,"Burning Goliath",2,163691,nil,nil},
-{0.2529,0.4856,"Kovork",1,163750,"Cave at 28.83 45.47",nil},
-{0.2295,0.4961,"Foulbelly",1,163735,"Cave at 28.83 45.47",nil},
-{0.2940,0.5834,"Rumbling Goliath",2,163701,nil,nil},
-{0.3782,0.6135,"Plaguefeather",2,nil,nil,nil},
-{0.4292,0.5660,"Ruul Onestone",1,163741,nil,nil},
-{0.4618,0.5209,"Thundering Goliath",2,163698,nil,nil},
-{0.5080,0.4085,"Singer",1,163738,nil,53525},
-{0.5084,0.3652,"Darbel Montrose",1,nil,nil,nil},
-{0.5707,0.3506,"Echo of Myzrael",2,nil,nil,nil},
-{0.6251,0.3084,"Cresting Goliath",2,163700,nil,nil},
-{0.5694,0.5330,"Venomarus",2,nil,nil,nil},
-{0.6748,0.6058,"Nimar the Slayer",1,163706,nil,nil},
-{0.7953,0.2945,"Geomancer Flintdagger",1,163713,"Cave visible on map",nil},
 {0.6706,0.6589,"Beastrider Kama",1,163644,nil,53504},
-{0.6285,0.8120,"Zalas Witherbark",1,163745,"Cave visible on map",nil},
-{0.5182,0.7562,"Man-Hunter Rog",1,nil,nil,nil},
-{0.4603,0.7672,"Boulderfist Brute",1,nil,nil,nil},
-{0.4931,0.8426,"Kor'gresh Coldrage",1,163744,"West Cave",nil},
-{0.3304,0.3749,"Overseer Krix",2,163646,"Inside a cave",nil},
-{0.5715,0.4575,"Skullripper",2,163645,nil,nil},
-{0.4689,0.7872,"Molok the Crusher",1,163775,nil,nil},
-{0.5104,0.5319,"Fozruk",2,163711,"Patrolling the road",nil},
-{0.4927,0.4005,"Knight-Captain Aldrin",1,163578,"Alliance Friendly",nil,function() return UnitFactionGroup("player") ~= "Alliance" end},
+--{0.4603,0.7672,"Boulderfist Brute",1,nil,nil,nil},
+{0.2175,0.2217,"Branchlord Aldrus",2,163650,nil,53505},
+{0.2989,0.4495,"Burning Goliath",2,163691,nil,53506},
+{0.6251,0.3084,"Cresting Goliath",2,163700,nil,53531},
+{0.5084,0.3652,"Darbel Montrose",1,163652,nil,53507,function() return GetAratiState() == 2 end},
+{0.5040,0.6120,"Darbel Montrose",1,163652,nil,53507,function() return GetAratiState() == 1 end},
+{0.5707,0.3506,"Echo of Myzrael",2,163677,nil,53508},
+{0.2295,0.4961,"Foulbelly",1,163735,"Cave at 28.83 45.47",53509},
+{0.5104,0.5319,"Fozruk",2,163711,"Patrolling the road",53510},
+{0.7953,0.2945,"Geomancer Flintdagger",1,163713,"Cave visible on map",53511},
+{0.2593,0.3532,"Horrific Apparition",1,163736,nil,53512,function() return GetAratiState() == 2 end},
+{0.1940,0.6120,"Horrific Apparition",1,163736,nil,53512,function() return GetAratiState() == 1 end},
+{0.4931,0.8426,"Kor'gresh Coldrage",1,163744,"West Cave",53513},
+{0.2529,0.4856,"Kovork",1,163750,"Cave at 28.83 45.47",53514},
+{0.5182,0.7562,"Man-Hunter Rog",1,163689,nil,53515},
+{0.4689,0.7872,"Molok the Crusher",2,163775,nil,53516},
+{0.6748,0.6058,"Nimar the Slayer",1,163706,nil,53517},
+{0.3304,0.3749,"Overseer Krix",2,163646,"Inside a cave",53518,function() return GetAratiState() == 2 end},
+{0.2740,0.5590,"Overseer Krix",2,163646,"Inside a cave",53518,function() return GetAratiState() == 1 end},
+{0.3782,0.6135,"Plaguefeather",2,163690,nil,53519},
+{0.1841,0.2794,"Ragebeak",2,163689,nil,53016,function() return GetAratiState() == 2 end},
+{0.1190,0.5220,"Ragebeak",2,163689,nil,53016,function() return GetAratiState() == 1 end},	--horde control
+{0.4292,0.5660,"Ruul Onestone",1,163741,nil,53524},
+{0.2940,0.5834,"Rumbling Goliath",2,163701,nil,53523},
+{0.5080,0.4085,"Singer",1,163738,nil,53525,function() return GetAratiState() == 2 end},
+{0.5070,0.5750,"Singer",1,163738,nil,53525,function() return GetAratiState() == 1 end},
+{0.5715,0.4575,"Skullripper",2,163645,nil,53526},
+{0.4618,0.5209,"Thundering Goliath",2,163698,nil,nil},	--53023
+{0.5694,0.5330,"Venomarus",2,163648,nil,53528},
+{0.1327,0.3534,"Yogursa",2,163684,nil,nil},	--53015
+{0.6285,0.8120,"Zalas Witherbark",1,163745,"Cave visible on map",53530},
+{0.4927,0.4005,"Knight-Captain Aldrin",1,163578,"Alliance Friendly",53088,function() return UnitFactionGroup("player") ~= "Alliance" end},
 {0.5397,0.5696,"Doomrider Helgrim",1,163579,"Horde Friendly",nil,function() return UnitFactionGroup("player") == "Alliance" end},
 {0.3709,0.3921,"Doom's Howl",2,163828,"World Boss Horde Friendly",nil,function() return UnitFactionGroup("player") == "Alliance" end},
 {0.3709,0.3921,"The Lion's Roar",2,163829,"World Boss Alliance Friendly",nil,function() return UnitFactionGroup("player") ~= "Alliance" end},
@@ -470,4 +562,9 @@ WQLdb.WorldQuestPopupBlacklist = {
 	[43943]=true,	[45379]=true,	[45070]=true,	[45068]=true,	[45069]=true,	[45071]=true,	[45072]=true,	[43756]=true,	[43772]=true,	[43767]=true,	[43328]=true,	[43778]=true,	[43764]=true,	[43769]=true,	[43753]=true,	[43774]=true,	[45046]=true,	[45047]=true,	[45048]=true,	[51637]=true,	[51641]=true,	[51642]=true,	[51640]=true,	[51639]=true,	[51633]=true,	[51636]=true,	[51626]=true,	[51627]=true,	[51630]=true,	[51625]=true,	[51628]=true,	[51629]=true,	[43327]=true,	[43755]=true,	[43766]=true,	[43771]=true,	[43777]=true,	[43325]=true,	[43753]=true,	[43764]=true,	[43769]=true,	[43774]=true,	[51638]=true,	[51636]=true,	[52472]=true,	[53369]=true,	[51632]=true,	[51635]=true,	[51636]=true,
 	[50981]=true,[50982]=true,[50983]=true,[50984]=true,[50989]=true,[50994]=true,[50995]=true,[50996]=true,[50998]=true,[50999]=true,[51003]=true,[51005]=true,[51006]=true,[51007]=true,[51010]=true,[51011]=true,[51012]=true,[51013]=true,[51014]=true,[52331]=true,[52332]=true,[52333]=true,[52335]=true,[52336]=true,[52338]=true,[52339]=true,[52340]=true,[52341]=true,[52344]=true,[52346]=true,[52348]=true,[52349]=true,[52350]=true,[52353]=true,[52355]=true,[52356]=true,[52358]=true,[52359]=true,[52361]=true,[52362]=true,[52363]=true,[52364]=true,[52367]=true,[52368]=true,[52369]=true,[52371]=true,[52372]=true,[52373]=true,[52374]=true,[52389]=true,[52392]=true,[52393]=true,[52394]=true,[52398]=true,[52404]=true,[52405]=true,[52406]=true,[52408]=true,[52410]=true,[52416]=true,[52417]=true,[52421]=true,[52424]=true,[52425]=true,[52426]=true,[50987]=true,[52345]=true,[41206]=true,[41223]=true,[41235]=true,[41240]=true,[41267]=true,[41272]=true,[41277]=true,[41282]=true,[41287]=true,[41292]=true,[41297]=true,[41302]=true,[41311]=true,[41312]=true,[41313]=true,[41314]=true,[41326]=true,[41338]=true,[41344]=true,[41350]=true,[41633]=true,[41634]=true,[41635]=true,[41636]=true,[41637]=true,[41638]=true,[41639]=true,[41640]=true,[41641]=true,[41642]=true,[41643]=true,[41644]=true,[41645]=true,[41646]=true,[41647]=true,[41648]=true,[41649]=true,[41650]=true,[41651]=true,[41652]=true,[41653]=true,[41654]=true,[41655]=true,[41656]=true,[41657]=true,[41658]=true,[41659]=true,[41660]=true,[41661]=true,[41662]=true,[41663]=true,[41664]=true,[41665]=true,[41666]=true,[41667]=true,[41668]=true,[41669]=true,[41670]=true,[41671]=true,[41672]=true,[41673]=true,[41674]=true,[41675]=true,[41676]=true,[41677]=true,[41678]=true,[41679]=true,[41680]=true,[48318]=true,[48323]=true,[48337]=true,[48349]=true,[48359]=true,[48363]=true,[48364]=true,[48373]=true,[50985]=true,[50991]=true,[50992]=true,[50993]=true,[51000]=true,[51002]=true,[51004]=true,[51008]=true,[51015]=true,[52334]=true,[52337]=true,[52342]=true,[52347]=true,[52357]=true,[52360]=true,[52395]=true,[52396]=true,[52407]=true,[52411]=true,[52414]=true,[52418]=true,[52419]=true,[52420]=true,[52423]=true,[52427]=true,
 	[51017]=true,[51021]=true,[51022]=true,[51023]=true,[51024]=true,[51025]=true,[51026]=true,[51027]=true,[51028]=true,[51029]=true,[51030]=true,[51031]=true,[51032]=true,[51033]=true,[51034]=true,[51035]=true,[51036]=true,[51037]=true,[51038]=true,[51039]=true,[51040]=true,[51041]=true,[51042]=true,[51043]=true,[51044]=true,[51045]=true,[51046]=true,[51047]=true,[51048]=true,[51049]=true,[51050]=true,[51051]=true,[52375]=true,[52376]=true,[52377]=true,[52378]=true,[52379]=true,[52380]=true,[52381]=true,[52382]=true,[52383]=true,[52385]=true,[52386]=true,[52387]=true,[52388]=true,[48358]=true,[41207]=true,[41224]=true,[41237]=true,[41288]=true,[41293]=true,[41298]=true,[41303]=true,[41315]=true,[41316]=true,[41317]=true,[41318]=true,[41327]=true,[41339]=true,[41345]=true,[41351]=true,[48338]=true,[48360]=true,[48374]=true,[52384]=true,
+}
+
+WQLdb.WorldQuestBfAAssaultQuests = {
+	[54137]=true,[53885]=true,[54132]=true,[53939]=true,[53883]=true,[54135]=true,
+	[53701]=true,[53711]=true,[54134]=true,[54136]=true,[54138]=true,[51982]=true,
 }

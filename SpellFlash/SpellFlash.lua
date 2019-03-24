@@ -38,14 +38,12 @@ local ActionButton_OverlayGlowAnimOutFinished = ActionButton_OverlayGlowAnimOutF
 local ActionHasRange = ActionHasRange
 local GetActionCooldown = GetActionCooldown
 local GetActionInfo = GetActionInfo
-local GetGlyphSocketInfo = GetGlyphSocketInfo
 local GetInventoryItemBroken = GetInventoryItemBroken
 local GetInventoryItemID = GetInventoryItemID
 local GetInventorySlotInfo = GetInventorySlotInfo
 local GetItemCooldown = GetItemCooldown
 local GetItemCount = GetItemCount
 local GetNetStats = GetNetStats
-local GetNumGlyphSockets = GetNumGlyphSockets
 local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetPetActionCooldown = GetPetActionCooldown
@@ -121,13 +119,14 @@ function a.print(...)
 end
 
 local MELEESPELL = {
-	DEATHKNIGHT = 45462--[[Plague Strike]],
-	DRUID = 33917--[[Mangle]],
-	MONK = 100780--[[Jab]],
-	PALADIN = 35395--[[Crusader Strike]],
-	ROGUE = 1752--[[Sinister Strike]],
+	DEATHKNIGHT = 49998--[[Death Strike]],
+	DRUID = 1822--[[Rake]],
+--	DRUID = 33917--[[Mangle]],
+	MONK = 116705--[[Spear Hand Strike]],
+	PALADIN = 96231--[[Rebuke]],
+	ROGUE = 1766--[[Kick]],
 	SHAMAN = 73899--[[Primal Strike]],
-	WARRIOR = 78--[[Heroic Strike]],
+	WARRIOR = 6552--[[Pummel]],
 }
 
 local HEALERCLASS = {
@@ -231,26 +230,27 @@ a.PetActions = {
 
 -- http://www.wowhead.com/npcs?filter=cr=34;crs=0;crv=270
 a.DummyIDNumbers = {
-	[24792] = "Advanced Training Dummy",
 	[1921] = "Combat Dummy",
-	[32542] = "Disciple's Training Dummy",
-	[25297] = "Drill Dummy",
-	[32546] = "Ebon Knight's Training Dummy",
-	[17578] = "Hellfire Training Dummy",
-	[54344] = "Highlord's Nemesis Trainer",
-	[32547] = "Highlord's Nemesis Trainer",
-	[32541] = "Initiate's Training Dummy",
-	[32545] = "Initiate's Training Dummy",
-	[33229] = "Melee Target",
-	[19139] = "Nagrand Target Dummy",
+	[4952] = "Theramore Combat Dummy",
+	[5652] = "Undercity Practice Dummy",
 	[16211] = "Naxxramas Combat Dummy",
+	[17578] = "Hellfire Training Dummy",
+	[19139] = "Nagrand Target Dummy",
+	[24792] = "Advanced Training Dummy",
+	[25225] = "Practice Dummy",
+	[25297] = "Drill Dummy",
+	[32541] = "Initiate's Training Dummy",
+	[32542] = "Disciple's Training Dummy",
+	[32545] = "Initiate's Training Dummy",
+	[32546] = "Ebon Knight's Training Dummy",
+	[32547] = "Highlord's Nemesis Trainer",
+	[54344] = "Highlord's Nemesis Trainer",
+	[33229] = "Melee Target",
 	[84991] = "Pet Training Post",
 	[42328] = "Practice Dummy",
-	[25225] = "Practice Dummy",
 	[31146] = "Raider's Training Dummy",
 	[18504] = "Silvermoon Practice Dummy",
 	[43560] = "Smilin' Timmy Sticks",
-	[4952] = "Theramore Combat Dummy",
 	[38038] = "Tiki Target",
 	[64446] = "Training Dummy",
 	[60197] = "Training Dummy",
@@ -273,19 +273,18 @@ a.DummyIDNumbers = {
 	[79987] = "Training Dummy",
 	[70245] = "Training Dummy",
 	[89078] = "Training Dummy",
-	[5652] = "Undercity Practice Dummy",
 	[32543] = "Veteran's Training Dummy",
 	[87320] = "Raider's Training Dummy <Damage>",
 	[87329] = "Raider's Training Dummy <Tanking>",
 	[87762] = "Raider's Training Dummy <Damage>",
 	[88837] = "Raider's Training Dummy <Tanking>",
+	[92164] = "Training Dummy <Damage>",
+	[92165] = "Dungeoneer's Training Dummy <Damage>",
 	[92166] = "Raider's Training Dummy <Damage>",
-	[87320] = "Raider's Training Dummy <Damage>",
+	[92168] = "Dungeoneer's Training Dummy <Tanking>",
 	[113860] = "Raider's Training Dummy <Damage>",
 	[113864] = "Raider's Training Dummy <Damage>",
 	[113964] = "Raider's Training Dummy <Tanking>",
-	[92165] = "Dungeoneer's Training Dummy <Damage>",
-	[92168] = "Dungeoneer's Training Dummy <Tanking>",
 	[113966] = "Dungeoneer's Training Dummy <Damage>",
 	[113859] = "Dungeoneer's Training Dummy <Damage>",
 	[113863] = "Dungeoneer's Training Dummy <Damage>",
@@ -295,7 +294,6 @@ a.DummyIDNumbers = {
 	[111824] = "Training Dummy",
 	[113862] = "Training Dummy <Damage>",
 	[113858] = "Training Dummy <Damage>",
-	[92164] = "Training Dummy <Damage>",
 	[102045] = "Rebellious Wrathguard <Dungeoneer's Training Dummy>",
 	[101956] = "Rebellious Fel Lord <Raider's Training Dummy>",
 	[102048] = "Rebellious Felguard <Training Dummy>",
@@ -319,6 +317,19 @@ a.DummyIDNumbers = {
 	[107555] = "Bound Void Wraith <Training Dummy>",
 	[107556] = "Bound Void Walker <Raider's Training Dummy>",
 	[107202] = "Reanimated Monstrosity <Raider's Training Dummy>",
+	[126712] = "Training Dummy",
+	[127019] = "Training Dummy",
+	[131983] = "Raider's Training Dummy <Damage>",
+	[131975] = "Dungeoneer's Training Dummy <Damage>",
+	[131985] = "Dungeoneer's Training Dummy <Damage>",
+	[131990] = "Raider's Training Dummy <Tanking>",
+	[131992] = "Dungeoneer's Training Dummy <Tanking>",
+	[143509] = "Training Dummy",
+	[144078] = "Dungeoneer's Training Dummy <Tanking>",
+	[144081] = "Training Dummy <Damage>",
+	[144082] = "Training Dummy <PVP Damage>",
+	[144085] = "Training Dummy <Damage>",
+	[144086] = "Raider's Training Dummy <Damage>",
 }
 
 
@@ -340,6 +351,7 @@ local SettingsListenerFunctions = {}
 local OtherAurasFunctions = {}
 local OtherAurasFromSpell = {}
 local OtherAurasSpellFromAura = {}
+local PowerFromSpell = {}
 local SPELL_DELAY = {}
 local ALL_SPELL_DELAY = {}
 local LAST_SPELL_TRAVEL_TIME_START = {}
@@ -1708,6 +1720,25 @@ function s.SetOtherAuras(Spell, Aura, Delete)
 	end
 end
 
+function s.SetPowerFromSpell(Spell, amount, powertype)
+	local Spell = s.SpellName(Spell, 1)
+	if Spell then
+		PowerFromSpell[Spell] = {}
+		PowerFromSpell[Spell].amount = amount
+		PowerFromSpell[Spell].type = powertype
+	end
+end
+
+function s.GetPowerFromSpell(Spell)
+	local Spell = s.SpellName(Spell, 1)
+	if Spell then
+		if PowerFromSpell[Spell] then
+			return PowerFromSpell[Spell].amount, PowerFromSpell[Spell].type
+		end
+	end
+	return 0
+end
+
 function s.AddSettingsListener(Function)
 	if type(Function) == "function" then
 		SettingsListenerFunctions[Function] = true
@@ -1982,94 +2013,6 @@ function s.CastTime(SpellName)
 	return 0
 end
 
--- 6.0.2 dropped any API for getting this data, so we need to grovel around in
--- the guts of the tooltip to get it.  Blizzard, why? whyyyy?
-local SpellCostTip = CreateFrame('GameTooltip')
-local SpellCostText = SpellCostTip:CreateFontString()
-local PowerGenerationText = SpellCostTip:CreateFontString()
-SpellCostTip:AddFontStrings(
-        SpellCostTip:CreateFontString(),
-        SpellCostTip:CreateFontString())
-SpellCostTip:AddFontStrings(
-        SpellCostText,
-        SpellCostTip:CreateFontString())
-SpellCostTip:AddFontStrings(
-        SpellCostTip:CreateFontString(),
-        SpellCostTip:CreateFontString())
-SpellCostTip:AddFontStrings(
-        SpellCostTip:CreateFontString(),
-        SpellCostTip:CreateFontString())
-SpellCostTip:AddFontStrings(
-        PowerGenerationText,
-        SpellCostTip:CreateFontString())
-
--- patterns to extract power by type, extra brackets because gsub has multiple
--- return values, and we don't want the '1' sneaking into our tables.
-local PowerPatterns = {
-		["WARRIOR"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Rage]  = (RAGE_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["PALADIN"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.HolyPower]  = (HOLY_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["HUNTER"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Focus]  = (FOCUS_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["ROGUE"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.ComboPoints]  = (COMBO_POINTS_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["PRIEST"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Insanity] = (INSANITY_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["DEATHKNIGHT"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Runes]  = (RUNE_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.RunicPower]  = (RUNIC_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["SHAMAN"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Maelstrom] = (MAELSTROM_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["MAGE"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.ArcaneCharges] = (ARCANE_CHARGES_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["WARLOCK"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.SoulShards]  = (SOUL_SHARDS_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["MONK"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Chi] = (CHI_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["DRUID"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Mana]  = (MANA_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Rage]  = (RAGE_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Energy]  = (ENERGY_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.ComboPoints]  = (COMBO_POINTS_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.LunarPower]  = (LUNAR_POWER_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-		["DEMONHUNTER"] = {
-	        [Enum.PowerType.HealthCost] = (HEALTH_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Fury] = (FURY_COST:gsub('%%s', '([.,%%d]+)', 1)),
-	        [Enum.PowerType.Pain] = (PAIN_COST:gsub('%%s', '([.,%%d]+)', 1)),
-		},
-}
-
 function s.SpellCost(SpellName)
         if not SpellName then return 0 end
 
@@ -2079,77 +2022,13 @@ function s.SpellCost(SpellName)
 			return 0
         end
 
-        -- make the tooltip work...
-        SpellCostTip:SetOwner(WorldFrame, 'ANCHOR_NONE')
-        SpellCostTip:SetSpellByID(id)
+        local costs = GetSpellPowerCost(id)
 
-        local text = SpellCostText:GetText()
-        if not text then
-			return 0
-        end
-
-        -- if not specified, default to our main power type.
-        local patterns = PowerPatterns[CLASS]
-        if not patterns then
-			-- if you encounter this, fix the table?
-			return 0
-        end
-
-        for powertype, pattern in pairs(patterns) do
-			local match = text:match(pattern)
-			if match then
-				return 0 + match:gsub('%D', ''), powertype
-			end
-        end
-
-        return 0
-end
-
-function s.PowerGeneration(SpellName)
-        if not SpellName then return 0 end
-
-        local _, _, _, _, _, _, id = GetSpellInfo(SpellName)
-
-        if not id then
-			return 0
-        end
-
-        -- make the tooltip work...
-        SpellCostTip:SetOwner(WorldFrame, 'ANCHOR_NONE')
-        SpellCostTip:SetSpellByID(id)
-
-        local text = PowerGenerationText:GetText()
-        if not text then
-			return 0
-        end
-
-        -- if not specified, default to our main power type.
-        local patterns = PowerPatterns[CLASS]
-        if not patterns then
-			-- if you encounter this, fix the table?
-			return 0
-        end
-
-        for powertype, pattern in pairs(patterns) do
-			local match = text:match(pattern)
-			if match then
-				return 0 + match:gsub('%D', ''), powertype
-			end
-        end
-
-        return 0
-end
-
-function s.HasGlyph(GlyphName)
-	local GlyphName = s.SpellName(GlyphName, 1)
-	if GlyphName then
-		for i=1,GetNumGlyphSockets() do
-			if s.SpellName((select(4, GetGlyphSocketInfo(i))), 1) == GlyphName then
-				return true
-			end
+        for index,value in pairs(costs) do
+			return value.cost, value.type
 		end
-	end
-	return false
+
+		return 0
 end
 
 function s.MeleeDistance(unit)
@@ -2215,7 +2094,7 @@ function s.SpellInRange(SpellName, unit)
 		end
 		return nil
 	end
-	local SpellName = s.SpellName(SpellName)
+	local SpellName = GetSpellInfo(SpellName)
 	if SpellName and IsSpellInRange(SpellName, unit) == 1 then
 		return 1
 	end
@@ -2232,7 +2111,7 @@ function s.SpellHasRange(SpellName)
 		end
 		return nil
 	end
-	local SpellName = s.SpellName(SpellName)
+	local SpellName = GetSpellInfo(SpellName)
 	if SpellName and SpellHasRange(SpellName) then
 		return 1
 	end
@@ -2759,6 +2638,24 @@ function s.Power(unit, ...)
 	return UnitPower(s.UnitSelection(unit), ...) or 0
 end
 
+function s.MyModifiedPower(powerType, unmodified)
+	local power = UnitPower("player", powerType, unmodified) or 0
+	local name = UnitCastingInfo("player")
+	if name then
+		local modPower, modType = s.GetPowerFromSpell(name)
+		if  modType == powerType then
+			power = power + s.If(unmodified, modPower * 10, modPower)
+		end
+		modPower, modType = s.SpellCost(name)
+		if  modType == powerType then
+			power = power - s.If(unmodified, modPower * 10, modPower)
+		end
+		power = max(0, power)
+		power = min(UnitPowerMax("player", powerType, unmodified), power)
+	end
+	return power
+end
+
 function s.MaxPower(unit, ...)
 	return UnitPowerMax(s.UnitSelection(unit), ...) or 0
 end
@@ -3270,13 +3167,20 @@ function s.CheckIfSpellCastable(z)
 	local Lag = select(3, GetNetStats()) / 1000
 	local DoubleLag = Lag * 2
 	local CastingTimeLeft = s.GetCasting(nil, "player")
+	local castingSpellName = UnitCastingInfo("player")
 	local CastRegenPower = 0
 	if not z.NoPowerCheck and cost and cost > 0 and CastingTimeLeft > 0 then
 		local Regen, activeRegen = GetPowerRegen()
 		if s.InCombat then
 			Regen = activeRegen
 		end
-		CastRegenPower = floor(Regen * CastingTimeLeft)
+		if UnitPowerType("player") == powertype then
+			CastRegenPower = CastRegenPower + floor(Regen * CastingTimeLeft)
+		end
+		local generatePower, generateType = s.GetPowerFromSpell(castingSpellName)
+		if  generateType == powertype then
+			CastRegenPower = CastRegenPower + generatePower
+		end
 	end
 	if z.NoStopChannel then
 		if type(z.NoStopChannel) == "table" or type(z.NoStopChannel) == "string" or ( type(z.NoStopChannel) == "number" and z.NoStopChannel > 1 ) then
@@ -3689,7 +3593,7 @@ function s.CheckIfVehicleSpellCastable(z)
 	return ( z.EvenIfNotUsable or isUsable ) and ( z.NoPowerCheck or not notEnoughPower )
 		and ( SUPPRESS_SPEED_CHECK or not z.NotWhileMoving or not s.Moving("vehicle") )
 		and ( duration <= 1.5 or cooldown <= Lag + CastingTimeLeft or ( globalcooldown and cooldown <= 1.5 and cooldown <= globalcooldown ) )
-		and ( SUPPRESS_RANGE_CHECK or z.NoRangeCheck or UnitIsUnit(z.Unit, "player") or UnitIsUnit(z.Unit, "vehicle") or not ActionHasRange(slot) or IsActionInRange(slot, z.Unit) == 1 )
+		and ( SUPPRESS_RANGE_CHECK or z.NoRangeCheck or UnitIsUnit(z.Unit, "player") or UnitIsUnit(z.Unit, "vehicle") or not ActionHasRange(slot) or IsActionInRange(slot, z.Unit) )
 		and ( not z.EnemyTargetNeeded or s.Enemy(z.Unit) )
 		and ( not z.TargetThatUsesManaNeeded or s.UsesMana(z.Unit) )
 		and ( not z.Interrupt or s.GetCastingOrChanneling(nil, z.Unit, 1) > (CastingOrChanneling or (cooldown + z.CastTime)) + DoubleLag )

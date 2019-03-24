@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 7.7.6112 (SwimmingSeadragon)
-	Revision: $Id: CoreMain.lua 6112 2018-08-29 01:26:34Z none $
+	Version: 8.1.6201 (SwimmingSeadragon)
+	Revision: $Id: CoreMain.lua 6201 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -99,11 +99,13 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 	tooltip:SetEmbed(false)
 
 	local modules = AucAdvanced.GetAllModules()
-
 	local L = AucAdvanced.localizations
-
-	if AucAdvanced.Settings.GetSetting("tooltip.marketprice.show") then
-		local market, seen = AucAdvanced.API.GetMarketValue(saneLink)
+	local market, seen
+	local doMarketprice, doDeposit = AucAdvanced.Settings.GetSetting("tooltip.marketprice.show"), AucAdvanced.Settings.GetSetting("core.tooltip.depositcost")
+	if doMarketprice or doDeposit then
+		market, seen = AucAdvanced.API.GetMarketValue(saneLink)
+	end
+	if doMarketprice then
 		if not market then
 			tooltip:AddLine(L"ADV_Interface_MarketPrice" ..": ".. L"ADV_Tooltip_NotAvailable")--Market Price // Not Available
 		else
@@ -143,9 +145,10 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 		end
 	end
 
-	if AucAdvanced.Settings.GetSetting("core.tooltip.depositcost") then
+	if doDeposit then
 		local duration = AucAdvanced.Settings.GetSetting("core.tooltip.depositduration")
-		local deposit = GetDepositCost(saneLink, duration, nil, 1)
+
+		local deposit = AucAdvanced.Post.GetDepositCost(saneLink, duration, 1, market, 1)
 		if not deposit then
 			tooltip:AddLine(L"ADV_Tooltip_UnknownDepositCost", .2, .4, .6)
 		else
@@ -153,7 +156,8 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 			local text = format(L"ADV_Tooltip_HourDepositCost", hours)
 			tooltip:AddLine(text..": ", deposit, .8, 1, .6)
 			if quantity > 1 and AucAdvanced.Settings.GetSetting("tooltip.marketprice.stacksize") then
-				local stackdeposit = GetDepositCost(saneLink, duration, nil, quantity) -- for now we won't worry if stacksize > maxstack: assume GetDepositCost will handle it
+				local stackprice = (market or 0) * quantity
+				local stackdeposit = AucAdvanced.Post.GetDepositCost(saneLink, duration, 1, stackprice, quantity)
 				if stackdeposit and stackdeposit ~= deposit then
 					tooltip:AddLine(text.." x"..tostring(quantity)..": ", stackdeposit, .8, 1, .6)
 				end
@@ -420,5 +424,5 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreMain.lua $", "$Rev: 6112 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreMain.lua $", "$Rev: 6201 $")
 AucAdvanced.CoreFileCheckOut("CoreMain")

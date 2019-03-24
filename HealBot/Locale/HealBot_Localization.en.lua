@@ -147,6 +147,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PETHEALS                = "Pets"
     HEALBOT_OPTIONS_GROUPHEALS              = "Group";
     HEALBOT_OPTIONS_TANKHEALS               = "Main tanks";
+    HEALBOT_OPTIONS_SINGLETANK              = "Single tank";
     HEALBOT_OPTIONS_PRIVATETANKS            = "Private main tanks";
     HEALBOT_OPTIONS_TARGETHEALS             = "Targets";
     HEALBOT_OPTIONS_EMERGENCYHEALS          = "Raid";
@@ -193,7 +194,8 @@ function HealBot_Lang_enALL()
     HEALBOT_TOOLTIP_NONE                    = "none available";
     HEALBOT_TOOLTIP_CORPSE                  = "Corpse of ";
     HEALBOT_TOOLTIP_CD                      = " (CD ";
-    HEALBOT_TOOLTIP_SECS                    = "s)";
+    HEALBOT_TOOLTIP_SECS                    = " sec)";
+    HEALBOT_TOOLTIP_MINS                    = " min)";
     HEALBOT_WORDS_SEC                       = "sec";
     HEALBOT_WORDS_CAST                      = "Cast";
     HEALBOT_WORDS_UNKNOWN                   = "Unknown";
@@ -209,8 +211,12 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Show health on bar";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Include incoming heals";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Separate incoming heals";
+    HEALBOT_OPTIONS_BARHEALTHALLINCHEALS    = "Always Include incoming heals";
+    HEALBOT_OPTIONS_BARHEALTHALLSEPHEALS    = "Always Separate incoming heals";
     HEALBOT_OPTIONS_BARHEALTHINCALL         = "Include incoming heals and absorbs"
     HEALBOT_OPTIONS_BARHEALTHSEPALL         = "Separate incoming heals and absorbs"
+    HEALBOT_OPTIONS_BARHEALTHALLINCALL      = "Always include incoming heals and absorbs"
+    HEALBOT_OPTIONS_BARHEALTHALLSEPALL      = "Always separate incoming heals and absorbs"
     HEALBOT_OPTIONS_BARHEALTH1              = "as delta";
     HEALBOT_OPTIONS_BARHEALTH2              = "as percentage";
     HEALBOT_OPTIONS_TIPTEXT                 = "Tooltip information";
@@ -265,7 +271,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_IGNOREDEBUFFCOOLDOWN    = "When cure spell CoolDown > 1.5 secs (GCD)";
     HEALBOT_OPTIONS_IGNOREDEBUFFFRIEND      = "When caster is known as friend";
 
-    HEALBOT_OPTIONS_RANGECHECKFREQ          = "Range, Aura and Aggro check frequency";
+    HEALBOT_OPTIONS_RANGECHECKFREQ          = "Internal Timers and Updates";
 
     HEALBOT_OPTIONS_HIDEPARTYFRAMES         = "Hide party frames";
     HEALBOT_OPTIONS_HIDEPLAYERTARGET        = "Include player and target";
@@ -296,7 +302,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_AGGROBAR                 = "Bar"
     HEALBOT_OPTION_AGGROTXT                 = ">> Text <<"
     HEALBOT_OPTION_AGGROIND                 = "Indicator"
-    HEALBOT_OPTION_BARUPDFREQ               = "Refresh Multiplier"
+    HEALBOT_OPTION_BARUPDFREQ               = "Refresh Speed"
     HEALBOT_OPTION_USEFLUIDBARS             = "Use fluid bars"
     HEALBOT_OPTIONS_RELOADUIMSG             = "This option requires a UI Reload, Reload now?"
 
@@ -321,7 +327,16 @@ function HealBot_Lang_enALL()
     HEALBOT_TOOLTIP_TARGETBAR               = "Target Bar"
     HEALBOT_OPTIONS_MYTARGET                = "My Targets"
 
-    HEALBOT_DISCONNECTED_TEXT               = "[ DC ]"
+    HEALBOT_DISCONNECTED_LABEL              = "Disconnected"
+    HEALBOT_DISCONNECTED_TAG                = "[ DC ] "
+    HEALBOT_DEAD_LABEL                      = "Dead"
+    HEALBOT_DEAD_TAG                        = "[ RIP ] "
+    HEALBOT_OUTOFRANGE_LABEL                = "Out Of Range"
+    HEALBOT_OUTOFRANGE_TAG                  = "[ OOR ] "
+    HEALBOT_RESERVED_LABEL                  = "Reserved"
+    HEALBOT_RESERVED_TAG                    = "[ R ] "
+    HEALBOT_TAGS                            = "Tags"
+    
     HEALBOT_OPTIONS_SHOWUNITBUFFTIME        = "Show my buffs";
     HEALBOT_OPTIONS_TOOLTIPUPDATE           = "Constantly update";
     HEALBOT_OPTIONS_BUFFSTEXTTIMER          = "Show buff before it expires";
@@ -330,6 +345,8 @@ function HealBot_Lang_enALL()
 
     HEALBOT_OPTIONS_NOTIFY_MSG              = "Message"
     HEALBOT_WORDS_YOU                       = "you";
+    HEALBOT_WORDS_MORECPU                   = "More CPU";
+    HEALBOT_WORDS_LESSCPU                   = "Less CPU";
     HEALBOT_NOTIFYOTHERMSG                  = "Casting #s on #n";
 
     HEALBOT_OPTIONS_HOTPOSITION             = "Icon position"
@@ -338,10 +355,13 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_HOTTEXTDURATION         = "Duration"
     HEALBOT_OPTIONS_ICONSCALE               = "Icon Scale"
     HEALBOT_OPTIONS_ICONTEXTSCALE           = "Icon Text Scale"
+    HEALBOT_OPTIONS_MAXICONS                = "Max Icons"
+    
 
     HEALBOT_OPTIONS_AGGROBARSIZE            = "Aggro bar size"
     HEALBOT_OPTIONS_DOUBLETEXTLINES         = "Double text lines"
     HEALBOT_OPTIONS_TEXTALIGNMENT           = "Text Alignment"
+    HEALBOT_OPTIONS_MAXCHARS                = "Max Characters"
     HEALBOT_VEHICLE                         = "Vehicle"
     HEALBOT_WORDS_ERROR                     = "Error"
     HEALBOT_SPELL_NOT_FOUND	                = "Spell Not Found"
@@ -462,6 +482,7 @@ function HealBot_Lang_enALL()
     HEALBOT_CHAT_CONFIRMSPELLRESET          = "Spells have been reset"
     HEALBOT_CHAT_CONFIRMCURESRESET          = "Cures have been reset"
     HEALBOT_CHAT_CONFIRMBUFFSRESET          = "Buffs have been reset"
+    HEALBOT_CHAT_CONFIRMICONRESET           = "Icons have been reset"
     HEALBOT_CHAT_POSSIBLEMISSINGMEDIA       = "Unable to receive all Skin settings - Possibly missing SharedMedia, download from curse.com"
     HEALBOT_CHAT_MACROSOUNDON               = "Sound not suppressed when using auto trinkets"
     HEALBOT_CHAT_MACROSOUNDOFF              = "Sound suppressed when using auto trinkets"
@@ -505,7 +526,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_TOOLTIPSHOWHOT          = "Show active monitored HoT details"
     HEALBOT_WORDS_MIN                       = "min"
     HEALBOT_WORDS_MAX                       = "max"
-    HEALBOT_CHAT_SELFPETSON                 = "Self Pet switched on"
+    HEALBOT_CHAT_SELFPETSON                 = "Self Pet switched on - This option increases CPU usage"
     HEALBOT_CHAT_SELFPETSOFF                = "Self Pet switched off"
     HEALBOT_WORD_PRIORITY                   = "Priority"
     HEALBOT_VISIBLE_RANGE                   = "Within 100 yards"
@@ -526,6 +547,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_TAB_TEXT                = "Bar text"
     HEALBOT_OPTIONS_AGGRO3COL               = "Aggro bar\ncol"..HEALBOT_enWORD_COLOUR_SUFFIX
     HEALBOT_OPTIONS_AGGROFLASHFREQ          = "Flash frequency"
+    HEALBOT_OPTIONS_WORD_FASTER             = "Faster"
+    HEALBOT_OPTIONS_WORD_SLOWER             = "Slower"
     HEALBOT_OPTIONS_AGGROFLASHALPHA         = "Flash opacity"
     HEALBOT_OPTIONS_SHOWDURATIONFROM        = "Show duration from"
     HEALBOT_OPTIONS_SHOWDURATIONWARN        = "Duration warning from"
@@ -540,6 +563,7 @@ function HealBot_Lang_enALL()
     HEALBOT_CMD_RESETSPELLS                 = "Reset spells"
     HEALBOT_CMD_RESETCURES                  = "Reset cures"
     HEALBOT_CMD_RESETBUFFS                  = "Reset buffs"
+    HEALBOT_CMD_RESETICONS                  = "Reset icons"
     HEALBOT_CMD_RESETBARS                   = "Reset bar position"
     HEALBOT_CMD_SUPPRESSSOUND               = "Toggle suppress sound when using auto trinkets"
     HEALBOT_CMD_SUPPRESSERRORS              = "Toggle suppress errors when using auto trinkets"
@@ -561,7 +585,6 @@ function HealBot_Lang_enALL()
     HEALBOT_CP_MACRO_BASE                   = "Base macro name"
     HEALBOT_CP_MACRO_SAVE                   = "Last saved at: "
     HEALBOT_CP_STARTTIME                    = "Protect duration on logon"
-    HEALBOT_WORD_RESERVED                   = "Reserved"
     HEALBOT_OPTIONS_COMBATPROT              = "Combat Protection"
     HEALBOT_COMBATPROT_PARTYNO              = "bars Reserved for Party"
     HEALBOT_COMBATPROT_RAIDNO               = "bars Reserved for Raid"
@@ -587,6 +610,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_CUSTOM_ALLMAGIC         = "All Magic"
     HEALBOT_OPTIONS_CUSTOM_ALLCURSE         = "All Curse"
     HEALBOT_OPTIONS_CUSTOM_ALLPOISON        = "All Poison"
+    HEALBOT_OPTIONS_CUSTOM_ALLBOSS          = "All Boss"
+    HEALBOT_OPTIONS_CUSTOM_ALLBOSSSTRICT    = "Strict Mode"
     HEALBOT_OPTIONS_CUSTOM_CASTBY           = "Cast By"
 
     HEALBOT_BLIZZARD_MENU                   = "Blizzard menu"
@@ -956,7 +981,7 @@ function HealBot_Lang_InitVars()
         [HEALBOT_CUSTOM_CAT_CUSTOM_MISC]       = 1,
 
         --Class Profession & Harmful Debuffs
-        --[HEALBOT_DEBUFF_SAVING_GRACE]      = 11, --Priest 
+        --[HEALBOT_DEBUFF_SAVING_GRACE]      = 11, --Priest
         --[HEALBOT_DARK_BARGAIN]             = 3, --Warlock
         [HEALBOT_SHROUD_OF_PURGATORY]      = 11, --Death Knight
         [HEALBOT_DEBUFF_ROCKET_FUEL_LEAK]  = 10, --Engineering
@@ -977,87 +1002,9 @@ function HealBot_Lang_InitVars()
 	Y-Z 14
 	]]
 
-    --Mythic+ Affixs
-	[HEALBOT_DEBUFF_BURST]                    = 2,
-    [HEALBOT_DEBUFF_GRIEVOUS_WOUND]           = 5,
-    [HEALBOT_DEBUFF_NECROTIC_ROT]             = 8,
-    [HEALBOT_DEBUFF_QUAKE]                    = 10,
-	[HEALBOT_DEBUFF_SANGUINE_ICHOR]           = 11,	
-
-	--Updated Legion Expansion (Antorus, The Burning Throne) By Ariá Of Silvermoon EU
-	--Varimathras
-	[HEALBOT_DEBUFF_MISERY]                   = 8,
-    [HEALBOT_DEBUFF_MARKED_PRAY]              = 8,
-    [HEALBOT_DEBUFF_NECROTIC_EMBRACE]         = 8,
-	[HEALBOT_DEBUFF_ECHOES_OF_DOOM]           = 4,
-	--Aggramar  
-	[HEALBOT_DEBUFF_TAESHALACHS_REACH]        = 11,
-    [HEALBOT_DEBUFF_FOE_BREAKER]              = 4,
-    [HEALBOT_DEBUFF_SCORCHING_BLAZE]          = 11,
-	[HEALBOT_DEBUFF_BLAZING_ERUPTION]         = 2,
-    [HEALBOT_DEBUFF_WAKE_OF_FLAME]            = 13,
-	[HEALBOT_DEBUFF_MOLTEN_REMNANTS]          = 8,
-	[HEALBOT_DEBUFF_RAVENOUS_BLAZE]           = 10,
-	--Portal Keeper Hasabel
-	[HEALBOT_DEBUFF_REALITY_TEAR]             = 10,
-    [HEALBOT_DEBUFF_ACIDIC_WEB]               = 2,
-    [HEALBOT_DEBUFF_FLAMES_OF_XOROTH]         = 4,
-	[HEALBOT_DEBUFF_EVERBURNING_FLAMES]       = 4,
-    [HEALBOT_DEBUFF_FELSILK_WRAP]             = 4,
-	[HEALBOT_DEBUFF_LEECH_ESSENCE]            = 7,
-	--The Coven of Shivarra
-	[HEALBOT_DEBUFF_FIERY_STRIKE]             = 4,
-    [HEALBOT_DEBUFF_WHIRLING_SABER]           = 13,
-	[HEALBOT_DEBUFF_FULMINATING_PULSE]        = 4,
-	[HEALBOT_DEBUFF_FLASHFREEZE]              = 4,
-    [HEALBOT_DEBUFF_CHILLED_BLOOD]            = 3,
-	[HEALBOT_DEBUFF_ORB_OF_FROST]             = 9,
-    [HEALBOT_DEBUFF_COSMIC_GLARE]             = 3,	
-	--Felhounds of Sargeras 
-	[HEALBOT_DEBUFF_DESOLATE_GAZE]            = 3,
-    [HEALBOT_DEBUFF_SINGED]                   = 11,
-	[HEALBOT_DEBUFF_WEIGHT_OF_DARKNESS]       = 13,
-	[HEALBOT_DEBUFF_SIPHONED]                 = 11,
-    [HEALBOT_DEBUFF_ENFLAMED]                 = 4,
-	[HEALBOT_DEBUFF_SMOULDERING]              = 11,
-    [HEALBOT_DEBUFF_DECAY]                    = 3,
-	--Garothi Worldbreaker
-    [HEALBOT_DEBUFF_LOCKED_ON]                = 7,
-    [HEALBOT_DEBUFF_ANNIHILATION]             = 2,
-    [HEALBOT_DEBUFF_DECIMATION]               = 3,
-	--Antoran High Command 
-	[HEALBOT_DEBUFF_EXPLOIT_WEAKNESS]         = 4,
-    [HEALBOT_DEBUFF_ENTROPIC_BLAST]           = 4,
-	[HEALBOT_DEBUFF_PSYCHIC_ASSAULT]          = 9,
-	--Kin'garoth 
-	[HEALBOT_DEBUFF_FORGING_STRIKE]           = 4,
-    [HEALBOT_DEBUFF_DEMOLISHED]               = 3,
-	[HEALBOT_DEBUFF_DECIMATION]               = 3,
-    [HEALBOT_DEBUFF_DEMOLISH]                 = 3,
-	[HEALBOT_DEBUFF_ECHOES_OF_DOOM]           = 4,
-	--Imonar the Soulhunter
-	[HEALBOT_DEBUFF_SHOCK_LANCE]              = 11,
-	[HEALBOT_DEBUFF_EMPOWERED_SHOCK_LANCE]    = 4,
-	[HEALBOT_DEBUFF_SHOCKED]                  = 11,
-    [HEALBOT_DEBUFF_SEVER]                    = 11,
-	[HEALBOT_DEBUFF_CHARGED_BLAST]            = 3,
-	[HEALBOT_DEBUFF_SHRAPNEL_BLAST]           = 11,
-    [HEALBOT_DEBUFF_EMPOWERED_SHRAPNEL_BLAST] = 4,
-	[HEALBOT_DEBUFF_SEARED_SKIN]              = 11,
-	--Eonar the Life-Binder
-	[HEALBOT_DEBUFF_RAIN_OF_FEL]              = 10,
-	[HEALBOT_DEBUFF_SPEAR_OF_DOOM]            = 11,
-	--Argus the Unmaker
-	[HEALBOT_DEBUFF_SOULBLIGHT]               = 11,
-    [HEALBOT_DEBUFF_SWEEPING_SCYTHE]          = 11,
-	[HEALBOT_DEBUFF_SOULBURST]                = 11,
-	[HEALBOT_DEBUFF_SOULBOMB]                 = 11,
-    [HEALBOT_DEBUFF_EDGE_OF_OBILTERATION]     = 4,
-	[HEALBOT_DEBUFF_COSMIC_BEACON]            = 3,
-    [HEALBOT_DEBUFF_COSMIC_SMASH]             = 3,
-    [HEALBOT_DEBUFF_EMBER_OF_RAGE]            = 4,
-	[HEALBOT_DEBUFF_DEADLY_SCYTHE]            = 3,
-	[HEALBOT_DEBUFF_WITHERING_ROOTS]          = 13,  
+    [HEALBOT_DEBUFF_FORBEARANCE]              = 4,
+    [HEALBOT_DEBUFF_WEAKENED_SOUL]            = 13,
+    [HEALBOT_SHADOW_TOUCHED]                  = 11,
 	}
 end
 

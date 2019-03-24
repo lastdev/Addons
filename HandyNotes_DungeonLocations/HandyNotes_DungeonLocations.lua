@@ -114,6 +114,24 @@ end
 
 do
 	local tablepool = setmetatable({}, {__mode = 'k'})
+	
+	local function deepCopy(object)
+		local lookup_table = {}
+		local function _copy(object)
+			if type(object) ~= "table" then
+				return object
+			elseif lookup_table[object] then
+				return lookup_table[object]
+			end
+			local new_table = {}
+			lookup_table[object] = new_table
+			for index, value in pairs(object) do
+				new_table[_copy(index)] = _copy(value)
+			end
+			return setmetatable(new_table, getmetatable(object))
+		end
+			return _copy(object)
+	end
 
 	local function iter(t, prestate)
 		if not t then return end
@@ -138,6 +156,7 @@ do
 			
 			local allLocked = true
 			local anyLocked = false
+			if value.name == nil then value.name = value.id end
 			local instances = { strsplit("\n", value.name) }
 			for i, v in pairs(instances) do
 				if (not LOCKOUTS[v] and not LOCKOUTS[alterName[v]]) then
@@ -157,7 +176,11 @@ do
 				alpha = db.zoneAlpha
 			end
 			
-			return state, nil, icon, db.zoneScale, alpha
+			--print('Minimap', t.minimapUpdate, legionInstancesDiscovered[value.id])
+			if not legionInstancesDiscovered[value.id] or t.minimapUpdate then
+			 return state, nil, icon, db.zoneScale, alpha
+			end
+			state, value = next(data, state)
 		end
 		wipe(t)
 		tablepool[t] = true
@@ -169,7 +192,6 @@ do
 	local function iterCont(t, prestate)
 		if not t then return end
 		if not db.continent then return end
-
 		local zone = t.C[t.Z]
 		local data = nodes[zone]
 		local state, value
@@ -181,6 +203,7 @@ do
 						coordToDungeon[state] = value
 					end
 					local icon, alpha
+
 					if (value.type == "Dungeon") then
 						icon = iconDungeon
 					elseif (value.type == "Raid") then
@@ -228,13 +251,13 @@ do
 	end
 
 	function pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
-		local C = HandyNotes:GetContinentZoneList(uiMapId) -- Is this a continent?
-		--print(uiMapId)
+		local C = deepCopy(HandyNotes:GetContinentZoneList(uiMapId)) -- Is this a continent?
+		-- I copy the table so I can add in the continent map id
 		if C then
+			table.insert(C, uiMapId)
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
 			tbl.C = C
-			table.insert(tbl.C, uiMapId) -- Did this because otherwise nodes only on continent maps don't show up
 			tbl.Z = next(C)
 			tbl.contId = uiMapId
 			return iterCont, tbl, nil
@@ -243,6 +266,8 @@ do
 			--print('zone')
 			local tbl = next(tablepool) or {}
 			tablepool[tbl] = nil
+			--print(isMinimapUpdate)
+			tbl.minimapUpdate = isMinimapUpdate
 			if (isMinimapUpdate and minimap[uiMapId]) then
 				tbl.data = minimap[uiMapId]
 			else
@@ -297,7 +322,7 @@ function pluginHandler:OnClick(button, pressed, mapFile, coord)
   end
   
   if (not dungeonID) then return end
-  --print(dungeonID)
+  --dungeonID)
   local name, _, _, _, _, _, _, link = EJ_GetInstanceInfo(dungeonID)
   if not link then return end
   local difficulty = string.match(link, 'journal:.-:.-:(.-)|h') 
@@ -315,6 +340,7 @@ local defaults = {
   continent = true,
   tomtom = true,
   journal = true,
+  checkForPOI = false,
   lockouts = true,
   lockoutgray = true,
   uselockoutalpha = false,
@@ -327,6 +353,7 @@ local defaults = {
   hidePandaria = false,
   hideDraenor = false,
   hideBrokenIsles = false,
+  hideBfa = false,
   show = {
    Dungeon = true,
    Raid = true,
@@ -345,11 +372,8 @@ local function updateStuff()
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
- self:CheckForPOIs()
- updateStuff()
-end
-
-function Addon:UPDATE_INSTANCE_INFO()
+ self.faction = UnitFactionGroup("player")
+ --print(self.faction)
  self:CheckForPOIs()
  updateStuff()
 end
@@ -412,6 +436,12 @@ function Addon:PLAYER_LOGIN()
    name = L["Journal Integration"],
    desc = L["Allow left click to open journal to dungeon or raid"],
    order = 2,
+  },
+  checkForPOI = {
+   type = "toggle",
+   name = L["Don't show discovered dungeons"],
+   desc = L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."],
+   order = 2.1,
   },
   showheader = {
    type = "header",
@@ -532,6 +562,13 @@ function Addon:PLAYER_LOGIN()
    order = 26.7,
    set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
   },
+  hideBfA = {
+   type = "toggle",
+   name = L["Hide Battle for Azeroth"],
+   desc = L["Hide all BfA nodes from the map"],
+   order = 26.7,
+   set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+  },
  },
 }
 
@@ -543,15 +580,10 @@ function Addon:PLAYER_LOGIN()
  self:PopulateTable()
  self:PopulateMinimap()
  self:ProcessTable()
- --self:ProcessExtraInfo()
- 
- --name, description, bgImage, buttonImage, loreImage, dungeonAreaMapID, link = EJ_GetInstanceInfo([instanceID])
- -- Populate Dungeon/Raid names based on Journal
  
  updateLockouts()
+ self:CheckForPOIs()
  Addon:RegisterEvent("PLAYER_ENTERING_WORLD") -- Check for any lockout changes when we zone
- Addon:RegisterEvent("UPDATE_INSTANCE_INFO")
- --Addon:RegisterEvent("WORLD_MAP_UPDATE") -- For the mess that is the legion stuff I've done
 end
 
 -- I only put a few specific nodes on the minimap, so if the minimap is used in a zone then I need to add all zone nodes to it except for the specific ones
@@ -692,7 +724,7 @@ nodes[69] = { -- Feralas
   id = 230,
   lfgid = 34,
   type = "Dungeon",
-  hideOnContinent = true,
+  --hideOnContinent = true,
  }, -- Dire Maul, probably dire maul east
  [60403070] = {
   id = 230,
@@ -1085,7 +1117,7 @@ nodes[102] = { -- Zangarmarsh
  --[48903570] = { 260,  type = "Dungeon" }, -- Slave Pens World 34204370
  --[51903280] = { 748,  type = "Raid" }, -- Serpentshrine Cavern World 35104280
  [50204100] = {
-  id = { 260, 262, 748 },
+  id = { 260, 261, 262, 748 },
   type = "Mixed",
   hideOnMinimap = true,
  }, -- Mixed Location
@@ -1266,6 +1298,7 @@ nodes[113] = { -- Northrend
  [47501750] = {
   id = { 757, 284 },
   type = "Mixed",
+  showOnContinent = true,
  }, -- Trial of the Crusader and Trial of the Champion
 }
 end
@@ -1799,6 +1832,96 @@ if (not minimap[641]) then
  }
 end
 end
+
+if (not self.db.profile.hideBfA) then
+nodes[862] = { } -- Zuldazar
+nodes[863] = { } -- Nazmir
+nodes[864] = { } -- Vol'Dun
+nodes[895] = { } -- Tiragarde Sound
+nodes[896] = { } -- Drustvar
+nodes[942] = { } -- Stormsong Valley
+nodes[1165] = { } -- Dazar'alor
+nodes[1169] = { } -- Tol Dagor
+
+nodes[862][43323947] = {
+ id = 968,
+ type = "Dungeon",
+}
+
+nodes[862][39227137] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE ALLIANCE
+
+nodes[862][55995989] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE HORDE
+
+nodes[862][37463948] = {
+ id = 1041,
+ type = "Dungeon",
+}
+
+nodes[863][51386483] = {
+ id = 1022,
+ type = "Dungeon",
+} -- The Underrot
+
+nodes[863][53886268] = {
+ id = 1031,
+ type = "Raid",
+} -- Uldir
+
+nodes[864][51932484] = {
+ id = 1030,
+ type = "Dungeon",
+} -- Temple of Sethraliss
+
+nodes[895][84457887] = {
+ id = 1001,
+ type = "Dungeon",
+} -- Freehold
+
+nodes[1165][44049256] = {
+ id = 1012,
+ type = "Dungeon",
+} -- The MOTHERLODE HORDE
+
+nodes[1169][39576833] = {
+ id = 1002,
+ type = "Dungeon",
+} -- Tol Dagor
+
+nodes[896][33681233] = {
+ id = 1021,
+ type = "Dungeon",
+} -- Waycrest Manor
+
+
+nodes[942][78932647] = {
+ id = 1036,
+ type = "Dungeon",
+} -- Shrine of Storm
+
+nodes[895][88305105] = {
+ id = 1023,
+ type = "Dungeon",
+} -- Siege of Boralus
+
+	--if (self.faction == "Alliance") then
+		nodes[895][74752350] = {
+		 id = 1023, -- LFG 1700, 1701
+		 type = "Dungeon",
+		} -- Siege of Boralus
+		--[[
+		nodes[1161] = { } -- Boralus
+		nodes[1161][71961540] = {
+		 id = 1023, -- LFG 1700, 1701
+		 type = "Dungeon",
+		} -- Siege of Boralus ]]--
+--	end
+end
 end
 
 
@@ -2013,21 +2136,21 @@ end
 
 -- Looks through the legions maps and checks if the default blizzard thingies are visible.
 function Addon:CheckForPOIs()
+ if (not db.checkForPOI) then return end -- The Pin enumeration seems to cause taint so disabled by default fo rnow
  if (WorldMapFrame:IsVisible()) then return end -- This function will interrupt the user if map is open while we do stuff
  local needsUpdate = false
- local LegionInstanceMapIDs = { 1015, 1017, 1018, 1024, 1033, 1170, 1171 }
- for k,v in pairs(LegionInstanceMapIDs) do --FIXME
-  --SetMapByID(v)  
-  --[[for i=1,GetNumMapLandmarks() do
-   local landmarkType, name, description, _, _, _, mapLinkID = C_WorldMap.GetMapLandmarkInfo(i)
-   if (landmarkType == LE_MAP_LANDMARK_TYPE_DUNGEON_ENTRANCE) then
-   --print(name, description, mapLinkID)
-    if (not legionInstancesDiscovered[mapLinkID]) then needsUpdate = true end
-	legionInstancesDiscovered[mapLinkID] = true
-    --print (name, mapLinkID, landmarkType, description)
-   end
-  end ]]--
- end 
+ local LegionBfaInstanceMapIDs = { 627, 630, 634, 641, 646, 650, 680, 862, 863, 864, 895, 896, 942, 1169 }
+ for k,v in pairs(LegionBfaInstanceMapIDs) do
+  WorldMapFrame:SetMapID(v)
+  for pin in WorldMapFrame:EnumeratePinsByTemplate("DungeonEntrancePinTemplate") do
+   local instanceId = pin.journalInstanceID
+   if not legionInstancesDiscovered[instanceId] then
+    --print(pin.name, 'Discovered')
+    legionInstancesDiscovered[instanceId] = true
+    needsUpdate = true
+  end
+ end
+end 
  
  if (needsUpdate) then self:FullUpdate() end
 end

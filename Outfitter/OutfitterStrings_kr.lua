@@ -1,4 +1,4 @@
-﻿if GetLocale() == "koKR" then	
+if GetLocale() == "koKR" then	
 	Outfitter.cTitle = "Outfitter"
 	Outfitter.cTitleVersion = Outfitter.cTitle.." "..Outfitter.cVersion
 

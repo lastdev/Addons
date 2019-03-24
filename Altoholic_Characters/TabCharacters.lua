@@ -284,9 +284,7 @@ local function OnRarityChange(self)
 end
 
 local function OnQuestHeaderChange(self)
-	local headerIndex = self.value
-
-
+	AltoholicTabCharacters.QuestLog:SetCategory(self.value or 0)
 	ns:ViewCharInfo(VIEW_QUESTS)
 end
 
@@ -494,12 +492,22 @@ local function QuestsIcon_Initialize(self, level)
 	local currentCharacterKey = ns:GetAltKey()
 	if not currentCharacterKey then return end
 	
+	local questLog = AltoholicTabCharacters.QuestLog
+	
 	DDM_AddTitle(format("%s / %s", QUESTS_LABEL, DataStore:GetColoredCharacterName(currentCharacterKey)))
-	-- DDM_Add(QUEST_LOG, VIEW_QUESTS, OnViewChange, nil, (currentView == VIEW_QUESTS))
-
-	DDM_Add(ALL, 0, OnQuestHeaderChange)
+	DDM_Add(ALL, 0, OnQuestHeaderChange, nil, (questLog:GetCategory() == 0))
+	
+	-- get the list of quest headers/categories
+	local sortedHeaders = {}
 	for headerIndex, header in pairs(DataStore:GetQuestHeaders(currentCharacterKey)) do
-		DDM_Add(header, headerIndex, OnQuestHeaderChange)
+		table.insert(sortedHeaders, { name = header, index = headerIndex })
+	end
+	-- sort them
+	table.sort(sortedHeaders, function(a, b) return a.name < b.name end)
+
+	-- then add them to the drop-down
+	for _, v in pairs(sortedHeaders) do
+		DDM_Add(v.name, v.index, OnQuestHeaderChange, nil, (questLog:GetCategory() == v.index))
 	end
 	
 	DDM_AddTitle("|r ")
@@ -900,9 +908,8 @@ function addon:DATASTORE_RECIPES_SCANNED(event, sender, tradeskillName)
 end
 
 function addon:DATASTORE_QUESTLOG_SCANNED(event, sender)
-	-- addon.Quests:InvalidateView()
-	-- addon.Quests:Update()
-
-	AltoholicTabCharacters.QuestLog:Update()
+	if AltoholicTabCharacters.QuestLog:IsVisible() then 
+		AltoholicTabCharacters.QuestLog:Update()
+	end
 end
 

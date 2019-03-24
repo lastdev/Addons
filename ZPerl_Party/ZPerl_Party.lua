@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1096 $")
+end, "$Revision: 1121 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -1207,11 +1207,6 @@ function XPerl_Party_Events:UNIT_COMBAT(...)
 	elseif (damage and damage > 0) then
 		XPerl_Party_CombatFlash(self, 0, true)
 	end
-end
-
--- UNIT_HEALTH
-function XPerl_Party_Events:UNIT_HEALTH()
-	XPerl_Party_UpdateHealth(self)
 end
 
 -- UNIT_MAXHEALTH

@@ -55,7 +55,7 @@ local source = {
 		["GROUP_ROSTER_UPDATE"] = function(self, addon) 
 			local n = GetNumGroupMembers()
 			if self.raid == 0 and n > 1 then
-				SendAddonMessage("oRA", "GETMT", "RAID")
+				C_ChatInfo.SendAddonMessage("oRA", "GETMT", "RAID")
 			end
 			self.raid = n
 		end,

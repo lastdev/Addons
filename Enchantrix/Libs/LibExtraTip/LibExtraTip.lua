@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 local LIBNAME = "LibExtraTip"
 local VERSION_MAJOR = 1
-local VERSION_MINOR = 344
+local VERSION_MINOR = 345
 -- Minor Version cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
 
@@ -37,7 +37,7 @@ local LIBSTRING = LIBNAME.."_"..VERSION_MAJOR.."_"..VERSION_MINOR
 local lib = LibStub:NewLibrary(LIBNAME.."-"..VERSION_MAJOR, VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/LibExtraTip/LibExtraTip.lua $","$Rev: 6056 $","5.15.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/LibExtraTip/LibExtraTip.lua $","$Rev: 6203 $","5.15.DEV.", 'auctioneer', 'libs')
 
 -- Call function to deactivate any outdated version of the library.
 -- (calls the OLD version of this function, NOT the one defined in this
@@ -1015,7 +1015,8 @@ end
 
 -- Sets all the complex spell details
 local function SetSpellDetail(reg, link)
-	local name, subname, icon, ctime, minRange, maxRange, spellID = GetSpellInfo(link)
+	local name, _, icon, ctime, minRange, maxRange, spellID = GetSpellInfo(link)
+	local subname = GetSpellSubtext(spellID)
 	reg.additional.name = name
 	reg.additional.link = link
 	reg.additional.rank = subname

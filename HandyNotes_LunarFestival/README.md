@@ -1,20 +1,24 @@
-HandyNotes - Lunar Festival
-===========================
+# HandyNotes - Lunar Festival
 
+Marks the locations of Lunar Festival elders on the worldmap and minimap.
 
-What it does
-------------
+[![Twitter](https://img.shields.io/twitter/follow/ravendwyr.svg?style=popout&label=Twitter)](https://twitter.com/Ravendwyr)
+[![Discord](https://img.shields.io/discord/299308204393889802.svg?style=popout&label=Discord)](https://discord.gg/XC2REFu)
+[![Version](https://img.shields.io/github/tag/ethancentaurai/handynotes_lunarfestival.svg?style=popout&label=Version)](https://www.wowace.com/projects/handynotes_lunarfestival/files)
+[![Tracker](https://img.shields.io/github/issues/ethancentaurai/handynotes_lunarfestival.svg?style=popout&label=Issues)](https://github.com/EthanCentaurai/HandyNotes_LunarFestival/issues)
 
-This addon displays locations of unvisited Elders on the worldmap and minimap.
+***
+
+## The Quick Intro
+
+This addon displays locations of unvisited elders on the worldmap and minimap.
 If you also have [TomTom](http://www.curse.com/addons/wow/tomtom), you can right-click on a marker to create a Waypoint arrow.
 
-This addon is the successor to [TourGuide - The Lunar Festival](https://github.com/EthanCentaurai/TourGuide_LunarFestival), re-written as a HandyNotes plug-in due to TourGuide being broken and abandoned.
+This addon is the successor to [TourGuide - The Lunar Festival](https://github.com/EthanCentaurai/TourGuide_LunarFestival).
 
 Requires [HandyNotes](http://www.curse.com/addons/wow/handynotes) to work.
 
-
-Configuration
--------------
+## Configuration
 
 There are a few options you can modify, including:
 
@@ -22,22 +26,6 @@ There are a few options you can modify, including:
 * Icon transparency.
 * Show all icons, even if you have already visited that Elder.
 
-
-Translations
-------------
+## Translations
 
 This addon should work for everyone regardless of language, but most of the text is currently only in English.
-
-
-Feedback
---------
-
-If you have any comments, bug reports or feature requests, please leave a comment here or open a ticket on [WoWace](http://www.wowace.com/addons/handynotes_lunarfestival/tickets/) or [GitHub](https://github.com/EthanCentaurai/HandyNotes_LunarFestival/issues).
-
-
-* * *
-
-
-* Visit my [website](http://www.ethancentaurai.com/).
-* Follow me on [Twitter](http://twitter.com/StevenBlanchard).
-* Watch me on [GitHub](https://github.com/EthanCentaurai).

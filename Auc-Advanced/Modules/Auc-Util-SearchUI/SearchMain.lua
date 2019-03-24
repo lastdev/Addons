@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 7.7.6099 (SwimmingSeadragon)
-	Revision: $Id: SearchMain.lua 6099 2018-08-29 01:26:34Z none $
+	Version: 8.1.6245 (SwimmingSeadragon)
+	Revision: $Id: SearchMain.lua 6245 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -394,6 +394,7 @@ local settingDefaults = {
 	["columnwidth.Cur/ea"] = 85,
 
 	["global.memorycleanup"] = false,
+	["global.fast_remove_mode"] = false,
 }
 
 local function getDefault(setting)
@@ -639,7 +640,7 @@ function lib.GetSearchLocals()
 	return lib.GetSetting, lib.SetSetting, lib.SetDefault, Const, resources
 end
 
-function private.removeline()
+function private.removeline(force)
 	local selected = gui.sheet.selected
 	--find the place in the sort list, so we can select the next one.
 	for i,j in ipairs(gui.sheet.sort) do
@@ -648,14 +649,21 @@ function private.removeline()
 			break
 		end
 	end
-	tremove(private.sheetData, gui.sheet.selected)
-	--regenerate style elements, to match shorter data table
-	local total =  #private.sheetData
-	for i = gui.sheet.selected, total do
-		private.sheetStyle[i] = private.sheetStyle[i+1]
+
+	if force or not lib.GetSetting("global.fast_remove_mode") then
+		tremove(private.sheetData, gui.sheet.selected)
+		--regenerate style elements, to match shorter data table
+		local total =  #private.sheetData
+		for i = gui.sheet.selected, total do
+			private.sheetStyle[i] = private.sheetStyle[i+1]
+		end
+		private.sheetStyle[total+1] = nil --remove extra style
+	else
+		-- fast remove workaround: simply skip to the next line
+		-- this reduces the number of (expensive) table removes, but leaves the 'removed' line in the data table
+		selected = selected + 1
 	end
-	private.sheetStyle[total+1] = nil --remove extra style
-	--gui.frame.remove:Disable()
+
 	gui.sheet.selected = nil
 	gui.sheet:SetData(private.sheetData, private.sheetStyle)
 	lib.UpdateControls()
@@ -1520,7 +1528,9 @@ function private.MakeGuiConfig()
 
 	gui:AddControl(id, "Subhead", 0, "Experimental settings")
 	gui:AddControl(id, "Checkbox", 0, 1, "global.memorycleanup", "Additional memory cleanup while searching")
-
+		
+	gui:AddControl(id, "Checkbox", 0, 1, "global.fast_remove_mode", "Do not remove items from list after bid/buy (to speed up operations for very large lists)")
+	
 	gui:AddControl(id, "Subhead",          0,    "Tooltip")
 	gui:AddControl(id, "Checkbox",          0, 1, "tooltiphelp.show", "Show tooltip help over buttons")
 	gui:AddControl(id, "Checkbox",         0, 1, "debug.show", "Show debug line in tooltip for auctions")
@@ -2229,4 +2239,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 6099 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 6245 $")

@@ -4,7 +4,7 @@ local __Scripts = LibStub:GetLibrary("ovale/Scripts")
 local OvaleScripts = __Scripts.OvaleScripts
 __exports.register = function()
     local name = "ovale_paladin_spells"
-    local desc = "[8.0] Ovale: Paladin spells"
+    local desc = "[8.1] Ovale: Paladin spells"
     local code = [[Define(avengers_shield 31935)
 # Hurls your shield at an enemy target, dealing s1 Holy damage?a231665[, interrupting and silencing the non-Player target for 3 seconds][], and then jumping to x1-1 additional nearby enemies.rnrnIncreases the effects of your next Shield of the Righteous by 197561s2.
 # Rank 2: Avenger's Shield interrupts and silences the main target for 3 seconds if it is not a player.
@@ -17,6 +17,9 @@ Define(avenging_wrath 31884)
   SpellInfo(avenging_wrath cd=120 duration=20)
   # Damage, healing, and critical strike chance increased by w1.
   SpellAddBuff(avenging_wrath avenging_wrath=1)
+Define(bastion_of_light 204035)
+# Immediately grants s1 charges of Shield of the Righteous.
+  SpellInfo(bastion_of_light cd=120 gcd=0 offgcd=1 talent=bastion_of_light_talent)
 Define(battle_potion_of_strength 279153)
 # Increases your Strength by s1 for 25 seconds.
   SpellInfo(battle_potion_of_strength cd=1 duration=25 gcd=0 offgcd=1)
@@ -33,10 +36,6 @@ Define(blinding_light 115750)
 # Emits dazzling light in all directions, blinding enemies within 105421A1 yards, causing them to wander disoriented for 105421d. Non-Holy damage will break the disorient effect.
   SpellInfo(blinding_light cd=90 duration=6 talent=blinding_light_talent)
   SpellAddBuff(blinding_light blinding_light=1)
-Define(bursting_blood 251316)
-# Imbues your blood with heat for 25 seconds, giving your melee attacks a chance to create a burst of blood, dealing 265514s1 Physical damage split evenly amongst all nearby enemies.
-  SpellInfo(bursting_blood duration=25 channel=25 gcd=0 offgcd=1)
-
 Define(consecration 26573)
 # Consecrates the land beneath you, causing 81297s1*9 Holy damage over 12 seconds to enemies who enter the area. Limit s2.
   SpellInfo(consecration cd=4.5 duration=12 tick=1)
@@ -51,23 +50,17 @@ Define(crusader_strike 35395)
 # Strike the target for s1 Physical damage.?s137027[rnrn|cFFFFFFFFGenerates s2 Holy Power.][]
 # Rank 2: Crusader Strike now has s1+1 charges.
   SpellInfo(crusader_strike cd=6 holypower=0)
-Define(divine_right_buff 278519)
-# When Divine Storm damages an enemy who is below s2 health, your Strength is increased by s1 for 10 seconds.
-  SpellInfo(divine_right_buff channel=-0.001 gcd=0 offgcd=1)
-
 Define(divine_storm 53385)
 # Unleashes a whirl of divine energy, dealing 224239sw1 Holy damage to all nearby enemies.
   SpellInfo(divine_storm holypower=3)
+Define(empyrean_power_buff 286392)
+# Your attacks have a chance to make your next Divine Storm free and deal s1 additional damage.
+  SpellInfo(empyrean_power_buff channel=-0.001 gcd=0 offgcd=1)
+
 Define(execution_sentence 267798)
 # Calls down the Light's punishment upon an enemy target, dealing s1 Holy damage and increasing the target's Holy damage taken from your attacks by 267799s1 for 12 seconds.
   SpellInfo(execution_sentence holypower=3 cd=30 talent=execution_sentence_talent)
-  # s1 increased Holy damage taken from the casting Paladin.
-  SpellAddTargetDebuff(execution_sentence execution_sentence_debuff=1)
-Define(execution_sentence_debuff 267799)
-# Calls down the Light's punishment upon an enemy target, dealing s1 Holy damage and increasing the target's Holy damage taken from your attacks by 267799s1 for 12 seconds.
-  SpellInfo(execution_sentence_debuff duration=12 channel=12 gcd=0 offgcd=1)
-  # s1 increased Holy damage taken from the casting Paladin.
-  SpellAddTargetDebuff(execution_sentence_debuff execution_sentence_debuff=1)
+
 Define(fireblood 265221)
 # Removes all poison, disease, curse, magic, and bleed effects and increases your ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by 265226s1*3 and an additional 265226s1 for each effect removed. Lasts 8 seconds. 
   SpellInfo(fireblood cd=120 gcd=0 offgcd=1)
@@ -128,14 +121,14 @@ Define(war_stomp 20549)
   SpellInfo(war_stomp cd=90 duration=2 gcd=0 offgcd=1)
   # Stunned.
   SpellAddTargetDebuff(war_stomp war_stomp=1)
+Define(bastion_of_light_talent 6) #22594
+# Immediately grants s1 charges of Shield of the Righteous.
 Define(blinding_light_talent 9) #21811
 # Emits dazzling light in all directions, blinding enemies within 105421A1 yards, causing them to wander disoriented for 105421d. Non-Holy damage will break the disorient effect.
 Define(crusade_talent 20) #22215
 # Call upon the Light and begin a crusade, increasing your damage done and Haste by <damage> for 25 seconds.rnrnEach Holy Power spent during Crusade increases damage done and Haste by an additional <damage>.rnrnMaximum u stacks.
 Define(crusaders_judgment_talent 5) #22604
 # Judgment now has 1+s1 charges, and Grand Crusader now also grants a charge of Judgment.
-Define(divine_judgment_talent 10) #22375
-# Each enemy hit by an ability that consumes Holy Power increases the damage of your next Judgment by 271581s1, stacking up to 271581u times.
 Define(execution_sentence_talent 3) #22175
 # Calls down the Light's punishment upon an enemy target, dealing s1 Holy damage and increasing the target's Holy damage taken from your attacks by 267799s1 for 12 seconds.
 Define(hammer_of_wrath_talent 6) #22593
@@ -148,7 +141,6 @@ Define(seraphim_talent 21) #22645
 # The Light temporarily magnifies your power, increasing your Haste, Critical Strike, Mastery, and Versatility by s1.rnrnConsumes up to s2 charges of Shield of the Righteous, and lasts 8 seconds per charge.
 Define(wake_of_ashes_talent 12) #22183
 # Lash out at your enemies, dealing sw1 Radiant damage to all enemies within a1 yd in front of you and reducing their movement speed by s2 for 5 seconds.rnrnDemon and Undead enemies are also stunned for 5 seconds.rnrn|cFFFFFFFFGenerates s3 Holy Power.
-Define(divine_right_trait 277678)
     ]]
     code = code .. [[
 # Items
@@ -199,7 +191,7 @@ Define(avenging_crusader_buff 216331)
 Define(avenging_wrath_buff 31884)
 	SpellInfo(avenging_wrath_buff duration=20)
 	SpellInfo(avenging_wrath_buff add_duration=5 talent=sanctified_wrath_talent specialization=holy)
-Define(bastion_of_light 204035)
+
 	SpellInfo(bastion_of_light cd=120 gcd=0 offgcd=1)
 Define(bastion_of_power_buff 144569)
 	SpellInfo(bastion_of_power_buff duration=20)
@@ -249,8 +241,8 @@ Define(blessing_of_spellwarding_buff 204018)
 	SpellInfo(blinding_light cd=90 interrupt=1 tag=cd)
 Define(cleanse 4987)
 	SpellInfo(cleanse cd=8)
-Define(cleense_toxins 213644)
-	SpellInfo(cleense_toxins cd=8)
+Define(cleanse_toxins 213644)
+	SpellInfo(cleanse_toxins cd=8)
 
 	SpellInfo(consecration cd=4.5 tag=main cd_haste=melee specialization=protection)
 	SpellInfo(consecration cd=4.5 tag=main cd_haste=spell specialization=holy)
@@ -552,6 +544,7 @@ Define(sacred_judgment_buff 253806)
 Define(divine_right_trait 278519)
 Define(divine_right_buff 277678)
 	SpellInfo(divine_right_buff duration=15)
+Define(inner_light_trait 275477)
 
 #Hack
 #Seems like we can't define multiple add_holypower -1=buff
@@ -579,7 +572,7 @@ Define(consecrated_ground_talent 17)
 
 Define(crusaders_might_talent 1)
 Define(devotion_aura_talent 10)
-
+Define(divine_judgment_talent 10)
 Define(divine_purpose_talent 19)
 
 Define(eye_for_an_eye_talent 15)

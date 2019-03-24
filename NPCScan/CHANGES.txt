@@ -1,28 +1,64 @@
-tag e92d59440af3ffd71b2268f463761e36fa716259 8.0.1.10
+tag fe90f5734f39c89d032c4a64a2701537a638e53a 8.0.1.13
 Author:	James D. Callahan III <jcallahan@curse.com>
-Date:	Sat Sep 1 02:02:33 2018 -0500
+Date:	Thu Sep 13 04:00:13 2018 -0500
 
-commit d3c8ceea99837d4013829f214d6014d2d0d68560
+commit ee35dfd706398e668594a33e4bfe308aa6ff9487
 Author: James D. Callahan III <jcallahan@curse.com>
-Date:   Sat Sep 1 02:01:11 2018 -0500
+Date:   Thu Sep 13 03:55:38 2018 -0500
 
-    Add vignetteIDs for Executioner Blackwell, Captain Leadfist, Haywire Golem, and Gorged Boar.
+    Add classifications for Maw of Shul-Nagruth, Underlord Xerxiz, Dunegorger Kraulok, and Unbra'rix.
 
-commit 340f0e02e572a58e63ae27488e41cdb54fe08290
+commit 140f51a7686b731c533782214523c3f243fc0c80
 Author: James D. Callahan III <jcallahan@curse.com>
-Date:   Sat Sep 1 01:17:31 2018 -0500
+Date:   Thu Sep 13 03:54:38 2018 -0500
 
-    Change update logic to only update the target button's source text if it doesn't exist or is an empty string to avoid, for example, updating from Minimap to Unit Nameplates since the former would be the actual source.
+    Remove tameable filtering from Rares display - a rare is a rare - and add filtering for classifications: No classification or classifications of "rare" or "rareelite" will be displayed, whereas "normal" or anything not the previous two will not.
 
-commit 2711b3cd09414b84f7601836b439d9d237cda8d8
+commit d2f00b4d206d0cf9814c0845b5fcc10e15456a67
 Author: James D. Callahan III <jcallahan@curse.com>
-Date:   Sat Sep 1 01:05:24 2018 -0500
+Date:   Thu Sep 13 03:51:27 2018 -0500
 
-    Add the ability to map multiple NPCs to a vignetteID, check the vignette mapping before checking the vignette's NPC ID, and always pass the vignette name to the processing handler no matter the method of detection.
+    Use absolute checks for questID instead of npc:HasQuest() to warn when an NPC has no quest assigned, so the latter doesn't return false positives for -1.
 
-commit 6ea0d297ebc24a91dbb8bf03f1e683037b140c6c
+commit 839bfb558fb96fcf0ed4093cd71e7ef719b9ad8a
 Author: James D. Callahan III <jcallahan@curse.com>
-Date:   Fri Aug 31 13:36:23 2018 -0500
+Date:   Thu Sep 13 03:45:47 2018 -0500
 
-    Add vignetteID and fix questID for Scaleclaw Broodmother in Vol'dun.
+    Add VignetteLootElite to ignored types.
+
+commit 180a28430312a69ad6c5c28955da89cbf223b1e5
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 04:38:03 2018 -0500
+
+    Set classification for Strange Mushroom Ring to "normal".
+
+commit f2c006dd589623cfe75a858332f0bb4d2f61a4f4
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 04:26:43 2018 -0500
+
+    Set factionGroup for Doc Marrtens to Alliance and for Jakala the Cruel to Horde.
+
+commit 7b7b1a0ee3483c775b34584bc5da1826db74867b
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 04:10:13 2018 -0500
+
+    Set the NPCMetatable for custom NPCs so the methods will work.
+
+commit 341282f16dd6586b1340fbc66776c274f31338c8
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 03:41:16 2018 -0500
+
+    Add questID to Henry Breakwater, and mark General Krathax as having neither a questID nor vignetteID.
+
+commit 8ad73ca6868f9ca24589aa5e572e967be9d909c5
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 03:40:19 2018 -0500
+
+    Add classifications to Zujothgul, Aiji the Accursed, General Krathax, and Vengeful Dead.
+
+commit 343782088c0a776659884a99d556e1b5c22acfef
+Author: James D. Callahan III <jcallahan@curse.com>
+Date:   Sat Sep 8 03:31:31 2018 -0500
+
+    Move NPC initialization code from Core to Data/NPCs/_Main and convert the IsNPCAchievementCriteriaComplete, NPCHasQuest, and IsNPCQuestComplete functions into prototype methods (without NPC in the name).
 

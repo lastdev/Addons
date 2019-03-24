@@ -1,5 +1,5 @@
 ## Title: MaxDps_Paladin
-## Version: 8.0.2
+## Version: 8.0.4.2
 ## Author: Kaminaris
 ## Interface: 80000
 ## Dependencies: MaxDps

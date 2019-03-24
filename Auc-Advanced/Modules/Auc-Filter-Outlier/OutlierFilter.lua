@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Outlier Filter
-	Version: 7.7.6074 (SwimmingSeadragon)
-	Revision: $Id: OutlierFilter.lua 6074 2018-08-29 01:26:34Z none $
+	Version: 8.1.6221 (SwimmingSeadragon)
+	Revision: $Id: OutlierFilter.lua 6221 2019-03-04 00:20:18Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -245,4 +245,4 @@ setmetatable(CFromZ, {__index = function(t,k)
 end});
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 6074 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 6221 $")

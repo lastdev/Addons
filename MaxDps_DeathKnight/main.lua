@@ -3,83 +3,93 @@ if not MaxDps then
 	return ;
 end
 
+local MaxDps = MaxDps;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local EnumPowerType = Enum.PowerType;
+
 local DeathKnight = MaxDps:NewModule('DeathKnight');
 
 -- Blood
+local BL = {
+	DancingRuneWeapon  = 49028,
+	DarkCommand        = 56222,
+	BloodDrinker       = 206931,
+	Marrowrend         = 195182,
+	BloodBoil          = 50842,
+	BoneShield         = 195181,
+	DeathStrike        = 49998,
+	BloodShield        = 77535,
+	BloodPlague        = 55078,
+	BonesoftheDamned   = 279503,
+	Ossuary            = 219786,
+	RuneStrike         = 210764,
+	DeathAndDecay      = 43265,
+	HeartStrike        = 206930,
+	CrimsonScourge     = 81136,
+	DeathGrip          = 49576,
+	AntiMagicShell     = 48707,
+	VampiricBlood      = 55233,
+	IceboundFortitude  = 48792,
+	AntiMagicBarrier   = 205727,
+	Hemostasis         = 273946,
+	RedThirst          = 205723,
+	DeathsAdvance      = 48265,
+	RuneTap            = 194679,
+	MasteryBloodShield = 77513,
+	Bonestorm          = 194844,
+};
 
-local _DancingRuneWeapon = 49028;
-local _DarkCommand = 56222;
-local _BloodDrinker = 206931;
-local _Marrowrend = 195182;
-local _BloodBoil = 50842;
-local _BoneShield = 195181;
-local _DeathStrike = 49998;
-local _BloodShield = 77535;
-local _BloodPlague = 55078;
-local _BonesoftheDamned = 279503;
-local _Ossuary = 219786;
-local _RuneStrike = 210764;
-local _DeathandDecay = 43265;
-local _HeartStrike = 206930;
-local _CrimsonScourge = 81136;
-local _DeathGrip = 49576;
-local _AntiMagicShell = 48707;
-local _VampiricBlood = 55233;
-local _IceboundFortitude = 48792;
-local _AntiMagicBarrier = 205727;
-local _Haemostasis = 235559;
-local _Hemostasis = 273946;
-local _RedThirst = 205723;
-local _DeathsAdvance = 48265;
-local _RuneTap = 194679;
-local _MasteryBloodShield = 77513;
-local _Bonestorm = 194844;
 
 -- Frost
+local FR = {
+	RemorselessWinter  = 196770,
+	GatheringStorm     = 194912,
+	HowlingBlast       = 49184,
+	Rime               = 59052,
+	FrostFever         = 55095,
+	Obliterate         = 49020,
+	KillingMachine     = 51124,
+	EmpowerRuneWeapon  = 47568,
+	HornOfWinter       = 57330,
+	ChainsOfIce        = 45524,
+	PillarOfFrost      = 51271,
+	FrostStrike        = 49143,
+	BreathOfSindragosa = 152279,
+	Frostscythe        = 207230,
+	FrostwyrmsFury     = 279302,
+	MasteryFrozenHeart = 77514,
+	Obliteration       = 281238,
+	ColdHeart          = 281209,
+	ColdHeartTalent    = 281208,
+};
 
-local _RemorselessWinter = 196770;
-local _GatheringStorm = 194912;
-local _HowlingBlast = 49184;
-local _Rime = 59052;
-local _FrostFever = 55095;
-local _Obliterate = 49020;
-local _KillingMachine = 51124;
-local _EmpowerRuneWeapon = 47568;
-local _HornofWinter = 57330;
-local _ChainsofIce = 45524;
-local _PillarofFrost = 51271;
-local _FrostStrike = 49143;
-local _BreathofSindragosa = 152279;
-local _Frostscythe = 207230;
-local _FrostwyrmsFury = 279302;
-local _MasteryFrozenHeart = 77514;
-local _Obliteration = 281238;
-local _ColdHeart = 281209;
-local _ColdHeartTalent = 281208;
 
 -- Unholy
+local UH = {
+	VirulentPlague     = 191587,
+	Outbreak           = 77575,
+	SoulReaper         = 130736,
+	DarkTransformation = 63560,
+	Apocalypse         = 275699,
+	FesteringWound     = 194310,
+	DeathCoil          = 47541,
+	SuddenDoom         = 49530,
+	DeathAndDecay      = 43265,
+	Pestilence         = 277234,
+	Defile             = 152280,
+	ScourgeStrike      = 55090,
+	ClawingShadows     = 207311,
+	FesteringStrike    = 85948,
+	UnholyFrenzy       = 207289,
+	BurstingSores      = 207264,
+	InfectedClaws      = 207272,
+	ArmyOfTheDead      = 42650,
+	Epidemic           = 207317,
+	SummonGargoyle     = 49206,
+	RaiseDead          = 46584,
+}
 
-local _VirulentPlague = 191587;
-local _Outbreak = 77575;
-local _SoulReaper = 130736;
-local _DarkTransformation = 63560;
-local _Apocalypse = 275699;
-local _FesteringWound = 194310;
-local _DeathCoil = 47541;
-local _SuddenDoom = 49530;
-local _DeathandDecayUh = 43265;
-local _Pestilence = 277234;
-local _Defile = 152280;
-local _ScourgeStrike = 55090;
-local _ClawingShadows = 207311;
-local _FesteringStrike = 85948;
-local _UnholyFrenzy = 207289;
-local _BurstingSores = 207264;
-local _InfectedClaws = 207272;
-local _ArmyoftheDead = 42650;
-local _Epidemic = 207317;
-local _SummonGargoyle = 49206;
-local _RaiseDead = 46584;
 
 function DeathKnight:Enable()
 	MaxDps:Print(MaxDps.Colors.Info .. 'Death Knight [Frost, Unholy, Blood]');
@@ -95,223 +105,219 @@ function DeathKnight:Enable()
 	return true;
 end
 
-function DeathKnight:Blood(timeShift, currentSpell, gcd, talents)
-	local runic = UnitPower('player', Enum.PowerType.RunicPower);
-	local runicMax = UnitPowerMax('player', Enum.PowerType.RunicPower);
+function DeathKnight:Blood()
+	local fd = MaxDps.FrameData;
+	local cooldown, buff, debuff, timeShift, talents, azerite, currentSpell =
+		fd.cooldown, fd.buff, fd.debuff, fd.timeShift, fd.talents, fd.azerite, fd.currentSpell;
+
+	local runic = UnitPower('player', EnumPowerType.RunicPower);
+	local runicMax = UnitPowerMax('player', EnumPowerType.RunicPower);
 	local runes, runeCd = DeathKnight:Runes(timeShift);
 
-	local bb, bbCharges = MaxDps:SpellCharges(_BloodBoil, timeShift);
-	local dad, dadCharges = MaxDps:SpellAvailable(_DeathandDecay, timeShift);
+	MaxDps:GlowCooldown(BL.DancingRuneWeapon, cooldown[BL.DancingRuneWeapon].ready);
 
-	local bs, bsCharges = MaxDps:Aura(_BoneShield, timeShift + 6);
-	local shield = MaxDps:Aura(_BloodShield, timeShift + 3);
-	local bp = MaxDps:TargetAura(_BloodPlague, timeShift);
-
-	MaxDps:GlowCooldown(_DancingRuneWeapon, MaxDps:SpellAvailable(_DancingRuneWeapon, timeShift));
-
-	if talents[_Bonestorm] then
-		MaxDps:GlowCooldown(_Bonestorm, MaxDps:SpellAvailable(_Bonestorm, timeShift) and runic >= 60);
+	if talents[BL.Bonestorm] then
+		MaxDps:GlowCooldown(BL.Bonestorm, cooldown[BL.Bonestorm].ready and runic >= 60);
 	end
 
-	if bsCharges <= 6 and runes >= 2 then
-		return _Marrowrend;
+	local shouldUseMarrowrend = buff[BL.BoneShield].count <= 6 or buff[BL.BoneShield].remains < 6;
+	if shouldUseMarrowrend and runes >= 2 then
+		return BL.Marrowrend;
 	end
 
 	local playerHp = MaxDps:TargetPercentHealth('player');
-	if runic >= 45 and (not shield or playerHp < 0.5) then
-		return _DeathStrike;
+	if runic >= 45 and (buff[BL.BoneShield].remains < 3 or playerHp < 0.5) then
+		return BL.DeathStrike;
 	end
 
-	if talents[_BloodDrinker] and MaxDps:SpellAvailable(_BloodDrinker, timeShift) then
-		return _BloodDrinker;
+	if talents[BL.BloodDrinker] and cooldown[BL.BloodDrinker].ready then
+		return BL.BloodDrinker;
 	end
 
-	if not bp or bbCharges >= 2 then
-		return _BloodBoil;
+	if not debuff[BL.BloodPlague].up or cooldown[BL.BloodBoil].charges >= 2 then
+		return BL.BloodBoil;
 	end
 
-	if bsCharges <= 6 and runes >= 2 then
-		return _Marrowrend;
+	if shouldUseMarrowrend and runes >= 2 then
+		return BL.Marrowrend;
 	end
 
-	local rs, rsCharges = MaxDps:SpellCharges(_RuneStrike, timeShift);
-	if talents[_RuneStrike] and rsCharges >= 1.7 and runes <= 3 then
-		return _RuneStrike;
+	if talents[BL.RuneStrike] and cooldown[BL.RuneStrike].charges >= 1.7 and runes <= 3 then
+		return BL.RuneStrike;
 	end
 
 	local targets = MaxDps:TargetsInRange(49998);
 	if runes >= 3 then
-		if dad and targets >= 3 then
-			return _DeathandDecay;
+		if cooldown[BL.DeathAndDecay].ready and targets >= 3 then
+			return BL.DeathAndDecay;
 		end
 
-		return _HeartStrike;
+		return BL.HeartStrike;
 	end
 
-	if MaxDps:Aura(_CrimsonScourge, timeShift) or (dad and targets > 5 and runes >= 1) then
-		return _DeathandDecay;
+	if buff[BL.CrimsonScourge].up or (cooldown[BL.DeathAndDecay].ready and targets > 5 and runes >= 1) then
+		return BL.DeathAndDecay;
 	end
 
 	if runicMax - runic <= 20 then
-		return _DeathStrike;
+		return BL.DeathStrike;
 	end
 
 	if runes > 2 then
-		return _HeartStrike;
+		return BL.HeartStrike;
 	end
 
-	-- comment this out if survival is a problem
 	if runic >= 60 then
-		return _DeathStrike;
+		return BL.DeathStrike;
 	end
-	-- comment out the above if survival is a problem
 
-	if bbCharges >= 1 then
-		return _BloodBoil;
+	if cooldown[BL.BloodBoil].charges >= 1 then
+		return BL.BloodBoil;
 	end
 
 	return nil;
 end
 
-function DeathKnight:Frost(timeShift, currentSpell, gcd, talents)
-	local runic = UnitPower('player', Enum.PowerType.RunicPower);
-	local runicMax = UnitPowerMax('player', Enum.PowerType.RunicPower);
+function DeathKnight:Frost()
+	local fd = MaxDps.FrameData;
+	local cooldown, buff, debuff, timeShift, talents, azerite, currentSpell =
+		fd.cooldown, fd.buff, fd.debuff, fd.timeShift, fd.talents, fd.azerite, fd.currentSpell;
+
+	local runic = UnitPower('player', EnumPowerType.RunicPower);
+	local runicMax = UnitPowerMax('player', EnumPowerType.RunicPower);
 	local runes, runeCd = DeathKnight:Runes(timeShift);
 
-	local km = MaxDps:Aura(_KillingMachine, timeShift);
-	local fever = MaxDps:TargetAura(_FrostFever, timeShift + 6);
+	local fever = debuff[FR.FrostFever].remains > 6;
 	local FSCost = 25;
 
-	MaxDps:GlowCooldown(_BreathofSindragosa, talents[_BreathofSindragosa] and MaxDps:SpellAvailable(_BreathofSindragosa, timeShift));
+	MaxDps:GlowCooldown(FR.BreathOfSindragosa, talents[FR.BreathOfSindragosa] and cooldown[FR.BreathOfSindragosa].ready);
 
-	MaxDps:GlowCooldown(_FrostwyrmsFury, MaxDps:SpellAvailable(_FrostwyrmsFury, timeShift));
-	MaxDps:GlowCooldown(_PillarofFrost, MaxDps:SpellAvailable(_PillarofFrost, timeShift));
-	MaxDps:GlowCooldown(_EmpowerRuneWeapon, MaxDps:SpellAvailable(_EmpowerRuneWeapon, timeShift) and runes <= 1 and runic <= (runicMax - FSCost));
+	MaxDps:GlowCooldown(FR.FrostwyrmsFury, cooldown[FR.FrostwyrmsFury].ready);
+	MaxDps:GlowCooldown(FR.PillarOfFrost, cooldown[FR.PillarOfFrost].ready);
+	MaxDps:GlowCooldown(FR.EmpowerRuneWeapon, cooldown[FR.EmpowerRuneWeapon].ready and runes <= 1 and runic <= (runicMax - FSCost));
 
-	if talents[_BreathofSindragosa] then
-		if MaxDps:Aura(_BreathofSindragosa, timeShift) then
-			if talents[_GatheringStorm] and MaxDps:SpellAvailable(_RemorselessWinter, timeShift) and runes >= 1 then
-				return _RemorselessWinter;
+	if talents[FR.BreathOfSindragosa] then
+		if buff[FR.BreathOfSindragosa].up then
+			if talents[FR.GatheringStorm] and cooldown[FR.RemorselessWinter].ready and runes >= 1 then
+				return FR.RemorselessWinter;
 			end
 
-			if runes >= 1 and (MaxDps:Aura(_Rime, timeShift) or not fever) then
-				return _HowlingBlast;
+			if runes >= 1 and (buff[FR.Rime].up or not fever) then
+				return FR.HowlingBlast;
 			end
 
 			if runes >= 2 then
-				return _Obliterate;
+				return FR.Obliterate;
 			end
 
-			if MaxDps:SpellAvailable(_EmpowerRuneWeapon, timeShift) and runic < 50 then
-				return _EmpowerRuneWeapon;
+			if cooldown[FR.EmpowerRuneWeapon].ready and runic < 50 then
+				return FR.EmpowerRuneWeapon;
 			end
 
-			if talents[_HornofWinter] and MaxDps:SpellAvailable(_HornofWinter, timeShift)
+			if talents[FR.HornOfWinter] and cooldown[FR.HornOfWinter].ready
 				and runes <= 3 and runic < 60
 			then
-				return _HornofWinter;
+				return FR.HornOfWinter;
 			end
 		else
-			local ch, chCharges = MaxDps:Aura(_ColdHeart, timeShift);
-			if talents[_ColdHeartTalent] and chCharges >= 20 and runes >= 1 then
-				return _ChainsofIce;
+			if talents[FR.ColdHeartTalent] and buff[FR.ColdHeart].count >= 20 and runes >= 1 then
+				return FR.ChainsOfIce;
 			end
 
-			if talents[_GatheringStorm] and MaxDps:SpellAvailable(_RemorselessWinter, timeShift) and runes >= 1 then
-				return _RemorselessWinter;
+			if talents[FR.GatheringStorm] and cooldown[FR.RemorselessWinter].ready and runes >= 1 then
+				return FR.RemorselessWinter;
 			end
 
-			if runes >= 1 and (MaxDps:Aura(_Rime, timeShift) or not fever) then
-				return _HowlingBlast;
+			if runes >= 1 and (buff[FR.Rime].up or not fever) then
+				return FR.HowlingBlast;
 			end
 
 			if runes >= 4 then
-				return _Obliterate;
+				return FR.Obliterate;
 			end
 
 			if runic >= 90 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 
-			if km and runes >= 2 then
-				return _Obliterate;
+			if buff[FR.KillingMachine].up and runes >= 2 then
+				return FR.Obliterate;
 			end
 
 			if runic >= 80 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 
 			if runes >= 2 then
-				return _Obliterate;
+				return FR.Obliterate;
 			end
 
 			if runic >= 25 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 		end
 
 		return nil;
 	else
-		if MaxDps:Aura(_PillarofFrost, timeShift) then
-			if MaxDps:SpellAvailable(_RemorselessWinter, timeShift) and runes >= 1 then
-				return _RemorselessWinter;
+		if buff[FR.PillarOfFrost].up then
+			if cooldown[FR.RemorselessWinter].ready and runes >= 1 then
+				return FR.RemorselessWinter;
 			end
 
-			if km and runes >= 2 then
-				return _Obliterate;
+			if buff[FR.KillingMachine].up and runes >= 2 then
+				return FR.Obliterate;
 			end
 
-			if (not MaxDps:Aura(_Rime, timeShift) and runic >= 25) or runic > 90 then
-				return _FrostStrike;
+			if (not buff[FR.Rime].up and runic >= 25) or runic > 90 then
+				return FR.FrostStrike;
 			end
 
-			if runes >= 1 and (MaxDps:Aura(_Rime, timeShift) or not fever) then
-				return _HowlingBlast;
+			if runes >= 1 and (buff[FR.Rime].up or not fever) then
+				return FR.HowlingBlast;
 			end
 
-			if not km and runic >= 25 then
-				return _FrostStrike;
+			if not buff[FR.KillingMachine].up and runic >= 25 then
+				return FR.FrostStrike;
 			end
 
-			if not km and runes >= 2 then
-				return _Obliterate;
+			if not buff[FR.KillingMachine].up and runes >= 2 then
+				return FR.Obliterate;
 			end
 		else
-			local ch, chCharges = MaxDps:Aura(_ColdHeart, timeShift);
-			if talents[_ColdHeartTalent] and chCharges >= 20 and runes >= 1 then
-				return _ChainsofIce;
+			if talents[FR.ColdHeartTalent] and buff[FR.ColdHeart].count >= 20 and runes >= 1 then
+				return FR.ChainsOfIce;
 			end
 
-			if MaxDps:SpellAvailable(_RemorselessWinter, timeShift) and runes >= 1 then
-				return _RemorselessWinter;
+			if cooldown[FR.RemorselessWinter].ready and runes >= 1 then
+				return FR.RemorselessWinter;
 			end
 
-			if runes >= 1 and MaxDps:Aura(_Rime, timeShift) then
-				return _HowlingBlast;
+			if runes >= 1 and buff[FR.Rime].up then
+				return FR.HowlingBlast;
 			end
 
 			if runes >= 4 then
-				return _Obliterate;
+				return FR.Obliterate;
 			end
 
 			if runic >= 90 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 
-			if km and runes >= 2 then
-				return _Obliterate;
+			if buff[FR.KillingMachine].up and runes >= 2 then
+				return FR.Obliterate;
 			end
 
 			if runic >= 75 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 
 			if runes >= 2 then
-				return _Obliterate;
+				return FR.Obliterate;
 			end
 
 			if runic >= 25 then
-				return _FrostStrike;
+				return FR.FrostStrike;
 			end
 		end
 
@@ -319,56 +325,59 @@ function DeathKnight:Frost(timeShift, currentSpell, gcd, talents)
 	end
 end
 
-function DeathKnight:Unholy(timeShift, currentSpell, gcd, talents)
-	local runic = UnitPower('player', Enum.PowerType.RunicPower);
-	local runicMax = UnitPowerMax('player', Enum.PowerType.RunicPower);
+function DeathKnight:Unholy()
+	local fd = MaxDps.FrameData;
+	local cooldown, buff, debuff, timeShift, talents, azerite, currentSpell =
+		fd.cooldown, fd.buff, fd.debuff, fd.timeShift, fd.talents, fd.azerite, fd.currentSpell;
+
+	local runic = UnitPower('player', EnumPowerType.RunicPower);
+	--local runicMax = UnitPowerMax('player', EnumPowerType.RunicPower);
 	local runes, runeCd = DeathKnight:Runes(timeShift);
 
-	--Get wounds on target.
-	local festering, festeringCharges, festeringCd = MaxDps:TargetAura(_FesteringWound, timeShift);
 
-	local scourgeStrike = (talents[_ClawingShadows] and _ClawingShadows) or _ScourgeStrike;
-	local deathanddecay = (talents[_Defile] and _Defile) or _DeathandDecay;
+	local scourgeStrike = talents[UH.ClawingShadows] and UH.ClawingShadows or UH.ScourgeStrike;
+	local deathAndDecay = talents[UH.Defile] and UH.Defile or UH.DeathAndDecay;
 
-	MaxDps:GlowCooldown(_ArmyoftheDead, MaxDps:SpellAvailable(_ArmyoftheDead, timeShift) and runes >= 3);
-	if talents[_UnholyFrenzy] then
-		MaxDps:GlowCooldown(_UnholyFrenzy, MaxDps:SpellAvailable(_UnholyFrenzy, timeShift));
+	MaxDps:GlowCooldown(UH.ArmyOfTheDead, cooldown[UH.ArmyOfTheDead].ready and runes >= 3);
+
+	if talents[UH.UnholyFrenzy] then
+		MaxDps:GlowCooldown(UH.UnholyFrenzy, cooldown[UH.UnholyFrenzy].ready);
 	end
 
-	if not UnitExists('pet') and MaxDps:SpellAvailable(_RaiseDead, timeShift) then
-		return _RaiseDead;
+	if not UnitExists('pet') and cooldown[UH.RaiseDead].ready then
+		return UH.RaiseDead;
 	end
 
-	if not MaxDps:TargetAura(_VirulentPlague, timeShift + 1.5) and runes >= 1 then
-		return _Outbreak;
+	if debuff[UH.VirulentPlague].refreshable and runes >= 1 then
+		return UH.Outbreak;
 	end
 
-	if runes < 2 and MaxDps:SpellAvailable(_SoulReaper, timeShift) then
-		return _SoulReaper;
+	if runes < 2 and cooldown[UH.SoulReaper].ready then
+		return UH.SoulReaper;
 	end
 
-	if MaxDps:SpellAvailable(_DarkTransformation, timeShift) then
-		return _DarkTransformation;
+	if cooldown[UH.DarkTransformation].ready then
+		return UH.DarkTransformation;
 	end
 
-	if MaxDps:SpellAvailable(_Apocalypse, timeShift) and festeringCharges >= 6 then
-		return _Apocalypse;
+	if cooldown[UH.Apocalypse].ready and debuff[UH.FesteringWound].count >= 6 then
+		return UH.Apocalypse;
 	end
 
-	if runic > 80 or MaxDps:Aura(_SuddenDoom, timeShift) then
-		return _DeathCoil;
+	if runic > 80 or buff[UH.SuddenDoom].up then
+		return UH.DeathCoil;
 	end
 
-	if MaxDps:SpellAvailable(deathanddecay, timeShift) and runes >= 1 then
-		return deathanddecay;
+	if cooldown[deathAndDecay].ready and runes >= 1 then
+		return deathAndDecay;
 	end
 
-	if festeringCharges >= 1 and runes >= 1 then
+	if debuff[UH.FesteringWound].count >= 1 and runes >= 1 then
 		return scourgeStrike;
 	end
 
-	if festeringCharges < 6 and runes >= 2 then
-		return _FesteringStrike;
+	if debuff[UH.FesteringWound].count < 6 and runes >= 2 then
+		return UH.FesteringStrike;
 	end
 
 	return nil;

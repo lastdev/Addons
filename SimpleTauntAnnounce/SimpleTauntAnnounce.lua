@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Taunt Announce
 --
--- Copyright 2011-2018 BeathsCurse (Saphod - Draenor EU)
+-- Copyright 2011-2019 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -290,13 +290,8 @@ end
 -- The actual combat log event handler
 -- Note: Naming the args was faster than select, and Lua adjusts the number
 -- of arguments automatically.
-function frame:COMBAT_LOG_EVENT_UNFILTERED(timeStamp, subEvent, _, _, sourceName, sourceFlags, _, _, destName, _, destRaidFlags, spellID, _, _, missType)
-	-- In BfA, CLEU no longer provides any parameters, and you have to call
-	-- CombatLogGetCurrentEventInfo() to retrieve them. This is a workaround
-	-- to support both the live version and the BfA beta.
-	if CombatLogGetCurrentEventInfo then
-		timeStamp, subEvent, _, _, sourceName, sourceFlags, _, _, destName, _, destRaidFlags, spellID, _, _, missType = CombatLogGetCurrentEventInfo()
-	end
+function frame:COMBAT_LOG_EVENT_UNFILTERED()
+	local timeStamp, subEvent, _, _, sourceName, sourceFlags, _, _, destName, _, destRaidFlags, spellID, _, _, missType = CombatLogGetCurrentEventInfo()
 	local failString
 
 --[[

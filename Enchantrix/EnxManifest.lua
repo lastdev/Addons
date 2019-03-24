@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 7.7.6104 (SwimmingSeadragon)
-	Revision: $Id: EnxManifest.lua 6104 2018-08-29 01:26:34Z none $
+	Version: 8.1.6237 (SwimmingSeadragon)
+	Revision: $Id: EnxManifest.lua 6237 2019-03-04 00:20:18Z none $
 	URL: http://enchantrix.org/
 
 	Enchantrix Manifest
@@ -101,4 +101,4 @@ function manifest.Validate()
 	return true
 end
 
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxManifest.lua $", "$Rev: 6104 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxManifest.lua $", "$Rev: 6237 $")

@@ -31,6 +31,7 @@ local AddonDB_Defaults = {
 				QuestTags = {},
 				Emissaries = {},
 				Rewards = {},
+				Money = {},
 				Dailies = {},
 				History = {},		-- a list of completed quests, hash table ( [questID] = true )
 				HistoryBuild = nil,	-- build version under which the history has been saved
@@ -52,6 +53,19 @@ local emissaryQuests = {
 	[48642] = true, -- Argussian Reach
 	[48641] = true, -- Armies of Legionfall
 	[48639] = true, -- Army of the Light
+	
+	-- BfA
+	[50604] = true, -- Tortollan Seekers 
+	[50562] = true, -- Champions of Azeroth
+	[50599] = true, -- Proudmoore Admiralty
+	[50600] = true, -- Order of Embers
+	[50601] = true, -- Storm's Wake
+	[50605] = true, -- Alliance War Effort
+	[50598] = true, -- Zandalari Empire
+	[50603] = true, -- Voldunai
+	[50602] = true, -- Talanji's Expedition
+	[50606] = true, -- Horde War Effort
+	
 }
 
 -- *** Utility functions ***
@@ -263,6 +277,7 @@ local function ScanQuests()
 	local rewards = char.Rewards
 	local tags = char.QuestTags
 	local emissaries = char.Emissaries
+	local money = char.Money
 
 	wipe(quests)
 	wipe(links)
@@ -270,6 +285,7 @@ local function ScanQuests()
 	wipe(rewards)
 	wipe(tags)
 	wipe(emissaries)
+	wipe(money)
 
 	local currentSelection = GetQuestLogSelection()		-- save the currently selected quest
 	SaveHeaders()
@@ -300,13 +316,14 @@ local function ScanQuests()
 			value = value + LShift(groupSize, 8)							-- bits 8-10 : groupSize, 3 bits, shouldn't exceed 5
 			value = value + LShift(lastHeaderIndex, 11)					-- bits 11-15 : index of the header (zone) to which this quest belongs
 			value = value + LShift(level, 16)								-- bits 16-23 : level
-			value = value + LShift(GetQuestLogRewardMoney(), 24)		-- bits 24+ : money
-
+			-- value = value + LShift(GetQuestLogRewardMoney(), 24)		-- bits 24+ : money
+			
 			table.insert(quests, value)
 			lastQuestIndex = lastQuestIndex + 1
 			
 			tags[lastQuestIndex] = GetQuestTagID(questID, isComplete, frequency)
 			links[lastQuestIndex] = GetQuestLink(questID)
+			money[lastQuestIndex] = GetQuestLogRewardMoney()
 
 			-- is the quest an emissary quest ?
 			if emissaryQuests[questID] then
@@ -406,7 +423,6 @@ local function _GetQuestLogInfo(character, index)
 	local groupSize = bAnd(RShift(quest, 8), 7)			-- 3-bits mask
 	local headerIndex = bAnd(RShift(quest, 11), 31)		-- 5-bits mask
 	local level = bAnd(RShift(quest, 16), 255)			-- 8-bits mask
-	local money = RShift(quest, 24)
 	
 	local groupName = character.QuestHeaders[headerIndex]		-- This is most often the zone name, or the profession name
 	
@@ -415,11 +431,18 @@ local function _GetQuestLogInfo(character, index)
 	local questID = link:match("quest:(%d+)")
 	local questName = link:match("%[(.+)%]")
 	
-	return questName, questID, link, groupName, level, money, groupSize, tag, isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo
+	return questName, questID, link, groupName, level, groupSize, tag, isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo
 end
 
 local function _GetQuestHeaders(character)
 	return character.QuestHeaders
+end
+
+local function _GetQuestLogMoney(character, index)
+	-- if not character.Money then return end
+	
+	local money = character.Money[index]
+	return money or 0
 end
 
 local function _GetQuestLogNumRewards(character, index)
@@ -553,10 +576,26 @@ local function _GetCharactersOnQuest(questName, player, realm, account)
 	return out
 end
 
+local function _IterateQuests(character, category, callback)
+	-- category : category index (or 0 for all)
+	
+	for index = 1, _GetQuestLogSize(character) do
+		local quest = character.Quests[index]
+		local headerIndex = bAnd(RShift(quest, 11), 31)		-- 5-bits mask	
+		
+		-- filter quests that are in the right category
+		if (category == 0) or (category == headerIndex) then
+			local stop = callback(index)
+			if stop then return end		-- exit if the callback returns true
+		end
+	end
+end
+
 local PublicMethods = {
 	GetQuestLogSize = _GetQuestLogSize,
 	GetQuestLogInfo = _GetQuestLogInfo,
 	GetQuestHeaders = _GetQuestHeaders,
+	GetQuestLogMoney = _GetQuestLogMoney,
 	GetQuestLogNumRewards = _GetQuestLogNumRewards,
 	GetQuestLogRewardInfo = _GetQuestLogRewardInfo,
 	GetQuestInfo = _GetQuestInfo,
@@ -571,6 +610,7 @@ local PublicMethods = {
 	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
 	IsCharacterOnQuest = _IsCharacterOnQuest,
 	GetCharactersOnQuest = _GetCharactersOnQuest,
+	IterateQuests = _IterateQuests,
 }
 
 function addon:OnInitialize()
@@ -580,6 +620,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetQuestLogSize")
 	DataStore:SetCharacterBasedMethod("GetQuestLogInfo")
 	DataStore:SetCharacterBasedMethod("GetQuestHeaders")
+	DataStore:SetCharacterBasedMethod("GetQuestLogMoney")
 	DataStore:SetCharacterBasedMethod("GetQuestLogNumRewards")
 	DataStore:SetCharacterBasedMethod("GetQuestLogRewardInfo")
 	DataStore:SetCharacterBasedMethod("GetQuestHistory")
@@ -590,6 +631,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
 	DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
 	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
+	DataStore:SetCharacterBasedMethod("IterateQuests")
 end
 
 function addon:OnEnable()

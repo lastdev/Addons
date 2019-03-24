@@ -420,7 +420,7 @@ function WorldQuestGroupFinder.SetHooks()
 				canFindGroup = false
 			end
 		else 
-			canFindGroup = (QuestUtils_CanUseAutoGroupFinder(questID, true) and WorldQuestGroupFinderConf.GetConfigValue("regularQuests")) or block.hasGroupFinderButton
+			canFindGroup = QuestUtils_CanUseAutoGroupFinder ~= nil and (QuestUtils_CanUseAutoGroupFinder(questID, true) and WorldQuestGroupFinderConf.GetConfigValue("regularQuests")) or block.hasGroupFinderButton
 		end
 		if (canFindGroup and not block.WQGFButton) then
 			block.WQGFButton = WorldQuestGroupFinder.CreateWQGFButton(block, questID, block.itemButton)

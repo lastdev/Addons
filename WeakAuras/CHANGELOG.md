@@ -1,20 +1,30 @@
-# [2.7.5](https://github.com/WeakAuras/WeakAuras2/tree/2.7.5) (2018-08-29)
+# [2.11.6](https://github.com/WeakAuras/WeakAuras2/tree/2.11.6) (2019-02-26)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.7.4...2.7.5)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.11.5...2.11.6)
 
-Allen Faure (1):
+## Highlights
 
-- block xpcall as well as pcall
+ Fixed the remaining cooldown issues and introduced a new button that tells you which auras you still need to upgrade to BuffTrigger2 
 
-Causese (1):
+## Commits
 
-- adds worlddrop trinkets to templates
+InfusOnWoW (6):
 
-Infus (5):
-
-- Add default values to Condition properties and fix a few nil errors
-- Overlays: Only use up to 7 drawlayers for overlays
 - Fix Cooldown Ready trigger
-- Unit Characteristics: Fix UnitIsUnit condition
-- Tweak Spell widget a bit more
+- Track spellIds for spells to detect changes in overriding
+- Set SetKeepModelOnHide for those models that are currently shown
+- Remove unused table
+- Fix procs resetting spell cooldowns
+- Fix performance problems due to cooldown tracking
+
+mrbuds (8):
+
+- fix padWithLinebreaks (#1194)
+- add missing TODO: remove
+- fix tab selection
+- show trigger when click on icon
+- update BT2upgrade icon on ReloadTriggerOptions
+- reminder to remove code after legacy trigger is removed
+- add warning icon on auras with legacy aura trigger (#1053)
+- Cast trigger: fix name condition #1172
 
