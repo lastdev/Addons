@@ -1,0 +1,9 @@
+## Interface: 80300
+## Title: HealBot Options
+## Author: Strife
+## Notes: HealBot options and player settings
+## RequiredDeps: HealBot_Data
+## OptionalDeps: LibSharedMedia-3.0
+## Version: 8.3.0.3
+
+HealBot_Options.xml

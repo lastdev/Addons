@@ -1,0 +1,11 @@
+## Interface: 80300
+## Title: Raider.IO |cffFFFFFFRaiding|r (Taiwan - Alliance)
+## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Type: Raiding
+## X-Region: Taiwan
+## X-Faction: Alliance
+## X-Website: https://raider.io
+../RaiderIO/db/db_raiding_tw_alliance_characters.lua
+../RaiderIO/db/db_raiding_tw_alliance_lookup.lua

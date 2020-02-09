@@ -1,0 +1,11 @@
+## Interface: 81000
+## Title: HandyNotes_PetDailies
+## Notes: Displays the locations of incomplete Pet Dailies
+## Author: LirameiRav
+## X-Category: Map & Minimap
+## SavedVariables: HandyNotes_PetDailiesDB
+## RequiredDeps: HandyNotes
+
+Core.lua
+
+PetDailies.lua

@@ -1,0 +1,38 @@
+lightweight tag 5a79b10a96b7af93bb9f5fb79d36a4e37cb7b010 8.1.5
+Author:	GitHub <noreply@github.com>
+Date:	Sun Mar 31 18:09:30 2019 -0400
+
+commit 3014b0bd74e7aff142bbfd5e45a0d5e467cba624
+Author: Rob <tiker@funkymonkey.org>
+Date:   Sun Mar 31 18:05:39 2019 -0400
+
+    Update version for next release
+
+commit 3014b0bd74e7aff142bbfd5e45a0d5e467cba624
+Author: Rob <tiker@funkymonkey.org>
+Date:   Sun Mar 31 18:05:39 2019 -0400
+
+    Update version for next release
+
+commit d276ac3e97a5d0d37b83cc27afbbe9377ccd7244
+Author: Rob <tiker@funkymonkey.org>
+Date:   Sun Mar 31 18:04:15 2019 -0400
+
+    Added rest of patch 8.1.5 mounts
+    
+    Added mounts:
+      * Sinister Gladiator's Proto-Drake
+      * Siltwing Albatross
+      * Beastlord's Irontusk
+      * Beastlord's Warwolf
+      * Ironclad Frostclaw
+      * Bloodflank Charger
+
+commit af0da0e74df8dc695d46292407f5a6b7f13d2010
+Author: Rob <tiker@funkymonkey.org>
+Date:   Tue Mar 26 10:28:14 2019 -0400
+
+    Added support for Crusader's Direhorn
+    
+    Fixes #12
+

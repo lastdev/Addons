@@ -1,0 +1,9 @@
+------------------------------------------------------------------------
+r56 | enno@ekolb.de | 2018-10-13 17:53:02 +0000 (Sat, 13 Oct 2018) | 1 line
+Changed paths:
+   M /trunk/Module_CTRA.lua
+   M /trunk/UnifiedTankFrames.toc
+
+Updated for BfA. Thanks to Lydith!
+------------------------------------------------------------------------
+

@@ -1,0 +1,11 @@
+## Interface: 80200
+## Title: Coordinates
+## Version: 2.1.0
+## Author: TomCat
+## Notes: Adds coordinates to the minimap and the world map
+## SavedVariables: CoordinatesDB
+## OptionalDeps: TomCats
+## LoadOnDemand: 0
+## DefaultState: enabled
+
+Coordinates.lua

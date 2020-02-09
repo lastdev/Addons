@@ -1,0 +1,10 @@
+lightweight tag d183331c2b5c09a510c646a63421b1dd2cafb94c r33
+Author:	MysticalOS <mysticalosx@gmail.com>
+Date:	Wed Jun 26 14:00:28 2019 -0400
+
+commit d183331c2b5c09a510c646a63421b1dd2cafb94c
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Wed Jun 26 14:00:28 2019 -0400
+
+    Migrate archaeology to soundkit, which will fix errors and restore functionality.
+

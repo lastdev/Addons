@@ -1,0 +1,24 @@
+tag 65d28307b2caba6b5ee5d517b580ba62aa7bc8a1 v11
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Tue Mar 12 15:42:35 2019 -0500
+
+Tagging v11
+
+commit 9b0e29224ed502f58a708bee540d1832582323f3
+Author: David Lynch <kemayo@gmail.com>
+Date:   Tue Mar 12 15:42:35 2019 -0500
+
+    Update for 8.1.5
+
+commit 120b48181683cfc2c191bfa4033f30ade38269b8
+Author: David Lynch <kemayo@gmail.com>
+Date:   Mon Jul 23 17:23:23 2018 -0500
+
+    Fix handynotes + tomtom integration
+
+commit f00248d64baf2c64f0030be589924ed48b0079bf
+Author: David Lynch <kemayo@gmail.com>
+Date:   Sat Jul 21 21:32:28 2018 -0500
+
+    Update for Battle for Azeroth
+

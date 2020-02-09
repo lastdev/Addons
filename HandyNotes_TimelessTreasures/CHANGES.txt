@@ -1,0 +1,22 @@
+tag c5576d2175b998a76016a55fd44a0b0ce1a4a15c 1.1.0
+Author:	Rainrider <Rainrider@users.noreply.github.com>
+Date:	Wed Mar 13 23:28:55 2019 +0100
+
+Update for patch 8.1.5
+
+commit b0105445e0b1cdeee684d0c77ddb1fb3c622db8c
+Author: Rainrider <Rainrider@users.noreply.github.com>
+Date:   Wed Mar 13 23:15:23 2019 +0100
+
+    Update for patch 8.1.5
+    
+    Fix TomTom integration
+    Switch to using uiMapID
+    Refactor (WIP)
+
+commit fa982c9b1b7b1aa44dbe238cdc946d8931b0ec6e
+Author: Rainrider <Rainrider@users.noreply.github.com>
+Date:   Wed Mar 13 19:39:46 2019 +0100
+
+    WorldMapTooltip is no more
+

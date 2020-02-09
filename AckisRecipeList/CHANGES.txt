@@ -1,0 +1,18 @@
+tag c4c425fe1508bc0891bbb4507add9681f58a1da0 8.3.0.2
+Author:	Ressy <resa1983@hotmail.com>
+Date:	Sun Jan 19 19:59:44 2020 -0500
+
+8.3.0.2 update
+
+commit dcbbd7e2534986794940f4e464e90d685780d3cf
+Author: Ressy <resa1983@hotmail.com>
+Date:   Sat Jan 18 16:00:09 2020 -0500
+
+    To fix various errors popping up
+
+commit 789c54134457bc76c7f8a03f3839fccd3e2be5c0
+Author: Ressy <resa1983@hotmail.com>
+Date:   Wed Jan 15 19:20:32 2020 -0500
+
+    To fix Acquire type error
+

@@ -1,0 +1,11 @@
+## Interface: 80205
+## Author: cqwrteur
+## Title: Lib: RaiderIO
+## Version: @project-version@
+## LoadOnDemand: 1
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+#@end-no-lib-strip@
+
+LibRaiderIO.lua

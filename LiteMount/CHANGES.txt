@@ -1,0 +1,12 @@
+tag 56e0ff08245c338bc695c6aee9599cde47f85838 8.3.3
+Author:	Mike "Xodiv" Battersby <mib@post.com>
+Date:	Tue Jan 21 16:47:30 2020 +1100
+
+Release 8.3.3, mark first lesser vision non-flyable
+
+commit c5a3f03aea1e1bd66736909c9c2e86e22122e082
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Tue Jan 21 16:45:41 2020 +1100
+
+    Better comment about lesser vision
+

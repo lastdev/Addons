@@ -1,0 +1,235 @@
+820.22
+------
+DRUID:
+* Fix for #10 - moonfire_debuff is replaced with moonfire
+
+820.21
+------
+* Update to new Ovale interfaces
+
+ALL:
+* concentrated_flame_burn_debuff doesn't stack so we need to check if it's refreshable
+* Add anima_of_death_essence
+
+DH:
+* Update rotation to reflect guide on Icy-Veins (prioritize fracture over SC)
+
+MONK: 
+* Optimize RJW uptime
+* Prioritze KS on cleave, BoS on single target
+
+820.20
+------
+ALL:
+* Update script names to reflect patch 8.2.0 (and replace Icy-Veins with Ovale_TankScripts)
+* Add Template for Azerite essences
+* Add concentrated_flame_essence to AzeriteEssenceMain()
+* Add worldvein_resonance_essence to AzeriteEssenceOffensiveCooldowns()
+* Add memory_of_lucid_dreams_essence to AzeriteEssenceDefensiveCooldowns()
+
+DH:
+* Add function to calculate power gain from Shear/Fracture so it's easier to check to not overcap (shear/fracture now gains additional pain when in meta)
+* Add rotation during meta
+
+DRUID: 
+* replace swipe to swipe_bear again (different id's after 8.2.0)
+* we can remove corruption in bear form now, so no longer need to check if we're not.
+* Soothe first, dispel after
+
+MONK:
+* Arcane torrent first, detox after
+* Check if we have black_ox_brew as a short circuit for the next checks
+* Implement Peak of Serenity proposed rotation for ST and AOE (there no longer is a different rotation for BoC)
+
+PALADIN: 
+* swap AW and Seraphim
+* can use bubble when solo
+* swap aegis of light
+* AOE rotation - HOTS when consecration is up (or with blessed hammer)
+* use consecration when in range
+* Dump sotr when Bastion of light is about to come of cooldown
+* Stop banking sotr charges, we want to be using them
+* Arcane torrent first, cleanse after
+
+820.19
+------
+ALL:
+* Update toc
+
+815.18
+------
+ALL:
+* Fix for using consumables, need an update of Ovale to make this effective
+
+DRUID:
+* replace swipe_bear with swipe
+
+MONK:
+* Add RJW as fallback, when there is nothing else to cast
+* Only suggest TP when KS is on cooldown
+
+WARRIOR:
+* don't recommend charge for huge bosses when already in melee range
+* don't shockwave as part of the rotation
+* demo shout is important
+
+815.17
+------
+DRUID:
+* Be a little less strict when trying to maintain earthwarden (from less then 3 to at least 1)
+
+MONK:
+* Apply BoF debuff ASAP in single target situation
+
+PALADIN:
+* Add a SpellKnown(rebuke) condition for range check for low level paladins
+* enable Interrupt actions when Casting() and not only when IsInterruptible()
+
+810.16
+------
+DH:
+* fracture when soul barrier is up to generate more souls in order to refresh the shield
+
+810.15
+------
+DH:
+* without facture, spirit bomb at 5 stacks or when it's not up
+
+WARRIOR:
+* try to prevent wasting shield block by not casting it when it's up
+
+810.14
+------
+ALL:
+* update to 8.1.0
+ 
+DH:
+* Can stack Sigil of Flame
+* Cast Sigil of Flames only when target lives to see the first tick
+* try to prevent wasting DS by not casting it when it's up
+* some optimizations for Feed the Demon talent
+
+Druid:
+* Incapacitating Roar got removed
+
+801.13
+------
+DK:
+* Pool RP when bonestorm is about to come of cd
+
+DRUID:
+* prevent suggesting ironfur when already up, unless close to capping rage
+
+MONK:
+* Attempt to purify more often (based on available charges)
+
+WARRIOR:
+* fix spell id for ravager
+
+801.12
+------
+* fix issue with Curse package manager
+
+801.11
+------
+DH:
+* burning alive fixes
+* don't use DS when fiery brand is on the target
+* indicate when at max charges for demon spikes
+
+MONK:
+* we don't want to keep BoS on cd too long
+
+801.10
+------
+DH:
+* charred flesh no longer applies a different debuff (as in legion) so we're checking just for fiery brand debuff now
+* support for void reaver talent
+* support for razor spikes talent
+* indicate when sitting on max DS
+
+DK:
+* show healing potions in short cd icon
+
+DRUID:
+* cast lunar strike only when standing still
+* don't suggest moonfire when incarnated
+* support for earthwarden talent
+* suggest maul more when playing solo
+* avoid capping rage and spend it on maul
+* don't let thrash fall off
+* indicate when ironfur is free to use
+
+MONK:
+* we really want to KS on cd
+* min ISB duration set to 3 from 5
+
+WARRIOR:
+* Demo shout in main rotation with booming voice
+* Avoid suggesting Last Stand if talented into Bolster if Shield
+* Block is already up or if it has charges available.
+* Don't cap rage when using Avatar, which generates 20 rage.
+
+801.9
+-----
+ALL TANKS:
+* implement dispel logic for all tanks (requires full buff/debuff scanning)
+
+801.8
+-----
+WARRIOR:
+* add arcane pulse
+
+801.7
+-----
+ALL TANKS:
+* added a small icon to show offensive cooldowns and interrupts (because gcd made it so that they were never shown)
+
+DK:
+* improved death strike usage
+* bonestorm usable at 90 RP instead of 100
+
+DH:
+* add sigil of flame refreshable check (no longer can have 2 buffs up)
+* meta isn't really an offensive cd anymore
+* fixed interrupts
+
+DRUID:
+* dump rage into maul when solo or not taking dmg and almost max rage
+
+MONK:
+* Guard to shortcd
+* Always KS on cooldown
+
+PALADIN:
+* Seraphim to offensive cd icon
+* delay AW for Seraphim when it is coming up
+
+WARRIOR:
+* dump rage into revenge when solo or not taking dmg and almost max rage
+
+801.6
+-----
+* Initial protection warrior script
+* DH tweaks
+
+801.5
+-----
+* Fix issue with missing lib.xml
+
+801.4
+-----
+* Paladin: LoH back to long cds
+
+801.3
+-----
+* temporary fix for Ovale replace problem
+
+801.2
+-----
+* work on paladin script
+* initial blood DK script
+
+801.1
+-----
+* Initial extraction from Ovale into Ovale_TankScripts

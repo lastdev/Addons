@@ -1,0 +1,11 @@
+## Interface: 80300
+## Title: Raider.IO |cffFFFFFFRaiding|r (Korea - Horde)
+## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Type: Raiding
+## X-Region: Korea
+## X-Faction: Horde
+## X-Website: https://raider.io
+../RaiderIO/db/db_raiding_kr_horde_characters.lua
+../RaiderIO/db/db_raiding_kr_horde_lookup.lua

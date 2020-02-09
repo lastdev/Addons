@@ -1,0 +1,14 @@
+## Interface: 80100
+## Title: HandyNotes_TreasureHunter
+## Notes: Where the Treasure Hunter objects are in Draenor
+## Author: Kemayo
+## Version: 1
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## SavedVariables: HandyNotes_TreasureHunterDB
+## RequiredDeps: HandyNotes
+
+handler.lua
+config.lua
+Treasure.lua

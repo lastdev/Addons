@@ -1,0 +1,12 @@
+## Interface: 80205
+## Title: TomCat's Tours: Holidays (Hallow's End)
+## Author: TomCat
+## X-Website: http://www.tomcatstours.com
+## Version: 1.3.3
+## DefaultState: enabled
+## SavedVariablesPerCharacter: TomCats_HallowsEnd_Character
+## OptionalDeps: TomCats
+## X-Part-Of: TomCat's Tours:
+## X-Category: Achievements, Map, Miscellaneous, Quests
+
+Main.xml
