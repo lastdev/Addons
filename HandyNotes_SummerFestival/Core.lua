@@ -16,100 +16,117 @@ SummerFestival.points = {}
 local db
 local defaults = { profile = { completed = false, icon_scale = 1.4, icon_alpha = 0.8 } }
 
+local continents = {
+	[12]  = true, -- Kalimdor
+	[13]  = true, -- Eastern Kingdoms
+	[101] = true, -- Outland
+	[113] = true, -- Northrend
+	[424] = true, -- Pandaria
+	[572] = true, -- Draenor
+	[619] = true, -- Broken Isles
+	[875] = true, -- Zandalar
+	[876] = true, -- Kul Tiras
+}
+
+local notes = {
+	-- Blasted Lands
+	["11737"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["11808"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["28917"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["28930"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+
+	-- Darkshore
+	["11740"] = "Speak to Zidormi in Darkshore to gain access to Lor'danel.",
+	["11811"] = "Speak to Zidormi in Darkshore to gain access to Lor'danel.",
+
+	-- Silithus
+	["11760"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["11800"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["11831"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+	["11836"] = "Speak to Zidormi at the north of the zone to gain access to this bonfire.",
+
+	-- Teldrassil
+	["9332"]  = "Speak to Zidormi in Darkshore to gain access to Darnassus.",
+	["11753"] = "Speak to Zidormi in Darkshore to gain access to Teldrassil.",
+	["11824"] = "Speak to Zidormi in Darkshore to gain access to Teldrassil.",
+
+	-- Tirisfal Glades
+	["9326"]  = "Speak to Zidormi in Tirisfal to gain access to The Undercity.",
+	["11786"] = "Speak to Zidormi in Tirisfal to gain access to Brill.",
+	["11862"] = "Speak to Zidormi in Tirisfal to gain access to Brill.",
+}
+
 
 -- upvalues
-local _G = getfenv(0)
+local C_Timer_After = C_Timer.After
+local C_Calendar = C_Calendar
+local GameTooltip = GameTooltip
+local GetGameTime = GetGameTime
+local GetQuestsCompleted = GetQuestsCompleted
+local IsControlKeyDown = IsControlKeyDown
+local LibStub = LibStub
+local next = next
+local UIParent = UIParent
 
-local C_Timer_NewTicker = _G.C_Timer.NewTicker
-local C_Calendar = _G.C_Calendar
-local GameTooltip = _G.GameTooltip
-local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo
-local GetGameTime = _G.GetGameTime
-local GetQuestsCompleted = _G.GetQuestsCompleted
-local gsub = _G.string.gsub
-local IsControlKeyDown = _G.IsControlKeyDown
-local LibStub = _G.LibStub
-local next = _G.next
-local UIParent = _G.UIParent
-local WorldMapButton = _G.WorldMapButton
-local WorldMapTooltip = _G.WorldMapTooltip
-
-local HandyNotes = _G.HandyNotes
-local TomTom = _G.TomTom
+local HandyNotes = HandyNotes
+local TomTom = TomTom
 
 local completedQuests = {}
 local points = SummerFestival.points
 
 
 -- plugin handler for HandyNotes
-local function infoFromCoord(mapFile, coord)
-	mapFile = gsub(mapFile, "_terrain%d+$", "")
+function SummerFestival:OnEnter(mapFile, coord)
+	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+	else
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	end
 
 	local point = points[mapFile] and points[mapFile][coord]
+	local text
+	local questID, mode = point:match("(%d+):(.*)")
 
-	if point == "Zidormi" then
-		return point
-	else
-		local mode = point:match("%d+:(.*)")
-
-		if mode == "H" then -- honour the flame
-			return "Honour the Flame"
-		elseif mode == "D" then -- desecrate this fire
-			return "Desecrate this Fire"
-		elseif mode == "C" then -- stealing the enemy's flame
-			return "Capture the Capital City's Flame"
-		end
-	end
-end
-
-function SummerFestival:OnEnter(mapFile, coord)
-	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
-
-	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
-		tooltip:SetOwner(self, "ANCHOR_LEFT")
-	else
-		tooltip:SetOwner(self, "ANCHOR_RIGHT")
+	if mode == "H" then -- honour the flame
+		text = "Honour the Flame"
+	elseif mode == "D" then -- desecrate this fire
+		text = "Desecrate this Fire"
+	elseif mode == "C" then -- stealing the enemy's flame
+		text = "Capture the City's Flame"
 	end
 
-	local text = infoFromCoord(mapFile, coord)
+	GameTooltip:SetText(text)
 
-	tooltip:SetText(text)
-
-	if text == "Zidormi" then
-		tooltip:AddLine("Talk to the Time Keeper to travel back in time if you can't find the bonfire.", 1, 1, 1)
+	if notes[questID] then
+		GameTooltip:AddLine(notes[questID])
+		GameTooltip:AddLine(" ")
 	end
 
 	if TomTom then
-		tooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
-		tooltip:AddLine("Control-Right-click to set waypoints to every bonfire.", 1, 1, 1)
+		GameTooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
+		GameTooltip:AddLine("Control-Right-click to set waypoints to every bonfire.", 1, 1, 1)
 	end
 
-	tooltip:Show()
+	GameTooltip:Show()
 end
 
 function SummerFestival:OnLeave()
-	if self:GetParent() == WorldMapButton then
-		WorldMapTooltip:Hide()
-	else
-		GameTooltip:Hide()
-	end
+	GameTooltip:Hide()
 end
 
 
 local function createWaypoint(mapFile, coord)
 	local x, y = HandyNotes:getXY(coord)
-	local m = HandyNotes:GetMapFiletoMapID(mapFile)
+	local point = points[mapFile] and points[mapFile][coord]
 
-	local text = infoFromCoord(mapFile, coord)
-
-	TomTom:AddMFWaypoint(m, nil, x, y, { title = text })
-	TomTom:SetClosestWaypoint()
+	TomTom:AddWaypoint(mapFile, x, y, { title = "Midsummer Bonfire", persistent = nil, minimap = true, world = true })
 end
 
 local function createAllWaypoints()
 	local questID, mode
 
 	for mapFile, coords in next, points do
+		if not continents[mapFile] then
 		for coord, value in next, coords do
 			questID, mode = value:match("(%d+):(.*)")
 
@@ -117,7 +134,9 @@ local function createAllWaypoints()
 				createWaypoint(mapFile, coord)
 			end
 		end
+		end
 	end
+	TomTom:SetClosestWaypoint()
 end
 
 function SummerFestival:OnClick(button, down, mapFile, coord)
@@ -133,95 +152,33 @@ end
 
 do
 	-- custom iterator we use to iterate over every node in a given zone
-	local function iter(t, prestate)
-		if not SummerFestival.isEnabled then return nil end
-		if not t then return nil end
+	local function iterator(t, prev)
+		if not SummerFestival.isEnabled then return end
+		if not t then return end
 
-		local state, value = next(t, prestate)
+		local coord, value = next(t, prev)
+		while coord do
+			local questID, mode = value:match("(%d+):(.*)")
+			local icon
 
-		while state do -- have we reached the end of this zone?
-			if value == "Zidormi" then
-				return state, mapFile, "interface\\icons\\spell_holy_borrowedtime", db.icon_scale, db.icon_alpha
-			else
-				local questID, mode = value:match("(%d+):(.*)")
-				local icon
-
-				if mode == "H" then -- honour the flame
-					icon = "interface\\icons\\inv_summerfest_firespirit"
-				elseif mode == "D" then -- desecrate this fire
-					icon = "interface\\icons\\spell_fire_masterofelements"
-				elseif mode == "C" then -- stealing the enemy's flame
-					icon = "interface\\icons\\spell_fire_flameshock"
-				end
-
-				if (db.completed or not completedQuests[tonumber(questID)]) then
-					return state, mapFile, icon, db.icon_scale, db.icon_alpha
-				end
+			if mode == "H" then -- honour the flame
+				icon = "interface\\icons\\inv_summerfest_firespirit"
+			elseif mode == "D" then -- desecrate this fire
+				icon = "interface\\icons\\spell_fire_masterofelements"
+			elseif mode == "C" then -- stealing the enemy's flame
+				icon = "interface\\icons\\spell_fire_flameshock"
 			end
 
-			state, value = next(t, state) -- get next data
-		end
-
-		return nil, nil, nil, nil
-	end
-
-	local function iterCont(t, prestate)
-		if not SummerFestival.isEnabled then return nil end
-		if not t then return nil end
-
-		local zone = t.Z
-		local mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
-		local state, value, data, cleanMapFile
-
-		while mapFile do
-			cleanMapFile = gsub(mapFile, "_terrain%d+$", "")
-			data = points[cleanMapFile]
-
-			if data then -- only if there is data for this zone
-				state, value = next(data, prestate)
-
-				while state do -- have we reached the end of this zone?
-					if value == "Zidormi" then
-						return state, mapFile, "interface\\icons\\spell_holy_borrowedtime", db.icon_scale, db.icon_alpha
-					else
-						local questID, mode = value:match("(%d+):(.*)")
-						local icon
-
-						if mode == "H" then -- honour the flame
-							icon = "interface\\icons\\inv_summerfest_firespirit"
-						elseif mode == "D" then -- desecrate this fire
-							icon = "interface\\icons\\spell_fire_masterofelements"
-						elseif mode == "C" then -- stealing the enemy's flame
-							icon = "interface\\icons\\spell_fire_flameshock"
-						end
-
-						if (db.completed or not completedQuests[tonumber(questID)]) then
-							return state, mapFile, icon, db.icon_scale, db.icon_alpha
-						end
-					end
-
-					state, value = next(data, state) -- get next data
-				end
+			if value and (db.completed or not completedQuests[tonumber(questID)]) then
+				return coord, nil, icon, db.icon_scale, db.icon_alpha
 			end
 
-			-- get next zone
-			zone = next(t.C, zone)
-			t.Z = zone
-			mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
-			prestate = nil
+			coord, value = next(t, coord)
 		end
 	end
 
-	function SummerFestival:GetNodes(mapFile)
-		local C = HandyNotes:GetContinentZoneList(mapFile) -- Is this a continent?
-
-		if C then
-			local tbl = { C = C, Z = next(C) }
-			return iterCont, tbl, nil
-		else
-			mapFile = gsub(mapFile, "_terrain%d+$", "")
-			return iter, points[mapFile], nil
-		end
+	function SummerFestival:GetNodes2(mapID, minimap)
+		return iterator, points[mapID]
 	end
 end
 
@@ -273,8 +230,8 @@ local options = {
 -- check
 local setEnabled = false
 local function CheckEventActive()
-	local date = C_Calendar.GetDate()
-	local month, day, year = date.month, date.monthDay, date.year
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	local month, day, year = calendar.month, calendar.monthDay, calendar.year
 
 	local monthInfo = C_Calendar.GetMonthInfo()
 	local curMonth, curYear = monthInfo.month, monthInfo.year
@@ -286,16 +243,14 @@ local function CheckEventActive()
 		local event = C_Calendar.GetDayEvent(monthOffset, day, i)
 
 		if event.iconTexture == 235472 or event.iconTexture == 235473 or event.iconTexture == 235474 then
-			if event.sequenceType == "ONGOING" then
-				setEnabled = true
-			else
-				local hour = GetGameTime()
+			local hour, minute = GetGameTime()
 
-				if event.sequenceType == "END" and hour <= event.endTime.hour or event.sequenceType == "START" and hour >= event.startTime.hour then
-					setEnabled = true
-				else
-					setEnabled = false
-				end
+			setEnabled = event.sequenceType == "ONGOING" -- or event.sequenceType == "INFO"
+
+			if event.sequenceType == "START" then
+				setEnabled = hour >= event.startTime.hour and (hour > event.startTime.hour or minute >= event.startTime.minute)
+			elseif event.sequenceType == "END" then
+				setEnabled = hour <= event.endTime.hour and (hour < event.endTime.hour or minute <= event.endTime.minute)
 			end
 		end
 	end
@@ -317,6 +272,11 @@ local function CheckEventActive()
 	end
 end
 
+local function RepeatingCheck()
+	CheckEventActive()
+	C_Timer_After(60, RepeatingCheck)
+end
+
 
 -- initialise
 function SummerFestival:OnEnable()
@@ -328,13 +288,43 @@ function SummerFestival:OnEnable()
 		return
 	end
 
-	local date = C_Calendar.GetDate()
-	C_Calendar.SetAbsMonth(date.month, date.year)
+	for continentMapID in next, continents do
+		local children = C_Map.GetMapChildrenInfo(continentMapID)
+		for _, map in next, children do
+			local coords = points[map.mapID]
+			if coords then
+				for coord, criteria in next, coords do
+					local mx, my = HandyNotes:getXY(coord)
+					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+					if cx and cy then
+						points[continentMapID] = points[continentMapID] or {}
+						points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+					end
+				end
+			end
+		end
+	end
 
-	C_Timer_NewTicker(15, CheckEventActive)
+	-- special treatment for Teldrassil as the HereBeDragons-2.0 library isn't recognising it as a "child zone" of Kalimdor at the moment
+	if UnitFactionGroup("player") == "Alliance" then
+		points[12][43611031] = "11824:H" -- Dolanaar
+	elseif UnitFactionGroup("player") == "Horde" then
+		points[12][43541026] = "11753:D" -- Dolanaar
+		points[12][40370935] = "9332:C"  -- Stealing Darnassus' Flame
+	end
+
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	C_Calendar.SetAbsMonth(calendar.month, calendar.year)
+	CheckEventActive()
+
 	HandyNotes:RegisterPluginDB("SummerFestival", self, options)
-
 	db = LibStub("AceDB-3.0"):New("HandyNotes_SummerFestivalDB", defaults, "Default").profile
+
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT", CheckEventActive)
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", CheckEventActive)
+	self:RegisterEvent("ZONE_CHANGED", CheckEventActive)
+
+	C_Timer_After(60, RepeatingCheck)
 end
 
 function SummerFestival:Refresh(_, questID)

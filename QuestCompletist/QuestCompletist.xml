@@ -207,10 +207,10 @@
 
   
 
-  <Frame name="qcNewDataAlert" toplevel="true" parent="QuestFrame" enableMouse="true" movable="false" hidden="true" frameStrata="MEDIUM">
+  <Frame name="qcNewDataAlert" toplevel="true" parent="QuestFrame" enableMouse="true" movable="false" hidden="true" frameStrata="High"> --Changed from Medium to make the dialog box show
     <Size x="250" y="16"/>
     <Anchors>
-      <Anchor point="TOP" relativePoint="TOP" relativeTo="QuestFrame" x="15" y="-35"/>
+      <Anchor point="TOP" relativePoint="TOP" relativeTo="QuestFrame" x="15" y="-35"/> -- x moves text right
     </Anchors>
     <Layers>
       <Layer level="ARTWORK">

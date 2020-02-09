@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(532, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 
 mod:SetCreatureID(24560)--24560 is main boss.
 mod:SetEncounterID(1895)
@@ -27,10 +27,10 @@ local specWarnPWS		= mod:NewSpecialWarningDispel(44175, "MagicDispeller", nil, 2
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 17843 and self:CheckInterruptFilter(args.sourceGUID) then		-- Delrissa's Flash Heal
+	if spellId == 17843 and self:CheckInterruptFilter(args.sourceGUID, false, true) then		-- Delrissa's Flash Heal
 		specWarnFlashHeal:Show(args.sourceName)
 		specWarnFlashHeal:Play("kickcast")
-	elseif args:IsSpellID(44256, 46181) and self:CheckInterruptFilter(args.sourceGUID) then					-- Apoko's LHW
+	elseif args:IsSpellID(44256, 46181) and self:CheckInterruptFilter(args.sourceGUID, false, true) then					-- Apoko's LHW
 		specWarnLHW:Show(args.sourceName)
 		specWarnLHW:Play("kickcast")
 	end

@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 80300
 ## Title: Simple Taunt Announce Config
 ## Notes: Configuration panel for STA
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)

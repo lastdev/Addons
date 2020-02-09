@@ -1,7 +1,7 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.7.6000 (SwimmingSeadragon)
-	Revision: $Id: BarkerManifest.lua 6000 2018-07-17 14:09:34Z none $
+	Version: 8.2.6507 (SwimmingSeadragon)
+	Revision: $Id: BarkerManifest.lua 6507 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	EnchantrixBarker Manifest
@@ -105,4 +105,4 @@ function manifest.Validate()
 	return true
 end
 
-EnchantrixBarker_RegisterRevision("$URL: /BarkerManifest.lua $", "$Rev: 6000 $")
+EnchantrixBarker_RegisterRevision("$URL: Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 6507 $")

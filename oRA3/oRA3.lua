@@ -5,9 +5,10 @@ scope.addon = addon
 local L = scope.locale
 
 -- luacheck: globals RaidFrame RaidInfoFrame GameFontNormalSmall GameFontHighlightSmall GameFontDisableSmall
--- luacheck: globals oRA3Frame oRA3DisbandButton oRA3CheckButton
+-- luacheck: globals oRA3DisbandButton oRA3CheckButton
 -- luacheck: globals PanelTemplates_SetNumTabs PanelTemplates_SetTab PanelTemplates_UpdateTabs
 -- luacheck: globals FauxScrollFrame_OnVerticalScroll FauxScrollFrame_Update FauxScrollFrame_GetOffset
+-- luacheck: globals RAID_CLASS_COLORS StoreFrame_IsShown
 
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 local LGIST = LibStub("LibGroupInSpecT-1.1")
@@ -83,8 +84,10 @@ end
 
 -- Locals
 
+local oRA3Frame = CreateFrame("Frame", "oRA3Frame", UIParent)
+oRA3Frame:Hide()
+
 local playerName = addon:UnitName("player")
-local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
 local SendAddonMessage = C_ChatInfo.SendAddonMessage
 local PlaySound, IsInGroup = PlaySound, IsInGroup
 
@@ -108,15 +111,21 @@ local scrollheaders = {} -- scrollheader frames
 local scrollhighs = {} -- scroll highlights
 local secureScrollhighs = {} -- clickable secure scroll highlights
 
-local function actuallyDisband()
-	if groupStatus > 0 and groupStatus < 3 and (addon:IsPromoted() or 0) > 1 then
-		SendChatMessage("<oRA3> ".. L.disbandingGroupChatMsg, IsInRaid() and "RAID" or "PARTY")
+local actuallyDisband
+do
+	local function uninviteAll()
 		for _, unit in next, groupMembers do
 			if not UnitIsUnit(unit, "player") then
 				UninviteUnit(unit)
 			end
 		end
-		addon:ScheduleTimer(LeaveParty, 2)
+	end
+	function actuallyDisband()
+		if groupStatus > 0 and groupStatus < 3 and (addon:IsPromoted() or 0) > 1 then
+			SendChatMessage("<oRA3> ".. L.disbandingGroupChatMsg, IsInRaid() and "RAID" or "PARTY")
+			addon:ScheduleTimer(uninviteAll, 1)
+			addon:ScheduleTimer(C_PartyInfo.LeaveParty, 3)
+		end
 	end
 end
 
@@ -222,7 +231,7 @@ do
 	local noFunc = "Module %q tried to register an event with the function '%s' which doesn't exist in the module."
 
 	local eventMap = {}
-	oraFrame:SetScript("OnEvent", function(_, event, ...)
+	oRA3Frame:SetScript("OnEvent", function(_, event, ...)
 		for k,v in next, eventMap[event] do
 			if type(v) == "function" then
 				v(...)
@@ -237,14 +246,14 @@ do
 		if (not func and not self[event]) or (type(func) == "string" and not self[func]) then error((noFunc):format(self.moduleName, func or event)) end
 		if not eventMap[event] then eventMap[event] = {} end
 		eventMap[event][self] = func or event
-		oraFrame:RegisterEvent(event)
+		oRA3Frame:RegisterEvent(event)
 	end
 	function addon:UnregisterEvent(event)
 		if type(event) ~= "string" then error((noEvent):format(self.moduleName)) end
 		if not eventMap[event] then return end
 		eventMap[event][self] = nil
 		if not next(eventMap[event]) then
-			oraFrame:UnregisterEvent(event)
+			oRA3Frame:UnregisterEvent(event)
 			eventMap[event] = nil
 		end
 	end
@@ -290,8 +299,8 @@ function addon:OnInitialize()
 	LibStub("LibDualSpec-1.0"):EnhanceOptions(options.args.general.args.profileOptions, self.db)
 
 	local function OnRaidHide()
-		if addon:IsEnabled() and db.toggleWithRaid and oRA3Frame then
-			HideUIPanel(oRA3Frame)
+		if addon:IsEnabled() and db.toggleWithRaid then
+			addon:HideUIPanel()
 		end
 	end
 	RaidFrame:HookScript("OnHide", OnRaidHide)
@@ -301,7 +310,7 @@ function addon:OnInitialize()
 
 	RaidFrame:HookScript("OnShow", function()
 		if addon:IsEnabled() and db.toggleWithRaid then
-			addon:ToggleFrame(true)
+			addon:ShowUIPanel()
 		end
 		if addon.rehookAfterRaidUILoad and IsAddOnLoaded("Blizzard_RaidUI") then
 			-- Blizzard_RaidUI overwrites the RaidFrame "OnHide" script squashing the hook registered above, so re-hook.
@@ -310,18 +319,6 @@ function addon:OnInitialize()
 		end
 	end)
 
-	RaidInfoFrame:HookScript("OnShow", function()
-		if addon:IsEnabled() and oRA3Frame and oRA3Frame:IsShown() then
-			addon.toggle = true
-			HideUIPanel(oRA3Frame)
-		end
-	end)
-	RaidInfoFrame:HookScript("OnHide", function()
-		if addon:IsEnabled() and addon.toggle then
-			addon:ToggleFrame(true)
-			addon.toggle = nil
-		end
-	end)
 
 	db = self.db.profile
 
@@ -367,7 +364,7 @@ end
 
 function addon:OnDisable()
 	self:UnregisterAllEvents()
-	HideUIPanel(oRA3Frame) -- nil-safe
+	self:HideUIPanel()
 end
 
 do
@@ -639,9 +636,7 @@ end
 --
 
 local function setupGUI()
-	local frame = oraFrame
-	UIPanelWindows["oRA3Frame"] = { area = "left", pushable = 3, whileDead = 1, yoffset = 12, xoffset = -16 }
-	HideUIPanel(oRA3Frame)
+	local frame = oRA3Frame
 
 	frame:SetWidth(384)
 	frame:SetHeight(512)
@@ -874,19 +869,72 @@ local function setupGUI()
 	end
 end
 
-function addon:ToggleFrame(force)
+do
+	local function updateUIPanel(frame)
+		local frameName = frame and frame:GetName()
+		if UIPanelWindows[frameName] and oRA3Frame:IsShown() then
+			addon:ShowUIPanel()
+		end
+	end
+	hooksecurefunc("ShowUIPanel", updateUIPanel)
+	hooksecurefunc("HideUIPanel", updateUIPanel)
+	hooksecurefunc("UpdateUIPanelPositions", updateUIPanel)
+	hooksecurefunc("MaximizeUIPanel", updateUIPanel)
+	hooksecurefunc("RestoreUIPanelArea", updateUIPanel)
+end
+
+function addon:ShowUIPanel()
 	if setupGUI then
 		setupGUI()
 		setupGUI = nil
 	end
-	if force then
-		RaidInfoFrame:Hide()
-		ShowUIPanel(oRA3Frame, true)
-	else
-		ToggleFrame(oRA3Frame)
-		if oRA3Frame:IsShown() then
-			RaidInfoFrame:Hide()
+
+	if not CanOpenPanels() or GetUIPanel("fullscreen") or (StoreFrame_IsShown and StoreFrame_IsShown()) then
+		return
+	end
+
+	local leftOffset = UIParent:GetAttribute("LEFT_OFFSET")
+	local xOff = -16
+
+	-- Position based off of UIPanelWindows without being managed by them
+	-- Will always be the right-most frame
+	local right, center, left = GetUIPanel("right"), GetUIPanel("center"), GetUIPanel("left")
+	local frame = right or center or left or GetUIPanel("doublewide")
+	if frame then
+		if right == frame then
+			-- RIGHT_OFFSET isn't updated after setting the right frame
+			local info = UIPanelWindows[frame:GetName()]
+			leftOffset = UIParent:GetAttribute("RIGHT_OFFSET") + (info.xoffset or 0) + GetUIPanelWidth(frame) + 32
+			-- can get pushed off the screen (never entirely), but since we don't want to touch
+			-- the current panels this seems better than overlapping or not showing at all
+		elseif left == frame then
+			leftOffset = UIParent:GetAttribute("CENTER_OFFSET")
+		else -- center or doublewide (left+center)
+			if center == frame and not left then
+				-- center frames can allows others, but normally get closed, so stick with LEFT_OFFSET
+				xOff = xOff - 32 -- undo spacing
+			else
+				leftOffset = UIParent:GetAttribute("RIGHT_OFFSET")
+			end
 		end
+		xOff = xOff + 32
+	end
+
+	oRA3Frame:ClearAllPoints()
+	oRA3Frame:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", leftOffset + xOff, -104)
+	oRA3Frame:Raise()
+	oRA3Frame:Show()
+end
+
+function addon:HideUIPanel()
+	oRA3Frame:Hide()
+end
+
+function addon:ToggleFrame()
+	if oRA3Frame:IsShown() then
+		self:HideUIPanel()
+	else
+		self:ShowUIPanel()
 	end
 end
 
@@ -995,7 +1043,11 @@ function addon:RegisterPanel(name, show, hide)
 end
 
 function addon:SelectPanel(name, noUpdate)
-	self:ToggleFrame(true)
+	if setupGUI then
+		setupGUI()
+		setupGUI = nil
+	end
+
 	if not name then
 		name = db.lastSelectedPanel or panels[1].name
 	end
@@ -1017,8 +1069,8 @@ function addon:SelectPanel(name, noUpdate)
 
 	panels[index].show()
 
-	if not noUpdate then
-		UpdateUIPanelPositions(oRA3Frame) -- snap the panel back
+	if not oRA3Frame:IsShown() or not noUpdate then
+		self:ShowUIPanel()
 	end
 end
 

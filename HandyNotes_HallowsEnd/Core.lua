@@ -23,17 +23,25 @@ local continents = {
 	[13]  = true, -- Eastern Kingdoms
 	[101] = true, -- Outland
 	[113] = true, -- Northrend
+	[203] = true, -- Vashj'ir
+	[224] = true, -- Stranglethorn Vale
 	[424] = true, -- Pandaria
 	[572] = true, -- Draenor
 	[619] = true, -- Broken Isles
 	[875] = true, -- Zandalar
 	[876] = true, -- Kul Tiras
+	[947] = true, -- Azeroth
 }
 
 local notes = {
+	[12331] = "Speak to Zidormi in Darkshore to gain access to Teldrassil.",
+	[12334] = "Speak to Zidormi in Darkshore to gain access to Teldrassil.",
 	[12340] = "If Sentinel Hill is on fire, the bucket will be in the tower. If not, it will be in the inn.",
 	[12349] = "Speak to Zidormi if you can't find the bucket.", -- Theramore Isle, Alliance
+	[12363] = "Speak to Zidormi if you can't find the bucket.", -- Brill, Horde
+	[12368] = "Speak to Zidormi in Tirisfal to gain access to The Undercity.",
 	[12380] = "Speak to Zidormi if you can't find the bucket.", -- Hammerfall, Horde
+	[12401] = "Speak to Zidormi if you can't find the bucket.", -- Cenarion Hold, Silithus
 	[13472] = "Down in the Underbelly Tavern.",
 	[28954] = "Speak to Zidormi if you can't find the bucket.", -- Refuge Pointe, Alliance
 	[28959] = "Speak to Zidormi if you can't find the bucket.", -- Dreadmaul Hold, Horde
@@ -43,21 +51,18 @@ local notes = {
 }
 
 -- upvalues
-local _G = getfenv(0)
-
-local C_Timer_NewTicker = _G.C_Timer.NewTicker
 local C_Calendar = _G.C_Calendar
+local C_DateAndTime = _G.C_DateAndTime
+local C_Map = _G.C_Map
+local C_Timer_After = _G.C_Timer.After
 local GameTooltip = _G.GameTooltip
 local GetFactionInfoByID = _G.GetFactionInfoByID
 local GetGameTime = _G.GetGameTime
 local GetQuestsCompleted = _G.GetQuestsCompleted
-local gsub = _G.string.gsub
 local IsControlKeyDown = _G.IsControlKeyDown
 local LibStub = _G.LibStub
-local next = _G.next
 local UIParent = _G.UIParent
-local WorldMapButton = _G.WorldMapButton
-local WorldMapTooltip = _G.WorldMapTooltip
+local UnitFactionGroup = _G.UnitFactionGroup
 
 local HandyNotes = _G.HandyNotes
 local TomTom = _G.TomTom
@@ -69,35 +74,30 @@ local points = HallowsEnd.points
 -- plugin handler for HandyNotes
 function HallowsEnd:OnEnter(mapFile, coord)
 	local point = points[mapFile] and points[mapFile][coord]
-	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
 
 	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
-		tooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
-		tooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 
-	tooltip:SetText("Candy Bucket")
+	GameTooltip:SetText("Candy Bucket")
 
 	if notes[point] then
-		tooltip:AddLine(notes[point])
-		tooltip:AddLine(" ")
+		GameTooltip:AddLine(notes[point])
+		GameTooltip:AddLine(" ")
 	end
 
 	if TomTom then
-		tooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
-		tooltip:AddLine("Control-Right-click to set waypoints to every bucket.", 1, 1, 1)
+		GameTooltip:AddLine("Right-click to set a waypoint.", 1, 1, 1)
+		GameTooltip:AddLine("Control-Right-click to set waypoints to every bucket.", 1, 1, 1)
 	end
 
-	tooltip:Show()
+	GameTooltip:Show()
 end
 
 function HallowsEnd:OnLeave()
-	if self:GetParent() == WorldMapButton then
-		WorldMapTooltip:Hide()
-	else
 		GameTooltip:Hide()
-	end
 end
 
 
@@ -107,11 +107,13 @@ local function createWaypoint(mapID, coord)
 end
 
 local function createAllWaypoints()
-	for mapID, coords in next, points do
+	for mapFile, coords in next, points do
+		if not continents[mapFile] then
 		for coord, questID in next, coords do
 			if coord and (db.completed or not completedQuests[questID]) then
-				createWaypoint(mapID, coord)
+				createWaypoint(mapFile, coord)
 			end
+		end
 		end
 	end
 	TomTom:SetClosestWaypoint()
@@ -144,7 +146,7 @@ do
 		end
 	end
 
-	function HallowsEnd:GetNodes2(mapID, minimap)
+	function HallowsEnd:GetNodes2(mapID)
 		return iterator, points[mapID]
 	end
 end
@@ -197,8 +199,8 @@ local options = {
 -- check
 local setEnabled = false
 local function CheckEventActive()
-	local date = C_Calendar.GetDate()
-	local month, day, year = date.month, date.monthDay, date.year
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	local month, day, year = calendar.month, calendar.monthDay, calendar.year
 
 	local monthInfo = C_Calendar.GetMonthInfo()
 	local curMonth, curYear = monthInfo.month, monthInfo.year
@@ -210,16 +212,14 @@ local function CheckEventActive()
 		local event = C_Calendar.GetDayEvent(monthOffset, day, i)
 
 		if event.iconTexture == 235460 or event.iconTexture == 235461 or event.iconTexture == 235462 then
-			if event.sequenceType == "ONGOING" then
-				setEnabled = true
-			else
-				local hour = GetGameTime()
+			local hour, minute = GetGameTime()
 
-				if event.sequenceType == "END" and hour <= event.endTime.hour or event.sequenceType == "START" and hour >= event.startTime.hour then
-					setEnabled = true
-				else
-					setEnabled = false
-				end
+			setEnabled = event.sequenceType == "ONGOING" -- or event.sequenceType == "INFO"
+
+			if event.sequenceType == "START" then
+				setEnabled = hour >= event.startTime.hour and (hour > event.startTime.hour or minute >= event.startTime.minute)
+			elseif event.sequenceType == "END" then
+				setEnabled = hour <= event.endTime.hour and (hour < event.endTime.hour or minute <= event.endTime.minute)
 			end
 		end
 	end
@@ -244,6 +244,11 @@ local function CheckEventActive()
 
 		HandyNotes:Print("The Hallow's End celebrations have ended.  See you next year!")
 	end
+end
+
+local function RepeatingCheck()
+	CheckEventActive()
+	C_Timer_After(60, RepeatingCheck)
 end
 
 
@@ -274,7 +279,7 @@ function HallowsEnd:OnEnable()
 	end
 
 	for continentMapID in next, continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID)
+		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = points[map.mapID]
 			if coords then
@@ -290,13 +295,18 @@ function HallowsEnd:OnEnable()
 		end
 	end
 
-	local date = C_Calendar.GetDate()
-	C_Calendar.SetAbsMonth(date.month, date.year)
+	local calendar = C_DateAndTime.GetCurrentCalendarTime()
+	C_Calendar.SetAbsMonth(calendar.month, calendar.year)
+	CheckEventActive()
 
-	C_Timer_NewTicker(15, CheckEventActive)
 	HandyNotes:RegisterPluginDB("HallowsEnd", self, options)
-
 	db = LibStub("AceDB-3.0"):New("HandyNotes_HallowsEndDB", defaults, "Default").profile
+
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT", CheckEventActive)
+	self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST", CheckEventActive)
+	self:RegisterEvent("ZONE_CHANGED", CheckEventActive)
+
+	C_Timer_After(60, RepeatingCheck)
 end
 
 function HallowsEnd:Refresh(_, questID)

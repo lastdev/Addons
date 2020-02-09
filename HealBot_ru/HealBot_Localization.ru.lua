@@ -268,11 +268,11 @@ function HealBot_Lang_ruRU()
     HEALBOT_OPTIONS_HOTBARRIGHT             = "Справа";
     HEALBOT_OPTIONS_HOTBARLEFT              = "Слева";
 
-    HEALBOT_ZONE_AB                         = "Низина Арати"; -- GetMapNameByID(461) or "Низина Арати";
-    HEALBOT_ZONE_AV                         = "Альтеракская долина"; -- GetMapNameByID(401) or "Альтеракская долина";
-    HEALBOT_ZONE_ES                         = "Око Бури"; -- GetMapNameByID(482) or "Око Бури";
-    HEALBOT_ZONE_IC                         = "Остров Завоеваний"; -- GetMapNameByID(540) or "Остров Завоеваний";
-    HEALBOT_ZONE_SA                         = "Берег Древних"; -- GetMapNameByID(512) or "Берег Древних";
+    HEALBOT_ZONE_AB                         = "Низина Арати"; 
+    HEALBOT_ZONE_AV                         = "Альтеракская долина"; 
+    HEALBOT_ZONE_ES                         = "Око Бури";
+    HEALBOT_ZONE_IC                         = "Остров Завоеваний"; 
+    HEALBOT_ZONE_SA                         = "Берег Древних"; 
 
     HEALBOT_OPTION_AGGROTRACK               = "Следить за угрозой";
     HEALBOT_OPTION_AGGROBAR                 = "Панель";
@@ -657,19 +657,6 @@ function HealBot_Lang_ruRU()
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Враг";
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Друг";
 
-    HEALBOT_CUSTOM_CAT_CUSTOM_IMPORTANT     = "Важные дебаффы";
-    HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE        = "Наносящие урон дебаффы";
-    HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT        = "Дебаффы эффектов";
-    HEALBOT_CUSTOM_CAT_CUSTOM_MISC          = "Другие дебаффы";
-
-    HEALBOT_CUSTOM_DEBUFF_CATS = {
-             -- Defaults
-            [HEALBOT_CUSTOM_CAT_CUSTOM_IMPORTANT]  = 1,
-			[HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE]     = 1,
-            [HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT]     = 1,
-            [HEALBOT_CUSTOM_CAT_CUSTOM_MISC]       = 1,
-	}
-
     HEALBOT_ABOUT_DESC1                     = "Добавляет окно со стилизуемыми панелями для исцеления, рассеивания, наложения баффов и отслеживания угрозы.";
     HEALBOT_ABOUT_WEBSITE                   = "Сайт:";
     HEALBOT_ABOUT_AUTHORH                   = "Автор:";
@@ -831,19 +818,19 @@ function HealBot_Lang_ruRU()
 
     HEALBOT_OPTIONS_LANG                    = "Язык";
 
-    HEALBOT_OPTIONS_LANG_ZHCN               = "Chinese (zhCN - by Ydzzs)";
-    HEALBOT_OPTIONS_LANG_ENUK               = "English (enUK - by Strife)";
-    HEALBOT_OPTIONS_LANG_ENUS               = "English (enUS - by Strife)";
-    HEALBOT_OPTIONS_LANG_FRFR               = "French (frFR - by Kubik)";
-    HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE - by Snaomi)";
-    HEALBOT_OPTIONS_LANG_GRGR               = "Greek (grGR - by Snaomi)";
-    HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU - by Von)";
-    HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR - translator required)";
-    HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT - by Brezza)";
-    HEALBOT_OPTIONS_LANG_PTBR               = "Portuguese (ptBR - by Aldetal)";
-    HEALBOT_OPTIONS_LANG_RURU               = "Русский (ruRU - by Justice)";
-    HEALBOT_OPTIONS_LANG_ESES               = "Spanish (esES - translator required)";
-    HEALBOT_OPTIONS_LANG_TWTW               = "Taiwanese (twTW - translator required)";
+    HEALBOT_OPTIONS_LANG_ZHCN               = "Chinese (zhCN)";
+    HEALBOT_OPTIONS_LANG_ENUK               = "English (enUK)";
+    HEALBOT_OPTIONS_LANG_ENUS               = "English (enUS)";
+    HEALBOT_OPTIONS_LANG_FRFR               = "French (frFR)";
+    HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE)";
+    HEALBOT_OPTIONS_LANG_GRGR               = "Greek (grGR)";
+    HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU)";
+    HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR)";
+    HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT)";
+    HEALBOT_OPTIONS_LANG_PTBR               = "Portuguese (ptBR)";
+    HEALBOT_OPTIONS_LANG_RURU               = "Русский (ruRU)";
+    HEALBOT_OPTIONS_LANG_ESES               = "Spanish (esES)";
+    HEALBOT_OPTIONS_LANG_TWTW               = "Taiwanese (twTW)";
 
     HEALBOT_OPTIONS_LANG_ADDON_FAIL1        = "Не удалось загрузить аддон для локализации";
     HEALBOT_OPTIONS_LANG_ADDON_FAIL2        = "Причина ошибки:";

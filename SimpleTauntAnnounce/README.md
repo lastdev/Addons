@@ -2,7 +2,7 @@
 Simple Taunt Announce
 =====================
 
-Copyright 2011-2019 BeathsCurse (Bowmore - Silvermoon EU)
+Copyright 2011-2020 BeathsCurse (Bowmore - Silvermoon EU)
 
 
 Introduction

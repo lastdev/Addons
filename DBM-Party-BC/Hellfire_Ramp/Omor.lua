@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(528, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190421035925")
 mod:SetCreatureID(17308)
 mod:SetEncounterID(1891)
 mod:SetUsedIcons(8)
@@ -20,7 +20,7 @@ local yellBane		= mod:NewYell(37566)
 
 local timerBane     = mod:NewTargetTimer(15, 37566, nil, nil, nil, 3)
 
-mod:AddBoolOption("SetIconOnBaneTarget", true)
+mod:AddSetIconOption("SetIconOnBaneTarget", 37566, true, false, {8})
 mod:AddBoolOption("RangeFrame")
 
 function mod:OnCombatEnd()

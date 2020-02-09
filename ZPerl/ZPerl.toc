@@ -1,5 +1,5 @@
-## Interface: 80100
-## Version: 5.7.2
+## Interface: 80300
+## Version: 5.9.2
 ## Author: Resike
 ## Title: Z-Perl UnitFrames
 ## Title-itIT: Z-Perl UnitFrames
@@ -15,11 +15,13 @@
 ## Notes-zhCN: 玩家头像增强插件，附带团队助手功能
 ## Notes-zhTW: 提供玩家單位、隊伍、目標、寵物、目標的目標頭像增強以及團隊框架顯示、團隊助手等等功能
 ## SavedVariables: ZPerlConfig, ZPerlConfig_Global, ZPerlConfigNew, ZPerlConfigSavePerCharacter, ZPerlImportDone
+## OptionalDeps: Clique, RealMobHealth
 
 
 Libs\LibStub\LibStub.lua
-Libs\!NoTaint\!NoTaint.xml
-Libs\!NoTaint\!NoTaint.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\LibClassicDurations\LibClassicDurations.xml
+Libs\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.lua
 
 Version.lua
 

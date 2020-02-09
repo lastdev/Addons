@@ -4,6 +4,6 @@
 	<Script file="AskPrice.lua"/>
 
 	<Script>
-		AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AskPrice/Embed.xml $", "$Rev: 6217 $")
+		AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-AskPrice/Embed.xml $", "$Rev: 6486 $")
 	</Script>
 </Ui>

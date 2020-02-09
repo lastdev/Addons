@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxAutoDisenchant.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxAutoDisenchant.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	Automatic disenchant scanner.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 6506 $")
 
 local auto_de_session_ignore_list = {}
 local auto_de_frame
@@ -60,7 +60,7 @@ end
 local function debugSpam(...)
 --	local message = debug:Dump(...)
 --	local r, g, b = 0, 0.75, 1
---	_G["ChatFrame1"]:AddMessage("AutoDe: " .. message, r, g, b)
+--	DEFAULT_CHAT_FRAME:AddMessage("AutoDe: " .. message, r, g, b)
 end
 
 local function eventSpam(...)
@@ -144,7 +144,7 @@ end
 local moduleState
 local function setState(newState)
 	if newState ~= state then
-		debugSpam("State: " .. newState)
+		--debugSpam("State: " .. newState)
 		moduleState = newState
 	end
 end
@@ -156,8 +156,9 @@ end
 
 local function getDisenchantOrProspectValue(link, count)
 	local _, _, quality, level = GetItemInfo(link)
+    --debugSpam("Checking Item ", link );
 	if not (quality and level) then
-		--debugSpam("Item ", link, "quality and level nil" );
+		debugSpam("Item ", link, "quality and level nil" );
 	return end
 
 	if quality >= 2 then
@@ -187,10 +188,13 @@ local function getDisenchantOrProspectValue(link, count)
 
 -- TODO - ccox - these could share some code
 		local jcSkillRequired = Enchantrix.Util.JewelCraftSkillRequiredForItem(link)
+        --debugSpam("Item ", link, "skill required", jcSkillRequired, Enchantrix.Util.GetUserJewelCraftingSkill() );
 		if (jcSkillRequired and jcSkillRequired > 0 and Enchantrix.Util.GetUserJewelCraftingSkill() > 0) then
+            --debugSpam("Item ", link, "skill passed" );
 
 			local prospect = Enchantrix.Storage.GetItemProspects(link)
 			if prospect then
+                --debugSpam("Item ", link, "prospect results passed" );
 				local prospectValue = 0
 				for result, yield in pairs(prospect) do
 					local hsp, median, baseline, valFive = Enchantrix.Util.GetReagentPrice(result)
@@ -206,7 +210,7 @@ local function getDisenchantOrProspectValue(link, count)
 					local value = (hsp or 0) * yield
 					prospectValue = prospectValue + value
 				end
-				--if (prospectValue == 0) then debugSpam("Item ", link, "has zero prospect value?" ); end	-- DEBUGGING
+                --if (prospectValue == 0) then debugSpam("Item ", link, "has zero prospect value?" ); end	-- DEBUGGING
 				return prospectValue, idProspecting -- _ENCH('ArgSpellProspectingName')
 			end
 		end
@@ -214,7 +218,7 @@ local function getDisenchantOrProspectValue(link, count)
 		local inscriptionSkillRequired = Enchantrix.Util.InscriptionSkillRequiredForItem(link)
 		--debugSpam("Item ", link, "skill required", inscriptionSkillRequired, Enchantrix.Util.GetUserInscriptionSkill() );
 		if (inscriptionSkillRequired and inscriptionSkillRequired > 0 and Enchantrix.Util.GetUserInscriptionSkill() > 0) then
-			--debugSpam("Item ", link, "skill passed" ); 
+			--debugSpam("Item ", link, "skill passed" );
 			local milling = Enchantrix.Storage.GetItemMilling(link)
 			if milling then
 				--debugSpam("Item ", link, "mill results passed" );
@@ -257,7 +261,7 @@ local function findItemInOneBag(bag, findLink)
 				if (not isItemIgnored(link)) and isAutoDisenchantAllowed(link, count) then
 					local value, spell = getDisenchantOrProspectValue(link, count)
 					if value and value > 0 then
-						debugSpam("found auto item ", value, link, bag, slot )
+						--debugSpam("found auto item ", value, link, bag, slot )
 						return link, bag, slot, value, spell
 					end
 				end
@@ -355,7 +359,7 @@ local function onEvent(...)
 		--      arg2 is always NIL,
 		--      arg3 is complex string guid? "Cast-3-3886-1-16283-13262-XXXXXXXXXX"
 		--      arg4 is a number (13262)
-eventSpam(...)
+            eventSpam(...)
 		if isState("prompt") and arg1 == "player" and arg4 == auto_de_prompt.Yes:GetAttribute("spell") then
 			-- disenchant started - wait for completion
 			eventSpam(...)
@@ -444,7 +448,7 @@ local function onUpdate(frame, elapsed)
 	if enabledInOptions then
 		if isState("sleep") or isState("init") then
 			if Enchantrix.Util.GetUserEnchantingSkill() >= 1
-				or Enchantrix.Util.GetUserJewelCraftingSkill() >= 20
+				or Enchantrix.Util.GetUserJewelCraftingSkill() >= 1
 				or Enchantrix.Util.GetUserInscriptionSkill() >= 1 then
 				Enchantrix.Util.ChatPrint(_ENCH("FrmtAutoDeActive"))
 				beginScan()
@@ -523,7 +527,7 @@ function showPrompt(link, bag, slot, value, spell)
 	local texture = GetItemIcon(auto_de_prompt.link)
 	auto_de_prompt.Item:SetNormalTexture(texture)
 	debugSpam("item link used:", auto_de_prompt.link, itemStringFromLink(auto_de_prompt.link), auto_de_prompt.bag, auto_de_prompt.slot)
-	
+
 	-- auto_de_prompt.Yes:SetAttribute("target-item", itemStringFromLink(auto_de_prompt.link))	-- this sees zombies for identical links in WoW 6.x
 	auto_de_prompt.Yes:SetAttribute("target-bag", auto_de_prompt.bag)
 	auto_de_prompt.Yes:SetAttribute("target-slot", auto_de_prompt.slot)

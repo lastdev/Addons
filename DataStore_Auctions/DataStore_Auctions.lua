@@ -96,7 +96,7 @@ local PublicMethods = {
 }
 
 -- maximum time left in seconds per auction type : [1] = max 30 minutes, [2] = 2 hours, [3] = 12 hours, [4] = more than 12, but max 48 hours
--- info : http://www.wowwiki.com/API_GetAuctionItemTimeLeft
+-- info : http://www.wowwiki.com/API_C_AuctionHouse.GetReplicateItemTimeLeft
 local maxTimeLeft = { 30*60, 2*60*60, 12*60*60, 48*60*60 }
 
 local function CheckExpiries()
@@ -163,9 +163,9 @@ local function ScanAuctions()
 	
 	_ClearAuctionEntries(character, "Auctions", AHZone)
 	
-	for i = 1, GetNumAuctionItems("owner") do
+	for i = 1, C_AuctionHouse.GetNumReplicateItems("owner") do
 		local itemName, _, count, _, _, _, _, startPrice, 
-			_, buyoutPrice, _, highBidder, _, _, _, saleStatus, itemID =  GetAuctionItemInfo("owner", i)
+			_, buyoutPrice, _, highBidder, _, _, _, saleStatus, itemID =  C_AuctionHouse.GetReplicateItemInfo("owner", i)
 			
 		-- do not list sold items, they're supposed to be in the mailbox
 		if saleStatus and saleStatus == 1 then		-- just to be sure, in case Bliz ever returns nil
@@ -175,8 +175,8 @@ local function ScanAuctions()
 		end
 			
 		if itemName and itemID and not saleStatus then
-			local link = GetAuctionItemLink("owner", i)
-			local timeLeft = GetAuctionItemTimeLeft("owner", i)
+			local link = C_AuctionHouse.GetReplicateItemLink("owner", i)
+			local timeLeft = C_AuctionHouse.GetReplicateItemTimeLeft("owner", i)
 			
 			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
 				AHZone, itemID, count, highBidder or "", startPrice, buyoutPrice, timeLeft))
@@ -204,15 +204,15 @@ local function ScanBids()
 	
 	_ClearAuctionEntries(character, "Bids", AHZone)
 	
-	for i = 1, GetNumAuctionItems("bidder") do
+	for i = 1, C_AuctionHouse.GetNumReplicateItems("bidder") do
 		local itemName, _, count, _, _, _, _, _, 
-			_, buyoutPrice, bidPrice, _, ownerName = GetAuctionItemInfo("bidder", i);
+			_, buyoutPrice, bidPrice, _, ownerName = C_AuctionHouse.GetReplicateItemInfo("bidder", i);
 			
 		if itemName then
-			local link = GetAuctionItemLink("bidder", i)
+			local link = C_AuctionHouse.GetReplicateItemLink("bidder", i)
 			if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
 				local id = tonumber(link:match("item:(%d+)"))
-				local timeLeft = GetAuctionItemTimeLeft("bidder", i)
+				local timeLeft = C_AuctionHouse.GetReplicateItemTimeLeft("bidder", i)
 			
 				table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
 					AHZone, id, count, ownerName or "", bidPrice, buyoutPrice, timeLeft))
@@ -224,12 +224,12 @@ end
 -- *** EVENT HANDLERS ***
 function addon:AUCTION_HOUSE_SHOW()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED")
-	addon:RegisterEvent("AUCTION_OWNED_LIST_UPDATE", ScanAuctions)
-	addon:RegisterEvent("AUCTION_BIDDER_LIST_UPDATE", ScanBids)
+	addon:RegisterEvent("OWNED_AUCTIONS_UPDATED", ScanAuctions)
+	addon:RegisterEvent("BIDS_UPDATED", ScanBids)
 end
 
 function addon:AUCTION_HOUSE_CLOSED()
 	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
-	addon:UnregisterEvent("AUCTION_OWNED_LIST_UPDATE")
-	addon:UnregisterEvent("AUCTION_BIDDER_LIST_UPDATE")
+	addon:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
+	addon:UnregisterEvent("BIDS_UPDATED")
 end

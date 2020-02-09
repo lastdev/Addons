@@ -257,18 +257,21 @@ local Factions = {
 		{	-- [2]
 			name = FACTION_HORDE,
 			{ name = DataStore:GetFactionName(2157), icon = "Inv_tabard_hordewareffort" },
-			{ name = DataStore:GetFactionName(2103), icon = "Inv_tabard_zandalariempire" },
+			-- should use the libbabble .. horde / ally factions again..
+			{ name = DataStore:GetFactionName(2103) or "Zandalari Empire", icon = "Inv_tabard_zandalariempire" },
 			{ name = DataStore:GetFactionName(2156), icon = "Inv_tabard_talanjisexpedition" },
 			-- temp fix, on Alliance, 2158 returns nil
 			{ name = DataStore:GetFactionName(2158) or "Voldunai", icon = "Inv_tabard_vulpera" },
 			{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
 			{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
 		},
-		-- {	-- [3]
-		-- 	name = OTHER,
-		-- 	{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
-		-- 	{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
-		-- },
+		{	-- [3]
+			name = OTHER,
+			{ name = DataStore:GetFactionName(2400), icon = "inv_faction_akoan" },
+			{ name = DataStore:GetFactionName(2391), icon = "inv_mechagon_junkyardtinkeringcrafting" },
+			{ name = DataStore:GetFactionName(2415), icon = "inv_faction_83_rajani" },
+			{ name = DataStore:GetFactionName(2417), icon = "inv_faction_83_uldumaccord" },
+		},
 	},
 	{	-- [8]
 		name = GUILD,

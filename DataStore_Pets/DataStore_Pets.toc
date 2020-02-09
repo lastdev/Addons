@@ -1,8 +1,8 @@
-## Interface: 80000
+## Interface: 80300
 ## Title: DataStore_Pets
 ## Notes: Stores information about character pets and mounts
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r44
+## Version: r46
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_PetsDB

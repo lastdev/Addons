@@ -94,6 +94,102 @@ local BLIP_TEX_COORDS = {
 	["MONK"]		 = { 0.125, 0.25, 0.25, 0.5 },
 	["DEMONHUNTER"]	 = { 0.375, 0.5, 0.25, 0.5 },
 }
+
+--All ranges are tested and compared against UnitDistanceSquared.
+--Example: Worgsaw has a tooltip of 6 but doesn't factor in hitboxes/etc. It doesn't return false until UnitDistanceSquared of 8.
+local itemRanges = {
+	[4] = 90175,--Gin-Ji Knife Set
+	[6] = 37727,--Ruby Acorn
+	[8] = 8149,--Voodoo Charm
+	[13] = 32321,--Sparrowhawk Net
+	[18] = 6450,--Silk Bandage
+	[23] = 21519,--Mistletoe
+	[33] = 1180,--Scroll of Stamina
+	[43] = 34471,--Vial of the Sunwell (UnitInRange api alternate if item checks break)
+	[48] = 32698,--Wrangling Rope
+	[53] = 116139,--Haunting Memento
+	[60] = 32825,--Soul Cannon
+	[80] = 35278,--Reinforced Net
+}
+local apiRanges = {
+	[10] = 3,--CheckInteractDistance (Duel)
+	[11] = 2,--CheckInteractDistance (Trade)
+	[30] = 1,--CheckInteractDistance (Inspect)
+}
+
+--Function for automatically converting inputed ranges from old mods to be ones that have valid item/api checks
+local function setCompatibleRestrictedRange(range)
+	if range <= 4 then
+		range = 4
+	elseif range <= 6 then
+		range = 6
+	elseif range <= 8 then
+		range = 8
+	elseif range <= 10 then
+		range = 10
+	elseif range <= 11 then
+		range = 11
+	elseif range <= 13 then
+		range = 13
+	elseif range <= 18 then
+		range = 18
+	elseif range <= 23 then
+		range = 23
+	elseif range <= 30 then
+		range = 30
+	elseif range <= 33 then
+		range = 33
+	elseif range <= 43 then
+		range = 43
+	elseif range <= 48 then
+		range = 48
+	elseif range <= 53 then
+		range = 53
+	elseif range <= 60 then
+		range = 60
+	elseif range <= 80 then
+		range = 80
+	end
+	return range
+end
+
+local function itsBCAgain(uId, checkrange)
+	if checkrange then--Specified range, this check only cares whether unit is within specific range
+		if itemRanges[checkrange] then--Only query item range for requested active range check
+			if IsItemInRange(itemRanges[checkrange], uId) then
+				return checkrange
+			else
+				return 1000
+			end
+		elseif apiRanges[checkrange] then--Only query item range for requested active range if no item found for it
+			if CheckInteractDistance(uId, apiRanges[checkrange]) then
+				return checkrange
+			else
+				return 1000
+			end
+		else
+			 return 1000--Just so it has a numeric value, even if it's unknown to protect from nil errors
+		end
+	else--No range passed, this is being used by a getDistanceBetween function that needs to calculate precise distances of members of raid (well as precise as possible with a crappy api)
+		if IsItemInRange(90175, uId) then return 4
+		elseif IsItemInRange(37727, uId) then return 6
+		elseif IsItemInRange(8149, uId) then return 8
+		elseif CheckInteractDistance(uId, 3) then return 10
+		elseif CheckInteractDistance(uId, 2) then return 11
+		elseif IsItemInRange(32321, uId) then return 13
+		elseif IsItemInRange(6450, uId) then return 18
+		elseif IsItemInRange(21519, uId) then return 23
+		elseif CheckInteractDistance(uId, 1) then return 30
+		elseif IsItemInRange(1180, uId) then return 33
+		elseif UnitInRange(uId) then return 43
+		elseif IsItemInRange(32698, uId) then return 48
+		elseif IsItemInRange(116139, uId) then return 53
+		elseif IsItemInRange(32825, uId) then return 60
+		elseif IsItemInRange(35278, uId) then return 80
+		else return 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
+	end
+end
+
 ---------------------
 --  Dropdown Menu  --
 ---------------------
@@ -114,7 +210,7 @@ do
 		rangeCheck:Hide(true)
 		rangeCheck:Show(range, mainFrame.filter, true, mainFrame.redCircleNumPlayers or 1)
 	end
-	
+
 	local function setThreshold(self, threshold)
 		rangeCheck:Hide(true)
 		rangeCheck:Show(mainFrame.range, mainFrame.filter, true, threshold)
@@ -188,14 +284,14 @@ do
 				info.arg1 = 4
 				info.checked = (mainFrame.range == 4)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(6)
 				info.func = setRange
 				info.arg1 = 6
 				info.checked = (mainFrame.range == 6)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(8)
 				info.func = setRange
@@ -209,7 +305,7 @@ do
 				info.arg1 = 10
 				info.checked = (mainFrame.range == 10)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(13)
 				info.func = setRange
@@ -225,12 +321,26 @@ do
 				UIDropDownMenu_AddButton(info, 2)
 
 				info = UIDropDownMenu_CreateInfo()
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(23)
+				info.func = setRange
+				info.arg1 = 23
+				info.checked = (mainFrame.range == 23)
+				UIDropDownMenu_AddButton(info, 2)
+
+				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(30)
 				info.func = setRange
 				info.arg1 = 30
 				info.checked = (mainFrame.range == 30)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
+				info = UIDropDownMenu_CreateInfo()
+				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(33)
+				info.func = setRange
+				info.arg1 = 33
+				info.checked = (mainFrame.range == 33)
+				UIDropDownMenu_AddButton(info, 2)
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(43)
 				info.func = setRange
@@ -251,35 +361,35 @@ do
 				info.arg1 = 2
 				info.checked = (mainFrame.redCircleNumPlayers == 2)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = 3
 				info.func = setThreshold
 				info.arg1 = 3
 				info.checked = (mainFrame.redCircleNumPlayers == 3)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = 4
 				info.func = setThreshold
 				info.arg1 = 4
 				info.checked = (mainFrame.redCircleNumPlayers == 4)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = 5
 				info.func = setThreshold
 				info.arg1 = 5
 				info.checked = (mainFrame.redCircleNumPlayers == 5)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = 6
 				info.func = setThreshold
 				info.arg1 = 6
 				info.checked = (mainFrame.redCircleNumPlayers == 6)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = 8
 				info.func = setThreshold
@@ -462,7 +572,7 @@ function createRadarFrame()
 
 	local player = radarFrame:CreateTexture(nil, "OVERLAY")
 	player:SetSize(32, 32)
-	player:SetTexture("Interface\\Minimap\\MinimapArrow.blp")
+	player:SetTexture(136431)--"Interface\\Minimap\\MinimapArrow.blp"
 	player:SetBlendMode("ADD")
 	player:SetPoint("CENTER")
 
@@ -485,7 +595,7 @@ function createRadarFrame()
 	for i = 1, 40 do
 		local dot = radarFrame:CreateTexture(nil, "OVERLAY")
 		dot:SetSize(24, 24)
-		dot:SetTexture("Interface\\Minimap\\PartyRaidBlips")
+		dot:SetTexture(249183)--"Interface\\Minimap\\PartyRaidBlips"
 		dot:Hide()
 		dots[i] = dot
 	end
@@ -534,7 +644,8 @@ do
 				dot.class = class
 				if icon and icon < 9 then
 					dot.icon = icon
-					dot:SetTexture(format("Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d", icon))
+					--137001-137008
+					dot:SetTexture(13700 .. icon)--format("Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d", icon)
 					dot:SetTexCoord(0, 1, 0, 1)
 					dot:SetSize(16, 16)
 					dot:SetDrawLayer("OVERLAY", 1)
@@ -542,7 +653,7 @@ do
 					dot.icon = nil
 					class = class or "PRIEST"
 					local c = RAID_CLASS_COLORS[class]
-					dot:SetTexture("Interface\\Minimap\\PartyRaidBlips")
+					dot:SetTexture(249183)--"Interface\\Minimap\\PartyRaidBlips"
 					dot:SetTexCoord(BLIP_TEX_COORDS[class][1], BLIP_TEX_COORDS[class][2], BLIP_TEX_COORDS[class][3], BLIP_TEX_COORDS[class][4])
 					dot:SetSize(24, 24)
 					dot:SetDrawLayer("OVERLAY", 0)
@@ -609,27 +720,9 @@ do
 			local dot = dots[i]
 			local mapId = GetBestMapForUnit(uId) or 0
 			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
-				local range--Juset set to a number in case any api fails and returns nil
+				local range--Just set to a number in case any api fails and returns nil
 				if restricted then--API restrictions are in play, so pretend we're back in BC
-					--Start at bottom and work way up.
-					--Definitely not most efficient way of doing it. Refactor later
-					--All ranges aer tested and compared against UnitDistanceSquared.
-					--Worgsaw has a tooltip of 6 but doesn't factor in hitboxes/etc. It doesn't return false until UnitDistanceSquared of 8. bandages 18 even though spell range is 15, etc. Acorn actually is 5 in both though
-					if IsItemInRange(90175, uId) then range = 4--Gin-Ji Knife Set
-					elseif IsItemInRange(37727, uId) then range = 6--Ruby Acorn
-					elseif IsItemInRange(63427, uId) then range = 8--Worgsaw
-					elseif CheckInteractDistance(uId, 3) then range = 10
-					elseif CheckInteractDistance(uId, 2) then range = 11
-					elseif IsItemInRange(32321, uId) then range = 13--reports 12 but actual range tested is 13
-					elseif IsItemInRange(6450, uId) then range = 18--Bandages. (despite popular sites saying it's 15 yards, it's actually 18 yards verified by UnitDistanceSquared
-					elseif IsItemInRange(21519, uId) then range = 22--Item says 20, returns true until 22.
-					elseif CheckInteractDistance(uId, 1) then range = 30
-					elseif UnitInRange(uId) then range = 43--item check of 34471 also good for 43
-					elseif IsItemInRange(32698, uId)  then range = 48--Wrangling Rope
-					elseif IsItemInRange(116139, uId)  then range = 53
-					elseif IsItemInRange(32825, uId) then range = 60
-					elseif IsItemInRange(35278, uId) then range = 80
-					else range = 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
+					range = itsBCAgain(uId, activeRange)
 				else
 					range = UnitDistanceSquared(uId) ^ 0.5
 				end
@@ -637,10 +730,12 @@ do
 				if range < (activeRange+0.5) then
 					closePlayer = closePlayer + 1
 					inRange = true
-					if not closestRange then
-						closestRange = range
-					elseif range < closestRange then
-						closestRange = range
+					if rEnabled then--Only used by radar
+						if not closestRange then
+							closestRange = range
+						elseif range < closestRange then
+							closestRange = range
+						end
 					end
 					if not closetName then closetName = UnitName(uId) end
 				end
@@ -677,6 +772,7 @@ do
 				textFrame:AddLine(DBM_CORE_RANGECHECK_IN_RANGE_TEXT:format(closePlayer, activeRange), 0, 1, 0)
 			--Red Text (Regular range frame and we are near too many players, or reverse range frame and we aren't near enough)
 			else
+				updateSound(closePlayer)
 				textFrame:AddLine(DBM_CORE_RANGECHECK_IN_RANGE_TEXT:format(closePlayer, activeRange), 1, 0, 0)
 			end
 			textFrame:Show()
@@ -714,10 +810,9 @@ do
 				end
 				prevColor = circleColor
 			end
-		end
-
-		if closePlayer >= warnThreshold then
-			updateSound(closePlayer)
+			if circleColor == 2 then--Red
+				updateSound(closePlayer)
+			end
 		end
 	end
 end
@@ -738,30 +833,12 @@ end)
 -----------------------
 local getDistanceBetween, getDistanceBetweenALL
 do
-	local function itsBCAgain(uId)
-		if IsItemInRange(90175, uId) then return 4
-		elseif IsItemInRange(37727, uId) then return 6
-		elseif IsItemInRange(63427, uId) then return 8
-		elseif CheckInteractDistance(uId, 3) then return 10
-		elseif CheckInteractDistance(uId, 2) then return 11
-		elseif IsItemInRange(32321, uId) then return 13
-		elseif IsItemInRange(6450, uId) then return 18
-		elseif IsItemInRange(21519, uId) then return 22
-		elseif CheckInteractDistance(uId, 1) then return 30
-		elseif UnitInRange(uId) then return 43
-		elseif IsItemInRange(32698, uId) then return 48
-		elseif IsItemInRange(116139, uId) then return 53
-		elseif IsItemInRange(32825, uId) then return 60
-		elseif IsItemInRange(35278, uId) then return 80
-		else return 1000 end--Just so it has a numeric value, even if it's unknown to protect from nil errors
-	end
-	
 	function getDistanceBetweenALL(checkrange)
 		local range = 1000
 		for uId in DBM:GetGroupMembers() do
 			if UnitExists(uId) and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) then
 				if DBM:HasMapRestrictions() then--API restrictions are in play, so pretend we're back in BC
-					range = itsBCAgain(uId)
+					range = itsBCAgain(uId, checkrange)
 				else
 					range = UnitDistanceSquared(uId) ^ 0.5
 				end
@@ -770,9 +847,9 @@ do
 				end
 			end
 		end
-		return false--No one was foundi nrnage
+		return false--No one was found in range
 	end
-	
+
 	function getDistanceBetween(uId, x, y)
 		local restrictionsActive = DBM:HasMapRestrictions()
 		if not x then--If only one arg then 2nd arg is always assumed to be player
@@ -830,35 +907,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 	local restrictionsActive = DBM:HasMapRestrictions()
 	if (DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" or restrictionsActive) and not textFrame.isShown then
 		if restrictionsActive then
-			if range <= 4 then
-				range = 4
-			elseif range <= 6 then
-				range = 6
-			elseif range <= 8 then
-				range = 8
-			elseif range <= 10 then
-				range = 10
-			elseif range <= 11 then
-				range = 11
-			elseif range <= 13 then
-				range = 13
-			elseif range <= 18 then
-				range = 18
-			elseif range <= 22 then
-				range = 22
-			elseif range <= 30 then
-				range = 30
-			elseif range <= 43 then
-				range = 43
-			elseif range <= 48 then
-				range = 48
-			elseif range <= 53 then
-				range = 53
-			elseif range <= 60 then
-				range = 60
-			elseif range <= 80 then
-				range = 80
-			end
+			range = setCompatibleRestrictedRange(range)
 		end
 		textFrame.isShown = true
 		textFrame:Show()
@@ -907,7 +956,7 @@ function rangeCheck:Hide(force)
 		end
 		if radarFrame then
 			radarFrame.isShown = nil
-			radarFrame:Hide() 
+			radarFrame:Hide()
 		end
 	end
 end
@@ -935,6 +984,9 @@ function rangeCheck:GetDistance(...)
 	return getDistanceBetween(...)
 end
 
-function rangeCheck:GetDistanceAll(...)
-	return getDistanceBetweenALL(...)
+function rangeCheck:GetDistanceAll(checkrange)
+	if DBM:HasMapRestrictions() then
+		checkrange = setCompatibleRestrictedRange(checkrange)
+	end
+	return getDistanceBetweenALL(checkrange)
 end

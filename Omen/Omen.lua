@@ -19,19 +19,19 @@ BINDING_NAME_OMENTOGGLEFOCUS = L["Toggle Focus"]
 
 -----------------------------------------------------------------------------
 -- Register some media
-LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.ogg]])
-LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.ogg]])
-LSM:Register("sound", "Explosion", [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.ogg]])
-LSM:Register("sound", "Shing!", [[Sound\Doodad\PortcullisActive_Closed.ogg]])
-LSM:Register("sound", "Wham!", [[Sound\Doodad\PVP_Lordaeron_Door_Open.ogg]])
-LSM:Register("sound", "Simon Chime", [[Sound\Doodad\SimonGame_LargeBlueTree.ogg]])
-LSM:Register("sound", "War Drums", [[Sound\Event Sounds\Event_wardrum_ogre.ogg]])
-LSM:Register("sound", "Cheer", [[Sound\Event Sounds\OgreEventCheerUnique.ogg]])
-LSM:Register("sound", "Humm", [[Sound\Spells\SimonGame_Visual_GameStart.ogg]])
-LSM:Register("sound", "Short Circuit", [[Sound\Spells\SimonGame_Visual_BadPress.ogg]])
-LSM:Register("sound", "Fel Portal", [[Sound\Spells\Sunwell_Fel_PortalStand.ogg]])
-LSM:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]])
-LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDIe.ogg]])
+LSM:Register("sound", "Rubber Ducky", 566121) -- [[Sound\Doodad\Goblin_Lottery_Open01.ogg]]
+LSM:Register("sound", "Cartoon FX", 566543) --  [[Sound\Doodad\Goblin_Lottery_Open03.ogg]]
+LSM:Register("sound", "Explosion", 566982) -- [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.ogg]]
+LSM:Register("sound", "Shing!", 566240) -- [[Sound\Doodad\PortcullisActive_Closed.ogg]]
+LSM:Register("sound", "Wham!", 566946) -- [[Sound\Doodad\PVP_Lordaeron_Door_Open.ogg]]
+LSM:Register("sound", "Simon Chime", 566076) -- [[Sound\Doodad\SimonGame_LargeBlueTree.ogg]]
+LSM:Register("sound", "War Drums", 567275) -- [[Sound\Event Sounds\Event_wardrum_ogre.ogg]]
+LSM:Register("sound", "Cheer", 567283) -- [[Sound\Event Sounds\OgreEventCheerUnique.ogg]]
+LSM:Register("sound", "Humm", 569518) -- [[Sound\Spells\SimonGame_Visual_GameStart.ogg]]
+LSM:Register("sound", "Short Circuit", 568975) -- [[Sound\Spells\SimonGame_Visual_BadPress.ogg]]
+LSM:Register("sound", "Fel Portal", 569215) -- [[Sound\Spells\Sunwell_Fel_PortalStand.ogg]]
+LSM:Register("sound", "Fel Nova", 568582) -- [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]]
+LSM:Register("sound", "You Will Die!", 546633) -- [[Sound\Creature\CThun\CThunYouWillDIe.ogg]]
 LSM:Register("sound", "Omen: Aoogah!", [[Interface\AddOns\Omen\aoogah.ogg]])
 
 

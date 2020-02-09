@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local L = WeakAuras.L;
 
 local event_types = WeakAuras.event_types;
@@ -75,7 +77,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.custom_type = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
         WeakAuras.ReloadOptions(data.id);
@@ -95,7 +96,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.check = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -114,7 +114,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.check = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -132,7 +131,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.events = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -148,9 +146,64 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.events = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
+      end
+    },
+    event_customError = {
+      type = "description",
+      name = function()
+        local events = trigger.custom_type == "event" and trigger.events2 or trigger.events
+        for index, event in pairs(WeakAuras.split(events)) do
+          local trueEvent
+          for i in event:gmatch("[^:]+") do
+            if not trueEvent then
+              trueEvent = string.upper(i)
+            elseif trueEvent == "CLEU" or trueEvent == "COMBAT_LOG_EVENT_UNFILTERED" then
+              local subevent = string.upper(i)
+              if not WeakAuras.IsCLEUSubevent(subevent) then
+                return "|cFFFF0000"..L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"]:format(subevent)
+              end
+            elseif trueEvent:match("^UNIT_") then
+              local unit = string.lower(i)
+              if not WeakAuras.baseUnitId[unit] and not WeakAuras.multiUnitId[unit] then
+                return "|cFFFF0000"..L["Unit %s is not a valid unit for RegisterUnitEvent"]:format(unit)
+              end
+            end
+          end
+        end
+        return ""
+      end,
+      width = WeakAuras.doubleWidth,
+      order = 9.201,
+      hidden = function()
+        if not (
+          trigger.type == "custom"
+          and (trigger.custom_type == "status" or trigger.custom_type == "stateupdate" or trigger.custom_type == "event")
+          and trigger.check ~= "update"
+        )
+        then
+          return true
+        end
+        local events = trigger.custom_type == "event" and trigger.events2 or trigger.events
+        for index, event in pairs(WeakAuras.split(events)) do
+          local trueEvent
+          for i in event:gmatch("[^:]+") do
+            if not trueEvent then
+              trueEvent = string.upper(i)
+            elseif trueEvent == "CLEU" or trueEvent == "COMBAT_LOG_EVENT_UNFILTERED" then
+              if not WeakAuras.IsCLEUSubevent(string.upper(i)) then
+                return false
+              end
+            elseif trueEvent:match("^UNIT_") then
+              local unit = string.lower(i)
+              if not WeakAuras.baseUnitId[unit] then
+                return false
+              end
+            end
+          end
+        end
+        return true
       end
     },
     -- texteditor below
@@ -165,7 +218,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.custom_hide = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -181,7 +233,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.custom_hide = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -195,7 +246,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       set = function(info, v)
         trigger.dynamicDuration = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
         WeakAuras.ReloadOptions(data.id);
@@ -253,7 +303,6 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
   };
 
   local function extraSetFunction()
-    WeakAuras.SetThumbnail(data);
     WeakAuras.SetIconNames(data);
     WeakAuras.UpdateDisplayButton(data);
   end
@@ -266,26 +315,30 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
   local function hideCustomTrigger()
     return not (trigger.type == "custom")
   end
-  WeakAuras.AddCodeOption(customOptions, data, L["Custom Trigger"], "custom_trigger", 10, hideCustomTrigger, appendToTriggerPath("custom"), false, true, extraSetFunction, nil, true);
+  WeakAuras.AddCodeOption(customOptions, data, L["Custom Trigger"], "custom_trigger", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          10, hideCustomTrigger, appendToTriggerPath("custom"), false, true, extraSetFunction, nil, true);
 
   local function hideCustomVariables()
     return not (trigger.type == "custom" and trigger.custom_type == "stateupdate");
   end
 
-  WeakAuras.AddCodeOption(customOptions, data, L["Custom Variables"], "custom_variables", 11, hideCustomVariables, appendToTriggerPath("customVariables"), false, true, extraSetFunctionReload, nil, true);
+  WeakAuras.AddCodeOption(customOptions, data, L["Custom Variables"], "custom_variables", "https://github.com/WeakAuras/WeakAuras2/wiki/Trigger-State-Updater-(TSU)#custom-variables",
+                          11, hideCustomVariables, appendToTriggerPath("customVariables"), false, true, extraSetFunctionReload, nil, true);
 
   local function hideCustomUntrigger()
     return not (trigger.type == "custom"
       and (trigger.custom_type == "status" or (trigger.custom_type == "event" and trigger.custom_hide == "custom")))
   end
-  WeakAuras.AddCodeOption(customOptions, data, L["Custom Untrigger"], "custom_untrigger", 14, hideCustomUntrigger, appendToUntriggerPath("custom"), false, true, extraSetFunction);
+  WeakAuras.AddCodeOption(customOptions, data, L["Custom Untrigger"], "custom_untrigger", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          14, hideCustomUntrigger, appendToUntriggerPath("custom"), false, true, extraSetFunction);
 
   local function hideCustomDuration()
     return not (trigger.type == "custom"
       and (trigger.custom_type == "status"
            or (trigger.custom_type == "event" and (trigger.custom_hide ~= "timed" or trigger.dynamicDuration))))
   end
-  WeakAuras.AddCodeOption(customOptions, data, L["Duration Info"], "custom_duration", 16, hideCustomDuration, appendToTriggerPath("customDuration"), false, true, extraSetFunctionReload);
+  WeakAuras.AddCodeOption(customOptions, data, L["Duration Info"], "custom_duration", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          16, hideCustomDuration, appendToTriggerPath("customDuration"), false, true, extraSetFunctionReload);
 
   local function hideIfTriggerStateUpdate()
     return not (trigger.type == "custom" and trigger.custom_type ~= "stateupdate")
@@ -326,13 +379,18 @@ local function GetCustomTriggerOptions(data, optionTriggerChoices, trigger)
       }
     }
 
-    WeakAuras.AddCodeOption(customOptions, data, string.format(L["Overlay %s Info"], i), "custom_overlay" .. i, 17 + i / 10, hideOverlay, appendToTriggerPath("customOverlay" .. i), false, true, extraSetFunctionReload, extraFunctions);
+    WeakAuras.AddCodeOption(customOptions, data, string.format(L["Overlay %s Info"], i), "custom_overlay" .. i, "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                            17 + i / 10, hideOverlay, appendToTriggerPath("customOverlay" .. i), false, true, extraSetFunctionReload, extraFunctions);
   end
 
-  WeakAuras.AddCodeOption(customOptions, data, L["Name Info"], "custom_name", 18, hideIfTriggerStateUpdate, appendToTriggerPath("customName"), false, true, extraSetFunction);
-  WeakAuras.AddCodeOption(customOptions, data, L["Icon Info"], "custom_icon", 20, hideIfTriggerStateUpdate, appendToTriggerPath("customIcon"), false, true, extraSetFunction);
-  WeakAuras.AddCodeOption(customOptions, data, L["Texture Info"], "custom_texture", 22, hideIfTriggerStateUpdate, appendToTriggerPath("customTexture"), false, true, extraSetFunction);
-  WeakAuras.AddCodeOption(customOptions, data, L["Stack Info"], "custom_stacks", 23, hideIfTriggerStateUpdate, appendToTriggerPath("customStacks"), false, true, extraSetFunction);
+  WeakAuras.AddCodeOption(customOptions, data, L["Name Info"], "custom_name", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          18, hideIfTriggerStateUpdate, appendToTriggerPath("customName"), false, true, extraSetFunctionReload);
+  WeakAuras.AddCodeOption(customOptions, data, L["Icon Info"], "custom_icon", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          20, hideIfTriggerStateUpdate, appendToTriggerPath("customIcon"), false, true, extraSetFunction);
+  WeakAuras.AddCodeOption(customOptions, data, L["Texture Info"], "custom_texture", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          22, hideIfTriggerStateUpdate, appendToTriggerPath("customTexture"), false, true, extraSetFunction);
+  WeakAuras.AddCodeOption(customOptions, data, L["Stack Info"], "custom_stacks", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers",
+                          23, hideIfTriggerStateUpdate, appendToTriggerPath("customStacks"), false, true, extraSetFunctionReload);
 
   return customOptions;
 end

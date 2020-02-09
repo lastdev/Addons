@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(551, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 643 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 
 mod:SetCreatureID(20912)
 mod:SetEncounterID(1914)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 
 local warnSplitSoon     = mod:NewSoonAnnounce("ej5335", 2)
 local warnSplit         = mod:NewSpellAnnounce("ej5335", 3)
-local warnMindControl   = mod:NewTargetAnnounce(39019, 4)
+local warnMindControl   = mod:NewTargetNoFilterAnnounce(39019, 4)
 local warnMindRend      = mod:NewTargetAnnounce(39017, 2)
 
 local timerMindControl  = mod:NewTargetTimer(6, 39019, nil, nil, nil, 3)

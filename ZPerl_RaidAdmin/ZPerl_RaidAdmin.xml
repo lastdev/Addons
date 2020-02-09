@@ -76,7 +76,7 @@
 		</Layers>
 		<Scripts>
 			<OnEscapePressed>
-				self:ClearFocus();
+				self:ClearFocus()
 			</OnEscapePressed>
 		</Scripts>
 		<FontString inherits="ChatFontNormal"/>
@@ -98,12 +98,12 @@
 	</Button>
 
 	<Frame name="XPerl_AdminFrameAnchor" parent="UIParent" movable="true" resizable="true">
-		<Size>
-			<AbsDimension x="140" y="150"/>
-		</Size>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="140" y="150"/>
+		</Size>
 	</Frame>
 
 	<Frame name="XPerl_AdminFrame" parent="XPerl_AdminFrameAnchor" hidden="true">
@@ -125,12 +125,12 @@
 				end
 			</OnDragStop>
 		</Scripts>
-		<Size>
-			<AbsDimension x="140" y="150"/>
-		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="140" y="150"/>
+		</Size>
 		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
 				<AbsValue val="9"/>
@@ -249,7 +249,7 @@
 						<Scripts>
 							<OnLoad>
 								self.SetButtonTex = function()
-									local tex = XPerl_AdminFrame_TitleBar_LockOpen:GetNormalTexture();
+									local tex = XPerl_AdminFrame_TitleBar_LockOpen:GetNormalTexture()
 									if (ZPerl_Admin.LockOpen) then
 										tex:SetTexCoord(0.375, 0.5, 0, 0.125)
 									else

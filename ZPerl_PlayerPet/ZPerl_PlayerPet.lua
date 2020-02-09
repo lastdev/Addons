@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Player_Pet_Events = {}
@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 1121 $")
+end, "$Revision:  $")
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -109,6 +109,7 @@ function XPerl_Player_Pet_OnLoad(self)
 		"UNIT_FLAGS",
 		"UNIT_AURA",
 		"UNIT_PET",
+		"UNIT_HAPPINESS",
 		"PET_ATTACK_START",
 		"UNIT_COMBAT",
 		"VARIABLES_LOADED",
@@ -122,15 +123,26 @@ function XPerl_Player_Pet_OnLoad(self)
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE"
 	}
+	local _, classFileName = UnitClass("player")
 	for i, event in pairs(events) do
 		if string.find(event, "^UNIT_") then
 			if event == "UNIT_THREAT_LIST_UPDATE" then
-				self:RegisterUnitEvent(event, "target")
+				if pcall(self.RegisterUnitEvent, self, event, "target") then
+					self:RegisterUnitEvent(event, "target")
+				end
+			elseif event == "UNIT_HAPPINESS" and classFileName == "HUNTER" then
+				if pcall(self.RegisterUnitEvent, self, event, "pet") then
+					self:RegisterUnitEvent(event, "pet")
+				end
 			else
-				self:RegisterUnitEvent(event, "pet", "player")
+				if pcall(self.RegisterUnitEvent, self, event, "pet", "player") then
+					self:RegisterUnitEvent(event, "pet", "player")
+				end
 			end
 		else
-			self:RegisterEvent(event)
+			if pcall(self.RegisterEvent, self, event) then
+				self:RegisterEvent(event)
+			end
 		end
 	end
 
@@ -150,7 +162,7 @@ function XPerl_Player_Pet_OnLoad(self)
 	self:SetScript("OnShow", XPerl_Unit_UpdatePortrait)
 
 	if (XPerl_ArcaneBar_RegisterFrame) then
-		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, UnitHasVehicleUI("player") and "player" or "pet")
+		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "player" or "pet")
 	end
 
 	XPerl_RegisterHighlight(self.highlight, 2)
@@ -190,7 +202,8 @@ end
 
 -- XPerl_Player_Pet_UpdateName
 local function XPerl_Player_Pet_UpdateName(self)
-	local petname = UnitName(self.partyid)
+	local partyid = self.partyid
+	local petname = UnitName(partyid)
 
 	if (petname == UNKNOWN) then
 		self.nameFrame.text:SetText("")
@@ -198,14 +211,14 @@ local function XPerl_Player_Pet_UpdateName(self)
 		self.nameFrame.text:SetText(petname)
 	end
 
-	if (self.partyid == "pet") then
+	if (partyid == "pet") then
 		local c = conf.colour.reaction.none
 		self.nameFrame.text:SetTextColor(c.r, c.g, c.b, conf.transparency.text)
 	elseif (not UnitIsFriend("player", "pet")) then		-- Pet or you charmed
 		local c = conf.colour.reaction.enemy
 		self.nameFrame.text:SetTextColor(c.r, c.g, c.b, conf.transparency.text)
 	else
-		XPerl_ColourFriendlyUnit(self.nameFrame.text, self.partyid)
+		XPerl_ColourFriendlyUnit(self.nameFrame.text, partyid)
 	end
 end
 
@@ -216,15 +229,16 @@ end
 
 -- XPerl_Player_Pet_UpdateHealth
 function XPerl_Player_Pet_UpdateHealth(self)
-	local pethealth = UnitHealth(self.partyid)
-	local pethealthmax = UnitHealthMax(self.partyid)
+	local partyid = self.partyid
+	local pethealth = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid))
+	local pethealthmax = UnitHealthMax(partyid)
 
 	XPerl_SetHealthBar(self, pethealth, pethealthmax)
 
 	XPerl_Player_Pet_UpdateAbsorbPrediction(self)
 	XPerl_Player_Pet_UpdateHealPrediction(self)
 
-	if (UnitIsDead(self.partyid)) then
+	if (UnitIsDead(partyid)) then
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_DEAD)
 		self.statsFrame.manaBar.text:Hide()
 	end
@@ -250,8 +264,9 @@ end
 
 -- XPerl_Player_Pet_UpdateMana()
 local function XPerl_Player_Pet_UpdateMana(self)
-	local petmana = UnitPower(self.partyid)
-	local petmanamax = UnitPowerMax(self.partyid)
+	local partyid = self.partyid
+	local petmana = UnitPower(partyid)
+	local petmanamax = UnitPowerMax(partyid)
 
 	self.statsFrame.manaBar:SetMinMaxValues(0, petmanamax)
 	self.statsFrame.manaBar:SetValue(petmana)
@@ -284,16 +299,57 @@ end
 -- Buff Functions --
 --------------------
 local function XPerl_Player_Pet_Buff_UpdateAll(self)
-	if (UnitExists(self.partyid)) then
+	local partyid = self.partyid
+	if (UnitExists(partyid)) then
 		XPerl_Unit_UpdateBuffs(self)
 		XPerl_Unit_BuffPositions(self, self.buffFrame.buff, self.buffFrame.debuff, self.conf.buffs.size, self.conf.debuffs.size)
-		XPerl_CheckDebuffs(self, self.partyid)
+		XPerl_CheckDebuffs(self, partyid)
+	end
+end
+
+---------------
+-- Happiness --
+---------------
+function XPerl_Player_Pet_SetHappiness(self)
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		return
+	end
+
+	local happiness, damagePercentage, loyaltyRate = GetPetHappiness()
+	if (not happiness) then
+		happiness = 3
+	end
+
+	local icon = self.happyFrame.icon
+	icon.tex:SetTexCoord(0.5625 - (0.1875 * happiness), 0.75 - (0.1875 * happiness), 0, 0.359375)
+
+	if (pconf.happiness.enabled and (not pconf.happiness.onlyWhenSad or happiness < 3)) then
+		self.happyFrame:Show()
+
+		icon.tooltip = _G[("PET_HAPPINESS"..happiness)]
+		icon.tooltipDamage = format(PET_DAMAGE_PERCENTAGE, damagePercentage)
+		if (loyaltyRate < 0) then
+			icon.tooltipLoyalty = LOSING_LOYALTY
+		elseif (loyaltyRate > 0) then
+			icon.tooltipLoyalty = GAINING_LOYALTY
+		else
+			icon.tooltipLoyalty = nil
+		end
+
+		if (pconf.happiness.flashWhenSad and happiness < 3) then
+			XPerl_FrameFlash(self.happyFrame)
+		else
+			XPerl_FrameFlashStop(self.happyFrame)
+		end
+	else
+		XPerl_FrameFlashStop(self.happyFrame)
+		self.happyFrame:Hide()
 	end
 end
 
 -- XPerl_Player_Pet_Update_Control
 local function XPerl_Player_Pet_Update_Control(self)
-	if (UnitIsCharmed(self.partyid) and not UnitInVehicle("player")) then
+	if (UnitIsCharmed(self.partyid) and WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and not UnitInVehicle("player")) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()
@@ -302,8 +358,9 @@ end
 
 -- XPerl_Player_Pet_UpdateCombat
 local function XPerl_Player_Pet_UpdateCombat(self)
-	if (UnitExists(self.partyid)) then
-		if (UnitAffectingCombat(self.partyid)) then
+	local partyid = self.partyid
+	if (UnitExists(partyid)) then
+		if (UnitAffectingCombat(partyid)) then
 			self.nameFrame.combatIcon:Show()
 		else
 			self.nameFrame.combatIcon:Hide()
@@ -334,6 +391,9 @@ function XPerl_Player_Pet_UpdateDisplay(self)
 	XPerl_Player_Pet_UpdateName(self)
 	XPerl_Player_Pet_UpdateHealth(self)
 	XPerl_SetManaBarType(self)
+	if (XPerl_Player_Pet_SetHappiness) then
+		XPerl_Player_Pet_SetHappiness(self)
+	end
 	XPerl_Player_Pet_UpdateMana(self)
 	XPerl_Player_Pet_UpdateLevel(self)
 	XPerl_Player_Pet_Buff_UpdateAll(self)
@@ -356,6 +416,12 @@ end
 
 -- VARIABLES_LOADED
 function XPerl_Player_Pet_Events:VARIABLES_LOADED()
+	local _, classFileName = UnitClass("player")
+	if not classFileName == "HUNTER" then
+		XPerl_Player_Pet_Events.UNIT_HAPPINESS = nil
+		XPerl_Player_Pet_SetHappiness = nil
+	end
+
 	XPerl_Player_Pet_Events.VARIABLES_LOADED = nil
 end
 
@@ -384,7 +450,7 @@ function XPerl_Player_Pet_Events:PET_BATTLE_CLOSE()
 		if not InCombatLockdown() then
 			RegisterUnitWatch(self)
 		end
-		XPerl_ProtectedCall(Show, self);
+		XPerl_ProtectedCall(Show, self)
 	end
 end]]
 
@@ -423,25 +489,28 @@ function XPerl_Player_Pet_Events:UNIT_LEVEL()
 	XPerl_Player_Pet_UpdateLevel(self)
 end
 
-XPerl_Player_Pet_Events.UNIT_PET_EXPERIENCE = XPerl_Player_Pet_Events.UNIT_LEVEL
-
 -- UNIT_DISPLAYPOWER
 function XPerl_Player_Pet_Events:UNIT_DISPLAYPOWER()
 	XPerl_SetManaBarType(self)
 end
 
+-- UNIT_HAPPINESS
+function XPerl_Player_Pet_Events:UNIT_HAPPINESS()
+	XPerl_Player_Pet_SetHappiness(self)
+	XPerl_Player_Pet_UpdateCombat(self)
+end
+
 -- PET_ATTACK_START
 function XPerl_Player_Pet_Events:PET_ATTACK_START()
-	XPerl_Player_Pet_UpdateCombat(XPerl_Player_Pet)
+	XPerl_Player_Pet_UpdateCombat(self)
 end
 
 -- UNIT_COMBAT
-function XPerl_Player_Pet_Events:UNIT_COMBAT(...)
-	local unitID, action, descriptor, damage, damageType = ...
 
+function XPerl_Player_Pet_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
 	if (unitID == self.partyid) then
 		if (pconf.hitIndicator and pconf.portrait) then
-			CombatFeedback_OnCombatEvent(self, ...)
+			CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
 		end
 
 		if (action == "HEAL") then
@@ -469,7 +538,7 @@ end
 
 -- PLAYER_ENTERING_WORLD
 function XPerl_Player_Pet_Events:PLAYER_ENTERING_WORLD()
-	if (UnitHasVehicleUI("player")) then
+	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) then
 		self.partyid = "player"
 		self:SetAttribute("unit", "player")
 	else
@@ -688,16 +757,18 @@ function XPerl_Player_Pet_Set_Bits(self)
 	pconf.buffs.size = tonumber(pconf.buffs.size) or 20
 	XPerl_SetBuffSize(self)
 
-	if (pconf.healprediction) then
-		self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet", "player")
-	else
-		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if (pconf.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet", "player")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
 
-	if (pconf.absorbs) then
-		self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet", "player")
-	else
-		self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if (pconf.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet", "player")
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
 	end
 
 	XPerl_Player_Pet_SetWidth(self)

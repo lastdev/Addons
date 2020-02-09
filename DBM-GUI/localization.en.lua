@@ -21,11 +21,11 @@ L.TabCategory_CATA	 		= EXPANSION_NAME3
 L.TabCategory_WOTLK 		= EXPANSION_NAME2
 L.TabCategory_BC 			= EXPANSION_NAME1
 L.TabCategory_CLASSIC		= EXPANSION_NAME0
-L.TabCategory_OTHER    		= "Other Boss Mods"
+L.TabCategory_OTHER    		= "Other Mods"
 
 L.BossModLoaded 			= "%s statistics"
-L.BossModLoad_now 			= [[This boss mod is not loaded. 
-It will be loaded when you enter the instance. 
+L.BossModLoad_now 			= [[This boss mod is not loaded.
+It will be loaded when you enter the instance.
 You can also click the button to load the mod manually.]]
 
 L.PosX						= 'Position X'
@@ -82,7 +82,7 @@ L.RaidWarnColor_1 			= "Color 1"
 L.RaidWarnColor_2 			= "Color 2"
 L.RaidWarnColor_3		 	= "Color 3"
 L.RaidWarnColor_4 			= "Color 4"
-L.InfoRaidWarning			= [[You can specify the position and colors of the raid warning frame. 
+L.InfoRaidWarning			= [[You can specify the position and colors of the raid warning frame.
 This frame is used for messages like "Player X is affected by Y".]]
 L.ColorResetted 			= "The color settings of this field have been reset."
 L.ShowWarningsInChat 		= "Show warnings in chat frame"
@@ -115,7 +115,6 @@ L.ShowGuildMessages 		= "Show engage/kill/wipe messages for guild raids in chat 
 L.ShowGuildMessagesPlus		= "Also show Mythic+ engage/kill/wipe messages for guild groups (requires raid option)"
 L.WhisperMessages			= "Whisper Message Options"
 L.AutoRespond 				= "Auto-respond to whispers while fighting"
-L.EnableStatus 				= "Reply to 'status' whispers"
 L.WhisperStats 				= "Include kill/wipe stats in whisper responses"
 L.DisableStatusWhisper 		= "Disable status whispers for the entire group (requires Group Leader). Applies only to normal/heroic/mythic raids and mythic+ dungeons"
 L.DisableGuildStatus 		= "Disable progression messages from being sent to guild for entire group (requires Group Leader)."
@@ -155,6 +154,18 @@ L.Bar7Header				= "User Bar Options"
 L.Bar7ForceLarge			= "Always use large bar"
 L.Bar7CustomInline			= "Use custom '!' inline icon"
 L.Bar7Footer				= "(Dummy Bar won't live update)"
+--Dropdown Options
+L.CBTGeneric				= "Generic"
+L.CBTAdd					= "Add"
+L.CBTAOE					= "AOE"
+L.CBTTargeted				= "Targeted"
+L.CBTInterrupt				= "Interrupt"
+L.CBTRole					= "Role"
+L.CBTPhase					= "Phase"
+L.CBTImportant				= "Important (User)"
+L.CVoiceOne					= "Count Voice 1"
+L.CVoiceTwo					= "Count Voice 2"
+L.CVoiceThree				= "Count Voice 3"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "Bar Colors by timer type"
@@ -178,6 +189,7 @@ L.BarSort					= "Sort by remaining time"
 L.BarColorByType			= "Color by type"
 L.BarInlineIcons			= "Show inline icons"
 L.ShortTimerText			= "Use short timer text (when available)"
+L.StripTimerText			= "Strip CD/Next out of timers"
 L.KeepBar					= "Keep timer active until ability cast"
 L.KeepBar2					= "(when supported by mod)"
 L.FadeBar					= "Fade timers for out of range abilities"
@@ -189,6 +201,7 @@ L.SpecWarn_ClassColor		= "Use class coloring for special warnings"
 L.ShowSWarningsInChat 		= "Show special warnings in chat frame"
 L.SWarnNameInNote			= "Use SW5 options if a custom note contains your name"
 L.SpecialWarningIcon		= "Show icons on special warnings"
+L.ShortTextSpellname		= "Use shorter spellname text (when available)"
 L.SpecWarn_FlashFrame		= "Show screen flash for special warnings"
 L.SpecWarn_FlashFrameRepeat	= "Repeat %d times (if enabled)"
 L.SpecWarn_Font				= "Font used for special warnings"
@@ -210,7 +223,7 @@ L.SpecialWarnSound5			= "Set default sound for special warnings with notes conta
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Spoken Alerts"
-L.Area_VoiceSelection		= "Voice Selections (scroll selection menus with mouse wheel)"
+L.Area_VoiceSelection		= "Voice Selections"
 L.CountdownVoice			= "Set primary voice for count sounds"
 L.CountdownVoice2			= "Set secondary voice for count sounds"
 L.CountdownVoice3			= "Set tertiary voice for count sounds"
@@ -221,14 +234,14 @@ L.SpecWarn_NoSoundsWVoice	= "Filter special warning sounds for warnings that als
 L.SWFNever					= "Never"
 L.SWFDefaultOnly			= "when special warnings use default sounds. (Allows custom sounds to still play)"
 L.SWFAll					= "when special warnings use any sound"
-L.SpecWarn_AlwaysVoice		= "Always play all spoken alerts (Overrides boss-specific options. Useful for RL)"
+L.SpecWarn_AlwaysVoice		= "Always play all spoken alerts (Even if Special Warning disabled. Useful for Raid Leader, not recommended otherwise)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 L.Area_GetVEM				= "Get VEM Voice Pack"
-L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-vem|r"
+L.VEMDownload				= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/dbm-voicepack-vem|r"
 L.Area_BrowseOtherVP		= "Browse other voice packs on curse"
-L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "Browse countdown packs on curse"
-L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+count+pack|r"
 
 -- Tab: Event Sounds
 L.Panel_EventSounds			= "Event Sounds"
@@ -238,7 +251,6 @@ L.EventWipeSound			= "Set sound played for encounter wipe"
 L.EventEngageSound			= "Set sound played for encounter engage"
 L.EventDungeonMusic			= "Set music played inside dungeons/raids"
 L.EventEngageMusic			= "Set music played during encounters"
-L.EventTurtleMusic			= "Set music played during turtle beach quests"
 L.Area_EventSoundsExtras	= "Event Sound Options"
 L.EventMusicCombined		= "Allow all music choices in dungeon and encounter selections (changing this option requires UIReload to reflect changes)"
 L.Area_EventSoundsFilters	= "Event Sound Filter Conditions"
@@ -258,11 +270,12 @@ L.SpamBlockNoSetIcon		= "Do not set icons on targets"
 L.SpamBlockNoRangeFrame		= "Do not show range frame"
 L.SpamBlockNoInfoFrame		= "Do not show info frame"
 L.SpamBlockNoHudMap			= "Do not show HudMap"
-L.SpamBlockNoNameplate		= "Do not show Nameplate Auras"
+L.SpamBlockNoNameplate		= "Do not show Nameplate Auras (disables completely)"
+L.SpamBlockNoNameplateLines	= "Do not show Nameplate Aura lines (aura icons still show)"
 L.SpamBlockNoCountdowns		= "Do not play countdown sounds"
 L.SpamBlockNoYells			= "Do not send chat yells"
 L.SpamBlockNoNoteSync		= "Do not accept shared notes"
-L.SpamBlockNoReminders		= "Do not show any login, recommendation, or update messages (NOT recommended)"
+L.SpamBlockNoReminders		= "Do not show any login, recommendation, missing mod, or hotfix messages"
 
 L.Area_Restore				= "DBM Restore Options (Whether DBM restores previous user state when mods finish)"
 L.SpamBlockNoIconRestore	= "Do not save icon states and restore them on combat end"
@@ -272,6 +285,7 @@ L.SpamBlockNoRangeRestore	= "Do not restore range frame to previous state when m
 L.Area_SpamFilter			= "Spam Filter Options"
 L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
 L.StripServerName			= "Strip realm name in warnings and timers"
+L.FilterVoidFormSay			= "Do not send chat position/count chat yells when in Void Form"
 
 L.Area_SpecFilter			= "Role Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec. (Note: Disabling this is not recommended for most users as 'taunt' warnings are now all on by default.)"
@@ -279,6 +293,7 @@ L.FilterInterruptsHeader	= "Filter warnings for interruptable spells based on be
 L.FilterInterrupts			= "If caster is not current target/focus (Always)."
 L.FilterInterrupts2			= "if caster is not current target/focus (Always) or interrupt on CD (Boss Only)"
 L.FilterInterrupts3			= "if caster is not current target/focus (Always) or interrupt on CD (Boss & Trash)"
+L.FilterInterrupts4			= "Always filter interrupt warnings (you don't want to see them period)"
 L.FilterInterruptNoteName	= "Filter warnings for interruptable spells (with count) if warning does not contain your name in the custom note"
 L.FilterDispels				= "Filter warnings for dispelable spells if your dispel is on cooldown"
 L.FilterTrashWarnings		= "Filter all trash mob warnings in normal &amp; heroic dungeons"
@@ -295,7 +310,7 @@ L.Panel_HideBlizzard		= "Blizzard Disable & Hide"
 L.Area_HideBlizzard			= "Blizzard Disable & Hide Options"
 L.HideBossEmoteFrame		= "Hide raid boss emote frame during boss fights"
 L.HideWatchFrame			= "Hide watch (objectives) frame during boss fights if no achievements are being tracked and if not in a Mythic+"
-L.HideGarrisonUpdates		= "Hide garrison toasts during boss fights"
+L.HideGarrisonUpdates		= "Hide follower toasts during boss fights"
 L.HideGuildChallengeUpdates	= "Hide guild challenge toasts during boss fights"
 L.HideQuestTooltips			= "Hide quest objectives from tooltips during boss fights"
 L.HideTooltips				= "Completely hide tooltips during boss fights"
@@ -306,11 +321,6 @@ L.AfterFirst				= "In instance, after each movie has played once"
 L.Always					= ALWAYS
 L.CombatOnly				= "Disable in combat (any)"
 L.RaidCombat				= "Disable in combat (bosses only)"
-L.HideBonusHeader			= "Hide bonus roll window in..."
-L.TrivialContent			= "NON-Mythic dungeons"--Basically anything below 340
-L.NormalRaider				= "Dungeons below Mythic+5 and LFR raids"--Basically, anything below 355
-L.HeroicRaider				= "Dungeons below Mythic+10 and raids below heroic and non warfront bosses"--Basically anything below 370
-L.MythicRaider				= "Anything below mythic difficulty raids"--Basically anything below 385
 
 L.Panel_ExtraFeatures		= "Extra Features"
 --
@@ -332,9 +342,10 @@ L.ShowRespawn				= "Show boss respawn timer after a wipe"
 L.ShowQueuePop				= "Show time remaining to accept a queue pop (LFG,BG,etc)"
 --
 L.Area_AutoLogging			= "Auto Logging Options"
-L.AutologBosses				= "Automatically record boss encounters using blizzard combat log (Use /dbm pull before bosses to start logging early for pre pots and other events.)"
-L.AdvancedAutologBosses		= "Automatically record boss encounters with Transcriptor"
-L.LogOnlyRaidBosses			= "Only record raid boss encounters from current expansion (exclude Raid Finder/party/scenario/old content)"
+L.AutologBosses				= "Automatically record dungeons/raids using blizzard combat log"
+L.AdvancedAutologBosses		= "Automatically record dungeons/raids with Transcriptor"
+L.RecordOnlyBosses			= "Only record Bosses (Excludes all trash. Use '/dbm pull' before bosses to capture pre pull pots &amp; ENCOUNTER_START)"
+L.LogOnlyNonTrivial			= "Only record non trivial content (excludes Raid Finder/dungeons/scenarios/old content)"
 --
 L.Area_3rdParty				= "3rd Party Addon Options"
 L.ShowBBOnCombatStart		= "Perform Big Brother buff check on combat start"
@@ -344,8 +355,7 @@ L.AutoAcceptFriendInvite	= "Automatically accept group invites from friends"
 L.AutoAcceptGuildInvite		= "Automatically accept group invites from guild members"
 L.Area_Advanced				= "Advanced Options"
 L.FakeBW					= "Pretend to be BigWigs in version checks instead of DBM (Useful for guilds that force using BigWigs)"
-L.AITimer					= "Automatically generate timers for never before seen fights using DBM's built in timer AI (Useful for pulling a test boss for the very first time such as beta or PTR). Note: This won't work properly for multiple adds with same ability."
-L.AutoCorrectTimer			= "Automatically correct timers that are too long (Useful for guilds pulling cutting edge content that boss mods aren't updated for yet). Note: This option may also make some timers worse if boss resets timers on phase changes that DBM isn't coded to handle properly yet."
+L.AITimer					= "Automatically generate timers for never before seen fights using DBM's built in timer AI (Useful for pulling a test boss for the very first time such as beta or PTR). Recommended to always leave this turned ON"
 
 L.Panel_Profile				= "Profiles"
 L.Area_CreateProfile		= "Profile Creation for DBM Core Options"

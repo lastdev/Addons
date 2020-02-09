@@ -1,18 +1,18 @@
-tag cffe19249b60005d9014c81be7763c167e5de798 v3
+tag 7559a5020223829a454edb11449f4c8fb9679401 v4
 Author:	David Lynch <kemayo@gmail.com>
-Date:	Fri Jul 20 11:31:42 2018 -0500
+Date:	Tue Mar 12 15:41:28 2019 -0500
 
-Tagging v3
+Tagging v4
 
-commit dcc5de8840f872c49592096fff72a6388613f7fb
+commit 12925098611b90dbf578958ff56f82190e03a119
 Author: David Lynch <kemayo@gmail.com>
-Date:   Fri Jul 20 11:31:27 2018 -0500
+Date:   Tue Mar 12 15:41:28 2019 -0500
 
-    Fix hiding nodes
+    Update for 8.1.5
 
-commit b6ee0d76fc7f7aa192be3ea728497315aaf44269
+commit 938ad221b9c5fdfa48c54bd88cd6ff1afb8eecf4
 Author: David Lynch <kemayo@gmail.com>
-Date:   Fri Jul 20 11:28:13 2018 -0500
+Date:   Sat Jul 21 21:35:27 2018 -0500
 
-    Fix for Battle for Azeroth
+    Wrong tooltip on world map
 

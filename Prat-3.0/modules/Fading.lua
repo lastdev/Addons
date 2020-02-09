@@ -54,8 +54,8 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "Set the number of seconds to wait before before fading text of chat windows.",
 		["duration_name"] = "Set Fading Delay (Seconds)",
@@ -66,11 +66,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "Définir le nombre de secondes à attendre avant la disparition du texte de la fenêtre de chat",
 		["duration_name"] = "Délai avant fondu (secondes)",
@@ -81,11 +82,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "Stellt die Anzahl der Sekunden ein ehe der Text in Chatfenstern verblasst.",
 		["duration_name"] = "Verzögerung des Verblassens einstellen (Sekunden)",
@@ -96,11 +98,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "대화글이 사라질 때 까지의 대기 시간을 설정합니다.",
 		["duration_name"] = "사라짐 대기 시간 설정 (초)",
@@ -111,32 +114,34 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		--[[Translation missing --]]
-		--[[ ["duration_desc"] = "",--]] 
+		["duration_desc"] = "Set the number of seconds to wait before before fading text of chat windows.",
 		--[[Translation missing --]]
-		--[[ ["duration_name"] = "",--]] 
+		["duration_name"] = "Set Fading Delay (Seconds)",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Chat window text fading options.",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Fading",
 		--[[Translation missing --]]
-		--[[ ["textfade_desc"] = "",--]] 
+		["textfade_desc"] = "Toggle enabling text fading for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["textfade_name"] = "",--]] 
+		["textfade_name"] = "Enable Fading",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "Задайте значение в секундах для задержки затухания текста в окне чата.",
 		["duration_name"] = "Задержка затухания (в секундах)",
@@ -147,11 +152,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "设置聊天窗口文本消隐前等待秒数",
 		["duration_name"] = "设置消隐延时(秒)",
@@ -162,11 +168,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "Establece el número de segundos a esperar antes de desvanecer el texto de la ventana de chat.",
 		["duration_name"] = "Establecer Retraso Desvanecer (Segundos)",
@@ -177,11 +184,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  L=
-{
+  
+L = {
 	["Fading"] = {
 		["duration_desc"] = "設定視窗消褪秒數",
 		["duration_name"] = "設定淡化延遲（秒數）",
@@ -191,6 +199,7 @@ Prat:AddModuleToLoad(function()
 		["textfade_name"] = "啟用淡化",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

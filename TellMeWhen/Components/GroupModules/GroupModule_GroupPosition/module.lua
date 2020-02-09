@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -236,8 +236,23 @@ function GroupPosition:UpdatePositionAfterMovement(wasMove)
 	
 	local gs = group:GetSettings()
 	local p = gs.Point
+	
+	-- This may fail if the region is "restricted"
+	-- (https://us.forums.blizzard.com/en/wow/t/ui-changes-in-rise-of-azshara/202487)
+	-- Seems to be no way to determine restrictedness other than
+	-- do a restricted call and see if it fails.
 
-	p.point, p.relativeTo, p.relativePoint, p.x, p.y = GetAnchoredPoints(group, wasMove)
+	local success, point, relativeTo, relativePoint, x, y = pcall(GetAnchoredPoints, group, wasMove)
+	if success then
+		p.point, p.relativeTo, p.relativePoint, p.x, p.y =
+			point, relativeTo, relativePoint, x, y
+	elseif wasMove then
+		-- Only print this on a move.
+		-- Non-moves happen when a user changes the target/point/relativePoint
+		-- in the settings UI. We don't want to warn that we can't "fix up" the position,
+		-- since not being able to do that is fairly harmless.
+		TMW:Print(L["GROUP_CANNOT_INTERACTIVELY_POSITION"]:format(group:GetGroupName()))
+	end
 	
 	self:SetPos()
 	
@@ -264,6 +279,17 @@ function GroupPosition:SetNewScale(newScale)
 end
 
 function GroupPosition:CanMove()
+
+	local canQuerySize = pcall(self.group.GetLeft, self.group)
+	if not canQuerySize then
+		return false
+	end
+
+	-- Reset this to true. Blizzard sets it false when a frame becomes restricted.
+	self.group:SetMovable(true)
+
+	if not self.group:IsMovable() then return false end
+
 	return not self.group:GetSettings().Locked
 end
 
@@ -333,9 +359,11 @@ function GroupPosition:SetPos()
 	-- For some reason this was 1 on one of my groups, which caused some issues with animations
 	gs.Level = max(gs.Level, 5)
 
+	group:SetFlattensRenderLayers(true)
 	group:SetFrameStrata(gs.Strata)
 	group:SetFrameLevel(gs.Level)
 	group:SetScale(gs.Scale)
+	--group:SetToplevel(true)
 end
 
 function GroupPosition:Reset()

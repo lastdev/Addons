@@ -1,8 +1,8 @@
 # BadBoy_Levels
 
-## [v8.1.0](https://github.com/funkydude/BadBoy_Levels/tree/v8.1.0) (2018-12-21)
-[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v8.0.0...v8.1.0)
+## [v8.2.1](https://github.com/funkydude/BadBoy_Levels/tree/v8.2.1) (2019-07-08)
+[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v8.2.0...v8.2.1)
 
-- bump toc  
-- Fixes for latest friends API.  
-- Update to the latest friends list API.  
+- Tweaks  
+- Fix a debug comment  
+- Re-write the core in an attempt to reduce interference from other addons.  

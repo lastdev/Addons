@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 8.1.6215 (SwimmingSeadragon)
-	Revision: $Id: Undercut.lua 6215 2019-03-04 00:20:18Z none $
+	Version: 8.2.6484 (SwimmingSeadragon)
+	Revision: $Id: Undercut.lua 6484 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer Matcher module that returns an undercut price
@@ -292,4 +292,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Match-Undercut/Undercut.lua $", "$Rev: 6215 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Match-Undercut/Undercut.lua $", "$Rev: 6484 $")

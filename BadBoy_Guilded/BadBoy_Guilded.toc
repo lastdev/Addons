@@ -1,5 +1,5 @@
-## Interface: 80000
-## Version: v8.0.0
+## Interface: 80200
+## Version: v8.2.0
 ## Title: BadBoy_Guilded
 ## Notes: Removes guild advertising from public channels.
 ## Notes-frFR: Enlève les publicités des guildes des canaux publiques.

@@ -40,7 +40,9 @@ local _, pclass = UnitClass("player")
 
 
 local function splitSpellAndDuration(str)
-	local spell, duration = strmatch(str, "(.-):([%d:%s%.]*)$")
+	-- A space is optionally allowed before the semicolon 
+	-- to support French, which likes spaces around semicolons.
+	local spell, duration = strmatch(str, "(.-)%s?:([%d:%s%.]*)$")
 	if not spell then
 		return str, 0
 	end
@@ -50,7 +52,7 @@ local function splitSpellAndDuration(str)
 		duration = tonumber( TMW.toSeconds(duration:trim(" :;.")) )
 	end
 
-	return spell, duration
+	return spell:trim(" "), duration
 end
 
 local function parseSpellsString(setting, doLower, keepDurations)
@@ -140,7 +142,7 @@ local function parseSpellsString(setting, doLower, keepDurations)
 
 	return buffNames
 end
-parseSpellsString = TMW:MakeFunctionCached(parseSpellsString)
+parseSpellsString = TMW:MakeNArgFunctionCached(3, parseSpellsString)
 
 
 local function getSpellNames(setting, doLower, firstOnly, toname, hash, allowRenaming)
@@ -557,20 +559,27 @@ elseif pclass == "MONK" then
 		}
 	}
 elseif pclass == "DEATHKNIGHT" then
-	local cachedName = TMW:TryGetNPCName(27829)
-	local name = function()
-		if cachedName then return cachedName end
-		cachedName = TMW:TryGetNPCName(27829)
-		return cachedName
+	local npcName = function(npcID)
+		local cachedName = TMW:TryGetNPCName(npcID)
+		return function()
+			if cachedName then return cachedName end
+			cachedName = TMW:TryGetNPCName(npcID)
+			return cachedName
+		end
 	end
-
+	local name = GetSpellInfo(49206) .. " & " .. GetSpellInfo(288853)
 	TMW.COMMON.CurrentClassTotems = {
 		name = name,
-		desc = function() return L["ICONMENU_TOTEM_GENERIC_DESC"]:format(name()) end,
+		desc = function() return L["ICONMENU_TOTEM_GENERIC_DESC"]:format(name) end,
 		texture = GetSpellTexture(49206),
-		[3] = { -- wow blizzard, so nice. put the gargoyle in slot 3 why dontcha.
+		[1] = { -- Raise Abomination (pvp talent)
 			hasVariableNames = false,
-			name = name,
+			name = npcName(149555),
+			texture = GetSpellTexture(288853),
+		},
+		[3] = { -- Ebon Gargoyle
+			hasVariableNames = false,
+			name = npcName(27829),
 			texture = GetSpellTexture(49206),
 		}
 	}

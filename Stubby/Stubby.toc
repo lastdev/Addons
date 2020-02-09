@@ -1,12 +1,12 @@
 ## Title: Stubby |cff224477(lib)
 ## Notes: Allows AddOns to load automatically, and provides event handling support.
 ##
-## Interface: 80100
+## Interface: 80205
 ## OptionalDeps: !nLog, DebugLib
 ## SavedVariables: StubbyConfig
 ##
-## Version: 8.1.6240 (SwimmingSeadragon)
-## Revision: $Id: Stubby.toc 6240 2019-03-04 00:20:18Z none $
+## Version: 8.2.6510 (SwimmingSeadragon)
+## Revision: $Id: Stubby.toc 6510 2019-11-02 14:38:37Z none $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries
 ## X-Category: Library

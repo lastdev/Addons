@@ -95,7 +95,7 @@ do
 	local function toggleShowSelf()
 		DBM.Options.InfoFrameShowSelf = not DBM.Options.InfoFrameShowSelf
 	end
-	
+
 	local function setLines(self, line)
 		DBM.Options.InfoFrameLines = line
 		if line ~= 0 then
@@ -124,7 +124,7 @@ do
 			end
 			info.func = toggleShowSelf
 			UIDropDownMenu_AddButton(info, 1)
-			
+
 			info = UIDropDownMenu_CreateInfo()
 			info.text = DBM_CORE_INFOFRAME_SETLINES
 			info.notCheckable = true
@@ -161,28 +161,28 @@ do
 				info.arg1 = 5
 				info.checked = (DBM.Options.InfoFrameLines == 5)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_INFOFRAME_LINES_TO:format(8)
 				info.func = setLines
 				info.arg1 = 8
 				info.checked = (DBM.Options.InfoFrameLines == 8)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_INFOFRAME_LINES_TO:format(10)
 				info.func = setLines
 				info.arg1 = 10
 				info.checked = (DBM.Options.InfoFrameLines == 10)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_INFOFRAME_LINES_TO:format(15)
 				info.func = setLines
 				info.arg1 = 15
 				info.checked = (DBM.Options.InfoFrameLines == 15)
 				UIDropDownMenu_AddButton(info, 2)
-				
+
 				info = UIDropDownMenu_CreateInfo()
 				info.text = DBM_CORE_INFOFRAME_LINES_TO:format(20)
 				info.func = setLines
@@ -199,7 +199,7 @@ end
 --  Create the frame  --
 ------------------------
 local frameBackdrop = {
-	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",--131071
 	tile = true,
 	tileSize = 16,
 	insets = { left = 2, right = 14, top = 2, bottom = 2 },
@@ -339,6 +339,8 @@ local function updatePlayerPower()
 	local threshold = value[1]
 	local powerType = value[2]
 	local spellFilter = value[3]
+	--Value 4 is the noUpdate handler
+	--Value 5 is sorting method, handled in show handler
 	for uId in DBM:GetGroupMembers() do
 		if spellFilter and DBM:UnitDebuff(uId, spellFilter) then
 			--Do nothing
@@ -365,16 +367,18 @@ local function updateEnemyPower()
 		if specificUnit then
 			local currentPower, maxPower = UnitPower(specificUnit, powerType), UnitPowerMax(specificUnit, powerType)
 			if maxPower and maxPower ~= 0 then--Prevent division by 0 in addition to filtering non existing units that may still return false on UnitExists()
-				if currentPower / maxPower * 100 >= threshold then
-					lines[UnitName(specificUnit)] = currentPower
+				local percent = currentPower / maxPower * 100
+				if percent >= threshold then
+					lines[UnitName(specificUnit)] = mfloor(percent).."%"
 				end
 			end
 		else
 			if specificUnit then
 				local currentPower, maxPower = UnitPower(specificUnit), UnitPowerMax(specificUnit)
 				if maxPower and maxPower ~= 0 then--Prevent division by 0 in addition to filtering non existing units that may still return false on UnitExists()
-					if currentPower / maxPower * 100 >= threshold then
-						lines[UnitName(specificUnit)] = currentPower
+					local percent = currentPower / maxPower * 100
+					if percent >= threshold then
+						lines[UnitName(specificUnit)] = mfloor(percent).."%"
 					end
 				end
 			else
@@ -382,8 +386,9 @@ local function updateEnemyPower()
 					local uId = "boss"..i
 					local currentPower, maxPower = UnitPower(uId), UnitPowerMax(uId)
 					if maxPower and maxPower ~= 0 then--Prevent division by 0 in addition to filtering non existing units that may still return false on UnitExists()
-						if currentPower / maxPower * 100 >= threshold then
-							lines[UnitName(uId)] = currentPower
+						local percent = currentPower / maxPower * 100
+						if percent >= threshold then
+							lines[UnitName(uId)] = mfloor(percent).."%"
 						end
 					end
 				end
@@ -429,10 +434,11 @@ local function updateEnemyAbsorb()
 				local text
 				if totalAbsorb then
 					text = absorbAmount / totalAbsorb * 100
+					lines[UnitName(specificUnit)] = mfloor(text).."%"
 				else
 					text = absorbAmount
+					lines[UnitName(specificUnit)] = mfloor(text)
 				end
-				lines[UnitName(specificUnit)] = mfloor(text).."%"
 			end
 		end
 	else
@@ -799,12 +805,9 @@ function onUpdate(frame, table)
 			return
 		elseif leftText and type(leftText) ~= "string" then
 			tostring(leftText)
-			--error("DBM InfoFrame: leftText must be string, Notify DBM author. Infoframe force shutting down ", 2)
-			--frame:Hide()--Force close infoframe so it doesn't keep throwing 100s of errors onupdate. If leftText is broken the frame needs to be shut down
-			--return
 		end
 		local rightText = lines[leftText]
-		local extra, extraName = string.split("-", leftText)--Find just unit name, if extra info had to be added to make unique
+		local extra, extraName = string.split("*", leftText)--Find just unit name, if extra info had to be added to make unique
 		local icon = icons[extraName or leftText] and icons[extraName or leftText]..leftText
 		if friendlyEvents[currentEvent] then
 			local unitId = DBM:GetRaidUnitId(DBM:GetUnitFullName(extraName or leftText)) or "player"--Prevent nil logical error
@@ -853,6 +856,8 @@ function onUpdate(frame, table)
 				else
 					color = NORMAL_FONT_COLOR
 				end
+			else
+				color = NORMAL_FONT_COLOR
 			end
 			if unitId2 then--Check right text
 				local _, class = UnitClass(unitId2)
@@ -861,6 +866,8 @@ function onUpdate(frame, table)
 				else
 					color2 = NORMAL_FONT_COLOR
 				end
+			else
+				color2 = NORMAL_FONT_COLOR
 			end
 			linesShown = linesShown + 1
 			frame:AddDoubleLine(icon or leftText, rightText, color.r, color.g, color.b, color2.r, color2.g, color2.b)
@@ -872,7 +879,7 @@ end
 ---------------
 --  Methods  --
 ---------------
---Arg 1: spellName, health/powervalue, customfunction, table type. Arg 2: TankIgnore, Powertype, SortFunction, totalAbsorb, sortmethod (table/stacks). Arg 3: SpellFilter, UseIcon. Arg 4: disable onUpdate
+--Arg 1: spellName, health/powervalue, customfunction, table type. Arg 2: TankIgnore, Powertype, SortFunction, totalAbsorb, sortmethod (table/stacks). Arg 3: SpellFilter, UseIcon. Arg 4: disable onUpdate. Arg 5: sortmethod (playerpower)
 function infoFrame:Show(maxLines, event, ...)
 	currentMapId = select(4, UnitPosition("player"))
 	if DBM.Options.DontShowInfoFrame and (event or 0) ~= "test" then return end
@@ -882,6 +889,7 @@ function infoFrame:Show(maxLines, event, ...)
 	else
 		maxlines = maxLines or 5
 	end
+	table.wipe(value)
 	for i = 1, select("#", ...) do
 		value[i] = select(i, ...)
 	end
@@ -902,15 +910,15 @@ function infoFrame:Show(maxLines, event, ...)
 	end
 	currentEvent = event
 	if event == "playerbuff" or event == "playerbaddebuff" or event == "playergooddebuff" then
-		sortMethod = 3
+		sortMethod = 3--Sort by group ID
 	elseif event == "health" or event == "playerdebuffremaining" then
-		sortMethod = 2	-- Sort lowest first
-	elseif (event == "playerdebuffstacks" or event == "table") and value[2] then
-		if type(value[2]) == "number" then
-			sortMethod = value[2]
-		end
+		sortMethod = 2--Sort lowest first
+	elseif (event == "playerdebuffstacks" or event == "table") and value[2] and type(value[2]) == "number" then
+		sortMethod = value[2]
+	elseif event == "playerpower" and value[5] and type(value[5]) == "number" then
+		sortMethod = value[5]
 	else
-		sortMethod = 1
+		sortMethod = 1--Sort highest first
 	end
 	if events[currentEvent] then
 		events[currentEvent](value[1])
@@ -926,11 +934,10 @@ function infoFrame:Show(maxLines, event, ...)
 	onUpdate(frame, value[1])
 	if not frame.ticker and not value[4] and event ~= "table" then
 		frame.ticker = C_Timer.NewTicker(0.5, function() onUpdate(frame) end)
-	elseif frame.ticker and event == "table" then--Redundancy, in event calling a new table based infoframe show without a hide event to unschedule ticker based infoframe
+	elseif frame.ticker and value[4] then--Redundancy, in event calling a non onupdate infoframe show without a hide event to unschedule ticker based infoframe
 		frame.ticker:Cancel()
 		frame.ticker = nil
 	end
-	local wowToc, testBuild, wowVersionString = DBM:GetTOC()
 end
 
 function infoFrame:RegisterCallback(cb)

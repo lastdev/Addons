@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxTooltip.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxTooltip.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	Tooltip functions.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxTooltip.lua $", "$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxTooltip.lua $", "$Rev: 6506 $")
 
 -- Global functions
 local addonLoaded	-- Enchantrix.Tooltip.AddonLoaded()
@@ -44,11 +44,14 @@ local ALTCHATLINKTOOLTIP_OPEN
 
 local tooltip = LibStub("nTipHelper:1")
 
+local constants = Enchantrix.Constants
+
 function addonLoaded()
 	-- Hook in new tooltip code
 	tooltip:Activate()
 	tooltip:AddCallback( { type = "item", callback = hookItemTooltip }, 400)
 	tooltip:AddCallback( { type = "spell", callback = hookSpellTooltip }, 400)
+
 	tooltip:AltChatLinkRegister(callbackAltChatLinkTooltip)
 	ALTCHATLINKTOOLTIP_OPEN = tooltip:AltChatLinkConstants()
 end
@@ -189,8 +192,7 @@ local function prospectTooltip(prospect, tooltip, name, link, quality, count)
 end
 
 
--- ccox - TODO WOTLK - change strings to milling, see if this can share code with prospecting!
--- probably not
+-- ccox - TODO - see if this can share code with prospecting! (probably not)
 
 local function millingTooltip(prospect, tooltip, name, link, quality, count)
 
@@ -255,14 +257,17 @@ local function millingTooltip(prospect, tooltip, name, link, quality, count)
 
 
 	if (Enchantrix.Settings.GetSetting('TooltipMillingLevels')) then
+        -- apparently results of 0 are being converted to NIL incorrectly by Lua
 		local reqSkill = Enchantrix.Util.InscriptionSkillRequiredForItem(link);
 		local userSkill = Enchantrix.Util.GetUserInscriptionSkill();
-		local deText = format(_ENCH("TooltipMillingLevel"), reqSkill );
-		if (userSkill < reqSkill) then
-			tooltip:AddLine(deText, nil, 0.8,0.1,0.1, embed);		-- reddish
-		else
-			tooltip:AddLine(deText, nil, 0.1,0.8,0.1, embed);		-- greenish
-		end
+        if (reqSkill and userSkill) then
+            local deText = format(_ENCH("TooltipMillingLevel"), reqSkill );
+            if (userSkill < reqSkill) then
+                tooltip:AddLine(deText, nil, 0.8,0.1,0.1, embed);		-- reddish
+            else
+                tooltip:AddLine(deText, nil, 0.1,0.8,0.1, embed);		-- greenish
+            end
+        end
 	end
 
 	tooltip:SetColor(0.1,0.6,0.6)
@@ -300,23 +305,23 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 		elseif Enchantrix.Settings.GetSetting("ModTTShow") == "ctrl" and not IsControlKeyDown() then
 			return
 		end
-	else 
+	else
 		Enchantrix.Settings.SetSetting("ModTTShow", "always")
 	end
 
 	local embed = Enchantrix.Settings.GetSetting('ToolTipEmbedInGameTip')
 
-	-- useful for debugging, not useful for most folks, setting must be changed in settings file
+	-- useful for debugging, not useful for most folks, setting must be changed manually in the settings file
 	if ( Enchantrix.Settings.GetSetting('TooltipShowItemDebugDetails') ) then
 --	if ( true ) then
 		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, invTexture = GetItemInfo(link)
 		tooltip:AddLine("Quality is "..itemRarity..", Type is "..itemType..", SubType is "..itemSubType..", EquipLoc is "..itemEquipLoc, nil, embed)
 	end
-	
+
 	-- see if this is a simple reagent produced from disenchanting, prospecting or milling
 	if ( Enchantrix.Settings.GetSetting('TooltipShowMatSources') ) then
-		
-		local deReagent = Enchantrix.Constants.ReverseDisenchantLevelList[ itemId ]
+
+		local deReagent = constants.ReverseDisenchantLevelList[ itemId ]
 		if (deReagent) then
 			local lowest = deReagent[1]
 			local highest = deReagent[2]
@@ -327,45 +332,49 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 				return
 			end
 		end
-		
-		local prospectGem = Enchantrix.Constants.ReverseProspectingSources[ itemId ]
-		if (prospectGem) then
-			local oreCount = #prospectGem
-			local oreString = Enchantrix.Util.GetReagentInfo( prospectGem[1] )
-			for index = 2, oreCount, 1 do
-				oreString = oreString..", "..Enchantrix.Util.GetReagentInfo( prospectGem[ index ] )
-			end
-			local prospectText = format( _ENCH('FrmtProspectFrom'), oreString )
-			tooltip:SetColor(0.8,0.8,0.2);
-			tooltip:AddLine( prospectText, true, embed) -- the "true" enables line wrapping
-			return
-		end
-		
-		local inkList = Enchantrix.Constants.ReverseInkList[ itemId ]
-		if (inkList) then
-			local pigmentString = Enchantrix.Util.GetReagentInfo( inkList[1] )
-			local inkText = format( _ENCH('FrmtInkFrom'), pigmentString )
-			tooltip:SetColor(0.8,0.8,0.2);
-			tooltip:AddLine(inkText, true, embed)
-			return
-		end
-	
-	end
-	
-	
-	-- first, see if this is a prospectable item (short list)
-	local prospect = Enchantrix.Storage.GetItemProspects(link)
-	if (prospect and Enchantrix.Settings.GetSetting('TooltipShowProspecting')) then
-		prospectTooltip(prospect, tooltip, name, link, quality, count)
-		return
+
+        if (not constants.Classic) then
+            local prospectGem = constants.ReverseProspectingSources[ itemId ]
+            if (prospectGem) then
+                local oreCount = #prospectGem
+                local oreString = Enchantrix.Util.GetReagentInfo( prospectGem[1] )
+                for index = 2, oreCount, 1 do
+                    oreString = oreString..", "..Enchantrix.Util.GetReagentInfo( prospectGem[ index ] )
+                end
+                local prospectText = format( _ENCH('FrmtProspectFrom'), oreString )
+                tooltip:SetColor(0.8,0.8,0.2);
+                tooltip:AddLine( prospectText, true, embed) -- the "true" enables line wrapping
+                return
+            end
+
+            local inkList = constants.ReverseInkList[ itemId ]
+            if (inkList) then
+                local pigmentString = Enchantrix.Util.GetReagentInfo( inkList[1] )
+                local inkText = format( _ENCH('FrmtInkFrom'), pigmentString )
+                tooltip:SetColor(0.8,0.8,0.2);
+                tooltip:AddLine(inkText, true, embed)
+                return
+            end
+        end
+
 	end
 
-	-- next, see if this is a millable item (short list)
-	local milling = Enchantrix.Storage.GetItemMilling(link)
-	if (milling and Enchantrix.Settings.GetSetting('TooltipShowMilling')) then
-		millingTooltip(milling, tooltip, name, link, quality, count)
-		return
-	end
+
+    if (not constants.Classic) then
+        -- first, see if this is a prospectable item (short list)
+        local prospect = Enchantrix.Storage.GetItemProspects(link)
+        if (prospect and Enchantrix.Settings.GetSetting('TooltipShowProspecting')) then
+            prospectTooltip(prospect, tooltip, name, link, quality, count)
+            return
+        end
+
+        -- next, see if this is a millable item (short list)
+        local milling = Enchantrix.Storage.GetItemMilling(link)
+        if (milling and Enchantrix.Settings.GetSetting('TooltipShowMilling')) then
+            millingTooltip(milling, tooltip, name, link, quality, count)
+            return
+        end
+    end
 
 	-- then see if it's disenchantable
 	local data = Enchantrix.Storage.GetItemDisenchants(link)
@@ -428,7 +437,7 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	else
 		return
 	end
-	
+
 	-- normally disenchanting deals with single items
 	-- but the appraiser window can show multiple items and wants a value for the group
 	totalHSP = totalHSP * count;
@@ -481,11 +490,84 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	end
 end
 
+
+--[[
+Old APIs used by Classic, see https://wow.gamepedia.com/Category:World_of_Warcraft_API/Removed_Functions
+
+API GetTradeSkillInfo
+API GetTradeSkillInvSlotFilter
+API GetTradeSkillInvSlots
+API GetTradeSkillItemLink
+API GetTradeSkillLine
+API GetTradeSkillListLink
+API GetTradeSkillNumReagents
+API GetTradeSkillReagentInfo
+API GetTradeSkillReagentItemLink
+API GetTradeSkillRecipeLink
+API GetTradeSkillSelectionIndex
+API GetTradeSkillSubClasses
+API GetTradeSkillNumMade
+
+Old Classic Crafting APIs (removed in 3.0)
+REMOVED - CloseCraft
+REMOVED - CollapseCraftSkillLine
+REMOVED - CraftIsEnchanting
+REMOVED - CraftIsPetTraining
+REMOVED - CraftOnlyShowMakeable
+REMOVED - DoCraft
+REMOVED - ExpandCraftSkillLine
+REMOVED - GetNumCrafts
+REMOVED - GetCraftButtonToken
+REMOVED - GetCraftCooldown
+REMOVED - GetCraftDescription
+REMOVED - GetCraftDisplaySkillLine
+REMOVED - GetCraftFilter
+REMOVED - GetCraftIcon
+REMOVED - GetCraftInfo
+REMOVED - GetCraftItemLink
+REMOVED - GetCraftItemNameFilter
+REMOVED - GetCraftName
+REMOVED - GetCraftNumMade
+REMOVED - GetCraftNumReagents
+REMOVED - GetCraftReagentInfo
+REMOVED - GetCraftReagentItemLink
+REMOVED - GetCraftRecipeLink
+REMOVED - GetCraftSelectionIndex
+REMOVED - GetCraftSkillLine
+REMOVED - GetCraftSlots
+REMOVED - GetCraftSpellFocus
+REMOVED - SelectCraft
+REMOVED - SetCraftFilter
+REMOVED - SetCraftItemNameFilter
+]]
+
+-- using the Classic Craft APIs
+local function getReagentsFromCraftFrame(craftIndex)
+	local reagentList = {}
+
+	local numReagents = GetCraftNumReagents(craftIndex)
+	for i = 1, numReagents do
+		local link = GetCraftReagentItemLink(craftIndex, i)
+		if link then
+			local reagentName, reagentTexture, reagentCount, playerReagentCount = GetCraftReagentInfo(craftIndex, i)
+			table.insert(reagentList, {link, reagentCount})
+		end
+	end
+
+	return reagentList
+end
+
+
 -- using the Recipe APIs
 local function getReagentsFromTradeFrame(recipe)
 	local reagentList = {}
+    local numReagents = 0
 
-	local numReagents = C_TradeSkillUI.GetRecipeNumReagents(recipe)
+    if (constants.Classic) then
+        numReagents = GetTradeSkillNumReagents(recipe)
+    else
+        numReagents = C_TradeSkillUI.GetRecipeNumReagents(recipe)
+    end
 	-- Enchantrix.Util.DebugPrintQuick("reagents count ", numReagents )	-- DEBUGGING
 
 	if (not numReagents) then
@@ -493,12 +575,25 @@ local function getReagentsFromTradeFrame(recipe)
 	end
 
 	for i = 1, numReagents do
-		local link = C_TradeSkillUI.GetRecipeReagentItemLink(recipe, i);
+        local link = nil
+        if (constants.Classic) then
+            link = GetTradeSkillReagentItemLink(recipe, i);
+        else
+            link = C_TradeSkillUI.GetRecipeReagentItemLink(recipe, i);
+        end
 		-- Enchantrix.Util.DebugPrintQuick("reagent ", i, link )	-- DEBUGGING
 		if link then
 			local hlink = link:match("|H([^|]+)|h")
-			-- Enchantrix.Util.DebugPrintQuick("reagent info ", C_TradeSkillUI.GetRecipeReagentInfo(recipe, i) )	-- DEBUGGING
-			local reagentName, reagentTexture, reagentCountNeeded, playerReagentCount = C_TradeSkillUI.GetRecipeReagentInfo(recipe, i)
+            local reagentCountNeeded = 0
+            if (constants.Classic) then
+                -- Enchantrix.Util.DebugPrintQuick("reagent info ", GetTradeSkillReagentInfo(recipe, i) )	-- DEBUGGING
+                local _, _, reagentCountNeededL, _ = GetTradeSkillReagentInfo(recipe, i)
+                reagentCountNeeded = reagentCountNeededL
+            else
+                -- Enchantrix.Util.DebugPrintQuick("reagent info ", C_TradeSkillUI.GetRecipeReagentInfo(recipe, i) )	-- DEBUGGING
+                local _, _, reagentCountNeededL, _ = C_TradeSkillUI.GetRecipeReagentInfo(recipe, i)
+                reagentCountNeeded = reagentCountNeededL
+            end
 			table.insert(reagentList, {hlink, reagentCountNeeded})
 		end
 	end
@@ -575,7 +670,9 @@ function enchantTooltip(tooltip, name, link, isItem)
 	local tradeIndex = nil
 	local reagentList
 	local frame = tooltip:GetFrame()
-	
+
+    --Enchantrix.Util.DebugPrintQuick("enchantTooltip", name, link, isItem )  -- DEBUGGING
+
 	-- if it's an item, try our cache
 	if isItem then
 		reagentList = Enchantrix.Util.GetCraftReagentInfoFromCache(name)
@@ -584,34 +681,70 @@ function enchantTooltip(tooltip, name, link, isItem)
 	if not reagentList or (#reagentList < 1) then
 
 		-- clean up the craft item string
-		--Enchantrix.Util.DebugPrintQuick("original name is ", name )
+        --Enchantrix.Util.DebugPrintQuick("original name is ", name )
 		name = name:gsub("^%a+:", "")	-- remove crafting type "Enchanting:"
 		name = name:gsub("^%s*", "")	-- remove leading spaces
-		--Enchantrix.Util.DebugPrintQuick("cleaned name is ", name )
-		
-		local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
+        --Enchantrix.Util.DebugPrintQuick("cleaned name is ", name )
 
-		-- Enchantrix.Util.DebugPrintQuick("recipe count is ", #recipes )		-- DEBUGGING
-		if recipes and (#recipes > 0) then
-			for i = 1, #recipes do
-				-- Enchantrix.Util.DebugPrintQuick("recipe ", i, " is ", recipes[i] )		-- DEBUGGING
-				if _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]).name == name then
-					tradeIndex = i
-					-- Enchantrix.Util.DebugPrintQuick("recipe matched ", i, _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]) )		-- DEBUGGING
-					break
-				end
-			end
-		end
+        if (constants.Classic) then
 
-		if tradeIndex then
-			reagentList = getReagentsFromTradeFrame( recipes[tradeIndex] )
-		else
-			-- if all else fails
-			reagentList = getReagentsFromTooltip(frame)
-		end
-		
+            -- first try craft APIs
+            for i = 1, GetNumCrafts() do
+                local craftName = GetCraftInfo(i)
+                if name == craftName then
+                    craftIndex = i
+                    break
+                end
+            end
+
+            if craftIndex then
+                reagentList = getReagentsFromCraftFrame(craftIndex)
+                --Enchantrix.Util.DebugPrintQuick("enchantTooltip reagents from Craft API ", reagentList )    -- DEBUGGING
+            else
+
+                -- now try tradeskill APIs
+                local numTradeSkills = GetNumTradeSkills()
+                for ID = GetFirstTradeSkill(), numTradeSkills do
+                    local itemName = GetTradeSkillInfo(ID)
+                    if itemName == name then
+                        tradeIndex = ID
+                        --Enchantrix.Util.DebugPrintQuick("recipe matched ", ID, GetTradeSkillInfo(ID) )		-- DEBUGGING
+                        break
+                    end
+                end
+
+                if tradeIndex then
+                    reagentList = getReagentsFromTradeFrame( tradeIndex )
+                else
+                    -- if all else fails
+                    reagentList = getReagentsFromTooltip(frame)
+                end
+            end
+        else
+            local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
+
+            --Enchantrix.Util.DebugPrintQuick("recipe count is ", #recipes )		-- DEBUGGING
+            if recipes and (#recipes > 0) then
+                for i = 1, #recipes do
+                    -- Enchantrix.Util.DebugPrintQuick("recipe ", i, " is ", recipes[i] )		-- DEBUGGING
+                    if _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]).name == name then
+                        tradeIndex = i
+                        --Enchantrix.Util.DebugPrintQuick("recipe matched ", i, _G.C_TradeSkillUI.GetRecipeInfo(recipes[i]) )		-- DEBUGGING
+                        break
+                    end
+                end
+            end
+
+            if tradeIndex then
+                reagentList = getReagentsFromTradeFrame( recipes[tradeIndex] )
+            else
+                -- if all else fails
+                reagentList = getReagentsFromTooltip(frame)
+            end
+        end
+
 		if not reagentList or (#reagentList < 1) then
-			--Enchantrix.Util.DebugPrintQuick("no reagents found for ", link, " in ", name )
+            --Enchantrix.Util.DebugPrintQuick("no reagents found for ", link, " in ", name )      -- DEBUGGING
 			return
 		end
 
@@ -647,7 +780,12 @@ function enchantTooltip(tooltip, name, link, isItem)
 	-- Sort by rarity and price
 	table.sort(reagentList, function(a,b)
 		if (not b) or (not a) then return end
-		return ((b[QUALITY] or -1) < (a[QUALITY] or -1)) or ((b[PRICE] or 0) < (a[PRICE] or 0))
+        -- tonumber needed because some mods change the reagent list display, and caches aren't working quite right
+        aQ = tonumber(a[QUALITY] or -1)
+        bQ = tonumber(b[QUALITY] or -1)
+        aP = tonumber(a[PRICE] or 0)
+        bP = tonumber(b[PRICE] or 0)
+		return (bQ < aQ) or (bP < aP)
 	end)
 
 	-- Header
@@ -717,14 +855,16 @@ end
 function hookItemTooltip(tipFrame, item, count, name, link, quality)
 	if ((not Enchantrix.Settings.GetSetting('all'))
 		or (not Enchantrix.Settings.GetSetting('TooltipShowReagents'))) then return end
-	
+
+    --Enchantrix.Util.DebugPrintQuick("hookItemTooltip", item, count, name, link, quality )  -- DEBUGGING
+
 	-- we're getting nil links in here somehow, just return if that happens
 	if (link == nil) then return end
-	
+
 	tooltip:SetFrame(tipFrame)
 	-- ccox - tooltip:DecodeLink will only work with type "item"
 	local itemType, itemId = tooltip:DecodeLink(link)
-	
+
 	if itemType == "item" then
 		name = name or ""
 		-- safety, some other addons pass in strings for count by mistake
@@ -740,10 +880,12 @@ end
 function hookSpellTooltip(tipFrame, link, name, rank)
 	if ((not Enchantrix.Settings.GetSetting('all'))
 		or (not Enchantrix.Settings.GetSetting('TooltipShowReagents'))) then return end
-	
+
+    --Enchantrix.Util.DebugPrintQuick("hookSpellTooltip", link, name, rank )  -- DEBUGGING
+
 	-- we're getting nil links in here somehow, just return if that happens
 	if (link == nil) then return end
-	
+
 	tooltip:SetFrame(tipFrame)
 	if link:sub(0, 8) == "enchant:" or link:sub(0, 6) == "spell:" then
 		link = "|H"..link.."|h|cffffffff["..name.."]|r|h"
@@ -751,13 +893,45 @@ function hookSpellTooltip(tipFrame, link, name, rank)
 	-- ccox - tooltip:DecodeLink will only work with type "item", returning nil for any other link type
 	-- so we have to do this the hard way
 	local itemType, itemId = tooltip:BreakHyperlink("H", 1, strsplit("|", link))
-	
+
 	if itemType == "enchant" or itemType == "spell" then
 		name = name or ""
 		enchantTooltip(tooltip, name, link, false)
 	end
 	tooltip:ClearFrame(tipFrame)
 end
+
+
+--[[
+-- old classic code for comparison
+function hookTooltip(tipFrame, item, count, name, link, quality)
+
+	-- nothing to do, if enchantrix is disabled
+--	if (not Enchantrix.Settings.GetSetting('all')) then return end
+
+--Enchantrix.Util.DebugPrintQuick("hookTooltip", link, name, rank )  -- DEBUGGING
+
+	tooltip:SetFrame(tipFrame)
+
+	local itemType, itemId = tooltip:DecodeLink(link)
+
+--Enchantrix.Util.DebugPrintQuick("enx tooltip hook called", item, count, name, link, quality, itemType, itemId );
+
+	if itemType == "item" then
+		name = name or ""
+		itemTooltip(tooltip, name, link, quality, count or 1)
+		if (Enchantrix.Settings.GetSetting('ShowAllCraftReagents')) then
+			enchantTooltip(tooltip, name, link, true)
+		end
+	elseif itemType == "enchant" or itemType == "spell" then
+		name = name or ""
+		enchantTooltip(tooltip, name, link, false)
+	end
+
+	tooltip:ClearFrame(tipFrame)
+end
+]]
+
 
 function callbackAltChatLinkTooltip(link, text, button, chatFrame)
 	if button == "LeftButton" and Enchantrix.Settings.GetSetting('AltChatlinkTooltip') then
@@ -771,7 +945,7 @@ function callbackAltChatLinkTooltip(link, text, button, chatFrame)
 end
 
 Enchantrix.Tooltip = {
-	Revision		= "$Rev: 6237 $",
+	Revision		= "$Rev: 6506 $",
 
 	AddonLoaded		= addonLoaded,
 	Format			= tooltipFormat,

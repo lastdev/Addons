@@ -7,7 +7,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
 L.TranslationBy 			= "Saispai"
-L.Website					= "Visita nuestro canal de Discord: |cFF73C2FBhttps://discord.gg/deadlybossmods|r."
+L.Website					= "Visita nuestro canal de Discord (|cFF73C2FBhttps://discord.gg/deadlybossmods|r) y síguenos en Twitter (@deadlybossmods)."
 L.WebsiteButton				= "Página web"
 
 L.OTabBosses	= "Jefes"
@@ -16,8 +16,8 @@ L.TabCategory_Options	 	= "Opciones generales"
 L.TabCategory_OTHER    		= "Otros módulos"
 
 L.BossModLoaded 			= "Estadísticas de %s"
-L.BossModLoad_now 			= [[Este módulo no está cargado. 
-Se cargará al entrar en la estancia. 
+L.BossModLoad_now 			= [[Este módulo no está cargado.
+Se cargará al entrar en la estancia.
 También puedes hacer clic en el botón para cargar el módulo manualmente.]]
 
 L.PosX 						= 'Posición X'
@@ -69,7 +69,7 @@ L.RaidWarnColor_1 			= "Color 1"
 L.RaidWarnColor_2 			= "Color 2"
 L.RaidWarnColor_3		 	= "Color 3"
 L.RaidWarnColor_4 			= "Color 4"
-L.InfoRaidWarning			= [[Puedes especificar la posición y colores del marco de avisos de banda. 
+L.InfoRaidWarning			= [[Puedes especificar la posición y colores del marco de avisos de banda.
 Este marco se usa para mensajes como "Jugador X afectado por Y".]]
 L.ColorResetted 			= "Se ha reiniciado la configuración de colores de este campo."
 L.ShowWarningsInChat 		= "Mostrar avisos en el chat"
@@ -102,7 +102,6 @@ L.ShowGuildMessages 		= "Mostrar mensajes de inicio de encuentro, victoria y der
 L.ShowGuildMessagesPlus		= "Mostrar también mensajes de inicio, victoria y derrota de Mítica+ de grupos de hermandad (requiere que la opción anterior esté activada)"
 L.WhisperMessages			= "Opciones de susurros"
 L.AutoRespond 				= "Responder automáticamente a susurros en encuentro"
-L.EnableStatus 				= "Responder automáticamente a susurros de 'estado'"
 L.WhisperStats 				= "Incluir estadísticas de victoria y derrota en las respuestas automáticas a susurros"
 L.DisableStatusWhisper 		= "Desactivar susurros automáticos de estado de encuentro del grupo o banda para todos los jugadores (requiere ser el líder). Solo se aplica a bandas en dificultad normal, heroica y mítica, y a mazmorras de piedra angular."
 L.DisableGuildStatus 		= "Desactivar mensajes de hermandad de estado de encuentro del grupo o banda para todos los jugadores (requiere ser el líder)."
@@ -142,6 +141,18 @@ L.Bar7Header				= "Opciones de barras de usuario"
 L.Bar7ForceLarge			= "Usar siempre barras grandes"
 L.Bar7CustomInline			= "Usar icono '!' personalizado"
 L.Bar7Footer				= "(la barra de muestra no se\nactualiza en vivo)"
+--Dropdown Options
+L.CBTGeneric				= "Genérico"
+L.CBTAdd					= "Esbirro"
+L.CBTAOE					= "Área"
+L.CBTTargeted				= "Objetivo"
+L.CBTInterrupt				= "Interrumpir"
+L.CBTRole					= "Rol"
+L.CBTPhase					= "Fase"
+L.CBTImportant				= "Importante (usuario)"
+L.CVoiceOne					= "Cuenta atrás 1"
+L.CVoiceTwo					= "Cuenta atrás 2"
+L.CVoiceThree				= "Cuenta atrás 3"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "Colores de barras por tipo de temporizador"
@@ -211,11 +222,11 @@ L.SWFAll					= "Cuando los avisos especiales usen cualquier sonido"
 L.SpecWarn_AlwaysVoice		= "Reproducir siempre todas las alertas de voz (ignora las opciones de jefe; útil para líderes de banda)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 L.Area_GetVEM				= "Descargar VEM Voice Pack"
-L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-vem|r"
+L.VEMDownload				= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/dbm-voicepack-vem|r"
 L.Area_BrowseOtherVP		= "Explorar otros paquetes de voz en Curse"
-L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "Explorar otros paquetes de voz de cuenta atrás en Curse"
-L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+count+pack|r"
 
 -- Tab: Event Sounds
 L.Panel_EventSounds			= "Sonidos de eventos"
@@ -225,7 +236,6 @@ L.EventWipeSound			= "Sonido de derrota de encuentro"
 L.EventEngageSound			= "Sonido de inicio de encuentro"
 L.EventDungeonMusic			= "Música de fondo en mazmorras y bandas"
 L.EventEngageMusic			= "Música de fondo en encuentros"
-L.EventTurtleMusic			= "Música de fondo en 'Cabeza de playa'"
 L.Area_EventSoundsExtras	= "Opciones de sonidos de eventos"
 L.EventMusicCombined		= "Mostrar toda la selección de música (escribe /reload en el chat para que esta opción surta efecto)"
 L.Area_EventSoundsFilters	= "Filtros de sonidos de evento"
@@ -245,7 +255,8 @@ L.SpamBlockNoSetIcon		= "Desactivar asignación automática de iconos"
 L.SpamBlockNoRangeFrame		= "Ocultar marcos de distancia"
 L.SpamBlockNoInfoFrame		= "Ocultar marcos de información"
 L.SpamBlockNoHudMap			= "Ocultar indicadores"
-L.SpamBlockNoNameplate		= "Ocultar auras de placas de nombres"
+L.SpamBlockNoNameplate		= "Ocultar auras de placas de nombres (las deshabilita por completo)"
+L.SpamBlockNoNameplateLines	= "Ocultar texto de auras de placas de nombres (se seguirán mostrando los iconos)"
 L.SpamBlockNoCountdowns		= "Desactivar sonidos de cuenta atrás"
 L.SpamBlockNoYells			= "Desactivar envío automático de mensajes en el chat"
 L.SpamBlockNoNoteSync		= "Rechazar automáticamente notas compartidas"
@@ -260,6 +271,7 @@ L.Panel_SpamFilter			= "Filtros de avisos"
 L.Area_SpamFilter			= "Opciones de filtros de avisos"
 L.DontShowFarWarnings		= "Ocultar anuncios y temporizadores de eventos que estén demasiado lejos"
 L.StripServerName			= "Omitir nombre del reino en avisos y temporizadores"
+L.FilterVoidFormSay			= "Deshabilitar el envío de mensajes de posición y cuenta atrás en el chat durante Forma del Vacío"
 
 L.Area_SpecFilter			= "Opciones de filtros de rol"
 L.FilterTankSpec			= "Ocultar avisos designados para tanques cuando no sea tu rol"
@@ -295,11 +307,6 @@ L.AfterFirst				= "Tras haber visto la cinemática por primera vez"
 L.Always					= ALWAYS
 L.CombatOnly				= "En combate"
 L.RaidCombat				= "En combate (solo en jefes)"
-L.HideBonusHeader			= "Ocultar ventana de tirada bonus en"
-L.TrivialContent			= "Mazmorras no míticas"
-L.NormalRaider				= "LFR y mazmorras míticas inferiores a +5"
-L.HeroicRaider				= "Bandas inferiores a heroico, mazmorras míticas inferiores a +10 y jefes de mundo (<400)"
-L.MythicRaider				= "Todo lo inferior a banda mítica"
 
 L.Panel_ExtraFeatures		= "Funciones adicionales"
 --
@@ -323,7 +330,8 @@ L.ShowQueuePop				= "Mostrar temporizador para eltiempo restante para aceptar av
 L.Area_AutoLogging			= "Opciones del registro automático"
 L.AutologBosses				= "Registrar encuentros automáticamente con el registro de combate de Blizzard (usa '/dbm pull' antes de iniciar un encuentro para comenzar a grabar antes, de forma que tenga en cuenta la toma de pociones y otras acciones)"
 L.AdvancedAutologBosses		= "Registrar encuentros automáticamente con Transcriptor"
-L.LogOnlyRaidBosses			= "Registrar solo encuentros de jefe de banda de la expansión actual (excluye el buscador de bandas)"
+L.RecordOnlyBosses			= "Registrar solo encuentros de jefe (excluye todos los combates contra enemigos que no son jefes; usa '/dbm pull' antes de un jefe para registrar el uso previo de pociones)"
+L.LogOnlyNonTrivial			= "Registrar solo el contenido importante (excluye el buscador de bandas, las mazmorras, las gestas y todo el contenido antiguo)"
 --
 L.Area_3rdParty				= "Opciones de addons de terceros"
 L.ShowBBOnCombatStart		= "Realizar comprobación de beneficios de Big Brother al iniciar un encuentro"
@@ -334,7 +342,6 @@ L.AutoAcceptGuildInvite		= "Aceptar automáticamente invitaciones a grupos de mi
 L.Area_Advanced				= "Opciones avanzadas"
 L.FakeBW					= "Camuflar DBM como si fuera BigWigs en comprobaciones de versión (útil para hermandades que obligan a usar BigWigs)"
 L.AITimer					= "Generar temporizadores automáticamente para encuentros no vistos anteriormente mediante la IA de temporizadores interna de DBM (útil para probar jefes por primera vez en el RPP). No funciona correctamente en encuentros con múltiples esbirros que comparten la misma facultad."
-L.AutoCorrectTimer			= "Corregir automáticamente temporizadores que son demasiado largos (útil para contenido nuevo para el que DBM todavía no está actualizado). Nota: esta opción puede empeorar algunos temporizadores si el encuentro los reinicia en cambios de fase para los que DBM todavía no está preparado."
 
 L.Panel_Profile				= "Perfiles"
 L.Area_CreateProfile		= "Creación de perfiles para opciones generales de DBM"

@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Chess", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
 local playerFactoin = UnitFactionGroup("player")
-mod:SetRevision(("$Revision: 595 $"):sub(12, -3))
+mod:SetRevision("20190417010011")
 if playerFactoin == "Alliance" then
 	mod:SetCreatureID(21752)--Warchief Blackhand
 else

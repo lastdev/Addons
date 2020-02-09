@@ -192,7 +192,7 @@ function Overachiever.ExamineAchievementTip(tooltip, link)
         end
         addline(tooltip)  -- Handle whatever hasn't actually been added to the tooltip yet.
         if (progresscompleted) then
-          tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready");
+          tooltip:AddTexture(136814) -- "Interface\\RAIDFRAME\\ReadyCheck-Ready"
         end
         tooltip:Show()
       end

@@ -65,8 +65,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = true,
 		["afkdnd_desc"] = "Throttle AFK and DND messages.",
@@ -82,100 +82,104 @@ L=
 		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		--[[Translation missing --]]
-		--[[ ["A module to provide basic chat filtering."] = "",--]] 
+		["A module to provide basic chat filtering."] = "A module to provide basic chat filtering.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_desc"] = "",--]] 
+		["bgjoin_desc"] = "Filter out channel Battleground leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_name"] = "",--]] 
+		["bgjoin_name"] = "Filter BG Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["Filtering"] = "",--]] 
+		["Filtering"] = "Filtering",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_desc"] = "",--]] 
+		["leavejoin_desc"] = "Filter out channel leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_name"] = "",--]] 
+		["leavejoin_name"] = "Filter Channel Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["notices_desc"] = "",--]] 
+		["notices_desc"] = "Filter out other custom channel notification messages, e.g. moderator changes.",
 		--[[Translation missing --]]
-		--[[ ["notices_name"] = "",--]] 
+		["notices_name"] = "Filter Channel Notices",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		--[[Translation missing --]]
-		--[[ ["A module to provide basic chat filtering."] = "",--]] 
+		["A module to provide basic chat filtering."] = "A module to provide basic chat filtering.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_desc"] = "",--]] 
+		["bgjoin_desc"] = "Filter out channel Battleground leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_name"] = "",--]] 
+		["bgjoin_name"] = "Filter BG Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["Filtering"] = "",--]] 
+		["Filtering"] = "Filtering",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_desc"] = "",--]] 
+		["leavejoin_desc"] = "Filter out channel leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_name"] = "",--]] 
+		["leavejoin_name"] = "Filter Channel Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["notices_desc"] = "",--]] 
+		["notices_desc"] = "Filter out other custom channel notification messages, e.g. moderator changes.",
 		--[[Translation missing --]]
-		--[[ ["notices_name"] = "",--]] 
+		["notices_name"] = "Filter Channel Notices",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "Un module pour fournir un filtrage basique",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		["bgjoin_desc"] = "Filtrer les messages du canal Champ de bataille: \"quitte/rejoint\"",
 		["bgjoin_name"] = "Filtrer BG quitte/rejoint",
 		["Filtering"] = "Filtrage",
 		["leavejoin_desc"] = "Filtrer les messages: \"quitte/rejoint le canal\"",
 		["leavejoin_name"] = "Filtre Rejoindre/Quitte",
 		--[[Translation missing --]]
-		--[[ ["notices_desc"] = "",--]] 
+		["notices_desc"] = "Filter out other custom channel notification messages, e.g. moderator changes.",
 		["notices_name"] = "Notifications de filtrage",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "Ein Modul, welches das elementare Filtern von Chat ermöglicht.",
 		["afkdnd_desc"] = "AFK- und DND-Mitteilungen unterdrücken",
@@ -191,10 +195,11 @@ L=
 		["tradespam_name"] = "Spam begrenzen",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "대화 내용을 필터링하는 모듈입니다.",
 		["afkdnd_desc"] = "자리비움과 다른 용무중 메시지를 조절합니다.",
@@ -210,39 +215,41 @@ L=
 		["tradespam_name"] = "스팸 조절",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
-L=
-{
+
+L = {
 	["Filtering"] = {
 		--[[Translation missing --]]
-		--[[ ["A module to provide basic chat filtering."] = "",--]] 
+		["A module to provide basic chat filtering."] = "A module to provide basic chat filtering.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_desc"] = "",--]] 
+		["bgjoin_desc"] = "Filter out channel Battleground leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["bgjoin_name"] = "",--]] 
+		["bgjoin_name"] = "Filter BG Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["Filtering"] = "",--]] 
+		["Filtering"] = "Filtering",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_desc"] = "",--]] 
+		["leavejoin_desc"] = "Filter out channel leave/join spam",
 		--[[Translation missing --]]
-		--[[ ["leavejoin_name"] = "",--]] 
+		["leavejoin_name"] = "Filter Channel Leave/Join",
 		--[[Translation missing --]]
-		--[[ ["notices_desc"] = "",--]] 
+		["notices_desc"] = "Filter out other custom channel notification messages, e.g. moderator changes.",
 		--[[Translation missing --]]
-		--[[ ["notices_name"] = "",--]] 
+		["notices_name"] = "Filter Channel Notices",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX",L)
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "Модуль для обеспечения базовый фильтрации чата.",
 		["afkdnd_desc"] = "Заглушать сообщения AFK и DND.",
@@ -258,9 +265,10 @@ L=
 		["tradespam_name"] = "Скрывать спам",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "提供基础的聊天过滤的模块",
 		["afkdnd_desc"] = "节流AFK和DND消息.",
@@ -276,15 +284,16 @@ L=
 		["tradespam_name"] = "屏蔽垃圾",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "Un módulo que proporciona el filtrado básico del chat.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		["bgjoin_desc"] = "Filtrar en canal Campo de Batlla spam ha abandonado/se ha unido",
 		["bgjoin_name"] = "Filtrar mensajes de unión/dejadas de Campos de Batalla",
 		["Filtering"] = "Filtrado",
@@ -293,20 +302,21 @@ L=
 		["notices_desc"] = "Filtrar otros mensajes de notificación de canal personalizado, por ejemplo, los cambios de moderador.",
 		["notices_name"] = "Filtrar Noticias del Canal",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
-L=
-{
+
+L = {
 	["Filtering"] = {
 		["A module to provide basic chat filtering."] = "模組：提供基本聊天過濾。",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_desc"] = "",--]] 
+		["afkdnd_desc"] = "Throttle AFK and DND messages.",
 		--[[Translation missing --]]
-		--[[ ["afkdnd_name"] = "",--]] 
+		["afkdnd_name"] = "Throttle AFK and DND messages.",
 		["bgjoin_desc"] = "濾除戰場頻道離開/加入訊息",
 		["bgjoin_name"] = "過濾戰場離開/參加",
 		["Filtering"] = "過濾",
@@ -315,11 +325,12 @@ L=
 		["notices_desc"] = "濾除自訂頻道通知訊息，像是主持人變動",
 		["notices_name"] = "過濾頻道通知",
 		--[[Translation missing --]]
-		--[[ ["tradespam_desc"] = "",--]] 
+		["tradespam_desc"] = "Throttle messages to prevent the same message from being repeated multiple times",
 		--[[Translation missing --]]
-		--[[ ["tradespam_name"] = "",--]] 
+		["tradespam_name"] = "Throttle Spam",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 end
 --@end-non-debug@

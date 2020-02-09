@@ -45,6 +45,7 @@ do
 	QUESTTYPE_RESOURCE = 0x2
 	QUESTTYPE_ITEM = 0x4
 	QUESTTYPE_ARTIFACTPOWER = 0x8
+	QUESTTYPE_PET = 0x16
 	
 	--todo: rename or put these into a table
 	FILTER_TYPE_PET_BATTLES = "pet_battles"
@@ -125,6 +126,8 @@ do
 				autosearch_cooldown = 600,
 				autosearch_share = false,
 			},
+			
+			raredetected = {},
 
 			world_map_config = {
 				onmap_show = true,
@@ -138,6 +141,8 @@ do
 			
 			disable_world_map_widgets = false,
 			
+			show_emissary_info = true,
+			
 			worldmap_widgets = {
 				textsize = 9,
 				scale = 1,
@@ -146,7 +151,7 @@ do
 			
 			accessibility = {
 				extra_tracking_indicator = false,
-				
+				use_bounty_ring = false,
 			},
 			
 			last_news_time = 0,
@@ -155,7 +160,7 @@ do
 			anchor_options = {}, --store the anchor options of each anchor
 			
 			filter_always_show_faction_objectives = true,
-			filter_force_show_brokenshore = false, --deprecated at this point, but won't be removed since further expantion might need this back
+			filter_force_show_brokenshore = true, --deprecated at this point, but won't be removed since further expantion might need this back
 			sort_time_priority = 0,
 			force_sort_by_timeleft = false,
 			alpha_time_priority = false,

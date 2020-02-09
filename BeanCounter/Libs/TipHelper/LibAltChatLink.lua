@@ -30,7 +30,7 @@
 
 	SVN Info for this file:
 		File $URL: Auc-Advanced/Libs/TipHelper/LibAltChatLink.lua $
-		Revision $Id: LibAltChatLink.lua 6243 2019-03-04 00:20:18Z none $
+		Revision $Id: LibAltChatLink.lua 6476 2019-11-02 14:38:37Z none $
 --]]
 
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1867, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision("20190711011703")
 mod:SetCreatureID(116691, 116689)--Belac (116691), Atrigan (116689)
 mod:SetEncounterID(2048)
 mod:SetZone()
@@ -49,7 +49,7 @@ local specWarnBoneSawEveryoneElse	= mod:NewSpecialWarningReflect(233441, "-Melee
 --Belac
 local specWarnPangsofGuilt			= mod:NewSpecialWarningInterruptCount(239401, "HasInterrupt", nil, nil, 1, 3)
 local specWarnEchoingAnguish		= mod:NewSpecialWarningMoveAway(233983, nil, nil, nil, 1, 2)
-local yellEchoingAnguish			= mod:NewPosYell(233983, DBM_CORE_AUTO_YELL_CUSTOM_POSITION)
+local yellEchoingAnguish			= mod:NewPosYell(233983, DBM_CORE_AUTO_YELL_CUSTOM_POSITION2)
 local specWarnAttackBelac			= mod:NewSpecialWarningSwitch("ej14646", "Dps", nil, nil, 1, 2)
 local specWarnFelSquallMelee		= mod:NewSpecialWarningRun(235230, "Melee", nil, 2, 4, 2)
 local specWarnFelSquallEveryoneElse	= mod:NewSpecialWarningReflect(235230, "-Melee", nil, nil, 1, 2)
@@ -62,7 +62,7 @@ local specWarnTorment				= mod:NewSpecialWarningStack(233104, nil, 75, nil, nil,
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(14645))
 local timerScytheSweepCD			= mod:NewCDCountTimer(23, 233426, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerCalcifiedQuillsCD		= mod:NewCDTimer(20.2, 233431, nil, nil, nil, 3)--20.2-20.5 unless delayed by scythe, or bone saw
-local timerBoneSawCD				= mod:NewCDCountTimer(45.4, 233441, nil, nil, nil, 2)
+local timerBoneSawCD				= mod:NewCDCountTimer(45.4, 233441, nil, nil, nil, 2, nil, nil, nil, 1, 4)
 local timerBoneSaw					= mod:NewBuffActiveTimer(15, 233441, nil, nil, nil, 2)
 --Belac
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(14646))
@@ -73,9 +73,6 @@ local timerFelSquallCD				= mod:NewCDCountTimer(45.7, 235230, nil, nil, nil, 2)
 local timerFelSquall				= mod:NewBuffActiveTimer(15, 235230, nil, nil, nil, 2)
 
 local berserkTimer					= mod:NewBerserkTimer(720)--482 in log, rounding to 8 even for now
-
---Atrigan
-local countdownBoneSaw				= mod:NewCountdown(45, 233441)
 
 mod:AddSetIconOption("SetIconOnQuills", 233431, true)
 mod:AddSetIconOption("SetIconOnAnguish", 233983, true)
@@ -112,8 +109,6 @@ local function updateAllAtriganTimers(self, ICD, ignoreBoneSaw)
 		DBM:Debug("timerBoneSawCD extended by: "..extend, 2)
 		timerBoneSawCD:Stop()
 		timerBoneSawCD:Update(elapsed, total+extend, self.vb.BonesawCount+1)
-		countdownBoneSaw:Cancel()
-		countdownBoneSaw:Start(ICD)
 	end
 end
 
@@ -165,7 +160,6 @@ function mod:OnCombatStart(delay)
 		timerCalcifiedQuillsCD:Start(8.5-delay)--8.5-11
 	end
 	timerBoneSawCD:Start(64.5-delay, 1)
-	countdownBoneSaw:Start(64.5-delay)
 --	timerEchoingAnguishCD:Start(1-delay)--6-20
 --	timerSuffocatingDarkCD:Start(1-delay)--13-48
 --	timerTormentingBurstCD:Start(1-delay, 1)--8-20
@@ -317,7 +311,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		specWarnAttackAtrigan:Play("targetchange")
 		timerBoneSaw:Stop()
 		timerBoneSawCD:Start()
-		countdownBoneSaw:Start()
 	elseif spellId == 233983 then
 		if args:IsPlayer() then
 			if self.Options.RangeFrame then

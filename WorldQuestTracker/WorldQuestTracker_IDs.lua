@@ -76,7 +76,9 @@ WorldQuestTracker.MapData.ZoneIDs = {
 		STORMSONG = 	942,
 		DRUSTVAR = 	896,
 		TOLDAGOR =	1169,
-	
+		
+		NAZJATAR = 	1355, --patch 8.2
+		MECHAGON = 	1462, --patch 8.2
 }
 
 --all zones with world quests
@@ -113,6 +115,10 @@ WorldQuestTracker.MapData.WorldQuestZones = {
 		--PRE PATCH
 		[WorldQuestTracker.MapData.ZoneIDs.DARKSHORE] = 	true,
 		[WorldQuestTracker.MapData.ZoneIDs.ARATHI] 	= 	true,
+		
+		--8.2
+		[WorldQuestTracker.MapData.ZoneIDs.NAZJATAR] = 		true,
+		[WorldQuestTracker.MapData.ZoneIDs.MECHAGON] = 	true,
 }
 
 --list of map ids for world quest hubs
@@ -161,6 +167,16 @@ WorldQuestTracker.mapTables = {
 			widgets = {},
 			Anchor_X = 0.01,
 			Anchor_Y = 0.20,
+			GrowRight = true,
+			show_on_map = {
+				[WorldQuestTracker.MapData.ZoneIDs.AZEROTH] = true,
+			},
+		},
+		
+		[WorldQuestTracker.MapData.ZoneIDs.NAZJATAR] = {
+			widgets = {},
+			Anchor_X = 0.01,
+			Anchor_Y = 0.08,
 			GrowRight = true,
 			show_on_map = {
 				[WorldQuestTracker.MapData.ZoneIDs.AZEROTH] = true,
@@ -431,6 +447,7 @@ WorldQuestTracker.MapData.FactionIcons = {
 	[2158] = "Interface\\ICONS\\inv__faction_voldunai", --Voldunai
 	[2163] = "Interface\\ICONS\\inv__faction_tortollanseekers", --Tortollan Seekers
 	[2164] = "Interface\\ICONS\\inv__faction_championsofazeroth", --Champions of Azeroth
+	
 }
 
 --reputation IDs for each faction -- UnitFactionGroup ("player")

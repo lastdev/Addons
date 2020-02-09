@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(861, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 53 $"):sub(12, -3))
+mod:SetRevision("20200110163536")
 mod:SetCreatureID(72057)
 mod:SetReCombatTime(20, 10)
 mod:SetZone()
@@ -20,7 +20,6 @@ local warnMagmaCrush			= mod:NewSpellAnnounce(144688, 3)
 local warnBurningSoul			= mod:NewTargetAnnounce(144689, 3)
 
 local specWarnBurningSoul		= mod:NewSpecialWarningMoveAway(144689)
-local yellBurningSoul			= mod:NewYell(144689)
 local specWarnPoolOfFire		= mod:NewSpecialWarningMove(144693)
 local specWarnEternalAgony		= mod:NewSpecialWarningSpell(144696, nil, nil, nil, 3)--Fights over, this is 5 minute berserk spell.
 
@@ -32,7 +31,7 @@ local berserkTimer				= mod:NewBerserkTimer(300)
 
 mod:AddBoolOption("SetIconOnBurningSoul")
 mod:AddBoolOption("RangeFrame", true)
-mod:AddReadyCheckOption(33118, false)
+mod:AddReadyCheckOption(33118, false, 90)
 
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then--We know for sure this is an actual pull and not diving into in progress
@@ -72,7 +71,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBurningSoul:Schedule(2)
 			specWarnBurningSoul:Schedule(4)
 			specWarnBurningSoul:Schedule(6)
-			yellBurningSoul:Yell()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
 			end

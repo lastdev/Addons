@@ -1,10 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 -- Auras Widget
 ---------------------------------------------------------------------------------------------------
 local ADDON_NAME, Addon = ...
 local ThreatPlates = Addon.ThreatPlates
 
-local Widget = Addon:NewWidget("Auras")
+local Widget = Addon.Widgets:NewWidget("Auras")
 
 ---------------------------------------------------------------------------------------------------
 -- Imported functions and constants
@@ -15,26 +16,32 @@ local GetTime = GetTime
 local pairs = pairs
 local floor, ceil = floor, ceil
 local sort = sort
-local math = math
-local string = string
 local tonumber = tonumber
 
 -- WoW APIs
 local CreateFrame, GetFramerate = CreateFrame, GetFramerate
 local DebuffTypeColor = DebuffTypeColor
-local UnitAura, UnitIsFriend, UnitIsUnit, UnitReaction, UnitIsPlayer, UnitPlayerControlled = UnitAura, UnitIsFriend, UnitIsUnit, UnitReaction, UnitIsPlayer, UnitPlayerControlled
+local UnitAura, UnitIsUnit, UnitReaction = UnitAura, UnitIsUnit, UnitReaction
+local UnitAffectingCombat = UnitAffectingCombat
 local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
+local GameTooltip = GameTooltip
+local IsInInstance = IsInInstance
 
 -- ThreatPlates APIs
+local LibCustomGlow = Addon.LibCustomGlow
 local TidyPlatesThreat = TidyPlatesThreat
 local Animations = Addon.Animations
 local Font = Addon.Font
-local UpdateTextPosition = Addon.Font.UpdateTextPosition
-local RGB = ThreatPlates.RGB
-local DEBUG = ThreatPlates.DEBUG
 
--- Default for icon mode is 0.5, for bar mode "1 / GetFramerate()" is used for smooth updates -- GetFramerate() in frames/second
-local UPDATE_INTERVAL = Addon.ON_UPDATE_INTERVAL
+---------------------------------------------------------------------------------------------------
+-- Aura Highlighting
+---------------------------------------------------------------------------------------------------
+
+local CUSTOM_GLOW_FUNCTIONS = {
+  Button = { "ButtonGlow_Start", "ButtonGlow_Stop", 8 },
+  Pixel = { "PixelGlow_Start", "PixelGlow_Stop", 3 },
+  AutoCast = { "AutoCastGlow_Start", "AutoCastGlow_Stop", 4 },
+}
 
 ---------------------------------------------------------------------------------------------------
 -- Auras Widget Functions
@@ -51,7 +58,6 @@ local GRID_LAYOUT = {
   },
 }
 
---local TEXTURE_BORDER = Addon.ADDON_DIRECTORY .. "Widgets\\AuraWidget\\TP_AuraFrameBorder"
 Widget.TEXTURE_BORDER = Addon.ADDON_DIRECTORY .. "Artwork\\squareline"
 
 -- Debuffs are color coded, with poison debuffs having a green border, magic debuffs a blue border, diseases a brown border,
@@ -213,6 +219,7 @@ Widget.CROWD_CONTROL_SPELLS = {
   --[204242] = PC_SNARE,        -- Consecrated Ground - same aura as Consecration
   -- Retribution
   -- [205273] = PC_SNARE,       -- Wake of Ashes - from Artefact weapon
+  [255937] = PC_SNARE,          -- Wake of Ashes - Talent
   [183218] = PC_SNARE,          -- Hand of Hindrance
 
   -- Priest
@@ -331,6 +338,19 @@ Widget.CROWD_CONTROL_SPELLS = {
 }
 
 ---------------------------------------------------------------------------------------------------
+-- Global attributes
+---------------------------------------------------------------------------------------------------
+local PLayerIsInInstance = false
+--local PLayerIsInCombat = false
+
+---------------------------------------------------------------------------------------------------
+-- Cached configuration settings
+---------------------------------------------------------------------------------------------------
+local HideOmniCC, ShowDuration
+local AuraHighlightEnabled, AuraHighlightStart, AuraHighlightStop, AuraHighlightStopPrevious, AuraHighlightOffset
+local AuraHighlightColor = { 0, 0, 0, 0 }
+
+---------------------------------------------------------------------------------------------------
 -- OnUpdate code - updates the auras remaining uptime and stacks and hides them after they expired
 ---------------------------------------------------------------------------------------------------
 
@@ -343,7 +363,6 @@ local function OnUpdateAurasWidget(widget_frame, elapsed)
     widget_frame.TimeSinceLastUpdate = 0
 
     local aura_frame
-    local current_time = GetTime()
     for i = 1, widget_frame.Debuffs.ActiveAuras do
       aura_frame = widget_frame.Debuffs.AuraFrames[i]
       widget:UpdateWidgetTime(aura_frame, aura_frame.AuraExpiration, aura_frame.AuraDuration)
@@ -419,48 +438,10 @@ local function FilterBlacklist(show_aura, spellfound, is_mine, show_only_mine)
   return show_aura
 end
 
---local function FilterWhitelistMine(show_aura, spellfound, is_mine)
---  return show_aura
---
-----  if spellfound == "All" then
-----    return true
-----  elseif spellfound == "My" or spellfound == true then
-----    return isMine
-----  end
-----
-----  return false
---end
---
---local function FilterAllMine(show_aura, spellfound, is_mine)
---  return show_aura
---
---  --  return is_mine
---end
---
---local function FilterBlacklistMine(show_aura, spellfound, is_mine)
---  --  blacklist my auras, i.e., default is show all of my auras (non of other players/NPCs)
---  --    spellfound = nil             - show my aura (not found in the blacklist)
---  --    spellfound = Not             - show my aura (from all casters) - bypass blacklisting
---  --    spellfound = My, true or All - blacklist my aura (auras from other casters are not shown either)
---
---  return show_aura
---
-----  if spellfound == nil then
-----    return isMine
-----  elseif spellfound == "Not" then
-----    return true
-----  end
-----
-----  return false
---end
-
 Widget.FILTER_FUNCTIONS = {
   all = FilterAll,
   blacklist = FilterBlacklist,
   whitelist = FilterWhitelist,
---  allMine = FilterAllMine,
---  blacklistMine = FilterBlacklistMine,
---  whitelistMine = FilterWhitelistMine,
 }
 
 function Widget:FilterFriendlyDebuffsBySpell(db, aura, AuraFilterFunction)
@@ -485,9 +466,10 @@ function Widget:FilterEnemyDebuffsBySpell(db, aura, AuraFilterFunction)
   return AuraFilterFunction(show_aura, spellfound, aura.CastByPlayer, db.ShowOnlyMine)
 end
 
-function Widget:FilterFriendlyBuffsBySpell(db, aura, AuraFilterFunction)
+function Widget:FilterFriendlyBuffsBySpell(db, aura, AuraFilterFunction, unit)
   local show_aura = db.ShowAllFriendly or
-                    (db.ShowOnFriendlyNPCs and aura.UnitIsNPC) or
+                    (db.ShowOnFriendlyNPCs and unit.type == "NPC") or
+                    (db.ShowOnlyMine and aura.CastByPlayer) or
                     (db.ShowPlayerCanApply and aura.PlayerCanApply)
 
   local spellfound = self.AuraFilterBuffs[aura.name] or self.AuraFilterBuffs[aura.spellid]
@@ -495,18 +477,31 @@ function Widget:FilterFriendlyBuffsBySpell(db, aura, AuraFilterFunction)
   return AuraFilterFunction(show_aura, spellfound, aura.CastByPlayer)
 end
 
-function Widget:FilterEnemyBuffsBySpell(db, aura, AuraFilterFunction)
+function Widget:FilterEnemyBuffsBySpell(db, aura, AuraFilterFunction, unit)
   local show_aura
-
-  if db.HideUnlimitedDuration and aura.duration <= 0 then
+  if aura.duration <= 0 and db.HideUnlimitedDuration then
     show_aura = false
   else
-    show_aura = db.ShowAllEnemy or (db.ShowOnEnemyNPCs and aura.UnitIsNPC) or (db.ShowDispellable and aura.StealOrPurge)
+    show_aura = db.ShowAllEnemy or (db.ShowOnEnemyNPCs and unit.type == "NPC") or (db.ShowDispellable and aura.StealOrPurge) or
+                (aura.type == "Magic" and db.ShowMagic)
   end
 
+  --  local show_aura = db.ShowAllEnemy or (db.ShowOnEnemyNPCs and unit.type == "NPC") or (db.ShowDispellable and aura.StealOrPurge)
   local spellfound = self.AuraFilterBuffs[aura.name] or self.AuraFilterBuffs[aura.spellid]
 
-  return AuraFilterFunction(show_aura, spellfound, aura.CastByPlayer)
+  show_aura = AuraFilterFunction(show_aura, spellfound, aura.CastByPlayer)
+
+  -- Checking unlimited auras after filter function results in the filter list not being able to overwrite
+  -- the "Show Unlimited Buffs" settings
+  if show_aura and (aura.duration <= 0) then
+    show_aura =  db.ShowUnlimitedAlways or
+                (db.ShowUnlimitedInCombat and unit.isInCombat) or
+                (db.ShowUnlimitedInInstances and PLayerIsInInstance) or
+                (db.ShowUnlimitedOnBosses and unit.IsBossOrRare)
+    unit.HasUnlimitedAuras = true
+  end
+
+  return show_aura
 end
 
 function Widget:FilterFriendlyCrowdControlBySpell(db, aura, AuraFilterFunction)
@@ -547,7 +542,7 @@ end
 -- Widget Object Functions
 -------------------------------------------------------------
 
-function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc, SpellFilter, SpellFilterCC, filter_mode)
+function Widget:UpdateUnitAuras(frame, unit, enabled_auras, enabled_cc, SpellFilter, SpellFilterCC, filter_mode)
   local aura_frames = frame.AuraFrames
   if not (enabled_auras or enabled_cc) then
     for i = 1, self.MaxAurasPerGrid do
@@ -568,6 +563,11 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
     UnitAuraList = {}
   end
 
+  local widget_frame = frame:GetParent()
+  unit.HasUnlimitedAuras = false
+  local effect = frame.Filter
+  local unitid = unit.unitid
+
   local db_auras = (effect == "HARMFUL" and db.Debuffs) or db.Buffs
   local AuraFilterFunction = self.FILTER_FUNCTIONS[filter_mode]
   local AuraFilterFunctionCC = self.FILTER_FUNCTIONS[db.CrowdControl.FilterMode]
@@ -575,7 +575,7 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
 
   local aura, show_aura
   local aura_count = 1
-  local rank, isCastByPlayer
+  local isCastByPlayer
   for i = 1, 40 do
     show_aura = false
 
@@ -592,8 +592,8 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
     -- ShowAll: Debuffs
     if not aura.name then break end
 
-    aura.unit = unitid
-    aura.UnitIsNPC = not (UnitIsPlayer(unitid) or UnitPlayerControlled(unitid))
+    --aura.unit = unitid
+    aura.Index = i
     aura.effect = effect
     aura.ShowAll = aura.ShowAll
     aura.CrowdControl = (enabled_cc and self.CROWD_CONTROL_SPELLS[aura.spellid])
@@ -609,7 +609,12 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
         show_aura = SpellFilter(self, db_auras, aura, AuraFilterFunction)
       end
     elseif enabled_auras then
-      show_aura = SpellFilter(self, db_auras, aura, AuraFilterFunction)
+      show_aura = SpellFilter(self, db_auras, aura, AuraFilterFunction, unit)
+
+      --      if show_aura and effect == "HELPFUL" and unit.reaction ~= "FRIENDLY" then
+      --        unit.HasUnlimitedAuras = unit.HasUnlimitedAuras or (aura.duration <= 0)
+      --        show_aura = self:FilterEnemyBuffsBySpellDynamic(db_auras, aura, unit)
+      --      end
     end
 
     if show_aura then
@@ -662,7 +667,7 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
 
     aura_count = 1
     aura_count_cc = 1
-    local aura_frames_cc = frame:GetParent().CrowdControl.AuraFrames
+    local aura_frames_cc = widget_frame.CrowdControl.AuraFrames
 
     for index = index_start, index_end, index_step do
       aura = UnitAuraList[index]
@@ -683,6 +688,10 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
         aura_frame.AuraExpiration = aura.expiration
         aura_frame.AuraStacks = aura.stacks
         aura_frame.AuraColor = aura.color
+        aura_frame.AuraStealOrPurge = aura.StealOrPurge
+
+        -- Information for aura tooltips
+        aura_frame.AuraIndex = aura.Index
 
         -- Call function to display the aura
         self:UpdateAuraInformation(aura_frame)
@@ -692,14 +701,16 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
   end
   aura_count_cc = aura_count_cc - 1
 
-  frame.ActiveAuras = max_auras_no - aura_count_cc
+  aura_count = max_auras_no - aura_count_cc
+  frame.ActiveAuras = aura_count
   -- Clear extra slots
-  for i = max_auras_no + 1, self.MaxAurasPerGrid do
+  for i = aura_count + 1, self.MaxAurasPerGrid do
     aura_frames[i]:Hide()
+    AuraHighlightStop(aura_frames[i].Highlight)
   end
 
   if effect == "HARMFUL" then
-    local aura_frames_cc = frame:GetParent().CrowdControl
+    local aura_frames_cc = widget_frame.CrowdControl
     aura_frames_cc.ActiveAuras = aura_count_cc
 
     local aura_frame_list_cc = aura_frames_cc.AuraFrames
@@ -707,6 +718,7 @@ function Widget:UpdateUnitAuras(frame, effect, unitid, enabled_auras, enabled_cc
       aura_frame_list_cc[i]:Hide()
     end
   end
+
 end
 
 function Widget:UpdatePositionAuraGrid(frame, y_offset)
@@ -735,8 +747,9 @@ function Widget:UpdatePositionAuraGrid(frame, y_offset)
   end
 end
 
-function Widget:UpdateIconGrid(widget_frame, unitid)
+function Widget:UpdateIconGrid(widget_frame, unit)
   local db = self.db
+  local unitid = unit.unitid
 
   if db.ShowTargetOnly then
     if not UnitIsUnit("target", unitid) then
@@ -748,18 +761,17 @@ function Widget:UpdateIconGrid(widget_frame, unitid)
   end
 
   local enabled_cc
-
   local unit_is_friendly = UnitReaction(unitid, "player") > 4
   if unit_is_friendly then -- friendly or better
     enabled_cc = db.CrowdControl.ShowFriendly
 
-    self:UpdateUnitAuras(widget_frame.Debuffs, "HARMFUL", unitid, db.Debuffs.ShowFriendly, enabled_cc, self.FilterFriendlyDebuffsBySpell, self.FilterFriendlyCrowdControlBySpell, db.Debuffs.FilterMode)
-    self:UpdateUnitAuras(widget_frame.Buffs, "HELPFUL", unitid, db.Buffs.ShowFriendly, false, self.FilterFriendlyBuffsBySpell, self.FilterFriendlyCrowdControlBySpell, db.Buffs.FilterMode)
+    self:UpdateUnitAuras(widget_frame.Debuffs, unit, db.Debuffs.ShowFriendly, enabled_cc, self.FilterFriendlyDebuffsBySpell, self.FilterFriendlyCrowdControlBySpell, db.Debuffs.FilterMode)
+    self:UpdateUnitAuras(widget_frame.Buffs, unit, db.Buffs.ShowFriendly, false, self.FilterFriendlyBuffsBySpell, self.FilterFriendlyCrowdControlBySpell, db.Buffs.FilterMode)
   else
     enabled_cc = db.CrowdControl.ShowEnemy
 
-    self:UpdateUnitAuras(widget_frame.Debuffs, "HARMFUL", unitid, db.Debuffs.ShowEnemy, enabled_cc, self.FilterEnemyDebuffsBySpell, self.FilterEnemyCrowdControlBySpell, db.Debuffs.FilterMode)
-    self:UpdateUnitAuras(widget_frame.Buffs, "HELPFUL", unitid, db.Buffs.ShowEnemy, false, self.FilterEnemyBuffsBySpell, self.FilterEnemyCrowdControlBySpell, db.Buffs.FilterMode)
+    self:UpdateUnitAuras(widget_frame.Debuffs, unit, db.Debuffs.ShowEnemy, enabled_cc, self.FilterEnemyDebuffsBySpell, self.FilterEnemyCrowdControlBySpell, db.Debuffs.FilterMode)
+    self:UpdateUnitAuras(widget_frame.Buffs, unit, db.Buffs.ShowEnemy, false, self.FilterEnemyBuffsBySpell, self.FilterEnemyCrowdControlBySpell, db.Buffs.FilterMode)
   end
 
   local buffs_active, debuffs_active, cc_active = widget_frame.Buffs.ActiveAuras > 0, widget_frame.Debuffs.ActiveAuras > 0, widget_frame.CrowdControl.ActiveAuras > 0
@@ -808,6 +820,62 @@ function Widget:UpdateIconGrid(widget_frame, unitid)
 end
 
 ---------------------------------------------------------------------------------------------------
+-- Functions for cooldown handling incl. OmniCC support
+---------------------------------------------------------------------------------------------------
+
+local function CreateCooldown(parent)
+  -- When the cooldown shares the frameLevel of its parent, the icon texture can sometimes render
+  -- ontop of it. So it looks like it's not drawing a cooldown but it's just hidden by the icon.
+
+  local cooldown_frame = CreateFrame("Cooldown", nil, parent, "ThreatPlatesAuraWidgetCooldown")
+  cooldown_frame:SetAllPoints(parent.Icon)
+  cooldown_frame:SetReverse(true)
+  cooldown_frame:SetHideCountdownNumbers(true)
+  cooldown_frame.noCooldownCount = HideOmniCC
+
+  return cooldown_frame
+end
+
+local function UpdateCooldown(cooldown_frame, db)
+  if db.ShowCooldownSpiral then
+    cooldown_frame:SetDrawEdge(true)
+    cooldown_frame:SetDrawSwipe(true)
+  else
+    cooldown_frame:SetDrawEdge(false)
+    cooldown_frame:SetDrawSwipe(false)
+  end
+
+  -- Fix for OmnniCC cooldown numbers being shown on auras
+  if cooldown_frame.noCooldownCount ~= HideOmniCC then
+    cooldown_frame.noCooldownCount = HideOmniCC
+    -- Force an update on OmniCC cooldowns
+    cooldown_frame:Hide()
+    cooldown_frame:Show()
+  end
+end
+
+local function SetCooldown(cooldown_frame, duration, expiration)
+  if duration and expiration and duration > 0 and expiration > 0 then
+    cooldown_frame:SetCooldown(expiration - duration, duration + .25)
+  else
+    cooldown_frame:Clear()
+  end
+end
+
+---------------------------------------------------------------------------------------------------
+-- Functions for showing tooltips on auras
+---------------------------------------------------------------------------------------------------
+
+local function AuraFrameOnEnter(self)
+  GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+  GameTooltip:SetUnitAura(self:GetParent():GetParent().unit.unitid, self.AuraIndex, self:GetParent().Filter)
+end
+
+local function AuraFrameOnLeave(self)
+  GameTooltip:Hide()
+end
+
+---------------------------------------------------------------------------------------------------
 -- Functions for the aura grid with icons
 ---------------------------------------------------------------------------------------------------
 
@@ -820,21 +888,17 @@ function Widget:CreateAuraFrameIconMode(parent)
   frame.Icon = frame:CreateTexture(nil, "ARTWORK", 0)
   frame.Border = CreateFrame("Frame", nil, frame)
   frame.Border:SetFrameLevel(parent:GetFrameLevel())
+  frame.Cooldown = CreateCooldown(frame)
 
-  -- When the cooldown shares the frameLevel of its parent, the icon texture can sometimes render
-  -- ontop of it. So it looks like it's not drawing a cooldown but it's just hidden by the icon.
-  frame.Cooldown = CreateFrame("Cooldown", nil, frame, "ThreatPlatesAuraWidgetCooldown")
-  frame.Cooldown:SetAllPoints(frame.Icon)
-  frame.Cooldown:SetReverse(true)
-  frame.Cooldown:SetHideCountdownNumbers(true)
-
-  -- Fix for OmnniCC cooldown numbers being shown on auras
-  frame.Cooldown.noCooldownCount = true
+  frame.Highlight = CreateFrame("Frame", nil, frame)
+  frame.Highlight:SetFrameLevel(parent:GetFrameLevel())
+  frame.Highlight:SetPoint("CENTER")
 
   -- Use a seperate frame for text elements as a) using frame as parent results in the text being shown below
   -- the cooldown frame and b) using the cooldown frame results in the text not being visible if there is no
   -- cooldown (i.e., duration and expiration are nil which is true for auras with unlimited duration)
-  local text_frame =  CreateFrame("Frame", nil, frame)
+  local text_frame = CreateFrame("Frame", nil, frame)
+  text_frame:SetFrameLevel(parent:GetFrameLevel() + 9) -- +9 as the glow is set to +8 by LibCustomGlow
   text_frame:SetAllPoints(frame.Icon)
   frame.Stacks = text_frame:CreateFontString(nil, "OVERLAY")
   frame.TimeLeft = text_frame:CreateFontString(nil, "OVERLAY")
@@ -847,16 +911,21 @@ end
 function Widget:UpdateAuraFrameIconMode(frame)
   local db = self.db
 
-  if db.ShowCooldownSpiral then
-    frame.Cooldown:SetDrawEdge(true)
-    frame.Cooldown:SetDrawSwipe(true)
-    --frame.Cooldown:SetFrameLevel(frame:GetParent():GetFrameLevel() + 10)
+  UpdateCooldown(frame.Cooldown, db)
+  if ShowDuration then
+    frame.TimeLeft:Show()
   else
-    frame.Cooldown:SetDrawEdge(false)
-    frame.Cooldown:SetDrawSwipe(false)
+    frame.TimeLeft:Hide()
   end
 
-  local show_aura_type = db.ShowAuraType
+  -- Add tooltips to icons
+  if db.ShowTooltips then
+    frame:SetScript("OnEnter", AuraFrameOnEnter)
+    frame:SetScript("OnLeave", AuraFrameOnLeave)
+  else
+    frame:SetScript("OnEnter", nil)
+    frame:SetScript("OnLeave", nil)
+  end
 
   db = self.db_icon
   -- Icon
@@ -866,19 +935,7 @@ function Widget:UpdateAuraFrameIconMode(frame)
   frame.Icon:SetTexCoord(.10, 1-.07, .12, 1-.12)  -- Style: Square - remove border from icons
 
   if db.ShowBorder then
-   --local offset, edge_size, inset = 1, 4, 0
     local offset, edge_size, inset = 2, 8, 0
---    local offset, edge_size = 2, 8
---    if not show_aura_type then
---      offset, edge_size = 1, 4
---    end
---    local db_test = TidyPlatesThreat.db.profile.TestWidget
---    local offset, edge_size, inset = db_test.Offset, db_test.EdgeSize, db_test.Inset
---    if not show_aura_type then
---      offset, edge_size, inset = db_test.Offset, db_test.EdgeSize, db_test.Inset
---      frame.Border:SetBackdropBorderColor(0, 0, 0, 1)
---    end
-
     frame.Border:ClearAllPoints()
     frame.Border:SetPoint("TOPLEFT", frame, "TOPLEFT", -offset, offset)
     frame.Border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offset, -offset)
@@ -888,10 +945,15 @@ function Widget:UpdateAuraFrameIconMode(frame)
       insets = { left = inset, right = inset, top = inset, bottom = inset },
     })
     frame.Border:SetBackdropBorderColor(0, 0, 0, 1)
-
     frame.Border:Show()
+
   else
     frame.Border:Hide()
+  end
+
+  AuraHighlightStopPrevious(frame.Highlight)
+  if AuraHighlightEnabled then
+    frame.Highlight:SetSize(frame:GetWidth() + AuraHighlightOffset, frame:GetHeight() + AuraHighlightOffset)
   end
 
   Font:UpdateText(frame, frame.TimeLeft, db.Duration)
@@ -917,47 +979,41 @@ function Widget:UpdateAuraInformationIconMode(frame) -- texture, duration, expir
   frame.Icon:SetTexture(frame.AuraTexture)
 
   -- Highlight Coloring
-  if db.ModeIcon.ShowBorder and db.ShowAuraType then
-    frame.Border:SetBackdropBorderColor(color.r, color.g, color.b, 1)
+  if db.ModeIcon.ShowBorder then
+    if db.ShowAuraType then
+      frame.Border:SetBackdropBorderColor(color.r, color.g, color.b, 1)
+    end
   end
 
-  -- Cooldown
-  if duration and duration > 0 and expiration and expiration > 0 then
-    frame.Cooldown:SetCooldown(expiration - duration, duration + .25)
-  else
-    frame.Cooldown:Clear()
+  if AuraHighlightEnabled then
+    if frame.AuraStealOrPurge then
+      AuraHighlightStart(frame.Highlight, AuraHighlightColor)
+    else
+      AuraHighlightStop(frame.Highlight)
+    end
   end
 
+  SetCooldown(frame.Cooldown, duration, expiration)
   Animations:StopFlash(frame)
 
   frame:Show()
 end
 
 function Widget:UpdateWidgetTimeIconMode(frame, expiration, duration)
-  local db = self.db
-
   if expiration == 0 then
     frame.TimeLeft:SetText("")
     Animations:StopFlash(frame)
   else
     local timeleft = expiration - GetTime()
-
-    if db.ShowDuration then
-      if timeleft > 60 then
-        frame.TimeLeft:SetText(floor(timeleft/60).."m")
-      else
-        frame.TimeLeft:SetText(floor(timeleft))
-      end
-
-      if db.FlashWhenExpiring and timeleft < db.FlashTime then
-        Animations:Flash(frame, self.FLASH_DURATION)
-      end
+    if timeleft > 60 then
+      frame.TimeLeft:SetText(floor(timeleft/60).."m")
     else
-      frame.TimeLeft:SetText("")
+      frame.TimeLeft:SetText(floor(timeleft))
+    end
 
-      if db.FlashWhenExpiring and timeleft < db.FlashTime then
-        Animations:Flash(frame, self.FLASH_DURATION)
-      end
+    local db = self.db
+    if db.FlashWhenExpiring and timeleft < db.FlashTime then
+      Animations:Flash(frame, self.FLASH_DURATION)
     end
   end
 end
@@ -981,6 +1037,9 @@ function Widget:CreateAuraFrameBarMode(parent)
   frame.Background = frame.Statusbar:CreateTexture(nil, "BACKGROUND", 0)
   frame.Background:SetAllPoints()
 
+  frame.Highlight = CreateFrame("Frame", nil, frame)
+  frame.Highlight:SetFrameLevel(parent:GetFrameLevel())
+
   frame.Icon = frame:CreateTexture(nil, "OVERLAY", 1)
   frame.Stacks = frame.Statusbar:CreateFontString(nil, "OVERLAY")
 
@@ -995,13 +1054,33 @@ function Widget:CreateAuraFrameBarMode(parent)
   frame.TimeText:SetJustifyH("RIGHT")
   frame.TimeText:SetShadowOffset(1, -1)
 
+  frame.Cooldown = CreateCooldown(frame)
+
   frame:Hide()
 
   return frame
 end
 
 function Widget:UpdateAuraFrameBarMode(frame)
-  local db = self.db_bar
+  local db = self.db
+
+  UpdateCooldown(frame.Cooldown, db)
+  if ShowDuration then
+    frame.TimeText:Show()
+  else
+    frame.TimeText:Hide()
+  end
+
+  -- Add tooltips to icons
+  if db.ShowTooltips then
+    frame:SetScript("OnEnter", AuraFrameOnEnter)
+    frame:SetScript("OnLeave", AuraFrameOnLeave)
+  else
+    frame:SetScript("OnEnter", nil)
+    frame:SetScript("OnLeave", nil)
+  end
+
+  db = self.db_bar
   local font = ThreatPlates.Media:Fetch('font', db.Font)
 
   -- width and position calculations
@@ -1050,6 +1129,26 @@ function Widget:UpdateAuraFrameBarMode(frame)
     frame.Icon:Hide()
   end
 
+  AuraHighlightStopPrevious(frame.Highlight)
+  if AuraHighlightEnabled then
+    local aura_highlight = frame.Highlight
+
+    aura_highlight:ClearAllPoints()
+    if self.db.Highlight.Type == "ActionButton" then
+      -- Align to icon because of bad scaling otherwise
+      local offset = - (AuraHighlightOffset * 0.5)
+      if db.IconAlignmentLeft then
+        aura_highlight:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", offset, offset)
+      else
+        aura_highlight:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", db.BarWidth + db.IconSpacing + offset, offset)
+      end
+      aura_highlight:SetSize(db.BarHeight + AuraHighlightOffset, db.BarHeight + AuraHighlightOffset)
+    else
+      aura_highlight:SetPoint("CENTER")
+      aura_highlight:SetSize(frame:GetWidth() + AuraHighlightOffset, frame:GetHeight() + AuraHighlightOffset)
+    end
+  end
+
   frame.Statusbar:SetSize(db.BarWidth, db.BarHeight)
   --    frame.Statusbar:SetWidth(db.BarWidth)
   frame.Statusbar:SetStatusBarTexture(ThreatPlates.Media:Fetch('statusbar', db.Texture))
@@ -1061,14 +1160,21 @@ end
 function Widget:UpdateAuraInformationBarMode(frame) -- texture, duration, expiration, stacks, color, name)
   local db = self.db
 
+  local duration = frame.AuraDuration
+  local expiration = frame.AuraExpiration
   local stacks = frame.AuraStacks
   local color = frame.AuraColor
 
   -- Expiration
-  self:UpdateWidgetTime(frame, frame.AuraExpiration, frame.AuraDuration)
+  self:UpdateWidgetTime(frame, expiration, duration)
 
   if db.ShowStackCount and stacks > 1 then
-    frame.Stacks:SetText(stacks)
+    if HideOmniCC then
+      frame.Stacks:SetText(stacks)
+    else
+      frame.Stacks:SetText("")
+      frame.AuraName = frame.AuraName .. " (" .. stacks .. ")"
+    end
   else
     frame.Stacks:SetText("")
   end
@@ -1078,11 +1184,20 @@ function Widget:UpdateAuraInformationBarMode(frame) -- texture, duration, expira
     frame.Icon:SetTexture(frame.AuraTexture)
   end
 
+  if AuraHighlightEnabled then
+    if frame.AuraStealOrPurge then
+      AuraHighlightStart(frame.Highlight, AuraHighlightColor)
+    else
+      AuraHighlightStop(frame.Highlight)
+    end
+  end
+
   frame.LabelText:SetWidth(self.LabelLength - frame.TimeText:GetStringWidth())
   frame.LabelText:SetText(frame.AuraName)
   -- Highlight Coloring
   frame.Statusbar:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 
+  SetCooldown(frame.Cooldown, duration, expiration)
   Animations:StopFlash(frame)
 
   frame:Show()
@@ -1118,6 +1233,30 @@ function Widget:UpdateWidgetTimeBarMode(frame, expiration, duration)
       if db.FlashWhenExpiring and timeleft < db.FlashTime then
         Animations:Flash(frame, self.FLASH_DURATION)
       end
+    end
+
+    frame.Statusbar:SetValue(timeleft * 100 / duration)
+  end
+end
+
+function Widget:UpdateWidgetTimeBarModeNoDuration(frame, expiration, duration)
+  if duration == 0 then
+    frame.Statusbar:SetValue(100)
+    Animations:StopFlash(frame)
+  elseif expiration == 0 then
+    frame.Statusbar:SetValue(0)
+    Animations:StopFlash(frame)
+  else
+    local timeleft = expiration - GetTime()
+    if timeleft > 60 then
+      frame.TimeText:SetText(floor(timeleft/60).."m")
+    else
+      frame.TimeText:SetText(floor(timeleft))
+    end
+
+    local db = self.db
+    if db.FlashWhenExpiring and timeleft < db.FlashTime then
+      Animations:Flash(frame, self.FLASH_DURATION)
     end
 
     frame.Statusbar:SetValue(timeleft * 100 / duration)
@@ -1184,6 +1323,12 @@ function Widget:UpdateAuraWidgetLayout(widget_frame)
   self:CreateAuraGrid(widget_frame.Debuffs)
   self:CreateAuraGrid(widget_frame.CrowdControl)
 
+  if ShowDuration or not self.IconMode then
+    widget_frame:SetScript("OnUpdate", OnUpdateAurasWidget)
+  else
+    widget_frame:SetScript("OnUpdate", nil)
+  end
+
   if self.db.FrameOrder == "HEALTHBAR_AURAS" then
     widget_frame:SetFrameLevel(widget_frame:GetParent():GetFrameLevel() + 3)
   else
@@ -1199,7 +1344,7 @@ local function UnitAuraEventHandler(widget_frame, event, unitid)
   --  if unitid == "player" or unitid == "target" then return end
 
   if widget_frame.Active then
-    widget_frame.Widget:UpdateIconGrid(widget_frame, unitid)
+    widget_frame.Widget:UpdateIconGrid(widget_frame, widget_frame:GetParent().unit)
   end
 end
 
@@ -1216,10 +1361,46 @@ function Widget:PLAYER_TARGET_CHANGED()
     self.CurrentTarget = plate.TPFrame.widgets.Auras
 
     if self.CurrentTarget.Active then
-      self:UpdateIconGrid(self.CurrentTarget, plate.TPFrame.unit.unitid)
+      self:UpdateIconGrid(self.CurrentTarget, plate.TPFrame.unit)
     end
   end
 end
+
+function Widget:PLAYER_REGEN_ENABLED()
+  --PLayerIsInCombat = false
+
+  for plate, _ in pairs(Addon.PlatesVisible) do
+    local widget_frame = plate.TPFrame.widgets.Auras
+    local unit = plate.TPFrame.unit
+
+    -- It seems that unitid here can be nil when using the healthstone while in combat
+    -- assert (unit.unitid ~= nil, "Auras: PLAYER_REGEN_ENABLED - unitid =", unit.unitid)
+
+    if widget_frame.Active and unit.HasUnlimitedAuras and unit.unitid then
+      unit.isInCombat = UnitAffectingCombat(unit.unitid)
+      self:UpdateIconGrid(widget_frame, unit)
+    end
+  end
+end
+
+function Widget:PLAYER_REGEN_DISABLED()
+  --PLayerIsInCombat = true
+
+  for plate, _ in pairs(Addon.PlatesVisible) do
+    local widget_frame = plate.TPFrame.widgets.Auras
+    local unit = plate.TPFrame.unit
+
+    if widget_frame.Active and unit.HasUnlimitedAuras then
+      unit.isInCombat = UnitAffectingCombat(unit.unitid)
+      self:UpdateIconGrid(widget_frame, unit)
+    end
+  end
+end
+
+function Widget:PLAYER_ENTERING_WORLD()
+  PLayerIsInInstance = IsInInstance()
+end
+
 
 ---------------------------------------------------------------------------------------------------
 -- Widget functions for creation and update
@@ -1238,21 +1419,23 @@ function Widget:Create(tp_frame)
   widget_frame.Debuffs = CreateFrame("Frame", nil, widget_frame)
   widget_frame.Debuffs.AuraFrames = {}
   widget_frame.Debuffs.ActiveAuras = 0
+  widget_frame.Debuffs.Filter = "HARMFUL"
 
   widget_frame.Buffs = CreateFrame("Frame", nil, widget_frame)
   widget_frame.Buffs.AuraFrames = {}
   widget_frame.Buffs.ActiveAuras = 0
+  widget_frame.Buffs.Filter = "HELPFUL"
 
   widget_frame.CrowdControl = CreateFrame("Frame", nil, widget_frame)
   widget_frame.CrowdControl.AuraFrames = {}
   widget_frame.CrowdControl.ActiveAuras = 0
+  widget_frame.CrowdControl.Filter = "HARMFUL"
 
   widget_frame.Widget = self
 
   self:UpdateAuraWidgetLayout(widget_frame)
 
   widget_frame:SetScript("OnEvent", UnitAuraEventHandler)
-  widget_frame:SetScript("OnUpdate", OnUpdateAurasWidget)
   widget_frame:HookScript("OnShow", OnShowHookScript)
   -- widget_frame:HookScript("OnHide", OnHideHookScript)
   --------------------------------------
@@ -1268,11 +1451,15 @@ end
 
 function Widget:OnEnable()
   self:RegisterEvent("PLAYER_TARGET_CHANGED")
+  self:RegisterEvent("PLAYER_REGEN_ENABLED")
+  self:RegisterEvent("PLAYER_REGEN_DISABLED")
+  self:RegisterEvent("PLAYER_ENTERING_WORLD")
   -- LOSS_OF_CONTROL_ADDED
   -- LOSS_OF_CONTROL_UPDATE
 end
 
 function Widget:OnDisable()
+  self:UnregisterAllEvents()
   for plate, _ in pairs(Addon.PlatesVisible) do
     plate.TPFrame.widgets.Auras:UnregisterAllEvents()
   end
@@ -1289,7 +1476,7 @@ end
 function Widget:OnUnitAdded(widget_frame, unit)
   local db = self.db
 
-  if db.SwitchScaleByReaction and UnitReaction(widget_frame.unit.unitid, "player") > 4 then
+  if db.SwitchScaleByReaction and UnitReaction(unit.unitid, "player") > 4 then
     widget_frame.Buffs:SetScale(db.Debuffs.Scale)
     widget_frame.Debuffs:SetScale(db.Buffs.Scale)
   else
@@ -1301,7 +1488,7 @@ function Widget:OnUnitAdded(widget_frame, unit)
   widget_frame:UnregisterAllEvents()
   widget_frame:RegisterUnitEvent("UNIT_AURA", unit.unitid)
 
-  self:UpdateIconGrid(widget_frame, unit.unitid)
+  self:UpdateIconGrid(widget_frame, unit)
 end
 
 function Widget:OnUnitRemoved(widget_frame)
@@ -1354,8 +1541,6 @@ function Widget:ParseSpellFilters()
   self.AuraFilterBuffs = ParseFilter(self.db.Buffs.FilterBySpell)
   self.AuraFilterDebuffs = ParseFilter(self.db.Debuffs.FilterBySpell)
   self.AuraFilterCrowdControl = ParseFilter(self.db.CrowdControl.FilterBySpell)
-
-  self:UpdateSettings()
 end
 
 function Widget:UpdateSettingsIconMode()
@@ -1422,7 +1607,12 @@ function Widget:UpdateSettingsBarMode()
   self.CreateAuraFrame = self.CreateAuraFrameBarMode
   self.UpdateAuraFrame = self.UpdateAuraFrameBarMode
   self.UpdateAuraInformation = self.UpdateAuraInformationBarMode
-  self.UpdateWidgetTime = self.UpdateWidgetTimeBarMode
+
+  if ShowDuration then
+    self.UpdateWidgetTime = self.UpdateWidgetTimeBarMode
+  else
+    self.UpdateWidgetTime = self.UpdateWidgetTimeBarModeNoDuration
+  end
 end
 
 -- Load settings from the configuration which are shared across all aura widgets
@@ -1439,6 +1629,26 @@ function Widget:UpdateSettings()
 
   self.AlignLayout = GRID_LAYOUT[self.db.AlignmentH][self.db.AlignmentV]
 
+  self:ParseSpellFilters()
+
+  HideOmniCC = not self.db.ShowOmniCC
+  ShowDuration = self.db.ShowDuration and not self.db.ShowOmniCC
+  --  -- Don't update any widget frame if the widget isn't enabled.
+--  if not self:IsEnabled() then return end
+
+  -- Highlighting
+  AuraHighlightEnabled = self.db.Highlight.Enabled
+  AuraHighlightStart = LibCustomGlow[CUSTOM_GLOW_FUNCTIONS[self.db.Highlight.Type][1]]
+  AuraHighlightStopPrevious = AuraHighlightStop or LibCustomGlow.PixelGlow_Stop
+  AuraHighlightStop = LibCustomGlow[CUSTOM_GLOW_FUNCTIONS[self.db.Highlight.Type][2]]
+  AuraHighlightOffset = CUSTOM_GLOW_FUNCTIONS[self.db.Highlight.Type][3]
+
+  local color = (self.db.Highlight.CustomColor and self.db.Highlight.Color) or ThreatPlates.DEFAULT_SETTINGS.profile.AuraWidget.Highlight.Color
+  AuraHighlightColor[1] = color.r
+  AuraHighlightColor[2] = color.g
+  AuraHighlightColor[3] = color.b
+  AuraHighlightColor[4] = color.a
+
   for plate, tp_frame in pairs(Addon.PlatesCreated) do
     local widget_frame = tp_frame.widgets.Auras
 
@@ -1453,6 +1663,6 @@ function Widget:UpdateSettings()
     end
   end
 
-  --TidyPlatesInternal:ForceUpdate()
+  --Addon:ForceUpdate()
 end
 

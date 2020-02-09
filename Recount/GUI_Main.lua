@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1464 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1528 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -220,6 +220,8 @@ function Recount:OpenBarDropDown(myframe)
 		side = "TOPRIGHT"
 		oside = "TOPLEFT"
 	end
+
+	barmenuframe:ClearAllPoints()
 	barmenuframe:SetPoint(oside, myframe, side, 0, 0)
 	--barmenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
 end
@@ -656,7 +658,7 @@ function Recount:CreateMainWindow()
 
 	theFrame:SetResizable(true)
 	theFrame:SetMinResize(140, 63)
-	theFrame:SetMaxResize(400, 520)
+	theFrame:SetMaxResize(500, 520)
 
 	theFrame.SaveMainWindowPosition = Recount.SaveMainWindowPosition
 
@@ -1390,6 +1392,7 @@ function Recount:OpenFightDropDown(myframe)
 		oside = "TOPLEFT"
 	end
 
+	fightmenuframe:ClearAllPoints()
 	fightmenuframe:SetPoint(oside, myframe, side, 0, 0)
 	--fightmenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
 end
@@ -1553,6 +1556,7 @@ function Recount:OpenModeDropDown(myframe)
 		oside = "TOPLEFT"
 	end
 
+	modemenuframe:ClearAllPoints()
 	modemenuframe:SetPoint(oside, myframe, side, 0, 0)
 	--modemenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
 end
@@ -1828,6 +1832,7 @@ function Recount:RestoreMainWindowPosition(x, y, width, height)
 	local f = Recount.MainWindow
 	local s = f:GetEffectiveScale() -- Elsia: Fixed position code, with inspiration from ckknight's handing in pitbull
 	local uis = UIParent:GetScale()
+	f:ClearAllPoints()
 	f:SetPoint("CENTER", UIParent, "CENTER", x * uis / s, y * uis / s)
 	f:SetWidth(width)
 	f:SetHeight(height)

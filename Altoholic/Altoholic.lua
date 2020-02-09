@@ -177,7 +177,7 @@ function AuctionFrameBrowse_UpdateHook()
 		else
 			trueID = button:GetID() + offset;
 		end
-		link = GetAuctionItemLink("list", trueID)
+		link = C_AuctionHouse.GetReplicateItemLink("list", trueID)
 		if link and not link:match("battlepet:(%d+)") then		-- if there's a valid item link in this slot ..
 			local itemID = addon:GetIDFromLink(link)
 			local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)

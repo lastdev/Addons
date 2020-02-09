@@ -5,7 +5,7 @@
 --
 --
 
-local THIS_VERSION = 0.03
+local THIS_VERSION = 0.10
 
 if (not TjSharedMediaDropDown or TjSharedMediaDropDown.Version < THIS_VERSION) then
   assert(TjDropDownMenu, "TjSharedMediaDropDown requires TjDropDownMenu library.")
@@ -52,6 +52,7 @@ if (not TjSharedMediaDropDown or TjSharedMediaDropDown.Version < THIS_VERSION) t
       copytab(emptyList, menuList)
     else
       local blizztab
+	  local alphatab = {}
       for i,mt in ipairs(mediaList) do
         if (mt == "None" or mt == NONE) then
           tinsert(menuList, 1, { text = mt, value = 0 })
@@ -63,9 +64,20 @@ if (not TjSharedMediaDropDown or TjSharedMediaDropDown.Version < THIS_VERSION) t
           end
           blizztab[#(blizztab)+1] = { text = strsub(mt, 11), value = mt }
         else
-          menuList[#(menuList)+1] = { text = mt, value = mt }
+		  --menuList[#(menuList)+1] = { text = mt, value = mt }
+		  local k = strsub(mt, 1, 1)
+		  alphatab[k] = alphatab[k] or {}
+		  alphatab[k][#(alphatab[k])+1] = mt
         end
       end
+	  for k,list in pairs(alphatab) do
+	    local subtab = {}
+	    menuList[#(menuList)+1] = { text = k, menuList = subtab,
+                                    keepShownOnClick = 1, hasArrow = 1, TjDDM_notCheckable = 1 }
+		for i,mt in ipairs(list) do
+		  subtab[i] = { text = mt, value = mt }
+	    end
+	  end
     end
     if (not SMDD.regcallback) then
       SharedMedia.RegisterCallback(SMDD, "LibSharedMedia_Registered");

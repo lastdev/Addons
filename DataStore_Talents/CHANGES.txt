@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------
+r63 | thaokyaltoholic | 2020-02-09 10:01:09 +0000 (Sun, 09 Feb 2020) | 1 line
+Changed paths:
+   M /trunk/DataStore_Talents.toc
+
+8.3.001 Commit
+------------------------------------------------------------------------
+r62 | thaokyaltoholic | 2019-06-30 06:55:57 +0000 (Sun, 30 Jun 2019) | 1 line
+Changed paths:
+   M /trunk/DataStore_Talents.toc
+
+8.2.001 Commit
+------------------------------------------------------------------------
 r61 | thaoky.altoholic@yahoo.com | 2018-07-22 11:26:33 +0000 (Sun, 22 Jul 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Talents.lua

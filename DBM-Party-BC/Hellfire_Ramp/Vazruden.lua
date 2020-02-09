@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(529, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(17537, 17307)
 mod:SetEncounterID(1892)
 
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 --	"UNIT_DIED"
 )
 
-local warnMark      = mod:NewTargetAnnounce(30689)
+local warnMark      = mod:NewTargetNoFilterAnnounce(30689)
 
 local specwarnMark  = mod:NewSpecialWarningYou(30689, nil, nil, nil, 1, 2)
 local yellMark		= mod:NewYell(30689)

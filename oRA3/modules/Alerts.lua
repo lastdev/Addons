@@ -80,6 +80,7 @@ combatLogMap.SPELL_CAST_SUCCESS = {
 	[178207] = "Bloodlust", -- Drums of Fury (WoD)
 	[230935] = "Bloodlust", -- Drums of the Mountain (Legion)
 	[256740] = "Bloodlust", -- Drums of the Maelstrom (BfA)
+	[292686] = "Bloodlust", -- Mallet of Thunderous Skins (BfA)
 }
 combatLogMap.SPELL_AURA_APPLIED = {
 	-- Taunts
@@ -128,10 +129,12 @@ combatLogMap.SPELL_CREATE = {
 	[259409] = "Feast", -- Galley Banquet (+75)
 	[259410] = "Feast", -- Bountiful Captain's Feast (+100)
 	[286050] = "Feast", -- Sanguinated Feast (+100)
+	[297048] = "Feast", -- Famine Evaluator And Snack Table (+131)
 	-- Instant Rituals
 	[29893] = "Feast", -- Create Soulwell (Warlock)
 	[190336] = "Feast", -- Conjure Refreshment (Mage)
 	[276972] = "Feast", -- Mystical Cauldron
+	[298861] = "Feast", -- Greater Mystical Cauldron
 }
 combatLogMap.SPELL_RESURRECT = {
 	["*"] = "Resurrect",
@@ -145,8 +148,7 @@ combatLogMap.SPELL_RESURRECT = {
 	[20484] = "CombatResurrect",  -- Rebirth (Druid)
 	[61999] = "CombatResurrect",  -- Raise Ally (Death Knight)
 	[95750] = "CombatResurrect",  -- Soulstone Resurrection (Warlock)
-	[159931] = "CombatResurrect", -- Dust to Life (Hunter Moth Pet)
-	[159956] = "CombatResurrect", -- Gift of Chi-Ji (Hunter Crane Pet)
+	[265116] = "CombatResurrect", -- Unstable Temporal Time Shifter (Engineer)
 }
 combatLogMap.SPELL_AURA_REMOVED = {
 	[20707] = "Soulstone",  --  Buff removed on death
@@ -242,7 +244,7 @@ combatLogMap.SPELL_SUMMON = {
 	-- Reaves
 	[200205] = "Repair", -- Auto-Hammer Mode
 	[200211] = "Reincarnation", -- Failure Detection Mode
-	[200216] = "Feast", -- Snack Distribution Mode (+225 versatility)
+	[200216] = "Feast", -- Snack Distribution Mode (+10 versatility)
 }
 
 -- cache pet owner names
@@ -323,7 +325,7 @@ function module:Spam(key, msg)
 	end
 
 	if output == "self" or (self.db.profile.fallback and fallback) then
-		chatframe:AddMessage(("|Hora:%s|h|cff33ff99oRA3|r|h: %s"):format(chatMsg:gsub("|", "@"), msg))
+		chatframe:AddMessage(("|Hgarrmission:oRA:%s|h|cff33ff99oRA3|r|h: %s"):format(chatMsg:gsub("|", "@"), msg))
 	end
 end
 
@@ -458,9 +460,25 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 		end
 	end
 
+	local function isCasting(unit)
+		if not unit then return end
+
+		local name, _, _, _, _, _, _, notInterruptible, spellId = UnitCastingInfo(unit)
+		if name then
+			return spellId, not notInterruptible
+		end
+
+		name, _, _, _, _, _, notInterruptible, spellId = UnitChannelInfo(unit)
+		if name then
+			return spellId, not notInterruptible
+		end
+	end
+
 	-- aaand where all the magic happens
 	local FILTER_GROUP = bit_bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
-	local function handler(self, _, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId)
+	combatLogHandler:SetScript("OnEvent", function()
+		local _, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, spellId, spellName, _, extraSpellId = CombatLogGetCurrentEventInfo()
+
 		-- first check if someone died
 		if event == "UNIT_DIED" or event == "UNIT_DESTROYED" then
 			if soulstoneList[dstName] then
@@ -475,7 +493,7 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 
 		local handler = e[spellId]
 		if handler == nil then handler = e["*"] end -- can be false to ignore
-		if handler and (not self.db.profile.groupOnly or bit_band(bit_bor(srcFlags, dstFlags), FILTER_GROUP) ~= 0) then
+		if handler and (not module.db.profile.groupOnly or bit_band(bit_bor(srcFlags, dstFlags), FILTER_GROUP) ~= 0) then
 			-- special cases
 			if handler == "AssignOwner" then
 				if bit_band(srcFlags, FILTER_GROUP) ~= 0 then
@@ -483,7 +501,7 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 				end
 				return
 			elseif handler == "Soulstone" then
-				self:Soulstone(dstName)
+				module:Soulstone(dstName)
 				return
 			elseif handler == "Dispel" then
 				if extraSpellId == 1604 then -- Dazed
@@ -496,12 +514,24 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 				end
 			elseif handler == "InterruptCast" then -- not casting alert
 				local unit = getUnit(dstGUID)
-				if not unit or UnitCastingInfo(unit) then
-					return
+				if not unit then return end
+
+				local casting, interruptible = isCasting(unit)
+				if casting then
+					if interruptible then
+						-- wait for SPELL_INTERRUPT or SPELL_MISSED
+						return
+					end
+
+					-- handle uninterruptible casts (no SPELL_MISSED)
+					event = "SPELL_MISSED"
+					handler = "InterruptImmune"
+					extraSpellId = L["%s is uninterruptible"]:format(GetSpellLink(casting))
 				end
 			elseif handler == "InterruptMiss" then
 				local unit = getUnit(dstGUID)
-				if unit and UnitCastingInfo(unit) then
+				if isCasting(unit) then
+					-- check if the miss was due to an immunity buff on the target
 					local reason, timeleft = getMissReason(unit)
 					if reason then
 						handler = "InterruptImmune"
@@ -526,12 +556,9 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 			end
 
 			-- execute!
-			return self[handler](self, srcOutput, dstOutput, spellOutput, extraSpellOuput)
+			return module[handler](module, srcOutput, dstOutput, spellOutput, extraSpellOuput)
 		end
 
-	end
-	combatLogHandler:SetScript("OnEvent", function()
-		handler(module, CombatLogGetCurrentEventInfo())
 	end)
 
 	-- Codex handling
@@ -724,7 +751,7 @@ do
 
 	function module:UNIT_FLAGS(unit)
 		if (unit == "player" or unit:match("^raid") or unit:match("^party")) and UnitAffectingCombat(unit) then
-			if encounter and GetTime() - encounterStart < 6 then -- timeout for safety's sake
+			if encounter and GetTime() - encounterStart < 15 then -- timeout for safety's sake
 				local name = self:UnitName(unit:gsub("pet$", ""))
 				local source = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
 				local boss = ("|cffff8000%s|r"):format(encounter) -- would be nice to turn this into proper EJ link
@@ -788,8 +815,8 @@ function module:OnRegister()
 
 	-- Enable shift-clicking the line to print in chat.
 	hooksecurefunc("SetItemRef", function(link)
-		if strsub(link, 1, 3) == "ora" and IsModifiedClick("CHATLINK") then
-			local _, msg = strsplit(":", link, 2)
+		local _, ora, msg = strsplit(":", link, 3)
+		if ora == "oRA" and IsShiftKeyDown() then
 			msg = msg:gsub("@", "|")
 			local editBox = _G.ChatEdit_ChooseBoxForSend()
 			_G.ChatEdit_ActivateChat(editBox)
@@ -806,7 +833,7 @@ function module:OnEnable()
 end
 
 function module:PLAYER_ENTERING_WORLD()
-	wipe(petOwnerMap) -- clear out the cache every now and again
+	petOwnerMap = {} -- clear out the cache every now and again
 	UpdatePets()
 end
 

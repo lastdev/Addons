@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 -- Lua APIs
 local pairs  = pairs
 
@@ -105,20 +107,20 @@ local function ConstructIconPicker(frame)
   iconLabel:SetPoint("RIGHT", input, "LEFT", -50, 0);
 
   function group.Pick(self, texturePath)
-    if(self.data.controlledChildren) then
+    if(not self.groupIcon and self.data.controlledChildren) then
       for index, childId in pairs(self.data.controlledChildren) do
         local childData = WeakAuras.GetData(childId);
         if(childData) then
           childData[self.field] = texturePath;
           WeakAuras.Add(childData);
-          WeakAuras.SetThumbnail(childData);
+          WeakAuras.UpdateThumbnail(childData);
           WeakAuras.SetIconNames(childData);
         end
       end
     else
       self.data[self.field] = texturePath;
       WeakAuras.Add(self.data);
-      WeakAuras.SetThumbnail(self.data);
+      WeakAuras.UpdateThumbnail(self.data);
       WeakAuras.SetIconNames(self.data);
     end
     local success = icon:SetTexture(texturePath) and texturePath;
@@ -129,10 +131,11 @@ local function ConstructIconPicker(frame)
     end
   end
 
-  function group.Open(self, data, field)
+  function group.Open(self, data, field, groupIcon)
     self.data = data;
     self.field = field;
-    if(data.controlledChildren) then
+    self.groupIcon = groupIcon
+    if(not groupIcon and data.controlledChildren) then
       self.givenPath = {};
       for index, childId in pairs(data.controlledChildren) do
         local childData = WeakAuras.GetData(childId);
@@ -144,29 +147,25 @@ local function ConstructIconPicker(frame)
       self.givenPath = self.data[self.field];
     end
     -- group:Pick(self.givenPath);
-    frame.container.frame:Hide();
-    frame.buttonsContainer.frame:Hide();
-    self.frame:Show();
     frame.window = "icon";
+    frame:UpdateFrameVisible()
     input:SetText("");
   end
 
   function group.Close()
-    group.frame:Hide();
-    frame.container.frame:Show();
-    frame.buttonsContainer.frame:Show();
     frame.window = "default";
+    frame:UpdateFrameVisible()
     AceConfigDialog:Open("WeakAuras", frame.container);
   end
 
   function group.CancelClose()
-    if(group.data.controlledChildren) then
+    if(not group.groupIcon and group.data.controlledChildren) then
       for index, childId in pairs(group.data.controlledChildren) do
         local childData = WeakAuras.GetData(childId);
         if(childData) then
           childData[group.field] = group.givenPath[childId] or childData[group.field];
           WeakAuras.Add(childData);
-          WeakAuras.SetThumbnail(childData);
+          WeakAuras.UpdateThumbnail(childData);
           WeakAuras.SetIconNames(childData);
         end
       end

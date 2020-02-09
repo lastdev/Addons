@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FreeholdTrash", "DBM-Party-BfA", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18412 $"):sub(12, -3))
+mod:SetRevision("20200126143729")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -64,7 +64,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnShatteringBellowKick:Play("kickcast")
 		else--Else, can't interrupt or interrupt warning is disabled and user is a caster, warn to stop casting.
 			specWarnShatteringBellow:Show()
-			specWarnShatteringBellow:Play("stopcasting")
+			specWarnShatteringBellow:Play("stopcast")
 		end
 	elseif spellId == 257756 and self:AntiSpam(5, 3) then
 		specWarnGoinBan:Show()

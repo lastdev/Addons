@@ -1,5 +1,5 @@
 
-local BNGetGameAccountInfoByGUID, IsCharacterFriend, find, tremove = BNGetGameAccountInfoByGUID, IsCharacterFriend, string.find, table.remove
+local BNGetGameAccountInfoByGUID, IsFriend, find, tremove = BNGetGameAccountInfoByGUID, C_FriendList.IsFriend, string.find, table.remove
 local names = {}
 
 do
@@ -22,7 +22,7 @@ f:SetScript("OnEvent", function(frame, _, addon)
 		if event == "CHAT_MSG_CHANNEL" and (chanid == 0 or type(chanid) ~= "number") then return end --Only scan official custom channels (gen/trade)
 		if not guid then return end
 		local _, characterName = BNGetGameAccountInfoByGUID(guid)
-		if characterName or IsCharacterFriend(guid) or flag == "GM" or flag == "DEV" then return end
+		if characterName or IsFriend(guid) or flag == "GM" or flag == "DEV" then return end
 		if not find(player, "-", nil, true) then
 			player = player..realm
 		end

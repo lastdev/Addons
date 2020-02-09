@@ -37,7 +37,7 @@ function qcVerifyMapDataExists()
 
 	local qcQuestID = GetQuestID()
 	local qcMapID = C_Map.GetBestMapForUnit("player")
-	local qcMapName = C_Map.GetAreaInfo(qcMapID).name
+	local qcMapName = C_Map.GetAreaInfo(qcMapID).name  -- qcUiMapID ?
 
 	if not (qcPinDB[qcMapID]) then
 		PlaySound("8959", "1115")

@@ -1,7 +1,7 @@
 --[[
 	Norganna's Tooltip Helper class
 	Version: 1,4
-	Revision: $Id: nTipHelper.lua 6243 2019-03-04 00:20:18Z none $
+	Revision: $Id: nTipHelper.lua 6476 2019-11-02 14:38:37Z none $
 	URL: http://norganna.org/tthelp
 
 	This is a slide-in helper class for the Norganna's AddOns family of AddOns
@@ -336,8 +336,10 @@ do -- tooltip class definition
 		if activated then return end
 		libTT:RegisterTooltip(GameTooltip)
 		libTT:RegisterTooltip(ItemRefTooltip)
-		libTT:RegisterTooltip(BattlePetTooltip)
-		libTT:RegisterTooltip(FloatingBattlePetTooltip)
+		if BattlePetTooltip then
+			libTT:RegisterTooltip(BattlePetTooltip)
+			libTT:RegisterTooltip(FloatingBattlePetTooltip)
+		end
 		activated = true
 	end
 
@@ -526,4 +528,4 @@ do -- tooltip class definition
 
 end -- tooltip class definition
 
-LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/TipHelper/nTipHelper.lua $","$Rev: 6243 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/TipHelper/nTipHelper.lua $","$Rev: 6476 $","5.12.DEV.", 'auctioneer', 'libs')

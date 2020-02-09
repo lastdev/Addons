@@ -133,12 +133,12 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						XPerl_Check_OnClickTick()
+						XPerl_Check_OnClickTick(self)
 						XPerl_Check_OnClickItem(arg1)
 					</OnClick>
 					<OnEnter>
 						self:GetParent():LockHighlight()
-						XPerl_Check_OnEnter()
+						XPerl_Check_OnEnter(self)
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide()
@@ -210,7 +210,7 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			</OnLoad>
 			<OnEnter>
-				XPerl_Check_OnEnter()
+				XPerl_Check_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
@@ -641,13 +641,13 @@
 	<Button name="XPerl_CheckListTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
-				self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonUp", "RightButtonDown");
+				self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonUp", "RightButtonDown")
 			</OnLoad>
 			<OnClick>
 				XPerl_Check_OnClickItem(arg1)
 			</OnClick>
 			<OnEnter>
-				XPerl_Check_OnEnter()
+				XPerl_Check_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide()
@@ -753,12 +753,12 @@
 	</Button>
 
 	<Frame name="XPerl_CheckAnchor" parent="UIParent" resizable="true" movable="true" clampedToScreen="true">
-		<Size>
-			<AbsDimension x="500" y="240"/>
-		</Size>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="500" y="240"/>
+		</Size>
 	</Frame>
 
 	<Frame name="XPerl_Check" parent="XPerl_CheckAnchor" hidden="true" clampedToScreen="true">
@@ -781,12 +781,12 @@
 				end
 			</OnDragStop>
 		</Scripts>
-		<Size>
-			<AbsDimension x="500" y="240"/>
-		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="500" y="240"/>
+		</Size>
 		<Backdrop bgFile="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
 				<AbsValue val="9"/>
@@ -1315,7 +1315,7 @@
 							</OnMouseUp>
 						</Scripts>
 					</Button>
-					<Frame name="$parentChannel" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parentChannel" enableMouse="true">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="XPerl_CheckListPlayers">
 								<Offset>
@@ -1325,11 +1325,8 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								--XPerl_Check_Channels_OnLoad(self)
-							</OnLoad>
-							<OnShow>
 								XPerl_Check_Channels_OnLoad(self)
-							</OnShow>
+							</OnLoad>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
 								GameTooltip:SetText(XPERL_CHECK_REPORT_DROPDOWN_DESC, nil, nil, nil, nil, true)

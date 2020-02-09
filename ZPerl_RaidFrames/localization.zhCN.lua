@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 if (GetLocale() == "zhCN") then
@@ -26,5 +26,5 @@ if (GetLocale() == "zhCN") then
 	XPERL_RAID_AFK			= "暂离"
 	XPERL_RAID_DND			= "勿扰"
 	XPERL_RAID_AUTOPROMOTE		= "自动提升"
-	XPERL_RAID_RESSER_AVAIL		= "可以复活者: "	
+	XPERL_RAID_RESSER_AVAIL		= "可以复活者: "
 end

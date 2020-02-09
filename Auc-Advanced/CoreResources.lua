@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreResources.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreResources.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -50,8 +50,8 @@
 local AucAdvanced = AucAdvanced
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreResources")
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreResources")
-if not (coremodule and internal) then return end
+local coremodule, internalResources = AucAdvanced.GetCoreModule("CoreResources", "Resources")
+if not (coremodule and internalResources) then return end
 local Const = AucAdvanced.Const
 
 -- internal constants
@@ -62,14 +62,11 @@ local CUT_HOME = 0.05
 local EventFrame
 
 
---[[ Install AucAdvanced.Resources table ]]--
-local lib = {
-	Active = false,
-	AuctionHouseOpen = false,
-	MailboxOpen = false,
-}
-AucAdvanced.Resources = lib
-
+--[[ Setup AucAdvanced.Resources table ]]--
+local lib = AucAdvanced.Resources
+lib.Active = false
+lib.AuctionHouseOpen = false
+lib.MailboxOpen = false
 
 --[[ Faction handlers ]]--
 
@@ -140,40 +137,38 @@ local function OnEvent(self, event, ...)
 	end
 end
 
-internal.Resources = {
-	-- Activate: called by CoreMain near the end of the load process
-	-- (expected to be during PLAYER_ENTERING_WORLD or later)
-	Activate = function()
-		internal.Resources.Activate = nil -- only run once
-		lib.Active = true
+-- Activate: called by CoreMain near the end of the load process
+-- (expected to be during PLAYER_ENTERING_WORLD or later)
+internalResources.Activate = function()
+	internalResources.Activate = nil -- only run once
+	lib.Active = true
 
-		-- Setup Event handler
-		EventFrame = CreateFrame("Frame")
-		EventFrame:SetScript("OnEvent", OnEvent)
-		EventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-		EventFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
-		EventFrame:RegisterEvent("MAIL_SHOW")
-		EventFrame:RegisterEvent("MAIL_CLOSED")
+	-- Setup Event handler
+	EventFrame = CreateFrame("Frame")
+	EventFrame:SetScript("OnEvent", OnEvent)
+	EventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+	EventFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
+	EventFrame:RegisterEvent("MAIL_SHOW")
+	EventFrame:RegisterEvent("MAIL_CLOSED")
 
-		-- Set faction info
-		if SetFaction then
-			SetFaction()
-		end
-		if SetFaction then
-			-- player is Neutral faction; register to detect when they choose a faction
-			EventFrame:RegisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
-		else
-			OnFactionSelect = nil
-		end
-	end,
-
-	-- SetResource: permits other Core files to set a resource
-	-- Other Cores/Modules must never modify AucAdvanced.Resources directly (or I may make it a read-only table in future!)
-	-- CoreServers will set ServerKey and ConnectedRealms resources
-	SetResource = function(key, value)
-		lib[key] = value
+	-- Set faction info
+	if SetFaction then
+		SetFaction()
 	end
-}
+	if SetFaction then
+		-- player is Neutral faction; register to detect when they choose a faction
+		EventFrame:RegisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
+	else
+		OnFactionSelect = nil
+	end
+end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreResources.lua $", "$Rev: 6201 $")
+-- SetResource: permits other Core files to set a resource
+-- Other Cores/Modules must never modify AucAdvanced.Resources directly (or I may make it a read-only table in future!)
+-- CoreServers will set ServerKey and ConnectedRealms resources
+internalResources.SetResource = function(key, value)
+	lib[key] = value
+end
+
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreResources.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreResources")

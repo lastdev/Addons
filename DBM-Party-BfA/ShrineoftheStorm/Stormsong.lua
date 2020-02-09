@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2155, "DBM-Party-BfA", 4, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18412 $"):sub(12, -3))
+mod:SetRevision("20200126143729")
 mod:SetCreatureID(134060)
 mod:SetEncounterID(2132)
 mod:SetZone()
@@ -108,7 +108,7 @@ end
 
 function mod:OnSync(msg, targetname)
 	if msg == "openingRP" and self:AntiSpam(10, 6) then
-		timerRP:Start(19.6)
+		timerRP:Start(24.6)
 	end
 end
 
@@ -124,7 +124,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 124396 then
-		
+
 	end
 end
 

@@ -1,13 +1,13 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + (tonumber(("@file-date-integer@"):match("%d+")) or 33333333333333)
+local MINOR_VERSION = 90000 + (tonumber(("20191207035733"):match("%d+")) or 33333333333333)
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
 end
 
 local _G, pairs, wipe, tonumber, GetTime = _G, pairs, wipe, tonumber, GetTime
-local UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo = 
-	  UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo
+local UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo = 
+	  UnitName, UnitGUID, UnitCastingInfo, UnitChannelInfo, CastingInfo, ChannelInfo 
 
 DogTag_Unit_funcs[#DogTag_Unit_funcs+1] = function(DogTag_Unit, DogTag)
 
@@ -19,7 +19,9 @@ local castData = {}
 local UnitGUID = UnitGUID
 local IsNormalUnit = DogTag.IsNormalUnit
 
-local wow_800 = select(4, GetBuildInfo()) >= 80000
+local wow_ver = select(4, GetBuildInfo())
+local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local wow_800 = wow_ver >= 80000
 
 local playerGuid = nil
 DogTag:AddEventHandler("Unit", "PLAYER_LOGIN", function()
@@ -46,6 +48,16 @@ local function updateInfo(event, unit)
 		if not spell then
 			spell, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
 			channeling = true
+		end
+	elseif wow_classic then
+		-- Classic only has an API for player spellcasts. No API for arbitrary units.
+		if unit == "player" then
+			spell, displayName, icon, startTime, endTime = CastingInfo()
+			rank = nil
+			if not spell then
+				spell, displayName, icon, startTime, endTime = ChannelInfo()
+				channeling = true
+			end
 		end
 	else
 		spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)

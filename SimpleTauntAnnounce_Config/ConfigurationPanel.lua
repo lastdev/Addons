@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Configuration Panel for SIA and STA
 --
--- Copyright 2012-2019 BeathsCurse (Bowmore - Silvermoon EU)
+-- Copyright 2012-2020 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ panel.controls = {}
 -- Sound file and name pairs for the sound dropdowns
 local soundList = {
 	'', 'Off',
-	'Sound\\Doodad\\BellTollAlliance.ogg', 'Bell 1',
-	'Sound\\Doodad\\BellTollHorde.ogg', 'Bell 2',
-	'Sound\\Doodad\\FX_Ice_Shard_Impact_03.OGG', 'Ice Shard',
-	'Sound\\Doodad\\FX_MK_IMPACT_MED_03.OGG', 'Impact',
-	'Sound\\Doodad\\BE_ScryingOrb_Explode.ogg', 'Orb Explode',
-	'Sound\\SPELLS\\PetCall.ogg', 'Pet Call',
-	'Sound\\character\\PlayerRoars\\CharacterRoarsDwarfMale.ogg', 'Roar Dwarf',
-	'Sound\\character\\PlayerRoars\\CharacterRoarsOrcMale.ogg', 'Roar Orc',
-	'Sound\\Doodad\\FX_GEN_KUNGFU_02.OGG', 'Swoosh',
-	'Sound\\character\\EmoteCatCallWhistle05.ogg', 'Whistle',
+	566564, 'Bell 1',	-- sound/doodad/belltollalliance.ogg
+	565853, 'Bell 2',	-- sound/doodad/belltollhorde.ogg
+	839999, 'Ice Shard',	-- sound/doodad/fx_ice_shard_impact_03.ogg
+	623880, 'Impact',	-- sound/doodad/fx_mk_impact_med_03.ogg
+	565875, 'Orb Explode',	-- sound/doodad/be_scryingorb_explode.ogg
+	569673, 'Pet Call',	-- sound/spells/petcall.ogg
+	542499, 'Roar Dwarf',	-- sound/character/playerroars/characterroarsdwarfmale.ogg
+	542504, 'Roar Orc',	-- sound/character/playerroars/characterroarsorcmale.ogg
+	644480, 'Swoosh',	-- sound/doodad/fx_gen_kungfu_02.ogg
+	539153, 'Whistle',	-- sound/character/emotecatcallwhistle05.ogg
 	-- Custom sound files user can add to addon folder
 	'Interface\\AddOns\\' .. addonName .. '\\sound1.mp3', 'Custom sound1.mp3',
 	'Interface\\AddOns\\' .. addonName .. '\\sound2.mp3', 'Custom sound2.mp3',

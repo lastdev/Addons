@@ -6,6 +6,12 @@ Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.j
 See TidyPlatesChanges.log for cumulative changes:
 
 
+---------------------------
+6.19.4
+---------------------------
+* Core: Fix for combo widget.
+* Core: Updated the TOC versions.
+
 
 ---------------------------
 6.19.3

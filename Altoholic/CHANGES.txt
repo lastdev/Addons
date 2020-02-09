@@ -1,4 +1,43 @@
 ------------------------------------------------------------------------
+r192 | thaokyaltoholic | 2020-02-09 10:06:23 +0000 (Sun, 09 Feb 2020) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Achievements/Frames/Achievements.lua
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Search/TabSearch.lua
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/changelog.txt
+
+8.3.001 Commit
+------------------------------------------------------------------------
+r191 | thaokyaltoholic | 2019-06-30 06:56:30 +0000 (Sun, 30 Jun 2019) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Characters/Frames/AuctionHouse.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Mails.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Quests.lua
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/changelog.txt
+
+8.2.001 Commit
+------------------------------------------------------------------------
 r190 | thaoky.altoholic@yahoo.com | 2018-09-19 17:03:32 +0000 (Wed, 19 Sep 2018) | 1 line
 Changed paths:
    M /trunk/Core.lua
@@ -2331,108 +2370,5 @@ Changed paths:
    M /trunk/Frames/TabSummary.xml
 
 Missing files in previous commit.
-------------------------------------------------------------------------
-r91 | thaoky | 2010-10-15 13:33:01 +0000 (Fri, 15 Oct 2010) | 3 lines
-Changed paths:
-   M /trunk/.pkgmeta
-   M /trunk/Altoholic.lua
-   M /trunk/Altoholic.toc
-   M /trunk/Altoholic.xml
-   M /trunk/AltoholicTemplates.xml
-   M /trunk/Characters.lua
-   M /trunk/Comm.lua
-   M /trunk/Core.lua
-   D /trunk/Frames/AuctionHouse.lua
-   D /trunk/Frames/AuctionHouse.xml
-   D /trunk/Frames/Containers.lua
-   D /trunk/Frames/Containers.xml
-   D /trunk/Frames/Currencies.lua
-   D /trunk/Frames/Currencies.xml
-   D /trunk/Frames/Equipment.lua
-   D /trunk/Frames/Equipment.xml
-   D /trunk/Frames/Mails.lua
-   D /trunk/Frames/Mails.xml
-   D /trunk/Frames/Pets.lua
-   D /trunk/Frames/Pets.xml
-   D /trunk/Frames/Quests.lua
-   D /trunk/Frames/Quests.xml
-   D /trunk/Frames/Recipes.lua
-   D /trunk/Frames/Recipes.xml
-   D /trunk/Frames/Reputations.lua
-   D /trunk/Frames/Reputations.xml
-   D /trunk/Frames/Search.lua
-   D /trunk/Frames/Search.xml
-   D /trunk/Frames/TabCharacters.lua
-   D /trunk/Frames/TabCharacters.xml
-   D /trunk/Frames/TabSearch.lua
-   D /trunk/Frames/TabSearch.xml
-   D /trunk/Frames/Talents.lua
-   D /trunk/Frames/Talents.xml
-   M /trunk/ItemFilters.lua
-   M /trunk/Locales/repoenUS.lua
-   M /trunk/Loots.lua
-   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
-   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
-   A /trunk/Modules/Altoholic_Characters
-   A /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
-   A /trunk/Modules/Altoholic_Characters/Data
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_deDE.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_enUS.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_frFR.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_koKR.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_ruRU.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_zhCN.lua
-   A /trunk/Modules/Altoholic_Characters/Data/FactionLeveling_zhTW.lua
-   A /trunk/Modules/Altoholic_Characters/Frames
-   A /trunk/Modules/Altoholic_Characters/Frames/AuctionHouse.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/AuctionHouse.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Containers.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Containers.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Currencies.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Currencies.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Equipment.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Equipment.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Mails.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Mails.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Pets.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Pets.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Quests.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Quests.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Recipes.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Recipes.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Reputations.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Reputations.xml
-   A /trunk/Modules/Altoholic_Characters/Frames/Talents.lua
-   A /trunk/Modules/Altoholic_Characters/Frames/Talents.xml
-   A /trunk/Modules/Altoholic_Characters/TabCharacters.lua
-   A /trunk/Modules/Altoholic_Characters/TabCharacters.xml
-   A /trunk/Modules/Altoholic_Search
-   A /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
-   A /trunk/Modules/Altoholic_Search/Search.lua
-   A /trunk/Modules/Altoholic_Search/Search.xml
-   A /trunk/Modules/Altoholic_Search/TabSearch.lua
-   A /trunk/Modules/Altoholic_Search/TabSearch.xml
-   M /trunk/Suggestions.lua
-   M /trunk/Suggestions_deDE.lua
-   M /trunk/Suggestions_frFR.lua
-   M /trunk/Suggestions_koKR.lua
-   M /trunk/Suggestions_ruRU.lua
-   M /trunk/Suggestions_zhCN.lua
-   M /trunk/Suggestions_zhTW.lua
-   M /trunk/Tooltip.lua
-   M /trunk/changelog.txt
-
-- 4.0.1 Update
-- SV clean-up mandatory !
-- Refer to changelog.txt for details
-------------------------------------------------------------------------
-r90 | Thaoky | 2010-07-06 17:50:10 +0000 (Tue, 06 Jul 2010) | 1 line
-Changed paths:
-   M /trunk/Altoholic.toc
-   M /trunk/Core.lua
-   M /trunk/Frames/TabOptions.lua
-   M /trunk/changelog.txt
-
-Version number update/what's new/etc..
 ------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
----------------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------------
 --
 -- Prat - A framework for World of Warcraft chat mods
 --
@@ -57,8 +57,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = true,
 		["AddonMsgs"] = true,
@@ -68,75 +68,79 @@ L=
 		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		--[[Translation missing --]]
-		--[[ ["Addon message options."] = "",--]] 
+		["Addon message options."] = "Addon message options.",
 		--[[Translation missing --]]
-		--[[ ["AddonMsgs"] = "",--]] 
+		["AddonMsgs"] = "AddonMsgs",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing hidden addon messages in each chat window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Addon Messages",
 		--[[Translation missing --]]
-		--[[ ["show_perframedesc"] = "",--]] 
+		["show_perframedesc"] = "Toggle showing hidden addon messages on and off.",
 		--[[Translation missing --]]
-		--[[ ["show_perframename"] = "",--]] 
+		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		--[[Translation missing --]]
-		--[[ ["Addon message options."] = "",--]] 
+		["Addon message options."] = "Addon message options.",
 		--[[Translation missing --]]
-		--[[ ["AddonMsgs"] = "",--]] 
+		["AddonMsgs"] = "AddonMsgs",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing hidden addon messages in each chat window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Addon Messages",
 		--[[Translation missing --]]
-		--[[ ["show_perframedesc"] = "",--]] 
+		["show_perframedesc"] = "Toggle showing hidden addon messages on and off.",
 		--[[Translation missing --]]
-		--[[ ["show_perframename"] = "",--]] 
+		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		--[[Translation missing --]]
-		--[[ ["Addon message options."] = "",--]] 
+		["Addon message options."] = "Addon message options.",
 		--[[Translation missing --]]
-		--[[ ["AddonMsgs"] = "",--]] 
+		["AddonMsgs"] = "AddonMsgs",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing hidden addon messages in each chat window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Addon Messages",
 		--[[Translation missing --]]
-		--[[ ["show_perframedesc"] = "",--]] 
+		["show_perframedesc"] = "Toggle showing hidden addon messages on and off.",
 		--[[Translation missing --]]
-		--[[ ["show_perframename"] = "",--]] 
+		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "Optionen für AddOn-Meldungen",
 		["AddonMsgs"] = "AddOn-Meldungen",
@@ -146,12 +150,13 @@ L=
 		["show_perframename"] = "Addon-Meldungen in Chatfenster %d anzeigen",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "애드온 메시지 옵션입니다.",
 		["AddonMsgs"] = "애드온 메시지",
@@ -161,33 +166,35 @@ L=
 		["show_perframename"] = "대화창%d 애드온 메시지 표시",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		--[[Translation missing --]]
-		--[[ ["Addon message options."] = "",--]] 
+		["Addon message options."] = "Addon message options.",
 		--[[Translation missing --]]
-		--[[ ["AddonMsgs"] = "",--]] 
+		["AddonMsgs"] = "AddonMsgs",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing hidden addon messages in each chat window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Addon Messages",
 		--[[Translation missing --]]
-		--[[ ["show_perframedesc"] = "",--]] 
+		["show_perframedesc"] = "Toggle showing hidden addon messages on and off.",
 		--[[Translation missing --]]
-		--[[ ["show_perframename"] = "",--]] 
+		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "Настройки сообщений модификаций.",
 		["AddonMsgs"] = "Сообщения аддонов",
@@ -197,12 +204,13 @@ L=
 		["show_perframename"] = "ChatFrame%d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "插件信息选项",
 		["AddonMsgs"] = "插件信息",
@@ -212,12 +220,13 @@ L=
 		["show_perframename"] = "聊天框体%d插件消息显示",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "Opciones de mensaje del Addon.",
 		["AddonMsgs"] = "MensajesAddon",
@@ -227,12 +236,13 @@ L=
 		["show_perframename"] = "MarchoChat %d AddonMsgsShow",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES", L)
 
 
 
-L=
-{
+
+L = {
 	["AddonMsgs"] = {
 		["Addon message options."] = "插件訊息選項",
 		["AddonMsgs"] = "插件訊息",
@@ -242,6 +252,7 @@ L=
 		["show_perframename"] = "聊天框架%d 插件訊息顯示",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW", L)
 
 

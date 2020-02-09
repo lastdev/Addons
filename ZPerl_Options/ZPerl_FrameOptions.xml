@@ -246,7 +246,7 @@
 
 	<Button name="XPerlLeftArrow" virtual="true">
 		<Size>
-			<AbsDimension x="32" y="32"/>
+			<AbsDimension x="33" y="32"/>
 		</Size>
 		<HitRectInsets>
 			<AbsInset left="6" right="6" top="4" bottom="4"/>
@@ -267,7 +267,7 @@
 
 	<Button name="XPerlRightArrow" virtual="true">
 		<Size>
-			<AbsDimension x="32" y="32"/>
+			<AbsDimension x="33" y="32"/>
 		</Size>
 		<HitRectInsets>
 			<AbsInset left="6" right="6" top="4" bottom="4"/>
@@ -385,55 +385,15 @@
 		</Scripts>
 	</Slider>
 
-	<EditBox name="XPerlOptEditBox" autoFocus="false" multiLine="false" ignoreArrows="true" historyLines="0" letters="20" hidden="false" virtual="true">
+	<EditBox name="XPerlOptEditBox" autoFocus="false" multiLine="false" ignoreArrows="true" historyLines="0" letters="20" hidden="false" inherits="InputBoxTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="50" y="24"/>
 		</Size>
-		<HitRectInsets>
-			<AbsInset left="0" right="8" top="0" bottom="0"/>
-		</HitRectInsets>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parentLeft" file="Interface\Common\Common-Input-Border">
-					<Size>
-						<AbsDimension x="8" y="20"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="-5" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0" right="0.0625" top="0" bottom="0.625"/>
-				</Texture>
-				<Texture name="$parentRight" file="Interface\Common\Common-Input-Border">
-					<Size>
-						<AbsDimension x="8" y="20"/>
-					</Size>
-					<Anchors>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="-10" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0.9375" right="1.0" top="0" bottom="0.625"/>
-				</Texture>
-				<Texture name="$parentMiddle" file="Interface\Common\Common-Input-Border">
-					<Size>
-						<AbsDimension x="10" y="20"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
-						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
-					</Anchors>
-					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625"/>
-				</Texture>
-			</Layer>
-		</Layers>
 		<Scripts>
 			<OnLoad function="XPerl_EditBoxSetup"/>
+			<OnEnterPressed>
+				self:ClearFocus()
+			</OnEnterPressed>
 			<OnEscapePressed>
 				self:ClearFocus()
 			</OnEscapePressed>
@@ -960,9 +920,7 @@
 						end
 						XPerlLocked = 0
 
-						if (var ~= "OptionsColour") then
-							XPerl_OptionActions()
-						end
+						XPerl_OptionActions()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -1331,7 +1289,7 @@
 					<OnLoad>
 						self:SetID(self:GetParent():GetID())
 						self.tooltipText = XPERL_CONF_RAID_CLASS_DOWN
-						if (self:GetID() == 12) then
+						if (self:GetID() == (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 9 or 12)) then
 							self:Hide()
 						end
 					</OnLoad>
@@ -1750,7 +1708,7 @@
 		<NormalFont style="GameFontNormalSmall"/>
 		<ButtonText name="$parentText" justifyH="LEFT" setAllPoints="true"/>
 		<Size>
-			<AbsDimension x="120" y="12"/>
+			<AbsDimension x="160" y="14"/>
 		</Size>
 		<Scripts>
 			<OnLoad>
@@ -1788,7 +1746,7 @@
 	</Frame>
 
 	<!-- Options Frames -->
-	<Frame name="XPerl_Options" inherits="XPerl_OptionsTemplate" parent="XPerl_OptionsAnchor" hidden="true">
+	<Frame name="XPerl_Options" inherits="XPerl_OptionsTemplate" clampedToScreen="true" hidden="true">
 		<Scripts>
 			<OnShow>
 				self:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -1854,8 +1812,8 @@
 					end
 
 					local width = 220 + totalTabWidth
-					if (not (width >= 700)) then
-						width = 700
+					if (not (width >= 740)) then
+						width = 740
 					end
 					self:SetWidth(width)
 					XPerl_OptionsAnchor:SetWidth(width)
@@ -1863,16 +1821,25 @@
 
 					XPerl_RegisterScalableFrame(self, XPerl_OptionsAnchor, 0.5, 1.2)
 
+					self.initWidth = width
 					self.initDone = true
 				end
 
 				self:Setup()
+				XPerl_RestorePosition(XPerl_OptionsAnchor)
+				self:SetParent(XPerl_OptionsAnchor)
+				self:SetScale(XPerl_OptionsAnchor:GetWidth() / self.initWidth)
+				self:ClearAllPoints()
+				self:SetPoint("TOPLEFT", XPerl_OptionsAnchor, "TOPLEFT", 0, 0)
 			</OnShow>
 			<OnHide>
 				self:UnregisterEvent("PLAYER_REGEN_ENABLED")
 				self:UnregisterEvent("PLAYER_REGEN_DISABLED")
 				XPerl_Options_InCombatChange(UnitAffectingCombat("player"))
 				XPerl_OptionsAnchor:StopMovingOrSizing()
+				if (XPerl_SavePosition) then
+					XPerl_SavePosition(XPerl_OptionsAnchor)
+				end
 			</OnHide>
 			<OnEvent>
 				if (event == "PLAYER_REGEN_DISABLED") then
@@ -2007,7 +1974,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_AlignTop">
 								<Offset>
-									<AbsDimension x="-5" y="3"/>
+									<AbsDimension x="-6" y="3"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2026,13 +1993,10 @@
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parent_SmallerGap" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="1" y="0"/>
+									<AbsDimension x="2" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<Size>
-							<AbsDimension x="50" y="24"/>
-						</Size>
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(self)
@@ -2062,7 +2026,7 @@
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parent_Gap" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="-15" y="0"/>
+									<AbsDimension x="-5" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2223,7 +2187,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_SmallerGap" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="10" y="8"/>
+									<AbsDimension x="11" y="8"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2259,7 +2223,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Gap" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="-10" y="7"/>
+									<AbsDimension x="-11" y="7"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2274,11 +2238,14 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" enableMouse="true">
+						<Size>
+							<AbsDimension x="100" y="24"/>
+						</Size>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_BiggerGap" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="-7" y="-10"/>
+									<AbsDimension x="-12" y="-10"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2297,7 +2264,6 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
-								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
 								self.varGet = function()
 									return (XPerlDB and XPerlDB.party.anchor) or "TOP"
 								end
@@ -2328,7 +2294,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Anchor" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="11" y="0"/>
+									<AbsDimension x="15" y="-4"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2414,11 +2380,14 @@
 						</Layers>
 					</Frame>
 
-					<Frame name="$parent_Anchor" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="$parent_Anchor" enableMouse="true">
+						<Size>
+							<AbsDimension x="100" y="24"/>
+						</Size>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 								<Offset>
-									<AbsDimension x="-12" y="-12"/>
+									<AbsDimension x="-16" y="-13"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2437,7 +2406,6 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
-								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
 								self.varGet = function()
 									return (XPerlDB and XPerlDB.raid.anchor) or "TOP"
 								end
@@ -2466,7 +2434,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Anchor">
 								<Offset>
-									<AbsDimension x="12" y="0"/>
+									<AbsDimension x="17" y="-4"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2507,7 +2475,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_AlignLeft">
 								<Offset>
-									<AbsDimension x="-5" y="3"/>
+									<AbsDimension x="-6" y="3"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2526,13 +2494,10 @@
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parent_SmallerGap" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="1" y="0"/>
+									<AbsDimension x="2" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<Size>
-							<AbsDimension x="50" y="24"/>
-						</Size>
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(self)
@@ -2551,9 +2516,6 @@
 									XPerl_Raid_SetGap(tonumber(self:GetText()))
 								end
 							</OnTextChanged>
-							<OnEnterPressed>
-								self:ClearFocus()
-							</OnEnterPressed>
 						</Scripts>
 					</EditBox>
 
@@ -2561,7 +2523,7 @@
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parent_Gap" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="-15" y="0"/>
+									<AbsDimension x="-5" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2857,12 +2819,12 @@
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Save" relativePoint="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="0" y="-3"/>
+									<AbsDimension x="0" y="-4"/>
 								</Offset>
 							</Anchor>
 							<Anchor point="BOTTOMRIGHT">
 								<Offset>
-									<AbsDimension x="-10" y="10"/>
+									<AbsDimension x="-10" y="4"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -2947,7 +2909,7 @@
 								<Anchors>
 									<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$parent1">
 										<Offset>
-											<AbsDimension x="3" y="1"/>
+											<AbsDimension x="-20" y="1"/>
 										</Offset>
 									</Anchor>
 									<Anchor point="BOTTOMRIGHT"/>
@@ -3899,6 +3861,10 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+									self:Hide()
+									return
+								end
 								local _, class = UnitClass("player")
 								if class == "MONK" then
 									XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_HIGHLIGHTS_RENEWING")
@@ -4830,10 +4796,10 @@
 							<OnClick>
 								ZPerlConfigSavePerCharacter = self:GetChecked()
 								XPerl_SetMyGlobal()
-								XPerl_Options_DropDown_LoadSettings:Hide()
-								XPerl_Options_DropDown_LoadSettings:Show()
-								XPerl_Options_DropDown_DeleteSettings:Hide()
-								XPerl_Options_DropDown_DeleteSettings:Show()
+								XPerl_Options_LoadSettings:Hide()
+								XPerl_Options_LoadSettings:Show()
+								XPerl_Options_DeleteSettings:Hide()
+								XPerl_Options_DeleteSettings:Show()
 							</OnClick>
 							<OnShow>
 								self:SetChecked(ZPerlConfigSavePerCharacter)
@@ -4864,7 +4830,10 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="XPerl_Options_DropDown_LoadSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_LoadSettings" enableMouse="true">
+						<Size>
+							<AbsDimension x="150" y="24"/>
+						</Size>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Reset" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -4887,10 +4856,9 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
-								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
+								XPerl_Options_LoadSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
-								XPerl_Options_LoadSettings_OnLoad(self)
 								if (not ZPerlConfigSavePerCharacter) then
 									self:Hide()
 								end
@@ -4907,11 +4875,14 @@
 						</Scripts>
 					</Frame>
 
-					<Frame name="XPerl_Options_DropDown_DeleteSettings" inherits="UIDropDownMenuTemplate" enableMouse="true">
+					<Frame name="XPerl_Options_DeleteSettings" enableMouse="true">
+						<Size>
+							<AbsDimension x="150" y="24"/>
+						</Size>
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeTo="XPerl_Options_DropDown_LoadSettings" relativePoint="TOPLEFT">
+							<Anchor point="TOPRIGHT" relativeTo="XPerl_Options_LoadSettings" relativePoint="TOPLEFT">
 								<Offset>
-									<AbsDimension x="20" y="0"/>
+									<AbsDimension x="-20" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -4930,10 +4901,9 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
-								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
+								XPerl_Options_DeleteSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
-								XPerl_Options_DeleteSettings_OnLoad(self)
 								if (not ZPerlConfigSavePerCharacter) then
 									self:Hide()
 								end
@@ -5110,6 +5080,7 @@
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "DockRunes")
 								end
+								XPerl_Options_RegisterProtected(self)
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -5132,6 +5103,7 @@
 									self:Hide()
 								end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_DOCKRUNES")
+								XPerl_Options_RegisterProtected(self)
 								self.configBase = "XPerlDB.player"
 								self.flashFrame = XPerl_Player and XPerl_Player.runes
 								self.configIndex = "dockRunes"
@@ -5158,6 +5130,7 @@
 									self:Hide()
 								end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_LOCKRUNES")
+								XPerl_Options_RegisterProtected(self)
 								self.configBase = "XPerlDB.player"
 								self.flashFrame = XPerl_Player and XPerl_Player.runes
 								self.configIndex = "lockRunes"
@@ -6349,11 +6322,81 @@
 						</Scripts>
 					</CheckButton>
 
-					<CheckButton name="$parent_Level" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_Happiness" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_ArcaneBar" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_PET_HAPPINESS")
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "OnlySad")
+									XPerl_Options_EnableSibling(self, "FlashSad")
+								end
+								self.flashFrame = XPerl_Player_PethappyFrame
+								self.configBase = "XPerlDB.pet.happiness"
+								self.configIndex = "enable"
+								self.configClick = XPerl_Player_Pet_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_OnlySad" inherits="XPerlCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativePoint="BOTTOMRIGHT" relativeTo="$parent_Happiness">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_PET_ONLYSAD")
+								self.flashFrame = XPerl_Player_PethappyFrame
+								self.configBase = "XPerlDB.pet.happiness"
+								self.configIndex = "onlyWhenSad"
+								self.configClick = XPerl_Player_Pet_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_FlashSad" inherits="XPerlCheckButtonTemplate">
+						<Size>
+							<AbsDimension x="26" y="26"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_OnlySad" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="0" y="6"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_PET_FLASHSAD")
+								self.flashFrame = XPerl_Player_PethappyFrame
+								self.configBase = "XPerlDB.pet.happiness"
+								self.configIndex = "flashWhenSad"
+								self.configClick = XPerl_Player_Pet_Reset
+								XPerl_Options_RegisterProtected(self)
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+
+					<CheckButton name="$parent_Level" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_FlashSad" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="-15" y="6"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -12741,6 +12784,10 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+											return
+										end
 										_G[self:GetName().."Text"]:SetText("10")
 										self.tooltipText = XPERL_CONF_RAID_GROUP_DESC
 										self.configBase = "XPerlDB.raid.group"
@@ -12764,6 +12811,10 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+											return
+										end
 										_G[self:GetName().."Text"]:SetText("11")
 										self.tooltipText = XPERL_CONF_RAID_GROUP_DESC
 										self.configBase = "XPerlDB.raid.group"
@@ -12787,6 +12838,10 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+											return
+										end
 										_G[self:GetName().."Text"]:SetText("12")
 										self.tooltipText = XPERL_CONF_RAID_GROUP_DESC
 										self.configBase = "XPerlDB.raid.group"
@@ -12912,6 +12967,13 @@
 										</Offset>
 									</Anchor>
 								</Anchors>
+								<Scripts>
+									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+										end
+									</OnLoad>
+								</Scripts>
 							</Frame>
 							<Frame name="$parent_ClassSel11" inherits="XPerl_OptClassSelTemplate" id="11">
 								<Anchors>
@@ -12921,6 +12983,13 @@
 										</Offset>
 									</Anchor>
 								</Anchors>
+								<Scripts>
+									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+										end
+									</OnLoad>
+								</Scripts>
 							</Frame>
 
 							<Frame name="$parent_ClassSel12" inherits="XPerl_OptClassSelTemplate" id="12">
@@ -12931,6 +13000,13 @@
 										</Offset>
 									</Anchor>
 								</Anchors>
+								<Scripts>
+									<OnLoad>
+										if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+											self:Hide()
+										end
+									</OnLoad>
+								</Scripts>
 							</Frame>
 
 							<Button name="$parent_All" inherits="XPerlButtonTemplate">
@@ -16961,7 +17037,9 @@
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, 1, function() self:GetParent():FillList() end)
+						FauxScrollFrame_OnVerticalScroll(self, offset, 1, function()
+							self:GetParent():FillList()
+						end)
 					</OnVerticalScroll>
 					<OnMouseWheel>
 						local f = _G[self:GetName().."ScrollBar"]
@@ -16971,7 +17049,7 @@
 							f:SetValue(f:GetValue() - 3)
 						end
 
-						GetParent():FillList()
+						self:GetParent():FillList()
 					</OnMouseWheel>
 				</Scripts>
 			</ScrollFrame>
@@ -16996,7 +17074,7 @@
 			</Anchor>
 		</Anchors>
 		<Size>
-			<AbsDimension x="425" y="195"/>
+			<AbsDimension x="470" y="195"/>
 		</Size>
 		<Frames>
 			<Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
@@ -17147,7 +17225,7 @@
 						XPerl_Options_Custom_ScanForIcons(XPerl_Custom_Config)
 						XPerl_Custom_ConfigEdit:Hide()
 						XPerl_SwitchAnchor(XPerl_Custom_Config, "TOPLEFT")
-						XPerl_Custom_Config:SetHeight(340)
+						XPerl_Custom_Config:SetHeight(430)
 					</OnShow>
 					<OnHide>
 						XPerl_Custom_ConfigEdit:Show()

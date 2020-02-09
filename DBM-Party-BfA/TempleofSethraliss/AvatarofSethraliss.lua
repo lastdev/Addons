@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2145, "DBM-Party-BfA", 6, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18412 $"):sub(12, -3))
+mod:SetRevision("20200126143729")
 mod:SetCreatureID(133392)
 mod:SetEncounterID(2127)
 mod:SetZone()
@@ -108,7 +108,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
-	if msg:find("spell:269688") then
+	if msg:find("spell:269688") and self:AntiSpam(5, 4) then
 		specWarnRainofToads:Show()
 		specWarnRainofToads:Play("mobsoon")
 		--timerRainofToadsCD:Start()
@@ -127,7 +127,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 124396 then
-		
+
 	end
 end
 

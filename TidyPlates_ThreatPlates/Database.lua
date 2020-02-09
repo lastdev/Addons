@@ -85,7 +85,7 @@ local function GetDefaultSettingsV1(defaults)
   db.allowClass = false
   db.friendlyClass = false
   db.optionRoleDetectionAutomatic = false
-  db.HeadlineView.width = 116
+  --db.HeadlineView.width = 116
   db.text.amount = true
   db.AuraWidget.ModeBar.Texture = "Aluminium"
   db.uniqueWidget.scale = 35
@@ -413,13 +413,14 @@ local function MigrateAuraWidget(profile_name, profile)
       profile.AuraWidget = profile.AuraWidget or {}
       profile.AuraWidget.ModeIcon = profile.AuraWidget.ModeIcon or {}
 
-      profile.AuraWidget.FilterMode = profile.debuffWidget.mode
-      profile.AuraWidget.ModeIcon.Style = profile.debuffWidget.style
-      profile.AuraWidget.ShowTargetOnly = profile.debuffWidget.targetOnly
-      profile.AuraWidget.ShowCooldownSpiral = profile.debuffWidget.cooldownSpiral
-      profile.AuraWidget.ShowFriendly = profile.debuffWidget.showFriendly
-      profile.AuraWidget.ShowEnemy = profile.debuffWidget.showEnemy
-      profile.AuraWidget.scale = profile.debuffWidget.scale
+      local default_profile = ThreatPlates.DEFAULT_SETTINGS.profile.AuraWidget
+      profile.AuraWidget.FilterMode = profile.debuffWidget.mode                     or default_profile.FilterMode
+      profile.AuraWidget.ModeIcon.Style = profile.debuffWidget.style                or default_profile.ModeIcon.Style
+      profile.AuraWidget.ShowTargetOnly = profile.debuffWidget.targetOnly           or default_profile.ShowTargetOnly
+      profile.AuraWidget.ShowCooldownSpiral = profile.debuffWidget.cooldownSpiral   or default_profile.ShowCooldownSpiral
+      profile.AuraWidget.ShowFriendly = profile.debuffWidget.showFriendly           or default_profile.ShowFriendly
+      profile.AuraWidget.ShowEnemy = profile.debuffWidget.showEnemy                 or default_profile.ShowEnemy
+      profile.AuraWidget.scale = profile.debuffWidget.scale                         or default_profile.scale
 
       if profile.debuffWidget.displays then
         profile.AuraWidget.FilterByType = ThreatPlates.CopyTable(profile.debuffWidget.displays)
@@ -431,6 +432,49 @@ local function MigrateAuraWidget(profile_name, profile)
 
       -- DatabaseEntryDelete(profile, { "debuffWidget" }) -- TODO
     end
+  end
+end
+
+local function MigrationForceFriendlyInCombat(profile_name, profile)
+  if DatabaseEntryExists(profile, { "HeadlineView" }) then
+    if profile.HeadlineView.ForceFriendlyInCombat == true then
+      profile.HeadlineView.ForceFriendlyInCombat = "NAME"
+    elseif profile.HeadlineView.ForceFriendlyInCombat == false then
+      profile.HeadlineView.ForceFriendlyInCombat = "NONE"
+    end
+  end
+end
+
+local function SetValueOrDefault(old_value, default_value)
+  if old_value ~= nil then
+    return old_value
+  else
+    return default_value
+  end
+end
+
+local function MigrationComboPointsWidget(profile_name, profile)
+  if DatabaseEntryExists(profile, { "comboWidget" }) then
+    profile.ComboPoints = profile.ComboPoints or {}
+
+    local default_profile = ThreatPlates.DEFAULT_SETTINGS.profile.ComboPoints
+    profile.ComboPoints.ON = SetValueOrDefault(profile.comboWidget.ON, default_profile.ON)
+    profile.ComboPoints.Scale = SetValueOrDefault(profile.comboWidget.scale, default_profile.Scale)
+    profile.ComboPoints.x = SetValueOrDefault(profile.comboWidget.x, default_profile.x)
+    profile.ComboPoints.y = SetValueOrDefault(profile.comboWidget.y, default_profile.y)
+    profile.ComboPoints.x_hv = SetValueOrDefault(profile.comboWidget.x_hv, default_profile.x_hv)
+    profile.ComboPoints.y_hv = SetValueOrDefault(profile.comboWidget.y_hv, default_profile.y_hv)
+    profile.ComboPoints.ShowInHeadlineView = SetValueOrDefault(profile.comboWidget.ShowInHeadlineView, default_profile.ShowInHeadlineView)
+
+    DatabaseEntryDelete(profile, { "comboWidget" })
+  end
+end
+
+local function MigrationThreatDetection(profile_name, profile)
+  if DatabaseEntryExists(profile, { "threat", "nonCombat" }) then
+    local default_profile = ThreatPlates.DEFAULT_SETTINGS.profile.threat
+    profile.threat.UseThreatTable = SetValueOrDefault(profile.threat.nonCombat, default_profile.UseThreatTable)
+    --DatabaseEntryDelete(profile, { "threat", "nonCombat" })
   end
 end
 
@@ -451,17 +495,23 @@ local DEPRECATED_SETTINGS = {
 --  HVNameHeight = { "HeadlineView", "name", "height" },        -- (removed in 8.5.0)
   DebuffWidget = { "debuffWidget" },                          -- (removed in 8.6.0)
   OldSettings = { "OldSettings" },                            -- (removed in 8.7.0)
-  CastbarColoring = { MigrateCastbarColoring, },              -- (removed in 8.7.0)
+  CastbarColoring = { MigrateCastbarColoring },              -- (removed in 8.7.0)
   TotemSettings = { MigrationTotemSettings, "8.7.0" },        -- (changed in 8.7.0)
   Borders = { MigrateBorderTextures, "8.7.0" },               -- (changed in 8.7.0)
   UniqueSettingsList = { "uniqueSettings", "list" },          -- (removed in 8.7.0, cleanup added in 8.7.1)
   Auras = { MigrationAurasSettings, "9.0.0" },                -- (changed in 9.0.0)
   AurasFix = { MigrationAurasSettingsFix },                   -- (changed in 9.0.4 and 9.0.9)
+  MigrationComboPointsWidget = { MigrationComboPointsWidget, "9.1.0" },  -- (changed in 9.1.0)
+  ForceFriendlyInCombatEx = { MigrationForceFriendlyInCombat }, -- (changed in 9.1.0)
+  HeadlineViewEnableToggle = { "HeadlineView", "ON" },        -- (removed in 9.1.0)
+  ThreatDetection = { MigrationThreatDetection, "9.1.3" },  -- (changed in 9.1.0)
+  -- hideNonCombat = { "threat", "hideNonCombat" },        -- (removed in ...)
+  -- nonCombat = { "threat", "nonCombat" },                -- (removed in 9.1.0)
 }
 
 local function MigrateDatabase(current_version)
   TidyPlatesThreat.db.global.MigrationLog = nil
-  -- TidyPlatesThreat.db.global.MigrationLog = {}
+  --TidyPlatesThreat.db.global.MigrationLog = {}
 
   local profile_table = TidyPlatesThreat.db.profiles
   for key, entry in pairs(DEPRECATED_SETTINGS) do
@@ -470,6 +520,7 @@ local function MigrateDatabase(current_version)
     if type(action) == "function" then
       local max_version = entry[2]
       if not max_version or CurrentVersionIsOlderThan(current_version, max_version) then
+
         -- iterate over all profiles and migrate values
         --TidyPlatesThreat.db.global.MigrationLog[key] = "Migration" .. (max_version and ( " because " .. current_version .. " < " .. max_version) or "")
         for profile_name, profile in pairs(profile_table) do
@@ -478,13 +529,15 @@ local function MigrateDatabase(current_version)
       end
     else
       -- iterate over all profiles and delete the old config entry
-      -- TidyPlatesThreat.db.global.MigrationLog[key] = "DELETED"
+      --TidyPlatesThreat.db.global.MigrationLog[key] = "DELETED"
       for profile_name, profile in pairs(profile_table) do
         DatabaseEntryDelete(profile, entry)
       end
     end
   end
 end
+
+Addon.MigrateDatabase = MigrateDatabase
 
 -----------------------------------------------------
 -- External

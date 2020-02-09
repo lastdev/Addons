@@ -25,7 +25,7 @@ close:SetPoint("TOPRIGHT", badboy, "TOPRIGHT", -5, -5)
 
 local title = badboy:CreateFontString(nil, nil, "GameFontNormalLarge")
 title:SetPoint("TOPLEFT", 16, -16)
-title:SetText("BadBoy v8.1.4") -- packager magic, replaced with tag version
+title:SetText("BadBoy v8.2.5") -- packager magic, replaced with tag version
 
 --[[ Show spam checkbox ]]--
 local btnShowSpam = CreateFrame("CheckButton", nil, badboy, "OptionsBaseCheckButtonTemplate")

@@ -69,8 +69,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "Bottom to top",
 		["Chat window scrolling options."] = true,
@@ -92,110 +92,113 @@ L=
 		["Top"] = "Top to bottom",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom to top",
 		--[[Translation missing --]]
-		--[[ ["Chat window scrolling options."] = "",--]] 
+		["Chat window scrolling options."] = "Chat window scrolling options.",
 		--[[Translation missing --]]
-		--[[ ["Control whether text is added to the frame at the top or the bottom."] = "",--]] 
+		["Control whether text is added to the frame at the top or the bottom."] = "Control whether text is added to the frame at the top or the bottom.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_desc"] = "",--]] 
+		["lowdown_desc"] = "Toggle auto jumping to the bottom for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_name"] = "",--]] 
+		["lowdown_name"] = "Enable TheLowDown",
 		--[[Translation missing --]]
-		--[[ ["modified_speed"] = "",--]] 
+		["modified_speed"] = "Set Shift+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["modified_speed_desc"] = "",--]] 
+		["modified_speed_desc"] = "Set number of lines mousewheel will scroll when shift is pressed.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_desc"] = "",--]] 
+		["mousewheel_desc"] = "Toggle mousewheel support for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_name"] = "",--]] 
+		["mousewheel_name"] = "Enable MouseWheel",
 		--[[Translation missing --]]
-		--[[ ["Scroll"] = "",--]] 
+		["Scroll"] = "Scroll",
 		--[[Translation missing --]]
-		--[[ ["Set Ctrl+MouseWheel Speed"] = "",--]] 
+		["Set Ctrl+MouseWheel Speed"] = "Set Ctrl+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set MouseWheel Speed"] = "",--]] 
+		["Set MouseWheel Speed"] = "Set MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll when ctrl is pressed."] = "",--]] 
+		["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Set number of lines mousewheel will scroll when ctrl is pressed.",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll."] = "",--]] 
+		["Set number of lines mousewheel will scroll."] = "Set number of lines mousewheel will scroll.",
 		--[[Translation missing --]]
-		--[[ ["Set TheLowDown Delay"] = "",--]] 
+		["Set TheLowDown Delay"] = "Set TheLowDown Delay",
 		--[[Translation missing --]]
-		--[[ ["Set time to wait before jumping to the bottom of chat windows."] = "",--]] 
+		["Set time to wait before jumping to the bottom of chat windows."] = "Set time to wait before jumping to the bottom of chat windows.",
 		--[[Translation missing --]]
-		--[[ ["Text scroll direction"] = "",--]] 
+		["Text scroll direction"] = "Text scroll direction",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top to bottom",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom to top",
 		--[[Translation missing --]]
-		--[[ ["Chat window scrolling options."] = "",--]] 
+		["Chat window scrolling options."] = "Chat window scrolling options.",
 		--[[Translation missing --]]
-		--[[ ["Control whether text is added to the frame at the top or the bottom."] = "",--]] 
+		["Control whether text is added to the frame at the top or the bottom."] = "Control whether text is added to the frame at the top or the bottom.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_desc"] = "",--]] 
+		["lowdown_desc"] = "Toggle auto jumping to the bottom for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_name"] = "",--]] 
+		["lowdown_name"] = "Enable TheLowDown",
 		--[[Translation missing --]]
-		--[[ ["modified_speed"] = "",--]] 
+		["modified_speed"] = "Set Shift+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["modified_speed_desc"] = "",--]] 
+		["modified_speed_desc"] = "Set number of lines mousewheel will scroll when shift is pressed.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_desc"] = "",--]] 
+		["mousewheel_desc"] = "Toggle mousewheel support for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_name"] = "",--]] 
+		["mousewheel_name"] = "Enable MouseWheel",
 		--[[Translation missing --]]
-		--[[ ["Scroll"] = "",--]] 
+		["Scroll"] = "Scroll",
 		--[[Translation missing --]]
-		--[[ ["Set Ctrl+MouseWheel Speed"] = "",--]] 
+		["Set Ctrl+MouseWheel Speed"] = "Set Ctrl+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set MouseWheel Speed"] = "",--]] 
+		["Set MouseWheel Speed"] = "Set MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll when ctrl is pressed."] = "",--]] 
+		["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Set number of lines mousewheel will scroll when ctrl is pressed.",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll."] = "",--]] 
+		["Set number of lines mousewheel will scroll."] = "Set number of lines mousewheel will scroll.",
 		--[[Translation missing --]]
-		--[[ ["Set TheLowDown Delay"] = "",--]] 
+		["Set TheLowDown Delay"] = "Set TheLowDown Delay",
 		--[[Translation missing --]]
-		--[[ ["Set time to wait before jumping to the bottom of chat windows."] = "",--]] 
+		["Set time to wait before jumping to the bottom of chat windows."] = "Set time to wait before jumping to the bottom of chat windows.",
 		--[[Translation missing --]]
-		--[[ ["Text scroll direction"] = "",--]] 
+		["Text scroll direction"] = "Text scroll direction",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top to bottom",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "Bas vers le haut",
 		["Chat window scrolling options."] = "Options de défilement.",
 		["Control whether text is added to the frame at the top or the bottom."] = "Définit si le texte est ajouté en bas ou en haut de la fenêtre.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_desc"] = "",--]] 
+		["lowdown_desc"] = "Toggle auto jumping to the bottom for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_name"] = "",--]] 
+		["lowdown_name"] = "Enable TheLowDown",
 		--[[Translation missing --]]
-		--[[ ["modified_speed"] = "",--]] 
+		["modified_speed"] = "Set Shift+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["modified_speed_desc"] = "",--]] 
+		["modified_speed_desc"] = "Set number of lines mousewheel will scroll when shift is pressed.",
 		["mousewheel_desc"] = "Active/Désactive le support de la molette pour chaque fenêtre.",
 		["mousewheel_name"] = "Activer la molette",
 		["Scroll"] = "Défilement",
@@ -204,18 +207,19 @@ L=
 		["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Définit le nombre de lignes qui défilent lorsque Ctrl est enfoncé.",
 		["Set number of lines mousewheel will scroll."] = "Définit le nombre de lignes qui défilent lors d'un coup de molette avec la souris.",
 		--[[Translation missing --]]
-		--[[ ["Set TheLowDown Delay"] = "",--]] 
+		["Set TheLowDown Delay"] = "Set TheLowDown Delay",
 		["Set time to wait before jumping to the bottom of chat windows."] = "Régler le temps d'attente avant de sauter au bas de la fenêtre de chat.",
 		["Text scroll direction"] = "Direction du texte",
 		["Top"] = "Haut en bas",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "Von unten nach oben",
 		["Chat window scrolling options."] = "Optionen zum Scrollen in Chatfenstern.",
@@ -237,10 +241,11 @@ L=
 		["Top"] = "Von oben nach unten",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "밑에서 위로",
 		["Chat window scrolling options."] = "대화 창 스크롤 옵션입니다.",
@@ -262,51 +267,53 @@ L=
 		["Top"] = "위에서 아래로",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
-L=
-{
+
+L = {
 	["Scroll"] = {
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom to top",
 		--[[Translation missing --]]
-		--[[ ["Chat window scrolling options."] = "",--]] 
+		["Chat window scrolling options."] = "Chat window scrolling options.",
 		--[[Translation missing --]]
-		--[[ ["Control whether text is added to the frame at the top or the bottom."] = "",--]] 
+		["Control whether text is added to the frame at the top or the bottom."] = "Control whether text is added to the frame at the top or the bottom.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_desc"] = "",--]] 
+		["lowdown_desc"] = "Toggle auto jumping to the bottom for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["lowdown_name"] = "",--]] 
+		["lowdown_name"] = "Enable TheLowDown",
 		--[[Translation missing --]]
-		--[[ ["modified_speed"] = "",--]] 
+		["modified_speed"] = "Set Shift+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["modified_speed_desc"] = "",--]] 
+		["modified_speed_desc"] = "Set number of lines mousewheel will scroll when shift is pressed.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_desc"] = "",--]] 
+		["mousewheel_desc"] = "Toggle mousewheel support for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["mousewheel_name"] = "",--]] 
+		["mousewheel_name"] = "Enable MouseWheel",
 		--[[Translation missing --]]
-		--[[ ["Scroll"] = "",--]] 
+		["Scroll"] = "Scroll",
 		--[[Translation missing --]]
-		--[[ ["Set Ctrl+MouseWheel Speed"] = "",--]] 
+		["Set Ctrl+MouseWheel Speed"] = "Set Ctrl+MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set MouseWheel Speed"] = "",--]] 
+		["Set MouseWheel Speed"] = "Set MouseWheel Speed",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll when ctrl is pressed."] = "",--]] 
+		["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Set number of lines mousewheel will scroll when ctrl is pressed.",
 		--[[Translation missing --]]
-		--[[ ["Set number of lines mousewheel will scroll."] = "",--]] 
+		["Set number of lines mousewheel will scroll."] = "Set number of lines mousewheel will scroll.",
 		--[[Translation missing --]]
-		--[[ ["Set TheLowDown Delay"] = "",--]] 
+		["Set TheLowDown Delay"] = "Set TheLowDown Delay",
 		--[[Translation missing --]]
-		--[[ ["Set time to wait before jumping to the bottom of chat windows."] = "",--]] 
+		["Set time to wait before jumping to the bottom of chat windows."] = "Set time to wait before jumping to the bottom of chat windows.",
 		--[[Translation missing --]]
-		--[[ ["Text scroll direction"] = "",--]] 
+		["Text scroll direction"] = "Text scroll direction",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top to bottom",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX",L)
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "Снизу вверх",
 		["Chat window scrolling options."] = "Настройки прокрутки окна чата.",
@@ -328,9 +335,10 @@ L=
 		["Top"] = "С верху вниз",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "从下到上",
 		["Chat window scrolling options."] = "聊天窗口滚动选项",
@@ -352,9 +360,10 @@ L=
 		["Top"] = "从上到下",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "De Abajo a Arriba",
 		["Chat window scrolling options."] = "Opciones de desplazamiento de la ventana de chat.",
@@ -377,19 +386,20 @@ L=
 		["Top"] = "De arriba a abajo",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
-L=
-{
+
+L = {
 	["Scroll"] = {
 		["Bottom"] = "由下而上",
 		["Chat window scrolling options."] = "聊天視窗滾動選項",
 		--[[Translation missing --]]
-		--[[ ["Control whether text is added to the frame at the top or the bottom."] = "",--]] 
+		["Control whether text is added to the frame at the top or the bottom."] = "Control whether text is added to the frame at the top or the bottom.",
 		["lowdown_desc"] = "切換是否於個別聊天視窗自動跳轉至最新訊息",
 		["lowdown_name"] = "啟用 TheLowDown",
 		["modified_speed"] = "設定 Shift+滑鼠滾輪速度",
 		--[[Translation missing --]]
-		--[[ ["modified_speed_desc"] = "",--]] 
+		["modified_speed_desc"] = "Set number of lines mousewheel will scroll when shift is pressed.",
 		["mousewheel_desc"] = "切換是否於個別聊天視窗支援滑鼠滾輪",
 		["mousewheel_name"] = "啟用滑鼠滾輪",
 		["Scroll"] = "滾動",
@@ -399,11 +409,12 @@ L=
 		["Set number of lines mousewheel will scroll."] = "設定滑鼠滾輪將滾動行數數字",
 		["Set TheLowDown Delay"] = "設定上下延遲",
 		--[[Translation missing --]]
-		--[[ ["Set time to wait before jumping to the bottom of chat windows."] = "",--]] 
+		["Set time to wait before jumping to the bottom of chat windows."] = "Set time to wait before jumping to the bottom of chat windows.",
 		["Text scroll direction"] = "文字滾動方向",
 		["Top"] = "由上而下",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 end
 --@end-non-debug@

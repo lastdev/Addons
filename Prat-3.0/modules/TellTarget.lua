@@ -58,8 +58,8 @@ Prat:AddModuleToLoad(function()
  do
      local L
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = true,
@@ -71,11 +71,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Ajoute la commande telltarget (/tt) pour envoyer un message privé au joueur ciblé.",
@@ -87,11 +88,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Fügt das Slash-Kommando TellTarget (/tt) hinzu",
@@ -103,11 +105,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "대상에게 말하기 슬래쉬 명령어를 추가합니다 (/tt).",
@@ -119,34 +122,36 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		--[[Translation missing --]]
-		--[[ ["/tt"] = "",--]] 
+		["/tt"] = "/tt",
 		--[[Translation missing --]]
-		--[[ ["Adds telltarget slash command (/tt)."] = "",--]] 
+		["Adds telltarget slash command (/tt)."] = "Adds telltarget slash command (/tt).",
 		--[[Translation missing --]]
-		--[[ ["No target selected."] = "",--]] 
+		["No target selected."] = "No target selected.",
 		--[[Translation missing --]]
-		--[[ ["NoTarget"] = "",--]] 
+		["NoTarget"] = "NoTarget",
 		--[[Translation missing --]]
-		--[[ ["Target does not exist."] = "",--]] 
+		["Target does not exist."] = "Target does not exist.",
 		--[[Translation missing --]]
-		--[[ ["Target is not a player."] = "",--]] 
+		["Target is not a player."] = "Target is not a player.",
 		--[[Translation missing --]]
-		--[[ ["TellTarget"] = "",--]] 
+		["TellTarget"] = "TellTarget",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Добавляет слеш-команду 'сказать о цели' (/tt).",
@@ -158,11 +163,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "添加目标告知斜杠命令(/tt).",
@@ -174,11 +180,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Añade comando decir a objetivo (/tt).",
@@ -190,11 +197,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
- L=
-{
+ 
+L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "新增 telltarget 快捷命令（/tt）",
@@ -205,6 +213,7 @@ Prat:AddModuleToLoad(function()
 		["TellTarget"] = true,
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
@@ -257,6 +266,10 @@ Prat:AddModuleToLoad(function()
       self:SendTellToTarget(editBox.chatFrame, msg, editBox)
     end
     self.hooks[editBox].OnTextChanged(editBox, ...)
+    -- set header's font
+    local font, fontsize, style = ChatFrame1:GetFont()
+    local header = _G[editBox:GetName().."Header"];
+    header:SetFont( font, fontsize, style )
   end
 
   function module:SendTellToTarget(frame, text, editBox)

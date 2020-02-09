@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(543, "DBM-Party-BC", 9, 252)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 
 mod:SetCreatureID(18473)
 mod:SetEncounterID(1902)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 local warnSheep					= mod:NewTargetAnnounce(38245, 3)
 
-local specWarnArcaneExplosion	= mod:NewSpecialWarningSpell(38197, nil, nil, nil, 2, 2)
+local specWarnArcaneExplosion	= mod:NewSpecialWarningSpell(38197, nil, nil, 2, 3, 2)
 
 local timerArcaneExplosion		= mod:NewCastTimer(5, 38197, nil, nil, nil, 2)
 

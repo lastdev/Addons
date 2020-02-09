@@ -10,10 +10,10 @@ if ( GetLocale() == "koKR") then
 
 	XPERL_LOC_DEAD		= "죽음"
 
-	XPERL_BUTTON_TOGGLE_LABELS	= "토글 대상 라벨";
-	XPERL_BUTTON_TOGGLE_MTTARGETS	= "매인탱커의 대상과 대대상 토글";
-	XPERL_BUTTON_TOGGLE_SHOWMT	= "메인탱커 보기 토글";
-	XPERL_BUTTON_HELPER_PIN		= "창 고정";
+	XPERL_BUTTON_TOGGLE_LABELS	= "토글 대상 라벨"
+	XPERL_BUTTON_TOGGLE_MTTARGETS	= "매인탱커의 대상과 대대상 토글"
+	XPERL_BUTTON_TOGGLE_SHOWMT	= "메인탱커 보기 토글"
+	XPERL_BUTTON_HELPER_PIN		= "창 고정"
 
 	XPERL_XS_TARGET			= "%s'의 대상"
 	XPERL_NO_TARGET			= "대상 없음"

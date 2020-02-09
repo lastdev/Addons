@@ -1,12 +1,18 @@
-tag 6db54f95901ade16176013490e243b7a64afdc86 v1.5
+tag bd8785c1a40c43b9d395fdd1b460311d332eea9d v1.6.1
 Author:	Ethan Centaurai <ethancentaurai@outlook.com>
-Date:	Sun Jul 22 12:27:13 2018 +0100
+Date:	Wed Jun 26 00:41:13 2019 +0100
 
-Tagging as v1.5.
+Tagging as v1.6.1.
 
-commit 3731495ff8273a0d850214b796aa8d378112448c
+commit 11840666a5ef4e99e9cd64f61dfdd16fd98baef8
 Author: Ethan Centaurai <ethancentaurai@outlook.com>
-Date:   Sun Jul 22 12:19:17 2018 +0100
+Date:   Tue Jun 25 22:59:40 2019 +0100
 
-    Updated for Patch 8.0.
+    Bump Interface number to 80200.
+
+commit faa07e2898c62bd2fb02a3500955649450365d43
+Author: Ethan Centaurai <ethancentaurai@outlook.com>
+Date:   Tue Jun 25 22:55:07 2019 +0100
+
+    Update README.md
 

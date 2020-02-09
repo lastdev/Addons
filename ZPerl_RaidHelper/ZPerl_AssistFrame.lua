@@ -1,11 +1,11 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1123 $")
+end, "$Revision:  $")
 
 local myClass
 local playerAggro, petAggro
@@ -307,10 +307,10 @@ function XPerl_Assists_OnEvent(self, event, unit)
 		XPerl_UpdateAssists()
 		XPerl_ShowAssists()
 		if (XPerl_SavePosition) then
-			XPerl_SavePosition(XPerl_Assists_FrameAnchor, true)
+			XPerl_SavePosition(XPerl_Assists_FrameAnchor)
 		end
 
-		if (ZPerlConfigHelper.sizeAssistsX) then
+		if ZPerlConfigHelper and ZPerlConfigHelper.sizeAssistsX and ZPerlConfigHelper.sizeAssistsY then
 			self:SetWidth(ZPerlConfigHelper.sizeAssistsX)
 			self:SetHeight(ZPerlConfigHelper.sizeAssistsY)
 		end
@@ -442,7 +442,7 @@ function XPerl_UpdateAssists()
 		XPerl_Highlight:ClearAll("AGGRO")
 	--end]]
 
-	if (ZPerlConfigHelper) and (ZPerlConfigHelper.TargetCounters == 0) then
+	if ZPerlConfigHelper and ZPerlConfigHelper.TargetCounters == 0 then
 		if (XPerl_Target_AssistFrame) then
 			XPerl_Target_AssistFrame:Hide()
 		end
@@ -586,7 +586,7 @@ function XPerl_UpdateAssists()
 		end
 	end
 
-	if (ZPerlConfigHelper and ZPerlConfigHelper.ShowTargetCounters == 1) then
+	if ZPerlConfigHelper and ZPerlConfigHelper.ShowTargetCounters == 1 then
 		if (XPerl_Player_TargettingFrame) then
 			if (XPerl_Player) then
 				local color = (conf and conf.colour.border) or (ZPerlConfigHelper and ZPerlConfigHelper.BorderColour) or {r = 0.5, g = 0.5, b = 0.5}

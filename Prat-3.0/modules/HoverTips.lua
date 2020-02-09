@@ -51,127 +51,133 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "frFR", L)
 
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_desc"] = "Zeigt einen Tooltip an, wenn der Mauszeiger über den Link im Chat schwebt",
+		["module_name"] = "Schwebetipps",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "deDE", L)
 
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "koKR",  L)
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "esMX",  L)
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
-		["module_desc"] = "Показывает подсказку при наведении курсора на ссылку в чате",
-		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_desc"] = "Показывает подсказку при наведении курсора на ссылку в чате ",
+		["module_name"] = "Советы по наведению курсора",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "ruRU",  L)
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_desc"] = "鼠标悬停在聊天链接上时显示工具提示",
+		["module_name"] = "悬停提示",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "zhCN",  L)
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "esES",  L)
 
-  L=
-{
+  
+  L = {
 	["HoverTips"] = {
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Shows tooltip when hovering over link in chat",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Hover Tips",
 	}
 }
+
   PL:AddLocale(PRAT_MODULE, "zhTW",  L)
   end
   --@end-non-debug@
@@ -191,6 +197,7 @@ Prat:AddModuleToLoad(function()
         spell = true,
         quest = true,
         achievement = true,
+        currency = true
     }
 
     function module:OnEnable()
@@ -224,7 +231,7 @@ Prat:AddModuleToLoad(function()
     function module:OnHyperlinkLeave(f, link)
         if showingTooltip then
             showingTooltip = false
-            HideUIPanel(GameTooltip)
+            GameTooltip:Hide()
         end
     end
 

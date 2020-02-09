@@ -43,7 +43,7 @@ end
 local OnEnter, ShowTip, HideTip
 do
 	local id = 11544 -- Defender of the Broken Isles
-	local GameTooltip, WorldMapTooltip = GameTooltip, WorldMapTooltip
+	local tt = CreateFrame("GameTooltip", "LITtooltip", UIParent, "GameTooltipTemplate")
 	local FormatShortDate = FormatShortDate
 	ShowTip = function(tip)
 		local _, name, _, _, month, day, year, description, _, _, _, _, wasEarnedByMe = GetAchievementInfo(id)
@@ -120,18 +120,13 @@ do
 		end
 	end
 	HideTip = function()
-		if frame.db.profile.mode == 3 then
-			WorldMapTooltip:Hide()
-		else
-			GameTooltip:Hide()
-		end
+		tt:Hide()
 	end
 	OnEnter = function(f)
-		local tip = frame.db.profile.mode == 3 and WorldMapTooltip or GameTooltip
-		tip:SetOwner(f, "ANCHOR_NONE")
-		tip:SetPoint("BOTTOM", f, "TOP")
-		ShowTip(tip)
-		tip:Show()
+		tt:SetOwner(f, "ANCHOR_NONE")
+		tt:SetPoint("BOTTOM", f, "TOP")
+		ShowTip(tt)
+		tt:Show()
 	end
 end
 
@@ -169,6 +164,7 @@ end
 local StartBar
 local hiddenBars = false
 do
+	local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 	StartBar = function(text, timeLeft, rewardQuestID, icon, paused)
 		if frame.Bar then frame.Bar:Stop() end
 		local bar = candy:New(media:Fetch("statusbar", frame.db.profile.barTexture), frame.db.profile.width, frame.db.profile.height)

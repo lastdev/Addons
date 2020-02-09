@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreMain.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreMain.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -44,7 +44,7 @@ if (not AucAdvancedData) then AucAdvancedData = {} end
 if (not AucAdvancedLocal) then AucAdvancedLocal = {} end
 if (not AucAdvancedConfig) then AucAdvancedConfig = {} end
 
-local _, internal = AucAdvanced.GetCoreModule() -- Don't need a module but do need the addon internal storage area.
+local _,_,_, internal = AucAdvanced.GetCoreModule(nil, nil, nil, nil, "CoreMain") -- Request access to all internal storage
 
 if (not AucAdvancedData.Stats) then AucAdvancedData.Stats = {} end
 if (not AucAdvancedLocal.Stats) then AucAdvancedLocal.Stats = {} end
@@ -264,6 +264,10 @@ local function HookAH()
 end
 
 local function OnLoad(addon)
+	if AucAdvanced.ABORTLOAD then
+		-- don't try to run if there were load time errors - some internal functions may be missing
+		return
+	end
 	addon = addon:lower()
 
 	-- Check if the actual addon itself is loading
@@ -272,7 +276,7 @@ local function OnLoad(addon)
 		internal.Settings.upgradeSavedVariables()
 
 		-- Load the dummy CoreModule
-		AucAdvanced.CoreModuleOnLoad(addon)
+		internal.CoreModule.CoreModuleOnLoad(addon)
 	end
 
 	-- Look for a matching module
@@ -327,8 +331,7 @@ end
 local function OnEnteringWorld(frame)
 	frame:UnregisterEvent("PLAYER_ENTERING_WORLD") -- we only want the first instance of this event
 	OnEnteringWorld = nil
-	AucAdvanced.CoreFileCheckOut() -- calling with no filename to finalize check in/out process
-	if AucAdvanced.ABORTLOAD then
+	if AucAdvanced.ABORTLOAD or not AucAdvanced.CORELOADED then
 		-- something's gone wrong - abort loading
 		-- in most cases an error should have been reported elsewhere, we don't want to generate a new one
 		-- but we should give some indication of the problem, so we shall print a short message to chat instead
@@ -424,5 +427,5 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreMain.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreMain.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreMain")

@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 8.1.6246 (SwimmingSeadragon)
-	Revision: $Id: InfSettings.lua 6246 2019-03-04 00:20:18Z none $
+	Version: 8.2.6508 (SwimmingSeadragon)
+	Revision: $Id: InfSettings.lua 6508 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Command handler. Assumes responsibility for allowing the user to set the
@@ -63,7 +63,7 @@ Usage:
 
 
 ]]
-Informant_RegisterRevision("$URL: Informant/InfSettings.lua $", "$Rev: 6246 $")
+Informant_RegisterRevision("$URL: Informant/InfSettings.lua $", "$Rev: 6508 $")
 
 local lib = {}
 Informant.Settings = lib

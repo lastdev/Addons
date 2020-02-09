@@ -1,4 +1,4 @@
---[[ Credit for these translations goes to:
+﻿--[[ Credit for these translations goes to:
 	lsjyzjl
 	wowuicn
 --]]
@@ -1784,7 +1784,7 @@ L["SOUND_EVENT_ONCHARGELOST_DESC"] = "此事件在一个被检测的充能类型
 L["SOUND_EVENT_ONCLEU"] = "在战斗事件发生时"
 L["SOUND_EVENT_ONCLEU_DESC"] = "此事件在图标处理一个战斗事件时触发."
 L["SOUND_EVENT_ONCONDITION"] = "在设置的条件通过时"
-L["SOUND_EVENT_ONCONDITION_DESC"] = "当你设置的条件通过时触发此事件."
+L["SOUND_EVENT_ONCONDITION_DESC"] = "当你设置的条件通过时触发一次此事件."
 L["SOUND_EVENT_ONDURATION"] = "在持续时间改变时"
 L["SOUND_EVENT_ONDURATION_DESC"] = [=[此事件在图标计时器的持续时间改变时触发.
 
@@ -1822,7 +1822,7 @@ L["SOUND_EVENT_ONUIERROR_DESC"] = "此事件在图标处理一个战斗错误事
 L["SOUND_EVENT_ONUNIT"] = "在单位改变时"
 L["SOUND_EVENT_ONUNIT_DESC"] = "当图标显示信息中的单位改变时触发此事件."
 L["SOUND_EVENT_WHILECONDITION"] = "当设置的条件通过时"
-L["SOUND_EVENT_WHILECONDITION_DESC"] = "此类型的通知事件会在你设置的条件通过时触发。"
+L["SOUND_EVENT_WHILECONDITION_DESC"] = "此类型的通知事件会在你设置的条件通过时持续触发。"
 L["SOUND_SOUNDTOPLAY"] = "要播放的音效"
 L["SOUND_TAB"] = "音效"
 L["SOUND_TAB_DESC"] = "设置用于播放的声音。 你可以使用LibSharedMedia的声音或者指定一个声音文件。"
@@ -2270,4 +2270,3 @@ L["WARN_DRMISMATCH"] = [=[警告!你正在检测递减的法术来自两个不�
 检测到下列你所使用的法术及其分类:]=]
 L["WATER"] = "水之图腾"
 L["worldboss"] = "首领"
-

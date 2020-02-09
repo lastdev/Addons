@@ -15,8 +15,8 @@
 		<Scripts>
 			<OnEnter>
 				if (self.tooltipText) then
-					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true)
 				end
 			</OnEnter>
 			<OnLeave function="XPerl_PlayerTipHide"/>
@@ -244,12 +244,12 @@
 	</Button>
 
 	<Frame name="XPerl_RaidMonitor_Anchor" parent="UIParent" movable="true" resizable="true" clampedToScreen="true">
-		<Size>
-			<AbsDimension x="200" y="80"/>
-		</Size>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="200" y="80"/>
+		</Size>
 	</Frame>
 
 	<Frame name="XPerl_RaidMonitor_Frame" enableMouse="true" parent="XPerl_RaidMonitor_Anchor" clampedToScreen="true">
@@ -271,12 +271,12 @@
 				end
 			</OnDragStop>
 		</Scripts>
-		<Size>
-			<AbsDimension x="200" y="80"/>
-		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
+		<Size>
+			<AbsDimension x="200" y="80"/>
+		</Size>
 		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
 				<AbsValue val="9"/>

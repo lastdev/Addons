@@ -1,9 +1,21 @@
+if not WeakAuras.IsCorrectVersion() then return end
 
 local L = WeakAuras.L
 
 
 local send_chat_message_types = WeakAuras.send_chat_message_types;
 local sound_types = WeakAuras.sound_types;
+
+local RestrictedChannelCheck
+if WeakAuras.IsClassic() then
+  RestrictedChannelCheck = function()
+    return false
+  end
+else
+  RestrictedChannelCheck = function(data)
+    return data.message_type == "SAY" or data.message_type == "YELL" or data.message_type == "SMARTRAID"
+  end
+end
 
 function WeakAuras.AddActionOption(id, data)
   local action = {
@@ -45,9 +57,9 @@ function WeakAuras.AddActionOption(id, data)
         data.actions[field][value] = v;
       end
       if(value == "sound" or value == "sound_path") then
-        PlaySoundFile(v, "Master");
+        pcall(PlaySoundFile, v, "Master");
       elseif(value == "sound_kit_id") then
-        PlaySound(v, "Master");
+        pcall(PlaySound, v, "Master");
       end
       WeakAuras.Add(data);
     end,
@@ -83,6 +95,13 @@ function WeakAuras.AddActionOption(id, data)
         values = send_chat_message_types,
         disabled = function() return not data.actions.start.do_message end,
         control = "WeakAurasSortedDropdown"
+      },
+      start_message_warning = {
+        type = "description",
+        width = WeakAuras.doubleWidth,
+        name = L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."],
+        order = 2.5,
+        hidden = function() return not RestrictedChannelCheck(data.actions.start) end
       },
       start_message_space = {
         type = "execute",
@@ -130,9 +149,7 @@ function WeakAuras.AddActionOption(id, data)
         order = 5,
         disabled = function() return not data.actions.start.do_message end,
         desc = function()
-          local ret = L["Dynamic text tooltip"];
-          ret = ret .. WeakAuras.GetAdditionalProperties(data);
-          return ret
+          return L["Dynamic text tooltip"] .. WeakAuras.GetAdditionalProperties(data)
         end,
       },
       -- texteditor added later
@@ -201,7 +218,7 @@ function WeakAuras.AddActionOption(id, data)
       start_do_glow = {
         type = "toggle",
         width = WeakAuras.normalWidth,
-        name = WeakAuras.newFeatureString .. L["Button Glow"],
+        name = L["Button Glow"],
         order = 10.1
       },
       start_glow_action = {
@@ -291,6 +308,13 @@ function WeakAuras.AddActionOption(id, data)
         disabled = function() return not data.actions.finish.do_message end,
         control = "WeakAurasSortedDropdown"
       },
+      finish_message_warning = {
+        type = "description",
+        width = WeakAuras.doubleWidth,
+        name = L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."],
+        order = 22.5,
+        hidden = function() return not RestrictedChannelCheck(data.actions.finish) end
+      },
       finish_message_space = {
         type = "execute",
         width = WeakAuras.normalWidth,
@@ -337,9 +361,7 @@ function WeakAuras.AddActionOption(id, data)
         order = 25,
         disabled = function() return not data.actions.finish.do_message end,
         desc = function()
-          local ret = L["Dynamic text tooltip"];
-          ret = ret .. WeakAuras.GetAdditionalProperties(data);
-          return ret
+          return L["Dynamic text tooltip"] .. WeakAuras.GetAdditionalProperties(data)
         end,
       },
       -- texteditor added below
@@ -392,7 +414,7 @@ function WeakAuras.AddActionOption(id, data)
       finish_do_glow = {
         type = "toggle",
         width = WeakAuras.normalWidth,
-        name = WeakAuras.newFeatureString .. L["Button Glow"],
+        name = L["Button Glow"],
         order = 30.1
       },
       finish_glow_action = {
@@ -465,13 +487,20 @@ function WeakAuras.AddActionOption(id, data)
     },
   }
 
-  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "init", 0.011, function() return not data.actions.init.do_custom end, {"actions", "init", "custom"}, true);
+  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "init", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Actions",
+                          0.011, function() return not data.actions.init.do_custom end, {"actions", "init", "custom"}, true);
 
-  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "start_message", 5.1, function() return not (data.actions.start.do_message and WeakAuras.ContainsPlaceHolders(data.actions.start.message, "c")) end, {"actions", "start", "message_custom"}, false);
-  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "start", 13, function() return not data.actions.start.do_custom end, {"actions", "start", "custom"}, true);
+  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "start_message", "https://github.com/WeakAuras/WeakAuras2/wiki/Text-Replacements",
+                          5.1, function() return not (data.actions.start.do_message and WeakAuras.ContainsCustomPlaceHolder(data.actions.start.message)) end, {"actions", "start", "message_custom"}, false);
 
-  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "finish_message", 26, function() return not (data.actions.finish.do_message and WeakAuras.ContainsPlaceHolders(data.actions.finish.message, "c")) end, {"actions", "finish", "message_custom"}, false);
-  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "finish", 32, function() return not data.actions.finish.do_custom end, {"actions", "finish", "custom"}, true);
+  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "start", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Actions",
+                          13, function() return not data.actions.start.do_custom end, {"actions", "start", "custom"}, true);
+
+  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "finish_message", "https://github.com/WeakAuras/WeakAuras2/wiki/Text-Replacements",
+                          26, function() return not (data.actions.finish.do_message and WeakAuras.ContainsCustomPlaceHolder(data.actions.finish.message)) end, {"actions", "finish", "message_custom"}, false);
+
+  WeakAuras.AddCodeOption(action.args, data, L["Custom Code"], "finish", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Actions",
+                          32, function() return not data.actions.finish.do_custom end, {"actions", "finish", "custom"}, true);
 
   return action;
 end

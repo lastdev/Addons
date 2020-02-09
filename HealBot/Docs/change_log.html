@@ -14,6 +14,351 @@
 <a href="https://healbot.dpm15.net/">HealBot Continued</a> - Change Log
 </span><br>
 <br>
+v8.3.0.3<br>
+=================<br>
+* Fixed Buffs>General showing item id instead of name for items that add buffs<br>
+* Disable custom debuffs can now be applied to all zones<br>
+* Disable custom buffs can now be applied to all zones<br>
+<br>
+v8.3.0.2<br>
+=================<br>
+* Tooltip improvements<br>
+* Fluid Bars delay fixed<br>
+* Increased bar resolution by 10x for smoother Fluid Bars<br>
+* fastHealth improvements<br>
+<br>
+v8.3.0.1<br>
+=================<br>
+* Fixed power bar colour caching bug<br>
+* Minor fix with select items dropdowns<br>
+* Minor fix with raid target on enemy bars<br>
+<br>
+v8.3.0.0<br>
+=================<br>
+* Fixed default settings for General Debuffs<br>
+* Integrity check on spells when exporting<br>
+* Filter out duplicates from certain dropdowns<br>
+* Filter out HealBot crash protection names from select spells Macros dropdown<br>
+* Update to select spells Items dropdown<br>
+<br>
+v8.2.5.10<br>
+=================<br>
+* Custom Debuffs can now be identified by Spell ID or Spell Name or Both<br>
+* Custom Buffs can now be identified by Spell ID or Spell Name or Both<br>
+<br>
+v8.2.5.9<br>
+=================<br>
+* Debuff icons - debuffs cast by player on enemy bars now shown in same position as all other bar types<br>
+* Minor improvements to buff icons<br>
+* Minor fixes to custom debuffs<br>
+* Minor fixes to custom buffs<br>
+* Fixed aggro bar option move bar<br>
+* Fixed general buffs always shown on self<br>
+* Brought back HealBot fastHealth<br>
+* Tightened up Internal Timers to increase responsiveness of certain events<br>
+ - 8.2.5.9 is still 5x more efficient than early 8.0.x versions<br>
+<br>
+v8.2.5.8<br>
+=================<br>
+* Minor debuff monitor improvement<br>
+* Fixed nil error introduced in 8.2.5.7<br>
+<br>
+v8.2.5.7 <B>*** <a href="https://healbot.dpm15.net/forum/general/573-important-read-before-updating-to-8-2-5-7">BEFORE UPDATING PLEASE READ THIS FORUM POST</a> ***</B><br>
+=================<br>
+* Change to memory structure, see the forum to avoid settings reset<br>
+* Added version check Retail vs Classic<br>
+* Fixed aura events not updated on target and focus bar after frame update<br>
+* Fixed target bar not hidden after end of combat when no target selected<br>
+<br>
+v8.2.5.6<br>
+=================<br>
+* Performance improvements<br>
+* Updated libs<br>
+* Minor fixes<br>
+* Class/Role icon persists through death<br>
+* Removed HealBot fastHealth, this is no longer required and wastes resources<br>
+* Fixes to the aura cache addition in 8.2.5.5<br>
+* Removed unused options of debuff tabs<br>
+* Updated Supporters<br>
+<br>
+v8.2.5.5<br>
+=================<br>
+* Fixed OOR tag when out of phase<br>
+* Performance improvements<br>
+<br>
+v8.2.5.4<br>
+=================<br>
+* Updated Supporters<br>
+* Updates to classic<br>
+* Minor bug fixes<br>
+* Fixed sort bug<br>
+<br>
+v8.2.5.3<br>
+=================<br>
+* Updates to classic<br>
+* Improvements to Tooltips<br>
+* Optimised building the frames<br>
+<br>
+v8.2.5.2<br>
+=================<br>
+* Replaced Named with My Friend in Buff/Debuff class dropdowns<br>
+* Added Set as/Unset My Friend in Healbot Menu<br>
+* Updates to classic<br>
+* Icons fade sooner<br>
+* Improved option Ignore aura events when resting<br>
+<br>
+v8.2.5.1<br>
+=================<br>
+* Updated Supporters<br>
+* Updates to classic<br>
+* Options panel can be toggled in combat<br>
+<br>
+v8.2.5.0<br>
+=================<br>
+* Optimised unit identification<br>
+* Fixed raid roles issue<br>
+<br>
+v8.2.0.8<br>
+=================<br>
+* Improved unit tracking<br>
+* Updates to classic<br>
+<br>
+v8.2.0.7<br>
+=================<br>
+* Aura events are ignore when player on a taxi<br>
+* Improved buff monitoring<br>
+<br>
+v8.2.0.6<br>
+=================<br>
+* Updated Supporters<br>
+* Fixed Buffs>Custom All Classes category Cast By My Class bug<br>
+* Changes to Cast By on Buffs>Custom tab now checked immediately<br>
+* Changes to Cast By on Debuffs>Custom tab now checked immediately<br>
+* General none event Buff and Debuff checks are now much faster<br>
+* Added option to permanently set a player to My Targets<br>
+* Added option to permanently set a Private Tank<br>
+* Added option to permanently set a Private Healer<br>
+<br>
+v8.2.0.5<br>
+=================<br>
+* Fixed sort error bug on custom buffs<br>
+<br>
+v8.2.0.4<br>
+=================<br>
+* Added slash command <b>/hb cs</b> - Checks integrity of all skin variables<br>
+* Updates for Classic<br>
+* Remove invalid Custom Buffs<br>
+* Remove invalid Custom Debuffs<br>
+* Updated Supporters<br>
+<br>
+v8.2.0.3<br>
+=================<br>
+* Updated Supporters<br>
+* Minor optimisations<br>
+* Fixed under certain conditions, spec change not updating spells/auras while in group/raid<br>
+* Fixed flyout spells not recognised as known spells, thanks to Slayybelle on the Healbot forum<br>
+* Will load in Classic and generally works solo<br>
+<br>
+v8.2.0.2 <B>*** On first logon with each character - CHECK THE SPELLS TAB ***</B><br>
+=================<br>
+* Updated Supporters<br>
+* Fixes to suppress sound/text in macros, short commands also available for all player macros, see the website>Help<br>
+* Added Emotes to Mouse Wheel Commands<br>
+* Fixed long lists in dropdowns Custom Buffs and Custom Debuffs from going off the screen<br>
+* Added OOM emote option to the Skins>Chat tab<br>
+* Added Exclude Self/Group/Raid from Target frame when out of combat option to Skins>Frames>Bars>Visibility tab<br>
+* Added Exclude Self/Group/Raid from Focus frame when out of combat option to Skins>Frames>Bars>Visibility tab<br>
+* Spells,Items and Commands on the Spells tab are now stored using ID's<br>
+* Fixed some sounds throwing invalid fileID error<br>
+* Updated libs<br>
+* Internal update changes to ensure all updates are done in a timely manner<br>
+<br>
+v8.2.0.1<br>
+=================<br>
+* Updated Supporters<br>
+* Improved item info loading for debuff general tab<br>
+* Minor fix to tooltips<br>
+* Major fix to load timings that affects some users resulting in no spells on dropdowns<br>
+* Fix to Ignore aura events when resting and changed to ignore all events (Custom and General Buffs and Debuffs)<br>
+* General improvements to buff monitor<br>
+<br>
+v8.2.0.0<br>
+=================<br>
+* Added options help tooltips for options on the Skins>Frames>General tab<br>
+* Added options help tooltips for options on the Skins>Frames>Heal Groups tab<br>
+* Added options help tooltips for options on the Skins>Frames>Headers>Bars tab<br>
+* Added options help tooltips for options on the Skins>Frames>Headers>Frames tab<br>
+* Updated default skins Standard and Group<br>
+* Replaced default skins Raid and Alterac Valley with Raid 25 and Raid 40<br>
+* Improvements to Sticky Frames<br>
+* Added Tooltip Font Size to Tips tab<br>
+* HealBot autoCombat only enters combat when the unit affecting combat is visible<br>
+* Fixed Bars Text Vertical Offset not updated when Apply current tab settings to all Frames is clicked<br>
+* Moved bar text fontstring down to ARTWORK layer, allows icons to be shown over the text<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>General tab<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>Colours tab<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>Text tab<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>Sort tab<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>Visibility tab<br>
+* Added options help tooltips for options on the Skins>Frames>Bars>Aggro tab<br>
+* Added options help tooltips for options on the Skins>Frames>Icons>General tab<br>
+* Added options help tooltips for options on the Skins>Frames>Icons>Text tab<br>
+* Moved options help tooltips to display near the cursor position<br>
+* Added options help tooltips for options on the Debuffs>General tab<br>
+* Added options help tooltips for options on the Debuffs>Custom tab<br>
+* Added options help tooltips for options on the Debuffs>Warning tab<br>
+* Added options help tooltips for options on the Buffs>General tab<br>
+* Added options help tooltips for options on the Buffs>Custom tab<br>
+* Added options help tooltips for options on the Buffs>Warning tab<br>
+* Added options help tooltips for options on the Tips tab<br>
+* Added options help tooltips for options on the Mouse Wheel tab<br>
+* Added options help tooltips for options on the Test tab<br>
+* Added options help tooltips for options on the Import/Export>Skins tab<br>
+* Added options help tooltips for options on the Import/Export>Custom Debuffs tab<br>
+* Added options help tooltips for options on the Import/Export>Custom Buffs tab<br>
+* Added options help tooltips for options on the Import/Export>Spells tab<br>
+* Added options help tooltips for options on the Import/Export>Preset Colours tab<br>
+* Check for missing new 8.2 default skins and include if required<br>
+<br>
+v8.1.5.16<br>
+=================<br>
+* Buff and Debuff icons now have independent scales<br>
+* Fixed Frame Header blocking clicks when hidden<br>
+* Increased range of Icon Text Size<br>
+* Added options help tooltips for options on the Skins>General tab<br>
+* Added options help tooltips for options on the Skins>Protection tab<br>
+* Added options help tooltips for options on the Skins>Chat tab<br>
+<br>
+v8.1.5.15<br>
+=================<br>
+* Added Sticky Frames to Skins>General tab<br>
+* Added Sensitivity to Skins>General tab<br>
+* Moved Low Mana Indicator from Skins>General to Skins>Frames>Bars>General<br>
+* Added Sticky Frame Offsets to Skins>Frames>General tab<br>
+* Added options help tooltips for options on the General tab<br>
+* Added options help tooltips for options on the Spells tab<br>
+* Added options help tooltips for new Sticky Frames options in this version<br>
+* Added Font and Font Outline to Skins>Frames>Icons>Text tab<br>
+* Changed Icon Text Scale to Font Size on Skins>Frames>Icons>Text tab<br>
+<br>
+v8.1.5.14<br>
+=================<br>
+* Added Import/Export>Preset Colours tab<br>
+* Added Own pet: with self to Skins>Frames>Bars>Sort tab<br>
+* Added Show mouse-wheel commands to Tips tab<br>
+* Improvements and fixes to tooltips<br>
+<br>
+v8.1.5.13<br>
+=================<br>
+* Moved tab Skins>Frames>Headers to Skins>Frames>Headers>Bars<br>
+* Moved frame title options from Skin>Frames>General to Skins>Frames>Headers>Frames<br>
+* Added background bar options to Skins>Frames>Headers>Frames<br>
+* Added font offset to Skins>Frames>Headers>Bars<br>
+<br>
+v8.1.5.12<br>
+=================<br>
+* Added Import/Export>Spells tab<br>
+* Added Vertical Offset to Skins>Frames>Bars>Text tab<br>
+<br>
+v8.1.5.11<br>
+=================<br>
+* Added reset button to Buffs>Custom tab<br>
+* Reset button now also resets Automatic Spell ID correction<br>
+* Added Import/Export>Custom Buffs tab<br>
+* Improvements to Debuffs>Custom tab<br>
+* Improvements to Buffs>Custom tab<br>
+* Improvements to Import/Export<br>
+* Changed Shift-Ctrl-Alt+Left click to show Menu<br>
+* Changed Shift-Ctrl-Alt+Right click to show HealBot Menu<br>
+* Changed Shift-Ctrl-Alt+Middle click to toggle enabled<br>
+<br>
+v8.1.5.10<br>
+=================<br>
+* Added Preset Colours frame, available via (*) buttons<br>
+* Fixed Spell select dropdown, Buff>General spell dropdown and Debuff>General spell dropdown<br>
+* Minor fixes and improvements<br>
+<br>
+v8.1.5.9<br>
+=================<br>
+* Move Buffs>Icons tab to Buffs>Custom tab<br>
+* Added multiple options for custom buffs<br>
+* Added Buffs>Warning tab<br>
+* Improved auto spell id correction<br>
+<br>
+v8.1.5.8<br>
+=================<br>
+* Fixed localization issue affecting non en clients<br>
+<br>
+v8.1.5.7<br>
+=================<br>
+* Minor improvements to custom debuffs<br>
+* Added new tab Import / Export > Custom Debuffs<br>
+* Fixed Target Friendly bug<br>
+<br>
+v8.1.5.6<br>
+=================<br>
+* Automatically update spell ID for custom debuffs and HoT/Buff Icons when the spell ID has changed<br>
+* New HoT/Buff Icons can now be added on the Buffs > Icons options tab<br>
+* HoT/Buff Icons can now be deleted on the Buffs > Icons options tab<br>
+<br>
+v8.1.5.5<br>
+=================<br>
+* Fix for HoT/Buff icons not working with new install<br>
+<br>
+v8.1.5.4<br>
+=================<br>
+* Spells and Auras switched to using ID's<br>
+* Custom Debuffs now using spell ID's, allows for multiple custom debuffs with the same name<br>
+* Fixed sort issue when using Headers or Use Groups per Column<br>
+<br>
+v8.1.5.3<br>
+=================<br>
+* Fixed startup nil error bug<br>
+<br>
+v8.1.5.2<br>
+=================<br>
+* Majority of Skin options can now be set per frame<br>
+* Moved Skins>Aggro to Skins>Frames>Bars>Aggro<br>
+* Moved Skins>Enemy to Skins>Frames>Bars>Visibility - <b>Available when selecting the Enemy frame</b><br>
+* Moved Skins>Healing>Raid to Skins>Frames>Bars>Visibility<br>
+* Moved Skins>Healing>Hide to Skins>Frames>Bars>Visibility<br>
+* Moved Skins>Healing>Sort to Skins>Frames>Bars>Sort<br>
+* Moved Skins>Healing Alert options into Skins>Frames>Bars>Visibility<br>
+* Moved Skins>Healing Target options into Skins>Frames>Bars>Visibility - <b>Available when selecting the Target frame</b><br>
+* Moved Skins>Healing Focus options into Skins>Frames>Bars>Visibility - <b>Available when selecting the Focus frame</b><br>
+* Moved Skins>Frames>Bar Colours to Skins>Frames>Bars>Colours<br>
+* Moved Skins>Frames>Bar Text to Skins>Frames>Bars>Text<br>
+* Moved Skins>Frames>Icon Text to Skins>Frames>Icons>Text<br>
+* Moved Global Buff/HoT Icon options to Buffs>Icons<br>
+* Moved Skins>Share to Import/Export>Skins<br>
+* Fixed Always Enabled toggle<br>
+* Fixed checks on Target<br>
+* Added Shift+Ctrl+Alt+Click built in combos to tooltip<br>
+* Removed Blizzard Menu from Mousewheel, use "menu" on the spells tab instead<br>
+* Fixed taint issue when setting focus via menu on the spells tab<br>
+<br>
+v8.1.5.1<br>
+=================<br>
+* Target Always Show changed to Always Show/No Change/Always Hide when entering combat<br>
+* Focus Always Show changed to Always Show/No Change/Always Hide when entering combat<br>
+* Added sort option to Skins>Healing tab - Sort out of range last<br>
+* Added Private Healers to Mouse Wheel commands - Thanks to GNotepad on the Healbot forum<BR>
+<br> 
+v8.1.5.0<br>
+=================<br>
+* Auto switch skins when entering group/raid now much quicker<br>
+* Fixed Mage HoT's missing from options<br>
+<br> 
+v8.1.0.7<br>
+=================<br>
+* Fixed Enable autoCombat, when on Healbot will go into combat mode as soon as anyone in range has aggro<br>
+* Added Paladin icons Glimmer of Light, Blessing of Sanctuary and Blessing of Spellwarding<br>
+* Added Azerite Trait icon Bracing Chill<br>
+* Added Prient icon Permeating Glow<br>
+<p>8.1.0.7 is approximately <b>2 times more efficient</b> than 8.0.1.4:<br>
+- In groups 8.0.1.4 uses ~9ms per second CPU, this version uses ~4.5ms per second CPU<br>
+- In Raids 8.0.1.4 uses ~30ms per second CPU, this version uses ~13.5ms per second CPU<br>
+- See <a href="https://healbot.dpm15.net/forum/general/218-8-1-0-7-brings-performance-gains-at-around-2x-when-compared-to-8-0-1-4">this forum post</a> - for more information</p>
 v8.1.0.6<br>
 =================<br>
 * Minor improvements to health updates<br>

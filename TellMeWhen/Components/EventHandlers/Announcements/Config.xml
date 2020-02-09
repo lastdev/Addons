@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
  
  
 	<Frame parentKey="Announcements" name="$parentAnnouncements" inherits="TellMeWhen_EventContainer">
@@ -112,6 +112,28 @@
 									self:SetText(channelData.ddtext(location))
 								end)
 
+							</OnLoad>
+						</Scripts>
+					</Frame>
+
+					<Frame parentKey="InstanceRestricted" >
+						<Size y="100" />
+
+						<Anchors>
+							<Anchor point="LEFT" x="10" />
+							<Anchor point="RIGHT" x="-10" />
+						</Anchors>
+
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString parentKey="Text" inherits="GameFontHighlight" justifyV="TOP" justifyH="LEFT" setAllPoints="true">
+								</FontString>
+							</Layer>
+						</Layers>
+
+						<Scripts>
+							<OnLoad>
+								self.Text:SetText(TMW.L["ANN_INSTANCE_RESTRICTED"])
 							</OnLoad>
 						</Scripts>
 					</Frame>

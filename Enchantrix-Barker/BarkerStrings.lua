@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: EnchantrixBarker
-	Revision: $Id: BarkerStrings.lua 6000 2018-07-17 14:09:34Z none $
-	Version: 7.7.6000 (SwimmingSeadragon)
+	Revision: $Id: BarkerStrings.lua 6507 2019-11-02 14:38:37Z none $
+	Version: 8.2.6507 (SwimmingSeadragon)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -496,8 +496,8 @@ EnchantrixBarkerLocalizations = {
 	enUS = {
 
 		-- Section: Command Messages
-		["BarkerEnxWindowNotOpen"]	= "Enchantrix: The enchant window is not open. The enchanting window must be open in order to use the barker.";
-		["BarkerNoEnchantsAvail"]	= "Enchantrix: You either don't have any enchants or don't have the reagents to make them.";
+		["BarkerEnxWindowNotOpen"]	= "Enchantrix Barker: The enchant window is not open. The enchanting window must be open in order to use the barker.";
+		["BarkerNoEnchantsAvail"]	= "Enchantrix Barker: You either don't have any enchants or don't have the reagents to make them.";
 
 		-- Section: Commands
 		["CmdBarker"]	= "barker";
@@ -544,7 +544,7 @@ EnchantrixBarkerLocalizations = {
 		["EnchSearchDamage1"]	= "points? of damage";
 		["EnchSearchDamage2"]	= "\+[0-9]+ damage";
 		["EnchSearchDefense"]	= "defense";
-		["EnchSearchDMGAbsorption"]	= "points of damage absorption";	-- CHANGE
+		["EnchSearchDMGAbsorption"]	= " points of damage absorption";	-- CHANGE
 		["EnchSearchFireRes"]	= "fire resistance";
 		["EnchSearchFrostRes"]	= "frost resistance";
 		["EnchSearchHealing"]	= "healing";
@@ -709,7 +709,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsStrengthPriorityTooltip"]	= "The priority score for Strength enchants.";
 		["BarkerOptionsTab1Title"]	= "Profit and Price Priorities";
 		["BarkerCannotBeAppliedHigher"] = ". cannot be applied to items higher than level %d+.";	-- NEW
-		["BarkerAddionalPointsOf"] = "additional points- of ";	-- NEW
+		["BarkerAddionalPointsOf"] = " additional points- of ";	-- NEW
 	};
 
 	esES = {

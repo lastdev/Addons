@@ -1,12 +1,6 @@
-local __exports = LibStub:NewLibrary("ovale/Equipment", 80000)
+local __exports = LibStub:NewLibrary("ovale/Equipment", 80300)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local __Profiler = LibStub:GetLibrary("ovale/Profiler")
-local OvaleProfiler = __Profiler.OvaleProfiler
-local __Ovale = LibStub:GetLibrary("ovale/Ovale")
-local Ovale = __Ovale.Ovale
-local __Debug = LibStub:GetLibrary("ovale/Debug")
-local OvaleDebug = __Debug.OvaleDebug
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
 local pairs = pairs
 local wipe = wipe
@@ -23,10 +17,6 @@ local concat = table.concat
 local insert = table.insert
 local __tools = LibStub:GetLibrary("ovale/tools")
 local isNumber = __tools.isNumber
-local strsub = sub
-local tinsert = insert
-local tconcat = concat
-local OvaleEquipmentBase = OvaleDebug:RegisterDebugging(OvaleProfiler:RegisterProfiling(Ovale:NewModule("OvaleEquipment", aceEvent)))
 local OVALE_SLOTID_BY_SLOTNAME = {
     AmmoSlot = 0,
     HeadSlot = 1,
@@ -58,13 +48,12 @@ local OVALE_RANGED_WEAPON = {
     INVTYPE_RANGEDRIGHT = true,
     INVTYPE_RANGED = true
 }
-local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
-    constructor = function(self)
+__exports.OvaleEquipmentClass = __class(nil, {
+    constructor = function(self, ovale, ovaleDebug, ovaleProfiler)
+        self.ovale = ovale
         self.ready = false
         self.equippedItemById = {}
         self.equippedItemBySlot = {}
-        self.mainHandItemType = nil
-        self.offHandItemType = nil
         self.mainHandDPS = 0
         self.offHandDPS = 0
         self.armorSetCount = {}
@@ -87,33 +76,49 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
                 }
             }
         }
-        OvaleEquipmentBase.constructor(self)
+        self.OnInitialize = function()
+            self.module:RegisterEvent("PLAYER_ENTERING_WORLD", self.UpdateEquippedItems)
+            self.module:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", self.PLAYER_EQUIPMENT_CHANGED)
+        end
+        self.OnDisable = function()
+            self.module:UnregisterEvent("PLAYER_ENTERING_WORLD")
+            self.module:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
+        end
+        self.PLAYER_EQUIPMENT_CHANGED = function(event, slotId, hasItem)
+            self.profiler:StartProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
+            local changed = self:UpdateItemBySlot(slotId)
+            if changed then
+                self.lastChangedSlot = slotId
+                self.ovale:needRefresh()
+                self.module:SendMessage("Ovale_EquipmentChanged")
+            end
+            self.profiler:StopProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
+        end
+        self.UpdateEquippedItems = function()
+            self.profiler:StartProfiling("OvaleEquipment_UpdateEquippedItems")
+            local changed = false
+            for slotId = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED, 1 do
+                if OVALE_SLOTNAME_BY_SLOTID[slotId] and self:UpdateItemBySlot(slotId) then
+                    changed = true
+                end
+            end
+            if changed then
+                self.ovale:needRefresh()
+                self.module:SendMessage("Ovale_EquipmentChanged")
+            end
+            self.ready = true
+            self.profiler:StopProfiling("OvaleEquipment_UpdateEquippedItems")
+        end
+        self.module = ovale:createModule("OvaleEquipment", self.OnInitialize, self.OnDisable, aceEvent)
+        self.profiler = ovaleProfiler:create(self.module:GetName())
         for k, v in pairs(self.debugOptions) do
-            OvaleDebug.options.args[k] = v
+            ovaleDebug.defaultOptions.args[k] = v
         end
         for slotName in kpairs(OVALE_SLOTID_BY_SLOTNAME) do
             local invSlotId = GetInventorySlotInfo(slotName)
             OVALE_SLOTID_BY_SLOTNAME[slotName] = invSlotId
             OVALE_SLOTNAME_BY_SLOTID[invSlotId] = slotName
         end
-    end,
-    OnInitialize = function(self)
-        self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateEquippedItems")
-        self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-    end,
-    OnDisable = function(self)
-        self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-        self:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
-    end,
-    PLAYER_EQUIPMENT_CHANGED = function(self, event, slotId, hasItem)
-        self:StartProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
-        local changed = self:UpdateItemBySlot(slotId)
-        if changed then
-            self.lastChangedSlot = slotId
-            Ovale:needRefresh()
-            self:SendMessage("Ovale_EquipmentChanged")
-        end
-        self:StopProfiling("OvaleEquipment_PLAYER_EQUIPMENT_CHANGED")
     end,
     GetArmorSetCount = function(self, name)
         return 0
@@ -134,6 +139,9 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
         return self.equippedItemById[itemId] and true or false
     end,
     HasMainHandWeapon = function(self, handedness)
+        if  not self.mainHandItemType then
+            return false
+        end
         if handedness then
             if handedness == 1 then
                 return OVALE_ONE_HANDED_WEAPON[self.mainHandItemType]
@@ -146,6 +154,9 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
         return false
     end,
     HasOffHandWeapon = function(self, handedness)
+        if  not self.offHandItemType then
+            return false
+        end
         if handedness then
             if handedness == 1 then
                 return OVALE_ONE_HANDED_WEAPON[self.offHandItemType]
@@ -161,7 +172,7 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
         return self.offHandItemType == "INVTYPE_SHIELD"
     end,
     HasRangedWeapon = function(self)
-        return OVALE_RANGED_WEAPON[self.mainHandItemType]
+        return self.mainHandItemType and OVALE_RANGED_WEAPON[self.mainHandItemType]
     end,
     HasTrinket = function(self, itemId)
         return self:HasEquippedItem(itemId)
@@ -175,12 +186,12 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
         end
         if slotId then
             if slotId == OVALE_SLOTID_BY_SLOTNAME["MainHandSlot"] then
-                return OVALE_ONE_HANDED_WEAPON[self.mainHandItemType]
+                return self.mainHandItemType and OVALE_ONE_HANDED_WEAPON[self.mainHandItemType]
             elseif slotId == OVALE_SLOTID_BY_SLOTNAME["SecondaryHandSlot"] then
-                return OVALE_ONE_HANDED_WEAPON[self.offHandItemType]
+                return self.offHandItemType and OVALE_ONE_HANDED_WEAPON[self.offHandItemType]
             end
         else
-            return OVALE_ONE_HANDED_WEAPON[self.mainHandItemType] or OVALE_ONE_HANDED_WEAPON[self.offHandItemType]
+            return self.mainHandItemType and OVALE_ONE_HANDED_WEAPON[self.mainHandItemType] or self.offHandItemType and OVALE_ONE_HANDED_WEAPON[self.offHandItemType]
         end
         return false
     end,
@@ -224,44 +235,28 @@ local OvaleEquipmentClass = __class(OvaleEquipmentBase, {
         if itemLink then
             local stats = GetItemStats(itemLink)
             if stats then
-                dps = stats["ITEM_MOD_DAMAGE_PER_SECOND_SHORT"]
+                dps = stats["ITEM_MOD_DAMAGE_PER_SECOND_SHORT"] or 0
             end
         end
         return itemEquipLoc, dps
-    end,
-    UpdateEquippedItems = function(self)
-        self:StartProfiling("OvaleEquipment_UpdateEquippedItems")
-        local changed = false
-        for slotId = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED, 1 do
-            if OVALE_SLOTNAME_BY_SLOTID[slotId] and self:UpdateItemBySlot(slotId) then
-                changed = true
-            end
-        end
-        if changed then
-            Ovale:needRefresh()
-            self:SendMessage("Ovale_EquipmentChanged")
-        end
-        self.ready = true
-        self:StopProfiling("OvaleEquipment_UpdateEquippedItems")
     end,
     DebugEquipment = function(self)
         wipe(self.output)
         local array = {}
         for slotId, slotName in ipairs(OVALE_SLOTNAME_BY_SLOTID) do
             local itemId = self.equippedItemBySlot[slotId] or ""
-            local shortSlotName = strsub(slotName, 1, -5)
-            tinsert(array, shortSlotName .. ": " .. itemId)
+            local shortSlotName = sub(slotName, 1, -5)
+            insert(array, shortSlotName .. ": " .. itemId)
         end
-        tinsert(array, [[
+        insert(array, [[
 ]])
-        tinsert(array, "Main Hand DPS = " .. self.mainHandDPS)
+        insert(array, "Main Hand DPS = " .. self.mainHandDPS)
         if self:HasOffHandWeapon() then
-            tinsert(array, "Off hand DPS = " .. self.offHandDPS)
+            insert(array, "Off hand DPS = " .. self.offHandDPS)
         end
         for _, v in ipairs(array) do
             self.output[#self.output + 1] = v
         end
-        return tconcat(self.output, "\n")
+        return concat(self.output, "\n")
     end,
 })
-__exports.OvaleEquipment = OvaleEquipmentClass()

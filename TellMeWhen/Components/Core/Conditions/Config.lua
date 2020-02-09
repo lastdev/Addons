@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -663,7 +663,9 @@ function CndtGroup:OnNewInstance()
 	local ID = self:GetID()
 	CNDT[ID] = self
 
-	self:SetPoint("TOP", CNDT[ID-1], "BOTTOM", 0, -20)
+	if ID > 1 then
+		self:SetPoint("TOP", CNDT[ID-1], "BOTTOM", 0, -20)
+	end
 	self:Hide()
 
 	self:SetMinAdjustHeight(68)

@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Taunt Announce
 --
--- Copyright 2011-2019 BeathsCurse (Bowmore - Silvermoon EU)
+-- Copyright 2011-2020 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ local tauntAuras = {
 	[171014]=1,	-- Warlock Infernal, Seethe
 	[185245]=1,	-- Demon Hunter, Torment
 	[204079]=1,	-- Paladin, Final Stand
+	[281854]=1,	-- Demon Hunter, Torment (Havoc)
 }
 
 -- Table of taunt spell IDs
@@ -108,6 +109,7 @@ local tauntSpells = {
 	[115546]=1,	-- Monk, Provoke (auras 116189 and 118635)
 	[171014]=1,	-- Warlock Infernal, Seethe
 	[185245]=1,	-- Demon Hunter, Torment
+	[281854]=1,	-- Demon Hunter, Torment (Havoc)
 }
 
 -- Table for looking up raid icon id from destFlags
@@ -360,14 +362,15 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED()
 	-- you join the instance finder as a group, you will be in both the
 	-- original group/raid and the instance group. Passing nothing checks for
 	-- either.
-	local inInstance = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
+	local inInstanceGroup = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 	local inGroup, inRaid = IsInGroup(), IsInRaid()
+	local inInstance = IsInInstance()
 
 	local config
 
 	-- Select config based on grouping status
-	if inInstance then
-		config = cfg.instance
+	if inInstanceGroup then
+		config = inInstance and cfg.instance or cfg.solo
 	elseif inRaid then
 		config = cfg.raid
 	elseif inGroup then
@@ -381,32 +384,47 @@ function frame:COMBAT_LOG_EVENT_UNFILTERED()
 
 	-- Check if source was the player, player's pet, or other
 	if sourceName == GetPlayerName() then
-		-- If own is off for this config, return
-		if config.own == 'off' then return end
+		local mode = config.own
+
+		-- If mode is off for this config, return
+		if mode == 'off' then return end
+
+		-- Outside instances, change say to self
+		if not inInstance and mode == 'say' then mode = 'self' end
 
 		-- Announce taunt
-		self:AnnounceTaunt(config.own, string.format('Taunting %s%s with %s%s', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOwn)
+		self:AnnounceTaunt(mode, string.format('Taunting %s%s with %s%s', GetRaidIconString(raidIcon, mode), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOwn)
 	elseif bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0 then
-		-- If own is off for this config, return
-		if config.own == 'off' then return end
+		local mode = config.own
+
+		-- If mode is off for this config, return
+		if mode == 'off' then return end
+
+		-- Outside instances, change say to self
+		if not inInstance and mode == 'say' then mode = 'self' end
 
 		-- Announce taunt
-		self:AnnounceTaunt(config.own, string.format('My %s taunting %s%s with %s%s', sourceName or '?', GetRaidIconString(raidIcon, config.own), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOwn)
+		self:AnnounceTaunt(mode, string.format('My %s taunting %s%s with %s%s', sourceName or '?', GetRaidIconString(raidIcon, mode), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOwn)
 	else
-		-- If other is off for this config, return
-		if config.other == 'off' then return end
+		local mode = config.other
+
+		-- If mode is off for this config, return
+		if mode == 'off' then return end
+
+		-- Outside instances, change say to self
+		if not inInstance and mode == 'say' then mode = 'self' end
 
 		-- Announce if source was a player/pet in our party/raid
 		if (inRaid and bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_RAID) > 0) or (inGroup and bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_PARTY) > 0) then
 			local name = sourceName or '?'
 
 			-- Apply class color to name if announcing to self and source was a player
-			if config.other == 'self' and bit.band(sourceFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
+			if mode == 'self' and bit.band(sourceFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
 				local _, classFileName = UnitClass(name)
 				name = '|c' .. RAID_CLASS_COLORS[classFileName or 'PRIEST'].colorStr .. name .. '|r'
 			end
 
-			self:AnnounceTaunt(config.other, string.format('%s taunting %s%s with %s%s', name, GetRaidIconString(raidIcon, config.other), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOther)
+			self:AnnounceTaunt(mode, string.format('%s taunting %s%s with %s%s', name, GetRaidIconString(raidIcon, mode), destName or '?', GetSpellLinkCached(spellID), failString or ''), cfg.soundOther)
 		end
 	end
 end

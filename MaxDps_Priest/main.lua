@@ -78,6 +78,8 @@ function Priest:Discipline()
 	local buff = fd.buff;
 	local cooldown = fd.cooldown;
 
+	MaxDps:GlowEssences();
+
 	if talents[DI.Mindbender] then
 		MaxDps:GlowCooldown(DI.Mindbender, cooldown[DI.Mindbender].ready);
 	else
@@ -126,6 +128,8 @@ function Priest:Shadow()
 	local VoidBolt = MaxDps:FindSpell(SH.VoidEruption) and SH.VoidEruption or
 		(MaxDps:FindSpell(SH.VoidBolt) and SH.VoidBolt or SH.VoidBolt2);
 	fd.VoidBolt = VoidBolt;
+
+	MaxDps:GlowEssences();
 
 	if talents[SH.SurrenderToMadness] then
 		MaxDps:GlowCooldown(

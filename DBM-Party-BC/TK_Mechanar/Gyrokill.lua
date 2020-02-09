@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gyrokill", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(19218)
 mod:SetEncounterID(1933)
 
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 39193 35322"
 )
 
-local warnShadowpower       = mod:NewTargetAnnounce(35322, 3)
+local warnShadowpower       = mod:NewTargetNoFilterAnnounce(35322, 3)
 
 local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, "MagicDispeller", nil, nil, 1, 2)
 

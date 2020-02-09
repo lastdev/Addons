@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 -- Lua APIs
 local pairs, error, coroutine = pairs, error, coroutine
 
@@ -156,7 +158,7 @@ function spellCache.CorrectAuraName(input)
     error("spellCache has not been loaded. Call WeakAuras.spellCache.Load(...) first.")
   end
 
-  local spellId = tonumber(input);
+  local spellId = WeakAuras.SafeToNumber(input);
   if(spellId) then
     local name, _, icon = GetSpellInfo(spellId);
     if(name) then

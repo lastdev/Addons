@@ -29,8 +29,8 @@
 		LibStub. See http://www.wowwiki.com/LibStub for more info.
 
 	SVN Info for this file:
-		File $URL: /LibAltChatLink.lua $
-		Revision $Id: LibAltChatLink.lua 6000 2018-07-17 14:09:34Z none $
+		File $URL: Auc-Advanced/Libs/TipHelper/LibAltChatLink.lua $
+		Revision $Id: LibAltChatLink.lua 6476 2019-11-02 14:38:37Z none $
 --]]
 
 

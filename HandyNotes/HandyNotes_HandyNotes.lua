@@ -1,4 +1,4 @@
----------------------------------------------------------
+﻿---------------------------------------------------------
 -- Module declaration
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HN = HandyNotes:NewModule("HandyNotes", "AceEvent-3.0", "AceConsole-3.0")
@@ -26,7 +26,6 @@ local defaults = {
 local next = next
 local wipe = wipe
 local GameTooltip = GameTooltip
-local WorldMapTooltip = WorldMapTooltip
 
 
 ---------------------------------------------------------
@@ -74,27 +73,22 @@ HN.icons = {
 local HNHandler = {}
 
 function HNHandler:OnEnter(mapID, coord)
-	local tooltip = self:GetParent() == WorldMapFrame:GetCanvas() and WorldMapTooltip or GameTooltip
 	if ( self:GetCenter() > UIParent:GetCenter() ) then -- compare X coordinate
-		tooltip:SetOwner(self, "ANCHOR_LEFT")
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
-		tooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	end
 	local title = dbdata[mapID][coord].title
 	local desc = dbdata[mapID][coord].desc
 	if title == "" and desc == "" then title = L["(No Title)"] end
 	if title == "" and desc ~= "" then title = desc  desc = nil end
-	tooltip:SetText(title)
-	tooltip:AddLine(desc, nil, nil, nil, true)
-	tooltip:Show()
+	GameTooltip:SetText(title)
+	GameTooltip:AddLine(desc, nil, nil, nil, true)
+	GameTooltip:Show()
 end
 
 function HNHandler:OnLeave(mapID, coord)
-	if self:GetParent() == WorldMapFrame:GetCanvas() then
-		WorldMapTooltip:Hide()
-	else
-		GameTooltip:Hide()
-	end
+	GameTooltip:Hide()
 end
 
 local function deletePin(button, mapID, coord)
@@ -337,10 +331,10 @@ end
 function HN.OnCanvasClicked(mapCanvas, button, cursorX, cursorY)
 	local self = HN
 	if button == "RightButton" and IsAltKeyDown() and not IsControlKeyDown() and not IsShiftKeyDown() then
-		
+
 		local coord = HandyNotes:getCoord(cursorX, cursorY)
 		local x, y = HandyNotes:getXY(coord)
-		
+
 		-- Pass the data to the edit note frame
 		local HNEditFrame = self.HNEditFrame
 		HNEditFrame.x = x
@@ -442,14 +436,14 @@ function HN:OnInitialize()
 
 	-- migrate data, if neccessary
 	local HBDMigrate = LibStub("HereBeDragons-Migrate")
-	
+
 	local migration = {}
 	for zone in pairs(dbdata) do
 		if type(zone) == "string" then
 			migration[zone] = true
 		end
 	end
-	
+
 	for zone in pairs(migration) do
 		local data = dbdata[zone]
 		dbdata[zone] = nil
@@ -465,7 +459,7 @@ function HN:OnInitialize()
 				dbdata[newzone][coord] = info
 			end
 		end
-		
+
 	end
 	HNData = dbdata
 

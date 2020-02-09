@@ -1,12 +1,12 @@
-tag 80b175f09e2726947c8748010290226f522f138d 1.7.3
-Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Sun Dec 16 18:29:47 2018 +0100
+tag 90a0a93921c3e9b777cf8000c2e27401f243bb9b 1.7.6
+Author:	Giovanni Gargani <g.gargani@hu-care.com>
+Date:	Fri Jan 17 22:10:06 2020 +0100
 
-TOC BUMP
+toc 80300
 
-commit 319a38dcb95765d20effe80e4a86c891b7adf7f9
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sun Dec 16 18:29:13 2018 +0100
+commit be2ba42e4bb78c99b376171a3b113c05b6456f81
+Author: Giovanni Gargani <g.gargani@hu-care.com>
+Date:   Fri Jan 17 22:09:45 2020 +0100
 
-    TOC BUMP
+    toc bumo
 

@@ -1,7 +1,7 @@
 --[[
 	PanelScroller
-	Version: 8.1.6204 (SwimmingSeadragon)
-	Revision: $Id: PanelScroller.lua 6204 2019-03-04 00:20:18Z none $
+	Version: 8.2.6474 (SwimmingSeadragon)
+	Revision: $Id: PanelScroller.lua 6474 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -26,11 +26,11 @@
 --]]
 
 local LIBRARY_VERSION_MAJOR = "PanelScroller"
-local LIBRARY_VERSION_MINOR = 4
+local LIBRARY_VERSION_MINOR = 5
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/PanelScroller.lua $","$Rev: 6204 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/PanelScroller.lua $","$Rev: 6474 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local kit = {
 	hPos = 0, hSize = 0, hWin = 0, hType = "AUTO",
@@ -365,7 +365,7 @@ local function VerticalScrollBarTemplate(name, parent)
 		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Up",
 		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Down",
 		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Disabled",
-		"Interface\Buttons\UI-ScrollBar-ScrollDownButton-Highlight"
+		"Interface\\Buttons\\UI-ScrollBar-ScrollDownButton-Highlight"
 	)
 	downButton:SetPoint("TOP", scrollbar, "BOTTOM")
 	downButton:SetScript("OnClick", DownDuttonOnClick)

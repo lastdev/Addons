@@ -1,8 +1,8 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1119 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
 	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
@@ -27,7 +27,7 @@ local outputChannelColour
 
 local GetNumGroupMembers = GetNumGroupMembers
 
-local UnitIsGroupAssistant = UnitIsGroupAssistant;
+local UnitIsGroupAssistant = UnitIsGroupAssistant
 
 local ITEMLISTSIZE		= 12
 local PLAYERLISTSIZE		= 10
@@ -63,7 +63,7 @@ end
 if (not XPerl_GetClassColour) then
 	XPerl_GetClassColour = function(class)
 		if (class) then
-			local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class];		-- Now using the WoW class color table
+			local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class] -- Now using the WoW class color table
 			if (color) then
 				return color
 			end
@@ -84,7 +84,7 @@ end
 if (not XPerl_ClassPos) then
 	local ClassPos = CLASS_BUTTONS
 	function XPerl_ClassPos(class)
-		local b = ClassPos[class]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
+		local b = ClassPos[class] -- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
 		if (b) then
 			return unpack(b)
 		end
@@ -104,7 +104,7 @@ local function CTRAItemMsg(nick, item, count)
 end
 
 local function ProcessCTRAMessage(unitName, msg)
---ChatFrame7:AddMessage(unitName..": "..msg)
+	--ChatFrame7:AddMessage(unitName..": "..msg)
 	if (strfind(msg, "^ITM ")) then
 		local numItems, itemName, callPerson = strmatch(msg, "^ITM ([-%d]+) (.+) ([^%s]+)$")
 
@@ -117,7 +117,7 @@ local function ProcessCTRAMessage(unitName, msg)
 
 		if (currDur and maxDur and brokenItems) then
 			currDur, maxDur, brokenItems = tonumber(currDur), tonumber(maxDur), tonumber(brokenItems)
-			XPerl_DurResults[unitName] = {dur = floor((currDur/maxDur)*100+0.5), broken = brokenItems}
+			XPerl_DurResults[unitName] = {dur = floor((currDur / maxDur) * 100 + 0.5), broken = brokenItems}
 			if (callPerson == UnitName("player")) then
 				XPerl_DurResults.count = XPerl_DurResults.count + 1
 			end
@@ -126,7 +126,7 @@ local function ProcessCTRAMessage(unitName, msg)
 		end
 
 	elseif (strfind(msg, "^RST ")) then
-		local plrName = strmatch(msg, "^RST %-1 ([^%s]+)$");
+		local plrName = strmatch(msg, "^RST %-1 ([^%s]+)$")
 		if (not plrName) then
 			local FR, NR, FRR, SR, AR, callPerson = strmatch(msg, "^RST (%d+) (%d+) (%d+) (%d+) (%d+) ([^%s]+)$")
 			if (FR) then
@@ -140,7 +140,7 @@ local function ProcessCTRAMessage(unitName, msg)
 		end
 
 	elseif (strfind(msg, "^REA ")) then
-		local numItems, callPerson = strmatch(msg, "^REA ([^%s]+) ([^%s]+)$");
+		local numItems, callPerson = strmatch(msg, "^REA ([^%s]+) ([^%s]+)$")
 		if (numItems) then
 			XPerl_RegResults[unitName] = {count = tonumber(numItems)}
 			if (callPerson == UnitName("player")) then
@@ -235,9 +235,7 @@ end
 -- XPerl_CheckOnUpdate
 -- Only active after a query, and only for 10 seconds
 local function XPerl_CheckOnUpdate(self, elapsed)
-
 	-- TODO Total Progress indication
-
 	if (#XPerl_MsgQueue > 0) then
 		local Time = GetTime()
 		local send
@@ -374,7 +372,6 @@ end
 
 -- XPerl_ItemCheck
 function XPerl_ItemCheck(itemName)
-
 	local cmd = "/raitem"
 	if (DEFAULT_CHAT_FRAME.editBox) then
 		local command = DEFAULT_CHAT_FRAME.editBox:GetText()
@@ -425,7 +422,6 @@ end)
 -- sortItems
 -- Fixed entries at top, followed by last current queried, followed by rest. Alphabetical within this.
 local function sortItems(i1, i2)
-
 	local itemName1 = GetVLinkName(i1)
 	local itemName2 = GetVLinkName(i2)
 
@@ -442,7 +438,6 @@ end
 
 -- ItemsChanged
 function XPerl_Check_ItemsChanged()
-
 	-- Validate. Make sure we have our fixed entries
 	local dur, reg, res
 	for k,v in ipairs(ZPerl_CheckItems) do
@@ -504,7 +499,7 @@ local function GetSelectedItemLink()
 end
 
 -- GetCursorItem
-local function GetCursorItemLink()
+local function GetCursorItemLink(self)
 	local id = self:GetID() + XPerl_CheckListItemsScrollBar.offset
 	local item = ZPerl_CheckItems[id]
 	if (item and not item.fixed) then
@@ -514,10 +509,9 @@ local function GetCursorItemLink()
 end
 
 -- SelectClickedTickItem
-local function SelectClickedTickItem()
-
+local function SelectClickedTickItem(self)
 	local oldSelection
-	for k,v in ipairs(ZPerl_CheckItems) do
+	for k, v in ipairs(ZPerl_CheckItems) do
 		if (v.selected) then
 			oldSelection = v
 			v.selected = nil
@@ -553,7 +547,7 @@ end
 
 -- XPerl_Check_TickAll
 function XPerl_Check_TickAll(all)
-	for k,v in ipairs(ZPerl_CheckItems) do
+	for k, v in ipairs(ZPerl_CheckItems) do
 		if (not v.fixed) then
 			v.ticked = all
 		end
@@ -563,7 +557,7 @@ end
 
 -- XPerl_Check_TickLastResults
 function XPerl_Check_TickLastResults()
-	for k,v in ipairs(ZPerl_CheckItems) do
+	for k, v in ipairs(ZPerl_CheckItems) do
 		if (not v.fixed) then
 			v.ticked = nil
 
@@ -581,16 +575,15 @@ end
 
 -- XPerl_Check_OnClickItem
 function XPerl_Check_OnClickItem(button)
-
 	if (button == "LeftButton") then
 		if (IsShiftKeyDown()) then
 			local activeWindow = ChatEdit_GetActiveWindow()
 			if ( activeWindow ) then
-				activeWindow:Insert(GetCursorItemLink())
+				activeWindow:Insert(GetCursorItemLink(button))
 			end
 
 		elseif (IsControlKeyDown()) then
-			DressUpItemLink(GetCursorItemLink())
+			DressUpItemLink(GetCursorItemLink(button))
 
 		else
 			if (CursorHasItem()) then
@@ -609,7 +602,7 @@ function XPerl_Check_OnClickItem(button)
 			XPerl_CheckListPlayersScrollBarScrollBar:SetValue(0)
 			XPerl_CheckButtonPlayerPortrait:SetTexture("")	-- SetPortraitTexture(XPerl_CheckButtonPlayerPortrait, "raidx")
 			SelectedPlayer = nil
-			SelectClickedTickItem(true)
+			SelectClickedTickItem(button)
 			XPerl_Check_ValidateButtons()
 		end
 	end
@@ -654,11 +647,11 @@ end
 local function SmoothColour(percentage)
 	local r, g
 	if (percentage < 0.5) then
-		g = 2*percentage
+		g = 2 * percentage
 		r = 1
 	else
 		g = 1
-		r = 2*(1 - percentage)
+		r = 2 * (1 - percentage)
 	end
 	if (r < 0) then r = 0 elseif (r > 1) then r = 1 end
 	if (g < 0) then g = 0 elseif (g > 1) then g = 1 end
@@ -673,7 +666,6 @@ end
 
 -- XPerl_Check_UpdateItemList
 function XPerl_Check_UpdateItemList()
-
 	local onlineCount, reagentCount = GetOnlineMembers()
 	local index = 1
 	local i = 0
@@ -748,7 +740,7 @@ function XPerl_Check_UpdateItemList()
 
 				nameFrame:SetText(v.link)
 
-				local itemId = strmatch(v.link, "item:(%d+):");
+				local itemId = strmatch(v.link, "item:(%d+):")
    				if (itemId) then
 					local itemName, itemString, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(itemId)
 					iconFrame:SetTexture(itemTexture)
@@ -952,7 +944,7 @@ function XPerl_Check_MakePlayerList()
 			ShowResists(true)
 		end
 
-		for i = 1,GetNumGroupMembers() do
+		for i = 1, GetNumGroupMembers() do
 			local name = UnitName("raid"..i)
 			local _, class = UnitClass("raid"..i)
 			local count = 0
@@ -1041,7 +1033,6 @@ end
 
 -- XPerl_Check_UpdatePlayerList
 function XPerl_Check_UpdatePlayerList()
-
 	local onlineCount, tFR, tFRR, tNR, tSR, tAR, tDur, tBroken, tCount = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 	local results, resType = GetSelectedItem()
@@ -1279,7 +1270,6 @@ end
 
 -- XPerl_Check_ShowInfo
 function XPerl_Check_ShowInfo()
-
 	if (ActiveScanTotals) then
 		if (ActiveScanTotals.missing > 0) then
 			XPerl_CheckButtonInfo:SetFormattedText(XPERL_CHECK_SCAN_MISSING, ActiveScanTotals.missing)
@@ -1304,8 +1294,7 @@ function XPerl_Check_ShowInfo()
 end
 
 -- XPerl_Check_OnEnter
-function XPerl_Check_OnEnter()
-
+function XPerl_Check_OnEnter(self)
 	local f, anc
 	if ((self.GetFrameType or self.GetObjectType)(self) == "CheckButton") then
 		f = _G[self:GetParent():GetName().."Name"]
@@ -1318,7 +1307,7 @@ function XPerl_Check_OnEnter()
 		local link = f:GetText()
 		if (link and strsub(link, 1, 1) == "|") then
 			-- Have to strip excess information for the SetHyperlink call
-			local itemId = strmatch(link, "item:(%d+):");
+			local itemId = strmatch(link, "item:(%d+):")
    			if (itemId) then
 				local newLink = format("item:%d:0:0:0", itemId)
 
@@ -1336,7 +1325,7 @@ function XPerl_Check_OnEnter()
 end
 
 -- XPerl_Check_OnClickStart
-function XPerl_Check_OnClickTick()
+function XPerl_Check_OnClickTick(self)
 	local id = self:GetParent():GetID() + XPerl_CheckListItemsScrollBar.offset
 	if (ZPerl_CheckItems[id]) then
 		ZPerl_CheckItems[id].ticked = self:GetChecked()
@@ -1346,10 +1335,9 @@ end
 
 -- XPerl_Check_DeleteSelectedItems
 function XPerl_Check_DeleteSelectedItems()
-
 	local newList = {}
 
-	for k,v in ipairs(ZPerl_CheckItems) do
+	for k, v in ipairs(ZPerl_CheckItems) do
 		if (v.fixed or not v.ticked) then
 			tinsert(newList, v)
 		else
@@ -1367,7 +1355,6 @@ end
 
 -- XPerl_Check_Query
 function XPerl_Check_Query()
-
 	local oldResults = XPerl_ItemResults
 	XPerl_ItemResults = {["type"] = "item"}
 
@@ -1381,7 +1368,7 @@ function XPerl_Check_Query()
 	XPerl_RegResults.count = 0
 
 	local msg
-	for k,v in ipairs(ZPerl_CheckItems) do
+	for k, v in ipairs(ZPerl_CheckItems) do
 		if (v.ticked) then
 			v.query = true
 			v.ticked = nil
@@ -1400,7 +1387,7 @@ function XPerl_Check_Query()
 		end
 	end
 
-	for k,v in pairs(oldResults) do
+	for k, v in pairs(oldResults) do
 		if (type(v) == "table") then
 			if (not v.fixed) then
 				XPerl_ItemResults[k] = v
@@ -1418,7 +1405,6 @@ end
 
 -- GetActiveScanItem
 local function GetActiveScanItem()
-
 	local item = GetSelectedItemLink()
 	local itemId
 	if (item and strsub(item, 1, 1) == "|") then
@@ -1483,7 +1469,6 @@ end
 
 -- XPerl_Check_ValidateButtons
 function XPerl_Check_ValidateButtons()
-
 	local fixedSelected, regSelected
 	local anyTicked
 	for k,v in ipairs(ZPerl_CheckItems) do
@@ -1581,7 +1566,6 @@ end
 
 -- XPerl_Check_Report
 function XPerl_Check_Report(showNames)
-
 	local function ReportOutput(msg)
 		if (msg) then
 			SendChatMessage("<X-Perl> "..msg, outputChannel, nil, outputChannelIndex)
@@ -1695,7 +1679,7 @@ function XPerl_Check_Report(showNames)
 				local offline = {}
 				local totalItems = 0
 
-				for k,v in ipairs(XPerl_PlayerList) do
+				for k, v in ipairs(XPerl_PlayerList) do
 					if (ActiveScanTotals and ActiveScanTotals.missing == 0) then
 						local scan = XPerl_ActiveScan[v.name]
 						if (scan.equipped) then
@@ -1728,7 +1712,8 @@ function XPerl_Check_Report(showNames)
 				else
 					if (showNames) then
 						if (link == "reg") then
-							link,c = string.gsub(SPELL_REAGENTS, ": ", "")
+							local c
+							link, c = string.gsub(SPELL_REAGENTS, ": ", "")
 							if (not link or c ~= 1) then
 								link = "Reagents"
 							end
@@ -1824,8 +1809,7 @@ end
 
 -- XPerl_Check_PlayerOnClick
 function XPerl_Check_PlayerOnClick(button)
-
-	local index = self:GetID() + XPerl_CheckListPlayersScrollBar.offset
+	local index = button:GetID() + XPerl_CheckListPlayersScrollBar.offset
 
 	if (index < 1 or index > #XPerl_PlayerList) then
 		return
@@ -1853,7 +1837,6 @@ end
 
 -- XPerl_Check_StartActiveScan
 function XPerl_Check_StartActiveScan()
-
 	if (ActiveScanItem) then
 		XPerl_Check_StopActiveScan()
 	else
@@ -1878,7 +1861,6 @@ end
 
 -- XPerl_Check_ActiveScan
 function XPerl_Check_ActiveScan()
-
 	local function CheckSlot(unit, slot)
 		local link = GetInventoryItemLink(unit, slot)
 		local eq
@@ -1913,8 +1895,9 @@ function XPerl_Check_ActiveScan()
 	local any
 	local update
 	ActiveScanTotals = {missing = 0, equipped = 0, notequipped = 0, offline = 0, wrongZone = 0}
-	for i = 1,GetNumGroupMembers() do
-		local name, rank, subgroup, level, _, class, zone, online, isDead = GetRaidRosterInfo(i)
+
+	for i = 1, GetNumGroupMembers() do
+		local name, _, _, _, _, _, zone = GetRaidRosterInfo(i)
 		local unit = "raid"..i
 		local new
 		local myScan = XPerl_ActiveScan[name]
@@ -2002,7 +1985,7 @@ function XPerl_GetChannelList()
 		tinsert(cList, {display = _G["CHAT_MSG_"..v], channel = v, colour = GetChatColour(v)})
 	end
 
-	for i = 1,10 do
+	for i = 1, 10 do
 		local c, name = GetChannelName(i)
 		if (name and c ~= 0) then
 			tinsert(cList, {display = name, channel = "CHANNEL", index = c, colour = GetChatColour("CHANNEL"..c)})
@@ -2019,11 +2002,12 @@ function XPerl_Check_Channels_OnLoad(self)
 		outputChannelSelection = 1
 	end
 
-	self.displayMode = "MENU"
-	UIDropDownMenu_Initialize(self, XPerl_Check_Channels_Initialize)
-	UIDropDownMenu_SetSelectedID(self, outputChannelSelection)
-	UIDropDownMenu_SetWidth(XPerl_CheckButtonChannel, 100)
-	XPerl_CheckButtonChannelText:SetTextColor(unpack(outputChannelColour))
+	local dropdown = MSA_DropDownMenu_Create(self:GetName().."_DropDown", self)
+	dropdown:SetAllPoints(self)
+	MSA_DropDownMenu_Initialize(dropdown, XPerl_Check_Channels_Initialize)
+	MSA_DropDownMenu_SetWidth(dropdown, 100)
+	MSA_DropDownMenu_SetSelectedID(dropdown, outputChannelSelection)
+	_G[dropdown:GetName().."Text"]:SetTextColor(unpack(outputChannelColour))
 end
 
 -- XPerl_Channel_OnClick
@@ -2032,14 +2016,13 @@ local function XPerl_Channel_OnClick(self)
 	outputChannel = v.channel
 	outputChannelIndex = v.index
 	outputChannelSelection = self:GetID()
-	UIDropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
+	MSA_DropDownMenu_SetSelectedID(XPerl_CheckButtonChannel, outputChannelSelection)
 
 	XPerl_CheckButtonChannelText:SetTextColor(v.red, v.green, v.blue)
 end
 
 -- XPerl_Check_Channels_Initialize
 function XPerl_Check_Channels_Initialize()
-
 	channelList = XPerl_GetChannelList()
 
 	for i,entry in pairs(channelList) do
@@ -2051,11 +2034,11 @@ function XPerl_Check_Channels_Initialize()
 			end
 		end
 
-		local info = UIDropDownMenu_CreateInfo()
+		local info = MSA_DropDownMenu_CreateInfo()
 		info.text = entry.display
 		info.func = XPerl_Channel_OnClick
 		info.value = {channel = entry.channel, index = entry.index, red = r, green = g, blue = b}
 		info.colorCode = format("|cFF%02X%02X%02X", r * 255, g * 255, b * 255)
-		UIDropDownMenu_AddButton(info)
+		MSA_DropDownMenu_AddButton(info)
 	end
 end

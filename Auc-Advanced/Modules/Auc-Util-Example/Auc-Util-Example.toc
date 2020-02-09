@@ -1,5 +1,5 @@
 ## Title: Auctioneer:Util:Example
-## Interface: 80100
+## Interface: 80205
 ## Dependancies: Auc-Advanced
 ##
 ## Version: <%version%> (<%codename%>)

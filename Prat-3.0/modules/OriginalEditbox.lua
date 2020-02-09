@@ -92,8 +92,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = true,
 		["BACKGROUND"] = true,
@@ -135,211 +135,214 @@ L=
 		["Undocked"] = true,
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		--[[Translation missing --]]
-		--[[ ["Autohide"] = "",--]] 
+		["Autohide"] = "Autohide",
 		--[[Translation missing --]]
-		--[[ ["BACKGROUND"] = "",--]] 
+		["BACKGROUND"] = "BACKGROUND",
 		--[[Translation missing --]]
-		--[[ ["Bar colour"] = "",--]] 
+		["Bar colour"] = "Bar colour",
 		--[[Translation missing --]]
-		--[[ ["Border colour"] = "",--]] 
+		["Border colour"] = "Border colour",
 		--[[Translation missing --]]
-		--[[ ["Border width"] = "",--]] 
+		["Border width"] = "Border width",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		--[[Translation missing --]]
-		--[[ ["Clickable"] = "",--]] 
+		["Clickable"] = "Clickable",
 		--[[Translation missing --]]
-		--[[ ["DIALOG"] = "",--]] 
+		["DIALOG"] = "DIALOG",
 		--[[Translation missing --]]
-		--[[ ["Editbox options."] = "",--]] 
+		["Editbox options."] = "Editbox options.",
 		--[[Translation missing --]]
-		--[[ ["Enable Arrowkeys"] = "",--]] 
+		["Enable Arrowkeys"] = "Enable Arrowkeys",
 		--[[Translation missing --]]
-		--[[ ["Enable using arrowkeys in editbox without the alt key."] = "",--]] 
+		["Enable using arrowkeys in editbox without the alt key."] = "Enable using arrowkeys in editbox without the alt key.",
 		--[[Translation missing --]]
-		--[[ ["Hide Border"] = "",--]] 
+		["Hide Border"] = "Hide Border",
 		--[[Translation missing --]]
-		--[[ ["Hide the border around the edit box."] = "",--]] 
+		["Hide the border around the edit box."] = "Hide the border around the edit box.",
 		--[[Translation missing --]]
-		--[[ ["Hide the edit box after you have pressed enter."] = "",--]] 
+		["Hide the edit box after you have pressed enter."] = "Hide the edit box after you have pressed enter.",
 		--[[Translation missing --]]
-		--[[ ["HIGH"] = "",--]] 
+		["HIGH"] = "HIGH",
 		--[[Translation missing --]]
-		--[[ ["Lock editbox position if undocked."] = "",--]] 
+		["Lock editbox position if undocked."] = "Lock editbox position if undocked.",
 		--[[Translation missing --]]
-		--[[ ["Lock Position"] = "",--]] 
+		["Lock Position"] = "Lock Position",
 		--[[Translation missing --]]
-		--[[ ["LOW"] = "",--]] 
+		["LOW"] = "LOW",
 		--[[Translation missing --]]
-		--[[ ["MEDIUM"] = "",--]] 
+		["MEDIUM"] = "MEDIUM",
 		--[[Translation missing --]]
-		--[[ ["OriginalEditbox"] = "",--]] 
+		["OriginalEditbox"] = "OriginalEditbox",
 		--[[Translation missing --]]
-		--[[ ["Padding"] = "",--]] 
+		["Padding"] = "Padding",
 		--[[Translation missing --]]
-		--[[ ["Set Alpha"] = "",--]] 
+		["Set Alpha"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Set Strata"] = "",--]] 
+		["Set Strata"] = "Set Strata",
 		--[[Translation missing --]]
-		--[[ ["Set the alpha of the editbox."] = "",--]] 
+		["Set the alpha of the editbox."] = "Set the alpha of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the amount of padding inside the edit box"] = "",--]] 
+		["Set the amount of padding inside the edit box"] = "Set the amount of padding inside the edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box background colour"] = "",--]] 
+		["Set the edit box background colour"] = "Set the edit box background colour",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box border colour"] = "",--]] 
+		["Set the edit box border colour"] = "Set the edit box border colour",
 		--[[Translation missing --]]
-		--[[ ["Set the frame strata of the editbox."] = "",--]] 
+		["Set the frame strata of the editbox."] = "Set the frame strata of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the position of the editbox."] = "",--]] 
+		["Set the position of the editbox."] = "Set the position of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the texture of the chat edit box"] = "",--]] 
+		["Set the texture of the chat edit box"] = "Set the texture of the chat edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the edit box's border"] = "",--]] 
+		["Set the width of the edit box's border"] = "Set the width of the edit box's border",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the editbox."] = "",--]] 
+		["Set the width of the editbox."] = "Set the width of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		--[[Translation missing --]]
-		--[[ ["Texture"] = "",--]] 
+		["Texture"] = "Texture",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top",
 		--[[Translation missing --]]
-		--[[ ["Undocked"] = "",--]] 
+		["Undocked"] = "Undocked",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		--[[Translation missing --]]
-		--[[ ["Autohide"] = "",--]] 
+		["Autohide"] = "Autohide",
 		--[[Translation missing --]]
-		--[[ ["BACKGROUND"] = "",--]] 
+		["BACKGROUND"] = "BACKGROUND",
 		--[[Translation missing --]]
-		--[[ ["Bar colour"] = "",--]] 
+		["Bar colour"] = "Bar colour",
 		--[[Translation missing --]]
-		--[[ ["Border colour"] = "",--]] 
+		["Border colour"] = "Border colour",
 		--[[Translation missing --]]
-		--[[ ["Border width"] = "",--]] 
+		["Border width"] = "Border width",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		--[[Translation missing --]]
-		--[[ ["Clickable"] = "",--]] 
+		["Clickable"] = "Clickable",
 		--[[Translation missing --]]
-		--[[ ["DIALOG"] = "",--]] 
+		["DIALOG"] = "DIALOG",
 		--[[Translation missing --]]
-		--[[ ["Editbox options."] = "",--]] 
+		["Editbox options."] = "Editbox options.",
 		--[[Translation missing --]]
-		--[[ ["Enable Arrowkeys"] = "",--]] 
+		["Enable Arrowkeys"] = "Enable Arrowkeys",
 		--[[Translation missing --]]
-		--[[ ["Enable using arrowkeys in editbox without the alt key."] = "",--]] 
+		["Enable using arrowkeys in editbox without the alt key."] = "Enable using arrowkeys in editbox without the alt key.",
 		--[[Translation missing --]]
-		--[[ ["Hide Border"] = "",--]] 
+		["Hide Border"] = "Hide Border",
 		--[[Translation missing --]]
-		--[[ ["Hide the border around the edit box."] = "",--]] 
+		["Hide the border around the edit box."] = "Hide the border around the edit box.",
 		--[[Translation missing --]]
-		--[[ ["Hide the edit box after you have pressed enter."] = "",--]] 
+		["Hide the edit box after you have pressed enter."] = "Hide the edit box after you have pressed enter.",
 		--[[Translation missing --]]
-		--[[ ["HIGH"] = "",--]] 
+		["HIGH"] = "HIGH",
 		--[[Translation missing --]]
-		--[[ ["Lock editbox position if undocked."] = "",--]] 
+		["Lock editbox position if undocked."] = "Lock editbox position if undocked.",
 		--[[Translation missing --]]
-		--[[ ["Lock Position"] = "",--]] 
+		["Lock Position"] = "Lock Position",
 		--[[Translation missing --]]
-		--[[ ["LOW"] = "",--]] 
+		["LOW"] = "LOW",
 		--[[Translation missing --]]
-		--[[ ["MEDIUM"] = "",--]] 
+		["MEDIUM"] = "MEDIUM",
 		--[[Translation missing --]]
-		--[[ ["OriginalEditbox"] = "",--]] 
+		["OriginalEditbox"] = "OriginalEditbox",
 		--[[Translation missing --]]
-		--[[ ["Padding"] = "",--]] 
+		["Padding"] = "Padding",
 		--[[Translation missing --]]
-		--[[ ["Set Alpha"] = "",--]] 
+		["Set Alpha"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Set Strata"] = "",--]] 
+		["Set Strata"] = "Set Strata",
 		--[[Translation missing --]]
-		--[[ ["Set the alpha of the editbox."] = "",--]] 
+		["Set the alpha of the editbox."] = "Set the alpha of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the amount of padding inside the edit box"] = "",--]] 
+		["Set the amount of padding inside the edit box"] = "Set the amount of padding inside the edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box background colour"] = "",--]] 
+		["Set the edit box background colour"] = "Set the edit box background colour",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box border colour"] = "",--]] 
+		["Set the edit box border colour"] = "Set the edit box border colour",
 		--[[Translation missing --]]
-		--[[ ["Set the frame strata of the editbox."] = "",--]] 
+		["Set the frame strata of the editbox."] = "Set the frame strata of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the position of the editbox."] = "",--]] 
+		["Set the position of the editbox."] = "Set the position of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the texture of the chat edit box"] = "",--]] 
+		["Set the texture of the chat edit box"] = "Set the texture of the chat edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the edit box's border"] = "",--]] 
+		["Set the width of the edit box's border"] = "Set the width of the edit box's border",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the editbox."] = "",--]] 
+		["Set the width of the editbox."] = "Set the width of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		--[[Translation missing --]]
-		--[[ ["Texture"] = "",--]] 
+		["Texture"] = "Texture",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top",
 		--[[Translation missing --]]
-		--[[ ["Undocked"] = "",--]] 
+		["Undocked"] = "Undocked",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		--[[Translation missing --]]
-		--[[ ["Autohide"] = "",--]] 
+		["Autohide"] = "Autohide",
 		--[[Translation missing --]]
-		--[[ ["BACKGROUND"] = "",--]] 
+		["BACKGROUND"] = "BACKGROUND",
 		["Bar colour"] = "Couleur de la barre",
 		["Border colour"] = "Couleur de la bordure",
 		["Border width"] = "Épaisseur de la bordure",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		["Clickable"] = "Clicable",
 		--[[Translation missing --]]
-		--[[ ["DIALOG"] = "",--]] 
+		["DIALOG"] = "DIALOG",
 		["Editbox options."] = "Options de la fenêtre d'édition.",
 		--[[Translation missing --]]
-		--[[ ["Enable Arrowkeys"] = "",--]] 
+		["Enable Arrowkeys"] = "Enable Arrowkeys",
 		--[[Translation missing --]]
-		--[[ ["Enable using arrowkeys in editbox without the alt key."] = "",--]] 
+		["Enable using arrowkeys in editbox without the alt key."] = "Enable using arrowkeys in editbox without the alt key.",
 		["Hide Border"] = "Cacher la bordure",
 		["Hide the border around the edit box."] = "Cacher la bordure autour de l'invite de discussion.",
 		["Hide the edit box after you have pressed enter."] = "Cacher l'invite de discussion après avoir fait Entrée.",
 		["HIGH"] = "HAUT",
 		--[[Translation missing --]]
-		--[[ ["Lock editbox position if undocked."] = "",--]] 
+		["Lock editbox position if undocked."] = "Lock editbox position if undocked.",
 		["Lock Position"] = "Verrouiller la position",
 		["LOW"] = "BAS",
 		["MEDIUM"] = "MILIEU",
 		--[[Translation missing --]]
-		--[[ ["OriginalEditbox"] = "",--]] 
+		["OriginalEditbox"] = "OriginalEditbox",
 		--[[Translation missing --]]
-		--[[ ["Padding"] = "",--]] 
+		["Padding"] = "Padding",
 		["Set Alpha"] = "Définir la transparance",
 		["Set Position"] = "Définir la position",
 		["Set Strata"] = "Définir la couche",
@@ -348,25 +351,26 @@ L=
 		["Set the edit box background colour"] = "Définir la couleur de fond de la boite d'édition",
 		["Set the edit box border colour"] = "Définir la couleur de la bordure de la boite d'édition",
 		--[[Translation missing --]]
-		--[[ ["Set the frame strata of the editbox."] = "",--]] 
+		["Set the frame strata of the editbox."] = "Set the frame strata of the editbox.",
 		["Set the position of the editbox."] = "Définir la position de l'invite de discussion.",
 		["Set the texture of the chat edit box"] = "Définir la texture de l'invite de discussion",
 		["Set the width of the edit box's border"] = "Définir la largeur de la bordure de l'invite de discussion",
 		["Set the width of the editbox."] = "Définir la largeur de l'invite de discussion.",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		["Texture"] = true,
 		["Top"] = "Haut",
 		--[[Translation missing --]]
-		--[[ ["Undocked"] = "",--]] 
+		["Undocked"] = "Undocked",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "Automatisch verbergen",
 		["BACKGROUND"] = "HINTERGRUND",
@@ -408,10 +412,11 @@ L=
 		["Undocked"] = "Abgekoppelt",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "자동 숨기기",
 		["BACKGROUND"] = true,
@@ -453,91 +458,93 @@ L=
 		["Undocked"] = "고정안함",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		--[[Translation missing --]]
-		--[[ ["Autohide"] = "",--]] 
+		["Autohide"] = "Autohide",
 		--[[Translation missing --]]
-		--[[ ["BACKGROUND"] = "",--]] 
+		["BACKGROUND"] = "BACKGROUND",
 		--[[Translation missing --]]
-		--[[ ["Bar colour"] = "",--]] 
+		["Bar colour"] = "Bar colour",
 		--[[Translation missing --]]
-		--[[ ["Border colour"] = "",--]] 
+		["Border colour"] = "Border colour",
 		--[[Translation missing --]]
-		--[[ ["Border width"] = "",--]] 
+		["Border width"] = "Border width",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		--[[Translation missing --]]
-		--[[ ["Clickable"] = "",--]] 
+		["Clickable"] = "Clickable",
 		--[[Translation missing --]]
-		--[[ ["DIALOG"] = "",--]] 
+		["DIALOG"] = "DIALOG",
 		--[[Translation missing --]]
-		--[[ ["Editbox options."] = "",--]] 
+		["Editbox options."] = "Editbox options.",
 		--[[Translation missing --]]
-		--[[ ["Enable Arrowkeys"] = "",--]] 
+		["Enable Arrowkeys"] = "Enable Arrowkeys",
 		--[[Translation missing --]]
-		--[[ ["Enable using arrowkeys in editbox without the alt key."] = "",--]] 
+		["Enable using arrowkeys in editbox without the alt key."] = "Enable using arrowkeys in editbox without the alt key.",
 		--[[Translation missing --]]
-		--[[ ["Hide Border"] = "",--]] 
+		["Hide Border"] = "Hide Border",
 		--[[Translation missing --]]
-		--[[ ["Hide the border around the edit box."] = "",--]] 
+		["Hide the border around the edit box."] = "Hide the border around the edit box.",
 		--[[Translation missing --]]
-		--[[ ["Hide the edit box after you have pressed enter."] = "",--]] 
+		["Hide the edit box after you have pressed enter."] = "Hide the edit box after you have pressed enter.",
 		--[[Translation missing --]]
-		--[[ ["HIGH"] = "",--]] 
+		["HIGH"] = "HIGH",
 		--[[Translation missing --]]
-		--[[ ["Lock editbox position if undocked."] = "",--]] 
+		["Lock editbox position if undocked."] = "Lock editbox position if undocked.",
 		--[[Translation missing --]]
-		--[[ ["Lock Position"] = "",--]] 
+		["Lock Position"] = "Lock Position",
 		--[[Translation missing --]]
-		--[[ ["LOW"] = "",--]] 
+		["LOW"] = "LOW",
 		--[[Translation missing --]]
-		--[[ ["MEDIUM"] = "",--]] 
+		["MEDIUM"] = "MEDIUM",
 		--[[Translation missing --]]
-		--[[ ["OriginalEditbox"] = "",--]] 
+		["OriginalEditbox"] = "OriginalEditbox",
 		--[[Translation missing --]]
-		--[[ ["Padding"] = "",--]] 
+		["Padding"] = "Padding",
 		--[[Translation missing --]]
-		--[[ ["Set Alpha"] = "",--]] 
+		["Set Alpha"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Set Strata"] = "",--]] 
+		["Set Strata"] = "Set Strata",
 		--[[Translation missing --]]
-		--[[ ["Set the alpha of the editbox."] = "",--]] 
+		["Set the alpha of the editbox."] = "Set the alpha of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the amount of padding inside the edit box"] = "",--]] 
+		["Set the amount of padding inside the edit box"] = "Set the amount of padding inside the edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box background colour"] = "",--]] 
+		["Set the edit box background colour"] = "Set the edit box background colour",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box border colour"] = "",--]] 
+		["Set the edit box border colour"] = "Set the edit box border colour",
 		--[[Translation missing --]]
-		--[[ ["Set the frame strata of the editbox."] = "",--]] 
+		["Set the frame strata of the editbox."] = "Set the frame strata of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the position of the editbox."] = "",--]] 
+		["Set the position of the editbox."] = "Set the position of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the texture of the chat edit box"] = "",--]] 
+		["Set the texture of the chat edit box"] = "Set the texture of the chat edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the edit box's border"] = "",--]] 
+		["Set the width of the edit box's border"] = "Set the width of the edit box's border",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the editbox."] = "",--]] 
+		["Set the width of the editbox."] = "Set the width of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		--[[Translation missing --]]
-		--[[ ["Texture"] = "",--]] 
+		["Texture"] = "Texture",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top",
 		--[[Translation missing --]]
-		--[[ ["Undocked"] = "",--]] 
+		["Undocked"] = "Undocked",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX",L)
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "Авто-сокрытие",
 		["BACKGROUND"] = "ФОН",
@@ -579,9 +586,10 @@ L=
 		["Undocked"] = "Отстыкован",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "自动隐藏",
 		["BACKGROUND"] = "背景",
@@ -623,78 +631,80 @@ L=
 		["Undocked"] = "非停靠",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "Auto Ocultar",
 		["BACKGROUND"] = "FONDO",
 		["Bar colour"] = "Color de la barra",
 		--[[Translation missing --]]
-		--[[ ["Border colour"] = "",--]] 
+		["Border colour"] = "Border colour",
 		["Border width"] = "Ancho del borde",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		["Clickable"] = "Clickeable",
 		["DIALOG"] = "DIÁLOGO",
 		--[[Translation missing --]]
-		--[[ ["Editbox options."] = "",--]] 
+		["Editbox options."] = "Editbox options.",
 		["Enable Arrowkeys"] = "Habilitar flechas del teclado",
 		["Enable using arrowkeys in editbox without the alt key."] = "Permite usar las flechas del teclado en la caja de texto sin usar la tecla alt.",
 		["Hide Border"] = "Ocultar Borde",
 		["Hide the border around the edit box."] = "Ocultar el borde alrededor de la caja de edición.",
 		["Hide the edit box after you have pressed enter."] = "Oculta la caja de texto después de pulsar enter.",
 		--[[Translation missing --]]
-		--[[ ["HIGH"] = "",--]] 
+		["HIGH"] = "HIGH",
 		["Lock editbox position if undocked."] = "Bloquea la posición de la caja de texto si está desbloqueada.",
 		["Lock Position"] = "Bloquear posición",
 		--[[Translation missing --]]
-		--[[ ["LOW"] = "",--]] 
+		["LOW"] = "LOW",
 		--[[Translation missing --]]
-		--[[ ["MEDIUM"] = "",--]] 
+		["MEDIUM"] = "MEDIUM",
 		--[[Translation missing --]]
-		--[[ ["OriginalEditbox"] = "",--]] 
+		["OriginalEditbox"] = "OriginalEditbox",
 		--[[Translation missing --]]
-		--[[ ["Padding"] = "",--]] 
+		["Padding"] = "Padding",
 		--[[Translation missing --]]
-		--[[ ["Set Alpha"] = "",--]] 
+		["Set Alpha"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Set Strata"] = "",--]] 
+		["Set Strata"] = "Set Strata",
 		--[[Translation missing --]]
-		--[[ ["Set the alpha of the editbox."] = "",--]] 
+		["Set the alpha of the editbox."] = "Set the alpha of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the amount of padding inside the edit box"] = "",--]] 
+		["Set the amount of padding inside the edit box"] = "Set the amount of padding inside the edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box background colour"] = "",--]] 
+		["Set the edit box background colour"] = "Set the edit box background colour",
 		--[[Translation missing --]]
-		--[[ ["Set the edit box border colour"] = "",--]] 
+		["Set the edit box border colour"] = "Set the edit box border colour",
 		--[[Translation missing --]]
-		--[[ ["Set the frame strata of the editbox."] = "",--]] 
+		["Set the frame strata of the editbox."] = "Set the frame strata of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the position of the editbox."] = "",--]] 
+		["Set the position of the editbox."] = "Set the position of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set the texture of the chat edit box"] = "",--]] 
+		["Set the texture of the chat edit box"] = "Set the texture of the chat edit box",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the edit box's border"] = "",--]] 
+		["Set the width of the edit box's border"] = "Set the width of the edit box's border",
 		--[[Translation missing --]]
-		--[[ ["Set the width of the editbox."] = "",--]] 
+		["Set the width of the editbox."] = "Set the width of the editbox.",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		--[[Translation missing --]]
-		--[[ ["Texture"] = "",--]] 
+		["Texture"] = "Texture",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top",
 		--[[Translation missing --]]
-		--[[ ["Undocked"] = "",--]] 
+		["Undocked"] = "Undocked",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
-L=
-{
+
+L = {
 	["OriginalEditbox"] = {
 		["Autohide"] = "自動隱藏",
 		["BACKGROUND"] = "背景",
@@ -704,20 +714,20 @@ L=
 		["Border width"] = "邊框寬度",
 		["Bottom"] = "底部",
 		--[[Translation missing --]]
-		--[[ ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",--]] 
+		["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "Click the edit box to open it up for editing. Only available if Autohide is disabled.",
 		["Clickable"] = "可用點擊",
 		["DIALOG"] = true,
 		["Editbox options."] = "編輯選項。",
 		["Enable Arrowkeys"] = "啟用箭頭鍵",
 		--[[Translation missing --]]
-		--[[ ["Enable using arrowkeys in editbox without the alt key."] = "",--]] 
+		["Enable using arrowkeys in editbox without the alt key."] = "Enable using arrowkeys in editbox without the alt key.",
 		["Hide Border"] = "隱藏邊緣",
 		["Hide the border around the edit box."] = "隱藏邊框環繞編輯框。",
 		--[[Translation missing --]]
-		--[[ ["Hide the edit box after you have pressed enter."] = "",--]] 
+		["Hide the edit box after you have pressed enter."] = "Hide the edit box after you have pressed enter.",
 		["HIGH"] = "高",
 		--[[Translation missing --]]
-		--[[ ["Lock editbox position if undocked."] = "",--]] 
+		["Lock editbox position if undocked."] = "Lock editbox position if undocked.",
 		["Lock Position"] = "鎖住位置",
 		["LOW"] = "低",
 		["MEDIUM"] = "中",
@@ -728,7 +738,7 @@ L=
 		["Set Strata"] = "設定階層",
 		["Set the alpha of the editbox."] = "設定編輯框透明度",
 		--[[Translation missing --]]
-		--[[ ["Set the amount of padding inside the edit box"] = "",--]] 
+		["Set the amount of padding inside the edit box"] = "Set the amount of padding inside the edit box",
 		["Set the edit box background colour"] = "設定編輯框背景色彩",
 		["Set the edit box border colour"] = "設定編輯框邊緣色彩",
 		["Set the frame strata of the editbox."] = "設定編輯框的顯示層級",
@@ -737,12 +747,13 @@ L=
 		["Set the width of the edit box's border"] = "設定輸入框邊緣寬度",
 		["Set the width of the editbox."] = "設定輸入框寬度",
 		--[[Translation missing --]]
-		--[[ ["Set Width (NB: only enabled if the editbox is undocked)"] = "",--]] 
+		["Set Width (NB: only enabled if the editbox is undocked)"] = "Set Width (NB: only enabled if the editbox is undocked)",
 		["Texture"] = "材質",
 		["Top"] = "頂部",
 		["Undocked"] = "取消停靠",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 end
 --@end-non-debug@

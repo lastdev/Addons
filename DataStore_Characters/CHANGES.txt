@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------
+r45 | thaokyaltoholic | 2020-02-09 09:59:03 +0000 (Sun, 09 Feb 2020) | 1 line
+Changed paths:
+   M /trunk/DataStore_Characters.toc
+
+8.2.001 Commit
+------------------------------------------------------------------------
+r44 | thaokyaltoholic | 2019-06-30 06:52:58 +0000 (Sun, 30 Jun 2019) | 1 line
+Changed paths:
+   M /trunk/DataStore_Characters.toc
+
+8.2.001 Commit
+------------------------------------------------------------------------
 r43 | thaoky.altoholic@yahoo.com | 2018-09-19 16:59:26 +0000 (Wed, 19 Sep 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Characters.lua

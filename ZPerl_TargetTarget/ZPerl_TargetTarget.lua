@@ -18,8 +18,6 @@ local UnitClassification = UnitClassification
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
 local UnitGUID = UnitGUID
-local UnitHealth = UnitHealth
-local UnitHealthMax = UnitHealthMax
 local UnitIsAFK = UnitIsAFK
 local UnitIsCharmed = UnitIsCharmed
 local UnitIsConnected = UnitIsConnected
@@ -55,7 +53,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 1121 $")
+end, "$Revision:  $")
 
 local buffSetup
 
@@ -83,33 +81,39 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "target")
 		end
-		if (conf.targettarget.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		end
-		if (conf.targettarget.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if (conf.targettarget.healprediction) then
+				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
+			else
+				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+			end
+			if (conf.targettarget.absorbs) then
+				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
+			else
+				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+			end
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
 		self.partyid = "focustarget"
-		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+		end
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "focus")
 		end
-		if (conf.focustarget.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "focus")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		end
-		if (conf.focustarget.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "focus")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if (conf.focustarget.healprediction) then
+				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "focus")
+			else
+				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+			end
+			if (conf.focustarget.absorbs) then
+				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "focus")
+			else
+				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+			end
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_PetTarget) then
@@ -118,15 +122,17 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "pet")
 		end
-		if (conf.pettarget.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		end
-		if (conf.pettarget.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if (conf.pettarget.healprediction) then
+				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet")
+			else
+				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+			end
+			if (conf.pettarget.absorbs) then
+				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet")
+			else
+				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+			end
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	else
@@ -135,15 +141,17 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "target")
 		end
-		if (conf.targettarget.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		end
-		if (conf.targettarget.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if (conf.targettarget.healprediction) then
+				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
+			else
+				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+			end
+			if (conf.targettarget.absorbs) then
+				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
+			else
+				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+			end
 		end
 		self:SetScript("OnUpdate", XPerl_TargetTargetTarget_OnUpdate)
 	end
@@ -207,7 +215,8 @@ end
 
 -- XPerl_TargetTarget_HighlightCallback
 function XPerl_TargetTarget_HighlightCallback(self, updateGUID)
-	if UnitGUID(self.partyid) == updateGUID and UnitIsFriend("player", self.partyid) then
+	local partyid = self.partyid
+	if UnitGUID(partyid) == updateGUID and UnitIsFriend("player", partyid) then
 		XPerl_Highlight:SetHighlight(self, updateGUID)
 	end
 end
@@ -215,13 +224,23 @@ end
 -------------------------
 -- The Update Function --
 -------------------------
-function XPerl_TargetTarget_UpdatePVP(self)
-	local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid)))
+local function XPerl_TargetTarget_UpdatePVP(self)
+	local partyid = self.partyid
+	local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(partyid) and "FFA") or (UnitIsPVP(partyid) and (UnitFactionGroup(partyid) ~= "Neutral") and UnitFactionGroup(partyid)))
 	if pvp then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()
 	else
 		self.nameFrame.pvpIcon:Hide()
+	end
+end
+
+-- XPerl_TargetTarget_BuffPositions
+local function XPerl_TargetTarget_BuffPositions(self)
+	if (self.partyid and UnitCanAttack("player", self.partyid)) then
+		XPerl_Unit_BuffPositions(self, self.buffFrame.debuff, self.buffFrame.buff, self.conf.debuffs.size, self.conf.buffs.size)
+	else
+		XPerl_Unit_BuffPositions(self, self.buffFrame.buff, self.buffFrame.debuff, self.conf.buffs.size, self.conf.debuffs.size)
 	end
 end
 
@@ -238,7 +257,9 @@ local function XPerl_TargetTarget_Buff_UpdateAll(self)
 		self.debuffFrame:Hide()
 	end
 	if self.conf.buffs.enable or self.conf.debuffs.enable then
-		XPerl_Targets_BuffUpdate(self)
+		--XPerl_Targets_BuffUpdate(self)
+		XPerl_Unit_UpdateBuffs(self, nil, nil, self.conf.buffs.castable, self.conf.debuffs.curable)
+		XPerl_TargetTarget_BuffPositions(self)
 	end
 end
 
@@ -265,7 +286,7 @@ end
 function XPerl_TargetTarget_UpdateDisplay(self, force)
 	local partyid = self.partyid
 	--[[if not UnitExists(partyid) then
-		self.targethp = UnitHealth(partyid)
+		self.targethp = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or XPerl_Unit_GetHealth(self))
 		self.targetmana = UnitPower(partyid)
 		self.guid = UnitGUID(partyid)
 		self.afk = UnitIsAFK(partyid)
@@ -283,7 +304,7 @@ function XPerl_TargetTarget_UpdateDisplay(self, force)
 			XPerl_TargetTarget_UpdatePVP(self)
 
 			-- Save these, so we know whether to update the frame later
-			self.targethp = UnitHealth(partyid)
+			self.targethp = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or XPerl_Unit_GetHealth(self))
 			self.targetmanatype = UnitPowerType(partyid)
 			self.targetmana = UnitPower(partyid)
 			self.guid = UnitGUID(partyid)
@@ -336,7 +357,7 @@ function XPerl_TargetTarget_UpdateDisplay(self, force)
 
 			XPerl_TargetTarget_RaidIconUpdate(self)
 
-			--XPerl_Targets_BuffPositions(self)		-- Moved to option set to save garbage production
+			--XPerl_TargetTarget_BuffPositions(self)		-- Moved to option set to save garbage production
 			XPerl_TargetTarget_Buff_UpdateAll(self)
 
 			XPerl_UpdateSpellRange(self, partyid)
@@ -351,7 +372,8 @@ end
 
 -- XPerl_TargetTarget_Update_Control
 local function XPerl_TargetTarget_Update_Control(self)
-	if UnitIsVisible(self.partyid) and UnitIsCharmed(self.partyid) then
+	local partyid = self.partyid
+	if UnitIsVisible(partyid) and UnitIsCharmed(partyid) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()
@@ -372,7 +394,7 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 	local partyid = self.partyid
 
 	local newGuid = UnitGUID(partyid)
-	local newHP = UnitHealth(partyid)
+	local newHP = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or XPerl_Unit_GetHealth(self))
 	local newManaType = UnitPowerType(partyid)
 	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
@@ -405,11 +427,15 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 		XPerl_TargetTarget_UpdateDisplay(self)
 	else
 		self.time = elapsed + self.time
-		if self.time >= 0.2 then
+		if self.time >= 0.5 then
 			XPerl_TargetTarget_Update_Combat(self)
 			XPerl_TargetTarget_Update_Control(self)
 			XPerl_TargetTarget_UpdatePVP(self)
-			XPerl_TargetTarget_Buff_UpdateAll(self)
+			if self.conf.buffs.enable or self.conf.debuffs.enable then
+				XPerl_Unit_UpdateBuffs(self, nil, nil, self.conf.buffs.castable, self.conf.debuffs.curable)
+				XPerl_TargetTarget_BuffPositions(self)
+			end
+			--XPerl_TargetTarget_Buff_UpdateAll(self)
 			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 			XPerl_UpdateSpellRange(self, partyid)
 			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))
@@ -423,7 +449,7 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 	local partyid = self.partyid
 
 	local newGuid = UnitGUID(partyid)
-	local newAFK = UnitIsAFK(partyid)
+	local newHP = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or XPerl_Unit_GetHealth(self))
 	local newManaType = UnitPowerType(partyid)
 	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
@@ -456,11 +482,15 @@ function XPerl_TargetTargetTarget_OnUpdate(self, elapsed)
 		XPerl_TargetTarget_UpdateDisplay(self)
 	else
 		self.time = elapsed + self.time
-		if self.time >= 0.2 then
+		if self.time >= 0.5 then
 			XPerl_TargetTarget_Update_Combat(self)
 			XPerl_TargetTarget_Update_Control(self)
 			XPerl_TargetTarget_UpdatePVP(self)
-			XPerl_TargetTarget_Buff_UpdateAll(self)
+			if self.conf.buffs.enable or self.conf.debuffs.enable then
+				XPerl_Unit_UpdateBuffs(self, nil, nil, self.conf.buffs.castable, self.conf.debuffs.curable)
+				XPerl_TargetTarget_BuffPositions(self)
+			end
+			--XPerl_TargetTarget_Buff_UpdateAll(self)
 			XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 			XPerl_UpdateSpellRange(self, partyid)
 			XPerl_Highlight:SetHighlight(self, UnitGUID(partyid))

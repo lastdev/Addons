@@ -1,8 +1,8 @@
 ## Title: MaxDps
 ## Notes: Rotation helper framework.
-## Version: 8.1.3
+## Version: 8.3.0
 ## Author: Kaminaris
-## Interface: 80100
+## Interface: 80300
 ## SavedVariables: MaxDpsOptions
 ## OptionalDependencies: Bartender4, ElvUI, ButtonForge, SVUI_ActionBars, G15Buttons, SyncUI, LUI, Dominos, DiabolicUI
 ## X-Curse-Project-ID: 91970
@@ -20,10 +20,11 @@ Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.lua
 Libs\ForAllIndentsAndPurposes.lua
 Libs\StdUi\StdUi.xml
 
-core.lua
-options.lua
-buttons.lua
-helper.lua
-timetodie.lua
-Modules/custom.lua
-Modules/profiler.lua
+Core.lua
+Options.lua
+Buttons.lua
+Helper.lua
+TimeToDie.lua
+Modules/Custom.lua
+Modules/Window.lua
+Modules/Profiler.lua

@@ -1,8 +1,8 @@
--- Diablohu(diablohudream@gmail.com) 
+-- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2019/02/22
+-- Last update: 2019/08/09
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -111,9 +111,9 @@ L.CombatMessages			= "战斗信息设置"
 L.ShowEngageMessage 		= "在聊天窗口中显示开战信息"
 L.ShowDefeatMessage 		= "在聊天窗口中显示击杀信息"
 L.ShowGuildMessages 		= "在聊天窗口中显示工会开战，击杀，灭团信息"
+L.ShowGuildMessagesPlus		= "显示工会中的M+以上难度的开战，击杀，灭团信息(需要团队选项)"
 L.WhisperMessages			= "密语信息设置"
 L.AutoRespond 				= "在战斗中自动回复私聊"
-L.EnableStatus 				= "回复“status”私聊当前战斗信息"
 L.WhisperStats 				= "在回复的私聊中包含击杀或灭团次数统计信息"
 L.DisableStatusWhisper 		= "屏蔽全团成员的status私聊(需要团长权限)。只对普通/英雄/神话团队和挑战/神话五人小队有效。"
 L.DisableGuildStatus 		= "屏蔽通报团队进度信息到工会(需要团长权限)。"
@@ -223,11 +223,11 @@ L.SWFAll					= "当特殊警报使用任何默认声音时"
 L.SpecWarn_AlwaysVoice		= "总是播放所有语音警告(覆盖Boss特定的选项,建议指挥使用)"
 --TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
 L.Area_GetVEM				= "获取夏一可语音包(普通话最新)"
-L.VEMDownload				= "|cFF73C2FBhttps://wow.curseforge.com/projects/dbm-voicepack-yike|r"
+L.VEMDownload				= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/dbm-voicepack-yike|r"
 L.Area_BrowseOtherVP		= "获取其他语音包"
-L.BrowseOtherVPs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+voice|r"
+L.BrowseOtherVPs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "获取其他倒计时语音包"
-L.BrowseOtherCTs			= "|cFF73C2FBhttps://wow.curseforge.com/search?search=dbm+count+pack|r"
+L.BrowseOtherCTs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+count+pack|r"
 
 -- Tab: Event Sounds
 L.Panel_EventSounds			= "事件音效"
@@ -256,7 +256,8 @@ L.SpamBlockNoSetIcon		= "不在目标上设定标记"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
-L.SpamBlockNoNameplate		= "不要显示姓名面板高亮"
+L.SpamBlockNoNameplate		= "不要显示姓名板高亮(完全取消)"
+L.SpamBlockNoNameplateLines	= "不要显示姓名版高亮(效果图标继续显示)"
 L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
 L.SpamBlockNoYells			= "不要再战斗中大喊"
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
@@ -270,6 +271,7 @@ L.SpamBlockNoRangeRestore	= "当Boss模块隐藏距离窗体时不重置窗体�
 L.Area_SpamFilter			= "信息过滤设置"
 L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
+L.FilterVoidFormSay			= "当在虚无状态下，不播发位置或报数喊叫"
 
 L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
@@ -299,15 +301,11 @@ L.HideQuestTooltips			= "Boss战斗中隐藏鼠标提示窗体(tooltips)中的�
 L.HideTooltips				= "Boss战斗中完全隐藏鼠标提示窗体(tooltips)"
 L.DisableSFX				= "Boss战斗中关闭音效"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
+L.OnlyFight					= "当每个动画被播放国一次后，只在战斗中放"
 L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
 L.CombatOnly				= "在任何战斗中隐藏"
 L.RaidCombat				= "只在Boss战斗中隐藏"
-L.HideBonusHeader			= "隐藏奖励拾取投掷"
-L.TrivialContent			= "低于5M掉落"--Basically anything below 340
-L.NormalRaider				= "低于5层大秘和随机团掉落"--Basically, anything below 355
-L.HeroicRaider				= "低于10层大秘，H副本"--Basically anything below 370
-L.MythicRaider				= "M副本"--Basically anything below 385
 
 L.Panel_ExtraFeatures		= "其他功能"
 --
@@ -331,7 +329,7 @@ L.ShowQueuePop				= "显示随机小队/团队查找器确认计时条"
 L.Area_AutoLogging			= "自动日志记录选项"
 L.AutologBosses				= "自动采用官方格式记录日志。 (使用 /dbm pull 可提前记录并使得记录更准确，如提前偷药水或是召唤大军。)"
 L.AdvancedAutologBosses		= "自动采用 Transcriptor 记录日志"
-L.LogOnlyRaidBosses			= "只记录团队Boss，而不记录随机团队，5人本，场景战役。"
+L.LogOnlyNonTrivial			= "只记录团队Boss，而不记录随机团队，5人本，场景战役。"
 --
 L.Area_3rdParty				= "第三方插件选项"
 L.ShowBBOnCombatStart		= "战斗开始时使用Big Brother的buff检测"
@@ -342,7 +340,6 @@ L.AutoAcceptGuildInvite		= "自动接受同工会成员的组队邀请"
 L.Area_Advanced				= "高级选项"
 L.FakeBW					= "当检查Bigwig时，假装DBM就是Bigwig"
 L.AITimer					= "DBM为没遇见过的战斗使用人工智能自动产生计时器(在初期的Beta或PTR的Boss测试非常有帮助)。此功能不会对多目标技能生效。"
-L.AutoCorrectTimer			= "自动校正时间过长的计时器(适合在公会正在进行全新副本而DBM模块还没被更新至可靠的程度)。这选项可能会使某些计时器错乱，如Boss在阶段转换时重置技能CD而DBM实在无能为力o_O"
 
 L.Panel_Profile				= "配置文件"
 L.Area_CreateProfile        = "创建DBM核心配置"

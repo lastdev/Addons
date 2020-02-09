@@ -4,7 +4,7 @@
 local ADDON_NAME, Addon = ...
 local ThreatPlates = Addon.ThreatPlates
 
-local Widget = Addon:NewWidget("BossMods")
+local Widget = Addon.Widgets:NewWidget("BossMods")
 
 ---------------------------------------------------------------------------------------------------
 -- Imported functions and constants
@@ -12,7 +12,6 @@ local Widget = Addon:NewWidget("BossMods")
 
 -- Lua APIs
 local floor = math.floor
-local pairs = pairs
 
 -- WoW APIs
 local CreateFrame = CreateFrame
@@ -26,7 +25,6 @@ local TidyPlatesThreat = TidyPlatesThreat
 
 --
 local DBM = DBM
-
 local GUIDAuraList = {}
 local ConfigDB
 local EnabledByBossmod = false
@@ -98,7 +96,6 @@ local function UpdateFrameWithAuras(widget_frame, unit_auras)
     if not aura_texture then
       aura_texture = CreateAuraTexture(widget_frame, index)
       widget_frame.Auras[index] = aura_texture
-
     end
 
     if aura_info[2] then -- aura with duration
@@ -144,7 +141,6 @@ local function OnUpdateBossModsWidget(widget_frame, elapsed)
   end
   widget_frame.LastUpdate = 0
 
-  --not Widget:IsEnabled() or not Widget:EnabledForStyle(widget_frame:GetParent().stylename) or
   if not EnabledByBossmod then
     widget_frame:Hide()
     return
@@ -163,14 +159,8 @@ end
 -- Callback functions for DBM
 ---------------------------------------------------------------------------------------------------
 
--- Events from: DBM
---   DBM:FireEvent("BossMod_DisableFriendlyNameplates")
---   DBM:FireEvent("BossMod_DisableHostileNameplates")
---   DBM:FireEvent("BossMod_ShowNameplateAura", isGUID, unit, currentTexture, duration, desaturate)
---   DBM:FireEvent("BossMod_HideNameplateAura", isGUID, unit, currentTexture)
-
--- DBM:FireEvent("BossMod_ShowNameplateAura", isGUID, unit, currentTexture, duration, desaturate)
-local function BossMod_ShowNameplateAura(msg, is_guid, unit, aura_texture, duration, desaturate)
+-- DBM:FireEvent("BossMod_ShowNameplateAura", isGUID, unit, currentTexture, duration, desaturate, addLine, lineColor)
+local function BossMod_ShowNameplateAura(msg, is_guid, unit, aura_texture, duration, desaturate, addLine, lineColor)
   local guid = (is_guid and unit) or UnitGUID(unit)
   if not guid then
     -- ThreatPlates.DEBUG('bossmods show discarded unmatched name: ' .. unit)
@@ -183,9 +173,10 @@ local function BossMod_ShowNameplateAura(msg, is_guid, unit, aura_texture, durat
   --   1: aura texture (spell id)
   --   2: time the aura ends
 
+  local no_auras = 0
   local unit_auras = GUIDAuraList[guid]
   if unit_auras then
-    local no_auras = #unit_auras
+    no_auras = #unit_auras
     if no_auras < MAX_AURAS_NO then
       for i = 1, no_auras do
         if unit_auras[i][1] == aura_texture then
@@ -197,18 +188,21 @@ local function BossMod_ShowNameplateAura(msg, is_guid, unit, aura_texture, durat
       -- append a new aura
       unit_auras[no_auras + 1] = {
         aura_texture,
-        (duration and (GetTime() + duration)) or nil
+        (duration and (GetTime() + duration)) or nil,
       }
     end
   else
     GUIDAuraList[guid] = {
       {
         aura_texture,
-        (duration and GetTime() + duration) or nil
+        (duration and GetTime() + duration) or nil,
       }
     }
     --guid_aura_list[guid] = unit_auras
+  end
 
+  -- Show frame is this is the first aura shown (no_auras == 0 in this case)
+  if no_auras == 0 then
     local plate = Addon.PlatesByGUID[guid]
     if plate then
       local widget_frame = plate.TPFrame.widgets["BossMods"]
@@ -259,7 +253,6 @@ local function BossMod_DisableHostileNameplates()
   GUIDAuraList = {}
 end
 
-
 ---------------------------------------------------------------------------------------------------
 -- Widget functions for creation and update
 ---------------------------------------------------------------------------------------------------
@@ -274,6 +267,7 @@ function Widget:Create(tp_frame)
   widget_frame:SetFrameLevel(tp_frame:GetFrameLevel() + 2)
   widget_frame.Auras = {}
   widget_frame.AurasNo = 0
+
   widget_frame.LastUpdate = 0.5
   widget_frame:SetScript("OnUpdate", OnUpdateBossModsWidget)
   --------------------------------------
@@ -360,8 +354,8 @@ function Addon:ConfigBossModsWidget()
   if not EnabledConfigMode then
     local guid = UnitGUID("target")
     if guid then
-      BossMod_ShowNameplateAura("Configuration Mode", true, guid, GetSpellTexture(241600), nil)
-      BossMod_ShowNameplateAura("Configuration Mode", true, guid, GetSpellTexture(207327), 7)
+      BossMod_ShowNameplateAura("Configuration Mode", true, guid, GetSpellTexture(241600), nil, false, true, {1, 1, 0.5, 1})
+      BossMod_ShowNameplateAura("Configuration Mode", true, guid, GetSpellTexture(207327), 7, false, true, {0, 0, 1, 1})
       BossMod_ShowNameplateAura("Configuration Mode", true, guid, GetSpellTexture(236513), 60)
 
       EnabledConfigMode = true

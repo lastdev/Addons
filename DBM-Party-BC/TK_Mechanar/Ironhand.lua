@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ironhand", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(19710)
 mod:SetEncounterID(1934)
 mod:SetModelID(21191)--Bad angle, but not terrible enough to disable i guess
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE"
 )
 
-local warnShadowpower       = mod:NewTargetAnnounce(35322, 3)
+local warnShadowpower       = mod:NewTargetNoFilterAnnounce(35322, 3)
 local WarnJackHammer		= mod:NewSpellAnnounce(39194, 4)
 
 local specWarnJackHammer	= mod:NewSpecialWarningRun(39194, "Melee", nil, nil, 4, 2)

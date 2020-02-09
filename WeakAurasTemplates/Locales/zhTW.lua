@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 if not(GetLocale() == "zhTW") then
   return
 end
@@ -30,7 +32,6 @@ local L = WeakAuras.L
 	L["Basic Show On Cooldown"] = "基本冷卻中顯示"
 	L["Bloodlust/Heroism"] = "嗜血/英勇"
 	L["buff"] = "種族特長"
-	L["Buff"] = "增益"
 	L["Buffs"] = "增益 BUFF"
 	L["Cancel"] = "取消"
 	L["Cast"] = "施放法術"
@@ -39,8 +40,10 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "次數和持續時間監控"
 	L["Charge Tracking"] = "次數監控"
 	L["cooldown"] = "冷卻"
+	L["Cooldown"] = "冷卻"
 	L["Cooldown Tracking"] = "冷卻監控"
 	L["Create Auras"] = "建立提醒效果"
+	L["debuff"] = "減益"
 	L["Debuffs"] = "減益 DEBUFF/DOT"
 	L["Enchants"] = "附魔"
 	L["General"] = "一般"
@@ -99,8 +102,10 @@ local L = WeakAuras.L
 	L["Show Only if Debuffed"] = "只在有減益時顯示"
 	L["Show Only if on Cooldown"] = "只有在冷卻中時顯示"
 	L["Show Totem and Charge Information"] = "顯示圖騰和次數資訊"
+	L["slow debuff"] = "緩速減益"
 	L["Specific Azerite Traits"] = "專用艾澤萊特長"
-	L["Stagger"] = "醉仙緩勁"
+	L["Stance"] = "姿勢/形態"
+	L["stun debuff"] = "暈眩減益"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "監控次數和機率觸發，觸發時顯著標示，超出範圍時變成紅色，資源不足時變成藍色。"
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "追蹤次數和增益，有增益作用時顯著標示，資源不足時變成藍色。"
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "追蹤次數和減益，有減益作用時顯著標示，資源不足時變成藍色。"

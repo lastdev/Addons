@@ -120,6 +120,12 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "8.2.001 Changes",
+		bulletedList = {
+			"Minor fixes.",
+			"Added new factions.",
+		},
+	},
 	{	name = "8.0.008 Changes",
 		bulletedList = {
 			"Added BfA factions. (Thanks AlexSUCF !!)",

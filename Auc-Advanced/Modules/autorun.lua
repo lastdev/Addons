@@ -45,7 +45,7 @@ for index, module in ipairs(embeddedModules) do
 	output:write("\t\t\t\""..module.."\",\n")
 end
 output:write("\t\t}\n\t\t")
-output:write([[AucAdvanced.RegisterRevision("$URL: Auc-Advanced/autorun.lua $", "$Rev: 6201 $")]])
+output:write([[AucAdvanced.RegisterRevision("$URL: Auc-Advanced/autorun.lua $", "$Rev: 6471 $")]])
 output:write("\n\t</Script>\n\n")
 for index, module in ipairs(embeddedModules) do
 	output:write("\t<Include file=\""..module.."\\Embed.xml\"/>\n");

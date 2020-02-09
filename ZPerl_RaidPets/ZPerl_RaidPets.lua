@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_RaidPets_Events = {}
@@ -9,11 +9,17 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: 1031 $")
+end, "$Revision:  $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local GetNumGroupMembers = GetNumGroupMembers
+
+local localGroups = LOCALIZED_CLASS_NAMES_MALE
+local WoWclassCount = 0
+for k, v in pairs(localGroups) do
+	WoWclassCount = WoWclassCount + 1
+end
 
 --local taintFrames = {}
 
@@ -139,7 +145,7 @@ end
 local function XPerl_RaidPets_UpdateName(self)
 	local partyid = SecureButton_GetUnit(self)
 	local name
-	if (self.ownerid and (UnitInVehicle(self.ownerid) or UnitHasVehicleUI(self.ownerid))) then
+	if (self.ownerid and WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and (UnitInVehicle(self.ownerid) or UnitHasVehicleUI(self.ownerid))) then
 		name = UnitName(self.ownerid)
 		if (name) then
 			self.text:SetFormattedText("<%s>", name)
@@ -168,13 +174,13 @@ end
 -- XPerl_RaidPets_UpdateHealth
 local function XPerl_RaidPets_UpdateHealth(self)
 	local partyid = SecureButton_GetUnit(self)
-	if (not partyid) then
+	if not partyid then
 		self.healthBar:SetValue(0)
 		XPerl_SetSmoothBarColor(self.healthBar, 0)
 		return
 	end
 
-	local health = UnitHealth(partyid)
+	local health = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid))
 	local healthmax = UnitHealthMax(partyid)
 
 	-- PTR region fix
@@ -597,11 +603,11 @@ end
 
 -- XPerl_RaidPets_Align()
 function XPerl_RaidPets_Align()
-	if (rconf.alignToRaid) then
+	if (rconf.enable and rconf.alignToRaid) then
 		local counts = XPerl_RaidGroupCounts()
 		local lastUsed = 0
 		if (counts) then
-			for i = 1, 11 do
+			for i = 1, WoWclassCount do
 				if (counts[i] > 0) then
 					lastUsed = i
 				end
@@ -611,6 +617,7 @@ function XPerl_RaidPets_Align()
 		if (lastUsed > 0) then
 			local relative = _G["XPerl_Raid_Title"..lastUsed]
 			if (relative) then
+				XPerl_Raid_TitlePets:ClearAllPoints()
 				XPerl_Raid_TitlePets:SetPoint("TOPLEFT", relative, "TOPRIGHT", raidconf.spacing, 0)
 				XPerl_Raid_TitlePets:SetUserPlaced(true)
 			end
@@ -657,22 +664,28 @@ function XPerl_RaidPets_OptionActions()
 
 	for i, event in pairs(events) do
 		if (rconf.enable) then
-			XPerl_RaidPets_Frame:RegisterEvent(event)
+			if pcall(XPerl_RaidPets_Frame.RegisterEvent, XPerl_RaidPets_Frame, event) then
+				XPerl_RaidPets_Frame:RegisterEvent(event)
+			end
 		else
-			XPerl_RaidPets_Frame:UnregisterEvent(event)
+			if pcall(XPerl_RaidPets_Frame.UnregisterEvent, XPerl_RaidPets_Frame, event) then
+				XPerl_RaidPets_Frame:UnregisterEvent(event)
+			end
 		end
 	end
 
-	if (raidconf.healprediction) then
-		XPerl_RaidPets_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		XPerl_RaidPets_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if (raidconf.healprediction) then
+			XPerl_RaidPets_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
+		else
+			XPerl_RaidPets_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
 
-	if (raidconf.absorbs) then
-		XPerl_RaidPets_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-	else
-		XPerl_RaidPets_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if (raidconf.absorbs) then
+			XPerl_RaidPets_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		else
+			XPerl_RaidPets_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
 	end
 
 	XPerl_RaidPets_Titles()

@@ -62,7 +62,7 @@ do
 	local function Constructor()
 		local num  = AceGUI:GetNextWidgetNum(Type)
 		local name = "AceGUI30"..Type..num
-		local frame = CreateFrame("Button",name,UIParent,"ItemButtonTemplate")
+		local frame = CreateFrame("Button",name,UIParent,"UIPanelButtonTemplate")
 		local self = {}
 		self.num = num
 		self.type = Type

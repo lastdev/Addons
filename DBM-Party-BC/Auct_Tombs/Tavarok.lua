@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(535, "DBM-Party-BC", 8, 250)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(18343)
 mod:SetEncounterID(1901)
 
@@ -13,14 +13,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 32361"
 )
 
-
 --TODO: Timers
---TODO: Verify jumping actually prevents quake stun and add a warning to jump during cast.
-local WarnPrison	= mod:NewTargetAnnounce(32361, 3)
+local WarnPrison		= mod:NewTargetAnnounce(32361, 3)
 
-local specWarnQuake	= mod:NewSpecialWarningSpell(33919, nil, nil, nil, 2, 2)
+local specWarnQuake		= mod:NewSpecialWarningSpell(33919, nil, nil, nil, 2, 2)
 
-local timerPrison	= mod:NewTargetTimer(5, 32361, nil, nil, nil, 3)
+local timerPrison		= mod:NewTargetTimer(5, 32361, nil, nil, nil, 3)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 33919 then

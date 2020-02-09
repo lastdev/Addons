@@ -1,7 +1,7 @@
 --[[
 Auctioneer - StatSimple
-Version: 8.1.6232 (SwimmingSeadragon)
-Revision: $Id: StatSimple.lua 6232 2019-03-04 00:20:18Z none $
+Version: 8.2.6501 (SwimmingSeadragon)
+Revision: $Id: StatSimple.lua 6501 2019-11-02 14:38:37Z none $
 URL: http://auctioneeraddon.com/
 
 This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -660,7 +660,7 @@ function private.PushStats(serverKey)
 			local datastringmeans = lookupmeansdata[prop]
 			if datastringmeans then
 				if dailyseen > 0 then
-					datameans = {strsplit(DATA_DIVIDER, datastringmeans)} -- seendays, seencount, EMA3, EMA7, EMA14, avgminbuy [, seenauctions]
+					local datameans = {strsplit(DATA_DIVIDER, datastringmeans)} -- seendays, seencount, EMA3, EMA7, EMA14, avgminbuy [, seenauctions]
 					for k, v in ipairs(datameans) do
 						datameans[k] = tonumber(v)
 					end
@@ -916,4 +916,4 @@ function private.WriteItemData(serverKey, storeID, storeProperty)
 	wipe(WriteStore)
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Stat-Simple/StatSimple.lua $", "$Rev: 6232 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Stat-Simple/StatSimple.lua $", "$Rev: 6501 $")

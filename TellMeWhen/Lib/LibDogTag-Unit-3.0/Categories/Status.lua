@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + (tonumber(("@file-date-integer@"):match("%d+")) or 33333333333333)
+local MINOR_VERSION = 90000 + (tonumber(("20191207035733"):match("%d+")) or 33333333333333)
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -26,22 +26,27 @@ local deadTimes = {}
 
 -- Parnic: support for cataclysm; Divine Intervention was removed
 local wow_ver = select(4, GetBuildInfo())
+local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local wow_400 = wow_ver >= 40000
 local wow_500 = wow_ver >= 50000
 local wow_600 = wow_ver >= 60000
 local wow_700 = wow_ver >= 70000
 local petHappinessEvent = "UNIT_POWER_UPDATE"
 local partyChangedEvent = "PARTY_MEMBERS_CHANGED"
-if wow_500 then
+if wow_500 or wow_classic then
 	UnitIsPartyLeader = UnitIsGroupLeader
 	partyChangedEvent = "GROUP_ROSTER_UPDATE"
 end
 
 -- Parnic: pet happiness removed in 4.1
 local wow_401 = wow_ver >= 40100
+-- ...and back in Classic
+if wow_classic then
+	petHappinessEvent = "UNIT_HAPPINESS"
+end
 
 -- Parnic: GetNumRaidMembers/GetNumPartyMembers removed in 6.0
-if wow_600 then
+if wow_600 or wow_classic then
 	GetNumRaidMembers = GetNumGroupMembers
 	GetNumPartyMembers = GetNumGroupMembers
 end
@@ -468,7 +473,7 @@ DogTag:AddTag("Unit", "HappyText", {
 	code = function()
 		return _G["PET_HAPPINESS" .. (GetPetHappiness() or 0)]
 	end,
-	ret = "number",
+	ret = "string;nil",
 	events = petHappinessEvent,
 	doc = L["Return a description of how happy your pet is"],
 	example = ('[HappyText] => %q'):format(_G.PET_HAPPINESS3),
@@ -519,7 +524,7 @@ DogTag:AddTag("Unit", "RaidIcon", {
 	category = L["Status"]
 })
 
-if wow_700 then
+if wow_700 or wow_classic then
 	DogTag:AddTag("Unit", "IsNotTappableByMe", {
 		code = UnitIsTapDenied,
 		arg = {
@@ -885,17 +890,19 @@ DogTag:AddTag("Unit", "IsVisible", {
 	category = L["Status"]
 })
 
-DogTag:AddTag("Unit", "HasVehicleUI", {
-	code = UnitHasVehicleUI,
-	arg = {
-		'unit', 'string;undef', 'player'
-	},
-	ret = "boolean",
-	events = "UNIT_ENTERED_VEHICLE#$unit;UNIT_EXITED_VEHICLE#$unit",
-	doc = L["Return True if unit has a vehicle UI"],
-	example = ('[HasVehicleUI] => %q; [HasVehicleUI] => ""'):format(L["True"]),
-	category = L["Status"]
-})
+if UnitHasVehicleUI then
+	DogTag:AddTag("Unit", "HasVehicleUI", {
+		code = UnitHasVehicleUI,
+		arg = {
+			'unit', 'string;undef', 'player'
+		},
+		ret = "boolean",
+		events = "UNIT_ENTERED_VEHICLE#$unit;UNIT_EXITED_VEHICLE#$unit",
+		doc = L["Return True if unit has a vehicle UI"],
+		example = ('[HasVehicleUI] => %q; [HasVehicleUI] => ""'):format(L["True"]),
+		category = L["Status"]
+	})
+end
 
 
 DogTag:AddTag("Unit", "StatusColor", {

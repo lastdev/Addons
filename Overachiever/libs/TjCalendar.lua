@@ -37,7 +37,7 @@
 --
 
 
-local THIS_VERSION = 0.02
+local THIS_VERSION = 0.03
 
 if (TjCalendar and TjCalendar.Version >= THIS_VERSION) then  return;  end
 
@@ -65,7 +65,7 @@ end
 -- BFA
 
 
-function internal_StartReadingAt(year, month, getMonthData)
+local function internal_StartReadingAt(year, month, getMonthData)
 	if (not year) then
 		local _
 		_, _, _, year = CalendarGetDate()

@@ -1,7 +1,7 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 8.1.6240 (SwimmingSeadragon)
-	Revision: $Id: Stubby.lua 6240 2019-03-04 00:20:18Z none $
+	Version: 8.2.6510 (SwimmingSeadragon)
+	Revision: $Id: Stubby.lua 6510 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 
 	Stubby is an addon that allows you to register boot code for
@@ -163,7 +163,7 @@
 	This constant is Stubby's revision number, a simple positive
 	integer that will increase by an arbitrary amount with each
 	new version of Stubby.
-	Current $Rev: 6240 $
+	Current $Rev: 6510 $
 
 	Example:
 	-------------------------------------------
@@ -196,7 +196,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: Stubby/Stubby.lua $","$Rev: 6240 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Stubby/Stubby.lua $","$Rev: 6510 $","5.1.DEV.", 'auctioneer', 'libs')
 
 -------------------------------------------------------------------------------
 -- Error codes
@@ -1022,7 +1022,7 @@ end
 
 -- Extract the revision number from SVN keyword string
 function getRevision()
-	return tonumber(("$Rev: 6240 $"):match("(%d+)"))
+	return tonumber(("$Rev: 6510 $"):match("(%d+)"))
 end
 
 -------------------------------------------------------------------------------

@@ -75,8 +75,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = true,
 		["BBCode"] = true,
@@ -102,127 +102,128 @@ L=
 		["Wowace.com Forums"] = true,
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		--[[Translation missing --]]
-		--[[ [" Text"] = "",--]] 
+		[" Text"] = " Text",
 		--[[Translation missing --]]
-		--[[ ["BBCode"] = "",--]] 
+		["BBCode"] = "BBCode",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMLEFT"] = "",--]] 
+		["BOTTOMLEFT"] = "Bottom, Left",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMRIGHT"] = "",--]] 
+		["BOTTOMRIGHT"] = "Bottom, Right",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_name"] = "",--]] 
+		["buttonpos_name"] = "Button Location",
 		--[[Translation missing --]]
-		--[[ ["ChatFrame"] = "",--]] 
+		["ChatFrame"] = "ChatFrame",
 		--[[Translation missing --]]
-		--[[ ["Copy all of the text in the selected chat frame into an edit box"] = "",--]] 
+		["Copy all of the text in the selected chat frame into an edit box"] = "Copy all of the text in the selected chat frame into an edit box",
 		--[[Translation missing --]]
-		--[[ ["Copy Text"] = "",--]] 
+		["Copy Text"] = "Copy Text",
 		--[[Translation missing --]]
-		--[[ ["Copy Text Format"] = "",--]] 
+		["Copy Text Format"] = "Copy Text Format",
 		--[[Translation missing --]]
-		--[[ ["Copy text from the active chat window."] = "",--]] 
+		["Copy text from the active chat window."] = "Copy text from the active chat window.",
 		--[[Translation missing --]]
-		--[[ ["Copy To Editbox"] = "",--]] 
+		["Copy To Editbox"] = "Copy To Editbox",
 		--[[Translation missing --]]
-		--[[ ["CopyChat"] = "",--]] 
+		["CopyChat"] = "CopyChat",
 		--[[Translation missing --]]
-		--[[ ["HTML"] = "",--]] 
+		["HTML"] = "HTML",
 		--[[Translation missing --]]
-		--[[ ["Message From : %s"] = "",--]] 
+		["Message From : %s"] = "Message From : %s",
 		--[[Translation missing --]]
-		--[[ ["Plain"] = "",--]] 
+		["Plain"] = "Plain",
 		--[[Translation missing --]]
-		--[[ ["Should the copied text be plain, or formatted so you can see the colors."] = "",--]] 
+		["Should the copied text be plain, or formatted so you can see the colors."] = "Should the copied text be plain, or formatted so you can see the colors.",
 		--[[Translation missing --]]
-		--[[ ["showbutton_desc"] = "",--]] 
+		["showbutton_desc"] = "Show a button on the chatframe",
 		--[[Translation missing --]]
-		--[[ ["showbutton_name"] = "",--]] 
+		["showbutton_name"] = "Copy Button",
 		--[[Translation missing --]]
-		--[[ ["TOPLEFT"] = "",--]] 
+		["TOPLEFT"] = "Top, Left",
 		--[[Translation missing --]]
-		--[[ ["TOPRIGHT"] = "",--]] 
+		["TOPRIGHT"] = "Top, Right",
 		--[[Translation missing --]]
-		--[[ ["Wowace.com Forums"] = "",--]] 
+		["Wowace.com Forums"] = "Wowace.com Forums",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
+		[" Text"] = "Texto",
 		--[[Translation missing --]]
-		--[[ [" Text"] = "",--]] 
+		["BBCode"] = "BBCode",
 		--[[Translation missing --]]
-		--[[ ["BBCode"] = "",--]] 
+		["BOTTOMLEFT"] = "Bottom, Left",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMLEFT"] = "",--]] 
+		["BOTTOMRIGHT"] = "Bottom, Right",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMRIGHT"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_name"] = "Button Location",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_name"] = "",--]] 
+		["ChatFrame"] = "ChatFrame",
 		--[[Translation missing --]]
-		--[[ ["ChatFrame"] = "",--]] 
+		["Copy all of the text in the selected chat frame into an edit box"] = "Copy all of the text in the selected chat frame into an edit box",
 		--[[Translation missing --]]
-		--[[ ["Copy all of the text in the selected chat frame into an edit box"] = "",--]] 
+		["Copy Text"] = "Copy Text",
 		--[[Translation missing --]]
-		--[[ ["Copy Text"] = "",--]] 
+		["Copy Text Format"] = "Copy Text Format",
 		--[[Translation missing --]]
-		--[[ ["Copy Text Format"] = "",--]] 
+		["Copy text from the active chat window."] = "Copy text from the active chat window.",
 		--[[Translation missing --]]
-		--[[ ["Copy text from the active chat window."] = "",--]] 
+		["Copy To Editbox"] = "Copy To Editbox",
 		--[[Translation missing --]]
-		--[[ ["Copy To Editbox"] = "",--]] 
+		["CopyChat"] = "CopyChat",
 		--[[Translation missing --]]
-		--[[ ["CopyChat"] = "",--]] 
+		["HTML"] = "HTML",
 		--[[Translation missing --]]
-		--[[ ["HTML"] = "",--]] 
+		["Message From : %s"] = "Message From : %s",
 		--[[Translation missing --]]
-		--[[ ["Message From : %s"] = "",--]] 
+		["Plain"] = "Plain",
 		--[[Translation missing --]]
-		--[[ ["Plain"] = "",--]] 
+		["Should the copied text be plain, or formatted so you can see the colors."] = "Should the copied text be plain, or formatted so you can see the colors.",
 		--[[Translation missing --]]
-		--[[ ["Should the copied text be plain, or formatted so you can see the colors."] = "",--]] 
+		["showbutton_desc"] = "Show a button on the chatframe",
 		--[[Translation missing --]]
-		--[[ ["showbutton_desc"] = "",--]] 
+		["showbutton_name"] = "Copy Button",
 		--[[Translation missing --]]
-		--[[ ["showbutton_name"] = "",--]] 
+		["TOPLEFT"] = "Top, Left",
 		--[[Translation missing --]]
-		--[[ ["TOPLEFT"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["TOPRIGHT"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Wowace.com Forums"] = "",--]] 
+		["TOPRIGHT"] = "Top, Right",
+		["Wowace.com Forums"] = "Wowace.com Fóruns",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = "Texte",
 		["BBCode"] = true,
 		--[[Translation missing --]]
-		--[[ ["BOTTOMLEFT"] = "",--]] 
+		["BOTTOMLEFT"] = "Bottom, Left",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMRIGHT"] = "",--]] 
+		["BOTTOMRIGHT"] = "Bottom, Right",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_name"] = "",--]] 
+		["buttonpos_name"] = "Button Location",
 		--[[Translation missing --]]
-		--[[ ["ChatFrame"] = "",--]] 
+		["ChatFrame"] = "ChatFrame",
 		["Copy all of the text in the selected chat frame into an edit box"] = "Copier tout le texte de la fenêtre de discussion sélectionnée dans une boîte d'édition.",
 		["Copy Text"] = "Copier le texte",
 		["Copy Text Format"] = "Format du texte copié",
@@ -236,18 +237,19 @@ L=
 		["showbutton_desc"] = "Montrer un bouton sur la fenêtre de discussion.",
 		["showbutton_name"] = "Bouton de copie",
 		--[[Translation missing --]]
-		--[[ ["TOPLEFT"] = "",--]] 
+		["TOPLEFT"] = "Top, Left",
 		--[[Translation missing --]]
-		--[[ ["TOPRIGHT"] = "",--]] 
+		["TOPRIGHT"] = "Top, Right",
 		["Wowace.com Forums"] = "Forums wowace.com",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = "Text",
 		["BBCode"] = true,
@@ -273,10 +275,11 @@ L=
 		["Wowace.com Forums"] = "Wowace.com Foren",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = " 텍스트",
 		["BBCode"] = true,
@@ -302,59 +305,61 @@ L=
 		["Wowace.com Forums"] = "Wowace.com 포럼",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		--[[Translation missing --]]
-		--[[ [" Text"] = "",--]] 
+		[" Text"] = " Text",
 		--[[Translation missing --]]
-		--[[ ["BBCode"] = "",--]] 
+		["BBCode"] = "BBCode",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMLEFT"] = "",--]] 
+		["BOTTOMLEFT"] = "Bottom, Left",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMRIGHT"] = "",--]] 
+		["BOTTOMRIGHT"] = "Bottom, Right",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_name"] = "",--]] 
+		["buttonpos_name"] = "Button Location",
 		--[[Translation missing --]]
-		--[[ ["ChatFrame"] = "",--]] 
+		["ChatFrame"] = "ChatFrame",
 		--[[Translation missing --]]
-		--[[ ["Copy all of the text in the selected chat frame into an edit box"] = "",--]] 
+		["Copy all of the text in the selected chat frame into an edit box"] = "Copy all of the text in the selected chat frame into an edit box",
 		--[[Translation missing --]]
-		--[[ ["Copy Text"] = "",--]] 
+		["Copy Text"] = "Copy Text",
 		--[[Translation missing --]]
-		--[[ ["Copy Text Format"] = "",--]] 
+		["Copy Text Format"] = "Copy Text Format",
 		--[[Translation missing --]]
-		--[[ ["Copy text from the active chat window."] = "",--]] 
+		["Copy text from the active chat window."] = "Copy text from the active chat window.",
 		--[[Translation missing --]]
-		--[[ ["Copy To Editbox"] = "",--]] 
+		["Copy To Editbox"] = "Copy To Editbox",
 		--[[Translation missing --]]
-		--[[ ["CopyChat"] = "",--]] 
+		["CopyChat"] = "CopyChat",
 		--[[Translation missing --]]
-		--[[ ["HTML"] = "",--]] 
+		["HTML"] = "HTML",
 		--[[Translation missing --]]
-		--[[ ["Message From : %s"] = "",--]] 
+		["Message From : %s"] = "Message From : %s",
 		--[[Translation missing --]]
-		--[[ ["Plain"] = "",--]] 
+		["Plain"] = "Plain",
 		--[[Translation missing --]]
-		--[[ ["Should the copied text be plain, or formatted so you can see the colors."] = "",--]] 
+		["Should the copied text be plain, or formatted so you can see the colors."] = "Should the copied text be plain, or formatted so you can see the colors.",
 		--[[Translation missing --]]
-		--[[ ["showbutton_desc"] = "",--]] 
+		["showbutton_desc"] = "Show a button on the chatframe",
 		--[[Translation missing --]]
-		--[[ ["showbutton_name"] = "",--]] 
+		["showbutton_name"] = "Copy Button",
 		--[[Translation missing --]]
-		--[[ ["TOPLEFT"] = "",--]] 
+		["TOPLEFT"] = "Top, Left",
 		--[[Translation missing --]]
-		--[[ ["TOPRIGHT"] = "",--]] 
+		["TOPRIGHT"] = "Top, Right",
 		--[[Translation missing --]]
-		--[[ ["Wowace.com Forums"] = "",--]] 
+		["Wowace.com Forums"] = "Wowace.com Forums",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX",L)
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = " Текст",
 		["BBCode"] = true,
@@ -368,7 +373,7 @@ L=
 		["Copy Text Format"] = "Формат копирования текста",
 		["Copy text from the active chat window."] = "Копировать текст из активного окна чата.",
 		["Copy To Editbox"] = "Копировать чат",
-		["CopyChat"] = "Копия Чата",
+		["CopyChat"] = "Копия Чата ",
 		["HTML"] = true,
 		["Message From : %s"] = "Сообщение от : %s",
 		["Plain"] = "Обычный текст",
@@ -380,9 +385,10 @@ L=
 		["Wowace.com Forums"] = "Форумы Wowace.com",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = "文本",
 		["BBCode"] = "BB代码",
@@ -408,27 +414,28 @@ L=
 		["Wowace.com Forums"] = "Wowace.com论坛",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = "Texto",
 		["BBCode"] = true,
 		--[[Translation missing --]]
-		--[[ ["BOTTOMLEFT"] = "",--]] 
+		["BOTTOMLEFT"] = "Bottom, Left",
 		--[[Translation missing --]]
-		--[[ ["BOTTOMRIGHT"] = "",--]] 
+		["BOTTOMRIGHT"] = "Bottom, Right",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_name"] = "",--]] 
+		["buttonpos_name"] = "Button Location",
 		["ChatFrame"] = "MarcoChat",
 		["Copy all of the text in the selected chat frame into an edit box"] = "Copiar todo el texto seleccionado en el marco del chat a una caja de edición",
 		["Copy Text"] = "Copiar Texto",
 		["Copy Text Format"] = "Copiar Texto con fomato",
 		["Copy text from the active chat window."] = "Copiar texto desde la ventana de chat activa.",
 		--[[Translation missing --]]
-		--[[ ["Copy To Editbox"] = "",--]] 
+		["Copy To Editbox"] = "Copy To Editbox",
 		["CopyChat"] = "ChatCopiar",
 		["HTML"] = true,
 		["Message From : %s"] = "Mensaje de : %s",
@@ -437,26 +444,27 @@ L=
 		["showbutton_desc"] = "Muestra un botón en el marco del chat",
 		["showbutton_name"] = "Botón Copiar",
 		--[[Translation missing --]]
-		--[[ ["TOPLEFT"] = "",--]] 
+		["TOPLEFT"] = "Top, Left",
 		--[[Translation missing --]]
-		--[[ ["TOPRIGHT"] = "",--]] 
+		["TOPRIGHT"] = "Top, Right",
 		["Wowace.com Forums"] = "Foros Wowace.com",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
-L=
-{
+
+L = {
 	["CopyChat"] = {
 		[" Text"] = "文字",
 		["BBCode"] = true,
 		["BOTTOMLEFT"] = "下, 左",
 		["BOTTOMRIGHT"] = "下, 右",
 		--[[Translation missing --]]
-		--[[ ["buttonpos_desc"] = "",--]] 
+		["buttonpos_desc"] = "Where on the chatframe to show the copy button",
 		["buttonpos_name"] = "按鈕位置",
 		["ChatFrame"] = "聊天視窗",
 		--[[Translation missing --]]
-		--[[ ["Copy all of the text in the selected chat frame into an edit box"] = "",--]] 
+		["Copy all of the text in the selected chat frame into an edit box"] = "Copy all of the text in the selected chat frame into an edit box",
 		["Copy Text"] = "複製文字",
 		["Copy Text Format"] = "複製文字格式",
 		["Copy text from the active chat window."] = "複製使用中聊天視窗文字",
@@ -465,9 +473,9 @@ L=
 		["HTML"] = true,
 		["Message From : %s"] = "來自 %s 的訊息",
 		--[[Translation missing --]]
-		--[[ ["Plain"] = "",--]] 
+		["Plain"] = "Plain",
 		--[[Translation missing --]]
-		--[[ ["Should the copied text be plain, or formatted so you can see the colors."] = "",--]] 
+		["Should the copied text be plain, or formatted so you can see the colors."] = "Should the copied text be plain, or formatted so you can see the colors.",
 		["showbutton_desc"] = "於聊天視窗中顯示按鈕",
 		["showbutton_name"] = "複製按鈕",
 		["TOPLEFT"] = "上, 左",
@@ -475,6 +483,7 @@ L=
 		["Wowace.com Forums"] = "Wowace.com 論壇",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 end
 --@end-non-debug@
@@ -779,33 +788,31 @@ function module:ScrapeFullChatFrame(frame)
     self:DoCopyChatScroll(frame)
 end
      
-local scrapelines = {}
+
 function module:DoCopyChatScroll(frame, noshow)
-    self.longstr = ""
-    self.str = ""
+    local scrapelines = {}
+    local str
     
     if frame:GetNumMessages() == 0 then return end
     
-    wipe(scrapelines)
-
     for i,v in ipairs(frame.historyBuffer.elements) do
         local msg = v.message
 
         if msg then
-            table.insert(scrapelines, msg)
+            local stripped =  msg:gsub("|K.-|k", "<BNET REMOVED>")
+            table.insert(scrapelines, stripped)
         end
     end
 
-    self.str = table.concat(scrapelines, "\n")
-    wipe(scrapelines)
-
+    str = table.concat(scrapelines, "\n")
+    
     if not noshow then
         if (self.copyformat and self.copyformat == "wowace") or self.db.profile.copyformat == "wowace" then
-            self.str = "[bgcolor=black]"..self.str.."[/bgcolor]"
+            str = "[bgcolor=black]"..str.."[/bgcolor]"
         end
 
-        PratCCText:SetText(PL["ChatFrame"]..frame:GetName():gsub("ChatFrame", "")..PL[" Text"], lines)
-        PratCCFrameScrollText:SetText(self.str or "")
+        PratCCFrameScrollText:SetText(str or "")
+        PratCCText:SetText(PL["ChatFrame"]..frame:GetName():gsub("ChatFrame", "")..PL[" Text"])
         PratCCFrame:Show()
     end
 end
@@ -815,27 +822,27 @@ function module:DoCopyChatArg(arg)
 end
 
 function module:DoCopyChat(frame, noshow)
-    wipe(self.lines)
+    local lines = {}
+    local str
 
     for _,v in ipairs(frame.visibleLines) do
         local msg = v.messageInfo
 
         if msg then
-            table.insert(self.lines, 1, msg.message)
+            local stripped =  msg.message:gsub("|K.-|k", "<BNET REMOVED>")
+            table.insert(lines, 1, stripped)
         end
     end
 
-    self.str = table.concat(self.lines, "\n")
+    str = table.concat(lines, "\n")
 
-    wipe(self.lines)
-    
     if not noshow then 
         if (self.copyformat and self.copyformat == "wowace") or self.db.profile.copyformat == "wowace" then
-            self.str = "[bgcolor=black]"..self.str.."[/bgcolor]"
+            str = "[bgcolor=black]"..str.."[/bgcolor]"
         end
 
-        PratCCText:SetText(PL["ChatFrame"]..frame:GetName():gsub("ChatFrame", "")..PL[" Text"], lines)
-        PratCCFrameScrollText:SetText(self.str or "")
+        PratCCFrameScrollText:SetText(str or "")
+        PratCCText:SetText(PL["ChatFrame"]..frame:GetName():gsub("ChatFrame", "")..PL[" Text"])
         PratCCFrame:Show()
     end
 end

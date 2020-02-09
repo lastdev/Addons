@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CorePost.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CorePost.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -46,14 +46,10 @@
 ]]
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CorePost")
-local coremodule, internal = AucAdvanced.GetCoreModule("CorePost")
--- internal is a shared space only accessible to code that can call GetCoreModule,
--- which is only the .lua files in Auc-Advanced.  Basically, we have an internal use only area.
+local coremodule, _, private = AucAdvanced.GetCoreModule("CorePost", nil, true)
 if not coremodule then return end -- Someone has explicitely broken us
-if (not AucAdvanced.Post) then AucAdvanced.Post = {} end
 
 local lib = AucAdvanced.Post
-local private = {}
 lib.Private = private
 
 local aucPrint = AucAdvanced.Print
@@ -70,13 +66,17 @@ local GetItemInfo = GetItemInfo
 
 -- Local tooltip for getting soulbound line from tooltip contents
 local ScanTip = CreateFrame("GameTooltip", "AppraiserTip", UIParent, "GameTooltipTemplate")
-local ScanTip2 = _G["AppraiserTipTextLeft2"]
-local ScanTip3 = _G["AppraiserTipTextLeft3"]
-local ScanTip4 = _G["AppraiserTipTextLeft4"]
-local ScanTip5 = _G["AppraiserTipTextLeft5"]
-local ScanTip6 = _G["AppraiserTipTextLeft6"]
-local ScanTip7 = _G["AppraiserTipTextLeft7"]
-local ScanTip8 = _G["AppraiserTipTextLeft8"]
+local line_metatable = {
+	__index = function(t,k)
+		local v = _G[t.name..k]
+		rawset(t,k,v)
+		return v
+	end
+}
+ScanTip.Left = setmetatable({name = ScanTip:GetName().."TextLeft"},line_metatable)
+ScanTip.Right = setmetatable({name = ScanTip:GetName().."TextRight"},line_metatable)
+local ScanTipLeft = ScanTip.Left
+
 
 -- control constants used in the posting mechanism
 local LAG_ADJUST = (4 / 1000)
@@ -90,6 +90,10 @@ local MAX_EXTRA_FEE = 10000000 -- cap the extra fee for stackable tradegoods, us
 local PROMPT_HEIGHT = 140
 local PROMPT_MIN_WIDTH = 400
 
+if AucAdvanced.Classic then
+    MINIMUM_DEPOSIT = 0     -- no minimum in Classic
+end
+
 -- Used to check for bound items in bags - only checks for strings indicating item is already bound
 -- In particular we do not check for ITEM_BIND_ON_PICKUP, as for our tests,
 -- that could only occur on an *unbound* recipe that creates a BoP item
@@ -99,6 +103,7 @@ local BindTypes = {
 	[ITEM_CONJURED] = "Conjured",
 	[ITEM_BNETACCOUNTBOUND] = "Accountbound",
 }
+
 if ITEM_ACCOUNTBOUND then
 	-- may be obsolete, check in case it is removed by a patch
 	BindTypes[ITEM_ACCOUNTBOUND] = "Accountbound"
@@ -277,22 +282,42 @@ do
 	end
 end --of Post Request Queue section
 
+
+local AuctionDurationCode = {
+    1, --[1]
+    2, --[2]
+    3, --[3]
+    [12] = 1, -- hours
+    [24] = 2,
+    [48] = 3,
+    [720] = 1, -- minutes
+    [1440] = 2,
+    [2880] = 3,
+}
+
+local LookupDurationHours = {12, 24, 48} -- convert duration code to hours, for display
+
+if AucAdvanced.Classic then
+    AuctionDurationCode = {
+        [1] = 1,
+-- 2 would cause issues here, but already exists as a value
+        [3] = 3,
+
+        [2] = 1, -- hours
+        [8] = 2,
+        [24] = 3,
+
+        [120] = 1, -- minutes
+        [480] = 2,
+        [1440] = 3,
+    }
+    LookupDurationHours = {2, 8, 24} -- convert duration code to hours, for display
+end
+
 do
-	local AuctionDurationCode = {
-		1, --[1]
-		2, --[2]
-		3, --[3]
-		[12] = 1, -- hours
-		[24] = 2,
-		[48] = 3,
-		[720] = 1, -- minutes
-		[1440] = 2,
-		[2880] = 3,
-	}
 	function lib.ValidateAuctionDuration(duration)
 		return AuctionDurationCode[duration]
 	end
-	local LookupDurationHours = {12, 24, 48} -- convert duration code to hours, for display
 	function lib.AuctionDurationHours(duration)
 		return LookupDurationHours[AuctionDurationCode[duration]]
 	end
@@ -544,8 +569,16 @@ function lib.IsAuctionable(bag, slot)
 	ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
 	ScanTip:ClearLines()
 	ScanTip:SetBagItem(bag, slot)
-	local test = BindTypes[ScanTip2:GetText()] or BindTypes[ScanTip3:GetText()]	or BindTypes[ScanTip4:GetText()]
-		or BindTypes[ScanTip5:GetText()] or BindTypes[ScanTip6:GetText()] or BindTypes[ScanTip7:GetText()] or BindTypes[ScanTip8:GetText()]
+	local test = nil
+	for index = 2, 8 do
+		local line = ScanTipLeft[index]
+		if line then
+			test = BindTypes[line:GetText()]
+		end
+		if test or not line then
+			break
+		end
+	end
 	ScanTip:Hide()
 	if test then
 		return false, test
@@ -599,19 +632,8 @@ function lib.CountAvailableItems(sig)
 	return (totalCount - unpostableCount - queuedCount - siglockCount), totalCount, unpostableCount, queuedCount, siglockCount, unpostableError
 end
 
+
 do --[[ Deposit Cost Calculator ]]--
-	-- lookup table to convert posting durations
-	local lookupDuration = {
-		1,	--[1]
-		2,	--[2]
-		4,	--[3]
-		[12] = 1,
-		[24] = 2,
-		[48] = 4,
-		[720] = 1,
-		[1440] = 2,
-		[2880] = 4,
-	}
 
 	local lookupExcludeSubclass, lookupExceptionID = {}, {}
 	function private.InitDepositCostData()
@@ -640,7 +662,8 @@ do --[[ Deposit Cost Calculator ]]--
 	--[[
 		lib.GetDepositCost(item, duration, bidprice, buyprice, stacksize, numstacks)
 		item: itemID or "itemString" or "itemName" or "itemLink" [Required]
-		duration: 1, 2, 3 (Blizzard auction duration codes), 12, 24, 48 (hours), 720, 1440, 2880 (minutes) [defaults to 2]
+		duration: 1, 2, 3 (Blizzard auction duration codes), 12, 24, 48 (hours), 720, 1440, 2880 (minutes) [defaults to 3]
+		Classic duration: 1, 2, 3 (Blizzard auction duration codes), 2, 8, 24 (hours), 120, 480, 1440 (minutes) [defaults to 3]
 		bidprice, buyprice: prices for the stack
 		stacksize: [defaults to 1]
 		numstacks: [defaults to 1]
@@ -649,12 +672,15 @@ do --[[ Deposit Cost Calculator ]]--
 	function lib.GetDepositCost(item, duration, bidprice, buyprice, stacksize, numstacks)
 		local vendor, classID, subclassID, itemID
 		--[[
-		Base Deposit = 0.15 * VendorPrice * StackSize * DurationMultiplier
-			DurationMultiplier = (1 for 12hrs, 2 for 24hrs, 4 for 48hrs)
-		Extra Deposit = 0.2 * max(StackBidPrice, StackBuyPrice) / StackSize
-			Extra Deposit is added to some Trade goods
+            Base Deposit = 0.15 * VendorPrice * StackSize * DurationMultiplier
+                DurationMultiplier = (1 for 12hrs, 2 for 24hrs, 4 for 48hrs)
 
-		-- ### todo: figure out proper rounding algorithm
+                or 0.0125 * VendorPrice * StackSize * DurationInHours
+
+            Extra Deposit = 0.2 * max(StackBidPrice, StackBuyPrice) / StackSize
+                Extra Deposit is added to some Trade goods
+
+            -- ### todo: figure out proper rounding algorithm
 		--]]
 
 		local itype = type(item)
@@ -677,12 +703,30 @@ do --[[ Deposit Cost Calculator ]]--
 		end
 
 		if vendor then
-			duration = lookupDuration[duration] or 2
+            --local start_duration = duration -- DEBUGGING
+			duration = AuctionDurationCode[duration] or 3       -- default to max time (most common case) if no duration given or invalid
 			if not stacksize or stacksize < 1 then stacksize = 1 end
+            local deposit = 0
+            local hours = LookupDurationHours[duration]
+            local vendstack = stacksize*vendor
+            local DepositMultiplier = 0.0125    --- multiplier in Current (48 hour max)
 
-			local deposit = 0.15 * vendor * stacksize * duration
+            -- ccox - NOTE - the real game function may have more inflection points, but this matches items from 5c to 2g exactly
+            -- Current may use a similar function as the math is close to /20, need to test
+            if AucAdvanced.Classic then
+                if (vendstack < 80) then
+                    deposit = floor( (vendstack+12)/24 )
+                else
+                    deposit = floor(vendstack/20)
+                end
+                deposit = deposit * hours / 2
+            else
+                deposit = DepositMultiplier * vendstack * hours
+            end
 
-			if classID == LE_ITEM_CLASS_TRADEGOODS then
+            --debugPrint("deposit: "..deposit.." stack: "..stacksize.." hours: "..hours.." start_duration: "..start_duration, "CorePost", "Debugging", "Warning")
+
+			if (not AucAdvanced.Classic) and (classID == LE_ITEM_CLASS_TRADEGOODS) then
 				-- additional deposit fee for certain tradegoods
 				if not (lookupExcludeSubclass[subclassID] or lookupExceptionID[itemID]) then
 					local extra = max(bidprice or 1, buyprice or 0)
@@ -694,21 +738,25 @@ do --[[ Deposit Cost Calculator ]]--
 				end
 			end
 
-			deposit = floor(deposit) -- ### try rounding as last thing...
+			deposit = floor(deposit) -- ### try rounding to coppers as last thing...
 
 			if deposit < MINIMUM_DEPOSIT then
 				deposit = MINIMUM_DEPOSIT
 			end
+
 			return deposit * (numstacks or 1)
 		end
 	end
+
 	function GetDepositCost(item, duration, unused, count)
 		-- ### temporary wrapper until we convert all our calls
 		-- calls lib.GetDepositCost inserting default (i.e. fake) values for missing arguaments
 		return lib.GetDepositCost(item, duration, 10000 * count, 0, count, 1)
 	end
+
 	lib.DepositCostDebugVersion = 2 -- ### temp value for use by debugging tools for GetDepositCost
 end
+
 function GetDepositCost(item, duration, unused, count)
 	-- ### temporary wrapper until we convert all our calls
 	-- calls lib.GetDepositCost inserting default (i.e. fake) values for missing arguaments
@@ -1450,7 +1498,9 @@ local function ShowTooltip()
 end
 local function HideTooltip()
 	GameTooltip:Hide()
-	BattlePetTooltip:Hide()
+	if BattlePetTooltip then
+		BattlePetTooltip:Hide()
+	end
 end
 local function DragStart()
 	private.Prompt:StartMoving()
@@ -1513,5 +1563,5 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CorePost.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CorePost.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CorePost")

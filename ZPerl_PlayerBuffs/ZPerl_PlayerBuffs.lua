@@ -1,12 +1,12 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 1086 $")
+end, "$Revision:  $")
 
 --local playerClass
 
@@ -358,7 +358,7 @@ function XPerl_PlayerBuffs_Update(self)
 		local unit = SecureButton_GetUnit(self:GetParent()) or "player"
 
 		if (filter and unit) then
-			local name, buff, count, debuffType, duration, endTime, isMine, isStealable = UnitAura(unit, index, filter)
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge = UnitAura(unit, index, filter)
 			self.filter = filter
 			self:SetAlpha(1)
 
@@ -370,7 +370,7 @@ function XPerl_PlayerBuffs_Update(self)
 				self.border:Hide()
 			end
 
-			self.icon:SetTexture(buff)
+			self.icon:SetTexture(icon)
 			if ((count or 0) > 1) then
 				self.count:SetText(count)
 				self.count:Show()
@@ -379,11 +379,11 @@ function XPerl_PlayerBuffs_Update(self)
 			end
 
 			-- Handle cooldowns
-			if (self.cooldown and (duration or 0) ~= 0 and conf.buffs.cooldown and (isMine or conf.buffs.cooldownAny)) then
-				local start = endTime - duration
-				XPerl_CooldownFrame_SetTimer(self.cooldown, start, duration, 1, isMine)
+			if (self.cooldown and (duration or 0) ~= 0 and conf.buffs.cooldown and (unitCaster or conf.buffs.cooldownAny)) then
+				local start = expirationTime - duration
+				XPerl_CooldownFrame_SetTimer(self.cooldown, start, duration, 1, unitCaster)
 				if (pconf.buffs.flash) then
-					self.endTime = endTime
+					self.endTime = expirationTime
 					self:SetScript("OnUpdate", AuraButton_OnUpdate)
 				else
 					self.endTime = nil

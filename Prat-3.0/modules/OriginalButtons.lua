@@ -78,8 +78,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "Sets alpha of chat menu and arrows for all chat windows.",
 		["alpha_name"] = "Set Alpha",
@@ -105,115 +105,118 @@ L=
 		["Toggles navigation arrows on and off."] = true,
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		--[[Translation missing --]]
-		--[[ ["alpha_desc"] = "",--]] 
+		["alpha_desc"] = "Sets alpha of chat menu and arrows for all chat windows.",
 		--[[Translation missing --]]
-		--[[ ["alpha_name"] = "",--]] 
+		["alpha_name"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_desc"] = "",--]] 
+		["buttonframe_desc"] = "Toggles the button frame menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_name"] = "",--]] 
+		["buttonframe_name"] = "Show Button Frame",
 		--[[Translation missing --]]
-		--[[ ["ChannelNames"] = "",--]] 
+		["ChannelNames"] = "ChannelNames",
 		--[[Translation missing --]]
-		--[[ ["Chat window button options."] = "",--]] 
+		["Chat window button options."] = "Chat window button options.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_desc"] = "",--]] 
+		["chatmenu_desc"] = "Toggles chat menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_name"] = "",--]] 
+		["chatmenu_name"] = "Show Chat Menu",
 		--[[Translation missing --]]
-		--[[ ["Default"] = "",--]] 
+		["Default"] = "Default",
 		--[[Translation missing --]]
-		--[[ ["Original Buttons"] = "",--]] 
+		["Original Buttons"] = "Original Buttons",
 		--[[Translation missing --]]
-		--[[ ["reflow_desc"] = "",--]] 
+		["reflow_desc"] = "Chatframe text should flow around the buttons not under them.",
 		--[[Translation missing --]]
-		--[[ ["reflow_name"] = "",--]] 
+		["reflow_name"] = "Text Flows Around",
 		--[[Translation missing --]]
-		--[[ ["reminder_desc"] = "",--]] 
+		["reminder_desc"] = "Show reminder button when not at the bottom of a chat window.",
 		--[[Translation missing --]]
-		--[[ ["reminder_name"] = "",--]] 
+		["reminder_name"] = "Show ScrollDown Reminder",
 		--[[Translation missing --]]
-		--[[ ["Right, Inside Frame"] = "",--]] 
+		["Right, Inside Frame"] = "Right, Inside Frame",
 		--[[Translation missing --]]
-		--[[ ["Right, Outside Frame"] = "",--]] 
+		["Right, Outside Frame"] = "Right, Outside Frame",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Sets position of chat menu and arrows for all chat windows."] = "",--]] 
+		["Sets position of chat menu and arrows for all chat windows."] = "Sets position of chat menu and arrows for all chat windows.",
 		--[[Translation missing --]]
-		--[[ ["Show Arrows"] = "",--]] 
+		["Show Arrows"] = "Show Arrows",
 		--[[Translation missing --]]
-		--[[ ["Show Chat%d Arrows"] = "",--]] 
+		["Show Chat%d Arrows"] = "Show Chat%d Arrows",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing chat arrows for each chat window."] = "",--]] 
+		["Toggle showing chat arrows for each chat window."] = "Toggle showing chat arrows for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["Toggles navigation arrows on and off."] = "",--]] 
+		["Toggles navigation arrows on and off."] = "Toggles navigation arrows on and off.",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		--[[Translation missing --]]
-		--[[ ["alpha_desc"] = "",--]] 
+		["alpha_desc"] = "Sets alpha of chat menu and arrows for all chat windows.",
 		--[[Translation missing --]]
-		--[[ ["alpha_name"] = "",--]] 
+		["alpha_name"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_desc"] = "",--]] 
+		["buttonframe_desc"] = "Toggles the button frame menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_name"] = "",--]] 
+		["buttonframe_name"] = "Show Button Frame",
 		["ChannelNames"] = true,
 		--[[Translation missing --]]
-		--[[ ["Chat window button options."] = "",--]] 
+		["Chat window button options."] = "Chat window button options.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_desc"] = "",--]] 
+		["chatmenu_desc"] = "Toggles chat menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_name"] = "",--]] 
+		["chatmenu_name"] = "Show Chat Menu",
 		["Default"] = "Padrão",
-		["Original Buttons"] = "Botões Original",
+		["Original Buttons"] = "Botões Originais",
 		--[[Translation missing --]]
-		--[[ ["reflow_desc"] = "",--]] 
+		["reflow_desc"] = "Chatframe text should flow around the buttons not under them.",
 		--[[Translation missing --]]
-		--[[ ["reflow_name"] = "",--]] 
+		["reflow_name"] = "Text Flows Around",
 		--[[Translation missing --]]
-		--[[ ["reminder_desc"] = "",--]] 
+		["reminder_desc"] = "Show reminder button when not at the bottom of a chat window.",
 		--[[Translation missing --]]
-		--[[ ["reminder_name"] = "",--]] 
+		["reminder_name"] = "Show ScrollDown Reminder",
 		["Right, Inside Frame"] = "Direito, Dentro do Frame",
 		--[[Translation missing --]]
-		--[[ ["Right, Outside Frame"] = "",--]] 
+		["Right, Outside Frame"] = "Right, Outside Frame",
 		["Set Position"] = "Definir Posição",
 		--[[Translation missing --]]
-		--[[ ["Sets position of chat menu and arrows for all chat windows."] = "",--]] 
-		["Show Arrows"] = "Mostar Setas",
+		["Sets position of chat menu and arrows for all chat windows."] = "Sets position of chat menu and arrows for all chat windows.",
+		["Show Arrows"] = "Mostrar Setas",
 		--[[Translation missing --]]
-		--[[ ["Show Chat%d Arrows"] = "",--]] 
+		["Show Chat%d Arrows"] = "Show Chat%d Arrows",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing chat arrows for each chat window."] = "",--]] 
+		["Toggle showing chat arrows for each chat window."] = "Toggle showing chat arrows for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["Toggles navigation arrows on and off."] = "",--]] 
+		["Toggles navigation arrows on and off."] = "Toggles navigation arrows on and off.",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "Définir l'alpha du menu du chat et des flèches pour toutes les fenêtres.",
 		["alpha_name"] = "Définir l'alpha",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_desc"] = "",--]] 
+		["buttonframe_desc"] = "Toggles the button frame menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_name"] = "",--]] 
+		["buttonframe_name"] = "Show Button Frame",
 		["ChannelNames"] = "Noms-des-Canaux",
 		["Chat window button options."] = "Bouton d'options de la fenêtre de chat.",
 		["chatmenu_desc"] = "Activer et désactiver le menu du chat",
@@ -221,9 +224,9 @@ L=
 		["Default"] = "Défaut",
 		["Original Buttons"] = "Boutons d'origine",
 		--[[Translation missing --]]
-		--[[ ["reflow_desc"] = "",--]] 
+		["reflow_desc"] = "Chatframe text should flow around the buttons not under them.",
 		--[[Translation missing --]]
-		--[[ ["reflow_name"] = "",--]] 
+		["reflow_name"] = "Text Flows Around",
 		["reminder_desc"] = "Montrer une icône de rappel lorsque vous n'êtes pas en bas de la fenêtre de chat",
 		["reminder_name"] = "Montrer un rappel pour le défilement vers le bas",
 		["Right, Inside Frame"] = "Droite, Dans le cadre",
@@ -236,12 +239,13 @@ L=
 		["Toggles navigation arrows on and off."] = "Activer et désactiver les flèches de navigation",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "Transparenz des Chatmenüs sowie der Navigationspfeile für alle Chatfenster einstellen.",
 		["alpha_name"] = "Transparenz einstellen",
@@ -267,10 +271,11 @@ L=
 		["Toggles navigation arrows on and off."] = "Ein-/Ausschalten der Navigationspfeile",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "deDE", L)
 
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "모든 대화창의 대화 메뉴와 화살표의 투명도를 설정합니다.",
 		["alpha_name"] = "투명도 설정",
@@ -296,59 +301,61 @@ L=
 		["Toggles navigation arrows on and off."] = "탐색 화살표를 켜거나 끕니다.",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		--[[Translation missing --]]
-		--[[ ["alpha_desc"] = "",--]] 
+		["alpha_desc"] = "Sets alpha of chat menu and arrows for all chat windows.",
 		--[[Translation missing --]]
-		--[[ ["alpha_name"] = "",--]] 
+		["alpha_name"] = "Set Alpha",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_desc"] = "",--]] 
+		["buttonframe_desc"] = "Toggles the button frame menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_name"] = "",--]] 
+		["buttonframe_name"] = "Show Button Frame",
 		--[[Translation missing --]]
-		--[[ ["ChannelNames"] = "",--]] 
+		["ChannelNames"] = "ChannelNames",
 		--[[Translation missing --]]
-		--[[ ["Chat window button options."] = "",--]] 
+		["Chat window button options."] = "Chat window button options.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_desc"] = "",--]] 
+		["chatmenu_desc"] = "Toggles chat menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["chatmenu_name"] = "",--]] 
+		["chatmenu_name"] = "Show Chat Menu",
 		--[[Translation missing --]]
-		--[[ ["Default"] = "",--]] 
+		["Default"] = "Default",
 		--[[Translation missing --]]
-		--[[ ["Original Buttons"] = "",--]] 
+		["Original Buttons"] = "Original Buttons",
 		--[[Translation missing --]]
-		--[[ ["reflow_desc"] = "",--]] 
+		["reflow_desc"] = "Chatframe text should flow around the buttons not under them.",
 		--[[Translation missing --]]
-		--[[ ["reflow_name"] = "",--]] 
+		["reflow_name"] = "Text Flows Around",
 		--[[Translation missing --]]
-		--[[ ["reminder_desc"] = "",--]] 
+		["reminder_desc"] = "Show reminder button when not at the bottom of a chat window.",
 		--[[Translation missing --]]
-		--[[ ["reminder_name"] = "",--]] 
+		["reminder_name"] = "Show ScrollDown Reminder",
 		--[[Translation missing --]]
-		--[[ ["Right, Inside Frame"] = "",--]] 
+		["Right, Inside Frame"] = "Right, Inside Frame",
 		--[[Translation missing --]]
-		--[[ ["Right, Outside Frame"] = "",--]] 
+		["Right, Outside Frame"] = "Right, Outside Frame",
 		--[[Translation missing --]]
-		--[[ ["Set Position"] = "",--]] 
+		["Set Position"] = "Set Position",
 		--[[Translation missing --]]
-		--[[ ["Sets position of chat menu and arrows for all chat windows."] = "",--]] 
+		["Sets position of chat menu and arrows for all chat windows."] = "Sets position of chat menu and arrows for all chat windows.",
 		--[[Translation missing --]]
-		--[[ ["Show Arrows"] = "",--]] 
+		["Show Arrows"] = "Show Arrows",
 		--[[Translation missing --]]
-		--[[ ["Show Chat%d Arrows"] = "",--]] 
+		["Show Chat%d Arrows"] = "Show Chat%d Arrows",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing chat arrows for each chat window."] = "",--]] 
+		["Toggle showing chat arrows for each chat window."] = "Toggle showing chat arrows for each chat window.",
 		--[[Translation missing --]]
-		--[[ ["Toggles navigation arrows on and off."] = "",--]] 
+		["Toggles navigation arrows on and off."] = "Toggles navigation arrows on and off.",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esMX",L)
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "Установить прозрачность меню чата, а также стрелок для всех окон чата.",
 		["alpha_name"] = "Прозрачность",
@@ -374,9 +381,10 @@ L=
 		["Toggles navigation arrows on and off."] = "Вкл/Откл отображение стрелок прокрутки чата",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "设置所有聊天窗口里聊天菜单和聊天箭头的透明度。",
 		["alpha_name"] = "设置透明度",
@@ -402,16 +410,17 @@ L=
 		["Toggles navigation arrows on and off."] = "开启或关闭导航箭头。",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "Establece la transparencia del menú y de las flechas en todas las ventanas de chat.",
 		["alpha_name"] = "Establecer Transparencia",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_desc"] = "",--]] 
+		["buttonframe_desc"] = "Toggles the button frame menu on and off.",
 		--[[Translation missing --]]
-		--[[ ["buttonframe_name"] = "",--]] 
+		["buttonframe_name"] = "Show Button Frame",
 		["ChannelNames"] = "NombreCanales",
 		["Chat window button options."] = "Opciones de los botones de la ventana de chat.",
 		["chatmenu_desc"] = "Alterna activación del menú de chat.",
@@ -432,9 +441,10 @@ L=
 		["Toggles navigation arrows on and off."] = "Alterna activación de flechas de navegación.",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
-L=
-{
+
+L = {
 	["OriginalButtons"] = {
 		["alpha_desc"] = "為所有聊天視窗選單以及箭頭設定透明度",
 		["alpha_name"] = "設定透明度",
@@ -447,7 +457,7 @@ L=
 		["Default"] = "預設值",
 		["Original Buttons"] = "預設按鈕",
 		--[[Translation missing --]]
-		--[[ ["reflow_desc"] = "",--]] 
+		["reflow_desc"] = "Chatframe text should flow around the buttons not under them.",
 		["reflow_name"] = "文字流動環繞",
 		["reminder_desc"] = "顯示按鈕提醒當聊天視窗未在最底層時",
 		["reminder_name"] = "顯示下方箭頭提示",
@@ -461,6 +471,7 @@ L=
 		["Toggles navigation arrows on and off."] = "切換是否啟用導覽箭頭",
 	}
 }
+
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 end
 --@end-non-debug@

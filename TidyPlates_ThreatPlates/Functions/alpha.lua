@@ -12,6 +12,11 @@ local UnitExists = UnitExists
 
 -- ThreatPlates APIs
 local TidyPlatesThreat = TidyPlatesThreat
+local GetThreatSituation = Addon.GetThreatSituation
+
+---------------------------------------------------------------------------------------------------
+-- Functions handling transparency of nameplates
+---------------------------------------------------------------------------------------------------
 
 local function TransparencySituational(unit)
 	local db = TidyPlatesThreat.db.profile.nameplate
@@ -84,11 +89,7 @@ local function TransparencyThreat(unit, style)
 		end
 	end
 
-  local threatSituation = unit.threatSituation
-  if style == "tank" and db.toggle.OffTank and Addon:UnitIsOffTanked(unit) then
-    threatSituation = "OFFTANK"
-	end
-
+	local threatSituation = GetThreatSituation(unit, style, db.toggle.OffTank)
 	if db.AdditiveAlpha then
 		return db[style].alpha[threatSituation] + TransparencyGeneral(unit) - 1
 	end
@@ -160,6 +161,8 @@ local ALPHA_FUNCTIONS = {
 	["NameOnly-Unique"] = AlphaUniqueNameOnly,
 }
 
-function Addon:SetAlpha(unit)
+function Addon:GetAlpha(unit)
   return ALPHA_FUNCTIONS[unit.style](unit, unit.style)
 end
+
+

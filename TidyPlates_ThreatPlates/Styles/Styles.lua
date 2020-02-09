@@ -106,7 +106,6 @@ local function GetUnitType(unit)
   return faction .. unit_class
 end
 
-
 local function ShowUnit(unit)
   -- If nameplate visibility is controlled by Wow itself (configured via CVars), this function is never used as
   -- nameplates aren't created in the first place (e.g. friendly NPCs, totems, guardians, pets, ...)
@@ -144,16 +143,18 @@ local function ShowUnit(unit)
 --  end
 
   db = db_base.HeadlineView
-  if not db.ON then
-    headline_view = false
-  elseif db.ForceHealthbarOnTarget and unit.isTarget then
+  if db.ForceHealthbarOnTarget and unit.isTarget then
     headline_view = false
   elseif db.ForceOutOfCombat and not InCombatLockdown() then
     headline_view = true
   elseif db.ForceNonAttackableUnits and unit.reaction ~= "FRIENDLY" and not UnitCanAttack("player", unit.unitid) then
     headline_view = true
-  elseif db.ForceFriendlyInCombat and unit.reaction == "FRIENDLY" and InCombatLockdown() then
-    headline_view = true
+  elseif unit.reaction == "FRIENDLY" and InCombatLockdown() then
+    if db.ForceFriendlyInCombat == "NAME" then
+      headline_view = true
+    elseif db.ForceFriendlyInCombat == "HEALTHBAR" then
+      headline_view = false
+    end
   end
 
   return show, headline_view
@@ -162,10 +163,8 @@ end
 -- Returns style based on threat (currently checks for in combat, should not do hat)
 function Addon:GetThreatStyle(unit)
   -- style tank/dps only used for NPCs/non-player units
-  if InCombatLockdown() and unit.type == "NPC" and unit.reaction ~= "FRIENDLY" and TidyPlatesThreat.db.profile.threat.ON then
-    if Addon:ShowThreatFeedback(unit) then
-      return (Addon:PlayerRoleIsTank() and "tank") or "dps"
-    end
+  if Addon:ShowThreatFeedback(unit) then
+    return (Addon:PlayerRoleIsTank() and "tank") or "dps"
   end
 
   return "normal"
@@ -182,13 +181,7 @@ function Addon:UnitStyle_NameDependent(unit)
   local totem_settings
   local unique_settings = db.uniqueSettings.map[unit.name]
   if unique_settings and unique_settings.useStyle then
-    if unique_settings.showNameplate then
-      plate_style = "unique"
-    elseif unique_settings.ShowHeadlineView then
-      plate_style = (db.HeadlineView.ON and "NameOnly-Unique") or "unique"
-    else
-      plate_style = "etotem"
-    end
+    plate_style = (unique_settings.showNameplate and "unique") or (unique_settings.ShowHeadlineView and "NameOnly-Unique") or "etotem"
   else
     local totem_id = TOTEMS[unit.name]
     if totem_id then
@@ -231,14 +224,11 @@ function Addon:SetStyle(unit)
   -- Check if custom nameplate should be used for the unit:
   local style = Addon:UnitStyle_NameDependent(unit) or (headline_view and "NameOnly")
 
-  if not style and unit.reaction ~= "FRIENDLY" then
+  --if not style and unit.reaction ~= "FRIENDLY" then
+  if not style and Addon:ShowThreatFeedback(unit) then
     -- could call GetThreatStyle here, but that would at a tiny overhead
     -- style tank/dps only used for hostile (enemy, neutral) NPCs
-    if InCombatLockdown() and unit.type == "NPC" and TidyPlatesThreat.db.profile.threat.ON then
-      if Addon:ShowThreatFeedback(unit) then
-        style = (Addon:PlayerRoleIsTank() and "tank") or "dps"
-      end
-    end
+    style = (Addon:PlayerRoleIsTank() and "tank") or "dps"
   end
 
   return style or "normal"

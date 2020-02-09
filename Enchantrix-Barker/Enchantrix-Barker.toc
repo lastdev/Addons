@@ -1,17 +1,17 @@
 ## Title: EnchantrixBarker
-## Notes: Sends a price list of Enchants that a user has available for sale to the Trade channel. [7.7.6000] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
+## Notes: Sends a price list of Enchants that a user has available for sale to the Trade channel. [8.2.6507] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
 ##
-## Interface: 70300
+## Interface: 80205
 ## Dependencies: Stubby
 ## OptionalDeps: Enchantrix, !nLog, DebugLib, Babylonian, LibExtraTip, TipHelper
-## SavedVariables: EnchantrixBarkerConfig
+## SavedVariables: EnchantrixBarkerConfig, EnchantrixBarkerSavedInfo
 ##
-## Version: 7.7.6000 (SwimmingSeadragon)
-## Revision: $Id: Enchantrix-Barker.toc 6000 2018-07-17 14:09:34Z none $
+## Version: 8.2.6507 (SwimmingSeadragon)
+## Revision: $Id: Enchantrix-Barker.toc 6507 2019-11-02 14:38:37Z none $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Professions
-## X-Max-Interface: 70300
+## X-Max-Interface: 80205
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

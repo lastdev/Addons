@@ -33,6 +33,8 @@ addon.pluginName 	= private.pluginName
 addon.Name = FOLDER_NAME
 _G.HandyNotes_Argus = addon
 
+local profile
+
 -- //////////////////////////////////////////////////////////////////////////
 -- get creature's name from server
 local mcache_tooltip = CreateFrame("GameTooltip", private.addon_name.."_mcacheToolTip", UIParent, "GameTooltipTemplate")
@@ -94,7 +96,7 @@ local get_point_info = function(point)
 
 		local icon = work_out_texture(point)
 
-		return label, icon, point.scale, point.alpha, point.dungeonLevel
+		return label, icon, point.scale, point.alpha
 	end
 end
 
@@ -189,13 +191,41 @@ local function addTomTomWaypoint(button, uMapID, coord)
 	end
 end
 
-local function addAllTreasureToWayPoint(button, mapFile)
+local function addAllTreasureToWayPoint(button, uMapID)
 	if TomTom then
-		local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
-		for k, v in pairs(profile.treasures) do
+		for k, v in pairs(private.DB.treasures) do
 			local x, y = HandyNotes:getXY(k)
-			TomTom:AddWaypoint(mapId, nil, x, y, {
-				title = L["Treasure Chest"],
+			TomTom:AddWaypoint(uMapID, x, y, {
+				title = L["Veiled Wyrmtongue Chest"],
+				persistent = nil,
+				minimap = true,
+				world = true
+			})
+		end
+	end
+end
+
+local function addAllShrineToWayPoint(button, uMapID)
+	if TomTom then
+		local spellName = GetSpellInfo(239933)
+		for k, v in pairs(private.DB.shrines) do
+			local x, y = HandyNotes:getXY(k)
+			TomTom:AddWaypoint(uMapID, x, y, {
+				title = spellName,
+				persistent = nil,
+				minimap = true,
+				world = true
+			})
+		end
+	end
+end
+
+local function addAllNetherPortalToWayPoint(button, uMapID)
+	if TomTom then
+		for k, v in pairs(private.DB.netherPortals) do
+			local x, y = HandyNotes:getXY(k)
+			TomTom:AddWaypoint(uMapID, x, y, {
+				title = L["Unstable Nether Portal"],
 				persistent = nil,
 				minimap = true,
 				world = true
@@ -227,13 +257,26 @@ do
 				info.arg2 = currentCoord
 				UIDropDownMenu_AddButton(info, level)
 
---[[				info = UIDropDownMenu_CreateInfo()
+				info = UIDropDownMenu_CreateInfo()
 				info.text = L["Add all treasure nodes to TomTom waypoints"]
-				info.notCheckable = 1
+				info.notCheckable = true
 				info.func = addAllTreasureToWayPoint
-				info.arg1 = currentZone
+				info.arg1 = currentMapID
 				UIDropDownMenu_AddButton(info, level)
-]]
+
+				info = UIDropDownMenu_CreateInfo()
+				info.text = L["Add all Ancient Shrine nodes to TomTom waypoints"]
+				info.notCheckable = true
+				info.func = addAllShrineToWayPoint
+				info.arg1 = currentMapID
+				UIDropDownMenu_AddButton(info, level)
+
+				info = UIDropDownMenu_CreateInfo()
+				info.text = L["Add all Unstable Nether Portal nodes to TomTom waypoints"]
+				info.notCheckable = true
+				info.func = addAllNetherPortalToWayPoint
+				info.arg1 = currentMapID
+				UIDropDownMenu_AddButton(info, level)
 			end
 
 			-- Hide menu item
@@ -267,6 +310,8 @@ do
 end
 
 do
+--	local tablepool = setmetatable({}, {__mode = 'k'})
+
 	-- This is a custom iterator we use to iterate over every node in a given zone
 	local currentMapID = nil
 	local function iter(t, prestate)
@@ -283,52 +328,58 @@ do
 		end
 		return nil, nil, nil, nil, nil, nil
 	end
+--[[
 	local function iterCont(t, prestate)
-		if not t then return nil end
-		local zone = t.Z
-		local mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
-		local state, value, data, cleanMapFile
+		if not t then return end
+		local zone = t.C[t.Z]
+		local data = private.DB.points[zone]
+		local state, value
 
-		while mapFile do
-			cleanMapFile = gsub(mapFile, "_terrain%d+$", "")
-			data = private.DB.points[cleanMapFile]
-
+		while zone do
 			if data then -- only if there is data for this zone
 				state, value = next(data, prestate)
-
 				while state do -- have we reached the end of this zone?
-					if value and private:ShouldShow(state, value, currentZone, currentLevel) then
-						local label, icon, scale, alpha, dungeonLevel = get_point_info(value)
+					if value and private:ShouldShow(state, value, currentMapID) then
+						local label, icon, scale, alpha = get_point_info(value)
 						scale = (scale or 1) * (icon and icon.scale or 1) * profile.icon_scale
 						alpha = (alpha or 1) * (icon and icon.alpha or 1) * profile.icon_alpha
-						return state, mapFile, icon, scale, alpha, dungeonLevel or 0
+						return state, mapFile, icon, scale, alpha
 					end
 					state, value = next(data, state) -- get next data
 				end
 			end
-
 			-- get next zone
-			zone = next(t.C, zone)
-			t.Z = zone
-			mapFile = HandyNotes:GetMapIDtoMapFile(t.C[zone])
+			t.Z = next(t.C, t.Z)
+			zone = t.C[t.Z]
+			data = private.DB.points[zone]
 			prestate = nil
 		end
+		wipe(t)
+		tablepool[t] = true
 	end
-	function PluginHandler:GetNodes(mapFile, minimap, level)
-		currentLevel = level
-		local C = HandyNotes:GetContinentZoneList(mapFile) -- Is this a continent?
-
+]]
+	function PluginHandler:GetNodes2(uMapID, minimap)
+--[[		local C = HandyNotes:GetContinentZoneList(uMapID) -- Is this a continent?
 		if C and profile.showNodesOnContinentMap then -- Once we added a config section in config panel, user will be able to toggle this
-			local tbl = { C = C, Z = next(C) }
+			local tbl = next(tablepool) or {}
+			tablepool[tbl] = nil
+			tbl.C = C
+			tbl.Z = next(C)
+			tbl.contId = uMapID
 			return iterCont, tbl, nil
 		else
-			mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-			currentZone = mapFile
-			return iter, private.DB.points[mapFile], nil
+			local tbl = next(tablepool) or {}
+			tablepool[tbl] = nil
+			tbl.data = private.DB.points[uMapID]
+			currentMapID = uMapID
+			return iter, tbl, nil
 		end
+]]
+		currentMapID = uMapID
+		return iter, private.DB.points[uMapID], nil
 	end
-	function private:ShouldShow(coord, point, currentZone, currentLevel)
-		if (private.hidden[currentZone] and private.hidden[currentZone][coord]) then
+	function private:ShouldShow(coord, point, currentMapID)
+		if (private.hidden[currentMapID] and private.hidden[currentMapID][coord]) then
 			return false
 		end
 		if (point.entrance and not profile.show_entrance) then

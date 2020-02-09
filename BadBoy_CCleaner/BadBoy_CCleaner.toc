@@ -1,5 +1,5 @@
-## Interface: 80000
-## Version: v8.0.0
+## Interface: 80200
+## Version: v8.2.0
 ## Title: BadBoy_CCleaner
 ## Notes: Filter crap from your chat.
 ## Notes-frFR: Enlève toutes les saloperies de votre fenêtre de discussion.

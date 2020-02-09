@@ -1,5 +1,7 @@
 local WIM = WIM;
 
+local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 -- imports
 local _G = _G;
 local table = table;
@@ -16,7 +18,7 @@ local classes = constants.classes;
 
 local classList = {
      "Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue",
-     "Shaman", "Warlock", "Warrior",  "Death Knight", "Monk"
+     "Shaman", "Warlock", "Warrior",  "Death Knight", "Monk", "Demon Hunter"
 };
 
 constants.classListEng = classList;
@@ -24,6 +26,7 @@ constants.classListEng = classList;
 local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID = _G.GetNumSpecializationsForClassID, _G.GetSpecializationInfoForClassID
 local function createSpecNameTable(classID)
 	local t = {}
+	if isClassic then return t end
 	for spec = 1, GetNumSpecializationsForClassID(classID) do
 		local specID, name = GetSpecializationInfoForClassID(classID,spec)
 		t[spec] = name
@@ -135,8 +138,8 @@ end
 
 function classes.GetColoredNameByChatEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
      if(arg12 and arg12 ~= "") then
-	    	 local type = _G.strsplit(":", arg12 or "")
-	    	 if type ~= "player" then return arg2 end--Blizzard didn't return a valid guid, so abort class colors
+	    	 local type = _G.strsplit("-", arg12 or "")
+	    	 if type ~= "Player" then return arg2 end--Blizzard didn't return a valid guid, so abort class colors
           local localizedClass, englishClass, localizedRace, englishRace, sex = _G.GetPlayerInfoByGUID(arg12)
           if ( englishClass ) then
                local classColorTable = _G.RAID_CLASS_COLORS[englishClass];

@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 XPerlLocked = 1
@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 1121 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -91,7 +91,7 @@ local function CurrentConfig()
 		if (not ZPerlConfigNew[GetRealmName()][playerName] or not QuickValidate(ZPerlConfigNew[GetRealmName()][playerName])) then
 			local new = {}
 			XPerl_Defaults(new)
-			ZPerlConfigNew[GetRealmName()][playerName] = new		-- TODO use last used config
+			ZPerlConfigNew[GetRealmName()][playerName] = new -- TODO: use last used config
 		end
 
 		ret = ZPerlConfigNew[GetRealmName()][playerName]
@@ -99,7 +99,7 @@ local function CurrentConfig()
 		if (not ZPerlConfigNew.global or not QuickValidate(ZPerlConfigNew.global)) then
 			local new = {}
 			XPerl_Defaults(new)
-			ZPerlConfigNew.global = new					-- TODO use last used config
+			ZPerlConfigNew.global = new -- TODO: use last used config
 		end
 
 		ret = ZPerlConfigNew.global
@@ -113,7 +113,7 @@ local function GiveConfig()
 	conf = CurrentConfig()
 	XPerlDB = conf
 
-	for k,v in pairs(ConfigRequesters) do
+	for k, v in pairs(ConfigRequesters) do
 		v(conf)
 	end
 end
@@ -122,7 +122,6 @@ XPerl_GiveConfig = GiveConfig
 
 -- XPerl_ResetDefaults
 function XPerl_ResetDefaults()
-
 	local conf = {}
 
 	XPerl_Defaults(conf)
@@ -134,6 +133,42 @@ function XPerl_ResetDefaults()
 	end
 
 	GiveConfig()
+
+	if XPerl_Assists_FrameAnchor then
+		XPerl_Assists_FrameAnchor:ClearAllPoints()
+		XPerl_Assists_FrameAnchor:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		if (XPerl_SavePosition) then
+			XPerl_SavePosition(XPerl_Assists_FrameAnchor)
+		end
+	end
+	if XPerl_RaidMonitor_Anchor then
+		XPerl_RaidMonitor_Anchor:ClearAllPoints()
+		XPerl_RaidMonitor_Anchor:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		if (XPerl_SavePosition) then
+			XPerl_SavePosition(XPerl_RaidMonitor_Anchor)
+		end
+	end
+	if XPerl_RosterTextAnchor then
+		XPerl_RosterTextAnchor:ClearAllPoints()
+		XPerl_RosterTextAnchor:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		if (XPerl_SavePosition) then
+			XPerl_SavePosition(XPerl_RosterTextAnchor)
+		end
+	end
+	if XPerl_CheckAnchor then
+		XPerl_CheckAnchor:ClearAllPoints()
+		XPerl_CheckAnchor:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		if (XPerl_SavePosition) then
+			XPerl_SavePosition(XPerl_CheckAnchor)
+		end
+	end
+	if XPerl_AdminFrameAnchor then
+		XPerl_AdminFrameAnchor:ClearAllPoints()
+		XPerl_AdminFrameAnchor:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		if (XPerl_SavePosition) then
+			XPerl_SavePosition(XPerl_AdminFrameAnchor)
+		end
+	end
 
 	XPerl_OptionActions()
 
@@ -191,94 +226,20 @@ local function ImportOldConfigs()
 	end
 end
 
--- XPerl_UnitEvents
---[[local unitEvents = {}
-function XPerl_UnitEvents(self, eventArray, eventList)
-
-	local unit = self.partyid
-	if (not unit) then
-		unit = self:GetAttribute("unit")
-		if (not unit) then
-			return
-		end
-	end
-
-	local a = unitEvents[unit]
-	if (not a) then
-		a = {}
-		unitEvents[unit] = a
-	end
-
-	a.array = eventArray
-	for k,v in pairs(eventList) do
-		local selves = a[v]
-		if (not selves) then
-			selves = {}
-			a[v] = selves
-		end
-		tinsert(selves, self)
-		XPerl_Globals:RegisterEvent(v)
-	end
-end
---]]
--- XPerl_UnitEvent
---[[local function XPerl_UnitEvent(unit, event, a, b, c, d)
-	local a = unitEvents[unit]
-	if (a) then
-		local selves = a[event]
-		if (selves) then
-			local array = a.array
-			if (array) then
-				for k,v in pairs(selves) do
-					array[event](v, a, b, c, d)
-				end
-				return true
-			end
-		end
-	end
-end--]]
-
--- XPerl_RegisterBasics
---[[function XPerl_RegisterBasics(self, eventArray)
-	local events = {
-		"UNIT_POWER", "UNIT_MAXPOWER", "UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"
-	}
-
-	if (self ~= XPerl_Player or not GetCVarBool("predictedPower")) then
-		tinsert(events, "UNIT_POWER")
-	end
-	XPerl_UnitEvents(self, eventArray, events)
-end--]]
-
 -- onEventPostSetup
 local function onEventPostSetup(self, event, unit, ...)
-	--if (unit and XPerl_UnitEvent(unit, event, unit, ...)) then
-	--	return
-	--end
-	--print(event)
-	--if (event == "PLAYER_REGEN_ENABLED") then
-		--print("something useful")
-		if (not XPerlDB) then
-			return
-		end
-		if (XPerl_OutOfCombatOptionSet) then
-			XPerl_OutOfCombatOptionSet = nil
-			XPerl_OptionActions()
-		end
-		for func, arg in pairs(XPerl_OutOfCombatQueue) do
-			assert(type(func) == "function")
-			func(arg)
-			--print("out of combat magiczzz:" .. tostring(arg))
-			--if (type(v) == "function") then
-			--	v()
-			--elseif (type(v) == "table") then
-			--	v[1](v[2])
-			--elseif (type(v) == "string") then
-			--	RunScript(v)
-			--end
-			XPerl_OutOfCombatQueue[func] = nil
-		end
-	--end
+	if (not XPerlDB) then
+		return
+	end
+	if (XPerl_OutOfCombatOptionSet) then
+		XPerl_OutOfCombatOptionSet = nil
+		XPerl_OptionActions()
+	end
+	for func, arg in pairs(XPerl_OutOfCombatQueue) do
+		assert(type(func) == "function")
+		func(arg)
+		XPerl_OutOfCombatQueue[func] = nil
+	end
 end
 
 -- XPerl_RegisterLDB
@@ -365,7 +326,7 @@ function ZPerl_ForceImportAll()
 end
 
 -- XPerl_GetLayout
-function XPerl_GetLayout(self, name)
+function XPerl_GetLayout(name)
 	if (ZPerlConfigNew.savedPositions) then
 		for realmName, realmList in pairs(ZPerlConfigNew.savedPositions) do
 			for playerName, frames in pairs(realmList) do
@@ -386,7 +347,7 @@ end
 
 -- XPerl_LoadFrameLayout
 function XPerl_LoadFrameLayout(name)
-	local layout = XPerl_GetLayout(self, name)
+	local layout = XPerl_GetLayout(name)
 
 	if (layout) then
 		local name = UnitName("player")

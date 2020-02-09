@@ -1,3 +1,85 @@
+**r1194**
+* Removed debug prints.
+
+**r1190**
+* Fixed curable class dispels.
+
+**r1180**
+* Update for Classic 1.13.3.
+
+**r1176**
+* Healer mode precision fixes.
+* Elite texture fixes.
+* Inspecting fixes for classic.
+
+**r1172**
+* Fixed range finder item.
+* Buff tooltip helper should work properly again.
+* Dispel fixes for classic.
+* Highlight fixes for classic.
+* Casting fixes for classic.
+* Various other smaller fixes.
+
+**r1168**
+* Fixed player pet hit indicators.
+* Reset defaults will properly reset the position of the additional extra info panels.
+* Broken custom highlight zone fixes.
+* Some other smaller fixes.
+
+**r1160**
+* Fixed custom highlighting.
+* Fixed debuff curable checker.
+* Fixed connected realm main tank names.
+* Various tooltip and other fixes.
+
+**r1158**
+* Fixed some issues with player frame states for druids/priests/shamans.
+* Target cast bar should work when the target is the player.
+* Fixed channel spells.
+
+**r1157**
+* TOC fixes.
+
+**r1153**
+* Fixed hidden but clickable raid frame movers.
+
+**r1149**
+* Fixed pvp icons for classic.
+* Added hunter pet happiness support. (untested)
+* Fixed status highlighting extra sparkles texture.
+* Various fixes for both classic and retail.
+
+**r1141**
+* Compatibility update for World of Warcraft Classic with RealMobHealth support.
+* Added Clique support for party pet frame.
+* Various fixes for retail.
+
+**r1139**
+* Fixing various issues with the default Blizzard buff frame.
+* Raid Pets anchoring fixes.
+
+**r1137**
+* Updated for 8.2.0.
+
+**r1135**
+* Edit box fixes.
+
+**r1133**
+* Fixing a dropdown error.
+
+**r1131**
+* Unit health workarounds.
+* Some other smaller fixes.
+
+**r1129**
+* Dropdown fixes.
+
+**r1128**
+* Packager changes.
+
+**r1127**
+* Updated for 8.1.5.
+
 **r1123**
 * Fixing a minor issues with assist frames.
 

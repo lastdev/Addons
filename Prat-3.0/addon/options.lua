@@ -77,8 +77,8 @@ PL:AddLocale(nil, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["display_desc"] = "Chat Frame Control and Look",
 	["display_name"] = "Display Settings",
 	["extras_desc"] = "Msc. Modules",
@@ -98,11 +98,12 @@ L=
 	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
 
+
 PL:AddLocale(nil, "enUS",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "Comportement et apparence de la fenêtre de discussion.",
 	["display_name"] = "Options d'affichage",
 	["extras_desc"] = "Modules divers",
@@ -120,14 +121,15 @@ L=
 	["prat"] = "Prat",
 	["reload_required"] = "Le nouveau paramètre de cette option ne prendra pas effet intégralement tant que vous n'aurez pas %s votre interface.",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "frFR",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "Steuerung und Darstellung des Chatfensters",
 	["display_name"] = "Anzeigeeinstellungen",
 	["extras_desc"] = "Verschiedene Module",
@@ -144,15 +146,15 @@ L=
 	["modulecontrol_name"] = "Modulsteuerung",
 	["prat"] = "Prat",
 	["reload_required"] = "Diese Änderung wird erst nach dem Neustart vollständig wirksam.",
-	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Modul ist nicht geladen, lade es, um die Beschreibung zu sehen"
 }
+
 
 PL:AddLocale(nil, "deDE",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "대화창 기능 및 외형 설정",
 	["display_name"] = "표시 설정",
 	["extras_desc"] = "기타 모듈",
@@ -170,55 +172,57 @@ L=
 	["prat"] = "Prat",
 	["reload_required"] = "이 설정은 애드온을 %s 해야 변경된 사항이 적용됩니다.",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "koKR",L)
 
 
-L=
-{
+
+L = {
 	--[[Translation missing --]]
-	--[[ ["display_desc"] = "",--]] 
+	["display_desc"] = "Chat Frame Control and Look",
 	--[[Translation missing --]]
-	--[[ ["display_name"] = "",--]] 
+	["display_name"] = "Display Settings",
 	--[[Translation missing --]]
-	--[[ ["extras_desc"] = "",--]] 
+	["extras_desc"] = "Msc. Modules",
 	--[[Translation missing --]]
-	--[[ ["extras_name"] = "",--]] 
+	["extras_name"] = "Extra Stuff",
 	--[[Translation missing --]]
-	--[[ ["formatting_desc"] = "",--]] 
+	["formatting_desc"] = "Change the way the lines look and feel",
 	--[[Translation missing --]]
-	--[[ ["formatting_name"] = "",--]] 
+	["formatting_name"] = "Chat Formatting",
 	--[[Translation missing --]]
-	--[[ ["load_desc"] = "",--]] 
+	["load_desc"] = "Control the load behavior for this module.",
 	--[[Translation missing --]]
-	--[[ ["load_disabled"] = "",--]] 
+	["load_disabled"] = "Disabled",
 	--[[Translation missing --]]
-	--[[ ["load_disabledonrestart"] = "",--]] 
+	["load_disabledonrestart"] = "Disabled (reload)",
 	--[[Translation missing --]]
-	--[[ ["load_enabled"] = "",--]] 
+	["load_enabled"] = "Enabled",
 	--[[Translation missing --]]
-	--[[ ["load_enabledonrestart"] = "",--]] 
+	["load_enabledonrestart"] = "Enabled (reload)",
 	--[[Translation missing --]]
-	--[[ ["load_no"] = "",--]] 
+	["load_no"] = "Don't Load",
 	--[[Translation missing --]]
-	--[[ ["modulecontrol_desc"] = "",--]] 
+	["modulecontrol_desc"] = "Control the loading and enabling of Prat's modules.",
 	--[[Translation missing --]]
-	--[[ ["modulecontrol_name"] = "",--]] 
+	["modulecontrol_name"] = "Module Control",
 	--[[Translation missing --]]
-	--[[ ["prat"] = "",--]] 
+	["prat"] = "Prat",
 	--[[Translation missing --]]
-	--[[ ["reload_required"] = "",--]] 
+	["reload_required"] = "This option change may not take full effect until you %s your UI.",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "esMX",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "Настройка отображения чата",
 	["display_name"] = "Настройка отображения",
 	["extras_desc"] = "Различные дополнительные модули",
@@ -235,15 +239,15 @@ L=
 	["modulecontrol_name"] = "Настройка модулей",
 	["prat"] = "Prat",
 	["reload_required"] = "Эта настройка вступит в силу только после %s вашего интерфейса.",
-	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "ruRU",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "聊天框管理与插件",
 	["display_name"] = "显示设置",
 	["extras_desc"] = "杂项模块",
@@ -260,15 +264,15 @@ L=
 	["modulecontrol_name"] = "模块控制",
 	["prat"] = "Prat",
 	["reload_required"] = "在%s您的插件以前,此选项不会完全生效",
-	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "模块未加载，请加载以查看描述"
 }
+
 
 PL:AddLocale(nil, "zhCN",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "Control y Aspecto del Marco del Chat",
 	["display_name"] = "Mostrar Ajustes",
 	["extras_desc"] = "Módulos Extra",
@@ -278,24 +282,25 @@ L=
 	["load_desc"] = "Controla el comportamiento de carga de este módulo.",
 	["load_disabled"] = "Desactivado",
 	--[[Translation missing --]]
-	--[[ ["load_disabledonrestart"] = "",--]] 
+	["load_disabledonrestart"] = "Disabled (reload)",
 	["load_enabled"] = "Activado",
 	--[[Translation missing --]]
-	--[[ ["load_enabledonrestart"] = "",--]] 
+	["load_enabledonrestart"] = "Enabled (reload)",
 	["load_no"] = "No cargar",
 	["modulecontrol_desc"] = "Control de las cargas y activaciones de los módulos de Prat",
 	["modulecontrol_name"] = "Control de módulos",
 	["prat"] = "Prat",
 	["reload_required"] = "Esta opción requiere que reinicies la IU para que entre en funcionamiento",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "esES",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "控制及檢視聊天視窗",
 	["display_name"] = "顯示設定",
 	["extras_desc"] = "Msc. 模組",
@@ -313,79 +318,82 @@ L=
 	["prat"] = "Prat",
 	["reload_required"] = "變更此選項後仍無法發揮完整功能，除非你%s你的插件。",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "zhTW",L)
 
 
-L=
-{
+
+L = {
 	--[[Translation missing --]]
-	--[[ ["display_desc"] = "",--]] 
+	["display_desc"] = "Chat Frame Control and Look",
 	--[[Translation missing --]]
-	--[[ ["display_name"] = "",--]] 
+	["display_name"] = "Display Settings",
 	--[[Translation missing --]]
-	--[[ ["extras_desc"] = "",--]] 
+	["extras_desc"] = "Msc. Modules",
 	--[[Translation missing --]]
-	--[[ ["extras_name"] = "",--]] 
+	["extras_name"] = "Extra Stuff",
 	--[[Translation missing --]]
-	--[[ ["formatting_desc"] = "",--]] 
+	["formatting_desc"] = "Change the way the lines look and feel",
 	--[[Translation missing --]]
-	--[[ ["formatting_name"] = "",--]] 
+	["formatting_name"] = "Chat Formatting",
 	--[[Translation missing --]]
-	--[[ ["load_desc"] = "",--]] 
+	["load_desc"] = "Control the load behavior for this module.",
 	--[[Translation missing --]]
-	--[[ ["load_disabled"] = "",--]] 
+	["load_disabled"] = "Disabled",
 	--[[Translation missing --]]
-	--[[ ["load_disabledonrestart"] = "",--]] 
+	["load_disabledonrestart"] = "Disabled (reload)",
 	--[[Translation missing --]]
-	--[[ ["load_enabled"] = "",--]] 
+	["load_enabled"] = "Enabled",
 	--[[Translation missing --]]
-	--[[ ["load_enabledonrestart"] = "",--]] 
+	["load_enabledonrestart"] = "Enabled (reload)",
 	--[[Translation missing --]]
-	--[[ ["load_no"] = "",--]] 
+	["load_no"] = "Don't Load",
 	--[[Translation missing --]]
-	--[[ ["modulecontrol_desc"] = "",--]] 
+	["modulecontrol_desc"] = "Control the loading and enabling of Prat's modules.",
 	--[[Translation missing --]]
-	--[[ ["modulecontrol_name"] = "",--]] 
+	["modulecontrol_name"] = "Module Control",
 	--[[Translation missing --]]
-	--[[ ["prat"] = "",--]] 
+	["prat"] = "Prat",
 	--[[Translation missing --]]
-	--[[ ["reload_required"] = "",--]] 
+	["reload_required"] = "This option change may not take full effect until you %s your UI.",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "itIT",L)
 
 
-L=
-{
+
+L = {
 	["display_desc"] = "Controle de Visualização de Frame de Chat",
 	["display_name"] = "Configurações de Visualização",
 	["extras_desc"] = "Módulos Diversos",
 	--[[Translation missing --]]
-	--[[ ["extras_name"] = "",--]] 
+	["extras_name"] = "Extra Stuff",
 	--[[Translation missing --]]
-	--[[ ["formatting_desc"] = "",--]] 
+	["formatting_desc"] = "Change the way the lines look and feel",
 	["formatting_name"] = "Formatação do Chat",
 	--[[Translation missing --]]
-	--[[ ["load_desc"] = "",--]] 
+	["load_desc"] = "Control the load behavior for this module.",
 	["load_disabled"] = "Desativado",
 	--[[Translation missing --]]
-	--[[ ["load_disabledonrestart"] = "",--]] 
+	["load_disabledonrestart"] = "Disabled (reload)",
 	["load_enabled"] = "Ativado",
 	--[[Translation missing --]]
-	--[[ ["load_enabledonrestart"] = "",--]] 
+	["load_enabledonrestart"] = "Enabled (reload)",
 	["load_no"] = "Não Carregar",
-	["modulecontrol_desc"] = "Controlar carregamento de módulos permitidos pelo Prat",
-	["modulecontrol_name"] = "Controle de Módulo",
+	["modulecontrol_desc"] = "Controla o carregamento e ativação de módulos do Prat.",
+	["modulecontrol_name"] = "Controle do Módulo",
 	["prat"] = "Prat",
 	["reload_required"] = "Essa alteração pode não ter efeitos até você %s sua IU.",
 	--[[Translation missing --]]
-	--[[ ["unloaded_desc"] = "",--]]
+	["unloaded_desc"] = "Module is not loaded, load it to see description"
 }
+
 
 PL:AddLocale(nil, "ptBR",L)
 

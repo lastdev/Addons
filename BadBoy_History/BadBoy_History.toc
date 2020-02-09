@@ -1,5 +1,5 @@
-## Interface: 80000
-## Version: v8.0.0
+## Interface: 80200
+## Version: v8.2.0
 ## Title: BadBoy_History
 ## Notes: Log all chat that's removed by the various BadBoy addons.
 ## Notes-deDE: Log all chat that's removed by the various BadBoy addons.

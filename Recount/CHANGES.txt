@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
-r1474 | Resike | 2019-02-21 17:28:14 +0000 (Thu, 21 Feb 2019) | 1 line
+r1530 | Resike | 2020-01-18 00:12:13 +0000 (Sat, 18 Jan 2020) | 1 line
 Changed paths:
-   M /trunk/Recount.lua
+   M /trunk/Recount.toc
 
-- Force a library update.
+- Retail TOC switch.
 ------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("TellMeWhen", true)
+﻿local L = LibStub("AceLocale-3.0"):GetLocale("TellMeWhen", true)
 
 local pname = UnitName("player")
 local locale = GetLocale()
@@ -74,6 +74,8 @@ L["CODESNIPPET_ORDER_DESC"]             = L["CODESNIPPET_ORDER_DESC"]           
 L["CLEU_NOFILTERS"]                     = L["CLEU_NOFILTERS"]                       :format(L["ICONMENU_CLEU"], "%s")
 L["CLEU_SPELL_DAMAGE_CRIT_DESC"]        = L["CLEU_SPELL_DAMAGE_CRIT_DESC"]          :format(L["CLEU_SPELL_DAMAGE"])
 L["CLEU_SPELL_DAMAGE_NONCRIT_DESC"]     = L["CLEU_SPELL_DAMAGE_NONCRIT_DESC"]       :format(L["CLEU_SPELL_DAMAGE"])
+L["CLEU_SPELL_HEAL_CRIT_DESC"]          = L["CLEU_SPELL_HEAL_CRIT_DESC"]            :format(L["CLEU_SPELL_HEAL"])
+L["CLEU_SPELL_HEAL_NONCRIT_DESC"]       = L["CLEU_SPELL_HEAL_NONCRIT_DESC"]         :format(L["CLEU_SPELL_HEAL"])
 
 
 L["UIPANEL_GROUPSORT_value_DESC"]       = L["UIPANEL_GROUPSORT_value_DESC"]         :format(L["ICONMENU_VALUE"])

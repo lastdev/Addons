@@ -1,19 +1,23 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local init_done, gradient, conf, doneOptions
 local errorCount = 0
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1063 $")
+end, "$Revision:  $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
+local UnitIsGroupAssistant = UnitIsGroupAssistant
 
-local UnitIsGroupAssistant = UnitIsGroupAssistant;
-
-local classOrder = {"WARRIOR", "DEATHKNIGHT", "ROGUE", "HUNTER", "DRUID", "SHAMAN", "PALADIN", "PRIEST", "MAGE", "WARLOCK", "MONK"}
+local classOrder
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	classOrder = {"WARRIOR", "ROGUE", "HUNTER", "DRUID", "SHAMAN", "PALADIN", "PRIEST", "MAGE", "WARLOCK", "MONK"}
+else
+	classOrder = {"WARRIOR", "DEATHKNIGHT", "ROGUE", "HUNTER", "DRUID", "SHAMAN", "PALADIN", "PRIEST", "MAGE", "WARLOCK", "MONK", "DEMONHUNTER"}
+end
 
 -- SetTex
 local highlightPositions = {
@@ -237,7 +241,7 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 		if (unitName and use and online and not dead) then
 			local hasBuff
 			for num = 1, 40 do
-			local name, rank, buffTexture, count, _, fullDuration, endTime, isMine, isStealable = UnitAura(unitid, num, filter)
+				local name, icon, count, _, fullDuration, endTime, isMine, isStealable = UnitAura(unitid, num, filter)
 				if (not name) then
 					break
 				end
@@ -254,9 +258,9 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 						end
 					end]]
 				end
-				if (hasBuff) then
+				--[[if (hasBuff) then
 					if (without and checkExpiring) then
-						local found = checkExpiring[buffTextureNoPath]
+						local found = checkExpiring[name]
 
 						if (found) then
 							if (endTime and endTime > 0 and endTime <= GetTime() + (found * 60)) then
@@ -265,7 +269,7 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 						end
 					end
 					break
-				end
+				end--]]
 			end
 
 			if ((with and hasBuff) or (not with and not hasBuff)) then
@@ -298,7 +302,7 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 		for i = 1, 8 do
 			local list = withList[i]
 			if (list) then
-				sort(list, function(a,b) return a.name < b.name end)
+				sort(list, function(a, b) return a.name < b.name end)
 
 				names = (names or "").."|r"..i..": "
 				for i, item in ipairs(list) do
@@ -358,7 +362,7 @@ end
 
 -- XPerl_ToolTip_AddBuffDuration
 local function XPerl_ToolTip_AddBuffDuration(self, partyid, buffID, filter)
-	local name, rank, buff, count, _, dur, max, caster, isStealable = UnitAura(partyid, buffID, filter)
+	local name, _, count, _, dur, max, caster, isStealable = UnitAura(partyid, buffID, filter)
 
 	if (IsInRaid() or UnitInParty("player")) then
 		if (conf.buffHelper.enable and partyid and (UnitInParty(partyid) or UnitInRaid(partyid))) then
@@ -520,7 +524,7 @@ function ZPerl_Init()
 		CT_RegisterMod(XPerl_ProductName.." "..XPerl_VersionNumber, "By "..XPerl_Author, 4, XPerl_ModMenuIcon, XPerl_LongDescription, "switch", "", XPerl_Toggle)
 	end
 
-	if (myAddOnsFrame) then
+	--[[if (myAddOnsFrame) then
 		myAddOnsList.XPerl_Description = {
 			name			= XPerl_Description,
 			description		= XPerl_LongDescription,
@@ -529,7 +533,7 @@ function ZPerl_Init()
 			frame			= "XPerl_Globals",
 			optionsframe	= "XPerl_Options"
 		}
-	end
+	end--]]
 
 	--XPerl_RegisterSMBarTextures()
 

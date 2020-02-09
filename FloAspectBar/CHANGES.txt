@@ -1,34 +1,12 @@
-lightweight tag a3a9faa6fe016ed29a4c28e7a552202712cdd175 8.0.22
+tag c1c45bf6055ad5948f4e779aa103198efef57b97 8.3.25
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Sun Dec 16 12:16:27 2018 +0100
+Date:	Wed Jan 15 21:41:39 2020 +0100
 
-commit a3a9faa6fe016ed29a4c28e7a552202712cdd175
+Tagging for release
+
+commit 2f5f96afd657decc0558c4d4dffefd6819dd3007
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Sun Dec 16 12:16:27 2018 +0100
-
-    Fix version
-
-commit 19fa005f281ae315877fc24cb77a3591ac8f7e83
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Sun Dec 16 12:08:03 2018 +0100
-
-    Fix a mouse focus stealing bug
-
-commit ba2cfc80330f1faef9f1602a91a55656d8ac9498
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Sun Dec 16 11:54:55 2018 +0100
+Date:   Wed Jan 15 21:34:14 2020 +0100
 
     Bump version
-
-commit 329940348cb00cd50be8e580f84d10448db08682
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Sat Sep 22 00:54:43 2018 +0200
-
-    Update version
-
-commit 0a75687c098dff02e09bc52b4e9da7d180f0b5ba
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Sat Sep 22 00:52:41 2018 +0200
-
-    Position adjustement
 

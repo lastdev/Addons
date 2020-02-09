@@ -1,6 +1,5 @@
 local linenum=1
 local HealBot_CheckBuffs = {}
-local HealBot_Tooltip_DirtyLines={}
 local xUnit=nil
 local xGUID=nil
 local xButton=nil
@@ -16,6 +15,12 @@ local hbCommands = { [strlower(HEALBOT_DISABLED_TARGET)]=true,
                     }  
 local HealBot_Tooltip_luVars={}
 HealBot_Tooltip_luVars["uGroup"]=false
+HealBot_Tooltip_luVars["doInit"]=true
+
+function HealBot_Tooltip_setLuVars(vName, vValue)
+    HealBot_Tooltip_luVars[vName]=vValue
+    --HealBot_setCall("HealBot_Tooltip_setLuVars")
+end
 
 function HealBot_Tooltip_Clear_CheckBuffs()
     for x,_ in pairs(HealBot_CheckBuffs) do
@@ -52,38 +57,44 @@ local function HealBot_Tooltip_readNumber(n)
     return n
 end
 
-local function HealBot_Tooltip_SpellPattern(click)
-    local hbCombos = HealBot_Config_Spells.EnabledKeyCombo
-    if HealBot_Data["TIPTYPE"]=="Disabled" then
-        hbCombos = HealBot_Config_Spells.DisabledKeyCombo
-    elseif HealBot_Data["TIPTYPE"]=="Enemy" then
-        hbCombos = HealBot_Config_Spells.EnemyKeyCombo
-    end
-    if not hbCombos then return nil end
-    local x = click;
-    if IsShiftKeyDown() then 
-        if IsAltKeyDown() then 
-            x = "Alt-Shift"..x
+local function HealBot_Tooltip_SpellPattern(button, click)
+    local sPattern=nil
+    if IsShiftKeyDown() and IsAltKeyDown() and IsControlKeyDown() then
+        if click=="Left" then
+            sPattern=HEALBOT_WOWMENU
+        elseif click=="Right" then
+            sPattern=HEALBOT_HBMENU
+            --HealBot_Panel_ToggelHealTarget(self.unit)
+        elseif click=="Middle" then
+            sPattern=HEALBOT_TOGGLE_ENABLED
+        end
+    else    
+        local x = click;
+        if IsShiftKeyDown() then 
+            if IsAltKeyDown() then 
+                x = "Alt-Shift"..x
+            elseif IsControlKeyDown() then 
+                x = "Ctrl-Shift"..x
+            else
+                x = "Shift"..x
+            end
+        elseif IsAltKeyDown() then 
+            if IsControlKeyDown() then 
+                 x = "Alt-Ctrl"..x
+            else
+                x = "Alt"..x
+            end
         elseif IsControlKeyDown() then 
-            x = "Ctrl-Shift"..x
-        else
-            x = "Shift"..x
+            x = "Ctrl"..x 
         end
-    elseif IsAltKeyDown() then 
-        if IsControlKeyDown() then 
-             x = "Alt-Ctrl"..x
-        else
-            x = "Alt"..x
-        end
-    elseif IsControlKeyDown() then 
-        x = "Ctrl"..x 
+        x=x..HealBot_Config.CurrentSpec
+        sPattern=HealBot_Action_GetSpell(string.upper(HealBot_Data["TIPTYPE"]), x)
     end
-    x=x..HealBot_Config.CurrentSpec
-    return hbCombos[x]
+    return sPattern
 end
 
 local function HealBot_Tooltip_GetHealSpell(button,sName)
-    if not sName or not HealBot_GetSpellId(sName) then
+    if not sName or not HealBot_Spell_Names[sName] then
         if sName then
             local s = GetItemSpell(sName)
             if not s then
@@ -104,7 +115,7 @@ local function HealBot_Tooltip_GetHealSpell(button,sName)
         end
     end
 
-    if HealBot_UnitInRange(button.unit, sName, false)<1 then
+    if not UnitIsUnit("player",button.unit) and HealBot_UnitInRange(button.unit, sName, false)<1 then
         return sName, 1,0.5
     end
  
@@ -155,10 +166,12 @@ end
 local function HealBot_Tooltip_SetLineLeft(Text,R,G,B,lNo,a)
     if lNo>40 then return end
     local txtL = _G["HealBot_TooltipTextL" .. lNo]
+    hbGameTooltip:AddFontStrings(
+        hbGameTooltip:CreateFontString( "$parentTextLeft" .. lNo, nil, "GameTooltipText" ),
+        hbGameTooltip:CreateFontString( "$parentTextRight" .. lNo, nil, "GameTooltipText" ) );
     txtL:SetTextColor(R,G,B,a)
     txtL:SetText(Text)
     txtL:Show()
-    HealBot_Tooltip_DirtyLines[lNo]=true
 end
 
 local function HealBot_Tooltip_SetLineRight(Text,R,G,B,lNo,a)
@@ -167,7 +180,21 @@ local function HealBot_Tooltip_SetLineRight(Text,R,G,B,lNo,a)
     txtR:SetTextColor(R,G,B,a)
     txtR:SetText(Text)
     txtR:Show()
-    HealBot_Tooltip_DirtyLines[lNo]=true
+end
+
+local function HealBot_Tooltip_InitFont()
+    local fontType=GameFontNormal
+    if HealBot_Globals.Tooltip_TextSize==1 then
+        fontType=GameFontNormalSmall
+    elseif HealBot_Globals.Tooltip_TextSize==3 then
+        fontType=GameFontNormalLarge
+    end
+    for x=1,44 do
+        local txtR = _G["HealBot_TooltipTextR" .. x]
+        txtR:SetFontObject(fontType)
+        local txtL = _G["HealBot_TooltipTextL" .. x]
+        txtL:SetFontObject(fontType)
+    end
 end
 
 local function HealBot_Tooltip_SetLine(lNo,lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
@@ -189,13 +216,13 @@ end
 
 local HealBot_Tooltip_Power = 9
 local function HealBot_Tooltip_SpellInfo(spellName)
-    if HealBot_Spells[spellName] then
-        if HealBot_Spells[spellName].Mana>0 then
+    if HealBot_Spell_Names[spellName] then
+        if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana>0 then
             linenum=linenum+1
-            if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
-                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spells[spellName].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Power: "..HealBot_Spells[spellName].Mana,0.4,0.4,1,1)
+            if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
+                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Power: "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana,0.4,0.4,1,1)
             else
-                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spells[spellName].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Mana: "..HealBot_Spells[spellName].Mana,0.4,0.4,1,1)
+                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Mana: "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana,0.4,0.4,1,1)
             end
         end
     end
@@ -203,25 +230,15 @@ end
 
 local function HealBot_Tooltip_SpellSummary(spellName)
     local ret_val = "  "
-    if HealBot_Spells[spellName] then
-        if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
-            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Power"
+    if HealBot_Spell_Names[spellName] then
+        if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
+            ret_val = " -  "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana.." Power"
         else
-            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Mana"
+            ret_val = " -  "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana.." Mana"
         end
     end
     if strlen(ret_val)<5 then ret_val = " - "..spellName; end
     return ret_val;
-end
-
-local function HealBot_Tooltip_CheckForInstant(unit,spellName)
-    if spellName and HealBot_Spells[spellName] then
-        if HealBot_Spells[spellName].HoT then
-            if HealBot_HasUnitBuff(HealBot_Spells[spellName].HoT,unit,"player") then return false end;  
-            return true;
-        end
-    end
-    return false;
 end
 
 local function HealBot_Tooltip_Show()
@@ -240,6 +257,8 @@ local function HealBot_Tooltip_Show()
         end
         HealBot_Tooltip:SetWidth(width)
         HealBot_Tooltip:SetHeight(height)
+        HealBot_Tooltip:SetScale(1.01);
+        HealBot_Tooltip:SetScale(1);
         HealBot_Tooltip:Show();
     end
 end
@@ -249,23 +268,24 @@ local UnitDebuffIcons=nil
 local function HealBot_ToolTip_ShowHoT(unit)
     if HealBot_Globals.Tooltip_ShowHoT then
         local hbHoTline1=true
-        UnitBuffIcons=HealBot_retHoTdetails(unit)
-        if UnitBuffIcons then
-            for name,_ in pairs(UnitBuffIcons) do
-                if linenum<44 and UnitBuffIcons[name].current then
-                    if UnitBuffIcons[name].unitCaster then
-                        local ttCaster=UnitName(UnitBuffIcons[name].unitCaster)
-                        if ttCaster then
+        UnitBuffIcons=HealBot_Aura_ReturnHoTdetails(unit)
+        if linenum<43 and UnitBuffIcons then
+            for i = 1,10 do
+                if UnitBuffIcons[i].current and HealBot_Spell_IDs[UnitBuffIcons[i].spellId] then
+                    if UnitBuffIcons[i].unitCaster then
+                        local ttCaster=UnitName(UnitBuffIcons[i].unitCaster)
+                        if ttCaster and linenum<44 then
                             local ttHoTd=nil
                             if hbHoTline1 then
-                                hbHoTline1=nil
+                                hbHoTline1=false
                                 linenum=linenum+1
+                                HealBot_Tooltip_SetLine(linenum," ",0,0,0,0)
                             end
                             linenum=linenum+1
-                            if UnitBuffIcons[name].expirationTime and UnitBuffIcons[name].expirationTime>0 then
-                                ttHoTd=floor(UnitBuffIcons[name].expirationTime-GetTime())
+                            if UnitBuffIcons[i].expirationTime and UnitBuffIcons[i].expirationTime>0 then
+                                ttHoTd=floor(UnitBuffIcons[i].expirationTime-GetTime())
                             end
-                            local ttHoTc=UnitBuffIcons[name].count or 0
+                            local ttHoTc=UnitBuffIcons[i].count or 0
                             local ttHoTright=nil
                             if ttHoTd and ttHoTd>60 then
                                 local ttHoTdt=floor(ttHoTd/60)
@@ -288,9 +308,9 @@ local function HealBot_ToolTip_ShowHoT(unit)
                                 ttHoTright=ttHoTright.."   " 
                             end
                             if ttHoTright then 
-                                HealBot_Tooltip_SetLine(linenum,"   "..ttCaster.." "..strlower(HEALBOT_WORDS_CAST).." "..name.." ",0.4,1,1,1,ttHoTright,0.7,1,0.7,1)
+                                HealBot_Tooltip_SetLine(linenum,"   "..ttCaster.." "..strlower(HEALBOT_WORDS_CAST).." "..HealBot_Spell_IDs[UnitBuffIcons[i].spellId].name.." ",0.4,1,1,1,ttHoTright,0.7,1,0.7,1)
                             else
-                                HealBot_Tooltip_SetLine(linenum,"   "..ttCaster.." "..strlower(HEALBOT_WORDS_CAST).." "..name.." ",0.4,1,1,1)
+                                HealBot_Tooltip_SetLine(linenum,"   "..ttCaster.." "..strlower(HEALBOT_WORDS_CAST).." "..HealBot_Spell_IDs[UnitBuffIcons[i].spellId].name.." ",0.4,1,1,1)
                             end
                         end
                     end
@@ -349,16 +369,15 @@ local function HealBot_ToolTip_SetTooltipPos()
     end
 end
 
-local function HealBot_Tooltip_ClearLines()
+local function HealBot_Tooltip_ClearLines(allLines)
     if HealBot_Globals.UseGameTooltip then
         GameTooltip:ClearLines()
     else
-        for x,_ in pairs(HealBot_Tooltip_DirtyLines) do
-            local txt = _G["HealBot_TooltipTextR" .. x]
-            txt:SetText(" ")
-            txt = _G["HealBot_TooltipTextL" .. x]
-            txt:SetText(" ")
-            HealBot_Tooltip_DirtyLines[x]=nil
+        for x=1,44 do
+            local txtR = _G["HealBot_TooltipTextR" .. x]
+            txtR:SetText(" ")
+            local txtL = _G["HealBot_TooltipTextL" .. x]
+            txtL:SetText(" ")
         end
     end
 end
@@ -425,24 +444,42 @@ local function HealBot_HealthColor(button)
     return hcr,hcg,hcb
 end
 
+local msgs={}
+local order={}
 function HealBot_DebugTooltip()
     HealBot_Tooltip_ClearLines();
-    local msgs=HealBot_retCalls()
+    msgs=HealBot_retCalls()
     linenum = 1
     local leftname=false
     local leftcount=0
-    for name,_ in pairs(msgs) do
-        if linenum<45 then
-            if leftname then
+    local maxcount=0
+    for x,_ in pairs(order) do
+        order[x]=nil;
+    end
+    
+    for name,count in pairs(msgs) do
+        table.insert(order,name)
+        if count>maxcount then maxcount=count end
+    end
+    local filtercount=floor(maxcount/100)
+    table.sort(order,function (a,b)
+        if msgs[a]>msgs[b] then return true end
+        if msgs[a]<msgs[b] then return false end
+        return a>b
+    end)
+    for j=1,#order do
+        if linenum<45 and msgs[order[j]]>filtercount then
+            if leftname and order[j] then
                 linenum = linenum + 1
-                HealBot_Tooltip_SetLine(linenum,leftname.." count="..leftcount,1,1,1,1,name.." count="..msgs[name].count,1,1,1,1)    
+                HealBot_Tooltip_SetLine(linenum,leftname.." count="..leftcount,1,1,1,1,order[j].." = "..msgs[order[j]],1,1,1,1)    
                 leftname=false
             else
-                leftname=name
-                leftcount=msgs[name].count
+                leftname=order[j]
+                leftcount=msgs[order[j]]
             end      
         end
     end
+
     HealBot_Tooltip_Show()
 end
 
@@ -451,11 +488,12 @@ local function HealBot_Action_DoRefreshTooltip()
     --    HealBot_DebugTooltip() 
     --    return
     --end
+    if HealBot_Data["TIPTYPE"]=="NONE" then return end
     if HealBot_Globals.ShowTooltip==false then return end
     if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
     xUnit=HealBot_Data["TIPUNIT"]
-    xGUID=HealBot_UnitGUID(xUnit)
-    xButton=HealBot_Unit_Button[xUnit] or HealBot_Enemy_Button[xUnit] or HealBot_Pet_Button[xUnit]
+    xGUID=UnitGUID(xUnit)
+    xButton=HealBot_Unit_Button[xUnit] or HealBot_Pet_Button[xUnit] or HealBot_Enemy_Button[xUnit]
     if not xGUID or not xButton then return end
     local uName=HealBot_GetUnitName(xUnit, xGUID)
     if not uName then return end;
@@ -473,27 +511,26 @@ local function HealBot_Action_DoRefreshTooltip()
     local maxmana=xButton.mana.max
 
     if hlth>maxhlth then
-        maxhlth=HealBot_CorrectPetHealth(xUnit,hlth,maxhlth)
+        hlth=maxhlth
     end
   
     local UnitOffline=HealBot_Action_GetTimeOffline(xButton); --added by Diacono
-    local uBuff=xButton.aura.buff.name
     local DebuffType=xButton.aura.debuff.type;
 
-    local spellLeft = HealBot_Tooltip_SpellPattern("Left");
-    local spellMiddle = HealBot_Tooltip_SpellPattern("Middle");
-    local spellRight = HealBot_Tooltip_SpellPattern("Right");
-    local spellButton4 = HealBot_Tooltip_SpellPattern("Button4");
-    local spellButton5 = HealBot_Tooltip_SpellPattern("Button5");
+    local spellLeft = HealBot_Tooltip_SpellPattern(xButton, "Left");
+    local spellMiddle = HealBot_Tooltip_SpellPattern(xButton, "Middle");
+    local spellRight = HealBot_Tooltip_SpellPattern(xButton, "Right");
+    local spellButton4 = HealBot_Tooltip_SpellPattern(xButton, "Button4");
+    local spellButton5 = HealBot_Tooltip_SpellPattern(xButton, "Button5");
     linenum = 1
-    
+
     if spellLeft and strsub(strlower(spellLeft),1,4)==strlower(HEALBOT_TELL) then spellLeft=HEALBOT_TELL end
     if spellMiddle and strsub(strlower(spellMiddle),1,4)==strlower(HEALBOT_TELL) then spellMiddle=HEALBOT_TELL end
     if spellRight and strsub(strlower(spellRight),1,4)==strlower(HEALBOT_TELL) then spellRight=HEALBOT_TELL end
     if spellButton4 and strsub(strlower(spellButton4),1,4)==strlower(HEALBOT_TELL) then spellButton4=HEALBOT_TELL end
     if spellButton5 and strsub(strlower(spellButton5),1,4)==strlower(HEALBOT_TELL) then spellButton5=HEALBOT_TELL end
   
-    if not IsModifierKeyDown() and not HealBot_Data["UILOCK"] and HealBot_Globals.SmartCast and UnitExists(xUnit) and UnitIsFriend("player",xUnit) then 
+    if not IsModifierKeyDown() and not HealBot_Data["UILOCK"] and HealBot_Globals.SmartCast and UnitExists(xUnit) and xButton.status.friend then 
         local z=spellLeft;
         spellLeft=nil;
         spellLeft=HealBot_Action_SmartCast(xButton);
@@ -514,7 +551,7 @@ local function HealBot_Action_DoRefreshTooltip()
     
     if HealBot_Globals.Tooltip_ShowTarget then
         if uName then
-            local r,g,b=HealBot_Action_ClassColour(xUnit)
+            local r,g,b=xButton.text.r,xButton.text.g,xButton.text.b
             local uLvl=UnitLevel(xUnit)
             if uLvl<1 then 
                 uLvl=nil
@@ -542,27 +579,22 @@ local function HealBot_Action_DoRefreshTooltip()
             elseif not uLvl then
                 uLvl=""
             end
-            if UnitClass(xUnit) and UnitIsPlayer(xUnit) then
-                local unitSpec = " "
-                if HealBot_UnitData[xGUID] then
-                    if HealBot_Globals.QueryTalents and not HealBot_Data["INSPECT"] and HealBot_UnitData[xGUID]["SPEC"]==" " then
-                        HealBot_Data["INSPECT"]=true
-                        HealBot_TalentQuery(xUnit)
-                    end
-                    unitSpec=HealBot_UnitData[xGUID]["SPEC"]
-                elseif xUnit=="target" then
-                    unitSpec=HealBot_retLuVars("targetSpec")
-                    if HealBot_Globals.QueryTalents and not HealBot_Data["INSPECT"] and unitSpec==" " then
-                        HealBot_Data["INSPECT"]=true
-                        HealBot_TalentQuery(xUnit)
-                    end
-                elseif HealBot_Unit_Button[xUnit] then
-                    HealBot_Action_SetUnitData(xGUID, xUnit)
+            local uClass=UnitCreatureFamily(xUnit) or UnitClass(xUnit) or UnitCreatureType(xUnit)
+            if uClass==uName then uClass=UnitCreatureType(xUnit) or "" end
+            if not uClass or uClass=="" then
+                if strfind(xUnit,"pet") then
+                    uClass=HEALBOT_WORD_PET 
+                else
+                    uClass=HEALBOT_WORDS_UNKNOWN 
                 end
-                HealBot_Tooltip_SetLine(linenum,uName,r,g,b,1,uLvl.." "..unitSpec..UnitClass(xUnit),r,g,b,1)                
-            else
-                HealBot_Tooltip_SetLine(linenum,uName,r,g,b,1,uLvl,r,g,b,1)      
-            end      
+            end
+            local inRange=true
+            if HEALBOT_GAME_VERSION<4 then inRange=CheckInteractDistance(xUnit,1) end
+            if xButton.spec==" " and UnitIsPlayer(xUnit) and inRange and HealBot_Globals.QueryTalents and not HealBot_Data["INSPECT"] then
+                HealBot_Data["INSPECT"]=true
+                HealBot_TalentQuery(xUnit)
+            end
+            HealBot_Tooltip_SetLine(linenum,uName,r,g,b,1,uLvl..xButton.spec..uClass,r,g,b,1)                     
       
             local zone=nil;
             if HealBot_Data["PGUID"]==xGUID or UnitIsVisible(xUnit) then
@@ -593,6 +625,8 @@ local function HealBot_Action_DoRefreshTooltip()
                 elseif zone and not strfind(zone,"Level") then
                     --if zone==HB_TOOLTIP_OFFLINE then xButton.status.offline = GetTime() end
                     HealBot_Tooltip_SetLine(linenum,zone,1,1,1,1,hlth.."/"..maxhlth.." ("..hPct.."%)",r,g,b,1)
+                else
+                    HealBot_Tooltip_SetLine(linenum," ",1,1,1,1,hlth.."/"..maxhlth.." ("..hPct.."%)",r,g,b,1)
                 end
                 local vUnit=HealBot_retIsInVehicle(xUnit)
                 if vUnit then
@@ -610,90 +644,86 @@ local function HealBot_Action_DoRefreshTooltip()
                     end
                 end
             end
-            local tp=0
-            if UnitIsPlayer(xUnit) then tp=HealBot_CalcThreat(xUnit) end
             HealBot_Tooltip_luVars["uGroup"]=false
             if IsInRaid() then 
                 HealBot_Tooltip_luVars["uGroup"]=HealBot_RetUnitGroups(xUnit)
             end
-            if tp>0 or mana or HealBot_Tooltip_luVars["uGroup"] then
-                linenum=linenum+1
-                if not mana then
-                    if tp>0 then
-                        HealBot_Tooltip_SetLine(linenum,HEALBOT_WORD_THREAT.." "..tp.."%",1,0.1,0.1,1," ",0,0,0,0)
-                    else
+            if UnitIsPlayer(xUnit) and xButton.aggro.threatpct>0 or mana or (HealBot_Tooltip_luVars["uGroup"] and HealBot_Tooltip_luVars["uGroup"]>0) then
+                if not mana or (maxmana and maxmana==0) then
+                    if xButton.aggro.threatpct>0 then
+                        linenum=linenum+1
+                        HealBot_Tooltip_SetLine(linenum,HEALBOT_WORD_THREAT.." "..xButton.aggro.threatpct.."%",1,0.1,0.1,1," ",0,0,0,0)
+                    elseif HealBot_Tooltip_luVars["uGroup"] then
+                        linenum=linenum+1
                         HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_GROUPHEALS.." "..HealBot_Tooltip_luVars["uGroup"],1,1,1,1," ",0,0,0,0)
                     end
                 else
+                    linenum=linenum+1
                     local mPct=100
                     if maxmana>0 then
                         mPct=floor((mana/maxmana)*100)
                     end
                     mana=HealBot_Tooltip_readNumber(mana)
                     maxmana=HealBot_Tooltip_readNumber(maxmana)
-                    if tp<1 then
+                    if xButton.aggro.threatpct<1 then
                         if HealBot_Tooltip_luVars["uGroup"] then
                             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_GROUPHEALS.." "..HealBot_Tooltip_luVars["uGroup"],1,1,1,1,mana.."/"..maxmana.." ("..mPct.."%)",0.4,0.4,1,1)
                         else
                             HealBot_Tooltip_SetLine(linenum," ",0,0,0,0,mana.."/"..maxmana.." ("..mPct.."%)",0.4,0.4,1,1)
                         end
                     else
-                        HealBot_Tooltip_SetLine(linenum,HEALBOT_WORD_THREAT.." "..tp.."%",1,0.1,0.1,1,mana.."/"..maxmana.." ("..mPct.."%)",0.4,0.4,1,1)
+                        HealBot_Tooltip_SetLine(linenum,HEALBOT_WORD_THREAT.." "..xButton.aggro.threatpct.."%",1,0.1,0.1,1,mana.."/"..maxmana.." ("..mPct.."%)",0.4,0.4,1,1)
                     end
                 end
             end
             
-            UnitDebuffIcons=HealBot_retDebuffdetails(xUnit)
+            UnitDebuffIcons=HealBot_Aura_ReturnDebuffdetails(xUnit)
             if UnitDebuffIcons then
-                for name,_ in pairs(UnitDebuffIcons) do
-                    if name~="ExtraIcon" and UnitDebuffIcons[name].current then
+                for i = 51,55 do
+                    if UnitDebuffIcons[i].current and UnitDebuffIcons[i].spellId>0 and GetSpellInfo(UnitDebuffIcons[i].spellId) then
                         linenum=linenum+1
-                        if HealBot_Globals.CDCBarColour[name] then
+                        local DebuffType=HealBot_Aura_retDebufftype(xUnit, UnitDebuffIcons[i].spellId)
+                        local name=GetSpellInfo(UnitDebuffIcons[i].spellId)
+                        if HealBot_Globals.CDCBarColour[i] then
                             HealBot_Tooltip_SetLine(linenum,uName.." suffers from "..name,
                                                         (HealBot_Globals.CDCBarColour[name].R or 0.4)+0.2,
                                                         (HealBot_Globals.CDCBarColour[name].G or 0.05)+0.2,
                                                         (HealBot_Globals.CDCBarColour[name].B or 0.2)+0.2,
                                                         1," ",0,0,0,0)
+                        elseif HealBot_Config_Cures.CDCBarColour[DebuffType] then
+                            HealBot_Tooltip_SetLine(linenum,uName.." suffers from "..name,
+                                                        (HealBot_Config_Cures.CDCBarColour[DebuffType].R or 0.5)+0.2,
+                                                        (HealBot_Config_Cures.CDCBarColour[DebuffType].G or 0.2)+0.2,
+                                                        (HealBot_Config_Cures.CDCBarColour[DebuffType].B or 0.4)+0.2,
+                                                        1," ",0,0,0,0)
                         else
-                            local DebuffType=HealBot_retDebufftype(name)
-                            if DebuffType == HEALBOT_CUSTOM_en then
-                                local customDebuffPriority=HEALBOT_CUSTOM_en.."10"
-                                if HealBot_GlobalsDefaults.HealBot_Custom_Debuffs[name] then
-                                    customDebuffPriority=HEALBOT_CUSTOM_en..HealBot_GlobalsDefaults.HealBot_Custom_Debuffs[name]
-                                end
-                                HealBot_Tooltip_SetLine(linenum,uName.." suffers from "..name,
-                                                            (HealBot_Globals.CDCBarColour[customDebuffPriority].R or 0.5)+0.2,
-                                                            (HealBot_Globals.CDCBarColour[customDebuffPriority].G or 0.2)+0.2,
-                                                            (HealBot_Globals.CDCBarColour[customDebuffPriority].B or 0.4)+0.2,
-                                                            1," ",0,0,0,0)
-                            else
-                                HealBot_Tooltip_SetLine(linenum,uName.." suffers from "..name,
-                                                            (HealBot_Config_Cures.CDCBarColour[DebuffType].R or 0.5)+0.2,
-                                                            (HealBot_Config_Cures.CDCBarColour[DebuffType].G or 0.2)+0.2,
-                                                            (HealBot_Config_Cures.CDCBarColour[DebuffType].B or 0.4)+0.2,
-                                                            1," ",0,0,0,0)
-                            end
+                            local customDebuffPriority=HEALBOT_CUSTOM_en.."15"
+                            HealBot_Tooltip_SetLine(linenum,uName.." suffers from "..name,
+                                                        (HealBot_Globals.CDCBarColour[customDebuffPriority].R or 0.5)+0.2,
+                                                        (HealBot_Globals.CDCBarColour[customDebuffPriority].G or 0.2)+0.2,
+                                                        (HealBot_Globals.CDCBarColour[customDebuffPriority].B or 0.4)+0.2,
+                                                        1," ",0,0,0,0)
                         end
                     end
                 end
             end
             linenum=linenum+1
             --if HealBot_Globals.UseGameTooltip then HealBot_Tooltip_SetLine(linenum,"  ",0,0,0,0) end
-            if uBuff then
+            if xButton.aura.buff.name and xButton.aura.buff.name~=HEALBOT_CUSTOM_en then
                 linenum=linenum+1
-                local br,bg,bb=HealBot_Options_RetBuffRGB(uBuff)
-                HealBot_Tooltip_SetLine(linenum,"  Requires "..uBuff,br,bg,bb,1," ",0,0,0,0)
+                local br,bg,bb=HealBot_Options_RetBuffRGB(xButton)
+                HealBot_Tooltip_SetLine(linenum,"  Requires "..xButton.aura.buff.name,br,bg,bb,1," ",0,0,0,0)
             end
             local d=false
             if HealBot_Globals.Tooltip_ShowMyBuffs then
                 for x,_ in pairs(HealBot_CheckBuffs) do
-                    local z=HealBot_RetMyBuffTime(xGUID,x)
-                    if z then
+                    local z=HealBot_Aura_RetMyBuffTime(xButton,x)
+                    if z and z>GetTime() then
                         d=true
                         z=z-GetTime()
                         local mins,secs=HealBot_Tooltip_ReturnMinsSecs(z)
                         linenum=linenum+1
-                        local br,bg,bb=HealBot_Options_RetBuffRGB(x)
+                        local br,bg,bb=HealBot_Options_RetBuffRGBName(x)
                         if mins>1 then 
                             HealBot_Tooltip_SetLine(linenum,"    "..x.."  "..mins.." mins",br,bg,bb,1," ",0,0,0,0)
                         elseif tonumber(secs)>=0 then
@@ -717,44 +747,46 @@ local function HealBot_Action_DoRefreshTooltip()
     else
         HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_TAB_SPELLS,1,1,1,1," ",0,0,0,0)
     end
-  
-    local spellLeftRecInstant=HealBot_Tooltip_CheckForInstant(xUnit,LeftN);
-    local spellMiddleRecInstant=HealBot_Tooltip_CheckForInstant(xUnit,MiddleN)
-    local spellRightRecInstant=HealBot_Tooltip_CheckForInstant(xUnit,RightN)
-    local spellButton4RecInstant=HealBot_Tooltip_CheckForInstant(xUnit,Button4N)
-    local spellButton5RecInstant=HealBot_Tooltip_CheckForInstant(xUnit,Button5N);
     
-    if HealBot_Globals.Tooltip_ShowSpellDetail then
+    if IsShiftKeyDown() and IsAltKeyDown() and IsControlKeyDown() then
+        if spellLeft then 
+            linenum=linenum+1
+            HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONLEFT,1,1,0,1,spellLeft,0.5,0.5,1,1)
+        end
+        if spellMiddle then
+            linenum=linenum+1
+            HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONMIDDLE,1,1,0,1,spellMiddle,0.5,0.5,1,1)
+        end
+        if spellRight then
+            linenum=linenum+1
+            HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONRIGHT,1,1,0,1,spellRight,0.5,0.5,1,1)
+        end
+    elseif HealBot_Globals.Tooltip_ShowSpellDetail then
 
         if LeftN then
             linenum=linenum+1
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONLEFT.." "..HEALBOT_OPTIONS_COMBOBUTTON..": "..LeftN,LeftR,LeftG,0,1) 
             HealBot_Tooltip_SpellInfo(LeftN);
-            linenum=linenum+1;
         end
         if MiddleN then
             linenum=linenum+1;
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONMIDDLE.." "..HEALBOT_OPTIONS_COMBOBUTTON..": "..MiddleN,MiddleR,MiddleG,0,1) 
             HealBot_Tooltip_SpellInfo(MiddleN);
-            linenum=linenum+1;
         end
         if RightN then
             linenum=linenum+1;
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTONRIGHT.." "..HEALBOT_OPTIONS_COMBOBUTTON..": "..RightN,RightR,RightG,0,1) 
             HealBot_Tooltip_SpellInfo(RightN);
-            linenum=linenum+1;
         end
         if Button4N then
             linenum=linenum+1;
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTON4.." "..HEALBOT_OPTIONS_COMBOBUTTON..": "..Button4N,Button4R,Button4G,0,1) 
             HealBot_Tooltip_SpellInfo(Button4N);
-            linenum=linenum+1;
         end
         if Button5N then
             linenum=linenum+1;
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTON5.." "..HEALBOT_OPTIONS_COMBOBUTTON..": "..Button5N,Button5R,Button5G,0,1) 
             HealBot_Tooltip_SpellInfo(Button5N);
-            linenum=linenum+1;
         end
     else
         if LeftN then 
@@ -778,46 +810,35 @@ local function HealBot_Action_DoRefreshTooltip()
             HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_BUTTON5..": "..Button5N,Button5R,Button5G,0,1,HealBot_Tooltip_SpellSummary(spellButton5),0.5,0.5,1,1)
         end
     end      
-    if HealBot_Globals.Tooltip_Recommend then
-        local Instant_check=false;
-        if HealBot_Globals.Tooltip_ShowSpellDetail==false then linenum=linenum+1; end
-        linenum=linenum+1
-        HealBot_Tooltip_SetLine(linenum,HEALBOT_TOOLTIP_RECOMMENDTEXT,0.8,0.8,0,1) 
-        if spellLeftRecInstant then
-            linenum=linenum+1;
-            HealBot_Tooltip_SetLine(linenum,"   "..HEALBOT_OPTIONS_BUTTONLEFT..":",1,1,0.2,1,LeftN.."    ",1,1,1,1)
-            Instant_check=true;
+    if HealBot_Globals.Tooltip_MouseWheel then
+        local nCommands=0
+        local keyDown="None"
+        if IsShiftKeyDown() then
+            keyDown="Shift"
+        elseif IsControlKeyDown() then
+            keyDown="Ctrl"
+        elseif IsAltKeyDown() then
+            keyDown="Alt"
         end
-        if spellMiddleRecInstant then
-            linenum=linenum+1;
-            HealBot_Tooltip_SetLine(linenum,"   "..HEALBOT_OPTIONS_BUTTONMIDDLE..":",1,1,0.2,1,MiddleN.."    ",1,1,1,1)
-            Instant_check=true;
-        end
-        if spellRightRecInstant then
-            linenum=linenum+1;
-            HealBot_Tooltip_SetLine(linenum,"   "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,1,RightN.."    ",1,1,1,1)
-            Instant_check=true;
-        end
-        if spellButton4RecInstant then
-            linenum=linenum+1;
-            HealBot_Tooltip_SetLine(linenum,"   "..HEALBOT_OPTIONS_BUTTON4..":",1,1,0.2,1,Button4N.."    ",1,1,1,1)
-            Instant_check=true;
-        end
-        if spellButton5RecInstant then
-            linenum=linenum+1;
-            HealBot_Tooltip_SetLine(linenum,"   "..HEALBOT_OPTIONS_BUTTON5..":",1,1,0.2,1,Button5N.."    ",1,1,1,1)
-            Instant_check=true;
-        end
-        if not Instant_check then
+        local wheelUp=HealBot_Globals.HealBot_MouseWheelTxt[keyDown.."Up"]
+        local wheelDown=HealBot_Globals.HealBot_MouseWheelTxt[keyDown.."Down"]
+        if (wheelUp and wheelUp~=HEALBOT_WORDS_NONE) or (wheelDown and wheelDown~=HEALBOT_WORDS_NONE) then
             linenum=linenum+1
-            HealBot_Tooltip_SetLine(linenum,"  None",0.4,0.4,0.4,1) 
+            HealBot_Tooltip_SetLine(linenum," ",0,0,0,0)
+            if wheelUp and wheelUp~=HEALBOT_WORDS_NONE then 
+                if wheelUp==HEALBOT_EMOTE then wheelUp=wheelUp..": "..HealBot_Globals.HealBot_Emotes[keyDown.."Up"] end
+                linenum=linenum+1
+                HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_MOUSEUP,1,1,0,1,wheelUp,0.5,0.5,1,1)
+            end
+            if wheelDown and wheelDown~=HEALBOT_WORDS_NONE then
+                if wheelDown==HEALBOT_EMOTE then wheelDown=wheelDown..": "..HealBot_Globals.HealBot_Emotes[keyDown.."Down"] end
+                linenum=linenum+1
+                HealBot_Tooltip_SetLine(linenum,HEALBOT_OPTIONS_MOUSEDOWN,1,1,0,1,wheelDown,0.5,0.5,1,1)
+            end
         end
-    else
-        if HealBot_Globals.Tooltip_ShowSpellDetail then linenum=linenum-1; end
     end
   
     HealBot_ToolTip_ShowHoT(xUnit)
-    
     HealBot_Tooltip_Show()
 end
 
@@ -825,14 +846,10 @@ local function HealBot_Action_DoRefreshTargetTooltip(button)
     HealBot_TooltipInit();
     HealBot_Tooltip_ClearLines();
     linenum=1
-    local r,g,b=HealBot_Action_ClassColour(button.unit)
+    local r,g,b=button.text.r,button.text.g,button.text.b
 
     if UnitClass(button.unit) then
-        local unitSpec=" "
-        if HealBot_UnitData[button.guid] then
-            unitSpec = HealBot_UnitData[button.guid]["SPEC"] or " "
-        end
-        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit, button.guid),r,g,b,1,"Level "..UnitLevel(button.unit)..unitSpec..UnitClass(button.unit),r,g,b,1)    
+        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit, button.guid),r,g,b,1,"Level "..UnitLevel(button.unit)..button.spec..UnitClass(button.unit),r,g,b,1)    
     else
         HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit, button.guid),r,g,b,1,rText,rR,rG,rB,ra)
     end
@@ -844,18 +861,79 @@ local function HealBot_Action_DoRefreshTargetTooltip(button)
     end
     linenum=linenum+1
     HealBot_Tooltip_SetLineLeft(" "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,linenum,1)
-    if HealBot_Panel_RetMyHealTarget(button.guid) then
-        HealBot_Tooltip_SetLine(linenum," "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,1,HEALBOT_WORDS_REMOVEFROM.." "..HEALBOT_OPTIONS_TARGETHEALS.." ",1,1,1,1)
+    if HealBot_Panel_RetMyHealTarget(button.unit) then
+        HealBot_Tooltip_SetLine(linenum," "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,1,HEALBOT_WORDS_REMOVEFROM.." "..HEALBOT_OPTIONS_MYTARGET.." ",1,1,1,1)
     else
-        HealBot_Tooltip_SetLine(linenum," "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,1,HEALBOT_WORDS_ADDTO.." "..HEALBOT_OPTIONS_TARGETHEALS.." ",1,1,1,1)
+        HealBot_Tooltip_SetLine(linenum," "..HEALBOT_OPTIONS_BUTTONRIGHT..":",1,1,0.2,1,HEALBOT_WORDS_ADDTO.." "..HEALBOT_OPTIONS_MYTARGET.." ",1,1,1,1)
     end
     HealBot_Tooltip_Show()
 end
 
 function HealBot_Action_RefreshTooltip()
+    if HealBot_Tooltip_luVars["doInit"] then
+        HealBot_Tooltip_luVars["doInit"]=false
+        HealBot_Tooltip_InitFont()
+    end
     HealBot_Action_DoRefreshTooltip()
 end
 
 function HealBot_Action_RefreshTargetTooltip(button)
     HealBot_Action_DoRefreshTargetTooltip(button)
+end
+
+local function HealBot_Tooltip_Options_Show(noLines)
+    if HealBot_Tooltip_luVars["doInit"] then
+        HealBot_Tooltip_luVars["doInit"]=false
+        HealBot_Tooltip_InitFont()
+    end
+    local height = 20 
+    local width = 0
+    for x = 1, noLines do
+        local txtL = _G["HealBot_TooltipTextL" .. x]
+        height = height + txtL:GetHeight() + 2
+        if (txtL:GetWidth() + 25 > width) then
+            width = txtL:GetWidth() + 25
+        end
+    end
+    HealBot_Tooltip:SetWidth(width)
+    HealBot_Tooltip:SetHeight(height)        
+    HealBot_Tooltip:SetScale(1.01);
+    HealBot_Tooltip:SetScale(1);
+    HealBot_Tooltip:Show();
+end
+
+local tLine={}
+function HealBot_Tooltip_OptionsHelp(title,text)
+    HealBot_Tooltip_ClearLines();
+    for x,_ in pairs(tLine) do
+        tLine[x]=nil;
+    end
+    local i=0
+    for l in string.gmatch(text, "[^\n]+") do
+        local t=(string.gsub(l, "^%s*(.-)%s*$", "%1"))
+        if string.len(t)>1 then
+            i=i+1
+            tLine[i]=t
+        end
+    end
+    local linenum=1
+    HealBot_Tooltip_SetLineLeft(title,1,1,1,linenum,1)
+    linenum=linenum+1
+    HealBot_Tooltip_SetLineLeft("     ",0,0,0,linenum,0)
+    for l=1,#tLine do 
+        linenum=linenum+1
+        HealBot_Tooltip_SetLineLeft(tLine[l],0.8,0.8,0.8,linenum,1)
+    end
+    local g=_G["HealBot_Options"]
+    HealBot_Tooltip:ClearAllPoints();
+--    HealBot_Tooltip:SetPoint("TOPLEFT",g,"TOPRIGHT");
+    local x, y = GetCursorPosition();
+    x=x/UIParent:GetScale();
+    y=y/UIParent:GetScale();
+    HealBot_Tooltip:SetPoint("TOPLEFT","WorldFrame","BOTTOMLEFT",x,y-30);
+    HealBot_Tooltip_Options_Show(linenum)
+end
+
+function HealBot_Tooltip_OptionsHide()
+    HealBot_Tooltip:Hide()
 end

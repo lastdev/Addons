@@ -193,7 +193,7 @@ TjAchieve.CRITTYPE_KILL		The asset type for kill criteria.
 --]]
 
 
-local THIS_VERSION = "0.11"
+local THIS_VERSION = "0.13"
 
 if (TjAchieve and TjAchieve.Version >= THIS_VERSION) then  return;  end  -- Lua's pretty good at this. It even knows that "1.0.10" > "1.0.9". However, be aware that it thinks "1.0" < "1.0b" so putting a "b" on the end for Beta, nothing for release, doesn't work.
 
@@ -292,7 +292,7 @@ do
 			return orig_GetAchievementNumCriteria(achievementID)
 		end
 		local i = 0
-		local _, asset
+		local _, completed, asset
 		repeat
 			i = i + 1
 			_, _, completed, _, _, _, _, asset = GetAchievementCriteriaInfo(achievementID, i)
@@ -621,7 +621,7 @@ TjAchieve.Frame:SetScript("OnEvent", function(self, event, arg1)
 	ACH_standard, ACH_standard_personal, ACH_standard_guild = nil, nil, nil
 end)
 
-local function informListeners(tab, arg1)
+local function informListeners(tab, arg1, errMsg)
 	C_Timer.After(0, function()  -- Use a timer to allow clean up to be completed before listeners are informed.
 		for i,func in ipairs(tab) do
 			local noerrors, ret2
@@ -722,7 +722,7 @@ do
 		TjAchieve.status_ACH = true
 		if (TjAchieve.listeners_IDCache) then
 			-- Inform the listeners:
-			informListeners(TjAchieve.listeners_IDCache, "calling an achievement ID cache listener")
+			informListeners(TjAchieve.listeners_IDCache, nil, "calling an achievement ID cache listener")
 			TjAchieve.listeners_IDCache = nil
 		end
 		idCacheBuildStep = nil -- Allow this do/end block to go out of scope
@@ -763,7 +763,7 @@ local function flagTaskComplete(assetType)
 	if (not TjAchieve.status_CA) then  TjAchieve.status_CA = {};  end
 	TjAchieve.status_CA[assetType] = true
 	if (TjAchieve.listeners_CACache and TjAchieve.listeners_CACache[assetType]) then
-		informListeners(TjAchieve.listeners_CACache[assetType], "updating a criteria asset cache listener")
+		informListeners(TjAchieve.listeners_CACache[assetType], nil, "updating a criteria asset cache listener")
 		TjAchieve.listeners_CACache[assetType] = nil
 		if (next(TjAchieve.listeners_CACache) == nil) then -- Is the table empty?
 			TjAchieve.listeners_CACache = nil
@@ -785,7 +785,7 @@ local function createAssetLookupFunc(assetType, saveIndex)
 		--print("task start",assetType)
 		local tab = ASSETS[assetType]
 		local list = TjAchieve.GetAchIDs()
-		local _, critType
+		local _, critType, assetID
 		local numc, i
 		local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 		local yieldIn = BUILD_CRIT_STEPS

@@ -3,11 +3,14 @@
 ---------------------------------------------------------------------------------------------------
 local ADDON_NAME, Addon = ...
 
-local Widget = Addon:NewWidget("Stealth")
+local Widget = Addon.Widgets:NewWidget("Stealth")
 
 ---------------------------------------------------------------------------------------------------
 -- Imported functions and constants
 ---------------------------------------------------------------------------------------------------
+
+-- Lua APIs
+local strsplit = strsplit
 
 -- WoW APIs
 local CreateFrame = CreateFrame
@@ -46,6 +49,12 @@ local DETECTION_AURAS = {
   -- Battle for Azeroth
   [230368] = true, -- Detector
   [248705] = true, -- Detector
+}
+
+local DETECTION_UNITS = {
+  ["148483"] = true, -- Ancestral Avenger (Battle of Dazar'alor)
+  ["148488"] = true, -- Unliving Augur (Battle of Dazar'alor)
+  ["122984"] = true, -- Dazar'ai Colossus (Atal'Dazar)
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -88,22 +97,23 @@ function Widget:EnabledForStyle(style, unit)
 end
 
 function Widget:OnUnitAdded(widget_frame, unit)
-  -- name, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff("unit", index or "name"[, "rank"[, "filter"]])
+  local name, spell_id
 
-  local i = 1
-  local found = false
-  -- or check for (?=: Invisibility and Stealth Detection)
-  -- TODO: for oder do-while (what#s more efficient) with break
-  repeat
-    local name, _, _, _, _, _, _, _, _, spell_id = UnitBuff(unit.unitid, i)
-    if DETECTION_AURAS[spell_id] then
-      found = true
-    else
-      i = i + 1
+  local _, _,  _, _, _, npc_id, _ = strsplit("-", unit.guid)
+  if DETECTION_UNITS[npc_id] then
+    name = npc_id
+  else
+    local DETECTION_AURAS, UnitBuff = DETECTION_AURAS, UnitBuff
+    local unitid = unit.unitid
+    for i = 1, 40 do
+      name, _, _, _, _, _, _, _, _, spell_id = UnitBuff(unitid, i)
+      if not name or DETECTION_AURAS[spell_id] then
+        break
+      end
     end
-  until found or not name
+  end
 
-  if not found then
+  if not name then
     widget_frame:Hide() -- not necessary as this does never change after a unit was added
     return
   end

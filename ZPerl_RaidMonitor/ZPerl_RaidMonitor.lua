@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local cast
@@ -8,11 +8,25 @@ local TableUnits = {}			-- Dynamic list of units indexed by raid id, changed on 
 ZPerlRaidMonConfig = {}
 local config = ZPerlRaidMonConfig
 
+local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
+
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	UnitCastingInfo = function(unit)
+		if unit ~= "player" then return end
+		return CastingInfo()
+	end
+
+	UnitChannelInfo = function(unit)
+		if unit ~= "player" then return end
+		return ChannelInfo()
+	end
+end
+
 local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 1121 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -165,7 +179,7 @@ local function UpdateTarget(self)
 				self.bar.name:SetTextColor(0.5, 0.5, 0.5)
 			end
 
-			local hp, hpMax = UnitHealth(id), UnitHealthMax(id)
+			local hp, hpMax = UnitIsGhost(id) and 1 or (UnitIsDead(id) and 0 or UnitHealth(id)), UnitHealthMax(id)
 			self.bar:SetMinMaxValues(0, hpMax)
 			self.bar:SetValue(hp)
 
@@ -403,7 +417,7 @@ function cast:HealthTotals()
 		for i = 1,GetNumGroupMembers() do
 			local id = "raid"..i
 			if (UnitIsConnected(id)) then
-				local hp, hpMax = UnitHealth(id), UnitHealthMax(id)
+				local hp, hpMax = UnitIsGhost(id) and 1 or (UnitIsDead(id) and 0 or UnitHealth(id)), UnitHealthMax(id)
 				--Begin 4.3 anti /0 fix.
 				local percent
 				if UnitIsDeadOrGhost(id) or (hp == 0 and hpMax == 0) then--They are dead
@@ -423,7 +437,7 @@ function cast:HealthTotals()
 		for i = 1,GetNumSubgroupMembers() do
 			local id = "party"..i
 			if (UnitIsConnected(id)) then
-				local hp, hpMax = UnitHealth(id), UnitHealthMax(id)
+				local hp, hpMax = UnitIsGhost(id) and 1 or (UnitIsDead(id) and 0 or UnitHealth(id)), UnitHealthMax(id)
 				--Begin 4.3 anti /0 fix.
 				local percent
 				if UnitIsDeadOrGhost(id) or (hp == 0 and hpMax == 0) then--They are dead
@@ -440,7 +454,7 @@ function cast:HealthTotals()
 			end
 		end
 		--GetNumSubgroupMembers() doesn't return player, unlike GetNumGroupMembers which does, so we have to manually add player in for 5 mans
-		local hp, hpMax = UnitHealth("player"), UnitHealthMax("player")
+		local hp, hpMax = UnitIsGhost("player") and 1 or (UnitIsDead("player") and 0 or UnitHealth("player")), UnitHealthMax("player")
 		--Begin 4.3 anti /0 fix.
 		local percent
 		if UnitIsDeadOrGhost("player") or (hp == 0 and hpMax == 0) then--They are dead

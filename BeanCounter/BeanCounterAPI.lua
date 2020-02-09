@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 8.1.6236 (SwimmingSeadragon)
-	Revision: $Id: BeanCounterAPI.lua 6236 2019-03-04 00:20:18Z none $
+	Version: 8.2.6505 (SwimmingSeadragon)
+	Revision: $Id: BeanCounterAPI.lua 6505 2019-11-02 14:38:37Z none $
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterAPI.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterAPI.lua $","$Rev: 6505 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 lib.API = {}
@@ -74,13 +74,13 @@ end
 Can be item Name or Link or itemID
 If itemID or Link search will be faster than a plain text lookup
 ]]
-local _
 function lib.API.search(name, settings, queryReturn)
 	if get("util.beancounter.externalSearch") then --is option enabled and have we already searched for this name (stop spam)
 		--check for blank search request
 		if name == "" and not queryReturn then return end
 		name = tostring(name)
 
+		--[[ search cache currently disabled -- ###
 		--serverName is used as part of our cache ID string
 		local serverName
 		if settings and settings.servers and settings.servers[1] then
@@ -96,6 +96,7 @@ function lib.API.search(name, settings, queryReturn)
 		else
 			playerName = "server"
 		end
+		--]]
 
 		--the function getItemInfo will return a plain text name on itemID or itemLink searches and nil if a plain text search is passed
 		local itemID, itemLink, itemName
@@ -103,32 +104,37 @@ function lib.API.search(name, settings, queryReturn)
 		if not itemLink then
 			itemName = name
 		else
-			_, itemName =  lib.API.getItemString(itemLink)
+			local _, n =  lib.API.getItemString(itemLink)
+			itemName = n
 		end
 
+		--[[ cache disabled -- ###
 		local cached = private.checkSearchCache(itemName, serverName, playerName)
 		--return cached search
 		if queryReturn and cached then
 			return cached
 		end
+		--]]
+
 		--if API query lacks a settings table use whatever filter options the player has currently selected
 		if not settings then
 			settings = private.getCheckboxSettings()
 		end
 
 		--search data
+		local data
 		if itemLink then
 			--itemKey is used to filter results if exact is used. We need the key to remove of the XXX style items from returns
-			_, settings.suffix = lib.API.decodeLink(itemLink)
-			if settings.suffix == 0 then settings.suffix = nil end
-			--cache search request
-			private.searchByItemID(itemID, settings, queryReturn, nil, nil, itemName)
+			local _, sfx = lib.API.decodeLink(itemLink)
+			settings.suffix = sfx and sfx or nil
+			--fetch search request and/or load into BeanCounter display
+			data = private.searchByItemID(itemID, settings, queryReturn, nil, nil, itemName)
 		else
-			private.startSearch(itemName, settings, queryReturn)
+			data = private.startSearch(itemName, settings, queryReturn)
 		end
 		--return data or displayItemName in select box
 		if queryReturn then
-			return private.checkSearchCache(itemName, serverName, playerName)
+			return data
 		else
 			private.frame.searchBox:SetText(itemName)
 		end
@@ -139,6 +145,7 @@ end
 
 
 -- Cache system for searches
+--[[ search cache disabled as it does not support the settings table properly, and thus often returns incorrect results -- ###
 local cache = setmetatable({}, {__mode="v"})
 
 function private.checkSearchCache(name, serverName, playerName)
@@ -150,10 +157,11 @@ function private.addSearchCache(name, data, serverName, playerName)
 	if not name or not serverName or not playerName then return end --nil safe the cache add
 	cache[strlower(name)..serverName..playerName] = data
 end
-
+--]]
 function private.wipeSearchCache()
-	wipe(cache)
+	--wipe(cache) -- ###
 end
+
 
 
 --[[ Returns the Sum of all AH sold vs AH buys along with the date range
@@ -170,11 +178,12 @@ local function addDEValue(meta)
 	end
 	return 0
 end
+
 function lib.API.getAHProfit(player, item, lowDate, highDate, includeMeta)
 	if not player or player == "" then player = "server" end
 	if not item then item = "" end
 
-	local sum, low, high, date = 0, 2051283600, 1  -- wow's date system errors when you go to far into the future 2035 seems like a good year
+	local sum, low, high, date = 0, 2051283600, 1  -- wow's date system errors when you go too far into the future, 2035 seems like a good year
 	local settings = {["selectbox"] = {"1", player} , ["bid"] = true, ["auction"] = true, ["failedauction"] = true}
 	local tbl
 	--allow a already API searched data table to be passed instead of just a text string
@@ -361,6 +370,7 @@ function lib.API.createItemLinkFromArray(itemKey, uniqueID)
 	end
 	return
 end
+
 --[[Convert and store an itemLink into the compressed format used in the itemIDArray]]
 function lib.API.storeItemLinkToArray(itemLink)
 	if not itemLink then return end
@@ -375,15 +385,21 @@ end
 Returns sanitized itemlinks. Since hyperlinks now vary depending on level of player who looks/creates them
 ]]
 function lib.API.getItemString(itemLink)
-	if not itemLink or not type(itemLink) == "string" then return end
+	if not itemLink or not type(itemLink) == "string" then
+        --DebugPrintQuick("getItemString bad itemLink ", itemLink)
+        return
+    end
 	local itemString, itemName = itemLink:match("H(item:.-)|h%[(.-)%]")
-	if not itemString then return end
+	if not itemString then
+        --DebugPrintQuick("getItemString no item in link ", itemLink)
+        return
+    end
 
-	--DebugPrintQuick("Itemstring input ", itemString, itemName)
+    --DebugPrintQuick("getItemString input ", itemString, itemName, itemLink )
 	-- WARNING - this must survive multiple iterations on the same link/string without changing it more than once
 	--itemString = itemString:gsub("(item:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+):%d+:%d+", "%1:80:0")	-- OLD, FAILING
 	itemString = itemString:gsub("(item:%d+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*):%d+:%d*:(.*)", "%1:100::%2")
-	--DebugPrintQuick("Itemstring output ", itemString, itemName)
+    --DebugPrintQuick("getItemString output ", itemString, itemName, itemLink )
 
 	return itemString, itemName
 end

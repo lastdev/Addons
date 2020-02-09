@@ -1,12 +1,13 @@
-## Interface: 80100
+## Interface: 80300
 ## Title: NugComboBar
 ## Notes: Combopoints counter
 ## Author: d87
 ## SavedVariablesPerCharacter: NugComboBarDB_Character
 ## SavedVariables: NugComboBarDB_Global
-## Version: 8.1.0
+## Version: 8.3.1
 
 ## X-WoWI-ID: 6308
+## X-Curse-Project-ID: 2538
 
 NugComboBar.lua
 skin.lua

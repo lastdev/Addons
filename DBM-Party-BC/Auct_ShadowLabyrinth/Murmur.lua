@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(547, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190421035925")
 mod:SetCreatureID(18708)
 mod:SetEncounterID(1910)
 mod:SetUsedIcons(8)
@@ -22,7 +22,7 @@ local specWarnTouch		= mod:NewSpecialWarningMoveAway(33711, nil, nil, nil, 1, 2)
 local timerBoomCast     = mod:NewCastTimer(5, 33923, nil, nil, nil, 2)
 local timerTouch        = mod:NewTargetTimer(14, 33711, nil, nil, nil, 3)
 
-mod:AddBoolOption("SetIconOnTouchTarget", true)
+mod:AddSetIconOption("SetIconOnTouchTarget", 33711, true, false, {8})
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 33923 or args.spellId == 38796 then

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Vendor
-	Version: 8.1.6245 (SwimmingSeadragon)
-	Revision: $Id: SearcherVendor.lua 6245 2019-03-04 00:20:18Z none $
+	Version: 8.2.6488 (SwimmingSeadragon)
+	Revision: $Id: SearcherVendor.lua 6488 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -28,14 +28,17 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
+
 -- Create a new instance of our lib with our parent
 if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Vendor")
 if not lib then return end
+
 --local aucPrint,decode,_,_,replicate,_,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local get,set,default,Const = AucSearchUI.GetSearchLocals()
 local GetItemInfoCache = AucAdvanced.GetItemInfoCache
 lib.tabname = "Vendor"
+
 -- Set our defaults
 default("vendor.profit.min", 1)
 default("vendor.profit.pct", 0)
@@ -43,6 +46,43 @@ default("vendor.allow.bid", true)
 default("vendor.allow.buy", true)
 default("vendor.maxprice", 10000000)
 default("vendor.maxprice.enable", false)
+default("vendor.timeleft", 0)
+
+
+-- strings for the vendor search UI panel
+function private.getTimeLeftStrings()
+    if AucAdvanced.Classic then
+        return {
+                {0, "Any"},
+                {1, "less than 30 min"},
+                {2, "2 hours"},
+                {3, "8 hours"},
+                {4, "24 hours"},
+            }
+    else
+        return {
+                {0, "Any"},
+                {1, "less than 30 min"},
+                {2, "2 hours"},
+                {3, "12 hours"},
+                {4, "48 hours"},
+            }
+    end
+end
+
+-- note: no strings, just comparing values 0-4
+function private.CheckTimeLeft(iTleft)
+	local timeLeftLimit = get("vendor.timeleft")
+	if timeLeftLimit == 0 then
+		return true
+	elseif timeLeftLimit == iTleft then
+		return true
+	else
+		private.debug = "Time left wrong"
+		return false
+	end
+end
+
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
@@ -70,17 +110,24 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Checkbox",          0.42, 1, "vendor.maxprice.enable", "Enable individual maximum price:")
 	gui:AddTip(id, "Limit the maximum amount you want to spend with the Vendor searcher")
 	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "vendor.maxprice", 1, Const.MAXBIDPRICE, "Maximum Price for Vendor")
+
+	gui:AddControl(id, "Note",       0, 1, 100, 14, "Bid TimeLeft:")
+	gui:AddControl(id, "Selectbox",  0, 1, private.getTimeLeftStrings(), "vendor.timeleft")
+
 end
 
 function lib.Search(item)
 	local bidprice, buyprice = item[Const.PRICE], item[Const.BUYOUT]
 	local maxprice = get("vendor.maxprice.enable") and get("vendor.maxprice")
+
 	if buyprice <= 0 or not get("vendor.allow.buy") or (maxprice and buyprice > maxprice) then
 		buyprice = nil
 	end
+
 	if not get("vendor.allow.bid") or (maxprice and bidprice > maxprice) then
 		bidprice = nil
 	end
+
 	if not (bidprice or buyprice) then
 		return false, "Does not meet bid/buy requirements"
 	end
@@ -90,6 +137,7 @@ function lib.Search(item)
 	if not market or market == 0 then
 		return false, "No vendor price"
 	end
+
 	market = market * item[Const.COUNT]
 
 	local value = market * (100-get("vendor.profit.pct")) / 100
@@ -97,12 +145,18 @@ function lib.Search(item)
 	if value > value2 then
 		value = value2
 	end
+
 	if buyprice and buyprice <= value then
 		return "buy", market
 	elseif bidprice and bidprice <= value then
-		return "bid", market
+        if not private.CheckTimeLeft( item[Const.TLEFT] ) then
+            return false, "Does not meet bid timeleft requirements"
+        else
+            return "bid", market
+        end
 	end
+
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 6245 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherVendor.lua $", "$Rev: 6488 $")

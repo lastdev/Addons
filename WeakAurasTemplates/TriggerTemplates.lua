@@ -46,6 +46,11 @@ local function changes(property, regionType)
       value = colors[property],
       property = regionColorProperty[regionType],
     };
+  elseif property == "glow" and (regionType == "icon" or regionType == "aurabar") then
+    return {
+      value = true,
+      property = regionType == "icon" and "sub.1.glow" or "sub.2.glow",
+    };
   elseif WeakAuras.regionTypes[regionType].default[property] == nil then
     return nil;
   elseif property == "cooldownSwipe" then
@@ -62,11 +67,6 @@ local function changes(property, regionType)
     return {
       value = false,
       property = "inverse",
-    };
-  elseif property == "glow" then
-    return {
-      value = true,
-      property = "glow",
     };
   end
 end
@@ -176,51 +176,37 @@ local function isOnCdGrey(conditions, trigger, regionType)
   tinsert(conditions, buildCondition(trigger, checks.onCooldown, {changes("grey", regionType)}));
 end
 
-local function isBuffedGlow(conditions, trigger, regionType)
+local function GenericGlow(conditions, trigger, regionType, check)
   if regionType == "icon" then
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraFound, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
-  elseif regionType == "aurabar" or regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraFound, {changes("inverse", regionType), changes("yellow", regionType)}));
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
+  elseif regionType == "aurabar" then
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("glow", regionType), changes("yellow", regionType)}));
+  elseif regionType == "progresstexture" then
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("yellow", regionType)}));
   else
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraFound, {changes("yellow", regionType)}));
+    tinsert(conditions, buildCondition(trigger, check, {changes("yellow", regionType)}));
   end
+end
+
+local function isBuffedGlow(conditions, trigger, regionType)
+  GenericGlow(conditions, trigger, regionType, checks.buffedAuraFound)
 end
 
 local function isDurationGlow(conditions, trigger, regionType)
-  if regionType == "icon" then
-    tinsert(conditions, buildCondition(trigger, checks.duration, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
-  elseif regionType == "aurabar" or regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, checks.duration, {changes("inverse", regionType), changes("yellow", regionType)}));
-  else
-    tinsert(conditions, buildCondition(trigger, checks.duration, {changes("yellow", regionType)}));
-  end
+  GenericGlow(conditions, trigger, regionType, checks.duration)
 end
 
 local function isBuffedGlowAuraAlways(conditions, trigger, regionType)
-  if regionType == "icon" then
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraAlways, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
-  elseif regionType == "aurabar" or regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraAlways, {changes("inverse", regionType), changes("yellow", regionType)}));
-  else
-    tinsert(conditions, buildCondition(trigger, checks.buffedAuraAlways, {changes("yellow", regionType)}));
-  end
+  GenericGlow(conditions, trigger, regionType, checks.buffedAuraAlways)
 end
 
 local function totemActiveGlow(conditions, trigger, regionType)
-  if regionType == "icon" then
-    tinsert(conditions, buildCondition(trigger, checks.totem, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
-  elseif regionType == "aurabar" or regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, checks.totem, {changes("inverse", regionType), changes("yellow", regionType)}));
-  else
-    tinsert(conditions, buildCondition(trigger, checks.totem, {changes("yellow", regionType)}));
-  end
+  GenericGlow(conditions, trigger, regionType, checks.totem)
 end
 
 local function overlayGlow(conditions, trigger, regionType)
-  if regionType == "icon" then
+  if regionType == "icon" or regionType == "aurabar" then
     tinsert(conditions, buildCondition(trigger, checks.overlayGlow, {changes("glow", regionType)}));
-  elseif regionType == "aurabar" or regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, checks.overlayGlow, {changes("yellow", regionType)}));
   else
     tinsert(conditions, buildCondition(trigger, checks.overlayGlow, {changes("yellow", regionType)}));
   end
@@ -438,7 +424,7 @@ local function subTypesFor(item, regionType)
   local types = {};
   local icon = {
     target = function()
-      local thumbnail = createThumbnail(UIParent);
+      local thumbnail = createThumbnail();
       local t1 = thumbnail:CreateTexture(nil, "ARTWORK");
       t1:SetTexture(134376);
       t1:SetAllPoints(thumbnail);
@@ -459,7 +445,7 @@ local function subTypesFor(item, regionType)
       return thumbnail;
     end, -- 132212,
     glow = function()
-      local thumbnail = createThumbnail(UIParent);
+      local thumbnail = createThumbnail();
       local t1 = thumbnail:CreateTexture(nil, "ARTWORK");
       t1:SetTexture(134376);
       t1:SetAllPoints(thumbnail);
@@ -467,7 +453,7 @@ local function subTypesFor(item, regionType)
       return thumbnail;
     end, -- 571554
     charges = function()
-      local thumbnail = createThumbnail(UIParent);
+      local thumbnail = createThumbnail();
       local t1 = thumbnail:CreateTexture(nil, "ARTWORK");
       t1:SetTexture(134376);
       t1:SetAllPoints(thumbnail);
@@ -481,6 +467,14 @@ local function subTypesFor(item, regionType)
     cd = 134377,
     cd2 = 134376,
   };
+  local subglow = WeakAuras.getDefaultGlow(regionType)
+  local subglowindex = (regionType == "icon" or regionType == "aurabar") and 1
+  local data = {}
+  local dataGlow = {
+    subRegions = {
+      [subglowindex] = subglow
+    }
+  }
   if (item.type == "ability") then
     tinsert(types, {
       icon = icon.cd,
@@ -491,6 +485,10 @@ local function subTypesFor(item, regionType)
       end,
     });
     if (item.charges) then
+      data.cooldownSwipe = false
+      data.cooldownEdge = true
+      dataGlow.cooldownSwipe = false
+      dataGlow.cooldownEdge = true
       tinsert(types, {
         icon = icon.charges,
         title = L["Charge Tracking"],
@@ -502,7 +500,7 @@ local function subTypesFor(item, regionType)
           insufficientResourcesBlue(conditions, 1, regionType);
           hasChargesGrey(conditions, 1, regionType);
         end,
-        data = { cooldownSwipe = false, cooldownEdge = true },
+        data = data,
       });
       if (item.duration) then
         tinsert(types, {
@@ -515,7 +513,7 @@ local function subTypesFor(item, regionType)
             hasChargesGrey(conditions, 2, regionType);
             isDurationGlow(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = dataGlow,
         });
       elseif (item.buff) then
         tinsert(types, {
@@ -528,7 +526,7 @@ local function subTypesFor(item, regionType)
             hasChargesGrey(conditions, 2, regionType);
             isBuffedGlow(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = dataGlow,
         });
       elseif(item.debuff) then
         tinsert(types, {
@@ -541,7 +539,7 @@ local function subTypesFor(item, regionType)
             hasChargesGrey(conditions, 2, regionType);
             isBuffedGlow(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = dataGlow,
         })
       elseif(item.requiresTarget) then
         tinsert(types,  {
@@ -557,7 +555,7 @@ local function subTypesFor(item, regionType)
             hasChargesGrey(conditions, 1, regionType);
             isSpellNotInRangeRed(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = data,
         });
         if (item.usable) then
           tinsert(types,  {
@@ -572,7 +570,7 @@ local function subTypesFor(item, regionType)
               hasChargesGrey(conditions, 1, regionType);
               isSpellNotInRangeRed(conditions, 1, regionType);
             end,
-            data = { cooldownSwipe = false, cooldownEdge = true },
+            data = data,
           });
         end
         if (item.overlayGlow) then
@@ -587,7 +585,7 @@ local function subTypesFor(item, regionType)
               isSpellNotInRangeRed(conditions, 1, regionType);
               overlayGlow(conditions, 2, regionType);
             end,
-            data = { cooldownSwipe = false, cooldownEdge = true },
+            data = dataGlow,
           });
         end
       elseif(item.totem) then
@@ -604,7 +602,7 @@ local function subTypesFor(item, regionType)
             hasChargesGrey(conditions, 2, regionType);
             totemActiveGlow(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = dataGlow,
         });
       elseif(item.usable) then
         tinsert(types, {
@@ -618,7 +616,7 @@ local function subTypesFor(item, regionType)
             isNotUsableBlue(conditions, 1, regionType);
             hasChargesGrey(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = data,
         });
         if (item.overlayGlow) then
           tinsert(types,  {
@@ -631,7 +629,7 @@ local function subTypesFor(item, regionType)
               hasChargesGrey(conditions, 1, regionType);
               overlayGlow(conditions, 2, regionType);
             end,
-            data = { cooldownSwipe = false, cooldownEdge = true },
+            data = dataGlow,
           });
         end
       end
@@ -649,6 +647,10 @@ local function subTypesFor(item, regionType)
         end,
       });
       if (item.duration) then
+        data.cooldownSwipe = false
+        data.cooldownEdge = true
+        dataGlow.cooldownSwipe = false
+        dataGlow.cooldownEdge = true
         tinsert(types, {
           icon = icon.glow,
           title = L["Show Cooldown and Duration"],
@@ -659,7 +661,7 @@ local function subTypesFor(item, regionType)
             isOnCdGrey(conditions, 2, regionType);
             isDurationGlow(conditions, 1, regionType);
           end,
-          data = { cooldownSwipe = false, cooldownEdge = true },
+          data = dataGlow
         });
         if (item.usable) then
           tinsert(types, {
@@ -672,6 +674,7 @@ local function subTypesFor(item, regionType)
               isOnCdGrey(conditions, 2, regionType);
               isDurationGlow(conditions, 1, regionType);
             end,
+            data = dataGlow
           });
         end
         if (item.requiresTarget) then
@@ -686,6 +689,7 @@ local function subTypesFor(item, regionType)
               isSpellNotInRangeRed(conditions, 2, regionType);
               isDurationGlow(conditions, 1, regionType);
             end,
+            data = dataGlow
           });
         end
       elseif (item.buff) then
@@ -699,6 +703,7 @@ local function subTypesFor(item, regionType)
             isOnCdGrey(conditions, 2, regionType);
             isBuffedGlow(conditions, 1, regionType);
           end,
+          data = dataGlow
         });
         if (item.usable) then
           tinsert(types, {
@@ -711,6 +716,7 @@ local function subTypesFor(item, regionType)
               isOnCdGrey(conditions, 2, regionType);
               isBuffedGlow(conditions, 1, regionType);
             end,
+            data = dataGlow
           });
         end
         if (item.requiresTarget) then
@@ -720,11 +726,16 @@ local function subTypesFor(item, regionType)
             description = L["Highlight while buffed, red when out of range."],
             createTriggers = createAbilityAndBuffTrigger,
             createConditions = function(conditions, item, regionType)
-              insufficientResourcesBlue(conditions, 2, regionType);
+              if item.usable then
+                isNotUsableBlue(conditions, 2, regionType);
+              else
+                insufficientResourcesBlue(conditions, 2, regionType);
+              end
               isOnCdGrey(conditions, 2, regionType);
               isSpellNotInRangeRed(conditions, 2, regionType);
               isBuffedGlow(conditions, 1, regionType);
             end,
+            data = dataGlow
           });
         end
       elseif(item.debuff) then
@@ -738,6 +749,7 @@ local function subTypesFor(item, regionType)
             isOnCdGrey(conditions, 2, regionType);
             isBuffedGlow(conditions, 1, regionType);
           end,
+          data = dataGlow
         });
         if (item.requiresTarget) then
           tinsert(types, {
@@ -746,11 +758,16 @@ local function subTypesFor(item, regionType)
             description = L["Highlight while debuffed, red when out of range."],
             createTriggers = createAbilityAndDebuffTrigger,
             createConditions = function(conditions, item, regionType)
-              insufficientResourcesBlue(conditions, 2, regionType);
+              if item.usable then
+                isNotUsableBlue(conditions, 2, regionType);
+              else
+                insufficientResourcesBlue(conditions, 2, regionType);
+              end
               isOnCdGrey(conditions, 2, regionType);
               isSpellNotInRangeRed(conditions, 2, regionType);
               isBuffedGlow(conditions, 1, regionType);
             end,
+            data = dataGlow
           });
         end
       elseif(item.totem) then
@@ -767,8 +784,52 @@ local function subTypesFor(item, regionType)
             isOnCdGrey(conditions, 2, regionType);
             totemActiveGlow(conditions, 1, regionType);
           end,
+          data = dataGlow
         });
       else
+        if (item.requiresTarget) then
+          tinsert(types, {
+            icon = icon.target,
+            title = L["Show Cooldown and Check for Target"],
+            description = L["Always shows the aura, turns red when out of range."],
+            createTriggers = function(triggers, item)
+              createAbilityTrigger(triggers, 1, item, "showAlways");
+            end,
+            createConditions = function(conditions, item, regionType)
+              insufficientResourcesBlue(conditions, 1, regionType);
+              isOnCdGrey(conditions, 1, regionType);
+              isSpellNotInRangeRed(conditions, 1, regionType);
+            end,
+          });
+          if (item.overlayGlow) then
+            tinsert(types,  {
+              icon = icon.glow,
+              title = L["Show Cooldown and Check for Target & Proc Tracking"],
+              description = L["Always shows the aura, highlight while proc is active, turns red when out of range, blue on insufficient resources."],
+              createTriggers = createAbilityAndOverlayGlowTrigger,
+              createConditions = function(conditions, item, regionType)
+                insufficientResourcesBlue(conditions, 1, regionType);
+                isOnCdGrey(conditions, 1, regionType);
+                isSpellNotInRangeRed(conditions, 1, regionType);
+                overlayGlow(conditions, 2, regionType);
+              end,
+              data = dataGlow
+            });
+          end
+        elseif (item.overlayGlow) then
+          tinsert(types,  {
+            icon = icon.glow,
+            title = L["Show Cooldown and Proc Tracking"],
+            description = L["Always shows the aura, highlight while proc is active, blue on insufficient resources."],
+            createTriggers = createAbilityAndOverlayGlowTrigger,
+            createConditions = function(conditions, item, regionType)
+              insufficientResourcesBlue(conditions, 1, regionType);
+              isOnCdGrey(conditions, 1, regionType);
+              overlayGlow(conditions, 2, regionType);
+            end,
+            data = dataGlow
+          });
+        end
         if (item.usable) then
           tinsert(types, {
             icon = icon.cd2,
@@ -808,6 +869,7 @@ local function subTypesFor(item, regionType)
                   isSpellNotInRangeRed(conditions, 1, regionType);
                   overlayGlow(conditions, 2, regionType);
                 end,
+                data = dataGlow
               });
             end
           else
@@ -822,54 +884,16 @@ local function subTypesFor(item, regionType)
                   isOnCdGrey(conditions, 1, regionType);
                   overlayGlow(conditions, 2, regionType);
                 end,
+                data = dataGlow
               });
             end
           end
         end
-        if (item.requiresTarget) then
-          tinsert(types, {
-            icon = icon.target,
-            title = L["Show Cooldown and Check for Target"],
-            description = L["Always shows the aura, turns red when out of range."],
-            createTriggers = function(triggers, item)
-              createAbilityTrigger(triggers, 1, item, "showAlways");
-            end,
-            createConditions = function(conditions, item, regionType)
-              insufficientResourcesBlue(conditions, 1, regionType);
-              isOnCdGrey(conditions, 1, regionType);
-              isSpellNotInRangeRed(conditions, 1, regionType);
-            end,
-          });
-          if (item.overlayGlow) then
-            tinsert(types,  {
-              icon = icon.glow,
-              title = L["Show Cooldown and Check for Target & Proc Tracking"],
-              description = L["Always shows the aura, highlight while proc is active, turns red when out of range, blue on insufficient resources."],
-              createTriggers = createAbilityAndOverlayGlowTrigger,
-              createConditions = function(conditions, item, regionType)
-                insufficientResourcesBlue(conditions, 1, regionType);
-                isOnCdGrey(conditions, 1, regionType);
-                isSpellNotInRangeRed(conditions, 1, regionType);
-                overlayGlow(conditions, 2, regionType);
-              end,
-            });
-          end
-        elseif (item.overlayGlow) then
-          tinsert(types,  {
-            icon = icon.glow,
-            title = L["Show Cooldown and Proc Tracking"],
-            description = L["Always shows the aura, highlight while proc is active, blue on insufficient resources."],
-            createTriggers = createAbilityAndOverlayGlowTrigger,
-            createConditions = function(conditions, item, regionType)
-              insufficientResourcesBlue(conditions, 1, regionType);
-              isOnCdGrey(conditions, 1, regionType);
-              overlayGlow(conditions, 2, regionType);
-            end,
-          });
-        end
       end
     end
   elseif(item.type == "buff") then
+    data.inverse = false
+    dataGlow.inverse = false
     tinsert(types, {
       icon = icon.cd,
       title = L["Show Only if Buffed"],
@@ -877,7 +901,7 @@ local function subTypesFor(item, regionType)
       createTriggers = function(triggers, item)
         createBuffTrigger(triggers, 1, item, "showOnActive", true);
       end,
-      data = { inverse = false },
+      data = data,
     });
     tinsert(types, {
       icon = icon.glow,
@@ -890,7 +914,7 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         isBuffedGlowAuraAlways(conditions, 1, regionType);
       end,
-      data = { inverse = false },
+      data = dataGlow,
     });
     tinsert(types, {
       icon = icon.cd2,
@@ -902,9 +926,11 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         missingBuffGreyed(conditions, 1, regionType);
       end,
-      data = { inverse = false },
+      data = data,
     });
   elseif(item.type == "debuff") then
+    data.inverse = false
+    dataGlow.inverse = false
     tinsert(types, {
       icon = icon.cd,
       title = L["Show Only if Debuffed"],
@@ -912,7 +938,7 @@ local function subTypesFor(item, regionType)
       createTriggers = function(triggers, item)
         createBuffTrigger(triggers, 1, item, "showOnActive", false);
       end,
-      data = { inverse = false },
+      data = data,
     });
     tinsert(types, {
       icon = icon.glow,
@@ -924,7 +950,7 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         isBuffedGlowAuraAlways(conditions, 1, regionType);
       end,
-      data = { inverse = false },
+      data = dataGlow,
     });
     tinsert(types, {
       icon = icon.cd2,
@@ -936,7 +962,7 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         missingBuffGreyed(conditions, 1, regionType);
       end,
-      data = { inverse = false },
+      data = data,
     });
   elseif(item.type == "item") then
     tinsert(types, {
@@ -969,26 +995,34 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         totemActiveGlow(conditions, 1, regionType);
       end,
+      data = dataGlow
     });
   elseif(item.type == "power") then
+    data.inverse = false
+    data.icon = false
+    data.text = false
     tinsert(types, {
       icon = item.icon,
       title = item.title,
       createTriggers = function(triggers, item)
         createPowerTrigger(triggers, 1, item);
       end,
-      data = { inverse = false, icon = false, text = false },
+      data = data,
     });
   elseif(item.type == "health") then
+    data.inverse = false
+    data.icon = false
+    data.text = false
     tinsert(types, {
       icon = item.icon,
       title = item.title,
       createTriggers = function(triggers, item)
         createHealthTrigger(triggers, 1, item);
       end,
-      data = { inverse = false, icon = false, text = false },
+      data = data,
     });
   elseif(item.type == "cast") then
+    data.inverse = false
     tinsert(types, {
       icon = item.icon,
       title = item.title,
@@ -998,7 +1032,7 @@ local function subTypesFor(item, regionType)
       createConditions = function(conditions, item, regionType)
         uninterruptibleRed(conditions, 1, regionType);
       end,
-      data = { inverse = false },
+      data = data,
     });
   end
 
@@ -1156,10 +1190,8 @@ function WeakAuras.CreateTemplateView(frame)
   local function createRegionButton(regionType, regionData, selectedItem)
     local button = AceGUI:Create("WeakAurasNewButton");
     button:SetTitle(regionData.displayName);
-    if(type(regionData.icon) == "string") then
+    if(type(regionData.icon) == "string" or type(regionData.icon) == "table") then
       button:SetIcon(regionData.icon);
-    elseif(type(regionData.icon) == "function") then
-      button:SetIcon(regionData.icon());
     end
     button:SetDescription(regionData.description);
     button:SetFullWidth(true);
@@ -1181,9 +1213,7 @@ function WeakAuras.CreateTemplateView(frame)
       if (item.icon) then
         templateButton:SetIcon(item.icon);
       else
-        local thumbnail = regionData.createThumbnail(templateButton.frame, regionData.create);
-        regionData.modifyThumbnail(templateButton.frame, thumbnail, item.data, true, regionData.modify)
-        templateButton:SetIcon(thumbnail);
+        templateButton:SetThumbnail(regionType, item.data)
       end
 
       templateButton:SetTitle(item.title);
@@ -1322,7 +1352,7 @@ function WeakAuras.CreateTemplateView(frame)
     group:SetFullWidth(true);
     local subTypes = subTypesFor(item, newView.data.regionType);
     local subTypesButtons = {}
-    local firstButton = true;
+    local lastButton
     for k, subType in pairs(subTypes) do
       local button = AceGUI:Create("WeakAurasNewButton");
       subTypesButtons[k] = button;
@@ -1365,10 +1395,13 @@ function WeakAuras.CreateTemplateView(frame)
           WeakAuras.NewAura(newView.data, newView.data.regionType, newView.targetId);
         end
       end);
-      if newView.batchStep and firstButton then
+      if newView.batchStep then
         button.frame:LockHighlight();
         newView.choosenItemBatchSubType[item] = subType;
-        firstButton = false;
+        if lastButton then
+          lastButton.frame:UnlockHighlight();
+        end
+        lastButton = button
       end
       group:AddChild(button);
     end
@@ -1396,7 +1429,9 @@ function WeakAuras.CreateTemplateView(frame)
   -- Creates a button + flyout (if the button is selected) for one section
   local function createTriggerButtons(templates, selectedItem, fullWidth)
     for k, section in ipairs(templates) do
-      createTriggerButton(section, selectedItem, fullWidth);
+      if section.args and next(section.args) then
+        createTriggerButton(section, selectedItem, fullWidth);
+      end
     end
   end
 
@@ -1408,7 +1443,7 @@ function WeakAuras.CreateTemplateView(frame)
       newView:CancelClose();
       WeakAuras.Add(data);
       WeakAuras.NewDisplayButton(data);
-      WeakAuras.SetThumbnail(data);
+      WeakAuras.UpdateThumbnail(data);
       WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
@@ -1434,7 +1469,7 @@ function WeakAuras.CreateTemplateView(frame)
       newView:CancelClose();
       WeakAuras.Add(data);
       WeakAuras.NewDisplayButton(data);
-      WeakAuras.SetThumbnail(data);
+      WeakAuras.UpdateThumbnail(data);
       WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
@@ -1536,10 +1571,11 @@ function WeakAuras.CreateTemplateView(frame)
       local classSelector = createDropdown("class", WeakAuras.class_types);
       newViewScroll:AddChild(classSelector);
 
-      local specSelector = createDropdown("spec", WeakAuras.spec_types_specific[newView.class]);
-      newViewScroll:AddChild(specSelector);
-      newViewScroll:AddChild(createSpacer());
-
+      if not WeakAuras.IsClassic() then
+        local specSelector = createDropdown("spec", WeakAuras.spec_types_specific[newView.class]);
+        newViewScroll:AddChild(specSelector);
+        newViewScroll:AddChild(createSpacer());
+      end
       if (WeakAuras.triggerTemplates.class[newView.class] and WeakAuras.triggerTemplates.class[newView.class][newView.spec]) then
         createTriggerButtons(WeakAuras.triggerTemplates.class[newView.class][newView.spec], selectedItem);
       end
@@ -1550,20 +1586,22 @@ function WeakAuras.CreateTemplateView(frame)
       createTriggerButton(WeakAuras.triggerTemplates.general, selectedItem);
 
       -- Items
-      local itemHeader = AceGUI:Create("Heading");
-      itemHeader:SetFullWidth(true);
-      newViewScroll:AddChild(itemHeader);
-      local itemTypes = {};
-      for _, section in pairs(WeakAuras.triggerTemplates.items) do
-        tinsert(itemTypes, section.title);
-      end
-      newView.item = newView.item or 1;
-      local itemSelector = createDropdown("item", itemTypes);
-      newViewScroll:AddChild(itemSelector);
-      newViewScroll:AddChild(createSpacer());
-      if (WeakAuras.triggerTemplates.items[newView.item]) then
-        local group = createTriggerFlyout(WeakAuras.triggerTemplates.items[newView.item].args, true);
-        newViewScroll:AddChild(group);
+      if not WeakAuras.IsClassic() then
+        local itemHeader = AceGUI:Create("Heading");
+        itemHeader:SetFullWidth(true);
+        newViewScroll:AddChild(itemHeader);
+        local itemTypes = {};
+        for _, section in pairs(WeakAuras.triggerTemplates.items) do
+          tinsert(itemTypes, section.title);
+        end
+        newView.item = newView.item or 1;
+        local itemSelector = createDropdown("item", itemTypes);
+        newViewScroll:AddChild(itemSelector);
+        newViewScroll:AddChild(createSpacer());
+        if (WeakAuras.triggerTemplates.items[newView.item]) then
+          local group = createTriggerFlyout(WeakAuras.triggerTemplates.items[newView.item].args, true);
+          newViewScroll:AddChild(group);
+        end
       end
 
       -- Race
@@ -1608,7 +1646,7 @@ function WeakAuras.CreateTemplateView(frame)
   local batchModeLabelString = batchModeLabel:CreateFontString(nil, "ARTWORK");
   batchModeLabelString:SetFont(STANDARD_TEXT_FONT, 10); -- "OUTLINE"
   batchModeLabelString:SetTextColor(1,1,1,1);
-  batchModeLabelString:SetText(WeakAuras.newFeatureString .. L["Hold CTRL to create multiple auras at once"]);
+  batchModeLabelString:SetText(L["Hold CTRL to create multiple auras at once"]);
   batchModeLabelString:SetJustifyH("LEFT")
   batchModeLabelString:SetAllPoints(batchModeLabel);
   batchModeLabel:SetPoint("BOTTOMLEFT", 10, -23);
@@ -1703,10 +1741,8 @@ function WeakAuras.CreateTemplateView(frame)
   newViewCancel:SetText(L["Cancel"]);
 
   function newView.Open(self, data)
-    frame.container.frame:Hide();
-    frame.buttonsContainer.frame:Hide();
-    self.frame:Show();
     frame.window = "newView";
+    frame:UpdateFrameVisible()
     if (data) then
       self.data = data;
       newView.existingAura = true;
@@ -1721,18 +1757,21 @@ function WeakAuras.CreateTemplateView(frame)
       newView.choosenItemBatch = {};
     end
     newView.class = select(2, UnitClass("player"));
-    newView.spec = GetSpecialization() or 1;
+    if not WeakAuras.IsClassic() then
+      newView.spec = GetSpecialization() or 1;
+    else
+      newView.spec = 1
+    end
     newView.race = select(2, UnitRace('player'));
+
     createButtons();
   end
 
   function newView.CancelClose(self)
-    newView.frame:Hide();
-    frame.buttonsContainer.frame:Show();
-    frame.container.frame:Show();
     frame.window = "default";
+    frame:UpdateFrameVisible()
     if (not self.data) then
-      frame:PickOption("New");
+      frame:NewAura();
     end
   end
 

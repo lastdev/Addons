@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreServers.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreServers.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -64,7 +64,7 @@
 local AucAdvanced = AucAdvanced
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreServers")
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreServers")
+local coremodule, internalLib, _, internal = AucAdvanced.GetCoreModule("CoreServers", "Servers", nil, nil, "CoreServers") -- needs access to the base internal table
 if not (coremodule and internal) then return end
 
 local Const = AucAdvanced.Const
@@ -147,7 +147,7 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, 
 		end
 		return newServerKey
 	end
-	
+
 	local lookupRealms, foundKeys = {}, {}
 	for _, realmName in ipairs(sessionConnected) do
 		lookupRealms[realmName] = true
@@ -160,7 +160,7 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, 
 			end
 		end
 	end
-	
+
 	if #foundKeys == 0 then
 		-- this connected realm has not been seen before by CoreServers
 		local newServerKey
@@ -173,7 +173,7 @@ local function ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, 
 				break
 			end
 		end
-		
+
 		if not newServerKey then -- default
 			newServerKey = "#"..CompactRealmName
 		end
@@ -248,114 +248,112 @@ local function FixNonConnectedRealm(sessionKey, moduleKeys)
 	end
 end
 
-internal.Servers = {
-	Activate = function()
-		internal.Servers.Activate = nil -- no longer needed after activation
+function internalLib.Activate()
+	internalLib.Activate = nil -- no longer needed after activation
 
-		if FullRealmName ~= CompactRealmName then
-			ExpandedNames[CompactRealmName] = FullRealmName
-			AucAdvancedServers.ExpandedNames = ExpandedNames -- attach to save structure, if not already attached
+	if FullRealmName ~= CompactRealmName then
+		ExpandedNames[CompactRealmName] = FullRealmName
+		AucAdvancedServers.ExpandedNames = ExpandedNames -- attach to save structure, if not already attached
+	end
+	local sessionConnected = GetAutoCompleteRealms()
+	if not sessionConnected or not next(sessionConnected) then -- GetAutoCompleteRealms returns non-connected realms as {}; previously it returned nil
+		sessionConnected = false
+	end
+
+	local sessionKey = KnownRealms[CompactRealmName] -- may be nil
+	local moduleKeys = GetModuleServerKeys() -- may be empty table
+
+	if not sessionConnected then
+		--if not sessionKey then -- ### temporarily we will always run this block to force fix incorrect entries [ADV-719]
+			sessionKey = CompactRealmName
+			KnownRealms[CompactRealmName] = sessionKey
+		--end
+		-- previously GetAutoCompleteRealms returned nil for non-connected realms, but has recently started returning {} instead
+		-- this caused CoreServers to incorrectly treat non-connected realms as connected [ADV-719]
+		FixNonConnectedRealm(sessionKey, moduleKeys) -- check if we need to correct previous errors
+	else -- handle connected realm
+		local needsCheck = false
+
+		-- [ADV-719] Previously our compact realm names only removed ' ' chars. We now also remove '-' chars.
+		-- Construct previous cname to see if it has changed
+		local oldCompactName = FullRealmName:gsub(" ", "")
+		if oldCompactName == CompactRealmName then
+			oldCompactName = nil
 		end
-		local sessionConnected = GetAutoCompleteRealms()
-		if not sessionConnected or not next(sessionConnected) then -- GetAutoCompleteRealms returns non-connected realms as {}; previously it returned nil
-			sessionConnected = false
-		end
 
-		local sessionKey = KnownRealms[CompactRealmName] -- may be nil
-		local moduleKeys = GetModuleServerKeys() -- may be empty table
-
-		if not sessionConnected then
-			--if not sessionKey then -- ### temporarily we will always run this block to force fix incorrect entries [ADV-719]
-				sessionKey = CompactRealmName
-				KnownRealms[CompactRealmName] = sessionKey
-			--end
-			-- previously GetAutoCompleteRealms returned nil for non-connected realms, but has recently started returning {} instead
-			-- this caused CoreServers to incorrectly treat non-connected realms as connected [ADV-719]
-			FixNonConnectedRealm(sessionKey, moduleKeys) -- check if we need to correct previous errors
-		else -- handle connected realm
-			local needsCheck = false
-			
-			-- [ADV-719] Previously our compact realm names only removed ' ' chars. We now also remove '-' chars.
-			-- Construct previous cname to see if it has changed
-			local oldCompactName = FullRealmName:gsub(" ", "")
-			if oldCompactName == CompactRealmName then
-				oldCompactName = nil
-			end
-			
-			sort(sessionConnected) -- we need it in the same order every time
-			if not ConnectedRealmTables then
-				ConnectedRealmTables = {}
-				AucAdvancedServers.ConnectedRealmTables = ConnectedRealmTables
-				needsCheck = true
-			elseif not sessionKey then
+		sort(sessionConnected) -- we need it in the same order every time
+		if not ConnectedRealmTables then
+			ConnectedRealmTables = {}
+			AucAdvancedServers.ConnectedRealmTables = ConnectedRealmTables
+			needsCheck = true
+		elseif not sessionKey then
+			needsCheck = true
+		else
+			-- Check that this exact sessionConnected table is already in ConnectedRealmTables
+			local savedConnectedRealms = ConnectedRealmTables[sessionKey]
+			if not savedConnectedRealms or #savedConnectedRealms ~= #sessionConnected then
 				needsCheck = true
 			else
-				-- Check that this exact sessionConnected table is already in ConnectedRealmTables
-				local savedConnectedRealms = ConnectedRealmTables[sessionKey]
-				if not savedConnectedRealms or #savedConnectedRealms ~= #sessionConnected then
-					needsCheck = true
-				else
-					for i = 1, #sessionConnected do
-						if sessionConnected[i] ~= savedConnectedRealms[i] then
-							needsCheck = true
-							break
-						end
+				for i = 1, #sessionConnected do
+					if sessionConnected[i] ~= savedConnectedRealms[i] then
+						needsCheck = true
+						break
 					end
 				end
 			end
-			if needsCheck then
-				sessionKey = ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, oldCompactName)
+		end
+		if needsCheck then
+			sessionKey = ResolveConnectedRealms(sessionKey, sessionConnected, moduleKeys, oldCompactName)
+		end
+
+		if oldCompactName and KnownRealms[oldCompactName] then
+			-- [ADV-719] Remove invalid entries if we used names that contained a '-' char
+			-- ResolveConnectedRealms should have taken care of any data conversion
+			KnownRealms[oldCompactName] = nil
+			local oldServerKey = "#"..oldCompactName
+			KnownServerKeys[oldServerKey] = nil
+			ConnectedRealmTables[oldServerKey] = nil
+
+			if not AucAdvancedServers.ConvertedServerKeys then
+				AucAdvancedServers.ConvertedServerKeys = {}
 			end
-			
-			if oldCompactName and KnownRealms[oldCompactName] then
-				-- [ADV-719] Remove invalid entries if we used names that contained a '-' char
-				-- ResolveConnectedRealms should have taken care of any data conversion
-				KnownRealms[oldCompactName] = nil
-				local oldServerKey = "#"..oldCompactName
-				KnownServerKeys[oldServerKey] = nil
-				ConnectedRealmTables[oldServerKey] = nil
-
-				if not AucAdvancedServers.ConvertedServerKeys then
-					AucAdvancedServers.ConvertedServerKeys = {}
-				end
-				AucAdvancedServers.ConvertedServerKeys[oldServerKey] = {
-					old = oldServerKey,
-					new = sessionKey,
-					timestamp = time(),
-					reason = "DashNameFix",
-				}
-			end
-
+			AucAdvancedServers.ConvertedServerKeys[oldServerKey] = {
+				old = oldServerKey,
+				new = sessionKey,
+				timestamp = time(),
+				reason = "DashNameFix",
+			}
 		end
 
-		KnownServerKeys[sessionKey] = time() -- record login time
+	end
 
-		-- install to CoreResource (using SetResource, as nothing should write directly to Resources!)
-		internal.Resources.SetResource("ServerKey", sessionKey)
-		internal.Resources.SetResource("ConnectedRealms", sessionConnected)
+	KnownServerKeys[sessionKey] = time() -- record login time
 
-		-- populate cacheKnown
-		for key in pairs(KnownServerKeys) do
-			cacheKnown[key] = key
-		end
-		for key in pairs(moduleKeys) do
-			cacheKnown[key] = key
-		end
-		for realm, key in pairs(KnownRealms) do
-			cacheKnown[realm] = key
-		end
-		for compact, expanded in pairs(ExpandedNames) do
-			cacheKnown[expanded] = cacheKnown[compact]
-		end
-		if Resources.PlayerFaction == "Alliance" or Resources.PlayerFaction == "Horde" then
-			-- ensure we can recognise old style home serverKey
-			cacheKnown[Resources.ServerKeyHome] = sessionKey
-		end
+	-- install to CoreResource (using SetResource, as nothing should write directly to Resources!)
+	internal.Resources.SetResource("ServerKey", sessionKey)
+	internal.Resources.SetResource("ConnectedRealms", sessionConnected)
 
-		-- issue serverkey message for compatibility
-		AucAdvanced.SendProcessorMessage("serverkey",sessionKey)
-	end,
-}
+	-- populate cacheKnown
+	for key in pairs(KnownServerKeys) do
+		cacheKnown[key] = key
+	end
+	for key in pairs(moduleKeys) do
+		cacheKnown[key] = key
+	end
+	for realm, key in pairs(KnownRealms) do
+		cacheKnown[realm] = key
+	end
+	for compact, expanded in pairs(ExpandedNames) do
+		cacheKnown[expanded] = cacheKnown[compact]
+	end
+	if Resources.PlayerFaction == "Alliance" or Resources.PlayerFaction == "Horde" then
+		-- ensure we can recognise old style home serverKey
+		cacheKnown[Resources.ServerKeyHome] = sessionKey
+	end
+
+	-- issue serverkey message for compatibility
+	AucAdvanced.SendProcessorMessage("serverkey",sessionKey)
+end
 
 local function OnLoadRunOnce()
 	OnLoadRunOnce = nil
@@ -568,5 +566,5 @@ AucAdvanced.GetServerKeyText = GetServerKeyText
 AucAdvanced.SplitServerKey = SplitServerKey
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreServers.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreServers.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreServers")

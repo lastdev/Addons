@@ -1,8 +1,8 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 1121 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -13,7 +13,7 @@ local XUnits = {}
 local UpdateTime = 0
 local XGaps = 0
 local XTitle
-local pendingTankListChange		-- If in combat when tank list changes, then we'll defer it till next time we're out of combat
+local pendingTankListChange -- If in combat when tank list changes, then we'll defer it till next time we're out of combat
 local conf
 
 local GetNumGroupMembers = GetNumGroupMembers
@@ -55,7 +55,7 @@ end
 local function SpecialCaseUnit(self)
 	local id
 	if (self.type == "MTT") then
-		id = self:GetParent():GetAttribute("unit")	-- SecureButton_GetUnit(self:GetParent())
+		id = self:GetParent():GetAttribute("unit") -- SecureButton_GetUnit(self:GetParent())
 		if (id) then
 			if (UnitIsUnit("player", id)) then
 				return "target"
@@ -64,7 +64,7 @@ local function SpecialCaseUnit(self)
 		end
 
 	elseif (self.type == "MT") then
-		id = self:GetAttribute("unit")			-- SecureButton_GetUnit(self)
+		id = self:GetAttribute("unit") -- SecureButton_GetUnit(self)
 		if (id and UnitIsUnit("player", id)) then
 			return "player"
 		end
@@ -122,17 +122,17 @@ local function UpdateUnit(self,forcedUpdate)
 
 		-- Health
 		local healthMax = UnitHealthMax(xunit)
-		local health = UnitHealth(xunit)
-		--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
+		local health = UnitIsGhost(xunit) and 1 or (UnitIsDead(xunit) and 0 or UnitHealth(xunit))
+		-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 		if UnitIsDeadOrGhost(xunit) or (health == 0 and healthMax == 0) then--Probably dead target
-			percBar = 0--So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
-		elseif health > 0 and healthMax == 0 then--We have current ho but max hp failed.
-			healthMax = health--Make max hp at least equal to current health
-			percBar = 100--And percent 100% cause a number divided by itself is 1, duh.
+			percBar = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
+		elseif health > 0 and healthMax == 0 then -- We have current ho but max hp failed.
+			healthMax = health -- Make max hp at least equal to current health
+			percBar = 100 -- And percent 100% cause a number divided by itself is 1, duh.
 		else
 			percBar = health / healthMax--Everything is dandy, so just do it right way.
 		end
-		--end division by 0 check
+		-- end division by 0 check
 		local perc = percBar * 100
 
 		if (healthMax == 0) then
@@ -249,7 +249,7 @@ end
 -- XPerl_RaidHelp_Show
 function XPerl_RaidHelp_Show()
 	conf.RaidHelper = 1
-	XPerl_RaidHelperCheck:Show()		-- XPerl_EnableDisable()
+	XPerl_RaidHelperCheck:Show() -- XPerl_EnableDisable()
 	return true
 end
 
@@ -387,7 +387,7 @@ function XPerl_MTRosterChanged()
 
 	blizzMTanks, ctraTanks = 0, 0
 
-	-- if conf is nothing, just return.
+	-- If conf is nothing, just return.
 	if (conf == nil) then
 		return
 	else
@@ -413,10 +413,10 @@ function XPerl_MTRosterChanged()
 		end
 
 		-- Scan roster, adding any new ones, and removing found ones from old tanks list
-		for i = 1,GetNumGroupMembers() do
+		for i = 1, GetNumGroupMembers() do
 			local unitid = "raid"..i
-			if (UnitGroupRolesAssigned(unitid) == "TANK" or GetPartyAssignment("maintank", unitid)) then
-				local name = GetUnitName(unitid)
+			if ((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGroupRolesAssigned(unitid) == "TANK") or GetPartyAssignment("maintank", unitid)) then
+				local name = GetUnitName(unitid, true)
 				local name2, realm = UnitName(unitid)
 				if (name ~= name2) then
 					name = name2.."-"..realm
@@ -526,7 +526,7 @@ local function ProcessCTRAMessage(unitName, msg)
 
 	if (mtListUpdate) then
 		-- XPerl_MTRosterChanged()
-		XPerl_RaidHelperCheck:Show()		-- XPerl_EnableDisable()
+		XPerl_RaidHelperCheck:Show() -- XPerl_EnableDisable()
 	end
 end
 
@@ -949,7 +949,7 @@ function Events:PLAYER_REGEN_ENABLED()
 		XPerl_MTRosterChanged()
 	end
 	DoButtons()
-	XPerl_RaidHelperCheck:Show()		-- XPerl_EnableDisable()
+	XPerl_RaidHelperCheck:Show() -- XPerl_EnableDisable()
 end
 Events.PLAYER_ENTERING_WORLD = Events.PLAYER_REGEN_ENABLED
 
@@ -1042,7 +1042,7 @@ local function SetVisibility()
 				v.raidIcon:Hide()
 				v:EnableMouse(false)
 
-				v:SetBackdrop(nil)		--bNoEdge)
+				v:SetBackdrop(nil)
 
 				v.target:SetPoint("TOPLEFT", v, "TOPLEFT", 0, 0)
 			end
@@ -1170,8 +1170,7 @@ local function onAttrChanged(self, name, value)
 end
 
 -- SetChildAttributes(self, child)
---[[
-local function SetChildAttributes(self, Type, suffix)
+--[[local function SetChildAttributes(self, Type, suffix)
 
 	local frame = self
 
@@ -1205,8 +1204,7 @@ function XPerl_MTList_ChildUnits(self)
 	SetChildAttributes(self, "MT")
 	SetChildAttributes(self, "MTT", "target")
 	SetChildAttributes(self, "MTTT", "targettarget")
-end
-]]
+end--]]
 
 -- XPerl_MTList_ChildUnits
 function XPerl_MTList_ChildUnits(self)
@@ -1260,7 +1258,7 @@ function XPerl_SetFrameSizes()
 	local tanks = MainTankCount
 
 	if (ZPerlConfigHelper) then
-		SetVisibility()		-- Change which of MT, MTT and MTTT we can see
+		SetVisibility() -- Change which of MT, MTT and MTTT we can see
 		ScanForMTDups()
 
 		if (tanks > conf.MaxMainTanks) then
@@ -1272,7 +1270,7 @@ function XPerl_SetFrameSizes()
 		if (conf) then
 			XPerl_MTTargets:SetHeight((conf.UnitHeight * tanks) + (XGaps * GAP_SPACING))
 
-			local ExtraWidth = (conf.MTLabels * 10);	-- 0 for off, 10 for on
+			local ExtraWidth = (conf.MTLabels * 10)	-- 0 for off, 10 for on
 			XPerl_Frame:SetWidth(DisplayableColumns() * conf.UnitWidth + 6 + ExtraWidth)
 
 			XPerl_Frame:SetHeight((conf.UnitHeight * tanks) + (XGaps * GAP_SPACING) + 6 + XPerl_Frame_TitleBar:GetHeight())
@@ -1303,7 +1301,7 @@ function XPerl_Toggle_UseCTRATargets()
 	end
 
 	--XPerl_MTRosterChanged()
-	XPerl_RaidHelperCheck:Show()		-- XPerl_EnableDisable()
+	XPerl_RaidHelperCheck:Show() -- XPerl_EnableDisable()
 	return true
 end
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Prospect
-	Version: 8.1.6245 (SwimmingSeadragon)
-	Revision: $Id: SearcherProspect.lua 6245 2019-03-04 00:20:18Z none $
+	Version: 8.2.6488 (SwimmingSeadragon)
+	Revision: $Id: SearcherProspect.lua 6488 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -28,8 +28,24 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
--- Create a new instance of our lib with our parent
+
+-- check prerequisites
+if not AucAdvanced then return end
 if not AucSearchUI then return end
+
+
+-- need to know early if we're using Classic or Modern version
+local MINIMUM_CLASSIC = 11300
+local MAXIMUM_CLASSIC = 19999
+-- version, build, date, tocversion = GetBuildInfo()
+local _,_,_,tocVersion = GetBuildInfo()
+local isClassic = (tocVersion > MINIMUM_CLASSIC and tocVersion < MAXIMUM_CLASSIC)
+
+-- prospecting does not exist in Classic, but AucAdvanced.Const.Classic isn't initialized yet
+if isClassic then return end
+
+
+-- Create a new instance of our lib with our parent
 local lib, parent, private = AucSearchUI.NewSearcher("Prospect")
 if not lib then return end
 --local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -196,4 +212,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 6245 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherProspect.lua $", "$Rev: 6488 $")

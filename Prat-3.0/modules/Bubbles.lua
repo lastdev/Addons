@@ -62,8 +62,8 @@ Prat:AddModuleToLoad(function()
 do
     local L
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "Color the chat bubble border the same as the chat type.",
 		["color_name"] = "Color Bubbles",
@@ -84,11 +84,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "Colorie la bordure de la bulle en fonction du type de discussion.",
 		["color_name"] = "Colorier les bulles",
@@ -105,17 +106,18 @@ L=
 		["shorten_desc"] = "Raccourci le texte des bulles à une seule ligne. Mettre la souris sur la bulle pour étendre la bulle et voir le texte en entier.",
 		["shorten_name"] = "Raccourcir les bulles",
 		--[[Translation missing --]]
-		--[[ ["transparent_desc"] = "",--]] 
+		["transparent_desc"] = "Hide background and border textures from chat bubbles. (/reload required to undo this option)",
 		--[[Translation missing --]]
-		--[[ ["transparent_name"] = "",--]] 
+		["transparent_name"] = "Transparent Bubbles",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "Färbe den Sprechblasenrahmen, im selben Stil, wie den Chattyp ein.",
 		["color_name"] = "Sprechblasen färben",
@@ -136,11 +138,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "말풍선 테두리 색상을 대화 유형에 맞춥니다.",
 		["color_name"] = "말풍선 색상",
@@ -161,52 +164,54 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		--[[Translation missing --]]
-		--[[ ["color_desc"] = "",--]] 
+		["color_desc"] = "Color the chat bubble border the same as the chat type.",
 		--[[Translation missing --]]
-		--[[ ["color_name"] = "",--]] 
+		["color_name"] = "Color Bubbles",
 		--[[Translation missing --]]
-		--[[ ["font_desc"] = "",--]] 
+		["font_desc"] = "Use the same font you are using on the chatframe",
 		--[[Translation missing --]]
-		--[[ ["font_name"] = "",--]] 
+		["font_name"] = "Use Chat Font",
 		--[[Translation missing --]]
-		--[[ ["fontsize_desc"] = "",--]] 
+		["fontsize_desc"] = "Set the chat bubble font size",
 		--[[Translation missing --]]
-		--[[ ["fontsize_name"] = "",--]] 
+		["fontsize_name"] = "Font Size",
 		--[[Translation missing --]]
-		--[[ ["format_desc"] = "",--]] 
+		["format_desc"] = "Apply Prat's formatting to the chat bubble text.",
 		--[[Translation missing --]]
-		--[[ ["format_name"] = "",--]] 
+		["format_name"] = "Format Text",
 		--[[Translation missing --]]
-		--[[ ["icons_desc"] = "",--]] 
+		["icons_desc"] = "Show raid icons in the chat bubbles.",
 		--[[Translation missing --]]
-		--[[ ["icons_name"] = "",--]] 
+		["icons_name"] = "Show Raid Icons",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Chat bubble related customizations",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Bubbles",
 		--[[Translation missing --]]
-		--[[ ["shorten_desc"] = "",--]] 
+		["shorten_desc"] = "Shorten the chat bubbles down to a single line each. Mouse over the bubble to expand the text.",
 		--[[Translation missing --]]
-		--[[ ["shorten_name"] = "",--]] 
+		["shorten_name"] = "Shorten Bubbles",
 		--[[Translation missing --]]
-		--[[ ["transparent_desc"] = "",--]] 
+		["transparent_desc"] = "Hide background and border textures from chat bubbles. (/reload required to undo this option)",
 		--[[Translation missing --]]
-		--[[ ["transparent_name"] = "",--]] 
+		["transparent_name"] = "Transparent Bubbles",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "Окрашивать границу облачка чата в цвет канала чата.",
 		["color_name"] = "Окрашивать облачка",
@@ -227,11 +232,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		["color_desc"] = "把聊天泡泡颜色设为与聊天类型一致",
 		["color_name"] = "泡泡颜色",
@@ -253,76 +259,79 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		--[[Translation missing --]]
-		--[[ ["color_desc"] = "",--]] 
+		["color_desc"] = "Color the chat bubble border the same as the chat type.",
 		--[[Translation missing --]]
-		--[[ ["color_name"] = "",--]] 
+		["color_name"] = "Color Bubbles",
 		--[[Translation missing --]]
-		--[[ ["font_desc"] = "",--]] 
+		["font_desc"] = "Use the same font you are using on the chatframe",
 		--[[Translation missing --]]
-		--[[ ["font_name"] = "",--]] 
+		["font_name"] = "Use Chat Font",
 		--[[Translation missing --]]
-		--[[ ["fontsize_desc"] = "",--]] 
+		["fontsize_desc"] = "Set the chat bubble font size",
 		["fontsize_name"] = "Tamaño de fuente",
 		--[[Translation missing --]]
-		--[[ ["format_desc"] = "",--]] 
+		["format_desc"] = "Apply Prat's formatting to the chat bubble text.",
 		--[[Translation missing --]]
-		--[[ ["format_name"] = "",--]] 
+		["format_name"] = "Format Text",
 		--[[Translation missing --]]
-		--[[ ["icons_desc"] = "",--]] 
+		["icons_desc"] = "Show raid icons in the chat bubbles.",
 		--[[Translation missing --]]
-		--[[ ["icons_name"] = "",--]] 
+		["icons_name"] = "Show Raid Icons",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Chat bubble related customizations",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Bubbles",
 		--[[Translation missing --]]
-		--[[ ["shorten_desc"] = "",--]] 
+		["shorten_desc"] = "Shorten the chat bubbles down to a single line each. Mouse over the bubble to expand the text.",
 		--[[Translation missing --]]
-		--[[ ["shorten_name"] = "",--]] 
+		["shorten_name"] = "Shorten Bubbles",
 		--[[Translation missing --]]
-		--[[ ["transparent_desc"] = "",--]] 
+		["transparent_desc"] = "Hide background and border textures from chat bubbles. (/reload required to undo this option)",
 		--[[Translation missing --]]
-		--[[ ["transparent_name"] = "",--]] 
+		["transparent_name"] = "Transparent Bubbles",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-L=
-{
+
+L = {
 	["Bubbles"] = {
 		--[[Translation missing --]]
-		--[[ ["color_desc"] = "",--]] 
+		["color_desc"] = "Color the chat bubble border the same as the chat type.",
 		["color_name"] = "顏色氣泡",
 		--[[Translation missing --]]
-		--[[ ["font_desc"] = "",--]] 
+		["font_desc"] = "Use the same font you are using on the chatframe",
 		["font_name"] = "使用聊天字型",
 		["fontsize_desc"] = "設定聊天氣泡字型尺寸",
 		["fontsize_name"] = "字型尺寸",
 		--[[Translation missing --]]
-		--[[ ["format_desc"] = "",--]] 
+		["format_desc"] = "Apply Prat's formatting to the chat bubble text.",
 		["format_name"] = "格式文字",
 		["icons_desc"] = "顯示在聊天氣泡團隊圖示。",
 		["icons_name"] = "顯示團隊圖示",
 		["module_desc"] = "自訂對話泡泡",
 		["module_name"] = "對話泡泡",
 		--[[Translation missing --]]
-		--[[ ["shorten_desc"] = "",--]] 
+		["shorten_desc"] = "Shorten the chat bubbles down to a single line each. Mouse over the bubble to expand the text.",
 		["shorten_name"] = "縮短氣泡",
 		--[[Translation missing --]]
-		--[[ ["transparent_desc"] = "",--]] 
+		["transparent_desc"] = "Hide background and border textures from chat bubbles. (/reload required to undo this option)",
 		--[[Translation missing --]]
-		--[[ ["transparent_name"] = "",--]] 
+		["transparent_name"] = "Transparent Bubbles",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

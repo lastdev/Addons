@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20191210204704")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 mod:SetModelID(11380)
@@ -16,7 +16,8 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnClassCall		= mod:NewAnnounce("WarnClassCall", 3, "Interface\\Icons\\Spell_Nature_WispSplode")
+--TODO, demon hunter class call
+local warnClassCall		= mod:NewAnnounce("WarnClassCall", 3, "136116")
 local warnPhase			= mod:NewPhaseChangeAnnounce()
 local warnPhase3Soon	= mod:NewPrePhaseAnnounce(3)
 local warnShadowFlame	= mod:NewCastAnnounce(22539, 2)
@@ -25,7 +26,7 @@ local warnFear			= mod:NewCastAnnounce(22686, 2)
 local specwarnMC		= mod:NewSpecialWarningTarget(22667, nil, nil, 2, 1, 2)
 local specwarnVeilShadow= mod:NewSpecialWarningDispel(22687, "RemoveCurse", nil, nil, 1, 2)
 
-local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 5)
+local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
 local timerFearNext		= mod:NewCDTimer(30, 22686, nil, nil, nil, 2)
 local timerVeilShadow	= mod:NewTargetTimer(6, 22687, nil, "RemoveCurse|Tank", 2, 3, nil, DBM_CORE_CURSE_ICON)
 local timerMC			= mod:NewTargetTimer(15, 22667, nil, nil, nil, 3)
@@ -47,8 +48,10 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 22687 then
-		specwarnVeilShadow:Show(args.destName)
-		specwarnVeilShadow:Play("dispelnow")
+		if self:CheckDispelFilter() then
+			specwarnVeilShadow:Show(args.destName)
+			specwarnVeilShadow:Play("dispelnow")
+		end
 		timerVeilShadow:Start(args.destName)
 	elseif args.spellId == 22667 then
 		specwarnMC:Show(args.destName)

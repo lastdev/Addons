@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreBuy.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreBuy.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -40,13 +40,9 @@
 ]]
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreBuy")
-local coremodule, internalStore = AucAdvanced.GetCoreModule("CoreBuy")
+local coremodule, _, private = AucAdvanced.GetCoreModule("CoreBuy", nil, true)
 if not coremodule then return end -- Someone has explicitely broken us
-
-if (not AucAdvanced.Buy) then AucAdvanced.Buy = {} end
-
 local lib = AucAdvanced.Buy
-local private = {}
 lib.Private = private
 
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill,L = AucAdvanced.GetModuleLocals()
@@ -756,7 +752,9 @@ local function ShowTooltip()
 end
 local function HideTooltip()
 	GameTooltip:Hide()
-	BattlePetTooltip:Hide()
+	if BattlePetTooltip then
+		BattlePetTooltip:Hide()
+	end
 end
 local function ClearReasonFocus()
 	private.Prompt.Reason:ClearFocus()
@@ -828,5 +826,5 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreBuy.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreBuy.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreBuy")

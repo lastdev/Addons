@@ -59,8 +59,8 @@ Prat:AddModuleToLoad(function()
 do
     local L
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = true,
 		["Color URL"] = true,
@@ -77,11 +77,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "Définit la couleur des liens URL.",
 		["Color URL"] = "Colorier les URL",
@@ -98,11 +99,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "Farbe einer URL ändern.",
 		["Color URL"] = "URL einfärben",
@@ -119,11 +121,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "URL의 색상을 변경합니다.",
 		["Color URL"] = "URL 색상",
@@ -140,44 +143,46 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		--[[Translation missing --]]
-		--[[ ["Change the color of the URL."] = "",--]] 
+		["Change the color of the URL."] = "Change the color of the URL.",
 		--[[Translation missing --]]
-		--[[ ["Color URL"] = "",--]] 
+		["Color URL"] = "Color URL",
 		--[[Translation missing --]]
-		--[[ ["Set Color"] = "",--]] 
+		["Set Color"] = "Set Color",
 		--[[Translation missing --]]
-		--[[ ["Show Brackets"] = "",--]] 
+		["Show Brackets"] = "Show Brackets",
 		--[[Translation missing --]]
-		--[[ ["Toggle"] = "",--]] 
+		["Toggle"] = "Toggle",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing brackets on and off."] = "",--]] 
+		["Toggle showing brackets on and off."] = "Toggle showing brackets on and off.",
 		--[[Translation missing --]]
-		--[[ ["Toggle the module on and off."] = "",--]] 
+		["Toggle the module on and off."] = "Toggle the module on and off.",
 		--[[Translation missing --]]
-		--[[ ["Toggle the URL color on and off."] = "",--]] 
+		["Toggle the URL color on and off."] = "Toggle the URL color on and off.",
 		--[[Translation missing --]]
-		--[[ ["URL formating options."] = "",--]] 
+		["URL formating options."] = "URL formating options.",
 		--[[Translation missing --]]
-		--[[ ["UrlCopy"] = "",--]] 
+		["UrlCopy"] = "UrlCopy",
 		--[[Translation missing --]]
-		--[[ ["Use Popup"] = "",--]] 
+		["Use Popup"] = "Use Popup",
 		--[[Translation missing --]]
-		--[[ ["Use popup window to show URL."] = "",--]] 
+		["Use popup window to show URL."] = "Use popup window to show URL.",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "Изменение цвета ссылок.",
 		["Color URL"] = "Цвет ссылки",
@@ -194,11 +199,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "更改链接颜色",
 		["Color URL"] = "彩色链接",
@@ -215,11 +221,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "Cambia el color de la URL.",
 		["Color URL"] = true,
@@ -236,11 +243,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-L=
-{
+
+L = {
 	["UrlCopy"] = {
 		["Change the color of the URL."] = "改變網址顯示的色彩",
 		["Color URL"] = "網址色彩",
@@ -256,6 +264,7 @@ L=
 		["Use popup window to show URL."] = "使用彈出視窗用以顯示網址",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

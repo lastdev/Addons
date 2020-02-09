@@ -7,7 +7,6 @@ ns.HL = HL
 
 local next = next
 local GameTooltip = GameTooltip
-local WorldMapTooltip = WorldMapTooltip
 local HandyNotes = HandyNotes
 local DEFAULT_LABEL = "Ephemeral Crystal"
 
@@ -88,7 +87,7 @@ local HLHandler = {}
 local info = {}
 
 function HLHandler:OnEnter(uiMapID, coord)
-    local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
+    local tooltip = GameTooltip
     if ( self:GetCenter() > UIParent:GetCenter() ) then -- compare X coordinate
         tooltip:SetOwner(self, "ANCHOR_LEFT")
     else
@@ -173,11 +172,7 @@ do
 end
 
 function HLHandler:OnLeave(uiMapID, coord)
-    if self:GetParent() == WorldMapButton then
-        WorldMapTooltip:Hide()
-    else
-        GameTooltip:Hide()
-    end
+    GameTooltip:Hide()
 end
 
 do

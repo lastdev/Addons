@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreSettings.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreSettings.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -76,12 +76,10 @@ Usage:
 ]]
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreSettings")
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreSettings")
+local coremodule, internalLib, private, internal = AucAdvanced.GetCoreModule("CoreSettings", "Settings", true, nil, "CoreSettings")
 if not coremodule or not internal then return end -- Someone has explicitely broken us
 
-AucAdvanced.Settings = {}
 local lib = AucAdvanced.Settings
-local private = {}
 local gui
 local Const = AucAdvanced.Const
 local Libraries = AucAdvanced.Libraries
@@ -159,6 +157,10 @@ local settingDefaults = {
 	["core.tooltip.depositcost"] = true,
 	["core.tooltip.depositduration"] = 48,
 }
+
+if AucAdvanced.Classic then
+    settingDefaults["core.tooltip.depositduration"] = 24
+end
 
 local function getDefault(setting)
 	-- If setting is a function reference, call it.
@@ -741,8 +743,7 @@ end
 
 --Changes the layout of saved var from a flat table to a nested set
 --called from coremain lua's onload. This also adds a version # to our saved variables for future use
-internal.Settings = {}
-function internal.Settings.upgradeSavedVariables()
+function internalLib.upgradeSavedVariables()
 	if not AucAdvancedConfig["version"] then
 		for p, data in pairs(AucAdvancedConfig) do
 			if type(p) == "string" then
@@ -806,5 +807,5 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreSettings.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreSettings.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreSettings")

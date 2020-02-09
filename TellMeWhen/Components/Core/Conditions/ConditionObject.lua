@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -288,6 +288,8 @@ end
 function ConditionObject:RequestAutoUpdates(requester, doRequest)
 	if doRequest then
 	
+		-- self.doesAutoUpdate must be true before calling RegisterForUpdating().
+		-- :RegisterForUpdating() will update the current state of the condition.
 		self.doesAutoUpdate = true
 		self:RegisterForUpdating()
 		

@@ -64,8 +64,8 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
 do
     local L
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = true,
 		["ChannelSticky"] = true,
@@ -81,39 +81,41 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Canal",
 		--[[Translation missing --]]
-		--[[ ["ChannelSticky"] = "",--]] 
+		["ChannelSticky"] = "ChannelSticky",
 		--[[Translation missing --]]
-		--[[ ["Chat channel sticky options."] = "",--]] 
+		["Chat channel sticky options."] = "Chat channel sticky options.",
 		--[[Translation missing --]]
-		--[[ ["ChatType"] = "",--]] 
+		["ChatType"] = "ChatType",
 		--[[Translation missing --]]
-		--[[ ["Per chat type options."] = "",--]] 
+		["Per chat type options."] = "Per chat type options.",
 		["smartgroup_desc"] = "Ajouter une commande /gr qui sélectionne automatiquement le bon type de chat : raid, groupe, champ de bataille",
 		["smartgroup_name"] = "Groupes intelligents",
 		--[[Translation missing --]]
-		--[[ ["Sticky %s"] = "",--]] 
+		["Sticky %s"] = "Sticky %s",
 		--[[Translation missing --]]
-		--[[ ["Sticky Per Chat Frame"] = "",--]] 
+		["Sticky Per Chat Frame"] = "Sticky Per Chat Frame",
 		--[[Translation missing --]]
-		--[[ ["Toggle remembering the chat type last used per chat frame."] = "",--]] 
+		["Toggle remembering the chat type last used per chat frame."] = "Toggle remembering the chat type last used per chat frame.",
 		--[[Translation missing --]]
-		--[[ ["Toggles sticky on and off for %s."] = "",--]] 
+		["Toggles sticky on and off for %s."] = "Toggles sticky on and off for %s.",
 	}
 }
+
 
 PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Kanal",
 		["ChannelSticky"] = true,
@@ -129,11 +131,12 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "채널",
 		["ChannelSticky"] = "채널 고정",
@@ -149,42 +152,44 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		--[[Translation missing --]]
-		--[[ ["Channel"] = "",--]] 
+		["Channel"] = "Channel",
 		--[[Translation missing --]]
-		--[[ ["ChannelSticky"] = "",--]] 
+		["ChannelSticky"] = "ChannelSticky",
 		--[[Translation missing --]]
-		--[[ ["Chat channel sticky options."] = "",--]] 
+		["Chat channel sticky options."] = "Chat channel sticky options.",
 		--[[Translation missing --]]
-		--[[ ["ChatType"] = "",--]] 
+		["ChatType"] = "ChatType",
 		--[[Translation missing --]]
-		--[[ ["Per chat type options."] = "",--]] 
+		["Per chat type options."] = "Per chat type options.",
 		--[[Translation missing --]]
-		--[[ ["smartgroup_desc"] = "",--]] 
+		["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
 		--[[Translation missing --]]
-		--[[ ["smartgroup_name"] = "",--]] 
+		["smartgroup_name"] = "Smart Groups",
 		--[[Translation missing --]]
-		--[[ ["Sticky %s"] = "",--]] 
+		["Sticky %s"] = "Sticky %s",
 		--[[Translation missing --]]
-		--[[ ["Sticky Per Chat Frame"] = "",--]] 
+		["Sticky Per Chat Frame"] = "Sticky Per Chat Frame",
 		--[[Translation missing --]]
-		--[[ ["Toggle remembering the chat type last used per chat frame."] = "",--]] 
+		["Toggle remembering the chat type last used per chat frame."] = "Toggle remembering the chat type last used per chat frame.",
 		--[[Translation missing --]]
-		--[[ ["Toggles sticky on and off for %s."] = "",--]] 
+		["Toggles sticky on and off for %s."] = "Toggles sticky on and off for %s.",
 	}
 }
+
 
 PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Канал",
 		["ChannelSticky"] = "Совмещение каналов",
@@ -200,11 +205,12 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "频道",
 		["ChannelSticky"] = "频道粘连",
@@ -220,11 +226,12 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Canal",
 		["ChannelSticky"] = "CanalAdhesivo",
@@ -240,11 +247,12 @@ L=
 	}
 }
 
+
 PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-L=
-{
+
+L = {
 	["ChannelSticky"] = {
 		["Channel"] = "頻道",
 		["ChannelSticky"] = "固定頻道",
@@ -252,16 +260,17 @@ L=
 		["ChatType"] = "聊天類型",
 		["Per chat type options."] = "每聊天類型選項。",
 		--[[Translation missing --]]
-		--[[ ["smartgroup_desc"] = "",--]] 
+		["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
 		["smartgroup_name"] = "智慧化群組",
 		["Sticky %s"] = "固定 %s",
 		["Sticky Per Chat Frame"] = "個別聊天視窗固定",
 		--[[Translation missing --]]
-		--[[ ["Toggle remembering the chat type last used per chat frame."] = "",--]] 
+		["Toggle remembering the chat type last used per chat frame."] = "Toggle remembering the chat type last used per chat frame.",
 		--[[Translation missing --]]
-		--[[ ["Toggles sticky on and off for %s."] = "",--]] 
+		["Toggles sticky on and off for %s."] = "Toggles sticky on and off for %s.",
 	}
 }
+
 
 PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
@@ -435,7 +444,9 @@ function module:BuildChannelList()
     for _,va in ipairs(chatList) do
         local val = va:lower()
         local chan
-        if va ~= "CHANNEL" then
+        if va == "INSTANCE_CHAT" then
+            chan = _G["INSTANCE_CHAT"]
+        elseif va ~= "CHANNEL" then
             chan = _G["CHAT_MSG_"..va]
         else
             chan = PL["Channel"]

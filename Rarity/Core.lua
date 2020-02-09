@@ -1,3 +1,5 @@
+local addonName, addonTable = ...
+
 Rarity = LibStub("AceAddon-3.0"):NewAddon("Rarity", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "LibSink-2.0", "AceBucket-3.0", "LibBars-1.0", "AceSerializer-3.0")
 -- Rarity.MINOR_VERSION = tonumber(("$Revision: 650 $"):match("%d+"))  -- Disabled after switching entirely to Git (from SVN)
 local projectVersion, noReplacements = (GetAddOnMetadata("Rarity", "Version"):match("r%d+") or "r0"):gsub("r", "") -- e.g., r654	1 (the second value can be discarded)
@@ -11,9 +13,16 @@ isDebugVersion = true
 --@end-debug@]===]
 
 do -- Set up the debug cache
-	local addonName, addonTable = ...
 	Rarity.DebugCache = addonTable.DebugCache
 	Rarity.DebugCache:SetOutputHandler(addonTable.PrettyPrint.DebugMsg)
+end
+
+do -- Set up the DB helper
+	Rarity.DatabaseMaintenanceHelper = addonTable.DatabaseMaintenanceHelper
+end
+
+do -- Set up the TSM_API interface (TODO: Combine loading of dependencies and modules, later)
+	Rarity.TSM_Interface = addonTable.TSM_Interface
 end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rarity")
@@ -62,6 +71,7 @@ local rarity_stats = {}
 Rarity.mount_sources = {}
 Rarity.pet_sources = {}
 Rarity.lockouts = {}
+Rarity.lockouts_detailed = {}
 Rarity.lockouts_holiday = {}
 Rarity.holiday_textures = {}
 Rarity.ach_npcs_isKilled = {}
@@ -99,7 +109,9 @@ local spells = {
 	[231932] = "Opening", -- Wyrmtongue Cache (Broken Shore: Secret Treasure Lair)
 	[265843] = "Mining",
 	[265825] = "Herb Gathering",
-	
+	-- 8.2
+	[6478] = "Opening", -- Pile of Coins (Mechagon Island: Armored Vaultbot)
+
 	-- Not tested (but added just in case)
 	[7731] = "Fishing",
 	[7732] = "Fishing",
@@ -154,7 +166,7 @@ local spells = {
 	[74522] = "Skinning",
 	[102216] = "Skinning",
 	[158756] = "Skinning",
-	
+
 	-- Not tested (and disabled until they are needed)
 	-- [1804] = "Pick Lock",
 }
@@ -331,7 +343,7 @@ R.fishnodes = {
 	[L["Fever of Stormrays"]]		= true,
 	[L["Highmountain Salmon School"]]	= true,
 	[L["Mossgill Perch School"]]	= true,
-	-- Battle for Azeroth	
+	-- Battle for Azeroth
 	[L["Frenzied Fangtooth School"]] = true,
 	[L["Great Sea Catfish School"]] = true,
 	[L["Lane Snapper School"]] = true,
@@ -341,7 +353,7 @@ R.fishnodes = {
 	[L["Slimy Mackerel School"]] = true,
 	[L["Tiragarde Perch School"]] = true,
 	[L["U'taka School"]] = true,
-	
+
 }
 
 R.miningnodes = {
@@ -415,24 +427,16 @@ R.opennodes = {
 	[L["Snow Mound"]] = true,
 	[L["Glimmering Treasure Chest"]] = true,
 	[L["Curious Wyrmtongue Cache"]] = true,
-}
-
--- Embedded mapIDs: It's best to avoid hardcoding these in case of yet another re-mapping on Blizzard's end...
-local UIMAPIDS = {
-	FROSTFIRE_RIDGE = 525,
-	KROKUUN = 830,
-	MACAREE = 882,
-	ANTORAN_WASTES = 885,
+	[L["Arcane Chest"]] = true,
+	[L["Glimmering Chest"]] = true,
+	[L["Pile of Coins"]] = true,
 }
 
 --[[
       CONSTANTS ----------------------------------------------------------------------------------------------------------------
   ]]
 
--- Types of items
-local MOUNT = "MOUNT"
-local PET = "PET"
-local ITEM = "ITEM"
+local CONSTANTS = addonTable.constants
 
 -- Methods of obtaining
 local NPC = "NPC"
@@ -487,7 +491,7 @@ local categories = {
 --[[
       UPVALUES -----------------------------------------------------------------------------------------------------------------
   ]]
-  
+
 local _G = getfenv(0)
 local pairs = _G.pairs
 local strlower = _G.strlower
@@ -523,13 +527,42 @@ local pet_journal = _G.C_PetJournal
 local GetBestMapForUnit = _G.C_Map.GetBestMapForUnit
 local GetMapInfo = _G.C_Map.GetMapInfo
 local mount_journal = _G.C_MountJournal
-local C_Timer = C_Timer
-local IsSpellKnown = IsSpellKnown
+local C_Timer = _G.C_Timer
+local IsSpellKnown = _G.IsSpellKnown
+local CombatLogGetCurrentEventInfo = _G.CombatLogGetCurrentEventInfo
 
 local NUM_BAG_SLOTS = _G.NUM_BAG_SLOTS
 local COMBATLOG_OBJECT_AFFILIATION_MINE = _G.COMBATLOG_OBJECT_AFFILIATION_MINE
 local COMBATLOG_OBJECT_AFFILIATION_PARTY = _G.COMBATLOG_OBJECT_AFFILIATION_PARTY
 local COMBATLOG_OBJECT_AFFILIATION_RAID = _G.COMBATLOG_OBJECT_AFFILIATION_RAID
+
+
+--[[
+      HELPERS ----------------------------------------------------------------------------------------------------------------
+  ]]
+
+-- TODO: Move elsewhere (when refactoring the Core)
+--- Calculate an estimate for an item's drop chance while considering other group members that are also eligible
+-- Only modifies chances for SHARED Loot, i.e. those that are set to use a groupSize > 1
+-- Note: Virtually all items are now PERSONAL loot by default, which means this no longer applies to them
+-- Caveat: Rarity has no idea how many group members were actually present, so it uses a predefined estimate (stored in the groupSize field), but this is also used to categorize items according to their difficulty (...). This is why there is another field, equalOdds, which will override the groupSize calculation to effectively force Personal Loot everywhere
+-- @param item A table containing the data (itemDB entry) that is to be used
+-- @return The modified drop chance after accounting for shared loot, given as a percentage
+-- @return The modified drop chance after accounting for shared loot, given as a fraction (1 in X)
+local function GetRealDropPercentage(item)
+
+	local dropChance =  (1.00 / (item.chance or 100))
+	local realDropChance = dropChance -- Default: Personal Loot -> group members don't matter
+	local fractionalDropChance = ( (item.chance or 0) * (item.groupSize or 1) )
+
+	local itemUsesSharedLoot = (item.method == BOSS -- Only applies to
+		and item.groupSize ~= nil and item.groupSize > 1 -- Item uses Shared Loot
+		and not item.equalOdds) -- Not overwritten by the Personal Loot toggle
+	if itemUsesSharedLoot then realDropChance = dropChance / item.groupSize	end
+
+	return realDropChance, fractionalDropChance
+
+end
 
 
 -- Helper function (to look up map names more easily)
@@ -550,23 +583,23 @@ end
 
 do
 	local isInitialized = false
-	
+
 	function R:OnEnable()
 		self:DoEnable()
 	end
-	
+
 	function R:DoEnable()
 		if isInitialized then return end
 		isInitialized = true
-	
+
 		self:PrepareDefaults() -- Loads in any new items
-		
+
 		self.db = LibStub("AceDB-3.0"):New("RarityDB", self.defaults, true)
   self:SetSinkStorage(self.db.profile)
 
 		self:RegisterChatCommand("rarity", "ChatCommand")
 		self:RegisterChatCommand("rare", "ChatCommand")
-		
+
 		dbicon:Register("Rarity", dataobj, self.db.profile.minimap)
 
 		-- Expose private objects
@@ -613,7 +646,7 @@ do
 		self:UpdateBar()
 
   self:ImportFromBunnyHunter()
-		
+
 		self:UnregisterAllEvents()
   self:RegisterBucketEvent("BAG_UPDATE", 0.5, "OnBagUpdate")
   self:RegisterEvent("LOOT_READY", "OnEvent")
@@ -801,9 +834,13 @@ do
 			self:ScanExistingItems("FINAL INIT")
 			self:UpdateText()
 		end, 240)
-		
+
 		self:Debug(L["Loaded (running in debug mode)"])
+
+		if self.db.profile.verifyDatabaseOnLogin then self:VerifyItemDB() end
+
 	end
+
 end
 
 
@@ -908,6 +945,40 @@ function R:BarAnchorClicked(cbk, group, button)
  self.db.profile.bar.relativePoint = relativePoint
 end
 
+-- TODO: Move elsewhere (in the final refactoring pass)
+function R:VerifyItemDB()
+
+	local DBH = self.DatabaseMaintenanceHelper
+	local ItemDB = self.db.profile.groups.items
+	local PetDB = self.db.profile.groups.pets
+	local MountDB = self.db.profile.groups.mounts
+	local UserDB = self.db.profile.groups.user
+	local DB = { ItemDB, PetDB, MountDB }
+
+	self:Print(L["Verifying item database..."])
+
+	local numErrors = 0
+
+	for category, entry in pairs(DB) do
+		for item, fields in pairs(entry) do
+
+			if type(fields) == "table" then
+
+				self:Debug(format(L["Verifying entry: %s ..."], item))
+				local isEntryValid = DBH:VerifyEntry(fields)
+				if not isEntryValid then  -- Skip pseudo-groups... Another artifact that has to be worked around, I guess
+					self:Print(format(L["Verification failed for entry: %s"], item))
+					numErrors = numErrors + 1
+				end
+
+			end
+		end
+	end
+
+	if numErrors == 0 then self:Print(L["Verification complete! Everything appears to be in order..."])
+	else self:Print(format(L["Verfication failed with %d errors!"], numErrors)) end
+
+end
 
 function R:ChatCommand(input)
 	if strlower(input) == "debug" then
@@ -918,9 +989,13 @@ function R:ChatCommand(input)
 			self.db.profile.debugMode = true
 			self:Print(L["Debug mode ON"])
 		end
-	elseif strlower(input) == "dump" then	
+	elseif strlower(input) == "dump" then
 		local numMessages = 50 -- Hardcoded is meh, but it should suffice for the time being
 		self.DebugCache:PrintMessages(numMessages)
+	elseif strlower(input) == "verify" then -- Verify the ItemDB
+
+		self:VerifyItemDB()
+
 	elseif strlower(input) == "profiling" then
 		if self.db.profile.enableProfiling then
 			self.db.profile.enableProfiling = false
@@ -944,18 +1019,18 @@ function R:CheckForceReset(report)
 	-- Require a profile reset after a hardcoded revision
 	if (self.db.profile.lastRevision or 0) < FORCE_PROFILE_RESET_BEFORE_REVISION and not isDebugVersion then
 		self.db:RegisterDefaults(self.defaults)
-		
+
 		-- Save as many settings as we can
 		local minimap = self.db.profile.minimap.hide
-		
+
 		-- Reset the profile
 		self.db:ResetProfile(false, true)
 		self.db.profile.lastRevision = R.MINOR_VERSION
 
 		-- Migrate settings across
 		self.db.profile.minimap.hide = minimap
-		
-		self:ScanExistingItems("FORCED PROFILE RESET")	
+
+		self:ScanExistingItems("FORCED PROFILE RESET")
 		if report or report == nil then
 			self:Print(format(L["Welcome to Rarity r%d. Your settings have been reset."], R.MINOR_VERSION))
 		end
@@ -984,7 +1059,7 @@ end
 --[[
       UTILITIES ----------------------------------------------------------------------------------------------------------------
   ]]
-		
+
 
 -- Item cache
 function R:GetItemInfo(id)
@@ -998,7 +1073,7 @@ function R:GetItemInfo(id)
 	if R.itemInfoCache[id] == nil then return nil end
 	return unpack(R.itemInfoCache[id])
 end
-	
+
 
 -- Compression encoding
 local encode_translate = {
@@ -1044,16 +1119,16 @@ function R:CanItemBeExportedImported(item)
 
 	if not item.itemId or tonumber(item.itemId) == nil or item.itemId <= 0 then return false end
 	if not item.chance or tonumber(item.chance) == nil or item.chance <= 0 then return false end
-		
+
 	if item.method == COLLECTION then
 		if not item.collectedItemId or tonumber(item.collectedItemId) == nil or item.collectedItemId <= 0 then return false end
 	end
 
-	if item.type ~= ITEM then
+	if item.type ~= CONSTANTS.ITEM_TYPES.ITEM then
 		if not item.spellId or tonumber(item.spellId) == nil or item.spellId <= 0 then return false end
 	end
 
-	if item.type == PET then
+	if item.type == CONSTANTS.ITEM_TYPES.PET then
 		if not item.creatureId or tonumber(item.creatureId) == nil or item.creatureId <= 0 then return false end
 	end
 
@@ -1225,14 +1300,12 @@ local function compareDifficulty(a, b)
 
  local item
  item = a
- local dropChance = (1.00 / (item.chance or 100))
- if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
+ local dropChance = GetRealDropPercentage(item)
  local medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
  local median1 = medianLoots
 
  item = b
- dropChance = (1.00 / (item.chance or 100))
- if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
+	dropChance = GetRealDropPercentage(item)
  medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
  local median2 = medianLoots
 
@@ -1245,16 +1318,14 @@ local function compareProgress(a, b)
 
  local item
  item = a
- local dropChance = (1.00 / (item.chance or 100))
- if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
+ local dropChance = GetRealDropPercentage(item)
  local medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
  local median1 = medianLoots
  local progress1 = 0
  if item.attempts or 0 > 0 then progress1 = 100 * (1 - math.pow(1 - dropChance, item.attempts or 0)) end
 
  item = b
- dropChance = (1.00 / (item.chance or 100))
- if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
+	dropChance = GetRealDropPercentage(item)
  medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
  local median2 = medianLoots
  local progress2 = 0
@@ -1518,34 +1589,47 @@ function R:UpdateInterestingThings()
 						end
 						table.insert(Rarity.collection_items, vv)
 					end
-				
+
 				if vv.tooltipNpcs and type(vv.tooltipNpcs) == "table" then -- Item has tooltipNpcs -> Check if they should be displayed
-				
+
 						local showTooltipNpcs = true -- If no filters exist, always show the tooltip for relevant NPCs
-						
+
 						if vv.showTooltipCondition and type(vv.showTooltipCondition) == "table" -- This item has filter conditions to help decide when the tooltipNpcs should be added
 						and vv.showTooltipCondition.filter and type(vv.showTooltipCondition.filter) == "function" and vv.showTooltipCondition.value -- Filter has the correct format and can be applied
 						then -- Check filter conditions to see if tooltipNpcs should be added
-							
+
 							showTooltipNpcs = false -- Hide the additional tooltip info by default (filters will overwrite this if they can find a match, below)
-							
+
 							-- Each filter requires separate handling here
-							if vv.showTooltipCondition.filter == IsSpellKnown then -- Filter if a (relevant) spell with the given name is not known	
+							if vv.showTooltipCondition.filter == IsSpellKnown then -- Filter if a (relevant) spell with the given name is not known
 
 								for spellID, spellName in pairs(spells) do -- Try to find any match for the given spell (a single one will do)
 
 									if spellName == vv.showTooltipCondition.value then -- The value is a relevant spell -> Check if filter condition is true
-									
+
 										--	Player hasn't learned the required spell -> Stop trying to find other matches and turn off the filter
 										showTooltipNpcs = IsSpellKnown(spellID)
-										if showTooltipNpcs then break end -- No point in checking the other spells; A single match is enough to decide to not filter them										
+										if showTooltipNpcs then break end -- No point in checking the other spells; A single match is enough to decide to not filter them
 									end
 								end
 							end
-						
+
 						-- There aren't any other Filter types at the moment... but there could be!
-						end 
-						
+						end
+
+						-- Check for post-processing via tooltip modifiers (additional logic contained in a database entry that requires special handling)
+						-- This has to run last, as it is intended to update things on the fly where a filter isn't sufficient
+						local tooltipModifier = vv.tooltipModifier
+
+						if tooltipModifier ~= nil and type(tooltipModifier) == "table" and tooltipModifier.condition ~= nil and tooltipModifier.value ~= nil then -- Apply modifications where necessary
+
+							local shouldApplyModification = type(tooltipModifier.condition) == "function" and tooltipModifier.condition()
+							if shouldApplyModification and tooltipModifier.action and type(tooltipModifier.action) == "function" then -- Apply this action to the entry
+								vv = tooltipModifier.action(vv, tooltipModifier.value) -- A tooltip modifier always returns the (modified) database entry to keep processing separate
+							end
+
+						end
+
 						-- Add entries to the list of relevant NPCs for this item
 						if showTooltipNpcs then
 							for kkk, vvv in pairs(vv.tooltipNpcs) do
@@ -1631,7 +1715,7 @@ end
       OBTAIN DETECTION ---------------------------------------------------------------------------------------------------------
       -- Some easy, some fairly arcane methods to detect when we've obtained something we're looking for
   ]]
-  
+
 local isSessionLocked = false
 
 local function UnlockTrackingSession()
@@ -1641,7 +1725,7 @@ end
 
 local function LockTrackingSession(delay)
 	delay = delay or 1 -- 1 second seems to be a suitable default value (as both events fire within 0.5-0.8s of each other)
-	
+
 	-- Lock the current session (and set the timer to unlock it again)
 	Rarity:Debug("Locking session for " .. tostring(delay) .. " second(s) to prevent duplicate attempts from being counted")
 	isSessionLocked = true
@@ -1654,9 +1738,9 @@ function R:OnEvent(event, ...)
  -- You opened a loot window on a corpse or fishing node
  -------------------------------------------------------------------------------------
 	if event == "LOOT_READY" then
-	
+
 		self:Debug("LOOT_READY with target: "..(UnitGUID("target") or "NO TARGET"))
-		
+
 		-- In 8.0.1, two LOOT_READY events fire when the loot window opens. We'll just ignore subsequent events for a short time to prevent double counting
 		if isSessionLocked then -- One attempt is already being counted and we don't want another one for this loot event -> Ignore this call
 			Rarity:Debug("Session is locked; ignoring this LOOT_READY event")
@@ -1678,7 +1762,7 @@ function R:OnEvent(event, ...)
 
   -- Handle opening Crane Nest
   if fishing and opening and lastNode and (lastNode == L["Crane Nest"]) then
-	Rarity:Debug("Detected Opening on " .. L["Crane Nest"] .. " (method = SPECIAL)")  
+	Rarity:Debug("Detected Opening on " .. L["Crane Nest"] .. " (method = SPECIAL)")
    local v = self.db.profile.groups.pets["Azure Crane Chick"]
    if v and type(v) == "table" and v.enabled ~= false then
     if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
@@ -1697,7 +1781,7 @@ function R:OnEvent(event, ...)
   end
 
   -- Handle opening Snow Mound
-  if fishing and opening and lastNode and (lastNode == L["Snow Mound"]) and GetBestMapForUnit("player") == UIMAPIDS.FROSTFIRE_RIDGE then -- Make sure we're in Frostfire Ridge (there are Snow Mounds in other zones, particularly Ulduar in the Hodir room)
+  if fishing and opening and lastNode and (lastNode == L["Snow Mound"]) and GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.FROSTFIRE_RIDGE then -- Make sure we're in Frostfire Ridge (there are Snow Mounds in other zones, particularly Ulduar in the Hodir room)
   	Rarity:Debug("Detected Opening on " .. L["Snow Mound"] .. " (method = SPECIAL)")
    local v = self.db.profile.groups.pets["Grumpling"]
    if v and type(v) == "table" and v.enabled ~= false then
@@ -1718,6 +1802,45 @@ function R:OnEvent(event, ...)
 				end
 			end
 		end
+
+		-- Handle opening Arcane Chest
+		if fishing and opening and lastNode and (lastNode == L["Arcane Chest"]) then
+			local names = {"Eternal Palace Dining Set", "Ocean Simulator" }
+				Rarity:Debug("Detected Opening on " .. L["Arcane Chest"] .. " (method = SPECIAL)")
+				for _, name in pairs(names) do
+					local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name]
+					if v and type(v) == "table" and v.enabled ~= false then
+						if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+						self:OutputAttempts(v)
+					end
+				end
+			end
+
+		-- Handle opening Glimmering Chest
+		if fishing and opening and lastNode and (lastNode == L["Glimmering Chest"]) then
+			local names = {"Eternal Palace Dining Set", "Sandclaw Nestseeker"}
+				Rarity:Debug("Detected Opening on " .. L["Glimmering Chest"] .. " (method = SPECIAL)")
+				for _, name in pairs(names) do
+					local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name]
+					if v and type(v) == "table" and v.enabled ~= false then
+						if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+						self:OutputAttempts(v)
+					end
+				end
+			end
+
+		-- Handle opening Pile of Coins
+		if fishing and opening and lastNode and (lastNode == L["Pile of Coins"]) then
+			local names = { "Armored Vaultbot" }
+				Rarity:Debug("Detected Opening on " .. L["Pile of Coins"] .. " (method = SPECIAL)")
+				for _, name in pairs(names) do
+					local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name]
+					if v and type(v) == "table" and v.enabled ~= false then
+						if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
+						self:OutputAttempts(v)
+					end
+				end
+			end
 
 		-- Handle opening Glimmering Treasure Chest
 		if fishing and opening and lastNode and (lastNode == L["Glimmering Treasure Chest"]) and select(8, GetInstanceInfo()) == 1626 then -- Player is in Withered Army scenario and looted the reward chest
@@ -1770,12 +1893,12 @@ function R:OnEvent(event, ...)
            end
           end
          end
-		 
+
 		if (vv.excludedMaps and type(vv.excludedMaps) == "table" and vv.excludedMaps[GetBestMapForUnit("player")]) then
 			Rarity:Debug("The current map is excluded for item: " .. tostring(vv.name) .. ". Attempts will not be counted")
 			found = false
 		end
-		 
+
          if found then
           if self:IsAttemptAllowed(vv) then
            if vv.attempts == nil then vv.attempts = 1 else vv.attempts = vv.attempts + 1 end
@@ -1806,7 +1929,7 @@ function R:OnEvent(event, ...)
 
   -- Handle skinning on Argus (Fossorial Bile Larva)
 	if (spells[prevSpell] == "Skinning" or spells[prevSpell] == "Mother's Skinning Knife") -- Skinned something
-	and (GetBestMapForUnit("player") == UIMAPIDS.KROKUUN or GetBestMapForUnit("player") == UIMAPIDS.MACAREE or GetBestMapForUnit("player") == UIMAPIDS.ANTORAN_WASTES) then -- Player is on Argus -> Can obtain the pet from skinning creatures
+	and (GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.KROKUUN or GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.MACAREE or GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.ANTORAN_WASTES) then -- Player is on Argus -> Can obtain the pet from skinning creatures
 		Rarity:Debug("Detected skinning on Argus - Can obtain " .. L["Fossorial Bile Larva"] .. " (method = SPECIAL)")
 		local v = self.db.profile.groups.pets["Fossorial Bile Larva"]
 		if v and type(v) == "table" and v.enabled ~= false then -- Add an attempt
@@ -1814,10 +1937,10 @@ function R:OnEvent(event, ...)
 			self:OutputAttempts(v)
 		end
 	end
-  
+
     -- Handle herb gathering on Argus (Fel Lasher)
 	if spells[prevSpell] == "Herb Gathering" -- Gathered a herbalism node
-	and (GetBestMapForUnit("player") == UIMAPIDS.KROKUUN or GetBestMapForUnit("player") == UIMAPIDS.MACAREE or GetBestMapForUnit("player") == UIMAPIDS.ANTORAN_WASTES) then -- Player is on Argus -> Can obtain the pet from gathering herbalism nodes
+	and (GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.KROKUUN or GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.MACAREE or GetBestMapForUnit("player") == CONSTANTS.UIMAPIDS.ANTORAN_WASTES) then -- Player is on Argus -> Can obtain the pet from gathering herbalism nodes
 		Rarity:Debug("Detected herb gathering on Argus - Can obtain " .. L["Fel Lasher"] .. " (method = SPECIAL)")
 		local v = self.db.profile.groups.pets["Fel Lasher"]
 		if v and type(v) == "table" and v.enabled ~= false then -- Add an attempt
@@ -1868,7 +1991,7 @@ function R:OnEvent(event, ...)
 
   -- If we failed to scan anything, scan the current target
   if numChecked <= 0 then self:CheckNpcInterest(UnitGUID("target"), zone, subzone, zone_t, subzone_t, curSpell) end
-  
+
   -- Scan the loot to see if we found something we're looking for
 		local numItems = GetNumLootItems()
   local slotID
@@ -1950,7 +2073,7 @@ function R:CheckNpcInterest(guid, zone, subzone, zone_t, subzone_t, curSpell, re
  local npcid = self:GetNPCIDFromGUID(guid)
  if npcs[npcid] == nil then -- Not an NPC we need, abort
 		self:Debug("NPC ID not on the list of needed NPCs: "..(npcid or "nil"))
-  
+
   if zones[tostring(GetBestMapForUnit("player"))] == nil and zones[zone] == nil and zones[lbz[zone] or "."] == nil and zones[lbsz[subzone] or "."] == nil and zones[zone_t] == nil and zones[subzone_t] == nil and zones[lbz[zone_t] or "."] == nil and zones[lbsz[subzone_t] or "."] == nil then -- Not a zone we need, abort
 		self:Debug("Map ID not on the list of needed zones: " .. tostring(GetBestMapForUnit("player")))
 		return
@@ -1974,7 +2097,7 @@ function R:CheckNpcInterest(guid, zone, subzone, zone_t, subzone_t, curSpell, re
 
 	-- We're interested in this loot, process further
  guids[guid] = true
-  
+
  -- Increment attempt counter(s). One NPC might drop multiple things we want, so scan for them all.
  if npcs_to_items[npcid] and type(npcs_to_items[npcid]) == "table" then
   for k, v in pairs(npcs_to_items[npcid]) do
@@ -2287,9 +2410,9 @@ function R:SpellStarted(event, unit, target, castGUID, spellID)
 	if unit ~= "player" then return end
 	foundTarget = false
 	ga ="No"
-	
+
 	Rarity:Debug("Detected UNIT_SPELLCAST_SENT for unit = player, spellID = " .. tostring(spellID) .. ", castGUID = " .. tostring(castGUID) .. ", target = " .. tostring(target)) -- TODO: Remove?
-	
+
 	if spells[spellID] then -- An entry exists for this spell in the LUT -> It's one that needs to be tracked
 		Rarity:Debug("Detected relevant spell: " .. tostring(spellID) .. " ~ " .. tostring(spells[spellID]))
 		curSpell = spellID
@@ -2428,8 +2551,8 @@ function R:ScanArchProjects(reason)
   		if architems[name] then
    			-- We started a project we were looking for!
    			local id = architems[name].itemId
-   			if id then 
-   				self:FoundItem(id, items[id]) 
+   			if id then
+   				self:FoundItem(id, items[id])
    			end
   		end
  	end
@@ -2442,7 +2565,7 @@ end
 function R:OnMouseOver(event)
  local guid = UnitGUID("mouseover")
  local npcid = self:GetNPCIDFromGUID(guid)
-
+Rarity:Debug("Mouse hovered over NPC with id = " .. tostring(npcid))
  if npcid == 50409 or npcid == 50410 then
   if not guids[guid] then
    guids[guid] = true
@@ -2460,7 +2583,8 @@ end
 -- Criteria in a dungeon completed, currently used for Reins of the Infinite Timereaver detection as a special case
 -------------------------------------------------------------------------------------
 local timewalkingCriteriaLUT = {
-	[24801] = "Ozumot",
+	[24801] = "Ozumat", -- Legacy (seems to no longer work? Perhaps the criterion ID was changed...)
+	[34414] = "Ozumat", -- Timewalking difficulty only? (need to test)
 	[24803] = "Murozond",
 	[24784] = "Trial of the King", -- [126952] = "Trial of the King", -- Object: Legacy of the Clan Leaders
 	[19256] = "Gekkan", -- Object: Ancient Mogu Treasure
@@ -2492,25 +2616,28 @@ local encounterLUT = {
 	[1135] = "Ominous Pile of Snow", -- Hodir
 	[1138] = "Overcomplicated Controller", -- Mimiron
 	[1143] = "Wriggling Darkness", -- Yogg-Saron (mount uses the BOSS method and is tracked separately)
+	[1500] = "Celestial Gift", -- Elegon
+	[1505] = "Azure Cloud Serpent Egg", -- Tsulong
+	[1506] = "Spirit of the Spring", -- Lei Shi
 }
 
 function R:OnEncounterEnd(event, encounterID, encounterName, difficultyID, raidSize, endStatus)
-	
+
 	R:Debug("ENCOUNTER_END with encounterID = " .. tonumber(encounterID or "0") .. ", name = " .. tostring(encounterName) .. ", endStatus = " .. tostring(endStatus))
-	
+
 	local item = encounterLUT[encounterID]
 	if item and type(item) == "string" then -- This encounter has an entry in the LUT and needs special handling
-	
+
 		R:Debug("Found item of interest for this encounter: " .. tostring(item))
 		local v = self.db.profile.groups.pets[item] -- v = value = number of attempts for this item
-		
+
 		if endStatus == 1 then -- Encounter succeeded -> Check if number of attempts should be increased
 			if v and type(v) == "table" and v.enabled ~= false and R:IsAttemptAllowed(v) then -- Add one attempt for this item
 				if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
 				R:OutputAttempts(v)
 			end
 		end
-		
+
 	end
 
 end
@@ -2530,10 +2657,16 @@ do
 		[1892] = "Rotting Mire",
 		[1893] = "Dread Chain",
 		[1898] = "Skittering Hollow",
+		[1814] = "Havenswood",
+		[1879] = "Jorundall",
+		[1907] = "Snowblossom",
+		[2124] = "Crestfall",
 	}
 
 	local islandExpeditionCollectibles = { -- List of collectibles (so we don't have to search the item DB for them)
+
 		-- Pets
+		---- 8.0
 		"Scuttle",
 		"Captain Nibs",
 		"Barnaby",
@@ -2562,43 +2695,66 @@ do
 		"Playful Frostkin",
 		"False Knucklebump",
 		"Craghoof Kid",
-		
+		---- 8.1
+		"Baby Stonehide",
+		"Leatherwing Screecher",
+		"Rotting Ghoul",
+		"Thunderscale Whelpling",
+		"Scritches",
+		"Tonguelasher",
+		"Lord Woofington",
+		"Firesting Buzzer",
+		"Needleback Pup",
+		"Shadefeather Hatchling",
+		---- 8.2
+		"Adventurous Hopling Pack",
+		"Ghostly Whelpling",
+
 		-- Toys
+		---- 8.0
 		"Oomgut Ritual Drum",
 		"Whiskerwax Candle",
-		-- "Yaungol Oil Stove", -- NYI as of 18/01/19
-		-- "Jinyu Light Globe", -- NYI as of 18/01/19
 		"Enchanted Soup Stone",
 		"Magic Monkey Banana",
 		"Bad Mojo Banana",
+		---- Not yet implemented?
 		-- "Regenerating Banana Bunch", -- NYI as of 18/01/19
-		
+		-- "Yaungol Oil Stove", -- NYI as of 18/01/19
+		-- "Jinyu Light Globe", -- NYI as of 18/01/19
+
 		-- Mounts
+		---- 8.0
 		"Surf Jelly",
 		"Squawks",
 		"Qinsho's Eternal Hound",
 		"Craghorn Chasm-Leaper",
 		"Twilight Avenger",
+		---- 8.1
+		"Risen Mare",
+		"Island Thunderscale",
+		"Bloodgorged Hunter",
+		"Stonehide Elderhorn",
+
 	}
 
 	function R:OnIslandCompleted(event, mapID, winner)
-		
+
 		R:Debug("Detected completion for Island Expedition: " .. (islandMapIDs[mapID] or "Unknown Map") .. " (mapID = " .. tostring(mapID) .. ")")
-		
+
 		if islandMapIDs[mapID] then -- Is a relevant map -> Add attempts for all collectibles (for now, I'm assuming they just drop from everything at the same rate. This may have to be revised once more data is available...)
-		
+
 			R:Debug("Found this Island Expedition to be relevant -> Adding attempts for all known collectibles...")
 
 			for index, name in pairs(islandExpeditionCollectibles) do -- Add an attempt for each item
-				
+
 				local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name] or self.db.profile.groups.mounts[name]
 				if v and type(v) == "table" and v.enabled ~= false then
 					if v.attempts == nil then v.attempts = 1 else v.attempts = v.attempts + 1 end
 					self:OutputAttempts(v)
-				end		
+				end
 
 			end
-			
+
 		end
 
 	end
@@ -2632,8 +2788,8 @@ end
       GAME TOOLTIPS ------------------------------------------------------------------------------------------------------------
   ]]
 
-		
-		
+
+
 -- TOOLTIP: NPCS
 
 _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
@@ -2670,8 +2826,7 @@ _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 							blankAdded = true
 							GameTooltip:AddLine(" ")
 						end
-						local chance = v.chance or 0
-						if v.method == BOSS and v.groupSize ~= nil and v.groupSize > 1 and not v.equalOdds then chance = chance * v.groupSize end
+						local chance = select(2, GetRealDropPercentage(v))
 						local attemptText = " "..colorize(format(L["(%d/%d attempts)"], v.attempts or 0, chance or 0), white)
 						if v.method == COLLECTION then attemptText = " "..colorize(format(L["(%d/%d collected)"], v.attempts or 0, v.chance or 0), white) end
 						if v.known or Rarity.db.profile.tooltipAttempts == false then attemptText = "" end
@@ -2720,10 +2875,10 @@ _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 					for i = 2, scanTip:NumLines() do
 						local myLeft = _G["__Rarity_ScanTipTextLeft"..i]
 						local txtLeft = myLeft:GetText()
-						local leftR, leftG, leftB, leftAlpha = myLeft:GetTextColor() 
+						local leftR, leftG, leftB, leftAlpha = myLeft:GetTextColor()
 						local myRight = _G["__Rarity_ScanTipTextRight"..i]
 						local txtRight = myRight:GetText()
-						local rightR, rightG, rightB, rightAlpha = myRight:GetTextColor() 
+						local rightR, rightG, rightB, rightAlpha = myRight:GetTextColor()
 						if txtRight then
 							GameTooltip:AddDoubleLine(txtLeft, txtRight, leftR, leftG, leftB, rightR, rightB, rightG)
 						else
@@ -2782,8 +2937,7 @@ _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 										blankAdded = true
 										GameTooltip:AddLine(" ")
 									end
-									local chance = vv.chance or 0
-									if vv.method == BOSS and vv.groupSize ~= nil and vv.groupSize > 1 and not vv.equalOdds then chance = chance * vv.groupSize end
+									local chance = select(2, GetRealDropPercentage(vv))
 									local attemptText = " "..colorize(format(L["(%d/%d attempts)"], vv.attempts or 0, chance or 0), white)
 									if vv.method == COLLECTION then attemptText = " "..colorize(format(L["(%d/%d collected)"], vv.attempts or 0, vv.chance or 0), white) end
 									if vv.known or Rarity.db.profile.tooltipAttempts == false then attemptText = "" end
@@ -2804,7 +2958,7 @@ _G.GameTooltip:HookScript("OnTooltipSetUnit", function(self)
 	end
 
 
-	
+
 end)
 
 
@@ -2828,8 +2982,7 @@ hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
 							blankAdded = true
 							GameTooltip:AddLine(" ")
 						end
-						local chance = v.chance or 0
-						if v.method == BOSS and v.groupSize ~= nil and v.groupSize > 1 and not v.equalOdds then chance = chance * v.groupSize end
+						local chance = select(2, GetRealDropPercentage(v))
 						local attemptText = " "..colorize(format(L["(%d/%d attempts)"], v.attempts or 0, chance or 0), white)
 						if v.method == COLLECTION then attemptText = " "..colorize(format(L["(%d/%d collected)"], v.attempts or 0, v.chance or 0), white) end
 						if v.known or Rarity.db.profile.tooltipAttempts == false then attemptText = "" end
@@ -2846,7 +2999,7 @@ hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
 		end
 
 		blankAdded = false
-		
+
 		-- Extra item tooltips
 		if R.db.profile.extraTooltips.inventoryItems[id] then
 			for x, y in pairs(R.db.profile.extraTooltips.inventoryItems[id]) do
@@ -2868,8 +3021,7 @@ hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
 													blankAdded = true
 													GameTooltip:AddLine(" ")
 												end
-												local chance = vv.chance or 0
-												if vv.method == BOSS and vv.groupSize ~= nil and vv.groupSize > 1 and not vv.equalOdds then chance = chance * vv.groupSize end
+												local chance = select(2, GetRealDropPercentage(vv))
 												local attemptText = " "..colorize(format(L["(%d/%d attempts)"], vv.attempts or 0, chance or 0), white)
 												if vv.method == COLLECTION then attemptText = " "..colorize(format(L["(%d/%d collected)"], vv.attempts or 0, vv.chance or 0), white) end
 												if vv.known or Rarity.db.profile.tooltipAttempts == false then attemptText = "" end
@@ -2893,16 +3045,16 @@ hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
 
  end
 end)
-		
-		
-		
-		
-		
+
+
+
+
+
 --[[
       DATA BROKER OBJECT, TOOLTIP, BAR -----------------------------------------------------------------------------------------------
   ]]
 
-		
+
 function R:UpdateBar()
 	if not self.barGroup:GetBars() then return end
 	if not self.db.profile.bar.font then self.barGroup:SetFont(self.db.profile.bar.font, self.db.profile.bar.fontSize or 8)
@@ -2925,7 +3077,7 @@ function R:UpdateBar()
  if not self.db.profile.bar.anchor then self.barGroup:HideAnchor() else self.barGroup:ShowAnchor() end
  if not self.db.profile.bar.locked then self.barGroup:Unlock() else self.barGroup:Lock() end
 end
-		
+
 do
 	local tooltip, tooltip2
 	local frame, frame2
@@ -2953,9 +3105,9 @@ do
   if trackedItem.attempts then attempts = trackedItem.attempts end
   if trackedItem.lastAttempts then attempts = attempts - trackedItem.lastAttempts end
   if trackedItem.realAttempts and trackedItem.found and not trackedItem.repeatable then attempts = trackedItem.realAttempts end
-  
+
   attempts = min(attempts, 2^31-1) -- Workaround to stop invalid attempt counts from breaking the addon; the correct count can be obtained by updating manually. It should also be restored automatically (at some point...) if the addon loads without errors. See issue: https://github.com/SacredDuckwhale/Rarity/issues/43) - This is mostly relevant for the two Archaeology mounts that may have invalid entries after the API was changed and not updated in the addon for quite some time
-  
+
   if trackedItem.found and not trackedItem.repeatable then
 			if trackedItem.method == COLLECTION then
 				dataobj.text = L["Collection complete!"]
@@ -2972,8 +3124,7 @@ do
 				chance = chance * 100
 				dataobj.text = format(L["%d collected - %.2f%%"], attempts, chance)
 			else
-				dropChance = (1.00 / (trackedItem.chance or 100))
-				if trackedItem.method == BOSS and trackedItem.groupSize ~= nil and trackedItem.groupSize > 1 and not trackedItem.equalOdds then dropChance = dropChance / trackedItem.groupSize end
+				dropChance = GetRealDropPercentage(trackedItem)
 				chance = 100 * (1 - math.pow(1 - dropChance, attempts))
 				if self.db.profile.feedText == FEED_MINIMAL then
 					if attempts == 1 then dataobj.text = format(L["%d attempt"], attempts)
@@ -3025,8 +3176,7 @@ do
 					if chance > 1 then chance = 1 end
 					chance = chance * 100
 				else
-					dropChance = (1.00 / (trackedItem2.chance or 100))
-					if trackedItem2.method == BOSS and trackedItem2.groupSize ~= nil and trackedItem2.groupSize > 1 and not trackedItem2.equalOdds then dropChance = dropChance / trackedItem2.groupSize end
+					dropChance = GetRealDropPercentage(trackedItem2)
 					chance = 100 * (1 - math.pow(1 - dropChance, attempts))
 				end
 			end
@@ -3054,8 +3204,8 @@ do
 
 	function dataobj.OnLeave(self)
 	end
-	
-	
+
+
 	function R:InTooltip()
 		return qtip:IsAcquired("RarityTooltip")
 	end
@@ -3136,10 +3286,10 @@ do
 		for i = 2, scanTip:NumLines() do
 			local myLeft = _G["__Rarity_ScanTipTextLeft"..i]
 			local txtLeft = myLeft:GetText()
-			local leftR, leftG, leftB, leftAlpha = myLeft:GetTextColor() 
+			local leftR, leftG, leftB, leftAlpha = myLeft:GetTextColor()
 			local myRight = _G["__Rarity_ScanTipTextRight"..i]
 			local txtRight = myRight:GetText()
-			local rightR, rightG, rightB, rightAlpha = myRight:GetTextColor() 
+			local rightR, rightG, rightB, rightAlpha = myRight:GetTextColor()
 			if txtRight then
 				tooltip2AddDoubleLine(colorizeV(txtLeft, leftR, leftG, leftB), colorizeV(txtRight, rightR, rightG, rightB))
 			else
@@ -3188,15 +3338,15 @@ do
     end
    end
   end
-		
+
 		-- Source text, bonus satchel, black market, etc.
 		local hadSource = false
-		if item.type == MOUNT and item.spellId ~= nil and Rarity.mount_sources[item.spellId] ~= nil then
+		if item.type == CONSTANTS.ITEM_TYPES.MOUNT and item.spellId ~= nil and Rarity.mount_sources[item.spellId] ~= nil then
 			tooltip2:AddSeparator(1, 1, 1, 1, 1)
 			tooltip2AddLine(Rarity.mount_sources[item.spellId])
 			hadSource = true
 		end
-		if item.type == PET and item.creatureId ~= nil and Rarity.pet_sources[item.creatureId] ~= nil then
+		if item.type == CONSTANTS.ITEM_TYPES.PET and item.creatureId ~= nil and Rarity.pet_sources[item.creatureId] ~= nil then
 			tooltip2:AddSeparator(1, 1, 1, 1, 1)
 			tooltip2AddLine(Rarity.pet_sources[item.creatureId])
 			hadSource = true
@@ -3276,8 +3426,7 @@ do
 		else
 			tooltip2AddLine(colorize(format(L["1 in %d chance"], item.chance or 100), white))
 		end
-  local dropChance = (1.00 / (item.chance or 100))
-  if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
+  local dropChance = GetRealDropPercentage(item)
   local medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
   if item.method ~= COLLECTION then tooltip2AddLine(colorize(format(L["Lucky if you obtain in %d or less"], medianLoots), gray)) end
 
@@ -3310,7 +3459,7 @@ do
 				tooltip2AddDoubleLine(L["Chance so far"], format("%.2f%%", chance))
 			end
   end
-  
+
   if item.totalFinds and item.method ~= COLLECTION then
 		 tooltip2:AddSeparator(1, 1, 1, 1, 1)
    tooltip2AddLine(colorize(L["Total"], yellow))
@@ -3324,9 +3473,8 @@ do
 		  tooltip2:AddSeparator(1, 1, 1, 1, 1)
     local f = sort2(item.finds)
     for k, v in pairs(f) do
-     local dropChance = (1.00 / (item.chance or 100))
+     local dropChance  =GetRealDropPercentage(v)
      local chance = 100 * (1 - math.pow(1 - dropChance, v.attempts))
-     if item.method == BOSS and item.groupSize ~= nil and item.groupSize > 1 and not item.equalOdds then dropChance = dropChance / item.groupSize end
      if v.attempts == 1 then tooltip2AddDoubleLine(format(L["#%d: %d attempt (%.2f%%)"], v.num, v.attempts, chance), R:FormatTime((v.time or 0) + len))
      else tooltip2AddDoubleLine(format(L["#%d: %d attempts (%.2f%%)"], v.num, v.attempts, chance), R:FormatTime((v.time or 0) + len)) end
     end
@@ -3343,7 +3491,7 @@ do
     tooltip2AddDoubleLine(L["Session"], format("%d (%s)", sessionAttempts, R:FormatTime(sessionTime + len)))
    end
 
-   local todayDate = getDate() 
+   local todayDate = getDate()
    local yesterDate = getDate(86400)
    local todayAttempts = item.dates[todayDate] and item.dates[todayDate].attempts or 0
    local todayTime = item.dates[todayDate] and item.dates[todayDate].time or 0
@@ -3387,12 +3535,11 @@ do
 		end
 
 		tooltip2:AddSeparator(1, 1, 1, 1, 1)
-		
-		-- TSM Pricing
-		local TSMAPI_FOUR = TSMAPI_FOUR
-		if TSMAPI_FOUR and item.type == PET and Rarity.db.profile.showTSMColumn then
-		
-			local tooltipLines = { 
+
+		-- Add TSM pricing information to the tooltip
+		if R.TSM_Interface:IsLoaded() and Rarity.db.profile.showTSMColumn then
+
+			local tooltipLines = {
 				{ priceSource = "DBMinBuyout", isMonetaryValue = true, localisedDisplayText = L["Min Buyout"], },
 				{ priceSource = "DBMarket", isMonetaryValue = true, localisedDisplayText = L["Market Price"], },
 				{ priceSource = "DBRegionMarketAvg", isMonetaryValue = true, localisedDisplayText = L["Region Market Avg"], },
@@ -3400,20 +3547,28 @@ do
 				{ priceSource = "DBRegionSaleRate", isMonetaryValue = false, localisedDisplayText = L["Region Sale Rate"], },
 				{ priceSource = "DBRegionSoldPerDay", isMonetaryValue = false, localisedDisplayText = L["Region Avg Daily Sold"], },
 			}
-			
+
 			local hasPrice = false
 			for _, lineInfo in pairs(tooltipLines) do -- Add text to tooltip if TSM4 has pricing data for this source
-				local price = TSMAPI_FOUR.CustomPrice.GetItemPrice(item.itemId, lineInfo.priceSource)
-				if(price ~= nil) then
+
+				if not R.TSM_Interface:IsValidPriceSource(lineInfo.priceSource) then
+					Rarity:Print(format("Attempting to use invalid price source %s to retrieve a price for item %d via TSM_API. Please report this error so it can be fixed :)", lineInfo.priceSource, item.itemId))
+					break
+				end
+
+				local formattedPrice = R.TSM_Interface:GetMarketPrice(item.itemId, lineInfo.priceSource, true)
+				if(formattedPrice ~= nil) then
 					hasPrice = true
-					tooltip2AddDoubleLine(colorize(lineInfo.localisedDisplayText, blue), lineInfo.isMonetaryValue and TSMAPI_FOUR.Money.ToString(price) or price, nil, nil)
+					tooltip2AddDoubleLine(colorize(lineInfo.localisedDisplayText, blue), lineInfo.isMonetaryValue and formattedPrice, nil, nil)
+				else
+
 				end
 			end
 
 			if hasPrice then tooltip2:AddSeparator(1, 1, 1, 1, 1) end
 
 		end
-		
+
 		-- Click instructions
 		tooltip2AddLine(colorize(L["Click to switch to this item"], gray))
 		tooltip2AddLine(colorize(L["Shift-Click to link your progress to chat"], gray))
@@ -3460,13 +3615,13 @@ do
 	local function showSubTooltipMe(cell, group)
 		showSubTooltip(cell, group, "")
 	end
-	
-	
+
+
 	local function showSubTooltipPet(cell, group)
 		showSubTooltip(cell, group, "_pet")
 	end
-	
-	
+
+
 	local function hideSubTooltip()
 		if tooltip2 then
 			qtip:Release(tooltip2)
@@ -3503,8 +3658,7 @@ do
    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(v.itemId)
    local attempts = v.attempts or 0
    if v.lastAttempts then attempts = attempts - v.lastAttempts end
-   local dropChance = (1.00 / (v.chance or 100))
-   if v.method == BOSS and v.groupSize ~= nil and v.groupSize > 1 and not v.equalOdds then dropChance = dropChance / v.groupSize end
+   local dropChance = GetRealDropPercentage(v)
    local chance = 100 * (1 - math.pow(1 - dropChance, attempts))
    local medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
    local lucky = L["lucky"]
@@ -3548,6 +3702,11 @@ do
 
 
  local function addGroup(group, requiresGroup)
+
+	R:ProfileStart2()
+
+	local addGroupStart = debugprofilestop()
+
   if type(group) ~= "table" then return end
   if group.name == nil then return end
 
@@ -3557,12 +3716,18 @@ do
 		local headerAdded = false
 		local itemsExistInThisGroup = false
   local g
+
+  local addGroupSortStart = debugprofilestop()
+
   if R.db.profile.sortMode == SORT_NAME then g = sort(group)
   elseif R.db.profile.sortMode == SORT_DIFFICULTY then g = sort_difficulty(group)
   elseif R.db.profile.sortMode == SORT_CATEGORY then g = sort_category(group)
   elseif R.db.profile.sortMode == SORT_ZONE then g = sort_zone(group)
   else g = sort_progress(group)
   end
+
+  local addGroupSortEnd = debugprofilestop()
+
   for k, v in pairs(g) do
    if type(v) == "table" and v.enabled ~= false and ((requiresGroup and v.groupSize ~= nil and v.groupSize > 1) or (not requiresGroup and (v.groupSize == nil or v.groupSize <= 1))) then
 
@@ -3583,8 +3748,7 @@ do
 							local lucky, chance, dropChance
 
 							if v.method ~= COLLECTION then
-								dropChance = (1.00 / (tonumber(v.chance) or 100))
-								if v.method == BOSS and v.groupSize ~= nil and tonumber(v.groupSize) ~= nil and v.groupSize > 1 and not v.equalOdds then dropChance = dropChance / v.groupSize end
+								dropChance = GetRealDropPercentage(v)
 								chance = 100 * (1 - math.pow(1 - dropChance, attempts))
 								local medianLoots = round(math.log(1 - 0.5) / math.log(1 - dropChance))
 								lucky = colorize(L["Lucky"], green)
@@ -3640,13 +3804,65 @@ do
 										if IsQuestFlaggedCompleted(v.questId) then status = colorize(L["Defeated"], red) else status = colorize(L["Undefeated"], green) end
 								end
 							end
-							elseif v.lockBossName then
-								
+							elseif v.lockBossName or v.lockoutDetails then -- Lockout-based defeat detection requires special treatment due to the underlying complexity
+
 								if not lbb["Theralion and Valiona"] and lbb["Valiona and Theralion"] then -- LibBabble-Boss is still outdated -> Add correct encounter name
 									lbb["Theralion and Valiona"] = lbb["Valiona and Theralion"] -- Workaround for issue: https://github.com/SacredDuckwhale/Rarity/issues/22 - can be removed once the library was updated
 								end
-								
-								if lbb[v.lockBossName] and (Rarity.lockouts[lbb[v.lockBossName]] == true or Rarity.lockouts[v.lockBossName] == true) then status = colorize(L["Defeated"], red) else status = colorize(L["Undefeated"], green) end
+
+								local isDefeated
+								local mode = CONSTANTS.DEFEAT_DETECTION.MODE_OR -- OR: At least one encounter must be defeated / AND: All encounters must be defeated (before the item will be displayed as defeated)
+								local usesNewDefeatDetection = v.lockoutDetails and type(v.lockoutDetails) == "table" and #v.lockoutDetails > 0
+
+								if usesNewDefeatDetection then -- Resolve the defeat detection using the item's parameters
+
+									isDefeated = false
+									local continue = true
+
+									mode = v.lockoutDetails.mode or mode
+
+									for index, sharedDifficultyGroup in ipairs(v.lockoutDetails) do  -- Check all stored lockouts and resolve the defeat detection (if there are none there isn't anything left to do)
+
+										local isValidEntry = sharedDifficultyGroup.encounterName and type(sharedDifficultyGroup.encounterName) == "string" and sharedDifficultyGroup.instanceDifficulties and type(sharedDifficultyGroup.instanceDifficulties) == "table"
+
+										if not isValidEntry then
+											Rarity:Debug("Invalid lockout details for item " .. tostring(v.name) .. " - defeat detection will not be resolved")
+											continue = false
+										end
+
+										local storedLockouts = Rarity.lockouts_detailed[sharedDifficultyGroup.encounterName] or {}
+
+										local isGroupCompleted = false
+										for instanceDifficulty, membershipFlag in pairs(sharedDifficultyGroup.instanceDifficulties) do -- Check if a lockout is stored for any of the group's members (difficulties)
+
+											if storedLockouts[instanceDifficulty] then -- Flag the entire group as locked out
+												isGroupCompleted = true -- isGroupCompleted = storedLockouts[instanceDifficulty]
+											end
+
+										end
+
+										if mode == CONSTANTS.DEFEAT_DETECTION.MODE_AND and not isGroupCompleted and continue then -- Since at least one step isn't complete, the item shouldn't be marked as defeated
+											isDefeated = false
+											continue = false
+										elseif continue then -- Overwrite default value
+											isDefeated = true
+										end
+
+										-- Otherwise, at least one version was defeated, so the item should be marked as defeated
+										if mode == CONSTANTS.DEFEAT_DETECTION.MODE_OR and isGroupCompleted and continue then
+												isDefeated = true
+												continue = false
+										end
+
+									end
+
+								end
+
+								-- Currently, only one of the two detection routines should be used
+								if (v.lockBossName and lbb[v.lockBossName] and (Rarity.lockouts[lbb[v.lockBossName]] == true or Rarity.lockouts[v.lockBossName] == true)) -- Legacy detection (I'll leave it be, for now)
+								or isDefeated
+								then status = colorize(L["Defeated"], red) else status = colorize(L["Undefeated"], green) end
+
 							elseif v.lockDungeonId then
 								if Rarity.lockouts_holiday[v.lockDungeonId] == true then
 									status = colorize(L["Defeated"], red)
@@ -3719,7 +3935,7 @@ do
 														if ((not requiresGroup and group.collapsed == true) or (requiresGroup and group.collapsedGroup == true)) then
 															line = tooltip:AddLine("|TInterface\\Buttons\\UI-PlusButton-Up:16|t", colorize(groupName, yellow))
 														else
-															line = tooltip:AddLine("|TInterface\\Buttons\\UI-MinusButton-Up:16|t", colorize(groupName, yellow), colorize(L["Attempts"], yellow), colorize(L["Likelihood"], yellow), Rarity.db.profile.showTimeColumn and colorize(L["Time"], yellow) or nil, Rarity.db.profile.showLuckinessColumn and colorize(L["Luckiness"], yellow) or nil, Rarity.db.profile.showZoneColumn and colorize(L["Zone"], yellow) or nil, colorize(L["Defeated"], yellow), TSMAPI_FOUR ~= nil and Rarity.db.profile.showTSMColumn and colorize(L["Market Price"], yellow) or nil)
+															line = tooltip:AddLine("|TInterface\\Buttons\\UI-MinusButton-Up:16|t", colorize(groupName, yellow), colorize(L["Attempts"], yellow), colorize(L["Likelihood"], yellow), Rarity.db.profile.showTimeColumn and colorize(L["Time"], yellow) or nil, Rarity.db.profile.showLuckinessColumn and colorize(L["Luckiness"], yellow) or nil, Rarity.db.profile.showZoneColumn and colorize(L["Zone"], yellow) or nil, colorize(L["Defeated"], yellow), TSM_API ~= nil and Rarity.db.profile.showTSMColumn and colorize(L["Market Price"], yellow) or nil)
 														end
 														tooltip:SetLineScript(line, "OnMouseUp", requiresGroup and onClickGroup2 or onClickGroup, group)
 													end
@@ -3728,12 +3944,8 @@ do
 												-- Zone
 												local zoneText, inMyZone, zoneColor, numZones = R:GetZone(v)
 
-												-- Get Price
-												local marketPrice
-												if TSMAPI_FOUR then
-													marketPrice = TSMAPI_FOUR.CustomPrice.GetItemPrice(v.itemId, 'DBMarket')
-													marketPrice = TSMAPI_FOUR.Money.ToString(marketPrice)
-												end
+												-- Retrieve the DBMarket price provided by the TSM_API (if loaded)
+												local marketPrice = Rarity.db.profile.showTSMColumn and R.TSM_Interface:GetMarketPrice(v.itemId, "DBMarket", true)
 
 												-- Add the item to the tooltip
 												local catIcon = ""
@@ -3760,6 +3972,8 @@ do
    end
   end
 
+	local addGroupIterationEnd = debugprofilestop()
+
 		-- Collapsed Header
 		if (not headerAdded) and itemsExistInThisGroup and ((not requiresGroup and group.collapsed == true) or (requiresGroup and group.collapsedGroup == true)) then
 			headerAdded = true
@@ -3777,12 +3991,16 @@ do
 			end
 		end
 
+	local addGroupEnd = debugprofilestop()
+
+	R:ProfileStop2("addGroup(" .. group.name .. ", " .. tostring(requiresGroup) .. ") took %fms"..format(" (Total: %f, Sort: %f, Iteration: %f, Tooltip: %f", (addGroupEnd - addGroupStart), (addGroupSortEnd - addGroupSortStart), (addGroupIterationEnd - addGroupSortEnd), (addGroupEnd - addGroupIterationEnd)))
+
   return added, itemsExistInThisGroup
  end
-	 
+
 
 	local renderingTip = false
-	
+
 	function R:ShowTooltip(hidden)
 
 		-- This function needs to be non-reentrant
@@ -3800,7 +4018,7 @@ do
 			tooltip = qtip:Acquire("RarityTooltip", 9, "LEFT", "LEFT", "RIGHT", "RIGHT", "RIGHT", "CENTER", "CENTER", "CENTER") -- intentionally one column more than we need to avoid text clipping
 			tooltip:SetScale(self.db.profile.tooltipScale or 1)
 		end
-		
+
 		table.wipe(headers)
   local addedLast
 		local itemsExistInThisGroup
@@ -3913,7 +4131,7 @@ do
 		end
 
 		R:ProfileStop("Tooltip rendering took %fms"..format(" (%f, %f, %f, %f, %f, %f, %f, %f)", (group1end - group1start), (group2end - group2start), (group3end - group3start), (group4end - group4start), (group5end - group5start), (group6end - group6start), (group7end - group7start), (group8end - group8start)))
-		
+
 		-- Footer
 		line = tooltip:AddLine()
 		tooltip:SetCell(line, 1, colorize(L["Click to toggle the progress bar"], gray), nil, nil, 3)
@@ -3936,7 +4154,7 @@ do
 		tooltip:SmartAnchorTo(frame)
 		tooltip:UpdateScrolling()
 		tooltip:Show()
-		
+
 		renderingTip = false
 	end
 end
@@ -3960,11 +4178,11 @@ local function RarityAchievementAlertFrame_SetUp(frame, itemId, attempts)
 	local shieldIcon = frame.Shield.Icon;
 	local unlocked = frame.Unlocked;
 	local oldCheevo = frame.OldAchievement;
-	
+
 	displayName:SetText(itemName);
 
 	AchievementShield_SetPoints(0, shieldPoints, GameFontNormal, GameFontNormalSmall);
-	
+
 	if (frame.guildDisplay or frame.oldCheevo) then
 		frame.oldCheevo = nil
 		shieldPoints:Show();
@@ -3998,9 +4216,9 @@ local function RarityAchievementAlertFrame_SetUp(frame, itemId, attempts)
 		frame.shine:SetTexCoord(0.78125, 0.912109375, 0, 0.28125);
 		frame.shine:SetPoint("BOTTOMLEFT", 0, 8);
 	end
-		
+
 	shieldIcon:SetTexture([[Interface\AchievementFrame\UI-Achievement-Shields-NoPoints]]);
-	
+
 	frame.Icon.Texture:SetTexture(itemTexture);
 
 	if attempts == nil or attempts <= 0 then attempts = 1 end
@@ -4014,7 +4232,7 @@ local function RarityAchievementAlertFrame_SetUp(frame, itemId, attempts)
 		-- Put the achievement frame back to normal when we're done
 		unlocked:SetText(ACHIEVEMENT_UNLOCKED);
 	end, 10)
-	
+
 	frame.id = itemId;
 	return true;
 end
@@ -4046,7 +4264,7 @@ function R:ShowFoundAlert(itemId, attempts, item)
 		end
   self:Pour(s, nil, nil, nil, nil, nil, nil, nil, nil, itemTexture)
  end
-	
+
  -- The following code is adapted from Blizzard's AlertFrameMixin:OnEvent function found in FrameXML\AlertFrames.lua [heavily updated in 7.0]
 
 	if (IsKioskModeEnabled()) then
@@ -4068,7 +4286,7 @@ function R:ShowFoundAlert(itemId, attempts, item)
  end, 2)
 
 
- PlaySoundFile("Sound\\Spells\\AchievmentSound1.ogg")
+ PlaySound(12891) -- UI_Alert_AchievementGained
 end
 
 
@@ -4218,7 +4436,7 @@ function R:ScanExistingItems(reason)
 			end
 
 		end
-	
+
 	-- Mounts (7.0+)
 	else
  	for i,id in pairs(mount_journal.GetMountIDs()) do
@@ -4389,7 +4607,7 @@ end
 
 function R:ScanTransmog(reason)
  self:Debug("Scanning transmog ("..(reason or "")..")")
- 
+
 	for k, v in pairs(R.db.profile.groups) do
 		if type(v) == "table" then
 			for kk, vv in pairs(v) do
@@ -4466,6 +4684,8 @@ function R:ScanInstanceLocks(reason)
 	local savedInstances = GetNumSavedInstances()
 	for i = 1, savedInstances do
 		local instanceName, instanceID, instanceReset, instanceDifficulty, locked, extended, instanceIDMostSig = GetSavedInstanceInfo(i)
+
+		-- Legacy code (deprecated)
 		if instanceReset > 0 then
 			scanTip:ClearLines()
 			scanTip:SetInstanceLockEncountersComplete(i)
@@ -4475,15 +4695,38 @@ function R:ScanInstanceLocks(reason)
 					if txtRight == BOSS_DEAD then self.lockouts[_G["__Rarity_ScanTipTextLeft"..i]:GetText()] = true end
 				end
 			end
-		end		
+		end
+
+		-- Detailed lockouts saving (stub - I'm leaving the legacy code above untouched, even if it's partly identical)
+		if instanceReset > 0 then -- Lockout isn't expired -> Scan it and store the defeated encounter names
+			scanTip:ClearLines()
+			scanTip:SetInstanceLockEncountersComplete(i)
+			for i = 2, scanTip:NumLines() do
+				local txtRight = _G["__Rarity_ScanTipTextRight"..i]:GetText()
+				if txtRight then
+					if txtRight == BOSS_DEAD then
+
+						local encounterName  = _G["__Rarity_ScanTipTextLeft"..i]:GetText()
+						self.lockouts[encounterName] = true
+						-- Create containers if this is the first lockout for a given instance
+						self.lockouts_detailed[encounterName] = self.lockouts_detailed[encounterName] or {}
+						self.lockouts_detailed[encounterName][instanceDifficulty] = self.lockouts_detailed[encounterName][instanceDifficulty] or {}
+						-- Add this lockout to the container
+						self.lockouts_detailed[encounterName][instanceDifficulty] = true
+
+						end
+				end
+			end
+		end
+
 	end
 
 	table.wipe(Rarity.lockouts_holiday)
 	local num = GetNumRandomDungeons()
-	for i = 1, num do 
+	for i = 1, num do
 		local dungeonID, name = GetLFGRandomDungeonInfo(i)
 		local _, _, _, _, _, _, _, _, _, _, _, _, _, desc, isHoliday = GetLFGDungeonInfo(dungeonID)
-		if isHoliday and dungeonID ~= 828 then		
+		if isHoliday and dungeonID ~= 828 then
 			local doneToday = GetLFGDungeonRewards(dungeonID)
 			self.lockouts_holiday[dungeonID] = doneToday
 		end
@@ -4492,7 +4735,7 @@ function R:ScanInstanceLocks(reason)
 	-- This code lists every LFG dungeon ID in the game (up through 1000)
 	--for instanceID = 0, 1000 do
 	--	local dungeonName, typeId, subtypeId, minLvl, maxLvl, recLvl, minRecLvl, maxRecLvl, expansionId, groupId, textureName, difficulty, maxPlayers, dungeonDesc, isHoliday = GetLFGDungeonInfo(instanceID)
-	--		if dungeonName then 
+	--		if dungeonName then
 	--			self:Print("instanceID = " .. instanceID .. " Name = " .. dungeonName .. " typeID = " .. tostring(typeId) .. " minLvl = " .. minLvl .. " maxLvl = " .. maxLvl .. " recLvl = " .. recLvl .. " groupId = " .. tostring(groupId) .." maxPlayers = " .. tostring(maxPlayers))
 	--		end
 	--end
@@ -4619,7 +4862,7 @@ end
 
 function R:FoundItem(itemId, item)
  if item.found and not item.repeatable then return end
-	
+
  self:Debug("FOUND ITEM %d!", itemId)
  if item.attempts == nil then item.attempts = 1 end
  if item.lastAttempts == nil then item.lastAttempts = 0 end
@@ -4888,4 +5131,3 @@ function R:Update(reason)
  self:UpdateText()
  --if self:InTooltip() then self:ShowTooltip() end
 end
-

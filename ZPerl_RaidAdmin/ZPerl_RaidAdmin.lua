@@ -1,10 +1,10 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local AddonName, Addon = ...
 
-XPerl_SetModuleRevision("$Revision: 1086 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 local SavedRoster = nil
 local XswapCount = 0
@@ -175,7 +175,7 @@ function XPerl_SaveRoster(saveName)
 	local Roster = {}
 
 	for i = 1,GetNumGroupMembers() do
-		local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i)
+		local name, _, subgroup, _, _, fileName = GetRaidRosterInfo(i)
 		Roster[name] = {group = subgroup, class = fileName}
 	end
 
@@ -190,8 +190,6 @@ function XPerl_SaveRoster(saveName)
 end
 
 local function LoadRoster()
-
---ChatFrame7:AddMessage("Arranging...")
 	local swapCount = 0
 	local moveCount = 0
 	local CurrentRoster = {}
@@ -200,7 +198,7 @@ local function LoadRoster()
 
 	-- Store the current raid roster, and a list of players in the raid, but not in the saved roster
 	for i = 1,GetNumGroupMembers() do
-		local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i)
+		local name, _, subgroup, _, _, fileName = GetRaidRosterInfo(i)
 		CurrentRoster[name] = {index = i, group = subgroup, class = fileName}
 
 		if (not SavedRoster[name]) then
@@ -210,7 +208,6 @@ local function LoadRoster()
 	end
 
 	local function Swap(a, b)
-	--ChatFrame7:AddMessage("Swapping: "..a.." (Grp"..CurrentRoster[a].group..") with "..b.." (Grp"..CurrentRoster[b].group..")")
 	if (CurrentRoster[a] and CurrentRoster[b]) then
 		SwapRaidSubgroup(CurrentRoster[a].index, CurrentRoster[b].index)
 		local save = CurrentRoster[b].group
@@ -231,7 +228,6 @@ local function LoadRoster()
 	end
 
 	local function Move(name, target)
-	--ChatFrame7:AddMessage("Moving: "..name.." (Grp"..CurrentRoster[name].group..") to group "..target)
 		SetRaidSubgroup(CurrentRoster[name].index, target)
 		CurrentRoster[name].group = target
 		CurrentRoster[name].moved = true
@@ -269,7 +265,7 @@ local function LoadRoster()
 
 		if (CurrentRoster[name] and not CurrentRoster[name].moved) then
 			if (CurrentRoster[name].group == group) then
-				CurrentRoster[name].moved = true;		-- They're in right group already
+				CurrentRoster[name].moved = true -- They're in right group already
 			elseif (not FreeFloating[name]) then
 			-- First see if we can directly swap any 2 players
 				local swapName
@@ -446,8 +442,7 @@ function XPerl_Admin_CountDifferences(rosterName)
 	SavedRoster = ZPerl_Admin.SavedRosters[rosterName]
 	if (SavedRoster) then
 		for i = 1,GetNumGroupMembers() do
-			local name, rank, subgroup = GetRaidRosterInfo(i)
-
+			local name, _, subgroup = GetRaidRosterInfo(i)
 			if (SavedRoster[name]) then
 				if (SavedRoster[name].group ~= subgroup) then
 					count = count + 1

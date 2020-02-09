@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 8.1.6236 (SwimmingSeadragon)
-	Revision: $Id: BeanCounterMail.lua 6236 2019-03-04 00:20:18Z none $
+	Version: 8.2.6505 (SwimmingSeadragon)
+	Revision: $Id: BeanCounterMail.lua 6505 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterMail - Handles recording of all auction house related mail
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterMail.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterMail.lua $","$Rev: 6505 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals() --_BC localization function
@@ -42,6 +42,7 @@ local time = time
 local GetTime = GetTime
 local floor = floor
 local bitand = bit.band
+
 
 local function debugPrint(...)
     if get("util.beancounter.debugMail") then
@@ -138,6 +139,7 @@ function private.PreGetInboxTextHook(n, ...)
 	end
 	return private.GetInboxText(n, ...)
 end
+
 --hook and replace GetInboxText()
 private.GetInboxText = GetInboxText
 GetInboxText = private.PreGetInboxTextHook
@@ -161,6 +163,7 @@ function private.HideMailGUI( hide )
 		private.wipeSearchCache() --clear the search cache, we are updating data so it is now outdated
 	end
 end
+
 --Mailbox Snapshots
 function private.updateInboxStart()
 	private.limitMailUpdateEvent = nil
@@ -202,15 +205,16 @@ function private.updateInboxStart()
 	end
 	private.wipeSearchCache() --clear the search cache, we are updating data so it is now outdated
 end
+
 function private.getInvoice(n, sender, subject)
 	if private.isAuctionHouseMail(sender, subject) then
 		if subject:match(successLocale) or subject:match(wonLocale) then
 			local invoiceType, itemName, playerName, bid, buyout, deposit, consignment = GetInboxInvoiceInfo(n)
 			if invoiceType and playerName and playerName ~= "" and bid and bid > 0 then --Silly name throttling lead to missed invoice lookups
-				--debugPrint("getInvoice", invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "yes")
+                --debugPrint("getInvoice", invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "yes")
 				return invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "yes", time()
 			else
-				--debugPrint("getInvoice", invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "no")
+                --debugPrint("getInvoice", invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "no")
 				return invoiceType, itemName, playerName, bid, buyout, deposit, consignment, "no", time()
 			end
 		end
@@ -232,25 +236,25 @@ function private.mailonUpdate()
 				tinsert(private.reconcilePending, data)
 				--private.inboxStart[i] = nil
 				tremove(private.inboxStart, i)
-				--debugPrint("not a invoice mail type", i)
+                --debugPrint("data.retrieved nil, adding to queue", i)
 
 			elseif  data.retrieved == "failed" then
 				tinsert(private.reconcilePending, data)
 				--private.inboxStart[i] = nil
 				tremove(private.inboxStart, i)
-				--debugPrint("data.retrieved == failed", i)
+                --debugPrint("data.retrieved == failed, adding to queue", i)
 
 			elseif  data.retrieved == "yes" then
 				tinsert(private.reconcilePending, data)
 				--private.inboxStart[i] = nil
 				tremove(private.inboxStart, i)
-				--debugPrint("data.retrieved == yes", i)
+                --debugPrint("data.retrieved == yes, adding to queue", i)
 
 			elseif  time() - data.startTime > get("util.beacounter.invoicetime") then --time exceded so fail it and process on next update
 				debugPrint("time to retrieve invoice exceeded, most likely waiting on players name if this is blank>..", data["Seller/buyer"], i)
 				data["retrieved"] = "failed" --time to get invoice exceded
 			else
-				--debugPrint("Invoice retieve attempt",data["subject"])
+                --debugPrint("Invoice retieve attempt",data["subject"])
 				data["invoiceType"], data["itemName"], data["Seller/buyer"], data['bid'], data["buyout"] , data["deposit"] , data["fee"], data["retrieved"], _ = private.getInvoice(data.n, data.sender, data.subject)
 			end
 		end
@@ -312,7 +316,7 @@ function private.matchDB(text, itemKey)
 		if text == name then
 			itemID = string.split(":", itemKey)
 			local itemLink = lib.API.createItemLinkFromArray(itemKey)
-			--debugPrint("|CFFFFFF00Searching",data,"for",text,"Success: link is",itemLink, "itemID is ", itemID)
+            --debugPrint("|CFFFFFF00Searching",data,"for",text,"Success: link is",itemLink, "itemID is ", itemID)
 			return itemID, itemLink, itemKey
 		end
 	end
@@ -375,14 +379,14 @@ function private.findStackcompletedAuctions(key, itemID, itemLink, soldDeposit, 
 			for index, text in pairs(v) do
 				if not text:match(".*USED.*") then
 					local postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason = strsplit(";", private.playerData[key][itemID][itemString][index])
-					postDeposit, postBuy, postBid, postTime = tonumber(postDeposit), tonumber(postBuy), tonumber(postBid), tonumber(postTime)
+					postDeposit, postBuy, postBid, postTime = tonumber(postDeposit) or 0, tonumber(postBuy) or 0, tonumber(postBid) or 0, tonumber(postTime) or 0
 					--if the deposits and buyouts match, check if time range would make this a possible match
 					if postDeposit == soldDeposit and (not postBuy or postBuy >= soldBuy) and postBid <= soldBuy then --We may have sold it on a bid so we need to loosen this search
 						if (soldTime > postTime) and (oldestPossible < postTime) then
 							tremove(private.playerData[key][itemID][itemString], index) --remove the matched item From postedAuctions DB
 							--private.playerData[key][itemID][itemString][index] = private.playerData[key][itemID][itemString][index]..";USED Sold"
 							--debugPrint("postedAuction removed as sold", itemID, itemLink, itemString)
-							return tonumber(postStack), tonumber(postBid), itemString   --itemString is the "real" itemlink
+							return tonumber(postStack) or 0, postBid, itemString   --itemString is the "real" itemlink
 						end
 					end
 				end
@@ -397,14 +401,22 @@ end
 function private.sortFailedAuctions(i)
 	private.sortReturnedAuctions(i, private.checkStackFailedAuctions, "failedAuctions", "")
 end
+
 function private.checkStackFailedAuctions(datalist, returnedStack, expiredTime)
+    local auctionTimeSlop = 60*35 -- 35 minutes, used to be 21600 (360 minutes?) for some reason
+    --debugPrint("checkStackFailedAuctions called", datalist, returnedStack, expiredTime )
 	for index = #datalist, 1, -1 do -- check entries from oldest to newest
 		local postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason = strsplit(";", datalist[index])
-		if returnedStack == tonumber(postStack) then --stacks same see if we can match time
-			local timeAuctionPosted, timeFailedAuctionStarted = tonumber(postTime), expiredTime - tonumber(postRunTime) * 60 --Earliest time we could have posted the auction
-			if (timeAuctionPosted - 21600) <= timeFailedAuctionStarted and timeFailedAuctionStarted <= (timeAuctionPosted + 21600) then
+        postStack, postDeposit, postBuy, postBid, postTime = tonumber(postStack) or 0, tonumber(postDeposit) or 0, tonumber(postBuy) or 0, tonumber(postBid) or 0, tonumber(postTime) or 0
+        postRunTime = tonumber(postRunTime) or 0
+        --debugPrint("checkStackFailedAuctions split index ", index, postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason )
+		if returnedStack == postStack then --stacks same see if we can match time
+            local timeFailedAuctionStarted = expiredTime - postRunTime * 60 --Earliest time we could have posted the auction
+			if ( abs(postTime - timeFailedAuctionStarted) <= auctionTimeSlop ) then
 				tremove(datalist, index) --remove the matched item From postedAuctions DB
 				return postStack, postBid, postBuy, postDeposit
+            else
+                --debugPrint("checkStackFailedAuctions time check failed index ", index, timeAuctionPosted, timeFailedAuctionStarted  )
 			end
 		end
 	end
@@ -414,11 +426,14 @@ end
 function private.sortCancelledAuctions(i)
 	private.sortReturnedAuctions(i, private.checkStackCancelledAuctions, "cancelledAuctions", _BC('Cancelled'))
 end
+
 function private.checkStackCancelledAuctions(datalist, returnedStack, expiredTime)
 	for index = #datalist, 1, -1 do -- check entries from oldest to newest
 		local postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason = strsplit(";", datalist[index])
-		if returnedStack == tonumber(postStack) then --stacks same see if we can match time
-			local timeAuctionPosted, timeCancelledAuctionStarted = tonumber(postTime), expiredTime - tonumber(postRunTime) * 60 --Earliest time we could have posted the auction
+        postStack, postDeposit, postBuy, postBid, postTime = tonumber(postStack) or 0, tonumber(postDeposit) or 0, tonumber(postBuy) or 0, tonumber(postBid) or 0, tonumber(postTime) or 0
+        postRunTime = tonumber(postRunTime) or 0
+		if returnedStack == postStack then --stacks same see if we can match time
+			local timeAuctionPosted, timeCancelledAuctionStarted = postTime, expiredTime - postRunTime * 60 --Earliest time we could have posted the auction
 			if (timeAuctionPosted - 21600) > (timeCancelledAuctionStarted) then --cancelled auctions could have just been posted so no way to age check beyond oldest possible
 				tremove(datalist, index) --remove the matched item From postedAuctions DB
 				return postStack, postBid, postBuy, postDeposit
@@ -432,8 +447,9 @@ end
 function private.sortReturnedAuctions(i, checkfunc, display, reason)
 	local mailPending = private.reconcilePending[i]
 	local mailItemLink = mailPending.itemLink
-	local itemID =  lib.API.decodeLink(mailItemLink)
+	local itemID = lib.API.decodeLink(mailItemLink)
 	if itemID then
+        --debugPrint("calling findStackReturnedAuctions with", itemID, mailItemLink, mailPending.stack, mailPending.time )
 		local stack, bid, buyout, deposit, itemString = private.findStackReturnedAuctions(checkfunc, itemID, mailItemLink, mailPending.stack, mailPending.time)
 		if stack then
 			local mailAuctionHouse = mailPending.auctionHouse
@@ -443,9 +459,9 @@ function private.sortReturnedAuctions(i, checkfunc, display, reason)
 			else
 				private.databaseAdd("failedAuctionsNeutral", nil, itemString, value)
 			end
-			--debugPrint("Success for", display, itemID, mailItemLink, "index", mailPending.n)
+            --debugPrint("Success for", display, itemID, mailItemLink, "index", mailPending.n)
 		else
-			debugPrint("Failure for", display, itemID, mailItemLink, "index", mailPending.n)
+            debugPrint("Failure for", display, itemID, mailItemLink, "index", mailPending.n)
 		end
 	end
 	tremove(private.reconcilePending, i)
@@ -453,17 +469,29 @@ end
 
 -- Find database info for returned auctions : either failed (expired) or cancelled
 function private.findStackReturnedAuctions(checkfunc, itemID, itemLink, returnedStack, expiredTime)
+    --debugPrint("findStackReturnedAuctions called with", itemID, itemLink, returnedStack, expiredTime )
+
 	local dataItemBase = private.playerData.postedAuctions[itemID]
-	if not dataItemBase then return end
+	if not dataItemBase then
+        --debugPrint("findStackReturnedAuctions dataItemBase not found for ", itemID )
+        return
+    end
+
 	local mailItemString = lib.API.getItemString(itemLink) -- entries in database are keyed by itemString
+    --debugPrint("findStackReturnedAuctions finding", itemID, itemLink, dataItemBase, mailItemString )
 
 	-- see if there is an exact match
 	local datalist = dataItemBase[mailItemString]
 	if datalist then
+        --debugPrint("findStackReturnedAuctions datalist found", mailItemString, datalist, dataItemBase )
 		local postStack, postBid, postBuy, postDeposit = checkfunc(datalist, returnedStack, expiredTime)
 		if postStack then
 			return postStack, postBid, postBuy, postDeposit, mailItemString
+        else
+            --debugPrint("findStackReturnedAuctions postStack was nil", postStack, postBid, postBuy, postDeposit )
 		end
+    else
+        --debugPrint("findStackReturnedAuctions item not found in dataItemBase", mailItemString, itemID, itemLink, dataItemBase )
 	end
 
 	-- no exact matches, keep looking for a fuzzy match
@@ -472,6 +500,7 @@ function private.findStackReturnedAuctions(checkfunc, itemID, itemLink, returned
 	if mailSuffix then
 		mailAdjustedString = mailItemString:gsub(mailUniqueId, mailCleanId)
 	end
+    --debugPrint("findStackReturnedAuctions trying adjusted ", mailItemString, mailAdjustedString, mailSuffix, mailUniqueId, mailCleanId )
 
 	for dbItemString, datalist in pairs(dataItemBase) do
 		if dbItemString ~= mailItemString then -- we've already tested that case above so don't test it again
@@ -489,9 +518,13 @@ function private.findStackReturnedAuctions(checkfunc, itemID, itemLink, returned
 				local dbSuffix, dbUniqueId, dbCleanId = private.getSuffixHelper(dbItemString)
 				if mailSuffix == dbSuffix and mailCleanId == dbCleanId then
 					local dbAdjustedString = dbItemString:gsub(dbUniqueId, dbCleanId)
+
+                    --debugPrint("findStackReturnedAuctions mailSuffix match1 ", mailSuffix, mailUniqueId, mailCleanId, dbSuffix, dbUniqueId, dbCleanId, dbAdjustedString )
+
 					if mailAdjustedString == dbAdjustedString or strfind(mailAdjustedString, dbAdjustedString, 1, true) then
 						local postStack, postBid, postBuy, postDeposit = checkfunc(datalist, returnedStack, expiredTime)
 						if postStack then
+                            --debugPrint("findStackReturnedAuctions mailSuffix match2 " )
 							-- mailItemString is mangled, determine the correct itemString
 							local correctItemString
 							if mailAdjustedString == dbAdjustedString then
@@ -503,12 +536,16 @@ function private.findStackReturnedAuctions(checkfunc, itemID, itemLink, returned
 								correctItemString = strjoin(":", item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, dbUniqueId, tail)
 							end
 							return postStack, postBid, postBuy, postDeposit, correctItemString
-						end
-					end
-				end
-			end
-		end
-	end
+
+						end -- if postStack
+					end -- if mailAdjustedString == dbAdjustedString or strfind(mailAdjustedString, dbAdjustedString, 1, true)
+
+				end -- if mailSuffix == dbSuffix and mailCleanId == dbCleanId
+			end -- if mailSuffix
+
+		end -- if dbItemString ~= mailItemString
+	end     -- for dbItemString
+
 end
 
 -- Most data for won bids/buyouts should be provided in the invoice. We still need to reconcile postedBids entries
@@ -537,12 +574,13 @@ function private.sortCompletedBidsBuyouts( i )
 
 	tremove(private.reconcilePending,i)
 end
+
 -- Clear postedBid entries, return reason (if any)
 function private.findCompletedBids(itemID, bid, itemLink)
 	local dataItemBase = private.playerData.postedBids[itemID]
 	if not dataItemBase then return end
 	local mailItemString = lib.API.getItemString(itemLink) -- entries in database are keyed by itemString
-	bid = tonumber(bid)
+	bid = tonumber(bid) or 0
 
 	-- see if there is an exact match
 	local datalist = dataItemBase[mailItemString]
@@ -597,10 +635,12 @@ function private.findCompletedBids(itemID, bid, itemLink)
 		end
 	end
 end
+
 function private.checkCompletedBidsBuyouts(datalist, bid)
 	for index = #datalist, 1, -1 do -- check entries from oldest to newest
 		local postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason = strsplit(";", datalist[index])
-		if tonumber(postBid) == bid then
+        postBid = tonumber(postBid) or 0
+		if postBid == bid then
 			tremove(datalist, index) --remove the matched item From postedBids DB
 			return postReason --return the reason code provided for why we bid/bought item
 		end
@@ -625,12 +665,11 @@ function private.sortFailedBids( i )
 end
 
 function private.findFailedBids(itemName, gold)
-	gold = tonumber(gold)
+	gold = tonumber(gold) or 0
 	local itemID, itemLink, itemKey
 
 	while true do
 		itemID, itemLink, itemKey = private.matchDB(itemName, itemKey)
-
 		if not itemLink then
 			debugPrint("Failed auction ItemStrig nil", itemID, itemLink)
 			return
@@ -649,7 +688,9 @@ function private.findFailedBids(itemName, gold)
 					for index, text in pairs(v) do
 						if not text:match(".*USED.*") then
 							local postStack, postBid, postSeller, isBuyout, postTimeLeft, postTime, reason = private.unpackString(text)
-							if tonumber(postBid) == gold then
+                            postBid = tonumber(postBid) or 0
+                            postStack = tonumber(postStack) or 0
+							if postBid == gold then
 								tremove(private.playerData["postedBids"][itemID][itemString], index) --remove the matched item From postedBids DB
 								--private.playerData["postedBids"][itemID][itemString][index] = private.playerData["postedBids"][itemID][itemString][index] ..";USED FAILED"
 								--debugPrint("posted Bid removed as Failed", itemString, index, itemLink)

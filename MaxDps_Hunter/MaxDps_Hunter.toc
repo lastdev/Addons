@@ -1,7 +1,7 @@
 ## Title: MaxDps_Hunter
-## Version: 8.1.4
+## Version: 8.2.5
 ## Author: Kaminaris
-## Interface: 80100
+## Interface: 80205
 ## Dependencies: MaxDps
 ## LoadOnDemand: 1
 ## SavedVariables: MaxDpsHunterOptions

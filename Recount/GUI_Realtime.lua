@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1361 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1484 $", 12, -3))
 if Recount.Version < revision
 	then Recount.Version = revision
 end
@@ -460,6 +460,7 @@ end
 function Recount:RestoreRealtimeWindowPosition(f, x, y, width, height)
 	local s = f:GetEffectiveScale() -- Elsia: Fixed position code, with inspiration from ckknight's handing in pitbull
 	local uis = UIParent:GetScale()
+	f:ClearAllPoints()
 	f:SetPoint("CENTER", UIParent, "CENTER", x * uis / s, y * uis / s)
 	f:SetWidth(width)
 	f:SetHeight(height)

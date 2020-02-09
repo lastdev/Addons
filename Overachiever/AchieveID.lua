@@ -545,6 +545,8 @@ OVERACHIEVER_EXPLOREZONEID = {
 	["Tiragarde Sound"] = 12556,
 	["Vol'dun"] = 12560,
 	["Zuldazar"] = 12559,
+	["Nazjatar"] = 13712,
+	["Mechagon Island"] = 13776,
 };
 OVERACHIEVER_EXPLOREZONEID["Thunder Totem"] = OVERACHIEVER_EXPLOREZONEID["Highmountain"]
 -- "Explore Cataclysm": 4868

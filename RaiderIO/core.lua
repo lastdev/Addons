@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 -- if we're on the developer version the addon behaves slightly different
-ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v201903100600", nil, true)
+ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v202002091658", nil, true)
 
 -- micro-optimization for more speed
 local unpack = unpack
@@ -15,6 +15,7 @@ local rshift = bit.rshift
 local band = bit.band
 local bor = bit.bor
 local bxor = bit.bxor
+local strbyte = string.byte
 local LOOKUP_MAX_SIZE = floor(2^18-1)
 local CONST_COMPLETED_FROM_ACHIEVEMENT_VALUE = 63
 
@@ -52,7 +53,7 @@ local CONST_PROVIDER_DATA_RAIDING = 2
 local CONST_PROVIDER_DATA_LIST = { CONST_PROVIDER_DATA_MYTHICPLUS, CONST_PROVIDER_DATA_RAIDING }
 local CONST_PROVIDER_INTERFACE = { MYTHICPLUS = CONST_PROVIDER_DATA_MYTHICPLUS, RAIDING = CONST_PROVIDER_DATA_RAIDING }
 local CONST_PROVIDER_DATA_FIELDS_PER_CHARACTER = {
-	3,	-- Mythic Plus
+	24,	-- Mythic Plus
 	2		-- Raiding
 }
 
@@ -200,6 +201,34 @@ local ORDERED_ROLES = {
 	{ {"tank","partial"}, {"healer","partial"}, {"dps","partial"}, },
 }
 
+local ENCODER_MYTHICPLUS_FIELDS = {
+	CURRENT_SCORE 				= 1, 	-- current season score
+	CURRENT_ROLES 				= 2, 	-- current season roles
+	PREVIOUS_SCORE 				= 3, 	-- previous season score
+	PREVIOUS_ROLES 				= 4, 	-- previous season roles
+	MAIN_CURRENT_SCORE 		= 5, 	-- main's current season score
+	MAIN_CURRENT_ROLES		= 6, 	-- main's current season roles
+	MAIN_PREVIOUS_SCORE 	= 7, 	-- main's previous season score
+	MAIN_PREVIOUS_ROLES 	= 8, 	-- main's previous season roles
+	DUNGEON_RUN_COUNTS 		= 9, 	-- number of runs this season for 5+, 10+, 15+, and 20+
+	DUNGEON_LEVELS 				= 10, 	-- dungeon levels and stars for each dungeon completed
+	DUNGEON_BEST_INDEX 		= 11 	-- best dungeon index
+}
+
+local ENCODER_MYTHICPLUS_FIELD_NAMES = {
+	[1] = "CURRENT_SCORE",
+	[2] = "CURRENT_ROLES",
+	[3] = "PREVIOUS_SCORE",
+	[4] = "PREVIOUS_ROLES",
+	[5] = "MAIN_CURRENT_SCORE",
+	[6] = "MAIN_CURRENT_ROLES",
+	[7] = "MAIN_PREVIOUS_SCORE",
+	[8] = "MAIN_PREVIOUS_ROLES",
+	[9] = "DUNGEON_RUN_COUNTS",
+	[10] = "DUNGEON_LEVELS",
+	[11] = "DUNGEON_BEST_INDEX"
+}
+
 -- setup outdated struct
 do
 	for i = 1, #CONST_PROVIDER_DATA_LIST do
@@ -216,26 +245,32 @@ local ENUM_DUNGEONS = {}
 local KEYSTONE_INST_TO_DUNGEONID = {}
 local DUNGEON_INSTANCEMAPID_TO_DUNGEONID = {}
 local LFD_ACTIVITYID_TO_DUNGEONID = {}
-for i = 1, #CONST_DUNGEONS do
-	local dungeon = CONST_DUNGEONS[i]
-	dungeon.index = i
 
-	ENUM_DUNGEONS[dungeon.shortName] = i
-	KEYSTONE_INST_TO_DUNGEONID[dungeon.keystone_instance] = i
-	DUNGEON_INSTANCEMAPID_TO_DUNGEONID[dungeon.instance_map_id] = i
+local function UpdateConstDungeon()
+	for i = 1, #CONST_DUNGEONS do
+		local dungeon = CONST_DUNGEONS[i]
+		dungeon.index = i
 
-	for _, activity_id in ipairs(dungeon.lfd_activity_ids) do
-		LFD_ACTIVITYID_TO_DUNGEONID[activity_id] = i
+		ENUM_DUNGEONS[dungeon.shortName] = i
+		KEYSTONE_INST_TO_DUNGEONID[dungeon.keystone_instance] = i
+		DUNGEON_INSTANCEMAPID_TO_DUNGEONID[dungeon.instance_map_id] = i
+
+		for _, activity_id in ipairs(dungeon.lfd_activity_ids) do
+			LFD_ACTIVITYID_TO_DUNGEONID[activity_id] = i
+		end
+
+		if ns.addonConfig.useEnglishAbbreviations == true then
+			dungeon.shortNameLocale = dungeon.shortName
+		else
+			dungeon.shortNameLocale = L["DUNGEON_SHORT_NAME_" .. dungeon.shortName] or dungeon.shortName
+		end
 	end
-
-	dungeon.shortNameLocale = L["DUNGEON_SHORT_NAME_" .. dungeon.shortName] or dungeon.shortName
 end
 
 -- defined constants
 local MAX_LEVEL = MAX_PLAYER_LEVEL_TABLE[LE_EXPANSION_BATTLE_FOR_AZEROTH]
 local OUTDATED_SECONDS = 86400 * 3 -- number of seconds before we start warning about outdated data
-local PREVIOUS_SEASON_ID = 1
-local CURRENT_SEASON_ID = 2
+local CURRENT_SEASON_ID = 4
 local FACTION
 local REGIONS
 local REGIONS_RESET_TIME
@@ -390,8 +425,9 @@ local GetFaction
 local IsUnitMaxLevel
 local GetWeeklyAffix
 local GetStarsForUpgrades
-local GetFormattedRunCount
+local GetFormattedScore
 local GetTooltipScore
+local GetFormattedRunCount
 do
 	-- bracket can be 10, 100, 0.1, 0.01, and so on
 	function RoundNumber(v, bracket)
@@ -408,19 +444,32 @@ do
 		end
 	end
 
+	function DecodeBits6(value)
+		if value < 10 then
+			return value
+		else
+			return 10 + (value - 10) * 5
+		end
+	end
+
+	local CONST_DECODE_BITS5_TABLE = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 35, 40, 45, 50,60, 70, 80, 90, 100 }
+	function DecodeBits5(value)
+		return CONST_DECODE_BITS5_TABLE[1 + value] or 0
+	end
+
 	local CONST_DECODE_BITS4_TABLE = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100 }
 	function DecodeBits4(value)
-		return CONST_DECODE_BITS4_TABLE[1 + value]
+		return CONST_DECODE_BITS4_TABLE[1 + value] or 0
 	end
 
 	local CONST_DECODE_BITS3_TABLE = { 0, 1, 2, 3, 4, 5, 10, 20 }
 	function DecodeBits3(value)
-		return CONST_DECODE_BITS3_TABLE[1 + value]
+		return CONST_DECODE_BITS3_TABLE[1 + value] or 0
 	end
 
 	local CONST_DECODE_BITS2_TABLE = { 0, 1, 2, 5 }
 	function DecodeBits2(value)
-		return CONST_DECODE_BITS2_TABLE[1 + value]
+		return CONST_DECODE_BITS2_TABLE[1 + value] or 0
 	end
 
 	-- Compare two dungeon first by the keyLevel, then by their short name
@@ -738,103 +787,125 @@ do
 		end
 	end
 
-	local function UnpackMythicPlusCharacterData(data1, data2, data3)
+	-- Params:
+	-- str = string to read from
+	-- strIndex = character offset to start reading from
+	-- bitOffset = number of bits after strIndex to read from
+	-- totalBitsToRead = number of bits to read
+	--
+	-- Returns:
+	-- value: of the `numBits` from the given offset
+	-- offset: new bit offset after reading this field
+	function ReadBitsFromString(str, bitOffset, totalBitsToRead)
+		local value = 0
+		local readOffset = 0
+		local firstByteShift = bitOffset % 8
+		local bytesToRead = ceil((totalBitsToRead + firstByteShift) / 8)
+
+		while readOffset < totalBitsToRead do
+			local byte = strbyte(str, 1 + floor((bitOffset + readOffset) / 8))
+			local bitsRead = 0
+			if readOffset == 0 then
+				if bytesToRead == 1 then
+					local availableBits = totalBitsToRead - readOffset
+					value = band(rshift(byte, firstByteShift), ((lshift(1, availableBits)) - 1))
+					bitsRead = totalBitsToRead
+				else
+					value = rshift(byte, firstByteShift)
+					bitsRead = 8 - firstByteShift
+				end
+			else
+				local availableBits = totalBitsToRead - readOffset
+				if availableBits < 8 then
+					value = value + lshift(band(byte, (lshift(1, availableBits) - 1)), readOffset)
+					bitsRead = bitsRead + availableBits;
+				else
+					value = value + lshift(byte, readOffset)
+					bitsRead = bitsRead + min(8, totalBitsToRead)
+				end
+			end
+			readOffset = readOffset + bitsRead
+		end
+
+		if readOffset ~= totalBitsToRead then
+			DEFAULT_CHAT_FRAME:AddMessage('Read an improper number of bits. Expected ' .. totalBitsToRead .. ' got ' .. readOffset, 0, 0, 1)
+		end
+
+		return value, bitOffset + readOffset
+	end
+
+	local function UnpackMythicPlusCharacterData(encodingOrder, bucket, baseOffset)
 		local results = {}
-		local lo, hi
-		local offset
+		local bitOffset = (baseOffset - 1) * 8
 		local value
-
-		--
-		-- Field 1
-		--
-		lo, hi = Split64BitNumber(data1)
-		offset = 0
-
-		results.currentScore, offset = ReadBits(lo, hi, offset, 12)
-
-		value, offset = ReadBits(lo, hi, offset, 7)
-		results.currentRoleOrdinalIndex = 1 + value			-- indexes are one-based
-
-		value, offset = ReadBits(lo, hi, offset, 4)
-		results.keystoneFivePlus = DecodeBits4(value)
-
-		value, offset = ReadBits(lo, hi, offset, 4)
-		results.keystoneTenPlus = DecodeBits4(value)
-
-		value, offset = ReadBits(lo, hi, offset, 7)
-		results.previousRoleOrdinalIndex = 1 + value			-- indexes are one-based
-
-		results.mainCurrentScore, offset = ReadBits(lo, hi, offset, 12)
-
-		value, offset = ReadBits(lo, hi, offset, 7)
-		results.mainCurrentRoleOrdinalIndex = 1 + value 	-- indexes are one-based
-
-		--
-		-- Field 2
-		--
-		lo, hi = Split64BitNumber(data2)
-		offset = 0
-
-		-- since we do not store score in addon, we need an explicit value indicating which dungeon was the best run
-		-- note: stored as zero-based, so offset it here on load
-		value, offset = ReadBits(lo, hi, offset, 4)
-		results.maxDungeonIndex = 1 + value
-
-		local dungeonIndex = 1
-		results.dungeons = {}
-		results.dungeonUpgrades = {}
-		results.dungeonTimes = {}
-
-		for i = 1, 7 do
-			results.dungeons[dungeonIndex], offset = ReadBits(lo, hi, offset, 5)
-			results.dungeonUpgrades[dungeonIndex], offset = ReadBits(lo, hi, offset, 2)
-
-			-- this is just set so that dungeons will be sorted by key level and number of stars.
-			-- it may be overridden by client data.
-			results.dungeonTimes[dungeonIndex] = 3 - results.dungeonUpgrades[dungeonIndex]
-
-			dungeonIndex = dungeonIndex + 1
+	
+		for encoderIndex = 1, #encodingOrder do
+			local field = encodingOrder[encoderIndex]
+			if field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_SCORE then
+				results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_ROLES then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
+				results.currentRoleOrdinalIndex = 1 + value -- indexes are one-based
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.PREVIOUS_SCORE then
+				results.previousScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+				results.previousScoreSeason, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.PREVIOUS_ROLES then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
+				results.previousRoleOrdinalIndex = 1 + value -- indexes are one-based
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_SCORE then
+				results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_ROLES then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
+				results.mainCurrentRoleOrdinalIndex = 1 + value -- indexes are one-based
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_PREVIOUS_SCORE then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 9)
+				results.mainPreviousScore = 10 * value
+				results.mainPreviousScoreSeason, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_PREVIOUS_ROLES then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
+				results.mainPreviousRoleOrdinalIndex = 1 + value -- indexes are one-based
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_RUN_COUNTS then
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 6)
+				results.keystoneFivePlus = DecodeBits6(value)
+		
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 6)
+				results.keystoneTenPlus = DecodeBits6(value)
+	
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 6)
+				results.keystoneFifteenPlus = DecodeBits6(value)
+	
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 6)
+				results.keystoneTwentyPlus = DecodeBits6(value)
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_LEVELS then
+				results.dungeons = {}
+				results.dungeonUpgrades = {}
+				results.dungeonTimes = {}
+		
+				for i = 1, 12 do
+						results.dungeons[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
+	
+						results.dungeonUpgrades[i], bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+	
+					-- this is just set so that dungeons will be sorted by key level and number of stars.
+					-- it may be overridden by client data.
+					results.dungeonTimes[i] = 3 - results.dungeonUpgrades[i]
+				end
+			elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_BEST_INDEX then
+				-- since we do not store score in addon, we need an explicit value indicating which dungeon was the best run
+				-- note: stored as zero-based, so offset it here on load
+				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
+				results.maxDungeonIndex = 1 + value
+			else
+				DEFAULT_CHAT_FRAME:AddMessage('Unexpected field ' .. field, 0, 1, 0)
+			end
 		end
-
-		--
-		-- Field 3
-		--
-		lo, hi = Split64BitNumber(data3)
-		offset = 0
-
-		for i = dungeonIndex, 10 do
-			results.dungeons[dungeonIndex], offset = ReadBits(lo, hi, offset, 5)
-			results.dungeonUpgrades[dungeonIndex], offset = ReadBits(lo, hi, offset, 2)
-
-			-- this is just set so that dungeons will be sorted by key level and number of stars.
-			-- it may be overridden by client data.
-			results.dungeonTimes[dungeonIndex] = 3 - results.dungeonUpgrades[dungeonIndex]
-
-			dungeonIndex = dungeonIndex + 1
-		end
-
-		value, offset = ReadBits(lo, hi, offset, 4)
-		results.keystoneFifteenPlus = DecodeBits4(value)
-
-		value, offset = ReadBits(lo, hi, offset, 3)
-		results.keystoneTwentyPlus = DecodeBits3(value)
-
-		value, offset = ReadBits(lo, hi, offset, 9)
-		results.previousScore = 10 * value
-
-		-- main previous season
-		value, offset = ReadBits(lo, hi, offset, 7)
-		results.mainPreviousRoleOrdinalIndex = 1 + value		-- indexes are one-based
-
-		value, offset = ReadBits(lo, hi, offset, 9)
-		results.mainPreviousScore = 10 * value
-
+	
 		-- Post processing
 		if results.maxDungeonIndex > #results.dungeons then
 			results.maxDungeonIndex = 1
 		end
 		results.maxDungeonLevel = results.dungeons[results.maxDungeonIndex]
-
+	
 		return results
 	end
 
@@ -936,7 +1007,7 @@ do
 	end
 
 	-- caches the profile table and returns one using keys
-	local function CacheMythicPlusProviderData(dataProviderGroup, name, realm, faction, index, data1, data2, data3)
+	local function CacheMythicPlusProviderData(dataProviderGroup, name, realm, faction, index, bucket, baseOffset)
 		local cache = profileCache[index]
 
 		-- prefer to re-use cached profiles
@@ -944,8 +1015,17 @@ do
 			return cache
 		end
 
+		if dataProviderGroup.recordSizeInBytes ~= CONST_PROVIDER_DATA_FIELDS_PER_CHARACTER[1] then
+			-- some type of mismatch, so return nothing
+			if ns.DEBUG_MODE then
+				DEFAULT_CHAT_FRAME:AddMessage(format('Raider.IO Addon received mismatched MythicPlus recordSizeInBytes. Got %i expected %i. Skipping.',
+					dataProviderGroup.recordSizeInBytes, CONST_PROVIDER_DATA_FIELDS_PER_CHARACTER[1]), 1, 0, 0)
+			end
+			return nil
+		end
+
 		-- unpack the payloads into these tables
-		local payload = UnpackMythicPlusCharacterData(data1, data2, data3)
+		local payload = UnpackMythicPlusCharacterData(dataProviderGroup.encodingOrder, bucket, baseOffset)
 
 		-- TODO: can we make this table read-only? raw methods will bypass metatable restrictions we try to enforce
 		-- build this custom table in order to avoid users tainting the provider database
@@ -965,7 +1045,8 @@ do
 			},
 			mplusPrevious = {
 				score = payload.previousScore,
-				roles = ORDERED_ROLES[payload.previousRoleOrdinalIndex] or ORDERED_ROLES[1]
+				roles = ORDERED_ROLES[payload.previousRoleOrdinalIndex] or ORDERED_ROLES[1],
+				season = 1 + payload.previousScoreSeason
 			},
 			mplusMainCurrent = {
 				score = payload.mainCurrentScore,
@@ -973,19 +1054,9 @@ do
 			},
 			mplusMainPrevious = {
 				score = payload.mainPreviousScore,
-				roles = ORDERED_ROLES[payload.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
+				roles = ORDERED_ROLES[payload.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1],
+				season = 1 + payload.mainPreviousScoreSeason
 			},
-			allScore = 0, 											-- deprecated: refer to mplusCurrent.score
-			mainScore = 0,											-- deprecated: refer to mplusMainCurrent.score
-			dpsScore = 0,												-- deprecated: refer to mplusXYZ.roles to see the roles they have contribution from
-			healScore = 0,											-- deprecated: refer to mplusXYZ.roles to see the roles they have contribution from
-			tankScore = 0,											-- deprecated: refer to mplusXYZ.roles to see the roles they have contribution from
-			season = '',												-- deprecated
-			prevSeason = '',										-- deprecated
-			isPrevAllScore = false,							-- deprecated: use mplusPrevious.score and mplusCurrent.score independently
-			isFivePlusAchievement = false,			-- deprecated
-			isTenPlusAchievement = false,				-- deprecated
-			isFifteenPlusAchievement = false,		-- deprecated
 			-- dungeons they have completed
 			dungeons = payload.dungeons,
 			dungeonUpgrades = payload.dungeonUpgrades,
@@ -1094,10 +1165,16 @@ do
 		return cache
 	end
 
-	-- returns the profile of a given character, faction is optional but recommended for quicker lookups
-	local function GetProviderData(dataType, name, realm, faction)
+	-- returns the profile of a given character
+	--   faction is optional but recommended for quicker lookups
+	--   region is optional as well, and will default to the player's region
+	local function GetProviderData(dataType, name, realm, faction, region)
+		if region == nil then
+			region = PLAYER_REGION
+		end
+
 		-- shorthand for data provider group table
-		local dataProviderGroup = dataProvider[dataType]
+		local dataProviderGroup = dataProvider[region] and dataProvider[region][dataType]
 		-- if the provider isn't loaded we don't try and search for the data
 		if not dataProviderGroup then return end
 		-- figure out what faction tables we want to iterate
@@ -1114,20 +1191,29 @@ do
 			-- sanity check that the data exists and is loaded, because it might not be for the requested faction
 			if db and lu then
 				r = db[realm]
+
 				if r then
 					d = BinarySearchForName(r, name, 2, #r)
 					if d then
-						-- `r[1]` = offset for this realm's characters in lookup table
-						-- `d` = index of found character in realm list. note: this is offset by two because first index in `r` is an offset, and because lua is 1-base.
-						-- `bucketID` = the index in the lookup table that contains that characters data
-						base = r[1] + (d - 2) * numFieldsPerCharacter
-						bucketID = 1 + floor(base / lookupMaxSize)
-						bucket = lu[bucketID]
-						base = 1 + base - (bucketID - 1) * lookupMaxSize
-						if bucket then
-							if dataType == CONST_PROVIDER_DATA_MYTHICPLUS then
-								return CacheMythicPlusProviderData(dataProviderGroup, name, realm, i, i .. "-" .. bucketID .. "-" .. base, bucket[base], bucket[base + 1], bucket[base + 2])
-							elseif dataType == CONST_PROVIDER_DATA_RAIDING then
+						if dataType == CONST_PROVIDER_DATA_MYTHICPLUS then
+							-- `r[1]` = offset for this realm's characters in lookup table
+							-- `d` = index of found character in realm list. note: this is offset by two because first index in `r` is an offset, and because lua is 1-base.
+							-- `bucketID` = the index in the lookup table that contains that characters data
+							base = 1 + r[1] + (d - 2) * dataProviderGroup.recordSizeInBytes
+							bucketID = 1
+							bucket = lu[bucketID]
+							if bucket then
+								return CacheMythicPlusProviderData(dataProviderGroup, name, realm, i, i .. "-" .. base, bucket, base)
+							end
+						elseif dataType == CONST_PROVIDER_DATA_RAIDING then
+							-- `r[1]` = offset for this realm's characters in lookup table
+							-- `d` = index of found character in realm list. note: this is offset by two because first index in `r` is an offset, and because lua is 1-base.
+							-- `bucketID` = the index in the lookup table that contains that characters data
+							base = r[1] + (d - 2) * numFieldsPerCharacter
+							bucketID = 1 + floor(base / lookupMaxSize)
+							bucket = lu[bucketID]
+							base = 1 + base - (bucketID - 1) * lookupMaxSize
+							if bucket then
 								return CacheRaidingProviderData(dataProviderGroup, name, realm, i, i .. "-" .. bucketID .. "-" .. base, bucket[base], bucket[base + 1])
 							end
 						end
@@ -1154,7 +1240,7 @@ do
 	end
 
 	-- returns score color using item colors
-	function GetScoreColorFromTable(score, tbl, tblSimple)
+	local function GetScoreColorFromTable(score, tbl, tblSimple)
 		if score == 0 or ns.addonConfig.disableScoreColors then
 			return 1, 1, 1
 		end
@@ -1209,14 +1295,7 @@ do
 		local best = { dungeon = nil, level = 0, text = nil }			-- dungeon best
 		local overallBest = { dungeon = profile.maxDungeon, level = profile.dungeons[profile.maxDungeon.index] }	-- overall best
 
-		if addLFD then
-			local hasArgs, dungeonIndex = ...
-			if hasArgs == true then
-				best.dungeon = CONST_DUNGEONS[dungeonIndex] or best.dungeon
-			end
-		end
-
-		if focusDungeon then
+		if addLFD or focusDungeon then
 			local hasArgs, dungeonIndex = ...
 			if hasArgs == true then
 				best.dungeon = CONST_DUNGEONS[dungeonIndex] or best.dungeon
@@ -1317,7 +1396,7 @@ do
 
 			if profile.mplusPrevious.score > profile.mplusCurrent.score then
 				table.insert(lines, {
-					GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, PREVIOUS_SEASON_ID),
+					GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, profile.mplusPrevious.season),
 					GetTooltipScore(profile.mplusPrevious, true),
 					1, 1, 1,
 					GetPreviousScoreColor(profile.mplusPrevious.score)
@@ -1335,7 +1414,7 @@ do
 
 				if profile.mplusPrevious.score > profile.mplusCurrent.score then
 					table.insert(lines, {
-						GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, PREVIOUS_SEASON_ID),
+						GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, profile.mplusPrevious.season),
 						GetTooltipScore(profile.mplusPrevious, true),
 						1, 1, 1,
 						GetPreviousScoreColor(profile.mplusPrevious.score)
@@ -1345,7 +1424,7 @@ do
 				if profile.mplusPrevious.score > profile.mplusCurrent.score then
 					-- headline
 					table.insert(lines, {
-						GenerateScoreSeasonLabel(L.RAIDERIO_MP_BEST_SCORE, PREVIOUS_SEASON_ID),
+						GenerateScoreSeasonLabel(L.RAIDERIO_MP_BEST_SCORE, profile.mplusPrevious.season),
 						GetTooltipScore(profile.mplusPrevious, true),
 						1, 0.85, 0,
 						GetPreviousScoreColor(profile.mplusPrevious.score)
@@ -1381,7 +1460,7 @@ do
 
 				if profile.mplusPrevious.score > profile.mplusCurrent.score then
 					table.insert(lines, {
-						GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, PREVIOUS_SEASON_ID),
+						GenerateScoreSeasonLabel(L.PREVIOUS_SCORE, profile.mplusPrevious.season),
 						GetTooltipScore(profile.mplusPrevious, true),
 						keyColor[1], keyColor[2], keyColor[3],
 						GetPreviousScoreColor(profile.mplusPrevious.score)
@@ -1455,7 +1534,7 @@ do
 							if profile.mplusMainCurrent.score < profile.mplusMainPrevious.score then
 								displayedPreviousSeason = true
 								output[i] = {
-									format(L.MAINS_BEST_SCORE_BEST_SEASON, L["SEASON_LABEL_" .. PREVIOUS_SEASON_ID]),
+									format(L.MAINS_BEST_SCORE_BEST_SEASON, L["SEASON_LABEL_" .. profile.mplusMainPrevious.season]),
 									GetTooltipScore(profile.mplusMainPrevious, true),
 									1, 1, 1,
 									GetPreviousScoreColor(profile.mplusMainPrevious.score)
@@ -1588,52 +1667,78 @@ do
 		return output
 	end
 
+	-- Parse input of "GetPlayerProfile"
+	-- Can be either :
+	-- - name, realm, (faction, (region))
+	-- - name, faction
+	-- - name
+	-- Each of these option above can be followed by either :
+	-- - boolean, arg1, arg2, ...
+	-- - {boolean, arg1, arg2, ...}}
+	local function GetInputPlayerProfile(...)
+		local args = {...}
+		local queryName, queryRealm, queryFaction, queryRegion, passThroughArg
+
+		for i, arg in pairs(args) do
+			local typeArg = type(arg)
+
+			-- if boolean or table, this means that these are the additional arguments
+			if typeArg == "boolean" then
+				passThroughArg = {select(i, ...)}
+				break
+			elseif typeArg == "table" then
+				passThroughArg = arg
+				break
+			end
+
+			if typeArg == "string" then
+				if i == 1 then
+					queryName = arg
+				elseif i == 2 then
+					queryRealm = arg
+				elseif i == 4 then
+					queryRegion = arg
+				end
+			end
+
+			-- Number is always faction
+			if typeArg == "number" then
+				queryFaction = arg
+			end
+		end
+
+		return queryName, queryRealm, queryFaction, queryRegion, type(passThroughArg) == "table" and passThroughArg or {}
+	end
+
 	-- retrieves the complete player profile from all providers
 	function GetPlayerProfile(outputFlag, ...)
 		if not dataProvider then
 			return
 		end
+
 		-- must be a number 0 or larger
 		if type(outputFlag) ~= "number" or outputFlag < 1 then
 			outputFlag = ProfileOutput.DATA
 		end
-		-- read the first args and figure out the request
-		local arg1, arg2, arg3, arg4, arg5 = ...
-		local targ1, targ2, targ3 = type(arg1), type(arg2), type(arg3)
-		local passThroughAt, passThroughArg1, passThroughArg2, passThroughArg1Table
-		local queryName, queryRealm, queryFaction
-		if targ1 == "string" and targ2 == "string" and targ3 == "number" then
-			passThroughAt, passThroughArg1, passThroughArg2 = 4, arg4, arg5
-			queryName, queryRealm, queryFaction = arg1, arg2, arg3
-		elseif targ1 == "string" and arg2 == nil and targ3 == "number" then
-			passThroughAt, passThroughArg1, passThroughArg2 = 4, arg4, arg5
-			queryName, queryRealm, queryFaction = arg1, arg2, arg3
-		elseif targ1 == "string" and targ2 == "string" then
-			passThroughAt, passThroughArg1, passThroughArg2 = 3, arg3, arg4
-			queryName, queryRealm, queryFaction = arg1, arg2, nil
-		elseif targ1 == "string" and targ2 == "number" then
-			passThroughAt, passThroughArg1, passThroughArg2 = 3, arg3, arg4
-			queryName, queryRealm, queryFaction = arg1, nil, arg2
-		else
-			passThroughAt, passThroughArg1, passThroughArg2 = 2, arg2, arg3
-			queryName, queryRealm, queryFaction = arg1, nil, nil
-		end
-		-- is the pass args an object? if so we pass it directly
-		if type(passThroughArg1) == "table" and passThroughArg2 == nil then
-			passThroughArg1Table = passThroughArg1
-		end
+
+		local queryName, queryRealm, queryFaction, queryRegion, passThroughArg = GetInputPlayerProfile(...)
+
 		-- lookup name, realm and potentially unit identifier
 		local name, realm, unit = GetNameAndRealm(queryName, queryRealm)
 		if name and realm then
+
 			-- global flag to avoid caching LFD/instance flagged tooltips everywhere
 			if not ns.enableTooltipCaching and band(outputFlag, ProfileOutput.ADD_LFD) ~= ProfileOutput.ADD_LFD then
 				outputFlag = bor(outputFlag, ProfileOutput.ADD_LFD)
 			end
+
 			-- what modules are we looking into?
 			local reqMythicPlus = band(outputFlag, ProfileOutput.MYTHICPLUS) == ProfileOutput.MYTHICPLUS
 			local reqRaiding = band(outputFlag, ProfileOutput.RAIDING) == ProfileOutput.RAIDING
+
 			-- profile GUID for this particular request
 			local profileGUID = realm .. "-" .. name .. "-" .. outputFlag
+
 			-- return cached table if it exists, and if we are capable of caching this particular tooltip
 			local canCacheProfile = band(outputFlag, ProfileOutput.ADD_LFD) ~= ProfileOutput.ADD_LFD and band(outputFlag, ProfileOutput.FOCUS_DUNGEON) ~= ProfileOutput.FOCUS_DUNGEON and band(outputFlag, ProfileOutput.FOCUS_KEYSTONE) ~= ProfileOutput.FOCUS_KEYSTONE and true or false
 			if canCacheProfile then
@@ -1642,12 +1747,15 @@ do
 					return cachedProfile, true, true, reqMythicPlus and reqRaiding
 				end
 			end
+
 			-- unless the flag to specifically ignore the level check, do make sure we only query max level players
 			if not IsUnitMaxLevel(unit, true) and band(outputFlag, ProfileOutput.INCLUDE_LOWBIES) ~= ProfileOutput.INCLUDE_LOWBIES then
 				return
 			end
+
 			-- establish faction for the lookups
 			local faction = type(queryFaction) == "number" and queryFaction or GetFaction(unit)
+
 			-- retrieve data from the various data types
 			local profile = {}
 			local hasData = false
@@ -1656,7 +1764,7 @@ do
 			for i = 1, #CONST_PROVIDER_DATA_LIST do
 				local dataType = CONST_PROVIDER_DATA_LIST[i]
 				if (dataType == CONST_PROVIDER_DATA_MYTHICPLUS and reqMythicPlus) or (dataType == CONST_PROVIDER_DATA_RAIDING and reqRaiding) then
-					local data = GetProviderData(dataType, name, realm, faction)
+					local data = GetProviderData(dataType, name, realm, faction, queryRegion)
 					if data then
 						validProviders[#validProviders + 1] = data
 					end
@@ -1687,11 +1795,7 @@ do
 					localOutputFlag = bor(localOutputFlag, ProfileOutput.ADD_FOOTER)
 				end
 
-				if passThroughArg1Table then
-					profile[dataType] = ShapeProfileData(dataType, data, localOutputFlag, passThroughArg1Table)
-				else
-					profile[dataType] = ShapeProfileData(dataType, data, localOutputFlag, select(passThroughAt, ...))
-				end
+				profile[dataType] = ShapeProfileData(dataType, data, localOutputFlag, unpack(passThroughArg))
 			end
 
 			-- if we only requested specific mythic+ or raiding data we only return that specific table
@@ -1700,22 +1804,31 @@ do
 			elseif not reqMythicPlus and reqRaiding then
 				profile = profile[CONST_PROVIDER_DATA_RAIDING]
 			end
+
 			-- cache profile before returning, if we are allowed to cache this particular tooltip
 			if canCacheProfile then
 				profileCacheTooltip[profileGUID] = profile
+
+				-- if the unit exists we try to store the fact they don't have a profile
+				if _G.RaiderIO_MissingCharacters and not hasData and UnitExists(unit) then
+					local realmSlug = GetRealmSlug(realm)
+					_G.RaiderIO_MissingCharacters[format("%s-%s-%s", PLAYER_REGION or "", name or "", realmSlug or "")] = true
+				end
 			end
+
 			return profile, hasData, canCacheProfile, reqMythicPlus and reqRaiding
 		end
 	end
 
 	-- checks if the player has a profile in any data provider
-	function HasPlayerProfile(queryName, queryRealm, queryFaction)
+	function HasPlayerProfile(queryName, queryRealm, queryFaction, queryRegion)
 		local name, realm, unit = GetNameAndRealm(queryName, queryRealm)
 		if name and realm then
 			local faction = type(queryFaction) == "number" and queryFaction or GetFaction(unit)
+			local region = (queryRegion ~= nil and queryRegion ~= "" and type(queryRegion) == "string") and queryRegion or nil
+
 			for i = 1, #CONST_PROVIDER_DATA_LIST do
-				local dataType = CONST_PROVIDER_DATA_LIST[i]
-				if GetProviderData(CONST_PROVIDER_DATA_LIST[i], name, realm, faction) then
+				if GetProviderData(CONST_PROVIDER_DATA_LIST[i], name, realm, faction, region) then
 					return true
 				end
 			end
@@ -1726,12 +1839,13 @@ end
 
 -- tooltips
 local ShowTooltip
+local ShowTooltipRegion
 local FlushTooltipCache
 local UpdateTooltips
 do
 	-- tooltip related hooks and storage
 	local tooltipArgs = {}
-	local tooltipHooks = { Wipe = function(tooltip) table.wipe(tooltipArgs[tooltip]) end }
+	local tooltipHooks = { Wipe = function(tooltip) wipe(tooltipArgs[tooltip]) end }
 
 	-- draws the tooltip based on the returned profile data from the data providers
 	local function AppendTooltipLines(tooltip, profile, multipleProviders)
@@ -1774,6 +1888,10 @@ do
 
 	-- shows data on the provided tooltip widget for the particular player
 	function ShowTooltip(tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, arg1, ...)
+		return ShowTooltipRegion(tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, nil, arg1, ...)
+	end
+
+	function ShowTooltipRegion(tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil, arg1, ...)
 		-- setup tooltip hook
 		if not tooltipHooks[tooltip] then
 			tooltipHooks[tooltip] = true
@@ -1783,15 +1901,15 @@ do
 			tooltipArgs[tooltip] = {}
 		end
 		-- get the player profile
-		local profile, hasProfile, isCached, multipleProviders = GetPlayerProfile(outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, arg1, ...)
+		local profile, hasProfile, isCached, multipleProviders = GetPlayerProfile(outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil, arg1, ...)
 		-- sanity check
 		if hasProfile and AppendTooltipLines(tooltip, profile, multipleProviders) then
 			-- store tooltip args for refresh purposes
 			local tooltipCache = tooltipArgs[tooltip]
 			if isCached then
-				tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8] = true, tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, arg1, ...
+				tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8], tooltipCache[9] = true, tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil, arg1, ...
 			else
-				tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8] = false, {tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, arg1, ...}
+				tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8], tooltipCache[9] = false, {tooltip, outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil, arg1, ...}
 			end
 			-- resize tooltip to fit the new contents
 			tooltip:Show()
@@ -1803,7 +1921,7 @@ do
 	-- updates the visible tooltip
 	local function UpdateTooltip(tooltipCache)
 		-- unpack the args
-		local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 = tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8]
+		local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9 = tooltipCache[1], tooltipCache[2], tooltipCache[3], tooltipCache[4], tooltipCache[5], tooltipCache[6], tooltipCache[7], tooltipCache[8], tooltipCache[9]
 		local tooltip
 		if arg1 == true then
 			tooltip = arg2
@@ -1872,9 +1990,9 @@ do
 		end
 		-- finalize by calling the show tooltip API with the same arguments as earlier
 		if arg1 == true then
-			ShowTooltip(arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+			ShowTooltipRegion(arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
 		elseif arg1 == false then
-			ShowTooltip(unpack(arg2))
+			ShowTooltipRegion(unpack(arg2))
 		end
 	end
 
@@ -1888,8 +2006,8 @@ do
 	end
 
 	function FlushTooltipCache()
-		table.wipe(profileCache)
-		table.wipe(profileCacheTooltip)
+		wipe(profileCache)
+		wipe(profileCacheTooltip)
 	end
 end
 
@@ -1928,6 +2046,9 @@ do
 			ns.addon:RegisterEvent("GROUP_ROSTER_UPDATE")
 			ns.addon:RegisterEvent("ZONE_CHANGED")
 			ns.addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+
+			-- purge missing players cache at login
+			_G.RaiderIO_MissingCharacters = wipe(_G.RaiderIO_MissingCharacters or {})
 		end
 
 		-- apply hooks to interface elements
@@ -1963,6 +2084,9 @@ do
 		ns.PLAYER_FACTION = PLAYER_FACTION
 		ns.PLAYER_REGION = PLAYER_REGION
 
+		-- Now that the config is loaded, update the dungeon's abbreviation locale
+		UpdateConstDungeon()
+
 		-- we can now create the empty table that contains all providers and provider groups
 		dataProvider = {}
 
@@ -1976,23 +2100,29 @@ do
 			local data = dataProviderQueue[i]
 			local dataType = data.data
 
-			-- is this provider relevant?
-			if data.region == PLAYER_REGION then
-				local dataProviderGroup = dataProvider[dataType]
+			-- is this provider relevant? (when in debug mode, provider for region different than yours are authorized)
+			if data.region == PLAYER_REGION or ns.addonConfig.debugMode == true then
+				if dataProvider[data.region] == nil then
+					dataProvider[data.region] = {}
+				end
 
-				-- is the provider up to date?
-				local isOutdated, outdatedHours, outdatedDays = IsProviderOutdated(data)
-				IS_DB_OUTDATED[dataType][data.faction] = isOutdated
-				OUTDATED_HOURS[dataType][data.faction] = outdatedHours
-				OUTDATED_DAYS[dataType][data.faction] = outdatedDays
+				local dataProviderGroup = dataProvider[data.region][dataType]
 
-				-- update the outdated counter with the largest count
-				if isOutdated then
-					isAnyProviderOutdated = isAnyProviderOutdated and max(isAnyProviderOutdated, outdatedDays) or outdatedDays
+				if data.region == PLAYER_REGION then
+					-- is the provider up to date?
+					local isOutdated, outdatedHours, outdatedDays = IsProviderOutdated(data)
+					IS_DB_OUTDATED[dataType][data.faction] = isOutdated
+					OUTDATED_HOURS[dataType][data.faction] = outdatedHours
+					OUTDATED_DAYS[dataType][data.faction] = outdatedDays
+
+					-- update the outdated counter with the largest count
+					if isOutdated then
+						isAnyProviderOutdated = isAnyProviderOutdated and max(isAnyProviderOutdated, outdatedDays) or outdatedDays
+					end
 				end
 
 				-- Check if our faction is loaded
-				if PLAYER_FACTION == data.faction then
+				if PLAYER_REGION == data.region and PLAYER_FACTION == data.faction then
 					neededProviderLoaded = neededProviderLoaded + 1
 				end
 
@@ -2025,14 +2155,13 @@ do
 					end
 				else
 					dataProviderGroup = data
-					dataProvider[dataType] = dataProviderGroup
+					dataProvider[data.region][dataType] = dataProviderGroup
 				end
-
 			else
 				-- disable the provider addon from loading in the future
 				DisableAddOn(data.name)
 				-- wipe the table to free up memory
-				table.wipe(data)
+				wipe(data)
 			end
 
 			-- remove reference from the queue
@@ -2059,6 +2188,10 @@ do
 
 		-- init the profiler now that the addon is fully loaded
 		ns.PROFILE_UI.Init()
+
+		if ns.addonConfig.debugMode == true then
+			DEFAULT_CHAT_FRAME:AddMessage(format(L.WARNING_DEBUG_MODE_ENABLE, addonName), 1, 1, 0)
+		end
 	end
 
 	-- we enter the world (after a loading screen, int/out of instances)
@@ -2133,7 +2266,7 @@ do
 	local function CopyURLForNameAndRealm(...)
 		local name, realm = GetNameAndRealm(...)
 		local realmSlug = GetRealmSlug(realm)
-		local url = format("https://raider.io/characters/%s/%s/%s", PLAYER_REGION, realmSlug, name)
+		local url = format("https://raider.io/characters/%s/%s/%s?utm_source=addon", PLAYER_REGION, realmSlug, name)
 		if IsModifiedClick("CHATLINK") then
 			local editBox = ChatFrame_OpenChat(url, DEFAULT_CHAT_FRAME)
 			editBox:HighlightText()
@@ -2182,7 +2315,7 @@ do
 			end
 			-- TODO: summoning portals don't always trigger OnTooltipSetUnit properly, leaving the unit tooltip on the portal object
 			local _, unit = self:GetUnit()
-			ShowTooltip(self, TooltipProfileOutput.PADDING(), unit, nil, GetFaction(unit))
+			ShowTooltipRegion(self, TooltipProfileOutput.PADDING(), unit, nil, GetFaction(unit))
 		end
 		GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 		return 1
@@ -2216,8 +2349,8 @@ do
 						end
 						local _, activityID, _, title, description = C_LFGList.GetActiveEntryInfo()
 						local keystoneLevel = GetKeystoneLevel(title) or GetKeystoneLevel(description) or 0
-						ShowTooltip(GameTooltip, bor(TooltipProfileOutput.PADDING(), ProfileOutput.ADD_LFD), fullName, nil, PLAYER_FACTION, true, LFD_ACTIVITYID_TO_DUNGEONID[activityID], keystoneLevel)
-						ns.PROFILE_UI.ShowProfile(fullName, nil, PLAYER_FACTION, GameTooltip, nil, activityID, keystoneLevel)
+						ShowTooltipRegion(GameTooltip, bor(TooltipProfileOutput.PADDING(), ProfileOutput.ADD_LFD), fullName, nil, PLAYER_FACTION, nil, true, LFD_ACTIVITYID_TO_DUNGEONID[activityID], keystoneLevel)
+						ns.PROFILE_UI.ShowProfile(fullName, nil, PLAYER_FACTION, PLAYER_REGION, GameTooltip, nil, activityID, keystoneLevel)
 					end
 				end
 			end
@@ -2241,7 +2374,7 @@ do
 					local keystoneLevel = 0 -- GetKeystoneLevel(title) or GetKeystoneLevel(description) or 0
 					-- Update game tooltip with player info
 					ShowTooltip(tooltip, bor(TooltipProfileOutput.PADDING(), ProfileOutput.ADD_LFD), leaderName, nil, PLAYER_FACTION, true, LFD_ACTIVITYID_TO_DUNGEONID[activityID], keystoneLevel)
-					ns.PROFILE_UI.ShowProfile(leaderName, nil, PLAYER_FACTION, tooltip, nil, activityID, keystoneLevel)
+					ns.PROFILE_UI.ShowProfile(leaderName, nil, PLAYER_FACTION, nil, tooltip, nil, activityID, keystoneLevel)
 				end
 			end
 			hooksecurefunc("LFGListUtil_SetSearchEntryTooltip", SetSearchEntryTooltip)
@@ -2268,14 +2401,14 @@ do
 			if not ns.addonConfig.enableWhoTooltips then
 				return
 			end
-			if self.whoIndex then
-				local name, guild, level, race, class, zone, classFileName = GetWhoInfo(self.whoIndex)
-				if name and level and level >= MAX_LEVEL then
+			if self.index then
+                 local info = C_FriendList.GetWhoInfo(self.index)
+                 if info and info.fullName and info.level and info.level >= MAX_LEVEL then
 					local hasOwner = GameTooltip:GetOwner()
 					if not hasOwner then
 						GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 0, 0)
 					end
-					if not ShowTooltip(GameTooltip, bor(TooltipProfileOutput.DEFAULT(), hasOwner and ProfileOutput.ADD_PADDING or 0), name, nil, PLAYER_FACTION) and not hasOwner then
+					if not ShowTooltip(GameTooltip, bor(TooltipProfileOutput.DEFAULT(), hasOwner and ProfileOutput.ADD_PADDING or 0), info.fullName, nil, PLAYER_FACTION) and not hasOwner then
 						GameTooltip:Hide()
 					end
 				end
@@ -2286,10 +2419,9 @@ do
 				GameTooltip:Hide()
 			end
 		end
-		for i = 1, 17 do
-			local b = _G["WhoFrameButton" .. i]
-			b:HookScript("OnEnter", OnEnter)
-			b:HookScript("OnLeave", OnLeave)
+		for _, button in pairs(WhoListScrollFrame.buttons) do
+			button:HookScript("OnEnter", OnEnter)
+			button:HookScript("OnLeave", OnLeave)
 		end
 		return 1
 	end
@@ -2303,7 +2435,9 @@ do
 			local fullName, faction, level
 			if self.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 				local bnetIDAccount = BNGetFriendInfo(self.id)
-				fullName, faction, level = GetNameAndRealmForBNetFriend(bnetIDAccount)
+				if bnetIDAccount then
+					fullName, faction, level = GetNameAndRealmForBNetFriend(bnetIDAccount)
+				end
 			elseif self.buttonType == FRIENDS_BUTTON_TYPE_WOW then
 				fullName, level = GetFriendInfo(self.id)
 				faction = PLAYER_FACTION
@@ -2323,12 +2457,12 @@ do
 			end
 			GameTooltip:Hide()
 		end
-		local buttons = FriendsFrameFriendsScrollFrame.buttons
+		local buttons = FriendsListFrameScrollFrame.buttons
 		for i = 1, #buttons do
 			local button = buttons[i]
 			button:HookScript("OnEnter", OnEnter)
 		end
-		hooksecurefunc("FriendsFrameTooltip_Show", OnEnter)
+		--hooksecurefunc("FriendsFrameTooltip_Show", OnEnter)
 		hooksecurefunc(FriendsTooltip, "Hide", FriendTooltip_Hide)
 		return 1
 	end
@@ -2388,10 +2522,29 @@ do
 			local function OnLeave(self)
 				GameTooltip:Hide()
 			end
-			for _, b in pairs(CommunitiesFrame.MemberList.ListScrollFrame.buttons) do
-				b:HookScript("OnEnter", OnEnter)
-				b:HookScript("OnLeave", OnLeave)
+			local hooked = {}
+			local completed
+			local function HookButtons()
+				if completed then
+					return
+				end
+				local buttons = _G.CommunitiesFrame.MemberList.ListScrollFrame.buttons
+				if not buttons then
+					return
+				end
+				for _, b in pairs(buttons) do
+					if not hooked[b] then
+						hooked[b] = true
+						b:HookScript("OnEnter", OnEnter)
+						b:HookScript("OnLeave", OnLeave)
+					end
+				end
+				if next(hooked) then
+					completed = true -- one pass seems to create all the buttons
+				end
 			end
+			HookButtons()
+			hooksecurefunc(_G.CommunitiesFrame.MemberList, "RefreshLayout", HookButtons)
 			return 1
 		end
 	end
@@ -2545,6 +2698,7 @@ do
 		do
 			local function CopyOnClick()
 				ShowCopyURLPopup(custom.kind, custom.query, custom.bnetChar, custom.bnetFaction)
+				CloseDropDownMenus()
 			end
 			local function UpdateCopyButton()
 				local copy = custom.copy
@@ -2554,12 +2708,6 @@ do
 				text:Show()
 				copy:SetScript("OnClick", CopyOnClick)
 				copy:Show()
-			end
-			local function CustomOnEnter(self) -- UIDropDownMenuTemplates.xml#248
-				UIDropDownMenu_StopCounting(self:GetParent()) -- TODO: this might taint and break like before, but let's try it and observe
-			end
-			local function CustomOnLeave(self) -- UIDropDownMenuTemplates.xml#251
-				UIDropDownMenu_StartCounting(self:GetParent()) -- TODO: this might taint and break like before, but let's try it and observe
 			end
 			local function CustomOnShow(self) -- UIDropDownMenuTemplates.xml#257
 				local p = self:GetParent() or self
@@ -2576,11 +2724,9 @@ do
 			end
 			local function CustomButtonOnEnter(self) -- UIDropDownMenuTemplates.xml#155
 				_G[self:GetName() .. "Highlight"]:Show()
-				CustomOnEnter(self:GetParent())
 			end
 			local function CustomButtonOnLeave(self) -- UIDropDownMenuTemplates.xml#178
 				_G[self:GetName() .. "Highlight"]:Hide()
-				CustomOnLeave(self:GetParent())
 			end
 			custom = CreateFrame("Button", addonName .. "_CustomDropDownList", UIParent, "UIDropDownListTemplate")
 			custom:Hide()
@@ -2592,8 +2738,6 @@ do
 			-- cleanup and modify the default template
 			do
 				custom:SetScript("OnClick", nil)
-				custom:SetScript("OnEnter", CustomOnEnter)
-				custom:SetScript("OnLeave", CustomOnLeave)
 				custom:SetScript("OnUpdate", nil)
 				custom:SetScript("OnShow", CustomOnShow)
 				custom:SetScript("OnHide", nil)
@@ -2682,6 +2826,19 @@ do
 		end
 		DropDownList1:HookScript("OnShow", OnShow)
 		DropDownList1:HookScript("OnHide", OnHide)
+		
+		-- https://github.com/Gethe/wow-ui-source/commit/356d028f9d245f6e75dc8a806deb3c38aa0aa77f#diff-4c5ca6424de48e2c9b959163c421d767R1145
+		local originalFunction = UIDropDownMenu_HandleGlobalMouseEvent
+		UIDropDownMenu_HandleGlobalMouseEvent = function (button, event)
+			if event == "GLOBAL_MOUSE_DOWN" and (button == "LeftButton" or button == "RightButton") then
+				if custom:IsShown() and custom:IsMouseOver() then
+					return
+				end
+			end
+
+			originalFunction(button, event)
+		end
+		
 		return 1
 	end
 
@@ -2826,7 +2983,9 @@ do
 	ns.GetPlayerProfile = GetPlayerProfile
 	ns.HasPlayerProfile = HasPlayerProfile
 	ns.ShowTooltip = ShowTooltip
+	ns.ShowTooltipRegion = ShowTooltipRegion
 	ns.FlushTooltipCache = FlushTooltipCache
+	ns.UpdateConstDungeon = UpdateConstDungeon
 end
 
 -- mirror certain data exposed in the public API to avoid external users changing our internal data
@@ -2911,18 +3070,20 @@ _G.RaiderIO = {
 	-- GetPlayerProfile
 	--   A function that returns a table with different data types, based on the type of query specified. Use the explanations above to build the query you need.
 	--
-	-- RaiderIO.HasPlayerProfile(unitOrNameOrNameRealm, realmOrNil, factionOrNil) => true | false
+	-- RaiderIO.HasPlayerProfile(unitOrNameOrNameRealm, realmOrNil, factionOrNil, [regionOrNil]) => true | false
 	--   unitOrNameOrNameRealm = "player", "target", "raid1", "Joe" or "Joe-ArgentDawn"
 	--   realmOrNil            = "ArgentDawn" or nil. Can be nil if realm is part of unitOrNameOrNameRealm, or if it's the same realm as the currently logged in character
-	--   factionOrNil          = 1 for Aliance, 2 for Horde, or nil for automatic (looks up both factions, first found is used)
+	--   factionOrNil          = 1 for Alliance, 2 for Horde, or nil for automatic (looks up both factions, first found is used)
+	--   regionOrNil           = "eu", "us", "kr", "tw", or nil for automatic (default to current region) - only useful when debugMode is enable
 	--
-	-- RaiderIO.GetPlayerProfile(outputFlag, unitOrNameOrNameRealm, realmOrNil, factionOrNil, ...) => nil | profile, hasData, isCached, hasDataFromMultipleProviders
+	-- RaiderIO.GetPlayerProfile(outputFlag, unitOrNameOrNameRealm, realmOrNil, factionOrNil, regionOrNil, ...) => nil | profile, hasData, isCached, hasDataFromMultipleProviders
 	--   outputFlag  = a number generated by one of the functions in TooltipProfileOutput, or a bit.bor you create using ProfileOutput as described above.
 	--
 	-- RaiderIO.GetPlayerProfile(0, "target")
 	-- RaiderIO.GetPlayerProfile(0, "Joe")
 	-- RaiderIO.GetPlayerProfile(0, "Joe-ArgentDawn")
 	-- RaiderIO.GetPlayerProfile(0, "Joe", "ArgentDawn")
+	-- RaiderIO.GetPlayerProfile(0, "Joe", "ArgentDawn", nil, "eu")
 	--
 	ProfileOutput = EXTERNAL_ProfileOutput,
 	TooltipProfileOutput = EXTERNAL_TooltipProfileOutput,

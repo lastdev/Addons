@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local L = WeakAuras.L;
 
 local operator_types = WeakAuras.operator_types;
@@ -193,9 +195,6 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
         trigger.autoclone = v;
         if(v == true) then
           WeakAuras.ShowCloneDialog(data);
-          WeakAuras.UpdateCloneConfig(data);
-        else
-          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,
@@ -242,7 +241,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.name = v;
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -368,7 +367,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.name, trigger.spellId = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -404,7 +403,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[1], trigger.spellIds[1] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -447,7 +446,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[2], trigger.spellIds[2] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -490,7 +489,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[3], trigger.spellIds[3] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -532,7 +531,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[4], trigger.spellIds[4] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -575,7 +574,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[5], trigger.spellIds[5] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -618,7 +617,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[6], trigger.spellIds[6] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -661,7 +660,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[7], trigger.spellIds[7] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -704,7 +703,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[8], trigger.spellIds[8] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -747,7 +746,7 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.names[9], trigger.spellIds[9] = WeakAuras.spellCache.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end,
@@ -779,9 +778,6 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
         trigger.use_specific_unit = (v == "member");
         if(v == "multi") then
           WeakAuras.ShowCloneDialog(data);
-          WeakAuras.UpdateCloneConfig(data);
-        else
-          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,
@@ -845,7 +841,6 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
           trigger.group_count = "";
         end
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.UpdateDisplayButton(data);
       end
@@ -883,9 +878,6 @@ local function GetBuffTriggerOptions(data, optionTriggerChoices)
         trigger.groupclone = v;
         if(v == true) then
           WeakAuras.ShowCloneDialog(data);
-          WeakAuras.UpdateCloneConfig(data);
-        else
-          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,

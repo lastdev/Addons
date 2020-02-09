@@ -1,4 +1,4 @@
--- ---------------------------------
+﻿-- ---------------------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -15,10 +15,28 @@
 -- ADDON GLOBALS AND LOCALS
 -- ---------------------------------
 
-TELLMEWHEN_VERSION = "8.5.4"
+local wow_classic = WOW_PROJECT_ID and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+if wow_classic then
+	StaticPopupDialogs["TMW_PROJECT_MISMATCH"] = {
+		-- This is not localizable, because AceLocale might not have loaded
+		-- (this is why we don't bother to load AceLocale until after these checks).
+		text = "You've installed TellMeWhen for retail WoW, but this is Classic WoW. Please double-check which version of TMW you downloaded.", 
+		button1 = EXIT_GAME,
+		button2 = CANCEL,
+		OnAccept = ForceQuit,
+		timeout = 0,
+		showAlert = true,
+		whileDead = true,
+		preferredIndex = 3, -- http://forums.wowace.com/showthread.php?p=320956
+	}
+	StaticPopup_Show("TMW_PROJECT_MISMATCH")
+	return
+end
+
+TELLMEWHEN_VERSION = "8.7.3"
 
 TELLMEWHEN_VERSION_MINOR = ""
-local projectVersion = "8.5.4" -- comes out like "6.2.2-21-g4e91cee"
+local projectVersion = "8.7.3" -- comes out like "6.2.2-21-g4e91cee"
 if projectVersion:find("project%-version") then
 	TELLMEWHEN_VERSION_MINOR = "dev"
 elseif strmatch(projectVersion, "%-%d+%-") then
@@ -26,11 +44,11 @@ elseif strmatch(projectVersion, "%-%d+%-") then
 end
 
 TELLMEWHEN_VERSION_FULL = TELLMEWHEN_VERSION .. " " .. TELLMEWHEN_VERSION_MINOR
-TELLMEWHEN_VERSIONNUMBER = 85403 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
+TELLMEWHEN_VERSIONNUMBER = 87302 -- NEVER DECREASE THIS NUMBER (duh?).  IT IS ALSO ONLY INTERNAL (for versioning of)
 
-TELLMEWHEN_FORCECHANGELOG = 82105 -- if the user hasn't seen the changelog until at least this version, show it to them.
+TELLMEWHEN_FORCECHANGELOG = 86005 -- if the user hasn't seen the changelog until at least this version, show it to them.
 
-if TELLMEWHEN_VERSIONNUMBER > 86000 or TELLMEWHEN_VERSIONNUMBER < 85000 then
+if TELLMEWHEN_VERSIONNUMBER > 88000 or TELLMEWHEN_VERSIONNUMBER < 87000 then
 	-- safety check because i accidentally made the version number 414069 once
 	return error("TELLMEWHEN: THE VERSION NUMBER IS SCREWED UP OR MAYBE THE SAFETY LIMITS ARE WRONG")
 end
@@ -41,11 +59,39 @@ end
 
 TELLMEWHEN_MAXROWS = 20
 
--- Put required libs here: (If they fail to load, they will make all of TMW fail to load)
-local AceDB = LibStub("AceDB-3.0")
+-- Put required libs here: (If they fail to load, all of TMW should fail to load)
+local AceDB = LibStub("AceDB-3.0", true)
+local LibOO = LibStub("LibOO-1.0", true)
+local LSM = LibStub("LibSharedMedia-3.0", true)
+
+if not AceDB or not LibOO or not LSM then
+	-- This is only a small handful of libs that we're checking, 
+	-- but should cover the bulk case of nolib installs 
+	-- (especially LibOO, which is basically only used by TMW)
+
+	StaticPopupDialogs["TMW_MISSINGLIB"] = {
+		-- This is not localizable, because AceLocale might not have loaded
+		-- (this is why we don't bother to load AceLocale until after these checks).
+		text = [[You're missing required libraries for TellMeWhen.
+
+Normally, these come bundled with TMW, but you may have installed a nolib version of TMW by accident.
+
+This can happen especially if you use the Twitch app - ensure "Install Libraries Separately" isn't check for TellMeWhen in the Twitch app.]], 
+		button1 = EXIT_GAME,
+		button2 = CANCEL,
+		OnAccept = ForceQuit,
+		timeout = 0,
+		showAlert = true,
+		whileDead = true,
+		preferredIndex = 3, -- http://forums.wowace.com/showthread.php?p=320956
+	}
+	StaticPopup_Show("TMW_MISSINGLIB")
+
+	-- Stop trying to load TMW.
+	return
+end
+
 local L = LibStub("AceLocale-3.0"):GetLocale("TellMeWhen", true)
-local LibOO = LibStub("LibOO-1.0")
-local LSM = LibStub("LibSharedMedia-3.0")
 
 LSM:Register("font", "Open Sans Regular", "Interface/Addons/TellMeWhen/Fonts/OpenSans-Regular.ttf")
 LSM:Register("font", "Vera Mono", "Interface/Addons/TellMeWhen/Fonts/VeraMono.ttf")
@@ -1074,9 +1120,7 @@ function TMW:PLAYER_LOGIN()
 		-- GLOBALS: StaticPopupDialogs, StaticPopup_Show, EXIT_GAME, CANCEL, ForceQuit
 		StaticPopupDialogs["TMW_RESTARTNEEDED"] = {
 			text = L["ERROR_MISSINGFILE"], 
-			button1 = EXIT_GAME,
-			button2 = CANCEL,
-			OnAccept = ForceQuit,
+			button1 = OKAY,
 			timeout = 0,
 			showAlert = true,
 			whileDead = true,
@@ -1086,18 +1130,16 @@ function TMW:PLAYER_LOGIN()
 		return
 
 	-- if the file is NOT required for gross functionality
-	elseif not TMW.DOGTAG then
+	elseif not LibStub("DRList-1.0", true) then
 		StaticPopupDialogs["TMW_RESTARTNEEDED"] = {
-			text = L["ERROR_MISSINGFILE_NOREQ"], 
-			button1 = EXIT_GAME,
-			button2 = CANCEL,
-			OnAccept = ForceQuit,
+			text = L["ERROR_MISSINGFILE_NOREQ"],
+			button1 = OKAY,
 			timeout = 0,
 			showAlert = true,
 			whileDead = true,
 			preferredIndex = 3, -- http://forums.wowace.com/showthread.php?p=320956
 		}
-		StaticPopup_Show("TMW_RESTARTNEEDED", TELLMEWHEN_VERSION_FULL, "TellMeWhen/Lib/LibBabble-CreatureType-3.0/LibBabble-CreatureType-3.0.lua") -- arg3 could also be L["ERROR_MISSINGFILE_REQFILE"]
+		StaticPopup_Show("TMW_RESTARTNEEDED", TELLMEWHEN_VERSION_FULL, "TellMeWhen/Lib/DRList-1.0/DRList-1.0.lua") -- arg3 could also be L["ERROR_MISSINGFILE_REQFILE"]
 	end
 	
 
@@ -1153,7 +1195,11 @@ function TMW:PLAYER_LOGIN()
 	TMW.Initialized = true
 	
 	TMW:SetScript("OnUpdate", TMW.OnUpdate)
-	TMW:Update()
+
+	-- Pass true to update via coroutine to try to fix 
+	-- https://wow.curseforge.com/projects/tellmewhen/issues/1643
+	-- It appears there can be "script ran too long" errors when logging in.
+	TMW:Update(true)
 end
 TMW:RegisterEvent("PLAYER_LOGIN")
 
@@ -2502,6 +2548,67 @@ end
 -- Update Functions
 ---------------------------------
 
+local cpuProfileTimeStack = {}
+function TMW:CpuProfilePush()
+	cpuProfileTimeStack[#cpuProfileTimeStack + 1] = debugprofilestop()
+end
+
+function TMW:CpuProfilePop()
+	local count = #cpuProfileTimeStack
+	if count == 0 then 
+		TMW:Debug("Popped CPU profile when it was empty");
+		return 0
+	end
+	local elapsed = debugprofilestop() - cpuProfileTimeStack[count]
+	cpuProfileTimeStack[count] = nil
+	if count > 1 then
+		-- If the stack had other items,
+		-- add the time that we just measured
+		-- to all the other start times so that
+		-- this time doesn't get counted more than once in any aggregates
+		for i = 1, count - 1 do
+			cpuProfileTimeStack[i] = cpuProfileTimeStack[i] + elapsed
+		end
+	end
+	return elapsed
+end
+
+function TMW:CpuProfileReset()
+	wipe(cpuProfileTimeStack)
+
+	for group in TMW:InGroups() do
+		for icon in group:InIcons() do
+			if TMW.profilingEnabled then
+				icon.cpu_startTime = TMW.time
+				icon.cpu_updateCount = 0
+				icon.cpu_updatePeak = 0
+				icon.cpu_updateTotal = 0
+				icon.cpu_eventCount = 0
+				icon.cpu_eventPeak = 0
+				icon.cpu_eventTotal = 0
+				icon.cpu_cndtCount = 0
+				icon.cpu_cndtTotal = 0
+			else
+				-- icon.cpu_startTime will serve as the flag by which we actually
+				-- determine whether to perform measurements or not.
+				icon.cpu_startTime = nil
+			end
+		end
+	end
+end
+
+--- Update variables that are used globally thoughout TMW.
+-- This includes TMW.time and TMW.GCD.
+-- Call this manually when script execution starts in a context
+-- that needs these variables but isn't originating from TMW:OnUpdate().
+function TMW:UpdateGlobals()
+	time = GetTime()
+	TMW.time = time
+
+	_, GCD=GetSpellCooldown(GCDSpell)
+	TMW.GCD = GCD	
+end
+
 do	-- TMW:OnUpdate()
 
 	local updateInProgress, shouldSafeUpdate
@@ -2514,7 +2621,13 @@ do	-- TMW:OnUpdate()
 
 	TMW:RegisterEvent("UNIT_FLAGS", function(event, unit)
 		if unit == "player" then
+			local old = inCombatLockdown
 			inCombatLockdown = InCombatLockdown()
+			if not old and inCombatLockdown then
+				TMW:Fire("TMW_COMBAT_LOCKDOWN_STARTED")
+			elseif old and not inCombatLockdown then
+				TMW:Fire("TMW_COMBAT_LOCKDOWN_ENDED")
+			end
 		end
 	end)
 
@@ -2529,8 +2642,7 @@ do	-- TMW:OnUpdate()
 	-- This is the main update engine of TMW.
 	local function OnUpdate()
 		while true do
-			time = GetTime()
-			TMW.time = time
+			TMW:UpdateGlobals()
 
 			if updateInProgress then
 				-- If the previous update cycle didn't finish (updateInProgress is still true)
@@ -2547,8 +2659,7 @@ do	-- TMW:OnUpdate()
 			
 			if LastUpdate <= time - UPD_INTV then
 				LastUpdate = time
-				_, GCD=GetSpellCooldown(GCDSpell)
-				TMW.GCD = GCD
+				wipe(cpuProfileTimeStack)
 
 				TMW:Fire("TMW_ONUPDATE_TIMECONSTRAINED_PRE", time, Locked)
 				
@@ -2699,6 +2810,7 @@ do -- TMW:UpdateViaCoroutine()
 
 	local function CheckCoroutineTermination()
 		if UpdateCoroutine and debugprofilestop() - CoroutineStartTime > COROUTINE_MAX_TIME_PER_FRAME then
+			TMW:Debug("Update() yielded early at %s", time)
 			coroutine.yield(UpdateCoroutine)
 		end
 	end
@@ -2783,8 +2895,16 @@ do -- TMW:UpdateViaCoroutine()
 end
 
 -- TMW:Update() sets up all groups, icons, and anything else.
-function TMW:Update()
-	if InCombatLockdown() then
+function TMW:Update(forceCoroutine)
+
+	-- We check arena (and I threw BGs in as well)
+	-- in hopes of resolving https://wow.curseforge.com/projects/tellmewhen/issues/1572 -
+	-- a "script ran too long" error that appears to be happening outside of combat,
+	-- potentially when loading into an arena map.
+	local _, z = IsInInstance()
+	local needsCoroutineUpdate = forceCoroutine or InCombatLockdown() or z == "arena" or z == "pvp"
+
+	if needsCoroutineUpdate then
 		TMW:UpdateViaCoroutine()
 	else
 		TMW:UpdateNormally()
@@ -2853,6 +2973,8 @@ function TMW:OnProfile(event, arg2, arg3)
 		end
 	end
 
+	TMW:Fire("TMW_ON_PROFILE_PRE", event, arg2, arg3)
+
 	TMW:Update()
 	
 	if event == "OnProfileChanged" then
@@ -2914,6 +3036,7 @@ function TMW:LockToggle()
 
 	PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 	TMW:Update()
+	TMW:CpuProfileReset()
 end
 
 function TMW:SlashCommand(str)
@@ -2996,7 +3119,26 @@ function TMW:SlashCommand(str)
 		else
 			TMW:Print("Bad syntax. Usage: /tmw [enable||disable||toggle] [profile||global] groupID iconID")
 		end
+	elseif cmd == "cpu" then
+		if arg2 == "reset" then
+			TMW:CpuProfileReset()
 
+		else
+			if TMW:CheckCanDoLockedAction() then
+				TMW:LoadOptions()
+
+				if TMW:AssertOptionsInitialized() then
+					return
+				end
+
+				if not TMW.profilingEnabled then
+					TMW.profilingEnabled = true
+					TMW:Update()
+					TMW:CpuProfileReset()
+				end
+				TellMeWhen_CpuProfileDialog:Show()
+			end
+		end
 	else
 		TMW:LockToggle()
 	end
@@ -3100,7 +3242,7 @@ function TMW:LoadOptions(recursed)
 		return;
 	end
 
-	TMW:Print(L["LOADINGOPT"])
+	TMW:Debug(L["LOADINGOPT"])
 
 	local loaded, reason = LoadAddOn("TellMeWhen_Options")
 	if not loaded then

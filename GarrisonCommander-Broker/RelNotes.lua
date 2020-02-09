@@ -7,8 +7,14 @@ self:HF_Paragraph("Description")
 self:HF_Pre([[
 Data broker for Garrison stuff.
 ]])
+self:RelNotes(3,2,1,[[
+Fix: No longer gives error when clicking on minimap report icon while in combat
+]])
+self:RelNotes(3,1,1,[[
+Fix: Harvesting node should now be detected again
+]])
 self:RelNotes(3,0,0,[[
-Fix: Harvesting detection works again, thanks to twitchdefresaemoved lua error GetAbsoluteMonth
+Fix: Harvesting detection works again, thanks to twitchdefresa
 ]])
 self:RelNotes(2,18,8,[[
 Fix: Removed lua error GetAbsoluteMonth

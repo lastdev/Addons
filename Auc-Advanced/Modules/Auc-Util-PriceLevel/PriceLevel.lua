@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 8.1.6220 (SwimmingSeadragon)
-	Revision: $Id: PriceLevel.lua 6220 2019-03-04 00:20:18Z none $
+	Version: 8.2.6489 (SwimmingSeadragon)
+	Revision: $Id: PriceLevel.lua 6489 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -310,18 +310,33 @@ function lib.CalcLevel(link, quantity, bidPrice, buyPrice, itemWorth, serverKey)
 
 	local r, g, b, lvl
 
-	r,g,b,lvl = 0.2,0.6,1.0, "blue"
-	if priceLevel > get("util.pricelevel.red") then
-		r,g,b,lvl = 1.0,0.0,0.0, "red"
-	elseif priceLevel > get("util.pricelevel.orange") then
-		r,g,b,lvl = 1.0,0.6,0.1, "orange"
-	elseif priceLevel > get("util.pricelevel.yellow") then
-		r,g,b,lvl = 1.0,1.0,0.0, "yellow"
-	elseif priceLevel > get("util.pricelevel.green") then
-		r,g,b,lvl = 0.1,1.0,0.1, "green"
-	end
+    local colorBlind = GetCVar("colorblindMode") == "1"
+
+    if colorBlind then
+        r,g,b,lvl     = 0.2,0.6,1.0, "blue"
+        if priceLevel > get("util.pricelevel.red") then
+            r,g,b,lvl = 1.0,0.2,0.4, "red"
+        elseif priceLevel > get("util.pricelevel.orange") then
+            r,g,b,lvl = 1.0,0.6,0.2, "orange"
+        elseif priceLevel > get("util.pricelevel.yellow") then
+            r,g,b,lvl = 1.0,1.0,0.2, "yellow"
+        elseif priceLevel > get("util.pricelevel.green") then
+            r,g,b,lvl = 0.2,1.0,0.3, "green"
+        end
+    else
+        r,g,b,lvl = 0.2,0.6,1.0, "blue"
+        if priceLevel > get("util.pricelevel.red") then
+            r,g,b,lvl = 1.0,0.0,0.0, "red"
+        elseif priceLevel > get("util.pricelevel.orange") then
+            r,g,b,lvl = 1.0,0.6,0.1, "orange"
+        elseif priceLevel > get("util.pricelevel.yellow") then
+            r,g,b,lvl = 1.0,1.0,0.0, "yellow"
+        elseif priceLevel > get("util.pricelevel.green") then
+            r,g,b,lvl = 0.1,1.0,0.1, "green"
+        end
+    end
 
 	return priceLevel, perItem, r,g,b, lvl, itemWorth
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 6220 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 6489 $")

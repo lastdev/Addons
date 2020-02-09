@@ -874,7 +874,7 @@ XPERL_CONF_ADDON_RAIDMONITOR_DESC	= "Activar el accesorio "..XPerl_ShortProductN
 XPERL_CONF_ADDON_ARCANE			= "Barra arcana"
 XPERL_CONF_ADDON_ARCANE_DESC		= "Activar barras arcanas de hechizos "..XPerl_ShortProductName..". Es necesario si quieres mostrar las barras de hechizo de objetivos o miembros de grupo. Tambi�n muestra las de las mascotas y jugadores"
 XPERL_CONF_ADDON_GRIMR					= "Grim Reaper"
-XPERL_CONF_ADDON_GRIMR_DESC				= "Enable the Grim Reaper to track recent combat events for all raid or party units. Tooltip extends to show recent dmg in/out for selected unit. Useful to determine cause of death; crushings, crit streak etc."
+XPERL_CONF_ADDON_GRIMR_DESC				= "Enable the Grim Reaper to track recent combat events for all raid or party units. Tooltip extends to show recent dmg in/out for selected unit. Useful to determine cause of death: crushings, crit streak etc."
 
 XPERL_CONF_RELOADUI			= "Recargar IU"
 XPERL_CONF_RELOADUI_DESC		= "Recargar la interfaz de usuario para aplicar los cambios"

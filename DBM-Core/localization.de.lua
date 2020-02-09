@@ -19,7 +19,6 @@ DBM_COPY_URL_DIALOG					= "Kopiere URL"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Das Abstandsradar kann in Instanzen nicht genutzt werden. Es wird stattdessen die alte textbasierte Abstandsanzeige verwendet."
 DBM_CORE_NO_ARROW					= "Der Pfeil kann in Instanzen nicht genutzt werden."
-DBM_CORE_ARROW_SUMMONED				= "Der Pfeil wurde aktiviert. Falls du das nicht manuell gemacht hast, dann hast du ein Addon eines Drittanbieters so konfiguriert, dass es den Pfeil für dich aktiviert."
 DBM_CORE_NO_HUD						= "Die HudMap kann in Instanzen nicht genutzt werden."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM hat das dynamische Abstandsfenster für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, auf wieviel versammelte Spieler bei deiner Gruppengröße geprüft werden muss."
@@ -158,7 +157,7 @@ DBM_CORE_VOICE_DISABLED				= "Du hast derzeit mindestens einen DBM Sprachpack in
 DBM_CORE_VOICE_COUNT_MISSING		= "Für die Countdown-Stimme %d ist ein Sprach-/Zählpack ausgewählt, der nicht gefunden werden konnte. Die Stimme wurde auf die Standardeinstellung zurückgesetzt: %s."
 --DBM_BIG_WIGS
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "Deine Version von Deadly Boss Mods ist veraltet.\n Version %s (r%d) kann über Curse/Twitch, WoWI oder von deadlybossmods.com heruntergeladen werden."
+DBM_CORE_UPDATEREMINDER_HEADER			= "Deine Version von Deadly Boss Mods ist veraltet.\n Version %s (%s) kann über Curse/Twitch, WoWI oder von deadlybossmods.com heruntergeladen werden."
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Deine ALPHA-Version von Deadly Boss Mods ist veraltet.\nDu liegst mindestens %d Revisionen zurück. Es wird empfohlen bei einer Entscheidung für ALPHA-Versionen immer die neueste ALPHA-Version zu nutzen. Ansonsten sollte die neueste RELEASE-Version genutzt werden. ALPHA-Versionen haben eine strengere Versionsprüfung, da diese Entwicklungsversionen von DBM sind."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Drücke " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Downloadlink in die Zwischenablage zu kopieren."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Drücke " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Link in die Zwischenablage zu kopieren."
@@ -237,11 +236,9 @@ DBM_CORE_SLASHCMD_HELP2				= {
 DBM_CORE_TIMER_USAGE	= {
 	"DBM-Timer Kommandos:",
 	"/dbm timer <sec> <text>: Startet einen <sec> Sekunden langen Timer mit deinem <text>.",
-	"/dbm ctimer <sec> <text>: Startet einen Timer mit Countdown.",
 	"/dbm ltimer <sec> <text>: Startet einen Timer, der automatisch wiederholt wird, bis er abgebrochen wird.",
-	"/dbm cltimer <sec> <text>: Startet einen Timer mit Countdown, der automatisch wiederholt wird, bis er abgebrochen wird.",
-	"/dbm broadcast timer/ctimer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
-	"/dbm timer endloop: Stoppt alle ltimer- und cltimer-Schleifen.",
+	"/dbm broadcast timer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
+	"/dbm timer endloop: Stoppt alle ltimer-.",
 }
 
 DBM_ERROR_NO_PERMISSION				= "Du hast nicht die benötigte Berechtigung für diesen Befehl!"
@@ -369,8 +366,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack				= "%%d Stapel von %s auf dir"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch			= "%s - Ziel wechseln"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - Ziel wechseln (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo				= "%%s unter dir - lauf raus"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds				= "Adds kommen - Ziel wechseln"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom		= "Adds kommen - %%s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.adds				= "Adds kommen - Ziel wechseln"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.addscustom		= "Adds kommen - %%s"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 			= "Spezialwarnung für $spell:%s"
@@ -409,8 +406,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 			= "Spezialwarnung bei >=%d Stapel von $
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch			= "Spezialwarnung für Zielwechsel auf $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= "Spezialwarnung (mit Zählung) für Zielwechsel auf $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.gtfo 			= "Spezialwarnung zum Rauslaufen aus schlechten Dingen auf dem Boden"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Adds			= "Spezialwarnung für Zielwechsel auf ankommende Adds"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Addscustom		= "Spezialwarnung für ankommende Adds"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.adds			= "Spezialwarnung für Zielwechsel auf ankommende Adds"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.addscustom		= "Spezialwarnung für ankommende Adds"
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: %%s"
@@ -459,13 +456,6 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Setze Zeichen auf $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "Zeige DBM-Pfeil zum Hingehen zum von $spell:%s betroffenen Ziel"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Zeige DBM-Pfeil zum Weggehen vom von $spell:%s betroffenen Ziel"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "Zeige DBM-Pfeil zum Hingehen zum richtigen Ort für $spell:%s"
-DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Spiele gesprochene Warnungen für $spell:%s"
-DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Spiele gesprochene Warnungen für Phasenwechsel"
-DBM_CORE_AUTO_VOICE3_OPTION_TEXT		= "Spiele gesprochene Warnungen für ankommende Adds"
-DBM_CORE_AUTO_VOICE4_OPTION_TEXT		= "Spiele gesprochene Warnungen für schlechte Dinge auf dem Boden"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Spiele akustischen Countdown bis $spell:%s gewirkt wird"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Spiele akustischen Countdown bis $spell:%s schwindet"
-DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Zähle akustisch die Dauer von $spell:%s"
 
 DBM_CORE_AUTO_YELL_OPTION_TEXT.shortyell	= "Schreie, wenn du von $spell:%s betroffen bist"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.yell			= "Schreie (mit Spielernamen), wenn du von $spell:%s betroffen bist"

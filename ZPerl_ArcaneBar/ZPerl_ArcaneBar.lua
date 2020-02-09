@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local ArcaneBars = {}
@@ -14,10 +14,23 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1094 $")
+end, "$Revision:  $")
+
+local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
+
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	UnitCastingInfo = function(unit)
+		if unit ~= "player" and unit ~= "target" then return end
+		return CastingInfo()
+	end
+
+	UnitChannelInfo = function(unit)
+		if unit ~= "player" and unit ~= "target" then return end
+		return ChannelInfo()
+	end
+end
 
 -- Registers frame to spellcast events.
-
 local barColours = {
 	main = {r = 1.0, g = 0.7, b = 0.0},
 	channel = {r = 0.0, g = 1.0, b = 0.0},
@@ -34,14 +47,18 @@ local function enableToggle(self, value)
 	if (value) then
 		if (not self.Enabled) then
 			for i, event in pairs(events) do
-				self:RegisterEvent(event)
+				if pcall(self.RegisterEvent, self, event) then
+					self:RegisterEvent(event)
+				end
 			end
 
 			self:SetScript("OnUpdate", XPerl_ArcaneBar_OnUpdate)
 			if (self.unit == "target") then
 				self:RegisterEvent("PLAYER_TARGET_CHANGED")
 			elseif (self.unit == "focus") then
-				self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+				if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+					self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+				end
 			elseif (strfind(self.unit, "^party")) then
 				self:RegisterEvent("PARTY_MEMBER_ENABLE")
 				self:RegisterEvent("PARTY_MEMBER_DISABLE")
@@ -108,7 +125,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 	if (event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_FOCUS_CHANGED" or event == "PARTY_MEMBER_ENABLE" or event == "PARTY_MEMBER_DISABLE") then
 		local nameChannel = UnitChannelInfo(self.unit)
 		local nameSpell = UnitCastingInfo(self.unit)
-		if (nameChannel) then
+		if nameChannel then
 			event = "UNIT_SPELLCAST_CHANNEL_START"
 			unit = self.unit
 		elseif (nameSpell) then
@@ -213,7 +230,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			if (not name or (not self.showTradeSkills and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				self:Hide()
-				return;
+				return
 			end
 			self.startTime = startTime / 1000
 			self.maxValue = endTime / 1000
@@ -256,7 +273,7 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			if (not name or (not self.showTradeSkills and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				self:Hide()
-				return;
+				return
 			end
 			self.startTime = startTime / 1000
 			self.endTime = endTime / 1000

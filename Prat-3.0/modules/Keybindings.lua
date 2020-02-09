@@ -1,4 +1,4 @@
----------------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------------
 --
 -- Prat - A framework for World of Warcraft chat mods
 --
@@ -66,8 +66,8 @@ Prat:AddModuleToLoad(function()
  do
      local L
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = true,
 		["Copy Selected Chat Frame"] = true,
@@ -90,20 +90,21 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "Canal %d",
 		["Copy Selected Chat Frame"] = "Copier la fenêtre de chat sélectionné",
 		["Guild Channel"] = "Canal de Guilde",
 		["Instance Channel"] = "Canal d'Instance",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Adds chat related keybindings",
 		--[[Translation missing --]]
-		--[[ ["Next Chat Tab"] = "",--]] 
+		["Next Chat Tab"] = "Next Chat Tab",
 		["Officer Channel"] = "Canal Officier",
 		["Party Channel"] = "Canal de Groupe",
 		["Prat CopyChat"] = "Prat Copier-le-Chat",
@@ -113,25 +114,25 @@ Prat:AddModuleToLoad(function()
 		["Raid Warning Channel"] = "Canal Avertissement",
 		["Say"] = "Dire",
 		--[[Translation missing --]]
-		--[[ ["Smart Group Channel"] = "",--]] 
+		["Smart Group Channel"] = "Smart Group Channel",
 		["TellTarget"] = "Chuchoter à la cible",
 		["Whisper"] = "Chuchoter",
 		["Yell"] = "Crier",
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "Kanal %d",
 		["Copy Selected Chat Frame"] = "Ausgewähltes Chatfenster kopieren",
 		["Guild Channel"] = "Gildenkanal",
 		["Instance Channel"] = "Schlachtfeld-Kanal",
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Fügt chatbezogene Tastenkombinationen hinzu",
 		["Next Chat Tab"] = "Nächster Chatreiter",
 		["Officer Channel"] = "Offizierskanal",
 		["Party Channel"] = "Gruppenkanal",
@@ -148,18 +149,19 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "채널 %d",
 		["Copy Selected Chat Frame"] = "선택한 대화창 복사",
 		["Guild Channel"] = "길드 채널",
 		["Instance Channel"] = "인스턴스 채널",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Adds chat related keybindings",
 		["Next Chat Tab"] = "다음 대화 탭",
 		["Officer Channel"] = "관리자 채널",
 		["Party Channel"] = "파티 채널",
@@ -176,62 +178,64 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		--[[Translation missing --]]
-		--[[ ["Channel %d"] = "",--]] 
+		["Channel %d"] = "Channel %d",
 		--[[Translation missing --]]
-		--[[ ["Copy Selected Chat Frame"] = "",--]] 
+		["Copy Selected Chat Frame"] = "Copy Selected Chat Frame",
 		--[[Translation missing --]]
-		--[[ ["Guild Channel"] = "",--]] 
+		["Guild Channel"] = "Guild Channel",
 		--[[Translation missing --]]
-		--[[ ["Instance Channel"] = "",--]] 
+		["Instance Channel"] = "Instance Channel",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Adds chat related keybindings",
 		--[[Translation missing --]]
-		--[[ ["Next Chat Tab"] = "",--]] 
+		["Next Chat Tab"] = "Next Chat Tab",
 		--[[Translation missing --]]
-		--[[ ["Officer Channel"] = "",--]] 
+		["Officer Channel"] = "Officer Channel",
 		--[[Translation missing --]]
-		--[[ ["Party Channel"] = "",--]] 
+		["Party Channel"] = "Party Channel",
 		--[[Translation missing --]]
-		--[[ ["Prat CopyChat"] = "",--]] 
+		["Prat CopyChat"] = "Prat CopyChat",
 		--[[Translation missing --]]
-		--[[ ["Prat Keybindings"] = "",--]] 
+		["Prat Keybindings"] = "Prat Keybindings",
 		--[[Translation missing --]]
-		--[[ ["Prat TellTarget"] = "",--]] 
+		["Prat TellTarget"] = "Prat TellTarget",
 		--[[Translation missing --]]
-		--[[ ["Raid Channel"] = "",--]] 
+		["Raid Channel"] = "Raid Channel",
 		--[[Translation missing --]]
-		--[[ ["Raid Warning Channel"] = "",--]] 
+		["Raid Warning Channel"] = "Raid Warning Channel",
 		--[[Translation missing --]]
-		--[[ ["Say"] = "",--]] 
+		["Say"] = "Say",
 		--[[Translation missing --]]
-		--[[ ["Smart Group Channel"] = "",--]] 
+		["Smart Group Channel"] = "Smart Group Channel",
 		--[[Translation missing --]]
-		--[[ ["TellTarget"] = "",--]] 
+		["TellTarget"] = "TellTarget",
 		--[[Translation missing --]]
-		--[[ ["Whisper"] = "",--]] 
+		["Whisper"] = "Whisper",
 		--[[Translation missing --]]
-		--[[ ["Yell"] = "",--]] 
+		["Yell"] = "Yell",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "Канал %d",
 		["Copy Selected Chat Frame"] = "Копирование выбранного окна чата",
 		["Guild Channel"] = "Канал Гильдии",
 		["Instance Channel"] = "Канал Подземелий",
-		["module_desc"] = "Добавляет привязки к чату",
+		["module_desc"] = "Добавляет привязки к чату ",
 		["Next Chat Tab"] = "Следующее окно чата",
 		["Officer Channel"] = "Офицерский Канал",
 		["Party Channel"] = "Канал Группы",
@@ -248,18 +252,18 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "频道 %d",
 		["Copy Selected Chat Frame"] = "复制选定的聊天框体",
 		["Guild Channel"] = "公会频道",
 		["Instance Channel"] = "战场频道",
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "添加聊天关联的按键绑定",
 		["Next Chat Tab"] = "下一个聊天标签",
 		["Officer Channel"] = "官员频道",
 		["Party Channel"] = "小队频道",
@@ -276,18 +280,19 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "Canal %d",
 		["Copy Selected Chat Frame"] = "Copiar el Marco de Chat Seleccionado",
 		["Guild Channel"] = "Canal de Hermandad",
 		["Instance Channel"] = "Canal Campo de Batalla",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Adds chat related keybindings",
 		["Next Chat Tab"] = "Siguiente Pestaña de Chat",
 		["Officer Channel"] = "Canal Oficial",
 		["Party Channel"] = "Canal del Grupo",
@@ -304,18 +309,19 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
- L=
-{
+ 
+L = {
 	["KeyBindings"] = {
 		["Channel %d"] = "頻道 %d",
 		["Copy Selected Chat Frame"] = "複製選取的聊天視窗",
 		["Guild Channel"] = "公會頻道",
 		["Instance Channel"] = "戰場頻道",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Adds chat related keybindings",
 		["Next Chat Tab"] = "次個聊天標籤",
 		["Officer Channel"] = "幹部頻道",
 		["Party Channel"] = "小隊頻道",
@@ -331,6 +337,7 @@ Prat:AddModuleToLoad(function()
 		["Yell"] = "大喊",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

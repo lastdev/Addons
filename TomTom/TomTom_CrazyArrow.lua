@@ -39,17 +39,17 @@ local twopi = math.pi * 2
 local wayframe = CreateFrame("Button", "TomTomCrazyArrow", UIParent)
 wayframe:SetHeight(42)
 wayframe:SetWidth(56)
-wayframe:SetPoint("CENTER", 0, 0)
 wayframe:EnableMouse(true)
 wayframe:SetMovable(true)
+wayframe:SetClampedToScreen(true)
 wayframe:Hide()
 
 -- Frame used to control the scaling of the title and friends
 local titleframe = CreateFrame("Frame", nil, wayframe)
 
-wayframe.title = titleframe:CreateFontString("OVERLAY", nil, "GameFontHighlightSmall")
-wayframe.status = titleframe:CreateFontString("OVERLAY", nil, "GameFontNormalSmall")
-wayframe.tta = titleframe:CreateFontString("OVERLAY", nil, "GameFontNormalSmall")
+wayframe.title = titleframe:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+wayframe.status = titleframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+wayframe.tta = titleframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 wayframe.title:SetPoint("TOP", wayframe, "BOTTOM", 0, 0)
 wayframe.status:SetPoint("TOP", wayframe.title, "BOTTOM", 0, 0)
 wayframe.tta:SetPoint("TOP", wayframe.status, "BOTTOM", 0, 0)
@@ -62,18 +62,33 @@ end
 
 local function OnDragStop(self, button)
 	self:StopMovingOrSizing()
+	self:SetUserPlaced(false)
+	-- point, relativeTo, relativePoint, xOfs, yOfs
+	TomTom.profile.arrow.position = { self:GetPoint() }
+	TomTom.profile.arrow.position[2] = nil  -- Note we are relative to UIParent
 end
 
 local function OnEvent(self, event, ...)
-	if event == "ZONE_CHANGED_NEW_AREA" and TomTom.profile.arrow.enable then
+	if (event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED") and TomTom.profile.arrow.enable then
 		self:Show()
+		return
 	end
+	if (event == "PLAYER_ENTERING_WORLD") then
+        wayframe:ClearAllPoints()
+        if not TomTom.profile.arrow.position then
+            TomTom.profile.arrow.position = {"CENTER", nil , "CENTER", 0, 0}
+        end
+        local pos = TomTom.profile.arrow.position
+        wayframe:SetPoint(pos[1], UIParent, pos[3], pos[4], pos[5])
+    end
 end
 
 wayframe:SetScript("OnDragStart", OnDragStart)
 wayframe:SetScript("OnDragStop", OnDragStop)
 wayframe:RegisterForDrag("LeftButton")
 wayframe:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+wayframe:RegisterEvent("ZONE_CHANGED")
+wayframe:RegisterEvent("PLAYER_ENTERING_WORLD")
 wayframe:SetScript("OnEvent", OnEvent)
 
 wayframe.arrow = wayframe:CreateTexture(nil, "OVERLAY")
@@ -177,6 +192,19 @@ local function OnUpdate(self, elapsed)
 		local angle = TomTom:GetDirectionToWaypoint(active_point)
 		local player = GetPlayerFacing()
 
+		if not player then
+			if not TomTom:IsValidWaypoint(active_point) then
+				active_point = nil
+				-- Change the crazy arrow to point at the closest waypoint
+				if TomTom.profile.arrow.setclosest then
+					TomTom:SetClosestWaypoint()
+					return
+				end
+			end
+			self:Hide()
+			return
+        end
+
 		angle = angle - player
 
 		local perc = math.abs((math.pi - math.abs(angle)) / math.pi)
@@ -239,7 +267,7 @@ end
 
 function TomTom:ShowHideCrazyArrow()
 	if self.profile.arrow.enable then
-		if self.profile.arrow.hideDuringPetBattles and C_PetBattles.IsInBattle() then
+		if self.profile.arrow.hideDuringPetBattles and C_PetBattles and C_PetBattles.IsInBattle() then
 			wayframe:Hide()
 			return
 		end
@@ -257,6 +285,12 @@ function TomTom:ShowHideCrazyArrow()
 		-- Do not allow the arrow to be invisible
 		if TomTom.db.profile.arrow.alpha < 0.1 then
 		    TomTom.db.profile.arrow.alpha = 1.0
+		end
+		-- Set the stratum
+		if TomTom.db.profile.arrow.highstrata then
+		    wayframe:SetFrameStrata("HIGH")
+		else
+		    wayframe:SetFrameStrata("MEDIUM")
 		end
 		wayframe:SetAlpha(TomTom.db.profile.arrow.alpha)
 		local width = TomTom.db.profile.arrow.title_width
@@ -302,6 +336,12 @@ local dropdown_info = {
 			-- Title
 			text = L["TomTom Waypoint Arrow"],
 			isTitle = 1,
+		},
+		{
+			-- Send waypoint
+			text = L["Send waypoint to"],
+			hasArrow = true,
+			value = "send",
 		},
 		{
 			-- Clear waypoint from crazy arrow
@@ -352,7 +392,54 @@ local dropdown_info = {
 				end
 			end,
 		},
-	}
+		{
+			-- Lock Arrow
+			text = L["Arrow locked"],
+			checked = function () return TomTom.db.profile.arrow.lock; end,
+			func = function ()
+				TomTom.db.profile.arrow.lock = not TomTom.db.profile.arrow.lock
+				TomTom:ShowHideCrazyArrow()
+			end,
+			isNotRadio = true,
+		}
+	},
+    [2] = {
+        send = {
+            {
+                -- Title
+                text = L["Waypoint communication"],
+                isTitle = true,
+            },
+            {
+                -- Party
+                text = L["Send to party"],
+                func = function()
+                    TomTom:SendWaypoint(TomTom.dropdown.uid, "PARTY")
+                end
+            },
+            {
+                -- Raid
+                text = L["Send to raid"],
+                func = function()
+                    TomTom:SendWaypoint(TomTom.dropdown.uid, "RAID")
+                end
+            },
+            {
+                -- Battleground
+                text = L["Send to battleground"],
+                func = function()
+                    TomTom:SendWaypoint(TomTom.dropdown.uid, "BATTLEGROUND")
+                end
+            },
+            {
+                -- Guild
+                text = L["Send to guild"],
+                func = function()
+                    TomTom:SendWaypoint(TomTom.dropdown.uid, "GUILD")
+                end
+            },
+        },
+    },
 }
 
 local function init_dropdown(self, level)
@@ -385,6 +472,7 @@ end
 local function WayFrame_OnClick(self, button)
 	if active_point then
 		if TomTom.db.profile.arrow.menu then
+			TomTom.dropdown.uid = active_point
 			UIDropDownMenu_Initialize(TomTom.dropdown, init_dropdown)
 			ToggleDropDownMenu(1, nil, TomTom.dropdown, "cursor", 0, 0)
 		end
@@ -496,7 +584,7 @@ local function wayframe_OnEvent(self, event, arg1, ...)
 	end
 end
 
-wayframe:SetScript("OnEvent", wayframe_OnEvent)
+wayframe:HookScript("OnEvent", wayframe_OnEvent)
 
 --[[-------------------------------------------------------------------------
 --  API for manual control of Crazy Arrow
@@ -567,4 +655,26 @@ end
 -- Returns whether or not the crazy arrow is currently hijacked
 function TomTom:CrazyArrowIsHijacked()
     return wayframe.hijacked
+end
+
+-- Logs Crazy Arrow status
+function TomTom:DebugCrazyArrow()
+    local msg
+    msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s hijacked"], (wayframe.hijacked and L["is"]) or L["not"])
+    ChatFrame1:AddMessage(msg)
+    msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s visible"], (wayframe:IsVisible() and L["is"]) or L["not"])
+    ChatFrame1:AddMessage(msg)
+    msg = string.format(L["|cffffff78TomTom:|r Waypoint %s valid"], (active_point and TomTom:IsValidWaypoint(active_point) and L["is"]) or L["not"])
+    ChatFrame1:AddMessage(msg)
+
+    local dist,x,y = TomTom:GetDistanceToWaypoint(active_point)
+    msg = string.format("|cffffff78TomTom:|r Waypoint distance=%s", tostring(dist))
+    ChatFrame1:AddMessage(msg)
+
+    if wayframe:IsVisible() then
+        local point, relativeTo, relativePoint, xOfs, yOfs = wayframe:GetPoint(1)
+        relativeTo = (relativeTo and relativeTo:GetName()) or "UIParent"
+        msg = string.format("|cffffff78TomTom:|r CrazyArrow point=%s frame=%s rpoint=%s xo=%.2f yo=%.2f",  point, relativeTo, relativePoint, xOfs, yOfs)
+        ChatFrame1:AddMessage(msg)
+    end
 end

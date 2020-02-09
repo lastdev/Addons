@@ -1,3 +1,4 @@
+--- @type MaxDps MaxDps
 local _, MaxDps = ...;
 
 ---@type StdUi
@@ -104,7 +105,7 @@ end
 
 function MaxDps:AddToBlizzardOptions()
 	if self.optionsFrame then
-		return;
+		return
 	end
 
 	local optionsFrame = StdUi:PanelWithTitle(UIParent, 100, 100, 'MaxDps Options');
@@ -134,12 +135,19 @@ function MaxDps:AddToBlizzardOptions()
 	forceSingle:SetChecked(MaxDps.db.global.forceSingle);
 	forceSingle.OnValueChanged = function(_, flag) MaxDps.db.global.forceSingle = flag; end;
 
+	local disableConsumables = StdUi:Checkbox(optionsFrame, 'Disable consumable support', 200, 24);
+	disableConsumables:SetChecked(MaxDps.db.global.disableConsumables);
+	disableConsumables.OnValueChanged = function(_, flag) MaxDps.db.global.disableConsumables = flag; end;
+
 	local loadModuleBtn = StdUi:Button(optionsFrame, nil, 24, 'Load current class module');
 	loadModuleBtn:SetScript('OnClick', function() MaxDps:InitRotations(); end);
 
 	local disableButtonGlow = StdUi:Checkbox(optionsFrame, 'Dissable blizzard button glow (experimental)', 200, 24);
 	disableButtonGlow:SetChecked(MaxDps.db.global.disableButtonGlow);
-	disableButtonGlow.OnValueChanged = function(_, flag) MaxDps.db.global.disableButtonGlow = flag; end;
+	disableButtonGlow.OnValueChanged = function(_, flag)
+		MaxDps.db.global.disableButtonGlow = flag;
+		MaxDps:UpdateButtonGlow();
+	end;
 
 	local interval = StdUi:SliderWithBox(optionsFrame, 100, 48, MaxDps.db.global.interval, 0.01, 2);
 	interval:SetPrecision(2);
@@ -181,17 +189,15 @@ function MaxDps:AddToBlizzardOptions()
 		MaxDps:ApplyOverlayChanges();
 	end;
 
-	local c = MaxDps.db.global.highlightColor;
-	local highlightColor = StdUi:ColorInput(optionsFrame, 'Highlight color', 200, 24, c.r, c.g, c.b, c.a);
-	highlightColor.OnValueChanged = function(_, r, g, b, a)
-		c.r, c.g, c.b, c.a = r, g, b, a;
+	local highlightColor = StdUi:ColorInput(optionsFrame, 'Highlight color', 200, 24, MaxDps.db.global.highlightColor);
+	highlightColor.OnValueChanged = function(_, newColor)
+		MaxDps.db.global.highlightColor = newColor;
 		MaxDps:ApplyOverlayChanges();
 	end;
 
-	local cc = MaxDps.db.global.cooldownColor;
-	local cooldownColor = StdUi:ColorInput(optionsFrame, 'Cooldown color', 200, 24, cc.r, cc.g, cc.b, cc.a);
-	cooldownColor.OnValueChanged = function(_, r, g, b, a)
-		cc.r, cc.g, cc.b, cc.a = r, g, b, a;
+	local cooldownColor = StdUi:ColorInput(optionsFrame, 'Cooldown color', 200, 24, MaxDps.db.global.cooldownColor);
+	cooldownColor.OnValueChanged = function(_, newColor)
+		MaxDps.db.global.cooldownColor = newColor;
 		MaxDps:ApplyOverlayChanges();
 	end;
 
@@ -226,7 +232,7 @@ function MaxDps:AddToBlizzardOptions()
 	optionsFrame:AddRow():AddElements(enabled, onCombatEnter, { column = 'even' });
 	optionsFrame:AddRow():AddElements(disableButtonGlow, forceSingle, { column = 'even' });
 	optionsFrame:AddRow():AddElements(interval, loadModuleBtn, {column = 'even'});
-	optionsFrame:AddRow():AddElement(debug);
+	optionsFrame:AddRow():AddElements(disableConsumables, debug, {column = 'even'});
 	optionsFrame:AddRow():AddElements(debugMode, disabledInfo, { column = 'even' });
 	optionsFrame:AddRow():AddElement(overlay);
 	local rowOverlay = optionsFrame:AddRow({ margin = { top = 20} });

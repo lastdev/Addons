@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 278 $"):sub(12, -3))
+mod:SetRevision("20190817015124")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_TARGETABLE_CHANGED"
 )
 
-local warnAddsSoon			= mod:NewAnnounce("warnAddsSoon", 1, 45419)
+local warnAddsSoon			= mod:NewAnnounce("warnAddsSoon", 1, "134321")
 local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 local warnBlastTargets		= mod:NewTargetAnnounce(27808, 2)
 local warnFissure			= mod:NewSpellAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
@@ -35,11 +35,11 @@ local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50
 local timerFrostBlast		= mod:NewCDTimer(40.1, 27808, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--40-46
 local timerMC				= mod:NewBuffActiveTimer(20, 28410, nil, nil, nil, 3)
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
-local timerPhase2			= mod:NewTimer(218, "TimerPhase2", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 6)
+local timerPhase2			= mod:NewTimer(218, "TimerPhase2", "136116", nil, nil, 6)
 
-mod:AddBoolOption("SetIconOnMC", true)
-mod:AddBoolOption("SetIconOnManaBomb", false)
-mod:AddBoolOption("SetIconOnFrostTomb", true)
+mod:AddSetIconOption("SetIconOnMC", 28410, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, false, {8})
+mod:AddSetIconOption("SetIconOnFrostTomb", 28169, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(10, 27819)
 
 mod.vb.phase = 1
@@ -64,7 +64,7 @@ local function AnnounceBlastTargets(self)
 	blastTimer:Start(3.5)
 	if self.Options.SetIconOnFrostTomb then
 		for i = #frostBlastTargets, 1, -1 do
-			self:SetIcon(frostBlastTargets[i], 8 - i, 4.5) 
+			self:SetIcon(frostBlastTargets[i], 8 - i, 4.5)
 			frostBlastTargets[i] = nil
 		end
 	end
@@ -81,7 +81,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
-	if self.Options.ShowRange then
+	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
 end
@@ -152,7 +152,7 @@ function mod:UNIT_TARGETABLE_CHANGED()
 		self.vb.phase = 2
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
-		if self.Options.ShowRange then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 	end

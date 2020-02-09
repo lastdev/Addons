@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxUtil.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxUtil.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	General utility functions
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxUtil.lua $", "$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxUtil.lua $", "$Rev: 6506 $")
 
 -- Global functions
 --local getItems
@@ -668,7 +668,7 @@ function createProfiler(name)
 end
 
 Enchantrix.Util = {
-	Revision			= "$Rev: 6237 $",
+	Revision			= "$Rev: 6506 $",
 
 --	GetItems			= getItems,
 --	GetItemType			= getItemType,
@@ -800,22 +800,62 @@ function Enchantrix.Util.GetUserSkillByName( name )
 	end
 
 	local resultRank = 0
-	
-	--WOW 4.0 Cataclysm uses the new profession system
-	local prof1, prof2 = GetProfessions()
-	local skillName1, _, rank1
-	local skillName2, _, rank2
-	if prof1 then
-		skillName1, _, rank1= GetProfessionInfo(prof1)
-	end
-	if prof2 then
-		skillName2, _, rank2 = GetProfessionInfo(prof2)
-	end
 
-	if name == skillName1 then
-		resultRank = rank1
-	elseif name == skillName2 then
-		resultRank = rank2
+	--WOW 4.0 Cataclysm uses the new profession system
+	if GetProfessions then
+		local prof1, prof2 = GetProfessions()
+		local skillName1, _, rank1
+		local skillName2, _, rank2
+		if prof1 then
+			skillName1, _, rank1= GetProfessionInfo(prof1)
+		end
+		if prof2 then
+			skillName2, _, rank2 = GetProfessionInfo(prof2)
+		end
+
+		if name == skillName1 then
+			resultRank = rank1
+		elseif name == skillName2 then
+			resultRank = rank2
+		end	
+	-- Classic uses old code path for finding skill rank
+	elseif GetNumSkillLines then
+		local MyExpandedHeaders = {}
+		local i, j
+
+
+		-- search the skill tree for the named skill
+		for i=0, GetNumSkillLines(), 1 do
+			local skillName, header, isExpanded, skillRank = GetSkillLineInfo(i)
+			-- expand the header if necessary
+			if ( header and not isExpanded ) then
+				MyExpandedHeaders[i] = skillName
+			end
+		end
+
+		ExpandSkillHeader(0)
+		for i=1, GetNumSkillLines(), 1 do
+			local skillName, header, _, skillRank = GetSkillLineInfo(i)
+			-- check for the skill name
+			if (skillName and not header) then
+				if (skillName == name) then
+					resultRank = skillRank
+					-- no need to look at the rest of the skills
+					break
+				end
+			end
+		end
+
+		-- close headers expanded during search process
+		for i=0, GetNumSkillLines() do
+			local skillName, header, isExpanded = GetSkillLineInfo(i)
+			for j in pairs(MyExpandedHeaders) do
+				if ( header and skillName == MyExpandedHeaders[j] ) then
+					CollapseSkillHeader(i)
+					MyExpandedHeaders[j] = nil
+				end
+			end
+		end
 	end
 	
 	Enchantrix.Util.SkillCacheRank[ name ] = resultRank

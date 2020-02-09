@@ -1,4 +1,4 @@
----------------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------------
 --
 -- Prat - A framework for World of Warcraft chat modules
 --
@@ -51,8 +51,8 @@ Prat:AddModuleToLoad(function()
  do
      local L
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		["ChannelColorMemory"] = true,
@@ -60,11 +60,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		["ChannelColorMemory"] = "Couleur Canal",
@@ -72,11 +73,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = true,
 		["ChannelColorMemory"] = true,
@@ -84,11 +86,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		["ChannelColorMemory"] = "채널 색상 기억",
@@ -96,26 +99,28 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		--[[Translation missing --]]
-		--[[ ["(%w+)%s?(.*)"] = "",--]] 
+		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		--[[Translation missing --]]
-		--[[ ["ChannelColorMemory"] = "",--]] 
+		["ChannelColorMemory"] = "ChannelColorMemory",
 		--[[Translation missing --]]
-		--[[ ["Remembers the colors of each channel name."] = "",--]] 
+		["Remembers the colors of each channel name."] = "Remembers the colors of each channel name.",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = true,
 		["ChannelColorMemory"] = "Сохранение цветов каналов",
@@ -123,11 +128,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = true,
 		["ChannelColorMemory"] = "频道颜色存储",
@@ -135,11 +141,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		["ChannelColorMemory"] = "MemoriaColorCanal",
@@ -147,17 +154,19 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
- L=
-{
+ 
+L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = "(%S+)%s?(.*)",
 		["ChannelColorMemory"] = "頻道顏色記憶",
 		["Remembers the colors of each channel name."] = "記住每個頻道顏色的名稱。",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

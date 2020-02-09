@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 if (not XPerl_RequestConfig) then
@@ -9,7 +9,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new.custom
-end, "$Revision: 1084 $")
+end, "$Revision:  $")
 
 local ch = CreateFrame("Frame", "ZPerl_Custom")
 ch.active = {}
@@ -37,17 +37,29 @@ end
 
 -- Pull zone names from encounter journal so they don't need to be localized.
 -- Cataclysm Raids
-local XPERL_LOC_ZONE_BARADIN_HOLD = EJ_GetInstanceInfo(75)
-local XPERL_LOC_ZONE_BLACKWING_DECENT = EJ_GetInstanceInfo(73)
-local XPERL_LOC_ZONE_BASTION_OF_TWILIGHT = EJ_GetInstanceInfo(72)
-local XPERL_LOC_ZONE_THRONE_OF_FOUR_WINDS = EJ_GetInstanceInfo(74)
-local XPERL_LOC_ZONE_FIRELANDS = EJ_GetInstanceInfo(78)
-local XPERL_LOC_ZONE_DRAGONSOUL = EJ_GetInstanceInfo(187)
-local XPERL_LOC_ZONE_EMERALD_NIGHTMARE = EJ_GetInstanceInfo(768)
-local XPERL_LOC_ZONE_TRIAL_OF_VALOR = EJ_GetInstanceInfo(861)
-local XPERL_LOC_ZONE_NIGHTHOLD = EJ_GetInstanceInfo(786)
-local XPERL_LOC_ZONE_TOMB_OF_SARGERAS = EJ_GetInstanceInfo(875)
-local XPERL_LOC_ZONE_ANTORUS = EJ_GetInstanceInfo(946)
+local XPERL_LOC_ZONE_ANTORUS = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(946) or XPERL_LOC_ZONE_ANTORUS
+local XPERL_LOC_ZONE_BARADIN_HOLD = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(75) or XPERL_LOC_ZONE_BARADIN_HOLD
+local XPERL_LOC_ZONE_BASTION_OF_TWILIGHT = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(72) or XPERL_LOC_ZONE_BASTION_OF_TWILIGHT
+local XPERL_LOC_ZONE_BLACK_TEMPLE = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(751) or XPERL_LOC_ZONE_BLACK_TEMPLE
+local XPERL_LOC_ZONE_BLACKWING_DECENT = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(73) or XPERL_LOC_ZONE_BLACKWING_DECENT
+local XPERL_LOC_ZONE_DRAGONSOUL = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(187) or XPERL_LOC_ZONE_DRAGONSOUL
+local XPERL_LOC_ZONE_EMERALD_NIGHTMARE = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(768) or XPERL_LOC_ZONE_EMERALD_NIGHTMARE
+local XPERL_LOC_ZONE_EYE_OF_ETERNITY = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(946) or XPERL_LOC_ZONE_EYE_OF_ETERNITY
+local XPERL_LOC_ZONE_FIRELANDS = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(78) or XPERL_LOC_ZONE_FIRELANDS
+local XPERL_LOC_ZONE_HYJAL_SUMMIT = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(750) or XPERL_LOC_ZONE_HYJAL_SUMMIT
+local XPERL_LOC_ZONE_ICECROWN_CITADEL = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(758) or XPERL_LOC_ZONE_ICECROWN_CITADEL
+local XPERL_LOC_ZONE_KARAZHAN = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(745) or XPERL_LOC_ZONE_KARAZHAN
+local XPERL_LOC_ZONE_NAXXRAMAS = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(754) or XPERL_LOC_ZONE_NAXXRAMAS
+local XPERL_LOC_ZONE_NIGHTHOLD = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(786) or XPERL_LOC_ZONE_NIGHTHOLD
+local XPERL_LOC_ZONE_OBSIDIAN_SANCTUM = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(755) or XPERL_LOC_ZONE_OBSIDIAN_SANCTUM
+local XPERL_LOC_ZONE_RUBY_SANCTUM = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(761) or XPERL_LOC_ZONE_RUBY_SANCTUM
+local XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(748) or XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN
+local XPERL_LOC_ZONE_SUNWELL_PLATEAU = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(752) or XPERL_LOC_ZONE_SUNWELL_PLATEAU
+local XPERL_LOC_ZONE_THRONE_OF_FOUR_WINDS = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(74) or XPERL_LOC_ZONE_THRONE_OF_FOUR_WINDS
+local XPERL_LOC_ZONE_TOMB_OF_SARGERAS = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(875) or XPERL_LOC_ZONE_TOMB_OF_SARGERAS
+local XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(757) or XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER
+local XPERL_LOC_ZONE_TRIAL_OF_VALOR = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(861) or XPERL_LOC_ZONE_TRIAL_OF_VALOR
+local XPERL_LOC_ZONE_ULDUAR = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and EJ_GetInstanceInfo(759) or XPERL_LOC_ZONE_ULDUAR
 --[[
 -- Mists of Pandaria Raids
 local XPERL_LOC_ZONE_MOGUSHAN_VAULTS = EJ_GetInstanceInfo(317)
@@ -384,7 +396,7 @@ function ch:PLAYER_ENTERING_WORLD()
 		if (self.zoneDataRaw) then
 			self.zoneData = {}
 			for spellid in pairs(self.zoneDataRaw) do
-				local spellName, rank, icon = GetSpellInfo(spellid)
+				local spellName, _, icon = GetSpellInfo(spellid)
 				if (spellName) then
 					self.zoneData[spellName] = icon
 				end
@@ -520,7 +532,7 @@ function ch:Check(frame, unit)
 		end
 
 		for i = 1, 40 do
-			local name, _, icon = UnitDebuff(unit, i)
+			local name, icon = UnitDebuff(unit, i)
 			if (not name) then
 				break
 			end

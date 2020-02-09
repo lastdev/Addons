@@ -1,5 +1,29 @@
 # Changelog
 
+## Changed in v4.0.17
+* Added questids for most Mechagon and Nazjatar rares
+* Added some missing Nazjatar rares
+* If we don't know questids, treat a vignette as the source as equivalent to an incomplete quest. This should help with future no-quest-known-yet situations over-alerting
+* Properly suppress mobs that were flagged as hidden from mouseover and targeting alerts
+
+## Changed in v4.0.16
+* Updated for 8.2
+* Added Mechagon and Nazjatar rares (questids to come)
+* Added I Thought You Said They'd Be Rare and Rest In Pistons achievements
+* Rearrange some mobs that were added in later expansions (Cataclysm and Mists) into the categories for the expansion whose zone they're in, because that makes more sense
+* Ignored mobs are no longer shown in the broker plugin
+* Other missing questids added
+
+## Changed in v4.0.15
+* Config wasn't opening because localization for some zone names was broken
+
+## Changed in v4.0.14
+* HandyNotes integration properly ignores rares you can't interact with because of your faction
+* Range-extended vignettes: shrink the clickable size a bit so you can click through them more easily
+* 8.1.5 compatibility fixes
+* Various mob fixups from NLZ
+* Other missing questids
+
 ## Changed in v4.0.13
 * Extend the range of vignettes on your minimap, so we don't keep on alerting for things without giving you any clue as to where they are.
 * Questids added for (almost) all the BfA Adventurer mobs

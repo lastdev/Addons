@@ -64,6 +64,28 @@ do
 		-- Crucible of Storms
 		[285900] = 2328, -- The Restless Cabal
 		[285901] = 2332, -- Uu'nat, Harbinger of the Void
+		-- The Eternal Palace
+		[298622] = 2352, -- Abyssal Commander Sivara
+		[298640] = 2353, -- Radiance of Aszhara
+		[298642] = 2347, -- Blackwater Behemoth
+		[298643] = 2354, -- Lady Ashvane
+		[298644] = 2351, -- Orgozoa
+		[298645] = 2359, -- The Queen's Court
+		[298646] = 2349, -- Za'qul, Harbinger of Ny'alotha
+		[302914] = 2361, -- Queen Azshara
+		-- Ny'alotha
+		[306475] = 2368, -- Wrathion, the Black Emperor
+		[306480] = 2365, -- Maut
+		[306476] = 2369, -- The Prophet Skitra
+		[306477] = 2377, -- Dark Inquisitor Xanesh
+		[306479] = 2370, -- Vexiona
+		[306478] = 2372, -- The Hivemind
+		[313550] = 2364, -- Ra-Den the Despoiled
+		[306484] = 2367, -- Shad'har the Insatiable
+		[306485] = 2373, -- Drest'agath
+		[313551] = 2374, -- Il'gynoth, Corruption Reborn
+		[313554] = 2366, -- Carapace of N'Zoth
+		[313556] = 2375, -- N'Zoth the Corruptor
 	}
 
 	local buffs = {}
@@ -106,10 +128,14 @@ end
 local getFlask
 do
 	local flasks = {
-		251836, -- Flask of the Currents          (Agility)
-		251837, -- Flask of Endless Fathoms       (Intellect)
-		251838, -- Flask of the Vast Horizon      (Stamina)
-		251839, -- Flask of the Undertow          (Strength)
+		251836, -- Flask of the Currents
+		251837, -- Flask of Endless Fathoms
+		251838, -- Flask of the Vast Horizon
+		251839, -- Flask of the Undertow
+		298836, -- Greater Flask of the Currents
+		298837, -- Greater Flask of Endless Fathoms
+		298839, -- Greater Flask of the Vast Horizon
+		298841, -- Greater Flask of the Undertow
 	}
 
 	function getFlask(player)
@@ -326,20 +352,21 @@ end
 do
 	local best = {
 		-- Food
-		[257410] = true, -- crit
-		[257415] = true, -- haste
-		[257420] = true, -- mastery
-		[257424] = true, -- versatility
-		[259454] = true, -- agi
-		[259455] = true, -- int
-		[259456] = true, -- str
-		[288075] = true, -- sta (stamina is not gained from feasts now)
+		[297039] = true, -- crit
+		[297034] = true, -- haste
+		[297035] = true, -- mastery
+		[297037] = true, -- versatility
+		[297116] = true, -- agi
+		[297117] = true, -- int
+		[297118] = true, -- str
+		[297040] = true, -- sta (stamina is not gained from feasts now)
+		[297119] = true, -- sta (not sure where this comes from, better not be a feast)
 
-		--Flasks
-		[251836] = true, -- agi
-		[251837] = true, -- int
-		[251838] = true, -- sta
-		[251839] = true, -- str
+		-- Flasks
+		[298836] = true, -- agi
+		[298837] = true, -- int
+		[298839] = true, -- sta
+		[298841] = true, -- str
 
 		-- Buffs
 		[1459] = true,   -- Arcane Intellect
@@ -356,10 +383,6 @@ end
 -- Output Results
 
 do
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", function(self, event, msg)
-		if msg:sub(1, 5) == "oRA3>" then return true end
-	end)
-
 	local function send(name, text)
 		SendChatMessage(("oRA3> %s"):format(text), "WHISPER", nil, name)
 	end

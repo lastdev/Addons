@@ -4,8 +4,8 @@ local ThreatPlates = Addon.ThreatPlates
 ---------------------------------------------------------------------------------------------------
 -- Imported functions and constants
 ---------------------------------------------------------------------------------------------------
-local InCombatLockdown = InCombatLockdown
-local UnitIsConnected = UnitIsConnected
+local InCombatLockdown, IsInInstance = InCombatLockdown, IsInInstance
+local UnitIsConnected, UnitAffectingCombat = UnitIsConnected, UnitAffectingCombat
 
 -- ThreatPlates APIs
 local TidyPlatesThreat = TidyPlatesThreat
@@ -17,22 +17,26 @@ local function ShowThreatGlow(unit)
   local db = TidyPlatesThreat.db.profile
 
   if db.ShowThreatGlowOnAttackedUnitsOnly then
-    return Addon:OnThreatTable(unit)
+    if IsInInstance() and db.threat.UseHeuristicInInstances then
+      return UnitAffectingCombat(unit.unitid)
+    else
+      return Addon:OnThreatTable(unit)
+    end
   else
-    return true
+    return UnitAffectingCombat(unit.unitid)
   end
 end
 
 function Addon:SetThreatColor(unit)
-  local c = COLOR_TRANSPARENT
+  local color
 
-  if not unit.unitid then
-    return c.r, c.g, c.b, c.a -- transparent color
-  end
-
-  if InCombatLockdown() and unit.type == "NPC" and unit.reaction ~= "FRIENDLY" then
+  local db = TidyPlatesThreat.db.profile
+  if not UnitIsConnected(unit.unitid) and ShowThreatGlow(unit) then
+    color = db.ColorByReaction.DisconnectedUnit
+  elseif unit.isTapped and ShowThreatGlow(unit) then
+    color = db.ColorByReaction.TappedUnit
+  elseif unit.type == "NPC" and unit.reaction ~= "FRIENDLY" then
     local style = unit.style
-
     if style == "unique" then
       local unique_setting = unit.CustomPlateSettings
       if unique_setting.UseThreatGlow then
@@ -41,26 +45,19 @@ function Addon:SetThreatColor(unit)
       end
     end
 
-    local db = TidyPlatesThreat.db.profile
-    if not UnitIsConnected(unit.unitid) then
-      if ShowThreatGlow(unit) then
-        c = db.ColorByReaction.DisconnectedUnit
+    -- Split this up into two if-parts, otherweise there is an inconsistency between
+    -- healthbar color and threat glow at the beginning of a combat when the player
+    -- is already in combat, but not yet on the mob's threat table for a sec or so.
+    if db.threat.ON and db.threat.useHPColor then
+      if style == "dps" or style == "tank" then
+        color = Addon:GetThreatColor(unit, style, db.ShowThreatGlowOnAttackedUnitsOnly)
       end
-    elseif unit.isTapped then
-      if ShowThreatGlow(unit) then
-        c = db.ColorByReaction.TappedUnit
-      end
-    elseif style == "dps" or style == "tank" or (style == "normal" and unit.isInCombat) then
-      if ShowThreatGlow(unit) then
-        local show_offtank = db.threat.toggle.OffTank
-        local threatSituation = unit.threatSituation
-        if style == "tank" and show_offtank and Addon:UnitIsOffTanked(unit) then
-          threatSituation = "OFFTANK"
-        end
-        c = db.settings[style]["threatcolor"][threatSituation]
-      end
+    elseif InCombatLockdown() and (style == "normal" or style == "dps" or style == "tank") then
+      color = Addon:GetThreatColor(unit, style, db.ShowThreatGlowOnAttackedUnitsOnly)
     end
   end
 
-  return c.r, c.g, c.b, c.a
+  color = color or COLOR_TRANSPARENT
+
+  return color.r, color.g, color.b, color.a
 end

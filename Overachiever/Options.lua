@@ -29,7 +29,9 @@ Overachiever.DefaultSettings = {
   Item_satisfied = true;
   Item_acquired = true;
   Mission_complete = true;
+  Mission_complete_whencomplete = true;
   CreatureTip_killed = true;
+  CreatureTip_killed_whencomplete = true;
   CreatureTip_killed_exclude_guild = false;
   LetItSnow_flaked = false;
   FistfulOfLove_petals = false;
@@ -137,6 +139,7 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_NEEDTOKILL, topBuffer = 4, id1 = IDs.MediumRare, id2 = IDs.NorthernExposure, id3 = IDs.Glorious, id4 = IDs.BattleMonsters },
 	{ variable = "CreatureTip_killed", text = L.OPT_KILLCREATURETIPS, tooltip = L.OPT_KILLCREATURETIPS_TIP,
 	  tooltip2 = L.OPT_KILLCREATURETIPS_TIP2, OnChange = BuildCriteriaLookupTab_check, xOffset = 28 },
+	{ variable = "CreatureTip_killed_whencomplete", text = L.OPT_KILLCREATURETIPS_WHENCOMPLETE, xOffset = 39 },
 	{ variable = "CreatureTip_killed_exclude_guild", text = L.OPT_KILLCREATURETIPS_EXCLUDE_GUILD, xOffset = 39 },
 
 	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
@@ -175,6 +178,7 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTHREE, topBuffer = 4, id1 = IDs.MissionBarrens, id2 = IDs.MissionLordaeron, id3 = IDs.MissionKalimdor, xOffset = 0 },
 	{ variable = "Mission_complete", text = L.OPT_MISSIONCOMPLETE, tooltip = L.OPT_MISSIONCOMPLETE_TIP, xOffset = 28 },
+	{ variable = "Mission_complete_whencomplete", text = L.OPT_MISSIONCOMPLETE_WHENCOMPLETE, xOffset = 39 },
 
 	{ type = "labelwrap", text = L.OPT_LABEL_SEASONALACHS, justifyH = "CENTER", topBuffer = 16, xOffset = 0 },
 

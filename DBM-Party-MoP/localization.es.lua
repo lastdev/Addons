@@ -9,10 +9,6 @@ local L
 ----------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 --------------------------
 -- Eremita Senda Pétrea --
 --------------------------
@@ -286,10 +282,6 @@ L= DBM:GetModLocalization(688)
 -- Hermano Korlof --
 --------------------
 L= DBM:GetModLocalization(671)
-
-L:SetOptionLocalization({
-	KickArrow	= "Mostrar flecha cuando $spell:114487 ocurra cerca de ti"
-})
 
 ------------------
 -- Melenablanca --

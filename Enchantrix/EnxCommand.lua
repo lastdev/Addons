@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxCommand.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxCommand.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	Slash command and GUI functions.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxCommand.lua $", "$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxCommand.lua $", "$Rev: 6506 $")
 
 -- Global functions
 local addonLoaded				-- Enchantrix.Command.AddonLoaded()
@@ -343,7 +343,7 @@ end
 
 
 Enchantrix.Command = {
-	Revision				= "$Rev: 6237 $",
+	Revision				= "$Rev: 6506 $",
 
 	AddonLoaded				= addonLoaded,
 	AuctioneerLoaded		= auctioneerLoaded,

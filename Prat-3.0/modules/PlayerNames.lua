@@ -106,8 +106,8 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = true,
 		["Angled"] = true,
@@ -172,11 +172,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Interroger activement les joueurs",
 		["Angled"] = "Chevrons",
@@ -201,9 +202,9 @@ Prat:AddModuleToLoad(function()
 		["Let TasteTheNaimbow set the common color for unknown player names."] = "Laisser TasteTheNaimbow définir la couleur des joueurs inconnus.",
 		["Level Color Mode"] = "Couleur des niveaux",
 		--[[Translation missing --]]
-		--[[ ["linkifycommon_desc"] = "",--]] 
+		["linkifycommon_desc"] = "Linkify Common Messages",
 		--[[Translation missing --]]
-		--[[ ["linkifycommon_name"] = "",--]] 
+		["linkifycommon_name"] = "Linkify Common Messages",
 		["No additional coloring"] = "Pas de couleur",
 		["None"] = "Aucun",
 		["Player Color Mode"] = "Couleur des joueurs",
@@ -236,20 +237,21 @@ Prat:AddModuleToLoad(function()
 		["Too many matches (%d possible)"] = "Trop de résultats (%d possibles)",
 		["Unknown Common Color"] = "Couleur pour inconnu",
 		--[[Translation missing --]]
-		--[[ ["Unknown Common Color From TasteTheNaimbow"] = "",--]] 
+		["Unknown Common Color From TasteTheNaimbow"] = "Unknown Common Color From TasteTheNaimbow",
 		["Unknown Use Common Color"] = "Couleur pour inconnu",
 		["Use Channel Color"] = "Couleur du canal",
 		["Use Player Color"] = "Couleur du joueur",
 		--[[Translation missing --]]
-		--[[ ["Use toon name for RealID"] = "",--]] 
+		["Use toon name for RealID"] = "Use toon name for RealID",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Spielerinformationen aktiv abfragen",
 		["Angled"] = "Abgewinkelt",
@@ -314,11 +316,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "적극적인 플레이어 정보 요청",
 		["Angled"] = "<플레이어>",
@@ -383,140 +386,142 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		--[[Translation missing --]]
-		--[[ ["Actively Query Player Info"] = "",--]] 
+		["Actively Query Player Info"] = "Actively Query Player Info",
 		--[[Translation missing --]]
-		--[[ ["Angled"] = "",--]] 
+		["Angled"] = "Angled",
 		--[[Translation missing --]]
-		--[[ ["Brackets"] = "",--]] 
+		["Brackets"] = "Brackets",
 		--[[Translation missing --]]
-		--[[ ["Brackets Common Color"] = "",--]] 
+		["Brackets Common Color"] = "Brackets Common Color",
 		--[[Translation missing --]]
-		--[[ ["Brackets Use Common Color"] = "",--]] 
+		["Brackets Use Common Color"] = "Brackets Use Common Color",
 		--[[Translation missing --]]
-		--[[ ["Class"] = "",--]] 
+		["Class"] = "Class",
 		--[[Translation missing --]]
-		--[[ ["Color by Level Difference"] = "",--]] 
+		["Color by Level Difference"] = "Color by Level Difference",
 		--[[Translation missing --]]
-		--[[ ["coloreverywhere_desc"] = "",--]] 
+		["coloreverywhere_desc"] = "Color player names if they appear in the text of the chat message",
 		--[[Translation missing --]]
-		--[[ ["coloreverywhere_name"] = "",--]] 
+		["coloreverywhere_name"] = "Color Names Everywhere",
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
+		["Enable Invite Links"] = "Enable Invite Links",
 		--[[Translation missing --]]
-		--[[ ["Enable TabComplete"] = "",--]] 
+		["Enable TabComplete"] = "Enable TabComplete",
 		--[[Translation missing --]]
-		--[[ ["hoverhilight_desc"] = "",--]] 
+		["hoverhilight_desc"] = "Hilight chat lines from a specific player when hovering over thier playerlink",
 		--[[Translation missing --]]
-		--[[ ["hoverhilight_name"] = "",--]] 
+		["hoverhilight_name"] = "Hover Hilighting",
 		--[[Translation missing --]]
-		--[[ ["How to color other player's level."] = "",--]] 
+		["How to color other player's level."] = "How to color other player's level.",
 		--[[Translation missing --]]
-		--[[ ["How to color player's name."] = "",--]] 
+		["How to color player's name."] = "How to color player's name.",
 		--[[Translation missing --]]
-		--[[ ["Keep Info"] = "",--]] 
+		["Keep Info"] = "Keep Info",
 		--[[Translation missing --]]
-		--[[ ["Keep Lots Of Info"] = "",--]] 
+		["Keep Lots Of Info"] = "Keep Lots Of Info",
 		--[[Translation missing --]]
-		--[[ ["Keep player information between session for all players except cross-server players"] = "",--]] 
+		["Keep player information between session for all players except cross-server players"] = "Keep player information between session for all players except cross-server players",
 		--[[Translation missing --]]
-		--[[ ["Keep player information between session, but limit it to friends and guild members."] = "",--]] 
+		["Keep player information between session, but limit it to friends and guild members."] = "Keep player information between session, but limit it to friends and guild members.",
 		--[[Translation missing --]]
-		--[[ ["Let TasteTheNaimbow set the common color for unknown player names."] = "",--]] 
+		["Let TasteTheNaimbow set the common color for unknown player names."] = "Let TasteTheNaimbow set the common color for unknown player names.",
 		--[[Translation missing --]]
-		--[[ ["Level Color Mode"] = "",--]] 
+		["Level Color Mode"] = "Level Color Mode",
 		--[[Translation missing --]]
-		--[[ ["linkifycommon_desc"] = "",--]] 
+		["linkifycommon_desc"] = "Linkify Common Messages",
 		--[[Translation missing --]]
-		--[[ ["linkifycommon_name"] = "",--]] 
+		["linkifycommon_name"] = "Linkify Common Messages",
 		--[[Translation missing --]]
-		--[[ ["No additional coloring"] = "",--]] 
+		["No additional coloring"] = "No additional coloring",
 		--[[Translation missing --]]
-		--[[ ["None"] = "",--]] 
+		["None"] = "None",
 		--[[Translation missing --]]
-		--[[ ["Player Color Mode"] = "",--]] 
+		["Player Color Mode"] = "Player Color Mode",
 		--[[Translation missing --]]
-		--[[ ["Player name formating options."] = "",--]] 
+		["Player name formating options."] = "Player name formating options.",
 		--[[Translation missing --]]
-		--[[ ["PlayerNames"] = "",--]] 
+		["PlayerNames"] = "PlayerNames",
 		--[[Translation missing --]]
-		--[[ ["Prat_Playernames: Stored Player Data Cleared"] = "",--]] 
+		["Prat_Playernames: Stored Player Data Cleared"] = "Prat_Playernames: Stored Player Data Cleared",
 		--[[Translation missing --]]
-		--[[ ["Query the server for all player names we do not know. Note: This happpens pretty slowly, and this data is not saved."] = "",--]] 
+		["Query the server for all player names we do not know. Note: This happpens pretty slowly, and this data is not saved."] = "Query the server for all player names we do not know. Note: This happpens pretty slowly, and this data is not saved.",
 		--[[Translation missing --]]
-		--[[ ["Random"] = "",--]] 
+		["Random"] = "Random",
 		--[[Translation missing --]]
-		--[[ ["realidcolor_desc"] = "",--]] 
+		["realidcolor_desc"] = "RealID Name Coloring",
 		--[[Translation missing --]]
-		--[[ ["realidcolor_name"] = "",--]] 
+		["realidcolor_name"] = "RealID Coloring",
 		--[[Translation missing --]]
-		--[[ ["Reset Settings"] = "",--]] 
+		["Reset Settings"] = "Reset Settings",
 		--[[Translation missing --]]
-		--[[ ["Restore default settings, and delete stored character data."] = "",--]] 
+		["Restore default settings, and delete stored character data."] = "Restore default settings, and delete stored character data.",
 		--[[Translation missing --]]
-		--[[ ["Set common color of unknown player names."] = "",--]] 
+		["Set common color of unknown player names."] = "Set common color of unknown player names.",
 		--[[Translation missing --]]
-		--[[ ["Sets common color of brackets to use around player names."] = "",--]] 
+		["Sets common color of brackets to use around player names."] = "Sets common color of brackets to use around player names.",
 		--[[Translation missing --]]
-		--[[ ["Sets style of brackets to use around player names."] = "",--]] 
+		["Sets style of brackets to use around player names."] = "Sets style of brackets to use around player names.",
 		--[[Translation missing --]]
-		--[[ ["Show Group"] = "",--]] 
+		["Show Group"] = "Show Group",
 		--[[Translation missing --]]
-		--[[ ["Show Level"] = "",--]] 
+		["Show Level"] = "Show Level",
 		--[[Translation missing --]]
-		--[[ ["Show Raid Target Icon"] = "",--]] 
+		["Show Raid Target Icon"] = "Show Raid Target Icon",
 		--[[Translation missing --]]
-		--[[ ["Square"] = "",--]] 
+		["Square"] = "Square",
 		--[[Translation missing --]]
-		--[[ ["Tab completion : "] = "",--]] 
+		["Tab completion : "] = "Tab completion : ",
 		--[[Translation missing --]]
-		--[[ ["tabcomplete_name"] = "",--]] 
+		["tabcomplete_name"] = "Possible Names",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 		--[[Translation missing --]]
-		--[[ ["Toggle level showing."] = "",--]] 
+		["Toggle level showing."] = "Toggle level showing.",
 		--[[Translation missing --]]
-		--[[ ["Toggle raid group showing."] = "",--]] 
+		["Toggle raid group showing."] = "Toggle raid group showing.",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing the raid target icon which is currently on the player."] = "",--]] 
+		["Toggle showing the raid target icon which is currently on the player."] = "Toggle showing the raid target icon which is currently on the player.",
 		--[[Translation missing --]]
-		--[[ ["Toggle tab completion of player names."] = "",--]] 
+		["Toggle tab completion of player names."] = "Toggle tab completion of player names.",
 		--[[Translation missing --]]
-		--[[ ["Toggle using a common color for brackets around player names."] = "",--]] 
+		["Toggle using a common color for brackets around player names."] = "Toggle using a common color for brackets around player names.",
 		--[[Translation missing --]]
-		--[[ ["Toggle using a common color for unknown player names."] = "",--]] 
+		["Toggle using a common color for unknown player names."] = "Toggle using a common color for unknown player names.",
 		--[[Translation missing --]]
-		--[[ ["Too many matches (%d possible)"] = "",--]] 
+		["Too many matches (%d possible)"] = "Too many matches (%d possible)",
 		--[[Translation missing --]]
-		--[[ ["Unknown Common Color"] = "",--]] 
+		["Unknown Common Color"] = "Unknown Common Color",
 		--[[Translation missing --]]
-		--[[ ["Unknown Common Color From TasteTheNaimbow"] = "",--]] 
+		["Unknown Common Color From TasteTheNaimbow"] = "Unknown Common Color From TasteTheNaimbow",
 		--[[Translation missing --]]
-		--[[ ["Unknown Use Common Color"] = "",--]] 
+		["Unknown Use Common Color"] = "Unknown Use Common Color",
 		--[[Translation missing --]]
-		--[[ ["Use Channel Color"] = "",--]] 
+		["Use Channel Color"] = "Use Channel Color",
 		--[[Translation missing --]]
-		--[[ ["Use Player Color"] = "",--]] 
+		["Use Player Color"] = "Use Player Color",
 		--[[Translation missing --]]
-		--[[ ["Use toon name for RealID"] = "",--]] 
+		["Use toon name for RealID"] = "Use toon name for RealID",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Активный запрос инфы о игроке",
 		["Angled"] = "Треугольные",
@@ -581,11 +586,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "活跃的查询玩家信息",
 		["Angled"] = "折角",
@@ -650,11 +656,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Pedir Información de Jugador Activamente",
 		["Angled"] = "Angulo",
@@ -670,7 +677,7 @@ Prat:AddModuleToLoad(function()
 		["Enable TabComplete"] = "Habilitar Ficha completa",
 		["hoverhilight_desc"] = "Resaltar líneas de chat de un jugador al situarse sobre su enlace de jugador",
 		--[[Translation missing --]]
-		--[[ ["hoverhilight_name"] = "",--]] 
+		["hoverhilight_name"] = "Hover Hilighting",
 		["How to color other player's level."] = "Cómo el color de otro jugador de nivel.",
 		["How to color player's name."] = "Cómo el color de nombre del jugador.",
 		["Keep Info"] = "Mantener Información",
@@ -690,9 +697,9 @@ Prat:AddModuleToLoad(function()
 		["Query the server for all player names we do not know. Note: This happpens pretty slowly, and this data is not saved."] = "Consulta el servidor para todos los nombres de jugador que desconocemos. Nota: esto sucede muy lentamente, y estos datos no se guardan.",
 		["Random"] = "Aleatorio",
 		--[[Translation missing --]]
-		--[[ ["realidcolor_desc"] = "",--]] 
+		["realidcolor_desc"] = "RealID Name Coloring",
 		--[[Translation missing --]]
-		--[[ ["realidcolor_name"] = "",--]] 
+		["realidcolor_name"] = "RealID Coloring",
 		["Reset Settings"] = "Restablecer Ajustes",
 		["Restore default settings, and delete stored character data."] = "Restablece ajustes por defecto, y eliminar información del jugador guardada.",
 		["Set common color of unknown player names."] = "Establece el color común para los nombres de jugadores desconocidos.",
@@ -705,7 +712,7 @@ Prat:AddModuleToLoad(function()
 		["Tab completion : "] = "Finalización de Pestaña : ",
 		["tabcomplete_name"] = "Nombres Posibles",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		["Toggle group invites by alt-clicking on player name."] = "Activa invitar a grupo al hacer alt-click en el nombre del jugador.",
 		["Toggle level showing."] = "Alterna mostrar nivel.",
 		["Toggle raid group showing."] = "Alterna mostrar grupo de raid.",
@@ -720,15 +727,16 @@ Prat:AddModuleToLoad(function()
 		["Use Channel Color"] = "Utilizar Color Canal",
 		["Use Player Color"] = "Utilizar Color Jugador",
 		--[[Translation missing --]]
-		--[[ ["Use toon name for RealID"] = "",--]] 
+		["Use toon name for RealID"] = "Use toon name for RealID",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  L=
-{
+  
+L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "主動查詢玩家資訊",
 		["Angled"] = "角",
@@ -743,7 +751,7 @@ Prat:AddModuleToLoad(function()
 		["Enable Invite Links"] = "啟用邀請連結",
 		["Enable TabComplete"] = "啟用 TabComplete",
 		--[[Translation missing --]]
-		--[[ ["hoverhilight_desc"] = "",--]] 
+		["hoverhilight_desc"] = "Hilight chat lines from a specific player when hovering over thier playerlink",
 		["hoverhilight_name"] = "滑鼠懸停高亮",
 		["How to color other player's level."] = "如何為玩家等級著色",
 		["How to color player's name."] = "如何為玩家名稱著色",
@@ -752,7 +760,7 @@ Prat:AddModuleToLoad(function()
 		["Keep player information between session for all players except cross-server players"] = "保存此階段所有玩家資訊，除了跨伺服器人物。",
 		["Keep player information between session, but limit it to friends and guild members."] = "保存此階段玩家資訊，但限制為好友以及公會成員。",
 		--[[Translation missing --]]
-		--[[ ["Let TasteTheNaimbow set the common color for unknown player names."] = "",--]] 
+		["Let TasteTheNaimbow set the common color for unknown player names."] = "Let TasteTheNaimbow set the common color for unknown player names.",
 		["Level Color Mode"] = "等級色彩模式",
 		["linkifycommon_desc"] = "製作連結共同的訊息",
 		["linkifycommon_name"] = "製作連結共同的訊息",
@@ -778,7 +786,7 @@ Prat:AddModuleToLoad(function()
 		["Tab completion : "] = "標籤完成:",
 		["tabcomplete_name"] = "可能的名稱 ",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		["Toggle group invites by alt-clicking on player name."] = "組隊邀請用alt-點擊玩家名稱。",
 		["Toggle level showing."] = "切換等級顯示。",
 		["Toggle raid group showing."] = "切換團隊組隊顯示。",
@@ -793,9 +801,10 @@ Prat:AddModuleToLoad(function()
 		["Use Channel Color"] = "使用頻道文字顏色",
 		["Use Player Color"] = "使用腳色名稱文字色彩",
 		--[[Translation missing --]]
-		--[[ ["Use toon name for RealID"] = "",--]] 
+		["Use toon name for RealID"] = "Use toon name for RealID",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
@@ -1065,7 +1074,7 @@ Prat:AddModuleToLoad(function()
     self:RegisterEvent("RAID_ROSTER_UPDATE", "updateRaid")
     self:RegisterEvent("PLAYER_LEVEL_UP", "updatePlayerLevel")
 
-    if select(4, GetBuildInfo()) < 80000 then
+    if select(4, GetBuildInfo()) < 80000 and select(4, GetBuildInfo()) >= 20000 then
       self:RegisterEvent("PARTY_MEMBERS_CHANGED", "updateParty")
     end
     self:RegisterEvent("PLAYER_TARGET_CHANGED", "updateTarget")
@@ -1120,6 +1129,87 @@ Prat:AddModuleToLoad(function()
     self:OnPlayerDataChanged()
   end
 
+  --[[------------------------------------------------
+    Fill Functions
+  ------------------------------------------------]] --
+
+  -- Use C_FriendList.GetNumWhoResults instead
+  local GetNumWhoResults = C_FriendList.GetNumWhoResults;
+ 
+  -- Use C_FriendList.GetWhoInfo instead
+  local function GetWhoInfo(index)
+    local info = C_FriendList.GetWhoInfo(index);
+    return info.fullName,
+      info.fullGuildName,
+      info.level,
+      info.raceStr,
+      info.classStr,
+      info.area,
+      info.filename,
+      info.gender;
+  end
+
+  -- Use C_FriendList.SendWho instead
+  local SendWho = C_FriendList.SendWho;
+
+  local function GetNumFriends()
+    return C_FriendList.GetNumFriends(),
+      C_FriendList.GetNumOnlineFriends();
+  end
+
+   -- Use C_FriendList.GetFriendInfo or C_FriendList.GetFriendInfoByIndex instead
+   local function GetFriendInfo(friend)
+    local info;
+    if type(friend) == "number" then
+      info = C_FriendList.GetFriendInfoByIndex(friend);
+    elseif type(friend) == "string" then
+      info = C_FriendList.GetFriendInfo(friend);
+    end
+ 
+    if info then
+      local chatFlag = "";
+      if info.dnd then
+        chatFlag = CHAT_FLAG_DND;
+      elseif info.afk then
+        chatFlag = CHAT_FLAG_AFK;
+      end
+      return info.name,
+        info.level,
+        info.className,
+        info.area,
+        info.connected,
+        chatFlag,
+        info.notes,
+        info.referAFriend,
+        info.guid;
+    end
+  end 
+
+  local GetToonInfoByBnetID
+  if Prat.IsClassic then
+    GetToonInfoByBnetID = function(bnetAccountID)
+      local _, _, _, _, _, gameAccountID = BNGetFriendInfoByID(bnetAccountID)
+      if gameAccountID then
+        local _, toonName, client, realmName, _, faction, race, class, _, zoneName, level, gameText,
+          broadcastText, broadcastTime = BNGetGameAccountInfo(gameAccountID)
+        -- Pre-8.2.5 API returns empty strings if friend is online on non-WoW client
+        -- We return only non-empty strings for consistency with other "no data" situations
+        if toonName ~= "" then
+          return toonName, level, class
+        end
+      end
+    end
+  else
+    GetToonInfoByBnetID = function(bnetAccountID)
+      local accountInfo = C_BattleNet.GetAccountInfoByID(bnetAccountID)
+      if accountInfo then
+        return accountInfo.gameAccountInfo.characterName,
+          accountInfo.gameAccountInfo.characterLevel,
+          accountInfo.gameAccountInfo.className
+      end
+    end
+  end
+
 
   --[[------------------------------------------------
     Core Functions
@@ -1166,11 +1256,11 @@ Prat:AddModuleToLoad(function()
 
 
   function module:updateFriends()
-    local Name, Class, Level
-    for i = 1, GetNumFriends() do
-      Name, Level, Class = GetFriendInfo(i) -- name, level, class, area, connected, status
-      self:addName(Name, nil, Class, Level, nil, "FRIEND")
-    end
+      local Name, Class, Level
+      for i = 1, GetNumFriends() do
+        Name, Level, Class = GetFriendInfo(i) -- name, level, class, area, connected, status
+        self:addName(Name, nil, Class, Level, nil, "FRIEND")
+      end
   end
 
 
@@ -1237,6 +1327,7 @@ Prat:AddModuleToLoad(function()
     Name, Server = UnitName("mouseover")
     self:addName(Name, Server, Class, UnitLevel("mouseover"), nil, "MOUSE")
   end
+
 
   function module:updateWho()
     if self.wholib then return end
@@ -1438,29 +1529,15 @@ Prat:AddModuleToLoad(function()
 
     if message.PLAYERLINKDATA and (message.PLAYERLINKDATA:find("BN_") and message.PLAYER ~= UnitName("player")) then
       if self.db.profile.realidcolor == "CLASS" then
-        local numFriends = BNGetNumFriends()
-        for i = 1, numFriends do
-          local _, name, _, _, toon, id = BNGetFriendInfo(i)
-
-          if id then
-            if BNTokenFindName(name) == message.PLAYER then
-
-              local _, toonName, client, realmName, _, faction, race, class, _, zoneName, level, gameText,
-                broadcastText, broadcastTime = BNGetGameAccountInfo(id)
-
-              if toonName and toonName ~= "" and self.db.profile.realidname then
-                message.PLAYER = toonName
-
-                if level and self.db.profile.level then
-                  message.PLAYERLEVEL = CLR:Level(tostring(level), tonumber(level), nil, nil, "DIFFICULTY")
-                  message.PREPLAYERDELIM = ":"
-                end
-              end
-
-              message.PLAYER = CLR:Class(message.PLAYER, class)
-            end
+        local toonName, level, class = GetToonInfoByBnetID(message.PRESENCE_ID)
+        if toonName and self.db.profile.realidname then
+          message.PLAYER = toonName
+          if level and self.db.profile.level then
+            message.PLAYERLEVEL = CLR:Level(tostring(level), tonumber(level), nil, nil, "DIFFICULTY")
+            message.PREPLAYERDELIM = ":"
           end
         end
+        message.PLAYER = CLR:Class(message.PLAYER, class or "") -- Empty string to get default gray color
       elseif self.db.profile.realidcolor == "RANDOM" then
         message.PLAYER = CLR:Random(message.PLAYER, message.PLAYER:lower())
       end

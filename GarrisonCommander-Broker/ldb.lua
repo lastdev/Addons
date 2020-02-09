@@ -98,12 +98,12 @@ for i=1,#ColorStrings do
 	ColorValues[i]={tonumber(c:sub(1,2),16)/255,tonumber(c:sub(3,4),16)/255,tonumber(c:sub(5,6),16)/255}
 end
 local spellids={
-	[158754]='herb',
-	[158745]='mine',
+	[158754]='mine',
+	[158745]='herb',
 	[170599]='mine',
 	[170691]='herb',
-	[195122]='herb',
-	[195114]='mine',
+	[195122]='mine',
+	[195114]='herb',
 }
 local buildids={
 	mine={61,62,63},
@@ -380,29 +380,7 @@ function addon:OnInitialized()
 	frequency=self:GetNumber("FREQUENCY",5)
 	self:ScheduleTimer("DelayedInit",1)
 	-- Avoid double adding
-	if not IsAddOnLoaded("GarrisonCommander") then
-		GarrisonLandingPageMinimapButton:HookScript("OnEnter",function(this)
-				if this.description==MINIMAP_ORDER_HALL_LANDING_PAGE_TOOLTIP then
-					GameTooltip:AddLine(WARDROBE_NEXT_VISUAL_KEY .. " " .. MINIMAP_GARRISON_LANDING_PAGE_TOOLTIP)
-				end
-				GameTooltip:Show()
-		end
-		)
-		GarrisonLandingPageMinimapButton:RegisterForClicks("LEFTBUTTONUP","RIGHTBUTTONUP")
-		GarrisonLandingPageMinimapButton:SetScript("OnClick",
-			function (this,button)
-					if (_G.GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
-						HideUIPanel(GarrisonLandingPage);
-					else
-						if button=="RightButton" then
-								ShowGarrisonLandingPage(2)
-						else
-								ShowGarrisonLandingPage(C_Garrison.GetLandingPageGarrisonType());
-						end
-					end
-			end
-		)
-	end
+
 	self:loadHelp()
 end
 function addon:ApplyFREQUENCY(value)
@@ -781,11 +759,71 @@ function dataobj:OldUpdate()
 	end
 	self.text=format("%s: %s (Tot: |cff00ff00%d|r) %s: %s",READY,ready,completed,NEXT,prox)
 end-- Resources rate: 144 a day
+--[[ Satchel was removed, keeping code as reference in case Bliz reintriduce simething similar
 local satchel_id=120146
 local satchel_name
 local satchel_link
 local satchel_index
 local button
+function addon:ResBuyer()
+	button=CreateFrame("Button",nil,UIParent,"SecureActionButtonTemplate")
+	button:SetAttribute("type1","item")
+	satchel_name,satchel_link=GetItemInfo(satchel_id)
+	button:SetAttribute("item",satchel_name)
+	self:AddChatCmd("Buygold","buygold",L["Use at trade merchant to buy multiple gold with resource"])
+
+end
+function addon:Buygold(args,...)
+	print(args,...)
+	if not args  or args=="" then
+		self:Print("Use /buygold <resource to use>")
+		self:Print("Example: /buygold 1000 will consume 1000 resources i.e. acquire 20 " .. satchel_link)
+		return
+	end
+	local resources=math.floor((tonumber(strsplit(" ",args)) or 50)/50)
+	if not satchel_link then
+		satchel_name,satchel_link=GetItemInfo(satchel_id)
+		button:SetAttribute("item",satchel_name)
+	end
+	if not MerchantFrame:IsVisible() then
+		self:Print("Please open trader frame to buy " .. satchel_link)
+		return
+	end
+	satchel_index=nil
+	if IsMapGarrisonMap(GetCurrentMapAreaID()) then
+		for i=1,GetMerchantNumItems() do
+			local l=GetMerchantItemLink(i)
+			local id=self:GetItemID(l)
+			if id==satchel_id then
+				satchel_index=i
+				break
+			end
+		end
+	end
+	if not satchel_index then
+		self:Print("This trader is not the right one for " .. satchel_link)
+		return
+	end
+	self:Print("Buying " .. resources .. ' '  .. satchel_link)
+	local gold=GetMoney()
+	local buyer=function()
+		for i=1,resources do
+			BuyMerchantItem(satchel_index,1)
+			coroutine.yield(true)
+			coroutine.yield(true)
+			button:Click()
+			coroutine.yield(true)
+		end
+		while GetItemCount(satchel_id) > 0 do
+			button:Click()
+			coroutine.yield(true)
+			coroutine.yield(true)
+		end
+		addon:Print("You earned " .. GetMoneyString(GetMoney()-gold))
+	end
+	self:coroutineExecute(0.2,buyer)
+end
+--]]
 local function convert(perc,numeric)
 	perc=max(0,min(10,perc))
 	if numeric then
@@ -804,17 +842,3 @@ function addon:moreIsGood(n,t,numeric)
 	-- n = counted
 	return convert(math.floor(10/t*n),numeric)
 end
---[===[@debug@
-local function highdebug(tb)
-	for k,v in pairs(tb) do
-		if type(v) == "function" then
-			tb[k]=function(...) print(date(),k) return v(...) end
-		end
-	end
-end
---highdebug(addon)
---highdebug(dataobj)
---highdebug(farmobj)
---highdebug(workobj)
-_G.GACB=addon
---@end-debug@]===]

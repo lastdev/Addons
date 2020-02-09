@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(553, "DBM-Party-BC", 12, 255)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(17880)
 mod:SetEncounterID(1921)
 
@@ -21,18 +21,18 @@ local timerHasten			= mod:NewTargetTimer(10, 31458, nil, "MagicDispeller|Healer|
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 31458 and not args:IsDestTypePlayer() then     --Hasten
-		timerHasten:Start(args.destName)
 		specWarnHasten:Show(args.destName)
 		specWarnHasten:Play("dispelboss")
+		timerHasten:Start(args.destName)
 	elseif args.spellId == 38592 then
 		specWarnSpellReflect:Show(args.destName)
-		timerSpellReflect:Start()
 		specWarnSpellReflect:Play("stopattack")
+		timerSpellReflect:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 31458 then
-		timerHasten:Cancel(args.destName)
+		timerHasten:Stop(args.destName)
     end
 end

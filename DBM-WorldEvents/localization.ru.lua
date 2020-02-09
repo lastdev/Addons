@@ -1,4 +1,4 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then return end
 
 local L
 
@@ -132,4 +132,36 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	MassiveWave		= "Приближается большая волна зомби!"
+})
+
+--------------------------
+--  Memories of Azeroth: Burning Crusade  --
+--------------------------
+L = DBM:GetModLocalization("BCEvent")
+
+L:SetGeneralLocalization({
+	name = "MoA: Burning Crusade"
+})
+
+--------------------------
+--  Memories of Azeroth: Wrath of the Lich King  --
+--------------------------
+L = DBM:GetModLocalization("WrathEvent")
+
+L:SetGeneralLocalization({
+	name = "MoA: WotLK"
+})
+
+L:SetMiscLocalization{
+	Emerge				= "вылезает на поверхность!",
+	Burrow				= "зарывается в землю!"
+}
+
+--------------------------
+--  Memories of Azeroth: Cataclysm  --
+--------------------------
+L = DBM:GetModLocalization("CataEvent")
+
+L:SetGeneralLocalization({
+	name = "MoA: Cataclysm"
 })

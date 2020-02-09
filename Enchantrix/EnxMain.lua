@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxMain.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxMain.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	This is an addon for World of Warcraft that add a list of what an item
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxMain.lua $", "$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxMain.lua $", "$Rev: 6506 $")
 
 -- Local functions
 local addonLoaded
@@ -50,7 +50,7 @@ local idProspecting = 31252
 
 
 
-Enchantrix.Version = "8.1.6237"
+Enchantrix.Version = "8.2.6506"
 if (Enchantrix.Version == "<".."%version%>") then
 	Enchantrix.Version = "4.0.DEV"
 end
@@ -96,7 +96,7 @@ function addonLoaded(hookArgs, event, addOnName)
 	Enchantrix.AutoDisenchant.AddonLoaded()
 	Enchantrix.MiniIcon.Reposition()
 
-	Enchantrix.Revision = Enchantrix.Util.GetRevision("$Rev: 6237 $")
+	Enchantrix.Revision = Enchantrix.Util.GetRevision("$Rev: 6506 $")
 	for name, obj in pairs(Enchantrix) do
 		if type(obj) == "table" then
 			Enchantrix.Revision = math.max(Enchantrix.Revision, Enchantrix.Util.GetRevision(obj.Revision))
@@ -267,7 +267,8 @@ end
 function pickupInventoryItemHook(slot)
 	-- Remember last activated item
 	--Enchantrix.Util.DebugPrintQuick("pickupInventoryItemHook", slot);
-	if (not UnitCastingInfo("player")) then
+	-- UnitCastingInfo is used in Retail, CastingInfo is used in Classic
+	if ((UnitCastingInfo and not UnitCastingInfo("player")) or (CastingInfo and not CastingInfo())) then
 		if slot then
 			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by inventory", "info:", GetInventoryItemLink("player", slot))
 			DisenchantEvent.spellTarget = GetInventoryItemLink("player", slot)
@@ -279,7 +280,7 @@ end
 function useContainerItemHook(bag, slot)
 	-- Remember last activated item
 	--Enchantrix.Util.DebugPrintQuick("usecontaineritemhook", bag, slot);
-	if (not UnitCastingInfo("player")) then
+	if ((UnitCastingInfo and not UnitCastingInfo("player")) or (CastingInfo and not CastingInfo())) then
 		if bag and slot then
 			--Enchantrix.Util.DebugPrint("Spellcast", ENX_INFO, "item targetted by bag", "info:", GetContainerItemLink(bag, slot))
 			DisenchantEvent.spellTarget = GetContainerItemLink(bag, slot)
@@ -291,7 +292,7 @@ end
 function spellTargetItemHook(itemString)
 	-- Remember targeted item
 	--Enchantrix.Util.DebugPrintQuick("targetitemhook", itemString);
-	if (not UnitCastingInfo("player")) then
+	if ((UnitCastingInfo and not UnitCastingInfo("player")) or (CastingInfo and not CastingInfo())) then
 		if itemString then
 			local _, itemLink = GetItemInfo(itemString)
 			if itemLink then
@@ -306,7 +307,7 @@ end
 function useItemByNameHook(itemString)
 	-- Remember targeted item
 	--Enchantrix.Util.DebugPrintQuick("useItemByNameHook", itemString);
-	if (not UnitCastingInfo("player")) then
+	if ((UnitCastingInfo and not UnitCastingInfo("player")) or (CastingInfo and not CastingInfo())) then
 		if itemString then
 			local _, itemLink = GetItemInfo(itemString)
 			if itemLink then

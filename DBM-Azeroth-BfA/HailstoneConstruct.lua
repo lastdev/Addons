@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod(2197, "DBM-Azeroth-BfA", nil, 1028)
+local mod	= DBM:NewMod(2197, "DBM-Azeroth-BfA", 1, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18147 $"):sub(12, -3))
+mod:SetRevision("20200126143729")
 mod:SetCreatureID(140252)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -32,12 +32,6 @@ function mod:OnCombatStart(delay, yellTriggered)
 		--timerGlacialBreathCD:Start(1-delay)
 		--timerFreezingTempestCD:Start(1-delay)
 	end
-end
-
-function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
 end
 
 function mod:SPELL_CAST_START(args)

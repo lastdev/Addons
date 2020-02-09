@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 18 October 2014
 
-XPerl_SetModuleRevision("$Revision: 949 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 -- XPerl_SlashHandler
 local function XPerl_SlashHandler(msg)
@@ -39,7 +39,7 @@ local function XPerl_SlashHandler(msg)
 			for realmName, realmList in pairs(ZPerlConfigNew) do
 				if (type(realmList) == "table" and realmName ~= "global" and realmName ~= "savedPositions") then
 					for playerName, realmSettings in pairs(realmList) do
-						if (strlower(realmName) == strlower(GetRealmName()) and strlower(playerName) == myName) then
+						if (strlower(realmName) == strlower(GetRealmName()) and strlower(playerName) == strlower(UnitName("player"))) then
 							current = XPERL_CONFIG_CURRENT
 						else
 							current = ""

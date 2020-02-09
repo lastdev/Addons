@@ -77,7 +77,8 @@ config.options = {
 					desc = L["Show rare mobs' location even if any of them has not yet spawned."],
 					order = 12,
 				},
---[[				show_treasure = {
+--[[
+				show_treasure = {
 					type = "toggle",
 					name = L["Wyrmtongue Chest"],
 					desc = L["Show possible spawning location of Veiled Wyrmtongue Chest."],

@@ -26,7 +26,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentItem" inherits="ItemButtonTemplate">
+			<ItemButton name="$parentItem">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="10" y="0" />
 				</Anchors>
@@ -41,7 +41,7 @@
 						Altoholic.Mail:OnClick(self, button)
 					</OnClick>
 				</Scripts>
-			</Button>
+			</ItemButton>
 		</Frames>
 		<HighlightTexture name="$parentHighlight" file="Interface\HelpFrame\HelpFrameButton-Highlight" alphaMode="ADD">
 			<Size x="560" y="37" />

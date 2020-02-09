@@ -150,6 +150,68 @@
 				</Scripts>
 			</Frame>
 
+			<Frame name="$parenthappyFrame" inherits="XPerl_BorderStyleTemplate" hidden="true">
+				<Size>
+					<AbsDimension x="34" y="34"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentportraitFrame">
+						<Offset>
+							<AbsDimension x="2" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="$parenticon">
+						<Size>
+							<AbsDimension x="27" y="27"/>
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" />
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parenttex" file="Interface\PetPaperDollFrame\UI-PetHappiness" setAllPoints="true">
+									<Size>
+										<AbsDimension x="27" y="27"/>
+									</Size>
+									<TexCoords left="0" right="0.1875" top="0" bottom="0.359375"/>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								self:RegisterForDrag("LeftButton")
+							</OnLoad>
+							<OnDragStart>
+								if (XPerlLocked == 0) then
+									XPerl_Player_Pet:StartMoving()
+								end
+							</OnDragStart>
+							<OnDragStop>
+								XPerl_Player_Pet:StopMovingOrSizing()
+							</OnDragStop>
+							<OnEnter>
+								if (XPerlDB.tooltip.enable and self.tooltip) then
+									GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+									GameTooltip:SetText(self.tooltip)
+									if ( self.tooltipDamage ) then
+										GameTooltip:AddLine(self.tooltipDamage, "", 1, 1, 1)
+									end
+									if ( self.tooltipLoyalty ) then
+										GameTooltip:AddLine(self.tooltipLoyalty, "", 1, 1, 1)
+									end
+									GameTooltip:Show()
+								end
+							</OnEnter>
+							<OnLeave>
+								XPerl_PlayerTipHide()
+							</OnLeave>
+						</Scripts>
+					</Frame>
+				</Frames>
+			</Frame>
+
 			<Frame name="$parentstatsFrame" inherits="XPerl_StatsXP_Template">
 				<Size>
 					<AbsDimension x="80" y="34"/>

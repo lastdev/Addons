@@ -1,7 +1,7 @@
 --[[
 	ScrollSheet
-	Version: 8.1.6204 (SwimmingSeadragon)
-	Revision: $Id: ScrollSheet.lua 6204 2019-03-04 00:20:18Z none $
+	Version: 8.2.6474 (SwimmingSeadragon)
+	Revision: $Id: ScrollSheet.lua 6474 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -30,7 +30,7 @@ local LIBRARY_VERSION_MINOR = 22
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/ScrollSheet.lua $","$Rev: 6204 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: Auc-Advanced/Libs/Configator/ScrollSheet.lua $","$Rev: 6474 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local GSC_GOLD="ffd100"
 local GSC_SILVER="e6e6e6"

@@ -36,8 +36,12 @@
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
-						self:SetScript("OnEnter", function(self) ZPerl_Unit_OnEnter(self:GetParent()) end)
-						self:SetScript("OnLeave", function(self) ZPerl_Unit_OnLeave(self:GetParent()) end)
+						self:SetScript("OnEnter", function(self)
+							ZPerl_Unit_OnEnter(self:GetParent())
+						end)
+						self:SetScript("OnLeave", function(self)
+							ZPerl_Unit_OnLeave(self:GetParent())
+						end)
 					</OnLoad>
 					<OnDragStart>
 						if (XPerlLocked == 0) then
@@ -395,12 +399,12 @@
 			</Frame>
 			<Frame name="$parenteliteFrame" hidden="true">
 				<Size>
-					<AbsDimension x="128" y="128"/>
+					<AbsDimension x="132" y="132"/>
 				</Size>
 				<Anchors>
 					<Anchor point="RIGHT">
 						<Offset>
-							<AbsDimension x="40" y="-5"/>
+							<AbsDimension x="45" y="-3"/>
 						</Offset>
 					</Anchor>
 				</Anchors>

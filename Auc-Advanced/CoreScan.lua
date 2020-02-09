@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreScan.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreScan.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -140,18 +140,14 @@ local _G = _G
 local AucAdvanced = AucAdvanced
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreScan")
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreScan")
-if not coremodule or not internal then return end -- Someone has explicitely broken us
-
-if (not AucAdvanced.Scan) then AucAdvanced.Scan = {} end
+local coremodule, internalScan, private = AucAdvanced.GetCoreModule("CoreScan", "Scan", true, "CoreScan")
+if not coremodule or not internalScan then return end -- Someone has explicitely broken us
+local lib = AucAdvanced.Scan
 
 local SCANDATA_VERSION = "A" -- must match Auc-ScanData INTERFACE_VERSION
 
 local TOLERANCE_LOWERLIMIT = 50
 local TOLERANCE_TAPERLIMIT = 10000
-
-local lib = AucAdvanced.Scan
-local private = {}
 
 local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
@@ -166,7 +162,16 @@ local bitand, bitor, bitnot = bit.band, bit.bor, bit.bnot
 local type, wipe = type, wipe
 local pairs, ipairs, next = _G.pairs, _G.ipairs, _G.next
 local tonumber = tonumber
+local strfind = _G.string.find
 local GetTime = GetTime
+local GetInboxInvoiceInfo, GetInboxItem, GetInboxHeaderInfo = _G.GetInboxInvoiceInfo, _G.GetInboxItem, _G.GetInboxHeaderInfo
+
+local ExpiredLocale = AUCTION_EXPIRED_MAIL_SUBJECT:gsub("%%s", "") --remove the %s
+local SalePendingLocale = AUCTION_INVOICE_MAIL_SUBJECT:gsub("%%s", "") --sale pending (temp invoice)
+local OutbidLocale = AUCTION_OUTBID_MAIL_SUBJECT:gsub("%%s", "(.+)")
+local CancelledLocale = AUCTION_REMOVED_MAIL_SUBJECT:gsub("%%s", "")
+local SuccessLocale = AUCTION_SOLD_MAIL_SUBJECT:gsub("%%s", "")
+local WonLocale = AUCTION_WON_MAIL_SUBJECT:gsub("%%s", "")
 
 private.isScanning = false
 private.auctionItemListUpdated = false
@@ -788,8 +793,11 @@ function private.SubImageCache(itemId, serverKey)
 		local scandata = private.GetScanData(serverKey)
 		if not scandata then return end
 		itemResults = {}
-		for pos, data in ipairs(scandata.image) do
-			if data[Const.ITEMID] == itemId then
+		local C_ITEMID = Const.ITEMID
+		local image = scandata.image
+		for pos = 1, #image do
+			local data = image[pos]
+			if data[C_ITEMID] == itemId then
 				tinsert(itemResults, data)
 			end
 		end
@@ -1837,7 +1845,6 @@ end
 do
 	local PetInfoCache, ItemTried, PetTried = {}, {}, {}
 	local lookupPetType2SubClassID = Const.AC_PetType2SubClassID
-	local GetPetInfoBySpeciesID = C_PetJournal.GetPetInfoBySpeciesID
 	local GetItemInfoCacheLib = AucAdvanced.GetItemInfoCache
 
 	function private.ResetItemInfoCache()
@@ -1873,7 +1880,7 @@ do
 				-- GetPetInfoBySpeciesID previously failed for this speciesID in this processing pass
 				return
 			end
-			local _, _, petType = GetPetInfoBySpeciesID(speciesID)
+			local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			if petType then
 				subtype = lookupPetType2SubClassID[petType]
 				PetInfoCache[speciesID] = subtype
@@ -2873,7 +2880,12 @@ function PlaceAuctionBid(type, index, bid, ...)
 		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		for pos, engineLib in ipairs(modules) do
 			if engineLib.ScanProcessors["placebid"] then
-				pcall(engineLib.ScanProcessors["placebid"],"placebid", statItem, type, index, bid)
+				local pOK, errormsg = pcall(engineLib.ScanProcessors["placebid"],"placebid", statItem, type, index, bid)
+				if not pOK then
+					local text = ("Error trapped for ScanProcessor 'placebid' in module %s:\n%s"):format(engineLib.GetName(), errormsg)
+					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+					geterrorhandler()(text)
+				end
 			end
 		end
 	end
@@ -2899,34 +2911,135 @@ function PostAuction(minBid, buyoutPrice, runTime, stackSize, numStacks, ...)
 		local modules = AucAdvanced.GetAllModules("ScanProcessors")
 		for pos, engineLib in ipairs(modules) do
 			if engineLib.ScanProcessors["newauc"] then
-				pcall(engineLib.ScanProcessors["newauc"],"newauc", statItem, minBid, buyoutPrice, runTime, price, stackSize, numStacks)
+				local pOK, errormsg = pcall(engineLib.ScanProcessors["newauc"],"newauc", statItem, minBid, buyoutPrice, runTime, price, stackSize, numStacks)
+				if not pOK then
+					local text = ("Error trapped for ScanProcessor 'newauc' in module %s:\n%s"):format(engineLib.GetName(), errormsg)
+					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+					geterrorhandler()(text)
+				end
 			end
 		end
 	end
 	return private.Hook.PostAuction(minBid, buyoutPrice, runTime, stackSize, numStacks, ...)
 end
 
+function ProcessInbox(index)
+    local _, _, sender, subject, money, _, daysLeft, itemCount, _, _, _, _, _, firstItemQuantity, firstItemLink = GetInboxHeaderInfo(index)
+
+    if not sender then return end
+
+    local modules = AucAdvanced.GetAllModules("ScanProcessors")
+    local auctionTime = daysLeft and (time() + (daysLeft - 30) * 86400)
+
+    -- "Auction successful:"
+    if strfind(subject, SuccessLocale) then
+        local invoiceType, itemName, playerName, bid, buyout, deposit, consignment, _, _, _, count, _ = GetInboxInvoiceInfo(index)
+        if not invoiceType == 'seller' or not money or money == 0 then return end
+        
+        for engineLib=1, #modules do
+            local aucsold = modules[engineLib].ScanProcessors.aucsold
+            if aucsold then
+                local pOK, errormsg = pcall(aucsold, "aucsold", auctionTime, itemName, playerName, bid, buyout, deposit, consignment, count)
+                if not pOK then
+                    local text = ("Error trapped for ScanProcessor 'aucsold' in module %s:\n%s"):format(modules[engineLib].GetName(), errormsg)
+                    if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+                    geterrorhandler()(text)
+                end
+            end
+        end
+
+    -- "Auction won:"
+    elseif strfind(subject, WonLocale) then
+        local invoiceType, itemName, playerName, bid, buyout, _, _, _, _, _, count, _ = GetInboxInvoiceInfo(index)
+        if not invoiceType == 'buyer' or not itemCount or itemCount == 0 then return end
+
+        for engineLib=1, #modules do
+            local aucwon = modules[engineLib].ScanProcessors.aucwon
+            if aucwon then
+                local pOK, errormsg = pcall(aucwon, "aucwon", auctionTime, itemName, playerName, bid, buyout, count, firstItemLink)
+                if not pOK then
+                    local text = ("Error trapped for ScanProcessor 'aucwon' in module %s:\n%s"):format(modules[engineLib].GetName(), errormsg)
+                    if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+                    geterrorhandler()(text)
+                end
+            end
+        end
+
+    -- "Auction expired:"
+    elseif strfind(subject, ExpiredLocale) then
+        if not itemCount or itemCount == 0 then return end
+
+        local itemName = GetInboxItem(index, 1) -- first (only) attachment
+
+        for engineLib=1, #modules do
+            local aucexpired = modules[engineLib].ScanProcessors.aucexpired
+            if aucexpired then
+                local pOK, errormsg = pcall(aucexpired, "aucexpired", auctionTime, itemName, firstItemQuantity, firstItemLink)
+                if not pOK then
+                    local text = ("Error trapped for ScanProcessor 'aucexpired' in module %s:\n%s"):format(modules[engineLib].GetName(), errormsg)
+                    if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+                    geterrorhandler()(text)
+                end
+            end
+        end
+
+    -- "Auction cancelled:"
+    elseif strfind(subject, CancelledLocale) then
+        if not itemCount or itemCount == 0 then return end
+
+        local itemName = GetInboxItem(index, 1) -- first (only) attachment
+
+        for engineLib=1, #modules do
+            local auccancelled = modules[engineLib].ScanProcessors.auccancelled
+            if auccancelled then
+                local pOK, errormsg = pcall(auccancelled, "auccancelled", auctionTime, itemName, firstItemQuantity, firstItemLink)
+                if not pOK then
+                    local text = ("Error trapped for ScanProcessor 'auccancelled' in module %s:\n%s"):format(modules[engineLib].GetName(), errormsg)
+                    if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+                    geterrorhandler()(text)
+                end
+            end
+        end
+
+    -- TODO? other tests such as COD Buys or outbid auctions (AUCTION_OUTBID_MAIL_SUBJECT)
+    else
+        return
+    end
+
+    return
+end
+
 private.Hook.TakeInboxMoney = TakeInboxMoney
 function TakeInboxMoney(index, ...)
-	local invoiceType, itemName, playerName, bid, buyout, deposit, consignment = GetInboxInvoiceInfo(index)
-	if invoiceType then
-		local modules = AucAdvanced.GetAllModules("ScanProcessors")
-		local _,_, sender = GetInboxHeaderInfo(index)
+    local pOK, errormsg = pcall(ProcessInbox, index)
+    if not pOK then
+        local text = ("Error trapped for Hook 'TakeInboxMoney'\n%s"):format(errormsg)
+        if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "Hook Error", text) end
+        geterrorhandler()(text)
+    end
+    return private.Hook.TakeInboxMoney(index, ...)
+end
 
-		local faction = "Neutral"
-		if sender:find(FACTION_ALLIANCE) then
-			faction = "Alliance"
-		elseif sender:find(FACTION_HORDE) then
-			faction = "Horde"
-		end
+private.Hook.AutoLootMailItem = AutoLootMailItem
+function AutoLootMailItem(index, ...)
+    local pOK, errormsg = pcall(ProcessInbox, index)
+    if not pOK then
+        local text = ("Error trapped for Hook 'AutoLootMailItem'\n%s"):format(errormsg)
+        if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "Hook Error", text) end
+        geterrorhandler()(text)
+    end
+    return private.Hook.AutoLootMailItem(index, ...)
+end
 
-		for pos, engineLib in ipairs(modules) do
-			if engineLib.ScanProcessors["aucsold"] then
-				pcall(engineLib.ScanProcessors["aucsold"],"aucsold", faction, itemName, playerName, bid, buyout, deposit, consignment)
-			end
-		end
-	end
-	return private.Hook.TakeInboxMoney(index, ...)
+private.Hook.TakeInboxItem = TakeInboxItem
+function TakeInboxItem(index, ...)
+    local pOK, errormsg = pcall(ProcessInbox, index)
+    if not pOK then
+        local text = ("Error trapped for Hook 'TakeInboxItem'\n%s"):format(errormsg)
+        if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "Hook Error", text) end
+        geterrorhandler()(text)
+    end
+    return private.Hook.TakeInboxItem(index, ...)
 end
 
 -- Function to indicate that the next call to QueryAuctionItems comes from Auctioneer itself.
@@ -3341,8 +3454,7 @@ function coremodule.Processors.auctionclose(event)
 	lib.Interrupt()
 end
 
-internal.Scan = {}
-function internal.Scan.NotifyItemListUpdated()
+function internalScan.NotifyItemListUpdated()
 	if private.scanStarted then
 		private.auctionItemListUpdated = true
 		--[[ commented out for now - this gets really spammy
@@ -3354,7 +3466,7 @@ function internal.Scan.NotifyItemListUpdated()
 	end
 end
 
-function internal.Scan.NotifyOwnedListUpdated()
+function internalScan.NotifyOwnedListUpdated()
 --	if private.scanStarted then
 --		if (_G.nLog) then
 --			local startTime = GetTime()
@@ -3363,5 +3475,5 @@ function internal.Scan.NotifyOwnedListUpdated()
 --	end
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreScan.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreScan.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreScan")

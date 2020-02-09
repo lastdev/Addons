@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------
+r40 | thaokyaltoholic | 2020-02-09 09:59:47 +0000 (Sun, 09 Feb 2020) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+8.3.001 Commit
+------------------------------------------------------------------------
+r39 | thaokyaltoholic | 2019-06-30 06:53:28 +0000 (Sun, 30 Jun 2019) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+8.2.001 Commit
+------------------------------------------------------------------------
 r38 | thaoky.altoholic@yahoo.com | 2018-09-19 16:59:41 +0000 (Wed, 19 Sep 2018) | 1 line
 Changed paths:
    M /trunk/DataStore_Currencies.lua

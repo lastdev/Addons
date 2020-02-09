@@ -14,6 +14,7 @@ local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 local TidyPlatesThreat = TidyPlatesThreat
 
 local ART_PATH = "Interface\\AddOns\\TidyPlates_ThreatPlates\\Artwork\\"
+local EMPTY_TEXTURE = ART_PATH .. "Empty"
 
 local OFFSET_THREAT= 7.5
 
@@ -36,17 +37,21 @@ local function OnUpdateCastBar(self, elapsed)
   if self.IsCasting then
     self.Value = self.Value + elapsed
 
-    if self.Value < self.MaxValue then
-      self:SetValue(self.Value)
+    local value, max_value = self.Value, self.MaxValue
+    if value < max_value then
+      self:SetValue(value)
+      self.Spark:SetPoint("CENTER", self, "LEFT", (value / max_value) * self:GetWidth(), 0)
       return
     end
 
-    self:SetValue(self.MaxValue)
+    self:SetValue(max_value)
   elseif self.IsChanneling then
     self.Value = self.Value - elapsed
 
-    if self.Value > 0 then
-      self:SetValue(self.Value)
+    local value = self.Value
+    if value > 0 then
+      self:SetValue(value)
+      self.Spark:SetPoint("CENTER", self, "LEFT", (value / self.MaxValue) * self:GetWidth(), 0)
       return
     end
   elseif (self.FlashTime > 0) then
@@ -68,19 +73,29 @@ end
 local function OnSizeChangedCastbar(self, width, height)
   local scale_factor = height / 10
   self.InterruptShield:SetSize(14 * scale_factor, 16 * scale_factor)
+  self.Spark:SetSize(3, self:GetHeight())
 end
 
 local function SetAllColors(self, rBar, gBar, bBar, aBar, rBackdrop, gBackdrop, bBackdrop, aBackdrop)
   self:SetStatusBarColor(rBar or 1, gBar or 1, bBar or 1, aBar or 1)
-  self.Border:SetBackdropColor(rBackdrop or 1, gBackdrop or 1, bBackdrop or 1, aBackdrop or 1)
+  self.Background:SetVertexColor(rBackdrop or 1, gBackdrop or 1, bBackdrop or 1, aBackdrop or 1)
+end
+
+local function SetHealthBarTexture(self, style)
+  self:SetStatusBarTexture(style.texture or EMPTY_TEXTURE)
+  self.HealAbsorb:SetTexture(style.texture or EMPTY_TEXTURE, true, false)
 end
 
 local function SetStatusBarBackdropHealthbar(self, backdrop_texture, edge_texture, edge_size, offset)
+  self.Background:SetTexture(backdrop_texture)
+  self.Background:SetPoint("TOPLEFT", self:GetStatusBarTexture(), "TOPRIGHT")
+  self.Background:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
+
   self.Border:ClearAllPoints()
   self.Border:SetPoint("TOPLEFT", self, "TOPLEFT", - offset, offset)
   self.Border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", offset, - offset)
   self.Border:SetBackdrop({
-    bgFile = backdrop_texture,
+    -- bgFile = backdrop_texture,
     edgeFile = edge_texture,
     edgeSize = edge_size,
     insets = { left = offset, right = offset, top = offset, bottom = offset },
@@ -109,6 +124,7 @@ function Addon:CreateHealthbar(parent)
   frame:SetFrameLevel(parent:GetFrameLevel() + 5)
 
   frame.Border = CreateFrame("Frame", nil, frame)
+  frame.Background = frame:CreateTexture(nil, "BACKGROUND")
   frame.EliteBorder = CreateFrame("Frame", nil, frame)
   frame.ThreatBorder = CreateFrame("Frame", nil, frame)
 
@@ -128,16 +144,39 @@ function Addon:CreateHealthbar(parent)
 	frame.SetAllColors = SetAllColors
   frame.SetTexCoord = function() end
 	frame.SetBackdropTexCoord = function() end
+	frame.SetHealthBarTexture = SetHealthBarTexture
   frame.SetStatusBarBackdrop = SetStatusBarBackdropHealthbar
   frame.SetEliteBorder = SetEliteBorder
+
+  local healabsorb_bar = frame:CreateTexture(nil, "OVERLAY", 0)
+  healabsorb_bar:SetVertexColor(0, 0, 0)
+  healabsorb_bar:SetAlpha(0.5)
+
+  local healabsorb_glow = frame:CreateTexture(nil, "OVERLAY", 7)
+  healabsorb_glow:SetTexture([[Interface\RaidFrame\Absorb-Overabsorb]])
+  healabsorb_glow:SetBlendMode("ADD")
+  healabsorb_glow:SetWidth(8)
+  healabsorb_glow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", 2, 0)
+  healabsorb_glow:SetPoint("TOPRIGHT", frame, "TOPLEFT", 2, 0)
+  healabsorb_glow:Hide()
+
+  frame.HealAbsorbLeftShadow = frame:CreateTexture(nil, "OVERLAY", 4)
+  frame.HealAbsorbLeftShadow:SetTexture([[Interface\RaidFrame\Absorb-Edge]])
+  frame.HealAbsorbRightShadow = frame:CreateTexture(nil, "OVERLAY", 4)
+  frame.HealAbsorbRightShadow:SetTexture([[Interface\RaidFrame\Absorb-Edge]])
+  frame.HealAbsorbRightShadow:SetTexCoord(1, 0, 0, 1) -- reverse texture (right to left)
+
+  frame.HealAbsorb = healabsorb_bar
+  frame.HealAbsorbGlow = healabsorb_glow
 
 	--frame:SetScript("OnSizeChanged", OnSizeChanged)
 	return frame
 end
 
-local function SetShownInterruptOverlay(self, show)
+local function SetFormat(self, show)
+  local db = TidyPlatesThreat.db.profile.settings
+
   if show then
-    local db = TidyPlatesThreat.db.profile.settings
     self.InterruptShield:SetShown(db.castnostop.ShowInterruptShield)
     if db.castborder.show and db.castnostop.ShowOverlay then
       self.InterruptBorder:Show()
@@ -151,6 +190,8 @@ local function SetShownInterruptOverlay(self, show)
     self.InterruptOverlay:Hide()
     self.InterruptShield:Hide()
   end
+
+  self.Spark:SetShown(db.castbar.ShowSpark)
 end
 
 local function SetStatusBarBackdropCastbar(self, backdrop_texture, edge_texture, edge_size, offset)
@@ -174,6 +215,7 @@ function Addon:CreateCastbar(parent)
   frame:SetFrameLevel(parent:GetFrameLevel() + 4)
 
   frame.Border = CreateFrame("Frame", nil, frame)
+  frame.Background = frame:CreateTexture(nil, "BACKGROUND")
   frame.InterruptBorder = CreateFrame("Frame", nil, frame)
   frame.Overlay = CreateFrame("Frame", nil, frame)
 
@@ -197,9 +239,14 @@ function Addon:CreateCastbar(parent)
   frame.SetBackdropTexCoord = function() end
   frame.SetStatusBarBackdrop = SetStatusBarBackdropCastbar
   frame.SetEliteBorder = SetEliteBorder
-  frame.SetShownInterruptOverlay = SetShownInterruptOverlay
+  frame.SetFormat = SetFormat
 
   frame:SetStatusBarColor(1, 0.8, 0)
+
+  local spark = frame:CreateTexture(nil, "OVERLAY", 7)
+  spark:SetTexture(ART_PATH .. "Spark")
+  spark:SetBlendMode("ADD")
+  frame.Spark = spark
 
 --  frame.Flash = frame:CreateAnimationGroup()
 --  local anim = frame.Flash:CreateAnimation("Alpha")
@@ -263,8 +310,12 @@ function Addon:ConfigCastbar()
             visual.spelltext:SetText("Cosmic Beacon")
 
             self.Border:SetShown(plate.TPFrame.style.castborder.show)
-            self:SetShownInterruptOverlay(plate.TPFrame.style.castnostop.show)
+            self:SetFormat(plate.TPFrame.style.castnostop.show)
             self.InterruptShield:SetShown(TidyPlatesThreat.db.profile.settings.castnostop.ShowInterruptShield)
+
+            self.Spark:SetSize(3, self:GetHeight() + 1)
+            self.Spark:SetPoint("CENTER", self, "LEFT", 0.5 * self:GetWidth(), 0)
+
             visual.spelltext:SetShown(plate.TPFrame.style.spelltext.show)
             visual.spellicon:SetShown(plate.TPFrame.style.spellicon.show)
             self:Show()
@@ -274,6 +325,7 @@ function Addon:ConfigCastbar()
             self.InterruptBorder:Hide()
             self.InterruptOverlay:Hide()
             self.InterruptShield:Hide()
+            self.Spark:Hide()
             visual.spelltext:Hide()
             visual.spellicon:Hide()
           end
@@ -291,7 +343,7 @@ function Addon:ConfigCastbar()
 
         castbar:Show()
         EnabledConfigMode = true
-        TidyPlatesInternal:ForceUpdate()
+        Addon:ForceUpdate()
       elseif castbar._Hide then
         castbar:_Hide()
       end

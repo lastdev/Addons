@@ -153,15 +153,26 @@ local allQuestsComplete = function(quests)
     end
 end
 
+local playerHasBuff = function(spellid)
+    local buffname = GetSpellInfo(spellid)
+    for i = 1, 40 do
+        local name = UnitBuff("player", i)
+        if not name then
+            -- reached the end, probably
+            return
+        end
+        if buffname == name then
+            return UnitBuff("player",i)
+        end
+    end
+end
+
 local player_faction = UnitFactionGroup("player")
 local player_name = UnitName("player")
 ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if isMinimap and not ns.db.show_on_minimap and not point.minimap then
         return false
     elseif not isMinimap and not ns.db.show_on_world then
-        return false
-    end
-    if point.level and point.level ~= currentLevel then
         return false
     end
     if ns.hidden[currentZone] and ns.hidden[currentZone][coord] then
@@ -214,6 +225,12 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
                 return false
             end
         end
+    end
+    if point.requires_buff and not playerHasBuff(point.requires_buff) then
+        return false
+    end
+    if point.requires_no_buff and playerHasBuff(point.requires_no_buff) then
+        return false
     end
     if point.hide_before and not ns.db.upcoming and not allQuestsComplete(point.hide_before) then
         return false

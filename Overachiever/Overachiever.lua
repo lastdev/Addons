@@ -1027,7 +1027,7 @@ do
 	    --if (notInUI and notInUI[name]) then  name = IconNotReadyX .. " " .. name;  end
         if (completed) then
           tooltip:AddLine(name, r_com, g_com, b_com)
-          tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
+          tooltip:AddTexture(136814) -- "Interface\\RAIDFRAME\\ReadyCheck-Ready"
         else
           tooltip:AddLine(name, 1, 1, 1) --, r_inc, g_inc, b_inc)
           if (anycomplete) then
@@ -1063,7 +1063,7 @@ do
 	  --]]
       if (completed) then
         tooltip:AddLine(name, r_com, g_com, b_com)
-        tooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
+        tooltip:AddTexture(136814) -- "Interface\\RAIDFRAME\\ReadyCheck-Ready"
       else
         tooltip:AddLine(name, 1, 1, 1) --, r_inc, g_inc, b_inc)
       end
@@ -1132,7 +1132,7 @@ do
           GameTooltip:AddLine(name, r_inc, g_inc, b_inc)
         end
         if (completed) then
-          GameTooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
+		  GameTooltip:AddTexture(136814) -- "Interface\\RAIDFRAME\\ReadyCheck-Ready"
           anycomplete = true
         elseif (anycomplete) then
           GameTooltip:AddTexture("") -- fake texture to push the text over
@@ -1197,7 +1197,7 @@ do
       for i,critArr in ipairs(reminders) do
 	    if (critArr[2]) then
 		  GameTooltip:AddLine(critArr[1], r_com, g_com, b_com)
-		  GameTooltip:AddTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
+		  GameTooltip:AddTexture(136814) -- "Interface\\RAIDFRAME\\ReadyCheck-Ready"
 		else
 		  GameTooltip:AddLine(critArr[1], 1, 1, 1)
 		  if (anycomplete) then

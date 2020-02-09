@@ -32,7 +32,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentItem" inherits="ItemButtonTemplate">
+			<ItemButton name="$parentItem">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="10" y="0" />
 				</Anchors>
@@ -47,7 +47,7 @@
 						Altoholic.AuctionHouse:OnClick(self, button)
 					</OnClick>
 				</Scripts>
-			</Button>
+			</ItemButton>
 		</Frames>
 		<Scripts>
 			<OnLoad>

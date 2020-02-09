@@ -1,12 +1,10 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_mage_spells", 80000)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_mage_spells", 80300)
 if not __exports then return end
-local __Scripts = LibStub:GetLibrary("ovale/Scripts")
-local OvaleScripts = __Scripts.OvaleScripts
-__exports.register = function()
+__exports.registerMageSpells = function(OvaleScripts)
     local name = "ovale_mage_spells"
-    local desc = "[8.1] Ovale: Mage spells"
+    local desc = "[8.2] Ovale: Mage spells"
     local code = [[Define(ancestral_call 274738)
-# Invoke the spirits of your ancestors, granting you their power for 15 seconds.
+# Invoke the spirits of your ancestors, granting you a random secondary stat for 15 seconds.
   SpellInfo(ancestral_call cd=120 duration=15 gcd=0 offgcd=1)
   SpellAddBuff(ancestral_call ancestral_call=1)
 Define(arcane_barrage 44425)
@@ -42,11 +40,9 @@ Define(arcane_power 12042)
   SpellInfo(arcane_power cd=90 duration=10)
   # Spell damage increased by w1.rnMana costs of your damaging spells reduced by w2.
   SpellAddBuff(arcane_power arcane_power=1)
-Define(battle_potion_of_intellect 279151)
-# Increases your Intellect by s1 for 25 seconds.
-  SpellInfo(battle_potion_of_intellect cd=1 duration=25 gcd=0 offgcd=1)
-  # Intellect increased by w1.
-  SpellAddBuff(battle_potion_of_intellect battle_potion_of_intellect=1)
+Define(bag_of_tricks 312411)
+# Pull your chosen trick from the bag and use it on target enemy or ally. Enemies take <damage> damage, while allies are healed for <healing>. 
+  SpellInfo(bag_of_tricks cd=90)
 Define(berserking 26297)
 # Increases your haste by s1 for 12 seconds.
   SpellInfo(berserking cd=180 duration=12 gcd=0 offgcd=1)
@@ -70,6 +66,31 @@ Define(blizzard 190356)
 # Ice shards pelt the target area, dealing 190357m1*8 Frost damage over 8 seconds and reducing movement speed by 12486s1 for 3 seconds.?a236662[rnrnEach time Blizzard deals damage, the cooldown of Frozen Orb is reduced by 236662s1/100.1 sec.][]
 # Rank 2: Each time Blizzard deals damage, the cooldown of Frozen Orb is reduced by s1/100.1 sec.
   SpellInfo(blizzard cd=8 duration=8)
+Define(blood_of_the_enemy_0 297108)
+# The Heart of Azeroth erupts violently, dealing s1 Shadow damage to enemies within A1 yds. You gain m2 critical strike chance against the targets for 10 seconds?a297122[, and increases your critical hit damage by 297126m for 5 seconds][].
+  SpellInfo(blood_of_the_enemy_0 cd=120 duration=10 channel=10)
+  # You have a w2 increased chance to be Critically Hit by the caster.
+  SpellAddTargetDebuff(blood_of_the_enemy_0 blood_of_the_enemy_0=1)
+Define(blood_of_the_enemy_1 297969)
+# Infuse your Heart of Azeroth with Blood of the Enemy.
+  SpellInfo(blood_of_the_enemy_1)
+Define(blood_of_the_enemy_2 297970)
+# Infuse your Heart of Azeroth with Blood of the Enemy.
+  SpellInfo(blood_of_the_enemy_2)
+Define(blood_of_the_enemy_3 297971)
+# Infuse your Heart of Azeroth with Blood of the Enemy.
+  SpellInfo(blood_of_the_enemy_3)
+Define(blood_of_the_enemy_4 298273)
+# The Heart of Azeroth erupts violently, dealing 297108s1 Shadow damage to enemies within 297108A1 yds. You gain 297108m2 critical strike chance against the targets for 10 seconds.
+  SpellInfo(blood_of_the_enemy_4 cd=90 duration=15 gcd=0 offgcd=1)
+  SpellAddBuff(blood_of_the_enemy_4 blood_of_the_enemy_4=1)
+Define(blood_of_the_enemy_5 298277)
+# The Heart of Azeroth erupts violently, dealing 297108s1 Shadow damage to enemies within 297108A1 yds. You gain 297108m2 critical strike chance against the targets for 10 seconds, and increases your critical hit damage by 297126m for 5 seconds.
+  SpellInfo(blood_of_the_enemy_5 cd=90 duration=15 gcd=0 offgcd=1)
+  SpellAddBuff(blood_of_the_enemy_5 blood_of_the_enemy_5=1)
+Define(blood_of_the_enemy_6 299039)
+# Infuse your Heart of Azeroth with Blood of the Enemy.
+  SpellInfo(blood_of_the_enemy_6)
 Define(charged_up 205032)
 # Immediately grants s1 Arcane Charges.
   SpellInfo(charged_up cd=40 duration=10 arcanecharges=-4 talent=charged_up_talent)
@@ -85,6 +106,8 @@ Define(comet_storm 153595)
 Define(cone_of_cold 120)
 # Targets in a cone in front of you take (37.5 of Spell Power) Frost damage and have movement slowed by 212792m1 for 5 seconds.
   SpellInfo(cone_of_cold cd=12)
+  # Movement slowed by s1.
+  SpellAddBuff(cone_of_cold cone_of_cold=1)
 Define(counterspell 2139)
 # Counters the enemy's spellcast, preventing any spell from that school of magic from being cast for 6 seconds?s12598[ and silencing the target for 55021d][].
   SpellInfo(counterspell cd=24 duration=6 gcd=0 offgcd=1 interrupt=1)
@@ -109,9 +132,14 @@ Define(fire_blast 108853)
 Define(fireball 133)
 # Throws a fiery ball that causes (59 of Spell Power) Fire damage.
   SpellInfo(fireball)
-Define(fireblood 265221)
-# Removes all poison, disease, curse, magic, and bleed effects and increases your ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by 265226s1*3 and an additional 265226s1 for each effect removed. Lasts 8 seconds. 
-  SpellInfo(fireblood cd=120 gcd=0 offgcd=1)
+Define(fireblood_0 265221)
+# Removes all poison, disease, curse, magic, and bleed effects and increases your ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by 265226s1*3 and an additional 265226s1 for each effect removed. Lasts 8 seconds. ?s195710[This effect shares a 30 sec cooldown with other similar effects.][]
+  SpellInfo(fireblood_0 cd=120 gcd=0 offgcd=1)
+Define(fireblood_1 265226)
+# Increases ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by s1.
+  SpellInfo(fireblood_1 duration=8 max_stacks=6 gcd=0 offgcd=1)
+  # Increases ?a162700[Agility]?a162702[Strength]?a162697[Agility]?a162698[Strength]?a162699[Intellect]?a162701[Intellect][primary stat] by w1.
+  SpellAddBuff(fireblood_1 fireblood_1=1)
 Define(flamestrike 2120)
 # Calls down a pillar of fire, burning all enemies within the area for s1 Fire damage and reducing their movement speed by (57.49999999999999 of Spell Power) for 8 seconds.
   SpellInfo(flamestrike duration=8)
@@ -121,6 +149,24 @@ Define(flurry 44614)
 # Unleash a flurry of ice, striking the target s1 times for a total of (31.6 of Spell Power)*m1 Frost damage. Each hit reduces the target's movement speed by 228354s1 for 1 second.rnrnWhile Brain Freeze is active, Flurry applies Winter's Chill, causing your target to take damage from your spells as if it were frozen.
   SpellInfo(flurry)
 
+Define(focused_azerite_beam_0 295258)
+# Focus excess Azerite energy into the Heart of Azeroth, then expel that energy outward, dealing m1*10 Fire damage to all enemies in front of you over 3 seconds.?a295263[ Castable while moving.][]
+  SpellInfo(focused_azerite_beam_0 cd=90 duration=3 channel=3 tick=0.33)
+  SpellAddBuff(focused_azerite_beam_0 focused_azerite_beam_0=1)
+  SpellAddBuff(focused_azerite_beam_0 focused_azerite_beam_1=1)
+Define(focused_azerite_beam_1 295261)
+# Focus excess Azerite energy into the Heart of Azeroth, then expel that energy outward, dealing m1*10 Fire damage to all enemies in front of you over 3 seconds.?a295263[ Castable while moving.][]
+  SpellInfo(focused_azerite_beam_1 cd=90)
+Define(focused_azerite_beam_2 299336)
+# Focus excess Azerite energy into the Heart of Azeroth, then expel that energy outward, dealing m1*10 Fire damage to all enemies in front of you over 3 seconds.
+  SpellInfo(focused_azerite_beam_2 cd=90 duration=3 channel=3 tick=0.33)
+  SpellAddBuff(focused_azerite_beam_2 focused_azerite_beam_0=1)
+  SpellAddBuff(focused_azerite_beam_2 focused_azerite_beam_1=1)
+Define(focused_azerite_beam_3 299338)
+# Focus excess Azerite energy into the Heart of Azeroth, then expel that energy outward, dealing m1*10 Fire damage to all enemies in front of you over 3 seconds. Castable while moving.
+  SpellInfo(focused_azerite_beam_3 cd=90 duration=3 channel=3 tick=0.33)
+  SpellAddBuff(focused_azerite_beam_3 focused_azerite_beam_0=1)
+  SpellAddBuff(focused_azerite_beam_3 focused_azerite_beam_1=1)
 Define(frostbolt 116)
 # Launches a bolt of frost at the enemy, causing (51.1 of Spell Power) Frost damage and slowing movement speed by 205708s1 for 8 seconds.
   SpellInfo(frostbolt)
@@ -129,15 +175,48 @@ Define(frozen_orb 84714)
 # Launches an orb of swirling ice up to s1 yards forward which deals up to 20*84721s2 Frost damage to all enemies it passes through. Grants 1 charge of Fingers of Frost when it first damages an enemy.rnrnEnemies damaged by the Frozen Orb are slowed by 289308s1 for 3 seconds.
   SpellInfo(frozen_orb cd=60 duration=15 channel=15)
 Define(glacial_spike 199786)
-# Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing (320 of Spell Power) damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 seconds. Damage may interrupt the freeze effect.rnrnRequires 5 Icicles to cast.rnrn|cFFFFFFFFPassive:|r Ice Lance no longer launches Icicles.
+# Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing (297 of Spell Power) damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 seconds. Damage may interrupt the freeze effect.rnrnRequires 5 Icicles to cast.rnrn|cFFFFFFFFPassive:|r Ice Lance no longer launches Icicles.
   SpellInfo(glacial_spike talent=glacial_spike_talent)
+  # Frozen in place.
+  SpellAddBuff(glacial_spike glacial_spike=1)
+Define(gladiators_badge 277185)
+# Increases primary stat by s1 for 15 seconds.rn
+  SpellInfo(gladiators_badge cd=120 duration=15 channel=15 gcd=0 offgcd=1)
+  # Primary stat increased by s4.
+  SpellAddBuff(gladiators_badge gladiators_badge=1)
+Define(guardian_of_azeroth_0 295840)
+# Call upon Azeroth to summon a Guardian of Azeroth for 30 seconds who impales your target with spikes of Azerite every s1/10.1 sec that deal 295834m1*(1+@versadmg) Fire damage.?a295841[ Every 303347t1 sec, the Guardian launches a volley of Azerite Spikes at its target, dealing 295841s1 Fire damage to all nearby enemies.][]?a295843[rnrnEach time the Guardian of Azeroth casts a spell, you gain 295855s1 Haste, stacking up to 295855u times. This effect ends when the Guardian of Azeroth despawns.][]rn
+  SpellInfo(guardian_of_azeroth_0 cd=180 duration=30)
+  SpellAddBuff(guardian_of_azeroth_0 guardian_of_azeroth_0=1)
+Define(guardian_of_azeroth_1 295855)
+# Each time the Guardian of Azeroth casts a spell, you gain 295855s1 Haste, stacking up to 295855u times. This effect ends when the Guardian of Azeroth despawns.
+  SpellInfo(guardian_of_azeroth_1 duration=60 max_stacks=5 gcd=0 offgcd=1)
+  # Haste increased by s1.
+  SpellAddBuff(guardian_of_azeroth_1 guardian_of_azeroth_1=1)
+Define(guardian_of_azeroth_2 299355)
+# Call upon Azeroth to summon a Guardian of Azeroth for 30 seconds who impales your target with spikes of Azerite every 295840s1/10.1 sec that deal 295834m1*(1+@versadmg)*(1+(295836m1/100)) Fire damage. Every 303347t1 sec, the Guardian launches a volley of Azerite Spikes at its target, dealing 295841s1 Fire damage to all nearby enemies.
+  SpellInfo(guardian_of_azeroth_2 cd=180 duration=30 gcd=1)
+  SpellAddBuff(guardian_of_azeroth_2 guardian_of_azeroth_2=1)
+Define(guardian_of_azeroth_3 299358)
+# Call upon Azeroth to summon a Guardian of Azeroth for 30 seconds who impales your target with spikes of Azerite every 295840s1/10.1 sec that deal 295834m1*(1+@versadmg)*(1+(295836m1/100)) Fire damage. Every 303347t1 sec, the Guardian launches a volley of Azerite Spikes at its target, dealing 295841s1 Fire damage to all nearby enemies.rnrnEach time the Guardian of Azeroth casts a spell, you gain 295855s1 Haste, stacking up to 295855u times. This effect ends when the Guardian of Azeroth despawns.
+  SpellInfo(guardian_of_azeroth_3 cd=180 duration=20 gcd=1)
+  SpellAddBuff(guardian_of_azeroth_3 guardian_of_azeroth_3=1)
+Define(guardian_of_azeroth_4 300091)
+# Call upon Azeroth to summon a Guardian of Azeroth to aid you in combat for 30 seconds.
+  SpellInfo(guardian_of_azeroth_4 cd=300 duration=30 gcd=1)
+Define(guardian_of_azeroth_5 303347)
+  SpellInfo(guardian_of_azeroth_5 gcd=0 offgcd=1 tick=8)
+  SpellAddBuff(guardian_of_azeroth_5 guardian_of_azeroth_buff=1)
+Define(guardian_of_azeroth_buff 303349)
+  SpellInfo(guardian_of_azeroth_buff gcd=0 offgcd=1)
+
 Define(ice_floes 108839)
 # Makes your next Mage spell with a cast time shorter than s2 sec castable while moving. Unaffected by the global cooldown and castable while casting.
   SpellInfo(ice_floes cd=20 duration=15 max_stacks=3 gcd=0 offgcd=1 talent=ice_floes_talent)
   # Able to move while casting spells.
   SpellAddBuff(ice_floes ice_floes=1)
 Define(ice_lance 30455)
-# Quickly fling a shard of ice at the target, dealing (35 of Spell Power) Frost damage?s56377[, and (35 of Spell Power)*56377m2/100 Frost damage to a second nearby target][].rnrnIce Lance damage is tripled against frozen targets.
+# Quickly fling a shard of ice at the target, dealing (42 of Spell Power) Frost damage?s56377[, and (42 of Spell Power)*56377m2/100 Frost damage to a second nearby target][].rnrnIce Lance damage is tripled against frozen targets.
   SpellInfo(ice_lance)
   SpellInfo(fire_blast replaced_by=ice_lance)
 Define(ice_nova 157997)
@@ -157,6 +236,13 @@ Define(lights_judgment 255647)
 Define(living_bomb 44457)
 # The target becomes a Living Bomb, taking 217694o1 Fire damage over 4 seconds, and then exploding to deal an additional (14.000000000000002 of Spell Power) Fire damage to the target and all other enemies within 44461A2 yards.rnrnOther enemies hit by this explosion also become a Living Bomb, but this effect cannot spread further.
   SpellInfo(living_bomb cd=12 talent=living_bomb_talent)
+  # Causes w1 Fire damage every t1 sec. After d, the target explodes, causing w2 Fire damage to the target and all other enemies within 44461A2 yards?w3>0[, and spreading Living Bomb][].
+  SpellAddBuff(living_bomb living_bomb=1)
+Define(manifesto_of_madness_chapter_one 313948)
+# Increase your Critical Strike by up to s5, reduced by s5*.08 for each ally within s3 yards of you. Lasts 10 seconds. When this effect ends, your Versatility is increased by 314040s3 for each ally within s4 yards of you, up to a max of 314040s3*5. Lasts 10 seconds.rn
+  SpellInfo(manifesto_of_madness_chapter_one cd=90 duration=10 channel=10 gcd=0 offgcd=1)
+  # Critical strike increased by w2.
+  SpellAddBuff(manifesto_of_madness_chapter_one manifesto_of_madness_chapter_one=1)
 Define(meteor 117588)
 # Call down a molten meteor on your target, dealing (75 of Spell Power) damage to all enemies within A1 yards of your target.
   SpellInfo(meteor cd=60 gcd=0 offgcd=1)
@@ -177,6 +263,28 @@ Define(presence_of_mind 205025)
   SpellInfo(presence_of_mind cd=60 gcd=0 offgcd=1)
   # Arcane Blast is instant cast.
   SpellAddBuff(presence_of_mind presence_of_mind=1)
+Define(purifying_blast_0 295337)
+# Call down a purifying beam upon the target area, dealing 295293s3*(1+@versadmg)*s2 Fire damage over 6 seconds.?a295364[ Has a low chance to immediately annihilate any specimen deemed unworthy by MOTHER.][]?a295352[rnrnWhen an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.][]rnrnAny Aberration struck by the beam is stunned for 3 seconds.
+  SpellInfo(purifying_blast_0 cd=60 duration=6)
+Define(purifying_blast_1 295338)
+# Call down a purifying beam upon the target area, dealing 295293s3*(1+@versadmg)*s2 Fire damage over 6 seconds.?a295364[ Has a low chance to immediately annihilate any specimen deemed unworthy by MOTHER.][]?a295352[rnrnWhen an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.][]rnrnAny Aberration struck by the beam is stunned for 3 seconds.
+  SpellInfo(purifying_blast_1 channel=0 gcd=0 offgcd=1)
+Define(purifying_blast_2 295354)
+# When an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.
+  SpellInfo(purifying_blast_2 duration=8 gcd=0 offgcd=1)
+  # Damage dealt increased by s1.
+  SpellAddBuff(purifying_blast_2 purifying_blast_2=1)
+Define(purifying_blast_3 295366)
+# Call down a purifying beam upon the target area, dealing 295293s3*(1+@versadmg)*s2 Fire damage over 6 seconds.?a295364[ Has a low chance to immediately annihilate any specimen deemed unworthy by MOTHER.][]?a295352[rnrnWhen an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.][]rnrnAny Aberration struck by the beam is stunned for 3 seconds.
+  SpellInfo(purifying_blast_3 duration=3 gcd=0 offgcd=1)
+  # Stunned.
+  SpellAddTargetDebuff(purifying_blast_3 purifying_blast_3=1)
+Define(purifying_blast_4 299345)
+# Call down a purifying beam upon the target area, dealing 295293s3*(1+@versadmg)*s2 Fire damage over 6 seconds. Has a low chance to immediately annihilate any specimen deemed unworthy by MOTHER.?a295352[rnrnWhen an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.][]rnrnAny Aberration struck by the beam is stunned for 3 seconds.
+  SpellInfo(purifying_blast_4 cd=60 duration=6 channel=6 gcd=1)
+Define(purifying_blast_5 299347)
+# Call down a purifying beam upon the target area, dealing 295293s3*(1+@versadmg)*s2 Fire damage over 6 seconds. Has a low chance to immediately annihilate any specimen deemed unworthy by MOTHER.rnrnWhen an enemy dies within the beam, your damage is increased by 295354s1 for 8 seconds.rnrnAny Aberration struck by the beam is stunned for 3 seconds.
+  SpellInfo(purifying_blast_5 cd=60 duration=6 gcd=1)
 Define(pyroblast 11366)
 # Hurls an immense fiery boulder that causes (123.9 of Spell Power) Fire damage.
   SpellInfo(pyroblast)
@@ -194,9 +302,29 @@ Define(ray_of_frost 205021)
   SpellInfo(ray_of_frost cd=75 duration=5 channel=5 tick=1 talent=ray_of_frost_talent)
   # Movement slowed by w1.rnTaking w2 Frost damage every t2 sec.
   SpellAddTargetDebuff(ray_of_frost ray_of_frost=1)
-Define(rising_death 252346)
-# Chance to create multiple potions.
-  SpellInfo(rising_death gcd=0 offgcd=1)
+Define(reaping_flames_0 310690)
+# Burn your target with a bolt of Azerite, dealing 310712s3 Fire damage. If the target has less than s2 health?a310705[ or more than 310705s1 health][], the cooldown is reduced by s3 sec.?a310710[rnrnIf Reaping Flames kills an enemy, its cooldown is lowered to 310710s2 sec and it will deal 310710s1 increased damage on its next use.][]
+  SpellInfo(reaping_flames_0 cd=45 channel=0)
+Define(reaping_flames_1 311194)
+# Burn your target with a bolt of Azerite, dealing 310712s3 Fire damage. If the target has less than s2 health or more than 310705s1 health, the cooldown is reduced by m3 sec.
+  SpellInfo(reaping_flames_1 cd=45 channel=0)
+Define(reaping_flames_2 311195)
+# Burn your target with a bolt of Azerite, dealing 310712s3 Fire damage. If the target has less than s2 health or more than 310705s1 health, the cooldown is reduced by m3 sec.rnrnIf Reaping Flames kills an enemy, its cooldown is lowered to 310710s2 sec and it will deal 310710s1 increased damage on its next use. 
+  SpellInfo(reaping_flames_2 cd=45 channel=0)
+Define(reaping_flames_3 311202)
+# Burn your target with a bolt of Azerite, dealing 310712s3 Fire damage. If the target has less than s2 health?a310705[ or more than 310705s1 health][], the cooldown is reduced by s3 sec.?a310710[rnrnIf Reaping Flames kills an enemy, its cooldown is lowered to 310710s2 sec and it will deal 310710s1 increased damage on its next use.][]
+  SpellInfo(reaping_flames_3 duration=30 gcd=0 offgcd=1)
+  # Damage of next Reaping Flames increased by w1.
+  SpellAddBuff(reaping_flames_3 reaping_flames_3=1)
+Define(reckless_force_buff_0 298409)
+# When an ability fails to critically strike, you have a high chance to gain Reckless Force. When Reckless Force reaches 302917u stacks, your critical strike is increased by 302932s1 for 4 seconds.
+  SpellInfo(reckless_force_buff_0 max_stacks=5 gcd=0 offgcd=1 tick=10)
+  # Gaining unstable Azerite energy.
+  SpellAddBuff(reckless_force_buff_0 reckless_force_buff_0=1)
+Define(reckless_force_buff_1 304038)
+# When an ability fails to critically strike, you have a high chance to gain Reckless Force. When Reckless Force reaches 302917u stacks, your critical strike is increased by 302932s1 for 4 seconds.
+  SpellInfo(reckless_force_buff_1 channel=-0.001 gcd=0 offgcd=1)
+  SpellAddBuff(reckless_force_buff_1 reckless_force_buff_1=1)
 Define(rule_of_threes 264354)
 # When you gain your third Arcane Charge, the cost of your next Arcane Blast or Arcane Missiles is reduced by 264774s1.
   SpellInfo(rule_of_threes channel=0 gcd=0 offgcd=1 talent=rule_of_threes_talent)
@@ -213,6 +341,44 @@ Define(summon_water_elemental 31687)
 Define(supernova 157980)
 # Pulses arcane energy around the target enemy or ally, dealing (30 of Spell Power) Arcane damage to all enemies within A2 yards, and knocking them upward. A primary enemy target will take s1 increased damage.
   SpellInfo(supernova cd=25 talent=supernova_talent)
+Define(the_unbound_force_0 298452)
+# Unleash the forces within the Heart of Azeroth, causing shards of Azerite to strike your target for (298407s3*((2 seconds/t)+1)+298407s3) Fire damage over 2 seconds. This damage is increased by s2 if it critically strikes.?a298456[rnrnEach time The Unbound Force causes a critical strike, it immediately strikes the target with an additional Azerite shard, up to a maximum of 298456m2.][]
+  SpellInfo(the_unbound_force_0 cd=60 duration=2 channel=2 tick=0.33)
+  SpellAddBuff(the_unbound_force_0 the_unbound_force_0=1)
+  SpellAddTargetDebuff(the_unbound_force_0 the_unbound_force_0=1)
+Define(the_unbound_force_1 298453)
+# Unleash the forces within the Heart of Azeroth, causing shards of Azerite to strike your target for (298407s3*((2 seconds/t)+1)+298407s3) Fire damage over 2 seconds. This damage is increased by s2 if it critically strikes.?a298456[rnrnEach time The Unbound Force causes a critical strike, it immediately strikes the target with an additional Azerite shard, up to a maximum of 298456m2.][]
+  SpellInfo(the_unbound_force_1 gcd=0 offgcd=1)
+Define(the_unbound_force_2 299321)
+# Infuse your Heart of Azeroth with The Unbound Force.
+  SpellInfo(the_unbound_force_2)
+Define(the_unbound_force_3 299322)
+# Infuse your Heart of Azeroth with The Unbound Force.
+  SpellInfo(the_unbound_force_3)
+Define(the_unbound_force_4 299323)
+# Infuse your Heart of Azeroth with The Unbound Force.
+  SpellInfo(the_unbound_force_4)
+Define(the_unbound_force_5 299324)
+# Infuse your Heart of Azeroth with The Unbound Force.
+  SpellInfo(the_unbound_force_5)
+Define(the_unbound_force_6 299376)
+# Unleash the forces within the Heart of Azeroth, causing shards of Azerite to strike your target for (298407s3*((2 seconds/298452t)+1)+298407s3) Fire damage over 2 seconds. This damage is increased by s2 if it critically strikes.
+  SpellInfo(the_unbound_force_6 cd=45 duration=2 channel=2 gcd=1 tick=0.33)
+  SpellAddBuff(the_unbound_force_6 the_unbound_force_6=1)
+  SpellAddTargetDebuff(the_unbound_force_6 the_unbound_force_6=1)
+Define(the_unbound_force_7 299378)
+# Unleash the forces within the Heart of Azeroth, causing shards of Azerite to strike your target for (298407s3*((2 seconds/298452t)+1)+298407s3) Fire damage over 2 seconds. This damage is increased by s2 if it critically strikes.rnrnEach time The Unbound Force causes a critical strike, it immediately strikes the target with an additional Azerite shard, up to a maximum of 298456m2.
+  SpellInfo(the_unbound_force_7 cd=45 duration=2 channel=2 gcd=1 tick=0.33)
+  SpellAddBuff(the_unbound_force_7 the_unbound_force_7=1)
+  SpellAddTargetDebuff(the_unbound_force_7 the_unbound_force_7=1)
+SpellList(blood_of_the_enemy blood_of_the_enemy_0 blood_of_the_enemy_1 blood_of_the_enemy_2 blood_of_the_enemy_3 blood_of_the_enemy_4 blood_of_the_enemy_5 blood_of_the_enemy_6)
+SpellList(fireblood fireblood_0 fireblood_1)
+SpellList(focused_azerite_beam focused_azerite_beam_0 focused_azerite_beam_1 focused_azerite_beam_2 focused_azerite_beam_3)
+SpellList(guardian_of_azeroth guardian_of_azeroth_0 guardian_of_azeroth_1 guardian_of_azeroth_2 guardian_of_azeroth_3 guardian_of_azeroth_4 guardian_of_azeroth_5)
+SpellList(purifying_blast purifying_blast_0 purifying_blast_1 purifying_blast_2 purifying_blast_3 purifying_blast_4 purifying_blast_5)
+SpellList(reaping_flames reaping_flames_0 reaping_flames_1 reaping_flames_2 reaping_flames_3)
+SpellList(the_unbound_force the_unbound_force_0 the_unbound_force_1 the_unbound_force_2 the_unbound_force_3 the_unbound_force_4 the_unbound_force_5 the_unbound_force_6 the_unbound_force_7)
+SpellList(reckless_force_buff reckless_force_buff_0 reckless_force_buff_1)
 Define(alexstraszas_fury_talent 11) #22465
 # Dragon's Breath always critically strikes and contributes to Hot Streak.
 Define(amplification_talent 1) #22458
@@ -236,11 +402,13 @@ Define(flame_patch_talent 16) #22451
 Define(freezing_rain_talent 16) #22454
 # Frozen Orb makes Blizzard instant cast and increases its damage done by 270232s2 for 12 seconds.
 Define(glacial_spike_talent 21) #21634
-# Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing (320 of Spell Power) damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 seconds. Damage may interrupt the freeze effect.rnrnRequires 5 Icicles to cast.rnrn|cFFFFFFFFPassive:|r Ice Lance no longer launches Icicles.
+# Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing (297 of Spell Power) damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 seconds. Damage may interrupt the freeze effect.rnrnRequires 5 Icicles to cast.rnrn|cFFFFFFFFPassive:|r Ice Lance no longer launches Icicles.
 Define(ice_floes_talent 6) #23073
 # Makes your next Mage spell with a cast time shorter than s2 sec castable while moving. Unaffected by the global cooldown and castable while casting.
 Define(ice_nova_talent 3) #22463
 # Causes a whirl of icy wind around the enemy, dealing (45 of Spell Power)*s3/100 Frost damage to the target and (45 of Spell Power) Frost damage to all other enemies within a2 yards, and freezing them in place for 2 seconds.
+Define(incanters_flow_talent 7) #22444
+# Magical energy flows through you while in combat, building up to 116267m1*5 increased damage and then diminishing down to 116267s1 increased damage, cycling every 10 sec.
 Define(kindling_talent 19) #21631
 # Your Fireball, Pyroblast, Fire Blast, and Phoenix Flames critical strikes reduce the remaining cooldown on Combustion by <cdr> sec.
 Define(living_bomb_talent 18) #22472
@@ -271,9 +439,24 @@ Define(splitting_ice_talent 17) #23176
 # Your Ice Lance and Icicles now deal s3 increased damage, and hit a second nearby target for s2 of their damage.rnrnYour Ebonbolt and Glacial Spike also hit a second nearby target for s2 of its damage.
 Define(supernova_talent 12) #22470
 # Pulses arcane energy around the target enemy or ally, dealing (30 of Spell Power) Arcane damage to all enemies within A2 yards, and knocking them upward. A primary enemy target will take s1 increased damage.
+Define(ancient_knot_of_wisdom_item 166793)
+Define(azsharas_font_of_power_item 169314)
+Define(azurethos_singed_plumage_item 161377)
+Define(balefire_branch_item 159630)
+Define(focused_resolve_item 168506)
+Define(gladiators_medallion_item 111306)
+Define(ignition_mages_fuse_item 159615)
+Define(neural_synapse_enhancer_item 168973)
+Define(shockbiters_fang_item 169318)
+Define(tzanes_barkspines_item 161411)
+Define(hyperthread_wristwraps_item 168989)
+Define(manifesto_of_madness_item 174103)
+Define(unbridled_fury_item 169299)
 Define(arcane_pummeling_trait 270669)
 Define(equipoise_trait 286027)
 Define(blaster_master_trait 274596)
+Define(condensed_life_force_essence_id 14)
+Define(memory_of_lucid_dreams_essence_id 27)
     ]]
     code = code .. [[
 # Mage spells and functions.
@@ -307,6 +490,7 @@ Define(blazing_speed 108843)
 	SpellInfo(blazing_speed cd=25 gcd=0 offgcd=1)
 
 	SpellInfo(blink cd=15)
+	SpellInfo(blink replaced_by=shimmer talent=shimmer_talent)
 
 	SpellInfo(blizzard cd=8 haste=spell)
 	SpellAddBuff(blizzard ice_floes_buff=0 if_spell=ice_floes)
@@ -315,6 +499,7 @@ Define(brain_freeze_buff 190446)
 	SpellInfo(brain_freeze_buff duration=15)
 
 	SpellInfo(charged_up arcanecharges=-4)
+
 Define(cinderstorm 198929)
 	SpellInfo(cinderstorm cd=9)
 Define(clearcasting_buff 276743)
@@ -381,8 +566,8 @@ Define(frostfire_bolt 44614)
 
 	SpellInfo(frozen_orb cd=60)
 	SpellAddBuff(frozen_orb frozen_mass_buff=1 itemset=T20 itemcount=2)
-Define(frozen_orb_debuff 84721)
-	SpellInfo(frozen_orb_debuff duration=2)
+Define(frozen_orb_debuff 289308)
+	SpellInfo(frozen_orb_debuff duration=3)
 Define(frozen_mass_buff 242253)
 	SpellInfo(frozen_mass_buff duration=10)
 Define(frozen_touch 205030)
@@ -485,6 +670,9 @@ Define(rune_of_power_buff 116014)
 
 	SpellInfo(scorch travel_time=1)
 Define(shard_of_the_exodar_warp 207970)
+Define(shimmer 212653)
+	SpellInfo(shimmer cd=20 charges=2)
+
 Define(spellsteal 30449)
 Define(summon_arcane_familiar 205022)
 	SpellInfo(summon_arcane_familiar cd=10)
@@ -535,6 +723,7 @@ Define(pyromaniac_talent 2)
 Define(reverberate_talent 16)
 Define(ring_of_frost_talent 15)
 Define(rule_of_threes_talent 2)
+Define(shimmer_talent 5)
 Define(slipstream_talent 6)
 Define(thermal_void_talent 19)
 Define(time_anomaly_talent 20)

@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 80300
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Argus|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Argus|r
@@ -18,6 +18,10 @@
 ## X-DBM-Mod-MapID: 1779
 ## X-DBM-Mod-LoadCID: 124625,124555,124719,124592,124492,124514
 ## X-DBM-Mod-MinCoreRevision: 14737
+## X-Curse-Project-ID: 301324
+## X-WoWI-ID: 24905
+## Version: r16
+
 localization.en.lua
 localization.cn.lua
 localization.de.lua

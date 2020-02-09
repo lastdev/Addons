@@ -54,8 +54,8 @@ Prat:AddModuleToLoad(function()
  do
      local L
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "Shorten the server name to 3 letters",
 		["autoabbreviate_name"] = "Auto-abbreviate",
@@ -68,18 +68,19 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "Raccourcir le nom des serveurs à 3 lettres.",
 		["autoabbreviate_name"] = "Abréviation",
 		--[[Translation missing --]]
-		--[[ ["colon_desc"] = "",--]] 
+		["colon_desc"] = "Toggle adding colon after server replacement.",
 		--[[Translation missing --]]
-		--[[ ["colon_name"] = "",--]] 
+		["colon_name"] = "Show Colon",
 		["randomclr_desc"] = "Utiliser une couleur aléatoire pour chaque serveur.",
 		["randomclr_name"] = "Couleurs aléatoires",
 		["Server name abbreviation options."] = "Options d'abréviation des noms de serveur.",
@@ -87,11 +88,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "Kürze den Server-Namen auf 3 Buchstaben",
 		["autoabbreviate_name"] = "Auto-Abkürzen",
@@ -104,11 +106,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "서버 이름을 3글자로 줄입니다",
 		["autoabbreviate_name"] = "자동-줄임",
@@ -121,36 +124,38 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		--[[Translation missing --]]
-		--[[ ["autoabbreviate_desc"] = "",--]] 
+		["autoabbreviate_desc"] = "Shorten the server name to 3 letters",
 		--[[Translation missing --]]
-		--[[ ["autoabbreviate_name"] = "",--]] 
+		["autoabbreviate_name"] = "Auto-abbreviate",
 		--[[Translation missing --]]
-		--[[ ["colon_desc"] = "",--]] 
+		["colon_desc"] = "Toggle adding colon after server replacement.",
 		--[[Translation missing --]]
-		--[[ ["colon_name"] = "",--]] 
+		["colon_name"] = "Show Colon",
 		--[[Translation missing --]]
-		--[[ ["randomclr_desc"] = "",--]] 
+		["randomclr_desc"] = "Use a random color for each server.",
 		--[[Translation missing --]]
-		--[[ ["randomclr_name"] = "",--]] 
+		["randomclr_name"] = "Random Colors",
 		--[[Translation missing --]]
-		--[[ ["Server name abbreviation options."] = "",--]] 
+		["Server name abbreviation options."] = "Server name abbreviation options.",
 		--[[Translation missing --]]
-		--[[ ["ServerNames"] = "",--]] 
+		["ServerNames"] = "ServerNames",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "Сокращает название сервера до трех букв",
 		["autoabbreviate_name"] = "Авто-сокращение",
@@ -163,11 +168,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "把服务器名缩到3个字符",
 		["autoabbreviate_name"] = "自动缩写",
@@ -180,11 +186,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		["autoabbreviate_desc"] = "Acorta el nombre del servidor a 3 letras",
 		["autoabbreviate_name"] = "Auto-abreviar",
@@ -197,17 +204,18 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
- L=
-{
+ 
+L = {
 	["ServerNames"] = {
 		--[[Translation missing --]]
-		--[[ ["autoabbreviate_desc"] = "",--]] 
+		["autoabbreviate_desc"] = "Shorten the server name to 3 letters",
 		["autoabbreviate_name"] = "自動縮短",
 		--[[Translation missing --]]
-		--[[ ["colon_desc"] = "",--]] 
+		["colon_desc"] = "Toggle adding colon after server replacement.",
 		["colon_name"] = "顯示冒號",
 		["randomclr_desc"] = "伺服器名稱使用隨機色彩",
 		["randomclr_name"] = "隨機色彩",
@@ -215,6 +223,7 @@ Prat:AddModuleToLoad(function()
 		["ServerNames"] = "伺服器名稱",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

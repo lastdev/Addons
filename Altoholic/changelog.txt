@@ -15,13 +15,24 @@ How to support Altoholic's development :
 - For a repeated donation : Support me on Patreon : https://www.patreon.com/Thaoky 
 - Make a gift from my amazon's wish list : http://amzn.eu/7xWdnbZ
 
-If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #OneManArmy
+If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
+
+8.3.001 (9/02/2020)
+
+- Fixed the issues related to the new Auction House
+- Added new factions.
+
+8.2.001 (29/06/2019)
+
+- Minor fixes.
+- Added new factions.
 
 8.0.008 (19/09/2018)
 
 - Added BfA factions. (Thanks AlexSUCF !!)
 - Added BfA currencies.
 - Added BfA emissary quests.
+- Reworked the quest log.
 - Some quest achievements for BfA were rearranged to better reflect a character's progress. If I made a mistake on the horde side, please let me know.
 - Fixed the percentage of rest xp for pandaren to now properly show 200% or 300% depending on the mode.
 - Reworked the way rest xp is displayed in the addon, there is now a tooltip giving more info about rest xp, including when an alt will be fully rested.

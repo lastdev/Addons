@@ -8,7 +8,7 @@ addon.events = LibStub("CallbackHandler-1.0"):New(addon)
 
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v4.0.13'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v4.0.17'
 	local window
 	local function GetDebugWindow()
 		if not window then
@@ -63,6 +63,8 @@ addon.datasources = {
 			mount = hasMount,
 			boss = isBoss,
 			locations = {[zoneid] = {coord,...}},
+			-- TODO, phase should really be per-zone in locations, but that's more of a data-model change than I want to make right now.
+			phase = artID,
 			hidden = isHidden,
 		},
 		...
@@ -72,7 +74,7 @@ addon.datasources = {
 local mobdb = setmetatable({}, {
 	__index = function(t, id)
 		for source, data in pairs(addon.datasources) do
-			if data[id] and addon.db.global.datasources[source] and not data[id].hidden then
+			if data[id] and addon.db.global.datasources[source] then
 				t[id] = data[id]
 				return data[id]
 			end
@@ -301,6 +303,17 @@ function addon:IsMobInZone(id, zone)
 		return mobsByZone[zone][id]
 	end
 end
+function addon:IsMobInPhase(id, zone)
+	if mobdb[id] then
+		if not mobdb[id].phase then
+			return true
+		end
+		if not mobdb[id].locations[zone] then
+			return false
+		end
+		return mobdb[id].phase == C_Map.GetMapArtID(zone)
+	end
+end
 -- Returns id, addon:GetMobInfo(id)
 function addon:GetMobByCoord(zone, coord)
 	if not mobsByZone[zone] then return end
@@ -365,12 +378,13 @@ do
 		if zone and zone_ignores[zone] and zone_ignores[zone][id] then
 			return true
 		end
-		--Maybe add an option for this later. This checks unit faction and ignores mobs your faction cannot do anything with.
 		if mobdb[id] then
 			if mobdb[id].hidden then
 				return true
 			end
 			if mobdb[id].faction == faction then
+				--This checks unit faction and ignores mobs your faction cannot do anything with.
+				--TODO: add an option for this?
 				return true
 			end
 			if mobdb[id].source and globaldb.ignore_datasource[mobdb[id].source] then
@@ -431,6 +445,17 @@ function addon:FormatLastSeen(t)
 		return minutes.." minute(s)"
 	end
 end
+
+addon.zone_names = setmetatable({}, {__index = function(self, mapid)
+	if not mapid then
+		return
+	end
+	local mapdata = C_Map.GetMapInfo(mapid)
+	if mapdata then
+		self[mapid] = mapdata.name
+		return mapdata.name
+	end
+end,})
 
 -- Location
 

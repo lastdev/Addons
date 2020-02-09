@@ -75,8 +75,8 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = true,
 		["Add a custom channel"] = true,
@@ -109,11 +109,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Un module pour jouer un son sur certains évènements de messages.",
 		["Add a custom channel"] = "Ajouter un canal",
@@ -146,11 +147,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Ein Modul, um bei bestimmten Mitteilungen, Töne abzuspielen.",
 		["Add a custom channel"] = "Einen benutzerdefinierten Kanal hinzufügen.",
@@ -183,11 +185,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "특정 대화 메시지에 소리를 재생하는 모듈입니다.",
 		["Add a custom channel"] = "사설 채널 추가",
@@ -220,76 +223,78 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		--[[Translation missing --]]
-		--[[ ["A module to play sounds on certain chat messages."] = "",--]] 
+		["A module to play sounds on certain chat messages."] = "A module to play sounds on certain chat messages.",
 		--[[Translation missing --]]
-		--[[ ["Add a custom channel"] = "",--]] 
+		["Add a custom channel"] = "Add a custom channel",
 		--[[Translation missing --]]
-		--[[ ["bn_whisper_desc"] = "",--]] 
+		["bn_whisper_desc"] = "Sound for %s Battle.Net whisper messages",
 		--[[Translation missing --]]
-		--[[ ["bn_whisper_name"] = "",--]] 
+		["bn_whisper_name"] = "Battle.Net Whisper",
 		--[[Translation missing --]]
-		--[[ ["Custom Channels"] = "",--]] 
+		["Custom Channels"] = "Custom Channels",
 		--[[Translation missing --]]
-		--[[ ["group_lead_desc"] = "",--]] 
+		["group_lead_desc"] = "Sound for %s raid leader, party leader or dungeon guide messages",
 		--[[Translation missing --]]
-		--[[ ["group_lead_name"] = "",--]] 
+		["group_lead_name"] = "Group Leader",
 		--[[Translation missing --]]
-		--[[ ["guild_desc"] = "",--]] 
+		["guild_desc"] = "Sound for %s guild messages",
 		--[[Translation missing --]]
-		--[[ ["guild_name"] = "",--]] 
+		["guild_name"] = "Guild",
 		--[[Translation missing --]]
-		--[[ ["incoming"] = "",--]] 
+		["incoming"] = "incoming",
 		--[[Translation missing --]]
-		--[[ ["Incoming Sounds"] = "",--]] 
+		["Incoming Sounds"] = "Incoming Sounds",
 		--[[Translation missing --]]
-		--[[ ["officer_desc"] = "",--]] 
+		["officer_desc"] = "Sound for %s officer channel messages",
 		--[[Translation missing --]]
-		--[[ ["officer_name"] = "",--]] 
+		["officer_name"] = "Officer",
 		--[[Translation missing --]]
-		--[[ ["outgoing"] = "",--]] 
+		["outgoing"] = "outgoing",
 		--[[Translation missing --]]
-		--[[ ["Outgoing Sounds"] = "",--]] 
+		["Outgoing Sounds"] = "Outgoing Sounds",
 		--[[Translation missing --]]
-		--[[ ["party_desc"] = "",--]] 
+		["party_desc"] = "Sound for %s party messages",
 		--[[Translation missing --]]
-		--[[ ["party_name"] = "",--]] 
+		["party_name"] = "Party",
 		--[[Translation missing --]]
-		--[[ ["Play a sound for a certain channel name (can be a substring)"] = "",--]] 
+		["Play a sound for a certain channel name (can be a substring)"] = "Play a sound for a certain channel name (can be a substring)",
 		--[[Translation missing --]]
-		--[[ ["raid_desc"] = "",--]] 
+		["raid_desc"] = "Sound for %s raid or battleground group/leader messages",
 		--[[Translation missing --]]
-		--[[ ["raid_name"] = "",--]] 
+		["raid_name"] = "Raid",
 		--[[Translation missing --]]
-		--[[ ["Remove a custom channel"] = "",--]] 
+		["Remove a custom channel"] = "Remove a custom channel",
 		--[[Translation missing --]]
-		--[[ ["Reset settings"] = "",--]] 
+		["Reset settings"] = "Reset settings",
 		--[[Translation missing --]]
-		--[[ ["Restore default settings and resets custom channel list"] = "",--]] 
+		["Restore default settings and resets custom channel list"] = "Restore default settings and resets custom channel list",
 		--[[Translation missing --]]
-		--[[ ["Sound selection for incoming chat messages"] = "",--]] 
+		["Sound selection for incoming chat messages"] = "Sound selection for incoming chat messages",
 		--[[Translation missing --]]
-		--[[ ["Sound selection for outgoing (from you) chat messages"] = "",--]] 
+		["Sound selection for outgoing (from you) chat messages"] = "Sound selection for outgoing (from you) chat messages",
 		--[[Translation missing --]]
-		--[[ ["Sounds"] = "",--]] 
+		["Sounds"] = "Sounds",
 		--[[Translation missing --]]
-		--[[ ["whisper_desc"] = "",--]] 
+		["whisper_desc"] = "Sound for %s whisper messages",
 		--[[Translation missing --]]
-		--[[ ["whisper_name"] = "",--]] 
+		["whisper_name"] = "Whisper",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Модуль проигрывает зуки для определённых сообщений в чате.",
 		["Add a custom channel"] = "Добавить свой канал",
@@ -322,11 +327,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "在某些聊天信息播放声音的模块",
 		["Add a custom channel"] = "添加自定义频道",
@@ -359,23 +365,24 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "Un módulo que reproduce sonidos con ciertos mensajes del chat.",
 		["Add a custom channel"] = "Añadir un canal personalizado",
 		--[[Translation missing --]]
-		--[[ ["bn_whisper_desc"] = "",--]] 
+		["bn_whisper_desc"] = "Sound for %s Battle.Net whisper messages",
 		--[[Translation missing --]]
-		--[[ ["bn_whisper_name"] = "",--]] 
+		["bn_whisper_name"] = "Battle.Net Whisper",
 		["Custom Channels"] = "Canales Personalizados",
 		--[[Translation missing --]]
-		--[[ ["group_lead_desc"] = "",--]] 
+		["group_lead_desc"] = "Sound for %s raid leader, party leader or dungeon guide messages",
 		--[[Translation missing --]]
-		--[[ ["group_lead_name"] = "",--]] 
+		["group_lead_name"] = "Group Leader",
 		["guild_desc"] = "Sonido para mensajes de hermandad %s",
 		["guild_name"] = "Hermandad",
 		["incoming"] = "Recibido",
@@ -400,11 +407,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  L=
-{
+  
+L = {
 	["Sounds"] = {
 		["A module to play sounds on certain chat messages."] = "模組：於特定聊天訊息播放音效。",
 		["Add a custom channel"] = "加入自訂頻道",
@@ -412,7 +420,7 @@ Prat:AddModuleToLoad(function()
 		["bn_whisper_name"] = "Battle.Net 密話",
 		["Custom Channels"] = "自訂頻道",
 		--[[Translation missing --]]
-		--[[ ["group_lead_desc"] = "",--]] 
+		["group_lead_desc"] = "Sound for %s raid leader, party leader or dungeon guide messages",
 		["group_lead_name"] = "隊長",
 		["guild_desc"] = "公會訊息音效：%s",
 		["guild_name"] = "公會",
@@ -437,6 +445,7 @@ Prat:AddModuleToLoad(function()
 		["whisper_name"] = "密語",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

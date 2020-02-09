@@ -2,9 +2,10 @@
 # yarn lockfile v1
 
 
-"@wowts/lua@^1.0.2", "@wowts/lua@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@wowts/lua/-/lua-1.0.3.tgz#3e75d1ad1dac3095021d24e4a3a319dc27a7bbc8"
+"@wowts/lua@^1.0.2", "@wowts/lua@^1.0.3", "@wowts/lua@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@wowts/lua/-/lua-1.3.2.tgz#5e4103862ab1dd2f08a71da71b252cf1e15abbf3"
+  integrity sha512-nv4WtbflnOJfT7YvxW2pUgvfYIb4jXwo21EvayIiuLK14T6Ta7Cm5KJDjWUVQ40oHnqqddei/6QudtQmbgJclg==
 
 "@wowts/table@^1.0.0":
   version "1.0.0"
@@ -18,23 +19,27 @@
   dependencies:
     "@wowts/lua" "^1.0.3"
 
-"@wowts/tstolua@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@wowts/tstolua/-/tstolua-1.0.6.tgz#16ebf6dd88addfbad4039627d291112bab85bb2d"
+"@wowts/tstolua@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@wowts/tstolua/-/tstolua-1.6.1.tgz#ffcc53e8b125158ec871a3b9fcb40b6503ff0fa6"
+  integrity sha512-BIvzqwK0zjU6uOCg8UgwYbjKfF0IcYlqcm3LLXtE0jvcZt2qQXcO4zzb4/NUkcESmhgJUMgfjFXpAJrrdznW3w==
   dependencies:
-    commander "^2.11.0"
-    typescript "^2.5.3"
+    commander "^2.18.0"
+    typescript "^3.5.3"
 
-"@wowts/wow-mock@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@wowts/wow-mock/-/wow-mock-1.0.1.tgz#05006a65383554784265f95ebd2cc9c8e1a47b72"
+"@wowts/wow-mock@^1.0.8":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@wowts/wow-mock/-/wow-mock-1.14.0.tgz#076f9dc388df814e5f6b9a1ba94f4addb91f11ae"
+  integrity sha512-pavbHfsZ6lRedvOT5i9qh43vGu4A9jYkLwgb4PNvTT6RJymKX82j5MH3AH+NOewyHi+jRpLDoWuJ5e//R4hSmQ==
   dependencies:
-    "@wowts/lua" "^1.0.2"
+    "@wowts/lua" "^1.3.2"
 
-commander@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
+commander@^2.18.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
+  integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
 
-typescript@^2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.3.tgz#df3dcdc38f3beb800d4bc322646b04a3f6ca7f0d"
+typescript@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
+  integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==

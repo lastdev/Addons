@@ -743,8 +743,10 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT			= "HOT-Z\195\164hler"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC 	= "Zeigt bei einer Einheit, wie viele aktiven HOTs diese gerade von JEDER Klasse hat"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET			= "Mein Ziel"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC		= "Zeigt Dein Ziel an den Gruppen und Schlachtzugfenstern"
-XPERL_CONF_RAID_HIGHLIGHTS_MENDING			= GetSpellInfo(33076)				-- Prayer of Mending
-XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC		= "Aktiviere "..GetSpellInfo(33076).." Verfolgung. Mit aktiviertem Glanz, zeigt dies eine prahlerische Grafik um den Buff besser verfolgen zu k\195\182nnen"
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	XPERL_CONF_RAID_HIGHLIGHTS_MENDING		= GetSpellInfo(33076) -- Prayer of Mending
+	XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC	= "Aktiviere "..GetSpellInfo(33076).." Verfolgung. Mit aktiviertem Glanz, zeigt dies eine prahlerische Grafik um den Buff besser verfolgen zu k\195\182nnen"
+end
 XPERL_CONF_RAID_HIGHLIGHTS_SPARKLES			= "Glanz"
 XPERL_CONF_RAID_HIGHLIGHTS_SPARKLES_DESC	= "Verwende das neue Glanz-Aussehen f\195\188r eine strahlender und besser sichtbare Methode des Hervorhebens. Deaktivieren f\195\188r die alten Randfarben."
 XPERL_CONF_RAID_HIGHLIGHTS_EXTRA			= "Extra Glanz"
@@ -957,7 +959,7 @@ XPERL_CONF_ADDON_RAIDMONITOR_DESC	= "Aktiviere das "..XPerl_ShortProductName.." 
 XPERL_CONF_ADDON_ARCANE				= "Arcane Bar"
 XPERL_CONF_ADDON_ARCANE_DESC		= "Aktiviere das "..XPerl_ShortProductName.."'s Arcane Casting bars. Needed if you want to display cast bars for target or party members. Also shows player's and pet's cast bars"
 XPERL_CONF_ADDON_GRIMR				= "Grim Reaper"
-XPERL_CONF_ADDON_GRIMR_DESC			= "Enable the Grim Reaper to track recent combat events for all raid or party units. Tooltip extends to show recent dmg in/out for selected unit. Useful to determine cause of death; crushings, crit streak etc."
+XPERL_CONF_ADDON_GRIMR_DESC			= "Enable the Grim Reaper to track recent combat events for all raid or party units. Tooltip extends to show recent dmg in/out for selected unit. Useful to determine cause of death: crushings, crit streak etc."
 
 XPERL_CONF_RELOADUI					= "Neu laden des UI"
 XPERL_CONF_RELOADUI_DESC			= "Lade das Benutzerinterface neu, um \195\132nderungen hinzuzuf\195\188gen"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UndermineTrash", "DBM-Party-BfA", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18395 $"):sub(12, -3))
+mod:SetRevision("20200126143729")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -106,7 +106,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 280604 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnIcedSpritzer:Show(args.sourceName)
 		specWarnIcedSpritzer:Play("kickcast")
-	elseif spellId == 262515 then
+	elseif spellId == 262515 and self:AntiSpam(2.5, args.destName) then
 		warnAzeriteHeartseeker:CombinedShow(0.5, args.destName)
 	end
 end

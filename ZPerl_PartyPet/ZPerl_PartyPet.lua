@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Party_Pet_Events = { }
@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1121 $")
+end, "$Revision:  $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -47,7 +47,9 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 	}
 
 	for i, event in pairs(events) do
-		self:RegisterEvent(event)
+		if pcall(self.RegisterEvent, self, event) then
+			self:RegisterEvent(event)
+		end
 	end
 
 	-- Set here to reduce amount of function calls made
@@ -194,6 +196,9 @@ function XPerl_Party_Pet_OnLoad(self)
 	self.nameFrame:SetAttribute("useparent-unit", true)
 	self.nameFrame:SetAttribute("unitsuffix", "pet")
 
+	XPerl_RegisterClickCastFrame(self.nameFrame)
+	XPerl_RegisterClickCastFrame(self)
+
 	XPerl_RegisterHighlight(self.highlight, 2)
 	XPerl_RegisterPerlFrames(self, {self.nameFrame, self.statsFrame})
 
@@ -224,27 +229,30 @@ end
 
 -- XPerl_Party_Pet_UpdateName
 local function XPerl_Party_Pet_UpdateName(self)
-	if (self.partyid) then
-		local Partypetname = UnitName(self.partyid)
-		if (Partypetname ~= nil) then
-			self.nameFrame.text:SetText(Partypetname)
-			if (UnitIsPVP(self.ownerid)) then
-				self.nameFrame.text:SetTextColor(0, 1, 0)
-			else
-				self.nameFrame.text:SetTextColor(0.5, 0.5, 1)
-			end
+	if not self.partyid then
+		return
+	end
+
+	local Partypetname = UnitName(self.partyid)
+	if (Partypetname ~= nil) then
+		self.nameFrame.text:SetText(Partypetname)
+		if (UnitIsPVP(self.ownerid)) then
+			self.nameFrame.text:SetTextColor(0, 1, 0)
+		else
+			self.nameFrame.text:SetTextColor(0.5, 0.5, 1)
 		end
 	end
 end
 
 -- XPerl_Party_Pet_UpdateHealth
 function XPerl_Party_Pet_UpdateHealth(self)
-	if (not self.partyid) then
+	local partyid = self.partyid
+	if not partyid then
 		return
 	end
 
-	local health = UnitHealth(self.partyid)
-	local healthmax = UnitHealthMax(self.partyid)
+	local health =UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid))
+	local healthmax = UnitHealthMax(partyid)
 
 	-- PTR region fix
 	if not healthmax or healthmax <= 0 then
@@ -256,7 +264,7 @@ function XPerl_Party_Pet_UpdateHealth(self)
 	end
 
 	local healthPct
-	if UnitIsDeadOrGhost(self.partyid) or (health == 0 and healthmax == 0) then -- Probably dead target
+	if UnitIsDeadOrGhost(partyid) or (health == 0 and healthmax == 0) then -- Probably dead target
 		healthPct = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	elseif health > 0 and healthmax == 0 then -- We have current ho but max hp failed.
 		healthmax = health -- Make max hp at least equal to current health
@@ -273,7 +281,7 @@ function XPerl_Party_Pet_UpdateHealth(self)
 	XPerl_Party_Pet_UpdateAbsorbPrediction(self)
 	XPerl_Party_Pet_UpdateHealPrediction(self)
 
-	if (UnitIsDead(self.partyid)) then
+	if (UnitIsDead(partyid)) then
 		self.statsFrame:SetGrey()
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_DEAD)
 	else
@@ -324,29 +332,32 @@ end
 
 -- XPerl_Party_Pet_UpdateMana
 local function XPerl_Party_Pet_UpdateMana(self)
-	if (self.partyid) then
-		local Partypetmana = UnitPower(self.partyid)
-		local Partypetmanamax = UnitPowerMax(self.partyid)
+	local partyid = self.partyid
+	if not partyid then
+		return
+	end
 
-		-- PTR region fix
-		if not Partypetmanamax or Partypetmanamax <= 0 then
-			if Partypetmanamax > 0 then
-				Partypetmanamax = Partypetmana
-			else
-				Partypetmanamax = 1
-			end
-		end
+	local Partypetmana = UnitPower(partyid)
+	local Partypetmanamax = UnitPowerMax(partyid)
 
-		self.statsFrame.manaBar:SetMinMaxValues(0, Partypetmanamax)
-		self.statsFrame.manaBar:SetValue(Partypetmana)
-
-		pmanaPct = (Partypetmana * 100.0) / Partypetmanamax
-		pmanaPct =  format("%3.0f", pmanaPct)
-		if (XPerl_GetDisplayedPowerType(self.partyid) >= 1) then
-			self.statsFrame.manaBar.text:SetText(Partypetmana)
+	-- PTR region fix
+	if not Partypetmanamax or Partypetmanamax <= 0 then
+		if Partypetmanamax > 0 then
+			Partypetmanamax = Partypetmana
 		else
-			self.statsFrame.manaBar.text:SetFormattedText("%.0f%%", (100 * (Partypetmana / Partypetmanamax)))
+			Partypetmanamax = 1
 		end
+	end
+
+	self.statsFrame.manaBar:SetMinMaxValues(0, Partypetmanamax)
+	self.statsFrame.manaBar:SetValue(Partypetmana)
+
+	pmanaPct = (Partypetmana * 100.0) / Partypetmanamax
+	pmanaPct =  format("%3.0f", pmanaPct)
+	if (XPerl_GetDisplayedPowerType(partyid) >= 1) then
+		self.statsFrame.manaBar.text:SetText(Partypetmana)
+	else
+		self.statsFrame.manaBar.text:SetFormattedText("%.0f%%", (100 * (Partypetmana / Partypetmanamax)))
 	end
 end
 
@@ -356,26 +367,29 @@ end
 
 -- XPerl_Party_Pet_Buff_UpdateAll
 function XPerl_Party_Pet_Buff_UpdateAll(self)
-	if (self.partyid) then
-		if (petconf.buffs.enable) then
-			if (UnitExists(self.partyid)) then
-				self.buffFrame:Show()
-				if (XPerlDB) then
-					if (not self.conf) then
-						self.conf = conf.partypet
-					end
+	local partyid = self.partyid
+	if not partyid then
+		return
+	end
 
-					XPerl_Unit_UpdateBuffs(self, nil, nil, petconf.buffs.castble, petconf.debuffs.curable)
+	if (petconf.buffs.enable) then
+		if (UnitExists(partyid)) then
+			self.buffFrame:Show()
+			if (XPerlDB) then
+				if (not self.conf) then
+					self.conf = conf.partypet
 				end
-			else
-				self.buffFrame:Hide()
+
+				XPerl_Unit_UpdateBuffs(self, nil, nil, petconf.buffs.castble, petconf.debuffs.curable)
 			end
 		else
 			self.buffFrame:Hide()
 		end
-
-		XPerl_CheckDebuffs(self, self.partyid)
+	else
+		self.buffFrame:Hide()
 	end
+
+	XPerl_CheckDebuffs(self, partyid)
 end
 
 -- XPerl_Party_Pet_UpdateDisplayAll
@@ -389,16 +403,18 @@ end
 
 -- XPerl_Party_Pet_UpdateDisplay
 function XPerl_Party_Pet_UpdateDisplay(self)
-	if (self.partyid) then
-		XPerl_Party_Pet_UpdateName(self)
-		XPerl_Party_Pet_UpdateHealth(self)
-		XPerl_Unit_UpdateLevel(self)
-		XPerl_SetManaBarType(self)
-		XPerl_Party_Pet_UpdateMana(self)
-		XPerl_Party_Pet_UpdateCombat(self)
-		XPerl_Party_Pet_Buff_UpdateAll(self)
-		XPerl_UpdateSpellRange(self)
+	if not self.partyid then
+		return
 	end
+
+	XPerl_Party_Pet_UpdateName(self)
+	XPerl_Party_Pet_UpdateHealth(self)
+	XPerl_Unit_UpdateLevel(self)
+	XPerl_SetManaBarType(self)
+	XPerl_Party_Pet_UpdateMana(self)
+	XPerl_Party_Pet_UpdateCombat(self)
+	XPerl_Party_Pet_Buff_UpdateAll(self)
+	XPerl_UpdateSpellRange(self)
 end
 
 --------------------
@@ -407,7 +423,8 @@ end
 
 -- XPerl_Party_Pet_Update_Control
 local function XPerl_Party_Pet_Update_Control(self)
-	if (self.partyid and UnitIsVisible(self.partyid) and UnitIsCharmed(self.partyid) and not UnitUsingVehicle(self.ownerid)) then
+	local partyid = self.partyid
+	if (partyid and UnitIsVisible(partyid) and UnitIsCharmed(partyid) and not UnitUsingVehicle(self.ownerid)) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()
@@ -416,7 +433,8 @@ end
 
 -- XPerl_Party_Pet_UpdateCombat
 function XPerl_Party_Pet_UpdateCombat(self)
-	if (self.partyid and UnitIsVisible(self.partyid) and UnitAffectingCombat(self.partyid)) then
+	local partyid = self.partyid
+	if (partyid and UnitIsVisible(partyid) and UnitAffectingCombat(partyid)) then
 		self.nameFrame.level:Hide()
 		self.nameFrame.combatIcon:Show()
 	else
@@ -676,7 +694,7 @@ function XPerl_Party_Pet_Set_Bits1(self)
 		end
 		if (buffs) then
 			local prev = self
-			for k,v in pairs(buffs) do
+			for k, v in pairs(buffs) do
 				v:ClearAllPoints()
 				if (pconf.flip) then
 					v:SetPoint("TOPRIGHT", prev, prevAnchor, 0, 0)
@@ -731,15 +749,17 @@ function XPerl_Party_Pet_Set_Bits()
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
 
-	if (pconf.healprediction) then
-		XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if (pconf.healprediction) then
+			XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_HEAL_PREDICTION")
+		else
+			XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
 
-	if (pconf.absorbs) then
-		XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-	else
-		XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if (pconf.absorbs) then
+			XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		else
+			XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
 	end
 end

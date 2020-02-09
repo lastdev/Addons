@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 8.1.6237 (SwimmingSeadragon)
-	Revision: $Id: EnxAucUtil.lua 6237 2019-03-04 00:20:18Z none $
+	Version: 8.2.6506 (SwimmingSeadragon)
+	Revision: $Id: EnxAucUtil.lua 6506 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	This is an addon for World of Warcraft that add a list of what an item
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: Enchantrix/EnxAucUtil.lua $","$Rev: 6237 $")
+Enchantrix_RegisterRevision("$URL: Enchantrix/EnxAucUtil.lua $","$Rev: 6506 $")
 
 -- Provide fixed price data by registering ourselves as a bonafide legitimate Auctioneer module.
 if not AucAdvanced then return end

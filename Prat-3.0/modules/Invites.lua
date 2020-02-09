@@ -54,8 +54,8 @@ Prat:AddModuleToLoad(function()
     do
         local L
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		["Enable Alt-Invite"] = true,
 		["Enable Invite Links"] = true,
@@ -66,166 +66,165 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
       PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		["Enable Invite Links"] = "Activer les liens d'invitation",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Options for easy inviting of players to groups",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Invites",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		["Enable Alt-Invite"] = "Aktiviere Alt-Einladen",
-		["Enable Invite Links"] = "Aktiviere Einladungs Links",
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Enable Invite Links"] = "Aktiviere Einladungs-Links",
+		["module_desc"] = "Optionen zum einfachen Einladen von Spielern für Gruppen",
+		["module_name"] = "Einladungen",
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Zum Umschalten der Gruppeneinladungen, klicke bei gedrückter Alt-Taste auf Hyperlink-Schlüsselwörter wie \"einladen\".",
+		["Toggle group invites by alt-clicking on player name."] = "Zum Umschalten der Gruppeneinladungen, klicke bei gedrückter Alt-Taste auf den Spielernamen.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
+		["Enable Invite Links"] = "Enable Invite Links",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Options for easy inviting of players to groups",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Invites",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
+		["Enable Invite Links"] = "Enable Invite Links",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Options for easy inviting of players to groups",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Invites",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
-		["Enable Alt-Invite"] = "включить Alt-приглашение",
-		["Enable Invite Links"] = "Показать ссылку \"приглашения\"",
-		["module_desc"] = "Опции простого приглашения игроков в группу",
-		["module_name"] = "Приглашения",
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Enable Alt-Invite"] = "включить Alt-приглашение ",
+		["Enable Invite Links"] = "Показать ссылку \"приглашения\" ",
+		["module_desc"] = "Опции простого приглашения игроков в группу ",
+		["module_name"] = "Приглашения ",
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = [=[Переключить группу приглашений, нажимая альт-клик по гиперссылкам, таким как «пригласить».
+]=],
+		["Toggle group invites by alt-clicking on player name."] = [=[Переключить группу приглашений, нажав Alt на имя игрока.
+]=],
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
-		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
-		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Enable Alt-Invite"] = "启用Alt-调出",
+		["Enable Invite Links"] = "启用调出链接",
+		["module_desc"] = "便捷邀请玩家加入队伍的选项",
+		["module_name"] = "邀请",
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "通过按住Alt键单击超链接的关键字（如“邀请”）来切换组队邀请。",
+		["Toggle group invites by alt-clicking on player name."] = "通过按住Alt键点击玩家名字来切换组队邀请。",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
+		["Enable Invite Links"] = "Enable Invite Links",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Options for easy inviting of players to groups",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Invites",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-    L=
-{
+    
+  L = {
 	["Invites"] = {
 		--[[Translation missing --]]
-		--[[ ["Enable Alt-Invite"] = "",--]] 
+		["Enable Alt-Invite"] = "Enable Alt-Invite",
 		--[[Translation missing --]]
-		--[[ ["Enable Invite Links"] = "",--]] 
+		["Enable Invite Links"] = "Enable Invite Links",
 		--[[Translation missing --]]
-		--[[ ["module_desc"] = "",--]] 
+		["module_desc"] = "Options for easy inviting of players to groups",
 		--[[Translation missing --]]
-		--[[ ["module_name"] = "",--]] 
+		["module_name"] = "Invites",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",--]] 
+		["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "Toggle group invites by alt-clicking hyperlinked keywords like 'invite'.",
 		--[[Translation missing --]]
-		--[[ ["Toggle group invites by alt-clicking on player name."] = "",--]] 
+		["Toggle group invites by alt-clicking on player name."] = "Toggle group invites by alt-clicking on player name.",
 	}
 }
+
 
       PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

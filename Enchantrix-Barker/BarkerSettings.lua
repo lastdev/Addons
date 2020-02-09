@@ -1,7 +1,7 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.7.6000 (SwimmingSeadragon)
-	Revision: $Id: BarkerSettings.lua 6000 2018-07-17 14:09:34Z none $
+	Version: 8.2.6507 (SwimmingSeadragon)
+	Revision: $Id: BarkerSettings.lua 6507 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	Settings GUI
@@ -62,7 +62,7 @@ Usage:
 	Barker.Settings.SetSetting('counts', true );
 
 ]]
-EnchantrixBarker_RegisterRevision("$URL: /BarkerSettings.lua $", "$Rev: 6000 $")
+EnchantrixBarker_RegisterRevision("$URL: Enchantrix-Barker/BarkerSettings.lua $", "$Rev: 6507 $")
 
 local lib = {}
 Barker.Settings = lib
@@ -114,6 +114,7 @@ local settingDefaults = {
 	['barker.Unknown'] = 1,		-- too many enchants failing to parse
 
 	['barker'] = true,
+    ['barker.skillup_mode'] = false,
 	['barker.profit_margin'] = 20,		-- percent
 	['barker.lowest_price'] = 10000,	-- GSC
 	['barker.randomise'] = 10,
@@ -132,6 +133,7 @@ local settingDefaults = {
 	['barker.factor_item.cloak'] = 70,
 	['barker.factor_item.shield'] = 70,
 	['barker.factor_item.ring'] = 70,
+	['barker.factor_item.neck'] = 70,
 	['barker.factor_stat'] = 40,
 	['barker.factor_stat.intellect'] = 90,
 	['barker.factor_stat.stamina'] = 70,
@@ -457,7 +459,8 @@ function lib.MakeGuiConfig()
 	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.chest", 0, 100, 1, "Chest priority: %d%%")
 	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.cloak", 0, 100, 1, "Cloak priority: %d%%")
 	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.shield", 0, 100, 1, "Shield priority: %d%%")
---	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.ring", 0, 100, 1, "Ring priority: %d%%")
+	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.ring", 0, 100, 1, "Ring priority: %d%%")
+	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_item.neck", 0, 100, 1, "Neck priority: %d%%")
 
 	gui.AddControl(id, "Subhead",        0,    "Statistics priorities")
 	gui.AddControl(id, "WideSlider",     0, 1, "barker.factor_stat", 0, 100, 1, "Overall stats priority: %d%%")

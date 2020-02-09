@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Fix for searches not returning to page one in Blizzard code.
-	Version: 8.1.6235 (SwimmingSeadragon)
-	Revision: $Id: PageOneReturn.lua 6235 2019-03-04 00:20:18Z none $
+	Version: 8.2.6504 (SwimmingSeadragon)
+	Revision: $Id: PageOneReturn.lua 6504 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that temporarily patches known errors and issues
@@ -111,4 +111,4 @@ function private.SearchButtonClick(...)
 	private.RealSearchButtonClick(...)
 end
 
-AucAdvanced.RegisterRevision("$URL: Auc-Util-FixAH/PageOneReturn.lua $", "$Rev: 6235 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Util-FixAH/PageOneReturn.lua $", "$Rev: 6504 $")

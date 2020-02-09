@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1897, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision("20190720215946")
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetZone()
@@ -55,21 +55,14 @@ local specWarnSpontFrag				= mod:NewSpecialWarningCount(239153, false, nil, nil,
 
 --Stage One: Divide and Conquer
 local timerInfusionCD				= mod:NewNextCountTimer(37.9, 235271, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerLightHammerCD			= mod:NewNextCountTimer(18, 241635, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerFelHammerCD				= mod:NewNextCountTimer(18, 241636, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerLightHammerCD			= mod:NewNextCountTimer(18, 241635, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, 1, 4)
+local timerFelHammerCD				= mod:NewNextCountTimer(18, 241636, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
 local timerMassInstabilityCD		= mod:NewNextCountTimer(31, 235267, nil, nil, nil, 3)
 local timerBlowbackCD				= mod:NewNextTimer(81.1, 237722, nil, nil, nil, 6)--81-82
 local berserkTimer					= mod:NewBerserkTimer(480)
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerSpontFragmentationCD		= mod:NewCDTimer(8, 239153, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
-
---Stage One: Divide and Conquer
-local countdownBomb					= mod:NewCountdown("AltTwo", 235117)
-local countdownLightHammer			= mod:NewCountdown(18, 241635)
-local countdownFelHammer			= mod:NewCountdown("Alt18", 241636)
-
-local voicePhaseChange				= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
 
 mod:AddSetIconOption("SetIconOnInfusion", 235271, true)
 mod:AddInfoFrameOption(235117, true)
@@ -95,7 +88,6 @@ function mod:OnCombatStart(delay)
 	else
 		timerInfusionCD:Start(2-delay, 2)
 		timerLightHammerCD:Start(12-delay, 3)--12-14
-		countdownLightHammer:Start(12-delay)
 		timerMassInstabilityCD:Start(22-delay, 2)
 		timerBlowbackCD:Start(40.9-delay)
 		if self:IsMythic() then
@@ -124,7 +116,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnLightHammer:Show(self.vb.hammerCount)
 		if self.vb.hammerCount < 4 then
 			timerFelHammerCD:Start(18, self.vb.hammerCount+1)--20 on Mythic, 18 on LFR?
-			countdownFelHammer:Start(18)
 		end
 		if DBM:UnitDebuff("player", lightDebuff) then
 			specWarnLightHammer:Play("helpsoak")
@@ -136,7 +127,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnFelhammer:Show(self.vb.hammerCount)
 		if self.vb.hammerCount == 2 then
 			timerLightHammerCD:Start(18, 3)
-			countdownLightHammer:Start(18)
 		end
 		if DBM:UnitDebuff("player", felDebuff) then
 			specWarnFelhammer:Play("helpsoak")
@@ -165,10 +155,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerMassInstabilityCD:Stop()
 		timerInfusionCD:Stop()
 		timerLightHammerCD:Stop()
-		countdownLightHammer:Cancel()
 		timerFelHammerCD:Stop()
-		countdownFelHammer:Cancel()
-		voicePhaseChange:Play("phasechange")
 	end
 end
 
@@ -179,7 +166,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFelInfusion:Show(self:IconNumToTexture(4))
 			specWarnFelInfusion:Play("felinfusion")
 			if spellId == 235213 then--Not LFR
-				yellInfusion:Yell(4, "", 4)
+				yellInfusion:Yell(4, "")
 			end
 		end
 		local uId = DBM:GetRaidUnitId(args.destName)
@@ -191,7 +178,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnLightInfusion:Show(self:IconNumToTexture(1))
 			specWarnLightInfusion:Play("lightinfusion")
 			if spellId == 235213 then--Not LFR
-				yellInfusion:Yell(1, "", 1)
+				yellInfusion:Yell(1, "")
 			end
 		end
 		local uId = DBM:GetRaidUnitId(args.destName)
@@ -209,7 +196,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if not self:IsLFR() then
 				yellUnstableSoul:Countdown(8)
-				countdownBomb:Start(8)
 				if self:IsEasy() then
 					specWarnUnstableSoul:ScheduleVoice(5.75, "jumpinpit")
 				else
@@ -242,7 +228,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			specWarnUnstableSoul:Cancel()
 			yellUnstableSoul:Cancel()
-			countdownBomb:Cancel()
 		end
 		if self.Options.InfoFrame and self.vb.unstableSoulCount == 0 and not self.vb.shieldActive then
 			DBM.InfoFrame:Hide()
@@ -263,7 +248,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.hammerCount = 0
 		self.vb.infusionCount = 0
 		self.vb.massShitCount = 0
-		voicePhaseChange:Play("phasechange")
 		if self:IsLFR() then
 			timerMassInstabilityCD:Start(8, 1)
 			timerInfusionCD:Start(61, 1)
@@ -271,7 +255,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		else
 			timerInfusionCD:Start(2, 1)
 			timerLightHammerCD:Start(14, 1)
-			countdownLightHammer:Start(14)
 			timerMassInstabilityCD:Start(22, 1)
 			timerBlowbackCD:Start()
 			if self:IsMythic() then

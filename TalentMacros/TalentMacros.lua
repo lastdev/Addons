@@ -2,6 +2,7 @@ local ADDON_NAME, TalentMacros = ...
 LibStub("AceAddon-3.0"):NewAddon(TalentMacros, ADDON_NAME, "AceEvent-3.0")
 
 -- luacheck: globals InterfaceOptionsFrame_OpenToCategory IconIntroTracker
+-- luacheck: globals C_Spell C_SpecializationInfo
 
 local DEFAULT_MACRO = "#showtooltip\n/cast %n"
 local CHECK_TEXTURE = " |T" .. _G.READY_CHECK_READY_TEXTURE .. ":0|t"
@@ -24,16 +25,20 @@ local GetOptions
 do
 	local function get(info)
 		local name = info[#info]
-		return db.macrotext[info.arg] or DEFAULT_MACRO:gsub("%%n", name)
+		return db.macrotext[info.arg[1]] or DEFAULT_MACRO:gsub("%%n", name)
 	end
 
 	local function set(info, value)
 		if type(value) == "string" and value:trim() ~= "" then
-			db.macrotext[info.arg] = value:sub(1,255)
+			db.macrotext[info.arg[1]] = value:sub(1,255)
 		else
-			db.macrotext[info.arg] = nil
+			db.macrotext[info.arg[1]] = nil
 		end
 		TalentMacros:UpdateMacros()
+	end
+
+	local function desc(info)
+		return GetSpellDescription(info.arg[2])
 	end
 
 	local function validate(info, value)
@@ -125,15 +130,19 @@ do
 					group.args[name] = {
 						type = "input",
 						name = ("|T%s:18:18:3:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or ""),
-						desc = GetSpellDescription(spellId),
+						desc = desc,
 						order = column,
 						get = get,
 						set = set,
-						arg = id,
+						arg = {id, spellId},
 						validate = validate,
 						multiline = 5,
 						width = "full",
 					}
+
+					if not C_Spell.IsSpellDataCached(spellId) then
+						C_Spell.RequestLoadSpellData(spellId)
+					end
 				end
 			end
 
@@ -157,15 +166,19 @@ do
 					group.args[name] = {
 						type = "input",
 						name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s"):format(icon, name, selected[id] and CHECK_TEXTURE or ""),
-						desc = GetSpellDescription(spellId),
+						desc = desc,
 						order = selected[id] or (10 + index),
 						get = get,
 						set = set,
-						arg = id,
+						arg = {id, spellId},
 						validate = validate,
 						multiline = 5,
 						width = "full",
 					}
+
+					if not C_Spell.IsSpellDataCached(spellId) then
+						C_Spell.RequestLoadSpellData(spellId)
+					end
 				end
 			else
 				group.disabled = true
@@ -294,7 +307,7 @@ function TalentMacros:CreateMacros()
 	for tier = 1, MAX_TALENT_TIERS do
 		local name = ("t%d"):format(tier)
 		if GetMacroIndexByName(name) == 0 then
-			local success = pcall(CreateMacro, name, "INV_Misc_QuestionMark", "")
+			local success = pcall(CreateMacro, name, "INV_Misc_QuestionMark", "", nil, nil)
 			if not success then
 				errors = errors + 1
 			end
@@ -305,7 +318,7 @@ function TalentMacros:CreateMacros()
 	for slot = 1, 3 do
 		local name = ("tpvp%d"):format(slot)
 		if GetMacroIndexByName(name) == 0 then
-			local success = pcall(CreateMacro, name, "INV_Misc_QuestionMark", "")
+			local success = pcall(CreateMacro, name, "INV_Misc_QuestionMark", "", nil, nil)
 			if not success then
 				errors = errors + 1
 			end

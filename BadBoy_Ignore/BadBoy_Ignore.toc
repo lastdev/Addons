@@ -1,5 +1,5 @@
-## Interface: 80000
-## Version: v8.0.0
+## Interface: 80200
+## Version: v8.2.0
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.

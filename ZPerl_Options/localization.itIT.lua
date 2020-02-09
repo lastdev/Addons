@@ -761,8 +761,10 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT        = "Contatore HOT"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC = "Indicherà su un'unità quanti HOT attivi hanno e da che classi"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET        = "Mio Bersaglio"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC    = "Indica il tuo bersaglio nel gruppo e nelle finestre dell'incursione"
-XPERL_CONF_RAID_HIGHLIGHTS_MENDING        = GetSpellInfo(33076)                -- Prayer of Mending
-XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC    = "Abilita il controllo di "..GetSpellInfo(33076)..". Con le scintille attivate, questo visualizzerà un effetto che permetterà di vedere meglio il beneficio."
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	XPERL_CONF_RAID_HIGHLIGHTS_MENDING        = GetSpellInfo(33076) -- Prayer of Mending
+	XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC    = "Abilita il controllo di "..GetSpellInfo(33076)..". Con le scintille attivate, questo visualizzerà un effetto che permetterà di vedere meglio il beneficio."
+end
 XPERL_CONF_RAID_HIGHLIGHTS_SPARKLES        = "Scintille"
 XPERL_CONF_RAID_HIGHLIGHTS_SPARKLES_DESC= "Usa le nuove scintille per un approccio più apparente e vivido all'evidenziazione. Disabilità per usare i colori dei bordi di vecchio tipo"
 XPERL_CONF_RAID_HIGHLIGHTS_EXTRA        = "Scintille Extra"

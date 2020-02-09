@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -86,41 +86,49 @@ end)
 
 
 Module:SetScriptHandler("OnMouseUp", function(Module, icon, button)
-	wipe(icons)
-	for _, instance in pairs(Module.class.instances) do
-		if instance.icon:IsVisible() and instance.icon:IsMouseOver() then
-			tinsert(icons, instance.icon)
-		end	
+	if TMW.Locked then
+		return
 	end
-	if not TMW.Locked then
-		if button == "RightButton" then
-			if #icons == 1 then
-				if not icon:IsControlled() then
-					LoadIcon(icon)
-				end
-				
-			elseif #icons > 1 then
-				GameTooltip:Hide() -- hide the tooltip over an icon so we can see the menu
-				TMW.DD:CloseDropDownMenus()
-				DD:Toggle(1, nil, icon, 0, 0)
+	
+	if button == "RightButton" then
+
+		wipe(icons)
+		for _, instance in pairs(Module.class.instances) do
+			if instance.icon == icon or (instance.icon:IsVisible() and instance.icon:IsMouseOver()) then
+				tinsert(icons, instance.icon)
+			end	
+		end
+
+		if #icons == 1 then
+			if not icon:IsControlled() then
+				LoadIcon(icon)
 			end
 			
-		elseif IsShiftKeyDown() and button == "LeftButton" then
+		elseif #icons > 1 then
+			GameTooltip:Hide() -- hide the tooltip over an icon so we can see the menu
+			TMW.DD:CloseDropDownMenus()
+			DD:Toggle(1, nil, icon, 0, 0)
+		end
+		
+	elseif IsControlKeyDown() and button == "LeftButton" then
+		icon:GetSettings().Enabled = not icon:GetSettings().Enabled
+		icon:Setup()
 
-			-- Don't insert into the chat editbox.
-			if not ChatEdit_GetActiveWindow() then
+	elseif IsShiftKeyDown() and button == "LeftButton" then
 
-				local GUID = icon:GetGUID()
-				local link = format("|H%s|h%s|h", GUID, GUID)
+		-- Don't insert into the chat editbox.
+		if not ChatEdit_GetActiveWindow() then
 
-				local inserted = ChatEdit_InsertLink(link)
+			local GUID = icon:GetGUID()
+			local link = format("|H%s|h%s|h", GUID, GUID)
 
-				if inserted then
-					-- If the insertion was successful, make the GUID permanant.
-					icon:GetGUID(1)
-				end
+			local inserted = ChatEdit_InsertLink(link)
 
+			if inserted then
+				-- If the insertion was successful, make the GUID permanant.
+				icon:GetGUID(1)
 			end
+
 		end
 	end
 end)

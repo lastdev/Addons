@@ -1,6 +1,6 @@
 import { Constructor, Library } from "@wowts/tslib";
 export interface AceModule {
-    GetName?(): string;
+    GetName(): string;
     OnInitialize?(): void;
 }
 export interface Addon {
@@ -9,10 +9,12 @@ export interface Addon {
     NewModule<T, U>(name: string, dep1: Library<T>, dep2: Library<U>): Constructor<AceModule & T & U>;
     NewModule<T, U, V>(name: string, dep1: Library<T>, dep2: Library<U>, dep3: Library<V>): Constructor<AceModule & T & U & V>;
     NewModule<T, U, V, W>(name: string, dep1: Library<T>, dep2: Library<U>, dep3: Library<V>, dep4: Library<W>): Constructor<AceModule & T & U & V & W>;
+    NewModule<T, U, V, W>(name: string, dep1?: Library<T>, dep2?: Library<U>, dep3?: Library<V>, dep4?: Library<W>): Constructor<AceModule & T & U & V & W>;
     NewModuleWithBase<T>(name: string, base: Constructor<T>): Constructor<AceModule & T>;
     NewModuleWithBase<T, U>(name: string, base: Constructor<T>, dep2: Library<U>): Constructor<AceModule & T & U>;
     NewModuleWithBase<T, U, V>(name: string, base: Constructor<T>, dep2: Library<U>, dep3: Library<V>): Constructor<AceModule & T & U & V>;
     NewModuleWithBase<T, U, V, W>(name: string, base: Constructor<T>, dep2: Library<U>, dep3: Library<V>, dep4: Library<W>): Constructor<AceModule & T & U & V & W>;
+    NewModuleWithBase<T, U, V, W>(name: string, base?: Constructor<T>, dep2?: Library<U>, dep3?: Library<V>, dep4?: Library<W>): Constructor<AceModule & T & U & V & W>;
     GetName(): string;
     OnInitialize?(): void;
 }

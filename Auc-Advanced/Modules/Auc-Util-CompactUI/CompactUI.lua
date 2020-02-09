@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 8.1.6225 (SwimmingSeadragon)
-	Revision: $Id: CompactUI.lua 6225 2019-03-04 00:20:18Z none $
+	Version: 8.2.6494 (SwimmingSeadragon)
+	Revision: $Id: CompactUI.lua 6494 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -150,7 +150,9 @@ function private.HookAH()
 		BrowseCurrentBidSort:Hide()
 	end
 	HideBlizzardColumnHeaders()
-	BrowseResetButton:HookScript("OnClick", HideBlizzardColumnHeaders)
+	if BrowseResetButton then -- doesn't exist in Classic
+		BrowseResetButton:HookScript("OnClick", HideBlizzardColumnHeaders)
+	end
 	hooksecurefunc("AuctionFrameBrowse_Reset", HideBlizzardColumnHeaders) -- hook this too, in case it's called by a third party AddOn
 	hooksecurefunc("AuctionFrameFilter_OnClick", function()
 		HideBlizzardColumnHeaders()
@@ -409,7 +411,10 @@ function private.HookAH()
 		-- Detail should be set to "Slot" for bags, "Skill" for recipes, otherwise "Min"
 		-- Inspect filterData, looking for any classID other than for container or recipe
 		local detailText = "Min"
-		if filterData then
+
+-- Classic doesn't show slots or recipe skills, just min level to use
+-- see notes below about GetItemInfo
+		if filterData and not AucAdvanced.Classic then
 			local allBags, allRecipes = true, true
 			local bagID, recipeID = LE_ITEM_CLASS_CONTAINER, LE_ITEM_CLASS_RECIPE
 			for _, filter in ipairs(filterData) do
@@ -490,10 +495,21 @@ function private.SetMoney(me, value, hasBid, highBidder)
 	value = tonumber (value)
 	if not value then me:Hide() return end
 	value = math.floor (value)
-	local r,g,b
-	if (hasBid == true) then r,g,b = 1,1,1
-	elseif (hasBid == false) then r,g,b = 0.7,0.7,0.7 end
-	if (highBidder) then r,g,b = 0.4,1,0.2 end
+	local r,g,b -- = 1,0.8,0.2     -- near Blizzard default text yellow
+
+    local colorBlind = GetCVar("colorblindMode") == "1"
+
+    if colorBlind then
+        r,g,b = 1,0.8,0.4
+        if (hasBid == true) then r,g,b = 1,1,1
+        elseif (hasBid == false) then r,g,b = 0.8,0.8,0.8 end
+        if (highBidder) then r,g,b = 0.5,1,0.4 end
+    else
+        if (hasBid == true) then r,g,b = 1,1,1
+        elseif (hasBid == false) then r,g,b = 0.7,0.7,0.7 end
+        if (highBidder) then r,g,b = 0.4,1,0.2 end
+    end
+
 	me:SetValue(value, r,g,b)
 	me:Show()
 end
@@ -544,7 +560,9 @@ function private.IconLeave(this)
 	button.Icon:SetWidth(16)
 	button.Icon:SetHeight(16)
 	GameTooltip:Hide()
-	BattlePetTooltip:Hide()
+	if BattlePetTooltip then
+		BattlePetTooltip:Hide()
+	end
 	ResetCursor()
 end
 
@@ -602,6 +620,11 @@ local function BrowseSortFunction(a, b)
 end
 
 local lookupTimeLeft = {"30m", "2h", "12h", "48h"}
+
+if AucAdvanced.Classic then
+    lookupTimeLeft = {"30m", "2h", "8h", "24h"}
+end
+
 function private.RetrievePage()
 	wipe(private.pageContents)
 
@@ -622,8 +645,13 @@ function private.RetrievePage()
 			item[1] = i
 			item[2] = selected == i
 
-			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName =  GetAuctionItemInfo("list", i)
+			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, status, itemID, hasAllInfo =  GetAuctionItemInfo("list", i)
 			local _, _, _, itemLevel, itemDetail = GetItemInfo(link) -- itemDetail = minUseLevel
+
+-- NOTE - this is broken for Classic! Always shows "1" for all bags  LE_ITEM_CLASS_CONTAINER
+-- NOTE - this is also broken for skill in recipes, Always shows "1"    LE_ITEM_CLASS_RECIPE
+-- NOTE - apparently GetItemInfo is not the same as for 8.x
+--print("got itemDetail", itemLevel, itemDetail, name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, status, itemID, hasAllInfo ) -- always "1" for level
 
 			if levelColHeader == "ITEM_LEVEL_ABBR" then
 				itemLevel = level
@@ -930,4 +958,4 @@ function lib.GetButtons()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 6225 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/Modules/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 6494 $")

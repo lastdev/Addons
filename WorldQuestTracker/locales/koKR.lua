@@ -88,27 +88,15 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "%d시간 미만"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "남은 시간 문자"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "시간 별 정렬"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "남은 시간"
-L["S_MAPBAR_SUMMARY"] = "요약"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "모든 계정"
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "추가 정보를 보려면 클릭하세요"
-L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[다른 캐릭터에 추적 중인 퀘스트 중
-2시간 내에 만료되는 퀘스트가 없습니다!]=]
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "주의 필요"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "오늘의 보상"
-L["S_MAPFRAME_ALIGN_CENTER"] = "중앙"
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
-L["S_MAPFRAME_ALIGN_LEFT"] = "왼쪽"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY"] = "접근성"
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "추가 추적 표시"
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "현상금 고리 표시"
+L["S_OPTIONS_ANIMATIONS"] = "애니메이션 사용"
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "지도 창 중앙 고정"
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "먼저 '지도 창 크기 조절' 을 활성화 해야하며, 값이 변경되지 않았습니다."
+L["S_OPTIONS_MAPFRAME_SCALE"] = "지도 창 크기 조절"
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "지도 창 크기 조절 활성화"
 L["S_OPTIONS_QUESTBLACKLIST"] = "퀘스트 블랙리스트"
 L["S_OPTIONS_RESET"] = "재설정"
 L["S_OPTIONS_SHOWFACTIONS"] = "사절 보기"
@@ -116,10 +104,8 @@ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "남은 시간별 우선 순위 없음"
 L["S_OPTIONS_TRACKER_RESETPOSITION"] = "위치 재설정"
 L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "왼쪽으로 고정"
 L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "오른쪽으로 고정"
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "행 당 정사각형 줄이기"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "행 당 정사각형 늘리기"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "지역별 정리"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "퀘스트 유형별 정리"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "추적중인것만 표시"
@@ -158,13 +144,19 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "캐릭터 전체 시간 통�
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
-L["S_TUTORIAL_MAPALIGN"] = "세계지도 정렬을 선택하려면 여기를 클릭하십시오."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
+L["S_TUTORIAL_STATISTICS_BUTTON"] = "다른 캐릭터에 대한 통계 및 저장된 퀘스트 목록을 보려면 여기를 클릭하십시오."
 L["S_TUTORIAL_TIMELEFT"] = "남은 시간을 나타냅니다 (+4시간, +90분, +30분, 30분 미만)"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
+L["S_TUTORIAL_WORLDBUTTONS"] = [=[3가지 유형의 요약을 보려면 여기를 클릭하십시오:
+
+- |cFFFFAA11퀘스트 유형별|r
+- |cFFFFAA11지역별|r
+- |cFFFFAA11없음|r
+
+Click |cFFFFAA11Toggle Quests|r to hide quest locations.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
+L["S_WHATSNEW"] = "새 소식"
 L["S_WORLDBUTTONS_SHOW_NONE"] = "요약 숨기기"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "요약 보기"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역별 구분"

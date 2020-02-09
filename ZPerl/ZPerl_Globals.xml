@@ -627,7 +627,7 @@
 		</Scripts>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentbackground" file="Interface\Addons\ZPerl\Images\GaugeCircle" setAllPoints="true" blendMode="ADD">
+				<Texture name="$parentbackground" file="Interface\Addons\ZPerl\Images\GaugeCircle" setAllPoints="true" alphaMode="ADD">
 					<Color r="1" g="1" b="1" a="0.5"/>
 				</Texture>
 			</Layer>

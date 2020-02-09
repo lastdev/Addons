@@ -26,7 +26,6 @@ DBM_COPY_URL_DIALOG					= "复制网址"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "距离雷达在副本中无法使用，该功能会使用文本代替"
 DBM_CORE_NO_ARROW					= "箭头在副本中无法使用"
-DBM_CORE_ARROW_SUMMONED				= "DBM箭头被启用了. 如果不是你启用的, 说明有一个第三方插件调用了DBM箭头."
 DBM_CORE_NO_HUD						= "HUDMap 在副本中无法使用"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "由于玩家数量不足，DBM 无法开启动态距离检测。"
@@ -168,7 +167,7 @@ DBM_CORE_VOICE_MISSING				= "DBM找不到你当前选择的语音包。语音包
 DBM_CORE_VOICE_DISABLED				= "你安装了语音包但是没有启动它。请在选项中的语音报警菜单中开启语音包。如果不需要语音报警请卸载语音包。"
 DBM_CORE_VOICE_COUNT_MISSING		= "在 %d 语音包中找不到倒计时语音。倒计时已恢复为默认值"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "您的DBM版本已过期。\n您可以在Curse/Twitch, WOWI, 或者deadlybossmods.com下载到新版本：%s（r%d）。如果您使用整合包，请使用更新器更新。"
+DBM_CORE_UPDATEREMINDER_HEADER			= "您的DBM版本已过期。\n您可以在Curse/Twitch, WOWI, 或者deadlybossmods.com下载到新版本：%s（%s）。如果您使用整合包，请使用更新器更新。"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "您正在使用的Alpha DBM 版本已至少落后主干%d个版本。\n 我们建议使用Alpha版本的用户时刻追随主干更新，否则请切换到正式发行版。Alpha版的版本检查会比正式发行版严格。"
 DBM_CORE_UPDATEREMINDER_FOOTER			= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制下载地址到剪切板。"
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "复制链接到剪切板。"
@@ -254,11 +253,9 @@ DBM_CORE_TIMER_USAGE	= {
 	"DBM计时器可用命令:",
 	"-----------------",
 	"/dbm timer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的计时器。",
-	"/dbm ctimer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的倒计时计时器。",
 	"/dbm ltimer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的循环计时器。",
-	"/dbm cltimer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的循环倒计时计时器。",
 	"('Broadcast' 在 'timer' 前会向所有团队成员发送这个计时器(需要队长或助理权限)。",
-	"/dbm timer endloop: 停止所有的 ltimer（循环计时器） 和 cltimer（循环倒计时计时器）."
+	"/dbm timer endloop: 停止所有的 ltimer（循环计时器）."
 }
 
 DBM_ERROR_NO_PERMISSION				= "权限不足。需要队长或助理权限。"
@@ -393,8 +390,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack				= "你叠加了%%d层%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch			= "%s - 转换目标"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - 转换目标 (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo				= "注意%%s - 快躲开"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds				= "小怪出现 - 转换目标"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom		= "小怪出现 - %%s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.adds				= "小怪出现 - 转换目标"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.addscustom		= "小怪出现 - %%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetchange		= "更换目标 - 请选择 %%s"
 
 -- Auto-generated Special Warning Localizations
@@ -438,8 +435,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stackcount		= "特殊警报：当叠加了>=%d�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 			= "特殊警报：针对$spell:%s需要转换目标"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= "特殊警报：针对$spell:%s需要转换目标(带计数)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.gtfo			= "特殊警报：需要躲开地上的有害技能"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Adds			= "特殊警报：需要攻击小怪"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Addscustom		= "特殊警报：小怪(自定义)"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.adds			= "特殊警报：需要攻击小怪"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.addscustom		= "特殊警报：小怪(自定义)"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetchange	= "特殊警报：需要立刻切换目标时"
 
 -- Auto-generated Timer Localizations
@@ -490,13 +487,6 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT2			= "为$spell:%s添加团队标记"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT				= "为$spell:%s的目标添加箭头"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2			= "为$spell:%s的目标添加远离箭头"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT3			= "为$spell:%s的目标添加前往指定位置的箭头"
-DBM_CORE_AUTO_VOICE_OPTION_TEXT				= "为技能$spell:%s提供语音包警报"
-DBM_CORE_AUTO_VOICE2_OPTION_TEXT			= "为阶段转换提供语音包警报"
-DBM_CORE_AUTO_VOICE3_OPTION_TEXT			= "为下一波小怪提供语音包警报"
-DBM_CORE_AUTO_VOICE4_OPTION_TEXT			= "为踩了不该踩的东西提供语音警报"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT			= "倒计时：$spell:%s的冷却时间倒计时"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "倒计时：$spell:%s消失时"
-DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT			= "倒计时：$spell:%s的持续时间正计时"
 --
 DBM_CORE_AUTO_YELL_OPTION_TEXT.shortyell	= "当你受到$spell:%s影响时大喊"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.yell			= "当你受到$spell:%s影响时大喊（带名字）"

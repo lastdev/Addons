@@ -1,10 +1,8 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_common", 80000)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_common", 80300)
 if not __exports then return end
-local __Scripts = LibStub:GetLibrary("ovale/Scripts")
-local OvaleScripts = __Scripts.OvaleScripts
-__exports.register = function()
+__exports.registerCommon = function(OvaleScripts)
     local name = "ovale_common"
-    local desc = "[7.3.2] Ovale: Common spell definitions"
+    local desc = "[8.2] Ovale: Common spell definitions"
     local code = [[
 # Common spell definitions shared by all classes and specializations.
 
@@ -86,15 +84,6 @@ SpellList(trinket_stacking_proc_spell_power_buff)
 
 Define(umbral_glaive_storm 242553)
 
-# Battle for Azeroth
-Define(battle_scarred 160053)
-
-Define(battle_potion_of_agility 163223)
-Define(battle_potion_of_intellect 163222)
-Define(battle_potion_of_strength 163224)
-Define(battle_potion_of_stamina 163225)
-Define(steelskin_potion 152557)
-
 ###
 ### Trinkets & OnUse Rings
 ###
@@ -112,6 +101,8 @@ Define(coagulated_nightwell_residue 137400)
 Define(cunning_of_the_deceiver 242629)
 Define(convergence_of_fates 140806)
 Define(draught_of_souls 140808)
+Define(edits_of_the_faithless 169315)
+    ItemInfo(edits_of_the_faithless unusable=1)
 Define(gnawed_thumb_ring 134526)
 	ItemInfo(gnawed_thumb_ring cd=180)
 Define(nightwell_energy_buff 214572)
@@ -162,6 +153,41 @@ Define(archmages_incandescence_str_buff 177160)
 Define(sephuzs_secret_item 132452)
 Define(sephuzs_secret_buff 208051)
 	SpellInfo(sephuzs_secret_buff buff_cd=30 duration=10)
+	
+### Missing items (temporary)
+Define(dread_combatants_insignia_item 161813)
+Define(dread_combatants_medallion_item 161811)
+
+### Missing spells 
+Define(trinket_grongs_primal_rage_cooldown_buff 288267)
+Define(trinket_ashvanes_razor_coral_cooldown_buff 303568)
+Define(hyperthread_wristwraps_300142 300142)
+
+###
+### Essences
+###
+
+Define(anima_of_death_essence 294926)
+    SpellInfo(anima_of_death_essence tag=cd)
+Define(concentrated_flame_essence 295373)
+    SpellInfo(concentrated_flame_essence cd=30 tag=main)
+    Define(concentrated_flame_burn_debuff 295368)
+    SpellInfo(concentrated_flame_burn_debuff duration=6)
+    SpellAddTargetDebuff(concentrated_flame_essence concentrated_flame_burn_debuff=1)
+Define(focused_azerite_beam_essence 295258)
+    SpellInfo(focused_azerite_beam_essence cd=90 tag=cd)
+Define(memory_of_lucid_dreams_essence 298357)
+    SpellInfo(memory_of_lucid_dreams_essence cd=120 tag=cd)
+    Define(memory_of_lucid_dreams_essence_buff 298357)
+Define(ripple_in_space_essence 302731)
+    SpellInfo(ripple_in_space_essence cd=60 tag=shortcd)
+Define(the_unbound_force_essence 298452)
+    SpellInfo(the_unbound_force_essence cd=60 tag=shortcd)
+    Define(reckless_force_counter_buff 302917)
+    SpellInfo(reckless_force_counter_buff max_stacks=20)
+Define(worldvein_resonance_essence 295186)
+    SpellInfo(worldvein_resonance_essence cd=60 tag=shortcd)
+    Define(lifeblood_buff 295137)
 
 ###
 ### Racials

@@ -6,7 +6,12 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "8.0.22"
+local VERSION
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	VERSION = "8.3.25"
+elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	VERSION = "1.13.25"
+end
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -22,6 +27,13 @@ local ACTIVE_OPTIONS = FLOASPECTBAR_OPTIONS[1];
 -- Ugly
 local changingSpec = false;
 
+local GetSpecialization = GetSpecialization;
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	GetSpecialization = function ()
+		return 1
+	end
+end
+
 -------------------------------------------------------------------------------
 -- Functions
 -------------------------------------------------------------------------------
@@ -36,6 +48,10 @@ function FloAspectBar_OnLoad(self)
 	local classSpells = FLO_ASPECT_SPELLS[classFileName];
 	if classSpells == nil then
 		return;
+	end
+
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		self.hideCooldowns = true;
 	end
 
 	-- Store the spell list for later
@@ -61,7 +77,9 @@ function FloAspectBar_OnLoad(self)
 		SlashCmdList["FLOASPECTBAR"] = FloAspectBar_ReadCmd;
 
 		self:RegisterEvent("ADDON_LOADED");
-		self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+		end
 		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
 	end
 
@@ -70,6 +88,7 @@ function FloAspectBar_OnLoad(self)
 	self:RegisterEvent("CHARACTER_POINTS_CHANGED");
 	self:RegisterEvent("PLAYER_ALIVE");
 	self:RegisterEvent("PLAYER_LEVEL_UP");
+	self:RegisterEvent("SPELLS_CHANGED");
 	self:RegisterEvent("SPELL_UPDATE_COOLDOWN");
 	self:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
 	self:RegisterEvent("UNIT_AURA");
@@ -79,17 +98,20 @@ end
 
 function FloAspectBar_OnEvent(self, event, arg1, ...)
 
-	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" then
+	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" or event == "SPELLS_CHANGED" then
 		if not changingSpec then
-		        FloLib_Setup(self);
-                end
+			FloLib_Setup(self);
+		end
 
 	elseif event == "ADDON_LOADED" and arg1 == "FloAspectBar" then
 		FloAspectBar_CheckTalentGroup(FLOASPECTBAR_OPTIONS.active);
 
 		-- Hook the UIParent_ManageFramePositions function
 		hooksecurefunc("UIParent_ManageFramePositions", FloAspectBar_UpdatePosition);
-		hooksecurefunc("SetSpecialization", function(specIndex, isPet) if not isPet then changingSpec = true end end);
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			hooksecurefunc("SetSpecialization", function(specIndex, isPet) if not isPet then changingSpec = true end end);
+		end
+		FloLib_UpdateBindings(self, "SHAPESHIFT");
 
 	elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
 		if arg1 == "player" then
@@ -104,7 +126,7 @@ function FloAspectBar_OnEvent(self, event, arg1, ...)
 		end
 
 	elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
-                local spec = GetSpecialization();
+		local spec = GetSpecialization();
 		if arg1 == "player" and FLOASPECTBAR_OPTIONS.active ~= spec then
 			FloAspectBar_TalentGroupChanged(spec);
 		end
@@ -201,7 +223,7 @@ function FloAspectBar_SetupSpell(self, spell, pos)
 
 	self.spells[pos] = { id = spell.id, name = spell.name, addName = spell.addName, talented = spell.talented, duration = spell.duration };
 
-        if spell.modifier then spell.modifier(self.spells[pos]) end
+	if spell.modifier then spell.modifier(self.spells[pos]) end
 
 end
 
@@ -224,9 +246,9 @@ function FloAspectBar_UpdateState(self, pos)
 	local spell = self.spells[pos];
 
 	if FloLib_UnitHasBuff("player", spell.name) then
-		button:SetChecked(true);
+		FloLib_StartTimer(self, nil, spell.id);
 	elseif self["activeSpell"..pos] == pos then
-            FloLib_ResetTimer(self, pos);
+        FloLib_ResetTimer(self, pos);
     else
 		button:SetChecked(false);
 	end

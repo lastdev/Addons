@@ -4,7 +4,7 @@
 	This is an example addon. Use the below code to start your own
 	module should you wish.
 
-	This top section should bel deleted from any derivative code
+	This top section should be deleted from any derivative code
 	before you distribute it.
 
 ]]

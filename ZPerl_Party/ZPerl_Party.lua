@@ -1,5 +1,5 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local XPerl_Party_Events = { }
@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 1121 $")
+end, "$Revision:  $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -74,7 +74,9 @@ function XPerl_Party_Events_OnLoad(self)
 		--"PET_BATTLE_CLOSE",
 	}
 	for i, event in pairs(events) do
-		self:RegisterEvent(event)
+		if pcall(self.RegisterEvent, self, event) then
+			self:RegisterEvent(event)
+		end
 	end
 
 	--partyHeader:UnregisterEvent("UNIT_NAME_UPDATE") -- IMPORTANT! Fix for WoW 2.1 UNIT_NAME_UPDATE lockup issues
@@ -297,7 +299,7 @@ function XPerl_Party_UpdateHealth(self)
 		return
 	end
 	local partyid = self.partyid
-	local Partyhealth, Partyhealthmax = UnitHealth(partyid), UnitHealthMax(partyid)
+	local Partyhealth, Partyhealthmax = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid)), UnitHealthMax(partyid)
 	local reason
 
 	--[[if (self.feigning and not UnitBuff(partyid, feignDeath)) then
@@ -581,9 +583,10 @@ end
 
 -- XPerl_Party_UpdateName
 local function XPerl_Party_UpdateName(self)
-	local Partyname = UnitName(self.partyid)
+	local partyid = self.partyid
+	local Partyname = UnitName(partyid)
 	self.lastName = Partyname
-	self.lastGUID = UnitGUID(self.partyid)
+	self.lastGUID = UnitGUID(partyid)
 	if (Partyname) then
 		self.nameFrame.text:SetFontObject(GameFontNormal)
 		self.nameFrame.text:SetText(Partyname)
@@ -592,7 +595,7 @@ local function XPerl_Party_UpdateName(self)
 			self.nameFrame.text:SetFontObject(GameFontNormalSmall)
 		end
 
-		XPerl_ColourFriendlyUnit(self.nameFrame.text, self.partyid)
+		XPerl_ColourFriendlyUnit(self.nameFrame.text, partyid)
 	end
 end
 
@@ -602,14 +605,14 @@ local function UpdateAssignedRoles(self)
 	local icon = self.nameFrame.roleIcon
 	local isTank, isHealer, isDamage
 	local inInstance, instanceType = IsInInstance()
-	if (instanceType == "party") then
+	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
 
 		-- According to http://forums.worldofwarcraft.com/thread.html?topicId=26560499864
 		-- this is the new way to check for roles
 		-- Port this from XPerl_Player.lua by PlayerLin
-		role = UnitGroupRolesAssigned(unit)
+		local role = UnitGroupRolesAssigned(unit)
 		isTank = false
 		isHealer = false
 		isDamage = false
@@ -684,8 +687,8 @@ end
 
 -- XPerl_Party_UpdateLeader
 local function XPerl_Party_UpdateLeader(self)
-
-	if (UnitIsGroupLeader(self.partyid)) then
+	local partyid = self.partyid
+	if (UnitIsGroupLeader(partyid)) then
 		self.nameFrame.leaderIcon:Show()
 	else
 		self.nameFrame.leaderIcon:Hide()
@@ -694,7 +697,7 @@ local function XPerl_Party_UpdateLeader(self)
 	local lootMethod, lootMaster, raidLootMaster = GetLootMethod()
 
 	if (lootMethod == "master" and lootMaster) then
-		if (self.partyid == "party"..lootMaster) then
+		if (partyid == "party"..lootMaster) then
 			self.nameFrame.masterIcon:Show()
 		else
 			self.nameFrame.masterIcon:Hide()
@@ -718,7 +721,7 @@ local function XPerl_Party_UpdatePVP(self)
 	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
 		pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if UnitIsMercenary(partyid) then
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitIsMercenary(partyid) then
 			if factionGroup == "Horde" then
 				pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
 			elseif factionGroup == "Alliance" then
@@ -742,14 +745,15 @@ end
 
 -- XPerl_Party_UpdateCombat
 function XPerl_Party_UpdateCombat(self)
-	if (UnitIsVisible(self.partyid)) then
-		if (UnitAffectingCombat(self.partyid)) then
+	local partyid = self.partyid
+	if (UnitIsVisible(partyid)) then
+		if (UnitAffectingCombat(partyid)) then
 			self.nameFrame.combatIcon:Show()
 		else
 			self.nameFrame.combatIcon:Hide()
 		end
 
-		if (UnitIsCharmed(self.partyid)) then
+		if (UnitIsCharmed(partyid)) then
 			self.nameFrame.warningIcon:Show()
 		else
 			self.nameFrame.warningIcon:Hide()
@@ -762,8 +766,9 @@ end
 
 -- XPerl_Party_UpdateClass
 local function XPerl_Party_UpdateClass(self)
-	if (UnitIsPlayer(self.partyid)) then
-		local _, class = UnitClass(self.partyid)
+	local partyid = self.partyid
+	if (UnitIsPlayer(partyid)) then
+		local _, class = UnitClass(partyid)
 		local l, r, t, b = XPerl_ClassPos(class)
 		self.classFrame.tex:SetTexCoord(l, r, t, b)
 	end
@@ -777,14 +782,15 @@ end
 
 -- XPerl_Party_UpdateMana
 local function XPerl_Party_UpdateMana(self)
-	if (self.afk and not UnitIsAFK(self.partyid)) then
+	local partyid = self.partyid
+	if (self.afk and not UnitIsAFK(partyid)) then
 		XPerl_Party_UpdatePlayerFlags(self)
 	end
 
-	local pType = XPerl_GetDisplayedPowerType(self.partyid)
+	local pType = XPerl_GetDisplayedPowerType(partyid)
 
-	local Partymana = UnitPower(self.partyid, pType)
-	local Partymanamax = UnitPowerMax(self.partyid, pType)
+	local Partymana = UnitPower(partyid, pType)
+	local Partymanamax = UnitPowerMax(partyid, pType)
 
 	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
@@ -805,7 +811,7 @@ local function XPerl_Party_UpdateMana(self)
 	self.statsFrame.manaBar:SetMinMaxValues(0, Partymanamax)
 	self.statsFrame.manaBar:SetValue(Partymana)
 
-	if (XPerl_GetDisplayedPowerType(self.partyid) >= 1) then
+	if (XPerl_GetDisplayedPowerType(partyid) >= 1) then
 		self.statsFrame.manaBar.percent:SetText(Partymana)
 	else
 		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * percent)
@@ -819,7 +825,7 @@ local function XPerl_Party_UpdateMana(self)
 
 	self.statsFrame.manaBar.text:SetFormattedText("%d/%d", Partymana, Partymanamax)
 
-	if (not UnitIsConnected(self.partyid)) then
+	if (not UnitIsConnected(partyid)) then
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_OFFLINE)
 		if (not self.statsFrame.greyMana) then
 			self.statsFrame:SetGrey()
@@ -831,7 +837,7 @@ end
 local function XPerl_Party_UpdateRange(self, overrideUnit)
 	local partyid = overrideUnit or self.partyid
 	if (partyid) then
-		if (not pconf.range30yard or CheckInteractDistance(self.partyid, 1) or not UnitIsConnected(self.partyid)) then
+		if (not pconf.range30yard or CheckInteractDistance(partyid, 1) or not UnitIsConnected(partyid)) then
 			self.nameFrame.rangeIcon:Hide()
 		else
 			self.nameFrame.rangeIcon:Show()
@@ -851,8 +857,8 @@ function XPerl_Party_SingleGroup()
 		return
 	end
 	for i = 1, num do
-		local name, rank, group = GetRaidRosterInfo(i)
-		if (group > 1) then
+		local _, _, subgroup = GetRaidRosterInfo(i)
+		if (subgroup > 1) then
 			return
 		end
 	end
@@ -876,13 +882,19 @@ local function CheckRaid()
 		local singleGroup = XPerl_Party_SingleGroup()
 
 		if (not pconf or ((pconf.inRaid and IsInRaid()) or (pconf.smallRaid and singleGroup) or (GetNumGroupMembers() > 0 and not IsInRaid()))) then -- or GetNumGroupMembers() > 0
-			if not C_PetBattles.IsInBattle() then
-				if (not partyHeader:IsShown()) then
-					partyHeader:Show()
+			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+				if not C_PetBattles.IsInBattle() then
+					if (not partyHeader:IsShown()) then
+						partyHeader:Show()
+					end
+				else
+					if (partyHeader:IsShown()) then
+						partyHeader:Hide()
+					end
 				end
 			else
-				if (partyHeader:IsShown()) then
-					partyHeader:Hide()
+				if (not partyHeader:IsShown()) then
+					partyHeader:Show()
 				end
 			end
 		else
@@ -896,7 +908,8 @@ end
 -- XPerl_Party_TargetUpdateHealth
 local function XPerl_Party_TargetUpdateHealth(self)
 	local tf = self.targetFrame
-	local hp, hpMax, heal, abosrb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+	local targetid = self.targetid
+	local hp, hpMax, heal, abosrb = UnitIsGhost(targetid) and 1 or (UnitIsDead(targetid) and 0 or UnitHealth(targetid)), UnitHealthMax(targetid), WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetIncomingHeals(targetid), WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetTotalAbsorbs(targetid)
 	tf.lastHP, tf.lastHPMax, tf.lastHeal, tf.lastAbsorb = hp, hpMax, heal, abosrb
 	tf.lastUpdate = GetTime()
 
@@ -904,7 +917,7 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	--tf.healthBar:SetValue(hp)
 	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
-	if UnitIsDeadOrGhost(self.targetid) then -- Probably dead target
+	if UnitIsDeadOrGhost(targetid) then -- Probably dead target
 		percent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	elseif hp > 0 and hpMax == 0 then -- We have current ho but max hp failed.
 		hpMax = hp -- Make max hp at least equal to current health
@@ -926,29 +939,29 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	XPerl_Party_TargetUpdateAbsorbPrediction(self.targetFrame)
 	XPerl_Party_TargetUpdateHealPrediction(self.targetFrame)
 
-	if (UnitIsDeadOrGhost(self.targetid)) then
+	if (UnitIsDeadOrGhost(targetid)) then
 		tf.healthBar:SetStatusBarColor(0.5, 0.5, 0.5, 1)
 		tf.healthBar.bg:SetVertexColor(0.5, 0.5, 0.5, 0.5)
-		if (UnitIsDead(self.targetid)) then
+		if (UnitIsDead(targetid)) then
 			tf.healthBar.text:SetText(XPERL_LOC_DEAD)
 		else
 			tf.healthBar.text:SetText(XPERL_LOC_GHOST)
 		end
 	else
-		--XPerl_ColourHealthBar(self.targetFrame, hp / hpMax, self.targetid)
+		--XPerl_ColourHealthBar(self.targetFrame, hp / hpMax, targetid)
 		if hpMax > 0 then
 			XPerl_SetSmoothBarColor(self.targetFrame.healthBar, percent)
 		end
 	end
 
-	if (UnitAffectingCombat(self.targetid)) then
+	if (UnitAffectingCombat(targetid)) then
 		tf.combatIcon:SetTexCoord(0.49, 1.0, 0.0, 0.49)
 		tf.combatIcon:Show()
 	else
 		tf.combatIcon:Hide()
 	end
 
-	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.targetid) and "FFA") or (UnitIsPVP(self.targetid) and (UnitFactionGroup(self.targetid) ~= "Neutral") and UnitFactionGroup(self.targetid)))
+	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(targetid) and "FFA") or (UnitIsPVP(targetid) and (UnitFactionGroup(targetid) ~= "Neutral") and UnitFactionGroup(targetid)))
 	if (pvp) then
 		tf.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		tf.pvpIcon:Show()
@@ -977,19 +990,22 @@ end
 
 -- XPerl_Party_TargetRaidIcon
 local function XPerl_Party_TargetRaidIcon(self)
-	XPerl_Update_RaidIcon(self.targetFrame.raidIcon, self.partyid.."target")
-	XPerl_Update_RaidIcon(self.nameFrame.raidIcon, self.partyid)
+	local partyid = self.partyid
+	XPerl_Update_RaidIcon(self.targetFrame.raidIcon, partyid.."target")
+	XPerl_Update_RaidIcon(self.nameFrame.raidIcon, partyid)
 end
 
 -- XPerl_Party_UpdateTarget
 local function XPerl_Party_UpdateTarget(self)
 	if (pconf.target.enable) then
-		if (self.targetid and UnitIsConnected(self.partyid) and UnitExists(self.partyid) and UnitIsVisible(self.partyid)) then
-			local targetname = UnitName(self.targetid)
+		local targetid = self.targetid
+		local partyid = self.partyid
+		if (targetid and UnitIsConnected(partyid) and UnitExists(partyid) and UnitIsVisible(partyid)) then
+			local targetname = UnitName(targetid)
 			if (targetname and targetname ~= UNKNOWNOBJECT) then
 				--self.targetFrame:SetAlpha(1)
 				self.targetFrame.text:SetText(targetname)
-				XPerl_SetUnitNameColor(self.targetFrame.text, self.targetid)
+				XPerl_SetUnitNameColor(self.targetFrame.text, targetid)
 				XPerl_Party_TargetUpdateHealth(self)
 				XPerl_Party_TargetRaidIcon(self)
 			end
@@ -999,7 +1015,8 @@ end
 
 -- XPerl_Party_OnUpdate
 function XPerl_Party_OnUpdate(self, elapsed)
-	if (not self.partyid) then
+	local partyid = self.partyid
+	if not partyid then
 		return
 	end
 
@@ -1014,7 +1031,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 	--self.time = self.time + elapsed
 	--if (self.time >= 0.2) then
 		--self.time = 0
-		local partyid = self.partyid
+		local targetid = self.targetid
 
 		self.flagsCheck = self.flagsCheck + 1
 		if (self.flagsCheck > 25) then
@@ -1023,7 +1040,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 		end
 
 		if (pconf.target.large and self.targetFrame:IsShown()) then
-			local hp, hpMax, heal, absorb = UnitHealth(self.targetid), UnitHealthMax(self.targetid), UnitGetIncomingHeals(self.targetid), UnitGetTotalAbsorbs(self.targetid)
+			local hp, hpMax, heal, absorb = UnitIsGhost(targetid) and 1 or (UnitIsDead(targetid) and 0 or UnitHealth(targetid)), UnitHealthMax(targetid), WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetIncomingHeals(targetid), WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetTotalAbsorbs(targetid)
 			if (hp ~= self.targetFrame.lastHP or hpMax ~= self.targetFrame.lastHPMax or heal ~= self.targetFrame.lastHeal or absorb ~= self.targetFrame.lastAbsorb or GetTime() > self.targetFrame.lastUpdate + 5000) then
 				XPerl_Party_TargetUpdateHealth(self)
 			end
@@ -1035,7 +1052,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 			XPerl_Party_UpdateRange(self, partyid)
 
 			XPerl_UpdateSpellRange(self, partyid)
-			XPerl_UpdateSpellRange(self.targetFrame, self.targetid)
+			XPerl_UpdateSpellRange(self.targetFrame, targetid)
 		end
 
 		--[=[if (checkRaidNextUpdate) then
@@ -1823,16 +1840,18 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if pconf.healprediction then
-		XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
-	end
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if pconf.healprediction then
+			XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
+		else
+			XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
 
-	if pconf.absorbs then
-		XPerl_Party_Events_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-	else
-		XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		if pconf.absorbs then
+			XPerl_Party_Events_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		else
+			XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
 	end
 
 	XPerl_Party_SetInitialAttributes()

@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -66,6 +66,7 @@ TMW.IE:RegisterRapidSetting("Magnitude")
 TMW.IE:RegisterRapidSetting("Period")
 TMW.IE:RegisterRapidSetting("Thickness")
 TMW.IE:RegisterRapidSetting("Size_anim")
+TMW.IE:RegisterRapidSetting("Scale")
 TMW.IE:RegisterRapidSetting("SizeX")
 TMW.IE:RegisterRapidSetting("SizeY")
 TMW.IE:RegisterRapidSetting("AnimColor")

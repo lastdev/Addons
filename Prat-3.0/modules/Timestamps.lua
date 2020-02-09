@@ -74,8 +74,8 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = true,
 		["colortimestamp_desc"] = "Toggle coloring the timestamp on and off.",
@@ -106,11 +106,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Options de l'heure des messages.",
 		["colortimestamp_desc"] = "Active/Désactive la couleur de l'heure des messages.",
@@ -141,11 +142,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Optionen für Zeitstempel in Chatfenstern.",
 		["colortimestamp_desc"] = "Einfärben des Zeitstempels ein- und ausschalten.",
@@ -176,11 +178,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "대화창 시간 표시 옵션입니다.",
 		["colortimestamp_desc"] = "시간 표시에 색상을 입히거나 입히지 않습니다.",
@@ -211,72 +214,74 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		--[[Translation missing --]]
-		--[[ ["Chat window timestamp options."] = "",--]] 
+		["Chat window timestamp options."] = "Chat window timestamp options.",
 		--[[Translation missing --]]
-		--[[ ["colortimestamp_desc"] = "",--]] 
+		["colortimestamp_desc"] = "Toggle coloring the timestamp on and off.",
 		--[[Translation missing --]]
-		--[[ ["colortimestamp_name"] = "",--]] 
+		["colortimestamp_name"] = "Color Timestamp",
 		--[[Translation missing --]]
-		--[[ ["Format All Timestamps"] = "",--]] 
+		["Format All Timestamps"] = "Format All Timestamps",
 		--[[Translation missing --]]
-		--[[ ["HH:MM (12-hour)"] = "",--]] 
+		["HH:MM (12-hour)"] = "HH:MM (12-hour)",
 		--[[Translation missing --]]
-		--[[ ["HH:MM (24-hour)"] = "",--]] 
+		["HH:MM (24-hour)"] = "HH:MM (24-hour)",
 		--[[Translation missing --]]
-		--[[ ["HH:MM:SS (12-hour)"] = "",--]] 
+		["HH:MM:SS (12-hour)"] = "HH:MM:SS (12-hour)",
 		--[[Translation missing --]]
-		--[[ ["HH:MM:SS (24-hour)"] = "",--]] 
+		["HH:MM:SS (24-hour)"] = "HH:MM:SS (24-hour)",
 		--[[Translation missing --]]
-		--[[ ["HH:MM:SS AM (12-hour)"] = "",--]] 
+		["HH:MM:SS AM (12-hour)"] = "HH:MM:SS AM (12-hour)",
 		--[[Translation missing --]]
-		--[[ ["localtime_desc"] = "",--]] 
+		["localtime_desc"] = "Toggle using local time on and off.",
 		--[[Translation missing --]]
-		--[[ ["localtime_name"] = "",--]] 
+		["localtime_name"] = "Use Local Time",
 		--[[Translation missing --]]
-		--[[ ["MM:SS"] = "",--]] 
+		["MM:SS"] = "MM:SS",
 		--[[Translation missing --]]
-		--[[ ["Post-Timestamp"] = "",--]] 
+		["Post-Timestamp"] = "Post-Timestamp",
 		--[[Translation missing --]]
-		--[[ ["Pre-Timestamp"] = "",--]] 
+		["Pre-Timestamp"] = "Pre-Timestamp",
 		--[[Translation missing --]]
-		--[[ ["Set the timestamp format"] = "",--]] 
+		["Set the timestamp format"] = "Set the timestamp format",
 		--[[Translation missing --]]
-		--[[ ["Set Timestamp Color"] = "",--]] 
+		["Set Timestamp Color"] = "Set Timestamp Color",
 		--[[Translation missing --]]
-		--[[ ["Sets the color of the timestamp."] = "",--]] 
+		["Sets the color of the timestamp."] = "Sets the color of the timestamp.",
 		--[[Translation missing --]]
-		--[[ ["Show Timestamp"] = "",--]] 
+		["Show Timestamp"] = "Show Timestamp",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing timestamp on and off for each window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Timestamp",
 		--[[Translation missing --]]
-		--[[ ["space_desc"] = "",--]] 
+		["space_desc"] = "Toggle adding space after timestamp on and off.",
 		--[[Translation missing --]]
-		--[[ ["space_name"] = "",--]] 
+		["space_name"] = "Show Space",
 		--[[Translation missing --]]
-		--[[ ["Timestamps"] = "",--]] 
+		["Timestamps"] = "Timestamps",
 		--[[Translation missing --]]
-		--[[ ["Toggle showing timestamp for each window."] = "",--]] 
+		["Toggle showing timestamp for each window."] = "Toggle showing timestamp for each window.",
 		--[[Translation missing --]]
-		--[[ ["twocolumn_desc"] = "",--]] 
+		["twocolumn_desc"] = "Place the timestamps in a separate column so the text does not wrap underneath them",
 		--[[Translation missing --]]
-		--[[ ["twocolumn_name"] = "",--]] 
+		["twocolumn_name"] = "2 Column Chat",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Настройки времени в окне чата.",
 		["colortimestamp_desc"] = "Вкл/Выкл окрасу времени.",
@@ -307,11 +312,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "聊天窗口时间戳选项",
 		["colortimestamp_desc"] = "时间戳着色开关",
@@ -342,11 +348,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Opciones de MáscaraTiempo de la ventana de chat.",
 		["colortimestamp_desc"] = "Alterna activación de colorear máscara de tiempo.",
@@ -377,11 +384,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  L=
-{
+  
+L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "聊天視窗時間戳選項",
 		["colortimestamp_desc"] = "切換是否為時間戳著色。",
@@ -404,15 +412,16 @@ Prat:AddModuleToLoad(function()
 		["show_desc"] = "切換顯示時間標籤",
 		["show_name"] = "顯示時間戳",
 		--[[Translation missing --]]
-		--[[ ["space_desc"] = "",--]] 
+		["space_desc"] = "Toggle adding space after timestamp on and off.",
 		["space_name"] = "顯示空白",
 		["Timestamps"] = "時間戳",
 		["Toggle showing timestamp for each window."] = "切換是否在個別視窗顯示時間戳。",
 		--[[Translation missing --]]
-		--[[ ["twocolumn_desc"] = "",--]] 
+		["twocolumn_desc"] = "Place the timestamps in a separate column so the text does not wrap underneath them",
 		["twocolumn_name"] = "兩欄式聊天",
 	}
 }
+
 
     PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
@@ -536,8 +545,7 @@ Prat:AddModuleToLoad(function()
     end
 
     -- Disable blizz timestamps
---    SetCVar("showTimestamps", "none")
---    InterfaceOptionsSocialPanelTimestamps.cvar = "none"
+    self:RawHook("ChatFrame_MessageEventHandler", true)
 
     self:RawHook("ChatChannelDropDown_PopOutChat", true)
 
@@ -553,6 +561,14 @@ Prat:AddModuleToLoad(function()
   end
 
   local hookedFrames = {}
+
+  function module:ChatFrame_MessageEventHandler(...)
+    local ctsf = CHAT_TIMESTAMP_FORMAT
+    CHAT_TIMESTAMP_FORMAT = nil
+    local ret = self.hooks["ChatFrame_MessageEventHandler"](...)
+    CHAT_TIMESTAMP_FORMAT = ctsf
+    return ret
+  end
 
   function module:Prat_FramesUpdated(info, name, chatFrame, ...)
     if not hookedFrames[chatFrame:GetName()] then
@@ -609,7 +625,7 @@ Prat:AddModuleToLoad(function()
       if cf and cf:GetJustifyH() == "RIGHT" then
         text = text .. (space and " " or "") .. Timestamp(self:GetTime(fmt))
       else
-        text = Timestamp(self:GetTime(fmt)) .. "|c00000000|r" .. (space and " " or "") .. text
+        text = Timestamp(self:GetTime(fmt)) .. (space and " " or "") .. text
       end
     end
 

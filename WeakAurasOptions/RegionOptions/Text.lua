@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
 
@@ -11,9 +13,7 @@ local function createOptions(id, data)
       type = "input",
       width = WeakAuras.doubleWidth,
       desc = function()
-        local ret = L["Dynamic text tooltip"];
-        ret = ret .. WeakAuras.GetAdditionalProperties(data);
-        return ret
+        return L["Dynamic text tooltip"] .. WeakAuras.GetAdditionalProperties(data)
       end,
       multiline = true,
       name = L["Display Text"],
@@ -22,9 +22,9 @@ local function createOptions(id, data)
         return data.displayText;
       end,
       set = function(info, v)
-        data.displayText = v;
+        data.displayText = WeakAuras.ReplaceLocalizedRaidMarkers(v);
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.ResetMoverSizer();
       end
@@ -45,11 +45,10 @@ local function createOptions(id, data)
       name = L["Remaining Time Precision"],
       values = WeakAuras.precision_types,
       get = function() return data.progressPrecision or 1 end,
-      hidden = function()
-        return not (data.displayText:find("%%p") or data.displayText:find("%%t"));
+      hidden = function() return not (WeakAuras.ContainsPlaceHolders(data.displayText, "pt"));
       end,
       disabled = function()
-        return not data.displayText:find("%%p");
+        return not WeakAuras.ContainsPlaceHolders(data.displayText, "p");
       end
     },
     totalPrecision = {
@@ -60,10 +59,10 @@ local function createOptions(id, data)
       values = WeakAuras.precision_types,
       get = function() return data.totalPrecision or 1 end,
       hidden = function()
-        return not (data.displayText:find("%%p") or data.displayText:find("%%t"));
+        return not (WeakAuras.ContainsPlaceHolders(data.displayText, "pt"));
       end,
       disabled = function()
-        return not data.displayText:find("%%t");
+        return not WeakAuras.ContainsPlaceHolders(data.displayText, "t");
       end
     },
     color = {
@@ -129,9 +128,15 @@ local function createOptions(id, data)
       order = 48,
       values = WeakAuras.font_flags
     },
+    endHeader = {
+      type = "header",
+      order = 100,
+      name = "",
+    },
   };
 
-  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", 37, function() return not WeakAuras.ContainsCustomPlaceHolder(data.displayText) end, {"customText"}, false);
+  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", "https://github.com/WeakAuras/WeakAuras2/wiki/Text-Replacements",
+                          37, function() return not WeakAuras.ContainsCustomPlaceHolder(data.displayText) end, {"customText"}, false);
 
   return {
     text = options;
@@ -139,8 +144,8 @@ local function createOptions(id, data)
   };
 end
 
-local function createThumbnail(parent)
-  local borderframe = CreateFrame("FRAME", nil, parent);
+local function createThumbnail()
+  local borderframe = CreateFrame("FRAME", nil, UIParent);
   borderframe:SetWidth(32);
   borderframe:SetHeight(32);
 
@@ -211,19 +216,10 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, size)
   end
 
   function borderframe:SetIcon(path)
-    local icon = (
-      WeakAuras.CanHaveAuto(data)
-      and path ~= ""
-      and path
-      or data.displayIcon
-      or "Interface\\Icons\\INV_Misc_QuestionMark"
-      );
-    borderframe.values.icon = "|T"..icon..":12:12:0:0:64:64:4:60:4:60|t";
     UpdateText();
   end
 
   function borderframe:SetName(name)
-    borderframe.values.name = WeakAuras.CanHaveAuto(data) and name or data.id;
     UpdateText();
   end
 

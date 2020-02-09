@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 7.7.6000 (SwimmingSeadragon)
-	Revision: $Id: EnchantrixBarker.lua 6000 2018-07-17 14:09:34Z none $
+	Version: 8.2.6507 (SwimmingSeadragon)
+	Revision: $Id: EnchantrixBarker.lua 6507 2019-11-02 14:38:37Z none $
 	URL: http://enchantrix.org/
 
 	This is an addon for World of Warcraft that adds the ability to advertise
@@ -30,7 +30,17 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-EnchantrixBarker_RegisterRevision("$URL: /EnchantrixBarker.lua $", "$Rev: 6000 $")
+EnchantrixBarker_RegisterRevision("$URL: Enchantrix-Barker/EnchantrixBarker.lua $", "$Rev: 6507 $")
+
+
+-- need to know early if we're using Classic or Modern version
+local MINIMUM_CLASSIC = 11300
+local MAXIMUM_CLASSIC = 19999
+-- version, build, date, tocversion = GetBuildInfo()
+local _,_,_,tocVersion = GetBuildInfo()
+local isClassic = (tocVersion > MINIMUM_CLASSIC and tocVersion < MAXIMUM_CLASSIC)
+
+
 
 local priorityList = {};
 
@@ -39,18 +49,24 @@ local priorityList = {};
 	-- search is the string to look for in the enchant name
 	-- print is what we print for the output
 local categories = {
-	['factor_item.bracer'] = {search = _BARKLOC('Bracer'), print = _BARKLOC('Bracer') },
-	['factor_item.gloves'] = {search = _BARKLOC('Gloves'), print = _BARKLOC('Gloves') },
-	['factor_item.boots'] = {search = _BARKLOC('Boots'), print = _BARKLOC('Boots') },
-	['factor_item.shield'] = {search = _BARKLOC('Shield'), print = _BARKLOC('Shield') },
-	['factor_item.chest'] = {search = _BARKLOC('Chest'), print = _BARKLOC('Chest') },
-	['factor_item.cloak'] = {search = _BARKLOC('Cloak'), print = _BARKLOC('Cloak') },
-	['factor_item.2hweap'] = {search = _BARKLOC('TwoHandWeapon'), print = _BARKLOC('TwoHandWeapon')},
-	['factor_item.weapon'] = {search = _BARKLOC('Weapon'), print = _BARKLOC('AnyWeapon') },
-	['factor_item.ring'] = {search = _BARKLOC('Ring'), print = _BARKLOC('Ring') },
-	['factor_item.other'] = {search = _BARKLOC('Other'), print = _BARKLOC('Other') },
-	['Unknown'] = {search = _BARKLOC('Other'), print = _BARKLOC('Other') },
+	['factor_item.bracer'] = {search = 'bracer', print = _BARKLOC('Bracer') },
+	['factor_item.gloves'] = {search = 'gloves', print = _BARKLOC('Gloves') },
+	['factor_item.boots'] = {search = 'boots', print = _BARKLOC('Boots') },
+	['factor_item.shield'] = {search = 'shield', print = _BARKLOC('Shield') },
+	['factor_item.chest'] = {search = 'chest', print = _BARKLOC('Chest') },
+	['factor_item.cloak'] = {search = 'cloak', print = _BARKLOC('Cloak') },
+	['factor_item.2hweap'] = {search = 'two handed weapon', print = _BARKLOC('TwoHandWeapon')},
+	['factor_item.weapon'] = {search = 'weapon', print = _BARKLOC('AnyWeapon') },
+	['factor_item.ring'] = {search = 'ring', print = _BARKLOC('Ring') },
+	['factor_item.neck'] = {search = 'neck', print = 'Neck' },
+	['factor_item.other'] = {search = 'other', print = _BARKLOC('Other') },
+	['Unknown'] = {search = 'other', print = _BARKLOC('Other') },
 };
+
+
+if isClassic then
+    categories[ 'factor_item.2hweap' ].search = "2h weapon";
+end
 
 
 	-- this is used internally only, to determine the order of enchants shown
@@ -64,6 +80,7 @@ local print_order = {
 	'factor_item.2hweap',
 	'factor_item.weapon',
 	'factor_item.ring',
+	'factor_item.neck',
 	'factor_item.other',
 	'Unknown',
 };
@@ -115,7 +132,13 @@ local attributes = {
 	{ search = _BARKLOC("EnchSearchAllResistance2"), key = "factor_stat.allRes", print = _BARKLOC("ShortAllRes") },
 	{ search = _BARKLOC("EnchSearchAllResistance3"), key = "factor_stat.allRes", print = _BARKLOC("ShortAllRes") },
 	{ search = _BARKLOC("EnchSearchArmor"), key = "factor_stat.armor", print = _BARKLOC("ShortArmor") },						-- too general, has to come near last
-	{ search = _BARKLOC("EnchSearchResilience"), key = "factor_stat.resilience", print = _BARKLOC("RESIL") },
+	{ search = _BARKLOC("EnchSearchResilience"), key = "factor_stat.resilience", print = _BARKLOC("RESIL") },				-- too general, has to come near last
+
+-- TODO - need new stat factors!
+	{ search = "mastery", key = "factor_stat.other", print = "Mast" },
+	{ search = "haste", key = "factor_stat.other", print = "Haste" },
+	{ search = "critical strike", key = "factor_stat.other", print = "Crit" },
+	{ search = "versatility", key = "factor_stat.other", print = "Vers" },
 };
 
 --[[
@@ -179,10 +202,20 @@ end
 
 function EnchantrixBarker_OnEvent(event,...)
 	--Returns "Enchanting" for enchantwindow
-	local tradeSkillID, craftName, _rank, _maxRank, skillLineModifier = _G.C_TradeSkillUI.GetTradeSkillLine();
+
+	local tradeSkillID, craftName, _rank, _maxRank, _skillLineModifier
+
+    if isClassic then
+        craftName, _rank, _maxRank = GetCraftDisplaySkillLine();
+    else
+        tradeSkillID, craftName, _rank, _maxRank, _skillLineModifier = _G.C_TradeSkillUI.GetTradeSkillLine();
+    end
+
+    --Barker.Util.DebugPrintQuick("CraftName ", craftName, event )
+    --print("CraftEvent", craftName, event )
 
 	if craftName and craftName == _BARKLOC('Enchanting') then
-		if event == "TRADE_SKILL_SHOW" then
+		if( event == "CRAFT_SHOW" or event == "TRADE_SKILL_SHOW") then
 			if( Barker.Settings.GetSetting('barker') ) then
 				Enchantrix_BarkerOptions_TradeTab:Show();
 				Enchantrix_BarkerOptions_TradeTab.tooltipText = _BARKLOC('OpenBarkerWindow');
@@ -190,11 +223,11 @@ function EnchantrixBarker_OnEvent(event,...)
 				Enchantrix_BarkerOptions_TradeTab:Hide();
 			end
 		end
-	elseif (event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_CLOSE") then
+	elseif (event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_CLOSE" or event == "CRAFT_CLOSE" ) then
 		-- we are closing, or it's a different craft/trade, hide the button and frame
 		Enchantrix_BarkerOptions_TradeTab:Hide();
 	end
-	
+
 end
 
 function Enchantrix_BarkerOptions_OnShow()
@@ -202,7 +235,8 @@ function Enchantrix_BarkerOptions_OnShow()
 end
 
 function Enchantrix_BarkerOnClick(self)
-	local barker = Enchantrix_CreateBarker();
+
+	local barker = Enchantrix_CreateBarker(false);
 	local id = GetChannelName( _BARKLOC("TradeChannel") ) ;
 	--Barker.Util.DebugPrintQuick("Attempting to send barker ", barker, " Trade Channel ID ", id)
 
@@ -210,6 +244,8 @@ function Enchantrix_BarkerOnClick(self)
 		if (barker) then
 			SendChatMessage(barker,"CHANNEL", GetDefaultLanguage("player"), id);
 		end
+    else
+        Barker.Util.ChatPrint( _BARKLOC("BarkerNotTradeZone") );
 	end
 end
 
@@ -248,7 +284,11 @@ local function craftUILoaded()
 		Enchantrix_BarkerOptions_TradeTab:SetPoint("TOPLEFT", useFrame, "BOTTOMLEFT", 10, 15 );
 	else
 		-- and this works for the WoW 4.0 trade Window
-		Enchantrix_BarkerOptions_TradeTab:SetPoint("TOPLEFT", useFrame, "BOTTOMLEFT", 10, 2 );		-- was 10, 75
+        if isClassic then
+		    Enchantrix_BarkerOptions_TradeTab:SetPoint("TOPLEFT", useFrame, "BOTTOMLEFT", 20, 73 ); -- was 10, 75
+        else
+		    Enchantrix_BarkerOptions_TradeTab:SetPoint("TOPLEFT", useFrame, "BOTTOMLEFT", 10, 2 );
+        end
 	end
 
 	-- skillet has an API to add buttons
@@ -264,11 +304,23 @@ local function craftUILoaded()
 end
 
 function EnchantrixBarker_OnLoad()
+
+    if (not EnchantrixBarkerSavedInfo) then EnchantrixBarkerSavedInfo = {} end
+
 	if (ATSWFrame ~= nil) then
 		Stubby.RegisterAddOnHook("ATSWFrame", "Enchantrix", craftUILoaded)
 	end
 	Stubby.RegisterAddOnHook("Blizzard_CraftUI", "Enchantrix", craftUILoaded)			-- pre 3.0
 	Stubby.RegisterAddOnHook("Blizzard_TradeSkillUI", "Enchantrix", craftUILoaded)		-- post 3.0
+
+    if isClassic then
+        -- these events don't exist in retail, and generate an error
+        EnchantrixBarker:RegisterEvent("CRAFT_SHOW")
+        EnchantrixBarker:RegisterEvent("CRAFT_CLOSE")
+    end
+
+    EnchantrixBarker:RegisterEvent("TRADE_SKILL_SHOW")
+    EnchantrixBarker:RegisterEvent("TRADE_SKILL_CLOSE")
 end
 
 function Enchantrix_BarkerGetConfig( key )
@@ -295,16 +347,36 @@ function Enchantrix_BarkerOptions_ResetButton_OnClick(self)
 	Enchantrix_BarkerOptions_SetDefaults();
 end
 
-function Enchantrix_BarkerOptions_TestButton_OnClick(self)
-	local barker = Enchantrix_CreateBarker();
-	local id = GetChannelName( _BARKLOC("TradeChannel") )
-	--Barker.Util.DebugPrintQuick("Attempting to send test barker ", barker, "Trade Channel ID ", id)
+function Enchantrix_BarkerOptions_SkillupCheck_OnClick(self)
+	-- flip boolean state
+    local current = Barker.Settings.GetSetting("barker.skillup_mode")
+	Barker.Settings.SetSetting("barker.skillup_mode", not current )
+end
 
-	if (id and (not(id == 0))) then
-		if (barker) then
-			Barker.Util.ChatPrint(barker);
-		end
-	end
+local saveStringData = false
+
+function Enchantrix_BarkerOptions_TestButton_OnClick(self)
+
+    local a = IsAltKeyDown()
+    local s = IsShiftKeyDown()
+    --local c = IsControlKeyDown()
+
+    if (a and s) then
+        saveStringData = true
+        EnchantrixBarkerSavedInfo = {}
+    end
+
+	local barker = Enchantrix_CreateBarker( true );
+
+    if saveStringData then
+        Barker.Util.ChatPrint("Saved enchant debug data to SV!");
+    else
+        if (barker) then
+            Barker.Util.ChatPrint(barker);
+        end
+    end
+
+    saveStringData = false;
 end
 
 function Enchantrix_BarkerOptions_Factors_Slider_GetValue(id)
@@ -500,6 +572,28 @@ Enchantrix_BarkerOptions_TabFrames = {
 				max = 100,
 				step = 1,
 				key = 'factor_item.shield',
+				getvalue = Enchantrix_BarkerOptions_Factors_Slider_GetValue,
+				valuechanged = Enchantrix_BarkerOptions_Factors_Slider_OnValueChanged
+			},
+			{
+				name = 'Ring',
+				tooltip = "The priority score for ring enchants.",
+				units = 'percentage',
+				min = 0,
+				max = 100,
+				step = 1,
+				key = 'factor_item.ring',
+				getvalue = Enchantrix_BarkerOptions_Factors_Slider_GetValue,
+				valuechanged = Enchantrix_BarkerOptions_Factors_Slider_OnValueChanged
+			},
+			{
+				name = 'Neck',
+				tooltip = "The priority score for neck enchants.",
+				units = 'percentage',
+				min = 0,
+				max = 100,
+				step = 1,
+				key = 'factor_item.neck',
 				getvalue = Enchantrix_BarkerOptions_Factors_Slider_GetValue,
 				valuechanged = Enchantrix_BarkerOptions_Factors_Slider_OnValueChanged
 			},
@@ -768,6 +862,7 @@ function Enchantrix_BarkerOptions_Refresh()
 	if (cur and cur > 0) then
 		Enchantrix_BarkerOptions_ShowFrame(cur)
 	end
+    Enchantrix_BarkerOptionsSkillup_Check:SetChecked( Barker.Settings.GetSetting("barker.skillup_mode") )
 end
 
 function Enchantrix_BarkerOptions_ShowFrame( frame_index )
@@ -775,7 +870,7 @@ function Enchantrix_BarkerOptions_ShowFrame( frame_index )
 	for index, frame in pairs(Enchantrix_BarkerOptions_TabFrames) do
 		if ( index == frame_index ) then
 			--Barker.Util.ChatPrint( "Showing Frame: "..index );
-			for i = 1,10 do
+			for i = 1,11 do
 				local slider = _G['EnchantrixBarker_OptionsSlider_'..i];
 				slider:Hide();
 			end
@@ -821,20 +916,34 @@ function Enchantrix_CheckButton_OnLeave()
 end
 
 
-function Enchantrix_CreateBarker()
+
+local CraftTypeWeights = {
+    ["optimal"] = 3,
+    ["medium"] = 2,
+    ["easy"] = 1,
+    ["trivial"] = 0,
+};
+
+
+function Enchantrix_CreateBarker( isTest )
 
 	--Barker.Util.DebugPrintQuick("CreateBarker started");
 
 	local zoneString = EnchantrixBarker_BarkerGetZoneText();
-	if (not zoneString) then
+	if (not isTest and not zoneString) then
 		-- not in a recognized trade zone
-		Barker.Util.ChatPrint( _BARKLOC("BarkerNotTradeZone") );
-		return nil;
+        Barker.Util.ChatPrint( _BARKLOC("BarkerNotTradeZone") );
+        return nil;
 	end
-	
-	
-	local tradeSkillID, craftName, _rank, _maxRank, _modifier = _G.C_TradeSkillUI.GetTradeSkillLine();
-	if (not tradeSkillID) then
+
+    local temp
+    if isClassic then
+        temp = GetCraftDisplaySkillLine();
+    else
+	    temp = _G.C_TradeSkillUI.GetTradeSkillLine();
+    end
+
+	if (not temp) then
 		-- trade skill window isn't open (how did this happen?)
 		Barker.Util.ChatPrint(_BARKLOC('BarkerEnxWindowNotOpen'));
 		return nil;
@@ -848,70 +957,178 @@ function Enchantrix_CreateBarker()
 
 	local highestProfit = Enchantrix_BarkerGetConfig("highest_profit");
 	local profitMargin = Enchantrix_BarkerGetConfig("profit_margin");
+    local isSkillUpMode = Enchantrix_BarkerGetConfig("skillup_mode");
 
-	local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
+    if isClassic then
+        local craftCount = GetNumCrafts()
+        --Barker.Util.DebugPrintQuick("CraftCount", craftCount )
 
-	if recipes and (#recipes > 0) then
-		for i = 1, #recipes do
+        for index=1, craftCount do
 
-		-- see http://wow.gamepedia.com/API_C_TradeSkillUI.GetRecipeInfo
-        local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(recipes[i])
-		local craftName = recipe_info.name
-		local craftType = recipe_info.type
-		local numEnchantsAvailable = recipe_info.numAvailable
+            local craftName, craftSubSpellName, craftType, numEnchantsAvailable, isExpanded = GetCraftInfo(index)
 
-		if ( recipe_info.learned and recipe_info.craftable and numEnchantsAvailable > 0 ) then -- user can craft this
+            --Barker.Util.DebugPrintQuick("craft index", index, craftName, numEnchantsAvailable )
 
-			-- does this skill produce an enchant, or a trade good?
-			local itemLink = _G.C_TradeSkillUI.GetRecipeItemLink(recipes[i]);
-			local itemName, newItemLink = GetItemInfo(itemLink);
+            if ( numEnchantsAvailable > 0 ) or isSkillUpMode then -- user has reagents, or customer supplies own reagents
 
-			--Barker.Util.DebugPrintQuick("Can Craft ", i, " info: ", recipe_info )
+                -- does this skill produce an enchant, or a trade good?
+                local itemLink = GetCraftItemLink(index);
 
-			-- item name and link are nil for enchants, and valid for produced items (which we want to ignore)
-			if (not itemName and not newItemLink) then
+                -- ALL results are nil, because we get enchant links, not item links
+                --local itemName, newItemLink, _rarity, _level, _minLevel, _itemType, _itemSubType, _itemStackCount, _itemEquipLoc, _itemIcon, _itemSell, _itemClassID, _itemSubClassID, itemBindType, _xpac, _setID, isCraftReagent = GetItemInfo(itemLink);
+                --local itemName, newItemLink = GetItemInfo(itemLink);
 
-				local cost = 0;
-				local reagentCount = _G.C_TradeSkillUI.GetRecipeNumReagents(recipes[i])
-				for j=1,reagentCount,1 do
-					local _reagentName, _reagentTexture, reagentCountRequired, _playerReagentCount = _G.C_TradeSkillUI.GetRecipeReagentInfo(recipes[i], j)
-					local reagent = _G.C_TradeSkillUI.GetRecipeReagentItemLink(recipes[i], j)
-					cost = cost + (Enchantrix_GetReagentHSP(reagent)*reagentCountRequired);
-				end
+                -- We really don't want to list rods or wands among our enchants for sale
+                -- enchants have hypens, item creation does not
+                local isItem = craftName:match("-") == nil
 
-				local profit = cost * profitMargin*0.01;
-				if( profit > highestProfit ) then
-					profit = highestProfit;
-				end
-				local price = EnchantrixBarker_RoundPrice(cost + profit);
+                local skillWeight = CraftTypeWeights[ craftType ] or 0;
+                skillWeight = tonumber(skillWeight)
 
-				local enchant = {
-					index = i,
-					recipe = recipes[i],
-					name = craftName,
-					type = craftType,
-					available = numEnchantsAvailable,
-					cost = cost,
-					price = price,
-					profit = price - cost
-				};
-				availableEnchants[ numAvailable] = enchant;
+                -- item name and link are nil for enchants, and valid for produced items (which we want to ignore)
+                if (not isItem and ((skillWeight > 0) or (not isSkillUpMode)) ) then
+                    --print("enchant", craftName, itemLink, itemName, newItemLink )
+                    --print(craftName, skillWeight)
 
-				--Barker.Util.DebugPrintQuick("Adding enchant ", enchant )
-				--local p_gold,p_silver,p_copper = getGSC(enchant.price);
-				--local pr_gold,pr_silver,pr_copper = getGSC(enchant.profit);
+                    local cost = 0;
+                    local profit = 0;
+                    local price = 0;
 
-				EnchantrixBarker_AddEnchantToPriorityList( enchant )
-				numAvailable = numAvailable + 1;
-			end
-		end
+                    if not isSkillUpMode then
+                        for j=1,GetCraftNumReagents(index),1 do
+                            local reagentName,_,countRequired = GetCraftReagentInfo(index,j);
+                            local reagent = GetCraftReagentItemLink(index,j);
+                            cost = cost + (Enchantrix_GetReagentHSP(reagent)*countRequired);
+                        end
+
+                        profit = cost * profitMargin*0.01;
+                        if( profit > highestProfit ) then
+                            profit = highestProfit;
+                        end
+                        price = EnchantrixBarker_RoundPrice(cost + profit);
+                    else
+                        numEnchantsAvailable = 1;
+                    end
+
+                    local enchant = {
+                        index = index,
+                        name = craftName,
+                        difficulty = skillWeight,
+                        --type = craftType,
+                        --available = numEnchantsAvailable,
+                        cost = cost,
+                        price = price,
+                        profit = price - cost,
+                    };
+                    availableEnchants[ numAvailable] = enchant;
+
+                    --Barker.Util.DebugPrintQuick("Adding enchant ", enchant )
+                    --local p_gold,p_silver,p_copper = getGSC(enchant.price);
+                    --local pr_gold,pr_silver,pr_copper = getGSC(enchant.profit);
+
+                    EnchantrixBarker_AddEnchantToPriorityList( enchant )
+                    numAvailable = numAvailable + 1;
+                end
+            end
+        end
+    else
+        -- retail
+	    local recipes = _G.C_TradeSkillUI.GetAllRecipeIDs()
+
+        if recipes and (#recipes > 0) then
+            for i = 1, #recipes do
+
+            -- see http://wow.gamepedia.com/API_C_TradeSkillUI.GetRecipeInfo
+            local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(recipes[i])
+            local craftName = recipe_info.name
+            local craftType = recipe_info.type
+            local numEnchantsAvailable = recipe_info.numAvailable
+
+            if ( recipe_info.learned and recipe_info.craftable and ((numEnchantsAvailable > 0) or isSkillUpMode) ) then -- user can craft this
+
+                -- does this skill produce an enchant, or a trade good?
+                local itemLink = _G.C_TradeSkillUI.GetRecipeItemLink(recipes[i]);
+
+                -- usually returns nils for everything, because we get enchant links instead of item links
+                local itemName, newItemLink = GetItemInfo(itemLink);
+
+                --Barker.Util.DebugPrintQuick("Can Craft ", i, " info: ", recipe_info )
+
+                -- We really don't want to list rods or wands among our enchants for sale
+                local isRod = craftName:match("Rod") ~= nil or craftName:match("Wand") ~= nil
+
+                local skillWeight = CraftTypeWeights[ recipe_info.difficulty ] or 0;
+
+                -- item name and link are nil for enchants, and valid for produced items (which we want to ignore)
+                if (not itemName and not newItemLink and not isRod and (skillWeight > 0 or (not isSkillUpMode)) ) then
+                    --print(craftName, skillWeight)
+
+                    local cost = 0;
+                    local profit = 0;
+                    local price = 0;
+
+                    if not isSkillUpMode then
+                        local reagentCount = _G.C_TradeSkillUI.GetRecipeNumReagents(recipes[i])
+                        for j=1,reagentCount,1 do
+                            local _reagentName, _reagentTexture, reagentCountRequired, _playerReagentCount = _G.C_TradeSkillUI.GetRecipeReagentInfo(recipes[i], j)
+                            local reagent = _G.C_TradeSkillUI.GetRecipeReagentItemLink(recipes[i], j)
+                            cost = cost + (Enchantrix_GetReagentHSP(reagent)*reagentCountRequired);
+                        end
+
+                        profit = cost * profitMargin*0.01;
+                        if( profit > highestProfit ) then
+                            profit = highestProfit;
+                        end
+                        price = EnchantrixBarker_RoundPrice(cost + profit);
+                    else
+                        numEnchantsAvailable = 1;
+                    end
+
+                    local enchant = {
+                        index = i,
+                        recipe = recipes[i],
+                        name = craftName,
+                        difficulty = skillWeight,
+                        --type = craftType,
+                        --available = numEnchantsAvailable,
+                        cost = cost,
+                        price = price,
+                        profit = price - cost,
+                    };
+                    availableEnchants[ numAvailable] = enchant;
+
+                    --Barker.Util.DebugPrintQuick("Adding enchant ", enchant )
+                    --local p_gold,p_silver,p_copper = getGSC(enchant.price);
+                    --local pr_gold,pr_silver,pr_copper = getGSC(enchant.profit);
+
+                    EnchantrixBarker_AddEnchantToPriorityList( enchant )
+                    numAvailable = numAvailable + 1;
+                end
+            end
+        end
 	end
-	end
+
+    end
 
 	if numAvailable == 0 then
 		Barker.Util.ChatPrint(_BARKLOC('BarkerNoEnchantsAvail'));
 		return nil
 	end
+
+    -- save debugging info
+    if saveStringData then
+        EnchantrixBarkerSavedInfo[ "isClassic" ] = isClassic
+	    for i,element in ipairs(priorityList) do
+	        local descString = Enchantrix_GetShortDescriptor(element.enchant)
+            local long_str = EnchantrixBarker_GetCraftDescription(element.enchant):lower();
+            local entry = {
+                    difficulty = element.enchant.difficulty,
+                    long_str = long_str,
+                    desc = descString,
+            }
+            EnchantrixBarkerSavedInfo[ element.enchant.name ] = entry
+        end
+    end
 
 	for i,element in ipairs(priorityList) do
 		EnchantrixBarker_AddEnchantToBarker( element.enchant );
@@ -926,16 +1143,12 @@ function EnchantrixBarker_ScoreEnchantPriority( enchant )
 
 	local score_item = 0;
 
-	local itemCatKey = EnchantrixBarker_GetItemCategoryKey(enchant.recipe)
-	if ( itemCatKey ) then
-		local score_config = Enchantrix_BarkerGetConfig( itemCatKey );
-		if (score_config) then
-			score_item = score_config * Enchantrix_BarkerGetConfig( 'factor_item' )*0.01;
-		end
+	if Enchantrix_BarkerGetConfig( EnchantrixBarker_GetItemCategoryKey(enchant) ) then
+		score_item = Enchantrix_BarkerGetConfig( EnchantrixBarker_GetItemCategoryKey(enchant) );
+		score_item = score_item * Enchantrix_BarkerGetConfig( 'factor_item' )*0.01;
 	end
-	
-	local stat = EnchantrixBarker_GetEnchantStat( enchant );
-	local score_stat = Enchantrix_BarkerGetConfig( stat );
+
+	local score_stat = Enchantrix_BarkerGetConfig( EnchantrixBarker_GetEnchantStat(enchant) );
 	if not score_stat then
 		score_stat = Enchantrix_BarkerGetConfig( 'factor_stat.other' );
 	end
@@ -945,6 +1158,7 @@ function EnchantrixBarker_ScoreEnchantPriority( enchant )
 	local score_price = 0;
 	local price_score_floor = Enchantrix_BarkerGetConfig("sweet_price");
 	local price_score_ceiling = Enchantrix_BarkerGetConfig("high_price");
+    local score_difficulty = 1 + enchant.difficulty * 30;
 
 	if enchant.price < price_score_floor then
 		score_price = (price_score_floor - (price_score_floor - enchant.price))/price_score_floor * 100;
@@ -954,8 +1168,9 @@ function EnchantrixBarker_ScoreEnchantPriority( enchant )
 	end
 
 	score_price = score_price * Enchantrix_BarkerGetConfig( 'factor_price' )*0.01;
-	score_total = (score_item + score_stat + score_price);
-	
+	score_total = (score_item + score_stat + score_price + score_difficulty);
+    --print("score", enchant.name, score_item, score_stat, score_price, score_difficulty )
+
 	local randomize_factor = 0.01 * Enchantrix_BarkerGetConfig("randomise")
 	return score_total * (1 - randomize_factor) + math.random(300) * randomize_factor;
 end
@@ -1030,7 +1245,15 @@ local barkerString = '';
 local barkerCategories = {};
 
 function EnchantrixBarker_ResetBarkerString()
-	barkerString = "("..EnchantrixBarker_BarkerGetZoneText()..") ".._BARKLOC('BarkerOpening');
+    local opening
+
+    if Enchantrix_BarkerGetConfig("skillup_mode")  then
+        opening = "Enchants free with your mats!"
+    else
+        opening = _BARKLOC('BarkerOpening')
+    end
+
+	barkerString = "("..EnchantrixBarker_BarkerGetZoneText()..") "..opening;
 	barkerCategories = {};
 end
 
@@ -1038,7 +1261,8 @@ function EnchantrixBarker_BarkerGetZoneText()
 	local zoneText = GetZoneText();
 	local result = short_location[zoneText];
 	if (not result) then
-		Barker.Util.DebugPrintQuick("Attempting to use barker in non-trade zone ", zoneText )
+        result = zoneText
+        Barker.Util.DebugPrintQuick("Attempting to use barker in non-trade zone ", zoneText )
 	end
 	return result;
 end
@@ -1047,7 +1271,7 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 
 	local currBarker = EnchantrixBarker_GetBarkerString();
 
-	local category_key = EnchantrixBarker_GetItemCategoryKey( enchant.recipe )
+	local category_key = EnchantrixBarker_GetItemCategoryKey( enchant )
 
 	-- see if this category (self enchants) should be excluded from barking
 	if (categories[category_key] and categories[category_key].exclude) then
@@ -1059,7 +1283,7 @@ function EnchantrixBarker_AddEnchantToBarker( enchant )
 	local test_category = {};
 	if barkerCategories[ category_key ] then
 		for i,element in ipairs(barkerCategories[category_key]) do
-			--Barker.Util.ChatPrint("Inserting: "..i..", elem: "..element.recipe );
+			--Barker.Util.ChatPrint("Inserting: "..i..", elem: "..element.index );
 			table.insert(test_category, element);
 		end
 	end
@@ -1099,8 +1323,8 @@ end
 
 function EnchantrixBarker_GetBarkerCategoryString( barkerCategory )
 	local barkercat = ""
-	--Barker.Util.DebugPrintQuick("setting up ", barkerCategory[1].recipe, EnchantrixBarker_GetItemCategoryString(barkerCategory[1].recipe) );
-	barkercat = barkercat.." ["..EnchantrixBarker_GetItemCategoryString(barkerCategory[1].recipe)..": ";
+	--Barker.Util.DebugPrintQuick("setting up ", barkerCategory[1].index, EnchantrixBarker_GetItemCategoryString(barkerCategory[1]) );
+	barkercat = barkercat.." ["..EnchantrixBarker_GetItemCategoryString(barkerCategory[1])..": ";
 	for j,enchant in ipairs(barkerCategory) do
 		if( j > 1) then
 			barkercat = barkercat..", "
@@ -1113,102 +1337,150 @@ function EnchantrixBarker_GetBarkerCategoryString( barkerCategory )
 end
 
 function EnchantrixBarker_GetBarkerEnchantString( enchant )
-	local p_gold,p_silver,p_copper = getGSC(enchant.price);
-	
-	local descString = Enchantrix_GetShortDescriptor(enchant.recipe)
+	local descString = Enchantrix_GetShortDescriptor(enchant)
 
 	-- remove unnecessary substrings
 	descString = descString:gsub(_BARKLOC("BarkerCannotBeAppliedHigher"), "")
 	descString = descString:gsub(_BARKLOC("BarkerAddionalPointsOf"), "")
-	
-	enchant_barker = descString.." - ";
-	if( p_gold > 0 ) then
-		enchant_barker = enchant_barker..p_gold.._BARKLOC('OneLetterGold');
-	end
-	if( p_silver > 0 ) then
-		enchant_barker = enchant_barker..p_silver.._BARKLOC('OneLetterSilver');
-	end
+
+    if Enchantrix_BarkerGetConfig("skillup_mode") then
+        enchant_barker = descString;
+    else
+        enchant_barker = descString.." - ";
+        local p_gold,p_silver,p_copper = getGSC(enchant.price);
+        if( p_gold > 0 ) then
+            enchant_barker = enchant_barker..p_gold.._BARKLOC('OneLetterGold');
+        end
+        if( p_silver > 0 ) then
+            enchant_barker = enchant_barker..p_silver.._BARKLOC('OneLetterSilver');
+        end
+    end
+
 	--enchant_barker = enchant_barker..", ";
 	return enchant_barker
 end
 
-function EnchantrixBarker_GetItemCategoryString( recipe )
-	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo( recipe );
-	if (recipe_info) then
-		local enchant = recipe_info.name
-		if (enchant) then
-			for key,category in pairs(categories) do
-				--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category );
-				if( enchant:find(category.search ) ~= nil ) then
-					--Barker.Util.DebugPrintQuick( "Matched category key: ", key, ", name: ", category.print, ", enchant: ", enchant, recipe_info );
-					return category.print;
-				end
-			end
-		else
-			Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe_info);		-- should not fail
+local function GetCraftInfoName(enchant)
+    if isClassic then
+        return GetCraftInfo(enchant.index)
+    else
+        local recipe = _G.C_TradeSkillUI.GetRecipeInfo(enchant.recipe);
+        if recipe then
+            return recipe.name;
+        else
+            --print("recipe unfound ", enchant)
+            return "unknown"
+        end
+    end
+end
+
+local function GetCraftInfoDescription(enchant)
+    if isClassic then
+        return GetCraftInfo(enchant.index)
+    else
+        return _G.C_TradeSkillUI.GetRecipeDescription(enchant.recipe) or "";
+    end
+end
+
+function EnchantrixBarker_GetItemCategoryString( enchant )
+	local enchant_string = GetCraftInfoDescription( enchant ):lower();
+    ---print("Scat searching ", enchant_string );
+
+	for key,category in pairs(categories) do
+        --print( "Scat key: ", key, category.search );
+		if( enchant_string:find(category.search ) ~= nil ) then
+            --print( "Scat key matched: ", key, ", name: ", category.print, ", enchant: ", enchant.name );
+			return category.print;
 		end
-	else
-		Barker.Util.DebugPrintQuick("Failed enchant info for: ", recipe_info);		-- should not fail
 	end
 
-	--Barker.Util.DebugPrintQuick("Unknown category string for", recipe_info )
-	return "Unknown";
+    --print("Unknown Scategory for", enchant.name, enchant_string )
+	return 'Unknown';
 end
 
-function EnchantrixBarker_GetItemCategoryKey( recipe )
-	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo( recipe );
-	if (recipe_info) then
-		local enchant = recipe_info.name
-		if (enchant) then
-			for key,category in pairs(categories) do
-				--Barker.Util.DebugPrintQuick( "cat key: ", key, ", name: ", category );
-				if( enchant:find(category.search ) ~= nil ) then
-					--Barker.Util.DebugPrintQuick("Matched category key for", key, recipe_info )
-					return key;
-				end
-			end
-		else
-			Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe_info);		-- should not fail
+function EnchantrixBarker_GetItemCategoryKey( enchant )
+	local enchant_string = GetCraftInfoDescription( enchant ):lower();
+
+	for key,category in pairs(categories) do
+        --print( "Kcat key: ", key, ", name: ", category );
+		if( enchant_string:find(category.search ) ~= nil ) then
+            --print( "Kcat key matched: ", key, ", name: ", category.print, ", enchant: ", enchant.name );
+			return key;
 		end
-	else
-		Barker.Util.DebugPrintQuick("Failed enchant info for: ", recipe_info);		-- should not fail
 	end
 
-	--Barker.Util.DebugPrintQuick("Unknown category key for", recipe_info )
-	return "Unknown";
+    --print("Unknown Kcategory for", enchant.name, enchant_string )
+	return 'Unknown';
 end
 
-function EnchantrixBarker_GetCraftDescription( recipe )
-	return _G.C_TradeSkillUI.GetRecipeDescription(recipe) or ""
+function EnchantrixBarker_GetCraftDescription( enchant )
+    --Barker.Util.DebugPrintQuick("GetCraftDescription", enchant.index )
+	if not isClassic then
+		return _G.C_TradeSkillUI.GetRecipeDescription(enchant.recipe) or "";
+	else
+		return GetCraftDescription(enchant.index) or "";
+	end
 end
 
-function Enchantrix_GetShortDescriptor( recipe )
-	local long_str = EnchantrixBarker_GetCraftDescription(recipe):lower();
-	
+function Enchantrix_GetShortDescriptor( enchant )
+	local long_str = EnchantrixBarker_GetCraftDescription(enchant):lower();
+    --print("description = ", long_str )
+
 	if (long_str == NIL) then
-		Barker.Util.DebugPrintQuick("Failed enchant name for: ", recipe);		-- should not fail
+		Barker.Util.DebugPrintQuick("Failed enchant name for: ", enchant.index, enchant.name );		-- should not fail
 		return "unknown";
 	end
 
 	for kk,attribute in ipairs(attributes) do
 		if( long_str:find(attribute.search ) ~= nil ) then
-			--Barker.Util.DebugPrintQuick("Matched attribute: ", attribute.print, " in: ", long_str);	-- DEBUGGING
+            --print("Matched attribute: ", attribute.search, attribute.print, " in: ", long_str);	-- DEBUGGING
 
 			local print_string = attribute.print;
 			if (print_string == nil) then
-				Barker.Util.DebugPrintQuick("Failed print lookup for: ", long_str);		-- should not fail
+				print("Failed print lookup for: ", long_str);		-- should not fail
 				print_string = "unknown";
 			end
 
 			if (not attribute.ignoreValues) then
 				local foundFirst = long_str:find('[0-9]+[^%%]')		-- this can fail for illusions and items without stats
+                --print("first = ", foundFirst )
 				if (foundFirst) then
 					statvalue = long_str:sub(foundFirst);
-					local foundSecond = statvalue:find('[0-9]+')
-					statvalue = statvalue:sub(foundSecond);
-					return "+"..statvalue..' '..print_string;
+                    local moveSpeed = statvalue:find(" and movement speed by");        -- ignore the "and movement speed" bit
+                    if moveSpeed then
+                        statvalue = statvalue:sub( 1, moveSpeed-1 );
+                    end
+
+                    if not statvalue then
+                        --print("Failed number parsing1 for: ", long_str, "using :", print_string);
+                        return print_string;
+                    end
+
+                    local period = statvalue:find("%.");        -- ignore second sentence and beyond ". Cannot be applied..."
+                    if period then
+                        statvalue = statvalue:sub( 1, period-1 );
+                    end
+                    --print("first stat = ", statvalue )
+
+                    if not statvalue then
+                        --print("Failed number parsing2 for: ", long_str, "using :", print_string);
+                        return print_string;
+                    end
+
+                    -- remove all extra spaces and text
+                    statvalue = statvalue:gsub("[ a-zA-Z]", "")
+                    --print("cleaned stat = ", statvalue )
+
+                    local foundSecond = statvalue:find('[0-9]+')
+                    --print("second = ", foundSecond )
+                    if foundSecond then
+                        statvalue = statvalue:sub(foundSecond);
+                    end
+                    --print("second stat = ", statvalue )
+
+                    return "+"..statvalue..' '..print_string;
 				else
-					--Barker.Util.DebugPrintQuick("Failed number lookup for: ", long_str, "using :", print_string);	-- DEBUGGING
+                    --print("Failed number lookup for: ", long_str, "using :", print_string);
 					return print_string;
 				end
 			else
@@ -1217,22 +1489,21 @@ function Enchantrix_GetShortDescriptor( recipe )
 		end
 	end
 
-	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(recipe)
-	local enchant = Barker.Util.Split(recipe_info.name, "-");
 
 	-- this happens for any enchant we don't have a special case for, which is relatively often
-	--Barker.Util.DebugPrintQuick("Nomatch in: ", GetCraftInfoFunc(index),  long_str,  enchant  );
+	local enchant_str = GetCraftInfoName(enchant);
+    local enchant_split = Barker.Util.Split(enchant_str, "-");  -- returns a table, not a string!
 
-	if (enchant == nil) then
-		--Barker.Util.DebugPrintQuick("Failed enchant split for: ", long_str, recipe);		-- should not fail
+	if (enchant_split == nil) then
+        --print("Failed enchant split for: ", enchant_str, long_str );		-- should not fail
 		return "unknown";
 	end
 
-	return enchant[#enchant];
+	return enchant_split[#enchant_split];
 end
 
 function EnchantrixBarker_GetEnchantStat( enchant )
-	local long_str = EnchantrixBarker_GetCraftDescription(enchant.recipe):lower();
+	local long_str = EnchantrixBarker_GetCraftDescription(enchant):lower();
 
 	for kk,attribute in ipairs(attributes) do
 
@@ -1245,8 +1516,8 @@ function EnchantrixBarker_GetEnchantStat( enchant )
 		end
 	end
 
-	local recipe_info = _G.C_TradeSkillUI.GetRecipeInfo(enchant.recipe)
-	local enchant = Barker.Util.Split(recipe_info.name, "-");
+	local enchant_str = GetCraftInfoName(enchant);
+    enchant_str = Barker.Util.Split(enchant_str, "-");
 
-	return enchant[#enchant];
+	return enchant_str[#enchant_str];
 end

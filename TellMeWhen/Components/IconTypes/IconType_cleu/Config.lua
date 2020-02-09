@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -35,6 +35,16 @@ Config.Events = {
 	"CAT_SWING",
 		"SWING_DAMAGE", -- normal
 		"SWING_MISSED", -- normal
+	"SPACE",
+		"SWING_MISSED_DODGE", -- normal (fake event)
+		"SWING_MISSED_PARRY", -- normal (fake event)
+		"SWING_MISSED_BLOCK", -- normal (fake event)
+		-- These are spell events, but are in the melee section
+		-- because only melee spells can be dodged/parried/blocked
+		"SPELL_MISSED_DODGE", -- normal (fake event)
+		"SPELL_MISSED_PARRY", -- normal (fake event)
+		"SPELL_MISSED_BLOCK", -- normal (fake event)
+	"SPACE",
 		"SPELL_EXTRA_ATTACKS", -- normal
 	"SPACE",
 		"RANGE_DAMAGE", -- normal
@@ -53,6 +63,8 @@ Config.Events = {
 		"SPELL_SUMMON", -- normal
 	"SPACE",
 		"SPELL_HEAL", -- normal
+		"SPELL_HEAL_CRIT", -- normal (fake event)
+		"SPELL_HEAL_NONCRIT", -- normal (fake event)
 		"SPELL_RESURRECT", -- normal
 	"SPACE",
 		"SPELL_ENERGIZE", -- normal

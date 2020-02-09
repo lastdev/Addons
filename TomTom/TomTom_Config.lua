@@ -36,7 +36,7 @@ local function createconfig()
 			TomTom:ShowHideWorldCoords()
 		elseif ns == "arrow" then
 			TomTom:ShowHideCrazyArrow()
-        elseif ns == "poi" then
+        elseif ns == "poi" and (not TomTom.CLASSIC) then
             TomTom:EnableDisablePOIIntegration()
 		elseif opt == "otherzone" then
 			TomTom:ReloadWaypoints()
@@ -145,7 +145,9 @@ local function createconfig()
 						func = function()
 							if TomTomBlock then
 								TomTomBlock:ClearAllPoints()
-								TomTomBlock:SetPoint("TOP", Minimap, "BOTTOM", -20, -10)
+								local pos = {"CENTER", nil, "CENTER", 0, -100}
+								set({arg="block.position"}, pos)
+								TomTomBlock:SetPoint(pos[1], UIParent, pos[3], pos[4], pos[5])
 							end
 						end,
 					},
@@ -226,7 +228,7 @@ local function createconfig()
 				type = "range",
 				name = L["\"Arrival Distance\""],
 				desc = L["This setting will control the distance at which the waypoint arrow switches to a downwards arrow, indicating you have arrived at your destination"],
-				min = 0, max = 150, step = 5,
+				min = 0, max = 150, step = 1,
 				width = "double",
 				arg = "arrow.arrival",
 			},
@@ -237,6 +239,21 @@ local function createconfig()
                 desc = L["When you 'arrive' at a waypoint (this distance is controlled by the 'Arrival Distance' setting in this group) a sound can be played to indicate this.  You can enable or disable this sound using this setting."],
                 width = "double",
                 arg = "arrow.enablePing",
+            },
+			setPingChannel = {
+                order = 12,
+                type = "select",
+                name = L["Channel to play the ping through"],
+                desc = L["When a 'ping' is played, use the indicated sound channel so the volume can be controlled."],
+                width = "double",
+                values = {
+					["Master"] = MASTER_VOLUME,
+					["SFX"] = SOUND_VOLUME,
+					["Music"] = MUSIC_VOLUME,
+					["Ambience"] = AMBIENCE_VOLUME,
+					["Dialog"] = DIALOG_VOLUME
+                },
+                arg = "arrow.pingChannel",
             },
 			hideDuringPetBattles = {
 				order = 13,
@@ -254,10 +271,18 @@ local function createconfig()
 				width = "double",
 				arg = "arrow.stickycorpse",
 			},
+			strata = {
+				order = 16,
+				type = "toggle",
+				name = L["Place the arrow in the HIGH strata"],
+				desc = L["If your arrow is covered up by something else, try this to bump it up a layer."],
+				width = "double",
+				arg = "arrow.highstrata",
+			},
 			display = {
 				type = "group",
 				name = L["Arrow display"],
-				order = 15,
+				order = 16,
 				inline = true,
 				args = {
 					help = {
@@ -336,7 +361,9 @@ local function createconfig()
 						desc = L["Resets the position of the waypoint arrow if its been dragged off screen"],
 						func = function()
 							TomTomCrazyArrow:ClearAllPoints()
-							TomTomCrazyArrow:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+							local pos = {"CENTER", nil , "CENTER", 0, 0}
+							set({arg="arrow.position"}, pos)
+							TomTomCrazyArrow:SetPoint(pos[1], UIParent, pos[3], pos[4], pos[5])
 						end,
 					},
 				}
@@ -409,14 +436,15 @@ local function createconfig()
 				arg = "minimap.enable",
 			},
 			otherzone = {
+				order = 3,
 				type = "toggle",
 				name = L["Display waypoints from other zones"],
 				desc = L["TomTom can hide waypoints in other zones, this setting toggles that functionality"],
 				width = "double",
 				arg = "minimap.otherzone",
-				disabled = true,
 			},
 			tooltip = {
+				order = 4,
 				type = "toggle",
 				name = L["Enable mouseover tooltips"],
 				desc = L["TomTom can display a tooltip containing information abouto waypoints, when they are moused over.  This setting toggles that functionality"],
@@ -424,11 +452,35 @@ local function createconfig()
 				arg = "minimap.tooltip",
 			},
 			rightclick = {
+				order = 5,
 				type = "toggle",
 				name = L["Enable the right-click contextual menu"],
 				desc = L["Enables a menu when right-clicking on a waypoint allowing you to clear or remove waypoints"],
 				width = "double",
 				arg = "minimap.menu",
+			},
+			iconsize = {
+				order = 10,
+				type = "range",
+				name = L["Minimap Icon Size"],
+				desc = L["This setting allows you to control the default size of the minimap icon. "],
+				min = 4, max = 64, step = 2,
+				arg = "minimap.default_iconsize",
+			},
+			icon = {
+				order = 11,
+				type = "select",
+				name = L["Minimap Icon"],
+				desc = L["This setting allows you to select the default icon for the minimap"],
+				values = {
+					["Interface\\AddOns\\TomTom\\Images\\GoldGreenDot"] = "Old Gold Green Dot",
+					["Interface\\AddOns\\TomTom\\Images\\GoldBlueDotNew"] = "New Gold Blue Dot",
+					["Interface\\AddOns\\TomTom\\Images\\GoldGreenDotNew"] = "New Gold Green Dot",
+					["Interface\\AddOns\\TomTom\\Images\\GoldPurpleDotNew"] = "New Gold Purple Dot",
+					["Interface\\AddOns\\TomTom\\Images\\GoldRedDotNew"] = "New Gold Red Dot",
+					["Interface\\AddOns\\TomTom\\Images\\PurpleRing"] = "New Purple Ring",
+				},
+				arg = "minimap.default_icon",
 			},
 		},
 	} -- End minimap options
@@ -459,7 +511,6 @@ local function createconfig()
 				desc = L["TomTom can hide waypoints in other zones, this setting toggles that functionality"],
 				width = "double",
 				arg = "worldmap.otherzone",
-				disabled = true,
 			},
 			tooltip = {
 				order = 4,
@@ -521,6 +572,14 @@ local function createconfig()
 						min = 0, max = 2, step = 1,
 						arg = "mapcoords.playeraccuracy",
 					},
+					playeroffset = {
+						order = 8,
+						type = "range",
+						name = L["Player coordinate offset"],
+						desc = L["Coordinates can be slid from the default location, to accomodate other addons.  This setting allows you to control that offset"],
+						min = -16, max = 48, step = 1,
+						arg = "mapcoords.playeroffset",
+					},
 				},
 			},
 			cursor = {
@@ -536,7 +595,6 @@ local function createconfig()
 						width = "double",
 						arg = "mapcoords.cursorenable",
 					},
-
 					cursoraccuracy = {
 						order = 5,
 						type = "range",
@@ -544,6 +602,45 @@ local function createconfig()
 						desc = L["Coordinates can be displayed as simple XX, YY coordinate, or as more precise XX.XX, YY.YY.  This setting allows you to control that precision"],
 						min = 0, max = 2, step = 1,
 						arg = "mapcoords.cursoraccuracy",
+					},
+					cursoroffset = {
+						order = 7,
+						type = "range",
+						name = L["Cursor coordinate offset"],
+						desc = L["Coordinates can be slid from the default location, to accomodate other addons.  This setting allows you to control that offset"],
+						min = -32, max = 64, step = 1,
+						arg = "mapcoords.cursoroffset",
+					},
+				},
+			},
+			icon = {
+				order = 9,
+				type = "group",
+				inline = true,
+				name = L["Icon Control"],
+				args = {
+				iconsize = {
+						order = 20,
+						type = "range",
+						name = L["World Map Icon Size"],
+						desc = L["This setting allows you to control the default size of the world map icon"],
+						min = 4, max = 64, step = 2,
+						arg = "worldmap.default_iconsize",
+					},
+					icon_default = {
+						order = 21,
+						type = "select",
+						name = L["World Map Icon"],
+						desc = L["This setting allows you to select the default icon for the world map"],
+						values = {
+							["Interface\\AddOns\\TomTom\\Images\\GoldGreenDot"] = "Old Gold Green Dot",
+							["Interface\\AddOns\\TomTom\\Images\\GoldBlueDotNew"] = "New Gold Blue Dot",
+							["Interface\\AddOns\\TomTom\\Images\\GoldGreenDotNew"] = "New Gold Green Dot",
+							["Interface\\AddOns\\TomTom\\Images\\GoldPurpleDotNew"] = "New Gold Purple Dot",
+							["Interface\\AddOns\\TomTom\\Images\\GoldRedDotNew"] = "New Gold Red Dot",
+							["Interface\\AddOns\\TomTom\\Images\\PurpleRing"] = "New Purple Ring",
+						},
+						arg = "worldmap.default_icon",
 					},
 				},
 			},
@@ -798,9 +895,11 @@ local function createBlizzOptions()
 	config:RegisterOptionsTable("TomTom-Feeds", options.args.feeds)
 	dialog:AddToBlizOptions("TomTom-Feeds", options.args.feeds.name, "TomTom")
 
-    -- POI Options
-	config:RegisterOptionsTable("TomTom-POI", options.args.poi)
-	dialog:AddToBlizOptions("TomTom-POI", options.args.poi.name, "TomTom")
+	-- POI Options
+	if not TomTom.CLASSIC then
+		config:RegisterOptionsTable("TomTom-POI", options.args.poi)
+		dialog:AddToBlizOptions("TomTom-POI", options.args.poi.name, "TomTom")
+	end
 
 	-- Profile Options
 	local p_options = options.args.profile.args.options
@@ -820,6 +919,7 @@ SlashCmdList["TOMTOM"] = function(msg)
 		registered = true
 	end
 
+	InterfaceOptionsFrame_OpenToCategory("TomTom")
 	InterfaceOptionsFrame_OpenToCategory("TomTom")
 end
 

@@ -49,8 +49,8 @@ Prat:AddModuleToLoad(function()
 do
     local L
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = true,
 		["Attach to..."] = true,
@@ -79,11 +79,12 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "Définit la position de la boîte d'édition.",
 		["Attach to..."] = "Position",
@@ -95,7 +96,9 @@ L=
 		["Bottom"] = "Bas",
 		["Color border by channel"] = "Colorier avec le canal",
 		--[[Translation missing --]]
-		--[[ ["currently_broken_alt_behavior"] = "",--]] 
+		["currently_broken_alt_behavior"] = [=[Arrow key behaviour broken in current WoW client,
+
+Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 		["Edge Size"] = "Taille de la bordure",
 		["Editbox"] = "Boite d'édition",
 		["Editbox options."] = "Options de la boite d'édition.",
@@ -111,11 +114,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "Befestige Eingabefeld an ...",
 		["Attach to..."] = "Befestige an ...",
@@ -144,11 +148,12 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "입력창 붙이기...",
 		["Attach to..."] = "붙이기...",
@@ -177,64 +182,68 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		--[[Translation missing --]]
-		--[[ ["Attach edit box to..."] = "",--]] 
+		["Attach edit box to..."] = "Attach edit box to...",
 		--[[Translation missing --]]
-		--[[ ["Attach to..."] = "",--]] 
+		["Attach to..."] = "Attach to...",
 		--[[Translation missing --]]
-		--[[ ["Background color"] = "",--]] 
+		["Background color"] = "Background color",
 		--[[Translation missing --]]
-		--[[ ["Background Inset"] = "",--]] 
+		["Background Inset"] = "Background Inset",
 		--[[Translation missing --]]
-		--[[ ["Background texture"] = "",--]] 
+		["Background texture"] = "Background texture",
 		--[[Translation missing --]]
-		--[[ ["Border color"] = "",--]] 
+		["Border color"] = "Border color",
 		--[[Translation missing --]]
-		--[[ ["Border texture"] = "",--]] 
+		["Border texture"] = "Border texture",
 		--[[Translation missing --]]
-		--[[ ["Bottom"] = "",--]] 
+		["Bottom"] = "Bottom",
 		--[[Translation missing --]]
-		--[[ ["Color border by channel"] = "",--]] 
+		["Color border by channel"] = "Color border by channel",
 		--[[Translation missing --]]
-		--[[ ["currently_broken_alt_behavior"] = "",--]] 
+		["currently_broken_alt_behavior"] = [=[Arrow key behaviour broken in current WoW client,
+
+Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 		--[[Translation missing --]]
-		--[[ ["Edge Size"] = "",--]] 
+		["Edge Size"] = "Edge Size",
 		--[[Translation missing --]]
-		--[[ ["Editbox"] = "",--]] 
+		["Editbox"] = "Editbox",
 		--[[Translation missing --]]
-		--[[ ["Editbox options."] = "",--]] 
+		["Editbox options."] = "Editbox options.",
 		--[[Translation missing --]]
-		--[[ ["Font"] = "",--]] 
+		["Font"] = "Font",
 		--[[Translation missing --]]
-		--[[ ["Free-floating"] = "",--]] 
+		["Free-floating"] = "Free-floating",
 		--[[Translation missing --]]
-		--[[ ["Free-floating, Locked"] = "",--]] 
+		["Free-floating, Locked"] = "Free-floating, Locked",
 		--[[Translation missing --]]
-		--[[ ["Requires the Alt key to be held down to move the cursor in chat"] = "",--]] 
+		["Requires the Alt key to be held down to move the cursor in chat"] = "Requires the Alt key to be held down to move the cursor in chat",
 		--[[Translation missing --]]
-		--[[ ["Select the font to use for the edit box"] = "",--]] 
+		["Select the font to use for the edit box"] = "Select the font to use for the edit box",
 		--[[Translation missing --]]
-		--[[ ["Sets the frame's border color to the color of your currently active channel"] = "",--]] 
+		["Sets the frame's border color to the color of your currently active channel"] = "Sets the frame's border color to the color of your currently active channel",
 		--[[Translation missing --]]
-		--[[ ["Tile Size"] = "",--]] 
+		["Tile Size"] = "Tile Size",
 		--[[Translation missing --]]
-		--[[ ["Top"] = "",--]] 
+		["Top"] = "Top",
 		--[[Translation missing --]]
-		--[[ ["Use Alt key for cursor movement"] = "",--]] 
+		["Use Alt key for cursor movement"] = "Use Alt key for cursor movement",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "Закрепить поле ввода...",
 		["Attach to..."] = "Закрепить...",
@@ -263,11 +272,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "把输入框附加到……",
 		["Attach to..."] = "附加到……",
@@ -296,24 +306,27 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "Anclar la caja de edición a...",
 		["Attach to..."] = "Anclar a...",
 		["Background color"] = "Color de fondo",
 		--[[Translation missing --]]
-		--[[ ["Background Inset"] = "",--]] 
+		["Background Inset"] = "Background Inset",
 		["Background texture"] = "Textura de fondo",
 		["Border color"] = "Color del borde",
 		["Border texture"] = "Textura del borde",
 		["Bottom"] = "Abajo",
 		["Color border by channel"] = "Color del borde por canal",
 		--[[Translation missing --]]
-		--[[ ["currently_broken_alt_behavior"] = "",--]] 
+		["currently_broken_alt_behavior"] = [=[Arrow key behaviour broken in current WoW client,
+
+Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 		["Edge Size"] = "Tamaño del borde",
 		["Editbox"] = "Caja de edición",
 		["Editbox options."] = "Opciones de la caja de edición.",
@@ -329,11 +342,12 @@ L=
 	}
 }
 
+
   PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-L=
-{
+
+L = {
 	["Editbox"] = {
 		["Attach edit box to..."] = "附上編輯框...",
 		["Attach to..."] = "附上...",
@@ -345,7 +359,9 @@ L=
 		["Bottom"] = "底部",
 		["Color border by channel"] = "顏色邊框由道頻",
 		--[[Translation missing --]]
-		--[[ ["currently_broken_alt_behavior"] = "",--]] 
+		["currently_broken_alt_behavior"] = [=[Arrow key behaviour broken in current WoW client,
+
+Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 		["Edge Size"] = "邊框尺寸",
 		["Editbox"] = "輸入框",
 		["Editbox options."] = "輸入框選單",
@@ -353,15 +369,16 @@ L=
 		["Free-floating"] = "自由浮動",
 		["Free-floating, Locked"] = "自由浮動, 已鎖定",
 		--[[Translation missing --]]
-		--[[ ["Requires the Alt key to be held down to move the cursor in chat"] = "",--]] 
+		["Requires the Alt key to be held down to move the cursor in chat"] = "Requires the Alt key to be held down to move the cursor in chat",
 		["Select the font to use for the edit box"] = "選擇字型使用編輯框",
 		--[[Translation missing --]]
-		--[[ ["Sets the frame's border color to the color of your currently active channel"] = "",--]] 
+		["Sets the frame's border color to the color of your currently active channel"] = "Sets the frame's border color to the color of your currently active channel",
 		["Tile Size"] = "並排尺寸",
 		["Top"] = "頂部",
 		["Use Alt key for cursor movement"] = "使用 Alt 鍵游標移動",
 	}
 }
+
 
   PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
@@ -670,9 +687,15 @@ end
     _G["ChatFrame" .. i .. "EditBoxLeft"]:Hide()
     _G["ChatFrame" .. i .. "EditBoxRight"]:Hide()
     _G["ChatFrame" .. i .. "EditBoxMid"]:Hide()
-    _G["ChatFrame" .. i .. "EditBoxFocusLeft"]:SetTexture(nil)
-    _G["ChatFrame" .. i .. "EditBoxFocusRight"]:SetTexture(nil)
-    _G["ChatFrame" .. i .. "EditBoxFocusMid"]:SetTexture(nil)
+    if (_G["ChatFrame".. i .."EditBoxFocusLeft"] ~=nil) then
+      _G["ChatFrame".. i .."EditBoxFocusLeft"]:SetTexture(nil)
+    end
+    if (_G["ChatFrame".. i .."EditBoxFocusRight"] ~=nil) then
+      _G["ChatFrame".. i .."EditBoxFocusRight"]:SetTexture(nil)
+    end
+    if (_G["ChatFrame".. i .."EditBoxFocusMid"] ~=nil) then
+      _G["ChatFrame".. i .."EditBoxFocusMid"]:SetTexture(nil)
+    end
     f:Hide()
 
     self.frames[i] = f
@@ -700,9 +723,11 @@ end
       _G["ChatFrame" .. i .. "EditBoxLeft"]:Hide()
       _G["ChatFrame" .. i .. "EditBoxRight"]:Hide()
       _G["ChatFrame" .. i .. "EditBoxMid"]:Hide()
+  if ChatFrame1EditBoxFocusLeft then
       _G["ChatFrame" .. i .. "EditBoxFocusLeft"]:SetTexture(nil)
       _G["ChatFrame" .. i .. "EditBoxFocusRight"]:SetTexture(nil)
       _G["ChatFrame" .. i .. "EditBoxFocusMid"]:SetTexture(nil)
+  end
       f:Hide()
 
       -- Prevent an error in FloatingChatFrame FCF_FadeOutChatFrame() (blizz bug)
@@ -811,8 +836,8 @@ end
         if chan == 0 then
           local c = self.db.profile.borderColor
           frame:SetBackdropBorderColor(c.r, c.g, c.b, c.a)
-        elseif chan then
-          local r, g, b = GetMessageTypeColor("CHANNEL" .. chan)
+        elseif chan and ChatTypeInfo["CHAT_MSG_CHANNEL" .. chan] then
+          local r, g, b = GetMessageTypeColor("CHAT_MSG_CHANNEL" .. chan)
           frame:SetBackdropBorderColor(r, g, b, 1)
         end
       else

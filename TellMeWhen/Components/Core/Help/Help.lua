@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -222,6 +222,10 @@ function HELP:ShowNext()
 	HELP.Frame:SetWidth(min(280, HELP.Frame.text:GetStringWidth() + 30))
 
 	HELP.Arrow:Show()
+
+	-- Seems to help fix issues where the background won't show up initially.
+	HELP.Frame:Hide()
+	HELP.Frame:Show()
 
 
 	-- if the help had a setting associated, set it now

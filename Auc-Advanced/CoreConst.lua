@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreConst.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreConst.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -145,6 +145,35 @@ local lib = {
 	MAXITEMLEVEL = 1100,
 	MAXBIDPRICE = 99999999999, -- copy from Blizzard_AuctionUI.lua, so it is available before AH loads
 }
+
+if AucAdvanced.Classic then
+	lib.MAXSKILLLEVEL = 300
+	lib.MAXUSERLEVEL = 60
+	lib.MAXITEMLEVEL = 92
+
+    -- times are in seconds
+	lib.AucMinTimes = {
+		0,
+		1800, -- 30 mins
+		7200, -- 2 hours
+		43200, -- 8 hours
+	}
+	lib.AucMaxTimes = {
+		1800,  -- 30 mins
+		7200,  -- 2 hours
+		28800, -- 8 hours
+		86400  -- 24 hours
+	}
+	lib.AucTimes = {
+		0,
+		1800, -- 30 mins
+		7200, -- 2 hours
+		28800, -- 8 hours
+		86400  -- 24 hours
+	}
+
+end
+
 AucAdvanced.Const = lib
 
 lib.CompactRealm = lib.PlayerRealm:gsub("[ %-]", "") -- CompactRealm is realm name with spaces and dashes removed
@@ -152,20 +181,39 @@ lib.CompactRealm = lib.PlayerRealm:gsub("[ %-]", "") -- CompactRealm is realm na
 -- *** AuctionCategory tables (AC_*) ***
 -- Indexed list of class IDs
 -- CoreScan records item class in the form of these IDs in ScanData
-lib.AC_ClassIDList = {
-	LE_ITEM_CLASS_WEAPON,
-	LE_ITEM_CLASS_ARMOR,
-	LE_ITEM_CLASS_CONTAINER,
-	LE_ITEM_CLASS_GEM,
-	LE_ITEM_CLASS_ITEM_ENHANCEMENT,
-	LE_ITEM_CLASS_CONSUMABLE,
-	LE_ITEM_CLASS_GLYPH,
-	LE_ITEM_CLASS_TRADEGOODS,
-	LE_ITEM_CLASS_RECIPE,
-	LE_ITEM_CLASS_BATTLEPET,
-	LE_ITEM_CLASS_QUESTITEM,
-	LE_ITEM_CLASS_MISCELLANEOUS,
-}
+
+if AucAdvanced.Classic then
+	lib.AC_ClassIDList = {
+		LE_ITEM_CLASS_WEAPON,
+		LE_ITEM_CLASS_ARMOR,
+		LE_ITEM_CLASS_CONTAINER,
+		LE_ITEM_CLASS_GEM,
+		LE_ITEM_CLASS_ITEM_ENHANCEMENT,
+		LE_ITEM_CLASS_CONSUMABLE,
+		-- LE_ITEM_CLASS_GLYPH, Does not exist in Classic
+		LE_ITEM_CLASS_TRADEGOODS,
+		LE_ITEM_CLASS_RECIPE,
+		-- LE_ITEM_CLASS_BATTLEPET, Does not exist in Classic
+		LE_ITEM_CLASS_QUESTITEM,
+		LE_ITEM_CLASS_MISCELLANEOUS,
+	}
+else
+	lib.AC_ClassIDList = {
+		LE_ITEM_CLASS_WEAPON,
+		LE_ITEM_CLASS_ARMOR,
+		LE_ITEM_CLASS_CONTAINER,
+		LE_ITEM_CLASS_GEM,
+		LE_ITEM_CLASS_ITEM_ENHANCEMENT,
+		LE_ITEM_CLASS_CONSUMABLE,
+		LE_ITEM_CLASS_GLYPH,
+		LE_ITEM_CLASS_TRADEGOODS,
+		LE_ITEM_CLASS_RECIPE,
+		LE_ITEM_CLASS_BATTLEPET,
+		LE_ITEM_CLASS_QUESTITEM,
+		LE_ITEM_CLASS_MISCELLANEOUS,
+	}
+end
+
 -- Indexed list of class names, indexes will match AC_ClassIDList
 -- names should match the (localized string) return values from GetItemInfo
 -- *not* the same as Category names (i.e. AUCTION_CATEGORY_*)
@@ -242,5 +290,5 @@ end
 -- ### todo: keep checking this conversion is correct, otherwise will have to hard-code lookup table
 lib.AC_PetType2SubClassID = {GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET)}
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreConst.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreConst.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreConst")

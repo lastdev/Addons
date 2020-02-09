@@ -124,7 +124,7 @@
 
 	<Frame name="XPerl_RosterTextAnchor" clampedToScreen="true" parent="UIParent" movable="true" resizable="true">
 		<Anchors>
-			<Anchor point="TOP">
+			<Anchor point="CENTER">
 				<Offset>
 					<AbsDimension x="0" y="-270"/>
 				</Offset>
@@ -156,7 +156,7 @@
 			<OnDragStop>
 				XPerl_RosterTextAnchor:StopMovingOrSizing()
 				if (XPerl_SavePosition) then
-					XPerl_SavePosition(XPerl_RosterTextAnchor, true)
+					XPerl_SavePosition(XPerl_RosterTextAnchor)
 				end
 			</OnDragStop>
 		</Scripts>

@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -22,8 +22,6 @@ local next, pairs, ipairs, type, assert, tinsert, sort =
 	  next, pairs, ipairs, type, assert, tinsert, sort
 local random, floor =
 	  random, floor
-local InCombatLockdown =
-	  InCombatLockdown
 	  
 -- GLOBALS: UIParent, CreateFrame
 
@@ -47,6 +45,7 @@ Animations:RegisterEventDefaults{
 	SizeX	  		= 30,
 	SizeY	  		= 30,
 	Thickness	  	= 2,
+	Scale           = 1,
 	Fade	  		= true,
 	Infinite  		= false,
 	AnimColor	  	= "7fff0000",

@@ -1,6 +1,10 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"     xsi:schemaLocation="http://www.blizzard.com/wow/ui/
     ..\FrameXML\UI.xsd">
   <Script file="HealBot_Panel.lua" />
+  <Script file="HealBot_Aggro.lua" />
+  <Script file="HealBot_Skins.lua" />
+  <Script file="HealBot_Text.lua" />
+  <Script file="HealBot_Wheel.lua" />
   <Script file="HealBot_Action.lua" />
  
   <Button name="HealBotButtonSecureTemplate" virtual="true" inherits="SecureUnitButtonTemplate">
@@ -721,19 +725,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f1_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f1_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f1_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f1_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 1); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 1); </OnHide>
@@ -751,19 +774,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f2_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f2_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f2_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f2_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 2); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 2); </OnHide>
@@ -781,19 +823,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f3_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f3_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f3_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f3_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 3); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 3); </OnHide>
@@ -811,19 +872,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f4_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f4_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f4_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f4_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 4); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 4); </OnHide>
@@ -841,19 +921,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f5_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f5_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f5_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f5_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 5); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 5); </OnHide>
@@ -871,19 +970,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f6_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f6_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f6_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f6_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 6); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 6); </OnHide>
@@ -901,19 +1019,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f7_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f7_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f7_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f7_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 7); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 7); </OnHide>
@@ -931,19 +1068,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f8_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f8_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f8_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f8_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 8); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 8); </OnHide>
@@ -961,19 +1117,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f9_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f9_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f9_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f9_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 9); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 9); </OnHide>
@@ -991,19 +1166,38 @@
       <TileSize> <AbsValue val="8"/> </TileSize>
       <BackgroundInsets> <AbsInset left="3" right="3" top="3" bottom="3"/> </BackgroundInsets>
     </Backdrop>
-    <Layers>
-      <Layer level="ARTWORK">
-        <FontString name="f10_HealBot_Action_Title" inherits="GameFontNormal" text="">
-          <Anchors>
-            <Anchor point="TOP">
-              <Offset>
-                <AbsDimension x="0" y="6"/>
-              </Offset>
-            </Anchor>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <StatusBar name="f10_HealBot_Action_HeaderBar" inherits="TextStatusBar">
+        <Size>
+          <AbsDimension x="225" y="25"/>
+        </Size>
+        <Anchors>
+          <Anchor point="BOTTOM" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="f10_HealBot_Action_Title" inherits="GameFontNormal" text="">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="f10_HealBot_Action_HeaderBar" relativePoint="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>self:SetMinMaxValues(0,100); self:SetValue(100);</OnLoad>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarColor r="0" g="1" b="0"/>
+      </StatusBar>
+    </Frames>
     <Scripts>
       <OnShow> HealBot_Action_OnShow(self, 10); </OnShow>
       <OnHide> HealBot_Action_OnHide(self, 10); </OnHide>

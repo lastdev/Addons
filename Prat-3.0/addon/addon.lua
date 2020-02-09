@@ -76,7 +76,7 @@ Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]===]
 
 --@non-debug@
-Version = "Prat |cff8080ff3.0|r (|cff8080ff".."r1195".."|r)"
+Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.7.50".."|r)"
 --@end-non-debug@
 
 
@@ -90,6 +90,8 @@ setmetatable(Prat, am)
 
 
 Prat.Prat3 = true
+Prat.IsClassic = (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC)
+
 
 local function dbg(...) end
 

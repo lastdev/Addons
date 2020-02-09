@@ -1,12 +1,12 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1100 $")
+end, "$Revision:  $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -169,7 +169,7 @@ function xpHigh:Add(guid, highlightType, duration, source)
 				self:Send(guid)
 			else
 				local newEndTime = GetTime() + duration
-				if (highlightType == "HEAL" and (UnitInRaid(source) or UnitInParty(source))) then
+				if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and highlightType == "HEAL" and (UnitInRaid(source) or UnitInParty(source))) then
 					if (source and not UnitIsUnit("player", source)) then
 						-- We'll query their cast bar and get accurate highlight time info
 						local spellName, text, texture, startTime, endTime = UnitCastingInfo(source)
@@ -557,7 +557,7 @@ end
 -- CreateShine
 function xpHigh:CreateShine(parent)
 	local shine = parent:CreateTexture(nil, "OVERLAY")
-	shine:SetTexture("Spells\\SparkleBlue")
+	shine:SetTexture(166928)
 	shine:SetBlendMode("ADD")
 	shine:SetWidth(12)
 	shine:SetHeight(12)
@@ -603,7 +603,7 @@ end
 function xpHigh:GetMyHotTime(unit)
 	local maxDur, maxTimeLeft = 0, 0
 	for i = 1, 40 do
-		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, _, _, _, dur, endTime = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -681,7 +681,7 @@ end
 -- xpHigh:HasMyHOT(unit)
 function xpHigh:HasMyHOT(unit)
 	for i = 1, 40 do
-		local name, tex, count, buffType, dur, endTime, caster = UnitBuff(unit, i, "PLAYER")
+		local name = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -721,7 +721,7 @@ end
 -- GetMyPomEndTime
 function xpHigh:GetMyPomEndTime(unit)
 	for i = 1, 40 do
-		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, _, _, _, _, endTime = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -937,7 +937,7 @@ function xpHigh:StartMendingAnimation(sourceFrame, targetFrame)
 			icon:SetWidth((4 - i) * 8)
 
 			icon.tex = icon:CreateTexture(nil, "OVERLAY")
-			icon.tex:SetTexture("Spells\\SparkleBlue")
+			icon.tex:SetTexture(166928)
 			icon.tex:SetAllPoints()
 			icon.tex:SetVertexColor(1 / i, 1 / i, 0.7 / i)
 			icon.tex:SetBlendMode("ADD")
@@ -1370,7 +1370,7 @@ end
 function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	if (srcGUID == playerGUID and conf.highlight.HOT ) then
 		if (self:checkEventFlags(dstFlags)) then
-			local spellId, spellName, spellSchool, amount = ...
+			local spellID, spellName, spellSchool, amount = ...
 			if (hotSpells[spellName]) then
 				-- Our HOT actually healed someone, so we'll do something pretty
 				if (self:HasEffect(dstGUID, "HOT") and conf.highlight.extraSparkles) then
@@ -1382,7 +1382,7 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 					-- was triggered
 
 					-- Find our HOT and get the duration left for it, then add a flashy!
-					local checkName = dstName;
+					local checkName = dstName
 					-- If the dstName is NOT in our party/raid but it IS target/focus we MUST use target/focus instead of their name
 					if (not UnitInParty(dstName) and not UnitPlayerOrPetInRaid(dstName) and not UnitPlayerOrPetInParty(dstName)) then
 						-- ok, now figure out which it is, target or focus?
@@ -1397,17 +1397,17 @@ function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName,
 					local index = 40
 					for i = 1, 39 do
 						local _, _, _, _, _, _, _, _, _, ID = UnitBuff(checkName, i, "PLAYER")
-						if ID == spellId then
+						if ID == spellID then
 							index = i
 							break
 						end
 					end
 
-					local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(checkName, index, "PLAYER")
+					local _, _, _, _, _, endTime, isMine = UnitBuff(checkName, index, "PLAYER")
 
 					if (isMine) then
 						-- Figure out how many seconds are left in the HOT so we can ensure the flashy only stays up as long as the HOT is active
-						local secondsLeft = endTime - GetTime();
+						local secondsLeft = endTime - GetTime()
 						self:Add(dstGUID, "HOT", secondsLeft)
 						if (conf.highlight.extraSparkles) then
 							self:Add(dstGUID, "HOTSPARKS", 0.1)
@@ -1585,7 +1585,7 @@ function xpHigh:UNIT_HEAL_PREDICTION(unit)
 	if (conf.highlight and conf.highlight.HEAL) then
 		local amount = UnitGetIncomingHeals(unit) or 0
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
-			local health, healthmax = UnitHealth(unit), UnitHealthMax(unit)
+			local health, healthmax = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or UnitHealth(unit)), UnitHealthMax(unit)
 			local missing = healthmax - health
 			if (missing > healthmax / 20) then -- More than 5% to heal
 				self:Add(guid, "HEAL", amount)
@@ -1599,7 +1599,7 @@ end
 -- xpHigh:HasMyPomPom(unit)
 function xpHigh:HasMyPomPom(unit)
 	for i = 1, 40 do
-		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, _, _, _, _, endTime = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -1612,7 +1612,7 @@ end
 -- xpHigh:HasMyShield(unit)
 function xpHigh:HasMyShield(unit)
 	for i = 1, 40 do
-		local name, tex, count, buffType, dur, endTime, isMine = UnitBuff(unit, i, "PLAYER")
+		local name, _, _, _, _, endTime = UnitBuff(unit, i, "PLAYER")
 		if (not name) then
 			break
 		end
@@ -1697,11 +1697,11 @@ function xpHigh:UNIT_AURA(unit)
 	if (conf.highlight.HOTCOUNT) then
 		local hotCount = 0
 		for i = 1, 40 do
-			local buffName = UnitBuff(unit, i)
-			if (not buffName) then
+			local name = UnitBuff(unit, i)
+			if (not name) then
 				break
 			end
-			if (hotSpells[buffName]) then
+			if (hotSpells[name]) then
 				hotCount = hotCount + 1
 			end
 		end
@@ -1770,12 +1770,14 @@ function xpHigh:OptionChange()
 		self:ClearAll("SHIELD")
 	end
 
-	if (conf.highlight.enable and conf.highlight.HEAL) then
-		events = true
-		self:RegisterEvent("UNIT_HEAL_PREDICTION")
-	else
-		self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		self:ClearAll("HEAL")
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if (conf.highlight.enable and conf.highlight.HEAL) then
+			events = true
+			self:RegisterEvent("UNIT_HEAL_PREDICTION")
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+			self:ClearAll("HEAL")
+		end
 	end
 
 	if (conf.highlight.enable and (conf.highlight.HOTCOUNT or conf.highlight.HOT or conf.highlight.SHIELD or conf.highlight.POM)) then

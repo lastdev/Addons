@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 --[[
 GTFO
-Author: Zensunim of Dragonblight
+Author: Zensunim of Dragonblight [Retail], Myzrael [Classic]
 
 Usage: /GTFO or go to Interface->Add-ons->GTFO
 ]]--
@@ -23,15 +23,15 @@ GTFO = {
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 		SoundOverrides = { }; -- Override table for GTFO sounds
 	};
-	Version = "4.46.17"; -- Version number (text format)
-	VersionNumber = 44617; -- Numeric version number for checking out-of-date clients
+	Version = "4.52.2"; -- Version number (text format)
+	VersionNumber = 45202; -- Numeric version number for checking out-of-date clients
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
 	CanCast = nil; -- The active character is capable of casting
 	TankMode = nil; -- The active character is a tank
 	CasterMode = nil; -- The active character is a caster
-	SpellName = { }; -- List of spells (legacy placeholder, not supported)
+	SpellName = { }; -- List of spells (for Classic only since Spell IDs are not available in the combat log)
 	SpellID = { }; -- List of spell IDs
 	FFSpellID = { }; -- List of friendly fire spell IDs
 	IgnoreSpellCategory = { }; -- List of spell groups to ignore
@@ -64,20 +64,24 @@ GTFO = {
 		DisableGTFO = nil;
 	};
 	BetaMode = nil; -- WoW Beta/PTR client detection
+	ClassicMode = nil; -- WoW Classic client detection
 	SoundChannels = { 
 		{ Code = "Master", Name = _G.MASTER },
 		{ Code = "SFX", Name = _G.SOUND_VOLUME, CVar = "Sound_EnableSFX" },
 		{ Code = "Ambience", Name = _G.AMBIENCE_VOLUME, CVar = "Sound_EnableAmbience" },
 		{ Code = "Music", Name = _G.MUSIC_VOLUME, CVar = "Sound_EnableMusic" },
-		{ Code = "Dialog", Name = _G.DIALOG_VOLUME },
+		{ Code = "Dialog", Name = _G.DIALOG_VOLUME, CVar = "Sound_EnableDialog" },
 	};
 	Scans = { };
 };
 
 GTFOData = {};
 
-if (select(4, GetBuildInfo()) >= 80000) then
+if (select(4, GetBuildInfo()) >= 90000) then
 	GTFO.BetaMode = true;
+end
+if (select(4, GetBuildInfo()) <= 20000) then
+	GTFO.ClassicMode = true;
 end
 
 StaticPopupDialogs["GTFO_POPUP_MESSAGE"] = {
@@ -227,6 +231,11 @@ function GTFO_OnEvent(self, event, ...)
 		GTFO.TankMode = GTFO_CheckTankMode();
 		GTFO.CasterMode = GTFO_CheckCasterMode();
 		GTFO_SendUpdateRequest();
+		
+		if (GTFO.ClassicMode) then
+			GTFO_ScanSpells();
+		end
+		
 		return;
 	end
 	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
@@ -264,7 +273,13 @@ function GTFO_OnEvent(self, event, ...)
 						local SpellID = tonumber(misc1);
 						local SpellName = tostring(misc2);
 						local SpellSourceGUID = tostring(sourceGUID);
-						SpellID = tostring(SpellID);
+						
+						if (GTFO.ClassicMode) then
+							SpellID = tostring(GTFO.SpellName[SpellName] or SpellID or 0)
+						else
+							SpellID = tostring(SpellID);
+						end
+						
 						--GTFO_ScanPrint(SpellType.." - "..SpellID.." - "..SpellName.." - "..SpellSourceName.." ("..GTFO_GetMobId(sourceGUID)..") >"..tostring(destName));
 						if (GTFO.FFSpellID[SpellID]) then
 							-- Friendly fire alerts
@@ -363,15 +378,27 @@ function GTFO_OnEvent(self, event, ...)
 				SpellID = 17086;
 			end
 			
-			SpellID = tostring(SpellID);
-
+			if (GTFO.ClassicMode) then
+				SpellID = tostring(GTFO.SpellName[SpellName] or SpellID or 0)
+			else
+				SpellID = tostring(SpellID);
+			end
+						
 			if (GTFO.Settings.ScanMode and not GTFO.IgnoreScan[SpellID]) then
 				if (vehicle) then
 					GTFO_ScanPrint("V: "..SpellType.." - "..SpellID.." - "..GetSpellLink(SpellID).." - "..SpellSourceName.." ("..GTFO_GetMobId(sourceGUID)..") >"..tostring(destName));
 					GTFO_SpellScan(SpellID, SpellSourceName);
 				elseif (SpellType~="SPELL_ENERGIZE" or (SpellType=="SPELL_ENERGIZE" and sourceGUID ~= UnitGUID("player"))) then
-					GTFO_ScanPrint(SpellType.." - "..SpellID.." - "..GetSpellLink(SpellID).." - "..SpellSourceName.." ("..GTFO_GetMobId(sourceGUID)..") >"..tostring(destName).." for "..tostring(misc4));
-					GTFO_SpellScan(SpellID, SpellSourceName, tostring(misc4));
+					if (GTFO.ClassicMode) then
+						GTFO_ScanPrint(SpellType.." - "..SpellID.." - "..SpellName.." - "..SpellSourceName.." ("..GTFO_GetMobId(sourceGUID)..") >"..tostring(destName).." for "..tostring(misc4));
+					else
+						GTFO_ScanPrint(SpellType.." - "..SpellID.." - "..GetSpellLink(SpellID).." - "..SpellSourceName.." ("..GTFO_GetMobId(sourceGUID)..") >"..tostring(destName).." for "..tostring(misc4));
+					end
+					if (GTFO.ClassicMode) then
+						GTFO_SpellScanName(SpellName, SpellSourceName, tostring(misc4));
+					else
+						GTFO_SpellScan(SpellID, SpellSourceName, tostring(misc4));
+					end
 				end
 			end
 			if (GTFO.SpellID[SpellID]) then
@@ -834,7 +861,7 @@ function GTFO_PlaySound(iSound, bOverride)
 	if (bOverride or GTFO.Settings.Sounds[iSound]) then
 		local soundChannel = GTFO.Settings.SoundChannel;
 		if (bOverride) then
-			--soundChannel = UIDropDownMenu_GetSelectedValue(GTFO_SoundChannelDropdown) or soundChannel;
+			soundChannel = L_UIDropDownMenu_GetSelectedValue(GTFO_SoundChannelDropdown) or soundChannel;
 		end
 		if (bOverride and getglobal("GTFO_UnmuteButton"):GetChecked()) then
 			GTFO_UnmuteSound(GTFO.SoundTimes[iSound], soundChannel);
@@ -866,7 +893,7 @@ function GTFO_PlaySound(iSound, bOverride)
 end
 
 -- Create Addon Menu options and interface
---local GTFO_SoundChannelDropdown;
+local GTFO_SoundChannelDropdown;
 function GTFO_RenderOptions()
 	GTFO.UIRendered = true;
 
@@ -974,20 +1001,18 @@ function GTFO_RenderOptions()
 	TestModeButton.tooltip = GTFOLocal.UI_TestModeDescription.."\n\n"..string.format(GTFOLocal.UI_TestModeDescription2,"zensunim","gmail","com");
 	getglobal(TestModeButton:GetName().."Text"):SetText(GTFOLocal.UI_TestMode);
 
-	--[[
 	local SoundChannelText = ConfigurationPanel:CreateFontString("GTFO_SoundChannelText","ARTWORK","GameFontNormal");
 	SoundChannelText:SetPoint("TOPLEFT", 10, -330);
 	SoundChannelText:SetText(GTFOLocal.UI_SoundChannel);
 	SoundChannelText.tooltip = UI_SoundChannelDescription;
 	
-	GTFO_SoundChannelDropdown = CreateFrame("Button", "GTFO_SoundChannelDropdown", ConfigurationPanel, "UIDropDownMenuTemplate");
+	GTFO_SoundChannelDropdown = L_Create_UIDropDownMenu("GTFO_SoundChannelDropdown", ConfigurationPanel);
 	GTFO_SoundChannelDropdown:SetPoint("TOPLEFT", 10, -350)
-	UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
-  UIDropDownMenu_SetWidth(GTFO_SoundChannelDropdown, 150);
-  UIDropDownMenu_SetButtonWidth(GTFO_SoundChannelDropdown, 124);
-  UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
-  UIDropDownMenu_JustifyText(GTFO_SoundChannelDropdown, "LEFT");
-  ]]--
+	L_UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
+	L_UIDropDownMenu_SetWidth(GTFO_SoundChannelDropdown, 150);
+	L_UIDropDownMenu_SetButtonWidth(GTFO_SoundChannelDropdown, 124);
+	L_UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
+	L_UIDropDownMenu_JustifyText(GTFO_SoundChannelDropdown, "LEFT");
 
 	-- Special Alerts frame
 
@@ -1029,7 +1054,6 @@ function GTFO_RenderOptions()
 			GTFO.Settings.Sounds[4] = FriendlyFireSoundButton:GetChecked();
 			GTFO.Settings.Volume = VolumeSlider:GetValue();
 			GTFO.Settings.TrivialDamagePercent = TrivialDamageSlider:GetValue();
-			--GTFO.Settings.SoundChannel = SoundChannelDropdown:GetValue();
 			GTFO.Settings.TestMode = TestModeButton:GetChecked();
 			GTFO.Settings.UnmuteMode = UnmuteButton:GetChecked();
 			GTFO.Settings.TrivialMode = TrivialButton:GetChecked();
@@ -1041,7 +1065,7 @@ function GTFO_RenderOptions()
 					GTFO.Settings.IgnoreOptions[key] = true;
 				end
 			end
-			--GTFO.Settings.SoundChannel = UIDropDownMenu_GetSelectedValue(GTFO_SoundChannelDropdown);
+			GTFO.Settings.SoundChannel = L_UIDropDownMenu_GetSelectedValue(GTFO_SoundChannelDropdown);
 
 			GTFO_SaveSettings();
 		end
@@ -1049,8 +1073,8 @@ function GTFO_RenderOptions()
 		function (self)
 			VolumeSlider:SetValue(GTFO.Settings.OriginalVolume);
 			TrivialDamageSlider:SetValue(GTFO.Settings.OriginalTrivialDamagePercent);
-			--UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
-			--UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
+			L_UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
+			L_UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
 			GTFO_SaveSettings();
 		end
 	ConfigurationPanel.default = 
@@ -1060,19 +1084,17 @@ function GTFO_RenderOptions()
 end
 
 function GTFO_SoundChannelDropdownInitialize(self, level)
-  --[[
   for id, soundChannel in pairs(GTFO.SoundChannels) do
     local info;
-    info = UIDropDownMenu_CreateInfo();
+    info = L_UIDropDownMenu_CreateInfo();
     info.text = soundChannel.Name;
     info.value = soundChannel.Code;
     info.arg1 = id;
     info.func = function(self, arg1, arg2, checked)
-    	UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, self.value);
+    	L_UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, self.value);
     end
-    UIDropDownMenu_AddButton(info, level);
+    L_UIDropDownMenu_AddButton(info, level);
   end
-  ]]--
 end
 
 function GTFO_RefreshOptions()
@@ -1088,7 +1110,9 @@ function GTFO_RefreshOptions()
 				
 					GTFOSpellTooltip:SetOwner(_G["GTFOFrame"],"ANCHOR_NONE");
 					GTFOSpellTooltip:ClearLines();
-					GTFOSpellTooltip:SetHyperlink(GetSpellLink(spellID));
+					if (not GTFO.ClassicMode) then
+						GTFOSpellTooltip:SetHyperlink(GetSpellLink(spellID));
+					end
 					local tooltipText = tostring(getglobal("GTFOSpellTooltipTextLeft1"):GetText());
 					if (GTFOSpellTooltip:NumLines()) then
 						if (getglobal("GTFOSpellTooltipTextLeft"..tostring(GTFOSpellTooltip:NumLines()))) then
@@ -1366,7 +1390,7 @@ function GTFO_Option_SetSoundChannel()
 		return;
 	end
 	GTFO.Settings.SoundChannel = "Master";
-	--getglobal("GTFO_SoundChannelDropdown"):SetValue(GTFO.Settings.SoundChannel);
+	getglobal("GTFO_SoundChannelDropdown"):SetValue(GTFO.Settings.SoundChannel);
 end
 
 function GTFO_Option_SetTrivialDamageText(iTrivialDamagePercent)
@@ -1386,12 +1410,14 @@ function GTFO_CheckTankMode()
 				--GTFO_DebugPrint("Bear Form found - tank mode activated");
 				return true;
 			end
-		elseif (class == "MONK" or class == "DEMONHUNTER" or class == "WARRIOR" or class == "DEATHKNIGHT" or class == "PALADIN") then
+		elseif ((not GTFO.ClassicMode) and (class == "MONK" or class == "DEMONHUNTER" or class == "WARRIOR" or class == "DEATHKNIGHT" or class == "PALADIN")) then
 			local spec = GetSpecialization();
 			if (spec and GetSpecializationRole(spec) == "TANK") then
 				--GTFO_DebugPrint("Tank spec found - tank mode activated");
 				return true;
 			end
+		elseif ((GTFO.ClassicMode) and (class == "WARRIOR" or class == "PALADIN")) then
+			GTFO.CanTank = true;
 		else
 			--GTFO_DebugPrint("Failed Tank Mode - This code shouldn't have ran");
 			GTFO.CanTank = nil;
@@ -1409,23 +1435,30 @@ function GTFO_CheckCasterMode()
 			return true;
 		end
 
-		local spec = GetSpecialization();
-		if (spec) then
-			local role = GetSpecializationRole(spec);
-			if (role == "TANK") then
-				return nil;
+		if not (GTFO.ClassicMode) then
+			local spec = GetSpecialization();
+			if (spec) then
+				local role = GetSpecializationRole(spec);
+				if (role == "TANK") then
+					return nil;
+				end
+				if (role == "HEALER") then
+					return true;
+				end
+			
+				local id, _ = GetSpecializationInfo(spec);
+				if (id == 102) then
+					-- Balance Druid
+					return true;
+				end
+				if (id == 262) then
+					-- Elemental Shaman
+					return true;
+				end
 			end
-			if (role == "HEALER") then
-				return true;
-			end
-		
-			local id, _ = GetSpecializationInfo(spec);
-			if (id == 102) then
-				-- Balance Druid
-				return true;
-			end
-			if (id == 262) then
-				-- Elemental Shaman
+		else
+			if (class == "DRUID" or class == "PALADIN" or class == "SHAMAN") then
+				-- Classic Detection (check for caster mode)
 				return true;
 			end
 		end
@@ -1494,8 +1527,10 @@ function GTFO_RegisterTankEvents()
 end
 
 function GTFO_RegisterCasterEvents()
-	GTFOFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
-	GTFOFrame:RegisterEvent("PLAYER_TALENT_UPDATE");	
+	if not (GTFO.ClassicMode) then
+		GTFOFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+		GTFOFrame:RegisterEvent("PLAYER_TALENT_UPDATE");	
+	end
 end
 
 -- Cache sound file locations 
@@ -1600,8 +1635,8 @@ function GTFO_SetDefaults()
 	if (GTFO.UIRendered) then
 		getglobal("GTFO_VolumeSlider"):SetValue(GTFO.DefaultSettings.Volume);
 		getglobal("GTFO_TrivialDamageSlider"):SetValue(GTFO.DefaultSettings.TrivialDamagePercent);
-		--UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
-		--UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
+		L_UIDropDownMenu_Initialize(GTFO_SoundChannelDropdown, GTFO_SoundChannelDropdownInitialize);
+		L_UIDropDownMenu_SetSelectedValue(GTFO_SoundChannelDropdown, GTFO.Settings.SoundChannel);
 	end
 	GTFO.Settings.IgnoreOptions = GTFO.DefaultSettings.IgnoreOptions;
 	GTFO.Settings.SoundOverrides = GTFO.DefaultSettings.SoundOverrides;
@@ -1878,6 +1913,26 @@ function GTFO_SpellScan(spellId, spellOrigin, spellDamage)
 	end
 end
 
+function GTFO_SpellScanName(spellName, spellOrigin, spellDamage)
+	if (GTFO.Settings.ScanMode) then
+		local damage = tonumber(spellDamage) or 0;
+		if not (GTFO.Scans[spellName] or GTFO.SpellName[spellName] or GTFO.IgnoreScan[spellName]) then
+			GTFO.Scans[spellName] = {
+				TimeAdded = GetTime();
+				Times = 1;
+				SpellID = 0;
+				SpellName = spellName;
+				SpellOrigin = tostring(spellOrigin);
+				IsDebuff = (spellDamage == "DEBUFF");
+				Damage = damage;
+			};
+		elseif (GTFO.Scans[spellName]) then
+			GTFO.Scans[spellName].Times = GTFO.Scans[spellName].Times + 1;
+			GTFO.Scans[spellName].Damage = GTFO.Scans[spellName].Damage + damage;
+		end
+	end
+end
+
 function GTFO_Command_Data()
 	if (next(GTFO.Scans) == nil) then
 		GTFO_ErrorPrint("No scan data available.");
@@ -1926,4 +1981,20 @@ end
 function GTFO_Command_ClearData()
 	GTFO.Scans = { };
 	return;
+end
+
+function GTFO_ScanSpells()
+	GTFO.SpellName = { };
+	for spellId, record in pairs(GTFO.SpellID) do
+		local spellName = GetSpellInfo(spellId);
+		if (spellName or "" ~= "") then
+			if (GTFO.SpellName[spellName] ~= nil) then
+			GTFO_ErrorPrint("Duplicate spell "..spellName.." from ID #"..tostring(spellId));
+			else
+				GTFO.SpellName[spellName] = spellId;
+			end
+		else
+			GTFO_ErrorPrint("Unknown or invalid spell ID #"..tostring(spellId));
+		end
+	end		
 end

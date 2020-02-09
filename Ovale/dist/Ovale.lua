@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/Ovale", 80000)
+local __exports = LibStub:NewLibrary("ovale/Ovale", 80300)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __Localization = LibStub:GetLibrary("ovale/Localization")
@@ -38,14 +38,18 @@ __exports.MakeString = function(s, ...)
     end
     return s
 end
-local OvaleBase = NewAddon("Ovale", aceEvent)
-local OvaleClass = __class(OvaleBase, {
+local name = "Ovale"
+local OvaleBase = NewAddon(name, aceEvent)
+__exports.MSG_PREFIX = name
+__exports.Print = function(...)
+    local s = __exports.MakeString(...)
+    DEFAULT_CHAT_FRAME:AddMessage(format("|cff33ff99%s|r: %s", name, s))
+end
+__exports.OvaleClass = __class(OvaleBase, {
     constructor = function(self)
-        self.playerClass = nil
-        self.playerGUID = nil
-        self.db = nil
+        self.playerClass = "WARRIOR"
+        self.playerGUID = ""
         self.refreshNeeded = {}
-        self.MSG_PREFIX = "Ovale"
         OvaleBase.constructor(self)
         _G["BINDING_HEADER_OVALE"] = "Ovale"
         local toggleCheckBox = L["Inverser la boîte à cocher "]
@@ -56,9 +60,9 @@ local OvaleClass = __class(OvaleBase, {
         _G["BINDING_NAME_OVALE_CHECKBOX4"] = toggleCheckBox .. "(5)"
     end,
     OnInitialize = function(self)
-        self.playerGUID = UnitGUID("player")
+        self.playerGUID = UnitGUID("player") or "error"
         local _, classId = UnitClass("player")
-        self.playerClass = classId
+        self.playerClass = classId or "WARRIOR"
         wipe(self_refreshIntervals)
         self_refreshIndex = 1
         self:ClearOneTimeMessages()
@@ -103,14 +107,24 @@ local OvaleClass = __class(OvaleBase, {
     PrintOneTimeMessages = function(self)
         for s in pairs(__exports.oneTimeMessages) do
             if __exports.oneTimeMessages[s] ~= "printed" then
-                self:Print(s)
+                __exports.Print(s)
                 __exports.oneTimeMessages[s] = "printed"
             end
         end
     end,
-    Print = function(self, ...)
-        local s = __exports.MakeString(...)
-        DEFAULT_CHAT_FRAME:AddMessage(format("|cff33ff99%s|r: %s", self:GetName(), s))
+    createModule = function(self, name, onInitialize, onRelease)
+    end,
+    createModule = function(self, name, onInitialize, onRelease, dep1)
+    end,
+    createModule = function(self, name, onInitialize, onRelease, dep1, dep2)
+    end,
+    createModule = function(self, name, onInitialize, onRelease, dep1, dep2, dep3)
+    end,
+    createModule = function(self, name, onInitialize, onRelease, dep1, dep2, dep3, dep4)
+    end,
+    createModule = function(self, name, onInitialize, onRelease, dep1, dep2, dep3, dep4)
+        local ret = (self:NewModule(name, dep1, dep2, dep3, dep4))()
+        ret.OnInitialize = onInitialize
+        return ret
     end,
 })
-__exports.Ovale = OvaleClass()

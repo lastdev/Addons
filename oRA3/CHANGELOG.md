@@ -1,10 +1,9 @@
 # oRA3
 
-## [v8.1.1](https://github.com/BigWigsMods/oRA3/tree/v8.1.1) (2019-01-13)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v8.1.0...v8.1.1)
+## [v8.3.0](https://github.com/BigWigsMods/oRA3/tree/v8.3.0) (2020-01-14)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v8.2.5...v8.3.0)
 
-- ReadyCheck: Add group buffs and increase the window width  
-- Consumables: Add group buff checking  
-- Consumables: Add Crucible of the Storm Vantus runes  
-- RoleIcons: Fix the raid frame icons not being on top  
-- Remove pre 8.0 code for UnitBuffByNames/UnitBuffByIDs  
+- Update TOC for 8.3  
+- Consumables: Add Ny'alotha Vantus runes  
+- Update API to use C\_PartyInfo.  
+- Cooldowns: Fix Blessing of Sacrifice cd (#77)  

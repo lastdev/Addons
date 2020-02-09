@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
 
@@ -15,113 +17,6 @@ local function createOptions(id, data)
       width = WeakAuras.doubleWidth,
       name = L["Bar Texture"],
       values = AceGUIWidgetLSMlists.statusbar
-    },
-    displayTextLeft = {
-      type = "input",
-      width = WeakAuras.normalWidth,
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Left Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Right Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Bottom Text"];
-        else
-          return L["Top Text"];
-        end
-      end,
-      desc = function()
-        local ret = L["Dynamic text tooltip"];
-        ret = ret .. WeakAuras.GetAdditionalProperties(data);
-        return ret
-      end,
-      order = 9
-    },
-    displayTextRight = {
-      type = "input",
-      width = WeakAuras.normalWidth,
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Right Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Left Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Top Text"];
-        else
-          return L["Bottom Text"];
-        end
-      end,
-      desc = function()
-        local ret = L["Dynamic text tooltip"];
-        ret = ret .. WeakAuras.GetAdditionalProperties(data);
-        return ret
-      end,
-      order = 10
-    },
-    customTextUpdate = {
-      type = "select",
-      width = WeakAuras.doubleWidth,
-      hidden = function()
-        return not (
-          WeakAuras.ContainsCustomPlaceHolder(data.displayTextLeft)
-          or WeakAuras.ContainsCustomPlaceHolder(data.displayTextRight)
-          );
-      end,
-      name = L["Update Custom Text On..."],
-      values = WeakAuras.text_check_types,
-      order = 10.1
-    },
-    -- code editor added below
-    progressPrecision = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      order = 11,
-      name = L["Remaining Time Precision"],
-      values = WeakAuras.precision_types,
-      get = function() return data.progressPrecision or 1 end,
-      hidden = function()
-        return not (
-          data.displayTextLeft:find("%%p")
-          or data.displayTextLeft:find("%%t")
-          or data.displayTextRight:find("%%p")
-          or data.displayTextRight:find("%%t")
-          );
-      end,
-      disabled = function()
-        return not (
-          data.displayTextLeft:find("%%p")
-          or data.displayTextRight:find("%%p")
-          );
-      end,
-    },
-    totalPrecision = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      order = 11.5,
-      name = L["Total Time Precision"],
-      values = WeakAuras.precision_types,
-      get = function() return data.totalPrecision or 1 end,
-      hidden = function()
-        return not (
-          data.displayTextLeft:find("%%p")
-          or data.displayTextLeft:find("%%t")
-          or data.displayTextRight:find("%%p")
-          or data.displayTextRight:find("%%t")
-          );
-      end,
-      disabled = function()
-        return not (
-          data.displayTextLeft:find("%%t")
-          or data.displayTextRight:find("%%t")
-          );
-      end,
-    },
-    rotateText = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Rotate Text"],
-      values = WeakAuras.text_rotate_types,
-      order = 19.5
     },
     orientation = {
       type = "select",
@@ -167,7 +62,7 @@ local function createOptions(id, data)
 
         data.orientation = v;
         WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
+        WeakAuras.UpdateThumbnail(data);
         WeakAuras.SetIconNames(data);
         WeakAuras.ResetMoverSizer();
       end
@@ -177,13 +72,6 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Inverse"],
       order = 35
-    },
-    stickyDuration = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Sticky Duration"],
-      desc = L["Prevents duration information from decreasing when an aura refreshes. May cause problems if used with multiple auras with different durations."],
-      order = 36
     },
     smoothProgress = {
       type = "toggle",
@@ -199,104 +87,6 @@ local function createOptions(id, data)
       hidden = function() return not WeakAuras.CanHaveTooltip(data) end,
       order = 38
     },
-    symbol_header = {
-      type = "header",
-      name = L["Symbol Settings"],
-      order = 38.01
-    },
-    icon = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Icon"],
-      order = 38.1,
-    },
-    auto = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Auto"],
-      desc = L["Choose whether the displayed icon is automatic or defined manually"],
-      order = 38.2,
-      disabled = function() return not WeakAuras.CanHaveAuto(data); end,
-      get = function() return WeakAuras.CanHaveAuto(data) and data.auto end,
-      hidden = function() return not data.icon end,
-    },
-    displayIcon = {
-      type = "input",
-      width = WeakAuras.normalWidth,
-      name = L["Display Icon"],
-      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
-      disabled = function() return not data.icon end,
-      order = 38.3,
-      get = function()
-        return data.displayIcon and tostring(data.displayIcon) or "";
-      end,
-      set = function(info, v)
-        data.displayIcon = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.SetIconNames(data);
-      end
-    },
-    chooseIcon = {
-      type = "execute",
-      width = WeakAuras.normalWidth,
-      name = L["Choose"],
-      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
-      disabled = function() return not data.icon end,
-      order = 38.5,
-      func = function() WeakAuras.OpenIconPicker(data, "displayIcon"); end
-    },
-    icon_side = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Icon"],
-      values = WeakAuras.icon_side_types,
-      hidden = function() return data.orientation:find("VERTICAL") or not data.icon end,
-      order = 38.6,
-    },
-    icon_side2 = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Icon"],
-      values = WeakAuras.rotated_icon_side_types,
-      hidden = function() return data.orientation:find("HORIZONTAL") or not data.icon end,
-      order = 38.7,
-      get = function()
-        return data.icon_side;
-      end,
-      set = function(info, v)
-        data.icon_side = v;
-        WeakAuras.Add(data);
-        WeakAuras.SetThumbnail(data);
-        WeakAuras.SetIconNames(data);
-      end
-    },
-    desaturate = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Desaturate"],
-      order = 38.8,
-      hidden = function() return not data.icon end,
-    },
-    icon_color = {
-      type = "color",
-      width = WeakAuras.normalWidth,
-      name = L["Icon Color"],
-      hasAlpha = true,
-      order = 38.9,
-      hidden = function() return not data.icon end,
-    },
-    zoom = {
-      type = "range",
-      width = WeakAuras.normalWidth,
-      name = L["Zoom"],
-      order = 38.91,
-      min = 0,
-      max = 1,
-      bigStep = 0.01,
-      isPercent = true,
-      hidden = function() return not data.icon end,
-    },
     bar_header = {
       type = "header",
       name = L["Bar Color Settings"],
@@ -307,24 +97,122 @@ local function createOptions(id, data)
       width = WeakAuras.normalWidth,
       name = L["Bar Color"],
       hasAlpha = true,
-      order = 39.5
+      order = 39.1
     },
     backgroundColor = {
       type = "color",
       width = WeakAuras.normalWidth,
       name = L["Background Color"],
       hasAlpha = true,
-      order = 40
+      order = 39.2
     },
     alpha = {
       type = "range",
       width = WeakAuras.normalWidth,
       name = L["Bar Alpha"],
-      order = 41,
+      order = 39.3,
       min = 0,
       max = 1,
       bigStep = 0.01,
       isPercent = true
+    },
+    icon_header = {
+      type = "header",
+      name = L["Icon Settings"],
+      order = 40.1
+    },
+    icon = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = L["Show Icon"],
+      order = 40.2,
+    },
+    auto = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = L["Auto"],
+      desc = L["Choose whether the displayed icon is automatic or defined manually"],
+      order = 40.3,
+      disabled = function() return not WeakAuras.CanHaveAuto(data); end,
+      get = function() return WeakAuras.CanHaveAuto(data) and data.auto end,
+      hidden = function() return not data.icon end,
+    },
+    displayIcon = {
+      type = "input",
+      width = WeakAuras.normalWidth,
+      name = L["Display Icon"],
+      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
+      disabled = function() return not data.icon end,
+      order = 40.4,
+      get = function()
+        return data.displayIcon and tostring(data.displayIcon) or "";
+      end,
+      set = function(info, v)
+        data.displayIcon = v;
+        WeakAuras.Add(data);
+        WeakAuras.UpdateThumbnail(data);
+        WeakAuras.SetIconNames(data);
+      end
+    },
+    chooseIcon = {
+      type = "execute",
+      width = WeakAuras.normalWidth,
+      name = L["Choose"],
+      hidden = function() return WeakAuras.CanHaveAuto(data) and data.auto or not data.icon; end,
+      disabled = function() return not data.icon end,
+      order = 40.5,
+      func = function() WeakAuras.OpenIconPicker(data, "displayIcon"); end
+    },
+    icon_side = {
+      type = "select",
+      width = WeakAuras.normalWidth,
+      name = L["Icon Position"],
+      values = WeakAuras.icon_side_types,
+      hidden = function() return data.orientation:find("VERTICAL") or not data.icon end,
+      order = 40.6,
+    },
+    icon_side2 = {
+      type = "select",
+      width = WeakAuras.normalWidth,
+      name = L["Icon Position"],
+      values = WeakAuras.rotated_icon_side_types,
+      hidden = function() return data.orientation:find("HORIZONTAL") or not data.icon end,
+      order = 40.7,
+      get = function()
+        return data.icon_side;
+      end,
+      set = function(info, v)
+        data.icon_side = v;
+        WeakAuras.Add(data);
+        WeakAuras.UpdateThumbnail(data);
+        WeakAuras.SetIconNames(data);
+      end
+    },
+    desaturate = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = L["Desaturate"],
+      order = 40.8,
+      hidden = function() return not data.icon end,
+    },
+    icon_color = {
+      type = "color",
+      width = WeakAuras.normalWidth,
+      name = L["Color"],
+      hasAlpha = true,
+      order = 40.9,
+      hidden = function() return not data.icon end,
+    },
+    zoom = {
+      type = "range",
+      width = WeakAuras.normalWidth,
+      name = L["Zoom"],
+      order = 40.91,
+      min = 0,
+      max = 1,
+      bigStep = 0.01,
+      isPercent = true,
+      hidden = function() return not data.icon end,
     },
     spark_header = {
       type = "header",
@@ -334,7 +222,7 @@ local function createOptions(id, data)
     spark = {
       type = "toggle",
       width = WeakAuras.normalWidth,
-      name = L["Spark"],
+      name = L["Show Spark"],
       order = 43
     },
     sparkTexture = {
@@ -472,206 +360,12 @@ local function createOptions(id, data)
       disabled = function() return not data.spark end,
       hidden = function() return not data.spark end,
     },
-    text_header = {
+    endHeader = {
       type = "header",
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Left Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Right Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Bottom Text"];
-        else
-          return L["Top Text"];
-        end
-      end,
-      order = 47
-    },
-    text = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Left Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Right Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Bottom Text"];
-        else
-          return L["Top Text"];
-        end
-      end,
-      order = 47.5
-    },
-    textColor = {
-      type = "color",
-      width = WeakAuras.normalWidth,
-      name = L["Text Color"],
-      hasAlpha = true,
-      order = 48,
-      disabled = function() return not data.text end,
-      hidden = function() return not data.text end,
-    },
-    textFont = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      dialogControl = "LSM30_Font",
-      name = L["Font Type"],
-      order = 49,
-      values = AceGUIWidgetLSMlists.font,
-      disabled = function() return not data.text end,
-      hidden = function() return not data.text end,
-    },
-    textSize = {
-      type = "range",
-      width = WeakAuras.normalWidth,
-      name = L["Font Size"],
-      order = 50,
-      min = 6,
-      softMax = 72,
-      step = 1,
-      disabled = function() return not data.text end,
-      hidden = function() return not data.text end,
-    },
-    textFlags = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Font Flags"],
-      order = 51,
-      values = WeakAuras.font_flags,
-      disabled = function() return not data.text end,
-      hidden = function() return not data.text end,
-    },
-    timer_header = {
-      type = "header",
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Right Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Left Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Top Text"];
-        else
-          return L["Bottom Text"];
-        end
-      end,
-      order = 52
-    },
-    timer = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = function()
-        if(data.orientation == "HORIZONTAL") then
-          return L["Right Text"];
-        elseif(data.orientation == "HORIZONTAL_INVERSE") then
-          return L["Left Text"];
-        elseif(data.orientation == "VERTICAL") then
-          return L["Top Text"];
-        else
-          return L["Bottom Text"];
-        end
-      end,
-      order = 52.5
-    },
-    timerColor = {
-      type = "color",
-      width = WeakAuras.normalWidth,
-      name = L["Text Color"],
-      hasAlpha = true,
-      order = 53,
-      disabled = function() return not data.timer end,
-      hidden = function() return not data.timer end,
-    },
-    timerFont = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      dialogControl = "LSM30_Font",
-      name = L["Font Type"],
-      order = 54,
-      values = AceGUIWidgetLSMlists.font,
-      disabled = function() return not data.timer end,
-      hidden = function() return not data.timer end,
-    },
-    timerSize = {
-      type = "range",
-      width = WeakAuras.normalWidth,
-      name = L["Font Size"],
-      order = 55,
-      min = 6,
-      softMax = 72,
-      step = 1,
-      disabled = function() return not data.timer end,
-      hidden = function() return not data.timer end,
-    },
-    timerFlags = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Font Flags"],
-      order = 56,
-      values = WeakAuras.font_flags,
-      disabled = function() return not data.timer end,
-      hidden = function() return not data.timer end,
-    },
-    stacks_header = {
-      type = "header",
-      name = L["Stacks Settings"],
-      order = 57.1
-    },
-    stacks = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Stacks"],
-      order = 57.2
-    },
-    stacksColor = {
-      type = "color",
-      width = WeakAuras.normalWidth,
-      name = L["Text Color"],
-      hasAlpha = true,
-      order = 57.3,
-      disabled = function() return not data.stacks end,
-      hidden = function() return not data.stacks end,
-    },
-    stacksFont = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      dialogControl = "LSM30_Font",
-      name = L["Font Type"],
-      order = 57.4,
-      values = AceGUIWidgetLSMlists.font,
-      disabled = function() return not data.stacks end,
-      hidden = function() return not data.stacks end,
-    },
-    stacksSize = {
-      type = "range",
-      width = WeakAuras.normalWidth,
-      name = L["Font Size"],
-      order = 57.5,
-      min = 6,
-      softMax = 72,
-      step = 1,
-      disabled = function() return not data.stacks end,
-      hidden = function() return not data.stacks end,
-    },
-    stacksFlags = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Font Flags"],
-      order = 57.6,
-      values = WeakAuras.font_flags,
-      disabled = function() return not data.stacks end,
-      hidden = function() return not data.stacks end,
+      order = 100,
+      name = "",
     },
   };
-
-  local function hideCustomTextEditor()
-    return not (
-      WeakAuras.ContainsCustomPlaceHolder(data.displayTextLeft)
-      or WeakAuras.ContainsCustomPlaceHolder(data.displayTextRight)
-      );
-  end
-
-  WeakAuras.AddCodeOption(options, data, L["Custom Function"], "customText", 10.2,  hideCustomTextEditor, {"customText"}, false);
 
   options = WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, 36.5);
 
@@ -718,15 +412,14 @@ local function createOptions(id, data)
 
   return {
     aurabar = options,
-    border = WeakAuras.BorderOptions(id, data, nil, true);
     position = WeakAuras.PositionOptions(id, data),
   };
 end
 
 -- Create preview thumbnail
-local function createThumbnail(parent)
+local function createThumbnail()
   -- Preview frame
-  local borderframe = CreateFrame("FRAME", nil, parent);
+  local borderframe = CreateFrame("FRAME", nil, UIParent);
   borderframe:SetWidth(32);
   borderframe:SetHeight(32);
 
@@ -763,6 +456,8 @@ end
 local function modifyThumbnail(parent, borderframe, data, fullModify, width, height)
   -- Localize
   local region, bar, texture, icon = borderframe.region, borderframe.bar, borderframe.texture, borderframe.icon;
+
+  borderframe:SetParent(parent)
 
   -- Defaut size
   width  = width or 26;
@@ -872,6 +567,7 @@ local function modifyThumbnail(parent, borderframe, data, fullModify, width, hei
         icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
       end
     end
+
     icon:Show();
   else
     icon:Hide();
@@ -893,7 +589,7 @@ local function createIcon()
   -- Create and configure thumbnail
   local thumbnail = createThumbnail(UIParent);
   modifyThumbnail(UIParent, thumbnail, data, nil, 32, 18);
-  thumbnail:SetIcon("Interface\\Icons\\INV_Sword_122");
+  thumbnail:SetIcon("Interface\\Icons\\INV_Sword_62");
 
   -- Return thumbnail
   return thumbnail;
@@ -924,5 +620,153 @@ local templates = {
   },
 }
 
+local anchorPoints = {
+  BOTTOMLEFT = {
+    display = { L["Bar"], L["Bottom Left"] },
+    type = "point"
+  },
+  BOTTOM = {
+    display = { L["Bar"], L["Bottom"] },
+    type = "point"
+  },
+  BOTTOMRIGHT = {
+    display = { L["Bar"], L["Bottom Right"] },
+    type = "point"
+  },
+  RIGHT = {
+    display = { L["Bar"], L["Right"] },
+    type = "point"
+  },
+  TOPRIGHT = {
+    display = { L["Bar"], L["Top Right"] },
+    type = "point"
+  },
+  TOP = {
+    display = { L["Bar"], L["Top"] },
+    type = "point"
+  },
+  TOPLEFT = {
+    display = { L["Bar"], L["Top Left"] },
+    type = "point"
+  },
+  LEFT = {
+    display = { L["Bar"], L["Left"] },
+    type = "point"
+  },
+  CENTER = {
+    display = { L["Bar"], L["Center"] },
+    type = "point"
+  },
+
+  INNER_BOTTOMLEFT = {
+    display = { L["Bar Inner"], L["Bottom Left"] },
+    type = "point"
+  },
+  INNER_BOTTOM = {
+    display = { L["Bar Inner"], L["Bottom"] },
+    type = "point"
+  },
+  INNER_BOTTOMRIGHT = {
+    display = { L["Bar Inner"], L["Bottom Right"] },
+    type = "point"
+  },
+  INNER_RIGHT = {
+    display = { L["Bar Inner"], L["Right"] },
+    type = "point"
+  },
+  INNER_TOPRIGHT = {
+    display = { L["Bar Inner"], L["Top Right"] },
+    type = "point"
+  },
+  INNER_TOP = {
+    display = { L["Bar Inner"], L["Top"] },
+    type = "point"
+  },
+  INNER_TOPLEFT = {
+    display = { L["Bar Inner"], L["Top Left"] },
+    type = "point"
+  },
+  INNER_LEFT = {
+    display = { L["Bar Inner"], L["Left"] },
+    type = "point"
+  },
+  INNER_CENTER = {
+    display = { L["Bar Inner"], L["Center"] },
+    type = "point"
+  },
+
+  ICON_BOTTOMLEFT = {
+    display = { L["Icon"], L["Bottom Left"] },
+    type = "point"
+  },
+  ICON_BOTTOM = {
+    display = { L["Icon"], L["Bottom"] },
+    type = "point"
+  },
+  ICON_BOTTOMRIGHT = {
+    display = { L["Icon"], L["Bottom Right"] },
+    type = "point"
+  },
+  ICON_RIGHT = {
+    display = { L["Icon"], L["Right"] },
+    type = "point"
+  },
+  ICON_TOPRIGHT = {
+    display = { L["Icon"], L["Top Right"] },
+    type = "point"
+  },
+  ICON_TOP = {
+    display = { L["Icon"], L["Top"] },
+    type = "point"
+  },
+  ICON_TOPLEFT = {
+    display = { L["Icon"], L["Top Left"] },
+    type = "point"
+  },
+  ICON_LEFT = {
+    display = { L["Icon"], L["Left"] },
+    type = "point"
+  },
+  ICON_CENTER = {
+    display = { L["Icon"], L["Center"] },
+    type = "point"
+  },
+
+  SPARK = {
+    display = L["Spark"],
+    type = "point"
+  },
+  ALL = {
+    display = L["Whole Area"],
+    type = "area"
+  },
+}
+
+local function GetAnchors(data)
+  return anchorPoints;
+end
+
+local function subCreateOptions(parentData, data, index, subIndex)
+  local order = 9
+  local options = {
+    __title = L["Foreground"],
+    __order = 1,
+    __up = function()
+      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionUp, index, "aurabar_bar")) then
+        WeakAuras.ReloadOptions2(parentData.id, parentData)
+      end
+    end,
+    __down = function()
+      if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionDown, index, "aurabar_bar")) then
+        WeakAuras.ReloadOptions2(parentData.id, parentData)
+      end
+    end,
+    __nooptions = true
+  }
+  return options
+end
+
 -- Register new region type options with WeakAuras
-WeakAuras.RegisterRegionOptions("aurabar", createOptions, createIcon, L["Progress Bar"], createThumbnail, modifyThumbnail, L["Shows a progress bar with name, timer, and icon"], templates);
+WeakAuras.RegisterRegionOptions("aurabar", createOptions, createIcon, L["Progress Bar"], createThumbnail, modifyThumbnail, L["Shows a progress bar with name, timer, and icon"], templates, GetAnchors);
+
+WeakAuras.RegisterSubRegionOptions("aurabar_bar", subCreateOptions, L["Foreground"]);

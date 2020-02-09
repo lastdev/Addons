@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 if not(GetLocale() == "deDE") then
   return
 end
@@ -49,7 +51,6 @@ local L = WeakAuras.L
 	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
 	L["Bloodlust/Heroism"] = "Kampfrausch/Heldentum"
 	L["buff"] = "buff"
-	L["Buff"] = "Buff"
 	L["Buffs"] = "Buffs"
 	L["Cancel"] = "Abbrechen"
 	L["Cast"] = "Zauberwirken"
@@ -63,9 +64,13 @@ local L = WeakAuras.L
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "Abklingzeit"
 	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
+	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
+	--[[Translation missing --]]
+	L["debuff"] = "debuff"
 	L["Debuffs"] = "Debuffs"
 	L["Enchants"] = "Verzauberungen"
 	L["General"] = "Allgemein"
@@ -168,9 +173,13 @@ local L = WeakAuras.L
 	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	--[[Translation missing --]]
+	L["slow debuff"] = "slow debuff"
 	L["Specific Azerite Traits"] = "Spezifische Azerit Traits"
 	--[[Translation missing --]]
-	L["Stagger"] = "Stagger"
+	L["Stance"] = "Stance"
+	--[[Translation missing --]]
+	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

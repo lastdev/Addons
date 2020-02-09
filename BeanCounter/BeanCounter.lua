@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 8.1.6236 (SwimmingSeadragon)
-	Revision: $Id: BeanCounter.lua 6236 2019-03-04 00:20:18Z none $
+	Version: 8.2.6505 (SwimmingSeadragon)
+	Revision: $Id: BeanCounter.lua 6505 2019-11-02 14:38:37Z none $
 
 	BeanCounterCore - BeanCounter: Auction House History
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounter.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounter.lua $","$Rev: 6505 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --AucAdvanced.Modules["Util"]["BeanCounter"]
 
@@ -47,15 +47,15 @@ local private = {
 	--BeanCounterCore
 	playerName = UnitName("player"),
 	realmName = GetRealmName(),
-	AucModule, --registers as an auctioneer module if present and stores module local functions
+	--AucModule, --registers as an auctioneer module if present and stores module local functions
 	faction = nil,
 	version = 3.03,
 	wealth = 0, --This characters current net worth. This will be appended to each transaction.
 	compressed = false,
 
-	playerData, --Alias for BeanCounterDB[private.realmName][private.playerName]
-	serverData, --Alias for BeanCounterDB[private.realmName]
-	playerSettings, --Alias for  BeanCounterDBSettings[private.realmName][private.playerName]
+	--playerData, --Alias for BeanCounterDB[private.realmName][private.playerName]
+	--serverData, --Alias for BeanCounterDB[private.realmName]
+	--playerSettings, --Alias for  BeanCounterDBSettings[private.realmName][private.playerName]
 	DBSumEntry = 0,
 	DBSumItems = 0,
 	--BeanCounter Bids/posts
@@ -481,16 +481,6 @@ function private.onEventDisenchant(frame, event, arg, spell, _, _, spellID)
 end
 
 --[[ Utility Functions]]--
---External Search Stub, allows other addons searches to search to display in BC or get results of a BC search
---Can be item Name or link or itemID
---If itemID or link search will be much faster than a plain text lookup
-function lib.externalSearch(name, settings, queryReturn, count)
-	lib.ShowDeprecationAlert("Depreciated API Call Used", "")
-	--print("|CFFFF3300 WARNING: |CFFFFFFFF A module just called a depreciated  Beancounter API")
-	--print(" |CFFFF3300 BeanCounter.externalSearch() ")
-	--print("Please update the module to use the function |CFFFFFF00 BeanCounter.API.search()  ")
-	return lib.API.search(name, settings, queryReturn, count) or {}
-end
 
 --will return any length arguments into a ; seperated string
 local tmp={}

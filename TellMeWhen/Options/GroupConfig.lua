@@ -42,6 +42,7 @@ TabGroup:SetChildrenEnabled(false)
 local MainTab = IE:RegisterTab("GROUP", "GROUPMAIN", "GroupMain", 1)
 MainTab:SetTexts(L["GROUP"], L["GROUPSETTINGS_DESC"])
 
+IE:RegisterTab("GROUP", "HELP", "Help", 101):SetTexts(L["HELP"])
 
 local HistorySet = TMW.C.HistorySet:New("GROUP")
 HistorySet:AddBlocker({Icons = true})
@@ -389,7 +390,7 @@ function IE:LoadGroup(isRefresh, group)
 end
 
 -- TellMeWhen_NoGroupsWarning
-TMW:RegisterCallback("TMW_GROUP_SETUP_POST", function()
+local noGroupsChecker = function()
 	-- GLOBALS: TellMeWhen_NoGroupsWarning
 	if not TMW.Locked then
 		for group in TMW:InGroups() do
@@ -403,7 +404,11 @@ TMW:RegisterCallback("TMW_GROUP_SETUP_POST", function()
 	else
 		TellMeWhen_NoGroupsWarning:Hide()
 	end
-end)
+end
+TMW:RegisterCallback("TMW_GROUP_SETUP_POST", noGroupsChecker)
+-- Need to also register TMW_GLOBAL_UPDATE_POST in case there are actually zero groups
+-- in the user's profile, in which case TMW_GROUP_SETUP_POST will never fire at all.
+TMW:RegisterCallback("TMW_GLOBAL_UPDATE_POST", noGroupsChecker)
 
 
 ---------- Add/Delete ----------

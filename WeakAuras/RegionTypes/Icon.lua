@@ -1,7 +1,16 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local SharedMedia = LibStub("LibSharedMedia-3.0");
-local MSQ = LibStub("Masque", true);
-local LCG = LibStub("LibCustomGlow-1.0")
 local L = WeakAuras.L
+local MSQ, MSQ_Version = LibStub("Masque", true);
+if MSQ then
+  if MSQ_Version <= 80100 then
+    MSQ = nil
+    print(print(WeakAuras.printPrefix .. L["Please upgrade your Masque version"]))
+  else
+    MSQ:AddType("WA_Aura", {"Icon", "Cooldown"})
+  end
+end
 
 -- WoW API
 local _G = _G
@@ -14,39 +23,19 @@ local default = {
   width = 64,
   height = 64,
   color = {1, 1, 1, 1},
-  text1Enabled = true,
-  text1Color = {1, 1, 1, 1},
-  text1 = "%s",
-  text1Point = "BOTTOMRIGHT",
-  text1Containment = "INSIDE",
-  text2Enabled = false,
-  text2Color = {1, 1, 1, 1},
-  text2 = "%p",
-  text2Point = "CENTER",
-  text2Containment = "INSIDE",
   selfPoint = "CENTER",
   anchorPoint = "CENTER",
   anchorFrameType = "SCREEN",
   xOffset = 0,
   yOffset = 0,
-  text1Font = "Friz Quadrata TT",
-  text1FontFlags = "OUTLINE",
-  text1FontSize = 12,
-  text2Font = "Friz Quadrata TT",
-  text2FontFlags = "OUTLINE",
-  text2FontSize = 24,
-  stickyDuration = false,
   zoom = 0,
   keepAspectRatio = false,
   frameStrata = 1,
-  customTextUpdate = "update",
-  glow = false,
-  useglowColor = false,
-  glowColor = {1, 1, 1, 1},
-  glowType = "buttonOverlay",
-  cooldownTextEnabled = true,
+
+  cooldownTextDisabled = false,
   cooldownSwipe = true,
   cooldownEdge = false,
+  subRegions = {}
 };
 
 WeakAuras.regionPrototype.AddAlphaToDefault(default);
@@ -77,55 +66,6 @@ local properties = {
     bigStep = 1,
     default = 32
   },
-  glow = {
-    display = WeakAuras.newFeatureString .. L["Set Glow Visibility"],
-    setter = "SetGlow",
-    type = "bool"
-  },
-  glowType = {
-    display = WeakAuras.newFeatureString .. L["Glow Type"],
-    setter = "SetGlowType",
-    type = "list",
-    values = WeakAuras.glow_types,
-  },
-  useGlowColor = {
-    display = WeakAuras.newFeatureString .. L["Use Custom Glow Color"],
-    setter = "SetUseGlowColor",
-    type = "bool"
-  },
-  glowColor = {
-    display = WeakAuras.newFeatureString .. L["Glow Color"],
-    setter = "SetGlowColor",
-    type = "color"
-  },
-  text1Color = {
-    display = L["1. Text Color"],
-    setter = "SetText1Color",
-    type = "color"
-  },
-  text1FontSize = {
-    display = L["1. Text Size"],
-    setter = "SetText1Height",
-    type = "number",
-    min = 6,
-    softMax = 72,
-    step = 1,
-    default = 12
-  },
-  text2Color = {
-    display = L["2. Text Color"],
-    setter = "SetText2Color",
-    type = "color"
-  },
-  text2FontSize = {
-    display = L["2. Text Size"],
-    setter = "SetText2Height",
-    type = "number",
-    min = 6,
-    softMax = 72,
-    step = 1,
-    default = 12
-  },
   color = {
     display = L["Color"],
     setter = "Color",
@@ -137,12 +77,12 @@ local properties = {
     type = "bool"
   },
   cooldownSwipe = {
-    display = WeakAuras.newFeatureString .. L["Cooldown Swipe"],
+    display = { L["Cooldown"], L["Swipe"], true},
     setter = "SetCooldownSwipe",
     type = "bool",
   },
   cooldownEdge = {
-    display = WeakAuras.newFeatureString .. L["Cooldown Edge"],
+    display = { L["Cooldown"], L["Edge"]},
     setter = "SetCooldownEdge",
     type = "bool",
   },
@@ -159,11 +99,6 @@ local properties = {
 };
 
 WeakAuras.regionPrototype.AddProperties(properties, default);
-
-local function GetProperties(data)
-  return properties;
-end
-
 
 local function GetTexCoord(region, texWidth, aspectRatio)
   region.currentCoord = region.currentCoord or {}
@@ -191,6 +126,45 @@ local function GetTexCoord(region, texWidth, aspectRatio)
   return unpack(region.currentCoord)
 end
 
+local function AnchorSubRegion(self, subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
+  if anchorType == "area" then
+    WeakAuras.regionPrototype.AnchorSubRegion(selfPoint == "region" and self or self.icon, subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
+  else
+    subRegion:ClearAllPoints()
+    anchorPoint = anchorPoint or "CENTER"
+    local anchorRegion = self.icon
+    if anchorPoint:sub(1, 6) == "INNER_" then
+      if not self.inner then
+        self.inner = CreateFrame("FRAME", nil, self)
+        self.inner:SetPoint("CENTER")
+        self.UpdateInnerOuterSize()
+      end
+      anchorRegion = self.inner
+      anchorPoint = anchorPoint:sub(7)
+    elseif anchorPoint:sub(1, 6) == "OUTER_" then
+      if not self.outer then
+        self.outer = CreateFrame("FRAME", nil, self)
+        self.outer:SetPoint("CENTER")
+        self.UpdateInnerOuterSize()
+      end
+      anchorRegion = self.outer
+      anchorPoint = anchorPoint:sub(7)
+    end
+    anchorXOffset = anchorXOffset or 0
+    anchorYOffset = anchorYOffset or 0
+
+    if not WeakAuras.point_types[selfPoint] then
+      selfPoint = "CENTER"
+    end
+
+    if not WeakAuras.point_types[anchorPoint] then
+      anchorPoint = "CENTER"
+    end
+
+    subRegion:SetPoint(selfPoint, anchorRegion, anchorPoint, anchorXOffset, anchorYOffset)
+  end
+end
+
 local function create(parent, data)
   local font = "GameFontHighlight";
 
@@ -198,6 +172,29 @@ local function create(parent, data)
   region:SetMovable(true);
   region:SetResizable(true);
   region:SetMinResize(1, 1);
+
+  function region.UpdateInnerOuterSize()
+    local width = region.width * math.abs(region.scalex);
+    local height = region.height * math.abs(region.scaley);
+
+    local iconWidth
+    local iconHeight
+
+    if MSQ then
+      iconWidth = region.button:GetWidth()
+      iconHeight = region.button:GetHeight()
+    else
+      iconWidth = region:GetWidth()
+      iconHeight = region:GetHeight()
+    end
+
+    if region.inner then
+      region.inner:SetSize(iconWidth - 0.2 * width, iconHeight - 0.2 * height)
+    end
+    if region.outer then
+      region.outer:SetSize(iconWidth + 0.1 * width, iconHeight + 0.1 * height)
+    end
+  end
 
   local button
   if MSQ then
@@ -214,8 +211,10 @@ local function create(parent, data)
   icon:SetTexelSnappingBias(0)
   if MSQ then
     icon:SetAllPoints(button);
+    button:SetScript("OnSizeChanged", region.UpdateInnerOuterSize);
   else
     icon:SetAllPoints(region);
+    region:SetScript("OnSizeChanged", region.UpdateInnerOuterSize);
   end
   region.icon = icon;
   icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
@@ -238,31 +237,14 @@ local function create(parent, data)
   region.cooldown = cooldown;
   cooldown:SetAllPoints(icon);
 
-  local stacksFrame = CreateFrame("frame", nil, region);
-  local stacks = stacksFrame:CreateFontString(nil, "OVERLAY");
-  local cooldownFrameLevel = cooldown:GetFrameLevel() + 1
-  stacksFrame:SetFrameLevel(cooldownFrameLevel)
-  region.stacks = stacks;
-
-  local text2Frame = CreateFrame("frame", nil, region);
-  local text2 = text2Frame:CreateFontString(nil, "OVERLAY");
-  text2Frame:SetFrameLevel(cooldownFrameLevel)
-  region.text2 = text2;
-
   region.values = {};
-  region.duration = 0;
-  region.expirationTime = math.huge;
+
 
   local SetFrameLevel = region.SetFrameLevel;
 
   function region.SetFrameLevel(self, level)
     SetFrameLevel(region, level);
     cooldown:SetFrameLevel(level);
-    stacksFrame:SetFrameLevel(level + 1);
-    text2Frame:SetFrameLevel(level + 1);
-    if (self.__WAGlowFrame) then
-      self.__WAGlowFrame:SetFrameLevel(level + 1);
-    end
     if button then
       button:SetFrameLevel(level);
     end
@@ -270,239 +252,31 @@ local function create(parent, data)
 
   WeakAuras.regionPrototype.create(region);
 
+  region.AnchorSubRegion = AnchorSubRegion
+
   return region;
 end
 
-local function configureText(fontString, icon, enabled, point, width, height, containment, font, fontSize, fontFlags, textColor)
-  if (enabled) then
-    fontString:Show();
-  else
-    fontString:Hide();
-    return;
-  end
-
-  local sxo, syo, h, v = 0, 0, "CENTER", "MIDDLE";
-  if(point:find("LEFT")) then
-    sxo = width / 10;
-    h = containment == "INSIDE" and "LEFT" or "RIGHT";
-  elseif(point:find("RIGHT")) then
-    sxo = width / -10;
-    h = containment == "INSIDE" and "RIGHT" or "LEFT";
-  end
-  if(point:find("BOTTOM")) then
-    syo = height / 10;
-    v = containment == "INSIDE" and "BOTTOM" or "TOP";
-  elseif(point:find("TOP")) then
-    syo = height / -10;
-    v = containment == "INSIDE" and "TOP" or "BOTTOM";
-  end
-  fontString:ClearAllPoints();
-  if(containment == "INSIDE") then
-    fontString:SetPoint(point, icon, point, sxo, syo);
-  else
-    local selfPoint = WeakAuras.inverse_point_types[point];
-    fontString:SetPoint(selfPoint, icon, point, -0.5 * sxo, -0.5 * syo);
-  end
-
-  local fontPath = SharedMedia:Fetch("font", font);
-  fontString:SetFont(fontPath, fontSize, fontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or fontFlags);
-
-  fontString:SetTextHeight(fontSize);
-  fontString:SetTextColor(textColor[1], textColor[2], textColor[3], textColor[4]);
-
-  fontString:SetJustifyH(h);
-  fontString:SetJustifyV(v);
-end
-
 local function modify(parent, region, data)
+  -- Legacy members stacks and text2
+  region.stacks = nil
+  region.text2 = nil
+
   WeakAuras.regionPrototype.modify(parent, region, data);
-  local button, icon, cooldown, stacks, text2 = region.button, region.icon, region.cooldown, region.stacks, region.text2;
+
+  local button, icon, cooldown = region.button, region.icon, region.cooldown;
 
   region.useAuto = data.auto and WeakAuras.CanHaveAuto(data);
 
-  region.stickyDuration = data.stickyDuration;
-  region.progressPrecision = data.progressPrecision;
-  region.totalPrecision = data.totalPrecision;
-
   if MSQ then
     local masqueId = data.id:lower():gsub(" ", "_");
-    -- TODO -- This should check if the masque id is different instead of always keeping the same masqueId
-    -- But currently masque behaves strangely when a button was already part of a group and the new group is disabled
-    -- In that case the button gets a Blizzard skin
-    if not region.masqueId then
+    if region.masqueId ~= masqueId then
       region.masqueId = masqueId
-      region.MSQGroup = MSQ:Group("WeakAuras", region.masqueId);
-      region.MSQGroup:AddButton(button, {Icon = icon, Cooldown = cooldown});
-
+      region.MSQGroup = MSQ:Group("WeakAuras", region.masqueId, data.uid);
+      region.MSQGroup:SetName(data.id)
+      region.MSQGroup:AddButton(button, {Icon = icon, Cooldown = cooldown}, "WA_Aura", true);
       button.data = data
     end
-  end
-
-  region:SetWidth(data.width);
-  region:SetHeight(data.height);
-  if MSQ then
-    button:SetWidth(data.width);
-    button:SetHeight(data.height);
-    button:SetAllPoints();
-  end
-  region.width = data.width;
-  region.height = data.height;
-  region.scalex = 1;
-  region.scaley = 1;
-  region.keepAspectRatio = data.keepAspectRatio;
-  region.zoom = data.zoom;
-  icon:SetAllPoints();
-
-  configureText(stacks, icon, data.text1Enabled, data.text1Point, data.width, data.height, data.text1Containment, data.text1Font, data.text1FontSize, data.text1FontFlags, data.text1Color);
-  configureText(text2, icon, data.text2Enabled, data.text2Point, data.width, data.height, data.text2Containment, data.text2Font, data.text2FontSize, data.text2FontFlags, data.text2Color);
-
-  local texWidth = 1 - region.zoom * 0.5;
-  local aspectRatio = region.keepAspectRatio and region.width / region.height or 1;
-
-  icon:SetTexCoord(GetTexCoord(region, texWidth, aspectRatio))
-  icon:SetDesaturated(data.desaturate);
-
-  local tooltipType = WeakAuras.CanHaveTooltip(data);
-  if(tooltipType and data.useTooltip) then
-    region:EnableMouse(true);
-    region:SetScript("OnEnter", function()
-      WeakAuras.ShowMouseoverTooltip(region, region);
-    end);
-    region:SetScript("OnLeave", WeakAuras.HideTooltip);
-  else
-    region:EnableMouse(false);
-  end
-
-  cooldown:SetReverse(not data.inverse);
-  cooldown:SetHideCountdownNumbers(not data.cooldownTextEnabled or IsAddOnLoaded("OmniCC") or false);
-
-  function region:Color(r, g, b, a)
-    region.color_r = r;
-    region.color_g = g;
-    region.color_b = b;
-    region.color_a = a;
-    if (r or g or b) then
-      a = a or 1;
-    end
-    icon:SetVertexColor(region.color_anim_r or r, region.color_anim_g or g, region.color_anim_b or b, region.color_anim_a or a);
-    if region.button then
-      region.button:SetAlpha(region.color_anim_a or a or 1);
-    end
-  end
-
-  function region:ColorAnim(r, g, b, a)
-    region.color_anim_r = r;
-    region.color_anim_g = g;
-    region.color_anim_b = b;
-    region.color_anim_a = a;
-    if (r or g or b) then
-      a = a or 1;
-    end
-    icon:SetVertexColor(r or region.color_r, g or region.color_g, b or region.color_b, a or region.color_a);
-    if MSQ then
-      region.button:SetAlpha(a or region.color_a or 1);
-    end
-  end
-
-  function region:GetColor()
-    return region.color_r or data.color[1], region.color_g or data.color[2],
-      region.color_b or data.color[3], region.color_a or data.color[4];
-  end
-
-  region:Color(data.color[1], data.color[2], data.color[3], data.color[4]);
-
-  local UpdateText;
-  if (data.text1Enabled and data.text1:find('%%')) or (data.text2Enabled and data.text2:find('%%')) then
-    UpdateText = function()
-      if (data.text1Enabled) then
-        local textStr = data.text1 or "";
-        textStr = WeakAuras.ReplacePlaceHolders(textStr, region);
-
-        if(stacks.text ~= textStr) then
-          if stacks:GetFont() then
-            WeakAuras.regionPrototype.SetTextOnText(stacks, textStr);
-            stacks.text = textStr;
-          end
-        end
-      end
-
-      if (data.text2Enabled) then
-        local textStr = data.text2 or "";
-        textStr = WeakAuras.ReplacePlaceHolders(textStr, region);
-
-        if(text2.text ~= textStr) then
-          if text2:GetFont() then
-            WeakAuras.regionPrototype.SetTextOnText(text2, textStr);
-            text2.text = textStr;
-          end
-        end
-      end
-    end
-  else
-    if (data.text1Enabled) then
-      WeakAuras.regionPrototype.SetTextOnText(stacks, data.text1);
-      stacks.text = data.text1;
-    end
-
-    if (data.text2Enabled) then
-      WeakAuras.regionPrototype.SetTextOnText(text2, data.text2);
-      text2.text = data.text2;
-    end
-
-    UpdateText = function() end
-  end
-
-  local customTextFunc = nil
-  local data1Custom = data.text1Enabled and WeakAuras.ContainsCustomPlaceHolder(data.text1)
-  local data2Custom = data.text2Enabled and WeakAuras.ContainsCustomPlaceHolder(data.text2)
-  if (data.customText and (data1Custom or data2Custom)) then
-    customTextFunc = WeakAuras.LoadFunction("return "..data.customText, region.id)
-  end
-  if (customTextFunc) then
-    local values = region.values;
-    region.UpdateCustomText = function()
-      WeakAuras.ActivateAuraEnvironment(region.id, region.cloneId, region.state);
-      values.custom = {select(2, xpcall(customTextFunc, geterrorhandler(), region.expirationTime, region.duration,
-        values.progress, values.duration, values.name, values.icon, values.stacks))}
-      WeakAuras.ActivateAuraEnvironment(nil);
-      UpdateText();
-    end
-    if(data.customTextUpdate == "update") then
-      WeakAuras.RegisterCustomTextUpdates(region);
-    else
-      WeakAuras.UnregisterCustomTextUpdates(region);
-    end
-  else
-    region.values.custom = nil;
-    region.UpdateCustomText = nil;
-    WeakAuras.UnregisterCustomTextUpdates(region);
-  end
-
-  function region:SetStacks(count)
-    if(count and count > 0) then
-      region.values.stacks = count;
-    else
-      region.values.stacks = " ";
-    end
-    UpdateText();
-  end
-
-  function region:SetIcon(path)
-    local iconPath = (
-      region.useAuto
-      and path ~= ""
-      and path
-      or data.displayIcon
-      or "Interface\\Icons\\INV_Misc_QuestionMark"
-      );
-    icon:SetTexture(iconPath);
-    region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
-    UpdateText();
-  end
-
-  function region:SetName(name)
-    region.values.name = name or data.id;
-    UpdateText();
   end
 
   function region:UpdateSize()
@@ -515,12 +289,7 @@ local function modify(parent, region, data)
       button:SetHeight(height);
       button:SetAllPoints();
     end
-    icon:SetAllPoints();
-
     region:UpdateTexCoords();
-    if region.glow then
-      region:SetGlow(true);
-    end
   end
 
   function region:UpdateTexCoords()
@@ -559,6 +328,81 @@ local function modify(parent, region, data)
     end
   end
 
+  region.width = data.width;
+  region.height = data.height;
+  region.scalex = 1;
+  region.scaley = 1;
+  region.keepAspectRatio = data.keepAspectRatio;
+  region.zoom = data.zoom;
+  region:UpdateSize()
+
+  icon:SetDesaturated(data.desaturate);
+
+  local tooltipType = WeakAuras.CanHaveTooltip(data);
+  if(tooltipType and data.useTooltip) then
+    if not region.tooltipFrame then
+      region.tooltipFrame = CreateFrame("frame", nil, region);
+      region.tooltipFrame:SetAllPoints(region);
+      region.tooltipFrame:SetScript("OnEnter", function()
+        WeakAuras.ShowMouseoverTooltip(region, region);
+      end);
+      region.tooltipFrame:SetScript("OnLeave", WeakAuras.HideTooltip);
+    end
+    region.tooltipFrame:EnableMouse(true);
+  elseif region.tooltipFrame then
+    region.tooltipFrame:EnableMouse(false);
+  end
+
+  cooldown:SetReverse(not data.inverse);
+  cooldown:SetHideCountdownNumbers(data.cooldownTextDisabled);
+  cooldown.noCooldownCount = data.cooldownTextDisabled;
+
+  function region:Color(r, g, b, a)
+    region.color_r = r;
+    region.color_g = g;
+    region.color_b = b;
+    region.color_a = a;
+    if (r or g or b) then
+      a = a or 1;
+    end
+    icon:SetVertexColor(region.color_anim_r or r, region.color_anim_g or g, region.color_anim_b or b, region.color_anim_a or a);
+    if region.button then
+      region.button:SetAlpha(region.color_anim_a or a or 1);
+    end
+  end
+
+  function region:ColorAnim(r, g, b, a)
+    region.color_anim_r = r;
+    region.color_anim_g = g;
+    region.color_anim_b = b;
+    region.color_anim_a = a;
+    if (r or g or b) then
+      a = a or 1;
+    end
+    icon:SetVertexColor(r or region.color_r, g or region.color_g, b or region.color_b, a or region.color_a);
+    if MSQ then
+      region.button:SetAlpha(a or region.color_a or 1);
+    end
+  end
+
+  function region:GetColor()
+    return region.color_r or data.color[1], region.color_g or data.color[2],
+      region.color_b or data.color[3], region.color_a or data.color[4];
+  end
+
+  region:Color(data.color[1], data.color[2], data.color[3], data.color[4]);
+
+  function region:SetIcon(path)
+    local iconPath = (
+      region.useAuto
+      and path ~= ""
+      and path
+      or data.displayIcon
+      or "Interface\\Icons\\INV_Misc_QuestionMark"
+      );
+    icon:SetTexture(iconPath);
+  end
+
   function region:Scale(scalex, scaley)
     if region.scalex == scalex and region.scaley == scaley then
       return
@@ -580,26 +424,6 @@ local function modify(parent, region, data)
   function region:SetRegionHeight(height)
     region.height = height
     region:UpdateSize();
-  end
-
-  function region:SetText1Color(r, g, b, a)
-    region.stacks:SetTextColor(r, g, b, a);
-  end
-
-  function region:SetText2Color(r, g, b, a)
-    region.text2:SetTextColor(r, g, b, a);
-  end
-
-  function region:SetText1Height(height)
-    local fontPath = SharedMedia:Fetch("font", data.text1Font);
-    region.stacks:SetFont(fontPath, height, data.text1FontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or data.text1FontFlags);
-    region.stacks:SetTextHeight(height);
-  end
-
-  function region:SetText2Height(height)
-    local fontPath = SharedMedia:Fetch("font", data.text2Font);
-    region.text2:SetFont(fontPath, height, data.text2FontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or data.text2FontFlags);
-    region.text2:SetTextHeight(height);
   end
 
   function region:SetInverse(inverse)
@@ -629,83 +453,11 @@ local function modify(parent, region, data)
     region:UpdateTexCoords();
   end
 
-  function region:SetGlowType(newType)
-    local isGlowing = region.glow
-    if isGlowing then
-      region:SetGlow(false)
-    end
-    if newType == "buttonOverlay" then
-      region.glowStart = LCG.ButtonGlow_Start
-      region.glowStop = LCG.ButtonGlow_Stop
-    elseif newType == "ACShine" then
-      region.glowStart = LCG.AutoCastGlow_Start
-      region.glowStop = LCG.AutoCastGlow_Stop
-    elseif newType == "Pixel" then
-      region.glowStart = LCG.PixelGlow_Start
-      region.glowStop = LCG.PixelGlow_Stop
-    end
-    region.glowType = newType
-    if isGlowing then
-      region:SetGlow(true)
-    end
-  end
-
-  function region:SetUseGlowColor(useGlowColor)
-    region.useGlowColor = useGlowColor
-    if region.glow then
-      region:SetGlow(true)
-    end
-  end
-
-  function region:SetGlowColor(r, g, b, a)
-    region.glowColor = {r, g, b, a}
-    if region.glow then
-      region:SetGlow(true)
-    end
-  end
-
-  function region:SetGlow(showGlow)
-    region.glow = showGlow
-    local color
-    if region.useGlowColor then
-      color = region.glowColor
-    end
-    if MSQ then
-      if (showGlow) then
-        region.glowStart(region.button, color);
-      else
-        region.glowStop(region.button);
-      end
-    elseif (showGlow) then
-      if (not region.__WAGlowFrame) then
-        region.__WAGlowFrame = CreateFrame("Frame", nil, region);
-        region.__WAGlowFrame:SetAllPoints();
-        region.__WAGlowFrame:SetSize(region.width, region.height);
-      end
-      region.glowStart(region.__WAGlowFrame, color);
-    else
-      if (region.__WAGlowFrame) then
-        region.glowStop(region.__WAGlowFrame);
-      end
-    end
-  end
-
-  function region:PreShowGlow()
-    if region.glow then
-      region:SetGlow(false)
-      region:SetGlow(true)
-    end
-  end
-
-  region.useGlowColor = data.useGlowColor
-  region.glowColor = data.glowColor
-  region:SetGlowType(data.glowType)
-  region:SetGlow(data.glow)
-
   if(data.cooldown) then
     function region:SetValue(value, total)
+      cooldown.duration = 0
+      cooldown.expirationTime = math.huge
       cooldown:Hide();
-      UpdateText();
     end
 
     function region:SetTime(duration, expirationTime)
@@ -715,38 +467,78 @@ local function modify(parent, region, data)
         cooldown.duration = duration;
         cooldown:SetCooldown(expirationTime - duration, duration);
       else
+        cooldown.expirationTime = expirationTime;
+        cooldown.duration = duration;
         cooldown:Hide();
       end
-      UpdateText();
-    end
-
-    function region:TimerTick()
-      UpdateText();
     end
 
     function region:PreShow()
-      region:PreShowGlow()
-      if (region.duration > 0.01) then
+      if (cooldown.duration and cooldown.duration > 0.01) then
         cooldown:Show();
-        cooldown:SetCooldown(region.expirationTime - region.duration, region.duration);
+        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration);
       end
+    end
+
+    function region:Update()
+      local state = region.state
+      if state.progressType == "timed" then
+        local expirationTime = state.expirationTime and state.expirationTime > 0 and state.expirationTime or math.huge;
+        local duration = state.duration or 0
+        if region.adjustedMinRelPercent then
+          region.adjustedMinRel = region.adjustedMinRelPercent * duration
+        end
+        local adjustMin = region.adjustedMin or region.adjustedMinRel or 0;
+
+        local max
+        if duration == 0 then
+          max = 0
+        elseif region.adjustedMax then
+          max = region.adjustedMax
+        elseif region.adjustedMaxRelPercent then
+          region.adjustedMaxRel = region.adjustedMaxRelPercent * duration
+          max = region.adjustedMaxRel
+        else
+          max = duration
+        end
+
+        region:SetTime(max - adjustMin, expirationTime - adjustMin, state.inverse);
+      elseif state.progressType == "static" then
+        local value = state.value or 0;
+        local total = state.total or 0;
+        if region.adjustedMinRelPercent then
+          region.adjustedMinRel = region.adjustedMinRelPercent * total
+        end
+        local adjustMin = region.adjustedMin or region.adjustedMinRel or 0;
+        local max = region.adjustedMax or region.adjustedMaxRel or total;
+        region:SetValue(value - adjustMin, max - adjustMin);
+      else
+        region:SetTime(0, math.huge)
+      end
+
+      region:SetIcon(state.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     end
   else
     cooldown:Hide();
-    function region:SetValue(value, total)
-      UpdateText();
-    end
+    region.SetValue = nil
+    region.SetTime = nil
 
-    function region:SetTime(duration, expirationTime)
-      UpdateText();
+    function region:Update()
+      local state = region.state
+      region:SetIcon(state.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     end
-
-    function region:TimerTick()
-      UpdateText();
-    end
-
-    region.PreShow = region.PreShowGlow
   end
+
+  -- Backwards compability function
+  function region:SetGlow(glow)
+    for index, subRegion in ipairs(self.subRegions) do
+      if subRegion.type == "subglow" then
+        subRegion:SetVisible(glow)
+      end
+    end
+  end
+
+  WeakAuras.regionPrototype.modifyFinish(parent, region, data);
 end
 
-WeakAuras.RegisterRegionType("icon", create, modify, default, GetProperties);
+WeakAuras.RegisterRegionType("icon", create, modify, default, properties);

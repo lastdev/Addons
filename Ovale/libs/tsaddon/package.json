@@ -1,6 +1,6 @@
 {
   "name": "@wowts/tsaddon",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,8 @@
     "@wowts/table": "^1.0.0"
   },
   "devDependencies": {
-    "typescript": "^2.5.3",
-    "@wowts/tstolua": "^1.0.6"
+    "typescript": "^3.5.3",
+    "@wowts/tstolua": "^1.6.1"
   },
   "repository": {
     "type": "git",

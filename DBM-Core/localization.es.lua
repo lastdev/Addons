@@ -20,7 +20,6 @@ DBM_COPY_URL_DIALOG					= "Copiar vínculo"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "No se puede usar el radar de distancia en estancias. Se procederá a usar el marco de distancia por texto."
 DBM_CORE_NO_ARROW					= "No se puede usar la flecha en estancias."
-DBM_CORE_ARROW_SUMMONED				= "Flecha activada. SiArrow has been activated. If you did not do this manually, you have a 3rd party addon configured to activated it for you"
 DBM_CORE_NO_HUD						= "No se puede usar el indicador en pantalla en estancias."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM ha desactivado el marco de distancia dinámico para este combate debido a la falta de información sobre las diferencias según el número de jugadores."
@@ -101,6 +100,7 @@ DBM_CORE_NOTESHAREERRORALREADYOPEN	= "No se puede abrir notas compartidas con el
 DBM_CORE_ALLMOD_DEFAULT_LOADED		= "Se han cargado las opciones por defecto de todos los módulos de esta estancia."
 DBM_CORE_ALLMOD_STATS_RESETED		= "Se han restaurado todas las estadísticas de este módulo."
 DBM_CORE_MOD_DEFAULT_LOADED			= "Se han cargado las opciones por defecto de este encuentro."
+DBM_CORE_SOUNDKIT_MIGRATION			= "Uno o varios de tus sonidos de avisos se han restaurado a la opción por defecto debido a incompatibilidades con el tipo de archivo o a una ruta incorrecta. DBM solo acepta sonidos externos que estén la carpeta de addons."
 
 DBM_CORE_WORLDBOSS_ENGAGED			= "Es posible que el encuentro de %s se haya iniciado en tu reino a %s de su salud máxima. (Enviado por %s.)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "Es posible que %s haya sido derrotado en tu reino. (Enviado por %s.)"
@@ -165,7 +165,7 @@ DBM_CORE_VOICE_DISABLED				= "Tienes al menos un paquete de voces de DBM instala
 DBM_CORE_VOICE_COUNT_MISSING		= "La voz de cuenta atrás %d está asignada a un paquete de voces que no se ha podido encontrar. Se ha restaurado a la configuración por defecto."
 DBM_BIG_WIGS						= "BigWigs"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "Tu versión de Deadly Boss Mods está desfasada.\nPuedes descargar la versión %s (r%d) a través de Curse/Twitch, WoWInterface o deadlybossmods.com."
+DBM_CORE_UPDATEREMINDER_HEADER			= "Tu versión de Deadly Boss Mods está desfasada.\nPuedes descargar la versión %s (%s) a través de Curse/Twitch, WoWInterface o deadlybossmods.com."
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Tu versión alfa de Deadly Boss Mods está desfasada.\nEstás por lo menos %d versiones por detrás. Se recomienda a los usuarios que usen siempre la última versión alfa. De lo contrario, sería más recomendable usar la última versión oficial. Las versiones alfa tienen una comprobación de versión mucho más estricta porque son versiones de desarrollo de DBM."
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " para copiar el enlace de descarga en tu portapapeles."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " para copiar el enlace en tu portapapeles."
@@ -175,11 +175,14 @@ DBM_CORE_UPDATEREMINDER_HOTFIX_ALPHA	= "Tu versión de DBM actual tiene errores 
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "AVISO: Se ha desactivado Deadly Boss Mods porque tu versión está demasiado desfasada. Como se trata de un parche de contenido importante, y con tal de prevenir conflictos con las versiones de otros jugadores, no se podrá volver a activar DBM hasta que lo actualices."
 DBM_CORE_UPDATEREMINDER_TESTVERSION		= "AVISO: Estás usando una versión de Deadly Boss Mods que no ha sido diseñada para esta versión del juego. Por favor, asegúrate de descargar la versión apropiada para tu cliente de juego desde www.deadlybossmods.com o Curse."
 DBM_CORE_VEM							= "AVISO: Estás ejecutando Deadly Boss Mods y Voice Encounter Mods a la vez. DBM no funciona correctamente con esta configuración, y por tanto no se ejecutará."
-DBM_CORE_3RDPROFILES					= "AVISO: DBM-Profiles no es compatible con esta versión de DBM. Con tal de evitar conflictos, DBM no se ejecutará hasta que borres tu DBM-Profiles actual."
+DBM_CORE_3RDPROFILES					= "AVISO: DBM-Profiles no es compatible con esta versión de DBM. Con tal de evitar conflictos, DBM no se ejecutará hasta que desactives o desinstales DBM-Profiles."
+DBM_CORE_VICTORYSOUND					= "AVISO: DBM-VictorySound no es compatible con esta versión de DBM. Con tal de evitar conflictos, DBM no se ejecutará hasta que desactives o desinstales DBM-VictorySound."
 DBM_CORE_DPMCORE						= "AVISO: Deadly PvP Mods ya no está en desarrollo y no es compatible con esta versión de DBM. Con tal de evitar conflictos, DBM no se ejecutará hasta que borres Deadly PvP Mods."
 DBM_CORE_DBMLDB							= "AVISO: DBM-LDB está ahora incluido en DBM-Core. Es recomendable que borres la carpeta 'DBM-LDB' de tu carpeta de addons."
+DBM_CORE_DBMLOOTREMINDER				= "AVISO: tienes instalado el módulo de terceros DBM-LootReminder. Este addon ya no es compatible con el cliente de WoW y causa conflictos con los temporizadores de DBM. Es recomendable que lo desinstales."
 DBM_CORE_UPDATE_REQUIRES_RELAUNCH		= "AVISO: Esta actualización de DBM no funcionará correctamente hasta que reinicies el juego. Esta versión contiene nuevos archivos o cambios a los archivos .toc que no pueden recargarse mediante /reload. Es muy probable que DBM no funcione correctamente hasta que reinicies el juego."
 DBM_CORE_OUT_OF_DATE_NAG				= "Tu versión de Deadly Boss Mods está desfasada para este encuentro. Se recomienda que actualices DBM para no perderte ningún aviso, temporizador o indicador crucial para tu grupo de banda."
+DBM_CORE_RETAIL_ONLY					= "AVISO: esta versión de DBM está pensada para la versión actual de World of Warcraft. Desinstala DBM e instala la versión correcta para WoW Classic."
 
 DBM_CORE_MOVABLE_BAR				= "¡Muéveme!"
 
@@ -251,11 +254,9 @@ DBM_CORE_TIMER_USAGE	= {
 	"DBM timer commands:",
 	"-----------------",
 	"/dbm timer <seg> <texto>: Inicia un temporizador con texto.",
-	"/dbm ctimer <seg> <texto>: Inicia un temporizador con texto de cuenta atrás.",
 	"/dbm ltimer <seg> <texto>: Inicia un temporizador que se repite hasta que se cancela.",
-	"/dbm cltimer <seg> <texto>: Inicia un temporizador con texto de cuenta atrás que se repite hasta que se cancela.",
 	"(Si escribes 'broadcast' delante de un temporizador, lo compartirás con tu grupo de banda si eres líder o ayudante)",
-	"/dbm timer endloop: Cancela todos los ltimer o cltimer que se estén repitiendo."
+	"/dbm timer endloop: Cancela todos los ltimer que se estén repitiendo."
 }
 
 DBM_ERROR_NO_PERMISSION				= "No tienes permiso para hacer eso."
@@ -288,8 +289,10 @@ DBM_BIG_ADD							= "Esbirro grande"
 DBM_BOSS							= "Jefe"
 DBM_CORE_ROOM_EDGE					= "los bordes de la sala"
 DBM_CORE_FAR_AWAY					= "alejarte"
-DBM_CORE_BREAK_LOS					= "romper la línea de mira" --must check
-DBM_CORE_SAFE						= "una zona segura"
+DBM_CORE_BREAK_LOS					= "romper la línea de mira"
+DBM_CORE_RESTORE_LOS				= "la línea de mira"
+DBM_CORE_SAFE						= "Zona segura"
+DBM_CORE_NOTSAFE					= "Zona no segura"
 DBM_CORE_SHIELD						= "Escudo"
 DBM_INCOMING						= "%s en breve"
 --Common Locals end
@@ -331,6 +334,7 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage		= "Fase %s"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.prestage	= "Fase %s en breve"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.count		= "%s (%%s)"
 DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack		= "%s en >%%s< (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.moveto		= "%s - ¡ve a >%%s<!"
 
 local prewarnOption = "Mostrar aviso previo para $spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.you			= "Anunciar que te afecta $spell:%s"
@@ -352,6 +356,7 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stagechange	= "Anunciar cambios de fase"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prestage		= "Mostrar aviso previo para Fase %s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count		= "Mostrar aviso (con contador) para $spell:%s"
 DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack		= "Anunciar acumulaciones de $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.moveto		= "Mostrar aviso para juntarse con alguien o ir a algún sitio para $spell:%s"
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell			= "¡%s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.ends			= "%s ha terminado"
@@ -392,8 +397,8 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack			= "%%d acumulaciones de %s en ti"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= "%s - ¡cambia de objetivo!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= "%s - ¡cambia de objetivo! (%%s)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.gtfo			= "%%s a tus pies - ¡apártate!"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Adds			= "Esbirros en breve - ¡cambia de objetivo!"
-DBM_CORE_AUTO_SPEC_WARN_TEXTS.Addscustom	= "Esbirros en breve - %%s"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.adds			= "Esbirros en breve - ¡cambia de objetivo!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.addscustom	= "Esbirros en breve - %%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.targetchange	= "¡cambia de objetivo a %%s!"
 
 -- Auto-generated Special Warning Localizations
@@ -436,8 +441,8 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 			= "Mostrar aviso especial cuando tengas
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch			= "Mostrar aviso especial para cambiar de objetivo a $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount		= "Mostrar aviso especial (con contador) para cambiar de objetivo a $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.gtfo 			= "Mostrar aviso especial para apartarte de áreas de daño en el suelo"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Adds			= "Mostrar aviso especial para cambiar de objetivo cuando falte poco para que aparezcan esbirros"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.Addscustom		= "Mostrar aviso especial cuando falte poco para que aparezcan esbirros"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.adds			= "Mostrar aviso especial para cambiar de objetivo cuando falte poco para que aparezcan esbirros"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.addscustom		= "Mostrar aviso especial cuando falte poco para que aparezcan esbirros"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.targetchange	= "Mostrar aviso especial para cambiar a objetivos prioritarios"
 
 -- Auto-generated Timer Localizations
@@ -488,13 +493,6 @@ DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Poner iconos en $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "Mostrar flecha indicadora para juntarse con los objetivos afectados por $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Mostrar flecha indicadora para alejarse de los objetivos afectados por $spell:%s"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT3		= "Mostrar flecha indicadora para ir a una ubicación específica para $spell:%s"
-DBM_CORE_AUTO_VOICE_OPTION_TEXT			= "Reproducir alertas de voz para $spell:%s"
-DBM_CORE_AUTO_VOICE2_OPTION_TEXT		= "Reproducir alertas de voz para los cambios de fase"
-DBM_CORE_AUTO_VOICE3_OPTION_TEXT		= "Reproducir alertas de voz cuando falte poco para que aparezcan esbirros"
-DBM_CORE_AUTO_VOICE4_OPTION_TEXT		= "Reproducir alertas de voz para apartarte de áreas de daño en el suelo"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Reproducir sonido de cuenta atrás para el tiempo de reutilización de $spell:%s"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Reproducir sonido de cuenta atrás para la duración restante de $spell:%s"
-DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Reproducir sonido de contador para la duración de $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.shortyell		= "Gritar cuando te afecte $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.yell		= "Gritar (con tu nombre) cuando te afecte $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT.count	= "Gritar (con contador) cuando te afecte $spell:%s"
@@ -511,8 +509,6 @@ DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.shortfade		= "%%d"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.iconfade		= "{rt%%2$d}%%1$d"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.position 	= "%s %%s en {rt%%d}"..UnitName("player").."{rt%%d}"
 DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.combo			= "%s y %%s"--Spell name (from option, plus spellname given in arg)
-DBM_CORE_AUTO_YELL_CUSTOM_POSITION		= "{rt%d}%s{rt%d}"
-DBM_CORE_AUTO_YELL_CUSTOM_POSITION2		= "{rt%d}{rt%d}%s{rt%d}{rt%d}"
 DBM_CORE_AUTO_YELL_CUSTOM_FADE			= "%s ha expirado"
 DBM_CORE_AUTO_HUD_OPTION_TEXT			= "Mostrar indicador en pantalla para $spell:%s"
 DBM_CORE_AUTO_HUD_OPTION_TEXT_MULTI		= "Mostrar indicadores en pantalla para varias mecánicas"

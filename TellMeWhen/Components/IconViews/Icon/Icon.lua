@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -98,9 +98,13 @@ View:RegisterGroupDefaults{
 	SettingsPerView = {
 		icon = {
 			TextLayout = "icon1",
+			BorderColor = "ff000000",
+			BorderIcon = 0,
 		}
 	}
 }
+
+View:RegisterConfigPanel_XMLTemplate(50, "TellMeWhen_GM_IconView")
 
 View:ImplementsModule("IconModule_Alpha", 10, true)
 View:ImplementsModule("IconModule_CooldownSweep", 20, function(Module, icon)
@@ -117,10 +121,6 @@ View:ImplementsModule("IconModule_CooldownSweep", 20, function(Module, icon)
 end)
 View:ImplementsModule("IconModule_Texture_Colored", 30, function(Module, icon)
 	Module:Enable()
-	
-	Module.texture:ClearAllPoints()
-	Module.texture:SetSize(ICON_SIZE, ICON_SIZE)
-	Module.texture:SetPoint("CENTER", icon)
 end)
 View:ImplementsModule("IconModule_PowerBar_Overlay", 40, function(Module, icon)
 	if icon.ShowPBar then
@@ -135,10 +135,18 @@ end)
 View:ImplementsModule("IconModule_Texts", 60, true)
 View:ImplementsModule("IconModule_IconContainer_Masque", 100, function(Module, icon)
 	local Modules = icon.Modules
+
+	local group = icon.group
+	local gspv = group:GetSettingsPerView()
+
+	Module:SetBorder(gspv.BorderIcon, gspv.BorderColor, gspv.BorderInset)
+	
+	local inset = gspv.BorderInset and 0 or gspv.BorderIcon
+	local sizeX, sizeY = icon:GetSize()
 	
 	Module.container:ClearAllPoints()
-	Module.container:SetSize(icon:GetSize())
-	Module.container:SetAllPoints()	
+	Module.container:SetSize(sizeX - 2*inset, sizeY - 2*inset)
+	Module.container:SetPoint("TOPLEFT", inset, -inset)
 	Module:Enable()
 
 	---------- Skin-Dependent Module Layout ----------
@@ -150,7 +158,12 @@ View:ImplementsModule("IconModule_IconContainer_Masque", 100, function(Module, i
 
 	local isDefaultSkin = not Module:IsIconSkinned(icon)
 	
-	local frameLevelOffset = isDefaultSkin and 1 or -2
+	local frameLevelOffset
+	if (select(2, LibStub("Masque", true)) or 0) >= 80100 then
+		frameLevelOffset = 1
+	else
+		frameLevelOffset = 1 or (isDefaultSkin and 1 or -2)
+	end
 	
 	if CooldownSweep then
 		CooldownSweep.cooldown:SetFrameLevel( icon:GetFrameLevel() + 0 + frameLevelOffset)
@@ -158,6 +171,10 @@ View:ImplementsModule("IconModule_IconContainer_Masque", 100, function(Module, i
 	
 	local insets = isDefaultSkin and 1.5 or 0
 	local anchorTo = IconModule_Texture_Colored and IconModule_Texture_Colored.texture or icon
+
+	if IconModule_Texture_Colored then
+		IconModule_Texture_Colored.texture:SetAllPoints(Module.container)
+	end
 	
 	if TimerBar_Overlay then
 		TimerBar_Overlay.bar:SetFrameLevel(icon:GetFrameLevel() + 1 + frameLevelOffset)

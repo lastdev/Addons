@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 8.1.6236 (SwimmingSeadragon)
-	Revision: $Id: BeanCounterFrames.lua 6236 2019-03-04 00:20:18Z none $
+	Version: 8.2.6505 (SwimmingSeadragon)
+	Revision: $Id: BeanCounterFrames.lua 6505 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterFrames - AuctionHouse UI for Beancounter
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterFrames.lua $","$Rev: 6236 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: BeanCounter/BeanCounterFrames.lua $","$Rev: 6505 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals()
@@ -55,15 +55,17 @@ function private.AuctionUI()
 	PanelTemplates_DeselectTab(frame.ScanTab)
 
 	if AucAdvanced then
+		frame:ClearAllPoints()
 		AucAdvanced.AddTab(frame.ScanTab, frame)
 	else
+		frame:ClearAllPoints()
 		private.AddTab(frame.ScanTab, frame)
 	end
 	local last = 1
 	function frame.ScanTab.OnClick(self, button, index)
 		if not index then index = self:GetID() end
 		local tab = _G["AuctionFrameTab"..index]
-		
+
 		if button == "RightButton" and tab and tab:GetName() == "AuctionFrameTabUtilBeanCounter" then
 			local tab = _G["AuctionFrameTab"..last]
 			tab:Click() --use this so we stay on users currently selected tab
@@ -71,7 +73,7 @@ function private.AuctionUI()
 			return
 		end
 		last = index
-		
+
 		if (tab and tab:GetName() == "AuctionFrameTabUtilBeanCounter") then
 			--Modified Textures
 			AuctionFrameTopLeft:SetTexture("Interface\\AddOns\\BeanCounter\\Textures\\BC-TopLeft")
@@ -108,10 +110,12 @@ function private.displayGUI( action )
 		if not BeanCounterBaseFrame:IsVisible() then
 			frame:Hide()
 		else --when tab is created frame parent is set to AH, we dont want this
+			frame:ClearAllPoints()
 			frame:SetParent("BeanCounterBaseFrame")
 			frame:SetAllPoints(BeanCounterBaseFrame)
 		end
 	elseif action == "ShowAHGUI" then
+		frame:ClearAllPoints()
 		frame:SetParent(AuctionFrame)
 		frame:SetAllPoints("AuctionFrame")
 		private.relevelFrame(frame)--make sure our frame stays in proper order
@@ -121,6 +125,7 @@ function private.displayGUI( action )
 		BeanCounterBaseFrame:Hide()
 		frame:Hide()
 	else
+		frame:ClearAllPoints()
 		frame:SetParent("BeanCounterBaseFrame")
 		frame:SetAllPoints(BeanCounterBaseFrame)
 		private.relevelFrame(frame)--make sure our frame stays in proper order
@@ -184,8 +189,8 @@ function private.CreateFrames()
 	base.Resizer:SetScript("OnMouseUp", function()  base:StopMovingOrSizing()  end)
 	base.Resizer:SetScript("OnEnter", function() private.buttonTooltips( base.Resizer, _BC('Click and drag to resize window')) end)
 	base.Resizer:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	
-	
+
+
 	base.Drag = CreateFrame("Button", nil, base)
 	base.Drag:SetPoint("TOPLEFT", base, "TOPLEFT", 10,-5)
 	base.Drag:SetPoint("TOPRIGHT", base, "TOPRIGHT", -10,-5)
@@ -244,7 +249,7 @@ function private.CreateFrames()
 	frame.Config:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
 
-	
+
 	--ICON box, used to drag item and display ICo for item being searched. Based Appraiser Code
 	function frame.IconClicked()
 		local objtype, _, link = GetCursorInfo()
@@ -252,7 +257,7 @@ function private.CreateFrames()
 		if objtype == "item" then
 			local itemID = lib.API.decodeLink(link)
 			local _, itemName =  lib.API.getItemString(link)
-			local itemTexture = select(2, private.getItemInfo(link, "name")) 
+			local itemTexture = select(2, private.getItemInfo(link, "name"))
 			frame.searchBox:SetText(itemName)
 			private.searchByItemID(itemID, private.getCheckboxSettings(), nil, 150, itemTexture, itemName)
 		end
@@ -320,7 +325,7 @@ function private.CreateFrames()
 	frame.searchBox:SetScript("OnEnter", function() private.buttonTooltips( frame.searchBox, _BC("TT_SearchBox")) end) --"Enter search query's here or leave blank to search all"
 	frame.searchBox:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-	
+
 	--Search Button
 	frame.searchButton = CreateFrame("Button", nil, frame, "OptionsButtonTemplate")
 	frame.searchButton:SetPoint("TOPLEFT", frame.searchBox, "BOTTOMLEFT", -6, -1)
@@ -387,7 +392,7 @@ function private.CreateFrames()
 	frame.neutralCheck:SetScript("OnEnter", function() private.buttonTooltips( frame.neutralCheck, _BC('TT_neutralCheck')) end) --"Display results from BeanCounter Classic Database"
 	frame.neutralCheck:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-	
+
 
 	--search bids
 	frame.bidCheck = CreateFrame("CheckButton", "BeancounterbidCheck", frame, "OptionsCheckButtonTemplate")
@@ -400,7 +405,7 @@ function private.CreateFrames()
 	frame.bidCheck:SetScript("OnEnter", function() private.buttonTooltips( frame.bidCheck, _BC('TT_BidCheck')) end) --"Display items bought from the Auction House"
 	frame.bidCheck:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-	
+
 	frame.bidFailedCheck = CreateFrame("CheckButton", "BeancounterbidFailedCheck", frame, "OptionsCheckButtonTemplate")
 	frame.bidFailedCheck:SetChecked(get("util.beancounter.ButtonBidFailedCheck"))
 	frame.bidFailedCheck:SetScript("OnClick", function(self) set("util.beancounter.ButtonBidFailedCheck", self:GetChecked() ) private.wipeSearchCache() end)
@@ -422,7 +427,7 @@ function private.CreateFrames()
 	frame.auctionCheck:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
 
-	
+
 	frame.auctionFailedCheck = CreateFrame("CheckButton", "BeancounterauctionFailedCheck", frame, "OptionsCheckButtonTemplate")
 	frame.auctionFailedCheck:SetChecked(get("util.beancounter.ButtonAuctionFailedCheck"))
 	frame.auctionFailedCheck:SetScript("OnClick", function(self) set("util.beancounter.ButtonAuctionFailedCheck", self:GetChecked() ) private.wipeSearchCache() end)
@@ -443,11 +448,11 @@ function private.CreateFrames()
 	frame.useDateCheck:SetPoint("TOP", frame.auctionCheck, "BOTTOM", 0, -10)
 	frame.useDateCheck:SetScript("OnEnter", function() private.buttonTooltips( frame.useDateCheck, _BC('TT_useDateCheck')) end) --"Display items you were outbided on."
 	frame.useDateCheck:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	
+
 	private.lowerDateBox = private.dateBoxTemplate(frame, "BeanCounterLower")
 	private.lowerDateBox.hour = 0 --sets time so we cover teh full day
 	private.lowerDateBox:SetPoint("TOPLEFT", frame.useDateCheck, "BOTTOM", 10, -20)
-	
+
 	private.upperDateBox = private.dateBoxTemplate(frame, "BeanCounterUpper")
 	private.upperDateBox.hour = 24 --sets time so we cover teh full day
 	private.upperDateBox:SetPoint("TOP", private.lowerDateBox, "BOTTOM", 0, -10)
@@ -466,23 +471,23 @@ function private.CreateFrames()
 			private.lowerDateBox.month:SetFocus()
 		end
 	end)
-		
-	
+
+
 	frame.dateHelp = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.dateHelp:ClearAllPoints()
 	frame.dateHelp:SetPoint("BOTTOMLEFT", private.lowerDateBox, "TOPLEFT", 0, 10)
 	frame.dateHelp:SetText("month day year")
-	
+
 	--creates teh report text that tells info on # of entries
 	frame.DBCount = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.DBCount:SetPoint("TOPLEFT", frame, "TOPLEFT", 70, -40)
 	frame.DBCount:SetText("Items: "..private.DBSumEntry)
-	
+
 	frame.DBItems = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.DBItems:SetPoint("TOPLEFT", frame, "TOPLEFT", 70, -55)
 	frame.DBItems:SetText("Entries: "..private.DBSumItems)
 	private.sumDatabase() --Sums database Done on first Start and Search of the session
-	
+
 	--Edit box for changing UI reason codes
 	frame.reasonEditBox = CreateFrame("EditBox", "BeanCounterReasonEditBox", frame, "InputBoxTemplate")
 	frame.reasonEditBox:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
@@ -565,10 +570,10 @@ function private.CreateFrames()
 		local self = frame.resultlist.sheet
 		local clickedFrame = self.rows[row][column]
 		if not clickedFrame:IsVisible() then return end --Old data is still in the frames, just hidden
-		
+
 		local text = clickedFrame:GetText()
 		if not text then text = "" end
-		
+
 		local columnName = self.labels[column]:GetText()
 		if columnName == _BC('UiNameHeader') then
 			if IsShiftKeyDown() then
@@ -587,7 +592,7 @@ function private.CreateFrames()
 			frame.reasonEditBox:Show()
 			frame.reasonEditBox:SetFocus()
 			self.selectedForEdit = {self.sort[row + math.floor(self.panel.vPos)], row, column}
-			
+
 		end
 	end
 
@@ -648,7 +653,7 @@ function private.CreateFrames()
 			set("columnsortcurSort", column)
 		end
 	end
-	
+
 	--All the UI settings are stored here. We then split it to get the appropriate search settings
 	function private.getCheckboxSettings()
 		local low, high
@@ -716,14 +721,14 @@ function private.createDeleteItemPrompt()
 	frame:SetPoint("CENTER", UIParent, "CENTER")
 	frame:SetWidth(500)
 	frame:SetHeight(200)
-	
+
 	frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	frame.title:SetPoint("CENTER", frame, "CENTER", 0,30)
 	frame.title:SetText(_BC('Do you want to delete this item from the database?'))
-	
+
 	frame.item = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	frame.item:SetPoint("CENTER", frame, "CENTER", 0,0)
-	
+
 	frame.yes = CreateFrame("Button", nil, frame, "OptionsButtonTemplate")
 	frame.yes:SetPoint("CENTER", frame, "CENTER", -120, -60)
 	frame.yes:SetText(_BC('Yes'))
@@ -731,13 +736,13 @@ function private.createDeleteItemPrompt()
 								frame:Hide()
 								frame.item:SetText("")
 					end)
-	
+
 	frame.no = CreateFrame("Button", nil, frame, "OptionsButtonTemplate")
 	frame.no:SetPoint("LEFT", frame.yes, "RIGHT", 50, 0)
 	frame.no:SetText(_BC('No'))
 	frame.no:SetScale(1.8)
 	frame.no:SetScript("OnClick", function()  frame:Hide() frame.item:SetText("") end)
-	
+
 	private.deletePromptFrame = frame
 end
 
@@ -851,7 +856,7 @@ function private.dateBoxTemplate(frame, name)
 	local self = CreateFrame("Frame", name, frame)
 	self:SetWidth(100) --total frame width of all elements
 	self:SetHeight(15)
-	
+
 	local month = private.editboxTemplate(self, name.."MonthEditBox", 15, 20, 2, true)
 	month:SetPoint("LEFT", self, "LEFT", 0, 0)
 
@@ -890,7 +895,7 @@ function private.dateBoxTemplate(frame, name)
 		t = tonumber(t)
 		if not t then t = 1 end
 		if t < 1 or t > 2051283600 then t = 1 end
-		
+
 		local m, d, y = string.split(" ", date("%m %d %Y",t))
 		self.month:SetText(m)
 		self.day:SetText(d)
@@ -901,7 +906,7 @@ function private.dateBoxTemplate(frame, name)
 		local d = self.day:GetNumber()
 		local y = self.year:GetNumber()
 		local h = self.hour --this is an optional setting defaults to noon otherwise
-	
+
 		--sanity check
 		if m < 1 or m > 12 then    debugPrint("Month's value can only be 1 to 12") m = 1 end
 		if d< 1 or d > 31 then     debugPrint("Day's value can only be 1 to 31") d = 1 end
@@ -911,7 +916,7 @@ function private.dateBoxTemplate(frame, name)
 		local t = time({["day"] = d,["month"] = m, ["year"] = y, ["hour"] = h})
 		if get("util.beancounter.ButtonuseDateCheck") then
 			private.wipeSearchCache()
-		end		
+		end
 		return t
 	end
 	return self
@@ -923,12 +928,12 @@ function private.processTooltip(tip, itemLink, quantity)
 	if get("ModTTShow") and not IsAltKeyDown() then
 		return
 	end
-	
+
 	if not get("util.beancounter.displayReasonCodeTooltip") then return end
 
 	private.tooltip:SetFrame(tip)
 	local reason, Time, bid, player = lib.API.getBidReason(itemLink, quantity)
-		
+
 	--debugPrint("Add to Tooltip", itemLink, reason)
 	if reason then
 		if reason == "0" then reason = "Unknown" end

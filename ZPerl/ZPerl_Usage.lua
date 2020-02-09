@@ -1,11 +1,11 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 1053 $")
+end, "$Revision:  $")
 
 local XPerl_Usage = { }
 

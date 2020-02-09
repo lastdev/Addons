@@ -84,14 +84,14 @@
 					<OnLoad>
 						self.SetButtonTex = function()
 							local tex = XPerlAssistPin:GetNormalTexture()
-							if (ZPerlConfigHelper.AssistPinned) then
+							if (ZPerlConfigHelper and ZPerlConfigHelper.AssistPinned) then
 								tex:SetTexCoord(0.5, 0.96875, 0, 0.453125)
 							else
 								tex:SetTexCoord(0, 0.46875, 0, 0.453125)
 							end
 
 							tex = XPerlAssistPin:GetPushedTexture()
-							if (ZPerlConfigHelper.AssistPinned) then
+							if (ZPerlConfigHelper and ZPerlConfigHelper.AssistPinned) then
 								if (XPerl_Assists_Frame.corner) then
 									XPerl_Assists_Frame.corner:Hide()
 								end

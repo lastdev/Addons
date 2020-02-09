@@ -1,5 +1,7 @@
-local L = WeakAuras.L;
+if not WeakAuras.IsCorrectVersion() then return end
 
+local L = WeakAuras.L;
+local GetAtlasInfo = WeakAuras.IsClassic() and GetAtlasInfo or C_Texture.GetAtlasInfo
 -- Credit to CommanderSirow for taking the time to properly craft the TransformPoint function
 -- to the enhance the abilities of Progress Textures.
 -- Also Credit to Semlar for explaining how circular progress can be shown
@@ -16,8 +18,8 @@ local L = WeakAuras.L;
 --   region.full_rotation (false) - Allow full rotation [bool]
 
 local default = {
-  foregroundTexture = "Textures\\SpellActivationOverlays\\Eclipse_Sun",
-  backgroundTexture = "Textures\\SpellActivationOverlays\\Eclipse_Sun",
+  foregroundTexture = "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Auras\\Aura3",
+  backgroundTexture = "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Auras\\Aura3",
   desaturateBackground = false,
   desaturateForeground = false,
   sameTexture = true,
@@ -45,7 +47,6 @@ local default = {
   yOffset = 0,
   font = "Friz Quadrata TT",
   fontSize = 12,
-  stickyDuration = false,
   mirror = false,
   frameStrata = 1,
   slantMode = "INSIDE"
@@ -133,7 +134,7 @@ local function GetProperties(data)
 
     return auraProperties;
   else
-    return properties;
+    return CopyTable(properties);
   end
 end
 
@@ -780,7 +781,7 @@ end
 local function ensureExtraSpinners(region, count)
   local parent = region:GetParent();
   for i = #region.extraSpinners + 1, count do
-    local extraSpinner = createSpinner(region, "OVERLAY", parent:GetFrameLevel() + 3, min(i, 7));
+    local extraSpinner = createSpinner(region, "OVERLAY", min(i, 7));
     extraSpinner:SetTexture(region.currentTexture);
     extraSpinner:SetBlendMode(region.foreground:GetBlendMode());
     region.extraSpinners[i] = extraSpinner;
@@ -980,14 +981,13 @@ local function create(parent)
   local foreground = createTexture(region, "ARTWORK", 0);
   region.foreground = foreground;
 
-  region.foregroundSpinner = createSpinner(region, "ARTWORK", parent:GetFrameLevel() + 2, 1);
-  region.backgroundSpinner = createSpinner(region, "BACKGROUND", parent:GetFrameLevel() + 1, 1);
+  region.foregroundSpinner = createSpinner(region, "ARTWORK", 1);
+  region.backgroundSpinner = createSpinner(region, "BACKGROUND", 1);
 
   region.extraTextures = {};
   region.extraSpinners = {};
 
   region.values = {};
-  region.duration = 0;
 
   -- Use a dummy object for the SmoothStatusBarMixin, because our SetValue
   -- is used for a different purpose
@@ -1006,13 +1006,19 @@ local function create(parent)
     return 0, 1;
   end
 
-  region.expirationTime = math.huge;
-
   region.SetOrientation = SetOrientation;
 
   WeakAuras.regionPrototype.create(region);
 
+  region.AnchorSubRegion = WeakAuras.regionPrototype.AnchorSubRegion
+
   return region;
+end
+
+local function TimerTick(self)
+  local adjustMin = self.adjustedMin or self.adjustedMinRel or 0;
+  local duration = self.state.duration
+  self:SetTime( (duration ~= 0 and (self.adjustedMax or self.adjustedMaxRel) or duration) - adjustMin, self.state.expirationTime - adjustMin, self.state.inverse);
 end
 
 local function modify(parent, region, data)
@@ -1259,9 +1265,70 @@ local function modify(parent, region, data)
     end
   end
 
-  function region:TimerTick()
-    local adjustMin = region.adjustedMin or 0;
-    self:SetTime( (region.duration ~= 0 and region.adjustedMax or region.duration) - adjustMin, region.expirationTime - adjustMin, region.inverse);
+  function region:Update()
+    local state = region.state
+
+    local max
+    if state.progressType == "timed" then
+      local expirationTime = state.expirationTime and state.expirationTime > 0 and state.expirationTime or math.huge;
+      local duration = state.duration or 0
+      if region.adjustedMinRelPercent then
+        region.adjustedMinRel = region.adjustedMinRelPercent * duration
+      end
+      local adjustMin = region.adjustedMin or region.adjustedMinRel or 0;
+      if duration == 0 then
+        max = 0
+      elseif region.adjustedMax then
+        max = region.adjustedMax
+      elseif region.adjustedMaxRelPercent then
+        region.adjustedMaxRel = region.adjustedMaxRelPercent * duration
+        max = region.adjustedMaxRel
+      else
+        max = duration
+      end
+
+      region:SetTime(max - adjustMin, expirationTime - adjustMin, state.inverse);
+      if not region.TimerTick then
+        region.TimerTick = TimerTick
+        region:UpdateRegionHasTimerTick()
+      end
+    elseif state.progressType == "static" then
+      local value = state.value or 0;
+      local total = state.total or 0;
+      if region.adjustedMinRelPercent then
+        region.adjustedMinRel = region.adjustedMinRelPercent * total
+      end
+      local adjustMin = region.adjustedMin or region.adjustedMinRel or 0;
+
+      if region.adjustedMax then
+        max = region.adjustedMax
+      elseif region.adjustedMaxRelPercent then
+        region.adjustedMaxRel = region.adjustedMaxRelPercent * total
+        max = region.adjustedMaxRel
+      else
+        max = total
+      end
+
+      region:SetValue(value - adjustMin, max - adjustMin);
+      if region.TimerTick then
+        region.TimerTick = nil
+        region:UpdateRegionHasTimerTick()
+      end
+    else
+      region:SetTime(0, math.huge)
+      if region.TimerTick then
+        region.TimerTick = nil
+        region:UpdateRegionHasTimerTick()
+      end
+    end
+
+    max = max or 0
+
+    region:SetAdditionalProgress(state.additionalProgress, region.adjustMin or 0, region.state.duration ~= 0 and max or state.total or state.duration or 0, state.inverse)
+
+    if state.texture then
+      region:SetTexture(state.texture)
+    end
   end
 
   function region:SetTexture(texture)
@@ -1327,6 +1394,8 @@ local function modify(parent, region, data)
       self.extraSpinners[id]:Color(r, g, b, a);
     end
   end
+
+  WeakAuras.regionPrototype.modifyFinish(parent, region, data);
 end
 
 WeakAuras.RegisterRegionType("progresstexture", create, modify, default, GetProperties);

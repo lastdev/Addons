@@ -1,7 +1,7 @@
-changeset:   46:f5db0cdadf1e
-tag:         v8.0.1.046
-user:        Tercio
-date:        Sat Jul 21 11:51:09 2018 -0300
-summary:     - Missing Libs.
+changeset:   50:2f4d16977cdf
+tag:         v8.2.0.050
+user:        Tercioo
+date:        Fri Jun 28 19:59:02 2019 -0300
+summary:     - ToC Update for Patch 8.2
 
 

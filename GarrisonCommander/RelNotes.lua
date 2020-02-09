@@ -22,10 +22,34 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,2,4,[[
+Feature: Toc 80300
+]])
+self:RelNotes(3,2,2,[[
+Fix: Due to Blizzartd UI changes, unlock panel is no longer available. Sorry mates
+]])
+self:RelNotes(3,2,1,[[
+Fix: Minimap report enhancement removed, You need Garrison Broker for it
+]])
+self:RelNotes(3,2,0,[[
+Fix: Checked Russian Localization
+]])
+self:RelNotes(3,1,1,[[
+Fix: Checked Russian Localization
+]])
+self:RelNotes(3,1,0,[[
+Feature: Lots of cosmetic fixes Blind fix for errors related to changed blizzard itembutton thanks to wildcard-23
+Fix: Removed various lua errors thanks to wildcard-23
+]])
+self:RelNotes(3,0,2,[[
+Fix: Blind fix for errors related to changed blizzard itembutton
+]])
+self:RelNotes(3,0,1,[[
+Fix: TOC Bump
+]])
 self:RelNotes(3,0,0,[[
 Feature: Updated broker
 ]])
-
 self:RelNotes(2,19,0,[[
 Feature: Addon can no longer log out the game. No workaround found, so Autologout and logout were removed
 ]])

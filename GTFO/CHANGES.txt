@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
-r446 | Zensunim | 2019-02-03 06:51:42 +0000 (Sun, 03 Feb 2019) | 2 lines
+r505 | Zensunim | 2020-01-23 09:36:54 +0000 (Thu, 23 Jan 2020) | 3 lines
 Changed paths:
    M /trunk/GTFO.lua
    M /trunk/GTFO.toc
@@ -7,7 +7,8 @@ Changed paths:
    M /trunk/GTFO_Spells_BFA.lua
    M /trunk/ReadMe.txt
 
-4.46.17
-* Added BFA spells for Battle of Dazar'alor
+4.52.2
+* Added Battle for Azeroth spells (world)
+* Added BFA spells for Ny'alotha, the Waking City
 ------------------------------------------------------------------------
 

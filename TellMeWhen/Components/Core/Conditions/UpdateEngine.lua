@@ -1,4 +1,4 @@
--- --------------------
+﻿-- --------------------
 -- TellMeWhen
 -- Originally by Nephthys of Hyjal <lieandswell@yahoo.com>
 
@@ -125,6 +125,7 @@ function UpdateEngine:OnEvent(event, ...)
 	local UpdateTable = self.EventUpdateTables[event]
 	
 	if UpdateTable then
+		TMW:UpdateGlobals()
 		for i = 1, #UpdateTable do
 			local ConditionObject = UpdateTable[i]
 			ConditionObject:UpdateFunction(event, ...)

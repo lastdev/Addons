@@ -1,9 +1,9 @@
-## Interface: 80100
+## Interface: 80300
 ## Title: Raider.IO Mythic Plus and Raiding
 ## Notes: Shows Raider.IO Mythic+ Score and Raid Progress in-game. Make sure to load one or more region DB.
 ## Author: Vladinator (Voidzone-Ravencrest), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 8.1.0 (v201903100600)
-## SavedVariables: RaiderIO_Config, RaiderIO_LastCharacter
+## Version: 8.1.0 (v202002091658)
+## SavedVariables: RaiderIO_Config, RaiderIO_LastCharacter, RaiderIO_MissingCharacters
 ## X-Website: https://raider.io
 
 db/db_regions.lua

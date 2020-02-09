@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(524, "DBM-Party-BC", 7, 247)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 598 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 mod:SetCreatureID(18373)
 mod:SetEncounterID(1889)
 
@@ -12,8 +12,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 32346"
 )
 
-local warningSoul	= mod:NewTargetAnnounce(32346, 2)
-local warningAvatar	= mod:NewSpellAnnounce(32424, 3)
+local warningSoul		= mod:NewTargetAnnounce(32346, 2)
+local warningAvatar		= mod:NewSpellAnnounce(32424, 3)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 32424 then

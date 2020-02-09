@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(550, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("20190417010024")
 
 mod:SetCreatureID(20886)
 mod:SetEncounterID(1915)
@@ -24,7 +24,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 35759 then
+	if args.spellId == 35759 and self:CheckDispelFilter() then
 		specwarnFelFireShock:Show(args.destName)
 		specwarnFelFireShock:Play("dispelnow")
 	end

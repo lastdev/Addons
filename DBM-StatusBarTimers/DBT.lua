@@ -54,7 +54,6 @@ local updateClickThrough
 local options
 local setupHandlers
 local applyFailed = false
-local totalBars = 0
 local barIsAnimating = false
 local function stringFromTimer(t)
 	if t <= DBM.Bars:GetOption("TDecimal") then
@@ -484,6 +483,10 @@ options = {
 		type = "boolean",
 		default = true,
 	},
+	StripCDText = {
+		type = "boolean",
+		default = false,
+	},
 }
 
 
@@ -615,7 +618,7 @@ do
 		obj.secAnchor:Show()
 		return obj
 	end
-	
+
 	local function delaySkinCheck(self)
 		local skins = self:GetSkins()
 		if not skins then--Returns nil if checked too soon
@@ -750,7 +753,7 @@ do
 	end
 	local mt = {__index = barPrototype}
 
-	function DBT:CreateBar(timer, id, icon, huge, small, color, isDummy, colorType, inlineIcon, keep, fade)
+	function DBT:CreateBar(timer, id, icon, huge, small, color, isDummy, colorType, inlineIcon, keep, fade, countdown, countdownMax)
 		if timer <= 0 then return end
 		if (self.numBars or 0) >= 15 and not isDummy then return end
 		--Most efficient place to block it, nil colorType instead of checking option every update
@@ -788,6 +791,8 @@ do
 				newBar.inlineIcon = inlineIcon
 				newBar.keep = keep
 				newBar.fade = fade
+				newBar.countdown = countdown
+				newBar.countdownMax = countdownMax
 			else  -- duplicate code ;(
 				newBar = setmetatable({
 					frame = newFrame,
@@ -805,12 +810,13 @@ do
 					inlineIcon = inlineIcon,
 					keep = keep,
 					fade = fade,
+					countdown = countdown,
+					countdownMax = countdownMax,
 					lastUpdate = GetTime()
 				}, mt)
 			end
 			newFrame.obj = newBar
 			self.numBars = (self.numBars or 0) + 1
-			totalBars = self.numBars
 			local enlargeTime = self.options.BarStyle ~= "NoAnim" and self.options.EnlargeBarTime or 11
 			local importantBar = colorType and colorType == 7 and self:GetOption("Bar7ForceLarge")
 			if (importantBar or (timer <= enlargeTime or huge)) and self:GetOption("HugeBarsEnabled") then -- start enlarged
@@ -849,7 +855,7 @@ do
 	end
 	function DBT:CreateDummyBar(colorType, inlineIcon)
 		dummyBars = dummyBars + 1
-		local dummy = self:CreateBar(25, "dummy"..dummyBars, "Interface\\Icons\\Spell_Nature_WispSplode", nil, true, nil, true, colorType, inlineIcon)
+		local dummy = self:CreateBar(25, "dummy"..dummyBars, 136116, nil, true, nil, true, colorType, inlineIcon)--"Interface\\Icons\\Spell_Nature_WispSplode"
 		dummy:SetText("Dummy", inlineIcon)
 		dummy:Cancel()
 		self.bars[dummy] = true
@@ -912,11 +918,11 @@ end
 --  General Bar Methods  --
 ---------------------------
 function DBT:ShowTestBars()
-	self:CreateBar(10, "Test 1", "Interface\\Icons\\Spell_Nature_WispSplode")
-	self:CreateBar(14, "Test 2", "Interface\\Icons\\Spell_Nature_WispSplode")
-	self:CreateBar(20, "Test 3", "Interface\\Icons\\Spell_Nature_WispSplode")
-	self:CreateBar(12, "Test 4", "Interface\\Icons\\Spell_Nature_WispSplode")
-	self:CreateBar(21.5, "Test 5", "Interface\\Icons\\Spell_Nature_WispSplode")
+	self:CreateBar(10, "Test 1", 136116)--"Interface\\Icons\\Spell_Nature_WispSplode"
+	self:CreateBar(14, "Test 2", 136116)
+	self:CreateBar(20, "Test 3", 136116)
+	self:CreateBar(12, "Test 4", 136116)
+	self:CreateBar(21.5, "Test 5", 136116)
 end
 
 function barPrototype:SetTimer(timer)
@@ -977,6 +983,14 @@ function barPrototype:SetIcon(icon)
 end
 
 function barPrototype:SetColor(color)
+	-- Fix to allow colors not require the table keys
+	if color[1] and not color.r then
+		color = {
+			r = color[1],
+			g = color[2],
+			b = color[3]
+		}
+	end
 	self.color = color
 	local frame_name = self.frame:GetName()
 	_G[frame_name.."Bar"]:SetStatusBarColor(color.r, color.g, color.b)
@@ -1168,7 +1182,7 @@ function DBT:SavePosition()
 	self:SetOption("TimerPoint", point)
 	self:SetOption("TimerX", x)
 	self:SetOption("TimerY", y)
-	local point, _, _, x, y = self.secAnchor:GetPoint(1)
+	point, _, _, x, y = self.secAnchor:GetPoint(1)
 	self:SetOption("HugeTimerPoint", point)
 	self:SetOption("HugeTimerX", x)
 	self:SetOption("HugeTimerY", y)
@@ -1184,11 +1198,11 @@ do
 
 	function DBT:ShowMovableBar(small, large)
 		if small or small == nil then
-			local bar1 = self:CreateBar(20, "Move1", "Interface\\Icons\\Spell_Nature_WispSplode", nil, true)
+			local bar1 = self:CreateBar(20, "Move1", 136116, nil, true)
 			bar1:SetText(DBM_CORE_MOVABLE_BAR)
 		end
 		if large or large == nil then
-			local bar2 = self:CreateBar(20, "Move2", "Interface\\Icons\\Spell_Nature_WispSplode", true)
+			local bar2 = self:CreateBar(20, "Move2", 136116, true)
 			bar2:SetText(DBM_CORE_MOVABLE_BAR)
 		end
 		updateClickThrough(self, false)
@@ -1223,7 +1237,6 @@ function barPrototype:Cancel()
 	unusedBarObjects[self] = self
 	self.dead = true
 	self.owner.numBars = (self.owner.numBars or 1) - 1
-	totalBars = self.owner.numBars 
 end
 
 
@@ -1302,7 +1315,7 @@ function barPrototype:ApplyStyle()
 		bar:SetWidth(barWidth)
 		bar:SetHeight(barHeight)
 		frame:SetScale(barOptions.Scale)
-		if barOptions.FadeBars and self.fade then
+		if barOptions.FadeBars and self.fade and barOptions.Alpha ~= 0 then
 			frame:SetAlpha(barOptions.Alpha/2)
 		else
 			frame:SetAlpha(barOptions.Alpha)
@@ -1475,7 +1488,7 @@ function barPrototype:Announce()
 	end
 	local text = tostring(_G[self.frame:GetName().."BarName"]:GetText())
 	text = text:gsub("|T.-|t", "")
-	msg = msg or ("%s  %d:%02d"):format(text, math.floor(self.timer / 60), self.timer % 60)
+	msg = msg or ("%s %d:%02d"):format(text, math.floor(self.timer / 60), self.timer % 60)
 	local chatWindow = ChatEdit_GetActiveWindow()
 	if chatWindow then
 		chatWindow:Insert(msg)

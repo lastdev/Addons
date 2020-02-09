@@ -335,12 +335,13 @@ local achClassHall = {
 	11220, -- Roster of Champions
 }
 
--- Battle for Azeroth achievements related to the War Campaign Ship (mission table, etc.)
+-- Battle for Azeroth achievements related to the War Campaign Ship (mission table, war campaign, etc.)
 local achWarship = {
 	IsAlliance and 12896 or 12867, -- Azeroth at War: The Barrens
 	IsAlliance and 12898 or 12869, -- Azeroth at War: After Lordaeron
 	IsAlliance and 12899 or 12870, -- Azeroth at War: Kalimdor on Fire
 	12872, -- The Dirty Five
+	IsAlliance and 13925 or 13924, -- The Fourth War
 }
 
 local achBrawlersGuild = {
@@ -374,8 +375,11 @@ local ACHID_ZONE_MISC = {
 	["Southern Barrens"] = "4827:1",	-- "Surveying the Damage"
 	["Tanaris"] = "4827:5",		-- "Surveying the Damage"
 	["Thousand Needles"] = "4827:9",	-- "Surveying the Damage"
-	["Uldum"] =			-- "Help the Bombardier! I'm the Bombardier!", "One Hump or Two?",
-		{ 5317, 4888, 4961 },	-- "In a Thousand Years Even You Might be Worth Something"
+	["Uldum"] = {
+		5317,  -- "Help the Bombardier! I'm the Bombardier!"
+		4888,  -- "One Hump or Two?"
+		4961,  -- "In a Thousand Years Even You Might be Worth Something"
+	},	
 	["Winterspring"] = 5443,	-- "E'ko Madness"
 -- Eastern Kingdoms
 	["The Cape of Stranglethorn"] =	-- "Master Angler of Azeroth",
@@ -769,6 +773,36 @@ local ACHID_ZONE_MISC = {
 			11861, -- The Throne of Zuldazar
 		},
 	},
+	["Nazjatar"] = {
+		13638, -- Undersea Usurper
+		13568, -- For Nazjatar!
+		13715, -- From The Belly Of The Jelly
+		13692, -- Give Me The Biggest Bag You've Got
+		13720, -- Supplying the Assassins
+		13569, -- Tour of Duty: Nazjatar
+	},
+	["Mardivas's Laboratory"] = {
+		13699, -- Periodic Destruction
+	},
+	["Mechagon"] = {
+		13541, -- Mecha-Done
+		13555, -- Junkyard Tinkmaster
+		13472, -- Diversed Investments
+		13708, -- Most Minis Wins
+		13570, -- Tour of Duty: Mechagon
+		13489, -- Secret Fish of Mechagon
+		13696, -- Scrappy's Best Friend
+	},
+	["Chamber of Heart"] = {
+		13777, -- My Heart Container is Full
+		13769, -- Power Up
+		13772, -- Essence Essentials
+		13994, -- Through the Depths of Visions
+		14162, -- Horrific Masquerade
+		14165, -- Masked Soliloquy (series to Symphony of Masks)
+		14170, -- Thanks For The Mementos (series)
+		13998, -- Pure of Heart
+	},
 -- !! TODO: add reputation-related achievements for factions tied to BFA zones
 }
 ACHID_ZONE_MISC["Thunder Totem"] = ACHID_ZONE_MISC["Highmountain"] -- Make this quasi-subzone show suggestions from the main zone
@@ -857,8 +891,37 @@ tinsert(ACHID_ZONE_MISC["Thunder Bluff"], "6621:2")
 tinsert(ACHID_ZONE_MISC["Undercity"], "6621:3")
 tinsert(ACHID_ZONE_MISC["Silvermoon City"], "6621:4")
 
+do
+	-- Black Empire Assaults (Battle for Azeroth 8.3):
+	local blackEmpireAssault = {
+		14160, -- Rare to Well Done
+		14159, -- Combating the Corruption
+		14158, -- It's Not A Tumor!
+		14161, -- All Consuming
+	}
+	local blackEmpireAssaultUldum = {
+		14153, -- Uldum Under Assault
+		14155, -- Uldum Accord
+	}
+	local blackEmpireAssaultVale = {
+		14154, -- Defend the Vale
+		14156, -- The Rajani
+	}
+
+	local function mergelist(from, to)
+		for k,v in pairs(from) do
+			tinsert(to, v)
+		end
+	end
+	mergelist(blackEmpireAssault, ACHID_ZONE_MISC["Uldum"])
+	mergelist(blackEmpireAssaultUldum, ACHID_ZONE_MISC["Uldum"])
+	mergelist(blackEmpireAssault, ACHID_ZONE_MISC["Vale of Eternal Blossoms"])
+	mergelist(blackEmpireAssaultVale, ACHID_ZONE_MISC["Vale of Eternal Blossoms"])
+end
+
+-- Alias:
 ACHID_ZONE_MISC["City of Ironforge"] = ACHID_ZONE_MISC["Ironforge"]
-ACHID_ZONE_MISC["Brawler's Guild"] = achBrawlersGuild -- alias
+ACHID_ZONE_MISC["Brawler's Guild"] = achBrawlersGuild
 
 -- INSTANCES - ANY DIFFICULTY (any group size):
 local ACHID_INSTANCES = {
@@ -1155,6 +1218,14 @@ local ACHID_INSTANCES = {
 	["The Underrot"] = 12500, -- The Underrot (series)
 	["Temple of Sethraliss"] = 12504, -- The Temple of Sethraliss (series)
 	["Kings' Rest"] = 12848, -- Kings' Rest
+-- Battle for Azeroth Raids
+	["The Eternal Palace"] = { -- !! double check zone name
+		13687, -- Glory of the Eternal Raider
+		13719, -- Depths of the Devoted
+		13725, -- The Circle of Stars
+		13718, -- The Grand Reception
+		13571, -- Under the Seams
+	},
 
 -- Battle for Azeroth Warfronts
 	["Battle for Stromgarde"] = {
@@ -1163,12 +1234,25 @@ local ACHID_INSTANCES = {
 		12874, -- An Eventful Battle
 		IsAlliance and 12886 or 12879, -- Tour of War
 		IsAlliance and 12884 or 12878, -- Leader of Troops
+		-- Heroic:
+		IsAlliance and 13737 or 13735, -- Heroic: War is Hell
+		IsAlliance and 13739 or 13738, -- Heroic: Tour of War
+	},
+	["Battle for Darkshore"] = {
+		IsAlliance and 13297 or 13296, -- War for the Shore
+		13310, -- By Nature's Call
+		13308, -- Recruitment Officer
+		13302, -- Under Cover of Darkness
+		-- Heroic:
+		IsAlliance and 14150 or 14149, -- Heroic: War for the Shore
 	},
 }
 -- Aliases
 ACHID_INSTANCES["Molten Core"] = ACHID_INSTANCES["The Molten Core"]
 --ACHID_INSTANCES["Hall of Blackhand"] = ACHID_INSTANCES["Upper Blackrock Spire"]
 ACHID_INSTANCES["Violet Hold"] = ACHID_INSTANCES["Assault on Violet Hold"]
+ACHID_INSTANCES[IsAlliance and "Warfronts Stromgarde - Alliance" or "Warfronts Stromgarde - Horde"] = ACHID_INSTANCES["Battle for Stromgarde"]
+ACHID_INSTANCES[IsAlliance and "Warfronts Darkshore - Alliance" or "Warfronts Darkshore - Horde"] = ACHID_INSTANCES["Battle for Darkshore"]
 
 -- Battlegrounds
 ACHID_INSTANCES["The Battle for Gilneas"] = 5258
@@ -1179,7 +1263,7 @@ ACHID_INSTANCES["Twin Peaks"] = 5223  -- "Master of Twin Peaks"
 ACHID_INSTANCES["Wildhammer Stronghold"] = 5223  -- Also part of Twin Peaks
 ACHID_INSTANCES["Dragonmaw Stronghold"] = 5223  -- Also part of Twin Peaks
 ACHID_INSTANCES["Temple of Kotmogu"] = 6981 -- "Master of Temple of Kotmogu"
-ACHID_INSTANCES["Deepwind Gorge"] = 8360 -- "Master of Deepwind Gorge"
+ACHID_INSTANCES["Deepwind Gorge"] = { 8360, 14175 } -- "Master of Deepwind Gorge" (two with same name; second is newer, apparently replaces the first after 8.3's revamp of Deepwind Gorge, but both still show in interface, so... that's weird)
 ACHID_INSTANCES["Seething Shore"] = 12412  -- "Master of Seething Shore"
 if (IsAlliance) then
 	ACHID_INSTANCES["Alterac Valley"] = { 1167, 907, 226 }
@@ -1620,6 +1704,25 @@ local ACHID_INSTANCES_MYTHIC = {
 		12721, -- Wrap God
 		12722, -- It Belongs in a Mausoleum!
 	},
+	["Operation: Mechagon"] = { -- !! double check zone name
+		13698, -- Clean Up On Aisle Mechagon
+		13545, -- Go Ahead, Make My Daisy
+		13723, -- M.C., Hammered
+		13706, -- Stay Positive
+		13789, -- Hertz Locker (unused? going to be a Feat of Strength later? it doesn't show in UI)
+		13624, -- Keep DPS-ing and Nobody Explodes
+	},
+-- Battle for Azeroth Raids
+	["The Eternal Palace"] = { -- !! double check zone name
+		13726, -- Mythic: Abyssal Commander Sivara
+		13728, -- Mythic: Blackwater Behemoth
+		13729, -- Mythic: Lady Ashvane
+		13730, -- Mythic: Orgozoa
+		13733, -- Mythic: Queen Azshara
+		13727, -- Mythic: Radiance of Azshara
+		13731, -- Mythic: The Queen's Court
+		13732, -- Mythic: Za'qul
+	},
 }
 
 
@@ -1754,7 +1857,9 @@ local ACHID_TRADESKILL_ZONE = {
 		["Crystalsong Forest"] = 306,
 		["Icecrown"] = 306,
 		["Zul'Drak"] = 306,
-        }
+
+		["Mechagon"] = 13489, -- "Secret Fish of Mechagon"
+	}
 }
 if (IsAlliance) then
   tinsert(ACHID_TRADESKILL_ZONE["Fishing"]["Stormwind City"], 5476)	-- "Fish or Cut Bait: Stormwind"

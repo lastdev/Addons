@@ -3,9 +3,9 @@
 --------------------------------------------------------------------------
 --[[
 GTFO Spell List - Battle for Azeroth
-Author: Zensunim of Malygos
 ]]--
 
+if (not GTFO.ClassicMode) then
 
 --- ******************************
 --- * Battle for Azeroth (World) *
@@ -47,11 +47,6 @@ GTFO.SpellID["271634"] = {
 GTFO.SpellID["271703"] = {
   --desc = "Tar Fire";
   sound = 1;
-};
-
-GTFO.SpellID["271737"] = {
-  --desc = "Rocket Barrage (Gnomish Gyro-Engineer)";
-  sound = 2;
 };
 
 GTFO.SpellID["266281"] = {
@@ -194,6 +189,182 @@ GTFO.SpellID["288924"] = {
 
 GTFO.SpellID["288897"] = {
   --desc = "Shadow Crash (Soggoth the Slitherer)";
+  sound = 1;
+};
+
+GTFO.SpellID["291166"] = {
+  --desc = "Flame Jet";
+  sound = 1;
+};
+
+GTFO.SpellID["286466"] = {
+  --desc = "Purifying Flame";
+  sound = 1;
+};
+
+GTFO.SpellID["297252"] = {
+  --desc = "Residual Gas";
+  sound = 1;
+};
+
+GTFO.SpellID["288700"] = {
+  --desc = "Windwall (Cyclarus)";
+  sound = 1;
+};
+
+GTFO.SpellID["303132"] = {
+  --desc = "Unstable Orb (Shirakess Starseeker)";
+  sound = 1;
+};
+
+GTFO.SpellID["303716"] = {
+  --desc = "Geyser (Deepwater Maw)";
+  sound = 1;
+};
+
+GTFO.SpellID["297537"] = {
+  --desc = "Intense Flames";
+  sound = 1;
+};
+
+GTFO.SpellID["304335"] = {
+  --desc = "Flamestrike (Magister Hathorel)";
+  sound = 1;
+};
+
+GTFO.SpellID["303436"] = {
+  --desc = "EM Field (Mr. Fixthis)";
+  sound = 1;
+};
+
+GTFO.SpellID["304360"] = {
+  --desc = "Caustic Fumes (Deepglider)";
+  sound = 1;
+  damageMinimum = 1;
+};
+
+GTFO.SpellID["299401"] = {
+  --desc = "Fragment of the Void (Infestation of Madness)";
+  sound = 1;
+};
+
+GTFO.SpellID["301839"] = {
+  --desc = "Void Dance (Ulmath)";
+  sound = 1;
+};
+
+GTFO.SpellID["278069"] = {
+  --desc = "Rocket Boots (Pest Remover Mk. II)";
+  sound = 1;
+};
+
+GTFO.SpellID["273178"] = {
+  --desc = "Blessed Consecration (Lady Liadrin)";
+  sound = 1;
+};
+
+GTFO.SpellID["302524"] = {
+  --desc = "Dark Orb (Grip of Horror)";
+  sound = 1;
+};
+
+GTFO.SpellID["302521"] = {
+  --desc = "Dark Orb (Grip of Horror)";
+  sound = 1;
+};
+
+GTFO.SpellID["318391"] = {
+  --desc = "Great Worm's Foul Stench (Great Worm From Beyond)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["315161"] = {
+  --desc = "Eye of Corruption";
+  sound = 2;
+  category = "EyeOfCorruption";
+};
+
+GTFO.SpellID["315197"] = {
+  --desc = "Grand Delusions (Thing From Beyond)";
+  sound = 3;
+};
+
+GTFO.SpellID["314579"] = {
+  --desc = "Shadow Wreath (Shadowy Nexus)";
+  sound = 1;
+};
+
+GTFO.SpellID["312687"] = {
+  --desc = "Shadow Crash (Black Warden Rhothkozz)";
+  sound = 1;
+};
+
+GTFO.SpellID["314956"] = {
+  --desc = "Fragmented Halo (Black Warden Rhothkozz)";
+  sound = 1;
+};
+
+GTFO.SpellID["302390"] = {
+  --desc = "Twilight Flames (Vexiona)";
+  sound = 1;
+};
+
+GTFO.SpellID["313017"] = {
+  --desc = "Solar Orb";
+  sound = 1;
+};
+
+GTFO.SpellID["314718"] = {
+  --desc = "Concentrated Sunlight (Watcher Rehu)";
+  sound = 1;
+};
+
+GTFO.SpellID["313190"] = {
+  --desc = "Deep Water (Depths Monstrosity)";
+  sound = 1;
+};
+
+GTFO.SpellID["313281"] = {
+  --desc = "Hurled Void (Squidtail Screamer)";
+  sound = 1;
+};
+
+GTFO.SpellID["303864"] = {
+  --desc = "Electrified";
+  sound = 1;
+};
+
+GTFO.SpellID["303867"] = {
+  --desc = "Burning";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["310832"] = {
+  --desc = "Void Tear";
+  sound = 1;
+  alwaysAlert = true;
+};
+
+GTFO.SpellID["296733"] = {
+  --desc = "Dark Smash (Faceless Destroyer)";
+  sound = 1;
+};
+
+GTFO.SpellID["301516"] = {
+  --desc = "Unsettling Mist";
+  sound = 1;
+  alwaysAlert = true;
+};
+
+GTFO.SpellID["312682"] = {
+  --desc = "Shadow Crash (Faceless Ruiner)";
+  sound = 1;
+};
+
+GTFO.SpellID["316258"] = {
+  --desc = "Bile (Aqir Goliath)";
   sound = 1;
 };
 
@@ -694,7 +865,7 @@ GTFO.SpellID["285479"] = {
 GTFO.SpellID["284470"] = {
   --desc = "Hex of Lethargy (Opulence)";
   sound = 2;
-  minimumDamage = 1;
+  damageMinimum = 1;
   test = true;
 };
 
@@ -714,6 +885,12 @@ GTFO.SpellID["290448"] = {
   sound = 1;
 };
 
+GTFO.SpellID["271737"] = {
+  --desc = "Rocket Barrage (Gnomish Gyro-Engineer)";
+  tankSound = 2;
+  sound = 1;
+};
+
 GTFO.SpellID["286680"] = {
   --desc = "Roiling Tides";
   sound = 1;
@@ -722,6 +899,12 @@ GTFO.SpellID["286680"] = {
 GTFO.SpellID["284369"] = {
   --desc = "Sea Storm";
   sound = 1;
+};
+
+GTFO.SpellID["285075"] = {
+  --desc = "Freezing Tidepool (Stormwall Blockade)";
+  sound = 1;
+  tankSound = 2;
 };
 
 GTFO.SpellID["288051"] = {
@@ -740,3 +923,279 @@ GTFO.SpellID["287993"] = {
   affirmingDebuffSpellID = 288297; -- Arctic Ground
   sound = 1;
 };
+
+GTFO.SpellID["287365"] = {
+  --desc = "Searing Pitch (Lady Jaina Proudmoore)";
+  sound = 1;
+  negatingDebuffSpellID = 287993;  -- Chilling Touch
+};
+
+GTFO.SpellID["288808"] = {
+  --desc = "Consecration";
+  applicationOnly = true;
+  heroicSound = 1;
+  mythicSound = 1;
+  sound = 0;
+  test = true;
+};
+
+
+--- **********************
+--- * Crucible of Storms *
+--- **********************
+
+-- TODO: Promises of Power (Restless Cabal) -- sound = 4 [Requires investigation]
+
+GTFO.SpellID["287876"] = {
+  --desc = "Enveloping Darkness (Restless Cabal)";
+  sound = 1;
+};
+
+GTFO.SpellID["287876"] = {
+  --desc = "Gift of N'Zoth: Obscurity (Uu'nat)";
+  sound = 1;
+};
+
+
+-- ***********************
+-- * Operation: Mechagon *
+-- ***********************
+
+GTFO.SpellID["302384"] = {
+  --desc = "Static Discharge (HK-8 Aerial Oppression Unit)";
+  sound = 1;
+};
+
+GTFO.SpellID["294890"] = {
+  --desc = "Gyro-Scrap (Malfunctioning Scrapbot)";
+  sound = 1;
+};
+
+GTFO.SpellID["296560"] = {
+  --desc = "Clinging Static (King Gobbamak)";
+  sound = 1;
+};
+
+GTFO.SpellID["301680"] = {
+  --desc = "Rapid Fire (Mechagon Cavalry)";
+  sound = 1;
+};
+
+GTFO.SpellID["300160"] = {
+  --desc = "Gyro-Scrap (Heavy Scrapbot)";
+  sound = 1;
+};
+
+GTFO.SpellID["300675"] = {
+  --desc = "Toxic Fog (Toxic Lurker)";
+  sound = 1;
+};
+
+GTFO.SpellID["298212"] = {
+  --desc = "Sludge Bolt (Gunker)";
+  tankSound = 1;
+  sound = 0;
+};
+
+GTFO.SpellID["285020"] = {
+  --desc = "Whirling Edge (The Platinum Pummeler)";
+  sound = 1;
+};
+
+GTFO.SpellID["294291"] = {
+  --desc = "Process Waste (Waste Processing Unit)";
+  sound = 1;
+};
+
+GTFO.SpellID["294549"] = {
+  --desc = "Furnace Flames";
+  sound = 1;
+};
+
+GTFO.SpellID["291949"] = {
+  --desc = "Venting Flames (K.U.-J.0.)";
+  sound = 1;
+};
+
+GTFO.SpellID["285443"] = {
+  --desc = "Hidden Flame Cannon (Head Machinist Sparkflux)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+
+-- **********************
+-- * The Eternal Palace *
+-- **********************
+
+-- TODO: Arcing Azerite (Lady Ashvane) 296944 -- Does this trigger on players empowered?  How to tell when wrongfully hit
+-- TODO: Raging Rapids (Orgozoa)
+-- TODO: Form Ranks/In Formation (The Queen's Court)
+-- TODO: Sphere of Influence (The Queen's Court) - Mythic, avoidable?
+-- TODO: Static Shock (Queen Azshara)
+-- TODO: Piercing Gaze (Queen Azshara)
+
+
+GTFO.SpellID["300961"] = {
+  --desc = "Frozen Ground (Abyssal Commander Sivara)";
+  sound = 1;
+};
+
+GTFO.SpellID["300962"] = {
+  --desc = "Septic Ground (Abyssal Commander Sivara)";
+  sound = 1;
+};
+
+GTFO.SpellID["292307"] = {
+  --desc = "Gaze from Below (Blackwater Behemoth)";
+  sound = 1;
+  --affirmingDebuffSpellID = 292133; -- Bioluminescence
+};
+
+GTFO.SpellID["292247"] = {
+  --desc = "Bioelectric Feelers (Blackwater Behemoth)";
+  sound = 4;
+};
+
+GTFO.SpellID["295920"] = {
+  --desc = "Ancient Tempest (Radiance of Azshara)";
+  applicationOnly = true;
+  sound = 1;
+  test = true;
+};
+
+GTFO.SpellID["299152"] = {
+  --desc = "Waterlogged";
+  applicationOnly = true;
+  sound = 0;
+};
+
+GTFO.SpellID["296752"] = {
+  --desc = "Cutting Coral (Lady Ashvane)";
+  sound = 1;
+};
+
+GTFO.SpellID["300244"] = {
+  --desc = "Raging Rapids (Orgozoa)";
+  sound = 1;
+};
+
+GTFO.SpellID["297672"] = {
+  --desc = "Stand Alone (The Queen's Court)";
+  sound = 4;
+  test = true;
+};
+
+GTFO.SpellID["297673"] = {
+  --desc = "Stand Alone (The Queen's Court)";
+  sound = 4;
+  test = true;
+};
+
+GTFO.SpellID["303306"] = {
+  --desc = "Sphere of Influence (The Queen's Court)";
+  sound = 1;
+  test = true;
+};
+
+GTFO.SpellID["300545"] = {
+  --desc = "Mighty Rupture (The Queen's Court)";
+  sound = 1;
+};
+
+GTFO.SpellID["303913"] = {
+  --desc = "Lingering Soul (Shirakess Voidreaper)";
+  sound = 1;
+};
+
+GTFO.SpellID["303958"] = {
+  --desc = "Nightmare Pool";
+  sound = 1;
+};
+
+GTFO.SpellID["298192"] = {
+  --desc = "Dark Beyond (Za'qul)";
+  sound = 1;
+  damageMinimum = 1;
+};
+
+GTFO.SpellID["303819"] = {
+  --desc = "Nightmare Pool (Za'qul)";
+  sound = 1;
+};
+
+GTFO.SpellID["297907"] = {
+  --desc = "Cursed Heart (Queen Azshara)";
+  sound = 1;
+};
+
+GTFO.SpellID["303981"] = {
+  --desc = "Nether Portal (Queen Azshara)";
+  sound = 1;
+};
+
+GTFO.SpellID["303422"] = {
+  --desc = "Blizzard";
+  sound = 1;
+};
+
+GTFO.SpellID["299276"] = {
+  --desc = "Sanction (Queen Azshara)";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["298569"] = {
+  --desc = "Drained Soul (Queen Azshara)";
+  applicationOnly = true;
+  sound = 1;
+  minimumStacks = 5;
+};
+
+-- *************
+-- * Ny'alotha *
+-- *************
+
+-- TODO: Burning Cataclysm (Wrathion)
+-- TODO: Crackling Shard (Wrathion) -- Alert when NOT afflicated with Burning Madness
+-- TODO: Scorching Blisters (Wrathion)
+-- TODO: Acidic Blood (Ka'zir) -- Mythic only, avoidable?
+-- TODO: Shadowy Residue (Vexiona)
+-- TODO: Mycelial Growth (Carapace of N'Zoth) 
+-- TODO: Infinite Void (Carapace of N'Zoth) 
+-- TODO: Paranoia (N'Zoth) -- FF, complicated mechanic to track?
+-- TODO: Devour Thoughts (N'Zoth) -- FF
+-- TODO: Contempt (N'Zoth) -- Low damage?
+
+GTFO.SpellID["306824"] = {
+  --desc = "Molten Pool (Wrathion)";
+  sound = 1;
+};
+
+GTFO.SpellID["307053"] = {
+  --desc = "Lava Pools (Wrathion)";
+  sound = 1;
+};
+
+GTFO.SpellID["305575"] = {
+  --desc = "Ritual Field (Dark Inquisitor Xanesh)";
+  sound = 1;
+};
+
+GTFO.SpellID["310322"] = {
+  --desc = "Morass of Corruption (Il'gynoth, Corruption Reborn)";
+  sound = 1;
+};
+
+GTFO.SpellID["307343"] = {
+  --desc = "Shadowy Residue (Vexiona)";
+  sound = 1;
+};
+
+GTFO.SpellID["309991"] = {
+  --desc = "Anguish (N'Zoth)";
+  sound = 1;
+};
+
+
+end

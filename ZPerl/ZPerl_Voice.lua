@@ -1,12 +1,15 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 CreateFrame("Frame", "XPerl_Voice")
 local voice = XPerl_Voice
 
 local conf
-XPerl_RequestConfig(function(new) conf = new voice:RepositionAll() end, "$Revision: 1027 $")
+XPerl_RequestConfig(function(new)
+	conf = new
+	voice:RepositionAll()
+end, "$Revision:  $")
 
 voice.frames = {}
 voice.permenantUnits = {}

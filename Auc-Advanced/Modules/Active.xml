@@ -6,7 +6,6 @@
 			"Auc-Match-Undercut",
 			"Auc-Stat-Example2",
 			"Auc-Stat-Sales",
-			"Auc-Stat-WOWEcon",
 			"Auc-Util-AHWindowControl",
 			"Auc-Util-Appraiser",
 			"Auc-Util-AskPrice",
@@ -24,7 +23,7 @@
 			"Auc-Util-SimpleAuction",
 			"Auc-Util-VendMarkup",
 		}
-		AucAdvanced.RegisterRevision("$URL: Active.xml $", "$Rev: 6247 $")
+		AucAdvanced.RegisterRevision("$URL: Active.xml $", "$Rev: 6512 $")
 	</Script>
 
 	<Include file="Auc-Filter-FlatOutlier\Embed.xml"/>
@@ -32,7 +31,6 @@
 	<Include file="Auc-Match-Undercut\Embed.xml"/>
 	<Include file="Auc-Stat-Example2\Embed.xml"/>
 	<Include file="Auc-Stat-Sales\Embed.xml"/>
-	<Include file="Auc-Stat-WOWEcon\Embed.xml"/>
 	<Include file="Auc-Util-AHWindowControl\Embed.xml"/>
 	<Include file="Auc-Util-Appraiser\Embed.xml"/>
 	<Include file="Auc-Util-AskPrice\Embed.xml"/>

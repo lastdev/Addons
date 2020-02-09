@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreModule.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreModule.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -35,30 +35,123 @@
 --[[
 	Auctioneer Core Module Support
 
-	This code helps maintain internal integrity of Auctioneer.  Allows a module to be created to support the Core
-	without hoisting variables into a public namespace.
-	Also creates an addon local (can only get a reference during auctioneers startup) tablespace, allowing more intermodule interaction
-	without hoisting the variables into the public tablespace.
+	This code helps maintain internal integrity of Auctioneer.
+	Creates a set of objects and namespaces, restricted to the Core files, for cross-Core-file communication
+
+	Allows Core files access to a module, for event messages
+	Each file receives it's own 'module' into which it can install Processor and other event handlers
+	These are merged into a single Core module to avoid cluttering the system with extra modules
+	Note: the individual file 'modules' are not retained after load time, and should not be permanently stored by the Core files
+	In the case of multi-file mode, each file does receive its own module, so it may add any event handler it needs without any chance of clashing
+
+	Allows Core files access to internal storage for direct cross-file access
+	Used for messages outside of the Processor system, typically where a specific call order is required, or for very closely related Core files
+	In most cases the Core file should specify the name of the internal subspace, and will be given access to that subspace
+	The Core files that require access to the internal storage for other files will call with the accessInternal (5th) parameter set to an identifying string
+	In the case of multi-file mode, the same Internal table will be shared by a group of Core files
+
+	Core files may also request a Private table for their own internal use
+	In the case of multi-file mode, the same Private table will be shared by a group of Core files
+
+	Supports splitting a Core 'file' over several sub-files, giving each access to the same module, internal and private objects
 --]]
 
 
 if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreModule")
 local lib = AucAdvanced
+local Debug = lib.Debug
 
 local _, internal = ...
+local internalLib = {}
+internal.CoreModule = internalLib
 
 local modules = {}
+local access_names = {}
 
+-- Variables to support multi-file mode
+local mKey, mModName, mIntName, mPrivate
 -- This is an initial creation function.  Create and return items once.  Expect the caller to store that value for use.
-function lib.GetCoreModule(moduleName)
-	local x
-	if (moduleName) then
-		if (modules[moduleName]) then return end
-		x = {}
-		modules[moduleName] = x
+function lib.GetCoreModule(moduleName, internalName, hasPrivate, multiFile, accessInternal)
+	local mod, int, priv, multi, access
+	Debug.DebugPrint(format("GetCoreModule called with parameters\nModule=%s, Internal=%s, Private=%s, Multifile=%s, Access=%s",
+			tostringall(moduleName, internalName, hasPrivate, multiFile, accessInternal)),
+		"Core",
+		"GetCoreModule info "..tostring(moduleName or accessInternal or multiFile or internalName or "Unknown"),
+		nil,
+		Debug.Level.Info)
+
+	if multiFile and multiFile == mKey then
+		multi = 2 -- 2nd or later file in multifile, use previous values if they exist,
+					-- or create new ones and record if they don't exist yet
+					-- but fail out if names do not match
+	else
+		mKey, mModName, mIntName, mPrivate = nil, nil, nil, nil
+		if multiFile then
+			multi = 1 -- 1st file in multifile, create new values and record them for next file
+			mKey = multiFile
+		end
 	end
-	return x, internal
+
+	-- moduleName must be unique, so each file can receive its own module
+	-- moduleName is used for error-checking and debugging, but has no use outside CoreModule
+	if moduleName then
+		if multi then
+			-- a group of files should be using the same moduleName, but we need the modules to be unique
+			if mModName ~= nil and mModName ~= moduleName then
+				return
+			end
+			local index = 1
+			local uniqueName = moduleName .. index
+			while modules[uniqueName] do
+				index = index + 1
+				uniqueName = moduleName .. index
+			end
+
+			mModName = moduleName
+			mod = {}
+			modules[uniqueName] = mod
+		elseif modules[moduleName] then
+			return
+		else
+			mod = {}
+			modules[moduleName] = mod
+		end
+	end
+
+
+	if internalName then
+		int = internal[internalName]
+		if int then -- only permitted if 2nd or later file, plus name must match previous
+			if multi ~= 2 or mIntName ~= internalName then
+				return
+			end
+		else
+			int = {}
+			internal[internalName] = int
+			if multi then
+				mIntName = internalName
+			end
+		end
+	end
+
+	if hasPrivate then
+		if multi == 2 and mPrivate then
+			priv = mPrivate
+		else
+			priv = {}
+			if multi then
+				mPrivate = priv
+			end
+		end
+	end
+
+	if accessInternal then
+		tinsert(access_names, accessInternal) -- record for debug
+		access = internal
+	end
+
+	return mod, int, priv, access
 end
 
 --[[ CoreModule
@@ -79,7 +172,8 @@ local function HasOnlyFunctions(tbl)
 end
 
 -- called from CoreMain's private OnLoad function
-function lib.CoreModuleOnLoad(addon)
+function internalLib.CoreModuleOnLoad(addon)
+	internalLib.CoreModuleOnLoad = nil
 	local tcheck = {}
 	local ncheck = {}
 	for mdl, core in pairs(modules) do
@@ -148,12 +242,11 @@ function lib.CoreModuleOnLoad(addon)
 	if coremodule.OnLoad then
 		coremodule.OnLoad(addon)
 	end
+end
 
-	-- delete the initialization code as we only need it once
-	lib.CoreModuleOnLoad = nil
+function internalLib.CoreFinalCall()
 	lib.GetCoreModule = nil
 end
 
-
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreModule.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreModule.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreModule")

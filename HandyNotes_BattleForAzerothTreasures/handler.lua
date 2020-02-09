@@ -11,7 +11,6 @@ ns.Debug = Debug
 
 local next = next
 local GameTooltip = GameTooltip
-local WorldMapTooltip = WorldMapTooltip
 local HandyNotes = HandyNotes
 local GetItemInfo = GetItemInfo
 local GetAchievementInfo = GetAchievementInfo
@@ -308,7 +307,7 @@ local HLHandler = {}
 local info = {}
 
 function HLHandler:OnEnter(uiMapID, coord)
-    local tooltip = self:GetParent() == WorldMapFrame:GetCanvas() and WorldMapTooltip or GameTooltip
+    local tooltip = GameTooltip
     if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
         tooltip:SetOwner(self, "ANCHOR_LEFT")
     else
@@ -395,11 +394,7 @@ do
 end
 
 function HLHandler:OnLeave(uiMapID, coord)
-    if self:GetParent() == WorldMapFrame:GetCanvas() then
-        WorldMapTooltip:Hide()
-    else
-        GameTooltip:Hide()
-    end
+    GameTooltip:Hide()
     ShoppingTooltip1:Hide()
 end
 
@@ -437,10 +432,10 @@ do
         currentZone = uiMapID
         isMinimap = minimap
         if minimap and ns.map_spellids[uiMapID] then
-            if ns.map_spellids[mapFile] == true then
+            if ns.map_spellids[uiMapID] == true then
                 return iter
             end
-            if UnitHasBuff("player", ns.map_spellids[mapFile]) then
+            if UnitHasBuff("player", ns.map_spellids[uiMapID]) then
                 return iter
             end
         end

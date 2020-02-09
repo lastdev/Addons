@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BC = {} -- = LibStub("LibBabble-Class-3.0"):GetLookupTable()
 
-local revision = tonumber(string.sub("$Revision: 1440 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1486 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -31,6 +31,8 @@ local UIDropDownMenu_SetSelectedID = UIDropDownMenu_SetSelectedID
 local GameTooltip = GameTooltip
 
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+
+local WOW_RETAIL = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC
 
 FillLocalizedClassList(BC, false) -- We are sexist here but not much of a choice, when there is no neutral
 
@@ -59,12 +61,12 @@ local EditableColors = {
 		"Total Bar",
 	},
 	["Class"] = {
-		"Deathknight",
-		"Demonhunter",
+		WOW_RETAIL and "Deathknight" or nil,
+		WOW_RETAIL and "Demonhunter" or nil,
 		"Druid",
 		"Hunter",
 		"Mage",
-		"Monk",
+		WOW_RETAIL and "Monk" or nil,
 		"Paladin",
 		"Priest",
 		"Rogue",

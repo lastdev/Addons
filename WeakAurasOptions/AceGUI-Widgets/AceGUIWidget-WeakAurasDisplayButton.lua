@@ -1,8 +1,10 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local tinsert, tconcat, tremove, wipe = table.insert, table.concat, table.remove, wipe
 local select, pairs, next, type, unpack = select, pairs, next, type, unpack
 local tostring, error = tostring, error
 
-local Type, Version = "WeakAurasDisplayButton", 47
+local Type, Version = "WeakAurasDisplayButton", 52
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -26,6 +28,11 @@ local ignoreForCopyingDisplay = {
   uid = true,
   authorOptions = true,
   config = true,
+  url = true,
+  semver = true,
+  version = true,
+  internalVersion = true,
+  tocbuild = true
 }
 
 local function copyAuraPart(source, destination, part)
@@ -95,10 +102,11 @@ clipboard.pasteMenuEntry = {
       WeakAuras.Add(clipboard.current);
     end
 
-    WeakAuras.ScanForLoads();
+    WeakAuras.ScanForLoads({[clipboard.current.id] = true});
     WeakAuras.SortDisplayButtons();
     WeakAuras.PickDisplay(clipboard.current.id);
     WeakAuras.UpdateDisplayButton(clipboard.current.id);
+    WeakAuras.ReloadOptions2(clipboard.current.id, clipboard.current);
   end
 }
 
@@ -175,7 +183,7 @@ clipboard.copyAnimationsEntry = {
 };
 
 clipboard.copyAuthorOptionsEntry = {
-  text = WeakAuras.newFeatureString .. L["Author Options"],
+  text = L["Author Options"],
   notCheckable = true,
   func = function()
     WeakAuras_DropDownMenu:Hide();
@@ -184,7 +192,7 @@ clipboard.copyAuthorOptionsEntry = {
 };
 
 clipboard.copyUserConfigEntry = {
-  text = WeakAuras.newFeatureString .. L["Custom Configuration"],
+  text = L["Custom Configuration"],
   notCheckable = true,
   func = function()
     WeakAuras_DropDownMenu:Hide();
@@ -221,8 +229,8 @@ local function UpdateClipboardMenuEntry(data)
     clipboard.copyLoadEntry.text = L["Load"];
     clipboard.copyActionsEntry.text = L["Actions"];
     clipboard.copyAnimationsEntry.text = L["Animations"];
-    clipboard.copyAuthorOptionsEntry = WeakAuras.newFeatureString .. L["Author Options"];
-    clipboard.copyUserConfigEntry = WeakAuras.newFeatureString .. L["Custom Configuration"];
+    clipboard.copyAuthorOptionsEntry = L["Author Options"];
+    clipboard.copyUserConfigEntry = L["Custom Configuration"];
     clipboard.copyGroupEntry.text = nil;
   end
 end
@@ -489,6 +497,7 @@ local methods = {
   ["OnAcquire"] = function(self)
     self:SetWidth(1000);
     self:SetHeight(32);
+    self.hasThumbnail = false
   end,
   ["Initialize"] = function(self)
     local data = self.data;
@@ -507,7 +516,11 @@ local methods = {
         if(editbox) then
           if (not fullName) then
             local name, realm = UnitFullName("player")
-            fullName = name.."-"..realm
+            if realm then
+              fullName = name.."-"..realm
+            else
+              fullName = name
+            end
           end
           editbox:Insert("[WeakAuras: "..fullName.." - "..data.id.."]");
         elseif not data.controlledChildren then
@@ -528,7 +541,7 @@ local methods = {
           end
         else
           if (WeakAuras.IsDisplayPicked(data.id)) then
-            WeakAuras.ClearPicks(data.id);
+            WeakAuras.ClearPicks();
           else
             WeakAuras.PickDisplay(data.id);
           end
@@ -601,10 +614,19 @@ local methods = {
 
     function self.callbacks.OnDuplicateClick()
       if (WeakAuras.IsImporting()) then return end;
-      local new_id = WeakAuras.DuplicateAura(data);
-      WeakAuras.SortDisplayButtons();
-      WeakAuras.DoConfigUpdate();
-      WeakAuras.PickAndEditDisplay(new_id);
+      if data.controlledChildren then
+        local new_idGroup = WeakAuras.DuplicateAura(data)
+        for index, childId in pairs(data.controlledChildren) do
+          local childData = WeakAuras.GetData(childId)
+          WeakAuras.DuplicateAura(childData, new_idGroup)
+        end
+        WeakAuras.SortDisplayButtons()
+        WeakAuras.PickAndEditDisplay(new_idGroup)
+      else
+        local new_id = WeakAuras.DuplicateAura(data)
+        WeakAuras.SortDisplayButtons()
+        WeakAuras.PickAndEditDisplay(new_id)
+      end
     end
 
     function self.callbacks.OnDeleteAllClick()
@@ -613,8 +635,8 @@ local methods = {
       if(data.controlledChildren) then
 
         local region = WeakAuras.regions[data.id];
-        if (region.ControlChildren) then
-          region:Pause();
+        if (region.Suspend) then
+          region:Suspend();
         end
 
         for _, id in pairs(data.controlledChildren) do
@@ -768,8 +790,6 @@ local methods = {
         WeakAuras.Rename(data, newid);
         WeakAuras.Add(data);
 
-        WeakAuras.thumbnails[newid] = WeakAuras.thumbnails[oldid];
-        WeakAuras.thumbnails[oldid] = nil;
         WeakAuras.displayButtons[newid] = WeakAuras.displayButtons[oldid];
         WeakAuras.displayButtons[newid]:SetData(data)
         WeakAuras.displayButtons[oldid] = nil;
@@ -848,14 +868,6 @@ local methods = {
       self:SetNormalTooltip();
     end
 
-    function self.frame.terribleCodeOrganizationHackTable.OnShow()
-      WeakAuras.UpdateCloneConfig(data);
-    end
-
-    function self.frame.terribleCodeOrganizationHackTable.OnHide()
-      WeakAuras.CollapseAllClones(data.id);
-    end
-
     local copyEntries = {};
     tinsert(copyEntries, clipboard.copyEverythingEntry);
     tinsert(copyEntries, clipboard.copyGroupEntry);
@@ -905,12 +917,13 @@ local methods = {
         hasArrow = true,
         menuList = convertMenu
       });
-      tinsert(self.menu, {
-        text = L["Duplicate"],
-        notCheckable = true,
-        func = self.callbacks.OnDuplicateClick
-      });
     end
+
+    tinsert(self.menu, {
+      text = L["Duplicate"],
+      notCheckable = true,
+      func = self.callbacks.OnDuplicateClick
+    });
 
     tinsert(self.menu, {
       text = L["Set tooltip description"],
@@ -952,11 +965,13 @@ local methods = {
       notClickable = true,
       notCheckable = true,
     });
-    tinsert(self.menu, {
-      text = L["Delete"],
-      notCheckable = true,
-      func = self.callbacks.OnDeleteClick
-    });
+    if not data.controlledChildren then
+      tinsert(self.menu, {
+        text = L["Delete"],
+        notCheckable = true,
+        func = self.callbacks.OnDeleteClick
+      });
+    end
 
     if (data.controlledChildren) then
       tinsert(self.menu, {
@@ -1033,6 +1048,8 @@ local methods = {
         error("Display \""..data.id.."\" thinks it is a member of group \""..data.parent.."\" which does not control it");
       end
     end
+
+    self.frame:Hide()
   end,
   ["SetNormalTooltip"] = function(self)
     local data = self.data;
@@ -1298,32 +1315,6 @@ local methods = {
   ["SetDescription"] = function(self, ...)
     self.frame.description = {...};
   end,
-  ["SetIcon"] = function(self, icon)
-    self.orgIcon = icon;
-    if(type(icon) == "string" or type(icon) == "number") then
-      self.icon:SetTexture(icon);
-      self.icon:Show();
-      if(self.iconRegion and self.iconRegion.Hide) then
-        self.iconRegion:Hide();
-      end
-    else
-      self.iconRegion = icon;
-      icon:SetAllPoints(self.icon);
-      icon:SetParent(self.frame);
-      self.iconRegion:Show();
-      self.icon:Hide();
-    end
-  end,
-  ["OverrideIcon"] = function(self)
-    self.icon:SetTexture("Interface\\Addons\\WeakAuras\\Media\\Textures\\icon.blp")
-    self.icon:Show()
-    if(self.iconRegion and self.iconRegion.Hide) then
-      self.iconRegion:Hide();
-    end
-  end,
-  ["RestoreIcon"] = function(self)
-    self:SetIcon(self.orgIcon);
-  end,
   ["SetViewRegion"] = function(self, region)
     self.view.region = region;
     self.view.func = function() return self.view.visibility end;
@@ -1392,7 +1383,7 @@ local methods = {
   end,
   ["Expand"] = function(self, reloadTooltip)
     self.expand:Enable();
-    self.data.expanded = true;
+    WeakAuras.SetCollapsed(self.data.id, "displayButton", "", false)
     self.expand:SetNormalTexture("Interface\\BUTTONS\\UI-MinusButton-Up.blp");
     self.expand:SetPushedTexture("Interface\\BUTTONS\\UI-MinusButton-Down.blp");
     self.expand.title = L["Collapse"];
@@ -1406,7 +1397,7 @@ local methods = {
   end,
   ["Collapse"] = function(self, reloadTooltip)
     self.expand:Enable();
-    self.data.expanded = false;
+    WeakAuras.SetCollapsed(self.data.id, "displayButton", "", true)
     self.expand:SetNormalTexture("Interface\\BUTTONS\\UI-PlusButton-Up.blp");
     self.expand:SetPushedTexture("Interface\\BUTTONS\\UI-PlusButton-Down.blp");
     self.expand.title = L["Expand"];
@@ -1422,7 +1413,7 @@ local methods = {
     self.expand.func = func;
   end,
   ["GetExpanded"] = function(self)
-    return self.data.expanded;
+    return not WeakAuras.IsCollapsed(self.data.id, "displayButton", "", true)
   end,
   ["DisableExpand"] = function(self)
     self.expand:Disable();
@@ -1636,9 +1627,11 @@ local methods = {
     self.frame:LockHighlight();
     self.view:PriorityShow(1);
   end,
-  ["ClearPick"] = function(self)
+  ["ClearPick"] = function(self, noHide)
     self.frame:UnlockHighlight();
-    self.view:PriorityHide(1);
+    if not noHide then
+      self.view:PriorityHide(1);
+    end
   end,
   ["PriorityShow"] = function(self, priority)
     self.view:PriorityShow(priority);
@@ -1677,6 +1670,7 @@ local methods = {
     return self.frame:IsEnabled();
   end,
   ["OnRelease"] = function(self)
+    self:ReleaseThumnail()
     self:SetViewRegion();
     self:Enable();
     self:SetGroup();
@@ -1694,7 +1688,85 @@ local methods = {
     self.frame:Hide();
     self.frame = nil;
     self.data = nil;
-  end
+  end,
+  ["UpdateThumbnail"] = function(self)
+    if not self.hasThumbnail then
+      return
+    end
+
+    if self.data.regionType ~= self.thumbnailType then
+      self:ReleaseThumnail()
+      self:AcquireThumnail()
+    else
+      local option = WeakAuras.regionOptions[self.thumbnailType]
+      if option and option.modifyThumbnail then
+        option.modifyThumbnail(self.frame, self.thumbnail, self.data)
+      end
+    end
+  end,
+  ["ReleaseThumnail"] = function(self)
+    if not self.hasThumbnail then
+      return
+    end
+    self.hasThumbnail = false
+
+    if self.thumbnail then
+      local regionType = self.thumbnailType
+      local option = WeakAuras.regionOptions[regionType]
+      option.releaseThumbnail(self.thumbnail)
+      self.thumbnail = nil
+    end
+  end,
+  ["AcquireThumnail"] = function(self)
+    if self.hasThumbnail then
+      return
+    end
+
+    if not self.data then
+      return
+    end
+
+    self.hasThumbnail = true
+
+    local button = self.frame
+    local regionType = self.data.regionType
+    self.thumbnailType = regionType
+
+    local option = WeakAuras.regionOptions[regionType]
+    if option and option.acquireThumbnail then
+      self.thumbnail = option.acquireThumbnail(button, self.data)
+      self:SetIcon(self.thumbnail)
+    else
+      self:SetIcon("Interface\\Icons\\INV_Misc_QuestionMark")
+    end
+  end,
+  ["SetIcon"] = function(self, icon)
+    self.orgIcon = icon;
+    if(type(icon) == "string" or type(icon) == "number") then
+      self.icon:SetTexture(icon);
+      self.icon:Show();
+      if(self.iconRegion and self.iconRegion.Hide) then
+        self.iconRegion:Hide();
+      end
+    else
+      self.iconRegion = icon;
+      icon:SetAllPoints(self.icon);
+      icon:SetParent(self.frame);
+      icon:Show()
+      self.iconRegion:Show();
+      self.icon:Hide();
+    end
+  end,
+  ["OverrideIcon"] = function(self)
+    self.icon:SetTexture("Interface\\Addons\\WeakAuras\\Media\\Textures\\icon.blp")
+    self.icon:Show()
+    if(self.iconRegion and self.iconRegion.Hide) then
+      self.iconRegion:Hide();
+    end
+  end,
+  ["RestoreIcon"] = function(self)
+    self:SetIcon(self.orgIcon);
+  end,
 }
 
 --[[-----------------------------------------------------------------------------
@@ -1769,8 +1841,7 @@ local function Constructor()
     if(priority >= self.visibility) then
       self.visibility = priority;
       if(self.region and self.region.Expand) then
-        button.terribleCodeOrganizationHackTable.OnShow();
-        self.region:Expand();
+        WeakAuras.FakeStatesFor(self.region.id, true)
         if (WeakAuras.personalRessourceDisplayFrame) then
           WeakAuras.personalRessourceDisplayFrame:expand(self.region.id);
         end
@@ -1778,6 +1849,9 @@ local function Constructor()
           WeakAuras.mouseFrame:expand(self.region.id);
         end
       end
+    end
+    if self.region and self.region.ClickToPick then
+      self.region:ClickToPick();
     end
   end
   view.PriorityHide = function(self, priority)
@@ -1787,8 +1861,7 @@ local function Constructor()
     if(priority >= self.visibility) then
       self.visibility = 0;
       if(self.region and self.region.Collapse) then
-        button.terribleCodeOrganizationHackTable.OnHide();
-        self.region:Collapse();
+        WeakAuras.FakeStatesFor(self.region.id, false)
         if (WeakAuras.personalRessourceDisplayFrame) then
           WeakAuras.personalRessourceDisplayFrame:collapse(self.region.id);
         end
@@ -2013,12 +2086,8 @@ local function Constructor()
     frame = button,
     title = title,
     icon = icon,
-    --delete = delete, -- There is no variable called delete?
-    --copy = copy, -- There is no variable called copy?
     view = view,
-    --rename = rename, -- There is no variable called rename?
     renamebox = renamebox,
-    --descbox = descbox, -- There is no variable called descbox?
     group = group,
     ungroup = ungroup,
     upgroup = upgroup,

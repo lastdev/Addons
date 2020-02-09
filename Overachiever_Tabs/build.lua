@@ -211,7 +211,7 @@ local function displayAchievement(button, frame, achievement, index, selectionID
       saturatedStyle = "account";
     else
       button.accountWide = nil;
-      if ( IN_GUILD_VIEW ) then
+      if ( In_Guild_View ) then
         saturatedStyle = "guild";
       else
         saturatedStyle = "normal";
@@ -849,7 +849,7 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
 	--filteredOutLabel:SetShadowColor(1, 0, 0, 1)
 	frameWarning.label = filteredOutLabel
 
-	scrollbar:HookScript("OnValueChanged", function(self, value, ...)
+	local function scollbarValueChange(self, value, ...)
 		local vmin, vmax = self:GetMinMaxValues()
 		local prev = frameWarning.top
 		--local new = (value >= (vmax / 2))
@@ -863,10 +863,12 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
 				frameWarning:SetPoint("BOTTOM", frame, "BOTTOM", 0, 3)
 			end
 		end
-	end)
+	end
+	scrollbar:HookScript("OnValueChanged", scollbarValueChange)
 
 	scrollbar:HookScript("OnShow", function(self)
 		frameWarning:SetWidth(492)
+		--scollbarValueChange(self, self:GetValue()) -- Might be needed to fix a bug where the warning message appears at the top of the window when it should be at the bottom. But, after running into the issue once, I couldn't reproduce the problem, so disabling for now since I can't test whether this helps or even hurts.
 	end)
 
 	scrollbar:HookScript("OnHide", function(self)

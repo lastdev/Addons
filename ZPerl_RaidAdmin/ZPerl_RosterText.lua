@@ -1,17 +1,24 @@
 -- X-Perl UnitFrames
--- Author: Zek <Boodhoof-EU>
+-- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 728 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 -- onEvent
 local function onEvent(self, event, a, b, c)
 	self[event](self, a, b, c)
 end
 
+local function SortName(a, b)
+	return a.name < b.name
+end
+
+local function SortNameGroup(a, b)
+	return a.group..a.name < b.group..b.name
+end
+
 -- doUpdate
 local function Update(self)
-
 	local myZone = GetRealZoneText()
 	local list = {}
 
@@ -24,9 +31,9 @@ local function Update(self)
 	end
 
 	if (self.sortAlpha) then
-		sort(list, function(a,b) return a.name < b.name end)
+		sort(list, SortName)
 	else
-		sort(list, function(a,b) return a.group..a.name < b.group..b.name end)
+		sort(list, SortNameGroup)
 	end
 
 	local text = ""

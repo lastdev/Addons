@@ -19,7 +19,7 @@ module.nodes = nodes
 local handler = {}
 do
 	local function should_show_mob(id)
-		if db.hidden[id] or (ns.mobdb[id] and ns.mobdb[id].hidden) then
+		if db.hidden[id] or core:ShouldIgnoreMob(id) then
 			return false
 		end
 		local quest, achievement = ns:CompletionStatus(id)
@@ -92,7 +92,7 @@ do
 end
 
 function handler:OnEnter(uiMapID, coord)
-	local tooltip = self:GetParent() == WorldMapFrame:GetCanvas() and WorldMapTooltip or GameTooltip
+	local tooltip = GameTooltip
 	if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
 		tooltip:SetOwner(self, "ANCHOR_LEFT")
 	else
@@ -122,11 +122,7 @@ function handler:OnEnter(uiMapID, coord)
 end
 
 function handler:OnLeave(uiMapID, coord)
-	if self:GetParent() == WorldMapFrame:GetCanvas() then
-		WorldMapTooltip:Hide()
-	else
-		GameTooltip:Hide()
-	end
+	GameTooltip:Hide()
 end
 
 local clicked_zone, clicked_coord
@@ -326,8 +322,10 @@ function module:UpdateNodes()
 	for zone, mobs in pairs(ns.mobsByZone) do
 		nodes[zone] = {}
 		for id, locs in pairs(mobs) do
-			for _, loc in ipairs(locs) do
-				nodes[zone][loc] = id
+			if core:IsMobInPhase(id, zone) then
+				for _, loc in ipairs(locs) do
+					nodes[zone][loc] = id
+				end
 			end
 		end
 	end

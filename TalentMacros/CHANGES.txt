@@ -1,12 +1,24 @@
-tag 3f4ff88c41d3d35872f9ae72476c3a01388845dc v1.1.6
+tag f1289eba47aca49bf787a91a9599287e00099d38 v1.1.8
 Author:	Kyle Buller <bullerk@gmail.com>
-Date:	Sun Jul 22 20:38:41 2018 -0500
+Date:	Mon Oct 28 21:57:22 2019 -0500
 
-Tagging as v1.1.6
+Tagging as v1.1.8
 
-commit 5bdf990d5bad37a48d742131d25fe6325d38cde1
+commit c41ba2411e4dc808c76e184b595a650d550de48a
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Sun Jul 22 20:16:35 2018 -0500
+Date:   Mon Oct 28 21:56:55 2019 -0500
 
-    Tweak options so we don't get a scroll bar
+    Fix pkgmeta typo
+
+commit cd499c95d9923226efdac85ef1f512dcfe02d793
+Author: Kyle Buller <bullerk@gmail.com>
+Date:   Mon Oct 28 20:51:51 2019 -0500
+
+    Update TOC for 8.2.5
+
+commit 2ed60984dae96ab870bd82817bec7a72fe2615c0
+Author: Kyle Buller <bullerk@gmail.com>
+Date:   Mon Oct 28 20:51:41 2019 -0500
+
+    Update pkgmeta
 

@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
@@ -26,7 +28,6 @@ local L = WeakAuras.L
 	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
 	L["Bloodlust/Heroism"] = "Bloodlust/Heroism"
 	L["buff"] = "buff"
-	L["Buff"] = "Buff"
 	L["Buffs"] = "Buffs"
 	L["Cancel"] = "Cancel"
 	L["Cast"] = "Cast"
@@ -35,8 +36,10 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "cooldown"
+	L["Cooldown"] = "Cooldown"
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	L["Create Auras"] = "Create Auras"
+	L["debuff"] = "debuff"
 	L["Debuffs"] = "Debuffs"
 	L["Enchants"] = "Enchants"
 	L["General"] = "General"
@@ -95,8 +98,10 @@ local L = WeakAuras.L
 	L["Show Only if Debuffed"] = "Show Only if Debuffed"
 	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	L["slow debuff"] = "slow debuff"
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
-	L["Stagger"] = "Stagger"
+	L["Stance"] = "Stance"
+	L["stun debuff"] = "stun debuff"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."

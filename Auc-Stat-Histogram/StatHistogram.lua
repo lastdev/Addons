@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Histogram Statistics module
-	Version: 8.1.6230 (SwimmingSeadragon)
-	Revision: $Id: StatHistogram.lua 6230 2019-03-04 00:20:18Z none $
+	Version: 8.2.6499 (SwimmingSeadragon)
+	Revision: $Id: StatHistogram.lua 6499 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -967,4 +967,4 @@ function lib.ChangeServerKey(oldKey, newKey)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 6230 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 6499 $")

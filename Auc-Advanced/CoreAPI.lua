@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 8.1.6201 (SwimmingSeadragon)
-	Revision: $Id: CoreAPI.lua 6201 2019-03-04 00:20:18Z none $
+	Version: 8.2.6471 (SwimmingSeadragon)
+	Revision: $Id: CoreAPI.lua 6471 2019-11-02 14:38:37Z none $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -31,20 +31,14 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-if not AucAdvanced then return end
 local AucAdvanced = AucAdvanced
+if not AucAdvanced then return end
 AucAdvanced.CoreFileCheckIn("CoreAPI")
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreAPI")
-if not (coremodule and internal) then return end -- Someone has explicitely broken us
 
-
-AucAdvanced.API = {}
+local coremodule, libinternal, private = AucAdvanced.GetCoreModule("CoreAPI", "API", true, "CoreAPI")
+if not coremodule then return end -- would only occur with conflicting module data spaces
 local lib = AucAdvanced.API
-local private = {}
-internal.API = {}
-local libinternal = internal.API
 
-lib.Print = AucAdvanced.Print
 local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
 local Data = AucAdvanced.Data
@@ -65,6 +59,7 @@ local bitand = bit.band
 local tconcat=table.concat
 -- GLOBALS: nLog, N_NOTICE, N_WARNING, N_ERROR
 
+lib.Print = AucAdvanced.Print
 
 coremodule.Processors = {}
 function coremodule.Processors.scanstats()
@@ -635,9 +630,11 @@ end
 function lib.ProgressBars(name, value, show, text, options)
 	-- reanchor first bar so we can display even if AH is closed
 	if AuctionFrame and AuctionFrame:IsShown() then
+		ProgressBarFrames[1]:ClearAllPoints()
 		ProgressBarFrames[1]:SetPoint("TOPRIGHT", AuctionFrame, "TOPRIGHT", -5, 5)
 	else
-		ProgressBarFrames[1]:SetPoint("CENTER", UIParent, "CENTER", -5,5)
+		ProgressBarFrames[1]:ClearAllPoints()
+		ProgressBarFrames[1]:SetPoint("CENTER", UIParent, "CENTER", 0, 250)
 	end
 
 	if type(name) ~= "string" then return end
@@ -1532,5 +1529,5 @@ do
 end
 
 
-AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreAPI.lua $", "$Rev: 6201 $")
+AucAdvanced.RegisterRevision("$URL: Auc-Advanced/CoreAPI.lua $", "$Rev: 6471 $")
 AucAdvanced.CoreFileCheckOut("CoreAPI")

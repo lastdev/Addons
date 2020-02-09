@@ -1,4 +1,4 @@
----------------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------------
 --
 -- Prat - A framework for World of Warcraft chat mods
 --
@@ -57,8 +57,8 @@ Prat:AddModuleToLoad(function()
  do
      local L
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "Enable Prat processing for all chat events.",
 		["allevents_name"] = "Process all events",
@@ -71,11 +71,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "Activer le traitement par Prat de tous les événements de discussion.",
 		["allevents_name"] = "Traiter tous les événements",
@@ -88,11 +89,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "Prat-Verarbeitung für alle Chat-Ereignisse aktivieren.",
 		["allevents_name"] = "Alle Ereignisse verarbeiten",
@@ -105,11 +107,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "모든 대화 이벤트에 Prat 처리 과정을 적용시킵니다.",
 		["allevents_name"] = "모든 이벤트 처리",
@@ -122,36 +125,38 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		--[[Translation missing --]]
-		--[[ ["allevents_desc"] = "",--]] 
+		["allevents_desc"] = "Enable Prat processing for all chat events.",
 		--[[Translation missing --]]
-		--[[ ["allevents_name"] = "",--]] 
+		["allevents_name"] = "Process all events",
 		--[[Translation missing --]]
-		--[[ ["Chat window event name options."] = "",--]] 
+		["Chat window event name options."] = "Chat window event name options.",
 		--[[Translation missing --]]
-		--[[ ["EventNames"] = "",--]] 
+		["EventNames"] = "EventNames",
 		--[[Translation missing --]]
-		--[[ ["Show"] = "",--]] 
+		["Show"] = "Show",
 		--[[Translation missing --]]
-		--[[ ["Show events on chatframes"] = "",--]] 
+		["Show events on chatframes"] = "Show events on chatframes",
 		--[[Translation missing --]]
-		--[[ ["show_desc"] = "",--]] 
+		["show_desc"] = "Toggle showing event names in each window.",
 		--[[Translation missing --]]
-		--[[ ["show_name"] = "",--]] 
+		["show_name"] = "Show Event Names",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "Обрабатывать Prat'ом все сообщения в чате.",
 		["allevents_name"] = "Обрабатывать все сообщения",
@@ -164,11 +169,12 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		["allevents_desc"] = "为所有聊天事件开启Phat处理",
 		["allevents_name"] = "处理所有事件",
@@ -181,16 +187,17 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		--[[Translation missing --]]
-		--[[ ["allevents_desc"] = "",--]] 
+		["allevents_desc"] = "Enable Prat processing for all chat events.",
 		--[[Translation missing --]]
-		--[[ ["allevents_name"] = "",--]] 
+		["allevents_name"] = "Process all events",
 		["Chat window event name options."] = "Opciones de nombre de evento de la ventana del chat.",
 		["EventNames"] = "NombresEventos",
 		["Show"] = "Mostrar",
@@ -200,16 +207,17 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
+
    PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
- L=
-{
+ 
+L = {
 	["EventNames"] = {
 		--[[Translation missing --]]
-		--[[ ["allevents_desc"] = "",--]] 
+		["allevents_desc"] = "Enable Prat processing for all chat events.",
 		--[[Translation missing --]]
-		--[[ ["allevents_name"] = "",--]] 
+		["allevents_name"] = "Process all events",
 		["Chat window event name options."] = "聊天視窗事件名稱選項。",
 		["EventNames"] = "事件名稱",
 		["Show"] = "顯示",
@@ -218,6 +226,7 @@ Prat:AddModuleToLoad(function()
 		["show_name"] = "顯示事件名稱",
 	}
 }
+
 
    PL:AddLocale(PRAT_MODULE, "zhTW",L)
 

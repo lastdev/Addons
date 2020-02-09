@@ -1,8 +1,8 @@
-## Interface: 80100
+## Interface: 80300
 ## Title: Simple Taunt Announce
 ## Notes: A simple taunt announcer
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)
-## Version: 1.0.39
+## Version: 1.0.42
 ## SavedVariablesPerCharacter: STACFG
 
 SimpleTauntAnnounce.lua
