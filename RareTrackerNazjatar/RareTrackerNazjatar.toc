@@ -1,0 +1,18 @@
+## Interface: 80300
+## Title: RareTrackerNazjatar
+## Notes: Track and coordinate rare spawn timers in Nazjatar.
+## Author: Melroy
+## Version: 6.0.4
+##SavedVariables: RareTrackerNazjatarDB, RTNDB
+## Dependencies: RareTrackerCore
+
+libs\AceLocale-3.0\AceLocale-3.0.lua
+libs\AceDB-3.0\AceDB-3.0.xml
+
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\frFR.lua
+
+RareTrackerNazjatar.lua
+RareTrackerNazjatarGlobals.lua
+RareTrackerNazjatarOptions.lua

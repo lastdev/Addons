@@ -1,0 +1,19 @@
+## Interface: 80300
+## Title: RareTrackerMechagon
+## Notes: Track and coordinate rare spawn timers in Mechagon.
+## Author: Melroy
+## Version: 6.0.6
+## SavedVariables: RareTrackerMechagonDB, RTMDB
+## Dependencies: RareTrackerCore
+
+libs\AceLocale-3.0\AceLocale-3.0.lua
+libs\AceDB-3.0\AceDB-3.0.xml
+
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\frFR.lua
+
+RareTrackerMechagon.lua
+RareTrackerMechagonGlobals.lua
+RareTrackerMechagonOptions.lua
+RareTrackerMechagonEventHandler.lua
