@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(738, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(61634)
 mod:SetEncounterID(1502)
 mod:SetZone()
@@ -63,7 +63,7 @@ end
 --[[
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.WaveStart or msg:find(L.WaveStart) then -- all timer and mob not confirmed, maybe useless.
-		timerWaveCD:Start(8, Swarmers) 
+		timerWaveCD:Start(8, Swarmers)
 		timerWaveCD:Start(65, Demolishers)
 		timerWaveCD:Start(102, Swarmers..", "..Warriors)
 		timerWaveCD:Start(160, Demolishers..", "..Warriors)

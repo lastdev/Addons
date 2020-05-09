@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(533, "DBM-Party-BC", 16, 249)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(24664)
 mod:SetEncounterID(1894)
 mod:SetModelID(22906)--Here for a reason?
@@ -46,14 +46,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.interruptable = true
         timerPyroblast:Start()
     elseif spellId == 44224 then
-    	WarnGravityLapse:Show()
-    	timerGravityLapse:Start()
-    	timerGravityLapseCD:Schedule(35)--Show after current lapse has ended
-    	if self.vb.phase < 2 then
-    		self.vb.phase = 2
+		WarnGravityLapse:Show()
+		timerGravityLapse:Start()
+		timerGravityLapseCD:Schedule(35)--Show after current lapse has ended
+		if self.vb.phase < 2 then
+			self.vb.phase = 2
 			timerShockBarrior:Stop()
 			timerPhoenix:Stop()
-    	end
+		end
 	end
 end
 

@@ -404,7 +404,7 @@ SortByName = nil
 
 local function GetCategorySize(categoryID)
 	if type(achievementsByCategory[categoryID]) == "table" then
-		return #achievementsByCategory[categoryID]
+        return #achievementsByCategory[categoryID]
 	end
 	return 0
 end
@@ -424,6 +424,13 @@ end
 
 local currentCategoryID
 
+-- 8.3.003: adding these to expand past 12 characters via scrolling
+local current_start_col = 1
+local start_char_index = 1
+function addon:GetAchievementsCurrentColumnScrollInfo()
+    return current_start_col, start_char_index
+end
+
 addon:Controller("AltoholicUI.Achievements", {
 	SetCategory = function(frame, categoryID)
 		-- for debug only
@@ -440,6 +447,24 @@ addon:Controller("AltoholicUI.Achievements", {
 		
 		AltoholicTabAchievements.Status:SetText(format("%s: %s%s", ACHIEVEMENTS, colors.green, categorySize ))
 		
+        local classIcons = AltoholicTabAchievements.ClassIcons
+        -- Update which class icons are shown
+        for i = 1, 50 do
+            local icon = classIcons["Icon"..i]
+            icon:ClearAllPoints()
+            if (i < current_start_col) or (i >= (current_start_col + 12)) then
+                icon:SetShown(false)
+            else
+                if (i == current_start_col) then
+                    icon:SetPoint("TOPLEFT", icon:GetParent())
+                else
+                    icon:SetPoint("BOTTOMLEFT", classIcons["Icon"..(i-1)], "BOTTOMLEFT", 35, 0)
+                end
+                icon:SetShown(true)
+                icon:Show()
+            end
+        end
+        
 		for rowIndex = 1, numRows do
 			local rowFrame = scrollFrame:GetRow(rowIndex)
 			local line = rowIndex + offset
@@ -458,3 +483,15 @@ addon:Controller("AltoholicUI.Achievements", {
 		frame:Show()
 	end,
 })
+
+function addon:OnTabAchievementsRightButtonClick()
+    if current_start_col == 50 then return end
+    current_start_col = current_start_col + 1
+    AltoholicTabAchievements.Achievements.Update(AltoholicTabAchievements.Achievements)    
+end
+
+function addon:OnTabAchievementsLeftButtonClick()
+    if current_start_col == 1 then return end
+    current_start_col = current_start_col - 1
+    AltoholicTabAchievements.Achievements.Update(AltoholicTabAchievements.Achievements)
+end

@@ -9,8 +9,6 @@
 ## X-Category: Interface Enhancements
 ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/datastore.aspx
-## X-eMail: thaoky.altoholic@yahoo.com
-## X-Donate: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
 ## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
 
 embeds.xml

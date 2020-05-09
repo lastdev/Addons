@@ -869,12 +869,13 @@ local function GetZonesFilterOptions()
 					
 					if (tempName) then
 						local i = 2
-						while (zones_filter_options.args.zoneFilters.values[tempName]) do
-							tempName = tempName..' ('..i..')'
+						local tempLoopName = tempName
+						while (zones_filter_options.args.zoneFilters.values[tempLoopName]) do
+							tempLoopName = tempName..' ('..i..')'
 							i = i+1
 						end
 						
-						zones_filter_options.args.zoneFilters.values[tempName] = zoneID
+						zones_filter_options.args.zoneFilters.values[tempLoopName] = zoneID
 					end
 				end)
 				if (private.CONTINENT_ZONE_IDS[continentID].extrazones) then
@@ -893,12 +894,13 @@ local function GetZonesFilterOptions()
 					
 						if (tempName) then
 							local i = 2
-							while (zones_filter_options.args.zoneFilters.values[tempName]) do
-								tempName = tempName..' ('..i..')'
+							local tempLoopName = tempName
+							while (zones_filter_options.args.zoneFilters.values[tempLoopName]) do
+								tempLoopName = tempName..' ('..i..')'
 								i = i+1
 							end
 							
-							zones_filter_options.args.zoneFilters.values[tempName] = zoneID
+							zones_filter_options.args.zoneFilters.values[tempLoopName] = zoneID
 						end
 					end)
 				end
@@ -1438,7 +1440,7 @@ local function GetMapOptions()
 					name = AL["MAP_SHOW_ICON_MAX_SEEN_TIME"],
 					desc = AL["MAP_SHOW_ICON_MAX_SEEN_TIME_DESC"],
 					min	= 0,
-					max	= 24,
+					max	= 30,
 					step = 1,
 					bigStep = 1,
 					get = function() return private.db.map.maxSeenTime end,

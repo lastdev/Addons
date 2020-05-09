@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(538, "DBM-Party-BC", 11, 251)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200219191522")
 mod:SetCreatureID(17848)
 mod:SetEncounterID(1905)
 
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 33792"
 )
 
-local warnShot      = mod:NewTargetAnnounce(33792)
+local warnShot      = mod:NewTargetNoFilterAnnounce(33792)
 
 local timerShot     = mod:NewTargetTimer(6, 33792, nil, nil, nil, 3)
 

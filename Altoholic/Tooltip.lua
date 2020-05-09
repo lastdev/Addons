@@ -260,12 +260,18 @@ local function GetRealmsList()
 	local realms = {}
 	table.insert(realms, THIS_REALM)
 	
-	if addon:GetOption("UI.Tooltip.ShowMergedRealmsCount") then
+	if addon:GetOption("UI.Tooltip.ShowAllRealmsCount") then
+		for connectedRealm in pairs(DataStore:GetRealms()) do
+        	if connectedRealm ~= THIS_REALM then
+                table.insert(realms, connectedRealm)
+            end
+		end    
+    elseif addon:GetOption("UI.Tooltip.ShowMergedRealmsCount") then
 		for _, connectedRealm in pairs(DataStore:GetRealmsConnectedWith(THIS_REALM)) do
 			table.insert(realms, connectedRealm)
 		end
 	end
-	
+
 	return realms
 end
 

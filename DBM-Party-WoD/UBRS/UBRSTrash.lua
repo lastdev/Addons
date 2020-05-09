@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UBRSTrash", "DBM-Party-WoD", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -49,7 +49,7 @@ function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
 	local spellId = args.spellId
 	if spellId == 155505 then
-		if self:CheckInterruptFilter(args.sourceGUID, false, true) then 
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnDebilitatingRay:Show(args.sourceName)
 			specWarnDebilitatingRay:Play("kickcast")
 		else

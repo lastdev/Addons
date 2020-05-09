@@ -16,6 +16,9 @@ L:SetOptionLocalization{
 }
 L:SetMiscLocalization{
 	Phase2Emote	= "flee as the controlling power of the orb is drained.",
+	YellEgg1 = "You'll pay for forcing me to do this!",
+	YellEgg2 = "Fools! These eggs are more precious than you know!",
+	YellEgg3 = "No - not another one! I'll have your heads for this atrocity!",
 	YellPull 	= "Intruders have breached the hatchery! Sound the alarm! Protect the eggs at all costs!\r\n"--Yes this yell actually has a return and new line in it. as grabbed by transcriptor
 }
 -------------------
@@ -82,15 +85,20 @@ L:SetWarningLocalization{
 	WarnBreath		= "%s"
 }
 L:SetTimerLocalization{
-	TimerBreathCD	= "%s CD"
+	TimerBreathCD	= "%s CD",
+	TimerBreath		= "%s cast",
+	TimerVulnCD		= "Vulnerability CD"
 }
 L:SetOptionLocalization{
 	WarnBreath		= "Show warning when Chromaggus casts one of his Breaths",
-	TimerBreathCD	= "Show Breath CD"
+	TimerBreathCD	= "Show Breath CD",
+	TimerBreath		= "Show Breath cast",
+	TimerVulnCD		= "Show Vulnerability CD"
 }
 L:SetMiscLocalization{
 	Breath1	= "First Breath",
-	Breath2	= "Second Breath"
+	Breath2	= "Second Breath",
+	VulnEmote	= "flinches as its skin shimmers."
 }
 
 ----------------
@@ -102,6 +110,7 @@ L:SetGeneralLocalization{
 	name = "Nefarian"
 }
 L:SetWarningLocalization{
+	WarnAddsLeft		= "%d kills remaining",
 	WarnClassCall		= "%s call"
 }
 L:SetTimerLocalization{
@@ -109,9 +118,11 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	TimerClassCall		= "Show timer for class call duration",
+	WarnAddsLeft		= "Announce kills remaining until Stage 2 is triggered",
 	WarnClassCall		= "Announce class calls"
 }
 L:SetMiscLocalization{
+	YellP1		= "Let the games begin!",
 	YellP2		= "Well done, my minions. The mortals' courage begins to wane! Now, let's see how they contend with the true Lord of Blackrock Spire!!!",
 	YellP3		= "Impossible! Rise my minions!  Serve your master once more!",
 	YellShaman	= "Shamans, show me",
@@ -124,5 +135,6 @@ L:SetMiscLocalization{
 	YellHunter	= "Hunters and your annoying pea-shooters!",
 	YellMage	= "Mages too? You should be more careful when you play with magic...",
 	YellDK		= "Death Knights... get over here!",
-	YellMonk	= "Monk"
+	YellMonk	= "Monk",
+	YellDH		= "Demon hunters? How odd, covering your eyes like that. Doesn't it make it hard to see the world around you?"
 }

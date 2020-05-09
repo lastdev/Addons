@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(119, "DBM-Party-Cataclysm", 5, 69)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(43612)
 mod:SetEncounterID(1053)
 mod:SetZone()
@@ -84,4 +84,3 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnHeavenFury:Play("runaway")
 	end
 end
-		

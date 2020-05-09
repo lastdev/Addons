@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(547, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220143131")
 mod:SetCreatureID(18708)
 mod:SetEncounterID(1910)
 mod:SetUsedIcons(8)
@@ -42,7 +42,7 @@ function mod:SPELL_AURA_APPLIED(args)
             specWarnTouch:Show()
             specWarnTouch:Play("runout")
         else
-        	warnTouch:Show(args.destName)
+			warnTouch:Show(args.destName)
         end
 	end
 end

@@ -66,8 +66,10 @@ local function GetRealms(text, maxResults, cursorPosition)
 					if count >= maxResults then
 						break
 					end
+
+					local realmSlug = ns.realmSlugs[k]
 					kl = k:lower()
-					if not unique[kl] and kl:find(text, nil, true) == 1 then
+					if not unique[kl] and (kl:find(text, nil, true) == 1 or (realmSlug and realmSlug:find(text, nil, true)))  then
 						unique[kl] = true
 						count = count + 1
 						temp[count] = {

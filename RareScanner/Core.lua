@@ -14,6 +14,7 @@ RareScanner.CONTAINER_ELITE_VIGNETTE = "VignetteLootElite"
 RareScanner.EVENT_VIGNETTE = "VignetteEvent"
 RareScanner.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
 local RESCAN_TIMER = 120; -- 2 minutes to rescan for the same NPC
+local RANGE_TIMER = 1; -- 1 seconds
 
 -- Timers
 local CLEAN_RARES_FOUND_TIMER
@@ -29,8 +30,8 @@ local ETERNAL_COMPLETED = -1
 local DEBUG_MODE = false
 
 -- Config constants
-local CURRENT_DB_VERSION = 8
-local CURRENT_LOOT_DB_VERSION = 25
+local CURRENT_DB_VERSION = 14
+local CURRENT_LOOT_DB_VERSION = 29
 
 -- Hard reset versions
 local CURRENT_ADDON_VERSION = 600
@@ -41,15 +42,14 @@ local HARD_RESET = {
 -- Command line input
 SLASH_RARESCANNER_CMD1 = "/rarescanner"
 local CMD_HELP = "help"
-local CMD_SHOW = "show"
-local CMD_HIDE = "hide"
-local CMD_TOGGLE = "toggle"
-local CMD_TOGGLE_RARES = "rares"
-local CMD_TOGGLE_EVENTS = "events"
-local CMD_TOGGLE_TREASURES = "treasures"
-local CMD_TOGGLE_RARES_SHORT = "tr"
-local CMD_TOGGLE_EVENTS_SHORT = "te"
-local CMD_TOGGLE_TREASURES_SHORT = "tt"
+local CMD_TOGGLE_MAP_ICONS = "tmi"
+local CMD_TOGGLE_ALERTS = "ta"
+local CMD_TOGGLE_RARES = "tr"
+local CMD_TOGGLE_RARES_ALERTS = "tra"
+local CMD_TOGGLE_EVENTS = "te"
+local CMD_TOGGLE_EVENTS_ALERTS = "tea"
+local CMD_TOGGLE_TREASURES = "tt"
+local CMD_TOGGLE_TREASURES_ALERTS = "tta"
 
 -- Textures
 local NORMAL_NEXT_ARROW_TEXTURE = "Interface\\AddOns\\RareScanner\\Media\\Icons\\RightArrowBlue.blp"
@@ -59,6 +59,9 @@ local HIGHLIGHT_BACK_ARROW_TEXTURE = "Interface\\AddOns\\RareScanner\\Media\\Ico
 
 -- Locales
 local AL = LibStub("AceLocale-3.0"):GetLocale("RareScanner");
+
+-- Range checker
+local rc = LibStub("LibRangeCheck-2.0")
 
 -- Settings
 local PROFILE_DEFAULTS = {
@@ -298,6 +301,9 @@ scanner_button:RegisterEvent("PLAYER_LOGIN")
 -- Vignette events
 scanner_button:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
 
+-- Nameplates events
+scanner_button:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+
 -- Out of combat events
 scanner_button:RegisterEvent("PLAYER_REGEN_ENABLED")
 
@@ -339,6 +345,68 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 		else
 			vignetteInfo.id = id
 			self:CheckNotificationCache(self, vignetteInfo)
+		end
+	-- Nameplates
+	elseif (event == "NAME_PLATE_UNIT_ADDED") then
+		-- If player in a zone with vignettes ignore it
+		local mapID = WorldMapFrame:GetMapID()
+		if (mapID and (not private.ZONES_WITHOUT_VIGNETTE[mapID] or not RS_tContains(private.ZONES_WITHOUT_VIGNETTE[mapID], C_Map.GetMapArtID(mapID)))) then
+			return
+		end
+		
+		local nameplateid = ...
+		if (nameplateid and not UnitIsUnit("player", nameplateid) and not UnitIsFriend("player", nameplateid)) then
+			local nameplateUnitGuid = UnitGUID(nameplateid)
+			if (nameplateUnitGuid) then
+				local _, _, _, _, _, id = strsplit("-", nameplateUnitGuid)
+				local npcID = id and tonumber(id) or nil
+				if (npcID) then
+					-- Simulates vignette event
+					if (npcID and (private.dbglobal.rares_found[npcID] or private.ZONE_IDS[npcID]) and not private.dbchar.rares_killed[npcID]) then
+						local vignetteInfo = {}
+						vignetteInfo.atlasName = RareScanner.NPC_VIGNETTE
+						vignetteInfo.id = "NPC"..npcID
+						local nameplateUnitName, _ = UnitName(nameplateid)
+						vignetteInfo.name = nameplateUnitName
+						vignetteInfo.objectGUID = nameplateUnitGuid
+						
+						-- It uses the player position in first instance
+						local playerMapPosition = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
+						if (playerMapPosition) then
+							local playerCoordX, playerCoordY = playerMapPosition:GetXY()
+							vignetteInfo.x = playerCoordX
+							vignetteInfo.y = playerCoordY
+						end
+						
+						-- In dungeons and such it doesnt return values, so use the ones in the database
+						-- They wont match the real position, but... what are we gonna do
+						if (not vignetteInfo.x or not vignetteInfo.y) then
+							if (type(private.ZONE_IDS[npcID].zoneID) == "table" and private.ZONE_IDS[npcID].zoneID[WorldMapFrame:GetMapID()]) then
+								vignetteInfo.x = private.ZONE_IDS[npcID].zoneID[WorldMapFrame:GetMapID()].x
+								vignetteInfo.y = private.ZONE_IDS[npcID].zoneID[WorldMapFrame:GetMapID()].y
+							else
+								vignetteInfo.x = private.ZONE_IDS[npcID].x
+								vignetteInfo.y = private.ZONE_IDS[npcID].y
+							end
+						end
+						self:CheckNotificationCache(self, vignetteInfo)
+						
+						-- And then in tries to find better coordinates
+						local minRange, maxRange = rc:GetRange(nameplateid)
+						if (playerMapPosition and (minRange or maxRange)) then
+							C_Timer.NewTicker(RANGE_TIMER, function() 
+								local minRange, maxRange = rc:GetRange(nameplateid)
+								if (minRange and minRange < 10) then
+									local playerCoordX, playerCoordY = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()
+									private.dbglobal.rares_found[npcID].coordX = playerCoordX
+									private.dbglobal.rares_found[npcID].coordY = playerCoordY
+									RareScanner:PrintDebugMessage("DEBUG: Localizadas nuevas coordenadas gracias al rango inferior a 5")
+								end
+							end, 15)
+						end
+					end
+				end
+			end
 		end
 	-- Out of combat actions
 	elseif (event == "PLAYER_REGEN_ENABLED") then
@@ -401,12 +469,17 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 			end
 			-- check if killed
 			if (npcID and private.dbglobal.rares_found[npcID] and not private.dbchar.rares_killed[npcID]) then
+				-- Update coordinates (if zone doesnt use vignettes)
+				local playerMapPosition = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
+				if (playerMapPosition) then
+					local playerCoordX, playerCoordY = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()
+					private.dbglobal.rares_found[npcID].coordX = playerCoordX
+					private.dbglobal.rares_found[npcID].coordY = playerCoordY
+				end
+				
 				if (unitClassification ~= "rare" and unitClassification ~= "rareelite") then
-					-- properly killed
-					--RareScanner:PrintDebugMessage("DEBUG: Identificado un NPC raro muerto porque ha dejado de ser raro en algun momento de la historia y nos habiamos enterado.")
 					RareScanner:ProcessKill(npcID)
 				else
-					--RareScanner:PrintDebugMessage("DEBUG: Identificado un NPC raro muerto que sigue siendo raro, por lo tanto no lo hemos debido de matar nosotros.")
 					private.dbglobal.rares_found[npcID].foundTime = time()
 				end
 			-- Debug tools
@@ -891,7 +964,7 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo, isNavigating)
 		elseif ((iconid == RareScanner.EVENT_VIGNETTE or iconid == RareScanner.EVENT_ELITE_VIGNETTE) and not private.db.general.scanEvents) then
 			return
 		-- disable zones alerts if the player is in that zone
-		elseif (not private.db.zoneFilters.filterOnlyMap and next(private.db.general.filteredZones) ~= nil and private.db.general.filteredZones[zone_id] == false) then
+		elseif (npcID and not private.db.zoneFilters.filterOnlyMap and next(private.db.general.filteredZones) ~= nil and (private.db.general.filteredZones[zone_id] == false or RareScanner:ZoneFiltered(npcID))) then
 			return
 		-- disable alerts for containers
 		elseif (iconid == RareScanner.CONTAINER_VIGNETTE or iconid == RareScanner.CONTAINER_ELITE_VIGNETTE) then
@@ -967,11 +1040,6 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo, isNavigating)
 				already_notified[161407] = true
 			end
 		end
-	end
-
-	-- Filters NPC by zone just in case it belong to a different are from the current player's position
-	if (npcID and RareScanner:ZoneFiltered(npcID)) then
-		return
 	end
 	
 	-- Check if the NPC is filtered, in which case we don't show anything
@@ -1596,6 +1664,9 @@ function RareScanner:InitializeDataBase()
 			end
 		end
 		
+		-- Clear previous overlay if active when closed the game
+		private.dbchar.overlayActive = nil
+		
 		-- Fix possible errors in database
 		self:DumpBrokenData()
 	end
@@ -1613,9 +1684,20 @@ function RareScanner:DumpBrokenData()
 	
 	if (private.dbchar.rares_killed and next(private.dbchar.rares_killed) ~= nil) then
 		for npcID, timestamp in pairs(private.dbchar.rares_killed) do
-			-- If the NPC belongs to Mechagon or Nazjatar and its set as eternal death, reset it
-			if (timestamp == ETERNAL_DEATH and private.ZONE_IDS[npcID] and (private.ZONE_IDS[npcID].zoneID == 1462 or private.ZONE_IDS[npcID].zoneID == 1355)) then
-				private.dbchar.rares_killed[npcID] = nil
+			-- If the NPC belongs to a place that is reseteable and its set as eternal death, reset it
+			if (timestamp == ETERNAL_DEATH and private.ZONE_IDS[npcID]) then
+				local zoneID = private.ZONE_IDS[npcID].zoneID
+				if (type(zoneID) == "table") then
+					for id, _ in pairs (zoneID) do
+						if (not RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[id], "all") and not RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[id], C_Map.GetMapArtID(id))) then
+							private.dbchar.rares_killed[npcID] = nil
+						end
+					end
+				else
+					if (not RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[zoneID], "all") and not RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[zoneID], C_Map.GetMapArtID(zoneID))) then
+						private.dbchar.rares_killed[npcID] = nil
+					end
+				end
 			end
 		end
 	end
@@ -1669,7 +1751,7 @@ function RareScanner:MarkCompletedAchievements()
 		local _, _, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe, _ = GetAchievementInfo(achievementID)
 		if (completed and wasEarnedByMe) then
 			for i, npcID in ipairs(entities) do
-				if (private.ZONE_IDS[npcID] and not private.RESETABLE_KILLS_ZONE_IDS[private.ZONE_IDS[npcID].zoneID] and not private.dbchar.rares_killed[npcID]) then
+				if (private.ZONE_IDS[npcID] and (RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[private.ZONE_IDS[npcID].zoneID], "all") or RS_tContains(private.PERMANENT_KILLS_ZONE_IDS[private.ZONE_IDS[npcID].zoneID], C_Map.GetMapArtID(private.ZONE_IDS[npcID].zoneID))) and not private.dbchar.rares_killed[npcID]) then
 					private.dbchar.rares_killed[npcID] = ETERNAL_DEATH
 				elseif (private.CONTAINER_ZONE_IDS[npcID] and not private.dbchar.containers_opened[npcID]) then
 					private.dbchar.containers_opened[npcID] = ETERNAL_COLLECTED
@@ -1798,42 +1880,45 @@ function RareScanner:LoadRareNames(db)
 	end, ITERATIONS);
 end
 
-SlashCmdList["RARESCANNER_CMD"] = function(msg)
-	local command, entity = strsplit(" ", msg)
-	if (command == CMD_SHOW) then
-		RareScanner:CmdShow()	
-	elseif (command == CMD_HIDE) then
-		RareScanner:CmdHide()
-	elseif (command == CMD_TOGGLE) then
-		if (not entity) then
-			if (not private.db.map.cmdToggle) then
-				RareScanner:CmdHide()
-				private.db.map.cmdToggle = true
-			else
-				RareScanner:CmdShow()
-				private.db.map.cmdToggle = false
-			end
-		elseif (entity == CMD_TOGGLE_RARES) then
-			RareScanner:CmdToggleRares()
-		elseif (entity == CMD_TOGGLE_EVENTS) then
-			RareScanner:CmdToggleEvents()
-		elseif (entity == CMD_TOGGLE_TREASURES) then
-			RareScanner:CmdToggleTreasures()
+SlashCmdList["RARESCANNER_CMD"] = function(command)
+	if (command == CMD_TOGGLE_MAP_ICONS) then
+		if (not private.db.map.cmdToggle) then
+			RareScanner:CmdHide()
+			private.db.map.cmdToggle = true
+		else
+			RareScanner:CmdShow()
+			private.db.map.cmdToggle = false
 		end
-	elseif (command == CMD_TOGGLE_RARES_SHORT) then
+	elseif (command == CMD_TOGGLE_ALERTS) then
+		if (not private.db.general.cmdToggleAlerts) then
+			RareScanner:CmdDisableAlerts()
+			private.db.general.cmdToggleAlerts = true
+		else
+			RareScanner:CmdEnableAlerts()
+			private.db.general.cmdToggleAlerts = false
+		end
+	elseif (command == CMD_TOGGLE_RARES) then
 		RareScanner:CmdToggleRares()
-	elseif (command == CMD_TOGGLE_EVENTS_SHORT) then
+	elseif (command == CMD_TOGGLE_RARES_ALERTS) then
+		RareScanner:CmdToggleRaresAlerts()
+	elseif (command == CMD_TOGGLE_EVENTS) then
 		RareScanner:CmdToggleEvents()
-	elseif (command == CMD_TOGGLE_TREASURES_SHORT) then
+	elseif (command == CMD_TOGGLE_EVENTS_ALERTS) then
+		RareScanner:CmdToggleEventsAlerts()
+	elseif (command == CMD_TOGGLE_TREASURES) then
 		RareScanner:CmdToggleTreasures()
+	elseif (command == CMD_TOGGLE_TREASURES_ALERTS) then
+		RareScanner:CmdToggleTreasuresAlerts()
 	else
-		RareScanner:PrintMessage(AL["CMD_HELP1"])
-		RareScanner:PrintMessage(AL["CMD_HELP2"])
-		RareScanner:PrintMessage(AL["CMD_HELP3"])
-		RareScanner:PrintMessage(AL["CMD_HELP4"])
-		RareScanner:PrintMessage(AL["CMD_HELP5"])
-		RareScanner:PrintMessage(AL["CMD_HELP6"])
-		RareScanner:PrintMessage(AL["CMD_HELP7"])
+		print("|cFFFBFF00"..AL["CMD_HELP1"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_MAP_ICONS.." |cFF00FFFB"..AL["CMD_HELP2"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_EVENTS.." |cFF00FFFB"..AL["CMD_HELP3"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_TREASURES.." |cFF00FFFB"..AL["CMD_HELP4"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_RARES.." |cFF00FFFB"..AL["CMD_HELP5"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_ALERTS.." |cFF00FFFB"..AL["CMD_HELP6"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_EVENTS_ALERTS.." |cFF00FFFB"..AL["CMD_HELP7"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_TREASURES_ALERTS.." |cFF00FFFB"..AL["CMD_HELP8"])
+		print("|cFFFBFF00   "..SLASH_RARESCANNER_CMD1.." "..CMD_TOGGLE_RARES_ALERTS.." |cFF00FFFB"..AL["CMD_HELP9"])
 	end
 end
 
@@ -1851,6 +1936,20 @@ function RareScanner:CmdShow()
 	RareScanner:PrintMessage(AL["CMD_SHOW"])	
 end
 
+function RareScanner:CmdDisableAlerts()
+	private.db.general.scanRares = false
+	private.db.general.scanEvents = false
+	private.db.general.scanContainers = false
+	RareScanner:PrintMessage(AL["CMD_DISABLE_ALERTS"])
+end
+
+function RareScanner:CmdEnableAlerts()
+	private.db.general.scanRares = true
+	private.db.general.scanEvents = true
+	private.db.general.scanContainers = true
+	RareScanner:PrintMessage(AL["CMD_ENABLE_ALERTS"])	
+end
+
 function RareScanner:CmdToggleRares()
 	if (private.db.map.displayNpcIcons) then
 		private.db.map.displayNpcIcons = false
@@ -1858,6 +1957,16 @@ function RareScanner:CmdToggleRares()
 	else
 		private.db.map.displayNpcIcons = true
 		RareScanner:PrintMessage(AL["CMD_SHOW_RARES"])
+	end
+end
+
+function RareScanner:CmdToggleRaresAlerts()
+	if (private.db.general.scanRares) then
+		private.db.general.scanRares = false
+		RareScanner:PrintMessage(AL["CMD_DISABLE_RARES_ALERTS"])
+	else
+		private.db.general.scanRares = true
+		RareScanner:PrintMessage(AL["CMD_ENABLE_RARES_ALERTS"])
 	end
 end
 
@@ -1871,6 +1980,16 @@ function RareScanner:CmdToggleEvents()
 	end
 end
 
+function RareScanner:CmdToggleEventsAlerts()
+	if (private.db.general.scanEvents) then
+		private.db.general.scanEvents = false
+		RareScanner:PrintMessage(AL["CMD_DISABLE_EVENTS_ALERTS"])
+	else
+		private.db.general.scanEvents = true
+		RareScanner:PrintMessage(AL["CMD_ENABLE_EVENTS_ALERTS"])
+	end
+end
+
 function RareScanner:CmdToggleTreasures()
 	if (private.db.map.displayContainerIcons) then
 		private.db.map.displayContainerIcons = false
@@ -1878,6 +1997,16 @@ function RareScanner:CmdToggleTreasures()
 	else
 		private.db.map.displayContainerIcons = true
 		RareScanner:PrintMessage(AL["CMD_SHOW_TREASURES"])
+	end
+end
+
+function RareScanner:CmdToggleTreasuresAlerts()
+	if (private.db.general.scanContainers) then
+		private.db.general.scanContainers = false
+		RareScanner:PrintMessage(AL["CMD_DISABLE_CONTAINERS_ALERTS"])
+	else
+		private.db.general.scanContainers = true
+		RareScanner:PrintMessage(AL["CMD_ENABLE_CONTAINERS_ALERTS"])
 	end
 end
 

@@ -1,7 +1,4 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<!-- 
-	<Script file="Profiler.lua"></Script>
-	-->
 	<Script file="Tasks.lua"></Script>
 	<Script file="Helpers.lua"></Script>
 	<Script file="Comm.lua"></Script>
@@ -10,6 +7,7 @@
 	<Script file="Loots.lua"></Script>
 	<Script file="Events.lua"></Script>
 	<Script file="Altoholic.lua"></Script>
+    <Script file="SetupTabs.lua" />
 	
 	<GameTooltip name="AltoTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true" />
 
@@ -30,7 +28,7 @@
 			<OnLoad>
 				self:RegisterForDrag("LeftButton")
 				self.elapsed = 0
-				PanelTemplates_SetNumTabs(self, 7)
+				Altoholic:SetupTabs(self)
 				PanelTemplates_SetTab(self, 1)
 			</OnLoad>
 			<OnDragStart>
@@ -113,63 +111,6 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentTab1" inherits="AltoTabTemplate" id="1">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="15" y="11" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Summary" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab2" inherits="AltoTabTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Characters" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab3" inherits="AltoTabTemplate" id="3" text="SEARCH">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab2" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Search" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab4" inherits="AltoTabTemplate" id="4" text="GUILD">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab3" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Guild" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab5" inherits="AltoTabTemplate" id="5" text="ACHIEVEMENT_BUTTON">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab4" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Achievements" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab6" inherits="AltoTabTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab5" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Agenda" />
-				</KeyValues>
-			</Button>
-			<Button name="$parentTab7" inherits="AltoTabTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab6" relativePoint="TOPRIGHT" x="-8" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="context" value="Grids" />
-				</KeyValues>
-			</Button>
-
 			<EditBox name="$parent_SearchEditBox" inherits="InputBoxTemplate">
 				<Size x="140" y="16" />
 				<Anchors>

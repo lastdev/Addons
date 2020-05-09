@@ -32,10 +32,13 @@ function LM_Location:Initialize()
     self:RegisterEvent("ZONE_CHANGED_INDOORS")
     self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
     self:RegisterEvent("MOUNT_JOURNAL_USABILITY_CHANGED")
-end
 
-local function FrameApply(frames, func, ...)
-    for _,f in ipairs(frames) do f[func](f, ...) end
+    self.lastJumpTime = 0
+    hooksecurefunc('AscendStop', function ()
+            if not IsMounted() and not IsFlying() then
+                self.lastJumpTime = GetTime()
+            end
+        end)
 end
 
 function LM_Location:UpdateSwimTimes()

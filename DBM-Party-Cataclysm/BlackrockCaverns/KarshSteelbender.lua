@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(107, "DBM-Party-Cataclysm", 1, 66)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(39698)
 mod:SetEncounterID(1039)
 mod:SetZone()
@@ -10,7 +10,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 75842 75846",
-	"SPELL_AURA_APPLIED_DOSE 75846"	
+	"SPELL_AURA_APPLIED_DOSE 75846"
 )
 
 local warnObsidianArmor		= mod:NewSpellAnnounce(75842, 2)

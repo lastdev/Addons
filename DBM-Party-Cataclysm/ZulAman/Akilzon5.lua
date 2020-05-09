@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(186, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(23574)
 mod:SetEncounterID(1189)
 mod:SetZone()
@@ -47,9 +47,9 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 97318 then
 		if args:IsDestTypePlayer() then
-			warnPlucked:Show(args.destName)	
+			warnPlucked:Show(args.destName)
 		else
-			self:ScanForMobs(args.destGUID, 0, 8, 1, 0.1, 10, "SetIconOnEagle")
+			self:ScanForMobs(args.destGUID, 2, 8, 1, 0.1, 10, "SetIconOnEagle")
 		end
 	end
 end

@@ -1,8 +1,11 @@
 # <DBM> Dungeons (BC)
 
-## [r13](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r13) (2020-01-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r12...r13)
+## [r14](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r14) (2020-02-23)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r13...r14)
 
-- Toc Bump for 8.3  
-- Port the sacrifice warning from classic DM to retail DM  
-- Sync Maraudon update to retail dungeon mods  
+- Remove unused spellId from king dread  
+- Missed one  
+- Pretty much 59 files of whitespace cleanup  
+- Update Luacheck  
+- Tweak a couple warnings to not be filtered  
+- Restore IKiss easter egg that plays trinkets speach when you open his boss mod panel  

@@ -1,16 +1,10 @@
-lightweight tag f664c7d04272de1cc1e3d82b3adfda7aef503bc0 v80300-1.1.1
+lightweight tag c8aaf3c2a6984df3c3818e62bac74eb68ab7ae3f v80300-1.1.2
 Author:	Ludovicus <ludovicus.maior@gmail.com>
-Date:	Sun Feb 2 17:50:26 2020 -0500
+Date:	Thu Feb 27 15:01:23 2020 -0500
 
-commit f664c7d04272de1cc1e3d82b3adfda7aef503bc0
+commit c8aaf3c2a6984df3c3818e62bac74eb68ab7ae3f
 Author: Ludovicus <ludovicus.maior@gmail.com>
-Date:   Sun Feb 2 17:50:26 2020 -0500
+Date:   Thu Feb 27 15:01:23 2020 -0500
 
-    If HBD does not know where we are, do not crash in /way list.
-
-commit ef9538a3b6e0b3172dc657c5f83c11d121f621d5
-Author: Ludovicus <ludovicus.maior@gmail.com>
-Date:   Sun Feb 2 17:49:00 2020 -0500
-
-    Use HereBeDragons-2.02-release-10-gd4da4b5 till next release.
+    Update to HereBeDragons 2.03
 

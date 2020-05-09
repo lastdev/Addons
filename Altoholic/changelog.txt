@@ -11,11 +11,13 @@ Some fixes to work around API changes are too time consuming, so cleaning is req
 
 How to support Altoholic's development :
 
-- For a single donation : Use the donate button either on Curse or on WoW Interface.
-- For a repeated donation : Support me on Patreon : https://www.patreon.com/Thaoky 
-- Make a gift from my amazon's wish list : http://amzn.eu/7xWdnbZ
+- To make a one-off donation to the original author: Use the donate button on https://www.curseforge.com/wow/addons/altoholic/
+- For an ongoing donation to the maintainer: Support Teelo on Patreon : https://www.patreon.com/TeeloJubeithos 
 
-If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
+If you like the addon, consider supporting it, this has been the long term effort and commitment of two people.
+
+8.3.002 (14/02/2020)
+- Fixed various LUA errors
 
 8.3.001 (9/02/2020)
 

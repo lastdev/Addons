@@ -185,6 +185,7 @@ lib:SetBaseTranslations {
 	["The Sunreavers"] = "The Sunreavers",
 	["The Taunka"] = "The Taunka",
 	["The Tillers"] = "The Tillers",
+    ["The Unshackled"] = "The Unshackled",
 	["The Violet Eye"] = "The Violet Eye",
 	["The Wardens"] = "The Wardens",
 	["The Wardens (Paragon)"] = "The Wardens (Paragon)",
@@ -207,6 +208,7 @@ lib:SetBaseTranslations {
 	["Vol'jin's Spear"] = "Vol'jin's Spear",
 	["Warsong Offensive"] = "Warsong Offensive",
 	["Warsong Outriders"] = "Warsong Outriders",
+    ["Waveblade Ankoan"] = "Waveblade Ankoan",
 	["Wildhammer Clan"] = "Wildhammer Clan",
 	["Winterfin Retreat"] = "Winterfin Retreat",
 	["Wintersaber Trainers"] = "Wintersaber Trainers",
@@ -433,6 +435,10 @@ elseif GAME_LOCALE == "deDE" then
 	["Wintersaber Trainers"] = "Wintersäblerausbilder",
 	["Wrynn's Vanguard"] = "Wrynns Vorhut",
 	["Zandalar Tribe"] = "Stamm der Zandalari"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
+    
 }
 elseif GAME_LOCALE == "frFR" then
 	lib:SetCurrentTranslations {
@@ -649,6 +655,9 @@ elseif GAME_LOCALE == "frFR" then
 	["Wintersaber Trainers"] = "Éleveurs de sabres-d'hiver",
 	["Wrynn's Vanguard"] = "Avant-garde de Wrynn",
 	["Zandalar Tribe"] = "Tribu Zandalar"
+    --[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "koKR" then
 	lib:SetCurrentTranslations {
@@ -872,6 +881,9 @@ elseif GAME_LOCALE == "koKR" then
 	["Wintersaber Trainers"] = "눈호랑이 조련사",
 	["Wrynn's Vanguard"] = "린의 선봉대",
 	["Zandalar Tribe"] = "잔달라 부족"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "esES" then
 	lib:SetCurrentTranslations {
@@ -1103,6 +1115,9 @@ elseif GAME_LOCALE == "esES" then
 	["Wintersaber Trainers"] = "Instructores de Sableinvernales",
 	["Wrynn's Vanguard"] = "Vanguardia de Wrynn",
 	["Zandalar Tribe"] = "Tribu Zandalar"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "esMX" then
 	lib:SetCurrentTranslations {
@@ -1354,6 +1369,9 @@ elseif GAME_LOCALE == "esMX" then
 	--[[Translation missing --]]
 	--[[ ["Wrynn's Vanguard"] = "Wrynn's Vanguard",--]] 
 	["Zandalar Tribe"] = "Tribu Zandalar"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "ptBR" then
 	lib:SetCurrentTranslations {
@@ -1604,6 +1622,9 @@ elseif GAME_LOCALE == "ptBR" then
 	--[[Translation missing --]]
 	--[[ ["Wrynn's Vanguard"] = "Wrynn's Vanguard",--]] 
 	["Zandalar Tribe"] = "Tribo dos Zandalar"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "itIT" then
 	lib:SetCurrentTranslations {
@@ -1820,6 +1841,9 @@ elseif GAME_LOCALE == "itIT" then
 	["Wintersaber Trainers"] = "Addestratori delle Fiere Glaciali",
 	["Wrynn's Vanguard"] = "Lancia di Vol'jin",
 	["Zandalar Tribe"] = "Tribù Zandalari"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "ruRU" then
 	lib:SetCurrentTranslations {
@@ -2070,6 +2094,9 @@ elseif GAME_LOCALE == "ruRU" then
 	--[[Translation missing --]]
 	--[[ ["Wrynn's Vanguard"] = "Wrynn's Vanguard",--]] 
 	["Zandalar Tribe"] = "Племя Зандалар"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "zhCN" then
 	lib:SetCurrentTranslations {
@@ -2268,6 +2295,9 @@ elseif GAME_LOCALE == "zhCN" then
 	["Wintersaber Trainers"] = "冬刃豹训练师",
 	["Wrynn's Vanguard"] = "乌瑞恩先锋军",
 	["Zandalar Tribe"] = "赞达拉部族"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 elseif GAME_LOCALE == "zhTW" then
 	lib:SetCurrentTranslations {
@@ -2466,6 +2496,9 @@ elseif GAME_LOCALE == "zhTW" then
 	["Wintersaber Trainers"] = "冬刃豹訓練師",
 	["Wrynn's Vanguard"] = "烏瑞恩先鋒",
 	["Zandalar Tribe"] = "贊達拉部族"
+	--[[Translation missing --]]    
+    --["The Unshackled"] = "The Unshackled",
+    --["Waveblade Ankoan"] = "Waveblade Ankoan",
 }
 else
 	error(("%s: Locale %q not supported"):format(MAJOR_VERSION, GAME_LOCALE))

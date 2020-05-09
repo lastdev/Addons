@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(608, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(36494)
 mod:SetEncounterID(833, 834, 1999)
 mod:SetUsedIcons(8)
@@ -88,7 +88,7 @@ function mod:RAID_BOSS_WHISPER(msg)
 		specWarnSaroniteRock:Show()
 		specWarnSaroniteRock:Play("watchstep")
 		yellRock:Yell()
---	end 
+--	end
 end
 
 --per usual, use transcriptor message to get messages from both bigwigs and DBM, all without adding comms to this mod at all

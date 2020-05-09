@@ -1,8 +1,8 @@
 ## Author: Allara
-## Interface: 80205
-## X-Min-Interface: 80205
+## Interface: 80300
+## X-Min-Interface: 80300
 ## Title: Rarity
-## Version: 1.0 (r694-release)
+## Version: 1.0 (r697-release-2)
 
 ## Notes: Tracks rare drops, including companions and mounts
 ## Notes-ruRU: Примечания
@@ -41,16 +41,35 @@ Libs\LibCompress\lib.xml
 #@end-no-lib-strip@
 Libs\LibBars-1.0\lib.xml
 
+# This must be loaded first
+Locales.lua
+Core\Init.lua
+
 # Database
+DB\Nodes.lua
 DB\SharedConstants.lua
+DB\Spells.lua
 
 # Utility/Helpers
 Utils\DatabaseMaintenanceHelper.lua
 Utils\DebugCache.lua
 Utils\PrettyPrint.lua
+Utils\Sorting.lua
+Utils\Time.lua
 Utils\TradeSkillMaster.lua
 
 # Addon Core
-Locales.lua
+Core\Caching.lua
+Core\Collections.lua
+Core\Debugging.lua
+Core\Detection.lua
+Core\EventHandlers.lua
+Core\GUI.lua
+Core\Profiling.lua
+Core\Serialization.lua
+Core\Session.lua
+Core\Settings.lua
+Core\Statistics.lua
+Core\Tracking.lua
 Core.lua
 Options_Defaults.lua

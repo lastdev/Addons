@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1234, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143517")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(77120)
 mod:SetEncounterID(1762)
 mod:SetZone()
@@ -69,4 +69,4 @@ function mod:UNIT_TARGETABLE_CHANGED()
 		timerBlackIronCycloneCD:Cancel()
 		specWarnZaela:Play("phasechange")
 	end
-end	
+end

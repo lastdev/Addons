@@ -1,7 +1,7 @@
-## Interface: 80200
+## Interface: 80300
 ## Title: SilverDragon (Warlords)
 ## Notes: Mobs for Warlords
-## Version: v4.0.17
+## Version: v80300.0
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

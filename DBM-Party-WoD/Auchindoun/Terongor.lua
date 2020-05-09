@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1225, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143517")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(77734)
 mod:SetEncounterID(1714)
 mod:SetZone()
@@ -180,7 +180,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnChaosBolt:Play("kickcast")
 		else
 			specWarnChaosBolt:Play("helpkick")
-		end	
+		end
 	elseif spellId == 156857 then--Base version cast only in phase 1
 		specWarnRainOfFire:Show()
 		specWarnRainOfFire:Play("watchstep")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(175, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(52155)
 mod:SetEncounterID(1178)
 mod:SetZone()
@@ -42,7 +42,7 @@ local toxicLinkTargets = {}
 local function warnToxicLinkTargets(self)
 	warnToxicLink:Show(table.concat(toxicLinkTargets, "<, >"))
 	table.wipe(toxicLinkTargets)
-	self.vb.toxicLinkIcon = 8	
+	self.vb.toxicLinkIcon = 8
 end
 
 function mod:OnCombatStart(delay)
@@ -62,7 +62,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		toxicLinkTargets[#toxicLinkTargets + 1] = args.destName
 		if self:IsInCombat() then--only start cd timer on boss fight, not when trash does it.
 			timerToxicLinkCD:Start()
-		end	
+		end
 		if args:IsPlayer() then
 			specWarnToxicLink:Show()
 			specWarnToxicLink:Play("gather")

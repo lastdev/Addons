@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Title: LiteMount
-## Version: 8.3.3
+## Version: 8.3.6
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug

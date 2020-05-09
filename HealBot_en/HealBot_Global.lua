@@ -1,11 +1,11 @@
-﻿HEALBOT_VERSION    = "8.3.0.3";
+﻿HEALBOT_VERSION    = "8.3.0.10";
 HEALBOT_VERSION_SC = HEALBOT_VERSION
 HEALBOT_ABOUT_URL = "healbot.dpm15.net"
 
 local version = GetBuildInfo()
 local vMajor = string.split(".", version)
 HEALBOT_GAME_VERSION = tonumber(vMajor)
-if HEALBOT_GAME_VERSION==1 then HEALBOT_VERSION = "1.13.3.7" end
+if HEALBOT_GAME_VERSION==1 then HEALBOT_VERSION = "1.13.4.3" end
 
 function HealBot_globalVars()
     --Consumables
@@ -73,6 +73,7 @@ function HealBot_globalVars()
     HEALBOT_TAILWIND                        = 284573 --GetSpellInfo(284573) or "--Tailwind"
     HEALBOT_AMETHYST_OF_THE_SHADOW_KING     = 284558 --GetItemInfo(284558) or "--Amethyst of the Shadow King"
     HEALBOT_SHADOW_TOUCHED                  = 284556 --GetSpellInfo(284556) or "--Shadow-Touched"
+    HEALBOT_INGENIOUS_MANA_BATTERY          = 169344 
     
 
     --Procs
@@ -114,11 +115,13 @@ function HealBot_globalVars()
     HEALBOT_CHI_BURST                       = 123986 --GetSpellInfo(123986) or "--Chi Burst"
     HEALBOT_CRACKLING_JADE_LIGHTNING        = 117952 --GetSpellInfo(117952) or "--Crackling Jade Lightning"
     HEALBOT_DISABLE                         = 116095 --GetSpellInfo(116095) or "--Disable"
+    HEALBOT_EXPEL_HARM                      = 115072 
     HEALBOT_JAB                             = 100780 --GetSpellInfo(100780) or "--Jab"
     HEALBOT_PARALYSIS                       = 115078 --GetSpellInfo(115078) or "--Paralysis"
     HEALBOT_PROVOKE                         = 115546 --GetSpellInfo(115546) or "--Provoke"
     HEALBOT_SPEAR_HAND_STRIKE               = 116705 --GetSpellInfo(116705) or "--Spear Hand Strike"
     HEALBOT_TIGER_PALM                      = 100787 --GetSpellInfo(100787) or "--Tiger Palm"
+    HEALBOT_TOUCH_OF_DEATH                  = 115080 --GetSpellInfo(115080) or "--Touch of Death"
     HEALBOT_TOUCH_OF_DEATH                  = 115080 --GetSpellInfo(115080) or "--Touch of Death"
     --Paladin
     HEALBOT_BINDING_LIGHT                   = 115750 --GetSpellInfo(115750) or "--Blinding Light"
@@ -184,7 +187,7 @@ function HealBot_globalVars()
     HEALBOT_REVIVAL                         = 115310 --GetSpellInfo(115310) or "--Revival"
     HEALBOT_SOOTHING_MIST                   = 198533 --GetSpellInfo(115175) or "--Soothing Mist" 
     HEALBOT_SURGING_MIST                    = 116694 --GetSpellInfo(116694) or "--Surging Mist" 
-    HEALBOT_UPLIFT                          = 116670 --GetSpellInfo(116670) or "--Uplift"
+    HEALBOT_UPLIFT                          = 116670 --Changed to Vivify
     HEALBOT_ZEN_MEDITATION                  = 115176 --GetSpellInfo(115176) or "--Zen Meditation"
     HEALBOT_ZEN_SPHERE                      = 124081 --GetSpellInfo(124081) or "--Zen Sphere"
     --Paladin
@@ -218,6 +221,7 @@ function HealBot_globalVars()
 	HEALBOT_HOLY_WORD_SANCTIFY              = 34861 --GetSpellInfo(34861) or "--Holy Word: Sanctify";
 	HEALBOT_SPIRIT_OF_REDEMPTION            = 27827 --GetSpellInfo(20711) or "--Spirit of Redemption";
     HEALBOT_HOLY_WARD                       = 213610 --GetSpellInfo(213610) or "--Holy Ward";
+    HBC_HOLY_NOVA                           = 15237
 	
     --Shaman
     HEALBOT_CHAIN_HEAL                      = 1064 --GetSpellInfo(1064) or "--Chain Heal";

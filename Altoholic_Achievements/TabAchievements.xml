@@ -52,7 +52,7 @@
 			<!-- Menu Icons -->
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<KeyValue key="numIcons" value="12" type="number" />
+					<KeyValue key="numIcons" value="50" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabAchievementsClassIconTemplate" />
 					<KeyValue key="tabName" value="Achievements" />
 				</KeyValues>

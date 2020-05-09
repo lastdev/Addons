@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(101, "DBM-Party-Cataclysm", 9, 65)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(40586)
 mod:SetEncounterID(1045)
 mod:SetZone()
@@ -61,7 +61,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.sporeCount = self.vb.sporeCount - 1
 		if self.vb.sporeCount == 0 then
 			timerFungalSpores:Cancel()
-		end	
+		end
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(529, "DBM-Party-BC", 1, 248)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(17537, 17307)
 mod:SetEncounterID(1892)
 
@@ -28,7 +28,7 @@ function mod:SPELL_AURA_APPLIED(args)
             specwarnMark:Play("targetyou")
             yellMark:Yell()
         else
-        	warnMark:Show(args.destName)
+			warnMark:Show(args.destName)
         end
 	end
 end

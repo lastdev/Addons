@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(131, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(39625)
 mod:SetEncounterID(1051)
 mod:SetZone()
@@ -67,7 +67,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:74670") then
 		timerBlitz:Start()
 		if not target then return end
-		local target = DBM:GetUnitFullName(target)
+		target = DBM:GetUnitFullName(target)
 		if target == UnitName("player") then
 			specWarnBlitz:Show()
 			specWarnBlitz:Play("targetyou")

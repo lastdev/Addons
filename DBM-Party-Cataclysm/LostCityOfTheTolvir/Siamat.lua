@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(122, "DBM-Party-Cataclysm", 5, 69)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(44819)
 mod:SetEncounterID(1055)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 84982",	
+	"SPELL_AURA_APPLIED 84982",
 	"SPELL_CAST_START 84522 91872",
 	"SPELL_CAST_SUCCESS 84589 83066 83151",
 	"SPELL_SUMMON 84547 84553 84554"

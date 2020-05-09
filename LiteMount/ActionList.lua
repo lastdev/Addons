@@ -14,20 +14,65 @@ if LibDebug then LibDebug() end
 
 _G.LM_ActionList = { }
 
+local function replaceConstant(k) return LM_Vars:GetConst(k) end
+
+local function ReadWord(line)
+    local token, rest
+
+    -- Skip whitespace
+    token, rest = line:match('^(%s+)(.*)$')
+    if token then return nil, rest end
+
+    -- Skip from # to end of line
+    token, rest = line:match('^#')
+    if token then return nil, nil end
+
+    -- Match ""
+    token, rest = line:match('^("[^"]*")(.*)$')
+    if token then return token, rest end
+
+    -- Match '', turn into ""
+    token, rest = line:match("^'([^']*)'(.*)$")
+    if token then return '"' .. token .. '"', rest end
+
+    -- Match [] empty condition, which is just skipped
+    token, rest = line:match('^(%[%])(.*)$')
+    if token then return nil, rest end
+
+    -- Match regular conditions
+    token, rest = line:match('^(%[.-%])(.*)$')
+    if token then return token, rest end
+
+    -- Match comma separated arguments
+    token, rest = line:match('^([^,]+),?(.*)$')
+    if token then return token, rest end
+end
+
 function LM_ActionList:ParseActionLine(line)
-    local action = strmatch(line, '%S+')
-    local filters, conditions = { }, { op = 'OR' }
-    for filterStr in line:gmatch('%[filter=(.-)%]') do
-        for f in filterStr:gmatch('[^,]+') do
-            f = f:gsub('{.-}', function (k) return LM_Vars:GetConst(k) end)
-            tinsert(filters, f)
+    local argWords, condWords = { }, { }
+    local word, action
+
+    -- Note this is intentionally unanchored to skip leading whitespace
+    action, line = line:match('(%S+)%s*(.*)')
+
+    while line ~= nil do
+        word, line = ReadWord(line)
+        if word then
+            if word:match('^%[filter=.-%]$') then
+                tinsert(argWords, word:sub(9, -2))
+            elseif word:match('^%[.-%]$') then
+                tinsert(condWords, word:sub(2, -2))
+            else
+                tinsert(argWords, word)
+            end
         end
     end
 
-    for conditionStr in line:gmatch('%[([^=]-)%]') do
-        local clause = { }
-        for c in conditionStr:gmatch('[^,]+') do
-            local vars = false
+    local conditions
+
+    for _, word in ipairs(condWords) do
+        local clause, vars = {}, false
+        for c in word:gmatch('[^,]+') do
             c = c:gsub('{.-}', function (k)
                     local v = LM_Vars:GetConst(k)
                     if v then
@@ -44,21 +89,35 @@ function LM_ActionList:ParseActionLine(line)
         end
         if #clause > 0 then
             clause.op = 'AND'
+            conditions = conditions or { op = 'OR' }
             tinsert(conditions, clause)
         end
     end
 
-    return action, filters, conditions
+    local args = { }
+
+    for _, word in ipairs(argWords) do
+        word = word:gsub('{.-}', replaceConstant)
+        if word:match('^".+"$') then
+            tinsert(args, word:sub(2, -2))
+        else
+            for w in word:gmatch('[^,]+') do
+                tinsert(args, w)
+            end
+        end
+    end
+
+    return action, args, conditions
 end
 
 function LM_ActionList:Compile(text)
     local out = { }
-    local action, filters, conditions
+    local action, args, conditions
     for line in text:gmatch('([^\r\n]+)') do
         line = line:gsub('%s*#.*', '')
         if line ~= '' then
-            action, filters, conditions = self:ParseActionLine(line)
-            tinsert(out, { action = action, filters = filters, conditions = conditions })
+            action, args, conditions = self:ParseActionLine(line)
+            tinsert(out, { action = action, args = args, conditions = conditions })
         end
     end
 

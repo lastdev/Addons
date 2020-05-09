@@ -1,7 +1,0 @@
-changeset:   50:2f4d16977cdf
-tag:         v8.2.0.050
-user:        Tercioo
-date:        Fri Jun 28 19:59:02 2019 -0300
-summary:     - ToC Update for Patch 8.2
-
-

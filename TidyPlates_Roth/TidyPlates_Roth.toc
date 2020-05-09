@@ -1,8 +1,0 @@
-## Interface: 71000
-## Title: Tidy Plates: Roth
-## Notes: Vanilla-Style Plates.
-## Author: Reinhart
-## Dependencies: TidyPlates, TidyPlatesHub
-
-TidyPlates_Roth.lua
-

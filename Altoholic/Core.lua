@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v8.3.001"
-addon.VersionNum = 803001
+addon.Version = "v8.3.004"
+addon.VersionNum = 803004
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -141,6 +141,7 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowGatheringNodesCount"] = true,		-- display counters when mousing over a gathering node (default:  on)
 			["UI.Tooltip.ShowCrossFactionCount"] = true,			-- display counters for both factions on a pve server
 			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
+            ["UI.Tooltip.ShowAllRealmsCount"] = false,               -- display counters for characters on all realms
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
@@ -283,7 +284,15 @@ local GuildCommCallbacks = {
 	[MSG_VERSION_REPLY] = OnVersionReply,
 }
 
+local tabList = {}
+local frameToID = {}
+
 function addon:OnInitialize()
+    tabList = addon:GetTabList()
+    for index, name in ipairs(tabList) do
+	   frameToID[name] = index
+    end
+    
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
 
@@ -353,20 +362,6 @@ addon.TradeSkills = {
 }
 
 -- ** Tabs **
-local tabList = {
-	"Summary",
-	"Characters",
-	"Search",
-	"Guild",
-	"Achievements",
-	"Agenda",
-	"Grids",
-}
-
-local frameToID = {}
-for index, name in ipairs(tabList) do
-	frameToID[name] = index
-end
 
 local function SafeLoadAddOn(name)
 	if not IsAddOnLoaded(name) then
@@ -405,13 +400,12 @@ function addon.Tabs:OnClick(index)
 	self:HideAll()
 	self.current = index
 	
-	if index >= 1 and index <= 7 then
+	if index >= 1 and index <= addon:GetNumTotalTabs() then
 		local moduleName = format("%s_%s", addonName, tabList[index])
 		SafeLoadAddOn(moduleName)		-- make this part a bit more generic once we'll have more LoD parts
 		
 		local parentLevel = AltoholicFrame:GetFrameLevel()
 		local childName = format("%sTab%s", addonName, tabList[index])
-
 		local tabFrame = _G[ childName ]
 		
 		if tabFrame then
@@ -421,7 +415,8 @@ function addon.Tabs:OnClick(index)
 				tabFrame:SetFrameLevel(parentLevel+1)
 			end
 		else
-			addon:Print(format("%s is disabled.", moduleName))
+			-- Now that tabs are added dynamically, the code should never get here anymore
+            addon:Print(format("%s is disabled.", moduleName))
 		end
 	end
 	

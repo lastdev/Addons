@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("StratWaves", "DBM-Party-WotLK", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 
 mod:RegisterEvents(
 	"UPDATE_UI_WIDGET",
@@ -49,9 +49,9 @@ local lastWave	= 0
 
 local function getWaveString(self, wave)
 	local waveInfo
-	if self:IsDifficulty("heroic5") then 
+	if self:IsDifficulty("heroic5") then
 		waveInfo = wavesHeroic[wave]
-	else 
+	else
 		waveInfo = wavesNormal[wave]
 	end
 	if #waveInfo == 1 then

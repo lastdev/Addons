@@ -847,7 +847,7 @@ function ns:FindItem(searchType, searchSubType)
 	
 	-- Start the search
 	local searchLocation = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectLocation)
-	
+
 	ns:ClearResults()
 	
 	local SearchLoots

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(673, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(56747)--56747 (Gu Cloudstrike), 56754 (Azure Serpent)
 mod:SetEncounterID(1303)
 mod:SetZone()
@@ -38,7 +38,7 @@ local staticFieldText = DBM:GetSpellInfo(106923)
 local targetFormatText
 do
 	local originalText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.target
-	local startIndex = string.find(originalText, "%%%%") 
+	local startIndex = string.find(originalText, "%%%%")
 	local tmp1 = string.sub(originalText, 1, startIndex)
 	local tmp2 = string.sub(originalText, startIndex+2)
 	targetFormatText = tmp1..tmp2

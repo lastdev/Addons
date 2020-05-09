@@ -297,10 +297,12 @@ nodes[16021946] = MANTR2
 nodes[17432634] = MANTR2
 nodes[19001350] = clone(MANTR2, {note=L["guolai"]})
 nodes[21051415] = MANTR2
+nodes[26301110] = MANTR2
 -- quest=58226
 nodes[07693682] = MANTR3
 nodes[09302831] = MANTR3
 nodes[10174243] = MANTR3
+nodes[12085118] = MANTR3
 nodes[15083162] = MANTR3
 nodes[15324320] = MANTR3
 nodes[16343312] = MANTR3
@@ -314,6 +316,8 @@ nodes[24994118] = MANTR4
 nodes[25843841] = MANTR4
 nodes[26524136] = MANTR4
 nodes[26704680] = MANTR4
+nodes[29944580] = MANTR4
+nodes[30074194] = MANTR4
 nodes[31724184] = MANTR4
 -- quest=58228
 nodes[07356617] = MANTR5
@@ -334,17 +338,18 @@ local MOGChest = Class('MOGChest', Treasure, {
 })
 
 local MOGTR1 = MOGChest({quest=57206, icon='chest_blue', note=L["guolai"]})
-local MOGTR2 = MOGChest({quest=57208, icon='chest_purple'})
+local MOGTR2 = MOGChest({quest=57208, icon='chest_lime'})
 local MOGTR3 = MOGChest({quest=57209, icon='chest_orange'})
 local MOGTR4 = MOGChest({quest=57211, icon='chest_yellow'})
 local MOGTR5 = MOGChest({quest=57212, icon='chest_teal'})
-local MOGTR6 = MOGChest({quest=57213, icon='chest_lime'})
+local MOGTR6 = MOGChest({quest=57213, icon='chest_purple'})
 
 -- quest=57206
 nodes[13500720] = MOGTR1
 nodes[17741256] = MOGTR1
 nodes[20221140] = MOGTR1
 nodes[20441477] = MOGTR1
+nodes[22971552] = MOGTR1
 nodes[23850753] = MOGTR1
 nodes[26001261] = MOGTR1
 nodes[26130403] = MOGTR1
@@ -355,6 +360,7 @@ nodes[20462833] = MOGTR2
 nodes[21982793] = MOGTR2
 nodes[24773504] = MOGTR2
 nodes[25114049] = MOGTR2
+nodes[26801860] = MOGTR2
 nodes[30283762] = MOGTR2
 nodes[30983065] = MOGTR2
 nodes[33503481] = MOGTR2

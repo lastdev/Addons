@@ -16,6 +16,28 @@
 					<KeyValue key="rowTemplate" value="AltoAchievementRowTemplate" />
 				</KeyValues>
 			</ScrollFrame>
+            <Button name="$parentScrollRightButton" inherits="UIPanelButtonTemplate" text="&gt;">
+				<Size x="30" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMRIGHT" x="0" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+                        Altoholic:OnTabAchievementsRightButtonClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+            <Button name="$parentScrollLeftButton" inherits="UIPanelButtonTemplate" text="&lt;">
+				<Size x="30" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMLEFT" x="180" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Altoholic:OnTabAchievementsLeftButtonClick()
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

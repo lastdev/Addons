@@ -424,7 +424,7 @@ end
 -- XPerl_Party_Pet_Update_Control
 local function XPerl_Party_Pet_Update_Control(self)
 	local partyid = self.partyid
-	if (partyid and UnitIsVisible(partyid) and UnitIsCharmed(partyid) and not UnitUsingVehicle(self.ownerid)) then
+	if (partyid and UnitIsVisible(partyid) and UnitIsCharmed(partyid) and (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and not UnitUsingVehicle(self.ownerid))) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()

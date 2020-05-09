@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(177, "DBM-Party-Cataclysm", 11, 76, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(52258)
 mod:SetZone()
 
@@ -49,7 +49,8 @@ end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 	if msg:find(L.pursuitEmote) then
-		local target = DBM:GetUnitFullName(target)
+		if not target then return end
+		target = DBM:GetUnitFullName(target)
 		timerPursuit:Start()
 		timerPursuitCD:Start()
 		if target then

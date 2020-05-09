@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 -- if we're on the developer version the addon behaves slightly different
-ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v202002091658", nil, true)
+ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v202004140600", nil, true)
 
 -- micro-optimization for more speed
 local unpack = unpack
@@ -842,7 +842,7 @@ do
 		for encoderIndex = 1, #encodingOrder do
 			local field = encodingOrder[encoderIndex]
 			if field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_SCORE then
-				results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+				results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
 			elseif field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_ROLES then
 				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
 				results.currentRoleOrdinalIndex = 1 + value -- indexes are one-based
@@ -853,7 +853,7 @@ do
 				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
 				results.previousRoleOrdinalIndex = 1 + value -- indexes are one-based
 			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_SCORE then
-				results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+				results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
 			elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_ROLES then
 				value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
 				results.mainCurrentRoleOrdinalIndex = 1 + value -- indexes are one-based
@@ -2695,6 +2695,20 @@ do
 			end
 		end
 		local custom
+		local function CustomOnShow(self) -- UIDropDownMenuTemplates.xml#257
+			local p = self:GetParent() or self
+			local w = p:GetWidth()
+			local h = 32
+			for i = 1, #self.buttons do
+				local b = self.buttons[i]
+				if b:IsShown() then
+					b:SetWidth(w - 32) -- anchor offsets for left/right
+					h = h + 16
+				end
+			end
+			self:SetHeight(h)
+			return h
+		end
 		do
 			local function CopyOnClick()
 				ShowCopyURLPopup(custom.kind, custom.query, custom.bnetChar, custom.bnetFaction)
@@ -2786,6 +2800,16 @@ do
 			custom:SetFrameStrata(list:GetFrameStrata())
 			custom:SetFrameLevel(list:GetFrameLevel() + 2)
 			custom:ClearAllPoints()
+			local dw, dh = list:GetSize()
+			local cw, ch = custom:GetSize()
+			cw = dw
+			if ch < 1 then
+				ch = CustomOnShow(custom)
+			end
+			list:SetHeight(dh + ch + OFFSET_BETWEEN)
+			custom:SetPoint("BOTTOMLEFT", list, "BOTTOMLEFT", 0, 0)
+			custom:SetPoint("BOTTOMRIGHT", list, "BOTTOMRIGHT", 0, 0)
+			--[=[
 			if list:GetBottom() >= 50 then
 				custom:SetPoint("TOPLEFT", list, "BOTTOMLEFT", 0, OFFSET_BETWEEN)
 				custom:SetPoint("TOPRIGHT", list, "BOTTOMRIGHT", 0, OFFSET_BETWEEN)
@@ -2793,6 +2817,7 @@ do
 				custom:SetPoint("BOTTOMLEFT", list, "TOPLEFT", 0, OFFSET_BETWEEN)
 				custom:SetPoint("BOTTOMRIGHT", list, "TOPRIGHT", 0, OFFSET_BETWEEN)
 			end
+			--]=]
 			custom:Show()
 		end
 		local function HideCustomDropDown()
@@ -2826,7 +2851,7 @@ do
 		end
 		DropDownList1:HookScript("OnShow", OnShow)
 		DropDownList1:HookScript("OnHide", OnHide)
-		
+		--[=[
 		-- https://github.com/Gethe/wow-ui-source/commit/356d028f9d245f6e75dc8a806deb3c38aa0aa77f#diff-4c5ca6424de48e2c9b959163c421d767R1145
 		local originalFunction = UIDropDownMenu_HandleGlobalMouseEvent
 		UIDropDownMenu_HandleGlobalMouseEvent = function (button, event)
@@ -2835,10 +2860,9 @@ do
 					return
 				end
 			end
-
 			originalFunction(button, event)
 		end
-		
+		--]=]
 		return 1
 	end
 

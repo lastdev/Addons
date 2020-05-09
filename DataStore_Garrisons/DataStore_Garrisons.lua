@@ -385,7 +385,9 @@ local function ScanFollowers()
 	
 	local function IncCounter(id)
 		if id and id ~= 0 then
-			IncTableIndex(counters, C_Garrison.GetFollowerAbilityCounterMechanicInfo(id))
+			if C_Garrison.GetFollowerAbilityCounterMechanicInfo(id) then
+                IncTableIndex(counters, C_Garrison.GetFollowerAbilityCounterMechanicInfo(id))
+            end
 		end
 	end
 

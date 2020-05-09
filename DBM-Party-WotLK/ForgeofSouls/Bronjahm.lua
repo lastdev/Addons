@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(615, "DBM-Party-WotLK", 14, 280)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(36497)
 mod:SetEncounterID(829, 830, 2006)
 mod:SetModelID(30226)
@@ -50,6 +50,6 @@ end
 function mod:UNIT_HEALTH(uId)
 	if not self.vb.warned_preStorm and self:GetUnitCreatureId(uId) == 36497 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.40 then
 		self.vb.warned_preStorm = true
-		warnSoulstormSoon:Show()	
+		warnSoulstormSoon:Show()
 	end
 end

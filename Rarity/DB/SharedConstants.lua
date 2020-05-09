@@ -28,11 +28,14 @@ C.UIMAPIDS = {
 	NAZJATAR = 1355,
 	MECHAGON_ISLAND = 1462,
 
-	-- TODO: Retrieve the correct mapIDs
-	VOLDUN = 000,
+	VOLDUN = 864,
 	ULDUM = 1527,
 	VALE_OF_ETERNAL_BLOSSOMS = 1530,
 
+	HORRIFIC_VISION_OF_STORMWIND = 1470,
+	HORRIFIC_VISION_OF_ORGRIMMAR = 1469,
+
+	NYALOTHA = 1582, -- Generic (doesn't matter which subzone, as waypoints inside of instances can no longer be set)
 }
 
 -- Types of items
@@ -83,6 +86,13 @@ C.INSTANCE_DIFFICULTIES = {
 	MYTHIC_DUNGEON = 23, -- Mythic 5-player instance
 	TIMEWALKING_DUNGEON = 24, -- Timewalking 5-player instance
 	TIMEWALKING_RAID = 33,
+}
+
+
+-- LDB feed text
+C.LDB_TEXT_STYLES = {
+	FEED_MINIMAL = "FEED_MINIMAL",
+	FEED_VERBOSE = "FEED_VERBOSE",
 }
 
 addonTable.constants = C

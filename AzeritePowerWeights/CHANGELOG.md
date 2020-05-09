@@ -1,5 +1,42 @@
+### 8.3.11
+
+- Add Holy Priest Default-scale by Simbiawow
+
+### 8.3.10
+
+- Fix error in one of the lines in French translations causing error on login. This fixes [Issue #67](https://www.curseforge.com/wow/addons/azeritepowerweights/issues/67).
+
+### 8.3.9
+
+- Update French translations (thanks to Simbiawow)
+
+### 8.3.8
+
+- Poke the packager.
+
+### 8.3.7
+
+- Updated Default-scales (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))
+   - I used `target_error=0.05` and it took almost 70 hours to run all the simulations with my old CPU (you are welcome for the CPU time).
+   - Because of the time spent, in the future I won't be doing simulations in this accuracy anymore unless I figure out some way to optimize the simulations in order to get the runtime down.
+- Fixed a bug causing the Essence UI to only color the top two minor essences instead of top three.
+
+### 8.3.6
+- Fix bug where you get error when you close Azerite UI when scores for that UI is disabled or something else went wrong. This fixes [Issue #63](https://www.curseforge.com/wow/addons/azeritepowerweights/issues/63).
+- Update Traditional Chinese translations.
+
+### 8.3.5
+- Added new feature to enable/disable the scores for Azerite Traits and Azerite Essences as requested in [Issue #60](https://www.curseforge.com/wow/addons/azeritepowerweights/issues/60).
+   - You can find these new settings by checking out the config at `ESC -> Interface -> AddOns -> AzeritePowerWeights`.
+   - This means 4 new lines for translators to translate at  [Curseforge Localization tool](https://www.curseforge.com/wow/addons/azeritepowerweights/localization).
+- Also made other small bug and QoL fixes in order to make the scores show and update more reliably.
+
+### 8.3.4
+- Added missing Retribution Paladin Default-scales.
+   - Thanks to both Retribution Paladin -players who actually read the change log and didn't report me them missing!
+
 ### 8.3.3
-- Added Protection Warrior -scales (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))
+- Added missing Protection Warrior -scales (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))
    - Still missing Retribution Paladin Default-scale
 - Updated all Defensive -scales without external source (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))
   - Protection Warrior one is even more all over the place than other classes, so don't trust that.

@@ -33,6 +33,7 @@ end
  
 function RareScannerDataProviderMixin:RemoveAllData()
 	self:GetMap():RemoveAllPinsByTemplate("RSRarePinTemplate");
+	self:GetMap():RemoveAllPinsByTemplate("RSOverlayTemplate");
 	self:InitializeAllTrackingTables();
 end
  
@@ -234,7 +235,7 @@ function RareScannerDataProviderMixin:AddPin(npcID, npcInfo, mapID)
 
 		-- If its been seen after our max show time
 		-- Ignore if its killed and we want to keep showing its icon
-		if (not npcInfo.notDiscovered and not keepShowingAfterDead and private.db.map.maxSeenTime ~= 0 and time() - npcInfo.foundTime > private.db.map.maxSeenTime * 3600) then
+		if (not npcInfo.notDiscovered and not keepShowingAfterDead and private.db.map.maxSeenTime ~= 0 and time() - npcInfo.foundTime > private.db.map.maxSeenTime * 60) then
 			return false
 		end
 	-- If its a container
@@ -313,6 +314,11 @@ function RareScannerDataProviderMixin:AddPin(npcID, npcInfo, mapID)
 
 	local pin = self:GetMap():AcquirePin("RSRarePinTemplate", npcID, npcInfo);
 	self.rareNpcToPins[npcID] = pin;
+	
+	-- Adds overlay if active
+	if (private.dbchar.overlayActive and private.dbchar.overlayActive == npcID) then
+		pin:ShowOverlay()
+	end
 	
 	-- Avoids overriding the recorded value
 	if (npcInfoBak) then

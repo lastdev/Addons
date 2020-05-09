@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("d1995", "DBM-Challenges", 3)--1993 Stormwind 1995 Org
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200116020317")
+mod:SetRevision("20200211183344")
 mod:SetZone()
 mod.onlyNormal = true
 
@@ -11,8 +11,8 @@ mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA"
 )
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 297822 297746 304976 297574 304251 306726 299055 299110 307863 300351 300388 304101 304282 306001 306199 303589 305875 306828 306617 300388 296537 305378",
-	"SPELL_AURA_APPLIED 311390 315385 316481 311641",
+	"SPELL_CAST_START 297822 297746 304976 297574 304251 306726 299110 307863 300351 300388 304101 304282 306001 306199 303589 305875 306828 306617 300388 296537 305378 298630 298033",
+	"SPELL_AURA_APPLIED 311390 315385 316481 311641 299055",
 	"SPELL_AURA_APPLIED_DOSE 311390",
 	"SPELL_CAST_SUCCESS 297237",
 	"SPELL_PERIODIC_DAMAGE 303594",
@@ -25,21 +25,22 @@ mod:RegisterEventsInCombat(
 --TODO, maybe add https://ptr.wowhead.com/spell=298510/aqiri-mind-toxin
 --TODO, improve https://ptr.wowhead.com/spell=306001/explosive-leap warning if can get throw target
 --TODO, can https://ptr.wowhead.com/spell=305875/visceral-fluid be dodged? If so upgrade the warning
---Extra Abilities (used by Thrall and the area LTs)
+local warnScorchedFeet				= mod:NewSpellAnnounce(315385, 4)
+--Extra Abilities (used by main boss and the area LTs)
 local warnCriesoftheVoid			= mod:NewCastAnnounce(304976, 4)
 local warnVoidQuills				= mod:NewCastAnnounce(304251, 3)
 --Other notable abilities by mini bosses/trash
-local warnDarkForce					= mod:NewSpellAnnounce(299055, 3)
-local warnVoidTorrent				= mod:NewCastAnnounce(307863, 3)
+local warnDarkForce					= mod:NewTargetNoFilterAnnounce(299055, 3)
 local warnExplosiveLeap				= mod:NewCastAnnounce(306001, 3)
 local warnVisceralFluid				= mod:NewCastAnnounce(305875, 3)
 local warnEndlessHungerTotem		= mod:NewSpellAnnounce(297237, 4)
+local warnTouchoftheAbyss			= mod:NewCastAnnounce(298033, 4)
 
 --General (GTFOs and Affixes)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(303594, nil, nil, nil, 1, 8)
 local specWarnEntomophobia			= mod:NewSpecialWarningJump(311389, nil, nil, nil, 1, 6)
 --local specWarnDarkDelusions			= mod:NewSpecialWarningRun(306955, nil, nil, nil, 4, 2)
-local specWarnScorchedFeet			= mod:NewSpecialWarningYou(315385, nil, nil, nil, 1, 2)
+local specWarnScorchedFeet			= mod:NewSpecialWarningYou(315385, false, nil, 2, 1, 2)
 local yellScorchedFeet				= mod:NewYell(315385)
 local specWarnSplitPersonality		= mod:NewSpecialWarningYou(316481, nil, nil, nil, 1, 2)
 local specWarnWaveringWill			= mod:NewSpecialWarningReflect(311641, "false", nil, nil, 1, 2)--Off by default, it's only 5%, but that might matter to some classes
@@ -53,6 +54,8 @@ local specWarnHopelessness			= mod:NewSpecialWarningMoveTo(297574, nil, nil, nil
 local specWarnDefiledGround			= mod:NewSpecialWarningDodge(306726, nil, nil, nil, 2, 2)--Can this be dodged?
 --Other notable abilities by mini bosses/trash
 local specWarnOrbofAnnihilation		= mod:NewSpecialWarningDodge(299110, nil, nil, nil, 2, 2)
+local specWarnDarkForce				= mod:NewSpecialWarningYou(299055, nil, nil, nil, 1, 2)
+local specWarnVoidTorrent			= mod:NewSpecialWarningSpell(307863, nil, nil, nil, 2, 2)--Can really only be avoided by really fast running away, most can't avoid it
 local specWarnSurgingFist			= mod:NewSpecialWarningDodge(300351, nil, nil, nil, 2, 2)
 local specWarnDecimator				= mod:NewSpecialWarningDodge(300412, nil, nil, nil, 2, 2)
 local specWarnDesperateRetching		= mod:NewSpecialWarningYou(304165, nil, nil, nil, 1, 2)
@@ -66,13 +69,16 @@ local specWarnDefiledGround			= mod:NewSpecialWarningDodge(306828, nil, nil, nil
 local specWarnRingofChaos			= mod:NewSpecialWarningDodge(306617, nil, nil, nil, 2, 2)
 local specWarnHorrifyingShout		= mod:NewSpecialWarningInterrupt(305378, "HasInterrupt", nil, nil, 1, 2)
 local specWarnMentalAssault			= mod:NewSpecialWarningInterrupt(296537, "HasInterrupt", nil, nil, 1, 2)
+local specWarnTouchoftheAbyss		= mod:NewSpecialWarningInterrupt(298033, "HasInterrupt", nil, nil, 1, 2)
+local specWarnShockwave				= mod:NewSpecialWarningDodge(298630, nil, nil, nil, 2, 2)
 
 --Thrall
 local timerSurgingDarknessCD	= mod:NewCDTimer(23.1, 297822, nil, nil, nil, 3)
 local timerSeismicSlamCD		= mod:NewCDTimer(12.1, 297746, nil, nil, nil, 3)
 --Extra Abilities (used by Thrall and the area LTs)
-local timerCriesoftheVoidCD		= mod:NewAITimer(21, 304976, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)
+--local timerCriesoftheVoidCD		= mod:NewAITimer(21, 304976, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)
 local timerDefiledGroundCD		= mod:NewAITimer(21, 306726, nil, nil, nil, 3)
+--Both surging fist and Decimator are 9.7 second cds, worth adding?
 
 mod:AddInfoFrameOption(307831, true)
 
@@ -113,28 +119,34 @@ function mod:SPELL_CAST_START(args)
 		specWarnSeismicSlam:Show()
 		specWarnSeismicSlam:Play("shockwave")
 		timerSeismicSlamCD:Start()
-		if IsInGroup() then
-			self:BossTargetScanner(args.sourceGUID, "SeismicSlamTarget", 0.2, 8)
+		if GetNumGroupMembers() > 1 then
+			self:BossTargetScanner(args.sourceGUID, "SeismicSlamTarget", 0.1, 7)
 		end
 	elseif spellId == 304976 then
 		warnCriesoftheVoid:Show()
-		timerCriesoftheVoidCD:Start()
+		--timerCriesoftheVoidCD:Start()
 	elseif spellId == 297574 then
 		specWarnHopelessness:Show(DBM_CORE_ORB)
 		specWarnHopelessness:Play("orbrun")--Technically not quite accurate but closest match to "find orb"
-	elseif spellId == 304251 and self:AntiSpam(3, 1) then--Two boars, 3 second throttle
+	elseif spellId == 304251 and self:AntiSpam(4, 1) then--Two boars, 3 second throttle
 		warnVoidQuills:Show()
 	elseif spellId == 306726 then
 		specWarnDefiledGround:Show()
 		specWarnDefiledGround:Play("shockwave")
 		timerDefiledGroundCD:Start()
 	elseif spellId == 299055 then
-		warnDarkForce:Show()
+		if args:IsPlayer() then
+			specWarnDarkForce:Show()
+			specWarnDarkForce:Play("targetyou")
+		else
+			warnDarkForce:Show(args.destName)
+		end
 	elseif spellId == 299110 then
 		specWarnOrbofAnnihilation:Show()
 		specWarnOrbofAnnihilation:Play("watchorb")
 	elseif spellId == 307863 then
-		warnVoidTorrent:Show()
+		specWarnVoidTorrent:Show()
+		specWarnVoidTorrent:Play("specialsoon")
 	elseif spellId == 300351 then
 		specWarnSurgingFist:Show()
 		specWarnSurgingFist:Play("chargemove")
@@ -169,6 +181,16 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 305378 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnHorrifyingShout:Show(args.sourceName)
 		specWarnHorrifyingShout:Play("kickcast")
+	elseif spellId == 298033 then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnTouchoftheAbyss:Show(args.sourceName)
+			specWarnTouchoftheAbyss:Play("kickcast")
+		else
+			warnTouchoftheAbyss:Show()
+		end
+	elseif spellId == 298630 and self:AntiSpam(3, 3) then
+		specWarnShockwave:Show()
+		specWarnShockwave:Play("shockwave")
 	end
 end
 
@@ -191,8 +213,12 @@ function mod:SPELL_AURA_APPLIED(args)
 --		specWarnDarkDelusions:Show()
 --		specWarnDarkDelusions:Play("justrun")
 	elseif spellId == 315385 and args:IsPlayer() then
-		specWarnScorchedFeet:Show()
-		specWarnScorchedFeet:Play("targetyou")
+		if self.Options.SpecWarn315385you then
+			specWarnScorchedFeet:Show()
+			specWarnScorchedFeet:Play("targetyou")
+		else
+			warnScorchedFeet:Show()
+		end
 		if IsInGroup() then--Warn allies if in scenario with others
 			yellScorchedFeet:Yell()
 		end
@@ -230,12 +256,12 @@ function mod:UNIT_DIED(args)
 	if cid == 152089 then--Thrall
 		timerSurgingDarknessCD:Stop()
 		timerSeismicSlamCD:Stop()
-		timerCriesoftheVoidCD:Stop()
+		--timerCriesoftheVoidCD:Stop()
 		timerDefiledGroundCD:Stop()
 		DBM:EndCombat(self)
 		started = false
 	elseif cid == 156161 then--Inquisitor Gnshal
-		timerCriesoftheVoidCD:Stop()
+		--timerCriesoftheVoidCD:Stop()
 		self.vb.GnshalCleared = true
 	elseif cid == 152874 then--Vez'okk the Lightless
 		timerDefiledGroundCD:Stop()
@@ -268,8 +294,8 @@ function mod:ENCOUNTER_START(encounterID)
 		else
 			timerSeismicSlamCD:Start(4.6)
 		end
-		if self.vb.GnshalCleared then
-			timerCriesoftheVoidCD:Start(1)
-		end
+		--if self.vb.GnshalCleared then
+		--	timerCriesoftheVoidCD:Start(1)
+		--end
 	end
 end

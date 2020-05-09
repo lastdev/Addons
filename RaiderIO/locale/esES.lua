@@ -66,10 +66,8 @@ L["DUNGEON_SHORT_NAME_UNDR"] = "Catacumbas"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Kara-S"
 L["DUNGEON_SHORT_NAME_VOTW"] = "Celadoras"
 L["DUNGEON_SHORT_NAME_WM"] = "Mansión "
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_WORK"] = "Taller"
+L["DUNGEON_SHORT_NAME_YARD"] = "Desguace"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar automáticamente el marco de perfil de RaiderIO"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Fija la ventana emergente de perfil de M+ junto al marco del buscador de grupos o la ventana emergente de jugador."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Estás activando el modo depuración. Esto es solo para fines de pruebas y desarrollo, y puede incurrir en un aumento del uso de memoria. Haz clic en confirmar para recargar la interfaz."
@@ -154,8 +152,7 @@ L["RAID_BOSS_EP_8"] = "Reina Azshara"
 --[[ L["RAID_BOSS_NYA_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_NYA_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_11"] = ""--]] 
+L["RAID_BOSS_NYA_11"] = "Caparazón"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_NYA_12"] = ""--]] 
 --[[Translation missing --]]
@@ -164,8 +161,7 @@ L["RAID_BOSS_EP_8"] = "Reina Azshara"
 --[[ L["RAID_BOSS_NYA_3"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_NYA_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_5"] = ""--]] 
+L["RAID_BOSS_NYA_5"] = "Mente"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_NYA_6"] = ""--]] 
 --[[Translation missing --]]
@@ -205,24 +201,19 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 L["SEASON_LABEL_1"] = "T1"
 L["SEASON_LABEL_2"] = "T2"
 L["SEASON_LABEL_3"] = "T3"
---[[Translation missing --]]
---[[ L["SEASON_LABEL_4"] = ""--]] 
+L["SEASON_LABEL_4"] = "T4"
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO"] = "Mostrar puntuación media de M+ en tiempo"
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC"] = "Muestra la puntuación media de M+ en tiempo de los miembros de un grupo. Aparece en las descripciones emergentes de piedras angulares y jugadores en el buscador de grupos."
 L["SHOW_BEST_MAINS_SCORE"] = "Mostrar puntuación de M+ del personaje principal de la mejor temporada"
 L["SHOW_BEST_MAINS_SCORE_DESC"] = "Muestra la puntuación conseguida con el personaje principal en la mejor temporada de míticas+ y bandas en el tooltip. Los jugadores deben haberse registrado en Raider.IO y haber declarado un personaje como personaje principal."
 L["SHOW_BEST_RUN"] = "Mostrar la mejor mítica+ realizada en el título"
 L["SHOW_BEST_RUN_DESC"] = "Muestra la mejor mítica+ realizada por el jugador en la temporada actual como título del tooltip."
---[[Translation missing --]]
---[[ L["SHOW_BEST_SEASON"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_BEST_SEASON_DESC"] = ""--]] 
+L["SHOW_BEST_SEASON"] = "Mostrar la mejor puntuación de la temporada de Míticas+ como título"
+L["SHOW_BEST_SEASON_DESC"] = "Muestra la mejor puntuación de la temporada de Míticas+ del jugador como título del tooltip. Si la puntuación es de una temporada anterior, la temporada se indicará en el título del tooltip."
 L["SHOW_CLIENT_GUILD_BEST"] = "Mostrar mejores puntuaciones de mazmorra en el buscador de grupos"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "Muestra las cinco mejores puntuaciones de tu hermandad (tanto de temporada como semanales) en la pestaña 'Piedra angular mítica' de la ventana del buscador de grupos."
---[[Translation missing --]]
---[[ L["SHOW_CURRENT_SEASON"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_CURRENT_SEASON_DESC"] = ""--]] 
+L["SHOW_CURRENT_SEASON"] = "Mostrar la puntuación actual de la temporada de Míticas+ como título"
+L["SHOW_CURRENT_SEASON_DESC"] = "Muestra la puntuación actual de la temporada de Míticas+ del jugador como título del tooltip."
 L["SHOW_IN_FRIENDS"] = "Mostrar en la lista de amigos"
 L["SHOW_IN_FRIENDS_DESC"] = "Muestra la puntuación de M+ de tus amigos cuando pasas el ratón por encima."
 L["SHOW_IN_LFD"] = "Mostrar en el buscador de grupos"
@@ -257,8 +248,7 @@ L["TANK"] = "Tanque"
 L["TANK_SCORE"] = "Puntuación de tanque"
 L["TIMED_10_RUNS"] = "+10-14 en tiempo"
 L["TIMED_15_RUNS"] = "+15 en tiempo"
---[[Translation missing --]]
---[[ L["TIMED_20_RUNS"] = ""--]] 
+L["TIMED_20_RUNS"] = "+20 en tiempo"
 L["TIMED_5_RUNS"] = "+5-9 en tiempo"
 L["TOOLTIP_CUSTOMIZATION"] = "Personalización de ventanas emergentes"
 L["TOOLTIP_PROFILE"] = "Personalización del marco de perfil"

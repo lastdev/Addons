@@ -263,6 +263,13 @@ CONDITIONS["instance"] =
         return instanceType == v
     end
 
+CONDITIONS["jump"] =
+    function (cond)
+        if GetTime() - LM_Location.lastJumpTime < 2 then
+            return true
+        end
+    end
+
 CONDITIONS["map"] =
     function (cond, v)
         if v:sub(1,1) == '*' then
@@ -323,6 +330,22 @@ CONDITIONS["pet"] =
         end
     end
 
+CONDITIONS["profession"] =
+    function (cond, v)
+        if not v then return end
+        local professions = { GetProfessions() }
+        local n = tonumber(v)
+        if n then
+            return tContains(professions, n)
+        else
+            for _,id in ipairs(professions) do
+                if GetProfessionInfo(id) == v then
+                    return true
+                end
+            end
+        end
+    end
+
 CONDITIONS["pvp"] =
     function (cond)
         return UnitIsPVP("player")
@@ -338,9 +361,8 @@ CONDITIONS["qfc"] =
 
 CONDITIONS["race"] =
     function (cond, v)
-        if v then
-            return tContains({ UnitRace("player") }, v)
-        end
+        local race, raceEN, raceID = UnitRace('player')
+        return ( race == v or raceEN == v or raceID == tonumber(v) )
     end
 
 CONDITIONS["raid"] =
@@ -369,6 +391,13 @@ CONDITIONS["role"] =
     function (cond, v)
         if v then
             return UnitGroupRolesAssigned("player") == v
+        end
+    end
+
+CONDITIONS["sameunit:args"] =
+    function (cond, unit1, unit2)
+        if unit1 and unit2 then
+            return UnitIsUnit(unit1, unit2)
         end
     end
 
@@ -449,16 +478,17 @@ CONDITIONS["waterwalking"] =
                 return true
             end
         end
+
         -- Water Walking (546)
-        if CONDITIONS.aura(546) then
+        if PlayerHasAura(546) then
             return true
         end
         -- Elixir of Water Walking (11319)
-        if CONDITIONS.aura(11319) then
+        if PlayerHasAura(11319) then
             return true
         end
         --  Path of Frost (3714)
-        if CONDITIONS.aura(3714) then
+        if PlayerHasAura(3714) then
             return true
         end
     end
@@ -488,6 +518,9 @@ function LM_Conditions:IsTrue(condition)
     if condition.vars then
         str = LM_Vars:StrSubVars(str)
     end
+
+    local unit = str:match('^@(.+)')
+    if unit then return true, unit end
 
     local cond, valuestr = strsplit(':', str)
 
@@ -520,19 +553,24 @@ function LM_Conditions:IsTrue(condition)
 end
 
 function LM_Conditions:EvalNot(conditions)
-    return not self:Eval(conditions[1])
+    local v, unit = self:Eval(conditions[1])
+    return not v, unit
 end
 
 function LM_Conditions:EvalAnd(conditions)
+    local unit
     for _,e in ipairs(conditions) do
-        if not self:Eval(e) then return false end
+        local v, u = self:Eval(e)
+        if not v then return false end
+        unit = u or unit
     end
-    return true
+    return true, unit
 end
 
 function LM_Conditions:EvalOr(conditions)
     for _,e in ipairs(conditions) do
-        if self:Eval(e) then return true end
+        local v, u = self:Eval(e)
+        if v then return v, u end
     end
     return false
 end
@@ -552,9 +590,17 @@ function LM_Conditions:Eval(conditions)
     end
 end
 
+-- Parsing is slow so we don't want to do it a million times
+local cachedConditions = {}
+
 function LM_Conditions:Check(line)
-    local _, _, cond = LM_ActionList:ParseActionLine(line)
-    if cond then
-        return self:Eval(cond)
+    if not line then return end
+
+    local _, cond
+    if not cachedConditions[line] then
+        _, _, cond = LM_ActionList:ParseActionLine('DUMMY ' .. line)
+        cachedConditions[line] = { cond }
     end
+
+    return self:Eval(cachedConditions[line][1])
 end

@@ -145,27 +145,32 @@ function addon:OnDisable()
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
 end
 
--- *** Scanning functions ***
-local function ScanAuctions()
-	local AHZone = 0		-- 0 means faction AH
-	-- local zoneFaction = GetZonePVPInfo()	-- "friendly", "sanctuary", "contested" (PvP server) or nil (PvE server)
-	-- if ( zoneFaction ~= "friendly" ) and ( zoneFaction ~= "sanctuary" ) then
-		-- AHZone = 1			-- 1 means goblin AH
-	-- end
-	
+local function getAHZone()
 	local zoneID = C_Map.GetBestMapForUnit("player")
 	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
- 		AHZone = 1			-- 1 means goblin AH
+ 		return 1			-- 1 means goblin AH
  	end
+    return 0
+end
+
+-- *** Scanning functions ***
+local function ScanAuctions()
+	local AHZone = getAHZone()
 	
 	local character = addon.ThisCharacter
 	character.lastUpdate = time()
 	
 	_ClearAuctionEntries(character, "Auctions", AHZone)
 	
-	for i = 1, C_AuctionHouse.GetNumReplicateItems("owner") do
-		local itemName, _, count, _, _, _, _, startPrice, 
-			_, buyoutPrice, _, highBidder, _, _, _, saleStatus, itemID =  C_AuctionHouse.GetReplicateItemInfo("owner", i)
+	for i = 1, C_AuctionHouse.GetNumOwnedAuctions() do
+        local ownedAuction = C_AuctionHouse.GetOwnedAuctionInfo(i)
+		local itemName = ownedAuction.itemLink
+        local count = ownedAuction.quantity
+        local startPrice = ownedAuction.bidAmount 
+		local buyoutPrice = ownedAuction.buyoutAmount
+        local highBidder = ownedAuction.bidder
+        local saleStatus = ownedAuction.status 
+        local itemID = ownedAuction.itemKey.itemID  
 			
 		-- do not list sold items, they're supposed to be in the mailbox
 		if saleStatus and saleStatus == 1 then		-- just to be sure, in case Bliz ever returns nil
@@ -175,15 +180,54 @@ local function ScanAuctions()
 		end
 			
 		if itemName and itemID and not saleStatus then
-			local link = C_AuctionHouse.GetReplicateItemLink("owner", i)
-			local timeLeft = C_AuctionHouse.GetReplicateItemTimeLeft("owner", i)
+			local timeLeft = ownedAuction.timeLeft
 			
 			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, count, highBidder or "", startPrice, buyoutPrice, timeLeft))
+				AHZone, itemID, count, highBidder or "", startPrice or "", buyoutPrice, timeLeft or ""))
 		end
 	end
 	
 	addon:SendMessage("DATASTORE_AUCTIONS_UPDATED")
+end
+
+-- UPDATE 8.3.003:
+-- Since addons can't seem to be able to scan the AH after selling an item, instead I will try to get the information about an item being sold directly
+
+-- Hook the game UI's PostItem and PostCommodity functions, grabbing their parameter information
+local originalPostItem = C_AuctionHouse.PostItem
+local originalPostCommodity = C_AuctionHouse.PostCommodity
+
+-- bid and buyout are optional parameters
+C_AuctionHouse.PostItem = function(item, duration, quantity, bid, buyout)
+    -- item is an ItemLocationMixin from Blizzard's ItemLocation.lua
+    local bagID, slotIndex = item:GetBagAndSlot()
+    local itemID = GetContainerItemID(bagID, slotIndex)
+    local AHZone = getAHZone()
+    
+    local character = addon.ThisCharacter
+	character.lastUpdate = time()
+    
+    table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
+				AHZone, itemID, quantity, "", bid or "", buyout or "", duration or ""))
+                
+    -- Call the original Blizzard function
+    originalPostItem(item, duration, quantity, bid, buyout)
+end
+
+C_AuctionHouse.PostCommodity = function(item, duration, quantity, unitPrice)
+    -- item is an ItemLocationMixin from Blizzard's ItemLocation.lua
+    local bagID, slotIndex = item:GetBagAndSlot()
+    local itemID = GetContainerItemID(bagID, slotIndex)
+    local AHZone = getAHZone()
+    
+    local character = addon.ThisCharacter
+	character.lastUpdate = time()
+    
+    table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
+				AHZone, itemID, quantity, "", "", unitPrice or "", duration or ""))
+                
+    -- Call the original Blizzard function
+    originalPostCommodity(item, duration, quantity, unitPrice)
 end
 
 local function ScanBids()

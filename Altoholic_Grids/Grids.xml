@@ -37,6 +37,28 @@
 					<KeyValue key="yOffset" value="3" type="number" />
 				</KeyValues>
 			</ScrollFrame>
+            <Button name="$parentScrollRightButton" inherits="UIPanelButtonTemplate" text="&gt;">
+				<Size x="30" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="0" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+                        Altoholic:OnTabGridsRightButtonClick(self:GetParent())
+					</OnClick>
+				</Scripts>
+			</Button>
+            <Button name="$parentScrollLeftButton" inherits="UIPanelButtonTemplate" text="&lt;">
+				<Size x="30" y="20" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMLEFT" x="180" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Altoholic:OnTabGridsLeftButtonClick(self:GetParent())
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 	</Frame>
 </Ui>

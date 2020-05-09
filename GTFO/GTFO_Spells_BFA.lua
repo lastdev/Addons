@@ -276,7 +276,7 @@ GTFO.SpellID["302521"] = {
 GTFO.SpellID["318391"] = {
   --desc = "Great Worm's Foul Stench (Great Worm From Beyond)";
   applicationOnly = true;
-  sound = 1;
+  sound = 2;
 };
 
 GTFO.SpellID["315161"] = {
@@ -365,6 +365,11 @@ GTFO.SpellID["312682"] = {
 
 GTFO.SpellID["316258"] = {
   --desc = "Bile (Aqir Goliath)";
+  sound = 1;
+};
+
+GTFO.SpellID["314565"] = {
+  --desc = "Defiled Ground (Blood of the Corruptor)";
   sound = 1;
 };
 
@@ -1156,12 +1161,8 @@ GTFO.SpellID["298569"] = {
 -- * Ny'alotha *
 -- *************
 
--- TODO: Burning Cataclysm (Wrathion)
 -- TODO: Crackling Shard (Wrathion) -- Alert when NOT afflicated with Burning Madness
--- TODO: Scorching Blisters (Wrathion)
 -- TODO: Acidic Blood (Ka'zir) -- Mythic only, avoidable?
--- TODO: Shadowy Residue (Vexiona)
--- TODO: Mycelial Growth (Carapace of N'Zoth) 
 -- TODO: Infinite Void (Carapace of N'Zoth) 
 -- TODO: Paranoia (N'Zoth) -- FF, complicated mechanic to track?
 -- TODO: Devour Thoughts (N'Zoth) -- FF
@@ -1169,6 +1170,11 @@ GTFO.SpellID["298569"] = {
 
 GTFO.SpellID["306824"] = {
   --desc = "Molten Pool (Wrathion)";
+  sound = 1;
+};
+
+GTFO.SpellID["313959"] = {
+  --desc = "Scorching Blisters (Wrathion)";
   sound = 1;
 };
 
@@ -1192,10 +1198,50 @@ GTFO.SpellID["307343"] = {
   sound = 1;
 };
 
+GTFO.SpellID["307250"] = {
+  --desc = "Twilight Decimator (Vexiona)";
+  sound = 1;
+};
+
 GTFO.SpellID["309991"] = {
   --desc = "Anguish (N'Zoth)";
   sound = 1;
 };
 
+GTFO.SpellID["307421"] = {
+  --desc = "Annihilation (Void Ascendant)";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["317999"] = {
+  --desc = "Gaze from Beyond";
+  sound = 1;
+};
+
+GTFO.SpellID["314430"] = {
+  --desc = "Lingering Blood";
+  sound = 1;
+};
+
+GTFO.SpellID["309704"] = {
+  --desc = "Caustic Coating";
+  sound = 1;
+};
+
+GTFO.SpellID["310406"] = {
+  --desc = "Void Glare (Eyes of Drest'agath)";
+  sound = 1;
+};
+
+GTFO.SpellID["308995"] = {
+  --desc = "Reality Tear (Tentacle of Drest'agath)";
+  sound = 1;
+};
+
+GTFO.SpellID["307061"] = {
+  --desc = "Mycelial Growth (Fury of N'Zoth)";
+  sound = 1;
+};
 
 end

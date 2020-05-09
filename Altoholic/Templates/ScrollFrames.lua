@@ -160,7 +160,7 @@ addon:Controller("AltoholicUI.UIPanelScrollFrame", {
 	Update = function(frame, numItems, numToDisplay, buttonHeight)
 		-- My own FauxScrollFrame_Update() from SharedUIPanelTemplates.lua
 		-- If more than one screen full of skills then show the scrollbar
-		
+
 		numToDisplay = numToDisplay or frame.numRows
 		buttonHeight = buttonHeight or frame.rowHeight
 		

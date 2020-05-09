@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(124, "DBM-Party-Cataclysm", 4, 70)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(39425)
 mod:SetEncounterID(1080)
 mod:SetZone()
@@ -66,4 +66,3 @@ function mod:UNIT_HEALTH(uId)
 		prewarnShield = false
 	end
 end
-		

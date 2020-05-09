@@ -672,6 +672,7 @@ L["Show already known/learnable by"] = true
 L["Show counters for all accounts"] = true
 L["Show counters for both factions"] = true
 L["Show counters for connected realms"] = true
+L["Show counters for all realms"] = true
 L["Show counters on gathering nodes"] = true
 L["Show guild bank count"] = true
 L["Show item count per character"] = true

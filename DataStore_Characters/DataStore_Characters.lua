@@ -162,7 +162,10 @@ local function _GetCharacterClassColor(character)
 end
 
 local function _GetClassColor(class)
-	-- return just the color of for any english class 	
+	-- return just the color of for any english class
+    -- Seems to be caused by guild members in Altoholic_Guild not having full details stored?
+    -- Might be a communications issue.
+    if class == nil then return "|cFFFFFFFF" end 	
 	return format("|c%s", RAID_CLASS_COLORS[class].colorStr) or "|cFFFFFFFF"
 end
 

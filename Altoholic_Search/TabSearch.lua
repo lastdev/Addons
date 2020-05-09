@@ -44,61 +44,61 @@ local categories = {
 	{
 		name = AUCTION_CATEGORY_CONTAINERS,
 		class = LE_ITEM_CLASS_CONTAINER,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONTAINER) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONTAINER),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_GEMS,
 		class = LE_ITEM_CLASS_GEM,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GEM) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GEM),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_ITEM_ENHANCEMENT,
 		class = LE_ITEM_CLASS_ITEM_ENHANCEMENT,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_ITEM_ENHANCEMENT) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_ITEM_ENHANCEMENT),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_CONSUMABLES,
 		class = LE_ITEM_CLASS_CONSUMABLE,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONSUMABLE) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_CONSUMABLE),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_GLYPHS,
 		class = LE_ITEM_CLASS_GLYPH,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GLYPH) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_GLYPH),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_TRADE_GOODS,
 		class = LE_ITEM_CLASS_TRADEGOODS,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_TRADEGOODS) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_TRADEGOODS),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_RECIPES,
 		class = LE_ITEM_CLASS_RECIPE,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_RECIPE) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_RECIPE),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_BATTLE_PETS,
 		class = LE_ITEM_CLASS_BATTLEPET,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_BATTLEPET),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_QUEST_ITEMS,
 		class = LE_ITEM_CLASS_QUESTITEM,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_QUESTITEM) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_QUESTITEM),
 		isCollapsed = true,
 	},
 	{
 		name = AUCTION_CATEGORY_MISCELLANEOUS,
 		class = LE_ITEM_CLASS_MISCELLANEOUS,
-		subClasses = { C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_MISCELLANEOUS) },
+		subClasses = C_AuctionHouse.GetAuctionItemSubClasses(LE_ITEM_CLASS_MISCELLANEOUS),
 		isCollapsed = true,
 	},
 }
@@ -188,7 +188,7 @@ function ns:Update()
 				local category = categories[p.parentIndex]
 				local class = category.class
 				local subClass = category.subClasses[p.dataIndex]
-			
+                
 				menuButton.Text:SetText("|cFFBBFFBB   " .. GetItemSubClassInfo(class, subClass))
 				menuButton:SetScript("OnClick", Item_OnClick)
 				menuButton.itemTypeIndex = p.parentIndex

@@ -15,8 +15,8 @@ local addonList = {
 	"Altoholic_Grids",
 }
 
-local url1 = "http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx"
-local url2 = "http://www.wowinterface.com/downloads/info8533-Altoholic.html"
+local url1 = "https://www.curseforge.com/wow/addons/altoholic/"
+local url2 = "https://github.com/teelolws/Altoholic-Retail"
 local url3 = "http://wow.curseforge.com/addons/altoholic/localization/"
 
 local help = {
@@ -61,7 +61,7 @@ local help = {
 			"Do I have to open all professions manually?",
 		},
 		answers = {
-			"Yes. Some advanced features require that you open the tradeskill pane once per profession.",
+			"Not anymore, on the Retail version of Altoholic. They are scanned when you login. Classic users will need to open the professions individually.",
 		}
 	},
 	{	name = "Mails",
@@ -95,10 +95,10 @@ local support = {
 			"I have multiple Lua errors at login, should I report them all?",
 		},
 		answers = {
-			"Both Curse and WoWInterface have a ticket section, I also read comments and respond as often as I materially can, so feel free to report in one of these places.",
+			format("%s%s", "Please use the Issue Tracker on Github: ", colors.green..url2),
 			format("%s\n\n%s\n%s\n%s\n%s\n%s\n", 
 				"A few things:",
-				colors.green.."1)|r Make sure you have the latest version of the add-on.\n",
+				colors.green.."1)|r Make sure you have the latest version of the add-on. Check for alpha builds on Github that address your issue.\n",
 				colors.green.."2)|r If you suspect a conflict with another add-on, try to reproduce the issue with only Altoholic enabled. As the add-on deals with a lot of things, a conflict is always possible.\n",
 				colors.green.."3)|r Make sure your issue has not been reported by someone else.\n",
 				colors.green.."4)|r Never, ever, report that 'it does not work', this is the most useless sentence in the world! Be specific about what does not work.\n",
@@ -120,6 +120,16 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+    { name = "8.3.003 Changes",
+        bulletedList = {
+            "Updated Altoholic_Grids to allow for scrolling along more than 12 characters using arrow button at the bottom.",
+        },
+    },
+    { name = "8.3.001 Changes",
+        bulletedList = {   
+            "Added new factions.",
+        },
+    },
 	{	name = "8.2.001 Changes",
 		bulletedList = {
 			"Minor fixes.",
@@ -221,9 +231,26 @@ function addon:SetOption(name, value)
 	end
 end
 
+local function UpdateRealmsOptionSelectivity()
+	f = AltoholicTooltipOptions
+    local connectedEnabled = addon:GetOption("UI.Tooltip.ShowMergedRealmsCount")
+    
+    if not connectedEnabled then
+        -- disable the all realms button, and make sure its deselected too
+        addon:SetOption("UI.Tooltip.ShowAllRealmsCount", false)
+        f.ShowAllRealmsCount:SetChecked(false)
+        f.ShowAllRealmsCount:SetEnabled(false)
+        f.ShowAllRealmsCount.Text:SetTextColor(.5,.5,.5)
+    else
+        -- enable the all realms button, but don't change its selection
+        f.ShowAllRealmsCount:SetEnabled(true)
+        f.ShowAllRealmsCount.Text:SetTextColor(1,1,1)        
+    end
+end
+
 function addon:ToggleOption(frame, option)
 	local value
-	
+
 	if frame then
 		value = frame:GetChecked() and true or false
 	else
@@ -231,6 +258,10 @@ function addon:ToggleOption(frame, option)
 	end
 	
 	addon:SetOption(option, value)
+    
+    if (option == "UI.Tooltip.ShowMergedRealmsCount") or (option == "UI.Tooltip.ShowAllRealmsCount") then
+        UpdateRealmsOptionSelectivity()
+    end 
 end
 
 function addon:SetupOptions()
@@ -393,6 +424,7 @@ function addon:SetupOptions()
 	f.ShowGatheringNodesCount.Text:SetText(L["Show counters on gathering nodes"])
 	f.ShowCrossFactionCount.Text:SetText(L["Show counters for both factions"])
 	f.ShowMergedRealmsCount.Text:SetText(L["Show counters for connected realms"])
+    f.ShowAllRealmsCount.Text:SetText(L["Show counters for all realms"])
 	f.ShowAllAccountsCount.Text:SetText(L["Show counters for all accounts"])
 	f.ShowGuildBankCount.Text:SetText(L["Show guild bank count"])
 	f.IncludeGuildBankInTotal.Text:SetText(L["Include guild bank count in the total count"])
@@ -409,6 +441,7 @@ function addon:SetupOptions()
 	L["Show counters for both factions"] = nil
 	L["Show counters for all accounts"] = nil
 	L["Include guild bank count in the total count"] = nil
+    UpdateRealmsOptionSelectivity()
 	
 	-- ** Calendar **
 	f = AltoholicCalendarOptions
@@ -483,6 +516,7 @@ function addon:RestoreOptionsToUI()
 	f.ShowGatheringNodesCount:SetChecked(O["UI.Tooltip.ShowGatheringNodesCount"])
 	f.ShowCrossFactionCount:SetChecked(O["UI.Tooltip.ShowCrossFactionCount"])
 	f.ShowMergedRealmsCount:SetChecked(O["UI.Tooltip.ShowMergedRealmsCount"])
+    f.ShowAllRealmsCount:SetChecked(O["UI.Tooltip.ShowAllRealmsCount"])
 	f.ShowAllAccountsCount:SetChecked(O["UI.Tooltip.ShowAllAccountsCount"])
 	f.ShowGuildBankCount:SetChecked(O["UI.Tooltip.ShowGuildBankCount"])
 	f.IncludeGuildBankInTotal:SetChecked(O["UI.Tooltip.IncludeGuildBankInTotal"])

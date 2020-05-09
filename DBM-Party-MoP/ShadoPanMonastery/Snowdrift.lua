@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(657, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(56541)
 mod:SetEncounterID(1304)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetReCombatTime(60)
 
 -- pre-bosswave. Novice -> Black Sash (Fragrant Lotus, Flying Snow). this runs automaticially.
 -- maybe we need Black Sash wave warns.
--- but boss (Master Snowdrift) not combat starts automaticilly. 
+-- but boss (Master Snowdrift) not combat starts automaticilly.
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(

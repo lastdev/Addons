@@ -4,7 +4,9 @@ local colors = addon.Colors
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local CHARS_PER_FRAME = 12
+local current_start_col = 1
 local gridCallbacks = {}
+local start_char_index = 1
 
 addon:Controller("AltoholicUI.TabGrids", {
 	OnBind = function(frame)
@@ -55,6 +57,27 @@ addon:Controller("AltoholicUI.TabGrids", {
 		local size = obj:GetSize()
 		local itemButton
 		
+        -- AltoIconListEntryTemplate.Item1
+        -- 	<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="180" y="0" />
+        local classIcons = frame.ClassIcons
+
+        -- Update which class icons are shown
+        for i = 1, 50 do
+            local icon = classIcons["Icon"..i]
+            icon:ClearAllPoints()
+            if (i < current_start_col) or (i >= (current_start_col + CHARS_PER_FRAME)) then
+                icon:SetShown(false)
+            else
+                if (i == current_start_col) then
+                    icon:SetPoint("TOPLEFT", icon:GetParent())
+                else
+                    icon:SetPoint("BOTTOMLEFT", classIcons["Icon"..(i-1)], "BOTTOMLEFT", 35, 0)
+                end
+                icon:SetShown(true)
+                icon:Show()
+            end
+        end
+        
 		for rowIndex = 1, numRows do
 			local rowFrame = scrollFrame:GetRow(rowIndex)
 			local dataRowID = rowIndex + offset
@@ -64,8 +87,10 @@ addon:Controller("AltoholicUI.TabGrids", {
 				itemButton = rowFrame.Name
 				itemButton:SetScript("OnEnter", obj.RowOnEnter)
 				itemButton:SetScript("OnLeave", obj.RowOnLeave)
-				
-				for colIndex = 1, CHARS_PER_FRAME do
+                
+                local current_end_col = current_start_col + CHARS_PER_FRAME
+                if current_end_col > 50 then current_end_col = 50 end
+				for colIndex = 1, 50 do
 					itemButton = rowFrame["Item"..colIndex]
 					itemButton.IconBorder:Hide()
 					
@@ -77,6 +102,17 @@ addon:Controller("AltoholicUI.TabGrids", {
 						
 						itemButton:Show()	-- note: this Show() must remain BEFORE the next call, if the button has to be hidden, it's done in ColumnSetup
 						obj:ColumnSetup(itemButton, dataRowID, character)
+                        itemButton:ClearAllPoints()
+                        if (colIndex < current_start_col) or (colIndex >= current_end_col) then
+                            -- Column is out of range, hide it
+                            itemButton:Hide()
+                        elseif colIndex == current_start_col then
+                            -- Column is the left-most one, anchor it to the left
+                            itemButton:SetPoint("BOTTOMRIGHT", rowFrame["Name"], "BOTTOMRIGHT", 50, 0)
+                        else
+                            -- Column is in the middle, anchor it to the one next to it
+                            itemButton:SetPoint("BOTTOMLEFT", rowFrame["Item"..(colIndex-1)], "BOTTOMLEFT", 35, 0)
+                        end
 					else
 						itemButton.id = nil
 						itemButton:Hide()
@@ -148,3 +184,15 @@ addon:Controller("AltoholicUI.TabGrids", {
 		return frame.SelectRealm:GetCurrentRealm()	-- returns : account, realm
 	end,
 })
+
+function addon:OnTabGridsRightButtonClick(frame)
+    if current_start_col == 50 then return end
+    current_start_col = current_start_col + 1
+    frame:GetParent().Update(frame:GetParent())    
+end
+
+function addon:OnTabGridsLeftButtonClick(frame)
+    if current_start_col == 1 then return end
+    current_start_col = current_start_col - 1
+    frame:GetParent().Update(frame:GetParent())
+end

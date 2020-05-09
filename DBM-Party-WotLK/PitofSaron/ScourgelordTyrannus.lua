@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(610, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(36658, 36661)
 mod:SetEncounterID(837, 838, 2000)
 mod:DisableESCombatDetection()
@@ -108,7 +108,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg == L.HoarfrostTarget or msg:find(L.HoarfrostTarget) then--Probably don't need this, verify
 		if not target then return end
 		timerHoarfrostCD:Start()
-		local target = DBM:GetUnitFullName(target)
+		target = DBM:GetUnitFullName(target)
 		if target == UnitName("player") then
 			specWarnHoarfrost:Show()
 			specWarnHoarfrost:Play("targetyou")

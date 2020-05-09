@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(625, "DBM-Party-WotLK", 9, 282)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(27656)
 mod:SetEncounterID(534, 535, 2013)
 mod:SetZone()
@@ -23,8 +23,8 @@ local timerShift		= mod:NewBuffActiveTimer(18, 51162, nil, nil, nil, 6)
 function mod:OnCombatEnd(wipe)
 	if not wipe then
 		if DBM.Bars:GetBar(L.MakeitCountTimer) then
-			DBM.Bars:CancelBar(L.MakeitCountTimer) 
-		end	
+			DBM.Bars:CancelBar(L.MakeitCountTimer)
+		end
 	end
 end
 

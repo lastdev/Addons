@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(609, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(36476)
 mod:SetEncounterID(835, 836, 2001)
 mod:SetUsedIcons(8)
@@ -83,8 +83,8 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 	local name = DBM:GetUnitFullName(uId)
 	if not isPursuitDebuff and pursuitTable[name] then
 		pursuitTable[name] = nil
-		if self.Options.SetIconOnPursuitTarget then 
-			self:SetIcon(name, 0) 
+		if self.Options.SetIconOnPursuitTarget then
+			self:SetIcon(name, 0)
 		end
 	elseif isPursuitDebuff and not pursuitTable[name] then
 		pursuitTable[name] = true
@@ -94,8 +94,8 @@ function mod:UNIT_AURA_UNFILTERED(uId)
 		else
 			warnPursuit:Show(name)
 		end
-		if self.Options.SetIconOnPursuitTarget then 
-			self:SetIcon(name, 8) 
+		if self.Options.SetIconOnPursuitTarget then
+			self:SetIcon(name, 8)
 		end
 	end
 end

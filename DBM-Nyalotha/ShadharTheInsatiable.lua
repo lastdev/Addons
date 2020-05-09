@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2367, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200206171259")
+mod:SetRevision("20200323225936")
 mod:SetCreatureID(157231)
 mod:SetEncounterID(2335)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 312528 306928 312529 306929 307260 306953 318078 312530 306930 307478 307476",
 	"SPELL_CAST_SUCCESS 312528 306928 312529 306929 312530 306930",
-	"SPELL_AURA_APPLIED 312328 312329 307471 307472 307358 306942 318078 314736 312099 306447 306931 306933",
+	"SPELL_AURA_APPLIED 312328 312329 307471 307472 307358 306942 318078 314736 312099 306447 306931 306933 306448",
 	"SPELL_AURA_APPLIED_DOSE 312328 307358 307471",
 	"SPELL_AURA_REMOVED 312328 307358 306447 306933 306931",
 	"SPELL_AURA_REMOVED_DOSE 312328 307358 307472",
@@ -35,7 +35,7 @@ mod:RegisterEventsInCombat(
  or (ability.id = 307476 or ability.id = 307478) and type = "begincast"
 --]]
 local warnHunger							= mod:NewStackAnnounce(312328, 2, nil, false, 2)--Mythic
---local warnUmbralMantle					= mod:NewSpellAnnounce(306447, 2)
+local warnUmbralMantle						= mod:NewCountAnnounce(306448, 2)
 local warnUmbralEruption					= mod:NewSpellAnnounce(308157, 2)
 local warnNoxiousMantle						= mod:NewSpellAnnounce(306931, 2)
 local warnBubblingOverflow					= mod:NewCountAnnounce(314736, 2)
@@ -44,7 +44,7 @@ local warnCrush								= mod:NewTargetNoFilterAnnounce(307471, 3, nil, "Tank")
 local warnDissolve							= mod:NewTargetNoFilterAnnounce(307472, 3, nil, "Tank")
 local warnDebilitatingSpit					= mod:NewTargetNoFilterAnnounce(307358, 3, nil, false, 58519)
 local warnFrenzy							= mod:NewTargetNoFilterAnnounce(306942, 2)
-local warnFixate							= mod:NewTargetAnnounce(307260, 2)
+local warnFixate							= mod:NewTargetCountAnnounce(307260, 2)
 local warnEntropicBuildup					= mod:NewCountAnnounce(308177, 2)
 local warnEntropicBreath					= mod:NewSpellAnnounce(306930, 2, nil, "Tank")
 local warnTastyMorsel						= mod:NewTargetNoFilterAnnounce(312099, 1)
@@ -63,9 +63,10 @@ local timerCrushCD							= mod:NewCDTimer(25.1, 307471, nil, "Tank", nil, 5, nil
 local timerSlurryBreathCD					= mod:NewCDTimer(17, 306736, nil, nil, nil, 3, nil, nil, nil, 1, 3)
 local timerDebilitatingSpitCD				= mod:NewCDTimer(30.1, 306953, 58519, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerFixateCD							= mod:NewCDCountTimer(30.2, 307260, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)
+local timerUmbralMantleCD					= mod:NewNextCountTimer(20, 306448, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 local timerUmbralEruptionCD					= mod:NewNextTimer(10, 308157, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 local timerBubblingOverflowCD				= mod:NewNextTimer(10, 314736, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
-local timerEntropicBuildupCD				= mod:NewNextTimer(10, 308177, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
+local timerEntropicBuildupCD				= mod:NewNextCountTimer(10, 308177, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
 
 local berserkTimer							= mod:NewBerserkTimer(360)
 
@@ -74,12 +75,12 @@ mod:AddInfoFrameOption(307358, true)
 mod:AddSetIconOption("SetIconOnDebilitating", 306953, true, false, {1, 2, 3, 4})
 
 mod.vb.phase = 0
+mod.vb.umbralMantleCount = 0
 mod.vb.eruptionCount = 0
 mod.vb.bubblingCount = 0
 mod.vb.buildupCount = 0
 mod.vb.fixateCount = 0
 mod.vb.bossPowerUpdateRate = 4
-mod.vb.comboCount = 0
 mod.vb.firstCrush = nil
 mod.vb.firstDissolve = nil
 local playerName = UnitName("player")
@@ -120,7 +121,7 @@ local function entropicBuildupLoop(self)
 	warnEntropicBuildup:Show(self.vb.buildupCount)
 	local timer = self:IsHard() and orbTimersHeroic[self.vb.buildupCount+1] or self:IsEasy() and orbTimersNormal[self.vb.buildupCount+1]
 	if timer then
-		timerEntropicBuildupCD:Start(timer)
+		timerEntropicBuildupCD:Start(timer, self.vb.buildupCount+1)
 		self:Schedule(timer, entropicBuildupLoop, self)
 	end
 end
@@ -163,9 +164,9 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
+	self.vb.umbralMantleCount = 0
 	self.vb.fixateCount = 0
 	self.vb.bossPowerUpdateRate = 4
-	self.vb.comboCount = 0
 	self.vb.firstCrush = nil
 	self.vb.firstDissolve = nil
 	table.wipe(SpitStacks)
@@ -213,25 +214,29 @@ function mod:SPELL_CAST_START(args)
 		timerDebilitatingSpitCD:Start()
 	elseif spellId == 307478 then--Dissolve
 		if self:AntiSpam(11, 1) then
-			self.vb.comboCount = 0
+			self.vb.firstCrush = nil
+			self.vb.firstDissolve = nil
 		end
-		self.vb.comboCount = self.vb.comboCount + 1
 		--there is already a crush debuffed tank, and it is not us, therefor WE must taunt dissolve
 		--or, we are the dissolve debuffed tank and we need to tank this dissolve too
-		if (self.vb.firstCrush and self.vb.firstCrush ~= playerName) or (self.vb.firstDissolve and self.vb.firstDissolve == playerName) then
-			specWarnDissolveTaunt:Show(self.vb.firstCrush)
-			specWarnDissolveTaunt:Play("tauntboss")
+		if not self:IsTanking("player", "boss1", nil, true) then
+			if (self.vb.firstCrush and self.vb.firstCrush ~= playerName) or (self.vb.firstDissolve and self.vb.firstDissolve == playerName) then
+				specWarnDissolveTaunt:Show(self.vb.firstCrush)
+				specWarnDissolveTaunt:Play("tauntboss")
+			end
 		end
 	elseif spellId == 307476 then--Crush
 		if self:AntiSpam(11, 1) then
-			self.vb.comboCount = 0
+			self.vb.firstCrush = nil
+			self.vb.firstDissolve = nil
 		end
-		self.vb.comboCount = self.vb.comboCount + 1
 		--there is already a dissolve debuffed tank, and it is not us, therefor WE must taunt crush
 		--or, we are the crush debuffed tank and we need to tank this crush too
-		if (self.vb.firstDissolve and self.vb.firstDissolve ~= playerName) or (self.vb.firstCrush and self.vb.firstCrush == playerName) then
-			specWarnCrushTaunt:Show(self.vb.firstCrush)
-			specWarnCrushTaunt:Play("tauntboss")
+		if not self:IsTanking("player", "boss1", nil, true) then
+			if (self.vb.firstDissolve and self.vb.firstDissolve ~= playerName) or (self.vb.firstCrush and self.vb.firstCrush == playerName) then
+				specWarnCrushTaunt:Show(self.vb.firstCrush)
+				specWarnCrushTaunt:Play("tauntboss")
+			end
 		end
 	end
 end
@@ -284,7 +289,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 306942 then
 		warnFrenzy:Show(args.destName)
 	elseif spellId == 318078 or spellId == 307260 then
-		warnFixate:CombinedShow(0.3, args.destName)
+		warnFixate:CombinedShow(0.3, self.vb.fixateCount, args.destName)
 		if args:IsPlayer() then
 			specWarnFixate:Show()
 			specWarnFixate:Play("targetyou")
@@ -326,7 +331,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Unschedule(bubblingOverflowLoop)
 			--Schedue P3 Loop
 			self.vb.buildupCount = 0
-			timerEntropicBuildupCD:Start(4)
+			timerEntropicBuildupCD:Start(4, 1)
 			if self:IsHard() then
 				self:Schedule(4, entropicBuildupLoop, self)
 			else
@@ -339,6 +344,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnGTFO:Play("watchfeet")
 	elseif spellId == 312099 then
 		warnTastyMorsel:Show(args.destName)
+	elseif spellId == 306448 and self:AntiSpam(5, 6) then
+		self.vb.umbralMantleCount = self.vb.umbralMantleCount + 1
+		warnUmbralMantle:Show(self.vb.umbralMantleCount)
+		timerUmbralMantleCD:Start(20, self.vb.umbralMantleCount+1)
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -366,6 +375,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 306447 then
 		timerUmbralEruptionCD:Stop()
+		timerUmbralMantleCD:Stop()
 		self:Unschedule(umbralEruptionLoop)
 	elseif spellId == 306931 then
 		timerBubblingOverflowCD:Stop()

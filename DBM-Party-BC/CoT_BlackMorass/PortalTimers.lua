@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("PT", "DBM-Party-BC", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 
 mod:RegisterEvents(
 	"UPDATE_UI_WIDGET",
@@ -39,8 +39,8 @@ function mod:UPDATE_UI_WIDGET(table)
 	local text = widgetInfo.text
 	if not text then return end
 	local currentPortal = text:match("(%d+).+18")
-	if not currentPortal then 
-		currentPortal = 0 
+	if not currentPortal then
+		currentPortal = 0
 	end
 	currentPortal = tonumber(currentPortal)
 	if currentPortal > lastPortal then

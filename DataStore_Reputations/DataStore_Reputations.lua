@@ -230,7 +230,8 @@ local factions = {
 	{ id = 2163, name = GetFactionInfoByID(2163) },		-- AH - Tortollan Seekers
 	{ id = 2158, name = GetFactionInfoByID(2158) },		-- H  - Voldunai
 	{ id = 2103, name = GetFactionInfoByID(2103) },		-- H  - Zandalari Empire
-	{ id = 2400, name = GetFactionInfoByID(2400) },		-- Waveblade Ankoan
+	{ id = 2400, name = BF["Waveblade Ankoan"] },		-- A - Waveblade Ankoan
+    { id = 2373, name = BF["The Unshackled"] },         -- H - The Unshackled
 	{ id = 2391, name = GetFactionInfoByID(2391) },		-- Rustbolt Resistance
 	{ id = 2415, name = GetFactionInfoByID(2415) },		-- 8.3 Rajani
 	{ id = 2417, name = GetFactionInfoByID(2417) },		-- 8.3 Uldum Accord

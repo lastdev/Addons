@@ -1,12 +1,21 @@
-tag 56e0ff08245c338bc695c6aee9599cde47f85838 8.3.3
+tag 8e3c04ab18704d26645201c0fd8aebc5bee3d3ee 8.3.6
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Tue Jan 21 16:47:30 2020 +1100
+Date:	Tue Apr 14 15:13:27 2020 +1000
 
-Release 8.3.3, mark first lesser vision non-flyable
+LiteMount 8.3.6
 
-commit c5a3f03aea1e1bd66736909c9c2e86e22122e082
+ - Add [jump] condition
+ - Add visual and clear button for when mount filters are enabled
+
+commit 397ce334af5ca22e867e06d82560472afeeb0e7d
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Tue Jan 21 16:45:41 2020 +1100
+Date:   Tue Apr 14 15:07:03 2020 +1000
 
-    Better comment about lesser vision
+    On the mounts frame, add the filter visual X to clear
+
+commit 9af13806d9a904145fe42750e50c8cc2ad090035
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Tue Apr 14 14:57:44 2020 +1000
+
+    Add [jump] condition
 

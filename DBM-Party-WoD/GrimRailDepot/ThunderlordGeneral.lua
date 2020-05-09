@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1133, "DBM-Party-WoD", 3, 536)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200220142801")
 mod:SetCreatureID(80005)
 mod:SetEncounterID(1736)
 mod:SetZone()
@@ -54,7 +54,7 @@ function mod:FreezingSnareTarget(targetname, uId)
 		warnFreezingSnare:Show(targetname)
 	end
 end
-  
+
 function mod:OnCombatStart(delay)
 
 end

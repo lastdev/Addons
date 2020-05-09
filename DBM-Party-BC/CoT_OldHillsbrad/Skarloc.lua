@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(539, "DBM-Party-BC", 11, 251)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200219191522")
 mod:SetCreatureID(17862)
 mod:SetEncounterID(1907)
 
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_MISSED 38385"
 )
 
-local warnHammer                = mod:NewTargetAnnounce(13005, 2)
+local warnHammer                = mod:NewTargetNoFilterAnnounce(13005, 2)
 
 local specWarnHeal				= mod:NewSpecialWarningInterrupt(29427, "HasInterrupt", nil, nil, 1, 2)
 local specWarnConsecration		= mod:NewSpecialWarningMove(38385, nil, nil, nil, 1, 2)
