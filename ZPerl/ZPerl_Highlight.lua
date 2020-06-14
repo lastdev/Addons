@@ -8,6 +8,13 @@ XPerl_RequestConfig(function(new)
 	conf = new
 end, "$Revision:  $")
 
+local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
+local LCC = LibStub("LibClassicCasterino", true)
+if LCC then
+    UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
+    UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
+end
+
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
 local GetTime = GetTime
@@ -169,7 +176,7 @@ function xpHigh:Add(guid, highlightType, duration, source)
 				self:Send(guid)
 			else
 				local newEndTime = GetTime() + duration
-				if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and highlightType == "HEAL" and (UnitInRaid(source) or UnitInParty(source))) then
+				if (highlightType == "HEAL" and (UnitInRaid(source) or UnitInParty(source))) then
 					if (source and not UnitIsUnit("player", source)) then
 						-- We'll query their cast bar and get accurate highlight time info
 						local spellName, text, texture, startTime, endTime = UnitCastingInfo(source)

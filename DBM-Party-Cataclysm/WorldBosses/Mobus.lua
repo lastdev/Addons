@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mobus", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(50009)
 mod:SetModelID(37338)
 mod:SetZone()
@@ -21,7 +21,7 @@ local specWarnWake			= mod:NewSpecialWarningMove(93494, "Melee", nil, nil, 2, 2)
 local specWarnAlgae			= mod:NewSpecialWarningMove(93490, nil, nil, nil, 1, 2)
 
 local timerAlgaeCD			= mod:NewNextTimer(12, 93490, nil, nil, nil, 3)
-local timerRamCD			= mod:NewNextTimer(16, 93492, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--16-17 seconds after wake seems more accurate then wild upwards of 20 second variations of starting timer after previous ram
+local timerRamCD			= mod:NewNextTimer(16, 93492, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--16-17 seconds after wake seems more accurate then wild upwards of 20 second variations of starting timer after previous ram
 local timerWakeCD			= mod:NewCDTimer(47, 93494, nil, nil, nil, 3)--47-60 second variations. also typcally 30-33sec after a ram AFTER first one.
 
 function mod:AlgaeTarget()

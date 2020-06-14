@@ -26,7 +26,7 @@
 
 Prat:AddModuleToLoad(function()
 
--- Get Utility Libraries
+  -- Get Utility Libraries
   local PRAT_MODULE = Prat:RequestModuleName("KeyBindings")
 
   if PRAT_MODULE == nil then
@@ -131,12 +131,12 @@ L = {
 		["Channel %d"] = "Kanal %d",
 		["Copy Selected Chat Frame"] = "Ausgewähltes Chatfenster kopieren",
 		["Guild Channel"] = "Gildenkanal",
-		["Instance Channel"] = "Schlachtfeld-Kanal",
+		["Instance Channel"] = "Instanzkanal",
 		["module_desc"] = "Fügt chatbezogene Tastenkombinationen hinzu",
 		["Next Chat Tab"] = "Nächster Chatreiter",
 		["Officer Channel"] = "Offizierskanal",
 		["Party Channel"] = "Gruppenkanal",
-		["Prat CopyChat"] = true,
+		["Prat CopyChat"] = "Prat Chat kopieren",
 		["Prat Keybindings"] = true,
 		["Prat TellTarget"] = true,
 		["Raid Channel"] = "Schlachtzugskanal",
@@ -160,8 +160,7 @@ L = {
 		["Copy Selected Chat Frame"] = "선택한 대화창 복사",
 		["Guild Channel"] = "길드 채널",
 		["Instance Channel"] = "인스턴스 채널",
-		--[[Translation missing --]]
-		["module_desc"] = "Adds chat related keybindings",
+		["module_desc"] = "채팅 관련 단축키 추가",
 		["Next Chat Tab"] = "다음 대화 탭",
 		["Officer Channel"] = "관리자 채널",
 		["Party Channel"] = "파티 채널",

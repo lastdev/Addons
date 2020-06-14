@@ -1,0 +1,21 @@
+## Interface: 80300
+## Title: RareTrackerVale
+## Notes: Track and coordinate rare spawn timers in the Vale of Eternal Blossoms.
+## Author: Melroy
+## Version: 6.0.8
+## SavedVariables: RareTrackerValeDB, RTVDB
+## Dependencies: RareTrackerCore
+
+libs\AceLocale-3.0\AceLocale-3.0.lua
+libs\AceDB-3.0\AceDB-3.0.xml
+
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\frFR.lua
+Locales\ruRU.lua
+
+RareTrackerVale.lua
+RareTrackerValeGlobals.lua
+RareTrackerValeInterface.lua
+RareTrackerValeOptions.lua
+RareTrackerValeEventHandler.lua

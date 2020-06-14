@@ -460,9 +460,9 @@ function RT.AddDefaultEventHandlerFunctions(module)
         end
     end
     
-    if not module.OnPlayerLogout then
+    if not module.OnDatabaseShutdown then
         -- Called when the player logs out, such that we can save the current time table for later use.
-        module.OnPlayerLogout = function(self)
+        module.OnDatabaseShutdown = function(self)
             if self.current_shard_id then
                 -- Save the records, such that we can use them after a reload.
                 self.db.global.previous_records[self.current_shard_id] = {}
@@ -519,7 +519,6 @@ function RT.AddDefaultUpdateAndEventSubscriptions(module)
     )
 
     module:RegisterEvent("ADDON_LOADED")
-    module:RegisterEvent("PLAYER_LOGOUT")
     module:RegisterEvent("ZONE_CHANGED_NEW_AREA")
     module:RegisterEvent("PLAYER_ENTERING_WORLD")
     module:RegisterEvent("ZONE_CHANGED")

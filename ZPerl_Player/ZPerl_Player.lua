@@ -719,6 +719,7 @@ function XPerl_Player_UpdateHealth(self)
 	XPerl_SetHealthBar(self, playerhealth, playerhealthmax)
 	XPerl_Player_UpdateAbsorbPrediction(self)
 	XPerl_Player_UpdateHealPrediction(self)
+	XPerl_Player_UpdateResurrectionStatus(self)
 
 	local greyMsg
 	if (UnitIsDead(partyid)) then
@@ -772,6 +773,22 @@ function XPerl_Player_UpdateAbsorbPrediction(self)
 		XPerl_SetExpectedAbsorbs(self)
 	else
 		self.statsFrame.expectedAbsorbs:Hide()
+	end
+end
+
+function XPerl_Player_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
 	end
 end
 
@@ -1394,10 +1411,11 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UPDATE_EXHAUSTION",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
 	for i, event in pairs(events) do
-		if string.find(event, "^UNIT_") then
+		if string.find(event, "^UNIT_") or string.find(event, "^INCOMING") then
 			if pcall(self.RegisterUnitEvent, self, event, "player", "vehicle") then
 				self:RegisterUnitEvent(event, "player", "vehicle")
 			end
@@ -1665,6 +1683,12 @@ function XPerl_Player_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 	end
 end
 
+function XPerl_Player_Events:INCOMING_RESURRECT_CHANGED(unit)
+	if unit == self.partyid then
+		XPerl_Player_UpdateResurrectionStatus(self)
+	end
+end
+
 -- XPerl_Player_SetWidth
 function XPerl_Player_SetWidth(self)
 	pconf.size.width = max(0, pconf.size.width or 0)
@@ -1815,19 +1839,13 @@ function XPerl_Player_Set_Bits(self)
 		end
 	end
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (pconf.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "player", "vehicle")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, pconf, function (guid)
+		if guid == UnitGUID("player") then
+			return "player"
+		elseif guid == UnitGUID("vehicle") then
+			return "vehicle"
 		end
-
-		if (pconf.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player", "vehicle")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
+	end, "player", "vehicle")
 
 	if (playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST") then
 		XPerl_Player_DruidBarUpdate(self)
@@ -1837,6 +1855,7 @@ function XPerl_Player_Set_Bits(self)
 		if (pconf.portrait) then
 			self.portraitFrame:Show()
 			self.portraitFrame:SetWidth(62)
+			self.statsFrame.resurrect:Hide()
 		else
 			self.portraitFrame:Hide()
 			self.portraitFrame:SetWidth(3)

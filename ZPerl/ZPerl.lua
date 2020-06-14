@@ -8,13 +8,14 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1198 $")
-XPerl_SetModuleRevision("$Revision: 1198 $")
+end, "$Revision: 1204 $")
+XPerl_SetModuleRevision("$Revision: 1204 $")
 
 local LCD = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LibStub and LibStub("LibClassicDurations")
 if LCD then
 	LCD:Register("ZPerl")
 end
+local HealComm = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LibStub and LibStub("LibHealComm-4.0")
 
 -- Upvalues
 local _G = _G
@@ -4014,7 +4015,13 @@ function XPerl_SetExpectedHealth(self)
 			unit = self:GetParent().targetid
 		end
 
-		local amount = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetIncomingHeals(unit)
+		local amount
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			amount = UnitGetIncomingHeals(unit)
+		else
+			local guid = UnitGUID(unit)
+			amount = (HealComm:GetHealAmount(guid, HealComm.ALL_HEALS, GetTime() + 3) or 0) * HealComm:GetHealModifier(guid)
+		end
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
 			local healthMax = UnitHealthMax(unit)
 			local health = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or UnitHealth(unit))
@@ -4165,4 +4172,48 @@ function XPerl_Unit_ThreatStatus(self, relative, immediate)
 
 		t:Hide()
 	end
+end
+
+function XPerl_Register_Prediction(self, conf, g2u, ...)
+	if not self then
+		return
+	end
+
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if (conf.healprediction) then
+			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", ...)
+		else
+			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		end
+
+		if (conf.absorbs) then
+			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", ...)
+		else
+			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+		end
+	else
+		if (conf.healprediction) then
+			local UpdateHealth = function(event, ...)
+				local unit = g2u(select(select("#", ...), ...))
+				if unit then
+					local f = self:GetScript("OnEvent")
+					f(self, "UNIT_HEAL_PREDICTION", unit)
+				end
+			end
+			HealComm.RegisterCallback(self, "HealComm_HealStarted", UpdateHealth)
+			HealComm.RegisterCallback(self, "HealComm_HealStopped", UpdateHealth)
+			HealComm.RegisterCallback(self, "HealComm_HealDelayed", UpdateHealth)
+			HealComm.RegisterCallback(self, "HealComm_HealUpdated", UpdateHealth)
+			HealComm.RegisterCallback(self, "HealComm_ModifierChanged", UpdateHealth)
+			HealComm.RegisterCallback(self, "HealComm_GUIDDisappeared", UpdateHealth)
+		else
+			HealComm.UnregisterCallback(self, "HealComm_HealStarted")
+			HealComm.UnregisterCallback(self, "HealComm_HealStopped")
+			HealComm.UnregisterCallback(self, "HealComm_HealDelayed")
+			HealComm.UnregisterCallback(self, "HealComm_HealUpdated")
+			HealComm.UnregisterCallback(self, "HealComm_ModifierChanged")
+			HealComm.UnregisterCallback(self, "HealComm_GUIDDisappeared")
+		end
+	end
+
 end

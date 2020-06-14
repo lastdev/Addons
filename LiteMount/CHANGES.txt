@@ -1,21 +1,26 @@
-tag 8e3c04ab18704d26645201c0fd8aebc5bee3d3ee 8.3.6
+tag 20b19af434dfe9cf20ea9daf19cec484ab896c4e 8.3.7
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Tue Apr 14 15:13:27 2020 +1000
+Date:	Sun Apr 19 10:13:28 2020 +1000
 
-LiteMount 8.3.6
+LiteMount 8.3.7
+- [falling] condition now requires more than 1s since a jump
+- flag Seething Shore battleground as non-flyable
 
- - Add [jump] condition
- - Add visual and clear button for when mount filters are enabled
-
-commit 397ce334af5ca22e867e06d82560472afeeb0e7d
+commit 8c2915ec3abc5567cdb11c547dab3c7ee4159e6d
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Tue Apr 14 15:07:03 2020 +1000
+Date:   Sun Apr 19 10:11:36 2020 +1000
 
-    On the mounts frame, add the filter visual X to clear
+    Flag Seething Shore as non-flyable
 
-commit 9af13806d9a904145fe42750e50c8cc2ad090035
+commit e0533207012af8d7c780ef7c63f77a593665e567
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Tue Apr 14 14:57:44 2020 +1000
+Date:   Sun Apr 19 10:11:18 2020 +1000
 
-    Add [jump] condition
+    Start recording instances, just in case it's helpful
+
+commit 0b4ae397d21d98fdb83375dde901c8264fbd3070
+Author: Mike "Xodiv" Battersby <mib@post.com>
+Date:   Fri Apr 17 14:07:46 2020 +1000
+
+    Adjust [falling] so it won't trigger within 1s of a jump
 

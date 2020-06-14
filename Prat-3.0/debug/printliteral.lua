@@ -33,20 +33,21 @@ setfenv(1, SVC_NAMESPACE)
 
 --[[ END STANDARD HEADER ]] --
 
-TABLE_PRINT_TIMEOUT = 0.2
+TABLE_PRINT_TIMEOUT = 5000
 
 local function buildText(...)
   local text = "|cffffff78" .. tostring(SVC_NAMESPACE) .. ":|r "
 
-  for i=1,select("#", ...) do
+  for i = 1, select("#", ...) do
     local parm = select(i, ...)
+
     if type(parm) == "string" then
-        text = text .. parm
+      text = text .. parm
     else
-        text = text .. tostring(parm) .. " "
+      text = text .. tostring(parm) .. " "
     end
   end
-  
+
   if text == nil or #text == 0 then
     return ""
   end
@@ -57,21 +58,21 @@ end
 --[[ from AceConsole-3.0 ]] --
 function Print(self, ...)
   local text = (self == SVC_NAMESPACE) and buildText(...) or buildText(self, ...)
-  
+
   if text == nil or #text == 0 then
     return
   end
 
-  _G.DEFAULT_CHAT_FRAME:AddMessage(text)
+  (self.printFrame or _G.DEFAULT_CHAT_FRAME):AddMessage(text)
 end
 
 function FPrint(self, frame, ...)
   local text = buildText(...)
-  
+
   if text == nil or #text == 0 then
     return
   end
-  
+
   frame:AddMessage(text)
 end
 
@@ -85,7 +86,7 @@ local function print(text, name, r, g, b, frame, delay)
   end
   local last_color
   for t in text:gmatch("[^\n]+") do
-    (frame or _G.DEFAULT_CHAT_FRAME):AddMessage(last_color and "|cff" .. last_color .. t or t, r, g, b, nil, delay or 5)
+    (frame or _G.DEFAULT_CHAT_FRAME):AddMessage(last_color and "|cff" .. last_color .. t or t, r, g, b)
     if not last_color or t:find("|r") or t:find("|c") then
       last_color = t:match(".*|c[fF][fF](%x%x%x%x%x%x)[^|]-$")
     end
@@ -108,7 +109,7 @@ local getkeystring
 
 local function isList(t)
   local n = #t
-  for k,v in pairs(t) do
+  for k, v in pairs(t) do
     if type(k) ~= "number" then
       return false
     elseif k < 1 or k > n then
@@ -120,7 +121,7 @@ end
 
 local findGlobal = setmetatable({}, {
   __index = function(self, t)
-    for k,v in pairs(_G) do
+    for k, v in pairs(_G) do
       if v == t then
         k = tostring(k)
         self[v] = k
@@ -134,7 +135,7 @@ local findGlobal = setmetatable({}, {
 
 local recurse = {}
 local timeToEnd
-local GetTime = GetTime
+local GetTime = _G.debugprofilestop
 local type = type
 
 local new, del
@@ -253,8 +254,11 @@ local function literal_tostring_prime(t, depth)
       s = "{ |cff9f9f9f-- " .. real_tostring(t):gsub("|", "||") .. "|r\n"
     end
     if isList(t) then
-      for i=1,#t do
+      for i = 1, #t do
         s = s .. ("    "):rep(depth + 1) .. literal_tostring_prime(t[i], depth + 1) .. (i == #t and "\n" or ",\n")
+        if GetTime() > timeToEnd then
+          return s .. ("    "):rep(depth + 1) .. "Timeout\n"
+        end
       end
     else
       local tmp = new()
@@ -262,7 +266,7 @@ local function literal_tostring_prime(t, depth)
         tmp[#tmp + 1] = k
       end
       table.sort(tmp, specialSort)
-      for i,k in ipairs(tmp) do
+      for i, k in ipairs(tmp) do
         tmp[i] = nil
         local v = t[k]
         s = s .. ("    "):rep(depth + 1) .. getkeystring(k, depth + 1) .. " = " .. literal_tostring_prime(v, depth + 1) .. (tmp[i + 1] == nil and "\n" or ",\n")
@@ -336,11 +340,11 @@ local function literal_tostring_frame(t)
   end
   table.sort(tmp, ignoreCaseSort)
   local first = true
-  for i,k in ipairs(tmp) do
+  for i, k in ipairs(tmp) do
     local v = t[k]
     local good = true
     if k == "GetPoint" then
-      for i=1,t:GetNumPoints() do
+      for i = 1, t:GetNumPoints() do
         if not first then
           s = s .. ",\n"
         else
@@ -384,10 +388,10 @@ local function literal_tostring(t, only)
   else
     s = literal_tostring_prime(t, 0)
   end
-  for k,v in pairs(recurse) do
+  for k, v in pairs(recurse) do
     recurse[k] = nil
   end
-  for k,v in pairs(findGlobal) do
+  for k, v in pairs(findGlobal) do
     findGlobal[k] = nil
   end
   return s
@@ -430,7 +434,7 @@ function PrintLiteralFrame(self, frame, ...)
 end
 
 function PrintLiteral(self, ...)
-  return CustomPrint(self or SVC_NAMESPACE, nil, nil, nil, _G.DEFAULT_CHAT_FRAME, nil, true, ...)
+  return CustomPrint(self or SVC_NAMESPACE, nil, nil, nil, nil, nil, true, ...)
 end
 
 function AddPrintMethod(_, frame)
@@ -455,4 +459,4 @@ function AddPrintMethods()
   SVC_NAMESPACE:Print("DEBUG PRINTING")
 end
 
-AddPrintMethods()
+

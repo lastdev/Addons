@@ -280,7 +280,7 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 						--withList[group] = XPerl_GetReusableTable()
 						withList[group] = { }
 					end
-					tinsert(withList[group], {class = unitClass, ["name"] = unitName})
+					tinsert(withList[group], {class = unitClass, name = unitName})
 				elseif (conf.buffHelper.sort == "class") then
 					if (not withList[unitClass]) then
 						--withList[unitClass] = XPerl_GetReusableTable()
@@ -306,7 +306,9 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 
 				names = (names or "").."|r"..i..": "
 				for i, item in ipairs(list) do
-					names = names..XPerlColourTable[item.class]..item.name.." "
+					if item.class and item.class then
+						names = names..XPerlColourTable[item.class]..item.name.." "
+					end
 				end
 				names = names.."|r\r"
 			end

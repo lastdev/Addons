@@ -422,44 +422,44 @@ L = {
   
 L = {
 	["AltNames"] = {
-		["%d alts found for %s: %s"] = "%d Alts gefunden für %s: %s",
-		["%s alts imported from LOKWhoIsWho"] = "%s Alts importiert von LOKWhoIsWho",
-		["%s total alts linked to mains"] = "Insgesamt %s Alts mit Haupt-Charakteren verknüpft",
+		["%d alts found for %s: %s"] = "%d Alternativen gefunden für %s: %s",
+		["%s alts imported from LOKWhoIsWho"] = "%s Alternativen importiert von LOKWhoIsWho",
+		["%s total alts linked to mains"] = "%s Gesamtalternativen im Zusammenhang mit Haupt-Charakteren verknüpft",
 		["(.-)'s? [Aa]lt"] = " %f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]s [Aa]lt",
 		["([^%s%p%d%c%z]+)'s alt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]s [Aa]lt",
 		[".*[Aa]lts?$"] = true,
 		[".*[Tt]wink.*$"] = true,
-		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<Altname> (z.B. /altnames del FalscherAltname)",
-		["<main> (eg /altnames listalts Fin)"] = "<main> (z.b. /altnames listalts Shylera)",
-		["<search term> (eg, /altnames find fin)"] = "<Suchbegriff> (z.b. /altnames find Shy)",
-		["Alt"] = true,
-		["alt"] = "Alt",
-		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "Alt-Name vorhanden: %s -> %s; wir nicht überschrieben, wie in der Auswahl eingestellt.",
-		["AltNames"] = "AltName",
-		["Alts:"] = true,
-		["autoguildalts_desc"] = "Automatisch den Import von der Gildenliste im Hintergrund ausführen.",
-		["autoguildalts_name"] = "Auto-Import der Gilden-Alts",
+		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<Alt.Name> (z.b. /alternative Namen gelöscht, Personvonderdudachtest, sieseieineAlternative, aberwirklichnichtist)",
+		["<main> (eg /altnames listalts Fin)"] = "<Haupt->  (z.b. /alternative Namen Liste)",
+		["<search term> (eg, /altnames find fin)"] = "<Suchbegriff> (z.b. /alternative Namen finden)",
+		["Alt"] = "Alternative",
+		["alt"] = "alternative",
+		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "Alternativname existiert: %s -> %s; nicht wie in den Einstellungen festgelegt überschreiben",
+		["AltNames"] = "Alternative Namen",
+		["Alts:"] = "Alternativen:",
+		["autoguildalts_desc"] = "Führe den Import aus dem Gildenplan automatisch aus",
+		["autoguildalts_name"] = "Alternative Gilde automatisch importieren",
 		["Be quiet"] = "Stumm schalten",
 		["character removed: %s"] = "Charakter entfernt: %s",
 		["Class colour"] = "Klassenfarbe",
 		["Clear all"] = "Alle löschen",
-		["Clear all links between alts and main names."] = "Alle Verknüpfungen zwischen Alt- und Haupt-Charakternamen löschen",
+		["Clear all links between alts and main names."] = "Löscht alle Verknüpfungen zwischen Alternativen und Hauptnamen.",
 		["Colour"] = "Farbe",
 		["Delete a character's link to another character as their main."] = "Die Verknüpfung eines Charakters zu einem anderen (Haupt-)Charakter löschen.",
-		["Delete alt"] = "Alts löschen",
+		["Delete alt"] = "Alternative löschen",
 		["Disabled"] = "Inaktiv",
-		["Display a player's alts in the tooltip"] = "Die Altnamen eines Spielers im Tooltip anzeigen.",
+		["Display a player's alts in the tooltip"] = "Zeigt die Alternativen eines Spielers im Tooltip an",
 		["Display a player's main name in the tooltip"] = "Den Namen des Hauptcharakters eines Spielers im Tooltip anzeigen.",
 		["Display main names in the same colour as that of the alt's class (taking the data from the PlayerNames module if it is enabled)"] = "Namen der Hauptcharaktere in Klassenfarbe des Alts anzeigen (Daten werden vom Modul PlayerNames geliefert, falls aktiviert).",
 		["Display main names in the same colour as that of the main's class (taking the data from the PlayerNames module if it is enabled)"] = "Namen der Hauptcharaktere in Klassenfarbe des Hauptcharakters anzeigen (Daten werden vom Modul PlayerNames geliefert, falls aktiviert).",
 		["Don't overwrite existing alt <-> main links when importing or adding new alts."] = "Vorhandenen Alt nicht überschreiben <-> Verknüpfungen zu Hauptcharakteren während des Imports oder des Hinzufügens von neuen Alts.",
-		["Don't overwrite existing links"] = "Bestehende Verknüpfungen nicht überschreiben",
+		["Don't overwrite existing links"] = "Überschreibe keine vorhandenen Links",
 		["don't use"] = "Nicht verwenden",
 		["Don't use data from the PlayerNames module at all"] = "Daten vom Modul SpielerNamen nicht verwenden.",
-		["ERROR: some function sent a blank message!"] = "ERROR: eine Funktion hat eine leere Nachricht hinterlassen.",
+		["ERROR: some function sent a blank message!"] = "FEHLER: Eine Funktion hat eine leere Nachricht gesendet!",
 		["Find characters"] = "Charaktersuche",
-		["Fix alts"] = "Alts reparieren",
-		["Fix corrupted entries in your list of alt names."] = "Korrupte Einträge in deiner Liste der Alt-Namen reparieren.",
+		["Fix alts"] = "Alternativen reparieren",
+		["Fix corrupted entries in your list of alt names."] = "Korrigiert beschädigte Einträge in der Liste der Alternativnamen.",
 		["Found alt: %s => main: %s"] = "Alt gefunden: %s => Haupt: %s",
 		["guild member alts found and imported: %s"] = "Alt-Chars eines Gildenmitglieds gefunden und importiert: %s",
 		["Import from Guild Greet database"] = "Importiere von der Gilden-Begrüßungs-Datenbank",
@@ -530,8 +530,7 @@ L = {
 		["(.-)'s? [Aa]lt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부캐릭터",
 		["([^%s%p%d%c%z]+)'s alt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부 캐릭터",
 		[".*[Aa]lts?$"] = ".*부캐릭터?$",
-		--[[Translation missing --]]
-		[".*[Tt]wink.*$"] = ".*[Tt]wink.*$",
+		[".*[Tt]wink.*$"] = true,
 		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<부 캐릭터 이름> (예, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)",
 		["<main> (eg /altnames listalts Fin)"] = "<주 캐릭터> (예 /altnames listalts Fin)",
 		["<search term> (eg, /altnames find fin)"] = "<검색 구문> (예, /altnames find fin)",
@@ -1334,9 +1333,7 @@ L = {
         hasEditBox = 1,
         maxLetters = 24,
         exclusive = 0,
-
         preferredIndex = 3,
-
         OnAccept = function(this, altname)
           local mainname = this.editBox:GetText()
 
@@ -1491,8 +1488,7 @@ L = {
         get = function(info) return info.handler.db.profile.tooltip_showmain end,
         set = function(info)
           info.handler.db.profile.tooltip_showmain = not info.handler.db.profile.tooltip_showmain
-          info.handler.altertooltip = info.handler.db.profile.tooltip_showalts or info.handler.db.profile
-                                      .tooltip_showmain
+          info.handler.altertooltip = info.handler.db.profile.tooltip_showalts or info.handler.db.profile.tooltip_showmain
 
           info.handler:HookTooltip()
         end,
@@ -1505,8 +1501,7 @@ L = {
         get = function(info) return info.handler.db.profile.tooltip_showalts end,
         set = function(info)
           info.handler.db.profile.tooltip_showalts = not info.handler.db.profile.tooltip_showalts
-          info.handler.altertooltip = info.handler.db.profile.tooltip_showalts or info.handler.db.profile
-                                      .tooltip_showmain
+          info.handler.altertooltip = info.handler.db.profile.tooltip_showalts or info.handler.db.profile.tooltip_showmain
 
           info.handler:HookTooltip()
         end,
@@ -1652,16 +1647,16 @@ L = {
     --self:SecureHook("UnitPopup_OnClick")
     --self:SecureHook("UnitPopup_ShowMenu")
 
-    Prat:RegisterDropdownButton("LINK_ALT")
+    --Prat:RegisterDropdownButton("LINK_ALT")
 
     -- add the bits to the context menus
-    UnitPopupButtons['LINK_ALT'] = { text = "Set Main", func = function() module:UnitPopup_LinkAltOnClick() end, arg1 = "", arg2 = "" }
+    --    UnitPopupButtons['LINK_ALT'] = { text = "Set Main", func = function() module:UnitPopup_LinkAltOnClick() end, arg1 = "", arg2 = "" }
 
     if not self.menusAdded then
---      tinsert(UnitPopupMenus['PARTY'], #UnitPopupMenus['PARTY'] - 1, 'LINK_ALT')
---      tinsert(UnitPopupMenus['FRIEND'], #UnitPopupMenus['FRIEND'] - 1, 'LINK_ALT')
---      tinsert(UnitPopupMenus['SELF'], #UnitPopupMenus['SELF'] - 1, 'LINK_ALT')
---      tinsert(UnitPopupMenus['PLAYER'], #UnitPopupMenus['PLAYER'] - 1, 'LINK_ALT')
+      --      tinsert(UnitPopupMenus['PARTY'], #UnitPopupMenus['PARTY'] - 1, 'LINK_ALT')
+      --      tinsert(UnitPopupMenus['FRIEND'], #UnitPopupMenus['FRIEND'] - 1, 'LINK_ALT')
+      --      tinsert(UnitPopupMenus['SELF'], #UnitPopupMenus['SELF'] - 1, 'LINK_ALT')
+      --      tinsert(UnitPopupMenus['PLAYER'], #UnitPopupMenus['PLAYER'] - 1, 'LINK_ALT')
       -- tinsert(UnitPopupMenus['TARGET'], getn(UnitPopupMenus['TARGET'])-1, 'LINK_ALT')
 
       self.menusAdded = true
@@ -1713,19 +1708,19 @@ L = {
   --	end
   --end
 
-  function module:UnitPopup_LinkAltOnClick()
-    local dropdownFrame = UIDROPDOWNMENU_INIT_MENU
-
-    --if (button == 'LINK_ALT') then
-    local altname = dropdownFrame.name
-    local dialog = StaticPopup_Show('MENUITEM_LINKALT', altname)
-
-    if dialog then
-      local altname = dropdownFrame.name
-      dialog.data = altname
-    end
-    --end
-  end
+  --  function module:UnitPopup_LinkAltOnClick()
+  --    local dropdownFrame = UIDROPDOWNMENU_INIT_MENU
+  --
+  --    --if (button == 'LINK_ALT') then
+  --    local altname = dropdownFrame.name
+  --    local dialog = StaticPopup_Show('MENUITEM_LINKALT', altname)
+  --
+  --    if dialog then
+  --      local altname = dropdownFrame.name
+  --      dialog.data = altname
+  --    end
+  --    --end
+  --  end
 
 
 
@@ -1753,8 +1748,7 @@ L = {
     local verbose = (not self.db.profile.quiet)
 
     if (not self.silent) and (verbose or printanyway) then
-      msg = string.format('|cffffd100' .. PL['AltNames'] .. ':|r %s', msg)
-      DEFAULT_CHAT_FRAME:AddMessage(msg)
+      self:Output(msg)
     end
   end
 
@@ -1803,7 +1797,7 @@ L = {
     name = name:gsub("'", '')
 
     name = name:lower()
-    name = name:gsub(Prat.MULTIBYTE_FIRST_CHAR,string.upper,1)
+    name = name:gsub(Prat.MULTIBYTE_FIRST_CHAR, string.upper, 1)
 
     return name
   end
@@ -2018,10 +2012,12 @@ L = {
 
     local mainname = message.PLAYERLINK
 
-    if self.db.profile.on and isAlt(mainname) then
+    local altname = isAlt(mainname) or isAlt(Ambiguate(mainname, "all"))
+
+    if self.db.profile.on and altname then
       local pres = message.PRESENCE_ID or 0
 
-      local altname = isAlt(mainname)
+
       local padfmt = self.padfmt or ' (%s)'
 
 
@@ -2179,7 +2175,7 @@ L = {
 
       -- check for guild members with rank "alt" or "alts" or "officer alt" or "twink"
       if (rank:match(PL[".*[Aa]lts?$"]) or rank:match(PL[".*[Tt]wink.*$"]) or (altrank and rank == altrank)) and (cleanpubnote and
-                                                                              guildMembers[cleanpubnote:lower()]) then
+        guildMembers[cleanpubnote:lower()]) then
         -- self:print(string.format('found mainname name for member %s', name))
         mainname = cleanpubnote
         -- check whether guild note is an exact match of a member's name

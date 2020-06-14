@@ -67,7 +67,8 @@ function ZPerl_TargetTarget_OnLoad(self)
 		"UNIT_HEALTH_FREQUENT",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_AURA",
-		"UNIT_TARGET"
+		"UNIT_TARGET",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
 	self.guid = 0
@@ -81,18 +82,11 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "target")
 		end
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-			if (conf.targettarget.healprediction) then
-				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
-			else
-				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		XPerl_Register_Prediction(self, conf.targettarget, function(guid)
+			if guid == UnitGUID("targettarget") then
+				return "targettarget"
 			end
-			if (conf.targettarget.absorbs) then
-				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
-			else
-				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-			end
-		end
+		end, "target")
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
@@ -103,18 +97,11 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "focus")
 		end
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-			if (conf.focustarget.healprediction) then
-				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "focus")
-			else
-				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		XPerl_Register_Prediction(self, conf.targettarget, function(guid)
+			if guid == UnitGUID("focustarget") then
+				return "focustarget"
 			end
-			if (conf.focustarget.absorbs) then
-				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "focus")
-			else
-				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-			end
-		end
+		end, "focus")
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	elseif (self == XPerl_PetTarget) then
 		self.parentid = "pet"
@@ -122,18 +109,11 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "pet")
 		end
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-			if (conf.pettarget.healprediction) then
-				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet")
-			else
-				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		XPerl_Register_Prediction(self, conf.targettarget, function(guid)
+			if guid == UnitGUID("pettarget") then
+				return "pettarget"
 			end
-			if (conf.pettarget.absorbs) then
-				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet")
-			else
-				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-			end
-		end
+		end, "pet")
 		self:SetScript("OnUpdate", XPerl_TargetTarget_OnUpdate)
 	else
 		self.parentid = "targettarget"
@@ -141,18 +121,11 @@ function ZPerl_TargetTarget_OnLoad(self)
 		for i, event in pairs(events) do
 			self:RegisterUnitEvent(event, "target")
 		end
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-			if (conf.targettarget.healprediction) then
-				self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target")
-			else
-				self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+		XPerl_Register_Prediction(self, conf.targettarget, function(guid)
+			if guid == UnitGUID("targettargettarget") then
+				return "targettargettarget"
 			end
-			if (conf.targettarget.absorbs) then
-				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target")
-			else
-				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-			end
-		end
+		end, "targettarget")
 		self:SetScript("OnUpdate", XPerl_TargetTargetTarget_OnUpdate)
 	end
 
@@ -518,6 +491,8 @@ function XPerl_TargetTarget_OnEvent(self, event, unitID, ...)
 		XPerl_TargetTarget_UpdateDisplay(self, true)
 	elseif event == "PLAYER_FOCUS_CHANGED" then
 		XPerl_TargetTarget_UpdateDisplay(self, true)
+	elseif event == "INCOMING_RESURRECT_CHANGED" then
+		XPerl_Target_UpdateResurrectionStatus(self)
 	elseif strfind(event, "^UNIT_") then
 		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
 			XPerl_NoFadeBars(true)

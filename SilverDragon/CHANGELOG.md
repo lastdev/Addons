@@ -1,5 +1,12 @@
 # Changelog
 
+## Changed in v80300.1
+
+* Made it so the 8.3 assault rares only appear while their assault is happening
+* ...also, the assault rares for the older faction assaults
+* Added many questids for new rares
+* Remove ability to automatically announce rares to chat, as Blizzard protected this functionality in 8.2.5 and it was just causing errors
+
 ## Changed in v80300.0
 
 * Updated for 8.3

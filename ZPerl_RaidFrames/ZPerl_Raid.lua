@@ -40,7 +40,6 @@ local format = format
 local strsub = strsub
 
 local GetNumGroupMembers = GetNumGroupMembers
-local UnitCastingInfo = UnitCastingInfo
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsConnected = UnitIsConnected
@@ -56,6 +55,13 @@ local XPerl_UnitDebuff = XPerl_UnitDebuff
 local XPerl_CheckDebuffs = XPerl_CheckDebuffs
 local XPerl_ColourFriendlyUnit = XPerl_ColourFriendlyUnit
 local XPerl_ColourHealthBar = XPerl_ColourHealthBar
+
+local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
+local LCC = LibStub("LibClassicCasterino", true)
+if LCC then
+    UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
+    UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
+end
 
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
@@ -133,19 +139,24 @@ function XPerl_Raid_OnLoad(self)
 		"PET_BATTLE_OPENING_START",
 		"PET_BATTLE_CLOSE",
 		"UNIT_CONNECTION",
+		"UNIT_SPELLCAST_START",
+		"UNIT_SPELLCAST_STOP",
+		"UNIT_SPELLCAST_FAILED",
+		"UNIT_SPELLCAST_INTERRUPTED",
 		--"PLAYER_REGEN_ENABLED",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		tinsert(events, "UNIT_SPELLCAST_START")
-		tinsert(events, "UNIT_SPELLCAST_STOP")
-		tinsert(events, "UNIT_SPELLCAST_FAILED")
-		tinsert(events, "UNIT_SPELLCAST_INTERRUPTED")
+	local CastbarEventHandler = function(event, ...)
+		return XPerl_Raid_OnEvent(self, event, ...)
 	end
-
 	for i, event in pairs(events) do
-		if pcall(self.RegisterEvent, self, event) then
-			self:RegisterEvent(event)
+		if LCC and strfind(event, "^UNIT_SPELLCAST") then
+			LCC.RegisterCallback(self, event, CastbarEventHandler)
+		else
+			if pcall(self.RegisterEvent, self, event) then
+				self:RegisterEvent(event)
+			end
 		end
 	end
 
@@ -513,6 +524,7 @@ function XPerl_Raid_UpdateHealth(self)
 
 	XPerl_Raid_UpdateAbsorbPrediction(self)
 	XPerl_Raid_UpdateHealPrediction(self)
+	XPerl_Raid_UpdateResurrectionStatus(self)
 
 	local name, realm = UnitName(partyid)
 	if realm and realm ~= "" then
@@ -620,6 +632,14 @@ function XPerl_Raid_UpdateHealPrediction(self)
 		XPerl_SetExpectedHealth(self)
 	else
 		self.statsFrame.expectedHealth:Hide()
+	end
+end
+
+function XPerl_Raid_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		self.statsFrame.resurrect:Show()
+	else
+		self.statsFrame.resurrect:Hide()
 	end
 end
 
@@ -1541,6 +1561,15 @@ function XPerl_Raid_Events:READY_CHECK(a, b, c)
 		end
 	end
 end
+
+function XPerl_Raid_Events:INCOMING_RESURRECT_CHANGED(unit)
+	for i, frame in pairs(FrameArray) do
+		if (frame.partyid and unit == frame.partyid) then
+			XPerl_Raid_UpdateResurrectionStatus(frame)
+		end
+	end
+end
+
 
 XPerl_Raid_Events.READY_CHECK_CONFIRM = XPerl_Raid_Events.READY_CHECK
 XPerl_Raid_Events.READY_CHECK_FINISHED = XPerl_Raid_Events.READY_CHECK
@@ -2585,19 +2614,12 @@ function XPerl_Raid_Set_Bits(self)
 
 	SkipHighlightUpdate = nil
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (rconf.healprediction) then
-			self:RegisterEvent("UNIT_HEAL_PREDICTION")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, rconf, function(guid)
+		local frame = XPerl_Raid_GetUnitFrameByGUID(guid)
+		if frame then
+			return frame.partyid
 		end
-
-		if (rconf.absorbs) then
-			self:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
+	end)
 
 	if (IsInRaid() or (IsInGroup() and rconf.inParty)) then
 		XPerl_Raid_Frame:Show()

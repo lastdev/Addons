@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(335, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 mod:SetZone()
@@ -22,8 +22,8 @@ local specWarnTouchOfNothingness= mod:NewSpecialWarningDispel(106113, "Healer")
 local specWarnShadowsOfDoubt	= mod:NewSpecialWarningMove(110099)--Actually used by his trash, but in a speed run, you tend to pull it all together
 
 local timerWitherWillCD			= mod:NewCDTimer(6, 106736, nil, false, 2)--6-10 second variations.
-local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113, nil, "Heaker", 2, 5, nil, DBM_CORE_MAGIC_ICON)--15.5~20 second variations.
-local timerTouchofNothingness	= mod:NewTargetTimer(30, 106113, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113, nil, "Heaker", 2, 5, nil, DBM_CORE_L.MAGIC_ICON)--15.5~20 second variations.
+local timerTouchofNothingness	= mod:NewTargetTimer(30, 106113, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
 local timerBoundsOfRealityCD	= mod:NewCDTimer(60, 117665, nil, nil, nil, 6)
 local timerBoundsOfReality		= mod:NewBuffFadesTimer(30, 117665, nil, nil, nil, 6)
 

@@ -33,6 +33,9 @@ function RTN:InitializeRareTrackerDatabase()
     
     -- Load the database.
     self.db = LibStub("AceDB-3.0"):New("RareTrackerNazjatarDB", self.defaults, true)
+    
+    -- Register the callback to the logout function.
+    self.db.RegisterCallback(self, "OnDatabaseShutdown", "OnDatabaseShutdown")
 end
 
 function RTN:AddModuleOptions(options)

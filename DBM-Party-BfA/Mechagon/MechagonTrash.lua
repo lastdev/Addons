@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MechagonTrash", "DBM-Party-BfA", 11)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200308164443")
+mod:SetRevision("20200603165257")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -67,7 +67,7 @@ local specWarnDetonate				= mod:NewSpecialWarningInterrupt(301088, "HasInterrupt
 local specWarnTuneUp				= mod:NewSpecialWarningInterrupt(293729, "HasInterrupt", nil, nil, 1, 2)--
 local specWarnShrinkYou				= mod:NewSpecialWarningYou(284219, nil, nil, nil, 1, 2)
 local yellShrunk					= mod:NewShortYell(284219)--Shrunk will just say with white letters
-local yellShrunkRepeater			= mod:NewYell(284219, UnitName("player"))
+local yellShrunkRepeater			= mod:NewPlayerRepeatYell(284219)
 local specWarnSuffocatingSmogDispel	= mod:NewSpecialWarningDispel(300650, "RemoveDisease", nil, nil, 1, 2)--Toxic Lurker
 local specWarnOverclockDispel		= mod:NewSpecialWarningDispel(299588, "MagicDispeller", nil, nil, 1, 2)--Pistonhead Mechanic/Mechagon Mechanic
 local specWarnEnlargeDispel			= mod:NewSpecialWarningDispel(301629, "MagicDispeller", nil, nil, 1, 2)--Mechagon Renormalizer
@@ -85,14 +85,14 @@ local function shrunkYellRepeater(self)
 	self:Schedule(2, shrunkYellRepeater, self)
 end
 
-function mod:Scraptarget(targetname, uId)
+function mod:Scraptarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") and self:AntiSpam(4, 5) then
 		yellScrapCannon:Yell()
 	end
 end
 
-function mod:BORKtarget(targetname, uId)
+function mod:BORKtarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") and self:AntiSpam(4, 5) then
 		yellBORK:Yell()
@@ -191,9 +191,12 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 301667 and self:AntiSpam(3, 2) then
 		specWarnRapidFire:Show()
 		specWarnRapidFire:Play("shockwave")--Or watchstep?
-	elseif spellId == 294290 and self:AntiSpam(3, 5) then
+	elseif spellId == 294324 and self:AntiSpam(3, 1) then
 		specWarnMegaDrill:Show()
-		specWarnMegaDrill:Play("defensive")
+		specWarnMegaDrill:Play("justrun")
+	elseif spellId == 294290 and self:AntiSpam(3, 5) then
+		specWarnProcessWaste:Show()
+		specWarnProcessWaste:Play("defensive")
 	elseif spellId == 294349 and self:AntiSpam(5, 4) then
 		warnVolatileWaste:Show()
 	elseif spellId == 293854 and self:AntiSpam(3, 6) then
@@ -219,7 +222,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 300650 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(5, 3) then
-		specWarnSuffocatingSmogDispel:Show()
+		specWarnSuffocatingSmogDispel:Show(args.destName)
 		specWarnSuffocatingSmogDispel:Play("helpdispel")
 	elseif (spellId == 299588 or spellId == 293930) and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnOverclockDispel:Show(args.destName)

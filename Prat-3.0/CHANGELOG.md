@@ -1,6 +1,7 @@
 # Prat 3.0
 
-## [3.7.50](https://github.com/sylvanaar/prat-3-0/tree/3.7.50) (2020-01-26)
-[Full Changelog](https://github.com/sylvanaar/prat-3-0/compare/3.7.49...3.7.50)
+## [3.8.11](https://github.com/sylvanaar/prat-3-0/tree/3.8.11) (2020-06-05)
+[Full Changelog](https://github.com/sylvanaar/prat-3-0/compare/3.8.10...3.8.11)
 
-- Add a guard against misbehaved addons which add chat types without a valid CHAT\_TYPE\_INFO entry  
+- Memory: Delay the auto-loading of the chat settings until the default chat frames have been loaded for a bit  
+- Substitutions: Re-enable the map subs for classic  

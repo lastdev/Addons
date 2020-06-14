@@ -119,17 +119,17 @@ L = {
 
 L = {
 	["Bubbles"] = {
-		["color_desc"] = "Färbe den Sprechblasenrahmen, im selben Stil, wie den Chattyp ein.",
+		["color_desc"] = "Färbt den Rand der Sprechblase genauso wie den Chat-Typ.",
 		["color_name"] = "Sprechblasen färben",
 		["font_desc"] = "Die selbe Schriftart wie auch für das Chatfenster verwenden",
 		["font_name"] = "Chatschriftart verwenden",
-		["fontsize_desc"] = "Stellt die Schriftgröße der Sprechblasen ein",
+		["fontsize_desc"] = "Stellt die Schriftgröße der Sprechblase ein",
 		["fontsize_name"] = "Schriftgröße",
-		["format_desc"] = "Benutze die Pratformatierung zum Einfärben des Sprechblasentextes",
+		["format_desc"] = "Wendet die Formatierung von Prat auf den Sprechblasentext an.",
 		["format_name"] = "Text formatieren",
 		["icons_desc"] = "Zielmarkierungssymbole in den Sprechblasen anzeigen.",
 		["icons_name"] = "Zielmarkierungssymbole anzeigen",
-		["module_desc"] = "Einstellung des Sprechblasenverhaltens",
+		["module_desc"] = "Anpassungen im Zusammenhang mit Sprechblasen",
 		["module_name"] = "Blasen",
 		["shorten_desc"] = "Verkürze die Sprechblasen zu einem Einzeiler. Fahre mit der Maus über die Sprachblase , um den Text zu erweitern",
 		["shorten_name"] = "Sprechblasen verkürzen",
@@ -463,7 +463,7 @@ end
       end
     end
 
-    MAX_CHATBUBBLE_WIDTH = math.min(UIParent:GetWidth() /2, math.max(frame:GetWidth(), MAX_CHATBUBBLE_WIDTH))
+    MAX_CHATBUBBLE_WIDTH = math.min(UIParent:GetWidth() / 2, math.max(frame:GetWidth(), MAX_CHATBUBBLE_WIDTH))
 
     local text = fontstring:GetText() or ""
 
@@ -487,9 +487,9 @@ end
     end
 
     if self.transparent then
-       -- Hide the border and background textures of the chat bubble
-       --FIXME: remove texture from bubble tail
-       frame:SetBackdrop(nil) -- remove texture from bubble (borders and background)
+      -- Hide the border and background textures of the chat bubble
+      --FIXME: remove texture from bubble tail
+      frame:SetBackdrop(nil) -- remove texture from bubble (borders and background)
     end
 
     if self.icons then

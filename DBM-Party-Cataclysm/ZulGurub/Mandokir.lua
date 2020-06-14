@@ -2,7 +2,7 @@ local mod	= DBM:NewMod(176, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 local Ohgan	= DBM:EJ_GetSectionInfo(2615)
 
-mod:SetRevision("20190421035925")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(52151)
 mod:SetEncounterID(1179)
 mod:SetZone()
@@ -28,10 +28,10 @@ local warnRevive 			= mod:NewAnnounce("WarnRevive", 2, 96484, false)
 local specWarnSlam			= mod:NewSpecialWarningDodge(96740, nil, nil, nil, 1, 2)
 local specWarnOhgan			= mod:NewSpecialWarning("SpecWarnOhgan", nil, nil, nil, 1, 2)
 
-local timerSummonOhgan		= mod:NewNextTimer(20, 96717, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--Engage only
-local timerResOhgan			= mod:NewCDTimer(40, 96724, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--rez cd
+local timerSummonOhgan		= mod:NewNextTimer(20, 96717, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--Engage only
+local timerResOhgan			= mod:NewCDTimer(40, 96724, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--rez cd
 local timerDecapitate		= mod:NewNextTimer(35, 96684, nil, nil, nil, 3)
-local timerBloodletting		= mod:NewTargetTimer(10, 96776, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerBloodletting		= mod:NewTargetTimer(10, 96776, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerBloodlettingCD	= mod:NewCDTimer(25, 96776, nil, nil, nil, 3)
 local timerOhgan			= mod:NewCastTimer(2.5, 96724, nil, nil, nil, 1)
 

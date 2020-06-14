@@ -1,7 +1,7 @@
 ## Interface: 80300
 ## Title: SilverDragon (Cataclysm)
 ## Notes: Mobs for Cataclysm
-## Version: v80300.0
+## Version: v80300.1.1
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

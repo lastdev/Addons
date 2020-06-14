@@ -17,17 +17,10 @@ XPerl_RequestConfig(function(new)
 end, "$Revision:  $")
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
-
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-	UnitCastingInfo = function(unit)
-		if unit ~= "player" and unit ~= "target" then return end
-		return CastingInfo()
-	end
-
-	UnitChannelInfo = function(unit)
-		if unit ~= "player" and unit ~= "target" then return end
-		return ChannelInfo()
-	end
+local LCC = LibStub("LibClassicCasterino", true)
+if LCC then
+    UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
+    UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
 -- Registers frame to spellcast events.
@@ -46,9 +39,16 @@ local events = {
 local function enableToggle(self, value)
 	if (value) then
 		if (not self.Enabled) then
+			local CastbarEventHandler = function(event, ...)
+				return XPerl_ArcaneBar_OnEvent(self, event, ...)
+			end
 			for i, event in pairs(events) do
-				if pcall(self.RegisterEvent, self, event) then
-					self:RegisterEvent(event)
+				if LCC and strfind(event, "^UNIT_SPELLCAST") then
+					LCC.RegisterCallback(self, event, CastbarEventHandler)
+				else
+					if pcall(self.RegisterEvent, self, event) then
+						self:RegisterEvent(event)
+					end
 				end
 			end
 
@@ -67,6 +67,9 @@ local function enableToggle(self, value)
 		end
 	else
 		if (self.Enabled) then
+			if LCC then
+				LCC.UnregisterAllCallbacks(self)
+			end
 			self:UnregisterAllEvents()
 			self:SetScript("OnUpdate", nil)
 			self.Enabled = nil
@@ -81,8 +84,15 @@ local function overrideToggle(value)
 	if (pconf) then
 		if (value) then
 			if (pconf.bar.Overrided) then
-				for i, event in pairs(events) do
-					CastingBarFrame:RegisterEvent(event)
+				local CastbarEventHandler = function(event, ...)
+					return XPerl_ArcaneBar_OnEvent(CastingBarFrame, event, ...)
+				end
+				if LCC and strfind(event, "^UNIT_SPELLCAST") then
+					LCC.RegisterCallback(CastingBarFrame, event, CastbarEventHandler)
+				else
+					for i, event in pairs(events) do
+						CastingBarFrame:RegisterEvent(event)
+					end
 				end
 				pconf.bar.Overrided = nil
 			end
@@ -90,6 +100,9 @@ local function overrideToggle(value)
 			if (not pconf.bar.Overrided) then
 				CastingBarFrame:Hide()
 				CastingBarFrame:UnregisterAllEvents()
+				if LCC then
+					LCC.UnregisterAllCallbacks(CastingBarFrame)
+				end
 				pconf.bar.Overrided = 1
 			end
 		end

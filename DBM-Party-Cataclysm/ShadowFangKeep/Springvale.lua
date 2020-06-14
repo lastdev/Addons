@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(98, "DBM-Party-Cataclysm", 6, 64)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(4278)
 mod:SetEncounterID(1071)
 mod:SetZone()
@@ -24,8 +24,8 @@ local warnWordShame			= mod:NewTargetAnnounce(93852, 3)
 local specWarnDesecration	= mod:NewSpecialWarningMove(93691, nil, nil, nil, 1, 8)
 local specWarnEmpowerment	= mod:NewSpecialWarningInterrupt(93844, "HasInterrupt", nil, nil, 1, 2)
 
-local timerAdds				= mod:NewTimer(40, "TimerAdds", 48000, nil, nil, 1)
-local timerMaleficStrike	= mod:NewNextTimer(6, 93685, nil, false, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerAdds				= mod:NewTimer(40, "TimerAdds", "136116", nil, nil, 1)
+local timerMaleficStrike	= mod:NewNextTimer(6, 93685, nil, false, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
 	timerAdds:Start(-delay)

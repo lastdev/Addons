@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 -- if we're on the developer version the addon behaves slightly different
-ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v202004140600", nil, true)
+ns.DEBUG_MODE = not not (GetAddOnMetadata(addonName, "Version") or ""):find("v202006060600", nil, true)
 
 -- micro-optimization for more speed
 local unpack = unpack
@@ -31,7 +31,7 @@ local PLAYER_FACTION
 local PLAYER_REGION
 
 -- db outdated
-local IS_DB_OUTDATED = {}
+local DB_OUTDATED = {}
 local OUTDATED_DAYS = {}
 local OUTDATED_HOURS = {}
 local INVALID_DATA_MESSAGE_SENT = false
@@ -233,7 +233,7 @@ local ENCODER_MYTHICPLUS_FIELD_NAMES = {
 do
 	for i = 1, #CONST_PROVIDER_DATA_LIST do
 		local dataType = CONST_PROVIDER_DATA_LIST[i]
-		IS_DB_OUTDATED[dataType] = {}
+		DB_OUTDATED[dataType] = {}
 		OUTDATED_DAYS[dataType] = {}
 		OUTDATED_HOURS[dataType] = {}
 	end
@@ -269,7 +269,8 @@ end
 
 -- defined constants
 local MAX_LEVEL = MAX_PLAYER_LEVEL_TABLE[LE_EXPANSION_BATTLE_FOR_AZEROTH]
-local OUTDATED_SECONDS = 86400 * 3 -- number of seconds before we start warning about outdated data
+local DATA_STALE_SECONDS = 86400 * 3 -- number of seconds before we start warning about stale data
+local DATA_EXPIRED_SECONDS = 86400 * 7 -- number of seconds before we hide the data
 local CURRENT_SEASON_ID = 4
 local FACTION
 local REGIONS
@@ -279,6 +280,9 @@ local KEYSTONE_LEVEL_TO_BASE_SCORE
 local RAID_DIFFICULTY_SUFFIXES
 local RAID_DIFFICULTY_NAMES
 local RAID_DIFFICULTY_COLORS
+local RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
+local TEXT_COLOR_START_RAIDERIO = "|cffffbd0a"
+local TEXT_COLOR_CLOSE = "|r"
 do
 	FACTION = {
 		["Alliance"] = 1,
@@ -413,6 +417,8 @@ local CompareDungeon
 local DecodeBits2
 local DecodeBits3
 local DecodeBits4
+local DecodeBits5
+local DecodeBits6
 local GetDungeonWithData
 local GetTimezoneOffset
 local GetRegion
@@ -1642,21 +1648,43 @@ do
 			end
 
 			if addFooter then
-				if IS_DB_OUTDATED[dataType][profile.faction] then
-					output[i] = {format(L.OUTDATED_DATABASE, OUTDATED_DAYS[dataType][profile.faction]), "", 1, 1, 1, 1, 1, 1, false}
-					i = i + 1
-				end
-
 				local t = EGG[profile.region]
 				if t then
+
 					t = t[profile.realm]
 					if t then
 						t = t[profile.name]
 						if t then
+							output[i] = " "
+							i = i + 1
+
 							output[i] = {t, "", 0.9, 0.8, 0.5, 1, 1, 1, false}
 							i = i + 1
 						end
 					end
+				end
+
+				local expiredType = DB_OUTDATED[dataType][profile.faction]
+				if expiredType == "stale" then
+					local expiresInHours = floor((DATA_EXPIRED_SECONDS / 60 / 60) - OUTDATED_HOURS[dataType][profile.faction])
+
+					output[i] = " "
+					i = i + 1
+
+					local message = ""
+					if expiresInHours >= 48 then
+						message = format(L.OUTDATED_EXPIRES_IN_DAYS, floor(expiresInHours / 24))
+					else
+						message = format(L.OUTDATED_EXPIRES_IN_HOURS, expiresInHours)
+					end
+
+					output[i] = {message, "", 1, 0.85, 0, 1, 1, 1, false}
+					i = i + 1
+
+					message = format(L.OUTDATED_DOWNLOAD_LINK, TEXT_COLOR_START_RAIDERIO .. RAIDERIO_ADDON_DOWNLOAD_URL .. TEXT_COLOR_CLOSE)
+					output[i] = {message, "", 1, 1, 1, 1, 1, 1, false}
+					i = i + 1
+
 				end
 			end
 
@@ -1755,6 +1783,12 @@ do
 
 			-- establish faction for the lookups
 			local faction = type(queryFaction) == "number" and queryFaction or GetFaction(unit)
+
+			local isPlayer = queryName == "player"
+
+			if not isPlayer and (DB_OUTDATED[CONST_PROVIDER_DATA_MYTHICPLUS][faction] == "expired" or DB_OUTDATED[CONST_PROVIDER_DATA_RAIDING][faction] == "expired") then
+				return
+			end
 
 			-- retrieve data from the various data types
 			local profile = {}
@@ -1900,6 +1934,24 @@ do
 			-- setup the re-usable table for this tooltips args cache for future updates
 			tooltipArgs[tooltip] = {}
 		end
+
+		local name, realm, unit = GetNameAndRealm(unitOrNameOrNameAndRealm, realmOrNil)
+		local faction = type(factionOrNil) == "number" and factionOrNil or GetFaction(unit)
+		if faction and (DB_OUTDATED[CONST_PROVIDER_DATA_RAIDING][faction] == "expired" or DB_OUTDATED[CONST_PROVIDER_DATA_MYTHICPLUS][faction] == "expired") then
+			tooltip:AddLine(" ", 1, 1, 1, false)
+			tooltip:AddLine(L.OUTDATED_EXPIRED_TITLE, 1, 0, 0, false)
+
+			local message = format(L.OUTDATED_DOWNLOAD_LINK, TEXT_COLOR_START_RAIDERIO .. RAIDERIO_ADDON_DOWNLOAD_URL .. TEXT_COLOR_CLOSE)
+			tooltip:AddLine(message, 1, 1, 1, false)
+
+			if unitOrNameOrNameAndRealm ~= "player" then
+				tooltip:Show()
+				return true
+			end
+
+			-- fall through, means it is the current player who can still see their own tooltip
+		end
+
 		-- get the player profile
 		local profile, hasProfile, isCached, multipleProviders = GetPlayerProfile(outputFlag, unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil, arg1, ...)
 		-- sanity check
@@ -2065,10 +2117,15 @@ do
 		-- find elapsed seconds since database update and account for the timezone offset
 		local diff = time() - ts - offset
 		-- figure out of the DB is outdated or not by comparing to our threshold
-		local isOutdated = diff >= OUTDATED_SECONDS
+		local outdated = false
+		if diff >= DATA_EXPIRED_SECONDS then
+			outdated = 'expired'
+		elseif diff >= DATA_STALE_SECONDS then
+			outdated = 'stale'
+		end
 		local outdatedHours = floor(diff/ 3600 + 0.5)
 		local outdatedDays = floor(diff / 86400 + 0.5)
-		return isOutdated, outdatedHours, outdatedDays
+		return outdated, outdatedHours, outdatedDays
 	end
 
 	-- we have logged in and character data is available
@@ -2110,8 +2167,8 @@ do
 
 				if data.region == PLAYER_REGION then
 					-- is the provider up to date?
-					local isOutdated, outdatedHours, outdatedDays = IsProviderOutdated(data)
-					IS_DB_OUTDATED[dataType][data.faction] = isOutdated
+					local dbOutdated, outdatedHours, outdatedDays = IsProviderOutdated(data)
+					DB_OUTDATED[dataType][data.faction] = dbOutdated
 					OUTDATED_HOURS[dataType][data.faction] = outdatedHours
 					OUTDATED_DAYS[dataType][data.faction] = outdatedDays
 
@@ -2171,7 +2228,7 @@ do
 		if isAnyProviderDesynced then
 			DEFAULT_CHAT_FRAME:AddMessage(format(L.OUT_OF_SYNC_DATABASE_S, addonName), 1, 1, 0)
 		elseif isAnyProviderOutdated then
-			DEFAULT_CHAT_FRAME:AddMessage(format(L.OUTDATED_DATABASE_S, addonName, isAnyProviderOutdated), 1, 1, 0)
+			DEFAULT_CHAT_FRAME:AddMessage(format(L.OUTDATED_EXPIRED_ALERT, addonName, RAIDERIO_ADDON_DOWNLOAD_URL), 1, 1, 0)
 		end
 
 		if neededProviderLoaded == 0 then
@@ -2989,7 +3046,7 @@ end
 do
 	ns.LFD_ACTIVITYID_TO_DUNGEONID = LFD_ACTIVITYID_TO_DUNGEONID
 	ns.CONST_DUNGEONS = CONST_DUNGEONS
-	ns.IS_DB_OUTDATED = IS_DB_OUTDATED
+	ns.DB_OUTDATED = DB_OUTDATED
 	ns.OUTDATED_DAYS = OUTDATED_DAYS
 	ns.OUTDATED_HOURS = OUTDATED_HOURS
 	ns.RAID_DIFFICULTY_NAMES = RAID_DIFFICULTY_NAMES
@@ -2999,6 +3056,7 @@ do
 	ns.CompareDungeon = CompareDungeon
 	ns.GetDungeonWithData = GetDungeonWithData
 	ns.GetNameAndRealm = GetNameAndRealm
+	ns.GetFaction = GetFaction
 	ns.GetRealmSlug = GetRealmSlug
 	ns.GetStarsForUpgrades = GetStarsForUpgrades
 	ns.ProfileOutput = ProfileOutput

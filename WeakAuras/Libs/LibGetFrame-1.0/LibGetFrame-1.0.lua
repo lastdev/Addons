@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 9
+local MINOR_VERSION = 18
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then return end
@@ -28,13 +28,13 @@ local defaultFramePriorities = {
     [12] = "^oUF.*raid", -- generic oUF
     [13] = "^LimeGroup", -- lime
     [14] = "^SUFHeaderraid", -- suf
-    [15] = "^CompactRaid", -- blizz
     -- party frames
-    [16] = "^AleaUI_GroupHeader", -- Alea
-    [17] = "^SUFHeaderparty", --suf
-    [18] = "^ElvUF_PartyGroup", -- elv
-    [19] = "^oUF.*party", -- generic oUF
-    [20] = "^PitBull4_Groups_Party", -- pitbull4
+    [15] = "^AleaUI_GroupHeader", -- Alea
+    [16] = "^SUFHeaderparty", --suf
+    [17] = "^ElvUF_PartyGroup", -- elv
+    [18] = "^oUF.*party", -- generic oUF
+    [19] = "^PitBull4_Groups_Party", -- pitbull4
+    [20] = "^CompactRaid", -- blizz
     [21] = "^CompactParty", -- blizz
     -- player frame
     [22] = "^SUFUnitplayer",
@@ -50,6 +50,8 @@ local defaultPlayerFrames = {
     "ElvUF_Player",
     "oUF_TukuiPlayer",
     "PlayerFrame",
+    "oUF_Player",
+    "oUF_PlayerPlate",
 }
 local defaultTargetFrames = {
     "SUFUnittarget",
@@ -57,6 +59,7 @@ local defaultTargetFrames = {
     "ElvUF_Target",
     "TargetFrame",
     "oUF_TukuiTarget",
+    "oUF_Target",
 }
 local defaultTargettargetFrames = {
     "SUFUnittargetarget",
@@ -64,9 +67,13 @@ local defaultTargettargetFrames = {
     "ElvUF_TargetTarget",
     "TargetTargetFrame",
     "oUF_TukuiTargetTarget",
+    "oUF_ToT",
 }
 
 local GetFramesCache = {}
+local FrameToUnitFresh = {}
+local FrameToUnit = {}
+local UpdatedFrames = {}
 
 local function ScanFrames(depth, frame, ...)
     if not frame then return end
@@ -83,6 +90,11 @@ local function ScanFrames(depth, frame, ...)
             local name = frame:GetName()
             if unit and frame:IsVisible() and name then
                 GetFramesCache[frame] = name
+                if unit ~= FrameToUnit[frame] then
+                    FrameToUnit[frame] = unit
+                    UpdatedFrames[frame] = unit
+                end
+                FrameToUnitFresh[frame] = unit
             end
         end
     end
@@ -90,18 +102,31 @@ local function ScanFrames(depth, frame, ...)
 end
 
 local wait = false
+
+local function doScanForUnitFrames()
+    wait = false
+    wipe(UpdatedFrames)
+    wipe(GetFramesCache)
+    wipe(FrameToUnitFresh)
+    ScanFrames(0, UIParent)
+    callbacks:Fire("GETFRAME_REFRESH")
+    for frame, unit in pairs(UpdatedFrames) do
+        callbacks:Fire("FRAME_UNIT_UPDATE", frame, unit)
+    end
+    for frame, unit in pairs(FrameToUnit) do
+        if FrameToUnitFresh[frame] ~= unit then
+            callbacks:Fire("FRAME_UNIT_REMOVED", frame, unit)
+            FrameToUnit[frame] = nil
+        end
+    end
+end
 local function ScanForUnitFrames(noDelay)
     if noDelay then
-        wipe(GetFramesCache)
-        ScanFrames(0, UIParent)
-        callbacks:Fire("GETFRAME_REFRESH")
+        doScanForUnitFrames()
     elseif not wait then
         wait = true
         C_Timer.After(1, function()
-            wipe(GetFramesCache)
-            ScanFrames(0, UIParent)
-            wait = false
-            callbacks:Fire("GETFRAME_REFRESH")
+            doScanForUnitFrames()
         end)
     end
 end
@@ -157,7 +182,8 @@ local defaultOptions = {
     targetFrames = defaultTargetFrames,
     targettargetFrames = defaultTargettargetFrames,
     ignoreFrames = {
-        "PitBull4_Frames_Target's target's target"
+        "PitBull4_Frames_Target's target's target",
+        "ElvUF_PartyGroup%dUnitButton%dTarget"
     },
     returnAll = false,
 }
@@ -218,3 +244,37 @@ function lib.GetUnitFrame(target, opt)
     end
 end
 lib.GetFrame = lib.GetUnitFrame -- compatibility
+
+-- nameplates
+function lib.GetUnitNameplate(unit)
+    if not unit then return end
+    local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
+    if nameplate then
+        -- credit to Exality for https://wago.io/explosiveorbs
+        if nameplate.unitFrame and nameplate.unitFrame.Health then
+          -- elvui
+          return nameplate.unitFrame.Health
+        elseif nameplate.unitFramePlater then
+          -- plater
+          return nameplate.unitFramePlater.healthBar
+        elseif nameplate.kui then
+          -- kui
+          return nameplate.kui.HealthBar
+        elseif nameplate.extended then
+          -- tidyplates
+          --nameplate.extended.visual.healthbar:SetHeight(tidyplatesHeight)
+          return nameplate.extended.visual.healthbar
+        elseif nameplate.TPFrame then
+          -- tidyplates: threat plates
+          return nameplate.TPFrame.visual.healthbar
+        elseif nameplate.ouf then
+          -- bdNameplates
+          return nameplate.ouf.Health
+        elseif nameplate.UnitFrame then
+          -- default
+          return nameplate.UnitFrame.healthBar
+        else
+          return nameplate
+        end
+    end
+end

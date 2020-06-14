@@ -72,6 +72,7 @@ function XPerl_Party_Events_OnLoad(self)
 		"PARTY_LOOT_METHOD_CHANGED",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 	for i, event in pairs(events) do
 		if pcall(self.RegisterEvent, self, event) then
@@ -310,6 +311,7 @@ function XPerl_Party_UpdateHealth(self)
 
 	XPerl_Party_UpdateAbsorbPrediction(self)
 	XPerl_Party_UpdateHealPrediction(self)
+	XPerl_Party_UpdateResurrectionStatus(self)
 
 	if (not UnitIsConnected(partyid)) then
 		reason = XPERL_LOC_OFFLINE
@@ -373,6 +375,23 @@ function XPerl_Party_UpdateAbsorbPrediction(self)
 		self.statsFrame.expectedAbsorbs:Hide()
 	end
 end
+
+function XPerl_Party_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
+	end
+end
+
 
 -- XPerl_Party_UpdatePlayerFlags(self)
 local function XPerl_Party_UpdatePlayerFlags(self)
@@ -1363,6 +1382,14 @@ function XPerl_Party_Events:PLAYER_FLAGS_CHANGED(unit)
 	end
 end
 
+function XPerl_Party_Events:INCOMING_RESURRECT_CHANGED(unit)
+	local f = PartyFrames[unit]
+	if (f) then
+		XPerl_Party_UpdateResurrectionStatus(f)
+	end
+end
+
+
 -- UNIT_NAME_UPDATE
 function XPerl_Party_Events:UNIT_NAME_UPDATE()
 	XPerl_Party_UpdateName(self)
@@ -1522,6 +1549,7 @@ function XPerl_Party_Set_Bits1(self)
 		end
 	else
 		self.portraitFrame:Show()
+		self.statsFrame.resurrect:Hide()
 
 		self.levelFrame:SetWidth(27)
 		self.levelFrame:SetHeight(22)
@@ -1840,21 +1868,13 @@ function XPerl_Party_Set_Bits()
 		end
 	end
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if pconf.healprediction then
-			XPerl_Party_Events_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
-		else
-			XPerl_Party_Events_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
-		end
-
-		if pconf.absorbs then
-			XPerl_Party_Events_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		else
-			XPerl_Party_Events_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
-
 	XPerl_Party_SetInitialAttributes()
+	XPerl_Register_Prediction(XPerl_Party_Events_Frame, pconf, function(guid)
+		local frame = XPerl_Party_GetUnitFrameByGUID(guid)
+		if frame then
+			return frame.partyid
+		end
+	end)
 
 	if (XPerl_Party_AnchorVirtual:IsShown()) then
 		XPerl_Party_Virtual(true)

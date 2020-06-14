@@ -9,17 +9,10 @@ ZPerlRaidMonConfig = {}
 local config = ZPerlRaidMonConfig
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
-
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-	UnitCastingInfo = function(unit)
-		if unit ~= "player" then return end
-		return CastingInfo()
-	end
-
-	UnitChannelInfo = function(unit)
-		if unit ~= "player" then return end
-		return ChannelInfo()
-	end
+local LCC = LibStub("LibClassicCasterino", true)
+if LCC then
+    UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
+    UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
 local GetNumGroupMembers = GetNumGroupMembers
@@ -849,11 +842,23 @@ function cast:EnableDisable()
 		"PLAYER_REGEN_ENABLED",
 	}
 
+
+	local CastbarEventHandler = function(event, ...)
+		return XPerl_RaidMonitor_OnEvent(self, event, ...)
+	end
 	for k, v in pairs(events) do
-		if (self:IsShown()) then
-			self:RegisterEvent(v)
+		if LCC and strfind(v, "^UNIT_SPELLCAST") then
+			if (self:IsShown()) then
+				LCC.RegisterCallback(self, v, CastbarEventHandler)
+			else
+				LCC.UnregisterCallback(self, v)
+			end
 		else
-			self:UnregisterEvent(v)
+			if (self:IsShown()) then
+				self:RegisterEvent(v)
+			else
+				self:UnregisterEvent(v)
+			end
 		end
 	end
 end

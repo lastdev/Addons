@@ -1,9 +1,9 @@
 # <DBM> Broken Isles
 
-## [r17](https://github.com/DeadlyBossMods/DBM-Legion/tree/r17) (2020-02-21)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r16...r17)
+## [r18](https://github.com/DeadlyBossMods/DBM-Legion/tree/r18) (2020-05-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r17...r18)
 
-- Cleaned up unused locals and removed unneeded calls to DBM:GetModLocalization()  
-- Remove unused localisation files  
-- Cleanup on isle legion  
-- Prep thorough error checking  
+- Fix the fixate nameplate aura to only show for parasites fixating YOU on Talarn  
+- Fix luacheck  
+- Update to be compatible with DBM-Core Locales restructure  
+- Change UNIT\_HEALTH\_FREQUENT to UNIT\_HEALTH  

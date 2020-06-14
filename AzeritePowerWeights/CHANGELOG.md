@@ -1,3 +1,7 @@
+### 8.3.12
+
+- Updated Default-scales (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))
+
 ### 8.3.11
 
 - Add Holy Priest Default-scale by Simbiawow

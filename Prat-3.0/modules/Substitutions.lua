@@ -36,90 +36,88 @@ Prat:AddModuleToLoad(function()
   local PL = module.PL
 
   --[===[@debug@
-PL:AddLocale(PRAT_MODULE, "enUS", {
-	["Substitutions"] = true,
-	["A module to provide basic chat substitutions."] = true,
-	['User defined substitutions'] = true,
-	['Options for setting and removing user defined substitutions. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)'] = true,
-	['Set substitution'] = true,
-	['Set the value of a user defined substitution (NB: this may be the same as an existing default substitution; to reset it to the default, just remove the user created definition).'] = true,
-	['subname = text after expansion -- NOTE: sub name without the prefix "%"'] = true,
-	['List substitutions'] = true,
-	['Lists all current subtitutions in the default chat frame'] = true,
-	['Delete substitution'] = true,
-	['Deletes a user defined substitution'] = true,
-	['subname -- NOTE: sub name without the prefix \'%\''] = true,
-	['Are you sure?'] = true,
-	['Delete all'] = true,
-	['Deletes all user defined substitutions'] = true,
-	['Are you sure - this will delete all user defined substitutions and reset defaults?'] = true,
-	['List of available substitutions'] = true,
-	['List of available substitutions defined by this module. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)'] = true,
-	["NO MATCHFUNC FOUND"] = true,
-	["current-prompt"] = "Current value: '%s'\nClick to paste into the chat.",
-	['no substitution name given'] = true,
-	['no value given for subtitution "%s"'] = true,
-	['|cffff0000warning:|r subtitution "%s" already defined as "%s", overwriting'] = true,
-	['defined %s: expands to => %s'] = true,
-	['no substitution name suPLied for deletion'] = true,
-	['no user defined subs found'] = true,
-	['user defined substition "%s" not found'] = true,
-	["user substitutions index (usersubs_idx) doesn't exist! oh dear."] = true,
-	["can't find substitution index for a substitution named '%s'"] = true,
-	['removing user defined substitution "%s"; previously expanded to => "%s"'] = true,
-	['substitution: %s defined as => %s'] = true,
-	['%d total user defined substitutions'] = true,
-	['module:buildUserSubsIndex(): warning: module patterns not defined!'] = true,
-
-	["<notarget>"] = true,
-	["male"] = true,
-	["female"] = true,
-	["unknown sex"] = true,
-	["<noguild>"] = true,
-	["his"] = true,
-	["hers"] = true,
-	["its"] = true,
-	["him"] = true,
-	["her"] = true,
-	["it"] = true,
-
-	['usersub_'] = true,
-	["TargetHealthDeficit"] = true,
-	["TargetPercentHP"] = true,
-	["TargetPronoun"] = true,
-	["PlayerHP"] = true,
-	["PlayerName"] = true,
-	["PlayerMaxHP"] = true,
-	["PlayerHealthDeficit"] = true,
-	["PlayerPercentHP"] = true,
-	["PlayerCurrentMana"] = true,
-	["PlayerMaxMana"] = true,
-	["PlayerPercentMana"] = true,
-	["PlayerManaDeficit"] = true,
-	["TargetName"] = true,
-	["TargetTargetName"] = true,
-	["MouseoverTargetName"] = true,
-	["TargetClass"] = true,
-	["TargetHealth"] = true,
-	["TargetRace"] = true,
-	["TargetGender"] = true,
-	["TargetLevel"] = true,
-	["TargetPossesive"] = true,
-	["TargetManaDeficit"] = true,
-	["TargetGuild"] = true,
-	["TargetIcon"] = true,
-	["MapZone"] = true,
-	["MapLoc"] = true,
-	["MapPos"] = true,
-	["MapYPos"] = true,
-	["MapXPos"] = true,
-	["RandNum"] = true,
+  PL:AddLocale(PRAT_MODULE, "enUS", {
+    ["Substitutions"] = true,
+    ["A module to provide basic chat substitutions."] = true,
+    ['User defined substitutions'] = true,
+    ['Options for setting and removing user defined substitutions. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)'] = true,
+    ['Set substitution'] = true,
+    ['Set the value of a user defined substitution (NB: this may be the same as an existing default substitution; to reset it to the default, just remove the user created definition).'] = true,
+    ['subname = text after expansion -- NOTE: sub name without the prefix "%"'] = true,
+    ['List substitutions'] = true,
+    ['Lists all current subtitutions in the default chat frame'] = true,
+    ['Delete substitution'] = true,
+    ['Deletes a user defined substitution'] = true,
+    ['subname -- NOTE: sub name without the prefix \'%\''] = true,
+    ['Are you sure?'] = true,
+    ['Delete all'] = true,
+    ['Deletes all user defined substitutions'] = true,
+    ['Are you sure - this will delete all user defined substitutions and reset defaults?'] = true,
+    ['List of available substitutions'] = true,
+    ['List of available substitutions defined by this module. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)'] = true,
+    ["NO MATCHFUNC FOUND"] = true,
+    ["current-prompt"] = "Current value: '%s'\nClick to paste into the chat.",
+    ['no substitution name given'] = true,
+    ['no value given for subtitution "%s"'] = true,
+    ['|cffff0000warning:|r subtitution "%s" already defined as "%s", overwriting'] = true,
+    ['defined %s: expands to => %s'] = true,
+    ['no substitution name suPLied for deletion'] = true,
+    ['no user defined subs found'] = true,
+    ['user defined substition "%s" not found'] = true,
+    ["user substitutions index (usersubs_idx) doesn't exist! oh dear."] = true,
+    ["can't find substitution index for a substitution named '%s'"] = true,
+    ['removing user defined substitution "%s"; previously expanded to => "%s"'] = true,
+    ['substitution: %s defined as => %s'] = true,
+    ['%d total user defined substitutions'] = true,
+    ['module:buildUserSubsIndex(): warning: module patterns not defined!'] = true,
+    ["<notarget>"] = true,
+    ["male"] = true,
+    ["female"] = true,
+    ["unknown sex"] = true,
+    ["<noguild>"] = true,
+    ["his"] = true,
+    ["hers"] = true,
+    ["its"] = true,
+    ["him"] = true,
+    ["her"] = true,
+    ["it"] = true,
+    ['usersub_'] = true,
+    ["TargetHealthDeficit"] = true,
+    ["TargetPercentHP"] = true,
+    ["TargetPronoun"] = true,
+    ["PlayerHP"] = true,
+    ["PlayerName"] = true,
+    ["PlayerMaxHP"] = true,
+    ["PlayerHealthDeficit"] = true,
+    ["PlayerPercentHP"] = true,
+    ["PlayerCurrentMana"] = true,
+    ["PlayerMaxMana"] = true,
+    ["PlayerPercentMana"] = true,
+    ["PlayerManaDeficit"] = true,
+    ["TargetName"] = true,
+    ["TargetTargetName"] = true,
+    ["MouseoverTargetName"] = true,
+    ["TargetClass"] = true,
+    ["TargetHealth"] = true,
+    ["TargetRace"] = true,
+    ["TargetGender"] = true,
+    ["TargetLevel"] = true,
+    ["TargetPossesive"] = true,
+    ["TargetManaDeficit"] = true,
+    ["TargetGuild"] = true,
+    ["TargetIcon"] = true,
+    ["MapZone"] = true,
+    ["MapLoc"] = true,
+    ["MapPos"] = true,
+    ["MapYPos"] = true,
+    ["MapXPos"] = true,
+    ["RandNum"] = true,
     ["PlayerAverageItemLevel"] = true,
-})
---@end-debug@]===]
+  })
+  --@end-debug@]===]
 
--- These Localizations are auto-generated. To help with localization
--- please go to http://www.wowace.com/projects/prat-3-0/localization/
+  -- These Localizations are auto-generated. To help with localization
+  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
 
   --@non-debug@
@@ -651,7 +649,7 @@ L = {
 		["A module to provide basic chat substitutions."] = "Ein Modul, das grundlegende Ersetzungen zur Verfügung stellt.",
 		["Are you sure - this will delete all user defined substitutions and reset defaults?"] = "Bist du sicher - dies wird alle vom Benutzer definierten Ersetzungen löschen und auf Standard zurücksetzen.",
 		["Are you sure?"] = "Bist du sicher?",
-		["can't find substitution index for a substitution named '%s'"] = "Kann Ersetzungsindex für eine Ersetzung mit dem Namen '%s' nicht finden.",
+		["can't find substitution index for a substitution named '%s'"] = "Es kann kein Ersatzindex für eine Ersetzung mit dem Namen '%s' gefunden werden.",
 		["current-prompt"] = [=[Gegenwärtiger Wert: '%s'
 Anklicken, um in den Chat einzufügen.]=],
 		["defined %s: expands to => %s"] = "definiert %s: erweitert zu => %s",
@@ -686,12 +684,12 @@ Anklicken, um in den Chat einzufügen.]=],
 		["Options for setting and removing user defined substitutions. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)"] = "Optionen zum Einstellen und Entfernen benutzerdefinierter Ersetzungen. (NB: Benutzer können eigeneWerte für vorhandene Ersetzungen definieren, aber diese werden auf ihre Standardwerte zurückgesetzt, wenn die Definition des Benutzers gelöscht wurde.)",
 		["PlayerAverageItemLevel"] = "Durchschnittliche Gegenstandsstufe des Spielers",
 		["PlayerCurrentMana"] = "SpielerAktuellesMana",
-		["PlayerHealthDeficit"] = "SpielerGesundheitDefizit",
+		["PlayerHealthDeficit"] = "Gesundheitsdefizit des Spielers",
 		["PlayerHP"] = "SpielerHP",
 		["PlayerManaDeficit"] = "SpielerManaDefizit",
 		["PlayerMaxHP"] = "SpielerMaxHP",
 		["PlayerMaxMana"] = "SpielerMaxMana",
-		["PlayerName"] = "SpielerName",
+		["PlayerName"] = "Spielername",
 		["PlayerPercentHP"] = "SpielerProzentHP",
 		["PlayerPercentMana"] = "SpielerProzentMana",
 		["RandNum"] = "ZufNum",
@@ -705,8 +703,8 @@ Anklicken, um in den Chat einzufügen.]=],
 		["TargetClass"] = "ZielKlasse",
 		["TargetGender"] = "ZielGeschlecht",
 		["TargetGuild"] = "ZielGilde",
-		["TargetHealth"] = "ZielGesundheit",
-		["TargetHealthDeficit"] = "ZielGesundheitDefizit",
+		["TargetHealth"] = "Zielgesundheit",
+		["TargetHealthDeficit"] = "Zielgesundheitsdefizit",
 		["TargetIcon"] = "ZielSymbol",
 		["TargetLevel"] = "ZielStufe",
 		["TargetManaDeficit"] = "ZielManaDefizit",
@@ -1354,24 +1352,21 @@ end
   function module:BuildModuleOptions(args)
     local modulePatterns = Prat.GetModulePatterns(self)
 
-    local order = 500
-
     self.buildingMenu = true
 
-    for k, v in pairs(modulePatterns) do
-      local name = v.optname
-      local pat = v.pattern:gsub("%%%%", "%%")
+    for _, v in pairs(modulePatterns) do
+      if v then
+        local name = v.optname
+        local pat = v.pattern:gsub("%%%%", "%%")
 
-      order = order + 10
+        args[name] = args[name] or {}
+        local d = args[name]
 
-      args[name] = args[name] or {}
-      local d = args[name]
-
-      d.name = name .. " " .. pat
-      d.desc = subDesc
-      d.type = "execute"
-      d.func = "DoPat"
-      d.order = order
+        d.name = name .. " " .. pat
+        d.desc = subDesc
+        d.type = "execute"
+        d.func = "DoPat"
+      end
     end
 
     self.buildingMenu = false
@@ -1380,7 +1375,7 @@ end
   function module:GetDescription()
     return PL["A module to provide basic chat substitutions."]
   end
-  
+
   function module:GetSubstDescription(info)
     local val = self:InfoToPattern(info)
 
@@ -1399,8 +1394,8 @@ end
     local name = info[#info] or ""
 
     if modulePatterns then
-      for k, v in pairs(modulePatterns) do
-        if v.optname == name then
+      for _, v in pairs(modulePatterns) do
+        if v and v.optname == name then
           return v
         end
       end
@@ -1730,8 +1725,13 @@ end
 
     Prat:SetModulePatterns(module, {
       { pattern = "(%%thd)", matchfunc = TargetHealthDeficit, optname = PL["TargetHealthDeficit"], type = "OUTBOUND" },
-      { pattern = "(%%thp)", matchfunc = TargetPercentHP, priority = 51, optname = PL["TargetPercentHP"],
-        type = "OUTBOUND" },
+      {
+        pattern = "(%%thp)",
+        matchfunc = TargetPercentHP,
+        priority = 51,
+        optname = PL["TargetPercentHP"],
+        type = "OUTBOUND"
+      },
       { pattern = "(%%tpn)", matchfunc = TargetPronoun, optname = PL["TargetPronoun"], type = "OUTBOUND" },
 
       { pattern = "(%%hc)", matchfunc = PlayerHP, optname = PL["PlayerHP"], type = "OUTBOUND" },
@@ -1744,8 +1744,12 @@ end
       { pattern = "(%%mp)", matchfunc = PlayerPercentMana, optname = PL["PlayerPercentMana"], type = "OUTBOUND" },
       { pattern = "(%%pmd)", matchfunc = PlayerManaDeficit, optname = PL["PlayerManaDeficit"], type = "OUTBOUND" },
 
-      GetAverageItemLevel and { pattern = "(%%ail)", matchfunc = PlayerAverageItemLevel, optname = PL["PlayerAverageItemLevel"],
-        type = "OUTBOUND" },
+      GetAverageItemLevel and {
+        pattern = "(%%ail)",
+        matchfunc = PlayerAverageItemLevel,
+        optname = PL["PlayerAverageItemLevel"],
+        type = "OUTBOUND"
+      },
 
       { pattern = "(%%tn)", matchfunc = TargetName, optname = PL["TargetName"], type = "OUTBOUND" },
       { pattern = "(%%tt)", matchfunc = TargetTargetName, optname = PL["TargetTargetName"], type = "OUTBOUND" },

@@ -28,21 +28,21 @@
 
 
 
-Prat:AddModuleToLoad(function() 
+Prat:AddModuleToLoad(function()
 
--- Get Utility Libraries
-local PRAT_MODULE = Prat:RequestModuleName("Paragraph")
+  -- Get Utility Libraries
+  local PRAT_MODULE = Prat:RequestModuleName("Paragraph")
 
-if PRAT_MODULE == nil then 
-    return 
-end
+  if PRAT_MODULE == nil then
+    return
+  end
 
-local module = Prat:NewModule(PRAT_MODULE)
+  local module = Prat:NewModule(PRAT_MODULE)
 
-local PL = module.PL
+  local PL = module.PL
 
---[===[@debug@
-PL:AddLocale(PRAT_MODULE, "enUS", {
+  --[===[@debug@
+  PL:AddLocale(PRAT_MODULE, "enUS", {
     ["Paragraph"] = true,
     ["Chat window paragraph options."] = true,
     ["justification_name"] = "Set Alignment",
@@ -50,15 +50,15 @@ PL:AddLocale(PRAT_MODULE, "enUS", {
     ["Line Spacing"] = true,
     ["Set the line spacing for all chat windows."] = true,
     ["adjustlinks_name"] = "Fix placement of player/item links",
-    ["adjustlinks_desc"] = "Adjust links to restore clickability on centered or right-aligned text.",    
-	["Center"] = true,
-	["Right"] = true,
-	["Left"] = true,
-})
---@end-debug@]===]
+    ["adjustlinks_desc"] = "Adjust links to restore clickability on centered or right-aligned text.",
+    ["Center"] = true,
+    ["Right"] = true,
+    ["Left"] = true,
+  })
+  --@end-debug@]===]
 
--- These Localizations are auto-generated. To help with localization
--- please go to http://www.wowace.com/projects/prat-3-0/localization/
+  -- These Localizations are auto-generated. To help with localization
+  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
 
   --@non-debug@
@@ -171,7 +171,7 @@ PL:AddLocale(PRAT_MODULE, "frFR",L)
 L = {
 	["Paragraph"] = {
 		["adjustlinks_desc"] = "Links anpassen, um die Fähigkeit des Anklickens wiederherzustellen, wenn Text zentriert oder rechtsbündig ist.",
-		["adjustlinks_name"] = "Platzierung von Spieler-/Gegenstands-Links reparieren.",
+		["adjustlinks_name"] = "Platzierung von Spieler-/Gegenstandslinks korrigieren",
 		["Center"] = "Mitte",
 		["Chat window paragraph options."] = "Paragraphoptionen in Chatfenstern.",
 		["justification_desc"] = "Horizontale Ausrichtung für jedes Chat-Fenster einstellen.",
@@ -311,105 +311,119 @@ end
 
 
 
-----[[
---	Chinese Local : CWDG Translation Team 昏睡墨鱼 (Thomas Mo)
---	CWDG site: http://Cwowaddon.com
---	$Rev: 80705 $
---]]
---
+  --- -[[
+  -- Chinese Local : CWDG Translation Team 昏睡墨鱼 (Thomas Mo)
+  -- CWDG site: http://Cwowaddon.com
+  -- $Rev: 80705 $
+  -- ]]
+  --
 
---
+  --
 
---
+  --
 
---
+  --
 
---
+  --
 
--- 
+  --
 
---
+  --
 
--- create prat module
+  -- create prat module
 
-Prat:SetModuleDefaults(module, {
-	profile = {
-	    on = false,
-	    justification = { ["*"] = "LEFT" },
-	}
-} )
+  Prat:SetModuleDefaults(module, {
+    profile = {
+      on = false,
+      justification = { ["*"] = "LEFT" },
+      spacing = 0
+    }
+  })
 
-do
-	local justifyoption = {
-			name = function(info) return Prat.FrameList[info[#info]] or "" end,
-			desc = PL["justification_name"],
-			type="select",
-			get = function(info) return info.handler.db.profile.justification[info[#info]] end,
-			set = function(info, v) info.handler.db.profile.justification[info[#info]] = v info.handler:OnValueChanged(info, v) end,
-			values = { ["RIGHT"] = PL["Right"], ["CENTER"] = PL["Center"], ["LEFT"] =  PL["Left"]},
-			hidden = function(info) return Prat.FrameList[info[#info]] == nil end,
-		}
-	
-	Prat:SetModuleOptions(module, {
-	        name = PL["Paragraph"],
-	        desc = PL["Chat window paragraph options."],
-	        type = "group",
-	        args = {
-	            justification = {
-	                name = PL["justification_name"],
-	                desc = PL["justification_desc"],
-	                type = "group",
-					inline = true,
-					args = {
-						ChatFrame1 = justifyoption,
-						ChatFrame2 = justifyoption,
-						ChatFrame3 = justifyoption,
-						ChatFrame4 = justifyoption,
-						ChatFrame5 = justifyoption,
-						ChatFrame6 = justifyoption,
-						ChatFrame7 = justifyoption,
-					}
-				},
+  do
+    local justifyoption = {
+      name = function(info) return Prat.FrameList[info[#info]] or "" end,
+      desc = PL["justification_name"],
+      type = "select",
+      get = function(info) return info.handler.db.profile.justification[info[#info]] end,
+      set = function(info, v) info.handler.db.profile.justification[info[#info]] = v info.handler:OnValueChanged(info, v) end,
+      values = { ["RIGHT"] = PL["Right"], ["CENTER"] = PL["Center"], ["LEFT"] = PL["Left"] },
+      hidden = function(info) return Prat.FrameList[info[#info]] == nil end,
+    }
 
-				info = {
-					name = "Note: Playerlinks, itemlinks, and any other link type will not work when justification is set to anything other than 'Left'",
-					type = "description",
-					order = 110
-				}
-	        }
-	    }
-	)
-end
+    Prat:SetModuleOptions(module, {
+      name = PL["Paragraph"],
+      desc = PL["Chat window paragraph options."],
+      type = "group",
+      args = {
+        justification = {
+          name = PL["justification_name"],
+          desc = PL["justification_desc"],
+          type = "group",
+          inline = true,
+          args = {
+            ChatFrame1 = justifyoption,
+            ChatFrame2 = justifyoption,
+            ChatFrame3 = justifyoption,
+            ChatFrame4 = justifyoption,
+            ChatFrame5 = justifyoption,
+            ChatFrame6 = justifyoption,
+            ChatFrame7 = justifyoption,
+          },
+        },
+        spacing = {
+          name = PL["Line Spacing"],
+          desc = PL["Set the line spacing for all chat windows."],
+          type = "range",
+          min = 0,
+          max = 20,
+          step = 1,
+          order = 109
+        },
+        info = {
+          name = "Note: Playerlinks, itemlinks, and any other link type will not work when justification is set to anything other than 'Left'",
+          type = "description",
+          order = 110
+        }
+      }
+    })
+  end
 
---[[------------------------------------------------
-    Module Event Functions
-------------------------------------------------]]--
+  --[[------------------------------------------------
+      Module Event Functions
+  ------------------------------------------------]] --
 
-function module:OnModuleEnable()
+  function module:OnModuleEnable()
     self:ConfigureAllChatFrames(true)
-end
+    Prat.RegisterChatEvent(self, Prat.Events.FRAMES_UPDATED)
+  end
 
-function module:OnModuleDisable()
+  function module:OnModuleDisable()
     self:ConfigureAllChatFrames(false)
-end
+  end
 
-function module:OnValueChanged()
-	self:ConfigureAllChatFrames(true)
-end
+  function module:OnValueChanged()
+    self:ConfigureAllChatFrames(true)
+  end
 
---[[------------------------------------------------
-	Core Functions
-------------------------------------------------]]--
-function module:GetDescription()
-	return PL["Chat window paragraph options."]
-end
+  function module:Prat_FramesUpdated()
+    self:ConfigureAllChatFrames(true)
+  end
 
-function module:ConfigureAllChatFrames(enable)
-	local prof = self.db.profile
-	for k,v in pairs(Prat.Frames) do
-        v:SetJustifyH(enable and prof.justification[k] or "LEFT")
-	end
-end
+  --[[------------------------------------------------
+    Core Functions
+  ------------------------------------------------]] --
+  function module:GetDescription()
+    return PL["Chat window paragraph options."]
+  end
+
+  function module:ConfigureAllChatFrames(enable)
+    local prof = self.db.profile
+    for k, v in pairs(Prat.Frames) do
+      v:SetJustifyH(enable and prof.justification[k] or "LEFT")
+      v:SetSpacing(prof.spacing)
+    end
+  end
 
   return
-end ) -- Prat:AddModuleToLoad
+end) -- Prat:AddModuleToLoad

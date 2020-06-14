@@ -135,10 +135,11 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_NAME_UPDATE",
 		--"PET_BATTLE_OPENING_START"
 		--"PET_BATTLE_CLOSE",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
 	for i, event in pairs(events) do
-		if string.find(event, "^UNIT_") then
+		if string.find(event, "^UNIT_") or string.find(event, "^INCOMING") then
 			if pcall(self.RegisterUnitEvent, self, event, partyid) then
 				self:RegisterUnitEvent(event, partyid)
 			end
@@ -904,10 +905,9 @@ function XPerl_Target_UpdateHealth(self)
 		XPerl_SetHealthBar(self, hp, hpMax)
 	end
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		XPerl_Target_UpdateAbsorbPrediction(self)
-		XPerl_Target_UpdateHealPrediction(self)
-	end
+	XPerl_Target_UpdateAbsorbPrediction(self)
+	XPerl_Target_UpdateHealPrediction(self)
+	XPerl_Target_UpdateResurrectionStatus(self)
 
 	if (percent) then
 		if UnitIsDeadOrGhost(partyid) or hpMax == 0 then -- 4.3+ fix so if for some dumb reason max HP is 0, prevent any division by 0.
@@ -1025,6 +1025,26 @@ function XPerl_Target_UpdateAbsorbPrediction(self)
 		end
 	end
 end
+
+function XPerl_Target_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if (self == XPerl_Target and tconf.portrait) or
+		   (self == XPerl_Focus and fconf.portrait) then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if (self == XPerl_Target and tconf.portrait) or
+		   (self == XPerl_Focus and fconf.portrait) then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
+	end
+end
+
+
 
 -- XPerl_Target_GetHealth
 function XPerl_Target_GetHealth(self)
@@ -1673,9 +1693,14 @@ function XPerl_Target_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 	end
 end
 
+function XPerl_Target_Events:INCOMING_RESURRECT_CHANGED(unit)
+	if (unit == self.partyid) then
+		XPerl_Target_UpdateResurrectionStatus(self)
+	end
+end
+
 -- XPerl_Target_SetWidth
 function XPerl_Target_SetWidth(self)
-
 	self.conf.size.width = max(0, self.conf.size.width or 0)
 	local w = 128 + ((self.conf.portrait and 1 or 0) * 62) + ((self.conf.percent and 1 or 0) * 32) + self.conf.size.width
 
@@ -1716,6 +1741,7 @@ function XPerl_Target_Set_Bits(self)
 	if (self.conf.portrait) then
 		self.portraitFrame:Show()
 		self.portraitFrame:SetWidth(62)
+		self.statsFrame.resurrect:Hide()
 	else
 		self.portraitFrame:Hide()
 		self.portraitFrame:SetWidth(3)
@@ -1748,20 +1774,16 @@ function XPerl_Target_Set_Bits(self)
 	self.conf.buffs.size = tonumber(self.conf.buffs.size) or 20
 	XPerl_SetBuffSize(self)
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (tconf.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "target", "focus")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, tconf, function(guid)
+		if guid == UnitGUID("target") then
+			return "target"
 		end
-
-		if (tconf.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "target", "focus")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+	end, "target")
+	XPerl_Register_Prediction(self, fconf, function(guid)
+		if guid == UnitGUID("focus") then
+			return "focus"
 		end
-	end
-
+	end, "focus")
 	XPerl_Target_SetWidth(self)
 
 	if (not InCombatLockdown()) then

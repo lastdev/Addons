@@ -98,7 +98,7 @@ L = {
 	["EventNames"] = {
 		["allevents_desc"] = "Prat-Verarbeitung für alle Chat-Ereignisse aktivieren.",
 		["allevents_name"] = "Alle Ereignisse verarbeiten",
-		["Chat window event name options."] = "Optionen zu Ereignisnamen in Chatfenstern.",
+		["Chat window event name options."] = "Optionen für den Namen des Chat-Fensterereignisses.",
 		["EventNames"] = "Ereignisnamen",
 		["Show"] = "Anzeigen",
 		["Show events on chatframes"] = "Ereignisse in Chatfenstern anzeigen",
@@ -257,8 +257,8 @@ L = {
         set = "SetSubValue"
       },
       allevents = {
-        name = function(info) return PL[info[#info].."_name"] end,
-        desc = function(info) return PL[info[#info].."_desc"] end,
+        name = function(info) return PL[info[#info] .. "_name"] end,
+        desc = function(info) return PL[info[#info] .. "_desc"] end,
         type = "toggle"
       }
     }
@@ -277,6 +277,7 @@ L = {
   function mod:GetDescription()
     return PL["Chat window event name options."]
   end
+
   --[[------------------------------------------------
     Core Functions
   ------------------------------------------------]] --

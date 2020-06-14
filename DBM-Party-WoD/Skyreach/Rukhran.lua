@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(967, "DBM-Party-WoD", 7, 476)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(76143)
 mod:SetEncounterID(1700)
 mod:SetZone()
@@ -22,7 +22,7 @@ local specWarnQuills			= mod:NewSpecialWarningSpell(159382, nil, nil, nil, 2, 2)
 local specWarnQuillsEnd			= mod:NewSpecialWarningEnd(159382, nil, nil, nil, 1, 2)
 
 local timerSolarFlareCD			= mod:NewCDTimer(18, 153810, nil, nil, nil, 3)
-local timerQuills				= mod:NewBuffActiveTimer(17, 159382, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerQuills				= mod:NewBuffActiveTimer(17, 159382, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 
 local skyTrashMod = DBM:GetModByName("SkyreachTrash")
 

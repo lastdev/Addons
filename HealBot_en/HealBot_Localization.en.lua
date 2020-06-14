@@ -185,6 +185,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_TARGETHEALS             = "Target";
     HEALBOT_OPTIONS_EMERGENCYHEALS          = "Raid";
     HEALBOT_OPTIONS_RAID10                  = HEALBOT_OPTIONS_EMERGENCYHEALS.." 10";
+    HEALBOT_OPTIONS_RAID20                  = HEALBOT_OPTIONS_EMERGENCYHEALS.." 20";
     HEALBOT_OPTIONS_RAID25                  = HEALBOT_OPTIONS_EMERGENCYHEALS.." 25";
     HEALBOT_OPTIONS_RAID40                  = HEALBOT_OPTIONS_EMERGENCYHEALS.." 40";
     HEALBOT_OPTIONS_EMERGFILTER             = "Show bars for";
@@ -216,6 +217,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWTOOLTIP             = "Show tooltips";
     HEALBOT_OPTIONS_SHOWDETTOOLTIP          = "Show detailed spell information";
     HEALBOT_OPTIONS_SHOWCDTOOLTIP           = "Show spell cooldown";
+    HEALBOT_OPTIONS_IGNOREGCDTOOLTIP        = "Ignore spell global cooldown";
     HEALBOT_OPTIONS_SHOWMOUSEWHEELTOOLTIP   = "Show mouse wheel commands"
     HEALBOT_OPTIONS_SHOWUNITTOOLTIP         = "Show target information";
     HEALBOT_OPTIONS_SHOWRECTOOLTIP          = "Show heal over time recommendation";
@@ -415,7 +417,6 @@ function HealBot_Lang_enALL()
     HEALBOT_TAGS                            = "Tags"
     
     HEALBOT_OPTIONS_SHOWUNITBUFFTIME        = "Show my buffs";
-    HEALBOT_OPTIONS_TOOLTIPUPDATE           = "Constantly update";
     HEALBOT_OPTIONS_BUFFSTEXTTIMER          = "Show buff before it expires";
     HEALBOT_OPTIONS_SHORTBUFFTIMER          = "Short buffs"
     HEALBOT_OPTIONS_LONGBUFFTIMER           = "Long buffs"
@@ -1232,9 +1233,18 @@ function HealBot_Lang_enALL()
                                    [13] = "spicy_squid",
                                    [14] = "Ameralanna_675",
                                    [15] = "nydiah",
-                                   [16] = "unhealed",
-                                   [17] = "Doomsdaze",
-                                   [18] = "Solution",
+                                   [16] = "Doomsdaze",
+                                   [17] = "Solution",
+                                   [18] = "selena817",
+                                   [19] = "SirArion",
+                                   [20] = "Xarava",
+                                   [21] = "jchap2k",
+                                   [22] = "Vayah",
+                                   [23] = "Madaleine",
+                                   [24] = "ADDYDARI",
+                                   [25] = "plastisch",
+                                   [26] = "MMOnster",
+                                   [27] = "dennywh",
                                 }
                                
 end

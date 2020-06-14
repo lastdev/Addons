@@ -12,10 +12,10 @@
 local name, _M = ...
 
 local pairs, ipairs, _G, table, LibStub, wipe, type, loadstring =
-      pairs, ipairs, _G, table, LibStub, wipe, type, loadstring
+pairs, ipairs, _G, table, LibStub, wipe, type, loadstring
 
 local setfenv, tostring, getmetatable, error =
-      setfenv, tostring, getmetatable, error
+setfenv, tostring, getmetatable, error
 
 if not LibStub then
   error("globalcomplete requires LibStub")
@@ -39,7 +39,7 @@ function _M:EnableGlobalCompletions(overrideName, maxResults, prematches)
 
   self:GlobalTabComplete()
 
-  self:FieldTabComplete()
+--  self:FieldTabComplete()
 end
 
 function _M:GlobalTabComplete()
@@ -47,7 +47,12 @@ function _M:GlobalTabComplete()
     AceTab:RegisterTabCompletion(self.tabcompleteName, self.preMatches,
       function(t, text, pos)
         if (text:trim():len() < 1) then return nil end
-        return self:GetPrefilteredCompletions(t, text, pos)
+
+        if (text:find("%.")) then
+          self:GetPrefilteredFieldCompletions(t, text, pos)
+        else
+          return self:GetPrefilteredCompletions(t, text, pos)
+        end
       end,
       function(...) return self:GetResultCompletions(...) end,
       nil, -- listenframes
@@ -59,7 +64,7 @@ end
 
 function _M:FieldTabComplete()
   if not AceTab:IsTabCompletionRegistered(self.tabcompleteName .. "-fields") then
-    AceTab:RegisterTabCompletion(self.tabcompleteName .. "-fields", ".+",
+    AceTab:RegisterTabCompletion(self.tabcompleteName .. "-fields", "%S+%.",
       function(t, text, pos, textToCursor)
         self:GetPrefilteredFieldCompletions(t, text, pos)
       end,
@@ -83,8 +88,8 @@ function _M:GetResultCompletions(u, cands, gcss, prematch)
     end
     table.sort(t)
     for i, v in ipairs(t) do
-      local common = "|cffffffff" .. v:sub(1,gcss:len()) .. "|r"
-      DEFAULT_CHAT_FRAME:AddMessage("   " .. common .. v:sub(gcss:len()+1), 0.1, 0.8, 0.1)
+      local common = "|cffffffff" .. v:sub(1, gcss:len()) .. "|r"
+      DEFAULT_CHAT_FRAME:AddMessage("   " .. common .. v:sub(gcss:len() + 1), 0.1, 0.8, 0.1)
     end
     return
   else
@@ -107,7 +112,7 @@ function _M:GetPrefilteredFieldCompletions(t, text, pos)
   elseif type(globalPrematches) == "table" then
     local result = false
     for i, v in ipairs(globalPrematches) do
-      if tostring(v):lower():find(text:lower(), 1, true) == 1 then
+      if text:lower():find(tostring(v):lower(), 1, true) == 1 then
         result = true
       end
       if not result then return end

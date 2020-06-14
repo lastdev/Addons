@@ -44,7 +44,7 @@ setfenv(1, select(2, ...))
 
 
 local function debug(...)
---  _G.ChatFrame1:print(...)
+  --  _G.ChatFrame1:print(...)
 end
 
 function BuildLink(linktype, data, text, color, link_start, link_end)
@@ -52,22 +52,29 @@ function BuildLink(linktype, data, text, color, link_start, link_end)
 end
 
 
+function FormatLink(linkType, linkDisplayText, ...)
+  local linkFormatTable = { ("|H%s"):format(linkType), ... };
+  local returnLink = tconcat(linkFormatTable, ":");
+  if linkDisplayText then
+    return returnLink .. ("|h%s|h"):format(linkDisplayText);
+  else
+    return returnLink .. "|h";
+  end
+end
+
 do
-  LinkRegistry = {}
-  local LinkOwners = {}
+  local LinkRegistry = {}
 
   -- linktype = { linkid, linkfunc, handler }
   function RegisterLinkType(linktype, who)
     if linktype and linktype.linkid and linktype.linkfunc then
+      linktype.owner = who
+
       tinsert(LinkRegistry, linktype)
 
       local idx = #LinkRegistry
 
       debug([[DBG_LINK("RegisterLinkType", who, linktype.linkid, idx)]])
-
-      if idx then
-        LinkOwners[idx] = who
-      end
 
       return idx
     end
@@ -76,9 +83,9 @@ do
   function UnregisterAllLinkTypes(who)
     debug([[DBG_LINK("UnregisterAllLinkTypes", who)]])
 
-    for k,owner in pairs(LinkOwners) do
-      if owner == who then
-        UnregisterLinkType(k)
+    for i, linktype in ipairs(LinkRegistry) do
+      if linktype.owner == who then
+        UnregisterLinkType(i)
       end
     end
   end
@@ -87,17 +94,24 @@ do
     tremove(LinkRegistry, idx)
   end
 
-  function SetHyperlinkHook(hooks, frame, link, ...)
+  function SetHyperlinkHook(hooks, tooltip, link, ...)
     debug("SetItemRef ", link, ...)
-    for i,reg_link in ipairs(LinkRegistry) do
+    for i, reg_link in ipairs(LinkRegistry) do
       if reg_link.linkid == link:sub(1, (reg_link.linkid):len()) then
-        if (reg_link.linkfunc(reg_link.handler, link, ...) == false) then
-          debug([[DUMP_LINK("SetItemRef ", "Link Handled Internally")]])
+        local frame
+        for _,v in pairs(HookedFrames) do
+          if v:IsMouseOver() and ((v.isDocked and v:IsShown()) or not v.isDocked) then
+            frame = v
+            break
+          end
+        end
+        if (reg_link.linkfunc(reg_link.handler, link, frame, ...) == false) then
+          debug([[DUMP_LINK("SetHyperlink ", "Link Handled Internally")]])
           return false
         end
       end
     end
-    hooks.SetHyperlink(frame, link, ...)
+    hooks.SetHyperlink(tooltip, link, ...)
   end
 end
 

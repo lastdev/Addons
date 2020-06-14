@@ -1,6 +1,6 @@
 if GetLocale() ~= "zhTW" then return end
-if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
-local L = DBM_GUI_Translations
+if not DBM_GUI_L then DBM_GUI_L = {} end
+local L = DBM_GUI_L
 
 L.MainFrame	= "Deadly Boss Mods"
 
@@ -55,16 +55,21 @@ L.UseDialogChannel			= "對話聲道"
 L.UseSFXChannel				= "音效聲道"
 L.Latency_Text				= "設定最高延遲同步門檻:%d"
 
+L.Button_RangeFrame			= "顯示/隱藏距離監視器"
+L.Button_InfoFrame			= "顯示/隱藏訊息監視器"
+L.Button_TestBars			= "測試計時條"
+L.Button_ResetInfoRange		= "重置訊息/距離監視器"
+
 L.ModelOptions				= "3D模型預覽選項"
 L.EnableModels				= "在首領選項中啟用3D模型預覽"
 L.ModelSoundOptions			= "為模型預覽設置聲音"
 L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
-L.Button_RangeFrame			= "顯示/隱藏距離監視器"
-L.Button_InfoFrame			= "顯示/隱藏訊息監視器"
-L.Button_TestBars			= "測試計時條"
-L.Button_ResetInfoRange		= "重置訊息/距離監視器"
+L.ResizeOptions			 	= "尺寸調整選項"
+L.Button_ResetWindowSize	= "重設GUI視窗大小"
+L.Editbox_WindowWidth		= "GUI視窗寬度"
+L.Editbox_WindowHeight		= "GUI視窗高度"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "團隊警告"
@@ -114,9 +119,9 @@ L.DisableGuildStatus 		= "停用整個隊伍的公會進度訊息發佈(需要�
 -- Tab: Barsetup
 L.BarSetup   				= "計時條樣式"
 L.BarTexture 				= "計時條材質"
-L.BarStyle					= "計時條風格"
-L.BarDBM					= "DBM(動畫)"
-L.BarSimple					= "精簡(沒有動畫)"
+L.BarStyle					= "計時條特性"
+L.BarDBM					= "經典 (現有的小計時條滑到大條的錨點)"
+L.BarSimple					= "簡單 (小計時條消失，創建新的大計時條)"
 L.BarStartColor				= "開始顏色"
 L.BarEndColor 				= "結束顏色"
 L.Bar_Font					= "計時條使用的字型"
@@ -145,7 +150,6 @@ L.BarEndColorUI				= "結束顏色(自訂)"
 L.Bar7Header				= "自訂計時條選項"
 L.Bar7ForceLarge			= "總是使用大計時條"
 L.Bar7CustomInline			= "使用自訂的'!'圖示"
-L.Bar7Footer				= "(測試計時條)"
 --Dropdown Options
 L.CBTGeneric				= "一般"
 L.CBTAdd					= "小怪"
@@ -161,7 +165,8 @@ L.CVoiceThree				= "倒數語音 3"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "根據計時器類型上色"
-L.AreaTitle_BarSetup		= "計時條綜合設置"
+L.AreaTitle_BarSetup		= "計時條外觀選項"
+L.AreaTitle_Behavior		= "計時條動作選項"
 L.AreaTitle_BarSetupSmall 	= "小型計時條設置"
 L.AreaTitle_BarSetupHuge	= "大型計時條設置"
 L.EnableHugeBar 			= "開啟大型計時條(2號計時條)"
@@ -177,6 +182,7 @@ L.BarSpark					= "計時條閃光"
 L.BarFlash					= "快結束時閃爍計時條"
 L.BarSort					= "依剩餘時間排序"
 L.BarColorByType			= "根據類型上色"
+L.NoBarFade					= "使用開始/結束顏色作為小型/大型顏色，而不是逐漸改變顏色"
 L.BarInlineIcons			= "顯示嵌入圖示"
 L.ShortTimerText			= "使用較短的計時器文字(如果可用時)"
 L.StripTimerText			= "剝離 冷卻/下次 計時器"
@@ -185,7 +191,7 @@ L.KeepBar2					= "(當有支援的模組時)"
 L.FadeBar					= "淡出已超出距離技能的計時器"
 
 -- Tab: Spec Warn Frame
-L.Panel_SpecWarnFrame		= "特別警告"
+L.Panel_SpecWarnFrame		= "特別團隊警告"
 L.Area_SpecWarn				= "特別警告選項"
 L.SpecWarn_ClassColor		= "為特別警告套用職業顏色"
 L.ShowSWarningsInChat 		= "在聊天視窗中顯示特別警告"
@@ -250,20 +256,23 @@ L.EventFilterMythicMusic	= "不要在傳奇/傳奇+難度播放戰鬥音樂"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "全局禁用及過濾"
-L.Area_SpamFilter_Outgoing	= "全局禁用及過濾選項"
+L.Area_SpamFilter_Anounces	= "Announce Global Disable & Filter Options"
 L.SpamBlockNoShowAnnounce	= "不顯示任何提示文字或播放警告音效"
 L.SpamBlockNoShowTgtAnnounce= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
-L.SpamBlockNoSpecWarn		= "不顯示特別警告或播放特別警告音效"
 L.SpamBlockNoSpecWarnText	= "不顯示特別警告但仍允許播放語音包音效 (上列選項會覆蓋此選項)"
+
+L.Area_SpamFilter_Timers	= "Timer Global Disable & Filter Options"
 L.SpamBlockNoShowTimers		= "不顯示計時器"
 L.SpamBlockNoShowUTimers	= "不顯示玩家送出的計時器(自訂/拉怪/休息)"
+L.SpamBlockNoCountdowns		= "不播放倒數音效"
+
+L.Area_SpamFilter_Misc		= "Misc Global Disable & Filter Options"
 L.SpamBlockNoSetIcon		= "不設置標記在目標上"
 L.SpamBlockNoRangeFrame		= "不顯示距離框架"
 L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
 L.SpamBlockNoHudMap			= "不要顯示HudMap"
 L.SpamBlockNoNameplate		= "不要顯示名條光環 (完全禁用)"
 L.SpamBlockNoNameplateLines	= "不要顯示名條光環行 (光環圖示仍然顯示)"
-L.SpamBlockNoCountdowns		= "不播放倒數音效"
 L.SpamBlockNoYells			= "不送出大喊至頻道"
 L.SpamBlockNoNoteSync		= "不接受註記分享"
 L.SpamBlockNoReminders		= "不顯示任何登入，推薦、模組缺失或更新訊息"
@@ -309,7 +318,6 @@ L.DisableSFX				= "首領戰鬥時禁用音效頻道"
 L.DisableCinematics			= "禁用遊戲中的過場動畫"
 L.OnlyFight					= "只有戰鬥中，每次動畫播放一次之後"
 L.AfterFirst				= "在副本中，每次動畫播放一次之後"
-L.Always					= ALWAYS
 L.CombatOnly				= "在任何戰鬥中停用"
 L.RaidCombat				= "只在首領戰鬥中停用"
 

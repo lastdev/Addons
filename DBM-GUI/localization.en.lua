@@ -1,6 +1,6 @@
-DBM_GUI_Translations = {}
+DBM_GUI_L = {}
 
-local L = DBM_GUI_Translations
+local L = DBM_GUI_L
 
 L.MainFrame = "Deadly Boss Mods"
 
@@ -13,7 +13,8 @@ L.OTabBosses	= "Bosses"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "General Options"
-L.TabCategory_BFA	 		= EXPANSION_NAME7 or "Battle for Azeroth"
+L.TabCategory_SHADOWLANDS	= EXPANSION_NAME8 or "Shadowlands"
+L.TabCategory_BFA	 		= EXPANSION_NAME7
 L.TabCategory_LEG	 		= EXPANSION_NAME6
 L.TabCategory_WOD	 		= EXPANSION_NAME5
 L.TabCategory_MOP	 		= EXPANSION_NAME4
@@ -63,16 +64,21 @@ L.UseDialogChannel			= "Dialog audio channel."
 L.UseSFXChannel				= "Sound Effects (SFX) audio channel."
 L.Latency_Text				= "Set max latency sync threshold: %d"
 
+L.Button_RangeFrame			= "Show/hide range frame"
+L.Button_InfoFrame			= "Show/hide info frame"
+L.Button_TestBars			= "Start test bars"
+L.Button_ResetInfoRange		= "Reset Info/Range frames"
+
 L.ModelOptions				= "3D Model Viewer Options"
 L.EnableModels				= "Enable 3D models in boss options"
 L.ModelSoundOptions			= "Set sound option for model viewer"
 L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
-L.Button_RangeFrame			= "Show/hide range frame"
-L.Button_InfoFrame			= "Show/hide info frame"
-L.Button_TestBars			= "Start test bars"
-L.Button_ResetInfoRange		= "Reset Info/Range frames"
+L.ResizeOptions			 	= "Resize Options"
+L.Button_ResetWindowSize	= "Reset GUI window size"
+L.Editbox_WindowWidth		= "GUI window width"
+L.Editbox_WindowHeight		= "GUI window height"
 
 -- Tab: Raidwarning
 L.Tab_RaidWarning 			= "Raid Warnings"
@@ -153,7 +159,6 @@ L.BarEndColorUI				= "End color (User)"
 L.Bar7Header				= "User Bar Options"
 L.Bar7ForceLarge			= "Always use large bar"
 L.Bar7CustomInline			= "Use custom '!' inline icon"
-L.Bar7Footer				= "(Dummy Bar won't live update)"
 --Dropdown Options
 L.CBTGeneric				= "Generic"
 L.CBTAdd					= "Add"
@@ -169,7 +174,8 @@ L.CVoiceThree				= "Count Voice 3"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "Bar Colors by timer type"
-L.AreaTitle_BarSetup		= "General Bar Options"
+L.AreaTitle_BarSetup		= "Bar Appearance Options"
+L.AreaTitle_Behavior		= "Bar Behavior Options"
 L.AreaTitle_BarSetupSmall 	= "Small Bar Options"
 L.AreaTitle_BarSetupHuge	= "Huge Bar Options"
 L.EnableHugeBar 			= "Enable huge bar (aka Bar 2)"
@@ -185,6 +191,7 @@ L.BarSpark					= "Bar spark"
 L.BarFlash					= "Flash bar about to expire"
 L.BarSort					= "Sort by remaining time"
 L.BarColorByType			= "Color by type"
+L.NoBarFade					= "Use Start/End colors as Small/Large colors instead of gradual color change"
 L.BarInlineIcons			= "Show inline icons"
 L.ShortTimerText			= "Use short timer text (when available)"
 L.StripTimerText			= "Strip CD/Next out of timers"
@@ -193,7 +200,7 @@ L.KeepBar2					= "(when supported by mod)"
 L.FadeBar					= "Fade timers for out of range abilities"
 
 -- Tab: Spec Warn Frame
-L.Panel_SpecWarnFrame		= "Special Warnings"
+L.Panel_SpecWarnFrame		= "Special Raid Warnings"
 L.Area_SpecWarn				= "Special Warning Options"
 L.SpecWarn_ClassColor		= "Use class coloring for special warnings"
 L.ShowSWarningsInChat 		= "Show special warnings in chat frame"
@@ -258,20 +265,24 @@ L.EventFilterMythicMusic	= "Do not play encounter music on Mythic/Mythic+ diffic
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "Global Disables & Filters"
-L.Area_SpamFilter_Outgoing	= "Global Disable & Filter Options"
+L.Area_SpamFilter_Anounces	= "Announce Global Disable & Filter Options"
 L.SpamBlockNoShowAnnounce	= "Do not show text or play sound for ANY general announces"
 L.SpamBlockNoShowTgtAnnounce= "Do not show text or play sound for TARGET general announces (above filter overrides this one)"
-L.SpamBlockNoSpecWarn		= "Do not show special warnings or play special warning sounds"
-L.SpamBlockNoSpecWarnText	= "Do not show special warning text, but still allow voice packs (above filter overrides this one)"
+L.SpamBlockNoSpecWarnText	= "Do not show special warning text"
+L.SpamBlockNoSpecWarnFlash	= "Do not show special warning screen flash"
+L.SpamBlockNoSpecWarnSound	= "Do not play special warning sounds (still permits voice packs, if one is enabled in Spoken Alerts panel)"
+
+L.Area_SpamFilter_Timers	= "Timer Global Disable & Filter Options"
 L.SpamBlockNoShowTimers		= "Do not show mod timers (Boss Mod/CM/LFG/Respawn)"
 L.SpamBlockNoShowUTimers	= "Do not show user sent timers (Custom/Pull/Break)"
+L.SpamBlockNoCountdowns		= "Do not play countdown sounds"
+
+L.Area_SpamFilter_Misc		= "Misc Global Disable & Filter Options"
 L.SpamBlockNoSetIcon		= "Do not set icons on targets"
 L.SpamBlockNoRangeFrame		= "Do not show range frame"
 L.SpamBlockNoInfoFrame		= "Do not show info frame"
 L.SpamBlockNoHudMap			= "Do not show HudMap"
-L.SpamBlockNoNameplate		= "Do not show Nameplate Auras (disables completely)"
-L.SpamBlockNoNameplateLines	= "Do not show Nameplate Aura lines (aura icons still show)"
-L.SpamBlockNoCountdowns		= "Do not play countdown sounds"
+L.SpamBlockNoNameplate		= "Do not show Nameplate Auras"
 L.SpamBlockNoYells			= "Do not send chat yells"
 L.SpamBlockNoNoteSync		= "Do not accept shared notes"
 L.SpamBlockNoReminders		= "Do not show any login, recommendation, missing mod, or hotfix messages"
@@ -283,15 +294,15 @@ L.SpamBlockNoRangeRestore	= "Do not restore range frame to previous state when m
 -- Tab: Spam Filter
 L.Area_SpamFilter			= "Spam Filter Options"
 L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
-L.StripServerName			= "Strip realm name in warnings and timers"
-L.FilterVoidFormSay			= "Do not send chat position/count chat yells when in Void Form"
+L.StripServerName			= "Strip realm name from warnings, timers, range check, and infoframe"
+L.FilterVoidFormSay			= "Do not send chat icon or countdown chat yells when in Void Form (regular chat yells still sent)"
 
 L.Area_SpecFilter			= "Role Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec. (Note: Disabling this is not recommended for most users as 'taunt' warnings are now all on by default.)"
 L.FilterInterruptsHeader	= "Filter warnings for interruptable spells based on behavior preference."
 L.FilterInterrupts			= "If caster is not current target/focus (Always)."
-L.FilterInterrupts2			= "if caster is not current target/focus (Always) or interrupt on CD (Boss Only)"
-L.FilterInterrupts3			= "if caster is not current target/focus (Always) or interrupt on CD (Boss & Trash)"
+L.FilterInterrupts2			= "If caster is not current target/focus (Always) or interrupt on CD (Boss Only)"
+L.FilterInterrupts3			= "If caster is not current target/focus (Always) or interrupt on CD (Boss & Trash)"
 L.FilterInterrupts4			= "Always filter interrupt warnings (you don't want to see them period)"
 L.FilterInterruptNoteName	= "Filter warnings for interruptable spells (with count) if warning does not contain your name in the custom note"
 L.FilterDispels				= "Filter warnings for dispelable spells if your dispel is on cooldown"
@@ -317,7 +328,6 @@ L.DisableSFX				= "Disable sound effects channel during boss fights"
 L.DisableCinematics			= "Hide in-game cinematics"
 L.OnlyFight					= "Only during fight, after each movie has played once"
 L.AfterFirst				= "In instance, after each movie has played once"
-L.Always					= ALWAYS
 L.CombatOnly				= "Disable in combat (any)"
 L.RaidCombat				= "Disable in combat (bosses only)"
 

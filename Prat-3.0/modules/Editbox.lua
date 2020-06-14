@@ -45,9 +45,9 @@ Prat:AddModuleToLoad(function()
   -- These Localizations are auto-generated. To help with localization
   -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
-    --@non-debug@
+  --@non-debug@
 do
-    local L
+  local L
 
 
 L = {
@@ -80,7 +80,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "enUS",L)
+PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
 
@@ -115,7 +115,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "frFR",L)
+PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
 
@@ -129,10 +129,8 @@ L = {
 		["Border color"] = "Randfarbe",
 		["Border texture"] = "Randtextur",
 		["Bottom"] = "Unten",
-		["Color border by channel"] = "Rand einfärben nach Kanal",
-		["currently_broken_alt_behavior"] = [=[Das Verhalten der Pfeiltasten im Chat ist im aktuellen WoW-Client defekt,
-
-verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scrollen.]=],
+		["Color border by channel"] = "Farbrand nach Kanal",
+		["currently_broken_alt_behavior"] = "Das Verhalten der Pfeiltasten im aktuellen WoW-Client ist unterbrochen. Verwende ALT-HOCH und ALT-RUNTER anstelle von nur HOCH RUNTER, um auf den Verlauf zuzugreifen",
 		["Edge Size"] = "Kantengröße",
 		["Editbox"] = "Eingabefeld",
 		["Editbox options."] = "Optionen für das Eingabefeld.",
@@ -141,7 +139,7 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
 		["Free-floating, Locked"] = "Freischwebend, fixiert",
 		["Requires the Alt key to be held down to move the cursor in chat"] = "Das Drücken der Alt-Taste wird benötigt, um den Cursor (Zeiger) im Chat zu bewegen.",
 		["Select the font to use for the edit box"] = "Schriftart auswählen, die im Eingabefeld verwendet wird.",
-		["Sets the frame's border color to the color of your currently active channel"] = "Wendet die Randfarbe des Rahmens auf die Farbe deines gegenwärtig aktiven Kanals an.",
+		["Sets the frame's border color to the color of your currently active channel"] = "Legt die Randfarbe des Rahmens auf die Farbe des aktuell aktiven Kanals fest",
 		["Tile Size"] = "Kachelgröße",
 		["Top"] = "Oben",
 		["Use Alt key for cursor movement"] = "Benutze Alt-Taste für Cursor-Bewegung",
@@ -149,7 +147,7 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "deDE",L)
+PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
 
@@ -183,7 +181,7 @@ L = {
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "koKR",L)
+PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
 
@@ -239,7 +237,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "esMX",L)
+PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
 
@@ -273,7 +271,7 @@ L = {
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "ruRU",L)
+PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
 
@@ -307,7 +305,7 @@ L = {
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "zhCN",L)
+PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
 
@@ -343,7 +341,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "esES",L)
+PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
 
@@ -380,7 +378,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 }
 
 
-  PL:AddLocale(PRAT_MODULE, "zhTW",L)
+PL:AddLocale(PRAT_MODULE, "zhTW",L)
 
 
 end
@@ -566,19 +564,21 @@ end
           mod.db.profile.font = v
           for i = 1, NUM_CHAT_WINDOWS do
             local ff = _G["ChatFrame" .. i .. "EditBox"]
+            local header = _G[ff:GetName() .. "Header"]
             local _, s, m = ff:GetFont()
-            ff:SetFont(Media:Fetch("font", v), s, m)
+            local font = Media:Fetch("font", v)
+            ff:SetFont(font, s, m)
+            header:SetFont(font, s, m)
           end
         end
       },
-        info = {
-            name = PL.currently_broken_alt_behavior;
-            type = "description",
-            hidden = not mustUseAlt;
-            order = 1000;
-        },
+      info = {
+        name = PL.currently_broken_alt_behavior;
+        type = "description",
+        hidden = not mustUseAlt;
+        order = 1000;
+      },
     },
-
   })
 
   Prat:SetModuleDefaults(mod.name, {
@@ -655,46 +655,48 @@ end
     end)
 
   local function OnArrowPressed(self, key)
-      if #self.history_lines == 0 then
-          return
+    if #self.history_lines == 0 then
+      return
+    end
+
+    if key == "DOWN" then
+      self.history_index = self.history_index - 1
+
+      if self.history_index < 1 then
+        self.history_index = #self.history_lines
       end
+    elseif key == "UP" then
+      self.history_index = self.history_index + 1
 
-      if key == "DOWN" then
-          self.history_index = self.history_index - 1
-
-          if self.history_index < 1 then
-              self.history_index = #self.history_lines
-          end
-      elseif key == "UP" then
-          self.history_index = self.history_index + 1
-
-          if self.history_index > #self.history_lines then
-              self.history_index = 1
-          end
-      else
-          return -- We don't want to interfere with LEFT/RIGHT because the tab-complete stuff might use it; we're already killing the other two.
+      if self.history_index > #self.history_lines then
+        self.history_index = 1
       end
-      self:SetText(self.history_lines[self.history_index])
+    else
+      return -- We don't want to interfere with LEFT/RIGHT because the tab-complete stuff might use it; we're already killing the other two.
+    end
+    self:SetText(self.history_lines[self.history_index])
   end
+
   local function enableArrowKeys(e)
-      e.history_lines = e.history_lines or {}
-      e.history_index = e.history_index or 0
-      e:HookScript("OnArrowPressed", OnArrowPressed)
+    e.history_lines = e.history_lines or {}
+    e.history_index = e.history_index or 0
+    e:HookScript("OnArrowPressed", OnArrowPressed)
   end
+
   function mod:Prat_FramesUpdated(info, name, chatFrame, ...)
     local i = chatFrame:GetID()
     local f = _G["ChatFrame" .. i .. "EditBox"]
     _G["ChatFrame" .. i .. "EditBoxLeft"]:Hide()
     _G["ChatFrame" .. i .. "EditBoxRight"]:Hide()
     _G["ChatFrame" .. i .. "EditBoxMid"]:Hide()
-    if (_G["ChatFrame".. i .."EditBoxFocusLeft"] ~=nil) then
-      _G["ChatFrame".. i .."EditBoxFocusLeft"]:SetTexture(nil)
+    if (_G["ChatFrame" .. i .. "EditBoxFocusLeft"] ~= nil) then
+      _G["ChatFrame" .. i .. "EditBoxFocusLeft"]:SetTexture(nil)
     end
-    if (_G["ChatFrame".. i .."EditBoxFocusRight"] ~=nil) then
-      _G["ChatFrame".. i .."EditBoxFocusRight"]:SetTexture(nil)
+    if (_G["ChatFrame" .. i .. "EditBoxFocusRight"] ~= nil) then
+      _G["ChatFrame" .. i .. "EditBoxFocusRight"]:SetTexture(nil)
     end
-    if (_G["ChatFrame".. i .."EditBoxFocusMid"] ~=nil) then
-      _G["ChatFrame".. i .."EditBoxFocusMid"]:SetTexture(nil)
+    if (_G["ChatFrame" .. i .. "EditBoxFocusMid"] ~= nil) then
+      _G["ChatFrame" .. i .. "EditBoxFocusMid"]:SetTexture(nil)
     end
     f:Hide()
 
@@ -709,7 +711,7 @@ end
 
     f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
     if (not mod.db.profile.useAltKey) then
-        enableArrowKeys(f)
+      enableArrowKeys(f)
     end
     self:SetBackdrop()
     self:UpdateHeight()
@@ -723,11 +725,11 @@ end
       _G["ChatFrame" .. i .. "EditBoxLeft"]:Hide()
       _G["ChatFrame" .. i .. "EditBoxRight"]:Hide()
       _G["ChatFrame" .. i .. "EditBoxMid"]:Hide()
-  if ChatFrame1EditBoxFocusLeft then
-      _G["ChatFrame" .. i .. "EditBoxFocusLeft"]:SetTexture(nil)
-      _G["ChatFrame" .. i .. "EditBoxFocusRight"]:SetTexture(nil)
-      _G["ChatFrame" .. i .. "EditBoxFocusMid"]:SetTexture(nil)
-  end
+      if ChatFrame1EditBoxFocusLeft then
+        _G["ChatFrame" .. i .. "EditBoxFocusLeft"]:SetTexture(nil)
+        _G["ChatFrame" .. i .. "EditBoxFocusRight"]:SetTexture(nil)
+        _G["ChatFrame" .. i .. "EditBoxFocusMid"]:SetTexture(nil)
+      end
       f:Hide()
 
       -- Prevent an error in FloatingChatFrame FCF_FadeOutChatFrame() (blizz bug)
@@ -743,7 +745,7 @@ end
 
       f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
       if (not mod.db.profile.useAltKey) then
-          enableArrowKeys(f)
+        enableArrowKeys(f)
       end
     end
 
@@ -754,6 +756,7 @@ end
     self:SetAttach(nil, self.db.profile.editX, self.db.profile.editY, self.db.profile.editW)
     self:SecureHook("ChatEdit_DeactivateChat")
     self:SecureHook("ChatEdit_SetLastActiveWindow")
+    self:SecureHook("ChatFrame_OpenChat")
 
     self:SetBackdrop()
     self:UpdateHeight()
@@ -763,6 +766,16 @@ end
     self:SecureHook("FCF_Tab_OnClick")
 
     Prat.RegisterChatEvent(self, Prat.Events.FRAMES_UPDATED)
+  end
+
+
+
+  function mod:ChatFrame_OpenChat(text, chatFrame)
+    if not self.db.profile.useAltKey then
+      local frame = ChatEdit_ChooseBoxForSend(chatFrame)
+
+      frame.history_index = 0
+    end
   end
 
   function mod:FCF_Tab_OnClick(frame, button)
@@ -797,7 +810,7 @@ end
     else
       frame:SetAlpha(1)
     end
-	frame:EnableMouse(true)
+    frame:EnableMouse(true)
   end
 
   function mod:ChatEdit_DeactivateChat(frame)
@@ -815,8 +828,12 @@ end
         tile = true,
         tileSize = self.db.profile.tileSize,
         edgeSize = self.db.profile.edgeSize,
-        insets = { left = self.db.profile.inset, right = self.db.profile.inset, top = self.db.profile.inset,
-          bottom = self.db.profile.inset }
+        insets = {
+          left = self.db.profile.inset,
+          right = self.db.profile.inset,
+          top = self.db.profile.inset,
+          bottom = self.db.profile.inset
+        }
       })
       local c = self.db.profile.backgroundColor
       frame:SetBackdropColor(c.r, c.g, c.b, c.a)
@@ -836,8 +853,8 @@ end
         if chan == 0 then
           local c = self.db.profile.borderColor
           frame:SetBackdropBorderColor(c.r, c.g, c.b, c.a)
-        elseif chan and ChatTypeInfo["CHAT_MSG_CHANNEL" .. chan] then
-          local r, g, b = GetMessageTypeColor("CHAT_MSG_CHANNEL" .. chan)
+        elseif chan and ChatTypeInfo["CHANNEL" .. chan] then
+          local r, g, b = GetMessageTypeColor("CHANNEL" .. chan)
           frame:SetBackdropBorderColor(r, g, b, 1)
         end
       else

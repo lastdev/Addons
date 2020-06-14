@@ -27,10 +27,10 @@ end
 local function XPerl_RaidPets_OnEvent(self, event, unit, ...)
 	local func = XPerl_RaidPets_Events[event]
 	if (func) then
-		if (strfind(event, "^UNIT_") and event ~= "UNIT_ENTERED_VEHICLE") then
+		if (strfind(event, "^UNIT_") and event ~= "UNIT_ENTERED_VEHICLE") or strfind(event, "^INCOMING_") then
 			local f = RaidPetFrameArray[unit]
 			if (f) then
-				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" or event == "INCOMING_RESURRECT_CHANGED" then
 					func(f, unit, ...)
 				else
 					func(f, ...)
@@ -223,6 +223,7 @@ local function XPerl_RaidPets_UpdateHealth(self)
 
 	XPerl_RaidPets_UpdateAbsorbPrediction(self)
 	XPerl_RaidPets_UpdateHealPrediction(self)
+	XPerl_RaidPets_UpdateResurrectionStatus(self)
 end
 
 -- XPerl_RaidPets_UpdateAbsorbPrediction
@@ -240,6 +241,14 @@ function XPerl_RaidPets_UpdateHealPrediction(self)
 		XPerl_SetExpectedHealth(self)
 	else
 		self.expectedHealth:Hide()
+	end
+end
+
+function XPerl_RaidPets_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		self.resurrect:Show()
+	else
+		self.resurrect:Hide()
 	end
 end
 
@@ -301,6 +310,12 @@ end
 function XPerl_RaidPets_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 	if (raidconf.absorbs and unit == self.partyid) then
 		XPerl_SetExpectedAbsorbs(self)
+	end
+end
+
+function XPerl_RaidPets_Events:INCOMING_RESURRECT_CHANGED(unit)
+	if unit == self.partyid then
+		XPerl_RaidPets_UpdateResurrectionStatus(self)
 	end
 end
 
@@ -647,6 +662,11 @@ end
 
 -- XPerl_RaidPets_OptionActions
 function XPerl_RaidPets_OptionActions()
+	if (InCombatLockdown()) then
+		XPerl_OutOfCombatQueue[XPerl_RaidPets_OptionActions] = true
+		return
+	end
+
 	SetMainHeaderAttributes(XPerl_Raid_GrpPets)
 
 	local events = {
@@ -660,6 +680,7 @@ function XPerl_RaidPets_OptionActions()
 		"UNIT_EXITED_VEHICLE",
 		"PET_BATTLE_OPENING_START",
 		"PET_BATTLE_CLOSE",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
 	for i, event in pairs(events) do
@@ -674,19 +695,12 @@ function XPerl_RaidPets_OptionActions()
 		end
 	end
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (raidconf.healprediction) then
-			XPerl_RaidPets_Frame:RegisterEvent("UNIT_HEAL_PREDICTION")
-		else
-			XPerl_RaidPets_Frame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, raidconf, function(guid)
+		local frame = XPerl_Raid_Pet_GetUnitFrameByGUID(guid)
+		if frame then
+			return frame.partyid
 		end
-
-		if (raidconf.absorbs) then
-			XPerl_RaidPets_Frame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		else
-			XPerl_RaidPets_Frame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
+	end)
 
 	XPerl_RaidPets_Titles()
 	XPerl_Raid_TitlePets:SetScale((conf.raid and conf.raid.scale) or 0.8)

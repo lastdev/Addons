@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(549, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143517")
+mod:SetRevision("20200524145746")
 
 mod:SetCreatureID(20885)
 mod:SetEncounterID(1913)
@@ -19,7 +19,7 @@ local warnGift			= mod:NewTargetNoFilterAnnounce(39009, 3)
 local specwarnWhirlwind	= mod:NewSpecialWarningRun(36175, "Melee", nil, nil, 4, 6)
 local specwarnHeal		= mod:NewSpecialWarningInterrupt(39013, "HasInterrupt", nil, 2, 1, 2)
 
-local timerGift			= mod:NewTargetTimer(10, 39009, nil, nil, 3, 5, nil, DBM_CORE_HEALER_ICON)
+local timerGift			= mod:NewTargetTimer(10, 39009, nil, nil, 3, 5, nil, DBM_CORE_L.HEALER_ICON)
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(39013, 36144) and self:CheckInterruptFilter(args.sourceGUID, false, true) then

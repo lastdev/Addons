@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(615, "DBM-Party-WotLK", 14, 280)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220142801")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(36497)
 mod:SetEncounterID(829, 830, 2006)
 mod:SetModelID(30226)
@@ -39,7 +39,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 68839 then							-- Corrupt Soul
 		if args:IsPlayer() then
-			specwarnCorruptedSoul:Show(DBM_CORE_ROOM_EDGE)
+			specwarnCorruptedSoul:Show(DBM_CORE_L.ROOM_EDGE)
 			specwarnCorruptedSoul:Play("runtoedge")
 		else
 			warnCorruptSoul:Show(args.destName)

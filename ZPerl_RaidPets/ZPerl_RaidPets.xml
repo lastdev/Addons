@@ -115,6 +115,20 @@
 				</Scripts>
 			</StatusBar>
 			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate" setAllPoints="true"/>
+			<Frame name="$parentresurrect" setAllPoints="true" frameStrata="HIGH" hidden="true">
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\RaidFrame\Raid-Icon-Rez">
+							<Size>
+								<AbsDimension x="26" y="26"/>
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER" />
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
 		</Frames>
 	</Button>
 	<Frame name="XPerl_Raid_TitlePets" parent="UIParent" inherits="XPerl_Raid_TitleDragTemplate" id="99">

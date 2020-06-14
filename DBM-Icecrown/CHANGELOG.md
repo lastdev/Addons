@@ -1,8 +1,7 @@
 # <DBM> Icecrown Citadel
 
-## [r292](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r292) (2020-02-22)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r291...r292)
+## [r293](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r293) (2020-05-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r292...r293)
 
-- Fixed lua error on Onyxia from bad copy paste  
-    A ton of white space cleanup  
-- Update Luacheck  
+- Fix luacheck  
+- Update to be compatible with DBM-Core Locales restructure  

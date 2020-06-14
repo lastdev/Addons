@@ -26,16 +26,13 @@ L["CHANGES_REQUIRES_UI_RELOAD"] = [=[Vos changements ont été sauvegardé, mais
 
 Voulez-vous faire cela maintenant ?]=]
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Hebdomadaire"
---[[Translation missing --]]
---[[ L["CHOOSE_HEADLINE_HEADER"] = ""--]] 
+L["CHOOSE_HEADLINE_HEADER"] = "Titre de l'infobulle Mythique+"
 L["CONFIG_SHOW_TOOLTIPS_HEADER"] = "Info-bulles de Mythique+ et de Raiding "
---[[Translation missing --]]
---[[ L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = ""--]] 
+L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Où afficher la progression Mythique+ et de Raid"
 L["CONFIRM"] = "Confirmer"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copier le profil Raider.IO"
 L["COPY_RAIDERIO_URL"] = "Copier l'url Raider.IO"
---[[Translation missing --]]
---[[ L["CURRENT_MAINS_SCORE"] = ""--]] 
+L["CURRENT_MAINS_SCORE"] = "Score M+ du personnage principal"
 L["CURRENT_SCORE"] = "Score Actuel M+"
 L["DISABLE_DEBUG_MODE_RELOAD"] = [=[
 Vous désactivez le mode de débogage.
@@ -67,10 +64,8 @@ L["DUNGEON_SHORT_NAME_UNDR"] = "UNDR"
 L["DUNGEON_SHORT_NAME_UPPR"] = "UPPR"
 L["DUNGEON_SHORT_NAME_VOTW"] = "VOTW"
 L["DUNGEON_SHORT_NAME_WM"] = "WM"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_WORK"] = "WORK"
+L["DUNGEON_SHORT_NAME_YARD"] = "YARD"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positionner le cadre de profil RaiderIO automatiquement "
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Activer cette option gardera l'info-bulle de profil M+ à côté du cadre de recherche de donjon ou de l'info-bulle du joueur. "
 L["ENABLE_DEBUG_MODE_RELOAD"] = [=[Vous activez le mode de débogage. Ceci est destiné uniquement à des fins de test et de développement, et entraînera une utilisation supplémentaire de la mémoire.
@@ -85,8 +80,7 @@ L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Activer cette option vous perme
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "Utiliser des couleurs simples pour le score"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Utiliser les couleurs de raretés (rare, épique, etc ...) pour les scores. Cela peut aider pour distinguer les tiers de score."
 L["EXPORTJSON_COPY_TEXT"] = "Copiez le texte suivant et collez-le n'importe où sur | cff00C8FFhttps://raider.io|r pour rechercher tous les joueurs. "
---[[Translation missing --]]
---[[ L["GENERAL_TOOLTIP_OPTIONS"] = ""--]] 
+L["GENERAL_TOOLTIP_OPTIONS"] = "Options générales de l'infobulle"
 L["GUILD_BEST_SEASON"] = "Guilde: Top Saison"
 L["GUILD_BEST_TITLE"] = "Record Raider.IO"
 L["GUILD_BEST_WEEKLY"] = "Guilde : Top Semaine"
@@ -99,12 +93,10 @@ L["INVERSE_PROFILE_MODIFIER_DESC"] = "Activer cette option va inverser le compor
 L["KEYSTONE_COMPLETED_10"] = "+10-14 (CM)"
 L["KEYSTONE_COMPLETED_15"] = "+15 (MM)"
 L["KEYSTONE_COMPLETED_5"] = "+5-9 (CM)"
---[[Translation missing --]]
---[[ L["LEGION_MAIN_SCORE"] = ""--]] 
+L["LEGION_MAIN_SCORE"] = "Score principal à Legion"
 L["LEGION_SCORE"] = "Score Legion"
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: Verrouiller le cadre de profil M+. "
---[[Translation missing --]]
---[[ L["MAINS_BEST_SCORE_BEST_SEASON"] = ""--]] 
+L["MAINS_BEST_SCORE_BEST_SEASON"] = "Meilleur score M+ du personnage principal (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progression du personnage principal "
 L["MAINS_SCORE"] = "Score du personnage principal"
 L["MAINS_SCORE_COLON"] = "Score du personnage principal :"
@@ -121,6 +113,18 @@ L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r a des données de dates différent
 L["OUTDATED_DATABASE"] = "Dernière mise à jour des scores il y a %d jours"
 L["OUTDATED_DATABASE_HOURS"] = "Dernière mise à jour des scores il y a %d heures"
 L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r utilise de la data qui est vieux de |cffFF6666%d|r jours. Merci de mettre à jour l'addon pour avoir des scores plus justes."
+--[[Translation missing --]]
+--[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_ALERT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_DAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
 L["PLAYER_PROFILE_TITLE"] = "Profil Mythic+ du joueur"
 L["PREV_SEASON_SUFFIX"] = "(*)"
 L["PREVIOUS_SCORE"] = "Score M+ Précédent (%s)"
@@ -155,30 +159,18 @@ L["RAID_BOSS_EP_5"] = "Orgozoa"
 L["RAID_BOSS_EP_6"] = "Cour de la reine"
 L["RAID_BOSS_EP_7"] = "Za'qul"
 L["RAID_BOSS_EP_8"] = "Reine Azshara"
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_12"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_9"] = ""--]] 
+L["RAID_BOSS_NYA_1"] = "Wrathion"
+L["RAID_BOSS_NYA_10"] = "Ra-den"
+L["RAID_BOSS_NYA_11"] = "Carapace"
+L["RAID_BOSS_NYA_12"] = "N'Zoth"
+L["RAID_BOSS_NYA_2"] = "Maut"
+L["RAID_BOSS_NYA_3"] = "Skitra"
+L["RAID_BOSS_NYA_4"] = "Xanesh"
+L["RAID_BOSS_NYA_5"] = "Hivemind"
+L["RAID_BOSS_NYA_6"] = "Shad'har"
+L["RAID_BOSS_NYA_7"] = "Drest'agath"
+L["RAID_BOSS_NYA_8"] = "Il'gynoth"
+L["RAID_BOSS_NYA_9"] = "Vexiona"
 L["RAID_BOSS_ULD_1"] = "Taloc"
 L["RAID_BOSS_ULD_2"] = "DAME"
 L["RAID_BOSS_ULD_3"] = "Dévoreur Fétide"
@@ -196,34 +188,27 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Rencontres de Raid vaincues"
 L["RAID_PROGRESS_TITLE"] = "Progression de Raid"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Moy. de score Raider.IO sur des +%s"
---[[Translation missing --]]
---[[ L["RAIDERIO_BEST_RUN"] = ""--]] 
+L["RAIDERIO_BEST_RUN"] = "Meilleur donjon M+ Raider.IO"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Modification avec le Client RaiderIO"
 L["RAIDERIO_MP_BASE_SCORE"] = "Score MM+ Raider.IO de base "
 L["RAIDERIO_MP_BEST_SCORE"] = "Score M+ Raider.IO (%s)"
 L["RAIDERIO_MP_SCORE"] = "Score Raider.IO M+"
 L["RAIDERIO_MP_SCORE_COLON"] = "Score Raider.IO M+ :"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Options de l'addon Raider.IO"
---[[Translation missing --]]
---[[ L["RAIDING_DATA_HEADER"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAIDING_DB_MODULES"] = ""--]] 
+L["RAIDING_DATA_HEADER"] = "Progression de Raid Raider.io"
+L["RAIDING_DB_MODULES"] = "Base de données du module de Raid"
 L["RELOAD_LATER"] = "Je rechargerai l'interface plus tard"
 L["RELOAD_NOW"] = "Recharger l'interface maintenant"
 L["SEASON_LABEL_1"] = "S1"
 L["SEASON_LABEL_2"] = "S2"
---[[Translation missing --]]
---[[ L["SEASON_LABEL_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["SEASON_LABEL_4"] = ""--]] 
+L["SEASON_LABEL_3"] = "S3"
+L["SEASON_LABEL_4"] = "S4"
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO"] = "Afficher le score moyen des joueurs pour une clé dans les temps"
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC"] = "Afficher la moyenne des scores Raider.IO des joueurs ayant fini une clé dans les temps. Cela est visible sur l'infobulle de la clé ainsi que des joueurs dans la recherche de groupe."
 L["SHOW_BEST_MAINS_SCORE"] = "Afficher le score Mythique+ de la meilleure saison du personnage principal"
 L["SHOW_BEST_MAINS_SCORE_DESC"] = "Affiche le score Mythique+ de la meilleure saison du personnage principal d'un joueur et la progression du raid sur l'info-bulle. Les joueurs doivent s'être inscrits sur Raider.IO et avoir déclaré un personnage principal."
---[[Translation missing --]]
---[[ L["SHOW_BEST_RUN"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_BEST_RUN_DESC"] = ""--]] 
+L["SHOW_BEST_RUN"] = "Afficher le meilleur Mythique+ comme titre"
+L["SHOW_BEST_RUN_DESC"] = "Afficher le meilleur Donjon M+ du joueur de la saison actuelle comme titre dans l'infobulle."
 L["SHOW_BEST_SEASON"] = [=[
 Afficher le meilleur score mythique+ de la saison en titre]=]
 L["SHOW_BEST_SEASON_DESC"] = [=[
@@ -250,14 +235,10 @@ L["SHOW_ON_GUILD_ROSTER"] = "Afficher dans l'onglet guilde"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Afficher le score Mythique+ lorsqu'on survole un joueur dans la liste des membres de la guilde."
 L["SHOW_ON_PLAYER_UNITS"] = "Afficher sur les cadres d'unité"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Afficher le score Mythique+ lorsqu'on survole le cadre d'un joueur. "
---[[Translation missing --]]
---[[ L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_RAIDERIO_BESTRUN_FIRST"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = ""--]] 
+L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Afficher la progression de Raid dans l'infobulle du joueur"
+L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Si activé, affiche la progression de Raid du joueur dans l'infobulle Raider.IO"
+L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Expérimental) Prioriser l'affichage Raider.IO du meilleur donjon"
+L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Ceci est une fonctionnalité expérimentale. Au lieu d'afficher le score Raider.IO comme première ligne, affiche le meilleur donjon du joueur."
 L["SHOW_RAIDERIO_PROFILE"] = "Afficher le Profil Raider.IO dans la recherche de donjon"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Afficher le Profil Raider.IO en Info-Bulle dans la recherche de donjon"
 L["SHOW_ROLE_ICONS"] = "Afficher les icônes de rôles dans les info-bulles"
@@ -273,8 +254,7 @@ L["TIMED_5_RUNS"] = "5-9+ dans les temps"
 L["TOOLTIP_CUSTOMIZATION"] = "Modification de l'info-bulle"
 L["TOOLTIP_PROFILE"] = "Modification du Profil"
 L["TOTAL_MP_SCORE"] = "Score Mythique+"
---[[Translation missing --]]
---[[ L["TOTAL_RUNS"] = ""--]] 
+L["TOTAL_RUNS"] = "Total de courses à BFA"
 L["UNKNOWN_SCORE"] = "Inconnu"
 L["UNKNOWN_SERVER_FOUND"] = "|cffFFFFFF%s|r a rencontré une erreur. S'il vous plait, écrivez ces informations |cffFF9999{|r |cffFFFFFF%s|r |cffFF9999,|r |cffFFFFFF%s|r |cffFF9999}|r et reporter le aux développers. Merci !"
 L["UNLOCKING_PROFILE_FRAME"] = "RaiderIO: Déverrouiller le cadre de profil M+."

@@ -81,8 +81,8 @@ L = {
 L = {
 	["ChannelColorMemory"] = {
 		["(%w+)%s?(.*)"] = true,
-		["ChannelColorMemory"] = true,
-		["Remembers the colors of each channel name."] = "Speichert die Farbe jedes Kanalnamens.",
+		["ChannelColorMemory"] = "Kanalfarbspeicher",
+		["Remembers the colors of each channel name."] = "Erinnert sich an die Farben jedes Kanalnamens.",
 	}
 }
 
@@ -295,7 +295,7 @@ L = {
   end
 
   function module:CHAT_MSG_CHANNEL_NOTICE(evt, NoticeType, Sender, Language, LongName, Target, Flags, ServChanID,
-    number, cname, unknown, counter)
+  number, cname, unknown, counter)
     if tonumber(ServChanID) > 0 then
       cname = self.zoneChanIdx[tostring(ServChanID)]
 

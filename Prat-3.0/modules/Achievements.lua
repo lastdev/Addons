@@ -25,78 +25,74 @@
 -------------------------------------------------------------------------------
 
 Prat:AddModuleToLoad(function()
-    local function dbg(...) end
+  local function dbg(...) end
 
-    --[===[@debug@
-    function dbg(...) Prat:PrintLiteral(...) end
+  --[===[@debug@
+  function dbg(...) Prat:PrintLiteral(...) end
 
-    --@end-debug@]===]
+  --@end-debug@]===]
 
-    local PRAT_MODULE = Prat:RequestModuleName("Achievements")
+  local PRAT_MODULE = Prat:RequestModuleName("Achievements")
 
-    if PRAT_MODULE == nil then
-        return
-    end
+  if PRAT_MODULE == nil then
+    return
+  end
 
-    local module = Prat:NewModule(PRAT_MODULE)
+  local module = Prat:NewModule(PRAT_MODULE)
 
-    -- define localized strings
-    local PL = module.PL
+  -- define localized strings
+  local PL = module.PL
 
-    --[===[@debug@
-    PL:AddLocale(PRAT_MODULE, "enUS", {
-        ["module_name"] = "Achievements",
-        ["module_desc"] = "Achievment related customizations",
-        ["grats_link"]  = "say grats",
-        ["completed"] = "Completed %s",
-        ["showCompletedDate_name"] = "Show completed date",
-        ["showCompletedDate_desc"] = "Show the date you completed the acheievment next to the link",
-        ["showGratsLink_name"] = "Show grats link",
-        ["showGratsLink_desc"] = "Show a clickable link which sends a grats message",
-        ["dontShowAchievements_name"] = "Don't show achievements",
-        ["dontShowAchievements_desc"] = "Hide all achievement messages",
+  --[===[@debug@
+  PL:AddLocale(PRAT_MODULE, "enUS", {
+    ["module_name"] = "Achievements",
+    ["module_desc"] = "Achievment related customizations",
+    ["grats_link"] = "say grats",
+    ["completed"] = "Completed %s",
+    ["showCompletedDate_name"] = "Show completed date",
+    ["showCompletedDate_desc"] = "Show the date you completed the acheievment next to the link",
+    ["showGratsLink_name"] = "Show grats link",
+    ["showGratsLink_desc"] = "Show a clickable link which sends a grats message",
+    ["dontShowAchievements_name"] = "Don't show achievements",
+    ["dontShowAchievements_desc"] = "Hide all achievement messages",
+    ["customGrats_defualt"] = "Grats %s",
+    ["customGrats_name"] = "Use Custom Grats Message",
+    ["customGrats_desc"] = "Use a custom grats message instead of a random one",
+    ["customGratsText_name"] = "Grats Message",
+    ["customGratsText_desc"] = "Custom grats message. Type any text you wish for your grats message, if you want to include the player's name use '%s' as a placeholder",
+    ["grats_have_1"] = "Grats %s",
+    ["grats_have_2"] = "Gz %s, I have that one too",
+    ["grats_have_3"] = "Wow %s that's great",
+    ["grats_have_4"] = "Welcome to the club %s",
+    ["grats_have_5"] = "I can still rememeber getting that one %s",
+    ["grats_have_6"] = "That one is a rite of passge %s",
+    ["grats_have_7"] = "I worked on that for ages %s, grats!",
+    ["grats_have_8"] = "I remember doing that, %s, grats!",
+    ["grats_have_9"] = "Nicely done %s",
+    ["grats_have_10"] = "Good work %s, now we both have it",
+    ["grats_donthave_1"] = "Grats %s",
+    ["grats_donthave_2"] = "Gz %s, I still need that",
+    ["grats_donthave_3"] = "I want that one %s, grats!",
+    ["grats_donthave_4"] = "Wow %s that's great",
+    ["grats_donthave_5"] = "I'm jealous %s, grats!",
+    ["grats_donthave_6"] = "I have been working on that for ages %s",
+    ["grats_donthave_7"] = "Still need that one %s, grats!",
+    ["grats_donthave_8"] = "WTB your achievment %s",
+    ["grats_donthave_9"] = "Looking forward to that one myself %s, good job!",
+    ["grats_donthave_10"] = "I can't wait to get that one %s",
+  })
+  --@end-debug@]===]
 
-        ["customGrats_defualt"] = "Grats %s",
-
-        ["customGrats_name"] = "Use Custom Grats Message",
-        ["customGrats_desc"] = "Use a custom grats message instead of a random one",
-        ["customGratsText_name"] = "Grats Message",
-        ["customGratsText_desc"] = "Custom grats message. Type any text you wish for your grats message, if you want to include the player's name use '%s' as a placeholder",
-
-        ["grats_have_1"] = "Grats %s",
-        ["grats_have_2"] = "Gz %s, I have that one too",
-        ["grats_have_3"] = "Wow %s that's great",
-        ["grats_have_4"] = "Welcome to the club %s",
-        ["grats_have_5"] = "I can still rememeber getting that one %s",
-        ["grats_have_6"] = "That one is a rite of passge %s",
-        ["grats_have_7"] = "I worked on that for ages %s, grats!",
-        ["grats_have_8"] = "I remember doing that, %s, grats!",
-        ["grats_have_9"] = "Nicely done %s",
-        ["grats_have_10"] = "Good work %s, now we both have it",
-
-        ["grats_donthave_1"] = "Grats %s",
-        ["grats_donthave_2"] = "Gz %s, I still need that",
-        ["grats_donthave_3"] = "I want that one %s, grats!",
-        ["grats_donthave_4"] = "Wow %s that's great",
-        ["grats_donthave_5"] = "I'm jealous %s, grats!",
-        ["grats_donthave_6"] = "I have been working on that for ages %s",
-        ["grats_donthave_7"] = "Still need that one %s, grats!",
-        ["grats_donthave_8"] = "WTB your achievment %s",
-        ["grats_donthave_9"] = "Looking forward to that one myself %s, good job!",
-        ["grats_donthave_10"] = "I can't wait to get that one %s",
-    } )
-    --@end-debug@]===]
-
-    -- These Localizations are auto-generated. To help with localization
-    -- please go to http://www.wowace.com/projects/prat-3-0/localization/
+  -- These Localizations are auto-generated. To help with localization
+  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
 
 
-    --@non-debug@
-  do
-      local L
+  --@non-debug@
+do
+    local L
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		["completed"] = "Completed %s",
 		["customGrats_defualt"] = "Grats %s",
@@ -136,11 +132,11 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "enUS", L)
+PL:AddLocale(PRAT_MODULE, "enUS", L)
 
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		--[[Translation missing --]]
 		["completed"] = "Completed %s",
@@ -215,11 +211,11 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "itIT", L)
+PL:AddLocale(PRAT_MODULE, "itIT", L)
 
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		--[[Translation missing --]]
 		["completed"] = "Completed %s",
@@ -289,11 +285,11 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "ptBR", L)
+PL:AddLocale(PRAT_MODULE, "ptBR", L)
 
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		--[[Translation missing --]]
 		["completed"] = "Completed %s",
@@ -340,11 +336,11 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "frFR", L)
+PL:AddLocale(PRAT_MODULE, "frFR", L)
 
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		["completed"] = "Abgeschlossen %s",
 		["customGrats_defualt"] = "Grats %s",
@@ -384,11 +380,57 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "deDE", L)
+PL:AddLocale(PRAT_MODULE, "deDE", L)
 
 
-  
-  L = {
+
+L = {
+	["Achievements"] = {
+		["completed"] = "%s 완료",
+		["customGrats_defualt"] = "%s님 축하!",
+		["customGrats_desc"] = "임의의 메시지 대신 사용자 정의 축하 메시지를 사용하십시오.",
+		["customGrats_name"] = "사용자 정의 축하 메세지 사용",
+		["customGratsText_desc"] = "사용자 정의 축하 메시지. 플레이어의 이름을 포함하려면 '%s' 변수를 사용하고 축하 메시지에 원하는 텍스트를 입력하십시오.",
+		["customGratsText_name"] = "축하 메세지",
+		["dontShowAchievements_desc"] = "모든 업적 메세지 숨기기",
+		["dontShowAchievements_name"] = "업적 보이지 않기",
+		["grats_donthave_1"] = "%s님 축하해요.",
+		["grats_donthave_10"] = "난 하나뿐인 %s님을 얻기 위해 기다릴 수 없어요.",
+		["grats_donthave_2"] = "%s님 축하, 난 아직도 그게 필요해요.",
+		["grats_donthave_3"] = "나는 %s님을 원해요, 축하!",
+		["grats_donthave_4"] = "와우 %s님 대단하심.",
+		["grats_donthave_5"] = "난 %s님이 질투나, 추카!",
+		["grats_donthave_6"] = "나는 %s님을 위해 그 작업을 해왔어요.",
+		["grats_donthave_7"] = "아직 %s님이 필요함. 축하!",
+		["grats_donthave_8"] = "%s님 업적을 사고싶어요.",
+		["grats_donthave_9"] = "나도 %s님을 기대하고 있어요. 잘했어요!",
+		["grats_have_1"] = "%s님 축하해요.",
+		["grats_have_10"] = "%s님 잘했어요. 이제 우리 둘 다 갖고 있네요.",
+		["grats_have_2"] = "%s님 축하! 나도 마찬가지죠.",
+		["grats_have_3"] = "와우 %s님 대단하심.",
+		["grats_have_4"] = "%s님 클럽에 오신 것을 환영합니다.",
+		["grats_have_5"] = "나는 여전히 %s님께 받은 것을 기억할 수 있어요.",
+		--[[Translation missing --]]
+		["grats_have_6"] = "That one is a rite of passge %s",
+		--[[Translation missing --]]
+		["grats_have_7"] = "I worked on that for ages %s, grats!",
+		--[[Translation missing --]]
+		["grats_have_8"] = "I remember doing that, %s, grats!",
+		["grats_have_9"] = "%s님 잘하셨어요.",
+		["grats_link"] = "축하한다고 말함",
+		["module_desc"] = "업적 관련 사용자 설정",
+		["module_name"] = "업적",
+		["showCompletedDate_desc"] = "링크 옆에 업적을 완료 한 날짜 표시",
+		["showCompletedDate_name"] = "완료 날짜 표시",
+		["showGratsLink_desc"] = "환영 메시지를 보내는 클릭 가능한 링크 표시",
+		["showGratsLink_name"] = "환영 링크 표시",
+	}
+}
+
+PL:AddLocale(PRAT_MODULE, "koKR",  L)
+
+
+L = {
 	["Achievements"] = {
 		--[[Translation missing --]]
 		["completed"] = "Completed %s",
@@ -463,88 +505,10 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "koKR",  L)
+PL:AddLocale(PRAT_MODULE, "esMX",  L)
 
-  
-  L = {
-	["Achievements"] = {
-		--[[Translation missing --]]
-		["completed"] = "Completed %s",
-		--[[Translation missing --]]
-		["customGrats_defualt"] = "Grats %s",
-		--[[Translation missing --]]
-		["customGrats_desc"] = "Use a custom grats message instead of a random one",
-		--[[Translation missing --]]
-		["customGrats_name"] = "Use Custom Grats Message",
-		--[[Translation missing --]]
-		["customGratsText_desc"] = "Custom grats message. Type any text you wish for your grats message, if you want to include the player's name use '%s' as a placeholder",
-		--[[Translation missing --]]
-		["customGratsText_name"] = "Grats Message",
-		--[[Translation missing --]]
-		["dontShowAchievements_desc"] = "Hide all achievement messages",
-		--[[Translation missing --]]
-		["dontShowAchievements_name"] = "Don't show achievements",
-		--[[Translation missing --]]
-		["grats_donthave_1"] = "Grats %s",
-		--[[Translation missing --]]
-		["grats_donthave_10"] = "I can't wait to get that one %s",
-		--[[Translation missing --]]
-		["grats_donthave_2"] = "Gz %s, I still need that",
-		--[[Translation missing --]]
-		["grats_donthave_3"] = "I want that one %s, grats!",
-		--[[Translation missing --]]
-		["grats_donthave_4"] = "Wow %s that's great",
-		--[[Translation missing --]]
-		["grats_donthave_5"] = "I'm jealous %s, grats!",
-		--[[Translation missing --]]
-		["grats_donthave_6"] = "I have been working on that for ages %s",
-		--[[Translation missing --]]
-		["grats_donthave_7"] = "Still need that one %s, grats!",
-		--[[Translation missing --]]
-		["grats_donthave_8"] = "WTB your achievment %s",
-		--[[Translation missing --]]
-		["grats_donthave_9"] = "Looking forward to that one myself %s, good job!",
-		--[[Translation missing --]]
-		["grats_have_1"] = "Grats %s",
-		--[[Translation missing --]]
-		["grats_have_10"] = "Good work %s, now we both have it",
-		--[[Translation missing --]]
-		["grats_have_2"] = "Gz %s, I have that one too",
-		--[[Translation missing --]]
-		["grats_have_3"] = "Wow %s that's great",
-		--[[Translation missing --]]
-		["grats_have_4"] = "Welcome to the club %s",
-		--[[Translation missing --]]
-		["grats_have_5"] = "I can still rememeber getting that one %s",
-		--[[Translation missing --]]
-		["grats_have_6"] = "That one is a rite of passge %s",
-		--[[Translation missing --]]
-		["grats_have_7"] = "I worked on that for ages %s, grats!",
-		--[[Translation missing --]]
-		["grats_have_8"] = "I remember doing that, %s, grats!",
-		--[[Translation missing --]]
-		["grats_have_9"] = "Nicely done %s",
-		--[[Translation missing --]]
-		["grats_link"] = "say grats",
-		--[[Translation missing --]]
-		["module_desc"] = "Achievment related customizations",
-		--[[Translation missing --]]
-		["module_name"] = "Achievements",
-		--[[Translation missing --]]
-		["showCompletedDate_desc"] = "Show the date you completed the acheievment next to the link",
-		--[[Translation missing --]]
-		["showCompletedDate_name"] = "Show completed date",
-		--[[Translation missing --]]
-		["showGratsLink_desc"] = "Show a clickable link which sends a grats message",
-		--[[Translation missing --]]
-		["showGratsLink_name"] = "Show grats link",
-	}
-}
 
-  PL:AddLocale(PRAT_MODULE, "esMX",  L)
-
-  
-  L = {
+L = {
 	["Achievements"] = {
 		["completed"] = "сделано",
 		["customGrats_defualt"] = "Поздравляю %s ",
@@ -584,10 +548,10 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "ruRU",  L)
+PL:AddLocale(PRAT_MODULE, "ruRU",  L)
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		["completed"] = "已完成 %s",
 		["customGrats_defualt"] = "恭喜 %s",
@@ -627,10 +591,10 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "zhCN",  L)
+PL:AddLocale(PRAT_MODULE, "zhCN",  L)
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		["completed"] = "Completado %s",
 		["customGrats_defualt"] = "Felicidades %s",
@@ -689,10 +653,10 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "esES",  L)
+PL:AddLocale(PRAT_MODULE, "esES",  L)
 
-  
-  L = {
+
+L = {
 	["Achievements"] = {
 		--[[Translation missing --]]
 		["completed"] = "Completed %s",
@@ -767,203 +731,200 @@ Prat:AddModuleToLoad(function()
 	}
 }
 
-  PL:AddLocale(PRAT_MODULE, "zhTW",  L)
+PL:AddLocale(PRAT_MODULE, "zhTW",  L)
+end
+--@end-non-debug@
+
+
+  local repeatPrevention = {}
+
+
+  Prat:SetModuleDefaults(module.name, {
+    profile = {
+      on = true,
+      dontShowAchievements = false,
+      showCompletedDate = true,
+      showGratsLink = false,
+      customGrats = true,
+      customGratsText = PL.customGrats_defualt
+    }
+  })
+
+  Prat:SetModuleOptions(module.name, {
+    name = PL.module_name,
+    desc = PL.module_desc,
+    type = "group",
+    args = {
+      dontShowAchievements = {
+        name = PL.dontShowAchievements_name,
+        desc = PL.dontShowAchievements_desc,
+        type = "toggle",
+        order = 90
+      },
+      showCompletedDate = {
+        name = PL.showCompletedDate_name,
+        desc = PL.showCompletedDate_desc,
+        type = "toggle",
+        order = 100
+      },
+      showGratsLink = {
+        name = PL.showGratsLink_name,
+        desc = PL.showGratsLink_desc,
+        type = "toggle",
+        order = 110
+      },
+      customGrats = {
+        name = PL.customGrats_name,
+        desc = PL.customGrats_desc,
+        type = "toggle",
+        order = 120
+      },
+      customGratsText = {
+        name = PL.customGratsText_name,
+        desc = PL.customGratsText_desc,
+        type = "input",
+        order = 130,
+        disabled = function() return not module.db.profile.customGrats end
+      }
+    }
+  })
+
+
+  local gratsVariantsHave = {
+    PL.grats_have_1,
+    PL.grats_have_2,
+    PL.grats_have_3,
+    PL.grats_have_4,
+    PL.grats_have_5,
+    PL.grats_have_6,
+    PL.grats_have_7,
+    PL.grats_have_8,
+    PL.grats_have_9,
+    PL.grats_have_10,
+  }
+  local gratsVariantsDontHave = {
+    PL.grats_donthave_1,
+    PL.grats_donthave_2,
+    PL.grats_donthave_3,
+    PL.grats_donthave_4,
+    PL.grats_donthave_5,
+    PL.grats_donthave_6,
+    PL.grats_donthave_7,
+    PL.grats_donthave_8,
+    PL.grats_donthave_9,
+    PL.grats_donthave_10,
+  }
+
+  local function white(text)
+    return Prat.CLR:Colorize("ffffff", text)
   end
-  --@end-non-debug@
 
+  local regexp = "(|cffffff00|Hachievement:([0-9]+):(.+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+)|h%[([^]]+)%]|h|r)"
+  local gratsLinkType = "gratsl"
 
-    local repeatPrevention = {}
-
-
-    Prat:SetModuleDefaults(module.name, {
-        profile = {
-            on = true,
-            dontShowAchievements = false,
-            showCompletedDate = true,
-            showGratsLink = false,
-            customGrats = true,
-            customGratsText = PL.customGrats_defualt
-        }
-    })
-
-    Prat:SetModuleOptions(module.name, {
-        name = PL.module_name,
-        desc = PL.module_desc,
-        type = "group",
-        args = {
-            dontShowAchievements = {
-                name = PL.dontShowAchievements_name,
-                desc = PL.dontShowAchievements_desc,
-                type = "toggle",
-                order = 90
-            },
-            showCompletedDate = {
-                name = PL.showCompletedDate_name,
-                desc = PL.showCompletedDate_desc,
-                type = "toggle",
-                order = 100
-            },
-            showGratsLink = {
-                name = PL.showGratsLink_name,
-                desc = PL.showGratsLink_desc,
-                type = "toggle",
-                order = 110
-            },
-            customGrats = {
-                name = PL.customGrats_name,
-                desc = PL.customGrats_desc,
-                type = "toggle",
-                order = 120
-            },
-            customGratsText = {
-                name = PL.customGratsText_name,
-                desc = PL.customGratsText_desc,
-                type = "input",
-                order = 130,
-                disabled = function() return not module.db.profile.customGrats end
-            }
-        }
-    })
-
-
-    local gratsVariantsHave = {
-        PL.grats_have_1,
-        PL.grats_have_2,
-        PL.grats_have_3,
-        PL.grats_have_4,
-        PL.grats_have_5,
-        PL.grats_have_6,
-        PL.grats_have_7,
-        PL.grats_have_8,
-        PL.grats_have_9,
-        PL.grats_have_10,
-    }
-    local gratsVariantsDontHave = {
-        PL.grats_donthave_1,
-        PL.grats_donthave_2,
-        PL.grats_donthave_3,
-        PL.grats_donthave_4,
-        PL.grats_donthave_5,
-        PL.grats_donthave_6,
-        PL.grats_donthave_7,
-        PL.grats_donthave_8,
-        PL.grats_donthave_9,
-        PL.grats_donthave_10,
-    }
-
-    local function white(text)
-        return Prat.CLR:Colorize("ffffff", text)
+  local function buildGratsLink(name, group, channel, achievementId)
+    if type(name) == "nil" or type(group) == "nil" then
+    else
+      return Prat.BuildLink(gratsLinkType, ("%s:%s:%s:%s"):format(name, group, channel or "", tostring(achievementId)), PL.grats_link, "2080a0")
     end
 
-    local regexp = "(|cffffff00|Hachievement:([0-9]+):(.+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+):([%-0-9]+)|h%[([^]]+)%]|h|r)"
-    local gratsLinkType = "gratsl"
+    return ""
+  end
 
+  local function ShowOurCompletion(...)
+    --        dbg(...)
+    local type = Prat.CurrentMessage.CHATTYPE
+    if type == "WHISPER_INFORM" then return end
 
+    local text, theirId, theirPlayerGuid, theirDone, theirMonth, theirDay, theirYear, _, _, _, _, theirAchievmentName, frame = ...
 
+    if not (tostring(theirPlayerGuid):len() > 3) then return end
 
-    local function buildGratsLink(name, group, channel, achievementId)
-        if type(name) == "nil" or type(group) == "nil" then
-        else
-            return Prat.BuildLink(gratsLinkType, ("%s:%s:%s:%s"):format(name, group, channel or "", tostring(achievementId)), PL.grats_link, "2080a0")
-        end
+    local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(theirId)
 
-        return ""
+    local _, _, _, _, _, theirName, _ = GetPlayerInfoByGUID(theirPlayerGuid)
+    local group = Prat.CurrentMessage.CHATGROUP
+    local channelNum = Prat.CurrentMessage.CHATTARGET
+
+    --        dbg(Prat.CurrentMessage)
+    if group == "CHANNEL" and not tonumber(channelNum) then return end
+
+    if completed  then
+      return Prat:RegisterMatch(text .. module:addDate(day, month, year) .. (theirDone and module:addGrats(theirName, group, channelNum, theirId, Prat.CurrentMessage)) or "")
+    elseif theirDone then
+      return Prat:RegisterMatch(text .. module:addGrats(theirName, group, channelNum, theirId, Prat.CurrentMessage))
+    end
+  end
+
+  Prat:SetModulePatterns(module, {
+    { pattern = regexp, matchfunc = ShowOurCompletion, priority = 42 },
+  })
+
+  function module:OnModuleEnable()
+    Prat.EnableProcessingForEvent("CHAT_MSG_GUILD_ACHIEVEMENT")
+    Prat.EnableProcessingForEvent("CHAT_MSG_ACHIEVEMENT")
+    Prat.RegisterChatEvent(self, "Prat_FrameMessage")
+    Prat.RegisterLinkType({ linkid = gratsLinkType, linkfunc = self.OnGratsLink, handler = self }, self.name)
+  end
+
+  function module:OnModuleDisable()
+    Prat.UnregisterAllChatEvents(self)
+  end
+
+  function module:addGrats(name, group, channel, achievementId, m)
+    if self.db.profile.showGratsLink then
+      return " " .. buildGratsLink(name, group, channel, achievementId)
     end
 
-    local function ShowOurCompletion(...)
---        dbg(...)
-        local type = Prat.CurrentMessage.CHATTYPE
-        if type == "WHISPER_INFORM" then return end
+    return ""
+  end
 
-        local text, theirId, theirPlayerGuid, theirDone, theirMonth, theirDay, theirYear, _, _, _, _, theirAchievmentName = ...
-
-        if not (tostring(theirPlayerGuid):len() > 3)  or (tostring(theirDone) == "0")  then return end
-
-        local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(theirId)
-
-        local _, _, _, _, _, theirName, _ = GetPlayerInfoByGUID(theirPlayerGuid)
-        local group = Prat.CurrentMessage.CHATGROUP
-        local channelNum = Prat.CurrentMessage.CHATTARGET
-
---        dbg(Prat.CurrentMessage)
-        if group == "CHANNEL" and not tonumber(channelNum) then return end
-
-        if completed then
-            return Prat:RegisterMatch(text..module:addDate(day, month, year)..module:addGrats(theirName, group, channelNum, theirId))
-        else
-            return Prat:RegisterMatch(text..module:addGrats(theirName, group, channelNum, theirId))
-        end
+  function module:addDate(day, month, year)
+    if self.db.profile.showCompletedDate then
+      return " " .. white("(") .. PL.completed:format(FormatShortDate(day, month, year)) .. white(")")
     end
 
-    Prat:SetModulePatterns(module, {
-        { pattern = regexp, matchfunc = ShowOurCompletion, priority = 100 },
-    })
+    return ""
+  end
 
-    function module:OnModuleEnable()
-        Prat.RegisterChatEvent(self, "Prat_FrameMessage")
-        Prat.RegisterLinkType({ linkid = gratsLinkType, linkfunc = self.OnGratsLink, handler = self }, self.name)
+  function module:OnGratsLink(link)
+    --        dbg(link)
+    local theirName, group, channel, id = strsub(link, gratsLinkType:len() + 2):match("([^:]*):([^:]*):([^:]*):([^:]*)")
+
+    local grats
+
+    if self.db.profile.customGrats then
+      grats = self.db.profile.customGratsText
+    else
+      id = tonumber(id)
+
+      local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(id)
+
+      local gratsVariants = wasEarnedByMe and gratsVariantsHave or gratsVariantsDontHave
+
+      local last = repeatPrevention[wasEarnedByMe and 1 or 2]
+      local next = math.random(#gratsVariants)
+
+      while next == last do
+        next = math.random(#gratsVariants)
+      end
+
+      grats = gratsVariants[next]
+      repeatPrevention[wasEarnedByMe and 1 or 2] = last
     end
 
-    function module:OnModuleDisable()
-        Prat.UnregisterAllChatEvents(self)
+    if group == "WHISPER" or not Prat.CanSendChatMessage(group) then
+      SendChatMessage(grats:format(theirName), "WHISPER", nil, theirName)
+    elseif Prat.CanSendChatMessage(group) then
+      SendChatMessage(grats:format(theirName), group)
     end
 
-    function module:addGrats(name, group, channel, achievementId)
-        if self.db.profile.showGratsLink then
-            return " " .. buildGratsLink(name, group, channel, achievementId)
-        end
+    return false
+  end
 
-        return ""
+  function module:Prat_FrameMessage(info, message, frame, event)
+    if self.db.profile.dontShowAchievements and event == "CHAT_MSG_GUILD_ACHIEVEMENT" then
+      message.DONOTPROCESS = true
     end
-
-    function module:addDate(day, month, year)
-        if self.db.profile.showCompletedDate then
-            return " "..white("(")..PL.completed:format(FormatShortDate(day, month, year))..white(")")
-        end
-
-        return ""
-    end
-
-    function module:OnGratsLink(link, text, button, ...)
---        dbg(link)
-        local theirName, group, channel, id = strsub(link, gratsLinkType:len()+2):match("([^:]*):([^:]*):([^:]*):([^:]*)")
-
-        local grats
-
-        if self.db.profile.customGrats then
-            grats = self.db.profile.customGratsText
-        else
-            id = tonumber(id)
-
-            local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch, wasEarnedByMe, earnedBy = GetAchievementInfo(id)
-
-            local gratsVariants = wasEarnedByMe and gratsVariantsHave or gratsVariantsDontHave
-
-            local last = repeatPrevention[wasEarnedByMe and 1 or 2]
-            local next = math.random(#gratsVariants)
-
-            while next == last do
-                next = math.random(#gratsVariants)
-            end
-
-            grats = gratsVariants[next]
-            repeatPrevention[wasEarnedByMe and 1 or 2] = last
-        end
-
-        if group == "WHISPER" then
-            SendChatMessage(grats:format(theirName), group, nil, theirName)
-        elseif group == "CHANNEL" then
-            SendChatMessage(grats:format(theirName), group, nil, tonumber(channel))
-        else
-            SendChatMessage(grats:format(theirName), group)
-        end
-
-        return false
-    end
-
-    function module:Prat_FrameMessage(info, message, frame, event)
-        if self.db.profile.dontShowAchievements and event == "CHAT_MSG_GUILD_ACHIEVEMENT" then
-            message.DONOTPROCESS = true
-        end
-    end
+  end
 end)

@@ -2,7 +2,7 @@
 ## Title: RareTrackerMechagon
 ## Notes: Track and coordinate rare spawn timers in Mechagon.
 ## Author: Melroy
-## Version: 6.0.6
+## Version: 6.0.8
 ## SavedVariables: RareTrackerMechagonDB, RTMDB
 ## Dependencies: RareTrackerCore
 
@@ -12,6 +12,7 @@ libs\AceDB-3.0\AceDB-3.0.xml
 Locales\enUS.lua
 Locales\zhCN.lua
 Locales\frFR.lua
+Locales\ruRU.lua
 
 RareTrackerMechagon.lua
 RareTrackerMechagonGlobals.lua

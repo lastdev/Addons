@@ -113,7 +113,7 @@ function XPerl_Player_Pet_OnLoad(self)
 		"PET_ATTACK_START",
 		"UNIT_COMBAT",
 		"VARIABLES_LOADED",
-		--[["PLAYER_REGEN_ENABLED",]]
+		--"PLAYER_REGEN_ENABLED",
 		"PLAYER_ENTERING_WORLD",
 		"UNIT_ENTERED_VEHICLE",
 		"UNIT_EXITED_VEHICLE",
@@ -122,10 +122,11 @@ function XPerl_Player_Pet_OnLoad(self)
 		"UNIT_TARGET",
 		--"PET_BATTLE_OPENING_START",
 		--"PET_BATTLE_CLOSE"
+		"INCOMING_RESURRECT_CHANGED",
 	}
 	local _, classFileName = UnitClass("player")
 	for i, event in pairs(events) do
-		if string.find(event, "^UNIT_") then
+		if string.find(event, "^UNIT_") or string.find(event, "^INCOMING") then
 			if event == "UNIT_THREAT_LIST_UPDATE" then
 				if pcall(self.RegisterUnitEvent, self, event, "target") then
 					self:RegisterUnitEvent(event, "target")
@@ -237,6 +238,7 @@ function XPerl_Player_Pet_UpdateHealth(self)
 
 	XPerl_Player_Pet_UpdateAbsorbPrediction(self)
 	XPerl_Player_Pet_UpdateHealPrediction(self)
+	XPerl_Player_Pet_UpdateResurrectionStatus(self)
 
 	if (UnitIsDead(partyid)) then
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_DEAD)
@@ -261,6 +263,23 @@ function XPerl_Player_Pet_UpdateHealPrediction(self)
 		self.statsFrame.expectedHealth:Hide()
 	end
 end
+
+function XPerl_Player_Pet_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
+	end
+end
+
 
 -- XPerl_Player_Pet_UpdateMana()
 local function XPerl_Player_Pet_UpdateMana(self)
@@ -627,6 +646,12 @@ function XPerl_Player_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 	end
 end
 
+function XPerl_Player_Pet_Events:INCOMING_RESURRECT_CHANGED(unit)
+	if unit == self.partyid then
+		XPerl_Player_Pet_UpdateResurrectionStatus(self)
+	end
+end
+
 -- XPerl_Player_Pet_SetWidth
 function XPerl_Player_Pet_SetWidth(self)
 	pconf.size.width = max(0, pconf.size.width or 0)
@@ -691,6 +716,7 @@ function XPerl_Player_Pet_Set_Bits(self)
 	if (pconf.portrait) then
 		self.portraitFrame:Show()
 		self.portraitFrame:SetWidth(50)
+		self.statsFrame.resurrect:Hide()
 	else
 		self.portraitFrame:Hide()
 		self.portraitFrame:SetWidth(3)
@@ -757,19 +783,11 @@ function XPerl_Player_Pet_Set_Bits(self)
 	pconf.buffs.size = tonumber(pconf.buffs.size) or 20
 	XPerl_SetBuffSize(self)
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (pconf.healprediction) then
-			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", "pet", "player")
-		else
-			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, pconf, function (guid)
+		if guid == UnitGUID("pet") then
+			return "pet"
 		end
-
-		if (pconf.absorbs) then
-			self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "pet", "player")
-		else
-			self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
+	end, "pet", "player")
 
 	XPerl_Player_Pet_SetWidth(self)
 

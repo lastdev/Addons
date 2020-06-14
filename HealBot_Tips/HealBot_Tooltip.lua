@@ -132,8 +132,9 @@ local function HealBot_Tooltip_setspellName(button, spellName)
             if mIdx==0 then 
                 validSpellName, spellAR, spellAG = HealBot_Tooltip_GetHealSpell(button,spellName) 
                 if validSpellName then
+                    local gcdSTART, gcdDUR = GetSpellCooldown(61304) -- GCD
                     local z, x, _ = GetSpellCooldown(spellName);
-                    if x and x>1 then 
+                    if x and x>1 and (not HealBot_Globals.Tooltip_IgnoreGCD or x > gcdDUR) then 
                         z = HealBot_Comm_round(x-(GetTime()-z),3)
                         local u=HEALBOT_TOOLTIP_SECS
                         if HealBot_Globals.Tooltip_ShowCD then
@@ -156,6 +157,16 @@ local function HealBot_Tooltip_setspellName(button, spellName)
                     end
                 end
             else
+                if validSpellName and GetMacroIndexByName(validSpellName)>0 then
+                    local _,_,mText=GetMacroInfo(GetMacroIndexByName(validSpellName))
+                    local _,s=string.find(mText, "#showtooltip ")
+                    if s and s>0 then
+                        local e,_=string.find(mText, "\n")
+                        if e and e>0 then
+                             validSpellName=(string.sub(mText, s+1, e-1)) or validSpellName
+                        end
+                    end
+                end
                 spellAR,spellAG=0.5,1
             end
         end
@@ -215,14 +226,24 @@ local function HealBot_Tooltip_SetLine(lNo,lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
 end
 
 local HealBot_Tooltip_Power = 9
+local HealBot_Tooltip_PowerDesc = {[0]="Mana", 
+                                   [1]="Rage", 
+                                   [2]="Focus", 
+                                   [3]="Energy", 
+                                   [4]="Happiness", 
+                                   [5]="Runes", 
+                                   [6]="Runic Power", 
+                                   [7]="Soul Shards", 
+                                   [8]="Eclipse", 
+                                   [9]="Holy Power"}
 local function HealBot_Tooltip_SpellInfo(spellName)
     if HealBot_Spell_Names[spellName] then
         if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana>0 then
             linenum=linenum+1
-            if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
+            if HealBot_Data["POWERTYPE"]==0 and HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
                 HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Power: "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana,0.4,0.4,1,1)
             else
-                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,"Mana: "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana,0.4,0.4,1,1)
+                HealBot_Tooltip_SetLine(linenum,HEALBOT_WORDS_CAST..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].CastTime.." "..HEALBOT_WORDS_SEC..".",0.8,0.8,0.8,1,HealBot_Tooltip_PowerDesc[HealBot_Data["POWERTYPE"]]..": "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana,0.4,0.4,1,1)
             end
         end
     end
@@ -231,10 +252,10 @@ end
 local function HealBot_Tooltip_SpellSummary(spellName)
     local ret_val = "  "
     if HealBot_Spell_Names[spellName] then
-        if HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
+        if HealBot_Data["POWERTYPE"]==0 and HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana<HealBot_Tooltip_Power then
             ret_val = " -  "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana.." Power"
         else
-            ret_val = " -  "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana.." Mana"
+            ret_val = " -  "..HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].Mana.." "..HealBot_Tooltip_PowerDesc[HealBot_Data["POWERTYPE"]]
         end
     end
     if strlen(ret_val)<5 then ret_val = " - "..spellName; end

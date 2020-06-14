@@ -43,7 +43,8 @@ function XPerl_Party_Pet_OnLoadEvents(self)
 		"UNIT_MAXHEALTH",
 		"PLAYER_ENTERING_WORLD",
 		"PET_BATTLE_OPENING_START",
-		"PET_BATTLE_CLOSE"
+		"PET_BATTLE_CLOSE",
+		"INCOMING_RESURRECT_CHANGED",
 	}
 
 	for i, event in pairs(events) do
@@ -280,6 +281,7 @@ function XPerl_Party_Pet_UpdateHealth(self)
 
 	XPerl_Party_Pet_UpdateAbsorbPrediction(self)
 	XPerl_Party_Pet_UpdateHealPrediction(self)
+	XPerl_Party_Pet_UpdateResurrectionStatus(self)
 
 	if (UnitIsDead(partyid)) then
 		self.statsFrame:SetGrey()
@@ -319,6 +321,14 @@ function XPerl_Party_Pet_UpdateHealPrediction(self)
 		XPerl_SetExpectedHealth(self)
 	else
 		self.statsFrame.expectedHealth:Hide()
+	end
+end
+
+function XPerl_Party_Pet_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		self.statsFrame.resurrect:Show()
+	else
+		self.statsFrame.resurrect:Hide()
 	end
 end
 
@@ -486,10 +496,10 @@ end
 function XPerl_Party_Pet_OnEvent(self, event, unit, ...)
 	local func = XPerl_Party_Pet_Events[event]
 	if func then
-		if (strfind(event, "^UNIT_")) then
+		if (strfind(event, "^UNIT_") or strfind(event, "^INCOMING_")) then
 			local f = PartyPetFrames[unit]
 			if f then
-				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+				if event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" or event == "INCOMING_RESURRECT_CHANGED" then
 					if not UnitIsUnit(f.partyid, unit) then
 						return
 					end
@@ -632,6 +642,13 @@ function XPerl_Party_Pet_Events:UNIT_ABSORB_AMOUNT_CHANGED(unit)
 	end
 end
 
+function XPerl_Party_Pet_Events:INCOMING_RESURRECT_CHANGED(unit)
+	if unit == self.partyid then
+		XPerl_Party_Pet_UpdateResurrectionStatus(self)
+	end
+end
+
+
 -- EnableDisable
 local function EnableDisable(self)
 	if (petconf.enable) then
@@ -749,17 +766,10 @@ function XPerl_Party_Pet_Set_Bits()
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
 	XPerl_Party_Pet_EventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		if (pconf.healprediction) then
-			XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_HEAL_PREDICTION")
-		else
-			XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_HEAL_PREDICTION")
+	XPerl_Register_Prediction(self, pconf, function(guid)
+		local frame = XPerl_Party_Pet_GetUnitFrameByGUID(guid)
+		if frame then
+			return frame.partyid
 		end
-
-		if (pconf.absorbs) then
-			XPerl_Party_Pet_EventFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		else
-			XPerl_Party_Pet_EventFrame:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-		end
-	end
+	end)
 end

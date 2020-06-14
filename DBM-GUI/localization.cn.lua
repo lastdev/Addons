@@ -2,12 +2,12 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2020/02/07
+-- Last update: 2020/05/22
 
 if GetLocale() ~= "zhCN" then return end
-if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
+if not DBM_GUI_L then DBM_GUI_L = {} end
 
-local L = DBM_GUI_Translations
+local L = DBM_GUI_L
 
 L.MainFrame 				= "Deadly Boss Mods"
 
@@ -153,7 +153,6 @@ L.BarEndColorUI				= "结束颜色 (自定义)"
 L.Bar7Header				= "自定义计时条选项"
 L.Bar7ForceLarge			= "总是使用大型计时条"
 L.Bar7CustomInline			= "使用自定义 '!' 图标"
-L.Bar7Footer				= "(测试用计时条)"
 --Dropdown Options
 L.CBTGeneric				= "基本"
 L.CBTAdd					= "小怪入场"
@@ -185,6 +184,7 @@ L.BarSpark					= "计时条闪光"
 L.BarFlash					= "快走完时闪动"
 L.BarSort					= "按剩余时间排序"
 L.BarColorByType			= "按类着色"
+L.NoBarFade					= "使用开始/结束颜色作为长/短计时条颜色，而不是颜色渐变"
 L.BarInlineIcons			= "显示条内图标"
 L.ShortTimerText			= "使用更短的计时条文字 (当可行时)"
 L.StripTimerText			= "分离CD/下一次 计时条"
@@ -193,7 +193,7 @@ L.KeepBar2					= "(当被模组支持时)"
 L.FadeBar					= "隐藏超出技能范围的计时条"
 
 -- Tab: Spec Warn Frame
-L.Panel_SpecWarnFrame		= "特殊警报"
+L.Panel_SpecWarnFrame		= "特殊团队警报"
 L.Area_SpecWarn				= "特殊警报设置"
 L.SpecWarn_ClassColor		= "为特殊警报启用分职业着色"
 L.ShowSWarningsInChat 		= "在聊天窗口中显示特殊警报"
@@ -205,13 +205,20 @@ L.SpecWarn_Font				= "特殊警报字体"
 L.SpecWarn_FontSize			= "字体大小: %d"
 L.SpecWarn_FontColor		= "字体颜色"
 L.SpecWarn_FontType			= "选择字体"
+L.SpecWarn_Flash			= "屏幕泛光"
 L.SpecWarn_FlashRepeat		= "重复泛光"
-L.SpecWarn_FlashColor		= "泛光顏色 (%d)"
+L.SpecWarn_FlashColor		= "泛光颜色 (%d)"
 L.SpecWarn_FlashDur			= "泛光持续时间: %0.1f"
 L.SpecWarn_FlashAlpha		= "泛光透明度: %0.1f"
 L.SpecWarn_DemoButton		= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"
 L.SpecWarn_ResetMe			= "重置"
+L.SpecialWarnSoundOption	= "设置默认声音"
+L.SpecialWarnHeader1		= "类型1: 设置影响您或您的操作的普通优先级警告选项"
+L.SpecialWarnHeader2		= "类型2: 设置影响每个人的正常优先级警告选项"
+L.SpecialWarnHeader3		= "类型3: 设置高优先级警告的选项"
+L.SpecialWarnHeader4		= "类型4: 设置“高优先级”选项会避免特殊警告"
+L.SpecialWarnHeader5		= "类型5: 设置警告选项，并包含玩家姓名"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警告"
@@ -251,20 +258,23 @@ L.EventFilterMythicMusic	= "不要在M/M+难度下播放战斗音乐"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "全局过滤"
-L.Area_SpamFilter_Outgoing	= "全局过滤设置"
+L.Area_SpamFilter_Anounces	= "Announce Global Disable & Filter Options"
 L.SpamBlockNoShowAnnounce	= "不显示警报或播放警报音效"
 L.SpamBlockNoShowTgtAnnounce= "不显示针对目标类型的警报或播放警报音效(上面那个优先级比这个高)"
-L.SpamBlockNoSpecWarn		= "不要显示特殊警报和特殊警报音效"
 L.SpamBlockNoSpecWarnText	= "不要显示特殊警报，但允许语音包(上面那个优先级比这个高)"
+
+L.Area_SpamFilter_Timers	= "Timer Global Disable & Filter Options"
 L.SpamBlockNoShowTimers		= "不显示DBM原装计时条"
 L.SpamBlockNoShowUTimers	= "不显示用户自定生成的计时条"
+L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
+
+L.Area_SpamFilter_Misc		= "Misc Global Disable & Filter Options"
 L.SpamBlockNoSetIcon		= "不在目标上设定标记"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
 L.SpamBlockNoNameplate		= "不要显示姓名板高亮(完全取消)"
 L.SpamBlockNoNameplateLines	= "不要显示姓名版高亮(效果图标继续显示)"
-L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
 L.SpamBlockNoYells			= "不要再战斗中大喊"
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
 L.SpamBlockNoReminders		= "不显示任何登陆, 过期信息(不推荐)"
@@ -310,7 +320,6 @@ L.DisableSFX				= "Boss战斗中关闭音效"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.OnlyFight					= "当每个动画被播放国一次后，只在战斗中放"
 L.AfterFirst				= "仅第一次播放"
-L.Always					= "总是跳过"
 L.CombatOnly				= "在任何战斗中隐藏"
 L.RaidCombat				= "只在Boss战斗中隐藏"
 

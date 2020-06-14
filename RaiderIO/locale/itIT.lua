@@ -18,10 +18,8 @@ L["API_DEPRECATED_WITH"] = "| cffFF0000Warning! | r L'addon | cffFFFFFF% s | r s
 L["API_INVALID_DATABASE"] = "| cffFF0000Warning! | r Rilevato un database RaiderIO non valido in | cffffffff% s | r. Si prega di aggiornare tutte le regioni e le fazioni nel client RaiderIO o reinstallare manualmente l'addon."
 L["BEST_FOR_DUNGEON"] = "Migliore Questa Spedizione"
 L["BEST_RUN"] = "Miglior Spedizione"
---[[Translation missing --]]
---[[ L["BEST_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["CANCEL"] = ""--]] 
+L["BEST_SCORE"] = "Miglior punteggio M+"
+L["CANCEL"] = "Annulla"
 L["CHANGES_REQUIRES_UI_RELOAD"] = [=[Le tue modifiche sono state salvate, ma devi ricaricare la tua interfaccia affinché abbiano effetto.
 
 Vuoi farlo ora?]=]
@@ -29,16 +27,13 @@ L["CHECKBOX_DISPLAY_WEEKLY"] = "Visualizza Settimanale"
 --[[Translation missing --]]
 --[[ L["CHOOSE_HEADLINE_HEADER"] = ""--]] 
 L["CONFIG_SHOW_TOOLTIPS_HEADER"] = "Mythic+ e Raid Tooltips"
---[[Translation missing --]]
---[[ L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = ""--]] 
---[[Translation missing --]]
---[[ L["CONFIRM"] = ""--]] 
+L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Dove mostrare il progresso di Mitiche+ e Incursioni"
+L["CONFIRM"] = "Conferma"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copia URL Raider.IO"
 L["COPY_RAIDERIO_URL"] = "Copia URL Raider.IO"
-L["CURRENT_MAINS_SCORE"] = "Punteggio PG Principale"
-L["CURRENT_SCORE"] = "Punteggio Corrente"
---[[Translation missing --]]
---[[ L["DISABLE_DEBUG_MODE_RELOAD"] = ""--]] 
+L["CURRENT_MAINS_SCORE"] = "Punteggio M+ PG Principale"
+L["CURRENT_SCORE"] = "Punteggio M+ Corrente"
+L["DISABLE_DEBUG_MODE_RELOAD"] = "Stai disabilitando Debug Mode. Premere Conferma ricaricherà l'interfaccia"
 L["DPS"] = "DPS"
 L["DPS_SCORE"] = "Punteggio DPS"
 L["DUNGEON_SHORT_NAME_AD"] = "AD"
@@ -71,8 +66,7 @@ L["DUNGEON_SHORT_NAME_WM"] = "MDC"
 --[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posiziona Automaticamente la Cornice del Profilo RaiderIO"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Abilitando questa Opzione manterrai la Descrizione del Profilo M+ accanto Finestra della Ricerca delle Incursioni o al Tooltip del Giocatore."
---[[Translation missing --]]
---[[ L["ENABLE_DEBUG_MODE_RELOAD"] = ""--]] 
+L["ENABLE_DEBUG_MODE_RELOAD"] = "Stai abilitando la modalità Debug. Questa modalità è indicata solo per test e sviluppatori e richiederà un ulteriore utilizzo di memoria. Premere Conferma farà ricaricare l'interfaccia"
 L["ENABLE_LOCK_PROFILE_FRAME"] = "Blocca Finestra del Profilo RaiderIO"
 L["ENABLE_LOCK_PROFILE_FRAME_DESC"] = "Impedisce il Trascinamento della Finestra del Profilo M+. Questo non ha alcun Effetto se la Finestra del Profilo M+ è impostata per essere Posizionata Automaticamente."
 L["ENABLE_NO_SCORE_COLORS"] = "Disabilita Colori Punteggio"
@@ -84,8 +78,7 @@ L["ENABLE_SIMPLE_SCORE_COLORS"] = [=[Usa i Colori dei Punteggi Semplici
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = [=[Mostra i Punteggi solo con Colori Standard utilizzati per gli Oggetti. Ciò può rendere più facile per chi ha problemi di visione dei colori a distinguere i livelli di punteggio.
 ]=]
 L["EXPORTJSON_COPY_TEXT"] = "Copia quanto segue e ncollalo ovunque su | cff00C8FFhttps: //raider.io | r per Cercare tutti i Giocatori."
---[[Translation missing --]]
---[[ L["GENERAL_TOOLTIP_OPTIONS"] = ""--]] 
+L["GENERAL_TOOLTIP_OPTIONS"] = "opzioni generali Tooltip"
 L["GUILD_BEST_SEASON"] = "Gilda: Stagionale"
 L["GUILD_BEST_TITLE"] = "Raider.IO Records"
 L["GUILD_BEST_WEEKLY"] = "Gilda: Settimanale"
@@ -101,8 +94,7 @@ L["KEYSTONE_COMPLETED_5"] = "+5-9(COMP)"
 L["LEGION_MAIN_SCORE"] = "Punteggio PG Principale \"Legion\""
 L["LEGION_SCORE"] = "Punteggio \"Legion\""
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: Blocco della finestra Profilo M+."
---[[Translation missing --]]
---[[ L["MAINS_BEST_SCORE_BEST_SEASON"] = ""--]] 
+L["MAINS_BEST_SCORE_BEST_SEASON"] = "miglior punteggio M+ del PG principale (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progresso PG Principale"
 L["MAINS_SCORE"] = "Punteggio PG Principale"
 L["MAINS_SCORE_COLON"] = "Punteggio PG Principale:"
@@ -119,10 +111,21 @@ L["OUT_OF_SYNC_DATABASE_S"] = "| cffFFFFFF% s | r ha dati di fazione di Orda / A
 L["OUTDATED_DATABASE"] = "Punteggi aggiornati a %d Giorni fa."
 L["OUTDATED_DATABASE_HOURS"] = "Punteggi aggiornati a %d Ore fa."
 L["OUTDATED_DATABASE_S"] = "| cffFFFFFF% s | r sta utilizzando dati | cffFF6666% d | r giorni precedenti. Si prega di aggiornare l'addon per risultati più accurati di Mitiche Chiavi del Potere."
+--[[Translation missing --]]
+--[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_ALERT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_DAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
 L["PLAYER_PROFILE_TITLE"] = "Profilo M+ Giocatore"
 L["PREV_SEASON_SUFFIX"] = "(*)"
---[[Translation missing --]]
---[[ L["PREVIOUS_SCORE"] = ""--]] 
+L["PREVIOUS_SCORE"] = "Punteggio M+ precedente"
 L["PROFILE_BEST_RUNS"] = "Miglior Corsa per Spedizione"
 L["PROVIDER_NOT_LOADED"] = "| cffFF0000Warning: | r | cffFFFFFF% s | r non riesce a trovare i dati per la fazione corrente. Controllare le impostazioni | cffFFFFFF / raiderio | r e abilitare i dati del tooltip per | cffFFFFFF% s | r."
 L["RAID_ABBREVIATION_ULD"] = "ULD"
@@ -195,12 +198,10 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "NM"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Boss Incursione Sconfitti"
 L["RAID_PROGRESS_TITLE"] = "Progresso Incursione"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Media Punteggio per +%s in Tempo"
---[[Translation missing --]]
---[[ L["RAIDERIO_BEST_RUN"] = ""--]] 
+L["RAIDERIO_BEST_RUN"] = "Raider.IO migliore scorreria M+"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalizzazione del client RaiderIO"
 L["RAIDERIO_MP_BASE_SCORE"] = "Raider.IO M+ Punteggio Base"
---[[Translation missing --]]
---[[ L["RAIDERIO_MP_BEST_SCORE"] = ""--]] 
+L["RAIDERIO_MP_BEST_SCORE"] = "punteggio M+ Raider.IO"
 L["RAIDERIO_MP_SCORE"] = "Raider.IO Punteggio M+"
 L["RAIDERIO_MP_SCORE_COLON"] = "Raider.IO Punteggio M+:"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO Opzioni Addon"
@@ -218,8 +219,7 @@ L["RELOAD_NOW"] = "Ricarica Ora"
 --[[ L["SEASON_LABEL_4"] = ""--]] 
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO"] = "Visualizza il Punteggio Medio Per Corse In Tempo"
 L["SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC"] = "Mostra il punteggio medio Raider.IO visualizzato sui membri delle Spedizioni finite in tempo. Questo è visibile nel Tooltip della Chiava del Potere e nelle descrizioni dei giocatori nella finestra Ricerca delle Incursioni."
---[[Translation missing --]]
---[[ L["SHOW_BEST_MAINS_SCORE"] = ""--]] 
+L["SHOW_BEST_MAINS_SCORE"] = "Mostra miglior punteggio Mythic+ del PG principale della precedente stagione"
 --[[Translation missing --]]
 --[[ L["SHOW_BEST_MAINS_SCORE_DESC"] = ""--]] 
 --[[Translation missing --]]
@@ -265,8 +265,7 @@ L["SHOW_RAIDERIO_PROFILE"] = "Mostra il Tooltip del Profilo RaiderIO"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Mostra il Popup del Profilo RaiderIO"
 --[[Translation missing --]]
 --[[ L["SHOW_ROLE_ICONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_ROLE_ICONS_DESC"] = ""--]] 
+L["SHOW_ROLE_ICONS_DESC"] = "Quando abilitata, il miglior ruolo del giocatore nelle Mitiche+ verrà mostrato nel tooltip"
 L["SHOW_SCORE_IN_COMBAT"] = "Mostra Punteggio in Combattimento"
 L["SHOW_SCORE_IN_COMBAT_DESC"] = "Disabilita per minimizzare l'impatto sulle prestazioni mentre si passa il mouse sopra i giocatori durante il combattimento."
 L["TANK"] = "Difensore"
@@ -284,8 +283,7 @@ L["UNKNOWN_SERVER_FOUND"] = "| cffFFFFFF% s | r ha rilevato un nuovo server. Si 
 L["UNLOCKING_PROFILE_FRAME"] = "RaiderIO: Sblocco della Finetra Profilo M+"
 L["USE_ENGLISH_ABBREVIATION"] = "Forza Abbreviazioni dei Dungeon in Inglese"
 L["USE_ENGLISH_ABBREVIATION_DESC"] = "Quando selezionato, verranno usate le abbreviazioni per i nomi dei dungeon in Inglese, al posto della lingua corrente."
---[[Translation missing --]]
---[[ L["WARNING_DEBUG_MODE_ENABLE"] = ""--]] 
+L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r La modalità Debug è abilitata. Per disabilitarla digita /raiderio debug|r"
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: Devi prima Disabilitare \"Posizionamento Automatico\" per il Profilo RaiderIO."
 
 

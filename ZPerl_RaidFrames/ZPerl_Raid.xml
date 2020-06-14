@@ -276,6 +276,20 @@
 							</Layer>
 						</Layers>
 					</Frame>
+					<Frame name="$parentresurrect" setAllPoints="true" frameStrata="HIGH" hidden="true">
+						<Layers>
+							<Layer level="OVERLAY">
+								<Texture file="Interface\RaidFrame\Raid-Icon-Rez">
+									<Size>
+										<AbsDimension x="24" y="24"/>
+									</Size>
+									<Anchors>
+										<Anchor point="CENTER" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
 				</Frames>
 				<Scripts>
 					<OnLoad function="XPerl_StatsFrame_Setup"/>

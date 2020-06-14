@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(188, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(23578)
 mod:SetEncounterID(1191)
 mod:SetZone()
@@ -26,7 +26,7 @@ local specWarnHatchAll		= mod:NewSpecialWarningSpell(43144, "Tank", nil, nil, 1,
 
 local timerBomb				= mod:NewCastTimer(12, 42630, nil, nil, nil, 3)
 local timerBombCD			= mod:NewNextTimer(30, 42630, nil, nil, nil, 3)
-local timerAdds				= mod:NewNextTimer(65, 43962, nil, nil, nil, 1, nil, DBM_CORE_TANK_ICON..DBM_CORE_DAMAGE_ICON)--I'm not evey sure it's timed or health based but it definitely wasn't 92 seconds in my run it was 65
+local timerAdds				= mod:NewNextTimer(65, 43962, nil, nil, nil, 1, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.DAMAGE_ICON)--I'm not evey sure it's timed or health based but it definitely wasn't 92 seconds in my run it was 65
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 

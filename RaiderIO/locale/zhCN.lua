@@ -165,6 +165,18 @@ L["OUTDATED_DATABASE"] = "%天前的评分"
 --[[ L["OUTDATED_DATABASE_HOURS"] = ""--]] 
 L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r使用的数据已经有|cffFF6666%d|r天之前的了。请更新此插件以显示更精准的大秘境评分。"
 --[[Translation missing --]]
+--[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_ALERT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_DAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["PLAYER_PROFILE_TITLE"] = ""--]] 
 L["PREV_SEASON_SUFFIX"] = "（*）"
 --[[Translation missing --]]

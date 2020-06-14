@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1160, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(76407)
 mod:SetEncounterID(1682)
 
@@ -21,7 +21,7 @@ local specWarnOmenOfDeathNear	= mod:NewSpecialWarningClose(154350, nil, nil, nil
 local yellOmenOfDeath			= mod:NewYell(154350)
 local specWarnMalevolence		= mod:NewSpecialWarningDodge(154442, nil, nil, nil, 2, 2)
 
-local timerRitualOfBonesCD		= mod:NewCDTimer(50.5, 154671, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerRitualOfBonesCD		= mod:NewCDTimer(50.5, 154671, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerOmenOfDeathCD		= mod:NewCDTimer(10.5, 154350, nil, nil, nil, 3)
 
 function mod:OmenOfDeathTarget(targetname, uId)

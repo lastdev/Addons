@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1163, "DBM-Party-WoD", 3, 536)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(79545)
 mod:SetEncounterID(1732)
 mod:SetZone()
@@ -18,8 +18,8 @@ mod:RegisterEventsInCombat(
 local warnMortar				= mod:NewSpellAnnounce(163550, 3)
 local warnPhase2				= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnSupressiveFire		= mod:NewTargetAnnounce(160681, 2)--In a repeating loop
---local warnGrenadeDown			= mod:NewAnnounce("warnGrenadeDown", 1, "ej9711", nil, DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej9711"))--Boss is killed by looting using these positive items on him.
---local warnMortarDown			= mod:NewAnnounce("warnMortarDown", 4, "ej9712", nil, DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej9712"))--So warn when adds that drop them die
+--local warnGrenadeDown			= mod:NewAnnounce("warnGrenadeDown", 1, "ej9711", nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej9711"))--Boss is killed by looting using these positive items on him.
+--local warnMortarDown			= mod:NewAnnounce("warnMortarDown", 4, "ej9712", nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej9712"))--So warn when adds that drop them die
 local warnPhase3				= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnSupressiveFire	= mod:NewSpecialWarningYou(160681, nil, nil, nil, 1, 2)

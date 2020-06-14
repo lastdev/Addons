@@ -1,3 +1,10 @@
+**r1204**
+* Fixed callback handler.
+
+**r1200**
+* Added LibClassicCasterino, LibHealComm library support for Classic and incoming resurrect status. (Thanks for pelder78)
+* Other various fixes.
+
 **r1196**
 * Update for Classic 1.13.4.
 * Party Pet fixes.

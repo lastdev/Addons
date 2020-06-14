@@ -3,7 +3,7 @@
 
 	Helps you pick the best Azerite powers on your gear for your class and spec.
 
-	(c) 2018 -
+	(c) 2018 - 2020
 	Sanex @ EU-Arathor / ahak @ Curseforge
 ----------------------------------------------------------------------------]]--
 local ADDON_NAME, n = ...
@@ -59,7 +59,7 @@ local azeriteSlots = {
 --[[
 	Version history:
 	1 - 8.0 -> 8.1.5: Initial release version of the ImportStrings
-	2 - 8.2 -> x.x: Added support for Azerite Essences to the ImportStrings
+	2 - 8.2 -> 8.3: Added support for Azerite Essences to the ImportStrings
 ]]--
 local importVersion = 2
 

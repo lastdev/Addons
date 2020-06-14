@@ -1,9 +1,8 @@
 # <DBM> Draenor
 
-## [r47](https://github.com/DeadlyBossMods/DBM-WoD/tree/r47) (2020-02-23)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r46...r47)
+## [r48](https://github.com/DeadlyBossMods/DBM-WoD/tree/r48) (2020-05-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r47...r48)
 
-- Cleanup unused locals, and added/commented ones that are still missing.  
-- Missed one  
-- whitespace cleanup  
-- Update Luacheck  
+- Fix luacheck  
+- Update to be compatible with DBM-Core Locales restructure  
+- Change UNIT\_HEALTH\_FREQUENT to UNIT\_HEALTH  

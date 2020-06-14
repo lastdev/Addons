@@ -2,11 +2,16 @@ local addonName, ns = ...
 
 -- constants
 local L = ns.L
+local RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
 
 -- colors
 local COLOR_WHITE = { r = 1, g = 1, b = 1 }
 local COLOR_GREY = { r = 0.62, g = 0.62, b = 0.62 }
 local COLOR_GREEN = { r = 0, g = 1, b = 0 }
+
+-- text color escape codes
+local TEXT_COLOR_START_RAIDERIO = "|cffffbd0a"
+local TEXT_COLOR_CLOSE = "|r"
 
 -- fallback frames and stratas
 local FALLBACK_ANCHOR = _G.PVEFrame
@@ -62,7 +67,7 @@ do
 		if not forceDisableModifier and ns.addonConfig.enableProfileModifier then
 			if (ns.addonConfig.inverseProfileModifier == ns.addon:IsModifierKeyDown(true) or not ns.HasPlayerProfile(unitOrNameOrNameAndRealm, realmOrNil, factionOrNil, regionOrNil)) then
 				if not (not ns.addonConfig.showRaiderIOProfile) then
-					unitOrNameOrNameAndRealm, realmOrNil = "player"
+					unitOrNameOrNameAndRealm, realmOrNil = "player", nil
 				end
 			end
 		end
@@ -73,6 +78,20 @@ do
 
 		local isPlayer = unitOrNameOrNameAndRealm == "player"
 
+		local name, realm, unit = ns.GetNameAndRealm(unitOrNameOrNameAndRealm, realmOrNil)
+		local faction = type(factionOrNil) == "number" and factionOrNil or ns.GetFaction(unit)
+
+		local isDataExpired = (ns.DB_OUTDATED[1][faction] == "expired" or ns.DB_OUTDATED[2][faction] == "expired")
+
+		if isDataExpired and not isPlayer then
+			-- prevent showing profile data when expired and looking at anyone but yourself
+			ProfileTooltip:AddLine(L.OUTDATED_EXPIRED_TITLE, 1, 0, 0, false)
+			ProfileTooltip:AddLine(format(L.OUTDATED_DOWNLOAD_LINK, TEXT_COLOR_START_RAIDERIO .. RAIDERIO_ADDON_DOWNLOAD_URL .. TEXT_COLOR_CLOSE), 1, 1, 1, true)
+			ProfileTooltip:AddLine(" ", 1, 1, 1, false)
+			ProfileTooltip:AddLine(L.OUTDATED_PROFILE_TOOLTIP_MESSAGE, 1, 1, 1, true)
+			return true
+		end
+
 		-- mythic plus data
 		local hasMythicPlusProfile = false
 		do
@@ -80,6 +99,12 @@ do
 			local profile = hasProfile and output.profile or nil
 			hasMythicPlusProfile = hasProfile
 			if profile and hasProfile then
+				if isDataExpired then
+					ProfileTooltip:AddLine(L.OUTDATED_EXPIRED_TITLE, 1, 0, 0, false)
+					ProfileTooltip:AddLine(format(L.OUTDATED_DOWNLOAD_LINK, TEXT_COLOR_START_RAIDERIO .. RAIDERIO_ADDON_DOWNLOAD_URL .. TEXT_COLOR_CLOSE), 1, 1, 1, true)
+					ProfileTooltip:AddLine(" ", 1, 1, 1, false)
+				end
+
 				ProfileTooltip:AddLine(isPlayer and L.MY_PROFILE_TITLE or format("%s: %s", L.MY_PROFILE_TITLE, profile.name), 1, 0.85, 0, false)
 
 				-- the focused dungeon based on LFD activityID
@@ -184,16 +209,6 @@ do
 					end
 				end
 			end
-		end
-
-
-		-- TODO: this working right?
-		if ns.OUTDATED_DAYS[ns.CONST_PROVIDER_DATA_MYTHICPLUS] and ns.OUTDATED_DAYS[ns.CONST_PROVIDER_DATA_MYTHICPLUS][profile.faction] > 1 then
-			ProfileTooltip:AddLine(" ")
-			ProfileTooltip:AddLine(format(L.OUTDATED_DATABASE, ns.OUTDATED_DAYS[ns.CONST_PROVIDER_DATA_MYTHICPLUS][profile.faction]), 0.8, 0.8, 0.8, false)
-		elseif ns.OUTDATED_HOURS[ns.CONST_PROVIDER_DATA_MYTHICPLUS] and ns.OUTDATED_HOURS[ns.CONST_PROVIDER_DATA_MYTHICPLUS][profile.faction] > 12 then
-			ProfileTooltip:AddLine(" ")
-			ProfileTooltip:AddLine(format(L.OUTDATED_DATABASE_HOURS, ns.OUTDATED_HOURS[ns.CONST_PROVIDER_DATA_MYTHICPLUS][profile.faction]), 0.8, 0.8, 0.8, false)
 		end
 
 		return true

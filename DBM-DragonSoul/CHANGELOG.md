@@ -1,7 +1,8 @@
 # <DBM> Dragon Soul
 
-## [r206](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r206) (2020-02-22)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r205...r206)
+## [r207](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r207) (2020-05-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r206...r207)
 
-- Whitespace cleanup  
-- Update Luacheck  
+- Fix luacheck  
+- Update to be compatible with DBM-Core Locales restructure  
+- Change UNIT\_HEALTH\_FREQUENT to UNIT\_HEALTH  

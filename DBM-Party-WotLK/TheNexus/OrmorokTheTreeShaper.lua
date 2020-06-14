@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(620, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200524145746")
 mod:SetCreatureID(26794)
 mod:SetEncounterID(524, 525, 2012)
 mod:SetZone()
@@ -21,8 +21,8 @@ local warningAdd			= mod:NewSpellAnnounce(61564, 2)
 local specWarnReflection	= mod:NewSpecialWarningReflect(47981, "SpellCaster", nil, nil, 1, 2)
 local specWarnSpikes		= mod:NewSpecialWarningDodge(47958, nil, nil, nil, 2, 2)
 
-local timerReflection		= mod:NewBuffActiveTimer(15, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DEADLY_ICON)
-local timerReflectionCD		= mod:NewCDTimer(30, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerReflection		= mod:NewBuffActiveTimer(15, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_L.DEADLY_ICON)
+local timerReflectionCD		= mod:NewCDTimer(30, 47981, nil, "SpellCaster", 2, 5, nil, DBM_CORE_L.DEADLY_ICON)
 local timerSpikesCD			= mod:NewCDTimer(12.1, 47958, nil, nil, nil, 3)--Health based or CD?
 
 function mod:OnCombatStart(delay)

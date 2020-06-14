@@ -113,6 +113,18 @@ L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r tiene datos de facción sin sincro
 L["OUTDATED_DATABASE"] = "Estas puntuaciones son de hace %d día(s)"
 L["OUTDATED_DATABASE_HOURS"] = "Estas puntuaciones son de hace %d hora(s)"
 L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r está usando datos de hace |cffFF6666%d|r día(s). Por favor, actualiza el addon para disponer de las puntuaciones de M+ más recientes."
+--[[Translation missing --]]
+--[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_ALERT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRED_TITLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_DAYS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
 L["PLAYER_PROFILE_TITLE"] = "Perfil de M+"
 L["PREV_SEASON_SUFFIX"] = "(*)"
 L["PREVIOUS_SCORE"] = "Puntuación M+ anterior (%s)"
