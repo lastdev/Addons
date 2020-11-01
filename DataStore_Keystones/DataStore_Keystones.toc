@@ -1,0 +1,13 @@
+## Interface: 90001
+## Title: DataStore_Keystones
+## Notes: Stores information about Mythic+ Keystones
+## Author: Teelo (US-Jubei'thos)
+## Version: 9.0.1-021
+## Dependencies: DataStore, DataStore_Containers
+## OptionalDeps: Ace3
+## SavedVariables: DataStore_KeystonesDB, DataStore_KeystonesRefDB
+## X-Category: Interface Enhancements
+## X-Embeds: Ace3
+## X-Curse-Project-ID: 411498
+
+DataStore_Keystones.lua

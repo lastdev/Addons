@@ -1,0 +1,20 @@
+Ver 1.13.6
+	-Tweaked wand use.
+
+Ver 1.13.5
+	-Created and Activated Spellmenu.
+
+Ver 1.13.4
+	-Forgot the "not" for Vap Embrace.
+
+Ver 1.13.3
+	-Fixed some Touch of Weakness issues, I hope again.
+	
+Ver 1.13.2
+	-Fixed some Touch of Weakness issues, I hope.
+
+Ver 1.13.1
+	-Minor update.
+
+Ver 1.13.0
+	-Initial release for Classic WoW.

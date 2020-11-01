@@ -1,0 +1,9 @@
+## Title:-|cffFFFFFFConRO|r- |cff69CCF0Mage|r
+## Version: 9.0.0
+## Author: Vae
+## Interface: 90001
+## Dependencies: ConRO
+## LoadOnDemand: 1
+
+mage_ids.lua
+mage.lua

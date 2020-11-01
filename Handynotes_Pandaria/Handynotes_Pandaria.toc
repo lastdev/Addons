@@ -1,0 +1,29 @@
+## Interface: 90001
+## Title: Handynotes Pandaria
+## Version: 1.4.3
+## Notes: Shows locations of treasures and rares in Pandaria
+## Author: syndenbock
+## RequiredDeps: HandyNotes
+## OptionalDeps: TomTom
+## SavedVariables: storedData
+
+# addon files
+HandyNotes_Pandaria.lua
+
+# data files
+data\nodes.lua
+data\rares.lua
+data\treasures.lua
+data\mounts.lua
+data\toys.lua
+data\achievements.lua
+
+# modules
+modules\node_hiding.lua
+modules\data_parsing.lua
+modules\node_validation.lua
+modules\handynotes_integration.lua
+
+# tools
+# tools\convert.lua
+# tools\datacheck.lua

@@ -1,0 +1,337 @@
+Ver 9.0.1
+	-Updated Havoc Rotation for prepatch.
+	-Vengeance specialization still is weird with melee distance.
+
+Ver 9.0.0
+	-Updated Library for PrePatch.
+	-Will work on rotation once all classes libraries have a once over.
+	-DH Vengeance melee abilities are not working with IsSpellInRange.
+	
+Ver 8.3.0
+	-Updating TOC
+
+Ver 8.2.3
+	-Implemented Auto Toggle changes.
+
+Ver 8.2.2
+	-Tweaked some momentum issues.
+
+Ver 8.2.1
+	-Updated toc.
+	
+Ver 8.2.0
+	-Changed Version Number to better coinside with WoW Client Versions.
+	-Started Adding Essences to the library.
+
+Ver 3.1.5
+	-Made small change to keep Eye Beamed displayed when casting.
+
+Ver 3.1.4
+	-Added PvPTalents to the IDs.
+	-Not hardly any changes for Demon Hunters recently. Strong Class.
+	-Small issue with taunt Icon sometimes showing on Fiery Brand.
+
+Ver 3.1.3
+	-Adjusted for Auto Target detection for Havoc Rotation.
+
+Ver 3.1.2
+	-Reversed a couple carots.
+
+Ver 3.1.1
+	-Fixed error with Fel Rush Cooldown in Havoc rotation.
+
+Ver 3.1.0
+	-Updating for 8.1
+
+Ver 3.0.3
+	-QoL code changes.
+	-Changed Vengeance Defense rotation to not suggest Demon Spikes during Metamorphasis or Fiery Brand unless at max charges.
+	-Added in Arcane Torrent racial for offensive dispells in melee range.
+	-Made Adjustments to distance closer openers for both Vengeance and Havoc rotations.
+	
+Ver 3.0.2
+	-Tweaked Metamorphasis burst tigger for Havoc.
+	-Added Burst/Full toggle for Havoc. Let me know how it feels.
+
+Ver 3.0.1
+	-Tweaked Soul Cleave in Vengeance rotation.
+
+Ver 3.0
+	-A few people have requested I split ConRO into class modules so you guys can just download and keep updated the classes you want to.
+	-I apologize for any inconvenience this may cause, but I think once the shift is done. It will be easier for everyone to find the addon and classes they want.
+
+Ver 2.2b
+	-Tweaked Vengeance Demon Hunter Damage and Defense rotations.
+	-Tweaked Frost Death Knight rotation, added Cold Heart and Glacial Advance support.
+
+Ver 2.2a
+	-Fixed Moonfire error for Feral Druids.
+	-Tweaked Retribution Paladin Inquisition.
+	-Added Burst/Full Toggle support to Affliction Warlock.
+
+Ver 2.2
+	-Starting Tweaks as Raid content is now active, maybe adding in a few pvp talents, but no promises.
+	-Fixed a few errors with Affliction Warlock, planning on adding Full/Burst toggle to help streamline DarkGlare/Deathbolt usage.
+	-Added Rotation support for Feral Druid while in Bear Form.
+
+Ver 2.1g
+	-Tweaked Subletly Rogue Shadowdance rotation, slightly.
+
+Ver 2.1f
+	-Tweaked Blood Death Knight rotation.
+	-Tuned up Discipline Priests DPS rotation quite a bit.
+	-Brewmaster Monk Chiwave and Chiburst were backwards in the coding. Funny yet frustrating error, sorry.
+
+Ver 2.1e
+	-Removed Rapidfire error in Marksman Hunter rotation.
+
+Ver 2.1d
+	-Added Burst toggle to Survival Hunter.
+	-Added Wildfire Infusion support for Survival Hunter.
+	-Tweaked Suvival Hunter Rotation and added Aspect of the Eagle Support.
+	-Slight tweak to Beast Mastery Hunter code for quality of life.
+	-Adjusted Shadow Priest to not use Dark Void in Voidform.
+
+Ver 2.1c
+	-Found fix for BFA spell loading issue.
+	-Added support for New Moon talent for Balance Druids, though it is not currently recommended to use.
+	-Added Wild Charge to Feral Druid.
+	-Gave Retribution Paladin Burst/Full Toggle support.
+
+Ver 2.1b
+	-Fixed Warlock error.
+	-Need to still find fix for low level toons now.
+
+Ver 2.1a
+	-Tweaked Hunter Pet attacking feature.
+	-Fixed part of issue with toggle buttons resetting themselves with loss of control effects.
+	-Made Assassination Rogue only warn you if you dont have poison while in combat or stealthed.
+	-Tweaked Vengeance Demon Hunter Spirit Bomb/Soul Cleave relationship.
+	-Found issue with new BFA spell API changes with logging in as certain specs.
+	
+Ver 2.1
+	-Fixed Arms Warrior Massacre Execute error and Added Burst toggle.
+	-Added Fury Warrior Bladestorm to Burst toggle.
+	-Fixed error with Elemental Shaman burst toggle and elementals.
+	
+Ver 2.0n
+	-Fixed Consume Magic for Demon Hunter.
+	-Tweaked Shadow Priest slightly.
+	-Fixed Destruction Warlock having issue with incinerate and certain talent chooses.
+
+Ver 2.0m
+	-Fixed coding error with prot warrior.
+
+Ver 2.0l
+	-Adjusted Beast Mastery Hunter AoE rotation.
+	-Changed Elite/Trash buttons into Full/Burst Rotation buttons.
+	-Added Taunt notifier for tanks. With changes to taunt system, thought would be helpful.
+
+Ver 2.0k
+	-Fixed inRange issue with different localizations across multiple classes.
+
+Ver 2.0j
+	-Fixed localization issue with distance closing abilities.
+	-Fixed some Guardian Druid issues.
+
+Ver 2.0i
+	-Fixed error in Balance and Feral druid specs for Incarnation talents.
+	-Added reset to default button to options window.
+
+Ver 2.0h
+	-Made Earth elemental into a burst cooldown.
+
+Ver 2.0g
+	-Adjusted Fire Mage Combustion phase.
+	-Added Netherportal to Demonology Warlock rotation.
+	-Added Raid Buff indicator for Priest, Mage, and Warrior. Still trying to figure out best way to party/raid scan.	
+	-Added ability for user to change the alpha of the icons within the color picker.
+	
+Ver 2.0f
+	-Fixed Raptor Strike for Survival Hunter.
+
+Ver 2.0e
+	-Updated Rogue			-Subtlety.
+	-Updated Monk			-Brewmaster, Mistweaver and Windwalker.
+	-Fixed error spam from 2 person mounts.
+	
+Ver 2.0d
+	-Fixed Stance Buttons not being scanned properly.
+	-Updated Druid			-Balance, Feral, and Guardian.
+	-Updated Rogue			-Assassination and Outlaw.
+
+Ver 2.0c
+	-Fixed error spam for pet heals when mounting or using taxi.
+	-Disabled rotation when player control is lost. 
+	-Updated Mage		-Arcane, Fire, and Frost.
+	-Updated Warrior	-Protection.
+	-Updated Shaman		-Elemental and Enhancement.
+	-Updated Demon Hunter	-Havoc and Vengeance.
+
+Ver 2.0b
+	-Fixed actionbar issue with Bartender4 and ElvUI. Hopefully
+	-Fixed issue where changing specs would not reset toggle buttons.
+	-Fixed a few Shadow Priest errors such as Elite/Trash toggle and delaying swp for to long when in voidform.
+	-Updated Warlock Affliction AoE and slight quality of life tweaks for Demonology and Destruction.
+	-Updated Warrior	- Arms and Fury.
+
+Ver 2.0a
+	-Updated Hunter		- Survival and added pet healing suggestions to the defense rotation. (Thank you, Patrik)
+	-Updated Warlock	- Demonology AoE rotation and added demon healing suggestions to the defense rotation.
+	-Updated Paladin	- Protection and Retribution.
+	-Updated Death Knight - Blood, Frost and Unholy.
+	
+Ver 2.0
+	-Updating to 8.0 pre-patch.
+	-Temporarily disabled hotkey for Display window. So i can focus on fixing more important features.
+	-Added buttons for all DPS/Tank specs to show whether they have a toggle rotation or not.
+	-Added support for charges cooldown on spells.
+	
+	-Updated Warlock	- Affliction, Destruction and Demonology
+	-Updated Priest		- Shadow
+	-Updated Hunter 	- Beast Mastery, Marksmanship
+
+Ver 1.5l
+	-Fixed error with Balance Druid, Warrior of Elune talent. And empowerment support for under lvl 70.
+	-Added in Owlkin Frenzy.
+	-Added support to Frost Mage with Flurry before lvl 100 with Ebonbolt.
+
+Ver 1.5k
+	-Fixed error from the Windwalker Monk The Emperor's Capacitor support.
+
+Ver 1.5j
+	-Addressed issue with Destruction Warlocks Incinerate spell vs. GCD. It runs a lot smoother now.
+
+Ver 1.5i
+	-Fixed error for interrupt and purge overlay hangup.
+	-Removed some burst overlays during trash toggle on some specs. Just too much.
+	-Added The Emperor's Capacitor support for Windwalker Monk.
+	-Added The Dreadlord's Deceit support for Rogue.
+
+Ver 1.5h
+	-Added Ironfur to Guardian Druid defense.
+	-Fixed issue with some talent swapping.
+	-Tweaked Unholy Death Knight.
+
+Ver 1.5g
+	-Updated and Created Vengeance Demon Hunter.
+	-Updated Havoc Demon Hunter.
+
+Ver 1.5f
+	-Tweaked Voidwalker presence in Warlock rotation.
+	-Fixed Enhancement Shaman, landslide/hothands talent error.
+
+Ver 1.5e
+	-Added Overlay scale and toggle support. So if you don't want the notifier for defense or interrupts you can now turn them off.
+	-Added Overlay color change for those that want to.
+	-Fixed Demonology Warlock glitch.
+
+Ver 1.5d
+	-Fixed Whirling Dragon Punch talent for Windwalker Monk.
+
+Ver 1.5c
+	-Adjusted Fury Warrior.
+	-Adjusted Marksman Hunter.
+
+Ver 1.5b
+	-Adjusted Arms Warrior and Protection Warrior. 
+
+Ver 1.5a
+	-Code error fixes for Destruction Warlock.
+
+Ver 1.5
+	-Added New Feature Boss/Trash Toggle button. Switches whether midrange cooldowns are included in rotation or overlayed as option burst.
+		-Specs will be updated with new feature slowly.
+		-Shadow Priest has new Elite Rotation added.
+	-Tweaked Arcane Mage rotation. Fixed Mark of aluneth and Arcane Missiles.
+	-Fixed issue with Icelance not not showing immediately following Flurry/BrainFreeze combo.
+	-Coded Windwalker Monk for better Combo Mastery management.
+	-Adjusted Havoc Demonhunter slighty. Made Meta into a burst rather than rotation.
+
+Ver 1.4j
+	-Started work on Windwalker and Brewmaster monk.
+	-Also started on major code cleanup and sorting.
+	
+Ver 1.4i
+	-Fixes for debuff code change.
+
+
+Ver 1.4h
+	-Removed Assassination Rogue Non-lethal poison missing error. Due to some fight mechanics. Lethals will remain. May add toggle option later on.
+	-Tweaked Feral druid rotation.
+	-Added new coding to how the add-on read debuffs. Please bare with any errors this may cause in rotation due to unforeseen aura algorithms.
+	-Added wait texture to Display window for pooling or waiting periods.
+	-Demonology and Destruction Warlock checked and tweaked.
+
+
+Ver 1.4g
+	-Added transparency support to Display window.
+	-Updated Affliction Warlock.
+
+Ver 1.4f
+	-Fixed Monk module issue. Monk has not been updated yet though.
+	-Fixed Feral Druid Rake-stun issue.
+
+Ver 1.4e
+	-Slight Frost Mage tweaks.
+	-Updated Display Window... Now shows name of Ability to use next as well as your hot key set to it.
+	-Tweaked Marksman Hunter.
+	-Tweaked Feral Druid.
+
+Ver 1.4d
+	-Updated Shaman rotation.
+	-Fixed issue with Demon Hunters Deathsweep focus. Which seems to have also fixed the default stance bar issue some were seeing as well.
+	-Possibly fixed issue with cool-down star burst still showing after cool-down use.
+	-Checked Hunter code and rotations. Survival needs tweaking still. Marksman and Beast Mastery are good.
+
+Ver 1.4c
+	-Checked Death Knight code and rotation.
+	-Checked Demonhunter code and rotation. Needs more testing.
+	-Checked Elemental Shaman code and rotation.
+	-Checked Beast Mastery Hunter code and rotation.
+
+Ver 1.4b
+	-Checked Priest code and rotations.
+	-Updated Subtlety Rogue rotation. Still feels clunky.
+	-Added Macro, Slash and key binding functionality to the Target rotation toggle button.
+
+Ver 1.4a
+	-Checked Paladin code.
+	-Checked Mage code and updated rotations.
+	-Checked Druid code and updated rotations.
+	-Checked Outlaw and Assassination Rogue code and updated rotations.
+
+Ver 1.4
+	-Starting Updates for Classes to game interface 7.3.
+	-Checked Druid code.
+
+Ver 1.3d
+	-Made some adjustments for Unholy Death Knights Soul Reaper talent.
+	-Cleaned up some unnecessary code.
+	-Upgraded Toggle Button (added size option).
+	-Fixed minor chat errors.
+
+Ver 1.3c
+	-Updated 7.2 Support
+	-Outlaw Rogue updated for 7.2
+	
+Ver 1.3b
+	-Fixed issue with Feral Druid and not choosing the Savage Roar talent.
+	-Added Brutal Slash support to AoE rotation.
+
+Ver 1.3a 
+	-Added AoE Support for Rogue class.
+	-Added AoE Support for Priest class.
+	-Added AoE Support for Druid class.
+	
+	-Made lock feature unlocked by Default.
+	-Tweaks to graphic glitch that sometimes happens.
+	-Fixed some Assassination Rogue bugs.
+
+Ver 1.3
+	-Added AoE Support for Paladin class.
+	-Added AoE Support for Hunter class.
+	-Added AoE Support for Warrior class.
+	
+	-Refined Beast Mastery Hunter single rotation. Added talents into rotation that were missing.
+	-Fixed Protection Warrior Intercept bug.

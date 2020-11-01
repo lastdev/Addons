@@ -1,0 +1,60 @@
+<Bindings>
+	<Binding name="CONROUNLOCK" header="ConRO">
+		if not ConRO.db.profile.unlockWindow then
+			ConRO.db.profile.unlockWindow = true;
+		else
+			ConRO.db.profile.unlockWindow = false;
+		end
+		
+		ConROWindow:EnableMouse(ConRO.db.profile.unlockWindow);
+		ConRODefenseWindow:EnableMouse(ConRO.db.profile.unlockWindow);
+		ConROInterruptWindow:EnableMouse(ConRO.db.profile.unlockWindow);
+		ConROPurgeWindow:EnableMouse(ConRO.db.profile.unlockWindow);
+		ConROInterruptWindow:SetMovable(ConRO.db.profile.unlockWindow);
+		ConROPurgeWindow:SetMovable(ConRO.db.profile.unlockWindow);
+		if ConRO.db.profile.unlockWindow and ConRO.db.profile.enableInterruptWindow == true then
+			ConROInterruptWindow:Show();				
+		else
+			ConROInterruptWindow:Hide();				
+		end	
+		if ConRO.db.profile.unlockWindow and ConRO.db.profile.enablePurgeWindow == true then
+			ConROPurgeWindow:Show();					
+		else
+			ConROPurgeWindow:Hide();					
+		end	
+	</Binding>
+	<Binding name="CONROTOGGLE">
+		if ConRO:MeleeSpec() then
+			if ConRO_AutoButton:IsVisible() then
+				ConRO_AutoButton:Hide();
+				ConRO_SingleButton:Show();
+				ConRO_AoEButton:Hide();
+			elseif ConRO_SingleButton:IsVisible() then
+				ConRO_AutoButton:Hide();
+				ConRO_SingleButton:Hide();
+				ConRO_AoEButton:Show();
+			elseif ConRO_AoEButton:IsVisible() then
+				ConRO_AutoButton:Show();
+				ConRO_SingleButton:Hide();
+				ConRO_AoEButton:Hide();
+			end		
+		else
+			if ConRO_SingleButton:IsVisible() then
+				ConRO_SingleButton:Hide();
+				ConRO_AoEButton:Show();
+			elseif ConRO_AoEButton:IsVisible() then
+				ConRO_SingleButton:Show();
+				ConRO_AoEButton:Hide();
+			end
+		end
+	</Binding>
+	<Binding name="CONROBOSSTOGGLE">
+		if ConRO_FullButton:IsVisible() then
+			ConRO_FullButton:Hide();
+			ConRO_BurstButton:Show();
+		elseif ConRO_BurstButton:IsVisible() then
+			ConRO_BurstButton:Hide();
+			ConRO_FullButton:Show();
+		end
+	</Binding>
+</Bindings>

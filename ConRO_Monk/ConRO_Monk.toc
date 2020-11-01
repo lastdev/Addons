@@ -1,0 +1,9 @@
+## Title:-|cffFFFFFFConRO|r- |cff00FF96Monk|r
+## Version: 9.0.1
+## Author: Vae
+## Interface: 90001
+## Dependencies: ConRO
+## LoadOnDemand: 1
+
+monk_ids.lua
+monk.lua

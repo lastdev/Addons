@@ -1,0 +1,40 @@
+local addonName = "DataStore_Rares"
+local addon = _G[addonName]	
+
+addon.RareList.ArathiWarfront = {
+    "Arathi Warfront",
+	{
+        -- "Creature ID", "Quest ID", "Alliance Quest ID", "Horde Quest ID", "English Name"
+		{ 137374, nil, nil, 53001, "The Lion's Roar"},
+		{ 138122, nil, 53002, nil, "Doom's Howl"},
+		{ 141615, nil, 53017, 53506, "Burning Goliath "},
+		{ 141618, nil, 53018, 53531, "Cresting Goliath"},
+		{ 141620, nil, 53021, 53523, "Rumbling Goliath"},
+		{ 141668, nil, 53059, 53508, "Echo of Myzrael"},
+		{ 141942, nil, 53057, 53516, "Molok the Crusher"},
+		{ 142112, nil, 53058, 53513, "Kor'gresh Coldrage"},
+		{ 142419, nil, 53023, 53527, "Thundering Goliath"},
+		{ 142423, nil, 53014, 53518, "Overseer Krix"},
+		{ 142433, nil, 53019, 53510, "Fozruk"},
+		{ 142435, nil, 53020, 53519, "Plaguefeather"},
+		{ 142436, nil, 53016, 53522, "Ragebeak"},
+		{ 142437, nil, 53022, 53526, "Skullripper"},
+		{ 142438, nil, 53024, 53528, "Venomarus"},
+		{ 142440, nil, 53015, 53529, "Yogursa"},
+		{ 142508, nil, 53013, 53505, "Branchlord Aldrus"},
+		{ 142662, nil, 53060, 53511, "Geomancer Flintdagger"},
+		{ 142682, nil, 53094, 53530, "Zalas Witherbark"},
+		{ 142683, nil, 53092, 53524, "Ruul Onestone"},
+		{ 142684, nil, 53089, 53514, "Kovork"},
+		{ 142686, nil, 53086, 53509, "Foulbelly"},
+		{ 142688, nil, 53084, 53507, "Darbel Montrose"},
+		{ 142690, nil, 53093, 53525, "Singer"},
+		{ 142692, nil, 53091, 53517, "Nimar the Slayer"},
+		{ 142709, nil, 53083, 53504, "Beastrider Kama"},
+		{ 142716, nil, 53090, 53515, "Man-Hunter Rog"},
+		{ 142725, nil, 53087, 53512, "Horrific Apparition"},
+		{ 142739, nil, nil, 53088, "Knight-Captain Aldrin"},
+		{ 142741, nil, 53085, nil, "Doomrider Helgrim"},
+	},
+    "WEEKLY",
+}

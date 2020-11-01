@@ -1,0 +1,9 @@
+## Title:-|cffFFFFFFConRO|r- |cffC79C6EWarrior|r
+## Version: 9.0.1
+## Author: Vae
+## Interface: 90001
+## Dependencies: ConRO
+## LoadOnDemand: 1
+
+warrior_ids.lua
+warrior.lua

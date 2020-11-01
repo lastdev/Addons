@@ -1,0 +1,535 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <Frame name="TomCats-HivemindTourGuideFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent" inherits="ButtonFrameTemplate" frameStrata="MEDIUM">
+        <Size>
+            <AbsDimension x="550" y="525"/>
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="TomCats-HivemindTourGuidePage1" file="Interface\Spellbook\Spellbook-Page-1">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="7" y="-25"/>
+                    </Anchors>
+                </Texture>
+                <Texture name="TomCats-HivemindTourGuidePage2" file="Interface\Spellbook\Spellbook-Page-2">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuidePage1" relativePoint="TOPRIGHT" />
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer>
+                <Texture>
+                    <Color r="0" b="0" g="0" a="0.3" />
+                </Texture>
+            </Layer>
+            <Layer level = "OVERLAY" textureSubLevel="-2">
+                <Texture name="$parentPortraitBackground" parentKey="portrait">
+                    <Size x="61" y="61" />
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="-6" y="8" />
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <!--
+                <Button name="TomCats-HivemindTourGuideTutorialButton" parentKey="MainHelpButton" inherits="MainHelpPlateButton">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideFrame" x="39" y="20" />
+                    </Anchors>
+                    <Scripts>
+                        <OnClick>
+                                SpellBook_ToggleTutorial();
+                        </OnClick>
+                    </Scripts>
+                </Button>
+                <Button name="TomCats-HivemindTourGuideFrameTabButton1" inherits="SpellBookFrameTabButtonTemplate">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="1"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <Button name="TomCats-HivemindTourGuideFrameTabButton2" inherits="SpellBookFrameTabButtonTemplate">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="TomCats-HivemindTourGuideFrameTabButton1" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-15" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <Button name="TomCats-HivemindTourGuideFrameTabButton3" inherits="SpellBookFrameTabButtonTemplate">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="TomCats-HivemindTourGuideFrameTabButton2" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-15" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <Button name="TomCats-HivemindTourGuideFrameTabButton4" inherits="SpellBookFrameTabButtonTemplate">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="TomCats-HivemindTourGuideFrameTabButton3" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-15" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                <Button name="TomCats-HivemindTourGuideFrameTabButton5" inherits="SpellBookFrameTabButtonTemplate">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="TomCats-HivemindTourGuideFrameTabButton4" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-15" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Button>
+                -->
+
+
+            <!--  Tab Types -->
+            <Frame name="TomCats-HivemindTourGuidePageNavigationFrame" setAllPoints="true" parentKey="pageNavigationFrame">
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="TomCats-HivemindTourGuidePageText" inherits="GameFontBlack" justifyH="RIGHT" parentKey="pageText">
+                            <Size>
+                                <AbsDimension x="202" y="0"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT">
+                                    <Offset>
+                                        <AbsDimension x="-110" y="38"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Color r="0.25" g="0.12" b="0"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="TomCats-HivemindTourGuidePrevPageButton" parentKey="prevPageButton">
+                        <Size>
+                            <AbsDimension x="32" y="32"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT" relativeTo="TomCats-HivemindTourGuideFrame">
+                                <Offset>
+                                    <AbsDimension x="-66" y="26"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <!--
+                        <Scripts>
+                            <OnClick function="SpellBookPrevPageButton_OnClick"/>
+                        </Scripts>
+                        -->
+                        <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+                        <DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+                    </Button>
+                    <Button name="TomCats-HivemindTourGuideNextPageButton" parentKey="nextPageButton">
+                        <Size>
+                            <AbsDimension x="32" y="32"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-31" y="26"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <!--
+                        <Scripts>
+                            <OnClick function="SpellBookNextPageButton_OnClick"/>
+                        </Scripts>
+                        -->
+                        <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+                        <DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+                        <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+                    </Button>
+                </Frames>
+            </Frame>
+            <SimpleHTML name="$parentContent" parentKey="content">
+                <Size>
+                    <AbsDimension x="400" y="400" />
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="90" y="-65" />
+                </Anchors>
+                <FontString inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP" spacing="1">
+                    <Color r="1" g="0.82" b="0" />
+                </FontString>
+                <FontStringHeader1 inherits="SystemFont_Huge1" justifyH="LEFT">
+                    <Color r="1" g="0.82" b="0" />
+                    <Shadow>
+                        <Color r="0" g="0" b="0" a="1" />
+                        <Offset x="1" y="-1" />
+                    </Shadow>
+                </FontStringHeader1>
+                <FontStringHeader2 inherits="Game16Font" justifyH="LEFT">
+                    <Color r="1" g="0.82" b="0" />
+                    <Shadow>
+                        <Color r="0" g="0" b="0" a="1" />
+                        <Offset x="1" y="-1" />
+                    </Shadow>
+                </FontStringHeader2>
+            </SimpleHTML>
+            <!--
+            <Frame name="TomCats-HivemindTourGuideSpellIconsFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Frames>
+                    <CheckButton name="TomCats-HivemindTourGuideButton1" inherits="SpellButtonTemplate" id="1">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="100" y="-72"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton2" inherits="SpellButtonTemplate" id="7">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton1">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton3" inherits="SpellButtonTemplate" id="2">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton1" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-29"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton4" inherits="SpellButtonTemplate" id="8">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton3">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton5" inherits="SpellButtonTemplate" id="3">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton3" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-29"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton6" inherits="SpellButtonTemplate" id="9">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton5">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton7" inherits="SpellButtonTemplate" id="4">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton5" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-29"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton8" inherits="SpellButtonTemplate" id="10">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton7">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton9" inherits="SpellButtonTemplate" id="5">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton7" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-29"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton10" inherits="SpellButtonTemplate" id="11">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton9">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton11" inherits="SpellButtonTemplate" id="6">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton9" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-29"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideButton12" inherits="SpellButtonTemplate" id="12">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideButton11">
+                                <Offset>
+                                    <AbsDimension x="225" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                </Frames>
+            </Frame>
+            -->
+
+            <Frame name="TomCats-HivemindTourGuideSideTabsFrame" parentKey="chapterButtons">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Frames>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab1" parentKey="button1" inherits="SpellBookSkillLineTabTemplate" id="1">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-36"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab2" parentKey="button2" inherits="SpellBookSkillLineTabTemplate" id="2">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab1" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab3" parentKey="button3" inherits="SpellBookSkillLineTabTemplate" id="3">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab2" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab4" parentKey="button4" inherits="SpellBookSkillLineTabTemplate" id="4">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab3" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab5" parentKey="button5" inherits="SpellBookSkillLineTabTemplate" id="5">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab4" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab6" parentKey="button6" inherits="SpellBookSkillLineTabTemplate" id="6">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab5" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab7" parentKey="button7" inherits="SpellBookSkillLineTabTemplate" id="7">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab6" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton name="TomCats-HivemindTourGuideSkillLineTab8" parentKey="button8" inherits="SpellBookSkillLineTabTemplate" id="8">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab7" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-17"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </CheckButton>
+                    <Frame name="TomCats-HivemindTourGuideTabFlashFrame" hidden="true">
+                        <Size>
+                            <AbsDimension x="10" y="10"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSkillLineTab1">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab1Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab1"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab2Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab2"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab3Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab3"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab4Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab4"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab5Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab5"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab6Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab6"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab7Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab7"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="TomCats-HivemindTourGuideSkillLineTab8Flash" file="Interface\Buttons\CheckButtonGlow" alphaMode="ADD" hidden="true">
+                                    <Size>
+                                        <AbsDimension x="64" y="64"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeTo="TomCats-HivemindTourGuideSkillLineTab8"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </Frame>
+                </Frames>
+            </Frame>
+            <!--
+            <Frame name="TomCats-HivemindTourGuideProfessionFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="TomCats-HivemindTourGuideFrame" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Frames>
+                    <Frame name="TomCats-HivemindTourGuidePrimaryProfession1" inherits="PrimaryProfessionTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="80" y="-67"/>
+                        </Anchors>
+                    </Frame>
+                    <Frame name="TomCats-HivemindTourGuidePrimaryProfession2" inherits="PrimaryProfessionTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuidePrimaryProfession1" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                    self.missingHeader:SetText(PROFESSIONS_SECOND_PROFESSION);
+                                    self.icon:SetAlpha(0.6)
+                                    SetDesaturation(self.icon, true);
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+                    <Frame name="TomCats-HivemindTourGuideSecondaryProfession1" inherits="SecondaryProfessionTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuidePrimaryProfession2" relativePoint="BOTTOMLEFT" x="0" y="-40"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                    self.missingHeader:SetText(PROFESSIONS_COOKING);
+                                    self.missingText:SetText(PROFESSIONS_COOKING_MISSING);
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+                    <Frame name="TomCats-HivemindTourGuideSecondaryProfession2" inherits="SecondaryProfessionTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSecondaryProfession1" relativePoint="BOTTOMLEFT" x="0" y="-30"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                    self.missingHeader:SetText(PROFESSIONS_FISHING);
+                                    self.missingText:SetText(PROFESSIONS_FISHING_MISSING);
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+                    <Frame name="TomCats-HivemindTourGuideSecondaryProfession3" inherits="SecondaryProfessionTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="TomCats-HivemindTourGuideSecondaryProfession2" relativePoint="BOTTOMLEFT" x="0" y="-30"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                    self.missingHeader:SetText(PROFESSIONS_ARCHAEOLOGY);
+                                    self.missingText:SetText(PROFESSIONS_ARCHAEOLOGY_MISSING);
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+
+                </Frames>
+            </Frame>
+            -->
+        </Frames>
+        <!--
+        <Scripts>
+            <OnLoad function="SpellBookFrame_OnLoad"/>
+            <OnEvent function="SpellBookFrame_OnEvent"/>
+            <OnShow function="SpellBookFrame_OnShow"/>
+            <OnHide function="SpellBookFrame_OnHide"/>
+            <OnMouseWheel function="SpellBookFrame_OnMouseWheel"/>
+        </Scripts>
+        -->
+    </Frame>
+    <Script file="TourGuideFrame.lua" />
+</Ui>

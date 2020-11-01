@@ -1,0 +1,9 @@
+## Title:-|cffFFFFFFConRO|r- |cffFF7D0ADruid|r
+## Version: 9.0.0
+## Author: Vae
+## Interface: 90001
+## Dependencies: ConRO
+## LoadOnDemand: 1
+
+druid_ids.lua
+druid.lua

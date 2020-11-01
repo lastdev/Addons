@@ -1,0 +1,13 @@
+## Interface: 80200
+## Title: TomCat's Tours: The Hivemind
+## Author: TomCat
+## X-Website: http://www.everythingwarcraft.com
+## Version: 0.1.6
+## DefaultState: enabled
+## SavedVariablesPerCharacter: TomCats_Hivemind_Character
+## OptionalDeps: TomCats
+## X-Part-Of: TomCat's Tours:
+## X-Category: Achievements, Map, Miscellaneous
+## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
+
+Main.xml

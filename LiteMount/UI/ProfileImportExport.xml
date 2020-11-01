@@ -1,0 +1,209 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+
+<!-- Copyright 2011-2020 Mike Battersby -->
+
+<Script file="ProfileImportExport.lua" />
+
+<Frame name="LiteMountProfileExport" parent="UIParent" hidden="true" inherits="TooltipBackdropTemplate" mixin="LiteMountProfileExportMixin" frameStrata="DIALOG" toplevel="true">
+    <KeyValues>
+        <KeyValue key="backdropBorderColor" value="GRAY_FONT_COLOR" TYpe="global" />
+        <KeyValue key="backdropColorAlpha" value="0.8" TYpe="number" />
+    </KeyValues>
+    <Scripts>
+        <OnLoad inherit="append" method="OnLoad" />
+    </Scripts>
+    <Size x="480" y="360" />
+    <Anchors>
+        <Anchor point="CENTER" />
+    </Anchors>
+    <Frames>
+        <ScrollFrame parentKey="Scroll" inherits="InputScrollFrameTemplate">
+            <KeyValues>
+                <KeyValue key="hideCharCount" value="true" type="boolean" />
+            </KeyValues>
+            <Anchors>
+                <Anchor point="TOPLEFT" x="16" y="-88" />
+                <Anchor point="BOTTOMRIGHT" x="-16" y="48" />
+            </Anchors>
+        </ScrollFrame>
+        <Button parentKey="OkayButton" inherits="UIPanelButtonTemplate" text="OKAY">
+            <Size x="96" y="22" />
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" x="-16" y="8" />
+            </Anchors>
+        </Button>
+    </Frames>
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString inherits="GameFontNormalLarge" parentKey="Title">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-16" />
+                </Anchors>
+            </FontString>
+            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_EXPORT_PROFILE_EXP">
+                <Anchors>
+                    <Anchor point="TOP" y="-40" />
+                    <Anchor point="LEFT" x="24" />
+                    <Anchor point="RIGHT" x="-24" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+</Frame>
+
+<Frame name="LiteMountProfileImport" parent="UIParent" hidden="true" inherits="TooltipBackdropTemplate" mixin="LiteMountProfileImportMixin" frameStrata="DIALOG" toplevel="true">
+    <KeyValues>
+        <KeyValue key="backdropBorderColor" value="GRAY_FONT_COLOR" TYpe="global" />
+        <KeyValue key="backdropColorAlpha" value="0.8" TYpe="number" />
+    </KeyValues>
+    <Scripts>
+        <OnLoad inherit="append" method="OnLoad" />
+        <OnShow inherit="append" method="OnShow" />
+    </Scripts>
+    <Size x="280" y="180" />
+    <Anchors>
+        <Anchor point="CENTER" />
+    </Anchors>
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString inherits="GameFontNormalLarge" parentKey="Title" Text="LM_IMPORT_PROFILE">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-16" />
+                </Anchors>
+            </FontString>
+            <FontString inherits="GameFontNormal" parentKey="ProfileNameText" justifyH="RIGHT" text="NAME">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="24" y="-88" />
+                </Anchors>
+            </FontString>
+            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_IMPORT_PROFILE_EXP">
+                <Anchors>
+                    <Anchor point="TOP" y="-40" />
+                    <Anchor point="LEFT" x="24" />
+                    <Anchor point="RIGHT" x="-24" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+    <Frames>
+        <EditBox parentKey="ProfileName" inherits="InputBoxTemplate" autoFocus="true">
+            <Size y="30" />
+            <Anchors>
+                <Anchor point="LEFT" relativeKey="$parent.ProfileNameText" relativePoint="RIGHT" x="12" />
+                <Anchor point="RIGHT" x="-80" />
+            </Anchors>
+            <FontString inherits="ChatFontNormal" />
+            <Scripts>
+                <OnTextChanged> self:GetParent():UpdateImportButton() </OnTextChanged>
+                <OnEscapePressed> self:GetParent():Hide() </OnEscapePressed>
+            </Scripts>
+        </EditBox>
+        <EditBox parentKey="ProfileData" inherits="InputBoxTemplate" autoFocus="false">
+            <Size y="30" />
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent.ProfileName" relativePoint="BOTTOMLEFT" y="-4" />
+                <Anchor point="RIGHT" x="-16" />
+            </Anchors>
+            <FontString inherits="ChatFontNormal" />
+            <Scripts>
+                <OnTextChanged> self:GetParent():UpdateImportButton() </OnTextChanged>
+                <OnEscapePressed> self:GetParent():Hide() </OnEscapePressed>
+            </Scripts>
+        </EditBox>
+        <Button parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="CANCEL">
+            <Scripts>
+                <OnClick> self:GetParent():Hide() </OnClick>
+            </Scripts>
+            <Size x="96" y="22" />
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" x="-8" y="8" />
+            </Anchors>
+        </Button>
+
+        <Button parentKey="ImportButton" inherits="UIPanelButtonTemplate" text="Import">
+            <Scripts>
+                <OnClick> self:GetParent():ImportProfile() </OnClick>
+            </Scripts>
+            <Size x="96" y="22" />
+            <Anchors>
+                <Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.CancelButton" x="-4" />
+            </Anchors>
+        </Button>
+    </Frames>
+</Frame>
+
+<!--@debug@
+<Frame name="LiteMountProfileInspect" parent="UIParent" hidden="true"
+       inherits="TooltipBackdropTemplate" mixin="LiteMountProfileInspectMixin"
+       frameStrata="DIALOG" toplevel="true" movable="true">
+    <KeyValues>
+        <KeyValue key="backdropBorderColor" value="GRAY_FONT_COLOR" TYpe="global" />
+        <KeyValue key="backdropColorAlpha" value="0.8" TYpe="number" />
+    </KeyValues>
+    <Size x="640" y="960" />
+    <Anchors>
+        <Anchor point="CENTER" />
+    </Anchors>
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString inherits="GameFontNormalLarge" parentKey="Title" Text="LiteMount : Profile Inspector">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-16" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+    <Frames>
+        <Button parentKey="DragBar">
+            <Size y="36" />
+            <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="TOPRIGHT" x="-48" />
+            </Anchors>
+            <Scripts>
+                <OnMouseDown>
+                    self:GetParent():StartMoving()
+                </OnMouseDown>
+                <OnMouseUp>
+                    self:GetParent():StopMovingOrSizing()
+                    self:GetParent():SetUserPlaced(false)
+                </OnMouseUp>
+            </Scripts>
+        </Button>
+        <Button inherits="UIPanelCloseButton">
+            <Anchors>
+                <Anchor point="TOPRIGHT" x="-4" y="-4" />
+            </Anchors>
+        </Button>
+        <EditBox parentKey="ProfileData" inherits="InputBoxTemplate" autoFocus="false">
+            <Size y="30" />
+            <Anchors>
+                <Anchor point="TOP" relativePoint="BOTTOM" relativeKey="$parent.Title" y="-8" />
+                <Anchor point="LEFT" x="8" y="-8" />
+                <Anchor point="RIGHT" x="-8" />
+            </Anchors>
+            <FontString inherits="GameFontHighlight" />
+            <Scripts>
+                <OnTextChanged> self:GetParent():Apply() </OnTextChanged>
+                <OnEscapePressed> self:GetParent():Hide() </OnEscapePressed>
+            </Scripts>
+        </EditBox>
+        <ScrollFrame parentKey="Scroll" inherits="InputScrollFrameTemplate">
+            <KeyValues>
+                <KeyValue key="hideCharCount" value="true" type="boolean" />
+            </KeyValues>
+            <Scripts>
+                <OnLoad inherit="append">
+                self.EditBox:SetFont("fonts\\2002.ttf", 14)
+                </OnLoad>
+            </Scripts>
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent.ProfileData" relativePoint="BOTTOMLEFT" y="-8" />
+                <Anchor point="BOTTOMRIGHT" x="-8" y="8" />
+            </Anchors>
+        </ScrollFrame>
+    </Frames>
+</Frame>
+@end-debug@-->
+
+</Ui>

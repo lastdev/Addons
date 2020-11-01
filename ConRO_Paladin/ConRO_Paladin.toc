@@ -1,0 +1,9 @@
+## Title:-|cffFFFFFFConRO|r- |cffF58CBAPaladin|r
+## Version: 9.0.0
+## Author: Vae
+## Interface: 90001
+## Dependencies: ConRO
+## LoadOnDemand: 1
+
+paladin_ids.lua
+paladin.lua
