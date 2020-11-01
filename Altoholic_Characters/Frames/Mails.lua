@@ -76,19 +76,20 @@ function ns:BuildView(field, ascending)
 end
 
 function ns:Update()
-	local VisibleLines = 7
 	local frame = "AltoholicFrameMail"
-	local scrollFrame = _G[ frame.."ScrollFrame" ]
-	
+	local scrollFrame = _G[frame].ScrollFrame
+    local VisibleLines = scrollFrame.numRows
 	local entry = frame.."Entry"
 	
 	local DS = DataStore
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numMails = DS:GetNumMails(character) or 0
-	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Mails %s(%d)"], colors.green, numMails)))
+	if AltoholicFrameMail:IsVisible() then 
+        AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Mails %s(%d)"], colors.green, numMails)))
+    end
 	if numMails == 0 then		-- make sure the scroll frame is cleared !
-		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
+		for i=1, 18 do					-- Hides all entries of the scrollframe, and updates it accordingly
 			_G[ entry..i ]:Hide()
 		end
 
@@ -101,37 +102,43 @@ function ns:Update()
 	for i=1, VisibleLines do
 		local line = i + offset
 		if line <= numMails then
-			local index = ns.view[line]
-			
-			local icon, count, link, _, _, wasReturned = DS:GetMailInfo(character, index)
-			
-			_G[ entry..i.."Name" ]:SetText(link or DS:GetMailSubject(character, index))
-			_G[ entry..i.."Character" ]:SetText(DS:GetMailSender(character, index))
-			
-			local msg
-			if not wasReturned then
-				msg = format(L["Will be %sreturned|r in"], colors.green, colors.white)
-			else
-				msg = format(L["Will be %sdeleted|r in"], colors.red, colors.white)
-			end
-			
-			local _, seconds = DataStore:GetMailExpiry(character, index)
-			_G[ entry..i.."Expiry" ]:SetText(format("%s:\n%s", msg, colors.white .. SecondsToTime(seconds)))
-			
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(icon);
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
-			else
-				_G[ entry..i.."ItemCount" ]:Hide()
-			end
-			-- trick: pass the index of the current item in the results table, required for the tooltip
-			_G[ entry..i.."Item" ]:SetID(index)
+            if ns.view then
+    			local index = ns.view[line]
+    			
+    			local icon, count, link, _, _, wasReturned = DS:GetMailInfo(character, index)
+    			
+    			_G[ entry..i.."Name" ]:SetText(link or DS:GetMailSubject(character, index))
+    			_G[ entry..i.."Character" ]:SetText(DS:GetMailSender(character, index))
+    			
+    			local msg
+    			if not wasReturned then
+    				msg = format(L["Will be %sreturned|r in"], colors.green, colors.white)
+    			else
+    				msg = format(L["Will be %sdeleted|r in"], colors.red, colors.white)
+    			end
+    			
+    			local _, seconds = DataStore:GetMailExpiry(character, index)
+    			_G[ entry..i.."Expiry" ]:SetText(format("%s:\n%s", msg, colors.white .. SecondsToTime(seconds)))
+    			
+    			_G[ entry..i.."ItemIconTexture" ]:SetTexture(icon);
+    			if count and count > 1 then
+    				_G[ entry..i.."ItemCount" ]:SetText(count)
+    				_G[ entry..i.."ItemCount" ]:Show()
+    			else
+    				_G[ entry..i.."ItemCount" ]:Hide()
+    			end
+    			-- trick: pass the index of the current item in the results table, required for the tooltip
+    			_G[ entry..i.."Item" ]:SetID(index)
+            end
 			_G[ entry..i ]:Show()
 		else
 			_G[ entry..i ]:Hide()
 		end
 	end
+    
+    for i = VisibleLines, 18 do
+        _G[entry..i]:Hide()
+    end
 	
 	if numMails < VisibleLines then
 		scrollFrame:Update(VisibleLines, VisibleLines, 41)
@@ -188,3 +195,5 @@ function ns:OnClick(self, button)
 		end
 	end
 end
+
+AltoholicFrame:RegisterResizeEvent("AltoholicFrameMail", 8, ns)

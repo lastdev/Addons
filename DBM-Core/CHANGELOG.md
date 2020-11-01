@@ -1,101 +1,21 @@
 # Deadly Boss Mods Core
 
-## [8.3.25](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.3.25) (2020-06-05)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.3.24...8.3.25)
+## [9.0.2](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.0.2) (2020-10-20)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.0.1...9.0.2) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Fixed missed line  
-- Cleanup unused locales  
-- Update KR (#244)  
-    * KR Update  
-- Apply custom stripping to custom ra-den frame  
-- Fix typo  
-- Fixed bugs in GetShortServerName function and eliminated redundant option checks by moving the option check directly into GetShortServerName function  
-- Fixed inconsistency across infoframes that weren't using realm name when they should  
-    Changed way realm name is stripped to still have indicator that it is a different realm player.  
-- Revert "Revert "Apply strip name option to rangecheck and infoframe as well""  
-- Revert "Apply strip name option to rangecheck and infoframe as well"  
-- Apply strip name option to rangecheck and infoframe as well  
-- Per user request, added Vicious Mauling warning to Jes Howlis encounter  
-- Fixed yell text regression on Nzoth and Council of Blood. I changed wrong thing. Yells now have new OPTION text, not new yell text  
-- Fixed reverse logic bug, and fixed a bug where tables wouldn't get wiped while text was disabled  
-- That's about as much patience I have for syncing other locales  
-- Update KR (#243)  
-    * KR Update  
-- fix  
-- Updated special warning global disble options to allow greater control over what parts of special warning object is disabled. It is now possible to disable only text alerts, only sound alerts, or only flash alerts, or any combination of them. Technically some of this was possible before through various options in other place but it made sense to make sure the global options presented it better.  if you want to disable special warnings completely, you just disable all 3.  
-- add back issue templates  
-- fix issue templates  
-- Removed a disable/filter option that's obsolete since 1.13.3, nameplate lines are dead.  
-    Added new disable/filter categories to help users find what they desire more quickly  
-- Classic sync (#241)  
-    * Classic sync  
-    * Derp  
-- Add a classic link in new issues (Myst requested) (#240)  
-    * Add a classic link in new issues (Myst requested)  
-    * Make link point to creating a new issue  
-- Last of the GUI problems (#239)  
-    Fix option spacer  
-    Fixed points for dynamic resizing becoming too wide  
-    Added max resize  
-    Made editboxes prettier, and saved 3 frames per (memory improvements ftw)  
-- Rename one dungeon boss that was renamed  
-- Fix error  
-- Create auto localized options for icon and playername yell repeaters  
-    Began construction of a :Repeat() function within yell prototype so the repeater code doesn't have to be duplicated in every mod. This needs review so it's not yet deployed  
-- Comment out SpellTimers while its currently disbled. (#235)  
-    * Comment out SpellTimers while its currently disbled.  
-    * Comment them at the end to prevent breaking list  
-- Attempt to fix long standing bug with jaina where nameplate icons still don't get removed, since calling without spellId still bugs out with some nameplate addons that don't have properly implimented "remove all if no texture/ID given"  
-- Properly fix wings mod  
-- Update KR (#234)  
-    * KR Update  
-- Patch2 (#233)  
-    * Fix spacing between checkboxes on resize.  
-    * Found the underlying issue >.>  
-    If its resized once, it doesn't like doing it a 2nd time due to our previous "SetPoint" hack  
-    * A lot of the options overhauled.  
-    * Don't run auto resize on stats, as that code is FAR too complex to math  
-    * Fix mod options having incorrect height assigned  
-    * Remove debug print code  
-    * Add update for sizes on drag in General Options  
-    * Remove unused variable  
-    * Might as well remove redundant initialization in core too  
-    * And fix unused in other stuff too  
-    * Even more unused variables cleanup  
-    * Luacheck entry is provided by *  
-    * Don't whitelist all DBM globals, since there's a lot less of them now. (Also fix build)  
-    * Fixes  
-    * Dropdowns now move according to editboxes above them.  
-    * Fix size options not updating properly  
-- Update zhTW (#232)  
-- Update zhTW (#231)  
-- Patch2 (#230)  
-    * Fix spacing between checkboxes on resize.  
-    * Found the underlying issue >.>  
-    If its resized once, it doesn't like doing it a 2nd time due to our previous "SetPoint" hack  
-- Fix spacing between checkboxes on resize. (#229)  
-- Fixed a bug that could cause event sounds to throw errors if User has no media installed and selects "Random" option  
-- Update zhTW (#226)  
-- CPU Improvements (#225)  
-    Fix stats panel having extra space at the bottom  
-    Checkboxes now resize properly  
-    CPU/memory improvements by localising global functions and variables  
-    Added editbox for GUI width and height for pixel perfectionists  
-    Fixed capitsalisation in a dropdown menu's entries  
-    Checkboxes have better positioning.  
-- Revert "Patch1 (#224)"  
-- Patch1 (#224)  
-    * Prevent editbox autofocus by default  
-    * GUI Fixes  
-- Fixed bug where neck tracking didn't work correctly on non mythic difficulty  
-- Fix last  
-- Fix hide dead logic, and make it on by default  
-- KR Update (#218)  
-    * KR Update  
-- Prevent dead players from appearing on the sanity table. (#219)  
-    Added option to hide dead players from infoframe on non mythic difficulties of nzoth.  
-- Updated messaging that SpellTimers and RaidLeadTools are no more and have to be uninstalled.  
-- And for absolute certainty, add this too  
-- Fix spellTimers version check, for alpha versions of spelltimers that add the git hash  
-- Set alpha version  
-- Prevent editbox autofocus by default (#217)  
+- prep new release  
+- Finish the unfinished stuff in Sanguine Dsepths  
+- Update version check  
+- Missed one replaccement  
+- Reworked Council of Blood mod with changes from latest build. A lot of abilities removed and added, therefor status of this mod has been changed from done back to bet since it needs to be retested  
+    Fixed a missed nameplate line usage on ghuun (was harmless but injected extra args and table for no reason)  
+- Code cleanup and security improvements on TimerTracker handling to prevent abuse (accidental or intentional) that would cause BG or M+ timer objects started by blizzard to break. Now, if an M+ or PvP timer already exists, pull timers from DBM will no longer start TimerTracker countdown objects.  
+     - In addition, another update was made to fix a niche condition for M+ where players like to do a 10 second pull timer first before activating keystone, and then after loading screen Obviously blizzard starts their own M+ timer. Blizzard added a conditional to TimerTracker code on their end that says "if a timer is already running, don't start another one". This was causing M+ blizzard timer not to activate correctly if even a fraction of a second was left on DBMs pull timer when keystone was activated. Now, any time a loading screen is triggered, DBM will wipe out TimerTracker objects that have countdown type to ensure that when blizzard runs their type 2 timer (M+), "already running" abort conditionn would be false.  
+- Es update  
+- Fixed regression to RU translations that caused them to completely erase english tables instead of doing table replacements. This was causing lua errors or missing auto translations on warnings/timers that weren't yet translated into Russian  
+- We can fix PvP timers, right? :P (#369)  
+    All timers are handled via PvPGeneral mod.  
+    Any which aren't (e.g. silvershard mines), use math rather than events to calculate their time, so don't need a resync.  
+- Fix #367 (#368)  
+- Forgot to bump version for next alpha cycle  
+- Some short term changes to TimerTracker handling in PT to reducce chance of taint as well as change to type 3 so texture overwriting no longer required. This will likely be changed up again in future to possibly migrate to blizzards countdown timer once it is able to accomidate some needs  

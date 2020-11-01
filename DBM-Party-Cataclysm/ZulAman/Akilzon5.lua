@@ -1,10 +1,11 @@
 ﻿local mod	= DBM:NewMod(186, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220142801")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(23574)
 mod:SetEncounterID(1189)
-mod:SetZone()
 mod:SetUsedIcons(1, 8)
 
 mod:RegisterCombat("combat")
@@ -13,7 +14,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 97318",
 	"SPELL_CAST_SUCCESS 43648"
 )
-mod.onlyHeroic = true
 
 local warnStormSoon		= mod:NewSoonAnnounce(43648, 5, 3)
 local warnPlucked		= mod:NewTargetNoFilterAnnounce(97318, 3)

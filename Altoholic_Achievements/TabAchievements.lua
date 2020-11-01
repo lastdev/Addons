@@ -62,13 +62,14 @@ end
 
 addon:Controller("AltoholicUI.TabAchievements", {
 	OnBind = function(frame)
-		frame.SelectRealm:RegisterClassEvent("RealmChanged", function(self, account, realm) 
+		frame.SelectAccount:RegisterClassEvent("AccountChanged", function(self)
+				local account, realm = frame.SelectAccount:GetCurrentAccount()
 				frame.ClassIcons:Update(account, realm)
 				frame.Status:SetText("")
 				frame.Achievements:Update()
 			end)
 			
-		frame.SelectRealm:RegisterClassEvent("DropDownInitialized", function(self) 
+		frame.SelectAccount:RegisterClassEvent("DropDownInitialized", function(self) 
 				self:AddTitle()
 				self:AddTitle(format("%s%s", colors.gold, L["Not started"]), ICON_NOT_STARTED)
 				self:AddTitle(format("%s%s", colors.gold, L["Started"]), ICON_PARTIAL)
@@ -76,7 +77,7 @@ addon:Controller("AltoholicUI.TabAchievements", {
 			end)
 			
 		frame.ClassIcons.OnCharacterChanged = function(self)
-				local account, realm = frame.SelectRealm:GetCurrentRealm()
+				local account, realm = frame.SelectAccount:GetCurrentAccount()
 				self:Update(account, realm)
 				frame.Achievements:Update()
 			end
@@ -104,11 +105,9 @@ addon:Controller("AltoholicUI.TabAchievements", {
 				-- end
 			-- end
 		-- end
-		
-		
 	end,
 	Update = function(frame)
-		local account, realm = frame.SelectRealm:GetCurrentRealm()
+		local account, realm = frame.SelectAccount:GetCurrentAccount()
 		frame.ClassIcons:Update(account, realm)
 
 		if not view then
@@ -189,8 +188,8 @@ addon:Controller("AltoholicUI.TabAchievements", {
 		
 		scrollFrame:Update(#MenuCache)
 	end,
-	GetRealm = function(frame)
-		local account, realm = frame.SelectRealm:GetCurrentRealm()
-		return realm, account
+	GetAccount = function(frame)
+		local account, realm = frame.SelectAccount:GetCurrentAccount()
+		return account, realm
 	end,
 })

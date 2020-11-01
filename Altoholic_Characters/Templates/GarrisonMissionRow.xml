@@ -58,6 +58,16 @@
 					<Anchor point="LEFT" relativeKey="$parent.Follower2" relativePoint="RIGHT" />
 				</Anchors>
 			</Button>
+            <Button parentKey="Follower4" inherits="AltoGarrisonMissionFollowerTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Follower3" relativePoint="RIGHT" />
+				</Anchors>
+			</Button>
+            <Button parentKey="Follower5" inherits="AltoGarrisonMissionFollowerTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Follower4" relativePoint="RIGHT" />
+				</Anchors>
+			</Button>
 			<Button parentKey="Reward1" inherits="AltoGarrisonMissionRewardTemplate">
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-50" y="-4" />

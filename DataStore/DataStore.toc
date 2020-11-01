@@ -1,15 +1,16 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: DataStore by |cFF69CCF0Thaoky|r
-## Notes: Main DataStore Module
+## Notes: Main DataStore Module - Teelos Fork
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r67
+## Version: 9.0.1-024
 ## OptionalDeps: Ace3, LibAboutPanel 
 ## SavedVariables: DataStoreDB
 ## X-Embeds: Ace3
 ## X-Category: Interface Enhancements
 ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
-## X-Website: http://wow.curse.com/downloads/wow-addons/details/datastore.aspx
+## X-Website: https://www.curseforge.com/wow/addons/altoholic-retail/
 ## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
+## X-Curse-Project-ID: 20204
 
 embeds.xml
 locale.xml

@@ -14,29 +14,81 @@
 
 ----------------------------------------------------------------------------]]--
 
+local _, LM = ...
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
 
-_G.LM_TravelForm = setmetatable({ }, LM_Spell)
-LM_TravelForm.__index = LM_TravelForm
+LM.TravelForm = setmetatable({ }, LM.Spell)
+LM.TravelForm.__index = LM.TravelForm
 
-local travelFormFlags = { 'FLY', 'SWIM', 'RUN' }
+-- Only cancel forms that we will activate (mount-style ones).
+-- See: https://wow.gamepedia.com/API_GetShapeshiftFormID
+-- Form IDs that you put here must be cancelled automatically on
+-- mounting.
 
-function LM_TravelForm:Get()
-    return LM_Spell.Get(self, LM_SPELL.TRAVEL_FORM, unpack(travelFormFlags))
-end
+local savedFormName = nil
 
--- You can cast Travel Form using the SpellID (unlike the journal mounts
--- where you can't), which bypasses a bug.
-
-function LM_TravelForm:GetSecureAttributes()
-    return { ["type"] = "spell", ["spell"] = self.spellID }
-end
+local restoreFormIDs = {
+    [1] = true,     -- Cat Form
+    [5] = true,     -- Bear Form
+    [31] = true,    -- Moonkin Form
+}
 
 -- IsUsableSpell doesn't return false for Travel Form indoors like it should,
 -- because you can swim indoors with it (apparently).
-function LM_TravelForm:IsCastable()
+function LM.TravelForm:IsCastable()
     if IsIndoors() and not IsSubmerged() then return false end
-    return LM_Spell.IsCastable(self)
+    return LM.Spell.IsCastable(self)
+end
+
+-- Check for the bad Travel Form from casting it in combat and
+-- don't consider that to be mounted
+function LM.TravelForm:IsCancelable()
+    if GetShapeshiftFormID() == 27 then
+        local _, run, fly, swim = GetUnitSpeed('player')
+        if fly < run then
+            return false
+        end
+    end
+    return LM.Spell.IsCancelable(self)
+end
+
+-- Work around a Blizzard bug with calling shapeshift forms in macros in 8.0
+-- Breaks after you respec unless you include (Shapeshift) after it.
+
+local function GetFormNameWithSubtext()
+    local idx = GetShapeshiftForm()
+    local spellID = select(4, GetShapeshiftFormInfo(idx))
+    local n = GetSpellInfo(spellID)
+    local s = GetSpellSubtext(spellID) or ''
+    return format('%s(%s)', n, s)
+end
+
+-- You can cast Travel Form using the SpellID (unlike the journal mounts
+-- where you can't), which bypasses a bug. This takes care of saving the
+-- current form name as well.
+--
+-- Takes care of saving the current form in case we need to restore it
+
+function LM.TravelForm:GetCastAction()
+    local currentFormID = GetShapeshiftFormID()
+
+    if currentFormID and restoreFormIDs[currentFormID] then
+        savedFormName = GetFormNameWithSubtext()
+        LM.Debug(" - saving current form " .. tostring(savedFormName))
+    end
+
+    return LM.SecureAction:Spell(self.spellID)
+end
+function LM.TravelForm:GetCancelAction()
+    if savedFormName then
+        local act = LM.SecureAction:Spell(savedFormName)
+        savedFormName = nil
+        return act
+    else
+        -- Is there any good reason to use /cancelform instead?
+        return LM.SecureAction:CancelAura(self.name)
+    end
 end

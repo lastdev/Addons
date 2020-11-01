@@ -8,7 +8,7 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local LCI = LibStub("LibCraftInfo-1.0")
+local LR = LibStub("LibRecipes-3.0")
 
 local THIS_ACCOUNT = "Default"
 
@@ -178,8 +178,21 @@ function AuctionFrameBrowse_UpdateHook()
 			local itemID = addon:GetIDFromLink(link)
 			local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
 			if itemType == L["ITEM_TYPE_RECIPE"] and itemSubType ~= L["ITEM_SUBTYPE_BOOK"] then		-- is it a recipe ?
-				
-				local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link))
+
+                -- Code added 2020/03/10: get the recipeRank
+                CreateFrame( "GameTooltip", "RecipeRankScanningTooltip", nil, "GameTooltipTemplate" );
+                RecipeRankScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+                --RecipeRankScanningTooltip:AddFontStrings(
+                --    RecipeRankScanningTooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
+                --    RecipeRankScanningTooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" ) 
+                --);
+                RecipeRankScanningTooltip:ClearLines()
+                RecipeRankScanningTooltip:SetHyperlink(link)
+                local recipeRank = string.match(_G["RecipeRankScanningTooltipTextLeft2"]:GetText(), 'Rank (%d)')
+                if not recipeRank then recipeRank = 0 end
+                RecipeRankScanningTooltip:Hide()
+                
+				local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link), recipeRank)
 				local tex
 
 				if (AuctioneerCompactUI) then
@@ -267,7 +280,22 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 					if IsBOPItemKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
 						r, g, b = 1, 0, 0
 					elseif itemType == L["ITEM_TYPE_RECIPE"] and itemSubType ~= L["ITEM_SUBTYPE_BOOK"] then		-- is it a recipe ?
-						local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link))
+                    
+                        -- Code added 2020/03/10: get the recipeRank
+                        CreateFrame( "GameTooltip", "RecipeRankScanningTooltip", nil, "GameTooltipTemplate" );
+                        RecipeRankScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+                        --RecipeRankScanningTooltip:AddFontStrings(
+                        --    RecipeRankScanningTooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
+                        --    RecipeRankScanningTooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" ) 
+                        --);
+                        RecipeRankScanningTooltip:ClearLines()
+                        RecipeRankScanningTooltip:SetHyperlink(link)
+                        local recipeRank = string.match(_G["RecipeRankScanningTooltipTextLeft2"]:GetText(), 'Rank (%d)')
+                        if not recipeRank then recipeRank = 0 end
+                        RecipeRankScanningTooltip:Hide()
+                
+                
+						local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link), recipeRank)
 						if #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red
 							r, g, b = 1, 0, 0
 						elseif #couldLearn > 0 then							-- at least 1 could learn it : green (priority over "will learn")
@@ -326,7 +354,7 @@ function addon:OnEnable()
 	Orig_MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfo
 	MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfoHook
 	
-	AltoholicFrameName:SetText(format("Altoholic %s%s by %sThaoky", colors.white, addon.Version, colors.classMage))
+	AltoholicFrameName:SetText(format("Altoholic %s%s", colors.white, addon.Version))
 
 	local realm = GetRealmName()
 	local player = UnitName("player")
@@ -345,7 +373,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHAT_MSG_LOOT", OnChatMsgLoot)
 	
 	BuildUnsafeItemList()
-	
+    
 	-- create an empty frame to manage the timer via its Onupdate
 	addon.TimerFrame = CreateFrame("Frame", "AltoholicTimerFrame", UIParent)
 	local f = addon.TimerFrame
@@ -505,7 +533,8 @@ end
 function addon:GetSpellIDFromRecipeLink(link)
 	-- returns nil if recipe id is not in the DB, returns the spellID otherwise
 	local recipeID = addon:GetIDFromLink(link)
-	return LCI:GetRecipeLearnedSpell(recipeID)
+	local spellID = LR:GetRecipeInfo(recipeID)
+    return spellID
 end
 
 -- copied to formatter service
@@ -523,8 +552,14 @@ function addon:GetMoneyString(copper, color, noTexture)
 		silver = format("%s%s%s%s", color, silver, "|cFFC7C7CF", SILVER_AMOUNT_SYMBOL)
 		gold = format("%s%s%s%s", color, gold, colors.gold, GOLD_AMOUNT_SYMBOL)
 	else
-		copper = color..format(COPPER_AMOUNT_TEXTURE, copper, 13, 13)
-		silver = color..format(SILVER_AMOUNT_TEXTURE, silver, 13, 13)
+        if copper < 10 then copper = "0"..copper end 
+        if silver < 10 then silver = "0"..silver end
+        local pattern = COPPER_AMOUNT_TEXTURE
+        pattern = pattern:gsub("%%d", "%%s")
+        copper = color..format(pattern, copper, 13, 13)
+        pattern = COPPER_AMOUNT_TEXTURE
+        pattern = pattern:gsub("%%d", "%%s") 
+        silver = color..format(pattern, silver, 13, 13)
 		gold = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
 	end
 	return format("%s %s %s", gold, silver, copper)
@@ -540,6 +575,10 @@ function addon:GetTimeString(seconds)
 	seconds = mod(seconds, 3600)
 	local minutes = floor(seconds / 60);
 	seconds = mod(seconds, 60)
+    
+    if seconds < 10 then seconds = "0"..seconds end
+    if minutes < 10 then minutes = "0"..minutes end
+    if hours < 10 then hours = "0"..hours end
 
 	return format("%s%s|rd %s%s|rh %s%s|rm", colors.white, days, colors.white, hours, colors.white, minutes)
 end
@@ -794,7 +833,7 @@ local slotNames = {
 	[15] = INVTYPE_WEAPONMAINHAND,
 	[16] = INVTYPE_WEAPONOFFHAND,
 	[17] = INVTYPE_SHIELD,
-	[18] = INVTYPE_RANGED
+	[18] = INVTYPE_TABARD,
 }
 
 local slotTypeInfo = {
@@ -815,7 +854,6 @@ local slotTypeInfo = {
 	{ color = colors.classHunter, name = INVTYPE_CLOAK },
 	{ color = colors.yellow, name = INVTYPE_WEAPONMAINHAND },
 	{ color = colors.yellow, name = INVTYPE_WEAPONOFFHAND },
-	{ color = colors.classHunter, name = INVTYPE_RANGED },
 	{ color = colors.white, name = INVTYPE_TABARD }
 }
 
@@ -839,3 +877,5 @@ end
 function ns:GetInventoryTypeName(inv)
 	return slotNames[ inventoryTypes[inv] ]
 end
+
+Item:CreateFromItemID(6948)

@@ -39,7 +39,7 @@ local function OnGuildChange(frame, guildBank)
 	local guildKey = frame.value
 	
 	guildBank:SetCurrentGuild(guildKey)
-	guildBank:SetCurrentBankTab(nil)
+	guildBank:SetCurrentBankTab(1)
 	guildBank:Update()
 	
 	local _, _, guildName = strsplit(".", guildKey)
@@ -69,11 +69,31 @@ end
 local function OnHideInTooltip(frame, guildBank)
 	local account, realm, name = strsplit(".", frame.value)
 	local guild = addon:GetGuild(name, realm, account)
-	if guild	then
+	if guild then
 		guild.hideInTooltip = not guild.hideInTooltip
 	end
 
 	guildBank.ContextualMenu:Close()
+end
+
+local function OnShowGuildRealmInTooltip(frame, guildBank)
+	local account, realm, name = strsplit(".", frame.value)
+	local guild = addon:GetGuild(name, realm, account)
+	if guild then
+		guild.showGuildRealmInTooltip = not guild.showGuildRealmInTooltip
+	end
+
+	guildBank.ContextualMenu:Close()
+end
+
+local function OnShowGoldOnSummary(frame, guildBank)
+	local account, realm, name = strsplit(".", frame.value)
+    local guild = addon:GetGuild(name, realm, account)
+    if guild then
+        guild.showGoldOnSummary = not guild.showGoldOnSummary
+    end
+    
+    guildBank.ContextualMenu:Close()
 end
 
 local function OnGuildDelete(frame, guildBank)
@@ -117,27 +137,26 @@ local function GuildIcon_Initialize(frame, level)
 	
 	local info = frame:CreateInfo()
 
+    -- Guilds might be on a different realm to the player. If the player has never been on that realm, then the realm won't be indexed in DataStore:GetRealms
+
 	if level == 1 then
 		local guildKey = guildBank:GetCurrentGuild()
-	
-		for account in pairs(DataStore:GetAccounts()) do
-			for realm in pairs(DataStore:GetRealms(account)) do
-				for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
-					local text = format("%s%s / %s%s", colors.white, realm, colors.green, guildName)
-
-					if account ~= "Default" then
-						text = format("%s %s(%s)", text, colors.yellow, account)
-					end
-				
-					info.text = text
-					info.hasArrow = 1
-					info.checked = (guild == guildKey) and true or nil
-					info.value = guild		-- guild key
-					info.func = OnGuildChange
-					info.arg1 = guildBank
-					frame:AddButtonInfo(info, level)
-				end
-			end
+        
+        for _, key in pairs(DataStore:GetSavedGuildKeys()) do
+            local account, realm, guildName = strsplit(".", key)
+    		local text = format("%s%s / %s%s", colors.white, realm, colors.green, guildName)
+    
+    		if account ~= "Default" then
+    			text = format("%s %s(%s)", text, colors.yellow, account)
+    		end
+    	
+    		info.text = text
+    		info.hasArrow = 1
+    		info.checked = (key == guildKey) and true or nil
+    		info.value = key		-- guild key
+    		info.func = OnGuildChange
+    		info.arg1 = guildBank
+    		frame:AddButtonInfo(info, level)
 		end
 		
 	elseif level == 2 then
@@ -158,6 +177,20 @@ local function GuildIcon_Initialize(frame, level)
 		info.func = OnHideInTooltip
 		info.arg1 = guildBank
 		frame:AddButtonInfo(info, level)
+        
+        info.text = colors.white ..  "Show this guild's realm in the tooltip"
+		info.value = currentMenu
+		info.checked = guild.showGuildRealmInTooltip
+		info.func = OnShowGuildRealmInTooltip
+		info.arg1 = guildBank
+		frame:AddButtonInfo(info, level)
+        
+        info.text = colors.white .. "Include this guild's gold on the Summary totals"
+        info.value = currentMenu
+        info.checked = guild.showGoldOnSummary
+        info.func = OnShowGoldOnSummary
+        info.arg1 = guildBank
+        frame:AddButtonInfo(info, level)
 		
 		info.text = colors.white .. DELETE
 		-- info.value = UIDROPDOWNMENU_MENU_VALUE

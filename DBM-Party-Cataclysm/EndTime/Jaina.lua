@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(285, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(54445)
 mod:SetEncounterID(1883)
 mod:SetModelID(38802)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -13,7 +14,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 101927 101812",
 	"SPELL_DAMAGE 101980"
 )
-mod.onlyHeroic = true
 
 local warnFrostBlades			= mod:NewSpellAnnounce(101339, 3)
 

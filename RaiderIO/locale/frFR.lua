@@ -113,18 +113,12 @@ L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r a des données de dates différent
 L["OUTDATED_DATABASE"] = "Dernière mise à jour des scores il y a %d jours"
 L["OUTDATED_DATABASE_HOURS"] = "Dernière mise à jour des scores il y a %d heures"
 L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r utilise de la data qui est vieux de |cffFF6666%d|r jours. Merci de mettre à jour l'addon pour avoir des scores plus justes."
---[[Translation missing --]]
---[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
---[[Translation missing --]]
---[[ L["OUTDATED_EXPIRED_ALERT"] = ""--]] 
---[[Translation missing --]]
---[[ L["OUTDATED_EXPIRED_TITLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["OUTDATED_EXPIRES_IN_DAYS"] = ""--]] 
---[[Translation missing --]]
---[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
---[[Translation missing --]]
---[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
+L["OUTDATED_DOWNLOAD_LINK"] = "Télécharger : %s"
+L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r utilise des données périmées. Veuillez mettre à jour maintenant pour avoir des données les plus précises : |cffFFFFFF%s|r"
+L["OUTDATED_EXPIRED_TITLE"] = "Les données de Raider.IO ont expiré"
+L["OUTDATED_EXPIRES_IN_DAYS"] = "Les données de Raider.IO expirent dans %d jours"
+L["OUTDATED_EXPIRES_IN_HOURS"] = "Les données de Raider.IO expirent dans %d heures"
+L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Veuillez mettre à jour maintenant votre addon pour avoir des données les plus précises. Les joueurs travaillent dur pour améliorer leurs progression, et l'affichage de données très anciennes ne leur rend pas service. Vous pouvez utiliser le client Raider.IO pour synchroniser automatiquement vos données."
 L["PLAYER_PROFILE_TITLE"] = "Profil Mythic+ du joueur"
 L["PREV_SEASON_SUFFIX"] = "(*)"
 L["PREVIOUS_SCORE"] = "Score M+ Précédent (%s)"
@@ -235,7 +229,7 @@ L["SHOW_ON_GUILD_ROSTER"] = "Afficher dans l'onglet guilde"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Afficher le score Mythique+ lorsqu'on survole un joueur dans la liste des membres de la guilde."
 L["SHOW_ON_PLAYER_UNITS"] = "Afficher sur les cadres d'unité"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Afficher le score Mythique+ lorsqu'on survole le cadre d'un joueur. "
-L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Afficher la progression de Raid dans l'infobulle du joueur"
+L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Affiche la progression du Raid dans l'infobulle du joueur"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Si activé, affiche la progression de Raid du joueur dans l'infobulle Raider.IO"
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Expérimental) Prioriser l'affichage Raider.IO du meilleur donjon"
 L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Ceci est une fonctionnalité expérimentale. Au lieu d'afficher le score Raider.IO comme première ligne, affiche le meilleur donjon du joueur."

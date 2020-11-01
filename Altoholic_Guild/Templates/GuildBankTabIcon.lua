@@ -17,7 +17,7 @@ addon:Controller("AltoholicUI.GuildBankTabIcon", {
 	end,
 	Icon_OnClick = function(frame, button)
 		local guildBank = frame:GetParent()
-		
+
 		guildBank:SetCurrentBankTab(frame:GetID())
 		guildBank:Update()
 	end,

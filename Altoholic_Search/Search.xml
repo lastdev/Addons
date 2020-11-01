@@ -143,7 +143,9 @@
 	<Frame name="AltoholicFrameSearch" parent="AltoholicTabSearch" hidden="true">
 		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT" x="39" y="-105" />
+            <Anchor point="TOPLEFT" x="180" y="-105"/>
+			<Anchor point="TOPRIGHT" x="-39" y="-105" />
+            <Anchor point="BOTTOMRIGHT" x="-39" y="30"/>
 		</Anchors>
 		<Frames>
 			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
@@ -153,7 +155,7 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="7" type="number" />
+					<KeyValue key="numRows" value="18" type="number" />
 					<KeyValue key="rowHeight" value="41" type="number" />
 					<KeyValue key="rowTemplate" value="AltoSearchEntryTemplate" />
 					<KeyValue key="xOffset" value="0" type="number" />

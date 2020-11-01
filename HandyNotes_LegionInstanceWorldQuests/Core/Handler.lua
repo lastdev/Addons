@@ -1,4 +1,4 @@
--- $Id: Handler.lua 45 2018-08-06 15:34:00Z arith $
+-- $Id: Handler.lua 59 2020-10-18 08:32:02Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -8,8 +8,11 @@ local _G = getfenv(0)
 local string = _G.string
 local format, gsub = string.format, string.gsub
 local next, wipe, pairs, select, type = next, wipe, pairs, select, type
-local GameTooltip, WorldMapTooltip, GetSpellInfo, CreateFrame, UnitClass = _G.GameTooltip, _G.WorldMapTooltip, _G.GetSpellInfo, _G.CreateFrame, _G.UnitClass
+local GameTooltip, GetSpellInfo, CreateFrame, UnitClass = _G.GameTooltip, _G.GetSpellInfo, _G.CreateFrame, _G.UnitClass
 local UIDropDownMenu_CreateInfo, CloseDropDownMenus, UIDropDownMenu_AddButton, ToggleDropDownMenu = _G.UIDropDownMenu_CreateInfo, _G.CloseDropDownMenus, _G.UIDropDownMenu_AddButton, _G.ToggleDropDownMenu
+
+local WorldMapTooltip = GameTooltip
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 
 -- ----------------------------------------------------------------------------
 -- AddOn namespace.

@@ -50,9 +50,34 @@ local function FilterName()
 	end
 end
 
+local function FilterNameOrDescription()
+    if string.find(strlower(searchedItem["itemName"]), filters["itemName"], 1, true) then
+		return true		-- name contains the filter value, keep the item
+	end
+    
+    local tooltip = AltoScanningTooltip
+	
+	tooltip:ClearLines()
+	if not pcall(tooltip.SetHyperlink, tooltip, searchedItem["itemLink"]) then
+        -- this fails for battle pets
+        return
+    end
+	
+	local tooltipName = tooltip:GetName()
+	
+	for i = tooltip:NumLines(), 2, -1 do			-- parse all tooltip lines, from last to second
+		local tooltipText = _G[tooltipName .. "TextLeft" .. i]:GetText()
+		if tooltipText then
+            if string.find(strlower(tooltipText), filters["itemName"], 1, true) then
+                return true		-- name contains the filter value, keep the item
+            end
+		end
+	end
+end
+
 local function FilterMinimumLevel()
 	local minLevel = searchedItem["itemMinLevel"]
-	if minLevel == 0 then
+	if (minLevel == nil) or (minLevel == 0) then
 		if addon:GetOption("UI.Tabs.Search.IncludeNoMinLevel") then
 			return true		-- include items with no minimum requireement
 		end
@@ -79,6 +104,7 @@ local filterFunctions = {
 	["Name"] = FilterName,
 	["MinLevel"] = FilterMinimumLevel,
 	["Maxlevel"] = FilterMaximumLevel,
+    ["NameOrDescription"] = FilterNameOrDescription,
 }
 
 addon.ItemFilters = {}
@@ -147,6 +173,7 @@ function ns:SetSearchedItem(itemID, itemLink, isBattlePet)
 	-- dirty hack, this should go somewhere else
 	if isBattlePet then
 		_, _, s.itemRarity, _, _, _, s.itemName = DataStore:GetBattlePetInfoFromLink(itemLink)
+        s.itemLink = itemLink
 	else
 		s.itemID = itemID
 		s.itemName, s.itemLink, s.itemRarity, s.itemLevel,	s.itemMinLevel, s.itemType, s.itemSubType, _, s.itemEquipLoc = GetItemInfo(itemLink or itemID)

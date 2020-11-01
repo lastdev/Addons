@@ -13,6 +13,8 @@ L.disbandingGroupChatMsg = "Disbanding group."
 L.disbandGroupWarning = "Are you sure you want to disband your group?"
 L.unknown = "Unknown"
 L.profile = "Profile"
+L.yes = _G.YES
+L.no = _G.NO
 
 -- Core
 L.togglePane = "Toggle oRA3 Pane"
@@ -248,6 +250,8 @@ L.lockMonitor = "Lock monitor"
 L.battleResLockDesc = "Toggle locking the monitor. This will hide the header text, background, and prevent movement."
 L.showMonitor = "Show monitor"
 L.battleResShowDesc = "Toggle showing or hiding the monitor."
+L.battleResAlwaysShow = "Always show"
+L.battleResAlwaysShowDesc = "Show the display even when no class in the group can use a battle res."
 
 -- Consumables Module
 L.consumables = "Consumable Check"

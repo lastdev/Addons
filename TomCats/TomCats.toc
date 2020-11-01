@@ -1,13 +1,13 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: TomCat's Tours
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 01.05.00
+## Version: 01.06.01
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: TomCats_Character
 ## SavedVariables: TomCats_Account
-## X-TomCats-VersionMessageID: 1583846119
-## X-TomCats-VersionMessage: XZGZYJf9Ec1k5QWPQ1TfBuQne+MQgCQKV56imu0rBrcJwkc7x8rIMl5nkucBAQUAAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEDBAwAAQYNAQASDgEAGg8BAAQ=
+## X-TomCats-VersionMessageID: 1603125516
+## X-TomCats-VersionMessage: T2gGYeQevRmZIkMHr8YvY7OSHipg4wXSbcFOdSBWpI2ca+r2g69xOl+NwQwBAQYBAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEGAAwAAQYNAQASDgEAGg8BAAY=
 ## X-Part-Of: TomCat's Tours:
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW

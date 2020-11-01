@@ -1,6 +1,6 @@
 local AddonName, Addon = ...
 
-local ZPerl = CreateFrame("Frame")
+local ZPerl = CreateFrame("Frame", BackdropTemplateMixin and "BackdropTemplate")
 
 ZPerl:RegisterEvent("ADDON_LOADED")
 

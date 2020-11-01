@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(592, "DBM-Party-WotLK", 5, 274)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "normal,heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(29304)
 mod:SetEncounterID(383, 384, 1978)
---mod:SetZone()
-
+--
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(

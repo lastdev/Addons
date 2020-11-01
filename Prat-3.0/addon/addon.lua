@@ -61,8 +61,6 @@ MOP = select(4, _G.GetBuildInfo()) >= 50000
 
 BN_CHAT = true --(_G.GetBuildInfo() == "3.3.5") or (_G.GetBuildInfo() == "0.3.5")
 
-if not _G.GetDifficultyColor then _G.GetDifficultyColor = _G.GetQuestDifficultyColor end
-
 -- Debug
 --PrintMainChunkUse=true
 
@@ -76,7 +74,7 @@ Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]===]
 
 --@non-debug@
-Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.8.11".."|r)"
+Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.1".."|r)"
 --@end-non-debug@
 
 
@@ -91,7 +89,7 @@ setmetatable(Prat, am)
 
 Prat.Prat3 = true
 Prat.IsClassic = (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC)
-Prat.IsRetail = not Prat.IsClassic
+Prat.IsRetail =  (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE)
 
 
 local function dbg(...) end
@@ -315,10 +313,6 @@ function Format(smf, event, color, ...)
 end
 
 function addon:OnEnable()
-
-
-
-
   for i, v in ipairs(EnableTasks) do
     v(self)
   end
@@ -329,7 +323,7 @@ function addon:OnEnable()
     linkfunc = function(...) _G.ReloadUI() return false end
   }, "Prat")
 
-  self:ScheduleTimer("PostEnable", 0)
+  self:PostEnable()
 end
 
 
@@ -403,10 +397,7 @@ function addon:FCF_SetTemporaryWindowType(chatFrame, chatType, chatTarget)
 
   Frames[name] = chatFrame
 
-  if not HookedFrames[name] then
-    self:RawHook(chatFrame, "AddMessage", true)
-    HookedFrames[name] = chatFrame
-  end
+  HookedFrames[name] = chatFrame
 
   callbacks:Fire(Events.FRAMES_UPDATED, name, chatFrame, chatType, chatTarget)
 end
@@ -417,14 +408,24 @@ function addon:FCF_Close(frame, fallback)
 
   Frames[name] = nil
 
-  if HookedFrames[name] then
-    self:Unhook(frame, "AddMessage")
-  end
   HookedFrames[name] = nil
 
   callbacks:Fire(Events.FRAMES_REMOVED, name, frame)
 end
 
+function addon:FCF_CopyChatSettings(chatFrame)
+  if not chatFrame.isTemporary then
+    local name = chatFrame:GetName()
+
+    Frames[name] = chatFrame
+
+    if not _G.IsCombatLog(chatFrame) then
+      HookedFrames[name] = chatFrame
+    end
+
+    callbacks:Fire(Events.FRAMES_UPDATED, name, chatFrame)
+  end
+end
 
 function addon:PostEnable()
   --[===[@debug@
@@ -456,6 +457,8 @@ function addon:PostEnable()
   self:SecureHook("FCF_SetTemporaryWindowType")
 
   self:SecureHook("FCF_Close")
+
+  self:SecureHook("FCF_CopyChatSettings")
 
   --    -- This event fires after Prat's hooks are installed
   --    -- Prat's core wont operate until after this event
@@ -528,7 +531,7 @@ function addon:ChatEdit_ParseText(editBox, send)
   CurrentMessage = m
 
 
-  m.MESSAGE = command
+  m.MESSAGE = command:gsub("^%s*(.-)%s*$", "%1") -- trim whitespace
 
   m.CTYPE = editBox:GetAttribute("chatType")
   m.TARGET = editBox:GetAttribute("tellTarget")

@@ -119,7 +119,7 @@ end
 
 local function inviteGuild()
 	if not canInvite() then return end
-	GuildRoster()
+	C_GuildInfo.GuildRoster()
 	local maxLevel = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 	SendChatMessage(L.invitePrintMaxLevel, "GUILD")
 	module:ScheduleTimer(doGuildInvites, 10, maxLevel, nil, nil)
@@ -127,7 +127,7 @@ end
 
 local function inviteZone()
 	if not canInvite() then return end
-	GuildRoster()
+	C_GuildInfo.GuildRoster()
 	local currentZone = GetRealZoneText()
 	SendChatMessage((L.invitePrintZone):format(currentZone), "GUILD")
 	module:ScheduleTimer(doGuildInvites, 10, nil, currentZone, nil)
@@ -208,15 +208,17 @@ local function getBattleNetCharacter(bnetIDAccount)
 	local friendIndex = BNGetFriendIndex(bnetIDAccount)
 	if not friendIndex then return end
 
-	for i = 1, BNGetNumFriendGameAccounts(friendIndex) do
-		local _, charName, client, realmName, realmId, faction, _, _, _, _, _, _, _, _, _, bnetIDGameAccount = BNGetFriendGameAccountInfo(friendIndex, i)
-		if client == BNET_CLIENT_WOW and faction == playerFaction and realmId > 0 then
-			if realmName ~= "" and realmName ~= playerRealm then
+	local accountInfo = C_BattleNet.GetFriendAccountInfo(friendIndex)
+	for i = 1, C_BattleNet.GetFriendNumGameAccounts(friendIndex) do
+		local info = C_BattleNet.GetFriendGameAccountInfo(friendIndex, i)
+		local charName, realmName = info.characterName, info.realmName
+		if info.clientProgram == BNET_CLIENT_WOW and info.wowProjectID == WOW_PROJECT_MAINLINE and info.factionName == playerFaction and info.realmID > 0 then
+			if realmName and realmName ~= "" and realmName ~= playerRealm then
 				-- To my knowledge there is no API for trimming server names. I can only guess this is what Blizzard uses internally.
 				realmName = realmName:gsub("[%s%-]", "")
 				charName = FULL_PLAYER_NAME:format(charName, realmName)
 			end
-			return charName, bnetIDGameAccount
+			return charName, accountInfo.bnetAccountID
 		end
 	end
 end

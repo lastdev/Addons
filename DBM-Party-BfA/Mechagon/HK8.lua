@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2355, "DBM-Party-BfA", 11, 1178)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524143937")
+mod:SetRevision("20200908175403")
 mod:SetCreatureID(150190)
 mod:SetEncounterID(2291)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -47,7 +46,7 @@ local timerFulminatingZapCD			= mod:NewCDTimer(17.0, 302274, nil, nil, nil, 3, n
 local timerFulminatingBurstCD		= mod:NewCDTimer(17.0, 303885, nil, nil, nil, 3, nil, DBM_CORE_L.HEALER_ICON)--Hard Mode
 --Stage 2
 local timerHaywire					= mod:NewBuffActiveTimer(30, 296080, nil, nil, nil, 6)
---local timerHowlingFearCD			= mod:NewAITimer(13.4, 257791, nil, "HasInterrupt", nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
+--local timerHowlingFearCD			= mod:NewCDTimer(13.4, 257791, nil, "HasInterrupt", nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 mod:AddNamePlateOption("NPAuraOnWalkieShockie", 296522, false)
 
@@ -177,7 +176,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFulminatingZap:Show(args.destName)
 	elseif spellId == 303885 then
 		if args:IsPlayer() then
-			specWarnFulminatingBurst:Show(DBM_ALLY)
+			specWarnFulminatingBurst:Show(DBM_CORE_L.ALLY)
 			yellFulminatingBurst:Yell()
 			yellFulminatingBurstFades:Countdown(spellId)
 		else
@@ -186,7 +185,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnFulminatingBurst:Play("gathershare")
 	elseif spellId == 303252 then
 		if args:IsPlayer() then
-			specWarnAntiTresField:Show(DBM_ALLY)
+			specWarnAntiTresField:Show(DBM_CORE_L.ALLY)
 			yellAntiTresField:Yell()
 		else
 			specWarnAntiTresField:Show(args.destName)

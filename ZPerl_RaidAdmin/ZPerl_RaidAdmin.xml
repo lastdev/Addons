@@ -106,7 +106,10 @@
 		</Size>
 	</Frame>
 
-	<Frame name="XPerl_AdminFrame" parent="XPerl_AdminFrameAnchor" hidden="true">
+	<Frame name="XPerl_AdminFrame" parent="XPerl_AdminFrameAnchor" inherits="XPerlBackdropTemplate" hidden="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad function="XPerl_AdminOnLoad"/>
 			<OnEnter>
@@ -131,19 +134,8 @@
 		<Size>
 			<AbsDimension x="140" y="150"/>
 		</Size>
-		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
-			<Frame name="$parent_TitleBar">
+			<Frame name="$parent_TitleBar" inherits="XPerlBackdropTemplate">
 				<Size>
 					<AbsDimension x="80" y="12"/>
 				</Size>

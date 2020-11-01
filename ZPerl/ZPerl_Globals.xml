@@ -14,6 +14,13 @@
 	<!--<Script file="ZPerl_Voice.lua"/>-->
 	<Script file="ZPerl_Slash.lua"/>
 
+	<Frame name="XPerlBackdropTemplate" mixin="XPerlBackdropTemplateMixin" virtual="true">
+		<Scripts>
+			<OnLoad method="OnBackdropLoaded"/>
+			<OnSizeChanged method="OnBackdropSizeChanged"/>
+		</Scripts>
+	</Frame>
+
 	<Button name="XPerl_BasicButton" virtual="true">
 		<Scripts>
 			<OnEnter>
@@ -66,49 +73,25 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="XPerl_BorderStyleTemplate" virtual="true">
-		<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
+	<Frame name="XPerl_BorderStyleTemplate" inherits="XPerlBackdropTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+		</KeyValues>
 	</Frame>
 
-	<Frame name="XPerl_BorderStyleTemplateSecure" inherits="SecureUnitButtonTemplate" virtual="true">
-		<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
+	<Frame name="XPerl_BorderStyleTemplateSecure" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+		</KeyValues>
 	</Frame>
 
 	<Frame name="XPerl_Portrait_Template" inherits="XPerl_BorderStyleTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+		</KeyValues>
 		<Size>
 			<AbsDimension x="62" y="62"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<PlayerModel name="$parentportrait3D">
 				<Size>
@@ -127,7 +110,7 @@
 					</Anchor>
 				</Anchors>
 			</PlayerModel>
-			<Frame name="$parentresurrect" setAllPoints="true" frameStrata="HIGH" hidden="true">
+			<Frame name="$parentresurrect" inherits="XPerlBackdropTemplate" setAllPoints="true" frameStrata="HIGH" hidden="true">
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture file="Interface\RaidFrame\Raid-Icon-Rez">
@@ -173,24 +156,19 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad function="XPerl_SetChildMembers"/>
+			<OnLoad >
+				self:OnBackdropLoaded()
+				XPerl_SetChildMembers(self)
+			</OnLoad>
 		</Scripts>
 	</Frame>
 	<Frame name="XPerl_Portrait_Template_Secure" inherits="XPerl_BorderStyleTemplateSecure" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+		</KeyValues>
 		<Size>
 			<AbsDimension x="62" y="62"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<PlayerModel name="$parentportrait3D">
 				<Size>
@@ -209,7 +187,7 @@
 					</Anchor>
 				</Anchors>
 			</PlayerModel>
-			<Frame name="$parentresurrect" setAllPoints="true" frameStrata="HIGH" hidden="true">
+			<Frame name="$parentresurrect" inherits="XPerlBackdropTemplate" setAllPoints="true" frameStrata="HIGH" hidden="true">
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture file="Interface\RaidFrame\Raid-Icon-Rez">
@@ -255,7 +233,10 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad function="XPerl_SetChildMembers"/>
+			<OnLoad >
+				self:OnBackdropLoaded()
+				XPerl_SetChildMembers(self)
+			</OnLoad>
 		</Scripts>
 	</Frame>
 
@@ -405,7 +386,10 @@
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnLoad function="XPerl_StatsFrame_Setup"/>
+			<OnLoad >
+				self:OnBackdropLoaded()
+				XPerl_StatsFrame_Setup(self)
+			</OnLoad>
 		</Scripts>
 	</Frame>
 	<!-- Stats Template Secure-->
@@ -637,7 +621,7 @@
 		</Frames>
 	</Button>
 
-	<Frame name="XPerl_HighlightTemplate" virtual="true">
+	<Frame name="XPerl_HighlightTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				XPerl_SetChildMembers(self)
@@ -693,7 +677,7 @@
 		</Layers>
 	</Frame>
 
-	<Frame name="XPerl_ThreatTemplateportraitFrame" virtual="true">
+	<Frame name="XPerl_ThreatTemplateportraitFrame" inherits="XPerlBackdropTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				XPerl_ThreatDisplayOnLoad(self, "portraitFrame")
@@ -723,7 +707,7 @@
 		</Layers>
 	</Frame>
 
-	<Frame name="XPerl_ThreatTemplatenameFrame" virtual="true">
+	<Frame name="XPerl_ThreatTemplatenameFrame" inherits="XPerlBackdropTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				XPerl_ThreatDisplayOnLoad(self, "nameFrame")

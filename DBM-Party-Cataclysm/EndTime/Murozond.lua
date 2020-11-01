@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(289, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(54432)
 mod:SetEncounterID(1271)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Kill)
@@ -13,7 +14,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 101591",
 	"SPELL_CAST_START 102381 102569"
 )
-mod.onlyHeroic = true
 
 --Review timers
 local warnBlast			= mod:NewSpellAnnounce(102381, 3)

@@ -7,7 +7,7 @@
 				<FontString parentKey="Info1" inherits="GameFontNormalSmall" justifyH="LEFT">
 					<Size x="250" y="16" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="360" y="-5" />
+						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="300" y="-5" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
@@ -32,7 +32,7 @@
 			<Frame parentKey="MenuIcons">
 				<Size x="170" y="37" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-23" />
+					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="0" y="-23" />
 				</Anchors>
 				<Frames>
 					<Button parentKey="GuildIcon" inherits="AltoGuildBankIconTemplate" id="1">

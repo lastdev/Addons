@@ -15,7 +15,6 @@ local HandyNotes = HandyNotes
 local GetItemInfo = GetItemInfo
 local GetAchievementInfo = GetAchievementInfo
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
-local GetCurrencyInfo = GetCurrencyInfo
 
 local ARTIFACT_LABEL = '|cffff8000' .. ARTIFACT_POWER .. '|r'
 
@@ -52,13 +51,10 @@ local trimmed_icon = function(texture)
     return icon_cache[texture]
 end
 local atlas_texture = function(atlas, scale)
-    local texture, _, _, left, right, top, bottom = GetAtlasInfo(atlas)
+    atlas = C_Texture.GetAtlasInfo(atlas)
     return {
-        icon = texture,
-        tCoordLeft = left,
-        tCoordRight = right,
-        tCoordTop = top,
-        tCoordBottom = bottom,
+        icon = atlas.file,
+        tCoordLeft = atlas.leftTexCoord, tCoordRight = atlas.rightTexCoord, tCoordTop = atlas.topTexCoord, tCoordBottom = atlas.bottomTexCoord,
         scale = scale or 1,
     }
 end
@@ -67,12 +63,20 @@ local function work_out_label(point)
     if point.label then
         return point.label
     end
-    if point.achievement and point.criteria then
-        local criteria = GetAchievementCriteriaInfoByID(point.achievement, point.criteria)
-        if criteria then
-            return criteria
+    if point.achievement then
+        if point.criteria then
+            local criteria = GetAchievementCriteriaInfoByID(point.achievement, point.criteria)
+            if criteria then
+                return criteria
+            end
+            fallback = 'achievement:'..point.achievement..'.'..point.criteria
+        else
+            local _, achievement = GetAchievementInfo(point.achievement)
+            if achievement then
+                return achievement
+            end
+            fallback = 'achievement:'..point.achievement
         end
-        fallback = 'achievement:'..point.achievement..'.'..point.criteria
     end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)
@@ -99,9 +103,9 @@ local function work_out_label(point)
         if point.currency == 'ARTIFACT' then
             return ARTIFACT_LABEL
         end
-        local name, _, texture = GetCurrencyInfo(point.currency)
-        if name then
-            return name
+        local info = C_CurrencyInfo.GetCurrencyInfo(point.currency)
+        if info then
+            return info.name
         end
     end
     return fallback or UNKNOWN
@@ -127,9 +131,9 @@ local function work_out_texture(point)
                     return trimmed_icon(texture)
                 end
             else
-                local texture = select(3, GetCurrencyInfo(point.currency))
-                if texture then
-                    return trimmed_icon(texture)
+                local info = C_CurrencyInfo.GetCurrencyInfo(point.currency)
+                if info then
+                    return trimmed_icon(info.iconFileID)
                 end
             end
         end
@@ -177,9 +181,8 @@ local get_point_info = function(point)
         return label, icon, category, point.quest, point.faction, point.scale, point.alpha or 1
     end
 end
-local get_point_info_by_coord = function(mapFile, coord)
-    mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-    return get_point_info(ns.points[mapFile] and ns.points[mapFile][coord])
+local get_point_info_by_coord = function(uiMapID, coord)
+    return get_point_info(ns.points[uiMapID] and ns.points[uiMapID][coord])
 end
 
 local function handle_tooltip(tooltip, point)
@@ -202,7 +205,8 @@ local function handle_tooltip(tooltip, point)
             if point.currency == 'ARTIFACT' then
                 name = ARTIFACT_LABEL
             else
-                name = GetCurrencyInfo(point.currency)
+                local info = C_CurrencyInfo.GetCurrencyInfo(point.currency)
+                name = info and info.name
             end
             tooltip:AddDoubleLine(CURRENCY, name or point.currency)
         end
@@ -288,9 +292,8 @@ local function handle_tooltip(tooltip, point)
     end
     tooltip:Show()
 end
-local handle_tooltip_by_coord = function(tooltip, mapFile, coord)
-    mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-    return handle_tooltip(tooltip, ns.points[mapFile] and ns.points[mapFile][coord])
+local handle_tooltip_by_coord = function(tooltip, uiMapID, coord)
+    return handle_tooltip(tooltip, ns.points[uiMapID] and ns.points[uiMapID][coord])
 end
 
 ---------------------------------------------------------
@@ -298,22 +301,21 @@ end
 local HLHandler = {}
 local info = {}
 
-function HLHandler:OnEnter(mapFile, coord)
+function HLHandler:OnEnter(uiMapID, coord)
     local tooltip = GameTooltip
     if self:GetCenter() > UIParent:GetCenter() then -- compare X coordinate
         tooltip:SetOwner(self, "ANCHOR_LEFT")
     else
         tooltip:SetOwner(self, "ANCHOR_RIGHT")
     end
-    handle_tooltip_by_coord(tooltip, mapFile, coord)
+    handle_tooltip_by_coord(tooltip, uiMapID, coord)
 end
 
-local function createWaypoint(button, mapFile, coord)
+local function createWaypoint(button, uiMapID, coord)
     if TomTom then
-        local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
         local x, y = HandyNotes:getXY(coord)
-        TomTom:AddWaypoint(mapId, x, y, {
-            title = get_point_info_by_coord(mapFile, coord),
+        TomTom:AddWaypoint(uiMapID, x, y, {
+            title = get_point_info_by_coord(uiMapID, coord),
             persistent = nil,
             minimap = true,
             world = true
@@ -321,8 +323,8 @@ local function createWaypoint(button, mapFile, coord)
     end
 end
 
-local function hideNode(button, mapFile, coord)
-    ns.hidden[mapFile][coord] = true
+local function hideNode(button, uiMapID, coord)
+    ns.hidden[uiMapID][coord] = true
     HL:Refresh()
 end
 
@@ -375,45 +377,30 @@ do
     HL_Dropdown.displayMode = "MENU"
     HL_Dropdown.initialize = generateMenu
 
-    function HLHandler:OnClick(button, down, mapFile, coord)
-        currentZone = string.gsub(mapFile, "_terrain%d+$", "")
+    function HLHandler:OnClick(button, down, uiMapID, coord)
+        currentZone = uiMapID
         currentCoord = coord
         -- given we're in a click handler, this really *should* exist, but just in case...
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if button == "RightButton" and not down then
             ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
-        elseif button == "LeftButton" and down and point.npc then
-            if InCombatLockdown() then
-                print("|cFF33FF99" .. myname .. "|r: Can't search in combat")
-            else
-                local name = mob_name(point.npc)
-                PVEFrame_ShowFrame("GroupFinderFrame", LFGListPVEStub)
-                local panel = LFGListFrame.CategorySelection
-                LFGListCategorySelection_SelectCategory(panel, 6, 0)
-                LFGListCategorySelection_StartFindGroup(panel, name)
-                -- LFGListEntryCreation_SetAutoCreateMode(panel:GetParent().EntryCreation, "quest", activityID, questID)
-
-                -- C_LFGList.Search(6, LFGListSearchPanel_ParseSearchTerms(npcName), 0, 4)
-                -- LFG_LIST_SEARCH_RESULTS_RECEIVED
-                -- local number, ids = C_LFGList.GetSearchResults()
-            end
         end
     end
 end
 
-function HLHandler:OnLeave(mapFile, coord)
+function HLHandler:OnLeave(uiMapID, coord)
     GameTooltip:Hide()
     ShoppingTooltip1:Hide()
 end
 
 do
     -- This is a custom iterator we use to iterate over every node in a given zone
-    local currentLevel, currentZone
+    local currentZone
     local function iter(t, prestate)
         if not t then return nil end
         local state, value = next(t, prestate)
         while state do -- Have we reached the end of this zone?
-            if value and ns.should_show_point(state, value, currentZone, currentLevel) then
+            if value and ns.should_show_point(state, value, currentZone) then
                 local label, icon, _, _, _, scale, alpha = get_point_info(value)
                 scale = (scale or 1) * (icon and icon.scale or 1) * ns.db.icon_scale
                 return state, nil, icon, scale, ns.db.icon_alpha * alpha
@@ -435,23 +422,19 @@ do
             end
         end
     end
-    function HLHandler:GetNodes(mapFile, minimap, level)
-        Debug("GetNodes", mapFile, minimap, level)
-        currentLevel = level
-        mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-        currentZone = mapFile
-        if (minimap and not ns.db.show_on_minimap) or (not minimap and not ns.db.show_on_world) then
-            return iter
-        end
-        if minimap and ns.map_spellids[mapFile] then
-            if ns.map_spellids[mapFile] == true then
+    function HLHandler:GetNodes2(uiMapID, minimap)
+        Debug("GetNodes2", uiMapID, minimap)
+        currentZone = uiMapID
+        isMinimap = minimap
+        if minimap and ns.map_spellids[uiMapID] then
+            if ns.map_spellids[uiMapID] == true then
                 return iter
             end
-            if UnitHasBuff("player", ns.map_spellids[mapFile]) then
+            if UnitHasBuff("player", ns.map_spellids[uiMapID]) then
                 return iter
             end
         end
-        return iter, ns.points[mapFile], nil
+        return iter, ns.points[uiMapID], nil
     end
 end
 

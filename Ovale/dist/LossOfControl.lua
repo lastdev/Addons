@@ -8,9 +8,11 @@ local pairs = pairs
 local insert = table.insert
 local sub = string.sub
 local upper = string.upper
+local format = string.format
+local __tools = LibStub:GetLibrary("ovale/tools")
+local OneTimeMessage = __tools.OneTimeMessage
 __exports.OvaleLossOfControlClass = __class(nil, {
     constructor = function(self, ovale, ovaleDebug, requirement)
-        self.ovale = ovale
         self.requirement = requirement
         self.lossOfControlHistory = {}
         self.OnInitialize = function()
@@ -25,15 +27,17 @@ __exports.OvaleLossOfControlClass = __class(nil, {
             self.requirement:UnregisterRequirement("lossofcontrol")
         end
         self.LOSS_OF_CONTROL_ADDED = function(event, eventIndex)
-            self.tracer:Debug("GetEventInfo:", eventIndex, C_LossOfControl.GetEventInfo(eventIndex))
-            local locType, spellID, _, _, startTime, _, duration = C_LossOfControl.GetEventInfo(eventIndex)
-            local data = {
-                locType = upper(locType),
-                spellID = spellID,
-                startTime = startTime or GetTime(),
-                duration = duration or 10
-            }
-            insert(self.lossOfControlHistory, data)
+            self.tracer:Debug("LOSS_OF_CONTROL_ADDED", format("C_LossOfControl.GetActiveLossOfControlData(%d)", eventIndex), C_LossOfControl.GetActiveLossOfControlData(eventIndex))
+            local lossOfControlData = C_LossOfControl.GetActiveLossOfControlData(eventIndex)
+            if lossOfControlData then
+                local data = {
+                    locType = upper(lossOfControlData.locType),
+                    spellID = lossOfControlData.spellID,
+                    startTime = lossOfControlData.startTime or GetTime(),
+                    duration = lossOfControlData.duration or 10
+                }
+                insert(self.lossOfControlHistory, data)
+            end
         end
         self.RequireLossOfControlHandler = function(spellId, atTime, requirement, tokens, index, targetGUID)
             local verified = false
@@ -48,7 +52,7 @@ __exports.OvaleLossOfControlClass = __class(nil, {
                 local hasLoss = self.HasLossOfControl(locType, atTime)
                 verified = (required and hasLoss) or ( not required and  not hasLoss)
             else
-                self.ovale:OneTimeMessage("Warning: requirement '%s' is missing a locType argument.", requirement)
+                OneTimeMessage("Warning: requirement '%s' is missing a locType argument.", requirement)
             end
             return verified, requirement, index
         end
@@ -56,7 +60,7 @@ __exports.OvaleLossOfControlClass = __class(nil, {
             local lowestStartTime = nil
             local highestEndTime = nil
             for _, data in pairs(self.lossOfControlHistory) do
-                if upper(locType) == data.locType and (data.startTime <= atTime and atTime <= data.startTime + data.duration) then
+                if upper(locType) == data.locType and data.startTime <= atTime and atTime <= data.startTime + data.duration then
                     if lowestStartTime == nil or lowestStartTime > data.startTime then
                         lowestStartTime = data.startTime
                     end

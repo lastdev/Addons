@@ -1,11 +1,13 @@
 --- Sorting.lua
 -- Anything used for sorting (it's a mess...)
+local _, addonTable = ...
 
 -- Locals
 local Sorting = {}
 
 -- Upvalues
 local R = Rarity
+local CONSTANTS = addonTable.constants
 -- Lua APIs
 local type = type
 local pairs = pairs
@@ -151,7 +153,25 @@ function Sorting.sort2(t)
 	return nt
 end
 
-function Sorting.sort(t)
+function Sorting:SortGroup(group, method)
+
+	local sortedGroup = group
+	if method == CONSTANTS.SORT_METHODS.SORT_NAME then
+		sortedGroup = self:sort(group)
+	elseif method == CONSTANTS.SORT_METHODS.SORT_DIFFICULTY then
+		sortedGroup = self:sort_difficulty(group)
+	elseif method == CONSTANTS.SORT_METHODS.SORT_CATEGORY then
+		sortedGroup = self:sort_category(group)
+	elseif method == CONSTANTS.SORT_METHODS.SORT_ZONE then
+		sortedGroup = self:sort_zone(group)
+	elseif method == CONSTANTS.SORT_METHODS.SORT_PROGRESS then
+		sortedGroup = self:sort_progress(group)
+	end
+
+	return sortedGroup
+end
+
+function Sorting:sort(t)
 	local nt = {}
 	local n = 0
 	local min
@@ -173,7 +193,7 @@ function Sorting.sort(t)
 	return nt
 end
 
-function Sorting.sort_difficulty(t)
+function Sorting:sort_difficulty(t)
 	local nt = {}
 	local n = 0
 	local min
@@ -195,7 +215,7 @@ function Sorting.sort_difficulty(t)
 	return nt
 end
 
-function Sorting.sort_progress(t)
+function Sorting:sort_progress(t)
 	local nt = {}
 	local n = 0
 	local min
@@ -217,7 +237,7 @@ function Sorting.sort_progress(t)
 	return nt
 end
 
-function Sorting.sort_category(t)
+function Sorting:sort_category(t)
 	local nt = {}
 	local n = 0
 	local min
@@ -239,7 +259,7 @@ function Sorting.sort_category(t)
 	return nt
 end
 
-function Sorting.sort_zone(t)
+function Sorting:sort_zone(t)
 	local nt = {}
 	local n = 0
 	local min

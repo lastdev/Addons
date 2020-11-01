@@ -1,9 +1,6 @@
 # oRA3
 
-## [v8.3.1](https://github.com/BigWigsMods/oRA3/tree/v8.3.1) (2020-04-22)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v8.3.0...v8.3.1)
+## [v9.0.6](https://github.com/BigWigsMods/oRA3/tree/v9.0.6) (2020-10-25)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v9.0.5...v9.0.6) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
 
-- Cooldowns: Fix removing Bloodlust and Heroism from displays  
-    Fixes #72  
-- Tweak comments  
-- Add the new infinite augment rune to consumables (#83)  
+- Cooldowns: Fix an error when a Mage uses Alter Time  

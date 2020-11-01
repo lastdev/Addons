@@ -1,7 +1,7 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="AchievementButton.lua"></Script>
 	
-	<Button name="AltoAchievementButtonTemplate" hidden="true" virtual="true">
+	<Button name="AltoAchievementButtonTemplate" hidden="true" virtual="true" inherits="BackdropTemplate">
 		<Size x="32" y="32" />
 		<Layers> 
 			<Layer level="BACKGROUND"> 
@@ -29,20 +29,17 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<Backdrop parentKey="Backdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="8"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="30"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-			<Color r="1" g="1" b="1" a="0"/>
-		</Backdrop>
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
+                self:SetBackdrop({
+                    bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
+                    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+                  	tile = true,
+                  	tileSize = 30,
+                  	edgeSize = 8,
+                  	insets = { left = 5, right = 5, top = 5, bottom = 5, },
+                })
+                self:SetBackdropColor(1, 1, 1, 0);
 				Altoholic:BindViewToController(self, "AltoholicUI.AchievementButton")
 				
 				local level = self:GetParent():GetFrameLevel()

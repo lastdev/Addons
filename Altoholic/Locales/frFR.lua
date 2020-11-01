@@ -740,7 +740,7 @@ L["Tablet of Ryuneh"] = "Tablette de Ryun'eh"
 L["Tablet of Will"] = "Tablette de volonté"
 L["Tailoring Sets"] = "Sets couture"
 L["TALENT_SPECIALIZATION_STAT_PRIORITY"] = "Stat prioritaire"
-L["TALENT_SPECIALIZATION_UNKOWN"] = "Cette specialization est inconnue.\\nActivez-là pour que l'add-on puisse l'apprendre."
+L["TALENT_SPECIALIZATION_UNKOWN"] = "Cette specialization est inconnue.\nActivez-là pour que l'add-on puisse l'apprendre."
 L["Tank"] = true
 L["T'chali's Voodoo Brewery"] = "Apprenti de la brasserie vaudou de T'chali"
 L["Terocone"] = "Terocône"
@@ -830,6 +830,7 @@ L["Warn %d minutes before an event starts"] = "Avertir %d minutes avant le débu
 L["Warn when mail expires in less days than this value"] = [=[Avertir quand du courrier arrive à expiration
 dans moins de jours que cette valeur]=]
 L["Warrior Set"] = "Set Guerrier"
+L["War Campaign Missions"] = "Missions de Campagne de Guerre"
 L["Weapons"] = "Armes"
 L["Weaponsmith"] = "Fabricant d'armes"
 L["Week starts on Monday"] = "La semaine commence le lundi"
@@ -856,7 +857,7 @@ L["Will be learnable by "] = "Pourra être appris par "
 L["Windhawk Armor"] = "Armure Faucont-du-vent"
 L["Winter Veil Gift"] = "Cadeau du Voile d'hiver"
 L["Wintersbite"] = "Hivernale"
-L["WIPE_DATABASE"] = "Nettoyer les données ?\\nAttention: toutes les données seront perdues !"
+L["WIPE_DATABASE"] = "Nettoyer les données?\nAttention: toutes les données seront perdues!"
 L["World Drops"] = "Butins mondiaux"
 L["World PVP"] = "PVP sauvage"
 L["WoW Collector Edition"] = "WoW édition Collector"
@@ -874,3 +875,13 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 L["Zelemar the Wrathful"] = "Zelemar le Courroucé"
 L["Zone"] = true
 
+-- Added for Grids_Tasks
+L["Task"] = true
+L["New"] = true
+L["Task Type"] = true
+
+L["will be returned upon expiry"] = "sera renvoyé à expiration"
+L["CLOSEST_RETURN_IN_PATTERN"] = "Le plus proche renvoi sera dans %s" -- %s will be filled in by [# hours # minutes]
+L["CLOSEST_DELETION_IN_PATTERN"] = "La suppression la plus proche sera dans %s" -- ^
+L["MAIL_WILL_BE_DELETED_PATTERN"] = "|cFF00FF00%d|cFFFFFFFF sera |cFFFF0000supprimé|cFFFFFFFF à expiration"
+L["Mails found:"] = "Courriers trouvés"

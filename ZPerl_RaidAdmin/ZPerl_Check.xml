@@ -8,7 +8,7 @@
 		</Size>
 	</Button>
 
-	<Button name="XPerlNormalListItemTemplate" virtual="true">
+	<Button name="XPerlNormalListItemTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="250" y="14"/>
 		</Size>
@@ -115,7 +115,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="XPerlCheckListItemTemplate" virtual="true">
+	<Button name="XPerlCheckListItemTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="206" y="14"/>
 		</Size>
@@ -221,21 +221,13 @@
 		</Scripts>
 	</Button>
 
-	<Button name="XPerl_NormalListTemplate" virtual="true" enableMouse="true">
+	<Button name="XPerl_NormalListTemplate" inherits="XPerlBackdropTemplate" virtual="true" enableMouse="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Size>
 			<AbsDimension x="260" y="178"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<Button name="$parentTitle">
 				<Size>
@@ -638,9 +630,13 @@
 		</Layers>
 	</Button>
 
-	<Button name="XPerl_CheckListTemplate" virtual="true">
+	<Button name="XPerl_CheckListTemplate" inherits="XPerlBackdropTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonUp", "RightButtonDown")
 			</OnLoad>
 			<OnClick>
@@ -656,17 +652,6 @@
 		<Size>
 			<AbsDimension x="230" y="178"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<Button name="$parent1" inherits="XPerlCheckListItemTemplate" id="1">
 				<Anchors>
@@ -761,9 +746,13 @@
 		</Size>
 	</Frame>
 
-	<Frame name="XPerl_Check" parent="XPerl_CheckAnchor" hidden="true" clampedToScreen="true">
+	<Frame name="XPerl_Check" parent="XPerl_CheckAnchor" inherits="XPerlBackdropTemplate" hidden="true" clampedToScreen="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				XPerl_CheckOnLoad(self)
 			</OnLoad>
 			<OnEnter>
@@ -787,17 +776,6 @@
 		<Size>
 			<AbsDimension x="500" y="240"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<Frame name="$parentTitleBar">
 				<Scripts>
@@ -849,7 +827,7 @@
 					</Layer>
 				</Layers>
 				<Frames>
-					<Button name="$parentClose" inherits="UIPanelCloseButton">
+					<Button name="$parentClose" inherits="XPerlBackdropTemplate,UIPanelCloseButton">
 						<Size>
 							<AbsDimension x="22" y="22"/>
 						</Size>
@@ -954,7 +932,7 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Frame name="$parentList" hidden="true">
+			<Frame name="$parentList" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnShow>
 						XPerl_Check_UpdateItemList()
@@ -981,7 +959,7 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Frame name="$parentButton" hidden="true">
+			<Frame name="$parentButton" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnUpdate>
 						XPerl_Check_ShowInfo()

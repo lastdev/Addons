@@ -37,7 +37,7 @@
 --
 
 
-local THIS_VERSION = 0.03
+local THIS_VERSION = 0.04
 
 if (TjCalendar and TjCalendar.Version >= THIS_VERSION) then  return;  end
 
@@ -50,11 +50,10 @@ local monthSet, yearSet
 local internal_monthSet, internal_yearSet
 
 
--- BFA
 local CalendarSetAbsMonth = CalendarSetAbsMonth or C_Calendar.SetAbsMonth
 
-local CalendarGetDate = CalendarGetDate or function(...)
-	local info = C_Calendar.GetDate(...)
+local function CalendarGetDate()
+	local info = C_DateAndTime.GetCurrentCalendarTime()
 	return info.weekday, info.month, info.monthDay, info.year, info.hour, info.minute
 end
 
@@ -62,7 +61,6 @@ local CalendarGetMonth = CalendarGetMonth or function(...)
 	local info = C_Calendar.GetMonthInfo(...)
 	return info.month, info.year, info.numDays, info.firstWeekday
 end
--- BFA
 
 
 local function internal_StartReadingAt(year, month, getMonthData)

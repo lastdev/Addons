@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("Xariona", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision((string.sub("20200524145746", 1, -5)):sub(12, -3))
+mod.statTypes = "normal,timewalker"
+
+mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -16,7 +17,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_POWER_FREQUENT",
 	"UNIT_SPELLCAST_SUCCEEDED"
 )
-mod.onlyNormal = true
 
 local warnTwilightZone			= mod:NewSpellAnnounce(93553, 2)--Used for protection against UnleashedMagic
 local warnTwilightFissure		= mod:NewTargetNoFilterAnnounce(93546, 3)--Typical void zone.

@@ -1,9 +1,9 @@
  --[[
-$Id: LibBabble-SubZone-3.0_zhTW.lua 227 2020-01-17 14:10:05Z arith $
+$Id: LibBabble-SubZone-3.0_zhTW.lua 231 2020-07-26 14:52:00Z arithmandar $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 227 $
+Revision: $Rev: 231 $
 Maintainers: arith
-Last updated by: $Author: arith $
+Last updated by: $Author: arithmandar $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
 Dependencies: None
 License: MIT
@@ -307,6 +307,8 @@ lib:SetCurrentTranslations
 	["Atul'Aman"] = "阿圖亞曼",
 	["Atulhet's Tomb"] = "阿圖爾西特之墓",
 	["Atul'Nazman"] = "安圖爾納茲曼",
+	["Auberdine"] = "奧伯丁",
+	["Auberdine Coast"] = "奧伯丁海岸",
 	["Auberdine Refugee Camp"] = "奧伯丁難民營",
 	["Auburn Bluffs"] = "赤褐崖",
 	["Auchenai Crypts"] = "奧奇奈地穴",
@@ -401,6 +403,7 @@ lib:SetCurrentTranslations
 	["Bathran's Haunt"] = "巴斯蘭鬼屋",
 	["Battle for Blackrock Mountain"] = "黑石山之戰",
 	["Battle for the Exodar"] = "艾克索達之戰",
+	["Battle of Dazar'alor"] = "達薩亞洛之戰",
 	["Battle of Exodar"] = "艾克索達之戰",
 	["Battle on the High Seas"] = "怒海之戰",
 	["Battle Ring"] = "競技場",
@@ -733,6 +736,7 @@ lib:SetCurrentTranslations
 	["Camp Onequah"] = "歐尼克瓦營地",
 	["Camp Oneqwah"] = "歐尼克瓦營地",
 	["Camp Sungraze"] = "日牧營地",
+	["Camp Taurajo"] = "陶拉祖營地",
 	["Camp Thornscar"] = "刺疤營地",
 	["Camp Tunka'lo"] = "坦卡羅營地",
 	["Camp Una'fe"] = "烏納非營地",
@@ -1406,6 +1410,7 @@ lib:SetCurrentTranslations
 	["Dustquill Ravine"] = "塵羽峽谷",
 	["Dustwallow Bay"] = "塵泥海灣",
 	["Dustwallow Marsh"] = "塵泥沼澤",
+	["Dustwallow Marsh UNUSED"] = "塵泥沼澤",
 	["Dustwind Cave"] = "塵風洞穴",
 	["Dustwind Dig"] = "塵風挖掘場",
 	["Dustwind Gulch"] = "塵風峽谷",
@@ -2122,6 +2127,7 @@ lib:SetCurrentTranslations
 	["Greystone Enclave"] = "灰石營地",
 	["Greystone Keep"] = "灰石要塞",
 	["Greystone Relief"] = "灰石憩所",
+	["Greystone Ruins"] = "灰石廢墟",
 	["Greywatch"] = "黯狼守望",
 	["Greywatch Barracks"] = "黯狼守望兵營",
 	["Grim Batol"] = "格瑞姆巴托",
@@ -3015,6 +3021,7 @@ lib:SetCurrentTranslations
 	["Mardum Treasure Scenario"] = "馬頓寶藏場景事件",
 	["Mardum, the Shattered Abyss"] = "馬爾頓，碎裂深淵",
 	["Mar'gok's Overwatch"] = "瑪爾戈克堡壘",
+	["Margoss' Retreat"] = "瑪苟斯的居所",
 	["Margoss's Retreat"] = "瑪苟斯的居所",
 	["Mariner's Row"] = "水手路",
 	["Mariner's Strand"] = "水手海岸",
@@ -3085,6 +3092,7 @@ lib:SetCurrentTranslations
 	["Mistfall Cleft"] = "霧臨之隙",
 	["Mistfall Village"] = "霧臨村",
 	["Mist's Edge"] = "薄霧海",
+	["Mists's Edge"] = "薄霧海",
 	["Mistvale"] = "迷霧谷",
 	["Mistvale Valley"] = "薄霧山谷",
 	["Mistveil Sea"] = "霧紗海",
@@ -3150,6 +3158,7 @@ lib:SetCurrentTranslations
 	["Moonshrine Sanctum"] = "月光神殿密室",
 	["Moontouched Den"] = "月觸之穴",
 	["Moonwater Retreat"] = "月水居",
+	["Moonwell"] = "月井",
 	["Moonwell of Cleansing"] = "淨化月井",
 	["Moonwell of Purity"] = "純淨月井",
 	["Moonwhisper Gulch"] = "月語峽谷",

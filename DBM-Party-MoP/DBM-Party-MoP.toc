@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (MoP)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인던전-판다리아의 안개|r
@@ -15,8 +15,7 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: MOP
-## X-DBM-Mod-Has-Challenge: 1
-## X-DBM-Mod-Has-TimeWalker: 1
+## X-DBM-StatTypes: normal,heroic,challenge
 ## X-DBM-Mod-SubCategoriesID: 960, 961, 959, 962, 994, 1011, 1007, 1001, 1004
 ## X-DBM-Mod-Name: Dungeons (MoP)
 ## X-DBM-Mod-Name-koKR: 5인 던전(판다리아의 안개)
@@ -31,9 +30,10 @@
 ## X-DBM-Mod-Sort: 715
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r16
+## Version: r21
 
 localization.en.lua
 localization.de.lua

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(657, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220142801")
+mod.statTypes = "normal,heroic,challenge,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(56541)
 mod:SetEncounterID(1304)
-mod:SetZone()
 mod:SetReCombatTime(60)
 
 -- pre-bosswave. Novice -> Black Sash (Fragrant Lotus, Flying Snow). this runs automaticially.

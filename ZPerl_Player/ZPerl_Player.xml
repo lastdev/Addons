@@ -36,9 +36,13 @@
 			</OnDragStop>
 		</Scripts>
 		<Frames>
-			<Button name="$parentportraitFrame" inherits="XPerl_Portrait_Template_Secure">
+			<Button name="$parentportraitFrame" inherits="XPerlBackdropTemplate,XPerl_Portrait_Template_Secure">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_SetChildMembers(self)
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
@@ -67,21 +71,14 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 			</Button>
-			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentnameFrame" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
@@ -114,20 +111,9 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Frames>
 					<!-- PVP Icon -->
-					<Frame name="$parentpvp" hidden="true">
+					<Frame name="$parentpvp" inherits="XPerlBackdropTemplate" hidden="true">
 						<Scripts>
 							<OnLoad>
 								self:SetScale(0.7)
@@ -151,7 +137,7 @@
 						</Layers>
 					</Frame>
 					<!-- PVP Timer -->
-					<Frame name="$parentpvptimer" hidden="true">
+					<Frame name="$parentpvptimer" inherits="XPerlBackdropTemplate" hidden="true">
 						<Scripts>
 							<OnLoad>
 								self:SetScale(0.7)
@@ -184,7 +170,7 @@
 						</Layers>
 					</Frame>
 					<!-- Raid Target Icon -->
-					<Frame name="$parentraidIcon" hidden="true">
+					<Frame name="$parentraidIcon" inherits="XPerlBackdropTemplate" hidden="true">
 						<Scripts>
 							<OnLoad>
 								self:SetFrameLevel(self:GetParent():GetFrameLevel() + 4)
@@ -212,6 +198,19 @@
 					<Layer level="OVERLAY">
 						<!-- Leader Icon -->
 						<Texture name="$parentleaderIcon" file="Interface\GroupFrame\UI-Group-LeaderIcon" hidden="true">
+							<Size>
+								<AbsDimension x="16" y="16"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset>
+										<AbsDimension x="0" y="7"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+						<!-- Leader Icon -->
+						<Texture name="$parentassistIcon" file="Interface\GroupFrame\UI-Group-AssistantIcon" hidden="true">
 							<Size>
 								<AbsDimension x="16" y="16"/>
 							</Size>
@@ -286,7 +285,10 @@
 					</Layer>
 				</Layers>
 			</Button>
-			<Frame name="$parentlevelFrame" inherits="XPerl_BorderStyleTemplate">
+			<Frame name="$parentlevelFrame" inherits="XPerlBackdropTemplate,XPerl_BorderStyleTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+				</KeyValues>
 				<Size>
 					<AbsDimension x="27" y="22"/>
 				</Size>
@@ -304,24 +306,17 @@
 						</FontString>
 					</Layer>
 				</Layers>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<Frame name="$parentclassFrame">
+			<Frame name="$parentclassFrame" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Icon_Backdrop_8_16_3333" type="global"/>
+				</KeyValues>
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
@@ -337,22 +332,15 @@
 						<Texture name="$parenttex" file="Interface\Glues\CharacterCreate\UI-CharacterCreate-Classes" setAllPoints="true"/>
 					</Layer>
 				</Layers>
-				<Backdrop bgFile="" edgeFile="" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="4" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 			</Frame>
 			<!-- Player Stats -->
-			<Button name="$parentstatsFrame" inherits="XPerl_Stats_Template_Secure">
+			<Button name="$parentstatsFrame" inherits="XPerlBackdropTemplate,XPerl_Stats_Template_Secure">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_StatsFrame_Setup(self)
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
@@ -381,19 +369,11 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 			</Button>
-			<Frame name="$parentgroupFrame" hidden="true">
+			<Frame name="$parentgroupFrame" hidden="true" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_2222" type="global"/>
+				</KeyValues>
 				<Size>
 					<AbsDimension x="65" y="18"/>
 				</Size>
@@ -404,17 +384,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="12"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="2" right="2" top="2" bottom="2"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="GameFontHighlightSmall" text="Error!" setAllPoints="true">
@@ -424,11 +393,12 @@
 				</Layers>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<Frame name="$parenthitIndicator" frameStrata="HIGH">
+			<Frame name="$parenthitIndicator" frameStrata="HIGH" inherits="XPerlBackdropTemplate">
 				<Layers>
 					<Layer level="OVERLAY">
 						<FontString name="$parenttext" inherits="NumberFontNormalHuge" hidden="true" text="Error!">
@@ -443,7 +413,7 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
+			<Frame name="$parenthighlight" inherits="XPerlBackdropTemplate,XPerl_HighlightTemplate">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentportraitFrame"/>
 					<Anchor point="TOPRIGHT" relativeTo="$parentnameFrame"/>

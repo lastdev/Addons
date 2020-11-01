@@ -270,9 +270,9 @@ L = {
 		["bnetclienticon_name"] = "BNet-Client Symbol anzeigen",
 		["Brackets"] = "Klammern",
 		["Brackets Common Color"] = "Standardfarbe der Klammern",
-		["Brackets Use Common Color"] = "Klammern verwende die Standardfarbe",
+		["Brackets Use Common Color"] = "Klammern verwenden die Standardfarbe",
 		["Class"] = "Klasse",
-		["Color by Level Difference"] = "Entsprechend des Stufenunterschieds einfärben",
+		["Color by Level Difference"] = "Farbe nach Stufenunterschied",
 		["coloreverywhere_desc"] = "Spielernamen einfärben, wenn diese im Text einer Chat-Mitteilung auftreten.",
 		["coloreverywhere_name"] = "Namen überall einfärben",
 		["Enable Alt-Invite"] = "Alternative Einladung aktivieren",
@@ -548,10 +548,8 @@ L = {
 	["PlayerNames"] = {
 		["Actively Query Player Info"] = "Активный запрос инфы о игроке",
 		["Angled"] = "Треугольные",
-		--[[Translation missing --]]
-		["bnetclienticon_desc"] = "Show an icon indicating which game or client the Battle.Net friend is using",
-		--[[Translation missing --]]
-		["bnetclienticon_name"] = "Show BNet Client Icon",
+		["bnetclienticon_desc"] = "Показывать значок, указывающий, какую игру или клиент использует ваш друг в Battle.Net",
+		["bnetclienticon_name"] = "Показать иконку клиента BNet",
 		["Brackets"] = "Скобки",
 		["Brackets Common Color"] = "Основной цвет скобок",
 		["Brackets Use Common Color"] = "Скобки общего цвета",
@@ -574,8 +572,7 @@ L = {
 		["Level Color Mode"] = "Режим окрашивания уровня",
 		["linkifycommon_desc"] = "Общие сообщения с сылками",
 		["linkifycommon_name"] = "Общие сообщения с сылками",
-		--[[Translation missing --]]
-		["msg_stored_data_cleared"] = "Stored Player Data Cleared",
+		["msg_stored_data_cleared"] = "Сохраненные данные игрока очищены",
 		["No additional coloring"] = "Отключить дополнительное цвето-выделение",
 		["None"] = "Нет",
 		["Player Color Mode"] = "Режим цвета игрока",
@@ -1152,7 +1149,7 @@ L = {
     self.NEEDS_INIT = true
 
     if IsInGuild() then
-      GuildRoster()
+      self.GuildRoster()
     end
 
     self:TabComplete(self.db.profile.tabcomplete)
@@ -1298,6 +1295,17 @@ L = {
     end
   end
 
+  -- This function is a wrapper for the Blizzard GuildRoster function, to account for the differences between Retail and Classic
+  function module:GuildRoster(...)
+    if Prat.IsRetail then
+      return C_GuildInfo.GuildRoster(...)
+    else
+      return GuildRoster(...)
+    end
+  end
+
+
+
   --[[------------------------------------------------
     Core Functions
   ------------------------------------------------]] --
@@ -1320,7 +1328,7 @@ L = {
 
 
   function module:updateGF()
-    if IsInGuild() then GuildRoster() end
+    if IsInGuild() then self.GuildRoster() end
     self:updateFriends()
     if GetNumBattlefieldScores() > 0 then
       self:updateBG()
@@ -1354,7 +1362,7 @@ L = {
 
   function module:updateGuild()
     if IsInGuild() then
-      GuildRoster()
+      self.GuildRoster()
 
       local Name, Class, Level, _
       for i = 1, GetNumGuildMembers(true) do
@@ -1632,7 +1640,7 @@ L = {
       if self.db.profile.bnetclienticon then
         local client = GetBnetClientByID(message.PRESENCE_ID)
         if client then
-          message.PLAYERCLIENTICON = ("|T%s:%d:%d:%d:%d|t"):format(BNet_GetClientTexture(client), 14, 14, 0, -6)
+          message.PLAYERCLIENTICON = ("|T%s:%d:%d:%d:%d|t"):format(BNet_GetClientTexture(client), 14)
         end
       end
     else

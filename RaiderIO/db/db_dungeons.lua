@@ -6,7 +6,7 @@ ns.dungeons = {
 		["id"] = 8064,
 		["keystone_instance"] = 247,
 		["instance_map_id"] = 1594,
-		["lfd_activity_ids"] = { 509, 511, 646, 510 },
+		["lfd_activity_ids"] = { 509, 510, 511, 540, 646 },
 		["name"] = "The MOTHERLODE!!",
 		["shortName"] = "ML"
 	},
@@ -14,7 +14,7 @@ ns.dungeons = {
 		["id"] = 9028,
 		["keystone_instance"] = 244,
 		["instance_map_id"] = 1763,
-		["lfd_activity_ids"] = { 501, 500, 499, 502 },
+		["lfd_activity_ids"] = { 499, 500, 501, 502, 543 },
 		["name"] = "Atal'Dazar",
 		["shortName"] = "AD"
 	},
@@ -22,7 +22,7 @@ ns.dungeons = {
 		["id"] = 9164,
 		["keystone_instance"] = 245,
 		["instance_map_id"] = 1754,
-		["lfd_activity_ids"] = { 539, 519, 517, 518 },
+		["lfd_activity_ids"] = { 516, 517, 518, 519, 539 },
 		["name"] = "Freehold",
 		["shortName"] = "FH"
 	},
@@ -30,7 +30,7 @@ ns.dungeons = {
 		["id"] = 9327,
 		["keystone_instance"] = 246,
 		["instance_map_id"] = 1771,
-		["lfd_activity_ids"] = { 537, 527, 525, 526 },
+		["lfd_activity_ids"] = { 524, 525, 526, 527, 537 },
 		["name"] = "Tol Dagor",
 		["shortName"] = "TD"
 	},
@@ -38,7 +38,7 @@ ns.dungeons = {
 		["id"] = 9354,
 		["keystone_instance"] = 353,
 		["instance_map_id"] = 1822,
-		["lfd_activity_ids"] = { 533, 534, 658, 659 },
+		["lfd_activity_ids"] = { 532, 533, 534, 535, 658, 659 },
 		["name"] = "Siege of Boralus",
 		["shortName"] = "SIEGE"
 	},
@@ -46,7 +46,7 @@ ns.dungeons = {
 		["id"] = 9391,
 		["keystone_instance"] = 251,
 		["instance_map_id"] = 1841,
-		["lfd_activity_ids"] = { 506, 508, 644, 507 },
+		["lfd_activity_ids"] = { 506, 507, 508, 541, 644 },
 		["name"] = "The Underrot",
 		["shortName"] = "UNDR"
 	},
@@ -54,7 +54,7 @@ ns.dungeons = {
 		["id"] = 9424,
 		["keystone_instance"] = 248,
 		["instance_map_id"] = 1862,
-		["lfd_activity_ids"] = { 536, 531, 529, 530 },
+		["lfd_activity_ids"] = { 528, 529, 530, 531, 536 },
 		["name"] = "Waycrest Manor",
 		["shortName"] = "WM"
 	},
@@ -62,7 +62,7 @@ ns.dungeons = {
 		["id"] = 9525,
 		["keystone_instance"] = 252,
 		["instance_map_id"] = 1864,
-		["lfd_activity_ids"] = { 538, 523, 521, 522 },
+		["lfd_activity_ids"] = { 520, 521, 522, 523, 538 },
 		["name"] = "Shrine of the Storm",
 		["shortName"] = "SOTS"
 	},
@@ -70,7 +70,7 @@ ns.dungeons = {
 		["id"] = 9526,
 		["keystone_instance"] = 249,
 		["instance_map_id"] = 1762,
-		["lfd_activity_ids"] = { 513, 514, 660, 661 },
+		["lfd_activity_ids"] = { 512, 513, 514, 515, 660, 661 },
 		["name"] = "Kings' Rest",
 		["shortName"] = "KR"
 	},
@@ -78,7 +78,7 @@ ns.dungeons = {
 		["id"] = 9527,
 		["keystone_instance"] = 250,
 		["instance_map_id"] = 1877,
-		["lfd_activity_ids"] = { 503, 505, 645, 504 },
+		["lfd_activity_ids"] = { 503, 504, 505, 542, 645 },
 		["name"] = "Temple of Sethraliss",
 		["shortName"] = "TOS"
 	},

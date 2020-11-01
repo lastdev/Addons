@@ -1,17 +1,17 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## Title: SilverDragon
 ## Notes: Remember where rares were
 ## Title-zhTW: SilverDragon
 ## Notes-zhTW: 協助記錄稀有怪位置,以及MouseOver時提示你.
 ## Notes-zhCN: 记录稀有怪物位置。
-## Version: v80300.1.1
+## Version: v90001.3
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements
 ## X-Donate: PayPal:kemayo AT gmail DOT com
 ## X-Curse-Project-ID: 14647
 ## X-WoWI-ID: 6606
-## OptionalDependencies: Ace3, LibSharedMedia-3.0, HandyNotes, _NPCScan.Overlay, LibSink-2.0, LibQTip-1.0, LibDBIcon-1.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons, LibTextDump-1.0
+## OptionalDependencies: Ace3, LibSharedMedia-3.0, HandyNotes, TomTom, _NPCScan.Overlay, LibSink-2.0, LibQTip-1.0, LibDBIcon-1.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons, LibTextDump-1.0
 ## SavedVariables: SilverDragon3DB,SilverDragon2DB
 ## LoadOnDemand: 0
 
@@ -22,11 +22,13 @@ embeds.xml
 # the core
 core.lua
 achievements.lua
+slash.lua
 config.lua
 
 scan\targets.lua
 scan\macro.lua
 scan\vignettes.lua
+scan\chat.lua
 
 # optional bits
 outputs\tooltip.lua
@@ -44,6 +46,7 @@ targets\looks\looks.xml
 
 mobs.lua
 
-# map plugins
+# working with other addons
 integration\handynotes.lua
+integration\tomtom.lua
 

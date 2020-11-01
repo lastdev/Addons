@@ -26,6 +26,7 @@ local MAX_COMBO_POINTS = MAX_COMBO_POINTS
 local __tools = LibStub:GetLibrary("ovale/tools")
 local isNumber = __tools.isNumber
 local isLuaArray = __tools.isLuaArray
+local OneTimeMessage = __tools.OneTimeMessage
 local __State = LibStub:GetLibrary("ovale/State")
 local States = __State.States
 local strlower = lower
@@ -73,7 +74,7 @@ __exports.PRIMARY_POWER = {
     mana = true
 }
 __exports.OvalePowerClass = __class(States, {
-    constructor = function(self, ovaleDebug, ovale, ovaleProfiler, ovaleData, ovaleFuture, baseState, ovaleAura, ovalePaperDoll, requirement, ovaleSpellBook)
+    constructor = function(self, ovaleDebug, ovale, ovaleProfiler, ovaleData, ovaleFuture, baseState, ovaleAura, ovalePaperDoll, requirement, ovaleSpellBook, combat)
         self.ovale = ovale
         self.ovaleData = ovaleData
         self.ovaleFuture = ovaleFuture
@@ -82,6 +83,7 @@ __exports.OvalePowerClass = __class(States, {
         self.ovalePaperDoll = ovalePaperDoll
         self.requirement = requirement
         self.ovaleSpellBook = ovaleSpellBook
+        self.combat = combat
         self.POWER_INFO = {}
         self.POWER_TYPE = {}
         self.OnInitialize = function()
@@ -354,7 +356,7 @@ __exports.OvalePowerClass = __class(States, {
                 end
             end
         else
-            self.ovale:OneTimeMessage("No spell cost for " .. spell)
+            OneTimeMessage("No spell cost for " .. spell)
         end
         return nil, nil
     end,
@@ -451,7 +453,7 @@ __exports.OvalePowerClass = __class(States, {
         return self:getPowerCostAt(self:GetState(atTime), spellId, powerType, atTime, targetGUID, maximumCost)
     end,
     getPowerRateAt = function(self, state, powerType, atTime)
-        if self.ovaleFuture:IsInCombat(atTime) then
+        if self.combat:isInCombat(atTime) then
             return state.activeRegen[powerType]
         else
             return state.inactiveRegen[powerType]
@@ -497,7 +499,7 @@ __exports.OvalePowerClass = __class(States, {
                 local maxCost = si[maxCostParam]
                 if maxCost then
                     local power = self:getPowerAt(state, powerType, atTime)
-                    if (power > maxCost) or maximumCost then
+                    if power > maxCost or maximumCost then
                         cost = maxCost
                     elseif power > cost then
                         cost = power
@@ -555,18 +557,18 @@ __exports.OvalePowerClass = __class(States, {
                     verified = true
                 end
                 if cost > 0 then
-                    local result = verified and "passed" or "FAILED"
+                    local result = (verified and "passed") or "FAILED"
                     self.tracer:Log("    Require %f %s at time=%f: %s", cost, powerType, atTime, result)
                 end
             else
                 verified = true
             end
         else
-            self.ovale:OneTimeMessage("Warning: requirement '%s' power is missing a cost argument.", requirement)
-            self.ovale:OneTimeMessage(tostring(index))
+            OneTimeMessage("Warning: requirement '%s' power is missing a cost argument.", requirement)
+            OneTimeMessage(tostring(index))
             if isLuaArray(tokens) then
                 for k, v in pairs(tokens) do
-                    self.ovale:OneTimeMessage(k .. " = " .. tostring(v))
+                    OneTimeMessage(k .. " = " .. tostring(v))
                 end
             end
         end

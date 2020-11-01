@@ -16,7 +16,7 @@ end
 -- Prints a prettier debug message, with source (module, category, etc.) if one was given
 function PP.DebugMsg(msg, timestamp, source, ...)
 	source = source or ""
-	timestamp = timestamp or date()
+	timestamp = timestamp or time()
 	print(
 		"|c00C2C2C2[" ..
 			format(
@@ -28,12 +28,21 @@ function PP.DebugMsg(msg, timestamp, source, ...)
 	)
 end
 
+local wasErrorDisplayed = false -- Displaying them more than once per session is sure to be annoying
+
 function PP.Error(message, ...)
+	if wasErrorDisplayed then
+		return
+	end
+
 	message = message or ""
-	local reportErrorText =
-		"Oh no! Something went horribly wrong:\n" ..
-		message .. "\nPlease report this error to the addon developer so it can be fixed :)"
+	local reportErrorText = format("Oh no! Something went horribly wrong. This is what happened:\n%s\n", message)
+	reportErrorText =
+		reportErrorText ..
+		"If you didn't change anything that might've caused this, please report the error to the addon developer so it can be fixed :)"
+
 	print(format("|c00CA0A00" .. "%s: " .. "|c00E6CC80%s", addonName, reportErrorText), ...)
+	wasErrorDisplayed = true
 end
 
 --- Prints timestamps in a human-readable fashion?

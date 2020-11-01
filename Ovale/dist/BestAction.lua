@@ -36,6 +36,7 @@ local isNodeType = __AST.isNodeType
 local __tools = LibStub:GetLibrary("ovale/tools")
 local isNumber = __tools.isNumber
 local isString = __tools.isString
+local OneTimeMessage = __tools.OneTimeMessage
 local INFINITY = huge
 __exports.OvaleBestActionClass = __class(nil, {
     constructor = function(self, ovaleEquipment, ovaleActionBar, ovaleData, ovaleCooldown, ovaleState, baseState, ovalePaperDoll, ovaleCompile, ovaleCondition, Ovale, OvaleGUID, OvalePower, OvaleFuture, OvaleSpellBook, ovaleProfiler, ovaleDebug, variables, ovaleRunes, OvaleSpells)
@@ -48,7 +49,6 @@ __exports.OvaleBestActionClass = __class(nil, {
         self.ovalePaperDoll = ovalePaperDoll
         self.ovaleCompile = ovaleCompile
         self.ovaleCondition = ovaleCondition
-        self.Ovale = Ovale
         self.OvaleGUID = OvaleGUID
         self.OvalePower = OvalePower
         self.OvaleFuture = OvaleFuture
@@ -153,7 +153,7 @@ __exports.OvaleBestActionClass = __class(nil, {
                 end
                 self.tracer:Log("[%d]    start=%f atTime=%f", nodeId, start, atTime)
                 local offgcd = element.namedParams.offgcd or (spellInfo and spellInfo.offgcd) or 0
-                element.offgcd = (offgcd == 1) and true or nil
+                element.offgcd = (offgcd == 1 and true) or nil
                 if element.offgcd then
                     self.tracer:Log("[%d]    Action %s is off the global cooldown.", nodeId, action)
                 elseif start < atTime then
@@ -210,6 +210,10 @@ __exports.OvaleBestActionClass = __class(nil, {
                 local t = atTime
                 self.tracer:Log("[%d]    %s+(t-%s)*%s %s %s+(t-%s)*%s", element.nodeId, a, b, c, operator, x, y, z)
                 local l, m, n
+                if isString(a) or isString(x) then
+                    self.tracer:Error("[%d] Operands of arithmetic operators must be numbers", element.nodeId)
+                    return timeSpan, element
+                end
                 local A = a + (t - b) * c
                 local B = x + (t - y) * z
                 if operator == "+" then
@@ -227,7 +231,7 @@ __exports.OvaleBestActionClass = __class(nil, {
                 elseif operator == "/" then
                     if B == 0 then
                         if A ~= 0 then
-                            self.Ovale:OneTimeMessage("[%d] Division by 0 in %s", element.nodeId, element.asString)
+                            OneTimeMessage("[%d] Division by 0 in %s", element.nodeId, element.asString)
                         end
                         B = 0.00001
                     end
@@ -295,6 +299,12 @@ __exports.OvaleBestActionClass = __class(nil, {
             else
                 local operator = element.operator
                 self.tracer:Log("[%d]    %s+(t-%s)*%s %s %s+(t-%s)*%s", element.nodeId, a, b, c, operator, x, y, z)
+                if isString(a) or isString(x) then
+                    if (operator == "==" and a ~= b) or (operator == "!=" and a == b) then
+                        wipe(timeSpan)
+                    end
+                    return timeSpan, element
+                end
                 local A = a - b * c
                 local B = x - y * z
                 if c == z then
@@ -309,7 +319,7 @@ __exports.OvaleBestActionClass = __class(nil, {
                     else
                         t = diff / (c - z)
                     end
-                    t = (t > 0) and t or 0
+                    t = (t > 0 and t) or 0
                     self.tracer:Log("[%d]    intersection at t = %s", element.nodeId, t)
                     local scratch
                     if (c > z and operator == "<") or (c > z and operator == "<=") or (c < z and operator == ">") or (c < z and operator == ">=") then
@@ -372,7 +382,7 @@ __exports.OvaleBestActionClass = __class(nil, {
                 local currentTimeSpan, currentElement = self:Compute(node, atTime)
                 currentTimeSpan:IntersectInterval(atTime, INFINITY, current)
                 if current:Measure() > 0 then
-                    local nodeString = (currentElement and currentElement.nodeId) and " [" .. currentElement.nodeId .. "]" or ""
+                    local nodeString = (currentElement and currentElement.nodeId and " [" .. currentElement.nodeId .. "]") or ""
                     self.tracer:Log("[%d]    group checking [%d]: %s%s", element.nodeId, node.nodeId, current, nodeString)
                     local currentCastTime
                     if currentElement then
@@ -387,7 +397,7 @@ __exports.OvaleBestActionClass = __class(nil, {
                         self.tracer:Log("[%d]    group first best is [%d]: %s%s", element.nodeId, node.nodeId, current, nodeString)
                         currentIsBetter = true
                     else
-                        local threshold = (bestElement and bestElement.namedParams) and bestElement.namedParams.wait or 0
+                        local threshold = (bestElement and bestElement.namedParams and bestElement.namedParams.wait) or 0
                         if best[1] - current[1] > threshold then
                             self.tracer:Log("[%d]    group new best is [%d]: %s%s", element.nodeId, node.nodeId, current, nodeString)
                             currentIsBetter = true
@@ -633,9 +643,11 @@ __exports.OvaleBestActionClass = __class(nil, {
             return self:getSpellActionInfo(spell, element, atTime, target)
         elseif isString(spell) then
             local spellList = self.ovaleData.buffSpellList[spell]
-            for spellId in pairs(spellList) do
-                if self.OvaleSpellBook:IsKnownSpell(spellId) then
-                    return self:getSpellActionInfo(spellId, element, atTime, target)
+            if spellList then
+                for spellId in pairs(spellList) do
+                    if self.OvaleSpellBook:IsKnownSpell(spellId) then
+                        return self:getSpellActionInfo(spellId, element, atTime, target)
+                    end
                 end
             end
         end
@@ -702,7 +714,7 @@ __exports.OvaleBestActionClass = __class(nil, {
             end
             if actionCooldownStart and actionCooldownDuration then
                 local extraPower = element.namedParams.extra_amount or 0
-                local timeToCd = (actionCooldownDuration > 0) and (actionCooldownStart + actionCooldownDuration - atTime) or 0
+                local timeToCd = (actionCooldownDuration > 0 and actionCooldownStart + actionCooldownDuration - atTime) or 0
                 local timeToPower = self.OvalePower:TimeToPower(spellId, atTime, targetGUID, nil, extraPower)
                 local runes = self.ovaleData:GetSpellInfoProperty(spellId, atTime, "runes", targetGUID)
                 if runes then
@@ -829,7 +841,7 @@ __exports.OvaleBestActionClass = __class(nil, {
         local timeSpan, result
         if element then
             if element.serial == -1 then
-                self.Ovale:OneTimeMessage("Recursive call is not supported. This is a known bug with arcane mage script")
+                OneTimeMessage("Recursive call is not supported. This is a known bug with arcane mage script")
                 return EMPTY_SET, element.result
             elseif element.serial and element.serial >= self.self_serial then
                 timeSpan = element.timeSpan or EMPTY_SET

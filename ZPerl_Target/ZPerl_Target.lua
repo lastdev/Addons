@@ -25,6 +25,16 @@ XPerl_RequestConfig(function(new)
 	end
 end, "$Revision:  $")
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local LCD = IsClassic and LibStub and LibStub("LibClassicDurations")
+if IsClassic then
+	LCD.RegisterCallback("ZPerl", "UNIT_BUFF", function(event, unit)
+		if unit == "target" then
+			XPerl_Target_Events:UNIT_AURA(event, unit)
+		end
+	end)
+end
+
 -- Upvalues
 local _G = _G
 local bit_band = bit.band
@@ -52,14 +62,12 @@ local NotifyInspect = NotifyInspect
 local PlaySound = PlaySound
 local RegisterUnitWatch = RegisterUnitWatch
 local UnitBattlePetType = UnitBattlePetType
-local UnitBuff = UnitBuff
 local UnitCanAssist = UnitCanAssist
 local UnitCanAttack = UnitCanAttack
 local UnitClass = UnitClass
 local UnitClassBase = UnitClassBase
 local UnitClassification = UnitClassification
 local UnitCreatureType = UnitCreatureType
-local UnitDebuff = UnitDebuff
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
 local UnitGUID = UnitGUID
@@ -124,12 +132,12 @@ function XPerl_Target_OnLoad(self, partyid)
 		"UNIT_CLASSIFICATION_CHANGED",
 		"UNIT_PORTRAIT_UPDATE",
 		"UNIT_AURA",
-		"UNIT_HEALTH_FREQUENT",
+		IsClassic and "UNIT_HEALTH_FREQUENT" or "UNIT_HEALTH",
+		"UNIT_MAXHEALTH",
 		"PET_BATTLE_HEALTH_CHANGED",
 		"UPDATE_SUMMONPETS_ACTION",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_MAXPOWER",
-		"UNIT_MAXHEALTH",
 		"UNIT_LEVEL",
 		"UNIT_DISPLAYPOWER",
 		"UNIT_NAME_UPDATE",
@@ -160,7 +168,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		self.statsFrame.focusTarget:SetVertexColor(0.7, 1, 1, 0.5)
 
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 
@@ -171,7 +179,7 @@ function XPerl_Target_OnLoad(self, partyid)
 	else
 		XPerl_BlizzFrameDisable(FocusFrame)
 
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 		self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -329,12 +337,12 @@ end
 function XPerl_Target_UpdateCombo(self)
 	-- Anticipation
 	--[[local name = GetSpellInfo(114015)
-	local _, _, count = UnitAura("player", name)
+	local _, _, count = UnitAura("player", name, "HELPFUL")
 	if not count then
 		count = 0
 	end]]
-	local combopoints = UnitPower((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
-	--local combopoints = GetComboPoints((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player", self.partyid) + count
+	local combopoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	--local combopoints = GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", self.partyid) + count
 	local r, g, b = GetComboColour(combopoints)
 	if (tconf.combo.enable) then
 		--self.cpFrame:Hide()
@@ -365,34 +373,10 @@ function XPerl_Target_UpdateCombo(self)
 	end
 end
 
--- XPerl_UnitDebuffInformation
---[[local function TargetDebuffInformation(debuff)
-	local name, _, count = UnitDebuff("target", debuff)
-	return name and count or 0
-end--]]
-
----------------------
---Debuffs          --
----------------------
---[[local XPERL_SPELL_SUNDER	= GetSpellInfo(58567)		-- Sunder Armorn
-local XPERL_SPELL_SHADOWV	= GetSpellInfo(15258)		-- Shadow Vulnerability
-local XPERL_SPELL_FIREV		= GetSpellInfo(22959)		-- Fire Vulnerability
-local XPERL_SPELL_WINTERCH	= GetSpellInfo(12579)		-- Winter's Chill]]
-
 local function XPerl_Target_DebuffUpdate(self)
 	local partyid = self.partyid
-	if (GetComboPoints((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player", partyid) == 0) then
+	if (GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", partyid) == 0) then
 		local numDebuffs = 0
-		--[[if (playerClass == "WARRIOR") then
-			numDebuffs = TargetDebuffInformation(XPERL_SPELL_SUNDER)
-		elseif (playerClass == "MAGE") then
-			if (select(5, GetTalentTabInfo(3)) > select(5, GetTalentTabInfo(2))) then
-				numDebuffs = TargetDebuffInformation(XPERL_SPELL_WINTERCH)
-			else
-				numDebuffs = TargetDebuffInformation(XPERL_SPELL_FIREV)
-			end
-		end]]
-
 		local r, g, b = GetComboColour(numDebuffs)
 		if (tconf.combo.enable) then
 			self.cpFrame:Hide()
@@ -434,7 +418,7 @@ local function XPerl_Target_UpdatePVP(self)
 	elseif self.conf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP(partyid) then
 		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitIsMercenary(partyid) then
+		if not IsClassic and UnitIsMercenary(partyid) then
 			if factionGroup == "Horde" then
 				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
 			elseif factionGroup == "Alliance" then
@@ -676,7 +660,7 @@ do
 		LTQ:RegisterCallback("TalentQuery_Ready", TalentQuery_Ready)
 	else
 		hooksecurefunc("NotifyInspect", function(unit)
-			if (UnitIsUnit("player", unit) or (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
+			if (UnitIsUnit("player", unit) or (not IsClassic and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
 				return
 			end
 			lastInspectUnit = unit
@@ -716,7 +700,7 @@ do
 						name1, name2, name3, group = unpack(cached)
 					elseif (inspectReady and guid == UnitGUID(partyid)) then
 						local remoteInspectNeeded = not UnitIsUnit("player", partyid) or nil
-						if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+						if not IsClassic then
 							group =  GetInspectSpecialization("target")
 							local _, spec = GetSpecializationInfoByID(group)
 							name1 = group and spec or "None"
@@ -777,7 +761,7 @@ local function XPerl_Target_UpdateType(self)
 	self.typeFramePlayer:Hide()
 
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and (UnitIsWildBattlePet(partyid) or UnitIsBattlePetCompanion(partyid)) then
+	if not IsClassic and (UnitIsWildBattlePet(partyid) or UnitIsBattlePetCompanion(partyid)) then
 		self.creatureTypeFrame.text:SetText(PET_TYPE_SUFFIX[UnitBattlePetType(partyid)])
 	else
 		self.creatureTypeFrame.text:SetText(targettype)
@@ -876,6 +860,82 @@ function XPerl_Target_SetMana(self)
 	--mb.text:SetFormattedText("%d/%d", targetmana, targetmanamax)
 end
 
+-- XPerl_Target_UpdateHealPrediction
+local function XPerl_Target_UpdateHealPrediction(self)
+	if self == XPerl_Target then
+		if tconf.healprediction then
+			XPerl_SetExpectedHealth(self)
+		else
+			self.statsFrame.expectedHealth:Hide()
+		end
+	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
+		if conf.targettarget.healprediction then
+			XPerl_SetExpectedHealth(self)
+		else
+			self.statsFrame.expectedHealth:Hide()
+		end
+	elseif self == XPerl_Focus then
+		if fconf.healprediction then
+			XPerl_SetExpectedHealth(self)
+		else
+			self.statsFrame.expectedHealth:Hide()
+		end
+	elseif self == XPerl_FocusTarget then
+		if conf.focustarget.healprediction then
+			XPerl_SetExpectedHealth(self)
+		else
+			self.statsFrame.expectedHealth:Hide()
+		end
+	end
+end
+
+-- XPerl_Target_UpdateAbsorbPrediction
+local function XPerl_Target_UpdateAbsorbPrediction(self)
+	if self == XPerl_Target then
+		if tconf.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
+		if conf.targettarget.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_Focus then
+		if fconf.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	elseif self == XPerl_FocusTarget then
+		if conf.focustarget.absorbs then
+			XPerl_SetExpectedAbsorbs(self)
+		else
+			self.statsFrame.expectedAbsorbs:Hide()
+		end
+	end
+end
+
+function XPerl_Target_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if (self == XPerl_Target and tconf.portrait) or
+		   (self == XPerl_Focus and fconf.portrait) then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if (self == XPerl_Target and tconf.portrait) or
+		   (self == XPerl_Focus and fconf.portrait) then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
+	end
+end
+
 -- XPerl_Target_UpdateHealth
 function XPerl_Target_UpdateHealth(self)
 	local partyid = self.partyid
@@ -968,84 +1028,6 @@ function XPerl_Target_UpdateHealth(self)
 	end
 end
 
--- XPerl_Target_UpdateHealPrediction
-function XPerl_Target_UpdateHealPrediction(self)
-	if self == XPerl_Target then
-		if tconf.healprediction then
-			XPerl_SetExpectedHealth(self)
-		else
-			self.statsFrame.expectedHealth:Hide()
-		end
-	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
-		if conf.targettarget.healprediction then
-			XPerl_SetExpectedHealth(self)
-		else
-			self.statsFrame.expectedHealth:Hide()
-		end
-	elseif self == XPerl_Focus then
-		if fconf.healprediction then
-			XPerl_SetExpectedHealth(self)
-		else
-			self.statsFrame.expectedHealth:Hide()
-		end
-	elseif self == XPerl_FocusTarget then
-		if conf.focustarget.healprediction then
-			XPerl_SetExpectedHealth(self)
-		else
-			self.statsFrame.expectedHealth:Hide()
-		end
-	end
-end
-
--- XPerl_Target_UpdateAbsorbPrediction
-function XPerl_Target_UpdateAbsorbPrediction(self)
-	if self == XPerl_Target then
-		if tconf.absorbs then
-			XPerl_SetExpectedAbsorbs(self)
-		else
-			self.statsFrame.expectedAbsorbs:Hide()
-		end
-	elseif self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget then
-		if conf.targettarget.absorbs then
-			XPerl_SetExpectedAbsorbs(self)
-		else
-			self.statsFrame.expectedAbsorbs:Hide()
-		end
-	elseif self == XPerl_Focus then
-		if fconf.absorbs then
-			XPerl_SetExpectedAbsorbs(self)
-		else
-			self.statsFrame.expectedAbsorbs:Hide()
-		end
-	elseif self == XPerl_FocusTarget then
-		if conf.focustarget.absorbs then
-			XPerl_SetExpectedAbsorbs(self)
-		else
-			self.statsFrame.expectedAbsorbs:Hide()
-		end
-	end
-end
-
-function XPerl_Target_UpdateResurrectionStatus(self)
-	if (UnitHasIncomingResurrection(self.partyid)) then
-		if (self == XPerl_Target and tconf.portrait) or
-		   (self == XPerl_Focus and fconf.portrait) then
-			self.portraitFrame.resurrect:Show()
-		else
-			self.statsFrame.resurrect:Show()
-		end
-	else
-		if (self == XPerl_Target and tconf.portrait) or
-		   (self == XPerl_Focus and fconf.portrait) then
-			self.portraitFrame.resurrect:Hide()
-		else
-			self.statsFrame.resurrect:Hide()
-		end
-	end
-end
-
-
-
 -- XPerl_Target_GetHealth
 function XPerl_Target_GetHealth(self)
 	local hp, hpMax = XPerl_Unit_GetHealth(self)
@@ -1070,7 +1052,7 @@ end
 
 -- XPerl_Target_Update_Range
 function XPerl_Target_Update_Range(self)
-	if (not tconf.range30yard or CheckInteractDistance(self.partyid, 1) or not UnitIsConnected(self.partyid)) then
+	if (not tconf.range30yard or CheckInteractDistance(self.partyid, 4) or not UnitIsConnected(self.partyid)) then
 		self.nameFrame.rangeIcon:Hide()
 	else
 		self.nameFrame.rangeIcon:Show()
@@ -1082,31 +1064,21 @@ end
 local function XPerl_Target_UpdateLeader(self)
 	local leader
 	local partyid = self.partyid
-	if (UnitIsUnit(partyid, "player")) then
-		leader = UnitIsGroupLeader("player")
-	elseif (UnitInRaid(partyid)) then
-		local find = UnitName(partyid)
-		for i = 1, GetNumGroupMembers() do
-			local name, rank = GetRaidRosterInfo(i)
-			if (name == find) then
-				leader = (rank == 2)
-				break
-			end
-		end
-	elseif (UnitInParty(partyid)) then
-		--local index = GetPartyLeaderIndex()
-		--if (index > 0) then
-		--	leader = UnitIsUnit(partyid, "party"..index)
-		--end
 
-		leader = UnitIsGroupLeader(partyid)
-	end
-
-	if (leader) then
+	if (UnitIsGroupLeader(partyid)) then
 		self.nameFrame.leaderIcon:Show()
+		self.nameFrame.assistIcon:Hide()
 	else
 		self.nameFrame.leaderIcon:Hide()
+		if (UnitIsGroupAssistant(partyid)) then
+			self.nameFrame.assistIcon:Show()
+		else 
+			self.nameFrame.assistIcon:Hide()
+		end
 	end
+
+
+
 
 	-- We can't determine who is master looter in raid if not in current party... :(
 	--Don't think this is the case anymore.... -- Cexikitin
@@ -1193,6 +1165,7 @@ function XPerl_Target_UpdateDisplay(self)
 		XPerl_Target_SetMana(self)
 		XPerl_Target_UpdateHealth(self)
 		XPerl_Target_Update_Combat(self)
+		XPerl_Target_UpdateLeader(self)
 		XPerl_Unit_ThreatStatus(self, partyid == "target" and "player" or nil, true)
 
 		RaidTargetUpdate(self)
@@ -1200,14 +1173,12 @@ function XPerl_Target_UpdateDisplay(self)
 		if (self.conf.defer) then
 			self.portraitFrame.portrait:Hide()
 			self.portraitFrame.portrait3D:Hide()
-			self.nameFrame.leaderIcon:Hide()
 			self.nameFrame.masterIcon:Hide()
 			self.cpFrame:Hide()
 			self.nameFrame.cpMeter:Hide()
 			self.deferring = true
 			self.time = -0.3
 		else
-			XPerl_Target_UpdateLeader(self)
 			XPerl_Target_UpdateCombo(self)
 			XPerl_Unit_UpdatePortrait(self)
 		end
@@ -1263,7 +1234,6 @@ function XPerl_Target_OnUpdate(self, elapsed)
 
 			if (self.deferring) then
 				self.deferring = nil
-				XPerl_Target_UpdateLeader(self)
 				XPerl_Target_Update_Combat(self)
 				XPerl_Target_UpdateCombo(self)
 				XPerl_Unit_UpdatePortrait(self)
@@ -1503,12 +1473,25 @@ function XPerl_Target_Events:PLAYER_FOCUS_CHANGED()
 	end
 end
 
--- UNIT_HEALTH_FREQUENT, UNIT_MAXHEALTH
+-- UNIT_HEALTH_FREQUENT
 function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Target_UpdateHealth(self)
 end
-XPerl_Target_Events.UNIT_MAXHEALTH = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
-XPerl_Target_Events.PET_BATTLE_HEALTH_CHANGED = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
+
+-- UNIT_HEALTH
+function XPerl_Target_Events:UNIT_HEALTH()
+	XPerl_Target_UpdateHealth(self)
+end
+
+-- UNIT_MAXHEALTH
+function XPerl_Target_Events:UNIT_MAXHEALTH()
+	XPerl_Target_UpdateHealth(self)
+end
+
+-- PET_BATTLE_HEALTH_CHANGED
+function XPerl_Target_Events:PET_BATTLE_HEALTH_CHANGED()
+	XPerl_Target_UpdateHealth(self)
+end
 
 -- UPDATE_SUMMONPETS_ACTION
 function XPerl_Target_Events:UPDATE_SUMMONPETS_ACTION()
@@ -1774,16 +1757,20 @@ function XPerl_Target_Set_Bits(self)
 	self.conf.buffs.size = tonumber(self.conf.buffs.size) or 20
 	XPerl_SetBuffSize(self)
 
-	XPerl_Register_Prediction(self, tconf, function(guid)
-		if guid == UnitGUID("target") then
-			return "target"
-		end
-	end, "target")
-	XPerl_Register_Prediction(self, fconf, function(guid)
-		if guid == UnitGUID("focus") then
-			return "focus"
-		end
-	end, "focus")
+	if self == XPerl_Target then
+		XPerl_Register_Prediction(self, tconf, function(guid)
+			if guid == UnitGUID("target") then
+				return "target"
+			end
+		end, "target")
+	end
+	if self == XPerl_Focus then
+		XPerl_Register_Prediction(self, fconf, function(guid)
+			if guid == UnitGUID("focus") then
+				return "focus"
+			end
+		end, "focus")
+	end
 	XPerl_Target_SetWidth(self)
 
 	if (not InCombatLockdown()) then
@@ -1821,16 +1808,16 @@ function XPerl_Target_Set_Bits(self)
 end
 
 function XPerl_Target_ComboFrame_Update()
-	--local comboPoints = GetComboPoints((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player")
-	local comboPoints = UnitPower((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
-	if comboPoints > 0 and UnitCanAttack((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player", "target") then
+	--local comboPoints = GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player")
+	local comboPoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	if comboPoints > 0 and UnitCanAttack((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", "target") then
 		if not ComboFrame:IsShown() then
 			ComboFrame:Show()
 			UIFrameFadeIn(ComboFrame, COMBOFRAME_FADE_IN)
 		end
 
 		local fadeInfo = { }
-		for i = 1, WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 8 or 5 do
+		for i = 1, not IsClassic and 8 or 5 do
 			local comboPoint = _G["ComboPoint"..i]
 			if i < 6 then
 				comboPoint:Show()
@@ -1877,7 +1864,7 @@ end
 function XPerl_Target_Set_BlizzCPFrame(self)
 	if tconf.combo.blizzard then
 		ComboFrame:ClearAllPoints()
-		for i = 1, WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 9 or 5 do
+		for i = 1, not IsClassic and 9 or 5 do
 			local combo = _G["ComboPoint"..i]
 			if i < 9 then
 				combo:ClearAllPoints()
@@ -1900,7 +1887,7 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, 1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, -1)
 			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
-			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if not IsClassic then
 				ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "BOTTOMLEFT", 0, 0)
 				ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "BOTTOMLEFT", 0, 0)
 				ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "BOTTOMLEFT", 0, 0)
@@ -1912,7 +1899,7 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, -1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, 1)
 			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, 1)
-			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if not IsClassic then
 				ComboPoint6:SetPoint("BOTTOMLEFT", ComboPoint2, "TOPLEFT", 0, 0)
 				ComboPoint7:SetPoint("BOTTOMLEFT", ComboPoint3, "TOPLEFT", 0, 0)
 				ComboPoint8:SetPoint("BOTTOMLEFT", ComboPoint4, "TOPLEFT", 0, 0)
@@ -1924,7 +1911,7 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", -1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", 1, 0)
 			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", 1, 0)
-			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if not IsClassic then
 				ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "TOPRIGHT", 0, 0)
 				ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "TOPRIGHT", 0, 0)
 				ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "TOPRIGHT", 0, 0)
@@ -1936,7 +1923,7 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint3:SetPoint("BOTTOM", ComboPoint2, "TOP", 1, 0)
 			ComboPoint4:SetPoint("BOTTOM", ComboPoint3, "TOP", -1, 0)
 			ComboPoint5:SetPoint("BOTTOM", ComboPoint4, "TOP", -1, 0)
-			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if not IsClassic then
 				ComboPoint6:SetPoint("TOPRIGHT", ComboPoint2, "TOPLEFT", 0, 0)
 				ComboPoint7:SetPoint("TOPRIGHT", ComboPoint3, "TOPLEFT", 0, 0)
 				ComboPoint8:SetPoint("TOPRIGHT", ComboPoint4, "TOPLEFT", 0, 0)
@@ -1948,7 +1935,7 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 			ComboPoint3:SetPoint("LEFT", ComboPoint2, "RIGHT", 0, 1)
 			ComboPoint4:SetPoint("LEFT", ComboPoint3, "RIGHT", 0, -1)
 			ComboPoint5:SetPoint("LEFT", ComboPoint4, "RIGHT", 0, -1)
-			if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			if not IsClassic then
 				ComboPoint6:SetPoint("TOPLEFT", ComboPoint2, "BOTTOMLEFT", 0, 0)
 				ComboPoint7:SetPoint("TOPLEFT", ComboPoint3, "BOTTOMLEFT", 0, 0)
 				ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "BOTTOMLEFT", 0, 0)

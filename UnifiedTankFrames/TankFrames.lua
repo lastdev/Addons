@@ -34,6 +34,9 @@ addon.config = {
 
 local backdrop = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16}
 local function initCommon(frame)
+	if (BackdropTemplateMixin) then
+    Mixin(frame, BackdropTemplateMixin)
+  end
 	frame:SetBackdrop(backdrop)
 	frame:SetBackdropColor(0, 0, 0, .5)
 	frame:SetWidth(db.width)

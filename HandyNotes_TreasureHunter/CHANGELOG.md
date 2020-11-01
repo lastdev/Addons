@@ -1,5 +1,19 @@
 # Changelog
 
+## Changed in v18
+
+* After many years, hide the bugged Sunken Treasure in Shadowmoon Valley
+
+## Changed in v17
+
+* Updated for Shadowlands API changes
+* Fixed icons being all over the place while in caves, by update for the new UIMapID system
+
+## Changed in v16
+
+* Updated for Battle for Azeroth API changes
+* Fixed TomTom integration
+
 ## Changed in v15
 
 * Update for 7.2

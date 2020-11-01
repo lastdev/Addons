@@ -23,6 +23,8 @@ if LCC then
     UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 -- Registers frame to spellcast events.
 local barColours = {
 	main = {r = 1.0, g = 0.7, b = 0.0},
@@ -56,7 +58,7 @@ local function enableToggle(self, value)
 			if (self.unit == "target") then
 				self:RegisterEvent("PLAYER_TARGET_CHANGED")
 			elseif (self.unit == "focus") then
-				if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+				if not IsClassic then
 					self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 				end
 			elseif (strfind(self.unit, "^party")) then

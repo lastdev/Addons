@@ -156,6 +156,159 @@ L["UseDefault2"] = "Utiliza los perfiles de la \"%s\" para todos sus caracteres"
 end
 L=l:NewLocale(me,'zhTW')
 if L then
+L["%1$d%% lower than %2$d%%. Lower %s"] = "%1$d%% è inferiore a %2$d%%. Abbassa %s"
+--[[Translation missing --]]
+L["%s for a wowhead link popup"] = "%s for a wowhead link popup"
+--[[Translation missing --]]
+L["%s start the mission without even opening the mission page. No question asked"] = "%s start the mission without even opening the mission page. No question asked"
+--[[Translation missing --]]
+L["%s starts missions"] = "%s starts missions"
+--[[Translation missing --]]
+L["%s to actually start mission"] = "%s to actually start mission"
+L["%s to blacklist"] = "Clicca col destro per mettere in blacklist"
+L["%s to remove from blacklist"] = "Clicca col destro per rimuovere dalla blacklist"
+--[[Translation missing --]]
+L[ [=[%s, please review the tutorial
+(Click the icon to dismiss this message and start the tutorial)]=] ] = [=[%s, please review the tutorial
+(Click the icon to dismiss this message and start the tutorial)]=]
+--[[Translation missing --]]
+L["%s, please review the tutorial\\n(Click the icon to dismiss this message)"] = "%s, please review the tutorial\\n(Click the icon to dismiss this message)"
+--[[Translation missing --]]
+L["Allow to start a mission directly from the mission list page (no single mission page shown)"] = "Allow to start a mission directly from the mission list page (no single mission page shown)"
+L["Always counter increased resource cost"] = "Contrasta sempre incremento risorse"
+L["Always counter increased time"] = "Contrasta sempre incremento durata"
+L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Contrasta sempre morte milizie (ignorato tutte le milizie hanno solo una vita rimanente)"
+L["Always counter no bonus loot threat"] = "Contrasta sempre il \"no bonus\""
+L["Artifact shown value is the base value without considering knowledge multiplier"] = "Il valore mostrato è quello base, senza considerare il moltiplicatore dalla conoscenza"
+L["Attempting %s"] = "Provo %s"
+L["Base Chance"] = "Percentuale base"
+L["Better parties available in next future"] = "Ci sono combinazioni migliori nel futuro"
+L["Blacklisted"] = "In blacklist"
+L["Blacklisted missions are ignored in Mission Control"] = "Le missioni in blacklist vengono ignorate negli automatismi"
+L["Bonus Chance"] = "Percentuale globale"
+L["Building Final report"] = "Sto preparando il rapporto finale"
+L["but using troops with just one durability left"] = "ma uso truppe con solo un punto vita rimasto"
+L["Capped %1$s. Spend at least %2$d of them"] = "%1$s ha un limite. Spendine almeno %2%d"
+L["Changes the sort order of missions in Mission panel"] = "Cambia l'ordine delle mission nel Pannello Missioni"
+L["Combat ally is proposed for missions so you can consider unassigning him"] = "Viene proposto l'alleato, per poter valutare se rimuoverlo dalla missione di scorta"
+L["Complete all missions without confirmation"] = "Completa tutte le missioni senza chiedere conferma"
+L["Configuration for mission party builder"] = "Configurazioni per il generatore di gruppi"
+L["Cost reduced"] = "Costo ridotto"
+L["Could not fulfill mission, aborting"] = "Non riesco a completare il party per la missione, rinuncio"
+L["Counter kill Troops"] = "Contrasta \"Uccide le truppe\""
+--[[Translation missing --]]
+L["Customization options (non mission related)"] = "Customization options (non mission related)"
+L["Disables warning: "] = "Disabilita l'avviso:"
+L["Dont use this slot"] = "Non usare questo slot"
+L["Don't use troops"] = "Non usare truppe"
+L["Duration reduced"] = "Durata ridotta"
+L["Duration Time"] = "Durata"
+--[[Translation missing --]]
+L["Elite: Prefer overcap"] = "Elite: Prefer overcap"
+L["Elites mission mode"] = "Modalità missioni \"elite\""
+L["Empty missions sorted as last"] = "Le missioni senza campioni vengono ordinate come ultime"
+L["Empty or 0% success mission are sorted as last. Does not apply to \"original\" method"] = "Le missioni senza campioni o con lo 0% o meno di possibilità di successo vengono ordinate come ultime. Non si applica all'ordinamento originale Blizzard"
+L["Equipped by following champions:"] = "Usato da questi campioni:"
+L["Expiration Time"] = "Scadenza"
+L["Favours leveling follower for xp missions"] = "Preferisci i campioni che devono livellare"
+--[[Translation missing --]]
+L["For elite missions, tries hard to not go under 100% even at cost of overcapping"] = "For elite missions, tries hard to not go under 100% even at cost of overcapping"
+L["General"] = "Generale"
+L["Global approx. xp reward"] = "Approssimativi PE globali"
+L["Global approx. xp reward per hour"] = "Approssimativi PE globali per ora"
+L["HallComander Quick Mission Completion"] = "OrderHallCommander Completamento rapido"
+L["If %1$s is lower than this, then we try to achieve at least %2$s without going over 100%%. Ignored for elite missions."] = "Se %1$s è inferiore a questa, allora cerchiamo di raggiungere almeno %2$s senza superare il 100%%. Viene ignorato nelle missioni elite."
+L["If not checked, inactive followers are used as last chance"] = "Se non attivo, visualizzerà seguaci inattivi pur di riempire la missione"
+L[ [=[If you %s, you will lose them
+Click on %s to abort]=] ] = "Se %s le perderai. Clicca su %s per interrompere"
+L["Ignore busy followers"] = "Ignora i seguaci occupati"
+L["Ignore inactive followers"] = "Ignora i seguaci inattivi"
+L["Keep cost low"] = "Mantieni il costo basso"
+L["Keep extra bonus"] = "Ottieni il bonus aggiuntivo"
+L["Keep time short"] = "Riduci la durata"
+L["Keep time VERY short"] = "Riduci MOLTO la durata"
+--[[Translation missing --]]
+L[ [=[Launch the first filled mission with at least one locked follower.
+Keep %s pressed to actually launch, a simple click will only print mission name with its followers list]=] ] = [=[Launch the first filled mission with at least one locked follower.
+Keep %s pressed to actually launch, a simple click will only print mission name with its followers list]=]
+--[[Translation missing --]]
+L[ [=[Launch the first filled mission with at least one locked follower.
+Keep SHIFT pressed to actually launch, a simple click will only print mission name with its followers list]=] ] = [=[Launch the first filled mission with at least one locked follower.
+Keep SHIFT pressed to actually launch, a simple click will only print mission name with its followers list]=]
+L["Level"] = "Livello"
+L["Lock all"] = "Riserva tutti"
+L["Lock this follower"] = "Riserva questo seguace"
+L["Locked follower are only used in this mission"] = "I seguaci riservati saranno usati solo in questa missione"
+L["Make Order Hall Mission Panel movable"] = "Rendi spostabile il pannello missioni"
+L["Makes sure that no troops will be killed"] = "Si accerta che nessuna truppa venga uccisa"
+L["Max champions"] = "Campioni massimi"
+L["Maximize xp gain"] = "Massimizza il guadagno di PE"
+L["Mission duration reduced"] = "Durata missione ridotta"
+L["Mission was capped due to total chance less than"] = "La percentuale di success è stata ridotta perché era comunque inferiore a"
+L["Missions"] = "Missioni"
+L["Never kill Troops"] = "Non uccidere mai le truppe"
+L["No follower gained xp"] = "Nessun campione ha guaagnato PE"
+L["No suitable missions. Have you reserved at least one follower?"] = "Nessuna missione valida. Hai riservato almeno un seguace?"
+L["Not blacklisted"] = "Non blacklistata"
+L["Nothing to report"] = "Niente da segnalare"
+L["Notifies you when you have troops ready to be collected"] = "Notificami quando ho truppe pronte per essere raccolte"
+L["Only accept missions with time improved"] = "Accetta solo missioni con bonus durata ridotta"
+L["Only consider elite missions"] = "Visualizza solo missioni elite"
+--[[Translation missing --]]
+L["Only need %s instead of %s to start a mission from mission list"] = "Only need %s instead of %s to start a mission from mission list"
+L["Only use champions even if troops are available"] = "Usa solo campioni anche se ci sono truppe disponibili"
+--[[Translation missing --]]
+L["Open configuration"] = "Open configuration"
+L[ [=[OrderHallCommander overrides GarrisonCommander for Order Hall Management.
+ You can revert to GarrisonCommander simply disabling OrderhallCommander.
+If instead you like OrderHallCommander remember to add it to Curse client and keep it updated]=] ] = [=[OrderHallCommander sostituisce l'interfaccia di GarrisonComamnder per le missioni di classe
+Disabilitalo se preferisci GarrisonCommander.
+Se invece ti piace, aggiungilo al client Curse e tienilo aggiornato]=]
+L["Original method"] = "Metodo originale"
+L["Position is not saved on logout"] = "La posizione non è salvata alla disconnessione"
+L["Prefer high durability"] = "Alta durabilità preferita"
+L["Quick start first mission"] = "Avvio rapido prima missione"
+L["Remove no champions warning"] = "Rimuovi avviso campioni insufficienti"
+--[[Translation missing --]]
+L["Restart tutorial from beginning"] = "Restart tutorial from beginning"
+--[[Translation missing --]]
+L["Resume tutorial"] = "Resume tutorial"
+L["Resurrect troops effect"] = "Resurrezione truppe possibile"
+L["Reward type"] = "Tipo ricompensa"
+--[[Translation missing --]]
+L["Sets all switches to a very permissive setup. Very similar to 1.4.4"] = "Sets all switches to a very permissive setup. Very similar to 1.4.4"
+--[[Translation missing --]]
+L["Show tutorial"] = "Show tutorial"
+L["Show/hide OrderHallCommander mission menu"] = "Mostra/ascondi il menu di missione di OrderHallCommander"
+L["Sort missions by:"] = "Ordina le missioni per:"
+L["Started with "] = "Avviata con"
+L["Success Chance"] = "Percentuale di successo"
+L["Troop ready alert"] = "Avviso truppe pronte"
+L["Unable to fill missions, raise \"%s\""] = "Non riesco ad assegnare seguaci alle mission, incrementa \"%s\""
+L["Unable to fill missions. Check your switches"] = "Impossibile riempire le missioni. Controlla le opzioni scelte"
+L["Unable to start mission, aborting"] = "Non riesco a far partire la missione, rinuncio"
+L["Unlock all"] = "Libera tutti"
+L["Unlock this follower"] = "Libera questo seguace"
+L["Unlocks all follower and slots at once"] = "Libera tutti i seguaci riservati e gli slot vietati in un colpo solo"
+--[[Translation missing --]]
+L["Unsafe mission start"] = "Unsafe mission start"
+L["Upgrading to |cff00ff00%d|r"] = "Incremento a |cff00ff00%d|r"
+L["URL Copy"] = "Copia la URL"
+L["Use at most this many champions"] = "Usa al massimo questo numero di campioni"
+L["Use combat ally"] = "Usa l'alleato"
+L["Use this slot"] = "Usa questo slot"
+L["Uses troops with the highest durability instead of the ones with the lowest"] = "Sceglie la truppe con durabilità residua piu' alta anziché quelle con durabilità residua piu' bassa"
+L["When no free followers are available shows empty follower"] = "Quando non ci sono seguaci disponibili mostra le caselle vuote"
+L["When we cant achieve the requested %1$s, we try to reach at least this one without (if possible) going over 100%%"] = "Se non è possibile raggiungere la percentuale di successo globale, si cerca di raggiungere almeno questa senza superare il 100%"
+L["Would start with "] = "Avvierei con"
+L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = "Stai sprecando |cffff0000%d|cffffd200 punti!!"
+--[[Translation missing --]]
+L[ [=[You need to close and restart World of Warcraft in order to update this version of OrderHallCommander.
+Simply reloading UI is not enough]=] ] = [=[You need to close and restart World of Warcraft in order to update this version of OrderHallCommander.
+Simply reloading UI is not enough]=]
+--[[Translation missing --]]
+L["You now need to press both %s and %s to start mission"] = "You now need to press both %s and %s to start mission"
+
 L["Configuration"] = "\231\181\132\230\133\139\239\188\140"
 L["Description"] = "\230\143\143\232\191\176\239\188\140"
 L["Libraries"] = "\229\156\150\230\155\184\233\164\168\239\188\140"

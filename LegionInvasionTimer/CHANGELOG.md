@@ -1,8 +1,6 @@
 # LegionInvasionTimer
 
-## [v8.3.0](https://github.com/funkydude/LegionInvasionTimer/tree/v8.3.0) (2020-01-14)
-[Full Changelog](https://github.com/funkydude/LegionInvasionTimer/compare/v8.2.4...v8.3.0)
+## [v9.0.2](https://github.com/funkydude/LegionInvasionTimer/tree/v9.0.2) (2020-10-14)
+[Full Changelog](https://github.com/funkydude/LegionInvasionTimer/compare/v9.0.1...v9.0.2) [Previous Releases](https://github.com/funkydude/LegionInvasionTimer/releases)
 
-- bump toc  
-- Update IsQuestFlaggedCompleted API use.  
-- Update esES  
+- Fix opening options  

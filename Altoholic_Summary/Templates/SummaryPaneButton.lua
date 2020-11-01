@@ -38,6 +38,6 @@ addon:Controller("AltoholicUI.SummaryPaneButton", {
 
 		-- Set Scripts
 		frame:SetScript("OnEnter", EmptyFunc)
-		frame:SetScript("OnClick", EmptyFunc)
+		frame:SetScript("OnClick", column.OnTotalClick or EmptyFunc)
 	end,
 })

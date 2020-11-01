@@ -6,8 +6,6 @@ local AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
 local __Localization = LibStub:GetLibrary("ovale/Localization")
 local L = __Localization.L
 local LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
-local __Ovale = LibStub:GetLibrary("ovale/Ovale")
-local Print = __Ovale.Print
 local debugprofilestop = debugprofilestop
 local GetTime = GetTime
 local format = string.format
@@ -17,12 +15,14 @@ local wipe = wipe
 local insert = table.insert
 local sort = table.sort
 local concat = table.concat
+local __tools = LibStub:GetLibrary("ovale/tools")
+local Print = __tools.Print
 __exports.Profiler = __class(nil, {
     constructor = function(self, name, profiler)
         self.profiler = profiler
         self.timestamp = debugprofilestop()
         self.enabled = false
-        local args = profiler.options.args.profiling.args.modules.args
+        local args = profiler.moduleOptions
         args[name] = {
             name = name,
             desc = format(L["Enable profiling for the %s module."], name),
@@ -89,6 +89,7 @@ __exports.OvaleProfilerClass = __class(nil, {
                 end
             }
         }
+        self.moduleOptions = {}
         self.options = {
             name = self.ovale:GetName() .. " " .. L["Profiling"],
             type = "group",
@@ -102,11 +103,11 @@ __exports.OvaleProfilerClass = __class(nil, {
                             type = "group",
                             inline = true,
                             order = 10,
-                            args = {},
+                            args = self.moduleOptions,
                             get = function(info)
                                 local name = info[#info]
                                 local value = self.ovaleOptions.db.global.profiler[name]
-                                return (value ~= nil)
+                                return value ~= nil
                             end,
                             set = function(info, value)
                                 local name = info[#info]
@@ -155,7 +156,7 @@ __exports.OvaleProfilerClass = __class(nil, {
         end
         self.array = {}
         for k, v in pairs(self.actions) do
-            ovaleOptions.options.args.actions.args[k] = v
+            ovaleOptions.actions.args[k] = v
         end
         ovaleOptions.defaultDB.global = ovaleOptions.defaultDB.global or {}
         ovaleOptions.defaultDB.global.profiler = {}

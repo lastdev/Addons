@@ -101,7 +101,7 @@ SlashCmdList["TOMCATS"] = handleSlashCommand
 local slashCommandsHtmlHead = "<html>\n<body>\n<h1>Slash Commands</h1>\n<br />\n"
 local slashCommandHtmlTemplate = "<h3>%s:</h3>\n<p>/TOMCATS %s</p>\n<br />\n"
 local slashCommandsHtmlFoot = "</body>\n</html>"
-TomCats.version = "01.05.00"
+TomCats.version = "01.06.01"
 local function refreshInterfaceControlPanels()
 	local slashCommandsHtml = slashCommandsHtmlHead
 	local infoText = "Installed Components:\n|cffffffff"
@@ -231,10 +231,10 @@ local function ADDON_LOADED(_, _, arg1)
 		TomCats_Config_Slash_Commands.parent = "TomCat's Tours"
 		InterfaceOptions_AddCategory(TomCats_Config_Slash_Commands)
 		refreshInterfaceControlPanels()
-		local offset = -36
-		local buttonSpacing = -34
+		local offset = -68
+		local buttonSpacing = -32
 		local count = 0
-		local mapIDs = { 14, 62, 1355, 1462 }
+		local mapIDs = { 1462, 1355, 62, 14 }
 		for i = 1, #mapIDs do
 			local k = mapIDs[i]
 			local v = addon.supportedMaps[k]
@@ -252,9 +252,9 @@ local function ADDON_LOADED(_, _, arg1)
 				rareMapShortcut:SetFrameStrata("MEDIUM")
 				rareMapShortcut:SetFrameLevel(9999)
 				rareMapShortcut:ClearAllPoints()
-				rareMapShortcut:SetPoint("TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -4,
-				                         offset + buttonSpacing * count)
-				rareMapShortcut.shadow:Show()
+				rareMapShortcut:SetPoint("TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT",
+				                         offset + buttonSpacing * count, -1)
+				--rareMapShortcut.shadow:Show()
 				rareMapShortcut.tooltip = {
 					Show = function(this)
 						GameTooltip:ClearLines()
@@ -308,16 +308,35 @@ do
 				WorldMapFrame.SidePanelToggle.CloseButton:Show()
 			end
 		end
+		TomCatsLayoutIndexManagerMixin = {}
+		function TomCatsLayoutIndexManagerMixin:AddManagedLayoutIndex(key, startingIndex)
+			if (not self.managedLayoutIndexes) then
+				self.managedLayoutIndexes = {};
+				self.startingLayoutIndexes = {};
+			end
+			self.managedLayoutIndexes[key] = startingIndex;
+			self.startingLayoutIndexes[key] = startingIndex;
+		end
+		function TomCatsLayoutIndexManagerMixin:GetManagedLayoutIndex(key)
+			if (not self.managedLayoutIndexes or not self.managedLayoutIndexes[key]) then
+				return 0;
+			end
+			local layoutIndex = self.managedLayoutIndexes[key];
+			self.managedLayoutIndexes[key] = self.managedLayoutIndexes[key] + 1;
+			return layoutIndex;
+		end
+		function TomCatsLayoutIndexManagerMixin:Reset()
+			for k, _ in pairs(self.managedLayoutIndexes) do
+				self.managedLayoutIndexes[k] = self.startingLayoutIndexes[k];
+			end
+		end
+		function TomCatsCreateLayoutIndexManager()
+			return CreateFromMixins(TomCatsLayoutIndexManagerMixin);
+		end
 		TomCatsRareLogMixin = {}
 		function TomCatsRareLogMixin:InitLayoutIndexManager()
-			self.layoutIndexManager = CreateLayoutIndexManager()
-			self.layoutIndexManager:AddManagedLayoutIndex("RaresLog", QUEST_LOG_WAR_CAMPAIGN_LAYOUT_INDEX + 1)
-			self.RaresFrame.Contents.Separator:Show()
-			self.RaresFrame.Contents.StoryHeader:Show()
-			self.RaresFrame.Contents.Notice.Text:SetText(
-					"New features being developed constantly. Be sure to update your addons regularly!|r\n\n|cff00ff00Thank you for using TomCat's Tours\n|cffffffffVisit https://twitch.tv/TomCat|r"
-			--            "New feature being developed:\n|cffffffffRare Spawn Share (34% of votes)|r\n\n|cff00ff00Round 3 voting has begun!|r\nVote each day on what's next:\n|cffffffffhttps://twitch.tv/TomCat|r"
-			)
+			self.layoutIndexManager = TomCatsCreateLayoutIndexManager()
+			self.layoutIndexManager:AddManagedLayoutIndex("RaresLog", 3)
 		end
 		local raresLog
 		local function CheckForUpdatedRaresLog()
@@ -466,7 +485,7 @@ do
 		function TomCatsRareLogMixin:Refresh()
 			self.RaresFrame.Contents.LogHeader.Text:SetText(L["Rare Creatures Log"])
 			self.RaresFrame.Contents.LogHeader:Show()
-			self.RaresFrame.Contents.StoryHeader.Text:SetText(C_Map.GetMapInfo(WorldMapFrame:GetMapID())["name"])
+			self.RaresFrame.Contents.LogHeader.Location:SetText(C_Map.GetMapInfo(WorldMapFrame:GetMapID())["name"])
 			self.layoutIndexManager:Reset()
 			self:RefreshRaresLog()
 			self.RaresFrame.Contents:Layout()

@@ -14,7 +14,7 @@ L:SetTimerLocalization({
 	TimerFlag		= "Flag respawn",
 	TimerInvite		= "%s",
 	TimerRemaining	= "Time Remaining: ",
-	TimerShadow		= "Shadow Sight",
+	TimerShadow		= "Shadow Sight"
 })
 
 L:SetOptionLocalization({
@@ -29,10 +29,14 @@ L:SetOptionLocalization({
 	TimerInvite			= "Show battleground join timer",
 	TimerRemaining		= "Show time remaining for match start and match end",
 	TimerShadow			= "Show timer for Shadow Sight",
-	TimerWin			= "Show win timer"
+	TimerWin			= "Show win timer",
+	ShowRelativeGameTime= "Fill win timer relative to BG start time (If disabled, bar just always looks full)"
 })
 
 L:SetMiscLocalization({
+	BgStart120          = "The battle begins in 2 minutes.",
+	BgStart60           = "The battle begins in 1 minute.",
+	BgStart30           = "The battle begins in 30 seconds. Prepare yourselves!",
 	ArenaInvite			= "Arena invite",
 	BasesToWin			= "Bases to win: %d",
 	WinBarText			= "%s wins",
@@ -58,6 +62,10 @@ L:SetMiscLocalization({
 --  Seething Shore  --
 ----------------------
 L = DBM:GetModLocalization("z1803")
+
+L:SetTimerLocalization({
+	TimerSpawn	= "%s"
+})
 
 L:SetOptionLocalization({
 	TimerSpawn	= "Show azerite spawn timer"
@@ -121,15 +129,19 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("z727")
 
 L:SetTimerLocalization({
-	TimerCart	= "Cart respawn"
+	TimerRespawn	= "Cart respawn",
+	TimerCart		= "%s"
 })
 
 L:SetOptionLocalization({
-	TimerCart	= "Show cart respawn timer"
+	TimerResapwn	= "Show cart respawn timer",
+	TimerCart		= "Show cart cap timer"
 })
 
 L:SetMiscLocalization({
-	Capture	= "has captured"
+	Capture	= "has captured",
+	Arrived	= "has arived",
+	Begun	= "has begun"
 })
 
 -------------------------
@@ -138,7 +150,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("z998")
 
 L:SetOptionLocalization({
-	ShowOrbCarriers	= "Show flag carrier",
+	ShowOrbCarriers	= "Show flag carrier"
 })
 
 L:SetMiscLocalization({

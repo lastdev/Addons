@@ -230,6 +230,14 @@
 					<KeyValue key="option" value="UI.Tabs.Search.IncludeKnownRecipes" />
 				</KeyValues>
 			</CheckButton>
+			<CheckButton parentKey="IncludeAuctionHouseListings" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOP" relativeKey="$parent.IncludeKnownRecipes" relativePoint="BOTTOM" x="0" y="-10" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="option" value="UI.Tabs.Search.IncludeAuctionHouseListings" />
+				</KeyValues>
+			</CheckButton>
 		</Frames>
 	</Frame>
 
@@ -404,6 +412,264 @@
 					<KeyValue key="option" value="UI.Tooltip.ShowGuildBankCountPerTab" />
 				</KeyValues>
 			</CheckButton>
+		</Frames>
+	</Frame>
+
+	<Frame name="AltoholicTooltipCounterOptions" hidden="true">
+		<Size x="615" y="306" />
+        <Layers>
+			<Layer level="BACKGROUND">
+				<FontString parentKey="Text2" inherits="GameFontNormalSmall">
+					<Size x="80" y="18" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-40" />
+					</Anchors>
+				</FontString>
+            </Layer>
+        </Layers>
+		<Frames>
+			<CheckButton parentKey="HideHearthstoneCounters" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOPLEFT" x="20" y="-20" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="option" value="UI.Tooltip.HideHearthstoneCounters" />
+				</KeyValues>
+			</CheckButton>
+			<EditBox name="$parent_ItemIDEditBox" inherits="InputBoxTemplate" numeric="true">
+				<Size x="100" y="16" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.HideHearthstoneCounters" relativePoint="BOTTOMLEFT" x="10" y="-25" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:SetAutoFocus( true );
+					</OnLoad>
+					<OnEnterPressed>
+						self:ClearFocus();
+						self:SetFocus();
+                        Altoholic.AddItemToHiddenHearthstones(self:GetText())
+					</OnEnterPressed>
+					<OnEscapePressed>
+						if self:GetText() == "" then
+							InterfaceOptionsFrame:Hide()
+						else
+							self:SetText("")
+						end
+					</OnEscapePressed>
+				</Scripts>
+			</EditBox>
+			<Button name="$parent_AddButton" inherits="UIPanelButtonTemplate" text="Add">
+				<Size x="60" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_ItemIDEditBox" relativePoint="TOPRIGHT" x="10" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						local name = AltoholicTooltipCounterOptions_ItemIDEditBox:GetText()
+                        Altoholic.AddItemToHiddenHearthstones(name)
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_DelButton" inherits="UIPanelButtonTemplate" text="Del">
+				<Size x="60" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_AddButton" relativePoint="TOPRIGHT" x="10" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						local name = AltoholicTooltipCounterOptions_ItemIDEditBox:GetText()
+                        Altoholic.DeleteItemFromHiddenHearthstones(name)
+					</OnClick>
+				</Scripts>
+			</Button>
+            
+            <Frame name="$parent_ItemList">
+        		<Size>
+        			<AbsDimension x="250" y="150"/>
+        		</Size>
+        		<Anchors>
+        			<Anchor point="TOPLEFT">
+        				<Offset>
+        					<AbsDimension x="20" y="-100"/>
+        				</Offset>
+        			</Anchor>
+        		</Anchors>
+        		<Layers>
+        			<Layer level="BACKGROUND">
+        				<Texture name="$parentTopLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Size>
+        						<AbsDimension x="16" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="TOPLEFT"/>
+        					</Anchors>
+        					<TexCoords left="0.5" right="0.625" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentBottomLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Size>
+        						<AbsDimension x="16" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="BOTTOMLEFT"/>
+        					</Anchors>
+        					<TexCoords left="0.75" right="0.875" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentBottomRight" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Size>
+        						<AbsDimension x="16" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="BOTTOMRIGHT"/>
+        					</Anchors>
+        					<TexCoords left="0.875" right="1" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentTopRight" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Size>
+        						<AbsDimension x="16" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="TOPRIGHT"/>
+        					</Anchors>
+        					<TexCoords left="0.625" right="0.75" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMLEFT"/>
+        						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomLeft" relativePoint="TOPRIGHT"/>
+        					</Anchors>
+        					<TexCoords left="0" right="0.125" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentRight" file="Interface\Tooltips\UI-Tooltip-Border">
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="$parentTopRight" relativePoint="BOTTOMLEFT"/>
+        						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="TOPRIGHT"/>
+        					</Anchors>
+        					<TexCoords left="0.125" right="0.25" top="0" bottom="1"/>
+        				</Texture>
+        				<Texture name="$parentBottom" file="Interface\OptionsFrame\UI-OptionsFrame-Spacer">
+        					<Size>
+        						<AbsDimension x="0" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="BOTTOMLEFT" relativeTo="$parentBottomLeft" relativePoint="BOTTOMRIGHT">
+        							<Offset>
+        								<AbsDimension x="0" y="-2"/>
+        							</Offset>
+        						</Anchor>
+        						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="BOTTOMLEFT"/>
+        					</Anchors>
+        				</Texture>
+        				<Texture name="$parentTop" file="Interface\OptionsFrame\UI-OptionsFrame-Spacer">
+        					<Size>
+        						<AbsDimension x="0" y="16"/>
+        					</Size>
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="TOPRIGHT">
+        							<Offset>
+        								<AbsDimension x="0" y="7"/>
+        							</Offset>
+        						</Anchor>
+        						<Anchor point="TOPRIGHT" relativeTo="$parentTopRight" relativePoint="TOPLEFT"/>
+        					</Anchors>
+        				</Texture>
+        			</Layer>
+        		</Layers>
+        		<Frames>
+        			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoUIPanelScrollFrameTemplate">
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMRIGHT">
+        						<Offset>
+        							<AbsDimension x="0" y="10"/>
+        						</Offset>
+        					</Anchor>
+        					<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="TOPLEFT">
+        						<Offset>
+        							<AbsDimension x="-12" y="-10"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        				<Scripts>
+        					<OnVerticalScroll>
+        						self:OnVerticalScroll(offset, 18, Altoholic.HiddenHearthstonesUpdate)
+        					</OnVerticalScroll>
+        				</Scripts>
+        			</ScrollFrame>
+        			
+        			<Button name="$parentEntry1" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-3"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        			<Button name="$parentEntry2" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentEntry1" relativePoint="BOTTOMLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-6"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        			<Button name="$parentEntry3" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentEntry2" relativePoint="BOTTOMLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-6"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        			<Button name="$parentEntry4" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentEntry3" relativePoint="BOTTOMLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-6"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        			<Button name="$parentEntry5" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentEntry4" relativePoint="BOTTOMLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-6"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        			<Button name="$parentEntry6" inherits="UIPanelButtonTemplate">
+                        <Size>
+        					<AbsDimension x="200" y="16"/>
+        				</Size>
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="$parentEntry5" relativePoint="BOTTOMLEFT">
+        						<Offset>
+        							<AbsDimension x="0" y="-6"/>
+        						</Offset>
+        					</Anchor>
+        				</Anchors>
+        			</Button>
+        		</Frames>
+        	</Frame>
 		</Frames>
 	</Frame>
 	
@@ -629,17 +895,17 @@
 					<KeyValue key="option" value="UI.Calendar.UseDialogBoxForWarnings" />
 				</KeyValues>
 			</CheckButton>
-			<CheckButton parentKey="WarningsEnabled" inherits="AltoToggleableOptionTemplate">
+			<CheckButton parentKey="WarningsDisabled" inherits="AltoToggleableOptionTemplate">
 				<Anchors> 
 					<Anchor point="TOPLEFT" relativeKey="$parent.UseDialogBoxForWarnings" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="option" value="UI.Calendar.WarningsEnabled" />
+					<KeyValue key="option" value="UI.Calendar.WarningsDisabled" />
 				</KeyValues>
 			</CheckButton>
 			<Frame name="$parent_WarningType1" inherits="AltoWarningTypeTemplate" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.WarningsEnabled" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.WarningsDisabled" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 			</Frame>
 			<Frame name="$parent_WarningType2" inherits="AltoWarningTypeTemplate" id="2">

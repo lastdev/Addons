@@ -1,12 +1,18 @@
-tag c1c45bf6055ad5948f4e779aa103198efef57b97 8.3.25
+tag 587b5eb1080c2f96b43049435430437c4bf35ea7 9.0.27
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Wed Jan 15 21:41:39 2020 +0100
+Date:	Tue Oct 13 19:25:07 2020 +0200
 
-Tagging for release
+Shadowland
 
-commit 2f5f96afd657decc0558c4d4dffefd6819dd3007
+commit f538b204a63cb1fd3ac20c545525e0464c5d3e1d
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Wed Jan 15 21:34:14 2020 +0100
+Date:   Mon Sep 28 21:17:23 2020 +0200
 
-    Bump version
+    Update toc and version number
+
+commit 055a5a60d5ab3ef490d0c96ff09f16d1d6bde9eb
+Author: Floraline <floraline@ophiuchus.org>
+Date:   Mon Sep 28 21:04:05 2020 +0200
+
+    changes for shadowland
 

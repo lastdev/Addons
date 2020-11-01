@@ -4,7 +4,7 @@
 	<!--<Script file="ZPerl_Usage.lua"/>-->
 	<Script file="ZPerl_Highlight.lua"/>
 
-	<Button name="XPerl_MinimapButton_Frame" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true">
+	<Button name="ZPerl_MinimapButton_Frame" frameStrata="MEDIUM" parent="Minimap" enableMouse="true" movable="true">
 		<Size>
 			<AbsDimension x="33" y="33"/>
 		</Size>

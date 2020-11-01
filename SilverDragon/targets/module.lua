@@ -11,6 +11,7 @@ function module:OnInitialize()
 			locked = true,
 			style = "SilverDragon",
 			closeAfter = 30,
+			closeDead = true,
 			sources = {
 				target = false,
 				grouptarget = true,
@@ -18,6 +19,7 @@ function module:OnInitialize()
 				nameplate = true,
 				vignette = true,
 				['point-of-interest'] = true,
+				chat = true,
 				groupsync = true,
 				guildsync = false,
 				fake = true,
@@ -46,18 +48,27 @@ function module:OnInitialize()
 				end,
 				order = 25,
 				args = {
-					about = config.desc("Once you've found a rare, it can be nice to actually target it. So this pops up a frame that targets the rare when you click on it. It can show a 3d model of that rare, but only if we already know the ID of the rare (though a data import), or if it was found by being targetted. Nameplates are right out.", 0),
+					about = config.desc("Once you've found a rare, it can be nice to actually target it. So this pops up a frame that targets the rare when you click on it.", 0),
 					show = config.toggle("Show", "Show the click-target frame.", 10),
 					locked = config.toggle("Locked", "Lock the click-target frame in place unless ALT is held down", 15),
+					style = {
+						type = "select",
+						name = "Style",
+						desc = "Appearance of the frame",
+						values = {},
+						order = 20,
+					},
 					closeAfter = {
 						type = "range",
 						name = "Close after",
-						desc = "How long to leave the target frame up without you interacting with it before it'll go away, in seconds",
+						desc = "How long to leave the target frame up without you interacting with it before it'll go away, in seconds. Every time you mouse over the frame this timer resets.",
 						width = "full",
 						min = 5,
 						max = 600,
 						step = 1,
+						order = 25,
 					},
+					closeDead = config.toggle("Close when dead", "Try to close the click-target frame when the mob dies. We'll only be able to *tell* if it dies if we're nearby and in combat. Might have to wait until you're out of combat to do the hiding.", 30),
 					sources = {
 						type="multiselect",
 						name = "Rare Sources",
@@ -71,21 +82,17 @@ function module:OnInitialize()
 							nameplate = "Nameplates",
 							vignette = "Vignettes",
 							['point-of-interest'] = "Map Points of Interest",
+							chat = "Chat yells",
 							groupsync = "Group Sync",
 							guildsync = "Guild Sync",
 						},
-					},
-					style = {
-						type = "select",
-						name = "Style",
-						desc = "Appearance of the frame",
-						values = {},
+						order = 40,
 					},
 				},
 			},
 		}
 		for key in pairs(self.Looks) do
-			config.options.plugins.clicktarget.clicktarget.args.style.values[key] = key
+			config.options.plugins.clicktarget.clicktarget.args.style.values[key] = key:gsub("_", ": ")
 		end
 	end
 
@@ -103,6 +110,7 @@ function module:Announce(callback, id, zone, x, y, dead, source, unit)
 		end
 	end
 	if not self.db.profile.sources[source] then
+		Debug("Not showing popup, source disabled", source)
 		return
 	end
 	local data = {
@@ -110,14 +118,26 @@ function module:Announce(callback, id, zone, x, y, dead, source, unit)
 		unit = unit,
 		source = source,
 		dead = dead,
+		zone = zone,
+		x = x or 0,
+		y = y or 0,
 	}
 	if InCombatLockdown() then
+		Debug("Queueing popup for out-of-combat")
 		pending = data
 	else
 		self:ShowFrame(data)
 	end
 	FlashClientIcon() -- If you're tabbed out, bounce the WoW icon if we're in a context that supports that
 	data.unit = nil -- can't be trusted to remain the same
+end
+
+function module:Point()
+	local data = self.popup.data
+	if data and data.zone and data.x and data.y then
+		-- point to it, without a timeout, and ignoring whether it'll be replacing an existing waypoint
+		core:GetModule("TomTom"):PointTo(data.id, data.zone, data.x, data.y, 0, true)
+	end
 end
 
 function module:Marked(callback, id, marker, unit)
@@ -128,7 +148,8 @@ end
 
 function module:PLAYER_REGEN_ENABLED()
 	if pending then
-		pending = nil
+		Debug("Showing queued popup")
 		self:ShowFrame(pending)
+		pending = nil
 	end
 end

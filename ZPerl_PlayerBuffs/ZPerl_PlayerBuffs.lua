@@ -17,6 +17,8 @@ local function d(fmt, ...)
 end
 --@end-debug@]===]
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 -- setCommon
 local function setCommon(self, filter, buffTemplate)
 	self:SetAttribute("template", buffTemplate)
@@ -75,9 +77,10 @@ function XPerl_Player_Buffs_Position(self)
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, 0)
 			end]]
 
-			local _, class = UnitClass("player")
+			local _, playerClass = UnitClass("player")
+			local extraBar
 
-			if (class == "DRUID" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) or (class == "SHAMAN" and GetShapeshiftForm() == 0 and not pconf.noDruidBar) or (class == "PRIEST" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) then
+			if (playerClass == "DRUID" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) or (playerClass == "SHAMAN" and not IsClassic and GetSpecialization() == 1 and GetShapeshiftForm() == 0 and not pconf.noDruidBar) or (playerClass == "PRIEST" and UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) then
 				extraBar = 1
 			else
 				extraBar = 0

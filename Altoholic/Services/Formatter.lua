@@ -18,8 +18,14 @@ addon:Service("AltoholicUI.Formatter",  function()
 				silver = format("%s%s%s%s", color, silver, "|cFFC7C7CF", SILVER_AMOUNT_SYMBOL)
 				gold = format("%s%s%s%s", color, gold, colors.gold, GOLD_AMOUNT_SYMBOL)
 			else
-				copper = color..format(COPPER_AMOUNT_TEXTURE, copper, 13, 13)
-				silver = color..format(SILVER_AMOUNT_TEXTURE, silver, 13, 13)
+                if copper < 10 then copper = "0"..copper end 
+                if silver < 10 then silver = "0"..silver end
+                local pattern = COPPER_AMOUNT_TEXTURE
+                pattern = pattern:gsub("%%d", "%%s")
+				copper = color..format(pattern, copper, 13, 13)
+                pattern = COPPER_AMOUNT_TEXTURE
+                pattern = pattern:gsub("%%d", "%%s") 
+				silver = color..format(pattern, silver, 13, 13)
 				gold = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
 			end
 			return format("%s %s %s", gold, silver, copper)
@@ -34,7 +40,11 @@ addon:Service("AltoholicUI.Formatter",  function()
 			seconds = mod(seconds, 3600)
 			local minutes = floor(seconds / 60)
 			seconds = mod(seconds, 60)
-
+            
+            if seconds < 10 then seconds = "0"..seconds end
+            if minutes < 10 then minutes = "0"..minutes end
+            if hours < 10 then hours = "0"..hours end
+            
 			return format("%s%s|rd %s%s|rh %s%s|rm", colors.white, days, colors.white, hours, colors.white, minutes)
 		end,
         

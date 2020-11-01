@@ -1,7 +1,7 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: SilverDragon (Wrath)
 ## Notes: Mobs for Wrath
-## Version: v80300.1.1
+## Version: v90001.3
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements

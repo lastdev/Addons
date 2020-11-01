@@ -1,3 +1,9 @@
+--[[
+	Translated by Asixandur, Philipxander and Darkvalky
+]]
+
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 if (GetLocale() == "deDE") then
 -- Tabs
 XPERL_CONF_TITLE1			= GENERAL_LABEL -- "Allgemein"
@@ -743,7 +749,7 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT			= "HOT-Z\195\164hler"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC 	= "Zeigt bei einer Einheit, wie viele aktiven HOTs diese gerade von JEDER Klasse hat"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET			= "Mein Ziel"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC		= "Zeigt Dein Ziel an den Gruppen und Schlachtzugfenstern"
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+if not IsClassic then
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING		= GetSpellInfo(33076) -- Prayer of Mending
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC	= "Aktiviere "..GetSpellInfo(33076).." Verfolgung. Mit aktiviertem Glanz, zeigt dies eine prahlerische Grafik um den Buff besser verfolgen zu k\195\182nnen"
 end

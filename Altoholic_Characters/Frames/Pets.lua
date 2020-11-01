@@ -99,11 +99,13 @@ function ns:UpdatePets()
 	
 	local num = DataStore:GetNumPets(pets)
 	
-	if currentPetType == "MOUNT" then
-		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(MOUNTS .. " %s(%d)", colors.green, num)))
-	else
-		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(COMPANIONS .. " %s(%d)", colors.green, num)))
-	end
+	if AltoholicFramePets:IsVisible() then
+        if currentPetType == "MOUNT" then
+    		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(MOUNTS .. " %s(%d)", colors.green, num)))
+    	else
+    		AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(COMPANIONS .. " %s(%d)", colors.green, num)))
+    	end
+    end
 	
 	if not pets or (num == 0) then		-- added this test as simply addressing the table seems to make it grow, I'd assume this is due to AceDB magic value ['*'].
 		for i = 1, PETS_PER_PAGE do

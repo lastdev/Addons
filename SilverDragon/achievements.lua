@@ -153,6 +153,8 @@ local achievements = {
 	},
 	[11786] = {}, -- Terrors of the Shore
 	[11841] = {}, -- Naxt Victim
+	[12026] = {}, -- Invasion Obliteration
+	[12028] = {}, -- Envision Invasion Eradication
 	[12078] = { -- Commander of Argus
 		[127323] = 37629, -- Ataxon
 	},
@@ -354,7 +356,8 @@ local achievements = {
 		[141239] = 41845, -- Osca the Bloodied
 		[139988] = 41846, -- Sandfang
 		[139980] = 41847, -- Taja the Tidehowler
-		-- [141043] = nil, -- Jakala the Cruel
+		[140925] = 34, -- Doc Marrtens
+		[141043] = 34, -- Jakala the Cruel
 	},
 	[12587] = {}, -- Unbound Monstrosities
 	[13027] = {}, -- Mushroom Harvest
@@ -396,8 +399,15 @@ local achievements = {
 		[154701] = 45410, -- Gorged Gear-Cruncher
 		[154739] = 45411, -- Caustic Mechaslime
 		[155060] = 45433, -- The Doppel Gang
+		[155583] = 45691, -- Scrapclaw
 	},
+	[13690] = {}, -- Nazjatarget Eliminated (Nazjatar)
 	[13691] = {}, -- I Thought You Said They'd Be Rare (Nazjatar)
+	[14159] = {}, -- Combating the Corruption (Assaults)
+	[14307] = {}, -- Adventurer of Bastion
+	[14308] = {}, -- Adventurer of Maldraxxus
+	[14309] = {}, -- Adventurer of Ardenweald
+	[14310] = {}, -- Adventurer of Revendreth
 }
 core.achievements = achievements
 local mobs_to_achievement = {
@@ -414,26 +424,26 @@ function ns:AchievementMobStatus(id)
 		return
 	end
 	local criteria = achievements[achievement][id]
-	local _, name = GetAchievementInfo(achievement)
+	local _, name, _, achievement_completed, _, _, _, _, _, _, _, _, completedByMe = GetAchievementInfo(achievement)
 	local completed
-	if criteria < 32 then
+	if criteria < 40 then
 		_, _, completed = GetAchievementCriteriaInfo(achievement, criteria)
 	else
 		_, _, completed = GetAchievementCriteriaInfoByID(achievement, criteria)
 	end
-	return achievement, name, completed
+	return achievement, name, completed, achievement_completed and not completedByMe
 end
 
--- return quest_complete, achievement_complete
+-- return quest_complete, criteria_complete, achievement_completed_by_alt
 -- `nil` if completion not knowable, true/false if knowable
 function ns:CompletionStatus(id)
 	local _, questid = core:GetMobInfo(id)
-	local _, _, achievement_complete = ns:AchievementMobStatus(id)
+	local _, _, criteria_complete, achievement_completed_by_alt = ns:AchievementMobStatus(id)
 	local quest_complete
 	if questid then
-		quest_complete = IsQuestFlaggedCompleted(questid)
+		quest_complete = C_QuestLog.IsQuestFlaggedCompleted(questid)
 	end
-	return quest_complete, achievement_complete
+	return quest_complete, criteria_complete, achievement_completed_by_alt
 end
 
 function ns:LoadAllAchievementMobs()
@@ -491,12 +501,124 @@ function ns:UpdateTooltipWithCompletion(tooltip, id)
 	end
 	local _, questid = core:GetMobInfo(id)
 	if questid then
-		completed = IsQuestFlaggedCompleted(questid)
+		completed = C_QuestLog.IsQuestFlaggedCompleted(questid)
 		tooltip:AddDoubleLine(
 			QUESTS_COLON:gsub(":", ""),
 			completed and COMPLETE or INCOMPLETE,
 			1, 1, 0,
 			completed and 0 or 1, completed and 1 or 0, 0
 		)
+	end
+end
+
+function ns:HasLoot(id)
+	if not (id and ns.mobdb[id]) then
+		return false
+	end
+	return ns.mobdb[id].mount or ns.mobdb[id].toy or ns.mobdb[id].pet
+end
+
+function ns:LootStatus(id)
+	if not id or not ns.mobdb[id] then
+		return
+	end
+
+	local toy = ns.mobdb[id].toy and PlayerHasToy(ns.mobdb[id].toy)
+	local mount = ns.mobdb[id].mount and select(11, C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount))
+	local pet = ns.mobdb[id].pet and (C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet) > 0)
+
+	return toy, mount, pet
+end
+function ns:UpdateTooltipWithLootDetails(tooltip, id, only)
+	if not (id and ns.mobdb[id]) then
+		return
+	end
+
+	local toy = ns.mobdb[id].toy and (not only or only == "toy")
+	local mount = ns.mobdb[id].mount and (not only or only == "mount")
+	local pet = ns.mobdb[id].pet and (not only or only == "pet")
+
+	if toy then
+		tooltip:SetHyperlink(("item:%d"):format(ns.mobdb[id].toy))
+	end
+	if mount then
+		if toy then
+			tooltip:AddLine("---")
+		end
+		local name, spellid, texture, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount)
+		local _, description, source = C_MountJournal.GetMountInfoExtraByID(ns.mobdb[id].mount)
+
+		tooltip:AddLine(name)
+		tooltip:AddTexture(texture)
+		tooltip:AddLine(description, 1, 1, 1, true)
+		tooltip:AddLine(source)
+		if isCollected then
+			tooltip:AddLine(USED, 1, 0, 0)
+		end
+	end
+	if pet then
+		if toy or mount then
+			tooltip:AddLine('---')
+		end
+		local name, texture, _, mobid, source, description = C_PetJournal.GetPetInfoBySpeciesID(ns.mobdb[id].pet)
+		local owned, limit = C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet)
+		tooltip:AddLine(name)
+		tooltip:AddTexture(texture)
+		tooltip:AddLine(description, 1, 1, 1, true)
+		tooltip:AddLine(source)
+		tooltip:AddLine(ITEM_PET_KNOWN:format(owned, limit))
+	end
+end
+function ns:UpdateTooltipWithLootSummary(tooltip, id)
+	if not (id and ns.mobdb[id]) then
+		return
+	end
+
+	if ns.mobdb[id].mount then
+		local name, _, icon, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount)
+		if name then
+			tooltip:AddDoubleLine(
+				MOUNT,
+				"|T" .. icon .. ":0|t " .. name,
+				1, 1, 0,
+				isCollected and 0 or 1, isCollected and 1 or 0, 0
+			)
+		else
+			tooltip:AddDoubleLine(MOUNT, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
+		end
+	end
+	if ns.mobdb[id].pet then
+		local name, icon = C_PetJournal.GetPetInfoBySpeciesID(ns.mobdb[id].pet)
+		local owned, limit = C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet)
+		if name then
+			local r, g, b = 1, 0, 0
+			if owned == limit then
+				r, g, b = 0, 1, 0
+			elseif owned > 0 then
+				r, g, b = 1, 1, 0
+			end
+			tooltip:AddDoubleLine(
+				TOOLTIP_BATTLE_PET,
+				"|T" .. icon .. ":0|t " .. (ITEM_SET_NAME):format(name, owned, limit),
+				1, 1, 0,
+				r, g, b
+			)
+		else
+			tooltip:AddDoubleLine(TOOLTIP_BATTLE_PET, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
+		end
+	end
+	if ns.mobdb[id].toy then
+		local _, name, icon = C_ToyBox.GetToyInfo(ns.mobdb[id].toy)
+		local owned = PlayerHasToy(ns.mobdb[id].toy)
+		if name then
+			tooltip:AddDoubleLine(
+				TOY,
+				"|T" .. icon .. ":0|t " .. name,
+				1, 1, 0,
+				owned and 0 or 1, owned and 1 or 0, 0
+			)
+		else
+			tooltip:AddDoubleLine(TOY, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
+		end
 	end
 end

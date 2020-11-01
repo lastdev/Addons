@@ -1,7 +1,7 @@
  --[[
-$Id: LibBabble-SubZone-3.0_esMX.lua 227 2020-01-17 14:10:05Z arith $
+$Id: LibBabble-SubZone-3.0_esMX.lua 229 2020-02-11 15:06:38Z arith $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 227 $
+Revision: $Rev: 229 $
 Maintainers: arith
 Last updated by: $Author: arith $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
@@ -400,6 +400,7 @@ lib:SetCurrentTranslations
 	["Bathran's Haunt"] = "Ruinas de Bathran",
 	["Battle for Blackrock Mountain"] = "Batalla por Montaña Roca Negra",
 	["Battle for the Exodar"] = "Batalla por el Exodar",
+	["Battle of Dazar'alor"] = "Battle de Dazar'alor",
 	["Battle of Exodar"] = "Batalla de Exodar",
 	["Battle on the High Seas"] = "Batalla en Alta Mar",
 	["Battle Ring"] = "Liza",
@@ -730,6 +731,7 @@ lib:SetCurrentTranslations
 	["Camp Onequah"] = "Campamento Oneqwah",
 	["Camp Oneqwah"] = "Campamento Oneqwah",
 	["Camp Sungraze"] = "Campamento Rasguño de Sol",
+	["Camp Taurajo"] = "Campamento Taurajo",
 	["Camp Thornscar"] = "Campamento Cicatriz Espinosa",
 	["Camp Tunka'lo"] = "Campamento Tunka'lo",
 	["Camp Una'fe"] = "Campamento Una'fe",

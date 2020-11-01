@@ -1,3 +1,8 @@
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    print("DataStore_Achievements does not support Classic WoW")
+    return
+end
+
 --[[	*** DataStore_Achievements ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 21st, 2009

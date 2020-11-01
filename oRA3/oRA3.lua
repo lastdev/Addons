@@ -348,7 +348,7 @@ function addon:OnEnable()
 
 	-- init groupStatus
 	self:GROUP_ROSTER_UPDATE()
-	if IsInGuild() then GuildRoster() end
+	if IsInGuild() then C_GuildInfo.GuildRoster() end
 
 	if CUSTOM_CLASS_COLORS then
 		local function updateClassColors()
@@ -696,8 +696,8 @@ local function setupGUI()
 	LibDialog:Register("oRA3DisbandGroup", {
 		text = L.disbandGroupWarning,
 		buttons = {
-			{ text = YES, on_click = actuallyDisband, },
-			{ text = NO, },
+			{ text = L.yes, on_click = actuallyDisband, },
+			{ text = L.no, },
 		},
 		no_close_button = true,
 		hide_on_escape = true,

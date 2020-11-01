@@ -14,6 +14,18 @@ local OPTION_TRADESKILL = "UI.Tabs.Summary.CurrentTradeSkill"
 
 -- ** Icon events **
 
+addon.ResetAllFilters = function()
+    addon:SetOption(OPTION_REALMS, 4)
+    addon:SetOption(OPTION_FACTIONS, 3)
+    addon:SetOption(OPTION_LEVELS, 1)
+    addon:SetOption(OPTION_LEVELS_MIN, 1)
+    addon:SetOption(OPTION_LEVELS_MAX, 120)
+    addon:SetOption(OPTION_CLASSES, 0)
+    addon:SetOption(OPTION_TRADESKILL, 0)
+    addon.Characters.InvalidateView()
+    addon.Summary:Update()
+end
+
 local function OnRealmFilterChange(frame)
 	addon:SetOption(OPTION_REALMS, frame.value)
 	addon.Characters:InvalidateView()
@@ -78,6 +90,7 @@ local locationLabels = {
 	format("%s %s(%s)", L["This realm"], colors.green, L["All accounts"]),
 	format("%s %s(%s)", L["All realms"], colors.green, L["This account"]),
 	format("%s %s(%s)", L["All realms"], colors.green, L["All accounts"]),
+    format("%s %s(%s)", L["All realms/accounts"], colors.green, L["Hide realms"]),
 }
 
 local function RealmsIcon_Initialize(frame, level)
@@ -105,17 +118,15 @@ local function LevelIcon_Initialize(frame, level)
 	local option = addon:GetOption(OPTION_LEVELS)
 	
 	frame:AddTitle(L["FILTER_LEVELS"])
-	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1))
+	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1)) -- Leaving this on 1-120 so players don't ask why characters they haven't logged into since Shadowlands are missing. Perhaps lower it in 9.1?
 	frame:AddTitle()
-	frame:AddButtonWithArgs("1-59", 2, OnLevelFilterChange, 1, 59, (option == 2))
-	frame:AddButtonWithArgs("60-69", 3, OnLevelFilterChange, 60, 69, (option == 3))
-	frame:AddButtonWithArgs("70-79", 4, OnLevelFilterChange, 70, 79, (option == 4))
-	frame:AddButtonWithArgs("80-89", 5, OnLevelFilterChange, 80, 89, (option == 5))
-	frame:AddButtonWithArgs("90-99", 6, OnLevelFilterChange, 90, 99, (option == 6))
-	frame:AddButtonWithArgs("90-100", 7, OnLevelFilterChange, 90, 100, (option == 7))
-	frame:AddButtonWithArgs("100-110", 8, OnLevelFilterChange, 100, 110, (option == 8))
-	frame:AddButtonWithArgs("110-120", 9, OnLevelFilterChange, 110, 120, (option == 9))
-	frame:AddButtonWithArgs("120", 10, OnLevelFilterChange, 120, 120, (option == 10))
+	frame:AddButtonWithArgs("1-9", 2, OnLevelFilterChange, 1, 9, (option == 2))
+	frame:AddButtonWithArgs("10-19", 3, OnLevelFilterChange, 10, 19, (option == 3))
+	frame:AddButtonWithArgs("20-29", 4, OnLevelFilterChange, 20, 29, (option == 4))
+	frame:AddButtonWithArgs("30-39", 5, OnLevelFilterChange, 30, 39, (option == 5))
+	frame:AddButtonWithArgs("40-49", 6, OnLevelFilterChange, 40, 49, (option == 6))
+	frame:AddButtonWithArgs("50-59", 7, OnLevelFilterChange, 50, 59, (option == 7))
+	frame:AddButtonWithArgs("60", 8, OnLevelFilterChange, 60, 60, (option == 8))
 	frame:AddCloseMenu()
 end
 
@@ -167,7 +178,17 @@ local function ClassIcon_Initialize(frame, level)
 			key, OnClassFilterChange, nil, (option == key)
 		)
 	end
-	frame:AddCloseMenu()
+    
+    frame:AddTitle()
+    local armorClassNames = {"Cloth", "Leather", "Mail", "Plate"}
+    local armorClassEnums = {LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_PLATE}
+    for i = 1, 4 do
+        local armorClassName = armorClassNames[i]
+        local armorClassCategoryEnum = armorClassEnums[i]
+        frame:AddButton(GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, armorClassCategoryEnum), armorClassName, OnClassFilterChange, nil, (option == armorClassName))
+    end
+	
+    frame:AddCloseMenu()
 end
 
 local function AltoholicOptionsIcon_Initialize(frame, level)
@@ -182,7 +203,7 @@ local function AltoholicOptionsIcon_Initialize(frame, level)
 	
 	frame:AddTitle()
 	frame:AddTitle(OTHER)	
-	frame:AddButton("What's new?", AltoholicWhatsNew, ShowOptionsCategory)
+	frame:AddButton(L["What's new?"], AltoholicWhatsNew, ShowOptionsCategory)
 	frame:AddButton("Getting support", AltoholicSupport, ShowOptionsCategory)
 	frame:AddButton(L["Memory used"], AltoholicMemoryOptions, ShowOptionsCategory)
 	frame:AddButton(HELP_LABEL, AltoholicHelp, ShowOptionsCategory)

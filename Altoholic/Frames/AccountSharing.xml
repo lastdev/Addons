@@ -522,7 +522,427 @@
 			</Button>
 		</Frames>
 	</Frame>
+    
+    <!-- moved from Altoholic.xml, the account sharing frame -->     
+    <Frame name="AltoAccountSharing" toplevel="true" parent="UIParent" hidden="true" movable="true">
+		<Size x="800" y="300" />
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="20" />
+		</Anchors>
+        <Frames>
+            <Frame name="AltoAccountSharingEntireDatabaseTab" parent="AltoAccountSharing" inherits="BackdropTemplate">
+                <Scripts>
+                    <OnLoad inherit="prepend">
+                        self:SetBackdrop({
+	                        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+                        	tile = true,
+                        	tileSize = 32,
+                        	edgeSize = 32,
+                        	insets = { left = 11, right = 12, top = 12, bottom = 11, },
+                        })
+                    </OnLoad>
+                </Scripts>     
+            	<Size x="800" y="300" />
+		        <Anchors>
+			         <Anchor point="TOPLEFT"/>
+		        </Anchors>
+        		<Layers>
+        			<Layer>
+        				<FontString name="AltoAccountSharingName" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="140" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" x="10" y="-16" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingText1" inherits="GameFontNormal" justifyH="LEFT">
+        					<Size x="250" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingName" relativePoint="BOTTOMLEFT" x="10" y="-10" />
+        					</Anchors>
+        					<Color r="1" g="1" b="1" />
+        				</FontString>
+        				<FontString name="AltoAccountSharingText2" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="140" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" x="390" y="-16" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingText3" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="60" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingText2" relativePoint="TOPRIGHT" x="30" y="0" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingText4" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="60" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingText3" relativePoint="TOPRIGHT" x="30" y="0" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingTransferStatus" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="260" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" x="30" y="-170" />
+        					</Anchors>
+        				</FontString>
+        			</Layer>
+        		</Layers>
+        		<Frames>
+        			<!-- 	for readability reasons, the scroll frame is in Frames/AccountSharing.xml	-->
 
+        			<EditBox name="AltoAccountSharing_AccNameEditBox" inherits="InputBoxTemplate">
+        				<Size x="100" y="16" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingName" relativePoint="TOPRIGHT" x="10" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnLoad>
+        						self:SetAutoFocus( true );
+        					</OnLoad>
+        					<OnEnterPressed>
+        						self:ClearFocus();
+        						_G[self:GetParent():GetParent():GetName() .."_AccTargetEditBox"]:SetFocus();
+        					</OnEnterPressed>
+        					<OnEscapePressed>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnEscapePressed>
+        				</Scripts>
+        			</EditBox>
+        			<Button name="AltoAccountSharing_InfoButton" inherits="UIPanelButtonTemplate" text="?">
+        				<Size x="20" y="24" />
+        				<Anchors>
+        					<Anchor point="LEFT" relativeTo="AltoAccountSharing_AccNameEditBox" relativePoint="RIGHT" x="5" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnEnter>
+        						Altoholic:ShowWidgetTooltip(self)
+        					</OnEnter>
+        					<OnLeave>
+        						AltoTooltip:Hide();
+        					</OnLeave>
+        				</Scripts>
+        			</Button>
+
+        			<CheckButton name="AltoAccountSharing_UseTarget" inherits="SendMailRadioButtonTemplate">
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingText1" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+        				</Anchors>
+        				<Scripts>
+        					<OnShow inherit="prepend">
+                                _G[self:GetName().."Text"]:SetText(TARGET);
+        					    if Altoholic:GetOption("UI.Sharing.EntireDatabase.Remember") and Altoholic:GetOption("UI.Sharing.EntireDatabase.RememberTarget") then
+        						    AltoAccountSharing_UseTarget:SetChecked(nil)
+                                else
+                                    AltoAccountSharing_UseTarget:SetChecked(true)
+                                end
+        					</OnShow>
+        					<OnClick>
+        						AltoAccountSharing_UseName:SetChecked(nil)
+        					</OnClick>
+        				</Scripts>
+        			</CheckButton>
+        			<CheckButton name="AltoAccountSharing_UseName" inherits="SendMailRadioButtonTemplate">
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharing_UseTarget" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+        				</Anchors>
+        				<Scripts>
+        					<OnLoad>
+        						AltoAccountSharing_UseName:SetChecked(nil)
+        					</OnLoad>
+                            <OnShow inherit="prepend">
+                                if Altoholic:GetOption("UI.Sharing.EntireDatabase.Remember") and Altoholic:GetOption("UI.Sharing.EntireDatabase.RememberTarget") then
+                                    self:SetChecked(true)
+                                end
+                            </OnShow>
+        					<OnClick>
+        						AltoAccountSharing_UseTarget:SetChecked(nil)
+        					</OnClick>
+        				</Scripts>
+        			</CheckButton>
+
+        			<EditBox name="AltoAccountSharing_AccTargetEditBox" inherits="InputBoxTemplate">
+        				<Size x="140" y="16" />
+        				<Anchors>
+        					<Anchor point="LEFT" relativeTo="AltoAccountSharing_UseNameText" relativePoint="RIGHT" x="30" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnLoad>
+        						self:SetAutoFocus( false );
+        					</OnLoad>
+                            <OnShow inherit="prepend">
+                                if Altoholic:GetOption("UI.Sharing.EntireDatabase.Remember") and Altoholic:GetOption("UI.Sharing.EntireDatabase.RememberTarget") then
+                                    self:SetText(Altoholic:GetOption("UI.Sharing.EntireDatabase.RememberTarget"))
+                                end
+                            </OnShow>
+        					<OnEnterPressed>
+        						self:ClearFocus();
+        					</OnEnterPressed>
+        					<OnEscapePressed>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnEscapePressed>
+                            <OnTextChanged>
+                                if userInput and Altoholic:GetOption("UI.Sharing.EntireDatabase.Remember") then
+                                    AltoAccountSharing_UseName:SetChecked(true)
+                                    AltoAccountSharing_UseTarget:SetChecked(nil)
+                                    Altoholic:SetOption("UI.Sharing.EntireDatabase.RememberTarget", self:GetText())
+                                end
+                            </OnTextChanged>
+        				</Scripts>
+        			</EditBox>
+                    <CheckButton name="AltoAccountSharing_RememberName" inherits="UICheckButtonTemplate">
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharing_AccTargetEditBox" relativePoint="TOPRIGHT" x="10" y="6" />
+        				</Anchors>
+        				<Scripts>
+        					<OnShow inherit="prepend">
+        						self:SetChecked(Altoholic:GetOption("UI.Sharing.EntireDatabase.Remember"))
+                                AltoAccountSharing_RememberNameText:SetText("Remember")
+                                AltoAccountSharing_RememberNameText:SetPoint("TOPLEFT", self, "TOPLEFT", -13, 10)
+        					</OnShow>
+        					<OnClick>
+        						Altoholic:SetOption("UI.Sharing.EntireDatabase.Remember", AltoAccountSharing_RememberName:GetChecked())
+                                Altoholic:SetOption("UI.Sharing.EntireDatabase.RememberTarget", AltoAccountSharing_AccTargetEditBox:GetText())
+        					</OnClick>
+        				</Scripts>
+        			</CheckButton>
+        			<Button name="AltoAccountSharing_SendButton" inherits="UIPanelButtonTemplate">
+        				<Size x="140" y="24" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharing" relativePoint="TOPLEFT" x="50" y="-130" />
+        				</Anchors>
+        				<Scripts>
+        					<OnClick>
+        						if self.requestMode then
+        							Altoholic.Comm.Sharing:GetContent()
+        						else
+        							Altoholic.Comm.Sharing:Request()
+        						end
+        					</OnClick>
+        				</Scripts>
+        			</Button>
+        			<Button name="AltoAccountSharing_CancelButton" inherits="UIPanelButtonTemplate" text="Cancel">
+        				<Size x="80" y="24" />
+        				<Anchors>
+        					<Anchor point="LEFT" relativeTo="AltoAccountSharing_SendButton" relativePoint="RIGHT" x="20" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnClick>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnClick>
+        				</Scripts>
+        			</Button>
+                    <Button name="AltoAccountSharing_CloseButton" inherits="UIPanelCloseButton">
+        				<Anchors>
+        					<Anchor point="LEFT" relativePoint="TOPRIGHT" x="-36" y="-4" />
+        				</Anchors>
+        				<Scripts>
+        					<OnClick>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnClick>
+        				</Scripts>
+        			</Button>
+        			<Button name="AltoAccountSharing_ToggleAll">
+        				<Size x="16" y="16" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" x="325" y="-20" />
+        				</Anchors>
+        				<Scripts>
+        					<OnClick>
+        						Altoholic.Sharing.AvailableContent:ToggleAll(self, button)
+        					</OnClick>
+        				</Scripts>
+        				<NormalTexture name="AltoAccountSharingIcon" file="Interface\Buttons\UI-MinusButton-UP" />
+        				<HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
+        			</Button>
+        			<CheckButton name="AltoAccountSharing_CheckAll" inherits="UICheckButtonTemplate">
+        				<Size x="20" y="20" />
+        				<Anchors> 
+        					<Anchor point="LEFT" relativeTo="AltoAccountSharing_ToggleAll" relativePoint="RIGHT" x="5" y="0" />
+        				</Anchors>      
+        				<Scripts>
+        					<OnLoad>
+        						_G[self:GetName() .. "Text"]:SetText(ALL)
+        					</OnLoad>
+        					<OnClick>
+        						Altoholic.Sharing.AvailableContent:CheckAll(self, button)
+        					</OnClick>
+        				</Scripts>
+        			</CheckButton>
+                </Frames>               
+            </Frame> <!-- end of tab1 -->
+
+            <Frame name="AltoAccountSharingOngoingTab" parent="AltoAccountSharing" hidden="true" inherits="BackdropTemplate">
+            	<Size x="800" y="300" />
+		        <Anchors>
+			         <Anchor point="TOPLEFT"/>
+		        </Anchors>
+
+                <Layers>
+        			<Layer>
+        				<FontString name="AltoAccountSharingOngoingDisclaimer" inherits="GameFontNormal" justifyH="LEFT">
+        					<Size x="700" y="60" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" x="10" y="-10" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingOngoingText1" inherits="GameFontNormal" justifyH="LEFT">
+        					<Size x="180" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingName" relativePoint="BOTTOMLEFT" x="10" y="-40" />
+        					</Anchors>
+        					<Color r="1" g="1" b="1" />
+        				</FontString>
+                        <FontString name="AltoAccountSharingOngoingText5" inherits="GameFontNormal" justifyH="LEFT">
+        					<Size x="180" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingOngoingText1" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+        					</Anchors>
+        					<Color r="1" g="1" b="1" />
+        				</FontString>
+        				<FontString name="AltoAccountSharingOngoingText2" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="140" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" x="390" y="-16" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingOngoingText3" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="60" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingText2" relativePoint="TOPRIGHT" x="30" y="0" />
+        					</Anchors>
+        				</FontString>
+        				<FontString name="AltoAccountSharingOngoingText4" inherits="GameFontNormal" justifyH="CENTER">
+        					<Size x="60" y="18" />
+        					<Anchors>
+        						<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingText3" relativePoint="TOPRIGHT" x="30" y="0" />
+        					</Anchors>
+        				</FontString>
+        			</Layer>
+        		</Layers>
+                <Scripts>
+                    <OnLoad inherit="prepend">
+                        self:SetBackdrop({
+	                        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+                        	tile = true,
+                        	tileSize = 32,
+                        	edgeSize = 32,
+                        	insets = { left = 11, right = 12, top = 12, bottom = 11, },
+                        })
+                    </OnLoad>
+                </Scripts>
+                <Frames>
+                    <Button name="AltoAccountSharing_AddOngoingButton" inherits="UIPanelButtonTemplate">
+        				<Size x="140" y="24" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharing" relativePoint="TOPLEFT" x="100" y="-150" />
+        				</Anchors>
+        			</Button>
+                    <EditBox name="$parent_CharacterNameEditBox" inherits="InputBoxTemplate">
+        				<Size x="100" y="16" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingOngoingText1" relativePoint="TOPRIGHT" x="10" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnLoad>
+        						self:SetAutoFocus( true );
+        					</OnLoad>
+        					<OnEscapePressed>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnEscapePressed>
+        				</Scripts>
+        			</EditBox>
+                    <EditBox name="$parent_RealmNameEditBox" inherits="InputBoxTemplate">
+        				<Size x="100" y="16" />
+        				<Anchors>
+        					<Anchor point="TOPLEFT" relativeTo="AltoAccountSharingOngoingText5" relativePoint="TOPRIGHT" x="10" y="0" />
+        				</Anchors>
+        				<Scripts>
+        					<OnEscapePressed>
+        						AltoAccountSharing:Hide()
+        						Altoholic:ToggleUI()
+        					</OnEscapePressed>
+        				</Scripts>
+        			</EditBox>
+                                        
+                    <CheckButton name="AltoAccountSharingTab2_CheckAll" inherits="UICheckButtonTemplate">
+        				<Size x="20" y="20" />
+        				<Anchors> 
+        					<Anchor point="LEFT" relativeTo="AltoAccountSharing_ToggleAll" relativePoint="RIGHT" x="5" y="0" />
+        				</Anchors>      
+        				<Scripts>
+        					<OnLoad>
+        						_G[self:GetName() .. "Text"]:SetText("Share")
+                                self:SetChecked(false)
+        					</OnLoad>
+        					<OnClick>
+        						Altoholic.Sharing.Ongoing:CheckAll(self, button)
+        					</OnClick>
+        				</Scripts>
+        			</CheckButton>
+                </Frames>
+            </Frame>
+
+            <Button name="$parentTab1" inherits="CharacterFrameTabButtonTemplate" id="1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="15" y="11" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Entire Database" />
+				</KeyValues>
+                <Scripts>
+                    <OnLoad>
+                        self:SetText(self.context)
+                    </OnLoad>
+                    <OnClick>
+                        PanelTemplates_SetTab(AltoAccountSharing, 1);
+                        AltoAccountSharingOngoingTab:Hide()
+                        AltoAccountSharingEntireDatabaseTab:Show()
+                    </OnClick>
+                </Scripts>
+			</Button>
+			<Button name="$parentTab2" inherits="CharacterFrameTabButtonTemplate" id="2">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT" x="-8" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="context" value="Ongoing" />
+				</KeyValues>
+                <Scripts>
+                    <OnLoad>
+                        self:SetText(self.context)
+                    </OnLoad>
+                    <OnClick>
+                        PanelTemplates_SetTab(AltoAccountSharing, 2);
+                        AltoAccountSharingEntireDatabaseTab:Hide()
+                        AltoAccountSharingOngoingTab:Show()
+                    </OnClick>
+                </Scripts>                
+			</Button>
+		</Frames>
+        <Scripts>
+            <OnLoad inherit="prepend">
+                PanelTemplates_SetNumTabs(AltoAccountSharing, 2);
+                PanelTemplates_SetTab(AltoAccountSharing, 1);
+                self:RegisterForDrag("LeftButton")
+            </OnLoad>
+            <OnDragStart>
+                 if not self.isLocked then
+                  self:StartMoving()
+                 end
+            </OnDragStart>
+            <OnDragStop>
+                 self:StopMovingOrSizing()
+            </OnDragStop>
+        </Scripts>
+	</Frame>
+        
 	<!--	Account Sharing / Available content	-->
 	<Button name="AltoAvailableContentTemplate" hidden="true" virtual="true">
 		<Size>
@@ -596,7 +1016,79 @@
 		</Frames>
 	</Button>
 
-	<Frame name="AltoholicFrameAvailableContent" parent="AltoAccountSharing">
+	<Button name="AltoOngoingAltTemplate" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="430" y="22"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentCharacterName" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="80" y="18"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="100" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentRealmName" inherits="GameFontNormalSmall" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="100" y="18"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentCharacterName" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="20" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentDeleteButton" hidden="true">
+				<Size>
+					<AbsDimension x="16" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentRealmName" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="20" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						 Altoholic.Sharing.Ongoing:DeleteClicked(self, button)
+					</OnClick>
+				</Scripts>
+				<NormalTexture name="$parentIcon" file="Interface\Buttons\UI-MinusButton-UP" />
+				<HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
+			</Button>
+			<CheckButton name="$parentCheck" inherits="UICheckButtonTemplate">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors> 
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="20" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>      
+				<Scripts>
+					<OnClick>
+						Altoholic.Sharing.Ongoing:ShareCheckButtonClicked(self, button)
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+	</Button>
+
+	<Frame name="AltoholicFrameAvailableContent" parent="AltoAccountSharingEntireDatabaseTab">
 		<Size>
 			<AbsDimension x="450" y="240"/>
 		</Size>
@@ -765,4 +1257,172 @@
 		</Frames>
 	</Frame>
 	
+	<Frame name="AltoholicFrameOngoingAltList" parent="AltoAccountSharingOngoingTab">
+		<Size>
+			<AbsDimension x="450" y="240"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT">
+				<Offset>
+					<AbsDimension x="-30" y="-40"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentTopLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+					<TexCoords left="0.5" right="0.625" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentBottomLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT"/>
+					</Anchors>
+					<TexCoords left="0.75" right="0.875" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentBottomRight" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT"/>
+					</Anchors>
+					<TexCoords left="0.875" right="1" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentTopRight" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPRIGHT"/>
+					</Anchors>
+					<TexCoords left="0.625" right="0.75" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentLeft" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomLeft" relativePoint="TOPRIGHT"/>
+					</Anchors>
+					<TexCoords left="0" right="0.125" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentRight" file="Interface\Tooltips\UI-Tooltip-Border">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTopRight" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="TOPRIGHT"/>
+					</Anchors>
+					<TexCoords left="0.125" right="0.25" top="0" bottom="1"/>
+				</Texture>
+				<Texture name="$parentBottom" file="Interface\OptionsFrame\UI-OptionsFrame-Spacer">
+					<Size>
+						<AbsDimension x="0" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativeTo="$parentBottomLeft" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentTop" file="Interface\OptionsFrame\UI-OptionsFrame-Spacer">
+					<Size>
+						<AbsDimension x="0" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="7"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="TOPRIGHT" relativeTo="$parentTopRight" relativePoint="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoUIPanelScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTopLeft" relativePoint="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="0" y="10"/>
+						</Offset>
+					</Anchor>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentBottomRight" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="-12" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						self:OnVerticalScroll(offset, 18, Altoholic.Sharing.AvailableContent.Update)
+					</OnVerticalScroll>
+				</Scripts>
+			</ScrollFrame>
+			
+			<Button name="$parentEntry1" inherits="AltoOngoingAltTemplate" id="1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-3"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry2" inherits="AltoOngoingAltTemplate" id="2">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry1" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry3" inherits="AltoOngoingAltTemplate" id="3">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry2" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry4" inherits="AltoOngoingAltTemplate" id="4">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry3" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry5" inherits="AltoOngoingAltTemplate" id="5">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry4" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry6" inherits="AltoOngoingAltTemplate" id="6">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry5" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry7" inherits="AltoOngoingAltTemplate" id="7">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry6" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry8" inherits="AltoOngoingAltTemplate" id="8">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry7" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry9" inherits="AltoOngoingAltTemplate" id="9">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry8" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parentEntry10" inherits="AltoOngoingAltTemplate" id="10">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry9" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
 </Ui>

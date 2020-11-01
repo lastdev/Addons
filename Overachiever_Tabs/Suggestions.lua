@@ -317,7 +317,7 @@ local achClassHall = {
 	10994, -- A Glorious Campaign
 	11223, -- Legendary Research
 	11298, -- A Classy Outfit
-	
+
 	10461, -- Fighting with Style: Classic
 	10747, -- Fighting with Style: Upgraded
 	10748, -- Fighting with Style: Valorous
@@ -379,7 +379,7 @@ local ACHID_ZONE_MISC = {
 		5317,  -- "Help the Bombardier! I'm the Bombardier!"
 		4888,  -- "One Hump or Two?"
 		4961,  -- "In a Thousand Years Even You Might be Worth Something"
-	},	
+	},
 	["Winterspring"] = 5443,	-- "E'ko Madness"
 -- Eastern Kingdoms
 	["The Cape of Stranglethorn"] =	-- "Master Angler of Azeroth",
@@ -1001,7 +1001,7 @@ local ACHID_INSTANCES = {
 	["Serpentshrine Cavern"] = {
 		694, 144,	-- "Serpentshrine Cavern", "The Lurker Above"
 		11747, -- Merely a Set
-	}, 
+	},
 	["The Shattered Halls"] = 657,
 	["The Slave Pens"] = 649,
 	["The Underbog"] = 650,			-- "Underbog"
@@ -1219,12 +1219,46 @@ local ACHID_INSTANCES = {
 	["Temple of Sethraliss"] = 12504, -- The Temple of Sethraliss (series)
 	["Kings' Rest"] = 12848, -- Kings' Rest
 -- Battle for Azeroth Raids
-	["The Eternal Palace"] = { -- !! double check zone name
+	["Uldir"] = {
+		12806,
+		12521,
+		12522,
+		12523,
+	},
+  ["Battle of Dazar'alor"] = {
+		13315,
+		13385,
+		Alliance = {
+			13287,
+			13288,
+			13286,
+		},
+		Horde = {
+			13289,
+			13290,
+			13291,
+		},
+	},
+	["Crucible of Storms"] = {
+		13501,
+		13414,
+		13506,
+	},
+	["The Eternal Palace"] = {
 		13687, -- Glory of the Eternal Raider
 		13719, -- Depths of the Devoted
 		13725, -- The Circle of Stars
 		13718, -- The Grand Reception
 		13571, -- Under the Seams
+	},
+	["Ny'alotha, the Waking City"] = {
+		14146,
+		14058,
+		14157,
+		14193,
+		14194,
+		14195,
+		14196,
 	},
 
 -- Battle for Azeroth Warfronts
@@ -1713,7 +1747,32 @@ local ACHID_INSTANCES_MYTHIC = {
 		13624, -- Keep DPS-ing and Nobody Explodes
 	},
 -- Battle for Azeroth Raids
-	["The Eternal Palace"] = { -- !! double check zone name
+	["Uldir"] = {
+		12524,
+		12526,
+		12527,
+		12529,
+		12530,
+		12531,
+		12532,
+		12533,
+	},
+	["Battle of Dazar'alor"] = {
+		13292,
+		13293,
+		IsAlliance and 13298 or 13295, -- "Mythic: Jadefire Masters"
+		13300,
+		13299,
+		13311,
+		13312,
+		13313,
+		13314,
+	},
+	["Crucible of Storms"] = {
+		13416,
+		13417,
+	},
+	["The Eternal Palace"] = {
 		13726, -- Mythic: Abyssal Commander Sivara
 		13728, -- Mythic: Blackwater Behemoth
 		13729, -- Mythic: Lady Ashvane
@@ -1722,6 +1781,20 @@ local ACHID_INSTANCES_MYTHIC = {
 		13727, -- Mythic: Radiance of Azshara
 		13731, -- Mythic: The Queen's Court
 		13732, -- Mythic: Za'qul
+	},
+	["Ny'alotha, the Waking City"] = {
+		14041,
+		14043,
+		14044,
+		14045,
+		14046,
+		14048,
+		14049,
+		14050,
+		14051,
+		14052,
+		14054,
+		14055,
 	},
 }
 
@@ -2104,7 +2177,7 @@ local function Refresh(self, instanceRetry)
         suggested[id] = true
       end
     end
-    
+
   else
     TradeskillSuggestions = nil
 
@@ -2244,7 +2317,7 @@ function frame.SetNumListed(num)
     end
     if (numHidden < 1) then  ResultsLabel:SetText(" ");  end
   end
-  
+
   local c = #frame.AchList
   local msg
   if (num < c) then

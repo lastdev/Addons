@@ -426,14 +426,14 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" und \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" und \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Reaktion auf Fortschritt (Nicht verfolgte)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Teilerfolge"
-L["OPT_LABEL_MAINUI"] = "Besondere UI-Modifikationen für Erfolge"
+L["OPT_LABEL_MAINUI"] = "Änderungen an der Benutzeroberfläche der Erfolge"
 L["OPT_LABEL_MISC"] = "Sonstiges"
-L["OPT_LABEL_NEEDTOKILL"] = "Erfolge für's Kreaturen töten (\"%s,\" \"%s,\" etc.)"
+L["OPT_LABEL_NEEDTOKILL"] = "Erfolge für das Töten von Kreaturen (\"%s,\" \"%s,\" usw.)"
 L["OPT_LABEL_SEASONALACHS"] = "WELTEREIGNIS-ERFOLGE"
 L["OPT_LABEL_STARTTOAST"] = "Feiertag/Veranstaltung Toasts"
 L["OPT_LABEL_TOOLTIPS"] = "Erfolg: Tooltips und Links"
 L["OPT_LABEL_TRACKING"] = "Erfolg: Verfolgung"
-L["OPT_LABEL_TRADESKILLUI"] = "Berufe UI Modifikationen"
+L["OPT_LABEL_TRADESKILLUI"] = "Änderungen an der Benutzeroberfläche der Berufe"
 L["OPT_LETITSNOWTIPS"] = "Handvoll Schneeflocken angewendet?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Spielers der Hinweis angezeigt, ob bei seinem Volk bzw. Klasse noch eine Handvoll Schneeflocken angewendet werden muss."
 L["OPT_MISSIONCOMPLETE"] = "Mission abgeschlossen?"
@@ -852,8 +852,7 @@ L["SOUND_SIMON_DING"] = "Simon - Carillon"
 --[[ L["SOUND_SIMON_FAIL_SMALL"] = ""--]] 
 L["SOUND_SIMON_STARTGAME"] = "Simon - Nouveau Jeu"
 L["SOUND_SIMON_STARTLEVEL"] = "Simon - Nouveau Niveau"
---[[Translation missing --]]
---[[ L["SOUND_STORE_CONFIRM"] = ""--]] 
+L["SOUND_STORE_CONFIRM"] = "Confirmation du magasin"
 L["SOUND_YAR"] = "Yarrrr"
 L["STARTTOAST_EVENT"] = "Se passe aujourd'hui"
 L["WILDPET"] = "Pet sauvage"
@@ -1471,10 +1470,8 @@ L["ACH_CONSUME_91_INCOMPLETE"] = "Съешь 91 за один раз!"
 L["ACH_CONSUME_COMPLETE"] = "Уже попробовали"
 L["ACH_CONSUME_INCOMPLETE"] = "Нужно попробовать"
 L["ACH_CONSUME_INCOMPLETE_EXTRA"] = "Не попробовали"
---[[Translation missing --]]
---[[ L["ACH_EATYOURGREENS_COMPLETE"] = ""--]] 
---[[Translation missing --]]
---[[ L["ACH_EATYOURGREENS_INCOMPLETE"] = ""--]] 
+L["ACH_EATYOURGREENS_COMPLETE"] = "Уже съедено"
+L["ACH_EATYOURGREENS_INCOMPLETE"] = "Нужно съесть"
 L["ACH_FISHSCHOOL_FORMAT"] = [=[%s Школa
 Из Школы %s
 %s Рой]=]
@@ -1679,16 +1676,14 @@ L["SOUND_GLYPH_DESTROY_MAJOR"] = "Уничтожение большого гли
 L["SOUND_GLYPH_DESTROY_MINOR"] = "Уничтожение малого глифа"
 L["SOUND_GONG_TROLL"] = "Гонг - Троль"
 L["SOUND_HEARTHBIND"] = "Привязка камня возвращения"
---[[Translation missing --]]
---[[ L["SOUND_LEVELUP"] = ""--]] 
+L["SOUND_LEVELUP"] = "Уровень повышен"
 L["SOUND_MAP_PING"] = "Импульс на карте"
 L["SOUND_MEDAL_EXPIRES"] = "Медаль Истекает"
 --[[Translation missing --]]
 --[[ L["SOUND_MEDAL_GOLDTOSILVER"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["SOUND_MEDAL_SILVERTOBRONZE"] = ""--]] 
---[[Translation missing --]]
---[[ L["SOUND_QUEST_COMPLETE"] = ""--]] 
+L["SOUND_QUEST_COMPLETE"] = "Задание выполнено"
 --[[Translation missing --]]
 --[[ L["SOUND_SIMON_BADPRESS"] = ""--]] 
 L["SOUND_SIMON_DING"] = "Саймон - звон"

@@ -1,8 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Achievements.lua"></Script>
 	
-	<Frame parentKey="Achievements" parent="AltoholicTabAchievements" inherits="AltoDataPanelTemplate">
-		<Frames>
+	<Frame name="AltoholicTabAchievementsAchievements" parentKey="Achievements" parent="AltoholicTabAchievements" inherits="AltoDataPanelTemplate">
+		<Anchors>
+			<Anchor point="TOPRIGHT" x="-39" />
+            <Anchor point="BOTTOMLEFT" y="40"/>
+		</Anchors>
+        <Frames>
 			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 				<Scripts>
 					<OnVerticalScroll>
@@ -11,15 +15,17 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="8" type="number" />
+					<KeyValue key="numRows" value="20" type="number" />
 					<KeyValue key="rowHeight" value="41" type="number" />
 					<KeyValue key="rowTemplate" value="AltoAchievementRowTemplate" />
+                    <KeyValue key="numCols" value="12" type="number"/>
+                    <KeyValue key="colWidth" value="35" type="number" />
 				</KeyValues>
 			</ScrollFrame>
             <Button name="$parentScrollRightButton" inherits="UIPanelButtonTemplate" text="&gt;">
 				<Size x="30" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMRIGHT" x="0" y="-20" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMRIGHT" x="0" y="-15" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -30,7 +36,7 @@
             <Button name="$parentScrollLeftButton" inherits="UIPanelButtonTemplate" text="&lt;">
 				<Size x="30" y="20" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMLEFT" x="180" y="-20" />
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollFrame" relativePoint="BOTTOMRIGHT" x="-100" y="-15" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -42,6 +48,7 @@
 		<Scripts>
 			<OnLoad>
 				Altoholic:BindViewToController(self, "AltoholicUI.Achievements")
+                --AltoholicFrame:TriggerResizeEvents()
 			</OnLoad>
 		</Scripts>
 	</Frame>

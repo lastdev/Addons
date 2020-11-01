@@ -1,6 +1,6 @@
 # NugComboBar
 
-## [8.3.4](https://github.com/rgd87/NugComboBar/tree/8.3.4) (2020-05-23)
-[Full Changelog](https://github.com/rgd87/NugComboBar/compare/8.3.3...8.3.4)
+## [9.0.4](https://github.com/rgd87/NugComboBar/tree/9.0.4) (2020-10-25)
+[Full Changelog](https://github.com/rgd87/NugComboBar/compare/9.0.3...9.0.4) [Previous Releases](https://github.com/rgd87/NugComboBar/releases)
 
-- Fixed vertical mode  
+- Config selection bugfix  

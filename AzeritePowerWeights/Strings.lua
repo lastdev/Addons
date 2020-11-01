@@ -150,12 +150,15 @@ do -- enUS / enGB
 
 	L.Debug_CopyToBugReport = "COPY & PASTE the text above to your bug report if you think it is relevant."
 end
+-- 111 Phrases
 
 if LOCALE == "deDE" then -- Sinusquell (39), Tiggi2702 (5), Vivan (2), pas06 (2), Cytoph (1), imna1975 (17), Aurielqt (6)
-L["Config_Enable_Essences"] = "Azerit Essenz"
-L["Config_Enable_Essences_Desc"] = "Aktiviere %s für Azerit Essenzen"
-L["Config_Enable_Traits"] = "Azerit Fähigkeiten"
-L["Config_Enable_Traits_Desc"] = "Aktiviere %s für Azerit verstärke Gegenstände"
+	-- 2 + 27 + 42 + 30 = 101
+	-- 90.99% translated
+L["Config_Enable_Essences"] = "Azerit Essenz(en)"
+L["Config_Enable_Essences_Desc"] = "Aktiviere %s für Azerit Essenzen."
+L["Config_Enable_Traits"] = "Azerit Fähigkeiten."
+L["Config_Enable_Traits_Desc"] = "Aktiviere %s für Azerit verstärkte Gegenstände"
 L["Config_Importing_ImportingCanUpdate"] = "Beim Importieren können vorhandene Skalierungen aktualisiert werden."
 L["Config_Importing_ImportingCanUpdate_Desc"] = "Wenn Sie eine Skalierung mit demselben Namen, derselben Klasse und Spezialisierung wie eine bereits vorhandene Skalierung importieren, wird die vorhandene Skalierung mit den neuen Gewichtungen aktualisiert, anstatt eine neue Skalierung zu erstellen. "
 L["Config_Importing_ImportingCanUpdate_Desc_Clarification"] = "Es kann mehrere Skalierungen mit demselben Namen geben, solange sie für verschiedene Spezialisierungen oder Klassen gelten. "
@@ -168,10 +171,10 @@ L["Config_Scales_Title"] = "Skalierungsliste "
 L["Config_Score_AddItemLevelToScore"] = "Füge Gegenstandsstufe zu allen Wertungen hinzu"
 L["Config_Score_AddItemLevelToScore_Desc"] = "Fügt allen Berechnungen der aktuellen Punktzahl, des aktuellen Potenzials und der maximalen Punktzahl die Elementstufe der azeritischen Gegenstände hinzu."
 L["Config_Score_AddPrimaryStatToScore"] = "Füge allen Wertungen den Primärstatus hinzu"
-L["Config_Score_AddPrimaryStatToScore_Desc"] = "Füge Azerit Gegenständen den primären Wert (%s/%s/%s) zu dem derzeitigen Wert hinzu. Derzeitiges Potential und maximale Werteberechnung."
-L["Config_Score_OutlineScores"] = "Werteumrandung"
-L["Config_Score_OutlineScores_Desc"] = "Zeige eine schmale Umrandung für die Werte der Azerit Fähigkeiten/Essenzen, um sie einfacher bei hellen Fähigkeiten/Essenzen Icons zu sehen."
-L["Config_Score_PreferBiSMajor"] = "Empfehle beste Hauptessenz"
+L["Config_Score_AddPrimaryStatToScore_Desc"] = "Füge Azerit Gegenständen den primären Wert ( %s/%s/%s ) zu dem derzeitigen Wert hinzu. Derzeitiges Potential und maximale Werteberechnung."
+L["Config_Score_OutlineScores"] = "Werteumrandung "
+L["Config_Score_OutlineScores_Desc"] = "Zeige eine schmale Umrandung für die Werte der Azerit Fähigkeiten/Essenzen, um sie einfacher bei hellen Fähigkeiten/Essenzen Icons zu sehen. "
+L["Config_Score_PreferBiSMajor"] = "Empfehle die beste Hauptessenz"
 --[[Translation missing --]]
 L["Config_Score_PreferBiSMajor_Desc"] = "Always pick the highest scored major essence even when sometimes you could get better overall score by not selecting the best major essence. When this setting is disabled, the addon will calculate few different score combinations and will pick the best overall score."
 L["Config_Score_RelativeScore"] = "Zeigt relative Werte in Tooltips anstelle von absoluten Werten an"
@@ -211,26 +214,25 @@ L["Config_WeightEditor_ShowZone"] = "Zonenspezifische Fähigkeiten anzeigen"
 --[[Translation missing --]]
 L["Config_WeightEditor_ShowZone_Desc"] = "Show Zone specific powers in the scale weight editor. These powers can only appear in items acquired in particular zones related to the power."
 L["Config_WeightEditor_ShowZone_Desc_Proc"] = "Zonenspezifische Kräfte können / proc überall aktivieren, aber Schlachtzugsmächte haben einen sekundären Effekt, der nur aktiviert wird, wenn sie sich innerhalb ihrer zugehörigen Schlachtzugsinstanz befinden (z. B. wird der sekundäre Effekt von Uldir-Kräften nur in der Uldir-Schlachtzugsinstanz ausgeführt). Die Schlachtzugskraft ist im Skala Gewicht Editor mit einem Stern (*) neben ihrem Namen gekennzeichnet."
---[[Translation missing --]]
-L["Config_WeightEditor_Title"] = "Scales weight editor"
-L["CreatePopup_Desc"] = "Erstelle neue Skalierung. Wähle deine Klasse und Spezialisierung aus der Liste und vergebe einen Namen für die Skalierung. Zur Bestätigung drücke %1$s"
-L["CreatePopup_Error_CreatedNewScale"] = "Skalierung \"%s\" erfolgreich erstellt"
+L["Config_WeightEditor_Title"] = "Skalierungseditor"
+L["CreatePopup_Desc"] = "Erstelle eine neue Skalierung. Wähle deine Klasse und Spezialisierung aus der Liste und vergebe einen Namen für die Skalierung. Zur Bestätigung drücke %1$s"
+L["CreatePopup_Error_CreatedNewScale"] = "Skalierung \"%s\" erfolgreich erstellt "
 --[[Translation missing --]]
 L["CreatePopup_Error_UnknownError"] = "ERROR: Something went wrong creating new scale \"%s\"!"
-L["CreatePopup_Title"] = "Erstelle Skalierung"
+L["CreatePopup_Title"] = "Erstelle Skalierung "
 L["Debug_CopyToBugReport"] = "Kopiere den obrigen Text in deine Fehlermeldung, wenn du denkst es ist relevant."
 L["DefaultScaleName_Default"] = "Standard"
 L["DefaultScaleName_Defensive"] = "Defensive"
 L["DefaultScaleName_Offensive"] = "Offensive"
 L["DeletePopup_DeletedDefaultScale"] = "Die gelöschte Skala wurde verwendet, sodass Sie für Ihre Klasse und Ihre Spezialisierung wieder auf die Default-Option zurückgreifen können!"
 L["DeletePopup_DeletedScale"] = "Gelöschte Skala \"%s\""
-L["DeletePopup_Desc"] = "Um Skalierung%1$s zu löschen drücke %2$s zur bestätigung. Alle Charactere die diese Skalierung, für ihre Spezialiserung, benutzt haben werden auf die Basisskalierung zurück gesetzt."
+L["DeletePopup_Desc"] = "Um Skalierung %1$s zu löschen drücke %2$s zur Bestätigung. Alle Charactere die diese Skalierung, für ihre Spezialiserung, benutzt haben werden auf die Basisskalierung zurück gesetzt."
 L["DeletePopup_Title"] = "Skala löschen"
 L["DeletePopup_Warning"] = "! Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden !"
-L["ExportPopup_Desc"] = [=[Um die Skalierung %1$s zu exportieren, drücke %2$sSTRG-C%3$s um sie zu kopieren und %4$sSTRG+V%5$s um sie wieder einzufügen.
+L["ExportPopup_Desc"] = [=[Um die Skalierung %1$s zu exportieren, drücke %2$sSTRG-C%3$s um sie zu kopieren und %4$sSTRG+V%5$s um sie wieder einzufügen
 ]=]
 L["ExportPopup_Title"] = "Skala exportieren"
-L["ImportPopup_CreatedNewScale"] = "Importiere neue Skalierung \"%s\""
+L["ImportPopup_CreatedNewScale"] = "Importiere neue Skalierung \"%s\" "
 --[[Translation missing --]]
 L["ImportPopup_Desc"] = [=[Importing scale from string
 Press %1$sCtrl+V%2$s to paste string to the editbox and press %3$s]=]
@@ -242,11 +244,8 @@ L["ImportPopup_Title"] = "Importiere Skalierung"
 L["ImportPopup_UpdatedScale"] = "Skalierung \"%s\" wurde aktualisiert"
 L["ItemToolTip_AzeriteLevel"] = "Azeritlevel: %1$d / %2$d"
 L["ItemToolTip_Legend"] = "Aktuelle Wertung / Aktuelles Potenzial / Maximale Wertung"
---[[Translation missing --]]
-L["MassImportPopup_Desc"] = [=[Importing multiple scales at once from string
-Press %1$sCtrl+V%2$s to paste string to the editbox and press %3$s]=]
---[[Translation missing --]]
-L["MassImportPopup_Title"] = "Mass Import Scales"
+L["MassImportPopup_Desc"] = "Importieren von mehreren Skalierungen aus einem String. Drücke %1$sSTRG+V%2$s um den String, in die Textbox, einzufügen - Zum Bestätigen drücke %3$s"
+L["MassImportPopup_Title"] = "Massenimport von Skalierungen"
 L["PowersScoreString"] = "Aktuelle Wertung: %1$s/%2$s Maximale Wertung: %3$s Azeritlevel: %4$d/%5$d"
 L["PowersTitles_Class"] = "Klassentalente"
 L["PowersTitles_Defensive"] = "Defensivtalente"
@@ -272,27 +271,22 @@ L["WeightEditor_DeleteText"] = "Löschen"
 L["WeightEditor_EnableScaleText"] = "Benutze diese Skalierung"
 L["WeightEditor_ExportText"] = "Exportieren"
 L["WeightEditor_ImportText"] = "Importieren"
---[[Translation missing --]]
-L["WeightEditor_Major"] = "Major"
---[[Translation missing --]]
-L["WeightEditor_MassImportText"] = "Mass Import"
+L["WeightEditor_Major"] = "Groß"
+L["WeightEditor_MassImportText"] = "Massenimport"
 L["WeightEditor_Minor"] = "Geringer"
---[[Translation missing --]]
-L["WeightEditor_ModeToEssences"] = "Change to Essences"
---[[Translation missing --]]
-L["WeightEditor_ModeToTraits"] = "Change to Traits"
+L["WeightEditor_ModeToEssences"] = "Wechsle zu Essenzen"
+L["WeightEditor_ModeToTraits"] = "Wechsle zu Eigenschaften"
 L["WeightEditor_RenameText"] = "Umbenennen"
---[[Translation missing --]]
-L["WeightEditor_TimestampText_Created"] = "Created %s"
---[[Translation missing --]]
-L["WeightEditor_TimestampText_Imported"] = "Imported %s"
---[[Translation missing --]]
-L["WeightEditor_TimestampText_Updated"] = "Updated %s"
+L["WeightEditor_TimestampText_Created"] = "Erstellt am %s"
+L["WeightEditor_TimestampText_Imported"] = "Importiert am %s"
+L["WeightEditor_TimestampText_Updated"] = "Aktualisiert am %s"
 L["WeightEditor_TooltipText"] = "Angezeigt im Tooltip"
 L["WeightEditor_VersionText"] = "Version %s"
 
 
 elseif LOCALE == "esES" then -- isaracho (4)
+	-- 110 + 1 = 111
+	-- 100% translated
 L["Config_Enable_Essences"] = "Esencias de Azerita "
 L["Config_Enable_Essences_Desc"] = "Activa %s para las Esencias de Azerita."
 L["Config_Enable_Traits"] = "Rasgos de Azerita"
@@ -409,6 +403,8 @@ L["WeightEditor_VersionText"] = "Versión %s"
 
 
 elseif LOCALE == "esMX" then
+	-- 0 = 0
+	-- 0% translated
 --[[Translation missing --]]
 L["Config_Enable_Essences"] = "Azerite Essences"
 --[[Translation missing --]]
@@ -647,19 +643,21 @@ L["WeightEditor_VersionText"] = "Version %s"
 
 
 elseif LOCALE == "frFR" then -- tthegarde (19), Marechoux (9), follower4jas (1)
-L["Config_Enable_Essences"] = "Essences d'azérites"
-L["Config_Enable_Essences_Desc"] = "Active %s par essences d'azérites"
-L["Config_Enable_Traits"] = "Trait d'azérite"
-L["Config_Enable_Traits_Desc"] = "Active %s pour les objets dotés d'azérites"
-L["Config_Importing_ImportingCanUpdate"] = "L'importation pourra mettre à jour les coefficients existants."
-L["Config_Importing_ImportingCanUpdate_Desc"] = "Quand vous importez les coefficients avec les mêmes nom, classe et spécialisation qu'un coefficient prédéfini, celui-ci sera mise à jour avec les nouveaux coefficients au lieu qu'un nouveau coefficient soit créée."
-L["Config_Importing_ImportingCanUpdate_Desc_Clarification"] = "Il peut y avoir plusieurs coefficients avec le même nom tant qu'elles sont pour des classes ou spécialisations différentes."
+	-- 11 + 3 + 8 + 10 + 66 + 13 = 111
+	--  101 under review
+L["Config_Enable_Essences"] = "Essences d'azérite"
+L["Config_Enable_Essences_Desc"] = "Active %s pour essences d'azérite"
+L["Config_Enable_Traits"] = "Traits d'azérite"
+L["Config_Enable_Traits_Desc"] = "Active %s pour les objets renforcés par l'azérite"
+L["Config_Importing_ImportingCanUpdate"] = "L'importation peut mettre à jour les coefficients existants."
+L["Config_Importing_ImportingCanUpdate_Desc"] = "Quand vous importez un profil avec les mêmes nom, classe et spécialisation qu'un profil pré-existanti, celui-ci sera mis à jour avec les nouveaux coefficients au lieu qu'un nouveau profil soit créé."
+L["Config_Importing_ImportingCanUpdate_Desc_Clarification"] = "Il peut y avoir plusieurs profils avec le même nom tant qu'ils sont pour des classes ou spécialisations différentes."
 L["Config_Importing_Title"] = "Import"
-L["Config_Scales_OwnClassCustomsOnly"] = "Uniquement pour lister ses propres coefficients de classe "
-L["Config_Scales_OwnClassCustomsOnly_Desc"] = "Répertorie uniquement les coefficients de votre propre classe, à la place de toutes les énumérer."
-L["Config_Scales_OwnClassDefaultsOnly"] = "N'afficher que les coefficients par défaut de votre classe"
+L["Config_Scales_OwnClassCustomsOnly"] = "Lister uniquement ses propres profils de classe personnalisés"
+L["Config_Scales_OwnClassCustomsOnly_Desc"] = "Lister les profils personnalisés de votre propre classe uniquement, au lieu de les lister tous."
+L["Config_Scales_OwnClassDefaultsOnly"] = "Ne lister que les profils par défaut de votre classe"
 L["Config_Scales_OwnClassDefaultsOnly_Desc"] = "Cache les coefficients par défaut qui ne correspondent pas à votre classe au lieu de toutes les afficher."
-L["Config_Scales_Title"] = "Liste des coefficients"
+L["Config_Scales_Title"] = "Liste des profils"
 L["Config_Score_AddItemLevelToScore"] = "Ajouter le niveau d'objet à tous les scores"
 L["Config_Score_AddItemLevelToScore_Desc"] = "Ajouter le niveau d'objet des objets azéritiques au calcul des scores actuels, potentiels et maximaux."
 L["Config_Score_AddPrimaryStatToScore"] = "Ajouter la statistique principale à tous les scores"
@@ -767,6 +765,8 @@ L["WeightEditor_VersionText"] = "Version %s"
 
 
 elseif LOCALE == "itIT" then
+	-- 0 = 0
+	-- 0% translated
 --[[Translation missing --]]
 L["Config_Enable_Essences"] = "Azerite Essences"
 --[[Translation missing --]]
@@ -1005,6 +1005,8 @@ L["WeightEditor_VersionText"] = "Version %s"
 
 
 elseif LOCALE == "koKR" then -- Killberos (52)
+	-- 1 + 52 = 53
+	-- 30.63% translated
 --[[Translation missing --]]
 L["Config_Enable_Essences"] = "Azerite Essences"
 --[[Translation missing --]]
@@ -1192,6 +1194,8 @@ L["WeightEditor_VersionText"] = "버전 %s "
 
 
 elseif LOCALE == "ptBR" then -- mariogusman (73)
+	-- 73 = 73
+	-- 49.55% translated
 --[[Translation missing --]]
 L["Config_Enable_Essences"] = "Azerite Essences"
 --[[Translation missing --]]
@@ -1357,14 +1361,12 @@ L["WeightEditor_VersionText"] = "Versão %s"
 
 
 elseif LOCALE == "ruRU" then -- dartraiden (78), Hubbotu (18), rtim0905 (0), Wolfeg (1), lorientalas (1)
---[[Translation missing --]]
-L["Config_Enable_Essences"] = "Azerite Essences"
---[[Translation missing --]]
-L["Config_Enable_Essences_Desc"] = "Enable %s for Azerite Essences."
---[[Translation missing --]]
-L["Config_Enable_Traits"] = "Azerite Traits"
---[[Translation missing --]]
-L["Config_Enable_Traits_Desc"] = "Enable %s for Azerite Empowered items."
+	-- 83 + 24 + 1 + 3 = 111
+	-- 100% translated
+L["Config_Enable_Essences"] = "Азеритовые сущности"
+L["Config_Enable_Essences_Desc"] = "Включите %s для азеритовых сущностей."
+L["Config_Enable_Traits"] = "Азеритовые таланты"
+L["Config_Enable_Traits_Desc"] = "Включите %s для предметов, c Азеритовым усилением."
 L["Config_Importing_ImportingCanUpdate"] = "Обновлять уже существующие наборы при импорте"
 L["Config_Importing_ImportingCanUpdate_Desc"] = "При импорте набора, совпадающего с существующим по имени, классу и специализации, вместо создания нового набора будет обновлён уже существующий набор."
 L["Config_Importing_ImportingCanUpdate_Desc_Clarification"] = "Допустимы наборы с одинаковыми названиями, если они предназначены для разных специализаций или классов."
@@ -1488,6 +1490,8 @@ L["WeightEditor_VersionText"] = "Версия %s"
 
 
 elseif LOCALE == "zhCN" then -- plok245 (27), riggzh (29), xlfd2008 (33)
+	-- 27 + 29 + 47 = 103
+	-- 0% translated
 --[[Translation missing --]]
 L["Config_Enable_Essences"] = "Azerite Essences"
 --[[Translation missing --]]
@@ -1624,6 +1628,8 @@ L["WeightEditor_VersionText"] = "版本 %s"
 
 
 elseif LOCALE == "zhTW" then -- BNSSNB (96), Sinusquell (1)
+	-- 110 + 1 = 111
+	-- 4 under review
 L["Config_Enable_Essences"] = "艾澤萊精華"
 L["Config_Enable_Essences_Desc"] = "啟用 %s 的艾澤萊精華。"
 L["Config_Enable_Traits"] = "艾澤萊特質"
@@ -1679,61 +1685,57 @@ L["Config_WeightEditor_ShowZone_Desc"] = "在比例權值編輯器中顯示區�
 L["Config_WeightEditor_ShowZone_Desc_Proc"] = [=[正常區域專有特質可以在任何地方啟動/觸發，但團隊特質只會在與它們相關的團隊副本中進行(例如：奧杜爾特質只會在奧杜爾團隊副本中觸發)。
 團隊特質在比例權值編輯器中的名稱旁標有星號(*)。]=]
 L["Config_WeightEditor_Title"] = "比例權值編輯器"
-L["CreatePopup_Desc"] = "建立新的比例。從下拉選單選擇職業與專精並輸入新比例的名稱然後按下 %1$s"
-L["CreatePopup_Error_CreatedNewScale"] = "已建立新比例 \"%s\""
-L["CreatePopup_Error_UnknownError"] = "錯誤：建立新比例“％s”出了點問題！"
+L["CreatePopup_Desc"] = "建立新的比重。從下拉選單選擇職業與專精並輸入新比重的名稱然後按下 %1$s"
+L["CreatePopup_Error_CreatedNewScale"] = "已建立新比重 \"%s\""
+L["CreatePopup_Error_UnknownError"] = "錯誤：建立新比重“％s”出了點問題！"
 L["CreatePopup_Title"] = "建立比例"
 L["Debug_CopyToBugReport"] = "如果你覺得這有相關請 複製&貼上 文字到錯誤回報中。"
 L["DefaultScaleName_Default"] = "預設"
 L["DefaultScaleName_Defensive"] = "防禦性"
 L["DefaultScaleName_Offensive"] = "攻擊性"
 L["DeletePopup_DeletedDefaultScale"] = "刪除的比例正在使用中，恢復為您的職業和專精的預設選項！"
-L["DeletePopup_DeletedScale"] = "已刪除比例 \"%s\""
-L["DeletePopup_Desc"] = [=[正刪除比例 %1$s
-按下 %2$s 以確認。
-所有使用此專精比例的角色將恢復為預設比例。]=]
+L["DeletePopup_DeletedScale"] = "已刪除比重 \"%s\""
+L["DeletePopup_Desc"] = [=[正刪除比重 %1$s，按下 %2$s 以確認。
+所有使用此專精比重的角色將恢復為預設比重。]=]
 L["DeletePopup_Title"] = "刪除比例"
 L["DeletePopup_Warning"] = "！ 這個動作是永久性的，無法逆轉！"
-L["ExportPopup_Desc"] = [=[正導出比例 %1$s
-按下 %2$sCtrl+C%3$s 來複製字串並且 %4$sCtrl+V%5$s 來貼上到某處]=]
+L["ExportPopup_Desc"] = "正導出比重 %1$s，按下 %2$sCtrl+C%3$s 來複製字串並且 %4$sCtrl+V%5$s 來貼上到某處"
 L["ExportPopup_Title"] = "導出比例"
-L["ImportPopup_CreatedNewScale"] = "導入新的比例 \"%s\""
-L["ImportPopup_Desc"] = [=[正從字串導入比例
+L["ImportPopup_CreatedNewScale"] = "導入新的比重 \"%s\""
+L["ImportPopup_Desc"] = [=[正從字串導入比重
 按下 %1$sCtrl+V%2$s 來貼上字串到編輯框並按下 %3$s]=]
 L["ImportPopup_Error_MalformedString"] = "錯誤：導入的字串格式錯誤"
 L["ImportPopup_Error_OldStringRetry"] = "錯誤：舊的或格式錯誤的\"匯入字串\" -版本已經使用，嘗試將其匯入為新的比重！"
 L["ImportPopup_Error_OldStringVersion"] = "錯誤：\"導入字串\" -版本太舊或是導入字串格式錯誤！"
 L["ImportPopup_Title"] = "導入比例"
-L["ImportPopup_UpdatedScale"] = "更新現有的比例 \"%s\""
+L["ImportPopup_UpdatedScale"] = "更新現有的比重 \"%s\""
 L["ItemToolTip_AzeriteLevel"] = "艾澤萊等級: %1$d / %2$d"
 L["ItemToolTip_Legend"] = "當前分數 / 當前潛力 / 最大分數"
 L["MassImportPopup_Desc"] = [=[從字串一次匯入多重比重
 按下 %1$sCtrl+V%2$s 在輸入框貼上字串並按下 %3$s]=]
 L["MassImportPopup_Title"] = "批量匯入比重"
-L["PowersScoreString"] = [=[當前分數: %1$s/%2$s
-最大分數: %3$s
-艾澤萊等級: %4$d/%5$d]=]
+L["PowersScoreString"] = "當前分數: %1$s/%2$s 最大分數: %3$s 艾澤萊等級: %4$d/%5$d"
 L["PowersTitles_Class"] = "職業特質"
 L["PowersTitles_Defensive"] = "防禦性特質"
 L["PowersTitles_Profession"] = "專業技能特質"
 L["PowersTitles_PvP"] = "PvP特質"
 L["PowersTitles_Role"] = "角色類型特質"
 L["PowersTitles_Zone"] = "團隊與區域特質"
-L["RenamePopup_Desc"] = [=[正重新命名比例 %1$s
+L["RenamePopup_Desc"] = [=[正重新命名比重 %1$s
 在編輯框中輸入新名稱並按下 %2$s]=]
-L["RenamePopup_RenamedScale"] = "已重命名比例 \"%1$s\" 為 \"%2$s\""
+L["RenamePopup_RenamedScale"] = "已重命名比重 \"%1$s\" 為 \"%2$s\""
 L["RenamePopup_Title"] = "重命名比例"
 L["ScaleName_Unknown"] = "未知"
 L["ScaleName_Unnamed"] = "未命名"
 L["ScalesList_CreateImportText"] = "建立新的 / 導入"
 L["ScalesList_CustomGroupName"] = "自訂比例"
 L["ScalesList_DefaultGroupName"] = "預設比例"
-L["ScaleWeightEditor_Title"] = "%s 比例權值編輯器"
+L["ScaleWeightEditor_Title"] = "%s 比重權值編輯器"
 L["Slash_Command"] = "/azerite"
 L["Slash_Error_Unkown"] = "錯誤：出了些問題了！"
 L["Slash_RemindConfig"] = "到ESC -> 介面 -> 插件 -> %s來設置"
 L["WeightEditor_CreateNewText"] = "建立新的"
-L["WeightEditor_CurrentScale"] = "當前比例: %s"
+L["WeightEditor_CurrentScale"] = "當前比重: %s"
 L["WeightEditor_DeleteText"] = "刪除"
 L["WeightEditor_EnableScaleText"] = "使用此比例"
 L["WeightEditor_ExportText"] = "導出"

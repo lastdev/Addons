@@ -71,15 +71,21 @@
 	<Frame name="AltoholicFrameAuctions" parent="AltoholicTabCharacters" hidden="true">
 		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT" x="39" y="-105" />
+            <Anchor point="TOPLEFT" x="180" y="-100"/>
+			<Anchor point="TOPRIGHT" x="-39" y="-105" />
+            <Anchor point="BOTTOMRIGHT" x="-39" y="40"/>
 		</Anchors>
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="AltoBaseScrollFrameTemplate" hidden="true">
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate" hidden="true">
 				<Scripts>
 					<OnVerticalScroll>
 						self:OnVerticalScroll(offset, 41, Altoholic.AuctionHouse.Update)
 					</OnVerticalScroll>
 				</Scripts>
+				<KeyValues>
+					<KeyValue key="numRows" value="16" type="number" />
+					<KeyValue key="rowHeight" value="41" type="number" />
+				</KeyValues>                
 			</ScrollFrame>
 			
 			<Button name="$parentEntry1" inherits="AltoAuctionEntryTemplate">
@@ -117,6 +123,62 @@
 					<Anchor point="TOPLEFT" relativeTo="$parentEntry6" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
+            <Button name="$parentEntry8" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry7" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry9" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry8" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry10" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry9" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry11" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry10" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry12" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry11" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry13" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry12" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry14" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry13" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry15" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry14" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry16" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry15" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry17" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry16" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+            <Button name="$parentEntry18" inherits="AltoAuctionEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEntry17" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+
 		</Frames>
 	</Frame>
 	

@@ -176,7 +176,7 @@ function Paladin:RetributionGenerators()
 
 	-- hammer_of_wrath,if=holy_power<=4;
 	if talents[RT.HammerOfWrath] and cooldown[RT.HammerOfWrath].ready and holyPower <= 4 and
-		(targetHp < 20 or buff[RT.AvengingWrath].up) then
+        (targetHp < 20 or buff[RT.AvengingWrath].up or buff[RT.Crusade].up) then
 		return RT.HammerOfWrath;
 	end
 

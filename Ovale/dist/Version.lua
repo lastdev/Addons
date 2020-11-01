@@ -22,11 +22,11 @@ local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 local self_printTable = {}
 local self_userVersion = {}
 local self_timer
-local OVALE_VERSION = "8.3.3"
+local OVALE_VERSION = "9.0.8"
 local REPOSITORY_KEYWORD = "@" .. "project-version" .. "@"
 __exports.OvaleVersionClass = __class(nil, {
     constructor = function(self, ovale, ovaleOptions, ovaleDebug)
-        self.version = (OVALE_VERSION == REPOSITORY_KEYWORD) and "development version" or OVALE_VERSION
+        self.version = (OVALE_VERSION == REPOSITORY_KEYWORD and "development version") or OVALE_VERSION
         self.warned = false
         self.handleInitialize = function()
             self.module:RegisterComm(MSG_PREFIX, self.OnCommReceived)
@@ -66,7 +66,7 @@ __exports.OvaleVersionClass = __class(nil, {
             }
         }
         for k, v in pairs(actions) do
-            ovaleOptions.options.args.actions.args[k] = v
+            ovaleOptions.actions.args[k] = v
         end
         ovaleOptions:RegisterOptions(self)
     end,

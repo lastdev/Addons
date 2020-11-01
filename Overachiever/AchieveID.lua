@@ -10,6 +10,12 @@ OVERACHIEVER_ACHID = {
 	LoveCritters2 = 2557,	-- "To All The Squirrels Who Shared My Life"
 	LoveCritters3 = 5548,	-- "To All the Squirrels Who Cared for Me"
 	LoveCritters4 = 6350,	-- "To All the Squirrels I Once Caressed?"
+	--[[
+	LoveCritters5 = 14728,	-- "To All the Squirrels Through Time and Space"
+	LoveCritters6 = 14729,	-- "To All the Squirrels I Love Despite Their Scars"
+	LoveCritters7 = 14730,	-- "To All the Squirrels I Set Sail to See"
+	LoveCritters8 = 14731,	-- "To All the Squirrels I've Love and Lost"
+	--]]
 	PestControl = 2556,		-- "Pest Control"
 	WellRead = 1244,		-- "Well Read"
 	HigherLearning = 1956,	-- "Higher Learning"
@@ -577,7 +583,7 @@ OVERACHIEVER_CATEGORY_25 = {
 
 OVERACHIEVER_HEROIC_CRITERIA = {
 	[1658] =			-- "Champion of the Frozen Wastes"
-		{ [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true,		  
+		{ [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true,
 		  [12] = true, [13] = true, [14] = true, [15] = true },
 --[[ this data seems wrong. was this achievement changed at some point or has it always been wrong?
 		{ [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true, [12] = true,

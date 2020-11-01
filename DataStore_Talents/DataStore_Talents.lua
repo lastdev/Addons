@@ -17,13 +17,9 @@ local AddonDB_Defaults = {
 				lastUpdate = nil,
 				Class = nil,							-- englishClass
 				Specializations = {},
-				EquippedArtifact = nil,				-- name of the currently equipped artifact
-				ArtifactKnowledge = nil,
-				ArtifactKnowledgeMultiplier = nil,
-				Artifacts = {
+				AzeriteEssences = {
 					['*'] = {
-						rank = 0,
-						pointsRemaining = 0,
+						rankCollected = 0,
 					}
 				},
 			}
@@ -153,17 +149,19 @@ local function RightShift(value, numBits)
 	return math.floor(value / 2^numBits)
 end
 
-local function GetArtifactName()
-	-- local info = C_ArtifactUI.GetEquippedArtifactArtInfo()
-	local info = C_ArtifactUI.GetArtifactArtInfo()
-	if info then 
-		return info.titleName
-	end
-	-- return select(2, C_ArtifactUI.GetArtifactArtInfo())
+-- *** Scanning functions ***
+local function ScanAzeriteEssences()
+    local char = addon.ThisCharacter
+    wipe(char.AzeriteEssences)
+    
+    local essences = C_AzeriteEssence.GetEssences()
+    if not essences then return	end
+    
+    for i, essence in ipairs(essences) do
+        char.AzeriteEssences[essence.name] = essence
+    end
 end
 
-
--- *** Scanning functions ***
 local function ScanTalents()
 	local level = UnitLevel("player")
 	if not level or level < 15 then return end		-- don't scan anything for low level characters
@@ -229,11 +227,16 @@ end
 local function OnPlayerAlive()
 	ScanTalents()
 	ScanTalentReference()
+    ScanAzeriteEssences()
 end
 
 local function OnPlayerSpecializationChanged()
 	ScanTalents()
 	ScanTalentReference()
+end
+
+local function OnAzeriteEssenceChanged()
+    ScanAzeriteEssences()
 end
 
 -- ** Mixins **
@@ -304,89 +307,14 @@ local function _GetSpecializationTierChoice(character, specialization, row)
 	end
 end
 
--- ** Artifact **
-local function _GetArtifactKnowledgeLevel(character)
-	return character.ArtifactKnowledge or 0
+-- ** Essences **
+local function _GetAzeriteEssences(character)
+	return character.AzeriteEssences
 end
 
-local function _GetArtifactKnowledgeMultiplier(character)
-	return character.ArtifactKnowledgeMultiplier or 0
+local function _GetAzeriteEssenceInfo(character, name)
+	return character.AzeriteEssence[name]
 end
-
-local function _GetEquippedArtifact(character)
-	return character.EquippedArtifact
-end
-
-local function _GetEquippedArtifactRank(character)
-	local rank = 0
-	
-	local equippedArtifact = character.EquippedArtifact
-	if equippedArtifact then
-		local info = character.Artifacts[equippedArtifact]
-		if info and info.rank then
-			rank = info.rank
-		end
-	end
-	
-	return rank
-end
-
-local function _GetEquippedArtifactPower(character)
-	local power = 0
-	
-	local equippedArtifact = character.EquippedArtifact
-	if equippedArtifact then
-		local info = character.Artifacts[equippedArtifact]
-		if info and info.pointsRemaining then
-			power = info.pointsRemaining
-		end
-	end
-	
-	return power
-end
-
-local function _GetEquippedArtifactTier(character)
-	local tier = 0
-	
-	local equippedArtifact = character.EquippedArtifact
-	if equippedArtifact then
-		local info = character.Artifacts[equippedArtifact]
-		if info and info.tier then
-			tier = info.tier
-		end
-	end
-	
-	return tier
-end
-
-local function _GetKnownArtifacts(character)
-	return character.Artifacts
-end
-
-local function _GetNumArtifactTraitsPurchasableFromXP(currentRank, xpToSpend, currentTier)
-	-- this function is exactly the same as 
-	-- MainMenuBar_GetNumArtifactTraitsPurchasableFromXP (from MainMenuBar.lua)
-	-- but just in case it's not loaded or changes later.. I'll keep it here
-	-- Usage: 
-	--		DataStore:GetNumArtifactTraitsPurchasableFromXP(1, 945)
-	--    artifact is currently at rank 1, and we have 945 points to spend
-	
-	local numPoints = 0
-	local xpForNextPoint = C_ArtifactUI.GetCostForPointAtRank(currentRank, currentTier)
-
-	while xpToSpend >= xpForNextPoint and xpForNextPoint > 0 do
-		xpToSpend = xpToSpend - xpForNextPoint
-
-		currentRank = currentRank + 1
-		numPoints = numPoints + 1
-
-		xpForNextPoint = C_ArtifactUI.GetCostForPointAtRank(currentRank, currentTier)
-	end
-	
-	-- ex: with rank 1 and 945 points, we have enough points for 2 traits, and 320 / 350 in the last rank
-	return numPoints, xpToSpend, xpForNextPoint
-end
-
 
 local PublicMethods = {
 	GetReferenceTable = _GetReferenceTable,
@@ -397,14 +325,8 @@ local PublicMethods = {
 	ImportClassReference = _ImportClassReference,
 	GetTalentInfo = _GetTalentInfo,
 	GetSpecializationTierChoice = _GetSpecializationTierChoice,
-	GetArtifactKnowledgeLevel = _GetArtifactKnowledgeLevel,
-	GetArtifactKnowledgeMultiplier = _GetArtifactKnowledgeMultiplier,
-	GetEquippedArtifact = _GetEquippedArtifact,
-	GetEquippedArtifactRank = _GetEquippedArtifactRank,
-	GetEquippedArtifactPower = _GetEquippedArtifactPower,
-	GetEquippedArtifactTier = _GetEquippedArtifactTier,
-	GetKnownArtifacts = _GetKnownArtifacts,
-	GetNumArtifactTraitsPurchasableFromXP = _GetNumArtifactTraitsPurchasableFromXP,
+    GetAzeriteEssences = _GetAzeriteEssences,
+    GetAzeriteEssenceInfo = _GetAzeriteEssenceInfo,
 }
 
 function addon:OnInitialize()
@@ -414,23 +336,21 @@ function addon:OnInitialize()
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 
 	DataStore:SetCharacterBasedMethod("GetSpecializationTierChoice")
-	DataStore:SetCharacterBasedMethod("GetArtifactKnowledgeLevel")
-	DataStore:SetCharacterBasedMethod("GetArtifactKnowledgeMultiplier")
-	DataStore:SetCharacterBasedMethod("GetEquippedArtifact")
-	DataStore:SetCharacterBasedMethod("GetEquippedArtifactRank")
-	DataStore:SetCharacterBasedMethod("GetEquippedArtifactPower")
-	DataStore:SetCharacterBasedMethod("GetEquippedArtifactTier")
-	DataStore:SetCharacterBasedMethod("GetKnownArtifacts")
+
+	DataStore:SetCharacterBasedMethod("GetAzeriteEssences")
+	DataStore:SetCharacterBasedMethod("GetAzeriteEssenceInfo")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("PLAYER_TALENT_UPDATE", ScanTalents)
 	addon:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED", OnPlayerSpecializationChanged)
+    addon:RegisterEvent("AZERITE_ESSENCE_CHANGED", OnAzeriteEssenceChanged)
 end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("PLAYER_TALENT_UPDATE")
 	addon:UnregisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+    addon:UnregisterEvent("AZERITE_ESSENCE_CHANGED")
 end

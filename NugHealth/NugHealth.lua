@@ -1,6 +1,6 @@
 local addonName, ns = ...
 
-NugHealth = CreateFrame("Frame","NugHealth", UIParent)
+NugHealth = CreateFrame("Frame", "NugHealth", UIParent)
 
 local NugHealth = NugHealth
 
@@ -10,7 +10,7 @@ end)
 
 NugHealth:RegisterEvent("ADDON_LOADED")
 
-local LibCLHealth = LibStub("LibCombatLogHealth-1.0")
+-- local LibCLHealth = LibStub("LibCombatLogHealth-1.0")
 local DB_VERSION = 1
 local UnitHealth = UnitHealth
 local UnitHealthOriginal = UnitHealth
@@ -24,12 +24,11 @@ local lowhpcolor = false
 local showSpikes = true
 local isMonk = select(2, UnitClass"player") == "MONK"
 local isClassic = select(4,GetBuildInfo()) <= 19999
-local GetSpecialization = isClassic and function() return nil end or _G.GetSpecialization   
+local GetSpecialization = isClassic and function() return nil end or _G.GetSpecialization
 
 local vengeanceMinRange = 7000
 local vengeanceMaxRange = 200000
 local vengeanceRedRange = 60000
-local healthTextFont = [[Interface\AddOns\NugHealth\Emblem.ttf]]
 
 local staggerMul = 1
 local resolveMul = 1
@@ -45,6 +44,9 @@ local defaults = {
     relative_point = "CENTER",
     frame = "UIParent",
     classcolor = true,
+    healthTexture = "Gradient",
+    healthOrientation = "VERTICAL",
+    outOfCombatAlpha = 0,
     allSpecs = false,
     healthcolor = { 0.78, 0.61, 0.43 },
     x = 0,
@@ -269,12 +271,12 @@ function NugHealth:PLAYER_STAGGER_UPDATE(currentStagger)
     end
 
     if stagger == 0 then
-        self.power:Hide()
+        self.stagger:Hide()
     else
-        self.power:Show()
-        self.power:SetValue(stagger)
-        self.power:SetColor(PercentColor(stagger))
-        self.power:Extend(stagger)
+        self.stagger:Show()
+        self.stagger:SetValue(stagger)
+        self.stagger:SetColor(PercentColor(stagger))
+        self.stagger:Extend(stagger)
     end
 
     if not NugHealthDB.healthText then
@@ -300,15 +302,20 @@ end
 function NugHealth.UNIT_ABSORB_AMOUNT_CHANGED(self, event, unit)
     local a,hm = UnitGetTotalAbsorbs(unit), UnitHealthMax(unit)
     local h = UnitHealth(unit)
-
-    self.absorb:SetValue(a/hm, h/hm)
-    self.absorb2:SetValue((h+a)/hm)
+    local ch, p = 0, 0
+    if hm ~= 0 then
+        p = a/hm
+        ch = h/hm
+    end
+    self.absorb:SetValue(p, ch)
+    self.absorb2:SetValue(p, ch)
 end
 
 function NugHealth:Enable()
     playerGUID = UnitGUID("player")
 
     NugHealthDB.useCLH = false
+    --[[
     if LibCLHealth and NugHealthDB.useCLH then
         self:UnregisterEvent("UNIT_HEALTH")
         UnitHealth = LibCLHealth.UnitHealth
@@ -322,6 +329,8 @@ function NugHealth:Enable()
             LibCLHealth.UnregisterCallback(self, "COMBAT_LOG_HEALTH")
         end
     end
+    ]]
+    self:RegisterUnitEvent("UNIT_HEALTH", "player")
     -- self:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
     if not isClassic then
         self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player")
@@ -402,24 +411,76 @@ end
 --         end
 -- end
 
-function NugHealth.UNIT_HEALTH(self, event)
-    local h = UnitHealth("player")
-    local mh = UnitHealthMax("player")
-    local a = isClassic and 0 or UnitGetTotalAbsorbs("player")
-    if mh == 0 then return end
-    local vp = h/mh
-
-    self.health:SetValue(vp)
-    self.health.text:SetText(math.floor(vp*100 + 0.5))
-    self.absorb:SetValue(a/mh, vp)
-    self.absorb2:SetValue((h+a)/mh)
-    if vp >= self.healthlost.currentvalue or not UnitAffectingCombat("player") then
-        self.healthlost.currentvalue = vp
-        self.healthlost.endvalue = vp
-        self.healthlost:SetValue(vp)
+local fgShowMissing = true
+local function GetForegroundSeparation(health, healthMax, showMissing)
+    if showMissing then
+        return (healthMax - health)/healthMax, health/healthMax
     else
-        self.healthlost.endvalue = vp
+        return health/healthMax, health/healthMax
     end
+end
+
+local damageEffect = true
+function NugHealth.UNIT_HEALTH(self, event)
+    -- local h = UnitHealth("player")
+    -- local mh = UnitHealthMax("player")
+    -- local a = isClassic and 0 or UnitGetTotalAbsorbs("player")
+    -- if mh == 0 then return end
+    -- local vp = h/mh
+
+    -- self.health:SetValue(vp)
+    -- self.health.text:SetText(math.floor(vp*100 + 0.5))
+    -- self.absorb:SetValue(a/mh, vp)
+    -- self.absorb2:SetValue((h+a)/mh)
+    -- if vp >= self.healthlost.currentvalue or not UnitAffectingCombat("player") then
+    --     self.healthlost.currentvalue = vp
+    --     self.healthlost.endvalue = vp
+    --     self.healthlost:SetValue(vp)
+    -- else
+    --     self.healthlost.endvalue = vp
+    -- end
+    local unit = "player"
+    local h,hm = UnitHealth(unit), UnitHealthMax(unit)
+    local shields = UnitGetTotalAbsorbs(unit)
+    local healabsorb = UnitGetTotalHealAbsorbs(unit)
+    local incomingHeal = UnitGetIncomingHeals(unit)
+    if hm == 0 or incomingHeal == nil then return end
+    local foregroundValue, perc = GetForegroundSeparation(h, hm, fgShowMissing)
+    local state = self.state
+    -- state.vHealth = h
+    -- state.vHealthMax = hm
+    self.health:SetValue(foregroundValue*100)
+    self.healabsorb:SetValue(healabsorb/hm, perc)
+    self.absorb2:SetValue(shields/hm, perc)
+    self.absorb:SetValue(shields/hm, perc)
+    self.health.incoming:SetValue(incomingHeal/hm, perc)
+    self.health.lost:SetNewHealthTarget(perc, perc)
+
+    if damageEffect then
+        local diff = perc - (state.healthPercent or perc)
+        local flashes = state.flashes
+        if not flashes then
+            state.flashes = {}
+            flashes = state.flashes
+        end
+
+        if diff < -0.02 then -- Damage taken is more than 2%
+            local flash = self.flashPool:Acquire()
+            local oldPerc = perc + (-diff)
+            if self.flashPool:FireEffect(flash, diff, perc, state, oldPerc) then
+                flashes[oldPerc] = flash
+            end
+        elseif diff > 0 then -- Heals
+            for oldPerc, flash in pairs(flashes) do
+                if perc >= oldPerc then
+                    self.flashPool:StopEffect(flash)
+                end
+            end
+        end
+    end
+    state.healthPercent = perc
+
+    self.health.text:SetText(math.floor(perc*100 + 0.5))
 
     -- if NugHealthDB.lowhpFlash then
     --     if vp < 0.2 then
@@ -455,472 +516,62 @@ end
 -- end
 
 
--- local doFadeOut = true
--- local fadeAfter = 3
--- local fadeTime = 1
--- local fader = CreateFrame("Frame", nil, NugHealth)
--- NugHealth.fader = fader
--- local HideTimer = function(self, time)
---     self.OnUpdateCounter = (self.OnUpdateCounter or 0) + time
---     if self.OnUpdateCounter < fadeAfter then return end
+local doFadeOut = true
+local fadeAfter = 3
+local fadeTime = 1
+local fader = CreateFrame("Frame", nil, NugHealth)
+NugHealth.fader = fader
+local HideTimer = function(self, time)
+    self.OnUpdateCounter = (self.OnUpdateCounter or 0) + time
+    if self.OnUpdateCounter < fadeAfter then return end
 
---     local nhe = NugHealth
---     local p = fadeTime - ((self.OnUpdateCounter - fadeAfter) / fadeTime)
---     -- if p < 0 then p = 0 end
---     -- local ooca = NugHealthDB.outOfCombatAlpha
---     -- local a = ooca + ((1 - ooca) * p)
---     local pA = NugHealthDB.outOfCombatAlpha
---     local rA = 1 - NugHealthDB.outOfCombatAlpha
---     local a = pA + (p*rA)
---     nhe:SetAlpha(a)
---     nhe.healthlost:Hide()
---     nhe.absorb2:Hide()
---     if self.OnUpdateCounter >= fadeAfter + fadeTime then
---         self:SetScript("OnUpdate",nil)
---         if nhe:GetAlpha() <= 0.03 then
---             nhe:Hide()
---         end
---         nhe.hiding = false
---         self.OnUpdateCounter = 0
---     end
--- end
--- function NugHealth:StartHiding()
---     if (not self.hiding and self:IsVisible())  then
---         fader:SetScript("OnUpdate", HideTimer)
---         fader.OnUpdateCounter = 0
---         self.hiding = true
---     end
--- end
+    local nhe = NugHealth
+    local p = fadeTime - ((self.OnUpdateCounter - fadeAfter) / fadeTime)
+    -- if p < 0 then p = 0 end
+    -- local ooca = NugHealthDB.outOfCombatAlpha
+    -- local a = ooca + ((1 - ooca) * p)
+    local pA = NugHealthDB.outOfCombatAlpha
+    local rA = 1 - NugHealthDB.outOfCombatAlpha
+    local a = pA + (p*rA)
+    nhe:SetAlpha(a)
+    if self.OnUpdateCounter >= fadeAfter + fadeTime then
+        self:SetScript("OnUpdate",nil)
+        if nhe:GetAlpha() <= 0.03 then
+            nhe:Hide()
+        end
+        nhe.hiding = false
+        self.OnUpdateCounter = 0
+    end
+end
+function NugHealth:StartHiding()
+    if (not self.hiding and self:IsVisible())  then
+        fader:SetScript("OnUpdate", HideTimer)
+        fader.OnUpdateCounter = 0
+        self.hiding = true
+    end
+end
 
--- function NugHealth:StopHiding()
---     -- if self.hiding then
---         fader:SetScript("OnUpdate", nil)
---         local nhe = NugHealth
---         nhe:SetAlpha(1)
---         nhe.healthlost:Show()
---         nhe.absorb2:Show()
---         self.hiding = false
---     -- end
--- end
+function NugHealth:StopHiding()
+    -- if self.hiding then
+        fader:SetScript("OnUpdate", nil)
+        self:SetAlpha(1)
+        self.hiding = false
+    -- end
+end
 
 function NugHealth.PLAYER_REGEN_DISABLED(self, event)
-    -- self:StopHiding()
+    self:StopHiding()
     self:Show()
 end
 function NugHealth.PLAYER_REGEN_ENABLED(self, event)
     if NugHealthDB.hideOutOfCombat then
-        self:Hide()
-        -- self:StartHiding()
+        -- self:Hide()
+        self:StartHiding()
     end
 end
 
 
-local pmult = 1
-local function pixelperfect(size)
-    return floor(size/pmult + 0.5)*pmult
-end
 
-function NugHealth.Create(self)
-    local res = GetCVar("gxWindowedResolution") --select(GetCurrentResolution(), GetScreenResolutions())
-    if res then
-        local w,h = string.match(res, "(%d+)x(%d+)")
-        pmult = (768/h) / UIParent:GetScale()
-    end
-
-    local p = pmult
-
-    local height = pixelperfect(NugHealthDB.height)
-    local width = pixelperfect(NugHealthDB.width)
-    local absorb_width = pixelperfect(NugHealthDB.absorb_width)
-    local stagger_width = pixelperfect(NugHealthDB.stagger_width)
-    local trend_width = pixelperfect(NugHealthDB.spike_width)
-    -- local incoming_width = pixelp+erfect(2)
-
-    self:SetWidth(width)
-    self:SetHeight(height)
-    local backdrop = {
-        bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 0,
-        insets = {left = -2*p, right = -2*p, top = -2*p, bottom = -2*p},
-    }
-    self:SetBackdrop(backdrop)
-    self:SetBackdropColor(0, 0, 0, 1)
-
-    local texture = [[Interface\AddOns\NugHealth\gradient]]
-    local hp = CreateFrame("StatusBar", nil, self)
-    hp:SetAllPoints(self)
-    hp:SetStatusBarTexture(texture)
-    hp:GetStatusBarTexture():SetDrawLayer("ARTWORK",-6)
-    hp:SetMinMaxValues(0,1)
-    hp:SetOrientation("VERTICAL")
-    hp:SetValue(50)
-
-    local hpbg = hp:CreateTexture(nil,"ARTWORK",nil,-8)
-    hpbg:SetAllPoints(hp)
-    hpbg:SetTexture(texture)
-    hp.bg = hpbg
-
-    local hplost = CreateFrame("StatusBar", nil, self)
-    hplost:SetAllPoints(self)
-    hplost:SetStatusBarTexture("Interface\\BUTTONS\\WHITE8X8")
-    hplost:GetStatusBarTexture():SetDrawLayer("ARTWORK",-7)
-    hplost:SetMinMaxValues(0,1)
-    hplost:SetOrientation("VERTICAL")
-    hplost:SetValue(0)
-    hplost:SetStatusBarColor(1,0,0, 1)
-    -- hplost:SetStatusBarColor(1,1,1, .9)
-
-    hplost.currentvalue = 0
-    hplost.endvalue = 0
-    hplost:SetScript("OnUpdate", function(self, time)
-        self._elapsed = (self._elapsed or 0) + time
-        if self._elapsed < 0.05 then return end
-        self._elapsed = 0
-        local diff = self.currentvalue - self.endvalue
-        if diff > 0 then
-            local d = (diff > .10) and 0.007 or 0.0035
-            self.currentvalue = self.currentvalue - d
-            self:SetValue(self.currentvalue)
-        end
-    end)
-
-    self.healthlost = hplost
-
-    local htext = hp:CreateFontString()
-    htext:SetFont(healthTextFont, NugHealthDB.healthTextSize)
-    htext:SetPoint("TOP", hp, "TOP",0, -NugHealthDB.healthTextOffset)
-    if not NugHealthDB.healthText then htext:Hide() end
-    hp.text = htext
-
-    hp.SetColor = function(self, r,g,b)
-        self:SetStatusBarColor(r*0.2,g*0.2,b*0.2)
-        self.bg:SetVertexColor(r,g,b)
-        self.text:SetTextColor(r*0.2,g*0.2,b*0.2)
-    end
-
-	hp.RestoreColor = function(self)
-		if NugHealthDB.classcolor then
-	        local _, class = UnitClass("player")
-	        local c = RAID_CLASS_COLORS[class]
-	        self:SetColor(c.r,c.g,c.b)
-	    else
-	        self:SetColor(unpack(NugHealthDB.healthcolor))
-	    end
-	end
-
-    hp:RestoreColor()
-
-
-    self.health = hp
-
-
-    local at = self:CreateTexture(nil,"BACKGROUND", nil, -1)
-    at:SetTexture([[Interface\SpellActivationOverlay\IconAlert]])
-    at:SetVertexColor(1, .2, .2)
-    do
-    local a,b,c,d = 0.00781250,0.50781250,0.27734375,0.52734375
-    at:SetTexCoord(a,d,b,d,a,c,b,c)
-    end
-
-    local hmul,vmul = 2, 1.65
-    if vertical then hmul, vmul = vmul, hmul end
-    at:SetWidth(self:GetWidth()*hmul)
-    at:SetHeight(self:GetHeight()*vmul)
-    at:SetPoint("CENTER",self,"CENTER",0,0)
-    at:SetAlpha(0)
-
-    local sag = at:CreateAnimationGroup()
-    sag:SetLooping("BOUNCE")
-    local sa1 = sag:CreateAnimation("Alpha")
-    sa1:SetFromAlpha(0)
-    sa1:SetToAlpha(1)
-    sa1:SetDuration(0.3)
-    sa1:SetOrder(1)
-    sa1:SetScript("OnFinished", function(self)
-        if self.pending_stop then self:GetParent():Stop() end
-    end)
-
-    self.glowtex = at
-    self.glow = sag
-    self.glowanim = sa1
-
-
-    local resolve = CreateFrame("Frame", nil, self)
-    resolve:SetParent(self)
-    resolve:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",0,0)
-    resolve:SetWidth(6)
-
-    local at = resolve:CreateTexture(nil, "ARTWORK", nil, -4)
-    at:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    -- at:SetVertexColor(.7, .7, 1, 1)
-    resolve.texture = at
-    at:SetAllPoints(resolve)
-
-    local atbg = resolve:CreateTexture(nil, "ARTWORK", nil, -5)
-    atbg:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    atbg:SetVertexColor(0,0,0,1)
-    atbg:SetPoint("TOPLEFT", at, "TOPLEFT", -1,1)
-    atbg:SetPoint("BOTTOMRIGHT", at, "BOTTOMRIGHT", 1,-1)
-
-    resolve.maxheight = self:GetHeight()
-    resolve.SetValue = function(self, p)
-        if p > 1 then p = 1 end
-        if p < 0 then p = 0 end
-        if p == 0 then self:Hide() else self:Show() end
-        self:SetHeight(p*self.maxheight)
-    end
-    resolve:SetValue(0)
-
-    resolve.SetStatusBarColor = function(self, r,g,b)
-        self.texture:SetVertexColor(r,g,b)
-    end
-
-    self.resolve = resolve
-
-
-
-    local absorb = CreateFrame("Frame", nil, self)
-    absorb:SetParent(self)
-    absorb:SetPoint("TOPLEFT",self,"TOPLEFT",-3,0)
-    absorb:SetWidth(absorb_width)
-
-    local at = absorb:CreateTexture(nil, "ARTWORK", nil, -4)
-    at:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    at:SetVertexColor(.7, .7, 1, 1)
-    absorb.texture = at
-    at:SetAllPoints(absorb)
-
-    local atbg = absorb:CreateTexture(nil, "ARTWORK", nil, -5)
-    atbg:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    atbg:SetVertexColor(0,0,0,1)
-    atbg:SetPoint("TOPLEFT", at, "TOPLEFT", -1,1)
-    atbg:SetPoint("BOTTOMRIGHT", at, "BOTTOMRIGHT", 1,-1)
-
-    absorb.maxheight = self:GetHeight()
-    absorb.SetValue = function(self, p, h)
-        if p > 1 then p = 1 end
-        if p < 0 then p = 0 end
-        if p <= 0.015 then self:Hide(); return; else self:Show() end
-
-        local missing_health_height = (1-h)*self.maxheight
-        local absorb_height = p*self.maxheight
-
-        self:SetHeight(p*self.maxheight)
-
-        if absorb_height >= missing_health_height then
-            self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -3 ,0)
-        else
-            self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -3, -(missing_health_height - absorb_height))
-        end
-    end
-    absorb:SetValue(0)
-
-    absorb.SetStatusBarColor = function(self, r,g,b)
-        self.texture:SetVertexColor(r,g,b)
-    end
-
-    self.absorb = absorb
-
-    local absorb2 = CreateFrame("StatusBar", nil, self)
-    absorb2:SetPoint("BOTTOMLEFT",self,"BOTTOMLEFT",0,0)
-    absorb2:SetPoint("TOPRIGHT",self,"TOPRIGHT",0,0)
-
-    local st = absorb2:CreateTexture(nil, 'ARTWORK', nil, -7)
-    -- st:SetBlendMode('BLEND')
-    st:SetTexture("Interface\\AddOns\\NugHealth\\shieldtex")
-    st:SetHorizTile(true)
-    st:SetVertTile(true)
-
-    absorb2:SetStatusBarTexture(st)
-    absorb2:GetStatusBarTexture():SetDrawLayer("ARTWORK",-7)
-    absorb2:SetMinMaxValues(0,1)
-    absorb2:SetAlpha(0.65)
-    absorb2:SetOrientation("VERTICAL")
-    absorb2.parent = self
-    self.absorb2 = absorb2
-
-
-    -- local incoming = CreateFrame("Frame", nil, self)
-    -- incoming:SetParent(self)
-    -- incoming:SetPoint("TOPLEFT",self,"TOPLEFT",2,0)
-    -- incoming:SetWidth(incoming_width)
-
-    -- local iht = incoming:CreateTexture(nil, "ARTWORK", nil, -4)
-    -- iht:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    -- iht:SetVertexColor(0.6, 1, 0.6, 1)
-    -- incoming.texture = iht
-    -- iht:SetAllPoints(incoming)
-
-    -- local ihtbg = incoming:CreateTexture(nil, "ARTWORK", nil, -5)
-    -- ihtbg:SetTexture"Interface\\BUTTONS\\WHITE8X8"
-    -- ihtbg:SetVertexColor(0,0,0,1)
-    -- ihtbg:SetPoint("TOPLEFT", iht, "TOPLEFT", -1,1)
-    -- ihtbg:SetPoint("BOTTOMRIGHT", iht, "BOTTOMRIGHT", 1,-1)
-
-    -- incoming.maxheight = self:GetHeight()
-    -- incoming.SetValue = function(self, p, h)
-    --     if p > 1 then p = 1 end
-    --     if p < 0 then p = 0 end
-    --     if p <= 0.015 then self:Hide(); return; else self:Show() end
-
-    --     local missing_health_height = (1-h)*self.maxheight
-    --     local incoming_height = p*self.maxheight
-
-    --     self:SetHeight(p*self.maxheight)
-
-    --     if incoming_height >= missing_health_height then
-    --         self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -3 ,0)
-    --     else
-    --         self:SetPoint("TOPLEFT", self:GetParent(), "TOPLEFT", -3, -(missing_health_height - incoming_height))
-    --     end
-    -- end
-    -- incoming:SetValue(0)
-
-    -- incoming.SetStatusBarColor = function(self, r,g,b)
-    --     self.texture:SetVertexColor(r,g,b)
-    -- end
-
-    -- self.incoming = incoming
-
-
-
-    local powerbar = CreateFrame("StatusBar", nil, self)
-    powerbar:SetWidth(stagger_width)
-    -- powerbar:SetPoint("TOPLEFT",self,"TOPRIGHT",1,0)
-    powerbar:SetPoint("BOTTOMLEFT",self,"BOTTOMRIGHT",2,0)
-	powerbar:SetHeight(height)
-	powerbar.baseheight = height
-	powerbar.Extend = function(self, v)
-		if v > 1.5 then v = 1.5 end
-		if v > 1 then
-			self:SetHeight(self.baseheight*v)
-		else
-			self:SetHeight(self.baseheight)
-		end
-	end
-
-    powerbar:SetStatusBarTexture("Interface\\BUTTONS\\WHITE8X8")
-    powerbar:GetStatusBarTexture():SetDrawLayer("ARTWORK",-2)
-    powerbar:SetOrientation("VERTICAL")
-    powerbar:SetMinMaxValues(0, 1)
-    powerbar:SetValue(0.5)
-    local backdrop = {
-        bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 0,
-        insets = {left = -2*p, right = -2*p, top = -2*p, bottom = -2*p},
-    }
-    powerbar:SetBackdrop(backdrop)
-    powerbar:SetBackdropColor(0, 0, 0, 1)
-
-    local pbbg = powerbar:CreateTexture(nil,"ARTWORK",nil,-3)
-    pbbg:SetAllPoints(powerbar)
-    pbbg:SetTexture("Interface\\BUTTONS\\WHITE8X8")
-    powerbar.bg = pbbg
-
-    powerbar.SetColor = ns.MakeSetColor(0.1)
-
-    -- powerbar:SetScript("OnUpdate", function(self, time)
-        -- self:SetValue( self.endTime - GetTime())
-    -- end)
-
-    powerbar:Hide()
-
-    self.power = powerbar
-
-
-
-    local trend = CreateFrame("Frame", nil, powerbar)
-    trend:SetFrameLevel(3)
-    trend:SetWidth(trend_width)
-    trend:SetHeight(height*0.25)
-
-    local ttex = trend:CreateTexture(nil, "ARTWORK", nil, 0)
-    ttex:SetTexture("Interface\\BUTTONS\\WHITE8X8")
-    ttex:SetAllPoints()
-    trend.texture = ttex
-
-    trend:SetBackdrop({
-        bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 0,
-        insets = {left = -1*p, right = -1*p, top = -1*p, bottom = -1*p},
-    })
-    trend:SetBackdropColor(0, 0, 0, 1)
-    trend:Hide()
-
-    trend.SetMod = function(self, mod, averageStagger)
-        local height = self:GetParent().baseheight
-        if mod > 0 then
-            self:ClearAllPoints()
-            local mod2 = math_min(0.75, mod)
-            -- local ah = math_min(averageStagger, 0.75)*height
-            local ah = averageStagger*height
-            self:SetPoint("TOPLEFT", powerbar, "BOTTOMRIGHT", 0, ah)
-            self:SetHeight(mod2*height)
-            self.texture:SetVertexColor(0,1,0)
-            self:Show()
-        elseif mod < 0 then
-            self:ClearAllPoints()
-            local mod2 = math.max(-0.75, mod)
-            -- local ah = math_min(averageStagger, 0.75)*height
-            local ah = averageStagger*height
-            -- spike bar won't be starting higher than 75% stagger position.
-            -- it's maximum length is also 75% of frame height
-            -- and the actual stagger bar itself also extends from 100% to 150% stagger if needed
-            self:SetPoint("BOTTOMLEFT", powerbar, "BOTTOMRIGHT", 0, ah)
-            self:SetHeight(-mod2*height)
-            self.texture:SetVertexColor(1,0,0)
-            self:Show()
-        else
-            self:Hide()
-        end
-    end
-
-    self.trend = trend
-
-    self.Resize = function(self)
-        local height = pixelperfect(NugHealthDB.height)
-        local width = pixelperfect(NugHealthDB.width)
-        local absorb_width = pixelperfect(NugHealthDB.absorb_width)
-        local stagger_width = pixelperfect(NugHealthDB.stagger_width)
-        local trend_width = pixelperfect(NugHealthDB.spike_width)
-
-        self:SetWidth(width)
-        self:SetHeight(height)
-        self.power:SetHeight(height)
-        self.power:SetWidth(stagger_width)
-        self.power.baseheight = height
-        self.trend:SetWidth(trend_width)
-        self.absorb.maxheight = height
-        self.absorb:SetWidth(absorb_width)
-        self.resolve.maxheight = height
-        self.glowtex:SetWidth(width*hmul)
-        self.glowtex:SetHeight(height*vmul)
-
-        local htext = self.health.text
-        if NugHealthDB.healthText then
-            htext:Show()
-            htext:SetFont(healthTextFont, NugHealthDB.healthTextSize)
-            htext:SetPoint("TOP", hp, "TOP",0, -NugHealthDB.healthTextOffset)
-        else
-            htext:Hide()
-        end
-    end
-
-
-
-    self:EnableMouse(false)
-    self:RegisterForDrag("LeftButton")
-    self:SetMovable(true)
-    self:SetScript("OnDragStart",function(self) self:StartMoving() end)
-    self:SetScript("OnDragStop",function(self)
-        self:StopMovingOrSizing();
-        local p = NugHealthDB
-        p.point, p.frame, p.relative_point, p.x, p.y = self:GetPoint(1)
-    end)
-
-    local p = NugHealthDB
-    self:SetPoint(p.point, p.frame, p.relative_point, p.x, p.y)
-    self:Hide()
-
-    return self
-end
 
 
 local ParseOpts = function(str)
@@ -1036,6 +687,7 @@ NugHealth.Commands = {
     end,
 
 
+    --[[
     ["useclh"] = function(v)
         NugHealthDB.useCLH = not NugHealthDB.useCLH
         if NugHealthDB.useCLH then
@@ -1052,13 +704,14 @@ NugHealth.Commands = {
             print("Fast health updates disabled")
         end
     end,
+    ]]
     -- ["set"] = function(v)
         -- local p = ParseOpts(v)
     -- end
 }
 
 function NugHealth.SlashCmd(msg)
-    k,v = string.match(msg, "([%w%+%-%=]+) ?(.*)")
+    local k,v = string.match(msg, "([%w%+%-%=]+) ?(.*)")
     if not k or k == "help" then
         print([[Usage:
           |cff55ffff/nhe unlock|r
@@ -1367,6 +1020,20 @@ function NugHealth:CreateGUI()
                         max = 12,
                         step = 1,
                         order = 12,
+                    },
+                    orientation = {
+                        name = "Health Orientation",
+                        type = 'select',
+                        order = 12.5,
+                        values = {
+                            ["HORIZONTAL"] = "Horizontal",
+                            ["VERTICAL"] = "Vertical",
+                        },
+                        get = function(info) return NugHealthDB.healthOrientation end,
+                        set = function( info, v )
+                            NugHealthDB.healthOrientation = v
+                            NugHealth:Resize()
+                        end,
                     },
                     allSpecs = {
                         name = "Show for all specializations",

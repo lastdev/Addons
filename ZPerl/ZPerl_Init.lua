@@ -8,12 +8,14 @@ XPerl_RequestConfig(function(new)
 	conf = new
 end, "$Revision:  $")
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
 local UnitIsGroupAssistant = UnitIsGroupAssistant
 
 local classOrder
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	classOrder = {"WARRIOR", "ROGUE", "HUNTER", "DRUID", "SHAMAN", "PALADIN", "PRIEST", "MAGE", "WARLOCK", "MONK"}
 else
 	classOrder = {"WARRIOR", "DEATHKNIGHT", "ROGUE", "HUNTER", "DRUID", "SHAMAN", "PALADIN", "PRIEST", "MAGE", "WARLOCK", "MONK", "DEMONHUNTER"}
@@ -103,6 +105,7 @@ end
 
 -- SetupUnitFrame
 local function SetupUnitFrame(self)
+	self:OnBackdropLoaded()
 	self:SetBackdropBorderColor(conf.colour.border.r, conf.colour.border.g, conf.colour.border.b, conf.colour.border.a)
 	self:SetBackdropColor(conf.colour.frame.r, conf.colour.frame.g, conf.colour.frame.b, conf.colour.frame.a)
 	XPerl_DoGradient(self)

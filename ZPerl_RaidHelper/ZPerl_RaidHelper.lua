@@ -16,8 +16,9 @@ local XTitle
 local pendingTankListChange -- If in combat when tank list changes, then we'll defer it till next time we're out of combat
 local conf
 
-local GetNumGroupMembers = GetNumGroupMembers
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
+local GetNumGroupMembers = GetNumGroupMembers
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -85,7 +86,7 @@ local function UpdateUnit(self,forcedUpdate)
 	if (forcedUpdate) then
 		local time = GetTime()
 		if (self.update and time < self.update + 0.2) then
-			-- Since we catch UNIT_HEALTH_FREQUENT changes, we don't need to update always
+			-- Since we catch UNIT_HEALTH changes, we don't need to update always
 			return
 		end
 	end
@@ -256,7 +257,7 @@ end
 -- XPerl_MTListUnit_OnEnter
 function XPerl_MTListUnit_OnEnter(self)
 
-	local x = XPerl_Frame:GetCenter()
+	local x = XPerl_RaidHelper_Frame:GetCenter()
 	local a1, a2 = "ANCHOR_LEFT", "ANCHOR_TOPLEFT"
 	if ( x < (GetScreenWidth() / 2)) then
 		a1, a2 = "ANCHOR_RIGHT", "ANCHOR_TOPRIGHT"
@@ -274,6 +275,7 @@ function XPerl_MTListUnit_OnEnter(self)
 				if (parentID) then
 					XPerl_BottomTip:SetOwner(GameTooltip, a2, 0, 10)
 					XPerl_BottomTip:SetUnit(parentID)
+					XPerl_BottomTip:OnBackdropLoaded()
 					XPerl_BottomTip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
 				end
 			end
@@ -288,6 +290,7 @@ function XPerl_MTListUnit_OnEnter(self)
 
 				GameTooltip:SetOwner(self, a1)
 				GameTooltip:SetUnit(partyid)
+				GameTooltip:OnBackdropLoaded()
 				GameTooltip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
 			end
 		end
@@ -296,6 +299,9 @@ end
 
 -- XPerl_SetupFrameSimple
 function XPerl_SetupFrameSimple(self, alpha)
+	if self.backdropInfo then
+		self:OnBackdropLoaded()
+	end
 	self:SetBackdropBorderColor(0.5, 0.5, 0.5, alpha or 0.8)
 	self:SetBackdropColor(0, 0, 0, alpha or 0.8)
 end
@@ -415,7 +421,7 @@ function XPerl_MTRosterChanged()
 		-- Scan roster, adding any new ones, and removing found ones from old tanks list
 		for i = 1, GetNumGroupMembers() do
 			local unitid = "raid"..i
-			if ((WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGroupRolesAssigned(unitid) == "TANK") or GetPartyAssignment("maintank", unitid)) then
+			if ((not IsClassic and UnitGroupRolesAssigned(unitid) == "TANK") or GetPartyAssignment("maintank", unitid)) then
 				local name = GetUnitName(unitid, true)
 				local name2, realm = UnitName(unitid)
 				if (name ~= name2) then
@@ -559,18 +565,35 @@ function XPerl_ParseCTRA(nick, msg, func)
 end
 
 -- CHAT_MSG_ADDON
-function Events:CHAT_MSG_ADDON()
+function Events:CHAT_MSG_ADDON(arg1, arg2, arg3, arg4)
 	if (arg1 == "CTRA" and arg3 == "RAID") then
 		XPerl_ParseCTRA(arg4, arg2, ProcessCTRAMessage)
 	end
 end
 
-----------------------------
----------- EVENTS ----------
-----------------------------
+-- XPerl_RaidHelper_OnLoad
+function XPerl_RaidHelper_OnLoad(self)
+	self:OnBackdropLoaded()
+	self:RegisterForDrag("LeftButton")
+	self:RegisterEvent("VARIABLES_LOADED")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
--- OnEvent
-function XPerl_OnEvent(self, event, ...)
+	SlashCmdList["XPERLHELPER"] = XPerl_Slash
+	SLASH_XPERLHELPER1 = "/xp"
+
+	if (XPerl_RegisterPerlFrames) then
+		XPerl_RegisterPerlFrames(self)
+	end
+
+	if (XPerl_SavePosition) then
+		XPerl_SavePosition(XPerl_MTList_Anchor, true)
+	end
+
+	XPerl_RaidHelper_OnLoad = nil
+end
+
+-- XPerl_RaidHelper_OnEvent
+function XPerl_RaidHelper_OnEvent(self, event, ...)
 	Events[event](self, ...)
 end
 
@@ -609,12 +632,14 @@ local function ScanForMTDups()
 						local unit2 = XPerl_GetUnit("raid"..t2[1])
 
 						if (unit1) then
-							unit1:SetBackdropBorderColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
+							unit1:OnBackdropLoaded()
 							unit1:SetBackdropColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
+							unit1:SetBackdropBorderColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
 						end
 						if (unit2) then
-							unit2:SetBackdropBorderColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
+							unit2:OnBackdropLoaded()
 							unit2:SetBackdropColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
+							unit2:SetBackdropBorderColor(MTdupColours[dup].r, MTdupColours[dup].g, MTdupColours[dup].b)
 						end
 						any = true
 					end
@@ -651,7 +676,7 @@ local function OnUpdate(self, elapsed)
 	if (UpdateTime > 0.5) then
 		-- Forced update here for anything we don't receive events for
 		UpdateTime = 0
-		for k,unit in pairs(XUnits) do
+		for k, unit in pairs(XUnits) do
 			if (unit.type == "MTT" or unit.type == "MTTT") then
 				UpdateUnit(unit, true)
 			end
@@ -702,24 +727,26 @@ end
 -- Registration
 local function Registration()
 	local list = {
-		"UNIT_HEALTH_FREQUENT",
+		IsClassic and "UNIT_HEALTH_FREQUENT" or "UNIT_HEALTH",
 		"UNIT_MAXHEALTH",
 		"UNIT_TARGET",
+		"UNIT_FACTION",
+		"PLAYER_ENTERING_WORLD",
 		"PLAYER_TARGET_CHANGED",
 		"PLAYER_REGEN_ENABLED",
 		"PLAYER_REGEN_DISABLED",
-		"PLAYER_ENTERING_WORLD",
+		"PLAYER_ROLES_ASSIGNED",
 		--"CHAT_MSG_ADDON",
-		"UNIT_FACTION",
-		"PLAYER_ROLES_ASSIGNED"
 	}
 
 	for i, a in pairs(list) do
-		if not conf then return end
+		if not conf then
+			return
+		end
 		if (conf.RaidHelper == 1) then
-			XPerl_Frame:RegisterEvent(a)
+			XPerl_RaidHelper_Frame:RegisterEvent(a)
 		else
-			XPerl_Frame:UnregisterEvent(a)
+			XPerl_RaidHelper_Frame:UnregisterEvent(a)
 		end
 	end
 end
@@ -738,9 +765,9 @@ function XPerl_EnableDisable()
 	end
 
 	if (ZPerlConfigHelper and conf and conf.RaidHelper == 1 and IsInRaid()) then
-		if (not XPerl_Frame:IsShown()) then
-			XPerl_Frame:Show()
-			XPerl_Frame:SetScript("OnUpdate", OnUpdate)
+		if (not XPerl_RaidHelper_Frame:IsShown()) then
+			XPerl_RaidHelper_Frame:Show()
+			XPerl_RaidHelper_Frame:SetScript("OnUpdate", OnUpdate)
 		end
 
 		if (CT_RAMenu_Options and CT_RA_UpdateVisibility) then
@@ -749,9 +776,9 @@ function XPerl_EnableDisable()
 			CT_RA_UpdateVisibility(1)
 		end
 	else
-		if (XPerl_Frame:IsShown()) then
-			XPerl_Frame:Hide()
-			XPerl_Frame:SetScript("OnUpdate", nil)
+		if (XPerl_RaidHelper_Frame:IsShown()) then
+			XPerl_RaidHelper_Frame:Hide()
+			XPerl_RaidHelper_Frame:SetScript("OnUpdate", nil)
 		end
 
 		if (ZPerlConfigHelper and conf and conf.RaidHelper == 0 and CT_RAMenu_Options and CT_RA_UpdateVisibility) then
@@ -794,7 +821,37 @@ function Events:UNIT_HEALTH_FREQUENT(unit)
 	end
 end
 
-Events.UNIT_MAXHEALTH = Events.UNIT_HEALTH_FREQUENT
+-- UNIT_HEALTH
+function Events:UNIT_HEALTH(unit)
+	if not unit then
+		return
+	end
+
+	if (strfind(unit, "^raid%d")) then
+		for k, frame in pairs(XUnits) do
+			local partyid = SecureButton_GetUnit(frame)
+			if (partyid and UnitIsUnit(partyid, unit)) then
+				UpdateUnit(frame)
+			end
+		end
+	end
+end
+
+-- UNIT_MAXHEALTH
+function Events:UNIT_MAXHEALTH(unit)
+	if not unit then
+		return
+	end
+
+	if (strfind(unit, "^raid%d")) then
+		for k, frame in pairs(XUnits) do
+			local partyid = SecureButton_GetUnit(frame)
+			if (partyid and UnitIsUnit(partyid, unit)) then
+				UpdateUnit(frame)
+			end
+		end
+	end
+end
 
 -- UNIT_FACTION
 function Events:UNIT_FACTION(unit)
@@ -845,7 +902,7 @@ local function CheckArrowPosition()
 	end
 
 	local maDone, mtDone
-	for i,unit in pairs(XUnits) do
+	for i, unit in pairs(XUnits) do
 		local xunit = SpecialCaseUnit(unit)
 		if (xunit) then
 			if (not arrowDone and unit.type == arrowType and UnitIsUnit("target", xunit..arrowExtra) and UnitExists("target")) then
@@ -890,6 +947,7 @@ end
 -- TargetChanged
 local function TargetChanged(xunit)
 	local unit, i = XPerl_MTTargets:GetAttribute("child1"), 1
+	local any
 	while (unit) do
 		local id = unit:GetAttribute("unit")
 		if (id and UnitIsUnit(id, xunit)) then
@@ -911,14 +969,14 @@ end
 
 -- PLAYER_TARGET_CHANGED
 function Events:PLAYER_TARGET_CHANGED()
-	if (XPerl_Frame:IsShown()) then
+	if (XPerl_RaidHelper_Frame:IsShown()) then
 		TargetChanged("player")
 	end
 end
 
 -- UNIT_TARGET
 function Events:UNIT_TARGET(u)
-	if (XPerl_Frame:IsShown() and strmatch(u, "^raid")) then
+	if (XPerl_RaidHelper_Frame:IsShown() and strmatch(u, "^raid")) then
 		TargetChanged(u)
 	end
 end
@@ -926,20 +984,22 @@ end
 -- DoButtons
 local function DoButtons(disable)
 	if (disable or InCombatLockdown()) then
-		XPerl_Frame_CloseButton:Disable()
-		XPerl_Frame_ToggleShowMT:Disable()
-		XPerl_Frame_ToggleMTTargets:Disable()
-		XPerl_Frame_ToggleLabels:Disable()
+		XPerl_RaidHelper_Frame_TitleBar_CloseButton:Disable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleShowMT:Disable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleMTTargets:Disable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleLabels:Disable()
+		XPerl_RaidHelper_Frame.corner:EnableMouse(false)
 	else
-		XPerl_Frame_CloseButton:Enable()
-		XPerl_Frame_ToggleShowMT:Enable()
-		XPerl_Frame_ToggleMTTargets:Enable()
-		XPerl_Frame_ToggleLabels:Enable()
+		XPerl_RaidHelper_Frame_TitleBar_CloseButton:Enable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleShowMT:Enable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleMTTargets:Enable()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleLabels:Enable()
+		XPerl_RaidHelper_Frame.corner:EnableMouse(true)
 	end
 
-	XPerl_Frame_ToggleShowMT:SetButtonTex()
-	XPerl_Frame_ToggleMTTargets:SetButtonTex()
-	XPerl_Frame_ToggleLabels:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleShowMT:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleMTTargets:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleLabels:SetButtonTex()
 end
 
 -- PLAYER_REGEN_ENABLED
@@ -999,19 +1059,19 @@ local function SetVisibility()
 	end
 
 	local left = 3 + (conf.MTLabels * 10)
-	XPerl_Frame:ClearAllPoints()
-	XPerl_Frame_TitleBar:ClearAllPoints()
+	XPerl_RaidHelper_Frame:ClearAllPoints()
+	XPerl_RaidHelper_Frame_TitleBar:ClearAllPoints()
 	XPerl_MTTargets:ClearAllPoints()
 	if (conf.MTListUpward == 1) then
-		XPerl_Frame:SetPoint("BOTTOMLEFT", XPerl_MTList_Anchor, "BOTTOMLEFT", 0, 0)
-		XPerl_Frame_TitleBar:SetPoint("BOTTOMLEFT", 3, 3)
-		XPerl_Frame_TitleBar:SetPoint("TOPRIGHT", XPerl_Frame, "BOTTOMRIGHT", -3, 13)
+		XPerl_RaidHelper_Frame:SetPoint("BOTTOMLEFT", XPerl_MTList_Anchor, "BOTTOMLEFT", 0, 0)
+		XPerl_RaidHelper_Frame_TitleBar:SetPoint("BOTTOMLEFT", 3, 3)
+		XPerl_RaidHelper_Frame_TitleBar:SetPoint("TOPRIGHT", XPerl_RaidHelper_Frame, "BOTTOMRIGHT", -3, 13)
 		XPerl_MTTargets:SetAttribute("point", "BOTTOM")
 		XPerl_MTTargets:SetPoint("BOTTOMLEFT", left, 13)
 	else
-		XPerl_Frame:SetPoint("TOPLEFT", XPerl_MTList_Anchor, "TOPLEFT", 0, 0)
-		XPerl_Frame_TitleBar:SetPoint("TOPLEFT", 3, -3)
-		XPerl_Frame_TitleBar:SetPoint("BOTTOMRIGHT", XPerl_Frame, "TOPRIGHT", -3, -13)
+		XPerl_RaidHelper_Frame:SetPoint("TOPLEFT", XPerl_MTList_Anchor, "TOPLEFT", 0, 0)
+		XPerl_RaidHelper_Frame_TitleBar:SetPoint("TOPLEFT", 3, -3)
+		XPerl_RaidHelper_Frame_TitleBar:SetPoint("BOTTOMRIGHT", XPerl_RaidHelper_Frame, "TOPRIGHT", -3, -13)
 		XPerl_MTTargets:SetAttribute("point", "TOP")
 		XPerl_MTTargets:SetPoint("TOPLEFT", left, -13)
 	end
@@ -1062,7 +1122,7 @@ local function SetVisibility()
 			if (u) then
 				local lbl
 				local name = UnitName(u)
-				for i,tank in pairs(MainTanks) do
+				for i, tank in pairs(MainTanks) do
 					if (tank[2] == name) then
 						lbl = i
 						break
@@ -1110,9 +1170,9 @@ function XPerl_MakeTankList()
 	end
 
 	if (#tanks == 0) then
-		XPerl_Frame:Hide()
+		XPerl_RaidHelper_Frame:Hide()
 	else
-		XPerl_Frame:Show()
+		XPerl_RaidHelper_Frame:Show()
 	end
 
 	XPerl_MTTargets:SetAttribute("nameList", table.concat(tanks, ","))
@@ -1271,20 +1331,20 @@ function XPerl_SetFrameSizes()
 			XPerl_MTTargets:SetHeight((conf.UnitHeight * tanks) + (XGaps * GAP_SPACING))
 
 			local ExtraWidth = (conf.MTLabels * 10)	-- 0 for off, 10 for on
-			XPerl_Frame:SetWidth(DisplayableColumns() * conf.UnitWidth + 6 + ExtraWidth)
+			XPerl_RaidHelper_Frame:SetWidth(DisplayableColumns() * conf.UnitWidth + 6 + ExtraWidth)
 
-			XPerl_Frame:SetHeight((conf.UnitHeight * tanks) + (XGaps * GAP_SPACING) + 6 + XPerl_Frame_TitleBar:GetHeight())
+			XPerl_RaidHelper_Frame:SetHeight((conf.UnitHeight * tanks) + (XGaps * GAP_SPACING) + 6 + XPerl_RaidHelper_Frame_TitleBar:GetHeight())
 
-			XPerl_RegisterScalableFrame(XPerl_Frame, XPerl_MTList_Anchor, nil, nil, conf.MTListUpward == 1)
+			XPerl_RegisterScalableFrame(XPerl_RaidHelper_Frame, XPerl_MTList_Anchor, nil, nil, conf.MTListUpward == 1)
 		end
-		XPerl_Frame_Pin:SetButtonTex()
+		XPerl_RaidHelper_Frame_TitleBar_Pin:SetButtonTex()
 
 		CheckArrowPosition()
 	end
 end
 
--- XPerl_MTList_ApplyUnitSizes
-function XPerl_MTList_ApplyUnitSizes()
+-- XPerl_RaidHelper_MTList_ApplyUnitSizes
+function XPerl_RaidHelper_MTList_ApplyUnitSizes()
 	for k,unit in pairs(XUnits) do
 		unit:SetWidth(conf.UnitWidth)
 		unit:SetHeight(conf.UnitHeight)
@@ -1292,8 +1352,8 @@ function XPerl_MTList_ApplyUnitSizes()
 	end
 end
 
--- XPerl_Toggle_UseCTRATargets
-function XPerl_Toggle_UseCTRATargets()
+-- XPerl_RaidHelper_ToggleUseCTRATargets
+function XPerl_RaidHelper_ToggleUseCTRATargets()
 	if (conf.UseCTRATargets == 1) then
 		conf.UseCTRATargets = 0
 	else
@@ -1305,7 +1365,8 @@ function XPerl_Toggle_UseCTRATargets()
 	return true
 end
 
-function XPerl_Toggle_MTTargets()
+-- XPerl_RaidHelper_ToggleMTTargets
+function XPerl_RaidHelper_ToggleMTTargets()
 	if (conf.MTTargetTargets == 1) then
 		conf.MTTargetTargets = 0
 	else
@@ -1314,12 +1375,12 @@ function XPerl_Toggle_MTTargets()
 
 	XPerl_SetFrameSizes()
 
-	XPerl_Frame_ToggleMTTargets:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleMTTargets:SetButtonTex()
 	return true
 end
 
--- XPerl_Toggle_ToggleLabels
-function XPerl_Toggle_ToggleLabels()
+-- XPerl_RaidHelper_ToggleLabels
+function XPerl_RaidHelper_ToggleLabels()
 	if (conf.MTLabels == 1) then
 		conf.MTLabels = 0
 	else
@@ -1328,12 +1389,13 @@ function XPerl_Toggle_ToggleLabels()
 
 	XPerl_SetFrameSizes()
 
-	XPerl_Frame_ToggleLabels:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleLabels:SetButtonTex()
 
 	return true
 end
 
-function XPerl_Toggle_ShowMT()
+-- XPerl_RaidHelper_ToggleShowMT
+function XPerl_RaidHelper_ToggleShowMT()
 	if (conf.ShowMT == 1) then
 		conf.ShowMT = 0
 	else
@@ -1342,7 +1404,7 @@ function XPerl_Toggle_ShowMT()
 
 	XPerl_SetFrameSizes()
 
-	XPerl_Frame_ToggleShowMT:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_ToggleShowMT:SetButtonTex()
 
 	return true
 end

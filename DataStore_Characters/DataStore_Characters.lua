@@ -18,6 +18,7 @@ local AddonDB_Defaults = {
 		Options = {
 			RequestPlayTime = true,		-- Request play time at logon
 			HideRealPlayTime = false,	-- Hide real play time to client addons (= return 0 instead of real value)
+            HideLoginPlayTime = false,  -- Hide play time from being displayed on login
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -37,6 +38,8 @@ local AddonDB_Defaults = {
 				playedThisLevel = 0,	-- /played at this level, in seconds
 				zone = nil,				-- character location
 				subZone = nil,
+                realm = nil,
+                hearthstone = nil,      -- eg: "Brill"
 				
 				-- ** XP **
 				XP = nil,				-- current level xp
@@ -49,6 +52,7 @@ local AddonDB_Defaults = {
 				guildName = nil,		-- nil = not in a guild, as returned by GetGuildInfo("player")
 				guildRankName = nil,
 				guildRankIndex = nil,
+                guildServer = nil,      -- for guilds on different servers, nil if same server
 			}
 		}
 	}
@@ -63,6 +67,7 @@ end
 local function ScanPlayerLocation()
 	local character = addon.ThisCharacter
 	character.zone = GetRealZoneText()
+    character.realm = GetRealmName()
 	character.subZone = GetSubZoneText()
 end
 
@@ -72,12 +77,13 @@ local function OnPlayerGuildUpdate()
 	-- however, the value returned here is correct
 	if IsInGuild() then
 		-- find a way to improve this, it's minor, but it's called too often at login
-		local name, rank, index = GetGuildInfo("player")
+		local name, rank, index, realm = GetGuildInfo("player")
 		if name and rank and index then
 			local character = addon.ThisCharacter
 			character.guildName = name
 			character.guildRankName = rank
 			character.guildRankIndex = index
+            character.guildRealm = realm
 		end
 	end
 end
@@ -113,6 +119,7 @@ local function OnPlayerAlive()
 	character.faction = UnitFactionGroup("player")
 	character.lastLogoutTimestamp = MAX_LOGOUT_TIMESTAMP
 	character.lastUpdate = time()
+    character.hearthstone = GetBindLocation()
 	
 	OnPlayerMoney()
 	OnPlayerXPUpdate()
@@ -130,6 +137,23 @@ local function OnPlayerLevelUp(event, newLevel)
 	addon.ThisCharacter.level = newLevel
 end
 
+local function OnPlayerHearthstoneBound(event)
+    addon.ThisCharacter.hearthstone = GetBindLocation()
+end
+
+-- hook ChatFrame_DisplayTimePlayed to stop it outputting the /played time if the user selects the option to hide it 
+local requestingTimePlayed = nil
+local original_ChatFrame_DisplayTimePlayed = ChatFrame_DisplayTimePlayed
+ChatFrame_DisplayTimePlayed = function(...)
+	if requestingTimePlayed then
+		requestingTimePlayed = false
+        if GetOption("HideLoginPlayTime") then
+            return
+        end
+	end
+	return original_ChatFrame_DisplayTimePlayed(...)
+end
+
 local function OnTimePlayedMsg(event, totalTime, currentLevelTime)
 	addon.ThisCharacter.played = totalTime
 	addon.ThisCharacter.playedThisLevel = currentLevelTime
@@ -138,6 +162,10 @@ end
 -- ** Mixins **
 local function _GetCharacterName(character)
 	return character.name
+end
+
+local function _GetCharacterRealm(character)
+    return character.realm
 end
 
 local function _GetCharacterLevel(character)
@@ -153,6 +181,7 @@ local function _GetCharacterClass(character)
 end
 
 local function _GetColoredCharacterName(character)
+    if (not character.englishClass) or (not RAID_CLASS_COLORS[character.englishClass]) or (not RAID_CLASS_COLORS[character.englishClass].colorStr) then return "" end
 	return format("|c%s%s", RAID_CLASS_COLORS[character.englishClass].colorStr, character.name)
 end
 	
@@ -193,6 +222,10 @@ end
 
 local function _GetMoney(character)
 	return character.money or 0
+end
+
+local function _GetHearthstone(character)
+    return character.hearthstone or ""
 end
 
 local function _GetXP(character)
@@ -309,7 +342,7 @@ local function _IsXPDisabled(character)
 end
 	
 local function _GetGuildInfo(character)
-	return character.guildName, character.guildRankName, character.guildRankIndex
+	return character.guildName, character.guildRankName, character.guildRankIndex, character.guildRealm
 end
 
 local function _GetPlayTime(character)
@@ -325,6 +358,7 @@ local PublicMethods = {
 	GetCharacterLevel = _GetCharacterLevel,
 	GetCharacterRace = _GetCharacterRace,
 	GetCharacterClass = _GetCharacterClass,
+    GetCharacterRealm = _GetCharacterRealm,
 	GetColoredCharacterName = _GetColoredCharacterName,
 	GetCharacterClassColor = _GetCharacterClassColor,
 	GetClassColor = _GetClassColor,
@@ -333,6 +367,7 @@ local PublicMethods = {
 	GetCharacterGender = _GetCharacterGender,
 	GetLastLogout = _GetLastLogout,
 	GetMoney = _GetMoney,
+    GetHearthstone = _GetHearthstone,
 	GetXP = _GetXP,
 	GetXPRate = _GetXPRate,
 	GetXPMax = _GetXPMax,
@@ -353,6 +388,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCharacterLevel")
 	DataStore:SetCharacterBasedMethod("GetCharacterRace")
 	DataStore:SetCharacterBasedMethod("GetCharacterClass")
+    DataStore:SetCharacterBasedMethod("GetCharacterRealm")
 	DataStore:SetCharacterBasedMethod("GetColoredCharacterName")
 	DataStore:SetCharacterBasedMethod("GetCharacterClassColor")
 	DataStore:SetCharacterBasedMethod("GetCharacterFaction")
@@ -360,6 +396,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCharacterGender")
 	DataStore:SetCharacterBasedMethod("GetLastLogout")
 	DataStore:SetCharacterBasedMethod("GetMoney")
+    DataStore:SetCharacterBasedMethod("GetHearthstone")
 	DataStore:SetCharacterBasedMethod("GetXP")
 	DataStore:SetCharacterBasedMethod("GetXPRate")
 	DataStore:SetCharacterBasedMethod("GetXPMax")
@@ -379,6 +416,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_MONEY", OnPlayerMoney)
 	addon:RegisterEvent("PLAYER_XP_UPDATE", OnPlayerXPUpdate)
 	addon:RegisterEvent("PLAYER_UPDATE_RESTING", OnPlayerUpdateResting)
+    addon:RegisterEvent("HEARTHSTONE_BOUND", OnPlayerHearthstoneBound)
 	addon:RegisterEvent("ENABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("DISABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("PLAYER_GUILD_UPDATE", OnPlayerGuildUpdate)				-- for gkick, gquit, etc..
@@ -386,10 +424,11 @@ function addon:OnEnable()
 	addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", ScanPlayerLocation)
 	addon:RegisterEvent("ZONE_CHANGED_INDOORS", ScanPlayerLocation)
 	addon:RegisterEvent("TIME_PLAYED_MSG", OnTimePlayedMsg)					-- register the event if RequestTimePlayed is not called afterwards. If another addon calls it, we want to get the data anyway.
-	
+    
 	addon:SetupOptions()
 	
 	if GetOption("RequestPlayTime") then
+        requestingTimePlayed = true
 		RequestTimePlayed()	-- trigger a TIME_PLAYED_MSG event
 	end
 end
@@ -399,6 +438,7 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_LOGOUT")
 	addon:UnregisterEvent("PLAYER_LEVEL_UP")
 	addon:UnregisterEvent("PLAYER_MONEY")
+    addon:UnregisterEvent("HEARTHSTONE_BOUND")
 	addon:UnregisterEvent("PLAYER_XP_UPDATE")
 	addon:UnregisterEvent("PLAYER_UPDATE_RESTING")
 	addon:UnregisterEvent("ENABLE_XP_GAIN")

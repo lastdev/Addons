@@ -18,21 +18,36 @@ local function HashToSortedArray(hash)
 end
 
 local function GetUsedHeaders()
-	local account, realm = AltoholicTabGrids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetAccount()
 	
 	local usedHeaders = {}
 	local isHeader, name, num
 
-	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-		num = DataStore:GetNumCurrencies(character) or 0
-		
-		for i = 1, num do
-			isHeader, name = DataStore:GetCurrencyInfo(character, i)	-- save ech header found in the table
-			if isHeader then
-				usedHeaders[name] = true
-			end
-		end
-	end
+	if realm then
+        for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+    		num = DataStore:GetNumCurrencies(character) or 0
+    		
+    		for i = 1, num do
+    			isHeader, name = DataStore:GetCurrencyInfo(character, i)	-- save ech header found in the table
+    			if isHeader then
+    				usedHeaders[name] = true
+    			end
+    		end
+    	end
+    else
+        for realm in pairs(DataStore:GetRealms(account)) do
+            for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+        		num = DataStore:GetNumCurrencies(character) or 0
+        		
+        		for i = 1, num do
+        			isHeader, name = DataStore:GetCurrencyInfo(character, i)	-- save ech header found in the table
+        			if isHeader then
+        				usedHeaders[name] = true
+        			end
+        		end
+        	end
+        end
+    end
 	
 	return HashToSortedArray(usedHeaders)
 end
@@ -40,29 +55,54 @@ end
 local function GetUsedTokens(header)
 	-- get the list of tokens found under a specific header, across all alts
 
-	local account, realm = AltoholicTabGrids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetAccount()
 	
 	local tokens = {}
 	local useData				-- use data for a specific header or not
 
-	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-		local num = DataStore:GetNumCurrencies(character) or 0
-		for i = 1, num do
-			local isHeader, name = DataStore:GetCurrencyInfo(character, i)
-			
-			if isHeader then
-				if header and name ~= header then -- if a specific header (filter) was set, and it's not the one we chose, skip
-					useData = nil
-				else
-					useData = true		-- we'll use data in this category
-				end
-			else
-				if useData then		-- mark it as used
-					tokens[name] = true
-				end
-			end
-		end
-	end
+	if realm then
+        for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+    		local num = DataStore:GetNumCurrencies(character) or 0
+    		for i = 1, num do
+    			local isHeader, name, count, icon = DataStore:GetCurrencyInfo(character, i)
+    			
+    			if isHeader then
+    				if header and name ~= header then -- if a specific header (filter) was set, and it's not the one we chose, skip
+    					useData = nil
+    				else
+    					useData = true		-- we'll use data in this category
+    				end
+    			else
+    				if useData then		-- mark it as used
+    					tokens[name] = true
+    				end
+    			end
+                
+    		end
+    	end
+    else
+        for realm in pairs(DataStore:GetRealms(account)) do
+            for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+        		local num = DataStore:GetNumCurrencies(character) or 0
+        		for i = 1, num do
+        			local isHeader, name, count, icon = DataStore:GetCurrencyInfo(character, i)
+        			
+        			if isHeader then
+        				if header and name ~= header then -- if a specific header (filter) was set, and it's not the one we chose, skip
+        					useData = nil
+        				else
+        					useData = true		-- we'll use data in this category
+        				end
+        			else
+        				if useData then		-- mark it as used
+        					tokens[name] = true
+        				end
+        			end
+                    
+        		end
+        	end
+        end
+    end
 	
 	return HashToSortedArray(tokens)
 end

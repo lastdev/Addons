@@ -193,8 +193,12 @@ local function ScanTransmogCollection()
 	local name
 	local collected, total
 
+    local enumSize = 0
+    for enum in pairs(Enum.TransmogCollectionType) do
+        enumSize = enumSize + 1
+    end
 	-- browse all categories
-	for i = 1, NUM_LE_TRANSMOG_COLLECTION_TYPES do
+	for i = 1, enumSize do -- Enum.TransmogCollectionType seems to have its indexes off by 1? Check if Blizzard fixed it.
 		name = C_TransmogCollection.GetCategoryInfo(i)
 		if name then
 			collected = C_TransmogCollection.GetCategoryCollectedCount(i)
@@ -302,6 +306,9 @@ end
 local function OnTransmogCollectionUpdated()
 	ScanTransmogCollection()
 	ScanTransmogSets()
+end
+
+local function OnEnterWorld()
 end
 
 
@@ -510,6 +517,7 @@ end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
+    addon:RegisterEvent("PLAYER_ENTERING_WORLD", OnEnterWorld)
 	addon:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", OnPlayerEquipmentChanged)
 	-- addon:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY", OnPlayerAilReady)
 	-- addon:RegisterEvent("TRANSMOG_COLLECTION_LOADED", OnTransmogCollectionLoaded)
@@ -524,6 +532,7 @@ end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
+    addon:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	addon:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
 end
 

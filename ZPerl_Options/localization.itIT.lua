@@ -1,7 +1,8 @@
 --[[
-	Localization file
 	Translated by Asixandur, Philipxander and Darkvalky
 ]]
+
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 if (GetLocale() == "itIT") then
 -- Tabs
@@ -761,7 +762,7 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT        = "Contatore HOT"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC = "Indicherà su un'unità quanti HOT attivi hanno e da che classi"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET        = "Mio Bersaglio"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC    = "Indica il tuo bersaglio nel gruppo e nelle finestre dell'incursione"
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+if not IsClassic then
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING        = GetSpellInfo(33076) -- Prayer of Mending
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC    = "Abilita il controllo di "..GetSpellInfo(33076)..". Con le scintille attivate, questo visualizzerà un effetto che permetterà di vedere meglio il beneficio."
 end

@@ -2,6 +2,8 @@
 -- Author: Resike
 -- License: GNU GPL v3, 18 October 2014
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local max = max
 local pairs = pairs
 local strfind = strfind
@@ -13,7 +15,7 @@ local GetTime = GetTime
 local InCombatLockdown = InCombatLockdown
 local RegisterUnitWatch = RegisterUnitWatch
 local UnitAffectingCombat = UnitAffectingCombat
-local UnitBuff = UnitBuff
+local UnitAura = UnitAura
 local UnitClassification = UnitClassification
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
@@ -64,7 +66,7 @@ function ZPerl_TargetTarget_OnLoad(self)
 	XPerl_SetChildMembers(self)
 
 	local events = {
-		"UNIT_HEALTH_FREQUENT",
+		IsClassic and "UNIT_HEALTH_FREQUENT" or "UNIT_HEALTH",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_AURA",
 		"UNIT_TARGET",
@@ -91,7 +93,7 @@ function ZPerl_TargetTarget_OnLoad(self)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
 		self.partyid = "focustarget"
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 		for i, event in pairs(events) do
@@ -513,47 +515,6 @@ function XPerl_TargetTarget_OnEvent(self, event, unitID, ...)
 			end
 			XPerl_NoFadeBars()
 		end
-	--[[elseif event == "UNIT_TARGET" then
-		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
-			XPerl_NoFadeBars(true)
-			XPerl_TargetTarget_UpdateDisplay(self, true)
-			XPerl_NoFadeBars()
-		elseif unitID == "focus" and self == XPerl_FocusTarget then
-			XPerl_NoFadeBars(true)
-			XPerl_TargetTarget_UpdateDisplay(self, true)
-			XPerl_NoFadeBars()
-		elseif unitID == "pet" and self == XPerl_PetTarget then
-			XPerl_NoFadeBars(true)
-			XPerl_TargetTarget_UpdateDisplay(self, true)
-			XPerl_NoFadeBars()
-		end
-	elseif event == "UNIT_HEAL_PREDICTION" or event == "UNIT_HEALTH_FREQUENT" then
-		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
-			XPerl_Target_UpdateHealth(self)
-		elseif unitID == "focus" and self == XPerl_FocusTarget then
-			XPerl_Target_UpdateHealth(self)
-		elseif unitID == "pet" and self == XPerl_PetTarget then
-			XPerl_Target_UpdateHealth(self)
-		end
-	elseif event == "UNIT_POWER_FREQUENT" then
-		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
-			XPerl_Target_SetMana(self)
-		elseif unitID == "focus" and self == XPerl_FocusTarget then
-			XPerl_Target_SetMana(self)
-		elseif unitID == "pet" and self == XPerl_PetTarget then
-			XPerl_Target_SetMana(self)
-		end
-	elseif event == "UNIT_AURA" then
-		if (unitID == "target") and (self == XPerl_TargetTarget or self == XPerl_TargetTargetTarget) then
-			XPerl_TargetTarget_Buff_UpdateAll(self)
-			XPerl_Target_UpdateAbsorbPrediction(self)
-		elseif unitID == "focus" and self == XPerl_FocusTarget then
-			XPerl_TargetTarget_Buff_UpdateAll(self)
-			XPerl_Target_UpdateAbsorbPrediction(self)
-		elseif unitID == "pet" and self == XPerl_PetTarget then
-			XPerl_TargetTarget_Buff_UpdateAll(self)
-			XPerl_Target_UpdateAbsorbPrediction(self)
-		end]]
 	end
 end
 
@@ -567,7 +528,7 @@ function XPerl_TargetTarget_Update(self)
 					offset = 0
 				end
 				offset = offset + 20
-				if UnitBuff("targettarget", 9) then
+				if UnitAura("targettarget", 9, "HELPFUL") then
 					offset = offset + 20
 				end
 			end

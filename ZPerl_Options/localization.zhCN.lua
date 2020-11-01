@@ -2,6 +2,8 @@
 	Translation Updated by Xgale @20090222
 ]]
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 if (GetLocale() == "zhCN") then
 -- Tabs
 XPERL_CONF_TITLE1   = "全局"
@@ -725,7 +727,7 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT	= "HOT计数"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC = "显示对象当前拥有的持续治疗数量"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET	= "我的目标"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC	= "在小队或团队窗体中显示玩家的目标"
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+if not IsClassic then
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING		= GetSpellInfo(33076)-- Prayer of Mending
 	PERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC	= "启用愈合祷言跟踪。与闪光效果合用时，将可以显示弹跳图像以便更容易地追踪愈合祷言Buff。"
 end

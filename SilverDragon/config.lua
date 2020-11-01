@@ -3,7 +3,7 @@ local module = core:NewModule("Config", "AceConsole-3.0")
 
 local db
 
-local function toggle(name, desc, order, inline)
+local function toggle(name, desc, order, inline, disabled)
 	return {
 		type = "toggle",
 		name = name,
@@ -11,6 +11,7 @@ local function toggle(name, desc, order, inline)
 		order = order,
 		descStyle = (inline or (inline == nil)) and "inline" or nil,
 		width = (inline or (inline == nil)) and "full" or nil,
+		disabled = disabled,
 	}
 end
 module.toggle = toggle
@@ -99,19 +100,6 @@ function module:OnInitialize()
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("SilverDragon", options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("SilverDragon", "SilverDragon")
-	self:RegisterChatCommand("silverdragon", "OnChatCommand")
-end
-
-function module:OnChatCommand(input)
-	local command, args = self:GetArgs(input, 2)
-	if command then
-		command = command:lower()
-		if command == 'debug' then
-			core:ShowDebugWindow()
-		end
-	else
-		self:ShowConfig()
-	end
 end
 
 function module:ShowConfig()

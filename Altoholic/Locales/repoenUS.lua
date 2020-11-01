@@ -148,6 +148,20 @@ L["COLUMN_ARTIFACT_RESEARCH_SUBTITLE"] = "Time until the next note is ready"
 L["COLUMN_ARTIFACT_RESEARCH_DETAIL_1"] = "At least one note is ready for pickup"
 L["COLUMN_ARTIFACT_RESEARCH_DETAIL_2"] = "All notes are ready for pickup"
 
+-- *** Tab Summary / Keystones ***
+
+L["COLUMN_CURRENT_KEYSTONE_NAME"] = "Current Mythic+ Keystone"
+L["COLUMN_CURRENT_KEYSTONE_NAME_SHORT"] = "Current"
+L["COLUMN_CURRENT_KEYSTONE_LEVEL"] = "Current Mythic+ Keystone Level"
+L["COLUMN_CURRENT_KEYSTONE_LEVEL_SHORT"] = "Level"
+
+L["COLUMN_HIGHEST_KEYSTONE_NAME"] = "Highest Mythic+ Keystone (this week)"
+L["COLUMN_HIGHEST_KEYSTONE_NAME_SHORT"] = "Highest"
+L["COLUMN_HIGHEST_KEYSTONE_LEVEL"] = "Highest Mythic+ Keystone Level (this week)"
+L["COLUMN_HIGHEST_KEYSTONE_LEVEL_SHORT"] = "Level"
+L["COLUMN_HIGHEST_KEYSTONE_TIME"] = "Highest Mythic+ Keystone Time"
+L["COLUMN_HIGHEST_KEYSTONE_TIME_SHORT"] = "Time"
+
 
 -- *************************
 -- *** Tab Characters

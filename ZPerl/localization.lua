@@ -2,6 +2,8 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 XPerl_ProductName		= "|cFFD00000Z-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000Z-Perl|r"
 XPerl_Author			= "|cFFFF8080Resike|r"
@@ -144,7 +146,7 @@ XPERL_DOWNLOAD_LOCATION = "https://mods.curse.com/addons/wow/zperl"
 
 
 -- Status highlight spells
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	XPERL_HIGHLIGHT_SPELLS = {
 		hotSpells  = {
 			[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
@@ -204,7 +206,7 @@ end
 
 
 -- Default spells for range checking in the healer visual out-of-range cues.
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	XPerl_DefaultRangeSpells = {
 		DRUID	= {spell = GetSpellInfo(774)},				--Rejuvenation
 		PALADIN = {spell = GetSpellInfo(19750)},			-- Flash of Light
@@ -229,7 +231,7 @@ else
 end
 
 -- Don't highlight these magical debuffs
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	XPerl_ArcaneExclusions = {
 	--[GetSpellInfo(63559)] = true,						-- Bind Life
 	--[GetSpellInfo(30451)] = true,						-- Arcane Blast (again) (old 42897)

@@ -1,12 +1,14 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: DataStore_Spells
 ## Notes: Stores information about character spells
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r34
+## Version: 9.0.1-003
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_SpellsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
+## X-Curse-Project-ID: 20212
 
 DataStore_Spells.lua
+

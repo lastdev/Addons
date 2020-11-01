@@ -23,6 +23,8 @@ local function d(...)
 end
 --@end-debug@]===]
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local format = format
 
 local GetNumGroupMembers = GetNumGroupMembers
@@ -32,6 +34,7 @@ local UnitIsAFK = UnitIsAFK
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsGhost = UnitIsGhost
+local UnitIsGroupAssistant = UnitIsGroupAssistant
 local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitPower = UnitPower
@@ -167,7 +170,7 @@ local function UpdateAssignedRoles(self)
 	local unit = self.partyid
 	local icon = self.nameFrame.roleIcon
 	local isTank, isHealer, isDamage
-	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and instanceType == "party") then
+	if (not IsClassic and instanceType == "party") then
 		-- No point getting it otherwise, as they can be wrong. Usually the values you had
 		-- from previous instance if you're running more than one with the same people
 
@@ -232,7 +235,7 @@ local function XPerl_Player_UpdateManaType(self)
 end
 
 -- XPerl_Player_UpdateLeader()
-function XPerl_Player_UpdateLeader(self)
+local function XPerl_Player_UpdateLeader(self)
 	local nf = self.nameFrame
 
 	-- Loot Master
@@ -260,6 +263,12 @@ function XPerl_Player_UpdateLeader(self)
 		nf.leaderIcon:Show()
 	else
 		nf.leaderIcon:Hide()
+	end
+
+	if (UnitIsGroupAssistant("player")) then
+		nf.assistIcon:Show()
+	else
+		nf.assistIcon:Hide()
 	end
 
 	--UpdateAssignedRoles(self)
@@ -524,7 +533,7 @@ local function XPerl_Player_UpdatePVP(self)
 	elseif pconf.pvpIcon and factionGroup and factionGroup ~= "Neutral" and UnitIsPVP("player") then
 		pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..factionGroup)
 
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitIsMercenary("player") then
+		if not IsClassic and UnitIsMercenary("player") then
 			if factionGroup == "Horde" then
 				pvpIcon.icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
 			elseif factionGroup == "Alliance" then
@@ -598,7 +607,7 @@ local function XPerl_Player_DruidBarUpdate(self)
 	druidBar.percent:SetFormattedText(percD, (currMana or 0) * 100 / (maxMana or 1))
 
 	--local druidBarExtra
-	if ((playerClass == "DRUID" or playerClass == "PRIEST") and UnitPowerType(self.partyid) > 0) or (playerClass == "SHAMAN" and WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and (GetSpecialization() == 1 or GetSpecialization() == 2) and GetShapeshiftForm() == 0) then -- Shaman's UnitPowerType is buggy
+	if ((playerClass == "DRUID" or playerClass == "PRIEST") and UnitPowerType(self.partyid) > 0) or (playerClass == "SHAMAN" and not IsClassic and GetSpecialization() == 1 and GetShapeshiftForm() == 0) then -- Shaman's UnitPowerType is buggy
 		if (pconf.values) then
 			druidBar.text:Show()
 		else
@@ -704,11 +713,45 @@ local function XPerl_Player_UpdateMana(self)
 	end
 end
 
+-- XPerl_Player_UpdateHealPrediction
+local function XPerl_Player_UpdateHealPrediction(self)
+	if pconf.healprediction then
+		XPerl_SetExpectedHealth(self)
+	else
+		self.statsFrame.expectedHealth:Hide()
+	end
+end
+
+-- XPerl_Player_UpdateAbsorbPrediction
+local function XPerl_Player_UpdateAbsorbPrediction(self)
+	if pconf.absorbs then
+		XPerl_SetExpectedAbsorbs(self)
+	else
+		self.statsFrame.expectedAbsorbs:Hide()
+	end
+end
+
+local function XPerl_Player_UpdateResurrectionStatus(self)
+	if (UnitHasIncomingResurrection(self.partyid)) then
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Show()
+		else
+			self.statsFrame.resurrect:Show()
+		end
+	else
+		if pconf.portrait then
+			self.portraitFrame.resurrect:Hide()
+		else
+			self.statsFrame.resurrect:Hide()
+		end
+	end
+end
+
 local feignDeath = GetSpellInfo(5384)
 local spiritOfRedemption = GetSpellInfo(27827)
 
 -- XPerl_Player_UpdateHealth
-function XPerl_Player_UpdateHealth(self)
+local function XPerl_Player_UpdateHealth(self)
 	local partyid = self.partyid
 	local sf = self.statsFrame
 	local hb = sf.healthBar
@@ -756,40 +799,6 @@ function XPerl_Player_UpdateHealth(self)
 	end
 
 	XPerl_PlayerStatus_OnUpdate(self, playerhealth, playerhealthmax)
-end
-
--- XPerl_Player_UpdateHealPrediction
-function XPerl_Player_UpdateHealPrediction(self)
-	if pconf.healprediction then
-		XPerl_SetExpectedHealth(self)
-	else
-		self.statsFrame.expectedHealth:Hide()
-	end
-end
-
--- XPerl_Player_UpdateAbsorbPrediction
-function XPerl_Player_UpdateAbsorbPrediction(self)
-	if pconf.absorbs then
-		XPerl_SetExpectedAbsorbs(self)
-	else
-		self.statsFrame.expectedAbsorbs:Hide()
-	end
-end
-
-function XPerl_Player_UpdateResurrectionStatus(self)
-	if (UnitHasIncomingResurrection(self.partyid)) then
-		if pconf.portrait then
-			self.portraitFrame.resurrect:Show()
-		else
-			self.statsFrame.resurrect:Show()
-		end
-	else
-		if pconf.portrait then
-			self.portraitFrame.resurrect:Hide()
-		else
-			self.statsFrame.resurrect:Hide()
-		end
-	end
 end
 
 -- XPerl_Player_UpdateLevel
@@ -934,7 +943,7 @@ end
 function XPerl_Player_Events:PLAYER_ENTERING_WORLD(event, initialLogin, reloadingUI)
 	self.updateAFK = true
 
-	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) then
+	if (not IsClassic and UnitHasVehicleUI("player")) then
 		self.partyid = "vehicle"
 		self:SetAttribute("unit", "vehicle")
 		if (XPerl_ArcaneBar_SetUnit) then
@@ -956,7 +965,7 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD(event, initialLogin, reloadin
 		local class, classFileName, classID = UnitClass("player")
 
 		self.state:SetAttribute("playerClass", classFileName)
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			self.state:SetAttribute("playerSpec", GetSpecialization())
 		end
 		self.state:SetAttribute("extendedPortrait", pconf.extendPortrait)
@@ -1254,7 +1263,7 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD(event, initialLogin, reloadin
 						end
 					end
 				elseif class == "SHAMAN" then
-					if spec == 1 or spec == 2 then
+					if spec == 1 then
 						if newstate == 1 then
 							if extend then
 								if bar then
@@ -1306,7 +1315,7 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD(event, initialLogin, reloadin
 								end
 							end
 						end
-					elseif spec == 3 then
+					elseif spec == 2 or spec == 3 then
 						if extend then
 							if bar then
 								frame:SetHeight(62 + offset)
@@ -1393,7 +1402,7 @@ function XPerl_Player_Events:VARIABLES_LOADED()
 		"UNIT_COMBAT",
 		"UNIT_POWER_FREQUENT",
 		"UNIT_MAXPOWER",
-		"UNIT_HEALTH_FREQUENT",
+		IsClassic and "UNIT_HEALTH_FREQUENT" or "UNIT_HEALTH",
 		"UNIT_MAXHEALTH",
 		"UNIT_LEVEL",
 		"UNIT_DISPLAYPOWER",
@@ -1451,16 +1460,36 @@ end
 function XPerl_Player_Events:PARTY_LOOT_METHOD_CHANGED()
 	XPerl_Player_UpdateLeader(self)
 end
-XPerl_Player_Events.PARTY_LEADER_CHANGED	= XPerl_Player_Events.PARTY_LOOT_METHOD_CHANGED
-XPerl_Player_Events.GROUP_ROSTER_UPDATE		= XPerl_Player_Events.PARTY_LOOT_METHOD_CHANGED
 
--- UNIT_HEALTH_FREQUENT, UNIT_MAXHEALTH
+-- PARTY_LEADER_CHANGED
+function XPerl_Player_Events:PARTY_LEADER_CHANGED()
+	XPerl_Player_UpdateLeader(self)
+end
+
+-- GROUP_ROSTER_UPDATE
+function XPerl_Player_Events:GROUP_ROSTER_UPDATE()
+	XPerl_Player_UpdateLeader(self)
+end
+
+-- UNIT_HEALTH_FREQUENT
 function XPerl_Player_Events:UNIT_HEALTH_FREQUENT()
 	XPerl_Player_UpdateHealth(self)
 end
 
-XPerl_Player_Events.UNIT_MAXHEALTH = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
-XPerl_Player_Events.PLAYER_DEAD = XPerl_Player_Events.UNIT_HEALTH_FREQUENT
+-- UNIT_HEALTH
+function XPerl_Player_Events:UNIT_HEALTH()
+	XPerl_Player_UpdateHealth(self)
+end
+
+-- UNIT_MAXHEALTH
+function XPerl_Player_Events:UNIT_MAXHEALTH()
+	XPerl_Player_UpdateHealth(self)
+end
+
+-- PLAYER_DEAD
+function XPerl_Player_Events:PLAYER_DEAD()
+	XPerl_Player_UpdateHealth(self)
+end
 
 -- UNIT_POWER_FREQUENT
 function XPerl_Player_Events:UNIT_POWER_FREQUENT(powerType)
@@ -1591,7 +1620,7 @@ end
 
 function XPerl_Player_Events:PLAYER_SPECIALIZATION_CHANGED()
 	if not InCombatLockdown() then
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			self.state:SetAttribute("playerSpec", GetSpecialization())
 		end
 		XPerl_Player_Set_Bits(self)
@@ -1667,7 +1696,7 @@ end
 
 -- UNIT_PET
 function XPerl_Player_Events:UNIT_PET()
-	self.partyid = (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "pet" or "player"
+	self.partyid = (not IsClassic and UnitHasVehicleUI("player")) and "pet" or "player"
 	XPerl_Player_UpdateDisplay(self)
 end
 
@@ -1763,7 +1792,7 @@ end
 -- XPerl_Player_Set_Bits()
 function XPerl_Player_Set_Bits(self)
 	if (XPerl_ArcaneBar_RegisterFrame and not self.nameFrame.castBar) then
-		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitHasVehicleUI("player")) and "vehicle" or "player")
+		XPerl_ArcaneBar_RegisterFrame(self.nameFrame, (not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player")
 	end
 
 	if not InCombatLockdown() then
@@ -1870,7 +1899,7 @@ function XPerl_Player_Set_Bits(self)
 
 		if (pconf.extendPortrait --[[or (self.runes and pconf.showRunes and pconf.dockRunes)]]) then
 			local druidBarExtra
-			if (UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) and ((playerClass == "DRUID") or (playerClass == "SHAMAN") or (playerClass == "PRIEST")) then
+			if (UnitPowerType(self.partyid) > 0 and not pconf.noDruidBar) and ((playerClass == "DRUID") or (playerClass == "PRIEST") or (playerClass == "SHAMAN" and not IsClassic and GetSpecialization() == 1 and GetShapeshiftForm() == 0)) then
 				druidBarExtra = 1
 			else
 				druidBarExtra = 0
@@ -1909,7 +1938,7 @@ function XPerl_Player_Set_Bits(self)
 			}
 		end
 
-		if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and not self.totemHooked) then
+		if (not IsClassic and not self.totemHooked) then
 			hooksecurefunc("TotemFrame_Update", XPerl_Player_SetTotems)
 			self.totemHooked = true
 		end

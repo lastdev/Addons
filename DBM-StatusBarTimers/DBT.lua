@@ -36,13 +36,10 @@
 --    * Noncommercial. You may not use this work for commercial purposes.
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 
-
 ---------------
 --  Globals  --
 ---------------
 DBT = {}
-DBT_PersistentOptions = {}
-
 
 --------------
 --  Locals  --
@@ -53,7 +50,6 @@ local unusedBarObjects = setmetatable({}, {__mode = "kv"})
 local updateClickThrough
 local options
 local setupHandlers
-local applyFailed = false
 local barIsAnimating = false
 local function stringFromTimer(t)
 	if t <= DBM.Bars:GetOption("TDecimal") then
@@ -65,24 +61,23 @@ local function stringFromTimer(t)
 	end
 end
 
-local ipairs, pairs, next, type = ipairs, pairs, next, type
+local pairs, next, type = pairs, next, type
 local tinsert = table.insert
 local GetTime = GetTime
 
 --Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
-local standardFont = STANDARD_TEXT_FONT
-if (LOCALE_koKR) then
+local standardFont
+if LOCALE_koKR then
 	standardFont = "Fonts\\2002.TTF"
-elseif (LOCALE_zhCN) then
+elseif LOCALE_zhCN then
 	standardFont = "Fonts\\ARKai_T.ttf"
-elseif (LOCALE_zhTW) then
+elseif LOCALE_zhTW then
 	standardFont = "Fonts\\blei00d.TTF"
-elseif (LOCALE_ruRU) then
+elseif LOCALE_ruRU then
 	standardFont = "Fonts\\FRIZQT___CYR.TTF"
 else
 	standardFont = "Fonts\\FRIZQT__.TTF"
 end
-
 
 -----------------------
 --  Default Options  --
@@ -453,7 +448,7 @@ options = {
 	},
 	Font = {
 		type = "string",
-		default = standardFont,
+		default = "standardFont",
 	},
 	FontFlag = {
 		type = "string",
@@ -643,16 +638,13 @@ do
 		-- init
 		if not DBT_AllPersistentOptions then DBT_AllPersistentOptions = {} end
 		if not DBT_AllPersistentOptions[_G["DBM_UsedProfile"]] then DBT_AllPersistentOptions[_G["DBM_UsedProfile"]] = {} end
-		-- migrate old options
-		if DBT_PersistentOptions and DBT_PersistentOptions[id] and not DBT_AllPersistentOptions[_G["DBM_UsedProfile"]][id] then
-			DBT_AllPersistentOptions[_G["DBM_UsedProfile"]][id] = DBT_PersistentOptions[id]
-		end
 		DBT_AllPersistentOptions[_G["DBM_UsedProfile"]][id] = DBT_AllPersistentOptions[_G["DBM_UsedProfile"]][id] or {}
 		self.options = setmetatable(DBT_AllPersistentOptions[_G["DBM_UsedProfile"]][id], optionMT)
 		self:Rearrange()
 		DBM:Schedule(2, delaySkinCheck, self)
-		if not self.options.Font then -- Fix font if it's nil
-			self.options.Font = standardFont
+		--Fix font if it's nil or set to any of standard font values
+		if not self.options.Font or (self.options.Font == "Fonts\\2002.TTF" or self.options.Font == "Fonts\\ARKai_T.ttf" or self.options.Font == "Fonts\\blei00d.TTF" or self.options.Font == "Fonts\\FRIZQT___CYR.TTF" or self.options.Font == "Fonts\\FRIZQT__.TTF") then
+			self.options.Font = "standardFont"
 		end
 		if self.options.Template == "DBTBarTemplate" then -- Kill internal default template
 			self.options.Template = "DBMDefaultSkinTimerTemplate"
@@ -1223,10 +1215,14 @@ function DBT:SavePosition()
 end
 
 do
+	local oldInfoFrameLocked, oldRangeFrameLocked
+
 	local function moveEnd(self)
 		updateClickThrough(self, self:GetOption("ClickThrough"))
 		self.movable = false
+		DBM.Options.InfoFrameLocked = oldInfoFrameLocked
 		DBM.InfoFrame:Hide()
+		DBM.Options.RangeFrameLocked = oldRangeFrameLocked
 		DBM.RangeCheck:Hide(true)
 	end
 
@@ -1243,7 +1239,11 @@ do
 		self.movable = true
 		DBM:Unschedule(moveEnd, self)
 		DBM:Schedule(20, moveEnd, self)
+		oldInfoFrameLocked = DBM.Options.InfoFrameLocked
+		DBM.Options.InfoFrameLocked = false
 		DBM.InfoFrame:Show(5, "test")
+		oldRangeFrameLocked = DBM.Options.RangeFrameLocked
+		DBM.Options.RangeFrameLocked = false
 		DBM.RangeCheck:Show(nil, nil, true)
 	end
 end
@@ -1368,7 +1368,8 @@ function barPrototype:ApplyStyle()
 	end
 	texture:SetAlpha(1)
 	bar:SetAlpha(1)
-	local barFont, barFontSize, barFontFlag = barOptions.Font, barOptions.FontSize, barOptions.FontFlag
+	local barFont = barOptions.Font == "standardFont" and standardFont or barOptions.Font
+	local barFontSize, barFontFlag = barOptions.FontSize, barOptions.FontFlag
 	name:SetFont(barFont, barFontSize, barFontFlag)
 	name:SetPoint("LEFT", bar, "LEFT", 3, 0)
 	timer:SetFont(barFont, barFontSize, barFontFlag)
@@ -1527,7 +1528,7 @@ function barPrototype:Announce()
 	if chatWindow then
 		chatWindow:Insert(msg)
 	else
-		SendChatMessage(msg, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or (IsInRaid() and "RAID") or "PARTY")
+		SendChatMessage(msg, (IsInGroup(2) and "INSTANCE_CHAT") or (IsInRaid() and "RAID") or "PARTY")
 	end
 end
 

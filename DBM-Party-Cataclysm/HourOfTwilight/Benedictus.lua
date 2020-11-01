@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(341, "DBM-Party-Cataclysm", 14, 186)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(54938)
 mod:SetEncounterID(1339)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -19,7 +20,6 @@ mod:RegisterEventsInCombat(
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_SAY"
 )
-mod.onlyHeroic = true
 
 local warnRighteousShear		= mod:NewTargetNoFilterAnnounce(103151, 2, nil, "Healer", 2)
 local warnPurifyingLight		= mod:NewSpellAnnounce(103565, 3)
@@ -32,7 +32,7 @@ local specwarnWaveVirtue		= mod:NewSpecialWarningMoveTo(103678, nil, nil, nil, 2
 local specwarnTwilight			= mod:NewSpecialWarningMove(103775, nil, nil, nil, 1, 8)
 local specwarnWaveTwilight		= mod:NewSpecialWarningMoveTo(103780, nil, nil, nil, 2)
 
-local timerCombatStart			= mod:NewTimer(51.5, "TimerCombatStart", 2457)
+local timerCombatStart			= mod:NewTimer(51.5, "TimerCombatStart", "132349")
 local timerWaveVirtueCD			= mod:NewNextTimer(30, 103678, nil, nil, nil, 2)--Will he do it more then once? if you are terrible and take > 30 sec to push him?
 local timerWaveTwilightCD		= mod:NewNextTimer(30, 103780, nil, nil, nil, 2)--^
 

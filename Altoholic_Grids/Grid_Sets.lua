@@ -25,6 +25,8 @@ local xPacks = {
 	EXPANSION_NAME4,	-- "Mists of Pandaria"
 	EXPANSION_NAME5,	-- "Warlords of Draenor"
 	EXPANSION_NAME6,	-- "Legion"
+    EXPANSION_NAME7,    -- "BfA"
+    EXPANSION_NAME8,    -- "Shadowlands"
 	L["All-in-one"],
 }
 
@@ -154,6 +156,7 @@ local TransmogSets = {
 		{ setID = 253, tier = 15, isPVP = true },		-- Season 15 H
 		{ setID = 1079, tier = 15, isPVP = true },	-- Season 15 A
 		{ setID = 1080, tier = 15, isPVP = true },	-- Season 15 H
+        --(unobtainable){ setID = 1443, tier = "/"}                 -- Pandaria Challenge Dungeons
 	},
 	{	-- [6] Warlords of Draenor
 		{ setID = 520, tier = 17 },			-- Blackrock Foundry
@@ -192,7 +195,7 @@ local TransmogSets = {
 		{ setID = 174, tier = "/" },			-- Trial of Valor
 		{ setID = 172, tier = "/" },			-- Trial of Valor
 		{ setID = 171, tier = "/" },			-- Trial of Valor
-		{ setID = 173, tier = "/" },			-- Trial of Valor
+		--(unobtainable){ setID = 173, tier = "/" },			-- Trial of Valor
 		{ setID = 1323, tier = 20 },			-- Tomb of Sargeras
 		{ setID = 1321, tier = 20 },			-- Tomb of Sargeras
 		{ setID = 1324, tier = 20 },			-- Tomb of Sargeras
@@ -202,6 +205,9 @@ local TransmogSets = {
 		{ setID = 1489, tier = 21 },			-- Antorus
 		{ setID = 1490, tier = 21 },			-- Antorus
 		
+        { setID = 1450, tier = "/"},            -- Trial of Style
+        { setID = 1457, tier = "/"},            -- Time's Keeper (Chromie scenario)
+        { setID = 1471, tier = 21},             -- Seat of the Triumvirate
 		
 		{ setID = 1137, tier = "19+20", isPVP = true,
 			["DEATHKNIGHT"] = 1163,				-- Manual fix, this set has no proper label in the table returned by the game
@@ -222,6 +228,111 @@ local TransmogSets = {
 		{ setID = 1384, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 A
 		{ setID = 1385, tier = "23-25", isPVP = true },		-- Legion Season 5, 6 and 7 H
 	},
+    
+    {  -- [8] BfA
+        { setID = 1641, tier = 22 },                         -- Uldir
+        { setID = 1638, tier = 22 },                         -- Uldir
+        { setID = 1639, tier = 22 },                         -- Uldir
+        { setID = 1640, tier = 22 },                         -- Uldir
+
+        { setID = 1807, tier = 23 },                         -- Battle of Dazar'alor
+        { setID = 1806, tier = 23 },                         -- Battle of Dazar'alor
+        { setID = 1808, tier = 23 },                         -- Battle of Dazar'alor
+        { setID = 1809, tier = 23 },                         -- Battle of Dazar'alor
+
+        { setID = 1845, tier = 24 },                         -- Eternal Palace
+        { setID = 1833, tier = 24 },                         -- Eternal Palace
+        { setID = 1837, tier = 24 },                         -- Eternal Palace
+        { setID = 1841, tier = 24 },                         -- Eternal Palace
+
+        { setID = 1995, tier = 25 },                         -- Nya'lotha
+        { setID = 1994, tier = 25 },                         -- Nya'lotha
+        { setID = 1996, tier = 25 },                         -- Nya'lotha
+        { setID = 1997, tier = 25 },                         -- Nya'lotha
+
+        
+        { setID = 1656, tier = "22", isPVP = true },             -- BfA Season 1 Warfront A
+        { setID = 1655, tier = "22", isPVP = true },             -- BfA Season 1 Aspirant A
+        { setID = 1654, tier = "22", isPVP = true },             -- BfA Season 1 Gladiator A
+        { setID = 1738, tier = "22", isPVP = true },             -- BfA Season 1 Elite A
+        { setID = 1668, tier = "22", isPVP = true },             -- BfA Season 1 Warfront H
+        { setID = 1666, tier = "22", isPVP = true },             -- BfA Season 1 Aspirant H
+        { setID = 1667, tier = "22", isPVP = true },             -- BfA Season 1 Gladiator H
+        { setID = 1734, tier = "22", isPVP = true },             -- BfA Season 1 Elite H
+        
+        { setID = 1796, tier = "23", isPVP = true },             -- BfA Season 2 Warfront A
+        { setID = 1797, tier = "23", isPVP = true },             -- BfA Season 2 Aspirant A
+        { setID = 1802, tier = "23", isPVP = true },             -- BfA Season 2 Gladiator A
+        { setID = 1801, tier = "23", isPVP = true },             -- BfA Season 2 Elite A
+        { setID = 1766, tier = "23", isPVP = true },             -- BfA Season 2 Warfront H
+        { setID = 1767, tier = "23", isPVP = true },             -- BfA Season 2 Aspirant H
+        { setID = 1772, tier = "23", isPVP = true },             -- BfA Season 2 Gladiator H
+        { setID = 1771, tier = "23", isPVP = true },             -- BfA Season 2 Elite H
+        
+        { setID = 1851, tier = "24", isPVP = true },             -- BfA Season 3 Aspirant A
+        { setID = 1846, tier = "24", isPVP = true },             -- BfA Season 3 Gladiator A
+        { setID = 1847, tier = "24", isPVP = true },             -- BfA Season 3 Elite A
+        { setID = 1892, tier = "24", isPVP = true },             -- BfA Season 3 Aspirant H
+        { setID = 1897, tier = "24", isPVP = true },             -- BfA Season 3 Gladiator H
+        { setID = 1896, tier = "24", isPVP = true },             -- BfA Season 3 Elite H
+        
+        { setID = 1969, tier = "25", isPVP = true },             -- BfA Season 4 Gladiator
+        { setID = 1968, tier = "25", isPVP = true },             -- BfA Season 4 Elite A
+        { setID = 1975, tier = "25", isPVP = true },             -- BfA Season 4 Elite H
+        
+        --[[
+        -- Heritage sets:
+        { setID = 1522, tier = "/" },       -- Allied Race: Highmountain
+        { setID = 1523, tier = "/" },       -- Allied Race: Nightbourne
+        { setID = 1524, tier = "/" },       -- Void Elf
+        { setID = 1525, tier = "/" },       -- Lightforged
+        { setID = 1679, tier = "/" },       -- Dark Iron
+        { setID = 1680, tier = "/" },       -- Mag'har?
+        { setID = 1681, tier = "/" },       -- Mag'har?
+        { setID = 1682, tier = "/" },       -- Mag'har?
+        { setID = 1741, tier = "/" },       -- Kul'tiran
+        { setID = 1742, tier = "/" },       -- Zandalari
+        { setID = 1789, tier = "/" },       -- Night Elf?
+        { setID = 1803, tier = "/" },       -- Dwarf
+        { setID = 1804, tier = "/" },       -- Blood Elf
+        { setID = 1828, tier = "/" },       -- Gnomes
+        { setID = 1829, tier = "/" },       -- Tauren
+        { setID = 1976, tier = "/" },       -- Worgen
+        { setID = 1977, tier = "/" },       -- Goblin
+        { setID = 1980, tier = "/" },       -- Mechagnome
+        { setID = 1981, tier = "/" },       -- Vulpera
+        ]]--
+        
+        -- Misc:
+        --{ setID = 1823},        -- Brawler's Guild H
+        --{ setID = 1822},        -- Brawler's Guild A
+        { setID = 1827},                      -- Trial of Style
+        --{ setID = 1902},                      -- RAF
+        --{ setID = 1903},                      -- Blizzcon
+        --{ setID = 1913},                      -- Eternal Traveler
+        
+        -- Looks like sets that don't have alternatives don't work. Trial of Style has a cloth/leather/etc alternative, but Eternal Traveler is just one set for every class.
+    },
+    {  -- [9] Shadowlands
+        { setID = 2015, tier = 26 },        -- 9.0 Covenant - Bastion - Cloth - Gold
+        { setID = 2016, tier = 26 },        -- 9.0 Covenant - Bastion - Cloth - White
+        { setID = 2017, tier = 26 },        -- 9.0 Covenant - Bastion - Cloth - Bronze
+        { setID = 2018, tier = 26 },        -- 9.0 Covenant - Bastion - Cloth - Black
+        { setID = 2031, tier = 26 },        -- Rationale of Maldraxxus
+        { setID = 2032, tier = 26 },        -- Rationale of Maldraxxus
+        { setID = 2033, tier = 26 },        -- Rationale of Maldraxxus
+        { setID = 2034, tier = 26 },        -- Rationale of Maldraxxus
+        { setID = 2047, tier = 26 },        -- Faewoven Regalia
+        { setID = 2048, tier = 26 },        -- Night Courtier's Regalia
+        { setID = 2049, tier = 26 },        -- Conservator's Regalia
+        { setID = 2050, tier = 26 },        -- Regalia of the Winter Queen
+        { setID = 2063, tier = 26 },        -- Soulbreaker's Crimson Vestments
+        { setID = 2064, tier = 26 },        -- Soulbreaker's Burnished Vestments
+        { setID = 2065, tier = 26 },        -- Soulbreaker's Court Vestments
+        { setID = 2066, tier = 26 },        -- Soulbreaker's Ebony Vestments
+        --{ setID = 2086, tier = 26 },        -- Night Fae Renown Cloth
+        --{ setID = 2087, tier = 26 },        -- Night Fae Renown Cloth
+    },
 }
 
 local pvpSortedDescriptions = {}

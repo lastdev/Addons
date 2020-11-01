@@ -1,24 +1,24 @@
-tag f1289eba47aca49bf787a91a9599287e00099d38 v1.1.8
+tag c0b5a9361593ba09b146c31aae745dffa0898747 v1.2.0
 Author:	Kyle Buller <bullerk@gmail.com>
-Date:	Mon Oct 28 21:57:22 2019 -0500
+Date:	Wed Oct 14 01:56:01 2020 -0500
 
-Tagging as v1.1.8
+Tagging as v1.2.0
 
-commit c41ba2411e4dc808c76e184b595a650d550de48a
+commit f1dc4f26b31312994509d5ad3c53cbad57d1ab3c
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Mon Oct 28 21:56:55 2019 -0500
+Date:   Wed Oct 14 01:55:17 2020 -0500
 
-    Fix pkgmeta typo
+    Update TOC for 9.0.1
 
-commit cd499c95d9923226efdac85ef1f512dcfe02d793
+commit dd3c45174c87f8021470f3b304654cb40bde1209
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Mon Oct 28 20:51:51 2019 -0500
+Date:   Wed Oct 14 01:55:00 2020 -0500
 
-    Update TOC for 8.2.5
+    Fix pvp macros
 
-commit 2ed60984dae96ab870bd82817bec7a72fe2615c0
+commit 83131dfa8dd470f281a9b3f1fac3dd96f54a8c45
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Mon Oct 28 20:51:41 2019 -0500
+Date:   Wed Oct 14 01:54:10 2020 -0500
 
-    Update pkgmeta
+    Fix tier levels
 

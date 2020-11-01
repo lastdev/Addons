@@ -1,8 +1,6 @@
 # BadBoy_Levels
 
-## [v8.2.1](https://github.com/funkydude/BadBoy_Levels/tree/v8.2.1) (2019-07-08)
-[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v8.2.0...v8.2.1)
+## [v9.0.1](https://github.com/funkydude/BadBoy_Levels/tree/v9.0.1) (2020-10-15)
+[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v9.0.0...v9.0.1) [Previous Releases](https://github.com/funkydude/BadBoy_Levels/releases)
 
-- Tweaks  
-- Fix a debug comment  
-- Re-write the core in an attempt to reduce interference from other addons.  
+- Fix the addon incorrectly whispering & blocking high level players, closes #9  

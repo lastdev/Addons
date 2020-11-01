@@ -73,7 +73,7 @@ addon:Controller("AltoholicUI.Calendar", {
 	Update = function(frame)
 		-- taken from CalendarFrame_Update() in Blizzard_Calendar.lua, adjusted for my needs.
 		
-		local DateInfo = C_Calendar.GetDate()
+		local DateInfo = C_DateAndTime.GetCurrentCalendarTime()
 		local presentWeekday, presentMonth, presentDay, presentYear = DateInfo.weekday, DateInfo.month, DateInfo.monthDay, DateInfo.year
 		
 		local CurMonthInfo = C_Calendar.GetMonthInfo()
@@ -109,7 +109,13 @@ addon:Controller("AltoholicUI.Calendar", {
 		day = 1
 		isDarkened = false
 		while ( day <= numDays ) do
-			frame["Day"..buttonIndex]:Update(day, month, year, isDarkened)
+			local button = frame["Day"..buttonIndex]
+            button:Update(day, month, year, isDarkened)
+            if day == presentDay and month==presentMonth and year==presentYear then
+                button.Shine:ShineStart()
+            else 
+                button.Shine:ShineStop()
+            end
 			day = day + 1
 			buttonIndex = buttonIndex + 1
 		end

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2351, "DBM-EternalPalace", nil, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200602212246")
+mod:SetRevision("20200908175403")
 mod:SetCreatureID(152128)
 mod:SetEncounterID(2303)
-mod:SetZone()
 mod:SetHotfixNoticeRev(20190716000000)--2019, 7, 16
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 29
@@ -63,7 +62,7 @@ local timerArcingCurrentCD					= mod:NewCDCountTimer(30.1, 295825, nil, nil, nil
 local timerCalloftheTenderCD				= mod:NewCDCountTimer(35, 305057, nil, nil, nil, 1, nil, DBM_CORE_L.MYTHIC_ICON, nil, 2, 4)--30.4-42
 --Transition
 local timerMassiveIncubator					= mod:NewCastTimer(20, 298548, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON, nil, 1, 4)--was 45, is 20 now
-mod:AddTimerLine(DBM_ADDS)
+mod:AddTimerLine(DBM_CORE_L.ADDS)
 local timerAmnioticEruption					= mod:NewCastTimer(5, 298465, nil, nil, nil, 2, nil, DBM_CORE_L.TANK_ICON)
 local timerAquaLanceCD						= mod:NewCDTimer(25.5, 295779, nil, nil, nil, 3)
 local timerShockingLightningCD				= mod:NewCDTimer(4.8, 295818, nil, false, nil, 3)

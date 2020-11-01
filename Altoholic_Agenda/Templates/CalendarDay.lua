@@ -73,6 +73,14 @@ addon:Controller("AltoholicUI.CalendarDay", {
 				AltoTooltip:AddDoubleLine(format("%s%s %s", colors.white, eventTime, char), title)
 			end
 		end
+        
+        for k, v in pairs(addon.Events:GetExpiredList()) do
+            if v.eventDate == eventDate then
+				local char, eventTime, title = addon.Events:GetExpiredInfo(k)
+				AltoTooltip:AddDoubleLine(format("%s%s %s", colors.grey, eventTime, char), title)
+			end
+		end
+        
 		AltoTooltip:Show()
 	end,
 	Day_OnClick = function(frame, button)

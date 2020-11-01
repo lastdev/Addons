@@ -9,7 +9,9 @@ local currentPage
 addon:Controller("AltoholicUI.SpellbookPanel", {
 	Update = function(frame)
 		local character = addon.Tabs.Characters:GetAltKey()
-		AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", DataStore:GetColoredCharacterName(character), SPELLBOOK, currentSchool))
+		if AltoholicTabCharacters.Spellbook:IsVisible() then
+            AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", DataStore:GetColoredCharacterName(character), SPELLBOOK, currentSchool))
+        end
 		
 		local itemName, itemButton
 		local spellID, availableAt

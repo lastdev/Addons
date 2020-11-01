@@ -22,6 +22,8 @@ local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local GetRuneCooldown = GetRuneCooldown
 local tsort = table.sort
+local dummy = function() return 0 end
+local GetComboPoints = dummy
 
 --- Compatibility with Classic
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -63,55 +65,8 @@ local AuraTimerOnUpdate = function(self, time)
     end
     self:SetValue(progress)
 end
-local dummy = function() return 0 end
 
-function NugComboBar:LoadClassSettings()
-        local class = select(2,UnitClass("player"))
-        self.MAX_POINTS = 0
-        self.isTempDisabled = nil
-        if self.bar then self.bar:SetColor(unpack(self.db.profile.colors.bar1)) end
 
-        self:RegisterEvent("SPELLS_CHANGED")
-end
-function NugComboBar:SPELLS_CHANGED()
-    local spec = GetSpecialization()
-    local class = select(2,UnitClass("player"))
-
-    local currentProfile = self.db:GetCurrentProfile()
-    local newSpecProfile = self.db.global.specProfiles[class][spec] or "Default"
-    if not self.db.profiles[newSpecProfile] then
-        self.db.global.specProfiles[class][spec] = "Default"
-        newSpecProfile = "Default"
-    end
-    if newSpecProfile ~= currentProfile then
-        self.db:SetProfile(newSpecProfile)
-    end
-
-    local newConfigName = self.db.global.classConfig[class][spec] or "Disabled"
-
-    if newConfigName == "Disabled" then
-        self:ResetConfig()
-        self:Disable()
-        currentConfigName = nil
-        return
-    end
-
-    local currentConfig = configs[currentConfigName]
-
-    local needUpdate
-    local changedConfig = currentConfigName ~= newConfigName
-    if changedConfig then
-        needUpdate = true
-    else
-        local newTriggerState = self:GetTriggerState(currentConfig)
-        needUpdate = not self:IsTriggerStateEqual(currentTriggerState, newTriggerState)
-    end
-
-    if needUpdate then
-        self:SelectConfig(newConfigName)
-        self:Update()
-    end
-end
 
 local defaults = {
     global = {
@@ -120,16 +75,16 @@ local defaults = {
         disableBlizzNP = false,
         enablePrettyRunes = true,
         classConfig = {
-            ROGUE = { "ComboPointsRogue", "ComboPointsRogue", "ComboPointsRogue" },
+            ROGUE = { "ComboPointsRogue", "ComboPointsRogue", "ComboPointsAndShadowdance" },
             DRUID = { "ShapeshiftDruid", "ComboPointsDruid", "ShapeshiftDruid", "ComboPointsDruid" },
-            PALADIN = { "Disabled", "ShieldOfTheRighteousness", "HolyPower" },
-            MONK = { "IronskinBrew", "Teachings", "Chi" },
+            PALADIN = { "HolyPower", "HolyPower", "HolyPower" },
+            MONK = { "PurifyingBrew", "Teachings", "Chi" },
             WARLOCK = { "SoulShards", "SoulShards", "SoulShards" },
             DEMONHUNTER = { "Disabled", "SoulFragments" },
             DEATHKNIGHT = { "Runes", "Runes", "Runes" },
             MAGE = { "ArcaneCharges", "Fireblast", "Icicles" },
             WARRIOR = { "Disabled", "Meatcleaver", "ShieldBlock" },
-            SHAMAN = { "Icefury", "Disabled", "Disabled" },
+            SHAMAN = { "Icefury", "MaelstromWeapon", "Disabled" },
             HUNTER = { "Disabled", "Disabled", "Disabled" },
             PRIEST = { "Disabled", "Disabled", "Disabled" },
         },
@@ -193,6 +148,62 @@ local defaults = {
     },
 }
 NugComboBar.defaults = defaults
+
+function NugComboBar:LoadClassSettings()
+        local class = select(2,UnitClass("player"))
+        self.MAX_POINTS = 0
+        self.isTempDisabled = nil
+        if self.bar then self.bar:SetColor(unpack(self.db.profile.colors.bar1)) end
+
+        self:RegisterEvent("SPELLS_CHANGED")
+end
+function NugComboBar:SPELLS_CHANGED()
+    local spec = GetSpecialization()
+    local class = select(2,UnitClass("player"))
+
+    local currentProfile = self.db:GetCurrentProfile()
+    local newSpecProfile = self.db.global.specProfiles[class][spec] or "Default"
+    if not self.db.profiles[newSpecProfile] then
+        self.db.global.specProfiles[class][spec] = "Default"
+        newSpecProfile = "Default"
+    end
+    if newSpecProfile ~= currentProfile then
+        self.db:SetProfile(newSpecProfile)
+    end
+
+    local newConfigName = self.db.global.classConfig[class][spec] or "Disabled"
+
+    -- If using missing config reset to default
+    if newConfigName ~= "Disabled" and not configs[newConfigName] then
+        self.db.global.classConfig[class][spec] = defaults.global.classConfig[class][spec]
+        newConfigName = self.db.global.classConfig[class][spec] or "Disabled"
+    end
+
+    if newConfigName == "Disabled" then
+        self:ResetConfig()
+        self:Disable()
+        currentConfigName = nil
+        return
+    else
+        self:Enable()
+    end
+
+    local currentConfig = configs[currentConfigName]
+
+    local needUpdate
+    local changedConfig = currentConfigName ~= newConfigName
+    if changedConfig then
+        needUpdate = true
+    else
+        local newTriggerState = self:GetTriggerState(currentConfig)
+        needUpdate = not self:IsTriggerStateEqual(currentTriggerState, newTriggerState)
+    end
+
+    if needUpdate then
+        self:SelectConfig(newConfigName)
+        self:Update()
+    end
+end
 
 NugComboBar.SkinVersion = 600
 do
@@ -274,8 +285,8 @@ end
 
 local pmult = 1
 function NugComboBar.pixelperfect(size)
-    -- return floor(size/pmult + 0.5)*pmult
-    return PixelUtil.GetNearestPixelSize(size, NugComboBar:GetEffectiveScale(), size)
+    return floor(size/pmult + 0.5)*pmult
+    -- return PixelUtil.GetNearestPixelSize(size, NugComboBar:GetEffectiveScale(), size) -- No PixelUtil on classic
 end
 local pixelperfect = NugComboBar.pixelperfect
 
@@ -366,6 +377,8 @@ function NugComboBar:Reconfigure()
     local profile = self.db.profile
     self:SetScale(profile.scale)
 
+    self.forceHidden = false
+
     if currentConfigName then
         self:SelectConfig(currentConfigName)
         self:Update() -- will update alpha
@@ -412,8 +425,9 @@ function NugComboBar.PLAYER_TARGET_CHANGED(self, event)
         end
     end
 
-    if not UnitExists("target") and self.db.profile.hideWithoutTarget and playerClass ~= "DEATHKNIGHT" then
-        self:Hide()
+    if self.db.profile.hideWithoutTarget and not self:IsDisabled() then
+        self.forceHidden = not UnitExists("target")
+        self:Update()
     end
 end
 
@@ -478,8 +492,16 @@ end
 
 function NugComboBar:SelectPoint(i)
     local point = self:GetPoint(i)
-    print(point)
+    if not point.Select then return end
     point:Select()
+end
+
+function NugComboBar:DeselectAllPoints()
+    for i, point in ipairs(self.point) do
+        if point.Deselect then
+            point:Deselect()
+        end
+    end
 end
 
 
@@ -614,7 +636,7 @@ function NugComboBar:Update(unit, ...)
 
 	    end
 
-    local forceHide = IsInPetBattle() or self.isTempDisabled
+    local forceHide = IsInPetBattle() or self.forceHidden
     if forceHide or
         (
             not flags.showAlways and
@@ -675,11 +697,11 @@ function NugComboBar.CreateAnchor(frame)
     local self = CreateFrame("Frame",nil,UIParent)
     self:SetWidth(10)
     self:SetHeight(frame:GetHeight())
-    self:SetBackdrop{
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
-        insets = {left = -2, right = -2, top = -2, bottom = -2},
-    }
-	self:SetBackdropColor(1, 0, 0, 0.8)
+
+    local t = self:CreateTexture(nil, "ARTWORK")
+    t:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+    t:SetAllPoints(self)
+    t:SetVertexColor(1, 0, 0, 0.8)
     self:SetFrameStrata("HIGH")
 
     local profile = NugComboBar.db.profile
@@ -957,6 +979,8 @@ NugComboBar.Commands = {
     end,
     ["hidewotarget"] = function(v)
         NugComboBar.db.profile.hideWithoutTarget = not NugComboBar.db.profile.hideWithoutTarget
+        NugComboBar.forceHidden = false
+        NugComboBar:PLAYER_TARGET_CHANGED()
     end,
     -- ["secondlayer"] = function(v)
     --     NugComboBar.db.profile.secondLayer = not NugComboBar.db.profile.secondLayer
@@ -1012,9 +1036,7 @@ NugComboBar.Commands = {
     end,
     ["vertical"] = function(v)
         NugComboBar.db.global.vertical = not NugComboBar.db.global.vertical
-        NugComboBar:Create()
-        NugComboBar:PLAYER_LOGIN(nil)
-        NugComboBar:PLAYER_ENTERING_WORLD(nil)
+        ReloadUI()
     end,
     ["playsound"] = function(v)
         if not NugComboBar.soundFiles[v] then
@@ -1078,13 +1100,20 @@ function NugComboBar.SlashCmd(msg)
     end
 end
 
-local HideBlizzFrame = function(frame)
+local HideBlizzFrame = function(frame, nosetup)
 	frame:UnregisterAllEvents()
 	frame:Hide()
-	frame._Show = frame.Show
-	frame.Show = frame.Hide
-	frame:ClearAllPoints()
-	frame:SetPoint("TOPLEFT", UIParent, "BOTTOMRIGHT", 100, -100)
+	hooksecurefunc(frame, "Show", function(self)
+        self:Hide()
+    end)
+    if not nosetup then
+        hooksecurefunc(frame, "Setup", function(self)
+            self:Hide()
+            self:UnregisterAllEvents()
+        end)
+    end
+	-- frame:ClearAllPoints()
+	-- frame:SetPoint("TOPLEFT", UIParent, "BOTTOMRIGHT", 100, -100)
 end
 
 function NugComboBar.disableBlizzFrames()
@@ -1093,7 +1122,7 @@ function NugComboBar.disableBlizzFrames()
             HideBlizzFrame(ComboPointPlayerFrame)
         end
         if class == "WARLOCK" then
-			HideBlizzFrame(WarlockPowerFrame)
+            HideBlizzFrame(WarlockPowerFrame)
         end
         if class == "PALADIN" then
 			HideBlizzFrame(PaladinPowerBarFrame)
@@ -1106,7 +1135,7 @@ function NugComboBar.disableBlizzFrames()
 			HideBlizzFrame(MonkHarmonyBarFrame)
         end
 		if class == "DEATHKNIGHT" then
-			HideBlizzFrame(RuneFrame)
+			HideBlizzFrame(RuneFrame, true)
         end
 end
 
@@ -1152,10 +1181,19 @@ function NugComboBar:Disable()
 
     -- self.isTempDisabled = true
 
+    self.isDisabled = true
+
 	self:DisableBar()
     if self.anchor then self.anchor:Hide() end
     self:SetAlpha(0)
 	self:Hide()
+end
+
+function NugComboBar:Enable()
+    self.isDisabled = false
+end
+function NugComboBar:IsDisabled()
+    return self.isDisabled
 end
 
 function NugComboBar:SuperDisable()

@@ -11,7 +11,7 @@
 	<Script file="localization.itIT.lua"/>
 	<Script file="ZPerl_RaidMonitor.lua"/>
 
-	<Button name="XPerl_RaidMonitor_BasicButton" virtual="true">
+	<Button name="XPerl_RaidMonitor_BasicButton" inherits="XPerlBackdropTemplate" virtual="true">
 		<Scripts>
 			<OnEnter>
 				if (self.tooltipText) then
@@ -23,7 +23,7 @@
 		</Scripts>
 	</Button>
 
-	<StatusBar name="XPerl_RaidMonitor_StatusBarTemplate" virtual="true">
+	<StatusBar name="XPerl_RaidMonitor_StatusBarTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				self.bg = _G[self:GetName().."bg"]
@@ -53,7 +53,7 @@
 		</Layers>
 	</StatusBar>
 
-	<Button name="XPerl_RaidMonitor_BarTemplate" inherits="SecureActionButtonTemplate" virtual="true">
+	<Button name="XPerl_RaidMonitor_BarTemplate" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="80" y="12"/>
 		</Size>
@@ -91,7 +91,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="XPerl_RaidMonitor_UnitTemplate" inherits="SecureUnitButtonTemplate" virtual="true">
+	<Button name="XPerl_RaidMonitor_UnitTemplate" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				self.bar = _G[self:GetName().."Bar"]
@@ -107,6 +107,7 @@
 				self.target:SetAttribute("type", "target")
 
 				self:RegisterForClicks("AnyUp")
+				self:SetAttribute("type", "target")
 				XPerl_CastMon_ChildUnits(self)
 			</OnLoad>
 			<OnSizeChanged>
@@ -243,7 +244,7 @@
 		</Frames>
 	</Button>
 
-	<Frame name="XPerl_RaidMonitor_Anchor" parent="UIParent" movable="true" resizable="true" clampedToScreen="true">
+	<Frame name="XPerl_RaidMonitor_Anchor" parent="UIParent" inherits="XPerlBackdropTemplate" movable="true" resizable="true" clampedToScreen="true">
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
@@ -252,13 +253,20 @@
 		</Size>
 	</Frame>
 
-	<Frame name="XPerl_RaidMonitor_Frame" enableMouse="true" parent="XPerl_RaidMonitor_Anchor" clampedToScreen="true">
+	<Frame name="XPerl_RaidMonitor_Frame" enableMouse="true" parent="XPerl_RaidMonitor_Anchor" inherits="XPerlBackdropTemplate" clampedToScreen="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				self.area = _G[self:GetName().."Area"]
 				XPerl_RaidMonitor_OnLoad(self)
 				self:RegisterForDrag("LeftButton")
 			</OnLoad>
+			<OnHide>
+				self:EnableDisable()
+			</OnHide>
 			<OnDragStart>
 				if (not ZPerlRaidMonConfig.Pinned) then
 					XPerl_RaidMonitor_Anchor:StartMoving()
@@ -277,19 +285,8 @@
 		<Size>
 			<AbsDimension x="200" y="80"/>
 		</Size>
-		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
-			<Frame name="$parent_TitleBar">
+			<Frame name="$parent_TitleBar" inherits="XPerlBackdropTemplate">
 				<Size>
 					<AbsDimension x="160" y="12"/>
 				</Size>
@@ -312,7 +309,7 @@
 					</OnLoad>
 				</Scripts>
 				<Frames>
-					<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+					<Button name="$parentCloseButton" inherits="XPerlBackdropTemplate,UIPanelCloseButton">
 						<Size>
 							<AbsDimension x="20" y="20"/>
 						</Size>
@@ -335,7 +332,7 @@
 						</Scripts>
 					</Button>
 
-					<Button name="$parentPin" inherits="XPerl_RaidMonitor_BasicButton">
+					<Button name="$parentPin" inherits="XPerlBackdropTemplate,XPerl_RaidMonitor_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
@@ -392,7 +389,7 @@
 						</Scripts>
 					</Button>
 
-					<Button name="$parentTotals" inherits="XPerl_RaidMonitor_BasicButton">
+					<Button name="$parentTotals" inherits="XPerlBackdropTemplate,XPerl_RaidMonitor_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
@@ -462,7 +459,7 @@
 				</Layers>
 			</Frame>
 
-			<Frame name="$parentArea" inherits="SecureRaidGroupHeaderTemplate">
+			<Frame name="$parentArea" inherits="XPerlBackdropTemplate,SecureRaidGroupHeaderTemplate">
 				<Size>
 					<AbsDimension x="160" y="26"/>
 				</Size>
@@ -475,7 +472,7 @@
 				</Anchors>
 			</Frame>
 
-			<Frame name="$parentTotals" hidden="true">
+			<Frame name="$parentTotals" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
 						self:GetParent().totals = self

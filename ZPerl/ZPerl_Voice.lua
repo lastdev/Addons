@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-CreateFrame("Frame", "XPerl_Voice")
+CreateFrame("Frame", "XPerl_Voice", BackdropTemplateMixin and "BackdropTemplate")
 local voice = XPerl_Voice
 
 local conf
@@ -35,7 +35,7 @@ voice:ClearCache()
 -- voice:Create
 function voice:Create(frame)
 	if not frame.voiceButton then
-		frame.voiceButton = CreateFrame("Button", self:GetName().."Speaker", frame, "VoiceChatSpeakerTemplate")
+		frame.voiceButton = CreateFrame("Button", self:GetName().."Speaker", frame, BackdropTemplateMixin and "BackdropTemplate", "VoiceChatSpeakerTemplate")
 		frame.voiceButton:EnableMouse(false)
 	end
 	XPerl_SetChildMembers(frame.voiceButton)

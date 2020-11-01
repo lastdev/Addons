@@ -1,7 +1,7 @@
 --- Main methods directly available in your addon
--- @classmod lib
+-- @module lib
 -- @author Alar of Runetotem
--- @release 52
+-- @release 60
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
@@ -11,7 +11,7 @@
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 52
+local MINOR_VERSION = 60
 local LibStub=LibStub
 local dprint=function() end
 local encapsulate  = function ()
@@ -41,10 +41,12 @@ local strconcat=strconcat
 local tostring=tostring
 local tremove=tremove
 local _G=_G -- Unmodified env
---@debug@
--- Checking packager behaviour
---@end-debug@
-
+--[===[@debug@
+-- Should not appear
+--@end-debug@]===]
+--@do-not-package@
+-- THIS SHOULD NOT APPEAR
+--@end-do-not-package@
 local lib=obj --#Lib
 function lib:Info()
 	print(MAJOR_VERSION,MINOR_VERSION,' loaded from ',__FILE__)
@@ -156,13 +158,13 @@ local new, del, add, recursivedel,copy, cached, stats
 do
 	local meta={__metatable="RECYCLE"}
 	local pool = lib.pool
---@debug@
+--[===[@debug@
 	local newcount, delcount,createdcount= 0,0,0
---@end-debug@
+--@end-debug@]===]
 	function new(t)
---@debug@
+--[===[@debug@
 		newcount = newcount + 1
---@end-debug@
+--@end-debug@]===]
 		if type(t)=="table" then
 			local rc=pcall(setmetatable,t,meta)
 			return t
@@ -173,9 +175,9 @@ do
 			pool[t] = nil
 			return t
 		else
---@debug@
+--[===[@debug@
 			createdcount = createdcount + 1
---@end-debug@
+--@end-debug@]===]
 			return setmetatable({},meta)
 		end
 	end
@@ -187,9 +189,9 @@ do
 		return c
 	end
 	function del(t)
---@debug@
+--[===[@debug@
 		delcount = delcount + 1
---@end-debug@
+--@end-debug@]===]
 		if getmetatable(t)==meta then
 			wipe(t)
 			pool[t] = true
@@ -197,9 +199,9 @@ do
 	end
 	function recursivedel(t,level)
 		level=level or 0
---@debug@
+--[===[@debug@
 		delcount = delcount + 1
---@end-debug@
+--@end-debug@]===]
 		for k,v in pairs(t) do
 			if type(v)=="table" and getmetatable(v) == "RECYCLE" then
 				if level < 2 then
@@ -219,19 +221,19 @@ do
 		end
 		return n
 	end
---@debug@
+--[===[@debug@
 	function stats()
 		print("Created:",createdcount)
 		print("Aquired:",newcount)
 		print("Released:",delcount)
 		print("Cached:",cached())
 	end
---@end-debug@
---[===[@non-debug@
+--@end-debug@]===]
+--@non-debug@
 	function stats()
 		return
 	end
---@end-non-debug@]===]
+--@end-non-debug@
 end
 --- Get a new table from the recycle pool
 -- Preferred usage is assigning to a local via wrap function
@@ -406,6 +408,39 @@ function lib:NewSubModule(name,...)
 end
 function lib:NewSubClass(name)
 	return self:NewSubModule(name,self)
+end
+--- Compatibility
+-- @section compatibility
+
+--- Compatibility: Emulates removed C_Garrison.GetMissionInfo
+--  @tparam integer id Mission ID
+--  @treturn list location,xp,environment,environmentDesc,environmentTexture,locTextureKit,isExhausting,enemies
+function lib:GetMissionInfo(id)
+  local t=C_Garrison.GetMissionDeploymentInfo(id)
+  return
+    t.location,
+    t.xp,
+    t.environment,
+    t.environmentDesc,
+    t.environmentTexture,
+    t.locTextureKit,
+    t.isExhausting,
+    t.enemies
+end
+--- Compatibility: Emulates renamed and modified GetCurrencyInfo
+--  @tparam integer id Currency identifier
+--  @treturn list name,quantity,iconFiledID,quantityEarnedThisWeek,maxWeeklyQuantiti,maxQuantity,discovered,quality
+function lib:GetCurrencyInfo(id)
+  local t=C_CurrencyInfo.GetCurrencyInfo(id)
+  return
+    t.name,
+    t.quantity,
+    t.iconFileID,
+    t.quantityEarnedThisWeek,
+    t.maxWeeklyQuantiti,
+    t.maxQuantity,
+    t.discovered,
+    t.quality
 end
 
 --- Returns a closure to call a method as simple local function
@@ -764,7 +799,7 @@ local function loadOptionsTable(self)
 				func="Gui",
 				guiHidden=true,
 			},
---@debug@
+--[===[@debug@
 			help = {
 				name="HELP",
 				desc="Show help",
@@ -780,7 +815,7 @@ local function loadOptionsTable(self)
 				guiHidden=true,
 				cmdHidden=true,
 			},
---@end-debug@
+--@end-debug@]===]
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",

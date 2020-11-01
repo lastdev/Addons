@@ -939,7 +939,7 @@ addon:Controller("AltoholicUI.DropDownMenu", {
 		info.checked	= isChecked
 		frame:AddButtonInfo(info, level or 1)
 	end,
-	AddButtonWithArgs = function(frame, text, value, func, arg1, arg2, isChecked)
+	AddButtonWithArgs = function(frame, text, value, func, arg1, arg2, isChecked, level)
 		local info = frame:CreateInfo()
 		
 		info.text		= text
@@ -948,7 +948,7 @@ addon:Controller("AltoholicUI.DropDownMenu", {
 		info.arg1		= arg1
 		info.arg2		= arg2
 		info.checked	= isChecked
-		frame:AddButtonInfo(info, 1)
+		frame:AddButtonInfo(info, level or 1)
 	end,
 	AddCategoryButton = function(frame, text, value, level)
 		local info = frame:CreateInfo()

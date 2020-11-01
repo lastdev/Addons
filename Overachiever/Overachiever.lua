@@ -201,7 +201,7 @@ end
 local getAchievementID_cat, getAchievementID_tab
 do
   local found
-  
+
   local function get_arg1_argN(n, arg1, ...)
 	--if (n == 1) then  return arg1, arg1;  end -- Unnecessary since it's never 1. Required if that's possible, though, or you could have errors.
     return arg1, select(n-1, ...)
@@ -1333,7 +1333,7 @@ end
 -- /run Overachiever.ToastFakeAchievement("test", nil, nil, nil, -1, "okay")
 
 function Overachiever.ToastFakeAchievement(name, baseID, playSound, chatMessage, delay, toptext, onClick, icon, newEarn)
-  if (IsKioskModeEnabled()) then
+  if (Kiosk.IsEnabled()) then
     return;
   end
   if ( not AchievementFrame ) then
@@ -1465,7 +1465,7 @@ function Overachiever.OnEvent(self, event, arg1, ...)
     ItemRefTooltip:HookScript("OnTooltipSetItem", Overachiever.ExamineItem)
     hooksecurefunc(ItemRefTooltip, "SetHyperlink", Overachiever.ExamineAchievementTip)
     hooksecurefunc(GameTooltip, "SetHyperlink", Overachiever.ExamineAchievementTip)
-    
+
     local StartTime
     if (Overachiever_Debug) then  StartTime = debugprofilestop();  end
 

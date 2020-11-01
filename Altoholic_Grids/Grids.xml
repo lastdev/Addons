@@ -1,22 +1,29 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="Grid_Equipment.lua"></Script>
-	<Script file="Grid_Reputations.lua"></Script>
-	<Script file="Grid_Currencies.lua"></Script>
-	<Script file="Grid_Mounts.lua"></Script>
-	<Script file="Grid_Tradeskills.lua"></Script>
-	<Script file="Grid_Archeology.lua"></Script>
-	<Script file="Grid_Dailies.lua"></Script>
-	<Script file="Grid_Dungeons.lua"></Script>
-	<Script file="Grid_GarrisonArchitect.lua"></Script>
-	<Script file="Grid_GarrisonFollowers.lua"></Script>
-	<Script file="Grid_FollowerAbilities.lua"></Script>
-	<Script file="Grid_Emissaries.lua"></Script>
-	<Script file="Grid_Sets.lua"></Script>
-	
+	<Script file="Grid_Equipment.lua"/>
+	<Script file="Grid_Reputations.lua"/>
+	<Script file="Grid_Currencies.lua"/>
+	<Script file="Grid_Tradeskills.lua"/>
+	<Script file="Grid_Archeology.lua"/>
+	<Script file="Grid_Dailies.lua"/>
+	<Script file="Grid_Dungeons.lua"/>
+	<Script file="Grid_GarrisonArchitect.lua"/>
+	<Script file="Grid_GarrisonFollowers.lua"/>
+	<Script file="Grid_FollowerAbilities.lua"/>
+    <Script file="Grid_OrderHallFollowers.lua"/>
+	<Script file="Grid_Emissaries.lua"/>
+	<Script file="Grid_Sets.lua"/>
+    <Script file="Grid_Tasks.lua"/>
+    <Script file="Grid_Essences.lua"/>
+    <Script file="Grid_WarCampaignFollowers.lua" />
+    <Script file="Grid_Callings.lua"/>
+    <Script file="Grid_CovenantAdventureFollowers.lua"/>
+    <Script file="Grid_Rares.lua"/>
+    
 	<Frame name="AltoholicFrameGrids" parent="AltoholicTabGrids" hidden="true">
 		<Size x="615" y="306" />
 		<Anchors>
 			<Anchor point="TOPRIGHT" x="39" y="-105" />
+            <Anchor point="BOTTOMLEFT" x="180"/>
 		</Anchors>
 		<Frames>
 			<Frame name="$parentRightClickMenu" inherits="UIDropDownMenuTemplate" id="1" hidden="true">
@@ -30,9 +37,10 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="8" type="number" />
+					<KeyValue key="numRows" value="20" type="number" />
 					<KeyValue key="rowHeight" value="41" type="number" />
 					<KeyValue key="rowTemplate" value="AltoIconListEntryTemplate" />
+                    <KeyValue key="colWidth" value="35" type="number" />
 					<KeyValue key="xOffset" value="3" type="number" />
 					<KeyValue key="yOffset" value="3" type="number" />
 				</KeyValues>
@@ -60,5 +68,10 @@
 				</Scripts>
 			</Button>
 		</Frames>
+        <Scripts>
+            <OnLoad>
+                --AltoholicFrame:TriggerResizeEvents()
+            </OnLoad>
+        </Scripts>
 	</Frame>
 </Ui>

@@ -221,7 +221,7 @@
 						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" y="-16"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parentVersion" text="01.05.00" inherits="GameFontHighlight">
+				<FontString name="$parentVersion" text="01.06.01" inherits="GameFontHighlight">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="$parentVersionLabel" relativePoint="TOPRIGHT" x="4"/>
 					</Anchors>
@@ -231,7 +231,7 @@
 						<Anchor point="TOPLEFT" relativeTo="$parentVersionLabel" relativePoint="BOTTOMLEFT" y="-6"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parentVersion" text="10-Mar-2020" inherits="GameFontHighlight">
+				<FontString name="$parentVersion" text="19-Oct-2020" inherits="GameFontHighlight">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="$parentReleaseDateLabel" relativePoint="TOPRIGHT" x="4"/>
 					</Anchors>
@@ -613,7 +613,6 @@
 							</Layer>
 						</Layers>
 					</Frame>
-					<Frame parentKey="WarCampaignTooltip" inherits="WarCampaignTooltipTemplate"/>
 				</Frames>
 				<ScrollChild>
 					<Frame parentKey="Contents" inherits="VerticalLayoutFrame">
@@ -630,7 +629,7 @@
 							</Frame>
 							<Frame parentKey="LogHeader" hidden="true">
 								<KeyValues>
-									<KeyValue key="layoutIndex" value="QUEST_LOG_WAR_CAMPAIGN_LAYOUT_INDEX"
+									<KeyValue key="layoutIndex" value="2"
 									          type="global"/>
 									<KeyValue key="topPadding" value="-10" type="number"/>
 								</KeyValues>
@@ -663,26 +662,9 @@
 									</Layer>
 								</Layers>
 							</Frame>
-							<Frame parentKey="Notice">
-								<KeyValues>
-									<KeyValue key="layoutIndex"
-									          value="QUEST_LOG_WAR_CAMPAIGN_NEXT_OBJECTIVE_LAYOUT_INDEX" type="global"/>
-								</KeyValues>
-								<Size x="262" y="59"/>
-								<Layers>
-									<Layer>
-										<FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT">
-											<Size x="240" y="0"/>
-											<Anchors>
-												<Anchor point="TOPLEFT" x="12" y="0"/>
-											</Anchors>
-										</FontString>
-									</Layer>
-								</Layers>
-							</Frame>
 							<Frame parentKey="Separator" hidden="true">
 								<KeyValues>
-									<KeyValue key="layoutIndex" value="QUEST_LOG_SEPARATOR_LAYOUT_INDEX" type="global"/>
+									<KeyValue key="layoutIndex" value="24" type="global"/>
 								</KeyValues>
 								<Size x="260" y="37"/>
 								<Layers>
@@ -697,7 +679,7 @@
 							</Frame>
 							<Frame parentKey="StoryHeader" hidden="true">
 								<KeyValues>
-									<KeyValue key="layoutIndex" value="QUEST_LOG_STORY_LAYOUT_INDEX" type="global"/>
+									<KeyValue key="layoutIndex" value="25" type="global"/>
 									<KeyValue key="topPadding" value="-18" type="number"/>
 									<KeyValue key="bottomPadding" value="7" type="number"/>
 								</KeyValues>

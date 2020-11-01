@@ -4,115 +4,67 @@
 
 <Script file="CombatMacro.lua" />
 
-<Frame name="LiteMountOptionsCombatMacro" hidden="true" inherits="LiteMountOptionsPanelTemplate">
+<Frame name="LiteMountCombatMacroPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountCombatMacroPanelMixin">
+
+    <KeyValues>
+        <KeyValue key="hideProfileButton" value="true" type="boolean" />
+    </KeyValues>
+
+    <Scripts>
+        <OnLoad method="OnLoad" />
+    </Scripts>
 
     <Frames>
-        <Frame name="$parentEditBoxContainer" parentKey="EditBoxContainer">
-
+        <Frame parentKey="EditBoxContainer" inherits="LiteMountOptionsContainerTemplate">
             <Size x="400" y="200" />
-
             <Anchors>
                 <Anchor point="CENTER" />
             </Anchors>
-
-            <Backdrop edgefile="Interface\Tooltips\UI-Tooltip-Border" bgfile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
-                <EdgeSize val="16" />
-                <TileSize val="16" />
-                <BackgroundInsets>
-                    <AbsInset left="5" right="5" top="5" bottom="5" />
-                </BackgroundInsets>
-            </Backdrop>
-
-            <Scripts>
-                <OnLoad>
-                    self:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.8)
-                    self:SetBackdropColor(0, 0, 0, 0.5)
-                </OnLoad>
-            </Scripts>
-
         </Frame>
 
-        <EditBox name="$parentEditBox" parentKey="EditBox" multiLine="true" letters="255" autoFocus="false" countInvisibleLetters="true">
-
+        <EditBox parentKey="EditBox" multiLine="true" letters="255" autoFocus="false" countInvisibleLetters="true" mixin="LiteMountCombatMacroEditBoxMixin">
             <Anchors>
                 <Anchor point="TOPLEFT" x="8" y="-8" relativeKey="$parent.EditBoxContainer" />
                 <Anchor point="BOTTOMRIGHT" x="-8" y="8" relativeKey="$parent.EditBoxContainer" />
             </Anchors>
-
             <Scripts>
-                <OnTextChanged function="LiteMountOptionsCombatMacro_OnTextChanged" />
                 <OnEscapePressed function="EditBox_ClearFocus" />
-                <OnLoad>
-                    self.GetOption = function (self)
-                            return LM_Options.db.char.combatMacro or ""
-                        end
-                    self.SetOption = function (self, v)
-                            LM_Options.db.char.combatMacro = v
-                            LiteMount:Refresh()
-                        end
-                    self.GetOptionDefault = function (self)
-                            return LM_Actions:DefaultCombatMacro()
-                        end
-                    LiteMountOptionsControl_OnLoad(self, LiteMountOptionsCombatMacro)
-                </OnLoad>
+                <OnTextChanged method="OnTextChanged" />
             </Scripts>
             <FontString inherits="GameFontHighlight" />
         </EditBox>
 
-        <Button name="$parentDeleteButton" parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="DELETE">
-            <Size x="96" y="22" />
-            <Anchors>
-                <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="-3" />
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    self:GetParent().EditBox:SetText("")
-                </OnClick>
-            </Scripts>
-        </Button>
-        <Button name="$parentDefaultButton" parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
-            <Size x="96" y="22" />
-            <Anchors>
-                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="3" />
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    self:GetParent().EditBox:SetText(LM_Actions:DefaultCombatMacro())
-                </OnClick>
-            </Scripts>
-        </Button>
-        <Button name="$parentRevertButton" parentKey="RevertButton" inherits="UIPanelButtonTemplate" text="REVERT">
-            <Size x="96" y="22" />
-            <Anchors>
-                <Anchor point="BOTTOMLEFT" x="24" y="16" />
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    local parent = self:GetParent()
-                    LiteMountOptionsPanel_Revert(parent)
-                    LiteMountOptionsPanel_Refresh(parent)
-                </OnClick>
-            </Scripts>
-        </Button>
-
-        <CheckButton name="$parentEnableButton" parentKey="EnableButton" inherits="OptionsBaseCheckButtonTemplate">
+        <CheckButton parentKey="EnableButton" inherits="OptionsBaseCheckButtonTemplate" mixin="LiteMountCombatMacroEnableButtonMixin">
             <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.EditBoxContainer" y="32" />
             </Anchors>
             <Scripts>
-                <OnLoad>
-                    self.GetOption = function (self)
-                            return LM_Options.db.char.useCombatMacro
-                        end
-                    self.GetOptionDefault = function (self) return false end
-                    self.SetOption = function (self, v)
-                            LM_Options.db.char.useCombatMacro = (v or false)
-                        end
-                    LiteMountOptionsControl_OnLoad(self)
-                </OnLoad>
                 <OnClick function="LiteMountOptionsControl_OnChanged" />
             </Scripts>
         </CheckButton>
+
+        <Button parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="DELETE">
+            <Size x="96" y="22" />
+            <Scripts>
+                <OnClick>
+                    self:GetParent().EditBox:SetOption("")
+                </OnClick>
+            </Scripts>
+            <Anchors>
+                <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="-3" />
+            </Anchors>
+        </Button>
+        <Button parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
+            <Size x="96" y="22" />
+            <Scripts>
+                <OnClick>
+                    LiteMountOptionsControl_Default(self:GetParent().EditBox)
+                </OnClick>
+            </Scripts>
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="3" />
+            </Anchors>
+        </Button>
     </Frames>
 
     <Layers>
@@ -126,7 +78,7 @@
                 </Anchors>
             </FontString>
 
-            <FontString inherits="GameFontNormalLarge" name="$parentEnable" parentKey="Enable" text="ENABLE">
+            <FontString inherits="GameFontNormalLarge" parentKey="Enable" text="ENABLE">
                 <Anchors>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.EnableButton" x="4" />
                 </Anchors>
@@ -137,21 +89,13 @@
                 </Anchors>
             </FontString>
 
-            <FontString name="$parentCount" parentKey="Count" inherits="GameFontHighlightSmall">
+            <FontString parentKey="Count" inherits="GameFontHighlightSmall">
                 <Anchors>
                     <Anchor point="TOP" relativePoint="BOTTOM" relativeKey="$parent.EditBoxContainer" y="-3" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
-
-    <KeyValues>
-        <KeyValue key="dontShowProfile" value="true" type="boolean" />
-    </KeyValues>
-
-    <Scripts>
-        <OnLoad function="LiteMountOptionsCombatMacro_OnLoad" />
-    </Scripts>
 </Frame>
 
 </Ui>

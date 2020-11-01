@@ -4,10 +4,9 @@ local oRA = scope.addon
 local module = oRA:NewModule("Consumables", "AceTimer-3.0")
 local L = scope.locale
 
-local tonumber, print, next, select = tonumber, print, next, select
 local format = string.format
 local tconcat, sort, wipe = table.concat, table.sort, table.wipe
-local GetSpellInfo, GetSpellDescription = GetSpellInfo, GetSpellDescription
+local GetSpellInfo = GetSpellInfo
 local UnitIsUnit, IsInGroup, IsInRaid, IsInInstance = UnitIsUnit, IsInGroup, IsInRaid, IsInInstance
 local UnitName, UnitIsConnected, UnitIsVisible = UnitName, UnitIsConnected, UnitIsVisible
 local GetTime, UnitIsDeadOrGhost = GetTime, UnitIsDeadOrGhost
@@ -21,8 +20,8 @@ local consumablesList = {}
 local playerBuffs = {}
 local missingFood, missingFlasks, missingRunes, missingBuffs = {}, {}, {}, {}
 
-local YES = ("|cff20ff20%s|r"):format(YES)
-local NO = ("|cffff2020%s|r"):format(NO)
+local YES = ("|cff20ff20%s|r"):format(L.yes)
+local NO = ("|cffff2020%s|r"):format(L.no)
 
 local spells = setmetatable({}, {
 	__index = function(t, k)
@@ -378,6 +377,47 @@ do
 	function module:IsBest(id)
 		return best[id]
 	end
+
+	local food = {
+		-- Deserts
+		[257408] = 8, -- crit
+		[257413] = 8, -- haste
+		[257418] = 8, -- mastery
+		[257422] = 8, -- versatility
+		[288074] = 17, -- stamina
+		-- Large Meals
+		[257410] = 10, -- crit
+		[257415] = 10, -- haste
+		[257420] = 10, -- mastery
+		[257424] = 10, -- versatility
+		[288075] = 22, -- stamina
+
+		[297039] = 14, -- crit
+		[297034] = 14, -- haste
+		[297035] = 14, -- mastery
+		[297037] = 14, -- versatility
+		[297040] = 29, -- stamina
+		-- Galley Banquet
+		[259448] = 11, -- agi
+		[259449] = 11, -- int
+		[259452] = 11, -- str
+		-- Boralus Blood Sausage
+		[290467] = 13, -- agi
+		[290468] = 13, -- int
+		[290469] = 13, -- str
+		-- Bountiful Captain's Feast / Sanguinated Feast
+		[259454] = 15, -- agi
+		[259455] = 15, -- int
+		[259456] = 15, -- str
+		-- F.E.A.S.T.
+		[297116] = 19, -- agi
+		[297117] = 19, -- int
+		[297118] = 19, -- str
+	}
+
+	function module:GetFoodValue(id)
+		return food[id]
+	end
 end
 
 -------------------
@@ -431,7 +471,7 @@ do
 					if noFlasks[player] then
 						warnings[#warnings + 1] = L.noFlask
 					else
-						local flask, expires = getFlask(player)
+						local _, expires = getFlask(player)
 						local remaining = expires and (expires - t) or 0
 						if remaining > 0 and remaining < 600 then -- triggers weirdly sometimes, not sure why
 							whisper(player, L.flaskExpires)
@@ -505,13 +545,14 @@ end
 do
 	local prev = 0
 
-	-- XXX this need to be updated for async loading
-	local function getStatValue(id)
-		local desc = GetSpellDescription(id)
-		if desc then
-			local value = tonumber(desc:match("%d+")) or 0
-			return value >= 75 and tostring(value) or YES
+	-- >.>
+	local function getFlaskValue(id)
+		if not id then return end
+		if id < 251836 or id > 298841 then return end
+		if id < 298836 then
+			return 25
 		end
+		return 38
 	end
 
 	function module:CheckGroup()
@@ -556,8 +597,8 @@ do
 
 				consumablesList[#consumablesList + 1] = {
 					player:gsub("%-.*", ""),
-					food and (getStatValue(food) or spells[161715]) or NO, -- 161715 = Eating
-					flask and (getStatValue(flask) or YES) or NO,
+					food and (food < 0 and spells[161715] or self:GetFoodValue(food) or YES) or NO, -- 161715 = Eating
+					flask and (getFlaskValue(flask) or YES) or NO,
 					rune and YES or NO,
 					getVantusBoss(vantus) or NO,
 					("%d/%d"):format(numBuffs, #buffs),

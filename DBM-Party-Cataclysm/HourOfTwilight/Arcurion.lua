@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(322, "DBM-Party-Cataclysm", 14, 186)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(54590)
 mod:SetEncounterID(1337)
-mod:SetZone()
 
 mod:RegisterCombat("emote", L.Pull)
 --Still don't know why this needs to pull this way, this boss fires an engage event? plus emote only fires FIRST pull so this mod is even broken subsiquent pulls
@@ -18,13 +19,12 @@ mod:RegisterEventsInCombat(
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_SAY"
 )
-mod.onlyHeroic = true
 
 local warnIcyTomb		= mod:NewTargetNoFilterAnnounce(103252, 4)
 local warnChainsFrost	= mod:NewSpellAnnounce(102582, 2)
 local prewarnPhase2		= mod:NewPrePhaseAnnounce(2, 3)
 
-local timerCombatStart	= mod:NewTimer(22.5, "TimerCombatStart", 2457)
+local timerCombatStart	= mod:NewTimer(22.5, "TimerCombatStart", "132349")
 local timerIcyTombCD	= mod:NewNextTimer(30, 103252)
 
 local warnedP2 = false

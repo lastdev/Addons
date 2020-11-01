@@ -17,9 +17,13 @@
 		</Scripts>
 
 		<Frames>
-			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentnameFrame" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_4444" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:RegisterForClicks("AnyUp")
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 						XPerl_RegisterUnitText(_G[self:GetName().."level"])
@@ -33,17 +37,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT"/>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="4" right="4" top="4" bottom="4"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture name="$parentcombatIcon" file="Interface\CharacterFrame\UI-StateIcon" hidden="true">
@@ -99,7 +92,7 @@
 				</Layers>
 			</Button>
 
-			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
+			<Frame name="$parentstatsFrame" inherits="XPerlBackdropTemplate,XPerl_Stats_Template">
 				<Size>
 					<AbsDimension x="80" y="33"/>
 				</Size>
@@ -187,7 +180,7 @@
 		</Anchors>
 	</Button>
 
-	<Frame name="XPerl_Party_Pet_EventFrame" hidden="true">
+	<Frame name="XPerl_Party_Pet_EventFrame" inherits="XPerlBackdropTemplate" hidden="true">
 		<Scripts>
 			<OnLoad function="XPerl_Party_Pet_OnLoadEvents"/>
 		</Scripts>

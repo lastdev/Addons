@@ -376,7 +376,7 @@ function SplitChatMessage(frame, event, ...)
 
 
     s.CHATTARGET = chatTarget
-    s.MESSAGE = safestr(arg1)
+    s.MESSAGE = safestr(arg1):gsub("^%s*(.-)%s*$", "%1")  -- trim spaces
 
 
     if (_G.FCFManager_ShouldSuppressMessage(frame, s.CHATGROUP, s.CHATTARGET)) then
@@ -489,6 +489,7 @@ function SplitChatMessage(frame, event, ...)
 
     -- If we are handling notices, format them like bliz
     if (type == "CHANNEL_NOTICE_USER") then
+      s.NOTICE = arg1
       local globalstring = _G["CHAT_" .. arg1 .. "_NOTICE_BN"];
       local chatnotice
       if globalstring then
@@ -513,6 +514,7 @@ function SplitChatMessage(frame, event, ...)
       end
     elseif type == "CHANNEL_NOTICE" then
       local globalstring;
+      s.NOTICE = arg1
       if ( arg1 == "TRIAL_RESTRICTED" ) then
         globalstring = _G.CHAT_TRIAL_RESTRICTED_NOTICE_TRIAL;
       else
@@ -532,12 +534,19 @@ function SplitChatMessage(frame, event, ...)
     if strlen(arg6) > 0 then
       s.fF = ""
 
-      -- 2.4 Change
-      if arg6 == "GM" then
-        s.FLAG = "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz.blp:0:2:0:-3|t "
-      elseif (arg6 == "DEV") then
-        --Add Blizzard Icon, this was sent by a Dev
-        s.FLAG = "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz.blp:0:2:0:-3|t ";
+      if arg6 == "GM" or arg6 == "DEV" then
+        -- Add Blizzard Icon if this was sent by a GM/DEV
+	      s.FLAG = "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t "
+      elseif arg6 == "GUIDE" then
+        if _G.IsActivePlayerNewcomer() then
+          -- Add guide text if player is a newcomer and this was sent by a mentor
+          s.FLAG = _G.NPEV2_CHAT_USER_TAG_GUIDE .. " "
+        end
+      elseif arg6 == "NEWCOMER" then
+        if _G.IsActivePlayerMentor() then
+          -- Add murloc icon if player is a mentor and this was sent by a new player
+          s.FLAG = _G.NPEV2_CHAT_USER_TAG_NEWCOMER
+        end
       else
         s.FLAG = _G["CHAT_FLAG_" .. arg6]
       end

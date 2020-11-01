@@ -5,8 +5,6 @@ local module = oRA:NewModule("BattleRes", "AceTimer-3.0")
 local L = scope.locale
 local coloredNames = oRA.coloredNames
 
---luacheck: globals GameFontNormal
-
 local resAmount = 0
 local badBuffs = {
 	27827, -- Spirit of Redemption
@@ -16,6 +14,7 @@ local resSpells = {
 	[20484] = true,  -- Rebirth
 	[61999] = true,  -- Raise Ally
 	[95750] = true,  -- Soulstone Resurrection
+	[265116] = true, -- Unstable Temporal Time Shifter
 }
 local theDead = {}
 local updateFunc
@@ -123,6 +122,7 @@ end
 local defaults = {
 	profile = {
 		showDisplay = true,
+		alwaysShow = false,
 		lock = false,
 	}
 }
@@ -176,6 +176,22 @@ local options = {
 			order = 2,
 			width = "full",
 		},
+		alwaysShow = {
+			type = "toggle",
+			name = colorize(L.battleResAlwaysShow),
+			desc = L.battleResAlwaysShowDesc,
+			descStyle = "inline",
+			set = function(_, v)
+				module.db.profile.alwaysShow = v
+				if v then
+					module:CheckOpen()
+				else
+					module:Close()
+				end
+			end,
+			order = 3,
+			width = "full",
+		},
 		lock = {
 			type = "toggle",
 			name = colorize(L.lockMonitor),
@@ -185,7 +201,7 @@ local options = {
 				module.db.profile.lock = v
 				toggleLock()
 			end,
-			order = 3,
+			order = 4,
 			width = "full",
 		},
 	}
@@ -220,7 +236,7 @@ end
 do
 	local GetTime, GetSpellCharges = GetTime, GetSpellCharges
 	local function updateTime()
-		local charges, maxCharges, started, duration = GetSpellCharges(20484) -- Rebirth
+		local charges, _, started, duration = GetSpellCharges(20484) -- Rebirth
 		if not charges then return end
 		local time = duration - (GetTime() - started)
 		local m = floor(time/60)
@@ -295,7 +311,7 @@ do
 		for i = 1, 2 do
 			local index = p[i]
 			if index then
-				local _, _, rank, maxRank, _, _, skillLine, _, _, _, skillLineName = GetProfessionInfo(index)
+				local _, _, rank, _, _, _, _, _, _, _, skillLineName = GetProfessionInfo(index)
 				if skillLineName == C_TradeSkillUI.GetTradeSkillDisplayName(2499) and rank > 85 then -- Zandalari/Kul Tiran Engineering
 					isEngineer = true
 					return true
@@ -303,7 +319,7 @@ do
 			end
 		end
 
-		return false
+		return module.db.profile.alwaysShow
 	end
 
 	function module:CheckOpen()

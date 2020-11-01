@@ -7,8 +7,8 @@ local __Pool = LibStub:GetLibrary("ovale/Pool")
 local OvalePool = __Pool.OvalePool
 local __Lexer = LibStub:GetLibrary("ovale/Lexer")
 local OvaleLexer = __Lexer.OvaleLexer
-local __Stance = LibStub:GetLibrary("ovale/Stance")
-local STANCE_NAME = __Stance.STANCE_NAME
+local __statesStance = LibStub:GetLibrary("ovale/states/Stance")
+local STANCE_NAME = __statesStance.STANCE_NAME
 local ipairs = ipairs
 local next = next
 local pairs = pairs
@@ -224,7 +224,7 @@ local function isListItemFlattenParameters(key, value)
     return key == "listitem"
 end
 local function isCsvNode(node)
-    return node.type == "comma_separated_values" or node.previousType == "comma_separated_values"
+    return (node.type == "comma_separated_values" or node.previousType == "comma_separated_values")
 end
 local function isVariableNode(node)
     return node.type == "variable" or node.previousType == "variable"
@@ -337,12 +337,11 @@ local SelfPool = __class(OvalePool, {
     Clean = function(self, node)
         if node.child then
             self.ovaleAst.childrenPool:Release(node.child)
-            node.child = nil
         end
         if node.postOrder then
             self.ovaleAst.postOrderPool:Release(node.postOrder)
-            node.postOrder = nil
         end
+        wipe(node)
     end,
 })
 local function isAstNode(a)
@@ -368,7 +367,7 @@ __exports.OvaleASTClass = __class(nil, {
         self.nodesPool = SelfPool(self)
         self.UnparseAddCheckBox = function(node)
             local s
-            if node.rawPositionalParams and next(node.rawPositionalParams) or node.rawNamedParams and next(node.rawNamedParams) then
+            if (node.rawPositionalParams and next(node.rawPositionalParams)) or (node.rawNamedParams and next(node.rawNamedParams)) then
                 s = format("AddCheckBox(%s %s %s)", node.name, self:Unparse(node.description), self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
             else
                 s = format("AddCheckBox(%s %s)", node.name, self:Unparse(node.description))
@@ -519,11 +518,11 @@ __exports.OvaleASTClass = __class(nil, {
             end
         end
         self.UnparseItemInfo = function(node)
-            local identifier = node.name and node.name or node.itemId
+            local identifier = (node.name and node.name) or node.itemId
             return format("ItemInfo(%s %s)", identifier, self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
         end
         self.UnparseItemRequire = function(node)
-            local identifier = node.name and node.name or node.itemId
+            local identifier = (node.name and node.name) or node.itemId
             return format("ItemRequire(%s %s %s)", identifier, node.property, self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
         end
         self.UnparseList = function(node)
@@ -566,15 +565,15 @@ __exports.OvaleASTClass = __class(nil, {
             return outputString
         end
         self.UnparseSpellAuraList = function(node)
-            local identifier = node.name and node.name or node.spellId
+            local identifier = (node.name and node.name) or node.spellId
             return format("%s(%s %s)", node.keyword, identifier, self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
         end
         self.UnparseSpellInfo = function(node)
-            local identifier = node.name and node.name or node.spellId
+            local identifier = (node.name and node.name) or node.spellId
             return format("SpellInfo(%s %s)", identifier, self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
         end
         self.UnparseSpellRequire = function(node)
-            local identifier = node.name and node.name or node.spellId
+            local identifier = (node.name and node.name) or node.spellId
             return format("SpellRequire(%s %s %s)", identifier, node.property, self:UnparseParameters(node.rawPositionalParams, node.rawNamedParams))
         end
         self.UnparseString = function(node)
@@ -1775,7 +1774,7 @@ __exports.OvaleASTClass = __class(nil, {
         return precedence
     end,
     HasParameters = function(self, node)
-        return node.rawPositionalParams and next(node.rawPositionalParams) or node.rawNamedParams and next(node.rawNamedParams)
+        return ((node.rawPositionalParams and next(node.rawPositionalParams)) or (node.rawNamedParams and next(node.rawNamedParams)))
     end,
     Unparse = function(self, node)
         if node.asString then
@@ -2060,6 +2059,28 @@ __exports.OvaleASTClass = __class(nil, {
         end
         return node
     end,
+    newFunction = function(self, nodeList, name, hasParameters)
+        local node = self:NewNode(nodeList)
+        node.type = "function"
+        node.name = name
+        if hasParameters then
+            node.rawNamedParams = self.rawNamedParametersPool:Get()
+            node.rawPositionalParams = self.rawPositionalParametersPool:Get()
+        end
+        return node
+    end,
+    newString = function(self, nodeList, value)
+        local node = self:NewNode(nodeList)
+        node.type = "string"
+        node.value = value
+        return node
+    end,
+    newValue = function(self, nodeList, value)
+        local node = self:NewNode(nodeList)
+        node.type = "value"
+        node.value = value
+        return node
+    end,
     NewNode = function(self, nodeList, hasChild)
         local node = self.nodesPool:Get()
         if nodeList then
@@ -2117,8 +2138,8 @@ __exports.OvaleASTClass = __class(nil, {
     Release = function(self, ast)
         if ast.annotation then
             self:ReleaseAnnotation(ast.annotation)
-            ast.annotation = nil
         end
+        wipe(ast)
         self.nodesPool:Release(ast)
     end,
     ParseCode = function(self, nodeType, code, nodeList, annotation)
@@ -2377,7 +2398,7 @@ __exports.OvaleASTClass = __class(nil, {
             for _, node in ipairs(annotation.parametersReference) do
                 if node.rawNamedParams then
                     for stanceKeyword in kpairs(STANCE_KEYWORD) do
-                        local valueNode = node.rawNamedParams[stanceKeyword]
+                        local valueNode = (node.rawNamedParams[stanceKeyword])
                         if valueNode then
                             if isCsvNode(valueNode) then
                                 valueNode = valueNode.csv[1]

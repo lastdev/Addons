@@ -500,6 +500,14 @@ function addon:GetThisGuildKey()
 	return format("%s.%s.%s", THIS_ACCOUNT, longName, guild)
 end
 
+-- Used by Altoholic_Guild, only for guilds on the same account and realm as the current player
+function addon:GetGuildKeyByGuildName(guildName)
+    local longName = addon:GetLongRealmName(GetRealmName())
+    if not longName then return end
+    
+   	return format("%s.%s.%s", THIS_ACCOUNT, longName, guildName) 
+end
+
 function addon:GetCharacter(name, realm, account)
 	local key = GetKey(name, realm, account)
 	if Characters[key] then		-- if the key is known, return it to caller, it can be passed to other modules
@@ -748,7 +756,7 @@ function addon:ImportData(module, data, name, realm, account)
 	end
 
 	assert(type(module) == "table")
-	-- change this, it shoudl be a COPYTABLE instead of an assignation, otherwise, ace DB wildcards are not applied
+	-- change this, it should be a COPYTABLE instead of an assignation, otherwise, ace DB wildcards are not applied
 	-- module.Characters[GetKey(name, realm, account)] = data
 	CopyTable(data, module.Characters[GetKey(name, realm, account)])
 
@@ -856,7 +864,7 @@ function addon:SetLongRealmName(realm, name)
 end
 
 function addon:GetLongRealmName(realm)
-	return (realm) and addon.db.global.ShortToLongRealmNames[realm] or nil
+	return (realm) and addon.db.global.ShortToLongRealmNames[realm] or (realm)
 end
 
 function addon:GetRealmsConnectedWith(realm)
@@ -875,4 +883,13 @@ function addon:GetRealmsConnectedWith(realm)
 	end
 	
 	return out
+end
+
+-- *** Utility ***
+function addon:GetSecondsUntilDailyReset()
+    local seconds = C_DateAndTime.GetSecondsUntilWeeklyReset()
+    while seconds > 86400 do
+        seconds = seconds - 86400
+    end
+    return seconds
 end

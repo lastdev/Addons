@@ -4,27 +4,33 @@
 
 <Script file="Advanced.lua" />
 
-<Button name="LiteMountOptionsFlagButtonTemplate" virtual="true">
+<Button name="LiteMountFlagButtonTemplate" virtual="true" mixin="LiteMountFlagButtonMixin">
     <Size y="22" />
+
+    <Scripts>
+        <OnShow method="OnShow" />
+        <OnEnter method="OnEnter" />
+        <OnLeave method="OnLeave" />
+    </Scripts>
 
     <Layers>
         <Layer level="ARTWORK">
-            <FontString name="$parentText" parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
+            <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
                 <Anchors>
                     <Anchor point="LEFT" x="24" />
-                    <Anchor point="RIGHT" x="-12" />
+                    <Anchor point="RIGHT" x="-4" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
 
     <Frames>
-        <Button name="$parentDeleteButton" parentKey="DeleteButton" hidden="true">
+        <Button parentKey="DeleteButton" hidden="true">
             <Size x="14" y="14" />
             <Anchors> <Anchor point="LEFT" x="6" /> </Anchors>
-            <NormalTexture name="$parentNormalTexture" file="Interface\Buttons\UI-MinusButton-UP"/>
-            <PushedTexture name="$parentPushedTexture" file="Interface\Buttons\UI-MinusButton-DOWN"/>
-            <HighlightTexture name="$parentHighlightTexture" file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD"/>
+            <NormalTexture file="Interface\Buttons\UI-MinusButton-UP"/>
+            <PushedTexture file="Interface\Buttons\UI-MinusButton-DOWN"/>
+            <HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD"/>
             <Scripts>
                 <OnClick>
                     local f = self:GetParent().flag
@@ -33,23 +39,13 @@
             </Scripts>
         </Button>
     </Frames>
-
-    <Scripts>
-        <OnLoad>
-            self:SetBackdropBorderColor(0.3, 0.3, 0.3, 0.3)
-            self:SetBackdropColor(0.3, 0.3, 0.3, 0.3)
-        </OnLoad>
-        <OnEnter function="LiteMountOptionsFlagButton_OnEnter" />
-        <OnLeave function="LiteMountOptionsFlagButton_OnLeave" />
-    </Scripts>
-
 </Button>
 
-<Frame name="LiteMountOptionsAdvanced" hidden="true" inherits="LiteMountOptionsPanelTemplate">
+<Frame name="LiteMountAdvancedPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountAdvancedPanelMixin">
 
     <Layers>
         <Layer level="ARTWORK">
-            <FontString name="$parentExplainText" parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_ADVANCED_EXP">
+            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_ADVANCED_EXP">
                 <Anchors>
                     <Anchor point="TOP" y="-48" />
                     <Anchor point="LEFT" x="48" />
@@ -60,31 +56,21 @@
     </Layers>
 
     <Frames>
-        <Frame name="$parentEditBoxContainer" parentKey="EditBoxContainer">
-            <Size x="400" />
+        <Frame parentKey="EditBoxContainer" inherits="TooltipBackdropTemplate">
+            <Size x="424" />
+            <KeyValues>
+                <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+                <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
+                <KeyValue key="backdropBorderColorAlpha" value="0.5" type="number"/>
+            </KeyValues>
             <Anchors>
                 <Anchor point="TOP" y="-160" />
-                <Anchor point="LEFT" x="24" />
+                <Anchor point="LEFT" x="16" />
                 <Anchor point="BOTTOM" y="48" />
             </Anchors>
-
-            <Backdrop edgefile="Interface\Tooltips\UI-Tooltip-Border" bgfile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
-                <EdgeSize val="16" />
-                <TileSize val="16" />
-                <BackgroundInsets>
-                    <AbsInset left="5" right="5" top="5" bottom="5" />
-                </BackgroundInsets>
-            </Backdrop>
-
-            <Scripts>
-                <OnLoad>
-                    self:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.8)
-                    self:SetBackdropColor(0, 0, 0, 0.5)
-                </OnLoad>
-            </Scripts>
         </Frame>
 
-        <ScrollFrame name="$parentEditScroll" parentKey="EditScroll" inherits="UIPanelScrollFrameTemplate">
+        <ScrollFrame parentKey="EditScroll" inherits="UIPanelScrollFrameTemplate" mixin="LiteMountAdvancedEditScrollMixin">
 
             <Anchors>
                 <Anchor point="TOPLEFT" x="8" y="-8" relativeKey="$parent.EditBoxContainer" />
@@ -92,37 +78,20 @@
             </Anchors>
 
             <Scripts>
-                <OnLoad>
-                    self.scrollBarHideable = 1
-                    self.ScrollBar:Hide()
-                </OnLoad>
-                <OnShow>
-                    self.EditBox:SetWidth(self:GetWidth() - 18)
-                </OnShow>
+                <OnLoad method="OnLoad" />
+                <OnShow method="OnShow" />
             </Scripts>
 
             <ScrollChild>
-                <EditBox name="$parentEditBox" parentKey="EditBox" multiLine="true" autoFocus="false">
+                <EditBox parentKey="EditBox" multiLine="true" autoFocus="false" mixin="LiteMountAdvancedEditBoxMixin">
                     <Size x="1" y="1" />
                     <Anchors>
                         <Anchor point="TOPLEFT" />
                     </Anchors>
                     <Scripts>
-                        <OnTextChanged function="LiteMountOptionsControl_OnChanged" />
+                        <OnLoad method="OnLoad" />
+                        <OnTextChanged function="LiteMountOptionsControl_OnTextChanged" />
                         <OnEscapePressed function="EditBox_ClearFocus" />
-                        <OnLoad>
-                             self.SetOption = function (self, v, i)
-                                    LM_Options.db.profile.buttonActions[i] = v
-                                    LiteMount.actions[i]:CompileActions()
-                                end
-                            self.GetOption = function (self, i)
-                                    return LM_Options.db.profile.buttonActions[i]
-                                end
-                            self.GetOptionDefault = function (self, i)
-                                    return LM_Options.db.defaults.profile.buttonActions['*']
-                                end
-                            LiteMountOptionsControl_OnLoad(self, self:GetParent():GetParent())
-                        </OnLoad>
                         <OnUpdate function="InputScrollFrame_OnUpdate" />
                         <OnCursorChanged function="ScrollingEdit_OnCursorChanged" />
                     </Scripts>
@@ -131,18 +100,7 @@
             </ScrollChild>
         </ScrollFrame>
 
-        <Button name="$parentRevertButton" parentKey="RevertButton" inherits="UIPanelButtonTemplate" text="UNLOCK">
-            <Size x="96" y="22" />
-            <Anchors>
-                <Anchor point="BOTTOMLEFT" x="24" y="16" />
-            </Anchors>
-            <Scripts>
-                <OnShow function="LiteMountOptionsAdvancedRevert_OnShow" />
-                <OnClick function="LiteMountOptionsAdvancedRevert_OnClick" />
-            </Scripts>
-        </Button>
-
-        <Button name="$parentDefaultButton" parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
+        <Button parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
             <Size x="96" y="22" />
             <Anchors>
                 <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EditBoxContainer" x="-8" y="3" />
@@ -151,55 +109,41 @@
                 <OnClick>
                     local parent = self:GetParent()
                     LiteMountOptionsControl_Default(parent.EditScroll.EditBox, true)
-                    LiteMountOptionsControl_Refresh(parent.EditScroll.EditBox)
                 </OnClick>
             </Scripts>
         </Button>
 
-        <Frame name="$parentBindingDropDown" parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
+        <Frame parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
             <Size x="93" y="22" />
             <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.EditBoxContainer" x="-8" />
             </Anchors>
         </Frame>
 
-        <Frame name="$parentFlagContainer" parentKey="FlagContainer">
+        <Frame parentKey="FlagContainer" inherits="TooltipBackdropTemplate">
             <Anchors>
-                <Anchor point="TOPLEFT" relativeKey="$parent.EditBoxContainer" relativePoint="TOPRIGHT" x="16" />
+                <Anchor point="TOPLEFT" relativeKey="$parent.EditBoxContainer" relativePoint="TOPRIGHT" x="8" />
                 <Anchor point="BOTTOM" relativeKey="$parent.EditBoxContainer" />
-                <Anchor point="RIGHT" x="-24" />
+                <Anchor point="RIGHT" x="-16" />
             </Anchors>
 
-            <Backdrop edgefile="Interface\Tooltips\UI-Tooltip-Border" bgfile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
-                <EdgeSize val="16" />
-                <TileSize val="16" />
-                <BackgroundInsets>
-                    <AbsInset left="5" right="5" top="5" bottom="5" />
-                </BackgroundInsets>
-            </Backdrop>
-
-            <Scripts>
-                <OnLoad>
-                    self:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.8)
-                    self:SetBackdropColor(0, 0, 0, 0.5)
-                </OnLoad>
-            </Scripts>
+            <KeyValues>
+                <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+                <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
+                <KeyValue key="backdropBorderColorAlpha" value="0.5" type="number"/>
+            </KeyValues>
         </Frame>
 
-        <ScrollFrame name="$parentFlagScroll" parentKey="FlagScroll" inherits="MinimalHybridScrollFrameTemplate">
+        <ScrollFrame parentKey="FlagScroll" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountFlagScrollMixin">
             <Anchors>
                 <Anchor point="TOPLEFT" relativeKey="$parent.FlagContainer" x="8" y="-8" />
                 <Anchor point="BOTTOMRIGHT" relativeKey="$parent.FlagContainer" x="-28" y="8" />
             </Anchors>
             <Scripts>
-                <OnLoad>
-                    local track = _G[self.scrollBar:GetName().."Track"]
-                    track:Hide()
-                    self.scrollBar.doNotHide = true
-                </OnLoad>
+                <OnLoad method="OnLoad" />
             </Scripts>
             <Frames>
-                <Button name="$parentAddFlagButton" parentKey="AddFlagButton" inherits="UIPanelButtonTemplate" text="ADD" hidden="true">
+                <Button parentKey="AddFlagButton" inherits="UIPanelButtonTemplate" text="ADD" hidden="true">
                     <Size x="96" y="22" />
                     <Scripts>
                         <OnClick>
@@ -210,7 +154,7 @@
             </Frames>
         </ScrollFrame>
 
-        <EditBox name="$parentDocURL" parentKey="DocURL" autoFocus="false" ignoreArrows="true">
+        <EditBox parentKey="DocURL" autoFocus="false" ignoreArrows="true">
             <Size y="16" />
             <Fontstring inherits="GameFontHighlight" />
             <Anchors>
@@ -219,7 +163,7 @@
             </Anchors>
             <Scripts>
                 <OnLoad>
-                    self.url = 'https://www.curseforge.com/wow/addons/litemount/pages/advanced-options'
+                    self.url = 'https://github.com/xod-wow/LiteMount/wiki/Advanced-Options'
                 </OnLoad>
                 <OnShow>
                     self:SetText(self.url)
@@ -239,18 +183,17 @@
 
     <Layers>
         <Layer level="ARTWORK">
-            <FontString name="$parentFlagsLabel" parentKey="FlagsLabel" inherits="GameFontNormalLarge" text="LM_FLAGS">
+            <FontString parentKey="FlagsLabel" inherits="GameFontNormalLarge" text="LM_FLAGS">
                 <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.FlagContainer" x="8" y="8" />
+                    <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.FlagContainer" x="30" y="8" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
 
     <Scripts>
-        <OnLoad function="LiteMountOptionsAdvanced_OnLoad" />
-        <OnShow function="LiteMountOptionsAdvanced_OnShow" />
-        <OnSizeChanged function="LiteMountOptionsAdvanced_OnSizeChanged" />
+        <OnLoad method="OnLoad" />
+        <OnSizeChanged method="OnSizeChanged" />
     </Scripts>
 </Frame>
 

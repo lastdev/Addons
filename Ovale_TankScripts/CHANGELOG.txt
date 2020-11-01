@@ -1,3 +1,30 @@
+901.26
+------
+Initial SL release for DRUID, WARRIOR, DEATH KNIGHT (thanks to @ultijlam) and DEMON HUNTER.
+All tanks are now represented.
+
+901.25
+------
+MONK:
+* fix touch of death
+* fix invoke Niuzao
+
+901.24
+------
+Initial SL release for MONK and PALADIN
+
+820.23
+------
+DH:
+* Fiery Demise optimizations
+* optimize DPS rotation
+
+PALADIN:
+* Fireblood before cleanse
+
+WARRIOR:
+* Don't propose battle shout, get a weak aura instead
+
 820.22
 ------
 DRUID:

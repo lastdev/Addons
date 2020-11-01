@@ -8,14 +8,17 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1204 $")
-XPerl_SetModuleRevision("$Revision: 1204 $")
+end, "$Revision: 1251 $")
+XPerl_SetModuleRevision("$Revision: 1251 $")
 
-local LCD = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LibStub and LibStub("LibClassicDurations")
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local LCD = IsClassic and LibStub and LibStub("LibClassicDurations", true)
+local UnitAuraDirect
 if LCD then
 	LCD:Register("ZPerl")
+	UnitAuraDirect = LCD.UnitAuraDirect
 end
-local HealComm = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LibStub and LibStub("LibHealComm-4.0")
+local HealComm = IsClassic and LibStub and LibStub("LibHealComm-4.0", true)
 
 -- Upvalues
 local _G = _G
@@ -84,11 +87,9 @@ local SpellIsTargeting = SpellIsTargeting
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitAlternatePowerInfo = UnitAlternatePowerInfo
 local UnitAura = UnitAura
-local UnitBuff = UnitBuff
 local UnitCanAssist = UnitCanAssist
 local UnitCanAttack = UnitCanAttack
 local UnitClass = UnitClass
-local UnitDebuff = UnitDebuff
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
@@ -128,7 +129,7 @@ local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
 
 local RealUnitHealth
 local RealUnitHealthMax
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	RealUnitHealth = function(unit)
 		if RealMobHealth then
 			local cur, max = RealMobHealth.GetUnitHealth(unit)
@@ -369,14 +370,14 @@ local function DoRangeCheck(unit, opt)
 	end
 
 	if (opt.PlusDebuff and ((opt.PlusHealth and range == 0) or not opt.PlusHealth)) then
-		local name = UnitDebuff(unit, 1, "RAID")
+		local name = UnitAura(unit, 1, "HARMFUL|RAID")
 		if (not name) then
 			range = 0
 		else
 			if (ArcaneExclusions[name]) then
 				-- It's one of the filtered debuffs, so we have to iterate thru all debuffs to see if anything is curable
 				for i = 1, 40 do
-					local name = UnitDebuff(unit, i, "RAID")
+					local name = UnitAura(unit, i, "HARMFUL|RAID")
 					if (not name) then
 						range = 0
 						break
@@ -392,8 +393,8 @@ local function DoRangeCheck(unit, opt)
 	end
 
 	if (not range) then
-		--local playerRealm = UnitDebuff("player", SpiritRealm)
-		--local unitRealm = UnitDebuff(unit, SpiritRealm)
+		--local playerRealm = UnitAura("player", SpiritRealm, "HARMFUL")
+		--local unitRealm = UnitAura(unit, SpiritRealm, "HARMFUL")
 
 		--[[if playerRealm ~= unitRealm then
 			range = nil
@@ -426,7 +427,7 @@ local function DoRangeCheck(unit, opt)
 				local checkedRange
 				if UnitCanAssist("player", unit) then
 					-- Vial of the Sunwell (40y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 34471 or 1713 --[[Ankh of Life]], unit)
+					range = IsItemInRange(not IsClassic and 34471 or 1713 --[[Ankh of Life]], unit)
 					if range == nil then
 						-- Fallback (40y)
 						range, checkedRange = UnitInRange(unit)
@@ -448,17 +449,17 @@ local function DoRangeCheck(unit, opt)
 			elseif (opt.interact == 3) then -- 10y
 				if UnitCanAssist("player", unit) then
 					-- Sparrowhawk Net (10y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 32321 or 21866 --[[Alterac Ram Collar DND]], unit)
+					range = IsItemInRange(not IsClassic and 32321 or 21866 --[[Alterac Ram Collar DND]], unit)
 					if range == nil then
 						-- Fallback (8y) (Classic = 10 yards)
-						range = CheckInteractDistance(unit, WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 2 or 1)
+						range = CheckInteractDistance(unit, not IsClassic and 2 or 1)
 					end
 				else
 					-- Sparrowhawk Net (10y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 32321 or 9618 --[[Wildkin Muisek Vessel]], unit)
+					range = IsItemInRange(not IsClassic and 32321 or 9618 --[[Wildkin Muisek Vessel]], unit)
 					if range == nil then
 						-- Fallback (8y) (Classic = 10 yards)
-						range = CheckInteractDistance(unit, WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 2 or 1)
+						range = CheckInteractDistance(unit, not IsClassic and 2 or 1)
 					end
 				end
 			elseif (opt.interact == 2) then -- 20y
@@ -471,7 +472,7 @@ local function DoRangeCheck(unit, opt)
 					end
 				else
 					-- Gnomish Death Ray (20y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 10645 or 1191 --[[Bag of Marbles]], unit)
+					range = IsItemInRange(not IsClassic and 10645 or 1191 --[[Bag of Marbles]], unit)
 					if range == nil then
 						-- Fallback (28y) (Classic = 21 yards)
 						range = CheckInteractDistance(unit, 4)
@@ -480,14 +481,14 @@ local function DoRangeCheck(unit, opt)
 			elseif (opt.interact == 1) then -- 30y
 				if UnitCanAssist("player", unit) then
 					-- Handful of Snowflakes (30y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 34191 or 1180 --[[Scroll of Stamina]], unit)
+					range = IsItemInRange(not IsClassic and 34191 or 1180 --[[Scroll of Stamina]], unit)
 					if range == nil then
 						-- Fallback (28y) (Classic = 21 yards)
 						range = CheckInteractDistance(unit, 4)
 					end
 				else
 					-- Handful of Snowflakes (30y)
-					range = IsItemInRange(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and 34191 or 835 --[[Large Rope Net]], unit)
+					range = IsItemInRange(not IsClassic and 34191 or 835 --[[Large Rope Net]], unit)
 					if range == nil then
 						-- Fallback (28y) (Classic = 21 yards)
 						range = CheckInteractDistance(unit, 4)
@@ -784,6 +785,7 @@ end
 
 -- XPerl_StatsFrame_Setup
 function XPerl_StatsFrame_Setup(self)
+	self:OnBackdropLoaded()
 	XPerl_SetChildMembers(self)
 	self.SetGrey = XPerl_StatsFrame_SetGrey
 end
@@ -1380,12 +1382,12 @@ end
 
 -- XPerl_MinimapMenu
 function XPerl_MinimapMenu(self)
-	if (not XPerl_Minimap) then
-		CreateFrame("Frame", "XPerl_Minimap")
-		XPerl_MinimapMenu_OnLoad(XPerl_Minimap)
+	if (not ZPerl_Minimap) then
+		CreateFrame("Frame", "ZPerl_Minimap", nil, BackdropTemplateMixin and "BackdropTemplate")
+		XPerl_MinimapMenu_OnLoad(ZPerl_Minimap)
 	end
 
-	MSA_ToggleDropDownMenu(1, nil, XPerl_Minimap_DropDown, "cursor", 0, 0)
+	MSA_ToggleDropDownMenu(1, nil, ZPerl_Minimap_DropDown, "cursor", 0, 0)
 end
 
 local xpModList = {"ZPerl", "ZPerl_Player", "ZPerl_PlayerBuffs", "ZPerl_PlayerPet", "ZPerl_Target", "ZPerl_TargetTarget", "ZPerl_Party", "ZPerl_PartyPet", "ZPerl_ArcaneBar", "ZPerl_RaidFrames", "ZPerl_RaidHelper", "ZPerl_RaidAdmin", "ZPerl_RaidMonitor", "ZPerl_RaidPets"}
@@ -1393,7 +1395,7 @@ local xpStartupMemory = {}
 
 -- ZPerl_MinimapButton_Init
 function ZPerl_MinimapButton_Init(self)
-	self.time = 0
+	--self.time = 0
 	collectgarbage()
 	UpdateAddOnMemoryUsage()
 	local totalKB = 0
@@ -1412,7 +1414,7 @@ function ZPerl_MinimapButton_Init(self)
 		self:Hide()
 	end
 
-	self.UpdateTooltip = XPerl_MinimapButton_OnEnter
+	--self.UpdateTooltip = XPerl_MinimapButton_OnEnter
 
 	ZPerl_MinimapButton_Init = nil
 end
@@ -1422,13 +1424,8 @@ function XPerl_MinimapButton_UpdatePosition(self)
 	if (not conf.minimap.radius) then
 		conf.minimap.radius = 78
 	end
-	self:SetPoint(
-		"TOPLEFT",
-		"Minimap",
-		"TOPLEFT",
-		54 - (conf.minimap.radius * cos(conf.minimap.pos)),
-		(conf.minimap.radius * sin(conf.minimap.pos)) - 55
-	)
+	self:ClearAllPoints()
+	self:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 54 - (conf.minimap.radius * cos(conf.minimap.pos)), (conf.minimap.radius * sin(conf.minimap.pos)) - 55)
 end
 
 -- XPerl_MinimapButton_Dragging
@@ -1565,11 +1562,11 @@ function XPerl_MinimapButton_Details(tt, ldb)
 	end
 
 	tt:Show()
-	tt.updateTooltip = 1
+	--tt.updateTooltip = 1
 end
 
 function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
-	local _, _, _, _, _, _, showOnRaid = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitAlternatePowerInfo(unitID)
+	local _, _, _, _, _, _, showOnRaid, _, _, _, _, _, _, _, _ = not IsClassic and GetUnitPowerBarInfo(unitID)
 	if ( showOnRaid and UnitHasVehicleUI(unitID) and (UnitInParty(unitID) or UnitInRaid(unitID)) ) then
 		return ALTERNATE_POWER_INDEX
 	else
@@ -1847,7 +1844,7 @@ local MagicCureTalents = {
 
 local function CanClassCureMagic(class)
 	if (MagicCureTalents[class]) then
-		return WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and GetSpecialization() == MagicCureTalents[class] or (MagicCureTalentsClassic[class] and IsSpellKnown(MagicCureTalentsClassic[class]))
+		return not IsClassic and GetSpecialization() == MagicCureTalents[class] or (MagicCureTalentsClassic[class] and IsSpellKnown(MagicCureTalentsClassic[class]))
 	end
 end
 
@@ -1924,7 +1921,7 @@ function ZPerl_DebufHighlightInit()
 			if (CanClassCureMagic(playerClass)) then
 				magic = Curses.Magic
 			end
-			return (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and Curses.Curse) or (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and Curses.Poison) or (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and Curses.Disease) or magic or show
+			return (not IsClassic and Curses.Curse) or (IsClassic and Curses.Poison) or (IsClassic and Curses.Disease) or magic or show
 		end
 	elseif (playerClass == "ROGUE") then
 		getShow = function(Curses)
@@ -1997,7 +1994,7 @@ function XPerl_CheckDebuffs(self, unit, resetBorders)
 	local _, unitClass = UnitClass(unit)
 
 	for i = 1, 40 do
-		local name, _, _, debuffType = UnitDebuff(unit, i)
+		local name, _, _, debuffType = UnitAura(unit, i, "HARMFUL")
 		if (not name) then
 			break
 		end
@@ -2158,7 +2155,7 @@ function XPerl_RestoreAllPositions()
 	local table = XPerl_GetSavePositionTable()
 	if table then
 		for k, v in pairs(table) do
-			if k == "XPerl_Runes" or k == "XPerl_Frame" or k == "XPerl_RaidMonitor_Frame" or k == "XPerl_Check" or k == "XPerl_AdminFrame" or k == "XPerl_Assists_Frame" then
+			if k == "XPerl_Runes" or k == "XPerl_RaidHelper_Frame" or k == "XPerl_RaidMonitor_Frame" or k == "XPerl_Check" or k == "XPerl_AdminFrame" or k == "XPerl_Assists_Frame" then
 				-- Fix for a wrong name with versions 2.3.2 and 2.3.2a
 				-- It was using XPerl_Frame instead of XPerl_MTList_Anchor
 				-- and XPerl_RaidMonitor_Frame instead of XPerl_RaidMonitor_Anchor
@@ -2204,7 +2201,7 @@ local BuffExceptions
 local DebuffExceptions
 local SeasonalDebuffs
 local RaidFrameIgnores
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+if IsClassic then
 	BuffExceptions = {
 		PRIEST = {
 			[GetSpellInfo(774)] = true,					-- Rejuvenation
@@ -2377,19 +2374,19 @@ end
 
 -- BuffException
 local showInfo
-local function BuffException(unit, index, flag, func, exceptions, raidFrames)
+local function BuffException(unit, index, filter, func, exceptions, raidFrames)
 	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID
-	if (flag ~= "RAID") then
+	if (filter ~= "HELPFUL|RAID" and filter ~= "HARMFUL|RAID") then
 		-- Not filtered, just return it
-		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, index)
+		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, index, filter)
 		return name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index
 	end
 
-	name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, index, "RAID")
+	name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, index, filter)
 	if (icon) then
 		-- We need the index of the buff unfiltered later for tooltips
 		for i = 1, 40 do
-			local name1, icon1, count1, _, _, _, unitCaster1 = func(unit, i)
+			local name1, icon1, count1, _, _, _, unitCaster1 = func(unit, i, filter)
 			if (not name1) then
 				break
 			end
@@ -2405,7 +2402,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	-- See how many filtered buffs WoW has returned by default
 	local normalBuffFilterCount = 0
 	for i = 1, 40 do
-		name = func(unit, i, "RAID")
+		name = func(unit, i, filter == "HELPFUL" and "HELPFUL|RAID" or (filter == "HARMFUL" and "HARMFUL|RAID" or filter))
 		if (not name) then
 			normalBuffFilterCount = i - 1
 			break
@@ -2418,7 +2415,7 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 	local classExceptions = exceptions[playerClass]
 	local allExceptions = exceptions.ALL
 	for i = 1, 40 do
-		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, i)
+		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = func(unit, i, filter)
 		if (not name) then
 			break
 		end
@@ -2451,11 +2448,11 @@ local function BuffException(unit, index, flag, func, exceptions, raidFrames)
 end
 
 -- DebuffException
-local function DebuffException(unit, start, flag, func, raidFrames)
+local function DebuffException(unit, start, filter, func, raidFrames)
 	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index
 	local valid = 0
 	for i = 1, 40 do
-		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, i, flag, func, DebuffExceptions, raidFrames)
+		name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, i, filter, func, DebuffExceptions, raidFrames)
 		if (not name) then
 			break
 		end
@@ -2469,22 +2466,22 @@ local function DebuffException(unit, start, flag, func, raidFrames)
 end
 
 -- XPerl_UnitBuff
-function XPerl_UnitBuff(unit, index, flag, raidFrames)
-	return BuffException(unit, index, flag, UnitBuff, BuffExceptions, raidFrames)
+function XPerl_UnitBuff(unit, index, filter, raidFrames)
+	return BuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, BuffExceptions, raidFrames)
 end
 
 -- XPerl_UnitDebuff
-function XPerl_UnitDebuff(unit, index, flag, raidFrames)
+function XPerl_UnitDebuff(unit, index, filter, raidFrames)
 	if (conf.buffs.ignoreSeasonal or raidFrames) then
-		return DebuffException(unit, index, flag, UnitDebuff, raidFrames)
+		return DebuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, raidFrames)
 	end
-	return BuffException(unit, index, flag, UnitDebuff, DebuffExceptions, raidFrames)
+	return BuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, DebuffExceptions, raidFrames)
 end
 
 -- XPerl_TooltipSetUnitBuff
 -- Retreives the index of the actual unfiltered buff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitBuff(self, unit, ind, filter, raidFrames)
-	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, ind, filter, UnitBuff, BuffExceptions, raidFrames)
+	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, ind, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, BuffExceptions, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitBuff) then
 			Utopia_SetUnitBuff(self, unit, index)
@@ -2692,7 +2689,7 @@ function XPerl_GetBuffButton(self, buffnum, debuff, createIfAbsent, newID)
 		end
 
 		buffIconCount = buffIconCount + 1
-		button = CreateFrame("Button", "XPerlBuff"..buffIconCount, parent, format("XPerl_Cooldown_%sTemplate", buffType))
+		button = CreateFrame("Button", "XPerlBuff"..buffIconCount, parent, BackdropTemplateMixin and format("BackdropTemplate,XPerl_Cooldown_%sTemplate", buffType) or format("XPerl_Cooldown_%sTemplate", buffType))
 		button:Hide()
 
 		if (setup.rightClickable) then
@@ -2806,7 +2803,7 @@ local function AuraButtonOnShow(self)
 
 	local cd = self.cooldown
 	if (not cd) then
-		cd = CreateFrame("Cooldown", nil, self, "CooldownFrameTemplate")
+		cd = CreateFrame("Cooldown", nil, self, BackdropTemplateMixin and "BackdropTemplate,CooldownFrameTemplate" or "CooldownFrameTemplate")
 		self.cooldown = cd
 		cd:SetAllPoints()
 	end
@@ -3145,13 +3142,13 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 					-- it's unlikey that we'll be buffing them
 				end
 				-- Two passes here now since 3.0.1, cos they did away with the GetPlayerBuff function
-				-- in favor of all in UnitBuff instead. We still want our big buffs first in the list,
+				-- in favor of all in UnitAura instead. We still want our big buffs first in the list,
 				-- so we have to scan thru twice. I know what you're thinking: "Why do 2 passes when
 				-- player's buffs are first anyway". Well, usually they are, but in the case of hunters
 				-- and warlocks, the pet triggered buffs can be anywhere, but we still want those alongside
 				-- our own buffs.
 				for buffnum = 1, maxBuffs do
-					local filter = castableOnly == 1 and "RAID" or nil
+					local filter = castableOnly == 1 and "HELPFUL|RAID" or "HELPFUL"
 					local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = XPerl_UnitBuff(partyid, buffnum, filter)
 					if (not name) then
 						if (mine == 1) then
@@ -3182,14 +3179,6 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 							button.count:Hide()
 						end
 
-						if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LCD and duration == 0 and expirationTime == 0 then
-							local auraDuration, auraExpirationTime = LCD:GetAuraDurationByUnit(partyid, spellID, unitCaster, name)
-							if auraDuration and auraExpirationTime then
-								duration = auraDuration
-								expirationTime = auraExpirationTime
-							end
-						end
-
 						-- Handle cooldowns
 						if (button.cooldown) then
 							if (duration and duration > 0 and expirationTime and expirationTime > 0 and conf.buffs.cooldown and (isPlayer or conf.buffs.cooldownAny)) then
@@ -3204,7 +3193,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 
 						if (canStealOrPurge) then --  and UnitCanAttack("player", partyid)
 							if (not button.steal) then
-								button.steal = CreateFrame("Frame", nil, button)
+								button.steal = CreateFrame("Frame", nil, button, BackdropTemplateMixin and "BackdropTemplate")
 								button.steal:SetPoint("TOPLEFT", -2, 2)
 								button.steal:SetPoint("BOTTOMRIGHT", 2, -2)
 
@@ -3275,7 +3264,7 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 				end
 
 				for buffnum = 1, maxDebuffs do
-					local filter = (isFriendly and curableOnly == 1) and "RAID" or nil
+					local filter = (isFriendly and curableOnly == 1) and "HARMFUL|RAID" or "HARMFUL"
 					local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID = XPerl_UnitDebuff(partyid, buffnum, filter)
 
 					if (not name) then
@@ -3309,14 +3298,6 @@ function XPerl_Unit_UpdateBuffs(self, maxBuffs, maxDebuffs, castableOnly, curabl
 
 						local borderColor = DebuffTypeColor[(debuffType or "none")]
 						button.border:SetVertexColor(borderColor.r, borderColor.g, borderColor.b)
-
-						if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and LCD and duration == 0 and expirationTime == 0 then
-							local auraDuration, auraExpirationTime = LCD:GetAuraDurationByUnit(partyid, spellID, unitCaster, name)
-							if auraDuration and auraExpirationTime then
-								duration = auraDuration
-								expirationTime = auraExpirationTime
-							end
-						end
 
 						-- Handle cooldowns
 						if (button.cooldown) then
@@ -3415,7 +3396,7 @@ end
 
 ------------------------------------------------------------------------------
 -- Flashing frames handler. Is hidden when there's nothing to do.
-local FlashFrame = CreateFrame("Frame", "XPerl_FlashFrame")
+local FlashFrame = CreateFrame("Frame", "XPerl_FlashFrame", nil, BackdropTemplateMixin and "BackdropTemplate")
 FlashFrame.list = { }
 
 -- XPerl_FrameFlash_OnUpdate(self, elapsed)
@@ -3773,7 +3754,7 @@ local function scaleMouseDown(self)
 	end
 
 	if (not scaleIndication) then
-		scaleIndication = CreateFrame("Frame", nil, UIParent)
+		scaleIndication = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 		scaleIndication:SetWidth(100)
 		scaleIndication:SetHeight(18)
 		scaleIndication.text = scaleIndication:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -3955,7 +3936,7 @@ function XPerl_SetExpectedAbsorbs(self)
 			unit = self:GetParent().targetid
 		end
 
-		local amount = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and UnitGetTotalAbsorbs(unit)
+		local amount = not IsClassic and UnitGetTotalAbsorbs(unit)
 		if (amount and amount > 0 and not UnitIsDeadOrGhost(unit)) then
 			local healthMax = UnitHealthMax(unit)
 			local health = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or UnitHealth(unit))
@@ -4016,7 +3997,7 @@ function XPerl_SetExpectedHealth(self)
 		end
 
 		local amount
-		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		if not IsClassic then
 			amount = UnitGetIncomingHeals(unit)
 		else
 			local guid = UnitGUID(unit)
@@ -4096,7 +4077,7 @@ end
 
 -- XPerl_Unit_ThreatStatus
 function XPerl_Unit_ThreatStatus(self, relative, immediate)
-	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or not self.partyid or not self.conf) then
+	if (IsClassic or not self.partyid or not self.conf) then
 		return
 	end
 
@@ -4120,7 +4101,7 @@ function XPerl_Unit_ThreatStatus(self, relative, immediate)
 			self.threatFrames = {}
 		end
 		if (self[mode]) then -- If desired parent frame exists
-			t = CreateFrame("Frame", self:GetName().."Threat"..mode, self[mode], "XPerl_ThreatTemplate"..mode)
+			t = CreateFrame("Frame", self:GetName().."Threat"..mode, self[mode], BackdropTemplateMixin and "BackdropTemplate,XPerl_ThreatTemplate"..mode or "XPerl_ThreatTemplate"..mode)
 			t:SetAllPoints()
 			self.threatFrames[mode] = t
 		end
@@ -4179,7 +4160,7 @@ function XPerl_Register_Prediction(self, conf, g2u, ...)
 		return
 	end
 
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	if not IsClassic then
 		if (conf.healprediction) then
 			self:RegisterUnitEvent("UNIT_HEAL_PREDICTION", ...)
 		else

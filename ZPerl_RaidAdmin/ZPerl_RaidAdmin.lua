@@ -52,7 +52,7 @@ end
 
 -- XPerl_AdminOnLoad
 function XPerl_AdminOnLoad(self)
-
+	self:OnBackdropLoaded()
 	self:RegisterForDrag("LeftButton")
 
 	ZPerl_Admin = { }
@@ -65,8 +65,9 @@ function XPerl_AdminOnLoad(self)
 	--self:RegisterEvent("VARIABLES_LOADED")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE")
-	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+	self:OnBackdropLoaded()
 	self:SetBackdropColor(0, 0, 0, 1)
+	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
 
 	self.Expand = function()
 		XPerl_AdminFrame_Controls:Show()
@@ -109,8 +110,9 @@ end
 
 -- XPerl_SetupFrameSimple
 function XPerl_SetupFrameSimple(self, alpha)
-	self:SetBackdropBorderColor(0.5, 0.5, 0.5, alpha or 1)
+	self:OnBackdropLoaded()
 	self:SetBackdropColor(0, 0, 0, alpha or 1)
+	self:SetBackdropBorderColor(0.5, 0.5, 0.5, alpha or 1)
 end
 
 -- XPerl_AdminSetupFrames()

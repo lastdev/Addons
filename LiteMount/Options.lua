@@ -8,14 +8,20 @@
 
 ----------------------------------------------------------------------------]]--
 
+local _, LM = ...
+
+local Serializer = LibStub("AceSerializer-3.0")
+local LibDeflate = LibStub("LibDeflate")
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
 
 --[[----------------------------------------------------------------------------
 
-excludedSpells is a table of spell ids the player has seen before, with
-the value true if excluded and false if not excluded
+mountPriorities is a list of spell ids the player has seen before mapped to
+the priority (0/1/2/3) of that mount. If the value is nil it means we haven't
+seen that mount yet.
 
 flagChanges is a table of spellIDs with flags to set (+) and clear (-).
     flagChanges = {
@@ -24,7 +30,6 @@ flagChanges is a table of spellIDs with flags to set (+) and clear (-).
     }
 
 customFlags is a table of flag names, with data about them (currently none)
-
     customFlags = {
         ["PASSENGER"] = { }
     }
@@ -37,7 +42,6 @@ local DefaultButtonAction = [[
 # Slow Fall, Levitate, Zen Flight, Glide
 Spell [falling] 130, 1706, 125883, 131347
 LeaveVehicle
-CancelForm
 Dismount
 CopyTargetsMount
 # Swimming mount to fly in Nazjatar with Budding Deepcoral
@@ -46,15 +50,13 @@ Mount [map:1355,flyable,qfc:56766] mt:254
 Mount [map:203,submerged] mt:232
 # AQ-only bugs in the raid zone
 Mount [instance:531] mt:241
-# The Nagrand (WoD) mounts can interact while mounted
-Mount [map:550,noflyable,nosubmerged] 164222/165803
 # Use Arcanist's Manasaber if it will disguise you
-Mount [nosubmerged,extra:202477] id:881
-Mount [nosubmerged,aura:202477] id:881
+IF [extra:202477][aura:202477]
+  Mount [nosubmerged] id:881
+END
 IF [mod:shift,flyable][mod:shift,waterwalking]
   Limit RUN/WALK,~FLY
 END
-SmartMount {CLASS}/{RACE}/{FACTION}
 SmartMount
 Macro
 ]]
@@ -63,16 +65,17 @@ Macro
 
 local defaults = {
     global = {
-        customFlags         = { },
-        flagChanges         = { },
+        instances = { },
     },
     profile = {
-        excludedSpells      = { },
+        customFlags         = { },
+        flagChanges         = { },
+        mountPriorities     = { },
         buttonActions       = { ['*'] = DefaultButtonAction },
         copyTargetsMount    = true,
-        enableTwoPress      = false,
         excludeNewMounts    = false,
-        uiMountFilterList   = { UNUSABLE = true },
+        priorityWeights     = { 1, 2, 6 },
+        randomKeepSeconds   = 0,
     },
     char = {
         unavailableMacro    = "",
@@ -84,13 +87,21 @@ local defaults = {
     },
 }
 
-_G.LM_Options = { }
+LM.Options = {
+    MIN_PRIORITY = 0,
+    MAX_PRIORITY = 3,
+    DISABLED_PRIORITY = 0,
+    DEFAULT_PRIORITY = 1,
+}
+
 
 local function FlagDiff(allFlags, a, b)
     local diff = { }
 
     for _,flagName in ipairs(allFlags) do
-        if a[flagName] and not b[flagName] then
+        if flagName == "FAVORITES" then
+            -- Do nothing
+        elseif a[flagName] and not b[flagName] then
             diff[flagName] = '-'
         elseif not a[flagName] and b[flagName] then
             diff[flagName] = '+'
@@ -104,157 +115,233 @@ local function FlagDiff(allFlags, a, b)
     return diff
 end
 
-function LM_Options:FlagIsUsed(f)
-    for spellID,changes in pairs(self.db.global.flagChanges) do
+function LM.Options:FlagIsUsed(f)
+    for spellID,changes in pairs(self.db.profile.flagChanges) do
         if changes[f] then return true end
     end
     return false
 end
 
-function LM_Options:VersionUpgrade()
+-- Note to self. In any profile except the active one, the defaults are not
+-- applied and you can't rely on them being there. This is super annoying.
+-- Any time you loop over the profiles table one profile has all the defaults
+-- jammed into it and all the other don't. You can't assume the profile has
+-- any valeus in it at all.
 
-    -- From 1 -> 2 moved a bunch of stuff from char to profile that
-    -- can't be migrated.
-
-    if (self.db.global.configVersion or 2) < 2 then
-        self.db.global.enableTwoPress = nil
-    end
-
-    if (self.db.char.configVersion or 2) < 2 then
-        self.db.char.copyTargetsMount = nil
-        self.db.char.uiMountFilterList = nil
-    end
-
-    if (self.db.global.configVersion or 3) < 3 then
-        local gfc = self.db.global.flagChanges
-
-        -- Merge all of the profile flagChanges into one global one
-        for _,p in pairs(self.db.profiles) do
-            for spellID,changes in pairs(p.flagChanges or {}) do
-                gfc[spellID] = Mixin(gfc[spellID] or {}, changes)
-            end
-            p.flagChanges = nil
-        end
-    end
-
-    -- Set current version
-    self.db.global.configVersion = 3
-    self.db.profile.configVersion = 3
-    self.db.char.configVersion = 3
-end
-
-function LM_Options:ConsistencyCheck()
-
-    -- Make sure any flag is included in the flag list
-
-    for spellID,changes in pairs(self.db.global.flagChanges) do
-        for f in pairs(changes) do
-            if LM_FLAG[f] == nil and self.db.global.customFlags[f] == nil then
-                self.db.global.customFlags[f] = { }
-            end
-        end
-    end
-
-end
-
-function LM_Options:Initialize()
-    self.db = LibStub("AceDB-3.0"):New("LiteMountDB", defaults, true)
-    self.db.instances = self.db.instances or {}
-    self:VersionUpgrade()
-    self:ConsistencyCheck()
-    self:UpdateAllFlags()
-end
-
-
---[[----------------------------------------------------------------------------
-    Excluded Mount stuff.
-----------------------------------------------------------------------------]]--
-
-function LM_Options:IsExcludedMount(m)
-    return self.db.profile.excludedSpells[m.spellID] == true
-end
-
-function LM_Options:InitializeExcludedMount(m)
-    
-    if self.db.profile.excludedSpells[m.spellID] ~= nil then
+-- Version 3 moved flag stuff global, and now version 4 is putting them
+-- back into profile. I hope I'm not making the same mistakes all over
+-- again. "Those who cannot remember the past are condemned to repeat it."
+function LM.Options:VersionUpgrade4()
+    if (self.db.global.configVersion or 4) >= 4 then
         return
     end
 
-    if self.db.profile.excludeNewMounts then
-        LM_Debug(format("Disabled newly added mount %s (%d).", m.name, m.spellID))
-        self.db.profile.excludedSpells[m.spellID] = true
-    else
-        self.db.profile.excludedSpells[m.spellID] = false
-        LM_Debug(format("Enabled newly added mount %s (%d).", m.name, m.spellID))
+    LM.Debug('VersionUpgrade: 4')
+
+    if self.db.global.flagChanges then
+        LM.Debug(' - migrating global.flagChanges')
+        for n, p in pairs(self.db.profiles) do
+            LM.Debug('   - into profile: ' .. n)
+            p.flagChanges = p.flagChanges or {}
+            for spellID,changes in pairs(self.db.global.flagChanges) do
+                p.flagChanges[spellID] = Mixin(p.flagChanges[spellID] or {}, changes)
+            end
+        end
+    end
+
+    if self.db.global.customFlags then
+        LM.Debug(' - migrating global.customFlags')
+        for n, p in pairs(self.db.profiles) do
+            LM.Debug('   - into profile: ' .. n)
+            p.customFlags = p.customFlags or {}
+            Mixin(p.customFlags, self.db.global.customFlags)
+        end
+    end
+
+    self.db.global.customFlags = nil
+    self.db.global.flagChanges = nil
+
+    for _, p in pairs(self.db.profiles) do p.configVersion = 4 end
+    self.db.global.configVersion = 4
+end
+
+function LM.Options:VersionUpgrade5()
+    LM.Debug('VersionUpgrade: 5')
+
+    for n, p in pairs(self.db.profiles) do
+        LM.Debug(' - checking profile: ' .. n)
+        if (p.configVersion or 5) < 5 then
+            LM.Debug('   - upgrading profile: ' .. n)
+            p.mountPriorities = p.mountPriorities or {}
+            local nTotal, nExcluded, nIncluded = 0, 0, 0
+            for spellID,isExcluded in pairs(p.excludedSpells or {}) do
+                nTotal = nTotal + 1
+                if isExcluded then
+                    nExcluded = nExcluded + 1
+                    p.mountPriorities[spellID] = self.DISABLED_PRIORITY
+                else
+                    nIncluded = nIncluded + 1
+                    p.mountPriorities[spellID] = self.DEFAULT_PRIORITY
+                end
+            end
+            -- p.excludedSpells = nil
+            p.uiMountFilterList = nil
+            p.enableTwoPress = nil
+            LM.Debug(string.format('   - finished: total=%d, p0=%d, p1=%d', nTotal, nExcluded, nIncluded))
+        end
+        p.uiMountFilterList = nil
+        p.enableTwoPress = nil
+        p.configVersion = 5
+    end
+
+    for _, p in pairs(self.db.profiles) do p.configVersion = 5 end
+    self.db.global.configVersion = 5
+    self.db.char.configVersion = 5
+end
+
+function LM.Options:VersionUpgrade()
+    local savedDefaults = self.db.defaults
+    self.db:RegisterDefaults(nil)
+
+    self:VersionUpgrade4()
+
+    self:VersionUpgrade5()
+
+    self.db:RegisterDefaults(savedDefaults)
+end
+
+-- We don't delete flags from the profile flagChanges on delete, because
+-- that lets us undo the flag delete by just putting it back.
+
+function LM.Options:PruneDeletedFlags()
+    for spellID,changes in pairs(self.db.profile.flagChanges) do
+        for f in pairs(changes) do
+            if f == 'FAVORITES' or not self:IsActiveFlag(f) then
+                changes[f] = nil
+            end
+        end
+        if next(changes) == nil then
+            self.db.profile.flagChanges[spellID] = nil
+        end
     end
 end
 
-function LM_Options:AddExcludedMount(m)
-    LM_Debug(format("Disabling mount %s (%d).", m.name, m.spellID))
-    self.db.profile.excludedSpells[m.spellID] = true
-    self.db.callbacks:Fire("OnMountSetExclude", m)
+function LM.Options:OnProfile()
+    self:PruneDeletedFlags()
+    self:UpdateFlagCache()
+    self:InitializePriorities()
+    LiteMount:RecompileActions()
+    self.db.callbacks:Fire("OnOptionsProfile")
 end
 
-function LM_Options:RemoveExcludedMount(m)
-    LM_Debug(format("Enabling mount %s (%d).", m.name, m.spellID))
-    self.db.profile.excludedSpells[m.spellID] = false
-    self.db.callbacks:Fire("OnMountSetExclude", m)
+-- This is split into two because I want to load it early in the
+-- setup process to get access to the debugging settings, but it can't
+-- run OnProfile() until the action buttons are set up as RecompileActions
+-- won't work yet.
+
+function LM.Options:Initialize()
+    self.db = LibStub("AceDB-3.0"):New("LiteMountDB", defaults, true)
+    self:VersionUpgrade()
+    self.db.RegisterCallback(self, "OnProfileChanged", "OnProfile")
+    self.db.RegisterCallback(self, "OnProfileCopied", "OnProfile")
+    self.db.RegisterCallback(self, "OnProfileReset", "OnProfile")
 end
 
-function LM_Options:ToggleExcludedMount(m)
-    local id = m.spellID
-    LM_Debug(format("Toggling mount %s (%d).", m.name, id))
-    self.db.profile.excludedSpells[id] = not self.db.profile.excludedSpells[id]
-    self.db.callbacks:Fire("OnMountSetExclude", m)
+--[[----------------------------------------------------------------------------
+    Mount priorities stuff.
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetRawMountPriorities()
+    return CopyTable(self.db.profile.mountPriorities)
 end
 
-function LM_Options:SetExcludedMounts(mountlist)
-    LM_Debug("Setting complete list of disabled mounts.")
-    for k in pairs(self.db.profile.excludedSpells) do
-        self.db.profile.excludedSpells[k] = false
+function LM.Options:SetRawMountPriorities(v)
+    self.db.profile.mountPriorities = CopyTable(v)
+    self:UpdateFlagCache()
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:GetPriority(m)
+    local p = self.db.profile.mountPriorities[m.spellID]
+    return p, (self.db.profile.priorityWeights[p] or 0)
+end
+
+function LM.Options:InitializePriorities()
+    for _,m in ipairs(LM.PlayerMounts.mounts) do
+        if not self.db.profile.mountPriorities[m.spellID] then
+            if self.db.profile.excludeNewMounts then
+                self.db.profile.mountPriorities[m.spellID] = self.DISABLED_PRIORITY
+            else
+                self.db.profile.mountPriorities[m.spellID] = self.DEFAULT_PRIORITY
+            end
+        end
     end
+end
+
+function LM.Options:SetPriority(m, v)
+    LM.Debug(format("Setting mount %s (%d) to priority %d", m.name, m.spellID, v))
+    v = math.max(self.MIN_PRIORITY, math.min(self.MAX_PRIORITY, v))
+    self.db.profile.mountPriorities[m.spellID] = v
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+-- Don't just loop over SetPriority because we don't want the UI to freeze up
+-- with hundreds of unnecessary callback refreshes.
+
+function LM.Options:SetPriorities(mountlist, v)
+    LM.Debug(format("Setting %d mounts to priority %d", #mountlist, v))
+    v = math.max(self.MIN_PRIORITY, math.min(self.MAX_PRIORITY, v))
     for _,m in ipairs(mountlist) do
-        self:AddExcludedMount(m)
+        self.db.profile.mountPriorities[m.spellID] = v
     end
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
 --[[----------------------------------------------------------------------------
     Mount flag overrides stuff
 ----------------------------------------------------------------------------]]--
 
-function LM_Options:ApplyMountFlags(m)
+function LM.Options:GetRawFlagChanges()
+    return CopyTable(self.db.profile.flagChanges)
+end
+
+function LM.Options:SetRawFlagChanges(v)
+    self.db.profile.flagChanges = CopyTable(v)
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:ApplyMountFlags(m)
 
     if not self.cachedMountFlags[m.spellID] then
-        local changes = self.db.global.flagChanges[m.spellID]
+        local changes = self.db.profile.flagChanges[m.spellID]
         self.cachedMountFlags[m.spellID] = CopyTable(m.flags)
 
         if changes then
             for _,flagName in ipairs(self.allFlags) do
-                if changes[flagName] == '+' then
-                    self.cachedMountFlags[m.spellID][flagName] = true
-                elseif changes[flagName] == '-' then
-                    self.cachedMountFlags[m.spellID][flagName] = nil
+                if self:IsActiveFlag(flagName) then
+                    if changes[flagName] == '+' then
+                        self.cachedMountFlags[m.spellID][flagName] = true
+                    elseif changes[flagName] == '-' then
+                        self.cachedMountFlags[m.spellID][flagName] = nil
+                    end
                 end
             end
         end
+        if m.isFavorite then
+            self.cachedMountFlags[m.spellID].FAVORITES = true
+        end
     end
 
-    if m.isFavorite then
-        self.cachedMountFlags[m.spellID].FAVORITES = true
-    else
-        self.cachedMountFlags[m.spellID].FAVORITES = nil
-    end
     return self.cachedMountFlags[m.spellID]
 end
 
-function LM_Options:SetMountFlag(m, setFlag)
-    LM_Debug(format("Setting flag %s for spell %s (%d).",
+function LM.Options:SetMountFlag(m, setFlag)
+    LM.Debug(format("Setting flag %s for spell %s (%d).",
                     setFlag, m.name, m.spellID))
 
     if setFlag == "FAVORITES" then
-        if m.SetFavorite ~= nil then
-            m:SetFavorite(true)
-        end
+        -- This needs to fire to reset the UI, because something went wrong
+        self.db.callbacks:Fire("OnOptionsModified")
         return
     end
 
@@ -266,16 +353,9 @@ function LM_Options:SetMountFlag(m, setFlag)
     self:SetMountFlags(m, flags)
 end
 
-function LM_Options:ClearMountFlag(m, clearFlag)
-    LM_Debug(format("Clearing flag %s for spell %s (%d).",
+function LM.Options:ClearMountFlag(m, clearFlag)
+    LM.Debug(format("Clearing flag %s for spell %s (%d).",
                      clearFlag, m.name, m.spellID))
-
-    if clearFlag == "FAVORITES" then
-        if m.SetFavorite ~= nil then
-            m:SetFavorite(false)
-        end
-        return
-    end
 
     -- See note above
     local flags = self:ApplyMountFlags(m)
@@ -283,15 +363,23 @@ function LM_Options:ClearMountFlag(m, clearFlag)
     self:SetMountFlags(m, flags)
 end
 
-function LM_Options:ResetMountFlags(m)
-    LM_Debug(format("Defaulting flags for spell %s (%d).", m.name, m.spellID))
-    self.db.global.flagChanges[m.spellID] = nil
+function LM.Options:ResetMountFlags(m)
+    LM.Debug(format("Defaulting flags for spell %s (%d).", m.name, m.spellID))
+    self.db.profile.flagChanges[m.spellID] = nil
     self.cachedMountFlags[m.spellID] = nil
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
-function LM_Options:SetMountFlags(m, flags)
-    self.db.global.flagChanges[m.spellID] = FlagDiff(self.allFlags, m.flags, flags)
+function LM.Options:ResetAllMountFlags()
+    table.wipe(self.db.profile.flagChanges)
+    table.wipe(self.cachedMountFlags)
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:SetMountFlags(m, flags)
+    self.db.profile.flagChanges[m.spellID] = FlagDiff(self.allFlags, m.flags, flags)
     self.cachedMountFlags[m.spellID] = nil
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
 
@@ -299,81 +387,80 @@ end
     Custom flags
 ----------------------------------------------------------------------------]]--
 
-function LM_Options:IsPrimaryFlag(f)
-    return LM_FLAG[f] ~= nil
+function LM.Options:GetRawFlags()
+    return self.db.profile.customFlags
 end
 
--- Empty strings and primary flag names are not valid
-function LM_Options:IsValidFlagName(n)
-    if n == "" or self:IsPrimaryFlag(n) then
-        return false
-    end
-    return true
+function LM.Options:SetRawFlags(v)
+    self.db.profile.customFlags = v
+    self:UpdateFlagCache()
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
-function LM_Options:CreateFlag(f)
-    if self.db.global.customFlags[f] then return end
+function LM.Options:IsPrimaryFlag(f)
+    return LM.FLAG[f] ~= nil
+end
+
+function LM.Options:IsCustomFlag(f)
+    return self.db.profile.customFlags[f] ~= nil
+end
+
+function LM.Options:IsActiveFlag(f)
+    return self:IsPrimaryFlag(f) or self:IsCustomFlag(f)
+end
+
+function LM.Options:CreateFlag(f)
+    if self.db.profile.customFlags[f] then return end
     if self:IsPrimaryFlag(f) then return end
-    self.db.global.customFlags[f] = { }
-    self.db.profile.uiMountFilterList[f] = false
-    self:UpdateAllFlags()
-    self.db.callbacks:Fire("OnFlagsModified")
+    self.db.profile.customFlags[f] = { }
+    self:UpdateFlagCache()
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
-function LM_Options:DeleteFlag(f)
-    for _,c in pairs(self.db.global.flagChanges) do
-        c[f] = nil
-    end
-    self.db.profile.uiMountFilterList[f] = nil
-    self.db.global.customFlags[f] = nil
-    self:UpdateAllFlags()
-    self.db.callbacks:Fire("OnFlagsModified")
+function LM.Options:DeleteFlag(f)
+    self.db.profile.customFlags[f] = nil
+    self:UpdateFlagCache()
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
-function LM_Options:RenameFlag(f, newF)
+function LM.Options:RenameFlag(f, newF)
     if self:IsPrimaryFlag(f) then return end
     if f == newF then return end
 
     -- all this "tmp" stuff is to deal with f == newF, just in case
     local tmp
 
-    for _,c in pairs(self.db.global.flagChanges) do
+    for _,c in pairs(self.db.profile.flagChanges) do
         tmp = c[f]
         c[f] = nil
         c[newF] = tmp
     end
 
-    for _,p in pairs(self.db.profiles) do
-        tmp = p.uiMountFilterList[f]
-        p.uiMountFilterList[f] = nil
-        p.uiMountFilterList[newF] = tmp
-    end
+    tmp = self.db.profile.customFlags[f]
+    self.db.profile.customFlags[f] = nil
+    self.db.profile.customFlags[newF] = tmp
 
-    tmp = self.db.global.customFlags[f]
-    self.db.global.customFlags[f] = nil
-    self.db.global.customFlags[newF] = tmp
-
-    self:UpdateAllFlags()
-    self.db.callbacks:Fire("OnFlagsModified")
+    self:UpdateFlagCache()
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
--- This keeps a cached list of all flags in sort order, with the LM_FLAG
+-- This keeps a cached list of all flags in sort order, with the LM.FLAG
 -- set of flags first, then the user-added flags in alphabetical order
 
-function LM_Options:UpdateAllFlags()
+function LM.Options:UpdateFlagCache()
     self.cachedMountFlags = wipe(self.cachedMountFlags or {})
     self.allFlags = wipe(self.allFlags or {})
 
-    for f in pairs(LM_FLAG) do tinsert(self.allFlags, f) end
-    for f in pairs(self.db.global.customFlags) do tinsert(self.allFlags, f) end
+    for f in pairs(LM.FLAG) do tinsert(self.allFlags, f) end
+    for f in pairs(self.db.profile.customFlags) do tinsert(self.allFlags, f) end
 
     sort(self.allFlags,
         function (a, b)
-            if LM_FLAG[a] and LM_FLAG[b] then
-                return LM_FLAG[a] < LM_FLAG[b]
-            elseif LM_FLAG[a] then
+            if LM.FLAG[a] and LM.FLAG[b] then
+                return LM.FLAG[a] < LM.FLAG[b]
+            elseif LM.FLAG[a] then
                 return true
-            elseif LM_FLAG[b] then
+            elseif LM.FLAG[b] then
                 return false
             else
                 return a < b
@@ -381,13 +468,226 @@ function LM_Options:UpdateAllFlags()
         end)
 end
 
-function LM_Options:GetAllFlags()
+function LM.Options:GetAllFlags()
+    if not self.allFlags then
+        self:UpdateFlagCache()
+    end
     return CopyTable(self.allFlags)
 end
 
-function LM_Options:RecordInstance()
-    local name, _, _, _, _, _, _, id = GetInstanceInfo()
-    if not self.db.instances[id] then
-        self.db.instances[id] = name
-    end
+
+--[[----------------------------------------------------------------------------
+    Copy targets mount
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetCopyTargetsMount()
+    return self.db.profile.copyTargetsMount
 end
+
+function LM.Options:SetCopyTargetsMount(v)
+    if v then
+        self.db.profile.copyTargetsMount = true
+    else
+        self.db.profile.copyTargetsMount = false
+    end
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Exclude new mounts
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetExcludeNewMounts()
+    return self.db.profile.excludeNewMounts
+end
+
+function LM.Options:SetExcludeNewMounts(v)
+    if v then
+        self.db.profile.excludeNewMounts = true
+    else
+        self.db.profile.excludeNewMounts = false
+    end
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Unavailable macro
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetUnavailableMacro()
+    return self.db.char.unvailableMacro
+end
+
+function LM.Options:GetUseUnavailableMacro()
+    return self.db.char.useUnavailableMacro
+end
+
+function LM.Options:SetUnavailableMacro(v)
+    self.db.char.unvailableMacro = v
+    self.db.char.useUnavailableMacro = (v ~= "")
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Combat macro
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetCombatMacro()
+    return self.db.char.combatMacro
+end
+
+function LM.Options:SetCombatMacro(v)
+    self.db.char.combatMacro = v
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:GetUseCombatMacro()
+    return self.db.char.useCombatMacro
+end
+
+function LM.Options:SetUseCombatMacro(v)
+    self.db.char.useCombatMacro = v
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Random persistence
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetRandomPersistence()
+    return self.db.profile.randomKeepSeconds
+end
+
+function LM.Options:SetRandomPersistence(v)
+    v = tonumber(v) or 0
+    if v then
+        self.db.profile.randomKeepSeconds = math.max(0, v)
+    end
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Button action lists
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetButtonAction(i)
+    return self.db.profile.buttonActions[i]
+end
+
+function LM.Options:SetButtonAction(i, v)
+    self.db.profile.buttonActions[i] = v
+    LiteMount.actions[i]:CompileActions()
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:GetDefaultButtonAction()
+     return self.db.defaults.profile.buttonActions['*']
+end
+
+
+--[[----------------------------------------------------------------------------
+    Instance recording
+----------------------------------------------------------------------------]]--
+
+
+function LM.Options:RecordInstance()
+    local name, _, _, _, _, _, _, id = GetInstanceInfo()
+    self.db.global.instances[id] = name
+end
+
+
+--[[----------------------------------------------------------------------------
+    Debug settings
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetDebug(v)
+    return self.db.char.debugEnabled
+end
+
+function LM.Options:SetDebug(v)
+    self.db.char.debugEnabled = not not v
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+function LM.Options:GetUIDebug()
+    return self.db.char.uiDebugEnabled
+end
+
+function LM.Options:SetUIDebug(v)
+    self.db.char.uiDebugEnabled = not not v
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+--[[----------------------------------------------------------------------------
+    Import/Export Profile
+----------------------------------------------------------------------------]]--
+
+function LM.Options:ExportProfile(profileName)
+    local currentProfileName = self.db:GetCurrentProfile()
+
+    -- remove all the defaults from the DB before export
+    local savedDefaults = self.db.defaults
+    self.db:RegisterDefaults(nil)
+
+    -- Add an export time into the profile
+
+    self.db.profiles[profileName].__export__ = time()
+
+    local data = LibDeflate:EncodeForPrint(
+                    LibDeflate:CompressDeflate(
+                     Serializer:Serialize(
+                       self.db.profiles[profileName]
+                     ) ) )
+
+    self.db.profiles[profileName].__export__ = nil
+
+    -- put the defaults back
+    self.db:RegisterDefaults(savedDefaults)
+
+    -- If something went wrong upstream this could be nil
+    return data
+end
+
+function LM.Options:DecodeProfileData(str)
+    local decoded = LibDeflate:DecodeForPrint(str)
+    if not decoded then return end
+
+    local deflated = LibDeflate:DecompressDeflate(decoded)
+    if not deflated then return end
+
+    local isValid, data = Serializer:Deserialize(deflated)
+    if not isValid then return end
+
+    if not data.__export__ then return end
+    data.__export__ = nil
+
+    return data
+end
+
+
+function LM.Options:ImportProfile(profileName, str)
+
+    -- I really just can't be bothered fighting with AceDB to make it safe to
+    -- import the current profile, given that they don't expose enough
+    -- functionality to do so in an "approved" way.
+
+    if profileName == self.db:GetCurrentProfile() then return false end
+
+    local data = self:DecodeProfileData(str)
+    if not data then return false end
+
+    local savedDefaults = self.db.defaults
+
+    self.db.profiles[profileName] = data
+    self:VersionUpgrade()
+
+    self.db:RegisterDefaults(savedDefaults)
+
+    return true
+end
+

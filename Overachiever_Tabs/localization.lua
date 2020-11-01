@@ -201,7 +201,7 @@ L["SUGGESTIONS_FILTERED_OUT_INCOMPLETE"] = "Zeige ABGESCHLOSSENE Erfolge. %s |4E
 L["SUGGESTIONS_HELP"] = "Hier werden Erfolge aufgelistet, die du in deiner aktuellen Zone abschließen kannst. Außerdem werden alle Erfolge aufgelistet, an die du in den letzen 2 Minuten per Tooltip erinnert wurdest und auch jene, durch die kürzlich ein Timer gestartet wurde."
 L["SUGGESTIONS_HIDDENLOCATION"] = "versteckt "
 L["SUGGESTIONS_LOCATION"] = "Standort:"
-L["SUGGESTIONS_LOCATION_NOSUBZONE"] = "(nicht spezifiziert)"
+L["SUGGESTIONS_LOCATION_NOSUBZONE"] = "(nicht genauer beschrieben)"
 L["SUGGESTIONS_LOCATION_SUBZONE"] = "Teilgebiet:"
 L["SUGGESTIONS_LOCATION_TIP"] = "Gebiet-/Instanz-Standort überschreiben"
 L["SUGGESTIONS_LOCATION_TIP2"] = [=[Lass dieses Feld leer, um Vorschläge für deinen aktuellen Standort zu erhalten, oder trage hier den gültigen Namen eines Gebiets oder einer Instanz ein, der automatisch erweitert wird. Drücke |cffffffffTAB|r, um zwischen den Standorten zu wechseln, deren Namen mit dem Text links vom Cursor beginnen. Drücke |cffffffffUMSCHALT+TAB|r, um in entgegengesetzter Richtung zu wechseln. Wenn das Feld leer ist, wird zwischen allen gültigen Standorten gewechselt.
@@ -243,7 +243,7 @@ L["WATCH_DELETE"] = "Löschen"
 L["WATCH_DISPLAYEDLIST"] = "Angezeigte Liste:"
 L["WATCH_EMPTY"] = "Deine Beobachtungsliste ist leer. ALT+Klick auf einen Erfolg in einem anderen Tab oder auf einen Chat-Link, um seine Beobachtung zu starten."
 L["WATCH_EMPTY_SHORT"] = "Liste leeren"
-L["WATCH_ERR_INVALIDID"] = " \"%s\" wurde aus der Beobachtungsliste entfernt. Ein Erfolg mit solch einer ID ist nicht bekannt."
+L["WATCH_ERR_INVALIDID"] = "\"%s\" aus der Beobachtungsliste entfernt: Ein Erfolg mit dieser ID konnte nicht gefunden werden."
 L["WATCH_FILTERED_OUT"] = "%s |4Erfolg wurde:Erfolge wurden; durch den Filter weggelassen."
 L["WATCH_HELP"] = "Fülle deine Beobachtungsliste, indem du via |cffffffffALT+Klick|r auf Erfolge in anderen Tabs oder auf Chat-Links klickst. |cffffffffALT+Klick|r auf einen hier angezeigten Erfolg, um seine Beobachtung zu beenden."
 L["WATCH_LIST_GLOBAL"] = "Global"
@@ -285,8 +285,7 @@ elseif (locale == "frFR") then  -- French
 -- Tabs
 L["EVENTNOTICE_ENDED_TODAY"] = "|cffff2020Cet évènement s'est fini|r plus tôt aujourd'hui."
 L["EVENTNOTICE_ENDS_DATETIME"] = "Se termine le %2$d/%1$02d à %3$s (heure du serveur)."
---[[Translation missing --]]
---[[ L["EVENTNOTICE_ENDS_DAYS"] = ""--]] 
+L["EVENTNOTICE_ENDS_DAYS"] = "Il se termine dans |cffff2020 %s |4day:days;|r."
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_ENDS_HOURS"] = ""--]] 
 --[[Translation missing --]]
@@ -296,11 +295,9 @@ L["EVENTNOTICE_ENDS_DATETIME"] = "Se termine le %2$d/%1$02d à %3$s (heure du se
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_HELP"] = ""--]] 
 L["EVENTNOTICE_ONGOING"] = "Cet évènement est en cours."
---[[Translation missing --]]
---[[ L["EVENTNOTICE_STARTED_TODAY"] = ""--]] 
+L["EVENTNOTICE_STARTED_TODAY"] = "Cet événement a débuté plus tôt dans la journée."
 L["EVENTNOTICE_STARTS_HOURS"] = "Cet évènement commence dans |cff7eff00 %s |4heure:heures;|r."
---[[Translation missing --]]
---[[ L["EVENTNOTICE_STARTS_MINUTES"] = ""--]] 
+L["EVENTNOTICE_STARTS_MINUTES"] = "Cet événement démarre dans |cff7eff00 %s |4minute:minutes;|r."
 --[[Translation missing --]]
 --[[ L["EVENTNOTICE_TIP"] = ""--]] 
 --[[Translation missing --]]
@@ -349,8 +346,7 @@ L["SUGGESTIONS_EMPTY_TRADESKILL"] = " %s: Overachiever n'a aucune suggestion à 
 --[[Translation missing --]]
 --[[ L["SUGGESTIONS_FILTERED_OUT_INCOMPLETE"] = ""--]] 
 L["SUGGESTIONS_HELP"] = "Les hauts faits suggérés sont affichés ici en fonction de votre localisation. Sont également listés tous les hauts faits qui vous ont été rappelés par une infobulle dans les 2 dernières minutes ou qui ont une alarme qui s'est déclenchée récemment."
---[[Translation missing --]]
---[[ L["SUGGESTIONS_HIDDENLOCATION"] = ""--]] 
+L["SUGGESTIONS_HIDDENLOCATION"] = "caché"
 L["SUGGESTIONS_LOCATION"] = "Emplacement :"
 L["SUGGESTIONS_LOCATION_NOSUBZONE"] = "(indéterminé)"
 L["SUGGESTIONS_LOCATION_SUBZONE"] = "Sous-zone :"
@@ -385,8 +381,7 @@ L["TAB_SORT_COMPLETE"] = "Date d'accomplissement"
 L["TAB_SORT_ID"] = "ID"
 L["TAB_SORT_NAME"] = "Nom"
 L["TAB_SORT_POINTS"] = "Valeur en point"
---[[Translation missing --]]
---[[ L["TAB_SORT_RELATION"] = ""--]] 
+L["TAB_SORT_RELATION"] = "Relation"
 L["WATCH_CLEAR"] = "Vider"
 L["WATCH_COPY"] = "Copier vers :"
 L["WATCH_COPY_TIP"] = "Quand activé, si vous |cffffffffmajuscule+alt+clicquez|r sur un haut-fait sur cet onglet, il sera ajouté à la liste de suivi spécifiée."

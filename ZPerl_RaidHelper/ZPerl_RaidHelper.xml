@@ -14,7 +14,10 @@
 
 	<GameTooltip name="XPerl_BottomTip" frameStrata="LOW" parent="UIParent" inherits="GameTooltipTemplate"/>
 
-	<Button name="XPerl_MTList_BasicButton" virtual="true">
+	<Button name="XPerl_MTList_BasicButton" inherits="XPerlBackdropTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnEnter>
 				if (self.tooltipText) then
@@ -28,9 +31,13 @@
 		</Scripts>
 	</Button>
 
-	<Button name="XPerl_MTList_UnitTemplate" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
+	<Button name="XPerl_MTList_UnitTemplate" inherits="XPerlBackdropTemplate,SecureActionButtonTemplate" virtual="true" hidden="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				XPerl_SetChildMembers(self)
 				self:RegisterForClicks("AnyUp")
 				XPerl_RegisterBar(_G[self:GetName().."healthBar"])
@@ -48,22 +55,11 @@
 		<Size>
 			<AbsDimension x="100" y="26"/>
 		</Size>
-		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<HighlightTexture file="Interface\Addons\ZPerl\Images\XPerl_Highlight" alphaMode="ADD">
 			<TexCoords left="0" right="1" top="0.5" bottom="1"/>
 		</HighlightTexture>
 		<Frames>
-			<StatusBar name="$parenthealthBar" enableMouse="false">
+			<StatusBar name="$parenthealthBar" inherits="XPerlBackdropTemplate" enableMouse="false">
 				<Scripts>
 					<OnLoad>
 						self.text = _G[self:GetName().."text"]
@@ -191,7 +187,7 @@
 		</Layers>
 	</Button>
 
-	<Frame name="XPerl_MTList_Anchor" parent="UIParent" movable="true" resizable="true" clampedToScreen="true">
+	<Frame name="XPerl_MTList_Anchor" parent="UIParent" inherits="XPerlBackdropTemplate" movable="true" resizable="true" clampedToScreen="true">
 		<Size>
 			<AbsDimension x="206" y="80"/>
 		</Size>
@@ -200,16 +196,19 @@
 		</Anchors>
 	</Frame>
 
-	<Frame name="XPerl_RaidHelperCheck">
+	<Frame name="XPerl_RaidHelperCheck" inherits="XPerlBackdropTemplate">
 		<Scripts>
 			<OnUpdate function="XPerl_HelperCheck_OnUpdate"/>
 		</Scripts>
 	</Frame>
 
-	<Frame name="XPerl_Frame" parent="XPerl_MTList_Anchor" hidden="true" clampedToScreen="true">
+	<Frame name="XPerl_RaidHelper_Frame" parent="XPerl_MTList_Anchor" inherits="XPerlBackdropTemplate" hidden="true" clampedToScreen="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Raid_Backdrop_16_9_3333" type="global"/>
+		</KeyValues>
 		<Scripts>
-			<OnLoad function="XPerl_OnLoad"/>
-			<OnEvent function="XPerl_OnEvent"/>
+			<OnLoad function="XPerl_RaidHelper_OnLoad"/>
+			<OnEvent function="XPerl_RaidHelper_OnEvent"/>
 			<OnDragStart>
 				if (not ZPerlConfigHelper or not ZPerlConfigHelper.Pinned or (IsAltKeyDown() and IsControlKeyDown() and IsShiftKeyDown())) then
 					XPerl_MTList_Anchor:StartMoving()
@@ -228,19 +227,8 @@
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="XPerl_MTList_Anchor"/>
 		</Anchors>
-		<Backdrop bgFile="Interface\AddOns\ZPerl_RaidHelper\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
-			<Frame name="$parent_TitleBar">
+			<Frame name="$parent_TitleBar" inherits="XPerlBackdropTemplate" >
 				<Size>
 					<AbsDimension x="160" y="12"/>
 				</Size>
@@ -257,7 +245,7 @@
 					</Anchor>
 				</Anchors>
 				<Frames>
-					<Button name="XPerl_Frame_CloseButton" inherits="UIPanelCloseButton">
+					<Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
 						<Size>
 							<AbsDimension x="20" y="20"/>
 						</Size>
@@ -276,12 +264,12 @@
 						</Scripts>
 					</Button>
 
-					<Button name="XPerl_Frame_Pin" inherits="XPerl_MTList_BasicButton">
+					<Button name="$parent_Pin" inherits="XPerl_MTList_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
 						<Anchors>
-							<Anchor point="RIGHT" relativeTo="XPerl_Frame_CloseButton" relativePoint="LEFT">
+							<Anchor point="RIGHT" relativeTo="$parent_CloseButton" relativePoint="LEFT">
 								<Offset>
 									<AbsDimension x="4" y="0"/>
 								</Offset>
@@ -302,22 +290,22 @@
 						<Scripts>
 							<OnLoad>
 								self.SetButtonTex = function()
-									local tex = XPerl_Frame_Pin:GetNormalTexture()
+									local tex = XPerl_RaidHelper_Frame_TitleBar_Pin:GetNormalTexture()
 									if (ZPerlConfigHelper.Pinned) then
 										tex:SetTexCoord(0.5, 0.96875, 0, 0.453125)
 									else
 										tex:SetTexCoord(0, 0.46875, 0, 0.453125)
 									end
 
-									tex = XPerl_Frame_Pin:GetPushedTexture()
+									tex = XPerl_RaidHelper_Frame_TitleBar_Pin:GetPushedTexture()
 									if (ZPerlConfigHelper.Pinned) then
-										if (XPerl_Frame.corner) then
-											XPerl_Frame.corner:Hide()
+										if (XPerl_RaidHelper_Frame.corner) then
+											XPerl_RaidHelper_Frame.corner:Hide()
 										end
 										tex:SetTexCoord(0.5, 0.96875, 0.5, 0.953125)
 									else
-										if (XPerl_Frame.corner) then
-											XPerl_Frame.corner:Show()
+										if (XPerl_RaidHelper_Frame.corner) then
+											XPerl_RaidHelper_Frame.corner:Show()
 										end
 										tex:SetTexCoord(0, 0.46875, 0.5, 0.953125)
 									end
@@ -331,12 +319,12 @@
 						</Scripts>
 					</Button>
 
-					<Button name="XPerl_Frame_ToggleLabels" inherits="XPerl_MTList_BasicButton">
+					<Button name="$parent_ToggleLabels" inherits="XPerl_MTList_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
 						<Anchors>
-							<Anchor point="RIGHT" relativeTo="XPerl_Frame_Pin" relativePoint="LEFT"/>
+							<Anchor point="RIGHT" relativeTo="$parent_Pin" relativePoint="LEFT"/>
 							<!--Anchor point="RIGHT" relativeTo="XPerl_Frame_ExpandLock" relativePoint="LEFT"/-->
 						</Anchors>
 						<NormalTexture file="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_Bits">
@@ -374,16 +362,16 @@
 									end
 								end
 							</OnLoad>
-							<OnClick function="XPerl_Toggle_ToggleLabels"/>
+							<OnClick function="XPerl_RaidHelper_ToggleLabels"/>
 						</Scripts>
 					</Button>
 
-					<Button name="XPerl_Frame_ToggleMTTargets" inherits="XPerl_MTList_BasicButton">
+					<Button name="$parent_ToggleMTTargets" inherits="XPerl_MTList_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
 						<Anchors>
-							<Anchor point="RIGHT" relativeTo="XPerl_Frame_ToggleLabels" relativePoint="LEFT"/>
+							<Anchor point="RIGHT" relativeTo="$parent_ToggleLabels" relativePoint="LEFT"/>
 							<!--Anchor point="RIGHT" relativeTo="XPerl_Frame_ToggleTargets" relativePoint="LEFT"/-->
 						</Anchors>
 						<NormalTexture file="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_Bits">
@@ -422,16 +410,16 @@
 									end
 								end
 							</OnLoad>
-							<OnClick function="XPerl_Toggle_MTTargets"/>
+							<OnClick function="XPerl_RaidHelper_ToggleMTTargets"/>
 						</Scripts>
 					</Button>
 
-					<Button name="XPerl_Frame_ToggleShowMT" inherits="XPerl_MTList_BasicButton">
+					<Button name="$parent_ToggleShowMT" inherits="XPerl_MTList_BasicButton">
 						<Size>
 							<AbsDimension x="11" y="11"/>
 						</Size>
 						<Anchors>
-							<Anchor point="RIGHT" relativeTo="XPerl_Frame_ToggleMTTargets" relativePoint="LEFT"/>
+							<Anchor point="RIGHT" relativeTo="$parent_ToggleMTTargets" relativePoint="LEFT"/>
 						</Anchors>
 						<NormalTexture file="Interface\Addons\ZPerl_RaidHelper\Images\XPerl_Bits">
 							<TexCoords left="0.75" right="0.875" top="0.0" bottom="0.125"/>
@@ -469,7 +457,7 @@
 									end
 								end
 							</OnLoad>
-							<OnClick function="XPerl_Toggle_ShowMT"/>
+							<OnClick function="XPerl_RaidHelper_ToggleShowMT"/>
 						</Scripts>
 					</Button>
 				</Frames>
@@ -490,7 +478,7 @@
 				</Layers>
 			</Frame>
 
-			<Frame name="XPerl_MTTargets" inherits="SecureRaidGroupHeaderTemplate">
+			<Frame name="XPerl_MTTargets" inherits="XPerlBackdropTemplate,SecureRaidGroupHeaderTemplate">
 				<Size>
 					<AbsDimension x="160" y="26"/>
 				</Size>

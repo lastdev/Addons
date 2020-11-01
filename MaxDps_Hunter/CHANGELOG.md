@@ -1,6 +1,6 @@
 # MaxDps_Hunter
 
-## [v8.2.5](https://github.com/kaminaris/MaxDps-Hunter/tree/v8.2.5) (2019-09-26)
-[Full Changelog](https://github.com/kaminaris/MaxDps-Hunter/compare/v8.2.0...v8.2.5)
+## [v8.3.0.1](https://github.com/kaminaris/MaxDps-Hunter/tree/v8.3.0.1) (2020-08-25)
+[Full Changelog](https://github.com/kaminaris/MaxDps-Hunter/compare/v8.3.0...v8.3.0.1) [Previous Releases](https://github.com/kaminaris/MaxDps-Hunter/releases)
 
-- v8.2.5 - Interface version bump  
+- v8.3.0.1 - Small fix  

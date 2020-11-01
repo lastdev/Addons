@@ -2,63 +2,66 @@
 
   LiteMount/LM_Tarecgosa.lua
 
+  This doesn't work because there is no action that will equip and mount
+  in one. I'm leaving it here as a reference in case I want to do something
+  similar in the future.
+
   Copyright 2011-2020 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
+
+local _, LM = ...
 
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
 
-_G.LM_Tarecgosa = setmetatable({ }, LM_Mount)
-LM_Tarecgosa.__index = LM_Tarecgosa
+LM.Tarecgosa = setmetatable({ }, LM.Mount)
+LM.Tarecgosa.__index = LM.Tarecgosa
 
-function LM_Tarecgosa:Get()
+function LM.Tarecgosa:Get()
 
     -- We're not actually going to use the spell action, but it gives
     -- us all the attributes, tooltip, icon, etc.
 
-    local m = LM_Spell.Get(self, LM_SPELL.TARECGOSAS_VISAGE, "FLY")
-    m.itemID = LM_ITEM.DRAGONWRATH_TARECGOSAS_REST
+    local m = LM.Spell.Get(self, LM.SPELL.TARECGOSAS_VISAGE, "FLY")
+    m.itemID = LM.ITEM.DRAGONWRATH_TARECGOSAS_REST
     m:Refresh()
     return m
 end
 
-function LM_Tarecgosa:Refresh()
+function LM.Tarecgosa:Refresh()
     self.isCollected = ( GetItemCount(self.itemID) > 0 )
-    LM_Mount.Refresh(self)
+    LM.Mount.Refresh(self)
 end
 
-function LM_Tarecgosa:InProgress()
+function LM.Tarecgosa:InProgress()
     local castingSpell = select(10, UnitCastingInfo("player"))
     if castingSpell == self.spellID then
         return true
     end
 end
 
-function LM_Tarecgosa:GetSecureAttributes()
+function LM.Tarecgosa:GetCastAction()
     if self:InProgress() then
         return { ['type'] = "macro", ['macrotext'] = "" }
     end
 
     local itemName = GetItemInfo(self.itemID)
 
-    -- We could move this back into LM_ItemSummoned if I could figure
+    -- We could move this back into LM.ItemSummoned if I could figure
     -- out how to determine what slot an item went into automatically.
-    local attrs = {
-        ["type"] = "item",
-        ["item"] = itemName
-    }
+    local action = LM.SecureAction:Item(itemName)
 
     -- Make sure you're not just wearing the item around like a champ
     if not IsEquippedItem(self.itemID) then
-        attrs['lm-nextaction'] = LM_Tarecgosa2:Get(self.itemID)
+        action['lm-nextaction'] = LM.Tarecgosa2:Get(self.itemID)
     end
 
     return attrs
 end
 
-function LM_Tarecgosa:IsCastable()
+function LM.Tarecgosa:IsCastable()
 
     -- If we're in the middle of casting it, accept responsbility and
     -- do nothing so spamming the button works ok.
@@ -71,7 +74,7 @@ function LM_Tarecgosa:IsCastable()
         return false
     end
 
-    if LM_Options.db.profile.enableTwoPress then
+    if LM.Options.db.profile.enableTwoPress then
         if GetItemCount(self.itemID) == 0 then
             return false
         end
@@ -83,10 +86,10 @@ function LM_Tarecgosa:IsCastable()
 end
 
 
-_G.LM_Tarecgosa2 = setmetatable({ }, LM_Mount)
-LM_Tarecgosa2.__index = LM_Tarecgosa2
+LM.Tarecgosa2 = setmetatable({ }, LM.Mount)
+LM.Tarecgosa2.__index = LM.Tarecgosa2
 
-function LM_Tarecgosa2:Get(itemID)
+function LM.Tarecgosa2:Get(itemID)
     local m = setmetatable({ }, self)
     m.itemID = itemID
     m.spellID = select(2, GetItemSpell(itemID))
@@ -96,7 +99,7 @@ function LM_Tarecgosa2:Get(itemID)
     return m
 end
 
-function LM_Tarecgosa2:Macro()
+function LM.Tarecgosa2:Macro()
     local text = "/use 16"
     if self.mainHand then
         text = text .. format("\n/run EquipItemByName(%d)", self.mainHand)
@@ -107,7 +110,7 @@ function LM_Tarecgosa2:Macro()
     return text
 end
 
-function LM_Tarecgosa2:GetSecureAttributes()
+function LM.Tarecgosa2:GetCastAction()
 
     local tryAgain = {
         ['type'] = 'macro',
@@ -116,7 +119,7 @@ function LM_Tarecgosa2:GetSecureAttributes()
     }
 
     if not IsEquippedItem(self.itemID) or not IsUsableSpell(self.spellID) then
-        return tryAgain
+        return LM.SecureAction:New(tryAgain)
     end
 
     --[[
@@ -126,6 +129,6 @@ function LM_Tarecgosa2:GetSecureAttributes()
     end
     ]]
 
-    return { ['type'] = 'macro', ['macrotext'] = self:Macro() }
+    return LM.SecureAction:Macro(self:Macro())
 end
 

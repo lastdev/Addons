@@ -9,7 +9,6 @@ local CHECK_TEXTURE = " |T" .. _G.READY_CHECK_READY_TEXTURE .. ":0|t"
 
 local MAX_TALENT_TIERS = _G.MAX_TALENT_TIERS
 local NUM_TALENT_COLUMNS = _G.NUM_TALENT_COLUMNS
-local CLASS_TALENT_LEVELS = _G.CLASS_TALENT_LEVELS
 
 
 local db = nil
@@ -111,9 +110,8 @@ do
 		if db.advanced then
 			local spec = GetActiveSpecGroup(false)
 			local _, playerClass = UnitClass("player")
-			local talentLevels = CLASS_TALENT_LEVELS[playerClass] or CLASS_TALENT_LEVELS.DEFAULT -- DK and DH gain talents at different levels
 			for tier = 1, MAX_TALENT_TIERS do
-				local level = talentLevels[tier]
+				local _, _, level = GetTalentTierInfo(tier, spec);
 				local group = {
 					type = "group",
 					name = ("T%d: %d"):format(tier, level),
@@ -150,10 +148,10 @@ do
 			local group = {
 				type = "group",
 				name = _G.PVP,
-				order = talentLevels[MAX_TALENT_TIERS] + 1,
+				order = -1,
 				args = {},
 			}
-			local slotInfo = C_SpecializationInfo.GetPvpTalentSlotInfo(2)
+			local slotInfo = C_SpecializationInfo.GetPvpTalentSlotInfo(1)
 			local available = slotInfo and slotInfo.availableTalentIDs
 			if available then
 				local selected = {}
@@ -281,7 +279,7 @@ function TalentMacros:UpdatePVPTalentMacros()
 		return
 	end
 
-	for slot = 2, 4 do
+	for slot = 1, 3 do
 		local slotInfo = C_SpecializationInfo.GetPvpTalentSlotInfo(slot)
 		local selectedTalentID = slotInfo and slotInfo.selectedTalentID
 		if selectedTalentID then
@@ -289,9 +287,9 @@ function TalentMacros:UpdatePVPTalentMacros()
 			local body = db.advanced and db.macrotext[id] or DEFAULT_MACRO:gsub("%%n", name or "")
 			-- XXX Can't check for passives by spell name because the spells don't
 			-- exist until they activate and I can't be arsed scan the tooltip
-			EditMacro(("tpvp%d"):format(slot-1), nil, texture, body)
+			EditMacro(("tpvp%d"):format(slot), nil, texture, body)
 		else
-			EditMacro(("tpvp%d"):format(slot-1), nil, "INV_Misc_QuestionMark", "")
+			EditMacro(("tpvp%d"):format(slot), nil, "INV_Misc_QuestionMark", "")
 		end
 	end
 	LibStub("AceConfigRegistry-3.0"):NotifyChange(ADDON_NAME)

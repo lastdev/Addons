@@ -2,7 +2,7 @@
 
 	<Script file="ZPerl_TargetTarget.lua"/>
 
-	<Button name="ZPerl_TargetTarget_Template" inherits="SecureUnitButtonTemplate" clampedToScreen="true" frameStrata="LOW" virtual="true" movable="true" parent="UIParent" hidden="true">
+	<Button name="ZPerl_TargetTarget_Template" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate" clampedToScreen="true" frameStrata="LOW" virtual="true" movable="true" parent="UIParent" hidden="true">
 		<Size>
 			<!-- The size of this frame determines what can be clicked for the menu and moving, hence it is the same size as the name frame. -->
 			<AbsDimension x="160" y="60"/>
@@ -32,9 +32,13 @@
 		</Scripts>
 		<Frames>
 			<!-- TargetTarget Name -->
-			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentnameFrame" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_3333" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:RegisterForClicks("AnyUp")
 						self:RegisterForDrag("LeftButton")
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
@@ -57,17 +61,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT"/>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Layers>
 					<Layer level="OVERLAY">
 						<!-- PVP Icon -->
@@ -137,7 +130,7 @@
 				</Layers>
 			</Button>
 			<!--Level Frame-->
-			<Frame name="$parentlevelFrame" inherits="XPerl_BorderStyleTemplate">
+			<Frame name="$parentlevelFrame" inherits="XPerlBackdropTemplate,XPerl_BorderStyleTemplate">
 				<Size>
 					<AbsDimension x="27" y="24"/>
 				</Size>
@@ -168,7 +161,7 @@
 				</Scripts>
 			</Frame>
 			<!-- TargetTarget Stats -->
-			<Frame name="$parentstatsFrame" inherits="XPerl_Stats_Template">
+			<Frame name="$parentstatsFrame" inherits="XPerlBackdropTemplate,XPerl_Stats_Template">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentnameFrame">
 						<Offset>
@@ -177,13 +170,13 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Frame name="$parenthighlight" inherits="XPerl_HighlightTemplate">
+			<Frame name="$parenthighlight" inherits="XPerlBackdropTemplate,XPerl_HighlightTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentnameFrame"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parentstatsFrame"/>
 				</Anchors>
 			</Frame>
-			<Frame name="$parentbuffFrame">
+			<Frame name="$parentbuffFrame" inherits="XPerlBackdropTemplate">
 				<Size>
 					<AbsDimension x="100" y="50"/>
 				</Size>
@@ -195,7 +188,7 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Frame name="$parentdebuffFrame">
+			<Frame name="$parentdebuffFrame" inherits="XPerlBackdropTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentbuffFrame"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="$parentbuffFrame"/>
@@ -204,7 +197,7 @@
 		</Frames>
 	</Button>
 
-	<Button name="XPerl_TargetTarget" inherits="ZPerl_TargetTarget_Template" movable="true" parent="UIParent" hidden="true">
+	<Button name="XPerl_TargetTarget" inherits="XPerlBackdropTemplate,ZPerl_TargetTarget_Template" movable="true" parent="UIParent" hidden="true">
 		<Anchors>
 			<Anchor point="TOPLEFT">
 				<Offset>

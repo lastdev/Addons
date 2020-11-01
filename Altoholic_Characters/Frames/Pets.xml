@@ -24,7 +24,7 @@
 	<Frame name="AltoholicFramePets" parent="AltoholicTabCharacters" hidden="true">
 		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT" x="39" y="-105" />
+			<Anchor point="TOPRIGHT" x="-39" y="-105" />
 		</Anchors>
 		<Frames>
 			<Frame name="$parentNormal">
@@ -64,7 +64,7 @@
 								self:RefreshUnit();
 							</OnEvent>
 							<OnUpdate>
-								Model_OnUpdate(self, elapsed);
+								--Model_OnUpdate(self, elapsed);
 							</OnUpdate>
 						</Scripts>
 						<Frames>
@@ -78,7 +78,8 @@
 										self:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
 									</OnLoad>
 									<OnClick>
-										Model_RotateLeft(self:GetParent());
+                                        Model_UpdateRotation(self:GetParent(), self, nil, 0.02)
+										--Model_RotateLeft(self:GetParent());
 									</OnClick>
 								</Scripts>
 								<NormalTexture file="Interface\Buttons\UI-RotationLeft-Button-Up"/>
@@ -95,7 +96,8 @@
 										self:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
 									</OnLoad>
 									<OnClick>
-										Model_RotateRight(self:GetParent());
+                                        Model_UpdateRotation(self:GetParent(), nil, self, 0.02)
+										--Model_RotateRight(self:GetParent());
 									</OnClick>
 								</Scripts>
 								<NormalTexture file="Interface\Buttons\UI-RotationRight-Button-Up"/>

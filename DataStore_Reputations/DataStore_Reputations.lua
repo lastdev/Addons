@@ -44,7 +44,7 @@ local BottomLevelNames = {
 
 local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000, 43000 }
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
+local BF = LibStub("LibBabble-Faction-ForAltoholic-3.0"):GetUnstrictLookupTable()
 
 --[[	*** Faction UIDs ***
 These UIDs have 2 purposes: 
@@ -96,6 +96,8 @@ local factions = {
 	{ id = 922, name = BF["Tranquillien"] },
 	{ id = 589, name = BF["Wintersaber Trainers"] },
 	{ id = 270, name = BF["Zandalar Tribe"] },
+    
+    -- TBC
 	{ id = 1012, name = BF["Ashtongue Deathsworn"] },
 	{ id = 942, name = BF["Cenarion Expedition"] },
 	{ id = 933, name = BF["The Consortium"] },
@@ -115,6 +117,8 @@ local factions = {
 	{ id = 989, name = BF["Keepers of Time"] },
 	{ id = 990, name = BF["The Scale of the Sands"] },
 	{ id = 967, name = BF["The Violet Eye"] },
+    
+    -- WOTLK
 	{ id = 1106, name = BF["Argent Crusade"] },
 	{ id = 1090, name = BF["Kirin Tor"] },
 	{ id = 1073, name = BF["The Kalu'ak"] },
@@ -218,6 +222,7 @@ local factions = {
 	{ id = 2100, name = GetFactionInfoByID(2100) }, 	-- Corbyn
 	{ id = 2102, name = GetFactionInfoByID(2102) }, 	-- Impus
 	{ id = 2098, name = GetFactionInfoByID(2098) }, 	-- Keeper Raynae
+    { id = 2135, name = GetFactionInfoByID(2135) },     -- Chromie
 	
 	-- Battle for Azeroth
 	{ id = 2159, name = GetFactionInfoByID(2159) },		-- A  - 7th Legion
@@ -235,7 +240,13 @@ local factions = {
 	{ id = 2391, name = GetFactionInfoByID(2391) },		-- Rustbolt Resistance
 	{ id = 2415, name = GetFactionInfoByID(2415) },		-- 8.3 Rajani
 	{ id = 2417, name = GetFactionInfoByID(2417) },		-- 8.3 Uldum Accord
- 
+    { id = 2395, name = GetFactionInfoByID(2395) },     -- Honeyback Hive
+    
+    -- Shadowlands
+	{ id = 2410, name = GetFactionInfoByID(2410) },		                  -- Maldraxxus / 
+	{ id = 2422, name = GetFactionInfoByID(2422) },		                  -- Ardenweald /
+	{ id = 2413, name = GetFactionInfoByID(2413) },		                  -- Revendreth /
+    { id = 2407, name = GetFactionInfoByID(2407) or "The Ascended" },	  -- The Ascended
 }
 
 local FactionUIDsRev = {}
@@ -329,7 +340,7 @@ local function ScanReputations()
 	
 	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
 		local name, _, _, _, _, earned, _, _, _, _, _, _, _, factionID = GetFactionInfo(i)
-		if (earned and earned > 0) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
+		if (earned ~= nil) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
 			if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
 				-- check paragon factions
 				if (C_Reputation.IsFactionParagon(factionID)) then

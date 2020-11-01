@@ -1,26 +1,14 @@
-tag 20b19af434dfe9cf20ea9daf19cec484ab896c4e 8.3.7
+tag 17a09ee33aff50ef0a06f805a7e52ba9ad3c49a3 9.0.13
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sun Apr 19 10:13:28 2020 +1000
+Date:	Sun Oct 25 08:21:26 2020 +1100
 
-LiteMount 8.3.7
-- [falling] condition now requires more than 1s since a jump
-- flag Seething Shore battleground as non-flyable
+LiteMount 9.0.13
+- Update koKR translations thanks to zzipsa22
+- Add "Dread Raven" family split out from "Bird"
 
-commit 8c2915ec3abc5567cdb11c547dab3c7ee4159e6d
+commit ed91f08afa57db3787d83a822587f3134b84e6f2
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Apr 19 10:11:36 2020 +1000
+Date:   Sat Oct 24 22:33:19 2020 +1100
 
-    Flag Seething Shore as non-flyable
-
-commit e0533207012af8d7c780ef7c63f77a593665e567
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Apr 19 10:11:18 2020 +1000
-
-    Start recording instances, just in case it's helpful
-
-commit 0b4ae397d21d98fdb83375dde901c8264fbd3070
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Fri Apr 17 14:07:46 2020 +1000
-
-    Adjust [falling] so it won't trigger within 1s of a jump
+    Add "Dread Raven" family. Pull in updated translations.
 

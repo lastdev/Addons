@@ -1,6 +1,6 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Raider.IO |cffFFFFFFRaiding|r (Americas - Alliance)
-## Author: Vladinator (Voidzone-Ravencrest) and Aspyr (Aspyrael-Skullcrusher)
+## Author: Vladinator (Voidzone-Ravencrest), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO
 ## DefaultState: enabled
 ## X-Type: Raiding

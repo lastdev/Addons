@@ -43,7 +43,7 @@
 		</Scripts>
 	</StatusBar>
 
-	<Button name="XPerl_Raid_FrameTemplate" frameStrata="LOW" virtual="true" hidden="true" inherits="SecureUnitButtonTemplate">
+	<Button name="XPerl_Raid_FrameTemplate" frameStrata="LOW" virtual="true" hidden="true" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
 		<Size>
 			<!-- The size of this frame determines what can be clicked for the menu and moving, hence it is the same size as the name frame. -->
 			<AbsDimension x="80" y="43"/>
@@ -64,9 +64,13 @@
 		</Scripts>
 
 		<Frames>
-			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentnameFrame" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_256_10_1211" type="global"/>
+				</KeyValues>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:RegisterForClicks("AnyUp")
 						XPerl_RegisterUnitText(_G[self:GetName().."text"])
 					</OnLoad>
@@ -87,17 +91,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT"/>
 				</Anchors>
-				<Backdrop bgFile="Interface\AddOns\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Addons\ZPerl\Images\XPerl_ThinEdge" tile="true">
-					<EdgeSize>
-						<AbsValue val="10"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="256"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="1" right="2" top="1" bottom="1"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Layers>
 					<Layer level="OVERLAY">
 						<!-- Combat Icon -->
@@ -143,7 +136,10 @@
 				</Layers>
 			</Button>
 
-			<Frame name="$parentstatsFrame">
+			<Frame name="$parentstatsFrame" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_256_10_1211" type="global"/>
+				</KeyValues>
 				<Size>
 					<AbsDimension x="80" y="26"/>
 				</Size>
@@ -154,17 +150,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\AddOns\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Addons\ZPerl\Images\XPerl_ThinEdge" tile="true">
-					<EdgeSize>
-						<AbsValue val="10"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="256"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="1" right="2" top="1" bottom="1"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Frames>
 					<!-- Health Bar -->
 					<StatusBar name="$parenthealthBar" drawLayer="ARTWORK" inherits="XPerlRaidStatusBar">
@@ -257,7 +242,7 @@
 							</OnLoad>
 						</Scripts>
 					</StatusBar>
-					<Frame name="$parentready" hidden="true" setAllPoints="true" topLevel="true">
+					<Frame name="$parentready" inherits="XPerlBackdropTemplate" hidden="true" setAllPoints="true" topLevel="true">
 						<Layers>
 							<Layer level="OVERLAY">
 								<!-- Class Icon -->
@@ -276,7 +261,7 @@
 							</Layer>
 						</Layers>
 					</Frame>
-					<Frame name="$parentresurrect" setAllPoints="true" frameStrata="HIGH" hidden="true">
+					<Frame name="$parentresurrect" inherits="XPerlBackdropTemplate" setAllPoints="true" frameStrata="HIGH" hidden="true">
 						<Layers>
 							<Layer level="OVERLAY">
 								<Texture file="Interface\RaidFrame\Raid-Icon-Rez">
@@ -296,7 +281,7 @@
 				</Scripts>
 			</Frame>
 
-			<Frame name="$parentbuffFrame" frameStrata="MEDIUM" hidden="true">
+			<Frame name="$parentbuffFrame" inherits="XPerlBackdropTemplate" frameStrata="MEDIUM" hidden="true">
 				<Size>
 					<AbsDimension x="10" y="10"/>
 				</Size>
@@ -313,7 +298,7 @@
 		</Frames>
 	</Button>
 
-	<Frame name="XPerl_Raid_TitleFrameTemplate" inherits="SecureRaidGroupHeaderTemplate" clampedToScreen="true" frameStrata="LOW" virtual="true" hidden="true">
+	<Frame name="XPerl_Raid_TitleFrameTemplate" inherits="XPerlBackdropTemplate,SecureRaidGroupHeaderTemplate" clampedToScreen="true" frameStrata="LOW" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="80" y="10"/>
 		</Size>
@@ -329,7 +314,7 @@
 		</Attributes>
 	</Frame>
 
-	<Frame name="XPerl_Raid_TitleDragTemplate" clampedToScreen="true" movable="true" frameStrata="LOW" virtual="true">
+	<Frame name="XPerl_Raid_TitleDragTemplate" clampedToScreen="true" inherits="XPerlBackdropTemplate" movable="true" frameStrata="LOW" virtual="true">
 		<Size>
 			<AbsDimension x="80" y="10"/>
 		</Size>
@@ -361,7 +346,7 @@
 		</Scripts>
 
 		<Frames>
-			<Frame name="$parentTitle" setAllPoints="true">
+			<Frame name="$parentTitle" inherits="XPerlBackdropTemplate" setAllPoints="true">
 				<Scripts>
 					<OnShow>
 						self:SetScale(0.75)
@@ -382,26 +367,19 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame name="$parentVirtual" hidden="true">
+			<Frame name="$parentVirtual" inherits="XPerlBackdropTemplate" hidden="true">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_256_10_1211" type="global"/>
+				</KeyValues>
 				<Size>
 					<AbsDimension x="80" y="10"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTitle"/>
 				</Anchors>
-				<Backdrop bgFile="Interface\AddOns\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Addons\ZPerl\Images\XPerl_ThinEdge" tile="true">
-					<EdgeSize>
-						<AbsValue val="10"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="256"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="2" right="2" top="2" bottom="2"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:RegisterForDrag("LeftButton")
 					</OnLoad>
 					<OnDragStart>
@@ -601,7 +579,7 @@
 		</Anchors>
 	</Frame>
 
-	<Frame name="XPerl_Raid_Frame" parent="UIParent" hidden="true">
+	<Frame name="XPerl_Raid_Frame" parent="UIParent" inherits="XPerlBackdropTemplate" hidden="true">
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 			<Anchor point="BOTTOMRIGHT"/>

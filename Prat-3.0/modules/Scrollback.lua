@@ -88,20 +88,38 @@ Prat:AddModuleExtension(function()
 
       for k, v in pairs(Prat.HookedFrames) do
         self.scrollback[k] = v.historyBuffer
+        if not self:IsHooked(v, "AddMessage") then
+          self:SecureHook(v, "AddMessage")
+        end
       end
     end
 
     Prat.RegisterChatEvent(self, Prat.Events.FRAMES_UPDATED)
+    Prat.RegisterChatEvent(self, Prat.Events.FRAMES_REMOVED)
+  end
+
+  local orgOMD = module.OnModuleDisable
+  function module:OnModuleDisable(...)
+    orgOMD(self, ...)
+
+    for name, v in pairs(Prat.HookedFrames) do
+      if self:IsHooked(v, "AddMessage") then
+        self:Unhook(v, "AddMessage")
+      end
+      self.scrollback[name] = nil
+    end
   end
 
   function module:OnValueChanged(info, b)
-    if self.db.profile.scrollback then
-      for k, v in pairs(Prat.HookedFrames) do
+    for k, v in pairs(Prat.HookedFrames) do
+      if self.db.profile.scrollback then
         if not v.isTemporary then
           self.scrollback[k] = v.historyBuffer
         else
           self.scrollback[k] = nil
         end
+      else
+        self.scrollback[k] = nil
       end
     end
   end
@@ -109,6 +127,21 @@ Prat:AddModuleExtension(function()
   function module:Prat_FramesUpdated(_, name, chatFrame)
     if self.db.profile.scrollback and not chatFrame.isTemporary then
       self.scrollback[name] = chatFrame.historyBuffer
+    end
+    if not self:IsHooked(chatFrame, "AddMessage") then
+      self:SecureHook(chatFrame, "AddMessage")
+    end
+  end
+  function module:Prat_FramesRemoved(_, name, chatFrame)
+    self.scrollback[name] = nil
+    if self:IsHooked(chatFrame, "AddMessage") then
+      self:Unhook(chatFrame, "AddMessage")
+    end
+  end
+
+  function module:AddMessage(frame, text, ...)
+    if self.db.profile.on and self.scrollback and self.scrollback[frame:GetName()] then
+      frame.historyBuffer:GetEntryAtIndex(1).serverTime = GetServerTime()
     end
   end
 
@@ -136,7 +169,9 @@ Prat:AddModuleExtension(function()
       else
         local bnetAccountID, accountName, battleTag = BNGetFriendInfo(i)
         local accountInfo = { bnetAccountID = bnetAccountID, accountName = accountName }
-        lookup[battleTag] = accountInfo
+        if battleTag then
+          lookup[battleTag] = accountInfo
+        end
       end
     end
 
@@ -167,7 +202,7 @@ Prat:AddModuleExtension(function()
   end
 
   function module:RestoreLastSession()
-    local now, maxTime = GetTime(), self.db.profile.scrollbackduration * 60 * 60
+    local now, uptime, maxTime = GetServerTime(), GetTime(), self.db.profile.scrollbackduration * 60 * 60
     for frame, scrollback in pairs(self.scrollback) do
       local f = _G[frame]
       if scrollback.elements and scrollback.headIndex and scrollback.maxElements and frame ~= "ChatFrame2" then
@@ -175,13 +210,16 @@ Prat:AddModuleExtension(function()
           local timeShown = false
           for i = 1, #scrollback.elements do
             local line = self:GetEntryAtIndex(scrollback, i)
-            if line and line.message and (not self.db.profile.removespam or isRealChatMessage(line)) then
-              if maxTime > 0 and (now - line.timestamp) <= maxTime then
+            if line and type(line.message) == "string" and (not self.db.profile.removespam or isRealChatMessage(line)) then
+              line.serverTime = line.serverTime or now
+              line.timestamp = uptime
+
+              if maxTime == 0 or (now - line.serverTime) <= maxTime then
                 if not timeShown then
                   f:BackFillMessage(PL.divider)
 
                   f:BackFillMessage(format(TIME_DAYHOURMINUTESECOND,
-                    ChatFrame_TimeBreakDown(now - line.timestamp)))
+                    ChatFrame_TimeBreakDown(now - line.serverTime)))
                   timeShown = true
                 end
 
@@ -191,6 +229,8 @@ Prat:AddModuleExtension(function()
               end
             end
           end
+
+          f:ResetAllFadeTimes()
         end
       end
     end

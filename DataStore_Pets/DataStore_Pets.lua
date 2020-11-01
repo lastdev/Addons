@@ -1,3 +1,8 @@
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    print("DataStore_Pets does not support Classic WoW")
+    return
+end
+
 --[[	*** DataStore_Pets ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 22st, 2009

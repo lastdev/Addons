@@ -245,7 +245,7 @@ local function displayAchievement(button, frame, achievement, index, selectionID
     else
       button.shield.icon:SetTexture([[Interface\AchievementFrame\UI-Achievement-Shields-NoPoints]]);
     end
-    
+
     if ( isGuild ) then
       button.shield.points:Show();
       button.shield.wasEarnedByMe = nil;
@@ -556,15 +556,15 @@ local function updateAchievementsList(frame)
 
   local totalHeight = numAchievements * ACHIEVEMENTBUTTON_COLLAPSEDHEIGHT;
   totalHeight = totalHeight + (extraHeight - ACHIEVEMENTBUTTON_COLLAPSEDHEIGHT);
-  
+
   HybridScrollFrame_Update(scrollFrame, totalHeight, displayedHeight);
-  
+
   if ( selection ) then
     frame.selection = selection;
   else
     HybridScrollFrame_CollapseButton(scrollFrame);
   end
-  
+
   if (frame.SetNumListed) then  frame.SetNumListed(numAchievements);  end
 
   --if (Overachiever_Debug) then  print("- Took "..(debugprofilestop() - StartTime)/1000 .." seconds.");  end
@@ -794,7 +794,7 @@ function Overachiever.BuildNewTab(name, text, watermark, helptip, loadFunc, filt
   local frameBGDarken = frame:CreateTexture(nil, "ARTWORK")
   frameBGDarken:SetAllPoints(frameBG)
   frameBGDarken:SetColorTexture(0, 0, 0, 0.75)
-  local frameBorder = CreateFrame("Frame", nil, frame)
+  local frameBorder = CreateFrame("Frame", nil, frame, "BackdropTemplate")
   frameBorder:SetAllPoints(frame)
   frameBorder:SetBackdrop( {
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16,
@@ -1198,7 +1198,7 @@ do
 
     flasher:Play()
   end
-  
+
   function flashFrame_stop(frame)
     if (frames and frames[frame]) then
       frames[frame]:Stop()

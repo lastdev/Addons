@@ -69,6 +69,25 @@ function RTM:OnChatMsgMonsterEmote(...)
     end
 end
 
+-- A special check to distinguish between the usual and alternative timeline Mecharantula.
+function RTM.CheckForRedirectedRareIds(npc_id)
+	-- Next, we check whether this is Mecharantula.
+	if npc_id == 151672 then
+		-- Check if the player has the time displacement buff.
+		for i=1, 40 do
+			local spell_id = select(10, UnitBuff("player", i))
+			if spell_id == nil then
+				break
+			elseif spell_id == 296644 then
+				-- Change the NPC id to a bogus id.
+				npc_id = 8821909
+				break
+			end
+		end
+	end
+	return npc_id
+end
+
 -- Register to the events required for the addon to function properly.
 function RTM:RegisterEvents()
     self:RegisterEvent("PLAYER_TARGET_CHANGED")

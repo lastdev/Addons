@@ -21,7 +21,7 @@ local strlower = _G.strlower
 local format = _G.format
 
 -- WOW APIs
-local GetCurrencyInfo = GetCurrencyInfo
+local GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
 local CombatLogGetCurrentEventInfo = _G.CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 local LoadAddOn = LoadAddOn
@@ -176,7 +176,8 @@ function R:OnCurrencyUpdate(event)
 
 	-- Check if any coins were used
 	for k, v in pairs(self.coins) do
-		local name, currencyAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(k)
+		local currency = GetCurrencyInfo(k)
+		local name, currencyAmount = currency.name, currency.quantity
 		local diff = currencyAmount - (coinamounts[k] or 0)
 		coinamounts[k] = currencyAmount
 		if diff < 0 then
@@ -686,6 +687,8 @@ function R:OnChatCommand(input)
 		DebugCache:PrintMessages(numMessages)
 	elseif strlower(input) == "verify" then -- Verify the ItemDB
 		self:VerifyItemDB()
+	elseif strlower(input) == "purge" then -- TODO: This should be done automatically, no?
+		self.Database:PurgeObsoleteEntries()
 	elseif strlower(input) == "profiling" then
 		if self.db.profile.enableProfiling then
 			self.db.profile.enableProfiling = false
@@ -697,6 +700,8 @@ function R:OnChatCommand(input)
 	else
 		LoadAddOn("Rarity_Options")
 		if R.optionsFrame then
+			-- Thanks, Blizzard (https://www.wowinterface.com/forums/showthread.php?t=54599)
+			InterfaceOptionsFrame_OpenToCategory(R.optionsFrame)
 			InterfaceOptionsFrame_OpenToCategory(R.optionsFrame)
 		else
 			self:Print(L["The Rarity Options module has been disabled. Log out and enable it from your add-ons menu."])
@@ -1108,26 +1113,9 @@ function R:OnEvent(event, ...)
 			end
 		end
 
-		-- Handle opening Arcane Chest
-		if Rarity.isFishing and Rarity.isOpening and Rarity.lastNode and (Rarity.lastNode == L["Arcane Chest"]) then
-			local names = {"Eternal Palace Dining Set", "Ocean Simulator"}
-			Rarity:Debug("Detected Opening on " .. L["Arcane Chest"] .. " (method = SPECIAL)")
-			for _, name in pairs(names) do
-				local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name]
-				if v and type(v) == "table" and v.enabled ~= false then
-					if v.attempts == nil then
-						v.attempts = 1
-					else
-						v.attempts = v.attempts + 1
-					end
-					self:OutputAttempts(v)
-				end
-			end
-		end
-
 		-- Handle opening Glimmering Chest
 		if Rarity.isFishing and Rarity.isOpening and Rarity.lastNode and (Rarity.lastNode == L["Glimmering Chest"]) then
-			local names = {"Eternal Palace Dining Set", "Sandclaw Nestseeker"}
+			local names = {"Sandclaw Nestseeker"}
 			Rarity:Debug("Detected Opening on " .. L["Glimmering Chest"] .. " (method = SPECIAL)")
 			for _, name in pairs(names) do
 				local v = self.db.profile.groups.items[name] or self.db.profile.groups.pets[name]

@@ -4,13 +4,13 @@
 
 -- Some shared functions
 -- Prevent multi-loading
-if not FLOLIB_VERSION or FLOLIB_VERSION < 1.40 then
+if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 
 	local _
 	local NUM_SPELL_SLOTS = 10;
 	local SCHOOL_COLORS = { 1.0, 0.7, 0.0 };
 	
-	FLOLIB_VERSION = 1.40;
+	FLOLIB_VERSION = 1.41;
 	
 	FLOLIB_ACTIVATE_SPEC = GetSpellInfo(200749);
 	
@@ -377,7 +377,8 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.40 then
 	
 			--Cooldown stuffs
 			cooldown = _G[self:GetName().."Button"..i.."Cooldown"];
-			start, duration, enable, charges, maxCharges = GetSpellCooldown(spell.id);
+			local _, _, _, _, _, _, maxRankId = GetSpellInfo(GetSpellInfo(spell.id));
+			start, duration, enable, charges, maxCharges = GetSpellCooldown(maxRankId);
 			if spell.talented then
 				start2, duration2, enable2 = GetSpellCooldown(spell.talented);
 				if start > 0 and start2 > 0 then
@@ -399,7 +400,7 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.40 then
 			--Castable stuffs
 			normalTexture = _G[self:GetName().."Button"..i.."NormalTexture"];
 			icon = _G[self:GetName().."Button"..i.."Icon"];
-			isUsable, noMana = IsUsableSpell(spell.id);
+			isUsable, noMana = IsUsableSpell(maxRankId);
 	
 			if isUsable then
 				icon:SetVertexColor(1.0, 1.0, 1.0);

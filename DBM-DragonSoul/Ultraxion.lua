@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(331, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
-mod:SetZone()
 --mod:SetModelSound("sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_INTRO_01.OGG", "sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_AGGRO_01.OGG")
 
 mod:RegisterCombat("combat")
@@ -28,7 +27,7 @@ local specWarnFadingLight			= mod:NewSpecialWarningYou(109075)
 local specWarnFadingLightOther		= mod:NewSpecialWarningTarget(109075, "Tank")
 local specWarnTwilightEruption		= mod:NewSpecialWarningSpell(106388, nil, nil, 2, 3)
 
-local timerCombatStart				= mod:NewTimer(35, "TimerCombatStart", 2457)
+local timerCombatStart				= mod:NewTimer(35, "TimerCombatStart", 59571)
 local timerUnstableMonstrosity		= mod:NewNextTimer(60, 106372, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerHourofTwilight			= mod:NewCastTimer(5, 106371)
 local timerHourofTwilightCD			= mod:NewNextCountTimer(45.5, 106371, nil, nil, nil, 5, nil, nil, nil, 2, 4)

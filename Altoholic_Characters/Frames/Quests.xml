@@ -1,7 +1,12 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Quests.lua"></Script>
 	
-	<Frame parentKey="QuestLog" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+	<Frame name="AltoholicFrameQuests" parentKey="QuestLog" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+		<Anchors>
+            <Anchor point="TOPLEFT" x="190" y="-100"/>
+			<Anchor point="TOPRIGHT" x="-39" y="-105" />
+            <Anchor point="BOTTOMRIGHT" x="-39" y="40"/>
+		</Anchors>
 		<Frames>
 			<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 				<Scripts>
@@ -11,7 +16,7 @@
 					</OnVerticalScroll>
 				</Scripts>
 				<KeyValues>
-					<KeyValue key="numRows" value="7" type="number" />
+					<KeyValue key="numRows" value="18" type="number" />
 					<KeyValue key="rowHeight" value="43" type="number" />
 					<KeyValue key="rowTemplate" value="AltoQuestLogRowTemplate" />
 				</KeyValues>

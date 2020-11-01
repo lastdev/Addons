@@ -1,6 +1,8 @@
 --[[
-Localisation file
+	Localisation file
 ]]
+
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 -- Tabs
 XPERL_CONF_TITLE1						= "Global"
@@ -832,7 +834,7 @@ XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT			= "HOT Counter"
 XPERL_CONF_RAID_HIGHLIGHTS_HOTCOUNT_DESC	= "Will indicate on a unit how many active HOTs they currently have from ANY class"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET		= "My Target"
 XPERL_CONF_RAID_HIGHLIGHTS_TARGET_DESC	= "Indicate your target on party and raid frames"
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+if not IsClassic then
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING		= GetSpellInfo(33076) -- Prayer of Mending
 	XPERL_CONF_RAID_HIGHLIGHTS_MENDING_DESC	= "Enable the "..GetSpellInfo(33076).." tracking. With sparkles enabled, this will show a bouncing graphic to make it easier to follow the buff."
 	XPERL_CONF_RAID_HIGHLIGHTS_RENEWING			= GetSpellInfo(115151) -- Renewing Mist

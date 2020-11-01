@@ -1,6 +1,6 @@
 
 do
-	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner v8.2.0") --packager magic, replaced with tag version
+	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner v9.0.0") --packager magic, replaced with tag version
 
 	local ccleanerInput = CreateFrame("EditBox", nil, BadBoyConfig, "InputBoxTemplate")
 	ccleanerInput:SetPoint("TOPLEFT", BadBoyCCleanerConfigTitle, "BOTTOMLEFT", 10, -5)
@@ -85,7 +85,7 @@ do
 		ccleanerInput:SetText("")
 	end)
 
-	local ccleanerBackdrop = CreateFrame("Frame", nil, BadBoyConfig)
+	local ccleanerBackdrop = CreateFrame("Frame", nil, BadBoyConfig, "BackdropTemplate")
 	ccleanerBackdrop:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
 		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
 		tile = true, tileSize = 16, edgeSize = 16,

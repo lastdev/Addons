@@ -342,9 +342,10 @@ local function BuildHubPanel(panel)
 
     -- Column 2
 	panel.EnableOffTankHighlight = CreateQuickCheckbutton(objectName.."EnableOffTankHighlight", "Highlight Mobs on Off-Tanks", AlignmentColumn, panel.ThreatLabel, OffsetColumnB)
-	panel.ColorAttackingOtherTank = CreateQuickColorbox(objectName.."ColorAttackingOtherTank", "Attacking another Tank", AlignmentColumn, panel.EnableOffTankHighlight , 16+OffsetColumnB)
+	panel.ColorAttackingOtherTank = CreateQuickColorbox(objectName.."ColorAttackingOtherTank", "Attacking another Tank", AlignmentColumn, panel.EnableOffTankHighlight , 14+OffsetColumnB)
+	panel.CountPetAsOtherTank = CreateQuickCheckbutton(objectName.."CountPetAsOtherTank", "Count pets as Off-Tanks", AlignmentColumn, panel.ColorAttackingOtherTank, 16+OffsetColumnB)
 
-	panel.ColorShowPartyAggro = CreateQuickCheckbutton(objectName.."ColorShowPartyAggro", "Highlight Group Members holding Aggro", AlignmentColumn, panel.ColorAttackingOtherTank, OffsetColumnB)
+	panel.ColorShowPartyAggro = CreateQuickCheckbutton(objectName.."ColorShowPartyAggro", "Highlight Group Members holding Aggro", AlignmentColumn, panel.CountPetAsOtherTank, OffsetColumnB)
 	panel.ColorPartyAggro = CreateQuickColorbox(objectName.."ColorPartyAggro", "Group Member Aggro", AlignmentColumn, panel.ColorShowPartyAggro , 14+OffsetColumnB)
 	panel.ColorPartyAggroBar = CreateQuickCheckbutton(objectName.."ColorPartyAggroBar", "Health Bar Color", AlignmentColumn, panel.ColorPartyAggro, 16+OffsetColumnB)
 	panel.ColorPartyAggroGlow = CreateQuickCheckbutton(objectName.."ColorPartyAggroGlow", "Border/Warning Glow", AlignmentColumn, panel.ColorPartyAggroBar, 16+OffsetColumnB)
@@ -373,6 +374,19 @@ local function BuildHubPanel(panel)
 	panel.ColorNormalSpellCast, F = CreateQuickColorbox(objectName.."ColorNormalSpellCast", "Normal", AlignmentColumn, F , 16)
 	panel.ColorUnIntpellCast, F = CreateQuickColorbox(objectName.."ColorUnIntpellCast", "Un-interruptible", AlignmentColumn, F , 16)
 
+	panel.SpellsCastAtPlayerLabel, F = CreateQuickItemLabel(nil, "Spells that target you:", AlignmentColumn, F, 0, 2)
+    panel.SpellsCastAtPlayerEnable, F = CreateQuickCheckbutton(objectName.."SpellsCastAtPlayerEnable", "Color spells cast at player", AlignmentColumn, F)
+	panel.ColorNormalSpellsCastAtPlayer, F = CreateQuickColorbox(objectName.."ColorNormalSpellsCastAtPlayer", "Normal", AlignmentColumn, F , 16)
+	panel.ColorUnIntSpellsCastAtPlayer, F = CreateQuickColorbox(objectName.."ColorUnIntSpellsCastAtPlayer", "Un-interruptible", AlignmentColumn, F , 16)
+	panel.SpellCastAtPlayerListLabel, F = CreateQuickItemLabel(nil, "Spells that will be checked:", AlignmentColumn, F, 0, 2)
+	panel.SpellCastAtPlayerList, F = CreateQuickEditbox(objectName.."SpellCastAtPlayerList", AlignmentColumn, F, 8)
+	panel.SpellCastAtPlayerList:SetWidth(250)
+
+	panel.SpellCastAtPlayerTip, F = CreateQuickItemLabel(nil, "Tip:|cffCCCCCC Not all spells are actually cast at the current target of a mob. TidyPlates only recolors spells listed here in order to make sure only spells where you know they get cast at the current target get recolored.\nSpells need to be listed with their exact spell ID or name. Each line needs to contain exactly one spell ID or name. Lines starting with # will be ignored. For example this would add Ice Lance (spell ID 30455), Frostbolt, but not Shadowbolt:\n\n30455\nFrostbolt\n# Shadowbolt", AlignmentColumn, panel.SpellsCastAtPlayerLabel, 300)
+	panel.SpellCastAtPlayerTip:SetHeight(300)
+	panel.SpellCastAtPlayerTip:SetWidth(200)
+	panel.SpellCastAtPlayerTip.Text:SetJustifyV("TOP")
+
 	--[[
 	------------------------------
 	-- Text
@@ -396,7 +410,7 @@ local function BuildHubPanel(panel)
 	------------------------------
 	--Widgets
 	------------------------------
-	panel.WidgetsLabel, F = CreateQuickHeadingLabel(nil, "Other Widgets", AlignmentColumn, F, 0, 5)
+	panel.WidgetsLabel, F = CreateQuickHeadingLabel(nil, "Other Widgets", AlignmentColumn, panel.SpellCastAtPlayerList, 0, 5)
 	panel.WidgetTargetHighlight = CreateQuickCheckbutton(objectName.."WidgetTargetHighlight", "Show Target Highlight", AlignmentColumn, panel.WidgetsLabel)
 	panel.WidgetEliteIndicator = CreateQuickCheckbutton(objectName.."WidgetEliteIndicator", "Show Elite Icon", AlignmentColumn, panel.WidgetTargetHighlight)
 	panel.ClassEnemyIcon = CreateQuickCheckbutton(objectName.."ClassEnemyIcon", "Show Enemy Class Art", AlignmentColumn, panel.WidgetEliteIndicator)
@@ -427,7 +441,7 @@ local function BuildHubPanel(panel)
 	--[[
 	theme.Default.name.size = 18
 	--]]
-	local ClearCacheButton = CreateFrame("Button", objectName.."ClearCacheButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate")
+	local ClearCacheButton = CreateFrame("Button", objectName.."ClearCacheButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate", "BackdropTemplate")
 	ClearCacheButton:SetPoint("TOPLEFT", F, "BOTTOMLEFT",-6, -18)
 	--ClearCacheButton:SetPoint("TOPLEFT", panel.AdvancedCustomCodeTextbox, "BOTTOMLEFT",-6, -18)
 	ClearCacheButton:SetWidth(300)
@@ -438,7 +452,7 @@ local function BuildHubPanel(panel)
 			print("Tidy Plates Hub: Cleared", count, "entries from cache.")
 		end)
 
-	local BlizzOptionsButton = CreateFrame("Button", objectName.."BlizzButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate")
+	local BlizzOptionsButton = CreateFrame("Button", objectName.."BlizzButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate", "BackdropTemplate")
 	BlizzOptionsButton:SetPoint("TOPLEFT", ClearCacheButton, "BOTTOMLEFT", 0, -16)
 	--BlizzOptionsButton:SetPoint("TOPLEFT", panel.AdvancedCustomCodeTextbox, "BOTTOMLEFT",-6, -18)
 	BlizzOptionsButton:SetWidth(300)
@@ -482,7 +496,8 @@ local function BuildHubPanel(panel)
 		ConvertDebuffListTable(LocalVars.WidgetsDebuffTrackList, LocalVars.WidgetsDebuffLookup, LocalVars.WidgetsDebuffPriority)
 		-- Convert Unit Filter Strings
 		ConvertStringToTable(LocalVars.OpacityFilterList, LocalVars.OpacityFilterLookup)
-		ConvertStringToTable(LocalVars.UnitSpotlightList, LocalVars.UnitSpotlightLookup)
+        ConvertStringToTable(LocalVars.UnitSpotlightList, LocalVars.UnitSpotlightLookup)
+		ConvertStringToTable(LocalVars.SpellCastAtPlayerList, LocalVars.SpellCastAtPlayerLookup)
 	end
 
 	--panel:Hide()
@@ -552,7 +567,7 @@ SlashCmdList['HUB'] = SlashCommandHub
 --]]
 --end
 
---local HubHandler = CreateFrame("Frame")
+--local HubHandler = CreateFrame("Frame", nil, nil, "BackdropTemplate")
 --HubHandler:SetScript("OnEvent", OnLogin)
 --HubHandler:RegisterEvent("PLAYER_LOGIN")
 

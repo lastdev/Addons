@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1236, "DBM-Party-WoD", 4, 558)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(80805, 80816, 80808)
 mod:SetEncounterID(1748)
-mod:SetZone()
 mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")
@@ -23,7 +24,7 @@ local warnSphereEnd				= mod:NewEndAnnounce(163689, 1)
 local specWarnSanguineSphere	= mod:NewSpecialWarningReflect(163689, "-Healer", nil, 2, 1, 2)
 local specWarnFlamingSlash		= mod:NewSpecialWarningDodge(163665, nil, nil, nil, 3, 2)--Devastating in challenge modes. move or die.
 local specWarnLavaSwipe			= mod:NewSpecialWarningSpell(165152, nil, nil, nil, 2, 2)
-local specWarnBigBoom			= mod:NewSpecialWarningSpell(163379, nil, nil, nil, 2)--maybe use switch.
+local specWarnBigBoom			= mod:NewSpecialWarningSpell(163379, nil, nil, nil, 2, 2)--maybe use switch.
 
 local timerSanguineSphere		= mod:NewTargetTimer(15, 163689, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerFlamingSlashCD		= mod:NewNextTimer(29, 163665, nil, nil, nil, 3, nil, nil, nil, 1, 4)

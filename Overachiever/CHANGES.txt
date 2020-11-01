@@ -1,46 +1,19 @@
 ------------------------------------------------------------------------
-r250 | tuhljin | 2020-01-21 23:51:12 +0000 (Tue, 21 Jan 2020) | 10 lines
+r254 | tuhljin | 2020-10-20 09:37:09 +0000 (Tue, 20 Oct 2020) | 3 lines
 Changed paths:
+   M /trunk/AchieveID.lua
    M /trunk/GameTip.lua
    M /trunk/Overachiever.toc
    M /trunk/Overachiever_Cache/Overachiever_Cache.toc
+   M /trunk/Overachiever_Tabs/CalendarNotice.lua
    M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
    M /trunk/Overachiever_Tabs/Suggestions.lua
-   M /trunk/Overachiever_Tabs/build.lua
    M /trunk/Overachiever_Trade/Overachiever_Trade.toc
-   M /trunk/readme.txt
-
-- Updated TOC for WoW patch 8.3.
-- Suggestions Tab:
--- Added suggestions for Chamber of Heart.
--- Added suggestions related to Black Empire Assaults on Uldum and Vale of Eternal Blossoms.
--- Added suggestion for Mardivas's Laboratory.
--- Added "The Fourth War" to War Campaign Ships suggestions.
--- Added "Scrappy's Best Friend" to Mechagon Island suggestions.
--- Added suggestions for the Battle for Darkshore warfront.
--- Added suggestions for the Battle for Stromgarde heroic warfront.
--- Added suggestion for revamped Deepwind Gorge battleground.
-------------------------------------------------------------------------
-r249 | tuhljin | 2019-11-27 06:06:01 +0000 (Wed, 27 Nov 2019) | 4 lines
-Changed paths:
-   M /trunk/AchieveTip.lua
-   M /trunk/GameTip.lua
-   M /trunk/Options.lua
-   M /trunk/Overachiever.lua
-   M /trunk/Overachiever.toc
-   M /trunk/Overachiever_Cache/Overachiever_Cache.toc
-   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
-   M /trunk/Overachiever_Tabs/Suggestions.lua
-   M /trunk/Overachiever_Tabs/build.lua
-   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
-   M /trunk/libs/TjAchieve.lua
    M /trunk/libs/TjCalendar.lua
-   M /trunk/localization.lua
    M /trunk/readme.txt
 
-- Fix missing tooltip textures for achievement reminders and missing checkmark texture for completed achievements in various places (recent reminders, series list, meta requirements).
-- Add options to show reminder text for kill-criteria achievements and the "Azeroth at War..." (mission table) achievements when the achievement is complete.
-- Suggestions Tab: Fix Mechagon Island suggestions not appearing. (Now listed under "Mechagon.")
-- Fix other variables leaking into global scope.
+- Fixed an error that appeared when the cursor was over a graphical notice for an active holiday.
+- Suggestions tab: Added suggestions for the raids Uldir, Battle of Dazar'alor, Crucible of Storms, and Ny'alotha, the Waking City.
+- Updated readme.txt to reflect previous slash command changes (directing to Search tab).
 ------------------------------------------------------------------------
 

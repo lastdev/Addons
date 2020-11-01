@@ -438,7 +438,7 @@ local pointtex = {
 }
 
 
-function RotateTexture(coords, degrees)
+local function RotateTexture(coords, degrees)
         local l,r,t,b = unpack(coords)
         -- return { l, b, r, b, l, t, r, t }
         return { r, t, l, t, r, b, l, b }
@@ -933,6 +933,14 @@ end
 
 local all_bars = {}
 
+local MakeBorder = function(self, tex, left, right, top, bottom, drawLayer, level)
+    local t = self:CreateTexture(nil, drawLayer, nil,level)
+    t:SetTexture(tex)
+    t:SetPoint("TOPLEFT", self, "TOPLEFT", left, -top)
+    t:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -right, bottom)
+    return t
+end
+
 local CreatePixelBar = function(self)
     local bar = CreateFrame("StatusBar",nil, self)
 
@@ -950,18 +958,13 @@ local CreatePixelBar = function(self)
     barbg:SetAllPoints(bar)
     bar.bg = barbg
 
-    local backdrop = {
-        bgFile = [[Interface\BUTTONS\WHITE8X8]],
-        tile = true, tileSize = 0,
-        insets = {left = -1*p, right = -p, top = -p, bottom = -p},
-    }
-    bar:SetBackdrop(backdrop)
-    bar:SetBackdropColor(0, 0, 0, 1)
+    local outline = MakeBorder(bar, "Interface\\BUTTONS\\WHITE8X8", -p, -p, -p, -p, "BACKGROUND", -2)
+    outline:SetVertexColor(0, 0, 0, 1)
+    bar.outline = outline
 
     bar.SetColor1 = function(self, r,g,b)
         self:SetStatusBarColor(r,g,b)
         self.bg:SetVertexColor(r*0.3,g*0.3,b*0.3)
-        self:SetBackdropColor(0,0,0,1)
     end
 
     bar.SetColor = function(self,r,g,b)
@@ -1294,9 +1297,25 @@ NugComboBar.Create = function(self)
                 self.selectTex:SetPoint("TOPLEFT", self, "TOPLEFT",0,0)
                 self.selectTex:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT",0,0)
                 self.selectTex:SetScale(0.8)
+
+                local bgt = self.selectTex.texture
+                bgt:SetBlendMode("ADD")
+                local bgt2 = self.selectTex:CreateTexture(nil, "BACKGROUND", nil, -4)
+                bgt2:SetAlpha(1)
+                bgt2:SetTexture("Interface\\AddOns\\NugComboBar\\tex\\selectBG")
+                bgt2:SetAllPoints(bgt)
+
                 selectTex = self.selectTex
             end
+            selectTex:Show()
             selectTex.ag:Play()
+        end
+
+        f.Deselect = function(self)
+            if self.selectTex then
+                -- self.selectTex.ag:Stop()
+                self.selectTex:Hide()
+            end
         end
 
         f.Activate = ActivateFunc

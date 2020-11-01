@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
@@ -36,8 +36,8 @@ local timerLightningCharge	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3)
 local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
-mod:AddBoolOption("RangeFrame")
-mod:AddSetIconOption("SetIconOnRunic", 62527, false)
+mod:AddRangeFrameOption("10")
+mod:AddSetIconOption("SetIconOnRunic", 62527, false, false, {7})
 
 local lastcharge = {}
 mod.vb.phase = 1

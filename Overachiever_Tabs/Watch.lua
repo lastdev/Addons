@@ -25,6 +25,30 @@ local function SortDrop_OnSelect(self, value)
   frame:ForceUpdate(true)
 end
 
+local function menuItemOnEnter(self, ...)
+  if (not self.arg1 or (type(self.arg1) ~= "table") or not self.arg1.Overachiever_list) then  return;  end
+  GameTooltip:Hide()
+
+  local text = self.tooltipTitle
+
+  local numAchievements, numCompleted, _, completed = 0, 0
+  for id in pairs(self.arg1.Overachiever_list) do
+    _, _, _, completed = GetAchievementInfo(id)
+    if (completed) then  numCompleted = numCompleted + 1;  end
+    numAchievements = numAchievements + 1
+  end
+  local numCompletedText = numAchievements > 0 and numCompleted.."/"..numAchievements or L.WATCH_EMPTY_SHORT
+
+  -- Based on AchievementFrameCategory_StatusBarTooltip():
+  --GameTooltip_SetDefaultAnchor(GameTooltip, self);
+  GameTooltip:SetOwner(self, "ANCHOR_NONE")
+  GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 10, 9)
+  GameTooltip:SetMinimumWidth(128, 1);
+  GameTooltip:SetText(text, 1, 1, 1, nil, 1); -- This should already be handled by the menu item's tooltipTitle property (shown its tooltipOnButton property is true).
+  GameTooltip_ShowStatusBar(GameTooltip, 0, numAchievements, numCompleted, numCompletedText);
+  GameTooltip:Show();
+end
+
 local function OnLoad(v, oldver)
   VARS = v
   sortdrop:SetSelectedValue(VARS.WatchSort or 0)
@@ -43,7 +67,7 @@ local function OnLoad(v, oldver)
     end
     VARS.WatchedList = 0
   end
-  
+
   -- Look for watched achievements that no longer exist (or are otherwise invalid):
   for realm,rtab in pairs(VARS.WatchLists_Realms) do
     for char,ctab in pairs(rtab) do
@@ -77,15 +101,15 @@ local function OnLoad(v, oldver)
   deflistdrop_menu[2].Overachiever_list = VARS.WatchLists_Realms[THIS_REALM][THIS_PC]
   -- Add custom lists to dropdown menus:
   for name,tab in pairs(VARS.WatchLists) do
-    tinsert(listdrop_menu, {  text = name, value = name, tooltipTitle = name, Overachiever_list = tab  })
-    tinsert(deflistdrop_menu, {  text = name, value = name, tooltipTitle = name, Overachiever_list = tab  })
+    tinsert(listdrop_menu, {  text = name, value = name, tooltipTitle = name, funcOnEnter = menuItemOnEnter, Overachiever_list = tab  })
+    tinsert(deflistdrop_menu, {  text = name, value = name, tooltipTitle = name, funcOnEnter = menuItemOnEnter, Overachiever_list = tab  })
   end
   -- Add realm/character lists to dropdown menu:
   for rname,rtab in pairs(VARS.WatchLists_Realms) do
     local menuList, num = {}, 0
     for cname,tab in pairs(rtab) do
       if (rname ~= THIS_REALM or cname ~= THIS_PC) then  -- Don't add the current character; it is included in the first tier of the menu.
-        tinsert(menuList, {  text = cname, value = "~^"..rname..":"..cname, tooltipTitle = cname, Overachiever_list = tab  })
+        tinsert(menuList, {  text = cname, value = "~^"..rname..":"..cname, tooltipTitle = cname, funcOnEnter = menuItemOnEnter, Overachiever_list = tab  })
         num = num + 1
       end
     end
@@ -386,7 +410,8 @@ StaticPopupDialogs["OVERACHIEVER_WATCH_DELETELIST"] = {
 	hideOnEscape = 1
 };
 
-listdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL  },  {  text = THIS_PC, value = "~^"..THIS_REALM..":"..THIS_PC, tooltipTitle = THIS_PC  };  }
+listdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL, funcOnEnter = menuItemOnEnter  },  {  text = THIS_PC, value = "~^"..THIS_REALM..":"..THIS_PC, tooltipTitle = THIS_PC, funcOnEnter = menuItemOnEnter  };  }
+  -- Note: tooltipOnButton isn't used because funcOnEnter handles the tooltip instead
 listdrop = TjDropDownMenu.CreateDropDown("Overachiever_WatchFrameListDrop", panel, listdrop_menu)
 listdrop:SetLabel(L.WATCH_DISPLAYEDLIST, true)
 listdrop:SetPoint("TOPLEFT", sortdrop, "BOTTOMLEFT", 0, -18)
@@ -409,7 +434,7 @@ DeleteListBtn:SetScript("OnClick", function()
   StaticPopup_Show("OVERACHIEVER_WATCH_DELETELIST")
 end);
 
-deflistdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL  },  {  text = L.WATCH_LIST_PERCHAR, value = 1, tooltipTitle = THIS_PC  };  }
+deflistdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL, funcOnEnter = menuItemOnEnter  },  {  text = L.WATCH_LIST_PERCHAR, value = 1, tooltipTitle = THIS_PC, funcOnEnter = menuItemOnEnter  };  }
 deflistdrop = TjDropDownMenu.CreateDropDown("Overachiever_WatchFrameDefListDrop", panel, deflistdrop_menu)
 deflistdrop:SetLabel(L.WATCH_DEFAULTLIST, true)
 --deflistdrop:SetPoint("TOPLEFT", listdrop, "BOTTOMLEFT", 0, -18)
@@ -437,7 +462,7 @@ CopyDestCheckbox:SetScript("OnClick", function(self)
   end
 end);
 
-destlistdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL  };  }
+destlistdrop_menu = {  {  text = L.WATCH_LIST_GLOBAL, value = 0, tooltipTitle = L.WATCH_LIST_GLOBAL, funcOnEnter = menuItemOnEnter  };  }
 destlistdrop = TjDropDownMenu.CreateDropDown("Overachiever_WatchFrameDestinationListDrop", panel, destlistdrop_menu)
 destlistdrop:SetPoint("TOPLEFT", CopyDestCheckbox, "BOTTOMLEFT", -14, 2)
 destlistdrop:SetDropDownWidth(158)
@@ -451,10 +476,10 @@ destlistdrop:OnMenuOpen(function(self, menuList)
       local sub = {}
       menuList[i] = {  text = tab.text, value = tab.value, hasArrow = true, TjDDM_notCheckable = 1, keepShownOnClick = 1, menuList = sub  }
       for k,v in ipairs(tab.menuList) do
-        sub[k] = {  text = v.text, value = v.value, tooltipTitle = v.tooltipTitle, Overachiever_list = v.Overachiever_list  };
+        sub[k] = {  text = v.text, value = v.value, tooltipTitle = v.tooltipTitle, funcOnEnter = menuItemOnEnter, Overachiever_list = v.Overachiever_list  };
       end
     else
-      menuList[i] = {  text = tab.text, value = tab.value, tooltipTitle = tab.tooltipTitle, Overachiever_list = tab.Overachiever_list  }
+      menuList[i] = {  text = tab.text, value = tab.value, tooltipTitle = tab.tooltipTitle, funcOnEnter = menuItemOnEnter, Overachiever_list = tab.Overachiever_list  }
     end
   end
   if (not self:SetMenu()) then
@@ -486,7 +511,9 @@ function destlistdrop_OnSelect(self, value, oldvalue, tab)
 end
 
 -- A trick to get default-UI-style tooltip like the function AchievementFrameCategory_StatusBarTooltip() displays:
+--[[ No longer works. GameTooltip_AddNewbieTip is deprecated. We now use our function menuItemOnEnter and set funcOnEnter for each menu item to point to it.
 hooksecurefunc("GameTooltip_AddNewbieTip", function(self, text, ...)
+-- ? Alternate hooks to consider: GameTooltip_SetTitle GameTooltip_AddNormalLine UIDropDownMenuButtonInvisibleButton_OnEnter UIDropDownMenuButton_OnEnter
   if (not self.arg1 or (type(self.arg1) ~= "table") or not self.arg1.Overachiever_list) then  return;  end
   GameTooltip:Hide()
 
@@ -507,6 +534,7 @@ hooksecurefunc("GameTooltip_AddNewbieTip", function(self, text, ...)
   GameTooltip_ShowStatusBar(GameTooltip, 0, numAchievements, numCompleted, numCompletedText);
   GameTooltip:Show();
 end);
+--]]
 
 frame:SetScript("OnEvent", function()  -- React to "PLAYER_LOGOUT" event:
   -- Remove unused character-specific watch lists:

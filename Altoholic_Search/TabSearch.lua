@@ -129,6 +129,7 @@ function ns:OnLoad()
 	parent.SortButtons.Sort3:SetText(L["Realm"])
 	parent.Slot:SetText(L["Equipment Slot"])
 	parent.Location:SetText(L["Location"])
+    parent.IncludeDescription:SetText("Also Search Description")
 end
 
 function ns:Update()
@@ -226,7 +227,7 @@ end
 function ns:DropDownRarity_Initialize()
 	local info = UIDropDownMenu_CreateInfo(); 
 
-	for i = 0, LE_ITEM_QUALITY_HEIRLOOM do		-- Quality: 0 = poor .. 5 = legendary ..
+	for i = 0, Enum.ItemQuality.Heirloom do		-- Quality: 0 = poor .. 5 = legendary ..
 		info.text = format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"])
 		info.value = i
 		info.func = function(self)	
@@ -299,6 +300,7 @@ function ns:DropDownLocation_Initialize()
 		info.value = i
 		info.func = function(self) 
 				UIDropDownMenu_SetSelectedValue(parent.SelectLocation, self.value)
+                addon:SetOption("UI.Tabs.Search.LocationRealm", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectLocation))
 			end
 		info.checked = nil; 
 		info.icon = nil; 

@@ -1,3 +1,8 @@
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    print("DataStore_Garrisons does not support Classic WoW")
+    return
+end
+
 --[[	*** DataStore_Garrisons ***
 Written by : Thaoky, EU-Marécages de Zangar
 November 30th, 2014
@@ -17,6 +22,8 @@ local ORDERHALL_MISSIONS_STORAGE = "AvailableOrderHallMissions"
 local ORDERHALL_ACTIVE_MISSIONS_STORAGE = "ActiveOrderHallMissions"
 local WARCAMPAIGN_MISSIONS_STORAGE = "AvailableWarCampaignMissions"
 local WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE = "ActiveWarCampaignMissions"
+local COVENANT_MISSIONS_STORAGE = "AvailableCovenantMissions"
+local COVENANT_ACTIVE_MISSIONS_STORAGE = "ActiveCovenantMissions"
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
@@ -27,13 +34,15 @@ local AddonDB_Defaults = {
 			MissionInfos = {},
 		},
 		Options = {
-			ReportUncollected = true,			-- Report uncollected resources
-			ReportLevel = 400,
+			ReportUncollected = false,			-- Report uncollected resources
+			ReportLevel = 900,
+            ReportLevelLowCap = 400,
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
 				lastResourceCollection = nil,
+                hasUpgradedResourceCollection = nil,
 				numFollowers = 0,
 				numFollowersAtLevel100 = 0,
 				numFollowersAtiLevel615 = 0,
@@ -47,13 +56,17 @@ local AddonDB_Defaults = {
 				avgArmoriLevel = 0,
 				
 				Buildings = {},				-- List of buildings
-				Followers = {},				-- List of followers
+				Followers = {},				-- List of followers (6.0 and 7.0); shipyard was never implemented!
+                BFAFollowers = {},          -- List of followers (8.0)
+                ShadowlandsFollowers = {},  -- List of followers (9.0)
 				[GARRISON_MISSIONS_STORAGE] = {},					-- List of available missions (6.0)
 				[GARRISON_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress missions (6.0)
 				[ORDERHALL_MISSIONS_STORAGE] = {},					-- List of available order hall missions (7.0)
 				[ORDERHALL_ACTIVE_MISSIONS_STORAGE] = {},			-- List of active/in-progress order hall missions (7.0)
 				[WARCAMPAIGN_MISSIONS_STORAGE] = {},				-- List of available war campaign missions (8.0)
 				[WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE] = {},		-- List of active/in-progress war campaign missions (8.0)
+                [COVENANT_MISSIONS_STORAGE] = {},				-- List of available war campaign missions (8.0)
+				[COVENANT_ACTIVE_MISSIONS_STORAGE] = {},		-- List of active/in-progress war campaign missions (8.0)
 				MissionsStartTimes = {},		-- List of start times for active/in-progress missions
 				MissionsInfo = {},				-- Extra information about active/in-progress missions (ex: success rate, active followers..)
 				
@@ -61,6 +74,8 @@ local AddonDB_Defaults = {
 				artifactResearchDuration = 0,
 				artifactResearchNumReady = 0,
 				artifactResearchNumTotal = 0,
+                
+                RenownLevel = 0,
 			}
 		}
 	}
@@ -174,15 +189,17 @@ local buildingTypes = {
 }
 
 local availableMissionsStorage = {
-	[LE_FOLLOWER_TYPE_GARRISON_6_0] = GARRISON_MISSIONS_STORAGE,
-	[LE_FOLLOWER_TYPE_GARRISON_7_0] = ORDERHALL_MISSIONS_STORAGE,
-	[LE_FOLLOWER_TYPE_GARRISON_8_0] = WARCAMPAIGN_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_6_0] = GARRISON_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_7_0] = ORDERHALL_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_8_0] = WARCAMPAIGN_MISSIONS_STORAGE,
+    [Enum.GarrisonFollowerType.FollowerType_9_0] = COVENANT_MISSIONS_STORAGE,
 }
 
 local activeMissionsStorage = {
-	[LE_FOLLOWER_TYPE_GARRISON_6_0] = GARRISON_ACTIVE_MISSIONS_STORAGE,
-	[LE_FOLLOWER_TYPE_GARRISON_7_0] = ORDERHALL_ACTIVE_MISSIONS_STORAGE,
-	[LE_FOLLOWER_TYPE_GARRISON_8_0] = WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_6_0] = GARRISON_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_7_0] = ORDERHALL_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_8_0] = WARCAMPAIGN_ACTIVE_MISSIONS_STORAGE,
+	[Enum.GarrisonFollowerType.FollowerType_9_0] = COVENANT_ACTIVE_MISSIONS_STORAGE,
 }
 
 -- *** Utility functions ***
@@ -190,28 +207,37 @@ local function GetOption(option)
 	return addon.db.global.Options[option]
 end
 
-local function GetNumUncollectedResources(from)
+local function GetNumUncollectedResources(from, character)
 	-- no known collection time (alt never logged in) .. return 0
 	if not from then return 0 end
 	
 	local age = time() - from
 	local resources = math.floor(age / 600)		-- 10 minutes = 1 resource
 	
-	-- cap at 500
-	if resources > 500 then
-		resources = 500
-	end
+	-- cap at 500/1000
+    if character.hasUpgradedResourceCollection then
+        if resources > 1000 then
+            resources = 1000
+        end
+    else
+	   if resources > 500 then
+		  resources = 500
+	   end
+    end
 	return resources
 end
 
 local function CheckUncollectedResources()
 	local account, realm, name
 	local num
-	local reportLevel = GetOption("ReportLevel")
 	
 	for key, character in pairs(addon.db.global.Characters) do
+    	local reportLevel = GetOption("ReportLevel")
+        if not character.hasUpgradedResourceCollection then
+            reportLevel = GetOption("ReportLevelLowCap")
+        end
 		account, realm, name = strsplit(".", key)
-		num = GetNumUncollectedResources(character.lastResourceCollection)
+		num = GetNumUncollectedResources(character.lastResourceCollection, character)
 		if name and num >= reportLevel then
 			addon:Print(format(L["UNCOLLECTED_RESOURCES_ALERT"], name, num))
 		end
@@ -228,20 +254,20 @@ local function ClearInactiveMissionsData()
 	-- loop through all characters
 	for key, character in pairs(addon.db.global.Characters) do			
 		-- get all garrison missions
-		for _, missionID in pairs(character[availableMissionsStorage[LE_FOLLOWER_TYPE_GARRISON_6_0]]) do
+		for _, missionID in pairs(character[availableMissionsStorage[Enum.GarrisonFollowerType.FollowerType_6_0]]) do
 			availableMissions[missionID] = true
 		end
 
-		for _, missionID in pairs(character[activeMissionsStorage[LE_FOLLOWER_TYPE_GARRISON_6_0]]) do
+		for _, missionID in pairs(character[activeMissionsStorage[Enum.GarrisonFollowerType.FollowerType_6_0]]) do
 			activeMissions[missionID] = true
 		end		
 		
 		-- get all order hall missions
-		for _, missionID in pairs(character[availableMissionsStorage[LE_FOLLOWER_TYPE_GARRISON_7_0]]) do
+		for _, missionID in pairs(character[availableMissionsStorage[Enum.GarrisonFollowerType.FollowerType_7_0]]) do
 			availableMissions[missionID] = true
 		end
 
-		for _, missionID in pairs(character[activeMissionsStorage[LE_FOLLOWER_TYPE_GARRISON_7_0]]) do
+		for _, missionID in pairs(character[activeMissionsStorage[Enum.GarrisonFollowerType.FollowerType_7_0]]) do
 			activeMissions[missionID] = true
 		end		
 	
@@ -298,7 +324,11 @@ end
 
 -- *** Scanning functions ***
 local function ScanBuildings()
-	local plots = C_Garrison.GetPlots(LE_FOLLOWER_TYPE_GARRISON_6_0)
+    if C_QuestLog.IsQuestFlaggedCompleted(37485) then
+        addon.ThisCharacter.hasUpgradedResourceCollection = true
+    end
+        
+	local plots = C_Garrison.GetPlots(Enum.GarrisonFollowerType.FollowerType_6_0)
 
 	-- to avoid deleting previously saved data when the game is not ready to deliver information
 	-- exit if no data is available
@@ -308,7 +338,7 @@ local function ScanBuildings()
 	wipe(buildings)
 	
 	-- Scan Town Hall
-	local level = C_Garrison.GetGarrisonInfo(LE_FOLLOWER_TYPE_GARRISON_6_0)
+	local level = C_Garrison.GetGarrisonInfo(Enum.GarrisonType.Type_6_0)
 	
 	buildings[BUILDING_TOWN_HALL] = { id = 0, rank = level }
 	
@@ -332,7 +362,7 @@ local function ScanBuildings()
 end
 	
 local function ScanFollowers()
-	local followersList = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0)
 	if not followersList then return end
 
 	local followers = addon.ThisCharacter.Followers
@@ -420,7 +450,6 @@ local function ScanFollowers()
 			info.levelXP = follower.levelXP
 			info.link = link
 			info.isInactive = isInactive
-			-- followers[name] = info
 			followers[id] = info
 			
 			-- Stats
@@ -483,8 +512,13 @@ local function ScanFollowers()
 	c.numFollowersAtiLevel645 = num645
 	c.numFollowersAtiLevel660 = num660
 	c.numFollowersAtiLevel675 = num675
-	c.avgWeaponiLevel = weaponiLvl / numActive
-	c.avgArmoriLevel = armoriLvl / numActive
+	if numActive == 0 then
+        c.avgWeaponiLevel = 0
+        c.avgArmoriLevel = 0
+    else
+        c.avgWeaponiLevel = weaponiLvl / numActive
+	    c.avgArmoriLevel = armoriLvl / numActive
+    end
 	c.numRareFollowers = numRare
 	c.numEpicFollowers = numEpic
 	c.Abilities = abilities
@@ -497,7 +531,7 @@ local function ScanFollowers()
 end
 
 local function ScanOrderHallFollowers()
-	local followersList = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_7_0)
 	if not followersList then return end
 
 	local followers = addon.ThisCharacter.Followers
@@ -542,6 +576,94 @@ local function ScanOrderHallFollowers()
 		end
 		
 		ref.FollowerNamesToID[follower.name] = id	-- ["Nat Pagle"] = 202
+	end
+end
+
+local function ScanWarCampaignFollowers()
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_8_0)
+	if not followersList then return end
+
+	local followers = addon.ThisCharacter.BFAFollowers
+	
+	local ref = addon.db.global.Reference
+
+	local link		-- follower link
+	local id			-- follower id
+	local isInactive		-- is a follower inactive or not ?
+	
+	for k, follower in pairs(followersList) do
+		id = follower.followerID		-- by default, the id should be this one (numeric)
+		
+		isInactive = nil
+		if type(follower.followerID) == "string" then	-- if the type is string, it's a GUID
+			local status = C_Garrison.GetFollowerStatus(follower.followerID)
+			if status and status == GARRISON_FOLLOWER_INACTIVE then
+				isInactive = true
+			end
+		end
+		
+		if follower.isCollected then
+			-- if the follower is collected, the id will be a GUID (string)
+			-- therefore, it has to be extracted from the link
+			-- also, the link is only valid for collected followers, otherwise it is nil
+			link = C_Garrison.GetFollowerLink(follower.followerID)
+			id = link:match("garrfollower:(%d+)")
+			id = tonumber(id)
+			
+			local info = {}
+			
+			info.xp = follower.xp
+			info.levelXP = follower.levelXP
+			info.link = link
+			info.isInactive = isInactive
+			followers[id] = info
+		end
+		
+		ref.FollowerNamesToID[follower.name] = id	-- ["Rexxar"] = 1069
+	end
+end
+
+local function ScanCovenantFollowers()
+	local followersList = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_9_0)
+	if not followersList then return end
+
+	local followers = addon.ThisCharacter.ShadowlandsFollowers
+	
+	local ref = addon.db.global.Reference
+
+	local link		-- follower link
+	local id			-- follower id
+	local isInactive		-- is a follower inactive or not ?
+	
+	for k, follower in pairs(followersList) do
+		id = follower.followerID		-- by default, the id should be this one (numeric)
+		
+		isInactive = nil
+		if type(follower.followerID) == "string" then	-- if the type is string, it's a GUID
+			local status = C_Garrison.GetFollowerStatus(follower.followerID)
+			if status and status == GARRISON_FOLLOWER_INACTIVE then
+				isInactive = true
+			end
+		end
+		
+		if follower.isCollected then
+			-- if the follower is collected, the id will be a GUID (string)
+			-- therefore, it has to be extracted from the link
+			-- also, the link is only valid for collected followers, otherwise it is nil
+			link = C_Garrison.GetFollowerLink(follower.followerID)
+			id = link:match("garrfollower:(%d+)")
+			id = tonumber(id)
+			
+			local info = {}
+			
+			info.xp = follower.xp
+			info.levelXP = follower.levelXP
+			info.link = link
+			info.isInactive = isInactive
+			followers[id] = info
+		end
+		
+		ref.FollowerNamesToID[follower.name] = id	-- ["Rexxar"] = 1069
 	end
 end
 
@@ -615,7 +737,7 @@ end
 local function ScanNextArtifactResearch()
 	-- scan the remaining time until the next artifact research notes are complete
 	
-	local shipments = C_Garrison.GetLooseShipments(LE_GARRISON_TYPE_7_0)
+	local shipments = C_Garrison.GetLooseShipments(Enum.GarrisonType.Type_7_0)
 	local char = addon.ThisCharacter
 
 	-- reset values 
@@ -696,6 +818,9 @@ local function OnGarrisonMissionNPCOpened(event, followerType)
 	ScanAvailableMissions(missionNPCType, availableMissionsStorage[missionNPCType])
 	ScanActiveMissions(missionNPCType)
 	ScanOrderHallFollowers()
+    ScanFollowers()
+    ScanWarCampaignFollowers()
+    ScanCovenantFollowers()
 	
 	addon:RegisterEvent("GARRISON_MISSION_LIST_UPDATE", OnGarrisonMissionListUpdate)
 end
@@ -714,19 +839,22 @@ local function OnGarrisonMissionNPCClosed(event)
 end
 
 local function OnGarrisonUpdate(event)
-	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE)
-	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0, ORDERHALL_MISSIONS_STORAGE)
-	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
+	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0, GARRISON_MISSIONS_STORAGE)
+	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_7_0, ORDERHALL_MISSIONS_STORAGE)
+	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
+    ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_9_0, COVENANT_MISSIONS_STORAGE)
 end
 
 local function OnGarrisonMissionStarted(event, followerType, missionID)
-	-- ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE) not needed, done by the list update
-	-- only re-scan in progress
 	ScanMissionStartTime(missionID)
 end
 
 local function OnGarrisonMissionFinished()
-	ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE)
+	ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0, GARRISON_MISSIONS_STORAGE)
+end
+
+local function OnCovenantSanctumInteract()
+    addon.ThisCharacter.RenownLevel = C_CovenantSanctumUI.GetRenownLevel()
 end
 
 local function OnAddonLoaded(event, addonName)
@@ -741,8 +869,16 @@ local function _GetFollowers(character)
 	return character.Followers
 end
 
+local function _GetBFAFollowers(character)
+    return character.BFAFollowers
+end
+
+local function _GetShadowlandsFollowers(character)
+    return character.ShadowlandsFollowers
+end
+
 local function _GetFollowerInfo(character, id)
-	local follower = character.Followers[id]
+	local follower = character.Followers[id] or character.BFAFollowers[id] or character.ShadowlandsFollowers[id]
 	if not follower then return end
 	
 	local link = follower.link
@@ -769,7 +905,7 @@ local function _GetFollowerSpellCounters(character, counterType, id)
 end
 
 local function _GetFollowerLink(character, id)
-	local follower = character.Followers[id]
+	local follower = character.Followers[id] or character.BFAFollowers[id] or character.ShadowlandsFollowers[id]
 	if not follower then return end
 	
 	return follower.link
@@ -913,8 +1049,14 @@ local function _GetArtifactResearchInfo(character)
 	return remaining, numReady, numTotal
 end
 
+local function _GetRenownLevel(character)
+    return character.RenownLevel
+end
+
 local PublicMethods = {
 	GetFollowers = _GetFollowers,
+    GetBFAFollowers = _GetBFAFollowers,
+    GetShadowlandsFollowers = _GetShadowlandsFollowers,
 	GetFollowerInfo = _GetFollowerInfo,
 	GetFollowerSpellCounters = _GetFollowerSpellCounters,
 	GetFollowerLink = _GetFollowerLink,
@@ -942,6 +1084,7 @@ local PublicMethods = {
 	GetMissionTableLastVisit = _GetMissionTableLastVisit,
 	GetLastResourceCollectionTime = _GetLastResourceCollectionTime,
 	GetArtifactResearchInfo = _GetArtifactResearchInfo,
+    GetRenownLevel = _GetRenownLevel,
 }
 
 function addon:OnInitialize()
@@ -949,6 +1092,8 @@ function addon:OnInitialize()
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetFollowers")
+    DataStore:SetCharacterBasedMethod("GetBFAFollowers")
+    DataStore:SetCharacterBasedMethod("GetShadowlandsFollowers")
 	DataStore:SetCharacterBasedMethod("GetFollowerInfo")
 	DataStore:SetCharacterBasedMethod("GetFollowerSpellCounters")
 	DataStore:SetCharacterBasedMethod("GetFollowerLink")
@@ -974,6 +1119,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetMissionTableLastVisit")
 	DataStore:SetCharacterBasedMethod("GetLastResourceCollectionTime")
 	DataStore:SetCharacterBasedMethod("GetArtifactResearchInfo")
+    DataStore:SetCharacterBasedMethod("GetRenownLevel")
 end
 
 function addon:OnEnable()
@@ -995,12 +1141,14 @@ function addon:OnEnable()
 	-- Missions
 	addon:ScheduleTimer(function()
 			-- To avoid the long list of GARRISON_MISSION_LIST_UPDATE at startup, make the initial scan 3 seconds later ..
-			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0, GARRISON_MISSIONS_STORAGE)
-			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0, ORDERHALL_MISSIONS_STORAGE)
-			ScanAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
-			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
-			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
-			ScanActiveMissions(LE_FOLLOWER_TYPE_GARRISON_8_0)
+			ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0, GARRISON_MISSIONS_STORAGE)
+			ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_7_0, ORDERHALL_MISSIONS_STORAGE)
+			ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_8_0, WARCAMPAIGN_MISSIONS_STORAGE)
+            ScanAvailableMissions(Enum.GarrisonFollowerType.FollowerType_9_0, COVENANT_MISSIONS_STORAGE)
+			ScanActiveMissions(Enum.GarrisonFollowerType.FollowerType_6_0)
+			ScanActiveMissions(Enum.GarrisonFollowerType.FollowerType_7_0)
+			ScanActiveMissions(Enum.GarrisonFollowerType.FollowerType_8_0)
+            ScanActiveMissions(Enum.GarrisonFollowerType.FollowerType_9_0)
 
 			-- .. then register the event
 			-- note, at logon, GARRISON_UPDATE is fired before MISSION_LIST_UPDATE
@@ -1013,6 +1161,8 @@ function addon:OnEnable()
 	addon:RegisterEvent("GARRISON_MISSION_STARTED", OnGarrisonMissionStarted)
 	addon:RegisterEvent("GARRISON_MISSION_FINISHED", OnGarrisonMissionFinished)
 	addon:RegisterEvent("GARRISON_UPDATE", OnGarrisonUpdate)
+    
+    addon:RegisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED", OnCovenantSanctumInteract)
 
 	addon:SetupOptions()
 	if GetOption("ReportUncollected") then
@@ -1036,5 +1186,6 @@ function addon:OnDisable()
 	addon:UnregisterEvent("GARRISON_MISSION_FINISHED")
 	addon:UnregisterEvent("LOADING_SCREEN_ENABLED")
 	addon:UnregisterEvent("GARRISON_UPDATE")
+    addon:UnregisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED")
 	addon:UnregisterEvent("ADDON_LOADED")
 end

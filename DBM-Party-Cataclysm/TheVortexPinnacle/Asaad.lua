@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(116, "DBM-Party-Cataclysm", 8, 68)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod.statTypes = "normal,heroic,timewalker"
+
+mod:SetRevision("20201013230804")
 mod:SetCreatureID(43875)
 mod:SetEncounterID(1042)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -22,7 +23,7 @@ local timerGroundingField		= mod:NewCastTimer(10, 86911, nil, nil, nil, 2)
 local timerGroundingFieldCD		= mod:NewCDTimer(45, 86911, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 86911 then
+	if args.spellId == 86911 and self:AntiSpam(5, 1) then
 		specWarnGroundingField:Show(args.spellName)
 		timerGroundingField:Start()
 		timerGroundingFieldCD:Start()

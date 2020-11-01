@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: FloAspectBar
 ## Author: Floraline
 ## Notes: Add an aspect bar similar to the paladin's aura bar

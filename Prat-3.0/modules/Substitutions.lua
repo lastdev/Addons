@@ -642,16 +642,15 @@ PL:AddLocale(PRAT_MODULE, "frFR", L)
 
 L = {
 	["Substitutions"] = {
-		["%d total user defined substitutions"] = " %d Gesamte vom Benutzer definierte Ersetzungen",
+		["%d total user defined substitutions"] = "%d Benutzerdefinierte Ersetzungen insgesamt",
 		["|cffff0000warning:|r subtitution \"%s\" already defined as \"%s\", overwriting"] = "|cffff0000Warnung:|r Ersetzung \"%s\" wurde bereits definiert als \"%s\", überschreibe",
 		["<noguild>"] = " <keinegilde>",
 		["<notarget>"] = "<keinziel>",
-		["A module to provide basic chat substitutions."] = "Ein Modul, das grundlegende Ersetzungen zur Verfügung stellt.",
+		["A module to provide basic chat substitutions."] = "Ein Modul zur Bereitstellung grundlegender Chat-Ersetzungen.",
 		["Are you sure - this will delete all user defined substitutions and reset defaults?"] = "Bist du sicher - dies wird alle vom Benutzer definierten Ersetzungen löschen und auf Standard zurücksetzen.",
 		["Are you sure?"] = "Bist du sicher?",
 		["can't find substitution index for a substitution named '%s'"] = "Es kann kein Ersatzindex für eine Ersetzung mit dem Namen '%s' gefunden werden.",
-		["current-prompt"] = [=[Gegenwärtiger Wert: '%s'
-Anklicken, um in den Chat einzufügen.]=],
+		["current-prompt"] = "Aktueller Wert: '%s' Anklicken, um in den Chat einzufügen.",
 		["defined %s: expands to => %s"] = "definiert %s: erweitert zu => %s",
 		["Delete all"] = "Alles löschen",
 		["Delete substitution"] = "Ersetzung löschen",
@@ -675,8 +674,8 @@ Anklicken, um in den Chat einzufügen.]=],
 		["MapYPos"] = "KarteYPos",
 		["MapZone"] = "KarteZone",
 		["module:buildUserSubsIndex(): warning: module patterns not defined!"] = true,
-		["MouseoverTargetName"] = true,
-		["NO MATCHFUNC FOUND"] = true,
+		["MouseoverTargetName"] = "Maus über Zielnamen fahren",
+		["NO MATCHFUNC FOUND"] = "KEINE ÜBEREINSTIMMUNGSFUNKTION GEFUNDEN",
 		["no substitution name given"] = "kein Ersetzungsname vergeben",
 		["no substitution name supplied for deletion"] = "kein Ersetzungsname für Löschung geliefert",
 		["no user defined subs found"] = "keine benutzerdefinierten Ersetzungen gefunden",
@@ -718,7 +717,7 @@ Anklicken, um in den Chat einzufügen.]=],
 		["user defined substition \"%s\" not found"] = "Benutzerdefinierte Ersetzung \"%s\" nicht gefunden",
 		["User defined substitutions"] = "Benutzerdefinierte Ersetzungen",
 		["user substitutions index (usersubs_idx) doesn't exist! oh dear."] = "Ersetzungsindex des Benutzers (usersubs_idx) existiert nicht! Oh weh!",
-		["usersub_"] = [=[ 	 	usersub_]=],
+		["usersub_"] = "Benutzerersatz_",
 	}
 }
 

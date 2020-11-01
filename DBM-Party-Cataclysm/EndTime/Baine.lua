@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(340, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(54431)
 mod:SetEncounterID(1881)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -14,7 +15,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 101625",
 	"SPELL_SUMMON 101614"
 )
-mod.onlyHeroic = true
 
 -- Just adding all I can find, no idea how usefull they will be on Live :)
 

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1873, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145614")
+mod:SetRevision("20200806141949")
 mod:SetCreatureID(116939)--Maiden of Valor 120437
 mod:SetEncounterID(2038)
-mod:SetZone()
 mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
 mod:SetHotfixNoticeRev(16307)
@@ -134,7 +133,7 @@ local function warnDarkMarkTargets(self, spellName)
 		end
 	end
 	if not DBM:UnitDebuff("player", spellName) then
-		specWarnDarkMarkOther:Show(DBM_ALLY)
+		specWarnDarkMarkOther:Show(DBM_CORE_L.ALLY)
 		specWarnDarkMarkOther:Play("gathershare")
 	end
 end

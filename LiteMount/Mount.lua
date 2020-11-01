@@ -8,39 +8,45 @@
 
 ----------------------------------------------------------------------------]]--
 
+local _, LM = ...
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
 
-_G.LM_Mount = { }
-LM_Mount.__index = LM_Mount
+LM.Mount = { }
+LM.Mount.__index = LM.Mount
 
-function LM_Mount:new()
+function LM.Mount:new()
     return setmetatable({ }, self)
 end
 
-function LM_Mount:Get(className, ...)
-    local class = _G["LM_"..className]
+function LM.Mount:Get(className, ...)
+    local class = LM[className]
 
     local m = class:Get(...)
     if not m then return end
 
+    for familyName, familyMounts in pairs(LM.MOUNTFAMILY) do
+        if familyMounts[m.spellID] then
+            m.family = familyName
+        end
+    end
+
     return m
 end
 
-function LM_Mount:CurrentFlags()
-    return LM_Options:ApplyMountFlags(self)
+function LM.Mount:CurrentFlags()
+    return LM.Options:ApplyMountFlags(self)
 end
 
-function LM_Mount:Refresh()
+function LM.Mount:Refresh()
     -- Nothing in base
 end
 
-function LM_Mount:MatchesOneFilter(flags, f)
+function LM.Mount:MatchesOneFilter(flags, f)
     if f == "CASTABLE" then
         if self:IsCastable() then return true end
-    elseif f == "ENABLED" then
-        if LM_Options:IsExcludedMount(self) ~= true then return true end
     elseif tonumber(f) then
         if self.spellID == tonumber(f) then return true end
     elseif f:sub(1, 3) == 'id:' then
@@ -54,7 +60,7 @@ function LM_Mount:MatchesOneFilter(flags, f)
     end
 end
 
-function LM_Mount:MatchesFilter(flags, filterStr)
+function LM.Mount:MatchesFilter(flags, filterStr)
 
     if self.name == filterStr then
         return true
@@ -73,7 +79,7 @@ function LM_Mount:MatchesFilter(flags, filterStr)
     return false
 end
 
-function LM_Mount:MatchesFilters(...)
+function LM.Mount:MatchesFilters(...)
     local currentFlags = self:CurrentFlags()
     local f
 
@@ -86,33 +92,42 @@ function LM_Mount:MatchesFilters(...)
     return true
 end
 
-function LM_Mount:FlagsSet(checkFlags)
+function LM.Mount:FlagsSet(checkFlags)
     for _,f in ipairs(checkFlags) do
         if self.flags[f] == nil then return false end
     end
     return true
 end
 
-local function PlayerIsMovingOrFalling()
-    return (GetUnitSpeed("player") > 0 or IsFalling())
+function LM.Mount:IsActive(buffTable)
+    return buffTable[self.spellID]
 end
 
-function LM_Mount:IsCastable()
-
-    if PlayerIsMovingOrFalling() then
+function LM.Mount:IsCastable()
+    if LM.Environment:IsMovingOrFalling() then
         local castTime = select(4, GetSpellInfo(self.spellID))
         if castTime > 0 then return false end
     end
-
     return true
 end
 
-function LM_Mount:GetSecureAttributes()
-    local spellName = GetSpellInfo(self.spellID)
-    return { ["type"] = "spell", ["spell"] = spellName }
+function LM.Mount:IsCancelable()
+    return true
 end
 
-function LM_Mount:Dump(prefix)
+-- These should probably not be making new identical objects all tha time.
+
+function LM.Mount:GetCastAction()
+    local spellName = GetSpellInfo(self.spellID)
+    return LM.SecureAction:Spell(spellName)
+end
+
+function LM.Mount:GetCancelAction()
+    local spellName = GetSpellInfo(self.spellID)
+    return LM.SecureAction:CancelAura(spellName)
+end
+
+function LM.Mount:Dump(prefix)
     prefix = prefix or ""
 
     local spellName = GetSpellInfo(self.spellID)
@@ -123,19 +138,20 @@ function LM_Mount:Dump(prefix)
     sort(currentFlags)
     sort(defaultFlags)
 
-    LM_Print("--- Mount Dump ---")
-    LM_Print(prefix .. self.name)
-    LM_Print(prefix .. " spell: " .. format("%s (id %d)", spellName, self.spellID))
-    LM_Print(prefix .. " flags: " ..
+    LM.Print("--- Mount Dump ---")
+    LM.Print(prefix .. self.name)
+    LM.Print(prefix .. " spell: " .. format("%s (id %d)", spellName, self.spellID))
+    LM.Print(prefix .. " flags: " ..
              format("%s (default %s)",
                     table.concat(currentFlags, ','),
                     table.concat(defaultFlags, ',')
                    )
             )
-    LM_Print(prefix .. " mountID: " .. tostring(self.mountID))
-    LM_Print(prefix .. " isCollected: " .. tostring(self.isCollected))
-    LM_Print(prefix .. " isFavorite: " .. tostring(self.isFavorite))
-    LM_Print(prefix .. " isFiltered: " .. tostring(self.isFiltered))
-    LM_Print(prefix .. " excluded: " .. tostring(LM_Options:IsExcludedMount(self)))
-    LM_Print(prefix .. " castable: " .. tostring(self:IsCastable()) .. " (spell " .. tostring(IsUsableSpell(self.spellID)) .. ")")
+    LM.Print(prefix .. " mountID: " .. tostring(self.mountID))
+    LM.Print(prefix .. " family: " .. tostring(self.family))
+    LM.Print(prefix .. " isCollected: " .. tostring(self.isCollected))
+    LM.Print(prefix .. " isFavorite: " .. tostring(self.isFavorite))
+    LM.Print(prefix .. " isFiltered: " .. tostring(self.isFiltered))
+    LM.Print(prefix .. " priority: " .. tostring(LM.Options:GetPriority(self)))
+    LM.Print(prefix .. " castable: " .. tostring(self:IsCastable()) .. " (spell " .. tostring(IsUsableSpell(self.spellID)) .. ")")
 end

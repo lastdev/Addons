@@ -13,9 +13,204 @@ local xperlBlocked = 0
 local lastConfigMode
 local maxRevision
 
+XPerl_Tooltip_Edge_9 = {
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	edgeSize = 9,
+	title = true
+}
+
+XPerl_Tooltip_Edge_6 = {
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	edgeSize = 6,
+	title = true
+}
+
+XPerl_Frame_Backdrop_32_16_3333 = {
+	bgFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 16,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_Frame_Backdrop_32_16_4444 = {
+	bgFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 16,
+	insets = { left = 4, right = 4, top = 4, bottom = 4 }
+}
+
+XPerl_Frame_Backdrop_16_16_4444 = {
+	bgFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 16,
+	edgeSize = 16,
+	insets = { left = 4, right = 4, top = 4, bottom = 4 }
+}
+
+XPerl_Frame_Backdrop_8_16_3333 = {
+	bgFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 8,
+	edgeSize = 16,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_Icon_Backdrop_8_16_3333 = {
+	bgFile = "",
+	edgeFile = "",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 16,
+	insets = { left = 3, right = 4, top = 3, bottom = 3 }
+}
+
+XPerl_Frame_Backdrop_256_10_1211 = {
+	bgFile = "Interface\\AddOns\\ZPerl\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Addons\\ZPerl\\Images\\XPerl_ThinEdge",
+	tile = true,
+	tileSize = 256,
+	edgeSize = 10,
+	insets = { left = 1, right = 2, top = 1, bottom = 1 }
+}
+
+XPerl_Raid_Backdrop_16_9_3333 = {
+	bgFile = "Interface\\AddOns\\ZPerl_RaidHelper\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 16,
+	edgeSize = 9,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_Raid_Backdrop_32_16_3333 = {
+	bgFile = "Interface\\AddOns\\ZPerl_RaidHelper\\Images\\XPerl_FrameBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 16,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_Options_Backdrop_256_16_3333 = {
+	bgFile = "Interface\\Addons\\ZPerl_Options\\Images\\ZPerl_FancyBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 256,
+	edgeSize = 16,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_Options_Backdrop_256_16_5555 = {
+	bgFile = "Interface\\Addons\\ZPerl_Options\\Images\\ZPerl_FancyBack",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 256,
+	edgeSize = 16,
+	insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+XPerl_UISlider_Backdrop_8_8_3366 = {
+	bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+	edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+	tile = true,
+	tileSize = 8,
+	edgeSize = 8,
+	insets = { left = 3, right = 3, top = 6, bottom = 6 }
+}
+
+XPerl_Frame_Backdrop_32_16_2222 = {
+	bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+	edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+	tile = true,
+	tileSize = 8,
+	edgeSize = 8,
+	insets = { left = 2, right = 2, top = 2, bottom = 2 }
+}
+
+local BackdropTemplatePolyfillMixin = {}
+
+function BackdropTemplatePolyfillMixin:OnBackdropLoaded()
+	if not self.backdropInfo then
+		return
+	end
+
+	if not self.backdropInfo.edgeFile and not self.backdropInfo.bgFile then
+		self.backdropInfo = nil
+		return
+	end
+
+	self:ApplyBackdrop()
+
+	if self.backdropColor then
+		local r, g, b = self.backdropColor:GetRGB()
+		self:SetBackdropColor(r, g, b, self.backdropColorAlpha or 1)
+	end
+
+	if self.backdropBorderColor then
+		local r, g, b = self.backdropBorderColor:GetRGB()
+		self:SetBackdropBorderColor(r, g, b, self.backdropBorderColorAlpha or 1)
+	end
+
+	if self.backdropBorderBlendMode then
+		self:SetBackdropBorderBlendMode(self.backdropBorderBlendMode)
+	end
+end
+
+function BackdropTemplatePolyfillMixin:OnBackdropSizeChanged()
+	if self.backdropInfo then
+		self:SetupTextureCoordinates()
+	end
+end
+
+function BackdropTemplatePolyfillMixin:ApplyBackdrop()
+	-- The SetBackdrop call will implicitly reset the background and border
+	-- texture vertex colors to white, consistent across all client versions.
+
+	self:SetBackdrop(self.backdropInfo)
+end
+
+function BackdropTemplatePolyfillMixin:ClearBackdrop()
+	self:SetBackdrop(nil)
+	self.backdropInfo = nil
+end
+
+function BackdropTemplatePolyfillMixin:GetEdgeSize()
+	-- The below will indeed error if there's no backdrop assigned this is
+	-- consistent with how it works on 9.x clients.
+
+	return self.backdropInfo.edgeSize or 39
+end
+
+function BackdropTemplatePolyfillMixin:HasBackdropInfo(backdropInfo)
+	return self.backdropInfo == backdropInfo
+end
+
+function BackdropTemplatePolyfillMixin:SetBorderBlendMode()
+	-- The pre-9.x API doesn't support setting blend modes for backdrop
+	-- borders, so this is a no-op that just exists in case we ever assume
+	-- it exists.
+end
+
+function BackdropTemplatePolyfillMixin:SetupPieceVisuals()
+	-- Deliberate no-op as backdrop internals are handled C-side pre-9.x.
+end
+
+function BackdropTemplatePolyfillMixin:SetupTextureCoordinates()
+	-- Deliberate no-op as texture coordinates are handled C-side pre-9.x.
+end
+
+XPerlBackdropTemplateMixin = CreateFromMixins(BackdropTemplateMixin or BackdropTemplatePolyfillMixin)
+
 function XPerl_GetRevision()
 	return (maxRevision and "r"..maxRevision) or ""
 end
+
 function XPerl_SetModuleRevision(rev)
 	if (rev) then
 		rev = strmatch(rev, "Revision: (%d+)")
@@ -411,7 +606,7 @@ function XPerl_Globals_OnEvent(self, event, arg1, ...)
 	elseif (event == "PLAYER_LOGIN") then
 		self:UnregisterEvent(event)
 		startupCheckSettings(self, event)
-		ZPerl_MinimapButton_Init(XPerl_MinimapButton_Frame)
+		ZPerl_MinimapButton_Init(ZPerl_MinimapButton_Frame)
 		-- Load the player's layout, will be profile dependent later.
 		local layout = format("%s(%s)", GetRealmName(), UnitName("player"))
 		XPerl_LoadFrameLayout(layout)

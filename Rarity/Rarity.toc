@@ -1,11 +1,12 @@
 ## Author: Allara
-## Interface: 80300
-## X-Min-Interface: 80300
+## Interface: 90001
+## X-Min-Interface: 90001
 ## Title: Rarity
-## Version: 1.0 (r697-release-2)
+## Version: 1.0 (r700-release-5)
 
 ## Notes: Tracks rare drops, including companions and mounts
 ## Notes-ruRU: Примечания
+## Notes-zhCN: 追踪稀有掉落，包括小宠物和坐骑
 ## Notes-frFR: Traque les butins rares, y compris les mascottes et montures
 
 ## LoadManagers: AddonLoader
@@ -61,6 +62,7 @@ Utils\TradeSkillMaster.lua
 # Addon Core
 Core\Caching.lua
 Core\Collections.lua
+Core\Database.lua
 Core\Debugging.lua
 Core\Detection.lua
 Core\EventHandlers.lua

@@ -3,7 +3,6 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
-local LCI = LibStub("LibCraftInfo-1.0")
 local LCL = LibStub("LibCraftLevels-1.0")
 
 local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
@@ -15,6 +14,9 @@ local xPacks = {
 	EXPANSION_NAME3,	-- "Cataclysm"
 	EXPANSION_NAME4,	-- "Mists of Pandaria"
 	EXPANSION_NAME5,	-- "Warlords of Draenor"
+    EXPANSION_NAME6,    -- "Legion"
+    EXPANSION_NAME7,    -- "BfA"
+    EXPANSION_NAME8,    -- "Shadowlands"
 }
 
 local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"
@@ -123,7 +125,7 @@ local callbacks = {
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
 			
-			currentList = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
+			currentList = DataStore:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
 			if not currentList.isSorted then
 				table.sort(currentList, SortByCraftLevel)
 				currentList.isSorted = true
@@ -171,15 +173,19 @@ local callbacks = {
 			button.Background:SetDesaturated(false)
 			button.Background:SetTexCoord(0, 1, 0, 1)
 			
-			button.Background:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
+			button.Background:SetTexture(GetItemIcon(currentItemID) or select(3, GetSpellInfo(currentList[dataRowID])) or ICON_QUESTIONMARK)
 
 			local text = icons.notReady
 			local vc = 0.25	-- vertex color
 			local tradeskills = addon.TradeSkills.spellIDs
-			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
-
-			if #profession.Crafts ~= 0 then
-				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity
+			local tradeSkillID = tradeskills[addon:GetOption(OPTION_TRADESKILL)]
+            
+            -- convert "Mining Skills" to just "Mining" to match the name in DataStore
+            if tradeSkillID == 2656 then tradeSkillID = 2575 end
+            local profession = DataStore:GetProfession(character, GetSpellInfo(tradeSkillID))			
+            
+			if profession and profession.Crafts then
+            	-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity
 				
 				-- local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
 				-- if itemRarity and itemRarity >= 2 then
@@ -194,15 +200,23 @@ local callbacks = {
 				else
 					vc = 0.4
 				end
-			end
+            end
 
 			button.Background:SetVertexColor(vc, vc, vc)
 			button.Name:SetText(text)
 			button.id = currentItemID
+            button.spellID = currentList[dataRowID]
 		end,
 	OnEnter = function(self) 
 			self.link = nil
-			addon:Item_OnEnter(self) 
+            if self.id then
+			    addon:Item_OnEnter(self)
+            else
+	            GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+                GameTooltip:ClearLines()
+	            GameTooltip:SetSpellByID(self.spellID)
+	            GameTooltip:Show()                
+            end 
 		end,
 	OnClick = function(self, button)
 			self.link = nil

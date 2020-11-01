@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220142801")
+mod:SetRevision("20201014225603")
 --mod:SetModelID(47785)
-mod:SetZone()
 mod:SetOOCBWComms()
 
 mod.isTrashMod = true
@@ -212,19 +211,19 @@ do
 		local cid = self:GetCIDFromGUID(guid)
 
 		if cid == 106468 then-- Disguise NPC
-			if select('#', GetGossipOptions()) > 0 then
-				SelectGossipOption(1)
-				CloseGossip()
+			if select('#', C_GossipInfo.GetOptions()) > 0 then
+				C_GossipInfo.SelectOption(1)
+				C_GossipInfo.CloseGossip()
 			end
 		end
 
 		if cid == 107486 then-- Suspicious noble
-			if select('#', GetGossipOptions()) > 0 then
-				SelectGossipOption(1)
+			if select('#', C_GossipInfo.GetOptions()) > 0 then
+				C_GossipInfo.SelectOption(1)
 			else
-				local clue = clues[GetGossipText()]
+				local clue = clues[C_GossipInfo.GetText()]
 				if clue and not hints[clue] then
-					CloseGossip()
+					C_GossipInfo.CloseGossip()
 --					if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
 --						SendChatMessage(hintTranslations[clue], "INSTANCE_CHAT")
 --					elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then

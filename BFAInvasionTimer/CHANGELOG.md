@@ -1,8 +1,6 @@
 # BFAInvasionTimer
 
-## [v8.3.0](https://github.com/funkydude/BFAInvasionTimer/tree/v8.3.0) (2020-01-14)
-[Full Changelog](https://github.com/funkydude/BFAInvasionTimer/compare/v8.2.5...v8.3.0)
+## [v9.0.2](https://github.com/funkydude/BFAInvasionTimer/tree/v9.0.2) (2020-10-14)
+[Full Changelog](https://github.com/funkydude/BFAInvasionTimer/compare/v9.0.1...v9.0.2) [Previous Releases](https://github.com/funkydude/BFAInvasionTimer/releases)
 
-- bump toc  
-- Update IsQuestFlaggedCompleted API use.  
-- Update esES (#30)  
+- Fix opening options  

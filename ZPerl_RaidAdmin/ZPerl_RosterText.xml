@@ -135,7 +135,10 @@
 		</Size>
 	</Frame>
 
-	<Frame name="XPerl_RosterText" clampedToScreen="true" hidden="true" parent="XPerl_RosterTextAnchor" enableMouse="true">
+	<Frame name="XPerl_RosterText" clampedToScreen="true" hidden="true" parent="XPerl_RosterTextAnchor" inherits="XPerlBackdropTemplate" enableMouse="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Options_Backdrop_256_16_5555" type="global"/>
+		</KeyValues>
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
@@ -144,6 +147,7 @@
 		</Size>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				XPerl_RosterText_Init(self)
 			</OnLoad>
 			<OnShow>
@@ -160,19 +164,6 @@
 				end
 			</OnDragStop>
 		</Scripts>
-
-		<Backdrop bgFile="Interface\Addons\ZPerl_Options\Images\XPerl_FancyBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="256"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-		</Backdrop>
-
 		<Layers>
 			<Layer level="BORDER">
 				<FontString name="$parenttitle" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="XPERL_ROSTERTEXT_TITLE">
@@ -233,7 +224,7 @@
 			</Anchors>
 			</Button>
 
-			<Frame name="$parentgroupFrame">
+			<Frame name="$parentgroupFrame" inherits="XPerlBackdropTemplate" >
 				<Size>
 					<AbsDimension x="176" y="176"/>
 				</Size>
@@ -343,7 +334,7 @@
 				</Scripts>
 			</CheckButton>
 
-			<Frame name="$parenttextFrame">
+			<Frame name="$parenttextFrame" inherits="XPerlBackdropTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentgroupFrame" relativePoint="TOPRIGHT">
 						<Offset>
@@ -357,7 +348,7 @@
 					</Anchor>
 				</Anchors>
 
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" inherits="XPerlBackdropTemplate" tile="true">
 					<EdgeSize>
 						<AbsValue val="16"/>
 					</EdgeSize>

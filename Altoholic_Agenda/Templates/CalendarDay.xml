@@ -3,6 +3,14 @@
 
 	<Button name="AltoCalendarDayButtonTemplate" virtual="true">
 		<Size x="50" y="50" />
+		<Frames>
+			<Frame parentKey="Shine" inherits="AltoAutoCastShineTemplate">
+				<Size x="47" y="47" />
+				<Anchors>
+					<Anchor point="CENTER" x="0" y="0" />
+				</Anchors>
+			</Frame>
+		</Frames>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString parentKey="Date" inherits="GameFontHighlight" justifyH="LEFT">

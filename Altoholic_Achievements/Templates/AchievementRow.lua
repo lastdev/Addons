@@ -32,7 +32,11 @@ addon:Controller("AltoholicUI.AchievementRow", {
 			button = frame["Item"..colIndex]
 			button.IconBorder:Hide()
 			
-			character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, colIndex))
+			if realm then
+                character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, colIndex))
+            else
+                character = addon:GetOption(format("Tabs.Achievements.%s.Column%d", account, colIndex))
+            end
 			if character then
 				if hordeID and DataStore:GetCharacterFaction(character) ~= "Alliance" then
 					achievementID = hordeID

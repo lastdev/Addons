@@ -244,12 +244,12 @@ L = {
 L = {
 	["CustomFilters"] = {
 		["<string>"] = "<Zeichenfolge>",
-		["Add a pattern to search for."] = "Muster hinzufügen, nach dem gesucht wird.",
+		["Add a pattern to search for."] = "Fügt ein Muster hinzu, nach dem gesucht werden soll.",
 		["Add Pattern"] = "Muster hinzufügen",
 		["Block Message"] = "Nachricht blockieren",
 		["Channel Data"] = "Kanal-Daten",
 		["Channel to send output text to."] = "Kanal, an den der Ausgabetext gesendet werden soll.",
-		["chatframesink_desc"] = "Ausgabe in ein Chat-Fenster",
+		["chatframesink_desc"] = "Ausgabe in ein Chatfenster",
 		["chatframesink_name"] = "Chatrahmen",
 		["Enabled"] = "Aktiviert",
 		["Extra data for WHISPER (target) and CHANNEL (channel name or num)"] = "Zusätzliche Daten für FLÜSTERN (Ziel) und KANAL (Kanalname oder Nummer)",
@@ -269,15 +269,15 @@ L = {
 		["Match Options"] = "Übereinstimmungsoptionen",
 		["module_desc"] = "Modul zur Unterstützung eigener Filter.",
 		["module_name"] = "CustomFilters",
-		["Only output the message portion of the chat text, leave out the channel, and playername etc."] = "Nur den Mitteilungsabschnitt des Chat-Textes ausgeben - Kanal, Spielernamen etc. auslassen.",
+		["Only output the message portion of the chat text, leave out the channel, and playername etc."] = "Gibt nur den Nachrichtenteil des Chat-Textes aus, lässt den Kanal- und Spielernamen usw. weg.",
 		["Outbound"] = "Ausgehend",
 		["Output Channel"] = "Ausgabekanal",
-		["Output Message Only"] = "Nur Mitteilung ausgeben",
+		["Output Message Only"] = "Nur Nachricht ausgeben",
 		["Pattern Info"] = "Muster-Informationen",
 		["Pattern Options"] = "Optionen für Muster",
-		["Play a sound when this message is output to the chatframe"] = "Einen Klang abspielen, wenn diese Mitteilung an das Chatfenster ausgegeben wurde.",
+		["Play a sound when this message is output to the chatframe"] = "Einen Ton abspielen, wenn diese Nachricht an das Chatfenster ausgegeben wurde.",
 		["Play Sound"] = "Ton abspielen",
-		["Prevent the message from being displayed"] = "Die Anzeige der Mitteilung verhindern.",
+		["Prevent the message from being displayed"] = "Verhindert, dass die Nachricht angezeigt wird",
 		["Remove an existing pattern."] = "Ein vorhandenes Muster entfernen.",
 		["Remove Pattern"] = "Muster entfernen",
 		["Replacement Text"] = "Ersatztext",
@@ -303,8 +303,8 @@ L = {
 		["Block Message"] = "메시지 차단",
 		["Channel Data"] = "채널 데이터",
 		["Channel to send output text to."] = "출력 내용을 보낼 채널.",
-		["chatframesink_desc"] = "채팅창으로 출력",
-		["chatframesink_name"] = "채팅프레임",
+		["chatframesink_desc"] = "대화창으로 출력",
+		["chatframesink_name"] = "대화창",
 		["Enabled"] = "사용",
 		["Extra data for WHISPER (target) and CHANNEL (channel name or num)"] = "귓속말 (대상)과 채널 (채널 이름 또는 숫자)의 추가 데이터",
 		["Filter Name"] = "필터 이름",
@@ -455,10 +455,8 @@ L = {
 		["Block Message"] = "Блокировка сообщения",
 		["Channel Data"] = "Канал данных",
 		["Channel to send output text to."] = "Канал для отсылки выходящего текста.",
-		--[[Translation missing --]]
-		["chatframesink_desc"] = "Output to a chat window",
-		--[[Translation missing --]]
-		["chatframesink_name"] = "Chatframe",
+		["chatframesink_desc"] = "Вывод в окно чата",
+		["chatframesink_name"] = "Чатфрейм ",
 		["Enabled"] = "Включено",
 		["Extra data for WHISPER (target) and CHANNEL (channel name or num)"] = "Добавочные данные для ШЕПОТА (цель) и КАНАЛА (название канала или номер)",
 		["Filter Name"] = "Название фильтра",
@@ -700,8 +698,11 @@ end
     for k, v in pairs(ChatTypeGroup) do
       eventTypes[k] = _G["CHAT_MSG_" .. k]
     end
-    eventTypes.CHANNEL = CHANNEL
+    for _, v in ipairs(Prat.GetChannelTable()) do
+        eventTypes[v] = "Channel: " .. v
+    end
     eventTypes.WHISPER_INFORM = CHAT_MSG_WHISPER_INFORM
+    eventTypes.CHANNEL = CHANNEL
     return eventTypes
   end
 
@@ -927,8 +928,8 @@ end
         type = "multiselect",
         order = 110,
         values = getTypes(),
-        get = "GetPatternSubValue",
-        set = "SetPatternSubValue",
+        get = "GetChannelPatternSubValue",
+        set = "SetChannelPatternSubValue",
       },
       --        searchfordeformat = {
       --            type = "toggle",
@@ -1031,8 +1032,18 @@ end
     local textout = text
 
     if mode == "inbound" then
-      if not matchopts.inchannels[Prat.SplitMessage.CHATTYPE] then
-        return
+      local chatype = Prat.SplitMessage.CHATTYPE
+      local typeopt = matchopts.inchannels[chatype]
+
+      if Prat.SplitMessage.CHATTYPE == "CHANNEL" then
+        local channelopt = matchopts.inchannels[Prat.SplitMessage.ORG.CHANNEL]
+
+        if channelopt == false then return end
+        if channelopt == nil and not typeopt then return end
+      else
+        if typeopt == false then
+          return
+        end
       end
     end
 
@@ -1088,7 +1099,7 @@ end
     return textout
   end
 
-  module.modulePatterns = {}
+
 
   function module:RegisterPattern(matchopts, mode)
     local mode = mode
@@ -1109,7 +1120,8 @@ end
         return match(text, matchopts, mode)
       end,
       type = matchtype,
-      deformat = matchopts.deformat
+      deformat = matchopts.deformat,
+      priority = 46
     }
 
     Prat.RegisterPattern(patterninfo, self.name)
@@ -1215,6 +1227,7 @@ end
 
   -- things to do when the module is enabled
   function module:OnModuleEnable()
+    self.modulePatterns = {}
     local modeOpts = modeOptions.mode
     local mode
     for mode, _ in pairs(modeOpts) do
@@ -1234,6 +1247,7 @@ end
 
 
   function module:OnModuleDisable()
+    self.modulePatterns = nil
     Prat.UnregisterAllChatEvents(self)
   end
 
@@ -1284,6 +1298,18 @@ end
   end
 
   function module:SetPatternSubValue(info, val, v)
+    self.db.profile[info[#info - 2]][info[#info - 1]][info[#info]][val] = v
+  end
+
+  function module:GetChannelPatternSubValue(info, val)
+    local v = self.db.profile[info[#info - 2]][info[#info - 1]][info[#info]][val]
+
+    if ChatTypeGroup[val] or v ~= nil then return v end
+
+    return  self.db.profile[info[#info - 2]][info[#info - 1]][info[#info]]["CHANNEL"]
+  end
+
+  function module:SetChannelPatternSubValue(info, val, v)
     self.db.profile[info[#info - 2]][info[#info - 1]][info[#info]][val] = v
   end
 

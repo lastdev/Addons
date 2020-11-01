@@ -1,5 +1,5 @@
 
-Overachiever v1.0.9
+Overachiever v1.1.1
 ==============================
 
 Author: Tuhljin
@@ -51,23 +51,27 @@ SLASH COMMANDS:
 
 - ALTERED: /ach and its aliases (/achieve, /achievement, and /achievements)
 
-  You can now add the name, part of the name, or the numerical ID of an achievement to search for it. If you put the "#"
-sign before the ID, then achievements that contain the number in the name aren't included (useful if you want to see
-the achievement with ID 500 but not achievements like "500 Fish" and "500 Quests Completed", for example).
+  You can now add the name, part of the name, or the numerical ID of an achievement to search for it. If you search
+using a number, then achievements with that number in their names will be included in addition to the achievement with that
+number ID. You may narrow this down by putting a "#" sign before the ID. For instance, if you search for "#500", then
+achievement number 500 will be returned but achievements like "500 Fish" and "500 Quests Completed" will not.
+
+  If the option "Slash commands use Search tab" is checked (default), the results are displayed in the Search tab. Otherwise,
+they are output to the chat log and the GUI is opened to the first match.
 
   Example A: /ach
    - Result: Toggle visibility of the main achievement UI.
   Example B: /ach gold
-   - Result: Outputs links to each achievement with "gold" in its name and opens the UI to the first of these.
+   - Result: Search for achievements with "gold" in their names.
   Example C: /ach #1206
-   - Result: Outputs a link to the achievement whose ID is 1206 and opens the UI to it.
+   - Result: Find the achievement with ID number 1206.
   Example D: /ach 80
-   - Result: As Example B except it searches for "80" in achievement names.
+   - Result: Find the achievement with ID number 80 and also find achievements with "80" in their names.
 
 - NEW: /achsilent, /achs
 
   These commands silently search for the first matching achievement and display it. Useful if you don't want text
-  added to the chat log.
+  added to the chat log but don't want to open to the Search tab, either.
 
   Example A: /achs gold
    - Result: Finds the first achievement with "gold" in its name and opens the UI to it.
@@ -110,6 +114,13 @@ Change log
 
 The change log lists changes of particular note to users, not every change made.
 
+v1.1.1
+- Fixed an error that appeared when the cursor was over a graphical notice for an active holiday.
+- Suggestions tab: Added suggestions for the raids Uldir, Battle of Dazar'alor, Crucible of Storms, and Ny'alotha, the Waking City.
+
+v1.1.0
+- Updated for Shadowlands pre-patch (WoW patch 9.0.1). Updated TOC and made several required changes.
+
 v1.0.9
 - Updated TOC for WoW patch 8.3.
 - Fix missing tooltip textures for achievement reminders and missing checkmark texture for completed achievements in various places (recent reminders, series list, meta requirements).
@@ -123,6 +134,7 @@ v1.0.9
 -- Added "Scrappy's Best Friend" to Mechagon Island suggestions.
 -- Added suggestions for the Battle for Darkshore warfront.
 -- Added suggestions for the Battle for Stromgarde heroic warfront.
+-- Attempt to fix suggestions not showing for the Battle for Stromgarde warfront.
 -- Added suggestion for revamped Deepwind Gorge battleground.
 - Fix other variables leaking into global scope.
 

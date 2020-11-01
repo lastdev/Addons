@@ -1,3 +1,35 @@
+**r1252**
+* Fixed some errors from previous release.
+
+**r1248**
+* Updated codebase to match with Classic.
+* Raid casting monitor fixes and tweaks.
+
+**r1246**
+* Fixed target incoming heals and absorb prediction.
+
+**r1244**
+* Fixed color picker.
+* Fixed shaman extra bars.
+
+**r1228**
+* Some minimap and settings related fixes.
+* Update libraries.
+
+**r1224**
+* Various buff/debuff related fixes.
+
+**r1218**
+* Fixed enemy player buffs on Classic.
+
+**r1209**
+* Update for Classic 1.13.5.
+* Update libraries.
+
+**r1208**
+* Add assist icon on target frame
+* Don't defer rendering the assist/lead icon on target swap, the performance hit is no longer there
+
 **r1204**
 * Fixed callback handler.
 

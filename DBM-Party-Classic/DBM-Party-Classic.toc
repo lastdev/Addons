@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Classic)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-Classic|r
@@ -14,6 +14,7 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: Classic
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-SubCategoriesID: 48,230,429,90,229,349,389,129,47,329,34,109,70,43,209
 ## X-DBM-Mod-Name: Dungeons (Classic)
 ## X-DBM-Mod-Name-deDE: Gruppe (Classic)
@@ -24,9 +25,10 @@
 ## X-DBM-Mod-Sort: 1115
 ## X-DBM-Mod-MapID: 48,230,429,90,229,349,389,129,47,329,34,109,70,43,209
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 0
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r16
+## Version: r21
 
 localization.en.lua
 localization.es.lua

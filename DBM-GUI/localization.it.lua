@@ -13,14 +13,6 @@ L.OTabBosses	= "Boss"
 L.OTabOptions	= "Opzioni"
 
 L.TabCategory_Options	 	= "Opzioni Generali"
--- L.TabCategory_BFA	 		= EXPANSION_NAME7 or "Battle for Azeroth"
--- L.TabCategory_LEG	 		= EXPANSION_NAME6
--- L.TabCategory_WOD	 		= EXPANSION_NAME5
--- L.TabCategory_MOP	 		= EXPANSION_NAME4
--- L.TabCategory_CATA	 		= EXPANSION_NAME3
--- L.TabCategory_WOTLK 		= EXPANSION_NAME2
--- L.TabCategory_BC 			= EXPANSION_NAME1
--- L.TabCategory_CLASSIC		= EXPANSION_NAME0
 L.TabCategory_OTHER    		= "Altre Mod"
 
 L.BossModLoaded 			= "%s statistiche"
@@ -90,10 +82,6 @@ L.WarningIconLeft 			= "Mostra icona nel lato sinistro"
 L.WarningIconRight 			= "Mostra icona nel lato destro"
 L.WarningIconChat 			= "Mostra icone nel riquadro chat"
 L.WarningAlphabetical		= "Ordina nomi alfabeticamente"
-L.Warn_FontType				= "Seleziona carattere"
-L.Warn_FontStyle			= "Stile carattere"
-L.Warn_FontShadow			= "Ombre"
-L.Warn_FontSize				= "Dimensioni carattere: %d"
 L.Warn_Duration				= "Durata avviso: %0.1f s"
 L.None						= "Nessuno"
 L.Random					= "Casuale"
@@ -113,22 +101,20 @@ L.ShowEngageMessage 		= "Visualizza in chat il messaggio di Ingaggio"
 L.ShowDefeatMessage 		= "Visualizza in chat il messaggio di uccisione"
 L.ShowGuildMessages 		= "Mostra messaggi ingaggio/vittoria/disfatta per i raid di gilda nel riquadro chat"
 L.ShowGuildMessagesPlus		= "Mostra inoltre i messaggi ingaggio/vittoria/disfatta Mitiche+ per i gruppi di gilda (richiede opzione incursione)"
-L.WhisperMessages			= "Opzioni Sussurri"
+L.Area_WhisperMessages		= "Opzioni Sussurri"
 L.AutoRespond 				= "Rispondi automaticamente ai sussurri mentre stai combattendo"
 L.WhisperStats 				= "Nelle risposte ai sussurri, aggiungi le informazioni su uccisioni e sconfitte."
 L.DisableStatusWhisper 		= "Disabilita sussurri stato per il gruppo (richiede Capoincursione). Solo per incursioni normale/eroico/mitico e spedizioni mitiche+"
 L.DisableGuildStatus 		= "Disabilita messaggi di progresso alla gilda per il gruppo (richiede Capoincursione)."
 
 -- Tab: Barsetup
-L.BarSetup   				= "Impostazioni barre"
+L.TabCategory_Timers		= "Impostazioni barre"
 L.BarTexture 				= "Texture barre"
 L.BarStyle					= "Stile barre"
 L.BarDBM					= "DBM (animate)"
 L.BarSimple					= "Semplici (non animate)"
 L.BarStartColor				= "Colore iniziale"
 L.BarEndColor 				= "Colore finale"
-L.Bar_Font					= "Carattere delle barre"
-L.Bar_FontSize				= "Dimensione carattere"
 L.Bar_Height				= "Altezza barra: %d"
 L.Slider_BarOffSetX 		= "Sfasamento X: %d"
 L.Slider_BarOffSetY 		= "Sfasamento Y: %d"
@@ -198,16 +184,11 @@ L.ShowSWarningsInChat 		= "Mostra avvisi speciali nella chat"
 L.SWarnNameInNote			= "Usa opzioni SW5 se una nota contiene il tuo nome"
 L.SpecialWarningIcon		= "Mostra icone negli avvisi speciali"
 L.SpecWarn_FlashFrameRepeat	= "Ripeti %d volte (se abilitato)"
-L.SpecWarn_Font				= "Carattere avvisi speciali"
-L.SpecWarn_FontSize			= "Dimensione carattere: %d"
-L.SpecWarn_FontColor		= "Colore carattere"
-L.SpecWarn_FontType			= "Selezione carattere"
 L.SpecWarn_FlashRepeat		= "Ripeti flash"
 L.SpecWarn_FlashColor		= "Colore flash %d"
 L.SpecWarn_FlashDur			= "Durata flash: %0.1f"
 L.SpecWarn_FlashAlpha		= "Trasp. flash: %0.1f"
 L.SpecWarn_DemoButton		= "Esempio"
-L.SpecWarn_MoveMe			= "Setta Posizione"
 L.SpecWarn_ResetMe			= "Ripristina predefiniti"
 
 -- Tab: Spoken Alerts Frame
@@ -267,7 +248,6 @@ L.SpamBlockNoNameplate		= "Non mostrare Auree Barre Vitali (disabilita completam
 L.SpamBlockNoNameplateLines	= "Non mostrare linee Aura Barre Vitali (icone aura visibili)"
 L.SpamBlockNoYells			= "Non urlare in chat"
 L.SpamBlockNoNoteSync		= "Non accettare note condivise"
-L.SpamBlockNoReminders		= "Non mostrare messaggi di accesso, raccomandazioni o aggiornamenti (SCONSIGLIATO)"
 
 L.Area_Restore				= "Ripristino Opzioni DBM (Se DBM ripristina lo stato utente al termine della mod)"
 L.SpamBlockNoIconRestore	= "Non salvare stato icone e ripristinale al termine del combattimento"
@@ -368,4 +348,10 @@ L.SelectModProfileCopyNote	= "Copia impostazioni note da"
 L.SelectModProfileDelete	= "Elimina impostazioni mod"
 
 -- Misc
+L.FontType					= "Seleziona carattere"
+L.FontStyle					= "Stile carattere"
+L.FontColor					= "Colore carattere"
+L.FontShadow				= "Ombre"
+L.FontSize					= "Dimensioni carattere: %d"
+
 L.FontHeight	= 16

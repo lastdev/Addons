@@ -54,8 +54,7 @@ L["Controls the scaling of the main Omen window."] = "Kontrolliert die Skalierun
 L["Controls the transparency of the main Omen window."] = "Kontrolliert die Sichtbarkeit des Omen-Hauptfensters"
 L["Controls whether the main Omen window can be dragged offscreen"] = "Kontrolliert, ob das Omen-Fenster über die Bildschirmkanten hinaus verschoben werden kann"
 L["DEATHKNIGHT"] = "Todesritter"
---[[Translation missing --]]
---[[ L["DEMONHUNTER"] = "Demon Hunter"--]] 
+L["DEMONHUNTER"] = "Dämonenjäger"
 L["Disable while tanking"] = "Beim Tanken deaktivieren"
 L["DISABLE_WHILE_TANKING_DESC"] = "Gibt keine Warnmeldungen aus, wenn Verteidigungshaltung, Bärengestalt, Zorn der Gerechtigkeit oder Blutpräsenz aktiv sind."
 L["Display large numbers in Ks"] = "Zeigt hohe Zahlenwerte im K-Format (1k = 1000) an"

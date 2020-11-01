@@ -8,38 +8,42 @@
 
 ----------------------------------------------------------------------------]]--
 
+local _, LM = ...
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
 
-_G.LM_PlayerMounts = CreateFrame("Frame", "LM_PlayerMounts", UIParent)
+LM.PlayerMounts = CreateFrame("Frame", nil, UIParent)
 
 -- Type, type class create args
-local LM_MOUNT_SPELLS = {
-    { "RunningWild", LM_SPELL.RUNNING_WILD },
-    { "FlightForm", LM_SPELL.FLIGHT_FORM },
-    { "GhostWolf", LM_SPELL.GHOST_WOLF },
-    { "TravelForm", LM_SPELL.TRAVEL_FORM },
-    { "Nagrand", LM_SPELL.FROSTWOLF_WAR_WOLF },
-    { "Nagrand", LM_SPELL.TELAARI_TALBUK },
-    { "Tarecgosa" },
-    { "Spell", LM_SPELL.STAG_FORM, 'RUN' },
+local MOUNT_SPELLS = {
+    { "RunningWild", LM.SPELL.RUNNING_WILD },
+    { "GhostWolf", LM.SPELL.GHOST_WOLF, 'WALK' },
+    { "TravelForm", LM.SPELL.TRAVEL_FORM, 'RUN', 'FLY', 'SWIM' },
+    { "TravelForm", LM.SPELL.FLIGHT_FORM, 'FLY' },
+    { "TravelForm", LM.SPELL.STAG_FORM, 'RUN' },
+    { "Nagrand", LM.SPELL.FROSTWOLF_WAR_WOLF, 'Horde', 'RUN' },
+    { "Nagrand", LM.SPELL.TELAARI_TALBUK, 'Alliance', 'RUN' },
+    { "Soulshape", LM.SPELL.SOULSHAPE, 'WALK' },
     { "ItemSummoned",
-        LM_ITEM.LOANED_GRYPHON_REINS, LM_SPELL.LOANED_GRYPHON, 'FLY' },
+        LM.ITEM.LOANED_GRYPHON_REINS, LM.SPELL.LOANED_GRYPHON, 'FLY' },
     { "ItemSummoned",
-        LM_ITEM.LOANED_WIND_RIDER_REINS, LM_SPELL.LOANED_WIND_RIDER, 'FLY' },
+        LM.ITEM.LOANED_WIND_RIDER_REINS, LM.SPELL.LOANED_WIND_RIDER, 'FLY' },
     { "ItemSummoned",
-        LM_ITEM.FLYING_BROOM, LM_SPELL.FLYING_BROOM, 'FLY', },
+        LM.ITEM.FLYING_BROOM, LM.SPELL.FLYING_BROOM, 'FLY', },
     { "ItemSummoned",
-        LM_ITEM.MAGIC_BROOM, LM_SPELL.MAGIC_BROOM, 'RUN', 'FLY', },
+        LM.ITEM.MAGIC_BROOM, LM.SPELL.MAGIC_BROOM, 'RUN', 'FLY', },
     { "ItemSummoned",
-        LM_ITEM.SHIMMERING_MOONSTONE, LM_SPELL.MOONFANG, 'RUN', },
+        LM.ITEM.SHIMMERING_MOONSTONE, LM.SPELL.MOONFANG, 'RUN', },
     { "ItemSummoned",
-        LM_ITEM.RATSTALLION_HARNESS, LM_SPELL.RATSTALLION_HARNESS, 'RUN', },
+        LM.ITEM.RATSTALLION_HARNESS, LM.SPELL.RATSTALLION_HARNESS, 'RUN', },
     { "ItemSummoned",
-        LM_ITEM.SAPPHIRE_QIRAJI_RESONATING_CRYSTAL, LM_SPELL.BLUE_QIRAJI_WAR_TANK, 'RUN', },
+        LM.ITEM.SAPPHIRE_QIRAJI_RESONATING_CRYSTAL, LM.SPELL.BLUE_QIRAJI_WAR_TANK, 'RUN', },
     { "ItemSummoned",
-        LM_ITEM.RUBY_QIRAJI_RESONATING_CRYSTAL, LM_SPELL.RED_QIRAJI_WAR_TANK, 'RUN', },
+        LM.ITEM.RUBY_QIRAJI_RESONATING_CRYSTAL, LM.SPELL.RED_QIRAJI_WAR_TANK, 'RUN', },
+    { "ItemSummoned",
+        LM.ITEM.DRAGONWRATH_TARECGOSAS_REST, LM.SPELL.TARECGOSAS_VISAGE, 'FLY' },
 }
 
 local RefreshEvents = {
@@ -57,21 +61,17 @@ local RefreshEvents = {
     "ACHIEVEMENT_EARNED",
 }
 
-function LM_PlayerMounts:Initialize()
+function LM.PlayerMounts:Initialize()
 
-    self.mounts = LM_MountList:New()
+    self.mounts = LM.MountList:New()
 
     self:AddSpellMounts()
     self:AddJournalMounts()
 
-    for _,m in ipairs(self.mounts) do
-        LM_Options:InitializeExcludedMount(m)
-    end
-
     -- Refresh event setup
     self:SetScript("OnEvent",
             function (self, event, ...)
-                LM_Debug("Got refresh event "..event)
+                LM.Debug("Got refresh event "..event)
                 self.needRefresh = true
             end)
 
@@ -81,29 +81,45 @@ function LM_PlayerMounts:Initialize()
 
 end
 
-function LM_PlayerMounts:AddMount(m)
+function LM.PlayerMounts:AddMount(m)
     tinsert(self.mounts, m)
 end
 
-function LM_PlayerMounts:AddJournalMounts()
+function LM.PlayerMounts:AddJournalMounts()
+    -- This is horrible but I can't find any other way to get the "unusable" flag
+    local usableMounts = {}
+
+    C_MountJournal.SetCollectedFilterSetting(LE_MOUNT_JOURNAL_FILTER_COLLECTED, true)
+    C_MountJournal.SetCollectedFilterSetting(LE_MOUNT_JOURNAL_FILTER_NOT_COLLECTED, true)
+    C_MountJournal.SetCollectedFilterSetting(LE_MOUNT_JOURNAL_FILTER_UNUSABLE, false)
+    C_MountJournal.SetAllSourceFilters(true)
+    C_MountJournal.SetSearch('')
+
+    for i = 1, C_MountJournal.GetNumDisplayedMounts() do
+        local mountID = select(12, C_MountJournal.GetDisplayedMountInfo(i))
+        usableMounts[mountID] = true
+    end
+
+    C_MountJournal.SetCollectedFilterSetting(LE_MOUNT_JOURNAL_FILTER_UNUSABLE, true)
+
     for _, mountID in ipairs(C_MountJournal.GetMountIDs()) do
-        local m = LM_Mount:Get("Journal", mountID)
+        local m = LM.Mount:Get("Journal", mountID, usableMounts[mountID])
         self:AddMount(m)
     end
 end
 
 -- The unpack function turns a table into a list. I.e.,
 --      unpack({ a, b, c }) == a, b, c
-function LM_PlayerMounts:AddSpellMounts()
-    for _,typeAndArgs in ipairs(LM_MOUNT_SPELLS) do
-        local m = LM_Mount:Get(unpack(typeAndArgs))
+function LM.PlayerMounts:AddSpellMounts()
+    for _,typeAndArgs in ipairs(MOUNT_SPELLS) do
+        local m = LM.Mount:Get(unpack(typeAndArgs))
         self:AddMount(m)
     end
 end
 
-function LM_PlayerMounts:RefreshMounts()
+function LM.PlayerMounts:RefreshMounts()
     if self.needRefresh then
-        LM_Debug("Refreshing status of all mounts.")
+        LM.Debug("Refreshing status of all mounts.")
 
         for _,m in ipairs(self.mounts) do
             m:Refresh()
@@ -112,19 +128,15 @@ function LM_PlayerMounts:RefreshMounts()
     end
 end
 
-function LM_PlayerMounts:FilterSearch(...)
+function LM.PlayerMounts:FilterSearch(...)
     return self.mounts:FilterSearch(...)
-end
-
-function LM_PlayerMounts:FilterFind(...)
-    return self.mounts:FilterFind(...)
 end
 
 -- This is deliberately by spell name instead of using the
 -- spell ID because there are some horde/alliance mounts with
 -- the same name but different spells.
 
-function LM_PlayerMounts:GetMountFromUnitAura(unitid)
+function LM.PlayerMounts:GetMountFromUnitAura(unitid)
     local buffs = { }
     local i = 1
     while true do
@@ -132,29 +144,29 @@ function LM_PlayerMounts:GetMountFromUnitAura(unitid)
         if aura then buffs[aura] = true else break end
         i = i + 1
     end
-    local function match(m)
-        local spellName = GetSpellInfo(m.spellID)
-        return m.isCollected and buffs[spellName] and m:IsCastable()
-    end
-    return self.mounts:Find(match)
+    return self.mounts:Find(function (m) return buffs[m.name] end)
 end
 
-function LM_PlayerMounts:GetMountByName(name)
+function LM.PlayerMounts:GetActiveMount()
+    return self:GetMountFromUnitAura('player')
+end
+
+function LM.PlayerMounts:GetMountByName(name)
     local function match(m) return m.name == name end
     return self.mounts:Find(match)
 end
 
-function LM_PlayerMounts:GetMountBySpell(id)
+function LM.PlayerMounts:GetMountBySpell(id)
     local function match(m) return m.spellID == id end
     return self.mounts:Find(match)
 end
 
 -- For some reason GetShapeshiftFormInfo doesn't work on Ghost Wolf.
-function LM_PlayerMounts:GetMountByShapeshiftForm(i)
+function LM.PlayerMounts:GetMountByShapeshiftForm(i)
     if not i then
         return
     elseif i == 1 and select(2, UnitClass("player")) == "SHAMAN" then
-         return self:GetMountBySpell(LM_SPELL.GHOST_WOLF)
+         return self:GetMountBySpell(LM.SPELL.GHOST_WOLF)
     else
         local spellID
         spellID = select(4, GetShapeshiftFormInfo(i))

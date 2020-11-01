@@ -1,3 +1,34 @@
+### 8.3.14
+
+- Update deDE (German) and zhTW (Traditional Chinese) -translations
+- Complete:
+   - esES (Spanish)
+   - ruRU (Russian)
+- Needs Review:
+   - frFR (French): 101 strings under review
+   - zhTW (Traditional Chinese): 4 strings under review
+- Needs Translation:
+   - deDE (German): 90.99% translated
+   - esMX (Latin American Spanish): 0% translated
+   - itIT (Italian): 0% translated
+   - koKR (Korean): 30.63% translated
+   - ptBR (Brazilian Portuguese): 49.55% translated
+   - zhCN (Simplified Chinese): 92.79% translated
+
+### 8.3.13
+
+- Update translations (big thanks to all the translators of past and current) and if you want to contribute, head out to [Curseforge Localization tool](https://www.curseforge.com/wow/addons/azeritepowerweights/localization).
+   - deDE (German): 72.97% translated
+   - esES (Spanish): 100% translated
+   - esMX (Latin American Spanish): 0% translated
+   - frFR (French): 100% translated, 101 strings under review
+   - itIT (Italian): 0% translated
+   - koKR (Korean): 30.63% translated
+   - ptBR (Brazilian Portuguese): 49.55% translated
+   - ruRU (Russian): 100% translated
+   - zhCN (Simplified Chinese): 92.79% translated, 103 strings under review
+   - zhTW (Traditional Chinese): 100% translated, 18 strings under review
+
 ### 8.3.12
 
 - Updated Default-scales (SimulationCraft 830-02 for World of Warcraft 8.3.0 Live (wow build 33051))

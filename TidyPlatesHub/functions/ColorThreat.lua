@@ -247,20 +247,26 @@ end
 -- Cast Bar Color
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-local function CastBarDelegate(unit)
+local function CastBarDelegate(unit, spellID, spellName)
 	local color, alpha
+    local isCastAtPlayer = LocalVars.SpellsCastAtPlayerEnable
+                           and ((spellID and LocalVars.SpellCastAtPlayerLookup[spellID])
+                                or (spellName and LocalVars.SpellCastAtPlayerLookup[spellName]))
+						   and unit.unitid
+						   and UnitIsUnit(unit.unitid.."target", "player")
+
 	if unit.spellInterruptible then
-		color = LocalVars.ColorNormalSpellCast
-	else color = LocalVars.ColorUnIntpellCast end
+		color = isCastAtPlayer and LocalVars.ColorNormalSpellsCastAtPlayer or LocalVars.ColorNormalSpellCast
+	else
+		color = isCastAtPlayer and LocalVars.ColorUnIntSpellsCastAtPlayer or LocalVars.ColorUnIntpellCast
+	end
 
-	if unit.reaction == "FRIENDLY" and (not LocalVars.SpellCastEnableFriendly) then
+	if unit.reaction == "FRIENDLY" and not LocalVars.SpellCastEnableFriendly then
 		alpha = 0
-	else alpha = 1 end
+	else
+		alpha = 1
+	end
 
-	--[[
-	if unit.reaction ~= "FRIENDLY" or LocalVars.SpellCastEnableFriendly then alpha = 1
-	else alpha = 0 end
---]]
 	return color.r, color.g, color.b, alpha
 end
 

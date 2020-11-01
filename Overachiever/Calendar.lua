@@ -7,8 +7,8 @@ local L = OVERACHIEVER_STRINGS
 local CalendarGetNumDayEvents = CalendarGetNumDayEvents or C_Calendar.GetNumDayEvents
 local CalendarGetHolidayInfo = CalendarGetHolidayInfo or C_Calendar.GetHolidayInfo
 
-local CalendarGetDate = CalendarGetDate or function(...)
-	local info = C_Calendar.GetDate(...)
+local function CalendarGetDate()
+	local info = C_DateAndTime.GetCurrentCalendarTime()
 	return info.weekday, info.month, info.monthDay, info.year, info.hour, info.minute
 end
 

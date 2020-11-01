@@ -1,10 +1,11 @@
-## Interface: 80200
+## Interface: 90001
 ## Title: NugHealth
 ## Author: d87
 ## SavedVariables: NugHealthDB
-## Version: 8.2.0
+## Version: 9.0.2
 
 ## X-WoWI-ID: 24281
+## X-Curse-Project-ID: 87471
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
@@ -13,3 +14,4 @@ Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 NugHealth.lua
+frame.lua

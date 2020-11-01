@@ -1,10 +1,11 @@
 ﻿local mod	= DBM:NewMod(189, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(23577)
 mod:SetEncounterID(1192)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -14,7 +15,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 43302 97499",
 	"CHAT_MSG_MONSTER_YELL"
 )
-mod.onlyHeroic = true
 
 local warnShock			= mod:NewTargetNoFilterAnnounce(43303, 3, nil, "Healer", 2)
 local warnEnrage		= mod:NewTargetAnnounce(43139, 3)

@@ -4,6 +4,7 @@
 	<Button name="AltoTabGridsClassIconTemplate" inherits="AltoClassIconTemplate" virtual="true">
 		<KeyValues>
 			<KeyValue key="optionFormat" value="Tabs.Grids.%s.%s.Column%d" />
+            <KeyValue key="optionFormatAccountWide" value="Tabs.Grids.%s.Column%d" />
 		</KeyValues>
 		<Scripts>
 			<OnEnter>
@@ -16,6 +17,7 @@
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT" />
+            <Anchor point="BOTTOMRIGHT" x="-75" y="35"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
@@ -28,16 +30,16 @@
 				<FontString parentKey="TextView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW" hidden="true">
 					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-5" />
+						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="0" y="-5" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="CENTER">
 					<Size x="320" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="AltoholicFrame" x="-50" y="10" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -47,9 +49,10 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.TextView" relativePoint="BOTTOMLEFT" x="-30" y="-2"/>
 				</Anchors>
 			</Frame>
-			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
+			<Frame parentKey="SelectAccount" inherits="AltoAccountPickerTemplate">
+            	<Size x="100" y="32" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="menuWidth" value="120" type="number" />
@@ -59,7 +62,6 @@
 			<!-- Menu Icons -->
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<!-- <KeyValue key="numIcons" value="11" type="number" /> -->
 					<KeyValue key="numIcons" value="50" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabGridsClassIconTemplate" />
 					<KeyValue key="tabName" value="Grids" />
@@ -70,7 +72,7 @@
 			
 			<Button parentKey="Equipment" inherits="AltoTabGridsMenuIconTemplate" id="1">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="240" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.SelectAccount" relativePoint="BOTTOMLEFT" x="30" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\INV_Chest_Plate04" />
@@ -101,19 +103,17 @@
 					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
 				</KeyValues>
 			</Button>
-
-			<Button parentKey="Pets" inherits="AltoTabGridsMenuIconTemplate" id="5">
+            <Button parentKey="Essences" inherits="AltoTabGridsMenuIconTemplate" id="5">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="200" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Equipment" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\INV_Box_Birdcage_01" />
-					<KeyValue key="text" value="COMPANIONS" type="global" />
+					<KeyValue key="iconFile" value="1869493" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="6">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Essences" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_helmet_189" />
@@ -140,13 +140,14 @@
 
 			<Button parentKey="GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="9">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="160" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Essences" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_blueprints3" />
 					<KeyValue key="text" value="GARRISON_ARCHITECT" type="global" />
 				</KeyValues>
 			</Button>
+            
 			<Button parentKey="GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="10">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonArchitect" relativePoint="BOTTOMRIGHT" x="5" y="0" />
@@ -156,6 +157,7 @@
 					<KeyValue key="text" value="GARRISON_FOLLOWERS_TITLE" type="global" />
 				</KeyValues>
 			</Button>
+            
 			<Button parentKey="FollowerAbilities" inherits="AltoTabGridsMenuIconTemplate" id="11">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonFollowers" relativePoint="BOTTOMRIGHT" x="5" y="0" />
@@ -164,25 +166,85 @@
 					<KeyValue key="iconFile" value="Interface\Icons\spell_shadow_shadowwordpain" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="Emissaries" inherits="AltoTabGridsMenuIconTemplate" id="12">
+            
+			<Button parentKey="OrderHallFollowers" inherits="AltoTabGridsMenuIconTemplate" id="16">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.FollowerAbilities" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\achievement_garrisonfollower_levelup" />
+					<KeyValue key="text" value="ORDER_HALL_FOLLOWERS" type="global" />
+				</KeyValues>
+			</Button>
+            
+			<Button parentKey="Emissaries" inherits="AltoTabGridsMenuIconTemplate" id="12">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.GarrisonArchitect" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_legion_cache_dreamweavers" />
 					<KeyValue key="text" value="BOUNTY_BOARD_LOCKED_TITLE" type="global" />
 				</KeyValues>
 			</Button>
-			
+            
 			<Button parentKey="Sets" inherits="AltoTabGridsMenuIconTemplate" id="13">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="120" />
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Emissaries" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_81" />
 				</KeyValues>
 			</Button>
-			
+
+            <Button parentKey="Tasks" inherits="AltoTabGridsMenuIconTemplate" id="15">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Sets" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_17" />
+				</KeyValues>
+			</Button>
+            
+			<Button parentKey="WarCampaignFollowers" inherits="AltoTabGridsMenuIconTemplate" id="17">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Tasks" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Icon_Mission_Complete_Order" />
+					<KeyValue key="text" value="WAR_FOLLOWERS" type="global" />
+				</KeyValues>
+			</Button>
+            
+            <Button parentKey="Callings" inherits="AltoTabGridsMenuIconTemplate" id="18">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Emissaries" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_misc_covenant_renown" />
+					<KeyValue key="text" value="CALLINGS_QUESTS" type="global" />
+				</KeyValues>
+			</Button>
+
+			<Button parentKey="CovenantFollowers" inherits="AltoTabGridsMenuIconTemplate" id="19">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Callings" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\sanctum_features_missiontable" />
+                    <KeyValue key="text" value="COVENANT_MISSIONS_FOLLOWERS" type="global"/>
+				</KeyValues>
+			</Button>
+            
+            <Button parentKey="RareSpawns" inherits="AltoTabGridsMenuIconTemplate" id="20">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.CovenantFollowers" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Inscription_Trinket_Dragon" />
+                    <KeyValue key="text" value="Rare Spawns"/>
+				</KeyValues>
+			</Button>
+            			
 			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
 			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">
 				<Size x="230" y="300" />

@@ -10,9 +10,10 @@
 	</Button>
 	
 	<Frame name="AltoholicTabCharacters" parent="AltoholicFrame" hidden="true">
-		<Size x="758" y="447" />
+		<!--Size x="758" y="447" /-->
 		<Anchors>
 			<Anchor point="TOPLEFT" x="0" y="0" />
+            <Anchor point="BOTTOMRIGHT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
@@ -21,7 +22,7 @@
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" x="190" y="13" />
 					</Anchors>
-					<Color r="255" g="255" b="255" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -30,7 +31,7 @@
 			<Frame parentKey="MenuIcons" name="AltoholicTabCharacters_MenuIcons">
 				<Size x="340" y="37" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-15" />
+					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="0" y="-15" />
 				</Anchors>
 				<Frames>
 					<Button parentKey="CharactersIcon" inherits="AltoTabCharactersIconTemplate" id="1">

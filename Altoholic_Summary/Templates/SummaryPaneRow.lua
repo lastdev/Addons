@@ -107,7 +107,7 @@ addon:Controller("AltoholicUI.SummaryPaneRow", {
 
 		frame.Collapse:Show()
 		frame.character = nil
-		frame:HideItems(2, 10)
+		frame:HideItems(2, 20)
 		frame:SetID(line)
 		frame:Show()
 	end,
@@ -123,7 +123,7 @@ addon:Controller("AltoholicUI.SummaryPaneRow", {
 		end
 		
 		frame.character = character
-		frame:HideItems(#currentMode+1, 10)
+		frame:HideItems(#currentMode+1, 20)
 		frame:SetID(line)
 		frame:Show()
 	end,
@@ -139,7 +139,7 @@ addon:Controller("AltoholicUI.SummaryPaneRow", {
 		frame.Item1:SetScript("OnEnter", ShowTotals)
 		
 		frame.character = nil
-		frame:HideItems(#currentMode+1, 10)
+		frame:HideItems(#currentMode+1, 20)
 		frame:SetID(line)
 		frame:Show()
 	end,

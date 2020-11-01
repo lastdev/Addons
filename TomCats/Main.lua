@@ -1,4 +1,6 @@
 local addonName, addon = ...;
+--todo: Refactor all calls to this
+IsQuestFlaggedCompleted = IsQuestFlaggedCompleted or C_QuestLog.IsQuestFlaggedCompleted
 local _G = _G
 local bit = bit
 local coroutine = coroutine
@@ -737,7 +739,7 @@ do
 					frames = 0
 					local currentFrameRate = GetFramerate();
 					if (currentFrameRate < frameRateGoal) then
-						maxYieldSkips = max(maxYieldSkips * 0.8, 2000)
+						maxYieldSkips = max(maxYieldSkips * 0.8, 1000)
 					else
 						frameRateGoal = currentFrameRate
 						maxYieldSkips = maxYieldSkips * 1.05
@@ -2116,8 +2118,8 @@ local TomCatsPublicKey = {
 }
 if (TomCats and TomCats.ReconcileVersionInfo) then
 	TomCats.ReconcileVersionInfo({
-		messageID = 1583846119,
-		encoded = "XZGZYJf9Ec1k5QWPQ1TfBuQne+MQgCQKV56imu0rBrcJwkc7x8rIMl5nkucBAQUAAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEDBAwAAQYNAQASDgEAGg8BAAQ="
+		messageID = 1603125516,
+		encoded = "T2gGYeQevRmZIkMHr8YvY7OSHipg4wXSbcFOdSBWpI2ca+r2g69xOl+NwQwBAQYBAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEGAAwAAQYNAQASDgEAGg8BAAY="
 	})
 end
 local MESSAGE_TYPE = {
@@ -2173,8 +2175,8 @@ do
 	local ignored = { }
 	local lastBroadcastVersionInfo
 	local syncLog = { }
-	VersionInfo.messageID = tonumber("1583846119")
-	VersionInfo.encoded = "XZGZYJf9Ec1k5QWPQ1TfBuQne+MQgCQKV56imu0rBrcJwkc7x8rIMl5nkucBAQUAAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEDBAwAAQYNAQASDgEAGg8BAAQ="
+	VersionInfo.messageID = tonumber("1603125516")
+	VersionInfo.encoded = "T2gGYeQevRmZIkMHr8YvY7OSHipg4wXSbcFOdSBWpI2ca+r2g69xOl+NwQwBAQYBAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEGAAwAAQYNAQASDgEAGg8BAAY="
 	local function BroadcastVersionInfo()
 		local channelID = GetChannelName(addonChannelName)
 		if (channelID) then
@@ -2199,7 +2201,8 @@ do
 		if ((not VersionInfo.messageID) or (versionInfo.messageID > VersionInfo.messageID)) then
 			VersionInfo.messageID = versionInfo.messageID
 			VersionInfo.encoded = versionInfo.encoded
-			if (IsAddOnLoaded("TomCats")) then
+			local _, loaded = IsAddOnLoaded("TomCats")
+			if (loaded) then
 				addon.savedVariables.account.versionInfo = {
 					messageID = VersionInfo.messageID,
 					encoded = VersionInfo.encoded

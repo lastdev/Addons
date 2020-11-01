@@ -231,10 +231,11 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2045), icon = "achievement_faction_legionfall" },			-- Armies of Legionfall
 			{ name = DataStore:GetFactionName(2165), icon = "achievement_admiral_of_the_light" },			-- Army of the Light
 			{ name = DataStore:GetFactionName(2170), icon = "achievement_master_of_argussian_reach" },			-- Argussian Reach
+            { name = DataStore:GetFactionName(2135), icon = "achievement_reputation_wyrmresttemple" },          -- Chromie
 		},		
 		{ -- [2]
 			name = L["Fishing Masters"],
-			{ name = DataStore:GetFactionName(1975), icon = "inv_elemental_primal_water" }, -- Conjurer Margoss
+			{ name = DataStore:GetFactionName(1975), icon = "inv_elemental_primal_water" },                     -- Conjurer Margoss
 			{ name = DataStore:GetFactionName(2097), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Ilyssia of the Waters
 			{ name = DataStore:GetFactionName(2099), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Akule Riverhorn
 			{ name = DataStore:GetFactionName(2101), icon = "achievement_profession_fishing_oldmanbarlowned" }, -- Sha'leth
@@ -252,6 +253,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2161), icon = "Inv_tabard_orderoftheembers" },
 			{ name = DataStore:GetFactionName(2162), icon = "Inv_tabard_stormswake" },
             { name = DataStore:GetFactionName(2400), icon = "inv_faction_akoan" },
+            { name = DataStore:GetFactionName(2395) or "Honeyback Hive", icon = "inv_bee_default"}
 		},
 		{	-- [2]
 			name = FACTION_HORDE,
@@ -271,7 +273,25 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2417), icon = "inv_faction_83_uldumaccord" },
 		},
 	},
-	{	-- [8]
+    { -- [9]
+        name = EXPANSION_NAME8, -- "Shadowlands"
+		{	-- [1]
+			name = FACTION_ALLIANCE,
+			--{ name = DataStore:GetFactionName(2159), icon = "Inv_tabard_alliancewareffort" },
+		},
+		{	-- [2]
+			name = FACTION_HORDE,
+			--{ name = DataStore:GetFactionName(2157), icon = "Inv_tabard_hordewareffort" },
+		},
+		{	-- [3]
+			name = OTHER,
+            { name = DataStore:GetFactionName(2410), icon = "inv_tabard_maldraxxus_d_01" },
+            { name = DataStore:GetFactionName(2422), icon = "inv_tabard_ardenweald_d_01" },
+			{ name = DataStore:GetFactionName(2413), icon = "inv_tabard_revendreth_d_01" },
+			{ name = DataStore:GetFactionName(2407), icon = "PLACEHOLDER" }, -- check https://shadowlands.wowhead.com/achievement=14335/the-ascended#criteria-of:0+1+2
+		},
+    },
+	{
 		name = GUILD,
 		{	-- [1]
 			name = GUILD,
@@ -312,9 +332,17 @@ local function BuildView()
 	local currentFactionGroup = addon:GetOption(OPTION_FACTION)
 
 	if (currentXPack ~= CAT_ALLINONE) then
-		for index, faction in ipairs(Factions[currentXPack][currentFactionGroup]) do
-			table.insert(view, faction)	-- insert the table pointer
-		end
+        if currentFactionGroup then
+		    for index, faction in ipairs(Factions[currentXPack][currentFactionGroup]) do
+			    table.insert(view, faction)	-- insert the table pointer
+		    end
+        else
+            for k, v in ipairs(Factions[currentXPack]) do
+                for index, faction in ipairs(v) do
+                    table.insert(view, faction)
+                end
+            end
+        end
 	else	-- all in one, add all factions
 		for xPackIndex, xpack in ipairs(Factions) do		-- all xpacks
 			for factionGroupIndex, factionGroup in ipairs(xpack) do 	-- all faction groups
@@ -343,13 +371,25 @@ end
 local function AddGuildsToFactionsTable(realm, account)
 	-- get the guilds on this realm/account
 	local guilds = {}
-	for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
-		if DataStore:GetGuildFaction(guildName, realm, account) == FACTION_ALLIANCE then
-			guilds[guildName] = "inv_misc_tournaments_banner_human"
-		else
-			guilds[guildName] = "inv_misc_tournaments_banner_orc"
-		end
-	end
+    if realm then
+      	for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
+      		if DataStore:GetGuildFaction(guildName, realm, account) == FACTION_ALLIANCE then
+      			guilds[guildName] = "inv_misc_tournaments_banner_human"
+      		else
+      			guilds[guildName] = "inv_misc_tournaments_banner_orc"
+      		end
+      	end
+    else
+        for realm in pairs(DataStore:GetRealms(account)) do
+        	for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
+        		if DataStore:GetGuildFaction(guildName, realm, account) == FACTION_ALLIANCE then
+        			guilds[guildName] = "inv_misc_tournaments_banner_human"
+        		else
+        			guilds[guildName] = "inv_misc_tournaments_banner_orc"
+        		end
+        	end        
+        end
+    end
 	
 	-- clean the Factions table
 	for k, v in ipairs(Factions[CAT_GUILD][1]) do	-- ipairs ! only touch the array part, leave the hash untouched
@@ -368,7 +408,12 @@ local function OnFactionChange(self, xpackIndex, factionGroupIndex)
 	addon:SetOption(OPTION_XPACK, xpackIndex)
 	addon:SetOption(OPTION_FACTION, factionGroupIndex)
 		
-	local factionGroup = Factions[xpackIndex][factionGroupIndex]
+	local factionGroup
+    if factionGroupIndex then
+        factionGroup = Factions[xpackIndex][factionGroupIndex]
+    else
+        factionGroup = Factions[xpackIndex]
+    end
 	currentDDMText = factionGroup.name
 	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	
@@ -384,7 +429,7 @@ local function OnGuildSelected(self)
 	addon:SetOption(OPTION_XPACK, CAT_GUILD)
 	addon:SetOption(OPTION_FACTION, 1)
 	
-	local account, realm = AltoholicTabGrids:GetRealm()
+	local account, realm = AltoholicTabGrids:GetAccount()
 	
 	if not lastRealm or not lastAccount or lastRealm ~= realm or lastAccount ~= account then	-- realm/account changed ? rebuild view
 		AddGuildsToFactionsTable(realm, account)
@@ -424,6 +469,9 @@ local function DropDown_Initialize(frame, level)
 			info.hasArrow = 1
 			info.checked = (currentXPack == xpackIndex)
 			info.value = xpackIndex
+            info.arg1 = xpackIndex
+            info.arg2 = nil
+            info.func = OnFactionChange
 			frame:AddButtonInfo(info, level)
 		end
 		
@@ -490,20 +538,24 @@ local callbacks = {
 				AltoholicTabGrids:SetStatus(GUILD)
 			elseif (currentXPack == CAT_ALLINONE) then
 				AltoholicTabGrids:SetStatus(L["All-in-one"])
-			else
+			elseif (currentFactionGroup) then
 				AltoholicTabGrids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack][currentFactionGroup].name))
+            else
+                AltoholicTabGrids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack].name))
 			end
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
 			currentFaction = view[dataRowID]
 
-			rowFrame.Name.Text:SetText(colors.white .. currentFaction.name)
+			if not currentFaction.name then return end
+            rowFrame.Name.Text:SetText(colors.white .. currentFaction.name)
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
 	RowOnEnter = function()	end,
 	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
+            button.Background:SetVertexColor(1, 1, 1)
 			local faction = currentFaction
 			
 			if faction.left then		-- if it's not a full texture, use tcoords
@@ -514,46 +566,39 @@ local callbacks = {
 				button.Background:SetTexCoord(0, 1, 0, 1)
 			end		
 			
-			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetFontObject("GameFontNormal")
 			button.Name:SetJustifyH("CENTER")
-			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
 			button.Background:SetDesaturated(false)
 			
-			local status, _, _, rate = DataStore:GetReputationInfo(character, faction.name)
+			local status, amount, _, rate = DataStore:GetReputationInfo(character, faction.name)
+
 			if status and rate then 
 				local text
 				if status == FACTION_STANDING_LABEL8 then
 					text = icons.ready
 				elseif status == PARAGON_LABEL then
 					if rate >= 100 then
-						text = icons.waiting
-					else
-						button.Name:SetFontObject("NumberFontNormalSmall")
-						button.Name:SetJustifyH("RIGHT")
-						button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
-						text = format("%2d%%", floor(rate))
+                        button.Background:SetTexture("Interface\\LFGFrame\\LFGIcon-Quest")
 					end
+					button.Name:SetFontObject("NumberFontNormalLarge")
+					button.Name:SetJustifyH("RIGHT")
+					button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
+                    text = math.floor(amount/1000) .. "K"
 				else
 					button.Background:SetDesaturated(true)
-					button.Name:SetFontObject("NumberFontNormalSmall")
+					button.Name:SetFontObject("NumberFontNormal")
 					button.Name:SetJustifyH("RIGHT")
 					button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
 					text = format("%2d", floor(rate)) .. "%"
 				end
 
 				local vc = VertexColors[status]
-				button.Background:SetVertexColor(vc.r, vc.g, vc.b);
-				
-				local color = colors.white
-				if status == FACTION_STANDING_LABEL1 or status == FACTION_STANDING_LABEL2 then
-					color = colors.darkred
-				elseif status == PARAGON_LABEL then
-					color = colors.epic
-				end
 
 				button.key = character
 				button:SetID(dataRowID)
-				button.Name:SetText(color..text)
+				button.Name:SetText(text)
+                button.Name:SetTextColor(vc.r, vc.g, vc.b)
 			else
 				button.Background:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
 				button.Name:SetText(icons.notReady)
@@ -594,8 +639,7 @@ local callbacks = {
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL5, 0.0, 1.0, 0.0)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL6, 0.0, 1.0, 0.8)
 			AltoTooltip:AddLine(FACTION_STANDING_LABEL7, 1.0, 0.4, 1.0)
-			AltoTooltip:AddLine(format("%s = %s", icons.ready, FACTION_STANDING_LABEL8), 1, 1, 1)
-			AltoTooltip:AddLine(format("%s = %s%s", icons.waiting, colors.epic, PARAGON_LABEL), 1, 1, 1)
+			AltoTooltip:AddLine(format("%s = %s/%s", icons.ready, FACTION_STANDING_LABEL8, PARAGON_LABEL), 1, 1, 1)
 			
 			AltoTooltip:AddLine(" ",1,1,1)
 			AltoTooltip:AddLine(colors.green .. L["Shift+Left click to link"])
@@ -629,13 +673,17 @@ local callbacks = {
 			local currentFactionGroup = addon:GetOption(OPTION_FACTION)
 			
 			if (currentXPack ~= CAT_ALLINONE) then
-				currentDDMText = Factions[currentXPack][currentFactionGroup].name
+                if currentFactionGroup then
+				    currentDDMText = Factions[currentXPack][currentFactionGroup].name
+                else
+                    currentDDMText = Factions[currentXPack].name
+                end
 			else
 				currentDDMText = L["All-in-one"]
 			end
 			
 			if (currentXPack == CAT_GUILD) then
-				local account, realm = AltoholicTabGrids:GetRealm()
+				local account, realm = AltoholicTabGrids:GetAccount()
 				AddGuildsToFactionsTable(realm, account)
 			end
 			
@@ -647,3 +695,14 @@ local callbacks = {
 }
 
 AltoholicTabGrids:RegisterGrid(2, callbacks)
+
+AltoholicTabGrids.RefreshReputations = function()
+	local account, realm = AltoholicTabGrids:GetAccount()
+	
+	if not lastRealm or not lastAccount or lastRealm ~= realm or lastAccount ~= account then	-- realm/account changed ? rebuild view
+		AddGuildsToFactionsTable(realm, account)
+	end
+    
+    isViewValid = nil
+	AltoholicTabGrids:Update()
+end

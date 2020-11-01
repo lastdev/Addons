@@ -1,5 +1,112 @@
 # Changelog
 
+## Changed in v90001.3
+
+* Improve shift-clicking the popup to add a chat link:
+    * Don't require you to have an open chatbox before pasting it there; open the default chatbox if you have nothing else open
+    * Include the health for the mob if we can work it out (if it's a target or its nameplate is visible)
+    * For sources that don't include the location (chat yells), link to the player's current location
+* Option to hide the target popup when the mob dies
+* Option to hide the waypoint arrow when you manually close the popup
+* Mobs that you've added to the "custom" section will now bypass most "should I announce this?" checks (e.g. you can ignore the entire Warlords source, and manually-add Rukhmar)
+* Unchecking "Got the loot" in the outputs config will now only affect mobs for which we know any drops
+* Some _very timely_ improvements on Argus
+* Achievement tooltip in the broker tooltip will now show your criteria-completion
+* Rukhmar's questid added
+* The highlight on the "store" popup theme was covering up the loot icon
+* The X on the target popup wasn't appearing when the mob died
+* Fixed `/silverdragon add` with no parameter causing an error
+* Some more Shadowlands questids
+* Some missing pets / toys
+* Sha of Anger has only had one spawn point since 7.2 (thanks frumpymoons)
+
+## Changed in v90001.2
+
+* Special map icons for mobs with toys and pets as well
+* Broker dropdown added to the mount journal, will show all known mobs that drop mounts (and whether you've looted them)
+* Show mob variants in the dropdown, for things like the Mechagon Data Anomalies, Madexx, and the Zandalari Warbringers
+* Chat-scanner: looks for mobs in the current zone with that name before checking globally in case of a name-collision
+* Chat-scanner: only announce coordinates if it's from a chat event which implies the mob is anywhere near you (yells are zone-wide...)
+* Waypoint integration with DeadlyBossMods
+* If data on a toy/mount/pet is still loading, say that in the tooltip rather than not showing anything about it at all
+* Mists: Nalak and Oondasta questids
+* Fixed broken N'zoth and Azerite loot popup target themes
+* Included updated version of LibQTip-1.0 which won't error if you have a broken pre-9.0 addon installed with an older version of LibQTip-1.0
+
+## Changed in v90001.1
+
+* Fixed a backdrop error in the "classic" popup target theme
+
+## Changed in v90001.0
+
+* Shadowlands data: most of the new rares are included, with questids and loot. Some are still missing quests, but we've got time.
+* Integration with "TomTom" is now "Waypoints", and can use the new built-in waypointing system or TomTom as you choose.
+    * Ctrl-clicking the target popup will set a waypoint for the mob.
+    * Shift-clicking the target popup will paste a clickable link to the mob to an open chatbox.
+    * These waypoints will only be accurate for mobs detected through minimap vignettes, otherwise it's just going to point at wherever you were when you saw it.
+    * The built-in waypointing can only have one waypoint at a time, so things like waypointing every spawn of a mob at once aren't possible.
+    * If you already have a waypoint, SilverDragon will replace it and then try to restore it. (Or can be configured to not add waypoints if you already have one.)
+* Added missing toys in Warlords, Mists, and Legion
+* The macro targeting now better respects mobs that should be ignored
+* Fixed target scanning to work in instances again
+* Fixed chat scanning not opening the target popup
+* Fixed an error from chat scanning in instances
+* Fixed the id for Rukhmar
+
+## Changed in v80300.5
+
+* Watch for known rares which announce themselves in chat (e.g. Arachnoid Harvester)
+* Add the broker dropdown to the world map frame -- now you can look at the rare list with loot for any zone
+* Add right-clicking on the target popup's close button to ignore the mob
+* Allow the waypoint auto-clear timer to be set in 5 second increments
+* Fix the target popup not showing up after combat ends if you noticed a rare during combat
+* Cleaned up some of the warfront map locations
+* Stop the achievement completed-by-alt check from behaving differently than whether your current character has completed it
+
+## Changed in v80300.4
+
+* Loot was missing from the Warfront rares
+* Warfront rares all had Alliance questids; now they know to check for the Horde ones, too
+* New map icon theme: stars
+* Option to not show icons on the minimap
+* Show a checkmark on the target popup's loot icon if you've got everything
+* Broker popup loot details tooltips will behave properly on the tiny number of mobs with multiple loot drops
+* Fix an error if your target popup theme was set to LessAwesome before v80300.3
+
+## Changed in v80300.3
+
+* Loot
+    * Include some data about drops from rares, so you can know whether you've gotten the mount / toy / pet that something drops. Data's present for everything in BFA, and spottily before that
+    * You can add this to tooltips for the rare so you'll know when you see it
+    * The target popup has a loot icon you can mouse over for details
+    * The broker dropdown includes icons breaking out what's dropped and whether you have it already
+    * The HandyNotes icons show this in their tooltips
+* Alerts
+    * Improved sound options: you can choose the channel the sound plays on (Master, Music, SFX, etc), and you can ask it to play while the game isn't focused / the channel is muted
+    * Improved the flash alert: you can choose the color and texture
+    * Add an option to not announce for mobs that another character has the achievement for, regardless of whether the current character has also completed it
+* Improved map icons in HandyNotes: you can choose between circles and skulls, and you can tell it to color the icons uniquely per-mob or by completion
+* You can right-click on a map icon to add a TomTom waypoint for every location that mob has
+* Added a bunch of new target popup themes
+* Added a slash command so you can do things like `/silverdragon add 123456` or `/silverdragon remove target` or `/silverdragon ignore target`
+* Allow right-clicking on the target popup to close it
+* Add bulk ignore all / none buttons to the expansion mob lists
+* The broker dropdown is now scrollable, and you can mouse over it for more information about some icons
+* Cleaned up some of the Assault / Nazjatar mobs which are replacement-spawns for common mobs
+* Cleaned up various rares which are only ever present for world quests
+* Changed really long-standing behavior: raid member targets are now checked, not just party member targets
+* Fixed various quest ids
+* Stopped hiding chat-channel output from the config for other addons using LibSink
+* Background Shadowlands work
+
+## Changed in v80300.2
+
+* TomTom integration: option to add a TomTom waypoint pointing to a just-seen rare
+* Update the database to mark mount-dropping rares from BfA
+* Lower the number of sound loops for the "I've seen a mount-dropping rare!" alert defaults
+* Fix a weird bug some people were seeing on login
+* Fix a few quest ids
+
 ## Changed in v80300.1
 
 * Made it so the 8.3 assault rares only appear while their assault is happening
@@ -326,7 +433,7 @@
 * Add cache-scanning, much credit to NPCScan by Saiket.
 * More options for notifying you: text, sound, screen-flashing.
 * LDB tooltip now says whether the rare is tameable.
-* [b]For the cache-scanning to work, you have to import data. It relies on NPC ids that can't be gained from within the game.[/b]
+* For the cache-scanning to work, you have to import data. It relies on NPC ids that can't be gained from within the game.
 
 ## Changed in v2.0 r20090403010638
 * Add a minimap icon for those without.

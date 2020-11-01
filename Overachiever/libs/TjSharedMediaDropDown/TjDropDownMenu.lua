@@ -145,7 +145,7 @@
 --
 
 
-local THIS_VERSION = 0.57
+local THIS_VERSION = 0.60
 
 if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   TjDropDownMenu = TjDropDownMenu or {};
@@ -156,7 +156,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   local generateNewMenuFrameForAll = nil;   -- Set to true to generate a new menuFrame object for every dropdown.
      -- Otherwise, those of the same displayMode are shared. This is a static option, to be set here in the Lua only
      -- (not meant to be changed dynamically).
-  
+
   local TEXTCUTOFF = 10   -- How much of the dropdown Middle frame's width to reduce from the display text's width.
 
   local menuFrameList
@@ -165,7 +165,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   end
 
   TjDropDownMenu.NumCreated = TjDropDownMenu.NumCreated or 0
-  local hooksComplete, TjMenuOpen, prevTjMenuOpen, clickedButton;
+  local hooksComplete, TjMenuOpen, prevTjMenuOpen, clickedButton, closingMenu;
 
   local function SelectEntry(dropdown, tab, fromClick)
     tab.checked = 1
@@ -383,6 +383,10 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   local function MenuHidden()
     prevTjMenuOpen = TjMenuOpen;
     TjMenuOpen = nil;
+    if (not closingMenu) then
+      closingMenu = prevTjMenuOpen;
+      C_Timer.After(0, function()  closingMenu = nil;  end)
+    end
   end
 
   local orig_UIDropDownMenuButton_OnClick;
@@ -482,7 +486,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   local function OnSelect(frame, func)
     frame.TjDDM.OnSelectFunc = func;
   end
-  
+
   local function OnMenuOpen(frame, func)
     frame.TjDDM.OnMenuOpenFunc = func;
   end
@@ -570,7 +574,8 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
   end
 
   local function OpenMenu(dropdown)
-    if (not TjMenuOpen or TjMenuOpen ~= dropdown:GetName()) then
+    local name = dropdown:GetName()
+    if ((not TjMenuOpen or TjMenuOpen ~= name) and (not closingMenu or closingMenu ~= name)) then
       local callFunc = dropdown.TjDDM.OnMenuOpenFunc
       if (type(callFunc) == "function") then
         callFunc(dropdown, dropdown.TjDDM.menuList);
@@ -602,9 +607,9 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
 
       menuFunc(dropdown.TjDDM.menuList, menuFrame, dropdown, x, y, dropdown.TjDDM.displayMode, dropdown.TjDDM.autoHideDelay);
       -- arg order: menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay
-      TjMenuOpen = dropdown:GetName();   -- Do this after menuFunc or it will be set to nil by MenuHidden().
+      TjMenuOpen = name;   -- Do this after menuFunc or it will be set to nil by MenuHidden().
     else
-      CloseMenus()
+      if (not closingMenu) then  CloseMenus();  end
     end
   end
 
@@ -653,6 +658,7 @@ if (not TjDropDownMenu or TjDropDownMenu.Version < THIS_VERSION) then
     end
 
     dropdown.button = _G[name.."Button"]
+    dropdown.button:RegisterForClicks("LeftButtonDown") -- Handle on button down instead of up to match how the default GUI handles this type of UI element.
     dropdown.button:SetScript("OnClick", TjDropDownMenu.DropBtnOnClick)
     dropdown:SetScript("OnClick", TjDropDownMenu.OnClick)
     dropdown:SetScript("OnEnter", OnEnter)

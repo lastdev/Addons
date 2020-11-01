@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("Mobus", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod.statTypes = "normal,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(50009)
 mod:SetModelID(37338)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -12,7 +13,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 93492 93494 93491",
 	"SPELL_AURA_APPLIED 93490"
 )
-mod.onlyNormal = true
 
 local warnAlgae				= mod:NewTargetNoFilterAnnounce(93491, 2)
 

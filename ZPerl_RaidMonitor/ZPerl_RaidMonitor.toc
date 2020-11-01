@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Author: Resike
 ## Title: Z-Perl |cffeda55fRaid Monitor|r
 ## Title-itIT: Z-Perl |cffeda55fMonitor Incursione|r
@@ -13,6 +13,5 @@
 ## Notes-zhTW: 提供施法進度以及治療和法力狀態的監控視窗
 ## SavedVariablesPerCharacter: ZPerlRaidMonConfig
 ## RequiredDeps: ZPerl
-## DefaultState: Disabled
 
 ZPerl_RaidMonitor.xml

@@ -37,6 +37,8 @@ local function BuildView()
 	isViewValid = true
 end
 
+local CurMonthInfo = C_Calendar.GetMonthInfo()
+
 local function GetDay(fullday)
 	-- full day = a date as YYYY-MM-DD
 	-- this function is actually different than the one in Blizzard_Calendar.lua, since weekday can't necessarily be determined from a UI button
@@ -44,7 +46,6 @@ local function GetDay(fullday)
 	local refMonthFirstDay
 	local _
 	
-	local CurMonthInfo = C_Calendar.GetMonthInfo()
 	refDate.month, refDate.year, refMonthFirstDay = CurMonthInfo.month, CurMonthInfo.year, CurMonthInfo.firstWeekday
 	refDate.day = 1
 

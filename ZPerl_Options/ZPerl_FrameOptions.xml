@@ -11,9 +11,10 @@
 	<Script file="localization.ruRU.lua"/>
 	<Script file="localization.itIT.lua"/>
 
-	<Frame name="XPerl_Frame_Title" virtual="true" hidden="false">
+	<Frame name="XPerl_Frame_Title" virtual="true" hidden="false" inherits="XPerlBackdropTemplate">
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				self.Setup = function(self)
 					local text = _G[self:GetName().."_Text"]
 					text:SetTextColor(1, 1, 1, 1)
@@ -52,9 +53,10 @@
 		</Layers>
 	</Frame>
 
-	<Frame name="XPerl_OptionsTemplateNaked" movable="true" enableMouse="true" frameStrata="HIGH" virtual="true">
+	<Frame name="XPerl_OptionsTemplateNaked" inherits="XPerlBackdropTemplate" movable="true" enableMouse="true" frameStrata="HIGH" virtual="true">
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				self.Setup = XPerl_Options_SetupFunc
 			</OnLoad>
 			<OnShow>
@@ -72,17 +74,9 @@
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
-		<Backdrop bgFile="Interface\Addons\ZPerl_Options\Images\ZPerl_FancyBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="256"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="3" bottom="3"/>
-			</BackgroundInsets>
-		</Backdrop>
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Options_Backdrop_256_16_3333" type="global"/>
+		</KeyValues>
 		<Frames>
 			<Frame name="$parent_Title" inherits="XPerl_Frame_Title">
 				<Anchors>
@@ -98,7 +92,7 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Frame name="$parent_Area">
+			<Frame name="$parent_Area" inherits="XPerlBackdropTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 						<Offset>
@@ -117,12 +111,10 @@
 
 	<Frame name="XPerl_OptionsTemplate" inherits="XPerl_OptionsTemplateNaked" virtual="true">
 		<Frames>
-			<Frame name="$parent_Area_Align">
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="6"/>
-					</EdgeSize>
-				</Backdrop>
+			<Frame name="$parent_Area_Align" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 						<Offset>
@@ -136,12 +128,10 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Frame name="$parent_Area_Global">
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="6"/>
-					</EdgeSize>
-				</Backdrop>
+			<Frame name="$parent_Area_Global" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Area_Align">
 						<Offset>
@@ -155,13 +145,10 @@
 					</Anchor>
 				</Anchors>
 			</Frame>
-			<Frame name="$parent_Area_Tabs">
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="6"/>
-					</EdgeSize>
-				</Backdrop>
-
+			<Frame name="$parent_Area_Tabs" inherits="XPerlBackdropTemplate">
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 						<Offset>
@@ -286,24 +273,16 @@
 		</HighlightTexture>
 	</Button>
 
-	<Slider name="XPerlSlider" orientation="HORIZONTAL" virtual="true">
+	<Slider name="XPerlSlider" inherits="XPerlBackdropTemplate" orientation="HORIZONTAL" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_UISlider_Backdrop_8_8_3366" type="global"/>
+		</KeyValues>
 		<Size>
 			<AbsDimension x="140" y="16"/>
 		</Size>
 		<HitRectInsets>
 			<AbsInset left="0" right="0" top="-10" bottom="-10"/>
 		</HitRectInsets>
-		<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="8"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="8"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="3" right="3" top="6" bottom="6"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
 			<Size>
 				<AbsDimension x="32" y="32"/>
@@ -353,7 +332,10 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad function="XPerl_SliderSetup"/>
+			<OnLoad>
+				self:OnBackdropLoaded()
+				XPerl_SliderSetup(self)
+			</OnLoad>
 			<OnEnter>
 				if (self.xperlSliderEnabled) then
 					if ( self.tooltipText ) then
@@ -827,7 +809,7 @@
 						self.varGet = nil
 					</OnHide>
 					<OnColorSelect>
-						_G[self:GetParent():GetName().."_ColorSelect_Swatch"]:SetTexture(r, g, b)
+						_G[self:GetParent():GetName().."_ColorSelect_Swatch"]:SetColorTexture(r, g, b)
 						XPerl_ColourPickerRed:SetText(floor(r * 255))
 						XPerl_ColourPickerGreen:SetText(floor(g * 255))
 						XPerl_ColourPickerBlue:SetText(floor(b * 255))
@@ -962,13 +944,13 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
+						XPerl_SliderSetup(self, true)
 						XPerl_OptionsSetMyText(self, "XPERL_CONF_ALPHA")
-						_G[self:GetName().."Low"]:SetText("0%")
-						_G[self:GetName().."High"]:SetText("100%")
 					</OnLoad>
 					<OnValueChanged>
 						XPerl_ColourPicker.alphaValue = value
 						_G[self:GetName().."Current"]:SetText(floor(100 * value + 0.5).."%")
+						_G[self:GetParent():GetName().."_ColorSelect_Swatch"]:SetAlpha(value)
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
@@ -1241,7 +1223,7 @@
 		</Frames>
 	</Frame>
 
-	<Frame name="XPerl_OptClassSelTemplate" virtual="true">
+	<Frame name="XPerl_OptClassSelTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="160" y="24"/>
 		</Size>
@@ -1399,9 +1381,13 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="XPerl_Options_TooltipConfig" frameStrata="DIALOG" hidden="true" enableMouse="true">
+	<Frame name="XPerl_Options_TooltipConfig" inherits="XPerlBackdropTemplate" frameStrata="DIALOG" hidden="true" enableMouse="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Options_Backdrop_256_16_5555" type="global"/>
+		</KeyValues>
 		<Scripts>
 			<OnLoad>
+				self:OnBackdropLoaded()
 				self.Setup = XPerl_Options_SetupFunc
 			</OnLoad>
 			<OnShow>
@@ -1426,17 +1412,6 @@
 		<Size>
 			<AbsDimension x="150" y="67"/>
 		</Size>
-		<Backdrop bgFile="Interface\Addons\ZPerl_Options\Images\ZPerl_FancyBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="256"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Frames>
 			<CheckButton name="$parent_NotInCombat" inherits="XPerlCheckButtonTemplate">
 				<Size>
@@ -1592,7 +1567,7 @@
 		</Frames>
 	</Frame>
 
-	<Frame name="XPerl_Options_HealerModeTemplate" virtual="true">
+	<Frame name="XPerl_Options_HealerModeTemplate" inherits="XPerlBackdropTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="190" y="62"/>
 		</Size>
@@ -1736,7 +1711,7 @@
 		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
 	</Button>
 
-	<Frame name="XPerl_OptionsAnchor" parent="UIParent" movable="true" resizable="true">
+	<Frame name="XPerl_OptionsAnchor" parent="UIParent" inherits="XPerlBackdropTemplate" movable="true" resizable="true">
 		<Size>
 			<AbsDimension x="650" y="540"/>
 		</Size>
@@ -1786,7 +1761,7 @@
 
 					table.insert(tabs, XPerl_Options_Tab9)
 
-					if (XPerl_Frame) then
+					if (XPerl_RaidHelper_Frame) then
 						table.insert(tabs, XPerl_Options_Tab10)
 					end
 
@@ -1870,7 +1845,7 @@
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
 		<Frames>
-			<Frame name="XPerl_Options_Mask" hidden="true" setAllPoints="true" enableMouse="true">
+			<Frame name="XPerl_Options_Mask" hidden="true" inherits="XPerlBackdropTemplate" setAllPoints="true" enableMouse="true">
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture name="$parenttex" file="Interface\ChatFrame\ChatFrameBackground">
@@ -1919,7 +1894,7 @@
 				</Scripts>
 			</Button>
 
-			<Frame name="$parent_Player">
+			<Frame name="$parent_Player" inherits="XPerlBackdropTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Align"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Align"/>
@@ -2101,7 +2076,7 @@
 			</Frame>
 
 			<!-- Party Frame Options -->
-			<Frame name="$parent_Party" hidden="true">
+			<Frame name="$parent_Party" inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Align"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Align"/>
@@ -2238,7 +2213,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="$parent_Anchor" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="XPerlBackdropTemplate" enableMouse="true">
 						<Size>
 							<AbsDimension x="100" y="24"/>
 						</Size>
@@ -2264,6 +2239,7 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
+							self:OnBackdropLoaded()
 								self.varGet = function()
 									return (XPerlDB and XPerlDB.party.anchor) or "TOP"
 								end
@@ -2351,13 +2327,13 @@
 			</Frame>
 
 			<!-- Raid Frame Options -->
-			<Frame name="$parent_Raid" hidden="true">
+			<Frame name="$parent_Raid" inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Align"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Align"/>
 				</Anchors>
 				<Frames>
-					<Frame name="$parent_Title">
+					<Frame name="$parent_Title" inherits="XPerlBackdropTemplate">
 						<Size>
 							<AbsDimension x="60" y="20"/>
 						</Size>
@@ -2380,7 +2356,7 @@
 						</Layers>
 					</Frame>
 
-					<Frame name="$parent_Anchor" enableMouse="true">
+					<Frame name="$parent_Anchor" inherits="XPerlBackdropTemplate" enableMouse="true">
 						<Size>
 							<AbsDimension x="100" y="24"/>
 						</Size>
@@ -2406,6 +2382,7 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.varGet = function()
 									return (XPerlDB and XPerlDB.raid.anchor) or "TOP"
 								end
@@ -2661,9 +2638,10 @@
 			</Frame>
 
 			<!-- Frame Layout Options -->
-			<Frame name="$parent_Layout">
+			<Frame name="$parent_Layout" inherits="XPerlBackdropTemplate">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 						self.FillList = XPerl_Options_LayoutFill
 						self.GetLayout = XPerl_Options_GetLayout
@@ -2815,7 +2793,10 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="$parent_List">
+					<Frame name="$parent_List" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_9" type="global"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parent_Save" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -2828,13 +2809,9 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="9"/>
-							</EdgeSize>
-						</Backdrop>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 							<OnMouseWheel>
@@ -2936,9 +2913,10 @@
 			</Frame>
 
 			<!-- Options Tabs -->
-			<Frame name="$parent_Tab">
+			<Frame name="$parent_Tab" inherits="XPerlBackdropTemplate">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self.frameNames = {
 							"_Global_Options",
 							"_Player_Options",
@@ -3146,9 +3124,10 @@
 			</Frame>
 
 			<!-- Global Main Options -->
-			<Frame name="$parent_Global_Options">
+			<Frame name="$parent_Global_Options" inherits="XPerlBackdropTemplate">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -3919,7 +3898,7 @@
 						</Scripts>
 					</CheckButton>
 
-					<Frame name="$parent_RangeFinder">
+					<Frame name="$parent_RangeFinder" inherits="XPerlBackdropTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
 								<Offset>
@@ -3932,9 +3911,9 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 								self.Refresh = function(self)
 									local a = {"Enable", "FadeAmount", "CustomSpell", "CombineWithHealth", "RangeHealthAmount", "DebuffCheck", "InteractNone", "Interact10", "Interact20", "Interact30", "Interact40"}
@@ -3948,7 +3927,6 @@
 								end
 							</OnLoad>
 						</Scripts>
-
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="$parentSeparator" file="Interface\TradeSkillFrame\UI-TradeSkill-SkillBorder">
@@ -4695,14 +4673,14 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_MINIMAP_ICON")
-								self.flashFrame = XPerl_MinimapButton_Frame
+								self.flashFrame = ZPerl_MinimapButton_Frame
 								self.configBase = "XPerlDB.minimap"
 								self.configIndex = "enable"
 								self.configClick = function()
 									if (XPerlDB.minimap.enable) then
-										XPerl_MinimapButton_Frame:Show()
+										ZPerl_MinimapButton_Frame:Show()
 									else
-										XPerl_MinimapButton_Frame:Hide()
+										ZPerl_MinimapButton_Frame:Hide()
 									end
 								end
 							</OnLoad>
@@ -4830,7 +4808,7 @@
 						</Scripts>
 					</Button>
 
-					<Frame name="XPerl_Options_LoadSettings" enableMouse="true">
+					<Frame name="XPerl_Options_LoadSettings" inherits="XPerlBackdropTemplate" enableMouse="true">
 						<Size>
 							<AbsDimension x="150" y="24"/>
 						</Size>
@@ -4856,6 +4834,7 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								XPerl_Options_LoadSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
@@ -4875,7 +4854,7 @@
 						</Scripts>
 					</Frame>
 
-					<Frame name="XPerl_Options_DeleteSettings" enableMouse="true">
+					<Frame name="XPerl_Options_DeleteSettings" inherits="XPerlBackdropTemplate" enableMouse="true">
 						<Size>
 							<AbsDimension x="150" y="24"/>
 						</Size>
@@ -4901,6 +4880,7 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								XPerl_Options_DeleteSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
@@ -4923,14 +4903,14 @@
 			</Frame>
 
 			<!-- Player Options -->
-			<Frame name="$parent_Player_Options" hidden="true">
+			<Frame name="$parent_Player_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs"/>
 				</Anchors>
-
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 					<OnShow>
@@ -4944,7 +4924,6 @@
 						end
 					</OnShow>
 				</Scripts>
-
 				<Frames>
 					<CheckButton name="$parent_Portrait" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
@@ -5536,6 +5515,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.getEnable = function() return XPerlDB.player.healerMode.enable end
 								self.setEnable = function(n)
 									XPerlDB.player.healerMode.enable = n
@@ -5583,7 +5563,10 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_Buffs">
+					<Frame name="$parent_Buffs" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnShow>
 								if (not IsAddOnLoaded("ZPerl_PlayerBuffs")) then
@@ -5591,11 +5574,6 @@
 								end
 							</OnShow>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -5974,9 +5952,13 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parent_Totems">
+					<Frame name="$parent_Totems" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								local _, class = UnitClass("player")
 								if (class == "SHAMAN" or class == "DRUID" or class == "MAGE" or class == "MONK" or class == "PRIEST" or class == "WARLOCK" or class == "WARRIOR") then
 									self:Show()
@@ -5985,11 +5967,6 @@
 								end
 							</OnLoad>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Buffs">
 								<Offset>
@@ -6117,9 +6094,10 @@
 			</Frame>
 
 			<!-- Pet Options -->
-			<Frame name="$parent_Pet_Options" hidden="true">
+			<Frame name="$parent_Pet_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -6523,7 +6501,10 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_PetTarget">
+					<Frame name="$parent_PetTarget" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnShow>
 								if (not IsAddOnLoaded("ZPerl_TargetTarget")) then
@@ -6531,11 +6512,6 @@
 								end
 							</OnShow>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -6892,6 +6868,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										self:OnBackdropLoaded()
 										self.getEnable = function() return XPerlDB.pettarget.healerMode.enable end
 										self.setEnable = function(n)
 											XPerlDB.pettarget.healerMode.enable = n
@@ -7211,13 +7188,14 @@
 			</Frame>
 
 			<!-- Target Options -->
-			<Frame name="$parent_Target_Options" hidden="true">
+			<Frame name="$parent_Target_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 					<OnShow>
@@ -7996,6 +7974,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.getEnable = function() return XPerlDB.target.healerMode.enable end
 								self.setEnable = function(n)
 									XPerlDB.target.healerMode.enable = n
@@ -8047,9 +8026,13 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_TargetTarget">
+					<Frame name="$parent_TargetTarget" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 							<OnShow>
@@ -8058,11 +8041,6 @@
 								end
 							</OnShow>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -8581,6 +8559,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										self:OnBackdropLoaded()
 										self.getEnable = function() return XPerlDB.targettarget.healerMode.enable end
 										self.setEnable = function(n)
 											XPerlDB.targettarget.healerMode.enable = n
@@ -9097,14 +9076,14 @@
 			</Frame>
 
 			<!-- Focus Options -->
-			<Frame name="$parent_Focus_Options" hidden="true">
+			<Frame name="$parent_Focus_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs"/>
 				</Anchors>
-
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 					<OnShow>
@@ -9113,7 +9092,6 @@
 						end
 					</OnShow>
 				</Scripts>
-
 				<Frames>
 					<CheckButton name="$parent_Enable" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
@@ -9683,6 +9661,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.getEnable = function() return XPerlDB.focus.healerMode.enable end
 								self.setEnable = function(n)
 									XPerlDB.focus.healerMode.enable = n
@@ -9734,9 +9713,13 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_FocusTarget">
+					<Frame name="$parent_FocusTarget" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 							<OnShow>
@@ -9745,11 +9728,6 @@
 								end
 							</OnShow>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -10164,6 +10142,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
+										self:OnBackdropLoaded()
 										self.getEnable = function()
 											return XPerlDB.focustarget.healerMode.enable
 										end
@@ -10658,14 +10637,14 @@
 			</Frame>
 
 			<!-- Party Options -->
-			<Frame name="$parent_Party_Options" hidden="true">
+			<Frame name="$parent_Party_Options"  inherits="XPerlBackdropTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs"/>
 				</Anchors>
-
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 					<OnShow>
@@ -10674,7 +10653,6 @@
 						end
 					</OnShow>
 				</Scripts>
-
 				<Frames>
 					<CheckButton name="$parent_Enable" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
@@ -11242,6 +11220,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.getEnable = function()
 									return XPerlDB.party.healerMode.enable
 								end
@@ -11621,9 +11600,13 @@
 						</Scripts>
 					</CheckButton>
 
-					<Frame name="$parent_PartyPets">
+					<Frame name="$parent_PartyPets" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 							<OnShow>
@@ -11632,11 +11615,6 @@
 								end
 							</OnShow>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="CENTER" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -11868,9 +11846,10 @@
 			</Frame>
 
 			<!-- Raid Options -->
-			<Frame name="$parent_Raid_Options" hidden="true">
+			<Frame name="$parent_Raid_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -12529,17 +12508,16 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_Groups">
+					<Frame name="$parent_Groups" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -12855,7 +12833,7 @@
 								</Scripts>
 							</CheckButton>
 
-							<Frame name="$parent_Title2">
+							<Frame name="$parent_Title2" inherits="XPerlBackdropTemplate">
 								<Size>
 									<AbsDimension x="60" y="10"/>
 								</Size>
@@ -13162,20 +13140,19 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parent_Pets">
+					<Frame name="$parent_Pets" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								local _, _, _, _, reason = GetAddOnInfo("ZPerl_RaidPets")
 								if (reason == "DISABLED" or reason == "MISSING") then
 									self:Hide()
 								end
 							</OnLoad>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Groups">
 								<Offset>
@@ -13246,20 +13223,19 @@
 						</Layers>
 					</Frame>
 
-					<Frame name="$parent_Custom">
+					<Frame name="$parent_Custom" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								local _, _, _, _, reason = GetAddOnInfo("ZPerl_CustomHighlight")
 								if (reason == "DISABLED" or reason == "MISSING") then
 									self:Hide()
 								end
 							</OnLoad>
 						</Scripts>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Pets">
 								<Offset>
@@ -13422,9 +13398,10 @@
 			</Frame>
 
 			<!-- All Options -->
-			<Frame name="$parent_All_Options" hidden="true">
+			<Frame name="$parent_All_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -13633,6 +13610,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.getEnable = function()
 									return XPerlDB.player.healerMode.enable
 								end
@@ -13736,20 +13714,19 @@
 						</Scripts>
 					</Slider>
 
-					<Frame name="$parent_AddOns">
+					<Frame name="$parent_AddOns" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self:SetScale(0.9)
 							</OnLoad>
 						</Scripts>
 						<Size>
 							<AbsDimension x="130" y="70"/>
 						</Size>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="XPerl_Options_Area_Tabs" relativePoint="TOP">
 								<Offset>
@@ -14172,9 +14149,10 @@
 			</Frame>
 
 			<!-- Color Options -->
-			<Frame name="$parent_Colour_Options" hidden="true">
+			<Frame name="$parent_Colour_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -14183,12 +14161,10 @@
 					<Anchor point="BOTTOMRIGHT" relativeTo="XPerl_Options_Area_Tabs"/>
 				</Anchors>
 				<Frames>
-					<Frame name="$parent_BarColours">
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
+					<Frame name="$parent_BarColours" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOP" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -14815,12 +14791,10 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parent_UnitReactions">
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
+					<Frame name="$parent_UnitReactions" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_BarColours">
 								<Offset>
@@ -15081,12 +15055,10 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parent_Appearance">
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
+					<Frame name="$parent_Appearance" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
@@ -15305,12 +15277,10 @@
 						</Frames>
 					</Frame>
 
-					<Frame name="$parent_FrameColours">
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
+					<Frame name="$parent_FrameColours" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Appearance">
 								<Offset>
@@ -15521,9 +15491,10 @@
 			</Frame>
 
 			<!-- Helper Options -->
-			<Frame name="$parent_Helper_Options" hidden="true">
+			<Frame name="$parent_Helper_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -15555,7 +15526,7 @@
 						</Layers>
 					</Button>
 
-					<CheckButton name="$parent_Enabled" inherits="XPerlCheckButtonTemplate">
+					<CheckButton name="$parent_Enable" inherits="XPerlCheckButtonTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Title">
 								<Offset>
@@ -15567,14 +15538,14 @@
 							<OnLoad>
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAIDHELP_ENABLE")
 								self.XconfigVar = "RaidHelper"
-								self.configClick = function()
-									XPerl_EnableDisable()
-								end
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "CTTargets")
 									XPerl_Options_EnableSibling(self, "BlizzTargets")
 									XPerl_Options_EnableSibling(self, "NoAuto")
 									XPerl_Options_EnableSibling(self, "Tooltips")
+									XPerl_Options_EnableSibling(self, "TooltipTarget", "Tooltips")
+									XPerl_Options_EnableSibling(self, "TooltipTank", "Tooltips")
+									XPerl_Options_EnableSibling(self, "TooltipBoth", "Tooltips")
 									XPerl_Options_EnableSibling(self, "GrowUp")
 									XPerl_Options_EnableSibling(self, "Healer_Healer")
 									XPerl_Options_EnableSibling(self, "Healer_DeficitOnly", "Healer_Healer")
@@ -15586,6 +15557,9 @@
 									XPerl_Options_EnableSibling(self, "Transparency")
 									XPerl_Options_EnableSibling(self, "BkTransparency")
 								end
+								self.configClick = function()
+									XPerl_EnableDisable()
+								end
 							</OnLoad>
 							<OnShow>
 								if ZPerlConfigHelper.RaidHelper == 1 then
@@ -15593,6 +15567,7 @@
 								else
 									self:SetChecked(false)
 								end
+								self:Validate()
 							</OnShow>
 						</Scripts>
 					</CheckButton>
@@ -15602,7 +15577,7 @@
 							<AbsDimension x="26" y="26"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOP" relativePoint="BOTTOMRIGHT" relativeTo="$parent_Enabled">
+							<Anchor point="TOP" relativePoint="BOTTOMRIGHT" relativeTo="$parent_Enable">
 								<Offset>
 									<AbsDimension x="0" y="6"/>
 								</Offset>
@@ -15690,6 +15665,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								self.hideOptions = "2"
 								self.getEnable = function()
 									return XPerlDB.player.healerMode.enable
@@ -15772,7 +15748,7 @@
 							<OnValueChanged>
 								if (ZPerlConfigHelper.UnitWidth ~= value) then
 									ZPerlConfigHelper.UnitWidth = value
-									XPerl_MTList_ApplyUnitSizes()
+									XPerl_RaidHelper_MTList_ApplyUnitSizes()
 									XPerl_SetFrameSizes()
 								end
 								_G[self:GetName().."Current"]:SetText(ZPerlConfigHelper.UnitWidth)
@@ -15809,7 +15785,7 @@
 							<OnValueChanged>
 								if (ZPerlConfigHelper.UnitHeight ~= value) then
 									ZPerlConfigHelper.UnitHeight = value
-									XPerl_MTList_ApplyUnitSizes()
+									XPerl_RaidHelper_MTList_ApplyUnitSizes()
 									XPerl_SetFrameSizes()
 								end
 								_G[self:GetName().."Current"]:SetText(ZPerlConfigHelper.UnitHeight)
@@ -15842,7 +15818,7 @@
 							<OnValueChanged>
 								if (ZPerlConfigHelper.Targets_Transparency ~= value / 100) then
 									ZPerlConfigHelper.Targets_Transparency = value / 100
-									XPerl_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
+									XPerl_RaidHelper_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
 								end
 								_G[self:GetName().."Current"]:SetText(value.."%")
 							</OnValueChanged>
@@ -15874,8 +15850,8 @@
 							<OnValueChanged>
 								if (ZPerlConfigHelper.Background_Transparency ~= value / 100) then
 									ZPerlConfigHelper.Background_Transparency = value / 100
-									if XPerl_Frame then
-										XPerl_SetupFrameSimple(XPerl_Frame, ZPerlConfigHelper.Background_Transparency)
+									if XPerl_RaidHelper_Frame then
+										XPerl_SetupFrameSimple(XPerl_RaidHelper_Frame, ZPerlConfigHelper.Background_Transparency)
 									end
 								end
 								_G[self:GetName().."Current"]:SetText(value.."%")
@@ -15977,15 +15953,13 @@
 						</Scripts>
 					</CheckButton>
 
-					<Frame name="$parent_Assists">
+					<Frame name="$parent_Assists" inherits="XPerlBackdropTemplate">
+						<KeyValues>
+							<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_6" type="global"/>
+						</KeyValues>
 						<Size>
 							<AbsDimension x="130" y="70"/>
 						</Size>
-						<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="6"/>
-							</EdgeSize>
-						</Backdrop>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="CENTER" relativeTo="XPerl_Options_Area_Tabs">
 								<Offset>
@@ -16200,9 +16174,10 @@
 			</Frame>
 
 			<!-- Monitor Options -->
-			<Frame name="$parent_Monitor_Options" hidden="true">
+			<Frame name="$parent_Monitor_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -16825,9 +16800,10 @@
 			</Frame>
 
 			<!-- Admin Options -->
-			<Frame name="$parent_Admin_Options" hidden="true">
+			<Frame name="$parent_Admin_Options" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						self:SetScale(0.9)
 					</OnLoad>
 				</Scripts>
@@ -16928,12 +16904,10 @@
 		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
 	</Button>
 
-	<Frame name="XPerlCustomListTemplate" virtual="true">
-		<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="9"/>
-			</EdgeSize>
-		</Backdrop>
+	<Frame name="XPerlCustomListTemplate" inherits="XPerlBackdropTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="XPerl_Tooltip_Edge_9" type="global"/>
+		</KeyValues>
 		<Size>
 			<AbsDimension x="200" y="130"/>
 		</Size>
@@ -17095,6 +17069,7 @@
 			<Frame name="$parentzoneList" inherits="XPerlCustomListTemplate">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_Options_Custom_InitList(self, "zone")
 					</OnLoad>
 				</Scripts>
@@ -17110,6 +17085,7 @@
 			<Frame name="$parentdebuffs" inherits="XPerlCustomListTemplate">
 				<Scripts>
 					<OnLoad>
+						self:OnBackdropLoaded()
 						XPerl_Options_Custom_InitList(self, "debuff")
 					</OnLoad>
 				</Scripts>
@@ -17143,7 +17119,7 @@
 				</Anchors>
 			</StatusBar>
 
-			<Frame name="$parentEdit">
+			<Frame name="$parentEdit" inherits="XPerlBackdropTemplate">
 				<Scripts>
 					<OnShow>
 						XPerl_Options_Custom_Buttons(XPerl_Custom_Config)
@@ -17219,7 +17195,7 @@
 					</Button>
 				</Frames>
 			</Frame>
-			<Frame name="$parentNew" hidden="true">
+			<Frame name="$parentNew" inherits="XPerlBackdropTemplate" hidden="true">
 				<Scripts>
 					<OnShow>
 						XPerl_Options_Custom_ScanForIcons(XPerl_Custom_Config)
@@ -17321,7 +17297,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Frame name="$parent_Icons">
+					<Frame name="$parent_Icons" inherits="XPerlBackdropTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
@@ -17336,6 +17312,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								self:OnBackdropLoaded()
 								XPerl_Custom_Config.icons = self
 							</OnLoad>
 						</Scripts>

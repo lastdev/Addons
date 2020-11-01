@@ -487,14 +487,14 @@ L = {
 		["mainpos_desc"] = "Wo der Name eines Hauptchars dargestellt werden soll, wenn diese mit ihrem Alt-Char zocken.",
 		["mainpos_name"] = "Hauptchar-Name Position",
 		["module_desc"] = "Erlaubt das Verknüpfen von Alt-Chars mit deren Hauptchars, was dann neben deren Namen angezeigt werden kann, wenn sie in Chat-Mitteilungen erscheinen (standard = aus).",
-		["no alts found for character "] = "Keine Alt-Chars für diesen Charakter gefunden.",
-		["no alts or mains found matching \"%s\""] = "Keine Alt-Chars oder Hauptchars gefunden, die mit \"%s\" übereinstimmen.",
+		["no alts found for character "] = "Keine Alternativen für Charakter gefunden",
+		["no alts or mains found matching \"%s\""] = "Es wurden keine Alternativen oder Hauptcharaktere gefunden, die mit \"%s\" übereinstimmen",
 		["No arg string given to :addAlt()"] = "Kein Parameter angegeben für: :addAlt()",
-		["no characters called \"%s\" found; nothing deleted"] = "Keine Charaktere mit dem Namen \"%s\" gefunden; es wurde nichts gelöscht.",
-		["No Guild Greet database found"] = "Keine Gilden-Begrüßungs-Datenbank gefunden.",
+		["no characters called \"%s\" found; nothing deleted"] = "Es wurden keine Charaktere mit dem Namen \"%s\" gefunden; nichts gelöscht",
+		["No Guild Greet database found"] = "Keine Gildenbegrüßungs-Datenbank gefunden",
 		["No main name suPLied to link %s to"] = "Es wurde kein Hauptname für den Link zu %s angegeben",
 		["No main name supplied to link %s to"] = "Kein Hauptcharname geliefert, mit dem %s verknüpft werden kann.",
-		["no matches found"] = "Keine Übereinstimmungen gefunden.",
+		["no matches found"] = "Keine Übereinstimmungen gefunden",
 		["quiet"] = "Sei ruhig",
 		["quiet_desc"] = "Ob Meldungen an den Chat-Rahmen gesendet werden oder nicht.",
 		["quiet_name"] = true,
@@ -508,7 +508,7 @@ L = {
 		["Use class colour (from the PlayerNames module)"] = "Klassenfarbe verwenden (vom Modul \"PlayerNames\") ",
 		["use class colour of alt"] = "Klassenfarbe für Alt-Char verwenden.",
 		["use class colour of main"] = "Klassenfarbe des Hauptchars verwenden",
-		["Use LibAlts Data"] = "Daten von LibAlts benutzen",
+		["Use LibAlts Data"] = "Daten zu liberalen Alternativen benutzen",
 		["Use the data available via the shared alt information library."] = "Verwende die vorhandenen Daten über die gemeinsam genutzte Alt-Informations-Sammlung.",
 		["Various ways to import a main's alts from other addons"] = "Verschiedene Möglichkeiten, wie man die Alts eines Hauptchars von anderen AddOns importieren kann.",
 		["warning: alt %s already linked to %s"] = "Warnung: Alt %s ist bereits mit %s verknüpft!",
@@ -530,7 +530,7 @@ L = {
 		["(.-)'s? [Aa]lt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부캐릭터",
 		["([^%s%p%d%c%z]+)'s alt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]의 부 캐릭터",
 		[".*[Aa]lts?$"] = ".*부캐릭터?$",
-		[".*[Tt]wink.*$"] = true,
+		[".*[Tt]wink.*$"] = ".*렙업.*$",
 		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<부 캐릭터 이름> (예, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)",
 		["<main> (eg /altnames listalts Fin)"] = "<주 캐릭터> (예 /altnames listalts Fin)",
 		["<search term> (eg, /altnames find fin)"] = "<검색 구문> (예, /altnames find fin)",
@@ -594,8 +594,7 @@ L = {
 		["No arg string given to :addAlt()"] = ":addAlt()에 변수 구문이 주어지지 않았습니다",
 		["no characters called \"%s\" found; nothing deleted"] = "요청한 \"%s\" 캐릭터 찾을 수 없음; 삭제하지 못함",
 		["No Guild Greet database found"] = "길드 쪽지 데이터베이스 찾을 수 없음",
-		--[[Translation missing --]]
-		["No main name suPLied to link %s to"] = "No main name suPLied to link %s to",
+		["No main name suPLied to link %s to"] = "%s|1을;를; 연결할 기본 이름이 없습니다.",
 		["No main name supplied to link %s to"] = "%s|1과;와; 연결할 주 캐릭터 이름 제공되지 않음",
 		["no matches found"] = "일치 하는 것 없음",
 		["quiet"] = "조용하게",
@@ -829,8 +828,7 @@ L = {
 		["(.-)'s? [Aa]lt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]'s [Аа]льт",
 		["([^%s%p%d%c%z]+)'s alt"] = "[Аа]льт %f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]",
 		[".*[Aa]lts?$"] = ".*[Аа]льты?$",
-		--[[Translation missing --]]
-		[".*[Tt]wink.*$"] = ".*[Tt]wink.*$",
+		[".*[Tt]wink.*$"] = ".*[Тв]инк.*$",
 		["<alt name> (eg, /altnames del Personyouthoughtwassomeonesaltbutreallyisnt)"] = "<имя альта> (к примеру, /altnames del Загзаг)",
 		["<main> (eg /altnames listalts Fin)"] = "<основной> (к примеру: /altnames listalts Загзаг)",
 		["<search term> (eg, /altnames find fin)"] = "<элемент поиска> (к примеру, /altnames find Загзаг)",
@@ -894,8 +892,7 @@ L = {
 		["No arg string given to :addAlt()"] = "Не задано значение строки для: :addAlt()",
 		["no characters called \"%s\" found; nothing deleted"] = "не найден персонаж по имени \"%s\"; нечего удалять",
 		["No Guild Greet database found"] = "База данных Guild Greet не найдена",
-		--[[Translation missing --]]
-		["No main name suPLied to link %s to"] = "No main name suPLied to link %s to",
+		["No main name suPLied to link %s to"] = "Нет основного имени, чтобы связать %s с",
 		["No main name supplied to link %s to"] = "Не предоставлено основное имя для связки %s к",
 		["no matches found"] = "совпадений не найдено",
 		["quiet"] = "тихий",
@@ -1673,7 +1670,12 @@ L = {
   function module:AutoImportGuildAlts(b)
     if b then
       self:RegisterEvent("GUILD_ROSTER_UPDATE", function() module:importGuildAlts(nil, true) end)
-      GuildRoster()
+      -- Different functions for retail versus classic
+	  if Prat.IsRetail then
+        C_GuildInfo.GuildRoster()
+      else
+        GuildRoster()
+      end
     else
       self:UnregisterEvent("GUILD_ROSTER_UPDATE")
     end

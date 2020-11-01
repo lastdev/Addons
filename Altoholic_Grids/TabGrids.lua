@@ -10,15 +10,18 @@ local start_char_index = 1
 
 addon:Controller("AltoholicUI.TabGrids", {
 	OnBind = function(frame)
-		frame.Label1:SetText(L["Realm"])
+		frame.Label1:SetText(L["Account"])
 		frame.Equipment.text = L["Equipment"]
 		frame.Factions.text = L["Reputations"]
 		frame.Archeology.text = GetSpellInfo(78670)
-		frame.Dailies.text = "Daily Quests"
-		frame.FollowerAbilities.text = format("%s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
+		frame.Dailies.text = L["Daily Quests"]
+		frame.FollowerAbilities.text = format("Garrison %s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
 		frame.Sets.text = WARDROBE_SETS
+        frame.Tasks.text = L["Tasks"]
+        frame.Essences.text = L["Azerite Essences"]
+        AltoholicTabGrids.SelectAccount.Middle:SetSize(140, 64)
 		
-		frame.SelectRealm:RegisterClassEvent("RealmChanged", function()
+		frame.SelectAccount:RegisterClassEvent("AccountChanged", function()
 				frame.Status:SetText("")
 				frame:Update()
 			end)
@@ -29,6 +32,8 @@ addon:Controller("AltoholicUI.TabGrids", {
 			
 		frame.Equipment:StartAutoCastShine()
 		frame.currentGridID = 1
+        
+        AltoholicFrame:RegisterResizeEvent("AltoholicFrameGrids", 8, AltoholicTabGrids, 12)
 	end,
 	RegisterGrid = function(frame, gridID, callbacks)
 		gridCallbacks[gridID] = callbacks
@@ -40,12 +45,14 @@ addon:Controller("AltoholicUI.TabGrids", {
 		frame.currentGridID = gridID
 	end,
 	Update = function(frame)
-		local account, realm = frame.SelectRealm:GetCurrentRealm()
+		local account, realm = frame.SelectAccount:GetCurrentAccount()
 		frame.ClassIcons:Update(account, realm)
 
 		local grids = AltoholicFrameGrids
 		local scrollFrame = grids.ScrollFrame
 		local numRows = scrollFrame.numRows
+        CHARS_PER_FRAME = scrollFrame.numCols
+        if not CHARS_PER_FRAME then CHARS_PER_FRAME = 12 end
 		grids:Show()
 			
 		local offset = scrollFrame:GetOffset()
@@ -57,8 +64,6 @@ addon:Controller("AltoholicUI.TabGrids", {
 		local size = obj:GetSize()
 		local itemButton
 		
-        -- AltoIconListEntryTemplate.Item1
-        -- 	<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="180" y="0" />
         local classIcons = frame.ClassIcons
 
         -- Update which class icons are shown
@@ -94,7 +99,11 @@ addon:Controller("AltoholicUI.TabGrids", {
 					itemButton = rowFrame["Item"..colIndex]
 					itemButton.IconBorder:Hide()
 					
-					character = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", account, realm, colIndex))
+					if realm then
+                        character = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", account, realm, colIndex))
+                    else
+                        character = addon:GetOption(format("Tabs.Grids.%s.Column%d", account, colIndex))
+                    end
 					if character then
 						itemButton:SetScript("OnEnter", obj.OnEnter)
 						itemButton:SetScript("OnClick", obj.OnClick)
@@ -124,14 +133,20 @@ addon:Controller("AltoholicUI.TabGrids", {
 				rowFrame:Hide()
 			end
 		end
+        
+        for rowIndex = numRows + 1, 20 do
+            scrollFrame:GetRow(rowIndex):Hide()
+        end
 
 		scrollFrame:Update(size)
 	end,
 	UpdateMenuIcons = function(frame)
 		if DataStore_Inventory then
 			frame.Equipment:EnableIcon()
+            frame.Sets:EnableIcon()
 		else
 			frame.Equipment:DisableIcon()
+            frame.Sets:DisableIcon()
 		end
 
 		if DataStore_Reputations then
@@ -145,33 +160,57 @@ addon:Controller("AltoholicUI.TabGrids", {
 		else
 			frame.Tokens:DisableIcon()
 		end
-		
-		if DataStore_Pets then
-			frame.Pets:EnableIcon()
-		else
-			frame.Pets:DisableIcon()
-		end
 
 		if DataStore_Quests then
 			frame.Dailies:EnableIcon()
+            frame.Emissaries:EnableIcon()
+            frame.Callings:EnableIcon()
 		else
 			frame.Dailies:DisableIcon()
+            frame.Emissaries:DisableIcon()
+            frame.Callings:DisableIcon()
 		end
 		
+        if DataStore_Talents then
+            frame.Essences:EnableIcon()
+        else
+            frame.Essences:DisableIcon()
+        end
+        
 		if DataStore_Agenda then
 			frame.Dungeons:EnableIcon()
 		else
 			frame.Dungeons:DisableIcon()
 		end
+        
+        if DataStore_Crafts then
+            frame.TradeSkills:EnableIcon()
+            frame.Archeology:EnableIcon()
+        else
+            frame.TradeSkills:DisableIcon()
+            frame.Archeology:DisableIcon()
+        end
+        
+        if DataStore_Rares then
+            frame.RareSpawns:EnableIcon()
+        else
+            frame.RareSpawns:DisableIcon()
+        end
 		
 		if DataStore_Garrisons then
 			frame.GarrisonArchitect:EnableIcon()
 			frame.GarrisonFollowers:EnableIcon()
 			frame.FollowerAbilities:EnableIcon()
+            frame.OrderHallFollowers:EnableIcon()
+            frame.WarCampaignFollowers:EnableIcon()
+            frame.CovenantFollowers:EnableIcon()
 		else
 			frame.GarrisonArchitect:DisableIcon()
 			frame.GarrisonFollowers:DisableIcon()
 			frame.FollowerAbilities:DisableIcon()
+            frame.OrderHallFollowers:DisableIcon()
+            frame.WarCampaignFollowers:DisableIcon()
+            frame.CovenantFollowers:DisableIcon()
 		end
 	end,
 	SetStatus = function(frame, text)
@@ -180,8 +219,8 @@ addon:Controller("AltoholicUI.TabGrids", {
 	SetViewDDMText = function(frame, text)
 		frame.SelectView:SetText(text)
 	end,
-	GetRealm = function(frame)
-		return frame.SelectRealm:GetCurrentRealm()	-- returns : account, realm
+	GetAccount = function(frame)
+		return frame.SelectAccount:GetCurrentAccount()	-- returns : account, realm
 	end,
 })
 

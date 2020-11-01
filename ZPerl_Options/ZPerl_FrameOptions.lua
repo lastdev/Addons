@@ -4,6 +4,8 @@
 
 XPerl_SetModuleRevision("$Revision:  $")
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
 for k, v in pairs(localGroups) do
@@ -31,8 +33,9 @@ end
 
 function XPerl_Options_SetupFunc(self)
 	XPerl_DoGradient(self, true)
-	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+	self:OnBackdropLoaded()
 	self:SetBackdropColor(0, 0, 0, 1)
+	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
 end
 
 -- XPerl_OptionsFrame_SelectFrame
@@ -346,6 +349,8 @@ end
 
 -- XPerl_SliderSetup(self)
 function XPerl_SliderSetup(self, percent)
+	self:OnBackdropLoaded()
+
 	self.xperlSliderEnabled = true
 
 	self.IsEnabled = function(self)
@@ -377,6 +382,10 @@ function XPerl_SliderSetup(self, percent)
 			low:SetText(min)
 			_G[self:GetName().."High"]:SetText(max)
 		end
+	end
+
+	if self.backdropInfo then
+		self:OnBackdropLoaded()
 	end
 
 	self:SetScript("OnLoad", nil)
@@ -938,7 +947,7 @@ function XPerl_Options_DoRangeTooltip(self)
 	if spell then
 		local link = GetSpellLink(spell)
 		if link then
-			if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+			if IsClassic then
 				local _, _, _, _, _, _, spellID = GetSpellInfo(spell)
 				if spellID then
 					local newLink = format("spell:%d:0:0:0", spellID)
@@ -984,7 +993,7 @@ end
 
 -- DefaultRaidClasses
 local function DefaultRaidClasses()
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	if IsClassic then
 		return {
 			{enable = true, name = "WARRIOR"},
 			--{enable = true, name = "DEATHKNIGHT"},
@@ -1025,7 +1034,7 @@ local function ValidateClassNames(part)
 	-- This should never happen, but I'm sure someone will find a way to break it
 
 	local list
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	if IsClassic then
 		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false}
 	else
 		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false, DEMONHUNTER = false}
@@ -2858,7 +2867,7 @@ end
 
 -- customOnUpdate
 local ICON_STEP_SIZE	= 500
-local ICON_STOP_SCAN	= WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 33000 or 310000
+local ICON_STOP_SCAN	= IsClassic and 33000 or 310000
 local function customOnUpdate(self, elapsed)
 	local db = self.iconDB
 	local ind = self.iconIndex
@@ -2987,7 +2996,7 @@ function XPerl_Options_Custom_ScanForIcons(self)
 						local link = GetSpellLink(self.spellid)
 						local name, _, icon = GetSpellInfo(self.spellid)
 						if link then
-							if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+							if IsClassic then
 								local _, _, _, _, _, _, spellID = GetSpellInfo(self.spellid)
 								if spellID then
 									local newLink = format("spell:%d:0:0:0", spellID)
@@ -3385,6 +3394,10 @@ if (XPerl_UpgradeSettings) then
 				if old.party.name == true then
 					old.party.name = 1
 				end
+			end
+
+			if not old.target.comboindicator then
+				old.target.comboindicator = { }
 			end
 
 			if (oldVersion < "5.0.4") then

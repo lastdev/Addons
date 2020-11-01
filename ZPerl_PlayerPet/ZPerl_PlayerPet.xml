@@ -2,7 +2,7 @@
 
 	<Script file="ZPerl_PlayerPet.lua"/>
 
-	<Button name="XPerl_Player_Pet" inherits="SecureUnitButtonTemplate" clampedToScreen="true" parent="UIParent" frameStrata="LOW" hidden="true" enableMouse="true" movable="true">
+	<Button name="XPerl_Player_Pet" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate" clampedToScreen="true" parent="UIParent" frameStrata="LOW" hidden="true" enableMouse="true" movable="true">
 		<Size>
 			<AbsDimension x="140" y="50"/>
 		</Size>
@@ -34,7 +34,7 @@
 		</Scripts>
 
 		<Frames>
-			<Frame name="$parentportraitFrame" inherits="XPerl_Portrait_Template">
+			<Frame name="$parentportraitFrame" inherits="XPerlBackdropTemplate,XPerl_Portrait_Template">
 				<Size>
 					<AbsDimension x="54" y="56"/>
 				</Size>
@@ -43,7 +43,7 @@
 				</Anchors>
 			</Frame>
 
-			<Button name="$parentnameFrame" inherits="SecureUnitButtonTemplate">
+			<Button name="$parentnameFrame" inherits="XPerlBackdropTemplate,SecureUnitButtonTemplate">
 				<Scripts>
 					<OnLoad>
 						self:RegisterForClicks("AnyUp")
@@ -72,17 +72,9 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Backdrop bgFile="Interface\Addons\ZPerl\Images\XPerl_FrameBack" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="16"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="32"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="4" right="4" top="4" bottom="4"/>
-					</BackgroundInsets>
-				</Backdrop>
+				<KeyValues>
+					<KeyValue key="backdropInfo" value="XPerl_Frame_Backdrop_32_16_4444" type="global"/>
+				</KeyValues>
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture name="$parentcombatIcon" file="Interface\CharacterFrame\UI-StateIcon" hidden="true">
@@ -127,7 +119,7 @@
 				</Layers>
 			</Button>
 
-			<Frame name="$parentlevelFrame" inherits="XPerl_BorderStyleTemplate">
+			<Frame name="$parentlevelFrame" inherits="XPerlBackdropTemplate,XPerl_BorderStyleTemplate">
 				<Size>
 					<AbsDimension x="27" y="24"/>
 				</Size>
@@ -212,7 +204,7 @@
 				</Frames>
 			</Frame>
 
-			<Frame name="$parentstatsFrame" inherits="XPerl_StatsXP_Template">
+			<Frame name="$parentstatsFrame" inherits="XPerlBackdropTemplate,XPerl_StatsXP_Template">
 				<Size>
 					<AbsDimension x="80" y="34"/>
 				</Size>

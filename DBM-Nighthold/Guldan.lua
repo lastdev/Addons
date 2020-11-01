@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145614")
+mod:SetRevision("20200806141949")
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
 mod:SetHotfixNoticeRev(16172)
 mod.respawnTime = 29
@@ -143,7 +142,7 @@ local timerVisionsofDarkTitanCD		= mod:NewCDCountTimer(9, 227008, nil, nil, nil,
 local timerFlameCrashCD				= mod:NewCDCountTimer(20, 227071, nil, nil, nil, 3, nil, nil, nil, mod:IsTank() and 3, 6)
 local timerSummonNightorbCD			= mod:NewCDCountTimer(10.9, 227283, nil, nil, nil, 1, 225133)
 --Shard
-mod:AddTimerLine(DBM_ADDS)
+mod:AddTimerLine(DBM_CORE_L.ADDS)
 local timerManifestAzzinothCD		= mod:NewCDCountTimer(10.9, 221149, nil, nil, nil, 1, 236237)
 local timerChaosSeedCD				= mod:NewCDTimer(10.9, 221336, nil, nil, nil, 3)
 local timerBulwarkofAzzinothCD		= mod:NewCDTimer(10.9, 221408, nil, nil, nil, 6)
@@ -426,7 +425,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM_NO_DEBUFF:format(timeStopBuff))
+			DBM.InfoFrame:SetHeader(DBM_CORE_L.NO_DEBUFF:format(timeStopBuff))
 			DBM.InfoFrame:Show(10, "playergooddebuff", timeStopBuff)
 		end
 	elseif spellId == 221408 then
@@ -436,7 +435,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnPurifiedEssence:Play("movetimebubble")
 		timerPurifiedEssence:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM_NO_DEBUFF:format(timeStopBuff))
+			DBM.InfoFrame:SetHeader(DBM_CORE_L.NO_DEBUFF:format(timeStopBuff))
 			DBM.InfoFrame:Show(10, "playergooddebuff", timeStopBuff)
 		end
 	end

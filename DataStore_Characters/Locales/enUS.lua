@@ -1,7 +1,5 @@
 local debug = false
---[===[@debug@
-debug = true
---@end-debug@]===]
+--debug = true
 
 local L = LibStub("AceLocale-3.0"):NewLocale("DataStore_Characters", "enUS", true, debug)
 
@@ -13,4 +11,7 @@ L["REQUEST_PLAYTIME_DISABLED"] = "Play time will not be queried at logon. The la
 L["REQUEST_PLAYTIME_ENABLED"] = "Play time will be queried every time you log in."
 L["REQUEST_PLAYTIME_TEXT"] = "Request play time at logon."
 L["REQUEST_PLAYTIME_TITLE"] = "Request Play Time"
-
+L["HIDE_LOGIN_PLAYTIME_DISABLED"] = "Your playtime will not be displayed when you login. (Other addons may interfere with this)"
+L["HIDE_LOGIN_PLAYTIME_ENABLED"] = "Your playtime will be displayed when you login."
+L["HIDE_LOGIN_PLAYTIME_TEXT"] = "Hide login playtime"
+L["HIDE_LOGIN_PLAYTIME_TITLE"] = "Hide play time when logging in"

@@ -4,7 +4,7 @@ local CL	= DBM_CORE_L
 local DBM = DBM
 local CreateFrame = CreateFrame
 
-local frame = DBM_GUI_OptionsFrame
+local frame = _G["DBM_GUI_OptionsFrame"]
 table.insert(_G["UISpecialFrames"], frame:GetName())
 frame:SetFrameStrata("DIALOG")
 if DBM.Options.GUIPoint then
@@ -35,11 +35,8 @@ frame.backdropInfo = {
 	edgeSize	= 32,
 	insets		= { left = 11, right = 12, top = 12, bottom = 11 }
 }
-if DBM:IsAlpha() then
-	frame:ApplyBackdrop()
-else
-	frame:SetBackdrop(frame.backdropInfo)
-end
+
+frame:ApplyBackdrop()
 frame.firstshow = true
 frame:SetScript("OnShow", function(self)
 	if self.firstshow then
@@ -48,7 +45,7 @@ frame:SetScript("OnShow", function(self)
 	end
 end)
 frame:SetScript("OnHide", function()
-	DBM_GUI_DropDown:Hide()
+	_G["DBM_GUI_DropDown"]:Hide()
 end)
 frame:SetScript("OnDragStart", frame.StartMoving)
 frame:SetScript("OnDragStop", function(self)
@@ -60,9 +57,8 @@ frame:SetScript("OnDragStop", function(self)
 end)
 frame:SetScript("OnSizeChanged", function(self)
 	self:UpdateMenuFrame()
-	local container = _G[self:GetName() .. "PanelContainer"]
-	if container.displayedFrame then
-		self:DisplayFrame(container.displayedFrame)
+	if DBM_GUI.currentViewing then
+		self:DisplayFrame(DBM_GUI.currentViewing)
 	end
 end)
 frame:SetScript("OnMouseUp", function(self)
@@ -155,7 +151,7 @@ function OptionsList_OnLoad(self, ...)
 		hack(self, ...)
 	end
 end
-local frameList = CreateFrame("Frame", "$parentList", frame, DBM:IsAlpha() and "BackdropTemplate,OptionsFrameListTemplate" or "OptionsFrameListTemplate")
+local frameList = CreateFrame("Frame", "$parentList", frame, "BackdropTemplate,OptionsFrameListTemplate")
 frameList:SetWidth(205)
 frameList:SetPoint("TOPLEFT", 22, -40)
 frameList:SetPoint("BOTTOMLEFT", frameWebsite, "TOPLEFT", 0, 5)
@@ -172,12 +168,8 @@ for i = 1, math.floor(UIParent:GetHeight() / 18) do
 	button:RegisterForClicks("LeftButtonUp")
 	button:SetScript("OnClick", function(self)
 		frame:ClearSelection()
-		for _, tab in ipairs(frame.tabs) do
-			tab.selection = nil
-		end
-		frame.tabs[frame.tab].selection = button
-		button:LockHighlight()
-		DBM_GUI.currentViewing = self.element
+		frame.tabs[frame.tab].selection = self.element
+		self:LockHighlight()
 		frame:DisplayFrame(self.element)
 	end)
 	if i == 1 then
@@ -211,11 +203,8 @@ frameListList.backdropInfo = {
 	edgeSize	= 12,
 	insets		= { left = 0, right = 0, top = 5, bottom = 5 }
 }
-if DBM:IsAlpha() then
-	frameListList:ApplyBackdrop()
-else
-	frameListList:SetBackdrop(frameListList.backdropInfo)
-end
+Mixin(frameListList, BackdropTemplateMixin)
+frameListList:ApplyBackdrop()
 frameListList:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.6)
 frameListList:SetScript("OnVerticalScroll", function(self, offset)
 	local scrollbar = _G[self:GetName() .. "ScrollBar"]
@@ -244,7 +233,7 @@ scrollDownButton:SetScript("OnClick", function(self)
 	self:GetParent():SetValue(self:GetParent():GetValue() + 18)
 end)
 
-local frameContainer = CreateFrame("ScrollFrame", "$parentPanelContainer", frame, DBM:IsAlpha() and "BackdropTemplate")
+local frameContainer = CreateFrame("ScrollFrame", "$parentPanelContainer", frame, "BackdropTemplate")
 frameContainer:SetPoint("TOPLEFT", frameList, "TOPRIGHT", 16, 0)
 frameContainer:SetPoint("BOTTOMLEFT", frameList, "BOTTOMRIGHT", 16, 0)
 frameContainer:SetPoint("RIGHT", -22, 0)
@@ -253,15 +242,8 @@ frameContainer.backdropInfo = {
 	edgeSize	= 16,
 	tileEdge	= true
 }
-if DBM:IsAlpha() then
-	frameContainer:ApplyBackdrop()
-else
-	frameContainer:SetBackdrop(frameContainer.backdropInfo)
-end
+frameContainer:ApplyBackdrop()
 frameContainer:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
-
-local frameContainerHeaderText = frameContainer:CreateFontString("$parentHeaderText", "BACKGROUND", "GameFontHighlightSmall")
-frameContainerHeaderText:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 10, 1)
 
 local frameContainerFOV = CreateFrame("ScrollFrame", "$parentFOV", frameContainer, "FauxScrollFrameTemplate")
 frameContainerFOV:Hide()
@@ -276,7 +258,7 @@ frameContainerScrollBar:ClearAllPoints()
 frameContainerScrollBar:SetPoint("TOPRIGHT", -4, -15)
 frameContainerScrollBar:SetPoint("BOTTOMRIGHT", 0, 15)
 
-local frameContainerScrollBarBackdrop = CreateFrame("Frame", nil, frameContainerScrollBar)
+local frameContainerScrollBarBackdrop = CreateFrame("Frame", nil, frameContainerScrollBar, "BackdropTemplate")
 frameContainerScrollBarBackdrop:SetPoint("TOPLEFT", -4, 20)
 frameContainerScrollBarBackdrop:SetPoint("BOTTOMRIGHT", 4, -20)
 frameContainerScrollBarBackdrop.backdropInfo = {
@@ -286,9 +268,5 @@ frameContainerScrollBarBackdrop.backdropInfo = {
 	edgeSize	= 16,
 	insets		= { left = 0, right = 0, top = 5, bottom = 5 }
 }
-if DBM:IsAlpha() then
-	frameContainerScrollBarBackdrop:ApplyBackdrop()
-else
-	frameContainerScrollBarBackdrop:SetBackdrop(frameContainerScrollBarBackdrop.backdropInfo)
-end
+frameContainerScrollBarBackdrop:ApplyBackdrop()
 frameContainerScrollBarBackdrop:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.6)

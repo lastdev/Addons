@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod(591, "DBM-Party-WotLK", 4, 273)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200806142123")
 mod:SetCreatureID(26632)
 mod:SetEncounterID(375, 376, 1975)
 mod:SetModelID(27072)--Does not scale, but at least it's on face. Leaving on for now.
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

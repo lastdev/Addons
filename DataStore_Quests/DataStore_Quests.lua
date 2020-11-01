@@ -1,6 +1,5 @@
 --[[	*** DataStore_Quests ***
 Written by : Thaoky, EU-Marécages de Zangar
-July 8th, 2009
 --]]
 
 if not DataStore then return end
@@ -21,6 +20,7 @@ local AddonDB_Defaults = {
 			TrackTurnIns = true,					-- by default, save the ids of completed quests in the history
 			AutoUpdateHistory = true,			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 			DailyResetHour = 3,					-- Reset dailies at 3am (default value)
+            ManuallyTrackedQuests = {},     -- a user defined table of Quest IDs that the player wants to track, should be used for "hidden" quests that aren't tracked on completion like Warfront weeklies
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
@@ -30,6 +30,8 @@ local AddonDB_Defaults = {
 				QuestHeaders = {},
 				QuestTags = {},
 				Emissaries = {},
+                RegularZoneQuests = {},
+                Callings = {}, -- Shadowlands version of Emissaries
 				Rewards = {},
 				Money = {},
 				Dailies = {},
@@ -38,11 +40,13 @@ local AddonDB_Defaults = {
 				HistorySize = 0,
 				HistoryLastUpdate = nil,
 			}
-		}
+		},
+        RegularZoneQuests = {},     -- tracks assault quests and rustbolt and such. This tracks overall quest info, while the character one tracks that characters progress
 	}
 }
 
 local emissaryQuests = {
+    -- Legion
 	[42420] = true, -- Court of Farondis
 	[42421] = true, -- Nightfallen
 	[42422] = true, -- The Wardens
@@ -65,7 +69,23 @@ local emissaryQuests = {
 	[50603] = true, -- Voldunai
 	[50602] = true, -- Talanji's Expedition
 	[50606] = true, -- Horde War Effort
-	
+	[56119] = true, -- The Waveblade Ankoan
+    [56120] = true, -- The Unshackled
+}
+
+local regularZoneQuests = {    
+    -- Mechagon World Quest
+    [56139] = true, -- 6 treasure chests
+    [55901] = true, -- complete activities in Mechagon
+    [56131] = true, -- kill three rares on Mechagon
+     
+    -- Assaults / Invasions / Etc
+    [56064] = true, -- The Black Empire in Vale
+    [57157] = true, -- The Black Empire in Uldum
+    [55350] = true, -- Amathet in Uldum
+    [56308] = true, -- Aqir in Uldum
+    [57728] = true, -- Mantid in Vale
+    [57008] = true, -- Mogu in Vale
 }
 
 -- *** Utility functions ***
@@ -80,8 +100,8 @@ end
 
 local function GetQuestLogIndexByName(name)
 	-- helper function taken from QuestGuru
-	for i = 1, GetNumQuestLogEntries() do
-		local title = GetQuestLogTitle(i);
+	for i = 1, C_QuestLog.GetNumQuestLogEntries() do
+		local title = C_QuestLog.GetInfo(i).title
 		if title == strtrim(name) then
 			return i
 		end
@@ -157,7 +177,8 @@ end
 
 local function GetQuestTagID(questID, isComplete, frequency)
 
-	local tagID = GetQuestTagInfo(questID)
+	local info = C_QuestLog.GetQuestTagInfo(questID) or {}
+    local tagID = info.tagID
 	if tagID then	
 		-- if there is a tagID, process it
 		if tagID == QUEST_TAG_ACCOUNT then
@@ -176,11 +197,11 @@ local function GetQuestTagID(questID, isComplete, frequency)
 	end
 
 	-- at this point, isComplete is either nil or 0
-	if frequency == LE_QUEST_FREQUENCY_DAILY then
+	if frequency == Enum.QuestFrequency.Daily then
 		return "DAILY"
 	end
 
-	if frequency == LE_QUEST_FREQUENCY_WEEKLY then
+	if frequency == Enum.QuestFrequency.Weekly then
 		return "WEEKLY"
 	end
 end
@@ -192,8 +213,8 @@ local headersState = {}
 local function SaveHeaders()
 	local headerCount = 0		-- use a counter to avoid being bound to header names, which might not be unique.
 
-	for i = GetNumQuestLogEntries(), 1, -1 do		-- 1st pass, expand all categories
-		local _, _, _, _, isHeader, isCollapsed = GetQuestLogTitle(i)
+	for i = C_QuestLog.GetNumQuestLogEntries(), 1, -1 do		-- 1st pass, expand all categories
+		local isHeader, isCollapsed = C_QuestLog.GetInfo(i).isHeader, C_QuestLog.GetInfo(i).isCollapsed
 		if isHeader then
 			headerCount = headerCount + 1
 			if isCollapsed then
@@ -206,8 +227,8 @@ end
 
 local function RestoreHeaders()
 	local headerCount = 0
-	for i = GetNumQuestLogEntries(), 1, -1 do
-		local _, _, _, _, isHeader = GetQuestLogTitle(i)
+	for i = C_QuestLog.GetNumQuestLogEntries(), 1, -1 do
+		local isHeader = C_QuestLog.GetInfo(i).isHeader
 		if isHeader then
 			headerCount = headerCount + 1
 			if headersState[headerCount] then
@@ -218,11 +239,11 @@ local function RestoreHeaders()
 	wipe(headersState)
 end
 
-local function ScanChoices(rewards)
+local function ScanChoices(rewards, questID)
 	-- rewards = out parameter
 
 	-- these are the actual item choices proposed to the player
-	for i = 1, GetNumQuestLogChoices() do
+	for i = 1, GetNumQuestLogChoices(questID) do
 		local _, _, numItems, _, isUsable = GetQuestLogChoiceInfo(i)
 		isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
 		local link = GetQuestLogItemLink("choice", i)
@@ -278,61 +299,80 @@ local function ScanQuests()
 	local tags = char.QuestTags
 	local emissaries = char.Emissaries
 	local money = char.Money
+    local savedRegularZoneQuests = addon.db.global.RegularZoneQuests
 
 	wipe(quests)
 	wipe(links)
 	wipe(headers)
 	wipe(rewards)
 	wipe(tags)
-	wipe(emissaries)
+	-- wipe(emissaries)  -- going to try a different approach
 	wipe(money)
-
-	local currentSelection = GetQuestLogSelection()		-- save the currently selected quest
+    
+    for questID, details in pairs(emissaries) do
+        local numFulfilled, numRequired, timeLeft, objective, timeSaved, questName = strsplit("|", details)
+        if timeSaved and timeLeft and (tonumber(timeSaved) > 0) and (tonumber(timeLeft) > 0) then
+		    local secondsSinceLastUpdate = (time() - timeSaved)
+		    if secondsSinceLastUpdate > (tonumber(timeLeft) * 60) then		-- if the info has expired ..
+			     emissaries[questID] = nil			-- .. clear the entry
+		    end
+        end
+        
+        -- delete data saved before the addon update, if past its expiry
+        if (not timeSaved) and timeLeft and (tonumber(timeLeft) > 0) then
+		    local secondsSinceLastUpdate = (time() - char.lastUpdate)
+		    if secondsSinceLastUpdate > (tonumber(timeLeft) * 60) then
+			     emissaries[questID] = nil			-- .. clear the entry
+		    end
+        end            
+	end
+    
+	local currentSelection = C_QuestLog.GetSelectedQuest()		-- save the currently selected quest
 	SaveHeaders()
 
 	local rewardsCache = {}
 	local lastHeaderIndex = 0
 	local lastQuestIndex = 0
 	
-	for i = 1, GetNumQuestLogEntries() do
-		local title, level, groupSize, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, 
-				isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(i)
-
-		if isHeader then
-			table.insert(headers, title or "")
+	for questLogIndex = 1, C_QuestLog.GetNumQuestLogEntries() do 
+		local info = C_QuestLog.GetInfo(questLogIndex)
+        info.frequency = info.frequency or 0
+           
+		if info.isHeader then
+			table.insert(headers, info.title or "")
 			lastHeaderIndex = lastHeaderIndex + 1
 		else
-			SelectQuestLogEntry(i)
+			C_QuestLog.SetSelectedQuest(info.questID)
 			
-			local value = (isComplete and isComplete > 0) and 1 or 0		-- bit 0 : isComplete
-			value = value + LShift((frequency == LE_QUEST_FREQUENCY_DAILY) and 1 or 0, 1)		-- bit 1 : isDaily
-			value = value + LShift(isTask and 1 or 0, 2)						-- bit 2 : isTask
-			value = value + LShift(isBounty and 1 or 0, 3)					-- bit 3 : isBounty
-			value = value + LShift(isStory and 1 or 0, 4)					-- bit 4 : isStory
-			value = value + LShift(isHidden and 1 or 0, 5)					-- bit 5 : isHidden
-			value = value + LShift((groupSize == 0) and 1 or 0, 6)		-- bit 6 : isSolo
+			local value = (info.isComplete and info.isComplete > 0) and 1 or 0		-- bit 0 : isComplete
+			value = value + LShift((info.frequency == Enum.QuestFrequency.Daily) and 1 or 0, 1)		-- bit 1 : isDaily
+			value = value + LShift(info.isTask and 1 or 0, 2)						-- bit 2 : isTask
+			value = value + LShift(info.isBounty and 1 or 0, 3)					-- bit 3 : isBounty
+			value = value + LShift(info.isStory and 1 or 0, 4)					-- bit 4 : isStory
+			value = value + LShift(info.isHidden and 1 or 0, 5)					-- bit 5 : isHidden
+			value = value + LShift((info.groupSize == 0) and 1 or 0, 6)		-- bit 6 : isSolo
 			-- bit 7 : unused, reserved
 
-			value = value + LShift(groupSize, 8)							-- bits 8-10 : groupSize, 3 bits, shouldn't exceed 5
+			value = value + LShift(info.suggestedGroup, 8)							-- bits 8-10 : groupSize, 3 bits, shouldn't exceed 5
 			value = value + LShift(lastHeaderIndex, 11)					-- bits 11-15 : index of the header (zone) to which this quest belongs
-			value = value + LShift(level, 16)								-- bits 16-23 : level
+			value = value + LShift(info.level, 16)								-- bits 16-23 : level
 			-- value = value + LShift(GetQuestLogRewardMoney(), 24)		-- bits 24+ : money
 			
 			table.insert(quests, value)
 			lastQuestIndex = lastQuestIndex + 1
 			
-			tags[lastQuestIndex] = GetQuestTagID(questID, isComplete, frequency)
-			links[lastQuestIndex] = GetQuestLink(questID)
+			tags[lastQuestIndex] = GetQuestTagID(info.questID, info.isComplete, info.frequency)
+			links[lastQuestIndex] = GetQuestLink(info.questID)
 			money[lastQuestIndex] = GetQuestLogRewardMoney()
 
 			-- is the quest an emissary quest ?
-			if emissaryQuests[questID] then
-				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
-				emissaries[questID] = format("%d|%d|%d|%s", numFulfilled, numRequired, C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or "")
+			if emissaryQuests[info.questID] then
+				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(info.questID, 1, false)
+				emissaries[info.questID] = format("%d|%d|%d|%s|%d|%s", numFulfilled, numRequired, C_TaskQuest.GetQuestTimeLeftMinutes(info.questID), objective or "", time(), info.title)
 			end
 
 			wipe(rewardsCache)
-			ScanChoices(rewardsCache)
+			ScanChoices(rewardsCache, info.questID)
 			ScanRewards(rewardsCache)
 			ScanRewardSpells(rewardsCache)
 
@@ -341,13 +381,52 @@ local function ScanQuests()
 			end
 		end
 	end
+    
+    for _, q in pairs({regularZoneQuests, ManuallyTrackedQuests}) do
+        for questID, _ in pairs(q) do
+            -- initialize the saved variable if needed
+            if not savedRegularZoneQuests then savedRegularZoneQuests = {} end
+            local objective, _, _, numFulfilled, numRequired
+            if C_QuestLog.IsQuestTask(questID) then
+                objective = GetQuestObjectiveInfo(questID, 1, false)
+                numFulfilled = C_TaskQuest.GetQuestProgressBarInfo(questID)
+                numRequired = 100
+            else
+                objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+            end
+            -- if the current character has completed the quest already, then C_TaskQuest.GetQuestTimeLeftMinutes(questID) will return nil, so we can't give an accurate time remaining
+            local timeRemaining = C_TaskQuest.GetQuestTimeLeftMinutes(questID)
+    
+            if (not C_QuestLog.IsQuestFlaggedCompleted(questID)) and (not C_QuestSession.Exists()) then
+                savedRegularZoneQuests[questID] = format("%d|%d|%s|%d|%s", timeRemaining, numRequired, objective or "", time(), C_TaskQuest.GetQuestInfoByQuestID(questID))
+            end
+            char.RegularZoneQuests[questID] = {["numFulfilled"] = numFulfilled}    
+        end
+    end
 
 	RestoreHeaders()
-	SelectQuestLogEntry(currentSelection)		-- restore the selection to match the cursor, must be properly set if a user abandons a quest
+	C_QuestLog.SetSelectedQuest(currentSelection)		-- restore the selection to match the cursor, must be properly set if a user abandons a quest
 
 	addon.ThisCharacter.lastUpdate = time()
 	
 	addon:SendMessage("DATASTORE_QUESTLOG_SCANNED", char)
+end
+
+local function ScanCallings(callings)
+    if not callings then return end
+    if not C_CovenantCallings.AreCallingsUnlocked() then return end
+    
+    local char = addon.ThisCharacter
+    local savedCallings = char.Callings
+    wipe(savedCallings)
+    
+    for i, calling in pairs(callings) do
+        if calling then
+            local questID = calling.questID
+            local timeRemaining = C_TaskQuest.GetQuestTimeLeftSeconds(calling.questID) or 0
+            savedCallings[questID] = timeRemaining
+        end
+    end
 end
 
 local queryVerbose
@@ -366,12 +445,16 @@ local function OnUnitQuestLogChanged()			-- triggered when accepting/validating 
 	addon:RegisterEvent("QUEST_LOG_UPDATE", OnQuestLogUpdate)		-- so register for this one ..
 end
 
+local function OnCovenantCallingsUpdated(event, ...)
+    ScanCallings(...)
+end
+
 local function RefreshQuestHistory()
 	local thisChar = addon.ThisCharacter
 	local history = thisChar.History
 	wipe(history)
-	local quests = {}
-	GetQuestsCompleted(quests)
+	local quests = C_QuestLog.GetAllCompletedQuestIDs()
+    -- 9.0: the questIDs were moved from values to keys
 
 	--[[	In order to save memory, we'll save the completion status of 32 quests into one number (by setting bits 0 to 31)
 		Ex:
@@ -384,7 +467,7 @@ local function RefreshQuestHistory()
 
 	local count = 0
 	local index, bitPos
-	for questID in pairs(quests) do
+	for _, questID in pairs(quests) do
 		bitPos = (questID % 32)
 		index = ceil(questID / 32)
 
@@ -520,11 +603,23 @@ local function _GetEmissaryQuests()
 	return emissaryQuests
 end
 
+local function _IsQuestEmissary(questID)
+    return emissaryQuests[questID]
+end
+
+local function _GetRegularZoneQuests()
+    return regularZoneQuests
+end
+
+local function _GetCallingQuests(character)
+    return character.Callings
+end
+
 local function _GetEmissaryQuestInfo(character, questID)
 	local quest = character.Emissaries[questID]
 	if not quest then return end
 
-	local numFulfilled, numRequired, timeLeft, objective = strsplit("|", quest)
+	local numFulfilled, numRequired, timeLeft, objective, timeSaved, questName = strsplit("|", quest)
 
 	numFulfilled = tonumber(numFulfilled) or 0
 	numRequired = tonumber(numRequired) or 0
@@ -540,7 +635,36 @@ local function _GetEmissaryQuestInfo(character, questID)
 		timeLeft = timeLeft - secondsSinceLastUpdate
 	end
 
-	return numFulfilled, numRequired, timeLeft, objective
+	return numFulfilled, numRequired, timeLeft, objective, questName
+end
+
+local function _GetRegularZoneQuestInfo(character, questID)
+	local sharedQuestInfo = addon.db.global.RegularZoneQuests[questID]
+	if not sharedQuestInfo then return end
+
+	local timeLeft, numRequired, objective, lastUpdate, title = strsplit("|", sharedQuestInfo)
+    
+    local characterSpecificQuestInfo = character.RegularZoneQuests[questID]
+    local numFulfilled = 0
+    if (characterSpecificQuestInfo) then
+        numFulfilled = characterSpecificQuestInfo.numFulfilled
+    end  
+
+	numFulfilled = tonumber(numFulfilled) or 0
+	numRequired = tonumber(numRequired) or 0
+	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
+	
+	if timeLeft > 0 then
+		local secondsSinceLastUpdate = time() - lastUpdate
+		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
+			addon.db.global.RegularZoneQuests[questID] = nil			-- .. clear the entry
+			return
+		end
+		
+		timeLeft = timeLeft - secondsSinceLastUpdate
+	end
+
+	return numFulfilled, numRequired, timeLeft, objective, title    
 end
 
 local function _IsCharacterOnQuest(character, questID)
@@ -591,6 +715,12 @@ local function _IterateQuests(character, category, callback)
 	end
 end
 
+-- Do NOT wipe!
+-- Only add Quest IDs to this.
+local function _GetManuallyTrackedQuests()
+    return GetOption("ManuallyTrackedQuests")
+end
+
 local PublicMethods = {
 	GetQuestLogSize = _GetQuestLogSize,
 	GetQuestLogInfo = _GetQuestLogInfo,
@@ -607,10 +737,15 @@ local PublicMethods = {
 	GetDailiesHistorySize = _GetDailiesHistorySize,
 	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
 	GetEmissaryQuests = _GetEmissaryQuests,
+    GetRegularZoneQuests = _GetRegularZoneQuests,
 	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
+    GetRegularZoneQuestInfo = _GetRegularZoneQuestInfo,
 	IsCharacterOnQuest = _IsCharacterOnQuest,
 	GetCharactersOnQuest = _GetCharactersOnQuest,
 	IterateQuests = _IterateQuests,
+    IsQuestEmissary = _IsQuestEmissary,
+    GetCallingQuests = _GetCallingQuests,
+    GetManuallyTrackedQuests = _GetManuallyTrackedQuests,
 }
 
 function addon:OnInitialize()
@@ -630,13 +765,17 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
 	DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
+    DataStore:SetCharacterBasedMethod("GetRegularZoneQuestInfo")
 	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
 	DataStore:SetCharacterBasedMethod("IterateQuests")
+    DataStore:SetCharacterBasedMethod("GetCallingQuests")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("UNIT_QUEST_LOG_CHANGED", OnUnitQuestLogChanged)
+    addon:RegisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL", ScanQuests)
+    addon:RegisterEvent("COVENANT_CALLINGS_UPDATED", OnCovenantCallingsUpdated)
 
 	addon:SetupOptions()
 
@@ -647,6 +786,8 @@ function addon:OnEnable()
 	-- Daily Reset Drop Down & label
 	local frame = DataStore.Frames.QuestsOptions.DailyResetDropDownLabel
 	frame:SetText(format("|cFFFFFFFF%s:", L["DAILY_QUESTS_RESET_LABEL"]))
+    
+    DataStore.Frames.QuestsOptions.AddQuestEditBoxLabel:SetText("Hidden Quest Tracking: Enter the Quest ID of a hidden quest you want to force tracking of.") -- TODO: Localize this
 
 	frame = DataStore_Quests_DailyResetDropDown
 	UIDropDownMenu_SetWidth(frame, 60) 
@@ -665,6 +806,8 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("UNIT_QUEST_LOG_CHANGED")
 	addon:UnregisterEvent("QUEST_QUERY_COMPLETE")
+    addon:UnregisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL")
+    addon:UnregisterEvent("COVENANT_CALLINGS_UPDATED")
 end
 
 -- *** Hooks ***
@@ -686,7 +829,7 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
 
 	-- track daily quests turn-ins
-	if QuestIsDaily() or emissaryQuests[questID] then
+	if QuestIsDaily() or emissaryQuests[questID] or regularZoneQuests[questID] then
 		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
 		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
 	end

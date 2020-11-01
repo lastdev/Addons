@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod(666, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20200806142123")
 mod:SetCreatureID(58722)--58722 is Body, 58791 is soul. Body is engaged first
 mod:SetEncounterID(1429)
 mod:SetReCombatTime(180, 15)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Kill)

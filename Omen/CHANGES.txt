@@ -1,24 +1,42 @@
-tag 743bc8a59ae452c6177643b8a04b4df4c01f56ee v3.2.2
+tag 806fdd86126c6c833db4b0fe20b0507e37984b13 v3.2.3
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Wed Jul 3 13:38:28 2019 +0200
+Date:	Thu Oct 15 12:37:25 2020 +0200
 
-Tag as v3.2.2
+Tag as v3.2.3
 
-commit b0cdd6211036e73e02b252a94f87827f755706c5
+commit 23614e27d92c4505a614f8d1871c0ef3a220d0e4
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 3 13:36:05 2019 +0200
+Date:   Thu Oct 15 12:37:16 2020 +0200
 
-    Bump TOC
+    Update for 9.0
 
-commit 6eb0e879f7a4fd1e0c1f257869cae03e59f29a02
+commit 7568a93a85a11b528bb72149b802190c0672c97a
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 3 13:35:52 2019 +0200
+Date:   Wed Jul 15 17:02:15 2020 +0200
 
-    Include the old filenames of the sounds as comments
+    Disable focus in more places on classic
 
-commit 51fd5d7cba743d64d44438794a348b2d24c194dc
-Author: David Lynch <kemayo@gmail.com>
-Date:   Tue Jul 2 11:41:20 2019 -0500
+commit 654833733c23dabd2a7cd4d73ce7bc81311f79c6
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 15 17:00:17 2020 +0200
 
-    Fix LSM sound registrations for 8.2
+    Add a hack for CLEU missing spell IDs
+
+commit 867e0f3c9225ac9205801fca2eeb503220abbd44
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 15 16:56:25 2020 +0200
+
+    Add a range check item for classic
+
+commit 8552c6bfb6c41e915e40c2b19e7287abe3117ce5
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 15 16:36:43 2020 +0200
+
+    Support WoW Classic
+
+commit 2051fc42f1e60dcaff257b475697d837f597b33f
+Author: Hendrik Leppkes <h.leppkes@gmail.com>
+Date:   Wed Jul 15 16:18:45 2020 +0200
+
+    Bump TOC to 8.3
 

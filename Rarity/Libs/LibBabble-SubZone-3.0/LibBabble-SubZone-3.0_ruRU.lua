@@ -1,9 +1,9 @@
  --[[
-$Id: LibBabble-SubZone-3.0_ruRU.lua 227 2020-01-17 14:10:05Z arith $
+$Id: LibBabble-SubZone-3.0_ruRU.lua 231 2020-07-26 14:52:00Z arithmandar $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 227 $
+Revision: $Rev: 231 $
 Maintainers: arith
-Last updated by: $Author: arith $
+Last updated by: $Author: arithmandar $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
 Dependencies: None
 License: MIT
@@ -31,6 +31,7 @@ lib:SetCurrentTranslations
 	["Abandoned Junkheap"] = "Заброшенная свалка",
 	["Abandoned Kirin Tor Camp"] = "Заброшенный лагерь Кирин-Тора",
 	["Abandoned Mine"] = "Заброшенная шахта",
+	["Abandoned Mines"] = "Заброшенные копи",
 	["Abandoned Passage"] = "Заброшенный проход",
 	["Abandoned Reef"] = "Запустелый риф",
 	["Abandoned Ruin"] = "Заброшенные руины",
@@ -52,6 +53,7 @@ lib:SetCurrentTranslations
 	["Admiral Taylor's Farm"] = "Ферма адмирала Тейлора",
 	["Admiral Taylor's Garrison"] = "Гарнизон адмирала Тейлора",
 	["Aegira's Meadery"] = "Хмелеварня Эгиры",
+	["Aegrim's Study"] = "Кабинет Эгрима",
 	["Aegwynn's Gallery"] = "Галерея Эгвин",
 	["Aegwynn's Tower"] = "Башня Эгвин",
 	["Aerie Peak"] = "Заоблачный пик",
@@ -80,6 +82,7 @@ lib:SetCurrentTranslations
 	["Aktar's Post"] = "Лагерь Актара",
 	["Aku'mai's Lair"] = "Логово Аку'мая",
 	["Alabaster Shelf"] = "Алебастровый шельф",
+	["Alathir Spire"] = "Шпиль Алатир",
 	["Ala'washte's Nest"] = "Гнездо Ала'ваште",
 	["Alcaz Island"] = "Остров Алькац",
 	["Alchemy Lab"] = "Алхимическая лаборатория",
@@ -108,12 +111,18 @@ lib:SetCurrentTranslations
 	["Alliance PVP Barracks"] = "Казармы Альянса",
 	["Alliance Shipyard Taxi"] = "",
 	["Alliance Submarine"] = "Подводная лодка Альянса",
+	["Allied - Dark Iron Dwarf Unlock"] = "Союзник - Дворф из клана Черного Железа Разблокирован",
 	["Allied - Highmountain Tauren Unlock"] = "Allied - Highmountain Tauren Unlock",
+	["Allied - Kul Tiran Unlock"] = "Союзник - Култирасец Разблокирован",
 	["Allied - Lightforged Draenei Unlock"] = "Allied - Lightforged Draenei Unlock",
+	["Allied - Mag'har Orc Unlock"] = "Союзник - Маг'хар Разблокирован",
+	["Allied - Mechagnome Unlock"] = "Союзник - Механогном Разблокирован",
 	["Allied - Nightborne Unlock"] = "Allied - Nightborne Unlock",
 	["Allied - Orgrimmar"] = "Allied - Orgrimmar",
 	["Allied - Stormwind"] = "Allied - Stormwind",
 	["Allied - Void Elf Unlock"] = "Allied - Void Elf Unlock",
+	["Allied - Zandalari Unlock"] = "Союзник - Зандалар Разблокирован",
+	["Alllied - Vulpera Unlock"] = "Союзник - Вульпер Разблокирован",
 	["Alluvanon's Delta"] = "Дельта Аллуванона",
 	["Alodi's Bank Vault"] = "Банковское хранилище Алоди",
 	["Alonsus Chapel"] = "Часовня Алонсия",

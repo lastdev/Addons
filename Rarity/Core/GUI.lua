@@ -57,7 +57,7 @@ local UnitClass = UnitClass
 local GetBestMapForUnit = C_Map.GetBestMapForUnit
 local GetMapInfo = C_Map.GetMapInfo
 local GetTime = GetTime
-local IsQuestFlaggedCompleted = IsQuestFlaggedCompleted
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local InCombatLockdown = InCombatLockdown
 local UnitCreatureType = UnitCreatureType
 local UnitGUID = UnitGUID
@@ -84,11 +84,11 @@ local TSM_Interface = Rarity.Utils.TSM_Interface
 
 -- Constants
 -- Sort parameters
-local SORT_NAME = "SORT_NAME"
-local SORT_DIFFICULTY = "SORT_DIFFICULTY"
-local SORT_PROGRESS = "SORT_PROGRESS"
-local SORT_CATEGORY = "SORT_CATEGORY"
-local SORT_ZONE = "SORT_ZONE"
+local SORT_NAME = CONSTANTS.SORT_METHODS.SORT_NAME
+local SORT_DIFFICULTY = CONSTANTS.SORT_METHODS.SORT_DIFFICULTY
+local SORT_PROGRESS = CONSTANTS.SORT_METHODS.SORT_PROGRESS
+local SORT_CATEGORY = CONSTANTS.SORT_METHODS.SORT_CATEGORY
+local SORT_ZONE = CONSTANTS.SORT_METHODS.SORT_ZONE
 local STATUS_TOOLTIP_MAX_WIDTH = 200
 -- Tooltip formatting
 local TIP_LEFT = "TIP_LEFT"
@@ -413,6 +413,8 @@ function dataobj:OnClick(button)
 		Rarity:Debug("Loading Rarity_Options addon")
 		LoadAddOn("Rarity_Options")
 		if R.optionsFrame then
+			-- Thanks, Blizzard (https://www.wowinterface.com/forums/showthread.php?t=54599)
+			InterfaceOptionsFrame_OpenToCategory(R.optionsFrame)
 			InterfaceOptionsFrame_OpenToCategory(R.optionsFrame)
 		else
 			R:Print(L["The Rarity Options module has been disabled. Log out and enable it from your add-ons menu."])
@@ -500,16 +502,16 @@ local function showSubTooltip(cell, item)
 	end
 
 	local itemName,
-	itemLink,
-	itemRarity,
-	itemLevel,
-	itemMinLevel,
-	itemType,
-	itemSubType,
-	itemStackCount,
-	itemEquipLoc,
-	itemTexture,
-	itemSellPrice
+		itemLink,
+		itemRarity,
+		itemLevel,
+		itemMinLevel,
+		itemType,
+		itemSubType,
+		itemStackCount,
+		itemEquipLoc,
+		itemTexture,
+		itemSellPrice
 
 	_, -- itemName,
 		itemLink,
@@ -595,7 +597,7 @@ local function showSubTooltip(cell, item)
 					zone = lbsz[v]
 				end
 				if not zone then
-					-- zone = v -- Why?
+				-- zone = v -- Why?
 				end
 				if not tonumber(v) then
 					tooltip2AddLine(colorize("    " .. v, gray))
@@ -1143,25 +1145,15 @@ local function addGroup(group, requiresGroup)
 	local added = false
 	local headerAdded = false
 	local itemsExistInThisGroup = false
-	local g
 
 	local addGroupSortStart = debugprofilestop()
 
-	if R.db.profile.sortMode == SORT_NAME then
-		g = sort(group)
-	elseif R.db.profile.sortMode == SORT_DIFFICULTY then
-		g = sort_difficulty(group)
-	elseif R.db.profile.sortMode == SORT_CATEGORY then
-		g = sort_category(group)
-	elseif R.db.profile.sortMode == SORT_ZONE then
-		g = sort_zone(group)
-	else
-		g = sort_progress(group)
-	end
+	local sortedGroup = Rarity.Utils.Sorting:SortGroup(group, R.db.profile.sortMode)
 
 	local addGroupSortEnd = debugprofilestop()
 
-	for k, v in pairs(g) do
+	-- Inlining this because it has WAY too many interdependencies and I don't have time to unwrangle it now, but using early exit is easier this way (and more readable). It doesn't change the functionality and the small overhead shouldn't matter here
+	local function AddItem(k, v)
 		if
 			type(v) == "table" and v.enabled ~= false and
 				((requiresGroup and v.groupSize ~= nil and v.groupSize > 1) or
@@ -1178,6 +1170,10 @@ local function addGroup(group, requiresGroup)
 				classGood = false
 			end
 
+			if not v.itemId then
+				Rarity:Error(format("Failed to add tooltip line for item %s (invalid ID or the server didn't return any data)", k))
+				return
+			end
 			-- Item
 			if
 				(v.requiresHorde and R.Caching:IsHorde()) or (v.requiresAlliance and not R.Caching:IsHorde()) or
@@ -1522,6 +1518,10 @@ local function addGroup(group, requiresGroup)
 				end
 			end
 		end
+	end
+
+	for k, v in ipairs(sortedGroup) do
+		AddItem(k, v)
 	end
 
 	local addGroupIterationEnd = debugprofilestop()
@@ -1885,8 +1885,7 @@ _G.GameTooltip:HookScript(
 								blankAdded = true
 								GameTooltip:AddLine(" ")
 							end
-							local chance = select(2, Rarity.Statistics.GetRealDropPercentage(v))
-							local attemptText = " " .. colorize(format(L["(%d/%d attempts)"], v.attempts or 0, chance or 0), white)
+							local attemptText = " " .. colorize(format(L["(%d/%d attempts)"], v.attempts or 0, v.chance or 0), white)
 							if v.method == CONSTANTS.DETECTION_METHODS.COLLECTION then
 								attemptText = " " .. colorize(format(L["(%d/%d collected)"], v.attempts or 0, v.chance or 0), white)
 							end
@@ -2589,10 +2588,7 @@ function R:ShowFoundAlert(itemId, attempts, item)
 	end
 
 	-- The following code is adapted from Blizzard's AlertFrameMixin:OnEvent function found in FrameXML\AlertFrames.lua [heavily updated in 7.0]
-
-	if (IsKioskModeEnabled()) then
-		return
-	end
+	-- Presumably, this is now outdated (as of 9.0) so maybe copy/pasting it wasn't the best idea? :P
 
 	if (not AchievementFrame) then
 		AchievementFrame_LoadUI()

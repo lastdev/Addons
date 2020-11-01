@@ -67,6 +67,57 @@
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item9" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
 				</Anchors>
 			</Button>
+            <Button parentKey="Item11" inherits="AltoSummaryPaneButtonTemplate" id="11">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item10" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item12" inherits="AltoSummaryPaneButtonTemplate" id="12">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item13" inherits="AltoSummaryPaneButtonTemplate" id="13">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item12" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item14" inherits="AltoSummaryPaneButtonTemplate" id="14">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item13" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item15" inherits="AltoSummaryPaneButtonTemplate" id="15">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item14" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item16" inherits="AltoSummaryPaneButtonTemplate" id="16">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item15" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item17" inherits="AltoSummaryPaneButtonTemplate" id="17">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item16" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item18" inherits="AltoSummaryPaneButtonTemplate" id="18">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item17" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item19" inherits="AltoSummaryPaneButtonTemplate" id="19">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item18" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            <Button parentKey="Item20" inherits="AltoSummaryPaneButtonTemplate" id="20">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item19" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Button>
+            
 		</Frames>
 		<Scripts>
 			<OnLoad>

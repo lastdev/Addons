@@ -84,7 +84,6 @@ local ProfessionSpellID = {
 	["Mining"] = SPELL_ID_MINING,
 	["Herbalism"] = SPELL_ID_HERBALISM,
 	["Smelting"] = SPELL_ID_SMELTING,
-
 	["Cooking"] = SPELL_ID_COOKING,
 	["Fishing"] = SPELL_ID_FISHING,
 }
@@ -93,6 +92,15 @@ local ProfessionSpellID = {
 local bAnd = bit.band
 local LShift = bit.lshift
 local RShift = bit.rshift
+
+-- Added this to replace the usage of #table, because that only works for arrays with ordered indexes, eg [1] = ..., [2] = ...
+local function getTableSize(t)
+    local count = 0
+    for _, __ in pairs(t) do
+        count = count + 1
+    end
+    return count
+end
 
 local function TestBit(value, pos)
 	-- note: this function works up to bit 51
@@ -158,6 +166,10 @@ local function LocalizeProfessionSpellIDs()
 	for name, id in pairs(localizedSpells) do
 		ProfessionSpellID[name] = id
 	end
+    
+    if GetLocale() == "deDE" then
+        ProfessionSpellID["Kräuterkunde"] = 2366
+    end
 end
 
 local function GetRecipeRank(info)
@@ -249,6 +261,9 @@ local function ScanRecipeCategories(profession)
 	
 	-- loop through this profession's categories
 	for _, id in ipairs( { C_TradeSkillUI.GetCategories() } ) do
+            -- Temporary workaround for C_TradeSkillUI.GetCategories() including a duplicate of Food of Draenor for some reason:
+            if id ~= 1013 then
+             
 		local info = C_TradeSkillUI.GetCategoryInfo(id)
 		
 		cumulatedRank = cumulatedRank + (info.skillLineCurrentLevel or 0)
@@ -269,6 +284,9 @@ local function ScanRecipeCategories(profession)
 			MaxRank = info.skillLineMaxLevel,
 			SubCategories = subCats
 		})
+        
+            -- End temporary workaround
+            end
 	end
 	
 	profession.Rank = cumulatedRank
@@ -295,7 +313,7 @@ local function ScanRecipes()
 	wipe(crafts)
 		
 	local recipes = C_TradeSkillUI.GetAllRecipeIDs()
-	if not recipes or (#recipes == 0) then return end
+	if not recipes or (getTableSize(recipes) == 0) then return end
 	
 	local resultItems = addon.ref.global.ResultItems
 	local reagentsDB = addon.ref.global.Reagents
@@ -344,7 +362,6 @@ local function ScanRecipes()
 		
 		-- if we are rank 2 out of 3 for a recipe, do not save rank 1 and rank 3
 		if recipeID == highestRankID then
-		
 			-- save the recipe
 			crafts[info.categoryID] = crafts[info.categoryID] or {}
 			table.insert(crafts[info.categoryID], 
@@ -356,8 +373,15 @@ local function ScanRecipes()
 		end
 		
 		-- scan cooldown
-		local cooldown = C_TradeSkillUI.GetRecipeCooldown(recipeID)
+		local cooldown, isDaily = C_TradeSkillUI.GetRecipeCooldown(recipeID)
 		if cooldown then
+            if isDaily then
+                -- Bugfix: 13/August/2020
+                -- to compensate for a bug on Blizzards end, I cannot rely on cooldown when isDaily is true
+                -- it returns a time 2 hours earlier than the correct time if called immediately after crafting something
+                -- So, instead I will use the newly added C_DateAndTime.GetSecondsUntilWeeklyReset
+                cooldown = DataStore:GetSecondsUntilDailyReset()
+            end
 			-- ex: "Hexweave Cloth|86220|1533539676" expire at "now + cooldown"
 			table.insert(profession.Cooldowns, format("%s|%d|%d", info.name, cooldown, cooldown + time()))
 		end
@@ -365,8 +389,6 @@ local function ScanRecipes()
 	
 	addon:SendMessage("DATASTORE_RECIPES_SCANNED", char, tradeskillName)
 end
-
-
 
 local function ScanTradeSkills()
 	ScanRecipes()
@@ -491,6 +513,38 @@ local function OnDataSourceChanged(self)
 	ScanTradeSkills()
 end
 
+-- save the recipeID currently being crafted
+local currentCraftRecipeID
+
+-- hook: C_TradeSkillUI.CraftRecipe
+local function HookCraftRecipe(recipeID, count)
+   currentCraftRecipeID = recipeID
+end
+hooksecurefunc(C_TradeSkillUI, "CraftRecipe", HookCraftRecipe)
+
+local function OnTradeSkillListUpdate(self)
+    -- check if the thing that was just crafted went on cooldown
+    
+    if not currentCraftRecipeID then return end
+    local recipeID = currentCraftRecipeID
+    currentCraftRecipeID = nil
+    
+    local cooldown, isDayCooldown, charges, maxCharges = C_TradeSkillUI.GetRecipeCooldown(recipeID)
+    local info = C_TradeSkillUI.GetRecipeInfo(recipeID)
+    
+	if cooldown then
+        if isDayCooldown then
+            cooldown = DataStore:GetSecondsUntilDailyReset()
+        end
+        
+    	local tradeskillName = select(7, C_TradeSkillUI.GetTradeSkillLine())
+	    if not tradeskillName or tradeskillName == "UNKNOWN" then return end
+	    local profession = addon.ThisCharacter.Professions[tradeskillName]
+        if not profession then return end
+		table.insert(profession.Cooldowns, format("%s|%d|%d", info.name, cooldown, cooldown + time()))
+	end
+end
+
 
 -- ** Mixins **
 local function _GetProfession(character, name)
@@ -520,14 +574,14 @@ local function _GetProfessionInfo(profession)
 	
 	if link and type(link) ~= "number" then
 		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
-		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
+		_, spellID = link:match("trade:(.+):(%d+):")		-- Fix 5.4, rank no longer in the profession link
 	end
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
 end
 	
-local function _GetNumRecipeCategories(profession)
-	return (profession.Categories) and #profession.Categories or 0
+local function _GetNumRecipeCategories(profession)                
+	return (profession.Categories) and getTableSize(profession.Categories) or 0
 end
 
 local function GetCategoryName(id)
@@ -541,7 +595,7 @@ end
 
 local function _GetNumRecipeCategorySubItems(profession, index)
 	local category = profession.Categories[index]
-	return #category.SubCategories
+	return getTableSize(category.SubCategories)
 end
 
 local function _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
@@ -567,8 +621,9 @@ end
 local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 	-- mainCategory : category index (or 0 for all)
 	-- subCategory : sub-category index (or 0 for all)
-	local crafts = profession.Crafts
-	
+	if not profession then return end
+    local crafts = profession.Crafts
+
 	-- loop through categories
 	for catIndex = 1, _GetNumRecipeCategories(profession) do
 		-- if there is no filter on main category, or if it is just the one we want to see
@@ -581,7 +636,7 @@ local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 					
 					if type(recipes) == "table" then
 						-- loop through recipes
-						for i = 1, #recipes do
+						for i = 1, getTableSize(recipes) do
 							local stop = callback(recipes[i])
 							
 							-- exit if the callback returns true
@@ -607,13 +662,13 @@ end
 
 local function _GetNumActiveCooldowns(profession)
 	assert(type(profession) == "table")		-- this is the pointer to a profession table, obtained through addon:GetProfession()
-	return #profession.Cooldowns
+	return getTableSize(profession.Cooldowns)
 end
 
 local function _ClearExpiredCooldowns(profession)
 	assert(type(profession) == "table")		-- this is the pointer to a profession table, obtained through addon:GetProfession()
 	
-	for i = #profession.Cooldowns, 1, -1 do		-- from last to first, to avoid messing up indexes when removing entries
+	for i = getTableSize(profession.Cooldowns), 1, -1 do		-- from last to first, to avoid messing up indexes when removing entries
 		local _, expiresIn = _GetCraftCooldownInfo(profession, i)
 		if expiresIn <= 0 then		-- already expired ? remove it
 			table.remove(profession.Cooldowns, i)
@@ -633,13 +688,14 @@ local function _GetNumRecipesByColor(profession)
 	return counts[3], counts[2], counts[1], counts[0]		-- orange, yellow, green, grey
 end
 
-local function _IsCraftKnown(profession, spellID)
+local function _IsCraftKnown(profession, spellID, rank)
+    rank = rank or 1
 	-- returns true if a given spell ID is known in the profession passed as first argument
 	local isKnown
-	
+
 	_IterateRecipes(profession, 0, 0, function(recipeData) 
-		local _, recipeID, isLearned = _GetRecipeInfo(recipeData)
-		if recipeID == spellID and isLearned then
+		local _, recipeID, isLearned, recipeRank = _GetRecipeInfo(recipeData)
+		if (recipeID == spellID) and (tonumber(rank) <= tonumber(recipeRank)) and isLearned then
 			isKnown = true
 			return true	-- stop iteration
 		end
@@ -714,7 +770,7 @@ local function _GetArchaeologyRaceArtifacts(race)
 end
 
 local function _GetRaceNumArtifacts(race)
-	return #addon.artifactDB[race]
+	return getTableSize(addon.artifactDB[race])
 end
 
 local function _GetArtifactInfo(race, index)
@@ -741,6 +797,35 @@ local function _GetCraftResultItem(recipeID)
 	return itemID, maxMade
 end
 
+local function _GetProfessionCraftList(professionSpellID, expansionID)
+    -- Pick the first character that has the profession, then get its crafting list including unlearned crafts
+    -- expansionID of 2 would be TBC, which is the second category from the bottom
+    local recipeIDs = {}
+    for accountName in pairs(DataStore:GetAccounts()) do
+        for realmName in pairs(DataStore:GetRealms(accountName)) do
+            for characterName, character in pairs(DataStore:GetCharacters(realm, account)) do
+                local professions = DataStore:GetProfessions(character)
+                if professions then
+                    for professionName, profession in pairs(professions) do
+                        local _,_, spellID = DataStore:GetProfessionInfo(profession)
+                        if (GetSpellInfo(spellID)) == (GetSpellInfo(professionSpellID)) then
+                            if _GetNumRecipeCategories(profession) >= EJ_GetNumTiers() then
+                                local difference = (DataStore:GetNumRecipeCategories(profession) - EJ_GetNumTiers())
+                                local categoryID = ((EJ_GetNumTiers() - expansionID) + difference + 1)
+                                _IterateRecipes(profession, categoryID, 0, function(recipeData)
+                                    local color, recipeID = DataStore:GetRecipeInfo(recipeData)
+                                    table.insert(recipeIDs, recipeID)
+                                end)
+                                return recipeIDs
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return recipeIDs
+end
 
 local PublicMethods = {
 	GetProfession = _GetProfession,
@@ -771,6 +856,7 @@ local PublicMethods = {
 	IsArtifactKnown = _IsArtifactKnown,
 	GetCraftReagents = _GetCraftReagents,
 	GetCraftResultItem = _GetCraftResultItem,
+    GetProfessionCraftList = _GetProfessionCraftList,
 }
 
 function addon:OnInitialize()
@@ -790,6 +876,7 @@ function addon:OnInitialize()
 	
 	DataStore:SetGuildBasedMethod("GetGuildCrafters")
 	DataStore:SetGuildBasedMethod("GetGuildMemberProfession")
+    
 end
 
 function addon:OnEnable()
@@ -798,6 +885,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 	addon:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", OnDataSourceChanged)
+    addon:RegisterEvent("TRADE_SKILL_LIST_UPDATE", OnTradeSkillListUpdate)
 		
 	local _, _, arch = GetProfessions()
 
@@ -818,6 +906,7 @@ function addon:OnDisable()
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 	addon:UnregisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED")
+    addon:UnregisterEvent("TRADE_SKILL_LIST_UPDATE")
 end
 
 function addon:IsTradeSkillWindowOpen()

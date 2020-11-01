@@ -52,6 +52,7 @@ Prat:AddModuleToLoad(function()
     ["Scrollback"] = true,
     ["Store the chat lines between sessions"] = true,
     ["Scrollback Options"] = true,
+    ["Command History Options"] = true,
     divider = "========== End of Scrollback ==========",
     scrollbackduration_name = "Scrollback Duration",
     scrollbackduration_desc = "How many hours to keep the saved messages.",
@@ -78,6 +79,7 @@ L = {
 		["Chat history options."] = true,
 		["Color GMOTD"] = true,
 		["Colors the GMOTD label"] = true,
+		["Command History Options"] = true,
 		["delaygmotd_desc"] = "Delay GMOTD until after all the startup spam",
 		["delaygmotd_name"] = "Delay GMOTD",
 		["divider"] = "========== End of Scrollback ==========",
@@ -117,6 +119,8 @@ L = {
 		["Color GMOTD"] = "Color GMOTD",
 		--[[Translation missing --]]
 		["Colors the GMOTD label"] = "Colors the GMOTD label",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		["delaygmotd_desc"] = "Afficher le message du jour de la guilde après tous les autres messages lors de la connexion.",
 		--[[Translation missing --]]
 		["delaygmotd_name"] = "Delay GMOTD",
@@ -163,7 +167,8 @@ L = {
 		["bnet_removed"] = "<BNET ENTFERNT>",
 		["Chat history options."] = "Optionen zum Chatverlauf.",
 		["Color GMOTD"] = "Farbe der Gildennachricht des Tages",
-		["Colors the GMOTD label"] = "Färbt die GMOTD-Beschriftung",
+		["Colors the GMOTD label"] = "Färbt die Gildennachricht des Tages-Beschriftung",
+		["Command History Options"] = "Befehlsverlaufsoptionen",
 		["delaygmotd_desc"] = "GMOTD verzögern, bis die Ausgabe aller Mitteilungen nach dem Einloggen vollendet ist.",
 		["delaygmotd_name"] = "GMOTD verzögern",
 		["divider"] = "========== Ende des Zurückblättern ==========",
@@ -200,6 +205,8 @@ L = {
 		["Chat history options."] = "대화 내역 옵션입니다.",
 		["Color GMOTD"] = "오늘의 길드 메시지에 색상입히기",
 		["Colors the GMOTD label"] = "오늘의 길드 메시지 제목에 색상입히기",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		["delaygmotd_desc"] = "모든 시작 스팸이 표시 될때까지 오늘의 길드 메시지 지연시키기",
 		["delaygmotd_name"] = "오늘의 길드 메시지 지연",
 		["divider"] = "========== 이전 대화 목록의 끝 ==========",
@@ -218,14 +225,10 @@ L = {
 		["Set Chat Lines"] = "대화 내역 설정",
 		["Set Command History"] = "명령어 내역 설정",
 		["Set the number of lines of chat history for each window."] = "각 대화창 별로 대화 내역의 줄의 갯수를 설정합니다.",
-		--[[Translation missing --]]
-		["storage_char"] = "Character",
-		--[[Translation missing --]]
-		["storage_desc"] = "Which location should the history be saved to.",
-		--[[Translation missing --]]
-		["storage_name"] = "Save To",
-		--[[Translation missing --]]
-		["storage_server"] = "Server",
+		["storage_char"] = "캐릭터",
+		["storage_desc"] = "기록을 저장할 위치",
+		["storage_name"] = "저장",
+		["storage_server"] = "서버",
 		["Store the chat lines between sessions"] = "세션 간 대화 내용 저장하기",
 	}
 }
@@ -244,6 +247,8 @@ L = {
 		["Color GMOTD"] = "Color GMOTD",
 		--[[Translation missing --]]
 		["Colors the GMOTD label"] = "Colors the GMOTD label",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		--[[Translation missing --]]
 		["delaygmotd_desc"] = "Delay GMOTD until after all the startup spam",
 		--[[Translation missing --]]
@@ -299,41 +304,33 @@ L = {
 
 L = {
 	["History"] = {
-		--[[Translation missing --]]
-		["bnet_removed"] = "<BNET REMOVED>",
+		["bnet_removed"] = "<BNET УДАЛЕН>",
 		["Chat history options."] = "Настройки истории чата.",
 		["Color GMOTD"] = "Цвет  GMOTD",
 		["Colors the GMOTD label"] = "Цвета названия СДГ",
+		["Command History Options"] = "Параметры истории команд",
 		["delaygmotd_desc"] = "Задерживать отображение СДГ вплоть до окончания спама при входе в игру",
 		["delaygmotd_name"] = "задержка GMOTD",
 		["divider"] = "========== Конец истории сообщений ==========",
 		["History"] = "История",
 		["Maximum number of lines of command history to save."] = "Максимальное число строк сохранённых в истории команд.",
-		--[[Translation missing --]]
-		["removespam_desc"] = "Remove addon spam messages when restoring the chat history",
-		--[[Translation missing --]]
-		["removespam_name"] = "Remove Spam",
+		["removespam_desc"] = "Удалять спам-сообщения аддона при восстановлении истории чата",
+		["removespam_name"] = "Удалить спам",
 		["Save Command History"] = "Сохранять историю команд",
 		["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Сохранять историю команд между сеансами (для использования используйте alt+ стрелка вверх или просто стрелку вверх)",
 		["Scrollback"] = "История сообщений",
 		["Scrollback Options"] = "Вернуть опции",
-		--[[Translation missing --]]
-		["scrollbackduration_desc"] = "How many hours to keep the saved messages.",
-		--[[Translation missing --]]
-		["scrollbackduration_name"] = "Scrollback Duration",
+		["scrollbackduration_desc"] = "Сколько часов хранить сохраненные сообщения.",
+		["scrollbackduration_name"] = "Длительность прокрутки",
 		["scrollbacklen_desc"] = "Количество строк чата, которое надо сохранять в буфере истории сообщений.",
 		["scrollbacklen_name"] = "Длина истории сообщений",
 		["Set Chat Lines"] = "Задать число строк чата",
 		["Set Command History"] = "История команд",
 		["Set the number of lines of chat history for each window."] = "Установите число строк истории чата для всех окон чата.",
-		--[[Translation missing --]]
-		["storage_char"] = "Character",
-		--[[Translation missing --]]
-		["storage_desc"] = "Which location should the history be saved to.",
-		--[[Translation missing --]]
-		["storage_name"] = "Save To",
-		--[[Translation missing --]]
-		["storage_server"] = "Server",
+		["storage_char"] = "Персонаж",
+		["storage_desc"] = "В какое место следует сохранять историю.",
+		["storage_name"] = "Сохранить В",
+		["storage_server"] = "Сервер ",
 		["Store the chat lines between sessions"] = "Сохранять строки чата между сессиями",
 	}
 }
@@ -349,6 +346,8 @@ L = {
 		["Chat history options."] = "历史聊天记录选项",
 		["Color GMOTD"] = "每日公会信息颜色",
 		["Colors the GMOTD label"] = "为每日公会信息标签着色",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		["delaygmotd_desc"] = "延迟每日公会信息直到起始垃圾信息显示完毕为止",
 		["delaygmotd_name"] = "延迟 GMOTD",
 		["divider"] = "========== 回卷结束 ==========",
@@ -396,6 +395,8 @@ L = {
 		["Color GMOTD"] = "Color GMOTD",
 		--[[Translation missing --]]
 		["Colors the GMOTD label"] = "Colors the GMOTD label",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		--[[Translation missing --]]
 		["delaygmotd_desc"] = "Delay GMOTD until after all the startup spam",
 		--[[Translation missing --]]
@@ -448,6 +449,8 @@ L = {
 		["Chat history options."] = "歷史訊息選項。",
 		["Color GMOTD"] = "顏色 GMOTD",
 		["Colors the GMOTD label"] = "顏色 GMOTD 標籤",
+		--[[Translation missing --]]
+		["Command History Options"] = "Command History Options",
 		--[[Translation missing --]]
 		["delaygmotd_desc"] = "Delay GMOTD until after all the startup spam",
 		["delaygmotd_name"] = "延遲 GMOTD",
@@ -533,7 +536,7 @@ L = {
         bigStep = 50,
       },
       cmdhistheader = {
-        name = "Command History Options",
+        name = PL["Command History Options"],
         type = "header",
         order = 130,
       },
@@ -554,18 +557,18 @@ L = {
         type = "toggle",
         order = 131,
       },
-      colorgmotd = {
-        name = PL["Color GMOTD"],
-        desc = PL["Colors the GMOTD label"],
-        type = "toggle",
-        order = 150,
-      },
-      delaygmotd = {
-        name = PL.delaygmotd_name,
-        desc = PL.delaygmotd_desc,
-        type = "toggle",
-        order = 151
-      }
+--      colorgmotd = {
+--        name = PL["Color GMOTD"],
+--        desc = PL["Colors the GMOTD label"],
+--        type = "toggle",
+--        order = 150,
+--      },
+--      delaygmotd = {
+--        name = PL.delaygmotd_name,
+--        desc = PL.delaygmotd_desc,
+--        type = "toggle",
+--        order = 151
+--      }
     }
   })
 
@@ -631,20 +634,20 @@ L = {
 
 
 
-    if IsInGuild() then
-      self.frame = self.frame or CreateFrame("Frame")
-
-      if self.db.profile.delaygmotd then
-        self:DelayGMOTD(self.frame)
-      end
-
-      if self.db.profile.colorgmotd then
-        local a, b = strsplit(":", GUILD_MOTD_TEMPLATE)
-        if a and b then
-          GUILD_MOTD_TEMPLATE = "|cffffffff" .. a .. "|r:" .. b
-        end
-      end
-    end
+--    if IsInGuild() then
+--      self.frame = self.frame or CreateFrame("Frame")
+--
+--      if self.db.profile.delaygmotd then
+--        self:DelayGMOTD(self.frame)
+--      end
+--
+--      if self.db.profile.colorgmotd then
+--        local a, b = strsplit(":", GUILD_MOTD_TEMPLATE)
+--        if a and b then
+--          GUILD_MOTD_TEMPLATE = "|cffffffff" .. a .. "|r:" .. b
+--        end
+--      end
+--    end
   end
 
 
@@ -686,30 +689,30 @@ L = {
   end
 
 
-  function module:DelayGMOTD(frame)
-    local delay = 2.5
-    local maxtime = 60
-    ChatFrame1:UnregisterEvent("GUILD_MOTD")
-    frame:SetScript("OnUpdate", function(this, expired)
-      delay = delay - expired
-      if delay < 0 then
-        local msg = GetGuildRosterMOTD()
-        if maxtime < 0 or (msg and msg:len() > 0) then
-          ChatFrame1:RegisterEvent("GUILD_MOTD")
-
-          for _, f in pairs(Prat.Frames) do
-            if f:IsEventRegistered("GUILD_MOTD") then
-              ChatFrame_SystemEventHandler(f, "GUILD_MOTD", msg)
-            end
-          end
-          this:Hide()
-        else
-          delay = 2.5
-          maxtime = maxtime - 2.5
-        end
-      end
-    end)
-  end
+--  function module:DelayGMOTD(frame)
+--    local delay = 2.5
+--    local maxtime = 60
+--    ChatFrame1:UnregisterEvent("GUILD_MOTD")
+--    frame:SetScript("OnUpdate", function(this, expired)
+--      delay = delay - expired
+--      if delay < 0 then
+--        local msg = GetGuildRosterMOTD()
+--        if maxtime < 0 or (msg and msg:len() > 0) then
+--          ChatFrame1:RegisterEvent("GUILD_MOTD")
+--
+--          for _, f in pairs(Prat.Frames) do
+--            if f:IsEventRegistered("GUILD_MOTD") then
+--              ChatFrame_SystemEventHandler(f, "GUILD_MOTD", msg)
+--            end
+--          end
+--          this:Hide()
+--        else
+--          delay = 2.5
+--          maxtime = maxtime - 2.5
+--        end
+--      end
+--    end)
+--  end
 
 
   --[[------------------------------------------------
@@ -742,6 +745,8 @@ L = {
     local maxlines = self.db.profile.maxlines
     local cmdhistory = editBox.history_lines or {}
 
+    if cmdhistory[1] == text then return end
+    
     table.insert(cmdhistory, 1, text)
 
     local cmdcount = #cmdhistory - maxlines

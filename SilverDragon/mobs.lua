@@ -17,6 +17,7 @@ local function toggle_mob(id)
 end
 
 local function input_to_mobid(value)
+	if not value then return end
 	value = value:trim()
 	if value == "target" or value == "mouseover" then
 		return core:UnitID(value)
@@ -26,6 +27,7 @@ local function input_to_mobid(value)
 	end
 	return core:IdForMob(value)
 end
+ns.input_to_mobid = input_to_mobid
 
 local function mob_input(name, desc, order, setter)
 	return {
@@ -61,8 +63,7 @@ function module:OnEnable()
 						order = 1,
 						args = {
 							add = mob_input(ADD, "Add a mob by entering its id, name, 'target', or 'mouseover'.", 1, function(info, id)
-								core.db.global.always[id] = true
-								self:BuildCustomList(config.options)
+								core:SetCustom(id, true)
 							end),
 							mobs = {
 								type = "group",
@@ -70,8 +71,7 @@ function module:OnEnable()
 								inline = true,
 								get = function() return true end,
 								set = function(info, value)
-									core.db.global.always[info.arg] = value or nil
-									config.options.plugins.mobs.mobs.args.custom.args.mobs.args[info[#info]] = nil
+									core:SetCustom(info.arg, false)
 								end,
 								args = {},
 							},
@@ -83,8 +83,7 @@ function module:OnEnable()
 						desc = "Mobs you just want to ignore, already",
 						args = {
 							add = mob_input(ADD, "Add a mob by entering its id, name, 'target', or 'mouseover'.", 1, function(info, id)
-								core.db.global.ignore[id] = true
-								self:BuildIgnoreList(config.options)
+								core:SetIgnore(id, true)
 							end),
 							mobs = {
 								type = "group",
@@ -92,8 +91,7 @@ function module:OnEnable()
 								inline = true,
 								get = function() return true end,
 								set = function(info, value)
-									core.db.global.ignore[info.arg] = value
-									config.options.plugins.mobs.mobs.args.ignore.args.mobs.args[info[#info]] = nil
+									core:SetIgnore(info.arg, false)
 								end,
 								args = {},
 							}
@@ -107,6 +105,22 @@ function module:OnEnable()
 		self:BuildIgnoreList(config.options)
 		self:BuildCustomList(config.options)
 		self:BuildMobList(config.options)
+
+		core.RegisterCallback(self, "IgnoreChanged")
+		core.RegisterCallback(self, "CustomChanged")
+	end
+end
+
+function module:IgnoreChanged(callback, id, ignored)
+	local config = core:GetModule("Config", true)
+	if config then
+		self:BuildIgnoreList(config.options)
+	end
+end
+function module:CustomChanged(callback, id, watched)
+	local config = core:GetModule("Config", true)
+	if config then
+		self:BuildCustomList(config.options)
 	end
 end
 
@@ -137,8 +151,7 @@ function module:BuildMobList(options)
 				return not core.db.global.ignore[info.arg]
 			end,
 			set = function(info, value)
-				core.db.global.ignore[info.arg] = not value
-				self:BuildIgnoreList(info.options)
+				core:SetIgnore(info.arg, not value)
 			end,
 			args = {
 				enabled = {
@@ -188,7 +201,36 @@ function module:BuildMobList(options)
 							inline = false,
 							name = core.zone_names[zone] or ("map"..zone),
 							desc = "ID: " .. zone,
-							args = {},
+							args = {
+								all = {
+									type = "execute",
+									name = ALL,
+									desc = "Select every mob in the list",
+									func = function(info)
+										if not ns.mobsByZone[zone] then return end
+										for mobid, locations in pairs(ns.mobsByZone[zone]) do
+											core:SetIgnore(mobid, false, true)
+										end
+										self:BuildIgnoreList(info.options)
+									end,
+									width = "half",
+									order = 1,
+								},
+								none = {
+									type = "execute",
+									name = NONE,
+									desc = "Deselect every mob in the list",
+									func = function(info)
+										if not ns.mobsByZone[zone] then return end
+										for mobid, locations in pairs(ns.mobsByZone[zone]) do
+											core:SetIgnore(mobid, true, true)
+										end
+										self:BuildIgnoreList(info.options)
+									end,
+									width = "half",
+									order = 2,
+								},
+							},
 						}
 					end
 					local toggle = toggle_mob(id)

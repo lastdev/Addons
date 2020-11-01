@@ -1,9 +1,9 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Altoholic_Characters
 ## Notes: Altoholic's Characters UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r192
-## Dependencies: Altoholic, DataStore, DataStore_Characters
+## Version: 9.0.1-024
+## Dependencies: Altoholic, DataStore, DataStore_Characters, DataStore_Containers
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 

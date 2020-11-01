@@ -9,6 +9,7 @@ Omen.version = GetAddOnMetadata("Omen", "Version")
 Omen.versionstring = "Omen v"..GetAddOnMetadata("Omen", "Version")
 _G["Omen"] = Omen
 
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 
 -----------------------------------------------------------------------------
 -- Keybinding globals
@@ -19,6 +20,22 @@ BINDING_NAME_OMENTOGGLEFOCUS = L["Toggle Focus"]
 
 -----------------------------------------------------------------------------
 -- Register some media
+if WoWClassic then
+-- most of these sounds are nto actually in classic
+--LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.ogg]])
+--LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.ogg]])
+--LSM:Register("sound", "Explosion", [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.ogg]])
+--LSM:Register("sound", "Shing!", [[Sound\Doodad\PortcullisActive_Closed.ogg]])
+--LSM:Register("sound", "Wham!", [[Sound\Doodad\PVP_Lordaeron_Door_Open.ogg]])
+--LSM:Register("sound", "Simon Chime", [[Sound\Doodad\SimonGame_LargeBlueTree.ogg]])
+--LSM:Register("sound", "War Drums", [[Sound\Event Sounds\Event_wardrum_ogre.ogg]])
+--LSM:Register("sound", "Cheer", [[Sound\Event Sounds\OgreEventCheerUnique.ogg]])
+--LSM:Register("sound", "Humm", [[Sound\Spells\SimonGame_Visual_GameStart.ogg]])
+--LSM:Register("sound", "Short Circuit", [[Sound\Spells\SimonGame_Visual_BadPress.ogg]])
+--LSM:Register("sound", "Fel Portal", [[Sound\Spells\Sunwell_Fel_PortalStand.ogg]])
+--LSM:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]])
+LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDIe.ogg]])
+else
 LSM:Register("sound", "Rubber Ducky", 566121) -- [[Sound\Doodad\Goblin_Lottery_Open01.ogg]]
 LSM:Register("sound", "Cartoon FX", 566543) --  [[Sound\Doodad\Goblin_Lottery_Open03.ogg]]
 LSM:Register("sound", "Explosion", 566982) -- [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.ogg]]
@@ -32,6 +49,7 @@ LSM:Register("sound", "Short Circuit", 568975) -- [[Sound\Spells\SimonGame_Visua
 LSM:Register("sound", "Fel Portal", 569215) -- [[Sound\Spells\Sunwell_Fel_PortalStand.ogg]]
 LSM:Register("sound", "Fel Nova", 568582) -- [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]]
 LSM:Register("sound", "You Will Die!", 546633) -- [[Sound\Creature\CThun\CThunYouWillDIe.ogg]]
+end
 LSM:Register("sound", "Omen: Aoogah!", [[Interface\AddOns\Omen\aoogah.ogg]])
 
 
@@ -349,7 +367,7 @@ function Omen:CreateFrames()
 	self.Anchor:SetScript("OnShow", function(self) db.Shown = true Omen:UpdateBars() end)
 
 	-- Create Title
-	self.Title = CreateFrame("Button", "OmenTitle", self.Anchor)
+	self.Title = CreateFrame("Button", "OmenTitle", self.Anchor, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	self.Title:SetPoint("TOPLEFT", self.Anchor, "TOPLEFT")
 	self.Title:SetPoint("TOPRIGHT", self.Anchor, "TOPRIGHT")
 	self.Title:SetHeight(16)
@@ -370,7 +388,7 @@ function Omen:CreateFrames()
 	self.TitleText:SetText(self.defaultTitle)
 
 	-- Create Bar List
-	self.BarList = CreateFrame("Frame", "OmenBarList", self.Anchor)
+	self.BarList = CreateFrame("Frame", "OmenBarList", self.Anchor, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	self.BarList:SetResizable(true)
 	self.BarList:EnableMouse(true)
 	self.BarList:SetPoint("TOPLEFT", self.Title, "BOTTOMLEFT")
@@ -601,8 +619,10 @@ function Omen:OnEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
-	self:RegisterEvent("PET_BATTLE_OPENING_START", "UpdateVisible")
-	self:RegisterEvent("PET_BATTLE_CLOSE", "UpdateVisible")
+	if not WoWClassic then
+		self:RegisterEvent("PET_BATTLE_OPENING_START", "UpdateVisible")
+		self:RegisterEvent("PET_BATTLE_CLOSE", "UpdateVisible")
+	end
 
 	if db.ShowWith.HideWhenOOC then
 		self:RegisterEvent("PLAYER_REGEN_DISABLED", "UpdateVisible")
@@ -754,7 +774,7 @@ function Omen:UpdateVisible(event)
 	if event == "PET_BATTLE_OPENING_START" then
 		self:_toggle(false)
 		return
-	elseif C_PetBattles.IsInBattle() then
+	elseif not WoWClassic and C_PetBattles.IsInBattle() then
 		return
 	end
 
@@ -1381,6 +1401,14 @@ function Omen:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 
 	elseif eventtype == "SPELL_AURA_APPLIED" then
 		local spellID = arg1
+
+		if WoWClassic then
+			-- Fade, classic has no spell IDs
+			if arg2 == GetSpellInfo(586) then
+				spellID = 586
+			end
+		end
+
 		--[[local mdtricksTarget = mdtricksActors[srcGUID]
 
 		-- Misdirection and Tricks of the Trade buff
@@ -1415,6 +1443,14 @@ function Omen:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 
 	elseif eventtype == "SPELL_AURA_REMOVED" then
 		local spellID = arg1
+
+		if WoWClassic then
+			-- Fade, classic has no spell IDs
+			if arg2 == GetSpellInfo(586) then
+				spellID = 586
+			end
+		end
+
 		--[[if spellID == 35079 or spellID == 59628 then
 			--self:Print(GetSpellLink(spellID).." fades from |cffff4040"..srcName.."|r")
 			mdtricksActors[dstGUID] = nil
@@ -1562,8 +1598,10 @@ function Omen:RecordThreat(srcGUID)
 	end
 	recordThreat(unitID, "target", srcGUID)
 	recordThreat(unitID, "targettarget", srcGUID)
-	recordThreat(unitID, "focus", srcGUID)
-	recordThreat(unitID, "focustarget", srcGUID)
+	if not WoWClassic then
+		recordThreat(unitID, "focus", srcGUID)
+		recordThreat(unitID, "focustarget", srcGUID)
+	end
 	recordThreat(unitID, "mouseover", srcGUID)
 	recordThreat(unitID, "mouseovertarget", srcGUID)
 end
@@ -1815,8 +1853,10 @@ function Omen:UpdateBarsReal()
 		end
 		updatethreat("target", mob)
 		updatethreat("targettarget", mob)
-		updatethreat("focus", mob)
-		updatethreat("focustarget", mob)
+		if not WoWClassic then
+			updatethreat("focus", mob)
+			updatethreat("focustarget", mob)
+		end
 		updatethreat(mobTarget, mob)
 		updatethreat("mouseover", mob)
 		updatethreat("mouseovertarget", mob)
@@ -1826,6 +1866,8 @@ function Omen:UpdateBarsReal()
 	if dbBar.ShowAggroBar and tankThreat > 0 then
 		if GetItemInfo(37727) then -- 5 yards (Ruby Acorn - http://www.wowhead.com/?item=37727)
 			threatTable["AGGRO"] = tankThreat * (IsItemInRange(37727, mob) and 1.1 or 1.3)
+		elseif GetItemInfo(8149) then -- 5 yards (Voodoo Charm - http://www.wowhead.com/?item=8149)
+			threatTable["AGGRO"] = tankThreat * (IsItemInRange(8149, mob) and 1.1 or 1.3)
 		else -- 9 yards compromise
 			threatTable["AGGRO"] = tankThreat * (CheckInteractDistance(mob, 3) and 1.1 or 1.3)
 		end
@@ -2003,7 +2045,7 @@ function Omen:UpdateBarsReal()
 		end
 		local t = db.Warnings
 		if lastWarn.mobGUID == mobGUID and myThreatPercent >= t.Threshold and t.Threshold > lastWarn.threatpercent then
-			if not t.DisableWhileTanking or not (GetSpecialization() and select(5, GetSpecializationInfo(GetSpecialization())) == "TANK") then
+			if not WoWClassic and (not t.DisableWhileTanking or not (GetSpecialization() and select(5, GetSpecializationInfo(GetSpecialization())) == "TANK")) then
 				self:Warn(t.Sound, t.Flash, t.Shake, t.Message and L["Passed %s%% of %s's threat!"]:format(t.Threshold, guidNameLookup[lastWarn.tankGUID]))
 			end
 		end
@@ -2156,12 +2198,14 @@ do
 			info.tooltipText = L["Locks Omen in place and prevents it from being dragged or resized."]
 			UIDropDownMenu_AddButton(info, level)
 
-			info.text = L["Use Focus Target"]
-			info.func = toggleFocus
-			info.checked = db.UseFocus
-			info.tooltipTitle = L["Use Focus Target"]
-			info.tooltipText = L["Tells Omen to additionally check your 'focus' and 'focustarget' before your 'target' and 'targettarget' in that order for threat display."]
-			UIDropDownMenu_AddButton(info, level)
+			if not WoWClassic then
+				info.text = L["Use Focus Target"]
+				info.func = toggleFocus
+				info.checked = db.UseFocus
+				info.tooltipTitle = L["Use Focus Target"]
+				info.tooltipText = L["Tells Omen to additionally check your 'focus' and 'focustarget' before your 'target' and 'targettarget' in that order for threat display."]
+				UIDropDownMenu_AddButton(info, level)
+			end
 
 			info.text = L["Test Mode"]
 			info.func = toggleTestMode
@@ -2405,6 +2449,7 @@ Omen.Options = {
 					set = function(info, value)
 						Omen:ToggleFocus()
 					end,
+					hidden = WoWClassic,
 				},
 				TestMode = {
 					type = "toggle",
@@ -3333,6 +3378,7 @@ Omen.Options = {
 					order = 10,
 					name = L["Disable while tanking"],
 					desc = L["DISABLE_WHILE_TANKING_DESC"],
+					hidden = WoWClassic,
 				},
 				test = {
 					type = "execute",

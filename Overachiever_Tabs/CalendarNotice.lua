@@ -26,12 +26,10 @@ local activeNoticeFrames = {}
 local r_desc, g_desc, b_desc = 0.741, 1, 0.467
 
 
--- BFA
-local CalendarGetDate = CalendarGetDate or function(...)
-	local info = C_Calendar.GetDate(...)
+local function CalendarGetDate()
+	local info = C_DateAndTime.GetCurrentCalendarTime()
 	return info.weekday, info.month, info.monthDay, info.year, info.hour, info.minute
 end
--- BFA
 
 
 local ACHID_HOLIDAY = Overachiever.SUGGESTIONS.holiday;
@@ -230,7 +228,7 @@ local function getNextNoticeFrame(texture, startHidden)
 		frameTex:SetTexCoord(0.0, 0.7109375, 0.0, 0.7109375)
 		frameTex:SetWidth(76); frameTex:SetHeight(76);
 
-		local frameBorder = CreateFrame("Frame", "$parentBorder", frame)
+		local frameBorder = CreateFrame("Frame", "$parentBorder", frame, "BackdropTemplate")
 		frameBorder:SetAllPoints(frame)
 		frameBorder:SetBackdrop( {
 			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16,

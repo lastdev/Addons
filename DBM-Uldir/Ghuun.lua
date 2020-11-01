@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2147, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524143937")
+mod:SetRevision("20201017153235")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
-mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod:SetHotfixNoticeRev(17906)
 mod:SetMinSyncRevision(18056)
@@ -127,7 +126,7 @@ mod.vb.matrixActive = false
 mod.vb.bloodFeastTarget = nil
 local playerHasImperfect, playerHasBursting, playerHasBargain, playerHasMatrix = false, false, false, false
 local matrixTargets = {}
-local thousandMawsTimers = {25.4, 26.3, 25.5, 24.2, 23.9, 23.1, 21.5, 21.9, 19.4}
+local thousandMawsTimers = {25.4, 26.3, 24.2, 24.2, 23.9, 21.9, 21.5, 20.6, 19.4}
 local thousandMawsTimersLFR = {27.78, 29.2, 27.9, 26.46, 26.13, 25.26, 23.51, 23.95, 21.21}--Timers 4+ extrapolated using 1.093x greater formula
 local seenAdds = {}
 local castsPerGUID = {}
@@ -404,13 +403,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else--Drive cast in Phase 2
 			if self.vb.waveCast == 2 then--Current timer is blood feast
 				local elapsed, total = timerBloodFeastCD:GetTime(self.vb.bloodFeastCount+1)
-				local extend = (total+25) - elapsed
 				timerBloodFeastCD:Update(elapsed, total+25, self.vb.bloodFeastCount+1)
 			else--Current timer is wave of corruption
 				timerWaveofCorruptionCD:AddTime(25, self.vb.waveCast+1)
 			end
 			local elapsed2, total2 = timerExplosiveCorruptionCD:GetTime(self.vb.explosiveCount+1)
-			local extend2 = (total2+25) - elapsed2
 			timerExplosiveCorruptionCD:Update(elapsed2, total2+25, self.vb.explosiveCount+1)
 			if self:IsMythic() then
 				timerBurstingBoilCD:AddTime(25, self.vb.burstingCount+1)
@@ -462,7 +459,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.explosiveIcon = 0
 		self.vb.explosiveCount = self.vb.explosiveCount + 1
 		if self.vb.phase == 1 then
-			local timer = self:IsMythic() and 44 or 26
+			local timer = self:IsMythic() and 42.9 or 26
 			timerExplosiveCorruptionCD:Start(timer, self.vb.explosiveCount+1)
 		elseif self.vb.phase == 2 then
 			timerExplosiveCorruptionCD:Start(15.8, self.vb.explosiveCount+1)--15.8 in all, except mythic, doesn't exist in mythic P2
@@ -503,7 +500,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellDarkPurpose:Yell()
 			end
 			if self.Options.NPAuraOnFixate then
-				DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, nil, nil, true, {0.5, 0, 0.55, 0.75})
+				DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 			end
 		end
 	elseif spellId == 275204 then
@@ -727,7 +724,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			seenAdds[GUID] = true
 			local cid = self:GetCIDFromGUID(GUID)
 			if cid == 134590 then--Big Adds
-				timerBurrowCD:Start(30.5, GUID)
+				timerBurrowCD:Start(29.5, GUID)
 			end
 		end
 	end

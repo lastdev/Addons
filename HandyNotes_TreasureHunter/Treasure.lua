@@ -1,13 +1,13 @@
 local myname, ns = ...
 
 ns.map_questids = {
-    ["ShadowmoonValleyDR"] = 36464,
-    ["FrostfireRidge"] = 34557,
-    ["Gorgrond"] = 36465,
-    ["Talador"] = 36466,
-    ["SpiresOfArak"] = 36467,
-    ["NagrandDraenor"] = 36468,
-    ["TanaanJungle"] = 39463,
+    [539] = 36464, -- ShadowmoonValleyDR
+    [525] = 34557, -- FrostfireRidge
+    [543] = 36465, -- Gorgrond
+    [535] = 36466, -- Talador
+    [542] = 36467, -- SpiresOfArak
+    [550] = 36468, -- NagrandDraenor
+    [534] = 39463, -- TanaanJungle
 }
 
 ns.points = {
@@ -24,7 +24,7 @@ ns.points = {
         },
     },
     --]]
-    ["NagrandDraenor"] = {
+    [550] = { -- NagrandDraenor
         -- steamwheedle supplies
         [50108220]={ quest=35577, label="Steamwheedle Supplies", note="Use a glider", currency=824, },
         [52708010]={ quest=35583, label="Steamwheedle Supplies", note="Use a glider", currency=824, },
@@ -133,6 +133,9 @@ ns.points = {
         [87005500]={ quest=34862, npc=78161, item=116799, }, -- Hyperious
         [89004120]={ quest=35623, npc=82486, item=118679, }, -- Explorer Nozzand
         [93202820]={ quest=35898, npc=83509, item=116916, }, -- Gorepetal
+        [28182969]={ quest=40073, npc=98199, item=129217, }, -- Pugg
+        [23783851]={ quest=40074, npc=98200, item=129217, }, -- Guk
+        [26033460]={ quest=40075, npc=98198, item=129217, }, -- Rukdug
         -- steamwheedle rares
         [62601680]={ quest=37211, npc=86732, item=118655, }, -- Bergruu
         [50204120]={ quest=37221, npc=86743, item=118656, }, -- Dekorhan
@@ -164,11 +167,11 @@ ns.points = {
 
     },
     --]]
-    ["ShadowmoonValleyDR"] = {
+    [539] = { -- ShadowmoonValleyDR
         -- garrison-y
         [27100260]={ quest=35280, currency=824, label="Stolen Treasure", },
         [26500570]={ quest=34174, currency=824, label="Fantastic Fish", },
-        [28800710]={ quest=35279, currency=824, label="Sunken Treasure", },
+        -- [28800710]={ quest=35279, currency=824, label="Sunken Treasure", }, -- bugged for years
         [30301990]={ quest=35530, currency=824, label="Lunarfall Egg", note="Moves to the garrison once built", faction="Alliance", },
         [45802460]={ quest=33570, currency=824, label="Shadowmoon Exile Treasure", note="cave below Exile Rise", },
         [52902490]={ quest=37254, currency=824, label="Mushroom-Covered Chest", },
@@ -260,10 +263,10 @@ ns.points = {
         [48706990]={ quest=37864, item=121815, note="Occasionally spawning portal", },
         [46607000]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
-    ["BloodthornCave"] = {
-        [55544974]={ quest=33572, item=113373, note="Rotting Basket", level=15, },
+    [540] = { -- BloodthornCave
+        [55544974]={ quest=33572, item=113373, note="Rotting Basket", },
     },
-    ["FrostfireRidge"] = {
+    [525] = { -- FrostfireRidge
         -- garrison
         [16104980]={ quest=33942, label="Supply Dump", currency=824, },
         [21605070]={ quest=34931, label="Pale Loot Sack", currency=824, },
@@ -363,20 +366,25 @@ ns.points = {
         [53841721]={ quest=37864, item=121815, note="Occasionally spawning portal", },
         [47702750]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
-    ["BladespireFortress"] = {
-        [44806480]={ quest=35570, label="Ogre Booty", note="Gold", level=1, },
-        [48506720]={ quest=35369, label="Ogre Booty", note="Gold; up some crates", level=1, },
-        [53702880]={ quest=35368, label="Ogre Booty", note="Gold; up some crates", level=1, },
-        [36502900]={ quest=35347, currency=824, label="Ogre Booty", level=2, },
-        [37806900]={ quest=35370, item=113189, note="Doorog's Secret Stash; second floor, outside", level=2, },
-        [46401640]={ quest=35371, label="Ogre Booty", note="Gold; up some crates; may hit an invisible ceiling, it's reachable if you work at it", level=2, },
-        [51101770]={ quest=35567, currency=824, label="Ogre Booty", level=2, },
-        [52605300]={ quest=35373, label="Ogre Booty", note="Gold; up some crates", level=2, },
-        [70806800]={ quest=35569, currency=824, label="Ogre Booty", note="In the vault", level=2, },
-        [76606330]={ quest=35568, currency=824, label="Ogre Booty", note="In the vault", level=2, },
-        [31706640]={ quest=35367, item=113108, note="Gorr'thogg's Personal Reserve", level=3, },
+    -- All these Bladespire ones are available for Alliance, but Horde have to complete Moving In (33657) first
+    [526] = { -- Turgall's Den: Bladespire Citadel
+        [44806480]={ quest=35570, label="Ogre Booty", note="Gold", },
+        [48506720]={ quest=35369, label="Ogre Booty", note="Gold; up some crates", },
+        [53702880]={ quest=35368, label="Ogre Booty", note="Gold; up some crates", },
     },
-    ["Gorgrond"] = {
+    [527] = { -- Turgall's Den: Bladespite Courtyard
+        [36502900]={ quest=35347, currency=824, label="Ogre Booty", },
+        [37806900]={ quest=35370, item=113189, note="Doorog's Secret Stash; second floor, outside", },
+        [46401640]={ quest=35371, label="Ogre Booty", note="Gold; up some crates; may hit an invisible ceiling, it's reachable if you work at it", },
+        [51101770]={ quest=35567, currency=824, label="Ogre Booty", },
+        [52605300]={ quest=35373, label="Ogre Booty", note="Gold; up some crates", },
+        [70806800]={ quest=35569, currency=824, label="Ogre Booty", note="In the vault", },
+        [76606330]={ quest=35568, currency=824, label="Ogre Booty", note="In the vault", },
+    },
+    [528] = { -- Turgall's Den: Bladespite Throne
+        [31706640]={ quest=35367, item=113108, note="Gorr'thogg's Personal Reserve", },
+    },
+    [543] = { -- Gorgrond
         -- treasures
         [39006810]={ quest=36631, label="Sasha's Secret Stash", note="Random green + gold; top of the tower on a broken beam outside, you have to jump down", },
         [40007230]={ quest=36170, item=118715, note="Femur of Improbability", },
@@ -451,7 +459,7 @@ ns.points = {
         [56004000]={ quest=37864, item=121815, note="Occasionally spawning portal", },
         [43203420]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
-    ["Talador"] = {
+    [535] = { -- Talador
         -- treasures
         [33307670]={ quest=34259, label="Bonechewer Remnants", currency=824, },
         [35509660]={ quest=34249, label="Farmer's Bounty", currency=824, },
@@ -497,7 +505,7 @@ ns.points = {
         [78201480]={ quest=34263, item=117572, note="Pure Crystal Dust; upper level of the mine", },
         [81803500]={ quest=34260, item=109118, note="Aruuna Mining Cart", },
         -- rares
-        [22207400]={ quest=36919, npc=85572, note="In a crate, no loot", }, -- Grrbrrgle
+        [22207400]={ quest=36919, npc=85572, item=120436, note="In a crate", }, -- Grrbrrgle
         [30502640]={ quest=37345, npc=82920, item=119388, }, -- Lord Korinak
         [31404750]={ quest=37344, npc=87668, currency=823, note="3 people needed to stand on the symbols", }, -- Orumo the Observer
         [31806380]={ quest=34189, npc=77719, item=116113, }, -- Glimmerwing
@@ -548,10 +556,10 @@ ns.points = {
         [51904120]={ quest=37864, item=121815, note="Occasionally spawning portal", },
         [46205260]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
-    ["TombofSouls"] = {
+    [537] = { -- TombofSouls
         [67602320]={ quest=34671, npc=79543, item=112370, }, -- Shirzir
     },
-    ["SpiresOfArak"] = {
+    [542] = { -- SpiresOfArak
         -- archeology
         [33302730]={ quest=36422, label="Sun-Touched Cache", currency=829, note="Needs archeology", },
         [42701830]={ quest=36244, label="Misplaced Scrolls", note="Needs archeology", currency=829, },
@@ -651,44 +659,37 @@ ns.points = {
         [36501820]={ quest=37864, item=121815, note="Occasionally spawning portal", },
     },
     -- Garrisons!
-    ["garrisonsmvalliance_tier1"] = {
-        [49604380]={ quest=35530, currency=824, label="Lunarfall Egg", note="wagon", faction="Alliance", junk=true, },
-        [51800110]={ quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
-        [42405436]={ quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [50704850]={ quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [30802830]={ quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [49197683]={ quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
+    [582] = { -- Lunarfall
+        -- garrisonsmvalliance_tier1
+        [49604380]={ art=601, quest=35530, currency=824, label="Lunarfall Egg", note="wagon", faction="Alliance", junk=true, },
+        [51800110]={ art=601, quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
+        [42405436]={ art=601, quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [50704850]={ art=601, quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [30802830]={ art=601, quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [49197683]={ art=601, quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        -- garrisonsmvalliance_tier2
+        [37006590]={ art=602, quest=35530, currency=824, label="Lunarfall Egg, wagon", },
+        [51800110]={ art=602, quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
+        [41685803]={ art=602, quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [51874545]={ art=602, quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [34972345]={ art=602, quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [46637608]={ art=602, quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        -- garrisonsmvalliance_tier3
+        [61277261]={ art=603, quest=35530, currency=824, label="Lunarfall Egg, tent", },
+        [51800110]={ art=603, quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
+        [60575515]={ art=603, quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [37307491]={ art=603, quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [37864378]={ art=603, quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
+        [61527154]={ art=603, quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
     },
-    ["garrisonsmvalliance_tier2"] = {
-        [37006590]={ quest=35530, currency=824, label="Lunarfall Egg, wagon", },
-        [51800110]={ quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
-        [41685803]={ quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [51874545]={ quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [34972345]={ quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [46637608]={ quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
-    },
-    ["garrisonsmvalliance_tier3"] = {
-        [61277261]={ quest=35530, currency=824, label="Lunarfall Egg, tent", },
-        [51800110]={ quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
-        [60575515]={ quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [37307491]={ quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [37864378]={ quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
-        [61527154]={ quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
-    },
-    ["garrisonffhorde_tier1"] = {
+    [590] = { -- Frostwall (garrisonffhorde_tier)
         [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
     },
-    ["garrisonffhorde_tier2"] = {
-        [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
-    },
-    ["garrisonffhorde_tier3"] = {
-        [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
-    },
-    ["FoundryRaid"] = {
-        [59305720] = { quest=34405, item=109118, label="Iron Horde Chest", junk=true, level=2, },
+    [597] = { -- FoundryRaid
+        [59305720] = { quest=34405, item=109118, label="Iron Horde Chest", junk=true, },
     },
     -- ["TanaanJungleIntro"] = {},
-    ["TanaanJungle"] = {
+    [534] = { -- TanaanJungle
         -- [42903490] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest. Second floor", repeatable=true, },
         -- [35604620] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest, in the cave", repeatable=true, },
         -- [49104660] = { quest=nil, currency=824, item=128346, note="Suspiciously Glowing Chest, on the pile", repeatable=true, },
@@ -748,10 +749,10 @@ ns.points = {
         [69705600] = { quest=38704, currency=824, achievement=10262, }, -- Forgotten Iron Horde Supplies
         [73604320] = { quest=38779, note="First floor of north-east tower", achievement=10262, }, -- Stashed Bleeding Hollow Loot
     },
-    ["AshranAllianceFactionHub"] = {
+    [622] = { -- AshranAllianceFactionHub
         [45307020] = { follower=467, faction="Alliance", note="Outside the town hall", }, -- Fen Tao
     },
-    ["AshranHordeFactionHub"] = {
+    [624] = { -- AshranHordeFactionHub
         [47004500] = { follower=467, faction="Horde", note="Outside the inn", }, -- Fen Tao
     },
 }

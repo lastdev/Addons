@@ -33,25 +33,25 @@ function XPerl_SetupFrames()
 		XPerl_Assists_Frame:SetAlpha(ZPerlConfigHelper.AssistsFrame_Transparency)
 
 		ZPerlConfigHelper.Targets_Transparency = ValidAlpha(ZPerlConfigHelper.Targets_Transparency)
-		XPerl_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
+		XPerl_RaidHelper_Frame:SetAlpha(ZPerlConfigHelper.Targets_Transparency)
 
 		--ZPerlConfigHelper.Scale_AssistsFrame = ValidScale(ZPerlConfigHelper.Scale_AssistsFrame)
 		--XPerl_Assists_Frame:SetScale(ZPerlConfigHelper.Scale_AssistsFrame)
 
 		--ZPerlConfigHelper.Targets_Scale = ValidScale(ZPerlConfigHelper.Targets_Scale)
-		--XPerl_Frame:SetScale(ZPerlConfigHelper.Targets_Scale)
+		--XPerl_RaidHelper_Frame:SetScale(ZPerlConfigHelper.Targets_Scale)
 
 		-- Assist Counters
 
-		XPerl_SetupFrameSimple(XPerl_Frame, ZPerlConfigHelper.Background_Transparency)
+		XPerl_SetupFrameSimple(XPerl_RaidHelper_Frame, ZPerlConfigHelper.Background_Transparency)
 		XPerl_SetupFrameSimple(XPerl_MTTargets)
 		XPerl_SetupFrameSimple(XPerl_Assists_Frame, ZPerlConfigHelper.Assists_BackTransparency)
 		XPerlScrollSeperator:SetAlpha(ZPerlConfigHelper.Assists_BackTransparency)
 
-		XPerl_Frame_ToggleMTTargets:SetButtonTex()
-		XPerl_Frame_ToggleLabels:SetButtonTex()
-		XPerl_Frame_ToggleShowMT:SetButtonTex()
-		XPerl_Frame_Pin:SetButtonTex()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleMTTargets:SetButtonTex()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleLabels:SetButtonTex()
+		XPerl_RaidHelper_Frame_TitleBar_ToggleShowMT:SetButtonTex()
+		XPerl_RaidHelper_Frame_TitleBar_Pin:SetButtonTex()
 	end
 
 	if (XPerl_RegisterHighlight) then
@@ -92,7 +92,7 @@ function XPerl_Slash(msg)
 		{"raid",	XPerl_RaidHelp_Show,		"Open Raid Helper"},
 		{"alpha",	setAlpha,			"Set Alpha Level"},
 		{"labels",	XPerl_Toggle_ToggleLabels,	"Toggle Tank Labels"},
-		{"ctra",	XPerl_Toggle_UseCTRATargets,	"Toggle Use of CTRA MT Targets"},
+		{"ctra",	XPerl_RaidHelper_ToggleUseCTRATargets,	"Toggle Use of CTRA MT Targets"},
 	}
 
 	local foundFunc
@@ -126,26 +126,6 @@ function XPerl_Slash(msg)
 	end
 
 	XPerl_Message("Options: /xp [|c00FFFF00find|r] [|c00FFFF00assists|r] [|c00FFFF00raid|r] [|c00FFFF00labels|r] [|c00FFFF00alpha|r raid|assists] [|c00FFFF00scale|r raid|assists] [|c00FFFF00ctra|r]")
-end
-
--- XPerl_OnLoad
-function XPerl_OnLoad(self)
-	self:RegisterForDrag("LeftButton")
-	self:RegisterEvent("VARIABLES_LOADED")
-	self:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-	SlashCmdList["XPERLHELPER"] = XPerl_Slash
-	SLASH_XPERLHELPER1 = "/xp"
-
-	if (XPerl_RegisterPerlFrames) then
-		XPerl_RegisterPerlFrames(self)
-	end
-
-	if (XPerl_SavePosition) then
-		XPerl_SavePosition(XPerl_MTList_Anchor, true)
-	end
-
-	XPerl_OnLoad = nil
 end
 
 local function DefaultVar(name, value)
@@ -202,7 +182,7 @@ function XPerl_Startup()
 	XPerl_SetupFrames()
 
 	XPerlAssistPin:SetButtonTex()
-	XPerl_Frame_Pin:SetButtonTex()
+	XPerl_RaidHelper_Frame_TitleBar_Pin:SetButtonTex()
 
 	if (XPerl_RegisterOptionChanger) then
 		XPerl_RegisterOptionChanger(XPerl_SetupFrames)

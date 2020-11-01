@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
-r56 | enno@ekolb.de | 2018-10-13 17:53:02 +0000 (Sat, 13 Oct 2018) | 1 line
+r58 | Jos_eu | 2020-10-19 13:36:37 +0000 (Mon, 19 Oct 2020) | 1 line
 Changed paths:
-   M /trunk/Module_CTRA.lua
+   M /trunk/TankFrames.lua
    M /trunk/UnifiedTankFrames.toc
 
-Updated for BfA. Thanks to Lydith!
+Backdrop fix, toc update. Thanks to madar2252 and DahkCeles!
 ------------------------------------------------------------------------
 

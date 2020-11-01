@@ -1,7 +1,19 @@
 # Prat 3.0
 
-## [3.8.11](https://github.com/sylvanaar/prat-3-0/tree/3.8.11) (2020-06-05)
-[Full Changelog](https://github.com/sylvanaar/prat-3-0/compare/3.8.10...3.8.11)
+## [3.9.1](https://github.com/sylvanaar/prat-3-0/tree/3.9.1) (2020-10-25)
+[Full Changelog](https://github.com/sylvanaar/prat-3-0/compare/3.9.0...3.9.1) [Previous Releases](https://github.com/sylvanaar/prat-3-0/releases)
 
-- Memory: Delay the auto-loading of the chat settings until the default chat frames have been loaded for a bit  
-- Substitutions: Re-enable the map subs for classic  
+- Merge pull request #175 from WanderingFox/master  
+    Adds 9.0 Newcomer/Guide icons  
+- need _G on constants too  
+- use _G  
+- user proper check for newcomer status  
+- formatting  
+- account for 9.0 guide/newcomer icons  
+- Merge pull request #167 from KyrosKrane/GuildRoster-Fix  
+    Fix for GuildRoster issues  
+- Merge pull request #162 from KyrosKrane/master  
+    Fixes to invite.lua module (works with both classic and retail)  
+- Fix for GuildRoster issues  
+- Fix to allow for Classic to continue working  
+- Change InviteUnit() to C\_PartyInfo.InviteUnit()  

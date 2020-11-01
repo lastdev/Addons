@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(190, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod.statTypes = "heroic,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(24239)
 mod:SetEncounterID(1193)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:SetMinCombatTime(30)	-- Prevent pre-maturely combat-end in cases where none targets the boss?
@@ -16,7 +17,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 43429 43440 61603",
 	"SPELL_PERIODIC_MISSED 43429 43440 61603"
 )
-mod.onlyHeroic = true
 
 local warnSiphon			= mod:NewTargetNoFilterAnnounce(43501, 3)
 local warnSpiritBolts		= mod:NewSpellAnnounce(43383, 3)

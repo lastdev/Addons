@@ -374,6 +374,8 @@ local callbacks = {
 	RowOnEnter = function()	end,
 	RowOnLeave = function() end,
 	ColumnSetup = function(self, button, dataRowID, character)
+            if dataRowID == 18 then dataRowID = 19 end -- Blizzard removed slot 18 (Ranged) without squashing the array. Reeee.
+            
 			button.Background:SetDesaturated(false)
 			button.Background:SetVertexColor(1.0, 1.0, 1.0)
 			button.Background:SetTexCoord(0, 1, 0, 1)
@@ -460,14 +462,18 @@ local callbacks = {
 			if button == "RightButton" then
 				if not IsAddOnLoaded("Altoholic_Search") then
 					LoadAddOn("Altoholic_Search")
-					addon:DDM_Initialize(AltoholicFrameGridsRightClickMenu, RightClickMenu_Initialize)
 				end
 				
 				addon.Search:SetCurrentItem( addon:GetIDFromLink(link) ) 		-- item ID of the item to find an upgrade for
 				local _, class = DataStore:GetCharacterClass(character)
 				addon.Search:SetClass(class)
 				
-				ToggleDropDownMenu(1, nil, AltoholicFrameGridsRightClickMenu, frame:GetName(), 0, -5);
+				--AltoholicFrameGridsRightClickMenu:Show()
+                addon:DDM_Initialize(AltoholicFrameGridsRightClickMenu, RightClickMenu_Initialize)
+                ToggleDropDownMenu(1, nil, AltoholicFrameGridsRightClickMenu, frame:GetName(), 0, -5);
+                AltoholicFrameGridsRightClickMenu:SetPoint("TOPLEFT", frame, "TOPRIGHT")
+                
+                
 				return
 			end
 			

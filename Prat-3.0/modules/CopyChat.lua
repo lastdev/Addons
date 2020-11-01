@@ -60,6 +60,8 @@ Prat:AddModuleToLoad(function()
     ["HTML"] = true,
     ["BBCode"] = true,
     ["Wowace.com Forums"] = true,
+    copytimestamps_name = "Timestamps Copy",
+    copytimestamps_desc = "Copy the chat line when you click on the timestamp",
     TOPLEFT = "Top, Left",
     TOPRIGHT = "Top, Right",
     BOTTOMRIGHT = "Bottom, Right",
@@ -91,6 +93,8 @@ L = {
 		["Copy text from the active chat window."] = true,
 		["Copy To Editbox"] = true,
 		["CopyChat"] = true,
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = true,
 		["Message From : %s"] = true,
 		["Plain"] = true,
@@ -135,6 +139,10 @@ L = {
 		["Copy To Editbox"] = "Copy To Editbox",
 		--[[Translation missing --]]
 		["CopyChat"] = "CopyChat",
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		--[[Translation missing --]]
 		["HTML"] = "HTML",
 		--[[Translation missing --]]
@@ -188,6 +196,10 @@ L = {
 		--[[Translation missing --]]
 		["CopyChat"] = "CopyChat",
 		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
+		--[[Translation missing --]]
 		["HTML"] = "HTML",
 		--[[Translation missing --]]
 		["Message From : %s"] = "Message From : %s",
@@ -230,6 +242,10 @@ L = {
 		["Copy text from the active chat window."] = "Copier le texte à partir de la fenêtre de discussion active.",
 		["Copy To Editbox"] = "Copier vers la fenêtre d'édition",
 		["CopyChat"] = "Copier",
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = true,
 		["Message From : %s"] = "Message de : %s",
 		["Plain"] = "Texte seul",
@@ -262,10 +278,12 @@ L = {
 		["Copy Text"] = "Text kopieren",
 		["Copy Text Format"] = "Textformat kopieren",
 		["Copy text from the active chat window."] = "Text im aktiven Chatfenster kopieren.",
-		["Copy To Editbox"] = "In das Eingabefenster kopieren",
+		["Copy To Editbox"] = "In das Eingabefeld kopieren",
 		["CopyChat"] = "Chat kopieren",
+		["copytimestamps_desc"] = "Kopiert die Chat-Zeile, wenn du auf den Zeitstempel klickst",
+		["copytimestamps_name"] = "Zeitstempel kopieren",
 		["HTML"] = true,
-		["Message From : %s"] = "Mitteilung von: %s",
+		["Message From : %s"] = "Nachricht von : %s",
 		["Plain"] = "Einfach",
 		["Should the copied text be plain, or formatted so you can see the colors."] = "Soll der kopierte Text einfach oder formattiert mit farbiger Darstellung kopiert werden?",
 		["showbutton_desc"] = "Schaltfläche im Chat-Rahmen anzeigen",
@@ -294,6 +312,10 @@ L = {
 		["Copy text from the active chat window."] = "활성 대화창에서 내용을 복사합니다.",
 		["Copy To Editbox"] = "대화 입력창에 복사",
 		["CopyChat"] = "대화 복사 [CopyChat]",
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = true,
 		["Message From : %s"] = "%s|1으로;로;부터 메시지",
 		["Plain"] = "보통",
@@ -337,6 +359,10 @@ L = {
 		--[[Translation missing --]]
 		["CopyChat"] = "CopyChat",
 		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
+		--[[Translation missing --]]
 		["HTML"] = "HTML",
 		--[[Translation missing --]]
 		["Message From : %s"] = "Message From : %s",
@@ -374,6 +400,8 @@ L = {
 		["Copy text from the active chat window."] = "Копировать текст из активного окна чата.",
 		["Copy To Editbox"] = "Копировать чат",
 		["CopyChat"] = "Копия Чата ",
+		["copytimestamps_desc"] = "Скопируйте строку чата при нажатии на метку времени",
+		["copytimestamps_name"] = "Копирование временны́х меток",
 		["HTML"] = true,
 		["Message From : %s"] = "Сообщение от : %s",
 		["Plain"] = "Обычный текст",
@@ -403,6 +431,10 @@ L = {
 		["Copy text from the active chat window."] = "从活跃的聊天窗口复制文本",
 		["Copy To Editbox"] = "复制到编辑框",
 		["CopyChat"] = "聊天复制",
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = "超文本标记语言",
 		["Message From : %s"] = "信息来自: %s",
 		["Plain"] = "简洁",
@@ -437,6 +469,10 @@ L = {
 		--[[Translation missing --]]
 		["Copy To Editbox"] = "Copy To Editbox",
 		["CopyChat"] = "ChatCopiar",
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = true,
 		["Message From : %s"] = "Mensaje de : %s",
 		["Plain"] = "Liso",
@@ -470,6 +506,10 @@ L = {
 		["Copy text from the active chat window."] = "複製使用中聊天視窗文字",
 		["Copy To Editbox"] = "複製至編輯盒",
 		["CopyChat"] = true,
+		--[[Translation missing --]]
+		["copytimestamps_desc"] = "Copy the chat line when you click on the timestamp",
+		--[[Translation missing --]]
+		["copytimestamps_name"] = "Timestamps Copy",
 		["HTML"] = true,
 		["Message From : %s"] = "來自 %s 的訊息",
 		--[[Translation missing --]]
@@ -494,7 +534,8 @@ end
       on = true,
       showbutton = { ["*"] = true },
       buttonpos = "TOPLEFT",
-      copyformat = "plain"
+      copyformat = "plain",
+      copytimestamps = true
     }
   })
 
@@ -541,6 +582,12 @@ end
         set = "SetValue",
         values = { ["plain"] = PL["Plain"], ["bbcode"] = PL["BBCode"], ["html"] = PL["HTML"], ["wowace"] = PL["Wowace.com Forums"] },
       },
+      copytimestamps = {
+        name = PL.copytimestamps_name,
+        desc = PL.copytimestamps_desc,
+        type = "toggle",
+        order = 200,
+      }
     }
   })
 
@@ -619,7 +666,7 @@ end
   ------------------------------------------------]] --
 
   function module:CopyLink(link, frame)
-    if frame then
+    if frame and self.db.profile.on and self.db.profile.copytimestamps then
       for lineIndex, visibleLine in ipairs(frame.visibleLines) do
         if visibleLine:IsMouseOver() then
           local info = visibleLine.messageInfo
@@ -649,7 +696,11 @@ end
 
   function module:GetTime(...)
     local stamp = self.hooks[self.timestamps].GetTime(...)
-    return "|H" .. "pratcopy" ..  "|h" .. stamp .. "|h"
+    if module.db.profile.on and module.db.profile.copytimestamps then
+      return "|Hpratcopy|h" .. stamp .. "|h"
+    end
+
+    return stamp
   end
 
   module.lines = {}
@@ -690,6 +741,13 @@ end
     self:ScrapeChatFrame(SELECTED_CHAT_FRAME)
   end
 
+  local function stripChatText(text)
+    local stripped = text:gsub("|K[^|]-|k", "<BNET REMOVED>")
+    stripped = stripped:gsub("|T.-|t", "")
+
+    return stripped
+  end
+
   function module:DoCopyChatScroll(frame)
     local scrapelines = {}
     local str
@@ -701,8 +759,7 @@ end
       msg = msg and msg.message
 
       if msg then
-        local stripped = msg:gsub("|K[^|]-|k", "<BNET REMOVED>")
-        table.insert(scrapelines, stripped)
+       scrapelines[#scrapelines+1] = stripChatText(msg)
       end
     end
 
@@ -721,12 +778,12 @@ end
     local lines = {}
     local str
 
-    for _, v in ipairs(frame.visibleLines) do
-      local msg = v.messageInfo
+    for i = frame:GetNumVisibleLines(), 1, -1 do
+      local msg = frame.visibleLines[i].messageInfo
+      msg = msg and msg.message
 
       if msg then
-        local stripped = msg.message:gsub("|K.-|k", "<BNET REMOVED>")
-        table.insert(lines, 1, stripped)
+        lines[#lines+1] = stripChatText(msg)
       end
     end
 
@@ -800,7 +857,7 @@ end
       local b = _G[name]
       if not b then
         b = CreateFrame("Button", name, cf)
-        b:SetFrameStrata("BACKGROUND")
+        b:SetFrameStrata("LOW")
         b:SetWidth(24)
         b:SetHeight(24)
         b:SetNormalTexture("Interface\\Addons\\Prat-3.0\\textures\\prat-chatcopy2")

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1209, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision((string.sub("20190625143517", 1, -5)):sub(12, -3))
+mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+
+mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
-mod:SetZone()
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.
 
 mod:RegisterCombat("combat_emotefind", L.Pull)

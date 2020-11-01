@@ -8,6 +8,8 @@
 
 ----------------------------------------------------------------------------]]--
 
+local _, LM = ...
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
@@ -17,7 +19,7 @@ if LibDebug then LibDebug() end
   A primer reminder for me on LUA metatables and doing OO stuff in
   them.  If you rewrite this from scratch don't make it OO, OK.
   See also: http://www.lua.org/pil/13.html
- 
+
   You can set a "metatable" on a table with
     setmetatable(theTable, theMetaTable)
 
@@ -57,14 +59,14 @@ if LibDebug then LibDebug() end
 
 ----------------------------------------------------------------------------]]--
 
-_G.LM_MountList = { }
-LM_MountList.__index = LM_MountList
+LM.MountList = { }
+LM.MountList.__index = LM.MountList
 
-function LM_MountList:New(ml)
-    return setmetatable(ml or {}, LM_MountList)
+function LM.MountList:New(ml)
+    return setmetatable(ml or {}, LM.MountList)
 end
 
-function LM_MountList:Copy()
+function LM.MountList:Copy()
     local out = { }
     for i,v in ipairs(self) do
         out[i] = v
@@ -72,7 +74,7 @@ function LM_MountList:Copy()
     return self:New(out)
 end
 
-function LM_MountList:Search(matchfunc, ...)
+function LM.MountList:Search(matchfunc, ...)
     local result = self:New()
 
     for _,m in ipairs(self) do
@@ -85,7 +87,7 @@ function LM_MountList:Search(matchfunc, ...)
 end
 
 -- Note that Find doesn't make another table
-function LM_MountList:Find(matchfunc, ...)
+function LM.MountList:Find(matchfunc, ...)
     for _,m in ipairs(self) do
         if matchfunc(m, ...) then
             return m
@@ -93,7 +95,7 @@ function LM_MountList:Find(matchfunc, ...)
     end
 end
 
-function LM_MountList:Shuffle()
+function LM.MountList:Shuffle()
     -- Fisher-Yates algorithm.
     -- Shuffle, http://forums.wowace.com/showthread.php?t=16628
     for i = #self, 2, -1 do
@@ -102,29 +104,46 @@ function LM_MountList:Shuffle()
     end
 end
 
-function LM_MountList:Random()
-    local n = #self
-    if n == 0 then
-        return nil
-    else
-        return self[math.random(n)]
+function LM.MountList:Random(r)
+    if #self > 0 then
+        if r then
+            r = math.ceil(r * #self)
+        else
+            r = math.random(#self)
+        end
+        return self[r]
     end
 end
 
-function LM_MountList:WeightedRandom(weightfunc)
-    local n = #self
-    if n == 0 then return nil end
+function LM.MountList:PriorityRandom(r)
 
-    local weightsum = 0
+    if #self == 0 then return end
+
+    local priorityCounts = { }
+
     for _,m in ipairs(self) do
-        weightsum = weightsum + (weightfunc(m) or 10)
+        local p = LM.Options:GetPriority(m)
+        priorityCounts[p] = ( priorityCounts[p] or 0 ) + 1
     end
 
-    local r = math.random(weightsum)
+    local weights, totalWeight = {}, 0
+
+    for i,m in ipairs(self) do
+        local p, w  = LM.Options:GetPriority(m)
+        weights[i] = w / ( priorityCounts[p] + 1 )
+        totalWeight = totalWeight + weights[i]
+    end
+
+    local cutoff = (r or math.random()) * totalWeight
+
+    LM.Debug(format(' - PriorityRandom n=%d, t=%0.3f, c=%0.3f', #self, totalWeight, cutoff))
+
     local t = 0
-    for _,m in ipairs(self) do
-        t = t + (weightfunc(m) or 10)
-        if t >= r then return m end
+    for i = 1, #self do
+        t = t + weights[i]
+        if t > cutoff then
+            return self[i]
+        end
     end
 end
 
@@ -132,15 +151,19 @@ local function filterMatch(m, ...)
     return m:MatchesFilters(...)
 end
 
-function LM_MountList:FilterSearch(...)
+function LM.MountList:FilterSearch(...)
     return self:Search(filterMatch, ...)
 end
 
-function LM_MountList:FilterFind(...)
-    return self:Find(filterMatch, ...)
+local function cmpName(a, b)
+    return a.name < b.name
 end
 
-function LM_MountList:Dump()
+function LM.MountList:Sort(cmp)
+    table.sort(self, cmp or cmpName)
+end
+
+function LM.MountList:Dump()
     for _,m in ipairs(self) do
         m:Dump()
     end

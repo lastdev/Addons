@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(673, "DBM-Party-MoP", 3, 312)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod.statTypes = "normal,heroic,challenge,timewalker"
+
+mod:SetRevision("20200912135206")
 mod:SetCreatureID(56747)--56747 (Gu Cloudstrike), 56754 (Azure Serpent)
 mod:SetEncounterID(1303)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -30,7 +31,7 @@ local specWarnMagneticShroud	= mod:NewSpecialWarningSpell(107140)
 
 local timerInvokeLightningCD	= mod:NewNextTimer(6, 106984)--Phase 1 ability
 local timerStaticFieldCD		= mod:NewNextTimer(8, 106923, nil, nil, nil, 3)--^^
-local timerLightningBreathCD	= mod:NewNextTimer(9.7, 102573, nil, nil, nil, 5)--Phase 2 ability
+local timerLightningBreathCD	= mod:NewCDTimer(6.8, 102573, nil, nil, nil, 5)--6.8-10 ish Phase 2 ability
 local timerMagneticShroudCD		= mod:NewCDTimer(12.5, 107140)--^^
 
 local staticFieldText = DBM:GetSpellInfo(106923)

@@ -1,5 +1,0 @@
-All Rights Reserved, however: Thaoky allows code modifications/branches in order to support current and future versions of the game as long as this is out of all commercial use.
-
-The add-on must remain free of use, in accordance with Blizzard's own TOS.
-
-Future updates shall also preserve all references/credits to the original author in every file when it is currently contained.

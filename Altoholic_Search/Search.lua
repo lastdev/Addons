@@ -13,7 +13,9 @@ local ns = addon.Search		-- ns = namespace
 local updateHandler
 
 function ns:Update()
-	ns[updateHandler](ns)
+	if updateHandler then
+        ns[updateHandler](ns)
+    end
 end
 
 function ns:SetUpdateHandler(h)
@@ -117,7 +119,7 @@ end
 -- that way, a function called GetXXX can be used to display this info regardless of the line type, but can also be reused by sort functions
 
 local RealmScrollFrame_Desc = {
-	NumLines = 7,
+	NumLines = 18,
 	Frame = "AltoholicFrameSearch",
 	GetSize = function() return ns:GetNumResults() end,
 	Update = Realm_UpdateEx,
@@ -260,7 +262,7 @@ local function ScrollFrameUpdate(desc)
 	local rowFrame
 
 	-- hide all lines and set their id to 0, the update function is responsible for showing and setting id's of valid lines	
-	for rowIndex = 1, numRows do
+	for rowIndex = 1, 18 do
 		rowFrame = frame["Entry"..rowIndex]
 		rowFrame:SetID(0)
 		rowFrame:Hide()
@@ -323,26 +325,33 @@ function ns:Loots_Update()
 			itemButton = rowFrame.Item
 			itemButton.IconBorder:Hide()
 			
-			local itemName, _, itemRarity, itemLevel = GetItemInfo(itemID)
-			local r, g, b, hex = GetItemQualityColor(itemRarity)
-			
-			if itemRarity >= 2 then
-				itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
-				itemButton.IconBorder:Show()
-			end
-			
-			itemButton.Icon:SetTexture(GetItemIcon(itemID));
+            local item = Item:CreateFromItemID(itemID)
+            item:ContinueOnItemLoad(function()
+                local itemName = item:GetItemName()
+                local itemRarity = item:GetItemQuality()
+                local colorInfo = item:GetItemQualityColor()
+                local r, g, b, hex = colorInfo.color.r, colorInfo.color.g, colorInfo.color.b, colorInfo.hex
+                local itemLevel = item:GetCurrentItemLevel()
 
-			rowFrame.Stat2:SetText(colors.yellow .. itemLevel)
-			rowFrame.Name:SetText("|c" .. hex .. itemName)
-			rowFrame.Source.Text:SetText(colors.teal .. result.dropLocation)
-			rowFrame.Source:SetID(0)
-			
-			rowFrame.Stat1:SetText(colors.green .. result.bossName)
-
-			itemButton:SetInfo(itemID)
-			itemButton:SetCount(result.count)
-			rowFrame:Show()
+                if itemRarity >= 2 then
+    				itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
+    				itemButton.IconBorder:Show()
+    			end
+    			
+    			itemButton.Icon:SetTexture(item:GetItemIcon());
+    
+    			rowFrame.Stat2:SetText(colors.yellow .. itemLevel)
+    			rowFrame.Name:SetText(hex .. itemName)
+    			rowFrame.Source.Text:SetText(colors.teal .. result.dropLocation)
+    			rowFrame.Source:SetID(0)
+    			
+    			rowFrame.Stat1:SetText(colors.green .. (result.bossName or "bossName"))
+    
+    			itemButton:SetInfo(itemID)
+    			itemButton:SetCount(result.count)
+    			rowFrame:Show()
+            
+            end)
 		else
 			rowFrame:Hide()
 		end
@@ -394,7 +403,7 @@ function ns:Upgrade_Update()
 		rowFrame.Stat1:SetPoint("LEFT", rowFrame.Name, "RIGHT", 0, 0)
 		rowFrame.Stat2:SetWidth(50)
 		rowFrame.Stat2:SetPoint("LEFT", rowFrame.Stat1, "RIGHT", 0, 0)
-		rowFrame:SetScript("OnEnter", function(self) ns:TooltipStats(self) end)
+		rowFrame:SetScript("OnEnter", function(self) addon.Tabs.Search:TooltipStats(self) end)
 		rowFrame:SetScript("OnLeave", function(self) AltoTooltip:Hide() end)
 		
 		local line = rowIndex + offset
@@ -728,6 +737,18 @@ local function BrowseCharacter(character)
 			end
 		end
 	end
+    
+    if addon:GetOption("UI.Tabs.Search.IncludeAuctionHouseListings") then
+        currentResultLocation = "Auction House"
+        local num = DataStore:GetNumAuctions(character) or 0
+        for i = 1, num do
+            local isGoblin, itemID, count, name, price1, price2, timeLeft = DataStore:GetAuctionHouseItemInfo(character, "Auctions", i)
+            local _, itemLink = GetItemInfo(itemID)
+            if itemLink then
+                VerifyItem(itemLink, count, itemLink)
+            end
+        end
+    end
 		
 	if addon:GetOption("UI.Tabs.Search.IncludeKnownRecipes")			-- check known recipes ?
 		and (filters:GetFilterValue("itemType") == nil) 
@@ -797,6 +818,16 @@ end
 
 local ongoingSearch
 
+local function GetAllRealms(account)
+    local realms = DataStore:GetRealms(account)
+    local guildKeys = DataStore:GetSavedGuildKeys()
+    for _, guildKey in pairs(guildKeys) do
+        local account, realm, guildName = strsplit(".", guildKey)
+        realms[realm] = true
+    end
+    return realms
+end
+
 function ns:FindItem(searchType, searchSubType)
 	if ongoingSearch then
 		return		-- if a search is already happening .. then exit
@@ -812,8 +843,12 @@ function ns:FindItem(searchType, searchSubType)
 	filters:EnableFilter("Existence")	-- should be first in the list !
 	
 	if value ~= "" then
-		filters:SetFilterValue("itemName", currentValue)
-		filters:EnableFilter("Name")
+        filters:SetFilterValue("itemName", currentValue)
+		if (AltoholicTabSearch.IncludeDescriptionButton:GetChecked()) then
+            filters:EnableFilter("NameOrDescription")
+        else
+            filters:EnableFilter("Name")
+        end
 	end
 	
 	if searchType then
@@ -856,19 +891,19 @@ function ns:FindItem(searchType, searchSubType)
 	elseif searchLocation == SEARCH_THISREALM_THISFACTION or	searchLocation == SEARCH_THISREALM_BOTHFACTIONS then
 		BrowseRealm(GetRealmName(), THIS_ACCOUNT, (searchLocation == SEARCH_THISREALM_BOTHFACTIONS))
 	elseif searchLocation == SEARCH_ALLREALMS then
-		for realm in pairs(DataStore:GetRealms()) do
+		for realm in pairs(GetAllRealms()) do
 			BrowseRealm(realm, THIS_ACCOUNT, true)
 		end
 	elseif searchLocation == SEARCH_ALLACCOUNTS then
 		-- this account first ..
-		for realm in pairs(DataStore:GetRealms()) do
+		for realm in pairs(GetAllRealms()) do
 			BrowseRealm(realm, THIS_ACCOUNT, true)
 		end
 		
 		-- .. then all other accounts
 		for account in pairs(DataStore:GetAccounts()) do
 			if account ~= THIS_ACCOUNT then
-				for realm in pairs(DataStore:GetRealms(account)) do
+				for realm in pairs(GetAllRealms(account)) do
 					BrowseRealm(realm, account, true)
 				end
 			end
@@ -988,3 +1023,10 @@ function ns:FindEquipmentUpgrade()
 
 	ns:Update()
 end
+
+local resizeHandler = {}
+function resizeHandler:Update()
+    RealmScrollFrame_Desc.NumLines = AltoholicFrameSearch.ScrollFrame.numRows
+    ns:Update()
+end
+AltoholicFrame:RegisterResizeEvent("AltoholicFrameSearch", 7, resizeHandler)

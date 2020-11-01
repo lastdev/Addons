@@ -13,16 +13,6 @@
 --
 --
 
-function HealBot_Tips_Lang_enUK()
-    HEALBOT_WORDS_CUSTOMNAME                = "Customise name"
-    HealBot_Lang_Options_enALL()
-end
-
-function HealBot_Tips_Lang_enUS()
-    HEALBOT_WORDS_CUSTOMNAME                = "Customize name"
-    HealBot_Lang_Options_enALL()
-end
-
 function HealBot_Lang_Options_enALL()
     HEALBOT_OPTIONS_HELP_TITLES={
                         -- Preset Colours
@@ -42,7 +32,7 @@ function HealBot_Lang_Options_enALL()
                                  ["DISABLEHEALBOT"]=HEALBOT_OPTIONS_DISABLEHEALBOT,
                                  ["DISABLEHEALBOTSOLO"]=HEALBOT_OPTIONS_DISABLEHEALBOT,
                                  ["ADJUSTMAXHLTH"]=HEALBOT_OPTION_ADJUST_MAX_HEALTH,
-                                 ["MAXBARCACHE"]=HEALBOT_OPTIONS_MAXBARCACHE,
+                                 ["OPTIONSOPACITY"]=HEALBOT_OPTIONS_OPTIONSOPACITY,
                                  ["INTERNALTIMERS"]=HEALBOT_OPTIONS_RANGECHECKFREQ,
                                  ["LANG"]=HEALBOT_OPTIONS_LANG,
                                  ["SETLANG"]=HEALBOT_OPTIONS_LANG,
@@ -50,7 +40,14 @@ function HealBot_Lang_Options_enALL()
                                  ["RUNCMDS"]=HEALBOT_OPTIONS_COMMANDS,
                                  ["PROFILE"]="Profile",
                                  ["SETPROFILE"]="Profile",
+								 ["OPTTHEME"]=HEALBOT_OPTIONS_THEME,
                                  ["CLASSTYPES"]="Class type configuration",
+                        -- Overrides tab
+                                 ["OVERRIDESEFFECTS"]="Overrides Effects tab.",
+                                 ["OVERRIDESPROT"]="Overrides Protection tab.",
+                                 ["OVERRIDESCHAT"]="Overrides Chat tab.",
+                                 ["OVERRIDESFRAMES"]="Overrides Frames tab.",
+                                 ["OVERRIDESEFFECTSUSE"]=HEALBOT_OPTIONS_OVERRIDE_EFFECTS,
                         -- Spells tab
                                  ["SETSPELLSFOR"]=HEALBOT_OPTIONS_SETSPELLS,
                                  ["ALWAYSUSEENABLED"]=HEALBOT_OPTIONS_ENABLEHEALTHY,
@@ -92,8 +89,12 @@ function HealBot_Lang_Options_enALL()
                                  ["HIDEBLIZPARTYFRAMES"]=HEALBOT_OPTIONS_HIDEPARTYFRAMES,
                                  ["HIDEBLIZBOSSFRAMES"]=HEALBOT_OPTIONS_HIDEMINIBOSSFRAMES,
                                  ["HIDEBLIZRAIDFRAMES"]=HEALBOT_OPTIONS_HIDERAIDFRAMES,
+                        -- Skins Effects tab
                                  ["USEFLUIDBARS"]=HEALBOT_OPTION_USEFLUIDBARS,
                                  ["FLUIDBARSREFRESHSPEED"]=HEALBOT_OPTION_BARUPDFREQ,
+                                 ["HEALBARSAGGROBARFLASHFREQ"]=HEALBOT_OPTIONS_AGGROFLASHFREQ,
+                                 ["HEALBARSAGGROBARFLASHMIN"]=HEALBOT_OPTIONS_AGGROFLASHALPHA.." "..HEALBOT_WORDS_MIN,
+                                 ["HEALBARSAGGROBARFLASHMAX"]=HEALBOT_OPTIONS_AGGROFLASHALPHA.." "..HEALBOT_WORDS_MAX,
                         -- Skins Protection tab
                                  ["USECRASHPROT"]=HEALBOT_OPTIONS_CRASHPROT,
                                  ["USECRASHPROTGENERALMACRO"]=HEALBOT_OPTIONS_USEGENERALMACRO,
@@ -229,9 +230,6 @@ function HealBot_Lang_Options_enALL()
                                  ["HEALBARSAGGROPCTTXT"]=HEALBOT_OPTION_AGGROPCTTRACK.." "..HEALBOT_OPTION_AGGROPCTTXT,
                                  ["HEALBARSAGGROINDALERT"]=HEALBOT_OPTIONS_AGGROINDALERT,
                                  ["HEALBARSAGGROBARALERT"]=HEALBOT_OPTIONS_AGGROALERT,
-                                 ["HEALBARSAGGROBARFLASHFREQ"]=HEALBOT_OPTIONS_AGGROFLASHFREQ,
-                                 ["HEALBARSAGGROBARFLASHMIN"]=HEALBOT_OPTIONS_AGGROFLASHALPHA.." "..HEALBOT_WORDS_MIN,
-                                 ["HEALBARSAGGROBARFLASHMAX"]=HEALBOT_OPTIONS_AGGROFLASHALPHA.." "..HEALBOT_WORDS_MAX,
                         -- Skins Frames Bars Aux tab
                                  ["BARSAUX"]="Bars Aux",
                                  ["BARSAUXASSIGN"]=HEALBOT_OPTIONS_AUXASSIGN,
@@ -282,29 +280,26 @@ function HealBot_Lang_Options_enALL()
                                  ["HEALBARSTXTIGNOREINFULL"]=HEALBOT_OPTIONS_IGNOREINCOMINGONFULL,
                                  ["HEALBARSTXTHEALTHTYPE"]="Display Type",
                                  ["HEALBARSTXTHEALTHFORMAT"]="Format Dropdowns",
-                        -- Skins Frames Icons General tab
-                                 ["ICONSGENERAL"]="Icons General",
-                                 ["ICONSHOWHOT"]=HEALBOT_OPTIONS_BARBUTTONSHOWHOT,
+						-- Skins Frames Icons  tab
+								 ["ICONSDEBUFFS"]="Icons Debuffs",
+								 ["ICONSBUFFS"]="Icons Buffs",
+								 ["ICONSEXTRA"]="Icons Extras",
+							     ["ICONPOSITION"]=HEALBOT_OPTIONS_ICONPOSITION,
+							     ["ICONANCHOR"]=HEALBOT_OPTIONS_ICONANCHOR,
+                        -- Skins Frames Icons Aura General tab
+                                 ["ICONSDEBUFFGENERAL"]="Icons Debuffs General",
+							     ["ICONSBUFFGENERAL"]="Icons Buffs General",
                                  ["ICONNUMHOT"]=HEALBOT_OPTIONS_ALLSPELLS.." "..HEALBOT_OPTIONS_MAXICONS,
                                  ["ICONSHOWDEBUFF"]=HEALBOT_OPTIONS_SHOWDEBUFFICON,
                                  ["ICONNUMDEBUFF"]=HEALBOT_OPTIONS_TAB_DEBUFFS.." "..HEALBOT_OPTIONS_MAXICONS,
-                                 ["ICONSHOWDIR"]=HEALBOT_OPTIONS_SHOWDIRECTION,
-                                 ["ICONSHOWDIRMO"]=HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE,
-                                 ["ICONSHOWRC"]=HEALBOT_OPTIONS_SHOWREADYCHECK,
-                                 ["ICONSHOWRT"]=HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON,
-                                 ["ICONONBAR"]=HEALBOT_OPTIONS_HOTPOSITION.." "..HEALBOT_OPTIONS_HOTONBAR,
-                                 ["ICONOFFBAR"]=HEALBOT_OPTIONS_HOTPOSITION.." "..HEALBOT_OPTIONS_HOTOFFBAR,
-                                 ["ICONBELOWBAR"]=HEALBOT_OPTIONS_HOTPOSITION.." "..HEALBOT_OPTIONS_HOTBELOWBAR,
-                                 ["ICONLEFTSIDE"]=HEALBOT_OPTIONS_HOTPOSITION.." "..HEALBOT_OPTIONS_HOTBARLEFT,
-                                 ["ICONRIGHTSIDE"]=HEALBOT_OPTIONS_HOTPOSITION.." "..HEALBOT_OPTIONS_HOTBARRIGHT,
                                  ["ICONDOUBLE"]=HEALBOT_OPTIONS_DOUBLEROW,
-                                 ["ICONSCALEBUFF"]=HEALBOT_OPTIONS_ICONSCALE,
-                                 ["ICONSCALEDEBUFF"]=HEALBOT_OPTIONS_DEBUFFICONSCALE,
+                                 ["ICONSCALE"]=HEALBOT_OPTIONS_ICONSCALE,
                                  ["ICONALWAYSEN"]=HEALBOT_OPTIONS_TTALPHA.." "..HEALBOT_OPTIONS_ENABLEHEALTHY,
                                  ["ICONFADE"]=HEALBOT_OPTIONS_FADEONEXPIRE,
                                  ["ICONFADESTART"]=HEALBOT_OPTIONS_FADESTARTTIME,
-                        -- Skins Frames Icons Text tab
-                                 ["ICONSTEXT"]="Icons Text",
+                        -- Skins Frames Icons Aura Text tab
+                                 ["ICONSDEBUFFTEXT"]="Icons Debuffs Text",
+						         ["ICONSBUFFTEXT"]="Icons Buffs Text",
                                  ["ICONTXTSHOWCOUNT"]=HEALBOT_OPTIONS_HOTSHOWTEXT.." "..HEALBOT_OPTIONS_HOTTEXTCOUNT,
                                  ["ICONTXTSHOWDUR"]=HEALBOT_OPTIONS_HOTSHOWTEXT.." "..HEALBOT_OPTIONS_HOTTEXTDURATION,
                                  ["ICONTXTDURTIME"]=HEALBOT_OPTIONS_SHOWDURATIONFROM,
@@ -312,6 +307,17 @@ function HealBot_Lang_Options_enALL()
                                  ["ICONTXTFONT"]=HEALBOT_OPTIONS_SKINFONT,
                                  ["ICONTXTFONTSIZE"]=HEALBOT_OPTIONS_SKINFHEIGHT,
                                  ["ICONTXTFONTOUTLINE"]=HEALBOT_OPTIONS_SKINFOUTLINE,
+                        -- Skins Frames Icons Extra tabs
+						         ["ICONSCLASSROLE"]="Icons Extras Class / Role",
+						         ["ICONSRAIDTARGET"]="Icons Extras Raid Target",
+						         ["ICONSREADYCHECK"]="Icons Extras Ready Check",
+						         ["ICONSOORARROW"]="Icons Extras Out of Range Arrow.",
+                                 ["ICONSHOWRC"]=HEALBOT_OPTIONS_SHOWREADYCHECK,
+                                 ["ICONSHOWCLASS"]=HEALBOT_OPTIONS_SHOWCLASSICON,
+                                 ["ICONSHOWRT"]=HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON,
+                                 ["ICONSHOWDIR"]=HEALBOT_OPTIONS_SHOWDIRECTION,
+                                 ["ICONSHOWDIRMO"]=HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE,
+								 ["ICONOFFSET"]="Extra Icon Offset",
                         -- Debuffs General tab
                                  ["MONITORDEBUFFS"]=HEALBOT_OPTIONS_MONITORDEBUFFS,
                                  ["MONITORDEBUFFSIC"]=HEALBOT_OPTIONS_MONITORBUFFSC,
@@ -340,7 +346,7 @@ function HealBot_Lang_Options_enALL()
                                  ["DEBUFFSCUSTOMALLPOISON"]=HEALBOT_OPTIONS_CUSTOM_ALLPOISON,
                                  ["DEBUFFSCUSTOMALLCURSE"]=HEALBOT_OPTIONS_CUSTOM_ALLCURSE,
                                  ["DEBUFFSCUSTOMALLBOSS"]=HEALBOT_OPTIONS_CUSTOM_ALLBOSS,
-                                 ["DEBUFFSCUSTOMALLBOSSSTRICT"]=HEALBOT_OPTIONS_CUSTOM_ALLBOSSSTRICT,
+                                 ["DEBUFFSCUSTOMALLTIMED"]=HEALBOT_OPTIONS_CUSTOM_ALLTIMED,
                         -- Debuffs Warning tab
                                  ["DEBUFFSWARNINGBAR"]=HEALBOT_OPTIONS_CDCSHOWHBARS,
                                  ["DEBUFFSWARNINGBARRANGE"]="Range",
@@ -350,6 +356,7 @@ function HealBot_Lang_Options_enALL()
                                  ["DEBUFFSWARNINGSOUNDRANGE"]="Range",
                                  ["DEBUFFSWARNINGSOUNDSELECT"]=HEALBOT_OPTIONS_SOUND,
                                  ["DEBUFFSWARNINGSOUNDPREVIEW"]=HEALBOT_OPTIONS_SOUND,
+								 ["DEBUFFSWARNINGSPAMFILTER"]=HEALBOT_OPTIONS_SPAMFILTER,
                         -- Buffs General tab
                                  ["MONITORBUFFS"]=HEALBOT_OPTIONS_MONITORBUFFS,
                                  ["MONITORBUFFSIC"]=HEALBOT_OPTIONS_MONITORBUFFSC,
@@ -410,6 +417,12 @@ function HealBot_Lang_Options_enALL()
                                  ["TESTNUMMYTARGETS"]=HEALBOT_OPTION_NUMMYTARGETS,
                                  ["TESTNUMPETS"]=HEALBOT_OPTION_NUMPETS,
                                  ["TESTNUMENEMY"]=HEALBOT_OPTION_NUMENEMYS,
+                        -- Import/Export tab
+                                 ["INOUTSKINS"]="Import/Export Skins tab.",
+                                 ["INOUTCUSTOMDEBUFFS"]="Import/Export Custom Debuffs tab.",
+                                 ["INOUTCUSTOMBUFFS"]="Import/Export Custom Buffs tab.",
+                                 ["INOUTSPELLS"]="Import/Export Spells tab.",
+                                 ["INOUTPRESETCOLS"]="Import/Export Preset Col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s tab.",
                         -- Import/Export Skins tab
                                  ["INOUTSELECTSKIN"]=HEALBOT_OPTIONS_EXPORTSKIN,
                                  ["INEXTRASKIN"]=HEALBOT_OPTIONS_EXTRASKINS,
@@ -430,6 +443,8 @@ function HealBot_Lang_Options_enALL()
                         -- Import/Export Preset Colours tab
                                  ["INOUTEXPORTPRESETCOLS"]=HEALBOT_OPTIONS_BUTTONEXPORT,
                                  ["INOUTIMPORTPRESETCOLS"]=HEALBOT_OPTIONS_BUTTONIMPORT,
+						-- Plugin Tab
+                                 ["SELECTPLUGIN"]=HEALBOT_OPTIONS_PLUGINS,
                               }
     HEALBOT_OPTIONS_HELP_TEXT={
                         -- Preset Colours
@@ -442,22 +457,29 @@ function HealBot_Lang_Options_enALL()
                                ["HIDEOPTIONBUTTON"]="Hide the options button that is\nshown at the bottom of the 1st frame.",
                                ["RIGHTTOOPENOPTIONS"]="Right click on the edge of\na frame will open options.",
                                ["SHOWMINIMAPBUTTON"]="Show a button on the minimap\nthat will open options.",
-                               ["QUERYTALENTS"]="Query talent information when\nthe mouse moves over a bar.\nNOTE: This is only used by tooltips.",
+                               ["QUERYTALENTS"]="Query talent information when\nthe mouse moves over a bar.\n--\nNOTE: This is only used by tooltips.",
                                ["ENABLEAUTOCOMBAT"]="Put healbot into lockdown combat mode when\nanyone in the group/raid goes into combat.",
-                               ["ENABLEFASTHEALTH"]="Monitor combat log for instant health updates.\nNOTE: Not recommended in retail.",
+                               ["ENABLEFASTHEALTH"]="Monitor combat log for instant health updates.\n--\nNOTE: Not recommended in retail.\nNOTE: Only applied to players with threat.",
                                ["IGNOREAURAEVENTS"]="Ignore required buffs when resting.",
                                ["DISABLEHEALBOT"]="Put Healbot into a deep sleep.",
                                ["DISABLEHEALBOTSOLO"]="Healbot is only sleeping when\nnot in a group or raid.",
                                ["ADJUSTMAXHLTH"]="Check for boss debuffs that alters healing\neffects and adjust max health to reflect.",
-                               ["MAXBARCACHE"]="Bars Cache\n=========\nBars within frames can be initialized and cached before joining a group or raid.\nThe number of bars is determined by the cache size.\n--\nNOTE: If you raid, the default setting or higher is recommended, otherwise reduce this setting.",
-                               ["INTERNALTIMERS"]="This combined with your FPS sets how quickly the following are updated:\n- Range checking\n- Buff updates\n- Debuff updates\n- Aggro updates\n- Enemy bar updates\n- Fluid bars update frequency\n- Aggro bars flash frequency\n- General checks and out of combat updates\n--\nNote: Higher settings use significantly more CPU.",
+                               ["OPTIONSOPACITY"]="Set the opaticy of the option panels.",
+                               ["INTERNALTIMERS"]="This combined with your FPS sets how quickly the following are updated:\n- Range checking\n- Buff updates\n- Debuff updates\n- Aggro updates\n- Enemy bar updates\n- Fluid bars update frequency\n- Aggro bars flash frequency\n- General checks and out of combat updates\n--\nNOTE: Higher settings use significantly more CPU.",
                                ["LANG"]="Select the language used by healbot options.\nThis can be independent to the UI.",
                                ["SETLANG"]="Set the language selected.",
                                ["CMDS"]="Select a command to run.\nMany commands allow for resetting parts of\nhealbot without the need to reset to defaults.",
                                ["RUNCMDS"]="Run the command selected.",
                                ["PROFILE"]="Select to use Class or Character for saving\nsettings related to Spells, Buffs and Debuffs.",
                                ["SETPROFILE"]="Set the profile selected.",
+							   ["OPTTHEME"]="Set the options Title Box, Borders and Contents text Col"..HEALBOT_enWORD_COLOUR_SUFFIX..".",
                                ["CLASSTYPES"]="Classes can be grouped as Melee, Ranged, Healers and Custom.\nGroups of classes are available in options:\n- Bars Visibility\n- General Debuffs\n- General Buffs\n--\nThese settings date back to Classic and have little use in today's WoW.\nThey have near zero overhead and so are kept as some might find them useful.",
+                        -- Overrides tab
+                               ["OVERRIDESEFFECTS"]="Show the Overrides Effects tab.",
+                               ["OVERRIDESPROT"]="Show the Overrides Protection tab.",
+                               ["OVERRIDESCHAT"]="Show the Overrides Chat tab.",
+                               ["OVERRIDESFRAMES"]="Show the Overrides Frames tab.",
+                               ["OVERRIDESEFFECTSUSE"]="Select to use the skin settings or\nalways override with settings on this tab.",
                         -- Spells tab
                                ["SETSPELLSFOR"]="Set spells that can be used in different states:\n* Enabled - Always when in combat and any time the bar is in an enabled state.\n* Disabled - Only when out of combat and the bar is in a disabled state.\n* Enemy - Allows for harmful spells to be set and used on enemy bars.",
                                ["ALWAYSUSEENABLED"]="Use this option to always cast enabled\nspells regardless of the bar state.",
@@ -487,20 +509,24 @@ function HealBot_Lang_Options_enALL()
                                ["SMARTCASTRES"]="Use SmartCast to cast resurrection type spells.",
                         -- Skins top
                                ["SELECTSKIN"]="Select the skin you want to use.",
-                               ["DELSKIN"]="Delete the current skin.\nNote: The standard skin cannot be deleted.",
+                               ["DELSKIN"]="Delete the current skin.\n--\nNOTE: The standard skin cannot be deleted.",
                                ["NEWSKIN"]="Enter a name for a new skin that will\nbe based on the currently selected skin.",
                                ["SAVENEWSKIN"]="Create a new skin based on the currently selected skin.",
                                ["SELECTFRAME"]="Select from a list of 10 frames.\nFrame options will be displayed and\ncan be updated for the current selected frame",
                                ["FRAMEAPPLYTAB"]="An easy way to set the current tab options to all frames.",
                         -- Skins General tab
-                               ["SKINDEFAULTFOR"]="Set when the skin is displayed.\nNote: This setting is Per Character.",
+                               ["SKINDEFAULTFOR"]="Set when the skin is displayed.\n--\nNOTE: This setting is Per Character.",
                                ["STICKFRAMES"]="When turned on a frame will stick to\nanother frame higher up in the list.\nLocked frames will remain stuck.\nUnlocked frames can be moved away.\n--\nTIP: Use the 1st frame as your main frame\nmove other frames to your main frame\nand when stuck lock them.",
                                ["STICKSENSITIVITY"]="The higher the sensitivity the closer you need to get for a frame to stick to another frame.\n--\nTIP: Use test bars to see if the sensitivity is correct for your frames.\nTurn On/Off/On test bars to see if the frames remain in place.\n- High sensitivity can lead to frames becoming unstuck on reload/logon\n- Low sensitivity can lead to a frame attaching to a different frame on reload/logon\n* Start with a high sensitivity and lower if required.",
-                               ["HIDEBLIZPARTYFRAMES"]="Hide the standard Blizzard party frames\noptionally include the player and pet frames.\nNote: Changing this setting requires a UI Reload.",
-                               ["HIDEBLIZBOSSFRAMES"]="Hide the standard Blizzard boss frames.\nNote: Changing this setting requires a UI Reload.",
-                               ["HIDEBLIZRAIDFRAMES"]="Hide the standard Blizzard raid frames.\nNote: Changing this setting requires a UI Reload.",
+                               ["HIDEBLIZPARTYFRAMES"]="Hide the standard Blizzard party frames\noptionally include the player and pet frames.\n--\nNOTE: Changing this setting requires a UI Reload.",
+                               ["HIDEBLIZBOSSFRAMES"]="Hide the standard Blizzard boss frames.\n--\nNOTE: Changing this setting requires a UI Reload.",
+                               ["HIDEBLIZRAIDFRAMES"]="Hide the standard Blizzard raid frames.\n--\nNOTE: Changing this setting requires a UI Reload.",
+                        -- Skins Effects tab
                                ["USEFLUIDBARS"]="Bar updates due to health changes are done in a fluid motion.",
-                               ["FLUIDBARSREFRESHSPEED"]="Controls how fast the bar updates.\nSlower is smoother as Faster skips steps.\nTIP: For a smooth yet fast fluid update:\nFirst increase Internal Timers and Updates on the General tab.",
+                               ["FLUIDBARSREFRESHSPEED"]="Controls how fast the bar updates.\nSlower is smoother as Faster skips steps.\n--\nTIP: For a smooth yet fast fluid update:\nFirst increase Internal Timers and Updates on the General tab.",
+                               ["HEALBARSAGGROBARFLASHFREQ"]="Set the speed the aux bars flash.\n--\nNOTE: faster means skipping steps in the update.\nFor a faster and smoother update first increase Internal Timers and Updates on the General Tab.",
+                               ["HEALBARSAGGROBARFLASHMIN"]="To give the effect of flashing, aux bars increase and decrease transparency in steps.\nMin - The minimum opacity.",
+                               ["HEALBARSAGGROBARFLASHMAX"]="To give the effect of flashing, aux bars increase and decrease transparency in steps.\nMax - The maximum opacity.",
                         -- Skins Protection tab
                                ["USECRASHPROT"]="Crash protection guards against the negative\neffects of a healbot user disconnecting during combat.\nA small number of macro slots will store current\ngroup/raid data that can be used on logon during combat.",
                                ["USECRASHPROTGENERALMACRO"]="Use global macro slots rather than per character.\nTo reduce overall usage this option is recommended\nwhen using Healbot on multiple characters.",
@@ -522,10 +548,10 @@ function HealBot_Lang_Options_enALL()
                         -- Skins Frames General tab
                                ["GOTOHEALGROUPS"]="Go to the Heal Groups tab.",
                                ["FRAMEALIAS"]="Give the frame a meaningful alias.\nAliases are shown on the Heal Groups tab",
-                               ["FRAMELOCKED"]="Lock the frame at the current position.\nNote: If the frame is locked and stuck to another frame\nthe frame will remain stuck and cannot be unstuck.",
+                               ["FRAMELOCKED"]="Lock the frame at the current position.\n--\nNOTE: If the frame is locked and stuck to another frame\nthe frame will remain stuck and cannot be unstuck.",
                                ["FRAMEAUTOSHOW"]="Hide the frame when out of combat and\nnone of the bars are in an enabled state.",
                                ["FRAMEAUTOSHOWSOUND"]="Play a bell sound when opening the frame.",
-                               ["FRAMEANCHOR"]="The position of the frame anchor relative to the screen.\nNote: When the frame is stuck to another frame\nthis setting is automatically updated\nand used to store the frames location.",
+                               ["FRAMEANCHOR"]="The position of the frame anchor relative to the screen.\n--\nNOTE: When the frame is stuck to another frame\nthis setting is automatically updated\nand used to store the frames location.",
                                ["BARANCHOR"]="The position of the bars anchor relative to the frame.",
                                ["BARGROWDIRECTION"]="The direction the bars grow away from the bars anchor.",
                                ["BARORIENTATION"]="The direction each bar will shrink/grow depending on the players health.",
@@ -567,7 +593,7 @@ function HealBot_Lang_Options_enALL()
                                ["HEADERFRAMESFONTOUTLINE"]="Set the font outline for the text\ndisplayed on the frames header.",
                                ["HEADERFRAMESFONTOFFSET"]="Vertically offset the header text.",
                         -- Skins Frames Bars General tab
-                               ["BARSGENERAL"]="Show the Skins Frames Bars General tab.\nNote: Some options are dependant on the frame selected.\n- Low mana indicator settings are not available when the Enemy frame is selected.",
+                               ["BARSGENERAL"]="Show the Skins Frames Bars General tab.\n--\nNOTE: Some options are dependant on the frame selected.\n- Low mana indicator settings are not available when the Enemy frame is selected.",
                                ["HEALBARSTEXTURE"]="Set the texture for the heal bars.",
                                ["HEALBARSNUMCOLS"]="Controls how many columns will be displayed.",
                                ["HEALBARSGRPSPERCOLS"]="Sets using the number of groups for each column.",
@@ -596,20 +622,20 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSALPHAOOR"]="Set the transparency of the heal bars when the bar\nis in an enabled state and the player is out of range.",
                                ["HEALBARSALPHADIS"]="Set the transparency of the heal bar\nwhen the bar is in an disabled state.",
                         -- Skins Frames Bars Sort tab
-                               ["BARSSORT"]="Show the Skins Frames Bars Sort tab.\nNote: Some options are dependant on the frame selected.\n- Sub sort - self first is only available when one of the User frames is selected.\n- Own pet: with self and Pets: Groups of five are only available when the Pets frame is selected.\n- This tab is not available when the Target frame or Focus frame is selected.",
-                               ["HEALBARSSORTSELF"]="Sub sort self to the top of the list.\nNote: also applies to Main sort when sorting by Name or Max health.",
+                               ["BARSSORT"]="Show the Skins Frames Bars Sort tab.\n--\nNOTE: Some options are dependant on the frame selected.\n- Sub sort - self first is only available when one of the User frames is selected.\n- Own pet: with self and Pets: Groups of five are only available when the Pets frame is selected.\n- This tab is not available when the Target frame or Focus frame is selected.",
+                               ["HEALBARSSORTSELF"]="Sub sort self to the top of the list.\n--\nNOTE: also applies to Main sort when sorting by Name or Max health.",
                                ["HEALBARSSORTOOR"]="This option is good for raids that split players, by sorting the out of range last.",
                                ["HEALBARSSORTMAIN"]="Organise how bars are sorted in the Heal Groups.",
                                ["HEALBARSSORTSUB"]="Organise how bars are sub sorted in the Main Sort.",
                                ["HEALBARSSELFPET"]="Place your own pet in the Self heal group.\nEnsure Self is turned on and high up in the Heal Groups list.",
                                ["HEALBARSPETGROUP"]="Treat pets as being in groups of five.",
                         -- Skins Frames Bars Visibility tab
-                               ["BARSVISIBILITY"]="Show the Skins Frames Bars Visibility tab.\nNote: Some options are dependant on the frame selected.\n- Target settings are only available when the Target frame is selected.\n- Focus settings are only available when the Focus frame is selected.\n- Enemy settings are only displayed when the Enemy frame is selected.",
+                               ["BARSVISIBILITY"]="Show the Skins Frames Bars Visibility tab.\n--\nNOTE: Some options are dependant on the frame selected.\n- Target settings are only available when the Target frame is selected.\n- Focus settings are only available when the Focus frame is selected.\n- Enemy settings are only displayed when the Enemy frame is selected.",
                                ["HEALBARSVISALERTIC"]="While in combat and when health is at or\nbelow this setting, the bar will become enabled.",
                                ["HEALBARSVISALERTOC"]="While out of combat and when health is at or\nbelow this setting, the bar will become enabled.",
                                ["HEALBARSVISHIDE100"]="Hide bars for players who are over 100 yards\ngenerally when not in visible in plain sight.",
-                               ["HEALBARSVISTARGETIC"]="Always Show/No Change/Always Hide\nthe target frame when entering combat.\nNote: select the target frame to enable these settings.",
-                               ["HEALBARSVISFOCUSIC"]="Always Show/No Change/Always Hide\nthe focus frame when entering combat.\nNote: select the focus frame to enable these settings.",
+                               ["HEALBARSVISTARGETIC"]="Always Show/No Change/Always Hide\nthe target frame when entering combat.\n--\nNOTE: select the target frame to enable these settings.",
+                               ["HEALBARSVISFOCUSIC"]="Always Show/No Change/Always Hide\nthe focus frame when entering combat.\n--\nNOTE: select the focus frame to enable these settings.",
                                ["HEALBARSVISTARGETFRIEND"]="Do not show hostile targets when out of combat.",
                                ["HEALBARSVISEXCLUDERAID"]="Do not show yourself or members of your group/raid when out of combat.",
                                ["HEALBARSVISFOCUSFRIEND"]="Do not show hostile focus when out of combat.",
@@ -624,24 +650,21 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSVISENEMYHIDEOC"]="Hide the bars when out of combat as they will often be empty and reserved.",
                                ["HEALBARSVISENEMYSHOWTARGET"]="Show a bar for the enemy target.\n--\nFor exampe:\nA boss might be boss2target (Retail Only)\nA tank might be raid2targettarget.",
                                ["HEALBARSVISENEMYTARGETSIZE"]="The percentage of the enemy bar width\nto be used by the enemy target bar.\n--\nTip: Set a large width for Enemy bars.",
-                               ["HEALBARSVISENEMYDOUBLEWIDTH"]="Double the total width for the Enemy and Enemy Target bars.\n--\nNote: This option only applies when "..HEALBOT_ENEMY_SHOW_TARGET.." is ON.",
+                               ["HEALBARSVISENEMYDOUBLEWIDTH"]="Double the total width for the Enemy and Enemy Target bars.\n--\nNOTE: This option only applies when "..HEALBOT_ENEMY_SHOW_TARGET.." is ON.",
                                ["HEALBARSVISENEMYSHOWSELF"]="On entering combat only display bars when an enemy exists.\nAllows filtering of bars that will not likely turn up during combat.\n--\nPlayer target bars - Only display your target as an enemy if the target is hostile at the start of combat.",
                                ["HEALBARSVISENEMYSHOWARENA"]="On entering combat only display bars when an enemy exists.\nAllows filtering of bars that will not likely turn up during combat.\n--\nArena opponent bars - Only display bars for existing opponents at the start of combat.",
                                ["HEALBARSVISENEMYSHOWBOSSES"]="On entering combat only display bars when an enemy exists.\nAllows filtering of bars that will not likely turn up during combat.\n--\nBoss bars - Only display bars for existing bosses at the start of combat.",
                         -- Skins Frames Bars Aggro tab
-                               ["BARSAGGRO"]="Show the Skins Frames Aggro tab.\nNote: This tab is not available when the Enemy frame is selected.",
+                               ["BARSAGGRO"]="Show the Skins Frames Aggro tab.\n--\nNOTE: This tab is not available when the Enemy frame is selected.",
                                ["HEALBARSAGGROSHOW"]="Turn On/Off monitoring aggro.",
                                ["HEALBARSAGGROSHOWTEXT"]="Display » text « when a player has aggro.",
                                ["HEALBARSAGGROSHOWIND"]="Display small round icons on the bar when a player has aggro.",
                                ["HEALBARSAGGROPCTTXT"]="Track percentage - Display the amount of aggro a player has.\nShow text - Display text using the format selected in the dropdown.",
                                ["HEALBARSAGGROINDALERT"]="When using the indicator.\nDisplay when the treat reaches the level selected in the dropdown.",
                                ["HEALBARSAGGROBARALERT"]="When using the aggro bars.\nDisplay when the treat reaches the level selected in the dropdown.",
-                               ["HEALBARSAGGROBARFLASHFREQ"]="Set the speed the aux bars flash.\nNote: faster means skipping steps in the update.\nFor a faster and smoother update first increase Internal Timers and Updates on the General Tab.",
-                               ["HEALBARSAGGROBARFLASHMIN"]="To give the effect of flashing, aux bars increase and decrease transparency in steps.\nMin - The minimum opacity.",
-                               ["HEALBARSAGGROBARFLASHMAX"]="To give the effect of flashing, aux bars increase and decrease transparency in steps.\nMax - The maximum opacity.",
                         -- Skins Frames Bars Aux tab
                                ["BARSAUX"]="Show the Skins Frames Aux tab.",
-                               ["BARSAUXASSIGN"]="Assign a bar type to the auxiliary bar.\n--\nNote: Only Aux 1 shows Power Points when set to Power.\nNote: Only Aux 2 shows enemy casting when set to Power.",
+                               ["BARSAUXASSIGN"]="Assign a bar type to the auxiliary bar.\n--\nNOTE: Only Aux 1 shows Power Points when set to Power.\nNOTE: Only Aux 2 shows enemy casting when set to Power.",
                                ["BARSAUXOVERLAP"]="Extend the size of the vertical or horizontal\nauxiliary bars when auxiliary bars exist on both\nthe left or right and above or below the health bar.",
                                ["BARSAUXCONFIG"]="Select the auxiliary bar to configure.",
                                ["BARSAUXCOLOUR"]="Set the col"..HEALBOT_enWORD_COLOUR_SUFFIX.." of the auxiliary bar.\nWhen custom is used click on the custom bar to set the col"..HEALBOT_enWORD_COLOUR_SUFFIX..".",
@@ -659,9 +682,9 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSNAMETEXTDISCOLALPHA"]="Set the transparency of the\nname text when in a disabled state.",
                                ["HEALBARSNAMETEXTDEBUFF"]="Always use the Custom col"..HEALBOT_enWORD_COLOUR_SUFFIX.."\nwhen the player has a debuff.",
                                ["HEALBARSTXTSHOWNAME"]="Show the players name on the bar.",
-                               ["HEALBARSTXTUTF8"]="Improve compatibility with international characters.\nNote: when on an English only server it is recommended to turn this off.",
+                               ["HEALBARSTXTUTF8"]="Improve compatibility with international characters.\n--\nNOTE: when on an English only server it is recommended to turn this off.",
                                ["HEALBARSTXTSHOWCLASS"]="Include the class on the bar.",
-                               ["HEALBARSTXTSHOWROLE"]="Show the players role in the group/raid when available.\nNote: This replaces the class.",
+                               ["HEALBARSTXTSHOWROLE"]="Show the players role in the group/raid when available.\n--\nNOTE: This replaces the class.",
                                ["HEALBARSTXTSHOWCLASSICON"]="Show the class/role as an icon.",
                                ["HEALBARSTXTSHOWCLASSTEXT"]="Show the class/role as text.",
                                ["HEALBARSTXTTAGDC"]="Display a tag before the characters name when the player is "..HEALBOT_DISCONNECTED_LABEL..".",
@@ -686,32 +709,28 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSTXTHEALTHICAOPTION"]="NOTE: "..HEALBOT_classicABSORBHOT.."s text is only shown on enabled bars.\n--\n- No Incoming "..HEALBOT_classicABSORBHOT.."s - Never show "..HEALBOT_classicABSORBHOT.."s.\n- Include "..HEALBOT_classicABSORBHOT.."s - Include "..HEALBOT_classicABSORBHOT.."s in the health text.\n- Separate "..HEALBOT_classicABSORBHOT.."s - Show "..HEALBOT_classicABSORBHOT.."s next to the health text.",
                                ["HEALBARSTXTHEALTHSOHEALS"]="NOTE: Overhealing text is only shown on\nenabled bars and always separate from other heals.\n--\n- No Overheals - Never show Overheals.\n- Show my overheals - Show your overhealing next to the health text.\n- Show all overheals - Show all overhealing next to the health text.",
                                ["HEALBARSTXTHLTHANCHOR"]="Set how the health text anchors to the name text.",
-                               ["HEALBARSTXTIGNOREINFULL"]="Ignore all incoming heals and "..HEALBOT_classicABSORBHOT.."s\nwhen the player is on full health.\n--\nNote:When this option is off, incoming heals and "..HEALBOT_classicABSORBHOT.."s\nare always shown when the bar is enabled.",
+                               ["HEALBARSTXTIGNOREINFULL"]="Ignore all incoming heals and "..HEALBOT_classicABSORBHOT.."s\nwhen the player is on full health.\n--\nNOTE:When this option is off, incoming heals and "..HEALBOT_classicABSORBHOT.."s\nare always shown when the bar is enabled.",
                                ["HEALBARSTXTHEALTHTYPE"]="Various options on how the health is displayed.",
                                ["HEALBARSTXTHEALTHFORMAT"]="Various options on the number format for health.",
-                        -- Skins Frames Icons General tab
-                               ["ICONSGENERAL"]="Show the Skins Frames Icons General tab.",
-                               ["ICONSHOWHOT"]="Show heal over time icons that\nare defined on the Buffs Custom tab.",
+						-- Skins Frames Icons  tab
+							   ["ICONSDEBUFFS"]="Show the Skins Frames Icons Debuffs tab",
+							   ["ICONSBUFFS"]="Show the Skins Frames Icons Buffs tab",
+							   ["ICONSEXTRA"]="Show the Skins Frames Icons Extras tab",
+							   ["ICONPOSITION"]="Set the position of icons",
+							   ["ICONANCHOR"]="Set the location of icons based on the position",
+                        -- Skins Frames Icons Aura General tab
+                               ["ICONSDEBUFFGENERAL"]="Show the Skins Frames Icons Debuffs General tab.",
+							   ["ICONSBUFFGENERAL"]="Show the Skins Frames Icons Buffs General tab.",
                                ["ICONNUMHOT"]="Select the maximum number\nof buff and HoT icons to show.",
-                               ["ICONSHOWDEBUFF"]="Show debuff icons that are\ndefined on the Debuff Custom tab.",
                                ["ICONNUMDEBUFF"]="Select the maximum number of debuff\nand Role/Class, Target Marker icons to show.",
-                               ["ICONSHOWDIR"]="Show a direction arrow pointing at players out of range.\nNote: This only works outside.",
-                               ["ICONSHOWDIRMO"]="Only show the direction arrow\nwhen the mouse is over the bar.",
-                               ["ICONSHOWRC"]="Shows the ready check status.",
-                               ["ICONSHOWRT"]="Show the raid target when assigned to a player.\nThe target types can be individually filtered.",
-                               ["ICONONBAR"]="Set the position of icons relative to the bar.\nOn bar - Position icons on the bar.",
-                               ["ICONOFFBAR"]="Set the position of icons relative to the bar.\nOff bar - Position icons to the sides of the bar.",
-                               ["ICONBELOWBAR"]="Set the position of icons relative to the bar.\nBelow bar - Position icons below the bar.",
-                               ["ICONLEFTSIDE"]="Set the position of icons relative to the bar.\nLeft side - Position helpful icons on the left side\nand harmful/information icons on the right.",
-                               ["ICONRIGHTSIDE"]="Set the position of icons relative to the bar.\nRight side - Position helpful icons on the right side\nand harmful/information icons on the left.",
-                               ["ICONDOUBLE"]="Show 2 rows of icons taking less horizontal space.\nNote: Icon scale is halved when using this setting.",
-                               ["ICONSCALEBUFF"]="The buff icon scale relative to the bar.\nNote: The scale is halved when using Double row.",
-                               ["ICONSCALEDEBUFF"]="The debuff icon scale relative to the bar.\nNote: The scale is halved when using Double row.",
+                               ["ICONDOUBLE"]="Show 2 rows of icons taking less horizontal space.\n--\nNOTE: Icon scale is halved when using this setting.",
+                               ["ICONSCALE"]="The icon scale relative to the bar.\n--\nNOTE: The scale is halved when using Double row.",
                                ["ICONALWAYSEN"]="Always use enabled bar opacity setting even\nwhen the bar is using a different setting.",
                                ["ICONFADE"]="Fade the icon as it begins to expire.",
                                ["ICONFADESTART"]="The number of seconds before expiry when the icon fades.\n--\nNOTE: The fade is gradual and generally not noticeable for the first few seconds.",
-                        -- Skins Frames Icons Text tab
-                               ["ICONSTEXT"]="Show the Skins Frames Icons Text tab.",
+                        -- Skins Frames Icons Aura Text tab
+                               ["ICONSDEBUFFTEXT"]="Show the Skins Frames Icons Debuffs Text tab.",
+						       ["ICONSBUFFTEXT"]="Show the Skins Frames Icons Buffs Text tab.",
                                ["ICONTXTSHOWCOUNT"]="Set the type of text and conditions met to show text on the icon.\nCount - Show the number of stacks, for all casters or own casts if Self casts only is on.",
                                ["ICONTXTSHOWDUR"]="Set the type of text and conditions met to show text on the icon.\nDuration - Show the duration remaining, for all casters or own casts if Self casts only is on.",
                                ["ICONTXTDURTIME"]="Only show the duration when the remaining\nduration is under the slider amount.",
@@ -719,6 +738,17 @@ function HealBot_Lang_Options_enALL()
                                ["ICONTXTFONT"]="Set the font for the text\ndisplayed on the icons.",
                                ["ICONTXTFONTSIZE"]="Set the font size for the\ntext displayed on the icons.",
                                ["ICONTXTFONTOUTLINE"]="Set the font outline for the\ntext displayed on the icons.",
+                        -- Skins Frames Icons Extra tabs
+						       ["ICONSCLASSROLE"]="Show the Skins Frames Icons Extras Class / Role tab.",
+						       ["ICONSRAIDTARGET"]="Show the Skins Frames Icons Extras Raid Target tab.",
+                               ["ICONSHOWCLASS"]="Shows the Class or Role when set.",
+                               ["ICONSHOWRC"]="Shows the ready check status.",
+                               ["ICONSHOWRT"]="Show the raid target when assigned to a player.\nThe target types can be individually filtered.",
+                               ["ICONSHOWDIR"]="Show a direction arrow pointing at players out of range.\n--\nNOTE: This only works outside.",
+                               ["ICONSHOWDIRMO"]="Only show the direction arrow\nwhen the mouse is over the bar.",
+						       ["ICONSREADYCHECK"]="Show the Skins Frames Icons Extras Ready Check tab.",
+						       ["ICONSOORARROW"]="Show the Skins Frames Icons Extras Out of Range Arrow tab.",
+						       ["ICONOFFSET"]="Offset the extra icon relative to the anchor.",
                         -- Debuffs General tab
                                ["MONITORDEBUFFS"]="Turn on/off debuff monitoring.",
                                ["MONITORDEBUFFSIC"]="Turn on/off monitoring for debuffs in combat.",
@@ -734,7 +764,7 @@ function HealBot_Lang_Options_enALL()
                                ["DEBUFFSCUSTOMDEBUFF"]="Lists custom default settings or individual\ndebuffs depending on the Category selected.",
                                ["DEBUFFSCUSTOMCASTBY"]="Sets a filter on debuffs displayed\nby checking the caster of the debuff.",
                                ["DEBUFFSCUSTOMDELETE"]="Delete the selected custom debuff.",
-                               ["DEBUFFSCUSTOMNEWNAME"]="Add a new debuff to the current category.\nNote: The Spell Name or Spell ID can be used.\nUsing Spell ID is recommended.",
+                               ["DEBUFFSCUSTOMNEWNAME"]="Add a new debuff to the current category.\n--\nNOTE: The Spell Name or Spell ID can be used.\nUsing Spell ID is recommended.",
                                ["DEBUFFSCUSTOMNEWSAVE"]="Save the new custom debuff.",
                                ["DEBUFFSCUSTOMENDIS"]="Disable the selected custom debuff in the current zone.",
                                ["DEBUFFSCUSTOMPRIORITY"]="Priority of the selected custom debuff.\nHighest priority is 1 and lowest is 20, highest priority is always displayed first.",
@@ -747,7 +777,7 @@ function HealBot_Lang_Options_enALL()
                                ["DEBUFFSCUSTOMALLPOISON"]="Always show poison type debuffs.",
                                ["DEBUFFSCUSTOMALLCURSE"]="Always show curse type debuffs.",
                                ["DEBUFFSCUSTOMALLBOSS"]="Always show debuffs cast by bosses.",
-                               ["DEBUFFSCUSTOMALLBOSSSTRICT"]="A boss must exist.\nAvoid bizzard api reporting boss debuffs from lesser mobs.",
+                               ["DEBUFFSCUSTOMALLTIMED"]="Always show debuffs with a duration less than "..HealBot_Config_Cures.ShowTimeMaxDuration.." seconds.\n--\nNOTE: Excludes debuffs cast by friendly players.\nNOTE: Use '/hb atd n' to set the duration where n is the seconds.",
                         -- Debuffs Warning tab
                                ["DEBUFFSWARNINGBAR"]="Change the health bar col"..HEALBOT_enWORD_COLOUR_SUFFIX.." to the settings defined.\nThis applies to all General and Custom debuffs.",
                                ["DEBUFFSWARNINGBARRANGE"]="Set the range when the health bar col"..HEALBOT_enWORD_COLOUR_SUFFIX.." is changed.",
@@ -757,6 +787,7 @@ function HealBot_Lang_Options_enALL()
                                ["DEBUFFSWARNINGSOUNDRANGE"]="Set the range when the sound is played.",
                                ["DEBUFFSWARNINGSOUNDSELECT"]="Select the sound to play.",
                                ["DEBUFFSWARNINGSOUNDPREVIEW"]="Test playing the sound.",
+                               ["DEBUFFSWARNINGSPAMFILTER"]="Minimum seconds for warnings of the same debuff.\n--\nNOTE: This applies to all players with the same debuff.",
                         -- Buffs General tab
                                ["MONITORBUFFS"]="Turn on/off buff monitoring.",
                                ["MONITORBUFFSIC"]="Turn on/off monitoring for buffs in combat.",
@@ -772,7 +803,7 @@ function HealBot_Lang_Options_enALL()
                                ["BUFFSCUSTOMIDMETHOD"]="Check buffs using Spell ID, Spell Name or Both.",
                                ["BUFFSCUSTOMCASTBY"]="Sets a filter on buffs displayed\nby checking the caster of the buff.",
                                ["BUFFSCUSTOMDELETE"]="Delete the selected custom buff.",
-                               ["BUFFSCUSTOMNEWNAME"]="Add a new buff to the current category.\nNote: The Spell Name or Spell ID can be used.\nUsing Spell ID is recommended.",
+                               ["BUFFSCUSTOMNEWNAME"]="Add a new buff to the current category.\n--\nNOTE: The Spell Name or Spell ID can be used.\nUsing Spell ID is recommended.",
                                ["BUFFSCUSTOMNEWSAVE"]="Save the new custom buff.",
                                ["BUFFSCUSTOMENDIS"]="Disable the selected custom buff in the current zone.",
                                ["BUFFSCUSTOMPRIORITY"]="Priority of the selected custom buff.\nHighest priority is 1 and lowest is 20, highest priority is always displayed first.",
@@ -805,7 +836,7 @@ function HealBot_Lang_Options_enALL()
                                ["TOOLTIPPOSITION"]="Links to the Skins Frame General tab,\nallowing for different positions per frame.",
                                ["TOOLTIPALPHA"]="Set the transparency of the tooltip.",
                         -- Mouse Wheel tab
-                               ["BUFFSMOUSEWHEELUSE"]="Turn On/Off usage of the mouse wheel.\nNote: When this is on mouse over macros will not work on HealBot bars",
+                               ["BUFFSMOUSEWHEELUSE"]="Turn On/Off usage of the mouse wheel.\n--\nNOTE: When this is on mouse over macros will not work on HealBot bars",
                                ["BUFFSMOUSEWHEELCMD"]="Set a command to run with an optional key press\nand mouse wheel up or down combination.",
                                ["BUFFSMOUSEWHEELEMOTE"]="Select the emote to be used on mouse wheel scroll.",
                         -- Test tab
@@ -817,11 +848,17 @@ function HealBot_Lang_Options_enALL()
                                ["TESTNUMMYTARGETS"]="Set the number of bars to represent your Private Targets.",
                                ["TESTNUMPETS"]="Set the number of bars to represent Pets.",
                                ["TESTNUMENEMY"]="Set the number of bars to represent the Enemy.",
+                        -- Import/Export tab
+                               ["INOUTSKINS"]="Show the Import/Export Skins tab.",
+                               ["INOUTCUSTOMDEBUFFS"]="Show the Import/Export Custom Debuffs tab.",
+                               ["INOUTCUSTOMBUFFS"]="Show the Import/Export Custom Buffs tab.",
+                               ["INOUTSPELLS"]="Show the Import/Export Spells tab.",
+                               ["INOUTPRESETCOLS"]="Show the Import/Export Preset Col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s tab.",
                         -- Import/Export Skins tab
                                ["INOUTSELECTSKIN"]="Select the skin to be exported.",
                                ["INEXTRASKIN"]="Select an extra skin to import.\n--\nNOTE: After importing extra skins, delete any that are not used.\nThis will reduce the addons main memory usage.\n--\nNOTE: Images can be viewed at "..HEALBOT_ABOUT_URL,
                                ["INOUTEXPORTSKIN"]="Export populates the large text box with data for the selected skin.\nThis can then be copied and saved outside the game.\n--\nTIP: To reduce the number of characters, first do the following:\nFor all tabs possible, in Skins>Frames, select the top frame and use Apply current tab settings to all Frames.",
-                               ["INOUTIMPORTSKIN"]="Import reads the text from the large text box and sets the skin.\nNote: This will overwrite any existing skin with the same name.",
+                               ["INOUTIMPORTSKIN"]="Import reads the text from the large text box and sets the skin.\n--\nNOTE: This will overwrite any existing skin with the same name.",
                         -- Import/Export Custom Debuffs tab
                                ["INOUTEXPORTCDEBUFF"]="Export populates the large text box with data of all current custom debuffs.\nThis can then be copied and saved outside the game.",
                                ["INOUTIMPORTCDEBUFFMETHOD"]="On Import the following methods can be used.\n- Overwrite All - Delete all existing custom debuffs, then load and insert custom debuffs.\n- Merge All - Insert missing custom debuffs and update existing custom debuffs.\n- Merge New - Only insert missing custom debuffs, no updates to existing custom debuffs.",
@@ -837,13 +874,11 @@ function HealBot_Lang_Options_enALL()
                         -- Import/Export Preset Colours tab
                                ["INOUTEXPORTPRESETCOLS"]="Export populates the large text box with data of all preset col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s.\nThis can then be copied and saved outside the game.",
                                ["INOUTIMPORTPRESETCOLS"]="Import loads in the data from the large text box.",
+						-- Plugin Tab
+                               ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n - HealBot Threat: See threat for all players on multiple mobs.\n - HealBot TimeToDie: Player damage tracker showing how soon players will die.\n - HealBot TimeToLive: Resurrection monitor tracking incoming and pending resurrections.",	
                               }
 end
 
 if HealBot_Version_Target() then
-    if (GetLocale() == "enUK") then
-        HealBot_Tips_Lang_enUK()
-    else
-        HealBot_Tips_Lang_enUS()
-    end
+    HealBot_Lang_Options_enALL()
 end

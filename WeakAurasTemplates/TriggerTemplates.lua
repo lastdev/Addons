@@ -129,7 +129,11 @@ local checks = {
   uninterruptible = {
     variable = "interruptible",
     value = 0,
-  };
+  },
+  enchantMissing = {
+    variable = "enchanted",
+    value = 0
+  }
 }
 
 local function buildCondition(trigger, check, properties)
@@ -202,6 +206,10 @@ end
 
 local function totemActiveGlow(conditions, trigger, regionType)
   GenericGlow(conditions, trigger, regionType, checks.totem)
+end
+
+local function isMissingEnchantGlow(conditions, trigger, regionType)
+  tinsert(conditions, buildCondition(trigger, checks.enchantMissing, {changes("glow", regionType)}));
 end
 
 local function overlayGlow(conditions, trigger, regionType)
@@ -380,6 +388,20 @@ local function createOverlayGlowTrigger(triggers, position, item)
   };
 end
 
+
+local function createWeaponEnchantTrigger(triggers, position, item, showOn)
+  triggers[position] = {
+    trigger = {
+      type = "status",
+      event = "Weapon Enchant",
+      use_enchant = true,
+      enchant = tostring(item.enchant),
+      weapon = item.weapon,
+      showOn = showOn
+    }
+  }
+end
+
 local function createAbilityAndDurationTrigger(triggers, item)
   createDurationTrigger(triggers, 1, item);
   createAbilityTrigger(triggers, 2, item, "showAlways");
@@ -441,7 +463,7 @@ local function subTypesFor(item, regionType)
         elseif(self.elapsed < 1.5) then
           t1:SetVertexColor(1,1,1,1);
         elseif(self.elapsed < 3) then
-        -- do nothing
+          -- Do nothing
         else
           self.elapsed = self.elapsed - 3;
         end
@@ -1060,6 +1082,38 @@ local function subTypesFor(item, regionType)
       end,
       data = data,
     });
+  elseif (item.type == "weaponenchant") then
+    data.inverse = false
+    tinsert(types, {
+      icon = icon.cd,
+      title = L["Show Only if Enchanted"],
+      description = L["Only shows if the weapon is enchanted."],
+      createTriggers = function(triggers, item)
+        createWeaponEnchantTrigger(triggers, 1, item, "showOnActive");
+      end,
+      data = data,
+    });
+    tinsert(types, {
+      icon = icon.cd,
+      title = L["Show if Enchant Missing"],
+      description = L["Only shows if the weapon is not enchanted."],
+      createTriggers = function(triggers, item)
+        createWeaponEnchantTrigger(triggers, 1, item, "showOnMissing");
+      end,
+      data = data,
+    });
+    tinsert(types, {
+      icon = icon.glow,
+      title = L["Show Always, Glow on Missing"],
+      description = L["Always shows highlights if enchant missing."],
+      createTriggers = function(triggers, item)
+        createWeaponEnchantTrigger(triggers, 1, item, "showAlways");
+      end,
+      createConditions = function(conditions, item, regionType)
+        isMissingEnchantGlow(conditions, 1, regionType);
+      end,
+      data = dataGlow,
+    });
   end
 
   -- filter when createConditions return nothing for this regionType
@@ -1111,8 +1165,7 @@ function WeakAuras.CreateTemplateView(frame)
   local function replaceCondition(data, item, subType)
     local conditions = createConditionsFor(item, subType, data.regionType);
     if conditions then
-      data.conditions = {}
-      WeakAuras.DeepCopy(conditions, data.conditions);
+      data.conditions = CopyTable(conditions);
     end
   end
 
@@ -1126,12 +1179,11 @@ function WeakAuras.CreateTemplateView(frame)
           if v.check.trigger ~= -1 then
             v.check.trigger = v.check.trigger + prevNumTriggers;
           end
-          WeakAuras.DeepCopy(v, data.conditions[position]);
+          data.conditions[position] = CopyTable(v);
           position = position + 1;
         end
       else
-        data.conditions = {};
-        WeakAuras.DeepCopy(conditions, data.conditions);
+        data.conditions = CopyTable(conditions);
       end
     end
   end
@@ -1171,13 +1223,13 @@ function WeakAuras.CreateTemplateView(frame)
       triggers = createTriggersFor(item, subType);
     end
 
+    data.triggers = {}
     for i, v in pairs(triggers) do
       data.triggers[i] = data.triggers[i] or {};
-      data.triggers[i].trigger = {};
-      WeakAuras.DeepCopy(v.trigger, data.triggers[i].trigger);
+      data.triggers[i].trigger = CopyTable(v.trigger);
       data.triggers[i].untrigger = {};
       if (v.untrigger) then
-        WeakAuras.DeepCopy(v.untrigger, data.triggers[i].untrigger);
+        data.triggers[i].untrigger = CopyTable(v.untrigger);
       end
     end
     if (#data.triggers > 1) then -- Multiple triggers
@@ -1197,11 +1249,10 @@ function WeakAuras.CreateTemplateView(frame)
     for i, v in pairs(triggers) do
       local position = #data.triggers + 1
       data.triggers[position] = data.triggers[position] or {};
-      data.triggers[position].trigger = {};
-      WeakAuras.DeepCopy(v.trigger, data.triggers[position].trigger);
+      data.triggers[position].trigger = CopyTable(v.trigger);
       data.triggers[position].untrigger = {};
       if (v.untrigger) then
-        WeakAuras.DeepCopy(v.untrigger, data.triggers[position].untrigger);
+        data.triggers[position].untrigger = CopyTable(v.untrigger);
       end
     end
      -- Multiple Triggers, override disjunctive, even if the users set it previously
@@ -1245,8 +1296,7 @@ function WeakAuras.CreateTemplateView(frame)
       templateButton:SetTitle(item.title);
       templateButton:SetDescription(item.description);
       templateButton:SetClick(function()
-        newView.data = {};
-        WeakAuras.DeepCopy(item.data, newView.data);
+        newView.data = CopyTable(item.data);
         WeakAuras.validate(newView.data, WeakAuras.data_stub);
         newView.data.internalVersion = WeakAuras.InternalVersion();
         newView.data.regionType = regionType;
@@ -1283,12 +1333,12 @@ function WeakAuras.CreateTemplateView(frame)
   local function batchModeToggler(value)
     if (not value) then
       -- clean selection
-      for k in pairs(newView.choosenItemBatch) do
-        newView.choosenItemBatch[k] = nil;
+      for k in pairs(newView.chosenItemBatch) do
+        newView.chosenItemBatch[k] = nil;
       end
-      for k, f in pairs(newView.choosenItemButtonsBatch) do
+      for k, f in pairs(newView.chosenItemButtonsBatch) do
         f.frame:UnlockHighlight();
-        newView.choosenItemButtonsBatch[k] = nil;
+        newView.chosenItemButtonsBatch[k] = nil;
       end
       newView.batchButton:Hide();
     end
@@ -1297,8 +1347,8 @@ function WeakAuras.CreateTemplateView(frame)
   local function createTriggerFlyout(section, fullWidth)
     local group = AceGUI:Create("WeakAurasTemplateGroup");
     group:SetFullWidth(true);
-    newView.choosenItemBatch = {};
-    newView.choosenItemButtonsBatch = {};
+    newView.chosenItemBatch = {};
+    newView.chosenItemButtonsBatch = {};
     group:SetLayout("WATemplateTriggerLayoutFlyout");
     if (section) then
       for j, item in sortedPairs(section, createSortFunctionFor(section)) do
@@ -1313,17 +1363,17 @@ function WeakAuras.CreateTemplateView(frame)
         end
         button:SetClick(function()
           if (IsControlKeyDown() and not newView.existingAura) then
-            if newView.choosenItemBatch[item] then
+            if newView.chosenItemBatch[item] then
               button.frame:UnlockHighlight();
-              newView.choosenItemBatch[item] = nil;
-              newView.choosenItemButtonsBatch[j] = nil;
+              newView.chosenItemBatch[item] = nil;
+              newView.chosenItemButtonsBatch[j] = nil;
             else
               button.frame:LockHighlight();
-              newView.choosenItemBatch[item] = true;
-              newView.choosenItemButtonsBatch[j] = button;
+              newView.chosenItemBatch[item] = true;
+              newView.chosenItemButtonsBatch[j] = button;
             end
             local count = 0;
-            for _ in pairs(newView.choosenItemBatch) do
+            for _ in pairs(newView.chosenItemBatch) do
               count = count + 1;
             end
             if count == 0 then
@@ -1342,8 +1392,8 @@ function WeakAuras.CreateTemplateView(frame)
             if #subTypes < 2 then
               local subType = subTypes[1] or {}
               if (newView.existingAura) then
-                newView.choosenItem = item;
-                newView.choosenSubType = subType;
+                newView.chosenItem = item;
+                newView.chosenSubType = subType;
                 createButtons();
               else
                 replaceTrigger(newView.data, item, subType);
@@ -1351,17 +1401,17 @@ function WeakAuras.CreateTemplateView(frame)
                 newView.data.id = WeakAuras.FindUnusedId(item.title);
                 newView.data.load = {};
                 if (item.load) then
-                  WeakAuras.DeepCopy(item.load, newView.data.load);
+                  newView.data.load = CopyTable(item.load);
                 end
                 if (subType.data) then
-                  WeakAuras.DeepCopy(subType.data, newView.data);
+                  WeakAuras.DeepMixin(newView.data, subType.data)
                 end
                 newView:CancelClose();
                 WeakAuras.NewAura(newView.data, newView.data.regionType, newView.targetId);
               end
             else
               -- create trigger type selection
-              newView.choosenItem = item;
+              newView.chosenItem = item;
               createButtons();
             end
           end
@@ -1373,7 +1423,7 @@ function WeakAuras.CreateTemplateView(frame)
   end
 
   local function createTriggerTypeButtons()
-    local item = newView.choosenItem;
+    local item = newView.chosenItem;
     local group = AceGUI:Create("WeakAurasTemplateGroup");
     group:SetFullWidth(true);
     local subTypes = subTypesFor(item, newView.data.regionType);
@@ -1401,10 +1451,10 @@ function WeakAuras.CreateTemplateView(frame)
               subTypesButton.frame:UnlockHighlight();
             end
           end
-          newView.choosenItemBatchSubType[item] = subType;
+          newView.chosenItemBatchSubType[item] = subType;
         elseif (newView.existingAura) then
-          newView.choosenItem = item;
-          newView.choosenSubType = subType;
+          newView.chosenItem = item;
+          newView.chosenSubType = subType;
           createButtons();
         else
           replaceTrigger(newView.data, item, subType);
@@ -1412,10 +1462,10 @@ function WeakAuras.CreateTemplateView(frame)
           newView.data.id = WeakAuras.FindUnusedId(item.title);
           newView.data.load = {};
           if (item.load) then
-            WeakAuras.DeepCopy(item.load, newView.data.load);
+            newView.data.load = CopyTable(item.load);
           end
           if (subType.data) then
-            WeakAuras.DeepCopy(subType.data, newView.data);
+            WeakAuras.DeepMixin(newView.data, subType.data)
           end
           newView:CancelClose();
           WeakAuras.NewAura(newView.data, newView.data.regionType, newView.targetId);
@@ -1423,7 +1473,7 @@ function WeakAuras.CreateTemplateView(frame)
       end);
       if newView.batchStep then
         button.frame:LockHighlight();
-        newView.choosenItemBatchSubType[item] = subType;
+        newView.chosenItemBatchSubType[item] = subType;
         if lastButton then
           lastButton.frame:UnlockHighlight();
         end
@@ -1465,12 +1515,12 @@ function WeakAuras.CreateTemplateView(frame)
     local function handle(data, item, subType)
       replaceTrigger(data, item, subType);
       replaceCondition(data, item, subType);
-      WeakAuras.optionTriggerChoices[data.id] = 1;
       newView:CancelClose();
       WeakAuras.Add(data);
+      WeakAuras.ClearAndUpdateOptions(data.id)
+      WeakAuras.FillOptions()
       WeakAuras.NewDisplayButton(data);
       WeakAuras.UpdateThumbnail(data);
-      WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
     if (data.controlledChildren) then
@@ -1491,12 +1541,12 @@ function WeakAuras.CreateTemplateView(frame)
       local prevNumTriggers = #data.triggers;
       addTrigger(data, item, subType);
       addCondition(data, item, subType, prevNumTriggers);
-      WeakAuras.optionTriggerChoices[data.id] = prevNumTriggers;
       newView:CancelClose();
       WeakAuras.Add(data);
+      WeakAuras.ClearAndUpdateOptions(data.id)
+      WeakAuras.FillOptions()
       WeakAuras.NewDisplayButton(data);
       WeakAuras.UpdateThumbnail(data);
-      WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
     if (data.controlledChildren) then
@@ -1519,17 +1569,15 @@ function WeakAuras.CreateTemplateView(frame)
     replaceButton:SetIcon("Interface\\Icons\\Spell_ChargeNegative");
     replaceButton:SetFullWidth(true);
     replaceButton:SetClick(function()
-      replaceTriggers(newView.data, newView.choosenItem, newView.choosenSubType);
+      replaceTriggers(newView.data, newView.chosenItem, newView.chosenSubType);
       for _,v in pairs({"class","spec","talent","pvptalent","race"}) do
         newView.data.load[v] = nil;
         newView.data.load["use_"..v] = nil;
       end
-      newView.data.load.class = {};
-      newView.data.load.spec = {};
-      WeakAuras.DeepCopy(WeakAuras.data_stub.load.class, newView.data.load.class);
-      WeakAuras.DeepCopy(WeakAuras.data_stub.load.spec, newView.data.load.spec);
-      if (newView.choosenItem.load) then
-        WeakAuras.DeepCopy(newView.choosenItem.load, newView.data.load);
+      newView.data.load.class = CopyTable(WeakAuras.data_stub.load.class);
+      newView.data.load.spec = CopyTable(WeakAuras.data_stub.load.spec);
+      if (newView.chosenItem.load) then
+        WeakAuras.DeepMixin(newView.data.load, newView.chosenItem.load)
       end
     end);
     newViewScroll:AddChild(replaceButton);
@@ -1540,7 +1588,7 @@ function WeakAuras.CreateTemplateView(frame)
     addButton:SetIcon("Interface\\Icons\\Spell_ChargePositive");
     addButton:SetFullWidth(true);
     addButton:SetClick(function()
-      addTriggers(newView.data, newView.choosenItem, newView.choosenSubType);
+      addTriggers(newView.data, newView.chosenItem, newView.chosenSubType);
     end);
     newViewScroll:AddChild(addButton);
   end
@@ -1566,8 +1614,8 @@ function WeakAuras.CreateTemplateView(frame)
     elseif (newView.data and newView.batchStep) then
       -- Batch
       if (newView.batchStep) then
-        newView.choosenItemBatchSubType = {};
-        for item in pairs(newView.choosenItemBatch) do
+        newView.chosenItemBatchSubType = {};
+        for item in pairs(newView.chosenItemBatch) do
           local classHeader = AceGUI:Create("Heading");
           classHeader:SetFullWidth(true);
           newViewScroll:AddChild(classHeader);
@@ -1581,7 +1629,7 @@ function WeakAuras.CreateTemplateView(frame)
           end
           newViewScroll:AddChild(button);
 
-          newView.choosenItem = item;
+          newView.chosenItem = item;
           local typesButtons = createTriggerTypeButtons();
           newViewScroll:AddChild(typesButtons);
         end
@@ -1590,7 +1638,7 @@ function WeakAuras.CreateTemplateView(frame)
         newView.backButton:SetPoint("BOTTOMRIGHT", -267, -23);
       end
       newView.batchModeLabel:Hide();
-    elseif (newView.data and not newView.choosenItem) then
+    elseif (newView.data and not newView.chosenItem) then
       -- Second step: Trigger selection screen
 
       -- Class
@@ -1611,25 +1659,6 @@ function WeakAuras.CreateTemplateView(frame)
 
       createTriggerButton(WeakAuras.triggerTemplates.general, selectedItem);
 
-      -- Items
-      if not WeakAuras.IsClassic() then
-        local itemHeader = AceGUI:Create("Heading");
-        itemHeader:SetFullWidth(true);
-        newViewScroll:AddChild(itemHeader);
-        local itemTypes = {};
-        for _, section in pairs(WeakAuras.triggerTemplates.items) do
-          tinsert(itemTypes, section.title);
-        end
-        newView.item = newView.item or 1;
-        local itemSelector = createDropdown("item", itemTypes);
-        newViewScroll:AddChild(itemSelector);
-        newViewScroll:AddChild(createSpacer());
-        if (WeakAuras.triggerTemplates.items[newView.item]) then
-          local group = createTriggerFlyout(WeakAuras.triggerTemplates.items[newView.item].args, true);
-          newViewScroll:AddChild(group);
-        end
-      end
-
       -- Race
       local raceHeader = AceGUI:Create("Heading");
       raceHeader:SetFullWidth(true);
@@ -1648,11 +1677,11 @@ function WeakAuras.CreateTemplateView(frame)
       end
 
       -- batchButton
-      newView.choosenItemBatch = {};
+      newView.chosenItemBatch = {};
       if not newView.existingAura then
         newView.batchModeLabel:Show();
       end
-    elseif (newView.data and newView.choosenItem and not newView.choosenSubType) then
+    elseif (newView.data and newView.chosenItem and not newView.chosenSubType) then
       -- Multi-Type template
       local typeHeader = AceGUI:Create("Heading");
       typeHeader:SetFullWidth(true);
@@ -1680,23 +1709,21 @@ function WeakAuras.CreateTemplateView(frame)
 
   local newViewMakeBatch = CreateFrame("Button", nil, newView.frame, "UIPanelButtonTemplate");
   newViewMakeBatch:SetScript("OnClick", function()
-    local saveData = {};
-    WeakAuras.DeepCopy(newView.data, saveData);
-    for item in pairs(newView.choosenItemBatch) do
+    local saveData = CopyTable(newView.data);
+    for item in pairs(newView.chosenItemBatch) do
       -- clean data
-      newView.data = {};
-      WeakAuras.DeepCopy(saveData, newView.data);
+      newView.data = CopyTable(saveData);
       -- copy data
-      local subType = newView.choosenItemBatchSubType[item]
+      local subType = newView.chosenItemBatchSubType[item]
       replaceTrigger(newView.data, item, subType);
       replaceCondition(newView.data, item, subType);
       newView.data.id = WeakAuras.FindUnusedId(item.title);
       newView.data.load = {};
       if (item.load) then
-        WeakAuras.DeepCopy(item.load, newView.data.load);
+        newView.data.load = CopyTable(item.load);
       end
       if (subType.data) then
-        WeakAuras.DeepCopy(subType.data, newView.data);
+        WeakAuras.DeepMixin(newView.data, subType.data)
       end
       -- create aura
       WeakAuras.NewAura(newView.data, newView.data.regionType, newView.targetId);
@@ -1726,28 +1753,28 @@ function WeakAuras.CreateTemplateView(frame)
   local newViewBack = CreateFrame("Button", nil, newView.frame, "UIPanelButtonTemplate");
   newViewBack:SetScript("OnClick", function()
     if (newView.existingAura) then
-      if newView.choosenSubType then
-        newView.choosenSubType = nil;
-        local subTypes = subTypesFor(newView.choosenItem, newView.data.regionType);
+      if newView.chosenSubType then
+        newView.chosenSubType = nil;
+        local subTypes = subTypesFor(newView.chosenItem, newView.data.regionType);
         if #subTypes < 2 then -- No subtype selection, go back twice
-          newView.choosenItem = nil;
+          newView.chosenItem = nil;
         end
       else
-        newView.choosenItem = nil;
+        newView.chosenItem = nil;
       end
     else
-      if newView.choosenSubType then
-        newView.choosenSubType = nil;
+      if newView.chosenSubType then
+        newView.chosenSubType = nil;
       else
-        if newView.choosenItem then
-          newView.choosenItem = nil;
+        if newView.chosenItem then
+          newView.chosenItem = nil;
         else
           newView.data = nil;
         end
       end
     end
     newView.batchButton:Hide();
-    newView.choosenItemBatch = {};
+    newView.chosenItemBatch = {};
     newView.batchStep = nil;
     newView.backButton:ClearAllPoints()
     newView.backButton:SetPoint("BOTTOMRIGHT", -147, -23);
@@ -1772,15 +1799,15 @@ function WeakAuras.CreateTemplateView(frame)
     if (data) then
       self.data = data;
       newView.existingAura = true;
-      newView.choosenItem = nil;
-      newView.choosenSubType = nil;
+      newView.chosenItem = nil;
+      newView.chosenSubType = nil;
     else
       self.data = nil; -- Data is cloned from display template
       newView.existingAura = false;
-      newView.choosenItem = nil;
-      newView.choosenSubType = nil;
+      newView.chosenItem = nil;
+      newView.chosenSubType = nil;
       newView.batchStep = nil;
-      newView.choosenItemBatch = {};
+      newView.chosenItemBatch = {};
     end
     newView.class = select(2, UnitClass("player"));
     if not WeakAuras.IsClassic() then

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1210, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision((string.sub("20190414033732", 1, -5)):sub(12, -3))
+mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
+
+mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
 mod:SetCreatureID(83846)
 mod:SetEncounterID(1756)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

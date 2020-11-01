@@ -10,7 +10,7 @@ local L = DBM_CORE_L
 local rangeCheck = DBM.RangeCheck
 local mainFrame = CreateFrame("Frame")
 local textFrame, radarFrame, updateIcon, updateRangeFrame, initializeDropdown
-local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS -- For Phanx' Class Colors
+local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS -- For Phanx' Class Colors
 
 -- Function for automatically converting inputed ranges from old mods to be ones that have valid item/api checks
 local function setCompatibleRestrictedRange(range)
@@ -405,18 +405,14 @@ end
 --  Create the frame  --
 ------------------------
 local function createTextFrame()
-	textFrame = CreateFrame("Frame", "DBMRangeCheck", UIParent, DBM:IsAlpha() and "BackdropTemplate")
+	textFrame = CreateFrame("Frame", "DBMRangeCheck", UIParent, "BackdropTemplate")
 	textFrame:SetFrameStrata("DIALOG")
 	textFrame.backdropInfo = {
 		bgFile		= "Interface\\DialogFrame\\UI-DialogBox-Background",--131071
 		tile		= true,
 		tileSize	= 16
 	}
-	if not DBM:IsAlpha() then
-		textFrame:SetBackdrop(textFrame.backdropInfo)
-	else
-		textFrame:ApplyBackdrop()
-	end
+	textFrame:ApplyBackdrop()
 	textFrame:SetPoint(DBM.Options.RangeFramePoint, UIParent, DBM.Options.RangeFramePoint, DBM.Options.RangeFrameX, DBM.Options.RangeFrameY)
 	textFrame:SetSize(128, 12)
 	textFrame:SetClampedToScreen(true)
@@ -556,7 +552,7 @@ end
 --  OnUpdate  --
 ----------------
 do
-	local UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, GetPlayerFacing, UnitClass, IsInRaid, GetNumGroupMembers, GetRaidTargetIndex, GetBestMapForUnit, Ambiguate = UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase, GetPlayerFacing, UnitClass, IsInRaid, GetNumGroupMembers, GetRaidTargetIndex, C_Map.GetBestMapForUnit, Ambiguate
+	local UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, GetPlayerFacing, UnitClass, IsInRaid, GetNumGroupMembers, GetRaidTargetIndex, GetBestMapForUnit = UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, GetPlayerFacing, UnitClass, IsInRaid, GetNumGroupMembers, GetRaidTargetIndex, C_Map.GetBestMapForUnit
 	local max, sin, cos, pi2 = math.max, math.sin, math.cos, math.pi * 2
 	local circleColor, rotation, pixelsperyard, activeDots, prevRange, prevThreshold, prevNumClosePlayer, prevclosestRange, prevColor, prevType = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	local unitList = {}
@@ -673,7 +669,7 @@ do
 			local uId = unitList[i]
 			local dot = radarFrame.dots[i]
 			local mapId = GetBestMapForUnit(uId) or 0
-			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
+			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and not UnitPhaseReason(uId) and (not filter or filter(uId)) then
 				local range = restricted and itsBCAgain(uId, activeRange) or UnitDistanceSquared(uId) ^ 0.5
 				local inRange = false
 				if range < activeRange + 0.5 then
@@ -707,8 +703,8 @@ do
 						rangeCheck:Hide(true)
 						return
 					end
-					dot.x = -(x - playerX)
-					dot.y = -(y - playerY)
+					dot.y = -(x - playerX)
+					dot.x = -(y - playerY)
 					dot.range = range
 					setDot(i, sinTheta, cosTheta)
 				end
@@ -788,12 +784,12 @@ end)
 local getDistanceBetween, getDistanceBetweenAll
 
 do
-	local UnitPosition, UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase = UnitPosition, UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected, UnitInPhase
+	local UnitPosition, UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected = UnitPosition, UnitExists, UnitIsUnit, UnitIsDeadOrGhost, UnitIsConnected
 
 	function getDistanceBetweenAll(checkrange)
-		local range = 1000
+		local range
 		for uId in DBM:GetGroupMembers() do
-			if UnitExists(uId) and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) then
+			if UnitExists(uId) and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and not UnitPhaseReason(uId) then
 				range = DBM:HasMapRestrictions() and itsBCAgain(uId, checkrange) or UnitDistanceSquared(uId) * 0.5
 				if checkrange < (range + 0.5) then
 					return true
@@ -892,7 +888,6 @@ function rangeCheck:Hide(force)
 		rangeCheck:Show(restoreRange, restoreFilter, true, restoreThreshold, restoreReverse)
 	else
 		restoreRange, restoreFilter, restoreThreshold, restoreReverse = nil, nil, nil, nil
-		DBM.Options.RestoreRange = nil -- Set nil here because it means force was passed.
 		updater:Stop()
 		if mainFrame.eventRegistered then
 			mainFrame.eventRegistered = nil

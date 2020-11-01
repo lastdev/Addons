@@ -137,7 +137,7 @@
 					<ScrollFrame parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate">
 						<Scripts>
 							<OnVerticalScroll>
-								self:OnVerticalScroll(offset, 18, self:GetParent():Update())
+								self:OnVerticalScroll(offset, 18, function() self:GetParent():Update() end)
 							</OnVerticalScroll>
 						</Scripts>
 						<KeyValues>

@@ -1,4 +1,4 @@
-﻿-- Locale
+-- Locale
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local AL = AceLocale:NewLocale("RareScanner", "itIT", false);
 
@@ -25,8 +25,6 @@ if AL then
 	AL["DISPLAY_BUTTON_CONTAINERS"] = "Attiva/Disattiva la visualizzazione del pulsante per i tesori/forzieri"
 	AL["DISPLAY_BUTTON_CONTAINERS_DESC"] = "Attiva/Disattiva la visualizzazione del pulsante per i tesori/forzieri. Non influisce sull'allarme sonoro e sugli avvisi della chat."
 	AL["DISPLAY_BUTTON_DESC"] = "Se disattivato, il pulsante e la miniatura non verranno più mostrati. Non influisce sull'allarme sonoro e sugli avvisi della chat."
-	AL["DISPLAY_LOG_WINDOW"] = "Attiva/Disattiva la visualizzazione della finestra del registro"
-	AL["DISPLAY_LOG_WINDOW_DESC"] = "Se disabilitata, la finestra del registro non verrà più mostrata."
 	AL["DISPLAY_LOOT_ON_MAP"] = "Mostra il bottino nelle didascalie sulla mappa"
 	AL["DISPLAY_LOOT_ON_MAP_DESC"] = "Attiva/Disattiva la visualizzazione del bottino del PNG/contenitori nelle didascalie quando si porta il cursore del mouse sulle icone"
 	AL["DISPLAY_LOOT_PANEL"] = "Attiva/Disattiva la barra del bottino"
@@ -69,9 +67,6 @@ if AL then
 	AL["GENERAL_OPTIONS"] = "Opzioni generali"
 	AL["JUST_SPAWNED"] = "%s è appena apparso. Controlla la mappa!"
 	AL["LEFT_BUTTON"] = "Clic con il pulsante sinistro del mouse"
-	AL["LOG_WINDOW_AUTOHIDE"] = "Nascondi automaticamente i pulsanti dei PNG registrati"
-	AL["LOG_WINDOW_AUTOHIDE_DESC"] = "Nasconde automaticamente i pulsanti di ogni PNG dopo la durata stabilita (in minuti). Impostando una durata pari a zero secondi i pulsanti rimarranno fin quando non si chiuderà la finestra di registro o il numero di pulsanti raggiungerà la quota massima (in tal caso quello più vecchiò verrà rimpiazzato)"
-	AL["LOG_WINDOW_OPTIONS"] = "Opzioni finestra di registro"
 	AL["LOOT_CATEGORY_FILTERED"] = "Filtro abilitato per la categoria/sottocategoria: %s/%s. Puoi disabilitare questo filtro cliccando nuovamente sull'icona del bottino oppure dal menu dell'add-on RareScanner"
 	AL["LOOT_CATEGORY_FILTERS"] = "Filtri categoria"
 	AL["LOOT_CATEGORY_FILTERS_DESC"] = "Filtra il bottino mostrato per categoria"
@@ -120,7 +115,6 @@ if AL then
 	AL["MAP_TOOLTIP_CONTAINER_LOOTED"] = "Maiusc + Clic con il pulsante sinistro del mouse per impostarlo come depredato."
 	AL["MAP_TOOLTIP_DAYS"] = "giorni"
 	AL["MAP_TOOLTIP_EVENT_DONE"] = "Maiusc + Clic con il pulsante sinistro del mouse per impostarlo come completato"
-	AL["MAP_TOOLTIP_IGNORE_ICON"] = "Maiusc + Clic con il pulsante sinistro del mouse per nascondere per sempre questa icona se non dovrebbe trovarsi qui."
 	AL["MAP_TOOLTIP_KILLED"] = "Maiusc + Clic con il pulsante sinistro del mouse per impostarlo come ucciso"
 	AL["MAP_TOOLTIP_NOT_FOUND"] = "Non hai visto questo PNG e nessun altro l'ha condiviso ancora con te."
 	AL["MAP_TOOLTIP_SEEN"] = "Visto prima: %s"
@@ -158,9 +152,6 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Opzioni del suono"
 	AL["SOUND_VOLUME"] = "Volume"
 	AL["SOUND_VOLUME_DESC"] = "Imposta il livello del volume sonoro"
-	AL["SYNCRONIZATION_COMPLETED"] = "Sincronizzazione completata"
-	AL["SYNCRONIZE"] = "Sincronizzazione database"
-	AL["SYNCRONIZE_DESC"] = "Si analizzeranno PNG rari e tesori già uccisi/raccolti che fanno parte di un'impresa. Completata l'analisi, si rimuoveranno dalla mappa. È impossibile conoscere lo stato dei PNG rari e tesori che non fanno parte di un'impresa, per questo motivo rimarranno sulla mappa quando appariranno."
 	AL["TEST"] = "Avvia il Test"
 	AL["TEST_DESC"] = "Premi il pulsante per mostrare un avviso di esempio. Puoi trascinare e rilasciare il pannello in un'altra posizione di propria preferenza."
 	AL["TOC_NOTES"] = "Scanner Minimappa. Crea un avviso sonoro e grafico riportante una miniatura e un pulsante ogniqualvolta un PNG, tesoro, cassa o evento apparirà sulla minimappa"
@@ -178,10 +169,11 @@ if AL then
 
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
-		[9999] = "Class Halls"; --Class Halls
+		[9999] = "Enclavi di Classe"; --Class Halls
 		[9998] = "Isola di Lunacupa"; --Darkmoon Island
-		[9997] = "Dungeons/Scenarios"; --Dungeons/Scenarios
-		[9996] = "Raids"; --Raids
-		[9995] = "Unknown"; --Unknown
+		[9997] = "Spedizioni/Scenari"; --Dungeons/Scenarios
+		[9996] = "Incursioni"; --Raids
+		[9995] = "Sconosciuto"; --Unknown
+		[9994] = "Expedition islands"; --Expedition islands
 	}
 end

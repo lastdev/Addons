@@ -1,8 +1,27 @@
 ------------------------------------------------------------------------
-r413 | the_original_manbot | 2020-01-15 16:37:21 +0000 (Wed, 15 Jan 2020) | 1 line
+r425 | Zimzarina | 2020-10-29 20:02:38 +0000 (Thu, 29 Oct 2020) | 1 line
 Changed paths:
-   M /trunk/Postal.toc
+   M /trunk/Modules/BlackBook.lua
+   M /trunk/Postal.lua
 
-version number update after testing features
+Address issue #231 and partial clean up of localization
+------------------------------------------------------------------------
+r424 | Zimzarina | 2020-10-25 02:47:51 +0000 (Sun, 25 Oct 2020) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+
+------------------------------------------------------------------------
+r423 | Zimzarina | 2020-10-24 19:13:18 +0000 (Sat, 24 Oct 2020) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+
+------------------------------------------------------------------------
+r422 | Zimzarina | 2020-10-24 18:55:41 +0000 (Sat, 24 Oct 2020) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+Fixed an old loc string issue in the help button dialog.
 ------------------------------------------------------------------------
 

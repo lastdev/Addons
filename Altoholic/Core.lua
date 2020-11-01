@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v8.3.004"
-addon.VersionNum = 803004
+addon.Version = GetAddOnMetadata("Altoholic", "Version")
+if addon.Version == "\064project-version\064" then addon.Version = "Developer" end
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -50,6 +50,7 @@ local AddonDB_Defaults = {
 		Guilds = {
 			['*'] = {			-- ["Account.Realm.Name"] 
 				hideInTooltip = nil,		-- true if this guild should not be shown in the tooltip counters
+                showGuildRealmInTooltip = nil, -- true if this guild's realm name should be shown in the tooltip counters
 			},
 		},
 		Characters = {
@@ -79,12 +80,14 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Summary.CurrentFactions"] = 3,							-- 1 = Alliance, 2 = Horde, 3 = Both
 			["UI.Tabs.Summary.CurrentLevels"] = 1,								-- 1 = All
 			["UI.Tabs.Summary.CurrentLevelsMin"] = 1,							
-			["UI.Tabs.Summary.CurrentLevelsMax"] = 120,					
+			["UI.Tabs.Summary.CurrentLevelsMax"] = 60,					
 			["UI.Tabs.Summary.CurrentClasses"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentTradeSkill"] = 0,						-- 0 = All
 			["UI.Tabs.Summary.SortAscending"] = true,							-- ascending or descending sort order
 			["UI.Tabs.Summary.ShowLevelDecimals"] = true,					-- display character level with decimals or not
 			["UI.Tabs.Summary.ShowILevelDecimals"] = true,					-- display character level with decimals or not
+            --["UI.Tabs.Summary.ExcludeRealms.<Account>.<Realm>"] = true
+            ["UI.Tabs.Summary.ShowLevelTotalAverage"] = nil,                -- Display level totals as their average instead
 			
 			-- ** Character tab options **
 			["UI.Tabs.Characters.ViewBags"] = true,
@@ -104,6 +107,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Search.IncludeMailboxItems"] = true,
 			["UI.Tabs.Search.IncludeGuildBankItems"] = true,
 			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
+            ["UI.Tabs.Search.IncludeAuctionHouseListings"] = true,
 			["UI.Tabs.Search.SortAscending"] = true,							-- ascending or descending sort order
 			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
 			UnknownLoots = 0,
@@ -129,7 +133,12 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Garrisons.CurrentStats"] = 1,					-- Current stats (abilities = 1, traits = 2, counters = 3)
 			["UI.Tabs.Grids.Sets.IncludePVE"] = true,							-- Include PVE Sets
 			["UI.Tabs.Grids.Sets.IncludePVP"] = true,							-- Include PVP Sets
-			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack 
+			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack
+            ["UI.Tabs.Grids.Rares.CurrentRareSet"] = "ArathiWarfront",
+            ["UI.Tabs.Grids.Tasks.Profile1Name"] = "Profile 1",
+            ["UI.Tabs.Grids.Tasks.MaxProfiles"] = 5,
+            ["UI.Tabs.Grids.Tasks.SelectedProfile"] = 1,
+            ["UI.Tabs.Grids.CurrentAccountRealmScope"] = "Realm", -- whether to default to current account or current realm 
 
 			-- ** Tooltip options **
 			["UI.Tooltip.ShowItemSource"] = true,
@@ -146,6 +155,14 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
 			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
+            ["UI.Tooltip.HideHearthstoneCounters"] = false,
+            ["UI.Tooltip.HiddenHearthstones"] = {
+                        [6948] = true, -- Hearthstone
+                        [71634] = true, -- Darkmoon Adventurer's Guide
+                        [110560] = true, -- Garrison Hearthstone
+                        [140192] = true, -- Dalaran Hearthstone
+                        [141605] = true, -- Flight Master's Whistle
+                    },
 			
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts
@@ -159,7 +176,7 @@ local AddonDB_Defaults = {
 			["UI.Minimap.IconRadius"] = 78,
 			
 			-- ** Calendar options **
-			["UI.Calendar.WarningsEnabled"] = true,
+			["UI.Calendar.WarningsDisabled"] = false,
 			["UI.Calendar.UseDialogBoxForWarnings"] = false,	-- use a dialog box for warnings (true), or default chat frame (false)
 			["UI.Calendar.WeekStartsOnMonday"] = false,
 
@@ -180,6 +197,10 @@ local AddonDB_Defaults = {
 		},
 	}
 }
+
+for i = 2, AddonDB_Defaults.global.options["UI.Tabs.Grids.Tasks.MaxProfiles"] do
+    AddonDB_Defaults.global.options["UI.Tabs.Grids.Tasks.Profile"..i.."Name"] = "Profile " .. i
+end
 
 addon.Colors = {
 	white	= "|cFFFFFFFF",
@@ -236,6 +257,9 @@ LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
 	end,
 	text = (Broker2FuBar) and addonName or nil,		-- only for fubar,  not for ldb
 	label = addonName,
+    OnTooltipShow = function(GameTooltip)
+        GameTooltip:SetText("Altoholic")
+    end,
 })
 
 
@@ -285,14 +309,8 @@ local GuildCommCallbacks = {
 }
 
 local tabList = {}
-local frameToID = {}
 
-function addon:OnInitialize()
-    tabList = addon:GetTabList()
-    for index, name in ipairs(tabList) do
-	   frameToID[name] = index
-    end
-    
+function addon:OnInitialize()    
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
 
@@ -373,6 +391,7 @@ local function ShowTab(name)
 	local tab = _G[addonName.."Tab" .. name]
 	if tab then
 		tab:Show()
+        AltoholicFrame:TriggerResizeEvents()
 	end
 end
 
@@ -392,6 +411,12 @@ function addon.Tabs:HideAll()
 end
 
 function addon.Tabs:OnClick(index)
+    tabList = addon:GetEnglishTabList()
+    local frameToID = {}
+    for i, name in ipairs(tabList) do
+	   frameToID[name] = i
+    end
+
 	if type(index) == "string" then
 		index = frameToID[index]
 	end

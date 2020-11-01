@@ -244,10 +244,10 @@ function MaxDps:AddStandardButton(button)
 		if type == 'action' then
 			local slot = button:GetAttribute('action');
 			if not slot or slot == 0 then
-				slot = ActionButton_GetPagedID(button);
+				slot = button:GetPagedID();
 			end
 			if not slot or slot == 0 then
-				slot = ActionButton_CalculateAction(button);
+				slot = button:CalculateAction();
 			end
 
 			if HasAction(slot) then
@@ -315,9 +315,24 @@ function MaxDps:Fetch()
 		self:FetchAzeriteUI();
 	end
 
+	if IsAddOnLoaded('Neuron') then
+		self:FetchNeuron();
+	end
+
 	if self.rotationEnabled then
 		self:EnableRotationTimer();
 		self:InvokeNextSpell();
+	end
+end
+
+function MaxDps:FetchNeuron()
+	for x = 1, 12 do
+		for i = 1, 12 do
+			local button = _G['NeuronActionBar' .. x .. '_' .. 'ActionButton' .. i];
+			if button then
+				self:AddStandardButton(button);
+			end
+		end
 	end
 end
 

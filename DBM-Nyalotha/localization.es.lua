@@ -21,19 +21,22 @@ local L
 ---------------------------
 L= DBM:GetModLocalization(2377)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "Patrón de interrupción de Ola de terror (sobrescribe al resto si eres el líder)",
+	Four				= "Cuatro jugadores",--Default
+	Five				= "Cinco jugadores",
+	Six					= "Seis jugadores",
+	NoReset				= "Incremento infinito"
+})
+
 L:SetMiscLocalization({
-	ObeliskSpawn	= "¡Obeliscos de sombras, arriba!"--Only as backup, in case the NPC target check stops working --Translator's Note: may have changed since when I tested it on the PTR
+	ObeliskSpawn	= "¡Alzaos, obeliscos de la sombra!"--Only as backup, in case the NPC target check stops working --Translator's Note: may have changed since when I tested it on the PTR
 })
 
 ---------------------------
 --  The Hivemind --
 ---------------------------
-L= DBM:GetModLocalization(2372)
-
-L:SetMiscLocalization({
-	Together	= "Jefes juntos",
-	Apart		= "Jefes separados"
-})
+--L= DBM:GetModLocalization(2372)
 
 ---------------------------
 --  Shad'har the Insatiable --
@@ -54,6 +57,10 @@ L:SetMiscLocalization({
 --  Ra-den the Despoiled --
 ---------------------------
 L= DBM:GetModLocalization(2364)
+
+L:SetOptionLocalization({
+	OnlyParentBondMoves		= "Mostrar aviso especial para Vínculos cargados únicamente si eres el objetivo principal"
+})
 
 L:SetMiscLocalization({
 	Furthest	= "Objetivo más lejano",
@@ -84,8 +91,19 @@ L:SetOptionLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2375)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "Patrón de interrupción de Suplicio mental (sobrescribe al resto si eres el líder)",
+	Four				= "Cuatro jugadores",
+	Five				= "Cinco jugadores",--Default
+	Six					= "Seis jugadores",
+	NoReset				= "Incremento infinito",
+	ArrowOnGlare		= "Mostrar flechas para la dirección de $spell:317874",
+	HideDead			= "Ocultar a los jugadores muertos del marco de información en dificultades inferiores a mítico"
+})
+
 L:SetMiscLocalization({
-	ExitMind		= "Sal de la mente"
+	ExitMind		= "Sal de la mente",
+	Gate			= "Portal"
 })
 
 -------------

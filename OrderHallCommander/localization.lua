@@ -455,26 +455,18 @@ return
 end
 L=l:NewLocale(me,"deDE")
 if (L) then
---[[Translation missing --]]
-L["%1$d%% lower than %2$d%%. Lower %s"] = "%1$d%% lower than %2$d%%. Lower %s"
---[[Translation missing --]]
-L["%s for a wowhead link popup"] = "%s for a wowhead link popup"
---[[Translation missing --]]
-L["%s start the mission without even opening the mission page. No question asked"] = "%s start the mission without even opening the mission page. No question asked"
---[[Translation missing --]]
-L["%s starts missions"] = "%s starts missions"
---[[Translation missing --]]
-L["%s to actually start mission"] = "%s to actually start mission"
---[[Translation missing --]]
-L["%s to blacklist"] = "%s to blacklist"
---[[Translation missing --]]
-L["%s to remove from blacklist"] = "%s to remove from blacklist"
+L["%1$d%% lower than %2$d%%. Lower %s"] = "%1$d%% niedriger als %2$d%%. Niedrigere %s"
+L["%s for a wowhead link popup"] = "%s für ein Wowhead-Link-Popup"
+L["%s start the mission without even opening the mission page. No question asked"] = "%s Starte die Mission ohne die Missions Seite zu öffnen. Es wird keine weitere Frage gestellt."
+L["%s starts missions"] = "%s Startet die Mission"
+L["%s to actually start mission"] = "%s zum tatsächlichen Start der Mission"
+L["%s to blacklist"] = "%s zur Blacklist"
+L["%s to remove from blacklist"] = "%s um von der Blacklist zu entfernen."
 --[[Translation missing --]]
 L[ [=[%s, please review the tutorial
 (Click the icon to dismiss this message and start the tutorial)]=] ] = [=[%s, please review the tutorial
 (Click the icon to dismiss this message and start the tutorial)]=]
---[[Translation missing --]]
-L["%s, please review the tutorial\\n(Click the icon to dismiss this message)"] = "%s, please review the tutorial\\n(Click the icon to dismiss this message)"
+L["%s, please review the tutorial\\n(Click the icon to dismiss this message)"] = "%s, bitte lese das Tutorial durch\\n(Klicken Sie auf das Symbol, um diese Nachricht zu schließen)"
 --[[Translation missing --]]
 L["Allow to start a mission directly from the mission list page (no single mission page shown)"] = "Allow to start a mission directly from the mission list page (no single mission page shown)"
 L["Always counter increased resource cost"] = "Immer erhöhte Ressourcenkosten kontern"

@@ -87,10 +87,10 @@ function DBM_GUI:CreateNewFauxScrollFrameList()
 	}, {
 		__index = ListFrameButtonsPrototype
 	})
-	DBM_GUI.frameTypes[#DBM_GUI.frameTypes + 1] = mt
+	self.tabs[#self.tabs + 1] = mt
 	return mt
 end
 
 -- TODO: Should this go somewhere else?
-DBM_GUI_Bosses = DBM_GUI:CreateNewFauxScrollFrameList()
-DBM_GUI_Options = DBM_GUI:CreateNewFauxScrollFrameList()
+_G["DBM_GUI_Bosses"] = DBM_GUI:CreateNewFauxScrollFrameList()
+_G["DBM_GUI_Options"] = DBM_GUI:CreateNewFauxScrollFrameList()

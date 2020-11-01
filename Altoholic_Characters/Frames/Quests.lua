@@ -20,7 +20,9 @@ local function SetStatus(character, category, numQuests)
 
 	local status = format("%s|r / %s (%s%d|r)", DataStore:GetColoredCharacterName(character), text, colors.green, numQuests)
 
-	AltoholicTabCharacters.Status:SetText(status)
+	if AltoholicFrameQuests:IsVisible() then
+        AltoholicTabCharacters.Status:SetText(status)
+    end
 end
 
 local function GetQuestList(character, category)
@@ -36,9 +38,18 @@ end
 addon:Controller("AltoholicUI.QuestLog", {
 	SetCategory = function(frame, categoryID) currentCategoryID = categoryID end,
 	GetCategory = function(frame) return currentCategoryID end,
-	
+	OnBind = function(frame)
+        AltoholicFrame:RegisterResizeEvent("AltoholicFrameQuests", 8, AltoholicFrameQuests)
+	end,
 	Update = function(frame)
+        frame = frame or AltoholicFrameQuests
 		local character = addon.Tabs.Characters:GetAltKey()
+        if not currentCategoryID then
+            for rowIndex = 1, 18 do
+                frame.ScrollFrame:GetRow(rowIndex):Hide()
+            end
+            return
+        end
 		local questList = GetQuestList(character, currentCategoryID)
 		
 		SetStatus(character, currentCategoryID, #questList)
@@ -64,11 +75,14 @@ addon:Controller("AltoholicUI.QuestLog", {
 				rowFrame:SetType(tagID)
 				rowFrame:SetRewards()
 				rowFrame:SetInfo(isComplete, isDaily, groupSize, money)
-				rowFrame:Show()
+                rowFrame:Show()
 			end
 		end
+        
+        for rowIndex = numRows, 18 do
+            scrollFrame:GetRow(rowIndex):Hide()
+        end
 
 		scrollFrame:Update(#questList)
-		frame:Show()
 	end,
 })

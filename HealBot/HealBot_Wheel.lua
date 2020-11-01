@@ -12,19 +12,19 @@ function HealBot_MountsPets_lastbutton(button)
     hbLastButton=button
 end
 
-local function HealBot_MountsPets_FavMount()
+function HealBot_MountsPets_FavMount()
     if not InCombatLockdown() then
         C_MountJournal.SummonByID(0)
     end
 end
 
-local function HealBot_MountsPets_RandomPet(isFav)
+function HealBot_MountsPets_RandomPet(isFav)
     if not InCombatLockdown() then
         C_PetJournal.SummonRandomPet(isFav)
     end
 end
 
-local function HealBot_MountsPets_Mount(mount)
+function HealBot_MountsPets_Mount(mount)
     if HealBot_MountIndex[mount] then 
         if not InCombatLockdown() then
             C_MountJournal.SummonByID(HealBot_MountIndex[mount]) 
@@ -36,7 +36,7 @@ local function HealBot_MountsPets_Mount(mount)
 end
 
 local vToggleMountIndex=0
-local function HealBot_MountsPets_ToggelMount(mountType)
+function HealBot_MountsPets_ToggelMount(mountType)
     if IsMounted() then
         Dismount()
 	elseif HEALBOT_GAME_VERSION>3 and CanExitVehicle() then	
@@ -98,7 +98,7 @@ local function HealBot_MountsPets_ToggelMount(mountType)
     end
 end
 
-local function HealBot_Action_DoHealUnit_Wheel(self, delta)
+function HealBot_Action_DoHealUnit_Wheel(self, delta)
     --local xButton=hbLastButton
     if hbLastButton then
         if not hbLastButton then return end
@@ -183,14 +183,7 @@ function HealBot_Action_HealUnit_Wheel(self, delta)
 end
 
 function HealBot_MountsPets_InitUse()
-    if (HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["NoneDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["NoneDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["NoneDown"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["ShiftUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["ShiftUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["ShiftUp"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["ShiftDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["ShiftDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["ShiftDown"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["CtrlUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["CtrlUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["CtrlUp"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["AltUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["AltUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["AltUp"]==HEALBOT_RANDOMGOUNDMOUNT))
-    or (HealBot_Globals.HealBot_MouseWheelTxt["AltDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["AltDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["AltDown"]==HEALBOT_RANDOMGOUNDMOUNT)) then
+    if HealBot_Globals.HealBot_Enable_MouseWheel and HEALBOT_GAME_VERSION>3 then
         HealBot_setOptions_Timer(410)
     end
 end

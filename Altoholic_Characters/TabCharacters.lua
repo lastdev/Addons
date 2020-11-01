@@ -77,6 +77,11 @@ local function EnableIcon(frame)
 	frame.Icon:SetDesaturated(false)
 end
 
+local function DisableIcon(frame)
+    frame:Disable()
+    frame.Icon:SetDesaturated(true)
+end
+
 local DDM_Add = addon.Helpers.DDM_Add
 local DDM_AddTitle = addon.Helpers.DDM_AddTitle
 local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
@@ -111,6 +116,8 @@ function ns:ViewCharInfo(index)
 	HideAll()
 	ns:SetMode(index)
 	ns:ShowCharInfo(index)
+    --AltoholicFrame:TriggerResizeEvents()
+    ns:ShowCharInfo(index)
 end
 
 function ns:ShowCharInfo(view)
@@ -118,22 +125,25 @@ function ns:ShowCharInfo(view)
 		addon.Containers:SetView(addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
 		AltoholicFrameContainers:Show()
 		addon.Containers:Update()
-		
+        
 	elseif view == VIEW_QUESTS then
 		AltoholicTabCharacters.QuestLog:Update()
+        AltoholicTabCharacters.QuestLog:Show()
 	elseif view == VIEW_TALENTS then
 		AltoholicTabCharacters.Talents:Update()
-	
+        
 	elseif view == VIEW_AUCTIONS then
 		addon.AuctionHouse:SetListType("Auctions")
 		AltoholicFrameAuctions:Show()
 		addon.AuctionHouse:InvalidateView()
 		addon.AuctionHouse:Update()
+        
 	elseif view == VIEW_BIDS then
 		addon.AuctionHouse:SetListType("Bids")
 		AltoholicFrameAuctions:Show()
 		addon.AuctionHouse:InvalidateView()
 		addon.AuctionHouse:Update()
+        
 	elseif view == VIEW_MAILS then
 		AltoholicFrameMail:Show()
 		addon.Mail:BuildView()
@@ -148,6 +158,7 @@ function ns:ShowCharInfo(view)
 
 	elseif view == VIEW_PROFESSION then
 		AltoholicTabCharacters.Recipes:Update()
+        AltoholicTabCharacters.Recipes:Show()
 				
 	elseif view == VIEW_GARRISONS then
 		AltoholicTabCharacters.GarrisonMissions:Update()
@@ -240,13 +251,13 @@ local function OnCharacterChange(self)
 	
 	local menuIcons = parent.MenuIcons
 	EnableIcon(menuIcons.BagsIcon)
-	EnableIcon(menuIcons.QuestsIcon)
-	EnableIcon(menuIcons.TalentsIcon)
-	EnableIcon(menuIcons.AuctionIcon)
-	EnableIcon(menuIcons.MailIcon)
-	EnableIcon(menuIcons.SpellbookIcon)
-	EnableIcon(menuIcons.ProfessionsIcon)
-	EnableIcon(menuIcons.GarrisonIcon)
+	if DataStore_Quests then EnableIcon(menuIcons.QuestsIcon) else DisableIcon(menuIcons.QuestsIcon) end
+	if DataStore_Talents then EnableIcon(menuIcons.TalentsIcon) else DisableIcon(menuIcons.TalentsIcon) end
+	if DataStore_Auctions then EnableIcon(menuIcons.AuctionIcon) else DisableIcon(menuIcons.AuctionIcon) end
+	if DataStore_Mails then EnableIcon(menuIcons.MailIcon) else DisableIcon(menuIcons.MailIcon) end
+	if DataStore_Spells then EnableIcon(menuIcons.SpellbookIcon) else DisableIcon(menuIcons.SpellbookIcon) end
+	if DataStore_Crafts then EnableIcon(menuIcons.ProfessionsIcon) else DisableIcon(menuIcons.ProfessionsIcon) end
+	if DataStore_Garrisons then EnableIcon(menuIcons.GarrisonIcon) else DisableIcon(menuIcons.GarrisonIcon) end
 	
 	DropDownList1:Hide()
 	
@@ -350,6 +361,7 @@ local function OnProfessionCategoryChange(self)
 	recipes:SetMainCategory(tonumber(mainCategory))
 	recipes:SetSubCategory(tonumber(subCategory))
 	recipes:Update()
+    recipes:Show()
 end
 
 local function OnShowLearned(self)
@@ -403,23 +415,25 @@ end
 
 local function GetCharacterLoginText(character)
 	local last = DataStore:GetLastLogout(character)
-	local _, _, name = strsplit(".", character)
+	local _, realm, name = strsplit(".", character)
 	
 	if last then
-		if name == UnitName("player") then
+		if (realm == GetRealmName()) and (name == UnitName("player")) then
 			last = colors.green..GUILD_ONLINE_LABEL
 		else
 			last = format("%s: %s", LASTONLINE, colors.yellow..date("%m/%d/%Y %H:%M", last))
 		end
 	else
-		last = format("%s: %s", LASTONLINE, RED..L["N/A"])
+		last = format("%s: %s", LASTONLINE, colors.red..L["N/A"])
 	end
-	return format("%s %s(%s%s)", DataStore:GetColoredCharacterName(character), colors.white, last, colors.white)
+	return format("%s %s(%s%s)", (DataStore:GetColoredCharacterName(character) or ""), colors.white, last, colors.white)
 end
 
 -- ** Menu Icons **
 local function CharactersIcon_Initialize(self, level)
-	
+	local currentCharacterKey = ns:GetAltKey()
+    local currentAccount, currentRealm, currentName = strsplit(".", currentCharacterKey)
+    
 	if level == 1 then
 		DDM_AddTitle(L["Characters"])
 		
@@ -430,7 +444,7 @@ local function CharactersIcon_Initialize(self, level)
 
 				info.text = realm
 				info.hasArrow = 1
-				info.checked = nil
+				info.checked = (currentRealm == realm)
 				info.value = format("%s.%s", account, realm)
 				info.func = nil
 				UIDropDownMenu_AddButton(info, level)
@@ -448,7 +462,7 @@ local function CharactersIcon_Initialize(self, level)
 		end
 		table.sort(nameList)
 		
-		local currentCharacterKey = ns:GetAltKey()
+
 		for _, character in ipairs(nameList) do
 			
 			local info = UIDropDownMenu_CreateInfo()
@@ -458,7 +472,6 @@ local function CharactersIcon_Initialize(self, level)
 			info.func		= OnCharacterChange
 			info.icon		= nil
 			info.checked	= (currentCharacterKey == character)
-			
 			UIDropDownMenu_AddButton(info, level)
 		end
 	end
@@ -481,7 +494,7 @@ local function BagsIcon_Initialize(self, level)
 	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	DDM_Add(L["Any"], 0, OnRarityChange, nil, (rarity == 0))
 	
-	for i = LE_ITEM_QUALITY_UNCOMMON, LE_ITEM_QUALITY_HEIRLOOM do		-- Quality: 0 = poor .. 5 = legendary
+	for i = Enum.ItemQuality.Uncommon, Enum.ItemQuality.Heirloom do		-- Quality: 0 = poor .. 5 = legendary
 		DDM_Add(format("|c%s%s", select(4, GetItemQualityColor(i)), _G["ITEM_QUALITY"..i.."_DESC"]), i, OnRarityChange, nil, (rarity == i))
 	end
 	
@@ -493,6 +506,10 @@ local function QuestsIcon_Initialize(self, level)
 	if not currentCharacterKey then return end
 	
 	local questLog = AltoholicTabCharacters.QuestLog
+    
+    if not DataStore_Quests then
+        return
+    end
 	
 	DDM_AddTitle(format("%s / %s", QUESTS_LABEL, DataStore:GetColoredCharacterName(currentCharacterKey)))
 	DDM_Add(ALL, 0, OnQuestHeaderChange, nil, (questLog:GetCategory() == 0))
@@ -813,22 +830,28 @@ local function GarrisonIcon_Initialize(self, level)
 	local currentMenu = addon:GetOption("UI.Tabs.Characters.GarrisonMissions")
 	
 	DDM_AddTitle(GARRISON_MISSIONS_TITLE)
-	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_6_0)), 
+	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_6_0)), 
 				1, OnGarrisonMenuChange, nil, (currentMenu == 1))
-	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_6_0)), 
+	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_6_0)), 
 				2, OnGarrisonMenuChange, nil, (currentMenu == 2))
 	DDM_AddTitle(" ")
 	DDM_AddTitle(ORDER_HALL_MISSIONS)
-	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_7_0)), 
+	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_7_0)), 
 				3, OnGarrisonMenuChange, nil, (currentMenu == 3))
-	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_7_0)), 
+	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_7_0)), 
 				4, OnGarrisonMenuChange, nil, (currentMenu == 4))
 	DDM_AddTitle(" ")
 	DDM_AddTitle(WAR_CAMPAIGN)
-	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_8_0)), 
+	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_8_0)), 
 				5, OnGarrisonMenuChange, nil, (currentMenu == 5))
-	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, LE_FOLLOWER_TYPE_GARRISON_8_0)), 
+	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_8_0)), 
 				6, OnGarrisonMenuChange, nil, (currentMenu == 6))
+	DDM_AddTitle(" ")
+	DDM_AddTitle(COVENANT_MISSIONS_COVENANT_ADVENTURE)
+	DDM_Add(format(GARRISON_LANDING_AVAILABLE, DataStore:GetNumAvailableMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_9_0)), 
+				7, OnGarrisonMenuChange, nil, (currentMenu == 7))
+	DDM_Add(format(GARRISON_LANDING_IN_PROGRESS, DataStore:GetNumActiveMissions(currentCharacterKey, Enum.GarrisonFollowerType.FollowerType_9_0)), 
+				8, OnGarrisonMenuChange, nil, (currentMenu == 8))
 	
 	DDM_AddCloseMenu()
 end
@@ -879,7 +902,7 @@ function ns:OnLoad()
 	local LVMax = 110
 	local numLvMax = 0
 	for _, character in pairs(DataStore:GetCharacters()) do
-		if DataStore:GetCharacterLevel(character) >= LVMax then
+		if (DataStore:GetCharacterLevel(character) or 0) >= LVMax then
 			numLvMax = numLvMax + 1
 		end
 	end
@@ -895,6 +918,13 @@ function ns:OnLoad()
 	local menuIcons = parent.MenuIcons
 	menuIcons.CharactersIcon.Icon:SetTexture(addon:GetCharacterIcon())
 	menuIcons.BagsIcon.Icon:SetTexture(bagIcon)
+    if DataStore_Quests then EnableIcon(menuIcons.QuestsIcon) else DisableIcon(menuIcons.QuestsIcon) end
+	if DataStore_Talents then EnableIcon(menuIcons.TalentsIcon) else DisableIcon(menuIcons.TalentsIcon) end
+	if DataStore_Auctions then EnableIcon(menuIcons.AuctionIcon) else DisableIcon(menuIcons.AuctionIcon) end
+	if DataStore_Mails then EnableIcon(menuIcons.MailIcon) else DisableIcon(menuIcons.MailIcon) end
+	if DataStore_Spells then EnableIcon(menuIcons.SpellbookIcon) else DisableIcon(menuIcons.SpellbookIcon) end
+	if DataStore_Crafts then EnableIcon(menuIcons.ProfessionsIcon) else DisableIcon(menuIcons.ProfessionsIcon) end
+	if DataStore_Garrisons then EnableIcon(menuIcons.GarrisonIcon) else DisableIcon(menuIcons.GarrisonIcon) end
 	
 	addon:RegisterMessage("DATASTORE_RECIPES_SCANNED")
 	addon:RegisterMessage("DATASTORE_QUESTLOG_SCANNED")

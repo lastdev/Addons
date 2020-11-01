@@ -1,8 +1,12 @@
 ------------------------------------------------------------------------
-r1542 | Resike | 2020-04-26 16:09:42 +0000 (Sun, 26 Apr 2020) | 1 line
+r1563 | Resike | 2020-10-13 23:04:48 +0000 (Tue, 13 Oct 2020) | 1 line
 Changed paths:
+   M /trunk/GUI_Detail.lua
+   M /trunk/GUI_Graph.lua
+   M /trunk/GUI_Reset.lua
    M /trunk/Recount.toc
+   M /trunk/Widgets.lua
 
-- Retail TOC switch
+- Support for 9.0.1.
 ------------------------------------------------------------------------
 

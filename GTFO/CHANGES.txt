@@ -1,11 +1,30 @@
 ------------------------------------------------------------------------
-r517 | Zensunim | 2020-04-01 03:05:57 +0000 (Wed, 01 Apr 2020) | 2 lines
+r528 | Zensunim | 2020-10-16 03:08:30 +0000 (Fri, 16 Oct 2020) | 3 lines
 Changed paths:
    M /trunk/GTFO.lua
    M /trunk/GTFO.toc
    M /trunk/ReadMe.txt
 
-4.55.2
-* Trying to fix Twitch/Curse from perpetually marking this out-of-date
+4.56.2
+* Updated for patch 9.0
+
+------------------------------------------------------------------------
+r527 | Zensunim | 2020-07-29 03:19:17 +0000 (Wed, 29 Jul 2020) | 1 line
+Changed paths:
+   M /trunk/GTFO_Spells_BFA.lua
+   M /trunk/ReadMe.txt
+
+* Added BFA spells for Ny'alotha, the Waking City
+------------------------------------------------------------------------
+r526 | Zensunim | 2020-07-27 07:58:34 +0000 (Mon, 27 Jul 2020) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_BFA.lua
+   M /trunk/GTFO_Ignore.lua
+   M /trunk/GTFO_Spells_BFA.lua
+   M /trunk/ReadMe.txt
+
+* Added Battle for Azeroth spells (world)
 ------------------------------------------------------------------------
 

@@ -6,20 +6,21 @@ local AceConfigDialog = LibStub:GetLibrary("AceConfigDialog-3.0", true)
 local __Localization = LibStub:GetLibrary("ovale/Localization")
 local L = __Localization.L
 local LibTextDump = LibStub:GetLibrary("LibTextDump-1.0", true)
-local __Ovale = LibStub:GetLibrary("ovale/Ovale")
-local MakeString = __Ovale.MakeString
 local aceTimer = LibStub:GetLibrary("AceTimer-3.0", true)
 local format = string.format
 local pairs = pairs
 local GetTime = GetTime
 local DEFAULT_CHAT_FRAME = DEFAULT_CHAT_FRAME
+local __tools = LibStub:GetLibrary("ovale/tools")
+local MakeString = __tools.MakeString
 local OVALE_TRACELOG_MAXLINES = 4096
 __exports.Tracer = __class(nil, {
     constructor = function(self, options, debug, name)
         self.options = options
         self.debug = debug
         self.name = name
-        debug.defaultOptions.args.toggles.args[name] = {
+        local toggles = debug.defaultOptions.args.toggles
+        toggles.args[name] = {
             name = name,
             desc = format(L["Enable debugging messages for the %s module."], name),
             type = "toggle"
@@ -83,7 +84,7 @@ __exports.OvaleDebugClass = __class(nil, {
                     args = {},
                     get = function(info)
                         local value = self.options.db.global.debug[info[#info]]
-                        return (value ~= nil)
+                        return value ~= nil
                     end,
                     set = function(info, value)
                         if  not value then
@@ -141,7 +142,7 @@ __exports.OvaleDebugClass = __class(nil, {
             }
         }
         for k, v in pairs(actions) do
-            options.options.args.actions.args[k] = v
+            options.actions.args[k] = v
         end
         options.defaultDB.global = options.defaultDB.global or {}
         options.defaultDB.global.debug = {}

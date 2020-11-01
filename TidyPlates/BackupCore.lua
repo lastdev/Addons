@@ -169,8 +169,8 @@ do
 		local carrier
 		local frameName = "TidyPlatesCarrier"..numChildren
 
-		carrier = CreateFrame("Frame", frameName, WorldFrame)
-		local extended = CreateFrame("Frame", nil, carrier)
+		carrier = CreateFrame("Frame", frameName, WorldFrame, "BackdropTemplate")
+		local extended = CreateFrame("Frame", nil, carrier, "BackdropTemplate")
 
 		plate.carrier = carrier
 		plate.extended = extended
@@ -180,8 +180,8 @@ do
 		-- Status Bars
 		local healthbar = CreateTidyPlatesStatusbar(extended)
 		local castbar = CreateTidyPlatesStatusbar(extended)
-		local textFrame = CreateFrame("Frame", nil, healthbar)
-		local widgetFrame = CreateFrame("Frame", nil, textFrame)
+		local textFrame = CreateFrame("Frame", nil, healthbar, "BackdropTemplate")
+		local widgetFrame = CreateFrame("Frame", nil, textFrame, "BackdropTemplate")
 
 		textFrame:SetAllPoints()
 
@@ -814,14 +814,13 @@ do
 		if not extended:IsShown() then return end
 
 		local castBar = extended.visual.castbar
-
-		local name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible
+		local name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, SpellID 
 
 		if channeled then
-			name, subText, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(unitid)
+			name, subText, text, texture, startTime, endTime, isTradeSkill, notInterruptible, SpellID = UnitChannelInfo(unitid)
 			castBar:SetScript("OnUpdate", OnUpdateCastBarReverse)
 		else
-			name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unitid)
+			name, subText, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, SpellID  = UnitCastingInfo(unitid)
 			castBar:SetScript("OnUpdate", OnUpdateCastBarForward)
 		end
 
@@ -838,7 +837,7 @@ do
 		local r, g, b, a = 1, 1, 0, 1
 
 		if activetheme.SetCastbarColor then
-			r, g, b, a = activetheme.SetCastbarColor(unit)
+			r, g, b, a = activetheme.SetCastbarColor(unit, SpellID )
 			if not (r and g and b and a) then return end
 		end
 
@@ -898,7 +897,7 @@ end -- End Indicator section
 --------------------------------------------------------------------------------------------------------------
 do
 
-	local TidyPlatesCore = CreateFrame("Frame", nil, WorldFrame)
+	local TidyPlatesCore = CreateFrame("Frame", nil, WorldFrame, "BackdropTemplate")
 	TidyPlatesCore:SetFrameStrata("TOOLTIP") 	-- When parented to WorldFrame, causes OnUpdate handler to run close to last
 
 	local events = {}
@@ -923,7 +922,7 @@ do
 
 	-- Update everything
 	local function WorldConditionChanged(...)
-		SetUpdateAll() end
+		SetUpdateAll()
 	end
 
 	-- Update spell currently being cast
@@ -949,14 +948,19 @@ do
 
 	function events:NAME_PLATE_CREATED(...)
 		local plate = ...
-		local BlizzardFrame = plate:GetChildren()
-
-		-- hooksecurefunc([table,] "function", hookfunc)
-
-		BlizzardFrame._Show = BlizzardFrame.Show	-- Store this for later
-		BlizzardFrame.Show = BypassFunction			-- Try this to keep the plate from showing up
 		OnNewNameplate(plate)
-	 end
+	end
+
+	hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", function(self, namePlateUnitToken)
+		local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(namePlateUnitToken, false)
+		if namePlateFrameBase then
+		local blizzardFrame = namePlateFrameBase:GetChildren()
+			if blizzardFrame and not blizzardFrame.tidyPlatesModified then
+				blizzardFrame.tidyPlatesModified = true
+				hooksecurefunc(blizzardFrame, "Show", blizzardFrame.Hide)
+			end
+		end
+	end)
 
 	function events:NAME_PLATE_UNIT_ADDED(...)
 		local unitid = ...
@@ -985,7 +989,7 @@ do
 		SetUpdateAll()
 	end
 
-	function events:UNIT_HEALTH_FREQUENT(...)
+	function events:UNIT_HEALTH(...)
 		local unitid = ...
 		local plate = PlatesByUnit[unitid]
 

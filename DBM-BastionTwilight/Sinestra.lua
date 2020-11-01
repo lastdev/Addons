@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod.statTypes = "heroic,heroic25"
+
+mod:SetRevision("20200912041323")
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 --mod:SetModelSound("Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Aggro01.ogg", "Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Kill02.ogg")
 --Long: We were fools to entrust an imbecile like Cho'gall with such a sacred duty! I will deal with you intruders myself!
@@ -21,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED",
 	"UNIT_DIED"
 )
-mod.onlyHeroic = true
 
 local warnBreath			= mod:NewSpellAnnounce(90125, 3)
 local warnOrbSoon			= mod:NewAnnounce("WarnOrbSoon", 3, 92852, true, nil, true)--Still on by default but no longer plays it's own sounds

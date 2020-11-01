@@ -1,7 +1,9 @@
 # BadBoy
 
-## [v8.2.5](https://github.com/funkydude/BadBoy/tree/v8.2.5) (2019-09-04)
-[Full Changelog](https://github.com/funkydude/BadBoy/compare/v8.2.4...v8.2.5)
+## [v9.0.0](https://github.com/funkydude/BadBoy/tree/v9.0.0) (2020-10-14)
+[Full Changelog](https://github.com/funkydude/BadBoy/compare/v8.2.5...v9.0.0) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
 
-- anti-spam update  
-- xpcall the report checking functions as I give up on Blizz putting the effort in to fix this, closes #112  
+- update blacklist  
+- bump toc  
+- Fix BNet API for Shadowlands  
+- add github directory  
