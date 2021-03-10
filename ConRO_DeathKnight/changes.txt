@@ -1,3 +1,73 @@
+Ver 9.1.10
+	-Added active pet condition for Raise Ghoul to frost.
+	-Adjusted Death Strike in Defense rotation for Frost and Unholy.
+	-Warnings update.
+	-PvP update for Arenas.
+	
+Ver 9.1.9
+	-Adjusted Unholy blight a little more.
+
+Ver 9.1.8
+	-Adjustments for Deadliest Coil Legendary for Unholy Rotation.
+
+Ver 9.1.7
+	-Tweaked Unholy Blight for Unholy specialization.
+
+Ver 9.1.6
+	-Added support for specialization disabling.
+
+Ver 9.1.5
+	-Adjusted Pillar of Frost.
+
+Ver 9.1.4
+	-Fixed Empower Rune Weapon burst setting.
+
+Ver 9.1.3
+	-Adjusted abilities slightly for Pillar of Frost when using Obliteration or Icecap Talent.
+
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Added Conduits to library.
+	-Adjusted with Deadliest Coil Legendary.
+	
+Ver 9.1.1
+	-Fixed Chill Streak pvptalent error.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.11
+	-Defense Tweak.
+
+Ver 9.0.10
+	-Added some more Blood abilities and support.
+
+Ver 9.0.9
+	-Fixed Unholy Assault burst condition.
+
+Ver 9.0.8
+	-Tweaked Unholy rotation slightly.
+
+Ver 9.0.7
+	-Tweaked Abomination Limb for burst mode.
+
+Ver 9.0.6
+	-Added Sacrifical Pact to the defensive rotations.
+
+Ver 9.0.5	
+	-Added Covenant Fleshcraft to all defensive rotations.
+	-Fixed Death and Decay for Frost single target.
+
+Ver 9.0.4
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.3
+	-Added Lichborne to defensive rotations.
+	-Updated Blood rotation for prepatch.
+
 Ver 9.0.2
 	-Tweaked Unholy Blight for better uptime.
 	-Fixed issue with Scourge Strike ignoring Apocalypse during Death and Decay.

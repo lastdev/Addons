@@ -6,6 +6,7 @@ local good, maybe, filterTable, whispered = {}, {}, {}, {}
 local whisp = "BadBoy_Levels: You need to be level %d to whisper me."
 local whisp_notallowed = "BadBoy_Levels: You do not meet the requirements to whisper me."
 local err = "You have reached the maximum amount of friends, remove 2 for this addon to function properly!"
+local connectedRealms = {}
 
 badboy:SetScript("OnEvent", function(frame, event, ...)
 	mod[event](mod, frame, event, ...)
@@ -52,35 +53,16 @@ do
 	end
 end
 
-local addMsg, hookFunc
-do
-	-- For some reason any form of CHAT_MSG_SYSTEM filter causes nonsense world map taints, so use the next best thing
-	local addFriend = ERR_FRIEND_ADDED_S:gsub("%%s", "([^ ]+)")
-	local removeFriend = ERR_FRIEND_REMOVED_S:gsub("%%s", "([^ ]+)")
-	local addFriendComeOnline = ERR_FRIEND_ONLINE_SS:gsub("\124Hplayer:%%s\124h%[%%s%]\124h", "\124Hplayer:([^\124]+)\124h[^\124]+\124h")
-	local info = ChatTypeInfo.SYSTEM
-	hookFunc = function(f, msg, r, g, b, ...)
-		-- This is a filter to remove the player added/removed from friends messages when we use it, otherwise they are left alone
-		if r == info.r and g == info.g and b == info.b then
-			local _, _, player = msg:find(addFriend)
-			if not player then
-				_, _, player = msg:find(removeFriend)
-			end
-			if not player then
-				_, _, player = msg:find(addFriendComeOnline)
-			end
-			if player and filterTable[player] then
-				return
-			end
-		end
-		return addMsg(f, msg, r, g, b, ...)
-	end
-end
-
 function mod:PLAYER_LOGIN(frame, event)
 	frame:UnregisterEvent(event)
 	frame:RegisterEvent("FRIENDLIST_UPDATE")
 	frame:RegisterEvent("CHAT_MSG_SYSTEM")
+
+	local realms = GetAutoCompleteRealms()
+	for i = 1, #realms do
+		local entry = realms[i]
+		connectedRealms[entry] = true
+	end
 
 	local tbl = {
 		"CHAT_MSG_WHISPER",
@@ -180,7 +162,10 @@ function mod:FRIENDLIST_UPDATE(_, _, msg)
 					if not next(maybe) then
 						-- No more players left so unmute the new "player has come online" sound that plays when a new friend is added.
 						-- Hopefully no one is actually muting this, because this will break it
-						C_Timer.After(0, function() UnmuteSoundFile(567518) end)
+						C_Timer.After(0, function()
+							UnmuteSoundFile(567518)
+							ChatFrame1:RegisterEvent("CHAT_MSG_SYSTEM") -- Re-enable the system message prints "player has come online"
+						end)
 					end
 				end
 			end
@@ -223,14 +208,15 @@ function mod:CHAT_MSG_WHISPER(_, _, ...)
 	end
 	--[[ End functionality for blocking all whispers regardless of level ]]--
 
-	--don't filter if guild member, friend, in group, or x-server
-	if trimmedPlayer:find("-", nil, true) then return end
-	if BadBoyIsFriendly(trimmedPlayer, flag, id, guid) then return end
-
-	if not addMsg then -- On-demand hook for chat filtering
-		addMsg = ChatFrame1.AddMessage
-		ChatFrame1.AddMessage = hookFunc
+	--we can only filter whispers from realms connected to ours
+	if trimmedPlayer:find("-", nil, true) then
+		local whisperRealm = trimmedPlayer:gsub("^[^%-]+%-(.+)", "%1")
+		if not connectedRealms[whisperRealm] then
+			return
+		end
 	end
+	--don't filter if guild member, character friend, bnet friend, or in our group
+	if BadBoyIsFriendly(trimmedPlayer, flag, id, guid) then return end
 
 	if not maybe[trimmedPlayer] then maybe[trimmedPlayer] = {} end --added to maybe
 	--store all the chat arguments incase we need to add it back (if it's a new good guy)
@@ -244,6 +230,7 @@ function mod:CHAT_MSG_WHISPER(_, _, ...)
 		-- Mute the new "player has come online" sound that plays when a friend is added.
 		-- Hopefully no one is actually muting this, because this will break it when it's unmuted above
 		MuteSoundFile(567518)
+		ChatFrame1:UnregisterEvent("CHAT_MSG_SYSTEM") -- Block system messages "player has come online" and "player added to friends"
 		C_FriendList.AddFriend(trimmedPlayer, "badboy_temp")
 	else
 		idsToFilter[id] = true

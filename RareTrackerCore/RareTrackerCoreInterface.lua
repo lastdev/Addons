@@ -5,17 +5,17 @@ local IsRightControlKeyDown = IsRightControlKeyDown
 local UnitInRaid = UnitInRaid
 local IsLeftAltKeyDown = IsLeftAltKeyDown
 local IsRightAltKeyDown = IsRightAltKeyDown
-local SendChatMessage = SendChatMessage
 local GetServerTime = GetServerTime
+local GetTime = GetTime
+local C_QuestLog = C_QuestLog
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local pairs = pairs
 local print = print
+local wipe = wipe
 
 -- Redefine global variables locally.
-local C_ChatInfo = C_ChatInfo
 local string = string
 local UIParent = UIParent
-local TomTom = TomTom
 
 -- Width and height variables used to customize the window.
 local entity_name_width = 208
@@ -26,675 +26,488 @@ local shard_id_frame_height = 16
 
 -- Values for the opacity of the background and foreground.
 local background_opacity = 0.4
-local front_opacity = 0.6
+local foreground_opacity = 0.6
+
+-- The list of currently tracked npcs. Used for cleanup.
+local target_npc_ids = {}
 
 -- ####################################################################
 -- ##                      Localization Support                      ##
 -- ####################################################################
 
 -- Get an object we can use for the localization of the addon.
-local L = LibStub("AceLocale-3.0"):GetLocale("RareTrackerCore", true)
-
--- ####################################################################
--- ##                     Decoration Call Function                   ##
--- ####################################################################
-
--- Decorate the module with the default interface functions, if not specified by the module itself.
-function RT:AddDefaultInterfaceFunctions(module)
-    self.AddDefaultInterfaceControlFunctions(module)
-    self.AddDefaultEntityFrameFunctions(module)
-end
+local L = LibStub("AceLocale-3.0"):GetLocale("RareTracker", true)
 
 -- ####################################################################
 -- ##                        Interface Control                       ##
 -- ####################################################################
 
--- Add the default interface control functions.
-function RT.AddDefaultInterfaceControlFunctions(module)
-    if not module.StartInterface then
-        -- Open and start the interface and subscribe to all the required events.
-        module.StartInterface = function(self)
-            -- Reset the data, since we cannot guarantee its correctness.
-            self.is_alive = {}
-            self.current_health = {}
-            self.last_recorded_death = {}
-            self.current_coordinates = {}
-            self.reported_spawn_uids = {}
-            self.reported_vignettes = {}
-            self.waypoints = {}
-            self.current_shard_id = nil
-            self:UpdateShardNumber(nil)
-            self:UpdateAllDailyKillMarks()
-            self:RegisterEvents()
-            
-            -- Attempt to register a prefix for the addon. All modules are given their own code for clarity.
-            if C_ChatInfo.RegisterAddonMessagePrefix(self.addon_code) ~= true then
-                print(string.format(
-                    L["<%s> Failed to register AddonPrefix '%s'. %s will not function properly."],
-                    self.addon_code, self.addon_code, self.addon_code
-                ))
-            end
-            
-            -- Show the window if it is not hidden.
-            if not RT.db.global.window.hide then
-                self:Show()
-            end
-        end
-    end
+-- Prepare the window's data and show it on the screen.
+function RareTracker:OpenWindow()
+    -- Update all the kill marks. Also make a delayed call in case the quest marks aren't loaded.
+    self:UpdateAllDailyKillMarks()
+    self:DelayedExecution(3, function() self:UpdateAllDailyKillMarks() end)
     
-    if not module.CloseInterface then
-        -- Close and stop the interface and unsubscribe from all the required events.
-        module.CloseInterface = function(self)
-            -- Reset the data.
-            self.is_alive = {}
-            self.current_health = {}
-            self.last_recorded_death = {}
-            self.current_coordinates = {}
-            self.reported_spawn_uids = {}
-            self.reported_vignettes = {}
-            self.current_shard_id = nil
-            self:UpdateShardNumber(nil)
-            
-            -- Register the user's departure and disable event listeners.
-            self:RegisterDeparture(self.current_shard_id)
-            self:UnregisterEvents()
-            
-            -- Hide the interface.
-            self:Hide()
+    -- Show the window if it is not hidden.
+    if not self.db.global.window.hide then
+        self.gui:Show()
+    end
+end
+
+-- Close the window and do cleanup.
+function RareTracker:CloseWindow()
+    -- Simply hide the interface.
+    self.gui:Hide()
+end
+
+-- ####################################################################
+-- ##                Rare Entity Window Update Functions             ##
+-- ####################################################################
+
+-- Update the shard number in the shard number display.
+function RareTracker:UpdateShardNumber()
+    if self.shard_id then
+        self.gui.shard_id_frame.status_text:SetText(string.format(L["Shard ID: %s"], self.shard_id))
+    else
+        self.gui.shard_id_frame.status_text:SetText(string.format(L["Shard ID: %s"], L["Unknown"]))
+    end
+end
+
+-- Update the status for the given entity.
+function RareTracker:UpdateStatus(npc_id)
+    local f = self.gui.entities_frame.entities[npc_id]
+
+    if self.current_health[npc_id] then
+        f.status:SetText(self.current_health[npc_id].."%")
+        f.status:SetFontObject("GameFontGreen")
+        f.announce.texture:SetColorTexture(0, 1, 0, 1)
+    elseif self.is_alive[npc_id] then
+        f.status:SetText("N/A")
+        f.status:SetFontObject("GameFontGreen")
+        f.announce.texture:SetColorTexture(0, 1, 0, 1)
+    elseif self.last_recorded_death[npc_id] then
+        local last_death, _ = unpack(self.last_recorded_death[npc_id])
+        f.status:SetText(math.floor((GetServerTime() - last_death) / 60).."m")
+        f.status:SetFontObject("GameFontNormal")
+        f.announce.texture:SetColorTexture(0, 0, 1, foreground_opacity)
+    else
+        f.status:SetText("--")
+        f.status:SetFontObject("GameFontNormal")
+        f.announce.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    end
+end
+
+-- Update the daily kill mark of the given entity.
+function RareTracker:UpdateDailyKillMark(npc_id, primary_id)
+    -- Not all npcs have a completion quest.
+    local quest_id = self.primary_id_to_data[primary_id].entities[npc_id].quest_id
+    if not quest_id then return end
+    
+    -- Multiple NPCs might share the same quest id.
+    local npc_ids = self.completion_quest_to_npc_ids[quest_id]
+    local is_completed = IsQuestFlaggedCompleted(quest_id)
+    
+    for _, target_npc_id in pairs(npc_ids) do
+        local f = self.gui.entities_frame.entities[target_npc_id].name
+        f:SetFontObject((is_completed and "GameFontRed") or "GameFontNormal")
+    end
+end
+
+-- Update the daily kill marks of all the currently tracked entities.
+function RareTracker:UpdateAllDailyKillMarks()
+    local primary_id = self.zone_id
+    if primary_id then
+        for npc_id, _ in pairs(self.primary_id_to_data[primary_id].entities) do
+            self:UpdateDailyKillMark(npc_id, primary_id)
         end
     end
 end
 
--- ####################################################################
--- ##                       Rare Entities Window                     ##
--- ####################################################################
-
--- Add the default entity frame initialization and control functions.
-function RT.AddDefaultEntityFrameFunctions(module)
-    -- Add the default variables.
-    module.last_reload_time = 0
-    
-    if not module.InitializeShardNumberFrame then
-        -- Display the current shard number at the top of the frame.
-        module.InitializeShardNumberFrame = function(self)
-            local f = CreateFrame("Frame", string.format("%s.shard_id_frame", self.addon_code), self)
-            f:SetSize(
-                entity_name_width + entity_status_width + 3 * frame_padding + 2 * favorite_rares_width,
-                shard_id_frame_height
-            )
-          
-            local texture = f:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(f)
-            f.texture = texture
-            
-            f.status_text = f:CreateFontString(nil, nil, "GameFontNormal")
-            f.status_text:SetPoint("TOPLEFT", 10 + 2 * favorite_rares_width + 2 * frame_padding, -3)
-            f.status_text:SetText(string.format(L["Shard ID: %s"], L["Unknown"]))
-            f:SetPoint("TOPLEFT", self, frame_padding, -frame_padding)
-            
-            return f
-        end
+-- Update the data that is displayed to apply to the current zone and other parameters.
+function RareTracker:UpdateDisplayList()
+    -- Hide all frames that are currently marked as visible.
+    local f = self.gui.entities_frame
+    for npc_id, _ in pairs(target_npc_ids) do
+        f.entities[npc_id]:Hide()
     end
     
-    if not module.CreateRareTableEntry then
-        -- Create an entry within the entity frame for the given entity.
-        module.CreateRareTableEntry = function(self, npc_id, parent_frame)
-            local f = CreateFrame(
-                "Frame", string.format("%s.entities_frame.entities[%s]", self.addon_code, npc_id), parent_frame
-            )
-            f:SetSize(entity_name_width + entity_status_width + 3 * frame_padding + 2 * favorite_rares_width, 12)
-            
-            -- Add the favorite button.
-            f.favorite = CreateFrame(
-                "CheckButton", string.format("%s.entities_frame.entities[%s].favorite", self.addon_code, npc_id), f
-            )
-            f.favorite:SetSize(10, 10)
-            local texture = f.favorite:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(f.favorite)
-            f.favorite.texture = texture
-            f.favorite:SetPoint("TOPLEFT", 1, 0)
-            
-            -- Add an action listener.
-            f.favorite:SetScript("OnClick", function()
-                if self.db.global.favorite_rares[npc_id] then
-                    self.db.global.favorite_rares[npc_id] = nil
-                    f.favorite.texture:SetColorTexture(0, 0, 0, front_opacity)
-                else
-                    self.db.global.favorite_rares[npc_id] = true
-                    f.favorite.texture:SetColorTexture(0, 1, 0, 1)
-                end
-                RT:NotifyOptionsChange()
-            end)
-            
-            -- Add the announce/waypoint button.
-            f.announce = CreateFrame(
-                "Button", string.format("%s.entities_frame.entities[%s].announce", self.addon_code, npc_id), f
-            )
-            f.announce:SetSize(10, 10)
-            texture = f.announce:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(f.announce)
-            f.announce.texture = texture
-            f.announce:SetPoint("TOPLEFT", frame_padding + favorite_rares_width + 1, 0)
-            f.announce:RegisterForClicks("LeftButtonDown", "RightButtonDown")
-            
-            -- Add an action listener.
-            f.announce:SetScript("OnClick",
-                function(_, button)
-                    local name = self.rare_names[npc_id]
-                    local health = self.current_health[npc_id]
-                    local last_death = self.last_recorded_death[npc_id]
-                    local loc = self.current_coordinates[npc_id]
-                    
-                    if button == "LeftButton" then
-                        local target = "CHANNEL"
-                        
-                        if IsLeftControlKeyDown() or IsRightControlKeyDown() then
-                            if UnitInRaid("player") then
-                                target = "RAID"
-                            else
-                                target = "PARTY"
-                            end
-                        elseif IsLeftAltKeyDown() or IsRightAltKeyDown() then
-                            target = "SAY"
-                        end
-                        
-                        local channel_id = RT.GetGeneralChatId()
-                    
-                        if self.current_health[npc_id] then
-                            -- SendChatMessage
-                            if loc then
-                                SendChatMessage(
-                                    string.format(
-                                        L["<%s> %s (%s%%) seen at ~(%.2f, %.2f)"],
-                                        self.addon_code,
-                                        name,
-                                        health,
-                                        loc.x,
-                                        loc.y
-                                    ),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            else
-                                SendChatMessage(
-                                    string.format(L["<%s> %s (%s%%)"], self.addon_code, name, health),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            end
-                        elseif self.last_recorded_death[npc_id] ~= nil then
-                            if GetServerTime() - last_death < 60 then
-                                SendChatMessage(
-                                    string.format(L["<%s> %s has died"], self.addon_code, name),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            else
-                                SendChatMessage(
-                                    string.format(
-                                        L["<%s> %s was last seen ~%s minutes ago"],
-                                        self.addon_code,
-                                        name,
-                                        math.floor((GetServerTime() - last_death) / 60)
-                                    ),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            end
-                        elseif self.is_alive[npc_id] then
-                            if loc then
-                                SendChatMessage(
-                                    string.format(
-                                        L["<%s> %s seen alive, vignette at ~(%.2f, %.2f)"],
-                                        self.addon_code, name,
-                                        loc.x,
-                                        loc.y
-                                    ),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            else
-                                SendChatMessage(
-                                    string.format(L["<%s> %s seen alive (combat log)"], self.addon_code, name),
-                                    target,
-                                    nil,
-                                    channel_id
-                                )
-                            end
-                        end
-                    else
-                        -- does the user have tom tom? if so, add a waypoint if it exists.
-                        if TomTom ~= nil and loc and not self.waypoints[npc_id] then
-                            self.waypoints[npc_id] = TomTom:AddWaypointToCurrentZone(loc.x, loc.y, name)
-                        end
-                    end
-                end
-            )
-            
-            -- Add the entities name.
-            f.name = f:CreateFontString(nil, nil, "GameFontNormal")
-            f.name:SetJustifyH("LEFT")
-            f.name:SetJustifyV("TOP")
-            f.name:SetPoint("TOPLEFT", 2 * frame_padding + 2 * favorite_rares_width + 10, 0)
-            f.name:SetText(self.rare_names[npc_id])
-            
-            -- Add the timer/health entry.
-            f.status = f:CreateFontString(nil, nil, "GameFontNormal")
-            f.status:SetPoint("TOPRIGHT", 0, 0)
-            f.status:SetText("--")
-            f.status:SetJustifyH("MIDDLE")
-            f.status:SetJustifyV("TOP")
-            f.status:SetSize(entity_status_width, 12)
-            
-            return f
-        end
-    end
-    
-    if not module.InitializeRareTableEntries then
-        -- Initialize the rare entries in the table for all the npcs.
-        module.InitializeRareTableEntries = function(self, parent_frame)
-            -- Create a holder for all the entries.
-            parent_frame.entities = {}
-            
-            -- Create a frame entry for all of the NPC ids, even the ignored ones.
-            -- The ordering and hiding of rares will be done later.
-            for i=1, #self.rare_ids do
-                local npc_id = self.rare_ids[i]
-                parent_frame.entities[npc_id] = self:CreateRareTableEntry(npc_id, parent_frame)
+    -- If no data is present for the given zone, then there are no targets.
+    wipe(target_npc_ids)
+    local primary_id = self.zone_id
+    if primary_id and self.primary_id_to_data[primary_id] then
+        -- Gather the candidate npc ids, using the plugin provider when defined.
+        if self.primary_id_to_data[primary_id].SelectTargetEntities then
+            self.primary_id_to_data[primary_id].SelectTargetEntities(self, target_npc_ids)
+        else
+            for npc_id, _ in pairs(self.primary_id_to_data[primary_id].entities) do
+                target_npc_ids[npc_id] = true
             end
         end
-    end
-    
-    if not module.ReorganizeRareTableFrame then
-        -- Reorganize the entries within the rare table.
-        module.ReorganizeRareTableFrame = function(self, f)
-            -- How many ignored rares do we have?
-            local n = 0
-            for _, npc_id in pairs(self.rare_ids) do
-                if self.db.global.ignore_rares[npc_id] then
+
+        -- Filter out all ignored entities and count the number of entries we will have in total.
+        -- Give all of the table entries their new positions and show them when appropriate.
+        local n = 0
+        for _, npc_id in pairs(self.primary_id_to_data[primary_id].ordering) do
+            if target_npc_ids[npc_id] then
+                if self.db.global.ignored_rares[npc_id] then
+                    target_npc_ids[npc_id] = nil
+                else
+                    f.entities[npc_id]:SetPoint("TOPLEFT", f, 0, -n * 12 - 5)
+                    f.entities[npc_id]:Show()
                     n = n + 1
                 end
             end
-            
-            -- Resize all the frames.
-            self:SetSize(
-                entity_name_width + entity_status_width + 2 * favorite_rares_width + 5 * frame_padding,
-                shard_id_frame_height + 3 * frame_padding + (#self.rare_ids - n) * 12 + 8
-            )
-            f:SetSize(
-                entity_name_width + entity_status_width + 2 * favorite_rares_width + 3 * frame_padding,
-                (#self.rare_ids - n) * 12 + 8
-            )
-            f.entity_name_backdrop:SetSize(entity_name_width, f:GetHeight())
-            f.entity_status_backdrop:SetSize(entity_status_width, f:GetHeight())
-            
-            -- Give all of the table entries their new positions.
-            local i = 1
-            self.db.global.rare_ordering:ForEach(function(npc_id, _)
-                if self.db.global.ignore_rares[npc_id] then
-                    f.entities[npc_id]:Hide()
-                else
-                    f.entities[npc_id]:SetPoint("TOPLEFT", f, 0, -(i - 1) * 12 - 5)
-                    f.entities[npc_id]:Show()
-                    i = i + 1
-                end
-            end)
         end
+        
+        -- Resize the appropriate frames.
+        self:UpdateEntityFrameDimensions(n, f)
     end
+end
+
+-- Resize the entities portion of the tracking window.
+function RareTracker:UpdateEntityFrameDimensions(n, f)
+    self.gui:SetSize(
+        entity_name_width + entity_status_width + 2 * favorite_rares_width + 5 * frame_padding,
+        shard_id_frame_height + 3 * frame_padding + n * 12 + 8
+    )
     
-    if not module.InitializeRareTableFrame then
-        -- Initialize the rare table frame.
-        module.InitializeRareTableFrame = function(self, f)
-            -- First, add the frames for the backdrop and make sure that the hierarchy is created.
-            f:SetPoint("TOPLEFT", frame_padding, -(2 * frame_padding + shard_id_frame_height))
-            
-            f.entity_name_backdrop = CreateFrame(
-                "Frame", string.format("%s.entities_frame.entity_name_backdrop", self.addon_code), f
-            )
-            local texture = f.entity_name_backdrop:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(f.entity_name_backdrop)
-            f.entity_name_backdrop.texture = texture
-            f.entity_name_backdrop:SetPoint("TOPLEFT", f, 2 * frame_padding + 2 * favorite_rares_width, 0)
-            
-            f.entity_status_backdrop = CreateFrame(
-                "Frame", string.format("%s.entities_frame.entity_status_backdrop", self.addon_code), f
-            )
-            texture = f.entity_status_backdrop:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(f.entity_status_backdrop)
-            f.entity_status_backdrop.texture = texture
-            f.entity_status_backdrop:SetPoint("TOPRIGHT", f, 0, 0)
-            
-            -- Next, add all the rare entries to the table.
-            self:InitializeRareTableEntries(f)
-            
-            -- Arrange the table such that it fits the user's wishes. Resize the frames appropriately.
-            self:ReorganizeRareTableFrame(f)
-        end
-    end
-    
-    if not module.UpdateStatus then
-        -- Update the status for the given entity.
-        module.UpdateStatus = function(self, npc_id)
-            local target = self.entities_frame.entities[npc_id]
+    f:SetSize(
+        entity_name_width + entity_status_width + 2 * favorite_rares_width + 3 * frame_padding,
+        n * 12 + 8
+    )
+    f.entity_name_backdrop:SetSize(entity_name_width, f:GetHeight())
+    f.entity_status_backdrop:SetSize(entity_status_width, f:GetHeight())
+end
 
-            if self.current_health[npc_id] then
-                target.status:SetText(self.current_health[npc_id].."%")
-                target.status:SetFontObject("GameFontGreen")
-                target.announce.texture:SetColorTexture(0, 1, 0, 1)
-            elseif self.is_alive[npc_id] then
-                target.status:SetText("N/A")
-                target.status:SetFontObject("GameFontGreen")
-                target.announce.texture:SetColorTexture(0, 1, 0, 1)
-            elseif self.last_recorded_death[npc_id] ~= nil then
-                local last_death = self.last_recorded_death[npc_id]
-                target.status:SetText(math.floor((GetServerTime() - last_death) / 60).."m")
-                target.status:SetFontObject("GameFontNormal")
-                target.announce.texture:SetColorTexture(0, 0, 1, front_opacity)
-            else
-                target.status:SetText("--")
-                target.status:SetFontObject("GameFontNormal")
-                target.announce.texture:SetColorTexture(0, 0, 0, front_opacity)
-            end
-        end
-    end
-    
-    if not module.UpdateShardNumber then
-        -- Update the shard number in the shard number display.
-        module.UpdateShardNumber = function(self, shard_number)
-            if shard_number then
-                self.shard_id_frame.status_text:SetText(string.format(L["Shard ID: %s"], (shard_number + 42)))
-            else
-                self.shard_id_frame.status_text:SetText(string.format(L["Shard ID: %s"], L["Unknown"]))
-            end
-        end
-    end
-
-    if not module.CorrectFavoriteMarks then
-        -- Ensure that all the favorite marks of the entities are set correctly.
-        module.CorrectFavoriteMarks = function(self)
-            for _, npc_id in pairs(self.rare_ids) do
-                if self.db.global.favorite_rares[npc_id] then
-                    self.entities_frame.entities[npc_id].favorite.texture:SetColorTexture(0, 1, 0, 1)
-                else
-                    self.entities_frame.entities[npc_id].favorite.texture:SetColorTexture(0, 0, 0, front_opacity)
-                end
-            end
-        end
-    end
-
-    if not module.UpdateDailyKillMark then
-        -- Update the daily kill mark of the given entity.
-        module.UpdateDailyKillMark = function(self, npc_id)
-            if not self.completion_quest_ids[npc_id] then
-                return
-            end
-            
-            -- Multiple NPCs might share the same quest id.
-            local completion_quest_id = self.completion_quest_ids[npc_id]
-            local npc_ids = self.completion_quest_inverse[completion_quest_id]
-            
-            for _, target_npc_id in pairs(npc_ids) do
-                if self.completion_quest_ids[target_npc_id]
-                        and IsQuestFlaggedCompleted(self.completion_quest_ids[target_npc_id]) then
-                    self.entities_frame.entities[target_npc_id].name:SetText(self.rare_display_names[target_npc_id])
-                    self.entities_frame.entities[target_npc_id].name:SetFontObject("GameFontRed")
-                else
-                    self.entities_frame.entities[target_npc_id].name:SetText(self.rare_display_names[target_npc_id])
-                    self.entities_frame.entities[target_npc_id].name:SetFontObject("GameFontNormal")
-                end
-            end
-        end
-    end
-
-    if not module.UpdateAllDailyKillMarks then
-        -- Update the daily kill marks of all the tracked entities.
-        module.UpdateAllDailyKillMarks = function(self)
-            for _, npc_id in pairs(self.rare_ids) do
-                self:UpdateDailyKillMark(npc_id)
-            end
-        end
-    end
-    
-    if not module.InitializeFavoriteIconFrame then
-        -- Initialize the favorite icon in the rare entities frame.
-        module.InitializeFavoriteIconFrame = function(self)
-            self.favorite_icon = CreateFrame("Frame", string.format("%s.favorite_icon", self.addon_code), self)
-            self.favorite_icon:SetSize(10, 10)
-            self.favorite_icon:SetPoint("TOPLEFT", self, frame_padding + 1, -(frame_padding + 3))
-
-            self.favorite_icon.texture = self.favorite_icon:CreateTexture(nil, "OVERLAY")
-            self.favorite_icon.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Favorite.tga")
-            self.favorite_icon.texture:SetSize(10, 10)
-            self.favorite_icon.texture:SetPoint("CENTER", self.favorite_icon)
-            
-            self.favorite_icon.tooltip = CreateFrame("Frame", nil, UIParent)
-            self.favorite_icon.tooltip:SetSize(300, 18)
-            
-            local texture = self.favorite_icon.tooltip:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(self.favorite_icon.tooltip)
-            self.favorite_icon.tooltip.texture = texture
-            self.favorite_icon.tooltip:SetPoint("TOPLEFT", self, 0, 19)
-            self.favorite_icon.tooltip:Hide()
-            
-            self.favorite_icon.tooltip.text = self.favorite_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.favorite_icon.tooltip.text:SetJustifyH("LEFT")
-            self.favorite_icon.tooltip.text:SetJustifyV("TOP")
-            self.favorite_icon.tooltip.text:SetPoint("TOPLEFT", self.favorite_icon.tooltip, 5, -3)
-            self.favorite_icon.tooltip.text:SetText(L["Click on the squares to add rares to your favorites."])
-            
-            self.favorite_icon:SetScript("OnEnter", function(icon) icon.tooltip:Show() end)
-            self.favorite_icon:SetScript("OnLeave", function(icon) icon.tooltip:Hide() end)
-        end
-    end
-    
-    if not module.InitializeAnnounceIconFrame then
-        -- Initialize the alternating announce icon in the rare entities frame.
-        module.InitializeAnnounceIconFrame = function(self)
-            self.broadcast_icon = CreateFrame("Frame", string.format("%s.broadcast_icon", self.addon_code), self)
-            self.broadcast_icon:SetSize(10, 10)
-            self.broadcast_icon:SetPoint(
-                "TOPLEFT", self, 2 * frame_padding + favorite_rares_width + 1, -(frame_padding + 3)
-            )
-
-            self.broadcast_icon.texture = self.broadcast_icon:CreateTexture(nil, "OVERLAY")
-            self.broadcast_icon.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Broadcast.tga")
-            self.broadcast_icon.texture:SetSize(10, 10)
-            self.broadcast_icon.texture:SetPoint("CENTER", self.broadcast_icon)
-            self.broadcast_icon.icon_state = false
-            
-            self.broadcast_icon.tooltip = CreateFrame("Frame", nil, UIParent)
-            self.broadcast_icon.tooltip:SetSize(273, 68)
-            
-            local texture = self.broadcast_icon.tooltip:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(self.broadcast_icon.tooltip)
-            self.broadcast_icon.tooltip.texture = texture
-            self.broadcast_icon.tooltip:SetPoint("TOPLEFT", self, 0, 69)
-            self.broadcast_icon.tooltip:Hide()
-            
-            self.broadcast_icon.tooltip.text1 = self.broadcast_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.broadcast_icon.tooltip.text1:SetJustifyH("LEFT")
-            self.broadcast_icon.tooltip.text1:SetJustifyV("TOP")
-            self.broadcast_icon.tooltip.text1:SetPoint("TOPLEFT", self.broadcast_icon.tooltip, 5, -3)
-            self.broadcast_icon.tooltip.text1:SetText(L["Click on the squares to announce rare timers."])
-            
-            self.broadcast_icon.tooltip.text2 = self.broadcast_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.broadcast_icon.tooltip.text2:SetJustifyH("LEFT")
-            self.broadcast_icon.tooltip.text2:SetJustifyV("TOP")
-            self.broadcast_icon.tooltip.text2:SetPoint("TOPLEFT", self.broadcast_icon.tooltip, 5, -15)
-            self.broadcast_icon.tooltip.text2:SetText(L["Left click: report to general chat"])
-            
-            self.broadcast_icon.tooltip.text3 = self.broadcast_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.broadcast_icon.tooltip.text3:SetJustifyH("LEFT")
-            self.broadcast_icon.tooltip.text3:SetJustifyV("TOP")
-            self.broadcast_icon.tooltip.text3:SetPoint("TOPLEFT", self.broadcast_icon.tooltip, 5, -27)
-            self.broadcast_icon.tooltip.text3:SetText(L["Control-left click: report to party/raid chat"])
-            
-            self.broadcast_icon.tooltip.text4 = self.broadcast_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.broadcast_icon.tooltip.text4:SetJustifyH("LEFT")
-            self.broadcast_icon.tooltip.text4:SetJustifyV("TOP")
-            self.broadcast_icon.tooltip.text4:SetPoint("TOPLEFT", self.broadcast_icon.tooltip, 5, -39)
-            self.broadcast_icon.tooltip.text4:SetText(L["Alt-left click: report to say"])
-              
-            self.broadcast_icon.tooltip.text5 = self.broadcast_icon.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.broadcast_icon.tooltip.text5:SetJustifyH("LEFT")
-            self.broadcast_icon.tooltip.text5:SetJustifyV("TOP")
-            self.broadcast_icon.tooltip.text5:SetPoint("TOPLEFT", self.broadcast_icon.tooltip, 5, -51)
-            self.broadcast_icon.tooltip.text5:SetText(L["Right click: set waypoint if available"])
-            
-            self.broadcast_icon:SetScript("OnEnter", function(icon) icon.tooltip:Show() end)
-            self.broadcast_icon:SetScript("OnLeave", function(icon) icon.tooltip:Hide() end)
-        end
-    end
-    
-    if not module.InitializeReloadButton then
-        -- Initialize the reload button in the rare entities frame.
-        module.InitializeReloadButton = function(self)
-            self.reload_button = CreateFrame("Button", string.format("%s.reload_button", self.addon_code), self)
-            self.reload_button:SetSize(10, 10)
-            self.reload_button:SetPoint(
-                "TOPRIGHT", self, -3 * frame_padding - favorite_rares_width, -(frame_padding + 3)
-            )
-
-            self.reload_button.texture = self.reload_button:CreateTexture(nil, "OVERLAY")
-            self.reload_button.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Reload.tga")
-            self.reload_button.texture:SetSize(10, 10)
-            self.reload_button.texture:SetPoint("CENTER", self.reload_button)
-            
-            -- Create a tooltip window.
-            self.reload_button.tooltip = CreateFrame("Frame", nil, UIParent)
-            self.reload_button.tooltip:SetSize(390, 34)
-            
-            local texture = self.reload_button.tooltip:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, front_opacity)
-            texture:SetAllPoints(self.reload_button.tooltip)
-            self.reload_button.tooltip.texture = texture
-            self.reload_button.tooltip:SetPoint("TOPLEFT", self, 0, 35)
-            self.reload_button.tooltip:Hide()
-            
-            self.reload_button.tooltip.text1 = self.reload_button.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.reload_button.tooltip.text1:SetJustifyH("LEFT")
-            self.reload_button.tooltip.text1:SetJustifyV("TOP")
-            self.reload_button.tooltip.text1:SetPoint("TOPLEFT", self.reload_button.tooltip, 5, -3)
-            self.reload_button.tooltip.text1:SetText(L["Reset your data and replace it with the data of others."])
-            
-            self.reload_button.tooltip.text2 = self.reload_button.tooltip:CreateFontString(nil, nil, "GameFontNormal")
-            self.reload_button.tooltip.text2:SetJustifyH("LEFT")
-            self.reload_button.tooltip.text2:SetJustifyV("TOP")
-            self.reload_button.tooltip.text2:SetPoint("TOPLEFT", self.reload_button.tooltip, 5, -15)
-            self.reload_button.tooltip.text2:SetText(
-                L["Note: you do not need to press this button to receive new timers."]
-            )
-            
-            -- Hide and show the tooltip on mouseover.
-            self.reload_button:SetScript("OnEnter", function(icon) icon.tooltip:Show() end)
-            self.reload_button:SetScript("OnLeave", function(icon) icon.tooltip:Hide() end)
-            
-            self.reload_button:SetScript("OnClick", function()
-                if self.current_shard_id ~= nil and GetServerTime() - self.last_reload_time > 600 then
-                    print(string.format(
-                        L["<%s> Resetting current rare timers and requesting up-to-date data."], self.addon_code
-                    ))
-                    self.is_alive = {}
-                    self.current_health = {}
-                    self.last_recorded_death = {}
-                    self.recorded_entity_death_ids = {}
-                    self.current_coordinates = {}
-                    self.reported_spawn_uids = {}
-                    self.reported_vignettes = {}
-                    self.last_reload_time = GetServerTime()
-                    
-                    -- Reset the cache.
-                    self.db.global.previous_records[self.current_shard_id] = nil
-                    
-                    -- Re-register your arrival in the shard.
-                    self:RegisterArrival(self.current_shard_id)
-                elseif self.current_shard_id == nil then
-                    print(string.format(L["<%s> Please target a non-player entity prior to resetting, "..
-                            "such that the addon can determine the current shard id."], self.addon_code))
-                else
-                    print(string.format(
-                        L["<%s> The reset button is on cooldown. Please note that a reset is not needed "..
-                        "to receive new timers. If it is your intention to reset the data, "..
-                        "please do a /reload and click the reset button again."], self.addon_code
-                    ))
-                end
-            end)
-        end
-    end
-    
-    if not module.InitializeCloseButton then
-        -- Initialize the close button in the rare entities frame.
-        module.InitializeCloseButton = function(self)
-            self.close_button = CreateFrame("Button", string.format("%s.close_button", self.addon_code), self)
-            self.close_button:SetSize(10, 10)
-            self.close_button:SetPoint("TOPRIGHT", self, -2 * frame_padding, -(frame_padding + 3))
-
-            self.close_button.texture = self.close_button:CreateTexture(nil, "OVERLAY")
-            self.close_button.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Cross.tga")
-            self.close_button.texture:SetSize(10, 10)
-            self.close_button.texture:SetPoint("CENTER", self.close_button)
-            
-            self.close_button:SetScript("OnClick", function()
-                self:Hide()
-                RT.db.global.window.hide = true
-            end)
-        end
-    end
-    
-    if not module.InitializeInterface then
-        -- Initialize the addon's entity frame.
-        module.InitializeInterface = function(self)
-            self:SetSize(
-                entity_name_width + entity_status_width + 2 * favorite_rares_width + 5 * frame_padding,
-                shard_id_frame_height + 3 * frame_padding + #self.rare_ids * 12 + 8
-            )
-            
-            local texture = self:CreateTexture(nil, "BACKGROUND")
-            texture:SetColorTexture(0, 0, 0, background_opacity)
-            texture:SetAllPoints(self)
-            self.texture = texture
-            self:SetPoint("CENTER")
-            
-            -- Create a sub-frame for the entity names.
-            self.shard_id_frame = self:InitializeShardNumberFrame()
-            self.entities_frame = CreateFrame("Frame", string.format("%s.entities_frame", self.addon_code), self)
-            self:InitializeRareTableFrame(self.entities_frame)
-
-            self:SetMovable(true)
-            self:EnableMouse(true)
-            self:RegisterForDrag("LeftButton")
-            self:SetScript("OnDragStart", self.StartMoving)
-            self:SetScript("OnDragStop", self.StopMovingOrSizing)
-            
-            -- Add icons for the favorite and broadcast columns.
-            self:InitializeFavoriteIconFrame()
-            self:InitializeAnnounceIconFrame()
-            
-            -- Create a reset button.
-            self:InitializeReloadButton()
-            self:InitializeCloseButton()
-            self:SetClampedToScreen(true)
-            
-            -- Enforce the user-defined scale of the window.
-            self:SetScale(self.db.global.window_scale)
-            
-            self:Hide()
+-- Ensure that all the favorite marks of the entities are set correctly.
+function RareTracker:CorrectFavoriteMarks()
+    for npc_id, _ in pairs(self.tracked_npc_ids) do
+        if self.db.global.favorite_rares[npc_id] then
+            self.gui.entities_frame.entities[npc_id].favorite.texture:SetColorTexture(0, 1, 0, 1)
+        else
+            self.gui.entities_frame.entities[npc_id].favorite.texture:SetColorTexture(0, 0, 0, foreground_opacity)
         end
     end
 end
 
+-- Update the status of all npcs that are currently being tracked.
+function RareTracker:UpdateStatusTrackedEntities()
+    for npc_id, _ in pairs(target_npc_ids) do
+        -- It might occur that the rare is marked as alive, but no health is known.
+        -- If two minutes pass without a health value, the alive tag will be reset.
+        if self.is_alive[npc_id] and GetServerTime() - self.is_alive[npc_id] > 120 then
+            self.is_alive[npc_id] = nil
+            self.current_health[npc_id] = nil
+            self.reported_spawn_uids[npc_id] = nil
+            self.current_coordinates[npc_id] = nil
+        end
+        
+        self:UpdateStatus(npc_id)
+    end
+end
 
+-- Switch between the report and waypoint icons.
+function RareTracker.CycleReportWaypointIcon(f)
+    f.icon_state = not f.icon_state
+                
+    if f.icon_state then
+        f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Broadcast.tga")
+    else
+        f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Waypoint.tga")
+    end
+end
 
+-- ####################################################################
+-- ##                          Initialization                        ##
+-- ####################################################################
+
+-- Create an entry within the entity frame for the given entity.
+function RareTracker:InitializeRareTableEntry(npc_id, rare_data, parent)
+    local f = CreateFrame("Frame", string.format("RT.entities_frame.entities[%s]", npc_id), parent)
+    f:SetSize(entity_name_width + entity_status_width + 3 * frame_padding + 2 * favorite_rares_width, 12)
     
+    -- Create the favorite button.
+    f.favorite = CreateFrame("CheckButton", string.format("RT.entities_frame.entities[%s].favorite", npc_id), f)
+    f.favorite:SetSize(10, 10)
+    f.favorite:SetPoint("TOPLEFT", 1, 0)
+    
+    f.favorite.texture = f.favorite:CreateTexture(nil, "BACKGROUND")
+    f.favorite.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    f.favorite.texture:SetAllPoints(f.favorite)
+    
+     -- Add an action listener.
+    f.favorite:SetScript("OnClick", function()
+        if self.db.global.favorite_rares[npc_id] then
+            self.db.global.favorite_rares[npc_id] = nil
+            f.favorite.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+        else
+            self.db.global.favorite_rares[npc_id] = true
+            f.favorite.texture:SetColorTexture(0, 1, 0, 1)
+        end
+        self.NotifyOptionsChange()
+    end)
+
+    -- Add a button that announces the rare/adds a waypoint when applicable.
+    -- Add the announce/waypoint button.
+    f.announce = CreateFrame("Button", string.format("RT.entities_frame.entities[%s].announce", npc_id), f)
+    f.announce:SetSize(10, 10)
+    f.announce:SetPoint("TOPLEFT", frame_padding + favorite_rares_width + 1, 0)
+    
+    f.announce.texture = f.announce:CreateTexture(nil, "BACKGROUND")
+    f.announce.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    f.announce.texture:SetAllPoints(f.announce)
+    
+    f.announce:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+    f.announce:SetScript("OnClick", function(_, button)
+        local name = rare_data.name
+        local health = self.current_health[npc_id]
+        local last_death = nil
+        if self.last_recorded_death[npc_id] then
+            last_death, _ = unpack(self.last_recorded_death[npc_id])
+        end
+        local loc = self.current_coordinates[npc_id]
+        
+        if button == "LeftButton" then
+            -- The default target is general chat.
+            local target = "CHANNEL"
+            if IsLeftControlKeyDown() or IsRightControlKeyDown() then
+                if UnitInRaid("player") then
+                    target = "RAID"
+                else
+                    target = "PARTY"
+                end
+            elseif IsLeftAltKeyDown() or IsRightAltKeyDown() then
+                target = "SAY"
+            end
+            
+            -- Send the message.
+            self:ReportRareInChat(npc_id, target, name, health, last_death, loc)
+        else
+            -- Put down a waypoint.
+            local loc = self.current_coordinates[npc_id] or self.primary_id_to_data[self.zone_id].entities[npc_id].coordinates
+            if loc then
+                if IsLeftAltKeyDown() or IsRightAltKeyDown() then
+                    self:ReportRareCoordinatesInChat(npc_id, "CHANNEL", name, loc)
+                elseif IsLeftControlKeyDown() or IsRightControlKeyDown() then
+                    local target = "PARTY"
+                    if UnitInRaid("player") then
+                        target = "RAID"
+                    end
+                    self:ReportRareCoordinatesInChat(npc_id, target, name, loc)
+                else
+                    local x, y = unpack(loc)
+                    C_Map.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(self.zone_id, x/100, y/100))
+                    C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+                end
+            end
+        end
+    end)
+
+    -- Add the entities name.
+    f.name = f:CreateFontString(nil, nil, "GameFontNormal")
+    f.name:SetSize(entity_name_width, 12)
+    f.name:SetPoint("TOPLEFT", 2 * frame_padding + 2 * favorite_rares_width + 10, 0)
+    f.name:SetJustifyH("LEFT")
+    f.name:SetJustifyV("TOP")
+    f.name:SetText(rare_data.name)
+    
+    -- Add the timer/health entry.
+    f.status = f:CreateFontString(nil, nil, "GameFontNormal")
+    f.status:SetSize(entity_status_width, 12)
+    f.status:SetPoint("TOPRIGHT", 0, 0)
+    f.status:SetText("--")
+    f.status:SetJustifyH("MIDDLE")
+    f.status:SetJustifyV("TOP")
+    
+    parent.entities[npc_id] = f
+end
+
+-- Initialize the rare table frame.
+function RareTracker:InitializeRareTableFrame(parent)
+    -- First, add the frames for the backdrop and make sure that the hierarchy is created.
+    local f = CreateFrame("Frame", "RT.entities_frame", parent)
+    f:SetPoint("TOPLEFT", frame_padding, -(2 * frame_padding + shard_id_frame_height))
+    
+    f.entity_name_backdrop = CreateFrame("Frame", "RT.entities_frame.entity_name_backdrop", f)
+    f.entity_name_backdrop:SetPoint("TOPLEFT", f, 2 * frame_padding + 2 * favorite_rares_width, 0)
+    
+    f.entity_name_backdrop.texture = f.entity_name_backdrop:CreateTexture(nil, "BACKGROUND")
+    f.entity_name_backdrop.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    f.entity_name_backdrop.texture:SetAllPoints(f.entity_name_backdrop)
+    
+    f.entity_status_backdrop = CreateFrame("Frame", "RT.entities_frame.entity_status_backdrop", f)
+    f.entity_status_backdrop:SetPoint("TOPRIGHT", f, 0, 0)
+    
+    f.entity_status_backdrop.texture = f.entity_status_backdrop:CreateTexture(nil, "BACKGROUND")
+    f.entity_status_backdrop.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    f.entity_status_backdrop.texture:SetAllPoints(f.entity_status_backdrop)
+    
+    -- Next, create frames for all rares in the table.
+    f.entities = {}
+    
+    -- Create a frame entry for all of the NPC ids, even the ignored ones.
+    -- The ordering and hiding of rares will be done later.
+    for _, data in pairs(self.primary_id_to_data) do
+        for npc_id, rare_data in pairs(data.entities) do
+            self:InitializeRareTableEntry(npc_id, rare_data, f)
+        end
+    end
+    
+    -- Ensure that the data in the window updates periodically.
+    f.last_display_update = GetTime()
+    f:SetScript("OnUpdate", function()
+        if f.last_display_update + 1 < GetTime() then
+            f.last_display_update = GetTime()
+            self:UpdateStatusTrackedEntities()
+        end
+    end)
+    
+    parent.entities_frame = f
+end
+
+-- Display the current shard number at the top of the frame.
+function RareTracker.InitializeShardNumberFrame(parent)
+    local f = CreateFrame("Frame", "RT.shard_id_frame", parent)
+    local width = entity_name_width + entity_status_width + 3 * frame_padding + 2 * favorite_rares_width
+    local height = shard_id_frame_height
+    f:SetSize(width, height)
+    f:SetPoint("TOPLEFT", parent, frame_padding, -frame_padding)
+  
+    f.texture = f:CreateTexture(nil, "BACKGROUND")
+    f.texture:SetColorTexture(0, 0, 0, foreground_opacity)
+    f.texture:SetAllPoints(f)
+    
+    f.status_text = f:CreateFontString(nil, nil, "GameFontNormal")
+    f.status_text:SetPoint("TOPLEFT", 10 + 2 * favorite_rares_width + 2 * frame_padding, -3)
+    f.status_text:SetText(string.format(L["Shard ID: %s"], L["Unknown"]))
+    
+    parent.shard_id_frame = f
+end
+
+-- Initialize the favorite icon in the rare entities frame.
+function RareTracker.InitializeFavoriteIconFrame(parent)
+    local f = CreateFrame("Frame", "RT.favorite_icon", parent)
+    f:SetSize(10, 10)
+    f:SetPoint("TOPLEFT", parent, frame_padding + 1, -(frame_padding + 3))
+
+    f.texture = f:CreateTexture(nil, "OVERLAY")
+    f.texture:SetSize(10, 10)
+    f.texture:SetPoint("CENTER", f)
+    f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Favorite.tga")
+
+    parent.favorite_icon = f
+end
+
+-- Initialize the alternating announce icon in the rare entities frame.
+function RareTracker:InitializeAnnounceIconFrame(parent)
+    local f = CreateFrame("Frame", "RT.broadcast_icon", parent)
+    f:SetSize(10, 10)
+    f:SetPoint("TOPLEFT", parent, 2 * frame_padding + favorite_rares_width + 1, -(frame_padding + 3))
+
+    f.texture = f:CreateTexture(nil, "OVERLAY")
+    f.texture:SetSize(10, 10)
+    f.texture:SetPoint("CENTER", f)
+    f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Broadcast.tga")
+    
+    -- Make the icon swap periodically by adding an update handler.
+    f.icon_state = false
+    f.last_icon_change = GetTime()
+    f:SetScript("OnUpdate", function()
+        if f.last_icon_change + 2 < GetTime() then
+            f.last_icon_change = GetTime()
+            self.CycleReportWaypointIcon(f)
+        end
+    end)
+    
+    parent.broadcast_icon = f
+end
+
+-- Initialize the close button in the rare entities frame.
+function RareTracker:InitializeInfoButton(parent)
+    local f = CreateFrame("Button", "RT.info_button", parent)
+    f:SetSize(10, 10)
+    f:SetPoint("TOPRIGHT", parent, -3 * frame_padding - favorite_rares_width, -(frame_padding + 3))
+
+    f.texture = f:CreateTexture(nil, "OVERLAY")
+    f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Info.tga")
+    f.texture:SetSize(10, 10)
+    f.texture:SetPoint("CENTER", f)
+    
+    f:SetScript("OnClick", function()
+        InterfaceOptionsFrame_Show()
+        InterfaceOptionsFrame_OpenToCategory(self.info_frame)
+    end)
+
+    parent.info_button = f
+end
+
+-- Initialize the close button in the rare entities frame.
+function RareTracker:InitializeCloseButton(parent)
+    local f = CreateFrame("Button", "RT.close_button", parent)
+    f:SetSize(10, 10)
+    f:SetPoint("TOPRIGHT", parent, -2 * frame_padding, -(frame_padding + 3))
+
+    f.texture = f:CreateTexture(nil, "OVERLAY")
+    f.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Cross.tga")
+    f.texture:SetSize(10, 10)
+    f.texture:SetPoint("CENTER", f)
+    
+    f:SetScript("OnClick", function()
+        parent:Hide()
+        self.db.global.window.hide = true
+    end)
+
+    parent.close_button = f
+end
+
+-- Initialize the addon's entity frame.
+function RareTracker:InitializeInterface()
+    local f = self.gui
+    
+    f:SetSize(
+        entity_name_width + entity_status_width + 2 * favorite_rares_width + 5 * frame_padding,
+        shard_id_frame_height + 2 * frame_padding
+    )
+    if self.db.global.window.position then
+        local anchor, x, y = unpack(self.db.global.window.position)
+        f:SetPoint(anchor, x, y)
+    else
+        f:SetPoint("CENTER")
+    end
+            
+    f.texture = f:CreateTexture(nil, "BACKGROUND")
+    f.texture:SetColorTexture(0, 0, 0, background_opacity)
+    f.texture:SetAllPoints(f)
+    
+    -- Create a sub-frame for the entity names.
+    self.InitializeShardNumberFrame(f)
+    self:InitializeRareTableFrame(f)
+    
+    -- Add icons for the favorite and broadcast columns.
+    self.InitializeFavoriteIconFrame(f)
+    self:InitializeAnnounceIconFrame(f)
+    
+    -- Create an info and close button.
+    self:InitializeInfoButton(f)
+    self:InitializeCloseButton(f)
+    
+    -- Make the window moveable and ensure that the window stays where the user puts it.
+    f:SetClampedToScreen(true)
+    f:RegisterForDrag("LeftButton")
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f:EnableMouse(true)
+    f:SetScript("OnDragStart", f.StartMoving)
+    f:SetScript("OnDragStop", function(_f)
+        _f:StopMovingOrSizing()
+        local _, _, anchor, x, y = _f:GetPoint()
+        self.db.global.window.position = {anchor, x, y}
+        self:Debug("New frame position", anchor, x, y)
+    end)
+    
+    -- Enforce the user-defined scale of the window.
+    f:SetScale(self.db.global.window.scale)
+    
+    -- The default state of the window is hidden.
+    f:Hide()
+end

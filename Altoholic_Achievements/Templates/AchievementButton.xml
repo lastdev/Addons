@@ -31,15 +31,16 @@
 		</Layers>
 		<Scripts>
 			<OnLoad inherit="prepend">
-                self:SetBackdrop({
-                    bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
-                    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-                  	tile = true,
-                  	tileSize = 30,
-                  	edgeSize = 8,
-                  	insets = { left = 5, right = 5, top = 5, bottom = 5, },
-                })
-                self:SetBackdropColor(1, 1, 1, 0);
+				self:SetBackdrop({
+					bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
+					edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+					tile = true,
+					tileSize = 30,
+					edgeSize = 8,
+					insets = { left = 5, right = 5, top = 5, bottom = 5, },
+				})
+				self:SetBackdropColor(1, 1, 1, 0)
+			
 				Altoholic:BindViewToController(self, "AltoholicUI.AchievementButton")
 				
 				local level = self:GetParent():GetFrameLevel()

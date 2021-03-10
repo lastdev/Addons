@@ -90,7 +90,7 @@ WeakAuras.WA_ClassColorName = WA_ClassColorName
 -- UTF-8 Sub is pretty commonly needed
 local WA_Utf8Sub = function(input, size)
   local output = ""
-  if not input then
+  if type(input) ~= "string" then
     return output
   end
   local i = 1
@@ -173,6 +173,9 @@ local blockedFunctions = {
 
 local blockedTables = {
   SlashCmdList = true,
+  SendMailMailButton = true,
+  SendMailMoneyGold = true,
+  MailFrameTab2 = true,
 }
 
 local aura_environments = {}
@@ -424,9 +427,11 @@ local exec_env = setmetatable({},
     elseif k == "aura_env" then
       return current_aura_env
     elseif blockedFunctions[k] then
-      return blocked
+      blocked(k)
+      return function() end
     elseif blockedTables[k] then
-      return blocked()
+      blocked(k)
+      return {}
     elseif overridden[k] then
       return overridden[k]
     else

@@ -14,7 +14,6 @@
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
-            <Anchor point="BOTTOMRIGHT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">

@@ -101,9 +101,7 @@ function ns:Update()
 		BuildView()
 	end
 
-	if ns[updateHandler] then
-        ns[updateHandler](ns)
-    end
+	ns[updateHandler](ns)
 end
 
 function ns:SetUpdateHandler(h)
@@ -131,19 +129,17 @@ function ns:InvalidateView()
 end
 
 function ns:UpdateAuctions()
+	local VisibleLines = 7
 	local frame = "AltoholicFrameAuctions"
 	local entry = frame.."Entry"
 
-	local scrollFrame = _G[ frame].ScrollFrame
-	local VisibleLines = scrollFrame.numRows
+	local scrollFrame = _G[ frame.."ScrollFrame" ]
 	
 	local DS = DataStore
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numAuctions = DS:GetNumAuctions(character) or 0
-	if AltoholicFrameAuctions:IsVisible() then
-        AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Auctions %s(%d)"], colors.green, numAuctions)))
-    end
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Auctions %s(%d)"], colors.green, numAuctions)))
 	
 	if numAuctions == 0 then		-- make sure the scroll frame is cleared !
 		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
@@ -168,15 +164,7 @@ function ns:UpdateAuctions()
 			itemName = itemName or L["N/A"]
 			itemRarity = itemRarity or 1
 			_G[ entry..i.."Name" ]:SetText("|c" .. select(4, GetItemQualityColor(itemRarity)) .. itemName)
-			
-			if not timeLeft then	-- secure this in case it is nil (may happen when other auction monitoring addons are present)
-				timeLeft = 1
-			elseif (timeLeft < 1) or (timeLeft > 4) then
-				timeLeft = 1
-			end
-			
-			_G[ entry..i.."TimeLeft" ]:SetText( colors.teal .. _G["AUCTION_TIME_LEFT"..timeLeft] 
-								.. " (" .. _G["AUCTION_TIME_LEFT"..timeLeft .. "_DETAIL"] .. ")")
+			_G[ entry..i.."TimeLeft" ]:SetText(addon:GetTimeString(timeLeft)) 
 
 			local bidder = (isGoblin) and L["Goblin AH"] .. "\n" or ""
 			bidder = (highBidder) and colors.white .. highBidder or colors.red .. NO_BIDS
@@ -198,10 +186,6 @@ function ns:UpdateAuctions()
 			_G[ entry..i ]:Hide()
 		end
 	end
-    
-    for i = VisibleLines, 18 do
-        _G[entry..i]:Hide()
-    end
 	
 	if numAuctions < VisibleLines then
 		scrollFrame:Update(VisibleLines, VisibleLines, 41)
@@ -211,19 +195,17 @@ function ns:UpdateAuctions()
 end
 
 function ns:UpdateBids()
+	local VisibleLines = 7
 	local frame = "AltoholicFrameAuctions"
 	local entry = frame.."Entry"
 	
-	local scrollFrame = _G[frame].ScrollFrame
-	local VisibleLines = scrollFrame.numRows
+	local scrollFrame = _G[ frame.."ScrollFrame" ]
 	
 	local DS = DataStore
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numBids = DS:GetNumBids(character) or 0
-	if AltoholicFrameAuctions:IsVisible() then
-	   AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Bids %s(%d)"], colors.green, numBids)))
-    end
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Bids %s(%d)"], colors.green, numBids)))
 	
 	if numBids == 0 then		-- make sure the scroll frame is cleared !
 		for i=1, VisibleLines do					-- Hides all entries of the scrollframe, and updates it accordingly
@@ -272,10 +254,6 @@ function ns:UpdateBids()
 			_G[ entry..i ]:Hide()
 		end
 	end
-    
-    for i = VisibleLines, 18 do
-        _G[entry..i]:Hide()
-    end
 	
 	if numBids < VisibleLines then
 		scrollFrame:Update(VisibleLines, VisibleLines, 41)
@@ -317,4 +295,3 @@ function ns:OnClick(frame, button)
 	end
 end
 
-AltoholicFrame:RegisterResizeEvent("AltoholicFrameAuctions", 8, ns)

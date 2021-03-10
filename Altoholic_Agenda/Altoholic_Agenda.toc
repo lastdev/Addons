@@ -1,8 +1,8 @@
-## Interface: 90001
+﻿## Interface: 90002
 ## Title: Altoholic_Agenda
 ## Notes: Altoholic's Agenda UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.0.1-024
+## Version: r198
 ## Dependencies: Altoholic, DataStore, DataStore_Agenda, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements

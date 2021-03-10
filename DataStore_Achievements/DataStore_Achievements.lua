@@ -1,8 +1,3 @@
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-    print("DataStore_Achievements does not support Classic WoW")
-    return
-end
-
 --[[	*** DataStore_Achievements ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 21st, 2009
@@ -220,7 +215,7 @@ local function OnPlayerAlive()
 	ScanProgress()
 	ScanTabards()
 
-	addon.ThisCharacter.guid = strsub(UnitGUID("player"), 3)	-- get rid at the 0x at the beginning of the string
+	addon.ThisCharacter.guid = UnitGUID("player") -- Get the GUID for achievement links
 end
 
 local function OnAchievementEarned(event, id)

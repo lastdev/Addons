@@ -62,7 +62,7 @@ local function createOptions(id, data)
     __order = 1,
     groupIcon = {
       type = "input",
-      width = WeakAuras.normalWidth,
+      width = WeakAuras.doubleWidth - 0.15,
       name = L["Group Icon"],
       desc = L["Set Thumbnail Icon"],
       order = 0.50,
@@ -77,10 +77,16 @@ local function createOptions(id, data)
     },
     chooseIcon = {
       type = "execute",
-      width = WeakAuras.normalWidth,
+      width = 0.15,
       name = L["Choose"],
       order = 0.51,
-      func = function() OptionsPrivate.OpenIconPicker(data, "groupIcon", true) end
+      func = function()
+         OptionsPrivate.OpenIconPicker(data, { [data.id] = {"groupIcon"} }, true)
+       end,
+       imageWidth = 24,
+       imageHeight = 24,
+       control = "WeakAurasIcon",
+       image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\browse",
     },
     align_h = {
       type = "select",
@@ -553,6 +559,7 @@ local function createOptions(id, data)
       order = 45,
       min = 0.05,
       softMax = 2,
+      max = 10,
       bigStep = 0.05,
       get = function()
         return data.scale or 1
@@ -580,7 +587,7 @@ local function createOptions(id, data)
 
   return {
     group = options,
-    position = OptionsPrivate.commonOptions.PositionOptions(id, data, nil, true, true),
+    position = OptionsPrivate.commonOptions.PositionOptions(id, data, nil, true, true, true),
   };
 end
 

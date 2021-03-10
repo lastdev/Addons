@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
 local LCC = LibStub("LibClassicCasterino", true)

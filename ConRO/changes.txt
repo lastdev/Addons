@@ -1,3 +1,131 @@
+Ver 9.1.12
+	-Fixed Weapon Buff function.
+
+Ver 9.1.11
+	-Added function to better suit Warning messages.
+	-Tweaked RaidBuffs slightly.
+	-Cleaned up some notifier code.
+
+Ver 9.1.10
+	-Added pvp flag function to support arena.
+
+Ver 9.1.9
+	-Updated Ace3 Libraries again.
+
+Ver 9.1.8
+	-Added new function for EndChannel spells.
+
+Ver 9.1.7
+	-Fixed taunt color typo.
+
+Ver 9.1.6
+	-Adjusting Raid Buff code.
+	-Added KozNic Squares to icon options.
+	-Added more features to customize overlays.
+
+Ver 9.1.5
+	-Code fix for error from 9.1.4.
+
+Ver 9.1.4
+	-Slight adjustment for Low level error.
+
+Ver 9.1.3
+	-Advanced toggle button to keep settings now. Hopefully moving around zones and reloading doesn't change toggles back any longer.
+	-Took away burst default toggle and it is unnecessary now.
+	-Added Class options to choose which specializations ConRO is enabled for.
+
+Ver 9.1.2
+	-Slight tweaks for new Item Equipped function.
+
+Ver 9.1.1
+	-Created Item Equipped code that will work with legendary items fro Shadowlands.
+
+Ver 9.1.0
+	-Added Covenant, Soulbind, and Conduit functions.
+	-Overhaul AbilityReady and ItemReady functions. Minor change to code but huge change to Class modules.
+	-Added new Burst Mode and Full Mode code.
+	-Fixed Dominos Hotkey Issue.
+	-Hopefully fixed some ElvUI keybind issues.
+	-Added PowerType function to ease more code.
+	-Finally tweaked Toggle frame for easier mobility.
+	-Fixed Slashcmd for Interface menu and options /conro.
+	-Added class color to Burst and AoE buttons as the grey seemed unnecessary and confusing for some. Don't want to give the disabled feeling.
+	-Supported under level 10 better.
+	
+Ver 9.0.24
+	-More slight fixes.
+
+Ver 9.0.23
+	-More buff function fixes.
+
+Ver 9.0.22
+	-Removed Azerite code that is no longer needed.
+	-Added GroupBuffCount function.
+	-Added tooltip for Atonement feature.
+	-Tweaked Group Wide and One off buff scanners.
+
+Ver 9.0.21
+	-Adjusted Strata slightly.
+
+Ver 9.0.20
+	-Tweaked more spell find/actionbar swap issue fixes.
+
+Ver 9.0.19
+	-Upped the strata on the overlays.
+	-Added some form change support.
+
+Ver 9.0.18
+	-Fixed Target detect issue with Minion nameplates turned on. I hope.
+
+Ver 9.0.17
+	-Quick tweak.
+
+Ver 9.0.16
+	-Removed IsSpellInRange from ability check and left it to its own function.
+	-Isolated some redundant loop code in hopes to fix the stutter issue.
+
+Ver 9.0.15
+	-Fixed pet spells again, my bad.
+
+Ver 9.0.14
+	-Got rid of some unnecessary code.
+
+Ver 9.0.13
+	-Added Convanent support code.
+
+Ver 9.0.12
+	-Adjusted number of Nameplates scanned to see if this will effect Memory leaks.
+
+Ver 9.0.11
+	-Added Covanent spell support.
+	-Updated for 9.0.2.
+
+Ver 9.0.10
+	-Found item to use for Melee Range comparison.
+
+Ver 9.0.9
+	-Fixed position saving and reset buttons.
+
+Ver 9.0.8
+	-Tweaked more Item ID code.
+
+Ver 9.0.7
+	-Fixed AzeriteUI support. I wish they would stop changing there actionbar names.
+	-Added LS:UI support. Hotkeys do not lineup and I have no idea why that would be. So best to turn off atm.
+
+Ver 9.0.6
+	-Tweaking some Item code.
+
+Ver 9.0.5
+	-More coding for items within rotation. Display Windows
+
+Ver 9.0.4
+	-Recoded the ElvUI button fetch code to fix Arcane Mage Mana Gem error.
+	-May have fixed teh ElvUI hotkey errors.
+
+Ver 9.0.3
+	-Added support for Shaman weapon imbues.
+
 Ver 9.0.2
 	-Added code for characters under level 10 to help block spam.
 

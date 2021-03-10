@@ -1,3 +1,68 @@
+Ver 9.1.6
+	-Updated PvP code.
+	-Updated Warning code.
+	-Fixed Shadowcrash issue for shadow specialization.
+
+Ver 9.1.5
+	-Slight adjustment to Fae Guardians for Shadow rotation.
+	-Made more adjustments for Shadow rotation.
+		-Power Infusion
+		-Dark Thoughts triggered Mind Blasts.
+
+Ver 9.1.4
+	-Adjusted Mindgames and Unholy Nova in Discipline rotation.
+
+Ver 9.1.3
+	-Slight tweak for Atonements.
+
+Ver 9.1.2
+	-Added support for specialization disabling.
+	-Making adjustments for Atonement system for Discipline specialization. Still have issues saving.
+
+Ver 9.1.1
+	-Added Legendaries to library.
+	-Added Conduits to library.
+	-Adjusted for Mind Devourer conduit.
+	
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Added Stuns for pvp targets.
+	-Added AoE fear and knockback.
+	-Tweaked new atonement system slightly to give Atonement spells a healer icon rather than include in DPS rotation.
+	-Supported under level 10 better.
+	
+Ver 9.0.11
+	-More atonement tweaks for solo and party play.
+	-Slight code cleanup.
+
+Ver 9.0.10
+	-Added Dissonant Echoes conduit.
+	-Updated Discipline rotation and added Atonement Feature.
+	-Tweaked Void Torrent channel.
+	-Tweaked Ascended Blast precast and cooldown.
+	
+Ver 9.0.9
+	-Fixed Boon of the Asended for Shadow Priest.
+
+Ver 9.0.8
+	-Added all Covenant abilities for Shadow rotation.
+
+Ver 9.0.7
+	-Looking for Covenant code for activation.
+
+Ver 9.0.6
+	-Added in Boon of the Ascended support.
+	-Removed BFA Azerite support.
+
+Ver 9.0.5
+	-Added PvP Talent support.
+
+Ver 9.0.4
+	-Updated Discipline and Holy rotation for damage and defense.
+	-Updated Shadow defense rotation.
+
 Ver 9.0.3
 	-Found error in Damnation Talent code for Shadow rotation.
 

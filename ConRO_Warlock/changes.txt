@@ -1,3 +1,43 @@
+Ver 9.1.6
+	-Updated PvP code.
+	-Updated warning code.
+
+Ver 9.1.5
+	-Tweak to pvp flagging.
+
+Ver 9.1.4
+	-Added support for specialization disabling.
+
+Ver 9.1.3
+	-Tweaked Conflagerate in Destruction rotation slightly with roaring blaze talent.
+
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Added Conduits to library.
+
+Ver 9.1.1
+	-Fixed Absolute Corruption error I created.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.7
+	-Added Covenant abilities to rotations.
+	-Updated rotations and cleaned up code a bit.
+
+Ver 9.0.6
+	-Fixed SpellLock for all 3 rotations.
+
+Ver 9.0.5
+	-Fixed Affliction Dark Soul: Misery burst mode error.
+	-Added PvPTalent Deathbolt.
+
+Ver 9.0.4
+	-Fixed experimental range detection for Destruction rotation.
+
 Ver 9.0.3
 	-Fixed Unstable Affliction usage for PvP talent Rampant Afflictions.
 

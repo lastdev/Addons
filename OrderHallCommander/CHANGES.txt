@@ -1,0 +1,12 @@
+tag b784a1fdc36f69d9218fd3214e2deb145259adf0 1.8.7
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Sun Dec 20 20:43:46 2020 +0100
+
+Fix: lua error in mission list. Really
+
+commit e912373a213016065b6566e28c08c9e276175bb4
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Sun Dec 20 20:43:07 2020 +0100
+
+    Removed typo in fix
+

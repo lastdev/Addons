@@ -18,7 +18,6 @@ local AddonDB_Defaults = {
 		Options = {
 			RequestPlayTime = true,		-- Request play time at logon
 			HideRealPlayTime = false,	-- Hide real play time to client addons (= return 0 instead of real value)
-            HideLoginPlayTime = false,  -- Hide play time from being displayed on login
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -30,6 +29,7 @@ local AddonDB_Defaults = {
 				englishRace = nil,
 				class = nil,
 				englishClass = nil,	-- "WARRIOR", "DRUID" .. english & caps, regardless of locale
+				classID = nil,
 				faction = nil,
 				gender = nil,			-- UnitSex
 				lastLogoutTimestamp = nil,
@@ -38,8 +38,7 @@ local AddonDB_Defaults = {
 				playedThisLevel = 0,	-- /played at this level, in seconds
 				zone = nil,				-- character location
 				subZone = nil,
-                realm = nil,
-                hearthstone = nil,      -- eg: "Brill"
+				bindLocation = nil,	-- location where the hearthstone is bound to
 				
 				-- ** XP **
 				XP = nil,				-- current level xp
@@ -52,7 +51,11 @@ local AddonDB_Defaults = {
 				guildName = nil,		-- nil = not in a guild, as returned by GetGuildInfo("player")
 				guildRankName = nil,
 				guildRankIndex = nil,
-                guildServer = nil,      -- for guilds on different servers, nil if same server
+				
+				-- ** Expansion Features / 9.0 - Shadowlands **
+				renownLevel = 1,					-- Covenant Renown Level
+				activeCovenantID = 0,			-- Active Covenant ID (0 = None)
+				activeSoulbindID = 0,			-- Active Soulbind ID (0 = None)
 			}
 		}
 	}
@@ -65,11 +68,20 @@ end
 
 -- *** Scanning functions ***
 local function ScanPlayerLocation()
-	local character = addon.ThisCharacter
-	character.zone = GetRealZoneText()
-    character.realm = GetRealmName()
-	character.subZone = GetSubZoneText()
+	local char = addon.ThisCharacter
+	
+	char.zone = GetRealZoneText()
+	char.subZone = GetSubZoneText()
 end
+
+local function ScanCovenant()
+	local char = addon.ThisCharacter
+	
+	char.activeCovenantID = C_Covenants.GetActiveCovenantID()
+	char.activeSoulbindID = C_Soulbinds.GetActiveSoulbindID()
+	char.renownLevel = C_CovenantSanctumUI.GetRenownLevel()
+end
+
 
 -- *** Event Handlers ***
 local function OnPlayerGuildUpdate()
@@ -77,13 +89,12 @@ local function OnPlayerGuildUpdate()
 	-- however, the value returned here is correct
 	if IsInGuild() then
 		-- find a way to improve this, it's minor, but it's called too often at login
-		local name, rank, index, realm = GetGuildInfo("player")
+		local name, rank, index = GetGuildInfo("player")
 		if name and rank and index then
 			local character = addon.ThisCharacter
 			character.guildName = name
 			character.guildRankName = rank
 			character.guildRankIndex = index
-            character.guildRealm = realm
 		end
 	end
 end
@@ -114,18 +125,20 @@ local function OnPlayerAlive()
 	character.name = UnitName("player")		-- to simplify processing a bit, the name is saved in the table too, in addition to being part of the key
 	character.level = UnitLevel("player")
 	character.race, character.englishRace = UnitRace("player")
-	character.class, character.englishClass = UnitClass("player")
+	character.class, character.englishClass, character.classID = UnitClass("player")
 	character.gender = UnitSex("player")
-	character.faction = UnitFactionGroup("player")
+	local _, localizedFaction = UnitFactionGroup("player")
+	character.faction = localizedFaction
 	character.lastLogoutTimestamp = MAX_LOGOUT_TIMESTAMP
+	character.bindLocation = GetBindLocation()
 	character.lastUpdate = time()
-    character.hearthstone = GetBindLocation()
 	
 	OnPlayerMoney()
 	OnPlayerXPUpdate()
 	OnPlayerUpdateResting()
 	OnPlayerGuildUpdate()
 	ScanXPDisabled()
+	ScanCovenant()
 end
 
 local function OnPlayerLogout()
@@ -137,21 +150,8 @@ local function OnPlayerLevelUp(event, newLevel)
 	addon.ThisCharacter.level = newLevel
 end
 
-local function OnPlayerHearthstoneBound(event)
-    addon.ThisCharacter.hearthstone = GetBindLocation()
-end
-
--- hook ChatFrame_DisplayTimePlayed to stop it outputting the /played time if the user selects the option to hide it 
-local requestingTimePlayed = nil
-local original_ChatFrame_DisplayTimePlayed = ChatFrame_DisplayTimePlayed
-ChatFrame_DisplayTimePlayed = function(...)
-	if requestingTimePlayed then
-		requestingTimePlayed = false
-        if GetOption("HideLoginPlayTime") then
-            return
-        end
-	end
-	return original_ChatFrame_DisplayTimePlayed(...)
+local function OnHearthstoneBound(event)
+	addon.ThisCharacter.bindLocation = GetBindLocation()
 end
 
 local function OnTimePlayedMsg(event, totalTime, currentLevelTime)
@@ -159,13 +159,18 @@ local function OnTimePlayedMsg(event, totalTime, currentLevelTime)
 	addon.ThisCharacter.playedThisLevel = currentLevelTime
 end
 
+local function OnCovenantChosen()
+	ScanCovenant()
+end
+
+local function OnSanctumRenownLevelChanged()
+	ScanCovenant()
+end
+
+
 -- ** Mixins **
 local function _GetCharacterName(character)
 	return character.name
-end
-
-local function _GetCharacterRealm(character)
-    return character.realm
 end
 
 local function _GetCharacterLevel(character)
@@ -177,11 +182,10 @@ local function _GetCharacterRace(character)
 end
 
 local function _GetCharacterClass(character)
-	return character.class or "", character.englishClass or ""
+	return character.class or "", character.englishClass or "", character.classID
 end
 
 local function _GetColoredCharacterName(character)
-    if (not character.englishClass) or (not RAID_CLASS_COLORS[character.englishClass]) or (not RAID_CLASS_COLORS[character.englishClass].colorStr) then return "" end
 	return format("|c%s%s", RAID_CLASS_COLORS[character.englishClass].colorStr, character.name)
 end
 	
@@ -191,10 +195,7 @@ local function _GetCharacterClassColor(character)
 end
 
 local function _GetClassColor(class)
-	-- return just the color of for any english class
-    -- Seems to be caused by guild members in Altoholic_Guild not having full details stored?
-    -- Might be a communications issue.
-    if class == nil then return "|cFFFFFFFF" end 	
+	-- return just the color of for any english class 	
 	return format("|c%s", RAID_CLASS_COLORS[class].colorStr) or "|cFFFFFFFF"
 end
 
@@ -203,12 +204,14 @@ local function _GetCharacterFaction(character)
 end
 	
 local function _GetColoredCharacterFaction(character)
-	if character.faction == "Alliance" then
-		return "|cFF2459FF" .. FACTION_ALLIANCE
-	elseif character.faction == "Neutral" then	-- for young pandas :)
-		return "|cFF909090" .. character.faction
-	else
-		return "|cFFFF0000" .. FACTION_HORDE
+	if character.faction == FACTION_ALLIANCE then
+		return format("|cFF2459FF%s", FACTION_ALLIANCE)
+		
+	elseif character.faction == FACTION_HORDE then
+		return format("|cFFFF0000%s", FACTION_HORDE)
+		
+	else	-- for young pandas, who have a "Neutral" faction
+		return format("|cFF909090%s", character.faction)
 	end
 end
 
@@ -224,8 +227,8 @@ local function _GetMoney(character)
 	return character.money or 0
 end
 
-local function _GetHearthstone(character)
-    return character.hearthstone or ""
+local function _GetBindLocation(character)
+	return character.bindLocation or ""
 end
 
 local function _GetXP(character)
@@ -342,7 +345,7 @@ local function _IsXPDisabled(character)
 end
 	
 local function _GetGuildInfo(character)
-	return character.guildName, character.guildRankName, character.guildRankIndex, character.guildRealm
+	return character.guildName or "", character.guildRankName, character.guildRankIndex
 end
 
 local function _GetPlayTime(character)
@@ -353,12 +356,24 @@ local function _GetLocation(character)
 	return character.zone, character.subZone
 end
 
+local function _GetCovenantInfo(character)
+	return character.activeCovenantID, character.activeSoulbindID, character.renownLevel
+end
+
+local function _GetCovenantNameByID(id)
+	local data = C_Covenants.GetCovenantData(id)
+	return (data) and data.name or ""	
+end
+
+local function _GetCovenantName(character)
+	return _GetCovenantNameByID(character.activeCovenantID)
+end
+
 local PublicMethods = {
 	GetCharacterName = _GetCharacterName,
 	GetCharacterLevel = _GetCharacterLevel,
 	GetCharacterRace = _GetCharacterRace,
 	GetCharacterClass = _GetCharacterClass,
-    GetCharacterRealm = _GetCharacterRealm,
 	GetColoredCharacterName = _GetColoredCharacterName,
 	GetCharacterClassColor = _GetCharacterClassColor,
 	GetClassColor = _GetClassColor,
@@ -367,7 +382,7 @@ local PublicMethods = {
 	GetCharacterGender = _GetCharacterGender,
 	GetLastLogout = _GetLastLogout,
 	GetMoney = _GetMoney,
-    GetHearthstone = _GetHearthstone,
+	GetBindLocation = _GetBindLocation,
 	GetXP = _GetXP,
 	GetXPRate = _GetXPRate,
 	GetXPMax = _GetXPMax,
@@ -378,6 +393,9 @@ local PublicMethods = {
 	GetGuildInfo = _GetGuildInfo,
 	GetPlayTime = _GetPlayTime,
 	GetLocation = _GetLocation,
+	GetCovenantInfo = _GetCovenantInfo,
+	GetCovenantNameByID = _GetCovenantNameByID,
+	GetCovenantName = _GetCovenantName,
 }
 
 function addon:OnInitialize()
@@ -388,7 +406,6 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCharacterLevel")
 	DataStore:SetCharacterBasedMethod("GetCharacterRace")
 	DataStore:SetCharacterBasedMethod("GetCharacterClass")
-    DataStore:SetCharacterBasedMethod("GetCharacterRealm")
 	DataStore:SetCharacterBasedMethod("GetColoredCharacterName")
 	DataStore:SetCharacterBasedMethod("GetCharacterClassColor")
 	DataStore:SetCharacterBasedMethod("GetCharacterFaction")
@@ -396,7 +413,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCharacterGender")
 	DataStore:SetCharacterBasedMethod("GetLastLogout")
 	DataStore:SetCharacterBasedMethod("GetMoney")
-    DataStore:SetCharacterBasedMethod("GetHearthstone")
+	DataStore:SetCharacterBasedMethod("GetBindLocation")
 	DataStore:SetCharacterBasedMethod("GetXP")
 	DataStore:SetCharacterBasedMethod("GetXPRate")
 	DataStore:SetCharacterBasedMethod("GetXPMax")
@@ -407,6 +424,8 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetGuildInfo")
 	DataStore:SetCharacterBasedMethod("GetPlayTime")
 	DataStore:SetCharacterBasedMethod("GetLocation")
+	DataStore:SetCharacterBasedMethod("GetCovenantInfo")
+	DataStore:SetCharacterBasedMethod("GetCovenantName")
 end
 
 function addon:OnEnable()
@@ -416,7 +435,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_MONEY", OnPlayerMoney)
 	addon:RegisterEvent("PLAYER_XP_UPDATE", OnPlayerXPUpdate)
 	addon:RegisterEvent("PLAYER_UPDATE_RESTING", OnPlayerUpdateResting)
-    addon:RegisterEvent("HEARTHSTONE_BOUND", OnPlayerHearthstoneBound)
+	addon:RegisterEvent("HEARTHSTONE_BOUND", OnHearthstoneBound)
 	addon:RegisterEvent("ENABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("DISABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("PLAYER_GUILD_UPDATE", OnPlayerGuildUpdate)				-- for gkick, gquit, etc..
@@ -424,11 +443,12 @@ function addon:OnEnable()
 	addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", ScanPlayerLocation)
 	addon:RegisterEvent("ZONE_CHANGED_INDOORS", ScanPlayerLocation)
 	addon:RegisterEvent("TIME_PLAYED_MSG", OnTimePlayedMsg)					-- register the event if RequestTimePlayed is not called afterwards. If another addon calls it, we want to get the data anyway.
-    
+	addon:RegisterEvent("COVENANT_CHOSEN", OnCovenantChosen)
+	addon:RegisterEvent("COVENANT_SANCTUM_RENOWN_LEVEL_CHANGED", OnSanctumRenownLevelChanged)
+	
 	addon:SetupOptions()
 	
 	if GetOption("RequestPlayTime") then
-        requestingTimePlayed = true
 		RequestTimePlayed()	-- trigger a TIME_PLAYED_MSG event
 	end
 end
@@ -438,7 +458,6 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_LOGOUT")
 	addon:UnregisterEvent("PLAYER_LEVEL_UP")
 	addon:UnregisterEvent("PLAYER_MONEY")
-    addon:UnregisterEvent("HEARTHSTONE_BOUND")
 	addon:UnregisterEvent("PLAYER_XP_UPDATE")
 	addon:UnregisterEvent("PLAYER_UPDATE_RESTING")
 	addon:UnregisterEvent("ENABLE_XP_GAIN")
@@ -448,4 +467,5 @@ function addon:OnDisable()
 	addon:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 	addon:UnregisterEvent("ZONE_CHANGED_INDOORS")
 	addon:UnregisterEvent("TIME_PLAYED_MSG")
+	addon:UnregisterEvent("COVENANT_SANCTUM_RENOWN_LEVEL_CHANGED")
 end

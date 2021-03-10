@@ -1,12 +1,17 @@
-# <DBM> Draenor
+# <DBM> World Bosses (WoD)
 
-## [r52](https://github.com/DeadlyBossMods/DBM-WoD/tree/r52) (2020-10-13)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r51...r52) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r54](https://github.com/DeadlyBossMods/DBM-WoD/tree/r54) (2021-03-09)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r53...r54) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- Bump TOCS  
-- Merge pull request #2 from DeadlyBossMods/stats  
-    MinExpansion  
-- MinExpansion  
-- Merge pull request #1 from DeadlyBossMods/stats  
-- Forgot lfr  
-- stats  
+- TOC Bump  
+- Localized mod names in Russian (#6)  
+- Fixed/Updated Istrivial checks to use cores built in checks instead of hard coded (and incorrect) pre squish levels  
+- LuaCheck cleanup (#5)  
+- Merge pull request #4 from DeadlyBossMods/ci  
+    Ci sync from master  
+- Ci sync from master  
+- Update CI  
+- Update README.md  
+- Delete .travis.yml  
+- Create ci.yml  
+- Minor code improvement  

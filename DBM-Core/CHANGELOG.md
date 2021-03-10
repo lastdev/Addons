@@ -1,21 +1,34 @@
 # Deadly Boss Mods Core
 
-## [9.0.2](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.0.2) (2020-10-20)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.0.1...9.0.2) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [9.0.22](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.0.22) (2021-03-09)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.0.21...9.0.22) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- prep new release  
-- Finish the unfinished stuff in Sanguine Dsepths  
-- Update version check  
-- Missed one replaccement  
-- Reworked Council of Blood mod with changes from latest build. A lot of abilities removed and added, therefor status of this mod has been changed from done back to bet since it needs to be retested  
-    Fixed a missed nameplate line usage on ghuun (was harmless but injected extra args and table for no reason)  
-- Code cleanup and security improvements on TimerTracker handling to prevent abuse (accidental or intentional) that would cause BG or M+ timer objects started by blizzard to break. Now, if an M+ or PvP timer already exists, pull timers from DBM will no longer start TimerTracker countdown objects.  
-     - In addition, another update was made to fix a niche condition for M+ where players like to do a 10 second pull timer first before activating keystone, and then after loading screen Obviously blizzard starts their own M+ timer. Blizzard added a conditional to TimerTracker code on their end that says "if a timer is already running, don't start another one". This was causing M+ blizzard timer not to activate correctly if even a fraction of a second was left on DBMs pull timer when keystone was activated. Now, any time a loading screen is triggered, DBM will wipe out TimerTracker objects that have countdown type to ensure that when blizzard runs their type 2 timer (M+), "already running" abort conditionn would be false.  
-- Es update  
-- Fixed regression to RU translations that caused them to completely erase english tables instead of doing table replacements. This was causing lua errors or missing auto translations on warnings/timers that weren't yet translated into Russian  
-- We can fix PvP timers, right? :P (#369)  
-    All timers are handled via PvPGeneral mod.  
-    Any which aren't (e.g. silvershard mines), use math rather than events to calculate their time, so don't need a resync.  
-- Fix #367 (#368)  
-- Forgot to bump version for next alpha cycle  
-- Some short term changes to TimerTracker handling in PT to reducce chance of taint as well as change to type 3 so texture overwriting no longer required. This will likely be changed up again in future to possibly migrate to blizzards countdown timer once it is able to accomidate some needs  
+- Fixed a bug where AddMsg would fail to read chatframe setting when AddMsg is called by a mod and not core. Self would inherit the wrong parent.  
+    bump version  
+- TOC Bump  
+- Disabled Xira's ability, per hottfixes  
+- no changes, just removed obsolete comment  
+- Added user request, dreadbindings in sanguine depths  
+- restore backup method for volatile ejection, CLEU not consistent  
+- went over cap, revert this  
+- Fix typo  
+- Fixes to last to actually do what was intended  
+- Allow CreatePizzaTimer object to be called with "whisper" arg by external modders using function to unicast timers. Also allows DBM to accept pizza timers sent this way via whisper sync handler.  
+- Update koKR (#518)  
+- Missed some schedules  
+- Save cpu on hungering destroyer by using new hotfixed events and no longer rely on cpu heavier spell\_damage and scheduling  
+    Also moved volatile to combat log events so it no longer relies on victims running boss mods for them to get marked  
+- Fix Lua exception (#517)  
+    Bad table entry, reported by user :)  
+- Clear paused status on a bar when :Start or :Stop is called on a timer object. Start should always clear previous status of timer.  
+- Add new test condition  
+- Update README.md  
+- Update README.md  
+- Forgot these  
+- tiny bit of post tier cleanup  
+- Fix  
+- updated timer recovery to send paused bar status. This will fix a bug where a user reloading bars they think are "stuck" won't ACTUALLY break them for real when recovery gets them back.  
+    Changed sync handler for it to avoid out of date syncs also messing it up that don't have paused status.  
+- tweak last  
+- Maybe this will fix bar errors. bar frame names will now generate unique integer EVERY SINGLE COMMIT. Shouldn't break DBMs bar handling but should make it an utter NIGHTMARE for anyone trying to modify them. Hate having to ruin 3rd party skinning like this, but if it's breaking DBM it has to come to a stop.  
+- bump alpha  

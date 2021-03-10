@@ -1,9 +1,9 @@
-## Interface: 90001
+## Interface: 90002
 #@non-debug@
 ## Title: HandyNotes - Broken Shore
 ## Title-deDE: HandyNotes - Verheerte Küste
 ## Title-esES: HandyNotes - Costa Abrupta
-## Title-frFR: Titre
+## Title-frFR: HandyNotes - Rivage Brisé
 ## Title-koKR: HandyNotes - 부서진 해변
 ## Title-ptBR: HandyNotes - Costa Partida
 ## Title-ruRU: HandyNotes - Расколотый берег
@@ -28,12 +28,12 @@
 # ## Notes-zhTW: 顯示破碎海岸的 POI 位置
 #@end-debug@
 ## Author: arith
-## Version: v1.37
+## Version: v1.39
 ## RequiredDeps: HandyNotes
 ## OptionalDeps: LibBabble-SubZone-3.0, !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_BrokenShoreDB
-## X-Date: 2020-10-21T15:14:38Z
+## X-Date: 2020-11-22T15:46:09Z
 ## X-License: GPLv2
 ## X-Category: Map
 

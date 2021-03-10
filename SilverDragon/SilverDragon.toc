@@ -1,17 +1,17 @@
-﻿## Interface: 90001
+﻿## Interface: 90005
 ## Title: SilverDragon
 ## Notes: Remember where rares were
 ## Title-zhTW: SilverDragon
 ## Notes-zhTW: 協助記錄稀有怪位置,以及MouseOver時提示你.
 ## Notes-zhCN: 记录稀有怪物位置。
-## Version: v90001.3
+## Version: v90005.0
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements
 ## X-Donate: PayPal:kemayo AT gmail DOT com
 ## X-Curse-Project-ID: 14647
 ## X-WoWI-ID: 6606
-## OptionalDependencies: Ace3, LibSharedMedia-3.0, HandyNotes, TomTom, _NPCScan.Overlay, LibSink-2.0, LibQTip-1.0, LibDBIcon-1.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons, LibTextDump-1.0
+## OptionalDependencies: Ace3, LibSharedMedia-3.0, TomTom, LibSink-2.0, LibQTip-1.0, LibDBIcon-1.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons, LibTextDump-1.0, LibWindow-1.1
 ## SavedVariables: SilverDragon3DB,SilverDragon2DB
 ## LoadOnDemand: 0
 
@@ -22,8 +22,10 @@ embeds.xml
 # the core
 core.lua
 achievements.lua
+loot.lua
 slash.lua
 config.lua
+util.lua
 
 scan\targets.lua
 scan\macro.lua
@@ -37,16 +39,14 @@ outputs\announce.lua
 outputs\sync.lua
 outputs\marker.lua
 
-outputs\vignettes.lua
-outputs\vignettes.xml
-
 targets\module.lua
+targets\queue.lua
 targets\popup.lua
+targets\config.lua
 targets\looks\looks.xml
 
 mobs.lua
 
 # working with other addons
-integration\handynotes.lua
 integration\tomtom.lua
 

@@ -1,5 +1,5 @@
 
-Reagent Banker v1.0.2
+Reagent Banker v1.1.0
 ==============================
 
 Author: Tuhljin
@@ -14,6 +14,10 @@ Reagent Banker simplifies usage of the Reagent Bank. It is easy to use yet highl
 
 Change log
 ==========
+
+v1.1.0
+- Updated for WoW patch 9.0.2.
+- Attempt to fix an intermittent problem where items already in the reagent bank are reported in the chat log as newly deposited.
 
 v1.0.2
 - Improve compatibility with addons that change bank display, such as Bagnon.

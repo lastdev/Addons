@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = GetAddOnMetadata("Altoholic", "Version")
-if addon.Version == "\064project-version\064" then addon.Version = "Developer" end
+addon.Version = "v9.0.007"
+addon.VersionNum = 900007
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -50,7 +50,6 @@ local AddonDB_Defaults = {
 		Guilds = {
 			['*'] = {			-- ["Account.Realm.Name"] 
 				hideInTooltip = nil,		-- true if this guild should not be shown in the tooltip counters
-                showGuildRealmInTooltip = nil, -- true if this guild's realm name should be shown in the tooltip counters
 			},
 		},
 		Characters = {
@@ -86,8 +85,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Summary.SortAscending"] = true,							-- ascending or descending sort order
 			["UI.Tabs.Summary.ShowLevelDecimals"] = true,					-- display character level with decimals or not
 			["UI.Tabs.Summary.ShowILevelDecimals"] = true,					-- display character level with decimals or not
-            --["UI.Tabs.Summary.ExcludeRealms.<Account>.<Realm>"] = true
-            ["UI.Tabs.Summary.ShowLevelTotalAverage"] = nil,                -- Display level totals as their average instead
+			["UI.Tabs.Summary.ShowGuildRank"] = false,						-- display the guild rank or the guild name
 			
 			-- ** Character tab options **
 			["UI.Tabs.Characters.ViewBags"] = true,
@@ -107,7 +105,6 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Search.IncludeMailboxItems"] = true,
 			["UI.Tabs.Search.IncludeGuildBankItems"] = true,
 			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
-            ["UI.Tabs.Search.IncludeAuctionHouseListings"] = true,
 			["UI.Tabs.Search.SortAscending"] = true,							-- ascending or descending sort order
 			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
 			UnknownLoots = 0,
@@ -133,12 +130,10 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Garrisons.CurrentStats"] = 1,					-- Current stats (abilities = 1, traits = 2, counters = 3)
 			["UI.Tabs.Grids.Sets.IncludePVE"] = true,							-- Include PVE Sets
 			["UI.Tabs.Grids.Sets.IncludePVP"] = true,							-- Include PVP Sets
-			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack
-            ["UI.Tabs.Grids.Rares.CurrentRareSet"] = "ArathiWarfront",
-            ["UI.Tabs.Grids.Tasks.Profile1Name"] = "Profile 1",
-            ["UI.Tabs.Grids.Tasks.MaxProfiles"] = 5,
-            ["UI.Tabs.Grids.Tasks.SelectedProfile"] = 1,
-            ["UI.Tabs.Grids.CurrentAccountRealmScope"] = "Realm", -- whether to default to current account or current realm 
+			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack 
+			["UI.Tabs.Grids.Emissaries.ShowXPack6"] = true,					-- Show Legion Emissaries
+			["UI.Tabs.Grids.Emissaries.ShowXPack7"] = true,					-- Show BfA Emissaries
+			["UI.Tabs.Grids.Emissaries.ShowXPack8"] = true,					-- Show Shadowlands Emissaries
 
 			-- ** Tooltip options **
 			["UI.Tooltip.ShowItemSource"] = true,
@@ -150,19 +145,11 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowGatheringNodesCount"] = true,		-- display counters when mousing over a gathering node (default:  on)
 			["UI.Tooltip.ShowCrossFactionCount"] = true,			-- display counters for both factions on a pve server
 			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
-            ["UI.Tooltip.ShowAllRealmsCount"] = false,               -- display counters for characters on all realms
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
+			["UI.Tooltip.ShowHearthstoneCount"] = true,			-- display hearthstone counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
 			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
-            ["UI.Tooltip.HideHearthstoneCounters"] = false,
-            ["UI.Tooltip.HiddenHearthstones"] = {
-                        [6948] = true, -- Hearthstone
-                        [71634] = true, -- Darkmoon Adventurer's Guide
-                        [110560] = true, -- Garrison Hearthstone
-                        [140192] = true, -- Dalaran Hearthstone
-                        [141605] = true, -- Flight Master's Whistle
-                    },
 			
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts
@@ -176,7 +163,7 @@ local AddonDB_Defaults = {
 			["UI.Minimap.IconRadius"] = 78,
 			
 			-- ** Calendar options **
-			["UI.Calendar.WarningsDisabled"] = false,
+			["UI.Calendar.WarningsEnabled"] = true,
 			["UI.Calendar.UseDialogBoxForWarnings"] = false,	-- use a dialog box for warnings (true), or default chat frame (false)
 			["UI.Calendar.WeekStartsOnMonday"] = false,
 
@@ -197,10 +184,6 @@ local AddonDB_Defaults = {
 		},
 	}
 }
-
-for i = 2, AddonDB_Defaults.global.options["UI.Tabs.Grids.Tasks.MaxProfiles"] do
-    AddonDB_Defaults.global.options["UI.Tabs.Grids.Tasks.Profile"..i.."Name"] = "Profile " .. i
-end
 
 addon.Colors = {
 	white	= "|cFFFFFFFF",
@@ -248,6 +231,16 @@ addon.Icons = {
 	Neutral = "Interface\\Icons\\Achievement_character_pandaren_female",
 }
 
+-- Place Enums in a separate file when there are enough to justify it
+addon.Enum = {
+	ArmorTypes = {
+		[1] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_CLOTH),			-- "Cloth"
+		[2] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_LEATHER),		-- "Leather"
+		[3] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_MAIL),			-- "Mail"
+		[4] = GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, LE_ITEM_ARMOR_PLATE)			-- "Plate"
+	}
+}
+
 -- ** LDB Launcher **
 LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
 	type = "launcher",
@@ -257,9 +250,6 @@ LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
 	end,
 	text = (Broker2FuBar) and addonName or nil,		-- only for fubar,  not for ldb
 	label = addonName,
-    OnTooltipShow = function(GameTooltip)
-        GameTooltip:SetText("Altoholic")
-    end,
 })
 
 
@@ -308,9 +298,7 @@ local GuildCommCallbacks = {
 	[MSG_VERSION_REPLY] = OnVersionReply,
 }
 
-local tabList = {}
-
-function addon:OnInitialize()    
+function addon:OnInitialize()
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
 
@@ -380,6 +368,20 @@ addon.TradeSkills = {
 }
 
 -- ** Tabs **
+local tabList = {
+	"Summary",
+	"Characters",
+	"Search",
+	"Guild",
+	"Achievements",
+	"Agenda",
+	"Grids",
+}
+
+local frameToID = {}
+for index, name in ipairs(tabList) do
+	frameToID[name] = index
+end
 
 local function SafeLoadAddOn(name)
 	if not IsAddOnLoaded(name) then
@@ -391,7 +393,6 @@ local function ShowTab(name)
 	local tab = _G[addonName.."Tab" .. name]
 	if tab then
 		tab:Show()
-        AltoholicFrame:TriggerResizeEvents()
 	end
 end
 
@@ -411,12 +412,6 @@ function addon.Tabs:HideAll()
 end
 
 function addon.Tabs:OnClick(index)
-    tabList = addon:GetEnglishTabList()
-    local frameToID = {}
-    for i, name in ipairs(tabList) do
-	   frameToID[name] = i
-    end
-
 	if type(index) == "string" then
 		index = frameToID[index]
 	end
@@ -425,12 +420,13 @@ function addon.Tabs:OnClick(index)
 	self:HideAll()
 	self.current = index
 	
-	if index >= 1 and index <= addon:GetNumTotalTabs() then
+	if index >= 1 and index <= 7 then
 		local moduleName = format("%s_%s", addonName, tabList[index])
 		SafeLoadAddOn(moduleName)		-- make this part a bit more generic once we'll have more LoD parts
 		
 		local parentLevel = AltoholicFrame:GetFrameLevel()
 		local childName = format("%sTab%s", addonName, tabList[index])
+
 		local tabFrame = _G[ childName ]
 		
 		if tabFrame then
@@ -440,8 +436,7 @@ function addon.Tabs:OnClick(index)
 				tabFrame:SetFrameLevel(parentLevel+1)
 			end
 		else
-			-- Now that tabs are added dynamically, the code should never get here anymore
-            addon:Print(format("%s is disabled.", moduleName))
+			addon:Print(format("%s is disabled.", moduleName))
 		end
 	end
 	

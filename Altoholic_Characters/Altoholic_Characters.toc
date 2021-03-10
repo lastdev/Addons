@@ -1,9 +1,9 @@
-## Interface: 90001
+﻿## Interface: 90002
 ## Title: Altoholic_Characters
 ## Notes: Altoholic's Characters UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.0.1-024
-## Dependencies: Altoholic, DataStore, DataStore_Characters, DataStore_Containers
+## Version: r198
+## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
 
@@ -19,3 +19,7 @@ Frames\Recipes.xml
 Frames\Spellbook.xml
 Frames\Talents.xml
 Frames\Garrisons.xml
+Frames\Covenants_Renown.xml
+Frames\Covenants_Reservoir.xml
+Frames\Covenants_Soulbinds.xml
+

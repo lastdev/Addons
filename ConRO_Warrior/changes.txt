@@ -1,3 +1,66 @@
+Ver 9.1.11
+	-Updated PvP code.
+
+Ver 9.1.10
+	-Added support for specialization disabling.
+
+Ver 9.1.9
+	-Siegebreaker Rage tweak.
+
+Ver 9.1.8
+	-Tweak for Death Maker legendary in Fury rotation.
+
+Ver 9.1.7
+	-Couple of tweaks to help support leggos.
+
+Ver 9.1.6
+	-Added one last tweak tonight for Siegebreaker and Rampage. Thanks to Hahachas for staying up late and testing with me. Happy New Year.
+
+Ver 9.1.5
+	-Tweak
+
+Ver 9.1.4
+	-Added Conduits to library.
+	-Tweaked Fury opener and rampage slightly. Thank you hahachas.
+
+Ver 9.1.3
+	-Tweaked Siegebreaker more. Thank you hahachas.
+
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Tweaked Siegebreaker. Thank you hahachas.
+
+Ver 9.1.1
+	-Reverted a change with Shockwave trying out. Doesnt play well.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.8
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.7
+	-Fixed typo with Condemn for Arms rotation.
+
+Ver 9.0.6
+	-Slight fix to venthyr error.
+
+Ver 9.0.5
+	-Added Covenant abilities to all rotations.
+
+Ver 9.0.4
+	-Tweaked Arms rotation for Mortal Strike and Sweeping Strikes usage.
+
+Ver 9.0.3
+	-Added in Bloodbath and Crushing Blow for when the talent Reckless Abandon is chosen in fury rotation.
+
+Ver 9.0.2
+	-Updated Protection rotation for prepatch. Removed the toggles due to lack of major differences in rotations.
+	-Added ignore pain to Fury and Arms Defensives.
+
 Ver 9.0.1
 	-Updated Arms and Fury rotations for prepatch.
 

@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: Simple Taunt Announce Config
 ## Notes: Configuration panel for STA
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)

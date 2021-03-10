@@ -1,14 +1,12 @@
 -- HereBeDragons-Pins is a library to show pins/icons on the world map and minimap
 
-local MAJOR, MINOR = "HereBeDragons-Pins-2.0", 8
+local MAJOR, MINOR = "HereBeDragons-Pins-2.0", 7
 assert(LibStub, MAJOR .. " requires LibStub")
 
 local pins, _oldversion = LibStub:NewLibrary(MAJOR, MINOR)
 if not pins then return end
 
 local HBD = LibStub("HereBeDragons-2.0")
-
-local WoW90 = select(4, GetBuildInfo()) >= 90000
 
 pins.updateFrame          = pins.updateFrame or CreateFrame("Frame")
 
@@ -216,13 +214,9 @@ local function UpdateMinimapPins(force)
     if x ~= lastXY or y ~= lastYY or diffZoom or facing ~= lastFacing or force then
         -- minimap information
         minimapShape = GetMinimapShape and minimap_shapes[GetMinimapShape() or "ROUND"]
+        mapRadius = minimap_size[indoors][zoom] / 2
         minimapWidth = pins.Minimap:GetWidth() / 2
         minimapHeight = pins.Minimap:GetHeight() / 2
-        if WoW90 then
-            mapRadius = C_Minimap.GetViewRadius()
-        else
-            mapRadius = minimap_size[indoors][zoom] / 2
-        end
 
         -- update upvalues for icon placement
         lastZoom = zoom
@@ -295,11 +289,7 @@ local function UpdateMinimapIconPosition()
 
     if x ~= lastXY or y ~= lastYY or facing ~= lastFacing or refresh then
         -- update radius of the map
-        if WoW90 then
-            mapRadius = C_Minimap.GetViewRadius()
-        else
-            mapRadius = minimap_size[indoors][zoom] / 2
-        end
+        mapRadius = minimap_size[indoors][zoom] / 2
         -- update upvalues for icon placement
         lastXY, lastYY = x, y
         lastFacing = facing
@@ -318,14 +308,12 @@ local function UpdateMinimapIconPosition()
 end
 
 local function UpdateMinimapZoom()
-    if not WoW90 then
-        local zoom = pins.Minimap:GetZoom()
-        if GetCVar("minimapZoom") == GetCVar("minimapInsideZoom") then
-            pins.Minimap:SetZoom(zoom < 2 and zoom + 1 or zoom - 1)
-        end
-        indoors = GetCVar("minimapZoom")+0 == pins.Minimap:GetZoom() and "outdoor" or "indoor"
-        pins.Minimap:SetZoom(zoom)
+    local zoom = pins.Minimap:GetZoom()
+    if GetCVar("minimapZoom") == GetCVar("minimapInsideZoom") then
+        pins.Minimap:SetZoom(zoom < 2 and zoom + 1 or zoom - 1)
     end
+    indoors = GetCVar("minimapZoom")+0 == pins.Minimap:GetZoom() and "outdoor" or "indoor"
+    pins.Minimap:SetZoom(zoom)
 end
 
 -------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90005
 ## Title: oRA3
 ## Notes: Raid and Party Assist
 ## Notes-zhCN: Raid and Party Assist
@@ -11,7 +11,7 @@
 ## Notes-ptBR: Raid and Party Assist
 ## Notes-esES: Raid and Party Assist
 ## Notes-esMX: Raid and Party Assist
-## Version: v9.0.6
+## Version: v9.0.15
 ## Author: Funkydude, Nebula
 
 ## X-Credits: Cladhaire, Ammo, Rabbit

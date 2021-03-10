@@ -4,7 +4,7 @@
 
   Information on all your mounts.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -21,11 +21,11 @@ local MOUNT_SPELLS = {
     { "RunningWild", LM.SPELL.RUNNING_WILD },
     { "GhostWolf", LM.SPELL.GHOST_WOLF, 'WALK' },
     { "TravelForm", LM.SPELL.TRAVEL_FORM, 'RUN', 'FLY', 'SWIM' },
-    { "TravelForm", LM.SPELL.FLIGHT_FORM, 'FLY' },
-    { "TravelForm", LM.SPELL.STAG_FORM, 'RUN' },
+--  { "TravelForm", LM.SPELL.FLIGHT_FORM, 'FLY' },
+    { "TravelForm", LM.SPELL.MOUNT_FORM, 'RUN' },
     { "Nagrand", LM.SPELL.FROSTWOLF_WAR_WOLF, 'Horde', 'RUN' },
     { "Nagrand", LM.SPELL.TELAARI_TALBUK, 'Alliance', 'RUN' },
-    { "Soulshape", LM.SPELL.SOULSHAPE, 'WALK' },
+--  { "Soulshape", LM.SPELL.SOULSHAPE, 'WALK' },
     { "ItemSummoned",
         LM.ITEM.LOANED_GRYPHON_REINS, LM.SPELL.LOANED_GRYPHON, 'FLY' },
     { "ItemSummoned",
@@ -44,6 +44,12 @@ local MOUNT_SPELLS = {
         LM.ITEM.RUBY_QIRAJI_RESONATING_CRYSTAL, LM.SPELL.RED_QIRAJI_WAR_TANK, 'RUN', },
     { "ItemSummoned",
         LM.ITEM.DRAGONWRATH_TARECGOSAS_REST, LM.SPELL.TARECGOSAS_VISAGE, 'FLY' },
+    { "ItemSummoned",
+        LM.ITEM.MAWRAT_HARNESS, LM.SPELL.MAWRAT_HARNESS, 'RUN' },
+    { "ItemSummoned",
+        LM.ITEM.SPECTRAL_BRIDLE, LM.SPELL.SPECTRAL_BRIDLE, 'RUN' },
+    { "ItemSummoned",
+        LM.ITEM.DEADSOUL_HOUND_HARNESS, LM.SPELL.DEADSOUL_HOUND_HARNESS, 'RUN' },
 }
 
 local RefreshEvents = {
@@ -132,6 +138,13 @@ function LM.PlayerMounts:FilterSearch(...)
     return self.mounts:FilterSearch(...)
 end
 
+-- Limits can be filter (no prefix), set (=), reduce (-) or extend (+).
+
+function LM.PlayerMounts:Limit(...)
+    return self.mounts:Limit(...)
+end
+
+
 -- This is deliberately by spell name instead of using the
 -- spell ID because there are some horde/alliance mounts with
 -- the same name but different spells.
@@ -148,7 +161,18 @@ function LM.PlayerMounts:GetMountFromUnitAura(unitid)
 end
 
 function LM.PlayerMounts:GetActiveMount()
-    return self:GetMountFromUnitAura('player')
+    local buffIDs = { }
+    local i = 1
+    while true do
+        local id = select(10, UnitAura('player', i))
+        if id then buffIDs[id] = true else break end
+        i = i + 1
+    end
+    for _,m in pairs(self.mounts) do
+        if m:IsActive(buffIDs) then
+            return m
+        end
+    end
 end
 
 function LM.PlayerMounts:GetMountByName(name)
@@ -173,3 +197,56 @@ function LM.PlayerMounts:GetMountByShapeshiftForm(i)
         if spellID then return self:GetMountBySpell(spellID) end
     end
 end
+
+local function IsRightFaction(info)
+    if not info[9] then
+        return true
+    end
+    local faction = UnitFactionGroup('player')
+    local fnum = PLAYER_FACTION_GROUP[faction]
+    if info[9] == fnum then
+        return true
+    end
+end
+
+-- Paladin level 20/40 mounts and felsaber are only counted if actually usable.
+-- Everything else is counted if you're the right faction, irrespective of
+-- whether you can mount up on it. This makes no sense at all.
+
+local notCounted = {
+    [367]   = true,     -- Exarch's Elekk
+    [368]   = true,     -- Great Exarch's Elekk
+    [1046]  = true,     -- Darkforge Ram
+    [1047]  = true,     -- Dawnforge Ram
+    [350]   = true,     -- Sunwalker Kodo
+    [351]   = true,     -- Great Sunwalker Kodo
+    [149]   = true,     -- Thalassian Charger
+    [150]   = true,     -- Thalassian Warhorse
+    [1225]  = true,     -- Crusader's Direhorn
+    [780]   = true,     -- Felsaber
+}
+
+local function IsCounted(info)
+    if notCounted[info[12]] then
+        return info[4]
+    else
+        return true
+    end
+end
+
+function LM.PlayerMounts:GetJournalTotals()
+    local c = { total=0, collected=0, usable=0 }
+
+    for _,id in ipairs(C_MountJournal.GetMountIDs()) do
+        local info = { C_MountJournal.GetMountInfoByID(id) }
+        c.total = c.total + 1
+        if info[11] and not info[10] then
+            c.collected = c.collected + 1
+            if IsRightFaction(info) and IsCounted(info) then
+                c.usable = c.usable + 1
+            end
+        end
+    end
+    return c
+end
+

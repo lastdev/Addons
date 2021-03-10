@@ -1,8 +1,8 @@
-## Interface: 90001
+﻿## Interface: 90002
 ## Title: Altoholic_Grids
 ## Notes: Altoholic's Grids Tab
-## Author: Thaoky + Teelo
-## Version: 9.0.1-024
+## Author: Thaoky (EU-Marécages de Zangar)
+## Version: r198
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
@@ -10,7 +10,6 @@
 Templates\UITemplates.xml
 TabGrids.xml
 Grids.xml
-Frames\TasksOptions.xml
 
 Data\FactionLeveling_deDE.lua
 Data\FactionLeveling_enUS.lua

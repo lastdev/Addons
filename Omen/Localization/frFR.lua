@@ -15,8 +15,7 @@ L["A collection of help pages"] = "Une série de pages d'aide."
 L["Alpha"] = "Transparence"
 L["Always Show Self"] = "Tj afficher soi-même"
 L["Always show your threat bar on Omen (ignores class filter settings), showing your bar on the last row if necessary"] = "Affiche toujours votre barre de menace sur Omen (ignore les paramètres de filtrage des classes), sur la dernière ligne si cela est nécessaire."
---[[Translation missing --]]
---[[ L["Ambience"] = "Ambience"--]] 
+L["Ambience"] = "ambiance"
 L["Animate Bars"] = "Barres animées"
 L["Attach to minimap"] = "Attacher à la minicarte"
 L["AUTO_SHOW/HIDE_NOTE"] = "Note : si vous affichez/masquez Omen manuellement, ce dernier restera affiché ou masqué sans se soucier des paramètres de Afficher/cacher auto. tant que vous n'avez pas changé de zone, rejoint ou quitté un groupe ou un raid, ou changer un des paramètres de Afficher/masquer auto."
@@ -55,8 +54,7 @@ L["Controls the scaling of the main Omen window."] = "Contrôle l'échelle de la
 L["Controls the transparency of the main Omen window."] = "Contrôle la transparence de la fenêtre principale de Omen."
 L["Controls whether the main Omen window can be dragged offscreen"] = "Contrôle si la fenêtre principale de Omen peut être déplacée hors-écran."
 L["DEATHKNIGHT"] = "Chevalier de la mort"
---[[Translation missing --]]
---[[ L["DEMONHUNTER"] = "Demon Hunter"--]] 
+L["DEMONHUNTER"] = "Chasseur de démon"
 L["Disable while tanking"] = "Désactiver en tankant"
 L["DISABLE_WHILE_TANKING_DESC"] = "Ne donne aucun avertissement si vous êtes en posture défensive, en forme d'ours, sous fureur vertueuse ou en présence de sang."
 L["Display large numbers in Ks"] = "Affiche les grands nombres en milliers."
@@ -164,8 +162,7 @@ L["Lock Omen"] = "Verrouiller Omen"
 L["Locks Omen in place and prevents it from being dragged or resized."] = "Verrouille Omen afin d'empêcher tout déplacement ou redimensionnement de la fenêtre."
 L["MAGE"] = "Mage"
 L["Makes the Omen window non-interactive"] = "Rend la fenêtre d'Omen non-interactive."
---[[Translation missing --]]
---[[ L["Master"] = "Master"--]] 
+L["Master"] = "Maitre"
 L["Max bars to show"] = "Nombre max. de barres"
 L["Max number of bars to show"] = "Détermine le nombre maximal de barres à afficher."
 L["Music"] = "Musique"
@@ -224,8 +221,7 @@ L["Show When..."] = "Afficher quand…"
 L["SHOW_CLASSES_DESC"] = "Affiche les barres de menace de Omen pour les classes suivantes. Les classes mentionnées ici se réfèrent uniquement aux personnes présentes dans votre groupe/raid, à l'exception de l'option 'Pas dans le groupe'."
 L["Slash Command"] = "Commande slash"
 L["Smoothly animate bar changes"] = "Anime de façon fluide les variations des barres."
---[[Translation missing --]]
---[[ L["Sound Channel"] = "Sound Channel"--]] 
+L["Sound Channel"] = "Canal audio"
 L["Sound to play"] = "Son à jouer"
 L["Spacing between each bar"] = "Espacement entre chaque barre."
 L["Switch the colors so that the bar background colors and the text colors are swapped."] = "Permute les couleurs afin que les couleurs de l'arrière-plan des barres et les couleurs du texte soient inversées."

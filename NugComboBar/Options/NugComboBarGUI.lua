@@ -194,8 +194,8 @@ do
                                 end
                             end
                         end,
-                        min = -150,
-                        max = 150,
+                        min = -250,
+                        max = 250,
                         step = 1,
                         order = 3.2,
                     },
@@ -261,8 +261,7 @@ do
                     },
                     secondLayer = {
                         name = L"Second Layer",
-                        desc = L"For Anticipation talent",
-                        disabled = true,
+                        desc = L"Used for Maelstrom / Echoing Reprimand",
                         type = "toggle",
                         get = function(info) return NugComboBar.db.profile.secondLayer end,
                         set = function(info, s) NugComboBar.Commands.secondlayer() end,
@@ -296,6 +295,13 @@ do
                         get = function(info) return NugComboBar.db.profile.cooldownOnTop end,
                         set = function(info, s) NugComboBar.db.profile.cooldownOnTop = not NugComboBar.db.profile.cooldownOnTop end,
                         order = 12.55,
+                    },
+                    enableFullColor = {
+                        name = L"Recolor when Full",
+                        type = "toggle",
+                        get = function(info) return NugComboBar.db.profile.enableFullColor end,
+                        set = function(info, s) NugComboBar.db.profile.enableFullColor = not NugComboBar.db.profile.enableFullColor end,
+                        order = 12.57,
                     },
                     animationLevel = {
                         name = L"Animation Level",
@@ -468,6 +474,20 @@ do
                             for i=1,6 do
                                 NugComboBar.SetColor(i,r,g,b)
                             end
+                        end,
+                    },
+                    fullColor = {
+                        name = "Full Color",
+                        type = 'color',
+                        disabled = function() return not NugComboBar.db.profile.enableFullColor end,
+                        order = 7.1,
+                        -- desc = "Color of all Points",
+                        get = function(info)
+                            local r,g,b = unpack(NugComboBar.db.profile.colors["full"])
+                            return r,g,b
+                        end,
+                        set = function(info, r, g, b)
+                            NugComboBar.SetColor("full",r,g,b)
                         end,
                     },
                     colorb1 = {

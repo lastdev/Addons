@@ -1,7 +1,7 @@
 --[[
-$Id: LibBabble-SubZone-3.0.lua 231 2020-07-26 14:52:00Z arithmandar $
+$Id: LibBabble-SubZone-3.0.lua 233 2020-10-26 15:11:35Z arithmandar $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 231 $
+Revision: $Rev: 233 $
 Maintainers: arith
 Last updated by: $Author: arithmandar $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
@@ -10,7 +10,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-SubZone-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 231 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 233 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local _, private = ...
@@ -91,6 +91,7 @@ lib:SetBaseTranslations
 	["Ahn'Qiraj Terrace"] = "Ahn'Qiraj Terrace",
 	["Ahn'Qiraj: The Fallen Kingdom"] = "Ahn'Qiraj: The Fallen Kingdom",
 	["Ai'twen's Cave"] = "Ai'twen's Cave",
+	["Akarek's Tears"] = "Akarek's Tears",
 	["Akazamzarak's Hat"] = "Akazamzarak's Hat",
 	["Akeeta's Hovel"] = "Akeeta's Hovel",
 	["Akhenet Fields"] = "Akhenet Fields",
@@ -301,6 +302,7 @@ lib:SetBaseTranslations
 	["Ariden's Camp"] = "Ariden's Camp",
 	["Arikara's Needle"] = "Arikara's Needle",
 	["Arinor Gardens"] = "Arinor Gardens",
+	["Arkelios' Solace"] = "Arkelios' Solace",
 	["Arklon Ruins"] = "Arklon Ruins",
 	["Arklonis Ridge"] = "Arklonis Ridge",
 	["Armory of the Silver Hand"] = "Armory of the Silver Hand",
@@ -1052,6 +1054,7 @@ lib:SetBaseTranslations
 	["Cliffclutch Roost"] = "Cliffclutch Roost",
 	["Cliffhorn Watch"] = "Cliffhorn Watch",
 	["Cliff's Edge"] = "Cliff's Edge",
+	["Cliffs of Respite"] = "Cliffs of Respite",
 	["Cliffspring Falls"] = "Cliffspring Falls",
 	["Cliffspring Hollow"] = "Cliffspring Hollow",
 	["Cliffspring River"] = "Cliffspring River",
@@ -1340,6 +1343,7 @@ lib:SetBaseTranslations
 	["Dawnchaser Retreat"] = "Dawnchaser Retreat",
 	["Dawning Lane"] = "Dawning Lane",
 	["Dawning Wood Catacombs"] = "Dawning Wood Catacombs",
+	["Dawnkeep"] = "Dawnkeep",
 	["Dawnrise Expedition"] = "Dawnrise Expedition",
 	["Dawn's Blossom"] = "Dawn's Blossom",
 	["Dawn's Reach"] = "Dawn's Reach",
@@ -1388,6 +1392,7 @@ lib:SetBaseTranslations
 	["Death's Door"] = "Death's Door",
 	["Death's End"] = "Death's End",
 	["Death's Hand Encampment"] = "Death's Hand Encampment",
+	["Death's Howl"] = "Death's Howl",
 	["Death's Rise"] = "Death's Rise",
 	["Death's Roar"] = "Death's Roar",
 	["Death's Stand"] = "Death's Stand",
@@ -1474,6 +1479,8 @@ lib:SetBaseTranslations
 	["Destructor's Rise"] = "Destructor's Rise",
 	["Detention Block"] = "Detention Block",
 	["Detrithos"] = "Detrithos",
+	["Dev Area - H (copy)"] = "Dev Area - H (copy)",
+	["Dev Area - I"] = "Dev Area - I",
 	["Dev Map - G"] = "Dev Map - G",
 	["Dev Smoketest Area"] = "Dev Smoketest Area",
 	["Development Land"] = "Development Land",
@@ -1502,6 +1509,7 @@ lib:SetBaseTranslations
 	["Diretusk Hollow"] = "Diretusk Hollow",
 	["Disciple's Enclave"] = "Disciple's Enclave",
 	["Do Not Use"] = "Do Not Use",
+	["DO NOT USE"] = "DO NOT USE",
 	["Dock 1 Exports"] = "Dock 1 Exports",
 	["Docks"] = "Docks",
 	["Dojani River"] = "Dojani River",
@@ -1701,6 +1709,7 @@ lib:SetBaseTranslations
 	["Echo Isles"] = "Echo Isles",
 	["Echo Reach"] = "Echo Reach",
 	["Echo Ridge Mine"] = "Echo Ridge Mine",
+	["Echoing Caverns"] = "Echoing Caverns",
 	["Echoing Halls"] = "Echoing Halls",
 	["Echoing Warrens"] = "Echoing Warrens",
 	["Echomok Cavern"] = "Echomok Cavern",
@@ -1715,6 +1724,7 @@ lib:SetBaseTranslations
 	["Edge of Discord"] = "Edge of Discord",
 	["Edge of Madness"] = "Edge of Madness",
 	["Edge of Reality"] = "Edge of Reality",
+	["Edge of Sin"] = "Edge of Sin",
 	["Egg Chamber"] = "Egg Chamber",
 	["Ekka's Hideaway"] = "Ekka's Hideaway",
 	["Eksis' Lair"] = "Eksis' Lair",
@@ -1744,6 +1754,7 @@ lib:SetBaseTranslations
 	["Elrendar River"] = "Elrendar River",
 	["Elun'alor Temple"] = "Elun'alor Temple",
 	["Elunaria"] = "Elunaria",
+	["Elunaria (cin)"] = "Elunaria (cin)",
 	["Elwynn Forest"] = "Elwynn Forest",
 	["Elysian Hold"] = "Elysian Hold",
 	["Embaari Village"] = "Embaari Village",
@@ -1769,6 +1780,7 @@ lib:SetBaseTranslations
 	["Emperor's Promise"] = "Emperor's Promise",
 	["Emperor's Reach"] = "Emperor's Reach",
 	["Empty Never Nowhere"] = "Empty Never Nowhere",
+	["Empyrean Domain"] = "Empyrean Domain",
 	["Empyrean Society Headquarters"] = "Empyrean Society Headquarters",
 	["Enchanter's Study"] = "Enchanter's Study",
 	["End Time"] = "End Time",
@@ -1839,6 +1851,7 @@ lib:SetBaseTranslations
 	["Explorers' League Outpost"] = "Explorers' League Outpost",
 	["Exposition Pavilion"] = "Exposition Pavilion",
 	["Exterior"] = "Exterior",
+	["Extractor's Sanatorium"] = "Extractor's Sanatorium",
 	["Eye of Azshara"] = "Eye of Azshara",
 	["Eye of Eternity"] = "Eye of Eternity",
 	["Eye of the Storm"] = "Eye of the Storm",
@@ -2030,6 +2043,7 @@ lib:SetBaseTranslations
 	["Fleshrender's Workshop"] = "Fleshrender's Workshop",
 	["Fletcher's Hollow"] = "Fletcher's Hollow",
 	["Fogcliff Strand"] = "Fogcliff Strand",
+	["Font of Fealty"] = "Font of Fealty",
 	["Font of Radiance"] = "Font of Radiance",
 	["Fonts of Cleansing"] = "Fonts of Cleansing",
 	["foo"] = "foo",
@@ -2553,6 +2567,7 @@ lib:SetBaseTranslations
 	["Hall of Blackhand"] = "Hall of Blackhand",
 	["Hall of Blades"] = "Hall of Blades",
 	["Hall of Bones"] = "Hall of Bones",
+	["Hall of Cantrips"] = "Hall of Cantrips",
 	["Hall of Castes"] = "Hall of Castes",
 	["Hall of Chains"] = "Hall of Chains",
 	["Hall of Champions"] = "Hall of Champions",
@@ -2573,6 +2588,7 @@ lib:SetBaseTranslations
 	["Hall of Holding"] = "Hall of Holding",
 	["Hall of Honored Dead"] = "Hall of Honored Dead",
 	["Hall of Horrors"] = "Hall of Horrors",
+	["Hall of Ichor"] = "Hall of Ichor",
 	["Hall of Illusions"] = "Hall of Illusions",
 	["Hall of Kings"] = "Hall of Kings",
 	["Hall of Legends"] = "Hall of Legends",
@@ -2756,6 +2772,7 @@ lib:SetBaseTranslations
 	["Hidden Camp"] = "Hidden Camp",
 	["Hidden Cell"] = "Hidden Cell",
 	["Hidden Corridor"] = "Hidden Corridor",
+	["Hidden Glade"] = "Hidden Glade",
 	["Hidden Lair"] = "Hidden Lair",
 	["Hidden Marsh Ruins"] = "Hidden Marsh Ruins",
 	["Hidden Passageway"] = "Hidden Passageway",
@@ -3563,6 +3580,7 @@ lib:SetBaseTranslations
 	["Mirage Abyss"] = "Mirage Abyss",
 	["Mirage Flats"] = "Mirage Flats",
 	["Mirage Raceway"] = "Mirage Raceway",
+	["Miri's Chapel"] = "Miri's Chapel",
 	["Mirkfallon Lake"] = "Mirkfallon Lake",
 	["Mirkfallon Post"] = "Mirkfallon Post",
 	["Mirror Lake"] = "Mirror Lake",
@@ -3673,6 +3691,7 @@ lib:SetBaseTranslations
 	["Mosshide Fen"] = "Mosshide Fen",
 	["Mosswalker Village"] = "Mosswalker Village",
 	["Mossy Pile"] = "Mossy Pile",
+	["Mother's Den"] = "Mother's Den",
 	["Motherseed Pit"] = "Motherseed Pit",
 	["Mount Akher"] = "Mount Akher",
 	["Mount Cortis"] = "Mount Cortis",
@@ -4043,6 +4062,7 @@ lib:SetBaseTranslations
 	["Path of Uther"] = "Path of Uther",
 	["Path of Victors"] = "Path of Victors",
 	["Path of Water"] = "Path of Water",
+	["Path of Wisdom"] = "Path of Wisdom",
 	["Pathfinder's Den"] = "Pathfinder's Den",
 	["Pattymack Land"] = "Pattymack Land",
 	["Pauper's Walk"] = "Pauper's Walk",
@@ -4140,6 +4160,7 @@ lib:SetBaseTranslations
 	["Pridefall Hamlet"] = "Pridefall Hamlet",
 	["Pride's Prison"] = "Pride's Prison",
 	["Primal Wetlands"] = "Primal Wetlands",
+	["Prime Arcanum"] = "Prime Arcanum",
 	["Prime Siegeworks"] = "Prime Siegeworks",
 	["Primrose Residence"] = "Primrose Residence",
 	["Priscilla's Parlor"] = "Priscilla's Parlor",
@@ -5242,6 +5263,7 @@ lib:SetBaseTranslations
 	["Staging Balcony"] = "Staging Balcony",
 	["Stairway to Honor"] = "Stairway to Honor",
 	["Stalker's Lodge"] = "Stalker's Lodge",
+	["Stanikos' Hollow"] = "Stanikos' Hollow",
 	["Star Lake Amphitheater"] = "Star Lake Amphitheater",
 	["Starbreeze Village"] = "Starbreeze Village",
 	["Starcaller Retreat"] = "Starcaller Retreat",
@@ -6555,6 +6577,7 @@ lib:SetBaseTranslations
 	["The Ruins of Stardust"] = "The Ruins of Stardust",
 	["The Rum Quarter"] = "The Rum Quarter",
 	["The Rumble Cage"] = "The Rumble Cage",
+	["The Runecarver's Oubliette"] = "The Runecarver's Oubliette",
 	["The Runewood"] = "The Runewood",
 	["The Rupture"] = "The Rupture",
 	["The Rustmaul Dig Site"] = "The Rustmaul Dig Site",
@@ -6682,6 +6705,7 @@ lib:SetBaseTranslations
 	["The Snoosh"] = "The Snoosh",
 	["The Solar Vigil"] = "The Solar Vigil",
 	["The Solarium"] = "The Solarium",
+	["The Sorcerous Steps"] = "The Sorcerous Steps",
 	["The Soul Engine"] = "The Soul Engine",
 	["The Soulforges"] = "The Soulforges",
 	["The Soulrender"] = "The Soulrender",
@@ -7118,6 +7142,7 @@ lib:SetBaseTranslations
 	["Torp's Farm"] = "Torp's Farm",
 	["Torseg's Rest"] = "Torseg's Rest",
 	["Tortaka Refuge"] = "Tortaka Refuge",
+	["Torturer's Hovel"] = "Torturer's Hovel",
 	["Tor'Watha"] = "Tor'Watha",
 	["Toryl Estate"] = "Toryl Estate",
 	["Toshley's Station"] = "Toshley's Station",
@@ -7460,6 +7485,7 @@ lib:SetBaseTranslations
 	["Veil Terokk"] = "Veil Terokk",
 	["Veil Vekh"] = "Veil Vekh",
 	["Veil Zekk"] = "Veil Zekk",
+	["Veiled Enclave"] = "Veiled Enclave",
 	["Veiled Grotto"] = "Veiled Grotto",
 	["Vekhaar Stand"] = "Vekhaar Stand",
 	["Velaani's Arcane Goods"] = "Velaani's Arcane Goods",
@@ -7815,6 +7841,7 @@ lib:SetBaseTranslations
 	["Witherwind Pass"] = "Witherwind Pass",
 	["Wizard Row"] = "Wizard Row",
 	["Wizard's Sanctum"] = "Wizard's Sanctum",
+	["Woeful Cavern"] = "Woeful Cavern",
 	["Wolf's Den"] = "Wolf's Den",
 	["Wolf's Run"] = "Wolf's Run",
 	["Wolf's Stand"] = "Wolf's Stand",

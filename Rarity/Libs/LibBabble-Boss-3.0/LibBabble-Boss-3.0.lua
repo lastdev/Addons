@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Boss-3.0
-Revision: $Rev: 457 $
+Revision: $Rev: 459 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-boss-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Boss-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 457 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 459 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -9162,8 +9162,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Aerial Command Unit"] = "Unità Aerea di Comando",
 	["Agathelos the Raging"] = "Agathelos il Rabbioso",
 	["Aggem Thorncurse"] = "Aggem Malaspina",
-	--[[Translation missing --]]
-	--[[ ["Agronox"] = "Agronox",--]] 
+	["Agronox"] = "Agronox",
 	["Ahri'ok Dugru"] = "Ahri'ok Dugru",
 	["Ahune"] = "Ahune",
 	["Akil'zon"] = "Akil'zon",
@@ -9203,8 +9202,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Anub'Rekhan"] = "Anub'Rekhan",
 	["Anub'shiah"] = "Anub'shiah",
 	["Anzu"] = "Anzu",
-	--[[Translation missing --]]
-	--[[ ["Apocron"] = "Apocron",--]] 
+	["Apocron"] = "Apocron",
 	["Apothecary Baxter"] = "Speziale Baxter",
 	["Apothecary Frye"] = "Speziale Frye",
 	["Apothecary Hummel"] = "Speziale Hummel",
@@ -9237,8 +9235,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Assembly of Iron"] = "Adunanza del Ferro",
 	["Atal'alarion"] = "Atal'alarion",
 	["Atramedes"] = "Atramedes",
-	--[[Translation missing --]]
-	--[[ ["Atrigan"] = "Atrigan",--]] 
+	["Atrigan"] = " Atrigan",
 	["Attumen the Huntsman"] = "Attumen il Predatore",
 	["Auriaya"] = "Auriaya",
 	["Avalanchion"] = "Avalanchion",
@@ -9268,8 +9265,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Bazzalan"] = "Bazzalan",
 	["Beastlord Darmac"] = "Signore delle Bestie Darmac",
 	["Beauty"] = "Bella",
-	--[[Translation missing --]]
-	--[[ ["Belac"] = "Belac",--]] 
+	["Belac"] = "Belac",
 	["Beth'tilac"] = "Beth'tilac",
 	["Black Guard Swordsmith"] = "Fabbro della Guardia Nera",
 	["Blackhand"] = "Manonera",
@@ -9312,8 +9308,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Captain Kromcrush"] = "Capitano Kromcrush",
 	["Captain Skarloc"] = "Capitano Skarloc",
 	["Captain Varo'then"] = "Capitano Varo'then",
-	--[[Translation missing --]]
-	--[[ ["Captain Yathae Moonstrike"] = "Captain Yathae Moonstrike",--]] 
+	["Captain Yathae Moonstrike"] = "Capitano Yathae Predastelle",
 	["Celebras the Cursed"] = "Celebras il Maledetto",
 	["Cenarius"] = "Cenarius",
 	["Charlga Razorflank"] = "Charlga Fiancospino",
@@ -9369,8 +9364,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Dark Iron Ambassador"] = "Ambasciatore Ferroscuro",
 	["Dark Shaman Koranthal"] = "Koranthal lo Sciamano Oscuro",
 	["Darkmaster Gandling"] = "Maestro Oscuro Gandling",
-	--[[Translation missing --]]
-	--[[ ["Darkscale Taskmaster"] = "Darkscale Taskmaster",--]] 
+	["Darkscale Taskmaster"] = "Coordinatore Scagliascura",
 	["Darkweaver Syth"] = "Syth il Mistico Oscuro",
 	["Death Knight Darkreaver"] = "Death Knight Darkreaver",
 	["Death Knight Understudy"] = "Cavalieri della Morte Sostituti",
@@ -9380,8 +9374,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Deathspeaker High Priest"] = "Sacerdote Necroratore",
 	["Deathstalker Visceri"] = "Inseguitore della Morte Visceri",
 	["Deathsworn Captain"] = "Capitano Linguamorta",
-	--[[Translation missing --]]
-	--[[ ["Demonic Inquisition"] = "Demonic Inquisition",--]] 
+	["Demonic Inquisition"] = "Inquisizione Demoniaca",
 	["Devastation"] = "Devastazione",
 	["Deviate Faerie Dragon"] = "Drago Fatato Deviato",
 	["Devourer of Souls"] = "Divoratore di Anime",
@@ -9389,8 +9382,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Dia Darkwhisper"] = "Dia Mormoscuro",
 	["Digmaster Shovelphlange"] = "Digmaster Shovelphlange",
 	["Doctor Theolen Krastinov"] = "Doctor Theolen Krastinov",
-	--[[Translation missing --]]
-	--[[ ["Domatrax"] = "Domatrax",--]] 
+	["Domatrax"] = "Domatrax",
 	["Doom Lord Kazzak"] = "Sire Oscuro Kazzak",
 	["Doom'rel"] = "Teneb'rel",
 	["Doomwalker"] = "Camminatoreoscuro",
@@ -9442,8 +9434,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Emperor Vek'lor"] = "Imperatore Vek'lor",
 	["Emperor Vek'nilash"] = "Imperatore Vek'nilash",
 	["Enforcer Sorka"] = "Sovrintendente Sorka",
-	--[[Translation missing --]]
-	--[[ ["Engine of Souls"] = "Engine of Souls",--]] 
+	["Engine of Souls"] = "Congegno delle Anime",
 	["Entropius"] = "Entropius",
 	["Eonar's Gift"] = "Dono di Eonar",
 	["Epoch Hunter"] = "Cacciatore delle Ere",
@@ -9457,14 +9448,12 @@ elseif GAME_LOCALE == "itIT" then
 	["Essence of Suffering"] = "Essenza della Sofferenza",
 	["Eviscerator"] = "Svisceratore",
 	["Exarch Maladaar"] = "Esarca Maladaar",
-	--[[Translation missing --]]
-	--[[ ["Expedient Elemental"] = "Expedient Elemental",--]] 
+	["Expedient Elemental"] = "Elementale Tempestivo",
 	["Expedition Commander"] = "Comandante Spedizione",
 	["Eydis Darkbane"] = "Eydis Iranera",
 	["Eye of C'Thun"] = "Occhio di C'Thun",
 	["Faction Champions"] = "Campioni della Fazione ",
-	--[[Translation missing --]]
-	--[[ ["Fallen Avatar"] = "Fallen Avatar",--]] 
+	["Fallen Avatar"] = "Avatar Caduto",
 	["Fallen Champion"] = "Campione Caduto",
 	["Falric"] = "Falric",
 	["Falric and Marwyn"] = "Falric e Marwyn",
@@ -9548,16 +9537,14 @@ elseif GAME_LOCALE == "itIT" then
 	["Gorefiend"] = "Malacarne",
 	["Gormok the Impaler"] = "Gormok l'Impalatore",
 	["Gorosh the Dervish"] = "Gorosh il Derviscio",
-	--[[Translation missing --]]
-	--[[ ["Goroth"] = "Goroth",--]] 
+	["Goroth"] = "Goroth",
 	["Gortok Palehoof"] = "Gortok Torochiaro",
 	["Gothik the Harvester"] = "Gothik il Falciatore",
 	["Grand Astromancer Capernian"] = "Gran Astromante Capernian",
 	["Grand Champions"] = "Gran Campioni",
 	["Grand Crusader Dathrohan"] = "Gran Crociato Dathrohan",
 	["Grand Empress Shek'zeer"] = "Grande Imperatrice Shek'zeer",
-	--[[Translation missing --]]
-	--[[ ["Grand Magistrix Elisande"] = "Grand Magistrix Elisande",--]] 
+	["Grand Magistrix Elisande"] = "Gran Magistra Elisande",
 	["Grand Magus Telestra"] = "Gran Magus Telestra",
 	["Grand Vizier Ertan"] = "Gran Visir Ertan",
 	["Grand Warlock Alythess"] = "Gran Strega Alythess",
@@ -9596,8 +9583,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Hans'gar and Franzok"] = "Hans'gar e Franzok",
 	["Harbaron"] = "Harbaron",
 	["Harbinger Skyriss"] = "Araldo Skyriss",
-	--[[Translation missing --]]
-	--[[ ["Harjatan"] = "Harjatan",--]] 
+	["Harjatan"] = "Harjatan",
 	["Hate'rel"] = "Odien'rel",
 	["Hazza'rah"] = "Hazza'rah",
 	["Hazzas"] = "Hazzas",
@@ -9651,8 +9637,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Hukku"] = "Hukku",
 	["Humongris"] = "Humongris",
 	["Hungarfen"] = "Fungilor",
-	--[[Translation missing --]]
-	--[[ ["Huntress Kasparian"] = "Huntress Kasparian",--]] 
+	["Huntress Kasparian"] = "Cacciatrice Kasparian",
 	["Hurley Blackbreath"] = "Hurley Fiatonero",
 	["Hyakiss the Lurker"] = "Hyakiss the Lurker",
 	["Hydromancer Thespia"] = "Idromante Thespia",
@@ -9834,10 +9819,8 @@ elseif GAME_LOCALE == "itIT" then
 	["Magra"] = "Magra",
 	["Magtheridon"] = "Magtheridon",
 	["Maiden of Grief"] = "Ancella della Pena",
-	--[[Translation missing --]]
-	--[[ ["Maiden of Valor"] = "Maiden of Valor",--]] 
-	--[[Translation missing --]]
-	--[[ ["Maiden of Vigilance"] = "Maiden of Vigilance",--]] 
+	["Maiden of Valor"] = "Ancella del Valore",
+	["Maiden of Vigilance"] = "Ancella della Vigilanza",
 	["Maiden of Virtue"] = "Ancella della Virtù",
 	["Majordomo Executus"] = "Maggiordomo Executus",
 	["Majordomo Staghelm"] = "Maggiordomo Elmocervo",
@@ -9846,8 +9829,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Maleki the Pallid"] = "Maleki il Pallido",
 	["Malfurion Stormrage"] = "Malfurion Grantempesta",
 	["Mal'Ganis"] = "Mal'Ganis",
-	--[[Translation missing --]]
-	--[[ ["Malificus"] = "Malificus",--]] 
+	["Malificus"] = " Malificus",
 	["Malkorok"] = "Malkorok",
 	["Maloriak"] = "Maloriak",
 	["Malygos"] = "Malygos",
@@ -9868,8 +9850,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Mekgineer Thermaplugg"] = "Mekgeniere Termospin",
 	["Meng the Demented"] = "Meng il Delirante",
 	["Mennu the Betrayer"] = "Mennu il Traditore",
-	--[[Translation missing --]]
-	--[[ ["Mephistroth"] = "Mephistroth",--]] 
+	["Mephistroth"] = "Mephistroth",
 	["Meshlok the Harvester"] = "Meshlok il Raccogliatore",
 	["Midnight"] = "Mezzanotte",
 	["Mijan"] = "Mijan",
@@ -9880,13 +9861,11 @@ elseif GAME_LOCALE == "itIT" then
 	["Miner Johnson"] = "Minatore Johnson",
 	["Ming the Cunning"] = "Ming lo Scaltro",
 	["Mistress of Pain"] = "Signora della Sofferenza",
-	--[[Translation missing --]]
-	--[[ ["Mistress Sassz'ine"] = "Mistress Sassz'ine",--]] 
+	["Mistress Sassz'ine"] = "Signora Sassz'ine",
 	["Moam"] = "Moam",
 	["Mogor"] = "Mogor",
 	["Mokra the Skullcrusher"] = "Mokra lo Spaccacrani",
-	--[[Translation missing --]]
-	--[[ ["Moontalon"] = "Moontalon",--]] 
+	["Moontalon"] = "Lunartiglio",
 	["Moorabi"] = "Moorabi",
 	["Mor Grayhoof"] = "Mor Zoccologrigio",
 	["Moragg"] = "Moragg",
@@ -9987,8 +9966,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Pol"] = "Poli",
 	["Postmaster Malown"] = "Postino Malown",
 	["Priestess Delrissa"] = "Sacerdotessa Delrissa",
-	--[[Translation missing --]]
-	--[[ ["Priestess Lunaspyre"] = "Priestess Lunaspyre",--]] 
+	["Priestess Lunaspyre"] = "Sacerdotessa Spiraluna",
 	["Primordius"] = "Primordius",
 	["Prince Keleseth"] = "Principe Keleseth",
 	["Prince Malchezaar"] = "Principe Malchazaar",
@@ -10031,15 +10009,12 @@ elseif GAME_LOCALE == "itIT" then
 	["Rattlegore"] = "Scuotiossa",
 	["Razorclaw the Butcher"] = "Artiglioaffilato il Macellaio",
 	["Razorgore the Untamed"] = "Alafurion l'Indomabile",
-	--[[Translation missing --]]
-	--[[ ["Razorjaw Gladiator"] = "Razorjaw Gladiator",--]] 
-	--[[Translation missing --]]
-	--[[ ["Razorjaw Wavemender"] = "Razorjaw Wavemender",--]] 
+	["Razorjaw Gladiator"] = "Gladiatore Zannefini",
+	["Razorjaw Wavemender"] = "Curaonde Zannefini",
 	["Razorlash"] = "Ramospino",
 	["Razorscale"] = "Scagliafusa",
 	["Reaver Jdorn"] = "Razziatore Jdorn",
-	--[[Translation missing --]]
-	--[[ ["Recursive Elemental"] = "Recursive Elemental",--]] 
+	["Recursive Elemental"] = "Elementale Ricorsivo",
 	["Reliquary of Souls"] = "Reliquia delle Anime",
 	["Renataki"] = "Renataki",
 	["Restless Skeleton"] = "Scheletro Inquieto",
@@ -10120,10 +10095,8 @@ elseif GAME_LOCALE == "itIT" then
 	["Sindragosa"] = "Sindragosa",
 	["Sinestra"] = "Sinestra",
 	["Sir Zeliek"] = "Ser Zeliek",
-	--[[Translation missing --]]
-	--[[ ["Sisters of the Moon"] = "Sisters of the Moon",--]] 
-	--[[Translation missing --]]
-	--[[ ["Si'vash"] = "Si'vash",--]] 
+	["Sisters of the Moon"] = "Sorelle della Luna",
+	["Si'vash"] = "Si'vash",
 	["Sjonnir The Ironshaper"] = "Sjonnir il Plasmaferro",
 	["Skadi the Ruthless"] = "Skadi lo Spietato",
 	["Skarr the Unbreakable"] = "Skarr l'Infrangibile",
@@ -10144,17 +10117,13 @@ elseif GAME_LOCALE == "itIT" then
 	["Sneed's Shredder"] = "Sneed's Shredder",
 	["Socrethar the Eternal"] = "Socrethar l'Eterno",
 	["Solakar Flamewreath"] = "Solakar Aurardente",
-	--[[Translation missing --]]
-	--[[ ["Solarist Tel'arn"] = "Solarist Tel'arn",--]] 
+	["Solarist Tel'arn"] = "Solarista Tel'arn",
 	["Solarium Agent"] = "Agente del Solarium",
 	["Solarium Priest"] = "Prete del Solarium",
-	--[[Translation missing --]]
-	--[[ ["Soul Queen Dejahna"] = "Soul Queen Dejahna",--]] 
+	["Soul Queen Dejahna"] = "Regina delle Anime Dejahna",
 	["Soulbinder Nyami"] = "Vincolatrice d'Anime Nyami",
-	--[[Translation missing --]]
-	--[[ ["Soultrapper Mevra"] = "Soultrapper Mevra",--]] 
-	--[[Translation missing --]]
-	--[[ ["Spellblade Aluriel"] = "Spellblade Aluriel",--]] 
+	["Soultrapper Mevra"] = "Cacciatrice d'Anime Mevra",
+	["Spellblade Aluriel"] = "Aluriel la Lama Incantata",
 	["Spine of Deathwing"] = "Spina Dorsale di Alamorte",
 	["Spirestone Battle Lord"] = "Signore della Battaglia Spiraroccia",
 	["Spirestone Butcher"] = "Macellaio Spiraroccia",
@@ -10162,8 +10131,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Spoils of Pandaria"] = "Spoglie di Pandaria",
 	["Staff of Disintegration"] = "Bastone della Disintegrazione",
 	["Stalagg"] = "Stalagg",
-	--[[Translation missing --]]
-	--[[ ["Star Augur Etraeus"] = "Star Augur Etraeus",--]] 
+	["Star Augur Etraeus"] = "Astromante Etraeus",
 	["Steelbreaker"] = "Spaccacciaio",
 	["Stomper Kreeg"] = "Kreeg il Pestatore",
 	["Stonespine"] = "Stonespine",
@@ -10212,8 +10180,7 @@ elseif GAME_LOCALE == "itIT" then
 	["The Butcher"] = "Il Macellaio",
 	["The Crone"] = "La Strega",
 	["The Curator"] = "Curatore",
-	--[[Translation missing --]]
-	--[[ ["The Desolate Host"] = "The Desolate Host",--]] 
+	["The Desolate Host"] = "Ospite della Disperazione",
 	["The Eredar Twins"] = "Gemelli Eredar",
 	["The Fallen Protectors"] = "Protettori Caduti",
 	["The Four Horsemen"] = "Cavalieri dell'Apocalisse",
@@ -10230,8 +10197,7 @@ elseif GAME_LOCALE == "itIT" then
 	["The Razza"] = "The Razza",
 	["The Seven Dwarves"] = "Sette Re",
 	["The Skybreaker"] = "Spaccacieli",
-	--[[Translation missing --]]
-	--[[ ["The Soultakers"] = "The Soultakers",--]] 
+	["The Soultakers"] = "I Ladri d'Anime",
 	["The Spirit Kings"] = "Reggenti Spirituali",
 	["The Stone Guard"] = "Guardia di Pietra",
 	["The Tribunal of Ages"] = "Tribunale delle Ere",
@@ -10241,13 +10207,11 @@ elseif GAME_LOCALE == "itIT" then
 	["The Windreaver"] = "The Windreaver",
 	["Theka the Martyr"] = "Theka il Martire",
 	["Theralion"] = "Theralion",
-	--[[Translation missing --]]
-	--[[ ["Theralion and Variona"] = "Theralion and Variona",--]] 
+	["Theralion and Variona"] = "Theralion e Variona",
 	["Thok the Bloodthirsty"] = "Thok il Sanguinario",
 	["Thorim"] = "Thorim",
 	["Thorngrin the Tender"] = "Ghignospino il Venerato",
-	--[[Translation missing --]]
-	--[[ ["Thrashbite the Scornful"] = "Thrashbite the Scornful",--]] 
+	["Thrashbite the Scornful"] = "Falciamorsi lo Sprezzante",
 	["Tichondrius"] = "Tichondrius",
 	["Tidewalker Lurker"] = "Cavalcaonde Furtivo",
 	["Timmy the Cruel"] = "Timmy il Crudele",
@@ -10310,8 +10274,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Warder Stilgiss"] = "Custode Stilgiss",
 	["Warlord Kalithresh"] = "Signore della Guerra Kalithresh",
 	["Warlord Parjesh"] = "Signore della Guerra Parjesh",
-	--[[Translation missing --]]
-	--[[ ["Warlord Ramtusk"] = "Warlord Ramtusk",--]] 
+	["Warlord Ramtusk"] = "Signore della Guerra Zannaspina",
 	["Warlord Zaela"] = "Signora della Guerra Zaela",
 	["Warlord Zon'ozz"] = "Zon'ozz il Signore della Guerra",
 	["Warmaster Blackhorn"] = "Maestro di Guerra Corno Nero",

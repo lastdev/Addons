@@ -3,6 +3,16 @@ $Id: ChangeLog.txt 79 2017-08-31 14:53:46Z arith $
 Revision History:
 =================
 
+* v0.20 (Nov. 22, 2020)
+-----------------------
+- Toc update to support WoW 9.0.2
+- Disable no-lib release as the new CurseForge seems to bring-in more torubles for users to download addon
+- Library update - LibCurrency
+
+* v0.19 (Oct. 26, 2020)
+-----------------------
+- Library update: LibBabble-SubZone
+
 * v0.18 (Oct. 21, 2020)
 -----------------------
 - Re-added LibUIDropDown

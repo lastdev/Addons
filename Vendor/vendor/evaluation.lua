@@ -2,8 +2,6 @@
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
 
-local bagItemCache = {}
-
 -- This is a wrapper for Evaluate Item that takes GetItemProperties parameters as input.
 -- This is for use cases where you do not need the item itself and just want to know
 -- the result. This is also the public api implementaion.
@@ -30,38 +28,44 @@ function Addon:EvaluateItem(item)
     end
 
     -- See if this item is already in the cache.
-    local retval, ruleid, rule = Addon:GetCachedResult(item.GUID)
+    local retval, ruleid, rule, ruletype, id = Addon:GetCachedResult(item.GUID)
     if retval and type(retval) == "number" then
-        return retval, ruleid, rule
+        self:Debug("items", "Retrieved %s from cache with result: %s - [%s] %s", item.Link, retval, ruletype, rule)
+        return retval, ruleid, rule, ruletype
     end
 
     if (not self.ruleManager) then
         self.ruleManager = Addon.RuleManager:Create();
     end
     local result = nil
-    result, ruleid, rule = self.ruleManager:Run(item)
+    result, ruleid, rule, ruletype = self.ruleManager:Run(item)
     retval = 0
     if result then
-        -- Only items explicitly in the always sell list are considered for deletion.
-        if item.IsUnsellable then
-            if Addon:GetList(Addon.c_AlwaysSellList):Contains(item.Id) then
-                retval = 2
+        if Addon.RuleType.SELL == ruletype then
+            if item.IsUnsellable then
+                -- Items in sell list but are unsellable take no action.
+                ruleid = nil
+                rule = nil
+                ruletype = nil
+                retval = 0
+                self:Debug("items", "Item %s is unsellable, changing result to no action.", item.Link)
+            else
+                retval = 1
             end
-            -- What to do about items that are to be sold, but are unsellable and not in the list?
-            -- We can't sell them, but the user wants them sold. There's nothing Vendor
-            -- can do here, but we should potentially catch this and inform the user and update
-            -- the tooltip (as in, add this to the always-sell list to delete it).
-            -- For now, we will let this fall through and take no action to fix immediate bug.
-            -- TODO: Consider Possible new state of -1 to indicate error state/conflict.
+        elseif Addon.RuleType.DESTROY == ruletype then
+            retval = 2
+        elseif Addon.RuleType.KEEP == ruletype then
+            retval = 0
         else
-            retval = 1
+            error("Unknown ruletype: "..tostring(ruletype))
         end
     end
 
     -- Add item to cache
-    Addon:AddResultToCache(item.Link, retval, ruleid, rule)
+    self:Debug("items", "Adding %s to cache with result: %s - [%s] %s", item.Link, retval, ruletype, rule)
+    Addon:AddResultToCache(item.GUID, retval, ruleid, rule, ruletype, item.Id)
     
-    return retval, ruleid, rule
+    return retval, ruleid, rule, ruletype
 end
 
 -- Results are cached by guid.
@@ -70,31 +74,55 @@ function Addon:GetCachedResult(guid)
     assert(guid)
     result = resultCache[guid]
     if result then
-        return result.Result, result.RuleId, result.Rule
+        return result.Result, result.RuleId, result.Rule, result.RuleType
     else
-        return nil, nil, nil
+        return nil, nil, nil, nil
     end
 end
 
-function Addon:ClearResultCache()
-    resultCache = {}
-    self:Debug("Result Cache cleared.")
+-- Returns num kept, num sold, and num destroyed for a given item id.
+-- Note that if this is called while evaluations are still occurring, it will
+-- give you a running count, thus far, of items that have been kept/sold/destroyed
+-- for this particular item id. This is the basis for the "keep at least N" type
+-- rule behavior.
+function Addon:GetResultCountsForItemId(id)
+    local resultCount = {}
+    resultCount[0] = 0
+    resultCount[1] = 0
+    resultCount[2] = 0
+
+    for guid, entry in pairs(resultCache) do
+        -- Find entries with the specified item ID
+        if entry.Id == id then
+            resultCount[entry.Result] = resultCount[entry.Result] + 1
+        end
+    end
+    -- Num Kept, Num Sold, Num Destroyed
+    return resultCount[0], resultCount[1], resultCount[2]
+end
+
+function Addon:ClearResultCache(arg)
+    if not arg then
+        resultCache = {}
+        self:Debug("items", "Result Cache cleared.")
+    else
+        resultCache[arg] = nil
+    end
     self:ClearTooltipResultCache()
 end
 
--- Clear the cache on addon changes
-Addon:GetConfig():AddOnChanged(function() Addon:ClearResultCache() end)
-
-function Addon:AddResultToCache(guid, result, ruleid, rule)
+function Addon:AddResultToCache(guid, result, ruleid, rule, ruletype, id)
     assert(type(guid) == "string" and type(result) == "number")
 
     local cacheEntry = {}
     cacheEntry.Result = result
     cacheEntry.RuleId = ruleid
     cacheEntry.Rule = rule
+    cacheEntry.RuleType = ruletype
+    cacheEntry.Id = id
 
     assert(guid ~= "")
-    --self:Debug("Cached result: %s = %s", guid, tostring(result))
+    self:Debug("items", "Cached result: %s = %s", guid, result)
     resultCache[guid] = cacheEntry
 end
 
@@ -102,11 +130,13 @@ function Addon:GetEvaluationStatus()
     local count = 0
     local value = 0
     local tosell = 0
-    local todelete = 0
+    local todestroy = 0
+    local sellitems = {}
+    local destroyitems = {}
     for bag=0, NUM_BAG_SLOTS do
         for slot=1, GetContainerNumSlots(bag) do
             local item, itemCount = Addon:GetItemPropertiesFromBag(bag, slot)
-            result = Addon:EvaluateItem(item)
+            local result = Addon:EvaluateItem(item)
             
             if result > 0 then
                 count = count + 1
@@ -115,12 +145,36 @@ function Addon:GetEvaluationStatus()
             if result == 1 then
                 value = value + item.UnitValue * itemCount
                 tosell = tosell + 1
+                table.insert(sellitems, item.Link)
             elseif result == 2 then
-                todelete = todelete + 1
+                todestroy = todestroy + 1
+                table.insert(destroyitems, item.Link)
             end
         end
     end
-    return count, value, tosell, todelete
+    return count, value, tosell, todestroy, sellitems, destroyitems
+end
+
+function Addon:GetEvaluationDetails()
+    local results = {}
+    for bag=0, NUM_BAG_SLOTS do
+        for slot=1, GetContainerNumSlots(bag) do
+            local item, itemCount = Addon:GetItemPropertiesFromBag(bag, slot)
+            if item then
+                local result, ruleid, rule, ruletype = Addon:EvaluateItem(item)
+                local entry = {}
+                entry.GUID = item.GUID
+                entry.Id = item.Id
+                entry.Count = itemCount
+                entry.Result = result
+                entry.RuleId = ruleid
+                entry.Rule = rule
+                entry.RuleType = ruletype
+                table.insert(results, entry)
+            end
+        end
+    end
+    return results
 end
 
 -- This is a bit of a hack to do a call for blizzard to fetch all the item links in our bags to populate the item links.
@@ -133,7 +187,5 @@ function Addon:LoadAllBagItemLinks()
 end
 
 -- Placeholder for now
-function Addon:OnBagUpdate(event, bag)
-end
-
-
+--function Addon:OnBagUpdate(event, bag)
+--end

@@ -1,19 +1,35 @@
 ------------------------------------------------------------------------
-r254 | tuhljin | 2020-10-20 09:37:09 +0000 (Tue, 20 Oct 2020) | 3 lines
+r274 | tuhljin | 2021-03-05 04:19:39 +0000 (Fri, 05 Mar 2021) | 1 line
 Changed paths:
-   M /trunk/AchieveID.lua
-   M /trunk/GameTip.lua
-   M /trunk/Overachiever.toc
-   M /trunk/Overachiever_Cache/Overachiever_Cache.toc
-   M /trunk/Overachiever_Tabs/CalendarNotice.lua
-   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
-   M /trunk/Overachiever_Tabs/Suggestions.lua
-   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
-   M /trunk/libs/TjCalendar.lua
    M /trunk/readme.txt
 
-- Fixed an error that appeared when the cursor was over a graphical notice for an active holiday.
-- Suggestions tab: Added suggestions for the raids Uldir, Battle of Dazar'alor, Crucible of Storms, and Ny'alotha, the Waking City.
-- Updated readme.txt to reflect previous slash command changes (directing to Search tab).
+Update readme.txt.
+------------------------------------------------------------------------
+r273 | tuhljin | 2021-02-28 23:55:34 +0000 (Sun, 28 Feb 2021) | 2 lines
+Changed paths:
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/Overachiever_Tabs/localization.lua
+
+- Added "Covenant" as an alias for "Covenant (X)" where "X" is the player character's current covenant.
+- Fix an error on load when player character isn't in a covenant.
+------------------------------------------------------------------------
+r272 | tuhljin | 2021-01-24 16:37:39 +0000 (Sun, 24 Jan 2021) | 5 lines
+Changed paths:
+   M /trunk/AchieveTracking.lua
+   M /trunk/Overachiever.lua
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/readme.txt
+
+- Fixed certain manually untracked achievements getting automatically retracked later when they shouldn't be.
+- Suggestions Tab:
+-- Added suggestions for Torghast.
+-- Added suggestions for the other covenants (Necrolord, Night Fae, Venthyr).
+-- Added more Shadowlands zone suggestions: "Something's Not Quite Right....", "A Bit of This, A Bit Of That", "Caught in a Bat Romance", "To 'Ghast, Two Curios".
+------------------------------------------------------------------------
+r271 | tuhljin | 2020-12-20 20:47:11 +0000 (Sun, 20 Dec 2020) | 1 line
+Changed paths:
+   M /trunk/readme.txt
+
+
 ------------------------------------------------------------------------
 

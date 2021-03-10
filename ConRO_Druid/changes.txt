@@ -1,3 +1,63 @@
+Ver 9.1.11
+	-Update PvP code.
+	-Still working with Balance dots.
+	-Added better code for casting while moving or not for Balance.
+
+Ver 9.1.10
+	-Adjusting Dots and Opener for Balance rotation.
+	-Made correction to recast dots at the end of an eclipse rather than in between Eclipses.
+	-Found reason to always start with Wrath casts so fixed opener.
+
+Ver 9.1.9
+	-Some more Adjusting for Balance dots.
+
+Ver 9.1.8
+	-Adjusted Balance dots to better refresh at appropriate times. Thanks Targonis.
+
+Ver 9.1.7
+	-Added support for specialization disabling.
+
+Ver 9.1.6
+	-Adjusted some Balance rotation code.
+
+Ver 9.1.5
+	-Finally found code for Balance Eclipse.
+
+Ver 9.1.4
+	-Added Legendaries to library.
+	-Added Conduits to library.
+	
+Ver 9.1.3
+	-Fixed error around Kyrian covenant. Second try!
+	
+Ver 9.1.2
+	-Fixed error around Kyrian covenant.
+
+Ver 9.1.1
+	-Tweaked some moving code.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	-Hopefully fixed Bloodtalons Talent for Feral rotation.
+	
+Ver 9.0.5
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.4
+	-Added Covenant abilities to Balance, Feral and Guardian rotations.
+
+Ver 9.0.3
+	-Added Barkskin to feral defense rotation.
+
+Ver 9.0.2
+	-Updated Guardian rotation for prepatch.
+
+Ver 9.0.1
+	-Updated Balance and feral rotations for prepatch.
+
 Ver 9.0.0
 	-Updated Library for PrePatch.
 	-Will work on rotation once all classes libraries have a once over.

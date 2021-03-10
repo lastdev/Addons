@@ -6,6 +6,7 @@
 
 ReagentBanker = {}
 local L = REAGENTBANKER_STRINGS
+local DEBUG = false
 
 local frame = CreateFrame("Frame")
 ReagentBanker.Frame = frame
@@ -24,19 +25,19 @@ local LIMIT_LINKS_PER_LINE = 10  --3 --15
 local R, G, B = 1, (170 / 255), (128 / 255)
 
 local function chatprint(msg)
-  DEFAULT_CHAT_FRAME:AddMessage(msg, R, G, B);
+	DEFAULT_CHAT_FRAME:AddMessage(msg, R, G, B);
 end
 
 
 local function isModifierKeyHeld(key)
-  if (key == 0) then
-    return IsAltKeyDown()
-  elseif (key == 1) then
-    return IsControlKeyDown()
-  elseif (key == 2) then
-    return IsShiftKeyDown()
-  end
-  -- If key is set to None (3), it always returns nil.
+	if (key == 0) then
+		return IsAltKeyDown()
+	elseif (key == 1) then
+		return IsControlKeyDown()
+	elseif (key == 2) then
+		return IsShiftKeyDown()
+	end
+	-- If key is set to None (3), it always returns nil.
 end
 
 
@@ -80,6 +81,7 @@ end
 
 
 local function getReagentBankContents()
+	if (DEBUG) then  chatprint("getReagentBankContents");  end
 	local tab = {}
 	local _, count, itemID
 	for slot=1,ReagentBankFrame.size do
@@ -90,6 +92,11 @@ local function getReagentBankContents()
 			tab[itemID] = (tab[itemID] or 0) + count
 		end
 	end
+	if (DEBUG) then
+	  local c = 0
+	  for id,count in pairs(tab) do  c = c + 1;  end
+	  chatprint("- Found " .. c .. " item IDs")
+	end
 	return tab
 end
 ReagentBanker.GetReagentBankContents = getReagentBankContents
@@ -97,27 +104,33 @@ ReagentBanker.GetReagentBankContents = getReagentBankContents
 
 local preDeposit, postDeposit
 do
-	local changed
+	local changedSortFlag
 
-	function preDeposit(ignoreIgnored)
-		changed = ignoreIgnored and makeBagsSort() or nil
+	function preDeposit(includeSortIgnored)
+		if (DEBUG) then  chatprint("preDeposit");  end
+		changedSortFlag = includeSortIgnored and makeBagsSort() or nil
 		if (ReagentBanker_Settings.chatLogDeposits) then
 			prevContents = getReagentBankContents()
 			awaitingChanges = true
+		else
+			prevContents = nil
+			awaitingChanges = false
 		end
 	end
 
 	function postDeposit()
-		if (changed) then
-			for i,id in ipairs(changed) do
+		--if (DEBUG) then  chatprint("postDeposit");  end
+		if (changedSortFlag) then
+			for i,id in ipairs(changedSortFlag) do
 				setBagSort(id, false)
 			end
-			changed = nil
+			changedSortFlag = nil
 		end
 	end
 end
 
 local function depositReaction()
+	if (DEBUG) then  chatprint("depositReaction");  end
 	local newContents = getReagentBankContents()
 	local numAdded, added = 0 -- numAdded is the number of item IDs that saw an addition of any size
 	for id,count in pairs(newContents) do
@@ -173,9 +186,11 @@ local function OnEvent(self, event, ...)
 		end
 
 		if (deposit) then
-			preDeposit(ReagentBanker_Settings.includeIgnoredAuto)
-			DepositReagentBank()
-			postDeposit()
+			C_Timer.After(0, function() -- This delay may prevent the intermittent problem where items already in the reagent bank appear to be newly deposited because getReagentBankContents() somehow failed to find any items when called by preDeposit().
+				preDeposit(ReagentBanker_Settings.includeIgnoredAuto)
+				DepositReagentBank()
+				postDeposit()
+			end)
 		end
 
 		if (not seenBank) then
@@ -188,11 +203,14 @@ local function OnEvent(self, event, ...)
 		end
 
 	elseif (event == "PLAYERREAGENTBANKSLOTS_CHANGED") then
+		if (DEBUG) then  chatprint(event, ...);  end
 		if (awaitingChanges) then
 			awaitingChanges = false
 			-- Consolidate all PLAYERREAGENTBANKSLOTS_CHANGED events into one reaction:
 			C_Timer.After(0, depositReaction) -- 0 seconds because we should receive all the events at once so the function ought to be triggered after all of them are in
 		end
+
+	-- REAGENTBANK_UPDATE ?
 
 	end
 end

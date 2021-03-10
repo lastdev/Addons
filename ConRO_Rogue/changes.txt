@@ -1,3 +1,49 @@
+Ver 9.1.7
+	-Updated PvP code.
+	-Updated warning code.
+	-Adjusted Assassination and Outlaw rotations.
+
+Ver 9.1.6
+	-Added support for specialization disabling.
+
+Ver 9.1.5
+	-Fixed error with Crimson Vial looking for Target HP and not Player HP.
+	-Fixed error with Subtlety rotation and not using Premeditation.
+	
+Ver 9.1.4
+	-Tweaked some fixes for Vanish.
+	-Added small PvP stun support to try out.
+
+Ver 9.1.3
+	-Tweaked Shadowstrike with Premeditation slightly.
+
+Ver 9.1.2
+	-Tweaked Subletly opener thanks to the feedback of Goon.
+	-Added Shiv to Subletly with Tiny Toxic Blade legendary.
+
+Ver 9.1.1
+	-Added Legendaries to library.
+	-Added Conduits to library.
+	
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.7
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.6
+	-Added Blackpowder into Subtlety rotation.
+
+Ver 9.0.5
+	-Added Covenant abilities to rogue rotations.
+	-Added Shiv to Assassination rotation after level 58.
+
+Ver 9.0.4
+	-Fixed error for Grand Melee buff causing rerolls of Roll the Bones.
+
 Ver 9.0.3
 	-Added Poison warning to Outlaw and Subletly specializations.
 	-Added Instant to Assassination for low levels.

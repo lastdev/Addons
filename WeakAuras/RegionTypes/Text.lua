@@ -75,18 +75,11 @@ local function modify(parent, region, data)
   WeakAuras.regionPrototype.modify(parent, region, data);
   local text = region.text;
 
-  region.useAuto = Private.CanHaveAuto(data);
-
   local fontPath = SharedMedia:Fetch("font", data.font);
   text:SetFont(fontPath, data.fontSize, data.outline);
   if not text:GetFont() then -- Font invalid, set the font but keep the setting
     text:SetFont(STANDARD_TEXT_FONT, data.fontSize, data.outline);
   end
-  if text:GetFont() then
-    text:SetText("")
-    text:SetText(WeakAuras.ReplaceRaidMarkerSymbols(data.displayText));
-  end
-  text.displayText = data.displayText;
   text:SetJustifyH(data.justify);
 
   text:ClearAllPoints();
@@ -96,6 +89,21 @@ local function modify(parent, region, data)
   region.height = text:GetStringHeight();
   region:SetWidth(region.width);
   region:SetHeight(region.height);
+
+  local tooltipType = Private.CanHaveTooltip(data);
+  if(tooltipType and data.useTooltip) then
+    if not region.tooltipFrame then
+      region.tooltipFrame = CreateFrame("frame", nil, region);
+      region.tooltipFrame:SetAllPoints(region);
+      region.tooltipFrame:SetScript("OnEnter", function()
+        Private.ShowMouseoverTooltip(region, region);
+      end);
+      region.tooltipFrame:SetScript("OnLeave", Private.HideTooltip);
+    end
+    region.tooltipFrame:EnableMouse(true);
+  elseif region.tooltipFrame then
+    region.tooltipFrame:EnableMouse(false);
+  end
 
   text:SetTextHeight(data.fontSize);
   text:SetShadowColor(unpack(data.shadowColor))
@@ -126,8 +134,8 @@ local function modify(parent, region, data)
       local height = text:GetStringHeight();
 
       if(region.height ~= height) then
-        region.height = text:GetStringHeight();
-        region:SetHeight(region.height);
+        region.height = height
+        region:SetHeight(height)
         if(data.parent and WeakAuras.regions[data.parent].region.PositionChildren) then
           WeakAuras.regions[data.parent].region:PositionChildren();
         end
@@ -213,7 +221,9 @@ local function modify(parent, region, data)
   region.TimerTick = TimerTick
 
   if not UpdateText then
-    SetText(data.displayText);
+    local textStr = data.displayText
+    textStr = textStr:gsub("\\n", "\n");
+    SetText(textStr)
   end
 
   function region:Color(r, g, b, a)

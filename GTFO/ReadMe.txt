@@ -17,7 +17,6 @@ Special thanks:
 		Andyca, and BNSSNB (Traditional Chinese Translations)
 		Phalk and Omukeka (Brazilian Portuguese Translations)
 		Asixandur (Italian Translations)
-		Arith (LibUIDropDownMenu)
 
 Change Log:
 
@@ -1525,3 +1524,91 @@ Change Log:
 4.56.2
 * Updated for patch 9.0
 
+4.56.3
+* Added Shadowlands spells (world)
+
+4.56.4
+* Updated for patch 9.0.2
+* Added Legion spells (world)
+* Added Shadowlands spells (world)
+* Added SL spells for Torghast
+* Added SL spells for The Necrotic Wake
+
+4.56.5
+* Fixed SL spells for The Necrotic Wake
+* Fixed SL spells for Plaguefall
+* Added SL spells for Torghast
+* Added SL spells for Halls of Atonement
+* Added SL spells for The Necrotic Wake
+
+4.56.6
+* Fixed SL spells for Mists of Tirna Scithe
+* Fixed SL spells for Spires of Ascension
+* Fixed SL spells for De Other Side
+* Added SL spells for De Other Side
+* Added SL spells for Torghast
+* Added SL spells for Spires of Ascension
+* Added SL spells for Theater of Pain
+
+4.57
+* Added support for Mythic/Mythic+ only alerts
+* Fixed SL spells for Mists of Tirna Scithe
+* Fixed SL spells for De Other Side
+* Added SL spells for Castle Nathria
+* Added SL spells for De Other Side
+
+4.57.1
+* Updated ToC for WoW Classic 1.13.6
+* Added Shadowlands spells (world)
+* Added SL spells for Castle Nathria
+* Added SL spells for Spires of Ascension
+* Added SL spells for Theater of Pain
+* Added SL spells for Halls of Atonement
+* Added SL spells for Sanguine Depths
+* Added Classic spells from Naxxramas 40
+
+4.57.2
+* Fixed SL spells for Sanguine Depths
+* Fixed SL spells for Spires of Ascension
+* Added Shadowlands spells (world)
+* Added SL spells for Castle Nathria
+* Added SL spells for Torghast
+* Added Classic spells from Naxxramas 40
+
+4.57.3
+* Added Shadowlands spells (world)
+* Added SL spells for Castle Nathria
+* Added SL spells for Theater of Pain
+* Added SL spells for De Other Side
+
+4.57.4
+* Fixed SL spells for Castle Nathria
+* Added Shadowlands spells (world)
+
+4.58
+* Updated ToC for WoW Classic 1.13.6 (again)
+* Updated LibUIDropDownMenu to 4.00.9000236639
+
+4.59
+* Fixed dropdown library issues with Classic
+* Added SL spells for Castle Nathria
+
+4.59.1
+* Renamed files for CurseForge updater
+* Added SL spells for Torghast
+
+4.59.2
+* Added Shadowlands spells (world)
+* Added SL spells for Castle Nathria
+
+4.60
+* Removed LibStub and LibUIDropDownMenu and replaced the sound channel selector with a slider
+* Added SL spells for Castle Nathria
+
+4.61
+* Added an additional debugging mode to try to track down difficult issues
+* Fixed SL spells for Castle Nathria
+
+4.62
+* Updated for patch 9.0.5
+* Improved additional debugging mode

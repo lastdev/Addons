@@ -1103,3 +1103,220 @@ end)
 CalligraphyHelper:RegisterEvent('QUEST_ACCEPTED')
 CalligraphyHelper:RegisterEvent('QUEST_REMOVED')
 CalligraphyHelper:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+
+
+-------------- SL
+
+-- Aspirant Training
+
+local AspirantTraining = CreateFrame'Frame'
+AspirantTraining:RegisterEvent('QUEST_ACCEPTED')
+AspirantTraining:RegisterEvent('QUEST_REMOVED')
+AspirantTraining:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+local locale = GetLocale()
+AspirantTraining.locale = 
+	locale == "ruRU" and {
+		def = "^Защита",
+		dmg = "^Удар",
+		dmg2 = "^Удар сплеча",
+		dod = "^Уворот",
+	}
+	or {
+		def = "^Защита",
+		dmg = "^Удар",
+		dmg2 = "^Удар сплеча",
+		dod = "^Уворот",
+	}
+
+AspirantTraining:SetScript("OnEvent",function(self,event,arg1,arg2)
+	if event == 'QUEST_ACCEPTED' then
+		if arg1 == 59585 then
+			if VWQL and VWQL.DisableAspirantTraining then
+				return
+			end
+			self:RegisterEvent("CHAT_MSG_MONSTER_SAY")
+			self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+		end
+	elseif event == 'QUEST_REMOVED' then
+		if arg1 == 59585 then
+			self:UnregisterEvent("CHAT_MSG_MONSTER_SAY")
+			self:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+
+			ActionButton_HideOverlayGlow(OverrideActionBarButton1)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton2)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton3)
+		end
+	elseif event == 'UNIT_SPELLCAST_SUCCEEDED' then
+		if arg1 == "player" then
+			ActionButton_HideOverlayGlow(OverrideActionBarButton1)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton2)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton3)
+		end
+	elseif event == 'CHAT_MSG_MONSTER_SAY' then
+		if not arg1 then
+			return
+		end
+		if arg1:find(AspirantTraining.locale.def) then
+			arg1 = GetSpellInfo(321847)
+		elseif arg1:find(AspirantTraining.locale.dmg2) then
+			arg1 = GetSpellInfo(341931)
+		elseif arg1:find(AspirantTraining.locale.dmg) then
+			arg1 = GetSpellInfo(321843)
+		elseif arg1:find(AspirantTraining.locale.dod) then
+			arg1 = GetSpellInfo(342002)
+		end
+		for i=1,3 do
+			local button = _G["OverrideActionBarButton"..i]
+			local action = button.action
+			local _, spellID = GetActionInfo(action)
+			if spellID then
+				local name = GetSpellInfo(spellID)
+				if name and arg1:lower():find(name:lower()) then
+					ActionButton_HideOverlayGlow(OverrideActionBarButton1)
+					ActionButton_HideOverlayGlow(OverrideActionBarButton2)
+					ActionButton_HideOverlayGlow(OverrideActionBarButton3)
+		
+					ActionButton_ShowOverlayGlow(button)
+					return
+				end
+			end
+		end
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		for i=1,GetNumQuestLogEntries() do
+			local title, _, _, _, _, _, _, questID = GetQuestLogTitle(i)
+			if questID and questID == 59585 then
+				self:GetScript("OnEvent")(self,'QUEST_ACCEPTED',59585)
+				break
+			end
+		end
+	end
+end)
+
+
+local AspirantTraining2 = CreateFrame'Frame'
+AspirantTraining2:RegisterEvent('QUEST_ACCEPTED')
+AspirantTraining2:RegisterEvent('QUEST_REMOVED')
+AspirantTraining2:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+local locale = GetLocale()
+AspirantTraining2.locale = 
+	locale == "ruRU" and {
+		cmd1 = "^Костекрыл напуган",
+		cmd2 = "^Костекрыл пытается вас сбросить",
+		cmd3 = "^Костекрыл летит плавно и осторожно",
+	}
+	or {
+		cmd1 = "^The flayedwing is scared",
+		cmd2 = "^The flayedwing is trying",
+		cmd3 = "^The flayedwing is flying",
+	}
+
+AspirantTraining2:SetScript("OnEvent",function(self,event,arg1,arg2)
+	if event == 'QUEST_ACCEPTED' then
+		if arg1 == 61540 then
+			if VWQL and VWQL.DisableAspirantTraining then
+				return
+			end
+			self:RegisterEvent("RAID_BOSS_WHISPER")
+			self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+		end
+	elseif event == 'QUEST_REMOVED' then
+		if arg1 == 61540 then
+			self:UnregisterEvent("RAID_BOSS_WHISPER")
+			self:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+
+			ActionButton_HideOverlayGlow(OverrideActionBarButton1)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton2)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton3)
+		end
+	elseif event == 'UNIT_SPELLCAST_SUCCEEDED' then
+		if arg1 == "vehicle" then
+			ActionButton_HideOverlayGlow(OverrideActionBarButton1)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton2)
+			ActionButton_HideOverlayGlow(OverrideActionBarButton3)
+		end
+	elseif event == 'RAID_BOSS_WHISPER' then
+		if not arg1 then
+			return
+		end
+		if arg1:find(AspirantTraining2.locale.cmd1) then
+			ActionButton_ShowOverlayGlow(OverrideActionBarButton1)
+		elseif arg1:find(AspirantTraining2.locale.cmd2) then
+			ActionButton_ShowOverlayGlow(OverrideActionBarButton2)
+		elseif arg1:find(AspirantTraining2.locale.cmd3) then
+			ActionButton_ShowOverlayGlow(OverrideActionBarButton3)
+		end
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		for i=1,GetNumQuestLogEntries() do
+			local title, _, _, _, _, _, _, questID = GetQuestLogTitle(i)
+			if questID and questID == 61540 then
+				self:GetScript("OnEvent")(self,'QUEST_ACCEPTED',61540)
+				break
+			end
+		end
+	end
+end)
+
+
+
+
+local ToughCrowdHelperQuests = {
+	[60739]=true,
+}
+local ToughCrowdHelper_guid = {}
+local ToughCrowdHelper_count = 8
+
+local ToughCrowdHelper = CreateFrame'Frame'
+ToughCrowdHelper:RegisterEvent('QUEST_ACCEPTED')
+ToughCrowdHelper:RegisterEvent('QUEST_REMOVED')
+ToughCrowdHelper:RegisterEvent('PLAYER_ENTERING_WORLD')
+ToughCrowdHelper:SetScript("OnEvent",function(self,event,arg1,arg2)
+	if event == 'QUEST_ACCEPTED' then
+		if arg1 and ToughCrowdHelperQuests[arg1] then
+			if VWQL and VWQL.DisableToughCrowd then
+				return
+			end
+			print("World Quests List: Tough Crowd helper loaded")
+			ToughCrowdHelper_count = 8
+			self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+		end
+	elseif event == 'QUEST_REMOVED' then
+		if arg1 and ToughCrowdHelperQuests[arg1] then
+			self:UnregisterEvent("UPDATE_MOUSEOVER_UNIT")
+			ToughCrowdHelper_count = 8
+		end
+	elseif event == 'UPDATE_MOUSEOVER_UNIT' then
+		local guid = UnitGUID'mouseover'
+		if guid then
+			local type,_,serverID,instanceID,zoneUID,id,spawnID = strsplit("-", guid)
+			if id == "170080" then
+				if not ToughCrowdHelper_guid[guid] then
+					ToughCrowdHelper_guid[guid] = ToughCrowdHelper_count
+					ToughCrowdHelper_count = ToughCrowdHelper_count - 1
+					if ToughCrowdHelper_count < 1 then
+						ToughCrowdHelper_count = 8
+					end
+				end
+				if GetRaidTargetIndex("mouseover") ~= ToughCrowdHelper_guid[guid] then
+					SetRaidTarget("mouseover", ToughCrowdHelper_guid[guid])
+				end
+			end
+		end
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		if VWQL and VWQL.DisableToughCrowd then
+			return
+		end
+		for i=1,GetNumQuestLogEntries() do
+			local title, _, _, _, _, _, _, questID = GetQuestLogTitle(i)
+			if questID and ToughCrowdHelperQuests[questID] then
+				self:GetScript("OnEvent")(self,'QUEST_ACCEPTED',questID)
+				break
+			end
+		end
+	end
+end)

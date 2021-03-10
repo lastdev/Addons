@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
 
-<!-- Copyright 2011-2020 Mike Battersby -->
+<!-- Copyright 2011-2021 Mike Battersby -->
 
 <Script file="Groups.lua" />
 
@@ -17,13 +17,45 @@
         <OnClick method="OnClick" />
     </Scripts>
 
-    <Size y="37" />
+    <Size y="22" />
 
-    <HighlightTexture atlas="PetList-ButtonHighlight"/>
+    <HighlightTexture alphaMode="ADD">
+        <Color r="0.3" g="0.5" b="1" a="0.3" />
+    </HighlightTexture>
+
+    <Frames>
+        <Button parentKey="DeleteButton">
+            <Size x="20" y="20" />
+            <Anchors>
+                <Anchor point="LEFT" x="0" />
+            </Anchors>
+            <Scripts>
+                <OnClick>
+                    local f = self:GetParent().flag
+                    StaticPopup_Show("LM_OPTIONS_DELETE_FLAG", f, nil, f)
+                </OnClick>
+                <OnEnter>
+                    local f = self:GetParent().flag
+                    GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+                    GameTooltip:AddLine(DELETE .. ' ' .. f)
+                    GameTooltip:Show()
+                </OnEnter>
+                <OnLeave>
+                    GameTooltip:Hide()
+                </OnLeave>
+            </Scripts>
+            <DisabledTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Disabled"/>
+            <NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+            <PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+        </Button>
+    </Frames>
 
     <Layers>
         <Layer level="OVERLAY">
-            <Texture parentKey="SelectedTexture" atlas="PetList-ButtonSelect" hidden="true"/>
+            <Texture parentKey="SelectedTexture" hidden="true" setAllPoints="true">
+                <Color r="1" g="0.843" b="0" a="0.2" />
+            </Texture>
             <Texture parentKey="Icon">
                 <Size x="18" y="18" />
                 <Anchors><Anchor point="LEFT" x="8" /></Anchors>
@@ -34,33 +66,14 @@
             </Texture>
         </Layer>
         <Layer level="ARTWORK">
-            <FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT">
+            <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
                 <Anchors>
-                    <Anchor point="LEFT" x="12" />
-                    <Anchor point="RIGHT" relativeKey="$parent.SelectedArrow" x="-4" />
+                    <Anchor point="LEFT" relativeKey="$parent.DeleteButton" relativePoint="RIGHT" x="0" />
+                    <Anchor point="RIGHT" x="-4" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
-
-    <Frames>
-        <Button parentKey="DeleteButton" hidden="true">
-            <Size x="26" y="26" />
-            <Anchors>
-                <Anchor point="RIGHT" x="0" />
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    local f = self:GetParent().flag
-                    StaticPopup_Show("LM_OPTIONS_DELETE_FLAG", f, nil, f)
-                </OnClick>
-            </Scripts>
-            <DisabledTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Disabled"/>
-            <NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
-            <PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
-            <HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
-        </Button>
-    </Frames>
 </Button>
 
 <Button name="LiteMountGroupsPanelMountTemplate" virtual="true" mixin="LiteMountGroupsPanelMountMixin">
@@ -70,37 +83,54 @@
         <OnLeave method="OnLeave" />
     </Scripts>
 
-    <Size y="22" />
+    <Size y="18" />
 
-    <HighlightTexture atlas="PetList-ButtonHighlight"/>
+    <HighlightTexture alphaMode="ADD">
+        <Color r="0.3" g="0.5" b="1" a="0.3" />
+    </HighlightTexture>
 
     <Layers>
         <Layer level="ARTWORK">
-            <Texture parentKey="SelectedTexture" hidden="true" setAllPoints="true">
-                <Color r="1" g="0.843" b="0" a="0.2" />
+            <Texture parentKey="CheckBox" file="Interface\Buttons\UI-CheckBox-Up">
+                <Size x="20" y="20" />
+                <Anchors>
+                    <Anchor point="LEFT" x="4" />
+                </Anchors>
             </Texture>
         </Layer>
         <Layer level="OVERLAY">
-            <Texture parentKey="CheckedTexture" file="Interface\Buttons\UI-CheckBox-Check" hidden="true">
+            <Texture parentKey="Checked" hidden="true" file="Interface\Buttons\UI-CheckBox-Check">
                 <Size x="20" y="20" />
                 <Anchors>
-                    <Anchor point="LEFT" x="8" />
+                    <Anchor point="CENTER" relativeKey="$parent.CheckBox" />
                 </Anchors>
             </Texture>
-            <Texture parentKey="Icon">
-                <Size x="18" y="18" />
+            <FontString parentKey="Name" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false">
                 <Anchors>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.CheckedTexture" x="8" />
-                </Anchors>
-            </Texture>
-            <FontString parentKey="Name" inherits="GameFontHighlightSmall" justifyH="LEFT" wordwrap="false">
-                <Anchors>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.Icon" x="8" />
-                    <Anchor point="RIGHT" x="-8" />
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.Checked" x="4" />
+                    <Anchor point="RIGHT" x="-4" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
+</Button>
+
+<Button name="LiteMountGroupsPanelButtonTemplate" virtual="true">
+    <Size y="18" />
+    <Frames>
+        <Button parentKey="mount1" inherits="LiteMountGroupsPanelMountTemplate">
+            <Anchors>
+                <Anchor point="LEFT" x="4" />
+                <Anchor point="RIGHT" relativePoint="CENTER" x="-4" />
+            </Anchors>
+        </Button>
+        <Button parentKey="mount2" inherits="LiteMountGroupsPanelMountTemplate">
+            <Anchors>
+                <Anchor point="LEFT" relativePoint="CENTER" x="4" />
+                <Anchor point="RIGHT" x="-4" />
+            </Anchors>
+        </Button>
+    </Frames>
 </Button>
 
 <Frame name="LiteMountGroupsPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountGroupsPanelMixin">
@@ -128,7 +158,7 @@
 
     <Frames>
         <Frame parentKey="GroupsContainer" inherits="LiteMountOptionsContainerTemplate" frameStrata="LOW">
-            <Size x="180" />
+            <Size x="150" />
             <Anchors>
                 <Anchor point="TOPLEFT" x="16" y="-120" />
                 <Anchor point="BOTTOM" y="53" />
@@ -172,7 +202,43 @@
                 <OnSizeChanged inherit="append" method="OnSizeChanged" />
             </Scripts>
         </ScrollFrame>
+        <CheckButton parentKey="ShowAll">
+            <Size x="22" y="22" />
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.MountsContainer" relativePoint="TOPRIGHT" x="-4" y="8" />
+            </Anchors>
+            <Scripts>
+                <OnClick>
+                    local parent = self:GetParent()
+                    parent.showAll = self:GetChecked() or nil
+                    parent:refresh()
+                </OnClick>
+            </Scripts>
+            <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+            <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+            <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+            <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+            <Layers>
+                <Layer level="OVERLAY">
+                    <FontString parentKey="Text" inherits="GameFontHighlight" text="LM_SHOW_ALL_MOUNTS">
+                        <Anchors>
+                            <Anchor point="RIGHT" relativePoint="LEFT" x="-4" />
+                        </Anchors>
+                    </FontString>
+                </Layer>
+            </Layers>
+        </CheckButton>
     </Frames>
+
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString inherits="GameFontHighlightLarge" text="GROUP">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.GroupsContainer" y="4" x="20" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
 
 </Frame>
 

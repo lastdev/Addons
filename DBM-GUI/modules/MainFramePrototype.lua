@@ -2,7 +2,7 @@ local select, ipairs, mfloor, mmax = select, pairs, math.floor, math.max
 local CreateFrame, GameFontHighlightSmall, GameFontNormalSmall, GameFontNormal = CreateFrame, GameFontHighlightSmall, GameFontNormalSmall, GameFontNormal
 local DBM, DBM_GUI = DBM, DBM_GUI
 
-local frame = CreateFrame("Frame", "DBM_GUI_OptionsFrame", UIParent, "BackdropTemplate")
+local frame = CreateFrame("Frame", "DBM_GUI_OptionsFrame", UIParent, DBM:IsShadowlands() and "BackdropTemplate")
 
 function frame:UpdateMenuFrame()
 	local listFrame = _G["DBM_GUI_OptionsFrameList"]
@@ -23,7 +23,7 @@ function frame:UpdateMenuFrame()
 		button:SetWidth(bigList and 185 or 209)
 		button:UnlockHighlight()
 		local element = displayedElements[i + (listFrame.offset or 0)]
-		if not element or i > bigList or element.initial then
+		if not element or i > bigList then
 			button:Hide()
 			button:SetHeight(-1)
 		else
@@ -152,7 +152,7 @@ function frame:DisplayFrame(frame)
 		if not bossPreview then
 			bossPreview = CreateFrame("PlayerModel", "DBM_BossPreview", _G["DBM_GUI_OptionsFramePanelContainer"])
 			bossPreview:SetPoint("BOTTOMRIGHT", "DBM_GUI_OptionsFramePanelContainer", "BOTTOMRIGHT", -5, 5)
-			bossPreview:SetSize(300, 230)
+			bossPreview:SetSize(300, 300)
 			bossPreview:SetPortraitZoom(0.4)
 			bossPreview:SetRotation(0)
 			bossPreview:SetClampRectInsets(0, 0, 24, 0)
@@ -236,12 +236,6 @@ function frame:ShowTab(tab)
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "LeftDisabled"]:Show()
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "MiddleDisabled"]:Show()
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "RightDisabled"]:Show()
-			for _, panel in ipairs(DBM_GUI.tabs[i].Buttons) do
-				if panel.initial then
-					self:DisplayFrame(panel.frame)
-					return
-				end
-			end
 		else
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "Left"]:Show()
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "Middle"]:Show()
@@ -249,12 +243,6 @@ function frame:ShowTab(tab)
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "LeftDisabled"]:Hide()
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "MiddleDisabled"]:Hide()
 			_G["DBM_GUI_OptionsFrameTab" .. i .. "RightDisabled"]:Hide()
-			for _, panel in ipairs(DBM_GUI.tabs[i].Buttons) do
-				if panel.initial then
-					panel.frame:Hide()
-					return
-				end
-			end
 		end
 	end
 end

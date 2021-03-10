@@ -1,0 +1,9 @@
+## Interface: 90002
+## X-Min-Interface: 90002
+
+## Title: AAP - Shadowlands
+## Notes: Shadowlands for AAP
+## Author: Zyrrael
+## LoadOnDemand: 1
+## RequiredDeps: AAP-Core
+Shadowlands.lua

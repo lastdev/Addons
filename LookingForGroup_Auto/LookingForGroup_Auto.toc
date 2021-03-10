@@ -1,7 +1,0 @@
-## Interface: 80205
-## Author: cqwrteur
-## Title: LookingForGroup Auto
-## LoadOnDemand: 1
-## Dependencies: LookingForGroup
-
-Core.lua

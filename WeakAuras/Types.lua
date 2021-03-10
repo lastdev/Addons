@@ -77,6 +77,25 @@ Private.group_hybrid_sort_types = {
   descending = L["Descending"]
 }
 
+if WeakAuras.IsClassic() then
+  Private.time_format_types = {
+    [0] = L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"],
+    [1] = L["Blizzard (2h | 3m | 10s | 2.4)"],
+  }
+else
+  Private.time_format_types = {
+    [0] = L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"],
+    [1] = L["Old Blizzard (2h | 3m | 10s | 2.4)"],
+    [2] = L["Modern Blizzard (1h 3m | 3m 7s | 10s | 2.4)"]
+  }
+end
+
+Private.time_precision_types = {
+  [1] = "12.3",
+  [2] = "12.34",
+  [3] = "12.345",
+}
+
 Private.precision_types = {
   [0] = "12",
   [1] = "12.3",
@@ -107,6 +126,33 @@ Private.unit_realm_name_types = {
   always = L["Always include realm"]
 }
 
+local timeFormatter = {}
+if not WeakAuras.IsClassic() then
+  Mixin(timeFormatter, SecondsFormatterMixin)
+  timeFormatter:Init(0, SecondsFormatter.Abbreviation.OneLetter)
+
+  -- The default time formatter adds a space between the value and the unit
+  -- While there is a API to strip it, that API does not work on all locales, e.g. german
+  -- Thus, copy the interval descriptions, strip the whitespace from them
+  -- and hack the timeFormatter to use our interval descriptions
+  local timeFormatIntervalDescriptionFixed = {}
+  timeFormatIntervalDescriptionFixed = CopyTable(SecondsFormatter.IntervalDescription)
+  for i, interval in ipairs(timeFormatIntervalDescriptionFixed) do
+    interval.formatString = CopyTable(SecondsFormatter.IntervalDescription[i].formatString)
+    for j, formatString in ipairs(interval.formatString) do
+      interval.formatString[j] = formatString:gsub(" ", "")
+    end
+  end
+
+  timeFormatter.GetIntervalDescription = function(self, interval)
+    return timeFormatIntervalDescriptionFixed[interval]
+  end
+
+  timeFormatter.GetMaxInterval = function(self)
+    return #timeFormatIntervalDescriptionFixed
+  end
+end
+
 local simpleFormatters = {
   AbbreviateNumbers = function(value, state)
     return (type(value) == "number") and AbbreviateNumbers(value) or value
@@ -122,7 +168,26 @@ local simpleFormatters = {
   end,
   round = function(value)
     return (type(value) == "number") and Round(value) or value
-  end
+  end,
+  time = {
+    [0] = function(value)
+      if value > 60 then
+        return string.format("%i:", math.floor(value / 60)) .. string.format("%02i", value % 60)
+      else
+        return string.format("%d", value)
+      end
+    end,
+    -- Old Blizzard
+    [1] = function(value)
+      local fmt, time = SecondsToTimeAbbrev(value)
+      -- Remove the space between the value and unit
+      return fmt:gsub(" ", ""):format(time)
+    end,
+    -- Modern Blizzard
+    [2] = not WeakAuras.IsClassic() and function(value)
+      return timeFormatter:Format(value)
+    end
+  }
 }
 
 Private.format_types = {
@@ -145,7 +210,7 @@ Private.format_types = {
         name = L["Max Char "],
         width = WeakAuras.normalWidth,
         min = 1,
-        max = 20,
+        softMax = 20,
         hidden = hidden,
         step = 1,
         disabled = function()
@@ -167,34 +232,84 @@ Private.format_types = {
   timed = {
     display = L["Time Format"],
     AddOptions = function(symbol, hidden, addOption, get)
+      addOption(symbol .. "_time_format", {
+        type = "select",
+        name = L["Format"],
+        width = WeakAuras.doubleWidth,
+        values = Private.time_format_types,
+        hidden = hidden
+      })
+
+      addOption(symbol .. "_time_dynamic_threshold", {
+        type = "range",
+        min = 0,
+        max = 60,
+        step = 1,
+        name = L["Increase Precision Below"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+
       addOption(symbol .. "_time_precision", {
         type = "select",
         name = L["Precision"],
         width = WeakAuras.normalWidth,
-        values = Private.precision_types,
-        hidden = hidden
-      })
-      addOption(symbol .. "_time_dynamic", {
-        type = "toggle",
-        name = L["Dynamic"],
-        desc = L["Increased Precision below 3s"],
-        width = WeakAuras.normalWidth,
+        values = Private.time_precision_types,
         hidden = hidden,
-        disabled = function() return get(symbol .. "_time_precision") == 0 end
+        disabled = function() return get(symbol .. "_time_dynamic_threshold") == 0 end
       })
     end,
     CreateFormatter = function(symbol, get)
+      local format = get(symbol .. "_time_format", 0)
+      local threshold = get(symbol .. "_time_dynamic_threshold", 60)
       local precision = get(symbol .. "_time_precision", 1)
-      local dynamic = get(symbol .. "_time_dynamic", false)
 
-      if dynamic then
-        if precision == 1 or precision == 2 or precision == 3 then
-          precision = precision + 3
+      local mainFormater = simpleFormatters.time[format]
+      if not mainFormater then
+        mainFormater = simpleFormatters.time[0]
+      end
+      local formatter
+      if threshold == 0 then
+        formatter = function(value, state)
+          if type(value) ~= 'number' or value == math.huge then
+            return ""
+          end
+          if value <= 0 then
+            return ""
+          end
+          return mainFormater(value)
+        end
+      else
+        local formatString = "%." .. precision .. "f"
+        formatter = function(value, state)
+          if type(value) ~= 'number' or value == math.huge then
+            return ""
+          end
+          if value <= 0 then
+            return ""
+          end
+          if value < threshold then
+            return string.format(formatString, value)
+          else
+            return mainFormater(value, state)
+          end
         end
       end
 
-      return function(value, state)
-        return Private.dynamic_texts.p.func(value, state, precision)
+      local triggerNum, sym = string.match(symbol, "(.+)%.(.+)")
+      sym = sym or symbol
+      if sym == "p" or sym == "t" then
+        -- Special case %p and %t. Since due to how the formatting
+        -- work previously, the time formatter only formats %p and %t
+        -- if the progress type is timed!
+        return function(value, state)
+          if not state or state.progressType ~= "timed" then
+            return value
+          end
+          return formatter(value, state)
+        end
+      else
+        return formatter
       end
     end
   },
@@ -764,6 +879,10 @@ do
     [23] = true,
     [33] = true
   }
+  if WeakAuras.IsClassic() then
+    unplayableRace[9] = true
+  end
+
   local raceID = 1
   local raceInfo = C_CreatureInfo.GetRaceInfo(raceID)
   while raceInfo do
@@ -777,6 +896,7 @@ end
 
 if not WeakAuras.IsClassic() then
   Private.covenant_types = {}
+  Private.covenant_types[0] = L["None"]
   for i = 1, 4 do
     Private.covenant_types[i] = C_Covenants.GetCovenantData(i).name
   end
@@ -934,18 +1054,10 @@ Private.text_word_wrap = {
   Elide = L["Elide"]
 }
 
-Private.event_types = {};
+Private.category_event_prototype = {}
 for name, prototype in pairs(Private.event_prototypes) do
-  if(prototype.type == "event") then
-    Private.event_types[name] = prototype.name;
-  end
-end
-
-Private.status_types = {};
-for name, prototype in pairs(Private.event_prototypes) do
-  if(prototype.type == "status") then
-    Private.status_types[name] = prototype.name;
-  end
+  Private.category_event_prototype[prototype.type] = Private.category_event_prototype[prototype.type] or {}
+  Private.category_event_prototype[prototype.type][name] = prototype.name
 end
 
 Private.subevent_prefix_types = {
@@ -1066,6 +1178,7 @@ Private.environmental_types = {
 }
 
 Private.combatlog_flags_check_type = {
+  Mine = L["Mine"],
   InGroup = L["In Group"],
   NotInGroup = L["Not in Group"]
 }
@@ -1187,12 +1300,45 @@ if not WeakAuras.IsClassic() then
   end
 end
 
+Private.talent_extra_option_types = {
+    [0] = L["Talent Known"],
+    [1] = L["Talent Selected"],
+    [2] = L["Talent |cFFFF0000Not|r Known"],
+    [3] = L["Talent |cFFFF0000Not|r Selected"],
+}
+
 -- GetTotemInfo() only works for the first 5 totems
 Private.totem_types = {};
 local totemString = L["Totem #%i"];
 for i = 1, 5 do
   Private.totem_types[i] = totemString:format(i);
 end
+
+Private.loss_of_control_types = {
+  CHARM = "CHARM",
+  CONFUSE = "CONFUSE",
+  DISARM = "DISARM",
+  FEAR = "FEAR",
+  FEAR_MECHANIC = "FEAR_MECHANIC",
+  PACIFY = "PACIFY",
+  SILENCE = "SILENCE",
+  PACIFYSILENCE = "PACIFYSILENCE",
+  POSSESS = "POSSESS",
+  ROOT = "ROOT",
+  SCHOOL_INTERRUPT = "SCHOOL_INTERRUPT",
+  STUN = "STUN",
+  STUN_MECHANIC = "STUN_MECHANIC",
+}
+
+Private.main_spell_schools = {
+  [1] = GetSchoolString(1),
+  [2] = GetSchoolString(2),
+  [4] = GetSchoolString(4),
+  [8] = GetSchoolString(8),
+  [16] = GetSchoolString(16),
+  [32] = GetSchoolString(32),
+  [64] = GetSchoolString(64),
+}
 
 Private.texture_types = {
   ["Blizzard Alerts"] = {
@@ -1789,11 +1935,6 @@ Private.eventend_types = {
   ["custom"] = L["Custom"]
 }
 
-Private.autoeventend_types = {
-  ["auto"] = L["Automatic"],
-  ["custom"] = L["Custom"]
-}
-
 Private.timedeventend_types = {
   ["timed"] = L["Timed"],
 }
@@ -1941,6 +2082,84 @@ Private.instance_types = {
   arena = L["Arena"]
 }
 
+Private.instance_difficulty_types = {
+
+}
+
+if not WeakAuras.IsClassic() then
+  -- Fill out instance_difficulty_types automatically.
+  -- Unfourtunately the names BLizzard gives are not entirely unique,
+  -- so try hard to disambiguate them via the type, and if nothing works by
+  -- including the plain id.
+
+  local unused = {}
+
+  local instance_difficulty_names = {
+    [1] = L["Dungeon (Normal)"],
+    [2] = L["Dungeon (Heroic)"],
+    [3] = L["10 Player Raid (Normal)"],
+    [4] = L["25 Player Raid (Normal)"],
+    [5] = L["10 Player Raid (Heroic)"],
+    [6] = L["25 Player Raid (Heroic)"],
+    [7] = L["Legacy Looking for Raid"],
+    [8] = L["Mythic Keystone"],
+    [9] = L["40 Player Raid"],
+    [11] = L["Scenario (Heroic)"],
+    [12] = L["Scenario (Normal)"],
+    [14] = L["Raid (Normal)"],
+    [15] = L["Raid (Heroic)"],
+    [16] = L["Raid (Mythic)"],
+    [17] = L["Looking for Raid"],
+    [18] = unused, -- Event Raid
+    [19] = unused, -- Event Party
+    [20] = unused, -- Event Scenario
+    [23] = L["Dungeon (Mythic)"],
+    [24] = L["Dungeon (Timewalking)"],
+    [25] = unused, -- World PvP Scenario
+    [29] = unused, -- PvEvP Scenario
+    [30] = unused, -- Event Scenario
+    [32] = unused, -- World PvP Scenario
+    [33] = L["Raid (Timewalking)"],
+    [34] = unused, -- PvP
+    [38] = L["Island Expedition (Normal)"],
+    [39] = L["Island Expedition (Heroic)"],
+    [40] = L["Island Expedition (Mythic)"],
+    [45] = L["Island Expeditions (PvP)"],
+    [147] = L["Warfront (Normal)"],
+    [149] = L["Warfront (Heroic)"],
+    [152] = L["Visions of N'Zoth"],
+    [150] = unused, -- Normal Party
+    [151] = unused, -- LfR
+    [153] = unused, -- Teeming Islands
+    [167] = L["Torghast"],
+    [168] = L["Path of Ascension: Courage"],
+    [169] = L["Path of Ascension: Loyalty"],
+    [171] = L["Path of Ascension: Humility"],
+    [170] = L["Path of Ascension: Wisdom"],
+    [172] = unused, -- World Boss
+  }
+
+  local names = {}
+  local ids = {}
+
+  for i = 1, 200 do
+    local name, type = GetDifficultyInfo(i)
+    if name then
+      if instance_difficulty_names[i] then
+        if instance_difficulty_names[i] ~= unused then
+          Private.instance_difficulty_types[i] = instance_difficulty_names[i]
+        end
+      else
+        Private.instance_difficulty_types[i] = name
+        WeakAuras.prettyPrint(string.format("Unknown difficulty id found. Please report as a bug: %s %s %s", i, name, type))
+      end
+    end
+  end
+
+
+end
+
+
 Private.group_types = {
   solo = L["Not in Group"],
   group = L["In Group"],
@@ -1957,11 +2176,18 @@ Private.difficulty_types = {
   challenge = PLAYER_DIFFICULTY5
 }
 
-Private.role_types = {
-  TANK = INLINE_TANK_ICON.." "..TANK,
-  DAMAGER = INLINE_DAMAGER_ICON.." "..DAMAGER,
-  HEALER = INLINE_HEALER_ICON.." "..HEALER
-}
+if WeakAuras.IsClassic() then
+  Private.raid_role_types = {
+    MAINTANK = "|TInterface\\GroupFrame\\UI-Group-maintankIcon:16:16|t "..MAINTANK,
+    MAINASSIST = "|TInterface\\GroupFrame\\UI-Group-mainassistIcon:16:16|t "..MAINASSIST
+  }
+else
+  Private.role_types = {
+    TANK = INLINE_TANK_ICON.." "..TANK,
+    DAMAGER = INLINE_DAMAGER_ICON.." "..DAMAGER,
+    HEALER = INLINE_HEALER_ICON.." "..HEALER
+  }
+end
 
 Private.classification_types = {
   worldboss = L["World Boss"],
@@ -2052,7 +2278,8 @@ Private.send_chat_message_types = {
   RAID_WARNING = L["Raid Warning"],
   INSTANCE_CHAT = L["Instance"],
   COMBAT = L["Blizzard Combat Text"],
-  PRINT = L["Chat Frame"]
+  PRINT = L["Chat Frame"],
+  ERROR = L["Error Frame"]
 }
 
 Private.group_aura_name_info_types = {
@@ -2490,6 +2717,9 @@ WeakAuras.data_stub = {
     class = {
       multi = {},
     },
+    talent = {
+      multi = {},
+    },
   },
   actions = {
     init = {},
@@ -2519,6 +2749,7 @@ WeakAuras.data_stub = {
   conditions = {},
   config = {},
   authorOptions = {},
+  information = {},
 }
 
 Private.author_option_classes = {
@@ -3011,6 +3242,8 @@ if WeakAuras.IsClassic() then
   Private.threat_unit_types.focus = nil
   Private.item_slot_types[0] = AMMOSLOT
   Private.item_slot_types[18] = RANGEDSLOT
+  Private.talent_extra_option_types[0] = nil
+  Private.talent_extra_option_types[2] = nil
 
   local reset_swing_spell_list = {
     1464, 8820, 11604, 11605, -- Slam

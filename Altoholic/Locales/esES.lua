@@ -706,7 +706,6 @@ L["Warlords Deck"] = "Baraja de Señores de la guerra"
 L["Warn %d minutes before an event starts"] = "Avisar con %d minutos de antelación del inicio de un evento"
 L["Warn when mail expires in less days than this value"] = "Avisar cuando el correo expira en menos días que los indicados"
 L["Warrior Set"] = "Conjunto de Guerrero"
-L["War Campaign Missions"] = "Misiones de Campaña de Guerra"
 L["Weapons"] = "Armas"
 L["Weaponsmith"] = "Forjador de Armas"
 L["Week starts on Monday"] = "La semana empieza el Lunes"
@@ -750,8 +749,3 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 L["Zelemar the Wrathful"] = "Zelemar El Colérico"
 L["Zone"] = "Zona"
 
-L["will be returned upon expiry"] = "TRANSLATION MISSING"
-L["CLOSEST_RETURN_IN_PATTERN"] = "TRANSLATION MISSING %s" -- %s will be filled in by [# hours # minutes]
-L["CLOSEST_DELETION_IN_PATTERN"] = "TRANSLATION MISSING %s" -- ^
-L["MAIL_WILL_BE_DELETED_PATTERN"] = "|cFF00FF00%d|cFFFFFFFF will be |cFFFF0000deleted|cFFFFFFFF upon expiry"
-L["Mails found:"] = "TRANSLATION MISSING"

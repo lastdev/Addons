@@ -8,103 +8,26 @@ local view
 local isViewValid
 local OPTION_TOKEN = "UI.Tabs.Grids.Currencies.CurrentTokenType"
 
-local function HashToSortedArray(hash)
-	local array = {}		-- order them
-	for k, _ in pairs(hash) do
-		table.insert(array, k)
-	end
-	table.sort(array)
-	return array
-end
-
-local function GetUsedHeaders()
-	local account, realm = AltoholicTabGrids:GetAccount()
-	
-	local usedHeaders = {}
-	local isHeader, name, num
-
-	if realm then
-        for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-    		num = DataStore:GetNumCurrencies(character) or 0
-    		
-    		for i = 1, num do
-    			isHeader, name = DataStore:GetCurrencyInfo(character, i)	-- save ech header found in the table
-    			if isHeader then
-    				usedHeaders[name] = true
-    			end
-    		end
-    	end
-    else
-        for realm in pairs(DataStore:GetRealms(account)) do
-            for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-        		num = DataStore:GetNumCurrencies(character) or 0
-        		
-        		for i = 1, num do
-        			isHeader, name = DataStore:GetCurrencyInfo(character, i)	-- save ech header found in the table
-        			if isHeader then
-        				usedHeaders[name] = true
-        			end
-        		end
-        	end
-        end
-    end
-	
-	return HashToSortedArray(usedHeaders)
-end
-
 local function GetUsedTokens(header)
 	-- get the list of tokens found under a specific header, across all alts
 
-	local account, realm = AltoholicTabGrids:GetAccount()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
 	local tokens = {}
 	local useData				-- use data for a specific header or not
 
-	if realm then
-        for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-    		local num = DataStore:GetNumCurrencies(character) or 0
-    		for i = 1, num do
-    			local isHeader, name, count, icon = DataStore:GetCurrencyInfo(character, i)
-    			
-    			if isHeader then
-    				if header and name ~= header then -- if a specific header (filter) was set, and it's not the one we chose, skip
-    					useData = nil
-    				else
-    					useData = true		-- we'll use data in this category
-    				end
-    			else
-    				if useData then		-- mark it as used
-    					tokens[name] = true
-    				end
-    			end
-                
-    		end
-    	end
-    else
-        for realm in pairs(DataStore:GetRealms(account)) do
-            for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-        		local num = DataStore:GetNumCurrencies(character) or 0
-        		for i = 1, num do
-        			local isHeader, name, count, icon = DataStore:GetCurrencyInfo(character, i)
-        			
-        			if isHeader then
-        				if header and name ~= header then -- if a specific header (filter) was set, and it's not the one we chose, skip
-        					useData = nil
-        				else
-        					useData = true		-- we'll use data in this category
-        				end
-        			else
-        				if useData then		-- mark it as used
-        					tokens[name] = true
-        				end
-        			end
-                    
-        		end
-        	end
-        end
-    end
+	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+		
+		for i = 1, (DataStore:GetNumCurrencies(character) or 0) do
+			local name, _, _, category = DataStore:GetCurrencyInfo(character, i)
+			
+			if category == header then
+				tokens[name] = true
+			end
+		end
+	end
 	
-	return HashToSortedArray(tokens)
+	return DataStore:HashToSortedArray(tokens)
 end
 
 local function BuildView()
@@ -129,9 +52,10 @@ local function OnTokensAllInOne(self)
 end
 
 local function DropDown_Initialize(frame)
-	for _, header in ipairs(GetUsedHeaders()) do		-- and add them to the DDM
+	for _, header in ipairs(DataStore:GetCurrencyHeaders()) do		-- and add them to the DDM
 		frame:AddButtonWithArgs(header, nil, OnTokenChange, header, nil, (addon:GetOption(OPTION_TOKEN) == header))
 	end
+	
 	frame:AddButtonWithArgs(L["All-in-one"], nil, OnTokensAllInOne, nil, nil, (addon:GetOption(OPTION_TOKEN) == nil))
 	frame:AddCloseMenu()
 end
@@ -163,7 +87,7 @@ local callbacks = {
 			button.Background:SetTexCoord(0, 1, 0, 1)
 
 			local token = view[dataRowID]
-			local _, _, count, icon = DataStore:GetCurrencyInfoByName(character, token)
+			local _, count, icon = DataStore:GetCurrencyInfoByName(character, token)
 			button.count = count
 		
 			if count then 
@@ -197,7 +121,7 @@ local callbacks = {
 			AltoTooltip:AddLine(DataStore:GetColoredCharacterName(character))
 			-- AltoTooltip:AddLine(view[frame:GetParent():GetID()], 1, 1, 1)
 			AltoTooltip:AddLine(view[frame:GetID()], 1, 1, 1)
-			AltoTooltip:AddLine(colors.green..frame.count)
+			AltoTooltip:AddLine(format("%s%s", colors.green, frame.count))
 			AltoTooltip:Show()
 		end,
 	OnClick = nil,
@@ -214,7 +138,5 @@ local callbacks = {
 			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }
-
-local headers = GetUsedHeaders()
 
 AltoholicTabGrids:RegisterGrid(3, callbacks)

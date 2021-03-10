@@ -26,13 +26,13 @@ L.BossModLoad_now 			= [[Esse módulo não está carregado.
 Ele será carregado quando você entrar na instância.
 Você também pode clicar no botão para carregar o módulo manualmente.]]
 
-L.PosX						= 'Posição X'
-L.PosY						= 'Posição Y'
+L.PosX						= "Posição X"
+L.PosY						= "Posição Y"
 
-L.MoveMe 					= 'Mova-me'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Cancelar'
-L.Button_LoadMod 			= 'Carregar AddOn'
+L.MoveMe 					= "Mova-me"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Cancelar"
+L.Button_LoadMod 			= "Carregar AddOn"
 L.Mod_Enabled				= "Habilitar módulo"
 L.Mod_Reset					= "Carregar opções padrão"
 L.Reset 					= "Resetar"
@@ -188,7 +188,7 @@ L.SpamBlockNoInfoFrame		= "Não exibir quadro de informação"
 L.SpamBlockNoHudMap			= "Não mostrar mapas HudMap (heads up display Map)"
 L.SpamBlockNoCountdowns		= "Não tocar sons de contagem regressiva"
 L.SpamBlockNoIconRestore	= "Não guardar estado dos ícones e restaura-los ao fim do combate"
-L.SpamBlockNoRangeRestore	= "Não restaurar o quadro de distancia para o estado anterior ( show/hide ) quando a mod pedir hide'"
+L.SpamBlockNoRangeRestore	= "Não restaurar o quadro de distancia para o estado anterior ( show/hide ) quando a mod pedir 'hide'"
 
 
 -- Tab: Spam Filter
@@ -239,8 +239,7 @@ L.AutologBosses				= "Gravar automaticamente o relatório de encontro com os che
 L.AdvancedAutologBosses		= "Gravar automaticamente o encontro com o chefe utilizando o Transcritor"
 L.LogOnlyNonTrivial			= "Só gravar encontros com chefes de raid (exclui Localizador de Raids/Grupos/Cenários)"
 L.Area_3rdParty				= "opções de add0ns de terceiros"
-L.ShowBBOnCombatStart		= "Fazer checagem de Buff com Big Brother no início do combate"
-L.BigBrotherAnnounceToRaid	= "Anunciar resultados do Big Brother para a raid"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Opções de convite"
 L.AutoAcceptFriendInvite	= "Aceitar convites de amigos automaticamente"
 L.AutoAcceptGuildInvite		= "Aceitar convites de membros da guilda automaticamente"

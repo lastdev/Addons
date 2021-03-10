@@ -4,7 +4,7 @@
 
   User-settable options.  Theses are queried by different places.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -74,8 +74,9 @@ local defaults = {
         buttonActions       = { ['*'] = DefaultButtonAction },
         copyTargetsMount    = true,
         excludeNewMounts    = false,
-        priorityWeights     = { 1, 2, 6 },
+        priorityWeights     = { 1, 2, 6, 1 },
         randomKeepSeconds   = 0,
+        instantOnlyMoving   = false,
     },
     char = {
         unavailableMacro    = "",
@@ -89,9 +90,10 @@ local defaults = {
 
 LM.Options = {
     MIN_PRIORITY = 0,
-    MAX_PRIORITY = 3,
+    MAX_PRIORITY = 4,
     DISABLED_PRIORITY = 0,
     DEFAULT_PRIORITY = 1,
+    ALWAYS_PRIORITY = 4,
 }
 
 
@@ -251,6 +253,10 @@ end
     Mount priorities stuff.
 ----------------------------------------------------------------------------]]--
 
+function LM.Options:GetAllPriorities()
+    return { 0, 1, 2, 3, 4 }
+end
+
 function LM.Options:GetRawMountPriorities()
     return CopyTable(self.db.profile.mountPriorities)
 end
@@ -339,7 +345,7 @@ function LM.Options:SetMountFlag(m, setFlag)
     LM.Debug(format("Setting flag %s for spell %s (%d).",
                     setFlag, m.name, m.spellID))
 
-    if setFlag == "FAVORITES" then
+    if setFlag == "FAVORITES" or setFlag == "NONE" or setFlag == "CASTABLE" then
         -- This needs to fire to reset the UI, because something went wrong
         self.db.callbacks:Fire("OnOptionsModified")
         return
@@ -398,7 +404,13 @@ function LM.Options:SetRawFlags(v)
 end
 
 function LM.Options:IsPrimaryFlag(f)
-    return LM.FLAG[f] ~= nil
+    -- These are pseudo-flags used in Mount:MatchesOneFilter and we don't
+    -- let custom flags have the name.
+    if f == "NONE" or f == "CASTABLE" then
+        return true
+    else
+        return LM.FLAG[f] ~= nil
+    end
 end
 
 function LM.Options:IsCustomFlag(f)
@@ -489,6 +501,24 @@ function LM.Options:SetCopyTargetsMount(v)
         self.db.profile.copyTargetsMount = true
     else
         self.db.profile.copyTargetsMount = false
+    end
+    self.db.callbacks:Fire("OnOptionsModified")
+end
+
+
+--[[----------------------------------------------------------------------------
+    Only use instant cast mounts when moving
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetInstantOnlyMoving()
+    return self.db.profile.instantOnlyMoving
+end
+
+function LM.Options:SetInstantOnlyMoving(v)
+    if v then
+        self.db.profile.instantOnlyMoving = true
+    else
+        self.db.profile.instantOnlyMoving = false
     end
     self.db.callbacks:Fire("OnOptionsModified")
 end

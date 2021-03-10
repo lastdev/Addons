@@ -1,0 +1,3013 @@
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_mage", 90047)
+if not __exports then return end
+__exports.registerMage = function(scripts)
+    do
+        local name = "sc_t26_mage_arcane"
+        local desc = "[9.0] Simulationcraft: T26_Mage_Arcane"
+        local code = [[
+# Based on SimulationCraft profile "T26_Mage_Arcane".
+#	class=mage
+#	spec=arcane
+#	talents=1032021
+
+Include(ovale_common)
+Include(ovale_mage_spells)
+
+
+AddFunction evo_pct
+{
+ 0
+}
+
+AddFunction am_spam
+{
+ 0
+}
+
+AddFunction ap_on_use
+{
+ hasequippeditem(macabre_sheet_music_item) or hasequippeditem(gladiators_badge_item) or hasequippeditem(gladiators_medallion_item) or hasequippeditem(darkmoon_deck_putrescence_item) or hasequippeditem(inscrutable_quantum_device_item) or hasequippeditem(soulletting_ruby_item) or hasequippeditem(sunblood_amethyst_item) or hasequippeditem(wakeners_frond_item) or hasequippeditem(flame_of_battle_item)
+}
+
+AddFunction inverted_opener
+{
+ if 
+ {
+  0
+ } == -1 0
+ if 
+ {
+  0
+ } == -1 and hastalent(rune_of_power_talent) and { hastalent(arcane_echo_talent) or not iscovenant("kyrian") } and { not iscovenant("necrolord") or enemies() == 1 or runeforge(siphon_storm_runeforge) } 1
+ 0
+}
+
+AddFunction aoe_totm_max_charges
+{
+ 0
+}
+
+AddFunction totm_max_charges
+{
+ 0
+}
+
+AddFunction ap_minimum_mana_pct
+{
+ if 
+ {
+  0
+ } == -1 15
+ if 
+ {
+  0
+ } == -1 and runeforge(grisly_icicle_runeforge) 50
+ if 
+ {
+  0
+ } == -1 and runeforge(disciplinary_command_runeforge) 50
+ 0
+}
+
+AddFunction barrage_mana_pct
+{
+ if 
+ {
+  0
+ } == -1 80 - masteryeffect() / 100 * 100
+ if 
+ {
+  0
+ } == -1 and iscovenant("night_fae") 60 - masteryeffect() / 100 * 100
+ 0
+}
+
+AddFunction totm_max_delay_for_rop
+{
+ 0
+}
+
+AddFunction totm_max_delay_for_ap
+{
+ if 
+ {
+  0
+ } == -1 5
+ if 
+ {
+  0
+ } == -1 and conduit(arcane_prodigy_conduit) and enemies() < 3 15
+ if 
+ {
+  0
+ } == -1 and iscovenant("night_fae") 15
+ if 
+ {
+  0
+ } == -1 and runeforge(disciplinary_command_runeforge) 3
+ 0
+}
+
+AddFunction rop_max_delay_for_totm
+{
+ 0
+}
+
+AddFunction ap_max_delay_for_totm
+{
+ 0
+}
+
+AddFunction rs_max_delay_for_ap
+{
+ 0
+}
+
+AddFunction rs_max_delay_for_rop
+{
+ 0
+}
+
+AddFunction rs_max_delay_for_totm
+{
+ 0
+}
+
+AddFunction final_burn
+{
+ if arcanecharges() == maxarcanecharges() and not buffpresent(rule_of_threes_buff) and fightremains() <= mana() / powercost(arcane_blast) * executetime(arcane_blast) 1
+ 0
+}
+
+AddFunction have_opened
+{
+ if 
+ {
+  0
+ } == 0 and buffexpires(arcane_power) and spellcooldown(arcane_power) > 0 and { runeforge(siphon_storm_runeforge) or runeforge(temporal_warp_runeforge) } 1
+ if 
+ {
+  0
+ } == 0 and previousgcdspell(evocation) and not { runeforge(siphon_storm_runeforge) or runeforge(temporal_warp_runeforge) } 1
+ if 
+ {
+  0
+ } == 0 and am_spam() == 1 1
+ if 
+ {
+  0
+ } == 0 and prepull_evo() == 1 1
+ if 
+ {
+  0
+ } == 0 and enemies() > 2 1
+ 0
+}
+
+AddFunction prepull_evo
+{
+ if 
+ {
+  0
+ } == -1 0
+ if 
+ {
+  0
+ } == -1 and runeforge(siphon_storm_runeforge) and iscovenant("necrolord") and enemies() > 1 1
+ if 
+ {
+  0
+ } == -1 and runeforge(siphon_storm_runeforge) and enemies() > 2 1
+ 0
+}
+
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(arcane)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(arcane)))
+AddCheckBox(opt_time_warp spellname(time_warp) enabled=(specialization(arcane)))
+AddCheckBox(opt_blink spellname(blink) enabled=(specialization(arcane)))
+
+AddFunction arcaneinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(counterspell) and target.isinterruptible() spell(counterspell)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction arcaneuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+### actions.shared_cds
+
+AddFunction arcaneshared_cdsmainactions
+{
+}
+
+AddFunction arcaneshared_cdsmainpostconditions
+{
+}
+
+AddFunction arcaneshared_cdsshortcdactions
+{
+ #bag_of_tricks,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down
+ if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) spell(bag_of_tricks)
+}
+
+AddFunction arcaneshared_cdsshortcdpostconditions
+{
+}
+
+AddFunction arcaneshared_cdscdactions
+{
+ #use_mana_gem,if=(talent.enlightened&mana.pct<=80&mana.pct>=65)|(!talent.enlightened&mana.pct<=85)
+ if hastalent(enlightened_talent) and manapercent() <= 80 and manapercent() >= 65 or not hastalent(enlightened_talent) and manapercent() <= 85 spell(replenish_mana)
+ #potion,if=buff.arcane_power.up
+ if buffpresent(arcane_power) and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_spectral_intellect_item usable=1)
+ #time_warp,if=runeforge.temporal_warp&buff.exhaustion.up&(cooldown.arcane_power.ready|fight_remains<=40)
+ if runeforge(temporal_warp_runeforge) and debuffpresent(exhaustion_debuff) and { spellcooldown(arcane_power) <= 0 or fightremains() <= 40 } and { checkboxon(opt_time_warp) and debuffexpires(burst_haste_debuff any=1) } spell(time_warp)
+ #lights_judgment,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down
+ if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) spell(lights_judgment)
+
+ unless buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(bag_of_tricks)
+ {
+  #berserking,if=buff.arcane_power.up
+  if buffpresent(arcane_power) spell(berserking)
+  #blood_fury,if=buff.arcane_power.up
+  if buffpresent(arcane_power) spell(blood_fury_int)
+  #fireblood,if=buff.arcane_power.up
+  if buffpresent(arcane_power) spell(fireblood)
+  #ancestral_call,if=buff.arcane_power.up
+  if buffpresent(arcane_power) spell(ancestral_call)
+  #use_items,if=buff.arcane_power.up
+  if buffpresent(arcane_power) arcaneuseitemactions()
+  #use_item,effect_name=gladiators_badge,if=buff.arcane_power.up|cooldown.arcane_power.remains>=55&debuff.touch_of_the_magi.up
+  if buffpresent(arcane_power) or spellcooldown(arcane_power) >= 55 and target.debuffpresent(touch_of_the_magi_debuff) arcaneuseitemactions()
+  #use_item,name=empyreal_ordnance,if=cooldown.arcane_power.remains<=20
+  if spellcooldown(arcane_power) <= 20 arcaneuseitemactions()
+  #use_item,name=dreadfire_vessel,if=cooldown.arcane_power.remains>=20|!variable.ap_on_use=1|(time=0&variable.inverted_opener=1&runeforge.siphon_storm)
+  if spellcooldown(arcane_power) >= 20 or not ap_on_use() == 1 or timeincombat() == 0 and inverted_opener() == 1 and runeforge(siphon_storm_runeforge) arcaneuseitemactions()
+  #use_item,name=soul_igniter,if=cooldown.arcane_power.remains>=20|!variable.ap_on_use=1|(time=0&variable.inverted_opener=1&runeforge.siphon_storm)
+  if spellcooldown(arcane_power) >= 20 or not ap_on_use() == 1 or timeincombat() == 0 and inverted_opener() == 1 and runeforge(siphon_storm_runeforge) arcaneuseitemactions()
+  #use_item,name=glyph_of_assimilation,if=cooldown.arcane_power.remains>=20|!variable.ap_on_use=1|(time=0&variable.inverted_opener=1&runeforge.siphon_storm)
+  if spellcooldown(arcane_power) >= 20 or not ap_on_use() == 1 or timeincombat() == 0 and inverted_opener() == 1 and runeforge(siphon_storm_runeforge) arcaneuseitemactions()
+  #use_item,name=macabre_sheet_music,if=cooldown.arcane_power.remains<=5&(!variable.inverted_opener=1|time>30)
+  if spellcooldown(arcane_power) <= 5 and { not inverted_opener() == 1 or timeincombat() > 30 } arcaneuseitemactions()
+  #use_item,name=macabre_sheet_music,if=cooldown.arcane_power.remains<=5&variable.inverted_opener=1&buff.rune_of_power.up&buff.rune_of_power.remains<=(10-5*runeforge.siphon_storm)&time<30
+  if spellcooldown(arcane_power) <= 5 and inverted_opener() == 1 and buffpresent(rune_of_power_buff) and totemremaining(rune_of_power) <= 10 - 5 * runeforge(siphon_storm_runeforge) and timeincombat() < 30 arcaneuseitemactions()
+ }
+}
+
+AddFunction arcaneshared_cdscdpostconditions
+{
+ buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(bag_of_tricks)
+}
+
+### actions.rotation
+
+AddFunction arcanerotationmainactions
+{
+ #cancel_action,if=action.evocation.channeling&mana.pct>=95&(!runeforge.siphon_storm|buff.siphon_storm.stack=buff.siphon_storm.max_stack)
+ if channeling(evocation) and manapercent() >= 95 and { not runeforge(siphon_storm_runeforge) or buffstacks(siphon_storm_buff) == spelldata(siphon_storm_buff max_stacks) } texture(inv_pet_exitbattle text=cancel)
+ #arcane_barrage,if=cooldown.touch_of_the_magi.ready&(buff.arcane_charge.stack>variable.totm_max_charges&cooldown.arcane_power.remains<=execute_time&mana.pct>variable.ap_minimum_mana_pct&buff.rune_of_power.down)
+ if spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and spellcooldown(arcane_power) <= executetime(arcane_barrage) and manapercent() > ap_minimum_mana_pct() } and buffexpires(rune_of_power_buff) spell(arcane_barrage)
+ #arcane_barrage,if=cooldown.touch_of_the_magi.ready&(buff.arcane_charge.stack>variable.totm_max_charges&talent.rune_of_power&cooldown.rune_of_power.remains<=execute_time&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)
+ if spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(arcane_barrage) } and spellcooldown(arcane_power) > totm_max_delay_for_ap() spell(arcane_barrage)
+ #arcane_barrage,if=cooldown.touch_of_the_magi.ready&(buff.arcane_charge.stack>variable.totm_max_charges&(!talent.rune_of_power|cooldown.rune_of_power.remains>variable.totm_max_delay_for_rop)&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)
+ if spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } } and spellcooldown(arcane_power) > totm_max_delay_for_ap() spell(arcane_barrage)
+ #arcane_barrage,if=debuff.radiant_spark_vulnerability.stack=debuff.radiant_spark_vulnerability.max_stack&(buff.arcane_power.down|buff.arcane_power.remains<=gcd)&(buff.rune_of_power.down|buff.rune_of_power.remains<=gcd)
+ if target.debuffstacks(radiant_spark_vulnerability_debuff) == spelldata(radiant_spark_vulnerability_debuff max_stacks) and { buffexpires(arcane_power) or buffremaining(arcane_power) <= gcd() } and { buffexpires(rune_of_power_buff) or totemremaining(rune_of_power) <= gcd() } spell(arcane_barrage)
+ #arcane_blast,if=dot.radiant_spark.remains>8|(debuff.radiant_spark_vulnerability.stack>0&debuff.radiant_spark_vulnerability.stack<debuff.radiant_spark_vulnerability.max_stack)
+ if { target.debuffremaining(radiant_spark) > 8 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 and target.debuffstacks(radiant_spark_vulnerability_debuff) < spelldata(radiant_spark_vulnerability_debuff max_stacks) } and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_blast,if=buff.presence_of_mind.up&debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<=action.arcane_blast.execute_time
+ if buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_missiles,if=debuff.touch_of_the_magi.up&talent.arcane_echo&(buff.deathborne.down|active_enemies=1)&(debuff.touch_of_the_magi.remains>action.arcane_missiles.execute_time|cooldown.presence_of_mind.remains|covenant.kyrian)&(!azerite.arcane_pummeling.enabled|buff.clearcasting_channel.down),chain=1,early_chain_if=buff.clearcasting_channel.down&(buff.arcane_power.up|(!talent.overpowered&(buff.rune_of_power.up|cooldown.evocation.ready)))
+ if target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and { target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) or spellcooldown(presence_of_mind) > 0 or iscovenant("kyrian") } and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&buff.expanded_potential.up
+ if buffpresent(clearcasting_mage_buff) and buffpresent(expanded_potential_buff) spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&(buff.arcane_power.up|buff.rune_of_power.up|debuff.touch_of_the_magi.remains>action.arcane_missiles.execute_time),chain=1
+ if buffpresent(clearcasting_mage_buff) and { buffpresent(arcane_power) or buffpresent(rune_of_power_buff) or target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&buff.clearcasting.stack=buff.clearcasting.max_stack,chain=1
+ if buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&buff.clearcasting.remains<=((buff.clearcasting.stack*action.arcane_missiles.execute_time)+gcd),chain=1
+ if buffpresent(clearcasting_mage_buff) and buffremaining(clearcasting_mage_buff) <= buffstacks(clearcasting_mage_buff) * executetime(arcane_missiles) + gcd() spell(arcane_missiles)
+ #nether_tempest,if=(refreshable|!ticking)&buff.arcane_charge.stack=buff.arcane_charge.max_stack&buff.arcane_power.down&debuff.touch_of_the_magi.down
+ if { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) spell(nether_tempest)
+ #arcane_orb,if=buff.arcane_charge.stack<=variable.totm_max_charges
+ if arcanecharges() <= totm_max_charges() spell(arcane_orb)
+ #supernova,if=mana.pct<=95&buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down
+ if manapercent() <= 95 and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) spell(supernova)
+ #arcane_blast,if=buff.rule_of_threes.up&buff.arcane_charge.stack>3
+ if buffpresent(rule_of_threes_buff) and arcanecharges() > 3 and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_barrage,if=mana.pct<=variable.barrage_mana_pct&buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down&buff.arcane_charge.stack=buff.arcane_charge.max_stack&cooldown.evocation.remains
+ if manapercent() <= barrage_mana_pct() and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 spell(arcane_barrage)
+ #arcane_barrage,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down&buff.arcane_charge.stack=buff.arcane_charge.max_stack&talent.arcane_orb&cooldown.arcane_orb.remains<=gcd&mana.pct<=90&cooldown.evocation.remains
+ if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and hastalent(arcane_orb_talent) and spellcooldown(arcane_orb) <= gcd() and manapercent() <= 90 and spellcooldown(evocation) > 0 spell(arcane_barrage)
+ #arcane_barrage,if=buff.arcane_power.up&buff.arcane_power.remains<=gcd&buff.arcane_charge.stack=buff.arcane_charge.max_stack&cooldown.evocation.remains
+ if buffpresent(arcane_power) and buffremaining(arcane_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 spell(arcane_barrage)
+ #arcane_barrage,if=buff.rune_of_power.up&buff.arcane_power.down&buff.rune_of_power.remains<=gcd&buff.arcane_charge.stack=buff.arcane_charge.max_stack&cooldown.evocation.remains
+ if buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 spell(arcane_barrage)
+ #arcane_barrage,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<=gcd&buff.arcane_charge.stack=buff.arcane_charge.max_stack
+ if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= gcd() and arcanecharges() == maxarcanecharges() spell(arcane_barrage)
+ #arcane_barrage,if=target.health.pct<35&buff.arcane_charge.stack=buff.arcane_charge.max_stack&runeforge.arcane_bombardment&active_enemies>1&buff.deathborne.down
+ if target.healthpercent() < 35 and arcanecharges() == maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) spell(arcane_barrage)
+ #arcane_explosion,if=target.health.pct<35&buff.arcane_charge.stack<buff.arcane_charge.max_stack&runeforge.arcane_bombardment&active_enemies>1&buff.deathborne.down
+ if target.healthpercent() < 35 and arcanecharges() < maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) spell(arcane_explosion)
+ #arcane_blast
+ if mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_barrage
+ spell(arcane_barrage)
+}
+
+AddFunction arcanerotationmainpostconditions
+{
+}
+
+AddFunction arcanerotationshortcdactions
+{
+}
+
+AddFunction arcanerotationshortcdpostconditions
+{
+ channeling(evocation) and manapercent() >= 95 and { not runeforge(siphon_storm_runeforge) or buffstacks(siphon_storm_buff) == spelldata(siphon_storm_buff max_stacks) } and texture(inv_pet_exitbattle text=cancel) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and spellcooldown(arcane_power) <= executetime(arcane_barrage) and manapercent() > ap_minimum_mana_pct() } and buffexpires(rune_of_power_buff) and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(arcane_barrage) } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or target.debuffstacks(radiant_spark_vulnerability_debuff) == spelldata(radiant_spark_vulnerability_debuff max_stacks) and { buffexpires(arcane_power) or buffremaining(arcane_power) <= gcd() } and { buffexpires(rune_of_power_buff) or totemremaining(rune_of_power) <= gcd() } and spell(arcane_barrage) or { target.debuffremaining(radiant_spark) > 8 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 and target.debuffstacks(radiant_spark_vulnerability_debuff) < spelldata(radiant_spark_vulnerability_debuff max_stacks) } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and { target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) or spellcooldown(presence_of_mind) > 0 or iscovenant("kyrian") } and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffpresent(expanded_potential_buff) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and { buffpresent(arcane_power) or buffpresent(rune_of_power_buff) or target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffremaining(clearcasting_mage_buff) <= buffstacks(clearcasting_mage_buff) * executetime(arcane_missiles) + gcd() and spell(arcane_missiles) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(nether_tempest) or arcanecharges() <= totm_max_charges() and spell(arcane_orb) or manapercent() <= 95 and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(supernova) or buffpresent(rule_of_threes_buff) and arcanecharges() > 3 and mana() > manacost(arcane_blast) and spell(arcane_blast) or manapercent() <= barrage_mana_pct() and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and hastalent(arcane_orb_talent) and spellcooldown(arcane_orb) <= gcd() and manapercent() <= 90 and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(arcane_power) and buffremaining(arcane_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= gcd() and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() == maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() < maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_explosion) or mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+AddFunction arcanerotationcdactions
+{
+ unless channeling(evocation) and manapercent() >= 95 and { not runeforge(siphon_storm_runeforge) or buffstacks(siphon_storm_buff) == spelldata(siphon_storm_buff max_stacks) } and texture(inv_pet_exitbattle text=cancel)
+ {
+  #evocation,if=mana.pct<=variable.evo_pct&(cooldown.touch_of_the_magi.remains<=action.evocation.execute_time|cooldown.arcane_power.remains<=action.evocation.execute_time|(talent.rune_of_power&cooldown.rune_of_power.remains<=action.evocation.execute_time))&buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down&!prev_gcd.1.touch_of_the_magi
+  if manapercent() <= evo_pct() and { spellcooldown(touch_of_the_magi) <= executetime(evocation) or spellcooldown(arcane_power) <= executetime(evocation) or hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(evocation) } and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and not previousgcdspell(touch_of_the_magi) spell(evocation)
+  #evocation,if=runeforge.siphon_storm&cooldown.arcane_power.remains<=action.evocation.execute_time
+  if runeforge(siphon_storm_runeforge) and spellcooldown(arcane_power) <= executetime(evocation) spell(evocation)
+
+  unless spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and spellcooldown(arcane_power) <= executetime(arcane_barrage) and manapercent() > ap_minimum_mana_pct() } and buffexpires(rune_of_power_buff) and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(arcane_barrage) } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or target.debuffstacks(radiant_spark_vulnerability_debuff) == spelldata(radiant_spark_vulnerability_debuff max_stacks) and { buffexpires(arcane_power) or buffremaining(arcane_power) <= gcd() } and { buffexpires(rune_of_power_buff) or totemremaining(rune_of_power) <= gcd() } and spell(arcane_barrage) or { target.debuffremaining(radiant_spark) > 8 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 and target.debuffstacks(radiant_spark_vulnerability_debuff) < spelldata(radiant_spark_vulnerability_debuff max_stacks) } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and { target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) or spellcooldown(presence_of_mind) > 0 or iscovenant("kyrian") } and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffpresent(expanded_potential_buff) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and { buffpresent(arcane_power) or buffpresent(rune_of_power_buff) or target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffremaining(clearcasting_mage_buff) <= buffstacks(clearcasting_mage_buff) * executetime(arcane_missiles) + gcd() and spell(arcane_missiles) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(nether_tempest) or arcanecharges() <= totm_max_charges() and spell(arcane_orb) or manapercent() <= 95 and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(supernova) or buffpresent(rule_of_threes_buff) and arcanecharges() > 3 and mana() > manacost(arcane_blast) and spell(arcane_blast) or manapercent() <= barrage_mana_pct() and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and hastalent(arcane_orb_talent) and spellcooldown(arcane_orb) <= gcd() and manapercent() <= 90 and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(arcane_power) and buffremaining(arcane_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= gcd() and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() == maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() < maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_explosion) or mana() > manacost(arcane_blast) and spell(arcane_blast)
+  {
+   #evocation,if=buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down
+   if buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) spell(evocation)
+  }
+ }
+}
+
+AddFunction arcanerotationcdpostconditions
+{
+ channeling(evocation) and manapercent() >= 95 and { not runeforge(siphon_storm_runeforge) or buffstacks(siphon_storm_buff) == spelldata(siphon_storm_buff max_stacks) } and texture(inv_pet_exitbattle text=cancel) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and spellcooldown(arcane_power) <= executetime(arcane_barrage) and manapercent() > ap_minimum_mana_pct() } and buffexpires(rune_of_power_buff) and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(arcane_barrage) } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or spellcooldown(touch_of_the_magi) <= 0 and { arcanecharges() > totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(arcane_barrage) or target.debuffstacks(radiant_spark_vulnerability_debuff) == spelldata(radiant_spark_vulnerability_debuff max_stacks) and { buffexpires(arcane_power) or buffremaining(arcane_power) <= gcd() } and { buffexpires(rune_of_power_buff) or totemremaining(rune_of_power) <= gcd() } and spell(arcane_barrage) or { target.debuffremaining(radiant_spark) > 8 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 and target.debuffstacks(radiant_spark_vulnerability_debuff) < spelldata(radiant_spark_vulnerability_debuff max_stacks) } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and { target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) or spellcooldown(presence_of_mind) > 0 or iscovenant("kyrian") } and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffpresent(expanded_potential_buff) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and { buffpresent(arcane_power) or buffpresent(rune_of_power_buff) or target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffremaining(clearcasting_mage_buff) <= buffstacks(clearcasting_mage_buff) * executetime(arcane_missiles) + gcd() and spell(arcane_missiles) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(nether_tempest) or arcanecharges() <= totm_max_charges() and spell(arcane_orb) or manapercent() <= 95 and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(supernova) or buffpresent(rule_of_threes_buff) and arcanecharges() > 3 and mana() > manacost(arcane_blast) and spell(arcane_blast) or manapercent() <= barrage_mana_pct() and buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and hastalent(arcane_orb_talent) and spellcooldown(arcane_orb) <= gcd() and manapercent() <= 90 and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(arcane_power) and buffremaining(arcane_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and spellcooldown(evocation) > 0 and spell(arcane_barrage) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= gcd() and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() == maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_barrage) or target.healthpercent() < 35 and arcanecharges() < maxarcanecharges() and runeforge(arcane_bombardment_runeforge) and enemies() > 1 and buffexpires(deathborne) and spell(arcane_explosion) or mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+### actions.precombat
+
+AddFunction arcaneprecombatmainactions
+{
+ #variable,name=prepull_evo,op=reset,default=-1
+ #variable,name=prepull_evo,op=set,value=1,if=variable.prepull_evo=-1&runeforge.siphon_storm&active_enemies>2
+ #variable,name=prepull_evo,op=set,value=1,if=variable.prepull_evo=-1&runeforge.siphon_storm&covenant.necrolord&active_enemies>1
+ #variable,name=prepull_evo,op=set,value=0,if=variable.prepull_evo=-1
+ #variable,name=have_opened,op=set,value=0
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&active_enemies>2
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&variable.prepull_evo=1
+ #variable,name=final_burn,op=set,value=0
+ #variable,name=rs_max_delay_for_totm,op=reset,default=5
+ #variable,name=rs_max_delay_for_rop,op=reset,default=5
+ #variable,name=rs_max_delay_for_ap,op=reset,default=20
+ #variable,name=ap_max_delay_for_totm,op=reset,default=10
+ #variable,name=rop_max_delay_for_totm,op=reset,default=20
+ #variable,name=totm_max_delay_for_ap,op=reset,default=-1
+ #variable,name=totm_max_delay_for_ap,op=set,value=3,if=variable.totm_max_delay_for_ap=-1&runeforge.disciplinary_command
+ #variable,name=totm_max_delay_for_ap,op=set,value=15,if=variable.totm_max_delay_for_ap=-1&covenant.night_fae
+ #variable,name=totm_max_delay_for_ap,op=set,value=15,if=variable.totm_max_delay_for_ap=-1&conduit.arcane_prodigy&active_enemies<3
+ #variable,name=totm_max_delay_for_ap,op=set,value=5,if=variable.totm_max_delay_for_ap=-1
+ #variable,name=totm_max_delay_for_rop,op=reset,default=20
+ #variable,name=barrage_mana_pct,op=reset,default=-1
+ #variable,name=barrage_mana_pct,op=set,value=(60-(mastery_value*100)),if=variable.barrage_mana_pct=-1&covenant.night_fae
+ #variable,name=barrage_mana_pct,op=set,value=(80-(mastery_value*100)),if=variable.barrage_mana_pct=-1
+ #variable,name=ap_minimum_mana_pct,op=reset,default=-1
+ #variable,name=ap_minimum_mana_pct,op=set,value=50,if=variable.ap_minimum_mana_pct=-1&runeforge.disciplinary_command
+ #variable,name=ap_minimum_mana_pct,op=set,value=50,if=variable.ap_minimum_mana_pct=-1&runeforge.grisly_icicle
+ #variable,name=ap_minimum_mana_pct,op=set,value=15,if=variable.ap_minimum_mana_pct=-1
+ #variable,name=totm_max_charges,op=reset,default=2
+ #variable,name=aoe_totm_max_charges,op=reset,default=2
+ #variable,name=inverted_opener,op=reset,default=-1
+ #variable,name=inverted_opener,op=set,value=1,if=variable.inverted_opener=-1&talent.rune_of_power&(talent.arcane_echo|!covenant.kyrian)&(!covenant.necrolord|active_enemies=1|runeforge.siphon_storm)
+ #variable,name=inverted_opener,op=set,value=0,if=variable.inverted_opener=-1
+ #variable,name=ap_on_use,op=set,value=equipped.macabre_sheet_music|equipped.gladiators_badge|equipped.gladiators_medallion|equipped.darkmoon_deck_putrescence|equipped.inscrutable_quantum_device|equipped.soulletting_ruby|equipped.sunblood_amethyst|equipped.wakeners_frond|equipped.flame_of_battle
+ #variable,name=am_spam,op=reset,default=0
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&variable.am_spam=1
+ #variable,name=evo_pct,op=reset,default=15
+ #flask
+ #food
+ #augmentation
+ #arcane_familiar
+ if buffexpires(arcane_familiar_buff) spell(arcane_familiar)
+ #arcane_intellect
+ if buffexpires(arcane_intellect) spell(arcane_intellect)
+ #conjure_mana_gem
+ spell(conjure_mana_gem)
+ #frostbolt,if=!variable.prepull_evo=1&runeforge.disciplinary_command
+ if not prepull_evo() == 1 and runeforge(disciplinary_command_runeforge) spell(frostbolt)
+ #arcane_blast,if=!variable.prepull_evo=1&!runeforge.disciplinary_command
+ if not prepull_evo() == 1 and not runeforge(disciplinary_command_runeforge) and mana() > manacost(arcane_blast) spell(arcane_blast)
+}
+
+AddFunction arcaneprecombatmainpostconditions
+{
+}
+
+AddFunction arcaneprecombatshortcdactions
+{
+}
+
+AddFunction arcaneprecombatshortcdpostconditions
+{
+ buffexpires(arcane_familiar_buff) and spell(arcane_familiar) or buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(conjure_mana_gem) or not prepull_evo() == 1 and runeforge(disciplinary_command_runeforge) and spell(frostbolt) or not prepull_evo() == 1 and not runeforge(disciplinary_command_runeforge) and mana() > manacost(arcane_blast) and spell(arcane_blast)
+}
+
+AddFunction arcaneprecombatcdactions
+{
+ unless buffexpires(arcane_familiar_buff) and spell(arcane_familiar) or buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(conjure_mana_gem)
+ {
+  #snapshot_stats
+  #mirror_image
+  spell(mirror_image)
+
+  unless not prepull_evo() == 1 and runeforge(disciplinary_command_runeforge) and spell(frostbolt) or not prepull_evo() == 1 and not runeforge(disciplinary_command_runeforge) and mana() > manacost(arcane_blast) and spell(arcane_blast)
+  {
+   #evocation,if=variable.prepull_evo=1
+   if prepull_evo() == 1 spell(evocation)
+  }
+ }
+}
+
+AddFunction arcaneprecombatcdpostconditions
+{
+ buffexpires(arcane_familiar_buff) and spell(arcane_familiar) or buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(conjure_mana_gem) or not prepull_evo() == 1 and runeforge(disciplinary_command_runeforge) and spell(frostbolt) or not prepull_evo() == 1 and not runeforge(disciplinary_command_runeforge) and mana() > manacost(arcane_blast) and spell(arcane_blast)
+}
+
+### actions.opener
+
+AddFunction arcaneopenermainactions
+{
+ #fire_blast,if=runeforge.disciplinary_command&buff.disciplinary_command_frost.up
+ if runeforge(disciplinary_command_runeforge) and buffpresent(disciplinary_command_frost_buff) spell(fire_blast)
+ #arcane_orb,if=variable.inverted_opener=1&cooldown.rune_of_power.remains=0
+ if inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 spell(arcane_orb)
+ #arcane_blast,if=variable.inverted_opener=1&cooldown.rune_of_power.remains=0&buff.arcane_charge.stack<buff.arcane_charge.max_stack
+ if inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and arcanecharges() < maxarcanecharges() and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_blast,if=dot.radiant_spark.remains>5|debuff.radiant_spark_vulnerability.stack>0
+ if { target.debuffremaining(radiant_spark) > 5 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 } and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_blast,if=buff.presence_of_mind.up&debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<=action.arcane_blast.execute_time
+ if buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_barrage,if=buff.rune_of_power.up&cooldown.arcane_power.ready&mana.pct<40&buff.arcane_charge.stack=buff.arcane_charge.max_stack&!runeforge.siphon_storm&!runeforge.temporal_warp
+ if buffpresent(rune_of_power_buff) and spellcooldown(arcane_power) <= 0 and manapercent() < 40 and arcanecharges() == maxarcanecharges() and not runeforge(siphon_storm_runeforge) and not runeforge(temporal_warp_runeforge) spell(arcane_barrage)
+ #arcane_barrage,if=buff.rune_of_power.up&buff.arcane_power.down&buff.rune_of_power.remains<=gcd&buff.arcane_charge.stack=buff.arcane_charge.max_stack&variable.inverted_opener
+ if buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and inverted_opener() spell(arcane_barrage)
+ #arcane_missiles,if=debuff.touch_of_the_magi.up&talent.arcane_echo&(buff.deathborne.down|active_enemies=1)&debuff.touch_of_the_magi.remains>action.arcane_missiles.execute_time&(!azerite.arcane_pummeling.enabled|buff.clearcasting_channel.down),chain=1,early_chain_if=buff.clearcasting_channel.down&(buff.arcane_power.up|(!talent.overpowered&(buff.rune_of_power.up|cooldown.evocation.ready)))
+ if target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&cooldown.arcane_power.remains&(buff.rune_of_power.up|buff.arcane_power.up),chain=1
+ if buffpresent(clearcasting_mage_buff) and spellcooldown(arcane_power) > 0 and { buffpresent(rune_of_power_buff) or buffpresent(arcane_power) } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&buff.clearcasting.stack=buff.clearcasting.max_stack,chain=1
+ if buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) spell(arcane_missiles)
+ #arcane_orb,if=buff.arcane_charge.stack<=variable.totm_max_charges&(cooldown.arcane_power.remains>10|active_enemies<=2)
+ if arcanecharges() <= totm_max_charges() and { spellcooldown(arcane_power) > 10 or enemies() <= 2 } spell(arcane_orb)
+ #arcane_blast,if=buff.rune_of_power.up|mana.pct>15
+ if { buffpresent(rune_of_power_buff) or manapercent() > 15 } and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_barrage
+ spell(arcane_barrage)
+}
+
+AddFunction arcaneopenermainpostconditions
+{
+}
+
+AddFunction arcaneopenershortcdactions
+{
+ unless runeforge(disciplinary_command_runeforge) and buffpresent(disciplinary_command_frost_buff) and spell(fire_blast)
+ {
+  #frost_nova,if=runeforge.grisly_icicle&mana.pct>95
+  if runeforge(grisly_icicle_runeforge) and manapercent() > 95 spell(frost_nova)
+  #radiant_spark,if=mana.pct>40
+  if manapercent() > 40 spell(radiant_spark)
+  #shifting_power,if=buff.arcane_power.down&cooldown.arcane_power.remains&!variable.inverted_opener=1
+  if buffexpires(arcane_power) and spellcooldown(arcane_power) > 0 and not inverted_opener() == 1 spell(shifting_power)
+
+  unless inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and spell(arcane_orb) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and arcanecharges() < maxarcanecharges() and mana() > manacost(arcane_blast) and spell(arcane_blast)
+  {
+   #rune_of_power,if=variable.inverted_opener=1&buff.rune_of_power.down
+   if inverted_opener() == 1 and buffexpires(rune_of_power_buff) spell(rune_of_power)
+   #mirrors_of_torment,if=buff.rune_of_power.down|prev_gcd.1.arcane_barrage
+   if buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) spell(mirrors_of_torment)
+   #touch_of_the_magi,if=buff.rune_of_power.down|prev_gcd.1.arcane_barrage
+   if buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) spell(touch_of_the_magi)
+   #rune_of_power,if=buff.rune_of_power.down
+   if buffexpires(rune_of_power_buff) spell(rune_of_power)
+   #presence_of_mind,if=debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<action.arcane_missiles.execute_time
+   if target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) < executetime(arcane_missiles) spell(presence_of_mind)
+   #presence_of_mind,if=talent.rune_of_power&buff.arcane_power.up&buff.rune_of_power.remains<gcd.max
+   if hastalent(rune_of_power_talent) and buffpresent(arcane_power) and totemremaining(rune_of_power) < gcd() spell(presence_of_mind)
+  }
+ }
+}
+
+AddFunction arcaneopenershortcdpostconditions
+{
+ runeforge(disciplinary_command_runeforge) and buffpresent(disciplinary_command_frost_buff) and spell(fire_blast) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and spell(arcane_orb) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and arcanecharges() < maxarcanecharges() and mana() > manacost(arcane_blast) and spell(arcane_blast) or { target.debuffremaining(radiant_spark) > 5 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(rune_of_power_buff) and spellcooldown(arcane_power) <= 0 and manapercent() < 40 and arcanecharges() == maxarcanecharges() and not runeforge(siphon_storm_runeforge) and not runeforge(temporal_warp_runeforge) and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and inverted_opener() and spell(arcane_barrage) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and spellcooldown(arcane_power) > 0 and { buffpresent(rune_of_power_buff) or buffpresent(arcane_power) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or arcanecharges() <= totm_max_charges() and { spellcooldown(arcane_power) > 10 or enemies() <= 2 } and spell(arcane_orb) or { buffpresent(rune_of_power_buff) or manapercent() > 15 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+AddFunction arcaneopenercdactions
+{
+ #evocation,if=(runeforge.siphon_storm|runeforge.temporal_warp)&talent.rune_of_power&cooldown.rune_of_power.remains&(buff.rune_of_power.down|prev_gcd.1.arcane_barrage)
+ if { runeforge(siphon_storm_runeforge) or runeforge(temporal_warp_runeforge) } and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) > 0 and { buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) } spell(evocation)
+
+ unless runeforge(disciplinary_command_runeforge) and buffpresent(disciplinary_command_frost_buff) and spell(fire_blast) or runeforge(grisly_icicle_runeforge) and manapercent() > 95 and spell(frost_nova)
+ {
+  #deathborne,if=!runeforge.siphon_storm
+  if not runeforge(siphon_storm_runeforge) spell(deathborne)
+
+  unless manapercent() > 40 and spell(radiant_spark) or buffexpires(arcane_power) and spellcooldown(arcane_power) > 0 and not inverted_opener() == 1 and spell(shifting_power) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and spell(arcane_orb) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and arcanecharges() < maxarcanecharges() and mana() > manacost(arcane_blast) and spell(arcane_blast) or inverted_opener() == 1 and buffexpires(rune_of_power_buff) and spell(rune_of_power)
+  {
+   #potion,if=variable.inverted_opener=1&!(runeforge.siphon_storm|runeforge.temporal_warp)
+   if inverted_opener() == 1 and not { runeforge(siphon_storm_runeforge) or runeforge(temporal_warp_runeforge) } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_spectral_intellect_item usable=1)
+   #deathborne,if=buff.rune_of_power.down
+   if buffexpires(rune_of_power_buff) spell(deathborne)
+
+   unless { buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) } and spell(mirrors_of_torment) or { buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) } and spell(touch_of_the_magi)
+   {
+    #arcane_power,if=prev_gcd.1.touch_of_the_magi
+    if previousgcdspell(touch_of_the_magi) spell(arcane_power)
+
+    unless buffexpires(rune_of_power_buff) and spell(rune_of_power) or target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) < executetime(arcane_missiles) and spell(presence_of_mind) or hastalent(rune_of_power_talent) and buffpresent(arcane_power) and totemremaining(rune_of_power) < gcd() and spell(presence_of_mind) or { target.debuffremaining(radiant_spark) > 5 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(rune_of_power_buff) and spellcooldown(arcane_power) <= 0 and manapercent() < 40 and arcanecharges() == maxarcanecharges() and not runeforge(siphon_storm_runeforge) and not runeforge(temporal_warp_runeforge) and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and inverted_opener() and spell(arcane_barrage) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and spellcooldown(arcane_power) > 0 and { buffpresent(rune_of_power_buff) or buffpresent(arcane_power) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or arcanecharges() <= totm_max_charges() and { spellcooldown(arcane_power) > 10 or enemies() <= 2 } and spell(arcane_orb) or { buffpresent(rune_of_power_buff) or manapercent() > 15 } and mana() > manacost(arcane_blast) and spell(arcane_blast)
+    {
+     #evocation,if=buff.rune_of_power.down&buff.arcane_power.down,interrupt_if=mana.pct>=85,interrupt_immediate=1
+     if buffexpires(rune_of_power_buff) and buffexpires(arcane_power) spell(evocation)
+    }
+   }
+  }
+ }
+}
+
+AddFunction arcaneopenercdpostconditions
+{
+ runeforge(disciplinary_command_runeforge) and buffpresent(disciplinary_command_frost_buff) and spell(fire_blast) or runeforge(grisly_icicle_runeforge) and manapercent() > 95 and spell(frost_nova) or manapercent() > 40 and spell(radiant_spark) or buffexpires(arcane_power) and spellcooldown(arcane_power) > 0 and not inverted_opener() == 1 and spell(shifting_power) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and spell(arcane_orb) or inverted_opener() == 1 and not spellcooldown(rune_of_power) > 0 and arcanecharges() < maxarcanecharges() and mana() > manacost(arcane_blast) and spell(arcane_blast) or inverted_opener() == 1 and buffexpires(rune_of_power_buff) and spell(rune_of_power) or { buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) } and spell(mirrors_of_torment) or { buffexpires(rune_of_power_buff) or previousgcdspell(arcane_barrage) } and spell(touch_of_the_magi) or buffexpires(rune_of_power_buff) and spell(rune_of_power) or target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) < executetime(arcane_missiles) and spell(presence_of_mind) or hastalent(rune_of_power_talent) and buffpresent(arcane_power) and totemremaining(rune_of_power) < gcd() and spell(presence_of_mind) or { target.debuffremaining(radiant_spark) > 5 or target.debuffstacks(radiant_spark_vulnerability_debuff) > 0 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(presence_of_mind) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= executetime(arcane_blast) and mana() > manacost(arcane_blast) and spell(arcane_blast) or buffpresent(rune_of_power_buff) and spellcooldown(arcane_power) <= 0 and manapercent() < 40 and arcanecharges() == maxarcanecharges() and not runeforge(siphon_storm_runeforge) and not runeforge(temporal_warp_runeforge) and spell(arcane_barrage) or buffpresent(rune_of_power_buff) and buffexpires(arcane_power) and totemremaining(rune_of_power) <= gcd() and arcanecharges() == maxarcanecharges() and inverted_opener() and spell(arcane_barrage) or target.debuffpresent(touch_of_the_magi_debuff) and hastalent(arcane_echo_talent) and { buffexpires(deathborne) or enemies() == 1 } and target.debuffremaining(touch_of_the_magi_debuff) > executetime(arcane_missiles) and { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and spellcooldown(arcane_power) > 0 and { buffpresent(rune_of_power_buff) or buffpresent(arcane_power) } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and buffstacks(clearcasting_mage_buff) == spelldata(clearcasting_mage_buff max_stacks) and spell(arcane_missiles) or arcanecharges() <= totm_max_charges() and { spellcooldown(arcane_power) > 10 or enemies() <= 2 } and spell(arcane_orb) or { buffpresent(rune_of_power_buff) or manapercent() > 15 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+### actions.movement
+
+AddFunction arcanemovementmainactions
+{
+ #blink_any,if=movement.distance>=10
+ if target.distance() >= 10 and checkboxon(opt_blink) spell(blink)
+ #arcane_missiles,if=movement.distance<10
+ if target.distance() < 10 spell(arcane_missiles)
+ #arcane_orb
+ spell(arcane_orb)
+ #fire_blast
+ spell(fire_blast)
+}
+
+AddFunction arcanemovementmainpostconditions
+{
+}
+
+AddFunction arcanemovementshortcdactions
+{
+ unless target.distance() >= 10 and checkboxon(opt_blink) and spell(blink)
+ {
+  #presence_of_mind
+  spell(presence_of_mind)
+ }
+}
+
+AddFunction arcanemovementshortcdpostconditions
+{
+ target.distance() >= 10 and checkboxon(opt_blink) and spell(blink) or target.distance() < 10 and spell(arcane_missiles) or spell(arcane_orb) or spell(fire_blast)
+}
+
+AddFunction arcanemovementcdactions
+{
+}
+
+AddFunction arcanemovementcdpostconditions
+{
+ target.distance() >= 10 and checkboxon(opt_blink) and spell(blink) or spell(presence_of_mind) or target.distance() < 10 and spell(arcane_missiles) or spell(arcane_orb) or spell(fire_blast)
+}
+
+### actions.final_burn
+
+AddFunction arcanefinal_burnmainactions
+{
+ #arcane_missiles,if=buff.clearcasting.react,chain=1
+ if buffpresent(clearcasting_mage_buff) spell(arcane_missiles)
+ #arcane_blast
+ if mana() > manacost(arcane_blast) spell(arcane_blast)
+ #arcane_barrage
+ spell(arcane_barrage)
+}
+
+AddFunction arcanefinal_burnmainpostconditions
+{
+}
+
+AddFunction arcanefinal_burnshortcdactions
+{
+}
+
+AddFunction arcanefinal_burnshortcdpostconditions
+{
+ buffpresent(clearcasting_mage_buff) and spell(arcane_missiles) or mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+AddFunction arcanefinal_burncdactions
+{
+}
+
+AddFunction arcanefinal_burncdpostconditions
+{
+ buffpresent(clearcasting_mage_buff) and spell(arcane_missiles) or mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(arcane_barrage)
+}
+
+### actions.cooldowns
+
+AddFunction arcanecooldownsmainactions
+{
+ #frostbolt,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_frost.down&(buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down)&cooldown.touch_of_the_magi.remains=0&(buff.arcane_charge.stack<=variable.totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd))
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(frostbolt)
+ #fire_blast,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down&prev_gcd.1.frostbolt
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) spell(fire_blast)
+}
+
+AddFunction arcanecooldownsmainpostconditions
+{
+}
+
+AddFunction arcanecooldownsshortcdactions
+{
+ #frost_nova,if=runeforge.grisly_icicle&cooldown.arcane_power.remains>30&cooldown.touch_of_the_magi.remains=0&(buff.arcane_charge.stack<=variable.totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd))
+ if runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(frost_nova)
+ #frost_nova,if=runeforge.grisly_icicle&cooldown.arcane_power.remains=0&(!talent.enlightened|(talent.enlightened&mana.pct>=70))&((cooldown.touch_of_the_magi.remains>10&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack=0))&buff.rune_of_power.down&mana.pct>=variable.ap_minimum_mana_pct
+ if runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > 10 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() spell(frost_nova)
+
+ unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) and spell(fire_blast)
+ {
+  #mirrors_of_torment,if=cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.totm_max_charges&cooldown.arcane_power.remains<=gcd
+  if not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= gcd() spell(mirrors_of_torment)
+  #mirrors_of_torment,if=cooldown.arcane_power.remains=0&(!talent.enlightened|(talent.enlightened&mana.pct>=70))&((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack=0))&buff.rune_of_power.down&mana.pct>=variable.ap_minimum_mana_pct
+  if not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() spell(mirrors_of_torment)
+  #radiant_spark,if=cooldown.touch_of_the_magi.remains>variable.rs_max_delay_for_totm&cooldown.arcane_power.remains>variable.rs_max_delay_for_ap&(talent.rune_of_power&(cooldown.rune_of_power.remains<execute_time|cooldown.rune_of_power.remains>variable.rs_max_delay_for_rop)|!talent.rune_of_power)&buff.arcane_charge.stack>2&debuff.touch_of_the_magi.down&buff.rune_of_power.down&buff.arcane_power.down
+  if spellcooldown(touch_of_the_magi) > rs_max_delay_for_totm() and spellcooldown(arcane_power) > rs_max_delay_for_ap() and { hastalent(rune_of_power_talent) and { spellcooldown(rune_of_power) < executetime(radiant_spark) or spellcooldown(rune_of_power) > rs_max_delay_for_rop() } or not hastalent(rune_of_power_talent) } and arcanecharges() > 2 and target.debuffexpires(touch_of_the_magi_debuff) and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) spell(radiant_spark)
+  #radiant_spark,if=cooldown.touch_of_the_magi.remains<execute_time&buff.arcane_charge.stack<=variable.totm_max_charges&cooldown.arcane_power.remains<(execute_time+action.touch_of_the_magi.execute_time)
+  if spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) < executetime(radiant_spark) + executetime(touch_of_the_magi) spell(radiant_spark)
+  #radiant_spark,if=cooldown.arcane_power.remains<execute_time&((!talent.enlightened|(talent.enlightened&mana.pct>=70))&((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack=0))&buff.rune_of_power.down&mana.pct>=variable.ap_minimum_mana_pct)
+  if spellcooldown(arcane_power) < executetime(radiant_spark) and { { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) } and manapercent() >= ap_minimum_mana_pct() spell(radiant_spark)
+  #touch_of_the_magi,if=buff.arcane_charge.stack<=variable.totm_max_charges&cooldown.arcane_power.remains<=execute_time&mana.pct>variable.ap_minimum_mana_pct&buff.rune_of_power.down
+  if arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= executetime(touch_of_the_magi) and manapercent() > ap_minimum_mana_pct() and buffexpires(rune_of_power_buff) spell(touch_of_the_magi)
+  #touch_of_the_magi,if=buff.arcane_charge.stack<=variable.totm_max_charges&talent.rune_of_power&cooldown.rune_of_power.remains<=execute_time&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap&cooldown.arcane_power.remains>12
+  if arcanecharges() <= totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(touch_of_the_magi) and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spellcooldown(arcane_power) > 12 spell(touch_of_the_magi)
+  #touch_of_the_magi,if=buff.arcane_charge.stack<=variable.totm_max_charges&(!talent.rune_of_power|cooldown.rune_of_power.remains>variable.totm_max_delay_for_rop)&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap
+  if arcanecharges() <= totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } and spellcooldown(arcane_power) > totm_max_delay_for_ap() spell(touch_of_the_magi)
+  #rune_of_power,if=buff.arcane_power.down&(cooldown.touch_of_the_magi.remains>variable.rop_max_delay_for_totm|cooldown.arcane_power.remains<=variable.totm_max_delay_for_ap)&buff.arcane_charge.stack=buff.arcane_charge.max_stack&cooldown.arcane_power.remains>12
+  if buffexpires(arcane_power) and { spellcooldown(touch_of_the_magi) > rop_max_delay_for_totm() or spellcooldown(arcane_power) <= totm_max_delay_for_ap() } and arcanecharges() == maxarcanecharges() and spellcooldown(arcane_power) > 12 spell(rune_of_power)
+  #shifting_power,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down
+  if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) spell(shifting_power)
+  #presence_of_mind,if=talent.rune_of_power&buff.arcane_power.up&buff.rune_of_power.remains<gcd.max
+  if hastalent(rune_of_power_talent) and buffpresent(arcane_power) and totemremaining(rune_of_power) < gcd() spell(presence_of_mind)
+  #presence_of_mind,if=debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<action.arcane_missiles.execute_time&!covenant.kyrian
+  if target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) < executetime(arcane_missiles) and not iscovenant("kyrian") spell(presence_of_mind)
+  #presence_of_mind,if=buff.rune_of_power.up&buff.rune_of_power.remains<gcd.max&cooldown.evocation.ready&cooldown.touch_of_the_magi.remains&!covenant.kyrian
+  if buffpresent(rune_of_power_buff) and totemremaining(rune_of_power) < gcd() and spellcooldown(evocation) <= 0 and spellcooldown(touch_of_the_magi) > 0 and not iscovenant("kyrian") spell(presence_of_mind)
+ }
+}
+
+AddFunction arcanecooldownsshortcdpostconditions
+{
+ runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) and spell(fire_blast)
+}
+
+AddFunction arcanecooldownscdactions
+{
+ unless runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frost_nova) or runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > 10 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() and spell(frost_nova) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) and spell(fire_blast) or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= gcd() and spell(mirrors_of_torment) or not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() and spell(mirrors_of_torment)
+ {
+  #deathborne,if=cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.totm_max_charges&cooldown.arcane_power.remains<=gcd
+  if not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= gcd() spell(deathborne)
+  #deathborne,if=cooldown.arcane_power.remains=0&(!talent.enlightened|(talent.enlightened&mana.pct>=70))&((cooldown.touch_of_the_magi.remains>10&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack=0))&buff.rune_of_power.down&mana.pct>=variable.ap_minimum_mana_pct
+  if not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > 10 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() spell(deathborne)
+
+  unless spellcooldown(touch_of_the_magi) > rs_max_delay_for_totm() and spellcooldown(arcane_power) > rs_max_delay_for_ap() and { hastalent(rune_of_power_talent) and { spellcooldown(rune_of_power) < executetime(radiant_spark) or spellcooldown(rune_of_power) > rs_max_delay_for_rop() } or not hastalent(rune_of_power_talent) } and arcanecharges() > 2 and target.debuffexpires(touch_of_the_magi_debuff) and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and spell(radiant_spark) or spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) < executetime(radiant_spark) + executetime(touch_of_the_magi) and spell(radiant_spark) or spellcooldown(arcane_power) < executetime(radiant_spark) and { { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) } and manapercent() >= ap_minimum_mana_pct() and spell(radiant_spark) or arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= executetime(touch_of_the_magi) and manapercent() > ap_minimum_mana_pct() and buffexpires(rune_of_power_buff) and spell(touch_of_the_magi) or arcanecharges() <= totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(touch_of_the_magi) and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spellcooldown(arcane_power) > 12 and spell(touch_of_the_magi) or arcanecharges() <= totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(touch_of_the_magi)
+  {
+   #arcane_power,if=cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack&buff.rune_of_power.down&mana.pct>=variable.ap_minimum_mana_pct
+   if spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() spell(arcane_power)
+  }
+ }
+}
+
+AddFunction arcanecooldownscdpostconditions
+{
+ runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frost_nova) or runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > 10 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() and spell(frost_nova) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) and spell(fire_blast) or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= gcd() and spell(mirrors_of_torment) or not spellcooldown(arcane_power) > 0 and { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) and manapercent() >= ap_minimum_mana_pct() and spell(mirrors_of_torment) or spellcooldown(touch_of_the_magi) > rs_max_delay_for_totm() and spellcooldown(arcane_power) > rs_max_delay_for_ap() and { hastalent(rune_of_power_talent) and { spellcooldown(rune_of_power) < executetime(radiant_spark) or spellcooldown(rune_of_power) > rs_max_delay_for_rop() } or not hastalent(rune_of_power_talent) } and arcanecharges() > 2 and target.debuffexpires(touch_of_the_magi_debuff) and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and spell(radiant_spark) or spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) < executetime(radiant_spark) + executetime(touch_of_the_magi) and spell(radiant_spark) or spellcooldown(arcane_power) < executetime(radiant_spark) and { { not hastalent(enlightened_talent) or hastalent(enlightened_talent) and manapercent() >= 70 } and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() == 0 } and buffexpires(rune_of_power_buff) } and manapercent() >= ap_minimum_mana_pct() and spell(radiant_spark) or arcanecharges() <= totm_max_charges() and spellcooldown(arcane_power) <= executetime(touch_of_the_magi) and manapercent() > ap_minimum_mana_pct() and buffexpires(rune_of_power_buff) and spell(touch_of_the_magi) or arcanecharges() <= totm_max_charges() and hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(touch_of_the_magi) and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spellcooldown(arcane_power) > 12 and spell(touch_of_the_magi) or arcanecharges() <= totm_max_charges() and { not hastalent(rune_of_power_talent) or spellcooldown(rune_of_power) > totm_max_delay_for_rop() } and spellcooldown(arcane_power) > totm_max_delay_for_ap() and spell(touch_of_the_magi) or buffexpires(arcane_power) and { spellcooldown(touch_of_the_magi) > rop_max_delay_for_totm() or spellcooldown(arcane_power) <= totm_max_delay_for_ap() } and arcanecharges() == maxarcanecharges() and spellcooldown(arcane_power) > 12 and spell(rune_of_power) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(shifting_power) or hastalent(rune_of_power_talent) and buffpresent(arcane_power) and totemremaining(rune_of_power) < gcd() and spell(presence_of_mind) or target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) < executetime(arcane_missiles) and not iscovenant("kyrian") and spell(presence_of_mind) or buffpresent(rune_of_power_buff) and totemremaining(rune_of_power) < gcd() and spellcooldown(evocation) <= 0 and spellcooldown(touch_of_the_magi) > 0 and not iscovenant("kyrian") and spell(presence_of_mind)
+}
+
+### actions.aoe
+
+AddFunction arcaneaoemainactions
+{
+ #frostbolt,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_frost.down&(buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down)&cooldown.touch_of_the_magi.remains=0&(buff.arcane_charge.stack<=variable.aoe_totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd))
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(frostbolt)
+ #fire_blast,if=(runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down&prev_gcd.1.frostbolt)|(runeforge.disciplinary_command&time=0)
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) or runeforge(disciplinary_command_runeforge) and timeincombat() == 0 spell(fire_blast)
+ #arcane_blast,if=buff.deathborne.up&((talent.resonance&active_enemies<4)|active_enemies<5)&(!runeforge.arcane_bombardment|target.health.pct>35)
+ if buffpresent(deathborne) and { hastalent(resonance_talent) and enemies() < 4 or enemies() < 5 } and { not runeforge(arcane_bombardment_runeforge) or target.healthpercent() > 35 } and mana() > manacost(arcane_blast) spell(arcane_blast)
+ #supernova
+ spell(supernova)
+ #arcane_barrage,if=buff.arcane_charge.stack=buff.arcane_charge.max_stack
+ if arcanecharges() == maxarcanecharges() spell(arcane_barrage)
+ #arcane_orb,if=buff.arcane_charge.stack=0
+ if arcanecharges() == 0 spell(arcane_orb)
+ #nether_tempest,if=(refreshable|!ticking)&buff.arcane_charge.stack=buff.arcane_charge.max_stack
+ if { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() spell(nether_tempest)
+ #arcane_missiles,if=buff.clearcasting.react&runeforge.arcane_infinity&((talent.amplification&active_enemies<8)|active_enemies<5)
+ if buffpresent(clearcasting_mage_buff) and runeforge(arcane_infinity_runeforge) and { hastalent(amplification_talent) and enemies() < 8 or enemies() < 5 } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&talent.arcane_echo&debuff.touch_of_the_magi.up&(talent.amplification|active_enemies<9)
+ if buffpresent(clearcasting_mage_buff) and hastalent(arcane_echo_talent) and target.debuffpresent(touch_of_the_magi_debuff) and { hastalent(amplification_talent) or enemies() < 9 } spell(arcane_missiles)
+ #arcane_missiles,if=buff.clearcasting.react&talent.amplification&active_enemies<4
+ if buffpresent(clearcasting_mage_buff) and hastalent(amplification_talent) and enemies() < 4 spell(arcane_missiles)
+ #arcane_explosion,if=buff.arcane_charge.stack<buff.arcane_charge.max_stack
+ if arcanecharges() < maxarcanecharges() spell(arcane_explosion)
+ #arcane_explosion,if=buff.arcane_charge.stack=buff.arcane_charge.max_stack&prev_gcd.1.arcane_barrage
+ if arcanecharges() == maxarcanecharges() and previousgcdspell(arcane_barrage) spell(arcane_explosion)
+}
+
+AddFunction arcaneaoemainpostconditions
+{
+}
+
+AddFunction arcaneaoeshortcdactions
+{
+ unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or { runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) or runeforge(disciplinary_command_runeforge) and timeincombat() == 0 } and spell(fire_blast)
+ {
+  #frost_nova,if=runeforge.grisly_icicle&cooldown.arcane_power.remains>30&cooldown.touch_of_the_magi.remains=0&(buff.arcane_charge.stack<=variable.aoe_totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd))
+  if runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(frost_nova)
+  #frost_nova,if=runeforge.grisly_icicle&cooldown.arcane_power.remains=0&(((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&buff.rune_of_power.down)
+  if runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) spell(frost_nova)
+  #touch_of_the_magi,if=runeforge.siphon_storm&prev_gcd.1.evocation
+  if runeforge(siphon_storm_runeforge) and previousgcdspell(evocation) spell(touch_of_the_magi)
+  #mirrors_of_torment,if=(cooldown.arcane_power.remains>45|cooldown.arcane_power.remains<=3)&cooldown.touch_of_the_magi.remains=0&(buff.arcane_charge.stack<=variable.aoe_totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>5)|(!talent.rune_of_power&cooldown.arcane_power.remains>5)|cooldown.arcane_power.remains<=gcd))
+  if { spellcooldown(arcane_power) > 45 or spellcooldown(arcane_power) <= 3 } and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > 5 or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > 5 or spellcooldown(arcane_power) <= gcd() } spell(mirrors_of_torment)
+  #radiant_spark,if=cooldown.touch_of_the_magi.remains<execute_time&(buff.arcane_charge.stack<=variable.aoe_totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd))
+  if spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(radiant_spark)
+  #radiant_spark,if=cooldown.arcane_power.remains<execute_time&(((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&buff.rune_of_power.down)
+  if spellcooldown(arcane_power) < executetime(radiant_spark) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) spell(radiant_spark)
+  #touch_of_the_magi,if=buff.arcane_charge.stack<=variable.aoe_totm_max_charges&((talent.rune_of_power&cooldown.rune_of_power.remains<=gcd&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|(!talent.rune_of_power&cooldown.arcane_power.remains>variable.totm_max_delay_for_ap)|cooldown.arcane_power.remains<=gcd)
+  if arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } spell(touch_of_the_magi)
+  #rune_of_power,if=buff.rune_of_power.down&((cooldown.touch_of_the_magi.remains>20&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&(cooldown.arcane_power.remains>12|debuff.touch_of_the_magi.up)
+  if buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > 20 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and { spellcooldown(arcane_power) > 12 or target.debuffpresent(touch_of_the_magi_debuff) } spell(rune_of_power)
+  #shifting_power,if=cooldown.arcane_orb.remains>5|!talent.arcane_orb
+  if spellcooldown(arcane_orb) > 5 or not hastalent(arcane_orb_talent) spell(shifting_power)
+  #presence_of_mind,if=buff.deathborne.up&debuff.touch_of_the_magi.up&debuff.touch_of_the_magi.remains<=buff.presence_of_mind.max_stack*action.arcane_blast.execute_time
+  if buffpresent(deathborne) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= spelldata(presence_of_mind max_stacks) * executetime(arcane_blast) spell(presence_of_mind)
+ }
+}
+
+AddFunction arcaneaoeshortcdpostconditions
+{
+ runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or { runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) or runeforge(disciplinary_command_runeforge) and timeincombat() == 0 } and spell(fire_blast) or buffpresent(deathborne) and { hastalent(resonance_talent) and enemies() < 4 or enemies() < 5 } and { not runeforge(arcane_bombardment_runeforge) or target.healthpercent() > 35 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(supernova) or arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() == 0 and spell(arcane_orb) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and spell(nether_tempest) or buffpresent(clearcasting_mage_buff) and runeforge(arcane_infinity_runeforge) and { hastalent(amplification_talent) and enemies() < 8 or enemies() < 5 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(arcane_echo_talent) and target.debuffpresent(touch_of_the_magi_debuff) and { hastalent(amplification_talent) or enemies() < 9 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(amplification_talent) and enemies() < 4 and spell(arcane_missiles) or arcanecharges() < maxarcanecharges() and spell(arcane_explosion) or arcanecharges() == maxarcanecharges() and previousgcdspell(arcane_barrage) and spell(arcane_explosion)
+}
+
+AddFunction arcaneaoecdactions
+{
+ unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or { runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) or runeforge(disciplinary_command_runeforge) and timeincombat() == 0 } and spell(fire_blast) or runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frost_nova) or runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) and spell(frost_nova) or runeforge(siphon_storm_runeforge) and previousgcdspell(evocation) and spell(touch_of_the_magi)
+ {
+  #arcane_power,if=runeforge.siphon_storm&(prev_gcd.1.evocation|prev_gcd.1.touch_of_the_magi)
+  if runeforge(siphon_storm_runeforge) and { previousgcdspell(evocation) or previousgcdspell(touch_of_the_magi) } spell(arcane_power)
+  #evocation,if=time>30&runeforge.siphon_storm&buff.arcane_charge.stack<=variable.aoe_totm_max_charges&cooldown.touch_of_the_magi.remains=0&cooldown.arcane_power.remains<=gcd
+  if timeincombat() > 30 and runeforge(siphon_storm_runeforge) and arcanecharges() <= aoe_totm_max_charges() and not spellcooldown(touch_of_the_magi) > 0 and spellcooldown(arcane_power) <= gcd() spell(evocation)
+  #evocation,if=time>30&runeforge.siphon_storm&cooldown.arcane_power.remains=0&(((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&buff.rune_of_power.down),interrupt_if=buff.siphon_storm.stack=buff.siphon_storm.max_stack,interrupt_immediate=1
+  if timeincombat() > 30 and runeforge(siphon_storm_runeforge) and not spellcooldown(arcane_power) > 0 and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) spell(evocation)
+
+  unless { spellcooldown(arcane_power) > 45 or spellcooldown(arcane_power) <= 3 } and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > 5 or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > 5 or spellcooldown(arcane_power) <= gcd() } and spell(mirrors_of_torment) or spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(radiant_spark) or spellcooldown(arcane_power) < executetime(radiant_spark) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) and spell(radiant_spark)
+  {
+   #deathborne,if=cooldown.arcane_power.remains=0&(((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&buff.rune_of_power.down)
+   if not spellcooldown(arcane_power) > 0 and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) spell(deathborne)
+
+   unless arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(touch_of_the_magi)
+   {
+    #arcane_power,if=((cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm&buff.arcane_charge.stack=buff.arcane_charge.max_stack)|(cooldown.touch_of_the_magi.remains=0&buff.arcane_charge.stack<=variable.aoe_totm_max_charges))&buff.rune_of_power.down
+    if { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) spell(arcane_power)
+
+    unless buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > 20 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and { spellcooldown(arcane_power) > 12 or target.debuffpresent(touch_of_the_magi_debuff) } and spell(rune_of_power) or { spellcooldown(arcane_orb) > 5 or not hastalent(arcane_orb_talent) } and spell(shifting_power) or buffpresent(deathborne) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= spelldata(presence_of_mind max_stacks) * executetime(arcane_blast) and spell(presence_of_mind) or buffpresent(deathborne) and { hastalent(resonance_talent) and enemies() < 4 or enemies() < 5 } and { not runeforge(arcane_bombardment_runeforge) or target.healthpercent() > 35 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(supernova) or arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() == 0 and spell(arcane_orb) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and spell(nether_tempest) or buffpresent(clearcasting_mage_buff) and runeforge(arcane_infinity_runeforge) and { hastalent(amplification_talent) and enemies() < 8 or enemies() < 5 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(arcane_echo_talent) and target.debuffpresent(touch_of_the_magi_debuff) and { hastalent(amplification_talent) or enemies() < 9 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(amplification_talent) and enemies() < 4 and spell(arcane_missiles) or arcanecharges() < maxarcanecharges() and spell(arcane_explosion) or arcanecharges() == maxarcanecharges() and previousgcdspell(arcane_barrage) and spell(arcane_explosion)
+    {
+     #evocation,interrupt_if=mana.pct>=85,interrupt_immediate=1
+     spell(evocation)
+    }
+   }
+  }
+ }
+}
+
+AddFunction arcaneaoecdpostconditions
+{
+ runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and { buffexpires(arcane_power) and buffexpires(rune_of_power_buff) } and target.debuffexpires(touch_of_the_magi_debuff) and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frostbolt) or { runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and previousgcdspell(frostbolt) or runeforge(disciplinary_command_runeforge) and timeincombat() == 0 } and spell(fire_blast) or runeforge(grisly_icicle_runeforge) and spellcooldown(arcane_power) > 30 and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(frost_nova) or runeforge(grisly_icicle_runeforge) and not spellcooldown(arcane_power) > 0 and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) and spell(frost_nova) or runeforge(siphon_storm_runeforge) and previousgcdspell(evocation) and spell(touch_of_the_magi) or { spellcooldown(arcane_power) > 45 or spellcooldown(arcane_power) <= 3 } and not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > 5 or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > 5 or spellcooldown(arcane_power) <= gcd() } and spell(mirrors_of_torment) or spellcooldown(touch_of_the_magi) < executetime(radiant_spark) and arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(radiant_spark) or spellcooldown(arcane_power) < executetime(radiant_spark) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and buffexpires(rune_of_power_buff) and spell(radiant_spark) or arcanecharges() <= aoe_totm_max_charges() and { hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= gcd() and spellcooldown(arcane_power) > totm_max_delay_for_ap() or not hastalent(rune_of_power_talent) and spellcooldown(arcane_power) > totm_max_delay_for_ap() or spellcooldown(arcane_power) <= gcd() } and spell(touch_of_the_magi) or buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > 20 and arcanecharges() == maxarcanecharges() or not spellcooldown(touch_of_the_magi) > 0 and arcanecharges() <= aoe_totm_max_charges() } and { spellcooldown(arcane_power) > 12 or target.debuffpresent(touch_of_the_magi_debuff) } and spell(rune_of_power) or { spellcooldown(arcane_orb) > 5 or not hastalent(arcane_orb_talent) } and spell(shifting_power) or buffpresent(deathborne) and target.debuffpresent(touch_of_the_magi_debuff) and target.debuffremaining(touch_of_the_magi_debuff) <= spelldata(presence_of_mind max_stacks) * executetime(arcane_blast) and spell(presence_of_mind) or buffpresent(deathborne) and { hastalent(resonance_talent) and enemies() < 4 or enemies() < 5 } and { not runeforge(arcane_bombardment_runeforge) or target.healthpercent() > 35 } and mana() > manacost(arcane_blast) and spell(arcane_blast) or spell(supernova) or arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() == 0 and spell(arcane_orb) or { target.refreshable(nether_tempest) or not target.debuffpresent(nether_tempest) } and arcanecharges() == maxarcanecharges() and spell(nether_tempest) or buffpresent(clearcasting_mage_buff) and runeforge(arcane_infinity_runeforge) and { hastalent(amplification_talent) and enemies() < 8 or enemies() < 5 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(arcane_echo_talent) and target.debuffpresent(touch_of_the_magi_debuff) and { hastalent(amplification_talent) or enemies() < 9 } and spell(arcane_missiles) or buffpresent(clearcasting_mage_buff) and hastalent(amplification_talent) and enemies() < 4 and spell(arcane_missiles) or arcanecharges() < maxarcanecharges() and spell(arcane_explosion) or arcanecharges() == maxarcanecharges() and previousgcdspell(arcane_barrage) and spell(arcane_explosion)
+}
+
+### actions.am_spam
+
+AddFunction arcaneam_spammainactions
+{
+ #cancel_action,if=action.evocation.channeling&mana.pct>=95
+ if channeling(evocation) and manapercent() >= 95 texture(inv_pet_exitbattle text=cancel)
+ #arcane_barrage,if=buff.arcane_power.up&buff.arcane_power.remains<=action.arcane_missiles.execute_time&buff.arcane_charge.stack=buff.arcane_charge.max_stack
+ if buffpresent(arcane_power) and buffremaining(arcane_power) <= executetime(arcane_missiles) and arcanecharges() == maxarcanecharges() spell(arcane_barrage)
+ #arcane_orb,if=buff.arcane_charge.stack<buff.arcane_charge.max_stack&buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down
+ if arcanecharges() < maxarcanecharges() and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) spell(arcane_orb)
+ #arcane_barrage,if=buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down&buff.arcane_charge.stack=buff.arcane_charge.max_stack
+ if buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() spell(arcane_barrage)
+ #arcane_missiles,if=buff.clearcasting.react,chain=1,early_chain_if=buff.clearcasting_channel.down&(buff.arcane_power.up|buff.rune_of_power.up|cooldown.evocation.ready)
+ if buffpresent(clearcasting_mage_buff) spell(arcane_missiles)
+ #arcane_missiles,if=!azerite.arcane_pummeling.enabled|buff.clearcasting_channel.down,chain=1,early_chain_if=buff.clearcasting_channel.down&(buff.arcane_power.up|buff.rune_of_power.up|cooldown.evocation.ready)
+ if not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) spell(arcane_missiles)
+ #arcane_orb,if=buff.arcane_charge.stack<buff.arcane_charge.max_stack
+ if arcanecharges() < maxarcanecharges() spell(arcane_orb)
+ #arcane_barrage
+ spell(arcane_barrage)
+ #arcane_blast
+ if mana() > manacost(arcane_blast) spell(arcane_blast)
+}
+
+AddFunction arcaneam_spammainpostconditions
+{
+}
+
+AddFunction arcaneam_spamshortcdactions
+{
+ unless channeling(evocation) and manapercent() >= 95 and texture(inv_pet_exitbattle text=cancel)
+ {
+  #mirrors_of_torment,if=cooldown.arcane_power.remains=0&(buff.rune_of_power.down&(cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm|cooldown.touch_of_the_magi.remains=0))
+  if not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() or not spellcooldown(touch_of_the_magi) > 0 } spell(mirrors_of_torment)
+  #radiant_spark
+  spell(radiant_spark)
+  #shifting_power,if=buff.arcane_power.down&buff.rune_of_power.down&debuff.touch_of_the_magi.down
+  if buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) spell(shifting_power)
+  #rune_of_power,if=buff.rune_of_power.down&cooldown.arcane_power.remains
+  if buffexpires(rune_of_power_buff) and spellcooldown(arcane_power) > 0 spell(rune_of_power)
+  #touch_of_the_magi,if=(cooldown.arcane_power.remains=0&buff.rune_of_power.down)|prev_gcd.1.rune_of_power
+  if not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) or previousgcdspell(rune_of_power) spell(touch_of_the_magi)
+  #touch_of_the_magi,if=cooldown.arcane_power.remains<50&buff.rune_of_power.down&essence.vision_of_perfection.enabled
+  if spellcooldown(arcane_power) < 50 and buffexpires(rune_of_power_buff) and azeriteessenceisenabled(vision_of_perfection_essence_id) spell(touch_of_the_magi)
+ }
+}
+
+AddFunction arcaneam_spamshortcdpostconditions
+{
+ channeling(evocation) and manapercent() >= 95 and texture(inv_pet_exitbattle text=cancel) or buffpresent(arcane_power) and buffremaining(arcane_power) <= executetime(arcane_missiles) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() < maxarcanecharges() and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(arcane_orb) or buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or buffpresent(clearcasting_mage_buff) and spell(arcane_missiles) or { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or arcanecharges() < maxarcanecharges() and spell(arcane_orb) or spell(arcane_barrage) or mana() > manacost(arcane_blast) and spell(arcane_blast)
+}
+
+AddFunction arcaneam_spamcdactions
+{
+ unless channeling(evocation) and manapercent() >= 95 and texture(inv_pet_exitbattle text=cancel)
+ {
+  #evocation,if=mana.pct<=variable.evo_pct&(cooldown.touch_of_the_magi.remains<=action.evocation.execute_time|cooldown.arcane_power.remains<=action.evocation.execute_time|(talent.rune_of_power&cooldown.rune_of_power.remains<=action.evocation.execute_time))&buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down
+  if manapercent() <= evo_pct() and { spellcooldown(touch_of_the_magi) <= executetime(evocation) or spellcooldown(arcane_power) <= executetime(evocation) or hastalent(rune_of_power_talent) and spellcooldown(rune_of_power) <= executetime(evocation) } and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) spell(evocation)
+  #deathborne,if=cooldown.arcane_power.remains=0&(buff.rune_of_power.down&(cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm|cooldown.touch_of_the_magi.remains=0))
+  if not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() or not spellcooldown(touch_of_the_magi) > 0 } spell(deathborne)
+
+  unless not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() or not spellcooldown(touch_of_the_magi) > 0 } and spell(mirrors_of_torment) or spell(radiant_spark) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(shifting_power) or buffexpires(rune_of_power_buff) and spellcooldown(arcane_power) > 0 and spell(rune_of_power) or { not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) or previousgcdspell(rune_of_power) } and spell(touch_of_the_magi) or spellcooldown(arcane_power) < 50 and buffexpires(rune_of_power_buff) and azeriteessenceisenabled(vision_of_perfection_essence_id) and spell(touch_of_the_magi)
+  {
+   #arcane_power,if=buff.rune_of_power.down&cooldown.touch_of_the_magi.remains>variable.ap_max_delay_for_totm
+   if buffexpires(rune_of_power_buff) and spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() spell(arcane_power)
+
+   unless buffpresent(arcane_power) and buffremaining(arcane_power) <= executetime(arcane_missiles) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() < maxarcanecharges() and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(arcane_orb) or buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or buffpresent(clearcasting_mage_buff) and spell(arcane_missiles) or { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles)
+   {
+    #evocation,if=buff.rune_of_power.down&buff.arcane_power.down&debuff.touch_of_the_magi.down
+    if buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) spell(evocation)
+   }
+  }
+ }
+}
+
+AddFunction arcaneam_spamcdpostconditions
+{
+ channeling(evocation) and manapercent() >= 95 and texture(inv_pet_exitbattle text=cancel) or not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) and { spellcooldown(touch_of_the_magi) > ap_max_delay_for_totm() or not spellcooldown(touch_of_the_magi) > 0 } and spell(mirrors_of_torment) or spell(radiant_spark) or buffexpires(arcane_power) and buffexpires(rune_of_power_buff) and target.debuffexpires(touch_of_the_magi_debuff) and spell(shifting_power) or buffexpires(rune_of_power_buff) and spellcooldown(arcane_power) > 0 and spell(rune_of_power) or { not spellcooldown(arcane_power) > 0 and buffexpires(rune_of_power_buff) or previousgcdspell(rune_of_power) } and spell(touch_of_the_magi) or spellcooldown(arcane_power) < 50 and buffexpires(rune_of_power_buff) and azeriteessenceisenabled(vision_of_perfection_essence_id) and spell(touch_of_the_magi) or buffpresent(arcane_power) and buffremaining(arcane_power) <= executetime(arcane_missiles) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or arcanecharges() < maxarcanecharges() and buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and spell(arcane_orb) or buffexpires(rune_of_power_buff) and buffexpires(arcane_power) and target.debuffexpires(touch_of_the_magi_debuff) and arcanecharges() == maxarcanecharges() and spell(arcane_barrage) or buffpresent(clearcasting_mage_buff) and spell(arcane_missiles) or { not hasazeritetrait(arcane_pummeling_trait) or buffexpires(clearcasting_channel_buff) } and spell(arcane_missiles) or arcanecharges() < maxarcanecharges() and spell(arcane_orb) or spell(arcane_barrage) or mana() > manacost(arcane_blast) and spell(arcane_blast)
+}
+
+### actions.default
+
+AddFunction arcane_defaultmainactions
+{
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&prev_gcd.1.evocation&!(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&buff.arcane_power.down&cooldown.arcane_power.remains&(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=final_burn,op=set,value=1,if=buff.arcane_charge.stack=buff.arcane_charge.max_stack&!buff.rule_of_threes.up&fight_remains<=((mana%action.arcane_blast.cost)*action.arcane_blast.execute_time)
+ #call_action_list,name=shared_cds
+ arcaneshared_cdsmainactions()
+
+ unless arcaneshared_cdsmainpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>2
+  if enemies() > 2 arcaneaoemainactions()
+
+  unless enemies() > 2 and arcaneaoemainpostconditions()
+  {
+   #call_action_list,name=opener,if=variable.have_opened=0
+   if have_opened() == 0 arcaneopenermainactions()
+
+   unless have_opened() == 0 and arcaneopenermainpostconditions()
+   {
+    #call_action_list,name=am_spam,if=variable.am_spam=1
+    if am_spam() == 1 arcaneam_spammainactions()
+
+    unless am_spam() == 1 and arcaneam_spammainpostconditions()
+    {
+     #call_action_list,name=cooldowns
+     arcanecooldownsmainactions()
+
+     unless arcanecooldownsmainpostconditions()
+     {
+      #call_action_list,name=rotation,if=variable.final_burn=0
+      if final_burn() == 0 arcanerotationmainactions()
+
+      unless final_burn() == 0 and arcanerotationmainpostconditions()
+      {
+       #call_action_list,name=final_burn,if=variable.final_burn=1
+       if final_burn() == 1 arcanefinal_burnmainactions()
+
+       unless final_burn() == 1 and arcanefinal_burnmainpostconditions()
+       {
+        #call_action_list,name=movement
+        arcanemovementmainactions()
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction arcane_defaultmainpostconditions
+{
+ arcaneshared_cdsmainpostconditions() or enemies() > 2 and arcaneaoemainpostconditions() or have_opened() == 0 and arcaneopenermainpostconditions() or am_spam() == 1 and arcaneam_spammainpostconditions() or arcanecooldownsmainpostconditions() or final_burn() == 0 and arcanerotationmainpostconditions() or final_burn() == 1 and arcanefinal_burnmainpostconditions() or arcanemovementmainpostconditions()
+}
+
+AddFunction arcane_defaultshortcdactions
+{
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&prev_gcd.1.evocation&!(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&buff.arcane_power.down&cooldown.arcane_power.remains&(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=final_burn,op=set,value=1,if=buff.arcane_charge.stack=buff.arcane_charge.max_stack&!buff.rule_of_threes.up&fight_remains<=((mana%action.arcane_blast.cost)*action.arcane_blast.execute_time)
+ #call_action_list,name=shared_cds
+ arcaneshared_cdsshortcdactions()
+
+ unless arcaneshared_cdsshortcdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>2
+  if enemies() > 2 arcaneaoeshortcdactions()
+
+  unless enemies() > 2 and arcaneaoeshortcdpostconditions()
+  {
+   #call_action_list,name=opener,if=variable.have_opened=0
+   if have_opened() == 0 arcaneopenershortcdactions()
+
+   unless have_opened() == 0 and arcaneopenershortcdpostconditions()
+   {
+    #call_action_list,name=am_spam,if=variable.am_spam=1
+    if am_spam() == 1 arcaneam_spamshortcdactions()
+
+    unless am_spam() == 1 and arcaneam_spamshortcdpostconditions()
+    {
+     #call_action_list,name=cooldowns
+     arcanecooldownsshortcdactions()
+
+     unless arcanecooldownsshortcdpostconditions()
+     {
+      #call_action_list,name=rotation,if=variable.final_burn=0
+      if final_burn() == 0 arcanerotationshortcdactions()
+
+      unless final_burn() == 0 and arcanerotationshortcdpostconditions()
+      {
+       #call_action_list,name=final_burn,if=variable.final_burn=1
+       if final_burn() == 1 arcanefinal_burnshortcdactions()
+
+       unless final_burn() == 1 and arcanefinal_burnshortcdpostconditions()
+       {
+        #call_action_list,name=movement
+        arcanemovementshortcdactions()
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction arcane_defaultshortcdpostconditions
+{
+ arcaneshared_cdsshortcdpostconditions() or enemies() > 2 and arcaneaoeshortcdpostconditions() or have_opened() == 0 and arcaneopenershortcdpostconditions() or am_spam() == 1 and arcaneam_spamshortcdpostconditions() or arcanecooldownsshortcdpostconditions() or final_burn() == 0 and arcanerotationshortcdpostconditions() or final_burn() == 1 and arcanefinal_burnshortcdpostconditions() or arcanemovementshortcdpostconditions()
+}
+
+AddFunction arcane_defaultcdactions
+{
+ #counterspell,if=target.debuff.casting.react
+ if target.isinterruptible() arcaneinterruptactions()
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&prev_gcd.1.evocation&!(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=have_opened,op=set,value=1,if=variable.have_opened=0&buff.arcane_power.down&cooldown.arcane_power.remains&(runeforge.siphon_storm|runeforge.temporal_warp)
+ #variable,name=final_burn,op=set,value=1,if=buff.arcane_charge.stack=buff.arcane_charge.max_stack&!buff.rule_of_threes.up&fight_remains<=((mana%action.arcane_blast.cost)*action.arcane_blast.execute_time)
+ #call_action_list,name=shared_cds
+ arcaneshared_cdscdactions()
+
+ unless arcaneshared_cdscdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>2
+  if enemies() > 2 arcaneaoecdactions()
+
+  unless enemies() > 2 and arcaneaoecdpostconditions()
+  {
+   #call_action_list,name=opener,if=variable.have_opened=0
+   if have_opened() == 0 arcaneopenercdactions()
+
+   unless have_opened() == 0 and arcaneopenercdpostconditions()
+   {
+    #call_action_list,name=am_spam,if=variable.am_spam=1
+    if am_spam() == 1 arcaneam_spamcdactions()
+
+    unless am_spam() == 1 and arcaneam_spamcdpostconditions()
+    {
+     #call_action_list,name=cooldowns
+     arcanecooldownscdactions()
+
+     unless arcanecooldownscdpostconditions()
+     {
+      #call_action_list,name=rotation,if=variable.final_burn=0
+      if final_burn() == 0 arcanerotationcdactions()
+
+      unless final_burn() == 0 and arcanerotationcdpostconditions()
+      {
+       #call_action_list,name=final_burn,if=variable.final_burn=1
+       if final_burn() == 1 arcanefinal_burncdactions()
+
+       unless final_burn() == 1 and arcanefinal_burncdpostconditions()
+       {
+        #call_action_list,name=movement
+        arcanemovementcdactions()
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction arcane_defaultcdpostconditions
+{
+ arcaneshared_cdscdpostconditions() or enemies() > 2 and arcaneaoecdpostconditions() or have_opened() == 0 and arcaneopenercdpostconditions() or am_spam() == 1 and arcaneam_spamcdpostconditions() or arcanecooldownscdpostconditions() or final_burn() == 0 and arcanerotationcdpostconditions() or final_burn() == 1 and arcanefinal_burncdpostconditions() or arcanemovementcdpostconditions()
+}
+
+### Arcane icons.
+
+AddCheckBox(opt_mage_arcane_aoe l(aoe) default enabled=(specialization(arcane)))
+
+AddIcon enabled=(not checkboxon(opt_mage_arcane_aoe) and specialization(arcane)) enemies=1 help=shortcd
+{
+ if not incombat() arcaneprecombatshortcdactions()
+ arcane_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_arcane_aoe) and specialization(arcane)) help=shortcd
+{
+ if not incombat() arcaneprecombatshortcdactions()
+ arcane_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(arcane)) enemies=1 help=main
+{
+ if not incombat() arcaneprecombatmainactions()
+ arcane_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_arcane_aoe) and specialization(arcane)) help=aoe
+{
+ if not incombat() arcaneprecombatmainactions()
+ arcane_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_mage_arcane_aoe) and specialization(arcane)) enemies=1 help=cd
+{
+ if not incombat() arcaneprecombatcdactions()
+ arcane_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_arcane_aoe) and specialization(arcane)) help=cd
+{
+ if not incombat() arcaneprecombatcdactions()
+ arcane_defaultcdactions()
+}
+
+### Required symbols
+# amplification_talent
+# ancestral_call
+# arcane_barrage
+# arcane_blast
+# arcane_bombardment_runeforge
+# arcane_echo_talent
+# arcane_explosion
+# arcane_familiar
+# arcane_infinity_runeforge
+# arcane_intellect
+# arcane_missiles
+# arcane_orb
+# arcane_orb_talent
+# arcane_power
+# arcane_prodigy_conduit
+# arcane_pummeling_trait
+# bag_of_tricks
+# berserking
+# blink
+# blood_fury_int
+# clearcasting_channel_buff
+# clearcasting_mage_buff
+# conjure_mana_gem
+# counterspell
+# darkmoon_deck_putrescence_item
+# deathborne
+# disciplinary_command
+# disciplinary_command_fire_buff
+# disciplinary_command_frost_buff
+# disciplinary_command_runeforge
+# enlightened_talent
+# evocation
+# exhaustion_debuff
+# expanded_potential_buff
+# fire_blast
+# fireblood
+# flame_of_battle_item
+# frost_nova
+# frostbolt
+# gladiators_badge_item
+# gladiators_medallion_item
+# grisly_icicle_runeforge
+# inscrutable_quantum_device_item
+# lights_judgment
+# macabre_sheet_music_item
+# mirror_image
+# mirrors_of_torment
+# nether_tempest
+# potion_of_spectral_intellect_item
+# presence_of_mind
+# quaking_palm
+# radiant_spark
+# radiant_spark_vulnerability_debuff
+# replenish_mana
+# resonance_talent
+# rule_of_threes_buff
+# rune_of_power
+# rune_of_power_buff
+# rune_of_power_talent
+# shifting_power
+# siphon_storm_buff
+# siphon_storm_runeforge
+# soulletting_ruby_item
+# sunblood_amethyst_item
+# supernova
+# temporal_warp_runeforge
+# time_warp
+# touch_of_the_magi
+# touch_of_the_magi_debuff
+# vision_of_perfection_essence_id
+# wakeners_frond_item
+]]
+        scripts:registerScript("MAGE", "arcane", name, desc, code, "script")
+    end
+    do
+        local name = "sc_t26_mage_fire"
+        local desc = "[9.0] Simulationcraft: T26_Mage_Fire"
+        local code = [[
+# Based on SimulationCraft profile "T26_Mage_Fire".
+#	class=mage
+#	spec=fire
+#	talents=3031021
+
+Include(ovale_common)
+Include(ovale_mage_spells)
+
+
+AddFunction phoenix_pooling
+{
+ not disable_combustion() and time_to_combustion() < spellfullrecharge(phoenix_flames) - 0 * { spellcooldown(shifting_power) < time_to_combustion() } and time_to_combustion() < fightremains() or runeforge(sun_kings_blessing_runeforge) or timeincombat() < 5
+}
+
+AddFunction fire_blast_pooling
+{
+ not disable_combustion() and time_to_combustion() - 3 < spellfullrecharge(fire_blast_fire) - 0 * { spellcooldown(shifting_power) < time_to_combustion() } and time_to_combustion() < fightremains() or hastalent(rune_of_power_talent) and buffexpires(rune_of_power_buff) and spellcooldown(rune_of_power) < spellfullrecharge(fire_blast_fire) - 0 * { spellcooldown(shifting_power) < spellcooldown(rune_of_power) } and spellcooldown(rune_of_power) < fightremains()
+}
+
+AddFunction time_to_combustion_value
+{
+ if time_to_combustion_value() < time_to_combustion_max() time_to_combustion_value()
+ time_to_combustion_max()
+}
+
+AddFunction time_to_combustion_max
+{
+ if runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) spellcooldown(disciplinary_command) > 0
+ if hastalent(rune_of_power_talent) and buffexpires(combustion) and spellcooldown(rune_of_power) + 5 < time_to_combustion() spellcooldown(rune_of_power) + baseduration(rune_of_power_buff)
+ if hastalent(rune_of_power_talent) and buffexpires(combustion) totemremaining(rune_of_power)
+ if hasequippeditem(gladiators_badge_item) spellcooldown(gladiators_badge) > 0
+ if hasequippeditem(empyreal_ordnance_item) empyreal_ordnance_delay() - { spellcooldownduration(empyreal_ordnance) - spellcooldown(empyreal_ordnance) } * { not spellcooldown(empyreal_ordnance) <= 0 }
+}
+
+AddFunction time_to_combustion
+{
+ if time_to_combustion_value() < time_to_combustion_max() time_to_combustion_value()
+ time_to_combustion_max()
+}
+
+AddFunction needed_fire_blasts
+{
+ if conduit(infernal_cascade_conduit) extended_combustion_remains() / { baseduration(infernal_cascade_buff) - gcd() }
+}
+
+AddFunction expected_fire_blasts
+{
+ if conduit(infernal_cascade_conduit) charges(fire_blast_fire count=0) + { extended_combustion_remains() - baseduration(infernal_cascade_buff) } / spellcooldownduration(fire_blast_fire)
+}
+
+AddFunction extended_combustion_remains
+{
+ if conduit(infernal_cascade_conduit) buffremaining(combustion) + baseduration(combustion) * { spellcooldown(combustion) < buffremaining(combustion) }
+}
+
+AddFunction combustion_shifting_power
+{
+ 0
+}
+
+AddFunction on_use_cutoff
+{
+ if hasequippeditem(empyreal_ordnance_item) 20 + empyreal_ordnance_delay()
+ if hasequippeditem(macabre_sheet_music_item) 25
+ if combustion_on_use() 20
+}
+
+AddFunction empyreal_ordnance_delay
+{
+ 0
+}
+
+AddFunction combustion_on_use
+{
+ hasequippeditem(gladiators_badge_item) or hasequippeditem(macabre_sheet_music_item) or hasequippeditem(inscrutable_quantum_device_item) or hasequippeditem(sunblood_amethyst_item) or hasequippeditem(empyreal_ordnance_item)
+}
+
+AddFunction skb_duration
+{
+ 5
+}
+
+AddFunction kindling_reduction
+{
+ 0
+}
+
+AddFunction arcane_explosion_mana
+{
+ 0
+}
+
+AddFunction arcane_explosion
+{
+ if 0 == 0 99 * talentpoints(flame_patch_talent) + 2 * { not hastalent(flame_patch_talent) }
+}
+
+AddFunction combustion_flamestrike
+{
+ if 0 == 0 3 * talentpoints(flame_patch_talent) + 6 * { not hastalent(flame_patch_talent) }
+}
+
+AddFunction hard_cast_flamestrike
+{
+ if 0 == 0 2 * talentpoints(flame_patch_talent) + 3 * { not hastalent(flame_patch_talent) }
+}
+
+AddFunction hot_streak_flamestrike
+{
+ if 0 == 0 2 * talentpoints(flame_patch_talent) + 3 * { not hastalent(flame_patch_talent) }
+}
+
+AddFunction disable_combustion
+{
+ 0
+}
+
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(fire)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(fire)))
+AddCheckBox(opt_time_warp spellname(time_warp) enabled=(specialization(fire)))
+
+AddFunction fireinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(counterspell) and target.isinterruptible() spell(counterspell)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction fireuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+### actions.standard_rotation
+
+AddFunction firestandard_rotationmainactions
+{
+ #flamestrike,if=active_enemies>=variable.hot_streak_flamestrike&(buff.hot_streak.react|buff.firestorm.react)
+ if enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } spell(flamestrike)
+ #pyroblast,if=buff.firestorm.react
+ if buffpresent(firestorm_buff) spell(pyroblast)
+ #pyroblast,if=buff.hot_streak.react&buff.hot_streak.remains<action.fireball.execute_time
+ if buffpresent(hot_streak_buff) and buffremaining(hot_streak_buff) < executetime(fireball) spell(pyroblast)
+ #pyroblast,if=buff.hot_streak.react&(prev_gcd.1.fireball|firestarter.active|action.pyroblast.in_flight)
+ if buffpresent(hot_streak_buff) and { previousgcdspell(fireball) or talent(firestarter_talent) and target.healthpercent() >= 90 or inflighttotarget(pyroblast) } spell(pyroblast)
+ #pyroblast,if=buff.sun_kings_blessing_ready.up&(cooldown.rune_of_power.remains+action.rune_of_power.execute_time+cast_time>buff.sun_kings_blessing_ready.remains|!talent.rune_of_power)&variable.time_to_combustion+cast_time>buff.sun_kings_blessing_ready.remains
+ if buffpresent(sun_kings_blessing_ready_buff) and { spellcooldown(rune_of_power) + executetime(rune_of_power) + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) or not hastalent(rune_of_power_talent) } and time_to_combustion() + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) spell(pyroblast)
+ #pyroblast,if=buff.hot_streak.react&target.health.pct<=30&talent.searing_touch
+ if buffpresent(hot_streak_buff) and target.healthpercent() <= 30 and hastalent(searing_touch_talent) spell(pyroblast)
+ #pyroblast,if=buff.pyroclasm.react&cast_time<buff.pyroclasm.remains
+ if buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) spell(pyroblast)
+ #fire_blast,use_off_gcd=1,use_while_casting=1,if=!firestarter.active&!variable.fire_blast_pooling&(((action.fireball.executing&(action.fireball.execute_remains<0.5|!runeforge.firestorm)|action.pyroblast.executing&(action.pyroblast.execute_remains<0.5|!runeforge.firestorm))&buff.heating_up.react)|(talent.searing_touch&target.health.pct<=30&(buff.heating_up.react&!action.scorch.executing|!buff.hot_streak.react&!buff.heating_up.react&action.scorch.executing&!hot_streak_spells_in_flight)))
+ if not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not fire_blast_pooling() and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } spell(fire_blast_fire)
+ #pyroblast,if=prev_gcd.1.scorch&buff.heating_up.react&talent.searing_touch&target.health.pct<=30&active_enemies<variable.hot_streak_flamestrike
+ if previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() spell(pyroblast)
+ #phoenix_flames,if=!variable.phoenix_pooling&(!talent.from_the_ashes|active_enemies>1)&(active_dot.ignite<2|active_enemies>=variable.hard_cast_flamestrike|active_enemies>=variable.hot_streak_flamestrike)
+ if not phoenix_pooling() and { not hastalent(from_the_ashes_talent) or enemies() > 1 } and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } spell(phoenix_flames)
+ #call_action_list,name=active_talents
+ fireactive_talentsmainactions()
+
+ unless fireactive_talentsmainpostconditions()
+ {
+  #dragons_breath,if=active_enemies>1
+  if enemies() > 1 and target.distance() < 12 spell(dragons_breath)
+  #scorch,if=target.health.pct<=30&talent.searing_touch
+  if target.healthpercent() <= 30 and hastalent(searing_touch_talent) spell(scorch)
+  #arcane_explosion,if=active_enemies>=variable.arcane_explosion&mana.pct>=variable.arcane_explosion_mana
+  if enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() spell(arcane_explosion)
+  #flamestrike,if=active_enemies>=variable.hard_cast_flamestrike
+  if enemies() >= hard_cast_flamestrike() spell(flamestrike)
+  #fireball
+  spell(fireball)
+ }
+}
+
+AddFunction firestandard_rotationmainpostconditions
+{
+ fireactive_talentsmainpostconditions()
+}
+
+AddFunction firestandard_rotationshortcdactions
+{
+ unless enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and buffremaining(hot_streak_buff) < executetime(fireball) and spell(pyroblast) or buffpresent(hot_streak_buff) and { previousgcdspell(fireball) or talent(firestarter_talent) and target.healthpercent() >= 90 or inflighttotarget(pyroblast) } and spell(pyroblast) or buffpresent(sun_kings_blessing_ready_buff) and { spellcooldown(rune_of_power) + executetime(rune_of_power) + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) or not hastalent(rune_of_power_talent) } and time_to_combustion() + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(pyroblast) or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and spell(pyroblast) or not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not fire_blast_pooling() and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and { not hastalent(from_the_ashes_talent) or enemies() > 1 } and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames)
+ {
+  #call_action_list,name=active_talents
+  fireactive_talentsshortcdactions()
+ }
+}
+
+AddFunction firestandard_rotationshortcdpostconditions
+{
+ enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and buffremaining(hot_streak_buff) < executetime(fireball) and spell(pyroblast) or buffpresent(hot_streak_buff) and { previousgcdspell(fireball) or talent(firestarter_talent) and target.healthpercent() >= 90 or inflighttotarget(pyroblast) } and spell(pyroblast) or buffpresent(sun_kings_blessing_ready_buff) and { spellcooldown(rune_of_power) + executetime(rune_of_power) + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) or not hastalent(rune_of_power_talent) } and time_to_combustion() + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(pyroblast) or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and spell(pyroblast) or not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not fire_blast_pooling() and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and { not hastalent(from_the_ashes_talent) or enemies() > 1 } and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames) or fireactive_talentsshortcdpostconditions() or enemies() > 1 and target.distance() < 12 and spell(dragons_breath) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch) or enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() and spell(arcane_explosion) or enemies() >= hard_cast_flamestrike() and spell(flamestrike) or spell(fireball)
+}
+
+AddFunction firestandard_rotationcdactions
+{
+ unless enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and buffremaining(hot_streak_buff) < executetime(fireball) and spell(pyroblast) or buffpresent(hot_streak_buff) and { previousgcdspell(fireball) or talent(firestarter_talent) and target.healthpercent() >= 90 or inflighttotarget(pyroblast) } and spell(pyroblast) or buffpresent(sun_kings_blessing_ready_buff) and { spellcooldown(rune_of_power) + executetime(rune_of_power) + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) or not hastalent(rune_of_power_talent) } and time_to_combustion() + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(pyroblast) or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and spell(pyroblast) or not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not fire_blast_pooling() and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and { not hastalent(from_the_ashes_talent) or enemies() > 1 } and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames)
+ {
+  #call_action_list,name=active_talents
+  fireactive_talentscdactions()
+ }
+}
+
+AddFunction firestandard_rotationcdpostconditions
+{
+ enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and buffremaining(hot_streak_buff) < executetime(fireball) and spell(pyroblast) or buffpresent(hot_streak_buff) and { previousgcdspell(fireball) or talent(firestarter_talent) and target.healthpercent() >= 90 or inflighttotarget(pyroblast) } and spell(pyroblast) or buffpresent(sun_kings_blessing_ready_buff) and { spellcooldown(rune_of_power) + executetime(rune_of_power) + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) or not hastalent(rune_of_power_talent) } and time_to_combustion() + casttime(pyroblast) > buffremaining(sun_kings_blessing_ready_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(pyroblast) or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and spell(pyroblast) or not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not fire_blast_pooling() and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and { not hastalent(from_the_ashes_talent) or enemies() > 1 } and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames) or fireactive_talentscdpostconditions() or enemies() > 1 and target.distance() < 12 and spell(dragons_breath) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch) or enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() and spell(arcane_explosion) or enemies() >= hard_cast_flamestrike() and spell(flamestrike) or spell(fireball)
+}
+
+### actions.rop_phase
+
+AddFunction firerop_phasemainactions
+{
+ #flamestrike,if=active_enemies>=variable.hot_streak_flamestrike&(buff.hot_streak.react|buff.firestorm.react)
+ if enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } spell(flamestrike)
+ #pyroblast,if=buff.sun_kings_blessing_ready.up&buff.sun_kings_blessing_ready.remains>cast_time
+ if buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) spell(pyroblast)
+ #pyroblast,if=buff.firestorm.react
+ if buffpresent(firestorm_buff) spell(pyroblast)
+ #pyroblast,if=buff.hot_streak.react
+ if buffpresent(hot_streak_buff) spell(pyroblast)
+ #fire_blast,use_off_gcd=1,use_while_casting=1,if=!variable.fire_blast_pooling&buff.sun_kings_blessing_ready.down&active_enemies<variable.hard_cast_flamestrike&!firestarter.active&(!buff.heating_up.react&!buff.hot_streak.react&!prev_off_gcd.fire_blast&(action.fire_blast.charges>=2|(talent.alexstraszas_fury&cooldown.dragons_breath.ready)|(talent.searing_touch&target.health.pct<=30)))
+ if not fire_blast_pooling() and buffexpires(sun_kings_blessing_ready_buff) and enemies() < hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { not buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and not previousoffgcdspell(fire_blast_fire) } and { charges(fire_blast_fire) >= 2 or hastalent(alexstraszas_fury_talent) and spellcooldown(dragons_breath) <= 0 or hastalent(searing_touch_talent) and target.healthpercent() <= 30 } spell(fire_blast_fire)
+ #fire_blast,use_off_gcd=1,use_while_casting=1,if=!variable.fire_blast_pooling&!firestarter.active&(((action.fireball.executing&(action.fireball.execute_remains<0.5|!runeforge.firestorm)|action.pyroblast.executing&(action.pyroblast.execute_remains<0.5|!runeforge.firestorm))&buff.heating_up.react)|(talent.searing_touch&target.health.pct<=30&(buff.heating_up.react&!action.scorch.executing|!buff.hot_streak.react&!buff.heating_up.react&action.scorch.executing&!hot_streak_spells_in_flight)))
+ if not fire_blast_pooling() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } spell(fire_blast_fire)
+ #call_action_list,name=active_talents
+ fireactive_talentsmainactions()
+
+ unless fireactive_talentsmainpostconditions()
+ {
+  #pyroblast,if=buff.pyroclasm.react&cast_time<buff.pyroclasm.remains&cast_time<buff.rune_of_power.remains
+  if buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and casttime(pyroblast) < totemremaining(rune_of_power) spell(pyroblast)
+  #pyroblast,if=prev_gcd.1.scorch&buff.heating_up.react&talent.searing_touch&target.health.pct<=30&active_enemies<variable.hot_streak_flamestrike
+  if previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() spell(pyroblast)
+  #phoenix_flames,if=!variable.phoenix_pooling&buff.heating_up.react&!buff.hot_streak.react&(active_dot.ignite<2|active_enemies>=variable.hard_cast_flamestrike|active_enemies>=variable.hot_streak_flamestrike)
+  if not phoenix_pooling() and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } spell(phoenix_flames)
+  #scorch,if=target.health.pct<=30&talent.searing_touch
+  if target.healthpercent() <= 30 and hastalent(searing_touch_talent) spell(scorch)
+  #dragons_breath,if=active_enemies>2
+  if enemies() > 2 and target.distance() < 12 spell(dragons_breath)
+  #arcane_explosion,if=active_enemies>=variable.arcane_explosion&mana.pct>=variable.arcane_explosion_mana
+  if enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() spell(arcane_explosion)
+  #flamestrike,if=active_enemies>=variable.hard_cast_flamestrike
+  if enemies() >= hard_cast_flamestrike() spell(flamestrike)
+  #fireball
+  spell(fireball)
+ }
+}
+
+AddFunction firerop_phasemainpostconditions
+{
+ fireactive_talentsmainpostconditions()
+}
+
+AddFunction firerop_phaseshortcdactions
+{
+ unless enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and spell(pyroblast) or not fire_blast_pooling() and buffexpires(sun_kings_blessing_ready_buff) and enemies() < hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { not buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and not previousoffgcdspell(fire_blast_fire) } and { charges(fire_blast_fire) >= 2 or hastalent(alexstraszas_fury_talent) and spellcooldown(dragons_breath) <= 0 or hastalent(searing_touch_talent) and target.healthpercent() <= 30 } and spell(fire_blast_fire) or not fire_blast_pooling() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire)
+ {
+  #call_action_list,name=active_talents
+  fireactive_talentsshortcdactions()
+ }
+}
+
+AddFunction firerop_phaseshortcdpostconditions
+{
+ enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and spell(pyroblast) or not fire_blast_pooling() and buffexpires(sun_kings_blessing_ready_buff) and enemies() < hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { not buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and not previousoffgcdspell(fire_blast_fire) } and { charges(fire_blast_fire) >= 2 or hastalent(alexstraszas_fury_talent) and spellcooldown(dragons_breath) <= 0 or hastalent(searing_touch_talent) and target.healthpercent() <= 30 } and spell(fire_blast_fire) or not fire_blast_pooling() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or fireactive_talentsshortcdpostconditions() or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and casttime(pyroblast) < totemremaining(rune_of_power) and spell(pyroblast) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch) or enemies() > 2 and target.distance() < 12 and spell(dragons_breath) or enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() and spell(arcane_explosion) or enemies() >= hard_cast_flamestrike() and spell(flamestrike) or spell(fireball)
+}
+
+AddFunction firerop_phasecdactions
+{
+ unless enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and spell(pyroblast) or not fire_blast_pooling() and buffexpires(sun_kings_blessing_ready_buff) and enemies() < hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { not buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and not previousoffgcdspell(fire_blast_fire) } and { charges(fire_blast_fire) >= 2 or hastalent(alexstraszas_fury_talent) and spellcooldown(dragons_breath) <= 0 or hastalent(searing_touch_talent) and target.healthpercent() <= 30 } and spell(fire_blast_fire) or not fire_blast_pooling() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire)
+ {
+  #call_action_list,name=active_talents
+  fireactive_talentscdactions()
+ }
+}
+
+AddFunction firerop_phasecdpostconditions
+{
+ enemies() >= hot_streak_flamestrike() and { buffpresent(hot_streak_buff) or buffpresent(firestorm_buff) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(hot_streak_buff) and spell(pyroblast) or not fire_blast_pooling() and buffexpires(sun_kings_blessing_ready_buff) and enemies() < hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { not buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and not previousoffgcdspell(fire_blast_fire) } and { charges(fire_blast_fire) >= 2 or hastalent(alexstraszas_fury_talent) and spellcooldown(dragons_breath) <= 0 or hastalent(searing_touch_talent) and target.healthpercent() <= 30 } and spell(fire_blast_fire) or not fire_blast_pooling() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and { { executetime(fireball) > 0 and { executetime(fireball) < 0.5 or not runeforge(firestorm_runeforge) } or executetime(pyroblast) > 0 and { executetime(pyroblast) < 0.5 or not runeforge(firestorm_runeforge) } } and buffpresent(heating_up_buff) or hastalent(searing_touch_talent) and target.healthpercent() <= 30 and { buffpresent(heating_up_buff) and not executetime(scorch) > 0 or not buffpresent(hot_streak_buff) and not buffpresent(heating_up_buff) and executetime(scorch) > 0 and not inflighttotarget(hot_streak_spells) } } and spell(fire_blast_fire) or fireactive_talentscdpostconditions() or buffpresent(pyroclasm_buff) and casttime(pyroblast) < buffremaining(pyroclasm_buff) and casttime(pyroblast) < totemremaining(rune_of_power) and spell(pyroblast) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and hastalent(searing_touch_talent) and target.healthpercent() <= 30 and enemies() < hot_streak_flamestrike() and spell(pyroblast) or not phoenix_pooling() and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) and { debuffcountonany(ignite_debuff) < 2 or enemies() >= hard_cast_flamestrike() or enemies() >= hot_streak_flamestrike() } and spell(phoenix_flames) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch) or enemies() > 2 and target.distance() < 12 and spell(dragons_breath) or enemies() >= arcane_explosion() and manapercent() >= arcane_explosion_mana() and spell(arcane_explosion) or enemies() >= hard_cast_flamestrike() and spell(flamestrike) or spell(fireball)
+}
+
+### actions.precombat
+
+AddFunction fireprecombatmainactions
+{
+ #flask
+ #food
+ #augmentation
+ #arcane_intellect
+ if buffexpires(arcane_intellect) spell(arcane_intellect)
+ #pyroblast
+ spell(pyroblast)
+}
+
+AddFunction fireprecombatmainpostconditions
+{
+}
+
+AddFunction fireprecombatshortcdactions
+{
+}
+
+AddFunction fireprecombatshortcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(pyroblast)
+}
+
+AddFunction fireprecombatcdactions
+{
+ unless buffexpires(arcane_intellect) and spell(arcane_intellect)
+ {
+  #variable,name=disable_combustion,op=reset
+  #variable,name=hot_streak_flamestrike,op=set,if=variable.hot_streak_flamestrike=0,value=2*talent.flame_patch+3*!talent.flame_patch
+  #variable,name=hard_cast_flamestrike,op=set,if=variable.hard_cast_flamestrike=0,value=2*talent.flame_patch+3*!talent.flame_patch
+  #variable,name=combustion_flamestrike,op=set,if=variable.combustion_flamestrike=0,value=3*talent.flame_patch+6*!talent.flame_patch
+  #variable,name=arcane_explosion,op=set,if=variable.arcane_explosion=0,value=99*talent.flame_patch+2*!talent.flame_patch
+  #variable,name=arcane_explosion_mana,default=40,op=reset
+  #variable,name=kindling_reduction,default=0.4,op=reset
+  #variable,name=skb_duration,op=set,value=dbc.effect.828420.base_value
+  #variable,name=combustion_on_use,op=set,value=equipped.gladiators_badge|equipped.macabre_sheet_music|equipped.inscrutable_quantum_device|equipped.sunblood_amethyst|equipped.empyreal_ordnance
+  #variable,name=empyreal_ordnance_delay,default=18,op=reset
+  #variable,name=on_use_cutoff,op=set,value=20,if=variable.combustion_on_use
+  #variable,name=on_use_cutoff,op=set,value=25,if=equipped.macabre_sheet_music
+  #variable,name=on_use_cutoff,op=set,value=20+variable.empyreal_ordnance_delay,if=equipped.empyreal_ordnance
+  #variable,name=combustion_shifting_power,default=2,op=reset
+  #snapshot_stats
+  #use_item,name=soul_igniter,if=!variable.combustion_on_use
+  if not combustion_on_use() fireuseitemactions()
+  #mirror_image
+  spell(mirror_image)
+ }
+}
+
+AddFunction fireprecombatcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(pyroblast)
+}
+
+### actions.combustion_phase
+
+AddFunction firecombustion_phasemainactions
+{
+ #living_bomb,if=active_enemies>1&buff.combustion.down
+ if enemies() > 1 and buffexpires(combustion) spell(living_bomb)
+ #fire_blast,use_off_gcd=1,use_while_casting=1,if=(active_enemies<=active_dot.ignite|!cooldown.phoenix_flames.ready)&!conduit.infernal_cascade&charges>=1&buff.combustion.up&!buff.firestorm.react&!buff.hot_streak.react&hot_streak_spells_in_flight+buff.heating_up.react<2
+ if { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and not conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and buffpresent(combustion) and not buffpresent(firestorm_buff) and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 spell(fire_blast_fire)
+ #variable,use_off_gcd=1,use_while_casting=1,name=expected_fire_blasts,op=set,value=action.fire_blast.charges_fractional+(variable.extended_combustion_remains-buff.infernal_cascade.duration)%cooldown.fire_blast.duration,if=conduit.infernal_cascade
+ #variable,use_off_gcd=1,use_while_casting=1,name=needed_fire_blasts,op=set,value=ceil(variable.extended_combustion_remains%(buff.infernal_cascade.duration-gcd.max)),if=conduit.infernal_cascade
+ #fire_blast,use_off_gcd=1,use_while_casting=1,if=(active_enemies<=active_dot.ignite|!cooldown.phoenix_flames.ready)&conduit.infernal_cascade&charges>=1&(variable.expected_fire_blasts>=variable.needed_fire_blasts|variable.extended_combustion_remains<=buff.infernal_cascade.duration|buff.infernal_cascade.stack<2|buff.infernal_cascade.remains<gcd.max|cooldown.shifting_power.ready&active_enemies>=variable.combustion_shifting_power&covenant.night_fae)&buff.combustion.up&(!buff.firestorm.react|buff.infernal_cascade.remains<0.5)&!buff.hot_streak.react&hot_streak_spells_in_flight+buff.heating_up.react<2
+ if { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and { expected_fire_blasts() >= needed_fire_blasts() or extended_combustion_remains() <= baseduration(infernal_cascade_buff) or buffstacks(infernal_cascade_buff) < 2 or buffremaining(infernal_cascade_buff) < gcd() or spellcooldown(shifting_power) <= 0 and enemies() >= combustion_shifting_power() and iscovenant("night_fae") } and buffpresent(combustion) and { not buffpresent(firestorm_buff) or buffremaining(infernal_cascade_buff) < 0.5 } and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 spell(fire_blast_fire)
+ #arcane_explosion,if=runeforge.disciplinary_command&buff.disciplinary_command.down&buff.disciplinary_command_arcane.down&cooldown.buff_disciplinary_command.ready&!talent.rune_of_power
+ if runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) spell(arcane_explosion)
+ #frostbolt,if=runeforge.disciplinary_command&buff.disciplinary_command.down&buff.disciplinary_command_frost.down
+ if runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_frost_buff) spell(frostbolt)
+ #call_action_list,name=active_talents
+ fireactive_talentsmainactions()
+
+ unless fireactive_talentsmainpostconditions()
+ {
+  #call_action_list,name=combustion_cooldowns,if=buff.combustion.last_expire<=action.combustion.last_used
+  if bufflastexpire(combustion) <= timesincepreviousspell(combustion) firecombustion_cooldownsmainactions()
+
+  unless bufflastexpire(combustion) <= timesincepreviousspell(combustion) and firecombustion_cooldownsmainpostconditions()
+  {
+   #flamestrike,if=(buff.hot_streak.react&active_enemies>=variable.combustion_flamestrike)|(buff.firestorm.react&active_enemies>=variable.combustion_flamestrike-runeforge.firestorm)
+   if buffpresent(hot_streak_buff) and enemies() >= combustion_flamestrike() or buffpresent(firestorm_buff) and enemies() >= combustion_flamestrike() - runeforge(firestorm_runeforge) spell(flamestrike)
+   #pyroblast,if=buff.sun_kings_blessing_ready.up&buff.sun_kings_blessing_ready.remains>cast_time
+   if buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) spell(pyroblast)
+   #pyroblast,if=buff.firestorm.react
+   if buffpresent(firestorm_buff) spell(pyroblast)
+   #pyroblast,if=buff.pyroclasm.react&buff.pyroclasm.remains>cast_time&(buff.combustion.remains>cast_time|buff.combustion.down)&active_enemies<variable.combustion_flamestrike
+   if buffpresent(pyroclasm_buff) and buffremaining(pyroclasm_buff) > casttime(pyroblast) and { buffremaining(combustion) > casttime(pyroblast) or buffexpires(combustion) } and enemies() < combustion_flamestrike() spell(pyroblast)
+   #pyroblast,if=buff.hot_streak.react&buff.combustion.up
+   if buffpresent(hot_streak_buff) and buffpresent(combustion) spell(pyroblast)
+   #pyroblast,if=prev_gcd.1.scorch&buff.heating_up.react&active_enemies<variable.combustion_flamestrike
+   if previousgcdspell(scorch) and buffpresent(heating_up_buff) and enemies() < combustion_flamestrike() spell(pyroblast)
+   #phoenix_flames,if=buff.combustion.up&((action.fire_blast.charges<1&talent.pyroclasm&active_enemies=1)|!talent.pyroclasm|active_enemies>1)&buff.heating_up.react+hot_streak_spells_in_flight<2
+   if buffpresent(combustion) and { charges(fire_blast_fire) < 1 and hastalent(pyroclasm_talent) and enemies() == 1 or not hastalent(pyroclasm_talent) or enemies() > 1 } and buffstacks(heating_up_buff) + inflighttotarget(hot_streak_spells) < 2 spell(phoenix_flames)
+   #flamestrike,if=buff.combustion.down&cooldown.combustion.remains<cast_time&active_enemies>=variable.combustion_flamestrike
+   if buffexpires(combustion) and spellcooldown(combustion) < casttime(flamestrike) and enemies() >= combustion_flamestrike() spell(flamestrike)
+   #fireball,if=buff.combustion.down&cooldown.combustion.remains<cast_time&!conduit.flame_accretion
+   if buffexpires(combustion) and spellcooldown(combustion) < casttime(fireball) and not conduit(flame_accretion_conduit) spell(fireball)
+   #scorch,if=buff.combustion.remains>cast_time&buff.combustion.up|buff.combustion.down&cooldown.combustion.remains<cast_time
+   if buffremaining(combustion) > casttime(scorch) and buffpresent(combustion) or buffexpires(combustion) and spellcooldown(combustion) < casttime(scorch) spell(scorch)
+   #living_bomb,if=buff.combustion.remains<gcd.max&active_enemies>1
+   if buffremaining(combustion) < gcd() and enemies() > 1 spell(living_bomb)
+   #dragons_breath,if=buff.combustion.remains<gcd.max&buff.combustion.up
+   if buffremaining(combustion) < gcd() and buffpresent(combustion) and target.distance() < 12 spell(dragons_breath)
+   #scorch,if=target.health.pct<=30&talent.searing_touch
+   if target.healthpercent() <= 30 and hastalent(searing_touch_talent) spell(scorch)
+  }
+ }
+}
+
+AddFunction firecombustion_phasemainpostconditions
+{
+ fireactive_talentsmainpostconditions() or bufflastexpire(combustion) <= timesincepreviousspell(combustion) and firecombustion_cooldownsmainpostconditions()
+}
+
+AddFunction firecombustion_phaseshortcdactions
+{
+ #variable,use_off_gcd=1,use_while_casting=1,name=extended_combustion_remains,op=set,value=buff.combustion.remains+buff.combustion.duration*(cooldown.combustion.remains<buff.combustion.remains),if=conduit.infernal_cascade
+ #variable,use_off_gcd=1,use_while_casting=1,name=extended_combustion_remains,op=add,value=variable.skb_duration,if=conduit.infernal_cascade&(buff.sun_kings_blessing_ready.up|variable.extended_combustion_remains>1.5*gcd.max*(buff.sun_kings_blessing.max_stack-buff.sun_kings_blessing.stack))
+ #bag_of_tricks,if=buff.combustion.down
+ if buffexpires(combustion) spell(bag_of_tricks)
+
+ unless enemies() > 1 and buffexpires(combustion) and spell(living_bomb) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and not conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and buffpresent(combustion) and not buffpresent(firestorm_buff) and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and { expected_fire_blasts() >= needed_fire_blasts() or extended_combustion_remains() <= baseduration(infernal_cascade_buff) or buffstacks(infernal_cascade_buff) < 2 or buffremaining(infernal_cascade_buff) < gcd() or spellcooldown(shifting_power) <= 0 and enemies() >= combustion_shifting_power() and iscovenant("night_fae") } and buffpresent(combustion) and { not buffpresent(firestorm_buff) or buffremaining(infernal_cascade_buff) < 0.5 } and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_frost_buff) and spell(frostbolt)
+ {
+  #frost_nova,if=runeforge.grisly_icicle&buff.combustion.down
+  if runeforge(grisly_icicle_runeforge) and buffexpires(combustion) spell(frost_nova)
+  #call_action_list,name=active_talents
+  fireactive_talentsshortcdactions()
+
+  unless fireactive_talentsshortcdpostconditions()
+  {
+   #call_action_list,name=combustion_cooldowns,if=buff.combustion.last_expire<=action.combustion.last_used
+   if bufflastexpire(combustion) <= timesincepreviousspell(combustion) firecombustion_cooldownsshortcdactions()
+
+   unless bufflastexpire(combustion) <= timesincepreviousspell(combustion) and firecombustion_cooldownsshortcdpostconditions() or { buffpresent(hot_streak_buff) and enemies() >= combustion_flamestrike() or buffpresent(firestorm_buff) and enemies() >= combustion_flamestrike() - runeforge(firestorm_runeforge) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(pyroclasm_buff) and buffremaining(pyroclasm_buff) > casttime(pyroblast) and { buffremaining(combustion) > casttime(pyroblast) or buffexpires(combustion) } and enemies() < combustion_flamestrike() and spell(pyroblast) or buffpresent(hot_streak_buff) and buffpresent(combustion) and spell(pyroblast) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and enemies() < combustion_flamestrike() and spell(pyroblast)
+   {
+    #shifting_power,if=buff.combustion.up&!action.fire_blast.charges&active_enemies>=variable.combustion_shifting_power&action.phoenix_flames.full_recharge_time>full_reduction,interrupt_if=action.fire_blast.charges=action.fire_blast.max_charges
+    if buffpresent(combustion) and not charges(fire_blast_fire) and enemies() >= combustion_shifting_power() and spellfullrecharge(phoenix_flames) > 0 spell(shifting_power)
+   }
+  }
+ }
+}
+
+AddFunction firecombustion_phaseshortcdpostconditions
+{
+ enemies() > 1 and buffexpires(combustion) and spell(living_bomb) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and not conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and buffpresent(combustion) and not buffpresent(firestorm_buff) and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and { expected_fire_blasts() >= needed_fire_blasts() or extended_combustion_remains() <= baseduration(infernal_cascade_buff) or buffstacks(infernal_cascade_buff) < 2 or buffremaining(infernal_cascade_buff) < gcd() or spellcooldown(shifting_power) <= 0 and enemies() >= combustion_shifting_power() and iscovenant("night_fae") } and buffpresent(combustion) and { not buffpresent(firestorm_buff) or buffremaining(infernal_cascade_buff) < 0.5 } and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_frost_buff) and spell(frostbolt) or fireactive_talentsshortcdpostconditions() or bufflastexpire(combustion) <= timesincepreviousspell(combustion) and firecombustion_cooldownsshortcdpostconditions() or { buffpresent(hot_streak_buff) and enemies() >= combustion_flamestrike() or buffpresent(firestorm_buff) and enemies() >= combustion_flamestrike() - runeforge(firestorm_runeforge) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(pyroclasm_buff) and buffremaining(pyroclasm_buff) > casttime(pyroblast) and { buffremaining(combustion) > casttime(pyroblast) or buffexpires(combustion) } and enemies() < combustion_flamestrike() and spell(pyroblast) or buffpresent(hot_streak_buff) and buffpresent(combustion) and spell(pyroblast) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and enemies() < combustion_flamestrike() and spell(pyroblast) or buffpresent(combustion) and { charges(fire_blast_fire) < 1 and hastalent(pyroclasm_talent) and enemies() == 1 or not hastalent(pyroclasm_talent) or enemies() > 1 } and buffstacks(heating_up_buff) + inflighttotarget(hot_streak_spells) < 2 and spell(phoenix_flames) or buffexpires(combustion) and spellcooldown(combustion) < casttime(flamestrike) and enemies() >= combustion_flamestrike() and spell(flamestrike) or buffexpires(combustion) and spellcooldown(combustion) < casttime(fireball) and not conduit(flame_accretion_conduit) and spell(fireball) or { buffremaining(combustion) > casttime(scorch) and buffpresent(combustion) or buffexpires(combustion) and spellcooldown(combustion) < casttime(scorch) } and spell(scorch) or buffremaining(combustion) < gcd() and enemies() > 1 and spell(living_bomb) or buffremaining(combustion) < gcd() and buffpresent(combustion) and target.distance() < 12 and spell(dragons_breath) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch)
+}
+
+AddFunction firecombustion_phasecdactions
+{
+ #lights_judgment,if=buff.combustion.down
+ if buffexpires(combustion) spell(lights_judgment)
+
+ unless buffexpires(combustion) and spell(bag_of_tricks) or enemies() > 1 and buffexpires(combustion) and spell(living_bomb) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and not conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and buffpresent(combustion) and not buffpresent(firestorm_buff) and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and { expected_fire_blasts() >= needed_fire_blasts() or extended_combustion_remains() <= baseduration(infernal_cascade_buff) or buffstacks(infernal_cascade_buff) < 2 or buffremaining(infernal_cascade_buff) < gcd() or spellcooldown(shifting_power) <= 0 and enemies() >= combustion_shifting_power() and iscovenant("night_fae") } and buffpresent(combustion) and { not buffpresent(firestorm_buff) or buffremaining(infernal_cascade_buff) < 0.5 } and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire)
+ {
+  #counterspell,if=runeforge.disciplinary_command&buff.disciplinary_command.down&buff.disciplinary_command_arcane.down&cooldown.buff_disciplinary_command.ready&!talent.rune_of_power
+  if runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) fireinterruptactions()
+
+  unless runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_frost_buff) and spell(frostbolt) or runeforge(grisly_icicle_runeforge) and buffexpires(combustion) and spell(frost_nova)
+  {
+   #call_action_list,name=active_talents
+   fireactive_talentscdactions()
+
+   unless fireactive_talentscdpostconditions()
+   {
+    #combustion,use_off_gcd=1,use_while_casting=1,if=buff.combustion.down&(!runeforge.disciplinary_command|buff.disciplinary_command.up|buff.disciplinary_command_frost.up&talent.rune_of_power&cooldown.buff_disciplinary_command.ready)&(!runeforge.grisly_icicle|debuff.grisly_icicle.up)&(action.meteor.in_flight&action.meteor.in_flight_remains<=0.6|action.scorch.executing&action.scorch.execute_remains<0.6|action.fireball.executing&action.fireball.execute_remains<0.6|action.pyroblast.executing&action.pyroblast.execute_remains<0.6|action.flamestrike.executing&action.flamestrike.execute_remains<0.6)
+    if buffexpires(combustion) and { not runeforge(disciplinary_command_runeforge) or buffpresent(disciplinary_command_fire_buff) or buffpresent(disciplinary_command_frost_buff) and hastalent(rune_of_power_talent) and spellcooldown(disciplinary_command) <= 0 } and { not runeforge(grisly_icicle_runeforge) or target.debuffpresent(grisly_icicle_debuff) } and { inflighttotarget(meteor) and 0 <= 0.6 or executetime(scorch) > 0 and executetime(scorch) < 0.6 or executetime(fireball) > 0 and executetime(fireball) < 0.6 or executetime(pyroblast) > 0 and executetime(pyroblast) < 0.6 or executetime(flamestrike) > 0 and executetime(flamestrike) < 0.6 } spell(combustion)
+    #call_action_list,name=combustion_cooldowns,if=buff.combustion.last_expire<=action.combustion.last_used
+    if bufflastexpire(combustion) <= timesincepreviousspell(combustion) firecombustion_cooldownscdactions()
+   }
+  }
+ }
+}
+
+AddFunction firecombustion_phasecdpostconditions
+{
+ buffexpires(combustion) and spell(bag_of_tricks) or enemies() > 1 and buffexpires(combustion) and spell(living_bomb) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and not conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and buffpresent(combustion) and not buffpresent(firestorm_buff) and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or { enemies() <= debuffcountonany(ignite_debuff) or not spellcooldown(phoenix_flames) <= 0 } and conduit(infernal_cascade_conduit) and charges(fire_blast_fire) >= 1 and { expected_fire_blasts() >= needed_fire_blasts() or extended_combustion_remains() <= baseduration(infernal_cascade_buff) or buffstacks(infernal_cascade_buff) < 2 or buffremaining(infernal_cascade_buff) < gcd() or spellcooldown(shifting_power) <= 0 and enemies() >= combustion_shifting_power() and iscovenant("night_fae") } and buffpresent(combustion) and { not buffpresent(firestorm_buff) or buffremaining(infernal_cascade_buff) < 0.5 } and not buffpresent(hot_streak_buff) and inflighttotarget(hot_streak_spells) + buffstacks(heating_up_buff) < 2 and spell(fire_blast_fire) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_arcane_buff) and spellcooldown(disciplinary_command) <= 0 and not hastalent(rune_of_power_talent) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and buffexpires(disciplinary_command_fire_buff) and buffexpires(disciplinary_command_frost_buff) and spell(frostbolt) or runeforge(grisly_icicle_runeforge) and buffexpires(combustion) and spell(frost_nova) or fireactive_talentscdpostconditions() or bufflastexpire(combustion) <= timesincepreviousspell(combustion) and firecombustion_cooldownscdpostconditions() or { buffpresent(hot_streak_buff) and enemies() >= combustion_flamestrike() or buffpresent(firestorm_buff) and enemies() >= combustion_flamestrike() - runeforge(firestorm_runeforge) } and spell(flamestrike) or buffpresent(sun_kings_blessing_ready_buff) and buffremaining(sun_kings_blessing_ready_buff) > casttime(pyroblast) and spell(pyroblast) or buffpresent(firestorm_buff) and spell(pyroblast) or buffpresent(pyroclasm_buff) and buffremaining(pyroclasm_buff) > casttime(pyroblast) and { buffremaining(combustion) > casttime(pyroblast) or buffexpires(combustion) } and enemies() < combustion_flamestrike() and spell(pyroblast) or buffpresent(hot_streak_buff) and buffpresent(combustion) and spell(pyroblast) or previousgcdspell(scorch) and buffpresent(heating_up_buff) and enemies() < combustion_flamestrike() and spell(pyroblast) or buffpresent(combustion) and not charges(fire_blast_fire) and enemies() >= combustion_shifting_power() and spellfullrecharge(phoenix_flames) > 0 and spell(shifting_power) or buffpresent(combustion) and { charges(fire_blast_fire) < 1 and hastalent(pyroclasm_talent) and enemies() == 1 or not hastalent(pyroclasm_talent) or enemies() > 1 } and buffstacks(heating_up_buff) + inflighttotarget(hot_streak_spells) < 2 and spell(phoenix_flames) or buffexpires(combustion) and spellcooldown(combustion) < casttime(flamestrike) and enemies() >= combustion_flamestrike() and spell(flamestrike) or buffexpires(combustion) and spellcooldown(combustion) < casttime(fireball) and not conduit(flame_accretion_conduit) and spell(fireball) or { buffremaining(combustion) > casttime(scorch) and buffpresent(combustion) or buffexpires(combustion) and spellcooldown(combustion) < casttime(scorch) } and spell(scorch) or buffremaining(combustion) < gcd() and enemies() > 1 and spell(living_bomb) or buffremaining(combustion) < gcd() and buffpresent(combustion) and target.distance() < 12 and spell(dragons_breath) or target.healthpercent() <= 30 and hastalent(searing_touch_talent) and spell(scorch)
+}
+
+### actions.combustion_cooldowns
+
+AddFunction firecombustion_cooldownsmainactions
+{
+}
+
+AddFunction firecombustion_cooldownsmainpostconditions
+{
+}
+
+AddFunction firecombustion_cooldownsshortcdactions
+{
+}
+
+AddFunction firecombustion_cooldownsshortcdpostconditions
+{
+}
+
+AddFunction firecombustion_cooldownscdactions
+{
+ #potion
+ if checkboxon(opt_use_consumables) and target.classification(worldboss) item(potion_of_spectral_intellect_item usable=1)
+ #blood_fury
+ spell(blood_fury_int)
+ #berserking
+ spell(berserking)
+ #fireblood
+ spell(fireblood)
+ #ancestral_call
+ spell(ancestral_call)
+ #use_items
+ fireuseitemactions()
+ #use_item,use_off_gcd=1,effect_name=gladiators_badge,if=action.meteor.in_flight_remains<=0.5
+ if 0 <= 0.5 fireuseitemactions()
+ #time_warp,if=runeforge.temporal_warp&buff.exhaustion.up
+ if runeforge(temporal_warp_runeforge) and debuffpresent(exhaustion_debuff) and { checkboxon(opt_time_warp) and debuffexpires(burst_haste_debuff any=1) } spell(time_warp)
+}
+
+AddFunction firecombustion_cooldownscdpostconditions
+{
+}
+
+### actions.active_talents
+
+AddFunction fireactive_talentsmainactions
+{
+ #living_bomb,if=active_enemies>1&buff.combustion.down&(variable.time_to_combustion>cooldown.living_bomb.duration|variable.time_to_combustion<=0|variable.disable_combustion)
+ if enemies() > 1 and buffexpires(combustion) and { time_to_combustion() > spellcooldownduration(living_bomb) or time_to_combustion() <= 0 or disable_combustion() } spell(living_bomb)
+ #dragons_breath,if=talent.alexstraszas_fury&(buff.combustion.down&!buff.hot_streak.react)
+ if hastalent(alexstraszas_fury_talent) and buffexpires(combustion) and not buffpresent(hot_streak_buff) and target.distance() < 12 spell(dragons_breath)
+}
+
+AddFunction fireactive_talentsmainpostconditions
+{
+}
+
+AddFunction fireactive_talentsshortcdactions
+{
+ unless enemies() > 1 and buffexpires(combustion) and { time_to_combustion() > spellcooldownduration(living_bomb) or time_to_combustion() <= 0 or disable_combustion() } and spell(living_bomb)
+ {
+  #meteor,if=!variable.disable_combustion&variable.time_to_combustion<=0|(cooldown.meteor.duration<variable.time_to_combustion&!talent.rune_of_power)|talent.rune_of_power&buff.rune_of_power.up&variable.time_to_combustion>action.meteor.cooldown|fight_remains<variable.time_to_combustion|variable.disable_combustion
+  if not disable_combustion() and time_to_combustion() <= 0 or spellcooldownduration(meteor) < time_to_combustion() and not hastalent(rune_of_power_talent) or hastalent(rune_of_power_talent) and buffpresent(rune_of_power_buff) and time_to_combustion() > spellcooldown(meteor) or fightremains() < time_to_combustion() or disable_combustion() spell(meteor)
+ }
+}
+
+AddFunction fireactive_talentsshortcdpostconditions
+{
+ enemies() > 1 and buffexpires(combustion) and { time_to_combustion() > spellcooldownduration(living_bomb) or time_to_combustion() <= 0 or disable_combustion() } and spell(living_bomb) or hastalent(alexstraszas_fury_talent) and buffexpires(combustion) and not buffpresent(hot_streak_buff) and target.distance() < 12 and spell(dragons_breath)
+}
+
+AddFunction fireactive_talentscdactions
+{
+}
+
+AddFunction fireactive_talentscdpostconditions
+{
+ enemies() > 1 and buffexpires(combustion) and { time_to_combustion() > spellcooldownduration(living_bomb) or time_to_combustion() <= 0 or disable_combustion() } and spell(living_bomb) or { not disable_combustion() and time_to_combustion() <= 0 or spellcooldownduration(meteor) < time_to_combustion() and not hastalent(rune_of_power_talent) or hastalent(rune_of_power_talent) and buffpresent(rune_of_power_buff) and time_to_combustion() > spellcooldown(meteor) or fightremains() < time_to_combustion() or disable_combustion() } and spell(meteor) or hastalent(alexstraszas_fury_talent) and buffexpires(combustion) and not buffpresent(hot_streak_buff) and target.distance() < 12 and spell(dragons_breath)
+}
+
+### actions.default
+
+AddFunction fire_defaultmainactions
+{
+ #fire_blast,use_while_casting=1,if=action.mirrors_of_torment.executing&full_recharge_time-action.mirrors_of_torment.execute_remains<4&!hot_streak_spells_in_flight&!buff.hot_streak.react
+ if executetime(mirrors_of_torment) > 0 and spellfullrecharge(fire_blast_fire) - executetime(mirrors_of_torment) < 4 and not inflighttotarget(hot_streak_spells) and not buffpresent(hot_streak_buff) spell(fire_blast_fire)
+ #cancel_buff,name=soul_ignition,if=!conduit.infernal_cascade&time<5|buff.infernal_cascade.stack=buff.infernal_cascade.max_stack
+ if { not conduit(infernal_cascade_conduit) and timeincombat() < 5 or buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) } and buffpresent(soul_ignition_buff) texture(soul_ignition_buff text=cancel)
+ #arcane_explosion,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_arcane.down&!buff.disciplinary_command.up&variable.time_to_combustion>25
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 spell(arcane_explosion)
+ #frostbolt,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_frost.down&!buff.disciplinary_command.up&variable.time_to_combustion>25
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 spell(frostbolt)
+ #call_action_list,name=combustion_phase,if=!variable.disable_combustion&variable.time_to_combustion<=0
+ if not disable_combustion() and time_to_combustion() <= 0 firecombustion_phasemainactions()
+
+ unless not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phasemainpostconditions()
+ {
+  #call_action_list,name=rop_phase,if=buff.rune_of_power.up&(variable.time_to_combustion>0|variable.disable_combustion)
+  if buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } firerop_phasemainactions()
+
+  unless buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phasemainpostconditions()
+  {
+   #fire_blast,use_off_gcd=1,use_while_casting=1,if=!variable.fire_blast_pooling&(variable.time_to_combustion>0|variable.disable_combustion)&active_enemies>=variable.hard_cast_flamestrike&!firestarter.active&!buff.hot_streak.react&(buff.heating_up.react&action.flamestrike.execute_remains<0.5|charges_fractional>=2)
+   if not fire_blast_pooling() and { time_to_combustion() > 0 or disable_combustion() } and enemies() >= hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not buffpresent(hot_streak_buff) and { buffpresent(heating_up_buff) and executetime(flamestrike) < 0.5 or charges(fire_blast_fire count=0) >= 2 } spell(fire_blast_fire)
+   #fire_blast,use_off_gcd=1,use_while_casting=1,if=firestarter.active&charges>=1&!variable.fire_blast_pooling&(!action.fireball.executing&!action.pyroblast.in_flight&buff.heating_up.react|action.fireball.executing&!buff.hot_streak.react|action.pyroblast.in_flight&buff.heating_up.react&!buff.hot_streak.react)
+   if talent(firestarter_talent) and target.healthpercent() >= 90 and charges(fire_blast_fire) >= 1 and not fire_blast_pooling() and { not executetime(fireball) > 0 and not inflighttotarget(pyroblast) and buffpresent(heating_up_buff) or executetime(fireball) > 0 and not buffpresent(hot_streak_buff) or inflighttotarget(pyroblast) and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) } spell(fire_blast_fire)
+   #fire_blast,use_while_casting=1,if=action.shifting_power.executing&full_recharge_time<action.shifting_power.tick_reduction&buff.hot_streak.down&time>10
+   if executetime(shifting_power) > 0 and spellfullrecharge(fire_blast_fire) < 0 and buffexpires(hot_streak_buff) and timeincombat() > 10 spell(fire_blast_fire)
+   #call_action_list,name=standard_rotation,if=(variable.time_to_combustion>0|variable.disable_combustion)&buff.rune_of_power.down
+   if { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) firestandard_rotationmainactions()
+
+   unless { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) and firestandard_rotationmainpostconditions()
+   {
+    #scorch
+    spell(scorch)
+   }
+  }
+ }
+}
+
+AddFunction fire_defaultmainpostconditions
+{
+ not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phasemainpostconditions() or buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phasemainpostconditions() or { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) and firestandard_rotationmainpostconditions()
+}
+
+AddFunction fire_defaultshortcdactions
+{
+ #variable,name=time_to_combustion,op=set,value=talent.firestarter*firestarter.remains+(cooldown.combustion.remains*(1-variable.kindling_reduction*talent.kindling))*!cooldown.combustion.ready*buff.combustion.down
+ #variable,name=time_to_combustion,op=max,value=variable.empyreal_ordnance_delay-(cooldown.empyreal_ordnance.duration-cooldown.empyreal_ordnance.remains)*!cooldown.empyreal_ordnance.ready,if=equipped.empyreal_ordnance
+ #variable,name=time_to_combustion,op=max,value=cooldown.gladiators_badge.remains,if=equipped.gladiators_badge
+ #variable,name=time_to_combustion,op=max,value=buff.rune_of_power.remains,if=talent.rune_of_power&buff.combustion.down
+ #variable,name=time_to_combustion,op=max,value=cooldown.rune_of_power.remains+buff.rune_of_power.duration,if=talent.rune_of_power&buff.combustion.down&cooldown.rune_of_power.remains+5<variable.time_to_combustion
+ #variable,name=time_to_combustion,op=max,value=cooldown.buff_disciplinary_command.remains,if=runeforge.disciplinary_command&buff.disciplinary_command.down
+ #shifting_power,if=buff.combustion.down&variable.time_to_combustion>full_reduction&(cooldown.rune_of_power.remains>full_reduction|!talent.rune_of_power)&!(buff.infernal_cascade.up&buff.hot_streak.react)&(active_enemies<variable.combustion_shifting_power|active_enemies<variable.combustion_flamestrike|variable.time_to_combustion-full_reduction>cooldown)
+ if buffexpires(combustion) and time_to_combustion() > 0 and { spellcooldown(rune_of_power) > 0 or not hastalent(rune_of_power_talent) } and not { buffpresent(infernal_cascade_buff) and buffpresent(hot_streak_buff) } and { enemies() < combustion_shifting_power() or enemies() < combustion_flamestrike() or time_to_combustion() - 0 > spellcooldown(shifting_power) } spell(shifting_power)
+ #radiant_spark,if=(buff.combustion.down&buff.rune_of_power.down&(variable.time_to_combustion<execute_time|variable.time_to_combustion>cooldown.radiant_spark.duration))|(buff.rune_of_power.up&variable.time_to_combustion>30)
+ if buffexpires(combustion) and buffexpires(rune_of_power_buff) and { time_to_combustion() < executetime(radiant_spark) or time_to_combustion() > spellcooldownduration(radiant_spark) } or buffpresent(rune_of_power_buff) and time_to_combustion() > 30 spell(radiant_spark)
+ #mirrors_of_torment,if=variable.time_to_combustion<=3&buff.combustion.down
+ if time_to_combustion() <= 3 and buffexpires(combustion) spell(mirrors_of_torment)
+
+ unless executetime(mirrors_of_torment) > 0 and spellfullrecharge(fire_blast_fire) - executetime(mirrors_of_torment) < 4 and not inflighttotarget(hot_streak_spells) and not buffpresent(hot_streak_buff) and spell(fire_blast_fire) or { not conduit(infernal_cascade_conduit) and timeincombat() < 5 or buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) } and buffpresent(soul_ignition_buff) and texture(soul_ignition_buff text=cancel) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(frostbolt)
+ {
+  #call_action_list,name=combustion_phase,if=!variable.disable_combustion&variable.time_to_combustion<=0
+  if not disable_combustion() and time_to_combustion() <= 0 firecombustion_phaseshortcdactions()
+
+  unless not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phaseshortcdpostconditions()
+  {
+   #variable,use_off_gcd=1,use_while_casting=1,name=fire_blast_pooling,value=!variable.disable_combustion&variable.time_to_combustion-3<action.fire_blast.full_recharge_time-action.shifting_power.full_reduction*(cooldown.shifting_power.remains<variable.time_to_combustion)&variable.time_to_combustion<fight_remains|talent.rune_of_power&buff.rune_of_power.down&cooldown.rune_of_power.remains<action.fire_blast.full_recharge_time-action.shifting_power.full_reduction*(cooldown.shifting_power.remains<cooldown.rune_of_power.remains)&cooldown.rune_of_power.remains<fight_remains
+   #variable,name=phoenix_pooling,value=!variable.disable_combustion&variable.time_to_combustion<action.phoenix_flames.full_recharge_time-action.shifting_power.full_reduction*(cooldown.shifting_power.remains<variable.time_to_combustion)&variable.time_to_combustion<fight_remains|runeforge.sun_kings_blessing|time<5
+   #rune_of_power,if=buff.rune_of_power.down&!buff.firestorm.react&(variable.time_to_combustion>=buff.rune_of_power.duration&variable.time_to_combustion>action.fire_blast.full_recharge_time|variable.time_to_combustion>fight_remains|variable.disable_combustion)
+   if buffexpires(rune_of_power_buff) and not buffpresent(firestorm_buff) and { time_to_combustion() >= baseduration(rune_of_power_buff) and time_to_combustion() > spellfullrecharge(fire_blast_fire) or time_to_combustion() > fightremains() or disable_combustion() } spell(rune_of_power)
+   #call_action_list,name=rop_phase,if=buff.rune_of_power.up&(variable.time_to_combustion>0|variable.disable_combustion)
+   if buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } firerop_phaseshortcdactions()
+
+   unless buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phaseshortcdpostconditions() or not fire_blast_pooling() and { time_to_combustion() > 0 or disable_combustion() } and enemies() >= hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not buffpresent(hot_streak_buff) and { buffpresent(heating_up_buff) and executetime(flamestrike) < 0.5 or charges(fire_blast_fire count=0) >= 2 } and spell(fire_blast_fire) or talent(firestarter_talent) and target.healthpercent() >= 90 and charges(fire_blast_fire) >= 1 and not fire_blast_pooling() and { not executetime(fireball) > 0 and not inflighttotarget(pyroblast) and buffpresent(heating_up_buff) or executetime(fireball) > 0 and not buffpresent(hot_streak_buff) or inflighttotarget(pyroblast) and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) } and spell(fire_blast_fire) or executetime(shifting_power) > 0 and spellfullrecharge(fire_blast_fire) < 0 and buffexpires(hot_streak_buff) and timeincombat() > 10 and spell(fire_blast_fire)
+   {
+    #call_action_list,name=standard_rotation,if=(variable.time_to_combustion>0|variable.disable_combustion)&buff.rune_of_power.down
+    if { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) firestandard_rotationshortcdactions()
+   }
+  }
+ }
+}
+
+AddFunction fire_defaultshortcdpostconditions
+{
+ executetime(mirrors_of_torment) > 0 and spellfullrecharge(fire_blast_fire) - executetime(mirrors_of_torment) < 4 and not inflighttotarget(hot_streak_spells) and not buffpresent(hot_streak_buff) and spell(fire_blast_fire) or { not conduit(infernal_cascade_conduit) and timeincombat() < 5 or buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) } and buffpresent(soul_ignition_buff) and texture(soul_ignition_buff text=cancel) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(frostbolt) or not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phaseshortcdpostconditions() or buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phaseshortcdpostconditions() or not fire_blast_pooling() and { time_to_combustion() > 0 or disable_combustion() } and enemies() >= hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not buffpresent(hot_streak_buff) and { buffpresent(heating_up_buff) and executetime(flamestrike) < 0.5 or charges(fire_blast_fire count=0) >= 2 } and spell(fire_blast_fire) or talent(firestarter_talent) and target.healthpercent() >= 90 and charges(fire_blast_fire) >= 1 and not fire_blast_pooling() and { not executetime(fireball) > 0 and not inflighttotarget(pyroblast) and buffpresent(heating_up_buff) or executetime(fireball) > 0 and not buffpresent(hot_streak_buff) or inflighttotarget(pyroblast) and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) } and spell(fire_blast_fire) or executetime(shifting_power) > 0 and spellfullrecharge(fire_blast_fire) < 0 and buffexpires(hot_streak_buff) and timeincombat() > 10 and spell(fire_blast_fire) or { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) and firestandard_rotationshortcdpostconditions() or spell(scorch)
+}
+
+AddFunction fire_defaultcdactions
+{
+ #counterspell,if=!runeforge.disciplinary_command
+ if not runeforge(disciplinary_command_runeforge) fireinterruptactions()
+
+ unless buffexpires(combustion) and time_to_combustion() > 0 and { spellcooldown(rune_of_power) > 0 or not hastalent(rune_of_power_talent) } and not { buffpresent(infernal_cascade_buff) and buffpresent(hot_streak_buff) } and { enemies() < combustion_shifting_power() or enemies() < combustion_flamestrike() or time_to_combustion() - 0 > spellcooldown(shifting_power) } and spell(shifting_power) or { buffexpires(combustion) and buffexpires(rune_of_power_buff) and { time_to_combustion() < executetime(radiant_spark) or time_to_combustion() > spellcooldownduration(radiant_spark) } or buffpresent(rune_of_power_buff) and time_to_combustion() > 30 } and spell(radiant_spark)
+ {
+  #deathborne,if=buff.combustion.down&buff.rune_of_power.down&variable.time_to_combustion<execute_time
+  if buffexpires(combustion) and buffexpires(rune_of_power_buff) and time_to_combustion() < executetime(deathborne) spell(deathborne)
+
+  unless time_to_combustion() <= 3 and buffexpires(combustion) and spell(mirrors_of_torment) or executetime(mirrors_of_torment) > 0 and spellfullrecharge(fire_blast_fire) - executetime(mirrors_of_torment) < 4 and not inflighttotarget(hot_streak_spells) and not buffpresent(hot_streak_buff) and spell(fire_blast_fire)
+  {
+   #mirror_image,if=buff.combustion.down&debuff.radiant_spark_vulnerability.down&buff.rune_of_power.down
+   if buffexpires(combustion) and target.debuffexpires(radiant_spark_vulnerability_debuff) and buffexpires(rune_of_power_buff) spell(mirror_image)
+   #use_item,effect_name=gladiators_badge,if=variable.time_to_combustion>cooldown-5
+   if time_to_combustion() > itemcooldown(slot="trinket0slot") - 5 fireuseitemactions()
+   #use_item,name=empyreal_ordnance,if=variable.time_to_combustion<=variable.empyreal_ordnance_delay
+   if time_to_combustion() <= empyreal_ordnance_delay() fireuseitemactions()
+   #use_item,name=glyph_of_assimilation,if=variable.time_to_combustion>=variable.on_use_cutoff
+   if time_to_combustion() >= on_use_cutoff() fireuseitemactions()
+   #use_item,name=macabre_sheet_music,if=variable.time_to_combustion<=5
+   if time_to_combustion() <= 5 fireuseitemactions()
+   #use_item,name=dreadfire_vessel,if=variable.time_to_combustion>=variable.on_use_cutoff&(buff.infernal_cascade.stack=buff.infernal_cascade.max_stack|!conduit.infernal_cascade|variable.combustion_on_use|variable.time_to_combustion+5>fight_remains%%cooldown)
+   if time_to_combustion() >= on_use_cutoff() and { buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) or not conduit(infernal_cascade_conduit) or combustion_on_use() or time_to_combustion() + 5 > fightremains() % itemcooldown(slot="trinket0slot") } fireuseitemactions()
+   #use_item,name=soul_igniter,if=(variable.time_to_combustion>=30*(variable.on_use_cutoff>0)|cooldown.item_cd_1141.remains)&(!equipped.dreadfire_vessel|cooldown.dreadfire_vessel_344732.remains>5)
+   if { time_to_combustion() >= 30 * { on_use_cutoff() > 0 } or itemcooldown(shared="item_cd_1141") > 0 } and { not hasequippeditem(dreadfire_vessel_item) or spellcooldown(dreadfire_vessel) > 5 } fireuseitemactions()
+
+   unless { not conduit(infernal_cascade_conduit) and timeincombat() < 5 or buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) } and buffpresent(soul_ignition_buff) and texture(soul_ignition_buff text=cancel)
+   {
+    #counterspell,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_arcane.down&!buff.disciplinary_command.up&variable.time_to_combustion>25
+    if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 fireinterruptactions()
+
+    unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(frostbolt)
+    {
+     #call_action_list,name=combustion_phase,if=!variable.disable_combustion&variable.time_to_combustion<=0
+     if not disable_combustion() and time_to_combustion() <= 0 firecombustion_phasecdactions()
+
+     unless not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phasecdpostconditions() or buffexpires(rune_of_power_buff) and not buffpresent(firestorm_buff) and { time_to_combustion() >= baseduration(rune_of_power_buff) and time_to_combustion() > spellfullrecharge(fire_blast_fire) or time_to_combustion() > fightremains() or disable_combustion() } and spell(rune_of_power)
+     {
+      #call_action_list,name=rop_phase,if=buff.rune_of_power.up&(variable.time_to_combustion>0|variable.disable_combustion)
+      if buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } firerop_phasecdactions()
+
+      unless buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phasecdpostconditions() or not fire_blast_pooling() and { time_to_combustion() > 0 or disable_combustion() } and enemies() >= hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not buffpresent(hot_streak_buff) and { buffpresent(heating_up_buff) and executetime(flamestrike) < 0.5 or charges(fire_blast_fire count=0) >= 2 } and spell(fire_blast_fire) or talent(firestarter_talent) and target.healthpercent() >= 90 and charges(fire_blast_fire) >= 1 and not fire_blast_pooling() and { not executetime(fireball) > 0 and not inflighttotarget(pyroblast) and buffpresent(heating_up_buff) or executetime(fireball) > 0 and not buffpresent(hot_streak_buff) or inflighttotarget(pyroblast) and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) } and spell(fire_blast_fire) or executetime(shifting_power) > 0 and spellfullrecharge(fire_blast_fire) < 0 and buffexpires(hot_streak_buff) and timeincombat() > 10 and spell(fire_blast_fire)
+      {
+       #call_action_list,name=standard_rotation,if=(variable.time_to_combustion>0|variable.disable_combustion)&buff.rune_of_power.down
+       if { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) firestandard_rotationcdactions()
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction fire_defaultcdpostconditions
+{
+ buffexpires(combustion) and time_to_combustion() > 0 and { spellcooldown(rune_of_power) > 0 or not hastalent(rune_of_power_talent) } and not { buffpresent(infernal_cascade_buff) and buffpresent(hot_streak_buff) } and { enemies() < combustion_shifting_power() or enemies() < combustion_flamestrike() or time_to_combustion() - 0 > spellcooldown(shifting_power) } and spell(shifting_power) or { buffexpires(combustion) and buffexpires(rune_of_power_buff) and { time_to_combustion() < executetime(radiant_spark) or time_to_combustion() > spellcooldownduration(radiant_spark) } or buffpresent(rune_of_power_buff) and time_to_combustion() > 30 } and spell(radiant_spark) or time_to_combustion() <= 3 and buffexpires(combustion) and spell(mirrors_of_torment) or executetime(mirrors_of_torment) > 0 and spellfullrecharge(fire_blast_fire) - executetime(mirrors_of_torment) < 4 and not inflighttotarget(hot_streak_spells) and not buffpresent(hot_streak_buff) and spell(fire_blast_fire) or { not conduit(infernal_cascade_conduit) and timeincombat() < 5 or buffstacks(infernal_cascade_buff) == spelldata(infernal_cascade_buff max_stacks) } and buffpresent(soul_ignition_buff) and texture(soul_ignition_buff text=cancel) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_frost_buff) and not buffpresent(disciplinary_command_fire_buff) and time_to_combustion() > 25 and spell(frostbolt) or not disable_combustion() and time_to_combustion() <= 0 and firecombustion_phasecdpostconditions() or buffexpires(rune_of_power_buff) and not buffpresent(firestorm_buff) and { time_to_combustion() >= baseduration(rune_of_power_buff) and time_to_combustion() > spellfullrecharge(fire_blast_fire) or time_to_combustion() > fightremains() or disable_combustion() } and spell(rune_of_power) or buffpresent(rune_of_power_buff) and { time_to_combustion() > 0 or disable_combustion() } and firerop_phasecdpostconditions() or not fire_blast_pooling() and { time_to_combustion() > 0 or disable_combustion() } and enemies() >= hard_cast_flamestrike() and not { talent(firestarter_talent) and target.healthpercent() >= 90 } and not buffpresent(hot_streak_buff) and { buffpresent(heating_up_buff) and executetime(flamestrike) < 0.5 or charges(fire_blast_fire count=0) >= 2 } and spell(fire_blast_fire) or talent(firestarter_talent) and target.healthpercent() >= 90 and charges(fire_blast_fire) >= 1 and not fire_blast_pooling() and { not executetime(fireball) > 0 and not inflighttotarget(pyroblast) and buffpresent(heating_up_buff) or executetime(fireball) > 0 and not buffpresent(hot_streak_buff) or inflighttotarget(pyroblast) and buffpresent(heating_up_buff) and not buffpresent(hot_streak_buff) } and spell(fire_blast_fire) or executetime(shifting_power) > 0 and spellfullrecharge(fire_blast_fire) < 0 and buffexpires(hot_streak_buff) and timeincombat() > 10 and spell(fire_blast_fire) or { time_to_combustion() > 0 or disable_combustion() } and buffexpires(rune_of_power_buff) and firestandard_rotationcdpostconditions() or spell(scorch)
+}
+
+### Fire icons.
+
+AddCheckBox(opt_mage_fire_aoe l(aoe) default enabled=(specialization(fire)))
+
+AddIcon enabled=(not checkboxon(opt_mage_fire_aoe) and specialization(fire)) enemies=1 help=shortcd
+{
+ if not incombat() fireprecombatshortcdactions()
+ fire_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_fire_aoe) and specialization(fire)) help=shortcd
+{
+ if not incombat() fireprecombatshortcdactions()
+ fire_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(fire)) enemies=1 help=main
+{
+ if not incombat() fireprecombatmainactions()
+ fire_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_fire_aoe) and specialization(fire)) help=aoe
+{
+ if not incombat() fireprecombatmainactions()
+ fire_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_mage_fire_aoe) and specialization(fire)) enemies=1 help=cd
+{
+ if not incombat() fireprecombatcdactions()
+ fire_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_fire_aoe) and specialization(fire)) help=cd
+{
+ if not incombat() fireprecombatcdactions()
+ fire_defaultcdactions()
+}
+
+### Required symbols
+# alexstraszas_fury_talent
+# ancestral_call
+# arcane_explosion
+# arcane_intellect
+# bag_of_tricks
+# berserking
+# blood_fury_int
+# combustion
+# counterspell
+# deathborne
+# disciplinary_command
+# disciplinary_command_arcane_buff
+# disciplinary_command_fire_buff
+# disciplinary_command_frost_buff
+# disciplinary_command_runeforge
+# dragons_breath
+# dreadfire_vessel
+# dreadfire_vessel_item
+# empyreal_ordnance
+# empyreal_ordnance_item
+# exhaustion_debuff
+# fire_blast_fire
+# fireball
+# fireblood
+# firestarter_talent
+# firestorm_buff
+# firestorm_runeforge
+# flame_accretion_conduit
+# flame_patch_talent
+# flamestrike
+# from_the_ashes_talent
+# frost_nova
+# frostbolt
+# gladiators_badge
+# gladiators_badge_item
+# grisly_icicle_debuff
+# grisly_icicle_runeforge
+# heating_up_buff
+# hot_streak_buff
+# hot_streak_spells
+# ignite_debuff
+# infernal_cascade_buff
+# infernal_cascade_conduit
+# inscrutable_quantum_device_item
+# kindling_talent
+# lights_judgment
+# living_bomb
+# macabre_sheet_music_item
+# meteor
+# mirror_image
+# mirrors_of_torment
+# phoenix_flames
+# potion_of_spectral_intellect_item
+# pyroblast
+# pyroclasm_buff
+# pyroclasm_talent
+# quaking_palm
+# radiant_spark
+# radiant_spark_vulnerability_debuff
+# rune_of_power
+# rune_of_power_buff
+# rune_of_power_talent
+# scorch
+# searing_touch_talent
+# shifting_power
+# soul_ignition_buff
+# sun_kings_blessing_ready_buff
+# sun_kings_blessing_runeforge
+# sunblood_amethyst_item
+# temporal_warp_runeforge
+# time_warp
+]]
+        scripts:registerScript("MAGE", "fire", name, desc, code, "script")
+    end
+    do
+        local name = "sc_t26_mage_frost"
+        local desc = "[9.0] Simulationcraft: T26_Mage_Frost"
+        local code = [[
+# Based on SimulationCraft profile "T26_Mage_Frost".
+#	class=mage
+#	spec=frost
+#	talents=2032021
+
+Include(ovale_common)
+Include(ovale_mage_spells)
+
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(frost)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(frost)))
+AddCheckBox(opt_time_warp spellname(time_warp) enabled=(specialization(frost)))
+AddCheckBox(opt_blink spellname(blink) enabled=(specialization(frost)))
+
+AddFunction frostinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(counterspell) and target.isinterruptible() spell(counterspell)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction frostuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+### actions.st
+
+AddFunction froststmainactions
+{
+ #flurry,if=(remaining_winters_chill=0|debuff.winters_chill.down)&(prev_gcd.1.ebonbolt|buff.brain_freeze.react&(prev_gcd.1.glacial_spike|prev_gcd.1.frostbolt&(!conduit.ire_of_the_ascended|cooldown.radiant_spark.remains|runeforge.freezing_winds)|prev_gcd.1.radiant_spark|buff.fingers_of_frost.react=0&(debuff.mirrors_of_torment.up|buff.freezing_winds.up|buff.expanded_potential.react)))
+ if { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } spell(flurry)
+ #blizzard,if=buff.freezing_rain.up|active_enemies>=2|runeforge.glacial_fragments&remaining_winters_chill=2
+ if buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 spell(blizzard)
+ #glacial_spike,if=remaining_winters_chill&debuff.winters_chill.remains>cast_time+travel_time
+ if debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) spell(glacial_spike)
+ #ice_lance,if=remaining_winters_chill&remaining_winters_chill>buff.fingers_of_frost.react&debuff.winters_chill.remains>travel_time
+ if debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #ice_nova
+ spell(ice_nova)
+ #ice_lance,if=buff.fingers_of_frost.react|debuff.frozen.remains>travel_time
+ if buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #arcane_explosion,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_arcane.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) spell(arcane_explosion)
+ #fire_blast,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) spell(fire_blast)
+ #glacial_spike,if=buff.brain_freeze.react
+ if buffpresent(brain_freeze_buff) spell(glacial_spike)
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction froststmainpostconditions
+{
+}
+
+AddFunction froststshortcdactions
+{
+ unless { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry)
+ {
+  #frozen_orb
+  spell(frozen_orb)
+
+  unless { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard)
+  {
+   #ray_of_frost,if=remaining_winters_chill=1&debuff.winters_chill.remains
+   if debuffstacks(winters_chill_debuff) == 1 and target.debuffpresent(winters_chill_debuff) spell(ray_of_frost)
+
+   unless debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance)
+   {
+    #comet_storm
+    spell(comet_storm)
+
+    unless spell(ice_nova)
+    {
+     #radiant_spark,if=buff.freezing_winds.up&active_enemies=1
+     if buffpresent(freezing_winds_buff) and enemies() == 1 spell(radiant_spark)
+
+     unless { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance)
+     {
+      #ebonbolt
+      spell(ebonbolt)
+      #radiant_spark,if=(!runeforge.freezing_winds|active_enemies>=2)&buff.brain_freeze.react
+      if { not runeforge(freezing_winds_runeforge) or enemies() >= 2 } and buffpresent(brain_freeze_buff) spell(radiant_spark)
+      #mirrors_of_torment
+      spell(mirrors_of_torment)
+      #shifting_power,if=buff.rune_of_power.down&(soulbind.grove_invigoration|soulbind.field_of_blossoms|active_enemies>=2)
+      if buffexpires(rune_of_power_buff) and { soulbind(grove_invigoration_soulbind) or soulbind(field_of_blossoms_soulbind) or enemies() >= 2 } spell(shifting_power)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction froststshortcdpostconditions
+{
+ { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry) or { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance) or spell(ice_nova) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or buffpresent(brain_freeze_buff) and spell(glacial_spike) or spell(frostbolt)
+}
+
+AddFunction froststcdactions
+{
+}
+
+AddFunction froststcdpostconditions
+{
+ { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry) or spell(frozen_orb) or { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard) or debuffstacks(winters_chill_debuff) == 1 and target.debuffpresent(winters_chill_debuff) and spell(ray_of_frost) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance) or spell(comet_storm) or spell(ice_nova) or buffpresent(freezing_winds_buff) and enemies() == 1 and spell(radiant_spark) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance) or spell(ebonbolt) or { not runeforge(freezing_winds_runeforge) or enemies() >= 2 } and buffpresent(brain_freeze_buff) and spell(radiant_spark) or spell(mirrors_of_torment) or buffexpires(rune_of_power_buff) and { soulbind(grove_invigoration_soulbind) or soulbind(field_of_blossoms_soulbind) or enemies() >= 2 } and spell(shifting_power) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or buffpresent(brain_freeze_buff) and spell(glacial_spike) or spell(frostbolt)
+}
+
+### actions.precombat
+
+AddFunction frostprecombatmainactions
+{
+ #flask
+ #food
+ #augmentation
+ #arcane_intellect
+ if buffexpires(arcane_intellect) spell(arcane_intellect)
+ #snapshot_stats
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction frostprecombatmainpostconditions
+{
+}
+
+AddFunction frostprecombatshortcdactions
+{
+ unless buffexpires(arcane_intellect) and spell(arcane_intellect)
+ {
+  #summon_water_elemental
+  spell(summon_water_elemental)
+ }
+}
+
+AddFunction frostprecombatshortcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(frostbolt)
+}
+
+AddFunction frostprecombatcdactions
+{
+}
+
+AddFunction frostprecombatcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(summon_water_elemental) or spell(frostbolt)
+}
+
+### actions.movement
+
+AddFunction frostmovementmainactions
+{
+ #blink_any,if=movement.distance>10
+ if target.distance() > 10 and checkboxon(opt_blink) spell(blink)
+ #ice_floes,if=buff.ice_floes.down
+ if buffexpires(ice_floes) and speed() > 0 spell(ice_floes)
+ #arcane_explosion,if=mana.pct>30&active_enemies>=2
+ if manapercent() > 30 and enemies() >= 2 spell(arcane_explosion)
+ #fire_blast
+ spell(fire_blast)
+ #ice_lance
+ spell(ice_lance)
+}
+
+AddFunction frostmovementmainpostconditions
+{
+}
+
+AddFunction frostmovementshortcdactions
+{
+}
+
+AddFunction frostmovementshortcdpostconditions
+{
+ target.distance() > 10 and checkboxon(opt_blink) and spell(blink) or buffexpires(ice_floes) and speed() > 0 and spell(ice_floes) or manapercent() > 30 and enemies() >= 2 and spell(arcane_explosion) or spell(fire_blast) or spell(ice_lance)
+}
+
+AddFunction frostmovementcdactions
+{
+}
+
+AddFunction frostmovementcdpostconditions
+{
+ target.distance() > 10 and checkboxon(opt_blink) and spell(blink) or buffexpires(ice_floes) and speed() > 0 and spell(ice_floes) or manapercent() > 30 and enemies() >= 2 and spell(arcane_explosion) or spell(fire_blast) or spell(ice_lance)
+}
+
+### actions.cds
+
+AddFunction frostcdsmainactions
+{
+}
+
+AddFunction frostcdsmainpostconditions
+{
+}
+
+AddFunction frostcdsshortcdactions
+{
+ #mirrors_of_torment,if=active_enemies<3&(conduit.siphoned_malice|soulbind.wasteland_propriety)
+ if enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } spell(mirrors_of_torment)
+ #rune_of_power,if=cooldown.icy_veins.remains>12&buff.rune_of_power.down
+ if spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) spell(rune_of_power)
+ #bag_of_tricks
+ spell(bag_of_tricks)
+}
+
+AddFunction frostcdsshortcdpostconditions
+{
+}
+
+AddFunction frostcdscdactions
+{
+ #potion,if=prev_off_gcd.icy_veins|fight_remains<30
+ if { previousoffgcdspell(icy_veins) or fightremains() < 30 } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_phantom_fire_item usable=1)
+ #deathborne
+ spell(deathborne)
+
+ unless enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } and spell(mirrors_of_torment) or spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) and spell(rune_of_power)
+ {
+  #icy_veins,if=buff.rune_of_power.down&(buff.icy_veins.down|talent.rune_of_power)&(buff.slick_ice.down|active_enemies>=2)
+  if buffexpires(rune_of_power_buff) and { buffexpires(icy_veins) or hastalent(rune_of_power_talent) } and { buffexpires(slick_ice_buff) or enemies() >= 2 } spell(icy_veins)
+  #time_warp,if=runeforge.temporal_warp&buff.exhaustion.up&(prev_off_gcd.icy_veins|fight_remains<30)
+  if runeforge(temporal_warp_runeforge) and debuffpresent(exhaustion_debuff) and { previousoffgcdspell(icy_veins) or fightremains() < 30 } and { checkboxon(opt_time_warp) and debuffexpires(burst_haste_debuff any=1) } spell(time_warp)
+  #use_items
+  frostuseitemactions()
+  #blood_fury
+  spell(blood_fury_int)
+  #berserking
+  spell(berserking)
+  #lights_judgment
+  spell(lights_judgment)
+  #fireblood
+  spell(fireblood)
+  #ancestral_call
+  spell(ancestral_call)
+ }
+}
+
+AddFunction frostcdscdpostconditions
+{
+ enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } and spell(mirrors_of_torment) or spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) and spell(rune_of_power) or spell(bag_of_tricks)
+}
+
+### actions.aoe
+
+AddFunction frostaoemainactions
+{
+ #blizzard
+ spell(blizzard)
+ #flurry,if=(remaining_winters_chill=0|debuff.winters_chill.down)&(prev_gcd.1.ebonbolt|buff.brain_freeze.react&buff.fingers_of_frost.react=0)
+ if { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } spell(flurry)
+ #ice_nova
+ spell(ice_nova)
+ #ice_lance,if=buff.fingers_of_frost.react|debuff.frozen.remains>travel_time|remaining_winters_chill&debuff.winters_chill.remains>travel_time
+ if buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #fire_blast,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) spell(fire_blast)
+ #arcane_explosion,if=mana.pct>30&active_enemies>=6&!runeforge.glacial_fragments
+ if manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) spell(arcane_explosion)
+ #ice_lance,if=runeforge.glacial_fragments&talent.splitting_ice&travel_time<ground_aoe.blizzard.remains
+ if runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) spell(ice_lance)
+ #wait,sec=0.1,if=runeforge.glacial_fragments&talent.splitting_ice
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction frostaoemainpostconditions
+{
+}
+
+AddFunction frostaoeshortcdactions
+{
+ #frozen_orb
+ spell(frozen_orb)
+
+ unless spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova)
+ {
+  #comet_storm
+  spell(comet_storm)
+
+  unless { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance)
+  {
+   #radiant_spark
+   spell(radiant_spark)
+   #mirrors_of_torment
+   spell(mirrors_of_torment)
+   #shifting_power
+   spell(shifting_power)
+
+   unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion)
+   {
+    #ebonbolt
+    spell(ebonbolt)
+   }
+  }
+ }
+}
+
+AddFunction frostaoeshortcdpostconditions
+{
+ spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion) or runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) and spell(ice_lance) or spell(frostbolt)
+}
+
+AddFunction frostaoecdactions
+{
+}
+
+AddFunction frostaoecdpostconditions
+{
+ spell(frozen_orb) or spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova) or spell(comet_storm) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance) or spell(radiant_spark) or spell(mirrors_of_torment) or spell(shifting_power) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion) or spell(ebonbolt) or runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) and spell(ice_lance) or spell(frostbolt)
+}
+
+### actions.default
+
+AddFunction frost_defaultmainactions
+{
+ #call_action_list,name=cds
+ frostcdsmainactions()
+
+ unless frostcdsmainpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoemainactions()
+
+  unless enemies() >= 3 and frostaoemainpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststmainactions()
+
+   unless enemies() < 3 and froststmainpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementmainactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultmainpostconditions
+{
+ frostcdsmainpostconditions() or enemies() >= 3 and frostaoemainpostconditions() or enemies() < 3 and froststmainpostconditions() or frostmovementmainpostconditions()
+}
+
+AddFunction frost_defaultshortcdactions
+{
+ #call_action_list,name=cds
+ frostcdsshortcdactions()
+
+ unless frostcdsshortcdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoeshortcdactions()
+
+  unless enemies() >= 3 and frostaoeshortcdpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststshortcdactions()
+
+   unless enemies() < 3 and froststshortcdpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementshortcdactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultshortcdpostconditions
+{
+ frostcdsshortcdpostconditions() or enemies() >= 3 and frostaoeshortcdpostconditions() or enemies() < 3 and froststshortcdpostconditions() or frostmovementshortcdpostconditions()
+}
+
+AddFunction frost_defaultcdactions
+{
+ #counterspell
+ frostinterruptactions()
+ #call_action_list,name=cds
+ frostcdscdactions()
+
+ unless frostcdscdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoecdactions()
+
+  unless enemies() >= 3 and frostaoecdpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststcdactions()
+
+   unless enemies() < 3 and froststcdpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementcdactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultcdpostconditions
+{
+ frostcdscdpostconditions() or enemies() >= 3 and frostaoecdpostconditions() or enemies() < 3 and froststcdpostconditions() or frostmovementcdpostconditions()
+}
+
+### Frost icons.
+
+AddCheckBox(opt_mage_frost_aoe l(aoe) default enabled=(specialization(frost)))
+
+AddIcon enabled=(not checkboxon(opt_mage_frost_aoe) and specialization(frost)) enemies=1 help=shortcd
+{
+ if not incombat() frostprecombatshortcdactions()
+ frost_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=shortcd
+{
+ if not incombat() frostprecombatshortcdactions()
+ frost_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(frost)) enemies=1 help=main
+{
+ if not incombat() frostprecombatmainactions()
+ frost_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=aoe
+{
+ if not incombat() frostprecombatmainactions()
+ frost_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_mage_frost_aoe) and specialization(frost)) enemies=1 help=cd
+{
+ if not incombat() frostprecombatcdactions()
+ frost_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=cd
+{
+ if not incombat() frostprecombatcdactions()
+ frost_defaultcdactions()
+}
+
+### Required symbols
+# ancestral_call
+# arcane_explosion
+# arcane_intellect
+# bag_of_tricks
+# berserking
+# blink
+# blizzard
+# blizzard_debuff
+# blood_fury_int
+# brain_freeze_buff
+# comet_storm
+# counterspell
+# deathborne
+# disciplinary_command
+# disciplinary_command_arcane_buff
+# disciplinary_command_fire_buff
+# disciplinary_command_runeforge
+# ebonbolt
+# exhaustion_debuff
+# expanded_potential_buff
+# field_of_blossoms_soulbind
+# fingers_of_frost_buff
+# fire_blast
+# fireblood
+# flurry
+# freezing_rain_buff
+# freezing_winds_buff
+# freezing_winds_runeforge
+# frostbolt
+# frozen_debuff
+# frozen_orb
+# glacial_fragments_runeforge
+# glacial_spike
+# grove_invigoration_soulbind
+# ice_floes
+# ice_lance
+# ice_nova
+# icy_veins
+# ire_of_the_ascended_conduit
+# lights_judgment
+# mirrors_of_torment
+# potion_of_phantom_fire_item
+# quaking_palm
+# radiant_spark
+# ray_of_frost
+# rune_of_power
+# rune_of_power_buff
+# rune_of_power_talent
+# shifting_power
+# siphoned_malice_conduit
+# slick_ice_buff
+# splitting_ice_talent
+# summon_water_elemental
+# temporal_warp_runeforge
+# time_warp
+# wasteland_propriety_soulbind
+# winters_chill_debuff
+]]
+        scripts:registerScript("MAGE", "frost", name, desc, code, "script")
+    end
+    do
+        local name = "sc_t26_mage_frost_fm_trade"
+        local desc = "[9.0] Simulationcraft: T26_Mage_Frost_FM_Trade"
+        local code = [[
+# Based on SimulationCraft profile "T26_Mage_Frost_FM_Trade".
+#	class=mage
+#	spec=frost
+#	talents=2022021
+
+Include(ovale_common)
+Include(ovale_mage_spells)
+
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(frost)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(frost)))
+AddCheckBox(opt_time_warp spellname(time_warp) enabled=(specialization(frost)))
+AddCheckBox(opt_blink spellname(blink) enabled=(specialization(frost)))
+
+AddFunction frostinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(counterspell) and target.isinterruptible() spell(counterspell)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction frostuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+### actions.st
+
+AddFunction froststmainactions
+{
+ #flurry,if=(remaining_winters_chill=0|debuff.winters_chill.down)&(prev_gcd.1.ebonbolt|buff.brain_freeze.react&(prev_gcd.1.glacial_spike|prev_gcd.1.frostbolt&(!conduit.ire_of_the_ascended|cooldown.radiant_spark.remains|runeforge.freezing_winds)|prev_gcd.1.radiant_spark|buff.fingers_of_frost.react=0&(debuff.mirrors_of_torment.up|buff.freezing_winds.up|buff.expanded_potential.react)))
+ if { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } spell(flurry)
+ #blizzard,if=buff.freezing_rain.up|active_enemies>=2|runeforge.glacial_fragments&remaining_winters_chill=2
+ if buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 spell(blizzard)
+ #glacial_spike,if=remaining_winters_chill&debuff.winters_chill.remains>cast_time+travel_time
+ if debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) spell(glacial_spike)
+ #ice_lance,if=remaining_winters_chill&remaining_winters_chill>buff.fingers_of_frost.react&debuff.winters_chill.remains>travel_time
+ if debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #ice_nova
+ spell(ice_nova)
+ #ice_lance,if=buff.fingers_of_frost.react|debuff.frozen.remains>travel_time
+ if buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #arcane_explosion,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_arcane.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) spell(arcane_explosion)
+ #fire_blast,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) spell(fire_blast)
+ #glacial_spike,if=buff.brain_freeze.react
+ if buffpresent(brain_freeze_buff) spell(glacial_spike)
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction froststmainpostconditions
+{
+}
+
+AddFunction froststshortcdactions
+{
+ unless { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry)
+ {
+  #frozen_orb
+  spell(frozen_orb)
+
+  unless { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard)
+  {
+   #ray_of_frost,if=remaining_winters_chill=1&debuff.winters_chill.remains
+   if debuffstacks(winters_chill_debuff) == 1 and target.debuffpresent(winters_chill_debuff) spell(ray_of_frost)
+
+   unless debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance)
+   {
+    #comet_storm
+    spell(comet_storm)
+
+    unless spell(ice_nova)
+    {
+     #radiant_spark,if=buff.freezing_winds.up&active_enemies=1
+     if buffpresent(freezing_winds_buff) and enemies() == 1 spell(radiant_spark)
+
+     unless { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance)
+     {
+      #ebonbolt
+      spell(ebonbolt)
+      #radiant_spark,if=(!runeforge.freezing_winds|active_enemies>=2)&buff.brain_freeze.react
+      if { not runeforge(freezing_winds_runeforge) or enemies() >= 2 } and buffpresent(brain_freeze_buff) spell(radiant_spark)
+      #mirrors_of_torment
+      spell(mirrors_of_torment)
+      #shifting_power,if=buff.rune_of_power.down&(soulbind.grove_invigoration|soulbind.field_of_blossoms|active_enemies>=2)
+      if buffexpires(rune_of_power_buff) and { soulbind(grove_invigoration_soulbind) or soulbind(field_of_blossoms_soulbind) or enemies() >= 2 } spell(shifting_power)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction froststshortcdpostconditions
+{
+ { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry) or { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance) or spell(ice_nova) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or buffpresent(brain_freeze_buff) and spell(glacial_spike) or spell(frostbolt)
+}
+
+AddFunction froststcdactions
+{
+}
+
+AddFunction froststcdpostconditions
+{
+ { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and { previousgcdspell(glacial_spike) or previousgcdspell(frostbolt) and { not conduit(ire_of_the_ascended_conduit) or spellcooldown(radiant_spark) > 0 or runeforge(freezing_winds_runeforge) } or previousgcdspell(radiant_spark) or buffstacks(fingers_of_frost_buff) == 0 and { target.debuffpresent(mirrors_of_torment) or buffpresent(freezing_winds_buff) or buffpresent(expanded_potential_buff) } } } and spell(flurry) or spell(frozen_orb) or { buffpresent(freezing_rain_buff) or enemies() >= 2 or runeforge(glacial_fragments_runeforge) and debuffstacks(winters_chill_debuff) == 2 } and spell(blizzard) or debuffstacks(winters_chill_debuff) == 1 and target.debuffpresent(winters_chill_debuff) and spell(ray_of_frost) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > casttime(glacial_spike) + traveltime(glacial_spike) and spell(glacial_spike) or debuffstacks(winters_chill_debuff) and debuffstacks(winters_chill_debuff) > buffstacks(fingers_of_frost_buff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) and spell(ice_lance) or spell(comet_storm) or spell(ice_nova) or buffpresent(freezing_winds_buff) and enemies() == 1 and spell(radiant_spark) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) } and spell(ice_lance) or spell(ebonbolt) or { not runeforge(freezing_winds_runeforge) or enemies() >= 2 } and buffpresent(brain_freeze_buff) and spell(radiant_spark) or spell(mirrors_of_torment) or buffexpires(rune_of_power_buff) and { soulbind(grove_invigoration_soulbind) or soulbind(field_of_blossoms_soulbind) or enemies() >= 2 } and spell(shifting_power) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_arcane_buff) and spell(arcane_explosion) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or buffpresent(brain_freeze_buff) and spell(glacial_spike) or spell(frostbolt)
+}
+
+### actions.precombat
+
+AddFunction frostprecombatmainactions
+{
+ #flask
+ #food
+ #augmentation
+ #arcane_intellect
+ if buffexpires(arcane_intellect) spell(arcane_intellect)
+ #snapshot_stats
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction frostprecombatmainpostconditions
+{
+}
+
+AddFunction frostprecombatshortcdactions
+{
+ unless buffexpires(arcane_intellect) and spell(arcane_intellect)
+ {
+  #summon_water_elemental
+  spell(summon_water_elemental)
+ }
+}
+
+AddFunction frostprecombatshortcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(frostbolt)
+}
+
+AddFunction frostprecombatcdactions
+{
+}
+
+AddFunction frostprecombatcdpostconditions
+{
+ buffexpires(arcane_intellect) and spell(arcane_intellect) or spell(summon_water_elemental) or spell(frostbolt)
+}
+
+### actions.movement
+
+AddFunction frostmovementmainactions
+{
+ #blink_any,if=movement.distance>10
+ if target.distance() > 10 and checkboxon(opt_blink) spell(blink)
+ #ice_floes,if=buff.ice_floes.down
+ if buffexpires(ice_floes) and speed() > 0 spell(ice_floes)
+ #arcane_explosion,if=mana.pct>30&active_enemies>=2
+ if manapercent() > 30 and enemies() >= 2 spell(arcane_explosion)
+ #fire_blast
+ spell(fire_blast)
+ #ice_lance
+ spell(ice_lance)
+}
+
+AddFunction frostmovementmainpostconditions
+{
+}
+
+AddFunction frostmovementshortcdactions
+{
+}
+
+AddFunction frostmovementshortcdpostconditions
+{
+ target.distance() > 10 and checkboxon(opt_blink) and spell(blink) or buffexpires(ice_floes) and speed() > 0 and spell(ice_floes) or manapercent() > 30 and enemies() >= 2 and spell(arcane_explosion) or spell(fire_blast) or spell(ice_lance)
+}
+
+AddFunction frostmovementcdactions
+{
+}
+
+AddFunction frostmovementcdpostconditions
+{
+ target.distance() > 10 and checkboxon(opt_blink) and spell(blink) or buffexpires(ice_floes) and speed() > 0 and spell(ice_floes) or manapercent() > 30 and enemies() >= 2 and spell(arcane_explosion) or spell(fire_blast) or spell(ice_lance)
+}
+
+### actions.cds
+
+AddFunction frostcdsmainactions
+{
+}
+
+AddFunction frostcdsmainpostconditions
+{
+}
+
+AddFunction frostcdsshortcdactions
+{
+ #mirrors_of_torment,if=active_enemies<3&(conduit.siphoned_malice|soulbind.wasteland_propriety)
+ if enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } spell(mirrors_of_torment)
+ #rune_of_power,if=cooldown.icy_veins.remains>12&buff.rune_of_power.down
+ if spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) spell(rune_of_power)
+ #bag_of_tricks
+ spell(bag_of_tricks)
+}
+
+AddFunction frostcdsshortcdpostconditions
+{
+}
+
+AddFunction frostcdscdactions
+{
+ #potion,if=prev_off_gcd.icy_veins|fight_remains<30
+ if { previousoffgcdspell(icy_veins) or fightremains() < 30 } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_phantom_fire_item usable=1)
+ #deathborne
+ spell(deathborne)
+
+ unless enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } and spell(mirrors_of_torment) or spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) and spell(rune_of_power)
+ {
+  #icy_veins,if=buff.rune_of_power.down&(buff.icy_veins.down|talent.rune_of_power)&(buff.slick_ice.down|active_enemies>=2)
+  if buffexpires(rune_of_power_buff) and { buffexpires(icy_veins) or hastalent(rune_of_power_talent) } and { buffexpires(slick_ice_buff) or enemies() >= 2 } spell(icy_veins)
+  #time_warp,if=runeforge.temporal_warp&buff.exhaustion.up&(prev_off_gcd.icy_veins|fight_remains<30)
+  if runeforge(temporal_warp_runeforge) and debuffpresent(exhaustion_debuff) and { previousoffgcdspell(icy_veins) or fightremains() < 30 } and { checkboxon(opt_time_warp) and debuffexpires(burst_haste_debuff any=1) } spell(time_warp)
+  #use_items
+  frostuseitemactions()
+  #blood_fury
+  spell(blood_fury_int)
+  #berserking
+  spell(berserking)
+  #lights_judgment
+  spell(lights_judgment)
+  #fireblood
+  spell(fireblood)
+  #ancestral_call
+  spell(ancestral_call)
+ }
+}
+
+AddFunction frostcdscdpostconditions
+{
+ enemies() < 3 and { conduit(siphoned_malice_conduit) or soulbind(wasteland_propriety_soulbind) } and spell(mirrors_of_torment) or spellcooldown(icy_veins) > 12 and buffexpires(rune_of_power_buff) and spell(rune_of_power) or spell(bag_of_tricks)
+}
+
+### actions.aoe
+
+AddFunction frostaoemainactions
+{
+ #blizzard
+ spell(blizzard)
+ #flurry,if=(remaining_winters_chill=0|debuff.winters_chill.down)&(prev_gcd.1.ebonbolt|buff.brain_freeze.react&buff.fingers_of_frost.react=0)
+ if { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } spell(flurry)
+ #ice_nova
+ spell(ice_nova)
+ #ice_lance,if=buff.fingers_of_frost.react|debuff.frozen.remains>travel_time|remaining_winters_chill&debuff.winters_chill.remains>travel_time
+ if buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) spell(ice_lance)
+ #fire_blast,if=runeforge.disciplinary_command&cooldown.buff_disciplinary_command.ready&buff.disciplinary_command_fire.down
+ if runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) spell(fire_blast)
+ #arcane_explosion,if=mana.pct>30&active_enemies>=6&!runeforge.glacial_fragments
+ if manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) spell(arcane_explosion)
+ #ice_lance,if=runeforge.glacial_fragments&talent.splitting_ice&travel_time<ground_aoe.blizzard.remains
+ if runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) spell(ice_lance)
+ #wait,sec=0.1,if=runeforge.glacial_fragments&talent.splitting_ice
+ #frostbolt
+ spell(frostbolt)
+}
+
+AddFunction frostaoemainpostconditions
+{
+}
+
+AddFunction frostaoeshortcdactions
+{
+ #frozen_orb
+ spell(frozen_orb)
+
+ unless spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova)
+ {
+  #comet_storm
+  spell(comet_storm)
+
+  unless { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance)
+  {
+   #radiant_spark
+   spell(radiant_spark)
+   #mirrors_of_torment
+   spell(mirrors_of_torment)
+   #shifting_power
+   spell(shifting_power)
+
+   unless runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion)
+   {
+    #ebonbolt
+    spell(ebonbolt)
+   }
+  }
+ }
+}
+
+AddFunction frostaoeshortcdpostconditions
+{
+ spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion) or runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) and spell(ice_lance) or spell(frostbolt)
+}
+
+AddFunction frostaoecdactions
+{
+}
+
+AddFunction frostaoecdpostconditions
+{
+ spell(frozen_orb) or spell(blizzard) or { debuffstacks(winters_chill_debuff) == 0 or target.debuffexpires(winters_chill_debuff) } and { previousgcdspell(ebonbolt) or buffpresent(brain_freeze_buff) and buffstacks(fingers_of_frost_buff) == 0 } and spell(flurry) or spell(ice_nova) or spell(comet_storm) or { buffpresent(fingers_of_frost_buff) or target.debuffremaining(frozen_debuff) > traveltime(ice_lance) or debuffstacks(winters_chill_debuff) and target.debuffremaining(winters_chill_debuff) > traveltime(ice_lance) } and spell(ice_lance) or spell(radiant_spark) or spell(mirrors_of_torment) or spell(shifting_power) or runeforge(disciplinary_command_runeforge) and spellcooldown(disciplinary_command) <= 0 and buffexpires(disciplinary_command_fire_buff) and spell(fire_blast) or manapercent() > 30 and enemies() >= 6 and not runeforge(glacial_fragments_runeforge) and spell(arcane_explosion) or spell(ebonbolt) or runeforge(glacial_fragments_runeforge) and hastalent(splitting_ice_talent) and traveltime(ice_lance) < target.debuffremaining(blizzard_debuff) and spell(ice_lance) or spell(frostbolt)
+}
+
+### actions.default
+
+AddFunction frost_defaultmainactions
+{
+ #call_action_list,name=cds
+ frostcdsmainactions()
+
+ unless frostcdsmainpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoemainactions()
+
+  unless enemies() >= 3 and frostaoemainpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststmainactions()
+
+   unless enemies() < 3 and froststmainpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementmainactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultmainpostconditions
+{
+ frostcdsmainpostconditions() or enemies() >= 3 and frostaoemainpostconditions() or enemies() < 3 and froststmainpostconditions() or frostmovementmainpostconditions()
+}
+
+AddFunction frost_defaultshortcdactions
+{
+ #call_action_list,name=cds
+ frostcdsshortcdactions()
+
+ unless frostcdsshortcdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoeshortcdactions()
+
+  unless enemies() >= 3 and frostaoeshortcdpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststshortcdactions()
+
+   unless enemies() < 3 and froststshortcdpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementshortcdactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultshortcdpostconditions
+{
+ frostcdsshortcdpostconditions() or enemies() >= 3 and frostaoeshortcdpostconditions() or enemies() < 3 and froststshortcdpostconditions() or frostmovementshortcdpostconditions()
+}
+
+AddFunction frost_defaultcdactions
+{
+ #counterspell
+ frostinterruptactions()
+ #call_action_list,name=cds
+ frostcdscdactions()
+
+ unless frostcdscdpostconditions()
+ {
+  #call_action_list,name=aoe,if=active_enemies>=3
+  if enemies() >= 3 frostaoecdactions()
+
+  unless enemies() >= 3 and frostaoecdpostconditions()
+  {
+   #call_action_list,name=st,if=active_enemies<3
+   if enemies() < 3 froststcdactions()
+
+   unless enemies() < 3 and froststcdpostconditions()
+   {
+    #call_action_list,name=movement
+    frostmovementcdactions()
+   }
+  }
+ }
+}
+
+AddFunction frost_defaultcdpostconditions
+{
+ frostcdscdpostconditions() or enemies() >= 3 and frostaoecdpostconditions() or enemies() < 3 and froststcdpostconditions() or frostmovementcdpostconditions()
+}
+
+### Frost icons.
+
+AddCheckBox(opt_mage_frost_aoe l(aoe) default enabled=(specialization(frost)))
+
+AddIcon enabled=(not checkboxon(opt_mage_frost_aoe) and specialization(frost)) enemies=1 help=shortcd
+{
+ if not incombat() frostprecombatshortcdactions()
+ frost_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=shortcd
+{
+ if not incombat() frostprecombatshortcdactions()
+ frost_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(frost)) enemies=1 help=main
+{
+ if not incombat() frostprecombatmainactions()
+ frost_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=aoe
+{
+ if not incombat() frostprecombatmainactions()
+ frost_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_mage_frost_aoe) and specialization(frost)) enemies=1 help=cd
+{
+ if not incombat() frostprecombatcdactions()
+ frost_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_mage_frost_aoe) and specialization(frost)) help=cd
+{
+ if not incombat() frostprecombatcdactions()
+ frost_defaultcdactions()
+}
+
+### Required symbols
+# ancestral_call
+# arcane_explosion
+# arcane_intellect
+# bag_of_tricks
+# berserking
+# blink
+# blizzard
+# blizzard_debuff
+# blood_fury_int
+# brain_freeze_buff
+# comet_storm
+# counterspell
+# deathborne
+# disciplinary_command
+# disciplinary_command_arcane_buff
+# disciplinary_command_fire_buff
+# disciplinary_command_runeforge
+# ebonbolt
+# exhaustion_debuff
+# expanded_potential_buff
+# field_of_blossoms_soulbind
+# fingers_of_frost_buff
+# fire_blast
+# fireblood
+# flurry
+# freezing_rain_buff
+# freezing_winds_buff
+# freezing_winds_runeforge
+# frostbolt
+# frozen_debuff
+# frozen_orb
+# glacial_fragments_runeforge
+# glacial_spike
+# grove_invigoration_soulbind
+# ice_floes
+# ice_lance
+# ice_nova
+# icy_veins
+# ire_of_the_ascended_conduit
+# lights_judgment
+# mirrors_of_torment
+# potion_of_phantom_fire_item
+# quaking_palm
+# radiant_spark
+# ray_of_frost
+# rune_of_power
+# rune_of_power_buff
+# rune_of_power_talent
+# shifting_power
+# siphoned_malice_conduit
+# slick_ice_buff
+# splitting_ice_talent
+# summon_water_elemental
+# temporal_warp_runeforge
+# time_warp
+# wasteland_propriety_soulbind
+# winters_chill_debuff
+]]
+        scripts:registerScript("MAGE", "frost", name, desc, code, "script")
+    end
+end

@@ -4,7 +4,6 @@
 	<Button name="AltoTabAchievementsClassIconTemplate" inherits="AltoClassIconTemplate" virtual="true">
 		<KeyValues>
 			<KeyValue key="optionFormat" value="Tabs.Achievements.%s.%s.Column%d" />
-            <KeyValue key="optionFormatAccountWide" value="Tabs.Achievements.%s.Column%d" />
 		</KeyValues>
 		<Scripts>
 			<OnEnter>
@@ -21,28 +20,32 @@
 		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
-            <Anchor point="BOTTOMRIGHT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Label1" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW">
 					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="0" y="-5" />
+						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-5" />
 					</Anchors>
-					<Color r="1" g="1" b="1" />
+					<Color r="255" g="255" b="255" />
 				</FontString>
 				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="24" />
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
 					</Anchors>
-					<Color r="1" g="1" b="1" />
+					<Color r="255" g="255" b="255" />
+				</FontString>
+				<FontString parentKey="PageNumber" inherits="GameFontHighlightSmallOutline" justifyH="RIGHT">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="-50" y="20" />
+					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="SelectAccount" inherits="AltoAccountPickerTemplate">
+			<Frame parentKey="SelectRealm" inherits="AltoRealmPickerTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-30" y="-2" />
 				</Anchors>
@@ -54,7 +57,7 @@
 			<!-- Menu Icons -->
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<KeyValue key="numIcons" value="50" type="number" />
+					<KeyValue key="numIcons" value="12" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabAchievementsClassIconTemplate" />
 					<KeyValue key="tabName" value="Achievements" />
 				</KeyValues>
@@ -80,6 +83,37 @@
 					<KeyValue key="yOffset" value="-105" type="number" />
 				</KeyValues>
 			</ScrollFrame>
+			
+			<Button parentKey="PrevPage">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="730" y="10" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():GoToPreviousPage()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+			</Button>
+			<Button parentKey="NextPage">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$Parent.PrevPage" relativePoint="RIGHT" x="10" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():GoToNextPage()
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

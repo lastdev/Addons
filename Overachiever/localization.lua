@@ -75,6 +75,9 @@ School of %s
 	ACH_MISSIONCOMPLETE_INCOMPLETE = "Need to complete";
 	ACH_MISSIONCOMPLETE_COMPLETE = "Previously completed";
 
+	ACH_RIDE_INCOMPLETE = "Need to ride";
+	ACH_RIDE_COMPLETE = "Already ridden";
+
 	ACH_LETITSNOW_INCOMPLETE = "Need to use Handful of Snowflakes";
 	ACH_LETITSNOW_COMPLETE = "Already used Handful of Snowflakes";
 	ACH_FISTFULOFLOVE_INCOMPLETE = "Need to use Handful of Rose Petals";
@@ -134,12 +137,12 @@ School of %s
 
 	OPT_LABEL_TRACKING = "Achievement Tracking";
 	OPT_AUTOTRACKTIMED = "Auto-track timed achievements (non-battleground)";
-	OPT_AUTOTRACKTIMED_TIP = "Automatically track achievements with timed criteria when the timer starts. If you are already tracking the maximum number of achievements, it will attempt to take the place of an auto-tracked exploration achievement; otherwise, it won't be tracked.|n|nExcludes battleground-specific achievements.";
+	OPT_AUTOTRACKTIMED_TIP = "Automatically track achievements with timed criteria when the timer starts. If you are already tracking the maximum number allowed, it may take the place of a previously auto-tracked achievement.|n|nExcludes battleground-specific achievements.";
 	OPT_AUTOTRACKTIMED_BG = "Auto-track timed battleground achievements";
-	OPT_AUTOTRACKTIMED_TIP_BG = "Automatically track battleground achievements with timed criteria when the timer starts. (For example, those for winning the match or capturing a flag within a set time.)|n|nThe achievement is untracked upon leaving the battleground.";
+	OPT_AUTOTRACKTIMED_TIP_BG = "Automatically track battleground achievements with timed criteria when the timer starts. (For example, those that require a win or flag capture within a certain time frame.)|n|nThe achievement is untracked upon leaving the battleground.";
 	OPT_AUTOTRACKEXPLORE = "Auto-track exploration achievements as you travel";
-	OPT_AUTOTRACKEXPLORE_TIP = "When you enter a zone, automatically track its exploration achievement. If already tracking an exploration achievement, this will replace the previous automatically-tracked one if there is one or another exploration achievement otherwise.";
-	OPT_AUTOTRACKEXPLORE_COMPLETED = "Including completed achievements";
+	OPT_AUTOTRACKEXPLORE_TIP = "When you enter a zone, automatically track its exploration achievement. It will be untracked when you leave the zone.";
+	OPT_AUTOTRACKEXPLORE_COMPLETED = "Including those completed on a different character";
 	OPT_AUTOTRACK_CRITERIATOAST = 'Auto-track upon "Achievement Progress" toast';
 	OPT_AUTOTRACK_CRITERIATOAST_TIP = 'When the "Achievement Progress" toast appears, automatically track the achievement (if the tracking limit permits).';
 
@@ -149,6 +152,7 @@ School of %s
 	OPT_CRITERIATOAST_SUGGEST = "Add to Recent Reminders (Suggestions)";
 	OPT_CRITERIATOAST_SUGGEST_TIP = 'When the "Achievement Progress" toast appears, temporarily add the achievement to the Suggestions tab as a "Recent Reminder."';
 
+	OPT_LABEL_LOVECRITTER = '/Love Critter Achievements ("%s," "%s," etc.)';
 	OPT_CRITTERTIPS = "Critter /loved?";
 	OPT_CRITTERTIPS_TIP = "If this achievement is incomplete, add a line to the tooltips of critters that are part of its criteria to indicate whether you still need to /love that type of critter.";
 	OPT_PESTCONTROLTIPS = "Pest exterminated?";
@@ -190,12 +194,14 @@ School of %s
 	OPT_MISSIONCOMPLETE_TIP = "Add a line to the tooltips of missions to indicate whether you need to complete them for an achievement.";
 	OPT_MISSIONCOMPLETE_WHENCOMPLETE = "Show even if achievement is complete";
 
+	OPT_VEHICLERIDDENTIPS = "Vehicle/creature ridden?";
+	OPT_VEHICLERIDDENTIPS_TIP = "Add a line to the tooltips of vehicles and creatures that you need to ride to complete an achievement.";
+
 	OPT_LABEL_NEEDTOKILL = 'Kill Creature Achievements ("%s," "%s," etc.)';
 	OPT_KILLCREATURETIPS = "Creature killed?";
 	OPT_KILLCREATURETIPS_TIP = "Add a line to the tooltips of creatures (excluding critters) indicating whether you need to kill them for an achievement.";
 	OPT_KILLCREATURETIPS_TIP2 = "|nNote: This relies on achievements providing mob IDs. Many kill-achievements do, but not all. Creatures needed for those that don't will not have updated tooltips, with a few exceptions where the data has been manually entered into Overachiever.";
 	OPT_KILLCREATURETIPS_WHENCOMPLETE = "Show even if achievement is complete";
-
 	OPT_KILLCREATURETIPS_EXCLUDE_GUILD = "Exclude guild achievements";
 
 	OPT_LABEL_MAINUI = "Main Achievement UI Modifications";
@@ -343,6 +349,8 @@ L["ACH_LOVECRITTERS_COMPLETE"] = "Wurde bereits geliebt"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Braucht etwas /liebe"
 L["ACH_MISSIONCOMPLETE_COMPLETE"] = "Zuvor abgeschlossen"
 L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "Noch nicht abgeschlossen"
+L["ACH_RIDE_COMPLETE"] = "Bereits geritten"
+L["ACH_RIDE_INCOMPLETE"] = "Muss noch geritten werden"
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Bereits mit Federn beschossen"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Noch mit Federn zu beschießen"
 L["ACH_WELLREAD_COMPLETE"] = "Bereits gelesen"
@@ -411,13 +419,14 @@ L["OPT_CRITTERTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird i
 L["OPT_DRAGGABLE"] = "Verschiebbar machen"
 L["OPT_DRAGSAVE"] = "Position merken"
 L["OPT_EATYOURGREENSTIPS"] = "Grün gegessen?"
-L["OPT_EATYOURGREENSTIPS_TIP"] = "Wenn der Erfolg unvollständig ist, füge zu den Tooltips eine Zeile hinzu von den Pflanzen in Nazmir die du essen musst."
+L["OPT_EATYOURGREENSTIPS_TIP"] = "Wenn der Erfolg unvollständig ist, füge den Tooltips der Pflanzen in Nazmir eine Zeile hinzu, die du essen musst."
 L["OPT_FISTFULOFLOVETIPS"] = "Handvoll Rosenblüten angewendet?"
 L["OPT_FISTFULOFLOVETIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Spielers der Hinweis angezeigt, ob bei seinem Volk bzw. Klasse noch eine Handvoll Rosenblüten angewendet werden muss."
 L["OPT_KILLCREATURETIPS"] = "Kreatur getötet?"
 L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Gildenerfolge ausschließen"
 L["OPT_KILLCREATURETIPS_TIP"] = "Zeigt im Tooltip einer Kreatur (außer Kleintiere) den Hinweis an, ob sie für einen Erfolg noch getötet werden muss."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Anmerkung: Beim Start (oder wenn diese Option aktiviert ist), wird jeder Erfolg gescannt, um die IDs der Einheiten festzustellen. Nicht alle Erfolge liefern derartige IDs. Die meisten tun es, aber Tooltips von Kreaturen, deren IDs nicht ermittelt werden konnten, bleiben unverändert."
+L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = "Zeigt auch an, wenn der Erfolg abgeschlossen ist"
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
@@ -426,6 +435,7 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" und \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" und \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Reaktion auf Fortschritt (Nicht verfolgte)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Teilerfolge"
+L["OPT_LABEL_LOVECRITTER"] = "/Liebe Kleintier Erfolge (\"%s,\" \"%s,\" usw.)"
 L["OPT_LABEL_MAINUI"] = "Änderungen an der Benutzeroberfläche der Erfolge"
 L["OPT_LABEL_MISC"] = "Sonstiges"
 L["OPT_LABEL_NEEDTOKILL"] = "Erfolge für das Töten von Kreaturen (\"%s,\" \"%s,\" usw.)"
@@ -438,6 +448,7 @@ L["OPT_LETITSNOWTIPS"] = "Handvoll Schneeflocken angewendet?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Spielers der Hinweis angezeigt, ob bei seinem Volk bzw. Klasse noch eine Handvoll Schneeflocken angewendet werden muss."
 L["OPT_MISSIONCOMPLETE"] = "Mission abgeschlossen?"
 L["OPT_MISSIONCOMPLETE_TIP"] = "Zeigt in den Tooltipps von Missionen einen Hinweis an, ob Sie sie für einen Erfolg abschließen müssen."
+L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = "Zeigt auch an, wenn der Erfolg abgeschlossen ist"
 L["OPT_PESTCONTROLTIPS"] = "Ungeziefer getötet?"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Wenn dieser Erfolg noch nicht abgeschlossen ist, wird im Tooltip des Ungeziefers angezeigt, ob es noch getötet werden muss."
 L["OPT_SATISFIEDTIPS"] = "1000% zufriedengestellt?"
@@ -455,7 +466,7 @@ L["OPT_SHOWPROGRESS_OTHER"] = "Den Fortschritt in Links von anderen Spielern ver
 L["OPT_SHOWPROGRESS_OTHER_TIP"] = "Deinen Fortschritt hinzufügen, wenn die Erfolge von einem anderen Spieler stammen."
 L["OPT_SHOWPROGRESS_TIP"] = "Deinen Fortschritt hinzufügen, wenn ein Erfolg mengenbasierende Kriterien enthält, wie zum Beispiel \"Erhaltet 10 Reittiere.\""
 L["OPT_SLASHSEARCH_TAB"] = "Schrägstrichbefehle in Registerkarte Suchen verwenden"
-L["OPT_SLASHSEARCH_TAB_TIP"] = "Verwenden Sie die Registerkarte \\\"Suchen\\\", um Suchergebnisse von Schrägstrichbefehlen wie \\\"/ach essen\\\" anzuzeigen. Wenn dies nicht markiert ist, werden die Ergebnisse stattdessen im Chat-Protokoll ausgegeben (es sei denn, ein Befehl für die stille Ausgabe wie \\\"/achs\\\" wird verwendet)."
+L["OPT_SLASHSEARCH_TAB_TIP"] = "Verwenden Sie die Registerkarte \"Suchen\", um Suchergebnisse von Schrägstrichbefehlen wie \"/ach essen\" anzuzeigen. Wenn dies nicht markiert ist, werden die Ergebnisse stattdessen im Chat-Protokoll ausgegeben (es sei denn, ein Befehl für die stille Ausgabe wie \"/achs\" wird verwendet)."
 L["OPT_SLASHSEARCH_TIP2"] = "|cffffffffTabs-Modul mit Such-Tab wird benötigt.|r"
 L["OPT_STARTTOAST_BONUS"] = "Zeigt die heutigen Bonus-Events"
 L["OPT_STARTTOAST_BONUS_TIP"] = "Zeigt die heutigen Bonus-Events in Toast-Benachrichtigungen beim Betreten der Spielwelt an."
@@ -491,6 +502,8 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "Tooltip für Erfolge, die Kriterien eines ande
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Zeigt im Tooltip eines Erfolges den Namen des Meta-Erfolges an, den man mit diesem Erfolg abschließen kann."
 L["OPT_UI_SERIESTIP"] = "Tooltip für Erfolge, die zu einer Serie von Erfolgen gehören"
 L["OPT_UI_SERIESTIP_TIP"] = "Zeigt im Tooltip eines Erfolges, der zu einer Serie von Erfolgen gehört, die Namen der anderen und dessen Beziehung zu ihnen."
+L["OPT_VEHICLERIDDENTIPS"] = "Fahrzeug/Kreatur geritten?"
+L["OPT_VEHICLERIDDENTIPS_TIP"] = "Fügt eine Zeile zu den Tooltips von Fahrzeugen und Kreaturen hinzu, die du fahren musst, um einen Erfolg zu erzielen."
 L["OPT_WELLREADTIPS"] = "Buch gelesen?"
 L["OPT_WELLREADTIPS_TIP"] = "Wenn der Erfolg noch nicht abgeschlossen ist, wird im Tooltip eines Buches der Hinweis angezeigt, ob es für den Erfolg noch gelesen werden muss."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Erinnerungshinweise"
@@ -579,6 +592,10 @@ L["ACH_LOVECRITTERS_COMPLETE"] = "A déjà reçu de l' /amour"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "A besoin d' /amour"
 L["ACH_MISSIONCOMPLETE_COMPLETE"] = "Déjà complété"
 L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "Doit être complété"
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Déjà Dindonisé"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Doit être Dindonisé"
 L["ACH_WELLREAD_COMPLETE"] = "Déjà lu"
@@ -672,6 +689,8 @@ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Exclure les hauts faits de guilde"
 L["OPT_KILLCREATURETIPS_TIP"] = "Ajoute une ligne à l'infobulle des créatures (hormis les bestioles) qui doivent être tuées pour atteindre l'objectif d'un haut fait inachevé pour indiquer si vous devez encore les tuer."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note : Au démarrage (ou lorsque cette option est activée) tous les hauts faits sont analysés afin de découvrir les IDs des \"unités\". Ils n'en fournissent pas tous. La plupart le font, mais les infobulles des créatures concernées par ceux qui ne le font pas ne seront pas affectées par cette option."
 --[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 --[[Translation missing --]]
@@ -683,6 +702,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" et \"%s\""
 --[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modifications de l'IU principale des Hauts faits"
 L["OPT_LABEL_MISC"] = "Divers"
 L["OPT_LABEL_NEEDTOKILL"] = "Hauts faits d'élimination de monstres (\"%s,\" \"%s,\" etc.)"
@@ -698,6 +719,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne à
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Ajoute à l'infobulle des nuisibles si vous les avez déjà exterminés"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Si ce haut fait est inachevé, ajoute une ligne à l'infobulle des nuisibles concernés pour indiquer si vous devez encore les exterminer."
 L["OPT_SATISFIEDTIPS"] = "Satisfait à 1000% ?"
@@ -782,6 +805,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "Infobulle pour les hauts faits qui en requièr
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Lorsque le curseur passe sur un haut fait qui est requis pour en accomplir un autre, affiche le nom du méta-haut fait."
 L["OPT_UI_SERIESTIP"] = "Infobulle pour les hauts faits qui font partie d'une série"
 L["OPT_UI_SERIESTIP_TIP"] = "Lorsque le curseur passe sur un haut fait qui fait partie d'une série, affiche le reste de la série et sa situation dans celle-ci."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "Ajoute à l'infobulle d'un livre si vous l'avez lu"
 L["OPT_WELLREADTIPS_TIP"] = "Si le haut fait est inachevé, ajoute une ligne dans l'infobulle des livres concernés pour vous signaler si vous avez besoin de les lire."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Rappel des info-bulles"
@@ -898,6 +925,10 @@ L["ACH_LOVECRITTERS_INCOMPLETE"] = "需要 /愛"
 --[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "已經使用過火雞獵槍"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "需要使用火雞獵槍"
 L["ACH_WELLREAD_COMPLETE"] = "已讀過"
@@ -998,6 +1029,8 @@ L["OPT_KILLCREATURETIPS"] = "新增您是否需要殺死的怪物"
 L["OPT_KILLCREATURETIPS_TIP"] = "新增一行動物提示(不包括小動物 )需要加以殺害，以符合標準的未完成的成就說明，表明您是否仍然需要殺死他們。"
 L["OPT_KILLCREATURETIPS_TIP2"] = "注意：在啟動時(或是這設定啟用)，每個成就會被掃描來找出單位編號。並非所有成就提供編號。大部分如此，但是其中的生物的提示不會因為這設定而有改變。"
 --[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 --[[Translation missing --]]
@@ -1008,6 +1041,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" 和 \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "進度相關動作 (不追蹤)"
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "成就視窗微調"
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_MISC"] = ""--]] 
@@ -1023,6 +1058,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "如果成就尚未完成，在適當種族與職�
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "顯示是否需要擊殺害蟲的提示"
 L["OPT_PESTCONTROLTIPS_TIP"] = "如果這個成就尚未完成，在那些害蟲的提示訊息中提示你是否需要擊殺牠們。"
 L["OPT_SATISFIEDTIPS"] = "1000%滿足?"
@@ -1088,6 +1125,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "顯示其他需要此成就來完成的提示"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "當游標位於一個成就，需要獲得的另一項成就，顯示成就樹名稱。"
 L["OPT_UI_SERIESTIP"] = "顯示系列成就的提示"
 L["OPT_UI_SERIESTIP_TIP"] = "當滑鼠指向一個系列成就時，顯示系列中其他成就的名字和與目前成就的關係"
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "提示書本是否閱讀過"
 L["OPT_WELLREADTIPS_TIP"] = "增加書本提示說明."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "滑鼠提示提醒"
@@ -1205,6 +1246,10 @@ L["ACH_LOVECRITTERS_COMPLETE"] = "已 /爱 过"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "需要 /爱"
 L["ACH_MISSIONCOMPLETE_COMPLETE"] = "此前已完成"
 L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "需要完成"
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "已使用过火鸡枪"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "需要使用火鸡枪"
 L["ACH_WELLREAD_COMPLETE"] = "已读过"
@@ -1284,6 +1329,8 @@ L["OPT_KILLCREATURETIPS"] = "新增需要杀死的怪物"
 L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "排除公会成就"
 L["OPT_KILLCREATURETIPS_TIP"] = "新增需要杀死的怪物提示（不包括小动物）。"
 L["OPT_KILLCREATURETIPS_TIP2"] = "Note: At startup (or when this is option is enabled), every achievement is scanned to find unit IDs. Not all achievements provide such IDs. Most do, but the tooltips of creatures which are the criteria of those that don't won't be altered by this option."
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s\"、\"%s\"、|n\"%s\"、\"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
@@ -1292,6 +1339,8 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s\"、\"%s\"和|n\"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\"和\"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "进度反馈 (非跟踪)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" 子成就"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "主成就界面修改"
 L["OPT_LABEL_MISC"] = "杂项"
 L["OPT_LABEL_NEEDTOKILL"] = "击杀怪物成就（\"%s\"、\"%s\"及其它）"
@@ -1306,6 +1355,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "提示是否需要使用一捧雪花。"
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "提示是否需要击杀害虫"
 L["OPT_PESTCONTROLTIPS_TIP"] = "提示是否需要击杀害虫。"
 L["OPT_SATISFIEDTIPS"] = "提示是否需要吃曲奇"
@@ -1376,6 +1427,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "提示成就树"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "当鼠标滑过一个需要先决条件的成就时，显示成就树的名称。"
 L["OPT_UI_SERIESTIP"] = "提示系列成就"
 L["OPT_UI_SERIESTIP_TIP"] = "当鼠标滑过一个系列成就时，显示系列中其他成就的名字和与当前成就的关系。"
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "提示书本是否读过"
 L["OPT_WELLREADTIPS_TIP"] = "增加书本提示说明。"
 L["OPTPANEL_REMINDERTOOLTIPS"] = "工具提示"
@@ -1483,6 +1538,10 @@ L["ACH_LOVECRITTERS_COMPLETE"] = "Уже /любите"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Выразите /любовь"
 L["ACH_MISSIONCOMPLETE_COMPLETE"] = "Уже выполнено"
 L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "Нужно выполнить"
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Уже расстрелян"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Нужно расстрелять"
 L["ACH_WELLREAD_COMPLETE"] = "Прочитано"
@@ -1560,6 +1619,8 @@ L["OPT_KILLCREATURETIPS"] = "Добавлять строку о необходи
 L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Исключить достижения гильдии"
 L["OPT_KILLCREATURETIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку существам (исключая спутников) добавится строка, уведомляющая о необходимости убить их."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Заметка: Вначале (или когда эта опция включена), каждое достижение сканируется на поиск Номера НПС. Не все достижения предоставляют правильные номера. Поэтому подсказки для существ, которые подходят по критериям, не будут отображаться этой опцией."
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
@@ -1568,6 +1629,8 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" и|n\"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" и \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Прогресс Реакции (Без Отслеживания)"
 L["OPT_LABEL_DRAENORANGLER"] = "\"%s\" Cуб-Достижение"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Модификации главного интерфейса достижений"
 L["OPT_LABEL_MISC"] = "Разное"
 L["OPT_LABEL_NEEDTOKILL"] = "Достижения по убийству существ (\"%s,\" \"%s,\" и т.д.)"
@@ -1580,6 +1643,8 @@ L["OPT_LETITSNOWTIPS"] = "Добавляет, нужно ли вам испол�
 L["OPT_LETITSNOWTIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку игрокам будет добавляться строка, уведомляющая о необходимости использования горсти снежинок."
 L["OPT_MISSIONCOMPLETE"] = "Миссия завершена?"
 L["OPT_MISSIONCOMPLETE_TIP"] = "Добавить строку в подсказки миссий, чтобы указать, нужно ли выполнять их для достижения."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Добавлять строку о необходимости убийства существа"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Если это достижение не выполнено, во всплывающую подсказку существам будет добавляться строка, уведомляющая о необходимости убить данное существо."
 L["OPT_SATISFIEDTIPS"] = "1000% удовлетворены?"
@@ -1633,6 +1698,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "Показывать достижения, н�
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Если вы наведёте мышку на достижение, которое необходимо для получения другого достижения, во всплывающем окошке будет отображено название этого мета-достижения."
 L["OPT_UI_SERIESTIP"] = "Показывать достижения, являющиеся частью серии"
 L["OPT_UI_SERIESTIP_TIP"] = "Если вы наведёте курсор на достижение, являющееся частью серии, во всплывающее окошко будут добавлены имена других достижений из этой серии."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "Отмечать в подсказке книги, прочитана ли она"
 L["OPT_WELLREADTIPS_TIP"] = "Если эти достижения не выполнены, во всплывающую подсказку к книгам будет добавляться строка, показывающая, прочитан ли этот экземпляр"
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Напоминающие подсказки"
@@ -1746,6 +1815,10 @@ L["ACH_LOVECRITTERS_INCOMPLETE"] = "/사랑 필요"
 --[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "칠면조 사냥총 사용 완료"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "칠면조 사냥총 사용 필요"
 L["ACH_WELLREAD_COMPLETE"] = "독서 완료"
@@ -1828,6 +1901,8 @@ L["OPT_KILLCREATURETIPS"] = "몬스터를 죽인 횟수 표시"
 --[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "업적이 완료되지 않았다면 업적에 몬스터를 죽인 횟수를 표시합니다."
 L["OPT_KILLCREATURETIPS_TIP2"] = "주의: 게임 시작시(설정에서 사용한 후 부터), 매 업적마다 유닛 ID를 찾습니다."
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\" 및|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s,\"|n\"%s,\" \"%s,\" \"%s\""
@@ -1836,6 +1911,8 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" 및|n\"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\"|1과;와; \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "진행상황 반응 (비 추적)"
 L["OPT_LABEL_DRAENORANGLER"] = "\\\"%s\\\"의 하위 업적"
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "기본 업적창 툴팁 변경"
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_MISC"] = ""--]] 
@@ -1851,6 +1928,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "업적을 완료하지 않은 경우 해당하는 
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "처치 상태 표시"
 L["OPT_PESTCONTROLTIPS_TIP"] = "업적을 완료하지 않은 경우 해당 동물에 마우스를 가져다대면 툴팁에 처치가 필요한지 표시합니다."
 L["OPT_SATISFIEDTIPS"] = "기분 1000% 상승"
@@ -1915,6 +1994,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "요구하는 관련 업적 표시"
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "업적 달성을 위해 다른 업적을 달성해야 하면 달성해야 할 해당 업적을 표시합니다."
 L["OPT_UI_SERIESTIP"] = "업적 세트 표시"
 L["OPT_UI_SERIESTIP_TIP"] = "업적이 특정 세트에 속하는 업적이면 세트에 속한 모든 업적을 추가로 표시합니다."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "독서 상태 표시"
 L["OPT_WELLREADTIPS_TIP"] = "업적을 완료하지 않았으면 툴팁에 독서가 필요하다고 표시합니다."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "툴팁 설정"
@@ -2023,6 +2106,10 @@ L["ACH_LOVECRITTERS_INCOMPLETE"] = "Necesita algo de /amor"
 --[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Ya emplumado"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Necesita unas plumas"
 L["ACH_WELLREAD_COMPLETE"] = "Ya lo has leído"
@@ -2131,6 +2218,8 @@ L["OPT_KILLCREATURETIPS"] = "Añadir si necesitas matar una criatura a su toolti
 L["OPT_KILLCREATURETIPS_TIP"] = "Añade una linea al tooltip de las criaturas (excluyendo alimañas) que necesitan ser matadas para cumplir los requisitos de un logro incompleto, para indicar que aún necesitas matarlas."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: Al inicio (o cuando esta opción es activada), cada logro es escaneado para encontrar la ID de las criaturas afectadas. No todos los logros informan de esas IDs. Muchos lo hacen, pero los tooltips de las criaturas que son necesarias para los logros que no lo hacen no serán afectadas por esta opción."
 --[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 --[[Translation missing --]]
@@ -2142,6 +2231,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" y \"%s\""
 --[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modificiaciones del interface de Logros"
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_MISC"] = ""--]] 
@@ -2158,6 +2249,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "Si este logro está incompleto, añade una línea 
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Añadir si ya has eliminado una alimaña a su tooltip."
 L["OPT_PESTCONTROLTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de las alimañas incluidas en el logro, para indicar que aún necesitas exterminarlas."
 L["OPT_SATISFIEDTIPS"] = "¿ Satisfecho al 1000% ?"
@@ -2242,6 +2335,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "Tooltip en los logros requeridos por otros log
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Cuando el cursor esta sobre un logro que es requerido para obtener otro logro, muestra el nombre del meta-logro."
 L["OPT_UI_SERIESTIP"] = "Mostrar tooltip sobre logros que son parte de una serie"
 L["OPT_UI_SERIESTIP_TIP"] = "Cuando el cursor esta sobre un logro que es parte de una serie, muestra los nombres de otros logros de la misma serie y su relación con ellos."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "Añadir si ya has leido un libro a su tooltip"
 L["OPT_WELLREADTIPS_TIP"] = "Si este logro está incompleto, añade una línea al tooltip de los libros incluidos en el logro, para indicar que necesitas leerlos."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Tooltips recordatorios"
@@ -2382,6 +2479,10 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_TURKEYLURKEY_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
@@ -2533,6 +2634,8 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[Translation missing --]]
 --[[ L["OPT_KILLCREATURETIPS_TIP2"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["OPT_LABEL_ACHFIVE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_ACHFOUR"] = ""--]] 
@@ -2548,6 +2651,8 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_DRAENORANGLER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_MAINUI"] = ""--]] 
 --[[Translation missing --]]
@@ -2572,6 +2677,8 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
 --[[Translation missing --]]
@@ -2678,6 +2785,10 @@ L["YOURPROGRESS"] = "Tu progreso"
 --[[ L["OPT_UI_SERIESTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_UI_SERIESTIP_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_WELLREADTIPS"] = ""--]] 
 --[[Translation missing --]]
@@ -2828,6 +2939,10 @@ L["ACH_LOVECRITTERS_COMPLETE"] = "Já /amou"
 L["ACH_LOVECRITTERS_INCOMPLETE"] = "Precisa /amar"
 L["ACH_MISSIONCOMPLETE_COMPLETE"] = "Completado anteriormente"
 L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = "Necessita completar"
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Já \"empenado\""
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Precisa de penas"
 L["ACH_WELLREAD_COMPLETE"] = "Já lido"
@@ -2904,6 +3019,8 @@ L["OPT_KILLCREATURETIPS"] = "Criatura morta?"
 L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = "Conquista de guilda excluidas"
 L["OPT_KILLCREATURETIPS_TIP"] = "Adiciona uma linha às dicas de telas de criaturas (excluindo bichos) que precisam ser mortas para satisfazer os critérios de uma conquista incompleta, indicando se você ainda precisa matá-las."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: Ao iniciar (ou quando esta opção está marcada), cada conquista é escaneada para encontrar IDs de unidades. Nem todas as conquistas fornecem estas IDs. A maioria sim, mas as dicas de tela de criaturas que são critério das que não fornecem não serão alteradas por esta opção."
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
@@ -2912,6 +3029,8 @@ L["OPT_LABEL_ACHTHREE"] = "\"%s,\" \"%s,\" e \"%s\""
 L["OPT_LABEL_ACHTWO"] = "\"%s\" e \"%s\""
 L["OPT_LABEL_CRITERIATOAST"] = "Reação a progresso (sem rastreio)"
 L["OPT_LABEL_DRAENORANGLER"] = "Subconquistas de \"%s\""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modificações da Página Principal das Conquistas"
 L["OPT_LABEL_MISC"] = "Diversos"
 L["OPT_LABEL_NEEDTOKILL"] = "Conquistas de Matar criaturas (\"%s,\" \"%s,\" etc.)"
@@ -2924,6 +3043,8 @@ L["OPT_LETITSNOWTIPS"] = "Punhado de Flocos de Neve utilizado?"
 L["OPT_LETITSNOWTIPS_TIP"] = "Se a conquista estiver incompleta, acrescentar uma linha às dicas de tela de jogadores da combinação de raça/classe apropriada para indicar se você precisa um Punhado de Flocos de Neve neles."
 L["OPT_MISSIONCOMPLETE"] = "Missão incompleta?"
 L["OPT_MISSIONCOMPLETE_TIP"] = "Adicione uma linha as dicas de missões para indicar se você precisa completa-las para uma conquista."
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 L["OPT_PESTCONTROLTIPS"] = "Praga exterminada?"
 L["OPT_PESTCONTROLTIPS_TIP"] = "Se essa conquista está incompleta, adicionar uma linha às dicas de tela de bichos que fazem parte de seus critérios para indicar se você precisa exterminá-los."
 L["OPT_SATISFIEDTIPS"] = "1000% Satisfeito?"
@@ -2988,6 +3109,10 @@ L["OPT_UI_REQUIREDFORMETATIP"] = "Dica de tela para conquistas requeridas por ou
 L["OPT_UI_REQUIREDFORMETATIP_TIP"] = "Quando o cursor está sobre uma conquista que é requerida para obter outra conquista, mostrar o nome da meta-conquista."
 L["OPT_UI_SERIESTIP"] = "Dica de tela para conquistas que fazem parte de uma série"
 L["OPT_UI_SERIESTIP_TIP"] = "Quando o cursor estiver sobre uma conquista que faz parte de uma série, mostrar os nomes das outras na série e sua relação com elas."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "Livro lido?"
 L["OPT_WELLREADTIPS_TIP"] = "Se a conquista estiver incompleta, adicionar uma linha às dicas de tela de livros que fazem parte dos seus critérios para indicar se você precisa lê-los."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Dicas de tela"
@@ -3093,6 +3218,10 @@ L["ACH_LOVECRITTERS_INCOMPLETE"] = "Richiede un po' di /love"
 --[[ L["ACH_MISSIONCOMPLETE_COMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ACH_MISSIONCOMPLETE_INCOMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_COMPLETE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ACH_RIDE_INCOMPLETE"] = ""--]] 
 L["ACH_TURKEYLURKEY_COMPLETE"] = "Hai già le piume"
 L["ACH_TURKEYLURKEY_INCOMPLETE"] = "Richiede piume"
 L["ACH_WELLREAD_COMPLETE"] = "Già letto"
@@ -3184,6 +3313,8 @@ L["OPT_KILLCREATURETIPS"] = "Creatura uccisa?"
 --[[ L["OPT_KILLCREATURETIPS_EXCLUDE_GUILD"] = ""--]] 
 L["OPT_KILLCREATURETIPS_TIP"] = "Aggiungere una riga nel tooltip delle creature (escluse i critter) che devono essere uccisi per soddisfare i criteri di un'impresa non completa che indica se hai ancora bisogno di ucciderli."
 L["OPT_KILLCREATURETIPS_TIP2"] = "Nota: All'avvio (o quando questa è l'opzione è abilitata), ogni realizzazione viene analizzata per individuare gli ID di unità. Non tutte le realizzazioni forniscono tali ID. La maggior parte fanno, ma le descrizioni comandi di creature che sono i criteri di coloro che non lo fanno non sarà alterato da questa opzione."
+--[[Translation missing --]]
+--[[ L["OPT_KILLCREATURETIPS_WHENCOMPLETE"] = ""--]] 
 L["OPT_LABEL_ACHFIVE"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s\""
 L["OPT_LABEL_ACHFOUR"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\""
 L["OPT_LABEL_ACHSEVEN"] = "\"%s,\" \"%s,\"|n\"%s,\" \"%s\"|n\"%s,\" \"%s,\" \"%s\""
@@ -3193,6 +3324,8 @@ L["OPT_LABEL_ACHTWO"] = "\"%s\" e \"%s\""
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_CRITERIATOAST"] = ""--]] 
 L["OPT_LABEL_DRAENORANGLER"] = "Sottoimprese \"%s\""
+--[[Translation missing --]]
+--[[ L["OPT_LABEL_LOVECRITTER"] = ""--]] 
 L["OPT_LABEL_MAINUI"] = "Modifiche Pannello Interfaccia Imprese"
 --[[Translation missing --]]
 --[[ L["OPT_LABEL_MISC"] = ""--]] 
@@ -3209,6 +3342,8 @@ L["OPT_LETITSNOWTIPS_TIP"] = "Se l'impresa è incompleta, aggiungere una riga ne
 --[[ L["OPT_MISSIONCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_MISSIONCOMPLETE_TIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_MISSIONCOMPLETE_WHENCOMPLETE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["OPT_PESTCONTROLTIPS"] = ""--]] 
 --[[Translation missing --]]
@@ -3297,6 +3432,10 @@ L["OPT_UI_HOLIDAYNOTICE_SUGGESTIONSTABONLY"] = "Solo nella scheda Suggerimenti"
 --[[ L["OPT_UI_REQUIREDFORMETATIP_TIP"] = ""--]] 
 L["OPT_UI_SERIESTIP"] = "Mostra tooltip per le imprese che fanno parte di una serie"
 L["OPT_UI_SERIESTIP_TIP"] = "Quando il cursore è su un'impresa che fa parte di una serie, mostra i nomi delle altre della serie e la relazione con loro."
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["OPT_VEHICLERIDDENTIPS_TIP"] = ""--]] 
 L["OPT_WELLREADTIPS"] = "Libro letto?"
 L["OPT_WELLREADTIPS_TIP"] = "Se l'impresa non è completata, aggiungi una linea nel tooltip nei libri che sono parte del criterio per indicare se devi leggerli o no."
 L["OPTPANEL_REMINDERTOOLTIPS"] = "Promemoria Tooltip"

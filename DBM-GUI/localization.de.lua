@@ -20,13 +20,13 @@ L.BossModLoad_now 			= [[Dieses Boss Mod ist nicht geladen. Es wird automatisch 
 
 
 
-L.PosX						= 'Position X'
-L.PosY						= 'Position Y'
+L.PosX						= "Position X"
+L.PosY						= "Position Y"
 
-L.MoveMe 					= 'Positionieren'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Abbrechen'
-L.Button_LoadMod 			= 'Lade Boss Mod'
+L.MoveMe 					= "Positionieren"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Abbrechen"
+L.Button_LoadMod 			= "Lade Boss Mod"
 L.Mod_Enabled				= "Aktiviere Boss Mod"
 L.Mod_Reset					= "Lade Standardeinstellungen"
 L.Reset 					= "Zurücksetzen"
@@ -298,8 +298,7 @@ L.AdvancedAutologBosses		= "Automatische Aufzeichnung von Bosskämpfen mit Addon
 L.LogOnlyNonTrivial			= "Nur Schlachtzugbosskämpfe der aktuellen Erweiterung aufzeichnen\n(ohne Schlachtzugsbrowser-/Dungeon-/Szenarienbosskämpfe/alte Spielinhalte)"
 --
 L.Area_3rdParty				= "Einstellungen für Addons von Drittanbietern"
-L.ShowBBOnCombatStart		= "Führe bei Kampfbeginn eine \"BigBrother\"-Buffprüfung durch"
-L.BigBrotherAnnounceToRaid	= "Verkünde Ergebnis der \"BigBrother\"-Buffprüfung zum Schlachtzug"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Einstellungen für Einladungen"
 L.AutoAcceptFriendInvite	= "Automatisch Gruppeneinladungen von Freunden akzeptieren"
 L.AutoAcceptGuildInvite		= "Automatisch Gruppeneinladungen von Gildenmitgliedern akzeptieren"

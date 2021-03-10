@@ -166,6 +166,7 @@ end
 local currentGuildName
 
 local function OnPlayerGuildUpdate()
+
 	-- at login this event is called between OnEnable and PLAYER_ALIVE, where GetGuildInfo returns a wrong value
 	-- however, the value returned here is correct
 	if IsInGuild() and not currentGuildName then		-- the event may be triggered multiple times, and GetGuildInfo may return incoherent values in subsequent calls, so only save if we have no value.
@@ -187,7 +188,7 @@ local function OnPlayerGuildUpdate()
 					guildKey = GetKey(currentGuildName, longName)
 				end
 			end
-
+			
 			-- guild key may be nil if the character is on a different realm than his guild, and he never logged on to that server
 			-- .. so the long realm name is unknown ..
 			if guildKey then
@@ -498,14 +499,6 @@ function addon:GetThisGuildKey()
 	if not longName then return end
 	
 	return format("%s.%s.%s", THIS_ACCOUNT, longName, guild)
-end
-
--- Used by Altoholic_Guild, only for guilds on the same account and realm as the current player
-function addon:GetGuildKeyByGuildName(guildName)
-    local longName = addon:GetLongRealmName(GetRealmName())
-    if not longName then return end
-    
-   	return format("%s.%s.%s", THIS_ACCOUNT, longName, guildName) 
 end
 
 function addon:GetCharacter(name, realm, account)
@@ -864,7 +857,8 @@ function addon:SetLongRealmName(realm, name)
 end
 
 function addon:GetLongRealmName(realm)
-	return (realm) and addon.db.global.ShortToLongRealmNames[realm] or (realm)
+	-- 2021-01-21 : the 'or realm' is mandatory to properly return the info of connected realms
+	return (realm) and addon.db.global.ShortToLongRealmNames[realm] or realm
 end
 
 function addon:GetRealmsConnectedWith(realm)
@@ -885,11 +879,36 @@ function addon:GetRealmsConnectedWith(realm)
 	return out
 end
 
--- *** Utility ***
-function addon:GetSecondsUntilDailyReset()
-    local seconds = C_DateAndTime.GetSecondsUntilWeeklyReset()
-    while seconds > 86400 do
-        seconds = seconds - 86400
-    end
-    return seconds
+-- *** Global Utility Functions ***
+function addon:GetHashSize(hash)
+	local count = 0
+	
+	for _, _ in pairs(hash) do
+		count = count + 1
+	end
+	
+	return count
+end
+
+function addon:HashToSortedArray(hash)
+	local array = {}
+	
+	for k, _ in pairs(hash) do
+		table.insert(array, k)			-- simply insert every entry into an array ..
+	end
+	table.sort(array)						-- .. then sort it
+	
+	return array
+end
+
+function addon:SortedArrayClone(array)
+	-- Clone an array and sort it, useful to be sure the original array is unmodified
+	local clone = {}
+	
+	for _, v in pairs(array) do
+		table.insert(clone, v)
+	end
+	table.sort(clone)
+	
+	return clone
 end

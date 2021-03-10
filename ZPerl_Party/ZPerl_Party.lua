@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -696,9 +696,9 @@ end
 -- UpdatePhaseIndicators
 local function UpdatePhasingDisplays(self)
 	local unit = self.partyid
-	local inPhase = not IsClassic and UnitPhaseReason(unit) == nil
+	local inPhase = not IsClassic and UnitPhaseReason(unit)
 
-	if ( inPhase or not UnitExists(unit) or not UnitIsConnected(unit)) then
+	if ( not inPhase or not UnitExists(unit) or not UnitIsConnected(unit)) then
 		self.phasingIcon:Hide()
 	else
 		self.phasingIcon:Show()

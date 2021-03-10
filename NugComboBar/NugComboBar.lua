@@ -28,7 +28,17 @@ local GetComboPoints = dummy
 --- Compatibility with Classic
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsInPetBattle = isClassic and function() end or C_PetBattles.IsInBattle
-local GetSpecialization = isClassic and function() return nil end or _G.GetSpecialization
+
+local function GetSpecializationWithFallback()
+    local spec = _G.GetSpecialization()
+    if spec == 5 then -- spec below lvl 10
+        return 1
+        -- windwalker 3
+    end
+    return spec
+end
+
+local GetSpecialization = isClassic and function() return nil end or GetSpecializationWithFallback
 
 local configs = {}
 local currentConfigName
@@ -84,7 +94,7 @@ local defaults = {
             DEATHKNIGHT = { "Runes", "Runes", "Runes" },
             MAGE = { "ArcaneCharges", "Fireblast", "Icicles" },
             WARRIOR = { "Disabled", "Meatcleaver", "ShieldBlock" },
-            SHAMAN = { "Icefury", "MaelstromWeapon", "Disabled" },
+            SHAMAN = { "Icefury", "MaelstromWeapon", "Undulation" },
             HUNTER = { "Disabled", "Disabled", "Disabled" },
             PRIEST = { "Disabled", "Disabled", "Disabled" },
         },
@@ -112,9 +122,11 @@ local defaults = {
         frameparent = nil, -- for SetParent
         scale = 1.3,
         showEmpty = false,
+        enableFullColor = false,
         hideSlowly = true,
         colors = {
             ['*'] = {1, 0.33, 0.74}, -- points
+            ["full"] = { 1, 0.7, 0.2 },
             ["bar1"] = { 0.9,0.1,0.1 },
             ["bar2"] = { 0.71, 0.16, 0 },
             ["layer2"] = { 0.74, 0.06, 0 },
@@ -130,6 +142,7 @@ local defaults = {
         colors3d = true,
         showAlways = false,
         onlyCombat = false,
+        secondLayer = true,
         disableProgress = false,
         cooldownOnTop = false,
         chargeCooldown = true,
@@ -494,12 +507,21 @@ function NugComboBar:SelectPoint(i)
     local point = self:GetPoint(i)
     if not point.Select then return end
     point:Select()
+    point.isSelected = true
+    self:Update()
 end
 
 function NugComboBar:DeselectAllPoints()
+    for i = 1, self.MAX_POINTS do
+        local point = self.p[i]
+        if point.isSelected then
+            AnticipationOut(point, i)
+        end
+    end
     for i, point in ipairs(self.point) do
         if point.Deselect then
             point:Deselect()
+            point.isSelected = nil
         end
     end
 end
@@ -568,36 +590,50 @@ function NugComboBar:Update(unit, ...)
             local runeIndex, isEnergize = ...
             self:UpdateRunes(runeIndex, isEnergize)
         else
+            local isFull = comboPoints == self.MAX_POINTS
     	    for i = 1, self.MAX_POINTS do
-    	        local point = self.p[i]
+                local point = self.p[i]
+
+                if self.db.profile.enableFullColor then
+                    local r,g,b = unpack(NugComboBar:GetColor(isFull and "full" or i))
+                    point:SetColor(r,g,b)
+                end
+
     	        if i <= comboPoints then
-    	            point:Activate(animationLevel)
+                    point:Activate(animationLevel)
+                    if flags.secondLayer then
+                        if point.isSelected then
+                            AnticipationIn(point, i)
+                        end
+                    end
     	        end
     	        if i > comboPoints then
     	            point:Deactivate(animationLevel)
     	        end
 
-    	        if secondLayerPoints then -- Anticipation stuff
-    	            if i <= secondLayerPoints then
-    	                if  (point.currentPreset and point.currentPreset ~= profile.preset3dlayer2)
-    	                    or
-    	                    (not point.anticipationColor) then
+                if flags.secondLayer then
+                    if secondLayerPoints then -- Anticipation stuff
+                        if i <= secondLayerPoints then
+                            if  (point.currentPreset and point.currentPreset ~= profile.preset3dlayer2)
+                                or
+                                (not point.anticipationColor) then
 
-    	                    point:Reappear(AnticipationIn, i)
-    	                end
-    	            else
-    	                if  (point.currentPreset and point.currentPreset ~= profile.preset3d)
-    	                    or
-    	                    (point.anticipationColor) then
+                                point:Reappear(animationLevel, AnticipationIn, i)
+                            end
+                        else
+                            if  (point.currentPreset and point.currentPreset ~= profile.preset3d)
+                                or
+                                (point.anticipationColor) then
 
-    	                    if i <= comboPoints then
-    	                        point:Reappear(AnticipationOut, i)
-    	                    else
-    	                        AnticipationOut(point, i)
-    	                    end
-    	                end
-    	            end
-    	        end
+                                if i <= comboPoints then
+                                    point:Reappear(animationLevel, AnticipationOut, i)
+                                else
+                                    AnticipationOut(point, i)
+                                end
+                            end
+                        end
+                    end
+                end
     	    end
         end
 
@@ -982,9 +1018,9 @@ NugComboBar.Commands = {
         NugComboBar.forceHidden = false
         NugComboBar:PLAYER_TARGET_CHANGED()
     end,
-    -- ["secondlayer"] = function(v)
-    --     NugComboBar.db.profile.secondLayer = not NugComboBar.db.profile.secondLayer
-    -- end,
+    ["secondlayer"] = function(v)
+        NugComboBar.db.profile.secondLayer = not NugComboBar.db.profile.secondLayer
+    end,
     ["toggleprogress"] = function(v)
         NugComboBar.db.profile.disableProgress = not NugComboBar.db.profile.disableProgress
         if NugComboBar.db.profile.disableProgress then

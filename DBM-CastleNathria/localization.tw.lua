@@ -17,8 +17,8 @@ local L
 L= DBM:GetModLocalization(2428)
 
 L:SetOptionLocalization({
-	SortDesc 				= "按最高減益堆疊來排序$spell:334755的訊息框架。（而不是最低）",
-	ShowTimeNotStacks		= "在$spell:334755上顯示剩餘時間，而不是堆疊數。"
+	SortDesc 				= "使用降序排列$spell:334755的減益層數訊息框架。",
+	ShowTimeNotStacks		= "在$spell:334755上顯示剩餘時間代替層數。"
 })
 
 ---------------------------
@@ -37,14 +37,14 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2420)
 
 L:SetTimerLocalization{
-	timerDesiresContainer		= "慾望滿了",
-	timerBottledContainer		= "瓶裝滿了",
-	timerSinsContainer			= "罪孽滿了",
-	timerConcentrateContainer	= "濃縮滿了"
+	timerDesiresContainer		= "慾望滿",
+	timerBottledContainer		= "瓶裝滿",
+	timerSinsContainer			= "罪惡滿",
+	timerConcentrateContainer	= "濃縮滿"
 }
 
 L:SetOptionLocalization({
-	timerContainers				= "顯示計時器，以顯示容器填充進度和直至充滿的剩餘時間"
+	timerContainers2			= "顯示容器填充進度和充滿剩餘時間的計時器"
 })
 
 ---------------------------
@@ -60,7 +60,11 @@ L:SetOptionLocalization({
 ---------------------------
 --  Stoneborne Generals --
 ---------------------------
---L= DBM:GetModLocalization(2425)
+L= DBM:GetModLocalization(2425)
+
+L:SetOptionLocalization({
+	ExperimentalTimerCorrection	= "在其他技能將法術排入佇列時自動調整計時器"
+})
 
 ---------------------------
 --  Sire Denathrius --
@@ -68,7 +72,7 @@ L:SetOptionLocalization({
 --L= DBM:GetModLocalization(2424)
 
 L:SetMiscLocalization({
-	--CrimsonSpawn	= "Crimson Cabalists answer the call of Denathrius."
+	CrimsonSpawn	= "赤紅秘術師回應了戴納瑟斯的呼喚。"
 })
 
 -------------

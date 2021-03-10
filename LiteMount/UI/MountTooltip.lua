@@ -2,13 +2,15 @@
 
   LiteMount/UI/MountsPreviewTooltip.lua
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
 local _, LM = ...
 
---[[--------------------------------------------------------------------------]]--
+local L = LM.Localize
+
+--[[------------------------------------------------------------------------]]--
 
 LiteMountPreviewMixin = {}
 
@@ -43,8 +45,19 @@ function LM.ShowMountTooltip(self, m)
         GameTooltip:SetSpellByID(m.spellID)
     end
 
-    GameTooltipTextRight2:SetText(ID.." "..m.spellID)
-    GameTooltipTextRight2:Show()
+    -- GameTooltip:Show()
+
+    GameTooltip:AddLine(" ")
+
+    if m.mountID then
+        GameTooltip:AddLine("|cffffffff"..ID..":|r "..tostring(m.mountID))
+    end
+
+    GameTooltip:AddLine("|cffffffff"..STAT_CATEGORY_SPELL..":|r "..tostring(m.spellID))
+
+    if m.family then
+        GameTooltip:AddLine("|cffffffff"..L.LM_FAMILY..":|r "..m.family)
+    end
 
     if m.description then
         GameTooltip:AddLine(" ")

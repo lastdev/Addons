@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2416, "DBM-Party-Shadowlands", 5, 1186)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200908175403")
+mod:SetRevision("20210123235530")
 mod:SetCreatureID(162058)
 mod:SetEncounterID(2356)
 
@@ -16,10 +16,14 @@ mod:RegisterEventsInCombat(
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, do more with dark stride if targetting possible
+--[[
+ability.id = 324205 and type = "begincast"
+ or ability.id = 324148 and type = "cast"
+ or ability.id = 334485 and (type = "applybuff" or type = "removebuff" or type = "removedebuff" or type = "applydebuff")
+ --]]
 --local warnBlackPowder				= mod:NewTargetAnnounce(257314, 4)
 
-local specWarnDarkStride			= mod:NewSpecialWarningTaunt(324148, nil, nil, nil, 1, 2)
+--local specWarnDarkStride			= mod:NewSpecialWarningTaunt(324148, nil, nil, nil, 1, 2)
 local specWarnBlindingFlash			= mod:NewSpecialWarningDodge(324205, nil, nil, nil, 2, 2)
 local specWarnRecharge				= mod:NewSpecialWarningDodge(334485, nil, nil, nil, 2, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
@@ -29,9 +33,9 @@ local timerBlindingFlashCD			= mod:NewCDTimer(21.8, 324205, nil, nil, nil, 3)
 local timerRechargeCD				= mod:NewCDTimer(15.8, 334485, nil, nil, nil, 6)
 
 function mod:OnCombatStart(delay)
-	timerDarkStrideCD:Start(8.4-delay)
-	timerBlindingFlashCD:Start(12-delay)
-	timerRechargeCD:Start(39.9-delay)
+	timerDarkStrideCD:Start(10.1-delay)
+	timerBlindingFlashCD:Start(15.7-delay)
+	timerRechargeCD:Start(44.9-delay)--SUCCESS/APPLIED
 end
 
 function mod:SPELL_CAST_START(args)
@@ -46,8 +50,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 324148 then
-		specWarnDarkStride:Show(args.destName or "Unknown")
-		specWarnDarkStride:Play("tauntboss")
+--		specWarnDarkStride:Show(args.destName or "Unknown")
+--		specWarnDarkStride:Play("tauntboss")
 		timerDarkStrideCD:Start()
 	end
 end

@@ -687,7 +687,6 @@ L["Warlock Set"] = "Set de Brujo"
 L["Warlords Deck"] = "Baraja de Señores de la guerra"
 L["Warn when mail expires in less days than this value"] = "Advertir cuando el correo expira en menos días que los indicados"
 L["Warrior Set"] = "Set de Guerrero"
-L["War Campaign Missions"] = "Misiones de Campaña de Guerra"
 L["Weapons"] = "Armas"
 L["Weaponsmith"] = "Forjador de Armas"
 L[ [=[When |cFFFF0000disabled|cFFFFFFFF, all requests will be automatically rejected.
@@ -728,8 +727,3 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 L["Zelemar the Wrathful"] = "Zelemar El Colérico"
 L["Zone"] = "Zona"
 
-L["will be returned upon expiry"] = "TRANSLATION MISSING"
-L["CLOSEST_RETURN_IN_PATTERN"] = "TRANSLATION MISSING %s" -- %s will be filled in by [# hours # minutes]
-L["CLOSEST_DELETION_IN_PATTERN"] = "TRANSLATION MISSING %s" -- ^
-L["MAIL_WILL_BE_DELETED_PATTERN"] = "|cFF00FF00%d|cFFFFFFFF will be |cFFFF0000deleted|cFFFFFFFF upon expiry"
-L["Mails found:"] = "TRANSLATION MISSING"

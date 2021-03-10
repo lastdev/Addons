@@ -44,7 +44,7 @@ local BottomLevelNames = {
 
 local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000, 43000 }
 
-local BF = LibStub("LibBabble-Faction-ForAltoholic-3.0"):GetUnstrictLookupTable()
+local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
 
 --[[	*** Faction UIDs ***
 These UIDs have 2 purposes: 
@@ -96,8 +96,8 @@ local factions = {
 	{ id = 922, name = BF["Tranquillien"] },
 	{ id = 589, name = BF["Wintersaber Trainers"] },
 	{ id = 270, name = BF["Zandalar Tribe"] },
-    
-    -- TBC
+
+	-- The Burning Crusade
 	{ id = 1012, name = BF["Ashtongue Deathsworn"] },
 	{ id = 942, name = BF["Cenarion Expedition"] },
 	{ id = 933, name = BF["The Consortium"] },
@@ -117,8 +117,8 @@ local factions = {
 	{ id = 989, name = BF["Keepers of Time"] },
 	{ id = 990, name = BF["The Scale of the Sands"] },
 	{ id = 967, name = BF["The Violet Eye"] },
-    
-    -- WOTLK
+
+	-- Wrath of the Lich King
 	{ id = 1106, name = BF["Argent Crusade"] },
 	{ id = 1090, name = BF["Kirin Tor"] },
 	{ id = 1073, name = BF["The Kalu'ak"] },
@@ -190,7 +190,7 @@ local factions = {
 	{ id = 1435, name = BF["Shado-Pan Assault"] },
 	{ id = 1440, name = BF["Darkspear Rebellion"] },
 	{ id = 1492, name = GetFactionInfoByID(1492) },		-- BF["Emperor Shaohao"]
-	
+
 	-- Warlords of Draenor
 	{ id = 1515, name = GetFactionInfoByID(1515) },		-- Arrakoa Outcasts
 	{ id = 1731, name = GetFactionInfoByID(1731) },		-- Council of Exarchs
@@ -204,7 +204,7 @@ local factions = {
 	{ id = 1848, name = GetFactionInfoByID(1848) },		-- Vol'jin's Headhunters
 	{ id = 1849, name = GetFactionInfoByID(1849) },		-- Order of the Awakened
 	{ id = 1850, name = GetFactionInfoByID(1850) },		-- The Saberstalkers
-	
+
 	-- Legion
 	{ id = 1900, name = GetFactionInfoByID(1900) },		-- Court of Farondis
 	{ id = 1883, name = GetFactionInfoByID(1883) },		-- Dreamweavers
@@ -222,8 +222,8 @@ local factions = {
 	{ id = 2100, name = GetFactionInfoByID(2100) }, 	-- Corbyn
 	{ id = 2102, name = GetFactionInfoByID(2102) }, 	-- Impus
 	{ id = 2098, name = GetFactionInfoByID(2098) }, 	-- Keeper Raynae
-    { id = 2135, name = GetFactionInfoByID(2135) },     -- Chromie
-	
+	{ id = 2135, name = GetFactionInfoByID(2135) }, 	-- Chromie
+
 	-- Battle for Azeroth
 	{ id = 2159, name = GetFactionInfoByID(2159) },		-- A  - 7th Legion
 	{ id = 2164, name = GetFactionInfoByID(2164) },		-- AH - Champions of Azeroth
@@ -235,18 +235,21 @@ local factions = {
 	{ id = 2163, name = GetFactionInfoByID(2163) },		-- AH - Tortollan Seekers
 	{ id = 2158, name = GetFactionInfoByID(2158) },		-- H  - Voldunai
 	{ id = 2103, name = GetFactionInfoByID(2103) },		-- H  - Zandalari Empire
-	{ id = 2400, name = BF["Waveblade Ankoan"] },		-- A - Waveblade Ankoan
-    { id = 2373, name = BF["The Unshackled"] },         -- H - The Unshackled
+	{ id = 2400, name = BF["Waveblade Ankoan"] },		-- A  - Waveblade Ankoan
+	{ id = 2373, name = BF["The Unshackled"] },			-- H  - The Unshackled
 	{ id = 2391, name = GetFactionInfoByID(2391) },		-- Rustbolt Resistance
 	{ id = 2415, name = GetFactionInfoByID(2415) },		-- 8.3 Rajani
 	{ id = 2417, name = GetFactionInfoByID(2417) },		-- 8.3 Uldum Accord
-    { id = 2395, name = GetFactionInfoByID(2395) },     -- Honeyback Hive
-    
-    -- Shadowlands
-	{ id = 2410, name = GetFactionInfoByID(2410) },		                  -- Maldraxxus / 
-	{ id = 2422, name = GetFactionInfoByID(2422) },		                  -- Ardenweald /
-	{ id = 2413, name = GetFactionInfoByID(2413) },		                  -- Revendreth /
-    { id = 2407, name = GetFactionInfoByID(2407) or "The Ascended" },	  -- The Ascended
+
+	-- Shadowlands (Source : https://www.wowhead.com/factions/shadowlands)
+	{ id = 2407, name = GetFactionInfoByID(2407) or BF["The Ascended"] },			-- Zone: Bastion
+	{ id = 2410, name = GetFactionInfoByID(2410) or BF["The Undying Army"]}, 		-- Zone : Maldraxxus
+	{ id = 2465, name = GetFactionInfoByID(2465) or BF["The Wild Hunt"]},			-- Zone : Ardenweald
+	{ id = 2413, name = GetFactionInfoByID(2413) or BF["Court of Harvesters"] },	-- Zone : Revendreth
+	{ id = 2432, name = GetFactionInfoByID(2432) },     -- Ve'nari (The Maw)
+	{ id = 2439, name = GetFactionInfoByID(2439) },     -- The Avowed (Halls of Attonement)
+	{ id = 2464, name = GetFactionInfoByID(2464) },     -- Court of Night (Ardenweald)
+	{ id = 2463, name = GetFactionInfoByID(2463) },     -- Marasimus (Ardenweald)
 }
 
 local FactionUIDsRev = {}
@@ -340,7 +343,7 @@ local function ScanReputations()
 	
 	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
 		local name, _, _, _, _, earned, _, _, _, _, _, _, _, factionID = GetFactionInfo(i)
-		if (earned ~= nil) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
+		if (earned and earned > 0) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
 			if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
 				-- check paragon factions
 				if (C_Reputation.IsFactionParagon(factionID)) then

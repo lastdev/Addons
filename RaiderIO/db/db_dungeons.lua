@@ -3,99 +3,67 @@ local _, ns = ...
 -- Dungeon listing sorted by id
 ns.dungeons = {
 	[1] = {
-		["id"] = 8064,
-		["keystone_instance"] = 247,
-		["instance_map_id"] = 1594,
-		["lfd_activity_ids"] = { 509, 510, 511, 540, 646 },
-		["name"] = "The MOTHERLODE!!",
-		["shortName"] = "ML"
+		["id"] = 12831,
+		["keystone_instance"] = 378,
+		["instance_map_id"] = 2287,
+		["lfd_activity_ids"] = { 696, 697, 698, 699 },
+		["name"] = "Halls of Atonement",
+		["shortName"] = "HOA",
 	},
 	[2] = {
-		["id"] = 9028,
-		["keystone_instance"] = 244,
-		["instance_map_id"] = 1763,
-		["lfd_activity_ids"] = { 499, 500, 501, 502, 543 },
-		["name"] = "Atal'Dazar",
-		["shortName"] = "AD"
+		["id"] = 12837,
+		["keystone_instance"] = 381,
+		["instance_map_id"] = 2285,
+		["lfd_activity_ids"] = { 708, 709, 710, 711 },
+		["name"] = "Spires of Ascension",
+		["shortName"] = "SOA",
 	},
 	[3] = {
-		["id"] = 9164,
-		["keystone_instance"] = 245,
-		["instance_map_id"] = 1754,
-		["lfd_activity_ids"] = { 516, 517, 518, 519, 539 },
-		["name"] = "Freehold",
-		["shortName"] = "FH"
+		["id"] = 12841,
+		["keystone_instance"] = 382,
+		["instance_map_id"] = 2293,
+		["lfd_activity_ids"] = { 716, 717, 718, 719 },
+		["name"] = "Theater of Pain",
+		["shortName"] = "TOP",
 	},
 	[4] = {
-		["id"] = 9327,
-		["keystone_instance"] = 246,
-		["instance_map_id"] = 1771,
-		["lfd_activity_ids"] = { 524, 525, 526, 527, 537 },
-		["name"] = "Tol Dagor",
-		["shortName"] = "TD"
+		["id"] = 12842,
+		["keystone_instance"] = 380,
+		["instance_map_id"] = 2284,
+		["lfd_activity_ids"] = { 704, 705, 706, 707 },
+		["name"] = "Sanguine Depths",
+		["shortName"] = "SD",
 	},
 	[5] = {
-		["id"] = 9354,
-		["keystone_instance"] = 353,
-		["instance_map_id"] = 1822,
-		["lfd_activity_ids"] = { 532, 533, 534, 535, 658, 659 },
-		["name"] = "Siege of Boralus",
-		["shortName"] = "SIEGE"
+		["id"] = 12916,
+		["keystone_instance"] = 376,
+		["instance_map_id"] = 2286,
+		["lfd_activity_ids"] = { 712, 713, 714, 715 },
+		["name"] = "The Necrotic Wake",
+		["shortName"] = "NW",
 	},
 	[6] = {
-		["id"] = 9391,
-		["keystone_instance"] = 251,
-		["instance_map_id"] = 1841,
-		["lfd_activity_ids"] = { 506, 507, 508, 541, 644 },
-		["name"] = "The Underrot",
-		["shortName"] = "UNDR"
+		["id"] = 13228,
+		["keystone_instance"] = 379,
+		["instance_map_id"] = 2289,
+		["lfd_activity_ids"] = { 688, 689, 690, 691 },
+		["name"] = "Plaguefall",
+		["shortName"] = "PF",
 	},
 	[7] = {
-		["id"] = 9424,
-		["keystone_instance"] = 248,
-		["instance_map_id"] = 1862,
-		["lfd_activity_ids"] = { 528, 529, 530, 531, 536 },
-		["name"] = "Waycrest Manor",
-		["shortName"] = "WM"
+		["id"] = 13309,
+		["keystone_instance"] = 377,
+		["instance_map_id"] = 2291,
+		["lfd_activity_ids"] = { 692, 693, 694, 695 },
+		["name"] = "De Other Side",
+		["shortName"] = "DOS",
 	},
 	[8] = {
-		["id"] = 9525,
-		["keystone_instance"] = 252,
-		["instance_map_id"] = 1864,
-		["lfd_activity_ids"] = { 520, 521, 522, 523, 538 },
-		["name"] = "Shrine of the Storm",
-		["shortName"] = "SOTS"
-	},
-	[9] = {
-		["id"] = 9526,
-		["keystone_instance"] = 249,
-		["instance_map_id"] = 1762,
-		["lfd_activity_ids"] = { 512, 513, 514, 515, 660, 661 },
-		["name"] = "Kings' Rest",
-		["shortName"] = "KR"
-	},
-	[10] = {
-		["id"] = 9527,
-		["keystone_instance"] = 250,
-		["instance_map_id"] = 1877,
-		["lfd_activity_ids"] = { 503, 504, 505, 542, 645 },
-		["name"] = "Temple of Sethraliss",
-		["shortName"] = "TOS"
-	},
-	[11] = {
-		["id"] = 800001,
-		["keystone_instance"] = 369,
-		["instance_map_id"] = 2097,
-		["lfd_activity_ids"] = { 679, 682 },
-		["name"] = "Mechagon Junkyard",
-		["shortName"] = "YARD"
-	},
-	[12] = {
-		["id"] = 800002,
-		["keystone_instance"] = 370,
-		["instance_map_id"] = 2097,
-		["lfd_activity_ids"] = { 683, 684 },
-		["name"] = "Mechagon Workshop",
-		["shortName"] = "WORK"
+		["id"] = 13334,
+		["keystone_instance"] = 375,
+		["instance_map_id"] = 2290,
+		["lfd_activity_ids"] = { 700, 701, 702, 703 },
+		["name"] = "Mists of Tirna Scithe",
+		["shortName"] = "MISTS",
 	}
 }

@@ -1,5 +1,221 @@
 # Changelog
 
+## Changed in v90005.0
+
+* Avoid a new issue which caused errors when showing/hiding the popup in 9.0.5 (had to remove some normal API calls here, so there might be subtle issues with the mouse working on a hidden-in-combat popup until this is resolved on Blizzard's end)
+* Popups have been rewritten!
+    * They're now a stack, rather than a new one immediately replacing the current popup. (If you prefer the old behavior, you can set the stack size to 1 in the options and it'll be about the same.)
+    * They should overlap less windows now.
+* Don't play multiple sounds at once. This was particularly bad for rares like the Beasts of Bastion, which simultaneously played the announcement four times, making it way too loud.
+* Trim the final awwwk off of Ikiss' loot announcement
+* Make help tooltips more compact in general
+* Add mobs that trigger via the yell for Sire Ladinas
+* Ability to toggle the map overlay per-zone by shift-clicking on the broker icon on the world map
+* Add various missing questids and improve loot
+
+## Changed in v90002.15.1
+
+* The broker tooltip "regular loot" icon will now show a checkmark if you have all the quests/appearances your character can get from that loot
+* Fix some mounts incorrectly showing as collected
+* Fix Tomb Burster questid
+
+## Changed in v90002.15
+
+* Transmog appearances can now be counted as part of mob completion. I've disabled this by default for now, but it's in "settings > outputs > ...include transmog appearances" as a modifier to the existing "got the loot" setting.
+* More updates to loot data
+* Add It's Always Sinny In Revendreth to tracked achievements
+* Fix a number of mobs appearing in Durotar that shouldn't have
+* Fix restricted items (covenant/class-specific) counting towards loot completion if you couldn't get them
+* Fix restriction labels on the popup tooltip going outside the tooltip borders
+
+## Changed in v90002.14
+
+* A huge amount of loot has been added, across all expansions. I've only added unique-to-that-mob loot
+* Now support loot that has an associated quest, and count it for completion purposes. I'm looking at you, Mechagon blueprints
+* Update tameable-mob information, which was very out of date, and show the icon for the type of tameable mob in the broker tooltip
+* Fix item-type headers not showing in the loot summary part of tooltips
+
+## Changed in v90002.13
+
+* Loot can now be flagged as being covenant/class-specific, and some is; Blizzard is quiet about what counts, so we're going by wowhead comments here, expect further updates
+* Checkmark on the popup loot icon was missing if you had all the knowable loot
+* Stop an error when mousing over the loot icon on the popup for mobs with more than 3 items that'd have to be previewed
+* Sharing a link to chat could fail if you were in an area where the general channel couldn't be identified; it'll fall back properly to opening the chatbox now
+* Stop the map overlay from pinging multiple mobs at once if a vignette was visible when you first logged in
+* Apparently I missed migrating Cataclysm loot data to the new format a few releases back, so it wasn't properly showing mounts and pets
+
+## Changed in v90002.12
+
+* Better vignette scanning options:
+    * You can ignore specific vignettes, including loot vignette (see options > scanning > vignettes > ignore)
+    * You can ignore entire categories of vignette by their icon (in particular, the white-skull for Maw bonus bosses may be of interest here...)
+* Fix Dead Blanchy's position
+* Add Fractured Faerie Tales achievement completion to tooltips
+
+## Changed in v90002.11
+
+* Don't try to draw routes if the map isn't visible (this caused some `y2 is nil` errors, if you saw those)
+* Add some more vignette ids to the Maw
+
+## Changed in v90002.10
+
+* Changed the way I was picking distinct colors for map icons
+* Fixed an issue where some people were having the minimap icons disabled when logging in
+* Fixed an issue where two mobs with identical coordinates wouldn't show up on the map
+* Add a few mob routes in Bastion
+
+## Changed in v90002.9
+
+* Can now show mob routes on the map. But I've not added much yet. So, if you want to see it, the Time Lost Proto-Drake is it for this release.
+* Avoid an error in the vignette scanner during certain zone transitions
+* There's now a crack-of-thunder sound included as an announcement option
+
+## Changed in v90002.8.1
+
+* Reverted the no-target-hunter-pet thing because it didn't work
+
+## Changed in v90002.8
+
+* Scanning macro improvements:
+    * Will no longer target hunter pets with the same name as a rare
+    * Zones with lots of rares will no longer be quietly truncated by the macro length limit, all rares will now be scanned
+* Improved chat scanning so we can catch the Sire Ladinas yell which comes from a different mob
+* Improved the detection of zones where we should restrict the range at which we scan for vignettes (no more going into caves in Ardenweald and having Ikiss yell at you suddenly)
+* Restrict all scanning in the Maw to visible-only, because of the rare-density there
+* Automatically shift the points in the map overlay so they try not to overlap each other
+* Range-extended vignettes now have smaller icons but easier mouseover tooltip targets
+* Broker tooltip anchor is adjusted to avoid overlapping the map
+* Include the Wild Hunting achievement
+* Various data updates in Shadowlands
+
+## Changed in v90002.7
+
+* In the mobs options, expose achievements so you can easily ignore/unignore every mob for a given achievement. Like, hypothetically, if you want to stop being notified about the Maw bonus bosses, you can quickly hide everything for "It’s About Sending a Message"
+* Split up the options for the map overlay: you can now control everything separately about minimap and worldmap pins
+* Changed the defaults for minimap pins so that their tooltips are less bulky
+* Added a central toggle for scanning for loot vignettes in the scan>vignette options, so you don't have to turn announcements off in several places if you don't want them.
+* Forbidding certain vignettes from being announced. I'm looking at you, Garrison Cache
+* Fixed the location of the Ascended Council in Bastion (thanks rainfordays!)
+* Filled out other mob locations / vignette ids
+* Updated some Maw loot
+
+## Changed in v90002.6
+
+* Click-to-ignore on the target popup didn't understand loot
+
+## Changed in v90002.5
+
+* Show alerts and popups when treasure vignettes appear on the map
+    * Haven't y'all missed Ikiss screaming about trinkets? Well, if you really haven't, there's sound options for this.
+* New option to only have vignettes trigger alerts when they actually become visible
+    * This is force-enabled in Ardenweald, because it has all vignettes viewable from the entire map for some reason
+* Change the behavior of the sound preferences: you can now separately toggle regular-mob sounds, mount-dropping sounds, boss sounds, and loot sounds without having to use the hack of setting the sound file to "None"
+* The overlay map pins were too sensitive, triggering the tooltip sooner than was ideal
+* Avoid tooltips for mobs with loot in the map overlay sticking around when they shouldn't
+* Avoid the tooltip on the loot window attached to the target popup overlapping the popup poorly
+* Avoid an error if you focus a mob that's in a zone with no route to you
+* Touch up some Warlords data
+
+## Changed in v90002.4
+
+* New minimal target popup look
+* Show unknowable loot attached to tooltips on the world map
+* Option to not set waypoints while you're dead (because it interferes with your corpse waypoint...)
+* Fix clicking the world map broker button to toggle map icons
+* Various loot data updates in Shadowlands
+
+## Changed in v90002.3
+
+* Include unknowable loot in tooltips
+    * Some of this is technically "knowable" in the transmog sense, but tracking that is complicated.
+    * You can go install [AppearanceTooltip](https://www.curseforge.com/wow/addons/appearancetooltip/) which'll integrate with the SilverDragon loot popups and show transmog-known.
+* Prime the loot cache when showing the world map or broker tooltip, so you see less "loading..." for items
+* Update a bunch of Shadowlands loot from new information
+* Unstable Memory in Bastion had a typo in its loot
+* Some fairly large behind the scenes changes to how the target popup is positioned, but what you should notice is:
+    * You can now scale the target popup in settings
+    * You can show an anchor for the target popup to see where it'll appear
+    * The popup position is saved per-profile rather than per character
+
+## Changed in v90002.2
+
+* Add the ability to toggle the map icons on/off by clicking the world map broker icon
+* Add a bunch of missing Shadowlands rares
+* Add achievements:
+    * Better to Be Lucky Than Dead (Maw)
+    * It's About Sending A Message (Maw)
+    * In The Mix (Maldraxxus)
+    * Bloodsport (Maldraxxus)
+* Vignette range extension is broken out into a sub-addon; it now has a better explanation of what's going on in the options, and lets you choose which types of vignette to range-extend
+* Lots of work on rewriting the loot system
+    * Some loot that's not mounts/toys/pets being visible
+    * Not much is added yet; I've got most known Shadowlands drops, and I fleshed out Mechagon for blueprints and Timeless Isle drops for now
+    * There's a new item in the broker tooltip to show if a rare has other known loot; click it to see a popup of that loot
+* When show the text alert for a rare, if we don't know its location (e.g. zone-wide mob yells) say that rather than just showing "0,0" for it
+* The chat scanning will now only announce rares that are known to exist in the current zone, and mobs you've added as custom mobs regardless of zone
+    * Death Rising caused a lot of false-positives for people running the old Icecrown instances...
+* In the broker tooltip, save space by showing tameable mobs with a hunter icon rather than text
+
+## Changed in v90002.1
+
+* Make sure the ping animation is stopped when the pin frames are reused
+* Remove the Death Rising rares, since the event is done
+* Fix up various Bastion mobs, including making sure they're flagged as being part of the achievement
+* A few past-expansion fixes: some missing positions and a toy in Pandaria, overlapping locations in Hyjal
+
+## Changed in v90002.0
+
+* This one is just a TOC bump, y'all
+
+## Changed in v90001.7
+
+* There's a ping highlight on the world map for:
+    * the last seen mob when you open the map (within 30 seconds of seeing it)
+    * a focused mob right when you focus it
+* Mobs on the map overlay can be shift-right-clicked to immediately hide them
+* Options for whether to show mobs on the edge of the minimap; by default, only focused ones are shown there
+* Mobs on the map which are completed but shown anyway get slightly smaller icons (the "stars" theme did this already, but now it's consistent)
+* The "ignore mobs that an alt has completed the achievement for" option was being ignored for mobs that had a vignette
+* Some mobs (Basten) couldn't be hidden from the map... but now they can!
+* Chat and vignette scanning now respect the "don't scan in instances" setting
+
+## Changed in v90001.6
+
+* Mobs in the broker tooltip now get click actions and informational tooltips
+    * Click a line to open the map with that mob focused
+    * Control-click a line to set a waypoint for the closest location for that mob
+    * Shift-click a line to link the closest location for that mob in chat
+    * Mousing over them triggers the highlights on the map, if it's open
+* Minimap pins update their focus state immediately
+* Fix a spawn location for Krik'thir the Gatewatcher
+
+## Changed in v90001.5
+
+* Refined waypoint options:
+    * Blizzard waypoints are now equivalent to TomTom/DBM, not just a fallback, and you can choose all/none of them independently
+    * Blizzard waypoints weren't being auto-removed on timeout correctly
+    * An error could happen on auto-removal if you had TomTom *and* DBM enabled simultaneously
+* Map overlay improvements:
+    * Hover over a mob to show a highlight over all locations for that mob on the map
+    * Click a pin (or the mob's name in the broker dropdown) to focus it so it always shows a highlight... now you can easily find a mob after seeing its name in the broker dropdown!
+    * Shift-click a pin to link to it in chat (using your target popup settings)
+    * Alt-click a pin to set a waypoint for it
+* Add notes on Death Rising rares about their spawn order
+* Fix a spawn location for Prince Keleseth
+
+## Changed in v90001.4
+
+* The Death Rising pre-launch rares in Icecrown are added temporarily; they won't actually spawn before the appropriate point in the event is reached
+* Improve shift-clicking the popup to add a chat link:
+    * New default: immediately send the link to the /general channel
+    * Which channel to send to can be configured
+    * Old behavior of just opening the default chatbox is available in options
+* Map icons no longer require HandyNotes
+* Right-clicking the LDB icon on the world map will immediately show the options for the map icons
+* Right-clicking the target popup to close it will now happen immediately in combat
+* Performance improvements when editing the mob ignore list
+* Galleon's chat announcement wasn't being noticed, because Chief Salyis isn't Galleon
+
 ## Changed in v90001.3
 
 * Improve shift-clicking the popup to add a chat link:

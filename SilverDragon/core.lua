@@ -4,12 +4,13 @@ local HBD = LibStub("HereBeDragons-2.0")
 
 local addon = LibStub("AceAddon-3.0"):NewAddon("SilverDragon", "AceEvent-3.0", "AceTimer-3.0", "AceConsole-3.0")
 SilverDragon = addon
+SilverDragon.NAMESPACE = ns -- for separate addons
 addon.events = LibStub("CallbackHandler-1.0"):New(addon)
 
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90001.3'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90005.0'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
@@ -41,15 +42,22 @@ do
 	Debug = addon.Debug
 end
 
-local mfloor, mpow, mabs = math.floor, math.pow, math.abs
-local tinsert, tremove = table.insert, table.remove
-local ipairs, pairs = ipairs, pairs
-local IsInInstance, GetCurrentMapAreaID, SetMapByID, SetMapToCurrentZone = IsInInstance, GetCurrentMapAreaID, SetMapByID, SetMapToCurrentZone
-local wowVersion, buildRevision, _, buildTOC = GetBuildInfo()
-
 BINDING_HEADER_SILVERDRAGON = "SilverDragon"
 _G["BINDING_NAME_CLICK SilverDragonPopupButton:LeftButton"] = "Target last found mob"
 _G["BINDING_NAME_CLICK SilverDragonMacroButton:LeftButton"] = "Scan for nearby mobs"
+
+addon.escapes = {
+	-- |TTexturePath:size1:size2:xoffset:yoffset:dimx:dimy:coordx1:coordx2:coordy1:coordy2|t
+	-- |A:atlas:height:width[:offsetX:offsetY]|a
+	-- leftClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:19:11:-1:0:512:512:9:67:227:306|t]],
+	-- rightClick = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:20:12:0:-1:512:512:9:66:332:411|t]],
+	leftClick = CreateAtlasMarkup("newplayertutorial-icon-mouse-leftbutton", 12, 15),
+	rightClick = CreateAtlasMarkup("newplayertutorial-icon-mouse-rightbutton", 12, 15),
+	keyDown = [[|TInterface\TUTORIALFRAME\UI-TUTORIAL-FRAME:0:0:0:-1:512:512:9:66:437:490|t]],
+	green = _G.GREEN_FONT_COLOR_CODE,
+	red = _G.RED_FONT_COLOR_CODE,
+}
+
 
 addon.datasources = {
 	--[[
@@ -173,20 +181,7 @@ function addon:OnInitialize()
 			always = {
 			},
 			ignore = {
-				[32435] = true, -- Vern
 				[64403] = true, -- Alani
-				[62346] = true, -- Galleon (spawns every 2 hourish)
---				[62346] = true, -- Oondasta (spawns every 2 hoursish now)
-				[123087] = true, -- Al'Abas in rogue class hall
-				--Throne of Thunder Weekly bosses
-				[70243] = true,--Agony and Anima (Archritualist Kelada)
-				[70238] = true,--Eyes of the Thunder King
-				[70249] = true,--Eyes of the Thunder King
-				[70440] = true,--Requiem for a Queen (Monara)
-				[70430] = true,--Rocks Fall, People Die (Rocky Horror)
-				[70429] = true,--Something Foul is Afoot (Flesh'rok the Diseased)
-				[70276] = true,--Taming the Tempest (No'ku Stormsayer)
-				[69843] = true,--Zao'cho the Wicked (Zao'cho)
 			},
 			ignore_datasource = {
 				-- "BurningCrusade" = true,
@@ -268,60 +263,6 @@ function addon:SetCustom(id, watch, quiet)
 	return true
 end
 
-do
-	local mobNameToId = {}
-	local questNameToId = {}
-
-	local cache_tooltip = CreateFrame("GameTooltip", "SDCacheTooltip", _G.UIParent, "GameTooltipTemplate")
-	cache_tooltip:SetOwner(_G.WorldFrame, "ANCHOR_NONE")
-	local function TextFromHyperlink(link)
-		cache_tooltip:ClearLines()
-		cache_tooltip:SetHyperlink(link)
-		local text = SDCacheTooltipTextLeft1:GetText()
-		if text and text ~= "" and text ~= UNKNOWN then
-			return text
-		end
-	end
-	function addon:NameForMob(id, unit)
-		if not self.db.locale.mob_name[id] then
-			local name = TextFromHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
-			if unit and not name then
-				name = UnitName(unit)
-			end
-			if name and name ~= UNKNOWNOBJECT then
-				self.db.locale.mob_name[id] = name
-			end
-		end
-		if self.db.locale.mob_name[id] then
-			mobNameToId[self.db.locale.mob_name[id]] = id
-		end
-		return self.db.locale.mob_name[id] or (mobdb[id] and mobdb[id].name)
-	end
-	function addon:IdForMob(name, zone)
-		if zone and mobNamesByZone[zone] and mobNamesByZone[zone][name] then
-			return mobNamesByZone[zone][name]
-		end
-		return mobNameToId[name]
-	end
-	function addon:NameForQuest(id)
-		if not self.db.locale.quest_name[id] then
-			-- TODO: after 9.0.1 this check can be removed
-			local name = C_QuestLog.GetTitleForQuestID and C_QuestLog.GetTitleForQuestID(id) or C_QuestLog.GetQuestInfo(id)
-			if name then
-				name = name:gsub("Vignette: ", "")
-				self.db.locale.quest_name[id] = name
-			end
-		end
-		if self.db.locale.quest_name[id] then
-			questNameToId[self.db.locale.quest_name[id]] = id
-		end
-		return self.db.locale.quest_name[id]
-	end
-	function addon:IdForQuest(name)
-		return questNameToId[name]
-	end
-end
-
 -- returns name, questid, vignette, tameable, last_seen, times_seen
 function addon:GetMobInfo(id)
 	if mobdb[id] then
@@ -395,10 +336,10 @@ function addon:GetMobLabel(id)
 	if not name then
 		return UNKNOWN
 	end
-	if not mobdb[id] then
+	if not (mobdb[id] and mobdb[id].variant) then
 		return name
 	end
-	return name .. (mobdb[id].variant and (" (" .. mobdb[id].variant .. ")") or "")
+	return name .. (" (" .. mobdb[id].variant .. ")")
 end
 
 do
@@ -426,6 +367,7 @@ do
 		globaldb.mob_seen[id] = time()
 		lastseen[id..zone] = time()
 		self.events:Fire("Seen", id, zone, x or 0, y or 0, is_dead, source, unit)
+		return true
 	end
 end
 do
@@ -480,89 +422,4 @@ function addon:CheckNearby()
 	if not zone then return end
 
 	self.events:Fire("Scan", zone)
-end
-
--- Utility:
-
-do
-	local valid_unit_types = {
-		Creature = true, -- npcs
-		Vehicle = true, -- vehicles
-	}
-	local function npcIdFromGuid(guid)
-		if not guid then return end
-		local unit_type, id = guid:match("(%a+)-%d+-%d+-%d+-%d+-(%d+)-.+")
-		if not (unit_type and valid_unit_types[unit_type]) then
-			return
-		end
-		return tonumber(id)
-	end
-	ns.IdFromGuid = npcIdFromGuid
-	function addon:UnitID(unit)
-		return npcIdFromGuid(UnitGUID(unit))
-	end
-	function addon:FindUnitWithID(id)
-		if self:UnitID('target') == id then
-			return 'target'
-		end
-		if self:UnitID('mouseover') == id then
-			return 'mouseover'
-		end
-		for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
-			if self:UnitID(nameplate.namePlateUnitToken) == id then
-				return nameplate.namePlateUnitToken
-			end
-		end
-		if IsInGroup() then
-			local prefix = IsInRaid() and 'raid' or 'party'
-			for i=1, GetNumGroupMembers() do
-				local unit = prefix .. i .. 'target'
-				if self:UnitID(unit) == id then
-					return unit
-				end
-			end
-		end
-	end
-end
-
-addon.round = function(num, precision)
-	return mfloor(num * mpow(10, precision) + 0.5) / mpow(10, precision)
-end
-
-function addon:FormatLastSeen(t)
-	t = tonumber(t)
-	if not t or t == 0 then return NEVER end
-	local currentTime = time()
-	local minutes = mfloor(((currentTime - t) / 60) + 0.5)
-	if minutes > 119 then
-		local hours = mfloor(((currentTime - t) / 3600) + 0.5)
-		if hours > 23 then
-			return mfloor(((currentTime - t) / 86400) + 0.5).." day(s)"
-		else
-			return hours.." hour(s)"
-		end
-	else
-		return minutes.." minute(s)"
-	end
-end
-
-addon.zone_names = setmetatable({}, {__index = function(self, mapid)
-	if not mapid then
-		return
-	end
-	local mapdata = C_Map.GetMapInfo(mapid)
-	if mapdata then
-		self[mapid] = mapdata.name
-		return mapdata.name
-	end
-end,})
-
--- Location
-
-function addon:GetCoord(x, y)
-	return floor(x * 10000 + 0.5) * 10000 + floor(y * 10000 + 0.5)
-end
-
-function addon:GetXY(coord)
-	return floor(coord / 10000) / 10000, (coord % 10000) / 10000
 end

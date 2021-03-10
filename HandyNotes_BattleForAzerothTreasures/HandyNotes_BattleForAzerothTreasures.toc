@@ -1,15 +1,35 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: HandyNotes: Battle for Azeroth Treasures
 ## Notes: Where are the hidden treasures in Battle For Azeroth?
 ## Author: Kemayo
-## Version: 1
+## Version: v16
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 297435
 ## SavedVariables: HandyNotes_BattleForAzerothTreasuresDB
 ## RequiredDeps: HandyNotes
 
 handler.lua
 config.lua
-Treasure.lua
-Rares.lua
+
+achievements\GetHekd.lua
+
+zones\KulTiras.lua
+zones\TiragardeSound.lua
+zones\StormsongValley.lua
+zones\Drustvar.lua
+
+zones\Zandalar.lua
+zones\Zuldazar.lua
+zones\Nazmir.lua
+zones\Voldun.lua
+
+zones\Darkshore.lua
+zones\ArathiHighlands.lua
+
+zones\Mechagon.lua
+zones\Nazjatar.lua
+
+zones\ValeOfEternalBlossoms.lua
+zones\Uldum.lua

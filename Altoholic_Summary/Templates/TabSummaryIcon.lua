@@ -14,18 +14,6 @@ local OPTION_TRADESKILL = "UI.Tabs.Summary.CurrentTradeSkill"
 
 -- ** Icon events **
 
-addon.ResetAllFilters = function()
-    addon:SetOption(OPTION_REALMS, 4)
-    addon:SetOption(OPTION_FACTIONS, 3)
-    addon:SetOption(OPTION_LEVELS, 1)
-    addon:SetOption(OPTION_LEVELS_MIN, 1)
-    addon:SetOption(OPTION_LEVELS_MAX, 120)
-    addon:SetOption(OPTION_CLASSES, 0)
-    addon:SetOption(OPTION_TRADESKILL, 0)
-    addon.Characters.InvalidateView()
-    addon.Summary:Update()
-end
-
 local function OnRealmFilterChange(frame)
 	addon:SetOption(OPTION_REALMS, frame.value)
 	addon.Characters:InvalidateView()
@@ -90,7 +78,6 @@ local locationLabels = {
 	format("%s %s(%s)", L["This realm"], colors.green, L["All accounts"]),
 	format("%s %s(%s)", L["All realms"], colors.green, L["This account"]),
 	format("%s %s(%s)", L["All realms"], colors.green, L["All accounts"]),
-    format("%s %s(%s)", L["All realms/accounts"], colors.green, L["Hide realms"]),
 }
 
 local function RealmsIcon_Initialize(frame, level)
@@ -118,7 +105,7 @@ local function LevelIcon_Initialize(frame, level)
 	local option = addon:GetOption(OPTION_LEVELS)
 	
 	frame:AddTitle(L["FILTER_LEVELS"])
-	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1)) -- Leaving this on 1-120 so players don't ask why characters they haven't logged into since Shadowlands are missing. Perhaps lower it in 9.1?
+	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1))
 	frame:AddTitle()
 	frame:AddButtonWithArgs("1-9", 2, OnLevelFilterChange, 1, 9, (option == 2))
 	frame:AddButtonWithArgs("10-19", 3, OnLevelFilterChange, 10, 19, (option == 3))
@@ -127,6 +114,10 @@ local function LevelIcon_Initialize(frame, level)
 	frame:AddButtonWithArgs("40-49", 6, OnLevelFilterChange, 40, 49, (option == 6))
 	frame:AddButtonWithArgs("50-59", 7, OnLevelFilterChange, 50, 59, (option == 7))
 	frame:AddButtonWithArgs("60", 8, OnLevelFilterChange, 60, 60, (option == 8))
+	frame:AddTitle()
+	frame:AddButtonWithArgs("1-44", 9, OnLevelFilterChange, 1, 44, (option == 9))
+	frame:AddButtonWithArgs(format("45+ %s(%s)", colors.green, EXPANSION_NAME7), 10, OnLevelFilterChange, 45, 60, (option == 10))
+	frame:AddButtonWithArgs(format("50+ %s(%s)", colors.green, EXPANSION_NAME8), 11, OnLevelFilterChange, 50, 60, (option == 11))
 	frame:AddCloseMenu()
 end
 
@@ -178,17 +169,17 @@ local function ClassIcon_Initialize(frame, level)
 			key, OnClassFilterChange, nil, (option == key)
 		)
 	end
-    
-    frame:AddTitle()
-    local armorClassNames = {"Cloth", "Leather", "Mail", "Plate"}
-    local armorClassEnums = {LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_PLATE}
-    for i = 1, 4 do
-        local armorClassName = armorClassNames[i]
-        local armorClassCategoryEnum = armorClassEnums[i]
-        frame:AddButton(GetItemSubClassInfo(LE_ITEM_CLASS_ARMOR, armorClassCategoryEnum), armorClassName, OnClassFilterChange, nil, (option == armorClassName))
-    end
+	frame:AddTitle()
 	
-    frame:AddCloseMenu()
+	-- TO DO: ok here, but finish filtering in characters.lua
+	local armorTypes = addon.Enum.ArmorTypes
+	
+	-- Add the armor types
+	-- for i = 1, #armorTypes do
+		-- frame:AddButton(armorTypes[i], armorTypes[i], OnClassFilterChange, nil, (option == armorTypes[i]))	
+	-- end
+	
+	frame:AddCloseMenu()
 end
 
 local function AltoholicOptionsIcon_Initialize(frame, level)
@@ -203,7 +194,7 @@ local function AltoholicOptionsIcon_Initialize(frame, level)
 	
 	frame:AddTitle()
 	frame:AddTitle(OTHER)	
-	frame:AddButton(L["What's new?"], AltoholicWhatsNew, ShowOptionsCategory)
+	frame:AddButton("What's new?", AltoholicWhatsNew, ShowOptionsCategory)
 	frame:AddButton("Getting support", AltoholicSupport, ShowOptionsCategory)
 	frame:AddButton(L["Memory used"], AltoholicMemoryOptions, ShowOptionsCategory)
 	frame:AddButton(HELP_LABEL, AltoholicHelp, ShowOptionsCategory)

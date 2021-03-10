@@ -4,7 +4,7 @@
 
   Options frame for the mount list.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -26,14 +26,6 @@ end
 
 LiteMountPriorityMixin = {}
 
-LiteMountPriorityMixin.PriorityColors = {
-    [''] = COMMON_GRAY_COLOR,
-    [0] =  RED_FONT_COLOR,
-    [1] =  RARE_BLUE_COLOR,
-    [2] =  EPIC_PURPLE_COLOR,
-    [3] =  LEGENDARY_ORANGE_COLOR,
-}
-
 function LiteMountPriorityMixin:Update()
     local value = self:Get()
     if value then
@@ -45,8 +37,8 @@ function LiteMountPriorityMixin:Update()
         self.Plus:Show()
         self.Priority:SetText('')
     end
-    local r, g, b = self.PriorityColors[value or '']:GetRGB()
-    self.Background:SetColorTexture(r, g, b, 0.25)
+    local r, g, b = LM.UIFilter.GetPriorityColor(value):GetRGB()
+    self.Background:SetColorTexture(r, g, b, 0.33)
 end
 
 function LiteMountPriorityMixin:Get()
@@ -410,6 +402,21 @@ function LiteMountMountsPanelMixin:OnShow()
     LiteMountFilter:Attach(self, 'BOTTOMLEFT', self.MountScroll, 'TOPLEFT', 0, 15)
     LM.UIFilter.RegisterCallback(self, "OnFilterChanged", "refresh")
     LM.PlayerMounts:RefreshMounts()
+
+    -- Update the counts, Journal-only
+    local counts = LM.PlayerMounts:GetJournalTotals()
+    self.Counts:SetText(
+            string.format(
+                '%s: %s %s: %s %s: %s',
+                TOTAL,
+                WHITE_FONT_COLOR:WrapTextInColorCode(counts.total),
+                COLLECTED,
+                WHITE_FONT_COLOR:WrapTextInColorCode(counts.collected),
+                L.LM_USABLE,
+                WHITE_FONT_COLOR:WrapTextInColorCode(counts.usable)
+            )
+        )
+
     LiteMountOptionsPanel_OnShow(self)
 end
 

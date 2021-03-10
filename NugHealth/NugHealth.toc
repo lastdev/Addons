@@ -1,8 +1,8 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: NugHealth
 ## Author: d87
 ## SavedVariables: NugHealthDB
-## Version: 9.0.2
+## Version: 9.0.3
 
 ## X-WoWI-ID: 24281
 ## X-Curse-Project-ID: 87471

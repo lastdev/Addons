@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BSMTrash", "DBM-Party-WoD", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20210119194132")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -21,10 +21,8 @@ local specWarnBloodRage					= mod:NewSpecialWarningDispel(151548, "MagicDispelle
 local specWarnSubjugate					= mod:NewSpecialWarningDispel(151697, "Healer", nil, nil, 1, 2)
 local specWarnSlaversRage				= mod:NewSpecialWarningDispel(151965, "RemoveEnrage", nil, nil, 1, 2)
 
-local isTrivial = mod:IsTrivial(110)
-
 function mod:SPELL_AURA_APPLIED(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or self:IsTrivial() then return end
 	local spellId = args.spellId
 	if spellId == 164597 and not args:IsDestTypePlayer() then
 		specWarnStoneBulwark:Show(args.destName)
@@ -42,7 +40,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or self:IsTrivial() then return end
 	local spellId = args.spellId
 	if spellId == 152298 and self:AntiSpam(5, 1) then
 		warnCinderSplash:Show()

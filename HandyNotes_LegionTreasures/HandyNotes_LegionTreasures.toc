@@ -1,15 +1,29 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: HandyNotes_LegionTreasures
 ## Notes: Where are the hidden treasures in Legion?
 ## Author: Kemayo
-## Version: 1
+## Version: v21
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 96500
 ## SavedVariables: HandyNotes_LegionTreasuresDB
 ## RequiredDeps: HandyNotes
 
 handler.lua
 config.lua
-Treasure.lua
-Rares.lua
+
+zones\BrokenIsles.lua
+zones\Dalaran.lua
+zones\Azsuna.lua
+zones\Highmountain.lua
+zones\Stormheim.lua
+zones\Valsharah.lua
+zones\Suramar.lua
+zones\BrokenShore.lua
+
+zones\AntoranWastes.lua
+zones\Krokuun.lua
+zones\MacAree.lua
+
+zones\Mardum.lua

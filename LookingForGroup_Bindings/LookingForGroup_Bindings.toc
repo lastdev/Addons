@@ -1,6 +1,0 @@
-## Interface: 80205
-## Author: cqwrteur
-## Title: LookingForGroup Bindings
-## Dependencies: LookingForGroup
-
-Core.lua

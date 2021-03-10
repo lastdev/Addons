@@ -11,7 +11,7 @@
 				<FontString parentKey="Totals" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size x="400" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" relativeTo="AltoholicFrame" x="-20" y="13" />
+						<Anchor point="BOTTOMRIGHT" x="30" y="13" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -52,12 +52,12 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-            <Button parentKey="MenuItem8" inherits="AltoTabSummaryMenuItemTemplate" id="8">
+			<Button parentKey="MenuItem8" inherits="AltoTabSummaryMenuItemTemplate" id="8">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem7" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-            <Button parentKey="MenuItem9" inherits="AltoTabSummaryMenuItemTemplate" id="9">
+			<Button parentKey="MenuItem9" inherits="AltoTabSummaryMenuItemTemplate" id="9">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem8" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
@@ -105,7 +105,7 @@
 			</Button>
 			<Button parentKey="DataStoreOptionsIcon" inherits="AltoTabSummaryIconTemplate" id="7">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="AltoholicFrame" relativePoint="TOPRIGHT" x="-25" y="-40" />
+					<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="25" y="-40" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_11" />
@@ -117,19 +117,6 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-            
-            <Button name="$parent_DesMephistoButton" inherits="UIPanelButtonTemplate"> <!-- Reset All Filters button -->
-            	<Size x="100" y="20" />
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeKey="$parent.ClassIcon" relativePoint="TOPRIGHT" x="10" y="-8"/>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                        Altoholic.ResetAllFilters()
-                    </OnClick>
-                </Scripts>
-            </Button>
-            
 			<Button parentKey="AltoholicOptionsIcon" inherits="AltoTabSummaryIconTemplate" id="6">
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.DataStoreOptionsIcon" relativePoint="TOPLEFT" x="-5" y="0" />
@@ -167,14 +154,14 @@
 			
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>
-					<KeyValue key="numButtons" value="19" type="number" />
+					<KeyValue key="numButtons" value="9" type="number" />
 					<KeyValue key="option" value="UI.Tabs.Summary.SortAscending" />
 				</KeyValues>
 			</Frame>
 			
 			<Button parentKey="ToggleView" inherits="AltoToggleButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="TOPRIGHT" x="-20" y="-15" />
+					<Anchor point="TOPLEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="TOPRIGHT" x="40" y="-15" />
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
@@ -208,10 +195,12 @@
 				self.MenuItem4:SetText(L["Activity"])
 				self.MenuItem5:SetText(CURRENCY)
 				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)
-                self.MenuItem7:SetText(PVEFrameTab3:GetText())
-                self.MenuItem8:SetText("Misc")
-                self.MenuItem9:SetText(L["Equipment"])
-					
+				self.MenuItem7:SetText(GARRISON_TYPE_9_0_LANDING_PAGE_TITLE)
+				self.MenuItem8:SetText(MISCELLANEOUS)
+				self.MenuItem9:SetText(CHALLENGES)
+				
+				-- "Artifacts"
+				-- self.MenuItem7:SetText(GetCategoryInfo(15256))	
 				self.RequestSharing:SetText(L["Account Sharing"])
 				
 				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())

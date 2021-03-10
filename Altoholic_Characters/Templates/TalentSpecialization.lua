@@ -4,23 +4,24 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local STAT_PRIO = 1
 local STAT_UNKNOWN = 2
-local NUM_TALENT_TIERS = 7
 
 addon:Controller("AltoholicUI.TalentSpecialization", {
 	Update = function(frame, character, class, specializationIndex)
 		local _, specName = DataStore:GetSpecializationInfo(class, specializationIndex)
 		
 		if specName then
-			for tier = 1, NUM_TALENT_TIERS do
-				frame["Tier"..tier]:Update(character, class, specializationIndex)
-			end
+			DataStore:IterateTalentTiers(function(tierIndex, level) 
+				frame["Tier"..tierIndex]:Update(character, class, specializationIndex)
+			end)
+
 			frame.tooltip = STAT_PRIO
 			frame.class = class
 			frame.spec = specializationIndex
 		else
-			for tier = 1, NUM_TALENT_TIERS do
-				frame["Tier"..tier]:Hide()
-			end
+			DataStore:IterateTalentTiers(function(tierIndex, level) 
+				frame["Tier"..tierIndex]:Hide()
+			end)
+			
 			frame.tooltip = STAT_UNKNOWN
 		end
 		
@@ -28,24 +29,28 @@ addon:Controller("AltoholicUI.TalentSpecialization", {
 		frame:Show()
 	end,
 	SpecInfo_OnEnter = function(frame, button)
+		local tt = AltoTooltip
+	
 		if frame.tooltip == STAT_PRIO then
-			AltoTooltip:ClearLines()
-			AltoTooltip:SetOwner(button, "ANCHOR_TOP")
-			AltoTooltip:AddLine(L["TALENT_SPECIALIZATION_STAT_PRIORITY"], 0, 1, 0)
-			AltoTooltip:AddLine(" ", 1, 1, 1)
+			tt:ClearLines()
+			tt:SetOwner(button, "ANCHOR_TOP")
+			tt:AddLine(L["TALENT_SPECIALIZATION_STAT_PRIORITY"], 0, 1, 0)
+			tt:AddLine(" ", 1, 1, 1)
 			for i, priority in pairs(DataStore:GetStatPriority(frame.class, frame.spec)) do
-				AltoTooltip:AddLine(format("%s%d. %s%s", addon.Colors.cyan, i, addon.Colors.white, priority), 1, 1, 1)
+				tt:AddLine(format("%s%d. %s%s", addon.Colors.cyan, i, addon.Colors.white, priority), 1, 1, 1)
 			end
 
-			AltoTooltip:AddLine(" ", 1, 1, 1)
-			AltoTooltip:AddLine("Source: Icy Veins (7.0)", 1, 1, 0)
-			AltoTooltip:Show()
+			tt:AddLine(" ", 1, 1, 1)
+			tt:AddLine("Source: Icy Veins (9.0)", 1, 1, 0)
+			tt:Show()
 			
 		elseif frame.tooltip == STAT_UNKNOWN then
-			AltoTooltip:ClearLines()
-			AltoTooltip:SetOwner(button, "ANCHOR_TOP")
-			AltoTooltip:AddLine(format("%s%s", addon.Colors.white, L["TALENT_SPECIALIZATION_UNKOWN"]), 1, 1, 1)
-			AltoTooltip:Show()
+			tt:ClearLines()
+			tt:SetOwner(button, "ANCHOR_TOP")
+			tt:AddLine(INFO)
+			tt:AddLine(" ", 1, 1, 1)
+			tt:AddLine(L["TALENT_SPECIALIZATION_UNKOWN"],  1, 1, 1)
+			tt:Show()
 		end
 	end,
 })

@@ -147,9 +147,9 @@ local function getMobID(unit)
   local guid = UnitGUID(unit)
   if (not guid) then  return;  end
   local unitType, _, _, _, _, id = ("-"):split(guid)
-  if (unitType == "Creature") then
+  if (unitType == "Creature" or unitType == "Vehicle") then
     --chatprint("ExamineSetUnit "..(id and tonumber(id) or "nil"))
-    return tonumber(id)
+    return tonumber(id), unitType
   end
   --guid = tonumber( "0x"..strsub(guid, 6, 10) )
   --guid = tonumber(guid:sub(6,10), 16)
@@ -392,6 +392,10 @@ local CritterAch = {
   LoveCritters2 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
   LoveCritters3 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
   LoveCritters4 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
+  LoveCritters5 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
+  LoveCritters6 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
+  LoveCritters7 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
+  LoveCritters8 = { "CritterTip_loved", L.ACH_LOVECRITTERS_COMPLETE, L.ACH_LOVECRITTERS_INCOMPLETE },
   PestControl = { "CritterTip_killed", L.KILL_COMPLETE, L.KILL_INCOMPLETE },
 };
 
@@ -404,6 +408,25 @@ local function CritterCheck(ach, name)
   local crit, complete = isCriteria(id, name)
   if (crit) then
     local tip = complete and CritterAch[ach][2] or CritterAch[ach][3]
+    if (Overachiever_Debug) then  tip = tip .. " (" .. id .. ")";  end
+    return id, tip, complete, crit
+  end
+end
+
+local VehicleMobAch = {
+  --WhatWeRideInTheShadows = { "VehicleTip_ridden", L.ACH_RIDE_COMPLETE, L.ACH_RIDE_INCOMPLETE },
+  AfterlifeExpress = { "VehicleTip_ridden", L.ACH_RIDE_COMPLETE, L.ACH_RIDE_INCOMPLETE },
+};
+
+local function VehicleMobCheck(ach, mobID)
+  local id = OVERACHIEVER_ACHID[ach]
+  if (select(4, GetAchievementInfo(id))) then
+    VehicleMobAch[ach] = nil;
+    return;
+  end
+  local crit, complete = isCriteria_asset(id, mobID)
+  if (crit) then
+    local tip = complete and VehicleMobAch[ach][2] or VehicleMobAch[ach][3]
     if (Overachiever_Debug) then  tip = tip .. " (" .. id .. ")";  end
     return id, tip, complete, crit
   end
@@ -501,11 +524,11 @@ function Overachiever.ExamineSetUnit(tooltip)
             else
               r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
               PlayReminder()
-			  local playername = UnitName(unit)
-			  if (playername) then  playername = playername .. " (" .. raceName .. " " .. className .. ")";  end
-			  flagReminder(id, playername)
+      			  local playername = UnitName(unit)
+      			  if (playername) then  playername = playername .. " (" .. raceName .. " " .. className .. ")";  end
+      			  flagReminder(id, playername)
             end
-			addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
+            addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
             needtipshow = true
           end
         end
@@ -518,7 +541,7 @@ function Overachiever.ExamineSetUnit(tooltip)
     if (type == L.CRITTER or type == L.WILDPET or UnitLevel(unit) < 10) then  -- Some critters aren't called critters any more for some reason. The unit level check should help.
       for key,tab in pairs(CritterAch) do
         if (Overachiever_Settings[ tab[1] ]) then
-		  local critNum
+          local critNum
           id, text, complete, critNum = CritterCheck(key, name)
           if (text) then
             local r, g, b
@@ -535,67 +558,99 @@ function Overachiever.ExamineSetUnit(tooltip)
         end
       end
 
-    elseif (Overachiever_Settings.CreatureTip_killed and UnitCanAttack("player", unit)) then
-      local guid = getMobID(unit)
-	  --local tab = TjAchieve.GetCriteriaByAsset(TjAchieve.CRITTYPE_KILL, guid, true)
-	  --local tab = Overachiever.GetKillCriteriaLookup()[guid]
-	  local tab = Overachiever.GetKillCriteriaLookup(true)
-      if (tab and tab[guid]) then
-	    tab = tab[guid]
-		local includeCompleteAch = Overachiever_Settings.CreatureTip_killed_whencomplete
-	    local excludeGuild = Overachiever_Settings.CreatureTip_killed_exclude_guild
-        local num, numincomplete, potential, _, achcom, guild, c, t = 0, 0
-        for i = 1, #tab, 2 do
-          id = tab[i]
-          _, _, _, achcom, _, _, _, _, _, _, _, guild = GetAchievementInfo(id)
-          if ((not achcom or includeCompleteAch) and (not guild or not excludeGuild)) then
-            num = num + 1
-            _, _, c = GetAchievementCriteriaInfo(id, tab[i+1])
-            if (not c) then
-              numincomplete = numincomplete + 1
-              potential = potential or {}
-			  potential[id] = tab[i+1]
+    else
+      local mobID, unitType = getMobID(unit)
+      --local tab = TjAchieve.GetCriteriaByAsset(TjAchieve.CRITTYPE_KILL, mobID, true)
+      --local tab = Overachiever.GetKillCriteriaLookup()[mobID]
+      if (unitType == "Creature" and Overachiever_Settings.CreatureTip_killed and UnitCanAttack("player", unit)) then
+        local tab = Overachiever.GetKillCriteriaLookup(true)
+        if (tab and tab[mobID]) then
+          tab = tab[mobID]
+          local includeCompleteAch = Overachiever_Settings.CreatureTip_killed_whencomplete
+          local excludeGuild = Overachiever_Settings.CreatureTip_killed_exclude_guild
+          local num, numincomplete, potential, _, achcom, guild, c, t = 0, 0
+          for i = 1, #tab, 2 do
+            id = tab[i]
+            _, _, _, achcom, _, _, _, _, _, _, _, guild = GetAchievementInfo(id)
+            if ((not achcom or includeCompleteAch) and (not guild or not excludeGuild)) then
+              num = num + 1
+              _, _, c = GetAchievementCriteriaInfo(id, tab[i+1])
+              if (not c) then
+                numincomplete = numincomplete + 1
+                potential = potential or {}
+                potential[id] = tab[i+1]
+              end
             end
+          end
+
+          if (num > 0) then
+            if (numincomplete > 0) then
+              local cat, t
+              local instype, heroic, mythic, challenge, twentyfive = Overachiever.GetDifficulty()
+              for id, crit in pairs(potential) do
+  			  --[[
+                cat = GetAchievementCategory(id)
+                if (((not instype or not heroic) and (OVERACHIEVER_CATEGORY_HEROIC[cat] or (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])))
+                    or ((not instype or not twentyfive) and OVERACHIEVER_CATEGORY_25[cat])) then
+                  numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
+                else
+                  flagReminder(id, crit)
+                end
+  			  --]]
+  			  -- We don't have an easy way to detect whether the achievement is heroic-only any more here. (Maybe add a new function for this later?)
+  			  -- We can still use the criteria-specific table, though:
+                if ((not instype or not heroic) and (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit]) or
+                    (not instype or not mythic) and (OVERACHIEVER_MYTHIC_CRITERIA[id] and OVERACHIEVER_MYTHIC_CRITERIA[id][crit])) then
+                  numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
+                else
+                  flagReminder(id, crit)
+                end
+              end
+            end
+            
+            local r, g, b
+            if (numincomplete <= 0) then
+              text = L.KILL_COMPLETE
+              r, g, b = tooltip_complete.r, tooltip_complete.g, tooltip_complete.b
+            else
+              text = L.KILL_INCOMPLETE
+              r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
+              if (not Overachiever_Settings.SoundAchIncomplete_KillCheckCombat or not isPlayerInCombatWith(unit)) then
+                PlayReminder()
+              end
+            end
+            addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
+            needtipshow = true
           end
         end
 
-        if (num > 0) then
-          if (numincomplete > 0) then
-            local cat, t
-            local instype, heroic, mythic, challenge, twentyfive = Overachiever.GetDifficulty()
-            for id, crit in pairs(potential) do
-			  --[[
-              cat = GetAchievementCategory(id)
-              if (((not instype or not heroic) and (OVERACHIEVER_CATEGORY_HEROIC[cat] or (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])))
-                  or ((not instype or not twentyfive) and OVERACHIEVER_CATEGORY_25[cat])) then
-                numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
+      elseif (unitType == "Vehicle") then
+        for key,tab in pairs(VehicleMobAch) do
+          --print(key, mobID, tab[1], Overachiever_Settings[ tab[1] ])
+          if (Overachiever_Settings[ tab[1] ]) then
+            local critNum
+            id, text, complete, critNum = VehicleMobCheck(key, mobID)
+            if (text) then
+              local r, g, b
+              if (complete) then
+                r, g, b = tooltip_complete.r, tooltip_complete.g, tooltip_complete.b
               else
-                flagReminder(id, crit)
+                r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
+                PlayReminder()
+                flagReminder(id, critNum) --flagReminder(id, name)
               end
-			  --]]
-			  -- We don't have an easy way to detect whether the achievement is heroic-only any more here. (Maybe add a new function for this later?)
-			  -- We can still use the criteria-specific table, though:
-              if ((not instype or not heroic) and (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])) then
-                numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
-              else
-                flagReminder(id, crit)
+              addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
+              needtipshow = true
+              if (TipTac) then  -- Attempt compatibility with the addon TipTac
+                C_Timer.After(0, function()
+                  if (tooltip:IsShown() and text) then -- Sanity check
+                    addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
+                    --tooltip:Show()
+                  end
+                end)
               end
             end
           end
-
-		  local r, g, b
-          if (numincomplete <= 0) then
-            text = L.KILL_COMPLETE
-            r, g, b = tooltip_complete.r, tooltip_complete.g, tooltip_complete.b
-          else
-            text = L.KILL_INCOMPLETE
-            r, g, b = tooltip_incomplete.r, tooltip_incomplete.g, tooltip_incomplete.b
-            if (not Overachiever_Settings.SoundAchIncomplete_KillCheckCombat or not isPlayerInCombatWith(unit)) then
-              PlayReminder()
-            end
-          end
-		  addTooltipLineWithTexture(tooltip, text, AchievementIcon, r, g, b)
-          needtipshow = true
         end
       end
     end
@@ -1157,7 +1212,7 @@ function Overachiever.ExamineItem(tooltip)
     local _, _, itemID  = strfind(link, "item:(%d+)")
     itemID = tonumber(itemID)
     if (not itemID) then  return;  end  -- Ignores special objects not classified as normal items, like battlepets
-
+	
     local id, text, complete, achcomplete
 	local idPrev, textPrev, completePrev, achcomplete
     for key,tab in pairs(ConsumeItemAch) do
@@ -1412,11 +1467,11 @@ local function getMissionID(button)
 end
 
 local function missionButtonOnEnter(self, ...)
-	--print("missionButtonOnEnter", self.id)
 	if (Overachiever_Settings.Mission_complete) then
 		--local name = self.info and self.info.name or self.Title and self.Title:GetText()
 		local missionID = getMissionID(self)
 		if (missionID) then
+      --print("mission",missionID)
 			local id, text, complete
 			for key,tab in pairs(MissionAch) do
 				local id, text, complete, achComplete, crit = MissionCheck(key, missionID)
@@ -1568,7 +1623,7 @@ if (SharedMedia) then
   ["Sound\\Interface\\UI_Garrison_Toast_InvasionAlert.ogg"] = L.SOUND_GARRISON_INVASION,
   --]]
   --[[ don't work for some reason
-
+  
   ["Sound\\Interface\\GLUECREATECHARACTERBUTTON.mp3"] = "Create Character",
   ["Sound\\Interface\\UI_igStore_PurchaseDelivered_Toast_01.ogg"] = "Store Delivered",
   ["Sound\\Interface\\Deathbind Sound.ogg"] = "Deathbind",

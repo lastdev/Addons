@@ -22,11 +22,13 @@ LSM:Register("sound", "Short Circuit", 568975)
 LSM:Register("sound", "Fel Portal", 569215)
 LSM:Register("sound", "Fel Nova", 568582)
 LSM:Register("sound", "PVP Flag", 569200)
+LSM:Register("sound", "Thunder crack", 566202) -- doodad/fx_thundercrack04.ogg
 LSM:Register("sound", "Algalon: Beware!", 543587)
 LSM:Register("sound", "Yogg Saron: Laugh", 564859)
 LSM:Register("sound", "Illidan: Not Prepared", 552503)
 LSM:Register("sound", "Magtheridon: I am Unleashed", 554554)
 LSM:Register("sound", "Loatheb: I see you", 554236)
+LSM:Register("sound", "Ikiss: Trinkets", 561403)
 LSM:Register("sound", "NPCScan", 567275)--Sound file is actually bogus, this just forces the option NPCScan into menu. We hack it later.
 
 function module:OnInitialize()
@@ -39,12 +41,15 @@ function module:OnInitialize()
 			soundguild = false,
 			sound_mount = true,
 			sound_boss = true,
+			sound_loot = true,
 			soundfile = "Loatheb: I see you",
 			soundfile_mount = "Illidan: Not Prepared",
 			soundfile_boss = "Magtheridon: I am Unleashed",
+			soundfile_loot = "Ikiss: Trinkets",
 			sound_loop = 1,
 			sound_mount_loop = 1,
 			sound_boss_loop = 1,
+			sound_loot_loop = 1,
 			flash = true,
 			flash_texture = "Blizzard Low Health",
 			flash_color = {r=1,g=0,b=1,a=1,},
@@ -58,11 +63,13 @@ function module:OnInitialize()
 			dead = true,
 			already = false,
 			already_drop = true,
+			already_transmog = false,
 			already_alt = true,
 			sink_opts = {},
 			channel = "Master",
 			unmute = false,
 			background = false,
+			loot = true,
 		},
 	})
 
@@ -74,6 +81,7 @@ function module:OnInitialize()
 	end
 
 	core.RegisterCallback(self, "Seen")
+	core.RegisterCallback(self, "SeenLoot")
 
 	local config = core:GetModule("Config", true)
 	if config then
@@ -138,9 +146,11 @@ function module:OnInitialize()
 				args = {
 					already = toggle("Already found", "Announce when we see rares we've already killed / achieved (if known)", 0),
 					already_drop = toggle("Got the loot", "Announce when we see rares which drop a mount / toy / pet you already have", 10),
+					already_transmog = toggle("...include transmog as loot", "Count transmog appearances as knowable loot for the previous option?", 11),
 					already_alt = toggle("Completed by an alt", "Announce when we see rares for an achievement that the current character doesn't have, but an alt has completed already", 20),
 					dead = toggle("Dead rares", "Announce when we see dead rares, if known. Not all scanning methods know whether a rare is dead or not, so this isn't entirely reliable.", 30),
 					instances = toggle("Instances", "Show announcements while in an instance", 50),
+					loot = toggle("Treasures", "Show announcements when treasure appears on the minimap", 60),
 				},
 			},
 			message = {
@@ -167,6 +177,20 @@ function module:OnInitialize()
 					amalgamation = faker(157593, "Amalgamation of Flesh (Pet!)", 1527, 0.598, 0.724),
 					-- alash = faker(148787, "Alash'anir", 62, 0.598, 0.724),
 					-- burninator = faker(149141, "Burninator Mk V (Pet!)", 62, 0.414, 0.764),
+					worldedge = faker(160821, "Worldedge Gorger (mount)", 1525, 0.5, 0.5),
+					tarahna = faker(126900, "Instructor Tarahna (multi-toy)", 882, 0.5, 0.5),
+					nerissa = faker(162690, "Nerissa Heartless (mount)", 1536, 0.5, 0.5),
+					-- faeflayer = faker(171688, "Faeflayer", 1536, 0.5, 0.5),
+					scrapking = faker(151625, "Scrap King (loot)", 1462, 0.5, 0.5),
+					kash = faker(159105, "Collector Kash (lots of loot)", 1536, 0.5, 0.5),
+					chest = {
+						type = "execute", name = "Waterlogged Chest",
+						desc = "Fake seeing a Waterlogged Chest",
+						func = function()
+							-- id, zone, x, y, is_dead, source, unit
+							core.events:Fire("SeenLoot", "Waterlogged Chest", 3341, 37, 0.318, 0.628)
+						end,
+					},
 				},
 			},
 			sound = {
@@ -175,7 +199,6 @@ function module:OnInitialize()
 				order = 10,
 				args = {
 					about = config.desc("Play sounds to announce rare mobs? Can do special things for special mobs. You *really* don't want to miss, say, the Time-Lost Proto Drake, after all...", 0),
-					sound = toggle("Enabled", "Play sounds at all!", 10),
 					channel = {
 						type = "select",
 						name = _G.SOUND_CHANNELS,
@@ -194,16 +217,22 @@ function module:OnInitialize()
 					drums = toggle("The Sound of Drums", "Underneath it all, the constant drumming", 14),
 					soundgroup = toggle("Group Sync Sounds", "Play sounds from synced mobs from party/raid members", 15),
 					soundguild = toggle("Guild Sync Sounds", "Play sounds from synced mobs from guild members not in group", 16),
-					soundfile = soundfile("sound", 15),
-					sound_loop = soundrange(17),
-					mount = {type="header", name="", order=20,},
-					sound_mount = toggle("Mount sounds", "Play a special sound for mobs that drop a mount", 21),
-					soundfile_mount = soundfile("sound_mount", 25),
-					sound_mount_loop = soundrange(27),
+					regular = {type="header", name="", order=20,},
+					sound = toggle("Sounds", "Play sounds for regular mobs", 21),
+					soundfile = soundfile("sound", 22),
+					sound_loop = soundrange(23),
+					mount = {type="header", name="", order=25,},
+					sound_mount = toggle("Mount sounds", "Play a sound for mobs that drop a mount", 26),
+					soundfile_mount = soundfile("sound_mount", 27),
+					sound_mount_loop = soundrange(28),
 					boss = {type="header", name="", order=30,},
-					sound_boss = toggle("Boss sounds", "Play a special sound for mobs that require a group", 31),
+					sound_boss = toggle("Boss sounds", "Play a sound for mobs that require a group", 31),
 					soundfile_boss = soundfile("sound_boss", 35),
 					sound_boss_loop = soundrange(37),
+					loot = {type="header", name="", order=40,},
+					sound_loot = toggle("Loot sounds", "Play a sound for treasures", 41),
+					soundfile_loot = soundfile("sound_loot", 45),
+					sound_loot_loop = soundrange(47),
 				},
 			},
 			flash = {
@@ -314,42 +343,61 @@ function module:Seen(callback, id, zone, x, y, is_dead, source, ...)
 	core.events:Fire("Announce", id, zone, x, y, is_dead, source, ...)
 end
 
+function module:SeenLoot(callback, name, id, zone, x, y, ...)
+	Debug("Announce:SeenLoot", name, id, zone, x, y, ...)
+
+	if not self.db.profile.instances and IsInInstance() then
+		return
+	end
+
+	if not self.db.profile.loot then
+		return
+	end
+
+	core.events:Fire("AnnounceLoot", name, id, zone, x, y, ...)
+end
+
 function module:ShouldAnnounce(id, zone, x, y, is_dead, source, ...)
 	if is_dead and not self.db.profile.dead then
+		Debug("ShouldAnnounce", false, "dead")
 		return false
 	end
 	if core.db.global.always[id] then
 		-- If you've manually added a mob, bypass any other checks
+		Debug("ShouldAnnounce", true, "always")
 		return true
 	end
-	if not self.db.profile.already_drop and ns:HasLoot(id) then
+	if not self.db.profile.already_drop and ns.Loot.Status(id, self.db.profile.already_transmog) == true then
 		-- hide mobs which have a mount/pet/toy which you already own
-		local toy, mount, pet = ns:LootStatus(id)
-		if toy ~= false and mount ~= false and pet ~= false then
-			-- this means there's not any loot left to drop, as everything is either true or nil
-			return false
-		end
+		-- this means there's knowable loot, and it's all known
+		Debug("ShouldAnnounce", false, "already got loot")
+		return false
 	end
 	if not self.db.profile.already then
-		local quest, achievement, by_alt = ns:CompletionStatus(id)
 		-- hide already-completed mobs
+		local quest, achievement, by_alt = ns:CompletionStatus(id)
+		if by_alt and not self.db.profile.already_alt then
+			-- an alt has completed the achievement, and we don't want to know about that
+			Debug("ShouldAnnounce", false, "alt got achievement")
+			return false
+		end
 		if source == "vignette" then
 			-- The vignette's presence implies no quest completion
+			Debug("ShouldAnnounce", true, "vignette implies quest")
 			return true
 		end
 		if quest ~= nil then
+			Debug("ShouldAnnounce", not quest, "quest")
 			return not quest
 		end
 		if achievement ~= nil then
 			-- can just fall back on achievement
-			if by_alt and not self.db.profile.already_alt then
-				-- an alt has completed the achievement, and we don't want to know about that
-				return false
-			end
+			Debug("ShouldAnnounce", not achievement, "achievement")
 			return not achievement
 		end
 	end
 
+	Debug("ShouldAnnounce", true, "fallback")
 	return true
 end
 
@@ -367,10 +415,27 @@ core.RegisterCallback("SD Announce Sink", "Announce", function(callback, id, zon
 		end
 	end
 	if x and y then
-		source = source .. " @ " .. core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
+		if x == 0 and y == 0 then
+			source = source .. " @ unknown location"
+		else
+			source = source .. " @ " .. core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
+		end
 	end
 	local prefix = "Rare seen: "
 	module:Pour((prefix .. "%s%s (%s)"):format(core:GetMobLabel(id), dead and "... but it's dead" or '', source or ''))
+end)
+core.RegisterCallback("SD AnnounceLoot Sink", "AnnounceLoot", function(callback, name, id, zone, x, y)
+	if not module.db.profile.sink then
+		return
+	end
+
+	Debug("Pouring")
+	local location = UNKNOWN
+	if x and y and x > 0 and y > 0 then
+		location = core.round(x * 100, 1) .. "," .. core.round(y * 100, 1)
+	end
+	local prefix = "Treasure seen: "
+	module:Pour((prefix .. "%s (%s)"):format(name, location))
 end)
 
 local cvar_overrides
@@ -381,10 +446,22 @@ local channel_cvars = {
 	SFX = "Sound_EnableSFX",
 	Dialog = "Sound_EnableDialog",
 }
+local delays = {
+	["Ikiss: Trinkets"] = 5.7,
+}
+local nowplaying
 function module:PlaySound(s)
 	-- Arg is a table, to make scheduling the loops easier. I am lazy.
 	Debug("Playing sound", s.soundfile, s.loops)
 	-- boring check:
+	if s and s.handle then
+		StopSound(s.handle)
+		if s.drumshandle then
+			StopSound(s.drumshandle)
+		end
+		s.handle = nil
+		s.drumshandle = nil
+	end
 	if not s.loops or s.loops == 0 then
 		if cvar_overrides and s.cvars then
 			for cvar, value in pairs(s.cvars) do
@@ -392,6 +469,7 @@ function module:PlaySound(s)
 			end
 			cvar_overrides = false
 		end
+		nowplaying = false
 		return
 	end
 	if not cvar_overrides then
@@ -413,38 +491,51 @@ function module:PlaySound(s)
 	if s.soundfile == "NPCScan" then
 		--Override default behavior and force npcscan behavior of two sounds at once
 		drums = true
-		PlaySoundFile(LSM:Fetch("sound", "Scourge Horn"), self.db.profile.channel)
+		local _, handle = PlaySoundFile(LSM:Fetch("sound", "Scourge Horn"), self.db.profile.channel)
+		s.handle = handle
 	else
 		--Play whatever sound is set
-		PlaySoundFile(LSM:Fetch("sound", s.soundfile), self.db.profile.channel)
+		local _, handle = PlaySoundFile(LSM:Fetch("sound", s.soundfile), self.db.profile.channel)
+		s.handle = handle
 	end
 	if drums then
-		PlaySoundFile(LSM:Fetch("sound", "War Drums"), self.db.profile.channel)
+		local _, handle = PlaySoundFile(LSM:Fetch("sound", "War Drums"), self.db.profile.channel)
+		s.drumshandle = handle
 	end
 	s.loops = s.loops - 1
 	-- we guarantee one callback, in case we need to do cleanup
-	self:ScheduleTimer("PlaySound", 4.5, s)
+	self:ScheduleTimer("PlaySound", delays[s.soundfile] or 4.5, s)
+	nowplaying = true
 end
 core.RegisterCallback("SD Announce Sound", "Announce", function(callback, id, zone, x, y, dead, source)
-	if not (module.db.profile.sound and LSM) then
-		return
-	end
+	if not LSM then return end
+	if nowplaying then return end
 	if source:match("^sync") then
 		local channel, player = source:match("sync:(.+):(.+)")
 		if channel == "GUILD" and not module.db.profile.soundguild or (channel == "PARTY" or channel == "RAID") and not module.db.profile.soundgroup then return end
 	end
 	local soundfile, loops
-	if module.db.profile.sound_mount and ns.mobdb[id] and ns.mobdb[id].mount then
+	if ns.Loot.HasMounts(id) then
+		if not module.db.profile.sound_mount then return end
 		soundfile = module.db.profile.soundfile_mount
 		loops = module.db.profile.sound_mount_loop
-	elseif module.db.profile.sound_boss and ns.mobdb[id] and ns.mobdb[id].boss then
+	elseif ns.mobdb[id] and ns.mobdb[id].boss then
+		if not module.db.profile.sound_boss then return end
 		soundfile = module.db.profile.soundfile_boss
 		loops = module.db.profile.sound_boss_loop
 	else
+		if not module.db.profile.sound then return end
 		soundfile = module.db.profile.soundfile
 		loops = module.db.profile.sound_loop
 	end
 	module:PlaySound{soundfile = soundfile, loops = loops}
+end)
+core.RegisterCallback("SD AnnounceLoot Sound", "AnnounceLoot", function(callback, id, zone, x, y, dead, source)
+	if not (module.db.profile.sound_loot and LSM) then
+		return
+	end
+	if nowplaying then return end
+	module:PlaySound{soundfile = module.db.profile.soundfile_loot, loops = module.db.profile.sound_loot_loop}
 end)
 
 do
@@ -490,7 +581,7 @@ do
 				local background = module.db.profile.flash_texture
 				local color = module.db.profile.flash_color
 				if self.id and ns.mobdb[self.id] then
-					if ns.mobdb[self.id].mount and module.db.profile.flash_mount then
+					if ns.Loot.HasMounts(self.id) and module.db.profile.flash_mount then
 						background = module.db.profile.flash_texture_mount
 						color = module.db.profile.flash_color_mount
 					elseif ns.mobdb[self.id].boss and module.db.profile.flash_boss then
@@ -512,6 +603,9 @@ do
 	end
 
 	core.RegisterCallback("SD Announce Flash", "Announce", function(callback, id)
+		module:Flash(id)
+	end)
+	core.RegisterCallback("SD AnnounceLoot Flash", "AnnounceLoot", function(callback, id)
 		module:Flash(id)
 	end)
 end

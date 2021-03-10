@@ -16,7 +16,7 @@ Overachiever.DefaultSettings = {
   Tracker_AutoTimer = true;
   Tracker_AutoTimer_BG = true;
   Explore_AutoTrack = false;
-  --Explore_AutoTrack_Completed = false;
+  Explore_AutoTrack_Completed = false;
   CritterTip_loved = true;
   CritterTip_killed = true;
   WellReadTip_read = true;
@@ -33,6 +33,7 @@ Overachiever.DefaultSettings = {
   CreatureTip_killed = true;
   CreatureTip_killed_whencomplete = true;
   CreatureTip_killed_exclude_guild = false;
+  VehicleTip_ridden = true;
   LetItSnow_flaked = false;
   FistfulOfLove_petals = false;
   BunnyMaker_eared = false;
@@ -88,9 +89,9 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ variable = "Tracker_AutoTimer_BG", text = L.OPT_AUTOTRACKTIMED_BG, tooltip = L.OPT_AUTOTRACKTIMED_TIP_BG },
 	{ variable = "Explore_AutoTrack", text = L.OPT_AUTOTRACKEXPLORE,
 	  tooltip = L.OPT_AUTOTRACKEXPLORE_TIP, OnChange = AutoTrackCheck_Explore },
-	--{ variable = "Explore_AutoTrack_Completed", text = L.OPT_AUTOTRACKEXPLORE_COMPLETED,
-	--  xOffset = 10, OnChange = AutoTrackCheck_Explore },
-	{ variable = "ProgressToast_AutoTrack", text = L.OPT_AUTOTRACK_CRITERIATOAST, tooltip = L.OPT_AUTOTRACK_CRITERIATOAST_TIP },
+	{ variable = "Explore_AutoTrack_Completed", text = L.OPT_AUTOTRACKEXPLORE_COMPLETED,
+	  xOffset = 10, OnChange = AutoTrackCheck_Explore },
+	{ variable = "ProgressToast_AutoTrack", text = L.OPT_AUTOTRACK_CRITERIATOAST, tooltip = L.OPT_AUTOTRACK_CRITERIATOAST_TIP, xOffset = 0 },
 	
 	{ type = "labelwrap", text = L.OPT_LABEL_CRITERIATOAST, topBuffer = 4 },
 	{ variable = "ProgressToast_ChatLog", text = L.OPT_CRITERIATOAST_CHATLOG, tooltip = L.OPT_CRITERIATOAST_CHATLOG_TIP },
@@ -142,7 +143,10 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ variable = "CreatureTip_killed_whencomplete", text = L.OPT_KILLCREATURETIPS_WHENCOMPLETE, xOffset = 39 },
 	{ variable = "CreatureTip_killed_exclude_guild", text = L.OPT_KILLCREATURETIPS_EXCLUDE_GUILD, xOffset = 39 },
 
-	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
+	--{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
+  { type = "Oa_AchLabel", text = L.OPT_LABEL_LOVECRITTER, topBuffer = 4, xOffset = 0,
+    id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters7, id4 = IDs.LoveCritters8, -- Just give a sampling of 4 of them to make the UI cleaner. For now, choosing first two and last two.
+  },
 	{ variable = "CritterTip_loved", text = L.OPT_CRITTERTIPS, tooltip = L.OPT_CRITTERTIPS_TIP, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.PestControl, xOffset = 0 },
@@ -179,6 +183,9 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTHREE, topBuffer = 4, id1 = IDs.MissionBarrens, id2 = IDs.MissionLordaeron, id3 = IDs.MissionKalimdor, xOffset = 0 },
 	{ variable = "Mission_complete", text = L.OPT_MISSIONCOMPLETE, tooltip = L.OPT_MISSIONCOMPLETE_TIP, xOffset = 28 },
 	{ variable = "Mission_complete_whencomplete", text = L.OPT_MISSIONCOMPLETE_WHENCOMPLETE, xOffset = 39 },
+
+  { type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.AfterlifeExpress, xOffset = 0 },
+	{ variable = "VehicleTip_ridden", text = L.OPT_VEHICLERIDDENTIPS, tooltip = L.OPT_VEHICLERIDDENTIPS_TIP, xOffset = 28 },
 
 	{ type = "labelwrap", text = L.OPT_LABEL_SEASONALACHS, justifyH = "CENTER", topBuffer = 16, xOffset = 0 },
 
@@ -339,16 +346,16 @@ do
 
       local text = data.text
       if (not text) then
-	    local i = 1
-		local v = data["id"..i]
-		text = ""
-		while (v) do
-		  if (text ~= "") then  text = text .. ",|n";  end
-		  local _, n = GetAchievementInfo(v)
+        local i = 1
+    		local v = data["id"..i]
+    		text = ""
+    		while (v) do
+    		  if (text ~= "") then  text = text .. ",|n";  end
+    		  local _, n = GetAchievementInfo(v)
           text = text .. '"'..(n or L.OPT_ACHUNKNOWN)..'"'
-		  i = i + 1
-		  v = data["id"..i]
-		end
+    		  i = i + 1
+    		  v = data["id"..i]
+    		end
       else
         d, count = data, 0
         text = text:gsub("(%%s)", achsub)

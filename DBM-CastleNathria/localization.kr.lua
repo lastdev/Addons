@@ -30,12 +30,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Artificer Xy'Mox --
 ---------------------------
-L= DBM:GetModLocalization(2418)
-
-L:SetMiscLocalization({
-	Phase2			= "The anticipation to use this relic is killing me! Though, it will more likely kill you.",
-	Phase3			= "I hope this wondrous item is as lethal as it looks!",
-})
+--L= DBM:GetModLocalization(2418)
 
 ---------------------------
 --  Sun King's Salvation/Kael'thas --
@@ -55,7 +50,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	timerContainers				= "용기가 채워지고 있는 상황과 가득찰때까지 남은 시간을 표시하는 타이머 보기"
+	timerContainers2			= "용기가 채워지고 있는 상황과 가득찰때까지 남은 시간을 표시하는 타이머 보기"
 })
 
 ---------------------------
@@ -71,7 +66,11 @@ L:SetOptionLocalization({
 ---------------------------
 --  Stoneborne Generals --
 ---------------------------
---L= DBM:GetModLocalization(2425)
+L= DBM:GetModLocalization(2425)
+
+L:SetOptionLocalization({
+	ExperimentalTimerCorrection	= "다른 스킬에 의해 대기중인 스킬의 타이머를 자동으로 조정"
+})
 
 ---------------------------
 --  Sire Denathrius --
@@ -79,7 +78,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2424)
 
 L:SetMiscLocalization({
-	CrimsonSpawn	= "Crimson Cabalists answer the call of Denathrius."
+	CrimsonSpawn	= "진홍의 밀사가 데나트리우스 대영주의 부름에 응합니다."
 })
 
 

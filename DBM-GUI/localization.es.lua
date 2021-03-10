@@ -23,13 +23,13 @@ L.BossModLoad_now 			= [[Este módulo no está cargado.
 Se cargará al entrar en la estancia.
 También puedes hacer clic en el botón para cargar el módulo manualmente.]]
 
-L.PosX 						= 'Posición X'
-L.PosY 						= 'Posición Y'
+L.PosX 						= "Posición X"
+L.PosY 						= "Posición Y"
 
-L.MoveMe 					= 'Posición'
-L.Button_OK 				= 'Aceptar'
-L.Button_Cancel 			= 'Cancelar'
-L.Button_LoadMod 			= 'Cargar módulo'
+L.MoveMe 					= "Posición"
+L.Button_OK 				= "Aceptar"
+L.Button_Cancel 			= "Cancelar"
+L.Button_LoadMod 			= "Cargar módulo"
 L.Mod_Enabled				= "Habilitar módulo"
 L.Mod_Reset					= "Cargar opciones por defecto"
 L.Reset 					= "Restaurar"
@@ -64,6 +64,7 @@ L.Latency_Text				= "Latencia máxima para sincronización: %d"
 L.Button_RangeFrame			= "Mostrar/ocultar\nmarco de distancia"
 L.Button_InfoFrame			= "Mostrar/ocultar\nmarco de información"
 L.Button_TestBars			= "Comprobar barras"
+L.Button_MoveBars			= "Posición barras"
 L.Button_ResetInfoRange		= "Restaurar posiciones por defecto"
 
 L.ModelOptions				= "Opciones del visualizador de modelos 3D"
@@ -97,8 +98,7 @@ L.RecordOnlyBosses			= "Registrar solo encuentros de jefe (excluye todos los com
 L.LogOnlyNonTrivial			= "Registrar solo el contenido importante (excluye el buscador de bandas, las mazmorras, las gestas y todo el contenido antiguo)"
 --
 L.Area_3rdParty				= "Opciones de addons de terceros"
-L.ShowBBOnCombatStart		= "Realizar comprobación de beneficios de Big Brother al iniciar un encuentro"
-L.BigBrotherAnnounceToRaid	= "Anunciar resultados de Big Brother en el chat de banda"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Opciones de invitación"
 L.AutoAcceptFriendInvite	= "Aceptar automáticamente invitaciones a grupos de amigos"
 L.AutoAcceptGuildInvite		= "Aceptar automáticamente invitaciones a grupos de miembros de la hermandad"

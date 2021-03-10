@@ -38,7 +38,7 @@
 		<NormalTexture parentKey="Arrow" file="Interface\Buttons\UI-SortArrow">
 			<Size x="9" y="8" />
 			<Anchors>
-				<Anchor point="LEFT" relativeKey="$parent.Text" relativePoint="RIGHT" x="3" y="-2" />
+				<Anchor point="LEFT" relativeKey="$parent.Text" relativePoint="RIGHT" x="3" y="0" />
 			</Anchors>
 			<TexCoords left="0" right="0.5625" top="0" bottom="1.0"/>
 		</NormalTexture>

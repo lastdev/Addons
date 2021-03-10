@@ -80,14 +80,15 @@ addon:Controller("AltoholicUI.GarrisonMissionRow", {
 		frame.Remaining:Show()
 	end,
 	SetFollowers = function(frame, followers, missionID, character)
-		frame.Follower1:Hide()
-		frame.Follower2:Hide()
-		frame.Follower3:Hide()
+		-- hide all icons
+		for i = 1, 5 do
+			frame["Follower"..i]:Hide()
+		end
 
 		-- 'followers' could be nil for the list of available missions
 		-- nevertheless, we want to show empty portraits
 		local numFollowers = C_Garrison.GetMissionMaxFollowers(missionID)
-
+		
 		for i = 1, numFollowers do
 			local followerFrame = frame["Follower"..i]
 			

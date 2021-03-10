@@ -141,9 +141,11 @@ do
 		local function regenerate()
 			for i = select("#", auraarea.frame:GetChildren()), 1, -1 do
 				local v = select(i, auraarea.frame:GetChildren())
-				v:Hide()
-				v:SetParent(UIParent)
-				v:ClearAllPoints()
+				if v:GetName() ~= "GetAdditionalID_Pull" then
+					v:Hide()
+					v:SetParent(UIParent)
+					v:ClearAllPoints()
+				end
 			end
 			CurCount = 0
 
@@ -194,7 +196,7 @@ do
 		end
 
 		do
-			local tremove = table.remove
+			local tremove, gsub = table.remove, string.gsub
 
 			local function onchange_spell(field)
 				return function(self)
@@ -220,10 +222,10 @@ do
 						if spellinfo == nil then
 							DBM:AddMsg("Illegal SpellID found. Please remove the Spell " .. settings.spells[self.guikey].spell .. " from your DBM Options GUI (spelltimers)");
 						else
-							self:SetText(string.gsub(settings.spells[self.guikey][field] or "", "%%spell", spellinfo))
+							self:SetText(gsub(settings.spells[self.guikey][field] or "", "%%spell", spellinfo))
 						end
 					elseif field == "enabled" then
-						self:SetChecked(settings.spells[self.guikey].enabled or true)
+						self:SetChecked(settings.spells[self.guikey].enabled or false)
 					else
 						self:SetText(settings.spells[self.guikey][field] or "")
 					end
@@ -231,6 +233,7 @@ do
 			end
 
 			local getadditionalid = CreateFrame("Button", "GetAdditionalID_Pull", auraarea.frame)
+			getadditionalid.myheight = 15
 			getadditionalid:SetNormalTexture(130838) -- "Interface\\Buttons\\UI-PlusButton-UP"
 			getadditionalid:SetPushedTexture(130836) -- "Interface\\Buttons\\UI-PlusButton-DOWN"
 			getadditionalid:SetSize(15, 15)
@@ -238,6 +241,7 @@ do
 			function createnewentry()
 				CurCount = CurCount + 1
 				local spellid = auraarea:CreateEditBox(L.SpellID, "", 65)
+				spellid.myheight = 34
 				spellid.guikey = CurCount
 				spellid:SetPoint("TOPLEFT", auraarea.frame, "TOPLEFT", 40, 15 - (CurCount * 35))
 				spellid:SetScript("OnTextChanged", onchange_spell("spell"))
@@ -245,12 +249,14 @@ do
 				spellid:SetNumeric(true)
 
 				local bartext = auraarea:CreateEditBox(L.BarText, "", 190)
+				bartext.myheight = 0
 				bartext.guikey = CurCount
 				bartext:SetPoint('TOPLEFT', spellid, "TOPRIGHT", 20, 0)
 				bartext:SetScript("OnTextChanged", onchange_spell("bartext"))
 				bartext:SetScript("OnShow", onshow_spell("bartext"))
 
 				local cooldown = auraarea:CreateEditBox(L.Cooldown, "", 45)
+				cooldown.myheight = 0
 				cooldown.guikey = CurCount
 				cooldown:SetPoint("TOPLEFT", bartext, "TOPRIGHT", 20, 0)
 				cooldown:SetScript("OnTextChanged", onchange_spell("cooldown"))
@@ -258,12 +264,14 @@ do
 				cooldown:SetNumeric(true)
 
 				local enableit = auraarea:CreateCheckButton("")
+				enableit.myheight = 0
 				enableit.guikey = CurCount
 				enableit:SetScript("OnShow", onshow_spell("enabled"))
 				enableit:SetScript("OnClick", onchange_spell("enabled"))
 				enableit:SetPoint("LEFT", cooldown, "RIGHT", 5, 0)
 
 				local removeEntry = CreateFrame("Button", "DeleteAdditionalID_Pull", auraarea.frame)
+				removeEntry.myheight = 0
 				removeEntry.guikey = CurCount
 				removeEntry:SetNormalTexture(130821) -- "Interface\\Buttons\\UI-MinusButton-DOWN"
 				removeEntry:SetPushedTexture(130820) -- "Interface\\Buttons\\UI-MinusButton-DOWN"
@@ -277,11 +285,6 @@ do
 
 				getadditionalid:ClearAllPoints()
 				getadditionalid:SetPoint("RIGHT", spellid, "LEFT", -15, -20)
-
-				if _G["DBM_GUI"].currentViewing == panel.frame and CurCount > 1 then
-					_G["DBM_GUI_OptionsFrame"]:DisplayFrame(panel.frame)
-				end
-
 				getadditionalid:SetScript("OnClick", function()
 					if spellid:GetNumber() > 0 and bartext:GetText():len() > 0 and cooldown:GetNumber() > 0 then
 						createnewentry()
@@ -289,6 +292,9 @@ do
 						DBM:AddMsg(L.Error_FillUp)
 					end
 				end)
+				if _G["DBM_GUI"].currentViewing == panel.frame and CurCount > 1 then
+					_G["DBM_GUI_OptionsFrame"]:DisplayFrame(panel.frame)
+				end
 			end
 
 			if #settings.spells == 0 then

@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 90002
 ## Title: Reagent Banker
-## Version: 1.0.2
+## Version: 1.1.0
 ## Author: Tuhljin
 ## Notes: Automate your Reagent Bank.
 ## SavedVariables: ReagentBanker_Settings

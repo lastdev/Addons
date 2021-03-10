@@ -10,7 +10,7 @@
 
   Also IsUsableSpell doesn't work right on it.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -36,23 +36,23 @@ local restoreFormIDs = {
     [31] = true,    -- Moonkin Form
 }
 
+-- Druid forms don't reliably have a corresponding player buff, so we need
+-- to check the spell from GetShapeshiftFormInfo.
+function LM.TravelForm:IsActive(buffTable)
+    local id = GetShapeshiftForm()
+    if id > 0 then
+        return select(4, GetShapeshiftFormInfo(id)) == self.spellID
+    end
+end
+
 -- IsUsableSpell doesn't return false for Travel Form indoors like it should,
 -- because you can swim indoors with it (apparently).
 function LM.TravelForm:IsCastable()
     if IsIndoors() and not IsSubmerged() then return false end
+    local id = GetShapeshiftFormID()
+    -- Don't recast over mount-like forms as it behaves as a dismount
+    if id == 3 or id == 27 then return false end
     return LM.Spell.IsCastable(self)
-end
-
--- Check for the bad Travel Form from casting it in combat and
--- don't consider that to be mounted
-function LM.TravelForm:IsCancelable()
-    if GetShapeshiftFormID() == 27 then
-        local _, run, fly, swim = GetUnitSpeed('player')
-        if fly < run then
-            return false
-        end
-    end
-    return LM.Spell.IsCancelable(self)
 end
 
 -- Work around a Blizzard bug with calling shapeshift forms in macros in 8.0
@@ -82,9 +82,13 @@ function LM.TravelForm:GetCastAction()
 
     return LM.SecureAction:Spell(self.spellID)
 end
+
 function LM.TravelForm:GetCancelAction()
     if savedFormName then
-        local act = LM.SecureAction:Spell(savedFormName)
+        -- Without the /cancelform the "Auto Dismount in Flight" setting stops
+        -- this from working.
+        local macroText = string.format("/cancelform\n/cast %s", savedFormName)
+        local act = LM.SecureAction:Macro(macroText)
         savedFormName = nil
         return act
     else

@@ -1,7 +1,6 @@
 -- Merchant event handling.
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
-local Config = Addon:GetConfig()
 
 local threadName = Addon.c_ItemSellerThreadName
 
@@ -9,27 +8,29 @@ local isMerchantOpen = false
 
 -- When the merchant window is opened, we will attempt to auto repair and sell.
 function Addon:OnMerchantShow()
-    self:Debug("Merchant opened.")
+    self:Debug("autosell", "Merchant opened.")
     isMerchantOpen = true
+    local profile = self:GetProfile();
 
     -- Do auto-repair if enabled
-    if Config:GetValue(Addon.c_Config_AutoRepair) then
+    if profile:GetValue(Addon.c_Config_AutoRepair) then
         self:AutoRepair()
     end
 
     -- Do auto-selling if enabled
-    if Config:GetValue(Addon.c_Config_AutoSell) then
+    if profile:GetValue(Addon.c_Config_AutoSell) then
         self:AutoSell()
     end
 end
 
 function Addon:OnMerchantClosed()
-    self:Debug("Merchant closed.")
+    self:Debug("autosell", "Merchant closed.")
     isMerchantOpen = false
 end
 
 -- For checking to make sure merchant window is open prior to selling anything.
 function Addon:IsMerchantOpen()
+    if Addon.IsDebug and Addon:GetDebugSetting("simulate") then return true end
     return isMerchantOpen
 end
 
@@ -37,8 +38,9 @@ end
 function Addon:AutoRepair()
     local cost, canRepair = GetRepairAllCost()
     if canRepair then
+        local profile = self:GetProfile();
         -- Guild repair is not supported on Classic. The API method "CanGuidlBankRepair" is missing.
-        if not Addon.IsClassic and Config:GetValue(Addon.c_Config_GuildRepair) and CanGuildBankRepair() and GetGuildBankWithdrawMoney() >= cost then
+        if not Addon.IsClassic and profile:GetValue(Addon.c_Config_GuildRepair) and CanGuildBankRepair() and GetGuildBankWithdrawMoney() >= cost then
             -- use guild repairs
             RepairAllItems(true)
             self:Print(string.format(L["MERCHANT_REPAIR_FROM_GUILD_BANK"], self:GetPriceString(cost)))
@@ -83,13 +85,15 @@ function Addon:AutoSell()
     local thread = function ()
         local numSold = 0
         local totalValue = 0
-        local sellLimitEnabled = Config:GetValue(Addon.c_Config_SellLimit)
+        local profile = Addon:GetProfile();
+        local sellLimitEnabled = profile:GetValue(Addon.c_Config_SellLimit)
         local sellLimitMaxItems = Addon.c_BuybackLimit
-        local sellThrottle = Config:GetValue(Addon.c_Config_SellThrottle)
+        local sellThrottle = profile:GetValue(Addon.c_Config_SellThrottle)
 
         -- Loop through every bag slot once.
         for bag=0, NUM_BAG_SLOTS do
-            for slot=1, GetContainerNumSlots(bag) do
+            for slot=1, GetContainerNumSlots(bag) do                
+
 
                 -- If the cursor is holding anything then we cant' sell. Yield and check again next cycle.
                 -- We must do this before we get the item info, since the user may have changed what item is in this slot.
@@ -101,18 +105,18 @@ function Addon:AutoSell()
                         return
                     end
 
-                    self:Debug("Cursor is holding something; waiting to sell..")
+                    self:Debug("autosell", "Cursor is holding something; waiting to sell..")
                     coroutine.yield()
                 end
 
                 -- Get Item properties and evaluate
-                local item, itemCount = Addon:GetItemPropertiesFromBag(bag, slot)
-                local result = Addon:EvaluateItem(item)
+                local item, itemCount = Addon:GetItemPropertiesFromBag(bag, slot)                
+                local result, ruleid, rule = Addon:EvaluateItem(item)
 
                 -- Determine if it is to be sold
-                -- Result of 0 is no action, 1 is sell, 2 is must be deleted.
-                -- So we only try to sell if Result is exactly 1.
-                if result == 1 then
+                -- Result of 0 is no action, 1 is sell, 2 is delete.
+                -- We will attempt to sell to-delete items if they are sellable.
+                if result >= 1 and not item.IsUnsellable then
                     -- UseContainerItem is really just a limited auto-right click, and it will equip/use the item if we are not in a merchant window!
                     -- So before we do this, make sure the Merchant frame is still open. If not, terminate the coroutine.
                     if not self:IsMerchantOpen() then
@@ -120,12 +124,20 @@ function Addon:AutoSell()
                         return
                     end
 
-                    -- Still open, so OK to sell it.
-                    UseContainerItem(bag, slot)
                     local netValue = item.UnitValue * itemCount
-                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(item.Link), self:GetPriceString(netValue))
+                    self:Print(L["MERCHANT_SELLING_ITEM"], tostring(item.Link), self:GetPriceString(netValue), tostring(rule))
                     numSold = numSold + 1
                     totalValue = totalValue + netValue
+
+                    -- Still open, so OK to sell it.
+                    if not Addon.IsDebug or not Addon:GetDebugSetting("simulate") then
+                        UseContainerItem(bag, slot)
+                    else
+                        self:Print("Simulating selling of: %s", tostring(item.Link))
+                    end
+
+                    -- Add to history
+                    Addon:AddEntryToHistory(item.Link, Addon.ActionType.SELL, rule, ruleid, itemCount, netValue)
 
                     -- Check for sell limit
                     if sellLimitEnabled and sellLimitMaxItems <= numSold then
@@ -162,7 +174,7 @@ end
 -- Gold:    FFFFFF00
 -- Silver:  FFFFFFFF
 -- Copper:  FFAE6938
-function Addon:GetPriceString(price)
+function Addon:GetPriceString(price, all)
     if not price then
         return "<missing>"
     end
@@ -174,7 +186,7 @@ function Addon:GetPriceString(price)
     gold = math.floor(price / 100)
 
     str = {}
-    if gold > 0 then
+    if gold > 0 or all then
         table.insert(str, "|cFFFFD100")
         table.insert(str, gold)
         table.insert(str, "|r|TInterface\\MoneyFrame\\UI-GoldIcon:12:12:4:0|t  ")
@@ -182,6 +194,12 @@ function Addon:GetPriceString(price)
         table.insert(str, "|cFFE6E6E6")
         table.insert(str, string.format("%02d", silver))
         table.insert(str, "|r|TInterface\\MoneyFrame\\UI-SilverIcon:12:12:4:0|t  ")
+
+        if (all) then
+            table.insert(str, "|cFFC8602C")
+            table.insert(str, copper)
+            table.insert(str, "|r|TInterface\\MoneyFrame\\UI-CopperIcon:12:12:4:0|t")
+        end
 
     elseif silver > 0 then
         table.insert(str, "|cFFE6E6E6")
@@ -197,57 +215,4 @@ function Addon:GetPriceString(price)
 
     -- Return the concatenated string using the efficient function for it
     return table.concat(str)
-end
-
--- Find a list of items which could be scrapped
-local function findItemsToScrap(ruleManager)
-    local items  = {};
-
-    -- Loop through every bag slot once.
-    for bag=0, NUM_BAG_SLOTS do
-        for slot=1,GetContainerNumSlots(bag) do
-            -- Get Item properties and run scrap rules
-            local item = Addon:GetItemProperties(bag, slot)
-            if (item) then
-                local scrap, ruleId, ruleName = ruleManager:CheckForScrap(item);
-                if (scrap) then
-                    Addon:Debug("Scrapping \"%s\" due to rule \"%s\" (%s) [%d]", item.Name, ruleName, ruleId, #items);
-                    table.insert(items, { item, bag, slot });
-                end
-            end
-        end
-    end
-
-    return items;
-end
-
--- Called when the crapping machine UI is opened.
-function Addon:OnScrappingShown()
-    local scrapConfig = Config:GetRulesConfig(Addon.c_RuleType_Scrap);
-    if (#scrapConfig > 0) then
-
-        local ruleManager = self:GetRuleManager();
-        local items = findItemsToScrap(ruleManager);
-
-        if (#items ~= 0) then
-            self:Print(L["MERCHANT_POPULATING_SCRAP"]);
-            C_ScrappingMachineUI.RemoveAllScrapItems();
-            local toScrap = math.min(#items, 9);
-            for i=1,toScrap do
-                local item, bag, slot = unpack(items[i]);
-
-                self:Print(L["MERCHANT_SCRAP_ITEM"], item.Link, i, toScrap);
-                PickupContainerItem(bag, slot);
-                C_ScrappingMachineUI.RemoveItemToScrap(i - 1);
-                C_ScrappingMachineUI.DropPendingScrapItemFromCursor(i - 1);
-            end
-
-            if (toScrap < #items) then
-                self:Print(L["MERCHANT_MORE_SCRAP"]);
-            end
-
-        else
-            self:Print(L["MERCHANT_NO_SCRAP"]);
-        end
-    end
 end

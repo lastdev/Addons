@@ -4,7 +4,7 @@
 
   List of mounts with some kinds of extra stuff, mostly shuffle/random.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -30,6 +30,8 @@ if LibDebug then LibDebug() end
     __newindex = function (table, key, value) store_value_somehow end
 
   Also arithmetic and comparison operators: __add __mul __eq __lt __le
+
+  For a full list: http://lua-users.org/wiki/MetatableEvents
 
   The generic case for metatable "inheritence" is
 
@@ -74,15 +76,51 @@ function LM.MountList:Copy()
     return self:New(out)
 end
 
+function LM.MountList:Clear()
+    table.wipe(self)
+    return self
+end
+
+function LM.MountList:Extend(other)
+    local exists = { }
+    for _,m in ipairs(self) do
+        exists[m] = true
+    end
+    for _,m in ipairs(other) do
+        if not exists[m] then
+            table.insert(self, m)
+        end
+    end
+    return self
+end
+
+function LM.MountList:Reduce(other)
+    local remove = { }
+    for _,m in ipairs(other) do
+        remove[m] = true
+    end
+    local j, n = 1, #self
+    for i = 1, n do
+        if remove[self[i]] then
+            self[i] = nil
+        else
+            if i ~= j then
+                self[j] = self[i]
+                self[i] = nil
+            end
+            j = j + 1
+        end
+    end
+    return self
+end
+
 function LM.MountList:Search(matchfunc, ...)
     local result = self:New()
-
     for _,m in ipairs(self) do
         if matchfunc(m, ...) then
             tinsert(result, m)
         end
     end
-
     return result
 end
 
@@ -130,7 +168,12 @@ function LM.MountList:PriorityRandom(r)
 
     for i,m in ipairs(self) do
         local p, w  = LM.Options:GetPriority(m)
-        weights[i] = w / ( priorityCounts[p] + 1 )
+        -- Handle the "always" priority by setting all the others to weight 0
+        if priorityCounts[LM.Options.ALWAYS_PRIORITY] and p ~= LM.Options.ALWAYS_PRIORITY then
+            weights[i] = 0
+        else
+            weights[i] = w / ( priorityCounts[p] + 1 )
+        end
         totalWeight = totalWeight + weights[i]
     end
 
@@ -153,6 +196,39 @@ end
 
 function LM.MountList:FilterSearch(...)
     return self:Search(filterMatch, ...)
+end
+
+-- Limits can be filter (no prefix), set (=), reduce (-) or extend (+).
+
+function LM.MountList:Limit(...)
+
+    -- This is a dubiously worthwhile optimization, to look for the last
+    -- set (=) and ignore everything before it as irrelevant. Depending on
+    -- how inefficient sub(1,1) is this might actually be slower.
+
+    local begin = 1
+    for i = 1, select('#', ...) do
+        if select(i, ...):sub(1,1) == '=' then
+            begin = i
+        end
+    end
+
+    local mounts = self:Copy()
+
+    for i = begin, select('#', ...) do
+        local f = select(i, ...)
+        if f:sub(1,1) == '+' then
+            mounts:Extend(self:FilterSearch(f:sub(2)))
+        elseif f:sub(1,1) == '-' then
+            mounts:Reduce(self:FilterSearch(f:sub(2)))
+        elseif f:sub(1,1) == '=' then
+            mounts = self:FilterSearch(f)
+        else
+            mounts = mounts:FilterSearch(f)
+        end
+    end
+
+    return mounts
 end
 
 local function cmpName(a, b)

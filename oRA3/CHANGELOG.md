@@ -1,6 +1,6 @@
 # oRA3
 
-## [v9.0.6](https://github.com/BigWigsMods/oRA3/tree/v9.0.6) (2020-10-25)
-[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v9.0.5...v9.0.6) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
+## [v9.0.15](https://github.com/BigWigsMods/oRA3/tree/v9.0.15) (2021-03-09)
+[Full Changelog](https://github.com/BigWigsMods/oRA3/compare/v9.0.14...v9.0.15) [Previous Releases](https://github.com/BigWigsMods/oRA3/releases)
 
-- Cooldowns: Fix an error when a Mage uses Alter Time  
+- bump toc  

@@ -4,13 +4,16 @@
 ---- PLEASE READ BEFORE DOING ANYTHING ----
 ----
 
-Only fonts should be added to this addon. If you wish to add textures, sounds, ... create your own addon or use an existing one if there is one.
-All fonts must be able to display special characters such as é, è, à, ü, É, Ç, ... Remember that not all the users use the English client!
+Only fonts should be added to this addon. If you wish to add textures, sounds, 
+... create your own addon or use an existing one if there is one.
+All fonts must be able to display special characters such as é, è, à, ü, É, Ç,
+... Remember that not all the users use the English client!
 
-Don't add a font that you did not test. All fonts must be tested in game before upload.
+Don't add a font that you did not test. All fonts must be tested in game before
+upload.
 
 Thanks for your cooperation! ;-)
-pb_ee1
+AllInOneMighty
 
 ]]
 

@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90005
 ## Title: WeakAuras Archive
 ## Author: The WeakAuras Team
 ## LoadOnDemand: 1

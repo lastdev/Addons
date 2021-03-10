@@ -44,6 +44,7 @@ function GoGo_OnEvent(self, event, ...)
 		GoGo_Variables.VerMajor, GoGo_Variables.VerMinor, GoGo_Variables.VerBuild = tonumber(GoGo_Variables.VerMajor), tonumber(GoGo_Variables.VerMinor), tonumber(GoGo_Variables.VerBuild)
 		_, GoGo_Variables.Player.Class = UnitClass("player")
 		_, GoGo_Variables.Player.Race = UnitRace("player")
+		GoGo_Variables.Player.Covenant = C_Covenants.GetActiveCovenantID()
 		GoGo_Variables.Player.Faction, _ = UnitFactionGroup("player")
 		GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 		GoGo_UpdateZonePrefs()  -- Migrate zone settings before attempting to draw options
@@ -71,7 +72,7 @@ function GoGo_OnEvent(self, event, ...)
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		GoGo_Variables.Player.MapID = C_Map.GetBestMapForUnit("player")
 		GoGo_Variables.Player.ZoneID = GoGo_Variables.ZoneMapID[GoGo_Variables.Player.MapID]
-		for i, button in ipairs({GoGoButton, GoGoButton2, GoGoButton3}) do
+		for i, button in ipairs({GoGoButton, GoGoButton2, GoGoButton3, GoGoButton4, GoGoButton5}) do
 			if GoGo_Variables.Player.Class == "SHAMAN" then
 				if GoGo_Variables.Debug >= 10 then 
 					GoGo_DebugAddLine("GoGo_OnEvent: Shaman entering combat.  Setting macro.")
@@ -118,6 +119,13 @@ function GoGo_OnEvent(self, event, ...)
 		end --if
 		if _G["GoGo_ZoneExclusions_ContentFrame"] and _G["GoGo_ZoneExclusions_ContentFrame"]:IsShown() then
 			GoGo_AddOptionCheckboxes("GoGo_ZoneExclusions_ContentFrame")
+		end --if
+		-- Covenant is no set properly on start. Try to get it when we change zones
+		if (GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NoCovenant) then
+		    GoGo_Variables.Player.Covenant = C_Covenants.GetActiveCovenantID()
+			if (GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae) then
+				GoGo_NightFae_Panel()
+			end --if
 		end --if
 	elseif event == "TAXIMAP_OPENED" then
 		GoGo_Dismount()
@@ -223,6 +231,11 @@ function GoGo_PreClick(button)
 			GoGo_DebugAddLine("GoGo_PreClick: Player is a shaman and is in wolf form.  Standing up.")
 		end --if
 		GoGo_Dismount(button)
+	elseif GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae and AuraUtil.FindAuraByName(GetSpellInfo(GoGo_Variables.Localize.SoulShape), "player") then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_PreClick: Player is in SoulShape form.  Standing up.")
+		end --if
+		GoGo_Dismount(button)
 	elseif not InCombatLockdown() then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_PreClick: Player not in combat, button pressed, looking for a mount.")
@@ -318,6 +331,8 @@ function GoGo_ChooseMount()
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 138) -- Aspects
 	elseif (GoGo_Variables.Player.Class == "MONK") then
 		GoGo_TableAddUnique(GoGo_Variables.AirSpeed, 160)  -- Zen Flight
+	elseif (GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae) then
+		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 150)  -- Soulshape
 	end --if
 
 	if GoGo_Variables.Debug >= 10 then
@@ -376,7 +391,7 @@ function GoGo_ChooseMount()
 
 	GoGo_ZoneCheck()  -- Checking to see what we can and can not do in zones
 
-	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly then
+	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly and not GoGo_Variables.SelectHerbMount then
 		GoGo_Variables.SkipFlyingMount = true
 	end --if
 
@@ -410,7 +425,11 @@ function GoGo_ChooseMount()
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 47)
 	end --if
 ]]
-	if GoGo_Variables.RidingLevel <= 224 then
+
+	if GoGo_Variables.Player.MapID == 1355 then
+
+
+	elseif GoGo_Variables.RidingLevel <= 224 then
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 36)
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 35)
 	elseif GoGo_Variables.RidingLevel >= 225 and GoGo_Variables.RidingLevel <= 299 then
@@ -431,16 +450,16 @@ function GoGo_ChooseMount()
 
 	if IsSubmerged() then
 		GoGo_CheckSwimSurface()
-	else
+	elseif GoGo_Variables.Player.MapID ~= 1355 then
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 53)
 	end --if
 
-	if (GoGo_Variables.Player.Level < 60) then
+	if (GoGo_Variables.Player.Level < 30) then
 		if (GoGo_Variables.Player.Level >= 58 and GoGo_Variables.Player.Class == "DRUID") then
 			-- do nothing.. druids can fly at 58
 		else
 			if GoGo_Variables.Debug >= 10 then
-				GoGo_DebugAddLine("GoGo_ChooseMount: Disabling flying - under level 60")
+				GoGo_DebugAddLine("GoGo_ChooseMount: Disabling flying - under level 30")
 			end --if
 			GoGo_Variables.NoFlying = true
 		end --if
@@ -473,6 +492,20 @@ function GoGo_ChooseMount()
 			GoGo_DebugAddLine("GoGo_ChooseMount: Filtering out all mounts except passenger mounts since passenger mount only was requested.")
 		end --if
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 2) or {}
+	end --if
+
+	if GoGo_Variables.SelectSellerMount then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Filtering out all mounts except seller mounts since seller mount only was requested.")
+		end --if
+		GoGo_Variables.FilteredMounts = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 3) or {}
+	end --if
+
+	if GoGo_Variables.SelectHerbMount then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Filtering out all mounts except herbalism mounts since herbalism only was requested.")
+		end --if
+		GoGo_Variables.FilteredMounts = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 6) or {}
 	end --if
 
 	if GoGo_Variables.SkipFlyingMount then
@@ -551,6 +584,15 @@ function GoGo_ChooseMount()
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except mounts that can be summoned while moving or falling - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
 	end --if
+	
+	if not GoGo_Variables.ZoneExclude.TheMaw then
+	    -- cannot summon mounts in The Maw
+	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except mounts that can be summoned in The Maw - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
+		end --if
+	end --if
+
 
 	if GoGo_Variables.ZoneExclude.RestrictedIndoorMounts then  -- only select what we can use in here..
 		GoGo_Variables.FilteredMounts = GoGo_GetIndoorMounts(GoGo_Variables.FilteredMounts) or {}
@@ -577,7 +619,7 @@ function GoGo_ChooseMount()
 		GoGo_Variables.CanFly = false
 	end --if 
 
-	if GoGo_Variables.Debug >= 10 then
+	if GoGo_Variables.Debug >= 6 then
 		GoGo_DebugAddLine("GoGo_ChooseMount: ZoneExclude.Canfly = " .. tostring(GoGo_Variables.ZoneExclude.CanFly))
 		GoGo_DebugAddLine("GoGo_ChooseMount: SkipFlyingMount = " .. tostring(GoGo_Variables.SkipFlyingMount))
 		GoGo_DebugAddLine("GoGo_ChooseMount: NoFlying = " .. tostring(GoGo_Variables.NoFlying))
@@ -609,8 +651,9 @@ function GoGo_ChooseMount()
 		end --if
 	end --if
 
+	if GoGo_Variables.Player.MapID ~= 1355 then
 	GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 53)
-
+	end
 	if (table.getn(mounts) == 0) and GoGo_Variables.CanFly then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Looking for flying mounts since we past flight checks.")
@@ -716,11 +759,11 @@ end --function
 function GoGo_FilterMountsOut(PlayerMounts, FilterID)
 ---------
 	local GoGo_FilteringMounts = {}
-	if not PlayerMounts then PlayerMounts = {} end --if
-	if table.getn(PlayerMounts) == 0 then
+	if not PlayerMounts then PlayerMounts = {} end --if --Make sure at least something is passed.
+	if table.getn(PlayerMounts) == 0 then --return if passed nothing.
 		return GoGo_FilteringMounts
 	end --if
-	if not GoGo_Variables.MountDB then
+	if not GoGo_Variables.MountDB then --If passed the wrong object fetch the correct one
 		GoGo_GetMountDB()
 	end --if
 	for a = 1, table.getn(PlayerMounts) do
@@ -808,6 +851,19 @@ function GoGo_Dismount(button)
 				GoGo_FillButton(button, GoGo_InBook(GoGo_Variables.Localize.GhostWolf))
 			end --if
 		end --if
+	elseif GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_Dismount: Getting out of Soulshape ")
+		end --if
+		if AuraUtil.FindAuraByName(GetSpellInfo(GoGo_Variables.Localize.SoulShape), "player") and button then
+			if GoGo_Prefs.NightFaeClickForm then
+				GoGo_FillButton(button, GoGo_GetMount())
+			else
+			    -- Soulshape button is replaced by Flicker. Clicking on the button while in Soulshape without the ClickForm option
+				-- will Flicker instead of getting out of Soulshape
+				GoGo_FillButton(button, GoGo_InBook(GoGo_Variables.Localize.SoulShape))
+			end --if
+		end --if
 	else
 		return nil
 	end --if
@@ -827,7 +883,11 @@ function GoGo_BuildMountList()
 			if GoGo_Variables.Debug >= 10 then 
 				-- show a line for each mount and indicate if it's usable, etc. in debug log?
 				--GoGo_DebugAddLine("GoGo_BuildMountList: Found mount spell ID " .. SpellID .. " and added to known mount list.")
-				GoGo_DebugAddLine("GoGo_BuildMountList: SpellID: " .. SpellID .. "  isUsable: " .. tostring(isUsable) .. "  isFactionSpecific: " .. tostring(isFactionSpecific) .. "  faction: " .. tostring(faction) .. "  isCollected: " .. tostring(isCollected) .. "  IsUsableSpell(): " .. tostring(IsUsableSpell(SpellID)) .. "  IsSpellKnown(): " .. tostring(IsSpellKnown(SpellID)))
+				if SpellID == 0 then
+				    GoGo_DebugAddLine("GoGo_BuildMountList: SpellID: " .. SpellID )
+				else
+					GoGo_DebugAddLine("GoGo_BuildMountList: SpellID: " .. SpellID .. "  isUsable: " .. tostring(isUsable) .. "  isFactionSpecific: " .. tostring(isFactionSpecific) .. "  faction: " .. tostring(faction) .. "  isCollected: " .. tostring(isCollected) .. "  IsUsableSpell(): " .. tostring(IsUsableSpell(SpellID)) .. "  IsSpellKnown(): " .. tostring(IsSpellKnown(SpellID)))
+				end --if
 			end --if
 
 			if isCollected and isUsable then
@@ -850,14 +910,14 @@ function GoGo_BuildMountList()
 		if GoGo_InBook(GoGo_Variables.Localize.CatForm) then
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.CatForm)
 		end --if
-		if GoGo_InBook(GoGo_Variables.Localize.FlightForm) then  -- may not be used any more since Warcraft 6.0
-			table.insert(GoGo_MountList, GoGo_Variables.Localize.FlightForm)
+		if GoGo_InBook(GoGo_Variables.Localize.TravelForm2) then  -- may not be used any more since Warcraft 6.0
+			table.insert(GoGo_MountList, GoGo_Variables.Localize.TravelForm2)
 		end --if
 		if GoGo_InBook(GoGo_Variables.Localize.FastFlightForm) then  -- may not be used any more since Warcraft 6.0
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.FastFlightForm)
 		end --if
-		if GoGo_InBook(165962) then  -- Flight Form that appears with "Glyph of the Stag" in Warcraft 6.0
-			table.insert(GoGo_MountList, 165962)
+		if GoGo_InBook(GoGo_Variables.Localize.FlightForm) then  -- Flight Form that appears with "Glyph of the Stag" in Warcraft 6.0
+			table.insert(GoGo_MountList, GoGo_Variables.Localize.FlightForm)
 		end --if
 		if GoGo_InBook(GoGo_Variables.Localize.TravelForm) then
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.TravelForm)
@@ -879,6 +939,8 @@ function GoGo_BuildMountList()
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.ZenFlight)
 			GoGo_TableAddUnique(GoGo_Variables.AirSpeed, 160)
 		end --if
+	elseif GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
+			table.insert(GoGo_MountList, GoGo_Variables.Localize.SoulShape)
 	end --if
 
 	if GoGo_Variables.Player.Race == "Worgen" then
@@ -1390,7 +1452,7 @@ function GoGo_CheckForUnknownMounts(MountList)
 			end --if
 			GoGo_ZonePrefMount(MountID)		-- to remove zone favorite flag if mount unknown
 			GoGo_GlobalPrefMount(MountID)		-- to remove global favorite flag if mount unknown
-			if GoGo_Variables.Debug >= 10 then
+			if GoGo_Variables.Debug >= 6 then
 				GoGo_DebugAddLine("GoGo_CheckForUnknownMounts: Unknown mount found:  " .. MountID)
 			end --if
 			if not GoGo_Prefs.DisableMountNotice and not GoGo_Variables.UnknownMountMsgShown then
@@ -1503,7 +1565,7 @@ end --function
 ---------
 function GoGo_CheckBindings()
 ---------
-	for binding, button in pairs({GOGOBINDING = GoGoButton, GOGOBINDING2 = GoGoButton2, GOGOBINDING3 = GoGoButton3}) do
+	for binding, button in pairs({GOGOBINDING = GoGoButton, GOGOBINDING2 = GoGoButton2, GOGOBINDING3 = GoGoButton3, GOGOBINDING4 = GoGoButton4, GOGOBINDING5 = GoGoButton5}) do
 		ClearOverrideBindings(button)
 		local key1, key2 = GetBindingKey(binding)
 		if key1 then
@@ -1529,9 +1591,9 @@ end --function
 ---------
 function GoGo_CanRide()
 ---------
-	if GoGo_Variables.Player.Level >= 20 then
+	if GoGo_Variables.Player.Level >= 10 then
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_CanRide: Passed - Player is over level 20.")
+			GoGo_DebugAddLine("GoGo_CanRide: Passed - Player is over level 10.")
 		end --if
 		return true
 	end --if
@@ -1638,17 +1700,17 @@ end --function
 function GoGo_GetRidingSkillLevel()
 --------- 
 	if GoGo_InBook(GoGo_Variables.Localize.MasterRiding) then
-		return 325
+		return GoGo_Variables.Localize.Skill.MasterRiding
 	elseif GoGo_InBook(GoGo_Variables.Localize.ArtisanRiding) then
-		return 300
+		return GoGo_Variables.Localize.Skill.ArtisanRiding
 	elseif GoGo_InBook(GoGo_Variables.Localize.ExpertRiding) then
-		return 225
+		return GoGo_Variables.Localize.Skill.ExpertRiding
 	elseif GoGo_InBook(GoGo_Variables.Localize.JourneymanRiding) then
-		return 150
+		return GoGo_Variables.Localize.Skill.JourneymanRiding
 	elseif GoGo_InBook(GoGo_Variables.Localize.ApprenticeRiding) then
-		return 75
+		return GoGo_Variables.Localize.Skill.ApprenticeRiding
 	else
-		return 0
+		return GoGo_Variables.Localize.Skill.NoRiding
 	end --if
 
 	-- master riding just makes epic flying mounts faster - no need to search for it specifically
@@ -1741,14 +1803,14 @@ function GoGo_GetBestAirMounts(GoGo_FilteredMounts)
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_GetBestAirMounts: Druid with preferred flight forms option enabled.  Using flight form.")
 		end --if
-		if string.find(GoGo_SearchString, 165962, 1, true) then
-			if GoGo_Variables.Debug >= 10 then
-				GoGo_DebugAddLine("GoGo_GetBestAirMounts: Found FastFlightForm")
-			end --if
-			table.insert(mounts, 165962)
-		elseif string.find(GoGo_SearchString, GoGo_Variables.Localize.TravelForm, 1, true) then
+		if string.find(GoGo_SearchString, GoGo_Variables.Localize.FlightForm, 1, true) then
 			if GoGo_Variables.Debug >= 10 then
 				GoGo_DebugAddLine("GoGo_GetBestAirMounts: Found FlightForm")
+			end --if
+			table.insert(mounts, GoGo_Variables.Localize.FlightForm)
+		elseif string.find(GoGo_SearchString, GoGo_Variables.Localize.TravelForm, 1, true) then
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_GetBestAirMounts: Found TravelForm")
 			end --if
 			table.insert(mounts, GoGo_Variables.Localize.TravelForm)
 		else
@@ -1960,13 +2022,13 @@ function GoGo_UpdateMountData()
 	end --if
 	
 	-- mount speed updates based on riding skill
-	if GoGo_GetRidingSkillLevel() == 325 then  -- increase air mounts to 410
+	if GoGo_GetRidingSkillLevel() == GoGo_Variables.Localize.Skill.MasterRiding then  -- increase air mounts to 410
 		GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 300, 10003, 410)
 	elseif GoGo_GetRidingSkillLevel() == 300 then  -- increase air mounts to 380
 		GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 301, 10003, 380)
 	end --if
 
-	if GoGo_GetRidingSkillLevel() >= 150 then  -- increase ground mounts to 200
+	if GoGo_GetRidingSkillLevel() >= GoGo_Variables.Localize.Skill.JourneymanRiding then  -- increase ground mounts to 200
 		GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 330, 10002, 200)
 	end --if	
 
@@ -2056,7 +2118,7 @@ GOGO_SPELLS = {
 			GoGo_CastString = GoGo_CastString .. "[indoors] "..GoGo_InBook(GoGo_Variables.Localize.CatForm)
 			UseSeperator = true
 		end --if
-		if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
+		if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FlightForm) and GoGo_Variables.CanFly then
 			if UseSeperator then
 				GoGo_CastString = GoGo_CastString .. ";"
 			end --if
@@ -2067,7 +2129,7 @@ GOGO_SPELLS = {
 			if UseSeperator then
 				GoGo_CastString = GoGo_CastString .. ";"
 			end --if
-			GoGo_CastString = GoGo_CastString .. GoGo_InBook(165962)
+			GoGo_CastString = GoGo_CastString .. GoGo_InBook(GoGo_Variables.Localize.FlightForm)
 		else
 			if UseSeperator then
 				GoGo_CastString = GoGo_CastString .. ";"
@@ -2082,8 +2144,8 @@ GOGO_SPELLS = {
 --[[
 	["DRUID"] = function()
 		if GoGo_Prefs.DruidClickForm then
-			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
-				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(165962)
+			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FlightForm) and GoGo_Variables.CanFly then
+				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FlightForm)
 			elseif not GoGo_Variables.SkipFlyingMount and GoGo_Variables.CanFly then
 				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; "..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
 			else
@@ -2097,8 +2159,8 @@ GOGO_SPELLS = {
 				_, GoGo_FormName = GetShapeshiftFormInfo(GoGo_TempCount)
 				GoGo_CastString = GoGo_CastString .. "[form:" .. GoGo_TempCount .. "] "..GoGo_FormName..";"
 			end --for
-			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
-				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(165962)
+			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FlightForm) and GoGo_Variables.CanFly then
+				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FlightForm)
 			elseif not GoGo_Variables.SkipFlyingMount and GoGo_Variables.CanFly then
 				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
 			else
@@ -2111,6 +2173,10 @@ GOGO_SPELLS = {
 
 	["SHAMAN"] = function()
 		return GoGo_InBook(GoGo_Variables.Localize.GhostWolf)
+	end, --function
+
+	["NIGHTFAE"] = function()
+		return GoGo_InBook(GoGo_Variables.Localize.SoulShape)
 	end, --function
 }
 
@@ -2160,6 +2226,10 @@ GOGO_COMMANDS = {
 	end, --function
 	["debug"] = function()
 		GoGo_StartStopDebug(10)
+		GoGo_Msg("debug")
+	end, --function
+	["debug 0"] = function()
+		GoGo_StartStopDebug(0)
 		GoGo_Msg("debug")
 	end, --function
 	["debug 6"] = function()
@@ -2248,6 +2318,8 @@ GOGO_MESSAGES = {
 			return "GoGoMount debugging level 6 set"
 		elseif GoGo_Variables.Debug == 5 then
 			return "GoGoMount debugging level 5 set"
+		elseif GoGo_Variables.Debug == 0 then
+			return "GoGoMount debugging disabled for 1 GoGoButton click."
 		end --if
 	end, --function
 	["globalexclude"] = function()
@@ -2300,6 +2372,7 @@ function GoGo_DebugAddLine(LogLine)
 	if not GoGo_Variables.DebugLine then GoGo_Variables.DebugLine = 1 end --if
 	GoGo_DebugLog[GoGo_Variables.DebugLine] = (debugprofilestop()-GoGo_Variables.DebugTimer) .. " " .. LogLine
 	GoGo_Msg(LogLine)
+	if DLAPI then DLAPI.DebugLog("GoGoMount", LogLine) end 
 	GoGo_Variables.DebugLine = GoGo_Variables.DebugLine + 1
 	
 end --function
@@ -2566,6 +2639,28 @@ function GoGo_Shaman_Panel()
 end --function
 
 ---------
+function GoGo_NightFae_Panel()
+---------
+	GoGo_NightFae_Panel = CreateFrame("Frame", nil, UIParent)
+	GoGo_NightFae_Panel.name = GoGo_Variables.Localize.String.NightFaeOptions
+	GoGo_NightFae_Panel.parent = "GoGoMount"
+	GoGo_NightFae_Panel.default = function (self) GoGo_Settings_Default("NIGHTFAE"); end;  -- use clear command with default button
+	InterfaceOptions_AddCategory(GoGo_NightFae_Panel)
+
+	GoGo_NightFae_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_NightFae_Panel_ClickForm", GoGo_NightFae_Panel, "OptionsCheckButtonTemplate")
+	GoGo_NightFae_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
+	GoGo_NightFae_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.NightFaeSingleClick)
+	if GoGo_Prefs.NightFaeClickForm then
+		GoGo_NightFae_Panel_ClickForm:SetChecked(1)
+	end --if
+	GoGo_NightFae_Panel_ClickForm:SetScript("OnClick",
+		function(self)
+			GoGo_SetPref("NightFaeClickForm", GoGo_NightFae_Panel_ClickForm:GetChecked())
+		end --function
+	)
+end --function
+
+---------
 function GoGo_ZoneFavorites_Panel()
 ---------
 	GoGo_ZoneFavorites_Panel = CreateFrame("Frame", nil, UIParent)
@@ -2801,6 +2896,11 @@ function GoGo_SetPref(strPref, intValue, boolNoPanel)
 		if (not boolNoPanel) then
 			GoGo_Shaman_Panel_ClickForm:SetChecked(intValue)
 		end --if
+	elseif strPref == "NightFaeClickForm" then
+		GoGo_Prefs.NightFaeClickForm = intValue
+		if (not boolNoPanel) then
+			GoGo_NightFae_Panel_ClickForm:SetChecked(intValue)
+		end --if
 	elseif strPref == "DruidDisableInCombat" then
 		GoGo_Prefs.DruidDisableInCombat = intValue
 		if (not boolNoPanel) then
@@ -2872,6 +2972,7 @@ function GoGo_Settings_Default(Class)
 		GoGo_SetPref("AutoExcludeFlyingMounts", false, true)
 		GoGo_SetPref("DruidDisableInCombat", false, true)
 		GoGo_SetPref("ShamanClickForm", false, true)
+		GoGo_SetPref("NightFaeClickForm", false, true)
 		GoGo_Prefs.PrefVer = 1
 
 	end --if
@@ -2894,6 +2995,7 @@ function GoGo_Settings_SetUpdates()
 	if not GoGo_Prefs.AutoExcludeFlyingMounts then GoGo_Prefs.AutoExcludeFlyingMounts = false end
 	if not GoGo_Prefs.DruidDisableInCombat then GoGo_Prefs.DruidDisableInCombat = false end
 	if not GoGo_Prefs.ShamanClickForm then GoGo_Prefs.ShamanClickForm = false end
+	if not GoGo_Prefs.NightFaeClickForm then GoGo_Prefs.NightFaeClickForm = false end
 
 	GoGo_Prefs.UnknownMounts = {}
 	if not GoGo_Prefs.GlobalExclude then
@@ -3001,14 +3103,17 @@ function GoGo_AddOptionCheckboxes(GoGo_FrameParentText)
 		end --if
 		
 		if GoGo_FrameParentText == "GoGo_ZoneFavorites_ContentFrame" then
-			if table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"]) > 0 then
-				--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
-				for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"]) do
-					if GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"][GoGo_FavoriteCount] == GoGo_MountID then
-						_G[GoGo_CheckBoxName]:SetChecked(1)
---							GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked " .. GoGo_MountID)
-					end --if
-				end --for
+		    -- Checking if MapID is valid as we sometimes get called before MapID is valid (e.g. jumping in the Maw)
+			if  GoGo_Variables.Player.MapID then
+				if table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"]) > 0 then
+					--GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): zone exists ")
+					for GoGo_FavoriteCount = 1, table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"]) do
+						if GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"][GoGo_FavoriteCount] == GoGo_MountID then
+							_G[GoGo_CheckBoxName]:SetChecked(1)
+							-- GoGo_DebugAddLine("GoGo_AddOptionCheckboxes(): set checked " .. GoGo_MountID)
+						end --if
+					end --for
+				end --if
 			end --if
 			_G[GoGo_CheckBoxName]:SetScript("OnClick",
 				function(self)
@@ -3101,6 +3206,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Legion enabled.")
 	elseif GoGo_Variables.ExpansionAccount == 7 then
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Battle for Azeroth enabled.")
+	elseif GoGo_Variables.ExpansionAccount == 8 then
+		GoGo_DebugAddLine("Information: Account - World of Warcraft: Shadowlands enabled.")
 	end --if
 	if GoGo_Variables.ExpansionGame == 0 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft (Classic) enabled.")
@@ -3118,6 +3225,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Legion enabled.")
 	elseif GoGo_Variables.ExpansionGame == 7 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Battle for Azeroth enabled.")
+	elseif GoGo_Variables.ExpansionGame == 8 then
+		GoGo_DebugAddLine("Information: Game - World of Warcraft: Shadowlands enabled.")
 	end --if
 	GoGo_DebugAddLine("Information: Client locale is " .. GetLocale())
 	GoGo_DebugAddLine("Information: Location = " .. GetRealZoneText() .. " - " .. GetZoneText() .. " - " ..GetSubZoneText() .. " - " .. GetMinimapZoneText())
@@ -3129,6 +3238,17 @@ function GoGo_DebugCollectInformation()
 	local level = UnitLevel("player")
 	GoGo_DebugAddLine("Information: We are level " .. level)
 	GoGo_DebugAddLine("Information: We are a " .. GoGo_Variables.Player.Race .. " " .. GoGo_Variables.Player.Class)
+	if GoGo_Variables.Player.Covenant == 0 then
+		GoGo_DebugAddLine("Information: We do not have a covenant.")
+	elseif GoGo_Variables.Player.Covenant == 1 then
+		GoGo_DebugAddLine("Information: Our covenant is Kyrian.")
+	elseif GoGo_Variables.Player.Covenant == 2 then
+		GoGo_DebugAddLine("Information: Our covenant is Venthyr.")
+	elseif GoGo_Variables.Player.Covenant == 3 then
+		GoGo_DebugAddLine("Information: Our covenant is Night Fae.")
+	elseif GoGo_Variables.Player.Covenant == 4 then
+		GoGo_DebugAddLine("Information: Our covenant is Necro Lord.")
+	end --if
 	if IsInGuild() and GetGuildPerkInfo(2) then
 		GoGo_DebugAddLine("Information: We are in a guild with the Mount Up perk")
 	end --if

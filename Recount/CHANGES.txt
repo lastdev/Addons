@@ -1,12 +1,10 @@
-------------------------------------------------------------------------
-r1563 | Resike | 2020-10-13 23:04:48 +0000 (Tue, 13 Oct 2020) | 1 line
-Changed paths:
-   M /trunk/GUI_Detail.lua
-   M /trunk/GUI_Graph.lua
-   M /trunk/GUI_Reset.lua
-   M /trunk/Recount.toc
-   M /trunk/Widgets.lua
+lightweight tag 8ed443c8a8d9f833c758b74fe5fa255e90949454 v9.0.2b
+Author:	Resike <resike@gmail.com>
+Date:	Tue Feb 2 19:54:59 2021 +0100
 
-- Support for 9.0.1.
-------------------------------------------------------------------------
+commit 8ed443c8a8d9f833c758b74fe5fa255e90949454
+Author: Resike <resike@gmail.com>
+Date:   Tue Feb 2 19:54:59 2021 +0100
+
+    Retail TOC
 

@@ -46,7 +46,7 @@ local tempGroup = {
 };
 OptionsPrivate.tempGroup = tempGroup;
 
-function OptionsPrivate.DuplicateAura(data, newParent)
+function OptionsPrivate.DuplicateAura(data, newParent, massEdit)
   local base_id = data.id .. " "
   local num = 2
 
@@ -72,7 +72,7 @@ function OptionsPrivate.DuplicateAura(data, newParent)
     newData.controlledChildren = {}
   end
   WeakAuras.Add(newData)
-  WeakAuras.NewDisplayButton(newData)
+  WeakAuras.NewDisplayButton(newData, massEdit)
   if(newParent or data.parent) then
     local parentId = newParent or data.parent
     local parentData = WeakAuras.GetData(parentId)
@@ -94,9 +94,11 @@ function OptionsPrivate.DuplicateAura(data, newParent)
         childButton:SetGroupOrder(index, #parentData.controlledChildren)
       end
 
-      local button = WeakAuras.GetDisplayButton(parentData.id)
-      button.callbacks.UpdateExpandButton()
-      WeakAuras.UpdateDisplayButton(parentData)
+      if not massEdit then
+        local button = WeakAuras.GetDisplayButton(parentData.id)
+        button.callbacks.UpdateExpandButton()
+        WeakAuras.UpdateDisplayButton(parentData)
+      end
       OptionsPrivate.ClearOptions(parentData.id)
     end
   end
@@ -373,6 +375,7 @@ StaticPopupDialogs["WEAKAURAS_CONFIRM_DELETE"] = {
   button2 = L["Cancel"],
   OnAccept = function(self)
     if self.data then
+      OptionsPrivate.Private.PauseAllDynamicGroups()
       OptionsPrivate.massDelete = true
       for _, auraData in pairs(self.data.toDelete) do
         WeakAuras.Delete(auraData)
@@ -395,6 +398,7 @@ StaticPopupDialogs["WEAKAURAS_CONFIRM_DELETE"] = {
           WeakAuras.UpdateDisplayButton(parentData)
         end
       end
+      OptionsPrivate.Private.ResumeAllDynamicGroups()
       WeakAuras.SortDisplayButtons()
     end
   end,
@@ -711,8 +715,18 @@ function WeakAuras.ShowOptions(msg)
   if (firstLoad) then
     frame = OptionsPrivate.CreateFrame();
     frame.buttonsScroll.frame:Show();
+
     LayoutDisplayButtons(msg);
   end
+
+  if (frame:GetWidth() > GetScreenWidth()) then
+    frame:SetWidth(GetScreenWidth())
+  end
+
+  if (frame:GetHeight() > GetScreenHeight() - 50) then
+    frame:SetHeight(GetScreenHeight() - 50)
+  end
+
   frame.buttonsScroll.frame:Show();
 
   if (frame.needsSort) then
@@ -829,13 +843,15 @@ function OptionsPrivate.ConvertDisplay(data, newType)
   WeakAuras.SortDisplayButtons()
 end
 
-function WeakAuras.NewDisplayButton(data)
+function WeakAuras.NewDisplayButton(data, massEdit)
   local id = data.id;
   OptionsPrivate.Private.ScanForLoads({[id] = true});
   EnsureDisplayButton(db.displays[id]);
   WeakAuras.UpdateDisplayButton(db.displays[id]);
   frame.buttonsScroll:AddChild(displayButtons[id]);
-  WeakAuras.SortDisplayButtons();
+  if not massEdit then
+    WeakAuras.SortDisplayButtons()
+  end
 end
 
 function WeakAuras.UpdateGroupOrders(data)
@@ -1268,8 +1284,8 @@ function OptionsPrivate.OpenTexturePicker(baseObject, path, properties, textures
   frame.texturePicker:Open(baseObject, path, properties, textures, SetTextureFunc)
 end
 
-function OptionsPrivate.OpenIconPicker(data, field, groupIcon)
-  frame.iconPicker:Open(data, field, groupIcon);
+function OptionsPrivate.OpenIconPicker(baseObject, paths, groupIcon)
+  frame.iconPicker:Open(baseObject, paths, groupIcon)
 end
 
 function OptionsPrivate.OpenModelPicker(baseObject, path)
@@ -1547,10 +1563,31 @@ function OptionsPrivate.InsertCollapsed(id, namespace, path, value)
   data[insertPoint] = {[collapsed] = value}
 end
 
+function OptionsPrivate.DuplicateCollapseData(id, namespace, path)
+  collapsedOptions[id] = collapsedOptions[id] or {}
+  collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
+  if type(path) ~= "table" then
+    if (collapsedOptions[id][namespace][path]) then
+      tinsert(collapsedOptions[id][namespace], path + 1, CopyTable(collapsedOptions[id][namespace][path]))
+    end
+  else
+    local tmp = collapsedOptions[id][namespace]
+    local lastKey = tremove(path)
+    for _, key in ipairs(path) do
+      print(" key: ", key)
+      tmp[key] = tmp[key] or {}
+      tmp = tmp[key]
+    end
 
-function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden)
+    if (tmp[lastKey]) then
+      tinsert(tmp, lastKey + 1, CopyTable(tmp[lastKey]))
+    end
+  end
+end
+
+function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden, index, total)
   local headerOption
-  if withHeader then
+  if withHeader and (not index or index == 1) then
     headerOption =  {
       type = "execute",
       control = "WeakAurasExpandSmall",
@@ -1607,7 +1644,7 @@ function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, h
     end
   end)
 
-  if withHeader then
+  if withHeader and (not index or index == total) then
     addOption("header_anchor",
     {
       type = "description",
@@ -1621,7 +1658,7 @@ function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, h
   )
   end
 
-  if not next(seenSymbols) and withHeader then
+  if not next(seenSymbols) and headerOption and not index then
     headerOption.hidden = true
   end
 

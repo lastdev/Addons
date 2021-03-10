@@ -172,16 +172,13 @@ local function ScanMailbox()
 	wipe(character.Mails)
 	wipe(character.MailCache)	-- fully clear the mail cache, since the mailbox will now be properly scanned
 	
-	local numItems, totalItems = GetInboxNumItems();
+	local numItems = GetInboxNumItems()
 	if numItems == 0 then
 		return
 	end
 	
-    local _, stationaryIcon, mailSender, mailSubject, mailMoney, _, days, numAttachments, _, wasReturned
-    days = 30
-    
 	for i = 1, numItems do
-		_, stationaryIcon, mailSender, mailSubject, mailMoney, _, days, numAttachments, _, wasReturned = GetInboxHeaderInfo(i);
+		local _, stationaryIcon, mailSender, mailSubject, mailMoney, _, days, numAttachments, _, wasReturned = GetInboxHeaderInfo(i)
 		if numAttachments then	-- treat attachments as separate entries
 			SaveAttachments(character, i, mailSender, days, wasReturned)
 		end
@@ -213,23 +210,6 @@ local function ScanMailbox()
 	
 	-- show mails with the lowest expiry first
 	table.sort(character.Mails, function(a, b) return a.daysLeft < b.daysLeft end)
-    
-    -- Code added 2020/03/23: also include mail that can't be seen beyond the first 50
-    -- Since we can't see the headers or contents of this mail, just making up generic data for the mail
-    if totalItems > numItems then
-        for i = numItems, totalItems do
-            table.insert(character.Mails, {
-                icon = ICON_NOTE,
-                money = 0,
-                text = "UNKNOWN",
-                subject = "UNKNOWN",
-                sender = "UNKNOWN",
-                lastCheck = time(),
-                daysLeft = days,
-                returned = false,
-            } )
-        end
-    end
 	
 	addon:SendMessage("DATASTORE_MAILBOX_UPDATED")
 end
@@ -338,20 +318,24 @@ local function _GetMailSubject(character, index)
 	
 	local name
 	local link = data.link
+	
 	if link then
 		local id = GetIDFromLink(link)
 		name = GetItemInfo(id)
 	end
+	
 	return name
 end
 
 local function _GetNumExpiredMails(character, threshold)
 	local count = 0
+	
 	for i = 1, _GetNumMails(character) do
 		if _GetMailExpiry(character, i) < threshold then
 			count = count + 1
 		end
 	end
+	
 	return count
 end
 
@@ -458,7 +442,7 @@ local function CheckExpiries()
 			if allAccounts or ((allAccounts == false) and (account == THIS_ACCOUNT)) then		-- all accounts, or only current and current was found
 				if allRealms or ((allRealms == false) and (realm == GetRealmName())) then			-- all realms, or only current and current was found
 		
-				-- detect return vs delete
+					-- detect return vs delete
 					local numExpiredMails = _GetNumExpiredMails(character, threshold)
 					if numExpiredMails > 0 then
 						expiryFound = true

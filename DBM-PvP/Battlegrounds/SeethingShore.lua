@@ -3,14 +3,14 @@ if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 end
 local mod	= DBM:NewMod("z1803", "DBM-PvP")
 
-mod:SetRevision("20201018212526")
+mod:SetRevision("20210228223514")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents("ZONE_CHANGED_NEW_AREA")
 
 do
 	local bgzone = false
 
-	function mod:OnInitialize()
+	local function Init(self)
 		if DBM:GetCurrentArea() == 1803 then
 			bgzone = true
 			self:RegisterShortTermEvents("VIGNETTES_UPDATED")
@@ -22,8 +22,10 @@ do
 	end
 
 	function mod:ZONE_CHANGED_NEW_AREA()
-		self:ScheduleMethod(1, "OnInitialize")
+		self:Schedule(1, Init, self)
 	end
+	mod.PLAYER_ENTERING_WORLD	= mod.ZONE_CHANGED_NEW_AREA
+	mod.OnInitialize			= mod.ZONE_CHANGED_NEW_AREA
 end
 
 do
@@ -58,16 +60,19 @@ do
 			local vignette = C_VignetteInfo.GetVignetteInfo(vignetteids[i])
 			if vignette and vignette.vignetteGUID then
 				local poss = C_VignetteInfo.GetVignettePosition(vignette.vignetteGUID, 907)
-				if not poss then
+				if not poss or poss.x == 0 or poss.y == 0 then
 					return
 				end
 				local pos = round(poss.x) .. ":" .. round(poss.y)
+				if not azeriteNames[pos] then
+					DBM:Debug(("Found azerite at position unknown: %d, %d"):format(poss.x, poss.y))
+				end
 				checkedThisRound[pos] = true
 				if not knownAzerite[pos] then
 					knownAzerite[pos] = true
 					local atlasName = vignette.atlasName
 					if atlasName == "AzeriteSpawning" then
-						spawnTimer:Start(nil, azeriteNames[pos])
+						spawnTimer:Start(30, azeriteNames[pos])
 					elseif atlasName == "AzeriteReady" then
 						spawnTimer:Stop(azeriteNames[pos])
 					end

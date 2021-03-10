@@ -1,9 +1,6 @@
 # BadBoy
 
-## [v9.0.0](https://github.com/funkydude/BadBoy/tree/v9.0.0) (2020-10-14)
-[Full Changelog](https://github.com/funkydude/BadBoy/compare/v8.2.5...v9.0.0) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
+## [v9.0.3](https://github.com/funkydude/BadBoy/tree/v9.0.3) (2020-11-18)
+[Full Changelog](https://github.com/funkydude/BadBoy/compare/v9.0.2...v9.0.3) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
 
-- update blacklist  
 - bump toc  
-- Fix BNet API for Shadowlands  
-- add github directory  

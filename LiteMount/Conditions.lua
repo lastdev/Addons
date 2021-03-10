@@ -4,7 +4,7 @@
 
   Parser/evaluator for action conditions.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -101,6 +101,16 @@ CONDITIONS["combat"] =
             petunit = unit .. "pet"
         end
         return UnitAffectingCombat(unit) or UnitAffectingCombat(petunit)
+    end
+
+CONDITIONS["covenant"] =
+    function (cond, unit, v)
+        if not C_Covenants or not v then return end
+        local id = C_Covenants.GetActiveCovenantID()
+        if not id then return end
+        if tonumber(v) == id then return true end
+        local data = C_Covenants.GetCovenantData(id)
+        if data.name == v then return true end
     end
 
 --- Note that this diverges from the macro [dead] defaults to "target".
@@ -233,7 +243,9 @@ CONDITIONS["flying"] =
 
 CONDITIONS["form"] =
     function (cond, unit, v)
-        if v then
+        if v == "slow" then
+            return LM.Environment.combatTravelForm
+        elseif v then
             return GetShapeshiftForm() == tonumber(v)
         else
             return GetShapeshiftForm() > 0
@@ -295,6 +307,11 @@ CONDITIONS["map"] =
         else
             return LM.Environment:MapInPath(tonumber(v))
         end
+    end
+
+CONDITIONS["maw"] =
+    function (cond, unit, v)
+        return LM.Environment:TheMaw()
     end
 
 CONDITIONS["mod"] =
@@ -378,8 +395,12 @@ CONDITIONS["profession"] =
     end
 
 CONDITIONS["pvp"] =
-    function (cond, unit)
-        return UnitIsPVP(unit or "player")
+    function (cond, unit, v)
+        if not v then
+            return UnitIsPVP(unit or "player")
+        else
+            return GetZonePVPInfo() == v
+        end
     end
 
 CONDITIONS["qfc"] =
@@ -540,13 +561,93 @@ CONDITIONS["waterwalking"] =
         end
     end
 
+-- See WardrobeSetsTransmogMixin:GetFirstMatchingSetID
+
+local function GetTransmogLocationSourceID(location)
+    local baseSourceID, _, appliedSourceID = C_Transmog.GetSlotVisualInfo(location)
+    if appliedSourceID == 0 then
+        return baseSourceID
+    else
+        return appliedSourceID
+    end
+end
+
+local function GetTransmogSetIDByName(name)
+    local usableSets = C_TransmogSets.GetUsableSets()
+    for _,info in ipairs(usableSets) do
+        if info.name == name then
+            return info.setID
+        end
+    end
+end
+
+local function GetTransmogOutfitIDByName(name)
+    local outfits = C_TransmogCollection.GetOutfits()
+    for id, info in ipairs(outfits) do
+        if info.name == name then
+            return info.outfitID
+        end
+    end
+end
+
+local function IsTransmogSetActive(setID)
+    if not C_TransmogSets.GetSetInfo(setID) then
+        return false
+    end
+    for key, slotInfo in pairs(TRANSMOG_SLOTS) do
+        if slotInfo.location:IsAppearance() then
+            local sourceIDs = C_TransmogSets.GetSourceIDsForSlot(setID, slotInfo.location.slotID)
+            if #sourceIDs > 0 then
+                local activeSourceID = GetTransmogLocationSourceID(slotInfo.location)
+                if not tContains(sourceIDs, activeSourceID) then
+                    return false
+                end
+            end
+        end
+    end
+    return true
+end
+
+local function IsTransmogOutfitActive(outfitID)
+    local sourceIDs = C_TransmogCollection.GetOutfitSources(outfitID)
+    if not sourceIDs then
+        return false
+    end
+    for key, slotInfo in pairs(TRANSMOG_SLOTS) do
+        if slotInfo.location:IsAppearance() then
+            local sourceID = sourceIDs[slotInfo.location.slotID]
+            if sourceID ~= NO_TRANSMOG_SOURCE_ID then
+                local activeSourceID = GetTransmogLocationSourceID(slotInfo.location)
+                if activeSourceID ~= sourceID then
+                    return false
+                end
+            end
+        end
+    end
+    return true
+end
+
+-- The :args version of this takes slotid/appearanceid and really should be junked
+-- now that the other form works.
+
 CONDITIONS["xmog:args"] =
-    function (cond, unit, slotID, appearanceID)
-        slotID, appearanceID = tonumber(slotID), tonumber(appearanceID)
-        local tmSlot = TRANSMOG_SLOTS[(slotID or 0) * 100]
-        if tmSlot then
-            local ok, _, _, _, current = pcall(C_Transmog.GetSlotVisualInfo, tmSlot.location)
-            return ok and current == appearanceID
+    function (cond, unit, arg1, arg2)
+        if arg2 then
+            local slotID, appearanceID = tonumber(arg1), tonumber(arg2)
+            local tmSlot = TRANSMOG_SLOTS[(slotID or 0) * 100]
+            if tmSlot then
+                local ok, _, _, _, current = pcall(C_Transmog.GetSlotVisualInfo, tmSlot.location)
+                return ok and current == appearanceID
+            end
+        else
+            local setID = tonumber(arg1) or GetTransmogSetIDByName(arg1)
+            if setID then
+                return IsTransmogSetActive(setID)
+            end
+            local outfitID = GetTransmogOutfitIDByName(arg1)
+            if outfitID then
+                return IsTransmogOutfitActive(outfitID)
+            end
         end
     end
 

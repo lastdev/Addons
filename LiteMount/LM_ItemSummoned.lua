@@ -2,7 +2,7 @@
 
   LiteMount/LM_ItemSummoned.lua
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -70,6 +70,6 @@ function LM.ItemSummoned:IsCastable()
         return false
     end
 
-    return true
+    return LM.Mount.IsCastable(self)
 end
 

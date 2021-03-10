@@ -1,8 +1,10 @@
-if GetLocale() == "frFR" then
+﻿if GetLocale() == "frFR" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "Monter/descendre de monture"
 	BINDING_NAME_GOGOBINDING2 = "Monter/descendre de monture (non volante)"
 	BINDING_NAME_GOGOBINDING3 = "Monter/descendre de monture avec passager"
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "Ingénierie",
@@ -40,6 +42,8 @@ if GetLocale() == "frFR" then
 		GlobalZoneDescription = "Les montures favorites sélectionnées ici seront utilisées seulement s'il n'y pas de favoris de zone désignés pour la zone actuelle.",
 		HunterOptions = "Options pour Chasseurs",
 		NewVersionFound = "Une nouvelle version de GoGoMount est disponible.",
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "Ne pas randomiser les formes avec les montures",
 		PaladinOptions = "Options pour paladins",
 		RemoveBuffs = "Supprimer les buffs qui empêchent l'utilisation des montures",

@@ -7,12 +7,11 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
+	L[" Debuff"] = "Affaiblissements"
 	L["<70% Mana"] = "<70% Mana"
-	--[[Translation missing --]]
 	L[">70% Mana"] = ">70% Mana"
 	L["Abilities"] = "Capacités"
-	L["Ability Charges"] = "Charges de capacité"
+	L["Ability"] = "Aptitude"
 	L["Add Triggers"] = "Ajouter Déclencheur"
 	L["Always Active"] = "Toujours actif"
 	L["Always Show"] = "Toujours afficher"
@@ -34,27 +33,42 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns grey if the ability is not usable."] = "Toujours afficher l'aura, griser si la technique n'est pas utilisable."
 	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Toujours afficher l'aura, rouge si hors de portée, bleue si ressources insuffisantes."
 	L["Always shows the aura, turns red when out of range."] = "Toujours afficher l'aura, rouge si hors de portée."
+	--[[Translation missing --]]
+	L["Always shows the aura."] = "Always shows the aura."
 	L["Back"] = "Retour"
 	L["Basic Show On Cooldown"] = "Affichage de base en temps de recharge"
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Furie sanguinaire/Héroïsme"
+	--[[Translation missing --]]
+	L["Bonded Buff"] = "Bonded Buff"
+	L["Buff"] = "Amélioration"
 	L["buff"] = "amélioration"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "Améliorations"
+	--[[Translation missing --]]
+	L["Build Up"] = "Build Up"
 	L["Cancel"] = "Annuler"
 	L["Cast"] = "Incantation"
 	L["Charge and Buff Tracking"] = "Suivis des Charges et Amélioration"
 	L["Charge and Debuff Tracking"] = "Suivis des Charges et Affaiblissement"
 	L["Charge and Duration Tracking"] = "Suivi des Charges et Durée"
 	L["Charge Tracking"] = "Suivis des Charges"
+	--[[Translation missing --]]
+	L["Combustion Ready"] = "Combustion Ready"
+	L["Conduits"] = "Conduits"
+	L["Cooldown"] = "Temps de recharge"
 	L["cooldown"] = "temps de recharge"
 	L["Cooldown Tracking"] = "Suivi du temps de recharge"
 	L["Create Auras"] = "Créer Auras"
-	--[[Translation missing --]]
-	L["debuff"] = "debuff"
+	L["Debuff"] = "Affaiblissement"
+	L["debuff"] = "affaiblissement"
 	L["Debuffs"] = "Affaiblissements"
+	--[[Translation missing --]]
+	L["Empowered Buff"] = "Empowered Buff"
+	L["Fire"] = "Feu"
+	L["Frost"] = "Froid"
 	L["General"] = "Général"
 	L["Health"] = "Vie"
 	L["Highlight while active, red when out of range."] = "Mettre en surbrillance pendant qu'il est actif, rouge quand hors de portée."
@@ -66,6 +80,12 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Mettez en surbrillance quand le sort est actif."
 	L["Hold CTRL to create multiple auras at once"] = "Maintenir CTRL pour créer plusieurs auras simultanément"
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
+	--[[Translation missing --]]
+	L["Legendaries"] = "Legendaries"
+	--[[Translation missing --]]
+	L["Meteor Ready"] = "Meteor Ready"
+	--[[Translation missing --]]
+	L["Nature"] = "Nature"
 	L["Next"] = "Suivant"
 	L["Only show the aura if the target has the debuff."] = "Montre l'aura que si la cible a l'affaiblissement."
 	L["Only show the aura when the item is on cooldown."] = "Afficher uniquement l'aura quand l'objet est en recharge."
@@ -77,6 +97,8 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is on cooldown."] = "Afficher uniquement l'aura quand la technique est en recharge."
 	--[[Translation missing --]]
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
+	--[[Translation missing --]]
+	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du Familier"
 	L["PvP Talents"] = "Talents JcJ"
@@ -84,6 +106,8 @@ local L = WeakAuras.L
 	L["Replace Triggers"] = "Remplacer les déclencheurs"
 	L["Resources"] = "Ressources"
 	L["Resources and Shapeshift Form"] = "Ressources et Forme de Changeforme"
+	--[[Translation missing --]]
+	L["Rogue cooldown"] = "Rogue cooldown"
 	L["Runes"] = "Runes"
 	L["Shapeshift Form"] = "Forme de Changeforme"
 	--[[Translation missing --]]
@@ -126,11 +150,15 @@ local L = WeakAuras.L
 	L["Show Only if Enchanted"] = "Show Only if Enchanted"
 	L["Show Only if on Cooldown"] = "Afficher Seulement si en Recharge"
 	L["Show Totem and Charge Information"] = "Afficher les Informations du Totem et de Charge"
+	L["Slow"] = "Lent"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
 	L["Stance"] = "Posture"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
+	--[[Translation missing --]]
+	L["Stun Debuff"] = "Stun Debuff"
+	L["Totem"] = "Totem"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Suivre la charge et le proc, mettre en surbrillance pendant que le proc est actif, devient rouge lorsque vous êtes hors de portée, bleu lorsque les ressources sont insuffisantes"
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Suit la charge et le buff, surligne pendant que le buff est actif, bleu sur les ressources insuffisantes."
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = [=[
@@ -138,4 +166,6 @@ Suit la charge et le debuff, met en surbrillance pendant que le debuff est actif
 	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Suit la charge et la durée du sort, mettez en surbrillance pendant que le sort est actif, bleu en cas de ressources insuffisantes."
 	L["Unknown Item"] = "Objet inconnu"
 	L["Unknown Spell"] = "Sort inconnu"
+	--[[Translation missing --]]
+	L["Warrior cooldown"] = "Warrior cooldown"
 

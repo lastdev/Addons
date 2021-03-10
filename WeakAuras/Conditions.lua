@@ -43,7 +43,19 @@ local function formatValueForAssignment(vType, value, pathToCustomFunction, path
   elseif(vType == "number") then
     return value and tostring(value) or "0";
   elseif (vType == "list") then
-    return type(value) == "string" and string.format("%q", value) or "nil";
+    if type(value) == "string" then
+      return string.format("%s", Private.QuotedString(value))
+    elseif type(value) == "number" then
+      return tostring(value)
+    end
+    return "nil"
+  elseif (vType == "icon") then
+    if type(value) == "string" then
+      return string.format("%s", Private.QuotedString(value))
+    elseif type(value) == "number" then
+      return tostring(value)
+    end
+    return "nil"
   elseif(vType == "color") then
     if (value and type(value) == "table") then
       return string.format("{%s, %s, %s, %s}", tostring(value[1]), tostring(value[2]), tostring(value[3]), tostring(value[4]));
@@ -51,18 +63,19 @@ local function formatValueForAssignment(vType, value, pathToCustomFunction, path
     return "{1, 1, 1, 1}";
   elseif(vType == "chat") then
     if (value and type(value) == "table") then
-      local serialized = string.format("{message_type = %q, message = %q, message_dest = %q, message_channel = %q, message_custom = %s, message_formaters = %s}",
-        tostring(value.message_type), tostring(value.message or ""),
-        tostring(value.message_dest), tostring(value.message_channel),
+      local serialized = string.format("{message_type = %s, message = %s, message_dest = %s, message_channel = %s, message_custom = %s, message_formaters = %s}",
+        Private.QuotedString(tostring(value.message_type)), Private.QuotedString(tostring(value.message or "")),
+        Private.QuotedString(tostring(value.message_dest)), Private.QuotedString(tostring(value.message_channel)),
         pathToCustomFunction,
         pathToFormatters)
       return serialized
     end
   elseif(vType == "sound") then
     if (value and type(value) == "table") then
-      return string.format("{ sound = %q, sound_channel = %q, sound_path = %q, sound_kit_id = %q, sound_type = %q, %s}",
-        tostring(value.sound or ""), tostring(value.sound_channel or ""), tostring(value.sound_path or ""),
-        tostring(value.sound_kit_id or ""), tostring(value.sound_type or ""),
+      return string.format("{ sound = %s, sound_channel = %s, sound_path = %s, sound_kit_id = %s, sound_type = %s, %s}",
+        Private.QuotedString(tostring(value.sound or "")), Private.QuotedString(tostring(value.sound_channel or "")),
+        Private.QuotedString(tostring(value.sound_path or "")), Private.QuotedString(tostring(value.sound_kit_id or "")),
+        Private.QuotedString(tostring(value.sound_type or "")),
         value.sound_repeat and "sound_repeat = " .. tostring(value.sound_repeat) or "nil");
     end
   elseif(vType == "customcode") then
@@ -97,7 +110,7 @@ local function formatValueForAssignment(vType, value, pathToCustomFunction, path
 end
 
 local function formatValueForCall(type, property)
-  if (type == "bool" or type == "number" or type == "list") then
+  if (type == "bool" or type == "number" or type == "list" or type == "icon") then
     return "propertyChanges['" .. property .. "']";
   elseif (type == "color") then
     local pcp = "propertyChanges['" .. property .. "']";
@@ -202,7 +215,7 @@ local function CreateTestForCondition(uid, input, allConditionsTemplate, usedSta
       end
     elseif (cType == "customcheck") then
       if value then
-        local customCheck = WeakAuras.LoadFunction("return " .. value, "custom check")
+        local customCheck = WeakAuras.LoadFunction("return " .. value, Private.UIDtoID(uid), "conditions custom check")
         if customCheck then
           WeakAuras.conditionHelpers[uid] = WeakAuras.conditionHelpers[uid] or {}
           WeakAuras.conditionHelpers[uid].customTestFunctions = WeakAuras.conditionHelpers[uid].customTestFunctions or {}
@@ -226,6 +239,12 @@ local function CreateTestForCondition(uid, input, allConditionsTemplate, usedSta
       else
         check = stateCheck .. stateVariableCheck .. "state[" .. trigger .. "]" .. string.format("[%q]", variable) .. "- now" .. op .. value;
       end
+    elseif (cType == "elapsedTimer" and value and op) then
+      if (op == "==") then
+        check = stateCheck .. stateVariableCheck .. "abs(state[" .. trigger .. "]" .. string.format("[%q]", variable) .. "- now +" .. value .. ") < 0.05";
+      else
+        check = stateCheck .. stateVariableCheck .. "now - state[" .. trigger .. "]" .. string.format("[%q]", variable) .. op .. value;
+      end
     elseif (cType == "select" and value and op) then
       if (tonumber(value)) then
         check = stateCheck .. stateVariableCheck .. "state[" .. trigger .. "]" .. string.format("[%q]", variable) .. op .. tonumber(value);
@@ -244,9 +263,15 @@ local function CreateTestForCondition(uid, input, allConditionsTemplate, usedSta
         check = stateCheck .. stateVariableCheck .. "state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. ":match([[" .. value .. "]], 1, true)";
       end
     end
+    -- If adding a new condition type, don't forget to adjust the validator in the options code
 
     if (cType == "timer" and value) then
       recheckCode = "  nextTime = state[" .. trigger .. "] and state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " and (state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " -" .. value .. ")\n";
+      recheckCode = recheckCode .. "  if (nextTime and (not recheckTime or nextTime < recheckTime) and nextTime >= now) then\n"
+      recheckCode = recheckCode .. "    recheckTime = nextTime\n";
+      recheckCode = recheckCode .. "  end\n"
+    elseif (cType == "elapsedTimer" and value) then
+      recheckCode = "  nextTime = state[" .. trigger .. "] and state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " and (state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " +" .. value .. ")\n";
       recheckCode = recheckCode .. "  if (nextTime and (not recheckTime or nextTime < recheckTime) and nextTime >= now) then\n"
       recheckCode = recheckCode .. "    recheckTime = nextTime\n";
       recheckCode = recheckCode .. "  end\n"
@@ -542,8 +567,8 @@ local function ConstructConditionFunction(data)
       end
     end
   end
-  ret = ret .. "  end\n";
   ret = ret .. recheckCode
+  ret = ret .. "  end\n";
 
   ret = ret .. "  if (recheckTime) then\n"
   ret = ret .. "    WeakAuras.scheduleConditionCheck(recheckTime, uid, cloneId);\n"
@@ -595,7 +620,19 @@ local function ConstructConditionFunction(data)
   return ret;
 end
 
+local function CancelTimers(uid)
+  conditionChecksTimers.recheckTime[uid] = nil;
+  if (conditionChecksTimers.recheckHandle[uid]) then
+    for _, v in pairs(conditionChecksTimers.recheckHandle[uid]) do
+      timer:CancelTimer(v);
+    end
+  end
+  conditionChecksTimers.recheckHandle[uid] = nil;
+end
+
 function Private.LoadConditionFunction(data)
+  CancelTimers(data.uid)
+
   local checkConditionsFuncStr = ConstructConditionFunction(data);
   local checkCondtionsFunc = checkConditionsFuncStr and WeakAuras.LoadFunction(checkConditionsFuncStr, data.id, "condition checks");
 
@@ -604,7 +641,9 @@ end
 
 function Private.RunConditions(region, uid, hideRegion)
   if (checkConditions[uid]) then
+    Private.ActivateAuraEnvironmentForRegion(region)
     checkConditions[uid](region, hideRegion);
+    Private.ActivateAuraEnvironment()
   end
 end
 
@@ -626,17 +665,22 @@ end
 local function runDynamicConditionFunctions(funcs)
   for uid in pairs(funcs) do
     local id = Private.UIDtoID(uid)
+    Private.StartProfileAura(id)
     if (Private.IsAuraActive(uid) and checkConditions[uid]) then
-      local activeTriggerState = WeakAuras.GetTriggerStateForTrigger(id, Private.ActiveTrigger(uid));
-      for cloneId, state in pairs(activeTriggerState) do
-        local region = WeakAuras.GetRegion(id, cloneId);
-        checkConditions[uid](region, false);
+      local activeStates = WeakAuras.GetActiveStates(id)
+      for cloneId, state in pairs(activeStates) do
+        local region = WeakAuras.GetRegion(id, cloneId)
+        Private.ActivateAuraEnvironmentForRegion(region)
+        checkConditions[uid](region, false)
+        Private.ActivateAuraEnvironment()
       end
     end
+    Private.StopProfileAura(id)
   end
 end
 
 local function handleDynamicConditions(self, event)
+  Private.StartProfileSystem("dynamic conditions")
   if (globalDynamicConditionFuncs[event]) then
     for i, func in ipairs(globalDynamicConditionFuncs[event]) do
       func(globalConditionState);
@@ -645,6 +689,7 @@ local function handleDynamicConditions(self, event)
   if (dynamicConditions[event]) then
     runDynamicConditionFunctions(dynamicConditions[event]);
   end
+  Private.StopProfileSystem("dynamic conditions")
 end
 
 local lastDynamicConditionsUpdateCheck;
@@ -757,12 +802,6 @@ function Private.UnloadAllConditions()
 end
 
 function Private.UnloadConditions(uid)
-  conditionChecksTimers.recheckTime[uid] = nil;
-  if (conditionChecksTimers.recheckHandle[uid]) then
-    for _, v in pairs(conditionChecksTimers.recheckHandle[uid]) do
-      timer:CancelTimer(v);
-    end
-  end
-  conditionChecksTimers.recheckHandle[uid] = nil;
+  CancelTimers(uid)
   Private.UnregisterForGlobalConditions(uid);
 end

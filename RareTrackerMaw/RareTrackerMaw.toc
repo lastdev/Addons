@@ -1,0 +1,20 @@
+## Interface: 90002
+## Title: RareTrackerMaw
+## Notes: Track and coordinate rare spawn timers in The Maw.
+## Author: Melroy
+## Version: 7.0.2
+## Dependencies: RareTrackerCore
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ptPT.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+
+RareTrackerMaw.lua

@@ -1,7 +1,0 @@
-## Interface: 80205
-## Author: cqwrteur
-## Title: Lib: RaiderIO Loader
-## Version: @project-version@
-## Dependencies: RaiderIO
-
-LibRaiderIO_Loader.lua

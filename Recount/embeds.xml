@@ -11,7 +11,7 @@
 	<Include file="Libs\AceTimer-3.0\AceTimer-3.0.xml"/>
 	<Include file="Libs\AceGUI-3.0\AceGUI-3.0.xml"/>
 	<Include file="Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
-	<Include file="Libs\LibDropDown-1.0\LibDropDown-1.0\lib.xml"/>
+	<Include file="Libs\LibDropDown-1.0\lib.xml"/>
 	<Include file="Libs\LibBossIDs-1.0\lib.xml"/>
 	<Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
 	<Script file="Libs\LibGraph-2.0\LibGraph-2.0.lua"/>

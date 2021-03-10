@@ -21,16 +21,17 @@ L.BossModLoad_now 			= [[보스 모드가 로딩되지 않았습니다.
 해당 인스턴스에 진입하면 로딩됩니다.
 아래 버튼을 클릭해서 모드를 직접 로딩할 수도 있습니다.]]
 
-L.PosX						= '위치 X'
-L.PosY						= '위치 Y'
+L.PosX						= "위치 X"
+L.PosY						= "위치 Y"
 
-L.MoveMe 					= '위치 이동'
-L.Button_OK					= '확인'
-L.Button_Cancel				= '취소'
-L.Button_LoadMod			= '애드온 로드'
+L.MoveMe 					= "위치 이동"
+L.Button_OK					= "확인"
+L.Button_Cancel				= "취소"
+L.Button_LoadMod			= "애드온 로드"
 L.Mod_Enabled				= "보스 모드 활성화"
 L.Mod_Reset					= "설정 기본값 로드"
 L.Reset						= "초기화"
+L.Import					= "가져오기"
 
 L.Enable					= "활성화"
 L.Disable					= "비활성화"
@@ -65,6 +66,7 @@ L.Latency_Text				= "동기화 신호를 보낼 최대 지연시간 설정: %d"
 L.Button_RangeFrame			= "거리 창 표시/숨기기"
 L.Button_InfoFrame			= "정보 창 표시/숨기기"
 L.Button_TestBars			= "테스트 바 시작"
+L.Button_MoveBars			= "바 이동"
 L.Button_ResetInfoRange		= "정보/거리 창 위치 초기화"
 
 L.ModelOptions				= "3D 모델 뷰어 설정"
@@ -74,6 +76,7 @@ L.ModelSoundShort			= "짧은 효과음"
 L.ModelSoundLong			= "긴 효과음"
 
 L.ResizeOptions			 	= "설정 창 크기 설정"
+L.ResizeInfo				= "우측 하단 모서리를 클릭 후 드래그하면 설정 창 크기를 조절할 수 있습니다."
 L.Button_ResetWindowSize	= "설정 창 크기 초기화"
 L.Editbox_WindowWidth		= "설정 창 너비"
 L.Editbox_WindowHeight		= "설정 창 높이"
@@ -100,8 +103,7 @@ L.RecordOnlyBosses			= "보스만 기록 (모든 일반몹은 제외됩니다. �
 L.LogOnlyNonTrivial			= "주요 콘텐츠만 기록 (최신 확장팩 일반 이상 레이드와 신화+ 던전)"
 --
 L.Area_3rdParty				= "써드파티 애드온 설정"
-L.ShowBBOnCombatStart		= "전투 시작시 Big Brother 버프 검사 실행"
-L.BigBrotherAnnounceToRaid	= "Big Brother 버프 검사 결과를 공격대에 알림"
+L.oRA3AnnounceConsumables	= "전투 시작시 oRA3 버프 검사 알림"
 L.Area_Invite				= "초대 설정"
 L.AutoAcceptFriendInvite	= "친구의 파티/공격대 초대 자동 수락"
 L.AutoAcceptGuildInvite		= "길드원의 파티/공격대 초대 자동 수락"
@@ -130,6 +132,13 @@ L.SelectModProfileCopy		= "전체 설정 복사"
 L.SelectModProfileCopySound	= "음성 설정만 복사"
 L.SelectModProfileCopyNote	= "메모 설정만 복사"
 L.SelectModProfileDelete	= "모드 설정 삭제"
+
+L.Area_ImportExportProfile	= "프로필 가져오기/내보내기"
+L.ImportExportInfo			= "가져오기를 하면 현재 프로필 설정에 덮어씌우게 되니 주의하세요."
+L.ButtonImportProfile		= "프로필 가져오기"
+L.ButtonExportProfile		= "프로필 내보내기"
+
+L.ImportErrorOn				= "프로필 설정에 빠져있는 사용자 지정 효과음: %s"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "경고"
@@ -322,6 +331,7 @@ L.StripTimerText			= "타이머 텍스트에 쿨타임/다음 글자 삭제"
 L.KeepBar					= "스킬 시전 전까지 타이머 작동 중단"
 L.KeepBar2					= "(모드에서 지원할 경우에만)"
 L.FadeBar					= "사정거리 밖의 스킬에 대한 타이머 바 숨김"
+L.BarSkin					= "바 스킨"
 
 -- Tab: Global Disables & Filters
 L.TabCategory_Filters	 	= "기능 끄기 및 필터"
@@ -335,6 +345,7 @@ L.SpamBlockNoShowTgtAnnounce = "대상 관련 알림 및 효과음만 재생 안
 L.SpamBlockNoSpecWarnText	= "특수 알림 텍스트 표시 안함"
 L.SpamBlockNoSpecWarnFlash	= "특수 알림에 화면 점멸 사용 안함"
 L.SpamBlockNoSpecWarnSound	= "특수 알림 효과음 재생 안함 (음성 경고 메뉴에서 설정했다면 음성팩은 계속 작동)"
+L.SpamBlockNoTrivialSpecWarnSound	= "현재 레벨에 맞는 콘텐츠 이외에는 특수 알림 효과음 재생이나 화면 점멸 효과 사용 안함 (대신 사용자가 선택한 정규 알림 효과음 재생)"
 
 L.Area_SpamFilter_Timers	= "타이머 관련 기능 끄기 및 필터 설정"
 L.SpamBlockNoShowTimers		= "모드 타이머 표시 안함 (보스 모드/도전모드/파티찾기/재생성)"
@@ -387,7 +398,7 @@ L.HideGarrisonUpdates		= "보스 전투중 추종자 팝업 알림 숨기기"
 L.HideGuildChallengeUpdates	= "보스 전투중 길드 도전 과제 알림 숨기기"
 L.HideQuestTooltips			= "보스 전투중 툴팁에서 퀘스트 정보 숨기기"
 L.HideTooltips				= "보스 전투중 모든 툴팁 숨기기"
-L.DisableSFX				= "보스 전투중 소리 채널 (효과음) 끄기"
+L.DisableSFX				= "보스 전투중 소리 채널 (효과음) 끄기 (알림: 이 설정을 켜면 효과음을 켜지 않았어도 전투가 끝난 후 자동으로 켜집니다)"
 L.DisableCinematics			= "게임 내 영상 끄기"
 L.OnlyFight					= "전투중일 때 한번만 재생"
 L.AfterFirst				= "인스턴스 던전에 있을 때 한번만 재생"

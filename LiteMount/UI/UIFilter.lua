@@ -4,7 +4,7 @@
 
   UI Filter state abstracted out similar to how C_MountJournal does it
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -13,7 +13,7 @@ local _, LM = ...
 local L = LM.Localize
 
 LM.UIFilter = {
-        filteredMountList = { },
+        filteredMountList = LM.MountList:New(),
         searchText = nil,
         flagFilterList =  { },
         sourceFilterList = { },
@@ -27,9 +27,10 @@ local callbacks = CallbackHandler:New(LM.UIFilter)
 local PriorityColors = {
     [''] = COMMON_GRAY_COLOR,
     [0] =  RED_FONT_COLOR,
-    [1] =  RARE_BLUE_COLOR,
-    [2] =  EPIC_PURPLE_COLOR,
-    [3] =  LEGENDARY_ORANGE_COLOR,
+    [1] =  UNCOMMON_GREEN_COLOR,
+    [2] =  RARE_BLUE_COLOR,
+    [3] =  EPIC_PURPLE_COLOR,
+    [4] =  LEGENDARY_ORANGE_COLOR,
 }
 
 local function searchMatch(src, text)
@@ -100,6 +101,16 @@ end
 
 
 -- Sources ---------------------------------------------------------------------
+
+function LM.UIFilter.GetSources()
+    local out = {}
+    for i = 1, LM.UIFilter.GetNumSources() do
+        if LM.UIFilter.IsValidSourceFilter(i) then
+            out[#out+1] = i
+        end
+    end
+    return out
+end
 
 function LM.UIFilter.GetNumSources()
     return C_PetJournal.GetNumPetSources() + 1
@@ -216,7 +227,7 @@ function LM.UIFilter.SetFlagFilter(f, v)
     callbacks:Fire('OnFilterChanged')
 end
 
-function LM.UIFilter:SetAllFlagFilters(v)
+function LM.UIFilter.SetAllFlagFilters(v)
     LM.UIFilter.ClearCache()
     for _,f in ipairs(LM.UIFilter.GetFlags()) do
         if v then
@@ -259,13 +270,12 @@ function LM.UIFilter.SetPriorityFilter(p, v)
     callbacks:Fire('OnFilterChanged')
 end
 
-function LM.UIFilter:SetAllPriorityFilters(v)
+function LM.UIFilter.SetAllPriorityFilters(v)
     LM.UIFilter.ClearCache()
-    v = v and true or nil
-    for _,p in ipairs(LM.UIFilter.GetPriorities()) do
-        if v then
-            LM.UIFilter.priorityFilterList[p] = nil
-        else
+    if v then
+        table.wipe(LM.UIFilter.priorityFilterList)
+    else
+        for _,p in ipairs(LM.UIFilter.GetPriorities()) do
             LM.UIFilter.priorityFilterList[p] = true
         end
     end
@@ -273,7 +283,11 @@ function LM.UIFilter:SetAllPriorityFilters(v)
 end
 
 function LM.UIFilter.GetPriorities()
-    return { 0, 1, 2, 3 }
+    return LM.Options:GetAllPriorities()
+end
+
+function LM.UIFilter.GetPriorityColor(p)
+    return PriorityColors[p] or PriorityColors['']
 end
 
 function LM.UIFilter.GetPriorityText(p)
@@ -354,7 +368,7 @@ function LM.UIFilter.IsFilteredMount(m)
 
     local okflags = CopyTable(m:CurrentFlags())
     local noFilters = true
-    for _,flagName in ipairs(LM.UIFilter:GetFlags()) do
+    for _,flagName in ipairs(LM.UIFilter.GetFlags()) do
         if LM.UIFilter.flagFilterList[flagName] then
             okflags[flagName] = nil
             noFilters = false

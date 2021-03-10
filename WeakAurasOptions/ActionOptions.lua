@@ -118,7 +118,10 @@ function OptionsPrivate.GetActionOptions(data)
         name = "",
         order = 3,
         image = function() return "", 0, 0 end,
-        hidden = function() return not(data.actions.start.message_type == "WHISPER" or data.actions.start.message_type == "COMBAT" or data.actions.start.message_type == "PRINT") end
+        hidden = function()
+          return not(data.actions.start.message_type == "WHISPER" or data.actions.start.message_type == "COMBAT"
+                     or data.actions.start.message_type == "PRINT" or data.actions.start.message_type == "ERROR")
+        end
       },
       start_message_color = {
         type = "color",
@@ -126,7 +129,11 @@ function OptionsPrivate.GetActionOptions(data)
         name = L["Color"],
         order = 3,
         hasAlpha = false,
-        hidden = function() return not(data.actions.start.message_type == "COMBAT" or data.actions.start.message_type == "PRINT") end,
+        hidden = function()
+          return not(data.actions.start.message_type == "COMBAT"
+                     or data.actions.start.message_type == "PRINT"
+                     or data.actions.start.message_type == "ERROR")
+        end,
         get = function() return data.actions.start.r or 1, data.actions.start.g or 1, data.actions.start.b or 1 end,
         set = function(info, r, g, b)
           data.actions.start.r = r;
@@ -174,6 +181,8 @@ function OptionsPrivate.GetActionOptions(data)
         order = 8.2,
         hidden = function() return not data.actions.start.do_loop end,
         disabled = function() return not data.actions.start.do_sound end,
+        min = 0,
+        softMax = 100,
       },
       start_sound_repeat_space = {
         type = "description",
@@ -509,7 +518,11 @@ function OptionsPrivate.GetActionOptions(data)
         name = L["Color"],
         order = 23,
         hasAlpha = false,
-        hidden = function() return not(data.actions.finish.message_type == "COMBAT" or data.actions.finish.message_type == "PRINT") end,
+        hidden = function() return
+          not(data.actions.finish.message_type == "COMBAT"
+              or data.actions.finish.message_type == "PRINT"
+              or data.actions.finish.message_type == "ERROR")
+            end,
         get = function() return data.actions.finish.r or 1, data.actions.finish.g or 1, data.actions.finish.b or 1 end,
         set = function(info, r, g, b)
           data.actions.finish.r = r;
@@ -894,12 +907,12 @@ function OptionsPrivate.GetActionOptions(data)
   end
 
   if data.controlledChildren then
-    for _, childId in pairs(data.controlledChildren) do
+    for index, childId in pairs(data.controlledChildren) do
       local childData = WeakAuras.GetData(childId)
       local startGet = function(key)
         return childData.actions.start["message_format_" .. key]
       end
-      OptionsPrivate.AddTextFormatOption(childData.actions and childData.actions.start.message, true, startGet, startAddOption, startHidden, startSetHidden)
+      OptionsPrivate.AddTextFormatOption(childData.actions and childData.actions.start.message, true, startGet, startAddOption, startHidden, startSetHidden, index, #data.controlledChildren)
     end
   else
     OptionsPrivate.AddTextFormatOption(data.actions and data.actions.start.message, true, startGet, startAddOption, startHidden, startSetHidden)
@@ -953,12 +966,12 @@ function OptionsPrivate.GetActionOptions(data)
   end
 
   if data.controlledChildren then
-    for _, childId in pairs(data.controlledChildren) do
+    for index, childId in pairs(data.controlledChildren) do
       local childData = WeakAuras.GetData(childId)
       local finishGet = function(key)
         return childData.actions.finish["message_format_" .. key]
       end
-      OptionsPrivate.AddTextFormatOption(childData.actions and childData.actions.finish.message, true, finishGet, finishAddOption, finishHidden, finishSetHidden)
+      OptionsPrivate.AddTextFormatOption(childData.actions and childData.actions.finish.message, true, finishGet, finishAddOption, finishHidden, finishSetHidden, index, #data.controlledChildren)
     end
   else
     OptionsPrivate.AddTextFormatOption(data.actions and data.actions.finish.message, true, finishGet, finishAddOption, finishHidden, finishSetHidden)

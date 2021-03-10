@@ -404,7 +404,9 @@ local function importPendingData()
     thumbnailAnchor.currentThumbnail = nil
   end
   if imports and Private.LoadOptions() then
-    WeakAuras.ShowOptions()
+    if not WeakAuras.IsOptionsOpen() then
+      WeakAuras.OpenOptions()
+    end
   else
     return
   end
@@ -1127,7 +1129,7 @@ local function scamCheck(codes, data)
 
   if (data.conditions) then
     for _, condition in ipairs(data.conditions) do
-      if (condition) then
+      if (condition and condition.changes) then
         for _, property in ipairs(condition.changes) do
           if ((property.property == "chat" or property.property == "customcode") and type(property.value) == "table" and property.value.custom) then
             checkCustomCondition(codes, L["%s - Condition Custom Chat"]:format(data.id), property.value.custom);
@@ -1210,7 +1212,6 @@ local function diff(ours, theirs)
 end
 
 local function findMatch(data, children)
-
   local function isParentMatch(old, new)
     if old.parent then return end
     if old.uid and new.uid then
@@ -1252,10 +1253,22 @@ local function findMatch(data, children)
   return oldParent
 end
 
-local function MatchInfo(data, children, target)
-  -- match the parent/single aura (if no children)
-  local oldParent = target or findMatch(data, children)
-  if not oldParent then return nil end
+local function MatchInfo(data, children, oldParent)
+  if oldParent then
+    -- Either both have children, or both don't have
+    if type(children) ~= type(oldParent.controlledChildren) then
+      return nil
+    end
+  else
+    -- match the parent/single aura (if no children)
+    oldParent = findMatch(data, children)
+  end
+
+  if not oldParent then
+    return nil
+  end
+
+
   -- setup
   local info = {
     mode = 1,
@@ -1553,12 +1566,8 @@ local function ShowDisplayTooltip(data, children, matchInfo, icon, icons, import
               end
             elseif(trigger.type == "aura2") then
               tinsert(tooltip, {2, L["Trigger:"], L["Aura"], 1, 1, 1, 1, 1, 1});
-            elseif(trigger.type == "event" or trigger.type == "status") then
-              if(trigger.type == "event") then
-                tinsert(tooltip, {2, L["Trigger:"], (Private.event_types[trigger.event] or L["Undefined"]), 1, 1, 1, 1, 1, 1});
-              else
-                tinsert(tooltip, {2, L["Trigger:"], (Private.status_types[trigger.event] or L["Undefined"]), 1, 1, 1, 1, 1, 1});
-              end
+            elseif(Private.category_event_prototype[trigger.type]) then
+              tinsert(tooltip, {2, L["Trigger:"], (Private.event_prototypes[trigger.event].name or L["Undefined"]), 1, 1, 1, 1, 1, 1});
               if(trigger.event == "Combat Log" and trigger.subeventPrefix and trigger.subeventSuffix) then
                 tinsert(tooltip, {2, L["Message type:"], (Private.subevent_prefix_types[trigger.subeventPrefix] or L["Undefined"]).." "..(Private.subevent_suffix_types[trigger.subeventSuffix] or L["Undefined"]), 1, 1, 1, 1, 1, 1});
               end
@@ -1625,7 +1634,7 @@ local function ShowDisplayTooltip(data, children, matchInfo, icon, icons, import
   if regionOptions[regionType] then
     local ok, thumbnail = pcall(regionOptions[regionType].acquireThumbnail, thumbnailAnchor, data);
     if not ok then
-      error("Error creating thumbnail", 2)
+      error(string.format("Error creating thumbnail for %s %s", regionType, thumbnail), 2)
     end
     thumbnailAnchor.currentThumbnail = thumbnail
     thumbnailAnchor.currentThumbnailType = regionType
@@ -1675,7 +1684,7 @@ function WeakAuras.Import(inData, target)
     return nil, "Invalid import data."
   end
   local status, msg = true, ""
-  if type(target) ~= nil then
+  if type(target) ~= 'nil' then
     local targetData
     local uid = type(target) == 'table' and target.uid or target
     if type(uid) == 'string' then
@@ -1702,6 +1711,9 @@ function WeakAuras.Import(inData, target)
   end
   tooltipLoading = nil;
   local matchInfo = MatchInfo(data, children, target)
+  if matchInfo == nil and target then
+    return false, "Import data did not match to target"
+  end
   ShowDisplayTooltip(data, children, matchInfo, icon, icons, "unknown")
   return status, msg
 end
@@ -1811,11 +1823,9 @@ Comm:RegisterComm("WeakAuras", function(prefix, message, distribution, sender)
       local matchInfo = MatchInfo(data, children)
       ShowDisplayTooltip(data, children, matchInfo, icon, icons, sender, true)
     elseif(received.m == "dR") then
-      --if(WeakAuras.linked[received.d]) then
-      TransmitDisplay(received.d, sender);
-    --else
-    --    TransmitError("not authorized", sender);
-    --end
+      if(Private.linked and Private.linked[received.d]) then
+        TransmitDisplay(received.d, sender);
+      end
     elseif(received.m == "dE") then
       tooltipLoading = nil;
       if(received.eM == "dne") then

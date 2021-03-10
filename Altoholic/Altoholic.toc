@@ -1,5 +1,5 @@
-## Interface: 90001
-## Title: Altoholic |TInterface\Icons\INV_Drink_13:0|t
+﻿## Interface: 90002
+## Title: Altoholic by |cFF69CCF0Thaoky|r
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 
 ## Notes: Provides information about your alts
@@ -8,22 +8,21 @@
 ## Notes-zhCN: 能让你全面掌握你的所有角色的信息。
 ## Notes-koKR: 부캐들(alts)의 정보들을 제공해 줍니다.
 
-## Author: Teelo (US-Jubei'thos) + Thaoky (EU-Marécages de Zangar)
-## Version: 9.0.1-024
-
+## Author: Thaoky (EU-Marécages de Zangar)
+## Version: r198
 ## X-Category: Inventory, Tradeskill, Mail
 ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
-## X-Website: https://www.curseforge.com/wow/addons/altoholic-retail
-## X-Github: https://github.com/teelolws/Altoholic-Retail
-## X-Donate: https://www.patreon.com/teelojubeithos
-## X-Curse-Project-ID: 384785
-## X-WoWI-ID: 25610
+## X-Website: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
+## X-eMail: thaoky.altoholic@yahoo.com
+## X-Donate: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
+## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
 ## Dependencies: DataStore, DataStore_Characters
 
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibPeriodicTable-3.1, LibBabble-Boss-3.0, LibBabble-Inventory-3.0
 ## SavedVariables: AltoholicDB
 ## X-Category: Interface Enhancements
 
+# Libraries
 embeds.xml
 
 locale.xml

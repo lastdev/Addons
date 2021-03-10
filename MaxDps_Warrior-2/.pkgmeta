@@ -1,0 +1,6 @@
+package-as: Better_MaxDps_Warrior
+enable-nolib-creation: no
+
+ignore:
+    - README.md
+    - CHANGELOG.md

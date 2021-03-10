@@ -15,20 +15,21 @@ local function UpdateBagIndices(bag, size)
 	-- ex: [2] = bagID = 0, from 13, to 16
 
 	local lowerLimit = 1
-    local upperLimit = 12 + math.floor(AltoholicFrame:GetExcessSize() / 41)
+
 	while size > 0 do					-- as long as there are slots to process ..
 		table.insert(bagIndices, { bagID=bag, from=lowerLimit} )
 	
-		if size <= upperLimit then			-- no more lines ? leave
+		if size <= 12 then			-- no more lines ? leave
 			return
 		else
-			size = size - upperLimit			-- .. or adjust counters
-			lowerLimit = lowerLimit + upperLimit
+			size = size - 12			-- .. or adjust counters
+			lowerLimit = lowerLimit + 12
 		end
 	end
 end
 
 local function UpdateSpread()
+
 	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	
 	local frame = AltoholicFrameContainers
@@ -36,7 +37,7 @@ local function UpdateSpread()
 	local numRows = scrollFrame.numRows
 	
 	if #bagIndices == 0 then
-		for rowIndex = 1, 18 do
+		for rowIndex = 1, numRows do
 			local rowFrame = scrollFrame:GetRow(rowIndex) 
 			rowFrame:Hide()
 		end
@@ -49,16 +50,12 @@ local function UpdateSpread()
 	local DS = DataStore
 	local offset = scrollFrame:GetOffset()
 	
-	if AltoholicFrameContainers:IsVisible() then
-        AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), L["Containers"]))
-    end
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), L["Containers"]))
 	
 	local rowFrame
 	local itemButton
 	
-    local i = 1
-    local colMax = 14 + math.floor(AltoholicFrame:GetExcessSize() / 41)
-	while i <= numRows do
+	for i=1, numRows do
 		rowFrame = scrollFrame:GetRow(i)
 		
 		local line = i + offset
@@ -67,102 +64,89 @@ local function UpdateSpread()
 		
 			local containerID = bagIndices[line].bagID
 			local container = DS:GetContainer(character, containerID)
-            if container then
-    			local containerIcon, _, containerSize = DS:GetContainerInfo(character, containerID)
-    			
-    			-- Column 1 : the bag
-    			itemButton = rowFrame.Item1
-    			
-    			if bagIndices[line].from == 1 then		-- if this is the first line for this bag .. draw bag icon
-    				itemButton.Icon:SetDesaturated(false)
-    				
-    				-- 15/10/2014: note, find a better way for this than this ugly hack
-    				if containerID == "VoidStorage.Tab1" then
-    					itemButton:SetID(201)	-- use id 201 for void storage, only required a few lines below
-    				elseif containerID == "VoidStorage.Tab2" then
-    					itemButton:SetID(202)	-- use id 202 for void storage, only required a few lines below
-    				elseif containerID == REAGENTBANK_CONTAINER then
-    					itemButton:SetID(300)
-    				else
-    					itemButton:SetID(containerID)
-    				end
-    				
-    				itemButton.Icon:SetTexture(containerIcon)
-    				itemButton:SetScript("OnEnter", function(self)
-    					local id = self:GetID()
-    					GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-    					if id == 0 then
-    						GameTooltip:AddLine(BACKPACK_TOOLTIP,1,1,1);
-    						GameTooltip:AddLine(format(CONTAINER_SLOTS, 16, BAGSLOT),1,1,1);
-    						
-    					elseif id == 100 then
-    						GameTooltip:AddLine(L["Bank"],0.5,0.5,1);
-    						GameTooltip:AddLine(L["28 Slot"],1,1,1);
-    					elseif id >= 201 and id <= 202 then
-    						GameTooltip:AddLine(VOID_STORAGE,0.5,0.5,1);
-    					elseif id == 300 then
-    						GameTooltip:AddLine(REAGENT_BANK,0.5,0.5,1);
-    					else
-    						local character = Altoholic.Tabs.Characters:GetAltKey()
-    						local _, link = DS:GetContainerInfo(character, id)
-    						GameTooltip:SetHyperlink(link);
-    						if (id >= 5) and (id <= 11) then
-    							GameTooltip:AddLine(L["Bank bag"],0,1,0);
-    						end
-    					end
-    					GameTooltip:Show();
-    				end)
-    				itemButton.Count:Hide()
-    				itemButton:Show()
-    			else
-    				itemButton:Hide()
-    			end
-    			
-    			-- Column 2 : empty
-    			itemButton = rowFrame.Item2
-    			itemButton:Hide()
-    			itemButton:SetInfo(nil, nil)
-    			
-    			-- Columns 3 to colMax : bag content
-    			for j=3, colMax do
-    				itemButton = rowFrame["Item"..j]
-    				
-    				local slotID = bagIndices[line].from - 3 + j
-    				local itemID, itemLink, itemCount, isBattlePet = DS:GetSlotInfo(container, slotID)
-    				
-    				if (slotID <= containerSize) then 
-    					itemButton:SetItem(itemID, itemLink, rarity)
-    					itemButton:SetCount(itemCount)
-    					if isBattlePet then
-    						itemButton:SetIcon(itemID)	-- override the icon if one is returned by datastore
-    					end
-    					
-    					local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
-    					itemButton:SetCooldown(startTime, duration, isEnabled)
-    					itemButton:Show()
-    				else
-    					itemButton:Hide()
-    					itemButton:SetInfo(nil, nil)
-    					itemButton.startTime = nil
-    					itemButton.duration = nil
-    				end
-    			end
-                
-                for j=colMax, 40 do
-                    itemButton = rowFrame["Item"..j]
-                    itemButton:Hide()
-                end
-            end
+			local containerIcon, _, containerSize = DS:GetContainerInfo(character, containerID)
+			
+			-- Column 1 : the bag
+			itemButton = rowFrame.Item1
+			
+			if bagIndices[line].from == 1 then		-- if this is the first line for this bag .. draw bag icon
+				itemButton.Icon:SetDesaturated(false)
+				
+				-- 15/10/2014: note, find a better way for this than this ugly hack
+				if containerID == "VoidStorage.Tab1" then
+					itemButton:SetID(201)	-- use id 201 for void storage, only required a few lines below
+				elseif containerID == "VoidStorage.Tab2" then
+					itemButton:SetID(202)	-- use id 202 for void storage, only required a few lines below
+				elseif containerID == REAGENTBANK_CONTAINER then
+					itemButton:SetID(300)
+				else
+					itemButton:SetID(containerID)
+				end
+				
+				itemButton.Icon:SetTexture(containerIcon)
+				itemButton:SetScript("OnEnter", function(self)
+					local id = self:GetID()
+					GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+					if id == 0 then
+						GameTooltip:AddLine(BACKPACK_TOOLTIP,1,1,1);
+						GameTooltip:AddLine(format(CONTAINER_SLOTS, 16, BAGSLOT),1,1,1);
+						
+					elseif id == 100 then
+						GameTooltip:AddLine(L["Bank"],0.5,0.5,1);
+						GameTooltip:AddLine(L["28 Slot"],1,1,1);
+					elseif id >= 201 and id <= 202 then
+						GameTooltip:AddLine(VOID_STORAGE,0.5,0.5,1);
+					elseif id == 300 then
+						GameTooltip:AddLine(REAGENT_BANK,0.5,0.5,1);
+					else
+						local character = Altoholic.Tabs.Characters:GetAltKey()
+						local _, link = DS:GetContainerInfo(character, id)
+						GameTooltip:SetHyperlink(link);
+						if (id >= 5) and (id <= 11) then
+							GameTooltip:AddLine(L["Bank bag"],0,1,0);
+						end
+					end
+					GameTooltip:Show();
+				end)
+				itemButton.Count:Hide()
+				itemButton:Show()
+			else
+				itemButton:Hide()
+			end
+			
+			-- Column 2 : empty
+			itemButton = rowFrame.Item2
+			itemButton:Hide()
+			itemButton:SetInfo(nil, nil)
+			
+			-- Columns 3 to 14 : bag content
+			for j=3, 14 do
+				itemButton = rowFrame["Item"..j]
+				
+				local slotID = bagIndices[line].from - 3 + j
+				local itemID, itemLink, itemCount, isBattlePet = DS:GetSlotInfo(container, slotID)
+				
+				if (slotID <= containerSize) then 
+					itemButton:SetItem(itemID, itemLink, rarity)
+					itemButton:SetCount(itemCount)
+					if isBattlePet then
+						itemButton:SetIcon(itemID)	-- override the icon if one is returned by datastore
+					end
+					
+					local startTime, duration, isEnabled = DS:GetContainerCooldownInfo(container, slotID)
+					itemButton:SetCooldown(startTime, duration, isEnabled)
+					itemButton:Show()
+				else
+					itemButton:Hide()
+					itemButton:SetInfo(nil, nil)
+					itemButton.startTime = nil
+					itemButton.duration = nil
+				end
+			end
 			rowFrame:Show()
 		else
 			rowFrame:Hide()
 		end
-        i = i + 1
-	end
-    
-	for rowIndex = i, 18 do
-		local rowFrame = scrollFrame:GetRow(rowIndex) 
-		rowFrame:Hide()
 	end
 	
 	if #bagIndices < numRows then
@@ -179,10 +163,7 @@ local function UpdateAllInOne()
 	local numRows = scrollFrame.numRows
 	
 	local character = Altoholic.Tabs.Characters:GetAltKey()
-
-    if AltoholicFrameContainers:IsVisible() then
-	   AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", DataStore:GetColoredCharacterName(character), L["Containers"], L["All-in-one"]))
-    end
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s / %s", DataStore:GetColoredCharacterName(character), L["Containers"], L["All-in-one"]))
 
 	local offset = scrollFrame:GetOffset()
 	
@@ -190,7 +171,6 @@ local function UpdateAllInOne()
 	local currentSlotIndex = 0		-- this indexes the non-empty slots
 	local rowIndex = 1
 	local colIndex = 1
-    local colMax = 14 + math.floor(AltoholicFrame:GetExcessSize() / 41) 
 	
 	local containerList = {}
 
@@ -242,12 +222,7 @@ local function UpdateAllInOne()
 						itemButton:Show()
 						
 						colIndex = colIndex + 1
-						if colIndex > colMax then
-                            while colIndex <= 40 do
-                                itemButton = frame["Entry"..rowIndex]["Item"..colIndex]
-                                itemButton:Hide()
-                                colIndex = colIndex + 1
-                            end
+						if colIndex > 14 then
 							colIndex = 1
 							rowIndex = rowIndex + 1
 						end
@@ -257,8 +232,8 @@ local function UpdateAllInOne()
 		end
 	end
 		
-	while rowIndex <= 18 do
-		while colIndex <= 40 do
+	while rowIndex <= numRows do
+		while colIndex <= 14 do
 			itemButton = frame["Entry"..rowIndex]["Item"..colIndex]
 			itemButton:Hide()
 			itemButton:SetInfo(nil, nil)
@@ -341,14 +316,4 @@ local function OnBagUpdate(bag)
 	end
 end
 
-local function OnContainerChangesMessage()
-   if AltoholicFrameContainers:IsVisible() then
-      ns:UpdateCache()
-      ns:Update()
-   end
-end
-
 addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
-addon:RegisterMessage("ALTOHOLIC_CONTAINER_CHANGES_COMPLETE", OnContainerChangesMessage)
-
-AltoholicFrame:RegisterResizeEvent("AltoholicFrameContainers", 7, ns)

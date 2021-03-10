@@ -3,7 +3,7 @@ local lsm = LibStub('AceGUISharedMediaWidgets-1.0');
 local media = LibStub('LibSharedMedia-3.0');
 local ADDON_NAME, ADDON_TABLE = ...;
 local version = GetAddOnMetadata(ADDON_NAME, "Version");
-local addoninfo = 'Main: Ver ' .. version;
+local addoninfo = 'Main Version: ' .. version;
 
 BINDING_HEADER_ConRO = "ConRO Hotkeys"
 BINDING_NAME_CONROUNLOCK = "Lock/Unlock ConRO"
@@ -13,11 +13,18 @@ BINDING_NAME_CONROBOSSTOGGLE = "Enemy Set Toggle (Burst/Full)"
 ConRO = LibStub('AceAddon-3.0'):NewAddon('ConRO', 'AceConsole-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
 ConRO.Textures = {
-	['Ping'] = 'Interface\\Cooldown\\ping4',
-	['Star'] = 'Interface\\Cooldown\\star4',
-	['Starburst'] = 'Interface\\Cooldown\\starburst',
-	['Shield'] = 'Interface\\AddOns\\ConRO\\images\\shield2',
 	['Skull'] = 'Interface\\AddOns\\ConRO\\images\\skull',
+	['Starburst'] = 'Interface\\AddOns\\ConRO\\images\\starburst',
+	['Shield'] = 'Interface\\AddOns\\ConRO\\images\\shield2',
+	['Rage'] = 'Interface\\AddOns\\ConRO\\images\\rage',
+
+	['Lightning'] = 'Interface\\AddOns\\ConRO\\images\\lightning',
+	['MagicCircle'] = 'Interface\\AddOns\\ConRO\\images\\magiccircle',
+	['Plus'] = 'Interface\\AddOns\\ConRO\\images\\plus',
+	['DoubleArrow'] = 'Interface\\AddOns\\ConRO\\images\\arrow',
+	
+	['KozNicSquare'] = 'Interface\\AddOns\\ConRO\\images\\KozNic_square',
+	['Circle'] = 'Interface\\AddOns\\ConRO\\images\\Circle',
 };
 ConRO.FinalTexture = nil;
 
@@ -39,6 +46,21 @@ ConRO.Colors = {
 	[12] = '|cFFA330C9',
 }
 
+ConRO.ClassRGB = {
+	[1] = {r = 0.78,g = 0.61,b = 0.43, a = 1.00},
+	[2] = {r = 0.96,g = 0.55,b = 0.73, a = 1.00},
+	[3] = {r = 0.67,g = 0.83,b = 0.45, a = 1.00},
+	[4] = {r = 1.00,g = 0.96,b = 0.41, a = 1.00},
+	[5] = {r = 1.00,g = 1.00,b = 1.00, a = 1.00},
+	[6] = {r = 0.77,g = 0.12,b = 0.23, a = 1.00},
+	[7] = {r = 0.00,g = 0.44,b = 0.87, a = 1.00},
+	[8] = {r = 0.25,g = 0.78,b = 0.92, a = 1.00},
+	[9] = {r = 0.53,g = 0.53,b = 0.93, a = 1.00},
+	[10] = {r = 0.00,g = 1.00,b = 0.60, a = 1.00},
+	[11] = {r = 1.00,g = 0.49,b = 0.04, a = 1.00},
+	[12] = {r = 0.64,g = 0.19,b = 0.79, a = 1.00},
+}
+
 ConRO.Classes = {
 	[1] = 'Warrior',
 	[2] = 'Paladin',
@@ -56,35 +78,70 @@ ConRO.Classes = {
 
 local defaultOptions = {
 	profile = {
-		disabledInfo = false,
+		_Disable_Info_Messages = false,
+		_Intervals = 0.20,
+		_Unlock_ConRO = true,
+
+		_Spec_1_Enabled = true,
+		_Spec_2_Enabled = true,
+		_Spec_3_Enabled = true,
+		_Spec_4_Enabled = true,
+		
+		_Damage_Overlay_Alpha = true,
+		_Damage_Overlay_Color = {r = 0.8,g = 0.8,b = 0.8,a = 1},
+		_Damage_Overlay_Size = 1,
+		_Damage_Icon_Style = 1,
+		_Damage_Alpha_Mode = 1,
+		_Damage_Overlay_Class_Color = false,
+		_Cooldown_Overlay_Color = {r = 1,g = 0.6,b = 0,a = 1},
+		_Cooldown_Overlay_Size = 1,
+		_Cooldown_Icon_Style = 2,
+		_Cooldown_Alpha_Mode = 2,
+
+		_Defense_Overlay_Alpha = true,
+		_Defense_Overlay_Color = {r = 0,g = 0.7,b = 1,a = 1},
+		_Defense_Overlay_Size = 1,		
+		_Defense_Icon_Style = 3,
+		_Defense_Alpha_Mode = 2,
+		_Taunt_Overlay_Color = {r = 0.8,g = 0,b = 0, a = 1},
+		_Taunt_Overlay_Size = 1,
+		_Taunt_Icon_Style = 4,
+		_Taunt_Alpha_Mode = 1,
+
+		_Notifier_Overlay_Alpha = true,
+		_Interrupt_Overlay_Color = {r = 1,g = 1,b = 1,a = 1},
+		_Interrupt_Overlay_Size = 1,
+		_Interrupt_Icon_Style = 5,
+		_Interrupt_Alpha_Mode = 1,
+		_Purge_Overlay_Color = {r = 0.6,g = 0,b = .9,a = 1},
+		_Purge_Overlay_Size = 1,
+		_Purge_Icon_Style = 6,
+		_Purge_Alpha_Mode = 1,
+		_RaidBuffs_Overlay_Color = {r = 0,g = 0.6,b = 0, a = 1},		
+		_RaidBuffs_Overlay_Size = 1,
+		_RaidBuffs_Icon_Style = 7,
+		_RaidBuffs_Alpha_Mode = 1,
+		_Movement_Overlay_Color = {r = 0.2,g = 0.9,b = 0.2, a = 1},
+		_Movement_Overlay_Size = 1,
+		_Movement_Icon_Style = 8,
+		_Movement_Alpha_Mode = 1,
+		
 		enableWindow = true,
-		enableDefenseWindow = false,
-		enableInterruptWindow = true,
-		enablePurgeWindow = true,
 		combatWindow = false,
-		enableWindowCooldown = true,
-		unlockWindow = true,
+		enableWindowCooldown = true,		
+		enableDefenseWindow = true,
 		enableWindowSpellName = true,
-		enableWindowKeybinds = true,	
+		enableWindowKeybinds = true,
 		transparencyWindow = 0.6,
-		burstDefault = false,
 		windowIconSize = 50,
 		flashIconSize = 50,
-		toggleButtonOrientation = 2,
+		enableInterruptWindow = true,
+		enablePurgeWindow = true,
+		
+		_Hide_Toggle = false,
 		toggleButtonSize = 1.2,
-		interval = 0.20,
-		overlayScale = 1,
-		damageOverlayAlpha = true,
-		defenseOverlayAlpha = true,
-		notifierOverlayAlpha = true,
-		damageOverlayColor = {r = 0.8,g = 0.8,b = 0.8,a = 1},
-		cooldownOverlayColor = {r = 1,g = 0.6,b = 0,a = 1},
-		defenseOverlayColor = {r = 0,g = 0.7,b = 1,a = 1},
-		interruptOverlayColor = {r = 1,g = 1,b = 1,a = 1},
-		purgeOverlayColor = {r = 0.6,g = 0,b = .9,a = 1},
-		raidbuffsOverlayColor = {r = 0,g = 0.6,b = 0, a = 1},
-		tauntOverlayColor = {r = 0.8,g = 0,b = 0, a = 1},
-		movementOverlayColor = {r = 0.2,g = 0.9,b = 0.2, a = 1},
+		toggleButtonOrientation = 2,
+		_Burst_Threshold = 90,
 	}
 }	
 
@@ -93,87 +150,112 @@ local orientations = {
 		"Horizontal",
 }
 
+local _Overlay_Styles = {
+	'Skull',
+	'Starburst',
+	'Shield',
+	'Rage',
+	'Lightning',
+	'MagicCircle',
+	'Plus',
+	'DoubleArrow',
+	'KozNic Square',
+	'Circle',
+}
+
+local _Alpha_Modes = {
+	'BLEND',
+	'ADD',
+	'MOD',
+	'ALPHAKEY',
+	'DISABLE',
+}
+
 local _, _, classIdv = UnitClass('player');
 local cversion = GetAddOnMetadata('ConRO_' .. ConRO.Classes[classIdv], 'Version');
 local classinfo = " ";
-
 	if cversion ~= nil then
-		classinfo = ConRO.Classes[classIdv] .. ': Ver ' .. cversion;
+		classinfo = ConRO.Classes[classIdv] .. ' Version: ' .. cversion;
 	end
 
 local options = {
 	type = 'group',
 	name = '-= |cffFFFFFFConRO  (Conflict Rotation Optimizer)|r =-',
 	inline = false,
+	childGroups = "tab",
 	args = {
-		authorPull = {
+		versionPull = {
 			order = 1,
 			type = "description",
-			width = "full",
-			name = "Author: Vae",
-		},
-		versionPull = {
-			order = 2,
-			type = "description",
-			width = "full",
+			width = "normal",
 			name = addoninfo,
 		},
-		cversionPull = {
+		spacer2 = {
+			order = 2,
+			type = "description",
+			width = "normal",
+			name = "\n\n",
+		},		
+		authorPull = {
 			order = 3,
+			type = "description",
+			width = "normal",
+			name = "Author: Vae",
+		},
+		cversionPull = {
+			order = 4,
 			type = "description",
 			width = "full",
 			name = classinfo,
-		},		
-		spacer4 = {
-			order = 4,
+		},
+--Generic Addon Settings
+		spacer10 = {
+			order = 10,
 			type = "description",
 			width = "full",
 			name = "\n\n",
 		},
-		interval = {
-			name = 'Interval in seconds',
-			desc = 'Sets how frequent rotation updates will be. Low value will result in fps drops.',
-			type = 'range',
-			order = 5,
+		_Disable_Info_Messages = {
+			name = "Disable info messages",
+			desc = "Enables / disables info messages, if you have issues with addon, make sure to deselect this.",
+			type = "toggle",
+			width = "normal",
+			order = 11,
+			set = function(info, val)
+				ConRO.db.profile._Disable_Info_Messages = val;
+			end,
+			get = function(info) return ConRO.db.profile._Disable_Info_Messages end
+		},
+		spacer12 = {
+			order = 12,
+			type = "description",
+			width = "normal",
+			name = "\n\n",
+		},		
+		_Intervals = {
+			name = "Interval in seconds",
+			desc = "Sets how frequent rotation updates will be. Low value will result in fps drops.",
+			type = "range",
+			width = "normal",
+			order = 13,
 			hidden = true,
 			min = 0.01,
 			max = 2,
-			set = function(info,val) ConRO.db.profile.interval = val end,
-			get = function(info) return ConRO.db.profile.interval end
+			set = function(info,val) ConRO.db.profile._Intervals = val end,
+			get = function(info) return ConRO.db.profile._Intervals end
 		},
-		disabledInfo = {
-			name = 'Disable info messages',
-			desc = 'Enables / disables info messages, if you have issues with addon, make sure to deselect this.',
-			type = 'toggle',
-			width = 'double',
-			order = 6,
+		_Unlock_ConRO = {
+			name = "Unlock ConRO",
+			desc = "Make display windows movable.",
+			type = "toggle",
+			width = "normal",
+			order = 14,
 			set = function(info, val)
-				ConRO.db.profile.disabledInfo = val;
-			end,
-			get = function(info) return ConRO.db.profile.disabledInfo end
-		},
-		reloadButton = {
-			name = 'ReloadUI',
-			desc = 'Reloads UI after making changes that need it.',
-			type = 'execute',
-			width = 'normal',
-			order = 7,
-			func = function(info)
-				ReloadUI();
-			end
-		},
-		unlockWindow = {
-			name = 'Unlock ConRO',
-			desc = 'Make display windows movable.',
-			type = 'toggle',
-			width = 'normal',
-			order = 8,
-			set = function(info, val)
-				ConRO.db.profile.unlockWindow = val;
-				ConROWindow:EnableMouse(ConRO.db.profile.unlockWindow);
-				ConRODefenseWindow:EnableMouse(ConRO.db.profile.unlockWindow);
-				ConROInterruptWindow:EnableMouse(ConRO.db.profile.unlockWindow);
-				ConROPurgeWindow:EnableMouse(ConRO.db.profile.unlockWindow);		
+				ConRO.db.profile._Unlock_ConRO = val;
+				ConROWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+				ConRODefenseWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+				ConROInterruptWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);
+				ConROPurgeWindow:EnableMouse(ConRO.db.profile._Unlock_ConRO);		
 				if val == true and ConRO.db.profile.enableInterruptWindow == true then
 					ConROInterruptWindow:Show();				
 				else
@@ -185,519 +267,1695 @@ local options = {
 					ConROPurgeWindow:Hide();					
 				end			
 			end,
-			get = function(info) return ConRO.db.profile.unlockWindow end
-		},		
-		spacer10 = {
-			order = 10,
-			type = "description",
-			width = "full",
-			name = "\n\n",
-		},
-		overlaySettings = {
-			type = 'header',
-			name = 'Overlay Settings',
-			order = 11,
-		},
-		damageOverlayAlpha = {
-			name = 'Show Damage Overlay',
-			desc = 'Turn damage overlay on and off.',
-			type = 'toggle',
-			width = 'default',
-			order = 12,
-			set = function(info, val)
-				ConRO.db.profile.damageOverlayAlpha = val;
-			end,
-			get = function(info) return ConRO.db.profile.damageOverlayAlpha end
-		},
-		damageOverlayColor = {
-			name = 'Damage Color',
-			desc = 'Change damage overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			width = 'default',
-			order = 13,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.damageOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.damageOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		cooldownOverlayColor = {
-			name = 'Cooldown Color',
-			desc = 'Change cooldown burst overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			order = 14,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.cooldownOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.cooldownOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		defenseOverlayAlpha = {
-			name = 'Show Defense Overlay',
-			desc = 'Turn defense overlay on and off.',
-			type = 'toggle',
-			width = 'default',
-			order = 15,
-			set = function(info, val)
-				ConRO.db.profile.defenseOverlayAlpha = val;
-			end,
-			get = function(info) return ConRO.db.profile.defenseOverlayAlpha end
-		},
-		defenseOverlayColor = {
-			name = 'Defense Color',
-			desc = 'Change defense overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			order = 16,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.defenseOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.defenseOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		tauntOverlayColor = {
-			name = 'Taunt Color',
-			desc = 'Change taunt overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			order = 17,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.tauntOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.tauntOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		notifierOverlayAlpha = {
-			name = 'Show Notifier Overlay',
-			desc = 'Turn interrupt, raid buff and purge overlays on and off.',
-			type = 'toggle',
-			width = 'default',
-			order = 18,
-			set = function(info, val)
-				ConRO.db.profile.notifierOverlayAlpha = val;
-			end,
-			get = function(info) return ConRO.db.profile.notifierOverlayAlpha end
-		},
-		interruptOverlayColor = {
-			name = 'Interrupt Color',
-			desc = 'Change Interrupt overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			order = 19,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.interruptOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.interruptOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		purgeOverlayColor = {
-			name = 'Purgable Color',
-			desc = 'Change purge overlay color.',
-			type = 'color',
-			hasAlpha = true,
-			order = 20,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.purgeOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.purgeOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		spacer21 = {
-			order = 21,
-			type = "description",
-			width = "normal",
-			name = "\n\n",
-		},
-		raidbuffsOverlayColor = {
-			name = 'Raid Buffs Color',
-			desc = 'Change raid buffs overlay color.',
-			type = 'color',
-			width = "default",
-			hasAlpha = true,
-			order = 22,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.raidbuffsOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.raidbuffsOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		movementOverlayColor = {
-			name = 'Movement Color',
-			desc = 'Change movement overlay color.',
-			type = 'color',
-			width = "default",
-			hasAlpha = true,
-			order = 23,
-			set = function(info, r, g, b, a)
-				local t = ConRO.db.profile.movementOverlayColor;
-				t.r, t.g, t.b, t.a = r, g, b, a;
-			end,
-			get = function(info)
-				local t = ConRO.db.profile.movementOverlayColor;
-				return t.r, t.g, t.b, t.a;
-			end
-		},
-		overlayScale = {
-			name = 'Change Overlay Size',
-			desc = 'Sets the scale of the Overlays.',
-			type = 'range',
-			width = 'normal',
-			order = 24,
-			min = .5,
-			max = 1.5,
-			step = .1,
-			set = function(info,val)
-			ConRO.db.profile.overlayScale = val
-			end,
-			get = function(info) return ConRO.db.profile.overlayScale end
-		},
-		spacer30 = {
-			order = 30,
-			type = "description",
-			width = "full",
-			name = "\n\n",
-		},
-		toggleButtonSettings = {
-			type = 'header',
-			name = 'Toggle Button Settings',
-			order = 31,
-		},
-		toggleButtonOrientation = {
-			name = 'Toggle Button Orientation',
-			desc = 'Sets the orientation of the button for the toggle buttons.',
-			type = 'select',
-			width = 'normal',
-			order = 32,
-			values = orientations,
-			style = "dropdown",
-			set = function(info,val)
-				ConRO.db.profile.toggleButtonOrientation = val
-				local vert = 2;
-				local hori = 1;
-					if val == 1 then
-						vert = 2;
-						hori = 1;
-					elseif val == 2 then
-						vert = 1;
-						hori = 2;
-					end
-				ConROButtonFrame:SetSize((40 * hori) + 14, (15 * vert) + 14)
-					
-			end,
-			get = function(info) return ConRO.db.profile.toggleButtonOrientation end
-		},
-		spacer33 = {
-			order = 33,
-			type = "description",
-			width = "normal",
-			name = "\n\n",
-		},
-		spacer34 = {
-			order = 34,
-			type = "description",
-			width = "normal",
-			name = "\n\n",
+			get = function(info) return ConRO.db.profile._Unlock_ConRO end
 		},
 
-		toggleButtonSize = {
-			name = 'Toggle Button Size',
-			desc = 'Sets the scale of the toggle buttons.',
-			type = 'range',
-			width = 'default',
-			order = 35,
-			min = 1,
-			max = 2,
-			step = .1,
-			set = function(info,val)
-			ConRO.db.profile.toggleButtonSize = val
-			ConROButtonFrame:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_AutoButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_SingleButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_AoEButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_FullButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_BurstButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_BlockBurstButton:SetScale(ConRO.db.profile.toggleButtonSize)
-			ConRO_BlockAoEButton:SetScale(ConRO.db.profile.toggleButtonSize)			
-			end,
-			get = function(info) return ConRO.db.profile.toggleButtonSize end
+--Class Settings
+		classSettings = {
+			type = 'group',
+			name = 'Class Settings',
+			order = 20,
+			args = {
+				_Spec_1_Enabled = {
+					name = function() return "\124T".. select(4, GetSpecializationInfo(1)) ..":0\124t ".. select(2, GetSpecializationInfo(1)) end,
+					desc = function() return select(3, GetSpecializationInfo(1)) end,
+					type = "toggle",
+					width = .80,
+					order = 1,
+					set = function(info, val)
+						ConRO.db.profile._Spec_1_Enabled = val;
+						
+						ConRO:DisableRotation();
+						ConRO:DisableDefense();
+						ConRO:LoadModule();
+						ConRO:EnableRotation();
+						ConRO:EnableDefense();
+						
+						if ConRO:HealSpec() then
+							ConROWindow:Hide();
+						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+							ConROWindow:Show();
+						else
+							ConROWindow:Hide();	
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Spec_1_Enabled end
+				},
+				_Spec_2_Enabled = {
+					name = function() return "\124T".. select(4, GetSpecializationInfo(2)) ..":0\124t ".. select(2, GetSpecializationInfo(2)) end,
+					desc = function() return select(3, GetSpecializationInfo(2)) end,
+					type = "toggle",
+					width = .80,
+					order = 2,
+					set = function(info, val)
+						ConRO.db.profile._Spec_2_Enabled = val;
+						
+						ConRO:DisableRotation();
+						ConRO:DisableDefense();
+						ConRO:LoadModule();
+						ConRO:EnableRotation();
+						ConRO:EnableDefense();
+						
+						if ConRO:HealSpec() then
+							ConROWindow:Hide();
+						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+							ConROWindow:Show();
+						else
+							ConROWindow:Hide();	
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Spec_2_Enabled end
+				},
+				_Spec_3_Enabled = {
+					name = function() if GetNumSpecializations() >= 3 then return "\124T".. select(4, GetSpecializationInfo(3)) ..":0\124t ".. select(2, GetSpecializationInfo(3)); end end,
+					desc = function() if GetNumSpecializations() >= 3 then return select(3, GetSpecializationInfo(3)); end end,
+					type = "toggle",
+					width = .80,
+					order = 3,
+					hidden = function() if GetNumSpecializations() >= 3 then return false; else return true; end end,
+					set = function(info, val)
+						ConRO.db.profile._Spec_3_Enabled = val;
+						
+						ConRO:DisableRotation();
+						ConRO:DisableDefense();
+						ConRO:LoadModule();
+						ConRO:EnableRotation();
+						ConRO:EnableDefense();
+						
+						if ConRO:HealSpec() then
+							ConROWindow:Hide();
+						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+							ConROWindow:Show();
+						else
+							ConROWindow:Hide();	
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Spec_3_Enabled end
+				},
+				_Spec_4_Enabled = {
+					name = function() if GetNumSpecializations() >= 4 then return "\124T".. select(4, GetSpecializationInfo(4)) ..":0\124t ".. select(2, GetSpecializationInfo(4)); end end,
+					desc = function() if GetNumSpecializations() >= 4 then return select(3, GetSpecializationInfo(4)); end end,
+					type = "toggle",
+					width = .80,
+					order = 4,
+					hidden = function() if GetNumSpecializations() >= 4 then return false; else return true; end end,
+					set = function(info, val)
+						ConRO.db.profile._Spec_4_Enabled = val;
+						
+						ConRO:DisableRotation();
+						ConRO:DisableDefense();
+						ConRO:LoadModule();
+						ConRO:EnableRotation();
+						ConRO:EnableDefense();
+						
+						if ConRO:HealSpec() then
+							ConROWindow:Hide();
+						elseif ConRO.db.profile.enableWindow and not ConRO.db.profile.combatWindow then
+							ConROWindow:Show();
+						else
+							ConROWindow:Hide();	
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Spec_4_Enabled end
+				},
+			},
 		},
-		spacer36 = {
-			order = 36,
-			type = "description",
-			width = "normal",
-			name = "\n\n",
-		},
-		burstDefault = {
-			name = 'Burst Rotation',
-			desc = 'Make "Burst" rotation the default setting.',
-			type = 'toggle',
-			width = 'default',
-			order = 37,
-			set = function(info, val)
-				ConRO.db.profile.burstDefault = val;
-				if ConROButtonFrame:IsVisible() and not ConRO_BlockBurstButton:IsVisible() then
-					if val == true then
-						ConRO_FullButton:Hide();
-						ConRO_BurstButton:Show();
-					else
-						ConRO_FullButton:Show();
-						ConRO_BurstButton:Hide();
+
+--Overlay Settings
+		overlaySettings = {
+			type = 'group',
+			name = 'Overlay Settings',
+			order = 21,
+			args = {
+				_Damage_Overlay_Alpha = {
+					name = 'Show Damage Overlay',
+					desc = 'Turn damage overlay on and off.',
+					type = 'toggle',
+					width = 'default',
+					order = 3,
+					set = function(info, val)
+						ConRO.db.profile._Damage_Overlay_Alpha = val;
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							local _Frame_Tables_ConRO = {ConRO.DamageFrames, ConRO.CoolDownFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(1);
+									end
+								end
+							end
+						else
+							local _Frame_Tables_ConRO = {ConRO.DamageFrames, ConRO.CoolDownFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(0);
+									end
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Damage_Overlay_Alpha end
+				},
+				_Defense_Overlay_Alpha = {
+					name = 'Show Defense Overlay',
+					desc = 'Turn defense overlay on and off.',
+					type = 'toggle',
+					width = 'default',
+					order = 4,
+					set = function(info, val)
+						ConRO.db.profile._Defense_Overlay_Alpha = val;
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							local _Frame_Tables_ConRO = {ConRO.DefenseFrames, ConRO.TauntFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(1);
+									end
+								end
+							end
+						else
+							local _Frame_Tables_ConRO = {ConRO.DefenseFrames, ConRO.TauntFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(0);
+									end
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Defense_Overlay_Alpha end
+				},
+				_Notifier_Overlay_Alpha = {
+					name = 'Show Notifier Overlay',
+					desc = 'Turn interrupt, raid buff and purge overlays on and off.',
+					type = 'toggle',
+					width = 'default',
+					order = 5,
+					set = function(info, val)
+						ConRO.db.profile._Notifier_Overlay_Alpha = val;
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							local _Frame_Tables_ConRO = {ConRO.InterruptFrames, ConRO.PurgableFrames, ConRO.RaidBuffsFrames, ConRO.MovementFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(1);
+									end
+								end
+							end
+						else
+							local _Frame_Tables_ConRO = {ConRO.InterruptFrames, ConRO.PurgableFrames, ConRO.RaidBuffsFrames, ConRO.MovementFrames};
+							for _, frameTable in pairs(_Frame_Tables_ConRO) do
+								for k, overlay in pairs(frameTable) do
+									if overlay ~= nil then
+										overlay:SetAlpha(0);
+									end
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Notifier_Overlay_Alpha end
+				},
+				_Damage_Spacer = {
+					type = "description",
+					width = "full",
+					name = "\n\n",
+					order = 10,
+				},			
+				_Damage_Overlays = {
+					type = "header",
+					name = "Damage Overlays",
+					order = 11,
+				},
+				_Damage_Overlay_Color = {
+					name = 'Damage',
+					desc = 'Change damage overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha and not ConRO.db.profile._Damage_Overlay_Class_Color then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 12,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Damage_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.DamageFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Damage_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
 					end
-				end
-			end,
-			get = function(info) return ConRO.db.profile.burstDefault end
-		},		
-		spacer40 = {
-			order = 40,
-			type = "description",
-			width = "full",
-			name = "\n\n",
+				},
+				_Damage_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the damage overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 13,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Damage_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.DamageFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Damage_Overlay_Size end
+				},
+				_Damage_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the damage overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 14,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Damage_Icon_Style = val;
+						for k, overlay in pairs(ConRO.DamageFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Damage_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+									overlay.texture:SetBlendMode('BLEND');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Damage_Icon_Style end
+				},
+				_Damage_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the damage texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 15,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Damage_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.DamageFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Damage_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Damage_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Damage_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Damage_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Damage_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Damage_Alpha_Mode end
+				},
+				_Damage_Overlay_Class_Color = {
+					name = 'Class Colors',
+					desc = 'Change damage overlays to class colors.',
+					type = 'toggle',
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .60,
+					order = 16,
+					set = function(info, val)
+						ConRO.db.profile._Damage_Overlay_Class_Color = val;
+						if val == true then
+							local _, _, classId = UnitClass('player');
+							local c = ConRO.ClassRGB[classId];
+							for k, overlay in pairs(ConRO.DamageFrames) do
+								if overlay ~= nil then
+									overlay.texture:SetVertexColor(c.r, c.g, c.b);
+									overlay.texture:SetAlpha(c.a);
+								end
+							end
+						else
+							local t = ConRO.db.profile._Damage_Overlay_Color;
+							for k, overlay in pairs(ConRO.DamageFrames) do
+								if overlay ~= nil then
+									overlay.texture:SetVertexColor(t.r, t.g, t.b);
+									overlay.texture:SetAlpha(t.a);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Damage_Overlay_Class_Color end
+				},
+				_Cooldown_Overlay_Color = {
+					name = 'Cooldown',
+					desc = 'Change cooldown burst overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 17,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Cooldown_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.CoolDownFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Cooldown_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Cooldown_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the cooldown overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 18,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Cooldown_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.CoolDownFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Cooldown_Overlay_Size end
+				},				
+				_Cooldown_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the cooldown overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 19,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Cooldown_Icon_Style = val;
+						for k, overlay in pairs(ConRO.CoolDownFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Cooldown_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Cooldown_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Cooldown_Icon_Style end
+				},
+				_Cooldown_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the cooldown texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Damage_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 20,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Cooldown_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.CoolDownFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Cooldown_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Cooldown_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Cooldown_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Cooldown_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Cooldown_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Cooldown_Alpha_Mode end
+				},
+				_Defense_Spacer = {
+					type = "description",
+					width = "full",
+					name = "\n\n",
+					order = 30,
+				},
+				_Defense_Overlays = {
+					type = "header",
+					name = "Defense Overlays",
+					order = 31,
+				},
+				_Defense_Overlay_Color = {
+					name = 'Defense',
+					desc = 'Change defense overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 32,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Defense_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.DefenseFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Defense_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Defense_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the defense overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 33,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Defense_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.DefenseFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Defense_Overlay_Size end
+				},
+				_Defense_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the defense overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 34,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Defense_Icon_Style = val
+						for k, overlay in pairs(ConRO.DefenseFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Defense_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Defense_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Defense_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Defense_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Defense_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Defense_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Defense_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Defense_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Defense_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Defense_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Defense_Icon_Style end
+				},
+				_Defense_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the defense texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 35,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Defense_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.DefenseFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Defense_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Defense_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Defense_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Defense_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Defense_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Defense_Alpha_Mode end
+				},
+				_Taunt_Overlay_Color = {
+					name = 'Taunt',
+					desc = 'Change taunt overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 36,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Taunt_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.TauntFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Taunt_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Taunt_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the taunt overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 37,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Taunt_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.TauntFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Taunt_Overlay_Size end
+				},
+				_Taunt_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the taunt overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 38,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Taunt_Icon_Style = val
+						for k, overlay in pairs(ConRO.TauntFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Taunt_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Taunt_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Taunt_Icon_Style end
+				},
+				_Taunt_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the taunt texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Defense_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 39,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Taunt_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.TauntFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Taunt_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Taunt_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Taunt_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Taunt_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Taunt_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Taunt_Alpha_Mode end
+				},
+				_Notifier_Spacer = {
+					type = "description",
+					width = "full",
+					name = "\n\n",
+					order = 50,
+				},
+				_Notifier_Overlays = {
+					type = "header",
+					name = "Notifier Overlays",
+					order = 51,
+				},
+				_Interrupt_Overlay_Color = {
+					name = 'Interrupt',
+					desc = 'Change interrupt overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 52,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Interrupt_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.InterruptFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Interrupt_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Interrupt_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the interrupt overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 53,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Interrupt_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.InterruptFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Interrupt_Overlay_Size end
+				},
+				_Interrupt_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the interrupt overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 54,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Interrupt_Icon_Style = val;
+						for k, overlay in pairs(ConRO.InterruptFrames) do
+							if overlay ~= nil then
+								if ConRO.db.profile._Interrupt_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Interrupt_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Interrupt_Icon_Style end
+				},
+				_Interrupt_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the interrupt texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 55,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Interrupt_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.InterruptFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Interrupt_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Interrupt_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Interrupt_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Interrupt_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Interrupt_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Interrupt_Alpha_Mode end
+				},
+				_Purge_Overlay_Color = {
+					name = 'Purgable',
+					desc = 'Change purge overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					hasAlpha = true,
+					width = .75,
+					order = 56,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Purge_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.PurgableFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Purge_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Purge_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the purge overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 57,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Purge_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.PurgableFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Purge_Overlay_Size end
+				},
+				_Purge_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the purge overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 58,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Purge_Icon_Style = val;
+						for k, overlay in pairs(ConRO.PurgeFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Purge_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Purge_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Purge_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Purge_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Purge_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Purge_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Purge_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Purge_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Purge_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Purge_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Purge_Icon_Style end
+				},
+				_Purge_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the purge texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 59,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Purge_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.PurgableFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Purge_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Purge_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Purge_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Purge_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Purge_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Purge_Alpha_Mode end
+				},
+				_RaidBuffs_Overlay_Color = {
+					name = 'Raid Buffs',
+					desc = 'Change raid buffs overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .75,
+					hasAlpha = true,
+					order = 60,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._RaidBuffs_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.RaidBuffsFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._RaidBuffs_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_RaidBuffs_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the raid buffs overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 61,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._RaidBuffs_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.RaidBuffsFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._RaidBuffs_Overlay_Size end
+				},
+				_RaidBuffs_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the raid buffs overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 62,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._RaidBuffs_Icon_Style = val;
+						for k, overlay in pairs(ConRO.RaidBuffsFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._RaidBuffs_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._RaidBuffs_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._RaidBuffs_Icon_Style end
+				},
+				_RaidBuffs_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the raid buffs texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 63,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._RaidBuffs_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.TauntFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._RaidBuffs_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._RaidBuffs_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._RaidBuffs_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._RaidBuffs_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._RaidBuffs_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._RaidBuffs_Alpha_Mode end
+				},
+				_Movement_Overlay_Color = {
+					name = 'Movement',
+					desc = 'Change movement overlays color.',
+					type = 'color',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .75,
+					hasAlpha = true,
+					order = 64,
+					set = function(info, r, g, b, a)
+						local t = ConRO.db.profile._Movement_Overlay_Color;
+						t.r, t.g, t.b, t.a = r, g, b, a;
+						for k, overlay in pairs(ConRO.MovementFrames) do
+							if overlay ~= nil then
+								overlay.texture:SetVertexColor(r, g, b);
+								overlay.texture:SetAlpha(a);
+							end
+						end
+					end,
+					get = function(info)
+						local t = ConRO.db.profile._Movement_Overlay_Color;
+						return t.r, t.g, t.b, t.a;
+					end
+				},
+				_Movement_Overlay_Size = {
+					name = 'Size',
+					desc = 'Sets the scale of the movement overlay texture.',
+					type = 'range',
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .65,
+					order = 65,
+					min = .5,
+					max = 1.5,
+					step = .1,
+					set = function(info,val)
+						ConRO.db.profile._Movement_Overlay_Size = val;
+						for k, overlay in pairs(ConRO.MovementFrames) do
+							if overlay ~= nil then
+								overlay:SetScale(val);
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Movement_Overlay_Size end
+				},
+				_Movement_Icon_Style = {
+					name = "Style",
+					desc = "Sets the style of the movement overlay texture.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .70,
+					order = 66,
+					values = _Overlay_Styles,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Movement_Icon_Style = val;
+						for k, overlay in pairs(ConRO.MovementFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Movement_Icon_Style == 1 then
+									overlay.texture:SetTexture(ConRO.Textures.Skull);
+								elseif ConRO.db.profile._Movement_Icon_Style == 2 then
+									overlay.texture:SetTexture(ConRO.Textures.Starburst);
+								elseif ConRO.db.profile._Movement_Icon_Style == 3 then
+									overlay.texture:SetTexture(ConRO.Textures.Shield);
+								elseif ConRO.db.profile._Movement_Icon_Style == 4 then
+									overlay.texture:SetTexture(ConRO.Textures.Rage);
+								elseif ConRO.db.profile._Movement_Icon_Style == 5 then
+									overlay.texture:SetTexture(ConRO.Textures.Lightning);
+								elseif ConRO.db.profile._Movement_Icon_Style == 6 then
+									overlay.texture:SetTexture(ConRO.Textures.MagicCircle);
+								elseif ConRO.db.profile._Movement_Icon_Style == 7 then
+									overlay.texture:SetTexture(ConRO.Textures.Plus);
+								elseif ConRO.db.profile._Movement_Icon_Style == 8 then
+									overlay.texture:SetTexture(ConRO.Textures.DoubleArrow);
+								elseif ConRO.db.profile._Movement_Icon_Style == 9 then
+									overlay.texture:SetTexture(ConRO.Textures.KozNicSquare);
+								elseif ConRO.db.profile._Movement_Icon_Style == 10 then
+									overlay.texture:SetTexture(ConRO.Textures.Circle);
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Movement_Icon_Style end
+				},
+				_Movement_Alpha_Mode = {
+					name = "Alpha",
+					desc = "Sets the mode of the movement texture alpha.",
+					type = "select",
+					disabled = function()
+						if ConRO.db.profile._Notifier_Overlay_Alpha then
+							return false;
+						else
+							return true;
+						end
+					end,
+					width = .55,
+					order = 67,
+					values = _Alpha_Modes,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile._Movement_Alpha_Mode = val;
+						for k, overlay in pairs(ConRO.MovementFrames) do
+							if overlay ~= nil then						
+								if ConRO.db.profile._Movement_Alpha_Mode == 1 then
+									overlay.texture:SetBlendMode('BLEND');
+								elseif ConRO.db.profile._Movement_Alpha_Mode == 2 then
+									overlay.texture:SetBlendMode('ADD');
+								elseif ConRO.db.profile._Movement_Alpha_Mode == 3 then
+									overlay.texture:SetBlendMode('MOD');
+								elseif ConRO.db.profile._Movement_Alpha_Mode == 4 then
+									overlay.texture:SetBlendMode('ALPHAKEY');
+								elseif ConRO.db.profile._Movement_Alpha_Mode == 5 then
+									overlay.texture:SetBlendMode('DISABLE');
+								end
+							end
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Movement_Alpha_Mode end
+				},
+			},
 		},
+
+--Display Window Settings
 		displayWindowSettings = {
-			type = 'header',
-			name = 'Display Window Settings',
-			order = 41,
+			type = "group",
+			name = "Display Window Settings",
+			order = 22,
+			args = {
+				enableWindow = {
+					name = 'Enable Display Window',
+					desc = 'Show movable display window.',
+					type = 'toggle',
+					width = 'default',
+					order = 73,
+					set = function(info, val)
+						ConRO.db.profile.enableWindow = val;
+						if val == true and not ConRO:HealSpec() then
+							ConROWindow:Show();
+						else
+							ConROWindow:Hide();
+						end
+					end,
+					get = function(info) return ConRO.db.profile.enableWindow end
+				},
+				combatWindow = {
+					name = 'Only Display with Hostile',
+					desc = 'Show display window only when hostile target selected.',
+					type = 'toggle',
+					width = 'default',
+					order = 74,
+					set = function(info, val)
+						ConRO.db.profile.combatWindow = val;
+						if val == true then
+							ConROWindow:Hide();
+							ConRODefenseWindow:Hide();
+						else
+							ConROWindow:Show();
+							ConRODefenseWindow:Show();				
+						end
+					end,
+					get = function(info) return ConRO.db.profile.combatWindow end
+				},
+				enableWindowCooldown = {
+					name = 'Enable Cooldown Swirl',
+					desc = 'Show cooldown swirl on Display Windows. REQUIRES RELOAD',
+					type = 'toggle',
+					width = 'normal',
+					order = 75,
+					set = function(info, val)
+						ConRO.db.profile.enableWindowCooldown = val;		
+					end,
+					get = function(info) return ConRO.db.profile.enableWindowCooldown end
+				},
+				enableDefenseWindow = {
+					name = 'Enable Defense Window',
+					desc = 'Show movable defense window.',
+					type = 'toggle',
+					width = 'default',
+					order = 76,
+					set = function(info, val)
+						ConRO.db.profile.enableDefenseWindow = val;
+						if val == true then
+							ConRODefenseWindow:Show();
+						else
+							ConRODefenseWindow:Hide();
+						end				
+					end,
+					get = function(info) return ConRO.db.profile.enableDefenseWindow end
+				},		
+				enableWindowSpellName = {
+					name = 'Show Spellname',
+					desc = 'Show spellname above Display Windows.',
+					type = 'toggle',
+					width = 'normal',
+					order = 77,
+					set = function(info, val)
+						ConRO.db.profile.enableWindowSpellName = val;
+						if val == true then
+							ConROWindow.font:Show();
+							ConRODefenseWindow.font:Show();
+						else 
+							ConROWindow.font:Hide();
+							ConRODefenseWindow.font:Hide();
+						end
+					end,
+					get = function(info) return ConRO.db.profile.enableWindowSpellName end
+				},
+				enableWindowKeybinds = {
+					name = 'Show Keybind',
+					desc = 'Show keybinds below Display Windows.',
+					type = 'toggle',
+					width = 'normal',
+					order = 78,
+					set = function(info, val)
+						ConRO.db.profile.enableWindowKeybinds = val;
+						if val == true then
+							ConROWindow.fontkey:Show();
+							ConRODefenseWindow.fontkey:Show();
+						else 
+							ConROWindow.fontkey:Hide();
+							ConRODefenseWindow.fontkey:Hide();
+						end
+					end,
+					get = function(info) return ConRO.db.profile.enableWindowKeybinds end
+				},
+				transparencyWindow = {
+					name = 'Window Transparency',
+					desc = 'Change transparency of your windows and texts.',
+					type = 'range',
+					width = 'normal',
+					order = 79,
+					min = 0,
+					max = 1,
+					step = 0.01,
+					set = function(info, val)
+						ConRO.db.profile.transparencyWindow = val;
+					end,
+					get = function(info) return ConRO.db.profile.transparencyWindow end
+				},	
+				windowIconSize = {
+					name = 'Display windows Icon size.',
+					desc = 'Sets the size of the icon in your display windows. REQUIRES RELOAD',
+					type = 'range',
+					width = 'normal',
+					order = 80,
+					min = 20,
+					max = 100,
+					step = 2,
+					set = function(info, val)
+						ConRO.db.profile.windowIconSize = val;
+					end,
+					get = function(info) return ConRO.db.profile.windowIconSize end
+				},
+				flashIconSize = {
+					name = 'Flasher Icon size.',
+					desc = 'Sets the size of the icon that flashes for Interrupts and Purges.',
+					type = 'range',
+					width = 'normal',
+					order = 81,
+					min = 20,
+					max = 100,
+					step = 2,
+					set = function(info, val)
+						ConRO.db.profile.flashIconSize = val;
+						ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
+						ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
+					end,
+					get = function(info) return ConRO.db.profile.flashIconSize end
+				},
+				enableInterruptWindow = {
+					name = 'Enable Interrupt Icon',
+					desc = 'Show movable interrupt icon.',
+					type = 'toggle',
+					width = 'default',
+					order = 82,			
+					set = function(info, val)
+						ConRO.db.profile.enableInterruptWindow = val;			
+						if val == true and ConRO.db.profile._Unlock_ConRO == true then
+							ConROInterruptWindow:Show();				
+						else
+							ConROInterruptWindow:Hide();
+						end	
+					end,
+					get = function(info) return ConRO.db.profile.enableInterruptWindow end
+				},
+				enablePurgeWindow = {
+					name = 'Enable Purge Icon',
+					desc = 'Show movable purge icon.',
+					type = 'toggle',
+					width = 'default',
+					order = 83,		
+					set = function(info, val)
+						ConRO.db.profile.enablePurgeWindow = val;			
+						if val == true and ConRO.db.profile._Unlock_ConRO == true then
+							ConROPurgeWindow:Show();
+						else
+							ConROPurgeWindow:Hide();
+						end	
+					end,
+					get = function(info) return ConRO.db.profile.enablePurgeWindow end
+				},
+				spacer84 = {
+					order = 84,
+					type = "description",
+					width = "normal",
+					name = "\n\n",
+				},
+			},
 		},
-		enableWindow = {
-			name = 'Enable Display Window',
-			desc = 'Show movable display window.',
-			type = 'toggle',
-			width = 'default',
-			order = 42,
-			set = function(info, val)
-				ConRO.db.profile.enableWindow = val;
-				if val == true and not ConRO:HealSpec() then
-					ConROWindow:Show();
-				else
-					ConROWindow:Hide();
-				end
-			end,
-			get = function(info) return ConRO.db.profile.enableWindow end
-		},
-		combatWindow = {
-			name = 'Only Display with Hostile',
-			desc = 'Show display window only when hostile target selected.',
-			type = 'toggle',
-			width = 'default',
-			order = 43,
-			set = function(info, val)
-				ConRO.db.profile.combatWindow = val;
-				if val == true then
-					ConROWindow:Hide();
-					ConRODefenseWindow:Hide();
-				else
-					ConROWindow:Show();
-					ConRODefenseWindow:Show();				
-				end
-			end,
-			get = function(info) return ConRO.db.profile.combatWindow end
-		},
-		enableWindowCooldown = {
-			name = 'Enable Cooldown Swirl',
-			desc = 'Show cooldown swirl on Display Windows. REQUIRES RELOAD',
-			type = 'toggle',
-			width = 'normal',
-			order = 44,
-			set = function(info, val)
-				ConRO.db.profile.enableWindowCooldown = val;		
-			end,
-			get = function(info) return ConRO.db.profile.enableWindowCooldown end
-		},		
-		enableWindowSpellName = {
-			name = 'Show Spellname',
-			desc = 'Show spellname above Display Windows.',
-			type = 'toggle',
-			width = 'normal',
-			order = 45,
-			set = function(info, val)
-				ConRO.db.profile.enableWindowSpellName = val;
-				if val == true then
-					ConROWindow.font:Show();
-					ConRODefenseWindow.font:Show();
-				else 
-					ConROWindow.font:Hide();
-					ConRODefenseWindow.font:Hide();
-				end
-			end,
-			get = function(info) return ConRO.db.profile.enableWindowSpellName end
-		},
-		enableWindowKeybinds = {
-			name = 'Show Keybind',
-			desc = 'Show keybinds below Display Windows.',
-			type = 'toggle',
-			width = 'normal',
-			order = 46,
-			set = function(info, val)
-				ConRO.db.profile.enableWindowKeybinds = val;
-				if val == true then
-					ConROWindow.fontkey:Show();
-					ConRODefenseWindow.fontkey:Show();
-				else 
-					ConROWindow.fontkey:Hide();
-					ConRODefenseWindow.fontkey:Hide();
-				end
-			end,
-			get = function(info) return ConRO.db.profile.enableWindowKeybinds end
-		},
-		spacer47 = {
-			order = 47,
-			type = "description",
+
+--Toggle Button Settings		
+		toggleButtonSettings = {
+			type = "group",
+			name = "Toggle Buttons",
+			order = 23,
+			args = {
+				_Hide_Toggle = {
+					name = "Hide Toggle Button",
+					desc = "Hides toggle buttons from view, but they are still operational.",
+					type = "toggle",
+					width = "normal",
+					order = 10,
+					set = function(info, val)
+						ConRO.db.profile._Hide_Toggle = val;
+						if val == true then
+							ConROButtonFrame:SetAlpha(0);
+						else
+							ConROButtonFrame:SetAlpha(1);
+						end
+					end,
+					get = function(info) return ConRO.db.profile._Hide_Toggle end
+				},
+				toggleButtonSize = {
+					name = "Toggle Button Size",
+					desc = "Sets the scale of the toggle buttons.",
+					type = "range",
+					width = "normal",
+					order = 11,
+					min = 1,
+					max = 2,
+					step = .1,
+					set = function(info,val)
+					ConRO.db.profile.toggleButtonSize = val
+					ConROButtonFrame:SetScale(ConRO.db.profile.toggleButtonSize)
+					end,
+					get = function(info) return ConRO.db.profile.toggleButtonSize end
+				},
+				toggleButtonOrientation = {
+					name = "Toggle Button Orientation",
+					desc = "Sets the orientation of the button for the toggle buttons.",
+					type = "select",
+					width = "normal",
+					order = 12,
+					values = orientations,
+					style = "dropdown",
+					set = function(info,val)
+						ConRO.db.profile.toggleButtonOrientation = val
+						local vert = 2;
+						local hori = 1;
+							if val == 1 then
+								vert = 2;
+								hori = 1;
+							elseif val == 2 then
+								vert = 1;
+								hori = 2;
+							end
+						ConROButtonFrame:SetSize((40 * hori) + 14, (15 * vert) + 14)
+							
+					end,
+					get = function(info) return ConRO.db.profile.toggleButtonOrientation end
+				},
+				_Spacer_Toggle_20 = {
+					order = 20,
+					type = "description",
+					width = "full",
+					name = "\n\n",
+				},
+				_Burst_Settings = {
+					type = "header",
+					name = "Burst Settings",
+					order = 21,					
+				},
+				_Burst_Threshold = {
+					name = "Burst Threshold",
+					desc = "Sets the burst mode threshold in seconds.",
+					type = "range",
+					width = "normal",
+					order = 22,
+					min = 45,
+					max = 180,
+					step = 5,
+					set = function(info,val)
+					ConRO.db.profile._Burst_Threshold = val
+					end,
+					get = function(info) return ConRO.db.profile._Burst_Threshold end
+				},
+			},
+		},				
+
+--Reset Buttons
+		reloadButton = {
+			name = "ReloadUI",
+			desc = "Reloads UI after making changes that need it.",
+			type = "execute",
 			width = "normal",
-			name = "\n\n",
-		},		
-		transparencyWindow = {
-			name = 'Window Transparency',
-			desc = 'Change transparency of your windows and texts.',
-			type = 'range',
-			width = 'normal',
-			order = 48,
-			min = 0,
-			max = 1,
-			step = 0.01,
-			set = function(info, val)
-				ConRO.db.profile.transparencyWindow = val;
-			end,
-			get = function(info) return ConRO.db.profile.transparencyWindow end
-		},	
-		windowIconSize = {
-			name = 'Display windows Icon size.',
-			desc = 'Sets the size of the icon in your display windows. REQUIRES RELOAD',
-			type = 'range',
-			width = 'normal',
-			order = 49,
-			min = 20,
-			max = 100,
-			step = 2,
-			set = function(info, val)
-				ConRO.db.profile.windowIconSize = val;
-			end,
-			get = function(info) return ConRO.db.profile.windowIconSize end
+			order = 31,
+			func = function(info)
+				ReloadUI();
+			end
 		},
-		flashIconSize = {
-			name = 'Flasher Icon size.',
-			desc = 'Sets the size of the icon that flashes for Interrupts and Purges.',
-			type = 'range',
-			width = 'normal',
-			order = 50,
-			min = 20,
-			max = 100,
-			step = 2,
-			set = function(info, val)
-				ConRO.db.profile.flashIconSize = val;
-				ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
-				ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
-			end,
-			get = function(info) return ConRO.db.profile.flashIconSize end
-		},		
-		enableDefenseWindow = {
-			name = 'Enable Defense Window',
-			desc = 'Show movable defense window.',
-			type = 'toggle',
-			width = 'default',
-			order = 51,
-			set = function(info, val)
-				ConRO.db.profile.enableDefenseWindow = val;
-				if val == true then
-					ConRODefenseWindow:Show();
-				else
-					ConRODefenseWindow:Hide();
-				end				
-			end,
-			get = function(info) return ConRO.db.profile.enableDefenseWindow end
-		},
-		enableInterruptWindow = {
-			name = 'Enable Interrupt Window',
-			desc = 'Show movable interrupt window.',
-			type = 'toggle',
-			width = 'default',
-			order = 52,			
-			set = function(info, val)
-				ConRO.db.profile.enableInterruptWindow = val;			
-				if val == true and ConRO.db.profile.unlockWindow == true then
-					ConROInterruptWindow:Show();				
-				else
-					ConROInterruptWindow:Hide();
-				end	
-			end,
-			get = function(info) return ConRO.db.profile.enableInterruptWindow end
-		},
-		enablePurgeWindow = {
-			name = 'Enable Purge Window',
-			desc = 'Show movable interrupt window.',
-			type = 'toggle',
-			width = 'default',
-			order = 53,		
-			set = function(info, val)
-				ConRO.db.profile.enablePurgeWindow = val;			
-				if val == true and ConRO.db.profile.unlockWindow == true then
-					ConROPurgeWindow:Show();
-				else
-					ConROPurgeWindow:Hide();
-				end	
-			end,
-			get = function(info) return ConRO.db.profile.enablePurgeWindow end
-		},
-		spacer52 = {
-			order = 54,
-			type = "description",
-			width = "double",
-			name = "\n\n",
-		},		
 		resetExtraWindows = {
-			name = 'Reset Positions',
-			desc = ('Back to Default. RELOAD REQUIRED'),
-			type = 'execute',
-			width = 'default',
-			order = 55,
+			name = "Reset Positions",
+			desc = "Reset ConRO UI positions back to default. RELOAD REQUIRED",
+			type = "execute",
+			width = "normal",
+			order = 32,
 			confirm = true,			
 			func = function(info)
-				ConRO.db.profile.unlockWindow = false;
-				ConROInterruptWindow:SetPoint("RIGHT", "ConROWindow", "LEFT", -5, 0);
-				ConROPurgeWindow:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, 0);
+				ConROButtonFrame:SetUserPlaced(false);
+				ConROWindow:SetUserPlaced(false);
+				ConRODefenseWindow:SetUserPlaced(false);
+				ConROInterruptWindow:SetUserPlaced(false);
+				ConROPurgeWindow:SetUserPlaced(false);
 				ReloadUI();
 			end
 		},
 		resetButton = {
-			name = 'Reset Settings',
-			desc = 'Resets options back to default. RELOAD REQUIRED',
-			type = 'execute',
-			width = 'full',
-			order = 61,
+			name = "Reset Settings",
+			desc = "Resets ConRO option settings back to default. RELOAD REQUIRED",
+			type = "execute",
+			width = "normal",
+			order = 33,
 			confirm = true,
 			func = function(info)
 				ConRO.db:ResetProfile();
-				ConRO.db.profile.unlockWindow = false;
-				ConROWindow:SetPoint("CENTER", -200, 50);
-				ConRODefenseWindow:SetPoint("CENTER", -250, 50);
-				ConROInterruptWindow:SetPoint("RIGHT", "ConROWindow", "LEFT", -5, 0);
-				ConROPurgeWindow:SetPoint("LEFT", "ConROWindow", "RIGHT", 5, 0);				
 				ReloadUI();
 			end
 		},
-	},
+	},	
 }
 
 function ConRO:GetTexture()
@@ -715,9 +1973,9 @@ function ConRO:GetTexture()
 end
 
 function ConRO:OnInitialize()
-	LibStub('AceConfig-3.0'):RegisterOptionsTable('ConRO', options, {'conro'});
+	LibStub('AceConfig-3.0'):RegisterOptionsTable('Conflict Rotation Optimizer', options, {'conflictrotationoptimizer'});
 	self.db = LibStub('AceDB-3.0'):New('ConROPreferences', defaultOptions);
-	self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('ConRO', 'ConRO');
+	self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('Conflict Rotation Optimizer', 'ConRO');
 	self.DisplayWindowFrame();
 	self.DefenseWindowFrame();
 	self.InterruptWindowFrame();
@@ -734,7 +1992,7 @@ end
 
 ConRO.DefaultPrint = ConRO.Print;
 function ConRO:Print(...)
-	if self.db.profile.disabledInfo then
+	if self.db.profile._Disable_Info_Messages then
 		return;
 	end
 	ConRO:DefaultPrint(...);
@@ -765,8 +2023,6 @@ function ConRO:EnableDefense()
 	end
 	
 	self.FetchDef();
-	self:CheckTalents();
-	self:CheckPvPTalents();
 	
 	if self.ModuleOnEnable then
 		self.ModuleOnEnable();
@@ -777,21 +2033,20 @@ function ConRO:EnableDefense()
 end
 
 function ConRO:EnableRotationTimer()
-	self.RotationTimer = self:ScheduleRepeatingTimer('InvokeNextSpell', self.db.profile.interval);
+	self.RotationTimer = self:ScheduleRepeatingTimer('InvokeNextSpell', self.db.profile._Intervals);
 end
 
 function ConRO:EnableDefenseTimer()
-	self.DefenseTimer = self:ScheduleRepeatingTimer('InvokeNextDef', self.db.profile.interval);
+	self.DefenseTimer = self:ScheduleRepeatingTimer('InvokeNextDef', self.db.profile._Intervals);
 end
 
 function ConRO:DisableRotation()
 	if not self.rotationEnabled then
 		return;
 	end
-
+--self:Print(self.Colors.Success .. 'Disabled Rotation.');
 	self:DisableRotationTimer();
 
-					
 	self:DestroyDamageOverlays();
 	self:DestroyInterruptOverlays();
 	self:DestroyCoolDownOverlays();
@@ -834,9 +2089,11 @@ function ConRO:OnEnable()
 	self:RegisterEvent('PLAYER_TALENT_UPDATE');
 	self:RegisterEvent('ACTIONBAR_SLOT_CHANGED');
 	self:RegisterEvent('PLAYER_REGEN_DISABLED');
---	self:RegisterEvent('PLAYER_REGEN_ENABLED');	
+	self:RegisterEvent('PLAYER_REGEN_ENABLED');	
 	self:RegisterEvent('PLAYER_ENTERING_WORLD');
-
+	self:RegisterEvent('UPDATE_SHAPESHIFT_FORM');
+	self:RegisterEvent('UPDATE_STEALTH');
+	
 	self:RegisterEvent('ACTIONBAR_HIDEGRID');
 	self:RegisterEvent('ACTIONBAR_PAGE_CHANGED');
 	self:RegisterEvent('LEARNED_SPELL_IN_TAB');
@@ -858,6 +2115,7 @@ function ConRO:OnEnable()
 end
 
 function ConRO:PLAYER_TALENT_UPDATE()
+--self:Print(self.Colors.Success .. 'Talent');
 	self:DisableRotation();
 	self:DisableDefense();
 	self:LoadModule();
@@ -900,6 +2158,7 @@ function ConRO:UNIT_ENTERED_VEHICLE(event, unit)
 end
 
 function ConRO:UNIT_EXITED_VEHICLE(event, unit)
+--self:Print(self.Colors.Success .. 'Vehicle!');
 	if unit == 'player' then
 		self:DisableRotation();
 		self:DisableDefense();
@@ -1001,17 +2260,12 @@ function ConRO:PLAYER_TARGET_CHANGED()
 end
 
 function ConRO:PLAYER_REGEN_DISABLED()
-	local plvl = UnitLevel("player");
-	if plvl <= 9 then
-		return;
-	else
-		if not self.rotationEnabled and not UnitHasVehicleUI("player") then
-			self:Print(self.Colors.Success .. 'Auto enable on combat!');
-			self:Print(self.Colors.Info .. 'Loading class module');
-			self:LoadModule();
-			self:EnableRotation();
-			self:EnableDefense();
-		end
+	if not self.rotationEnabled and not UnitHasVehicleUI("player") then
+		self:Print(self.Colors.Success .. 'Auto enable on combat!');
+		self:Print(self.Colors.Info .. 'Loading class module');
+		self:LoadModule();
+		self:EnableRotation();
+		self:EnableDefense();
 	end
 end
 
@@ -1027,8 +2281,10 @@ function ConRO:ButtonFetch()
 end
 
 ConRO.ACTIONBAR_SLOT_CHANGED = ConRO.ButtonFetch;
---ConRO.ACTIONBAR_HIDEGRID = ConRO.ButtonFetch;
+ConRO.PLAYER_REGEN_ENABLED = ConRO.ButtonFetch;
 ConRO.ACTIONBAR_PAGE_CHANGED = ConRO.ButtonFetch;
+ConRO.UPDATE_SHAPESHIFT_FORM = ConRO.ButtonFetch;
+ConRO.UPDATE_STEALTH = ConRO.ButtonFetch;
 ConRO.LEARNED_SPELL_IN_TAB = ConRO.ButtonFetch;
 ConRO.CHARACTER_POINTS_CHANGED = ConRO.ButtonFetch;
 ConRO.PLAYER_SPECIALIZATION_CHANGED = ConRO.ButtonFetch;
@@ -1042,16 +2298,21 @@ function ConRO:InvokeNextSpell()
 	local timeShift, currentSpell, gcd = ConRO:EndCast();
 	
 	self.Spell = self:NextSpell(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
-	ConRO:UpdateRotation();
-	ConRO:UpdateButtonGlow();
+--	ConRO:UpdateRotation();
+--	ConRO:UpdateButtonGlow();
 	local spellName, _, spellTexture = GetSpellInfo(self.Spell);
-
 
 	if (oldSkill ~= self.Spell or oldSkill == nil) and self.Spell ~= nil then
 		self:GlowNextSpell(self.Spell);
-		ConROWindow.texture:SetTexture(spellTexture);
-		ConROWindow.font:SetText(spellName);
 		ConROWindow.fontkey:SetText(ConRO:FindKeybinding(self.Spell));
+		if spellName ~= nil then
+			ConROWindow.texture:SetTexture(spellTexture);
+			ConROWindow.font:SetText(spellName);
+		else
+			local itemName, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(self.Spell);
+			ConROWindow.texture:SetTexture(itemTexture);
+			ConROWindow.font:SetText(itemName);
+		end
 	end
 	
 	if self.Spell == nil and oldSkill ~= nil then
@@ -1069,14 +2330,20 @@ function ConRO:InvokeNextDef()
 	
 	self.Def = self:NextDef(timeShift, currentSpell, gcd, self.PlayerTalents, self.PvPTalents);
 	local spellName, _, spellTexture = GetSpellInfo(self.Def);
-	local color = ConRO.db.profile.defenseOverlayColor;
+	local color = ConRO.db.profile._Defense_Overlay_Color;
 	
 	if (oldSkill ~= self.Def or oldSkill == nil) and self.Def ~= nil then
 		self:GlowNextDef(self.Def);
-		ConRODefenseWindow.texture:SetTexture(spellTexture);
 		ConRODefenseWindow.texture:SetVertexColor(1, 1, 1);
-		ConRODefenseWindow.font:SetText(spellName);
 		ConRODefenseWindow.fontkey:SetText(ConRO:FindKeybinding(self.Def));
+		if spellName ~= nil then
+			ConRODefenseWindow.texture:SetTexture(spellTexture);
+			ConRODefenseWindow.font:SetText(spellName);
+		else
+			local itemName, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(self.Def);
+			ConRODefenseWindow.texture:SetTexture(itemTexture);
+			ConRODefenseWindow.font:SetText(itemName);	
+		end
 	end
 	
 	if self.Def == nil and oldSkill ~= nil then
@@ -1100,7 +2367,7 @@ function ConRO:LoadModule()
 	local _, _, _, loadable, reason = GetAddOnInfo(module);
 	
 	if IsAddOnLoaded(module) then
-		local mode = GetSpecialization();
+		local mode = ConRO:CheckSpecialization();
 		
 		self:EnableRotationModule(mode);
 		self:EnableDefenseModule(mode);
@@ -1114,7 +2381,7 @@ function ConRO:LoadModule()
 
 	LoadAddOn(module)
 
-	local mode = GetSpecialization();
+	local mode = ConRO:CheckSpecialization();
 
 	self:EnableRotationModule(mode);
 	self:EnableDefenseModule(mode);
@@ -1126,14 +2393,22 @@ end
 
 function ConRO:CheckSpecialization()
 	local mode = GetSpecialization();
-
-	self:EnableRotationModule(mode);
-	self:EnableDefenseModule(mode);
+	local _Player_Level = UnitLevel("player");
+		if _Player_Level <= 9 then
+			mode = 0;
+		end
+		if mode == nil then
+			mode = 0;		
+		elseif mode >= 5 then
+			mode = 0;		
+		end
+		
+	return mode;
 end
 
 function ConRO:HealSpec()
 	local _, _, classId = UnitClass('player');
-	local specId = GetSpecialization();
+	local specId = ConRO:CheckSpecialization();
 	--[[[1] = 'Warrior',
 		[2] = 'Paladin',
 		[3] = 'Hunter',
@@ -1159,7 +2434,7 @@ end
 
 function ConRO:MeleeSpec()
 	local _, _, classId = UnitClass('player');
-	local specId = GetSpecialization();
+	local specId = ConRO:CheckSpecialization();
 	--[[[1] = 'Warrior',
 		[2] = 'Paladin',
 		[3] = 'Hunter',

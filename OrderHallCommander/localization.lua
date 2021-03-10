@@ -17,6 +17,7 @@ L["Always counter increased resource cost"] = true
 L["Always counter increased time"] = true
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = true
 L["Always counter no bonus loot threat"] = true
+L["and then by:"] = true
 L["Artifact shown value is the base value without considering knowledge multiplier"] = true
 L["Attempting %s"] = true
 L["Base Chance"] = true
@@ -146,6 +147,8 @@ L["Always counter increased resource cost"] = "Sempre contornar o aumento do cus
 L["Always counter increased time"] = "Sempre contornar o aumento do tempo"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Sempre evitar matança de tropas (ignorado se só pudermos usar tropas com apenas 1 de durabilidade)"
 L["Always counter no bonus loot threat"] = "Sempre contornar ameaça sem bônus de saque"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "O valor mostrado do artefato é o valor base sem considerar o multiplicador de conhecimento"
 L["Attempting %s"] = "Tentativa %s"
 L["Base Chance"] = "Chance Base"
@@ -291,6 +294,8 @@ L["Always counter increased resource cost"] = "Toujours contrer les coûts accru
 L["Always counter increased time"] = "Toujours contrer le temps accru"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Toujours éviter de tuer les troupes (ignoré s'il ne reste qu'un seul point de vitalité aux troupes disponibles)"
 L["Always counter no bonus loot threat"] = "Toujours contrer les malus au butin bonus"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Le montant de puissance prodigieuse affiché est la valeur de base, sans prendre en considération le niveau de connaissance de l'arme prodigieuse"
 --[[Translation missing --]]
 L["Attempting %s"] = "Attempting %s"
@@ -473,6 +478,8 @@ L["Always counter increased resource cost"] = "Immer erhöhte Ressourcenkosten k
 L["Always counter increased time"] = "Immer erhöhte Missionsdauer kontern"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Töten der Trupps immer kontern (dies wird ignoriert, falls nur Truppen mit 1 Haltbarkeit benutzt werden können)"
 L["Always counter no bonus loot threat"] = "Kontert immer Bedrohungen, die Bonusbeute verhindern"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Der angezeigte Wert ist der Grundwert ohne die Berücksichtigung von Artefakwissen."
 --[[Translation missing --]]
 L["Attempting %s"] = "Attempting %s"
@@ -661,6 +668,8 @@ L["Always counter increased resource cost"] = "Contrasta sempre incremento risor
 L["Always counter increased time"] = "Contrasta sempre incremento durata"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Contrasta sempre morte milizie (ignorato tutte le milizie hanno solo una vita rimanente)"
 L["Always counter no bonus loot threat"] = "Contrasta sempre il \"no bonus\""
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Il valore mostrato è quello base, senza considerare il moltiplicatore dalla conoscenza"
 L["Attempting %s"] = "Provo %s"
 L["Base Chance"] = "Percentuale base"
@@ -813,6 +822,8 @@ L["Always counter increased resource cost"] = "자원 비용 증가 항상 대�
 L["Always counter increased time"] = "소요 시간 증가 항상 대응"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "병력 죽이기 항상 대응 (활력이 1만 남은 병력만 있을 땐 무시)"
 L["Always counter no bonus loot threat"] = "추가 전리품 획득 불가 항상 대응"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "표시된 유물력 수치는 유물 지식 레벨을 고려하지 않은 기본 수치입니다"
 L["Attempting %s"] = "%s 시도 중"
 L["Base Chance"] = "기본 성공 확률"
@@ -965,6 +976,8 @@ L["Always counter increased resource cost"] = "Siempre contrarrestar el costo de
 L["Always counter increased time"] = "Siempre contrarrestar el tiempo incrementado"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Siempre contra las tropas de matar (ignorado si sólo podemos utilizar tropas con sólo 1 durabilidad a la izquierda)"
 L["Always counter no bonus loot threat"] = "Siempre contrarrestar amenaza de no obtener bonificación"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 --[[Translation missing --]]
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Artifact shown value is the base value without considering knowledge multiplier"
 --[[Translation missing --]]
@@ -1144,6 +1157,7 @@ L["Always counter increased resource cost"] = "Парировать увелич
 L["Always counter increased time"] = "Парировать увеличение времени."
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Парировать смерть отрядов (игнорируется, когда есть только одна единица здоровья)."
 L["Always counter no bonus loot threat"] = "Парировать отсутствие бонусной добычи."
+L["and then by:"] = "а потом по:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Показывать силу артефакта без учета множителя знания."
 L["Attempting %s"] = "Пытаемся %s."
 L["Base Chance"] = "Базовый шанс"
@@ -1286,6 +1300,8 @@ L["Always counter increased resource cost"] = "总是反制增加资源花费"
 L["Always counter increased time"] = "总是反制增加任务时间"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "总是反制杀死部队(如果我们用只剩一次耐久的部队则忽略)"
 L["Always counter no bonus loot threat"] = "总是反制没有额外奖励的威胁"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "神器显示的值是基础值，没有经过神器知识的加成"
 L["Attempting %s"] = "尝试%s"
 L["Base Chance"] = "基础机率"
@@ -1449,6 +1465,8 @@ L["Always counter increased resource cost"] = "Siempre contrarreste el mayor cos
 L["Always counter increased time"] = "Siempre contrarreste el tiempo incrementado"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Siempre contrarrestar la muerte de tropas (ignorado si sólo podemos utilizar tropas con un solo punto de durabilidad)"
 L["Always counter no bonus loot threat"] = "Siempre contrarresta la falta de bonificación de botín"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 --[[Translation missing --]]
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Artifact shown value is the base value without considering knowledge multiplier"
 --[[Translation missing --]]
@@ -1654,6 +1672,8 @@ L["Always counter increased resource cost"] = "總是反制增加資源花費"
 L["Always counter increased time"] = "總是反制增加任務時間"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "總是反制殺死部隊(如果我們用只剩一次耐久的部隊則忽略)"
 L["Always counter no bonus loot threat"] = "總是反制沒有額外獎勵的威脅"
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "神兵顯示的值是基礎值，沒有經過神兵知識的加成。"
 L["Attempting %s"] = "嘗試%s"
 L["Base Chance"] = "基礎機率"

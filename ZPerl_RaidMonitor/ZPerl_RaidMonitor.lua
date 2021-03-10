@@ -21,7 +21,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision:  $")
+XPerl_SetModuleRevision("$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150

@@ -1,0 +1,272 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="Covenants_Renown.lua"></Script>
+
+	<!-- Copy of Blizzard's own CovenantRenownLevelTemplate in Blizzard_CovenantRenown.xml -->
+	<Frame name="AltoCovenantRenownLevelTemplate" parentArray="Items" virtual="true">
+		<Size x="55" y="55"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Icon" parentArray="Textures">
+					<Size x="40" y="39"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="IconBorder" parentArray="Textures">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Check" atlas="CovenantSanctum-Renown-Checkmark" useAtlasSize="true" parentArray="Textures">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="3" y="0"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Level" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="BOTTOM" y="-1"/>
+					</Anchors>
+				</FontString>
+				<MaskTexture parentKey="HexMask" atlas="CovenantSanctum-Renown-Hexagon-Mask" useAtlasSize="true" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</MaskTexture>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="HighlightTexture" parentArray="Textures" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				Altoholic:BindViewToController(self, "AltoholicUI.RenownLevel")
+			</OnLoad>
+			<OnEnter>
+				self:OnEnter()
+			</OnEnter>
+			<OnLeave function="GameTooltip_Hide"/>
+		</Scripts>
+	</Frame>
+
+	<Frame parentKey="Renown" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
+		<Frames>
+			<!-- Reminder: these have a parentArray="Items" -->
+			<Frame parentKey="Item1" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-5" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item2" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item1" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item3" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item2" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item4" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item3" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item5" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item4" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item6" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item5" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item7" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item6" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item8" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item7" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item9" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item8" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item10" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item9" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="Item11" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item1" relativePoint="BOTTOMLEFT" x="0" y="-20" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item12" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item13" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item12" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item14" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item13" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item15" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item14" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item16" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item15" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item17" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item16" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item18" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item17" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item19" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item18" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item20" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item19" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="Item21" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMLEFT" x="0" y="-20" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item22" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item21" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item23" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item22" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item24" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item23" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item25" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item24" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item26" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item25" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item27" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item26" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item28" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item27" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item29" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item28" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item30" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item29" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="Item31" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item21" relativePoint="BOTTOMLEFT" x="0" y="-20" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item32" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item31" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item33" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item32" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item34" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item33" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item35" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item34" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item36" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item35" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item37" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item36" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item38" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item37" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item39" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item38" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Item40" inherits="AltoCovenantRenownLevelTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item39" relativePoint="BOTTOMRIGHT" x="8" y="0" />
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				Altoholic:BindViewToController(self, "AltoholicUI.RenownPanel")
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

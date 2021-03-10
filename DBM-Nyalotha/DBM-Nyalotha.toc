@@ -1,9 +1,10 @@
-## Interface: 90001
-## X-Min-Interface: 90001
+## Interface: 90005
+## X-Min-Interface: 90005
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ny'alotha|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0나이알로사|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0尼奥罗萨，觉醒之城|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0奈奧羅薩，甦醒之城|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ни'алота|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -16,6 +17,7 @@
 ## X-DBM-Mod-Name: Ny'alotha
 ## X-DBM-Mod-Name-koKR: 나이알로사
 ## X-DBM-Mod-Name-zhTW: 奈奧羅薩
+## X-DBM-Mod-Name-ruRU: Ни'алота
 ## X-DBM-Mod-Sort: 404
 ## X-DBM-Mod-MapID: 2217
 ## X-DBM-Mod-MinCoreRevision: 17286

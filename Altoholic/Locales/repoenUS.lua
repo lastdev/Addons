@@ -148,19 +148,52 @@ L["COLUMN_ARTIFACT_RESEARCH_SUBTITLE"] = "Time until the next note is ready"
 L["COLUMN_ARTIFACT_RESEARCH_DETAIL_1"] = "At least one note is ready for pickup"
 L["COLUMN_ARTIFACT_RESEARCH_DETAIL_2"] = "All notes are ready for pickup"
 
--- *** Tab Summary / Keystones ***
+-- *** Tab Summary / Covenant ***
 
-L["COLUMN_CURRENT_KEYSTONE_NAME"] = "Current Mythic+ Keystone"
-L["COLUMN_CURRENT_KEYSTONE_NAME_SHORT"] = "Current"
-L["COLUMN_CURRENT_KEYSTONE_LEVEL"] = "Current Mythic+ Keystone Level"
-L["COLUMN_CURRENT_KEYSTONE_LEVEL_SHORT"] = "Level"
+L["COLUMN_COVENANT_SUBTITLE"] = "Click to view your soulbinds"
+L["COLUMN_COVENANT_TITLE"] = "Chosen Covenant"
+L["COLUMN_COVENANT_TITLE_SHORT"] = "Covenant"
 
-L["COLUMN_HIGHEST_KEYSTONE_NAME"] = "Highest Mythic+ Keystone (this week)"
-L["COLUMN_HIGHEST_KEYSTONE_NAME_SHORT"] = "Highest"
-L["COLUMN_HIGHEST_KEYSTONE_LEVEL"] = "Highest Mythic+ Keystone Level (this week)"
-L["COLUMN_HIGHEST_KEYSTONE_LEVEL_SHORT"] = "Level"
-L["COLUMN_HIGHEST_KEYSTONE_TIME"] = "Highest Mythic+ Keystone Time"
-L["COLUMN_HIGHEST_KEYSTONE_TIME_SHORT"] = "Time"
+L["COLUMN_SOULBIND_SUBTITLE"] = "Click to view your soulbinds"
+L["COLUMN_SOULBIND_TITLE"] = "Active Soulbind"
+L["COLUMN_SOULBIND_TITLE_SHORT"] = "Soulbind"
+
+L["COLUMN_RENOWN_SUBTITLE"] = "Click to view your renown level and rewards"
+L["COLUMN_RENOWN_TITLE"] = "Renown Level"
+
+L["COLUMN_CAMPAIGNPROGRESS_TITLE_SHORT"] = "Story"
+L["COLUMN_CAMPAIGNPROGRESS_TITLE"] = "Campaign Progress"
+L["COLUMN_CAMPAIGNPROGRESS_SUBTITLE"] = "Number of completed chapters in the covenant campaign"
+
+L["Overall"] = true
+L["Torghast"] = true
+L["Single target build"] = true
+L["AOE build"] = true
+L["Recommended Covenant"] = true
+L["Equally viable"] = true
+
+-- *** Tab Summary / Miscellaneous ***
+
+L["COLUMN_GUILD_SUBTITLE"] = "Click guild name to toggle the guild rank"
+L["COLUMN_GUILD_TITLE"] = "Guild information"
+L["COLUMN_HEARTHSTONE_TITLE"] = "Hearthstone"
+L["COLUMN_HEARTHSTONE_SUBTITLE"] = "That special place you call home"
+L["COLUMN_CLASS_SUBTITLE"] = "Character class and active specialization"
+L["COLUMN_RIDING_UPGRADEABLE"] = "This character could upgrade his riding skill"
+
+-- *** Tab Summary / Mythic Keystone ***
+
+L["COLUMN_KEYNAME_TITLE"] = "Current Mythic+ Keystone"
+L["COLUMN_KEYNAME_TITLE_SHORT"] = "Keystone"
+L["COLUMN_KEYNAME_SUBTITLE"] = "Your next adventure"
+L["COLUMN_KEYLEVEL_TITLE"] = "Current Mythic+ Keystone Level"
+L["COLUMN_KEYLEVEL_SUBTITLE"] = "You are definitely not prepared!"
+L["COLUMN_WEEKLYBEST_KEYNAME_TITLE"] = "Weekly Best Mythic+ Keystone"
+L["COLUMN_WEEKLYBEST_KEYNAME_SUBTITLE"] = "Mouse over for weekly best for all maps"
+L["COLUMN_WEEKLYBEST_KEYLEVEL_TITLE"] = "Weekly Best Mythic+ Level"
+L["COLUMN_WEEKLYBEST_KEYLEVEL_SUBTITLE"] = "How deep down the rabbit hole you dared to go"
+L["COLUMN_WEEKLYBEST_KEYTIME_TITLE"] = "Weekly Best Mythic+ Time"
+L["COLUMN_WEEKLYBEST_KEYTIME_SUBTITLE"] = "Mouse over for season best for all maps"
 
 
 -- *************************
@@ -1004,6 +1037,7 @@ L["Show counters for all accounts"] =
 L["Show counters for connected realms"] = true
 L["Include guild bank count in the total count"] = true
 L["Detailed guild bank count"] = true
+L["Show counters for hearthstones"] = true
 
 -- ** Frame 6 : Calendar **
 L["Week starts on Monday"] = true

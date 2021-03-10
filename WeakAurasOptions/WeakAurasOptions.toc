@@ -1,7 +1,7 @@
-## Interface: 90001
+## Interface: 90005
 ## Title: WeakAuras Options
 ## Author: The WeakAuras Team
-## Version: 3.0.5
+## Version: 3.2.1
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
 ## Notes-deDE: Optionen für WeakAuras
@@ -66,8 +66,6 @@ OptionsFrames\TexturePicker.lua
 # -- misc Frames
 OptionsFrames\MoverSizer.lua
 OptionsFrames\FrameChooser.lua
-
-Legendaries.lua
 
 AceGUI-Widgets\AceGUIWidget-WeakAurasExpand.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasExpandSmall.lua

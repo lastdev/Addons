@@ -2,6 +2,8 @@ BINDING_HEADER_GOGOHEADER = "GoGoMount"
 BINDING_NAME_GOGOBINDING = "Mount/Dismount"
 BINDING_NAME_GOGOBINDING2 = "Mount/Dismount (no flying)"
 BINDING_NAME_GOGOBINDING3 = "Mount/Dismount Passenger Mounts"
+BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts"
+BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts"
 
 GoGo_Variables = {}
 GoGo_Variables.ZoneExclude = {}
@@ -22,15 +24,47 @@ GoGo_Variables.DebugTimer = 0
 GoGo_Variables.TestVersion = true
 --GoGo_Variables.Zones = {}	-- Defined below
 --GoGo_Variables.ZoneMapID = {}	-- Defined below
+--if GoGo_Variables.Debug >= 6 then
+--  GoGo_DebugAddLine("GoGo_Variables initialized ")
+--end
+
+---------------------------------------------------------
+-- Mount data (true/false by default, else value)
+--
+-- 2 : passenger mount
+-- 3 : seller mount
+-- 4 : ????
+-- 5 : while moving
+-- 6 : can be used to gather herbs
+-- 7 : instant
+-- 8 : indoor
+-- 9 : ????
+-- 35 : Mounts unusable under Riding Level 300
+-- 36 : Mounts unusable under Riding Level 225
+-- 37 : Mounts unusable under Riding Level 150
+-- 38 : Mounts unusablea under Riding Level 75
+-- 52 : Northrend loaned
+-- 54 : The Oculus
+-- 330 : Ground mounts which can go up to 200%
+-- 400 : Thousand Needles speed buff special
+-- 402 : Mount Up guild perk special (Ground)
+-- 403 : Mount Up guild perk special (Air)
+-- 405 : Water Gliding buff special
+-- 501 : Druid flight form
+-- 701 : Ashran Swift Riding Crop special
+-- 10001 : Underwater (speed)
+-- 10002 : Ground (speed)
+-- 10003 : Flying (speed)
+-- 10004 : Water surface (speed)
+-- 50000 : item ID <-> Spell ID for mounts from an item
+--
+---------------------------------------------------------
+
+
 ---------
 function GoGo_GetMountDB()
 ---------
 	GoGo_Variables.MountDB = {
-		[316337] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Malevolent Drone
-		[315987] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Mail Muncher
-		[312751] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Ha-Li
-
-
 		[25863] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Black Qiraji Battle Tank
 		[25953] = {[38] = true, [201] = true, [330]=true, [402]=true, [10002]=160},  -- Blue Qiraji Battle Tank
 		[26055] = {[38] = true, [201] = true, [330]=true, [402]=true, [10002]=160},  -- Yellow Qiraji Battle Tank
@@ -459,7 +493,7 @@ function GoGo_GetMountDB()
 		[73629] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Exarch's Elekk
 		[73630] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Great Exarch's Elekk
 
-		[122708] = {[2]=true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Expedition Yak
+		[122708] = {[2]=true, [3] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Expedition Yak
 		[123182] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- White Riding Yak
 		[127209] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Black Riding Yak
 		[127213] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Brown Riding Yak
@@ -491,8 +525,8 @@ function GoGo_GetMountDB()
 		[59811] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Black War Mammoth
 		[60136] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Caravan Mammoth
 		[60140] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Caravan Mammoth
-		[61425] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Traveler's Tundra Mammoth
-		[61447] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Traveler's Tundra Mammoth
+		[61425] = {[2] = true, [3] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Traveler's Tundra Mammoth
+		[61447] = {[2] = true, [3] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Traveler's Tundra Mammoth
 		[61465] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Black War Mammoth
 		[61466] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Black War Mammoth
 		[61467] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Grand Black War Mammoth
@@ -518,7 +552,7 @@ function GoGo_GetMountDB()
 		[76203] = {[55] = true, [200] = true, [10004]=286, [50000]=55121},  -- River Boat
 		[87090] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67}, -- Goblin Trike
 		[87091] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67}, -- Goblin Turbo-Trike
-		[134359] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Sky Golem (The Sky Claw)
+		[134359] = {[6] = true, [9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Sky Golem (The Sky Claw)
 		[171845] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Warlord's Deathwheel
 		[179244] = {[39] = true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Summon Chauffeur
 		[179245] = {[39] = true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Summon Chauffeur
@@ -563,8 +597,8 @@ function GoGo_GetMountDB()
 
 		[139448] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Clutch of Ji-Kun
 
-		[75207] = {[36] = true, [53] = true, [401] = true, [10001]=371, [10004]=371},  -- Abyssal Seahorse (was Abyssal Manta)
-		[98718] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Subdued Seahorse
+		[75207] = {[36] = true, [53] = true, [401] = true, [10001]=108, [10002]=160, [10003]=250, [10004]=371},  -- Abyssal Seahorse (was Abyssal Manta)
+		[98718] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10002]=160, [10003]=250, [10004]=108},  -- Subdued Seahorse
 
 		[142641] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Brawler's Burly Mushan Beast
 		[148428] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Ashhide Mushan Beast
@@ -617,10 +651,11 @@ function GoGo_GetMountDB()
 		[2645] = {[7] = true, [8] = true, [500] = true, [1000] = true, ["DefaultInstance"] = true, [10002]=130}, -- Shaman Ghost Wolf Form
 		[768] = {[7] = true, [8] = true, [1000] = true, [500] = true, ["DefaultInstance"] = true, [10002]=125},  -- Druid Cat Form
 		[1066] = {[7] = true, [53] = true, [500]=true, [1000]=true, [10001]=101, [10004]=101, ["DefaultInstance"] = true},  -- Druid Aqua form
-		[5118] = {[7] = true, [8] = true, [500] = true, ["DefaultInstance"] = true, [10002]=138},  -- Aspect of the Cheeta
-		[13159] = {[7] = true, [8] = true, [500] = true, ["DefaultInstance"] = true, [10002]=138},  -- Aspect of the Pack
+		[186257] = {[7] = true, [8] = true, [500] = true, ["DefaultInstance"] = true, [10002]=138},  -- Aspect of the Cheeta
+		-- [13159] = {[7] = true, [8] = true, [500] = true, ["DefaultInstance"] = true, [10002]=138},  -- Aspect of the Pack
 		[87840] = {[14] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Running Wild (Worgen Racial)
 		[125883] = {[7]=true, [9]=true, [403]=true, ["FlightOnly"]=true, [10003]=160},	-- Zen Flight (Monk glyph)
+		[310143] = {[7] = true, [8] = true, [500] = true, [1000] = true, ["DefaultInstance"] = true, [10002]=150}, -- Night Fae SoulShape
 
 		-- Other ...
 		[163016] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67, [9999]=true},  -- Warforged Nightmare
@@ -738,7 +773,7 @@ function GoGo_GetMountDB()
 		[222240] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Prestigious Azure Courser
 		[222241] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Prestigious Midnight Courser
 
-		[223814] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Mechanized Lumber Extractor
+		[223814] = {[6]=true, [9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Mechanized Lumber Extractor
 		[223341] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious Gilnean Warhorse
 		[223354] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious War Trike
 		[223363] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Vicious Warstrider
@@ -759,7 +794,7 @@ function GoGo_GetMountDB()
 		[220508] = {[38] = true, [203]=true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=139505},  -- 7.0 Paladin Order Hall Mount Dummy
 
 		-- 7.1.5
-		[228919] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Darkwater Skate
+		[228919] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10002]=160, [10003]=250, [10004]=108},  -- Darkwater Skate
 		[229499] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Midnight
 		[230401] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- White Hawkstrider
 		[230844] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Rockspine Basilisk // Brawler's Burly Basilisk
@@ -874,7 +909,7 @@ function GoGo_GetMountDB()
 		[262022] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Dread Gladiator's Proto-Drake
 		[262023] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Sinister Gladiator's Proto-Drake
 		[263707] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Zandalari Direhorn
-		[264058] = {[2] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mighty Caravan Brutosaur
+		[264058] = {[2] = true, [3] = true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mighty Caravan Brutosaur
 		[272472] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Undercity Plaguebat
 		[274610] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Teldrassil Hippogryph
 
@@ -899,9 +934,9 @@ function GoGo_GetMountDB()
 		[275841] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Expedition Bloodswarmer
 
 		-- 8.0.1.26624
-		[278803] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Great Sea Ray
+		[278803] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10002]=160, [10003]=250, [10004]=108},  -- Great Sea Ray
 		[278966] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Tempestuous Skystallion
-		[278979] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Surf Jelly
+		[278979] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10002]=160, [10003]=250, [10004]=108},  -- Surf Jelly
 		[279454] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Conquerer's Scythemaw
 		[279456] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Highland Mustang
 		[279457] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Broken Highland Mustang
@@ -978,9 +1013,125 @@ function GoGo_GetMountDB()
 		[295386] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Ironclad Frostclaw
 		[295387] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Bloodflank Charger
 		
+		-- 8.2
+		[297157] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Junkheap Drifter
+		[291492] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Rusty Mechanocrawler
+		[299159] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- scrapforged-mechaspider
+		[294143] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- X-995 Mechanocat
+		[296788] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- keys-to-the-model-w
+		[294039] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- snapback scuttler
+		[297560] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Child of Torcali
+		[300146] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Snapdragon Kelpstalker
+		[294038] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Royal Snapdragon
+		[300147] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Deepcoral Snapdragon
+		[299158] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mechagon Peacekeeper
+
+		[290328] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Wonderwing 2.0
+		[290132] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Sylverian Dreamer
+		[275859] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Dusky Waycrest Gryphon
+		[299170] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Rustbolt resistor
+		[275868] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Proudmoore Sea Scout
+		[275866] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Stormsong Coastwatcher
+		[275840] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Voldunai Dunescraper
+		[244712] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Spectral Pterrorwing
+		[275838] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Captured Swampstalker
+		[256123] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Xiwyllag ATV
+		[290718] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Aerial Unit R-21/X
+		[262024] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Notorious Gladiator's Proto-Drake
+		[292407] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  --Ankoan waveray
+		[291538] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  --unshackled waveray
+
+		[300153] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108}, -- CRIMSON TIDEstalion
+		[300150] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108}, --Fabius
+		[300151] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108}, --iNKSCALE DEEPSEEKER
+		[300152] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108}, --tidestallion
+
+		-- 8.2.5
+		[302361] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Alabaster Stormtalon
+		[302362] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Alabaster Thunderwing
+		[294197] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Obsidian Worldbreaker
+    [259741] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Honeyback Harvester
+    [307256] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Explorer's Jungle Hopper
+
+    [307263] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Explorer's Dunetrekker
+    [306421] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Frostwolf Snarler
+    [308250] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Stormpike Battle Ram
+
+		-- 8.3
+	[344578] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Corridor Creeper
+    [305592] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Mechagon Mechanostrider
+    [306423] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Caravan Hyena
+    [315987] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Mail muncher    
+	[316802] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Springfur Alpaca
+    [316339] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Shadowbarb Drone
 --		[123456] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- Standard Ground Mount template
 --		[123456] = {[9] = true, [38] = true, [300]=true, [301]=true, [330]=true, [400]=true, [402]=true, [403]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10003]=250, [10004]=67},  -- Standard Air & Ground Mount template
 --		[123456] = {[36] = true, [53] = true, [404] = true, [10001]=108, [10004]=108},  -- Standard Water (surface and submerged) Mount template
+
+
+       -- 9.0 Ground mounts (from wowhead)
+	   
+		[295190] = {[8]=true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=168035},  -- Mawrat Harness
+		[304916] = {[8]=true, [38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67, [50000]=170499},  -- Maw Seeker Harness
+		[312753] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- hopecrusher-gargon
+		[312754] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- battle-gargon-vrednic
+		[312756] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- ph-phalynx
+		[312758] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- ph-epic-phalynx
+		[312759] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- dreamlight-runestag
+		[312761] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- enchanted-dreamlight-runestag
+		[312762] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- mawsworn-soulhunter
+		[312763] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- darkwarren-hardshell
+		[312772] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- gilded-prowler
+		[327407] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- vicious-war-spider
+		[327408] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- vicious-war-spider
+		[332243] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- shadeleaf-runestag
+		[332244] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- wakeners-runestag
+		[332245] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- winterborn-runestag
+		[332246] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- enchanted-shadeleaf-runestag
+		[332247] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- enchanted-wakeners-runestag
+		[332248] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- enchanted-winterborn-runestag
+		[332455] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- war-bred-tauralus
+		[332456] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- plaguerot-tauralus
+		[332457] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- bonehoof-tauralus
+		[332460] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- chosen-tauralus
+		[332462] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- armored-war-bred-tauralus
+		[332464] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- armored-plaguerot-tauralus
+		[332466] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- armored-bonehoof-tauralus
+		[332467] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- armored-chosen-tauralus
+		[332478] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- blisterback-bloodtusk
+		[332480] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- gorespine
+		[332482] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- bonecleavers-skullboar
+		[332484] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- lurid-bloodtusk
+		[332904] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- ph-purple-dredwing
+		[332908] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- ph-devourer-mite-green
+		[332923] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- inquisition-gargon
+		[332927] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- sinfall-gargon
+		[332932] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- crypt-gargon
+		[332949] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- desires-battle-gargon
+		[333021] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- gravestone-battle-gargon
+		[333023] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- battle-gargon-silessa
+		[333027] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- loyal-gorger
+		[334364] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- spinemaw-gladechewer
+		[334365] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- pale-acidmaw
+		[334366] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- wild-glimmerfur-prowler
+		[334382] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- phalynx-of-loyalty
+		[334386] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- phalynx-of-humility
+		[334391] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- phalynx-of-courage
+		[334398] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- phalynx-of-purity
+		[334403] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- eternal-phalynx-of-purity
+		[334406] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- eternal-phalynx-of-courage
+		[334408] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- eternal-phalynx-of-loyalty
+		[334409] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- eternal-phalynx-of-humility
+		[339588] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- sinrunner-blanchy
+		[339632] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- arboreal-gulper
+		[340503] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- umbral-scythehorn
+		[341639] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- court-sinrunner
+		[341766] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- warstitched-darkhound
+		[344228] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- battle-bound-warhound
+		[344577] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- tower-shadehound
+		[344578] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67},  -- corridor-creeper
+		[344659] = {[38] = true, [330]=true, [400]=true, [402]=true, [405]=true, [701]=true, [10001]=67, [10002]=160, [10004]=67}   -- voracious-gorger
+	   
 	}
 end --if
 
@@ -1005,6 +1156,8 @@ GoGo_Variables.MountItemIDs = {
 	[139505] = {[50000]=220508, [51000] = true},	-- Reins of the Charger
 	[151625] = {[50000]=239767, [51000] = true},  	-- Ruby Qiraji Resonating Crystal
 	[151626] = {[50000]=239766, [51000] = true},  	-- Sapphire Qiraji Resonating Crystal
+	[168035] = {[50000]=295190, [51000] = true},  	-- Mawrat Harness
+	[170499] = {[50000]=304916, [51000] = true}  	-- Maw Seeker Harness
 }
 
 

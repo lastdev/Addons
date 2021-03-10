@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20210119194132")
 mod:SetCreatureID(29307)
 mod:SetEncounterID(385, 386, 1983)
 --
@@ -28,7 +28,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 59451 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) and not self:IsTrivial(85) then
+	if spellId == 59451 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) and not self:IsTrivial() then
 		specWarnPurpleShit:Show()
 		specWarnPurpleShit:Play("runaway")
 	end

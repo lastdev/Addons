@@ -1,0 +1,29 @@
+## Interface: 90001
+## Title: HandyNotes_TimelessIsle
+## Version: 1.3
+## Notes: TimelessIsle Notes
+## OptionalDeps: Ace3
+## RequiredDeps: HandyNotes
+## X-Embeds: Ace3
+## SavedVariables: HandyNotes_TimelessIsleDB
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+localization\enUS.lua
+#localization\deDE.lua
+#localization\esES.lua
+#localization\zhCN.lua
+#localization\zhTW.lua
+#localization\koKR.lua
+#localization\ruRU.lua
+
+core\class.lua
+core\core.lua
+core\icons.lua
+core\options.lua
+core\nodes.lua
+core\rewards.lua
+
+timelessisle.lua

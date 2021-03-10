@@ -1,0 +1,46 @@
+lightweight tag 9af2da600067b0a842f9e416b428cbb26554dc93 Plater-v9.0.2.326b-Retail
+Author:	Continuity <continuity@gmx.net>
+Date:	Thu Feb 25 15:45:45 2021 +0100
+
+commit 9af2da600067b0a842f9e416b428cbb26554dc93
+Author: Continuity <continuity@gmx.net>
+Date:   Thu Feb 25 15:45:45 2021 +0100
+
+    - correcting tooltip
+
+commit 64b947b707cdfbc4c6325441f343f9259110cc47
+Author: Continuity <continuity@gmx.net>
+Date:   Thu Feb 25 12:12:16 2021 +0100
+
+    - change tracking type and coloring priority for auras
+
+commit d0b50c8c0c9a6eae6384a05edda51caf6f58d952
+Author: Continuity <continuity@gmx.net>
+Date:   Thu Feb 25 11:26:01 2021 +0100
+
+    - removing duplicate
+
+commit e3bc3ebb4cb267c61a34284dc0cbf4466fb00aec
+Author: Spencer Steers <spencersteers@gmail.com>
+Date:   Thu Feb 25 03:11:53 2021 -0700
+
+    - fix extra icon border not showing for offensive / defensive auras (#87)
+
+commit bef9e1f3ba0300979558aefa9a01a2aa0cea1807
+Author: Continuity <continuity@gmx.net>
+Date:   Thu Feb 25 00:23:22 2021 +0100
+
+    - fixing issues with CheckAuras
+
+commit 541b56d4a9b2d5dd1d6a2e8e8f360f3147df29ad
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 24 13:44:18 2021 -0300
+
+    Framework update
+
+commit 541b56d4a9b2d5dd1d6a2e8e8f360f3147df29ad
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 24 13:44:18 2021 -0300
+
+    Framework update
+

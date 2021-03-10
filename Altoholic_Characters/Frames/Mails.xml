@@ -55,9 +55,7 @@
 	<Frame name="AltoholicFrameMail" parent="AltoholicTabCharacters" hidden="true">
 		<Size x="615" y="306" />
 		<Anchors>
-            <Anchor point="TOPLEFT" x="190" y="-100"/>
-			<Anchor point="TOPRIGHT" x="-39" y="-105" />
-            <Anchor point="BOTTOMRIGHT" x="-39" y="40"/>
+			<Anchor point="TOPRIGHT" x="39" y="-105" />
 		</Anchors>
 		<Frames>
 			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="AltoBaseScrollFrameTemplate" hidden="true">
@@ -66,11 +64,12 @@
 						self:OnVerticalScroll(offset, 41, Altoholic.Mail.Update)
 					</OnVerticalScroll>
 				</Scripts>
+				<!--
 				<KeyValues>
-					<KeyValue key="numRows" value="18" type="number" />
-                    <KeyValue key="rowHeight" value="41" type="number" />
-					<!--KeyValue key="rowTemplate" value="AltoMailEntryTemplate" /-->
+					<KeyValue key="numRows" value="7" type="number" />
+					<KeyValue key="rowTemplate" value="AltoMailEntryTemplate" />
 				</KeyValues>
+				-->
 			</ScrollFrame>
 			
 			<Button name="$parentEntry1" inherits="AltoMailEntryTemplate">
@@ -106,61 +105,6 @@
 			<Button name="$parentEntry7" inherits="AltoMailEntryTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentEntry6" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry8" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry7" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry9" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry8" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry10" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry9" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry11" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry10" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry12" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry11" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry13" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry12" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry14" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry13" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry15" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry14" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry16" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry15" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry17" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry16" relativePoint="BOTTOMLEFT" />
-				</Anchors>
-			</Button>
-            <Button name="$parentEntry18" inherits="AltoMailEntryTemplate">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry17" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
 		</Frames>

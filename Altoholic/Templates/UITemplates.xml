@@ -13,7 +13,7 @@
 	<Include file="ScrollFrames.xml"/>
 	<Include file="ToggleButton.xml"/>
 	<Include file="DropDownMenu.xml"/>
-	<Include file="AccountPicker.xml"/>
+	<Include file="RealmPicker.xml"/>
 	
 	<Button name="AltoTabTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
 		<Scripts>
@@ -153,136 +153,6 @@
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item13" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="Item15" inherits="AltoItemIconTemplate" id="15">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item14" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item16" inherits="AltoItemIconTemplate" id="16">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item15" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item17" inherits="AltoItemIconTemplate" id="17">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item16" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item18" inherits="AltoItemIconTemplate" id="18">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item17" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item19" inherits="AltoItemIconTemplate" id="19">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item18" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item20" inherits="AltoItemIconTemplate" id="20">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item19" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item21" inherits="AltoItemIconTemplate" id="21">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item20" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item22" inherits="AltoItemIconTemplate" id="22">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item21" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item23" inherits="AltoItemIconTemplate" id="23">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item22" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item24" inherits="AltoItemIconTemplate" id="24">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item23" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item25" inherits="AltoItemIconTemplate" id="25">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item24" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item26" inherits="AltoItemIconTemplate" id="26">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item25" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item27" inherits="AltoItemIconTemplate" id="27">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item26" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item28" inherits="AltoItemIconTemplate" id="28">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item27" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item29" inherits="AltoItemIconTemplate" id="29">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item28" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item30" inherits="AltoItemIconTemplate" id="30">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item29" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item31" inherits="AltoItemIconTemplate" id="31">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item30" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item32" inherits="AltoItemIconTemplate" id="32">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item31" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item33" inherits="AltoItemIconTemplate" id="33">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item32" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item34" inherits="AltoItemIconTemplate" id="34">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item33" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item35" inherits="AltoItemIconTemplate" id="35">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item34" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item36" inherits="AltoItemIconTemplate" id="36">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item35" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item37" inherits="AltoItemIconTemplate" id="37">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item36" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item38" inherits="AltoItemIconTemplate" id="38">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item37" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item39" inherits="AltoItemIconTemplate" id="39">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item38" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item40" inherits="AltoItemIconTemplate" id="40">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item39" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
 		</Frames>
 	</Button>
 
@@ -346,7 +216,7 @@
 
 	<!-- IconList, used by Pets & Achievements -->
 	<Button name="AltoIconListItemTemplate" hidden="true" virtual="true" inherits="BackdropTemplate">
-        <!-- <Size x="34" y="34" /> -->
+		<!-- <Size x="34" y="34" /> -->
 		<Size x="31" y="31" />
 		<Layers> 
 			<Layer level="BACKGROUND"> 
@@ -367,7 +237,7 @@
 					</Anchors>
 				</Texture>
 				<FontString parentKey="Name" inherits="GameFontNormalSmall" justifyH="CENTER" >
-					<Size x="40" y="18" />
+					<Size x="30" y="18" />
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" x="5" y="0" />
 					</Anchors>
@@ -377,21 +247,22 @@
 		</Layers>
 		<Scripts>
 			<OnLoad inherit="prepend">
-                self:SetBackdrop({
-                    bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
-                    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-                  	tile = true,
-                  	tileSize = 30,
-                  	edgeSize = 8,
-                  	insets = { left = 5, right = 5, top = 5, bottom = 5, },
-                })
-                self:SetBackdropColor(1, 1, 1, 0);
+				self:SetBackdrop({
+					bgFile = "Interface\\TutorialFrame\\TutorialFrameBackground",
+					edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+					tile = true,
+					tileSize = 30,
+					edgeSize = 8,
+					insets = { left = 5, right = 5, top = 5, bottom = 5, },
+				})
+				self:SetBackdropColor(1, 1, 1, 0)
+
 				local level = self:GetParent():GetFrameLevel()
 				self:SetFrameLevel(level + 1)
 				self:RegisterForClicks("LeftButtonDown", "RightButtonDown")
 			</OnLoad>
 			<OnLeave>
-				AltoTooltip:Hide();
+				AltoTooltip:Hide()
 			</OnLeave>
 		</Scripts>
 	</Button>
@@ -470,199 +341,10 @@
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item10" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
+			<!-- New -->
 			<Button parentKey="Item12" inherits="AltoIconListItemTemplate">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item13" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item12" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item14" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item13" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item15" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item14" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item16" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item15" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item17" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item16" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item18" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item17" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item19" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item18" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item20" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item19" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item21" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item20" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item22" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item21" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item23" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item22" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item24" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item23" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item25" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item24" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item26" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item25" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item27" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item26" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item28" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item27" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item29" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item28" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item30" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item29" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item31" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item30" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item32" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item31" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item33" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item32" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item34" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item33" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item35" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item34" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item36" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item35" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item37" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item36" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item38" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item37" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item39" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item38" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item40" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item39" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item41" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item40" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item42" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item41" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item43" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item42" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item44" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item43" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item45" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item44" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item46" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item45" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item47" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item46" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item48" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item47" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item49" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item48" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-			</Button>
-            <Button parentKey="Item50" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item49" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
 		</Frames>

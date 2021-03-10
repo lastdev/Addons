@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
 
-<!-- Copyright 2011-2020 Mike Battersby -->
+<!-- Copyright 2011-2021 Mike Battersby -->
 
 <Script file="MountsFilter.lua" />
 <Script file="Mounts.lua" />
@@ -98,10 +98,16 @@
 <Button name="LiteMountMountButtonTemplate" virtual="true" mixin="LiteMountMountButtonMixin" inherits="BackdropTemplate">
     <KeyValues>
         <KeyValue key="backdropInfo" value="BACKDROP_TOOLTIP_8_8_1111" type="global" />
+<!--
         <KeyValue key="backdropColor" value="DARKGRAY_COLOR" type="global"/>
         <KeyValue key="backdropColorAlpha" value="0.3" type="number" />
         <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
         <KeyValue key="backdropBorderColorAlpha" value="0.3" type="number" />
+-->
+        <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropColorAlpha" value="0.3" type="number"/>
+        <KeyValue key="backdropBorderColor" value="GRAY_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropBorderColorAlpha" value="0.3" type="number"/>
     </KeyValues>
     <Scripts>
         <OnShow method="OnShow" />
@@ -242,6 +248,13 @@
             <FontString parentKey="PriorityLabel" inherits="GameFontWhiteTiny" justifyH="CENTER" text="LM_PRIORITY">
                 <Anchors>
                     <Anchor point="BOTTOM" relativePoint="TOP" relativeKey="$parent.AllPriority" y="8" />
+                </Anchors>
+            </FontString>
+        </Layer>
+        <Layer level="OVERLAY">
+            <FontString parentKey="Counts" inherits="GameFontNormal">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativePOint="BOTTOMRIGHT" relativeKEy="$parent.MountScroll" y="-12" />
                 </Anchors>
             </FontString>
         </Layer>

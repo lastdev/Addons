@@ -1,7 +1,7 @@
 ## Title:-|cffFFFFFFConRO|r- |cffF58CBAPaladin|r
-## Version: 9.0.0
+## Version: 9.1.8
 ## Author: Vae
-## Interface: 90001
+## Interface: 90002
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 

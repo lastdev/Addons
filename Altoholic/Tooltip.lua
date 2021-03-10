@@ -9,9 +9,211 @@ local THIS_REALM = GetRealmName()
 
 local storedLink = nil
 
-local LGN = LibStub("LibGatheringNodes-1.0")
+local hearthstoneItemIDs = {
+	[6948] = true,				-- Hearthstone
+	[140192] = true,			-- Dalaran Hearthstone
+	[110560] = true,			-- Garrison Hearthstone
+	[128353] = true,			-- Admiral's Compass
+	[141605] = true,			-- Flight Master's Whistle
+}
+
+local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, thanks to Tempus on wowace for gathering this.
+
+	-- Mining nodes
+	-- Classic
+	[L["Copper Vein"]]                     =  2770, -- Copper Ore
+	[L["Dark Iron Deposit"]]               = 11370, -- Dark Iron Ore
+	[L["Gold Vein"]]                       =  2776, -- Gold Ore
+	[L["Hakkari Thorium Vein"]]            = 10620, -- Thorium Ore
+	[L["Iron Deposit"]]                    =  2772, -- Iron Ore
+	[L["Mithril Deposit"]]                 =  3858, -- Mithril Ore
+	[L["Ooze Covered Gold Vein"]]          =  2776, -- Gold Ore
+	[L["Ooze Covered Mithril Deposit"]]    =  3858, -- Mithril Ore
+	[L["Ooze Covered Rich Thorium Vein"]]  = 10620, -- Thorium Ore
+	[L["Ooze Covered Silver Vein"]]        =  2775, -- Silver Ore
+	[L["Ooze Covered Thorium Vein"]]       = 10620, -- Thorium Ore
+	[L["Ooze Covered Truesilver Deposit"]] =  7911, -- Truesilver Ore
+	[L["Rich Thorium Vein"]]               = 10620, -- Thorium Ore
+	[L["Silver Vein"]]                     =  2775, -- Silver Ore
+	[L["Small Thorium Vein"]]              = 10620, -- Thorium Ore
+	[L["Tin Vein"]]                        =  2771, -- Tin Ore
+	[L["Truesilver Deposit"]]              =  7911, -- Truesilver Ore
+
+	[L["Lesser Bloodstone Deposit"]]       =  4278, -- Lesser Bloodstone Ore
+	[L["Incendicite Mineral Vein"]]        =  3340, -- Incendicite Ore
+	[L["Indurium Mineral Vein"]]           =  5833, -- Indurium Ore
+	[L["Large Obsidian Chunk"]]            = 22203, -- Large Obsidian Shard. Both drop on both nodes.
+	[L["Small Obsidian Chunk"]]            = 22202, -- Small Obsidian Shard. Both drop on both nodes.
+	
+	-- TBC
+	[L["Adamantite Deposit"]]              = 23425, -- Adamantite Ore
+	[L["Fel Iron Deposit"]]                = 23424, -- Fel Iron Ore
+	[L["Khorium Vein"]]                    = 23426, -- Khorium Ore
+	[L["Nethercite Deposit"]]              = 32464, -- Nethercite Ore
+	[L["Rich Adamantite Deposit"]]         = 23425, -- Adamantite Ore
+	
+	-- WotLK
+	["Cobalt Deposit"]                     = 36909, -- Cobalt Ore
+	["Rich Cobalt Deposit"]                = 36909, -- Cobalt Ore
+	["Saronite Deposit"]                   = 36912, -- Saronite Ore
+	["Rich Saronite Deposit"]              = 36912, -- Saronite Ore
+	["Titanium Vein"]                      = 36910, -- Titanium Ore
+
+	-- Cataclysm
+	["Obsidium Deposit"]                   = 53038, -- Obsidium Ore
+	["Rich Obsidium Deposit"]              = 53038, -- Obsidium Ore
+	["Elementium Vein"]                    = 52185, -- Elementium Ore
+	["Rich Elementium Vein"]               = 52185, -- Elementium Ore
+	["Pyrite Deposit"]                     = 52183, -- Pyrite Ore
+	["Rich Pyrite Deposit"]                = 52183, -- Pyrite Ore
+
+	-- MoP
+	["Ghost Iron Deposit"]                 = 72092, -- Ghost Iron Ore
+	["Rich Ghost Iron Deposit"]            = 72092, -- Ghost Iron Ore
+	["Kyparite Deposit"]                   = 72093, -- Kyparite Ore
+	["Rich Kyparite Deposit"]              = 72093, -- Kyparite Ore
+	["Trillium Vein"]                      = 72095, -- Trillium Bar, because this node produces two ores
+	["Rich Trillium Vein"]                 = 72095, -- Trillium Bar, because this node produces two ores
+
+	-- WoD
+	["Blackrock Deposit"]                  = 109118, -- Blackrock Ore
+	["Rich Blackrock Deposit"]             = 109118, -- Blackrock Ore
+	["True Iron Deposit"]                  = 109119, -- True Iron Ore 
+	["Rich True Iron Deposit"]             = 109119, -- True Iron Ore
+	["Smoldering True Iron Deposit"]       = 109119, -- True Iron Ore
+
+	-- Legion
+	["Leystone Deposit"]                   = 123918, -- Leystone Ore
+	["Leystone Seam"]                      = 123918, -- Leystone Ore
+	["Rich Leystone Deposit"]              = 123918, -- Leystone Ore
+	["Felslate Deposit"]                   = 123919, -- Felslate
+	["Felslate Seam"]                      = 123919, -- Felslate
+	["Rich Felslate Deposit"]              = 123919, -- Felslate
+	
+	["Empyrium Deposit"]                   = 151564, -- Empyrium
+	["Empyrium Seam"]                      = 151564, -- Empyrium
+	["Rich Empyrium Deposit"]              = 151564, -- Empyrium
+	["Astral Glory"]     				      = 151565,	
+	
+	-- Battle for Azeroth
+	["Monelite Deposit"]				   		= 152512, -- Monelite Ore
+	["Rich Monelite Deposit"]			   	= 152512, -- Monelite Ore
+	["Monelite Seam"]					   		= 152512, -- Monelite Ore
+	["Storm Silver Deposit"]			   	= 152579, -- Storm Silver Ore
+	["Rich Storm Silver Deposit"]		   	= 152579, -- Storm Silver Ore
+	["Storm Silver Seam"]				   	= 152579, -- Storm Silver Ore
+	["Platinum Deposit"]				   		= 152513, -- Platinum Ore
+	["Rich Platinum Deposit"]			   	= 152513, -- Platinum Ore
+
+	
+	-- Herbs
+	-- Classic
+	[L["Arthas' Tears"]]        =  8836,
+	[L["Black Lotus"]]          = 13468,
+	[L["Blindweed"]]            =  8839,
+	[L["Bloodthistle"]]         = 22710,
+	[L["Briarthorn"]]           =  2450,
+	[L["Bruiseweed"]]           =  2453,
+	[L["Dreamfoil"]]            = 13463,
+	[L["Earthroot"]]            =  2449,
+	[L["Fadeleaf"]]             =  3818,
+	[L["Firebloom"]]            =  4625,
+	[L["Ghost Mushroom"]]       =  8845,
+	[L["Golden Sansam"]]        = 13464,
+	[L["Goldthorn"]]            =  3821,
+	[L["Grave Moss"]]           =  3369,
+	[L["Gromsblood"]]           =  8846,
+	[L["Icecap"]]               = 13467,
+	[L["Khadgar's Whisker"]]    =  3358,
+	[L["Kingsblood"]]           =  3356,
+	[L["Liferoot"]]             =  3357,
+	[L["Mageroyal"]]            =   785,
+	[L["Mountain Silversage"]]  = 13465,
+	[L["Peacebloom"]]           =  2447,
+	[L["Plaguebloom"]]          = 13466,
+	[L["Purple Lotus"]]         =  8831,
+	[L["Silverleaf"]]           =   765,
+	[L["Stranglekelp"]]         =  3820,
+	[L["Sungrass"]]             =  8838,
+	[L["Wild Steelbloom"]]      =  3355,
+	[L["Wintersbite"]]          =  3819,
+
+	-- TBC
+	[L["Ancient Lichen"]]       = 22790,
+	[L["Dreaming Glory"]]       = 22786,
+	[L["Felweed"]]              = 22785,
+	[L["Flame Cap"]]            = 22788,
+	[L["Glowcap"]]              = 24245,
+	[L["Mana Thistle"]]         = 22793,
+	[L["Netherbloom"]]          = 22791,
+	[L["Netherdust Bush"]]      = 32468, -- Netherdust Pollen
+	[L["Nightmare Vine"]]       = 22792,
+	[L["Ragveil"]]              = 22787,
+	[L["Sanguine Hibiscus"]]    = 24246,
+	[L["Terocone"]]             = 22789,
+
+	-- WotLK
+	["Goldclover"]              = 36901,
+	["Adder's Tongue"]          = 36903,
+	["Tiger Lily"]              = 36904,
+	["Lichbloom"]               = 36905,
+	["Icethorn"]                = 36906,
+	["Talandra's Rose"]         = 36907,
+	["Frost Lotus"]             = 36908,
+	["Firethorn"]               = 39970,
+
+	-- Cataclysm
+	["Cinderbloom"]             = 52983,
+	["Stormvine"]               = 52984,
+	["Azshara's Veil"]          = 52985,
+	["Heartblossom"]            = 52986,
+	["Twilight Jasmine"]        = 52987,
+	["Whiptail"]                = 52988,
+	["Deathspore Pod"]          = 52989,
+
+	-- MoP
+	["Green Tea Leaf"]          = 72234,
+	["Silkweed"]                = 72235,
+	["Rain Poppy"]              = 72237,
+	["Snow Lily"]               = 79010,
+	["Fool's Cap"]              = 79011,
+
+	-- WoD
+	["Frostweed"]               = 109124,
+	["Fireweed"]                = 109125,
+	["Gorgrond Flytrap"]        = 109126,
+	["Starflower"]              = 109127,
+	["Nagrand Arrowbloom"]      = 109128,
+	["Talador Orchid"]          = 109129,
+
+	-- Legion
+	["Aethril"]                 = 124101,
+	["Dreamleaf"]               = 124102,
+	["Foxflower"]               = 124103,
+	["Fjarnskaggl"]             = 124104,
+	["Starlight Rose"]          = 124105,	
+	
+	-- Battle for Azeroth
+	["Akunda's Bite"]           = 152507,
+	["Anchor Weed"]             = 152510,
+	["Riverbud"]                = 152505,
+	["Sea Stalk"]               = 152511,
+	["Siren's Pollen"]          = 152509,	
+	["Star Moss"]               = 152506,	
+	["Winter's Kiss"]           = 152508,	
+}
 
 -- *** Utility functions ***
+local function IsGatheringNode(name)
+	if name then
+		for k, v in pairs(GatheringNodes) do
+			if name == k then				-- returns the itemID if "name" is a known type of gathering node (mines & herbs)
+				return v
+			end
+		end
+	end
+end
+
 local function GetCraftNameFromRecipeLink(link)
 	-- get the craft name from the itemlink (strsplit on | to get the 4th value, then split again on ":" )
 	local recipeName = select(4, strsplit("|", link))
@@ -30,53 +232,6 @@ local function GetCraftNameFromRecipeLink(link)
 	end
 	
 	return string.sub(craftName, 2, -2)	-- at this point, get rid of the leading space and trailing square bracket
-end
-
-local function GetRequirementsFromRecipeLink(link)
-    local expansionRequirement, specializationRequirement, expansionSkillRequirement
-    
-    local pattern = ITEM_MIN_SKILL
-    -- this pattern is setup for use in string.format, need to change it to a regular expression for use in string.match
-    -- in english, it is: ITEM_MIN_SKILL = "Requires %s (%d)"
-    -- in Deutsch, it is: ITEM_MIN_SKILL = "Benotigi %1$s (%2$d)"
-    -- remove any %1s and %2s in the string
-    pattern = pattern:gsub("%%%d", "")
-    -- swap any $s to %s
-    pattern = pattern:gsub("$", "%")
-    -- swap the (%d) to a %((%d+)%)
-    pattern = pattern:gsub("%(%%d%)", "%%%(%(%%d+%)%%%)")
-    -- swap the %s to a (.+)
-    pattern = pattern:gsub("%%s", "(.+)")
-    -- in english, it should now look like: "Requires (.+) %(%d+%)"
-    -- yup, I did pattern matching on a pattern. If theres a better way to do that, let me know.
-    
-    local localizedGoblinEngineering = GetSpellInfo(20222)
-    local localizedGnomishEngineering = GetSpellInfo(20219)
-    
-    local tooltip = AltoScanningTooltip
-	tooltip:ClearLines()
-	tooltip:SetHyperlink(link)	
-	local tooltipName = tooltip:GetName()
-	for i = tooltip:NumLines(), 2, -1 do			-- parse all tooltip lines, from last to second
-		local tooltipText = _G[tooltipName .. "TextLeft" .. i]:GetText()
-		if tooltipText then
-            if not expansionRequirement then
-                expansionRequirement, expansionSkillRequirement = string.match(tooltipText, pattern)
-            end
-            if not specializationRequirement then
-                if string.find(tooltipText, string.format(ITEM_REQ_SKILL, localizedGoblinEngineering)) then
-                    specializationRequirement = "Goblin"
-                end
-            end
-            if not specializationRequirement then
-                if string.find(tooltipText, string.format(ITEM_REQ_SKILL, localizedGnomishEngineering)) then
-                    specializationRequirement = "Gnomish"
-                end
-            end
-		end
-	end
-    
-    return expansionRequirement, specializationRequirement, expansionSkillRequirement
 end
 
 local isTooltipDone, isNodeDone			-- for informant
@@ -113,43 +268,13 @@ local function GetRealmsList()
 	local realms = {}
 	table.insert(realms, THIS_REALM)
 	
-	if addon:GetOption("UI.Tooltip.ShowAllRealmsCount") then
-		for connectedRealm in pairs(DataStore:GetRealms()) do
-        	if connectedRealm ~= THIS_REALM then
-                table.insert(realms, connectedRealm)
-            end
-		end    
-    elseif addon:GetOption("UI.Tooltip.ShowMergedRealmsCount") then
+	if addon:GetOption("UI.Tooltip.ShowMergedRealmsCount") then
 		for _, connectedRealm in pairs(DataStore:GetRealmsConnectedWith(THIS_REALM)) do
 			table.insert(realms, connectedRealm)
 		end
 	end
-
+	
 	return realms
-end
-
-local function GetGuildRealmsList()
-    if not addon:GetOption("UI.Tooltip.ShowMergedRealmsCount") then
-        return GetRealmsList()
-    end
-    
-    -- same as GetRealmsList except also include known guilds on connected servers
-    local realms = GetRealmsList()
-    for characterName, character in pairs(DataStore:GetCharacters(THIS_REALM, THIS_ACCOUNT)) do
-        local _, _, _, guildRealm = DataStore:GetGuildInfo(character)
-        if guildRealm then
-            local exists = false
-            for _, realm in pairs(realms) do
-                if guildRealm == realm then
-                    exists = true
-                end
-            end
-            if not exists then
-                table.insert(realms, guildRealm)
-            end
-        end
-    end
-    return realms
 end
 
 local function GetCharacterItemCount(character, searchedID)
@@ -200,15 +325,7 @@ local function GetAccountItemCount(account, searchedID)
 	local count = 0
 
 	for _, realm in pairs(GetRealmsList()) do
-        -- sort the characters in alphabetical order
-        local characters = DataStore:GetCharacters(realm, account)
-        local characterKeys = {}
-        for characterKey in pairs(characters) do
-            table.insert(characterKeys, characterKey)
-        end
-        table.sort(characterKeys)
-		for _, characterKey in ipairs(characterKeys) do
-            local character = characters[characterKey]
+		for _, character in pairs(DataStore:GetCharacters(realm, account)) do
 			if addon:GetOption("UI.Tooltip.ShowCrossFactionCount") then
 				count = count + GetCharacterItemCount(character, searchedID)
 			else
@@ -235,9 +352,9 @@ local function GetItemCount(searchedID)
 	end
 	
 	local showCrossFaction = addon:GetOption("UI.Tooltip.ShowCrossFactionCount")
-    
+	
 	if addon:GetOption("UI.Tooltip.ShowGuildBankCount") then
-		for _, realm in pairs(GetGuildRealmsList()) do
+		for _, realm in pairs(GetRealmsList()) do
 			for guildName, guildKey in pairs(DataStore:GetGuilds(realm)) do
 				local altoGuild = addon:GetGuild(guildName)
 				local bankFaction = DataStore:GetGuildBankFaction(guildKey)
@@ -260,11 +377,7 @@ local function GetItemCount(searchedID)
 						
 						if #tabCounters > 0 then
 							guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
-                            if altoGuild.showGuildRealmInTooltip then
-							    AddCounterLine(colors.green..guildName.." ("..realm..")", format("%s %s(%s%s)", colors.orange .. guildCount, colors.white, table.concat(tabCounters, ","), colors.white))
-                            else
-                                AddCounterLine(colors.green..guildName, format("%s %s(%s%s)", colors.orange .. guildCount, colors.white, table.concat(tabCounters, ","), colors.white))
-                            end
+							AddCounterLine(colors.green..guildName, format("%s %s(%s%s)", colors.orange .. guildCount, colors.white, table.concat(tabCounters, ","), colors.white))
 						end
 					else
 						guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
@@ -284,17 +397,15 @@ local function GetItemCount(searchedID)
 	return count
 end
 
-function addon:GetRecipeOwners(professionName, link, recipeLevel, recipeRank)
-	if not recipeRank then recipeRank = 1 end
-    
-    local craftName
+function addon:GetRecipeOwners(professionName, link, recipeLevel)
+	local craftName
 	local spellID = addon:GetSpellIDFromRecipeLink(link)
 
 	if not spellID then		-- spell id unknown ? let's parse the tooltip
 		craftName = GetCraftNameFromRecipeLink(link)
 		if not craftName then return end		-- still nothing usable ? then exit
 	end
-
+	
 	local know = {}				-- list of alts who know this recipe
 	local couldLearn = {}		-- list of alts who could learn it
 	local willLearn = {}			-- list of alts who will be able to learn it later
@@ -303,9 +414,7 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel, recipeRank)
 		-- it seems that some tooltip libraries interfere and cause a recipeLevel to be nil
 		return know, couldLearn, willLearn
 	end
-    
-    local expansionRequirement, specializationRequirement, expansionSkillRequirement = GetRequirementsFromRecipeLink(link)
-
+	
 	local profession, isKnownByChar
 	for characterName, character in pairs(DataStore:GetCharacters()) do
 		profession = DataStore:GetProfession(character, professionName)
@@ -313,140 +422,42 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel, recipeRank)
 		isKnownByChar = nil
 		if profession then
 			if spellID then			-- if spell id is known, just find its equivalent in the professions
-				isKnownByChar = DataStore:IsCraftKnown(profession, spellID, recipeRank)
+				isKnownByChar = DataStore:IsCraftKnown(profession, spellID)
 			else
 				DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
-					local _, recipeID, isLearned, knownRecipeRank, totalRanks = DataStore:GetRecipeInfo(recipeData)
+					local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
 					local skillName = GetSpellInfo(recipeID) or ""
 
 					if string.lower(skillName) == string.lower(craftName) and isLearned then
-                        if tonumber(recipeRank) > tonumber(knownRecipeRank) then
-                            isKnownByChar = false
-                            return true
-                        else
-                            isKnownByChar = true
-						    return true	-- stop iteration
-                        end
+						isKnownByChar = true
+						return true	-- stop iteration
 					end
 				end)
 			end
 
 			local coloredName = DataStore:GetColoredCharacterName(character)
 			
-            if coloredName then
-    			if isKnownByChar then
-    				table.insert(know, coloredName)
-    			else
-    				-- Which expansion's profession does it require?
-                    local charactersProfession = DataStore:GetProfession(character, professionName)
-                    if expansionRequirement then
-                        -- remove the profession name from the string
-                        expansionRequirement = string.gsub(expansionRequirement, professionName, "")
-                        -- and trim it
-                        expansionRequirement = strtrim(expansionRequirement) 
-                        
-                        -- iterate through each professions category
-                        local numCategories = DataStore:GetNumRecipeCategories(charactersProfession)
-                        if numCategories > 0 then
-                            for index = 1, numCategories do 
-                                local id, categoryName, rank, maxRank = DataStore:GetRecipeCategoryInfo(charactersProfession, index)
-                                local shouldAdd = false
-                                if (string.len(expansionRequirement) == 0) then
-                                    local classicProfIDs = {362, 419, 379, 667, 604, 590, 415, 1044, 72, 372, 1078, 1060} 
-                                    for _,v in pairs(classicProfIDs) do
-                                        if id == v then
-                                            shouldAdd = true
-                                        end
-                                    end 
-                                else
-                                    if categoryName and string.find(categoryName, expansionRequirement) then
-                                        shouldAdd = true
-                                    else
-                                        -- cooking has weird category names, also some "pandaren" instead of "pandaria" and "broken isles" instead of "legion"
-                                        -- TODO: Get localized versions of these names, move them all to the /Locales/ folder.
-                                        if (expansionRequirement == "Northrend" and professionName == "Cooking" and id == 74) or
-                                            (expansionRequirement == "Pandaria" and professionName == "Cooking" and id == 90) or
-                                            (expansionRequirement == "Pandaria" and professionName == "Blacksmithing" and id == 553) or
-                                            (expansionRequirement == "Legion" and professionName == "Alchemy" and id == 433) or
-                                            (expansionRequirement == "Legion" and professionName == "Cooking" and id == 475) then
-                                                shouldAdd = true
-                                        end
-                                    end
-                                end
-                                if shouldAdd then
-                                    -- one final check before we actually add it: does it require gnomish/goblin engineering?
-                                    if specializationRequirement == "Goblin" then
-                                        local localizedGoblinEngineering = GetSpellInfo(20222)
-                                        if string.find(charactersProfession.FullLink, localizedGoblinEngineering) then
-                                            if rank < recipeLevel then
-                                                table.insert(willLearn, format("%s |r(%d)", coloredName, rank))
-                                            else
-                                                table.insert(couldLearn, format("%s |r(%d)", coloredName, rank))
-                                            end
-                                            break
-                                        end    
-                                    elseif specializationRequirement == "Gnomish" then
-                                        local localizedGnomishEngineering = GetSpellInfo(20219)
-                                        if string.find(charactersProfession.FullLink, localizedGnomishEngineering) then
-                                            if rank < recipeLevel then
-                                                table.insert(willLearn, format("%s |r(%d)", coloredName, rank))
-                                            else
-                                                table.insert(couldLearn, format("%s |r(%d)", coloredName, rank))
-                                            end
-                                            break
-                                        end                                         
-                                    else
-                                        if rank < recipeLevel then
-                                            table.insert(willLearn, format("%s |r(%d)", coloredName, rank))
-                                        else
-                                            table.insert(couldLearn, format("%s |r(%d)", coloredName, rank))
-                                        end
-                                        break
-                                    end
-                                end
-                            end
-                        end
-                    else                        
-                        -- Code should no longer get to this, as expansionRequirement should always have something. Keeping this here just in case a recipe slips through.
-                        local currentLevel = DataStore:GetProfessionInfo(charactersProfession)
-        				if currentLevel > 0 then
-        					if currentLevel < recipeLevel then
-        						table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
-        					else
-        						table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
-        					end
-        				end
-                    end
-    			end
-            end
+			if isKnownByChar then
+				table.insert(know, coloredName)
+			else
+				local currentLevel = DataStore:GetProfessionInfo(DataStore:GetProfession(character, professionName))
+				if currentLevel > 0 then
+					if currentLevel < recipeLevel then
+						table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
+					else
+						table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
+					end
+				end
+			end
 		end
 	end
-	    
-    local function sortStripFormatting(a, b)
-        local escapes = {
-            ["|c%x%x%x%x%x%x%x%x"] = "", -- color start
-            ["|r"] = "", -- color end
-            ["|H.-|h(.-)|h"] = "%1", -- links
-            ["|T.-|t"] = "", -- textures
-            ["{.-}"] = "", -- raid target icons
-        }
-        local function unescape(str)
-            for k, v in pairs(escapes) do
-                str = gsub(str, k, v)
-            end
-            return str
-        end
-        return (unescape(a) < unescape(b))
-    end
-    
-    table.sort(know, sortStripFormatting)
-    table.sort(couldLearn, sortStripFormatting)
-    table.sort(willLearn, sortStripFormatting)
+	
 	return know, couldLearn, willLearn
 end
 
-local function GetRecipeOwnersText(professionName, link, recipeLevel, recipeRank)
-	local know, couldLearn, willLearn = addon:GetRecipeOwners(professionName, link, recipeLevel, recipeRank)
+local function GetRecipeOwnersText(professionName, link, recipeLevel)
+
+	local know, couldLearn, willLearn = addon:GetRecipeOwners(professionName, link, recipeLevel)
 	
 	local lines = {}
 	if #know > 0 then
@@ -458,7 +469,7 @@ local function GetRecipeOwnersText(professionName, link, recipeLevel, recipeRank
 	end
 	
 	if #willLearn > 0 then
-		table.insert(lines, colors.red .. L["Will be learnable by "] ..": ".. colors.white.. table.concat(willLearn, ", ") .."\n")
+		table.insert(lines, colors.red .. L["Will be learnable by "] ..": ".. colors.white.. table.concat(willLearn, ", "))
 	end
 	
 	return table.concat(lines, "\n")
@@ -489,14 +500,11 @@ local function AddGlyphOwners(itemID, tooltip)
 	end
 end
 
-local gatheringNodeWasShown
-
 local function ShowGatheringNodeCounters()
-    gatheringNodeWasShown = true
 	-- exit if player does not want counters for known gathering nodes
 	if addon:GetOption("UI.Tooltip.ShowGatheringNodesCount") == false then return end
 
-	local itemID = LGN.getItemID( _G["GameTooltipTextLeft1"]:GetText() )
+	local itemID = IsGatheringNode( _G["GameTooltipTextLeft1"]:GetText() )
 	if not itemID or (itemID == cachedItemID) then return end					-- is the item in the tooltip a known type of gathering node ?
 	
 	if Informant then
@@ -511,7 +519,6 @@ local function ShowGatheringNodeCounters()
 	
 	WriteCounterLines(GameTooltip)
 	WriteTotal(GameTooltip)
-    return true
 end
 
 local function ProcessTooltip(tooltip, link)
@@ -534,32 +541,33 @@ local function ProcessTooltip(tooltip, link)
 			end
 		end
 	end
-    
-    if addon:GetOption("UI.Tooltip.HideHearthstoneCounters") and addon:GetOption("UI.Tooltip.HiddenHearthstones")[itemID] then return end
-	 
+	
 	if (itemID == 0) then return end
+	
 	-- if there's no cached item id OR if it's different from the previous one ..
 	if (not cachedItemID) or 
 		(cachedItemID and (itemID ~= cachedItemID)) then
 
 		cachedRecipeOwners = nil
-		cachedItemID = itemID			-- we have searched this ID ..
-        
+		
 		-- these are the cpu intensive parts of the update .. so do them only if necessary
 		cachedSource = nil
 		if addon:GetOption("UI.Tooltip.ShowItemSource") then
 			local domain, subDomain = addon.Loots:GetSource(itemID)
-
+			
+			cachedItemID = itemID			-- we have searched this ID ..
 			if domain then
 				subDomain = (subDomain) and format(", %s", subDomain) or ""
-				cachedSource = format("%s: %s%s", colors.gold..L["Source"], colors.teal..domain, subDomain)
+				cachedSource = format("%s%s: %s%s%s", colors.gold, L["Source"], colors.teal, domain, subDomain)
 			end
 		end
+
+
 		
 		-- .. then check player bags to see how many times he owns this item, and where
 		if addon:GetOption("UI.Tooltip.ShowItemCount") or addon:GetOption("UI.Tooltip.ShowTotalItemCount") then
 			cachedCount = GetItemCount(itemID) -- if one of the 2 options is active, do the count
-			cachedTotal = (cachedCount > 0) and format("%s: %s", colors.gold..L["Total owned"], colors.teal..cachedCount) or nil
+			cachedTotal = (cachedCount > 0) and format("%s%s: %s%s", colors.gold, L["Total owned"], colors.teal, cachedCount) or nil
 		end
 	end
 
@@ -569,12 +577,17 @@ local function ProcessTooltip(tooltip, link)
 		tooltip:AddLine(format(ITEM_COOLDOWN_TIME, SecondsToTime(owner.duration - (GetTime() - owner.startTime))),1,1,1);
 	end
 
-	WriteCounterLines(tooltip)
-	WriteTotal(tooltip)
+	local isHearth = hearthstoneItemIDs[itemID] 
+	local showHearth = addon:GetOption("UI.Tooltip.ShowHearthstoneCount")
+	
+	if showHearth or (not showHearth and not isHearth) then
+		WriteCounterLines(tooltip)
+		WriteTotal(tooltip)
+	end
 	
 	if cachedSource then		-- add item source
-		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(cachedSource,1,1,1);
+		tooltip:AddLine(" ",1,1,1)
+		tooltip:AddLine(cachedSource, 1,1,1)
 	end
 	
 	-- addon:CheckMaterialUtility(itemID)
@@ -583,12 +596,14 @@ local function ProcessTooltip(tooltip, link)
 		local iLevel = select(4, GetItemInfo(itemID))
 		
 		if iLevel then
-			tooltip:AddLine(" ",1,1,1);
-			tooltip:AddDoubleLine("Item ID: " .. colors.green .. itemID,  "iLvl: " .. colors.green .. iLevel);
+			tooltip:AddLine(" ",1,1,1)
+			tooltip:AddDoubleLine(format("Item ID: %s%s", colors.green, itemID), format("iLvl: %s%s", colors.green, iLevel))
 		end
 	end
 	
 	local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
+	
+	-- 25/01/2015: Removed the code that displayed the pet owners, since they have been account wide for a while now..
 	
 	if itemType == GetItemClassInfo(LE_ITEM_CLASS_GLYPH) then
 		AddGlyphOwners(itemID, tooltip)
@@ -601,14 +616,7 @@ local function ProcessTooltip(tooltip, link)
 	if itemSubType == L["ITEM_SUBTYPE_BOOK"] then return end		-- exit if it's a book
 
 	if not cachedRecipeOwners then
-        local recipeRank
-        if (_G["GameTooltipTextLeft2"]:GetText()) then
-            recipeRank = string.match(_G["GameTooltipTextLeft2"]:GetText(), 'Rank (%d)')
-        else
-            recipeRank = string.match(_G["ItemRefTooltipTextLeft2"]:GetText(), 'Rank (%d)')
-        end
-        if not recipeRank then recipeRank = 0 end
-		cachedRecipeOwners = GetRecipeOwnersText(itemSubType, link, addon:GetRecipeLevel(link, tooltip), recipeRank)
+		cachedRecipeOwners = GetRecipeOwnersText(itemSubType, link, addon:GetRecipeLevel(link, tooltip))
 	end
 	
 	if cachedRecipeOwners then
@@ -626,20 +634,8 @@ end
 
 -- ** GameTooltip hooks **
 local function OnGameTooltipShow(tooltip, ...)
-    if GameTooltip:GetItem() then return end
-	if ShowGatheringNodeCounters() then
-	   GameTooltip:Show()
-    end
-end
-
-local function OnGameTooltipUpdate(tooltip, elapsed)
-    if not GameTooltip:IsVisible() then return end
-    
-    if not gatheringNodeWasShown then
-        if ShowGatheringNodeCounters() then
-            GameTooltip:Show()
-        end
-    end
+	ShowGatheringNodeCounters()
+	GameTooltip:Show()
 end
 
 local function OnGameTooltipSetItem(tooltip, ...)
@@ -666,35 +662,30 @@ local function OnGameTooltipCleared(tooltip, ...)
 	isTooltipDone = nil
 	isNodeDone = nil		-- for informant
 	storedLink = nil
-    cachedItemID = nil
-    gatheringNodeWasShown = nil
-    C_Timer.After(0.2, OnGameTooltipUpdate)
 end
 
 local function Hook_SetCurrencyToken(self,index,...)
 	if not index then return end
 
-	local info = C_CurrencyInfo.GetCurrencyListInfo(index)
-    if not info then return end
-    local currency = info.name
+	local currency = C_CurrencyInfo.GetCurrencyListInfo(index)
 	if not currency then return end
 
-	GameTooltip:AddLine(" ",1,1,1);
+	GameTooltip:AddLine(" ",1,1,1)
 
 	local total = 0
 	for _, character in pairs(DataStore:GetCharacters()) do
-		local _, _, count = DataStore:GetCurrencyInfoByName(character, currency)
+		local _, count = DataStore:GetCurrencyInfoByName(character, currency.name)
 		if count and count > 0 then
-			GameTooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character),  colors.teal .. count);
+			GameTooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character), format("%s%s", colors.teal, count))
 			total = total + count
 		end
 		
 	end
 	
 	if total > 0 then
-		GameTooltip:AddLine(" ",1,1,1);
+		GameTooltip:AddLine(" ",1,1,1)
 	end
-	GameTooltip:AddLine(format("%s: %s", colors.gold..L["Total owned"], colors.teal..total ) ,1,1,1);
+	GameTooltip:AddLine(format("%s%s: %s%s", colors.gold, L["Total owned"], colors.teal, total ) ,1,1,1)
 	GameTooltip:Show()
 end
 

@@ -1,15 +1,19 @@
 ------------------------------------------------------------------------
-r9 | Tuhljin | 2018-07-22 02:44:56 +0000 (Sun, 22 Jul 2018) | 1 line
+r12 | tuhljin | 2020-11-20 02:37:18 +0000 (Fri, 20 Nov 2020) | 1 line
 Changed paths:
-   A /trunk/readme.txt
+   M /trunk/ReagentBanker.toc
+   M /trunk/readme.txt
 
-- Add readme.txt for proper change log.
+Label version as 1.1.0
 ------------------------------------------------------------------------
-r8 | Tuhljin | 2018-07-21 15:24:44 +0000 (Sat, 21 Jul 2018) | 1 line
+r11 | tuhljin | 2020-11-20 02:31:06 +0000 (Fri, 20 Nov 2020) | 2 lines
 Changed paths:
    M /trunk/ReagentBanker.lua
    M /trunk/ReagentBanker.toc
+   M /trunk/libs/TjDropDownMenu.lua
+   M /trunk/readme.txt
 
-- Improve compatibility with addons that change bank display, such as Bagnon.
+- Updated TOC for WoW patch 9.0.2.
+- Attempt to fix an intermittent problem where items already in the reagent bank are reported in the chat log as newly deposited.
 ------------------------------------------------------------------------
 

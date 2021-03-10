@@ -1,4 +1,4 @@
---Mini Dragon <流浪者酒馆-Brilla@金色平原> 20200920
+--Mini Dragon <流浪者酒馆-Brilla@金色平原> 20201221
 --夏一可，暴雪娱乐
 
 if GetLocale() ~= "zhCN" then return end
@@ -27,14 +27,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Artificer Xy'Mox --
 ---------------------------
-L= DBM:GetModLocalization(2418)
-
-L:SetMiscLocalization({
-	Phase2			= "The anticipation to use this relic is killing me! Though, it will more likely kill you.",
-	Phase2Demonic	= "Lok zennshinagas xi ril zila refir il rethule no Rakkas az alar alar archim maev shi ",--Boss has Curse of Tongues
-	Phase3			= "I hope this wondrous item is as lethal as it looks!",
-	Phase3Demonic	= "X ante zila romathis alar il re thorje re az modas "--Boss has Curse of Tongues
-})
+--L= DBM:GetModLocalization(2418)
 
 ---------------------------
 --  Sun King's Salvation/Kael'thas --
@@ -54,7 +47,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	timerContainers				= "显示容器装满的进度与时间"
+	timerContainers2			= "显示容器装满的进度与时间"
 })
 
 ---------------------------
@@ -72,13 +65,19 @@ L:SetOptionLocalization({
 ---------------------------
 --L= DBM:GetModLocalization(2425)
 
+L= DBM:GetModLocalization(2425)
+
+L:SetOptionLocalization({
+	ExperimentalTimerCorrection	= "当技能发生排队时，自动调整计时器"
+})
+
 ---------------------------
 --  Sire Denathrius --
 ---------------------------
 L= DBM:GetModLocalization(2424)
 
 L:SetMiscLocalization({
-	CrimsonSpawn	= "Crimson Cabalists answer the call of Denathrius."
+	CrimsonSpawn	= "赤红秘法师回应了德纳修斯的召唤。"
 })
 
 

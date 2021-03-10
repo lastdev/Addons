@@ -1,7 +1,7 @@
 ## Interface: 90001
 ## Title: Lib: GroupInSpecT-1.1
 ## Notes: Keeps track of group members and keeps an up-to-date cache of their specialization and talents.
-## Version: v9.0.6
+## Version: v9.0.15
 ## Author: Anyia of HordeYakka (Jubei'Thos)
 ## X-Category: Library
 

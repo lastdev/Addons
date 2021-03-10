@@ -293,7 +293,6 @@ function addon:MarkAsSeen(key)
 	if newsframes[key] then newsframes[key]:Hide() end
 end
 
-
 if not _G.OHC then
 _G.OHC=addon
 end

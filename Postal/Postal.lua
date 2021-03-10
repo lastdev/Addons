@@ -167,7 +167,7 @@ function Postal:OnModuleEnable_Common()
 end
 
 -- Hides the minimap unread mail button if there are no unread mail on closing the mailbox.
--- Does not scan past the first 50 items since only the first 50 are viewable.
+-- Does not scan past the first 100 items since only the first 100 are viewable.
 function Postal:MAIL_CLOSED()
 	for i = 1, GetInboxNumItems() do
 		if not select(9, GetInboxHeaderInfo(i)) then return end
@@ -327,6 +327,14 @@ function Postal.Menu(self, level)
 	elseif level == 2 then
 		if UIDROPDOWNMENU_MENU_VALUE == "OpenSpeed" then
 			local speed = Postal.db.profile.OpenSpeed
+			for i = 0, 0 do
+				local s = 0
+				info.text = format("%0.2f", s)
+				info.func = Postal.SetOpenSpeed
+				info.checked = s == speed
+				info.arg1 = s
+				UIDropDownMenu_AddButton(info, level)
+			end
 			for i = 0, 13 do
 				local s = 0.3 + i*0.05
 				info.text = format("%0.2f", s)

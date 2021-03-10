@@ -1,6 +1,6 @@
 # MaxDps_Warrior
 
-## [v8.3.0](https://github.com/kaminaris/MaxDps-Warrior/tree/v8.3.0) (2020-08-25)
-[Full Changelog](https://github.com/kaminaris/MaxDps-Warrior/compare/v8.2.5.1...v8.3.0) [Previous Releases](https://github.com/kaminaris/MaxDps-Warrior/releases)
+## [v9.0.2.4](https://github.com/kaminaris/MaxDps-Warrior/tree/v9.0.2.4) (2020-12-23)
+[Full Changelog](https://github.com/kaminaris/MaxDps-Warrior/compare/v9.0.2.3...v9.0.2.4) [Previous Releases](https://github.com/kaminaris/MaxDps-Warrior/releases)
 
-- v8.3.0 - Small fury fix  
+- v9.0.2.4 - Fury whirlwind fixes  

@@ -4,11 +4,13 @@
 
   Information about one mount.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
 local _, LM = ...
+
+local L = LM.Localize
 
 --[===[@debug@
 if LibDebug then LibDebug() end
@@ -33,6 +35,10 @@ function LM.Mount:Get(className, ...)
         end
     end
 
+    if not m.family then
+        LM.PrintError('Mount with no family: ' .. m.name)
+    end
+
     return m
 end
 
@@ -45,7 +51,9 @@ function LM.Mount:Refresh()
 end
 
 function LM.Mount:MatchesOneFilter(flags, f)
-    if f == "CASTABLE" then
+    if f == "NONE" then
+        return false
+    elseif f == "CASTABLE" then
         if self:IsCastable() then return true end
     elseif tonumber(f) then
         if self.spellID == tonumber(f) then return true end
@@ -53,6 +61,10 @@ function LM.Mount:MatchesOneFilter(flags, f)
         if self.mountID == tonumber(f:sub(4)) then return true end
     elseif f:sub(1, 3) == 'mt:' then
         if self.mountType == tonumber(f:sub(4)) then return true end
+    elseif f:sub(1, 7) == 'family:' then
+        if self.family == f:sub(8) or L[self.family] == f:sub(8) then
+            return true
+        end
     elseif f:sub(1, 1) == '~' then
         if not self:MatchesOneFilter(flags, f:sub(2)) then return true end
     else
@@ -104,9 +116,14 @@ function LM.Mount:IsActive(buffTable)
 end
 
 function LM.Mount:IsCastable()
+    local castTime = select(4, GetSpellInfo(self.spellID))
     if LM.Environment:IsMovingOrFalling() then
-        local castTime = select(4, GetSpellInfo(self.spellID))
         if castTime > 0 then return false end
+    elseif LM.Options:GetInstantOnlyMoving() then
+        if castTime == 0 then return false end
+    end
+    if LM.Environment:TheMaw() and not self:MawUsable() then
+        return false
     end
     return true
 end
@@ -125,6 +142,22 @@ end
 function LM.Mount:GetCancelAction()
     local spellName = GetSpellInfo(self.spellID)
     return LM.SecureAction:CancelAura(spellName)
+end
+
+-- This is gross
+
+local MawUsableSpells = {
+    [LM.SPELL.TRAVEL_FORM] = true,
+    [LM.SPELL.MOUNT_FORM] = true,
+    [LM.SPELL.RUNNING_WILD] = true,
+    [LM.SPELL.SOULSHAPE] = true,
+    [LM.SPELL.GHOST_WOLF] = true,
+    [312762] = true,                -- Mawsworn Soulhunter
+    [344578] = true,                -- Corridor Creeper
+}
+
+function LM.Mount:MawUsable()
+    return MawUsableSpells[self.spellID]
 end
 
 function LM.Mount:Dump(prefix)

@@ -2,11 +2,16 @@
 	<!-- 
 	<Include file="RecipeRow.xml"/>
 	-->
+	<Include file="CovenantSanctumUpgradeTalent.xml"/>
+	<Include file="CovenantSanctumUpgradeTree.xml"/>
 	<Include file="GarrisonMissionFollower.xml"/>
 	<Include file="GarrisonMissionReward.xml"/>
 	<Include file="GarrisonMissionRow.xml"/>
 	<Include file="QuestLogRow.xml"/>
 	<Include file="RecipeRow.xml"/>
+	<Include file="SoulbindTreeButton.xml"/>
+	<Include file="SoulbindTreeRow.xml"/>
+	<Include file="SoulbindTree.xml"/>
 	<Include file="SpellButton.xml"/>
 	<Include file="TalentButton.xml"/>
 	<Include file="TalentRow.xml"/>

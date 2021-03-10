@@ -1,12 +1,10 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: Ovale Spell Priority
 ## Notes: Show the icon of the next spell to cast
-## Notes-frFR: Affiche l'icône du prochain sort à lancer
-## Author: Sidoine, Johnny C. Lam
-## Version: 9.0.0.0
-## OptionalDeps: Ace3, LibBabble-CreatureType-3.0, LibDataBroker-1.1, LibDBIcon-1.0, LibDualSpec-1.0, LibRangeCheck-2.0, LibTextDump-1.0, Masque, Recount, Skada, SpellFlashCore, LibArtifactData-1.0, DBM-Core, BigWigs, LibActionButton-1.0-ElvUI
+## Author: Sidoine De Wispelaere
+## Version: 9.0.47
+## OptionalDeps: LibStub, @wowts/tsaddon, @wowts/ace_event-3.0, @wowts/ace_gui-3.0, @wowts/ace_config-3.0, @wowts/ace_config_dialog-3.0, @wowts/lib_text_dump-1.0, @wowts/ace_timer-3.0, @wowts/libactionbutton-1.0-elvui, @wowts/lib_button_glow-1.0, @wowts/ace_db-3.0, @wowts/ace_db_options-3.0, @wowts/ace_console-3.0, @wowts/ace_serializer-3.0, @wowts/masque, @wowts/lib_data_broker-1.1, @wowts/lib_d_b_icon-1.0, @wowts/ace_locale-3.0, @wowts/recount, @wowts/ace_comm-3.0, @wowts/lib_babble-creature_type-3.0, @wowts/lib_range_check-2.0, @wowts/lib-stub, @wowts/callback_handler-1.0, @wowts/tslib
 ## SavedVariables: OvaleDB
 
-# Libraries.
-libs\libs.xml
-dist\files.xml
+libs\files.xml
+files.xml

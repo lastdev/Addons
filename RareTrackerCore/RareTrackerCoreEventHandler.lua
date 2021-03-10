@@ -5,533 +5,518 @@ local UnitHealth = UnitHealth
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local C_VignetteInfo = C_VignetteInfo
 local GetServerTime = GetServerTime
-local LinkedSet = LinkedSet
 local CreateFrame = CreateFrame
 local GetChannelList = GetChannelList
-local GetTime = GetTime
-local InterfaceOptionsFrame_Show = InterfaceOptionsFrame_Show
-local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
-local pairs = pairs
+local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+local PlaySoundFile = PlaySoundFile
 local select = select
+local date = date
+local time = time
+local EnumerateServerChannels = EnumerateServerChannels
 
 -- Redefine often used variables locally.
 local C_Map = C_Map
 local COMBATLOG_OBJECT_TYPE_GUARDIAN = COMBATLOG_OBJECT_TYPE_GUARDIAN
 local COMBATLOG_OBJECT_TYPE_PET = COMBATLOG_OBJECT_TYPE_PET
 local COMBATLOG_OBJECT_TYPE_OBJECT = COMBATLOG_OBJECT_TYPE_OBJECT
-local UIParent = UIParent
-local string = string
 local bit = bit
+local UIParent = UIParent
 
 -- ####################################################################
 -- ##                      Localization Support                      ##
 -- ####################################################################
 
 -- Get an object we can use for the localization of the addon.
-local L = LibStub("AceLocale-3.0"):GetLocale("RareTrackerCore", true)
+local L = LibStub("AceLocale-3.0"):GetLocale("RareTracker", true)
 
 -- ####################################################################
--- ##                         Event Handlers                         ##
+-- ##                          Event Variables                       ##
 -- ####################################################################
 
-function RT:OnInitialize()
-    self:InitializeRareTrackerDatabase()
-    self:InitializeRareTrackerLDB()
-    self:InitializeOptionsMenu()
-    self:RegisterChatCommand("rt", "ChatCommand")
-    self:RegisterChatCommand("raretracker", "ChatCommand")
+-- The last zone id that was encountered.
+RareTracker.zone_id = nil
+
+-- The current shard id.
+RareTracker.shard_id = nil
+
+-- A flag used to detect guardians or pets.
+local companion_type_mask = bit.bor(
+    COMBATLOG_OBJECT_TYPE_GUARDIAN, COMBATLOG_OBJECT_TYPE_PET, COMBATLOG_OBJECT_TYPE_OBJECT
+)
+
+-- A flag that will notify whether the char frame has loaded successfully, to avoid overwriting the chat order.
+local chat_frame_loaded = false
+
+-- Track whether an entity is considered to be alive.
+RareTracker.is_alive = {}
+
+-- Track the current health of the entity.
+RareTracker.current_health = {}
+
+-- Track when the entity was last seen dead.
+RareTracker.last_recorded_death = {}
+
+-- Track the reported current coordinates of the rares.
+RareTracker.current_coordinates = {}
+
+-- Record all spawn uids that are detected, such that we don't report the same spawn multiple times.
+RareTracker.reported_spawn_uids = {}
+
+-- Record all entities that died, such that we don't overwrite existing death.
+RareTracker.recorded_entity_death_ids = {}
+
+-- Record all vignettes that are detected, such that we don't report the same spawn multiple times.
+local reported_vignettes = {}
+
+-- For some reason... the Sha of Anger is a... vehicle?
+local valid_unit_types = {
+    ["Creature"] = true,
+    ["Vehicle"] = true
+}
+
+-- The version of the db storage scheme.
+local storage_version = 1
+
+-- ####################################################################
+-- ##                           Event Handlers                       ##
+-- ####################################################################
+
+-- Called whenever the user changes to a new zone or area.
+function RareTracker:OnZoneTransition()
+    -- The zone the player is in.
+    local zone_id = C_Map.GetBestMapForUnit("player")
+    
+    -- Update the zone id and keep the last id.
+    local last_zone_id = self.zone_id
+    self.zone_id = self.zone_id_to_primary_id[zone_id]
+    
+    -- Check if the zone id changed. If so, update the list of rares to display when appropriate.
+    if self.zone_id_to_primary_id[zone_id] ~= self.zone_id_to_primary_id[last_zone_id] then
+        self:ChangeZone()
+    end
+    
+    -- Show/hide the interface when appropriate.
+    if self.zone_id_to_primary_id[zone_id] and not self.zone_id_to_primary_id[last_zone_id] then
+        self:OpenWindow()
+        self:RegisterTrackingEvents()
+    elseif not self.zone_id_to_primary_id[zone_id] and self.zone_id_to_primary_id[last_zone_id] then
+        self:CloseWindow()
+        self:UnregisterTrackingEvents()
+    end
 end
 
--- ####################################################################
--- ##                        Event Functions                         ##
--- ####################################################################
+-- Fetch the new list of rares and ensure that these rares are properly displayed.
+function RareTracker:ChangeZone()
+    -- Reset the shard id
+    self:ChangeShard(nil)
+    
+    -- Ensure that the correct data is shown in the window.
+    self:UpdateDisplayList()
+    self:UpdateAllDailyKillMarks()
+    
+    self:Debug("Changing zone to", C_Map.GetBestMapForUnit("player"))
+end
 
-function RT.AddDefaultEventHandlerFunctions(module)
-    -- Start by defining the default variables.
-    module.is_alive = {}
-    module.current_health = {}
-    module.last_recorded_death = {}
-    module.current_coordinates = {}
-    module.current_shard_id = nil
-    module.recorded_entity_death_ids = {}
-    module.reported_vignettes = {}
-    module.reported_spawn_uids = {}
+-- Transfer to a new shard, reset current data and join the appropriate channel.
+function RareTracker:ChangeShard(zone_uid)
+    -- Leave the channel associated with the previous shard id and save the data.
+    self:LeavePreviousShardChannel()
+    self:SaveRecordedData()
     
-    -- Continue by adding the default functions.
-    if not module.OnEvent then
-        -- Listen to a given set of events and handle them accordingly.
-        module.OnEvent = function(self, event, ...)
-            if event == "PLAYER_TARGET_CHANGED" then
-                self:OnTargetChanged()
-            elseif event == "UNIT_HEALTH" and RT.chat_frame_loaded then
-                self:OnUnitHealth(...)
-            elseif event == "COMBAT_LOG_EVENT_UNFILTERED" and RT.chat_frame_loaded then
-                self:OnCombatLogEvent()
-            elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED" then
-                self:OnZoneTransition()
-            elseif event == "CHAT_MSG_ADDON" then
-                self:OnChatMsgAddon(...)
-            elseif event == "VIGNETTE_MINIMAP_UPDATED" and RT.chat_frame_loaded then
-                self:OnVignetteMinimapUpdated(...)
-            elseif event == "CHAT_MSG_MONSTER_YELL" and RT.chat_frame_loaded then
-                self:OnChatMsgMonsterYell(...)
-            elseif event == "ADDON_LOADED" then
-                self:OnAddonLoaded()
-            elseif event == "PLAYER_LOGOUT" then
-                self:OnPlayerLogout()
-            end
-        end
+    -- As a precaution, leave all other channels not in the current zone.
+    self:LeaveShardChannelsInOtherZones()
+    
+    -- Reset all tracked data.
+    self:ResetTrackedData()
+    
+    -- Set the new shard id.
+    self.shard_id = zone_uid
+    
+    -- Update the shard number in the display.
+    self:UpdateShardNumber()
+    
+    if self.shard_id then
+        -- Change the shard id to the new shard and add the channel.
+        self:LoadRecordedData()
+        self:AnnounceArrival()
     end
+end
+
+-- Check whether the user has changed shards and proceed accordingly.
+-- Return true if the shard changed, false otherwise.
+function RareTracker:CheckForShardChange(zone_uid)
+    if self.shard_id ~= zone_uid and zone_uid ~= nil then
+        print(L["<RT> Moving to shard "]..zone_uid..".")
+        self:ChangeShard(zone_uid)
+        return true
+    end
+    return false
+end
+
+-- Check whether the given npc id needs to be redirected under the current circumstances.
+function RareTracker:CheckForRedirectedRareIds(npc_id)
+    local NPCIdRedirection = self.primary_id_to_data[self.zone_id].NPCIdRedirection
+    if NPCIdRedirection then
+        return NPCIdRedirection(npc_id)
+    end
+    return npc_id
+end
+
+-- This event is fired whenever the player's target is changed, including when the target is lost.
+function RareTracker:PLAYER_TARGET_CHANGED()
+    self:OnHealthDetection("target", "[PLAYER_TARGET_CHANGED]")
+end
+
+-- Fired when the mouseover object needs to be updated. 
+function RareTracker:UPDATE_MOUSEOVER_UNIT()
+    self:OnHealthDetection("mouseover", "[UPDATE_MOUSEOVER_UNIT]")
+end
+
+-- Fired whenever a unit's health is affected.
+function RareTracker:UNIT_HEALTH(_, unit)
+    if unit == "target" or unit:find("nameplate") then
+        self:OnHealthDetection(unit, "[UNIT_HEALTH]")
+    end
+end
+
+function RareTracker:OnHealthDetection(unit, debug_tag)
+    -- Get information about the target.
+    local guid = UnitGUID(unit)
     
-    if not module.OnZoneTransition then
-        -- Add a last zone id to the module.
-        module.last_zone_id = nil
+    if chat_frame_loaded and guid and not UnitPlayerControlled(unit) then
+        -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
+        local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", guid)
+        npc_id = tonumber(npc_id)
         
-        -- Called whenever an event occurs that could indicate a zone change.
-        module.OnZoneTransition = function(self)
-            -- The zone the player is in.
-            local zone_id = C_Map.GetBestMapForUnit("player")
-                
-            if self.target_zones[zone_id] and not self.target_zones[self.last_zone_id] then
-                self:StartInterface()
-            elseif not self.target_zones[zone_id] then
-                self:RegisterDeparture(self.current_shard_id)
-                self:CloseInterface()
+        -- It might occur that the NPC id is nil. Do not proceed in such a case.
+        if not npc_id then return end
+        
+        -- Certain entities retain their zone_uid even after moving shards. Ignore them.
+        if not self.db.global.banned_NPC_ids[npc_id] then
+            if self:CheckForShardChange(zone_uid) then
+                self:Debug(debug_tag, unit, guid)
             end
-            
-            self.last_zone_id = zone_id
+        end
+        
+        --A special check for duplicate NPC ids in different environments (Mecharantula).
+        npc_id = self:CheckForRedirectedRareIds(npc_id)
+        
+        if valid_unit_types[unittype] and self.primary_id_to_data[self.zone_id].entities[npc_id] then
+            -- Find the health of the entity.
+            local health = UnitHealth(unit)
+        
+            if health > 0 then
+                -- Get the health of the entity
+                local percentage = self.GetTargetHealthPercentage(unit)
+                
+                -- Mark the entity as alive and report to your peers.
+                self:ProcessEntityHealth(npc_id, spawn_uid, percentage, nil, nil, true)
+            else
+                -- Mark the entity has dead and report to your peers.
+                self:ProcessEntityDeath(npc_id, spawn_uid, true)
+            end
         end
     end
-    
-    if not module.ChangeShard then
-        -- Change from the original shard to the other.
-        module.ChangeShard = function(self, old_zone_uid, new_zone_uid)
-            -- Notify the users in your old shard that you have moved on to another shard.
-            self:RegisterDeparture(old_zone_uid)
-            
-            -- Reset all the data we have, since it has all become useless.
-            self.is_alive = {}
-            self.current_health = {}
-            self.last_recorded_death = {}
-            self.recorded_entity_death_ids = {}
-            self.current_coordinates = {}
-            self.reported_spawn_uids = {}
-            self.reported_vignettes = {}
-            
-            -- Announce your arrival in the new shard.
-            self:RegisterArrival(new_zone_uid)
-        end
-    end
-    
-    if not module.CheckForShardChange then
-        -- Check whether the user has changed shards and proceed accordingly.
-        module.CheckForShardChange = function(self, zone_uid)
-            local has_changed = false
+end
 
-            if self.current_shard_id ~= zone_uid and zone_uid ~= nil then
-                print(string.format(L["<%s> Moving to shard "], self.addon_code)..(zone_uid + 42)..".")
-                self:UpdateShardNumber(zone_uid)
-                has_changed = true
-                
-                if self.current_shard_id == nil then
-                    -- Register your arrival on the current shard.
-                    self:RegisterArrival(zone_uid)
-                else
-                    -- Move from one shard to another.
-                    self:ChangeShard(self.current_shard_id, zone_uid)
-                end
-                self.current_shard_id = zone_uid
+-- Fires for combat events such as a player casting a spell or an NPC taking damage.
+function RareTracker:COMBAT_LOG_EVENT_UNFILTERED()
+    if chat_frame_loaded then
+        -- The event does not have a payload (8.0 change). Use CombatLogGetCurrentEventInfo() instead.
+        -- timestamp, subevent, zero, sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
+        -- destGUID, destName, destFlags, destRaidFlags
+        local _, subevent, _, sourceGUID, _, _, _, destGUID, _, destFlags, _ = CombatLogGetCurrentEventInfo()
+        
+        -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
+        local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
+        npc_id = tonumber(npc_id)
+        
+        -- It might occur that the NPC id is nil. Do not proceed in such a case.
+        if not npc_id or not destFlags then return end
+        
+        -- Blacklist the entity.
+        if not self.db.global.banned_NPC_ids[npc_id] and bit.band(destFlags, companion_type_mask) > 0 and not self.tracked_npc_ids[npc_id] then
+            self.db.global.banned_NPC_ids[npc_id] = true
+        end
+        
+        -- We can always check for a shard change.
+        -- We only take fights between creatures, since they seem to be the only reliable option.
+        -- We exclude all pets and guardians, since they might have retained their old shard change.
+        if valid_unit_types[unittype] and not self.db.global.banned_NPC_ids[npc_id] and bit.band(destFlags, companion_type_mask) == 0 then
+            if self:CheckForShardChange(zone_uid) then
+                self:Debug("[COMBAT_LOG_EVENT_UNFILTERED]", sourceGUID, destGUID)
             end
-            
-            return has_changed
         end
-    end
-    
-    if not module.CheckForRedirectedRareIds then
-        -- Check whether the given npc id needs to be redirected under the current circumstances.
-        module.CheckForRedirectedRareIds = function(npc_id)
-            -- Unused by most plugins.
-            return npc_id
-        end
-    end
-    
-    if not module.OnTargetChanged then
-        -- Called when a target changed event is fired.
-        module.OnTargetChanged = function(self)
-            if UnitGUID("target") ~= nil then
-                -- Get information about the target.
-                local guid = UnitGUID("target")
-                
-                -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
-                local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", guid)
-                npc_id = tonumber(npc_id)
             
-                -- It might occur that the NPC id is nil. Do not proceed in such a case.
-                if not npc_id then return end
-                
-                if not self.banned_NPC_ids[npc_id] and not self.db.global.banned_NPC_ids[npc_id] then
-                    if self:CheckForShardChange(zone_uid) then
-                        RT:Debug("[Target]", guid)
-                    end
-                end
-                
-                --A special check for duplicate NPC ids in different environments (Mecharantula).
-                npc_id = self.CheckForRedirectedRareIds(npc_id)
-                
-                if unittype == "Creature" and self.rare_ids_set[npc_id] then
-                    -- Find the health of the entity.
-                    local health = UnitHealth("target")
-                
-                    if health > 0 then
-                        -- Get the current position of the player and the health of the entity.
-                        local pos = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
-                        local x, y = math.floor(pos.x * 10000 + 0.5) / 100, math.floor(pos.y * 10000 + 0.5) / 100
-                        local percentage = RT.GetTargetHealthPercentage()
-                        
-                        -- Mark the entity as alive and report to your peers.
-                        self:RegisterEntityTarget(self.current_shard_id, npc_id, spawn_uid, percentage, x, y)
-                    else
-                        -- Mark the entity has dead and report to your peers.
-                        self:RegisterEntityDeath(self.current_shard_id, npc_id, spawn_uid)
-                    end
+        if valid_unit_types[unittype] and self.primary_id_to_data[self.zone_id].entities[npc_id] and bit.band(destFlags, companion_type_mask) == 0 then
+            if subevent == "UNIT_DIED" then
+                -- Mark the entity has dead and report to your peers.
+                self:ProcessEntityDeath(npc_id, spawn_uid, true)
+            elseif subevent ~= "PARTY_KILL" then
+                -- Report the entity as alive to your peers, if it is not marked as alive already.
+                if not self.is_alive[npc_id] then
+                    -- The combat log range is quite long, so no coordinates can be provided.
+                    self:ProcessEntityAlive(npc_id, spawn_uid, true)
                 end
             end
         end
     end
-    
-    if not module.OnUnitHealth then
-        -- Called when a unit health update event is fired.
-        module.OnUnitHealth = function(self, unit)
-            -- If the unit is not the target, skip.
-            if unit ~= "target" then
-                return
-            end
-            
-            if UnitGUID("target") ~= nil then
-                -- Get information about the target.
-                local guid = UnitGUID("target")
-                
-                -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
-                local _, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", guid)
-                npc_id = tonumber(npc_id)
-            
-                -- It might occur that the NPC id is nil. Do not proceed in such a case.
-                if not npc_id then return end
-                
-                if not self.banned_NPC_ids[npc_id] and not self.db.global.banned_NPC_ids[npc_id] then
-                    if self:CheckForShardChange(zone_uid) then
-                        RT:Debug("[OnUnitHealth]", guid)
-                    end
-                end
-                
-                --A special check for duplicate NPC ids in different environments (Mecharantula).
-                npc_id = self.CheckForRedirectedRareIds(npc_id)
-                
-                if self.rare_ids_set[npc_id] then
-                    -- Update the current health of the entity.
-                    local percentage = RT.GetTargetHealthPercentage()
-                    
-                    -- Does the entity have any health left?
-                    if percentage > 0 then
-                        -- Report the health of the entity to your peers.
-                        self:RegisterEntityHealth(self.current_shard_id, npc_id, spawn_uid, percentage)
-                    else
-                        -- Mark the entity has dead and report to your peers.
-                        self:RegisterEntityDeath(self.current_shard_id, npc_id, spawn_uid)
-                    end
-                end
-            end
-        end
-    end
-    
-    if not module.OnCombatLogEvent then
-        -- The flag used to detect guardians or pets.
-        local flag_mask = bit.bor(
-            COMBATLOG_OBJECT_TYPE_GUARDIAN, COMBATLOG_OBJECT_TYPE_PET, COMBATLOG_OBJECT_TYPE_OBJECT
-        )
+end
 
-        -- Called when a unit health update event is fired.
-        module.OnCombatLogEvent = function(self)
-            -- The event does not have a payload (8.0 change). Use CombatLogGetCurrentEventInfo() instead.
-            -- timestamp, subevent, zero, sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
-            -- destGUID, destName, destFlags, destRaidFlags
-            local _, subevent, _, sourceGUID, _, _, _, destGUID, _, destFlags, _ = CombatLogGetCurrentEventInfo()
-            
+-- Fired whenever a vignette appears or disappears in the minimap.
+function RareTracker:VIGNETTE_MINIMAP_UPDATED(_, vignetteGUID, _)
+    if chat_frame_loaded then
+        local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID)
+        local vignetteLocation = C_VignetteInfo.GetVignettePosition(vignetteGUID, C_Map.GetBestMapForUnit("player"))
+
+        if vignetteInfo and vignetteLocation then
+            -- Report the entity.
             -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
-            local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
+            local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", vignetteInfo.objectGUID)
             npc_id = tonumber(npc_id)
-            
+        
             -- It might occur that the NPC id is nil. Do not proceed in such a case.
             if not npc_id then return end
             
-            -- Blacklist the entity.
-            if not self.db.global.banned_NPC_ids[npc_id]
-                    and bit.band(destFlags, flag_mask) > 0 and not self.rare_ids_set[npc_id] then
-                self.db.global.banned_NPC_ids[npc_id] = true
-            end
-            
-            -- We can always check for a shard change.
-            -- We only take fights between creatures, since they seem to be the only reliable option.
-            -- We exclude all pets and guardians, since they might have retained their old shard change.
-            if unittype == "Creature" and not self.banned_NPC_ids[npc_id]
-                and not self.db.global.banned_NPC_ids[npc_id] and bit.band(destFlags, flag_mask) == 0 then
-                
-                if self:CheckForShardChange(zone_uid) then
-                    RT:Debug("[OnCombatLogEvent]", sourceGUID, destGUID)
-                end
-            end
-            
             --A special check for duplicate NPC ids in different environments (Mecharantula).
-            npc_id = self.CheckForRedirectedRareIds(npc_id)
-                
-            if unittype == "Creature" and self.rare_ids_set[npc_id] then
-                if subevent == "UNIT_DIED" then
-                    -- Mark the entity has dead and report to your peers.
-                    self:RegisterEntityDeath(self.current_shard_id, npc_id, spawn_uid)
-                elseif subevent ~= "PARTY_KILL" then
-                    -- Report the entity as alive to your peers, if it is not marked as alive already.
-                    if self.is_alive[npc_id] == nil then
-                        -- The combat log range is quite long, so no coordinates can be provided.
-                        self:RegisterEntityAlive(self.current_shard_id, npc_id, spawn_uid, nil, nil)
+            npc_id = self:CheckForRedirectedRareIds(npc_id)
+            
+            if valid_unit_types[unittype] then
+                if not self.db.global.banned_NPC_ids[npc_id] then
+                    if self:CheckForShardChange(zone_uid) then
+                        self:Debug("[VIGNETTE_MINIMAP_UPDATED]", vignetteInfo.objectGUID)
                     end
                 end
-            end
-        end
-    end
-    
-    if not module.OnVignetteMinimapUpdated then
-        -- Called when a vignette on the minimap is updated.
-        module.OnVignetteMinimapUpdated = function(self, vignetteGUID, _)
-            local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID)
-            local vignetteLocation = C_VignetteInfo.GetVignettePosition(vignetteGUID, C_Map.GetBestMapForUnit("player"))
-
-            if vignetteInfo and vignetteLocation then
-                -- Report the entity.
-                -- unittype, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid
-                local unittype, _, _, _, zone_uid, npc_id, spawn_uid = strsplit("-", vignetteInfo.objectGUID)
-                npc_id = tonumber(npc_id)
-            
-                -- It might occur that the NPC id is nil. Do not proceed in such a case.
-                if not npc_id then return end
                 
-                if unittype == "Creature" then
-                    if not self.banned_NPC_ids[npc_id] and not self.db.global.banned_NPC_ids[npc_id] then
-                        if self:CheckForShardChange(zone_uid) then
-                            RT:Debug("[OnVignette]", vignetteInfo.objectGUID)
-                        end
-                    end
-                    
                 --A special check for duplicate NPC ids in different environments (Mecharantula).
-                npc_id = self.CheckForRedirectedRareIds(npc_id)
+                npc_id = self:CheckForRedirectedRareIds(npc_id)
                     
-                    if self.rare_ids_set[npc_id] and not self.reported_vignettes[vignetteGUID] then
-                        self.reported_vignettes[vignetteGUID] = {npc_id, spawn_uid}
-                        
-                        local x, y = 100 * vignetteLocation.x, 100 * vignetteLocation.y
-                        self:RegisterEntityAlive(self.current_shard_id, npc_id, spawn_uid, x, y)
-                    end
+                if self.primary_id_to_data[self.zone_id].entities[npc_id] and not reported_vignettes[vignetteGUID] then
+                    reported_vignettes[vignetteGUID] = {npc_id, spawn_uid}
+                    local x, y = 100 * vignetteLocation.x, 100 * vignetteLocation.y
+                    self:ProcessEntityVignette(npc_id, spawn_uid, x, y, true)
                 end
             end
         end
     end
-    
-    if not module.OnChatMsgMonsterYell then
-        -- Called when a monster or entity does a yell emote.
-        module.OnChatMsgMonsterYell = function(self, ...)
-            -- Check whether the module provides yell announcing rares.
-            if self.yell_announcing_rares then
-                local entity_name = select(2, ...)
-                local npc_id = self.yell_announcing_rares[entity_name]
-                
-                if npc_id ~= nil then
-                    -- Mark the entity as alive.
-                    self.is_alive[npc_id] = GetServerTime()
-                    self.current_coordinates[npc_id] = self.rare_coordinates[npc_id]
-                    self:PlaySoundNotification(npc_id, npc_id)
-                end
-            end
-        end
-    end
-    
-    if not module.OnChatMsgAddon then
-        -- Called on every addon message received by the addon.
-        module.OnChatMsgAddon = function(self, ...)
-            local addon_prefix, message, _, sender = ...
-
-            if addon_prefix == self.addon_code then
-                local header, payload = strsplit(":", message)
-                local prefix, shard_id, addon_version_str = strsplit("-", header)
-                local addon_version = tonumber(addon_version_str)
-
-                self:OnChatMessageReceived(sender, prefix, shard_id, addon_version, payload)
-            end
-        end
-    end
-    
-    if not module.OnUpdate then
-        -- A counter that tracks the time stamp on which the displayed data was updated last.
-        module.last_display_update = 0
-
-        -- The last time the icon changed.
-        module.last_icon_change = 0
-
-        -- Called on every addon message received by the addon.
-        module.OnUpdate = function(self)
-            if (self.last_display_update + 1 < GetTime()) then
-                for i=1, #self.rare_ids do
-                    local npc_id = self.rare_ids[i]
-                    
-                    -- It might occur that the rare is marked as alive, but no health is known.
-                    -- If two minutes pass without a health value, the alive tag will be reset.
-                    if self.is_alive[npc_id] and GetServerTime() - self.is_alive[npc_id] > 120 then
-                        self.is_alive[npc_id] = nil
-                        self.current_health[npc_id] = nil
-                        self.reported_spawn_uids[npc_id] = nil
-                    end
-                    
-                    self:UpdateStatus(npc_id)
-                end
-                
-                self.last_display_update = GetTime()
-            end
-            
-            if self.last_icon_change + 2 < GetTime() then
-                self.last_icon_change = GetTime()
-                
-                self.broadcast_icon.icon_state = not self.broadcast_icon.icon_state
-                
-                if self.broadcast_icon.icon_state then
-                    self.broadcast_icon.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Broadcast.tga")
-                else
-                    self.broadcast_icon.texture:SetTexture("Interface\\AddOns\\RareTrackerCore\\Icons\\Waypoint.tga")
-                end
-            end
-        end
-    end
-    
-    if not module.OnAddonLoaded then
-        -- Give the module a flag that checks whether the addon is loaded.
-        module.is_loaded = false
-        
-        -- Called when the addon loaded event is fired.
-        module.OnAddonLoaded = function(self)
-            -- OnAddonLoaded might be called multiple times. We only want it to do so once.
-            if not self.is_loaded then
-                -- Initialize the database.
-                self:InitializeRareTrackerDatabase()
-                
-                -- As a precaution, we remove all actively tracked rares from the blacklist.
-                for i=1, #self.rare_ids do
-                    local npc_id = self.rare_ids[i]
-                    self.db.global.banned_NPC_ids[npc_id] = nil
-                end
-                
-                -- Check if the rare ordering has to be reset/initialized.
-                if not self.db.global.rare_ordering or not self.db.global.version
-                        or self.db.global.version ~= self.version then
-                    RT:Debug(string.format(L["<%s> Resetting ordering"], self.addon_code))
-                    self.db.global.rare_ordering = LinkedSet:New()
-                    for i=1, #self.rare_ids do
-                        local npc_id = self.rare_ids[i]
-                        self.db.global.rare_ordering:AddBack(npc_id)
-                    end
-                    self.db.global.version = self.version
-                else
-                    self.db.global.rare_ordering = LinkedSet:New(self.db.global.rare_ordering)
-                end
-                
-                -- Remove any data in the previous records that have expired.
-                for key, _ in pairs(self.db.global.previous_records) do
-                    if GetServerTime() - self.db.global.previous_records[key].time_stamp > 900 then
-                        print(string.format(L["<%s> Removing cached data for shard "], self.addon_code)..(key + 42)..".")
-                        self.db.global.previous_records[key] = nil
-                    end
-                end
-                
-                -- Initialize the frame.
-                self:InitializeInterface()
-                self:CorrectFavoriteMarks()
-                
-                -- Notify the core library that the plugin has loaded successfully.
-                RT:NotifyZoneModuleLoaded(self)
-                
-                self.is_loaded = true
-            end
-        end
-    end
-    
-    if not module.OnDatabaseShutdown then
-        -- Called when the player logs out, such that we can save the current time table for later use.
-        module.OnDatabaseShutdown = function(self)
-            if self.current_shard_id then
-                -- Save the records, such that we can use them after a reload.
-                self.db.global.previous_records[self.current_shard_id] = {}
-                self.db.global.previous_records[self.current_shard_id].time_stamp = GetServerTime()
-                self.db.global.previous_records[self.current_shard_id].time_table = self.last_recorded_death
-            end
-        end
-    end
-    
-    if not module.RegisterEvents then
-        -- Register to the events required for the addon to function properly.
-        module.RegisterEvents = function(self)
-            self:RegisterEvent("PLAYER_TARGET_CHANGED")
-            self:RegisterEvent("UNIT_HEALTH")
-            self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-            self:RegisterEvent("CHAT_MSG_ADDON")
-            self:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
-            self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
-        end
-    end
-    
-    if not module.UnregisterEvents then
-        -- Unregister from the events, to disable the tracking functionality.
-        module.UnregisterEvents = function(self)
-            self:UnregisterEvent("PLAYER_TARGET_CHANGED")
-            self:UnregisterEvent("UNIT_HEALTH")
-            self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-            self:UnregisterEvent("CHAT_MSG_ADDON")
-            self:UnregisterEvent("VIGNETTE_MINIMAP_UPDATED")
-            self:UnregisterEvent("CHAT_MSG_MONSTER_YELL")
-        end
-    end
-    
-    -- Add the remaining default objects.
-    RT.AddDefaultUpdateAndEventSubscriptions(module)
-    RT.AddDefaultDailyResetHandler(module)
 end
 
--- Certain frames and event subscriptions always have to be made.
-function RT.AddDefaultUpdateAndEventSubscriptions(module)
-    -- Create a frame that handles the frame updates of the addon.
-    module.updateHandler = CreateFrame("Frame", string.format("%s.updateHandler", module.addon_code), module)
-    module.updateHandler:SetScript("OnUpdate",
-        function()
-            module:OnUpdate()
-        end
-    )
+-- Fires when an NPC speaks.
+function RareTracker:OnMonsterChatMessage(_, ...)
+    if chat_frame_loaded then
+        local data = self.primary_id_to_data[self.zone_id]
 
-    -- Register the event handling of the frame.
-    module:SetScript("OnEvent",
-        function(self, event, ...)
-            self:OnEvent(event, ...)
+        -- Attempt to match by name or text, using the function provided by the plugin.
+        local text, name = select(1, ...), select(2, ...)
+        local npc_id = data.FindMatchForName and data.FindMatchForName(self, name) or data.FindMatchForText and data.FindMatchForText(self, text)
+        if npc_id then
+            -- We found a match.
+            self.is_alive[npc_id] = GetServerTime()
+            self:PlaySoundNotification(npc_id, npc_id)
+            
+            if not self.current_coordinates[npc_id] then
+                self.current_coordinates[npc_id] = self.primary_id_to_data[self.zone_id].entities[npc_id].coordinates
+            end
         end
-    )
+    end
+end
 
-    module:RegisterEvent("ADDON_LOADED")
-    module:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-    module:RegisterEvent("PLAYER_ENTERING_WORLD")
-    module:RegisterEvent("ZONE_CHANGED")
+-- ####################################################################
+-- ##                   Event Handler Helper Functions               ##
+-- ####################################################################
+
+-- Register the events that are needed for the proper tracking of rares.
+function RareTracker:RegisterTrackingEvents()
+    self:RegisterEvent("PLAYER_TARGET_CHANGED")
+    self:RegisterEvent("UNIT_HEALTH")
+    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    self:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
+    self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+    self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "OnMonsterChatMessage")
+    self:RegisterEvent("CHAT_MSG_MONSTER_SAY", "OnMonsterChatMessage")
+    self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE", "OnMonsterChatMessage")
+end
+
+-- Unregister all events that aren't necessary when outside of tracking zones.
+function RareTracker:UnregisterTrackingEvents()
+    self:UnregisterEvent("PLAYER_TARGET_CHANGED")
+    self:UnregisterEvent("UNIT_HEALTH")
+    self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    self:UnregisterEvent("VIGNETTE_MINIMAP_UPDATED")
+    self:UnregisterEvent("UPDATE_MOUSEOVER_UNIT")
+    self:UnregisterEvent("CHAT_MSG_MONSTER_YELL")
+    self:UnregisterEvent("CHAT_MSG_MONSTER_SAY")
+    self:UnregisterEvent("CHAT_MSG_MONSTER_EMOTE")
+end
+
+-- Reset all the currently tracked data.
+function RareTracker:ResetTrackedData()
+    self.is_alive = {}
+    self.current_health = {}
+    self.last_recorded_death = {}
+    self.is_npc_data_provided_by_other_player = {}
+    self.current_coordinates = {}
+    self.recorded_entity_death_ids = {}
+    self.reported_spawn_uids = {}
+    reported_vignettes = {}
+end
+
+-- Save all the recorded data in the database.
+function RareTracker:SaveRecordedData()
+    if self.shard_id then
+        -- Store the timer data for the shard in the saved variables.
+        self.db.global.previous_records[self.shard_id] = {}
+        self.db.global.previous_records[self.shard_id].time_stamp = GetServerTime()
+        self.db.global.previous_records[self.shard_id].time_table = self.last_recorded_death
+        self.db.global.previous_records[self.shard_id].version = storage_version
+    end
+end
+
+-- Attempt to load previous data from our cache.
+function RareTracker:LoadRecordedData()
+    if self.db.global.previous_records[self.shard_id] then
+        if GetServerTime() - self.db.global.previous_records[self.shard_id].time_stamp < 900 then
+            self:Debug("Restoring data from previous session in shard "..self.shard_id)
+            self.last_recorded_death = self.db.global.previous_records[self.shard_id].time_table
+            for npc_id, kill_data in pairs(self.last_recorded_death) do
+                local _, spawn_uid = unpack(kill_data)
+                self.recorded_entity_death_ids[spawn_uid..npc_id] = true
+            end
+        else
+            self:Debug("Resetting stored data for "..self.shard_id)
+            self.db.global.previous_records[self.shard_id] = nil
+        end
+    end
+end
+
+-- Play a sound notification if applicable
+function RareTracker:PlaySoundNotification(npc_id, spawn_uid)
+    if self.db.global.favorite_rares[npc_id] and not self.reported_spawn_uids[spawn_uid] and not self.reported_spawn_uids[npc_id] then
+        -- Play a sound file.
+        local completion_quest_id = self.primary_id_to_data[self.zone_id].entities[npc_id].quest_id
+        self.reported_spawn_uids[spawn_uid] = true
+        
+        if not completion_quest_id or not IsQuestFlaggedCompleted(completion_quest_id) then
+            PlaySoundFile(self.db.global.favorite_alert.favorite_sound_alert)
+        end
+    end
+end
+
+-- ####################################################################
+-- ##                Process Rare Event Helper Functions             ##
+-- ####################################################################
+
+-- Process that an entity has died.
+function RareTracker:ProcessEntityDeath(npc_id, spawn_uid, make_announcement)
+    if not self.recorded_entity_death_ids[spawn_uid..npc_id] then
+        -- Mark the entity as dead.
+        self.last_recorded_death[npc_id] = {GetServerTime(), spawn_uid}
+        self.is_alive[npc_id] = nil
+        self.current_health[npc_id] = nil
+        self.current_coordinates[npc_id] = nil
+        self.recorded_entity_death_ids[spawn_uid..npc_id] = true
+        self.reported_spawn_uids[spawn_uid] = nil
+        self.reported_spawn_uids[npc_id] = nil
+        
+        -- Update the status of the rare in the display.
+        self:UpdateStatus(npc_id)
+                
+        -- We need to delay the update daily kill mark check, since the servers don't update it instantly.
+        local primary_id = self.zone_id
+        if primary_id then
+            self:DelayedExecution(3, function() self:UpdateDailyKillMark(npc_id, primary_id) end)
+        end
+        
+        -- Send the death message.
+        if make_announcement then
+            self:AnnounceEntityDeath(npc_id, spawn_uid)
+        end
+    end
+end
+
+-- Process that an entity has been seen alive.
+function RareTracker:ProcessEntityAlive(npc_id, spawn_uid, make_announcement)
+    if not self.recorded_entity_death_ids[spawn_uid..npc_id] then
+        -- Mark the entity as alive.
+        self.is_alive[npc_id] = GetServerTime()
+        
+        -- Update the status of the rare in the display.
+        self:UpdateStatus(npc_id)
+        
+        -- Make a sound announcement if appropriate.
+        self:PlaySoundNotification(npc_id, spawn_uid)
+        
+        -- Send the alive message.
+        if make_announcement then
+            self:AnnounceEntityAlive(npc_id, spawn_uid)
+        end
+    end
+end
+
+-- Process that an entity has been seen alive.
+function RareTracker:ProcessEntityVignette(npc_id, spawn_uid, x, y, make_announcement)
+    if not self.recorded_entity_death_ids[spawn_uid..npc_id] then
+        -- Mark the entity as alive.
+        self.is_alive[npc_id] = GetServerTime()
+        self.current_coordinates[npc_id] = {x, y}
+        
+        -- Update the status of the rare in the display.
+        self:UpdateStatus(npc_id)
+        
+        -- Make a sound announcement if appropriate.
+        self:PlaySoundNotification(npc_id, spawn_uid)
+        
+        -- Send the vignette message.
+        if make_announcement then
+            self:AnnounceEntityVignette(npc_id, spawn_uid, x, y)
+        end
+    end
+end
+
+-- Process an enemy health update.
+function RareTracker:ProcessEntityHealth(npc_id, spawn_uid, percentage, x, y, make_announcement)
+    if not self.recorded_entity_death_ids[spawn_uid..npc_id] then
+        -- Update the health of the entity.
+        self.last_recorded_death[npc_id] = nil
+        self.is_alive[npc_id] = GetServerTime()
+        self.current_health[npc_id] = percentage
+        
+        -- Update the status of the rare in the display.
+        self:UpdateStatus(npc_id)
+        
+        -- Make a sound announcement if appropriate.
+        self:PlaySoundNotification(npc_id, spawn_uid)
+        
+        -- Set some coordinates if none are yet known.
+        if not self.current_coordinates[npc_id] then
+            if self.primary_id_to_data[self.zone_id].entities[npc_id].coordinates then
+                self.current_coordinates[npc_id] = self.primary_id_to_data[self.zone_id].entities[npc_id].coordinates
+            elseif x ~= nil and y ~= nil then
+                -- This code should only be reached when make_announcement is false.
+                self.current_coordinates[npc_id] = {x, y}
+            else
+                -- Get the current position of the player.
+                local pos = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
+                self.current_coordinates[npc_id] = {math.floor(pos.x * 10000 + 0.5) / 100, math.floor(pos.y * 10000 + 0.5) / 100}
+            end
+        end
+        
+        -- Send the alive message.
+        if make_announcement then
+            x, y = unpack(self.current_coordinates[npc_id])
+            self:AnnounceEntityHealthWithCoordinates(npc_id, spawn_uid, percentage, x, y)
+        end
+    end
 end
 
 -- ####################################################################
 -- ##                      Daily Reset Handling                      ##
 -- ####################################################################
 
-function RT.AddDefaultDailyResetHandler(module)
-    module.daily_reset_handling_frame = CreateFrame(
-        "Frame", string.format("%s.daily_reset_handling_frame", module.addon_code), UIParent
-    )
+-- Certain updates need to be made every hour because of the lack of daily reset/new world quest events.
+function RareTracker:AddDailyResetHandler()
+    -- There is no event for the daily reset, so do a precautionary check every hour.
+    local f = CreateFrame("Frame", "RT.daily_reset_handling_frame", UIParent)
 
     -- Which timestamp was the last hour?
     local time_table = date("*t", GetServerTime())
@@ -539,50 +524,26 @@ function RT.AddDefaultDailyResetHandler(module)
     time_table.min = 0
 
     -- Check when the next hourly reset is going to be, by adding 3600 to the previous hour timestamp.
-    module.daily_reset_handling_frame.target_time = time(time_table) + 3600 + 60
+    -- Add a 60 second offset, since the kill mark update might be delayed.
+    f.target_time = time(time_table) + 3600 + 60
 
     -- Add an OnUpdate checker.
-    module.daily_reset_handling_frame:SetScript("OnUpdate",
-        function(self)
-            if GetServerTime() > self.target_time then
-                self.target_time = self.target_time + 3600
+    f:SetScript("OnUpdate",
+        function(_f)
+            if GetServerTime() > _f.target_time then
+                _f.target_time = _f.target_time + 3600
                 
-                if module.entities_frame ~= nil then
-                    module:UpdateAllDailyKillMarks()
-                    RT:Debug(string.format(L["<%s> Updating daily kill marks."], module.addon_code))
+                if self.gui.entities_frame ~= nil then
+                    self:UpdateAllDailyKillMarks()
+                    self:Debug("Updating daily kill marks.")
+                    self:UpdateDisplayList()
+                    self:Debug("Updating display list.")
                 end
             end
         end
     )
-    module.daily_reset_handling_frame:Show()
-end
-
--- ####################################################################
--- ##                            Commands                            ##
--- ####################################################################
-
-function RT:ChatCommand(input)
-    input = input:trim()
-    if not input or input == "" then
-        InterfaceOptionsFrame_Show()
-        InterfaceOptionsFrame_OpenToCategory(self.options_frame)
-    else
-        local _, _, cmd, _ = string.find(input, "%s?(%w+)%s?(.*)")
-        local zone_id = C_Map.GetBestMapForUnit("player")
-        if cmd == "show" then
-            if zone_id and self.zone_id_to_module[zone_id] then
-                self.zone_id_to_module[zone_id]:Show()
-                self.db.global.window.hide = false
-            else
-                print("<RT> The rare window cannot be shown, since the current zone is not covered by any of the zone modules.")
-            end
-        elseif cmd == "hide" then
-            if zone_id and self.zone_id_to_module[zone_id] then
-                self.zone_id_to_module[zone_id]:Hide()
-            end
-            self.db.global.window.hide = true
-        end
-    end
+    f:Show()
+    self.gui.daily_reset_handling_frame = f
 end
 
 -- ####################################################################
@@ -592,17 +553,21 @@ end
 -- One of the issues encountered is that the chat might be joined before the default channels.
 -- In such a situation, the order of the channels changes, which is undesirable.
 -- Thus, we block certain events until these chats have been loaded.
-RT.chat_frame_loaded = false
-
 local message_delay_frame = CreateFrame("Frame", "RT.message_delay_frame", UIParent)
 message_delay_frame.start_time = GetServerTime()
+message_delay_frame.num_of_retries = 0
 message_delay_frame:SetScript("OnUpdate",
 	function(self)
 		if GetServerTime() - self.start_time > 0 then
-			if #{GetChannelList()} == 0 then
+			if #{GetChannelList()} == 0 and message_delay_frame.num_of_retries < 3 then
+                if #{EnumerateServerChannels()} > 0 then
+                    pcall(RareTracker.Debug, RareTracker, "Retry", self.num_of_retries)
+                    self.num_of_retries = self.num_of_retries + 1
+                end
 				self.start_time = GetServerTime()
-			else
-				RT.chat_frame_loaded = true
+            else
+                pcall(RareTracker.Debug, RareTracker, "Chat frame is loaded.")
+				chat_frame_loaded = true
 				self:SetScript("OnUpdate", nil)
 				self:Hide()
 			end

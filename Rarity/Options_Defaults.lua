@@ -31,6 +31,7 @@ local MOP = CONSTANTS.ITEM_CATEGORIES.MOP
 local WOD = CONSTANTS.ITEM_CATEGORIES.WOD
 local LEGION = CONSTANTS.ITEM_CATEGORIES.LEGION
 local BFA = CONSTANTS.ITEM_CATEGORIES.BFA
+local SHADOWLANDS = CONSTANTS.ITEM_CATEGORIES.SHADOWLANDS
 local HOLIDAY = CONSTANTS.ITEM_CATEGORIES.HOLIDAY
 
 -- Holiday calendar textures
@@ -124,6 +125,7 @@ R.catIcons = {
  [WOD] = "wod",
  [LEGION] = "legion",
  [BFA] = "bfa",
+ [SHADOWLANDS] = "shadowlands",
 }
 R.catOrder = {
  [HOLIDAY] = 0,
@@ -135,6 +137,7 @@ R.catOrder = {
  [WOD] = 6,
  [LEGION] = 7,
  [BFA] = 8,
+ [SHADOWLANDS] = 9,
 }
 
 -- Tooltip Filters (Note: Currently, this system is merely a stub. but more (and custom) filters may be added in the future)
@@ -179,11 +182,13 @@ function R:PrepareDefaults()
    enableAnnouncements = true,
    feedText = FEED_NORMAL,
    statusTip = TIP_LEFT,
+   tooltipActivation = CONSTANTS.TOOLTIP.ACTIVATION_METHOD_HOVER,
    sortMode = SORT_CATEGORY,
 			hideHighChance = false,
 			enableTooltipAdditions = true,
 			blankLineBeforeTooltipAdditions = true,
 			tooltipAttempts = true,
+			hideKnownItemsInTooltip = false,
 			takeScreenshot = true,
 			hideUnavailable = true,
 			hideDefeated = false,
@@ -234,6 +239,13 @@ function R:PrepareDefaults()
 				[LEGION] = true,
 				[HOLIDAY] = true,
 				[BFA] = true,
+				[SHADOWLANDS] = true,
+			},
+
+			collectionType = {
+				[MOUNT] = true,
+				[PET] = true,
+				[ITEM] = true,
 			},
 
 			-- These are achievements with the names of rare NPCs as criteria to kill
@@ -266,6 +278,15 @@ function R:PrepareDefaults()
 				12942, -- Adventurer of Nazmir
 				12943, -- Adventurer of Vol'dun
 				12944, -- Adventurer of Zuldazar
+				13691, -- I Thought You Said They'd Be Rare? (Nazjatar)
+				13470, -- Rest In Pistons (Mechagon)
+
+				-- Shadowlands
+				14307, -- Adventurer of Bastion
+				14308, -- Adventurer of Maldraxxus
+				14309, -- Adventurer of Ardenweald
+				14310, -- Adventurer of Revendreth
+				14744, -- Better to Be Lucky Than Dead (The Maw)
 
 			},
 
@@ -625,13 +646,16 @@ function R:PrepareDefaults()
 		 ["Ashes of Al'ar"] =                                { cat = TBC, type = MOUNT, method = BOSS, name = L["Ashes of Al'ar"], spellId = 40192, itemId = 32458, npcs = { 99999 }, tooltipNpcs = { 19622 }, chance = 100, statisticId = { 1088 }, blackMarket = true, coords = { {m=334,x=50.6,y=15.2,i=true} }, },
 		 ["Fiery Warhorse's Reins"] =                        { cat = TBC, type = MOUNT, method = NPC, name = L["Fiery Warhorse's Reins"], spellId = 36702, itemId = 30480, npcs = { 16152 }, chance = 100, blackMarket = true, lockBossName = "Attumen the Huntsman", coords = { {m=350, x=46.6,y=82.6,i=true} }, },
 		 ["Reins of the Raven Lord"] =                       { cat = TBC, type = MOUNT, method = NPC, name = L["Reins of the Raven Lord"], spellId = 41252, itemId = 32768, npcs = { 23035 }, chance = 67, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.TIMEWALKING_DUNGEON] = true, }, bonusSatchel = true, blackMarket = true, lockBossName = "Anzu", coords = { {m=258, x=32.6,y=54.5,i=true} }, },
-		 ["Swift White Hawkstrider"] =                       { cat = TBC, type = MOUNT, method = NPC, name = L["Swift White Hawkstrider"], spellId = 46628, itemId = 35513, npcs = { 24664 }, chance = 33, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.TIMEWALKING_DUNGEON] = true, }, sourceText = L["Heroic difficulty"], bonusSatchel = true, blackMarket = true, coords = { {m=348, x=8.6,y=50.2,i=true} }, },
+		 ["Swift White Hawkstrider"] =                       { cat = TBC, type = MOUNT, method = NPC, name = L["Swift White Hawkstrider"], spellId = 46628, itemId = 35513, npcs = { 24664 }, chance = 33, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.TIMEWALKING_DUNGEON] = true, }, sourceText = L["Heroic difficulty"], bonusSatchel = true, blackMarket = true, coords = {
+			{m= CONSTANTS.UIMAPIDS.MAGISTERS_TERRACE_GRAND_MAGISTERS_ASYLUM, x=8.6,y=50.2,i=true},
+			 { m = CONSTANTS.UIMAPIDS.MAGISTERS_TERRACE_OBSERVATION_GROUNDS, i = true }
+		}, },
 						-- 3.x
 		 ["Invincible's Reins"] =                            { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Invincible's Reins"], spellId = 72286, itemId = 50818, npcs = { 99999 }, tooltipNpcs = { 36597 }, chance = 100, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_HEROIC] = true, }, statisticId = { 4688 }, sourceText = L["25-player heroic"], blackMarket = true, wasGuaranteed = true, lockBossName = "The Lich King", coords = { {m=191, x=49.8,y=52.8,i=true} }, },
 		 ["Mimiron's Head"] =                                { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Mimiron's Head"], spellId = 63796, itemId = 45693, npcs = { 33288 }, statisticId = {2869, 2883}, chance = 100, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.NORMAL_RAID] = true, }, sourceText = L["Dropped by Yogg-Saron in Ulduar with no Keepers assisting"], wasGuaranteed = true, blackMarket = true, lockBossName = "Yogg-Saron", coords = { {m=150, x=68,y=40.8,i=true} }, },
 		 ["Reins of the Azure Drake"] =                      { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Reins of the Azure Drake"], spellId = 59567, itemId = 43952, npcs = { 99999 }, tooltipNpcs = { 28859 }, chance = 100, statisticId = { 1391, 1394 }, sourceText = L["Dropped by Malygos in The Eye of Eternity (any raid size)"], blackMarket = true, lockBossName = "Malygos", coords = { {m=141, x=39,y=51.8,i=true} }, },
 		 ["Reins of the Blue Drake"] =                       { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Reins of the Blue Drake"], spellId = 59568, itemId = 43953, npcs = { 99999 }, tooltipNpcs = { 28859 }, chance = 100, statisticId = { 1391, 1394 }, sourceText = L["Dropped by Malygos in The Eye of Eternity (any raid size)"], bonusSatchel = true, blackMarket = true, lockBossName = "Malygos", coords = { {m=141, x=39,y=51.8,i=true} }, },
-		 ["Reins of the Blue Proto-Drake"] =                 { cat = WOTLK, type = MOUNT, method = NPC, name = L["Reins of the Blue Proto-Drake"], spellId = 59996, itemId = 44151, npcs = { 26693 }, chance = 77, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.TIMEWALKING_DUNGEON] = true, }, sourceText = L["Heroic difficulty"], bonusSatchel = true, blackMarket = true, lockBossName = "Skadi the Ruthless", coords = { {m=136, x=68.4,y=36.2,i=true} }, },
+		 ["Reins of the Blue Proto-Drake"] =                 { cat = WOTLK, type = MOUNT, method = NPC, name = L["Reins of the Blue Proto-Drake"], spellId = 59996, itemId = 44151, npcs = { 26693, 174062 }, chance = 77, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.HEROIC_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.TIMEWALKING_DUNGEON] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.NONE] = true}, sourceText = L["Heroic difficulty"], bonusSatchel = true, blackMarket = true, lockBossName = "Skadi the Ruthless", coords = { {m=136, x=68.4,y=36.2,i=true}, { m = CONSTANTS.UIMAPIDS.ICECROWN, x = 57.6, y = 56 } }, },
 		 ["Reins of the Grand Black War Mammoth Alliance"] = { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Reins of the Grand Black War Mammoth"], spellId = 61465, itemId = 43959, npcs = { 99999 }, tooltipNpcs = { 35013, 33993, 31125, 38433 }, chance = 100, requiresAlliance = true, statisticId = { 1753, 1754, 2870, 3236, 4074, 4075, 4657, 4658 }, sourceText = L["Dropped by Koralon the Flame Watcher, Emalon the Storm Watcher, Archavon the Stone Watcher, and Toravon the Ice Watcher in Vault of Archavon (any raid size)."], lockBossName = "Archavon the Stone Watcher", coords = { {m=156, x=36,y=55.4,i=true},{m=156, x=62.6,y=55.4,i=true},{m=156, x=49.2,y=17,i=true},{m=156, x=62.6,y=36.8,i=true}, }, },
 		 ["Reins of the Grand Black War Mammoth Horde"] =    { cat = WOTLK, type = MOUNT, method = BOSS, name = L["Reins of the Grand Black War Mammoth"], spellId = 61467, itemId = 44083, npcs = { 99999 }, tooltipNpcs = { 35013, 33993, 31125, 38433 }, chance = 100, requiresHorde = true, statisticId = { 1753, 1754, 2870, 3236, 4074, 4075, 4657, 4658 }, sourceText = L["Dropped by Koralon the Flame Watcher, Emalon the Storm Watcher, Archavon the Stone Watcher, and Toravon the Ice Watcher in Vault of Archavon (any raid size)."], lockBossName = "Archavon the Stone Watcher", coords = { {m=156, x=36,y=55.4,i=true},{m=156, x=62.6,y=55.4,i=true},{m=156, x=49.2,y=17,i=true},{m=156, x=62.6,y=36.8,i=true}, }, },
 		 ["Reins of the Green Proto-Drake"] =                { cat = WOTLK, type = MOUNT, method = USE, name = L["Reins of the Green Proto-Drake"], spellId = 61294, itemId = 44707, items = { 39883 }, chance = 20, sourceText = L["Contained in Cracked Egg, which is obtained by becoming Revered with The Oracles, purchasing a Mysterious Egg from their reputation vendor, and waiting three days. The mount has a 5% chance to appear in the Cracked Egg."], bonusSatchel = true, blackMarket = true, coords = { {m=119,x=54.6,y=56.2} }, },
@@ -654,7 +678,7 @@ function R:PrepareDefaults()
 		 ["Swift Zulian Panther"] =                          { cat = CATA, type = MOUNT, method = BOSS, name = L["Swift Zulian Panther"], spellId = 96499, itemId = 68824, npcs = { 52059 }, chance = 100, sourceText = L["Heroic difficulty"], lockBossName = "High Priestess Kilnara", coords = { {m=337,x=48,y=20,i=true} }, },
 						-- 5.x
 		 ["Clutch of Ji-Kun"] =                              { cat = MOP, type = MOUNT, method = BOSS, name = L["Clutch of Ji-Kun"], spellId = 139448, itemId = 95059, npcs = { 99999 }, tooltipNpcs = { 69712 }, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_HEROIC] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_HEROIC] = true, }, chance = 50, statisticId = { 8171, 8169, 8172, 8170 }, sourceText = L["All raid formats except Raid Finder"], lockBossName = "Ji-Kun", coords = { {m=510, x=49.7,y=41.6,i=true} }, },
-		 ["Kor'kron Juggernaut"] =                           { cat = MOP, type = MOUNT, method = BOSS, name = L["Kor'kron Juggernaut"], spellId = 148417, itemId = 104253, npcs = { 99999 }, tooltipNpcs = { 71865 }, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true, }, chance = 100, statisticId = { 8638, 8637, }, sourceText = L["Mythic difficulty"], wasGuaranteed = true, lockBossName = "Garrosh Hellscream", coords = { {m=5671,x=49.4,y=71.3,i=true} }, },
+		 ["Kor'kron Juggernaut"] =                           { cat = MOP, type = MOUNT, method = BOSS, name = L["Kor'kron Juggernaut"], spellId = 148417, itemId = 104253, npcs = { 99999 }, tooltipNpcs = { 71865 }, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true, }, chance = 100, statisticId = { 8638, 8637, }, sourceText = L["Mythic difficulty"], wasGuaranteed = true, lockBossName = "Garrosh Hellscream", coords = { {m=567,x=49.4,y=71.3,i=true} }, },
 		 ["Reins of the Amber Primordial Direhorn"] =        { cat = MOP, type = MOUNT, method = NPC, name = L["Reins of the Amber Primordial Direhorn"], spellId = 138424, itemId = 94230, npcs = { 69841 }, chance = 20, sourceText = L["The Warbringer will be riding the mount color he has a chance to drop."], coords = { {m=418,x=39.08,y=67.13},{m=422,x=47.47,y=61.32},{m=388,x=36.53,y=85.67},{m=379,x=75.09,y=67.65},{m=371,x=52.73,y=18.99}, }, },
 		 ["Reins of the Astral Cloud Serpent"] =             { cat = MOP, type = MOUNT, method = BOSS, name = L["Reins of the Astral Cloud Serpent"], spellId = 127170, itemId = 87777, npcs = { 99999 }, tooltipNpcs = { 60410 }, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_HEROIC] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_HEROIC] = true, }, chance = 100, statisticId = { 6797, 6798, 7924, 7923, }, sourceText = L["Dropped by Elegon in Mogu'shan Vaults (all raid formats except Raid Finder)"], blackMarket = true, lockBossName = "Elegon", coords = { {m=471,x=21.7,y=51.1,i=true} }, },
 		 ["Reins of the Bone-White Primal Raptor"] =         { cat = MOP, type = MOUNT, method = COLLECTION, name = L["Reins of the Bone-White Primal Raptor"], spellId = 138640, itemId = 94290, collectedItemId = 94288, chance = 9999, obtain = L["Dropped from dinosaurs on Isle of Giants"], tooltipNpcs = { 69992, 70013, 70012, 70015, 70014, 70006, 69925, 69993, 70004, 70005, 70007, 70020, 70016, 69983, 70017, 70019, 70018, 70011, 70009, 69991, 70021, 70010, 70008, }, sourceText = L["Earned by giving 9999 Giant Dinosaur Bones to Ku'ma on Isle of Giants. Giant Dinosaur bones drop from all dinosaurs and Zandalari Dinomancers on Isle of Giants."], coords = { {m=507} }, },
@@ -711,6 +735,25 @@ function R:PrepareDefaults()
 		 ["Valarjar Stormwing"] =                            { cat = LEGION, type = MOUNT, method = USE, name = L["Valarjar Stormwing"], spellId = 242882, itemId = 147805, items = { 152106, }, chance = 20, },
 		 ["Wild Dreamrunner"] =                              { cat = LEGION, type = MOUNT, method = USE, name = L["Wild Dreamrunner"], spellId = 242875, itemId = 147804, items = { 152103, }, chance = 20, },
 
+		 -- 7.1
+		 ["Smoldering Ember Wyrm"] = {
+			 cat = LEGION,
+			 type = MOUNT,
+			 method = BOSS,
+			 name = L["Smoldering Ember Wyrm"],
+			 spellId = 231428,
+			 itemId = 142552,
+			 npcs = { 114895 },
+			 chance = 5,
+			 instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			 lockDungeonId = 1475,
+			 lockBossName = "Nightbane",
+			 coords = {
+				 { m=814, i=true }
+				},
+			},
+
+
 		 -- 7.3
 		 ["Lambent Mana Ray"] =	{
 			cat = LEGION,
@@ -723,7 +766,7 @@ function R:PrepareDefaults()
 			chance = 30,
 			questId = 48705,
 			coords = {
-				{ m = 882,	x = 34.01, y = 47.83, n = L["Venomtail Skyfin"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE,	x = 34.01, y = 47.83, n = L["Venomtail Skyfin"] },
 			},
 		 },
 		 ["Maddened Chaosrunner"] =	{
@@ -737,7 +780,7 @@ function R:PrepareDefaults()
 			chance = 30,
 			questId = 48695,
 			coords = {
-				{ m = 882, x = 55.65, y = 59.95, n = L["Wrangler Kravos"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 55.65, y = 59.95, n = L["Wrangler Kravos"] },
 			},
 		 },
 		 ["Vile Fiend"] = {
@@ -751,7 +794,7 @@ function R:PrepareDefaults()
 			chance = 30,
 			questId = 48821,
 			coords = {
-				{ m = 885, x = 62.96, y = 24.86, n = L["Houndmaster Kerrax"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 62.96, y = 24.86, n = L["Houndmaster Kerrax"] },
 			},
 		 },
 		 ["Crimson Slavermaw"] = {
@@ -765,7 +808,7 @@ function R:PrepareDefaults()
 			chance = 30,
 			questId = 49183,
 			coords = {
-				{ m = 885, x = 61.78, y = 36.97, n = L["Blistermaw"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 61.78, y = 36.97, n = L["Blistermaw"] },
 			},
 		 },
 		 ["Biletooth Gnasher"] = {
@@ -785,8 +828,8 @@ function R:PrepareDefaults()
 			},
 			sourceText = format(L["Has a chance to drop from either %s or %s on Argus. Each can be looted once per day."], L["Puscilla"], L["Vrax'thul"]),
 			coords = {
-				{ m=885, x = 64.42, y = 20.35, q=48809, n=L["Puscilla"]},
-				{ m=885, x = 53.06, y = 36.12, q=48810, n=L["Vrax'thul"]},
+				{ m=CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.42, y = 20.35, q=48809, n=L["Puscilla"]},
+				{ m=CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 53.06, y = 36.12, q=48810, n=L["Vrax'thul"]},
 			},
 		 },
 		 ["Acid Belcher "] = {
@@ -800,7 +843,7 @@ function R:PrepareDefaults()
 			chance = 30,
 			questId = 48721,
 			coords = {
-				{ m = 882, x = 49.79, y = 9.40, n = L["Skreeg the Devourer"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 49.79, y = 9.40, n = L["Skreeg the Devourer"] },
 			},
 		 },
 		 ["Scintillating Mana Ray"] = {
@@ -814,9 +857,9 @@ function R:PrepareDefaults()
 			chance = 16,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		 },
 		 ["Felglow Mana Ray"] = {
@@ -830,9 +873,9 @@ function R:PrepareDefaults()
 			chance = 16,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		 },
 		 ["Darkspore Mana Ray"] = {
@@ -846,9 +889,9 @@ function R:PrepareDefaults()
 			chance = 16,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		 },
 		 ["Vibrant Mana Ray"] = {
@@ -862,9 +905,9 @@ function R:PrepareDefaults()
 			chance = 16,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		 },
 		["Pond Nettle"] = {
@@ -877,6 +920,11 @@ function R:PrepareDefaults()
 			itemId = 152912,
 			chance = 2000,
 			requiresPool = false,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE },
+			},
 		},
 		["Avenging Felcrusher"] = {
 			cat = LEGION,
@@ -935,8 +983,6 @@ function R:PrepareDefaults()
 			spellId = 279608,
 			npcs = { 142423 },
 			chance = 33,
-			groupSize = 5,
-			equalOdds = true,
 			questId = { 53014, 53518},
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x = 27.46, y = 55.89, n = L["Overseer Krix"] .. " - " .. L["Horde controls Stromgarde"] },
@@ -954,8 +1000,6 @@ function R:PrepareDefaults()
 			spellId = 279611,
 			npcs = { 142437 },
 			chance = 33,
-			groupSize = 5,
-			equalOdds = true,
 			questId = { 53022, 53526 },
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x = 57.15, y = 45.75, n = L["Skullripper"] },
@@ -986,8 +1030,6 @@ function R:PrepareDefaults()
 			spellId = 279456,
 			npcs = { 142741 },
 			chance = 33,
-			groupSize = 3,
-			equalOdds = true,
 			questId = 53085,
 			requiresAlliance = true,
 			coords = {
@@ -1004,8 +1046,6 @@ function R:PrepareDefaults()
 			spellId = 279457,
 			npcs = { 142739 },
 			chance = 33,
-			groupSize = 3,
-			equalOdds = true,
 			questId = 53088,
 			requiresHorde = true,
 			coords = {
@@ -1043,6 +1083,9 @@ function R:PrepareDefaults()
 				123863,
 			},
 			chance = 3000,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.VOLDUN },
+			},
 		 },
 
 		 ["Chewed-On Reins of the Terrified Pack Mule"] = {
@@ -1064,6 +1107,9 @@ function R:PrepareDefaults()
 				131529
 			},
 			chance = 4000,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.DRUSTVAR },
+			},
 		 },
 
 		 ["Reins of a Tamed Bloodfeaster"] = {
@@ -1092,6 +1138,9 @@ function R:PrepareDefaults()
 				124688,
 			},
 			chance = 3000,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.NAZMIR },
+			},
 		 },
 
 		 ["Goldenmane's Reins"] = {
@@ -1129,6 +1178,9 @@ function R:PrepareDefaults()
 				130531,
 			},
 			chance = 3000,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.STORMSONG_VALLEY },
+			},
 		 },
 
 		-- 8.1
@@ -1143,8 +1195,6 @@ function R:PrepareDefaults()
 			npcs = { 148787 },
 			chance = 20,
 			questId = { 54695, 54696},
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 56.4, y = 30.8, n = L["Alash'anir"] },
 			},
@@ -1255,7 +1305,7 @@ function R:PrepareDefaults()
 			spellId = 294038,
 			itemId = 169198,
 			items = { 169940, 169939 },
-			chance = 100, -- Blind guess (no data). Possibly a lot higher?
+			chance = 19,
 		},
 
 		["Rusted Keys to the Junkheap Drifter"] = {
@@ -1281,10 +1331,8 @@ function R:PrepareDefaults()
 			itemId = 168823,
 			spellId = 291492,
 			npcs = { 154342, 151934 },
-			chance = 500,
+			chance = 333,
 			questId = { 55512 },
-			groupSize = 3,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND, x = 52.0, y = 41.4, n = L["Arachnoid Harvester"] },
 			},
@@ -1307,12 +1355,25 @@ function R:PrepareDefaults()
 			type = MOUNT,
 			method = NPC,
 			name = L["Mechagon Peacekeeper"],
-			itemId = 168826,
 			spellId = 299158,
-			npcs = { 150190, 155157 },
-			chance = 300,
+			itemId = 168826,
+			npcs = { 150190 },
+			chance = 200,
 			groupSize = 5,
 			equalOdds = true,
+			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			lockoutDetails = {
+				mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
+				{
+					encounterName = "HK-8 Aerial Oppression Unit",
+					instanceDifficulties = {
+						[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true,
+					},
+				},
+			},
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND_DUNGEON, i = true}
+			},
 		},
 
 		-- 8.3 Mounts
@@ -1340,8 +1401,6 @@ function R:PrepareDefaults()
 			spellId = 315847,
 			npcs = { 157134 },
 			chance = 100,
-			groupSize = 3,
-			equalOdds = true,
 			questId = { 57259 },
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ULDUM, x = 73.96, y = 83.52, n = L["Ishak of the Four Winds"] },
@@ -1372,8 +1431,6 @@ function R:PrepareDefaults()
 			spellId = 312751,
 			npcs = { 157153 },
 			chance = 100,
-			groupSize = 3,
-			equalOdds = true,
 			questId = { 57344 },
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 36.6, y = 37.6, n = L["Ha-Li"] },
@@ -1444,7 +1501,157 @@ function R:PrepareDefaults()
 		},
 
 
-		-- 8.3 Mounts
+		-- 9.0 Mounts
+		["Horrid Dredwing"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Horrid Dredwing"],
+			itemId = 180461,
+			spellId = 332882,
+			npcs = { 165290 },
+			chance = 100,
+			questId = { 59612 },
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 46.0, y = 78.5, n = L["Harika the Horrid"] },
+			},
+			requiresCovenant = true,
+			requiredCovenantID = CONSTANTS.COVENANT_IDS.VENTHYR
+		},
+
+		-- ["Bonehoof Tauralus"] = { -- NYI as of 21/01/2021 ?
+		-- 	cat = SHADOWLANDS,
+		-- 	type = MOUNT,
+		-- 	method = NPC,
+		-- 	name = L["Bonehoof Tauralus"],
+		-- 	itemId = 182075,
+		-- 	spellId = 332457,
+		-- 	npcs = { 162586 },
+		-- 	chance = 100,
+		-- 	coords = {
+		-- 		{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 44.2, y = 51.2, n = L["Tahonta"] },
+		-- 	},
+		-- 	requiresCovenant = true,
+		-- 	requiredCovenantID = CONSTANTS.COVENANT_IDS.NECROLORD
+		-- },
+
+		["Hopecrusher Gargon"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Hopecrusher Gargon"],
+			itemId = 180581,
+			spellId = 312753,
+			npcs = { 166679 },
+			chance = 100,
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 51.98, y = 51.80, n = L["Hopecrusher"] },
+			},
+			requiresCovenant = true,
+			requiredCovenantID = CONSTANTS.COVENANT_IDS.VENTHYR
+		},
+
+		["Reins of the Colossal Slaughterclaw"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = USE,
+			name = L["Reins of the Colossal Slaughterclaw"],
+			spellId = 327405,
+			itemId = 182081,
+			items = { 180646 },
+			chance = 20,	-- Estimate
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+			},
+		},
+
+		["Amber Ardenmoth"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = USE,
+			name = L["Amber Ardenmoth"],
+			spellId = 342666,
+			itemId = 183800,
+			items = { 180649 },
+			chance = 20,	-- Estimate
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.ARDENWEALD }
+			},
+		},
+
+		["Phalynx of Humility"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = SPECIAL,
+			name = L["Phalynx of Humility"],
+			spellId = 334386,
+			itemId = 180762,
+			items = { 356818 },
+			chance = 50,
+			questId = { 61688 },
+			sourceText = L["This mount can only drop for Kyrians. Requires channeling anima to Temple of Purity."],
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.BASTION, x = 60.23, y = 78.11, n = L["Penitence of Purity"] },
+			},
+		},
+
+		["Bulbous Necroray"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = USE,
+			name = L["Bulbous Necroray"],
+			spellId = 344574,
+			itemId = 184160,
+			items = { 184158 },
+			chance = 10,	-- Estimate
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+			},
+		},
+
+		["Pestilent Necroray"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = USE,
+			name = L["Pestilent Necroray"],
+			spellId = 344575,
+			itemId = 184162,
+			items = { 184158 },
+			chance = 10,	-- Estimate
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+			},
+		},
+
+		["Infested Necroray"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = USE,
+			name = L["Infested Necroray"],
+			spellId = 344576,
+			itemId = 184161,
+			items = { 184158 },
+			chance = 10,	-- Estimate
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+			},
+		},
+
+		["Silessa's Battle Harness"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = SPECIAL,
+			name = L["Silessa's Battle Harness"],
+			spellId = 333023,
+			itemId = 183798,
+			chance = 100,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.REVENDRETH }
+			},
+		},
+
 
 
 	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1457,7 +1664,7 @@ function R:PrepareDefaults()
 		 ["Swift Brewfest Ram"] =                            { cat = HOLIDAY, type = MOUNT, method = USE, name = L["Swift Brewfest Ram"], spellId = 43900, itemId = 33977, items = { 54535, 117393, }, chance = 25, groupSize = 5, equalOdds = true, sourceText = L["Can be contained in Keg-Shaped Treasure Chest, rewarded for defeating the World Event Dungeon during Brewfest."], lockDungeonId = 287, coords = {{m=242,x=46.6,y=60, i=true}}, },
 		 ["The Horseman's Reins"] =                          { cat = HOLIDAY, type = MOUNT, method = USE, name = L["The Horseman's Reins"], spellId = 48025, itemId = 37012, items = { 117392 }, chance = 200, groupSize = 5, equalOdds = true, sourceText = L["Can be contained in Loot-Filled Pumpkin, rewarded for defeating the World Event Dungeon during Hallow's End."], lockDungeonId = 285, coords = { {m=435,i=true} }, },
 						-- 6.x
-		 ["Felsteel Annihilator"] =                          { cat = WOD, type = MOUNT, method = BOSS, name = L["Felsteel Annihilator"], spellId = 182912, itemId = 123890, npcs = { 99999 }, tooltipNpcs = { 91331 }, chance = 100, wasGuaranteed = true, statisticId = { 10252 }, lockBossName = "Archimonde", coords = { {m=6610,x=58.4,y=53.3,i=true} }, },
+		 ["Felsteel Annihilator"] =                          { cat = WOD, type = MOUNT, method = BOSS, name = L["Felsteel Annihilator"], spellId = 182912, itemId = 123890, npcs = { 99999 }, tooltipNpcs = { 91331 }, chance = 100, wasGuaranteed = true, statisticId = { 10252 }, lockBossName = "Archimonde", coords = { {m=670,x=58.4,y=53.3,i=true} }, },
 		 ["Garn Nighthowl"] =                                { cat = WOD, type = MOUNT, method = BOSS, name = L["Garn Nighthowl"], spellId = 171851, itemId = 116794, npcs = { 81001 }, chance = 1, coords = { {m=525,x=16,y=53.2} }, },
 		 ["Ironhoof Destroyer"] =                            { cat = WOD, type = MOUNT, method = BOSS, name = L["Ironhoof Destroyer"], spellId = 171621, itemId = 116660, npcs = { 99999 }, tooltipNpcs = { 77325 }, chance = 100, wasGuaranteed = true, statisticId = { 9365 }, lockBossName = "Blackhand", coords = { {m=600, x=48.4,y=34.5,i=true} }, },
 
@@ -1719,6 +1926,9 @@ function R:PrepareDefaults()
 			equalOdds = true,
 			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 			groupSize = 5,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.FREEHOLD, i = true }
+			},
 		},
 
 		["Underrot Crawg Harness"] = {
@@ -1735,6 +1945,9 @@ function R:PrepareDefaults()
 			equalOdds = true,
 			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 			groupSize = 5,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.THE_UNDERROT, i = true }
+			},
 		},
 
 		["Mummified Raptor Skull"] = {
@@ -1751,6 +1964,9 @@ function R:PrepareDefaults()
 			equalOdds = true,
 			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 			groupSize = 5,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.KINGS_REST, i = true }
+			},
 		},
 
 		["Twilight Avenger"] = {
@@ -1836,7 +2052,26 @@ function R:PrepareDefaults()
 				"875", -- Zandalar
 				"876", -- Kul'tiras
 				"974", -- Tol'Dagor
+				"1161", -- Boralus
 				"1364", -- Battle for Dazar'alor (Raid)
+				"1462", -- Mechagon Island
+				"1165", -- Dazar'alor
+			},
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.DRUSTVAR },
+				{ m = CONSTANTS.UIMAPIDS.TIRAGARDE_SOUND },
+				{ m = CONSTANTS.UIMAPIDS.STORMSONG_VALLEY },
+				{ m = CONSTANTS.UIMAPIDS.ZULDAZAR },
+				{ m = CONSTANTS.UIMAPIDS.NAZMIR },
+				{ m = CONSTANTS.UIMAPIDS.VOLDUN },
+				{ m = CONSTANTS.UIMAPIDS.ZANDALAR },
+				{ m = CONSTANTS.UIMAPIDS.KULTIRAS },
+				{ m = CONSTANTS.UIMAPIDS.TORDAGOR },
+				{ m = CONSTANTS.UIMAPIDS.BORALUS },
+				{ m = CONSTANTS.UIMAPIDS.BATTLE_FOR_DAZARALOR_RAID },
+				{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND },
+				{ m = CONSTANTS.UIMAPIDS.DAZARALOR }
+
 			},
 		},
 
@@ -1853,7 +2088,7 @@ function R:PrepareDefaults()
 			tooltipNpcs = { 144796 },
 			tooltipModifier = { condition = TOOLTIP_FILTERS.IS_PLAYER_IN_LFR, action = TOOLTIP_ACTIONS.OVERRIDE_TOOLTIP_NPCS, value = 146409 },
 			chance = 100,
-			groupSize = 10,
+			groupSize = 5,
 			equalOdds = true,
 			statisticId = { 13372, 13373, 13374, 13379 },
 			lockoutDetails = {
@@ -1946,10 +2181,243 @@ function R:PrepareDefaults()
 			groupSize = 3,
 		},
 
-    },
+		-- 9.0 Mounts
 
+		["Endmire Flyer Tether"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Endmire Flyer Tether"],
+			itemId = 180582,
+			spellId = 332905,
+			npcs = { 166521 },
+			chance = 100,
+			questId = { 59869 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 62.0, y = 47.0, n = L["Famu the Infinite"] },
+			},
+		},
 
+		["Wild Glimmerfur Prowler"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Wild Glimmerfur Prowler"],
+			itemId = 180730,
+			spellId = 334366,
+			npcs = { 168647 },
+			chance = 100,
+			questId = { 61632 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.ARDENWEALD, x = 30.4, y = 55.2, n = L["Valfir the Unrelenting"] },
+			},
+			requiresCovenant = true,
+			requiredCovenantID = CONSTANTS.COVENANT_IDS.NIGHT_FAE
+		},
 
+		["Predatory Plagueroc"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Predatory Plagueroc"],
+			itemId = 182080,
+			spellId = 336045,
+			npcs = { 162741 },
+			chance = 33,
+			questId = { 58872 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 31.4, y = 35.6, n = L["Gieger"] },
+			},
+			requiresCovenant = true,
+			requiredCovenantID = CONSTANTS.COVENANT_IDS.NECROLORD
+		},
+
+		["Slime-Covered Reins of the Hulking Deathroc"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Slime-Covered Reins of the Hulking Deathroc"],
+			itemId = 182079,
+			spellId = 336042,
+			npcs = { 157309 },
+			chance = 33,
+			questId = { 61720 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 58.6, y = 74.2, n = L["Violet Mistake"] },
+			},
+		},
+
+		["Gorespine"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Gorespine"],
+			itemId = 182084,
+			spellId = 332480,
+			npcs = { 162690 },
+			chance = 50,
+			questId = { 58851 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 65.8, y = 35.3, n = L["Nerissa Heartless"] },
+			},
+		},
+
+		["Blisterback Bloodtusk"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Blisterback Bloodtusk"],
+			itemId = 182085,
+			spellId = 332478,
+			npcs = { 162819 },
+			chance = 33,
+			questId = { 58889 },
+			tooltipNpcs = { 162818 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 33.6, y = 80.6, n = L["Warbringer Mal'Korak"] },
+			},
+		},
+
+		["Armored Bonehoof Tauralus"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Armored Bonehoof Tauralus"],
+			itemId = 181815,
+			spellId = 332466,
+			npcs = { 168147 },
+			chance = 100,	-- Estimate
+			questId = { 58784 },
+			tooltipNpcs = { 168148 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 50.67, y = 47.37, n = L["Sabriel the Bonecleaver"] },
+			},
+			requiresCovenant = true,
+			requiredCovenantID = CONSTANTS.COVENANT_IDS.NECROLORD
+		},
+
+		-- Note: This appears to not have made it to live, so I'm disabling it until further notice
+		-- ["Bonecleaver's Skullboar"] = {
+		-- 	cat = SHADOWLANDS,
+		-- 	type = MOUNT,
+		-- 	method = NPC,
+		-- 	name = L["Bonecleaver's Skullboar"],
+		-- 	itemId = 182083,
+		-- 	spellId = 332482,
+		-- 	npcs = { 168147 },
+		-- 	chance = 100,	-- Estimate
+		-- 	questId = { 58784 },
+		-- 	tooltipNpcs = { 168148 },
+		-- 	groupSize = 5,
+		-- 	equalOdds = true,
+		-- 	coords = {
+		-- 		{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 50.67, y = 47.37, n = L["Sabriel the Bonecleaver"] },
+		-- 	},
+		-- },
+
+		["Mawsworn Soulhunter"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Mawsworn Soulhunter"],
+			itemId = 184167,
+			spellId = 312762,
+			npcs = { 174861 },
+			chance = 100,	-- Estimate
+			questId = 63433,
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 53.5, y = 79.5, n = L["Gorged Shadehound"] },
+			},
+		},
+
+		["Gnawed Reins of the Battle-Bound Warhound"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Gnawed Reins of the Battle-Bound Warhound"],
+			itemId = 184062,
+			spellId = 344228,
+			npcs = { 162873, 162880, 162875, 162853, 162874, 162872 },
+			chance = 100,	-- Estimate
+			questId =  62786 ,
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 50.67, y = 47.37, n = L["Theatre of Pain"] },
+			},
+		},
+
+		["Marrowfang's Reins"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = BOSS,
+			name = L["Marrowfang's Reins"],
+			spellId = 336036,
+			itemId = 181819,
+			npcs = { 99999 },
+			tooltipNpcs = { 162693 },
+			statisticId = { 14404 },
+			chance = 100,
+			equalOdds = true,
+			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			groupSize = 5,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.THE_NECROTIC_WAKE },
+			},
+		},
+
+		["Impressionable Gorger Spawn"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = NPC,
+			name = L["Impressionable Gorger Spawn"],
+			itemId = 180583,
+			spellId = 333027,
+			npcs = { 160821 },
+			chance = 100, -- Estimate,
+			questId = 58259,
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 38.60, y = 72.00, n = L["Worldedge Gorger"] },
+			},
+		},
+
+		["Ascended Skymane"] = {
+			cat = SHADOWLANDS,
+			type = MOUNT,
+			method = SPECIAL,
+			name = L["Ascended Skymane"],
+			spellId = 342335,
+			itemId = 183741,
+			items = { 354175 },
+			chance = 20,
+			tooltipNpcs = { 170834, 170835, 170833, 170832, 170836 },
+			questId = { 60933 },
+			groupSize = 5,
+			equalOdds = true,
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.BASTION, x = 53.50, y = 88.37, n = L["Cache of the Ascended"] },
+			},
+		},
+
+		},
 
 				--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 				-- BATTLE PETS
@@ -1998,7 +2466,7 @@ function R:PrepareDefaults()
      ["Gundrak Hatchling"] =                             { cat = WOTLK, type = PET, method = NPC, name = L["Gundrak Hatchling"], spellId = 67415, itemId = 48116, npcs = { 29334 }, chance = 1000,  creatureId = 35400, coords = {{m=121}}, },
      ["Razzashi Hatchling"] =                            { cat = WOTLK, type = PET, method = ZONE, name = L["Razzashi Hatchling"], spellId = 67420, itemId = 48126, zones = { "224", "50", "210" }, chance = 5000,  creatureId = 35394, coords = {{m=224},{m=50},{m=210}}, },
 					-- 4.x
-     ["Elementium Geode"] =                              { cat = CATA, type = PET, method = SPECIAL, name = L["Elementium Geode"], spellId = 93838, itemId = 67282, obtain = L["Obtained by mining Elementium Vein"], chance = 2000, creatureId = 50722, coords = {{m=249},{m=245},{m=244}}, },
+     ["Elementium Geode"] =                              { cat = CATA, type = PET, method = SPECIAL, name = L["Elementium Geode"], spellId = 93838, itemId = 67282, obtain = L["Obtained by mining Elementium Vein"], chance = 2000, creatureId = 50722, coords = {{m=CONSTANTS.UIMAPIDS.DEEPHOLM},{m=CONSTANTS.UIMAPIDS.TWILIGHT_HIGHLANDS},{m=CONSTANTS.UIMAPIDS.ULDUM_CATACLYSM},{m=CONSTANTS.UIMAPIDS.TOL_BARAD_PENINSULA},{m=CONSTANTS.UIMAPIDS.TOL_BARAD}}, },
      ["Fox Kit"] =                                       { cat = CATA, type = PET, method = NPC, name = L["Fox Kit"], spellId = 90637, itemId = 64403, npcs = { 47676 }, chance = 1000, creatureId = 48641, coords = {{m=245}}, },
      ["Mr. Grubbs"] =                                    { cat = CATA, type = PET, method = USE, name = L["Mr. Grubbs"], spellId = 93739, itemId = 66076, items = { 61387 }, chance = 50, creatureId = 50586, coords = {{m=23}}, },
      ["Scorched Stone"] =                                { cat = CATA, type = PET, method = USE, name = L["Scorched Stone"], spellId = 45890, itemId = 34955, items = { 71631 }, chance = 20, creatureId = 25706, coords = {{m=338,x=47,y=90.6}}, },
@@ -2038,7 +2506,7 @@ function R:PrepareDefaults()
      ["Crystal of the Void"] =                           { cat = MOP, type = PET, method = BOSS, name = L["Crystal of the Void"], spellId = 141448, itemId = 97556, npcs = { 18805 }, chance = 20, creatureId = 71021, coords = {{m=334,x=74,y=48.9,i=true}}, },
      ["Dark Quivering Blob"] =                           { cat = MOP, type = PET, method = BOSS, name = L["Dark Quivering Blob"], spellId = 142029, itemId = 97960, npcs = { 99999 }, tooltipNpcs = { 69017 }, instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_NORMAL] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_10_HEROIC] = true, [CONSTANTS.INSTANCE_DIFFICULTIES.RAID_25_HEROIC] = true, }, chance = 50, statisticId = { 8181, 8179, 8180, 8182 }, creatureId = 71200, enableCoin = true, sourceText = L["All raid formats except Raid Finder"], lockBossName = "Primordius", coords = {{m=508, i=true,x=57.2,y=78.2}}, },
      ["Dripping Strider Egg"] =                          { cat = MOP, type = PET, method = NPC, name = L["Dripping Strider Egg"], spellId = 141446, itemId = 97554, npcs = { 21212 }, chance = 250, creatureId = 71019, coords = {{m=332,x=72.2,y=58.9,i=true}}, },
-     ["Gahz'rooki's Summoning Stone"] =                  { cat = MOP, type = PET, method = NPC, name = L["Gahz'rooki's Summoning Stone"], spellId = 141789, itemId = 97821, npcs = { 71012 }, chance = 1000, creatureId = 71159, coords = {{m=10,x=43.7,y=47.9}}, },
+     ["Gahz'rooki's Summoning Stone"] =                  { cat = MOP, type = PET, method = NPC, name = L["Gahz'rooki's Summoning Stone"], spellId = 141789, itemId = 97821, npcs = { 71012, 70997, 71000, 70999, 71001 }, chance = 1000, creatureId = 71159, coords = {{m=10,x=43.7,y=47.9}}, },
      ["Half-Empty Food Container"] =                     { cat = MOP, type = PET, method = NPC, name = L["Half-Empty Food Container"], spellId = 142030, itemId = 97961, npcs = { 69251 }, chance = 750, creatureId = 71201, coords = {{m=504,x=51.8,y=80.6}}, },
      ["Instant Arcane Sanctum Security Kit"] =           { cat = MOP, type = PET, method = NPC, name = L["Instant Arcane Sanctum Security Kit"], spellId = 141434, itemId = 97549, npcs = { 15691 }, chance = 33, creatureId = 71015, coords = {{m=794,i=true, x=49.4,y=36.6}}, },
      ["Netherspace Portal-Stone"] =                      { cat = MOP, type = PET, method = NPC, name = L["Netherspace Portal-Stone"], spellId = 141435, itemId = 97550, npcs = { 15690 }, chance = 33, creatureId = 71016, coords = {{m=350,x=51.4,y=30.9,i=true}}, },
@@ -2114,6 +2582,43 @@ function R:PrepareDefaults()
 					-- 7.0
 	 ["Eye of Inquisition"] =                            { cat = LEGION, type = PET, method = NPC, name = L["Eye of Inquisition"], spellId = 210673, itemId = 136901, npcs = { 101878, }, chance = 100, creatureId = 97179, coords = { {m=680,x=27.8,y=85.2} }},
      ["Knockoff Blingtron"] =                            { cat = LEGION, type = PET, method = USE, name = L["Knockoff Blingtron"], spellId = 210683, itemId = 136911, items = { 132892, 168740 }, chance = 200, creatureId = 99505, },
+
+	 ["Ridgeback Piglet"] = {
+			cat = LEGION,
+			type = PET,
+			method = USE,
+			name = L["Ridgeback Piglet"],
+			spellId = 210678,
+			itemId = 136905,
+			creatureId = 98172,
+			items = { 137608 },
+			chance = 10,
+	 },
+
+	 ["Thaumaturgical Piglet"] = {
+			cat = LEGION,
+			type = PET,
+			method = USE,
+			name = L["Thaumaturgical Piglet"],
+			spellId = 210681,
+			itemId = 136908,
+			creatureId = 98183,
+			items = { 137608 },
+			chance = 10,
+	 },
+
+	 ["Transmutant"] = {
+			cat = LEGION,
+			type = PET,
+			method = USE,
+			name = L["Transmutant"],
+			spellId = 221906,
+			itemId = 139789,
+			creatureId = 111425,
+			items = { 137608 },
+			chance = 10,
+	 },
+
      --["Sting Ray Pup"] =                                 { cat = LEGION, type = PET, method = COLLECTION, name = L["Sting Ray Pup"], spellId = 217218, itemId = 138810, creatureId = 109216, collectedItemId = { 138777 }, chance = 50, },
 					-- 7.1
 	 ["Blessed Seed"] =									 { cat = LEGION, type = PET, method = NPC, name = L["Blessed Seed"], itemId = 142091, spellId = 229098, creatureId = 115143, npcs = { 32906 }, chance = 10, statisticId = {2864, 3258}, doNotUpdateToHighestStat = true,  coords = {{m=148,x=53.2,y=22.3,i=true}},},
@@ -2175,9 +2680,9 @@ function R:PrepareDefaults()
 			creatureId = 128157,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		},
 
@@ -2193,9 +2698,9 @@ function R:PrepareDefaults()
 			creatureId = 128158,
 			sourceText = L["Contained in Cracked Fel-Spotted Egg, which is obtained by defeating any of the panthara rares on Argus, looting a Fel-Spotted Egg from them, and waiting five days. Each mount has a 6% chance to appear in the Cracked Fel-Spotted Egg, and each pet has a 20% chance to appear in it."],
 			coords = {
-				{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-				{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-				{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+				{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 			},
 		},
 
@@ -2211,7 +2716,7 @@ function R:PrepareDefaults()
 			creatureId = 128388,
 			questId = 48970,
 			coords = {
-				{ m = 885,  x = 66.72, y = 18.12, n = L["Mother Rosula"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES,  x = 66.72, y = 18.12, n = L["Mother Rosula"] },
 			},
 		},
 
@@ -2227,7 +2732,7 @@ function R:PrepareDefaults()
 			creatureId = 128159,
 			questId = 48709,
 			coords = {
-				{ m = 882, x = 30.12, y = 40.18, n = L["Ataxon"] },
+				{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 30.12, y = 40.18, n = L["Ataxon"] },
 			},
 		},
 
@@ -2243,7 +2748,7 @@ function R:PrepareDefaults()
 			creatureId = 128396,
 			questId = 48966,
 			coords = {
-				{ m = 885, x = 54.83, y = 39.15, n = L["The Many-Faced Devourer"] },
+				{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 54.83, y = 39.15, n = L["The Many-Faced Devourer"] },
 			},
 		},
 
@@ -2738,8 +3243,6 @@ function R:PrepareDefaults()
 			creatureId = 143499,
 			questId = { 53024, 53528 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  56.7, y = 54.1, n = L["Venomarus"] },
 			},
@@ -2756,8 +3259,6 @@ function R:PrepareDefaults()
 			creatureId = 143503,
 			questId = { 53013, 53505 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  22.9, y = 22.2, n = L["Branchlord Aldrus"] },
 			},
@@ -2791,8 +3292,6 @@ function R:PrepareDefaults()
 			creatureId = 143533,
 			questId = { 53015, 53529 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  14, y = 36.9, n = L["Yogursa"] },
 			},
@@ -2809,8 +3308,6 @@ function R:PrepareDefaults()
 			creatureId = 143515,
 			questId = { 53059, 53508 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  56.6, y = 36.0, n = L["Echo of Myzrael"] },
 			},
@@ -2827,8 +3324,6 @@ function R:PrepareDefaults()
 			creatureId = 143627,
 			questId = { 53019, 53510 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  51, y = 53.2, n = L["Fozruk"] },
 			},
@@ -2845,8 +3340,6 @@ function R:PrepareDefaults()
 			creatureId = 143563,
 			questId = { 53016, 53522 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  18.4, y = 27.9, n = L["Ragebeak"] .. " - " .. L["Alliance controls Stromgarde"] },
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  11.9, y = 52.1, n = L["Ragebeak"] .. " - " .. L["Horde controls Stromgarde"] },
@@ -2864,11 +3357,73 @@ function R:PrepareDefaults()
 			creatureId = 143564,
 			questId = { 53020, 53519 },
 			chance = 20,
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x =  36.9, y = 66, n = L["Plaguefeather"] },
 			},
+		},
+
+		["Filthy Bucket"] = {
+			cat = BFA,
+			type = PET,
+			method = NPC,
+			name = L["Filthy Bucket"],
+			itemId = 160704,
+			spellId = 273184,
+			creatureId = 139049,
+			npcs = { 135448 },
+			chance = 10,
+			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.TOLDAGOR, n = L["Gol'than the Malodorous"] },
+			},
+		},
+
+		["Wind-Up Frog"] = {
+			cat = BFA,
+			type = PET,
+			method = USE,
+			name = L["Wind-Up Frog"],
+			spellId = 280617,
+			itemId = 163860,
+			creatureId = 143957,
+			items = { 160324 },
+			chance = 50,
+		},
+
+		["Undulating Blue Sac"] = {
+			cat = BFA,
+			type = PET,
+			method = USE,
+			name = L["Undulating Blue Sac"],
+			spellId = 280618,
+			itemId = 163861,
+			creatureId = 143958,
+			items = { 160324 },
+			chance = 50,
+		},
+
+		["Baby Crawg"] = {
+			cat = BFA,
+			type = PET,
+			method = USE,
+			name = L["Baby Crawg"],
+			spellId = 279435,
+			itemId = 163859,
+			creatureId = 143374,
+			items = { 160324 },
+			chance = 50,
+		},
+
+		["Ball of Tentacles"] = {
+			cat = BFA,
+			type = PET,
+			method = USE,
+			name = L["Ball of Tentacles"],
+			spellId = 280619,
+			itemId = 163858,
+			creatureId = 143959,
+			items = { 160324 },
+			chance = 50,
 		},
 
 		-- 8.1 Pets
@@ -2949,8 +3504,6 @@ function R:PrepareDefaults()
 			chance = 7,
 			creatureId = 148825,
 			questId = { 54232, 54233 },
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 39.2, y = 62, n = L["Conflagros"] },
 			},
@@ -2967,8 +3520,6 @@ function R:PrepareDefaults()
 			chance = 7,
 			creatureId = 148843,
 			questId = { 54274, 54291 },
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 62.5, y = 9.4, n = L["Zim'kaga"] .. " - " .. L["Alliance only"] },
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 45.2, y = 75.1, n = L["Onu"] .. " - " .. L["Horde only"] },
@@ -2986,8 +3537,6 @@ function R:PrepareDefaults()
 			chance = 7,
 			creatureId = 148784,
 			questId = { 54229, 54230 },
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 43.8, y = 53.6, n = L["Cyclarus"] },
 			},
@@ -3020,8 +3569,6 @@ function R:PrepareDefaults()
 			chance = 7,
 			creatureId = 148844,
 			questId = { 54320, 54321 },
-			groupSize = 5,
-			equalOdds = true,
 			coords = {
 				{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 40.7, y = 84.6, n = L["Soggoth the Slitherer"] },
 			},
@@ -3056,7 +3603,7 @@ function R:PrepareDefaults()
 			lockBossName = "Conclave of the Chosen",
 			chance = 20,
 			statisticId = { 13366 },
-			groupSize = 10,
+			groupSize = 5,
 			equalOdds = true,
 			coords = {
 				{ m = 1364, i = true },
@@ -3076,7 +3623,7 @@ function R:PrepareDefaults()
 			lockBossName = "Conclave of the Chosen",
 			chance = 20,
 			statisticId = { 13364, 13365, 13366 },
-			groupSize = 10,
+			groupSize = 5,
 			equalOdds = true,
 			coords = {
 				{ m = 1364, i = true },
@@ -3096,7 +3643,7 @@ function R:PrepareDefaults()
 			lockBossName = "Conclave of the Chosen",
 			chance = 50,
 			statisticId = { 13364, 13365, 13366 },
-			groupSize = 10,
+			groupSize = 5,
 			equalOdds = true,
 			coords = {
 				{ m = 1364, i = true },
@@ -3683,6 +4230,8 @@ function R:PrepareDefaults()
 			creatureId = 154833,
 			npcs = { 99999 },
 			tooltipNpcs = { 154986, 150653 },
+			groupSize = 5,
+			equalOdds = true,
 			statisticId = {
 				13591,
 				13592,
@@ -3722,7 +4271,7 @@ function R:PrepareDefaults()
 				[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true,
 				[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 			},
-			chance = 10, -- Blind guess (no data)
+			chance = 8,
 
 	},
 
@@ -3736,6 +4285,8 @@ function R:PrepareDefaults()
 		creatureId = 154831,
 		npcs = { 99999 },
 		tooltipNpcs = { 153142, 152236 },
+		groupSize = 5,
+		equalOdds = true,
 		statisticId = {
 			13600,
 			13601,
@@ -3775,7 +4326,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true,
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
-		chance = 10, -- Blind guess (no data)
+		chance = 8,
 
 	},
 
@@ -3789,6 +4340,8 @@ function R:PrepareDefaults()
 		creatureId = 154819,
 		npcs = { 99999 },
 		tooltipNpcs = { 155126 },
+		groupSize = 5,
+		equalOdds = true,
 		statisticId = {
 			13616,
 			13617,
@@ -3832,6 +4385,44 @@ function R:PrepareDefaults()
 
 	},
 
+	["Pommel Jewel of Remornia"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = BOSS,
+		name = L["Pommel Jewel of Remornia"],
+		itemId = 183395,
+		spellId = 341302,
+		creatureId = 173994,
+		npcs = { 99999 },
+		tooltipNpcs = { 168938, 167406 },
+		chance = 33,
+		statisticId = { 14455, 14458 }, -- Normal and LFR are the only two confirmed sources.
+		groupSize = 10,
+		equalOdds = true,
+		instanceDifficulties = {
+			[CONSTANTS.INSTANCE_DIFFICULTIES.NORMAL_RAID] = true,
+			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true
+		},
+		lockoutDetails = {
+			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
+			{
+				encounterName = "Sire Denathrius",
+				instanceDifficulties = {
+					[CONSTANTS.INSTANCE_DIFFICULTIES.NORMAL_RAID] = true,
+				},
+			},
+			{
+				encounterName = "Sire Denathrius",
+				instanceDifficulties = {
+					[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
+				},
+			},
+		},
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.CASTLE_NATHRIA, i = true },
+		},
+	},
+
 	["Amethyst Softshell"] = {
 		cat = BFA,
 		type = PET,
@@ -3868,7 +4459,7 @@ function R:PrepareDefaults()
 		itemId = 169373,
 		creatureId = 154845,
 		questId = { 55584 },
-		chance = 20,
+		chance = 18,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NAZJATAR, x =  36.9, y = 11.2, n = L["Avarius"] },
 		},
@@ -3897,7 +4488,7 @@ function R:PrepareDefaults()
 		itemId = 169356,
 		creatureId = 154829,
 		questId = { 56283 },
-		chance = 20,
+		chance = 25,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NAZJATAR, x =  42.29, y = 13.29, n = L["Caverndark Terror"] },
 		},
@@ -3955,7 +4546,7 @@ function R:PrepareDefaults()
 		itemId = 169350,
 		creatureId = 154823,
 		questId = { 56277 },
-		chance = 6,
+		chance = 8,
 	},
 
 	["Murgle"] = {
@@ -4032,8 +4623,6 @@ function R:PrepareDefaults()
 		creatureId = 154840,
 		questId = { 56289 },
 		chance = 14,
-		groupSize = 3,
-		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NAZJATAR, x =  43.1, y = 87.22, n = L["Prince Typhonus"] },
 		},
@@ -4143,8 +4732,6 @@ function R:PrepareDefaults()
 		creatureId = 154854,
 		questId = { 55544 },
 		chance = 20,
-		groupSize = 3,
-		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND, x =  60.65, y = 42.22, n = L["Malfunctioning Beastbot"] },
 		},
@@ -4160,7 +4747,7 @@ function R:PrepareDefaults()
 		itemId = 169379,
 		creatureId = 154851,
 		questId = { 55367 },
-		chance = 20,
+		chance = 5,
 	},
 
 	["Spraybot 0D"] = {
@@ -4189,6 +4776,8 @@ function R:PrepareDefaults()
 		creatureId = 154835,
 		npcs = { 99999 },
 		tooltipNpcs = { 150859 },
+		groupSize = 5,
+		equalOdds = true,
 		statisticId = {
 			13612,
 			13613,
@@ -4228,7 +4817,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_RAID] = true,
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
-		chance = 10, -- Blind guess (no data)
+		chance = 8,
 
 	},
 
@@ -4240,7 +4829,7 @@ function R:PrepareDefaults()
 		spellId = 301022,
 		itemId = 169351,
 		creatureId = 154824,
-		chance = 200,
+		chance = 250,
 	},
 
 	["Armored Vaultbot"] = {
@@ -4253,7 +4842,7 @@ function R:PrepareDefaults()
 		itemId = 170072,
 		creatureId = 155829,
 		questId = { 55546 },
-		chance = 50,
+		chance = 75,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND, x =  53.99, y = 49.31, n = L["Armored Vaultbot"] },
 		},
@@ -4270,8 +4859,6 @@ function R:PrepareDefaults()
 		creatureId = 154904,
 		questId = { 55847 }, -- Not sure which is correct: 55847, 57134, 57132, 56079 ? // 55847, 57132,
 		chance = 20, -- Blind guess (no data)
-		groupSize = 3,
-		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND, x =  70.12, y = 61.99, n = L["Reclamation Rig"] },
 		},
@@ -4281,23 +4868,36 @@ function R:PrepareDefaults()
 		cat = BFA,
 		type = PET,
 		method = NPC,
-		npcs = { 150190, 155157 },
+		npcs = { 150190 },
 		name = L["Microbot 8D"],
 		spellId = 301056,
 		itemId = 169385,
 		creatureId = 154857,
-		chance = 55,
+		chance = 50,
 		groupSize = 5,
 		equalOdds = true,
+		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+		lockoutDetails = {
+			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
+			{
+				encounterName = "HK-8 Aerial Oppression Unit",
+				instanceDifficulties = {
+					[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true,
+				},
+			},
+		},
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND_DUNGEON, i = true}
+		},
 	},
 
 	["Golden Snorf"] = {
 		cat = BFA,
 		type = PET,
 		method = NPC,
-		npcs = { 99999 },
-		tooltipNpcs = { 150397, 154817 },
-		statisticId = { 14056, 13620 },
+		npcs = { 150397 },
+		tooltipNpcs = { 150396, 144249 },
+		statisticId = { 13620 },
 		name = L["Golden Snorf"],
 		spellId = 301049,
 		itemId = 169378,
@@ -4305,6 +4905,19 @@ function R:PrepareDefaults()
 		chance = 65,
 		groupSize = 5,
 		equalOdds = true,
+		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+		lockoutDetails = {
+			mode = CONSTANTS.DEFEAT_DETECTION.MODE_AND,
+			{
+				encounterName = "King Mechagon",
+				instanceDifficulties = {
+					[CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true,
+				},
+			},
+		},
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MECHAGON_ISLAND_DUNGEON, i = true}
+		},
 	},
 
 	-- 8.3 Pets
@@ -4515,8 +5128,6 @@ function R:PrepareDefaults()
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.ULDUM, x = 36.85, y = 20.93, n = L["Lord Aj'qirai"] },
 		},
-		groupSize = 3,
-		equalOdds = true,
 	},
 
 	["Snarling Butterfly Crate"] = {
@@ -4530,7 +5141,7 @@ function R:PrepareDefaults()
 		chance = 20,
 		creatureId =158685,
 		coords = {
-			{ m = 942, x = 61.4, y = 16, n = L["Honey Smasher"] },
+			{ m = CONSTANTS.UIMAPIDS.STORMSONG_VALLEY, x = 61.4, y = 16, n = L["Honey Smasher"] },
 		},
 	},
 
@@ -4584,7 +5195,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
 		chance = 10, -- Blind guess (no data)
-		groupSize = 10,
+		groupSize = 5,
 		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NYALOTHA, i = true },
@@ -4641,7 +5252,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
 		chance = 8,
-		groupSize = 10,
+		groupSize = 5,
 		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NYALOTHA, i = true },
@@ -4698,7 +5309,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
 		chance = 5,
-		groupSize = 10,
+		groupSize = 5,
 		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NYALOTHA, i = true },
@@ -4755,7 +5366,7 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
 		chance = 10,
-		groupSize = 10,
+		groupSize = 5,
 		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NYALOTHA, i = true },
@@ -4812,10 +5423,27 @@ function R:PrepareDefaults()
 			[CONSTANTS.INSTANCE_DIFFICULTIES.LFR] = true,
 		},
 		chance = 10, -- Blind guess (no data)
-		groupSize = 10,
+		groupSize = 5,
 		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NYALOTHA, i = true },
+		},
+	},
+
+	["Bottle of Gloop"] = {
+		cat = BFA,
+		type = PET,
+		method = FISHING,
+		name = L["Bottle of Gloop"],
+		zones = { tostring(CONSTANTS.UIMAPIDS.ULDUM), tostring(CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS) },
+		spellId = 315285,
+		itemId = 174456,
+		creatureId = 161951,
+		chance = 500,
+		requiresPool = true,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.ULDUM },
+			{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS },
 		},
 	},
 
@@ -4836,6 +5464,214 @@ function R:PrepareDefaults()
 		},
 	},
 
+	-- 9.0 Pets
+	["Feasting Larva"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Feasting Larva"],
+		npcs = { 162528 },
+		spellId = 335977,
+		itemId = 181266,
+		chance = 25,
+		creatureId = 172137,
+		questId = 58768,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 42.27, y = 53.90, n = L["Smorgas the Feaster"] },
+		},
+	},
+
+	["Writhing Spine"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Writhing Spine"],
+		npcs = { 158406 },
+		spellId = 335979,
+		itemId = 181267,
+		chance = 33,
+		creatureId = 172139,
+		questId = 58006,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 61.6, y = 76.4, n = L["Scunner"] },
+		},
+	},
+
+	["Foulwing Buzzer"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Foulwing Buzzer"],
+		npcs = { 159753 },
+		spellId = 336031,
+		itemId = 181283,
+		chance = 20,
+		creatureId = 172155,
+		questId = 58004,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 54.0, y = 18.4, n = L["Ravenomous"] },
+		},
+	},
+
+	["Sharpclaw"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Sharpclaw"],
+		npcs = { 172521 },
+		spellId = 341495,
+		itemId = 183410,
+		chance = 20,
+		creatureId = 174084,
+		questId = 62210,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 55.8, y = 67.5, n = L["Sanngror the Torturer"] },
+		},
+	},
+
+	["Blushing Spiderling"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Blushing Spiderling"],
+		npcs = { 155779 },
+		spellId = 333794,
+		itemId = 180584,
+		chance = 50,
+		creatureId = 171117,
+		questId = 56877,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 42.8, y = 79.2, n = L["Tomb Burster"] },
+		},
+	},
+
+	["Boneweave Hatchling"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Boneweave Hatchling"],
+		npcs = { 159886 },
+		spellId = 335764,
+		itemId = 181172,
+		chance = 33,
+		creatureId = 171986,
+		questId = 58003,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 55.5, y = 23.6, n = L["Sister Chelicerae"] },
+		},
+	},
+
+	["Bucket of Primordial Sludge"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Bucket of Primordial Sludge"],
+		npcs = { 166292 },
+		spellId = 333799,
+		itemId = 180588,
+		chance = 11,
+		creatureId = 171121,
+		questId = 59823,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 35.8, y = 32.6, n = L["Bog Beast"] },
+		},
+	},
+
+	["Animated Tome"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Animated Tome"],
+		npcs = { 160675 },
+		spellId = 333797,
+		itemId = 180587,
+		chance = 20,
+		creatureId = 171120,
+		questId = 58213,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 37.6, y = 68.7, n = L["Scrivener Lenua"] },
+		},
+	},
+
+	["Invertebrate Oil"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Invertebrate Oil"],
+		npcs = { 157312 },
+		spellId = 336021,
+		itemId = 181270,
+		chance = 40,
+		creatureId = 172149,
+		questId = 61724,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 58.6, y = 74.2, n = L["Oily Invertebrate"] },
+		},
+	},
+
+	["Shy Melvin"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Shy Melvin"],
+		npcs = { 162711 },
+		spellId = 335969,
+		itemId = 181263,
+		chance = 3,
+		creatureId = 172134,
+		questId = 58868,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 76.8, y = 57.0, n = L["Deadly Dapperling"] },
+		},
+	},
+
+	["Corpselouse Larva"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Corpselouse Larva"],
+		npcs = { 162528 },
+		spellId = 335974,
+		itemId = 181265,
+		chance = 100,
+		creatureId = 172136,
+		questId = 58768,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 42.27, y = 53.90, n = L["Smorgas the Feaster"] },
+		},
+	},
+
+	["Contained Essence of Dread"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Contained Essence of Dread"],
+		npcs = { 154330 },
+		spellId = 341492,
+		itemId = 183407,
+		chance = 8,
+		creatureId = 174081,
+		questId = 57509,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 19.8, y = 46.0, n = L["Eternas the Tormentor"] },
+		},
+	},
+
+	["Tower Deathroach"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Tower Deathroach"],
+		npcs = { 155250, 155251, 156239 },
+		spellId = 340721,
+		itemId = 183115,
+		chance = 25,
+		creatureId = 173849,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
 	-- ["SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"] = {
 	-- 	cat = BFA,
 	-- 	type = PET,
@@ -4851,6 +5687,457 @@ function R:PrepareDefaults()
 	-- 		{ m = CONSTANTS.UIMAPIDS.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, x = 00000000000000000000000000000000000000000000000000000000000, y = 000000000000000000000000000000000000000000000000000000000000000000, n = L["BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"] },
 	-- 	},
 	-- },
+	["Devoured Wader"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Devoured Wader"],
+		itemId = 180869,
+		spellId = 335083,
+		creatureId = 171714,
+		npcs = { 171041, 171013, 171040 },
+		chance = 20,
+		questId = 61001,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION },
+		},
+	},
+
+	["Lost Featherling"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Lost Featherling"],
+		itemId = 184397,
+		spellId = 345741,
+		creatureId = 175560,
+		npcs = { 157054, 156559, 156560, 157212 },
+		chance = 150,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION },
+		},
+		requiresCovenant = true,
+		requiredCovenantID = CONSTANTS.COVENANT_IDS.KYRIAN
+	},
+
+	["Bottled Up Rage"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Bottled Up Rage"],
+		itemId = 180585,
+		spellId = 333795,
+		creatureId = 171118,
+		npcs = { 170048, 165175 },
+		chance = 20,
+		questId = { 60729 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 49.84, y = 35.02, n = L["Manifestation of Wrath"] },
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 67.8, y = 82, n = L["Prideful Hulk"] },
+		},
+	},
+
+	["Undying Deathroach"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Undying Deathroach"],
+		itemId = 183408,
+		items = { 184395 },
+		spellId = 341493,
+		creatureId = 174082,
+		chance = 20,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW },
+		},
+	},
+
+	["Decaying Mawrat"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Decaying Mawrat"],
+		itemId = 183409,
+		items = { 184395 },
+		spellId = 341494,
+		creatureId = 174083,
+		chance = 20,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW },
+		},
+	},
+
+	["Frenzied Mawrat"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Frenzied Mawrat"],
+		itemId = 183192,
+		spellId = 341293,
+		creatureId = 173990,
+		npcs = { 151329, 153165, 151331 },
+		chance = 100,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Maw Stalker"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Maw Stalker"],
+		itemId = 183194,
+		spellId = 341295,
+		creatureId = 173991,
+		npcs = { 159755, 151331, 169859, 171422 },
+		chance = 200,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Hissing Deathroach"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Hissing Deathroach"],
+		itemId = 183116,
+		spellId = 340722,
+		creatureId = 173850,
+		npcs = { 155251, 156239, 155250 },
+		chance = 33,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Severs"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Severs"],
+		itemId = 183117,
+		spellId = 340723,
+		creatureId = 173851,
+		npcs = { 159190, 157122, 171422, 155945 },
+		chance = 400,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Lightbinders"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Lightbinders"],
+		itemId = 180586,
+		spellId = 333796,
+		creatureId = 171119,
+		npcs = { 164388, 160604, 165687 },
+		chance = 1000, -- It's about 5% from the rare, but two sources with different drop rates aren't currently supported
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 25.8, y = 48.4, n = L["Amalgamation of Light"] },
+		},
+	},
+
+	["Crimson Dredwing Pup"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Crimson Dredwing Pup"],
+		itemId = 180602,
+		spellId = 333865,
+		creatureId = 171150,
+		npcs = {161206, 169154, 163893, 156077, 156395, 165290 },
+		chance = 2000,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH },
+		},
+	},
+
+	["Jar of Ashes"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Jar of Ashes"],
+		itemId = 183193,
+		spellId = 341292,
+		creatureId = 173989,
+		npcs = { 153165, 151329, 151331 },
+		chance = 100,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+
+	["Maw Crawler"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Maw Crawler"],
+		itemId = 183191,
+		spellId = 341289,
+		creatureId = 173988,
+		npcs = { 153451, 156015, 155945, 153165, 169859 },
+		chance = 200,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Torghast Lurker"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Torghast Lurker"],
+		itemId = 183195,
+		spellId = 341298,
+		creatureId = 173992,
+		npcs = { 152995, 170418, 153174, 153011, 153382 },
+		chance = 100,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TORGHAST },
+		},
+	},
+
+	["Stonewing Dredwing Pup"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Stonewing Dredwing Pup"],
+		itemId = 180601,
+		items = { 180648 },
+		spellId = 339590,
+		creatureId = 173502,
+		chance = 100, -- Blind guess
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH },
+		},
+	},
+
+	["Hungry Burrower"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Hungry Burrower"],
+		itemId = 180635,
+		items = { 180649 },
+		spellId = 334149,
+		creatureId = 171242,
+		chance = 100, -- Blind guess
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.ARDENWEALD },
+		},
+	},
+
+	["Larion Cub"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Larion Cub"],
+		itemId = 184399,
+		items = { 180647 },
+		spellId = 345744,
+		creatureId = 175564,
+		chance = 100, -- Blind guess
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION },
+		},
+	},
+
+	["Micromancer's Mystical Cowl"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = USE,
+		name = L["Micromancer's Mystical Cowl"],
+		itemId = 181269,
+		items = { 180646 },
+		spellId = 336020,
+		creatureId = 172148,
+		chance = 100, -- Blind guess
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS },
+		},
+	},
+
+	["Sludge Feeler"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = BOSS,
+		name = L["Sludge Feeler"],
+		itemId = 181271,
+		spellId = 336022,
+		creatureId = 172150,
+		npcs = { 99999 },
+		tooltipNpcs = { 164267 },
+		statisticId = { 14398 },
+		chance = 100,
+		equalOdds = true,
+		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+		groupSize = 5,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.PLAGUEFALL },
+		},
+	},
+
+	["Vial of Roiling Emotions"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC, -- Is this actually correct? Can't use statistics to reliably detect this, because there aren't any
+		name = L["Vial of Roiling Emotions"],
+		itemId = 180591,
+		spellId = 333802,
+		creatureId = 171124,
+		npcs = { 162102 },
+		-- tooltipNpcs = { 162102 }, -- Not needed if using NPC instead of BOSS
+		chance = 100,
+		equalOdds = true,
+		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+		groupSize = 5,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.SANGUINE_DEPTHS },
+		},
+	},
+
+	["Spinemaw Gormling"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = BOSS,
+		name = L["Spinemaw Gormling"],
+		itemId = 183623,
+		spellId = 341519,
+		creatureId = 174089,
+		npcs = { 99999 },
+		tooltipNpcs = { 164517 },
+		statisticId = { 14395 },
+		chance = 100,
+		equalOdds = true,
+		instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
+		groupSize = 5,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MISTS_OF_TIRNA_SCITHE },
+		},
+	},
+
+	["Skittering Venomspitter"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Skittering Venomspitter"],
+		itemId = 181173,
+		spellId = 335765,
+		creatureId = 171987,
+		chance = 75,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS },
+		},
+	},
+
+	["Bubbling Pustule"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Bubbling Pustule"],
+		itemId = 181262,
+		spellId = 335966,
+		creatureId = 172132,
+		chance = 33,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS },
+		},
+	},
+
+	["Silvershell Snapper"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Silvershell Snapper"],
+		itemId = 180856,
+		spellId = 335050,
+		creatureId = 171693,
+		chance = 20,
+		tooltipNpcs = { 163460 },
+		questId = { 62650 },
+		sourceText = L["This can be looted after killing Dionae."],
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION, x = 41.5, y = 49.1, n = L["Stewart's Stewpendous Stew"] },
+		},
+	},
+
+	["Trapped Stonefiend"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Trapped Stonefiend"],
+		itemId = 180592,
+		spellId = 333803,
+		creatureId = 171125,
+		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH },
+		},
+	},
+
+	["Larion Pouncer"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = NPC,
+		name = L["Larion Pouncer"],
+		itemId = 184401,
+		spellId = 345742,
+		creatureId = 175562,
+		npcs = { 156340 },
+		questId = 61634,
+		chance = 25,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION, x = 22.6, y = 22.8, n = L["Larionrider Orstus"] },
+		},
+	},
+
+	["Soullocked Sinstone"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Soullocked Sinstone"],
+		itemId = 180589,
+		spellId = 333800,
+		creatureId = 171122,
+		chance = 20,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH },
+		},
+	},
+
+	["Luminous Webspinner"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Luminous Webspinner"],
+		itemId = 181171,
+		spellId = 335762,
+		creatureId = 171985,
+		chance = 25, -- Blind guess
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS },
+		},
+	},
+
+	["Stony's Infused Ruby"] = {
+		cat = SHADOWLANDS,
+		type = PET,
+		method = SPECIAL,
+		name = L["Stony's Infused Ruby"],
+		itemId = 183855,
+		spellId = 339674,
+		creatureId = 173536,
+		chance = 100, -- Estimate
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH },
+		},
+	},
 
 },
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4985,7 +6272,6 @@ function R:PrepareDefaults()
 		enableCoin = true,
 		disableForClass = { ["DEATHKNIGHT"] = true, ["DRUID"] = true, ["HUNTER"] = true, ["MAGE"] = true, ["MONK"] = true, ["PALADIN"] = true, ["PRIEST"] = true, ["ROGUE"] = true, ["SHAMAN"] = true, ["WARLOCK"] = true, ["WARRIOR"] = true },
 		statisticId = { 10977, 10979, 10980, 10978 },
-		-- todo is still counting even if disableForClass is set?
 		coords = { {m=772, i=true} },
 	},
 
@@ -5024,7 +6310,7 @@ function R:PrepareDefaults()
 		chance = 3,
 		questId = 48700,
 		coords = {
-			{ m = 882, x = 43.65, y = 60.72, n = L["Baarut the Bloodthirsty"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.65, y = 60.72, n = L["Baarut the Bloodthirsty"] },
 		},
 	},
 
@@ -5039,7 +6325,7 @@ function R:PrepareDefaults()
 		chance = 10,
 		questId = 48968,
 		coords = {
-			{ m = 885, x = 58.49, y = 11.80, n = L["Doomcaster Suprax"] },
+			{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 58.49, y = 11.80, n = L["Doomcaster Suprax"] },
 		},
 	},
 
@@ -5054,7 +6340,7 @@ function R:PrepareDefaults()
 		chance = 9,
 		questId = 48718,
 		coords = {
-			{ m = 882, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
 		},
 	},
 
@@ -5069,7 +6355,7 @@ function R:PrepareDefaults()
 		chance = 9,
 		questId = 48718,
 		coords = {
-			{ m = 882, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
 		},
 	},
 
@@ -5084,7 +6370,7 @@ function R:PrepareDefaults()
 		chance = 9,
 		questId = 48718,
 		coords = {
-			{ m = 882, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 61.72, y = 50.31, n = L["Instructor Tarahna"] },
 		},
 	},
 
@@ -5099,7 +6385,7 @@ function R:PrepareDefaults()
 		chance = 12,
 		questId = 48565,
 		coords = {
-			{ m = 830, x = 53.94, y = 31.39, n = L["Sister Subversia"] },
+			{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 53.94, y = 31.39, n = L["Sister Subversia"] },
 		},
 	},
 
@@ -5114,7 +6400,7 @@ function R:PrepareDefaults()
 		chance = 7,
 		questId = 48967,
 		coords = {
-			{ m = 885, x = 83.72, y = 81.14, n = L["Squadron Commander Vishax"] },
+			{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 83.72, y = 81.14, n = L["Squadron Commander Vishax"] },
 		},
 	},
 
@@ -5129,7 +6415,7 @@ function R:PrepareDefaults()
 		chance = 5,
 		questId = 48814,
 		coords = {
-			{ m = 885, x = 61.77, y = 64.53, n = L["Wrath-Lord Yarez"] },
+			{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 61.77, y = 64.53, n = L["Wrath-Lord Yarez"] },
 		},
 	},
 
@@ -5144,7 +6430,7 @@ function R:PrepareDefaults()
 		chance = 10,
 		questId = 48971,
 		coords = {
-			{ m = 885, x = 65.03, y = 82.31, n = L["Rezira the Seer"] },
+			{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 65.03, y = 82.31, n = L["Rezira the Seer"] },
 		},
 	},
 
@@ -5176,8 +6462,8 @@ function R:PrepareDefaults()
 		},
 		sourceText = format(L["Has a chance to drop from either %s or %s on Argus. Each can be looted once per day."], L["Vigilant Thanos"], L["Vigilant Kuro"]),
 		coords = {
-			{ m = 882, x = 63.88, y = 64.25, n = L["Vigilant Kuro"] },
-			{ m = 882, x = 36.32, y = 23.71, n = L["Vigilant Thanos"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 63.88, y = 64.25, n = L["Vigilant Kuro"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 36.32, y = 23.71, n = L["Vigilant Thanos"] },
 		},
 	 },
 
@@ -5315,8 +6601,6 @@ function R:PrepareDefaults()
 		npcs = { 141942 },
 		questId = { 53057, 53516},
 		chance = 30,
-		groupSize = 5,
-		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.ARATHI_HIGHLANDS, x = 47.6, y = 77.9, n = L["Molok the Crusher"] },
 		},
@@ -5442,7 +6726,7 @@ function R:PrepareDefaults()
 		npcs = { 138122 },
 		questId = { 53001, 53002 }, -- Loot lockout
 		chance = 100, -- Need more data. Until then, this is a blind guess...
-		groupSize = 25,
+		groupSize = 3,
 		equalOdds = true,
 		requiresAlliance = true,
 		coords = {
@@ -5461,7 +6745,7 @@ function R:PrepareDefaults()
 		npcs = { 137374 },
 		questId = { 53001, 53002 }, -- Loot Lockout
 		chance = 100, -- Blind guess :|
-		groupSize = 25,
+		groupSize = 3,
 		equalOdds = true,
 		requiresHorde = true,
 		coords = {
@@ -5481,6 +6765,9 @@ function R:PrepareDefaults()
 		itemId = 166877,
 		items = { 166298 },
 		chance = 8,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.SILITHUS, x = 42.19, y = 44.26, n = L["Magni Bronzebeard"] },
+		},
 	},
 
 	["Bowl of Glowing Pufferfish"] = {
@@ -5492,6 +6779,10 @@ function R:PrepareDefaults()
 		itemId = 166704,
 		items = { 166245 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.STORMSONG_VALLEY },
+			{ m = CONSTANTS.UIMAPIDS.ZULDAZAR }
+		},
 	},
 
 
@@ -5515,6 +6806,9 @@ function R:PrepareDefaults()
 		itemId = 166701,
 		items = { 166292 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.ZULDAZAR }
+		},
 	},
 
 	["For da Blood God!"] = {
@@ -5526,6 +6820,9 @@ function R:PrepareDefaults()
 		itemId = 166308,
 		items = { 166282 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.NAZMIR }
+		},
 	},
 
 	["Goldtusk Inn Breakfast Buffet"] = {
@@ -5537,6 +6834,9 @@ function R:PrepareDefaults()
 		itemId = 166703,
 		items = { 166290 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.VOLDUN }
+		},
 	},
 
 	-- ["Words of Akunda"] = { -- Note: NYI as of 19/04/2019
@@ -5559,6 +6859,9 @@ function R:PrepareDefaults()
 		itemId = 166880,
 		items = { 166290 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.VOLDUN }
+		},
 	},
 
 	["Rallying War Banner"] = {
@@ -5570,6 +6873,10 @@ function R:PrepareDefaults()
 		itemId = 166879,
 		items = { 166299, 166300 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BORALUS },
+			{ m = CONSTANTS.UIMAPIDS.DAZARALOR }
+		},
 	},
 
 	["Bewitching Tea Set"] = {
@@ -5581,6 +6888,9 @@ function R:PrepareDefaults()
 		itemId = 166808,
 		items = { 166297 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.DRUSTVAR }
+		},
 	},
 
 	["Proudmoore Music Box"] = {
@@ -5592,6 +6902,9 @@ function R:PrepareDefaults()
 		itemId = 166702,
 		items = { 166295 },
 		chance = 10,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.TIRAGARDE_SOUND }
+		},
 	},
 
 	["Detoxified Blight Grenade"] = {
@@ -5635,8 +6948,6 @@ function R:PrepareDefaults()
 		npcs = { 147708 },
 		chance = 10,
 		questId = { 54278, 54279 },
-		groupSize = 5,
-		equalOdds = true,
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.DARKSHORE, x = 58.3, y = 24.9, n = L["Athrikus Narassin"] },
 		},
@@ -5683,7 +6994,7 @@ function R:PrepareDefaults()
 		name = L["Mechagonian Sawblades"],
 		itemId = 167931,
 		npcs = { 152007 },
-		chance = 5, -- Blind guess (no data)
+		chance = 20,
 		questId = { 55369 },
 	},
 
@@ -5695,7 +7006,7 @@ function R:PrepareDefaults()
 		name = L["Shadescale"],
 		itemId = 170187,
 		npcs = { 152552 },
-		chance = 20, -- Blind guess (no data)
+		chance = 10,
 		questId = { 56295 },
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NAZJATAR, x = 62.74, y = 8.09, n = L["Shassera"] },
@@ -5710,7 +7021,7 @@ function R:PrepareDefaults()
 		name = L["Shirakess Warning Sign"],
 		itemId = 170196,
 		npcs = { 154148 },
-		chance = 20, -- Blind guess (no data)
+		chance = 7,
 		questId = { 56106 },
 		coords = {
 			{ m = CONSTANTS.UIMAPIDS.NAZJATAR, x = 66, y = 23, n = L["Tidemistress Leth'sindra"] },
@@ -5740,7 +7051,7 @@ function R:PrepareDefaults()
 		name = L["Flopping Fish"],
 		itemId = 170203,
 		items = { 169940, 169939 },
-		chance = 20, -- Blind guess (no data)
+		chance = 8,
 	},
 
 	["Memento of the Deeps"] = {
@@ -5751,7 +7062,7 @@ function R:PrepareDefaults()
 		name = L["Memento of the Deeps"],
 		itemId = 170469,
 		items = { 169940, 169939 },
-		chance = 20, -- Blind guess (no data)
+		chance = 10,
 	},
 
 	["Zanj'ir Weapon Rack"] = {
@@ -5798,7 +7109,7 @@ function R:PrepareDefaults()
 		},
 		name = L["Zanj'ir Weapon Rack"],
 		itemId = 170199,
-		chance = 3333,
+		chance = 400,
 	},
 
 	["Underlight Sealamp"] = {
@@ -5815,7 +7126,7 @@ function R:PrepareDefaults()
 		},
 		name = L["Underlight Sealamp"],
 		itemId = 170476,
-		chance = 20,
+		chance = 10,
 	},
 
 	-- 8.3 Toys
@@ -5894,6 +7205,255 @@ function R:PrepareDefaults()
 		},
 	},
 
+	-- 9.0 Toys
+	["Borr-Geth's Fiery Brimstone"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Borr-Geth's Fiery Brimstone"],
+		itemId = 184312,
+		npcs = { 157833 },
+		chance = 4,
+		questId = { 57469 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 39.6, y = 40.8, n = L["Borr-Geth"] },
+		},
+	},
+
+	["Ancient Elethium Coin"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Ancient Elethium Coin"],
+		itemId = 184292,
+		npcs = { 162849 },
+		chance = 8,
+		questId = { 60987 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 16.4, y = 50.6, n = L["Morguliax"] },
+		},
+	},
+
+	["Orophea's Lyre"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Orophea's Lyre"],
+		itemId = 181794,
+		npcs = { 172577 },
+		chance = 2,
+		questId = { 61519 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.THE_MAW, x = 23.6, y = 21.6, n = L["Orophea"] },
+		},
+	},
+
+	["Smolderheart"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Smolderheart"],
+		itemId = 180873,
+		npcs = { 160857 },
+		chance = 25,
+		questId = { 58263 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.REVENDRETH, x = 34.08, y = 55.47, n = L["Sire Ladinas"] },
+		},
+	},
+
+	["Regenerating Slime Vial"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Regenerating Slime Vial"],
+		itemId = 184476,
+		npcs = { 162727 },
+		chance = 10,
+		questId = { 58870 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 52.75, y = 35.28, n = L["Bubbleblood"] },
+		},
+	},
+
+	["Malfunctioning Goliath Gauntlet"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = USE,
+		name = L["Malfunctioning Goliath Gauntlet"],
+		itemId = 184396,
+		items = { 180647 },
+		chance = 20,	-- Estimate
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION }
+		},
+	},
+
+	["Mark of Purity"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = USE,
+		name = L["Mark of Purity"],
+		itemId = 184435,
+		items = { 180647 },
+		chance = 20,	-- Estimate
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION }
+		},
+	},
+
+	["Infested Arachnid Casing"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = USE,
+		name = L["Infested Arachnid Casing"],
+		itemId = 184495,
+		items = { 180646 },
+		chance = 20,	-- Estimate
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+		},
+	},
+
+	["Acrobatic Steward"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = SPECIAL,
+		name = L["Acrobatic Steward"],
+		itemId = 184418,
+		items = {
+			353234,
+			353019,
+			353503,
+			352754,
+			353325,
+			353516,
+			353205,
+			363825,
+			353500,
+			353643
+		},
+		chance = 20, -- Average
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION },
+		},
+	},
+
+	["Ever-Abundant Hearth"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Ever-Abundant Hearth"],
+		itemId = 184404,
+		npcs = { 171009 },
+		chance = 8,
+		questId = { 60998 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION, x = 51.4, y = 19.0, n = L["Enforcer Aegeon"] },
+		},
+	},
+
+	["Soothing Vesper"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = SPECIAL,
+		name = L["Soothing Vesper"],
+		itemId = 184415,
+		items = {
+			353687,
+			353691,
+			353867
+		},
+		chance = 12, -- Average
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION },
+		},
+	},
+
+	["Mnemonic Attunement Pane"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Mnemonic Attunement Pane"],
+		itemId = 184413,
+		npcs = { 171008 },
+		chance = 10,
+		questId = { 60997 },
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.BASTION, x = 43.6, y = 25.6, n = L["Unstable Memory"] },
+		},
+	},
+
+	["Vixx's Chest of Tricks"] = {
+		cat = LEGION,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Vixx's Chest of Tricks"],
+		itemId = 152982,
+		npcs = { 127882 },
+		chance = 4,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.SEAT_OF_THE_TRIUMVIRATE },
+		},
+	},
+
+	["Unstable Portal Emitter"] = {
+		cat = LEGION,
+		type = ITEM,
+		isToy = true,
+		method = NPC,
+		name = L["Unstable Portal Emitter"],
+		itemId = 153004,
+		npcs = { 127882 },
+		chance = 7,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.SEAT_OF_THE_TRIUMVIRATE },
+		},
+	},
+
+	["Kevin's Party Supplies"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = SPECIAL,
+		name = L["Kevin's Party Supplies"],
+		itemId = 184447,
+		items = { 354856, },
+		chance = 11,
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS },
+		},
+	},
+
+	["Battlecry of Krexus"] = {
+		cat = SHADOWLANDS,
+		type = ITEM,
+		isToy = true,
+		method = SPECIAL,
+		name = L["Battlecry of Krexus"],
+		itemId = 184318,
+		items = { 352086, },
+		chance = 25,
+		sourceText = L["Only members of the Necrolord covenant will be able to reach this cache."],
+		coords = {
+			{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 44.1, y = 40.0, n = L["Blackhound Cache"] },
+		},
+	},
+
+
 	-- ["AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"] = {
 	-- 	cat = BFA,
 	-- 	type = ITEM,
@@ -5930,9 +7490,9 @@ function R:PrepareDefaults()
 		unique = false,
 		sourceText = L["Dropped by the panthara rares on Argus. Has a chance to hatch into one of four Mana Ray mounts as well as one of two Skyfin pets after five days."],
 		coords = {
-			{ m = 885, x = 64.32, y = 48.62, n = L["Varga"] },
-			{ m = 830, x = 70.21, y = 34.38, n = L["Naroua"] },
-			{ m = 882, x = 43.55, y = 49.19, n = L["Sabuul"] },
+			{ m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 64.32, y = 48.62, n = L["Varga"] },
+			{ m = CONSTANTS.UIMAPIDS.KROKUUN, x = 70.21, y = 34.38, n = L["Naroua"] },
+			{ m = CONSTANTS.UIMAPIDS.MACAREE, x = 43.55, y = 49.19, n = L["Sabuul"] },
 		},
 	 },
 
@@ -5951,8 +7511,6 @@ function R:PrepareDefaults()
 		{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 22.09, y = 24.03, n = L["Cave Entrance"] },
 		{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS, x = 21.16, y = 14.53, n = L["Rei Lun"] },
 	},
-	groupSize = 3,
-	equalOdds = true,
 },
 
 ["Zan-Tien Lasso"] = {
@@ -5985,6 +7543,44 @@ function R:PrepareDefaults()
 		{ m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS },
 	},
 	sourceText = L["Can be used to capture the Ivory Cloud Serpent"],
+},
+
+-- 9.0
+["Blight-Touched Egg"] = {
+	cat = SHADOWLANDS,
+	type = ITEM,
+	method = NPC,
+	name = L["Blight-Touched Egg"],
+	itemId = 184104,
+	npcs = {
+		162258,
+		162588,
+		172390,
+		162259,
+		170456,
+		162589,
+		170893,
+		164587
+	},
+	chance = 500,
+	sourceText = L["Dropped by various flying creatures in Maldraxxus. Will hatch into Callow Flayedwing after five days."],
+	coords = {
+		{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+	},
+},
+
+["Necroray Egg"] = {
+	cat = SHADOWLANDS,
+	type = ITEM,
+	method = USE,
+	name = L["Necroray Egg"],
+	itemId = 184159,
+	items = { 181732, 181733 },
+	chance = 100,
+	sourceText = L["Sometimes contained in the caches awarded for completing any covenant's Calling in Maldraxxus. Will hatch into one of three Necroray mounts after three days."],
+	coords = {
+		{ m = CONSTANTS.UIMAPIDS.MALDRAXXUS }
+	},
 },
 
 ["All-Seeing Right Eye"] = {
@@ -6037,6 +7633,9 @@ function R:PrepareDefaults()
 			instanceDifficulties = { [CONSTANTS.INSTANCE_DIFFICULTIES.MYTHIC_DUNGEON] = true },
 			groupSize = 5,
 			sourceText = L["Dropped by Merektha in Temple of Sethraliss. Will hatch into Spawn of Merektha pet after three days."],
+			coords = {
+				{ m = CONSTANTS.UIMAPIDS.TEMPLE_OF_SETHRALISS, i = true }
+			},
 		},
 		["Nightwreathed Egg"] = {
 			cat = BFA,

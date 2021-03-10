@@ -20,13 +20,13 @@ L.BossModLoad_now 			= [[Boss Mod non caricata.
 Verrà caricata all'entrata dell'istanza.
 Puoi cliccare il pulsante per forzarne il caricamento.]]
 
-L.PosX						= 'Posizione X'
-L.PosY						= 'Posizione Y'
+L.PosX						= "Posizione X"
+L.PosY						= "Posizione Y"
 
-L.MoveMe 					= 'Spostami'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Annulla'
-L.Button_LoadMod 			= 'Carica AddOn'
+L.MoveMe 					= "Spostami"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Annulla"
+L.Button_LoadMod 			= "Carica AddOn"
 L.Mod_Enabled				= "Abilita boss mod"
 L.Mod_Reset					= "Ripristina predefiniti"
 L.Reset 					= "Resetta"
@@ -317,8 +317,7 @@ L.AdvancedAutologBosses		= "Regostra automaticamente gli scontri boss con Transc
 L.LogOnlyNonTrivial			= "Registra gli scontri boss incursione solo dell'espansione attuale (esclude Ricerca Incursioni/gruppo/scenari/vecchi contenuti)"
 --
 L.Area_3rdParty				= "Opzioni di Terze Parti"
-L.ShowBBOnCombatStart		= "Esegui controllo Big Brother a inizio combattimento"
-L.BigBrotherAnnounceToRaid	= "Annuncia risultati Big Brother all'incursione"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Opzioni Invito"
 L.AutoAcceptFriendInvite	= "Accetta automaticamente inviti gruppo da parte di amici"
 L.AutoAcceptGuildInvite		= "Accetta automaticamente inviti gruppo da parte di gildani"

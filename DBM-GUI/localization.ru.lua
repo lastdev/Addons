@@ -21,13 +21,13 @@ L.BossModLoad_now 			= [[Модуль для этих боссов не загр
 Он будет загружен сразу после входа в подземелье.
 Также вы можете нажать кнопку, чтобы загрузить модуль вручную.]]
 
-L.PosX						= 'Позиция X'
-L.PosY						= 'Позиция Y'
+L.PosX						= "Позиция X"
+L.PosY						= "Позиция Y"
 
-L.MoveMe 					= 'Передвинь меня'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Отмена'
-L.Button_LoadMod			= 'Загрузить модуль'
+L.MoveMe 					= "Передвинь меня"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Отмена"
+L.Button_LoadMod			= "Загрузить модуль"
 L.Mod_Enabled				= "Включить модуль"
 L.Mod_Reset					= "Сброс настроек"
 L.Reset 					= "Сброс"
@@ -305,8 +305,7 @@ L.AdvancedAutologBosses		= "Автоматически записывать бо
 L.LogOnlyNonTrivial			= "Записывать только бои с рейдовыми боссами (искл. Поиск Рейдов/5 ппл/сценарии)"
 --
 L.Area_3rdParty				= "Параметры аддонов третих лиц"
-L.ShowBBOnCombatStart		= "Выполнять проверку положительных эффектов Big Brother в начале боя"
-L.BigBrotherAnnounceToRaid	= "Объявлять результаты проверки Big Brother в рейд"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Параметры приглашений"
 L.AutoAcceptFriendInvite	= "Автоматически принимать приглашения в группу от друзей"
 L.AutoAcceptGuildInvite		= "Автоматически принимать приглашения в группу от согильдийцев"

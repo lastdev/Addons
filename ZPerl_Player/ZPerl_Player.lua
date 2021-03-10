@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -27,6 +27,7 @@ local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local format = format
 
+local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local GetNumGroupMembers = GetNumGroupMembers
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitHealth = UnitHealth
@@ -803,7 +804,7 @@ end
 
 -- XPerl_Player_UpdateLevel
 local function XPerl_Player_UpdateLevel(self)
-	local color = GetQuestDifficultyColor(UnitLevel(self.partyid))
+	local color = GetDifficultyColor(UnitLevel(self.partyid))
 	self.levelFrame.text:SetTextColor(color.r, color.g, color.b, conf.transparency.text)
 
 	self.levelFrame.text:SetText(UnitLevel(self.partyid))

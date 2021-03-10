@@ -3,10 +3,8 @@ local addon = _G[addonName]
 local colors = addon.Colors
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local CHARS_PER_FRAME = 12
-
 addon:Controller("AltoholicUI.AchievementRow", {
-	Update = function(frame, account, realm, allianceID, hordeID)
+	Update = function(frame, account, realm, page, allianceID, hordeID)
 		local _, achName, _, isComplete, _, _, _, _, flags = GetAchievementInfo(allianceID)
 		
 		-- if not achName then 
@@ -23,20 +21,14 @@ addon:Controller("AltoholicUI.AchievementRow", {
 		local button
 		local character
 		local achievementID
-        
-        local current_start_col, start_char_index = addon:GetAchievementsCurrentColumnScrollInfo()		
-        local current_end_col = current_start_col + CHARS_PER_FRAME
-        if current_end_col > 50 then current_end_col = 50 end
 		
-        for colIndex = 1, 50 do
+		for colIndex = 1, 12 do
 			button = frame["Item"..colIndex]
 			button.IconBorder:Hide()
 			
-			if realm then
-                character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, colIndex))
-            else
-                character = addon:GetOption(format("Tabs.Achievements.%s.Column%d", account, colIndex))
-            end
+			local optionIndex = ((page - 1) * 12) + colIndex		-- Pages = 1-12, 13-24, etc..
+			
+			character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, optionIndex))
 			if character then
 				if hordeID and DataStore:GetCharacterFaction(character) ~= "Alliance" then
 					achievementID = hordeID
@@ -51,18 +43,6 @@ addon:Controller("AltoholicUI.AchievementRow", {
 				-- row could be alliance, and button could be horde
 				button:SetInfo(character, achievementID)
 				button:Show()
-                
-                button:ClearAllPoints()
-                if (colIndex < current_start_col) or (colIndex >= current_end_col) then
-                    -- Column is out of range, hide it
-                    button:Hide()
-                elseif colIndex == current_start_col then
-                    -- Column is the left-most one, anchor it to the left
-                    button:SetPoint("BOTTOMRIGHT", frame["Name"], "BOTTOMRIGHT", 50, 0)
-                else
-                    -- Column is in the middle, anchor it to the one next to it
-                    button:SetPoint("BOTTOMLEFT", frame["Item"..(colIndex-1)], "BOTTOMLEFT", 35, 0)
-                end
 			else
 				button:SetInfo(nil, nil)
 				button:Hide()

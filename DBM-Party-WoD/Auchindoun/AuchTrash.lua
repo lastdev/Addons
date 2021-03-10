@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AuchTrash", "DBM-Party-WoD", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20210119194132")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -18,10 +18,8 @@ local specWarnVoidMending			= mod:NewSpecialWarningInterrupt(154623, "HasInterru
 local specWarnFelStomp				= mod:NewSpecialWarningDodge(157173, "Tank", nil, nil, 1, 2)
 local specWarnArbitersHammer		= mod:NewSpecialWarningInterrupt(157797, "HasInterrupt", nil, 2, 1, 2)
 
-local isTrivial = mod:IsTrivial(110)
-
 function mod:SPELL_CAST_START(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or self:IsTrivial() then return end
 	local spellId = args.spellId
 	if spellId == 157173 then
 		specWarnFelStomp:Show()

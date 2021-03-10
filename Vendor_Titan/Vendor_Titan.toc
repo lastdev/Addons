@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Dependencies: Vendor, Titan
 ## Title: Vendor_Titan
 ## Notes: Titan Plugin for the Vendor addon.

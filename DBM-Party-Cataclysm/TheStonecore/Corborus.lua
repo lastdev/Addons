@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20210119194132")
 mod:SetCreatureID(43438)
 mod:SetEncounterID(1056)
 
@@ -46,7 +46,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 86881 and not self:IsTrivial(90) then
+	if args.spellId == 86881 and not self:IsTrivial() then
 		warnCrystalBarrage:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnCrystalBarrage:Show()

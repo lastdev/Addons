@@ -75,7 +75,8 @@ local AddonDB_Defaults = {
 						counts = {},
 						cooldowns = {}
 					}
-				}
+				},
+				Keystone = {},
 			}
 		}
 	}
@@ -208,19 +209,6 @@ local ContainerTypes = {
 			end,
 		GetFreeSlots = function(self, bagID)
 				local freeSlots, bagType = GetContainerNumFreeSlots(bagID)
-                if (bagID == -3) then 
-                    if not addon.isBankOpen then
-                        -- Player isn't at the bank, so GetContainerNumFreeSlots always returns zero
-                        -- Have to count the number of slots instead
-                        local count = 0
-                        for i = 1, 98 do
-                            if GetContainerItemLink(-3, i) then
-                                count = count + 1
-                            end
-                        end
-                        freeSlots = 98 - count
-                    end
-                end
 				return freeSlots, bagType
 			end,
 		GetLink = function(self, slotID, bagID)
@@ -276,129 +264,70 @@ local ContainerTypes = {
 	}
 }
 
-local function detectBagChanges(originalBag, newBag)
-    local changes = {}
-
-    for slotID = 1, originalBag.size do
-        local itemID = originalBag.ids[slotID]
-        if itemID == nil then
-            -- slot was originally empty
-            if newBag.ids[slotID] ~= nil then
-                -- an item has been moved into this slot
-                table.insert(changes, {["changeType"] = "insert", ["slotID"] = slotID, ["itemID"] = newBag.ids[slotID], ["count"] = newBag.counts[slotID] })
-            end
-        else
-            -- slot originally had an item
-            if newBag.ids[slotID] == nil then
-                -- an item has been removed from this slot
-                table.insert(changes, {["changeType"] = "delete", ["slotID"] = slotID, ["itemID"] = itemID})
-            else
-                if (itemID ~= newBag.ids[slotID]) or (originalBag.counts[slotID] ~= newBag.counts[slotID]) then
-                    -- a different item is now in this slot OR its count changed
-                    table.insert(changes, { 
-                        ["changeType"] = "changed", 
-                        ["slotID"] = slotID, 
-                        ["originalItemID"] = itemID, 
-                        ["newItemID"] = newBag.ids[slotID], 
-                        ["originalCount"] = originalBag.counts[slotID], 
-                        ["newCount"] = newBag.counts[slotID], 
-                    } )
-                end
-            end
-        end
-    end
-
-    return changes
-end
-
 -- *** Scanning functions ***
 local function ScanContainer(bagID, containerType)
 	local Container = ContainerTypes[containerType]
-
-	local originalBag
-    local newBag = {}
-    
+	
+	local bag
 	if containerType == GUILDBANK then
 		local thisGuild = GetThisGuild()
 		if not thisGuild then return end
 	
-		originalBag = thisGuild.Tabs[bagID]	-- bag is actually the current tab
-        thisGuild.Tabs[bagID] = newBag
+		bag = thisGuild.Tabs[bagID]	-- bag is actually the current tab
 	else
-		originalBag = addon.ThisCharacter.Containers["Bag" .. bagID]
-        newBag.cooldowns = {}
-        addon.ThisCharacter.Containers["Bag"..bagID] = newBag
+		bag = addon.ThisCharacter.Containers["Bag" .. bagID]
+		wipe(bag.cooldowns)		-- does not exist for a guild bank
 	end
-        
-    newBag.ids = {}
-    newBag.counts = {}
-    newBag.links = {}
-    newBag.icon = originalBag.icon
-    newBag.link = originalBag.link
-    newBag.rarity = originalBag.rarity
+
+	wipe(bag.ids)				-- clean existing bag data
+	wipe(bag.counts)
+	wipe(bag.links)
 	
 	local link, count
 	local startTime, duration, isEnabled
 	
-	newBag.size = Container:GetSize(bagID)
-	newBag.freeslots, newBag.bagtype = Container:GetFreeSlots(bagID)
-
+	bag.size = Container:GetSize(bagID)
+	bag.freeslots, bag.bagtype = Container:GetFreeSlots(bagID)
+	
 	-- Scan from 1 to bagsize for normal bags or guild bank tabs, but from 40 to 67 for main bank slots
 	-- local baseIndex = (containerType == BANK) and 39 or 0
 	local baseIndex = 0
 	local index
 	
-	for slotID = baseIndex + 1, baseIndex + newBag.size do
+	for slotID = baseIndex + 1, baseIndex + bag.size do
 		index = slotID - baseIndex
 		link = Container:GetLink(slotID, bagID)
 		if link then
-			newBag.ids[index] = tonumber(link:match("item:(%d+)"))
+			bag.ids[index] = tonumber(link:match("item:(%d+)"))
 
 			if link:match("|Hkeystone:") then
 				-- mythic keystones are actually all using the same item id
-				newBag.ids[index] = 138019
+				bag.ids[index] = 138019
 
 			elseif link:match("|Hbattlepet:") then
 				-- special treatment for battle pets, save texture id instead of item id..
 				-- texture, itemCount, locked, quality, readable, _, _, isFiltered, noValue, itemID = GetContainerItemInfo(id, itemButton:GetID());
-				newBag.ids[index] = GetContainerItemInfo(bagID, slotID)
+				bag.ids[index] = GetContainerItemInfo(bagID, slotID)
 			end
 			
 			if IsEnchanted(link) then
-				newBag.links[index] = link
+				bag.links[index] = link
 			end
 		
 			count = Container:GetCount(slotID, bagID)
 			if count and count > 1  then
-				newBag.counts[index] = count	-- only save the count if it's > 1 (to save some space since a count of 1 is extremely redundant)
+				bag.counts[index] = count	-- only save the count if it's > 1 (to save some space since a count of 1 is extremely redundant)
 			end
 		end
 		
 		startTime, duration, isEnabled = Container:GetCooldown(slotID, bagID)
 		if startTime and startTime > 0 then
-			newBag.cooldowns[index] = format("%s|%s|1", startTime, duration)
+			bag.cooldowns[index] = format("%s|%s|1", startTime, duration)
 		end
 	end
 	
 	addon.ThisCharacter.lastUpdate = time()
 	addon:SendMessage("DATASTORE_CONTAINER_UPDATED", bagID, containerType)
-    
-    local changes
-    
-    if containerType ~= GUILDBANK then 
-        changes = detectBagChanges(originalBag, newBag)
-    else
-        return nil
-    end
-
-    -- detect if the table is empty
-    local next = next
-    if next(changes) == nil then
-        return nil
-    else
-        changes.bagID = bagID
-        return changes
-    end
 end
 
 local function ScanBagSlotsInfo()
@@ -410,7 +339,6 @@ local function ScanBagSlotsInfo()
 	for bagID = 0, NUM_BAG_SLOTS do
 		local bag = char.Containers["Bag" .. bagID]
 		numBagSlots = numBagSlots + bag.size
-        if not bag.freeslots then bag.freeslots = 0 end
 		numFreeBagSlots = numFreeBagSlots + bag.freeslots
 	end
 	
@@ -439,19 +367,18 @@ local function ScanGuildBankInfo()
 	-- only the current tab can be updated
 	local thisGuild = GetThisGuild()
 	if not thisGuild then return end
-
+	
 	local tabID = GetCurrentGuildBankTab()
 	local t = thisGuild.Tabs[tabID]	-- t = current tab
+
 	t.name, t.icon = GetGuildBankTabInfo(tabID)
 	t.visitedBy = UnitName("player")
 	t.ClientTime = time()
-    
 	if GetLocale() == "enUS" then				-- adjust this test if there's demand
 		t.ClientDate = date("%m/%d/%Y")
 	else
 		t.ClientDate = date("%d/%m/%Y")
 	end
-    
 	t.ClientHour = tonumber(date("%H"))
 	t.ClientMinute = tonumber(date("%M"))
 	t.ServerHour, t.ServerMinute = GetGameTime()
@@ -476,9 +403,8 @@ local function ScanBag(bagID)
 			end
 		end
 	end
-    local changes = ScanContainer(bagID, BAGS) 
+	ScanContainer(bagID, BAGS)
 	ScanBagSlotsInfo()
-    return changes
 end
 
 local function ScanVoidStorage()
@@ -491,13 +417,9 @@ local function ScanVoidStorage()
 	for tab = 1, 2 do
 		bag = addon.ThisCharacter.Containers[VOID_STORAGE_TAB .. tab]
 		bag.size = 80
-        bag.freeslots = 80
 	
 		for slot = 1, bag.size do
 			itemID = GetVoidItemInfo(tab, slot)
-            if itemID then
-                bag.freeslots = bag.freeslots - 1
-            end
 			bag.ids[slot] = itemID
 		end
 	end
@@ -508,8 +430,32 @@ local function ScanReagentBank()
 	ScanContainer(REAGENTBANK_CONTAINER, BAGS)
 end
 
-local bagUpdateQueue = {} 
+local function ScanKeystoneInfo()
+	local char = addon.ThisCharacter
+	wipe(char.Keystone)
+	
+   local mapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID()
+	if not mapID then return end
+
+	local keyName, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
+	
+	local keyInfo = char.Keystone
+	keyInfo.name = keyName
+	keyInfo.level = C_MythicPlus.GetOwnedKeystoneLevel()
+	keyInfo.texture = texture
+	
+	char.lastUpdate = time()
+end
+
 -- *** Event Handlers ***
+local function OnPlayerAlive()
+	ScanKeystoneInfo()
+end
+
+local function OnWeeklyRewardsUpdate()
+	ScanKeystoneInfo()
+end
+
 local function OnBagUpdate(event, bag)
 	if bag < 0 then
 		return
@@ -519,20 +465,8 @@ local function OnBagUpdate(event, bag)
 		return
 	end
 
-    table.insert(bagUpdateQueue, bag)
-end
-
-local function OnBagUpdateDelayed(event)
-    if #bagUpdateQueue == 0 then return end
-
-    for _, v in ipairs(bagUpdateQueue) do
-        local changes = ScanBag(v)
-        if changes then
-            addon:SendMessage("DATASTORE_CONTAINER_CHANGES_SINGLE", changes)
-        end        
-    end
-
-    wipe(bagUpdateQueue)
+	ScanBag(bag)
+	ScanKeystoneInfo()
 end
 
 local function OnBankFrameClosed()
@@ -546,10 +480,7 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	if (slotID >= 29) and (slotID <= 35) then
 		ScanBag(slotID - 24)		-- bagID for bank bags goes from 5 to 11, so slotID - 24
 	else
-        local changes = ScanContainer(MAIN_BANK_SLOTS, BANK) 
-        if changes then
-            addon:SendMessage("DATASTORE_CONTAINER_CHANGES_SINGLE", changes)
-        end
+		ScanContainer(MAIN_BANK_SLOTS, BANK)
 		ScanBankSlotsInfo()
 	end
 end
@@ -563,10 +494,8 @@ local function OnBankFrameOpened()
 	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
 		ScanBag(bagID)
 	end
-	
-    ScanContainer(MAIN_BANK_SLOTS, BANK)
+	ScanContainer(MAIN_BANK_SLOTS, BANK)
 	ScanBankSlotsInfo()
-    
 	addon:RegisterEvent("BANKFRAME_CLOSED", OnBankFrameClosed)
 	addon:RegisterEvent("PLAYERBANKSLOTS_CHANGED", OnPlayerBankSlotsChanged)
 end
@@ -601,13 +530,11 @@ end
 local function OnAuctionMultiSellStart()
 	-- if a multi sell starts, unregister bag updates.
 	addon:UnregisterEvent("BAG_UPDATE")
-    addon:UnregisterEvent("BAG_UPDATE_DELAYED") 
 end
 
 local function OnAuctionMultiSellUpdate(event, current, total)
 	if current == total then	-- ex: multisell = 8 items, if we're on the 8th, resume bag updates.
 		addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
-        addon:RegisterEvent("BAG_UPDATE_DELAYED", OnBagUpdateDelayed) 
 	end
 end
 
@@ -617,7 +544,6 @@ local function OnAuctionHouseClosed()
 	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
 	
 	addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)	-- just in case things went wrong
-    addon:RegisterEvent("BAG_UPDATE_DELAYED", OnBagUpdateDelayed) 
 end
 
 local function OnAuctionHouseShow()
@@ -674,54 +600,9 @@ local BagTypeStrings = {
 	
 }
 
-local function _ImportBagChanges(character, changes)
-    -- first, integrity checks...
-    if not character then return end
-    if not changes then return end
-    if type(changes) ~= "table" then return end
-    if not changes.bagID then return end
-    local container = _GetContainer(character, changes.bagID) 
-    if not container then return end
-
-    for _, change in pairs(changes) do
-        if type(change) == "table" then
-            if change.changeType == "insert" then
-                if change.slotID and change.itemID then
-                    local existingItem = container.ids[change.slotID]
-                    container.ids[change.slotID] = change.itemID
-                    local item = Item:CreateFromItemID(change.itemID)
-                    item:ContinueOnItemLoad(function()
-	                    container.links[change.slotID] = item:GetItemLink()
-                    end)
-                    container.counts[change.slotID] = change.count 
-                end
-            elseif change.changeType == "delete" then
-                if change.slotID and change.itemID then
-                    local existingItem = container.ids[change.slotID]
-                    container.ids[change.slotID] = nil
-                    container.links[change.slotID] = nil
-                    container.counts[change.slotID] = nil
-                end
-            elseif change.changeType == "changed" then
-                if change.slotID and change.originalItemID and change.newItemID then
-                    local existingItem = container.ids[change.slotID]
-                    container.ids[change.slotID] = change.newItemID
-                    local item = Item:CreateFromItemID(change.newItemID)
-                    item:ContinueOnItemLoad(function()
-	                    container.links[change.slotID] = item:GetItemLink()
-                    end)
-                    container.counts[change.slotID] = change.newCount 
-                end
-            end
-        end
-    end
-end
-
 local function _GetContainerInfo(character, containerID)
 	local bag = _GetContainer(character, containerID)
 	
-    if not bag then return nil end
-    
 	local icon = bag.icon
 	local size = bag.size
 	
@@ -740,8 +621,7 @@ end
 local function _GetContainerSize(character, containerID)
 	-- containerID can be number or string
 	if type(containerID) == "number" then
-		if not character.Containers["Bag"..containerID] then return 0 end
-        return character.Containers["Bag" .. containerID].size
+		return character.Containers["Bag" .. containerID].size
 	end
 	return character.Containers[containerID].size
 end
@@ -754,9 +634,9 @@ local rarityColors = {
 
 local function _GetColoredContainerSize(character, containerID)
 	local bag = _GetContainer(character, containerID)
-	local size = _GetContainerSize(character, containerID) or 0
+	local size = _GetContainerSize(character, containerID)
 	
-	if bag and bag.rarity and rarityColors[bag.rarity] then
+	if bag.rarity and rarityColors[bag.rarity] then
 		return format("%s%s", rarityColors[bag.rarity], size)
 	end
 	
@@ -781,12 +661,7 @@ end
 local function _GetContainerCooldownInfo(bag, slotID)
 	assert(type(bag) == "table")		-- this is the pointer to a bag table, obtained through addon:GetContainer()
 	assert(type(slotID) == "number")
-    
-    if not bag.cooldowns then
-        bag.cooldowns = {}
-        return nil
-    end
-    
+
 	local cd = bag.cooldowns[slotID]
 	if cd then
 		local startTime, duration, isEnabled = strsplit("|", bag.cooldowns[slotID])
@@ -855,27 +730,16 @@ local function _GetNumFreeBankSlots(character)
 	return character.numFreeBankSlots
 end
 
-local function _GetNumFreeReagentBankSlots(character)
-    if not character.Containers then return 0 end
-    if not character.Containers["Bag-3"] then return 0 end
-    return character.Containers["Bag-3"].freeslots
-end
-
-local function _GetNumFreeVoidStorageSlots(character)
-    local tab1Slots = 0
-    if character.Containers["VoidStorage.Tab1"] then
-        tab1Slots = character.Containers["VoidStorage.Tab1"].freeslots
-    end
-    local tab2Slots = 0
-    if character.Containers["VoidStorage.Tab2"] then
-        tab2Slots = character.Containers["VoidStorage.Tab2"].freeslots
-    end
-    return tab1Slots + tab2Slots
-end
-
--- Seems like this should be updated to include tab1 / tab2.
 local function _GetVoidStorageItem(character, index)
 	return character.Containers["VoidStorage"].ids[index]
+end
+
+local function _GetKeystoneName(character)
+	return character.Keystone.name or ""
+end
+
+local function _GetKeystoneLevel(character)
+	return character.Keystone.level or 0
 end
 
 -- local function _DeleteGuild(name, realm, account)
@@ -978,14 +842,6 @@ local function _SendBankTabToGuildMember(member, tabName)
 	end
 end
 
-local function _GetSavedGuildKeys()
-    local keys = {}
-    for key in pairs(addon.db.global.Guilds) do
-        table.insert(keys, key)
-    end
-    return keys
-end
-
 local PublicMethods = {
 	GetContainer = _GetContainer,
 	GetContainers = _GetContainers,
@@ -999,9 +855,9 @@ local PublicMethods = {
 	GetNumFreeBagSlots = _GetNumFreeBagSlots,
 	GetNumBankSlots = _GetNumBankSlots,
 	GetNumFreeBankSlots = _GetNumFreeBankSlots,
-    GetNumFreeReagentBankSlots = _GetNumFreeReagentBankSlots,
-    GetNumFreeVoidStorageSlots = _GetNumFreeVoidStorageSlots, 
 	GetVoidStorageItem = _GetVoidStorageItem,
+	GetKeystoneName = _GetKeystoneName,
+	GetKeystoneLevel = _GetKeystoneLevel,
 	-- DeleteGuild = _DeleteGuild,
 	GetGuildBankItemCount = _GetGuildBankItemCount,
 	GetGuildBankTab = _GetGuildBankTab,
@@ -1017,8 +873,6 @@ local PublicMethods = {
 	RejectBankTabRequest = _RejectBankTabRequest,
 	SendBankTabToGuildMember = _SendBankTabToGuildMember,
 	GetGuildBankTabSuppliers = _GetGuildBankTabSuppliers,
-    GetSavedGuildKeys = _GetSavedGuildKeys,
-    ImportBagChanges = _ImportBagChanges, 
 }
 
 -- *** Guild Comm ***
@@ -1108,10 +962,9 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetNumFreeBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumBankSlots")
 	DataStore:SetCharacterBasedMethod("GetNumFreeBankSlots")
-    DataStore:SetCharacterBasedMethod("GetNumFreeReagentBankSlots")
-    DataStore:SetCharacterBasedMethod("GetNumFreeVoidStorageSlots")
-    DataStore:SetCharacterBasedMethod("ImportBagChanges") 
 	DataStore:SetCharacterBasedMethod("GetVoidStorageItem")
+	DataStore:SetCharacterBasedMethod("GetKeystoneName")
+	DataStore:SetCharacterBasedMethod("GetKeystoneLevel")
 	
 	DataStore:SetGuildBasedMethod("GetGuildBankItemCount")
 	DataStore:SetGuildBasedMethod("GetGuildBankTab")
@@ -1136,23 +989,25 @@ function addon:OnEnable()
 	
 	ScanReagentBank()
 	
+	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
-    addon:RegisterEvent("BAG_UPDATE_DELAYED", OnBagUpdateDelayed) 
 	addon:RegisterEvent("BANKFRAME_OPENED", OnBankFrameOpened)
 	addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
 	addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
 	addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
+	addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
 	
 	-- disable bag updates during multi sell at the AH
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
 end
 
 function addon:OnDisable()
+	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("BAG_UPDATE")
-    addon:UnregisterEvent("BAG_UPDATE_DELAYED") 
 	addon:UnregisterEvent("BANKFRAME_OPENED")
 	addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
 	addon:UnregisterEvent("VOID_STORAGE_OPEN")
 	addon:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
+	addon:UnregisterEvent("WEEKLY_REWARDS_UPDATE")
 end

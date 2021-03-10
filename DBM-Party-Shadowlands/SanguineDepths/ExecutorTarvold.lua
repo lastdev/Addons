@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2415, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200915215556")
+mod:SetRevision("20201213224811")
 mod:SetCreatureID(162103)
 mod:SetEncounterID(2361)
 
@@ -19,15 +19,19 @@ mod:RegisterEventsInCombat(
 
 --TODO, warn for https://shadowlands.wowhead.com/spell=328494/sintouched-anima spawns?
 --TODO, figure ot how Castigate works to more accurately warn it
-local warnCastigate					= mod:NewCastAnnounce(322554, 4)
+--[[
+ability.id = 322554 and type = "begincast"
+ or ability.id = 323548 and type = "applydebuff"
+--]]
+local warnCastigate					= mod:NewTargetNoFilterAnnounce(322554, 4)
 
 local specWarnCastigate				= mod:NewSpecialWarningMoveAway(322554, nil, nil, nil, 1, 2)
---local yellCastigate				= mod:NewYell(322554)
+local yellCastigate					= mod:NewYell(322554)
 local specWarnCoalesceManifestation	= mod:NewSpecialWarningSwitch(322574, "-Healer", nil, nil, 1, 2)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerCastigateCD				= mod:NewNextTimer(20.7, 322554, nil, nil, nil, 3)
-local timerCoalesceManifestationCD	= mod:NewNextTimer(15.8, 322574, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerCastigateCD				= mod:NewNextTimer(20.5, 322554, nil, nil, nil, 3)
+local timerCoalesceManifestationCD	= mod:NewCDTimer(29.5, 322574, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--30 with a standard variationn of 1
 
 mod:AddRangeFrameOption(8, 322554)
 mod:AddNamePlateOption("NPAuraOnEnergy", 323548)
@@ -35,11 +39,22 @@ mod:AddNamePlateOption("NPAuraOnEnergy", 323548)
 mod.vb.AddsActive = 0
 local unitTracked = {}
 
+function mod:CastigateTarget(targetname, uId, bossuid, scanningTime)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnCastigate:Show()
+		specWarnCastigate:Play("targetyou")
+		yellCastigate:Yell()
+	else
+		warnCastigate:Show(targetname)
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.AddsActive = 0
 	table.wipe(unitTracked)
-	timerCastigateCD:Start(4.8-delay)
-	timerCoalesceManifestationCD:Start(1-delay)
+	timerCastigateCD:Start(3.7-delay)
+	timerCoalesceManifestationCD:Start(14.6-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -60,9 +75,8 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 322554 then
-		warnCastigate:Show()
 		timerCastigateCD:Start()
-		timerCoalesceManifestationCD:Start(6)
+		self:BossTargetScanner(args.sourceGUID, "CastigateTarget", 0.1, 8)
 	end
 end
 

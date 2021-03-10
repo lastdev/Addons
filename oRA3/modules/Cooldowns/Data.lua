@@ -441,7 +441,7 @@ data.spells = {
 		[195072] = {10, 1, 577}, -- Fel Rush
 		[204021] = {60, 1, 581}, -- Fiery Brand
 		[189110] = {20, 1, 581}, -- Infernal Strike
-		[187827] = {300, 1, 581}, -- Metamorphosis (Vengeance)
+		[187827] = {300, 1}, -- Metamorphosis (Vengeance)
 		[200166] = 187827, -- Metamorphosis (Havoc)
 		[188501] = {60, 1}, -- Spectral Sight
 		[198793] = {25, 1, 577}, -- Vengeful Retreat
@@ -549,7 +549,7 @@ data.spells = {
 		[199483] = {60, 30, nil, 9}, -- Camouflage
 		[162488] = {30, 35, 255, 11}, -- Steel Trap
 		[131894] = {60, {[253]=35,[254]=15,[255]=35}, nil, {[253]=12,[254]=3,[255]=12}, true}, -- A Murder of Crows
-		[109248] = {45, 40, nil, 15}, -- Binding Shot
+		[109248] = {45, 40, nil, {[253]=15,[254]=false,[255]=15}}, -- Binding Shot
 		[120360] = {20, {[253]=35,[254]=25}, nil, {[253]=17,[254]=5}}, -- Barrage
 		[260402] = {60, 45, 254, 18}, -- Double Tap
 		[201430] = {120, 45, 253, 18}, -- Stampede
@@ -753,6 +753,7 @@ data.spells = {
 		[51533] = {120, 34, 263}, -- Feral Spirit
 		[198103] = {300, 37, 262}, -- Earth Elemental
 		[108280] = {180, 38, 264}, -- Healing Tide Totem
+		[16191] = {180, 38, 264}, -- Mana Tide Totem
 		[51514] = {30, 41}, -- Hex (Frog)
 		[211004] = 51514, -- Spider
 		[211015] = 51514, -- Cockroach

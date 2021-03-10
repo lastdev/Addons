@@ -340,7 +340,9 @@ local function modify(parent, region, parentData, data, first)
 
   if not UpdateText then
     if text:GetFont() then
-      text:SetText(WeakAuras.ReplaceRaidMarkerSymbols(data.text_text))
+      local textStr = data.text_text
+      textStr = textStr:gsub("\\n", "\n");
+      text:SetText(WeakAuras.ReplaceRaidMarkerSymbols(textStr))
     end
   end
 
@@ -359,7 +361,11 @@ local function modify(parent, region, parentData, data, first)
 
   function region:SetTextHeight(size)
     local fontPath = SharedMedia:Fetch("font", data.text_font);
-    region.text:SetFont(fontPath, size, data.text_fontType);
+    if not text:GetFont() then -- Font invalid, set the font but keep the setting
+      text:SetFont(STANDARD_TEXT_FONT, size, data.text_fontType);
+    else
+      region.text:SetFont(fontPath, size, data.text_fontType);
+    end
     region.text:SetTextHeight(size)
     region:UpdateAnchorOnTextChange();
   end

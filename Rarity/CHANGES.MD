@@ -1,54 +1,77 @@
-**r700:**
+**r705:**
 
-> Fixed errors caused by API changes in the Shadowlands prepatch (there may be more errors still)
+Additions:
+* Added tracking for various Shadowlands pets and toys that were previously missing
+* Added tracking for Smoldering Ember Wyrm (Return to Karazhan)
+* Added tracking for Gloop (Corrupted Vale of Eternal Blossoms/Uldum)
+* Added tooltips for achievement-related rares in Nazjatar, Mechagon Island, as well as Shadowlands zones
 
-Developer Notes:
-> Thanks to Daniel Bowden (dbowden713)
+Changes:
+* The main tooltip's sort order can now also be changed by CTRL-clicking on the tooltip header (in addition to clicking on the LDB icon/minimap button)
 
------
+Fixes:
+* Fixed an issue where duplicate attempts would be detected when defeating certain Timewalking encounters
+* Fixed waypoint data (including the displayed zone) for certain legacy collectibles
+* Fixed tracking for Mechagon Peacekeeper, Golden Snorf, and Microbot 8D (Operation: Mechagon)
+* Mining Elementium veins should now add attempts for Elementium Geode in all Cataclysm zones
 
-**r699:**
-
-> When items with incomplete or invalid data are detected by the addon, a notification will now be displayed. These messages should help narrow down future issues with custom items; they can be disabled with a newly-added setting that is located in the Advanced/Experimental section of the configuration UI (subject to change)
-<br>Added a button to remove accountwide statistics for players affected by realm merges, transfers and name changes, to be used if the old character's attempts are still saved and the attempts counts are wrong as a result of the unique ID (name-realm) being different. It can be found in the 'Advanced' section of the options, for now.
-
-> Black Tabby Cat is now considered a zonewide drop, obtainable in all of Hillsbrad Foothills
-<br>Attempts for Knockoff Blingtron are now added when opening Blingtron 7000 Gift Packages
-
-> Fixed a UI issue that could cause the tooltip to not be shown when custom items were added with invalid data (or Blizzard's server didn't send any data for the given item)
-<br>The tooltip now always displays an item's estimated base drop rate instead of considering the somewhat arbitrary group size setting in order to provide consistent data to players
-<br>Added a workaround for some display issues in Blizzard's addon menu that can cause the options window to not open correctly (sigh)
-
------
-
-**r698:**
-
-> Looting an epic-quality Satchel of Chilled Goods (obtained from Frost Lord Ahune during the Midsummer Fire Festival) will now correctly register attempts for the Frigid Frostling pet
+Contributors (in alphabetical order):
+* Tommy Godejord (https://github.com/godejord)
 
 -----
 
-**r697:**
+**r704:**
 
-> Added tracking for pets obtained in the Ny'alotha raid
-<br>Added tracking for Skyshards in the phased 8.3 version of the Vale of Eternal Blossoms
+Additions:
+* Added tracking for various Shadowlands pets and toys that were previously missing
 
-> Fixed an error in the fishing detection that could prevent attempts from being registered correctly
-<br>Fixed a UI issue that could cause the tooltip loading to fail
+Fixes:
+* Mechagon Peacekeeper should now correctly be displayed in the Group category
+* Attempts for Gahz'rooki's Summoning Stone should now be tracked correctly when looting relevant Kor'kron NPCs in The Barrens
+
+Contributors (in alphabetical order):
+* Tommy Godejord (https://github.com/godejord)
 
 -----
 
-**r696:**
+**r703:**
 
-> Added tracking for collectibles obtained from Horrific Visions (experimental)
-<br>Added tracking for the Zan-Tien Lasso (dropped by mogu in the Vale of Eternal Blossoms)
-<br>Added tracking for pets obtained from 8.3 paragon caches
-<br>Added missing toggle for BFA content in the configuration UI
+Additions:
+* Added tracking for various Shadowlands pets and toys that were previously missing
+* Added a setting to show the addon's tooltip on click instead of hover
 
-> Updated group size recommendations for 8.3 collectibles
-<br>Updated drop rate estimations for mounts obtained in BFA dungeons
+Changes:
+* Removed tracking for various items that appear to have never made it to live servers
 
-> Fixed an issue that could cause additional attempts to be registered when Dunegorger Kraulok died nearby, but wasn't actually engaged
-<br>Fixed the detection of pets obtained in the Firelands raid (see notes below)
+Fixes:
+* Removed restrictions placed on the tracking for Theater of Pain rares (to account for Blizzard's stealth hotfix)
+* Fixed an issue where killing covenant-restricted rares on characters that haven't selected a covenant yet would cause an error
+* Fixed tracking for Lightbinders (pet)
 
-Developer Notes:
-> It appears that Blizzard broke the statistics for the Firelands raid when adding its Timewalking version. Detection for all bosses except Ragnaros and Alysrazor was changed to use NPC looting in order to work around this bug as best as possible, but attempts for items dropped by those two bosses might not always be detected until statistics are being updated correctly again
+Contributors (in alphabetical order):
+* Nick Bayley (https://github.com/nickbayley)
+* Tommy Godejord (https://github.com/godejord)
+* Mikael Jelveby (https://github.com/jelveby)
+
+-----
+
+**r702:**
+
+Additions:
+* Added most rare collectibles available in the Shadowlands expansion (many thanks to Tommy Godejord for helping with this task)
+* Added a button to always track battle pets repeatedly. Note: This will overwrite all individual settings for the 'repeatable' flag, so beware and/or make a backup of your saved variables first if you're at all unsure
+
+Changes:
+* Many collectibles from the Battle for Azeroth expansion are no longer considered group content and have been moved to the 'solo-able' category
+
+-----
+
+**r701:**
+
+Additions:
+* Added an option to hide items that are already known from the mouseover tooltip (courtesy of Daniel Bowden) 
+
+Fixes:
+* Attempts for the Great Sea Ray should now be correctly tracked while fishing on Mechagon Island and in Boralus
+* Fixed an error that would occur when Blizzard's bonus roll window was displayed after obtaining a tracked item
+* Attempts should no longer be added if tracking is disabled for the player's class

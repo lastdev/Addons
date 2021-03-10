@@ -98,10 +98,13 @@ function module:OnInitialize()
 	}
 	options.plugins.profiles.profiles.order = -1 -- last!
 
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("SilverDragon", options)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("SilverDragon", function()
+		core.events:Fire("OptionsRequested", options)
+		return options
+	end)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("SilverDragon", "SilverDragon")
 end
 
-function module:ShowConfig()
-	LibStub("AceConfigDialog-3.0"):Open("SilverDragon")
+function module:ShowConfig(...)
+	LibStub("AceConfigDialog-3.0"):Open("SilverDragon", ...)
 end

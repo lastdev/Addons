@@ -9,8 +9,8 @@
 ## X-Donate: http://www.curseforge.com/projects/libaboutpanel/#w_donations
 
 ## Interface: 70300
-## Version: 9.0.1-024
-## X-Revision: 9
+## Version: 9.0.2-002
+## X-Revision: 12
 ## X-Date: 2020-10-05T23:56:44Z
 
 ## X-Category: Libraries

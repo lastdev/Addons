@@ -1,9 +1,7 @@
 # Vendor
 
-## [4.1.7](https://github.com/typicalzergling/vendor/tree/4.1.7) (2020-10-21)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/4.1.6...4.1.7) 
+## [5.1.2](https://github.com/typicalzergling/vendor/tree/5.1.2) (2020-12-01)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/5.1.1...5.1.2) 
 
-- Fix stale tooltip issue  
-- Fix Classic system rules  
-- Rework item caching to go by guid  
-- Fix Travis for classic builds  
+- Fix and a to do list  
+- Remove extra print  

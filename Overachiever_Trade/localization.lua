@@ -4,6 +4,7 @@ local L, locale = OVERACHIEVER_STRINGS, GetLocale()
 L.TRADE_SKILLET_ACHSORT = "By Achievement";
 
 if (locale == "enUS" or locale == "enGB") then  -- English
+	-- !! NOTE: L.TRADE_COOKING_OBJRENAME IS DEPRECATED. DO NOT USE.
 	--If an achievement's criteria list gives an incorrect name for an item to be cooked, correct it with
 	--the string L.TRADE_COOKING_OBJRENAME using the format "<incorrect name>=<correct name>" (without
 	--quotes), separating different items with a carriage return. Example usage (commented out because

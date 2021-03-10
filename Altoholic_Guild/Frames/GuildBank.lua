@@ -19,44 +19,35 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 			local currentRealm = GetRealmName()
 			local currentGuild = GetGuildInfo("player")
 			
-            -- if the current guild or at least a guild on this realm was found, then set the right values
-			if currentGuild then
-				currentGuildKey = DataStore:GetThisGuildKey()
-                if currentGuildKey then
-    				-- pick the first available tab
-    				for i = 1, MAX_BANK_TABS do 
-    					local tabName = DataStore:GetGuildBankTabName(currentGuildKey, i)
-    					if tabName then
-    						currentGuildBankTab = i
-    						break
-    					end
-    				end
-    			end
-                if currentGuildBankTab == 0 then currentGuildKey = nil end
-            end
-            
-			-- if the player is not in a guild, or hasn't seen their current guild bank yet, set the drop down to the first available guild on this account, if any.
-            if currentGuildBankTab == 0 then
+			-- if the player is not in a guild, set the drop down to the first available guild on this realm, if any.
+			if not currentGuild then
 				-- if the guild that will be displayed is not the one the current player is in, then disable the button
 				menuIcons.UpdateIcon:Disable()
 				menuIcons.UpdateIcon.Icon:SetDesaturated(true)
-                
-                for _, key in pairs(DataStore:GetSavedGuildKeys()) do
-    				local money = DataStore:GetGuildBankMoney(key)
-    				if money then		-- if money is not nil, the guild bank has been populated
-                        for i = 1, MAX_BANK_TABS do 
-            				local tabName = DataStore:GetGuildBankTabName(key, i)
-            				if tabName then
-            					currentGuildBankTab = i
-                                currentGuildKey = key
-            					break-- if there's at least one guild with a bank tab, let's set the right value and break immediately
-            				end
-            			end
-    					if currentGuildKey then break end 
-    				end
-    			end
+			
+				for guildName, guild in pairs(DataStore:GetGuilds(currentRealm, THIS_ACCOUNT)) do
+					local money = DataStore:GetGuildBankMoney(guild)
+					if money then		-- if money is not nil, the guild bank has been populated
+						currentGuild = guildName
+						break	-- if there's at least one guild, let's set the right value and break immediately
+					end
+				end
 			end
+			
+			-- if the current guild or at least a guild on this realm was found, then set the right values
+			if currentGuild then
+				currentGuildKey = DataStore:GetThisGuildKey()
 
+				-- pick the first available tab
+				for i = 1, MAX_BANK_TABS do 
+					local tabName = DataStore:GetGuildBankTabName(currentGuildKey, i)
+					if tabName then
+						currentGuildBankTab = i
+						break
+					end
+				end
+			end
+			
 			frame:UpdateBankTabButtons()
 		end,
 		Update = function(frame)
@@ -90,20 +81,16 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 				local from = mod(row:GetID(), numGuildBankRows)
 				if from == 0 then from = numGuildBankRows end
 			
-				for itemIndex, itemButton in pairs(row.Items) do
-                    if itemIndex > 14 then
-                        itemButton:Hide()
-                    else
-					   local itemIndex = from + ((itemButton:GetID() - 1) * numGuildBankRows)
-					   local itemID, itemLink, itemCount, isBattlePet = DataStore:GetSlotInfo(tab, itemIndex)
+				for _, itemButton in pairs(row.Items) do
+					local itemIndex = from + ((itemButton:GetID() - 1) * numGuildBankRows)
+					local itemID, itemLink, itemCount, isBattlePet = DataStore:GetSlotInfo(tab, itemIndex)
 					
-					   itemButton:SetItem(itemID, itemLink, rarity)
-					   itemButton:SetCount(itemCount)
+					itemButton:SetItem(itemID, itemLink, rarity)
+					itemButton:SetCount(itemCount)
 					-- if isBattlePet then
 						-- itemButton:SetIcon(itemID)	-- override the icon if one is returned by datastore
 					-- end
-					   itemButton:Show()
-                    end
+					itemButton:Show()
 				end
 				row:Show()
 			end
@@ -111,7 +98,7 @@ addon:Controller("AltoholicUI.GuildBank", { "AltoholicUI.Formatter", function(fo
 			frame:Show()
 		end,
 		UpdateBankTabButtons = function(frame)
-			--if not currentGuildKey then return end
+			if not currentGuildKey then return end
 			
 			for _, button in pairs(frame.TabButtons) do
 				local id = button:GetID()

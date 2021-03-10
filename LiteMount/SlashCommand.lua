@@ -4,7 +4,7 @@
 
   Chat slash command (/litemount or /lmt) and macro maintenance.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -68,16 +68,16 @@ COMMANDS['location'] =
     end
 
 COMMANDS['maps'] =
-    function ()
-        local str = table.concat(args, ' ')
+    function (argstr, ...)
+        local str = table.concat({ ... }, ' ')
         for _,line in ipairs(LM.Environment:GetMaps(str)) do
             LM.Print(line)
         end
     end
 
 COMMANDS['continents'] =
-    function ()
-        local str = table.concat(args, ' ')
+    function (argstr, ...)
+        local str = table.concat({ ... }, ' ')
         for _,line in ipairs(LM.Environment:GetContinents(str)) do
             LM.Print(line)
         end
@@ -86,7 +86,7 @@ COMMANDS['continents'] =
 COMMANDS['mounts'] =
     function (argstr, ...)
         if select('#', ...) == 0 then
-            local m = LM.PlayerMounts:GetMountFromUnitAura("player")
+            local m = LM.PlayerMounts:GetActiveMount()
             if m then m:Dump() end
         else
             local n = string.lower(table.concat({ ... }, ' '))
@@ -101,9 +101,9 @@ COMMANDS['mounts'] =
 COMMANDS['flags'] =
     function (argstr, action, arg1, arg2)
         if action == "add" and arg1 then
-            LM.Options:CreateFlag(args[2])
+            LM.Options:CreateFlag(arg1)
         elseif action == "del" and arg1 then
-            LM.Options:DeleteFlag(args[2])
+            LM.Options:DeleteFlag(arg1)
         elseif action == "rename" and arg1 and arg2 then
             LM.Options:RenameFlag(arg1, arg2)
         elseif action == "list" and arg1 == nil then

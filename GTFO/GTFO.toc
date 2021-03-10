@@ -1,12 +1,10 @@
-## Interface: 90001
+## Interface: 90005
 ## Title: GTFO
 ## Notes: GTFO, you're dying!
 ## Author: Zensunim of Dragonblight/Myzrael
-## Version: 4.56.2
+## Version: 4.62
 ## DefaultState: Enabled
 ## SavedVariables: GTFOData
-Libs\LibStub\LibStub.lua
-Libs\LibUIDropDownMenu\LibUIDropDownMenu.xml
 Localization\enUS.lua
 Localization\esES.lua
 Localization\esMX.lua

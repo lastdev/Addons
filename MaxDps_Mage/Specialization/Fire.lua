@@ -5,6 +5,8 @@ if not MaxDps then return end
 
 local Mage = addonTable.Mage;
 local MaxDps = MaxDps;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
 
 local FR = {
 	ArcaneIntellect   = 1459,
@@ -31,12 +33,35 @@ local FR = {
 	Fireball          = 133,
 	Kindling          = 155148,
 	BlasterMasterAura = 274598,
+	TimeWarp          = 80353,
 };
+
+local CN = {
+	None      = 0,
+	Kyrian    = 1,
+	Venthyr   = 2,
+	NightFae  = 3,
+	Necrolord = 4
+};
+
+-- Covenant abilities	
+local C = {
+	-- Buttons
+	ClassAbility = 313347,
+	SignatureAbility = 326526,
+	-- Kyrian
+	RadiantSpark = 307443,
+	-- Necrolord
+	Deathborne = 324220,
+	-- Night Fae
+	ShiftingPower = 314791,
+	-- Venthyr
+    MirrorsOfTorment = 314793,
+}
 
 local A = {
 	BlasterMaster = 274596,
 }
-
 
 setmetatable(FR, Mage.spellMeta);
 setmetatable(A, Mage.spellMeta);
@@ -45,6 +70,7 @@ function Mage:Fire()
 	local fd = MaxDps.FrameData;
 	local cooldown = fd.cooldown;
 	local azerite = fd.azerite;
+	local covenant = fd.covenant.covenantId;
 	local buff = fd.buff;
 	local currentSpell = fd.currentSpell;
 	local talents = fd.talents;
@@ -55,6 +81,9 @@ function Mage:Fire()
 	local targets = MaxDps:SmartAoe();
 	local combustionRopCutoff = 60;
 	local firestarterActive = talents[FR.Firestarter] and targetHp > 90;
+    local health = UnitHealth('player')
+	local healthMax = UnitHealthMax('player');
+	local healthPercent = ( health / healthMax ) * 100
 
 	fd.targets = targets;
 	fd.targetHp = targetHp;
@@ -62,10 +91,45 @@ function Mage:Fire()
 
 	MaxDps:GlowEssences();
 
-	-- mirror_image,if=buff.combustion.down;
-	if talents[FR.MirrorImage] then
-		MaxDps:GlowCooldown(FR.MirrorImage, cooldown[FR.MirrorImage].ready and not buff[FR.Combustion].up);
-	end
+	-- If NightFae covenant, use ShiftingPower as a cooldown
+	MaxDps:GlowCooldown(
+		C.ShiftingPower, 
+		covenant == CN.NightFae and 
+			cooldown[C.ShiftingPower].ready and
+				not buff[FR.HeatingUp].up and 
+					not buff[FR.HotStreak].up and
+						not buff[FR.Combustion].up and 
+							not buff[FR.RuneOfPowerAura].up
+	);
+	MaxDps:GlowCooldown(
+		C.Deathborne, 
+		covenant == CN.Necrolord and 
+			cooldown[C.Deathborne].ready and
+				not buff[FR.HeatingUp].up and 
+					not buff[FR.HotStreak].up and
+						not buff[FR.Combustion].up and 
+							not buff[FR.RuneOfPowerAura].up
+	);
+	MaxDps:GlowCooldown(
+		C.RadiantSpark, 
+		covenant == CN.Kyrian and 
+			cooldown[C.RadiantSpark].ready and
+				not buff[FR.HeatingUp].up and 
+					not buff[FR.HotStreak].up and
+						not buff[FR.Combustion].up and 
+							not buff[FR.RuneOfPowerAura].up
+	);
+	MaxDps:GlowCooldown(
+		C.MirrorsOfTorment, 
+		covenant == CN.Venthyr and 
+			cooldown[C.MirrorsOfTorment].ready and
+				not buff[FR.HeatingUp].up and 
+					not buff[FR.HotStreak].up and
+						not buff[FR.Combustion].up and 
+							not buff[FR.RuneOfPowerAura].up
+	);
+	-- mirror_image,if=buff.combustion.down; isnt a dps CD so only use on lower then 50% life
+	MaxDps:GlowCooldown(FR.MirrorImage, cooldown[FR.MirrorImage].ready and not buff[FR.Combustion].up and healthPercent < 50);
 
 	-- rune_of_power,if=talent.firestarter.enabled&firestarter.remains>full_recharge_time|cooldown.combustion.remains>variable.combustion_rop_cutoff&buff.combustion.down|target.time_to_die<cooldown.combustion.remains&buff.combustion.down;
 	if talents[FR.RuneOfPower] then
@@ -73,19 +137,18 @@ function Mage:Fire()
 			cooldown[FR.RuneOfPower].ready and
 				currentSpell ~= FR.RuneOfPower and
 				(
-					talents[FR.Firestarter] and firestarterActive or
-						cooldown[FR.Combustion].remains > combustionRopCutoff and not buff[FR.Combustion].up or
-						cooldown[FR.Combustion].ready or
+					firestarterActive or
+						(cooldown[FR.Combustion].remains > combustionRopCutoff and not buff[FR.Combustion].up) or
 						timeToDie < cooldown[FR.Combustion].remains and not buff[FR.Combustion].up
 				)
 		);
 	end
 
-	-- combustion,use_off_gcd=1,use_while_casting=1,if=azerite.blaster_master.enabled&((action.meteor.in_flight&action.meteor.in_flight_remains<0.2)|!talent.meteor.enabled|prev_gcd.1.meteor)&(buff.rune_of_power.up|!talent.rune_of_power.enabled);
+	-- only use combustion if you have enough charges to support it
 	MaxDps:GlowCooldown(FR.Combustion,
-		cooldown[FR.Combustion].ready and (
-			buff[FR.RuneOfPowerAura].up or currentSpell == FR.RuneOfPower or not talents[FR.RuneOfPower]
-		)
+		cooldown[FR.Combustion].ready and
+			cooldown[FR.FireBlast].charges > 2.5 and
+			cooldown[FR.PhoenixFlames].charges > 2.75
 	);
 
 
@@ -136,112 +199,6 @@ function Mage:FireActiveTalents()
 	end
 end
 
-function Mage:FireBmCombustionPhase()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
-	local buff = fd.buff;
-	local currentSpell = fd.currentSpell;
-	local talents = fd.talents;
-	local timeShift = fd.timeShift;
-	local targets = fd.targets;
-	local spellHistory = fd.spellHistory;
-	local gcd = fd.gcd;
-	local gcdRemains = fd.gcdRemains;
-
-	-- living_bomb,if=buff.combustion.down&active_enemies>1;
-	if talents[FR.LivingBomb] and cooldown[FR.LivingBomb].ready and not buff[FR.Combustion].up and targets > 1 then
-		return FR.LivingBomb;
-	end
-
-	-- fire_blast,use_while_casting=1,if=buff.blaster_master.down&(talent.rune_of_power.enabled&action.rune_of_power.executing&action.rune_of_power.execute_remains<0.6|(cooldown.combustion.ready|buff.combustion.up)&!talent.rune_of_power.enabled&!action.pyroblast.in_flight&!action.fireball.in_flight);
-	if cooldown[FR.FireBlast].ready and
-		not buff[FR.BlasterMasterAura].up and
-		(
-			talents[FR.RuneOfPower] and currentSpell == FR.RuneOfPower or
-				(cooldown[FR.Combustion].ready or buff[FR.Combustion].up) and not talents[FR.RuneOfPower]
-		)
-	then
-		return FR.FireBlast;
-	end
-
-	-- call_action_list,name=active_talents;
-	local result = Mage:FireActiveTalents();
-	if result then return result; end
-
-	-- pyroblast,if=prev_gcd.1.scorch&buff.heating_up.up;
-	if currentSpell ~= FR.Pyroblast and currentSpell == FR.Scorch and buff[FR.HeatingUp].up then
-		return FR.Pyroblast;
-	end
-
-	-- pyroblast,if=buff.hot_streak.up;
-	if currentSpell ~= FR.Pyroblast and buff[FR.HotStreak].up then
-		return FR.Pyroblast;
-	end
-
-	-- pyroblast,if=buff.pyroclasm.react&cast_time<buff.combustion.remains;
-	if currentSpell ~= FR.Pyroblast and buff[FR.Pyroclasm].up and timeShift < buff[FR.Combustion].remains then
-		return FR.Pyroblast;
-	end
-
-	-- phoenix_flames;
-	if talents[FR.PhoenixFlames] and cooldown[FR.PhoenixFlames].ready then
-		return FR.PhoenixFlames;
-	end
-
-	-- fire_blast,use_off_gcd=1,if=buff.blaster_master.stack=1&buff.hot_streak.down&!buff.pyroclasm.react&prev_gcd.1.pyroblast&(buff.blaster_master.remains<0.15|gcd.remains<0.15);
-	if cooldown[FR.FireBlast].ready and
-		buff[FR.BlasterMasterAura].count == 1 and
-		not buff[FR.HotStreak].up and
-		not buff[FR.Pyroclasm].up and
-		(spellHistory[1] == FR.Pyroblast or currentSpell == FR.Pyroblast) and
-		(buff[FR.BlasterMasterAura].remains < 0.3)
-	then
-		return FR.FireBlast;
-	end
-
-	-- fire_blast,use_while_casting=1,if=buff.blaster_master.stack=1&(action.scorch.executing&action.scorch.execute_remains<0.15|buff.blaster_master.remains<0.15);
-	if cooldown[FR.FireBlast].ready and
-		buff[FR.BlasterMasterAura].count == 1 and
-		(currentSpell == FR.Scorch or buff[FR.BlasterMasterAura].remains < 0.3)
-	then
-		return FR.FireBlast;
-	end
-
-	-- scorch,if=buff.hot_streak.down&(cooldown.fire_blast.remains<cast_time|action.fire_blast.charges>0);
-	if currentSpell ~= FR.Scorch and
-		not buff[FR.HotStreak].up and
-		(cooldown[FR.FireBlast].remains < 1.5 or cooldown[FR.FireBlast].charges >= 1)
-	then
-		return FR.Scorch;
-	end
-
-	-- fire_blast,use_while_casting=1,use_off_gcd=1,if=buff.blaster_master.stack>1&(prev_gcd.1.scorch&!buff.hot_streak.up&!action.scorch.executing|buff.blaster_master.remains<0.15);
-	if cooldown[FR.FireBlast].ready and (
-		buff[FR.BlasterMasterAura].count > 1 and
-			(
-				currentSpell == FR.Scorch and
-					not buff[FR.HotStreak].up or
-					buff[FR.BlasterMasterAura].remains < 0.3
-			)
-	) then
-		return FR.FireBlast;
-	end
-
-	-- living_bomb,if=buff.combustion.remains<gcd.max&active_enemies>1;
-	if talents[FR.LivingBomb] and cooldown[FR.LivingBomb].ready and buff[FR.Combustion].remains < gcd and targets > 1 then
-		return FR.LivingBomb;
-	end
-
-	-- dragons_breath,if=buff.combustion.remains<gcd.max;
-	if cooldown[FR.DragonsBreath].ready and buff[FR.Combustion].remains < gcd then
-		return FR.DragonsBreath;
-	end
-
-	-- scorch;
-	return FR.Scorch;
-end
-
 function Mage:FireCombustionPhase()
 	local fd = MaxDps.FrameData;
 	local cooldown = fd.cooldown;
@@ -254,12 +211,6 @@ function Mage:FireCombustionPhase()
 	local spellHistory = fd.spellHistory;
 	local targetHp = fd.targetHp;
 	local gcd = fd.gcd;
-
-	-- call_action_list,name=bm_combustion_phase,if=azerite.blaster_master.enabled&talent.flame_on.enabled;
-	if azerite[A.BlasterMaster] > 0 and talents[FR.FlameOn] then
-		local result = Mage:FireBmCombustionPhase();
-		if result then return result; end
-	end
 
 	-- call_action_list,name=active_talents;
 	local result = Mage:FireActiveTalents();
@@ -300,15 +251,14 @@ function Mage:FireCombustionPhase()
 	end
 
 	-- phoenix_flames;
-	if talents[FR.PhoenixFlames] and cooldown[FR.PhoenixFlames].ready then -- 100 OK
+	if cooldown[FR.PhoenixFlames].ready then -- 100 OK
 		return FR.PhoenixFlames;
 	end
 
 	-- scorch,if=buff.combustion.remains>cast_time&buff.combustion.up|buff.combustion.down;
 	if currentSpell ~= FR.Scorch and (
 		buff[FR.Combustion].remains > 1.5 and buff[FR.Combustion].up or
-			not buff[FR.Combustion].up
-	) then -- 100 OK
+			not buff[FR.Combustion].up ) then -- 100 OK
 		return FR.Scorch;
 	end
 
@@ -340,11 +290,6 @@ function Mage:FireRopPhase()
 	local targetHp = fd.targetHp;
 	local firestarterActive = fd.firestarterActive;
 
-	-- rune_of_power;
-	--if talents[FR.RuneOfPower] and cooldown[FR.RuneOfPower].ready and currentSpell ~= FR.RuneOfPower then
-	--	return FR.RuneOfPower;
-	--end
-
 	-- flamestrike,if=((talent.flame_patch.enabled&active_enemies>1)|active_enemies>4)&buff.hot_streak.react;
 	if currentSpell ~= FR.Flamestrike and
 		((talents[FR.FlamePatch] and targets > 1) or targets > 4) and
@@ -358,19 +303,18 @@ function Mage:FireRopPhase()
 		return FR.Pyroblast;
 	end
 
-	-- fire_blast,use_off_gcd=1,use_while_casting=1,if=(cooldown.combustion.remains>0|firestarter.active&buff.rune_of_power.up)&(!buff.heating_up.react&!buff.hot_streak.react&!prev_off_gcd.fire_blast&(action.fire_blast.charges>=2|(action.phoenix_flames.charges>=1&talent.phoenix_flames.enabled)|(talent.alexstraszas_fury.enabled&cooldown.dragons_breath.ready)|(talent.searing_touch.enabled&target.health.pct<=30)|(talent.firestarter.enabled&firestarter.active)));
+	-- fire_blast,use_off_gcd=1,use_while_casting=1,if=(cooldown.combustion.remains>25|firestarter.active)&(!buff.heating_up.react&!buff.hot_streak.react&!prev_off_gcd.fire_blast&
+    -- (action.fire_blast.charges>=2.5|(talent.alexstraszas_fury.enabled&cooldown.dragons_breath.ready)|(talent.searing_touch.enabled&target.health.pct<=30)|(firestarter.active)));
 	if cooldown[FR.FireBlast].ready and (
-		(cooldown[FR.Combustion].remains > 0 or firestarterActive and buff[FR.RuneOfPowerAura].up) and
+		(cooldown[FR.Combustion].remains > 25 or firestarterActive) and
 			(
 				not buff[FR.HeatingUp].up and
 					not buff[FR.HotStreak].up and
-					not spellHistory[1] == FR.FireBlast and
 					(
-						cooldown[FR.FireBlast].charges >= 2 or
-							(cooldown[FR.PhoenixFlames].charges >= 1 and talents[FR.PhoenixFlames]) or
-							(talents[FR.AlexstraszasFury] and cooldown[FR.DragonsBreath].ready) or
-							(talents[FR.SearingTouch] and targetHp <= 30) or
-							(talents[FR.Firestarter] and firestarterActive)
+						cooldown[FR.FireBlast].charges >= 2.5 or
+                        (talents[FR.AlexstraszasFury] and cooldown[FR.DragonsBreath].ready) or
+                        (talents[FR.SearingTouch] and targetHp <= 30) or
+                        firestarterActive
 					)
 			)
 	) then
@@ -391,19 +335,17 @@ function Mage:FireRopPhase()
 	end
 
 	-- fire_blast,use_off_gcd=1,use_while_casting=1,if=(cooldown.combustion.remains>0|firestarter.active&buff.rune_of_power.up)&(buff.heating_up.react&(target.health.pct>=30|!talent.searing_touch.enabled));
-	if cooldown[FR.FireBlast].ready and
-		(cooldown[FR.Combustion].remains > 0 or firestarterActive and buff[FR.RuneOfPowerAura].up) and
-		(buff[FR.HeatingUp].up and (targetHp >= 30 or not talents[FR.SearingTouch]))
+	if cooldown[FR.FireBlast].ready and buff[FR.HeatingUp].up and
+		(cooldown[FR.Combustion].remains > 25 or firestarterActive )
 	then
 		return FR.FireBlast;
 	end
 
 	-- fire_blast,use_off_gcd=1,use_while_casting=1,if=(cooldown.combustion.remains>0|firestarter.active&buff.rune_of_power.up)&talent.searing_touch.enabled&target.health.pct<=30&(buff.heating_up.react&!action.scorch.executing|!buff.heating_up.react&!buff.hot_streak.react);
 	if cooldown[FR.FireBlast].ready and
-		(cooldown[FR.Combustion].remains > 0 or firestarterActive and buff[FR.RuneOfPowerAura].up) and
-		talents[FR.SearingTouch] and
-		targetHp <= 30 and
-		(buff[FR.HeatingUp].up and not currentSpell == FR.Scorch or not buff[FR.HeatingUp].up and not buff[FR.HotStreak].up)
+		(cooldown[FR.Combustion].remains > 25 or firestarterActive ) and
+		talents[FR.SearingTouch] and targetHp <= 30 and
+		(buff[FR.HeatingUp].up and not currentSpell == FR.Scorch)
 	then
 		return FR.FireBlast;
 	end
@@ -419,11 +361,9 @@ function Mage:FireRopPhase()
 		return FR.Pyroblast;
 	end
 
-	-- phoenix_flames,if=!prev_gcd.1.phoenix_flames&buff.heating_up.react;
-	if talents[FR.PhoenixFlames] and
-		not spellHistory[1] == FR.PhoenixFlames and
-		buff[FR.HeatingUp].up
-	then
+	-- phoenix_flames, only if we have 3 charges and Combust not ready in less then 25 sec, to prevent cap!
+	if cooldown[FR.PhoenixFlames].ready and not buff[FR.HotStreak].up and
+		( cooldown[FR.PhoenixFlames].charges == 3 and cooldown[FR.Combustion].remains > 25) then
 		return FR.PhoenixFlames;
 	end
 
@@ -481,7 +421,7 @@ function Mage:FireStandardRotation()
 	-- pyroblast,if=buff.hot_streak.react&(prev_gcd.1.fireball|firestarter.active|action.pyroblast.in_flight);
 	if currentSpell ~= FR.Pyroblast and
 		buff[FR.HotStreak].up and
-		(currentSpell == FR.Fireball or firestarterActive)
+		(currentSpell == FR.Fireball or firestarterActive or not currentSpell)
 	then
 		return FR.Pyroblast;
 	end
@@ -497,9 +437,9 @@ function Mage:FireStandardRotation()
 	end
 
 	-- fire_blast,use_off_gcd=1,use_while_casting=1,if=(cooldown.combustion.remains>0&buff.rune_of_power.down|firestarter.active)&!talent.kindling.enabled&!variable.fire_blast_pooling&(((action.fireball.executing|action.pyroblast.executing)&(buff.heating_up.react|firestarter.active&!buff.hot_streak.react&!buff.heating_up.react))|(talent.searing_touch.enabled&target.health.pct<=30&(buff.heating_up.react&!action.scorch.executing|!buff.hot_streak.react&!buff.heating_up.react&action.scorch.executing&!action.pyroblast.in_flight&!action.fireball.in_flight))|(firestarter.active&(action.pyroblast.in_flight|action.fireball.in_flight)&!buff.heating_up.react&!buff.hot_streak.react));
-	if cooldown[FR.FireBlast].charges >= cooldown[FR.FireBlast].maxCharges - 0.5 and
-		not buff[FR.HotStreak].up and
-		buff[FR.HeatingUp].up
+	if (cooldown[FR.Combustion].remains > 25 and (cooldown[FR.FireBlast].ready and buff[FR.HeatingUp].up or cooldown[FR.FireBlast].charges >= 2.8)) or
+		((cooldown[FR.Combustion].remains > 16.5 and cooldown[FR.Combustion].remains < 25) and cooldown[FR.FireBlast].charges >= 1.8 and buff[FR.HeatingUp].up) or
+		((cooldown[FR.Combustion].remains > 8.6 and cooldown[FR.Combustion].remains < 16.5) and cooldown[FR.FireBlast].charges >= 2.8 and buff[FR.HeatingUp].up)
 	then
 		return FR.FireBlast;
 	end
@@ -514,15 +454,9 @@ function Mage:FireStandardRotation()
 		return FR.Pyroblast;
 	end
 
-	-- phoenix_flames,if=(buff.heating_up.react|(!buff.hot_streak.react&(action.fire_blast.charges>0|talent.searing_touch.enabled&target.health.pct<=30)))&!variable.phoenix_pooling;
-	if talents[FR.PhoenixFlames] and cooldown[FR.PhoenixFlames].ready and (
-		buff[FR.HeatingUp].up or
-			(
-				not buff[FR.HotStreak].up and (
-					cooldown[FR.FireBlast].charges > 0 or talents[FR.SearingTouch] and targetHp <= 30
-				)
-			)
-	) then
+	-- phoenix_flames, only if we have 3 charges and Combust not ready in less then 25 sec, to prevent cap!
+	if cooldown[FR.PhoenixFlames].ready and not buff[FR.HotStreak].up and
+		( cooldown[FR.PhoenixFlames].charges == 3 and cooldown[FR.Combustion].remains > 25) then
 		return FR.PhoenixFlames;
 	end
 

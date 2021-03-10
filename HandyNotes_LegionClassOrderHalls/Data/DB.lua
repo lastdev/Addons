@@ -1,4 +1,4 @@
--- $Id: DB.lua 98 2018-12-21 15:58:07Z arith $
+-- $Id: DB.lua 105 2020-01-08 17:03:11Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -188,7 +188,7 @@ DB.points = {
 		[52545781] = { others=true, label=L["High Elder Cloudfall"], npc=104744 },
 		[54795663] = { others=true, label=L["Elder Xang <Monk Trainer>"], npc=101749 },
 	},
-	[676] = { -- Paladin
+	[24] = { -- Paladin
 		[53427865] = { mission=true, dungeonLevel=20, label=ADVENTURE_MAP_TITLE, note=ORDER_HALL_MISSIONS },
 		[53295617] = { recruiter=true, dungeonLevel=20, label=L["Commander Ansela <Silver Hand Recruiter>"], npc=106447, note=CAPACITANCE_START_RECRUITMENT },
 		[58893898] = { recruiter=true, dungeonLevel=20, label=L["Commander Born <Silver Hand Officer Recruiter>"], npc=106448, note=CAPACITANCE_START_RECRUITMENT },
@@ -431,12 +431,12 @@ DB.points = {
 		[89884473] = { portal=true, L["Portal"], class="DRUID" }, -- The Hinterlands
 	},
 	-- The Vindicaar
-	[886] = { -- Antoran Wastes, Level 5
+	[887] = { -- Antoran Wastes, Level 5
 		[62656402] = { others=true, dungeonLevel=5, label=L["Vindicator Jaelaana <Army of the Light Emissary>"], npc=127120, },
 		[56312878] = { others=true, dungeonLevel=5, label=L["Toraan the Revered <Argussian Reach Emissary>"], npc=127151, },
 		[31995648] = { beacon=true, dungeonLevel=5, label=L["Navigation Console"], npc=123139, icon="beacon", },
 	},
-	[885] = { -- Antoran Wastes, Level 6
+	[886] = { -- Antoran Wastes, Level 6
 		[33935591] = { portal=true, dungeonLevel=6, label=format(L["Portal to %s"], BZ["Dalaran"]), },
 		[46755120] = { others=true, dungeonLevel=6, label=L["Vindicaar Matrix Core"], },
 		[61675913] = { others=true, dungeonLevel=6, label=L["Thaumaturge Vashreen <Purveyor of Exquisite Furnishings>"], npc=121589, },

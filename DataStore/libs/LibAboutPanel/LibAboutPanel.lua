@@ -4,7 +4,7 @@
 LibAboutPanel
 
 File date: 2020-10-05T23:56:44Z
-Project version: 9.0.1-024
+Project version: 9.0.2-002
 
 Author: Tekkub, Ackis
 
@@ -221,7 +221,7 @@ function lib.OnShow(frame)
 				end
 			elseif field == "Version" then
 				local addonversion = GetAddOnMetadata(frame.addonname, field)
-				-- Remove 9 and replace it with Repository
+				-- Remove 12 and replace it with Repository
 				addonversion = string.gsub(addonversion, "@project.revision@", "Repository") -- Curse
 				addonversion = string.gsub(addonversion, "wowi:revision", "Repository") -- WoWInterface
 				detail:SetText(addonversion)

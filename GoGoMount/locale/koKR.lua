@@ -1,8 +1,10 @@
-if GetLocale() == "koKR" then
+﻿if GetLocale() == "koKR" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "타기/내리기"
 	BINDING_NAME_GOGOBINDING2 = "타기/내리기 (나는 탈것 제외)"
 	BINDING_NAME_GOGOBINDING3 = "2인승 탈것 타기/내리기"
+	BINDING_NAME_GOGOBINDING4 = "Mount/Dismount Seller Mounts" -- Requires localization
+	BINDING_NAME_GOGOBINDING5 = "Mount/Dismount Herbalism Mounts" -- Requires localization
 	GoGo_Variables.Localize = {
 	Skill = {
 		Engineering = "기계공학",
@@ -40,6 +42,8 @@ if GetLocale() == "koKR" then
 		GlobalZoneDescription = "Preferred mounts defined here will only take effect if there are no zone specific mount favorites set for the current zone you are in.", -- Requires localization
 		HunterOptions = "사냥꾼 옵션",
 		NewVersionFound = "GoGoMount의 새로운 버전을 사용할 수 있습니다.",
+		NightFaeOptions = "Night Fae Options", -- Requires localization
+		NightFaeSingleClick = "Single click mount from Soulshape instead of dismounting", -- Requires localization
 		NoShapeInRandom = "탈것이나 변신 폼 무작위로 사용 안함",
 		PaladinOptions = "성기사 옵션", -- Needs review
 		RemoveBuffs = "탈것을 방해하는 버프 제거",

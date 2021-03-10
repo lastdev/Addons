@@ -18,16 +18,22 @@ Addon:MakePublic(
     L["API_EVALUATEITEM_DOCS"])
 
 Addon:MakePublic(
-    "AddTooltipItemToAlwaysSellList",
-    function () Addon:AddTooltipItemToAlwaysSellList() end,
+    "AddTooltipItemToSellList",
+    function () Addon:AddTooltipItemToSellList() end,
     L["API_ADDTOALWAYSSELL_TITLE"],
     L["API_ADDTOALWAYSSELL_DOCS"])
     
 Addon:MakePublic(
-    "AddTooltipItemToNeverSellList",
-    function () Addon:AddTooltipItemToNeverSellList() end,
+    "AddTooltipItemToKeepList",
+    function () Addon:AddTooltipItemToKeepList() end,
     L["API_ADDTONEVERSELL_TITLE"],
     L["API_ADDTONEVERSELL_DOCS"])
+
+Addon:MakePublic(
+    "AddTooltipItemToDestroyList",
+    function () Addon:AddTooltipItemToDestroyList() end,
+    L["API_ADDTODESTROY_TITLE"],
+    L["API_ADDTODESTROY_DOCS"])
     
 Addon:MakePublic(
     "AutoSell",
@@ -65,4 +71,21 @@ Addon:MakePublic(
     L["API_GETPRICESTRING_TITLE"],
     L["API_GETPRICESTRING_DOCS"])
 
+Addon:MakePublic(
+    "GetProfiles",
+    function () return Addon:GetProfiles() end,
+    L["API_GETPROFILE_TITLE"],
+    L["API_GETPROFILE_DOCS"])
+
+Addon:MakePublic(
+    "SetProfile",
+    function (profileNameOrId) return Addon:SetProfile(profileNameOrId) end,
+    L["API_SETPROFILE_TITLE"],
+    L["API_SETPROFILE_DOCS"])
+
+Addon:MakePublic(
+    "DestroyItems",
+    function () Addon:DestroyItems() end,
+    L["API_SETPROFILE_TITLE"],
+    L["API_SETPROFILE_DOCS"])
 

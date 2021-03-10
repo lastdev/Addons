@@ -23,16 +23,17 @@ L.BossModLoad_now 			= [[該模組尚未載入。
 當你進入相應副本時其會自動載入。
 你也可以點擊該按鈕手動載入該模組。]]
 
-L.PosX						= 'X座標'
-L.PosY						= 'Y座標'
+L.PosX						= "X座標"
+L.PosY						= "Y座標"
 
-L.MoveMe 					= '移動'
-L.Button_OK 				= '確定'
-L.Button_Cancel 			= '取消'
-L.Button_LoadMod 			= '載入模組'
+L.MoveMe 					= "移動"
+L.Button_OK 				= "確定"
+L.Button_Cancel 			= "取消"
+L.Button_LoadMod 			= "載入模組"
 L.Mod_Enabled				= "啟用首領模組"
 L.Mod_Reset					= "讀取預設值"
 L.Reset 					= "重置"
+L.Import					= "匯入"
 
 L.Enable  					= "啟用"
 L.Disable					= "停用"
@@ -67,6 +68,7 @@ L.Latency_Text				= "設定最高延遲同步門檻:%d"
 L.Button_RangeFrame			= "顯示/隱藏距離監視器"
 L.Button_InfoFrame			= "顯示/隱藏訊息框架"
 L.Button_TestBars			= "測試計時條"
+L.Button_MoveBars			= "移動計時條"
 L.Button_ResetInfoRange		= "重置訊息/距離監視器"
 
 L.ModelOptions				= "3D模型預覽選項"
@@ -76,6 +78,7 @@ L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.ResizeOptions			 	= "尺寸調整選項"
+L.ResizeInfo				= "您可以通過點擊右下角並拖動來調整GUI的大小。"
 L.Button_ResetWindowSize	= "重設GUI視窗大小"
 L.Editbox_WindowWidth		= "GUI視窗寬度"
 L.Editbox_WindowHeight		= "GUI視窗高度"
@@ -102,8 +105,7 @@ L.RecordOnlyBosses			= "只記錄首領的戰鬥 (排除所有小怪。請於首
 L.LogOnlyNonTrivial			= "只記錄重要內容 (普通或更難的當前內容團隊副本 & 傳奇+ 地下城)"
 --
 L.Area_3rdParty				= "協力插件選項"
-L.ShowBBOnCombatStart		= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"
-L.BigBrotherAnnounceToRaid	= "通告BigBrother的結果給團隊"
+L.oRA3AnnounceConsumables	= "在戰鬥開始時通告oRA3消耗品檢查"
 L.Area_Invite				= "邀請選項"
 L.AutoAcceptFriendInvite	= "自動接受來自朋友的隊伍邀請"
 L.AutoAcceptGuildInvite		= "自動接受來自公會成員的隊伍邀請"
@@ -132,6 +134,11 @@ L.SelectModProfileCopy		= "複製所有設定"
 L.SelectModProfileCopySound	= "只複製音效設定"
 L.SelectModProfileCopyNote	= "只複製註記設定"
 L.SelectModProfileDelete	= "刪除模組設定"
+
+L.Area_ImportExportProfile	= "匯入/匯出 設定檔"
+L.ImportExportInfo			= "匯入會覆寫您當前的設定檔，後果請自負。"
+L.ButtonImportProfile		= "匯入設定檔"
+L.ButtonExportProfile		= "匯出設定檔"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "警告"
@@ -320,19 +327,21 @@ L.StripTimerText			= "剝離 冷卻/下次 計時器"
 L.KeepBar					= "保持計時器啟用直到技能施放"
 L.KeepBar2					= "(當有支援的模組時)"
 L.FadeBar					= "隱藏已超出距離技能的計時器"
+L.BarSkin					= "計時條外觀"
 
 -- Tab: Global Disables & Filters
 L.TabCategory_Filters	 	= "全局禁用及過濾"
 L.Area_DBMFiltersSetup		= "DBM過濾器指南"
 L.Area_BlizzFiltersSetup	= "暴雪過濾器指南"
 -- Panel: DBM Features
-L.Panel_SpamFilter			= "DBM功能設置"
-L.Area_SpamFilter_Anounces	= "全局警告禁用及過濾選項"
-L.SpamBlockNoShowAnnounce	= "不顯示任何提示文字或播放警告音效"
-L.SpamBlockNoShowTgtAnnounce= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
-L.SpamBlockNoSpecWarnText	= "不顯示特別警告文字"
-L.SpamBlockNoSpecWarnFlash	= "不顯示特別警告螢幕閃爍"
-L.SpamBlockNoSpecWarnSound	= "不播放特別警告音效 (如果在“語音警告”面板中啟用了語音包，則仍允許語音包)"
+L.Panel_SpamFilter					= "DBM功能設置"
+L.Area_SpamFilter_Anounces			= "全局警告禁用及過濾選項"
+L.SpamBlockNoShowAnnounce			= "不顯示任何提示文字或播放警告音效"
+L.SpamBlockNoShowTgtAnnounce		= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
+L.SpamBlockNoSpecWarnText			= "不顯示特別警告文字"
+L.SpamBlockNoSpecWarnFlash			= "不顯示特別警告螢幕閃爍"
+L.SpamBlockNoSpecWarnSound			= "不播放特別警告音效 (如果在“語音警告”面板中啟用了語音包，則仍允許語音包)"
+L.SpamBlockNoTrivialSpecWarnSound	= "如果相對你等級是不重要的內容則不要播放特別警告音效 (播放使用者選擇的標準警告音效替代)"
 
 L.Area_SpamFilter_Timers	= "全局計時禁用及過濾選項"
 L.SpamBlockNoShowTimers		= "不顯示計時器(首領模組/挑戰模式/尋求組隊/重生)"
@@ -385,7 +394,7 @@ L.HideGarrisonUpdates		= "首領戰鬥時隱藏追隨者任務完成提示"
 L.HideGuildChallengeUpdates	= "首領戰鬥時隱藏公會挑戰完成提示"
 L.HideQuestTooltips			= "首領戰鬥時隱藏任務目標提示"
 L.HideTooltips				= "首領戰鬥時完全地隱藏滑鼠提示"
-L.DisableSFX				= "首領戰鬥時禁用音效頻道"
+L.DisableSFX				= "首領戰鬥時禁用音效頻道（注意：如果啟用此選項，則即使戰鬥進入時音效未打開，戰鬥結束時也會打開聲音效果）"
 L.DisableCinematics			= "禁用遊戲中的過場動畫"
 L.OnlyFight					= "只有戰鬥中，每次動畫播放一次之後"
 L.AfterFirst				= "在副本中，每次動畫播放一次之後"

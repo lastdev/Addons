@@ -18,7 +18,7 @@ function DBMVPSoundEventsPack() -- Register Victory sounds to DBM.Victory table
 	})
 	insert(DBM.Victory, {
 		text	= "Sonic: Stage Cleared",
-		value = "Interface\\AddOns\\DBM-SoundEventsPack\\Victory\\sonic.ogg"
+		value	= "Interface\\AddOns\\DBM-SoundEventsPack\\Victory\\sonic.ogg"
 	})
 	insert(DBM.Victory, {
 		text	= "FF: Fanfare",
@@ -179,7 +179,7 @@ function DBMMPSoundEventsPack() -- Register Music to DBM.Music Table
 		text	= "Blakbyrd",
 		value	= "Interface\\AddOns\\DBM-SoundEventsPack\\Music\\Blackbyrd.ogg"
 	})
-	
+
 	-- Dungeon BGM Table
 	if DBM.DungeonMusic then
 		insert(DBM.DungeonMusic, {

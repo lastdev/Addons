@@ -13,7 +13,9 @@ L:SetTimerLocalization({
 	TimerCap		= "%s",
 	TimerFlag		= "Flag respawn",
 	TimerInvite		= "%s",
-	TimerRemaining	= "Time Remaining: ",
+	TimerRemaining	= "Remaining",
+	TimerWin		= "Victory in",
+	TimerStarting	= "Starting in",
 	TimerShadow		= "Shadow Sight"
 })
 
@@ -36,26 +38,29 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	BgStart120          = "The battle begins in 2 minutes.",
 	BgStart60           = "The battle begins in 1 minute.",
-	BgStart30           = "The battle begins in 30 seconds. Prepare yourselves!",
+	BgStart30           = "The battle begins in 30 seconds.",
 	ArenaInvite			= "Arena invite",
 	BasesToWin			= "Bases to win: %d",
 	WinBarText			= "%s wins",
 	-- TODO: Implement the flag carrying system
-	Flag				= "Flag",
-	FlagReset			= "The flag has been reset!",
-	FlagTaken			= "(.+) has taken the flag!",
+	FlagReset			= "The flag has been reset!", -- Unused
+	FlagTaken			= "(.+) has taken the flag!", -- Unused
 	FlagCaptured		= "The .+ ha%w+ captured the flag!",
-	FlagDropped			= "The flag has been dropped!",
+	FlagDropped			= "The flag has been dropped!", -- Unused
 	--
-	InfoErrorText		= "The flag carrier targeting function will be restored when you are out of combat.",
-	ExprFlagPickUp		= "The (%w+) .lag was picked up by (.+)!",
+	ExprFlagPickUp		= "The (%w+) .lag was picked up by (.+)!", -- Unused
 	ExprFlagCaptured	= "(.+) captured the (%w+) flag!",
-	ExprFlagReturn		= "The (%w+) .lag was returned to its base by (.+)!",
-	FlagAlliance		= "Alliance Flag: ",
-	FlagHorde			= "Horde Flag: ",
-	FlagBase			= "Base",
+	ExprFlagReturn		= "The (%w+) .lag was returned to its base by (.+)!", -- Unused
 	Vulnerable1			= "The flag carriers have become vulnerable to attack!",
-	Vulnerable2			= "The flag carriers have become increasingly vulnerable to attack!"
+	Vulnerable2			= "The flag carriers have become increasingly vulnerable to attack!",
+	-- Alterac/IsleOfConquest bosses
+	InfoFrameHeader		= "Boss Health",
+	HordeBoss			= "Horde Boss",
+	AllianceBoss		= "Alliance Boss",
+	Galvangar			= "Galvangar",
+	Balinda				= "Balinda",
+	Ivus				= "Ivus",
+	Lokholar			= "Lokholar"
 })
 
 ----------------------
@@ -64,7 +69,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("z1803")
 
 L:SetTimerLocalization({
-	TimerSpawn	= "%s"
+	TimerSpawn		= "%s"
 })
 
 L:SetOptionLocalization({
@@ -76,8 +81,18 @@ L:SetOptionLocalization({
 ----------------------
 L = DBM:GetModLocalization("z30")
 
+L:SetTimerLocalization({
+	TimerBoss	= "%s"
+})
+
 L:SetOptionLocalization({
-	AutoTurnIn	= "Automatically turn-in quests"
+	AutoTurnIn	= "Automatically turn-in quests",
+	TimerBoss	= "Show boss remaining timer"
+})
+
+L:SetMiscLocalization({
+	BossHorde	= "WHO DARES SUMMON LOKHOLAR?",
+	BossAlly	= "Wicked, wicked, mortals! The forest weeps. The elements recoil at the destruction. Ivus must purge you from this world!"
 })
 
 --------------
@@ -134,7 +149,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerResapwn	= "Show cart respawn timer",
+	TimerRespawn	= "Show cart respawn timer",
 	TimerCart		= "Show cart cap timer"
 })
 
@@ -150,7 +165,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("z998")
 
 L:SetOptionLocalization({
-	ShowOrbCarriers	= "Show flag carrier"
+	ShowOrbCarriers	= "Show orb carrier"
 })
 
 L:SetMiscLocalization({

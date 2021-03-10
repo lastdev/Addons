@@ -6,40 +6,85 @@ end
 local ConRO_Mage, ids = ...;
 
 function ConRO:EnableRotationModule(mode)
-	mode = mode or 1;
+	mode = mode or 0;
 	self.ModuleOnEnable = ConRO.Mage.CheckTalents;
-	self.ModuleOnEnable = ConRO.Mage.CheckPvPTalents;
+	self.ModuleOnEnable = ConRO.Mage.CheckPvPTalents;	
+	if mode == 0 then
+		self.Description = "Mage [No Specialization Under 10]";
+		self.NextSpell = ConRO.Mage.Under10;
+		self.ToggleHealer();
+	end;
 	if mode == 1 then
 		self.Description = "Mage [Arcane - Caster]";
-		self.NextSpell = ConRO.Mage.Arcane;
-		self.ToggleDamage();
+		if ConRO.db.profile._Spec_1_Enabled then
+			self.NextSpell = ConRO.Mage.Arcane;
+			self.ToggleDamage();
+			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+		else
+			self.NextSpell = ConRO.Mage.Disabled;
+			self.ToggleHealer();
+			ConROWindow:SetAlpha(0);
+			ConRODefenseWindow:SetAlpha(0);			
+		end
 	end;
 	if mode == 2 then
 		self.Description = "Mage [Fire - Caster]";
-		self.NextSpell = ConRO.Mage.Fire;
-		self.ToggleDamage();
+		if ConRO.db.profile._Spec_2_Enabled then
+			self.NextSpell = ConRO.Mage.Fire;
+			self.ToggleDamage();
+			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+		else
+			self.NextSpell = ConRO.Mage.Disabled;
+			self.ToggleHealer();
+			ConROWindow:SetAlpha(0);
+			ConRODefenseWindow:SetAlpha(0);			
+		end
 	end;
 	if mode == 3 then
 		self.Description = "Mage [Frost - Caster]";
-		self.NextSpell = ConRO.Mage.Frost;
-		self.ToggleDamage();
+		if ConRO.db.profile._Spec_3_Enabled then
+			self.NextSpell = ConRO.Mage.Frost;
+			self.ToggleDamage();
+			ConROWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+			ConRODefenseWindow:SetAlpha(ConRO.db.profile.transparencyWindow);
+		else
+			self.NextSpell = ConRO.Mage.Disabled;
+			self.ToggleHealer();
+			ConROWindow:SetAlpha(0);
+			ConRODefenseWindow:SetAlpha(0);			
+		end
 	end;
 	self:RegisterEvent('UNIT_SPELLCAST_SUCCEEDED');
 	self.lastSpellId = 0;
 end
 
 function ConRO:EnableDefenseModule(mode)
-	mode = mode or 1;
-	self.ModuleOnEnable = ConRO.Mage.CheckTalents;
-	self.ModuleOnEnable = ConRO.Mage.CheckPvPTalents;
+	mode = mode or 0;
+	if mode == 0 then
+		self.NextDef = ConRO.Mage.Under10Def;
+	end;
 	if mode == 1 then
-		self.NextDef = ConRO.Mage.ArcaneDef;
+		if ConRO.db.profile._Spec_1_Enabled then
+			self.NextDef = ConRO.Mage.ArcaneDef;
+		else
+			self.NextDef = ConRO.Mage.Disabled;
+		end
 	end;
 	if mode == 2 then
-		self.NextDef = ConRO.Mage.FireDef;
+		if ConRO.db.profile._Spec_2_Enabled then
+			self.NextDef = ConRO.Mage.FireDef;
+		else
+			self.NextDef = ConRO.Mage.Disabled;
+		end
 	end;
 	if mode == 3 then
-		self.NextDef = ConRO.Mage.FrostDef;
+		if ConRO.db.profile._Spec_3_Enabled then
+			self.NextDef = ConRO.Mage.FrostDef;
+		else
+			self.NextDef = ConRO.Mage.Disabled;
+		end
 	end;
 end
 
@@ -49,714 +94,1084 @@ function ConRO:UNIT_SPELLCAST_SUCCEEDED(event, unitID, lineID, spellID)
 	end
 end
 
+function ConRO.Mage.Disabled(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+	return nil;
+end
+
+function ConRO.Mage.Under10(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
+--Racials
+	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(ids.Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(ids.Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(ids.Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
+
+--Abilities
+
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	
+--Warnings
+
+--Rotations	
+
+	
+return nil;
+end
+
+function ConRO.Mage.Under10Def(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
+--Racials
+	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(ids.Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(ids.Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(ids.Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
+
+--Abilities
+
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	
+--Warnings
+
+--Rotations	
+
+return nil;
+end
+
 function ConRO.Mage.Arcane(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+	
 --Resources	
-	local mana												= UnitPower('player', Enum.PowerType.Mana);
-	local manaMax 											= UnitPowerMax('player', Enum.PowerType.Mana);
-	local manapercent 										= math.max(0, mana) / math.max(1, manaMax) * 100;
-	local arcCharges 										= UnitPower('player', Enum.PowerType.ArcaneCharges);
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	local _ArcaneCharges 																				= ConRO:PlayerPower('ArcaneCharges');
 
 --Racials
-	local arctorrent										= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(ids.Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(ids.Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(ids.Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
 	
 --Abilties	
-	local counter 											= ConRO:AbilityReady(ids.Arc_Ability.Counterspell, timeShift);
-	local ssteal 											= ConRO:AbilityReady(ids.Arc_Ability.Spellsteal, timeShift);
-	local aexp												= ConRO:AbilityReady(ids.Arc_Ability.ArcaneExplosion, timeShift);
-	local amissiles 										= ConRO:AbilityReady(ids.Arc_Ability.ArcaneMissiles, timeShift);
-		local ccBuff 											= ConRO:Aura(ids.Arc_Buff.Clearcasting, timeShift);	
-		local ccPvPBuff 										= ConRO:Aura(ids.Arc_Buff.ClearcastingPvP, timeShift);	
-	local apower, apCD 										= ConRO:AbilityReady(ids.Arc_Ability.ArcanePower, timeShift);
-		local apBuff, _, apDUR									= ConRO:Aura(ids.Arc_Buff.ArcanePower, timeShift);
-	local abarrage 											= ConRO:AbilityReady(ids.Arc_Ability.ArcaneBarrage, timeShift);
-	local pom 												= ConRO:AbilityReady(ids.Arc_Ability.PresenceofMind, timeShift);
-		local pomBuff 											= ConRO:Form(ids.Arc_Form.PresenceofMind, timeShift);
-	local evo, evoCD										= ConRO:AbilityReady(ids.Arc_Ability.Evocation, timeShift);
-		local evoBuff 											= ConRO:Aura(ids.Arc_Buff.Evocation, timeShift);	
-	local ablast	 										= ConRO:AbilityReady(ids.Arc_Ability.ArcaneBlast, timeShift);
-		local totmDebuff 										= ConRO:TargetAura(ids.Arc_Debuff.TouchoftheMagi, timeShift);
-		local rotBuff 											= ConRO:Aura(ids.Arc_Buff.RuleofThrees, timeShift);
-	local aint												= ConRO:AbilityReady(ids.Arc_Ability.ArcaneIntellect, timeShift);
-	
-	local rpower				  							= ConRO:AbilityReady(ids.Arc_Talent.RuneofPower, timeShift);
-		local runeCharges										= ConRO:SpellCharges(ids.Arc_Talent.RuneofPower);
-		local rpBuff 											= ConRO:Form(ids.Arc_Form.RuneofPower, timeShift);
-	local mimage 											= ConRO:AbilityReady(ids.Arc_Ability.MirrorImage, timeShift);
-	local afam												= ConRO:AbilityReady(ids.Arc_Talent.ArcaneFamiliar, timeShift);
-		local afBuff 											= ConRO:Aura(ids.Arc_Buff.ArcaneFamiliar, timeShift);
-	local aorb 												= ConRO:AbilityReady(ids.Arc_Talent.ArcaneOrb, timeShift);
-	local ntemp 											= ConRO:AbilityReady(ids.Arc_Talent.NetherTempest, timeShift);
-		local ntDebuff 											= ConRO:TargetAura(ids.Arc_Debuff.NetherTempest, timeShift + 3);
-	local snova 											= ConRO:AbilityReady(ids.Arc_Talent.Supernova, timeShift);
+	local _ArcaneBarrage, _ArcaneBarrage_RDY 															= ConRO:AbilityReady(ids.Arc_Ability.ArcaneBarrage, timeShift);
+	local _ArcaneBlast, _ArcaneBlast_RDY	 															= ConRO:AbilityReady(ids.Arc_Ability.ArcaneBlast, timeShift);
+		local _RuleofThrees_BUFF 																			= ConRO:Aura(ids.Arc_Buff.RuleofThrees, timeShift);
+	local _ArcaneExplosion, _ArcaneExplosion_RDY														= ConRO:AbilityReady(ids.Arc_Ability.ArcaneExplosion, timeShift);
+	local _ArcaneIntellect, _ArcaneIntellect_RDY														= ConRO:AbilityReady(ids.Arc_Ability.ArcaneIntellect, timeShift);
+	local _ArcaneMissiles, _ArcaneMissiles_RDY 															= ConRO:AbilityReady(ids.Arc_Ability.ArcaneMissiles, timeShift);
+		local _Clearcasting_BUFF 																			= ConRO:Aura(ids.Arc_Buff.Clearcasting, timeShift);	
+		local _Clearcasting_PvP_BUFF 																		= ConRO:Aura(ids.Arc_Buff.ClearcastingPvP, timeShift);	
+	local _ArcanePower, _ArcanePower_RDY, _ArcanePower_CD 												= ConRO:AbilityReady(ids.Arc_Ability.ArcanePower, timeShift);
+		local _ArcanePower_BUFF, _, _ArcanePower_DUR														= ConRO:Aura(ids.Arc_Buff.ArcanePower, timeShift);
+	local _Blink, _Blink_RDY																			= ConRO:AbilityReady(ids.Arc_Ability.Blink, timeShift);
+	local _ConjureManaGem, _ConjureManaGem_RDY															= ConRO:AbilityReady(ids.Arc_Ability.ConjureManaGem, timeShift);
+		local _ManaGem, _ManaGem_RDY, _, _, _ManaGem_COUNT													= ConRO:ItemReady(ids.Arc_Ability.ManaGem, timeShift);
+	local _Counterspell, _Counterspell_RDY 																= ConRO:AbilityReady(ids.Arc_Ability.Counterspell, timeShift);
+	local _Evocation, _Evocation_RDY, _Evocation_CD														= ConRO:AbilityReady(ids.Arc_Ability.Evocation, timeShift);
+		local _Evocation_BUFF 																				= ConRO:Aura(ids.Arc_Buff.Evocation, timeShift);
+	local _PresenceofMind, _PresenceofMind_RDY 															= ConRO:AbilityReady(ids.Arc_Ability.PresenceofMind, timeShift);
+		local _PresenceofMind_BUFF 																			= ConRO:Form(ids.Arc_Form.PresenceofMind, timeShift);
+	local _Spellsteal, _Spellsteal_RDY 																	= ConRO:AbilityReady(ids.Arc_Ability.Spellsteal, timeShift);
+	local _TouchoftheMagi, _TouchoftheMagi_RDY, _TouchoftheMagi_CD										= ConRO:AbilityReady(ids.Arc_Ability.TouchoftheMagi, timeShift);
+		local _TouchoftheMagi_DEBUFF 																		= ConRO:TargetAura(ids.Arc_Debuff.TouchoftheMagi, timeShift);
 
-	local azChosen_Equipoise								= ConRO:AzPowerChosen(ids.AzTrait.Equipoise);
-	
-	local azEssence_ConcentratedFlame						= ConRO:AbilityReady(ids.AzEssence.ConcentratedFlame, timeShift);
-	local azEssence_FocusedAzeriteBeam						= ConRO:AbilityReady(ids.AzEssence.FocusedAzeriteBeam, timeShift);	
-	local azEssence_GuardianofAzeroth						= ConRO:AbilityReady(ids.AzEssence.GuardianofAzeroth, timeShift);		
-	local azEssence_MemoryofLucidDream						= ConRO:AbilityReady(ids.AzEssence.MemoryofLucidDream, timeShift);
-	local azEssence_ReapingFlames							= ConRO:AbilityReady(ids.AzEssence.ReapingFlames, timeShift);
-	
+	local _ArcaneFamiliar, _ArcaneFamiliar_RDY															= ConRO:AbilityReady(ids.Arc_Talent.ArcaneFamiliar, timeShift);
+		local _ArcaneFamiliar_BUFF 																			= ConRO:Aura(ids.Arc_Buff.ArcaneFamiliar, timeShift);
+	local _ArcaneOrb, _ArcaneOrb_RDY 																	= ConRO:AbilityReady(ids.Arc_Talent.ArcaneOrb, timeShift);
+	local _NetherTempest, _NetherTempest_RDY 															= ConRO:AbilityReady(ids.Arc_Talent.NetherTempest, timeShift);
+		local _NetherTempest_DEBUFF 																		= ConRO:TargetAura(ids.Arc_Debuff.NetherTempest, timeShift + 3);
+	local _RuneofPower, _RuneofPower_RDY				  												= ConRO:AbilityReady(ids.Arc_Talent.RuneofPower, timeShift);
+		local _RuneofPower_CHARGES																			= ConRO:SpellCharges(ids.Arc_Talent.RuneofPower);
+		local _RuneofPower_BUFF 																			= ConRO:Form(ids.Arc_Form.RuneofPower, timeShift);
+	local _Shimmer, _Shimmer_RDY 																		= ConRO:AbilityReady(ids.Arc_Talent.Shimmer, timeShift);
+	local _Supernova, _Supernova_RDY 																	= ConRO:AbilityReady(ids.Arc_Talent.Supernova, timeShift);
+
+	local _Deathborne, _Deathborne_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Deathborne, timeShift);
+	local _MirrorsofTorment, _MirrorsofTorment_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.MirrorsofTorment, timeShift);
+		local _MirrorsofTorment_DEBUFF																		= ConRO:TargetAura(ids.Covenant_Debuff.MirrorsofTorment, timeShift);		
+	local _RadiantSpark, _RadiantSpark_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.RadiantSpark, timeShift);
+	local _Soulshape, _Soulshape_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Soulshape, timeShift);
+	local _ShiftingPower, _ShiftingPower_RDY															= ConRO:AbilityReady(ids.Covenant_Ability.ShiftingPower, timeShift);
+
 --Conditions
-	local incombat 											= UnitAffectingCombat('player');
-	local Close 											= CheckInteractDistance("target", 3);
-	local targetPh 											= ConRO:PercentHealth('target');
-	local ispvp												= UnitIsPVP('player');
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
 	
-	if currentSpell == ids.Arc_Ability.ArcaneBlast then
-		arcCharges = arcCharges + 1;
+	if currentSpell == _ArcaneBlast then
+		_ArcaneCharges = _ArcaneCharges + 1;
+	end
+	if currentSpell == _TouchoftheMagi then
+		_ArcaneCharges = 4;
 	end
 	
-	manaThreshold = 60;
-	if azChosen_Equipoise then
-		manaThreshold = 80;	
-	end
+	local _Mana_Threshold = 60;
+		if tChosen[ids.Arc_Talent.Enlightened] then
+			_Mana_Threshold = 80;
+		end
 	
-	if ispvp then
+	if _is_PvP then
 		if pvpChosen[ids.Arc_PvPTalent.ArcaneEmpowerment] then
-			ccBuff = ccPvPBuff;
+			_Clearcasting_BUFF = _Clearcasting_PvP_BUFF;
 		end
 	end
 
 --Indicators	
-	ConRO:AbilityInterrupt(ids.Arc_Ability.Counterspell, counter and ConRO:Interrupt());
-	ConRO:AbilityPurge(ids.Arc_Ability.Spellsteal, ssteal and ConRO:Purgable());
-	ConRO:AbilityPurge(ids.Racial.ArcaneTorrent, arctorrent and Close and ConRO:Purgable());
+	ConRO:AbilityInterrupt(_Counterspell, _Counterspell_RDY and ConRO:Interrupt());
+	ConRO:AbilityPurge(_Spellsteal, _Spellsteal_RDY and ConRO:Purgable());
+	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_10yrds and ConRO:Purgable());
+	ConRO:AbilityMovement(_Blink, _Blink_RDY and not tChosen[ids.Arc_Talent.Shimmer] and _target_in_melee);
+	ConRO:AbilityMovement(_Shimmer, _Shimmer_RDY and _target_in_melee);
+	ConRO:AbilityMovement(_Soulshape, _Soulshape_RDY and _target_in_melee);
 	
-	ConRO:AbilityRaidBuffs(ids.Arc_Ability.ArcaneIntellect, aint and not ConRO:RaidBuff(ids.Arc_Ability.ArcaneIntellect));
+	ConRO:AbilityRaidBuffs(_ArcaneIntellect, _ArcaneIntellect_RDY and not ConRO:RaidBuff(ids.Arc_Buff.ArcaneIntellect));
 	
-	ConRO:AbilityBurst(ids.Arc_Ability.MirrorImage, mimage and ConRO_BurstButton:IsVisible());
-	ConRO:AbilityBurst(ids.Arc_Ability.ArcanePower, apower and (evo or evoCD < 15) and ConRO_BurstButton:IsVisible());
-	ConRO:AbilityBurst(ids.AzEssence.ReapingFlames, azEssence_ReapingFlames and (targetPh > 20 and targetPh < 80));
-	
+	ConRO:AbilityBurst(_ArcanePower, _ArcanePower_RDY and (_Evocation_RDY or _Evocation_CD < 15) and ConRO:BurstMode(_ArcanePower));
+	ConRO:AbilityBurst(_PresenceofMind, _PresenceofMind_RDY and not _PresenceofMind_BUFF and _ArcanePower_BUFF and _ArcanePower_DUR <= 3 and ConRO:BurstMode(_PresenceofMind));
+	ConRO:AbilityBurst(_RuneofPower, _RuneofPower_RDY and not _RuneofPower_BUFF and not _ArcanePower_BUFF and currentSpell ~= _RuneofPower and ConRO:BurstMode(_RuneofPower));
+	ConRO:AbilityBurst(_TouchoftheMagi, _TouchoftheMagi_RDY and _ArcaneCharges <= 0 and currentSpell ~= _TouchoftheMagi and ConRO:BurstMode(_TouchoftheMagi));
+
+	ConRO:AbilityBurst(_Deathborne, _Deathborne_RDY and _in_combat and currentSpell ~= _Deathborne and ConRO:BurstMode(_Deathborne));
+	ConRO:AbilityBurst(_MirrorsofTorment, _MirrorsofTorment_RDY and _in_combat and currentSpell ~= _MirrorsofTorment and ConRO:BurstMode(_MirrorsofTorment));
+	ConRO:AbilityBurst(_ShiftingPower, _ShiftingPower_RDY and _target_in_10yrds and not _ArcanePower_RDY and not _Evocation_RDY and not _TouchoftheMagi_RDY and ConRO:BurstMode(_ShiftingPower));
+		
 --Warnings	
 	
 --Rotations
-	if evoBuff and mana < manaMax then
-		return ids.Arc_Ability.Evocation;
+	if _Evocation_BUFF and _Mana < _Mana_Max then
+		return _Evocation;
 	end
 
-	if not incombat then
-		if ablast then
-			return ids.Arc_Ability.ArcaneBlast;
+	if not _in_combat then
+		if _ConjureManaGem_RDY and _ManaGem_COUNT <= 0 then
+			return _ConjureManaGem;
+		end
+
+		if _ArcaneBlast_RDY and currentSpell ~= _ArcaneBlast and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneBlast;
+		end
+
+		if _ArcaneBarrage_RDY and _TouchoftheMagi_RDY and _ArcaneCharges >= 4 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneBarrage;
 		end
 		
-		if azEssence_ConcentratedFlame and not apBuff then
-			return ids.AzEssence.ConcentratedFlame;
-		end	
-
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) then
-			return ids.AzEssence.ReapingFlames;
+		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
+			return _TouchoftheMagi;
 		end
 	end
 	
-	if apBuff or (not apower and (evo or evoCD < 30)) then
-		if azEssence_ConcentratedFlame and not apBuff then
-			return ids.AzEssence.ConcentratedFlame;
-		end	
-		
-		if azEssence_MemoryofLucidDream and not apBuff then
-			return ids.AzEssence.MemoryofLucidDream;
+	if _ArcanePower_BUFF or (not _ArcanePower_RDY and _ArcanePower_CD >= 30 and (_Evocation_RDY or _Evocation_CD < 30)) then
+		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
+			return _RadiantSpark;
 		end
 
-		if aorb and arcCharges < 4 then
-			return ids.Arc_Talent.ArcaneOrb;
-		end
-
-		if ntemp and arcCharges >= 4 and not ntDebuff and not apBuff and not rpBuff then
-			return ids.Arc_Talent.NetherTempest;
-		end	
-
-		if mimage then
-			return ids.Arc_Ability.MirrorImage;
-		end
-
-		if rpower then
-			return ids.Arc_Talent.RuneofPower;
-		end
-		
-		if pom and not pomBuff and apBuff and apDUR <= 3 then
-			return ids.Arc_Ability.PresenceofMind;
-		end
-		
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) and not apBuff then
-			return ids.AzEssence.ReapingFlames;
-		end
-	
-		if abarrage and arcCharges >= 4 and ConRO_AoEButton:IsVisible() then
-			return ids.Arc_Ability.ArcaneBarrage;
-		end
-		
-		if aexp and ConRO_AoEButton:IsVisible() then
-			return ids.Arc_Ability.ArcaneExplosion;
-		end
-
-		if amissiles and ccBuff and not apBuff and manapercent < 95 then
-			return ids.Arc_Ability.ArcaneMissiles;
+		if _Deathborne_RDY and currentSpell ~= _Deathborne and ConRO:FullMode(_Deathborne) then
+			return _Deathborne;
 		end		
-	
-		if ablast then
-			return ids.Arc_Ability.ArcaneBlast;
+
+		if _MirrorsofTorment_RDY and currentSpell ~= _MirrorsofTorment and ConRO:FullMode(_MirrorsofTorment) then
+			return _MirrorsofTorment;
 		end
 
-		if evo then
-			return ids.Arc_Ability.Evocation;
+		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneOrb;
+		end
+
+		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF and not _ArcanePower_BUFF and not _RuneofPower_BUFF then
+			return _NetherTempest;
+		end
+
+		if _ManaGem_RDY and _ManaGem_COUNT > 0 and _Mana_Percent <= 85 and not _ArcanePower_BUFF then
+			return _ManaGem;
+		end
+
+		if _RuneofPower_RDY and not _RuneofPower_BUFF and not _ArcanePower_BUFF and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+			return _RuneofPower;
 		end
 		
-	elseif apower and (evo or evoCD < 30) and ConRO_FullButton:IsVisible() then 
-		if aorb and arcCharges < 4 then
-			return ids.Arc_Talent.ArcaneOrb;
+		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi then
+			return _TouchoftheMagi;
+		end
+		
+		if _PresenceofMind_RDY and not _PresenceofMind_BUFF and _ArcanePower_BUFF and _ArcanePower_DUR <= 3 and ConRO:FullMode(_PresenceofMind) then
+			return _PresenceofMind;
+		end
+			
+		if ConRO_AoEButton:IsVisible() then
+			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 then
+				return _ArcaneBarrage;
+			end
+			
+			if _ArcaneExplosion_RDY then
+				return _ArcaneExplosion;
+			end			
+		else
+			if _ArcaneMissiles_RDY and ((_Clearcasting_BUFF and _Mana_Percent < 95 and _TouchoftheMagi_CD > 10) or (_TouchoftheMagi_DEBUFF and (tChosen[ids.Arc_Talent.ArcaneEcho] or _Clearcasting_BUFF))) then
+				return _ArcaneMissiles;
+			end	
+		
+			if _ArcaneBlast_RDY then
+				return _ArcaneBlast;
+			end
+		end
+		
+		if _Evocation_RDY then
+			return _Evocation;
+		end	
+	end
+	
+	if _ArcanePower_RDY and (_Evocation_RDY or _Evocation_CD < 30) and ConRO:FullMode(_ArcanePower) then 
+		if _ArcaneBarrage_RDY and _TouchoftheMagi_RDY and _ArcaneCharges >= 4 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneBarrage;
 		end
 
-		if ntemp and arcCharges >= 4 and not ntDebuff and not apBuff and not rpBuff then
-			return ids.Arc_Talent.NetherTempest;
+		if _ArcanePower_RDY and _TouchoftheMagi_DEBUFF or currentSpell == _TouchoftheMagi then
+			return _ArcanePower;
 		end	
 		
-		if azEssence_GuardianofAzeroth then
-			return ids.AzEssence.GuardianofAzeroth;
-		end
-
-		if ablast and arcCharges < 4 then
-			return ids.Arc_Ability.ArcaneBlast;
+		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
+			return _RadiantSpark;
 		end
 		
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) then
-			return ids.AzEssence.ReapingFlames;
-		end
-
-		if mimage then
-			return ids.Arc_Ability.MirrorImage;
-		end
-
-		if rpower then
-			return ids.Arc_Talent.RuneofPower;
-		end
-
-		if apower then
-			return ids.Arc_Ability.ArcanePower;
+		if _Deathborne_RDY and currentSpell ~= _Deathborne and ConRO:FullMode(_Deathborne) then
+			return _Deathborne;
 		end		
+
+		if _MirrorsofTorment_RDY and currentSpell ~= _MirrorsofTorment and ConRO:FullMode(_MirrorsofTorment) then
+			return _MirrorsofTorment;
+		end
+		
+		if _TouchoftheMagi_RDY and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
+			return _TouchoftheMagi;
+		end
+
+		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneOrb;
+		end
+
+		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF then
+			return _NetherTempest;
+		end
+		
+		if _ArcaneBlast_RDY and _ArcaneCharges < 4 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneBlast;
+		end
+		
+	elseif _TouchoftheMagi_DEBUFF or currentSpell == _TouchoftheMagi then
+		if _ArcaneMissiles_RDY and (tChosen[ids.Arc_Talent.ArcaneEcho] or _Clearcasting_BUFF) then
+			return _ArcaneMissiles;
+		end
+		
+		if _ArcaneBlast_RDY then
+			return _ArcaneBlast;
+		end	
 	else
-		if azEssence_ConcentratedFlame then
-			return ids.AzEssence.ConcentratedFlame;
-		end	
-		
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) then
-			return ids.AzEssence.ReapingFlames;
+		if _ShiftingPower_RDY and _target_in_10yrds and not _ArcanePower_RDY and not _Evocation_RDY and not _TouchoftheMagi_RDY and ConRO:FullMode(_ShiftingPower) then
+			return _ShiftingPower;
+		end
+
+		if _RuneofPower_RDY and not _RuneofPower_BUFF and _TouchoftheMagi_RDY and _ArcanePower_CD >= 42 and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+			return _RuneofPower;
+		end
+
+		if _ArcaneBarrage_RDY and _ArcaneCharges >= 1 and _TouchoftheMagi_RDY and _ArcanePower_CD >= 40 and currentSpell ~= ids.Arc_Ability.TouchoftheMagi then
+			return _ArcaneBarrage;
+		end
+			
+		if _TouchoftheMagi_RDY and _ArcanePower_CD >= 40 and currentSpell ~= _TouchoftheMagi and ConRO:FullMode(_TouchoftheMagi) then
+			return _TouchoftheMagi;
 		end
 		
-		if ntemp and arcCharges >= 4 and not ntDebuff then
-			return ids.Arc_Talent.NetherTempest;
+		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
+			return _RadiantSpark;
+		end
+
+		if _NetherTempest_RDY and _ArcaneCharges >= 4 and not _NetherTempest_DEBUFF then
+			return _NetherTempest;
 		end	
 
-		if aorb and arcCharges < 4 then
-			return ids.Arc_Talent.ArcaneOrb;
+		if _ArcaneOrb_RDY and not _TouchoftheMagi_RDY and _ArcaneCharges <= 3 and currentSpell ~= _TouchoftheMagi then
+			return _ArcaneOrb;
 		end
-		
-		if ablast and rotBuff then
-			return ids.Arc_Ability.ArcaneBlast;
-		end
-		
-		if aexp and ccBuff and ConRO_AoEButton:IsVisible() then
-			return ids.Arc_Ability.ArcaneExplosion;
-		end
-		
-		if amissiles and ccBuff and manapercent < 95 then
-			return ids.Arc_Ability.ArcaneMissiles;
-		end
-		
-		if abarrage and arcCharges >= 4 and (manapercent < manaThreshold or ConRO_AoEButton:IsVisible()) then
-			return ids.Arc_Ability.ArcaneBarrage;
-		end
-		
-		if aexp and ConRO_AoEButton:IsVisible() then
-			return ids.Arc_Ability.ArcaneExplosion;
-		end
-		
-		if snova then
-			return ids.Arc_Talent.Supernova;
-		end		
 
-		if ablast then
-			return ids.Arc_Ability.ArcaneBlast;
+		if _ArcaneBlast_RDY and _RuleofThrees_BUFF then
+			return _ArcaneBlast;
+		end
+
+		if _Supernova_RDY then
+			return _Supernova;
+		end
+		
+		if ConRO_AoEButton:IsVisible() then
+			if _ArcaneExplosion_RDY and _Clearcasting_BUFF then
+				return _ArcaneExplosion;
+			end
+			
+			if _ArcaneBarrage_RDY and _ArcaneCharges >= 4 and (_Mana_Percent < _Mana_Threshold) then
+				return _ArcaneBarrage;
+			end
+
+			if _ArcaneExplosion_RDY then
+				return _ArcaneExplosion;
+			end
+		else
+			if _ArcaneMissiles_RDY and _Clearcasting_BUFF and _Mana_Percent < 95 and _TouchoftheMagi_CD > 10 then
+				return _ArcaneMissiles;
+			end
+
+			if _ArcaneBarrage_RDY and _ArcaneCharges >= 2 and _Mana_Percent < _Mana_Threshold then
+				return _ArcaneBarrage;
+			end
+		end
+
+		if _ArcaneBlast_RDY then
+			return _ArcaneBlast;
 		end
 	end
 return nil;		
 end
 
 function ConRO.Mage.ArcaneDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
 --Abilties
-	local pbarrier 											= ConRO:AbilityReady(ids.Arc_Ability.PrismaticBarrier, timeShift);
-		local pbBuff 											= ConRO:Aura(ids.Arc_Buff.PrismaticBarrier, timeShift);
-	local iblock 											= ConRO:AbilityReady(ids.Arc_Ability.IceBlock, timeShift);
+	local _PrismaticBarrier, _PrismaticBarrier_RDY 														= ConRO:AbilityReady(ids.Arc_Ability.PrismaticBarrier, timeShift);
+		local _PrismaticBarrier_BUFF 																		= ConRO:Aura(ids.Arc_Buff.PrismaticBarrier, timeShift);
+	local _IceBlock, _IceBlock_RDY 																		= ConRO:AbilityReady(ids.Arc_Ability.IceBlock, timeShift);
+	local _MirrorImage, _MirrorImage_RDY 																= ConRO:AbilityReady(ids.Arc_Ability.MirrorImage, timeShift);
 
---Conditions	
-	local playerPh 											= ConRO:PercentHealth('player');
-
+	local _Fleshcraft, _Fleshcraft_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Fleshcraft, timeShift);
+	local _PhialofSerenity, _PhialofSerenity_RDY														= ConRO:ItemReady(ids.Covenant_Ability.PhialofSerenity, timeShift);
+	
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	
 --Rotations	
-	if pbarrier and not pbBuff then
-		return ids.Arc_Ability.PrismaticBarrier;
+	if _Fleshcraft_RDY and not _in_combat then
+		return _Fleshcraft;
 	end
 	
-	if iblock and playerPh <= 25 then
-		return ids.Arc_Ability.IceBlock;
+	if _IceBlock_RDY and _Player_Percent_Health <= 25 and _in_combat then
+		return _IceBlock;
+	end
+
+	if _PrismaticBarrier_RDY and not _PrismaticBarrier_BUFF then
+		return _PrismaticBarrier;
+	end
+
+	if _PhialofSerenity_RDY and _Player_Percent_Health <= 80 then
+		return _PhialofSerenity;
 	end
 	
-	return nil;
+	if _MirrorImage_RDY and _in_combat then
+		return _MirrorImage;
+	end
+
+	if _Fleshcraft_RDY then
+		return _Fleshcraft;
+	end
+return nil;
 end
 
 function ConRO.Mage.Fire(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
---Resources
-	local mana 												= UnitPower('player', Enum.PowerType.Mana);
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
 
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
 --Racials
-	local arctorrent										= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(ids.Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(ids.Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(ids.Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
 	
 --Abilities
-	local counter 											= ConRO:AbilityReady(ids.Fire_Ability.Counterspell, timeShift);
-	local ssteal 											= ConRO:AbilityReady(ids.Fire_Ability.Spellsteal, timeShift);
-	local fball 											= ConRO:AbilityReady(ids.Fire_Ability.Fireball, timeShift);
-		local hupBuff											= ConRO:Aura(ids.Fire_Buff.HeatingUp, timeShift);
-		local hsBuff 											= ConRO:Aura(ids.Fire_Buff.HotStreak, timeShift);
-		local pyroBuff, pBCount									= ConRO:Aura(ids.Fire_Buff.Pyroclasm, timeShift);
-	local pblast, _, pbMCD, pbCAST							= ConRO:AbilityReady(ids.Fire_Ability.Pyroblast, timeShift);		
-	local fblast											= ConRO:AbilityReady(ids.Fire_Ability.FireBlast, timeShift);
-		local blastCharges 										= ConRO:SpellCharges(ids.Fire_Ability.FireBlast);
-	local scorch 											= ConRO:AbilityReady(ids.Fire_Ability.Scorch, timeShift);
-	local dbreath 											= ConRO:AbilityReady(ids.Fire_Ability.DragonsBreath, timeShift);
-	local fstrike 											= ConRO:AbilityReady(ids.Fire_Ability.Flamestrike, timeShift);
-	local combust, cbCD										= ConRO:AbilityReady(ids.Fire_Ability.Combustion, timeShift);
-		local comBuff, _, comDUR								= ConRO:Aura(ids.Fire_Buff.Combustion, timeShift);
-	local aint												= ConRO:AbilityReady(ids.Fire_Ability.ArcaneIntellect, timeShift);
-	local pflames											= ConRO:AbilityReady(ids.Fire_Ability.PhoenixFlames, timeShift);
-		local flamesCharges, _, pfCCD							= ConRO:SpellCharges(ids.Fire_Ability.PhoenixFlames);
-	local mimage 											= ConRO:AbilityReady(ids.Fire_Ability.MirrorImage, timeShift);
-	
-	local meteor 											= ConRO:AbilityReady(ids.Fire_Talent.Meteor, timeShift);
-	local rpower											= ConRO:AbilityReady(ids.Fire_Talent.RuneofPower, timeShift);
-		local runeCharges, _, rpCCD								= ConRO:SpellCharges(ids.Fire_Talent.RuneofPower);
-		local rpBuff 											= ConRO:Form(ids.Fire_Form.RuneofPower);
-	local lbomb 											= ConRO:AbilityReady(ids.Fire_Talent.LivingBomb, timeShift);
+	local _ArcaneIntellect, _ArcaneIntellect_RDY														= ConRO:AbilityReady(ids.Fire_Ability.ArcaneIntellect, timeShift);
+	local _Blink, _Blink_RDY																			= ConRO:AbilityReady(ids.Fire_Ability.Blink, timeShift);
+	local _Combustion, _Combustion_RDY, _Combustion_CD													= ConRO:AbilityReady(ids.Fire_Ability.Combustion, timeShift);
+		local _Combustion_BUFF, _, _Combustion_DUR														= ConRO:Aura(ids.Fire_Buff.Combustion, timeShift);
+	local _Counterspell,  _Counterspell_RDY 															= ConRO:AbilityReady(ids.Fire_Ability.Counterspell, timeShift);
+	local _DragonsBreath, _DragonsBreath_RDY 															= ConRO:AbilityReady(ids.Fire_Ability.DragonsBreath, timeShift);
+	local _FireBlast, _FireBlast_RDY																	= ConRO:AbilityReady(ids.Fire_Ability.FireBlast, timeShift);
+		local _FireBlast_CHARGES 																			= ConRO:SpellCharges(ids.Fire_Ability.FireBlast);
+	local _Fireball, _Fireball_RDY 																		= ConRO:AbilityReady(ids.Fire_Ability.Fireball, timeShift);
+		local _HeatingUp_BUFF																				= ConRO:Aura(ids.Fire_Buff.HeatingUp, timeShift);
+		local _HotStreak_BUFF 																				= ConRO:Aura(ids.Fire_Buff.HotStreak, timeShift);
+	local _Flamestrike, _Flamestrike_RDY 																= ConRO:AbilityReady(ids.Fire_Ability.Flamestrike, timeShift);
+	local _Pyroblast, _Pyroblast_RDY, _, _Pyroblast_MaxCD, _Pyroblast_CAST								= ConRO:AbilityReady(ids.Fire_Ability.Pyroblast, timeShift);		
+		local _Pyroclasm_BUFF, _Pyroclasm_COUNT																= ConRO:Aura(ids.Fire_Buff.Pyroclasm, timeShift);
+	local _PhoenixFlames, _PhoenixFlames_RDY															= ConRO:AbilityReady(ids.Fire_Ability.PhoenixFlames, timeShift);
+		local _PhoenixFlames_CHARGES, _, _PhoenixFlames_CCD													= ConRO:SpellCharges(ids.Fire_Ability.PhoenixFlames);
+	local _Scorch, _Scorch_RDY 																			= ConRO:AbilityReady(ids.Fire_Ability.Scorch, timeShift);
+	local _Spellsteal, _Spellsteal_RDY 																	= ConRO:AbilityReady(ids.Fire_Ability.Spellsteal, timeShift);
 
-	local azEssence_ConcentratedFlame						= ConRO:AbilityReady(ids.AzEssence.ConcentratedFlame, timeShift);
-	local azEssence_FocusedAzeriteBeam						= ConRO:AbilityReady(ids.AzEssence.FocusedAzeriteBeam, timeShift);	
-	local azEssence_GuardianofAzeroth						= ConRO:AbilityReady(ids.AzEssence.GuardianofAzeroth, timeShift);		
-	local azEssence_MemoryofLucidDream						= ConRO:AbilityReady(ids.AzEssence.MemoryofLucidDream, timeShift);
-		local azBuff_MemoryofLucidDream							= ConRO:Aura(ids.AzEssenceBuff.MemoryofLucidDream, timeShift);
-	local azEssence_ReapingFlames							= ConRO:AbilityReady(ids.AzEssence.ReapingFlames, timeShift);
+	local _LivingBomb, _LivingBomb_RDY 																	= ConRO:AbilityReady(ids.Fire_Talent.LivingBomb, timeShift);	
+	local _Meteor, _Meteor_RDY 																			= ConRO:AbilityReady(ids.Fire_Talent.Meteor, timeShift);
+	local _RuneofPower, _RuneofPower_RDY																= ConRO:AbilityReady(ids.Fire_Talent.RuneofPower, timeShift);
+		local _RuneofPower_CHARGES, _, _RuneofPower_CCD														= ConRO:SpellCharges(ids.Fire_Talent.RuneofPower);
+		local _RuneofPower_BUFF 																			= ConRO:Form(ids.Fire_Form.RuneofPower);
+	local _Shimmer, _Shimmer_RDY 																		= ConRO:AbilityReady(ids.Fire_Talent.Shimmer, timeShift);
+
+	local _Deathborne, _Deathborne_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Deathborne, timeShift);
+	local _MirrorsofTorment, _MirrorsofTorment_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.MirrorsofTorment, timeShift);
+		local _MirrorsofTorment_DEBUFF																		= ConRO:TargetAura(ids.Covenant_Debuff.MirrorsofTorment, timeShift);		
+	local _RadiantSpark, _RadiantSpark_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.RadiantSpark, timeShift);
+	local _Soulshape, _Soulshape_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Soulshape, timeShift);
+	local _ShiftingPower, _ShiftingPower_RDY															= ConRO:AbilityReady(ids.Covenant_Ability.ShiftingPower, timeShift);
+
+		local _InfernalCascade_BUFF, _InfernalCascade_COUNT, _InfernalCascade_DUR							= ConRO:Aura(ids.Conduit_Buff.InfernalCascade, timeShift);
 	
-	local bracers_HyperthreadWristwraps						= ConRO:ItemReady(168989, timeShift);
-		local use_HyperthreadWristwraps							= 168989;
-		
---Conditions	
-	local incombat 											= UnitAffectingCombat('player');
-	local moving 											= ConRO:PlayerSpeed();
-	local targetPh 											= ConRO:PercentHealth('target');
-	local Close 											= CheckInteractDistance("target", 3);
+		local _Firestorm_BUFF																				= ConRO:Aura(ids.Legendary_Buff.Firestorm, timeShift);
+
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
 	
-	local scorchball = false;
-	
-	if moving then
-		scorchball = ids.Fire_Ability.Scorch;
-	else
-		scorchball = ids.Fire_Ability.Fireball;
-	end
-	
-	if currentSpell == ids.Fire_Ability.Pyroblast then
-		pBCount = pBCount - 1;
-	end
+		if currentSpell == _Pyroblast then
+			_Pyroclasm_COUNT = _Pyroclasm_COUNT - 1;
+		end
 
 --Indicators	
-	ConRO:AbilityInterrupt(ids.Fire_Ability.Counterspell, counter and ConRO:Interrupt());
-	ConRO:AbilityPurge(ids.Fire_Ability.Spellsteal, ssteal and ConRO:Purgable());
-	ConRO:AbilityPurge(ids.Racial.ArcaneTorrent, arctorrent and Close and ConRO:Purgable());
+	ConRO:AbilityInterrupt(_Counterspell, _Counterspell_RDY and ConRO:Interrupt());
+	ConRO:AbilityPurge(_Spellsteal, _Spellsteal_RDY and ConRO:Purgable());
+	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_10yrds and ConRO:Purgable());
+	ConRO:AbilityMovement(_Blink, _Blink_RDY and not tChosen[ids.Fire_Talent.Shimmer] and _target_in_melee);
+	ConRO:AbilityMovement(_Shimmer, _Shimmer_RDY and _target_in_melee);
+	ConRO:AbilityMovement(_Soulshape, _Soulshape_RDY and _target_in_melee);
 	
-	ConRO:AbilityRaidBuffs(ids.Fire_Ability.ArcaneIntellect, aint and not ConRO:RaidBuff(ids.Fire_Ability.ArcaneIntellect));
+	ConRO:AbilityRaidBuffs(_ArcaneIntellect, _ArcaneIntellect_RDY and not ConRO:RaidBuff(ids.Fire_Buff.ArcaneIntellect));
 
-	ConRO:AbilityBurst(ids.AzEssence.ReapingFlames, azEssence_ReapingFlames and (targetPh > 20 and targetPh < 80));	
-	ConRO:AbilityBurst(ids.Fire_Ability.MirrorImage, mimage);
-	ConRO:AbilityBurst(ids.Fire_Ability.Combustion, combust and (hsBuff or (hupBuff and ConRO:AzPowerChosen(ids.AzTrait.BlasterMaster)) or currentSpell == ids.Fire_Ability.Fireball) and ConRO_BurstButton:IsVisible());
+	ConRO:AbilityBurst(_Combustion, _Combustion_RDY and _HotStreak_BUFF and (currentSpell == _Fireball or currentSpell == _Scorch) and ConRO:BurstMode(_Combustion));
+	ConRO:AbilityBurst(_Meteor, _Meteor_RDY and (((not tChosen[ids.Fire_Talent.RuneofPower] or (tChosen[ids.Fire_Talent.RuneofPower] and (_RuneofPower_BUFF or currentSpell == _RuneofPower)) or _Combustion_CD > 40) and not _Combustion_RDY) or _Combustion_BUFF) and ConRO:BurstMode(_Meteor));
+		
+	ConRO:AbilityBurst(_Deathborne, _Deathborne_RDY and _in_combat and currentSpell ~= _Deathborne and ConRO:BurstMode(_Deathborne));
+	ConRO:AbilityBurst(_MirrorsofTorment, _MirrorsofTorment_RDY and _in_combat and currentSpell ~= _MirrorsofTorment and ConRO:BurstMode(_MirrorsofTorment));
+	ConRO:AbilityBurst(_ShiftingPower, _ShiftingPower_RDY and _target_in_10yrds and not _Combustion_RDY and ConRO:BurstMode(_ShiftingPower));
 	
 --Warnings	
-	
+
 --Rotations	
-	if bracers_HyperthreadWristwraps and azBuff_MemoryofLucidDream and blastCharges <= 0 and ConRO.lastSpellId == ids.Fire_Ability.FireBlast then
-		return use_HyperthreadWristwraps;
-	end
-		
-	if pblast and not incombat and currentSpell ~= ids.Fire_Ability.Pyroblast then
-		return ids.Fire_Ability.Pyroblast;
-	elseif tChosen[ids.Fire_Talent.Firestarter] and targetPh >= 90 then
-		if pblast and pyroBuff and pBCount >= 1 then
-			return ids.Fire_Ability.Pyroblast;
+	if not _in_combat then
+		if ConRO_AoEButton:IsVisible() then
+			if _Flamestrike_RDY and currentSpell ~= _Flamestrike  then
+				return _Flamestrike;
+			end
+			
+			if _FireBlast_RDY and not _HotStreak_BUFF and currentSpell == _Flamestrike then
+				return _FireBlast;
+			end
+		else
+			if _Pyroblast_RDY and currentSpell ~= _Pyroblast then
+				return _Pyroblast;
+			end
+			
+			if _Fireball_RDY and currentSpell ~= _Fireball then
+				return _Fireball;
+			end
 		end
-		
-		if hsBuff then
-			if scorch and moving or (tChosen[ids.Fire_Talent.SearingTouch] and targetPh <= 30) and currentSpell ~= ids.Fire_Ability.Scorch and currentSpell ~= ids.Fire_Ability.Fireball then
-				return ids.Fire_Ability.Scorch;
-			elseif fball and currentSpell ~= ids.Fire_Ability.Fireball and currentSpell ~= ids.Fire_Ability.Scorch then
-				return ids.Fire_Ability.Fireball;
-			end		
-		end
-		
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) then
-			return ids.AzEssence.ReapingFlames;
-		end
-	
-		if pblast and hsBuff then
-			return ids.Fire_Ability.Pyroblast;
-		end
-		
-		if scorch and moving then
-			return ids.Fire_Ability.Scorch;
-		end
-		
-		if fball then
-			return ids.Fire_Ability.Fireball;
-		end
-	elseif comBuff then
-		if pblast and hsBuff or (hupBuff and currentSpell == ids.Fire_Ability.Scorch) then
-			return ids.Fire_Ability.Pyroblast;
+	elseif tChosen[ids.Fire_Talent.Firestarter] and _Target_Percent_Health >= 90 then
+		if _Pyroblast_RDY and _Pyroclasm_BUFF and _Pyroclasm_COUNT >= 1 then
+			return _Pyroblast;
 		end
 
-		if pblast and pyroBuff and pBCount >= 1 and (not combust or (comBuff and comDUR < pbCAST + 0.5)) then
-			return ids.Fire_Ability.Pyroblast;
+		if _FireBlast_RDY and not _HeatingUp_BUFF and not _HotStreak_BUFF then
+			return _FireBlast;
+		end	
+		
+		if _Pyroblast_RDY and ((_HeatingUp_BUFF and currentSpell ~= _Pyroblast) or (_HotStreak_BUFF and currentSpell == _Fireball)) then
+			return _Pyroblast;
+		end
+
+		if _Fireball_RDY and _HotStreak_BUFF and currentSpell ~= _Fireball then
+			return _Fireball;
 		end
 		
-		if fblast and (hupBuff or ConRO.lastSpellId == ids.Fire_Ability.Pyroblast) then
-			return ids.Fire_Ability.FireBlast;
+		if _Fireball_RDY and currentSpell ~= _Fireball then
+			return _Fireball;
+		end
+	elseif _Firestorm_BUFF then
+		if ConRO_AoEButton:IsVisible() then
+			if _Flamestrike_RDY then
+				return _Flamestrike;
+			end
+		else
+			if _Pyroblast_RDY then
+				return _Pyroblast;
+			end
 		end		
-	
-		if scorch then
-			return ids.Fire_Ability.Scorch;
+	elseif _Combustion_BUFF then
+		if _FireBlast_RDY and ConRO:ConduitChosen(ids.Conduit.InfernalCascade) and (_InfernalCascade_BUFF and _InfernalCascade_DUR < 1.5) then
+			return _FireBlast;
+		end
+
+		if ConRO_AoEButton:IsVisible() then
+			if _Flamestrike_RDY and _HotStreak_BUFF or (_HeatingUp_BUFF  and (currentSpell == _Scorch or currentSpell == _Flamestrike)) then
+				return _Flamestrike;
+			end
+		else
+			if _Pyroblast_RDY and _HotStreak_BUFF or (_HeatingUp_BUFF and (currentSpell == _Scorch or currentSpell == _Pyroblast)) then
+				return _Pyroblast;
+			end
+		end
+
+		if _Meteor_RDY and ConRO:FullMode(_Meteor) then
+			return _Meteor;
+		end
+
+		if _DragonsBreath_RDY and _target_in_10yrds and not _PhoenixFlames_RDY and not _FireBlast_RDY and ((_HeatingUp_BUFF and tChosen[ids.Fire_Talent.AlexstraszasFury]) or ConRO.lastSpellId == _Pyroblast) then
+			return _DragonsBreath;
+		end
+		
+		if _PhoenixFlames_RDY and (not _FireBlast_RDY or _PhoenixFlames_CHARGES >= 3) and (_HeatingUp_BUFF or ConRO.lastSpellId == _Pyroblast or ConRO.lastSpellId == _Flamestrike) then
+			return _PhoenixFlames;
+		end
+		
+		if _FireBlast_RDY and (_HeatingUp_BUFF or ConRO.lastSpellId == _Pyroblast or ConRO.lastSpellId == _Flamestrike) then
+			return _FireBlast;
+		end
+
+		if not ConRO_AoEButton:IsVisible() then
+			if _Pyroblast_RDY and _Pyroclasm_BUFF and _Pyroclasm_COUNT >= 1 and _Combustion_DUR < _Pyroblast_CAST + 0.5 then
+				return _Pyroblast;
+			end
+		end
+		
+		if _Scorch_RDY then
+			return _Scorch;
 		end	
 	else
-		if fblast and combust and (hupBuff or (currentSpell == ids.Fire_Talent.RuneofPower and ConRO:AzPowerChosen(ids.AzTrait.BlasterMaster))) then
-			return ids.Fire_Ability.FireBlast;
+		if ConRO_AoEButton:IsVisible() then
+			if _FireBlast_RDY and not _HotStreak_BUFF and (_Combustion_RDY or ((_FireBlast_CHARGES >= 1 and _Combustion_CD >= 20) or (_FireBlast_CHARGES >= 2 and _Combustion_CD >= 10) or _FireBlast_CHARGES >= 3)) and (currentSpell == _Scorch or currentSpell == _Flamestrike) then
+				return _FireBlast;
+			end
+		else
+			if _FireBlast_RDY and ((_Combustion_RDY and not _HotStreak_BUFF) or (_HeatingUp_BUFF and ((_FireBlast_CHARGES >= 1 and _Combustion_CD >= 20) or (_FireBlast_CHARGES >= 2 and _Combustion_CD >= 10) or _FireBlast_CHARGES >= 3))) and (currentSpell == _Fireball or currentSpell == _Scorch or currentSpell == _Pyroblast or currentSpell == _Flamestrike) then
+				return _FireBlast;
+			end
+		end
+
+		if _Combustion_RDY and _HotStreak_BUFF and (currentSpell == ids.Fire_Ability.Fireball or currentSpell == ids.Fire_Ability.Scorch or currentSpell == ids.Fire_Ability.Pyroblast or currentSpell == ids.Fire_Ability.Flamestrike) and ConRO_FullButton:IsVisible() then
+			return _Combustion;
+		end
+
+		if ConRO_AoEButton:IsVisible() then
+			if _Flamestrike_RDY and _HotStreak_BUFF and (currentSpell == _Fireball or currentSpell == _Scorch or currentSpell == _Flamestrike) then
+				return _Flamestrike;
+			end
+		else
+			if _Pyroblast_RDY and _HotStreak_BUFF and (currentSpell == _Fireball or currentSpell == _Scorch or currentSpell == _Pyroblast) then
+				return _Pyroblast;
+			end
+		end
+		
+		if _Deathborne_RDY and ConRO:FullMode(_Deathborne) then
+			return _Deathborne;
+		end
+
+		if _ShiftingPower_RDY and _target_in_10yrds and not _Combustion_RDY and ConRO:FullMode(_ShiftingPower) then
+			return _ShiftingPower;
+		end
+		
+		if _RadiantSpark_RDY and currentSpell ~= _RadiantSpark then
+			return _RadiantSpark;
+		end
+
+		if _MirrorsofTorment_RDY and currentSpell ~= _MirrorsofTorment and ConRO:FullMode(_MirrorsofTorment) then
+			return _MirrorsofTorment;
 		end
 	
-		if azEssence_MemoryofLucidDream and combust and hsBuff then
-			return ids.AzEssence.MemoryofLucidDream;
-		end	
+		if _RuneofPower_RDY and not _Combustion_RDY and not _RuneofPower_BUFF and (_RuneofPower_CHARGES >= 2 or (_RuneofPower_CHARGES ==1 and _RuneofPower_CCD <= 2) or _Pyroclasm_BUFF or _Meteor_RDY or (not tChosen[ids.Fire_Talent.Meteor] and not tChosen[ids.Fire_Talent.Pyroclasm])) and (_Combustion_CD > 40 or not _in_combat) and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+			return _RuneofPower;
+		end
 
-		if azEssence_GuardianofAzeroth and combust and hsBuff then
-			return ids.AzEssence.GuardianofAzeroth;
+		if _Meteor_RDY and (not tChosen[ids.Fire_Talent.RuneofPower] or (tChosen[ids.Fire_Talent.RuneofPower] and (_RuneofPower_BUFF or currentSpell == _RuneofPower)) or _Combustion_CD > 40) and not _Combustion_RDY and ConRO:FullMode(_Meteor) then
+			return _Meteor;
 		end
-		
-		if azEssence_ReapingFlames and (targetPh < 20 or targetPh > 80) then
-			return ids.AzEssence.ReapingFlames;
-		end
-		
-		if rpower and (runeCharges >= 2 or (runeCharges ==1 and rpCCD <= 2) or pyroBuff or meteor) and (cbCD > 40 or (combust and (hsBuff or ConRO:AzPowerChosen(ids.AzTrait.BlasterMaster))) or not incombat) and currentSpell ~= ids.Fire_Talent.RuneofPower then
-			return ids.Fire_Talent.RuneofPower;
-		end
-		
-		if meteor and (not tChosen[ids.Fire_Talent.RuneofPower] or (tChosen[ids.Fire_Talent.RuneofPower] and (rpBuff or currentSpell == ids.Fire_Talent.RuneofPower)) or cbCD > 30) and (ConRO:AzPowerChosen(ids.AzTrait.BlasterMaster) or not combust) then
-			return ids.Fire_Talent.Meteor;
-		end	
-		
-		if combust and (hsBuff or (hupBuff and ConRO:AzPowerChosen(ids.AzTrait.BlasterMaster)) or currentSpell == ids.Fire_Ability.Fireball) and ConRO_FullButton:IsVisible() then
-			return ids.Fire_Ability.Combustion;
-		end
-		
-		if hsBuff then
-			if scorch and moving or (tChosen[ids.Fire_Talent.SearingTouch] and targetPh <= 30) and currentSpell ~= ids.Fire_Ability.Scorch and currentSpell ~= ids.Fire_Ability.Fireball then
-				return ids.Fire_Ability.Scorch;
-			elseif fball and currentSpell ~= ids.Fire_Ability.Fireball and currentSpell ~= ids.Fire_Ability.Scorch then
-				return ids.Fire_Ability.Fireball;
+	
+		if _HotStreak_BUFF and currentSpell ~= _Fireball and currentSpell ~= _Scorch and not ConRO_AoEButton:IsVisible() then
+			if _Scorch_RDY and (_is_moving or (tChosen[ids.Fire_Talent.SearingTouch] and _Target_Percent_Health <= 30)) then
+				return _Scorch;
+			elseif _Fireball_RDY then
+				return _Fireball;
 			end		
 		end
-
-		if pblast and pyroBuff and pBCount >= 1 and (not combust or (comBuff and comDUR < pbCAST + 0.5)) then
-			return ids.Fire_Ability.Pyroblast;
-		end
 		
-		if pflames and (flamesCharges >= 3 or (flamesCharges ==2 and pfCCD <= 2)) then
-			return ids.Fire_Ability.PhoenixFlames;
-		end
-		
-		if fstrike and hsBuff and ConRO_AoEButton:IsVisible() then
-			return ids.Fire_Ability.Flamestrike;
-		end
-		
-		if pblast and hsBuff then
-			return ids.Fire_Ability.Pyroblast;
-		end
-		
-		if lbomb and ConRO_AoEButton:IsVisible() then
-			return ids.Fire_Talent.LivingBomb;
+		if _Pyroblast_RDY and _Pyroclasm_BUFF and _Pyroclasm_COUNT >= 1 and not _Combustion_RDY and not ConRO_AoEButton:IsVisible() then
+			return _Pyroblast;
 		end
 
-		if dbreath and ConRO_AoEButton:IsVisible() then
-			return ids.Fire_Ability.DragonsBreath;
+		if _PhoenixFlames_RDY and not _HeatingUp_BUFF and ((_PhoenixFlames_CHARGES >= 1 and _Combustion_CD >= 50) or (_PhoenixFlames_CHARGES >= 2 and _Combustion_CD >= 25) or _PhoenixFlames_CHARGES >= 3) then
+			return _PhoenixFlames;
+		end
+
+		if _DragonsBreath_RDY and _target_in_10yrds and ((_HeatingUp_BUFF and tChosen[ids.Fire_Talent.AlexstraszasFury]) or ConRO_AoEButton:IsVisible()) then
+			return _DragonsBreath;
 		end
 		
-		if fblast and hupBuff then
-			return ids.Fire_Ability.FireBlast;
+		if _LivingBomb_RDY and ConRO_AoEButton:IsVisible() then
+			return _LivingBomb;
 		end
 		
-		if azEssence_ConcentratedFlame then
-			return ids.AzEssence.ConcentratedFlame;
-		end		
-	
-		if scorch and moving or (tChosen[ids.Fire_Talent.SearingTouch] and targetPh <= 30) then
-			return ids.Fire_Ability.Scorch;
-		end
-		
-		if fball then
-			return ids.Fire_Ability.Fireball;
+		if (_is_moving or (tChosen[ids.Fire_Talent.SearingTouch] and _Target_Percent_Health <= 30)) then
+			if _Scorch_RDY then
+				return _Scorch;
+			end
+		elseif ConRO_AoEButton:IsVisible() then
+			if _Flamestrike_RDY then
+				return _Flamestrike;
+			end
+		else
+			if _Fireball_RDY then
+				return _Fireball;
+			end
 		end
 	end
 end
 
 function ConRO.Mage.FireDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
 --Abilities	
-	local blazeb 											= ConRO:AbilityReady(ids.Fire_Ability.BlazingBarrier, timeShift);
-	local iblock 											= ConRO:AbilityReady(ids.Fire_Ability.IceBlock, timeShift);
+	local _BlazingBarrier, _BlazingBarrier_RDY 															= ConRO:AbilityReady(ids.Fire_Ability.BlazingBarrier, timeShift);
+		local _BlazingBarrier_BUFF 																			= ConRO:Aura(ids.Fire_Buff.BlazingBarrier, timeShift);
+	local _IceBlock, _IceBlock_RDY 																		= ConRO:AbilityReady(ids.Fire_Ability.IceBlock, timeShift);
+	local _MirrorImage, _MirrorImage_RDY 																= ConRO:AbilityReady(ids.Fire_Ability.MirrorImage, timeShift);
+
+	local _Fleshcraft, _Fleshcraft_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Fleshcraft, timeShift);
+	local _PhialofSerenity, _PhialofSerenity_RDY														= ConRO:ItemReady(ids.Covenant_Ability.PhialofSerenity, timeShift);
 	
-	local bbBuff 											= ConRO:Aura(ids.Fire_Buff.BlazingBarrier, timeShift);
-
---Conditions	
-	local playerPh 											= ConRO:PercentHealth('player');
-
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	
 --Rotations	
-	if blazeb and not bbBuff then
-		return ids.Fire_Ability.BlazingBarrier;
+	if _Fleshcraft_RDY and not _in_combat then
+		return _Fleshcraft;
 	end
 	
-	if iblock and playerPh <= 25 then
-		return ids.Fire_Ability.IceBlock;
+	if _IceBlock_RDY and _Player_Percent_Health <= 25 and _in_combat then
+		return _IceBlock;
+	end
+
+	if _BlazingBarrier_RDY and not _BlazingBarrier_BUFF then
+		return _BlazingBarrier;
 	end
 	
-	return nil;
+	if _PhialofSerenity_RDY and _Player_Percent_Health <= 80 then
+		return _PhialofSerenity;
+	end
+	
+	if _MirrorImage_RDY and _in_combat then
+		return _MirrorImage;
+	end
+
+	if _Fleshcraft_RDY then
+		return _Fleshcraft;
+	end
+return nil;
 end
 
 function ConRO.Mage.Frost(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
 --Resources
-	local plvl 												= UnitLevel("player");
-	local mana 												= UnitPower('player', Enum.PowerType.Mana);
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
 
 --Racials
-	local arctorrent										= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
+	local _AncestralCall, _AncestralCall_RDY															= ConRO:AbilityReady(ids.Racial.AncestralCall, timeShift);
+	local _ArcanePulse, _ArcanePulse_RDY																= ConRO:AbilityReady(ids.Racial.ArcanePulse, timeShift);
+	local _Berserking, _Berserking_RDY																	= ConRO:AbilityReady(ids.Racial.Berserking, timeShift);
+	local _ArcaneTorrent, _ArcaneTorrent_RDY															= ConRO:AbilityReady(ids.Racial.ArcaneTorrent, timeShift);
 	
 --Abilities
-	local cspell 											= ConRO:AbilityReady(ids.Frost_Ability.Counterspell, timeShift);
-	local ssteal 											= ConRO:AbilityReady(ids.Frost_Ability.Spellsteal, timeShift);
-	local iveins, ivCD										= ConRO:AbilityReady(ids.Frost_Ability.IcyVeins, timeShift);
-		local ivBuff 											= ConRO:Aura(ids.Frost_Buff.IcyVeins, timeShift);
-	local forb 												= ConRO:AbilityReady(ids.Frost_Ability.FrozenOrb, timeShift);
-	local flurry 											= ConRO:AbilityReady(ids.Frost_Ability.Flurry, timeShift);
-		local bfBuff 											= ConRO:Aura(ids.Frost_Buff.BrainFreeze, timeShift);	
-		local wcDebuff 											= ConRO:TargetAura(ids.Frost_Debuff.WintersChill, timeShift);
-	local fbolt 											= ConRO:AbilityReady(ids.Frost_Ability.Frostbolt, timeShift);
-	local sumwele 											= ConRO:AbilityReady(ids.Frost_Ability.SummonWaterElemental, timeShift);
-	local ilance											= ConRO:AbilityReady(ids.Frost_Ability.IceLance, timeShift);
-		local _, icicleCount									= ConRO:Aura(ids.Frost_Buff.Icicles, timeShift);
-		local fofBuff, fofCount 								= ConRO:Aura(ids.Frost_Buff.FingersofFrost, timeShift);
-	local blizzard											= ConRO:AbilityReady(ids.Frost_Ability.Blizzard, timeShift);
-		local frBuff											= ConRO:Aura(ids.Frost_Buff.FreezingRain, timeShift);
-	local cofc												= ConRO:AbilityReady(ids.Frost_Ability.ConeofCold, timeShift);
-	local aint												= ConRO:AbilityReady(ids.Frost_Ability.ArcaneIntellect, timeShift);
-	
-	local ebolt 											= ConRO:AbilityReady(ids.Frost_Talent.Ebonbolt, timeShift);
-	local mimage 											= ConRO:AbilityReady(ids.Frost_Ability.MirrorImage, timeShift);
-	local rpower				 							= ConRO:AbilityReady(ids.Frost_Talent.RuneofPower, timeShift);
-		local runeCharges										= ConRO:SpellCharges(ids.Frost_Talent.RuneofPower);
-		local rpBuff 											= ConRO:Form(ids.Frost_Form.RuneofPower, timeShift);
-	local rfrost 											= ConRO:AbilityReady(ids.Frost_Talent.RayofFrost, timeShift);
-	local gspike 											= ConRO:AbilityReady(ids.Frost_Talent.GlacialSpike, timeShift);
-		local gspikeBuff										= ConRO:Aura(ids.Frost_Buff.GlacialSpike, timeShift);
-	local inova 											= ConRO:AbilityReady(ids.Frost_Talent.IceNova, timeShift);
-	local ifloes											= ConRO:AbilityReady(ids.Frost_Talent.IceFloes, timeShift);
-	local cstorm 											= ConRO:AbilityReady(ids.Frost_Talent.CometStorm, timeShift);
+	local _ArcaneExplosion, _ArcaneExplosion_RDY														= ConRO:AbilityReady(ids.Frost_Ability.ArcaneExplosion, timeShift);
+	local _ArcaneIntellect, _ArcaneIntellect_RDY														= ConRO:AbilityReady(ids.Frost_Ability.ArcaneIntellect, timeShift);
+	local _Blink, _Blink_RDY																			= ConRO:AbilityReady(ids.Frost_Ability.Blink, timeShift);
+	local _Blizzard, _Blizzard_RDY																		= ConRO:AbilityReady(ids.Frost_Ability.Blizzard, timeShift);
+		local _FreezingRain_BUFF																			= ConRO:Aura(ids.Frost_Buff.FreezingRain, timeShift);
+	local _ConeofCold_RDY																				= ConRO:AbilityReady(ids.Frost_Ability.ConeofCold, timeShift);
+	local _Counterspell, _Counterspell_RDY 																= ConRO:AbilityReady(ids.Frost_Ability.Counterspell, timeShift);
+	local _Flurry, _Flurry_RDY 																			= ConRO:AbilityReady(ids.Frost_Ability.Flurry, timeShift);
+		local _BrainFreeze_BUFF 																			= ConRO:Aura(ids.Frost_Buff.BrainFreeze, timeShift);
+		local _WintersChill_DEBUFF, _WintersChill_COUNT														= ConRO:TargetAura(ids.Frost_Debuff.WintersChill, timeShift);		
+	local _Frostbolt, _Frostbolt_RDY 																	= ConRO:AbilityReady(ids.Frost_Ability.Frostbolt, timeShift);
+	local _FrozenOrb, _FrozenOrb_RDY 																	= ConRO:AbilityReady(ids.Frost_Ability.FrozenOrb, timeShift);
+	local _IcyVeins, _IcyVeins_RDY, _IcyVeins_CD														= ConRO:AbilityReady(ids.Frost_Ability.IcyVeins, timeShift);
+		local _IcyVeins_BUFF 																				= ConRO:Aura(ids.Frost_Buff.IcyVeins, timeShift);
+	local _Spellsteal, _Spellsteal_RDY 																	= ConRO:AbilityReady(ids.Frost_Ability.Spellsteal, timeShift);
+	local _SummonWaterElemental, _SummonWaterElemental_RDY 												= ConRO:AbilityReady(ids.Frost_Ability.SummonWaterElemental, timeShift);
+	local _IceLance, _IceLance_RDY																		= ConRO:AbilityReady(ids.Frost_Ability.IceLance, timeShift);
+		local _, _Icicles_COUNT																				= ConRO:Aura(ids.Frost_Buff.Icicles, timeShift);
+		local _FingersofFrost_BUFF, _FingersofFrost_COUNT 													= ConRO:Aura(ids.Frost_Buff.FingersofFrost, timeShift);
 
-	local iceform 											= ConRO:AbilityReady(ids.Frost_PvPTalent.IceForm, timeShift);
+	local _CometStorm, _CometStorm_RDY 																	= ConRO:AbilityReady(ids.Frost_Talent.CometStorm, timeShift);
+	local _Ebonbolt, _Ebonbolt_RDY 																		= ConRO:AbilityReady(ids.Frost_Talent.Ebonbolt, timeShift);
+	local _GlacialSpike, _GlacialSpike_RDY 																= ConRO:AbilityReady(ids.Frost_Talent.GlacialSpike, timeShift);
+		local _GlacialSpike_BUFF																			= ConRO:Aura(ids.Frost_Buff.GlacialSpike, timeShift);
+	local _IceFloes, _IceFloes_RDY																		= ConRO:AbilityReady(ids.Frost_Talent.IceFloes, timeShift);
+	local _IceNova, _IceNova_RDY 																		= ConRO:AbilityReady(ids.Frost_Talent.IceNova, timeShift);
+	local _RayofFrost, _RayofFrost_RDY						 											= ConRO:AbilityReady(ids.Frost_Talent.RayofFrost, timeShift);
+	local _RuneofPower, _RuneofPower_RDY									 							= ConRO:AbilityReady(ids.Frost_Talent.RuneofPower, timeShift);
+		local _RuneofPower_CHARGES, _, _RuneofPower_CCD														= ConRO:SpellCharges(ids.Frost_Talent.RuneofPower);
+		local _RuneofPower_BUFF 																			= ConRO:Form(ids.Frost_Form.RuneofPower, timeShift);
+	local _Shimmer, _Shimmer_RDY 																		= ConRO:AbilityReady(ids.Frost_Talent.Shimmer, timeShift);
 
-	local wrAzBuff											= ConRO:Aura(ids.AzTraitBuff.WintersReach, timeShift);
+	local _ConcentratedCoolness_FrozenOrb, _, _ConcentratedCoolness_FrozenOrb_CD						= ConRO:AbilityReady(ids.Frost_PvPTalent.ConcentratedCoolness_FrozenOrb, timeShift);
+	local _IceForm, _, _IceForm_CD																		= ConRO:AbilityReady(ids.Frost_PvPTalent.IceForm, timeShift);
 
-	local azEssence_ConcentratedFlame						= ConRO:AbilityReady(ids.AzEssence.ConcentratedFlame, timeShift);
-	local azEssence_FocusedAzeriteBeam						= ConRO:AbilityReady(ids.AzEssence.FocusedAzeriteBeam, timeShift);	
-	local azEssence_GuardianofAzeroth						= ConRO:AbilityReady(ids.AzEssence.GuardianofAzeroth, timeShift);		
-	local azEssence_MemoryofLucidDream						= ConRO:AbilityReady(ids.AzEssence.MemoryofLucidDream, timeShift);
+	local _Deathborne, _Deathborne_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Deathborne, timeShift);
+	local _MirrorsofTorment, _MirrorsofTorment_RDY														= ConRO:AbilityReady(ids.Covenant_Ability.MirrorsofTorment, timeShift);
+		local _MirrorsofTorment_DEBUFF																		= ConRO:TargetAura(ids.Covenant_Debuff.MirrorsofTorment, timeShift);		
+	local _RadiantSpark, _RadiantSpark_RDY																= ConRO:AbilityReady(ids.Covenant_Ability.RadiantSpark, timeShift);
+	local _Soulshape, _Soulshape_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Soulshape, timeShift);
+	local _ShiftingPower, _ShiftingPower_RDY															= ConRO:AbilityReady(ids.Covenant_Ability.ShiftingPower, timeShift);
+
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+
+	local _Pet_summoned 																				= ConRO:CallPet();
+	local _Pet_assist 																					= ConRO:PetAssist();	
 	
---Conditions	
-	local incombat 											= UnitAffectingCombat('player');
-	local summoned 											= ConRO:CallPet();
-	local assist		 									= ConRO:PetAssist();
-	local ispvp												= UnitIsPVP('player');
-	local Close 											= CheckInteractDistance("target", 3);
-	
-	if currentSpell == ids.Frost_Ability.Frostbolt then
-		icicleCount = icicleCount + 1;
-	elseif currentSpell == ids.Frost_Talent.GlacialSpike then
-		icicleCount = 0;
+	if currentSpell == _Frostbolt then
+		_Icicles_COUNT = _Icicles_COUNT + 1;
+	elseif currentSpell == _GlacialSpike then
+		_Icicles_COUNT = 0;
 	end
-
-	local ivUSE = ids.Frost_Ability.IcyVeins;
-	local foUSE = ids.Frost_Ability.FrozenOrb;
 	
-	if ispvp then
+	if _is_PvP then
 		if pvpChosen[ids.Frost_PvPTalent.IceForm] then
-			iveins = iceform;
-			ivUSE = ids.Frost_PvPTalent.IceForm;
+			_IcyVeins_RDY = _IcyVeins_RDY and _IceForm_CD <= 0
+			_IcyVeins = _IceForm;
 		end
 		if pvpChosen[ids.Frost_PvPTalent.ConcentratedCoolness] then
-			foUSE = ids.Frost_PvPTalent.FrozenOrb;
+			_FrozenOrb_RDY = _FrozenOrb_RDY and _ConcentratedCoolness_FrozenOrb_CD <= 0;
+			_FrozenOrb = _ConcentratedCoolness_FrozenOrb;
 		end		
 	end
 	
 --Indicators	
-	ConRO:AbilityInterrupt(ids.Frost_Ability.Counterspell, cspell and ConRO:Interrupt());
-	ConRO:AbilityPurge(ids.Frost_Ability.Spellsteal, ssteal and ConRO:Purgable());
-	ConRO:AbilityPurge(ids.Racial.ArcaneTorrent, arctorrent and Close and ConRO:Purgable());
+	ConRO:AbilityInterrupt(_Counterspell, _Counterspell_RDY and ConRO:Interrupt());
+	ConRO:AbilityPurge(_Spellsteal, _Spellsteal_RDY and ConRO:Purgable());
+	ConRO:AbilityPurge(_ArcaneTorrent, _ArcaneTorrent_RDY and _target_in_10yrds and ConRO:Purgable());
+	ConRO:AbilityMovement(_Blink, _Blink_RDY and not tChosen[ids.Frost_Talent.Shimmer] and _target_in_melee);
+	ConRO:AbilityMovement(_Shimmer, _Shimmer_RDY and _target_in_melee);
+	ConRO:AbilityMovement(_Soulshape, _Soulshape_RDY and _target_in_melee);
 	
-	ConRO:AbilityRaidBuffs(ids.Frost_Ability.ArcaneIntellect, aint and not ConRO:RaidBuff(ids.Frost_Ability.ArcaneIntellect));
-	
-	ConRO:AbilityBurst(ids.Frost_Ability.MirrorImage, mimage and ConRO_BurstButton:IsVisible());
-	ConRO:AbilityBurst(ids.Frost_Ability.IcyVeins, incombat and iveins and ConRO_BurstButton:IsVisible());
+	ConRO:AbilityRaidBuffs(_ArcaneIntellect, _ArcaneIntellect_RDY and not ConRO:RaidBuff(ids.Frost_Buff.ArcaneIntellect));
 
---Warnings	
-	if not tChosen[ids.Frost_Talent.LonelyWinter] and not summoned and sumwele then
-		UIErrorsFrame:AddMessage("Call your Water Elemental!!!", 1.0, 0.0, 0.0, 53, 5);
-	end
+	ConRO:AbilityBurst(_Ebonbolt, _Ebonbolt_RDY and currentSpell ~= _Ebonbolt and ConRO:BurstMode(_Ebonbolt));
+	ConRO:AbilityBurst(_FrozenOrb, _FrozenOrb_RDY and ConRO:BurstMode(_FrozenOrb));
+	ConRO:AbilityBurst(_IcyVeins, _in_combat and _IcyVeins_RDY and ConRO:BurstMode(_IcyVeins));
 	
-	if not assist and summoned then
-		UIErrorsFrame:AddMessage("Pet is NOT attacking!!!", 1.0, 0.0, 0.0, 53, 5);
-	end
+	ConRO:AbilityBurst(_Deathborne, _Deathborne_RDY and _in_combat and currentSpell ~= _Deathborne and ConRO:BurstMode(_Deathborne));
+	ConRO:AbilityBurst(_MirrorsofTorment, _MirrorsofTorment_RDY and _in_combat and currentSpell ~= _MirrorsofTorment and ConRO:BurstMode(_MirrorsofTorment));
+	ConRO:AbilityBurst(_ShiftingPower, _ShiftingPower_RDY and _target_in_10yrds and (not tChosen[ids.Frost_Talent.RuneofPower] or (tChosen[ids.Frost_Talent.RuneofPower] and _RuneofPower_CCD >= 16) or ConRO_AoEButton:IsVisible()) and ConRO:BurstMode(_ShiftingPower));
+	
+--Warnings	
+	ConRO:Warnings("Call your Water Elemental!!!", not tChosen[ids.Frost_Talent.LonelyWinter] and not _Pet_summoned and _SummonWaterElemental_RDY);
 
 --Rotations	
-	if not incombat then
-		if azEssence_GuardianofAzeroth and (iveins or ivCD <= 10) then
-			return ids.AzEssence.GuardianofAzeroth;
+	if not _in_combat then
+		if _Ebonbolt_RDY and currentSpell ~= _Ebonbolt and ConRO:FullMode(_Ebonbolt) then
+			return _Ebonbolt;
+		end
+
+		if _Frostbolt_RDY and currentSpell ~= _Frostbolt and currentSpell ~= _Ebonbolt then
+			return _Frostbolt;
 		end
 		
-		if rpower then
-			return ids.Frost_Talent.RuneofPower;
+		if _IcyVeins_RDY and ConRO:FullMode(_IcyVeins) then
+			return _IcyVeins;
 		end
-			
-		if mimage and ConRO_FullButton:IsVisible() then
-			return ids.Frost_Ability.MirrorImage;
+		
+		if _FrozenOrb_RDY and ConRO:FullMode(_FrozenOrb) then
+			return _FrozenOrb;
 		end
+	end
 	
-		if iveins and ConRO_FullButton:IsVisible() then
-			return ivUSE;
+	if ConRO_AoEButton:IsVisible() then
+		if _Deathborne_RDY and ConRO:FullMode(_Deathborne) then
+			return _Deathborne;
+		end
+
+		if _IcyVeins_RDY and ConRO:FullMode(_IcyVeins) then
+			return _IcyVeins;
+		end
+
+		if _RuneofPower_RDY and not _RuneofPower_BUFF and _IcyVeins_CD >= 15 and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+			return _RuneofPower;
+		end
+
+		if _FrozenOrb_RDY and ConRO:FullMode(_FrozenOrb) then
+			return _FrozenOrb;
+		end
+
+		if _Blizzard_RDY and currentSpell ~= _Blizzard then
+			return _Blizzard;
+		end
+
+		if _Flurry_RDY and _BrainFreeze_BUFF and _WintersChill_COUNT <= 0 and (currentSpell == _Frostbolt or currentSpell == _Ebonbolt or _MirrorsofTorment_DEBUFF) then
+			return _Flurry;
+		end
+
+		if _IceNova_RDY then
+			return _IceNova;
+		end
+		
+		if _CometStorm_RDY then
+			return _CometStorm;
+		end
+
+		if _IceLance_RDY and (ConRO.lastSpellId == ids.Frost_Ability.Flurry or _WintersChill_COUNT >= 1) then
+			return _IceLance;
+		end
+
+		if _RadiantSpark_RDY and _BrainFreeze_BUFF and currentSpell ~= ids.Covenant_Ability.RadiantSpark then
+			return _RadiantSpark;
+		end
+
+		if _ShiftingPower_RDY and _target_in_10yrds and (not tChosen[ids.Frost_Talent.RuneofPower] or (tChosen[ids.Frost_Talent.RuneofPower] and _RuneofPower_CCD >= 16) or ConRO_AoEButton:IsVisible()) and ConRO:FullMode(_ShiftingPower) then
+			return _ShiftingPower;
+		end
+		
+		if _MirrorsofTorment_RDY and currentSpell ~= _MirrorsofTorment and ConRO:FullMode(_MirrorsofTorment) then
+			return _MirrorsofTorment;
+		end	
+
+		if _ArcaneExplosion_RDY and _Mana_Percent >= 30 and _target_in_10yrds and ConRO_AoEButton:IsVisible() then
+			return _ArcaneExplosion;
+		end
+		
+		if _Ebonbolt_RDY and currentSpell ~= _Ebonbolt and ConRO:FullMode(_Ebonbolt) then
+			return _Ebonbolt;
+		end
+		
+		if _Frostbolt_RDY then
+			return _Frostbolt;
+		end
+	else
+		if _Deathborne_RDY and ConRO:FullMode(_Deathborne) then
+			return _Deathborne;
+		end
+
+		if _RuneofPower_RDY and not _RuneofPower_BUFF and _IcyVeins_CD >= 15 and currentSpell ~= _RuneofPower and ConRO:FullMode(_RuneofPower) then
+			return _RuneofPower;
 		end	
 		
-		if fbolt and currentSpell ~= ids.Frost_Ability.Frostbolt then
-			return ids.Frost_Ability.Frostbolt;
+		if _IcyVeins_RDY and ConRO:FullMode(_IcyVeins) then
+			return _IcyVeins;
+		end	
+
+		if _Flurry_RDY and _BrainFreeze_BUFF and _WintersChill_COUNT <= 0 and (currentSpell == _Frostbolt or currentSpell == _Ebonbolt or _MirrorsofTorment_DEBUFF) then
+			return _Flurry;
+		end
+
+		if _FrozenOrb_RDY and ConRO:FullMode(_FrozenOrb) then
+			return _FrozenOrb;
+		end
+
+		if _Blizzard_RDY and _FreezingRain_BUFF then
+			return _Blizzard;
+		end	
+		
+		if _RayofFrost_RDY and _WintersChill_COUNT == 1 and ConRO_SingleButton:IsVisible() and ConRO:FullMode(_RayofFrost) then
+			return _RayofFrost;
+		end	
+
+		if (_GlacialSpike_RDY or _Icicles_COUNT >= 5) and tChosen[ids.Frost_Talent.GlacialSpike] and currentSpell ~= _GlacialSpike and (ConRO.lastSpellId == _Flurry or _WintersChill_COUNT >= 1 or ConRO_AoEButton:IsVisible()) then
+			return _GlacialSpike;
+		end
+		
+		if _IceLance_RDY and (ConRO.lastSpellId == _Flurry or _WintersChill_COUNT >= 1) then
+			return _IceLance;
+		end
+
+		if _CometStorm_RDY then
+			return _CometStorm;
+		end
+
+		if _IceNova_RDY then
+			return _IceNova;
+		end
+
+		if _IceLance_RDY and _FingersofFrost_BUFF then
+			return _IceLance;
+		end
+
+		if _Ebonbolt_RDY and currentSpell ~= ids.Frost_Talent.Ebonbolt and ConRO:FullMode(_Ebonbolt) then
+			return _Ebonbolt;
+		end
+
+		if _RadiantSpark_RDY and _BrainFreeze_BUFF and currentSpell ~= _RadiantSpark then
+			return _RadiantSpark;
+		end
+
+		if _ShiftingPower_RDY and _target_in_10yrds and (not tChosen[ids.Frost_Talent.RuneofPower] or (tChosen[ids.Frost_Talent.RuneofPower] and _RuneofPower_CCD >= 16) or ConRO_AoEButton:IsVisible()) and ConRO:FullMode(_ShiftingPower) then
+			return _ShiftingPower;
+		end
+
+		if _MirrorsofTorment_RDY and currentSpell ~= _MirrorsofTorment and ConRO:FullMode(_MirrorsofTorment) then
+			return _MirrorsofTorment;
+		end
+
+		if _Frostbolt_RDY then
+			return _Frostbolt;
 		end
 	end
-
-	if flurry and bfBuff and ((currentSpell == ids.Frost_Ability.Frostbolt and not tChosen[ids.Frost_Talent.GlacialSpike]) or currentSpell == ids.Frost_Talent.GlacialSpike or (currentSpell == ids.Frost_Talent.Ebonbolt and (not tChosen[ids.Frost_Talent.GlacialSpike] or (tChosen[ids.Frost_Talent.GlacialSpike] and icicleCount <= 3)))) then
-		return ids.Frost_Ability.Flurry;
-	end
-	
-	if ilance and ConRO.lastSpellId ~= ids.Frost_Ability.IceLance and (ConRO.lastSpellId == ids.Frost_Ability.Flurry or wcDebuff) then
-		return ids.Frost_Ability.IceLance;
-	end
-	
-	if azEssence_MemoryofLucidDream and ivBuff and icicleCount <= 2 then
-		return ids.AzEssence.MemoryofLucidDream;
-	end
-	
-	if azEssence_GuardianofAzeroth and (iveins or ivCD <= 10) then
-		return ids.AzEssence.GuardianofAzeroth;
-	end		
-	
-	if tChosen[ids.Frost_Talent.GlacialSpike] then
-		if rpower and ((icicleCount >= 5 and (bfBuff or ebolt)) or ConRO.lastSpellId == ids.Frost_Ability.FrozenOrb) then
-			return ids.Frost_Talent.RuneofPower;
-		end
-	else	
-		if rpower and (rfrost or ebolt or cstorm or ConRO.lastSpellId == ids.Frost_Ability.FrozenOrb) then
-			return ids.Frost_Talent.RuneofPower;
-		end
-	end
-
-	if iveins and ConRO_FullButton:IsVisible() then
-		return ivUSE;
-	end	
-	
-	if mimage and ConRO_FullButton:IsVisible() then
-		return ids.Frost_Ability.MirrorImage;
-	end
-	
-	if azEssence_ConcentratedFlame then
-		return ids.AzEssence.ConcentratedFlame;
-	end
-	
-	if flurry and plvl <= 99 and currentSpell ~= ids.Frost_Ability.Flurry then
-		return ids.Frost_Ability.Flurry;
-	end
-
-	if forb and ConRO_AoEButton:IsVisible() then
-		return foUSE;
-	end
-	
-	if blizzard and frBuff and ConRO_AoEButton:IsVisible() and currentSpell ~= ids.Frost_Ability.Blizzard then
-		return ids.Frost_Ability.Blizzard;
-	end		
-	
-	if ilance and fofBuff then
-		return ids.Frost_Ability.IceLance;
-	end		
-	
-	if rfrost then
-		return ids.Frost_Talent.RayofFrost;
-	end		
-	
-	if ebolt and currentSpell ~= ids.Frost_Talent.Ebonbolt then
-		return ids.Frost_Talent.Ebonbolt;
-	end
-
-	if forb then
-		return foUSE;
-	end
-	
-	if cstorm then
-		return ids.Frost_Talent.CometStorm;
-	end
-	
-	if inova then
-		return ids.Frost_Talent.IceNova;
-	end
-
-	if (gspike or icicleCount >= 5) and tChosen[ids.Frost_Talent.GlacialSpike] and bfBuff and currentSpell ~= ids.Frost_Talent.GlacialSpike then
-		return ids.Frost_Talent.GlacialSpike;
-	end		
-	
-	if blizzard and ConRO_AoEButton:IsVisible() and currentSpell ~= ids.Frost_Ability.Blizzard then
-		return ids.Frost_Ability.Blizzard;
-	end
-
-	if fbolt then
-		return ids.Frost_Ability.Frostbolt;
-	end	
-
 end
 
 function ConRO.Mage.FrostDef(_, timeShift, currentSpell, gcd, tChosen, pvpChosen)
+--Info
+	local _Player_Level																					= UnitLevel("player");
+	local _Player_Percent_Health 																		= ConRO:PercentHealth('player');
+	local _is_PvP																						= ConRO:IsPvP();
+	local _in_combat 																					= UnitAffectingCombat('player');
+	local _party_size																					= GetNumGroupMembers();
+	
+	local _is_PC																						= UnitPlayerControlled("target");
+	local _is_Enemy 																					= ConRO:TarHostile();
+	local _Target_Health 																				= UnitHealth('target');
+	local _Target_Percent_Health 																		= ConRO:PercentHealth('target');
+
+--Resources
+	local _Mana, _Mana_Max, _Mana_Percent																= ConRO:PlayerPower('Mana');
+	
 --Abilities	
-	local iceb 												= ConRO:AbilityReady(ids.Frost_Ability.IceBarrier, timeShift);
-	local iblock 											= ConRO:AbilityReady(ids.Frost_Ability.IceBlock, timeShift);
-	local csnap 											= ConRO:AbilityReady(ids.Frost_Ability.ColdSnap, timeShift);
+	local _IceBarrier, _IceBarrier_RDY 																	= ConRO:AbilityReady(ids.Frost_Ability.IceBarrier, timeShift);
+		local _IceBarrier_BUFF 																				= ConRO:Aura(ids.Frost_Buff.IceBarrier, timeShift);
+	local _IceBlock, _IceBlock_RDY 																		= ConRO:AbilityReady(ids.Frost_Ability.IceBlock, timeShift);
+	local _ColdSnap, _ColdSnap_RDY 																		= ConRO:AbilityReady(ids.Frost_Ability.ColdSnap, timeShift);
+	local _MirrorImage, _MirrorImage_RDY 																= ConRO:AbilityReady(ids.Frost_Ability.MirrorImage, timeShift);
+
+	local _Fleshcraft, _Fleshcraft_RDY																	= ConRO:AbilityReady(ids.Covenant_Ability.Fleshcraft, timeShift);
+	local _PhialofSerenity, _PhialofSerenity_RDY														= ConRO:ItemReady(ids.Covenant_Ability.PhialofSerenity, timeShift);
 	
-	local ibBuff 											= ConRO:Aura(ids.Frost_Buff.IceBarrier, timeShift);
-
---Conditions	
-	local playerPh 											= ConRO:PercentHealth('player');
-
+--Conditions
+	local _is_moving 																					= ConRO:PlayerSpeed();
+	local _enemies_in_melee, _target_in_melee															= ConRO:Targets("Melee");
+	local _target_in_10yrds 																			= CheckInteractDistance("target", 3);
+	
 --Rotations	
-	if iceb and not ibBuff then
-		return ids.Frost_Ability.IceBarrier;
+	if _Fleshcraft_RDY and not _in_combat then
+		return _Fleshcraft;
 	end
 	
-	if iblock and playerPh <= 25 then
-		return ids.Frost_Ability.IceBlock;
+	if _ColdSnap_RDY and not _IceBlock_RDY then
+		return _ColdSnap;
 	end
 	
-	if csnap and not iblock then
-		return ids.Frost_Ability.ColdSnap;
+	if _IceBlock_RDY and _Player_Percent_Health <= 25 and _in_combat then
+		return _IceBlock;
 	end
 	
-	return nil;
+	if _IceBarrier_RDY and not _IceBarrier_BUFF then
+		return _IceBarrier;
+	end
+
+	if _PhialofSerenity_RDY and _Player_Percent_Health <= 80 then
+		return _PhialofSerenity;
+	end
+	
+	if _MirrorImage_RDY and _in_combat then
+		return _MirrorImage;
+	end
+
+	if _Fleshcraft_RDY then
+		return _Fleshcraft;
+	end
+return nil;
 end

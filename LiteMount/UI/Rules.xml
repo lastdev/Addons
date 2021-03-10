@@ -1,0 +1,78 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+
+<!-- Copyright 2011-2021 Mike Battersby -->
+
+<Script file="Rules.lua" />
+
+<Button name="LiteMountRuleButtonTemplate" virtual="true" mixin="LiteMountRuleButtonMixin" inherits="BackdropTemplate">
+    <KeyValues>
+        <KeyValue key="backdropInfo" value="BACKDROP_TOOLTIP_8_8_1111" type="global" />
+        <KeyValue key="backdropColor" value="DARKGRAY_COLOR" type="global"/>
+        <KeyValue key="backdropColorAlpha" value="0.3" type="number" />
+        <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
+        <KeyValue key="backdropBorderColorAlpha" value="0.3" type="number" />
+    </KeyValues>
+    <Size y="33" />
+    <Scripts>
+        <OnShow method="OnShow" />
+    </Scripts>
+
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString parentKey="NumText" inherits="GameFontNormal" justifyH="LEFT">
+                <Size x="24" />
+                <Anchors>
+                    <Anchor point="LEFT" x="16" />
+                </Anchors>
+            </FontString>
+            <FontString parentKey="RuleText" inherits="GameFontHighlight" justifyH="LEFT">
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.NumText" relativePoint="RIGHT" x="4" />
+                    <Anchor point="RIGHT" x="-16" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+</Button>
+
+<Frame name="LiteMountRulesPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountRulesPanelMixin">
+
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_ACTIONS_EXP">
+                <Anchors>
+                    <Anchor point="TOP" y="-48" />
+                    <Anchor point="LEFT" x="48" />
+                    <Anchor point="RIGHT" x="-48" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+
+    <Frames>
+        <ScrollFrame parentKey="Scroll" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountRulesScrollMixin">
+            <Anchors>
+                <Anchor point="TOPLEFT" x="16" y="-120" />
+                <Anchor point="BOTTOMRIGHT" x="-34" y="48" />
+            </Anchors>
+            <Scripts>
+                <OnLoad method="OnLoad" />
+            </Scripts>
+        </ScrollFrame>
+
+        <Frame parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
+            <Size x="93" y="22" />
+            <Anchors>
+                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.Scroll" x="-8" />
+            </Anchors>
+        </Frame>
+
+    </Frames>
+
+    <Scripts>
+        <OnLoad method="OnLoad" />
+        <OnSizeChanged method="OnSizeChanged" />
+    </Scripts>
+</Frame>
+
+</Ui>

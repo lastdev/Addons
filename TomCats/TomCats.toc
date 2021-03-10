@@ -1,15 +1,45 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: TomCat's Tours
+## Notes: See license.txt for license and copyright information
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
-## Version: 01.06.01
+## Version: 2.2.5
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: TomCats_Character
 ## SavedVariables: TomCats_Account
-## X-TomCats-VersionMessageID: 1603125516
-## X-TomCats-VersionMessage: T2gGYeQevRmZIkMHr8YvY7OSHipg4wXSbcFOdSBWpI2ca+r2g69xOl+NwQwBAQYBAgEEAwMBBAYEAQQIBQEEBgYBBAYHAQQXCAECCAkCBgAKAQADCwEGAAwAAQYNAQASDgEAGg8BAAY=
-## X-Part-Of: TomCat's Tours:
+## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
-## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
+## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
+## X-TomCats-WOWVersion: @retail.db.build@
 
-Main.xml
+slashcommands.lua
+event.lua
+saved_variables.lua
+legacy.lua
+constants.lua
+maps.lua
+playerposition.lua
+arrows.lua
+cache.lua
+rules.lua
+compression.lua
+db_vignette_names.lua
+db_vignette_info.lua
+db_item_companion.lua
+dao_vignettes.lua
+dao_loot.lua
+proxy.lua
+proxy_mapcanvas.lua
+proxy_mapcanvaspinmixin.lua
+ui_vignettes_tooltip.lua
+ui_vignettes_tooltip.xml
+ui_vignettes_section.lua
+ui_vignettes_section.xml
+ui_vignettes_pins.lua
+ui_vignettes_pins.xml
+#lunarfestival/Main.xml
+#loveisintheair/Main.xml
+configuration.xml
+configuration.lua
+minimap_icon.xml
+minimap_icon.lua
+beta.lua

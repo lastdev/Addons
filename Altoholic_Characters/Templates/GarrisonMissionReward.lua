@@ -68,7 +68,7 @@ addon:Controller("AltoholicUI.GarrisonMissionReward", {
 				if reward.currencyID == 0 then	-- this is money
 					frame:SetMoney(reward.quantity)
 				else
-					frame.title = C_CurrencyInfo.GetCurrencyInfo(reward.currencyID)["name"]
+					frame.title = C_CurrencyInfo.GetCurrencyInfo(reward.currencyID)
 					frame.tooltip = reward.quantity
 					frame:SetQuantity(reward.quantity)
 				end

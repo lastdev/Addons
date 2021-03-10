@@ -1,8 +1,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
--- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2020/09/09
+-- Mini Dragon <流浪者酒馆-Brilla@金色平原> 20210202
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
@@ -30,16 +29,17 @@ L.BossModLoad_now 			= [[该模块尚未启动。
 当你进入相应副本时其会自动加载。
 你也可以点击开启模块按钮手动启动该模块。]]
 
-L.PosX 						= 'X坐标'
-L.PosY 						= 'Y坐标'
+L.PosX 						= "X坐标"
+L.PosY 						= "Y坐标"
 
-L.MoveMe					= '移动我'
-L.Button_OK 				= '确定'
-L.Button_Cancel 			= '取消'
-L.Button_LoadMod 			= '加载模块'
+L.MoveMe					= "移动我"
+L.Button_OK 				= "确定"
+L.Button_Cancel 			= "取消"
+L.Button_LoadMod 			= "加载模块"
 L.Mod_Enabled				= "开启模块"
 L.Mod_Reset					= "恢复默认设置"
 L.Reset 					= "重置"
+L.Import					= "导入"
 
 L.Enable  					= "开启"
 L.Disable					= "关闭"
@@ -74,6 +74,7 @@ L.Latency_Text				= "设定团队之间DBM最高延迟阈值：%d"
 L.Button_RangeFrame			= "显示/隐藏距离雷达框体"
 L.Button_InfoFrame			= "显示/隐藏信息框体"
 L.Button_TestBars			= "测试计时条"
+L.Button_MoveBars			= "移动计时条"
 L.Button_ResetInfoRange		= "重置信息/距离雷达框体"
 
 L.ModelOptions				= "3D模型选项"
@@ -82,10 +83,11 @@ L.ModelSoundOptions			= "为模型查看器设置声音选项"
 L.ModelSoundShort			= "短"
 L.ModelSoundLong			= "长"
 
-L.ResizeOptions			 	= "调整窗口大小"
-L.Button_ResetWindowSize	= "重置窗口大小"
-L.Editbox_WindowWidth		= "宽度"
-L.Editbox_WindowHeight		= "高度"
+L.ResizeOptions			 	= "调整窗口选项"
+L.ResizeInfo				= "您可以通过拖动右下角来调整GUI窗口大小"
+L.Button_ResetWindowSize	= "重置GUI窗口大小"
+L.Editbox_WindowWidth		= "GUI宽度"
+L.Editbox_WindowHeight		= "GUI高度"
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "其他功能"
@@ -107,8 +109,7 @@ L.RecordOnlyBosses			= "只记录团队BOSS数据 (不记录其他数据，使�
 L.LogOnlyNonTrivial			= "只记录团队Boss，而不记录随机团队/5人本/场景战役"
 --
 L.Area_3rdParty				= "第三方插件选项"
-L.ShowBBOnCombatStart		= "战斗开始时使用Big Brother的buff检测"
-L.BigBrotherAnnounceToRaid	= "报告Big Brother的检测结果给团队"
+L.oRA3AnnounceConsumables	= "在战斗开始时通告oRA3消耗品检查"
 L.Area_Invite				= "组队邀请选项"
 L.AutoAcceptFriendInvite	= "自动接受来自好友列表里的好友的组队邀请"
 L.AutoAcceptGuildInvite		= "自动接受同公会成员的组队邀请"
@@ -137,6 +138,11 @@ L.SelectModProfileCopy		= "复制所有选项："
 L.SelectModProfileCopySound	= "只复制声音选项："
 L.SelectModProfileCopyNote	= "只复制自定义注记："
 L.SelectModProfileDelete	= "删除 Boss 模块设置："
+
+L.Area_ImportExportProfile	= "导入导出配置"
+L.ImportExportInfo			= "导入会覆盖你当前的配置，请小心使用"
+L.ButtonImportProfile		= "导入配置"
+L.ButtonExportProfile		= "导出配置"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "警报"
@@ -326,6 +332,7 @@ L.StripTimerText			= "分离 CD/下一次 计时条"
 L.KeepBar					= "保持计时条显示直到技能被释放"
 L.KeepBar2					= "(当被模组支持时)"
 L.FadeBar					= "隐藏超出技能范围的计时条"
+L.BarSkin					= "计时条外观"
 
 -- Tab: Global Disables & Filters
 L.TabCategory_Filters	 	= "禁用及过滤选项"
@@ -391,7 +398,7 @@ L.HideGarrisonUpdates		= "Boss 战斗中隐藏要塞队列完成提示"
 L.HideGuildChallengeUpdates	= "Boss 战斗中隐藏公会挑战成功信息"
 L.HideQuestTooltips			= "Boss 战斗中隐藏鼠标提示窗体中的任务进度"
 L.HideTooltips				= "Boss 战斗中完全隐藏鼠标提示窗体"
-L.DisableSFX				= "Boss 战斗中关闭音效"
+L.DisableSFX				= "Boss 战斗中关闭音效(注意：如果你开启了这个选项，即使你在战斗开始时已关闭音效，战斗接叔后音效也会被开启)"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
 L.OnlyFight					= "只有在战斗中，每部动画播放了一次之后跳过"
 L.AfterFirst				= "仅第一次播放"

@@ -4,7 +4,7 @@
 
   Mounting actions.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -43,19 +43,18 @@ FLOWCONTROLS['IF'] =
 
 FLOWCONTROLS['ELSEIF'] =
     function (args, env, isTrue)
+        local wasTrue = env.flowControl[#env.flowControl]
+        isTrue = not wasTrue and isTrue
         LM.Debug(' - ELSEIF test is ' .. tostring(isTrue))
-        table.remove(env.flowControl)
-        table.insert(env.flowControl, isTrue)
+        env.flowControl[#env.flowControl] = isTrue
     end
 
 FLOWCONTROLS['ELSE'] =
     function (args, env, isTrue)
-        local n = #env.flowControl
-        if n > 0 then
-            isTrue =  not env.flowControl[n]
-            LM.Debug(' - ELSE test is ' .. tostring(isTrue))
-            env.flowControl[n] = isTrue
-        end
+        local wasTrue = env.flowControl[#env.flowControl]
+        isTrue = not wasTrue
+        LM.Debug(' - ELSE test is ' .. tostring(isTrue))
+        env.flowControl[#env.flowControl] = isTrue
     end
 
 FLOWCONTROLS['END'] =
@@ -82,7 +81,7 @@ ACTIONS['Endlimit'] =
         LM.Debug(" - restored filter: " .. table.concat(env.filters[1], ' '))
     end
 
-local function GetKnownSpell(arg)
+local function GetUsableSpell(arg)
     local spellID, name, _
 
     -- You can look up any spell from any class by number so we have to
@@ -95,7 +94,18 @@ local function GetKnownSpell(arg)
     -- For names, GetSpellInfo returns nil if it's not in your spellbook
     -- so we don't need to call IsSpellKnown
     name, _, _, _, _, _, spellID = GetSpellInfo(arg)
-    if name and IsUsableSpell(name) then
+
+    -- Glide won't cast while mounted
+    if spellID == 131347 and IsMounted() then
+        return
+    end
+
+    -- Zen Flight only works if you can fly
+    if spellID == 125883 and not LM.Environment:CanFly() then
+        return
+    end
+
+    if name and IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
         return name, spellID
     end
 end
@@ -104,8 +114,8 @@ ACTIONS['Spell'] =
     function (args, env)
         for _, arg in ipairs(args) do
             LM.Debug(' - trying spell: ' .. tostring(arg))
-            local name, id = GetKnownSpell(arg)
-            if name and IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
+            local name, id = GetUsableSpell(arg)
+            if name then
                 LM.Debug(" - setting action to spell " .. name)
                 return LM.SecureAction:Spell(name, env.unit)
             end
@@ -121,7 +131,9 @@ ACTIONS['Buff'] =
     function (args, env)
         for _, arg in ipairs(args) do
             LM.Debug(' - trying buff: ' .. tostring(arg))
-            local name, id = GetKnownSpell(arg)
+            local name, id = GetUsableSpell(arg)
+            -- Glide won't cast while mounted
+            if id == 131347 and IsMounted() then return end
             if name and not LM.UnitAura(env.unit or 'player', name) and
                IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
                 LM.Debug(" - setting action to spell " .. name)
@@ -193,7 +205,7 @@ ACTIONS['SmartMount'] =
     function (args, env)
 
         local filters = ReplaceVars(tJoin(env.filters[1], args))
-        local filteredList = LM.PlayerMounts:FilterSearch(unpack(filters))
+        local filteredList = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
 
         LM.Debug(" - filters: " .. table.concat(filters, ' '))
         LM.Debug(" - filtered list contains " .. #filteredList .. " mounts")
@@ -247,7 +259,7 @@ ACTIONS['Mount'] =
     function (args, env)
         local filters = ReplaceVars(tJoin(env.filters[1], args))
         LM.Debug(" - filters: " .. table.concat(filters, ' '))
-        local mounts = LM.PlayerMounts:FilterSearch(unpack(filters))
+        local mounts = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
         local m = mounts:PriorityRandom(env.random)
         if m then
             LM.Debug(format(" - setting action to mount %s", m.name))
@@ -350,8 +362,8 @@ LM.Actions = { }
 local function GetDruidMountForms()
     local forms = {}
     for i = 1,GetNumShapeshiftForms() do
-        local spell = select(5, GetShapeshiftFormInfo(i))
-        if spell == LM.SPELL.FLIGHT_FORM or spell == LM.SPELL.TRAVEL_FORM then
+        local spell = select(4, GetShapeshiftFormInfo(i))
+        if spell == LM.SPELL.TRAVEL_FORM or spell == LM.SPELL.MOUNT_FORM then
             tinsert(forms, i)
         end
     end

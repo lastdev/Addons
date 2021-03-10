@@ -4,9 +4,9 @@ local L = Addon:GetLocale()
 local Package = select(2, ...);
 Addon.Rules = Addon.Rules or {}
 local Rules = Addon.Rules;
-local SELL_RULE = Addon.c_RuleType_Sell;
-local KEEP_RULE = Addon.c_RuleType_Keep;
-local SCRAP_RULE = Addon.c_RuleType_Scrap;
+local SELL_RULE = Addon.RuleType.SELL;
+local KEEP_RULE = Addon.RuleType.KEEP;
+local DESTROY_RULE = Addon.RuleType.DESTROY;
 local INTERFACE_VERSION = tonumber(select(4, GetBuildInfo()));
 local SHADOWLANDS_VERSION = 90000;
 
@@ -21,6 +21,11 @@ end
 -- This is event is fired when our custom rule definitions have changed.
 Rules.OnDefinitionsChanged = Addon.CreateEvent("Rules.OnDefinitionChanged");
 Rules.OnFunctionsChanged = Addon.CreateEvent("Rules.OnFunctionsChanged");
+
+local function DefaultItemLevel()
+    local avg, equip = GetAverageItemLevel();
+    return math.max(0, math.floor(math.min(avg, equip) * 0.8));
+end
 
 -- Param definition for our rules which use ITEMLEVEL
 local ITEM_LEVEL_PARAMS =
@@ -79,9 +84,9 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_KNOWNTOYS"],
         Description = L["SYSRULE_SELL_KNOWNTOYS_DESC"],
-        ScriptText = "IsSoulbound and IsToy and IsAlreadyKnown",
+        ScriptText = "IsSoulbound and IsToy and IsAlreadyKnown and not IsUnsellable",
         Script = function()
-                return IsSoulbound and IsToy and IsAlreadyKnown;
+                return IsSoulbound and IsToy and IsAlreadyKnown and not IsUnsellable;
             end,
         Order = 1300,
     },
@@ -91,11 +96,19 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_UNCOMMONGEAR"],
         Description = L["SYSRULE_SELL_UNCOMMONGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == UNCOMMON and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == UNCOMMON and (not IsUnsellable) and Level < {itemlevel}",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and (Quality == UNCOMMON) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and (Quality == UNCOMMON) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
             end,
-        Params = ITEM_LEVEL_PARAMS,
+        Params = 
+        {
+            {
+                Key = "ITEMLEVEL",
+                Type = "numeric",
+                Name = L.RULEUI_SELL_UNCOMMON_INFO,
+                Default = DefaultItemLevel,
+            }
+        },
         Order = 1400,
     },
 
@@ -104,11 +117,19 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_RAREGEAR"],
         Description = L["SYSRULE_SELL_RAREGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == RARE and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and Quality == RARE and (not IsUnsellable) and Level < {itemlevel}",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and (Quality == RARE) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and (Quality == RARE) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
             end,
-        Params = ITEM_LEVEL_PARAMS,
+        Params = 
+        {
+            {
+                Type = "numeric",
+                Name = L.RULEUI_SELL_RARE_INFO,
+                Key = "ITEMLEVEL",
+                Default = DefaultItemLevel,
+            }
+        },
         Order = 1500,
     },
 
@@ -117,15 +138,62 @@ Rules.SystemRules =
         Type = SELL_RULE,
         Name = L["SYSRULE_SELL_EPICGEAR"],
         Description = L["SYSRULE_SELL_EPICGEAR_DESC"],
-        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and IsSoulbound and Quality == EPIC and Level < {itemlevel}",
+        ScriptText = "(not IsInEquipmentSet()) and IsEquipment and IsSoulbound and Quality == EPIC and (not IsUnsellable) and Level < {itemlevel}",
         Script = function()
-                return (not IsInEquipmentSet()) and IsEquipment and IsSoulbound and (Quality == EPIC) and (Level < RULE_PARAMS.ITEMLEVEL);
+                return (not IsInEquipmentSet()) and IsEquipment and IsSoulbound and (Quality == EPIC) and (not IsUnsellable) and (Level < RULE_PARAMS.ITEMLEVEL);
             end,
-        Params = ITEM_LEVEL_PARAMS,
+        Params = 
+        {
+            {
+                Type = "numeric",
+                Key = "ITEMLEVEL",
+                Name = L.RULEUI_SELL_EPIC_INFO,
+                Default = DefaultItemLevel,
+            }
+        },
         Order = 1600,
     },
     --@end-retail@
+    --[===[@non-retail@
+    {
+        Id = "sell.uncommongear_classic",
+        Type = SELL_RULE,
+        Name = L["SYSRULE_SELL_UNCOMMONGEAR"],
+        Description = L["SYSRULE_SELL_UNCOMMONGEAR_DESC"],
+        ScriptText = "IsEquipment and Quality == UNCOMMON and Level < {itemlevel}",
+        Script = function()
+                return IsEquipment and (Quality == UNCOMMON) and (Level < RULE_PARAMS.ITEMLEVEL);
+            end,
+        Params = ITEM_LEVEL_PARAMS,
+        Order = 1401,
+    },
 
+    {
+        Id = "sell.raregear_classic",
+        Type = SELL_RULE,
+        Name = L["SYSRULE_SELL_RAREGEAR"],
+        Description = L["SYSRULE_SELL_RAREGEAR_DESC"],
+        ScriptText = "IsEquipment and Quality == RARE and Level < {itemlevel}",
+        Script = function()
+                return IsEquipment and (Quality == RARE) and (Level < RULE_PARAMS.ITEMLEVEL);
+            end,
+        Params = ITEM_LEVEL_PARAMS,
+        Order = 1501,
+    },
+
+    {
+        Id = "sell.epicgear_classic",
+        Type = SELL_RULE,
+        Name = L["SYSRULE_SELL_EPICGEAR"],
+        Description = L["SYSRULE_SELL_EPICGEAR_DESC"],
+        ScriptText = "IsEquipment and IsSoulbound and Quality == EPIC and Level < {itemlevel}",
+        Script = function()
+                return IsEquipment and IsSoulbound and (Quality == EPIC) and (Level < RULE_PARAMS.ITEMLEVEL);
+            end,
+        Params = ITEM_LEVEL_PARAMS,
+        Order = 1601,
+    },
+    --@end-non-retail@]===]
 
     --*****************************************************************************
     -- Keep Rules
@@ -193,6 +261,17 @@ Rules.SystemRules =
     },
     --@end-retail@
 
+    -- Safeguard Rule
+    {
+        Id = "keep.potentialupgrades",
+        Type = KEEP_RULE,
+        Name = L["SYSRULE_KEEP_POTENTIALUPGRADES"],
+        Description = L["SYSRULE_KEEP_POTENTIALUPGRADES_DESC"],
+        ScriptText = "IsEquipment and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5))",
+        Script = function() return IsEquipment and (Level >= math.min(PlayerItemLevel() * .95, PlayerItemLevel() - 5)) end,
+        Order = 1275,
+    },
+
     -- Safeguard rule - Common items are usually important and useful.
     {
         Id = "keep.common",
@@ -210,10 +289,19 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_UNCOMMONGEAR"],
         Description = L["SYSRULE_KEEP_UNCOMMONGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 2",
+        ScriptText = "IsEquipment and Quality == 2 and (Level >= {itemlevel})",
         Script = function()
-                return IsEquipment and (Quality == 2);
+                return IsEquipment and (Quality == 2) and (Level >= RULE_PARAMS.ITEMLEVEL);
             end,
+        Params = 
+            {
+                {
+                    Type = "numeric",
+                    Key = "ITEMLEVEL",
+                    Name = L.RULEUI_KEEP_UNCOMMON_INFO,
+                    Default = 0,
+                }
+            },
         Order = 1400,
     },
 
@@ -223,10 +311,19 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_RAREGEAR"],
         Description = L["SYSRULE_KEEP_RAREGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 3",
+        ScriptText = "IsEquipment and Quality == 3 and (Level >= {itemlevel})",
         Script = function()
-                return IsEquipment and (Quality == 3);
+                return IsEquipment and (Quality == 3) and (Level >= RULE_PARAMS.ITEMLEVEL);
             end,
+        Params = 
+            {
+                {
+                    Type = "numeric",
+                    Key = "ITEMLEVEL",
+                    Name = L.RULEUI_KEEP_RARE_INFO,
+                    Default = 0,
+                }
+            },
         Order = 1500,
     },
 
@@ -236,10 +333,19 @@ Rules.SystemRules =
         Type = KEEP_RULE,
         Name = L["SYSRULE_KEEP_EPICGEAR"],
         Description = L["SYSRULE_KEEP_EPICGEAR_DESC"],
-        ScriptText = "IsEquipment and Quality == 4",
+        ScriptText = "IsEquipment and Quality == 4 and (Level >= {itemlevel})",
         Script = function()
-                return IsEquipment and (Quality == 4);
+                return IsEquipment and (Quality == 4) and (Level >= RULE_PARAMS.ITEMLEVEL);
             end,
+        Params = 
+            {
+                {
+                    Type = "numeric",
+                    Key = "ITEMLEVEL",
+                    Name = L.RULEUI_KEEP_EPIC_INFO,
+                    Default = 0,
+                }
+            },
         Order = 1600,
     },
 
@@ -249,7 +355,7 @@ Rules.SystemRules =
     {
         Id = "keep.equipmentset",
         Type = KEEP_RULE,
-        Name = L["SYSRULE_KEEP_EQUIPMENTSET_NAME"],
+        Name = L["SYSRULE_KEEP_EQUIPMENTSET"],
         Description = L["SYSRULE_KEEP_EQUIPMENTSET_DESC"],
         ScriptText = "IsInEquipmentSet()",
         Script = function() return IsInEquipmentSet() end,
@@ -258,21 +364,32 @@ Rules.SystemRules =
     --@end-retail@
 
     --*****************************************************************************
-    -- Scrap rules
+    -- Destroy Rules
     --*****************************************************************************
 
-    --@retail@
+    -- Item is in the Never Sell list.
     {
-        Id = "scrap.scrapable",
-        Type = SCRAP_RULE,
-        Name = "Scrappable Items",
-        Description = "Scrappable Items",
-        ScriptText = "IsFromExpansion(BATTLE_FOR_AZEROTH) and TooltipContains(\"Scrapable\")",
-        Script = function() return (IsFromExpansion(BATTLE_FOR_AZEROTH) and TooltipContains("Scrapable")) end,
-        Order = 3000,
+        Id = "destroy.alwaysdestroy",
+        Type = DESTROY_RULE,
+        Name = L["SYSRULE_DESTROYLIST"],
+        Description = L["SYSRULE_DESTROYLIST_DESC"],
+        ScriptText = "IsInList(\"Destroy\")",
+        Script = function() return IsDestroyItem() end,
+        Locked = true,
+        Order = -1000,
     },
-    --@end-retail@
 
+    {
+        Id = "destroy.knowntoys",
+        Type = DESTROY_RULE,
+        Name = L["SYSRULE_DESTROY_KNOWNTOYS"],
+        Description = L["SYSRULE_DESTROY_KNOWNTOYS_DESC"],
+        ScriptText = "IsSoulbound and IsToy and IsAlreadyKnown and IsUnsellable",
+        Script = function()
+                return IsSoulbound and IsToy and IsAlreadyKnown and IsUnsellable;
+            end,
+        Order = 1200,
+    },
 };
 
 -- While creating this closure sort the rules table by order, this prevents us from
@@ -372,20 +489,20 @@ end
     | CheckMigration:
     ========================================================================--]]
 function Rules.CheckMigration()
-    Addon:Debug("%s+|r Checking for rule definition migration", YELLOW_FONT_COLOR_CODE);
+    Addon:Debug("rules", "%s+|r Checking for rule definition migration", YELLOW_FONT_COLOR_CODE);
     if (Vendor_CustomRuleDefinitions) then
         for _, ruleDef in ipairs(Vendor_CustomRuleDefinitions) do
             ruleDef.Locked = false;
             if (not ruleDef.needsMigration) then
                 local riv = ruleDef.interfaceversion or 0;
                 if ((INTERFACE_VERSION >=SHADOWLANDS_VERSION) and (riv < SHADOWLANDS_VERSION)) then
-                    Addon:Debug("%s| |rrule '%s' needs migration (iv=%s)", GREEN_FONT_COLOR_CODE, ruleDef.Id, riv or "<none>");
+                    Addon:Debug("rules", "%s| |rrule '%s' needs migration (iv=%s)", GREEN_FONT_COLOR_CODE, ruleDef.Id, riv or "<none>");
                     ruleDef.needsMigration = true;
                 end
             end
         end
     end
-    Addon:Debug("+ Completed rule defintion migration");
+    Addon:Debug("rules", "+ Completed rule defintion migration");
 end
 
 --[[===========================================================================
@@ -456,12 +573,12 @@ end
     |
     |   Note: ruleType is optional and is not required.
     ========================================================================--]]
-function Rules.GetDefinition(ruleId, ruleType)
+function Rules.GetDefinition(ruleId, ruleType, includeLocked)
     local id = string.lower(ruleId);
 
     -- Check the system rules.
     for _, ruleDef in ipairs(Rules.SystemRules) do
-        if (not ruleDef.Locked) then
+        if (not ruleDef.Locked or includeLocked) then
             if (string.lower(ruleDef.Id) == id) then
                 if ((not ruleType) or (ruleType == ruleDef.Type)) then
                     return ruleDef;

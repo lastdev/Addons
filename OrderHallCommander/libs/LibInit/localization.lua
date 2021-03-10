@@ -179,6 +179,8 @@ L["Always counter increased resource cost"] = "Contrasta sempre incremento risor
 L["Always counter increased time"] = "Contrasta sempre incremento durata"
 L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Contrasta sempre morte milizie (ignorato tutte le milizie hanno solo una vita rimanente)"
 L["Always counter no bonus loot threat"] = "Contrasta sempre il \"no bonus\""
+--[[Translation missing --]]
+L["and then by:"] = "and then by:"
 L["Artifact shown value is the base value without considering knowledge multiplier"] = "Il valore mostrato è quello base, senza considerare il moltiplicatore dalla conoscenza"
 L["Attempting %s"] = "Provo %s"
 L["Base Chance"] = "Percentuale base"

@@ -32,16 +32,17 @@ L.BossModLoad_now 			= [[This boss mod is not loaded.
 It will be loaded when you enter the instance.
 You can also click the button to load the mod manually.]]
 
-L.PosX						= 'Position X'
-L.PosY						= 'Position Y'
+L.PosX						= "Position X"
+L.PosY						= "Position Y"
 
-L.MoveMe 					= 'Move me'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Cancel'
-L.Button_LoadMod 			= 'Load AddOn'
+L.MoveMe 					= "Move me"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Cancel"
+L.Button_LoadMod 			= "Load AddOn"
 L.Mod_Enabled				= "Enable boss mod"
 L.Mod_Reset					= "Load default options"
 L.Reset 					= "Reset"
+L.Import					= "Import"
 
 L.Enable  					= ENABLE
 L.Disable					= DISABLE
@@ -76,6 +77,7 @@ L.Latency_Text				= "Set max latency sync threshold: %d"
 L.Button_RangeFrame			= "Show/hide range frame"
 L.Button_InfoFrame			= "Show/hide info frame"
 L.Button_TestBars			= "Start test bars"
+L.Button_MoveBars			= "Move bars"
 L.Button_ResetInfoRange		= "Reset Info/Range frames"
 
 L.ModelOptions				= "3D Model Viewer Options"
@@ -85,6 +87,7 @@ L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.ResizeOptions			 	= "Resize Options"
+L.ResizeInfo				= "You can resize the GUI by clicking the bottom-right corner, and dragging."
 L.Button_ResetWindowSize	= "Reset GUI window size"
 L.Editbox_WindowWidth		= "GUI window width"
 L.Editbox_WindowHeight		= "GUI window height"
@@ -111,8 +114,7 @@ L.RecordOnlyBosses			= "Only record Bosses (Excludes all trash. Use '/dbm pull' 
 L.LogOnlyNonTrivial			= "Only record non trivial content (normal or harder current content raids &amp; Mythic+ Dungeons)"
 --
 L.Area_3rdParty				= "3rd Party Addon Options"
-L.ShowBBOnCombatStart		= "Perform Big Brother buff check on combat start"
-L.BigBrotherAnnounceToRaid	= "Announce Big Brother results to raid"
+L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Invite Options"
 L.AutoAcceptFriendInvite	= "Automatically accept group invites from friends"
 L.AutoAcceptGuildInvite		= "Automatically accept group invites from guild members"
@@ -141,6 +143,13 @@ L.SelectModProfileCopy		= "Copy all settings from"
 L.SelectModProfileCopySound	= "Copy just sound setting from"
 L.SelectModProfileCopyNote	= "Copy just note setting from"
 L.SelectModProfileDelete	= "Delete mod settings for"
+
+L.Area_ImportExportProfile	= "Import/Export profiles"
+L.ImportExportInfo			= "Importing will overwrite your current profile, do at your own risk."
+L.ButtonImportProfile		= "Import profile"
+L.ButtonExportProfile		= "Export profile"
+
+L.ImportErrorOn				= "Custom sounds missing for setting: %s"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "Alerts"
@@ -329,19 +338,21 @@ L.StripTimerText			= "Strip CD/Next out of timers"
 L.KeepBar					= "Keep timer active until ability cast"
 L.KeepBar2					= "(when supported by mod)"
 L.FadeBar					= "Fade timers for out of range abilities"
+L.BarSkin					= "Bar skin"
 
 -- Tab: Global Disables & Filters
 L.TabCategory_Filters	 	= "Global Disables & Filters"
 L.Area_DBMFiltersSetup		= "DBM Filters guide"
 L.Area_BlizzFiltersSetup	= "Blizzard Filters guide"
 -- Panel: DBM Features
-L.Panel_SpamFilter			= "DBM Features"
-L.Area_SpamFilter_Anounces	= "Announce Global Disable & Filter Options"
-L.SpamBlockNoShowAnnounce	= "Do not show text or play sound for ANY general announcements"
-L.SpamBlockNoShowTgtAnnounce= "Do not show text or play sound for TARGET general announcements (above filter overrides this one)"
-L.SpamBlockNoSpecWarnText	= "Do not show special announce text"
-L.SpamBlockNoSpecWarnFlash	= "Do not show special announce screen flash"
-L.SpamBlockNoSpecWarnSound	= "Do not play special announce sounds (still permits voice packs, if one is enabled in Spoken Alerts panel)"
+L.Panel_SpamFilter					= "DBM Features"
+L.Area_SpamFilter_Anounces			= "Announce Global Disable & Filter Options"
+L.SpamBlockNoShowAnnounce			= "Do not show text or play sound for ANY general announcements"
+L.SpamBlockNoShowTgtAnnounce		= "Do not show text or play sound for TARGET general announcements (above filter overrides this one)"
+L.SpamBlockNoSpecWarnText			= "Do not show special announce text"
+L.SpamBlockNoSpecWarnFlash			= "Do not show special announce screen flash"
+L.SpamBlockNoSpecWarnSound			= "Do not play special announce sounds (still permits voice packs, if one is enabled in Spoken Alerts panel)"
+L.SpamBlockNoTrivialSpecWarnSound	= "Do not play special announce sounds or show screen flash for content that is trivial for your level (plays user selected regular announce sound instead)"
 
 L.Area_SpamFilter_Timers	= "Timer Global Disable & Filter Options"
 L.SpamBlockNoShowTimers		= "Do not show mod timers (Boss Mod/CM/LFG/Respawn)"
@@ -394,7 +405,7 @@ L.HideGarrisonUpdates		= "Hide follower toasts during boss fights"
 L.HideGuildChallengeUpdates	= "Hide guild challenge toasts during boss fights"
 L.HideQuestTooltips			= "Hide quest objectives from tooltips during boss fights"
 L.HideTooltips				= "Completely hide tooltips during boss fights"
-L.DisableSFX				= "Disable sound effects channel during boss fights"
+L.DisableSFX				= "Disable sound effects channel during boss fights (Note: If you enable this option it'll turn sound effects on when fight ends even if they weren't on when entering fight)"
 L.DisableCinematics			= "Hide in-game cinematics"
 L.OnlyFight					= "Only during fight, after each movie has played once"
 L.AfterFirst				= "In instance, after each movie has played once"

@@ -10,12 +10,10 @@ OVERACHIEVER_ACHID = {
 	LoveCritters2 = 2557,	-- "To All The Squirrels Who Shared My Life"
 	LoveCritters3 = 5548,	-- "To All the Squirrels Who Cared for Me"
 	LoveCritters4 = 6350,	-- "To All the Squirrels I Once Caressed?"
-	--[[
 	LoveCritters5 = 14728,	-- "To All the Squirrels Through Time and Space"
 	LoveCritters6 = 14729,	-- "To All the Squirrels I Love Despite Their Scars"
 	LoveCritters7 = 14730,	-- "To All the Squirrels I Set Sail to See"
 	LoveCritters8 = 14731,	-- "To All the Squirrels I've Love and Lost"
-	--]]
 	PestControl = 2556,		-- "Pest Control"
 	WellRead = 1244,		-- "Well Read"
 	HigherLearning = 1956,	-- "Higher Learning"
@@ -72,6 +70,9 @@ OVERACHIEVER_ACHID = {
 	MissionBarrens = IsAlliance and 12896 or 12867, -- Azeroth at War: The Barrens
 	MissionLordaeron = IsAlliance and 12898 or 12869, -- Azeroth at War: After Lordaeron
 	MissionKalimdor = IsAlliance and 12899 or 12870, -- Azeroth at War: Kalimdor on Fire
+
+	--WhatWeRideInTheShadows = 14770,	-- "What We Ride in the Shadows"
+	AfterlifeExpress = 14771,				-- "The Afterlife Express"
 
 	-- Statistics:
 	Stat_ConsumeDrinks = 346,	-- "Beverages consumed"
@@ -347,6 +348,13 @@ OVERACHIEVER_MOB_CRIT = {
 	[139988] = { 12940, 32 }, -- Sandfang
 	[139980] = { 12940, 33 }, -- Taja the Tidehowler
 	[IsAlliance and 141043 or 140925] = { 12940, 34 }, -- Doc Marrtens or Jakala the Cruel (kill type but asset ID 0)
+	
+	-- SHADOWLANDS
+	
+	-- Adventurer of Bastion:
+	--!!
+	-- Adventurer of Maldraxxus:
+	--   lookup not needed; all are kill type
 };
 
 --[[
@@ -361,7 +369,7 @@ function Overachiever.Debug_WHICHCRIT(id)
 		if (crittype == 27) then
 			print("- quest type:|cff7eff00", id, i, name)
 			c = c + 1
-			s = s.."\n  [] = { "..id..", "..i.." }, -- "..name
+			s = s.."\n  [NPC_ID] = { "..id..", "..i.." }, -- "..name --.." (quest "..assetID..")"
 		elseif (crittype == 0) then
 			if (assetID and assetID ~= 0) then
 				print("- kill type:|cff7f7f7f", id, i, name);
@@ -391,6 +399,9 @@ end
 --/run error(Overachiever.Debug_WHICHCRIT(12941)) -- Adventurer of Drustvar
 --/run error(Overachiever.Debug_WHICHCRIT(12939)) -- Adventurer of Tiragarde Sound
 --/run error(Overachiever.Debug_WHICHCRIT(12940)) -- Adventurer of Stormsong Valley
+
+--/run error(Overachiever.Debug_WHICHCRIT(14307)) -- Adventurer of Bastion
+--/run error(Overachiever.Debug_WHICHCRIT(14308)) -- Adventurer of Maldraxxus
 --]]
 
 
@@ -553,6 +564,12 @@ OVERACHIEVER_EXPLOREZONEID = {
 	["Zuldazar"] = 12559,
 	["Nazjatar"] = 13712,
 	["Mechagon Island"] = 13776,
+-- Shadowlands
+	["Bastion"] = 14303,
+	["Maldraxxus"] = 14305,
+	["Ardenweald"] = 14304,
+	["Revendreth"] = 14306,
+	["The Maw"] = 14663,
 };
 OVERACHIEVER_EXPLOREZONEID["Thunder Totem"] = OVERACHIEVER_EXPLOREZONEID["Highmountain"]
 -- "Explore Cataclysm": 4868
@@ -591,6 +608,8 @@ OVERACHIEVER_HEROIC_CRITERIA = {
 --]]
 };
 
+OVERACHIEVER_MYTHIC_CRITERIA = {} -- Unused for now, but checked in GameTip.lua
+
 
 
 -- ZONE RENAMES AND LOOKUP BY MAP ID (helps handle issues where a zone name is used multiple times)
@@ -622,7 +641,7 @@ if (WOW_BFA) then
 			[1220] = "Dalaran (Broken Isles)", -- 1220 = Broken Isles
 		},
 		["Karazhan"] = { -- !! double check this is the zone name
-			[1651] = "Return to Karazhan", -- !! confirm this weeks in both Upper and Lower
+			[1651] = "Return to Karazhan", -- !! confirm this works in both Upper and Lower
 		},
 		-- !! need to confirm these next two work:
 		["Warfronts Arathi - Alliance"] = {
@@ -683,7 +702,7 @@ function Overachiever.GetZoneKey(zoneName) -- zoneName here is expected to be in
 			return INSTANCE_RENAME[zoneName][insMapID]
 		end
 	end
-return zoneName
+	return zoneName
 end
 
 ----- :BFA

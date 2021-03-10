@@ -31,18 +31,6 @@
 					<KeyValue key="locDisabled" value="HIDE_PLAYTIME_DISABLED" />
 				</KeyValues>
 			</CheckButton>
-            <CheckButton parentKey="HideLoginPlayTime" inherits="DataStoreToggleableOptionTemplate">
-				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.HideRealPlayTime" relativePoint="BOTTOM" x="0" y="-10" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="option" value="HideLoginPlayTime" />
-					<KeyValue key="locLabel" value="HIDE_LOGIN_PLAYTIME_TEXT" />
-					<KeyValue key="locTitle" value="HIDE_LOGIN_PLAYTIME_TITLE" />
-					<KeyValue key="locEnabled" value="HIDE_LOGIN_PLAYTIME_ENABLED" />
-					<KeyValue key="locDisabled" value="HIDE_LOGIN_PLAYTIME_DISABLED" />
-				</KeyValues>
-			</CheckButton>
 		</Frames>
 	</Frame>
 </Ui>

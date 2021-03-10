@@ -1,42 +1,12 @@
-tag 806fdd86126c6c833db4b0fe20b0507e37984b13 v3.2.3
+tag 14ae5ab387345b138dd57c16ca9bc253a946712e v3.2.4
 Author:	Hendrik Leppkes <h.leppkes@gmail.com>
-Date:	Thu Oct 15 12:37:25 2020 +0200
+Date:	Thu Nov 19 12:32:29 2020 +0100
 
-Tag as v3.2.3
+Tag as v3.2.4
 
-commit 23614e27d92c4505a614f8d1871c0ef3a220d0e4
+commit f5cc63d1d93209bf4000dcf2b5c298e7f4b6363a
 Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Thu Oct 15 12:37:16 2020 +0200
+Date:   Thu Nov 19 12:32:07 2020 +0100
 
-    Update for 9.0
-
-commit 7568a93a85a11b528bb72149b802190c0672c97a
-Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 15 17:02:15 2020 +0200
-
-    Disable focus in more places on classic
-
-commit 654833733c23dabd2a7cd4d73ce7bc81311f79c6
-Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 15 17:00:17 2020 +0200
-
-    Add a hack for CLEU missing spell IDs
-
-commit 867e0f3c9225ac9205801fca2eeb503220abbd44
-Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 15 16:56:25 2020 +0200
-
-    Add a range check item for classic
-
-commit 8552c6bfb6c41e915e40c2b19e7287abe3117ce5
-Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 15 16:36:43 2020 +0200
-
-    Support WoW Classic
-
-commit 2051fc42f1e60dcaff257b475697d837f597b33f
-Author: Hendrik Leppkes <h.leppkes@gmail.com>
-Date:   Wed Jul 15 16:18:45 2020 +0200
-
-    Bump TOC to 8.3
+    Update for 9.0.2
 

@@ -1,24 +1,12 @@
-tag c0b5a9361593ba09b146c31aae745dffa0898747 v1.2.0
+tag 73673998cbc95785b573d5b9246c1a36b939bcdb v1.2.1
 Author:	Kyle Buller <bullerk@gmail.com>
-Date:	Wed Oct 14 01:56:01 2020 -0500
+Date:	Wed Nov 18 11:43:56 2020 -0600
 
-Tagging as v1.2.0
+Tagging as v1.2.1
 
-commit f1dc4f26b31312994509d5ad3c53cbad57d1ab3c
+commit 5abd6edce8e57b473504b5dce209823d2dfb871a
 Author: Kyle Buller <bullerk@gmail.com>
-Date:   Wed Oct 14 01:55:17 2020 -0500
+Date:   Wed Nov 18 11:43:46 2020 -0600
 
-    Update TOC for 9.0.1
-
-commit dd3c45174c87f8021470f3b304654cb40bde1209
-Author: Kyle Buller <bullerk@gmail.com>
-Date:   Wed Oct 14 01:55:00 2020 -0500
-
-    Fix pvp macros
-
-commit 83131dfa8dd470f281a9b3f1fac3dd96f54a8c45
-Author: Kyle Buller <bullerk@gmail.com>
-Date:   Wed Oct 14 01:54:10 2020 -0500
-
-    Fix tier levels
+    Update TOC for 9.0.2
 

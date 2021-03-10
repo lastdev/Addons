@@ -1,3 +1,178 @@
+902.41
+------
+DK:
+* can't raise dead when already have a pet active (though raise dead)
+* use raise dead and sacrificial pact offensively
+* only use sacrificial pact defenively as last resort
+
+DH:
+* don't propose metamorphosis when already active
+* use elysian decree more freely (we don't care for soul fragments)
+* use fiery brand before fel devastation
+* charred flesh no longer turns fiery brand into a DPS cooldown
+* add bulk extraction as a DPS cooldown
+* felblade restores 40 fury instead of 30
+
+MONK:
+* only wait for keg smash when not wearing stormshout's last keg legendary
+
+902.40
+------
+* Prepare Ovale_TankScripts for some Ovale naming convention changes that will break TankScripts
+
+ALL:
+* Add support for mistcaller_ocarina and bottled_flayedwing_toxin trinkets
+* Remove humming_black_dragonscale
+
+MONK:
+* Move Expel Harm to shortcd
+
+902.39
+------
+DK:
+* Fix a nil reference error with smallcd help message
+* Track raise dead as a totem now
+
+PALADIN:
+* Fix a nil reference error with smallcd help message
+* Propose Moment of Glory only when Avenger's Shield is on cooldown
+
+902.38
+------
+ALL:
+* Fix syntax for range checks on several abilities (CC and movement)
+
+PALADIN:
+* Add Blessing of Protection and Blessing of Spellwarding as defensive cooldowns
+
+902.37
+------
+DEATH KNIGHT:
+* Add support for Raise Dead and Sacrificial Pact
+* Always propose Death's Due (Night Fae ability)
+
+DEMON HUNTER:
+* Corrected id for metamorphosis buff
+
+WARRIOR:
+* Victory rush is only possible when Victorious (after killing a mob)
+
+902.36
+------
+MONK:
+* Don't use Blackout Combo buff on Breath of Fire when talented into Spitfire talent
+
+PALADIN:
+* Add moment of clarity talent
+* Correctly check shield of the righteous buff when proposing SOTR
+
+902.35
+------
+DH:
+* Don't propose Soul Barrier when not specced into the talent.
+
+DK:
+* Suggest Rune Tap less aggressively
+
+MONK: 
+* Prioritize Tiger Palm (ST and cleave) and Breath of Fire (>=3 enemies) with Blackout Combo buff. Blackout Combo is currently not recommended for challenging content so we use the buff just for the damage it provides.
+* Touch of Death should now show when below our current HP
+
+Paladin:
+* Add Blinding Light to interrupt again
+
+902.34
+------
+DRUID:
+* Add logic for Adaptive Swarm (Necrolord ability)
+* Renewal only shows when talented
+* Now properly proposes heart of the wild
+* Don't catweave when berserk is up
+* Add precombat actions (prowl, cat form, rake, shred, bear form, adaptive swap, moonfire)
+
+MONK:
+* Update rotation according to https://www.wowhead.com/brewmaster-monk-rotation-guide
+
+DK:
+* Move covenant abilities to offensive cd
+
+902.33
+------
+ALL:
+* Fix talent definitions, Ovale is now using id instead of row/column
+
+DRUID:
+* Added support for Kyrian covenant ability
+* Define missing Bristling Fur talent (it was proposing without it being selected)
+
+DEATH KNIGHT:
+* Added covenant abilities
+* Define missing blood tap talent (it was proposing without it being selected)
+
+MONK: 
+* Proposing healing actions before AM
+
+902.32
+------
+Don't release without testing. Should properly work now
+
+902.31
+------
+Quick fix for error introcuded in Ovale 9.0.14
+
+902.30
+------
+ALL:
+* Fix syntax errors introduced in latest Ovale version
+* Introduce covenant abilities (needs testing still)
+
+Remarks:
+* Small icon with offensive cooldowns (the fifth icon) is currently big due to a bug in Ovale
+* Druid Kyrian ability Kindred Spirit not yet implemented
+* Paladin Night Fae ability not implemented - get a weakaura instead
+* Please provide feedback on Ovale Discord (My name is Hemario) or though tickets on Github
+
+Thanks @ultijlam for updating DK and Monk scripts
+
+902.29
+------
+DRUID:
+* Preliminary support for catweaving (checkbox to enable, not enabled by default) - Thanks @ultijlam
+
+MONK:
+* Correct cooldown of fortifying Brew
+
+PALADIN:
+* Keep shield of righteous up when taking physical damage
+** if not, use only with judgment buff, or when capped on holypower, or to prevent overcapping due to holy avenger or sanctified wrath
+* Correct id for arcane torrent
+
+WARRIOR:
+* Use Ignore Pain when it's not up
+* Keep Shield block up when taking physical damage
+
+901.28
+------
+DEMON HUNTER:
+* Start pooling fury for Demonic earlier (5 seconds before FD comes off cooldown)
+* Only use demon spikes when about to drop off (and still taking physical damage)
+* Only use Fel Devastation in dps rotation without Demonic, with Demonic use it as a short cd
+
+WARRIOR:
+* Execute no longer shows up without being usable
+* Use shockwave on 3 mobs with rubmling earth talent
+
+901.27
+------
+ALL:
+* Don't show Humming Black Dragonscale when equipped
+
+PALADIN:
+* Corrected id for Ardent Defender
+
+WARRIOR:
+* Range check for Intimidating Shout
+
 901.26
 ------
 Initial SL release for DRUID, WARRIOR, DEATH KNIGHT (thanks to @ultijlam) and DEMON HUNTER.

@@ -2,19 +2,18 @@
 local _, MaxDps = ...;
 
 -- Global cooldown spell id
-local _GlobalCooldown	= 61304;
+local _GlobalCooldown = 61304;
 
 -- Bloodlust effects
-local _Bloodlust		= 2825;
-local _TimeWrap			= 80353;
-local _Heroism			= 32182;
-local _AncientHysteria	= 90355;
-local _Netherwinds		= 160452;
-local _DrumsOfFury		= 178207;
-local _Exhaustion		= 57723;
+local _Bloodlust = 2825;
+local _TimeWrap = 80353;
+local _Heroism = 32182;
+local _AncientHysteria = 90355;
+local _Netherwinds = 160452;
+local _DrumsOfFury = 178207;
+local _Exhaustion = 57723;
 
-
-local _Bloodlusts = {_Bloodlust, _TimeWrap, _Heroism, _AncientHysteria, _Netherwinds, _DrumsOfFury};
+local _Bloodlusts = { _Bloodlust, _TimeWrap, _Heroism, _AncientHysteria, _Netherwinds, _DrumsOfFury };
 
 -- Global functions
 local UnitAura = UnitAura;
@@ -39,7 +38,6 @@ local GetSpellBaseCooldown = GetSpellBaseCooldown;
 local IsSpellInRange = IsSpellInRange;
 local UnitSpellHaste = UnitSpellHaste;
 local GetSpellCharges = GetSpellCharges;
-local C_NamePlate = C_NamePlate;
 local UnitPower = UnitPower;
 local UnitPowerMax = UnitPowerMax;
 local UnitHealth = UnitHealth;
@@ -52,6 +50,9 @@ local GetSpellBookItemName = GetSpellBookItemName;
 local IsInInstance = IsInInstance;
 local IsItemInRange = IsItemInRange;
 local UnitThreatSituation = UnitThreatSituation;
+local GetActiveCovenantID = C_Covenants.GetActiveCovenantID;
+local GetActiveSoulbindID = C_Soulbinds.GetActiveSoulbindID;
+local GetSoulbindData = C_Soulbinds.GetSoulbindData;
 
 
 -----------------------------------------------------------------
@@ -63,7 +64,7 @@ function MaxDps:IntUnitAura(unit, nameOrId, filter, timeShift)
 	local aura = {
 		name           = nil,
 		up             = false,
-		upMath		   = 0,
+		upMath         = 0,
 		count          = 0,
 		expirationTime = 0,
 		remains        = 0,
@@ -97,7 +98,7 @@ function MaxDps:IntUnitAura(unit, nameOrId, filter, timeShift)
 			return {
 				name           = name,
 				up             = remains > 0,
-				upMath		   = remains > 0 and 1 or 0,
+				upMath         = remains > 0 and 1 or 0,
 				count          = count,
 				expirationTime = expirationTime,
 				remains        = remains,
@@ -116,7 +117,9 @@ function MaxDps:CollectAura(unit, timeShift, output, filter)
 
 	local t = GetTime();
 	local i = 1;
-	for k, v in pairs(output) do output[k] = nil; end
+	for k, _ in pairs(output) do
+		output[k] = nil;
+	end
 
 	while true do
 		local name, _, count, _, duration, expirationTime, _, _, _, id = UnitAura(unit, i, filter);
@@ -141,7 +144,7 @@ function MaxDps:CollectAura(unit, timeShift, output, filter)
 		output[id] = {
 			name           = name,
 			up             = remains > 0,
-			upMath		   = remains > 0 and 1 or 0,
+			upMath         = remains > 0 and 1 or 0,
 			count          = count,
 			expirationTime = expirationTime,
 			remains        = remains,
@@ -157,7 +160,7 @@ local auraMetaTable = {
 	__index = function()
 		return {
 			up          = false,
-			upMath		= 0,
+			upMath      = 0,
 			count       = 0,
 			remains     = 0,
 			duration    = 0,
@@ -188,12 +191,12 @@ end
 function MaxDps:DumpAuras()
 	print('Player Auras');
 	for id, aura in pairs(self.PlayerAuras) do
-		print(aura.name .. '('.. id ..'): ' .. aura.count);
+		print(aura.name .. '(' .. id .. '): ' .. aura.count);
 	end
 
 	print('Target Auras');
 	for id, aura in pairs(self.TargetAuras) do
-		print(aura.name .. '('.. id ..'): ' .. aura.count);
+		print(aura.name .. '(' .. id .. '): ' .. aura.count);
 	end
 end
 
@@ -212,7 +215,7 @@ function MaxDps:CheckTalents()
 
 	for talentRow = 1, 7 do
 		for talentCol = 1, 3 do
-			local _, name, _, sel, _, id = GetTalentInfo(talentRow, talentCol, 1);
+			local _, _, _, sel, _, id = GetTalentInfo(talentRow, talentCol, 1);
 			if sel then
 				self.PlayerTalents[id] = 1;
 			end
@@ -229,11 +232,14 @@ function MaxDps:CheckIsPlayerMelee()
 	-- Warrior, Paladin, Rogue, DeathKnight, Monk, Demon Hunter
 	if class == 1 or class == 2 or class == 4 or class == 6 or class == 10 or class == 12 then
 		self.isMelee = true;
-	elseif class == 3 and spec == 3 then -- Survival Hunter
+	elseif class == 3 and spec == 3 then
+		-- Survival Hunter
 		self.isMelee = true;
-	elseif class == 7 and spec == 2 then -- Enh Shaman
+	elseif class == 7 and spec == 2 then
+		-- Enh Shaman
 		self.isMelee = true;
-	elseif class == 11 and (spec == 2 or spec == 3) then -- Guardian or Feral Druid
+	elseif class == 11 and (spec == 2 or spec == 3) then
+		-- Guardian or Feral Druid
 		self.isMelee = true;
 	end
 
@@ -244,14 +250,12 @@ function MaxDps:HasTalent(talent)
 	return self.PlayerTalents[talent];
 end
 
-function MaxDps:TalentEnabled(talent)
-	self:Print(self.Colors.Error .. 'MaxDps:TalentEnabled is deprecated, please use table `talents` to check talents');
-end
-
 function MaxDps:GetAzeriteTraits()
-	local t = setmetatable({}, {__index = function() return 0; end});
+	local t = setmetatable({}, { __index = function()
+		return 0;
+	end });
 
-	for equipSlotIndex, itemLocation in AzeriteUtil.EnumerateEquipedAzeriteEmpoweredItems() do
+	for _, itemLocation in AzeriteUtil.EnumerateEquipedAzeriteEmpoweredItems() do -- equipSlotIndex
 		local tierInfo = C_AzeriteEmpoweredItem.GetAllTierInfo(itemLocation);
 		for i = 1, #tierInfo do
 			for x = 1, #tierInfo[i].azeritePowerIDs do
@@ -314,6 +318,442 @@ function MaxDps:GetAzeriteEssences()
 	end
 
 	return result;
+end
+
+--- Get active covenant and soulbind Ids, use Enum.CovenantType for covenantId
+---
+function MaxDps:GetCovenantInfo()
+	local covenantId = GetActiveCovenantID();
+	local soulbindId = GetActiveSoulbindID();
+
+	--if soulbindId == 0 then
+	--	soulbindId = Soulbinds.GetDefaultSoulbindID(covenantId);
+	--end
+
+	local soulbindData = {};
+	local soulbindAbilities = {};
+	local soulbindConduits = {};
+
+	if soulbindId ~= 0 then
+		soulbindData = GetSoulbindData(soulbindId);
+
+		if soulbindData.tree then
+			for _, node in ipairs(soulbindData.tree.nodes) do
+				if node.state == Enum.SoulbindNodeState.Selected then
+					if node.spellID ~= 0 then
+						soulbindAbilities[node.spellID] = true;
+					end
+
+					if node.conduitID ~= 0 then
+						soulbindConduits[node.conduitID] = node.conduitRank;
+					end
+				end
+			end
+		end
+	end
+
+	self.CovenantInfo = {
+		covenantId        = covenantId,
+		soulbindId        = soulbindId,
+		soulbindData      = soulbindData,
+		soulbindAbilities = soulbindAbilities,
+		soulbindConduits  = soulbindConduits,
+	};
+
+	return self.CovenantInfo;
+end
+
+--[[
+	Borrowed from WeakAuras
+
+	This is free software: you can redistribute it and/or modify it under the terms of
+	the GNU General Public License version 2 as published by the Free Software
+	Foundation.
+
+	For more information see WeakAuras License
+]]
+--------------------------------------------
+--- Legendaries
+--------------------------------------------
+local generalLegendaries = {
+	[7100] = true, -- Echo of Eonar
+	[7102] = true, -- Norgannon's Sagacity
+	[7103] = true, -- Sephuz's Proclamation
+	[7104] = true, -- Stable Phantasma Lure
+	[7105] = true, -- Third Eye of the Jailer
+	[7106] = true, -- Vitality Sacrifice
+}
+
+local allLegendaryBonusIds = {
+	SHAMAN = { -- 7
+		[6993] = true, -- Doom Winds
+		[6997] = true, -- Jonat's Natural Focus
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[6986] = true, -- Deeptremor Stone
+		[6990] = true, -- Elemental Equilibrium
+		[6994] = true, -- Legacy of the Frost Witch
+		[6998] = true, -- Spiritwalker's Tidal Totem
+		[7103] = true, -- Sephuz's Proclamation
+		[6987] = true, -- Deeply Rooted Elements
+		[6991] = true, -- Echoes of Great Sundering
+		[6995] = true, -- Witch Doctor's Wolf Bones
+		[6999] = true, -- Primal Tide Core
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[6988] = true, -- Chains of Devastation
+		[6992] = true, -- Windspeaker's Lava Resurgence
+		[6996] = true, -- Primal Lava Actuators
+		[7000] = true, -- Earthen Harmony
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[6985] = true, -- Ancestral Reminder
+		[6989] = true, -- Skybreaker's Fiery Demise
+	},
+	WARRIOR = { -- 1
+		[6962] = true, -- Enduring Blow
+		[6966] = true, -- Will of the Berserker
+		[6970] = true, -- Unhinged
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[6955] = true, -- Leaper
+		[6959] = true, -- Signet of Tormented Kings
+		[6963] = true, -- Cadence of Fujieda
+		[6967] = true, -- Unbreakable Will
+		[6971] = true, -- Seismic Reverberation
+		[7103] = true, -- Sephuz's Proclamation
+		[6956] = true, -- Thunderlord
+		[6960] = true, -- Battlelord
+		[6964] = true, -- Deathmaker
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[6957] = true, -- The Wall
+		[6961] = true, -- Exploiter
+		[6965] = true, -- Reckless Defense
+		[6969] = true, -- Reprisal
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[6958] = true, -- Misshapen Mirror
+	},
+	PALADIN = { -- 2
+		[7055] = true, -- Of Dusk and Dawn
+		[7059] = true, -- Shock Barrier
+		[7063] = true, -- Reign of Endless Kings
+		[7067] = true, -- Tempest of the Lightbringer
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7056] = true, -- The Magistrate's Judgment
+		[7060] = true, -- Holy Avenger's Engraved Sigil
+		[7064] = true, -- Final Verdict
+		[7103] = true, -- Sephuz's Proclamation
+		[7053] = true, -- Uther's Devotion
+		[7057] = true, -- Shadowbreaker, Dawn of the Sun
+		[7061] = true, -- The Ardent Protector's Sanctum
+		[7065] = true, -- Vanguard's Momentum
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7054] = true, -- The Mad Paragon
+		[7058] = true, -- Inflorescence of the Sunwell
+		[7062] = true, -- Bulwark of Righteous Fury
+		[7128] = true, -- Maraad's Dying Breath
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7159] = true, -- Maw Rattle
+		[7066] = true, -- Relentless Inquisitor
+	},
+	ROGUE = { -- 4
+		[7117] = true, -- Zoldyck Insignia
+		[7121] = true, -- Celerity
+		[7125] = true, -- The Rotten
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7114] = true, -- Invigorating Shadowdust
+		[7118] = true, -- Duskwalker's Patch
+		[7122] = true, -- Concealed Blunderbuss
+		[7126] = true, -- Deathly Shadows
+		[7103] = true, -- Sephuz's Proclamation
+		[7111] = true, -- Mark of the Master Assassin
+		[7115] = true, -- Dashing Scoundrel
+		[7119] = true, -- Greenskin's Wickers
+		[7123] = true, -- Finality
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7112] = true, -- Tiny Toxic Blade
+		[7116] = true, -- Doomblade
+		[7120] = true, -- Guile Charm
+		[7124] = true, -- Akaari's Soul Fragment
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7113] = true, -- Essence of Bloodfang
+	},
+	MAGE = { -- 8
+		[6931] = true, -- Fevered Incantation
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[6831] = true, -- Expanded Potential
+		[6928] = true, -- Siphon Storm
+		[6932] = true, -- Firestorm
+		[6936] = true, -- Triune Ward
+		[7103] = true, -- Sephuz's Proclamation
+		[6828] = true, -- Cold Front
+		[6832] = true, -- Disciplinary Command
+		[6933] = true, -- Molten Skyfall
+		[6937] = true, -- Grisly Icicle
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[6829] = true, -- Freezing Winds
+		[6926] = true, -- Arcane Infinity
+		[6934] = true, -- Sun King's Blessing
+		[6823] = true, -- Slick Ice
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[6830] = true, -- Glacial Fragments
+		[6834] = true, -- Temporal Warp
+		[6927] = true, -- Arcane Bombardment
+	},
+	WARLOCK = { -- 9
+		[7028] = true, -- Pillars of the Dark Portal
+		[7032] = true, -- Wrath of Consumption
+		[7036] = true, -- Balespider's Burning Core
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7025] = true, -- Wilfred's Sigil of Superior Summoning
+		[7029] = true, -- Perpetual Agony of Azj'Aqir
+		[7033] = true, -- Implosive Potential
+		[7037] = true, -- Odr, Shawl of the Ymirjar
+		[7103] = true, -- Sephuz's Proclamation
+		[7026] = true, -- Claw of Endereth
+		[7030] = true, -- Sacrolash's Dark Strike
+		[7034] = true, -- Grim Inquisitor's Dread Calling
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7040] = true, -- Embers of the Diabolic Raiment
+		[7027] = true, -- Relic of Demonic Synergy
+		[7031] = true, -- Malefic Wrath
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7039] = true, -- Madness of the Azj'Aqir
+		[7038] = true, -- Cinders of the Azj'Aqir
+		[7035] = true, -- Forces of the Horned Nightmare
+	},
+	PRIEST = { -- 5
+		[6974] = true, -- Flash Concentration
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7002] = true, -- Twins of the Sun Priestess
+		[6975] = true, -- Cauterizing Shadows
+		[7103] = true, -- Sephuz's Proclamation
+		[6983] = true, -- Eternal Call to the Void
+		[7162] = true, -- Talbadar's Stratagem
+		[6982] = true, -- Shadowflame Prism
+		[6981] = true, -- Painbreaker Psalm
+		[6972] = true, -- Vault of Heavens
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[6984] = true, -- X'anshi, Return of Archbishop Benedictus
+		[6973] = true, -- Divine Image
+		[6977] = true, -- Harmonious Apparatus
+		[6976] = true, -- The Penitent One
+		[6978] = true, -- Crystalline Reflection
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[6979] = true, -- Kiss of Death
+		[6980] = true, -- Clarity of Mind
+		[7161] = true, -- Measured Contemplation
+	},
+	MONK = { -- 10
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7079] = true, -- Shaohao's Might
+		[7184] = true, -- Escape from Reality
+		[7068] = true, -- Keefer's Skyreach
+		[7103] = true, -- Sephuz's Proclamation
+		[7076] = true, -- Charred Passions
+		[7080] = true, -- Swiftsure Wraps
+		[7069] = true, -- Last Emperor's Capacitor
+		[7071] = true, -- Jade Ignition
+		[7070] = true, -- Xuen's Treasure
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7077] = true, -- Stormstout's Last Keg
+		[7081] = true, -- Fatal Touch
+		[7072] = true, -- Tear of Morning
+		[7074] = true, -- Clouded Focus
+		[7073] = true, -- Yu'lon's Whisper
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7078] = true, -- Celestial Infusion
+		[7082] = true, -- Invoker's Delight
+		[7075] = true, -- Ancient Teachings of the Monastery
+	},
+	HUNTER = { -- 3
+		[7005] = true, -- Soulforge Embers
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7017] = true, -- Latent Poison Injectors
+		[7006] = true, -- Craven Strategem
+		[7103] = true, -- Sephuz's Proclamation
+		[7014] = true, -- Secrets of the Unblinking Vigil
+		[7018] = true, -- Butcher's Bone Fragments
+		[7009] = true, -- Qa'pla, Eredun War Order
+		[7013] = true, -- Serpentstalker's Trickery
+		[7003] = true, -- Call of the Wild
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7015] = true, -- Wildfire Cluster
+		[7012] = true, -- Surging Shots
+		[7011] = true, -- Eagletalon's True Focus
+		[7007] = true, -- Dire Command
+		[7008] = true, -- Flamewaker's Cobra Sting
+		[7004] = true, -- Nessingwary's Trapping Apparatus
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7016] = true, -- Rylakstalker's Confounding Strikes
+		[7010] = true, -- Rylakstalker's Piercing Fangs
+		[7159] = true, -- Maw Rattle
+	},
+	DEATHKNIGHT = { -- 6
+		[6943] = true, -- Gorefiend's Domination
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[6940] = true, -- Bryndaor's Might
+		[6944] = true, -- Koltira's Favor
+		[7103] = true, -- Sephuz's Proclamation
+		[6952] = true, -- Deadliest Coil
+		[6951] = true, -- Death's Certainty
+		[6950] = true, -- Frenzied Monstrosity
+		[6949] = true, -- Reanimated Shambler
+		[6941] = true, -- Crimson Rune Weapon
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[6953] = true, -- Superstrain
+		[7160] = true, -- Rage of the Frozen Champion
+		[6946] = true, -- Absolute Zero
+		[6945] = true, -- Biting Cold
+		[6947] = true, -- Death's Embrace
+		[6942] = true, -- Vampiric Aura
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[6954] = true, -- Phearomones
+		[6948] = true, -- Grip of the Everlasting
+		[7159] = true, -- Maw Rattle
+	},
+	DEMONHUNTER = { -- 12
+		[7102] = true, -- Norgannon's Sagacity
+		[7044] = true, -- Darkest Hour
+		[7048] = true, -- Fiery Soul
+		[7052] = true, -- Burning Wound
+		[7041] = true, -- Collective Anguish
+		[7045] = true, -- Spirit of the Darkness Flame
+		[7049] = true, -- Darker Nature
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7046] = true, -- Razelikh's Defilement
+		[7050] = true, -- Chaos Theory
+		[7042] = true, -- Fel Bombardment
+		[7043] = true, -- Darkglare Medallion
+		[7103] = true, -- Sephuz's Proclamation
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7047] = true, -- Fel Flame Fortification
+		[7051] = true, -- Erratic Fel Core
+		[7106] = true, -- Vitality Sacrifice
+	},
+	DRUID = { -- 11
+		[7086] = true, -- Draught of Deep Focus
+		[7090] = true, -- Eye of Fearful Symmetry
+		[7094] = true, -- Ursoc's Fury Remembered
+		[7098] = true, -- Verdant Infusion
+		[7102] = true, -- Norgannon's Sagacity
+		[7106] = true, -- Vitality Sacrifice
+		[7110] = true, -- Lycara's Fleeting Glimpse
+		[7087] = true, -- Oneth's Clear Vision
+		[7091] = true, -- Apex Predator's Craving
+		[7095] = true, -- Legacy of the Sleeper
+		[7099] = true, -- Vision of Unending Growth
+		[7103] = true, -- Sephuz's Proclamation
+		[7107] = true, -- Balance of All Things
+		[7084] = true, -- Oath of the Elder Druid
+		[7088] = true, -- Primordial Arcanic Pulsar
+		[7092] = true, -- Luffa-Infused Embrace
+		[7096] = true, -- Memory of the Mother Tree
+		[7100] = true, -- Echo of Eonar
+		[7104] = true, -- Stable Phantasma Lure
+		[7108] = true, -- Timeworn Dreambinder
+		[7085] = true, -- Circle of Life and Death
+		[7089] = true, -- Cat-eye Curio
+		[7093] = true, -- The Natural Order's Will
+		[7159] = true, -- Maw Rattle
+		[7101] = true, -- Judgment of the Arbiter
+		[7105] = true, -- Third Eye of the Jailer
+		[7109] = true, -- Frenzyband
+		[7097] = true, -- The Dark Titan's Lesson
+	},
+}
+
+local function GetItemSplit(itemLink)
+	local itemString = string.match(itemLink, 'item:([%-?%d:]+)');
+	local itemSplit = {};
+
+	-- Split data into a table
+	for _, v in ipairs({strsplit(':', itemString)}) do
+		if v == '' then
+			itemSplit[#itemSplit + 1] = 0;
+		else
+			itemSplit[#itemSplit + 1] = tonumber(v);
+		end
+	end
+
+	return itemSplit;
+end
+
+local OFFSET_BONUS_ID = 13;
+function MaxDps:ExtractBonusIds(itemLink)
+	local itemSplit = GetItemSplit(itemLink);
+	local bonuses = {}
+
+	for i = 1, itemSplit[OFFSET_BONUS_ID] do
+		bonuses[itemSplit[OFFSET_BONUS_ID + i]] = true;
+	end
+
+	return bonuses;
+end
+
+function MaxDps:GetLegendaryEffects()
+	local legendaryBonusIds = {};
+	local playerClass = select(2, UnitClass('player'));
+
+	for i = 1, 19 do
+		local link = GetInventoryItemLink('player', i);
+
+		if link then
+			local itemBonusIds = self:ExtractBonusIds(link);
+
+			for bonusId, _ in pairs(generalLegendaries) do
+				if itemBonusIds[bonusId] then
+					legendaryBonusIds[bonusId] = true;
+				end
+			end
+
+			for bonusId, _ in pairs(allLegendaryBonusIds[playerClass]) do
+				if itemBonusIds[bonusId] then
+					legendaryBonusIds[bonusId] = true;
+				end
+			end
+		end
+	end
+
+	self.LegendaryBonusIds = legendaryBonusIds;
+
+	return legendaryBonusIds;
 end
 
 local bfaConsumables = {
@@ -405,7 +845,7 @@ function MaxDps:EndCast(target)
 
 		if gcd < 0 then
 			gcd = 0;
-		end;
+		end ;
 	end
 
 	if not endTime then
@@ -437,7 +877,7 @@ end
 
 function MaxDps:AttackHaste()
 	local haste = UnitSpellHaste('player');
-	return 1/((haste / 100) + 1);
+	return 1 / ((haste / 100) + 1);
 end
 
 -----------------------------------------------------------------
@@ -457,8 +897,8 @@ function MaxDps:ItemCooldown(itemId, timeShift)
 	end
 
 	return {
-		ready           = remains <= 0,
-		remains         = remains,
+		ready   = remains <= 0,
+		remains = remains,
 	};
 end
 
@@ -522,7 +962,7 @@ function MaxDps:Cooldown(spell, timeShift)
 		return (duration - (GetTime() - start) - (timeShift or 0));
 	else
 		return 100000;
-	end;
+	end ;
 end
 
 -- @deprecated
@@ -564,14 +1004,14 @@ function MaxDps:TargetPercentHealth(unit)
 	local health = UnitHealth(unit or 'target');
 	if health <= 0 then
 		return 0;
-	end;
+	end ;
 
 	local healthMax = UnitHealthMax(unit or 'target');
 	if healthMax <= 0 then
 		return 0;
-	end;
+	end ;
 
-	return health/healthMax;
+	return health / healthMax;
 end
 
 function MaxDps:SetBonus(items)
@@ -589,7 +1029,6 @@ function MaxDps:Mana(minus, timeShift)
 	local mana = UnitPower('player', 0) - minus + (casting * timeShift);
 	return mana / UnitPowerMax('player', 0), mana;
 end
-
 
 function MaxDps:ExtractTooltip(spell, pattern)
 	local _pattern = gsub(pattern, "%%s", "([%%d%.,]+)");
@@ -618,8 +1057,10 @@ end
 
 function MaxDps:Bloodlust(timeShift)
 	-- @TODO: detect exhausted/seated debuff instead of 6 auras
-	for k, v in pairs (_Bloodlusts) do
-		if MaxDps:Aura(v, timeShift or 0) then return true; end
+	for k, v in pairs(_Bloodlusts) do
+		if MaxDps:Aura(v, timeShift or 0) then
+			return true;
+		end
 	end
 
 	return false;
@@ -744,16 +1185,18 @@ function MaxDps:SmartAoe(itemId)
 		end
 	end
 
-	if WeakAuras then WeakAuras.ScanEvents('MAXDPS_TARGET_COUNT', count); end
+	if WeakAuras then
+		WeakAuras.ScanEvents('MAXDPS_TARGET_COUNT', count);
+	end
 	return count;
 end
 
 function MaxDps:FormatTime(left)
-	local seconds = left >= 0        and math.floor((left % 60)    / 1   ) or 0;
-	local minutes = left >= 60       and math.floor((left % 3600)  / 60  ) or 0;
-	local hours   = left >= 3600     and math.floor((left % 86400) / 3600) or 0;
-	local days    = left >= 86400    and math.floor((left % 31536000) / 86400) or 0;
-	local years   = left >= 31536000 and math.floor( left / 31536000) or 0;
+	local seconds = left >= 0 and math.floor((left % 60) / 1) or 0;
+	local minutes = left >= 60 and math.floor((left % 3600) / 60) or 0;
+	local hours = left >= 3600 and math.floor((left % 86400) / 3600) or 0;
+	local days = left >= 86400 and math.floor((left % 31536000) / 86400) or 0;
+	local years = left >= 31536000 and math.floor(left / 31536000) or 0;
 
 	if years > 0 then
 		return string.format("%d [Y] %d [D] %d:%d:%d [H]", years, days, hours, minutes, seconds);

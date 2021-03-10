@@ -26,13 +26,13 @@
 				<FontString parentKey="Remaining" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size x="120" y="32" />
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="110" y="0" />
+						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="140" y="0" />
 					</Anchors>
 				</FontString>
 				<FontString parentKey="Success" inherits="GameFontNormal" justifyH="RIGHT">
 					<Size x="120" y="32" />
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="110" y="-16" />
+						<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="TOPRIGHT" x="140" y="-16" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -58,12 +58,12 @@
 					<Anchor point="LEFT" relativeKey="$parent.Follower2" relativePoint="RIGHT" />
 				</Anchors>
 			</Button>
-            <Button parentKey="Follower4" inherits="AltoGarrisonMissionFollowerTemplate">
+			<Button parentKey="Follower4" inherits="AltoGarrisonMissionFollowerTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent.Follower3" relativePoint="RIGHT" />
 				</Anchors>
 			</Button>
-            <Button parentKey="Follower5" inherits="AltoGarrisonMissionFollowerTemplate">
+			<Button parentKey="Follower5" inherits="AltoGarrisonMissionFollowerTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent.Follower4" relativePoint="RIGHT" />
 				</Anchors>

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(431, "DBM-Party-Classic", 6, 232)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191001141630")
+mod:SetRevision("20210119194132")
 mod:SetCreatureID(12201)
 mod:SetEncounterID(429)
 
@@ -42,7 +42,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warningRepulsiveGaze:Show()
 		timerRespulsiveGazeCD:Start()
 	elseif args.spellId == 21909 then
-		if self.Options.SpecWarn21909run and not self:IsTrivial(70) then--Mob will scale up to level 60, so retail needs to trivial it at 70, not 60 like classic
+		if self.Options.SpecWarn21909run and not self:IsTrivial() then--Mob will scale up to level 60, so retail needs to trivial it at 70, not 60 like classic
 			specWarnDustField:Show()
 			specWarnDustField:Play("justrun")
 		else

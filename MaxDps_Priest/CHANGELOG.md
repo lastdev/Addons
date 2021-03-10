@@ -1,6 +1,6 @@
 # MaxDps_Priest
 
-## [v8.3.0](https://github.com/kaminaris/MaxDps-Priest/tree/v8.3.0) (2020-08-25)
-[Full Changelog](https://github.com/kaminaris/MaxDps-Priest/compare/v8.2.5...v8.3.0) [Previous Releases](https://github.com/kaminaris/MaxDps-Priest/releases)
+## [v9.0.2](https://github.com/kaminaris/MaxDps-Priest/tree/v9.0.2) (2021-01-01)
+[Full Changelog](https://github.com/kaminaris/MaxDps-Priest/compare/v9.0.0.1...v9.0.2) [Previous Releases](https://github.com/kaminaris/MaxDps-Priest/releases)
 
-- v8.3.0 - Interface version bump  
+- v9.0.2 - Shadowlands alpha  

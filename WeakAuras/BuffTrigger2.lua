@@ -35,9 +35,6 @@ Returns whether the trigger can have a duration.
 GetOverlayInfo(data, triggernum)
 Returns a table containing all overlays. Currently there aren't any
 
-CanHaveAuto(data, triggernum)
-Returns whether the icon can be automatically selected.
-
 CanHaveClones(data, triggernum)
 Returns whether the trigger can have clones.
 
@@ -165,6 +162,20 @@ local function IsSingleMissing(trigger)
   return not IsGroupTrigger(trigger) and trigger.matchesShowOn == "showOnMissing"
 end
 
+local function CanHaveMatchCheck(trigger)
+  if IsGroupTrigger(trigger) then
+    return true
+  end
+  if trigger.matchesShowOn == "showOnMissing" then
+    return false
+  end
+  if trigger.matchesShowOn == "showOnActive" or trigger.matchesShowOn == "showOnMatches" or not trigger.matchesShowOn then
+    return true
+  end
+  -- Always: If clones are shown
+  return trigger.showClones
+end
+
 local function HasMatchCount(trigger)
   if IsGroupTrigger(trigger) then
     return trigger.useMatch_count
@@ -248,7 +259,7 @@ local function UpdateToolTipDataInMatchData(matchData, time)
   return changed
 end
 
-local function UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId)
+local function UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, isBossDebuff, isCastByPlayer, spellId)
   if not matchData[unit] then
     matchData[unit] = {}
   end
@@ -271,6 +282,8 @@ local function UpdateMatchData(time, matchDataChanged, unit, index, filter, name
       unit = unit,
       unitName = GetUnitName(unit, false) or "",
       isStealable = isStealable,
+      isBossDebuff = isBossDebuff,
+      isCastByPlayer = isCastByPlayer,
       time = time,
       lastChanged = time,
       filter = filter,
@@ -337,6 +350,16 @@ local function UpdateMatchData(time, matchDataChanged, unit, index, filter, name
 
   if data.isStealable ~= isStealable then
     data.isStealable = isStealable
+    changed = true
+  end
+
+  if data.isBossDebuff ~= isBossDebuff then
+    data.isBossDebuff = isBossDebuff
+    changed = true
+  end
+
+  if data.isCastByPlayer ~= isCastByPlayer then
+    data.isCastByPlayer = isCastByPlayer
     changed = true
   end
 
@@ -452,7 +475,7 @@ local function FindBestMatchDataForUnit(time, id, triggernum, triggerInfo, unit)
       end
     end
   end
-  return bestMatch, matchCount, nextCheck
+  return bestMatch, matchCount, stackCount, nextCheck
 end
 
 local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, matchCount, unitCount, maxUnitCount, matchCountPerUnit, totalStacks, affected, unaffected)
@@ -487,6 +510,8 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
       affected = affected,
       unaffected = unaffected,
       totalStacks = totalStacks,
+      initialTime = time,
+      refreshTime = time,
       active = true,
       time = time,
     }
@@ -528,6 +553,15 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
     end
 
     if state.stacks ~= bestMatch.stacks then
+      if state.stacks and bestMatch.stacks then
+        if state.stacks < bestMatch.stacks then
+          state.stackGainTime = time
+          state.stackLostTime = nil
+        else
+          state.stackGainTime = nil
+          state.stackLostTime = time
+        end
+      end
       state.stacks = bestMatch.stacks
       changed = true
     end
@@ -548,6 +582,10 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
     end
 
     if state.expirationTime ~= bestMatch.expirationTime then
+      -- A bit fuzzy checking
+      if state.expirationTime and bestMatch.expirationTime and bestMatch.expirationTime - state.expirationTime > 0.2  then
+        state.refreshTime = time
+      end
       state.expirationTime = bestMatch.expirationTime
       changed = true
     end
@@ -921,7 +959,11 @@ local function TriggerInfoApplies(triggerInfo, unit)
     return false
   end
 
-  if triggerInfo.groupRole and not triggerInfo.groupRole[UnitGroupRolesAssigned(unit)] then
+  if triggerInfo.groupRole and not triggerInfo.groupRole[UnitGroupRolesAssigned(unit) or ""] then
+    return false
+  end
+
+  if triggerInfo.raidRole and not triggerInfo.raidRole[WeakAuras.UnitRaidRole(unit) or ""] then
     return false
   end
 
@@ -1116,8 +1158,8 @@ local function UpdateTriggerState(time, id, triggernum)
       for unit, unitData in pairs(matchDataByTrigger[id][triggernum]) do
         local bestMatch, countPerUnit, stacks, nextCheckForMatch = FindBestMatchDataForUnit(time, id, triggernum, triggerInfo, unit)
         matchCount = matchCount + countPerUnit
+        totalStacks = totalStacks + (stacks or 0)
         if bestMatch then
-          totalStacks = totalStacks + (bestMatch.stacks or 0)
           unitCount = unitCount + 1
           matchedUnits[unit] = true
         end
@@ -1203,7 +1245,7 @@ local function PrepareMatchData(unit, filter)
     local time = GetTime()
     local index = 1
     while true do
-      local name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId = UnitAura(unit, index, filter)
+      local name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId, _, isBossDebuff, isCastByPlayer = UnitAura(unit, index, filter)
       if not name then
         break
       end
@@ -1216,7 +1258,7 @@ local function PrepareMatchData(unit, filter)
         debuffClass = string.lower(debuffClass)
       end
 
-      local updatedMatchData = UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId)
+      local updatedMatchData = UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, isBossDebuff, isCastByPlayer, spellId)
       index = index + 1
     end
 
@@ -1311,7 +1353,7 @@ local function ScanUnitWithFilter(matchDataChanged, time, unit, filter,
 
   if UnitExistsFixed(unit) then
     while true do
-      local name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId = UnitAura(unit, index, filter)
+      local name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId, _, isBossDebuff, isCastByPlayer = UnitAura(unit, index, filter)
       if not name then
         break
       end
@@ -1324,7 +1366,7 @@ local function ScanUnitWithFilter(matchDataChanged, time, unit, filter,
         debuffClass = string.lower(debuffClass)
       end
 
-      local updatedMatchData = UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId)
+      local updatedMatchData = UpdateMatchData(time, matchDataChanged, unit, index, filter, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, isBossDebuff, isCastByPlayer, spellId)
 
       if updatedMatchData then -- Aura data changed, check against triggerInfos
         CheckScanFuncs(scanFuncName and scanFuncName[name], unit, filter, index)
@@ -1903,18 +1945,25 @@ function BuffTrigger.Rename(oldid, newid)
 end
 
 local function createScanFunc(trigger)
-  local isSingleMissing = IsSingleMissing(trigger)
+  local canHaveMatchCheck = CanHaveMatchCheck(trigger)
   local isMulti = trigger.unit == "multi"
-  local useStacks = not isSingleMissing and not isMulti and trigger.useStacks
-  local use_stealable = not isSingleMissing and not isMulti and trigger.use_stealable
-  local use_debuffClass = not isSingleMissing and not isMulti and trigger.use_debuffClass
-  local use_tooltip = not isSingleMissing and not isMulti and trigger.fetchTooltip and trigger.use_tooltip
-  local use_tooltipValue = not isSingleMissing and not isMulti and trigger.fetchTooltip and trigger.use_tooltipValue
-  local use_total = not isSingleMissing and not isMulti and trigger.useTotal and trigger.total
-  local use_ignore_name = not isSingleMissing and not isMulti and trigger.useIgnoreName and trigger.ignoreAuraNames
-  local use_ignore_spellId = not isSingleMissing and not isMulti and trigger.useIgnoreExactSpellId and trigger.ignoreAuraSpellids
+  local useStacks = canHaveMatchCheck and not isMulti and trigger.useStacks
 
-  if not useStacks and use_stealable == nil and not use_debuffClass and trigger.ownOnly == nil
+  local use_stealable, use_isBossDebuff, use_castByPlayer
+  if canHaveMatchCheck and not isMulti then
+    use_stealable = trigger.use_stealable
+    use_isBossDebuff = trigger.use_isBossDebuff
+    use_castByPlayer = trigger.use_castByPlayer
+  end
+  local use_debuffClass = canHaveMatchCheck and not isMulti and trigger.use_debuffClass
+  local use_tooltip = canHaveMatchCheck and not isMulti and trigger.fetchTooltip and trigger.use_tooltip
+  local use_tooltipValue = canHaveMatchCheck and not isMulti and trigger.fetchTooltip and trigger.use_tooltipValue
+  local use_total = canHaveMatchCheck and not isMulti and trigger.useTotal and trigger.total
+  local use_ignore_name = canHaveMatchCheck and not isMulti and trigger.useIgnoreName and trigger.ignoreAuraNames
+  local use_ignore_spellId = canHaveMatchCheck and not isMulti and trigger.useIgnoreExactSpellId and trigger.ignoreAuraSpellids
+
+  if not useStacks and use_stealable == nil and use_isBossDebuff == nil and use_castByPlayer == nil
+       and not use_debuffClass and trigger.ownOnly == nil
        and not use_tooltip and not use_tooltipValue and not trigger.useNamePattern and not use_total
        and not use_ignore_name and not use_ignore_spellId then
     return nil
@@ -1957,6 +2006,35 @@ local function createScanFunc(trigger)
       end
     ]]
   end
+
+  if use_isBossDebuff then
+    ret = ret .. [[
+      if not matchData.isBossDebuff then
+        return false
+      end
+    ]]
+  elseif use_isBossDebuff == false then
+    ret = ret .. [[
+      if matchData.isBossDebuff then
+        return false
+      end
+    ]]
+  end
+
+  if use_castByPlayer then
+    ret = ret .. [[
+      if not matchData.isCastByPlayer then
+        return false
+      end
+    ]]
+  elseif use_castByPlayer == false then
+    ret = ret .. [[
+      if matchData.isCastByPlayer then
+        return false
+      end
+    ]]
+  end
+
   if use_debuffClass then
     local ret2 = [[
       local tDebuffClass = %s;
@@ -1984,25 +2062,25 @@ local function createScanFunc(trigger)
   if use_tooltip and trigger.tooltip_operator and trigger.tooltip then
     if trigger.tooltip_operator == "==" then
       local ret2 = [[
-      if not matchData.tooltip or not matchData.tooltip == %q then
+      if not matchData.tooltip or not matchData.tooltip == %s then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.tooltip)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.tooltip))
     elseif trigger.tooltip_operator == "find('%s')" then
       local ret2 = [[
-      if not matchData.tooltip or not matchData.tooltip:find(%q) then
+      if not matchData.tooltip or not matchData.tooltip:find(%s, 1, true) then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.tooltip)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.tooltip))
     elseif trigger.tooltip_operator == "match('%s')" then
       local ret2 = [[
-      if not matchData.tooltip or not matchData.tooltip:match(%q) then
+      if not matchData.tooltip or not matchData.tooltip:match(%s) then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.tooltip)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.tooltip))
     end
   end
 
@@ -2019,25 +2097,25 @@ local function createScanFunc(trigger)
   if trigger.useNamePattern and trigger.namePattern_operator and trigger.namePattern_name then
     if trigger.namePattern_operator == "==" then
       local ret2 = [[
-      if not matchData.name == %q then
+      if not matchData.name == %s then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.namePattern_name)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.namePattern_name))
     elseif trigger.namePattern_operator == "find('%s')" then
       local ret2 = [[
-      if not matchData.name:find(%q) then
+      if not matchData.name:find(%s, 1, true) then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.namePattern_name)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.namePattern_name))
     elseif trigger.namePattern_operator == "match('%s')" then
       local ret2 = [[
-      if not matchData.name:match(%q) then
+      if not matchData.name:match(%s) then
         return false
       end
       ]]
-      ret = ret .. ret2:format(trigger.namePattern_name)
+      ret = ret .. ret2:format(Private.QuotedString(trigger.namePattern_name))
     end
   end
 
@@ -2142,7 +2220,7 @@ function BuffTrigger.Add(data)
       local scanFunc = createScanFunc(trigger)
 
       local remFunc
-      if trigger.unit ~= "multi" and not IsSingleMissing(trigger) and trigger.useRem then
+      if trigger.unit ~= "multi" and CanHaveMatchCheck(trigger) and trigger.useRem then
         local remFuncStr = Private.function_strings.count:format(trigger.remOperator or ">=", tonumber(trigger.rem) or 0)
         remFunc = WeakAuras.LoadFunction(remFuncStr)
       end
@@ -2178,7 +2256,7 @@ function BuffTrigger.Add(data)
       end
 
       local matchCountFunc
-      if HasMatchCount(trigger) and trigger.match_countOperator and trigger.match_count then
+      if HasMatchCount(trigger) and trigger.match_countOperator and trigger.match_count and tonumber(trigger.match_count) then
         local count = tonumber(trigger.match_count)
         local match_countFuncStr = Private.function_strings.count:format(trigger.match_countOperator, count)
         matchCountFunc = WeakAuras.LoadFunction(match_countFuncStr)
@@ -2197,6 +2275,7 @@ function BuffTrigger.Add(data)
       local groupTrigger = trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party"
       local effectiveIgnoreSelf = (groupTrigger or trigger.unit == "nameplate") and trigger.ignoreSelf
       local effectiveGroupRole = groupTrigger and trigger.useGroupRole and trigger.group_role
+      local effectiveRaidRole = groupTrigger and trigger.useRaidRole and trigger.raid_role
       local effectiveClass = groupTrigger and trigger.useClass and trigger.class
       local effectiveHostility = trigger.unit == "nameplate" and trigger.useHostility and trigger.hostility
       local effectiveIgnoreDead = groupTrigger and trigger.ignoreDead
@@ -2245,7 +2324,7 @@ function BuffTrigger.Add(data)
         perUnitMode = perUnitMode,
         scanFunc = scanFunc,
         remainingFunc = remFunc,
-        remainingCheck = trigger.unit ~= "multi" and not IsSingleMissing(trigger) and trigger.useRem and tonumber(trigger.rem) or 0,
+        remainingCheck = trigger.unit ~= "multi" and CanHaveMatchCheck(trigger) and trigger.useRem and tonumber(trigger.rem) or 0,
         id = id,
         triggernum = triggernum,
         compareFunc = trigger.combineMode == "showHighest" and highestExpirationTime or lowestExpirationTime,
@@ -2257,6 +2336,7 @@ function BuffTrigger.Add(data)
         ignoreDisconnected = effectiveIgnoreDisconnected,
         ignoreInvisible = effectiveIgnoreInvisible,
         groupRole = effectiveGroupRole,
+        raidRole = effectiveRaidRole,
         groupSubType = groupSubType,
         groupCountFunc = groupCountFunc,
         class = effectiveClass,
@@ -2284,14 +2364,6 @@ end
 -- @param triggernum
 function BuffTrigger.GetOverlayInfo(data, triggernum)
   return {}
-end
-
---- Returns whether the icon can be automatically selected.
--- @param data
--- @param triggernum
--- @return boolean
-function BuffTrigger.CanHaveAuto(data, triggernum)
-  return true
 end
 
 --- Returns whether the trigger can have clones.
@@ -2512,6 +2584,25 @@ function BuffTrigger.GetTriggerConditions(data, triggernum)
     result["tooltip3"] = {
       display = L["Tooltip Value 3"],
       type = "number"
+    }
+  end
+
+  if trigger.unit ~= "multi" then
+    result["stackGainTime"] = {
+      display = L["Since Stack Gain"],
+      type = "elapsedTimer"
+    }
+    result["stackLostTime"] = {
+      display = L["Since Stack Lost"],
+      type = "elapsedTimer"
+    }
+    result["initialTime"] = {
+      display = L["Since Apply"],
+      type = "elapsedTimer"
+    }
+    result["refreshTime"] = {
+      display = L["Since Apply/Refresh"],
+      type = "elapsedTimer"
     }
   end
 
@@ -2865,7 +2956,11 @@ local function UpdateMatchDataMulti(time, base, key, event, sourceGUID, sourceNa
 end
 
 local function AugmentMatchDataMultiWith(matchData, unit, name, icon, stacks, debuffClass, duration, expirationTime, unitCaster, isStealable, _, spellId)
-  ScheduleMultiCleanUp(matchData.GUID, expirationTime)
+  if expirationTime == 0 then
+    expirationTime = math.huge
+  else
+    ScheduleMultiCleanUp(matchData.GUID, expirationTime)
+  end
   local changed = false
   if matchData.name ~= name then
     matchData.name = name

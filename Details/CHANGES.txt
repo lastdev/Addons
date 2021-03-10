@@ -1,0 +1,98 @@
+lightweight tag 5294541c321270071b9bef711b5991d49db47e89 DetailsRetail.9.0.2.8316.144
+Author:	Tercio Jose <terciob19@hotmail.com>
+Date:	Fri Mar 5 20:50:29 2021 -0300
+
+commit 5294541c321270071b9bef711b5991d49db47e89
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 5 20:50:29 2021 -0300
+
+    Version Bump
+
+commit af696b454beeba24d5e2ad034856f9f2f326eba0
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 5 19:47:04 2021 -0300
+
+    Fix for not finding the coords for nil when an enemy dies in battleground
+
+commit 0d33b510900354b44de0653cebb2386b8dcbe996
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 5 19:40:18 2021 -0300
+
+    Making custom scripts support inline texts
+
+commit 0d33b510900354b44de0653cebb2386b8dcbe996
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 5 19:40:18 2021 -0300
+
+    Making custom scripts support inline texts
+
+commit 1b27156227641dd9b84340988d5306730b3491cc
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Wed Mar 3 15:40:43 2021 -0600
+
+    Fix for weird segment bug when swapping segments
+    
+    When using a custom display that uses a spell, this line sets a numerical value to the `class` key, which conflicts with the default Details metatable `:class()` function that I ensure is on every custom object. Honestly, this is such a niche bug that it's stupid it happens. But when it does happen, no new segments are created. Soo, fix.
+
+commit 1b27156227641dd9b84340988d5306730b3491cc
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Wed Mar 3 15:40:43 2021 -0600
+
+    Fix for weird segment bug when swapping segments
+    
+    When using a custom display that uses a spell, this line sets a numerical value to the `class` key, which conflicts with the default Details metatable `:class()` function that I ensure is on every custom object. Honestly, this is such a niche bug that it's stupid it happens. But when it does happen, no new segments are created. Soo, fix.
+
+commit b1dd10f1667f4ccb6afd776e3fac400ad8510b4c
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Mar 1 16:19:00 2021 -0300
+
+    Added actor:IsFriendlyNpc()
+
+commit 3958b85cdb1adc1bcf91b589a38d17032b46481d
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Sat Feb 27 15:24:08 2021 -0600
+
+    Fix for Total code and Percent code not exporting
+
+commit 3958b85cdb1adc1bcf91b589a38d17032b46481d
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Sat Feb 27 15:24:08 2021 -0600
+
+    Fix for Total code and Percent code not exporting
+
+commit bfce07842a9b3f070ae52eb18cc1f4d513bd72f6
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 24 20:43:13 2021 -0300
+
+    Code cleanup
+
+commit 17ed4c6d6ea7f7e1fa762320375b9c243e5ac3c7
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Tue Feb 23 20:39:50 2021 -0300
+
+    Fix for 'LUA error on arena entry (#194)'
+
+commit dc3d32546cea82eb55aeef83e0435736a711c381
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Feb 22 19:32:05 2021 -0300
+
+    Improvements for "Ignore death events after the necrolord triggers Forgeborne Reveries"
+
+commit ee3685492e2ab01fbf5dd1564149b1f17afeb3ff
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Feb 22 19:18:54 2021 -0300
+
+    Ignore death events after the necrolord triggers Forgeborne Reveries
+
+commit 8085b91ad6939116726c672ab3b6af47107ec1e1
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Feb 22 16:52:17 2021 -0300
+
+    Backend stuff
+
+commit 81a9c31f75553ecef37a50a573afcece91bb10ba
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Feb 22 16:44:37 2021 -0300
+
+    Backend updates
+

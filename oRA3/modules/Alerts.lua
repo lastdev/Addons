@@ -77,6 +77,8 @@ combatLogMap.SPELL_CAST_SUCCESS = {
 	[32182] = "Bloodlust", -- Heroism
 	[80353] = "Bloodlust", -- Time Warp
 	[264667] = "Bloodlust", -- Primal Rage
+	[309658] = "Bloodlust", -- Drums of Deathly Ferocity (Shadowlands)
+	-- These don't work past lv50
 	[178207] = "Bloodlust", -- Drums of Fury (WoD)
 	[230935] = "Bloodlust", -- Drums of the Mountain (Legion)
 	[256740] = "Bloodlust", -- Drums of the Maelstrom (BfA)
@@ -85,6 +87,7 @@ combatLogMap.SPELL_CAST_SUCCESS = {
 combatLogMap.SPELL_AURA_APPLIED = {
 	-- Taunts
 	[355] = "Taunt",    -- Taunt (Warrior)
+	[1161] = "TauntAE", -- Challenging Shout (Warrior)
 	[6795] = "Taunt",   -- Growl (Druid)
 	[51399] = "Taunt",  -- Death Grip (Death Knight)
 	[56222] = "Taunt",  -- Dark Command (Death Knight)
@@ -122,18 +125,22 @@ combatLogMap.SPELL_CREATE = {
 	[224871] = "Portal", -- Dalaran (Broken Isles)
 	[281400] = "Portal", -- Boralus
 	[281402] = "Portal", -- Dazar'alor
+	[344597] = "Portal", -- Oribos
 	-- Feasts
-	[201351] = "Feast", -- Hearty Feast (+18)
-	[201352] = "Feast", -- Lavish Suramar Feast (+22)
-	[259409] = "Feast", -- Galley Banquet (+75)
-	[259410] = "Feast", -- Bountiful Captain's Feast (+100)
-	[286050] = "Feast", -- Sanguinated Feast (+100)
-	[297048] = "Feast", -- Famine Evaluator And Snack Table (+131)
+	[201351] = "Feast", -- Hearty Feast (+11)
+	[259409] = "Feast", -- Galley Banquet (+11)
+	[201352] = "Feast", -- Lavish Suramar Feast (+15)
+	[259410] = "Feast", -- Bountiful Captain's Feast (+15)
+	[286050] = "Feast", -- Sanguinated Feast (+15)
+	[297048] = "Feast", -- Famine Evaluator And Snack Table (+16)
+	[308458] = "Feast", -- Surprisingly Palatable Feast (+18)
+	[308462] = "Feast", -- Feast of Gluttonous Hedonism (+20)
 	-- Instant Rituals
 	[29893] = "Feast", -- Create Soulwell (Warlock)
 	[190336] = "Feast", -- Conjure Refreshment (Mage)
 	[276972] = "Feast", -- Mystical Cauldron
 	[298861] = "Feast", -- Greater Mystical Cauldron
+	[188036] = "Feast", -- Spirit Cauldron
 }
 combatLogMap.SPELL_RESURRECT = {
 	["*"] = "Resurrect",
@@ -148,6 +155,7 @@ combatLogMap.SPELL_RESURRECT = {
 	[61999] = "CombatResurrect",  -- Raise Ally (Death Knight)
 	[95750] = "CombatResurrect",  -- Soulstone Resurrection (Warlock)
 	[265116] = "CombatResurrect", -- Unstable Temporal Time Shifter (Engineer)
+	[345130] = "CombatResurrect", -- Disposable Spectrophasic Reanimator (Engineer)
 }
 combatLogMap.SPELL_AURA_REMOVED = {
 	[20707] = "Soulstone",  --  Buff removed on death
@@ -187,6 +195,7 @@ combatLogMap.SPELL_MISSED = {
 	[6552] = "InterruptMiss",  -- Pummel (Warrior)
 	[96231] = "InterruptMiss", -- Rebuke (Paladin)
 	[183752] = "InterruptMiss",-- Consume Magic (Demon Hunter)
+	[116705] = "InterruptMiss",-- Spear Hand Strike (Monk)
 	-- Pet Interrupts
 	[19647] = "InterruptMiss",  -- Felhunter Spell Lock (Normal, originates from pet)
 	[119910] = "InterruptMiss", -- Felhunter Spell Lock (via Command Demon, originates from player)
@@ -208,8 +217,6 @@ combatLogMap.SPELL_MISSED = {
 -- Crowd Control
 combatLogMap.SPELL_AURA_BROKEN_SPELL = {
 	[3355] = "CrowdControl",   -- Freezing Trap (Hunter)
-	[19386] = "CrowdControl",  -- Wyvern Sting (Hunter)
-	[200108] = "CrowdControl", -- Ranger's Net (Hunter)
 	[6358] = "CrowdControl",   -- Seduction (Warlock Pet)
 	[115268] = "CrowdControl", -- Mesmerize (Warlock Pet)
 	[118699] = "CrowdControl", -- Fear (Warlock)
@@ -225,10 +232,13 @@ combatLogMap.SPELL_AURA_BROKEN_SPELL = {
 	[61721] = "CrowdControl",  -- Polymorph Rabbit (Mage)
 	[61780] = "CrowdControl",  -- Polymorph Turkey (Mage)
 	[126819] = "CrowdControl", -- Polymorph Porcupine (Mage)
-	[161354] = "CrowdControl", -- Polymorph Monkey (Mage)
-	[161372] = "CrowdControl", -- Polymorph Peacock (Mage)
 	[161353] = "CrowdControl", -- Polymorph Polar Bear Cub (Mage)
+	[161354] = "CrowdControl", -- Polymorph Monkey (Mage)
 	[161355] = "CrowdControl", -- Polymorph Penguin (Mage)
+	[161372] = "CrowdControl", -- Polymorph Peacock (Mage)
+	[277787] = "CrowdControl", -- Polymorph Direhorn (Mage)
+	[277792] = "CrowdControl", -- Polymorph Bumblebee (Mage)
+	[321395] = "CrowdControl", -- Polymorph Mawrat (Mage)
 	[339] = "CrowdControl",    -- Entangling Roots (Druid)
 	[2094] = "CrowdControl",   -- Blind (Rogue)
 	[6770] = "CrowdControl",   -- Sap (Rogue)

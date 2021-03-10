@@ -22,6 +22,10 @@ L["API_DEPRECATED_WITH"] = [=[| cffFF0000"Aviso! | r El complemento | cffFFFFFF%
 ]=]
 L["API_INVALID_DATABASE"] = [=[| cffFF0000 ¡Advertencia! | r Se detectó una base de datos Raider.IO no válida en | cffffffff% s | r. Actualice todas las regiones y facciones en el cliente Raider.IO, o reinstale el complemento manualmente.
 ]=]
+--[[Translation missing --]]
+--[[ L["AUTO_COMBATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["AUTO_COMBATLOG_DESC"] = ""--]] 
 L["BEST_FOR_DUNGEON"] = "Mejor en esta mazmorra"
 L["BEST_RUN"] = "Mejor mazmorra"
 L["BEST_SCORE"] = "Mejor puntuacion M + (% s)"
@@ -48,19 +52,35 @@ L["DUNGEON_SHORT_NAME_BRH"] = "Torreón"
 L["DUNGEON_SHORT_NAME_COEN"] = "Catedral"
 L["DUNGEON_SHORT_NAME_COS"] = "Corte"
 L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_DOS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_EOA"] = "Ojo"
 L["DUNGEON_SHORT_NAME_FH"] = "Fuerte Libre"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_HOA"] = ""--]] 
 L["DUNGEON_SHORT_NAME_HOV"] = "Valor"
 L["DUNGEON_SHORT_NAME_KR"] = "Reposo "
 L["DUNGEON_SHORT_NAME_LOWR"] = "Kara-I"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MISTS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_ML"] = "Veta Madre"
 L["DUNGEON_SHORT_NAME_MOS"] = "Fauce"
 L["DUNGEON_SHORT_NAME_NL"] = "Guarida"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_PF"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SD"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SEAT"] = "Trono"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "Asedio"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SOA"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SOTS"] = "Altar "
 L["DUNGEON_SHORT_NAME_TD"] = "Tol Dagor"
 L["DUNGEON_SHORT_NAME_TM"] = "Veta Madre"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_TOP"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOS"] = "Templo "
 L["DUNGEON_SHORT_NAME_UNDR"] = "Catacumbas"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Kara-S"
@@ -124,6 +144,8 @@ L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r está usando datos de hace |cffFF6666
 --[[Translation missing --]]
 --[[ L["OUTDATED_EXPIRES_IN_HOURS"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_MINUTES"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = ""--]] 
 L["PLAYER_PROFILE_TITLE"] = "Perfil de M+"
 L["PREV_SEASON_SUFFIX"] = "(*)"
@@ -152,6 +174,26 @@ L["RAID_BOSS_BOD_6"] = "Rey Rastakhan"
 L["RAID_BOSS_BOD_7"] = "Manitas mayor Mekkatorque"
 L["RAID_BOSS_BOD_8"] = "Bloqueo de la tormenta"
 L["RAID_BOSS_BOD_9"] = "Lady Jaina Valiente"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_9"] = ""--]] 
 L["RAID_BOSS_EP_1"] = "Comandante abisal Sivara"
 L["RAID_BOSS_EP_2"] = "Behemoth de Aguasnegras"
 L["RAID_BOSS_EP_3"] = "Radiancia de Azshara"
@@ -201,6 +243,8 @@ L["RAID_PROGRESS_TITLE"] = "Progreso de banda"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Puntuación media de +%s en tiempo"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Mejor resultado en M+"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalización del cliente de RaiderIO"
+--[[Translation missing --]]
+--[[ L["RAIDERIO_LIVE_TRACKING"] = ""--]] 
 L["RAIDERIO_MP_BASE_SCORE"] = "Puntuación de M+ base"
 L["RAIDERIO_MP_BEST_SCORE"] = "Raider.IO Puntuación M+ (%s)"
 L["RAIDERIO_MP_SCORE"] = "Puntuación de M+"
@@ -256,6 +300,10 @@ L["SHOW_ROLE_ICONS"] = "Mostrar iconos de rol en el tooltip"
 L["SHOW_ROLE_ICONS_DESC"] = "Cuando está activado, se muestran los mejores roles del jugador en míticas+ en el tooltip."
 L["SHOW_SCORE_IN_COMBAT"] = "Mostrar puntuación en combate"
 L["SHOW_SCORE_IN_COMBAT_DESC"] = "Desactiva esta opción para mejorar el rendimiento al pasar el ratón por encima de jugadores cuando estás en combate."
+--[[Translation missing --]]
+--[[ L["SHOW_SCORE_WITH_MODIFIER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_SCORE_WITH_MODIFIER_DESC"] = ""--]] 
 L["TANK"] = "Tanque"
 L["TANK_SCORE"] = "Puntuación de tanque"
 L["TIMED_10_RUNS"] = "+10-14 en tiempo"
@@ -271,6 +319,10 @@ L["UNKNOWN_SERVER_FOUND"] = "|cffFFFFFF%s|r ha encontrado un nuevo servidor. Por
 L["UNLOCKING_PROFILE_FRAME"] = "RaiderIO: desbloqueando el marco de perfil de M+."
 L["USE_ENGLISH_ABBREVIATION"] = "Forzar abreviaturas en inglés para mazmorras"
 L["USE_ENGLISH_ABBREVIATION_DESC"] = "Cuando está activado, se sustituyen las abreviaturas usadas para referirse a las mazmorras por sus versiones en inglés, en vez de usar las de tu idioma actual."
+--[[Translation missing --]]
+--[[ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = ""--]] 
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r El modo depuración está activado. Puedes desactivarlo escribiendo |cffFFFFFF/raiderio debug|r."
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: primero debes deshabilitar el posicionamiento automático del marco de perfil de RaiderIO."
 

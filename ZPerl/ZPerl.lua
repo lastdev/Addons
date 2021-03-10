@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 1251 $")
-XPerl_SetModuleRevision("$Revision: 1251 $")
+end, "$Revision: 47918bb57417b34ae32de6069ae26a9958ae532a $")
+XPerl_SetModuleRevision("$Revision: 47918bb57417b34ae32de6069ae26a9958ae532a $")
 
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local LCD = IsClassic and LibStub and LibStub("LibClassicDurations", true)
@@ -126,26 +126,6 @@ local UnitReaction = UnitReaction
 local UnregisterUnitWatch = UnregisterUnitWatch
 local UpdateAddOnCPUUsage = UpdateAddOnCPUUsage
 local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
-
-local RealUnitHealth
-local RealUnitHealthMax
-if IsClassic then
-	RealUnitHealth = function(unit)
-		if RealMobHealth then
-			local cur, max = RealMobHealth.GetUnitHealth(unit)
-			if cur then return cur end
-		end
-		return UnitHealth(unit)
-	end
-
-	RealUnitHealthMax = function(unit)
-		if RealMobHealth then
-			local cur, max = RealMobHealth.GetUnitHealth(unit)
-			if max then return max end
-		end
-		return UnitHealthMax(unit)
-	end
-end
 
 local CreateFrame = CreateFrame
 
@@ -352,7 +332,7 @@ local SpiritRealm = GetSpellInfo(235621)
 local function DoRangeCheck(unit, opt)
 	local range
 	if (opt.PlusHealth) then
-		local hp, hpMax = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or (RealUnitHealth and RealUnitHealth(unit) or UnitHealth(unit))), (RealUnitHealthMax and RealUnitHealthMax(unit) or UnitHealthMax(unit))
+		local hp, hpMax = UnitIsGhost(unit) and 1 or (UnitIsDead(unit) and 0 or UnitHealth(unit)), UnitHealthMax(unit)
 		-- Begin 4.3 divide by 0 work around.
 		local percent
 		if UnitIsDeadOrGhost(unit) or (hp == 0 and hpMax == 0) then -- Probably dead target
@@ -3594,7 +3574,7 @@ end
 --This function sucks, it needs reworking so it self corrects /0 problems here. But i haven't quite figured out how to approach it here yet. So i just fix stuff at sethealth functions.
 function XPerl_Unit_GetHealth(self)
 	local partyid = self.partyid
-	local hp, hpMax = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or (RealUnitHealth and RealUnitHealth(partyid) or UnitHealth(partyid))), (RealUnitHealthMax and RealUnitHealthMax(partyid) or UnitHealthMax(partyid))
+	local hp, hpMax = UnitIsGhost(partyid) and 1 or (UnitIsDead(partyid) and 0 or UnitHealth(partyid)), UnitHealthMax(partyid)
 
 	if (hp > hpMax) then
 		if (UnitIsGhost(partyid)) then

@@ -1,3 +1,40 @@
+Ver 9.1.6
+	-Updated PvP code.
+
+Ver 9.1.5
+	-Adjusted Eyebeams for Blind Fury and Demonic.
+	-Fixed Fel Barrage.
+
+Ver 9.1.4
+	-Added support for specialization disabling.
+
+Ver 9.1.3
+	-Slight adjustment for Chaos Theory. Mostly unnoticeable.
+
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Fixed Elysian Decree issue with Concentrated Sigils buff.
+	-Adjusted Sigil of Flame when Kyrian and Razelikhs Defilement Legendary Equipped.
+	-Added Conduits to library.
+	
+Ver 9.1.1
+	-Fixed code error for Havoc rotation.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.3
+	-Added covenant abilities.
+	-Added Burst rotation to the Vengeance rotation for long covenant abilities.
+	-Tweaked rotations for Shadowlands.
+
+Ver 9.0.2
+	-Update Vengeance rotation for prepatch.
+	-Slight tweak to Havoc talent Unbound Chaos.
+
 Ver 9.0.1
 	-Updated Havoc Rotation for prepatch.
 	-Vengeance specialization still is weird with melee distance.

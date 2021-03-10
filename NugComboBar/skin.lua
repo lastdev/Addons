@@ -270,11 +270,28 @@ end
         f.dagfunc = nil
         self:SetScript("OnFinished", nil)
     end
-local ReappearFunc = function(self, func, arg, speed)
+local ReappearFunc = function(self, animLevel, func, arg, speed)
     if self.aag:IsPlaying() then self.aag:Stop() end
     if self.dag:IsPlaying() then self.dag:Stop() end
+
     self.ragfunc = func
     self.ragfuncarg = arg
+
+    if animLevel and animLevel == 0 then
+        func(self, arg)
+        return
+    end
+
+    if animLevel and animLevel >= 2 then
+        self.gather:Stop()
+        self.shine1:Stop()
+        self.shine2:Stop()
+
+        self.gather:GetParent():SetAlpha(0)
+        self.shine1:GetParent():SetAlpha(0)
+        self.shine2:GetParent():SetAlpha(0)
+    end
+
     self.rag:SetSpeed(speed or 1)
     self.rag:Play()
 end
@@ -471,7 +488,8 @@ local mappings = {
     ["5NO6"] = { 1, 2, 3, 4, 8 },
     ["6NO6"] = { 1, 2, 3, 4, 5, 8 },
     ["MOONKIN"] = { 1, 2, 8, SR1, SR2, SR8 },
-    ["FIREMAGE3"] = { 1, 6, SR1, SR2, SR8 },
+    ["FIREMAGE_CIND2"] = { 1, 6, SR1, SR2, SR8 },
+    ["FIREMAGE_CIND3"] = { 1, 2, 6, SR1, SR2, SR8 },
 }
 NugComboBar.mappings = mappings
 

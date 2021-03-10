@@ -1,16 +1,21 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: RareTrackerNazjatar
 ## Notes: Track and coordinate rare spawn timers in Nazjatar.
 ## Author: Melroy
-## Version: 6.0.11
-##SavedVariables: RareTrackerNazjatarDB, RTNDB
+## Version: 7.1.1
+##SavedVariables: RareTrackerNazjatarDB
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua
-Locales\zhCN.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\esMX.lua
 Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ptPT.lua
 Locales\ruRU.lua
+Locales\zhCN.lua
 
 RareTrackerNazjatar.lua
-RareTrackerNazjatarGlobals.lua
-RareTrackerNazjatarOptions.lua

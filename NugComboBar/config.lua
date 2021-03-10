@@ -31,6 +31,18 @@ local GetAuraStack = function(scanID, filter, unit, casterCheck)
     end
 end
 
+local GetAuraStackWTimer = function(scanID, filter, unit, casterCheck)
+    filter = filter or "HELPFUL"
+    unit = unit or "player"
+    return function()
+        local name, icon, count, debuffType, duration, expirationTime, caster = FindAura(unit, scanID, filter)
+        if casterCheck and caster ~= casterCheck then count = nil end
+        if count then
+            return count, expirationTime-duration, duration
+        else return 0,0,0 end
+    end
+end
+
 local MakeGetChargeFunc = function(spellID)
     return function(unit)
         local charges, maxCharges, chargeStart, chargeDuration = GetSpellCharges(spellID)
@@ -401,6 +413,23 @@ NugComboBar:RegisterConfig("RenewingMist", {
 }, "MONK", 2)
 
 ---------------------
+-- PRIEST
+---------------------
+
+NugComboBar:RegisterConfig("FlashConcentration", {
+    triggers = { GetSpecialization },
+    setup = function(self, spec)
+        self.eventProxy:RegisterUnitEvent("UNIT_AURA", "player")
+        self.eventProxy.UNIT_AURA = GENERAL_UPDATE
+        self:SetMaxPoints(5)
+        self:SetDefaultValue(0)
+        -- self.flags.soundFullEnabled = true
+        self:EnableBar(0, 6,"Small", "Timer")
+        self:SetPointGetter(GetAuraStackWTimer(336267)) -- Flash Concentration
+    end
+}, "PRIEST", 2)
+
+---------------------
 -- WARLOCK
 ---------------------
 
@@ -593,7 +622,7 @@ NugComboBar:RegisterConfig("PhoenixFlamesFireblast", {
         local maxFireBlastCharges = 2 + (IsPlayerSpell(205029) and 1 or 0) -- Flame On
 
         if isPhoenixFlames then
-            self:SetMaxPoints(maxFireBlastCharges, "FIREMAGE3", 3)
+            self:SetMaxPoints(maxFireBlastCharges, "FIREMAGE_CIND"..maxFireBlastCharges, 3)
             self:SetPointGetter(FireMageGetCombined)
             self:DisableBar()
         else
@@ -660,6 +689,104 @@ NugComboBar:RegisterConfig("TidalWaves", {
         self:SetPointGetter(GetAuraStack(53390, "HELPFUL", "player")) -- Tidal Waves
     end
 }, "SHAMAN", 3)
+
+
+--[[
+local function GetTestData()
+    local cp = math.random(10)
+    local l2 = math.max(cp - 5, 0)
+    if cp > 5 then cp = 5 end
+    return cp, nil, nil, l2
+end
+
+NugComboBar:RegisterConfig("TestConfig", {
+    triggers = { GetSpecialization },
+    setup = function(self, spec)
+        self.eventProxy:RegisterUnitEvent("UNIT_AURA", "player")
+        self.eventProxy.UNIT_AURA = GENERAL_UPDATE
+        self:SetMaxPoints(5)
+        self:SetDefaultValue(0)
+        self:SetPointGetter(GetTestData) -- Tidal Waves
+    end
+}, "SHAMAN")
+]]
+
+do
+
+local undulationCharge = 0
+local undulationConsumed = false
+local undulationStartTime
+local undulationDuration
+
+local GetUndulation = function()
+    return undulationCharge, undulationStartTime, undulationDuration
+end
+
+NugComboBar:RegisterConfig("Undulation", {
+    triggers = { GetSpecialization, GetSpell(200071) },
+    setup = function(self, spec)
+
+        -- undulationCharge = 0 -- reset on talent or spec change
+        -- Apparently the internal charges don't reset whatever you do
+
+        if not IsPlayerSpell(200071) then
+            return self:Disable()
+        end
+
+        local bit_band = bit.band
+        local COMBATLOG_OBJECT_AFFILIATION_MINE = COMBATLOG_OBJECT_AFFILIATION_MINE
+        self.eventProxy.COMBAT_LOG_EVENT_UNFILTERED = function(self, event)
+            local timestamp, eventType, hideCaster,
+            srcGUID, srcName, srcFlags, srcFlags2,
+            dstGUID, dstName, dstFlags, dstFlags2,
+            spellID, spellName, spellSchool, auraType, amount = CombatLogGetCurrentEventInfo()
+
+            if (bit_band(srcFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE) then -- isSrcPlayer
+                if eventType == "SPELL_CAST_SUCCESS" then
+                    if spellID == 77472 or spellID == 8004 then
+                        if GetPlayerAuraBySpellID(216251) then -- Undulation buff
+                            undulationConsumed = true
+                            undulationCharge = 1
+                        else
+                            undulationCharge = undulationCharge + 1
+                        end
+
+                        self:Update()
+                    end
+
+                elseif spellID == 216251 then -- Undulation buff
+
+                    if eventType == "SPELL_AURA_APPLIED" then
+                        local name, icon, count, debuffType, duration, expirationTime = GetPlayerAuraBySpellID(216251)
+                        if name then
+                            undulationStartTime = expirationTime - duration
+                            undulationDuration = duration
+                            self:Update()
+                        end
+
+                    elseif eventType == "SPELL_AURA_REMOVED" then
+                        if not undulationConsumed then
+                            undulationCharge = 0
+                        end
+                        undulationConsumed = false
+                        undulationStartTime = nil
+                        undulationDuration = nil
+
+                        self:Update()
+                    end
+                end
+            end
+        end
+
+        self.eventProxy:RegisterUnitEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        self:SetMaxPoints(3)
+        self:SetDefaultValue(0)
+        self:EnableBar(0, 6, 90, "Timer", true)
+        self.flags.onlyCombat = true -- forcing to hide out of combat, because otherwise it'll stay forever
+        self:SetPointGetter(GetUndulation)
+    end
+}, "SHAMAN", 3)
+end
 
 NugComboBar:RegisterConfig("Icefury", {
     triggers = { GetSpecialization, GetSpell(210714) },

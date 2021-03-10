@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision((string.sub("20200912133955", 1, -5)):sub(12, -3))
+mod:SetRevision((string.sub("20210119194132", 1, -5)):sub(12, -3))
 mod:SetCreatureID(81522)
 mod:SetEncounterID(1746)
 
@@ -31,7 +31,7 @@ local timerParchedGrasp			= mod:NewCDTimer(12, 164357, nil, "Tank", 2, 5, nil, D
 
 function mod:OnCombatStart(delay)
 	timerParchedGrasp:Start(7-delay)
-	if not self:IsTrivial(110) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 169495 164294",
 			"SPELL_PERIODIC_MISSED 169495 164294"

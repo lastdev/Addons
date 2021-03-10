@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("DataStore_Inventory", "enUS", true, true)
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("DataStore_Inventory", "enUS", true, true)
 
 if not L then return end
 

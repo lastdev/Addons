@@ -12,7 +12,6 @@ local THISREALM_THISACCOUNT = 1
 local THISREALM_ALLACCOUNTS = 2
 local ALLREALMS_THISACCOUNT = 3
 local ALLREALMS_ALLACCOUNTS = 4
-local ALLREALMS_HIDEREALMS = 5
 
 addon.Characters = {}
 
@@ -32,10 +31,6 @@ local function ProcessRealms(func)
 	local mode = addon:GetOption("UI.Tabs.Summary.CurrentRealms")
 	local thisRealm = GetRealmName()
 	
-    -- Code added 2020/03/23: extra option to include all realms and accounts, but hide the realm headers
-    -- For the purposes of this function, will just change it to 4
-    if mode == ALLREALMS_HIDEREALMS then mode = ALLREALMS_ALLACCOUNTS end
-    
 	-- this account only
 	if mode == THISREALM_THISACCOUNT then
 		func(THIS_ACCOUNT, thisRealm)
@@ -71,8 +66,6 @@ local totalPlayed
 local totalLevels
 local realmCount
 
-local firstRealmShown = false
-
 local function AddRealm(AccountName, RealmName)
 
 	local comm = Altoholic.Comm.Sharing
@@ -82,8 +75,6 @@ local function AddRealm(AccountName, RealmName)
 			return
 		end
 	end
-    
-    local mode = addon:GetOption("UI.Tabs.Summary.CurrentRealms")
 
 	local realmMoney = 0
 	local realmPlayed = 0
@@ -107,15 +98,10 @@ local function AddRealm(AccountName, RealmName)
 	local shouldAddCharacter = true
 	
 	-- 1) Add the realm name
-    if (mode ~= ALLREALMS_HIDEREALMS) then
-        table.insert(characterList, { linetype = INFO_REALM_LINE + realmOffset,
-		  account = AccountName,
-		  realm = RealmName
-	   } )
-    elseif (not firstRealmShown) then
-        table.insert(characterList, { linetype = INFO_REALM_LINE, account = "All Accounts", realm = "All Realms" } )
-        firstRealmShown = true
-    end    
+	table.insert(characterList, { linetype = INFO_REALM_LINE + realmOffset,
+		account = AccountName,
+		realm = RealmName
+	} )
 	
 	-- 2) Add the characters (if they pass filters)
 	for characterName, character in pairs(DataStore:GetCharacters(RealmName, AccountName)) do
@@ -124,75 +110,51 @@ local function AddRealm(AccountName, RealmName)
 		local characterLevel = DataStore:GetCharacterLevel(character)
 		local characterFaction = DataStore:GetCharacterFaction(character)
 		local _, characterClass = DataStore:GetCharacterClass(character)
-        
-        if (characterLevel) then
-    		if (characterLevel < minLevel) then shouldAddCharacter = false end
-    		if (characterLevel > maxLevel) then shouldAddCharacter = false end
 
-    		if (factions == 1) and (characterFaction ~= "Alliance") then
-    			shouldAddCharacter = false
-    		elseif (factions == 2) and (characterFaction ~= "Horde") then
-    			shouldAddCharacter = false
-    		end
-    		if (class ~= 0) then
-                if type(class) == "number" then
-                    if CLASS_SORT_ORDER[class] ~= characterClass then 
-                        shouldAddCharacter = false
-                    end 
-                else
-                    local armorClasses = {
-                        ["Cloth"] = {"MAGE", "PRIEST", "WARLOCK"},
-                        ["Leather"] = {"DRUID", "ROGUE", "DEMONHUNTER", "MONK"},
-                        ["Mail"] = {"HUNTER", "SHAMAN"},
-                        ["Plate"] = {"PALADIN", "WARRIOR", "DEATHKNIGHT"},
-                    }
-                    local classes = armorClasses[class]
-                    local found = false
-                    for _, class in pairs(classes) do
-                        if class == characterClass then
-                            found = true
-                        end
-                    end
-                    if not found then shouldAddCharacter = false end
-                end
-            end
-    		if (tradeskill ~= 0) then 
-    
-    			-- primary profession
-    			if tradeskill < addon.TradeSkills.AccountSummaryFirstSecondarySkillIndex then
-    				local tradeskillID = addon.TradeSkills.AccountSummaryFiltersSpellIDs[tradeskill]
-    				local _, _, _, name1 = DataStore:GetProfession1(character)
-    				local _, _, _, name2 = DataStore:GetProfession2(character)
-    				local prof1 = DataStore:GetProfessionSpellID(name1) or 0
-    				local prof2 = DataStore:GetProfessionSpellID(name2) or 0
-    				
-    				if tradeskillID ~= prof1 and tradeskillID ~= prof2 then 
-    					shouldAddCharacter = false 
-    				end
-    				
-    			elseif tradeskill == firstSecondary then
-    				local rank = DataStore:GetCookingRank(character) or 0
-    				if rank == 0 then
-    					shouldAddCharacter = false 
-    				end
-    
-    			elseif tradeskill == firstSecondary+1 then
-    				local rank = DataStore:GetFishingRank(character) or 0
-    				if rank == 0 then
-    					shouldAddCharacter = false 
-    				end
-    
-    			elseif tradeskill == firstSecondary+2 then
-    				local rank = DataStore:GetArchaeologyRank(character) or 0
-    				if rank == 0 then
-    					shouldAddCharacter = false 
-    				end
-    
-    			end
-    		end
-        else
-            shouldAddCharacter = false
-        end
+		
+		if (characterLevel < minLevel) then shouldAddCharacter = false end
+		if (characterLevel > maxLevel) then shouldAddCharacter = false end
+		
+		if (factions == 1) and (characterFaction ~= FACTION_ALLIANCE) then
+			shouldAddCharacter = false
+		elseif (factions == 2) and (characterFaction ~= FACTION_HORDE) then
+			shouldAddCharacter = false
+		end
+		if (class ~= 0) and CLASS_SORT_ORDER[class] ~= characterClass then shouldAddCharacter = false end
+		if (tradeskill ~= 0) then 
+
+			-- primary profession
+			if tradeskill < addon.TradeSkills.AccountSummaryFirstSecondarySkillIndex then
+				local tradeskillID = addon.TradeSkills.AccountSummaryFiltersSpellIDs[tradeskill]
+				local _, _, _, name1 = DataStore:GetProfession1(character)
+				local _, _, _, name2 = DataStore:GetProfession2(character)
+				local prof1 = DataStore:GetProfessionSpellID(name1) or 0
+				local prof2 = DataStore:GetProfessionSpellID(name2) or 0
+				
+				if tradeskillID ~= prof1 and tradeskillID ~= prof2 then 
+					shouldAddCharacter = false 
+				end
+				
+			elseif tradeskill == firstSecondary then
+				local rank = DataStore:GetCookingRank(character) or 0
+				if rank == 0 then
+					shouldAddCharacter = false 
+				end
+
+			elseif tradeskill == firstSecondary+1 then
+				local rank = DataStore:GetFishingRank(character) or 0
+				if rank == 0 then
+					shouldAddCharacter = false 
+				end
+
+			elseif tradeskill == firstSecondary+2 then
+				local rank = DataStore:GetArchaeologyRank(character) or 0
+				if rank == 0 then
+					shouldAddCharacter = false 
+				end
+
+			end
+		end
 		
 		-- filters passed ?
 		if shouldAddCharacter then
@@ -205,49 +167,27 @@ local function AddRealm(AccountName, RealmName)
 			realmBankSlots = realmBankSlots + (DataStore:GetNumBankSlots(character) or 0)
 			realmFreeBankSlots = realmFreeBankSlots + (DataStore:GetNumFreeBankSlots(character) or 0)
 			realmAiL = realmAiL + (DataStore:GetAverageItemLevel(character) or 0)
-			if (mode ~= ALLREALMS_HIDEREALMS) then
-                table.insert(characterList, { linetype = INFO_CHARACTER_LINE + realmOffset, key = character } )
-            else
-                table.insert(characterList, {linetype = INFO_CHARACTER_LINE, key = character} )
-            end
+			table.insert(characterList, { linetype = INFO_CHARACTER_LINE + realmOffset, key = character } )
 			
 			numCharacters = numCharacters + 1
 		end
 	end
 
 	-- 3) Add the totals
-    if (mode ~= ALLREALMS_HIDEREALMS) then
-        local levelTotal = colors.white..realmLevels
-        if addon:GetOption("UI.Tabs.Summary.ShowLevelTotalAverage") then
-            levelTotal = colors.white .. ((numCharacters ~= 0) and math.floor(realmLevels / numCharacters) or 0)
-        end
-        
-        table.insert(characterList, { linetype = INFO_TOTAL_LINE + realmOffset,
-		  level = levelTotal,
-		  money = realmMoney,
-		  played = Altoholic:GetTimeString(realmPlayed),
-		  bagSlots = realmBagSlots,
-		  freeBagSlots = realmFreeBagSlots,
-		  bankSlots = realmBankSlots,
-		  freeBankSlots = realmFreeBankSlots,
-		  realmAiL = (numCharacters ~= 0) and (realmAiL / numCharacters) or 0,
-	   } )
-    end
-    
-    for guildName, guild in pairs(DataStore:GetGuilds(RealmName, AccountName)) do
-        local altoSavedVariableGuild = addon:GetGuild(guildName, RealmName, AccountName)
-        if altoSavedVariableGuild then
-            if altoSavedVariableGuild.showGoldOnSummary then
-                totalMoney = totalMoney + DataStore:GetGuildBankMoney(guild)
-            end
-        end
-    end
+	table.insert(characterList, { linetype = INFO_TOTAL_LINE + realmOffset,
+		level = format("%s%d", colors.white, realmLevels),
+		money = realmMoney,
+		played = Altoholic:GetTimeString(realmPlayed),
+		bagSlots = realmBagSlots,
+		freeBagSlots = realmFreeBagSlots,
+		bankSlots = realmBankSlots,
+		freeBankSlots = realmFreeBankSlots,
+		realmAiL = (numCharacters ~= 0) and (realmAiL / numCharacters) or 0,
+	} )
 
-	if not addon:GetOption(format("UI.Tabs.Summary.ExcludeRealms.%s.%s", AccountName, RealmName)) then
-        totalMoney = totalMoney + realmMoney
-	    totalPlayed = totalPlayed + realmPlayed
-	    totalLevels = totalLevels + realmLevels
-    end
+	totalMoney = totalMoney + realmMoney
+	totalPlayed = totalPlayed + realmPlayed
+	totalLevels = totalLevels + realmLevels
 	realmCount = realmCount + 1
 	
 	-- remove empty realms if no characters have passed filters
@@ -260,7 +200,6 @@ end
 local function BuildList()
 	characterList = characterList or {}
 	wipe(characterList)
-    firstRealmShown = false
 	
 	totalMoney = 0
 	totalPlayed = 0
@@ -268,8 +207,8 @@ local function BuildList()
 	realmCount = 0 -- will be required for sorting purposes
 	ProcessRealms(AddRealm)
 
-	local levels = format("%s%s |rLv", colors.white, BreakUpLargeNumbers(totalLevels))    
-    local gold = format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(floor( totalMoney / 10000 )), 13, 13)
+	local levels = format("%s%s |rLv", colors.white, BreakUpLargeNumbers(totalLevels))
+	local gold = format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(floor( totalMoney / 10000 )), 13, 13)
 	local played = format("%s%sd", BreakUpLargeNumbers(floor(totalPlayed / 86400)), colors.gold)
 	
 	AltoholicTabSummary.Totals:SetText(format("%s: %s%s / %s%s / %s", L["Totals"], levels, colors.white, gold, colors.white, played))
@@ -278,40 +217,22 @@ end
 local function AddRealmView(AccountName, RealmName)
 	for index, line in pairs(characterList) do
 		if mod(line.linetype, 3) == INFO_REALM_LINE then
-            if (addon:GetOption("UI.Tabs.Summary.CurrentRealms") ~= ALLREALMS_HIDEREALMS) then 
-                if (line.account == AccountName) and (line.realm == RealmName) then
-    				-- insert index to current line (INFO_REALM_LINE)
-    				table.insert(view, index)
-    				index = index + 1
-                    
-    				-- insert index to the rest of the realm 
-    				local linetype = mod(characterList[index].linetype, 3)
-    				while (linetype ~= INFO_REALM_LINE) do
-    					table.insert(view, index)
-    					index = index + 1
-    					if index > #characterList then
-    						return
-    					end
-    					linetype = mod(characterList[index].linetype, 3)
-    				end
-    				return
-                end
-            elseif (not firstRealmShown) then
-                table.insert(view, index)
-                index = index + 1
-                
-                local linetype = characterList[index].linetype
-                while (linetype == INFO_CHARACTER_LINE) do
-                    table.insert(view, index)
-                    index = index + 1
-                    if index > #characterList then
-                        firstRealmShown = true
-                        return
-                    end
-                    linetype = characterList[index].linetype
-                end
-                firstRealmShown = true
-                return
+			if (line.account == AccountName) and (line.realm == RealmName) then
+				-- insert index to current line (INFO_REALM_LINE)
+				table.insert(view, index)
+				index = index + 1
+
+				-- insert index to the rest of the realm 
+				local linetype = mod(characterList[index].linetype, 3)
+				while (linetype ~= INFO_REALM_LINE) do
+					table.insert(view, index)
+					index = index + 1
+					if index > #characterList then
+						return
+					end
+					linetype = mod(characterList[index].linetype, 3)
+				end
+				return
 			end
 		end
 	end
@@ -323,13 +244,12 @@ local function BuildView()
 	-- and indexes just one realm, or one account
 	view = view or {}
 	wipe(view)
-    firstRealmShown = false
 	
 	ProcessRealms(AddRealmView)
 	isViewValid = true
 end
 
-local function SortByFunction(a, b, func, ascending)   
+local function SortByFunction(a, b, func, ascending)
 	if (a.linetype ~= b.linetype) then			-- sort by linetype first ..
 		return a.linetype < b.linetype
 	else													-- and when they're identical, sort  by func xx
@@ -339,6 +259,14 @@ local function SortByFunction(a, b, func, ascending)
 
 		local retA = func(self, a.key) or 0		-- set to zero if a return value is nil, so that they can be compared
 		local retB = func(self, b.key) or 0
+
+		-- 2021/02/15
+		-- It may happen that an alt's key is not known at all in a DataStore module (ex: talents on low level alts)
+		-- In such case, DataStore itself will not see the character key and alway return null (converted to 0 just above)
+		-- If the other key is valid and returns a string, we might have a type conflict, so let's not swap lines
+		if type(retA) ~= type(retB) then
+			return false
+		end
 		
 		if ascending then
 			return retA < retB

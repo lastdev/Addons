@@ -1,7 +1,7 @@
 ## Title:-|cffFFFFFFConRO|r- |cff00FF96Monk|r
-## Version: 9.0.1
+## Version: 9.1.5
 ## Author: Vae
-## Interface: 90001
+## Interface: 90002
 ## Dependencies: ConRO
 ## LoadOnDemand: 1
 

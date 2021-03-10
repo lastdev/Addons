@@ -4,15 +4,21 @@ local colors = addon.Colors
 local icons = addon.Icons
 
 local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
-local OPTION_TOKEN = "UI.Tabs.Grids.Emissaries.CurrentTokenType"
-
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local questList
 local view
+local isViewValid
 
 local QUEST_IN_PROGRESS = 1
 local QUEST_COMPLETE = 2
+
+local OPTION_XPACK = "UI.Tabs.Grids.Emissaries.ShowXPack%d"
+
+local function GetExpansionLabel(level, withVersion)
+	return (withVersion) 
+		and format("%s[%s%s.0%s] %s%s", colors.white, colors.green, level+1, colors.white, colors.gold, _G["EXPANSION_NAME" .. level])
+		or format("%s%s", colors.white, _G["EXPANSION_NAME" .. level])
+end
 
 local function GetPercentageColor(percent)
 	if percent >= 75 then
@@ -30,124 +36,31 @@ local function BuildView()
 	questList = {}
 	view = {}
 	
-	local account, realm = AltoholicTabGrids:GetAccount()
+	local account, realm = AltoholicTabGrids:GetRealm()
 	
 	-- parse the emissary quests, but only the ones that have NOT been completed
-    if realm then
-    	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-    		for questID, _ in pairs(DataStore:GetEmissaryQuests()) do
-                if (not addon:GetOption(OPTION_TOKEN)) or 
-                        ((addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME6) and questID < 50000) or
-                        ((addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME7) and questID > 50000) then
-  
-        			local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
-                    local isCompleted = DataStore:IsQuestCompletedBy(character, questID)
-        			local _, _, timeLeft, objective, emissaryQuestName = DataStore:GetEmissaryQuestInfo(character, questID)
-        			
-        			if timeLeft and timeLeft > 0 then
-        				local questName = DataStore:GetQuestLogInfo(character, questLogIndex)
-                        if not questName then questName = emissaryQuestName end
-                        if not emissaryQuestName then questName = C_QuestLog.GetTitleForQuestID(questID) end
-                        if not questName then questName = "" end
-        
-        				if not questList[questID] then
-        					questList[questID] = {}
-        					questList[questID].title = questName
-        					questList[questID].timeLeft = timeLeft
-        					questList[questID].completionStatus = {}
-        				end				
-        
-                        if isOnQuest then
-        				    questList[questID].completionStatus[character] = QUEST_IN_PROGRESS
-                        elseif isCompleted then
-                            questList[questID].completionStatus[character] = QUEST_COMPLETE
-                        end
-        			end
-                end
-    		end
-            
-            if (not addon:GetOption(OPTION_TOKEN)) or (addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME7) then
-                for questID, _ in pairs(DataStore:GetRegularZoneQuests()) do
-                    local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
-                    local isCompleted = DataStore:IsQuestCompletedBy(character, questID)
-        			local numFulfilled, numRequired, timeLeft, objective, questName = DataStore:GetRegularZoneQuestInfo(character, questID)
-        			
-        			if numRequired and timeLeft and timeLeft > 0 then
-        				if not questList[questID] then
-        					questList[questID] = {}
-        					questList[questID].title = questName
-        					questList[questID].timeLeft = timeLeft
-        					questList[questID].completionStatus = {}
-        				end				
-        
-                        if isOnQuest then
-        				    questList[questID].completionStatus[character] = QUEST_IN_PROGRESS
-                        elseif isCompleted then
-                            questList[questID].completionStatus[character] = QUEST_COMPLETE
-                        end
-        			end
-                end
-            end
-    	end
-    else
-        for realm in pairs(DataStore:GetRealms(account)) do
-        	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
-        		for questID, _ in pairs(DataStore:GetEmissaryQuests()) do
-                    if (not addon:GetOption(OPTION_TOKEN)) or 
-                            ((addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME6) and questID < 50000) or
-                            ((addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME7) and questID > 50000) then
-                            -- TODO: In Badowlands, find the questIDs of emissaries there and extend this out  
-            			local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
-                        local isCompleted = DataStore:IsQuestCompletedBy(character, questID)
-            			local _, _, timeLeft, objective, emissaryQuestName = DataStore:GetEmissaryQuestInfo(character, questID)
-            			
-            			if timeLeft and timeLeft > 0 then
-            				local questName = DataStore:GetQuestLogInfo(character, questLogIndex)
-                            if not questName then questName = emissaryQuestName end
-                            if not emissaryQuestName then questName = C_QuestLog.GetQuestInfo(questID) end
-                            if not questName then questName = "" end
-            
-            				if not questList[questID] then
-            					questList[questID] = {}
-            					questList[questID].title = questName
-            					questList[questID].timeLeft = timeLeft
-            					questList[questID].completionStatus = {}
-            				end				
-            
-                            if isOnQuest then
-            				    questList[questID].completionStatus[character] = QUEST_IN_PROGRESS
-                            elseif isCompleted then
-                                questList[questID].completionStatus[character] = QUEST_COMPLETE
-                            end
-            			end
-                    end
-        		end
-                
-                if (not addon:GetOption(OPTION_TOKEN)) or (addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME7) then
-                    for questID, _ in pairs(DataStore:GetRegularZoneQuests()) do
-                        local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
-                        local isCompleted = DataStore:IsQuestCompletedBy(character, questID)
-            			local numFulfilled, numRequired, timeLeft, objective, questName = DataStore:GetRegularZoneQuestInfo(character, questID)
-            			
-            			if numRequired and timeLeft and timeLeft > 0 then
-            				if not questList[questID] then
-            					questList[questID] = {}
-            					questList[questID].title = questName
-            					questList[questID].timeLeft = timeLeft
-            					questList[questID].completionStatus = {}
-            				end				
-            
-                            if isOnQuest then
-            				    questList[questID].completionStatus[character] = QUEST_IN_PROGRESS
-                            elseif isCompleted then
-                                questList[questID].completionStatus[character] = QUEST_COMPLETE
-                            end
-            			end
-                    end
-                end
-        	end
-        end
-    end
+	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
+		for questID, _ in pairs(DataStore:GetEmissaryQuests()) do
+			local isOnQuest, questLogIndex = DataStore:IsCharacterOnQuest(character, questID)
+			local _, _, timeLeft, _, _, expansionLevel = DataStore:GetEmissaryQuestInfo(character, questID)
+
+			if isOnQuest and timeLeft and timeLeft > 0 and addon:GetOption(format(OPTION_XPACK, expansionLevel)) then
+				-- 2021-01-10 : Callings injected as emissaries will cause the player not yet to be "on the quest"
+				-- Param 3 : questID important if it is a calling, not used otherwise
+				local questName = DataStore:GetQuestLogInfo(character, questLogIndex, questID)
+
+				if not questList[questID] then
+					questList[questID] = {}
+					questList[questID].title = questName
+					questList[questID].timeLeft = timeLeft
+					questList[questID].completionStatus = {}
+					questList[questID].expansionLevel = expansionLevel
+				end				
+
+				questList[questID].completionStatus[character] = QUEST_IN_PROGRESS
+			end
+		end
+	end
 
 	-- .. and only when the questList table is ready with emissaries info for all alts, loop again on the dailies
 	for _, character in pairs(DataStore:GetCharacters(realm, account)) do	-- all alts on this realm
@@ -169,38 +82,36 @@ local function BuildView()
 	end)
 end
 
-local function OnTokenChange(self, header)
-	addon:SetOption(OPTION_TOKEN, header)
-	AltoholicTabGrids:SetViewDDMText(header)
-
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local function OnTokensAllInOne(self)
-	addon:SetOption(OPTION_TOKEN, nil)
-	AltoholicTabGrids:SetViewDDMText(L["All-in-one"])
+local function OnExpansionChange(self)
+	addon:ToggleOption(nil, format(OPTION_XPACK, self.value))
 
 	isViewValid = nil
 	AltoholicTabGrids:Update()
 end
 
 local function DropDown_Initialize(frame)
-	frame:AddButtonWithArgs(EXPANSION_NAME6, nil, OnTokenChange, EXPANSION_NAME6, nil, (addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME6))
-	frame:AddButtonWithArgs(EXPANSION_NAME7, nil, OnTokenChange, EXPANSION_NAME7, nil, (addon:GetOption(OPTION_TOKEN) == EXPANSION_NAME7))
-	frame:AddButtonWithArgs(L["All-in-one"], nil, OnTokensAllInOne, nil, nil, (addon:GetOption(OPTION_TOKEN) == nil))
+	-- add from the 6th to the 8th expansion
+	for i = 6, 8 do
+		frame:AddButtonWithArgs(GetExpansionLabel(i, true), i, OnExpansionChange, nil, nil, addon:GetOption(format(OPTION_XPACK, i)))
+	end
+	
 	frame:AddCloseMenu()
 end
 
 local callbacks = {
 	OnUpdate = function() 
-			BuildView()
+			if not isViewValid then
+				BuildView()
+			end
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, rowFrame, dataRowID)
-			local name = questList[ view[dataRowID] ].title
+			local quest = questList[ view[dataRowID] ]
+			local level = quest.expansionLevel
+			local name = quest.title
+
 			if name then
-				rowFrame.Name.Text:SetText(format("%s%s", colors.white, name))
+				rowFrame.Name.Text:SetText(format("%s%s\n%s", colors.white, name, GetExpansionLabel(level, true)))
 				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
@@ -234,10 +145,7 @@ local callbacks = {
 				text = icons.ready
 				button.Background:SetVertexColor(1.0, 1.0, 1.0)
 			else			
-				local numFulfilled, numRequired, timeLeft, objective, questName = DataStore:GetEmissaryQuestInfo(character, questID)
-                if not numFulfilled then
-                    numFulfilled, numRequired, timeLeft, objective, questName = DataStore:GetRegularZoneQuestInfo(character, questID)
-                end
+				local numFulfilled, numRequired, timeLeft = DataStore:GetEmissaryQuestInfo(character, questID)
 
 				-- if not timeLeft or timeLeft == 0 then
 				-- 	button:Hide()
@@ -266,9 +174,6 @@ local callbacks = {
 			local questID = self.questID
 			local quest = questList[questID]
 			local _, _, timeLeft, objective = DataStore:GetEmissaryQuestInfo(character, questID)
-            if not objective then
-                _, _, timeLeft, objective = DataStore:GetRegularZoneQuestInfo(character, questID)
-            end
 
 			local tooltip = AltoTooltip
 			tooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -294,7 +199,7 @@ local callbacks = {
 			
 			frame:SetMenuWidth(100) 
 			frame:SetButtonWidth(20)
-			frame:SetText(addon:GetOption(OPTION_TOKEN) or L["All-in-one"])
+			frame:SetText(EXPANSION_FILTER_TEXT)
 			frame:Initialize(DropDown_Initialize, "MENU_NO_BORDERS")
 		end,
 }

@@ -1,0 +1,1933 @@
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_rogue", 90047)
+if not __exports then return end
+__exports.registerRogue = function(scripts)
+    do
+        local name = "sc_t26_rogue_assassination"
+        local desc = "[9.0] Simulationcraft: T26_Rogue_Assassination"
+        local code = [[
+# Based on SimulationCraft profile "T26_Rogue_Assassination".
+#	class=rogue
+#	spec=assassination
+#	talents=3210021
+
+Include(ovale_common)
+Include(ovale_rogue_spells)
+
+
+AddFunction single_target
+{
+ enemies(tagged=1) < 2
+}
+
+AddFunction energy_regen_combined
+{
+ energyregenrate() + { debuffcountonany(rupture) + debuffcountonany(garrote) + talent(internal_bleeding_talent) * debuffcountonany(internal_bleeding_debuff) } * 7 / { 2 * { 100 / { 100 + spellcastspeedpercent() } } }
+}
+
+AddFunction vendetta_nightstalker_condition
+{
+ not hastalent(nightstalker_talent) or not hastalent(exsanguinate_talent) or spellcooldown(exsanguinate) < 5 - 2 * talentpoints(deeper_stratagem_talent)
+}
+
+AddFunction use_filler
+{
+ combopointsdeficit() > 1 or energydeficit() <= 25 + energy_regen_combined() or not single_target()
+}
+
+AddFunction skip_rupture
+{
+ target.debuffpresent(vendetta) and { target.debuffpresent(shiv_debuff) or buffremaining(master_assassin_buff) > 0 } and target.debuffremaining(rupture) > 2
+}
+
+AddFunction skip_cycle_rupture
+{
+ checkboxon(opt_priority_rotation) and enemies(tagged=1) > 3 and { target.debuffpresent(shiv_debuff) or debuffcountonany(rupture) + debuffcountonany(garrote) + talent(internal_bleeding_talent) * debuffcountonany(internal_bleeding_debuff) > 5 }
+}
+
+AddFunction skip_cycle_garrote
+{
+ checkboxon(opt_priority_rotation) and enemies(tagged=1) > 3 and { target.debuffremaining(garrote) < spellcooldownduration(garrote) or debuffcountonany(rupture) + debuffcountonany(garrote) + talent(internal_bleeding_talent) * debuffcountonany(internal_bleeding_debuff) > 5 }
+}
+
+AddFunction nightstalker_cp_condition
+{
+ not runeforge(deathly_shadows_runeforge) and combopoints() >= maxcombopoints() or runeforge(deathly_shadows_runeforge) and combopoints() < 2
+}
+
+AddCheckBox(opt_priority_rotation l(opt_priority_rotation) default enabled=(specialization(assassination)))
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(assassination)))
+AddCheckBox(opt_melee_range l(not_in_melee_range) enabled=(specialization(assassination)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(assassination)))
+AddCheckBox(opt_vanish spellname(vanish) default enabled=(specialization(assassination)))
+
+AddFunction assassinationinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(kick) and target.isinterruptible() spell(kick)
+  if target.inrange(cheap_shot) and not target.classification(worldboss) spell(cheap_shot)
+  if target.inrange(kidney_shot) and not target.classification(worldboss) spell(kidney_shot)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction assassinationuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+AddFunction assassinationgetinmeleerange
+{
+ if checkboxon(opt_melee_range) and not target.inrange(kick)
+ {
+  spell(shadowstep)
+  texture(misc_arrowlup help=(l(not_in_melee_range)))
+ }
+}
+
+### actions.vanish
+
+AddFunction assassinationvanishmainactions
+{
+}
+
+AddFunction assassinationvanishmainpostconditions
+{
+}
+
+AddFunction assassinationvanishshortcdactions
+{
+}
+
+AddFunction assassinationvanishshortcdpostconditions
+{
+}
+
+AddFunction assassinationvanishcdactions
+{
+ #variable,name=nightstalker_cp_condition,value=(!runeforge.deathly_shadows&effective_combo_points>=cp_max_spend)|(runeforge.deathly_shadows&combo_points<2)
+ #vanish,if=talent.exsanguinate.enabled&talent.nightstalker.enabled&variable.nightstalker_cp_condition&cooldown.exsanguinate.remains<1
+ if hastalent(exsanguinate_talent) and hastalent(nightstalker_talent) and nightstalker_cp_condition() and spellcooldown(exsanguinate) < 1 and checkboxon(opt_vanish) spell(vanish)
+ #vanish,if=talent.nightstalker.enabled&!talent.exsanguinate.enabled&variable.nightstalker_cp_condition&debuff.vendetta.up
+ if hastalent(nightstalker_talent) and not hastalent(exsanguinate_talent) and nightstalker_cp_condition() and target.debuffpresent(vendetta) and checkboxon(opt_vanish) spell(vanish)
+ #pool_resource,for_next=1,extra_amount=45
+ #vanish,if=talent.subterfuge.enabled&cooldown.garrote.up&(dot.garrote.refreshable|debuff.vendetta.up&dot.garrote.pmultiplier<=1)&combo_points.deficit>=(spell_targets.fan_of_knives>?4)&raid_event.adds.in>12
+ if hastalent(subterfuge_talent) and not spellcooldown(garrote) > 0 and { target.debuffrefreshable(garrote) or target.debuffpresent(vendetta) and target.debuffpersistentmultiplier(garrote) <= 1 } and combopointsdeficit() >= enemies(tagged=1) >? 4 and 600 > 12 and checkboxon(opt_vanish) spell(vanish)
+ unless hastalent(subterfuge_talent) and not spellcooldown(garrote) > 0 and { target.debuffrefreshable(garrote) or target.debuffpresent(vendetta) and target.debuffpersistentmultiplier(garrote) <= 1 } and combopointsdeficit() >= enemies(tagged=1) >? 4 and 600 > 12 and checkboxon(opt_vanish) and { spellusable(vanish) and spellcooldown(vanish) < timetoenergy(45) }
+ {
+  #vanish,if=(talent.master_assassin.enabled|runeforge.mark_of_the_master_assassin)&!dot.rupture.refreshable&dot.garrote.remains>3&debuff.vendetta.up&debuff.shiv.up
+  if { hastalent(master_assassin_talent) or runeforge(mark_of_the_master_assassin_runeforge) } and not target.debuffrefreshable(rupture) and target.debuffremaining(garrote) > 3 and target.debuffpresent(vendetta) and target.debuffpresent(shiv_debuff) and checkboxon(opt_vanish) spell(vanish)
+ }
+}
+
+AddFunction assassinationvanishcdpostconditions
+{
+}
+
+### actions.stealthed
+
+AddFunction assassinationstealthedmainactions
+{
+ #crimson_tempest,if=talent.nightstalker.enabled&spell_targets>=3&combo_points>=4&target.time_to_die-remains>6
+ if hastalent(nightstalker_talent) and enemies(tagged=1) >= 3 and combopoints() >= 4 and target.timetodie() - target.debuffremaining(crimson_tempest) > 6 spell(crimson_tempest)
+ #rupture,if=talent.nightstalker.enabled&combo_points>=4&target.time_to_die-remains>6
+ if hastalent(nightstalker_talent) and combopoints() >= 4 and target.timetodie() - target.debuffremaining(rupture) > 6 spell(rupture)
+ #pool_resource,for_next=1
+ #garrote,target_if=min:remains,if=talent.subterfuge.enabled&(remains<12|pmultiplier<=1)&target.time_to_die-remains>2
+ if hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 spell(garrote)
+ unless hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+ {
+  #pool_resource,for_next=1
+  #garrote,if=talent.subterfuge.enabled&talent.exsanguinate.enabled&active_enemies=1&buff.subterfuge.remains<1.3
+  if hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 spell(garrote)
+  unless hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+  {
+   #mutilate,if=talent.subterfuge.enabled&combo_points<=3
+   if hastalent(subterfuge_talent) and combopoints() <= 3 spell(mutilate)
+  }
+ }
+}
+
+AddFunction assassinationstealthedmainpostconditions
+{
+}
+
+AddFunction assassinationstealthedshortcdactions
+{
+}
+
+AddFunction assassinationstealthedshortcdpostconditions
+{
+ hastalent(nightstalker_talent) and enemies(tagged=1) >= 3 and combopoints() >= 4 and target.timetodie() - target.debuffremaining(crimson_tempest) > 6 and spell(crimson_tempest) or hastalent(nightstalker_talent) and combopoints() >= 4 and target.timetodie() - target.debuffremaining(rupture) > 6 and spell(rupture) or hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 and spell(garrote) or not { hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 and spell(garrote) or not { hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { hastalent(subterfuge_talent) and combopoints() <= 3 and spell(mutilate) } }
+}
+
+AddFunction assassinationstealthedcdactions
+{
+}
+
+AddFunction assassinationstealthedcdpostconditions
+{
+ hastalent(nightstalker_talent) and enemies(tagged=1) >= 3 and combopoints() >= 4 and target.timetodie() - target.debuffremaining(crimson_tempest) > 6 and spell(crimson_tempest) or hastalent(nightstalker_talent) and combopoints() >= 4 and target.timetodie() - target.debuffremaining(rupture) > 6 and spell(rupture) or hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 and spell(garrote) or not { hastalent(subterfuge_talent) and { target.debuffremaining(garrote) < 12 or persistentmultiplier(garrote) <= 1 } and target.timetodie() - target.debuffremaining(garrote) > 2 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 and spell(garrote) or not { hastalent(subterfuge_talent) and hastalent(exsanguinate_talent) and enemies() == 1 and buffremaining(subterfuge_buff) < 1.3 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { hastalent(subterfuge_talent) and combopoints() <= 3 and spell(mutilate) } }
+}
+
+### actions.precombat
+
+AddFunction assassinationprecombatmainactions
+{
+ #apply_poison
+ if buffremaining(lethal_poison_buff) < 1200 spell(deadly_poison)
+ #stealth
+ spell(stealth)
+ #slice_and_dice,precombat_seconds=1
+ spell(slice_and_dice)
+}
+
+AddFunction assassinationprecombatmainpostconditions
+{
+}
+
+AddFunction assassinationprecombatshortcdactions
+{
+ unless buffremaining(lethal_poison_buff) < 1200 and spell(deadly_poison)
+ {
+  #flask
+  #augmentation
+  #food
+  #snapshot_stats
+  #marked_for_death,precombat_seconds=5,if=raid_event.adds.in>15
+  if 600 > 15 spell(marked_for_death)
+ }
+}
+
+AddFunction assassinationprecombatshortcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(deadly_poison) or spell(stealth) or spell(slice_and_dice)
+}
+
+AddFunction assassinationprecombatcdactions
+{
+}
+
+AddFunction assassinationprecombatcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(deadly_poison) or 600 > 15 and spell(marked_for_death) or spell(stealth) or spell(slice_and_dice)
+}
+
+### actions.dot
+
+AddFunction assassinationdotmainactions
+{
+ #variable,name=skip_cycle_garrote,value=priority_rotation&spell_targets.fan_of_knives>3&(dot.garrote.remains<cooldown.garrote.duration|poisoned_bleeds>5)
+ #variable,name=skip_cycle_rupture,value=priority_rotation&spell_targets.fan_of_knives>3&(debuff.shiv.up|poisoned_bleeds>5)
+ #variable,name=skip_rupture,value=debuff.vendetta.up&(debuff.shiv.up|master_assassin_remains>0)&dot.rupture.remains>2
+ #garrote,if=talent.exsanguinate.enabled&!exsanguinated.garrote&dot.garrote.pmultiplier<=1&cooldown.exsanguinate.remains<2&spell_targets.fan_of_knives=1&raid_event.adds.in>6&dot.garrote.remains*0.5<target.time_to_die
+ if hastalent(exsanguinate_talent) and not targetdebuffremaining(garrote_exsanguinated) and target.debuffpersistentmultiplier(garrote) <= 1 and spellcooldown(exsanguinate) < 2 and enemies(tagged=1) == 1 and 600 > 6 and target.debuffremaining(garrote) * 0.5 < target.timetodie() spell(garrote)
+ #rupture,if=talent.exsanguinate.enabled&(effective_combo_points>=cp_max_spend&cooldown.exsanguinate.remains<1&dot.rupture.remains*0.5<target.time_to_die)
+ if hastalent(exsanguinate_talent) and { combopoints() >= maxcombopoints() and spellcooldown(exsanguinate) < 1 } and target.debuffremaining(rupture) * 0.5 < target.timetodie() spell(rupture)
+ #pool_resource,for_next=1
+ #garrote,if=refreshable&combo_points.deficit>=1&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&(target.time_to_die-remains)>4&master_assassin_remains=0
+ if target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 spell(garrote)
+ unless target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+ {
+  #pool_resource,for_next=1
+  #garrote,cycle_targets=1,if=!variable.skip_cycle_garrote&target!=self.target&refreshable&combo_points.deficit>=1&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&(target.time_to_die-remains)>12&master_assassin_remains=0
+  if not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 spell(garrote)
+  unless not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+  {
+   #crimson_tempest,if=spell_targets>=2&remains<2+(spell_targets>=5)&effective_combo_points>=4
+   if enemies(tagged=1) >= 2 and target.debuffremaining(crimson_tempest) < 2 + { enemies(tagged=1) >= 5 } and combopoints() >= 4 spell(crimson_tempest)
+   #rupture,if=!variable.skip_rupture&(effective_combo_points>=4&refreshable|!ticking&(time>10|combo_points>=2))&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&target.time_to_die-remains>4
+   if not skip_rupture() and { combopoints() >= 4 and target.refreshable(rupture) or not target.debuffpresent(rupture) and { timeincombat() > 10 or combopoints() >= 2 } } and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 spell(rupture)
+   #rupture,cycle_targets=1,if=!variable.skip_cycle_rupture&!variable.skip_rupture&target!=self.target&effective_combo_points>=4&refreshable&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&target.time_to_die-remains>4
+   if not skip_cycle_rupture() and not skip_rupture() and not never(target_is_target) and combopoints() >= 4 and target.refreshable(rupture) and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 spell(rupture)
+   #crimson_tempest,if=spell_targets=1&effective_combo_points>=(cp_max_spend-1)&refreshable&!exsanguinated&!debuff.shiv.up&master_assassin_remains=0&target.time_to_die-remains>4
+   if enemies(tagged=1) == 1 and combopoints() >= maxcombopoints() - 1 and target.refreshable(crimson_tempest) and not target.debuffpresent(exsanguinated) and not target.debuffpresent(shiv_debuff) and buffremaining(master_assassin_buff) == 0 and target.timetodie() - target.debuffremaining(crimson_tempest) > 4 spell(crimson_tempest)
+  }
+ }
+}
+
+AddFunction assassinationdotmainpostconditions
+{
+}
+
+AddFunction assassinationdotshortcdactions
+{
+ unless hastalent(exsanguinate_talent) and not targetdebuffremaining(garrote_exsanguinated) and target.debuffpersistentmultiplier(garrote) <= 1 and spellcooldown(exsanguinate) < 2 and enemies(tagged=1) == 1 and 600 > 6 and target.debuffremaining(garrote) * 0.5 < target.timetodie() and spell(garrote) or hastalent(exsanguinate_talent) and { combopoints() >= maxcombopoints() and spellcooldown(exsanguinate) < 1 } and target.debuffremaining(rupture) * 0.5 < target.timetodie() and spell(rupture)
+ {
+  #pool_resource,for_next=1
+  #garrote,if=refreshable&combo_points.deficit>=1&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&(target.time_to_die-remains)>4&master_assassin_remains=0
+  unless target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+  {
+   #pool_resource,for_next=1
+   #garrote,cycle_targets=1,if=!variable.skip_cycle_garrote&target!=self.target&refreshable&combo_points.deficit>=1&(pmultiplier<=1|remains<=tick_time&spell_targets.fan_of_knives>=3)&(!exsanguinated|remains<=tick_time*2&spell_targets.fan_of_knives>=3)&(target.time_to_die-remains)>12&master_assassin_remains=0
+   unless not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) }
+   {
+    unless enemies(tagged=1) >= 2 and target.debuffremaining(crimson_tempest) < 2 + { enemies(tagged=1) >= 5 } and combopoints() >= 4 and spell(crimson_tempest) or not skip_rupture() and { combopoints() >= 4 and target.refreshable(rupture) or not target.debuffpresent(rupture) and { timeincombat() > 10 or combopoints() >= 2 } } and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or not skip_cycle_rupture() and not skip_rupture() and not never(target_is_target) and combopoints() >= 4 and target.refreshable(rupture) and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or enemies(tagged=1) == 1 and combopoints() >= maxcombopoints() - 1 and target.refreshable(crimson_tempest) and not target.debuffpresent(exsanguinated) and not target.debuffpresent(shiv_debuff) and buffremaining(master_assassin_buff) == 0 and target.timetodie() - target.debuffremaining(crimson_tempest) > 4 and spell(crimson_tempest)
+    {
+     #sepsis
+     spell(sepsis)
+    }
+   }
+  }
+ }
+}
+
+AddFunction assassinationdotshortcdpostconditions
+{
+ hastalent(exsanguinate_talent) and not targetdebuffremaining(garrote_exsanguinated) and target.debuffpersistentmultiplier(garrote) <= 1 and spellcooldown(exsanguinate) < 2 and enemies(tagged=1) == 1 and 600 > 6 and target.debuffremaining(garrote) * 0.5 < target.timetodie() and spell(garrote) or hastalent(exsanguinate_talent) and { combopoints() >= maxcombopoints() and spellcooldown(exsanguinate) < 1 } and target.debuffremaining(rupture) * 0.5 < target.timetodie() and spell(rupture) or not { target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { not { not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { enemies(tagged=1) >= 2 and target.debuffremaining(crimson_tempest) < 2 + { enemies(tagged=1) >= 5 } and combopoints() >= 4 and spell(crimson_tempest) or not skip_rupture() and { combopoints() >= 4 and target.refreshable(rupture) or not target.debuffpresent(rupture) and { timeincombat() > 10 or combopoints() >= 2 } } and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or not skip_cycle_rupture() and not skip_rupture() and not never(target_is_target) and combopoints() >= 4 and target.refreshable(rupture) and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or enemies(tagged=1) == 1 and combopoints() >= maxcombopoints() - 1 and target.refreshable(crimson_tempest) and not target.debuffpresent(exsanguinated) and not target.debuffpresent(shiv_debuff) and buffremaining(master_assassin_buff) == 0 and target.timetodie() - target.debuffremaining(crimson_tempest) > 4 and spell(crimson_tempest) } }
+}
+
+AddFunction assassinationdotcdactions
+{
+}
+
+AddFunction assassinationdotcdpostconditions
+{
+ hastalent(exsanguinate_talent) and not targetdebuffremaining(garrote_exsanguinated) and target.debuffpersistentmultiplier(garrote) <= 1 and spellcooldown(exsanguinate) < 2 and enemies(tagged=1) == 1 and 600 > 6 and target.debuffremaining(garrote) * 0.5 < target.timetodie() and spell(garrote) or hastalent(exsanguinate_talent) and { combopoints() >= maxcombopoints() and spellcooldown(exsanguinate) < 1 } and target.debuffremaining(rupture) * 0.5 < target.timetodie() and spell(rupture) or target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 and spell(garrote) or not { target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 4 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 and spell(garrote) or not { not skip_cycle_garrote() and not never(target_is_target) and target.refreshable(garrote) and combopointsdeficit() >= 1 and { persistentmultiplier(garrote) <= 1 or target.debuffremaining(garrote) <= target.currentticktime(garrote) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(garrote) <= target.currentticktime(garrote) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(garrote) > 12 and buffremaining(master_assassin_buff) == 0 and { spellusable(garrote) and spellcooldown(garrote) < timetoenergyfor(garrote) } } and { enemies(tagged=1) >= 2 and target.debuffremaining(crimson_tempest) < 2 + { enemies(tagged=1) >= 5 } and combopoints() >= 4 and spell(crimson_tempest) or not skip_rupture() and { combopoints() >= 4 and target.refreshable(rupture) or not target.debuffpresent(rupture) and { timeincombat() > 10 or combopoints() >= 2 } } and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or not skip_cycle_rupture() and not skip_rupture() and not never(target_is_target) and combopoints() >= 4 and target.refreshable(rupture) and { persistentmultiplier(rupture) <= 1 or target.debuffremaining(rupture) <= target.currentticktime(rupture) and enemies(tagged=1) >= 3 } and { not target.debuffpresent(exsanguinated) or target.debuffremaining(rupture) <= target.currentticktime(rupture) * 2 and enemies(tagged=1) >= 3 } and target.timetodie() - target.debuffremaining(rupture) > 4 and spell(rupture) or enemies(tagged=1) == 1 and combopoints() >= maxcombopoints() - 1 and target.refreshable(crimson_tempest) and not target.debuffpresent(exsanguinated) and not target.debuffpresent(shiv_debuff) and buffremaining(master_assassin_buff) == 0 and target.timetodie() - target.debuffremaining(crimson_tempest) > 4 and spell(crimson_tempest) or spell(sepsis) } }
+}
+
+### actions.direct
+
+AddFunction assassinationdirectmainactions
+{
+ #envenom,if=effective_combo_points>=4+talent.deeper_stratagem.enabled&(debuff.vendetta.up|debuff.shiv.up|energy.deficit<=25+variable.energy_regen_combined|!variable.single_target)&(!talent.exsanguinate.enabled|cooldown.exsanguinate.remains>2)
+ if combopoints() >= 4 + talentpoints(deeper_stratagem_talent) and { target.debuffpresent(vendetta) or target.debuffpresent(shiv_debuff) or energydeficit() <= 25 + energy_regen_combined() or not single_target() } and { not hastalent(exsanguinate_talent) or spellcooldown(exsanguinate) > 2 } spell(envenom)
+ #variable,name=use_filler,value=combo_points.deficit>1|energy.deficit<=25+variable.energy_regen_combined|!variable.single_target
+ #serrated_bone_spike,cycle_targets=1,if=buff.slice_and_dice.up&!dot.serrated_bone_spike_dot.ticking|fight_remains<=5|cooldown.serrated_bone_spike.charges_fractional>=2.75|soulbind.lead_by_example.enabled&!buff.lead_by_example.up
+ if buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) spell(serrated_bone_spike)
+ #fan_of_knives,if=variable.use_filler&(buff.hidden_blades.stack>=19|(!priority_rotation&spell_targets.fan_of_knives>=4+stealthed.rogue))
+ if use_filler() and { buffstacks(hidden_blades_buff) >= 19 or not checkboxon(opt_priority_rotation) and enemies(tagged=1) >= 4 + buffpresent(rogue_stealthed_buff) } spell(fan_of_knives)
+ #fan_of_knives,target_if=!dot.deadly_poison_dot.ticking,if=variable.use_filler&spell_targets.fan_of_knives>=3
+ if not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) >= 3 } spell(fan_of_knives)
+ #ambush,if=variable.use_filler&(master_assassin_remains=0|buff.blindside.up)
+ if use_filler() and { buffremaining(master_assassin_buff) == 0 or buffpresent(blindside_buff) } spell(ambush)
+ #mutilate,target_if=!dot.deadly_poison_dot.ticking,if=variable.use_filler&spell_targets.fan_of_knives=2
+ if not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) == 2 } spell(mutilate)
+ #mutilate,if=variable.use_filler
+ if use_filler() spell(mutilate)
+}
+
+AddFunction assassinationdirectmainpostconditions
+{
+}
+
+AddFunction assassinationdirectshortcdactions
+{
+ unless combopoints() >= 4 + talentpoints(deeper_stratagem_talent) and { target.debuffpresent(vendetta) or target.debuffpresent(shiv_debuff) or energydeficit() <= 25 + energy_regen_combined() or not single_target() } and { not hastalent(exsanguinate_talent) or spellcooldown(exsanguinate) > 2 } and spell(envenom) or { buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) } and spell(serrated_bone_spike) or use_filler() and { buffstacks(hidden_blades_buff) >= 19 or not checkboxon(opt_priority_rotation) and enemies(tagged=1) >= 4 + buffpresent(rogue_stealthed_buff) } and spell(fan_of_knives) or not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) >= 3 } and spell(fan_of_knives)
+ {
+  #echoing_reprimand,if=variable.use_filler&cooldown.vendetta.remains>10
+  if use_filler() and spellcooldown(vendetta) > 10 spell(echoing_reprimand)
+ }
+}
+
+AddFunction assassinationdirectshortcdpostconditions
+{
+ combopoints() >= 4 + talentpoints(deeper_stratagem_talent) and { target.debuffpresent(vendetta) or target.debuffpresent(shiv_debuff) or energydeficit() <= 25 + energy_regen_combined() or not single_target() } and { not hastalent(exsanguinate_talent) or spellcooldown(exsanguinate) > 2 } and spell(envenom) or { buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) } and spell(serrated_bone_spike) or use_filler() and { buffstacks(hidden_blades_buff) >= 19 or not checkboxon(opt_priority_rotation) and enemies(tagged=1) >= 4 + buffpresent(rogue_stealthed_buff) } and spell(fan_of_knives) or not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) >= 3 } and spell(fan_of_knives) or use_filler() and { buffremaining(master_assassin_buff) == 0 or buffpresent(blindside_buff) } and spell(ambush) or not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) == 2 } and spell(mutilate) or use_filler() and spell(mutilate)
+}
+
+AddFunction assassinationdirectcdactions
+{
+}
+
+AddFunction assassinationdirectcdpostconditions
+{
+ combopoints() >= 4 + talentpoints(deeper_stratagem_talent) and { target.debuffpresent(vendetta) or target.debuffpresent(shiv_debuff) or energydeficit() <= 25 + energy_regen_combined() or not single_target() } and { not hastalent(exsanguinate_talent) or spellcooldown(exsanguinate) > 2 } and spell(envenom) or { buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) } and spell(serrated_bone_spike) or use_filler() and { buffstacks(hidden_blades_buff) >= 19 or not checkboxon(opt_priority_rotation) and enemies(tagged=1) >= 4 + buffpresent(rogue_stealthed_buff) } and spell(fan_of_knives) or not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) >= 3 } and spell(fan_of_knives) or use_filler() and spellcooldown(vendetta) > 10 and spell(echoing_reprimand) or use_filler() and { buffremaining(master_assassin_buff) == 0 or buffpresent(blindside_buff) } and spell(ambush) or not target.debuffpresent(deadly_poison) and { use_filler() and enemies(tagged=1) == 2 } and spell(mutilate) or use_filler() and spell(mutilate)
+}
+
+### actions.cds
+
+AddFunction assassinationcdsmainactions
+{
+ #shiv,if=dot.rupture.ticking|dot.sepsis.ticking
+ if target.debuffpresent(rupture) or target.debuffpresent(sepsis) spell(shiv)
+ #call_action_list,name=vanish,if=!stealthed.all&master_assassin_remains=0
+ if not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 assassinationvanishmainactions()
+}
+
+AddFunction assassinationcdsmainpostconditions
+{
+ not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 and assassinationvanishmainpostconditions()
+}
+
+AddFunction assassinationcdsshortcdactions
+{
+ #flagellation
+ spell(flagellation)
+ #flagellation_cleanse,if=debuff.flagellation.remains<2
+ if target.debuffremaining(flagellation) < 2 spell(flagellation)
+ #marked_for_death,target_if=min:target.time_to_die,if=raid_event.adds.up&(target.time_to_die<combo_points.deficit*1.5|combo_points.deficit>=cp_max_spend)
+ if never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() * 1.5 or combopointsdeficit() >= maxcombopoints() } spell(marked_for_death)
+ #marked_for_death,if=raid_event.adds.in>30-raid_event.adds.duration&combo_points.deficit>=cp_max_spend
+ if 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() spell(marked_for_death)
+ #exsanguinate,if=!stealthed.rogue&(!dot.garrote.refreshable&dot.rupture.remains>4+4*cp_max_spend|dot.rupture.remains*0.5>target.time_to_die)&target.time_to_die>4
+ if not buffpresent(rogue_stealthed_buff) and { not target.debuffrefreshable(garrote) and target.debuffremaining(rupture) > 4 + 4 * maxcombopoints() or target.debuffremaining(rupture) * 0.5 > target.timetodie() } and target.timetodie() > 4 spell(exsanguinate)
+
+ unless { target.debuffpresent(rupture) or target.debuffpresent(sepsis) } and spell(shiv)
+ {
+  #call_action_list,name=vanish,if=!stealthed.all&master_assassin_remains=0
+  if not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 assassinationvanishshortcdactions()
+ }
+}
+
+AddFunction assassinationcdsshortcdpostconditions
+{
+ { target.debuffpresent(rupture) or target.debuffpresent(sepsis) } and spell(shiv) or not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 and assassinationvanishshortcdpostconditions()
+}
+
+AddFunction assassinationcdscdactions
+{
+ unless spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() * 1.5 or combopointsdeficit() >= maxcombopoints() } and spell(marked_for_death) or 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() and spell(marked_for_death)
+ {
+  #variable,name=vendetta_nightstalker_condition,value=!talent.nightstalker.enabled|!talent.exsanguinate.enabled|cooldown.exsanguinate.remains<5-2*talent.deeper_stratagem.enabled
+  #vendetta,if=!stealthed.rogue&dot.rupture.ticking&!debuff.vendetta.up&variable.vendetta_nightstalker_condition
+  if not buffpresent(rogue_stealthed_buff) and target.debuffpresent(rupture) and not target.debuffpresent(vendetta) and vendetta_nightstalker_condition() spell(vendetta)
+
+  unless not buffpresent(rogue_stealthed_buff) and { not target.debuffrefreshable(garrote) and target.debuffremaining(rupture) > 4 + 4 * maxcombopoints() or target.debuffremaining(rupture) * 0.5 > target.timetodie() } and target.timetodie() > 4 and spell(exsanguinate) or { target.debuffpresent(rupture) or target.debuffpresent(sepsis) } and spell(shiv)
+  {
+   #potion,if=buff.bloodlust.react|fight_remains<30|debuff.vendetta.up
+   if { buffpresent(bloodlust) or fightremains() < 30 or target.debuffpresent(vendetta) } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_phantom_fire_item usable=1)
+   #blood_fury,if=debuff.vendetta.up
+   if target.debuffpresent(vendetta) spell(blood_fury_ap)
+   #berserking,if=debuff.vendetta.up
+   if target.debuffpresent(vendetta) spell(berserking)
+   #fireblood,if=debuff.vendetta.up
+   if target.debuffpresent(vendetta) spell(fireblood)
+   #ancestral_call,if=debuff.vendetta.up
+   if target.debuffpresent(vendetta) spell(ancestral_call)
+   #call_action_list,name=vanish,if=!stealthed.all&master_assassin_remains=0
+   if not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 assassinationvanishcdactions()
+
+   unless not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 and assassinationvanishcdpostconditions()
+   {
+    #use_item,effect_name=gladiators_medallion,if=debuff.vendetta.up
+    if target.debuffpresent(vendetta) assassinationuseitemactions()
+    #use_item,effect_name=gladiators_badge,if=debuff.vendetta.up
+    if target.debuffpresent(vendetta) assassinationuseitemactions()
+    #use_items
+    assassinationuseitemactions()
+   }
+  }
+ }
+}
+
+AddFunction assassinationcdscdpostconditions
+{
+ spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() * 1.5 or combopointsdeficit() >= maxcombopoints() } and spell(marked_for_death) or 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() and spell(marked_for_death) or not buffpresent(rogue_stealthed_buff) and { not target.debuffrefreshable(garrote) and target.debuffremaining(rupture) > 4 + 4 * maxcombopoints() or target.debuffremaining(rupture) * 0.5 > target.timetodie() } and target.timetodie() > 4 and spell(exsanguinate) or { target.debuffpresent(rupture) or target.debuffpresent(sepsis) } and spell(shiv) or not buffpresent(stealthed_buff) and buffremaining(master_assassin_buff) == 0 and assassinationvanishcdpostconditions()
+}
+
+### actions.default
+
+AddFunction assassination_defaultmainactions
+{
+ #stealth
+ spell(stealth)
+ #variable,name=energy_regen_combined,value=energy.regen+poisoned_bleeds*7%(2*spell_haste)
+ #variable,name=single_target,value=spell_targets.fan_of_knives<2
+ #call_action_list,name=stealthed,if=stealthed.rogue
+ if buffpresent(rogue_stealthed_buff) assassinationstealthedmainactions()
+
+ unless buffpresent(rogue_stealthed_buff) and assassinationstealthedmainpostconditions()
+ {
+  #call_action_list,name=cds,if=(!talent.master_assassin.enabled|dot.garrote.ticking)
+  if not hastalent(master_assassin_talent) or target.debuffpresent(garrote) assassinationcdsmainactions()
+
+  unless { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdsmainpostconditions()
+  {
+   #slice_and_dice,if=spell_targets.fan_of_knives<=(5-runeforge.dashing_scoundrel)&buff.slice_and_dice.remains<fight_remains&refreshable&combo_points>=3
+   if enemies(tagged=1) <= 5 - runeforge(dashing_scoundrel_runeforge) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and combopoints() >= 3 spell(slice_and_dice)
+   #call_action_list,name=dot
+   assassinationdotmainactions()
+
+   unless assassinationdotmainpostconditions()
+   {
+    #call_action_list,name=direct
+    assassinationdirectmainactions()
+   }
+  }
+ }
+}
+
+AddFunction assassination_defaultmainpostconditions
+{
+ buffpresent(rogue_stealthed_buff) and assassinationstealthedmainpostconditions() or { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdsmainpostconditions() or assassinationdotmainpostconditions() or assassinationdirectmainpostconditions()
+}
+
+AddFunction assassination_defaultshortcdactions
+{
+ unless spell(stealth)
+ {
+  #variable,name=energy_regen_combined,value=energy.regen+poisoned_bleeds*7%(2*spell_haste)
+  #variable,name=single_target,value=spell_targets.fan_of_knives<2
+  #call_action_list,name=stealthed,if=stealthed.rogue
+  if buffpresent(rogue_stealthed_buff) assassinationstealthedshortcdactions()
+
+  unless buffpresent(rogue_stealthed_buff) and assassinationstealthedshortcdpostconditions()
+  {
+   #call_action_list,name=cds,if=(!talent.master_assassin.enabled|dot.garrote.ticking)
+   if not hastalent(master_assassin_talent) or target.debuffpresent(garrote) assassinationcdsshortcdactions()
+
+   unless { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdsshortcdpostconditions() or enemies(tagged=1) <= 5 - runeforge(dashing_scoundrel_runeforge) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and combopoints() >= 3 and spell(slice_and_dice)
+   {
+    #call_action_list,name=dot
+    assassinationdotshortcdactions()
+
+    unless assassinationdotshortcdpostconditions()
+    {
+     #call_action_list,name=direct
+     assassinationdirectshortcdactions()
+
+     unless assassinationdirectshortcdpostconditions()
+     {
+      #bag_of_tricks
+      spell(bag_of_tricks)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction assassination_defaultshortcdpostconditions
+{
+ spell(stealth) or buffpresent(rogue_stealthed_buff) and assassinationstealthedshortcdpostconditions() or { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdsshortcdpostconditions() or enemies(tagged=1) <= 5 - runeforge(dashing_scoundrel_runeforge) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and combopoints() >= 3 and spell(slice_and_dice) or assassinationdotshortcdpostconditions() or assassinationdirectshortcdpostconditions()
+}
+
+AddFunction assassination_defaultcdactions
+{
+ unless spell(stealth)
+ {
+  #kick
+  assassinationinterruptactions()
+  #variable,name=energy_regen_combined,value=energy.regen+poisoned_bleeds*7%(2*spell_haste)
+  #variable,name=single_target,value=spell_targets.fan_of_knives<2
+  #call_action_list,name=stealthed,if=stealthed.rogue
+  if buffpresent(rogue_stealthed_buff) assassinationstealthedcdactions()
+
+  unless buffpresent(rogue_stealthed_buff) and assassinationstealthedcdpostconditions()
+  {
+   #call_action_list,name=cds,if=(!talent.master_assassin.enabled|dot.garrote.ticking)
+   if not hastalent(master_assassin_talent) or target.debuffpresent(garrote) assassinationcdscdactions()
+
+   unless { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdscdpostconditions() or enemies(tagged=1) <= 5 - runeforge(dashing_scoundrel_runeforge) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and combopoints() >= 3 and spell(slice_and_dice)
+   {
+    #call_action_list,name=dot
+    assassinationdotcdactions()
+
+    unless assassinationdotcdpostconditions()
+    {
+     #call_action_list,name=direct
+     assassinationdirectcdactions()
+
+     unless assassinationdirectcdpostconditions()
+     {
+      #arcane_torrent,if=energy.deficit>=15+variable.energy_regen_combined
+      if energydeficit() >= 15 + energy_regen_combined() spell(arcane_torrent)
+      #arcane_pulse
+      spell(arcane_pulse)
+      #lights_judgment
+      spell(lights_judgment)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction assassination_defaultcdpostconditions
+{
+ spell(stealth) or buffpresent(rogue_stealthed_buff) and assassinationstealthedcdpostconditions() or { not hastalent(master_assassin_talent) or target.debuffpresent(garrote) } and assassinationcdscdpostconditions() or enemies(tagged=1) <= 5 - runeforge(dashing_scoundrel_runeforge) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and combopoints() >= 3 and spell(slice_and_dice) or assassinationdotcdpostconditions() or assassinationdirectcdpostconditions() or spell(bag_of_tricks)
+}
+
+### Assassination icons.
+
+AddCheckBox(opt_rogue_assassination_aoe l(aoe) default enabled=(specialization(assassination)))
+
+AddIcon enabled=(not checkboxon(opt_rogue_assassination_aoe) and specialization(assassination)) enemies=1 help=shortcd
+{
+ if not incombat() assassinationprecombatshortcdactions()
+ assassination_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_assassination_aoe) and specialization(assassination)) help=shortcd
+{
+ if not incombat() assassinationprecombatshortcdactions()
+ assassination_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(assassination)) enemies=1 help=main
+{
+ if not incombat() assassinationprecombatmainactions()
+ assassination_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_assassination_aoe) and specialization(assassination)) help=aoe
+{
+ if not incombat() assassinationprecombatmainactions()
+ assassination_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_rogue_assassination_aoe) and specialization(assassination)) enemies=1 help=cd
+{
+ if not incombat() assassinationprecombatcdactions()
+ assassination_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_assassination_aoe) and specialization(assassination)) help=cd
+{
+ if not incombat() assassinationprecombatcdactions()
+ assassination_defaultcdactions()
+}
+
+### Required symbols
+# ambush
+# ancestral_call
+# arcane_pulse
+# arcane_torrent
+# bag_of_tricks
+# berserking
+# blindside_buff
+# blood_fury_ap
+# bloodlust
+# cheap_shot
+# crimson_tempest
+# dashing_scoundrel_runeforge
+# deadly_poison
+# deathly_shadows_runeforge
+# deeper_stratagem_talent
+# echoing_reprimand
+# envenom
+# exsanguinate
+# exsanguinate_talent
+# exsanguinated
+# fan_of_knives
+# fireblood
+# flagellation
+# garrote
+# garrote_exsanguinated
+# hidden_blades_buff
+# internal_bleeding_debuff
+# internal_bleeding_talent
+# kick
+# kidney_shot
+# lead_by_example_buff
+# lead_by_example_soulbind
+# lights_judgment
+# mark_of_the_master_assassin_runeforge
+# marked_for_death
+# master_assassin_buff
+# master_assassin_talent
+# mutilate
+# nightstalker_talent
+# potion_of_phantom_fire_item
+# quaking_palm
+# rupture
+# sepsis
+# serrated_bone_spike
+# shadowstep
+# shiv
+# shiv_debuff
+# slice_and_dice
+# stealth
+# subterfuge_buff
+# subterfuge_talent
+# vanish
+# vendetta
+]]
+        scripts:registerScript("ROGUE", "assassination", name, desc, code, "script")
+    end
+    do
+        local name = "sc_t26_rogue_outlaw"
+        local desc = "[9.0] Simulationcraft: T26_Rogue_Outlaw"
+        local code = [[
+# Based on SimulationCraft profile "T26_Rogue_Outlaw".
+#	class=rogue
+#	spec=outlaw
+#	talents=3030022
+
+Include(ovale_common)
+Include(ovale_rogue_spells)
+
+
+AddFunction blade_flurry_sync
+{
+ enemies(tagged=1) < 2 and 600 > 20 or buffpresent(blade_flurry)
+}
+
+AddFunction ambush_condition
+{
+ combopointsdeficit() >= 2 + buffpresent(broadside_buff) and energy() >= 50 and { not conduit(count_the_odds_conduit) or buffremaining(roll_the_bones_buff) >= 10 }
+}
+
+AddFunction rtb_reroll
+{
+ buffcount(roll_the_bones_buff) < 2 and not buffpresent(true_bearing_buff) and not buffpresent(broadside_buff)
+}
+
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(outlaw)))
+AddCheckBox(opt_melee_range l(not_in_melee_range) enabled=(specialization(outlaw)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(outlaw)))
+AddCheckBox(opt_blade_flurry spellname(blade_flurry) default enabled=(specialization(outlaw)))
+
+AddFunction outlawinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(kick) and target.isinterruptible() spell(kick)
+  if target.inrange(cheap_shot) and not target.classification(worldboss) spell(cheap_shot)
+  if target.inrange(kidney_shot) and not target.classification(worldboss) spell(kidney_shot)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+  if target.inrange(gouge) and not target.classification(worldboss) spell(gouge)
+ }
+}
+
+AddFunction outlawuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+AddFunction outlawgetinmeleerange
+{
+ if checkboxon(opt_melee_range) and not target.inrange(kick)
+ {
+  spell(shadowstep)
+  texture(misc_arrowlup help=(l(not_in_melee_range)))
+ }
+}
+
+### actions.stealth
+
+AddFunction outlawstealthmainactions
+{
+ #dispatch,if=combo_points>=cp_max_spend
+ if combopoints() >= maxcombopoints() spell(dispatch)
+ #ambush
+ spell(ambush)
+}
+
+AddFunction outlawstealthmainpostconditions
+{
+}
+
+AddFunction outlawstealthshortcdactions
+{
+}
+
+AddFunction outlawstealthshortcdpostconditions
+{
+ combopoints() >= maxcombopoints() and spell(dispatch) or spell(ambush)
+}
+
+AddFunction outlawstealthcdactions
+{
+}
+
+AddFunction outlawstealthcdpostconditions
+{
+ combopoints() >= maxcombopoints() and spell(dispatch) or spell(ambush)
+}
+
+### actions.precombat
+
+AddFunction outlawprecombatmainactions
+{
+ #apply_poison
+ if buffremaining(lethal_poison_buff) < 1200 spell(instant_poison)
+ #slice_and_dice,precombat_seconds=2
+ spell(slice_and_dice)
+ #stealth
+ spell(stealth)
+}
+
+AddFunction outlawprecombatmainpostconditions
+{
+}
+
+AddFunction outlawprecombatshortcdactions
+{
+ unless buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison)
+ {
+  #flask
+  #augmentation
+  #food
+  #snapshot_stats
+  #marked_for_death,precombat_seconds=5,if=raid_event.adds.in>25
+  if 600 > 25 spell(marked_for_death)
+  #roll_the_bones,precombat_seconds=1
+  spell(roll_the_bones)
+ }
+}
+
+AddFunction outlawprecombatshortcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or spell(slice_and_dice) or spell(stealth)
+}
+
+AddFunction outlawprecombatcdactions
+{
+}
+
+AddFunction outlawprecombatcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or 600 > 25 and spell(marked_for_death) or spell(roll_the_bones) or spell(slice_and_dice) or spell(stealth)
+}
+
+### actions.finish
+
+AddFunction outlawfinishmainactions
+{
+ #slice_and_dice,if=buff.slice_and_dice.remains<fight_remains&refreshable
+ if buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) spell(slice_and_dice)
+ #dispatch
+ spell(dispatch)
+}
+
+AddFunction outlawfinishmainpostconditions
+{
+}
+
+AddFunction outlawfinishshortcdactions
+{
+ unless buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice)
+ {
+  #between_the_eyes
+  spell(between_the_eyes)
+ }
+}
+
+AddFunction outlawfinishshortcdpostconditions
+{
+ buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice) or spell(dispatch)
+}
+
+AddFunction outlawfinishcdactions
+{
+}
+
+AddFunction outlawfinishcdpostconditions
+{
+ buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice) or spell(between_the_eyes) or spell(dispatch)
+}
+
+### actions.cds
+
+AddFunction outlawcdsmainactions
+{
+}
+
+AddFunction outlawcdsmainpostconditions
+{
+}
+
+AddFunction outlawcdsshortcdactions
+{
+ #blade_flurry,if=spell_targets>=2&!buff.blade_flurry.up
+ if enemies(tagged=1) >= 2 and not buffpresent(blade_flurry) and checkboxon(opt_blade_flurry) spell(blade_flurry)
+ #flagellation
+ spell(flagellation)
+ #flagellation_cleanse,if=debuff.flagellation.remains<2
+ if target.debuffremaining(flagellation) < 2 spell(flagellation)
+ #roll_the_bones,if=buff.roll_the_bones.remains<=3|variable.rtb_reroll
+ if buffremaining(roll_the_bones_buff) <= 3 or rtb_reroll() spell(roll_the_bones)
+ #marked_for_death,target_if=min:target.time_to_die,if=raid_event.adds.up&(target.time_to_die<combo_points.deficit|!stealthed.rogue&combo_points.deficit>=cp_max_spend-1)
+ if never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 } spell(marked_for_death)
+ #marked_for_death,if=raid_event.adds.in>30-raid_event.adds.duration&!stealthed.rogue&combo_points.deficit>=cp_max_spend-1
+ if 600 > 30 - 10 and not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 spell(marked_for_death)
+ #blade_rush,if=variable.blade_flurry_sync&(energy.time_to_max>2|spell_targets>2)
+ if blade_flurry_sync() and { timetomaxenergy() > 2 or enemies(tagged=1) > 2 } spell(blade_rush)
+ #dreadblades,if=!stealthed.all&combo_points<=1
+ if not buffpresent(stealthed_buff) and combopoints() <= 1 spell(dreadblades)
+}
+
+AddFunction outlawcdsshortcdpostconditions
+{
+}
+
+AddFunction outlawcdscdactions
+{
+ unless enemies(tagged=1) >= 2 and not buffpresent(blade_flurry) and checkboxon(opt_blade_flurry) and spell(blade_flurry)
+ {
+  #vanish,if=!stealthed.all&variable.ambush_condition&master_assassin_remains=0&(!runeforge.deathly_shadows|buff.deathly_shadows.down&combo_points<=2)
+  if not buffpresent(stealthed_buff) and ambush_condition() and buffremaining(master_assassin_buff) == 0 and { not runeforge(deathly_shadows_runeforge) or buffexpires(deathly_shadows_buff) and combopoints() <= 2 } spell(vanish)
+
+  unless spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation)
+  {
+   #adrenaline_rush,if=!buff.adrenaline_rush.up&(!cooldown.killing_spree.up|!talent.killing_spree.enabled)
+   if not buffpresent(adrenaline_rush) and { not { not spellcooldown(killing_spree) > 0 } or not hastalent(killing_spree_talent) } and energydeficit() > 1 spell(adrenaline_rush)
+
+   unless { buffremaining(roll_the_bones_buff) <= 3 or rtb_reroll() } and spell(roll_the_bones) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 } and spell(marked_for_death) or 600 > 30 - 10 and not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 and spell(marked_for_death)
+   {
+    #killing_spree,if=variable.blade_flurry_sync&(energy.time_to_max>2|spell_targets>2)
+    if blade_flurry_sync() and { timetomaxenergy() > 2 or enemies(tagged=1) > 2 } spell(killing_spree)
+
+    unless blade_flurry_sync() and { timetomaxenergy() > 2 or enemies(tagged=1) > 2 } and spell(blade_rush) or not buffpresent(stealthed_buff) and combopoints() <= 1 and spell(dreadblades)
+    {
+     #shadowmeld,if=!stealthed.all&variable.ambush_condition
+     if not buffpresent(stealthed_buff) and ambush_condition() spell(shadowmeld)
+     #potion,if=buff.bloodlust.react|fight_remains<30|buff.adrenaline_rush.up
+     if { buffpresent(bloodlust) or fightremains() < 30 or buffpresent(adrenaline_rush) } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_phantom_fire_item usable=1)
+     #blood_fury
+     spell(blood_fury_ap)
+     #berserking
+     spell(berserking)
+     #fireblood
+     spell(fireblood)
+     #ancestral_call
+     spell(ancestral_call)
+     #use_items,slots=trinket1,if=!runeforge.mark_of_the_master_assassin&debuff.between_the_eyes.up&(!talent.ghostly_strike.enabled|debuff.ghostly_strike.up)|master_assassin_remains>0|trinket.1.has_stat.any|fight_remains<=20
+     if not runeforge(mark_of_the_master_assassin_runeforge) and target.debuffpresent(between_the_eyes) and { not hastalent(ghostly_strike_talent) or target.debuffpresent(ghostly_strike) } or buffremaining(master_assassin_buff) > 0 or false or fightremains() <= 20 outlawuseitemactions()
+     #use_items,slots=trinket2,if=!runeforge.mark_of_the_master_assassin&debuff.between_the_eyes.up&(!talent.ghostly_strike.enabled|debuff.ghostly_strike.up)|master_assassin_remains>0|trinket.2.has_stat.any|fight_remains<=20
+     if not runeforge(mark_of_the_master_assassin_runeforge) and target.debuffpresent(between_the_eyes) and { not hastalent(ghostly_strike_talent) or target.debuffpresent(ghostly_strike) } or buffremaining(master_assassin_buff) > 0 or false or fightremains() <= 20 outlawuseitemactions()
+    }
+   }
+  }
+ }
+}
+
+AddFunction outlawcdscdpostconditions
+{
+ enemies(tagged=1) >= 2 and not buffpresent(blade_flurry) and checkboxon(opt_blade_flurry) and spell(blade_flurry) or spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation) or { buffremaining(roll_the_bones_buff) <= 3 or rtb_reroll() } and spell(roll_the_bones) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 } and spell(marked_for_death) or 600 > 30 - 10 and not buffpresent(rogue_stealthed_buff) and combopointsdeficit() >= maxcombopoints() - 1 and spell(marked_for_death) or blade_flurry_sync() and { timetomaxenergy() > 2 or enemies(tagged=1) > 2 } and spell(blade_rush) or not buffpresent(stealthed_buff) and combopoints() <= 1 and spell(dreadblades)
+}
+
+### actions.build
+
+AddFunction outlawbuildmainactions
+{
+ #shiv,if=runeforge.tiny_toxic_blade
+ if runeforge(tiny_toxic_blade_runeforge) spell(shiv)
+ #serrated_bone_spike,cycle_targets=1,if=buff.slice_and_dice.up&!dot.serrated_bone_spike_dot.ticking|fight_remains<=5|cooldown.serrated_bone_spike.charges_fractional>=2.75
+ if buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 spell(serrated_bone_spike)
+ #pistol_shot,if=buff.opportunity.up&(energy.deficit>(energy.regen+10)|combo_points.deficit<=1+buff.broadside.up|talent.quick_draw.enabled)
+ if buffpresent(opportunity_buff) and { energydeficit() > energyregenrate() + 10 or combopointsdeficit() <= 1 + buffpresent(broadside_buff) or hastalent(quick_draw_talent) } spell(pistol_shot)
+ #pistol_shot,if=buff.opportunity.up&(buff.greenskins_wickers.up|buff.concealed_blunderbuss.up)
+ if buffpresent(opportunity_buff) and { buffpresent(greenskins_wickers_buff) or buffpresent(concealed_blunderbuss_buff) } spell(pistol_shot)
+ #sinister_strike
+ spell(sinister_strike_outlaw)
+ #gouge,if=talent.dirty_tricks.enabled&combo_points.deficit>=1+buff.broadside.up
+ if hastalent(dirty_tricks_talent) and combopointsdeficit() >= 1 + buffpresent(broadside_buff) spell(gouge)
+}
+
+AddFunction outlawbuildmainpostconditions
+{
+}
+
+AddFunction outlawbuildshortcdactions
+{
+ #sepsis
+ spell(sepsis)
+ #ghostly_strike
+ spell(ghostly_strike)
+
+ unless runeforge(tiny_toxic_blade_runeforge) and spell(shiv)
+ {
+  #echoing_reprimand
+  spell(echoing_reprimand)
+ }
+}
+
+AddFunction outlawbuildshortcdpostconditions
+{
+ runeforge(tiny_toxic_blade_runeforge) and spell(shiv) or { buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 } and spell(serrated_bone_spike) or buffpresent(opportunity_buff) and { energydeficit() > energyregenrate() + 10 or combopointsdeficit() <= 1 + buffpresent(broadside_buff) or hastalent(quick_draw_talent) } and spell(pistol_shot) or buffpresent(opportunity_buff) and { buffpresent(greenskins_wickers_buff) or buffpresent(concealed_blunderbuss_buff) } and spell(pistol_shot) or spell(sinister_strike_outlaw) or hastalent(dirty_tricks_talent) and combopointsdeficit() >= 1 + buffpresent(broadside_buff) and spell(gouge)
+}
+
+AddFunction outlawbuildcdactions
+{
+}
+
+AddFunction outlawbuildcdpostconditions
+{
+ spell(sepsis) or spell(ghostly_strike) or runeforge(tiny_toxic_blade_runeforge) and spell(shiv) or spell(echoing_reprimand) or { buffpresent(slice_and_dice) and not target.debuffpresent(serrated_bone_spike) or fightremains() <= 5 or spellcharges(serrated_bone_spike count=0) >= 2.75 } and spell(serrated_bone_spike) or buffpresent(opportunity_buff) and { energydeficit() > energyregenrate() + 10 or combopointsdeficit() <= 1 + buffpresent(broadside_buff) or hastalent(quick_draw_talent) } and spell(pistol_shot) or buffpresent(opportunity_buff) and { buffpresent(greenskins_wickers_buff) or buffpresent(concealed_blunderbuss_buff) } and spell(pistol_shot) or spell(sinister_strike_outlaw) or hastalent(dirty_tricks_talent) and combopointsdeficit() >= 1 + buffpresent(broadside_buff) and spell(gouge)
+}
+
+### actions.default
+
+AddFunction outlaw_defaultmainactions
+{
+ #stealth
+ spell(stealth)
+ #variable,name=rtb_reroll,value=rtb_buffs<2&(!buff.true_bearing.up&!buff.broadside.up)
+ #variable,name=ambush_condition,value=combo_points.deficit>=2+buff.broadside.up&energy>=50&(!conduit.count_the_odds|buff.roll_the_bones.remains>=10)
+ #variable,name=blade_flurry_sync,value=spell_targets.blade_flurry<2&raid_event.adds.in>20|buff.blade_flurry.up
+ #run_action_list,name=stealth,if=stealthed.all
+ if buffpresent(stealthed_buff) outlawstealthmainactions()
+
+ unless buffpresent(stealthed_buff) and outlawstealthmainpostconditions()
+ {
+  #call_action_list,name=cds
+  outlawcdsmainactions()
+
+  unless outlawcdsmainpostconditions()
+  {
+   #run_action_list,name=finish,if=combo_points>=cp_max_spend-buff.broadside.up-(buff.opportunity.up*talent.quick_draw.enabled)|combo_points=animacharged_cp
+   if combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() outlawfinishmainactions()
+
+   unless { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishmainpostconditions()
+   {
+    #call_action_list,name=build
+    outlawbuildmainactions()
+   }
+  }
+ }
+}
+
+AddFunction outlaw_defaultmainpostconditions
+{
+ buffpresent(stealthed_buff) and outlawstealthmainpostconditions() or outlawcdsmainpostconditions() or { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishmainpostconditions() or outlawbuildmainpostconditions()
+}
+
+AddFunction outlaw_defaultshortcdactions
+{
+ unless spell(stealth)
+ {
+  #variable,name=rtb_reroll,value=rtb_buffs<2&(!buff.true_bearing.up&!buff.broadside.up)
+  #variable,name=ambush_condition,value=combo_points.deficit>=2+buff.broadside.up&energy>=50&(!conduit.count_the_odds|buff.roll_the_bones.remains>=10)
+  #variable,name=blade_flurry_sync,value=spell_targets.blade_flurry<2&raid_event.adds.in>20|buff.blade_flurry.up
+  #run_action_list,name=stealth,if=stealthed.all
+  if buffpresent(stealthed_buff) outlawstealthshortcdactions()
+
+  unless buffpresent(stealthed_buff) and outlawstealthshortcdpostconditions()
+  {
+   #call_action_list,name=cds
+   outlawcdsshortcdactions()
+
+   unless outlawcdsshortcdpostconditions()
+   {
+    #run_action_list,name=finish,if=combo_points>=cp_max_spend-buff.broadside.up-(buff.opportunity.up*talent.quick_draw.enabled)|combo_points=animacharged_cp
+    if combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() outlawfinishshortcdactions()
+
+    unless { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishshortcdpostconditions()
+    {
+     #call_action_list,name=build
+     outlawbuildshortcdactions()
+
+     unless outlawbuildshortcdpostconditions()
+     {
+      #bag_of_tricks
+      spell(bag_of_tricks)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction outlaw_defaultshortcdpostconditions
+{
+ spell(stealth) or buffpresent(stealthed_buff) and outlawstealthshortcdpostconditions() or outlawcdsshortcdpostconditions() or { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishshortcdpostconditions() or outlawbuildshortcdpostconditions()
+}
+
+AddFunction outlaw_defaultcdactions
+{
+ unless spell(stealth)
+ {
+  #kick
+  outlawinterruptactions()
+  #variable,name=rtb_reroll,value=rtb_buffs<2&(!buff.true_bearing.up&!buff.broadside.up)
+  #variable,name=ambush_condition,value=combo_points.deficit>=2+buff.broadside.up&energy>=50&(!conduit.count_the_odds|buff.roll_the_bones.remains>=10)
+  #variable,name=blade_flurry_sync,value=spell_targets.blade_flurry<2&raid_event.adds.in>20|buff.blade_flurry.up
+  #run_action_list,name=stealth,if=stealthed.all
+  if buffpresent(stealthed_buff) outlawstealthcdactions()
+
+  unless buffpresent(stealthed_buff) and outlawstealthcdpostconditions()
+  {
+   #call_action_list,name=cds
+   outlawcdscdactions()
+
+   unless outlawcdscdpostconditions()
+   {
+    #run_action_list,name=finish,if=combo_points>=cp_max_spend-buff.broadside.up-(buff.opportunity.up*talent.quick_draw.enabled)|combo_points=animacharged_cp
+    if combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() outlawfinishcdactions()
+
+    unless { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishcdpostconditions()
+    {
+     #call_action_list,name=build
+     outlawbuildcdactions()
+
+     unless outlawbuildcdpostconditions()
+     {
+      #arcane_torrent,if=energy.deficit>=15+energy.regen
+      if energydeficit() >= 15 + energyregenrate() spell(arcane_torrent)
+      #arcane_pulse
+      spell(arcane_pulse)
+      #lights_judgment
+      spell(lights_judgment)
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction outlaw_defaultcdpostconditions
+{
+ spell(stealth) or buffpresent(stealthed_buff) and outlawstealthcdpostconditions() or outlawcdscdpostconditions() or { combopoints() >= maxcombopoints() - buffpresent(broadside_buff) - buffpresent(opportunity_buff) * talentpoints(quick_draw_talent) or combopoints() == maxcombopoints() } and outlawfinishcdpostconditions() or outlawbuildcdpostconditions() or spell(bag_of_tricks)
+}
+
+### Outlaw icons.
+
+AddCheckBox(opt_rogue_outlaw_aoe l(aoe) default enabled=(specialization(outlaw)))
+
+AddIcon enabled=(not checkboxon(opt_rogue_outlaw_aoe) and specialization(outlaw)) enemies=1 help=shortcd
+{
+ if not incombat() outlawprecombatshortcdactions()
+ outlaw_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_outlaw_aoe) and specialization(outlaw)) help=shortcd
+{
+ if not incombat() outlawprecombatshortcdactions()
+ outlaw_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(outlaw)) enemies=1 help=main
+{
+ if not incombat() outlawprecombatmainactions()
+ outlaw_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_outlaw_aoe) and specialization(outlaw)) help=aoe
+{
+ if not incombat() outlawprecombatmainactions()
+ outlaw_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_rogue_outlaw_aoe) and specialization(outlaw)) enemies=1 help=cd
+{
+ if not incombat() outlawprecombatcdactions()
+ outlaw_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_outlaw_aoe) and specialization(outlaw)) help=cd
+{
+ if not incombat() outlawprecombatcdactions()
+ outlaw_defaultcdactions()
+}
+
+### Required symbols
+# adrenaline_rush
+# ambush
+# ancestral_call
+# arcane_pulse
+# arcane_torrent
+# bag_of_tricks
+# berserking
+# between_the_eyes
+# blade_flurry
+# blade_rush
+# blood_fury_ap
+# bloodlust
+# broadside_buff
+# cheap_shot
+# concealed_blunderbuss_buff
+# count_the_odds_conduit
+# deathly_shadows_buff
+# deathly_shadows_runeforge
+# dirty_tricks_talent
+# dispatch
+# dreadblades
+# echoing_reprimand
+# fireblood
+# flagellation
+# ghostly_strike
+# ghostly_strike_talent
+# gouge
+# greenskins_wickers_buff
+# instant_poison
+# kick
+# killing_spree
+# killing_spree_talent
+# lights_judgment
+# mark_of_the_master_assassin_runeforge
+# marked_for_death
+# master_assassin_buff
+# opportunity_buff
+# pistol_shot
+# potion_of_phantom_fire_item
+# quaking_palm
+# quick_draw_talent
+# roll_the_bones
+# sepsis
+# serrated_bone_spike
+# shadowmeld
+# shadowstep
+# shiv
+# sinister_strike_outlaw
+# slice_and_dice
+# stealth
+# tiny_toxic_blade_runeforge
+# true_bearing_buff
+# vanish
+]]
+        scripts:registerScript("ROGUE", "outlaw", name, desc, code, "script")
+    end
+    do
+        local name = "sc_t26_rogue_subtlety"
+        local desc = "[9.0] Simulationcraft: T26_Rogue_Subtlety"
+        local code = [[
+# Based on SimulationCraft profile "T26_Rogue_Subtlety".
+#	class=rogue
+#	spec=subtlety
+#	talents=1320031
+
+Include(ovale_common)
+Include(ovale_rogue_spells)
+
+
+AddFunction stealth_threshold
+{
+ 25 + talentpoints(vigor_talent) * 20 + talentpoints(master_of_shadows_talent) * 20 + talentpoints(shadow_focus_talent) * 25 + talentpoints(alacrity_talent) * 20 + 25 * { enemies(tagged=1) >= 4 }
+}
+
+AddFunction use_priority_rotation
+{
+ checkboxon(opt_priority_rotation) and enemies(tagged=1) >= 2
+}
+
+AddFunction snd_condition
+{
+ buffpresent(slice_and_dice) or enemies(tagged=1) >= 6
+}
+
+AddFunction skip_rupture
+{
+ buffremaining(master_assassin_buff) > 0 or not hastalent(nightstalker_talent) and hastalent(dark_shadow_talent) and buffpresent(shadow_dance_buff) or enemies(tagged=1) >= 5
+}
+
+AddFunction premed_snd_condition
+{
+ hastalent(premeditation_talent) and enemies(tagged=1) < 5 - iscovenant("necrolord") and not iscovenant("kyrian")
+}
+
+AddFunction shd_combo_points
+{
+ if use_priority_rotation() and enemies(tagged=1) >= 4 combopointsdeficit() <= 1
+ if iscovenant("kyrian") combopointsdeficit() >= 3
+ combopointsdeficit() >= 2 + buffpresent(shadow_blades)
+}
+
+AddFunction shd_threshold
+{
+ spellcharges(shadow_dance count=0) >= 1.75
+}
+
+AddCheckBox(opt_priority_rotation l(opt_priority_rotation) default enabled=(specialization(subtlety)))
+AddCheckBox(opt_interrupt l(interrupt) default enabled=(specialization(subtlety)))
+AddCheckBox(opt_melee_range l(not_in_melee_range) enabled=(specialization(subtlety)))
+AddCheckBox(opt_use_consumables l(opt_use_consumables) default enabled=(specialization(subtlety)))
+
+AddFunction subtletyinterruptactions
+{
+ if checkboxon(opt_interrupt) and not target.isfriend() and target.casting()
+ {
+  if target.inrange(kick) and target.isinterruptible() spell(kick)
+  if target.inrange(cheap_shot) and not target.classification(worldboss) spell(cheap_shot)
+  if target.inrange(kidney_shot) and not target.classification(worldboss) spell(kidney_shot)
+  if target.inrange(quaking_palm) and not target.classification(worldboss) spell(quaking_palm)
+ }
+}
+
+AddFunction subtletyuseitemactions
+{
+ item(trinket0slot text=13 usable=1)
+ item(trinket1slot text=14 usable=1)
+}
+
+AddFunction subtletygetinmeleerange
+{
+ if checkboxon(opt_melee_range) and not target.inrange(kick)
+ {
+  spell(shadowstep)
+  texture(misc_arrowlup help=(l(not_in_melee_range)))
+ }
+}
+
+### actions.stealthed
+
+AddFunction subtletystealthedmainactions
+{
+ #shadowstrike,if=(buff.stealth.up|buff.vanish.up)&master_assassin_remains=0
+ if { buffpresent(stealth) or buffpresent(vanish) } and buffremaining(master_assassin_buff) == 0 spell(shadowstrike)
+ #call_action_list,name=finish,if=buff.shuriken_tornado.up&combo_points.deficit<=2
+ if buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 subtletyfinishmainactions()
+
+ unless buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishmainpostconditions()
+ {
+  #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+  if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishmainactions()
+
+  unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishmainpostconditions()
+  {
+   #call_action_list,name=finish,if=combo_points.deficit<=1-(talent.deeper_stratagem.enabled&buff.vanish.up)
+   if combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } subtletyfinishmainactions()
+
+   unless combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } and subtletyfinishmainpostconditions()
+   {
+    #shadowstrike,if=stealthed.sepsis&spell_targets.shuriken_storm<4
+    if buffpresent(sepsis) and enemies(tagged=1) < 4 spell(shadowstrike)
+    #shiv,if=talent.nightstalker.enabled&runeforge.tiny_toxic_blade&spell_targets.shuriken_storm<5
+    if hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 spell(shiv)
+    #shadowstrike,cycle_targets=1,if=!variable.use_priority_rotation&debuff.find_weakness.remains<1&spell_targets.shuriken_storm<=3&target.time_to_die-remains>6
+    if not use_priority_rotation() and target.debuffremaining(find_weakness_debuff) < 1 and enemies(tagged=1) <= 3 and target.timetodie() - buffremaining(shadowstrike) > 6 spell(shadowstrike)
+    #shadowstrike,if=variable.use_priority_rotation&(debuff.find_weakness.remains<1|talent.weaponmaster.enabled&spell_targets.shuriken_storm<=4)
+    if use_priority_rotation() and { target.debuffremaining(find_weakness_debuff) < 1 or hastalent(weaponmaster_talent) and enemies(tagged=1) <= 4 } spell(shadowstrike)
+    #shuriken_storm,if=spell_targets>=3+(buff.the_rotten.up|runeforge.akaaris_soul_fragment&conduit.deeper_daggers.rank>=7)&(buff.symbols_of_death_autocrit.up|!buff.premeditation.up|spell_targets>=5)
+    if enemies(tagged=1) >= 3 + { buffpresent(the_rotten_buff) or runeforge(akaaris_soul_fragment_runeforge) and conduitrank(deeper_daggers_conduit) >= 7 } and { buffpresent(symbols_of_death_autocrit) or not buffpresent(premeditation_buff) or enemies(tagged=1) >= 5 } spell(shuriken_storm)
+    #shadowstrike,if=debuff.find_weakness.remains<=1|cooldown.symbols_of_death.remains<18&debuff.find_weakness.remains<cooldown.symbols_of_death.remains
+    if target.debuffremaining(find_weakness_debuff) <= 1 or spellcooldown(symbols_of_death) < 18 and target.debuffremaining(find_weakness_debuff) < spellcooldown(symbols_of_death) spell(shadowstrike)
+    #gloomblade,if=buff.perforated_veins.stack>=5&conduit.perforated_veins.rank>=13
+    if buffstacks(perforated_veins_buff) >= 5 and conduitrank(perforated_veins_conduit) >= 13 spell(gloomblade)
+    #shadowstrike
+    spell(shadowstrike)
+    #cheap_shot,if=!target.is_boss&combo_points.deficit>=1&buff.shot_in_the_dark.up&energy.time_to_40>gcd.max
+    if not target.classification(worldboss) and combopointsdeficit() >= 1 and buffpresent(shot_in_the_dark_buff) and timetoenergy(40) > gcd() spell(cheap_shot)
+   }
+  }
+ }
+}
+
+AddFunction subtletystealthedmainpostconditions
+{
+ buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishmainpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishmainpostconditions() or combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } and subtletyfinishmainpostconditions()
+}
+
+AddFunction subtletystealthedshortcdactions
+{
+ unless { buffpresent(stealth) or buffpresent(vanish) } and buffremaining(master_assassin_buff) == 0 and spell(shadowstrike)
+ {
+  #call_action_list,name=finish,if=buff.shuriken_tornado.up&combo_points.deficit<=2
+  if buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 subtletyfinishshortcdactions()
+
+  unless buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishshortcdpostconditions()
+  {
+   #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+   if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishshortcdactions()
+
+   unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishshortcdpostconditions()
+   {
+    #call_action_list,name=finish,if=combo_points.deficit<=1-(talent.deeper_stratagem.enabled&buff.vanish.up)
+    if combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } subtletyfinishshortcdactions()
+   }
+  }
+ }
+}
+
+AddFunction subtletystealthedshortcdpostconditions
+{
+ { buffpresent(stealth) or buffpresent(vanish) } and buffremaining(master_assassin_buff) == 0 and spell(shadowstrike) or buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishshortcdpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishshortcdpostconditions() or combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } and subtletyfinishshortcdpostconditions() or buffpresent(sepsis) and enemies(tagged=1) < 4 and spell(shadowstrike) or hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 and spell(shiv) or not use_priority_rotation() and target.debuffremaining(find_weakness_debuff) < 1 and enemies(tagged=1) <= 3 and target.timetodie() - buffremaining(shadowstrike) > 6 and spell(shadowstrike) or use_priority_rotation() and { target.debuffremaining(find_weakness_debuff) < 1 or hastalent(weaponmaster_talent) and enemies(tagged=1) <= 4 } and spell(shadowstrike) or enemies(tagged=1) >= 3 + { buffpresent(the_rotten_buff) or runeforge(akaaris_soul_fragment_runeforge) and conduitrank(deeper_daggers_conduit) >= 7 } and { buffpresent(symbols_of_death_autocrit) or not buffpresent(premeditation_buff) or enemies(tagged=1) >= 5 } and spell(shuriken_storm) or { target.debuffremaining(find_weakness_debuff) <= 1 or spellcooldown(symbols_of_death) < 18 and target.debuffremaining(find_weakness_debuff) < spellcooldown(symbols_of_death) } and spell(shadowstrike) or buffstacks(perforated_veins_buff) >= 5 and conduitrank(perforated_veins_conduit) >= 13 and spell(gloomblade) or spell(shadowstrike) or not target.classification(worldboss) and combopointsdeficit() >= 1 and buffpresent(shot_in_the_dark_buff) and timetoenergy(40) > gcd() and spell(cheap_shot)
+}
+
+AddFunction subtletystealthedcdactions
+{
+ unless { buffpresent(stealth) or buffpresent(vanish) } and buffremaining(master_assassin_buff) == 0 and spell(shadowstrike)
+ {
+  #call_action_list,name=finish,if=buff.shuriken_tornado.up&combo_points.deficit<=2
+  if buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 subtletyfinishcdactions()
+
+  unless buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishcdpostconditions()
+  {
+   #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+   if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishcdactions()
+
+   unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishcdpostconditions()
+   {
+    #call_action_list,name=finish,if=combo_points.deficit<=1-(talent.deeper_stratagem.enabled&buff.vanish.up)
+    if combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } subtletyfinishcdactions()
+   }
+  }
+ }
+}
+
+AddFunction subtletystealthedcdpostconditions
+{
+ { buffpresent(stealth) or buffpresent(vanish) } and buffremaining(master_assassin_buff) == 0 and spell(shadowstrike) or buffpresent(shuriken_tornado) and combopointsdeficit() <= 2 and subtletyfinishcdpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishcdpostconditions() or combopointsdeficit() <= 1 - { hastalent(deeper_stratagem_talent) and buffpresent(vanish) } and subtletyfinishcdpostconditions() or buffpresent(sepsis) and enemies(tagged=1) < 4 and spell(shadowstrike) or hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 and spell(shiv) or not use_priority_rotation() and target.debuffremaining(find_weakness_debuff) < 1 and enemies(tagged=1) <= 3 and target.timetodie() - buffremaining(shadowstrike) > 6 and spell(shadowstrike) or use_priority_rotation() and { target.debuffremaining(find_weakness_debuff) < 1 or hastalent(weaponmaster_talent) and enemies(tagged=1) <= 4 } and spell(shadowstrike) or enemies(tagged=1) >= 3 + { buffpresent(the_rotten_buff) or runeforge(akaaris_soul_fragment_runeforge) and conduitrank(deeper_daggers_conduit) >= 7 } and { buffpresent(symbols_of_death_autocrit) or not buffpresent(premeditation_buff) or enemies(tagged=1) >= 5 } and spell(shuriken_storm) or { target.debuffremaining(find_weakness_debuff) <= 1 or spellcooldown(symbols_of_death) < 18 and target.debuffremaining(find_weakness_debuff) < spellcooldown(symbols_of_death) } and spell(shadowstrike) or buffstacks(perforated_veins_buff) >= 5 and conduitrank(perforated_veins_conduit) >= 13 and spell(gloomblade) or spell(shadowstrike) or not target.classification(worldboss) and combopointsdeficit() >= 1 and buffpresent(shot_in_the_dark_buff) and timetoenergy(40) > gcd() and spell(cheap_shot)
+}
+
+### actions.stealth_cds
+
+AddFunction subtletystealth_cdsmainactions
+{
+}
+
+AddFunction subtletystealth_cdsmainpostconditions
+{
+}
+
+AddFunction subtletystealth_cdsshortcdactions
+{
+ #pool_resource,for_next=1,extra_amount=40,if=race.night_elf
+ unless race(nightelf)
+ {
+  #variable,name=shd_combo_points,value=combo_points.deficit>=2+buff.shadow_blades.up
+  #variable,name=shd_combo_points,value=combo_points.deficit>=3,if=covenant.kyrian
+  #variable,name=shd_combo_points,value=combo_points.deficit<=1,if=variable.use_priority_rotation&spell_targets.shuriken_storm>=4
+  #shadow_dance,if=variable.shd_combo_points&(variable.shd_threshold|buff.symbols_of_death.remains>=1.2|spell_targets.shuriken_storm>=4&cooldown.symbols_of_death.remains>10)
+  if shd_combo_points() and { shd_threshold() or buffremaining(symbols_of_death) >= 1.2 or enemies(tagged=1) >= 4 and spellcooldown(symbols_of_death) > 10 } spell(shadow_dance)
+  #shadow_dance,if=variable.shd_combo_points&fight_remains<cooldown.symbols_of_death.remains
+  if shd_combo_points() and fightremains() < spellcooldown(symbols_of_death) spell(shadow_dance)
+ }
+}
+
+AddFunction subtletystealth_cdsshortcdpostconditions
+{
+}
+
+AddFunction subtletystealth_cdscdactions
+{
+ #variable,name=shd_threshold,value=cooldown.shadow_dance.charges_fractional>=1.75
+ #vanish,if=(!variable.shd_threshold|!talent.nightstalker.enabled&talent.dark_shadow.enabled)&combo_points.deficit>1&!runeforge.mark_of_the_master_assassin
+ if { not shd_threshold() or not hastalent(nightstalker_talent) and hastalent(dark_shadow_talent) } and combopointsdeficit() > 1 and not runeforge(mark_of_the_master_assassin_runeforge) spell(vanish)
+ #pool_resource,for_next=1,extra_amount=40,if=race.night_elf
+ unless race(nightelf)
+ {
+  #shadowmeld,if=energy>=40&energy.deficit>=10&!variable.shd_threshold&combo_points.deficit>1&debuff.find_weakness.remains<1
+  if energy() >= 40 and energydeficit() >= 10 and not shd_threshold() and combopointsdeficit() > 1 and target.debuffremaining(find_weakness_debuff) < 1 spell(shadowmeld)
+ }
+}
+
+AddFunction subtletystealth_cdscdpostconditions
+{
+ not race(nightelf) and { shd_combo_points() and { shd_threshold() or buffremaining(symbols_of_death) >= 1.2 or enemies(tagged=1) >= 4 and spellcooldown(symbols_of_death) > 10 } and spell(shadow_dance) or shd_combo_points() and fightremains() < spellcooldown(symbols_of_death) and spell(shadow_dance) }
+}
+
+### actions.precombat
+
+AddFunction subtletyprecombatmainactions
+{
+ #apply_poison
+ if buffremaining(lethal_poison_buff) < 1200 spell(instant_poison)
+ #flask
+ #augmentation
+ #food
+ #snapshot_stats
+ #stealth
+ spell(stealth)
+ #slice_and_dice,precombat_seconds=1
+ spell(slice_and_dice)
+}
+
+AddFunction subtletyprecombatmainpostconditions
+{
+}
+
+AddFunction subtletyprecombatshortcdactions
+{
+ unless buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or spell(stealth)
+ {
+  #marked_for_death,precombat_seconds=15
+  spell(marked_for_death)
+ }
+}
+
+AddFunction subtletyprecombatshortcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or spell(stealth) or spell(slice_and_dice)
+}
+
+AddFunction subtletyprecombatcdactions
+{
+ unless buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or spell(stealth) or spell(marked_for_death) or spell(slice_and_dice)
+ {
+  #shadow_blades,if=runeforge.mark_of_the_master_assassin
+  if runeforge(mark_of_the_master_assassin_runeforge) spell(shadow_blades)
+ }
+}
+
+AddFunction subtletyprecombatcdpostconditions
+{
+ buffremaining(lethal_poison_buff) < 1200 and spell(instant_poison) or spell(stealth) or spell(marked_for_death) or spell(slice_and_dice)
+}
+
+### actions.finish
+
+AddFunction subtletyfinishmainactions
+{
+ #variable,name=premed_snd_condition,value=talent.premeditation.enabled&spell_targets.shuriken_storm<(5-covenant.necrolord)&!covenant.kyrian
+ #slice_and_dice,if=!variable.premed_snd_condition&spell_targets.shuriken_storm<6&!buff.shadow_dance.up&buff.slice_and_dice.remains<fight_remains&refreshable
+ if not premed_snd_condition() and enemies(tagged=1) < 6 and not buffpresent(shadow_dance_buff) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) spell(slice_and_dice)
+ #slice_and_dice,if=variable.premed_snd_condition&cooldown.shadow_dance.charges_fractional<1.75&buff.slice_and_dice.remains<cooldown.symbols_of_death.remains&(cooldown.shadow_dance.ready&buff.symbols_of_death.remains-buff.shadow_dance.remains<1.2)
+ if premed_snd_condition() and spellcharges(shadow_dance count=0) < 1.75 and buffremaining(slice_and_dice) < spellcooldown(symbols_of_death) and spellcooldown(shadow_dance) <= 0 and buffremaining(symbols_of_death) - buffremaining(shadow_dance_buff) < 1.2 spell(slice_and_dice)
+ #variable,name=skip_rupture,value=master_assassin_remains>0|!talent.nightstalker.enabled&talent.dark_shadow.enabled&buff.shadow_dance.up|spell_targets.shuriken_storm>=5
+ #rupture,if=(!variable.skip_rupture|variable.use_priority_rotation)&target.time_to_die-remains>6&refreshable
+ if { not skip_rupture() or use_priority_rotation() } and target.timetodie() - target.debuffremaining(rupture) > 6 and target.refreshable(rupture) spell(rupture)
+ #rupture,cycle_targets=1,if=!variable.skip_rupture&!variable.use_priority_rotation&spell_targets.shuriken_storm>=2&target.time_to_die>=(5+(2*combo_points))&refreshable
+ if not skip_rupture() and not use_priority_rotation() and enemies(tagged=1) >= 2 and target.timetodie() >= 5 + 2 * combopoints() and target.refreshable(rupture) spell(rupture)
+ #rupture,if=!variable.skip_rupture&remains<cooldown.symbols_of_death.remains+10&cooldown.symbols_of_death.remains<=5&target.time_to_die-remains>cooldown.symbols_of_death.remains+5
+ if not skip_rupture() and target.debuffremaining(rupture) < spellcooldown(symbols_of_death) + 10 and spellcooldown(symbols_of_death) <= 5 and target.timetodie() - target.debuffremaining(rupture) > spellcooldown(symbols_of_death) + 5 spell(rupture)
+ #black_powder,if=!variable.use_priority_rotation&spell_targets>=4-debuff.find_weakness.down
+ if not use_priority_rotation() and enemies(tagged=1) >= 4 - target.debuffexpires(find_weakness_debuff) spell(black_powder)
+ #eviscerate
+ spell(eviscerate)
+}
+
+AddFunction subtletyfinishmainpostconditions
+{
+}
+
+AddFunction subtletyfinishshortcdactions
+{
+ unless not premed_snd_condition() and enemies(tagged=1) < 6 and not buffpresent(shadow_dance_buff) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice) or premed_snd_condition() and spellcharges(shadow_dance count=0) < 1.75 and buffremaining(slice_and_dice) < spellcooldown(symbols_of_death) and spellcooldown(shadow_dance) <= 0 and buffremaining(symbols_of_death) - buffremaining(shadow_dance_buff) < 1.2 and spell(slice_and_dice) or { not skip_rupture() or use_priority_rotation() } and target.timetodie() - target.debuffremaining(rupture) > 6 and target.refreshable(rupture) and spell(rupture)
+ {
+  #secret_technique
+  spell(secret_technique)
+ }
+}
+
+AddFunction subtletyfinishshortcdpostconditions
+{
+ not premed_snd_condition() and enemies(tagged=1) < 6 and not buffpresent(shadow_dance_buff) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice) or premed_snd_condition() and spellcharges(shadow_dance count=0) < 1.75 and buffremaining(slice_and_dice) < spellcooldown(symbols_of_death) and spellcooldown(shadow_dance) <= 0 and buffremaining(symbols_of_death) - buffremaining(shadow_dance_buff) < 1.2 and spell(slice_and_dice) or { not skip_rupture() or use_priority_rotation() } and target.timetodie() - target.debuffremaining(rupture) > 6 and target.refreshable(rupture) and spell(rupture) or not skip_rupture() and not use_priority_rotation() and enemies(tagged=1) >= 2 and target.timetodie() >= 5 + 2 * combopoints() and target.refreshable(rupture) and spell(rupture) or not skip_rupture() and target.debuffremaining(rupture) < spellcooldown(symbols_of_death) + 10 and spellcooldown(symbols_of_death) <= 5 and target.timetodie() - target.debuffremaining(rupture) > spellcooldown(symbols_of_death) + 5 and spell(rupture) or not use_priority_rotation() and enemies(tagged=1) >= 4 - target.debuffexpires(find_weakness_debuff) and spell(black_powder) or spell(eviscerate)
+}
+
+AddFunction subtletyfinishcdactions
+{
+}
+
+AddFunction subtletyfinishcdpostconditions
+{
+ not premed_snd_condition() and enemies(tagged=1) < 6 and not buffpresent(shadow_dance_buff) and buffremaining(slice_and_dice) < fightremains() and target.refreshable(slice_and_dice) and spell(slice_and_dice) or premed_snd_condition() and spellcharges(shadow_dance count=0) < 1.75 and buffremaining(slice_and_dice) < spellcooldown(symbols_of_death) and spellcooldown(shadow_dance) <= 0 and buffremaining(symbols_of_death) - buffremaining(shadow_dance_buff) < 1.2 and spell(slice_and_dice) or { not skip_rupture() or use_priority_rotation() } and target.timetodie() - target.debuffremaining(rupture) > 6 and target.refreshable(rupture) and spell(rupture) or spell(secret_technique) or not skip_rupture() and not use_priority_rotation() and enemies(tagged=1) >= 2 and target.timetodie() >= 5 + 2 * combopoints() and target.refreshable(rupture) and spell(rupture) or not skip_rupture() and target.debuffremaining(rupture) < spellcooldown(symbols_of_death) + 10 and spellcooldown(symbols_of_death) <= 5 and target.timetodie() - target.debuffremaining(rupture) > spellcooldown(symbols_of_death) + 5 and spell(rupture) or not use_priority_rotation() and enemies(tagged=1) >= 4 - target.debuffexpires(find_weakness_debuff) and spell(black_powder) or spell(eviscerate)
+}
+
+### actions.cds
+
+AddFunction subtletycdsmainactions
+{
+ #pool_resource,for_next=1,if=talent.shuriken_tornado.enabled&!talent.shadow_focus.enabled
+ unless hastalent(shuriken_tornado_talent) and not hastalent(shadow_focus_talent)
+ {
+  #serrated_bone_spike,cycle_targets=1,if=variable.snd_condition&!dot.serrated_bone_spike_dot.ticking&target.time_to_die>=21|fight_remains<=5&spell_targets.shuriken_storm<3
+  if snd_condition() and not target.debuffpresent(serrated_bone_spike) and target.timetodie() >= 21 or fightremains() <= 5 and enemies(tagged=1) < 3 spell(serrated_bone_spike)
+ }
+}
+
+AddFunction subtletycdsmainpostconditions
+{
+}
+
+AddFunction subtletycdsshortcdactions
+{
+ #shadow_dance,use_off_gcd=1,if=!buff.shadow_dance.up&buff.shuriken_tornado.up&buff.shuriken_tornado.remains<=3.5
+ if not buffpresent(shadow_dance_buff) and buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 spell(shadow_dance)
+ #symbols_of_death,use_off_gcd=1,if=buff.shuriken_tornado.up&buff.shuriken_tornado.remains<=3.5
+ if buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 spell(symbols_of_death)
+ #flagellation,if=variable.snd_condition&!stealthed.mantle
+ if snd_condition() and not buffpresent(mantle_stealthed_buff) spell(flagellation)
+ #flagellation_cleanse,if=debuff.flagellation.remains<2
+ if target.debuffremaining(flagellation) < 2 spell(flagellation)
+ #pool_resource,for_next=1,if=talent.shuriken_tornado.enabled&!talent.shadow_focus.enabled
+ unless hastalent(shuriken_tornado_talent) and not hastalent(shadow_focus_talent)
+ {
+  #shuriken_tornado,if=energy>=60&variable.snd_condition&cooldown.symbols_of_death.up&cooldown.shadow_dance.charges>=1
+  if energy() >= 60 and snd_condition() and not spellcooldown(symbols_of_death) > 0 and spellcharges(shadow_dance) >= 1 spell(shuriken_tornado)
+
+  unless { snd_condition() and not target.debuffpresent(serrated_bone_spike) and target.timetodie() >= 21 or fightremains() <= 5 and enemies(tagged=1) < 3 } and spell(serrated_bone_spike)
+  {
+   #sepsis,if=variable.snd_condition&combo_points.deficit>=1
+   if snd_condition() and combopointsdeficit() >= 1 spell(sepsis)
+   #symbols_of_death,if=variable.snd_condition&(talent.enveloping_shadows.enabled|cooldown.shadow_dance.charges>=1)&(!talent.shuriken_tornado.enabled|talent.shadow_focus.enabled|cooldown.shuriken_tornado.remains>2)
+   if snd_condition() and { hastalent(enveloping_shadows_talent) or spellcharges(shadow_dance) >= 1 } and { not hastalent(shuriken_tornado_talent) or hastalent(shadow_focus_talent) or spellcooldown(shuriken_tornado) > 2 } spell(symbols_of_death)
+   #marked_for_death,target_if=min:target.time_to_die,if=raid_event.adds.up&(target.time_to_die<combo_points.deficit|!stealthed.all&combo_points.deficit>=cp_max_spend)
+   if never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(stealthed_buff) and combopointsdeficit() >= maxcombopoints() } spell(marked_for_death)
+   #marked_for_death,if=raid_event.adds.in>30-raid_event.adds.duration&combo_points.deficit>=cp_max_spend
+   if 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() spell(marked_for_death)
+   #echoing_reprimand,if=variable.snd_condition&combo_points.deficit>=2&(variable.use_priority_rotation|spell_targets.shuriken_storm<=4)
+   if snd_condition() and combopointsdeficit() >= 2 and { use_priority_rotation() or enemies(tagged=1) <= 4 } spell(echoing_reprimand)
+   #shuriken_tornado,if=talent.shadow_focus.enabled&variable.snd_condition&buff.symbols_of_death.up
+   if hastalent(shadow_focus_talent) and snd_condition() and buffpresent(symbols_of_death) spell(shuriken_tornado)
+   #shadow_dance,if=!buff.shadow_dance.up&fight_remains<=8+talent.subterfuge.enabled
+   if not buffpresent(shadow_dance_buff) and fightremains() <= 8 + talentpoints(subterfuge_talent) spell(shadow_dance)
+  }
+ }
+}
+
+AddFunction subtletycdsshortcdpostconditions
+{
+ not { hastalent(shuriken_tornado_talent) and not hastalent(shadow_focus_talent) } and { { snd_condition() and not target.debuffpresent(serrated_bone_spike) and target.timetodie() >= 21 or fightremains() <= 5 and enemies(tagged=1) < 3 } and spell(serrated_bone_spike) }
+}
+
+AddFunction subtletycdscdactions
+{
+ unless not buffpresent(shadow_dance_buff) and buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 and spell(shadow_dance) or buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 and spell(symbols_of_death) or snd_condition() and not buffpresent(mantle_stealthed_buff) and spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation)
+ {
+  #vanish,if=(runeforge.mark_of_the_master_assassin&combo_points.deficit<=1-talent.deeper_strategem.enabled|runeforge.deathly_shadows&combo_points<1)&buff.symbols_of_death.up&buff.shadow_dance.up&master_assassin_remains=0&buff.deathly_shadows.down
+  if { runeforge(mark_of_the_master_assassin_runeforge) and combopointsdeficit() <= 1 - talentpoints(deeper_stratagem_talent) or runeforge(deathly_shadows_runeforge) and combopoints() < 1 } and buffpresent(symbols_of_death) and buffpresent(shadow_dance_buff) and buffremaining(master_assassin_buff) == 0 and buffexpires(deathly_shadows_buff) spell(vanish)
+  #pool_resource,for_next=1,if=talent.shuriken_tornado.enabled&!talent.shadow_focus.enabled
+  unless hastalent(shuriken_tornado_talent) and not hastalent(shadow_focus_talent)
+  {
+   unless energy() >= 60 and snd_condition() and not spellcooldown(symbols_of_death) > 0 and spellcharges(shadow_dance) >= 1 and spell(shuriken_tornado) or { snd_condition() and not target.debuffpresent(serrated_bone_spike) and target.timetodie() >= 21 or fightremains() <= 5 and enemies(tagged=1) < 3 } and spell(serrated_bone_spike) or snd_condition() and combopointsdeficit() >= 1 and spell(sepsis) or snd_condition() and { hastalent(enveloping_shadows_talent) or spellcharges(shadow_dance) >= 1 } and { not hastalent(shuriken_tornado_talent) or hastalent(shadow_focus_talent) or spellcooldown(shuriken_tornado) > 2 } and spell(symbols_of_death) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(stealthed_buff) and combopointsdeficit() >= maxcombopoints() } and spell(marked_for_death) or 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() and spell(marked_for_death)
+   {
+    #shadow_blades,if=variable.snd_condition&combo_points.deficit>=2
+    if snd_condition() and combopointsdeficit() >= 2 spell(shadow_blades)
+
+    unless snd_condition() and combopointsdeficit() >= 2 and { use_priority_rotation() or enemies(tagged=1) <= 4 } and spell(echoing_reprimand) or hastalent(shadow_focus_talent) and snd_condition() and buffpresent(symbols_of_death) and spell(shuriken_tornado) or not buffpresent(shadow_dance_buff) and fightremains() <= 8 + talentpoints(subterfuge_talent) and spell(shadow_dance)
+    {
+     #potion,if=buff.bloodlust.react|fight_remains<30|buff.symbols_of_death.up&(buff.shadow_blades.up|cooldown.shadow_blades.remains<=10)
+     if { buffpresent(bloodlust) or fightremains() < 30 or buffpresent(symbols_of_death) and { buffpresent(shadow_blades) or spellcooldown(shadow_blades) <= 10 } } and { checkboxon(opt_use_consumables) and target.classification(worldboss) } item(potion_of_phantom_fire_item usable=1)
+     #blood_fury,if=buff.symbols_of_death.up
+     if buffpresent(symbols_of_death) spell(blood_fury_ap)
+     #berserking,if=buff.symbols_of_death.up
+     if buffpresent(symbols_of_death) spell(berserking)
+     #fireblood,if=buff.symbols_of_death.up
+     if buffpresent(symbols_of_death) spell(fireblood)
+     #ancestral_call,if=buff.symbols_of_death.up
+     if buffpresent(symbols_of_death) spell(ancestral_call)
+     #use_items,if=buff.symbols_of_death.up|fight_remains<20
+     if buffpresent(symbols_of_death) or fightremains() < 20 subtletyuseitemactions()
+    }
+   }
+  }
+ }
+}
+
+AddFunction subtletycdscdpostconditions
+{
+ not buffpresent(shadow_dance_buff) and buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 and spell(shadow_dance) or buffpresent(shuriken_tornado) and buffremaining(shuriken_tornado) <= 3.5 and spell(symbols_of_death) or snd_condition() and not buffpresent(mantle_stealthed_buff) and spell(flagellation) or target.debuffremaining(flagellation) < 2 and spell(flagellation) or not { hastalent(shuriken_tornado_talent) and not hastalent(shadow_focus_talent) } and { energy() >= 60 and snd_condition() and not spellcooldown(symbols_of_death) > 0 and spellcharges(shadow_dance) >= 1 and spell(shuriken_tornado) or { snd_condition() and not target.debuffpresent(serrated_bone_spike) and target.timetodie() >= 21 or fightremains() <= 5 and enemies(tagged=1) < 3 } and spell(serrated_bone_spike) or snd_condition() and combopointsdeficit() >= 1 and spell(sepsis) or snd_condition() and { hastalent(enveloping_shadows_talent) or spellcharges(shadow_dance) >= 1 } and { not hastalent(shuriken_tornado_talent) or hastalent(shadow_focus_talent) or spellcooldown(shuriken_tornado) > 2 } and spell(symbols_of_death) or never(raid_event_adds_exists) and { target.timetodie() < combopointsdeficit() or not buffpresent(stealthed_buff) and combopointsdeficit() >= maxcombopoints() } and spell(marked_for_death) or 600 > 30 - 10 and combopointsdeficit() >= maxcombopoints() and spell(marked_for_death) or snd_condition() and combopointsdeficit() >= 2 and { use_priority_rotation() or enemies(tagged=1) <= 4 } and spell(echoing_reprimand) or hastalent(shadow_focus_talent) and snd_condition() and buffpresent(symbols_of_death) and spell(shuriken_tornado) or not buffpresent(shadow_dance_buff) and fightremains() <= 8 + talentpoints(subterfuge_talent) and spell(shadow_dance) }
+}
+
+### actions.build
+
+AddFunction subtletybuildmainactions
+{
+ #shiv,if=!talent.nightstalker.enabled&runeforge.tiny_toxic_blade&spell_targets.shuriken_storm<5
+ if not hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 spell(shiv)
+ #shuriken_storm,if=spell_targets>=2
+ if enemies(tagged=1) >= 2 spell(shuriken_storm)
+ #serrated_bone_spike,if=cooldown.serrated_bone_spike.charges_fractional>=2.75|soulbind.lead_by_example.enabled&!buff.lead_by_example.up
+ if spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) spell(serrated_bone_spike)
+ #gloomblade
+ spell(gloomblade)
+ #backstab
+ spell(backstab)
+}
+
+AddFunction subtletybuildmainpostconditions
+{
+}
+
+AddFunction subtletybuildshortcdactions
+{
+}
+
+AddFunction subtletybuildshortcdpostconditions
+{
+ not hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 and spell(shiv) or enemies(tagged=1) >= 2 and spell(shuriken_storm) or { spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) } and spell(serrated_bone_spike) or spell(gloomblade) or spell(backstab)
+}
+
+AddFunction subtletybuildcdactions
+{
+}
+
+AddFunction subtletybuildcdpostconditions
+{
+ not hastalent(nightstalker_talent) and runeforge(tiny_toxic_blade_runeforge) and enemies(tagged=1) < 5 and spell(shiv) or enemies(tagged=1) >= 2 and spell(shuriken_storm) or { spellcharges(serrated_bone_spike count=0) >= 2.75 or enabledsoulbind(lead_by_example_soulbind) and not buffpresent(lead_by_example_buff) } and spell(serrated_bone_spike) or spell(gloomblade) or spell(backstab)
+}
+
+### actions.default
+
+AddFunction subtlety_defaultmainactions
+{
+ #stealth
+ spell(stealth)
+ #variable,name=snd_condition,value=buff.slice_and_dice.up|spell_targets.shuriken_storm>=6
+ #call_action_list,name=cds
+ subtletycdsmainactions()
+
+ unless subtletycdsmainpostconditions()
+ {
+  #run_action_list,name=stealthed,if=stealthed.all
+  if buffpresent(stealthed_buff) subtletystealthedmainactions()
+
+  unless buffpresent(stealthed_buff) and subtletystealthedmainpostconditions()
+  {
+   #slice_and_dice,if=spell_targets.shuriken_storm<6&fight_remains>6&buff.slice_and_dice.remains<gcd.max&combo_points>=4-(time<10)*2
+   if enemies(tagged=1) < 6 and fightremains() > 6 and buffremaining(slice_and_dice) < gcd() and combopoints() >= 4 - { timeincombat() < 10 } * 2 spell(slice_and_dice)
+   #variable,name=use_priority_rotation,value=priority_rotation&spell_targets.shuriken_storm>=2
+   #call_action_list,name=stealth_cds,if=variable.use_priority_rotation
+   if use_priority_rotation() subtletystealth_cdsmainactions()
+
+   unless use_priority_rotation() and subtletystealth_cdsmainpostconditions()
+   {
+    #variable,name=stealth_threshold,value=25+talent.vigor.enabled*20+talent.master_of_shadows.enabled*20+talent.shadow_focus.enabled*25+talent.alacrity.enabled*20+25*(spell_targets.shuriken_storm>=4)
+    #call_action_list,name=stealth_cds,if=energy.deficit<=variable.stealth_threshold
+    if energydeficit() <= stealth_threshold() subtletystealth_cdsmainactions()
+
+    unless energydeficit() <= stealth_threshold() and subtletystealth_cdsmainpostconditions()
+    {
+     #call_action_list,name=finish,if=combo_points=animacharged_cp
+     if combopoints() == maxcombopoints() subtletyfinishmainactions()
+
+     unless combopoints() == maxcombopoints() and subtletyfinishmainpostconditions()
+     {
+      #call_action_list,name=finish,if=combo_points.deficit<=1|fight_remains<=1&combo_points>=3|buff.symbols_of_death_autocrit.up&combo_points>=4
+      if combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 subtletyfinishmainactions()
+
+      unless { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishmainpostconditions()
+      {
+       #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+       if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishmainactions()
+
+       unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishmainpostconditions()
+       {
+        #call_action_list,name=build,if=energy.deficit<=variable.stealth_threshold
+        if energydeficit() <= stealth_threshold() subtletybuildmainactions()
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction subtlety_defaultmainpostconditions
+{
+ subtletycdsmainpostconditions() or buffpresent(stealthed_buff) and subtletystealthedmainpostconditions() or use_priority_rotation() and subtletystealth_cdsmainpostconditions() or energydeficit() <= stealth_threshold() and subtletystealth_cdsmainpostconditions() or combopoints() == maxcombopoints() and subtletyfinishmainpostconditions() or { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishmainpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishmainpostconditions() or energydeficit() <= stealth_threshold() and subtletybuildmainpostconditions()
+}
+
+AddFunction subtlety_defaultshortcdactions
+{
+ unless spell(stealth)
+ {
+  #variable,name=snd_condition,value=buff.slice_and_dice.up|spell_targets.shuriken_storm>=6
+  #call_action_list,name=cds
+  subtletycdsshortcdactions()
+
+  unless subtletycdsshortcdpostconditions()
+  {
+   #run_action_list,name=stealthed,if=stealthed.all
+   if buffpresent(stealthed_buff) subtletystealthedshortcdactions()
+
+   unless buffpresent(stealthed_buff) and subtletystealthedshortcdpostconditions() or enemies(tagged=1) < 6 and fightremains() > 6 and buffremaining(slice_and_dice) < gcd() and combopoints() >= 4 - { timeincombat() < 10 } * 2 and spell(slice_and_dice)
+   {
+    #variable,name=use_priority_rotation,value=priority_rotation&spell_targets.shuriken_storm>=2
+    #call_action_list,name=stealth_cds,if=variable.use_priority_rotation
+    if use_priority_rotation() subtletystealth_cdsshortcdactions()
+
+    unless use_priority_rotation() and subtletystealth_cdsshortcdpostconditions()
+    {
+     #variable,name=stealth_threshold,value=25+talent.vigor.enabled*20+talent.master_of_shadows.enabled*20+talent.shadow_focus.enabled*25+talent.alacrity.enabled*20+25*(spell_targets.shuriken_storm>=4)
+     #call_action_list,name=stealth_cds,if=energy.deficit<=variable.stealth_threshold
+     if energydeficit() <= stealth_threshold() subtletystealth_cdsshortcdactions()
+
+     unless energydeficit() <= stealth_threshold() and subtletystealth_cdsshortcdpostconditions()
+     {
+      #call_action_list,name=finish,if=combo_points=animacharged_cp
+      if combopoints() == maxcombopoints() subtletyfinishshortcdactions()
+
+      unless combopoints() == maxcombopoints() and subtletyfinishshortcdpostconditions()
+      {
+       #call_action_list,name=finish,if=combo_points.deficit<=1|fight_remains<=1&combo_points>=3|buff.symbols_of_death_autocrit.up&combo_points>=4
+       if combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 subtletyfinishshortcdactions()
+
+       unless { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishshortcdpostconditions()
+       {
+        #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+        if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishshortcdactions()
+
+        unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishshortcdpostconditions()
+        {
+         #call_action_list,name=build,if=energy.deficit<=variable.stealth_threshold
+         if energydeficit() <= stealth_threshold() subtletybuildshortcdactions()
+
+         unless energydeficit() <= stealth_threshold() and subtletybuildshortcdpostconditions()
+         {
+          #bag_of_tricks
+          spell(bag_of_tricks)
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction subtlety_defaultshortcdpostconditions
+{
+ spell(stealth) or subtletycdsshortcdpostconditions() or buffpresent(stealthed_buff) and subtletystealthedshortcdpostconditions() or enemies(tagged=1) < 6 and fightremains() > 6 and buffremaining(slice_and_dice) < gcd() and combopoints() >= 4 - { timeincombat() < 10 } * 2 and spell(slice_and_dice) or use_priority_rotation() and subtletystealth_cdsshortcdpostconditions() or energydeficit() <= stealth_threshold() and subtletystealth_cdsshortcdpostconditions() or combopoints() == maxcombopoints() and subtletyfinishshortcdpostconditions() or { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishshortcdpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishshortcdpostconditions() or energydeficit() <= stealth_threshold() and subtletybuildshortcdpostconditions()
+}
+
+AddFunction subtlety_defaultcdactions
+{
+ unless spell(stealth)
+ {
+  #kick
+  subtletyinterruptactions()
+  #variable,name=snd_condition,value=buff.slice_and_dice.up|spell_targets.shuriken_storm>=6
+  #call_action_list,name=cds
+  subtletycdscdactions()
+
+  unless subtletycdscdpostconditions()
+  {
+   #run_action_list,name=stealthed,if=stealthed.all
+   if buffpresent(stealthed_buff) subtletystealthedcdactions()
+
+   unless buffpresent(stealthed_buff) and subtletystealthedcdpostconditions() or enemies(tagged=1) < 6 and fightremains() > 6 and buffremaining(slice_and_dice) < gcd() and combopoints() >= 4 - { timeincombat() < 10 } * 2 and spell(slice_and_dice)
+   {
+    #variable,name=use_priority_rotation,value=priority_rotation&spell_targets.shuriken_storm>=2
+    #call_action_list,name=stealth_cds,if=variable.use_priority_rotation
+    if use_priority_rotation() subtletystealth_cdscdactions()
+
+    unless use_priority_rotation() and subtletystealth_cdscdpostconditions()
+    {
+     #variable,name=stealth_threshold,value=25+talent.vigor.enabled*20+talent.master_of_shadows.enabled*20+talent.shadow_focus.enabled*25+talent.alacrity.enabled*20+25*(spell_targets.shuriken_storm>=4)
+     #call_action_list,name=stealth_cds,if=energy.deficit<=variable.stealth_threshold
+     if energydeficit() <= stealth_threshold() subtletystealth_cdscdactions()
+
+     unless energydeficit() <= stealth_threshold() and subtletystealth_cdscdpostconditions()
+     {
+      #call_action_list,name=finish,if=combo_points=animacharged_cp
+      if combopoints() == maxcombopoints() subtletyfinishcdactions()
+
+      unless combopoints() == maxcombopoints() and subtletyfinishcdpostconditions()
+      {
+       #call_action_list,name=finish,if=combo_points.deficit<=1|fight_remains<=1&combo_points>=3|buff.symbols_of_death_autocrit.up&combo_points>=4
+       if combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 subtletyfinishcdactions()
+
+       unless { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishcdpostconditions()
+       {
+        #call_action_list,name=finish,if=spell_targets.shuriken_storm>=4&combo_points>=4
+        if enemies(tagged=1) >= 4 and combopoints() >= 4 subtletyfinishcdactions()
+
+        unless enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishcdpostconditions()
+        {
+         #call_action_list,name=build,if=energy.deficit<=variable.stealth_threshold
+         if energydeficit() <= stealth_threshold() subtletybuildcdactions()
+
+         unless energydeficit() <= stealth_threshold() and subtletybuildcdpostconditions()
+         {
+          #arcane_torrent,if=energy.deficit>=15+energy.regen
+          if energydeficit() >= 15 + energyregenrate() spell(arcane_torrent)
+          #arcane_pulse
+          spell(arcane_pulse)
+          #lights_judgment
+          spell(lights_judgment)
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
+
+AddFunction subtlety_defaultcdpostconditions
+{
+ spell(stealth) or subtletycdscdpostconditions() or buffpresent(stealthed_buff) and subtletystealthedcdpostconditions() or enemies(tagged=1) < 6 and fightremains() > 6 and buffremaining(slice_and_dice) < gcd() and combopoints() >= 4 - { timeincombat() < 10 } * 2 and spell(slice_and_dice) or use_priority_rotation() and subtletystealth_cdscdpostconditions() or energydeficit() <= stealth_threshold() and subtletystealth_cdscdpostconditions() or combopoints() == maxcombopoints() and subtletyfinishcdpostconditions() or { combopointsdeficit() <= 1 or fightremains() <= 1 and combopoints() >= 3 or buffpresent(symbols_of_death_autocrit) and combopoints() >= 4 } and subtletyfinishcdpostconditions() or enemies(tagged=1) >= 4 and combopoints() >= 4 and subtletyfinishcdpostconditions() or energydeficit() <= stealth_threshold() and subtletybuildcdpostconditions() or spell(bag_of_tricks)
+}
+
+### Subtlety icons.
+
+AddCheckBox(opt_rogue_subtlety_aoe l(aoe) default enabled=(specialization(subtlety)))
+
+AddIcon enabled=(not checkboxon(opt_rogue_subtlety_aoe) and specialization(subtlety)) enemies=1 help=shortcd
+{
+ if not incombat() subtletyprecombatshortcdactions()
+ subtlety_defaultshortcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_subtlety_aoe) and specialization(subtlety)) help=shortcd
+{
+ if not incombat() subtletyprecombatshortcdactions()
+ subtlety_defaultshortcdactions()
+}
+
+AddIcon enabled=(specialization(subtlety)) enemies=1 help=main
+{
+ if not incombat() subtletyprecombatmainactions()
+ subtlety_defaultmainactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_subtlety_aoe) and specialization(subtlety)) help=aoe
+{
+ if not incombat() subtletyprecombatmainactions()
+ subtlety_defaultmainactions()
+}
+
+AddIcon enabled=(not checkboxon(opt_rogue_subtlety_aoe) and specialization(subtlety)) enemies=1 help=cd
+{
+ if not incombat() subtletyprecombatcdactions()
+ subtlety_defaultcdactions()
+}
+
+AddIcon enabled=(checkboxon(opt_rogue_subtlety_aoe) and specialization(subtlety)) help=cd
+{
+ if not incombat() subtletyprecombatcdactions()
+ subtlety_defaultcdactions()
+}
+
+### Required symbols
+# akaaris_soul_fragment_runeforge
+# alacrity_talent
+# ancestral_call
+# arcane_pulse
+# arcane_torrent
+# backstab
+# bag_of_tricks
+# berserking
+# black_powder
+# blood_fury_ap
+# bloodlust
+# cheap_shot
+# dark_shadow_talent
+# deathly_shadows_buff
+# deathly_shadows_runeforge
+# deeper_daggers_conduit
+# deeper_stratagem_talent
+# echoing_reprimand
+# enveloping_shadows_talent
+# eviscerate
+# find_weakness_debuff
+# fireblood
+# flagellation
+# gloomblade
+# instant_poison
+# kick
+# kidney_shot
+# lead_by_example_buff
+# lead_by_example_soulbind
+# lights_judgment
+# mark_of_the_master_assassin_runeforge
+# marked_for_death
+# master_assassin_buff
+# master_of_shadows_talent
+# nightstalker_talent
+# perforated_veins_buff
+# perforated_veins_conduit
+# potion_of_phantom_fire_item
+# premeditation_buff
+# premeditation_talent
+# quaking_palm
+# rupture
+# secret_technique
+# sepsis
+# serrated_bone_spike
+# shadow_blades
+# shadow_dance
+# shadow_dance_buff
+# shadow_focus_talent
+# shadowmeld
+# shadowstep
+# shadowstrike
+# shiv
+# shot_in_the_dark_buff
+# shuriken_storm
+# shuriken_tornado
+# shuriken_tornado_talent
+# slice_and_dice
+# stealth
+# subterfuge_talent
+# symbols_of_death
+# symbols_of_death_autocrit
+# the_rotten_buff
+# tiny_toxic_blade_runeforge
+# vanish
+# vigor_talent
+# weaponmaster_talent
+]]
+        scripts:registerScript("ROGUE", "subtlety", name, desc, code, "script")
+    end
+end

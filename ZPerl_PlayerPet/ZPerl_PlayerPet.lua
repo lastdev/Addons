@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 

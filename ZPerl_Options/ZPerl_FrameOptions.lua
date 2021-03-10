@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision:  $")
+XPerl_SetModuleRevision("$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 

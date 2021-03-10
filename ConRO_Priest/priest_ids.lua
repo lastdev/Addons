@@ -2,38 +2,267 @@ local ConRO_Priest, ids = ...;
 
 --General
 	ids.Racial = {
-		ArcaneTorrent = 232633,
+		AncestralCall = 274738,
 		ArcanePulse = 260364,
+		ArcaneTorrent = 50613,
+		Berserking = 26297,
+		Cannibalize = 20577,
+		GiftoftheNaaru = 59548,
+		Shadowmeld = 58984,
 	}
 	ids.Glyph = {
 		Lightspawn = 254224,
 		Sha = 132603,
 		Voidling = 254232,
 	}
-	ids.AzTrait = {
-		DeathThroes = 278659,
-		ThoughtHarvester = 288340,
+	ids.Covenant = {
+		None = 0,
+		Kyrian = 1,
+		Venthyr = 2,
+		NightFae = 3,
+		Necrolord = 4,
 	}
-	ids.AzTraitBuff = {
-		ThoughtHarvester = 288343,
+	ids.Soulbinds = {
+		Niya = 1,
+		Dreamweaver = 2,
+		GeneralDraven = 3,
+		PlagueDeviserMarileth = 4,
+		Emeni = 5,
+		Korayn = 6,
+		Pelagos = 7,
+		NadjiatheMistblade = 8,
+		TheotartheMadDuke = 9,
+		BonesmithHeirmir = 10,
+		Kleia = 13,
+		ForgelitePrimeMikanikos = 18,
 	}
-	ids.AzEssence = {
-		BloodoftheEnemy = 298273,
-		ConcentratedFlame = 295373,
-		FocusedAzeriteBeam =295258,
-		GuardianofAzeroth = 299358,
-		MemoryofLucidDream = 298357,
-		ReapingFlames = 310690,
-		TheUnboundForce = 298452,
-		WorldveinResonance = 295186,
+	ids.Covenant_Ability = {
+		BoonoftheAscended = 325013,
+			AscendedBlast = 325283,
+			AscendedNova = 325020,
+		FaeGuardians = 327661,
+		Fleshcraft = 324631,
+		Mindgames = 323673,
+		PhialofSerenity = 177278,
+		Soulshape = 310143,
+		SummonSteward = 324739,
+		UnholyNova = 324724,
 	}
-	ids.AzEssenceBuff = {
-		MemoryofLucidDream = 298357,
+	ids.Covenant_Conduit = {
+	--Kyrian
+		--Pelagos
+			CombatMeditation = 328266,
+			FocusingMantra = 328261,
+			RoadofTrials = 329786,
+			PhialofPatience = 329777,
+			BondofFriendship = 328265,
+			CleansedVestments = 328263,
+			LetGoofthePast = 328257,
+		--Kleia
+			ValiantStrikes = 329791,
+			Mentorship = 334066,
+			AscendantPhial = 329776,
+			CleansingRites = 329784,
+			EverForward = 328258,
+			BearersPursuit = 329779,
+			PointedCourage = 329778,
+			ResonantAccolades = 329781,
+		--Forgelite Prime Mikanikos
+			BronsCalltoAction = 333950,
+			ForgeliteFilter = 331609,
+			ChargedAdditive = 331610,
+			RegeneratingMaterials = 331726,
+			ResilientPlumage = 331725,
+			SoulsteelClamps = 331611,
+			HammerofGenesis = 333935,
+			SparklingDriftglobeCore = 331612,
+	--Necrolord
+		--Plague Deviser Marileth
+			VolatileSolvent = 323074,
+			OozsFrictionlessCoating = 323091,
+			TravelwithBloop = 323089,
+			PlagueysPreemptiveStrike = 323090,
+			KevinsKeyring = 323079,
+			PlaguebornCleansingSlime = 323081,
+			UltimateForm = 323095,
+		--Emeni
+			LeadbyExample = 342156,
+			EmenisMagnificentSkin = 323921,
+			EmenisAmbulatoryFlesh = 341650,
+			CartilaginousLegs = 324440,
+			HearthKidneystone = 324441,
+			GristledToes = 323918,
+			GnashingChompers = 323919,
+			SulfuricEmission = 323916,
+		--Bonesmith Heirmir
+			ForgeborneReveries = 326514,
+			ResourcefulFleshcrafting = 326507,
+			SerratedSpaulders = 326504,
+			RuneforgedSpurs = 326512,
+			BonesmithsSatchel = 326513,
+			HeirmirsArsenalGorestompers = 326511,
+			HeirmirsArsenalMarrowedGemstone = 326572,
+			HeirmirsArsenalRavenousPendant = 326509,
+	--NightFae
+		--Niya
+			GroveInvigoration = 322721,
+			RunWithoutTiring = 342270,
+			StayontheMove = 320658,
+			NaturesSplendor = 320668,
+			SwiftPatrol = 320687,
+			NiyasToolsBurrs = 320659,
+			NiyasToolsPoison = 320660,
+			NiyasToolsHerbs = 320662,
+		--Dreamweaver
+			Podtender = 319217,
+			SoothingVoice = 319211,
+			SocialButterfly = 319210,
+			EmpoweredChrysalis = 319213,
+			FaerieDust = 319214,
+			Somnambulist = 319216,
+			FieldofBlossoms = 319191,
+		--Korayn
+			WildHuntTactics = 325066,
+			HornoftheWildHunt = 325067,
+			WildHuntsCharge = 325065,
+			VorkaiSharpeningTechniques = 325072,
+			GetInFormation = 325073,
+			FaceYourFoes = 325068,
+			FirstStrike = 325069,
+			HoldtheLine = 325601,
+	--Venthyr
+		--Nadjia the Mistblade
+			ThrillSeeker = 331586,
+			AgentofChaos = 331576,
+			FancyFootwork = 331577,
+			FriendsinLowPlaces = 331579,
+			FamiliarPredicaments = 331582,
+			ExactingPreparation = 331580,
+			DauntlessDuelist = 331584,
+		--Theotar the Mad Duke
+			SoothingShade = 336239,
+			WatchtheShoes = 336140,
+			LeisurelyGait = 336147,
+			LifeoftheParty = 336247,
+			ExquisiteIngredients = 336184,
+			TokenofAppreciation = 336245,
+			RefinedPalate = 336243,
+			WastelandPropriety = 319983,
+		--General Draven
+			ServiceInStone = 340159,
+			MoveAsOne = 319982,
+			EnduringGloom = 319978,
+			UnbreakableBody = 332755,
+			ExpeditionLeader = 332756,
+			HoldYourGround = 332754,
+			SuperiorTactics = 332753,
+			BuiltforWar = 319973,
+	--Endurance
+		CharitableSoul = 337715,
+		LightsInspiration = 337748,
+		TranslucentImage = 337662,
+	--Finesse
+		ClearMind = 337707,
+		MentalRecovery = 337954,
+		MovewithGrace = 337678,
+		PowerUntoOthers = 337762,
+	--Potency
+		CourageousAscension = 337966,
+		DissonantEchoes = 338342,
+			DissonantEchoes_VoidBolt = 343355,
+		Exaltation = 337790,
+		FaeFermata = 338305,
+		FesteringTransfusion = 337979,
+		FocusedMending = 337914,
+		HauntingApparitions = 338319,
+		HolyOration = 338345,
+		LastingSpirit = 337811,
+		MindDevourer = 338332,
+		PainTransformation = 337786,
+		RabidShadows = 338338,
+		ResonantWords = 337947,
+		ShatteredPerceptions = 338315,
+		ShiningRadiance = 337778,
+		SwiftPenitence = 337891,
 	}
-	ids.AzEssenceDebuff = {
-		ConcentratedFlame = 295368,
+	ids.Covenant_Buff = {
+		BoonoftheAscended = 325013,
+		DissonantEchoes = 343144,
+		MindDevourer = 338333,
 	}
-	
+	ids.Covenant_Debuff = {	
+
+	}
+	ids.Legendary = {
+	--Neutral
+		EchoofEonar_Finger = "item:178926::::::::::::1:7100",
+		EchoofEonar_Waist = "item:173248::::::::::::1:7100",
+		EchoofEonar_Wrist = "item:173249::::::::::::1:7100",
+		JudgementoftheArbiter_Finger = "item:178926::::::::::::1:7101",
+		JudgementoftheArbiter_Hands = "item:173244::::::::::::1:7101",
+		JudgementoftheArbiter_Wrist = "item:173249::::::::::::1:7101",
+		MawRattle_Feet = "item:173243::::::::::::1:7159",
+		MawRattle_Hands = "item:173244::::::::::::1:7159",
+		MawRattle_Legs = "item:173246::::::::::::1:7159",
+		NorgannonsSagacity_Back = "item:173242::::::::::::1:7102",
+		NorgannonsSagacity_Feet = "item:173243::::::::::::1:7102",
+		NorgannonsSagacity_Legs = "item:173246::::::::::::1:7102",
+		SephuzsProclamation_Chest = "item:173241::::::::::::1:7103",
+		SephuzsProclamation_Neck = "item:178927::::::::::::1:7103",
+		SephuzsProclamation_Shoulder = "item:173247::::::::::::1:7103",
+		StablePhantasmaLure_Back = "item:173242::::::::::::1:7104",
+		StablePhantasmaLure_Neck = "item:178927::::::::::::1:7104",
+		StablePhantasmaLure_Wrist = "item:173249::::::::::::1:7104",
+		ThirdEyeoftheJailer_Head = "item:173245::::::::::::1:7105",
+		ThirdEyeoftheJailer_Shoulder = "item:173247::::::::::::1:7105",
+		ThirdEyeoftheJailer_Waist = "item:173248::::::::::::1:7105",
+		VitalitySacrifice_Chest = "item:173241::::::::::::1:7106",
+		VitalitySacrifice_Head = "item:173245::::::::::::1:7106",
+		VitalitySacrifice_Shoulder = "item:173247::::::::::::1:7106",
+	--Priest
+		CauterizingShadows_Feet = "item:173243::::::::::::1:6975",
+		CauterizingShadows_Waist = "item:173248::::::::::::1:6975",
+		MeasuredContemplation_Chest = "item:173241::::::::::::1:7161",
+		MeasuredContemplation_Neck = "item:178927::::::::::::1:7161",
+		TwinsoftheSunPriestess_Head = "item:173245::::::::::::1:7002",
+		TwinsoftheSunPriestess_Shoulder = "item:173247::::::::::::1:7002",
+		VaultofHeavens_Finger = "item:178926::::::::::::1:6972",
+		VaultofHeavens_Wrist = "item:173249::::::::::::1:6972",
+	--Discipline
+		ClarityofMind_Chest = "item:173241::::::::::::1:6980",
+		ClarityofMind_Finger = "item:178926::::::::::::1:6980",
+		CrystallineReflection_Hands = "item:173244::::::::::::1:6978",
+		CrystallineReflection_Shoulder = "item:173247::::::::::::1:6978",
+		KissofDeath_Feet = "item:173243::::::::::::1:6979",
+		KissofDeath_Legs = "item:173246::::::::::::1:6979",
+		ThePenitentOne_Back = "item:173242::::::::::::1:6976",
+		ThePenitentOne_Feet = "item:173243::::::::::::1:6976",
+	--Holy
+		DivineImage_Head = "item:173245::::::::::::1:6973",
+		DivineImage_Waist = "item:173248::::::::::::1:6973",
+		FlashConcentration_Neck = "item:178927::::::::::::1:6974",
+		FlashConcentration_Wrist = "item:173249::::::::::::1:6974",
+		HarmoniousApparatus_Finger = "item:178926::::::::::::1:6977",
+		HarmoniousApparatus_Shoulder = "item:173247::::::::::::1:6977",
+		XanshiReturnofArchbishopBenedictus_Legs = "item:173246::::::::::::1:6984",
+		XanshiReturnofArchbishopBenedictus_Back = "item:173242::::::::::::1:6984",		
+	--Shadow
+		EternalCalltotheVoid_Hands = "item:173244::::::::::::1:6983",
+		EternalCalltotheVoid_Wrist = "item:173249::::::::::::1:6983",
+		PainbreakerPsalm_Back = "item:173242::::::::::::1:6981",
+		PainbreakerPsalm_Chest = "item:173241::::::::::::1:6981",
+		ShadowflamePrism_Hands = "item:173244::::::::::::1:6982",
+		ShadowflamePrism_Head = "item:173245::::::::::::1:6982",
+		TalbadarsStratagem_Legs = "item:173246::::::::::::1:7162",
+		TalbadarsStratagem_Waist = "item:173248::::::::::::1:7162",
+	}
+	ids.Legendary_Buff = {
+
+	}
+	ids.Legendary_Debuff = {	
+
+	}
+
 --Discipline
 	ids.Disc_Ability = {
 	--Priest
@@ -108,6 +337,18 @@ local ConRO_Priest, ids = ...;
 		SpiritShell = 109964,
 		Evangelism = 246287,
 	}
+	ids.Disc_PvPTalent = {	
+		Purification = 196162,
+		PurifiedResolve = 196439,
+		Trinity = 214205,
+		StrengthofSoul = 197535,
+		UltimateRadiance = 236499,
+		DomeofLight = 197590,
+		Archangel = 197862,
+		DarkArchangel = 197871,
+		Thoughtsteal = 316262,
+		SearingLight = 215768,
+	}
 	ids.Disc_Form = {
 	
 	}
@@ -116,6 +357,8 @@ local ConRO_Priest, ids = ...;
 		PoweroftheDarkSide = 198069,
 		PowerWordFortitude = 21562,
 		PowerWordShield = 17,
+		Rapture = 47536,
+		SpiritShell = 109964,
 	}
 	ids.Disc_Debuff = {
 		PurgetheWicked = 204213,
@@ -204,6 +447,19 @@ local ConRO_Priest, ids = ...;
 		Apotheosis = 200183,
 		HolyWordSalvation = 265202,
 	}
+	ids.Holy_PvPTalent = {	
+		HolyWard = 213610,
+		HolyWordConcentration = 289657,
+		GreaterHeal = 289666,
+		CardinalMending = 328529,
+		MiracleWorker = 235587,
+		SpiritoftheRedeemer = 215982,
+		RayofHope = 197268,
+		GreaterFade = 213602,
+		DeliveredfromEvil = 196611,
+		Thoughtsteal = 316262,
+		DivineAscension = 328530,
+	}
 	ids.Holy_Form = {
 	
 	}
@@ -212,6 +468,7 @@ local ConRO_Priest, ids = ...;
 		PowerWordShield = 17,
 	}
 	ids.Holy_Debuff = {
+		HolyFire = 14914,
 		ShadowWordPain = 589,	
 		WeakenedSoul = 6788,
 	}
@@ -288,7 +545,7 @@ local ConRO_Priest, ids = ...;
 		--40
 		AuspiciousSpirits = 155271,
 		PsychicLink = 199484,
-		ShadowCrash = 342834,
+		ShadowCrash = 205385,
 		--45
 		Damnation = 341374,
 		Mindbender = 200174,
@@ -297,6 +554,17 @@ local ConRO_Priest, ids = ...;
 		AncientMadness = 341240,
 		HungeringVoid = 345218,
 		SurrendertoMadness = 319952,
+	}
+	ids.Shad_PvPTalent = {	
+		VoidShield = 280749,
+		DriventoMadness = 199259,
+		MindTrauma = 199445,
+		VoidShift = 108968,
+		VoidOrigins = 228630,
+		Psyfiend = 211522,
+		GreaterFade = 213602,
+		LastingPlague = 341167,
+		Thoughtsteal = 316262,
 	}
 	ids.Shad_Form = {
 		Shadowform = 232698,
@@ -308,10 +576,11 @@ local ConRO_Priest, ids = ...;
 		PowerInfusion = nil,
 		PowerWordFortitude = 21562,
 		PowerWordShield = 17,
+		UnfurlingDarkness = 341282,
 		VampiricEmbrace = 15286,
 	}
 	ids.Shad_Debuff = {
-		ShadowCrash = 342835,
+		DevouringPlague = 335467,
 		ShadowWordPain = 589,
 		VampiricTouch = 34914,
 		WeakenedSoul = 6788,

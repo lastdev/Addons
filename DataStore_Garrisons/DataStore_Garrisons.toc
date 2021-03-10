@@ -1,14 +1,13 @@
-## Interface: 90001
+﻿## Interface: 90002
 ## Title: DataStore_Garrisons
 ## Notes: Stores information about garrisons and followers
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.0.1-024
+## Version: r28
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_GarrisonsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Project-ID: 88051
 
 locale.xml
 

@@ -6,545 +6,497 @@ if not MaxDps then
 end
 local MaxDps = MaxDps;
 local UnitPower = UnitPower;
-local Maelstrom = Enum.PowerType.Maelstrom;
+local GetTotemInfo = GetTotemInfo;
+local GetTime = GetTime;
+
+local Necrolord = Enum.CovenantType.Necrolord;
+local Venthyr = Enum.CovenantType.Venthyr;
+local NightFae = Enum.CovenantType.NightFae;
+local Kyrian = Enum.CovenantType.Kyrian;
 
 local Shaman = addonTable.Shaman;
 
 local EH = {
-	LightningShield      = 192106,
-	Boulderfist          = 246035,
-	Landslide            = 197992,
-	Hailstorm            = 210853,
-	Frostbrand           = 196834,
-	CrashLightning       = 187874,
-	Flametongue          = 193796,
-	Stormstrike          = 17364,
-	Stormbringer         = 201845,
-	FeralSpirit          = 51533,
-	CrashingStorm        = 192246,
-	LavaLash             = 60103,
-	LightningBolt        = 187837,
-	Rockbiter            = 193786,
-	FuryOfAir            = 197211,
-	Overcharge           = 210727,
-	Windsong             = 201898,
-	HotHand              = 201900,
-	Windfury             = 33757,
-	FeralLunge           = 196884,
-	WindRushTotem        = 192077,
-	EarthenSpike         = 188089,
-	Windstrike           = 115356,
-	GatheringStorms      = 198300,
-	SearingAssault       = 192087,
-	Sundering            = 197214,
-	Ascendance           = 114051,
-	EarthElemental       = 198103,
-	ForcefulWinds        = 262647,
+	WindfuryWeapon      = 33757,
+	FlametongueWeapon   = 318038,
+	LightningShield     = 192106,
+	Stormkeeper         = 320137,
+	WindfuryTotem       = 8512,
+	DoomWinds           = 335903,
+	Bloodlust           = 2825,
+	WindShear           = 57994,
+	FeralSpirit         = 51533,
+	Ascendance          = 114051,
+	Windstrike          = 115356,
+	CrashLightning      = 187874,
+	CrashLightningAura  = 333964,
+	FaeTransfusion      = 328923,
+	FrostShock          = 196840,
+	Hailstorm           = 210853,
+	FlameShock          = 188389,
+	FireNova            = 333974,
+	LashingFlames       = 334046,
+	LashingFlamesAura   = 334168,
+	PrimordialWave      = 326059,
+	VesperTotem         = 324386,
+	LightningBolt       = 188196,
+	MaelstromWeapon     = 344179,
+	CrashingStorm       = 192246,
+	LavaLash            = 60103,
+	Stormstrike         = 17364,
+	ChainLightning      = 188443,
+	ChainHarvest        = 320674,
+	ElementalBlast      = 117014,
+	Sundering           = 197214,
+	IceStrike           = 342240,
+	EarthenSpike        = 188089,
+	EarthElemental      = 198103,
+	HotHand             = 201900,
+	PrimalLavaActuators = 335896,
 
-	TotemMastery         = 262395,
-	ResonanceTotem       = 262417,
+	-- soulbind abilities
+	GroveInvigoration   = 322721,
+	FieldOfBlossoms     = 319191,
 
-	PrimalPrimer         = 272992,
-	PrimalPrimerAura     = 273006,
-
-	NaturalHarmony       = 278697,
-	NaturalHarmonyFrost  = 279029,
-	NaturalHarmonyFire   = 279028,
-	NaturalHarmonyNature = 279033,
-
-	StrengthOfEarth      = 273461,
-	StrengthOfEarthAura  = 273465,
-
-	LightningConduit     = 275388,
-	LightningConduitAura = 275391,
+	-- leggos
+	DoomWindsBonusId           = 6993,
+	DoomWindsDebuff            = 335904,
+	PrimalLavaActuatorsBonusId = 6996,
 };
 
 setmetatable(EH, Shaman.spellMeta);
---local EH = {
---	LightningShield = 192106,
---	WindShear       = 57994,
---	Ascendance      = 114051,
---	FeralSpirit     = 51533,
---	FuryOfAir       = 197211,
---	Stormstrike     = 17364,
---	LavaLash        = 60103,
---	CrashLightning  = 187874,
---	Frostbrand      = 196834,
---	EarthenSpike    = 188089,
---	LightningBolt   = 187837,
---	Overcharge      = 210727,
---	HotHand         = 201900,
---	Hailstorm       = 210853,
---	Boulderfist     = 246035,
---	Landslide       = 197992,
---	Rockbiter       = 193786,
---	Bloodlust       = 2825,
---	EarthElemental  = 198103,
---	Stormbringer    = 201845,
---	Sundering       = 197214,
---
---	Flametongue     = 193796,
---	SearingAssault  = 192087,
---	CrashingStorm   = 192246,
---	TotemMastery    = 262395,
---};
+
+local TotemIcons = {
+	[136114] = 'Windfury'
+}
 
 function Shaman:Enhancement()
 	local fd = MaxDps.FrameData;
 	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
 	local buff = fd.buff;
 	local talents = fd.talents;
 	local targets = MaxDps:SmartAoe();
-	local gcd = fd.gcd;
-	local maelstrom = UnitPower('player', Maelstrom);
-	local feralSpiritRemains = Clamp(cooldown[EH.FeralSpirit].remains - 90 + 15, 0, 16);
-
-	fd.targets = targets;
-
-	-- variable,name=cooldown_sync,value=(talent.ascendance.enabled&(buff.ascendance.up|cooldown.ascendance.remains>50))|(!talent.ascendance.enabled&(feral_spirit.remains>5|cooldown.feral_spirit.remains>50));
-	fd.cooldownSync = (
-		talents[EH.Ascendance] and (buff[EH.Ascendance].up or
-			cooldown[EH.Ascendance].remains > 50)
-	) or (
-		not talents[EH.Ascendance] and (feralSpiritRemains > 5 or cooldown[EH.FeralSpirit].remains > 50)
-	);
-
-	-- variable,name=furyCheck_SS,value=maelstrom>=(talent.fury_of_air.enabled*(6+action.stormstrike.cost));
-	fd.furyCheckSS = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 30));
-
-	-- variable,name=furyCheck_LL,value=maelstrom>=(talent.fury_of_air.enabled*(6+action.lava_lash.cost));
-	fd.furyCheckLL = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 40));
-
-	-- variable,name=furyCheck_CL,value=maelstrom>=(talent.fury_of_air.enabled*(6+action.crash_lightning.cost));
-	fd.furyCheckCL = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 20));
-
-	-- variable,name=furyCheck_FB,value=maelstrom>=(talent.fury_of_air.enabled*(6+action.frostbrand.cost));
-	fd.furyCheckFB = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 20));
-
-	-- variable,name=furyCheck_ES,value=maelstrom>=(talent.fury_of_air.enabled*(6+action.earthen_spike.cost));
-	fd.furyCheckES = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 20));
-
-	-- variable,name=furyCheck_LB,value=maelstrom>=(talent.fury_of_air.enabled*(6+40));
-	fd.furyCheckLB = maelstrom >= ((talents[EH.FuryOfAir] and 1 or 0) * (6 + 40));
-
-	-- variable,name=OCPool,value=(active_enemies>1|(cooldown.lightning_bolt.remains>=2*gcd));
-	fd.oCPool = (targets > 1 or (cooldown[EH.LightningBolt].remains >= 2 * gcd));
-
-	-- variable,name=OCPool_SS,value=(variable.OCPool|maelstrom>=(talent.overcharge.enabled*(40+action.stormstrike.cost)));
-	fd.oCPoolSS = (fd.oCPool or maelstrom >= ((talents[EH.Overcharge] and 1 or 0) * (40 + 30)));
-
-	-- variable,name=OCPool_LL,value=(variable.OCPool|maelstrom>=(talent.overcharge.enabled*(40+action.lava_lash.cost)));
-	fd.oCPoolLL = (fd.oCPool or maelstrom >= ((talents[EH.Overcharge] and 1 or 0) * (40 + 40)));
-
-	-- variable,name=OCPool_CL,value=(variable.OCPool|maelstrom>=(talent.overcharge.enabled*(40+action.crash_lightning.cost)));
-	fd.oCPoolCL = (fd.oCPool or maelstrom >= ((talents[EH.Overcharge] and 1 or 0) * (40 + 20)));
-
-	-- variable,name=OCPool_FB,value=(variable.OCPool|maelstrom>=(talent.overcharge.enabled*(40+action.frostbrand.cost)));
-	fd.oCPoolFB = (fd.oCPool or maelstrom >= ((talents[EH.Overcharge] and 1 or 0) * (40 + 20)));
-
-	-- variable,name=CLPool_LL,value=active_enemies=1|maelstrom>=(action.crash_lightning.cost+action.lava_lash.cost);
-	fd.cLPoolLL = targets == 1 or maelstrom >= (20 + 40);
-
-	-- variable,name=CLPool_SS,value=active_enemies=1|maelstrom>=(action.crash_lightning.cost+action.stormstrike.cost);
-	fd.cLPoolSS = targets == 1 or maelstrom >= (20 + 30);
-
-	-- variable,name=freezerburn_enabled,value=(talent.hot_hand.enabled&talent.hailstorm.enabled&azerite.primal_primer.enabled);
-	fd.freezerburnEnabled = (talents[EH.HotHand] and talents[EH.Hailstorm] and azerite[EH.PrimalPrimer] > 0);
-
-	-- variable,name=rockslide_enabled,value=(!variable.freezerburn_enabled&(talent.boulderfist.enabled&talent.landslide.enabled&azerite.strength_of_earth.enabled));
-	fd.rockslideEnabled = (not fd.freezerburnEnabled and (talents[EH.Boulderfist] and talents[EH.Landslide] and azerite[EH.StrengthOfEarth] > 0));
-
-	fd.maelstrom = maelstrom;
-
-	local result;
-
-	-- call_action_list,name=cds;
-	Shaman:EnhancementCds();
-
-	-- call_action_list,name=asc,if=buff.ascendance.up;
-	if buff[EH.Ascendance].up then
-		result = Shaman:EnhancementAsc();
-		if result then return result; end
-	end
-
-	-- call_action_list,name=priority;
-	result = Shaman:EnhancementPriority();
-	if result then return result; end
-
-	-- call_action_list,name=maintenance,if=active_enemies<3;
-	if targets < 3 then
-		result = Shaman:EnhancementMaintenance();
-		if result then return result; end
-	end
-
-	-- call_action_list,name=freezerburn_core,if=variable.freezerburn_enabled;
-	-- call_action_list,name=default_core,if=!variable.freezerburn_enabled;
-	if fd.freezerburnEnabled then
-		result = Shaman:EnhancementFreezerburnCore();
-		if result then return result; end
-	else
-		result = Shaman:EnhancementDefaultCore();
-		if result then return result; end
-	end
-
-	-- call_action_list,name=maintenance,if=active_enemies>=3;
-	if targets >= 3 then
-		result = Shaman:EnhancementMaintenance();
-		if result then return result; end
-	end
-
-	-- call_action_list,name=filler;
-	return Shaman:EnhancementFiller();
-end
-
-function Shaman:EnhancementAsc()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local buff = fd.buff;
-	local talents = fd.talents;
-	local targets = fd.targets;
-	local maelstrom = fd.maelstrom;
-	local furyCheckCL = fd.furyCheckCL;
-
-	-- crash_lightning,if=!buff.crash_lightning.up&active_enemies>1&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and not buff[EH.CrashLightning].up and targets > 1 and furyCheckCL then
-		return EH.CrashLightning;
-	end
-
-	-- rockbiter,if=talent.landslide.enabled&!buff.landslide.up&charges_fractional>1.7;
-	if cooldown[EH.Rockbiter].ready and talents[EH.Landslide] and not buff[EH.Landslide].up and cooldown[EH.Rockbiter].charges > 1.7 then
-		return EH.Rockbiter;
-	end
-
-	-- windstrike;
-	return EH.Windstrike;
-end
-
-function Shaman:EnhancementCds()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local talents = fd.talents;
-
-	MaxDps:GlowEssences();
+	local runeforge = fd.runeforge;
+	fd.totems = Shaman:Totems();
+	fd.activeFlameShock = MaxDps:DebuffCounter(EH.FlameShock, fd.timeShift);
+	local doomWindsDebuff = MaxDps:IntUnitAura('player', EH.DoomWindsDebuff, 'HARMFUL', fd.timeShift);
 
 	-- feral_spirit;
 	MaxDps:GlowCooldown(EH.FeralSpirit, cooldown[EH.FeralSpirit].ready);
+	MaxDps:GlowCooldown(EH.EarthElemental, cooldown[EH.EarthElemental].ready);
 
-	-- ascendance,if=cooldown.strike.remains>0;
-	-- @TODO: wtf is strike?
+	-- ascendance;
 	if talents[EH.Ascendance] then
 		MaxDps:GlowCooldown(EH.Ascendance, cooldown[EH.Ascendance].ready);
 	end
 
-	-- earth_elemental;
-	MaxDps:GlowCooldown(EH.EarthElemental, cooldown[EH.EarthElemental].ready);
+	-- windfury_totem,if=runeforge.doom_winds.equipped&buff.doom_winds_debuff.down;
+	if runeforge[EH.DoomWindsBonusId] and not doomWindsDebuff.up then
+		return EH.WindfuryTotem;
+	end
+
+	-- call_action_list,name=single,if=active_enemies=1;
+	if targets <= 1 then
+		return Shaman:EnhancementSingle();
+	else
+	-- call_action_list,name=aoe,if=active_enemies>1;
+		return Shaman:EnhancementAoe();
+	end
 end
 
-function Shaman:EnhancementDefaultCore()
+function Shaman:EnhancementAoe()
 	local fd = MaxDps.FrameData;
 	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
 	local buff = fd.buff;
 	local debuff = fd.debuff;
+	local currentSpell = fd.currentSpell;
 	local talents = fd.talents;
-	local targets = fd.targets;
-	local maelstrom = fd.maelstrom;
-	local furyCheckES = fd.furyCheckES;
-	local furyCheckSS = fd.furyCheckSS;
-	local furyCheckCL = fd.furyCheckCL;
-	local furyCheckLB = fd.furyCheckLB;
-	local oCPoolSS = fd.oCPoolSS;
+	local covenant = fd.covenant;
+	local runeforge = fd.runeforge;
+	local covenantId = covenant.covenantId;
+	local totems = fd.totems;
+	local activeFlameShock = fd.activeFlameShock;
+	-- 2021-01-06 Laag - Added targets variable
+	local targets = MaxDps:SmartAoe();
 
-	-- earthen_spike,if=variable.furyCheck_ES;
-	if talents[EH.EarthenSpike] and cooldown[EH.EarthenSpike].ready and maelstrom >= 20 and furyCheckES then
-		return EH.EarthenSpike;
+	-- windstrike,if=buff.crash_lightning.up;
+	local Windstrike = MaxDps:FindSpell(EH.Windstrike) and EH.Windstrike or EH.Stormstrike;
+	if buff[EH.Ascendance].up and cooldown[EH.Windstrike].ready and buff[EH.CrashLightningAura].up then
+		return Windstrike;
 	end
 
-	-- stormstrike,cycle_targets=1,if=active_enemies>1&azerite.lightning_conduit.enabled&!debuff.lightning_conduit.up&variable.furyCheck_SS;
-	if cooldown[EH.Stormstrike].ready and maelstrom >= 30 and (
-		targets > 1 and azerite[EH.LightningConduit] > 0 and not debuff[EH.LightningConduitAura].up and furyCheckSS
-	) then
-		return EH.Stormstrike;
+	-- fae_transfusion,if=soulbind.grove_invigoration|soulbind.field_of_blossoms;
+	if covenantId == NightFae and cooldown[EH.FaeTransfusion].ready and currentSpell ~= EH.FaeTransfusion and
+		(covenant.soulbindAbilities[EH.GroveInvigoration] or covenant.soulbindAbilities[EH.FieldOfBlossoms])
+	then
+		return EH.FaeTransfusion;
 	end
 
-	-- stormstrike,if=buff.stormbringer.up|(active_enemies>1&buff.gathering_storms.up&variable.furyCheck_SS);
-	if cooldown[EH.Stormstrike].ready and maelstrom >= 30 and (
-		buff[EH.Stormbringer].up or
-		(targets > 1 and buff[EH.GatheringStorms].up and furyCheckSS)
-	) then
-		return EH.Stormstrike;
-	end
-
-	-- crash_lightning,if=active_enemies>=3&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and (targets >= 3 and furyCheckCL) then
+	-- 2021-01-06 Laag - Added Crash Lightning when DoomWinds buff is up
+	-- Crash Lightning,if=runeforge.doom_winds.equipped&buff.doom_winds.up);
+	if cooldown[EH.CrashLightning].ready and runeforge[EH.DoomWindsBonusId] and buff[EH.DoomWinds].up then
 		return EH.CrashLightning;
 	end
 
-	-- lightning_bolt,if=talent.overcharge.enabled&active_enemies=1&variable.furyCheck_LB&maelstrom>=40;
-	if talents[EH.Overcharge] and targets <= 1 and furyCheckLB and maelstrom >= 40 then
+	-- frost_shock,if=buff.hailstorm.up;
+	if cooldown[EH.FrostShock].ready and buff[EH.Hailstorm].up then
+		return EH.FrostShock;
+	end
+
+	-- 2021-01-06 Laag - Moved Sundering to earlier in rotation
+	-- sundering;
+	if talents[EH.Sundering] and cooldown[EH.Sundering].ready then
+		return EH.Sundering;
+	end
+
+	-- flame_shock,target_if=refreshable,cycle_targets=1,if=talent.fire_nova.enabled|talent.lashing_flames.enabled|covenant.necrolord;
+	if cooldown[EH.FlameShock].ready and debuff[EH.FlameShock].refreshable and
+		(talents[EH.FireNova] or talents[EH.LashingFlames] or covenantId == Necrolord)
+	then
+		return EH.FlameShock;
+	end
+
+	-- primordial_wave,target_if=min:dot.flame_shock.remains,cycle_targets=1,if=!buff.primordial_wave.up;
+	if covenantId == Necrolord and cooldown[EH.PrimordialWave].ready and (not buff[EH.PrimordialWave].up) then
+		return EH.PrimordialWave;
+	end
+
+	-- fire_nova,if=active_dot.flame_shock>=3;
+	-- TODO
+	if talents[EH.FireNova] and cooldown[EH.FireNova].ready and activeFlameShock >= 3 then
+		return EH.FireNova;
+	end
+
+	-- vesper_totem;
+	if covenantId == Kyrian and cooldown[EH.VesperTotem].ready then
+		return EH.VesperTotem;
+	end
+
+	-- lightning_bolt,if=buff.primordial_wave.up&(buff.stormkeeper.up|buff.maelstrom_weapon.stack>=5);
+	if buff[EH.PrimordialWave].up and (buff[EH.Stormkeeper].up or buff[EH.MaelstromWeapon].count >= 5) then
 		return EH.LightningBolt;
 	end
 
-	-- stormstrike,if=variable.OCPool_SS&variable.furyCheck_SS;
-	if cooldown[EH.Stormstrike].ready and maelstrom >= 30 and oCPoolSS and furyCheckSS then
+	-- crash_lightning,if=talent.crashing_storm.enabled|buff.crash_lightning.down;
+	if cooldown[EH.CrashLightning].ready and (talents[EH.CrashingStorm] or not buff[EH.CrashLightningAura].up) then
+		return EH.CrashLightning;
+	end
+
+	-- lava_lash,target_if=min:debuff.lashing_flames.remains,cycle_targets=1,if=talent.lashing_flames.enabled;
+	if cooldown[EH.LavaLash].ready and (talents[EH.LashingFlames]) then
+		return EH.LavaLash;
+	end
+
+	-- stormstrike,if=buff.crash_lightning.up;
+	if cooldown[EH.Stormstrike].ready and buff[EH.CrashLightningAura].up then
 		return EH.Stormstrike;
+	end
+
+	-- crash_lightning;
+	if cooldown[EH.CrashLightning].ready then
+		return EH.CrashLightning;
+	end
+
+	-- chain_lightning,if=buff.stormkeeper.up;
+	if currentSpell ~= EH.ChainLightning and buff[EH.Stormkeeper].up then
+		return EH.ChainLightning;
+	end
+
+	-- chain_harvest,if=buff.maelstrom_weapon.stack>=5;
+	if covenantId == Venthyr and
+		cooldown[EH.ChainHarvest].ready and
+		currentSpell ~= EH.ChainHarvest and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.ChainHarvest;
+	end
+
+	-- elemental_blast,if=buff.maelstrom_weapon.stack>=5;
+	if talents[EH.ElementalBlast] and
+		cooldown[EH.ElementalBlast].ready and
+		currentSpell ~= EH.ElementalBlast and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.ElementalBlast;
+	end
+
+	-- stormkeeper,if=buff.maelstrom_weapon.stack>=5;
+	if talents[EH.Stormkeeper] and
+		cooldown[EH.Stormkeeper].ready and
+		currentSpell ~= EH.Stormkeeper and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.Stormkeeper;
+	end
+
+	-- chain_lightning,if=buff.maelstrom_weapon.stack=10;
+	if currentSpell ~= EH.ChainLightning and buff[EH.MaelstromWeapon].count >= 10 then
+		return EH.ChainLightning;
+	end
+
+	-- flame_shock,target_if=refreshable,cycle_targets=1,if=talent.fire_nova.enabled;
+	if cooldown[EH.FlameShock].ready and debuff[EH.FlameShock].refreshable and talents[EH.FireNova] then
+		return EH.FlameShock;
+	end
+
+	-- lava_lash,target_if=min:debuff.lashing_flames.remains,cycle_targets=1,if=runeforge.primal_lava_actuators.equipped&buff.primal_lava_actuators.stack>6;
+	if cooldown[EH.LavaLash].ready and
+		runeforge[EH.PrimalLavaActuatorsBonusId] and
+		buff[EH.PrimalLavaActuators].count > 6
+	then
+		return EH.LavaLash;
+	end
+
+	-- 2021-01-06 Laag - Chain Lightning if targets >= 3
+	-- chain_lightning,if=buff.maelstrom_weapon.stack>=5&active_enemies>=3;
+	if currentSpell ~= EH.ChainLightning and buff[EH.MaelstromWeapon].count >= 5 and targets >= 3 then
+		return EH.ChainLightning;
+	end
+
+	-- windstrike;
+	if buff[EH.Ascendance].up and cooldown[EH.Windstrike].ready then
+		return Windstrike;
+	end
+
+	-- stormstrike;
+	if cooldown[EH.Stormstrike].ready then
+		return EH.Stormstrike;
+	end
+
+	-- lava_lash;
+	if cooldown[EH.LavaLash].ready then
+		return EH.LavaLash;
+	end
+
+	-- flame_shock,target_if=refreshable,cycle_targets=1;
+	if cooldown[EH.FlameShock].ready and debuff[EH.FlameShock].refreshable then
+		return EH.FlameShock;
+	end
+
+	-- fae_transfusion;
+	if covenantId == NightFae and cooldown[EH.FaeTransfusion].ready and currentSpell ~= EH.FaeTransfusion then
+		return EH.FaeTransfusion;
+	end
+
+	-- frost_shock;
+	if cooldown[EH.FrostShock].ready then
+		return EH.FrostShock;
+	end
+
+	-- ice_strike;
+	if talents[EH.IceStrike] and cooldown[EH.IceStrike].ready then
+		return EH.IceStrike;
+	end
+
+	-- chain_lightning,if=buff.maelstrom_weapon.stack>=5;
+	if currentSpell ~= EH.ChainLightning and buff[EH.MaelstromWeapon].count >= 5 then
+		return EH.ChainLightning;
+	end
+
+	-- fire_nova,if=active_dot.flame_shock>1;
+	if talents[EH.FireNova] and cooldown[EH.FireNova].ready and activeFlameShock > 1 then
+		return EH.FireNova;
+	end
+
+	-- earthen_spike;
+	if talents[EH.EarthenSpike] and cooldown[EH.EarthenSpike].ready then
+		return EH.EarthenSpike;
+	end
+
+	-- windfury_totem,if=buff.windfury_totem.remains<30;
+	if totems.Windfury < 30 then
+		return EH.WindfuryTotem;
 	end
 end
 
-function Shaman:EnhancementFiller()
+function Shaman:EnhancementSingle()
 	local fd = MaxDps.FrameData;
 	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
 	local buff = fd.buff;
+	local debuff = fd.debuff;
+	local currentSpell = fd.currentSpell;
 	local talents = fd.talents;
-	local targets = fd.targets;
-	local gcd = fd.gcd;
-	local maelstrom = fd.maelstrom;
-	local furyCheckCL = fd.furyCheckCL;
-	local furyCheckLL = fd.furyCheckLL;
-	local furyCheckFB = fd.furyCheckFB;
-	local oCPoolLL = fd.oCPoolLL;
-	local oCPoolCL = fd.oCPoolCL;
+	local runeforge = fd.runeforge;
+	local totems = fd.totems;
+	local activeFlameShock = fd.activeFlameShock;
+	local covenantId = fd.covenant.covenantId;
+
+	-- windstrike;
+	local Windstrike = MaxDps:FindSpell(EH.Windstrike) and EH.Windstrike or EH.Stormstrike;
+	if buff[EH.Ascendance].up and cooldown[EH.Windstrike].ready then
+		return Windstrike;
+	end
+
+	-- primordial_wave,if=!buff.primordial_wave.up;
+	if covenantId == Necrolord and cooldown[EH.PrimordialWave].ready and not buff[EH.PrimordialWave].up then
+		return EH.PrimordialWave;
+	end
+
+	-- stormstrike,if=runeforge.doom_winds.equipped&buff.doom_winds.up;
+	if cooldown[EH.Stormstrike].ready and runeforge[EH.DoomWindsBonusId] and buff[EH.DoomWinds].up then
+		return EH.Stormstrike;
+	end
+
+	-- crash_lightning,if=runeforge.doom_winds.equipped&buff.doom_winds.up;
+	if cooldown[EH.CrashLightning].ready and runeforge[EH.DoomWindsBonusId] and buff[EH.DoomWinds].up then
+		return EH.CrashLightning;
+	end
+
+	-- ice_strike,if=runeforge.doom_winds.equipped&buff.doom_winds.up;
+	if talents[EH.IceStrike] and
+		cooldown[EH.IceStrike].ready and
+		runeforge[EH.DoomWindsBonusId] and
+		buff[EH.DoomWinds].up
+	then
+		return EH.IceStrike;
+	end
+
+	-- 2021-01-06 Laag - Added Sundering when DoomWinds buff is up
+	-- Sundering,if=runeforge.doom_winds.equipped&buff.doom_winds.up);
+	if talents[EH.Sundering] and cooldown[EH.Sundering].ready and runeforge[EH.DoomWindsBonusId] and buff[EH.DoomWinds].up then
+		return EH.Sundering;
+	end
+
+	-- flame_shock,if=!ticking;
+	if cooldown[EH.FlameShock].ready and not debuff[EH.FlameShock].up then
+		return EH.FlameShock;
+	end
+
+	-- vesper_totem;
+	if covenantId == Kyrian and cooldown[EH.VesperTotem].ready then
+		return EH.VesperTotem;
+	end
+
+	-- frost_shock,if=buff.hailstorm.up;
+	if cooldown[EH.FrostShock].ready and (buff[EH.Hailstorm].up) then
+		return EH.FrostShock;
+	end
+
+	-- earthen_spike;
+	if talents[EH.EarthenSpike] and cooldown[EH.EarthenSpike].ready then
+		return EH.EarthenSpike;
+	end
+
+	-- fae_transfusion;
+	if covenantId == NightFae and cooldown[EH.FaeTransfusion].ready and currentSpell ~= EH.FaeTransfusion then
+		return EH.FaeTransfusion;
+	end
+
+	-- lightning_bolt,if=buff.stormkeeper.up;
+	if buff[EH.Stormkeeper].up then
+		return EH.LightningBolt;
+	end
+
+	-- elemental_blast,if=buff.maelstrom_weapon.stack>=5;
+	if talents[EH.ElementalBlast] and
+		cooldown[EH.ElementalBlast].ready and
+		currentSpell ~= EH.ElementalBlast and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.ElementalBlast;
+	end
+
+	-- chain_harvest,if=buff.maelstrom_weapon.stack>=5;
+	if covenantId == Venthyr and
+		cooldown[EH.ChainHarvest].ready and
+		currentSpell ~= EH.ChainHarvest and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.ChainHarvest;
+	end
+
+	-- lightning_bolt,if=buff.maelstrom_weapon.stack=10;
+	if buff[EH.MaelstromWeapon].count >= 10 then
+		return EH.LightningBolt;
+	end
+
+	-- lava_lash,if=buff.hot_hand.up|(runeforge.primal_lava_actuators.equipped&buff.primal_lava_actuators.stack>6);
+	if cooldown[EH.LavaLash].ready and
+		(
+			buff[EH.HotHand].up or
+			(runeforge[EH.PrimalLavaActuatorsBonusId] and buff[EH.PrimalLavaActuators].count > 6)
+		)
+	then
+		return EH.LavaLash;
+	end
+
+	-- stormstrike;
+	if cooldown[EH.Stormstrike].ready then
+		return EH.Stormstrike;
+	end
+
+	-- stormkeeper,if=buff.maelstrom_weapon.stack>=5;
+	if talents[EH.Stormkeeper] and
+		cooldown[EH.Stormkeeper].ready and
+		currentSpell ~= EH.Stormkeeper and
+		buff[EH.MaelstromWeapon].count >= 5
+	then
+		return EH.Stormkeeper;
+	end
+
+	-- lava_lash;
+	if cooldown[EH.LavaLash].ready then
+		return EH.LavaLash;
+	end
+
+	-- crash_lightning;
+	if cooldown[EH.CrashLightning].ready then
+		return EH.CrashLightning;
+	end
+
+	-- flame_shock,target_if=refreshable;
+	if cooldown[EH.FlameShock].ready and debuff[EH.FlameShock].refreshable then
+		return EH.FlameShock;
+	end
+
+	-- frost_shock;
+	if cooldown[EH.FrostShock].ready then
+		return EH.FrostShock;
+	end
+
+	-- ice_strike;
+	if talents[EH.IceStrike] and cooldown[EH.IceStrike].ready then
+		return EH.IceStrike;
+	end
 
 	-- sundering;
-	if talents[EH.Sundering] and cooldown[EH.Sundering].ready and maelstrom >= 20 then
+	if talents[EH.Sundering] and cooldown[EH.Sundering].ready then
 		return EH.Sundering;
 	end
 
-	-- crash_lightning,if=talent.forceful_winds.enabled&active_enemies>1&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and (
-		talents[EH.ForcefulWinds] and targets > 1 and furyCheckCL
-	) then
-		return EH.CrashLightning;
+	-- fire_nova,if=active_dot.flame_shock;
+	-- TODO
+	if talents[EH.FireNova] and cooldown[EH.FireNova].ready and activeFlameShock > 0 then
+		return EH.FireNova;
 	end
 
-	-- flametongue,if=talent.searing_assault.enabled;
-	if cooldown[EH.Flametongue].ready and talents[EH.SearingAssault] then
-		return EH.Flametongue;
-	end
-
-	-- lava_lash,if=!azerite.primal_primer.enabled&talent.hot_hand.enabled&buff.hot_hand.react;
-	if maelstrom >= 40 and (
-		azerite[EH.PrimalPrimer] == 0 and talents[EH.HotHand] and buff[EH.HotHand].up
-	) then
-		return EH.LavaLash;
-	end
-
-	-- crash_lightning,if=active_enemies>1&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and targets > 1 and furyCheckCL then
-		return EH.CrashLightning;
-	end
-
-	-- rockbiter,if=maelstrom<70&!buff.strength_of_earth.up;
-	if cooldown[EH.Rockbiter].ready and maelstrom < 70 and not buff[EH.StrengthOfEarthAura].up then
-		return EH.Rockbiter;
-	end
-
-	-- crash_lightning,if=talent.crashing_storm.enabled&variable.OCPool_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and talents[EH.CrashingStorm] and oCPoolCL then
-		return EH.CrashLightning;
-	end
-
-	-- lava_lash,if=variable.OCPool_LL&variable.furyCheck_LL;
-	if maelstrom >= 40 and oCPoolLL and furyCheckLL then
-		return EH.LavaLash;
-	end
-
-	-- rockbiter;
-	if cooldown[EH.Rockbiter].ready then
-		return EH.Rockbiter;
-	end
-
-	-- frostbrand,if=talent.hailstorm.enabled&buff.frostbrand.remains<4.8+gcd&variable.furyCheck_FB;
-	if maelstrom >= 20 and talents[EH.Hailstorm] and buff[EH.Frostbrand].remains < 4.8 + gcd and furyCheckFB then
-		return EH.Frostbrand;
-	end
-
-	-- flametongue;
-	if cooldown[EH.Flametongue].ready then
-		return EH.Flametongue;
-	end
-end
-
-function Shaman:EnhancementFreezerburnCore()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
-	local buff = fd.buff;
-	local debuff = fd.debuff;
-	local talents = fd.talents;
-	local targets = fd.targets;
-	local maelstrom = fd.maelstrom;
-	local furyCheckLL = fd.furyCheckLL;
-	local furyCheckES = fd.furyCheckES;
-	local furyCheckSS = fd.furyCheckSS;
-	local furyCheckCL = fd.furyCheckCL;
-	local furyCheckLB = fd.furyCheckLB;
-	local cLPoolLL = fd.cLPoolLL;
-	local oCPoolSS = fd.oCPoolSS;
-	local cLPoolSS = fd.cLPoolSS;
-
-	-- lava_lash,target_if=max:debuff.primal_primer.stack,if=azerite.primal_primer.rank>=2&debuff.primal_primer.stack=10&variable.furyCheck_LL&variable.CLPool_LL;
-	if maelstrom >= 40 and azerite[EH.PrimalPrimer] >= 2 and
-		debuff[EH.PrimalPrimerAura].count >= 10 and
-		furyCheckLL and
-		cLPoolLL then
-		return EH.LavaLash;
-	end
-
-	-- earthen_spike,if=variable.furyCheck_ES;
-	if talents[EH.EarthenSpike] and cooldown[EH.EarthenSpike].ready and maelstrom >= 20 and furyCheckES then
-		return EH.EarthenSpike;
-	end
-
-	-- stormstrike,cycle_targets=1,if=active_enemies>1&azerite.lightning_conduit.enabled&!debuff.lightning_conduit.up&variable.furyCheck_SS;
-	if cooldown[EH.Stormstrike].ready and maelstrom >= 30 and (
-		targets > 1 and azerite[EH.LightningConduit] > 0 and not debuff[EH.LightningConduitAura].up and furyCheckSS
-	) then
-		return EH.Stormstrike;
-	end
-
-	-- stormstrike,if=buff.stormbringer.up|(active_enemies>1&buff.gathering_storms.up&variable.furyCheck_SS);
-	if cooldown[EH.Stormstrike].ready and (
-		buff[EH.Stormbringer].up or
-		(targets > 1 and buff[EH.GatheringStorms].up and furyCheckSS)
-	) then
-		return EH.Stormstrike;
-	end
-
-	-- crash_lightning,if=active_enemies>=3&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and targets >= 3 and furyCheckCL then
-		return EH.CrashLightning;
-	end
-
-	-- lightning_bolt,if=talent.overcharge.enabled&active_enemies=1&variable.furyCheck_LB&maelstrom>=40;
-	if talents[EH.Overcharge] and targets <= 1 and furyCheckLB and maelstrom >= 40 then
+	-- lightning_bolt,if=buff.maelstrom_weapon.stack>=5;
+	if buff[EH.MaelstromWeapon].count >= 5 then
 		return EH.LightningBolt;
 	end
 
-	-- lava_lash,if=azerite.primal_primer.rank>=2&debuff.primal_primer.stack>7&variable.furyCheck_LL&variable.CLPool_LL;
-	if maelstrom >= 40 and azerite[EH.PrimalPrimer] >= 2 and
-		debuff[EH.PrimalPrimerAura].count > 7 and furyCheckLL and cLPoolLL
-	then
-		return EH.LavaLash;
-	end
-
-	-- stormstrike,if=variable.OCPool_SS&variable.furyCheck_SS&variable.CLPool_SS;
-	if cooldown[EH.Stormstrike].ready and maelstrom >= 30 and oCPoolSS and furyCheckSS and cLPoolSS then
-		return EH.Stormstrike;
-	end
-
-	-- lava_lash,if=debuff.primal_primer.stack=10&variable.furyCheck_LL;
-	if maelstrom >= 40 and debuff[EH.PrimalPrimerAura].count >= 10 and furyCheckLL then
-		return EH.LavaLash;
+	-- windfury_totem,if=buff.windfury_totem.remains<30;
+	if totems.Windfury < 30 then
+		return EH.WindfuryTotem;
 	end
 end
 
-function Shaman:EnhancementMaintenance()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local buff = fd.buff;
-	local talents = fd.talents;
-	local maelstrom = fd.maelstrom;
-	local furyCheckFB = fd.furyCheckFB;
 
-	-- flametongue,if=!buff.flametongue.up;
-	if cooldown[EH.Flametongue].ready and not buff[EH.Flametongue].up then
-		return EH.Flametongue;
+function Shaman:Totems()
+	local pets = {
+		Windfury = 0,
+	};
+
+	for index = 1, MAX_TOTEMS do
+		local hasTotem, totemName, startTime, duration, icon = GetTotemInfo(index);
+		if hasTotem then
+			local totemUnifiedName = TotemIcons[icon];
+			if totemUnifiedName then
+				local remains = startTime + duration - GetTime();
+				pets[totemUnifiedName] = remains;
+			end
+		end
 	end
 
-	-- frostbrand,if=talent.hailstorm.enabled&!buff.frostbrand.up&variable.furyCheck_FB;
-	if maelstrom >= 20 and talents[EH.Hailstorm] and not buff[EH.Frostbrand].up and furyCheckFB then
-		return EH.Frostbrand;
-	end
+	return pets;
 end
-
-function Shaman:EnhancementPriority()
-	local fd = MaxDps.FrameData;
-	local cooldown = fd.cooldown;
-	local azerite = fd.azerite;
-	local buff = fd.buff;
-	local debuff = fd.debuff;
-	local talents = fd.talents;
-	local targets = fd.targets;
-	local gcd = fd.gcd;
-	local maelstrom = fd.maelstrom;
-	local freezerburnEnabled = fd.freezerburnEnabled;
-	local furyCheckCL = fd.furyCheckCL;
-	local furyCheckLL = fd.furyCheckLL;
-	local furyCheckFB = fd.furyCheckFB;
-
-	-- crash_lightning,if=active_enemies>=(8-(talent.forceful_winds.enabled*3))&variable.freezerburn_enabled&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and (
-		freezerburnEnabled and furyCheckCL and
-		targets >= (8 - (talents[EH.ForcefulWinds] and 3 or 0))
-	) then
-		return EH.CrashLightning;
-	end
-
-	-- lava_lash,if=azerite.primal_primer.rank>=2&debuff.primal_primer.stack=10&active_enemies=1&variable.freezerburn_enabled&variable.furyCheck_LL;
-	if maelstrom >= 40 and (
-		azerite[EH.PrimalPrimer] >= 2 and
-		debuff[EH.PrimalPrimerAura].count >= 10 and
-		targets <= 1 and
-		freezerburnEnabled and
-		furyCheckLL
-	) then
-		return EH.LavaLash;
-	end
-
-	-- crash_lightning,if=!buff.crash_lightning.up&active_enemies>1&variable.furyCheck_CL;
-	if cooldown[EH.CrashLightning].ready and maelstrom >= 20 and (
-		not buff[EH.CrashLightning].up and
-		furyCheckCL and
-		targets > 1
-	) then
-		return EH.CrashLightning;
-	end
-
-	-- fury_of_air,if=!buff.fury_of_air.up&maelstrom>=20&spell_targets.fury_of_air_damage>=(1+variable.freezerburn_enabled);
-	if talents[EH.FuryOfAir] and maelstrom >= 3 and
-		not buff[EH.FuryOfAir].up and maelstrom >= 20 and targets >= (1 + (freezerburnEnabled and 1 or 0))
-	then
-		return EH.FuryOfAir;
-	end
-
-	-- fury_of_air,if=buff.fury_of_air.up&&spell_targets.fury_of_air_damage<(1+variable.freezerburn_enabled);
-	if talents[EH.FuryOfAir] and maelstrom >= 3 and
-		buff[EH.FuryOfAir].up and targets < (1 + (freezerburnEnabled and 1 or 0))
-	then
-		return EH.FuryOfAir;
-	end
-
-	-- totem_mastery,if=buff.resonance_totem.remains<=2*gcd;
-	if talents[EH.TotemMastery] and buff[EH.ResonanceTotem].remains <= 2 * gcd then
-		return EH.TotemMastery;
-	end
-
-	-- sundering,if=active_enemies>=3;
-	if talents[EH.Sundering] and cooldown[EH.Sundering].ready and maelstrom >= 20 and targets >= 3 then
-		return EH.Sundering;
-	end
-
-	-- rockbiter,if=talent.landslide.enabled&!buff.landslide.up&charges_fractional>1.7;
-	if cooldown[EH.Rockbiter].ready and talents[EH.Landslide] and not buff[EH.Landslide].up and cooldown[EH.Rockbiter].charges > 1.7 then
-		return EH.Rockbiter;
-	end
-
-	-- frostbrand,if=(azerite.natural_harmony.enabled&buff.natural_harmony_frost.remains<=2*gcd)&talent.hailstorm.enabled&variable.furyCheck_FB;
-	if maelstrom >= 20 and (azerite[EH.NaturalHarmony] > 0 and buff[EH.NaturalHarmonyFrost].remains <= 2 * gcd) and talents[EH.Hailstorm] and furyCheckFB then
-		return EH.Frostbrand;
-	end
-
-	-- flametongue,if=(azerite.natural_harmony.enabled&buff.natural_harmony_fire.remains<=2*gcd);
-	if cooldown[EH.Flametongue].ready and (azerite[EH.NaturalHarmony] > 0 and buff[EH.NaturalHarmonyFire].remains <= 2 * gcd) then
-		return EH.Flametongue;
-	end
-
-	-- rockbiter,if=(azerite.natural_harmony.enabled&buff.natural_harmony_nature.remains<=2*gcd)&maelstrom<70;
-	if cooldown[EH.Rockbiter].ready and (azerite[EH.NaturalHarmony] > 0 and buff[EH.NaturalHarmonyNature].remains <= 2 * gcd) and maelstrom < 70 then
-		return EH.Rockbiter;
-	end
-end
-

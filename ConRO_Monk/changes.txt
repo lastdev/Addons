@@ -1,3 +1,40 @@
+Ver 9.1.5
+	-Updated PvP code.
+	-Small cleaning.
+
+Ver 9.1.4
+	-Added support for specialization disabling.
+
+Ver 9.1.3
+	-Fixed DanceofChiJi talent for windwalker rotation.
+
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Added Conduits to library.
+
+Ver 9.1.1
+	-Fixed Typo.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.5
+	-Added covenant abilities to rotations.
+	-Updated rotations.
+
+Ver 9.0.4
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.3
+	-Fixed missing Player Percent health condition in Windwalker rotation.
+
+Ver 9.0.2
+	-Updated Brewmaster rotation for prepatch.
+	-Updated Windwalker defense rotation for prepatch.
+
 Ver 9.0.1
 	-Updated Windwalker rotation for prepatch.
 

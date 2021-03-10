@@ -1,3 +1,77 @@
+Ver 9.1.11
+	-Updated PvP code.
+	-Fixed Weapon buffs for Enhancement specialization.
+
+Ver 9.1.10
+	-Manually set Elementals for Cooldown so they work with burst system.
+
+Ver 9.1.9
+	-Another Doom Winds fix now that I can tell friend from foe.
+
+Ver 9.1.8
+	-Tweaked Crash Lightning ability in Enhancement rotation.
+	-Added support for specialization disabling.
+	-Another tweak for Doom Winds.
+
+Ver 9.1.7
+	-Removed Thunderstorm from Interrupt as these changes are turning out confusing.
+	-Tweak to fix AoE Primordial Wave.
+	-Fix for Doom Winds.
+
+Ver 9.1.6
+	-Tweaked Doom Winds interaction slightly.
+	-Tweaked Elemental rotation Lava Burst Usage in AoE.
+
+Ver 9.1.5
+	-Removed Warning Text for Enhancement Weapon imbues as Icon is good enough.
+	-Fixed error around Static Discharge talent.
+	-Fixed issue with Lava Burst without Echos of Elements talent.
+	
+Ver 9.1.4
+	-Added Legendaries to library.
+	-Added Conduits to library.
+	
+Ver 9.1.3
+	-Reverted change to Primordial Wave.
+
+Ver 9.1.2
+	-Changed Primordial Wave spell ID. Cannot test myself, please let me know if it works.
+
+Ver 9.1.1
+	-Found small code error.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.8
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.7
+	-Added Windfury Totem to burst rotation by request.
+
+Ver 9.0.6
+	-Added Chain Harvest to the burst rotation.
+
+Ver 9.0.5
+	-Added Covenant Abilities to rotations.
+	-Updated Damage rotations for Shadowlands.
+
+Ver 9.0.4
+	-Fixing Windstrike during Ascendence for Enhancement rotation.
+
+Ver 9.0.3
+	-Adjusted Enhancement defense rotation to use Maelstrom Weapon with Healing Surge.
+
+Ver 9.0.2
+	-Tested Windfury Totem and added to Enhancement rotation.
+
+Ver 9.0.1
+	-Updated Elemental and Enhancement rotations for prepatch.
+	-Added notifiers for Weapon Imbues.
+
 Ver 9.0.0
 	-Updated Library for PrePatch.
 	-Will work on rotation once all classes libraries have a once over.

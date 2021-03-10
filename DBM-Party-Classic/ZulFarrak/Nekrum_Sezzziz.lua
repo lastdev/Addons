@@ -1,9 +1,11 @@
 local mod	= DBM:NewMod(487, "DBM-Party-Classic", 15, 241)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145746")
+mod:SetRevision("20201104202220")
 mod:SetCreatureID(7796, 7275)--nekrum-gutchewer, shadowpriest-sezzziz
---mod:SetEncounterID(598, 599)--Each boss has it's own encounter ID?
+mod:SetEncounterID(598, 599)--Each boss has it's own encounter ID?
+mod:DisableEEKillDetection()--So we have to disable using encounter events for win detection since you don't win until BOTH died
+mod:DisableBKKillDetection()
 
 mod:RegisterCombat("combat")
 

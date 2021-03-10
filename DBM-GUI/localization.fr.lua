@@ -17,13 +17,13 @@ L.BossModLoad_now 			= [[Ce boss mod n'est pas chargé.
 Il le sera une fois que vous serez dans l'instance.
 Vous pouvez aussi cliquer sur le bouton pour le charger manuellement.]]
 
-L.PosX						= 'Position en X'
-L.PosY						= 'Position en Y'
+L.PosX						= "Position en X"
+L.PosY						= "Position en Y"
 
-L.MoveMe 					= 'Déplacez-moi'
-L.Button_OK 				= 'OK'
-L.Button_Cancel 			= 'Annuler'
-L.Button_LoadMod 			= 'Charger l\'AddOn'
+L.MoveMe 					= "Déplacez-moi"
+L.Button_OK 				= "OK"
+L.Button_Cancel 			= "Annuler"
+L.Button_LoadMod 			= "Charger l\'AddOn"
 L.Mod_Enabled				= "Activer ce module"
 L.Mod_Reset					= "Charger les options par défaut"
 L.Reset 					= "Réinit."
@@ -262,8 +262,7 @@ L.AdvancedAutologBosses		= "Automatiquement enregistrer le combat contre un boss
 L.LogOnlyNonTrivial			= "N'enregistrer que les combats contre un boss (exclus RdR/dongeon/scenario)"
 --
 L.Area_3rdParty				= "Options des Addons tiers"
-L.ShowBBOnCombatStart		= "Effectuer la vérification des buffs de Big Brother au début des combats"
-L.BigBrotherAnnounceToRaid	= "Annoncer les résultats de Big Brother au raid"
+--L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
 L.Area_Invite				= "Options des invitations"
 L.AutoAcceptFriendInvite	= "Accepter les invitations venant d'un ami automatiquement"
 L.AutoAcceptGuildInvite		= "Accepter les invitations venant d'un membre de la guilde automatiquement"

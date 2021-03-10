@@ -20,6 +20,7 @@ local achievements = {
 	[9400] = {}, -- Gorgrond Monster Hunter
 	[9541] = {}, -- The Song of Silence
 	[9571] = {}, -- Broke Back Precipice
+	[9601] = {}, -- King of the Monsters
 	[9617] = {}, -- Making the Cut
 	[9633] = {}, -- Cut off the Head (Shatt)
 	[9638] = {}, -- Heralds of the Legion (Shatt)
@@ -401,18 +402,83 @@ local achievements = {
 		[155060] = 45433, -- The Doppel Gang
 		[155583] = 45691, -- Scrapclaw
 	},
-	[13690] = {}, -- Nazjatarget Eliminated (Nazjatar)
+	[13690] = { -- Nazjatarget Eliminated (Nazjatar)
+		[153299] = 45504, -- Szun, Breaker of Slaves
+		[153302] = 45505, -- Frozen Winds of Zhiela
+		[153300] = 45506, -- Zoko, Her Iron Defender
+		[153296] = 45507, -- Tempest-Speaker Shalan'ali
+		[153301] = 45508, -- Starseeker of the Shirakess
+		[153311] = 45509, -- Azanz, the Slitherblade
+		[153304] = 45510, -- Undana, Chilling Assassin
+		[153303] = 45511, -- Kassar, Wielder of Dark Blades
+		[153305] = 45512, -- The Zanj'ir Brutalizer
+		[153314] = 45513, -- Champion Aldrantiss, Defender of Her Kingdom
+		[153309] = 45514, -- Champion Alzana, Arrow of Thunder
+		[153315] = 45515, -- Champion Eldanar, Shield of Her Glory
+		[153312] = 45516, -- Champion Kyx'zhul the Deepspeaker
+		[153310] = 45517, -- Champion Qalina, Spear of Ice
+		[153313] = 45518, -- Champion Vyz'olgo the Mind-Taker
+	},
 	[13691] = {}, -- I Thought You Said They'd Be Rare (Nazjatar)
 	[14159] = {}, -- Combating the Corruption (Assaults)
-	[14307] = {}, -- Adventurer of Bastion
+	[14276] = {}, -- It's Always Sinny in Revendreth
+	[14307] = { -- Adventurer of Bastion
+		[158659] = 50582, -- Herculon
+		[160721] = 50596, -- Fallen Acolyte Erisne
+		[161527] = 50597, -- Sigilback
+		[161530] = 50598, -- Cloudtail
+		[161529] = 50599, -- Nemaeus
+		[160629] = 50592, -- Baedos
+		[167078] = 50600, -- Wingflayer the Cruel
+		[160882] = 50594, -- Vesper Repair: Sophia's Aria (Nikara Blackheart)
+		[163460] = 50595, -- Dionae
+		[170548] = 50601, -- Sundancer
+		[170659] = 50602, -- Basilofos, King of the Hill
+		[170623] = 50603, -- Dark Watcher
+		[170932] = 50604, -- Cloudfeather Guardian
+		[171009] = 50605, -- Enforcer Aegeon
+		[171008] = 50606, -- Unstable Memory
+		[171013] = 50607, -- Embodied Hunger
+		[171040] = 50608, -- Xixin the Ravening
+		[171041] = 50609, -- Worldfeaster Chronn
+		[171014] = 50610, -- Collector Astorestes
+		[171011] = 50611, -- Demi the Relic Hoarder
+		[171189] = 50612, -- Bookkeeper Mnemis
+		[171211] = 50613, -- Aspirant Eolis
+		[171255] = 50614, -- Echo of Aella
+		[171010] = 50615, -- Corrupted Clawguard
+		[171327] = 50616, -- Reekmonger
+		[161528] = 50617, -- Aethon
+		[160985] = 50593, -- Vesper Repair: Sophia's Overture (Selena the Reborn)
+		[156339] = 50618, -- Orstus and Sotiros
+		[156340] = 50618, -- Orstus and Sotiros
+		[170832] = 50619, -- The Ascended Council (Champion of Loyalty)
+		[170833] = 50619, -- The Ascended Council (Champion of Wisdom)
+		[170834] = 50619, -- The Ascended Council (Champion of Purity)
+		[170835] = 50619, -- The Ascended Council (Champion of Courage)
+		[170836] = 50619, -- The Ascended Council (Champion of Humility)
+	},
 	[14308] = {}, -- Adventurer of Maldraxxus
 	[14309] = {}, -- Adventurer of Ardenweald
 	[14310] = {}, -- Adventurer of Revendreth
+	[14660] = {}, -- It's About Sending A Message (Maw)
+	[14721] = {}, -- It's In The Mix (Maldraxxus)
+	[14744] = {}, -- Better to Be Lucky Than Dead (Maw)
+	[14779] = {}, -- Wild Hunting (Ardenweald)
+	[14788] = { -- Fractured Faerie Tales (Ardenweald)
+		[174721] = 50012, -- A Meandering Story
+		[174723] = 50013, -- A Wandering Tale
+		[174724] = 50014, -- An Escapist Novel
+		[174725] = 50015, -- A Travel Journal
+		[174726] = 50016, -- A Naughty Story
+	},
+	[14802] = {}, -- Bloodsport (Maldraxxus)
 }
-core.achievements = achievements
+ns.achievements = achievements
 local mobs_to_achievement = {
 	-- [43819] = 2257,
 }
+ns.mobs_to_achievement = mobs_to_achievement
 local achievements_loaded = false
 
 function ns:AchievementMobStatus(id)
@@ -508,117 +574,5 @@ function ns:UpdateTooltipWithCompletion(tooltip, id)
 			1, 1, 0,
 			completed and 0 or 1, completed and 1 or 0, 0
 		)
-	end
-end
-
-function ns:HasLoot(id)
-	if not (id and ns.mobdb[id]) then
-		return false
-	end
-	return ns.mobdb[id].mount or ns.mobdb[id].toy or ns.mobdb[id].pet
-end
-
-function ns:LootStatus(id)
-	if not id or not ns.mobdb[id] then
-		return
-	end
-
-	local toy = ns.mobdb[id].toy and PlayerHasToy(ns.mobdb[id].toy)
-	local mount = ns.mobdb[id].mount and select(11, C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount))
-	local pet = ns.mobdb[id].pet and (C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet) > 0)
-
-	return toy, mount, pet
-end
-function ns:UpdateTooltipWithLootDetails(tooltip, id, only)
-	if not (id and ns.mobdb[id]) then
-		return
-	end
-
-	local toy = ns.mobdb[id].toy and (not only or only == "toy")
-	local mount = ns.mobdb[id].mount and (not only or only == "mount")
-	local pet = ns.mobdb[id].pet and (not only or only == "pet")
-
-	if toy then
-		tooltip:SetHyperlink(("item:%d"):format(ns.mobdb[id].toy))
-	end
-	if mount then
-		if toy then
-			tooltip:AddLine("---")
-		end
-		local name, spellid, texture, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount)
-		local _, description, source = C_MountJournal.GetMountInfoExtraByID(ns.mobdb[id].mount)
-
-		tooltip:AddLine(name)
-		tooltip:AddTexture(texture)
-		tooltip:AddLine(description, 1, 1, 1, true)
-		tooltip:AddLine(source)
-		if isCollected then
-			tooltip:AddLine(USED, 1, 0, 0)
-		end
-	end
-	if pet then
-		if toy or mount then
-			tooltip:AddLine('---')
-		end
-		local name, texture, _, mobid, source, description = C_PetJournal.GetPetInfoBySpeciesID(ns.mobdb[id].pet)
-		local owned, limit = C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet)
-		tooltip:AddLine(name)
-		tooltip:AddTexture(texture)
-		tooltip:AddLine(description, 1, 1, 1, true)
-		tooltip:AddLine(source)
-		tooltip:AddLine(ITEM_PET_KNOWN:format(owned, limit))
-	end
-end
-function ns:UpdateTooltipWithLootSummary(tooltip, id)
-	if not (id and ns.mobdb[id]) then
-		return
-	end
-
-	if ns.mobdb[id].mount then
-		local name, _, icon, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(ns.mobdb[id].mount)
-		if name then
-			tooltip:AddDoubleLine(
-				MOUNT,
-				"|T" .. icon .. ":0|t " .. name,
-				1, 1, 0,
-				isCollected and 0 or 1, isCollected and 1 or 0, 0
-			)
-		else
-			tooltip:AddDoubleLine(MOUNT, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
-		end
-	end
-	if ns.mobdb[id].pet then
-		local name, icon = C_PetJournal.GetPetInfoBySpeciesID(ns.mobdb[id].pet)
-		local owned, limit = C_PetJournal.GetNumCollectedInfo(ns.mobdb[id].pet)
-		if name then
-			local r, g, b = 1, 0, 0
-			if owned == limit then
-				r, g, b = 0, 1, 0
-			elseif owned > 0 then
-				r, g, b = 1, 1, 0
-			end
-			tooltip:AddDoubleLine(
-				TOOLTIP_BATTLE_PET,
-				"|T" .. icon .. ":0|t " .. (ITEM_SET_NAME):format(name, owned, limit),
-				1, 1, 0,
-				r, g, b
-			)
-		else
-			tooltip:AddDoubleLine(TOOLTIP_BATTLE_PET, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
-		end
-	end
-	if ns.mobdb[id].toy then
-		local _, name, icon = C_ToyBox.GetToyInfo(ns.mobdb[id].toy)
-		local owned = PlayerHasToy(ns.mobdb[id].toy)
-		if name then
-			tooltip:AddDoubleLine(
-				TOY,
-				"|T" .. icon .. ":0|t " .. name,
-				1, 1, 0,
-				owned and 0 or 1, owned and 1 or 0, 0
-			)
-		else
-			tooltip:AddDoubleLine(TOY, SEARCH_LOADING_TEXT, 1, 1, 0, 0, 1, 1)
-		end
 	end
 end

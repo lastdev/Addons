@@ -1,12 +1,11 @@
 --[[----------------------------------------------------------------------------
-
   LiteMount/Location.lua
 
   Some basics about the current game state with respect to mounting. Most of
   the mojo is done by IsUsableSpell to know if a mount can be cast, this just
   helps with the prioritization.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -27,6 +26,8 @@ function LM.Environment:Initialize()
     self.instanceID = -1
     self.zoneText = nil
 
+    self.combatTravelForm = nil
+
     self:UpdateSwimTimes()
 
     self.startedFalling = 0
@@ -43,6 +44,7 @@ function LM.Environment:Initialize()
     self:RegisterEvent("MOUNT_JOURNAL_USABILITY_CHANGED")
     self:RegisterEvent("PLAYER_STARTED_MOVING")
     self:RegisterEvent("PLAYER_STOPPED_MOVING")
+    self:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
 end
 
 -- I hate OnUpdate handlers but there are just no good events for determining
@@ -72,7 +74,7 @@ end
 function LM.Environment:IsFalling()
     return IsFalling() and
         self.startedFalling > self.stoppedFalling and
-        GetTime() - self.startedFalling > 1
+        GetTime() - self.startedFalling >= 0.45
 end
 
 -- A jump in place takes approximately 0.83 seconds
@@ -106,6 +108,14 @@ end
 
 function LM.Environment:IsMovingOrFalling()
     return (GetUnitSpeed("player") > 0 or IsFalling())
+end
+
+function LM.Environment:TheMaw()
+    -- This is the instanced starting experience
+    if self.instanceID == 2364 then return true end
+
+    -- Otherwise, The Maw is just a Shadowlands zone in instance 2222
+    if LM.Environment.uiMapID == 1543 then return true end
 end
 
 function LM.Environment:Update()
@@ -169,6 +179,15 @@ end
 function LM.Environment:ZONE_CHANGED_NEW_AREA()
     LM.Debug("Updating location due to ZONE_CHANGED_NEW_AREA.")
     self:Update()
+end
+
+function LM.Environment:UPDATE_SHAPESHIFT_FORM()
+    if GetShapeshiftFormID() == 3 and InCombatLockdown() then
+        LM.Debug("Changed to travel form in combat.")
+        self.combatTravelForm = true
+    else
+        self.combatTravelForm = nil
+    end
 end
 
 function LM.Environment:MapInPath(...)
@@ -245,6 +264,9 @@ local InstanceFlyableOverride = {
     [2124] = false,         -- Island Expedition Crestfall
     [2275] = false,         -- Lesser Vision Vale of Eternal Twilight
     [2278] = false,         -- Revendreth Scenario
+    [2291] = false,         -- De Other Side
+    [2293] = false,         -- Theater of Pain
+    [2296] = false,         -- Castle Nathria
     [2363] = false,         -- Queen's Winter Conservatory
 }
 
@@ -306,7 +328,7 @@ function LM.Environment:GetLocation()
         "instance: " .. self.instanceID,
         "zoneText: " .. GetZoneText(),
         "subZoneText: " .. GetSubZoneText(),
-        "IsFlyableArea(): " .. (IsFlyableArea() and "true" or "false"),
+        "IsFlyableArea(): " .. tostring(IsFlyableArea()),
     }
 end
 

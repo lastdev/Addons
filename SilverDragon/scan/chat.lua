@@ -33,14 +33,29 @@ function module:OnInitialize()
 end
 
 function module:OnEnable()
+    self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "OnChatMessage")
     self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE", "OnChatMessage")
     self:RegisterEvent("CHAT_MSG_MONSTER_SAY", "OnChatMessage")
     self:RegisterEvent("CHAT_MSG_MONSTER_WHISPER", "OnChatMessage")
-    self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "OnChatMessage")
 end
+
+local redirects = {
+    [62352] = 62346, -- Chief Salyis => Galleon
+    [157726] = 160857, -- Scorched Scavenger => Sire Ladinas
+    [157727] = 160857, -- Scorched Outcast => Sire Ladinas
+    [157733] = 160857, -- Crazed Ash Ghoul => Sire Ladinas
+    [166726] = 160857, -- Blistering Ash Ghoul => Sire Ladinas
+}
+local type_restriction = {
+    [157726] = "CHAT_MSG_MONSTER_YELL", -- Scorched Scavenger
+    [157727] = "CHAT_MSG_MONSTER_YELL", -- Scorched Outcast
+    [157733] = "CHAT_MSG_MONSTER_YELL", -- Crazed Ash Ghoul
+    [166726] = "CHAT_MSG_MONSTER_YELL", -- Blistering Ash Ghoul
+}
 
 function module:OnChatMessage(event, text, name, ...)
     if not self.db.profile.enabled then return end
+    if not core.db.profile.instances and IsInInstance() then return end
     local zone = HBD:GetPlayerZone()
     local guid = select(10, ...)
     local id, x, y
@@ -50,7 +65,26 @@ function module:OnChatMessage(event, text, name, ...)
         id = core:IdForMob(name, zone)
     end
     Debug("OnChatMessage", event, text, name, id, guid)
+    if id then
+        if type_restriction[id] and type_restriction[id] ~= event then
+            -- Added for Sire Ladinas, whose spawn is announced by a different
+            -- type of mob yelling. That mob can normally say things in
+            -- combat, so restricting the announcement to yells seems to make
+            -- sense...
+            return
+        end
+        if redirects[id] then
+            id = redirects[id]
+        end
+    end
     if not id or not (ns.mobdb[id] or globaldb.always[id]) then return end
+    if not globaldb.always[id] and not (ns.mobsByZone[zone] and ns.mobsByZone[zone][id]) then
+        -- Only announce from chat message in zones that a rare is known to
+        -- exist in (or if they're manually-added rares). Avoids issues like
+        -- the Shadowlands pre-event where a lot of boss names got reused and
+        -- started getting rare-alerts in their older versions in instances.
+        return
+    end
     -- Guess from the event whether we're anywhere near the mob
     if event == "CHAT_MSG_MONSTER_SAY" or event == "CHAT_MSG_MONSTER_EMOTE" then
         x, y = HBD:GetPlayerZonePosition()

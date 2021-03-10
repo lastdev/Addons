@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 

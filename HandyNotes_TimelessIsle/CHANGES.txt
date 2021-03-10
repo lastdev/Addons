@@ -1,0 +1,30 @@
+tag 61a154d07466c15d6adf22b0ed3b245ee6d15549 v1.3
+Author:	Antoine Pietri <antoine.pietri1@gmail.com>
+Date:	Thu Oct 15 12:20:56 2020 +0200
+
+version 1.3
+-----BEGIN PGP SIGNATURE-----
+
+iQFOBAABCAA4FiEEK3+ITqUhoMLTy00+5HbuHqx0YRkFAl+IIogaHGFudG9pbmUu
+cGlldHJpMUBnbWFpbC5jb20ACgkQ5HbuHqx0YRliAwf/XqnWZLItzkQGasY/Xt4L
+rHN9/GGL/0BaLLlztltwJJXJ+gIoHZs1vOmR41AOG52FiZE7YzQAKShkK3/ZR+YL
+fEnieAjjfQcGC0js+1jPqBzPFByP477OLc3krGUjd3zIf9CrRawwmuirBWMXqvli
+3GOLash8bC7t5dktd+Q+RjD8LWxYtsc3bVVOqjhv1DvLj818KKV2mK2cTOGGIZU1
+jaYgqmm5nlbUHg5Xs2oqkNUNKxaknfZYruEnd/m1g/Im/i0eT5DpEhql0oPPLeiz
+qF6tj8Ro/zDHYTPs9XLmrmBOV3xfuGoSTsawxGObYiNQZ+qZh0AKAYkf1E11l2eP
+bQ==
+=EtLu
+-----END PGP SIGNATURE-----
+
+commit 4c159884197f4c4bc2462e8bfa20abfddd874d20
+Author: Antoine Pietri <antoine.pietri1@gmail.com>
+Date:   Thu Oct 15 12:20:31 2020 +0200
+
+    Bump API version to 90001
+
+commit 18130dccd6d25a28d6333529ef02956e27f613d6
+Author: Antoine Pietri <antoine.pietri1@gmail.com>
+Date:   Thu Oct 15 12:18:20 2020 +0200
+
+    Use new C_QuestLog.IsComplete() function
+

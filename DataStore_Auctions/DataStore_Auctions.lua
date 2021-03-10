@@ -43,14 +43,17 @@ local function _GetNumBids(character)
 end
 
 local function _GetAuctionHouseItemInfo(character, list, index)
-	if list == "Auctions" or list == "Bids" then
-		local item = character[list][index]
-		if not item then return end
-		local isGoblin, itemID, count, name, price1, price2, timeLeft = strsplit("|", item)
-		isGoblin = tonumber(isGoblin)
-		isGoblin = (isGoblin == 1) and true or nil
-		return isGoblin, tonumber(itemID), tonumber(count), name, tonumber(price1), tonumber(price2), tonumber(timeLeft)
-	end
+	-- invalid auction type ? exit
+	if not (list == "Auctions" or list == "Bids") then return end
+	
+	-- invalid index ? exit
+	local item = character[list][index]
+	if not item then return end
+	
+	local isGoblin, itemID, count, name, price1, price2, timeLeft = strsplit("|", item)
+	isGoblin = (tonumber(isGoblin) == 1) and true or nil
+	
+	return isGoblin, tonumber(itemID), tonumber(count), name, tonumber(price1), tonumber(price2), tonumber(timeLeft)
 end
 
 local function _GetAuctionHouseLastVisit(character)
@@ -145,17 +148,16 @@ function addon:OnDisable()
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
 end
 
-local function getAHZone()
+local function GetAuctionHouseZone()
 	local zoneID = C_Map.GetBestMapForUnit("player")
-	if zoneID == 161 or zoneID == 281 or zoneID == 673 then
- 		return 1			-- 1 means goblin AH
- 	end
-    return 0
+	
+	-- return 1 for goblin AH, 0 for faction AH
+	return (zoneID == 161 or zoneID == 281 or zoneID == 673) and 1 or 0
 end
 
 -- *** Scanning functions ***
 local function ScanAuctions()
-	local AHZone = getAHZone()
+	local AHZone = GetAuctionHouseZone()
 	
 	local character = addon.ThisCharacter
 	character.lastUpdate = time()
@@ -163,15 +165,10 @@ local function ScanAuctions()
 	_ClearAuctionEntries(character, "Auctions", AHZone)
 	
 	for i = 1, C_AuctionHouse.GetNumOwnedAuctions() do
-        local ownedAuction = C_AuctionHouse.GetOwnedAuctionInfo(i)
-		local itemName = ownedAuction.itemLink
-        local count = ownedAuction.quantity
-        local startPrice = ownedAuction.bidAmount 
-		local buyoutPrice = ownedAuction.buyoutAmount
-        local highBidder = ownedAuction.bidder
-        local saleStatus = ownedAuction.status 
-        local itemID = ownedAuction.itemKey.itemID  
-			
+		local info = C_AuctionHouse.GetOwnedAuctionInfo(i)
+		local saleStatus = info.status
+		local itemID = info.itemKey.itemID
+		
 		-- do not list sold items, they're supposed to be in the mailbox
 		if saleStatus and saleStatus == 1 then		-- just to be sure, in case Bliz ever returns nil
 			saleStatus = true
@@ -179,58 +176,57 @@ local function ScanAuctions()
 			saleStatus = false
 		end
 			
-		if itemName and itemID and not saleStatus then
-			local timeLeft = ownedAuction.timeLeft
-			
+		if info.itemLink and itemID and not saleStatus then
 			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, count, highBidder or "", startPrice or "", buyoutPrice, timeLeft or ""))
+				AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))
 		end
 	end
 	
 	addon:SendMessage("DATASTORE_AUCTIONS_UPDATED")
 end
 
--- UPDATE 8.3.003 2020/03/21:
--- Since addons can't seem to be able to scan the AH after selling an item, instead I will try to get the information about an item being sold directly
-
--- bid and buyout are optional parameters
-local function onPostItem(item, duration, quantity, bid, buyout)
-    -- item is an ItemLocationMixin from Blizzard's ItemLocation.lua
-    local bagID, slotIndex = item:GetBagAndSlot()
-    local itemID = GetContainerItemID(bagID, slotIndex)
-    local AHZone = getAHZone()
-    
-    local character = addon.ThisCharacter
+local function ScanBids()
+	local AHZone = GetAuctionHouseZone()
+	
+	local character = addon.ThisCharacter
 	character.lastUpdate = time()
-    
-   table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, quantity, "", bid or "", buyout or "", duration or ""))
+	character.lastVisitDate = date("%Y/%m/%d %H:%M")
+	
+	_ClearAuctionEntries(character, "Bids", AHZone)
+	
+	for i = 1, C_AuctionHouse.GetNumBids() do
+		local info = C_AuctionHouse.GetBidInfo(i)
+		local itemID = info.itemKey.itemID
+	
+		-- review item.name ? item.quantity ?
+		table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
+			AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeftSeconds))	
+	
+		-- local itemName, _, count, _, _, _, _, _, 
+			-- _, buyoutPrice, bidPrice, _, ownerName = C_AuctionHouse.GetReplicateItemInfo("bidder", i);
+			
+		-- if itemName then
+			-- local link = C_AuctionHouse.GetReplicateItemLink("bidder", i)
+			-- if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
+				-- local id = tonumber(link:match("item:(%d+)"))
+				-- local timeLeft = C_AuctionHouse.GetReplicateItemTimeLeft("bidder", i)
+			
+				-- table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
+					-- AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount, info.buyoutAmount, info.timeLeft))
+			-- end
+		-- end
+	end
 end
-
-local function onPostCommodity(item, duration, quantity, unitPrice)
-    -- item is an ItemLocationMixin from Blizzard's ItemLocation.lua
-    local bagID, slotIndex = item:GetBagAndSlot()
-    local itemID = GetContainerItemID(bagID, slotIndex)
-    local AHZone = getAHZone()
-    
-    local character = addon.ThisCharacter
-	character.lastUpdate = time()
-    
-    table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, quantity, "", "", unitPrice or "", duration or ""))
-end
-
--- Hook the game UI's PostItem and PostCommodity functions, grabbing their parameter information
-hooksecurefunc(C_AuctionHouse, "PostItem", onPostItem)
-hooksecurefunc(C_AuctionHouse, "PostCommodity", onPostCommodity)
 
 -- *** EVENT HANDLERS ***
 function addon:AUCTION_HOUSE_SHOW()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED")
 	addon:RegisterEvent("OWNED_AUCTIONS_UPDATED", ScanAuctions)
+	addon:RegisterEvent("BIDS_UPDATED", ScanBids)
 end
 
 function addon:AUCTION_HOUSE_CLOSED()
 	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
 	addon:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
+	addon:UnregisterEvent("BIDS_UPDATED")
 end

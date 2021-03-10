@@ -42,7 +42,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-<!--@debug
+<!--@debug@
 			<OnEnter method="Dump"/>
 @end-debug@-->
 			<OnLeave method="HideTT"/>
@@ -68,7 +68,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad method="OnLoad"/>
-<!--@debug
+<!--@debug@
 			<OnEnter>
 				self:Dump(self:GetParent())
 			</OnEnter>

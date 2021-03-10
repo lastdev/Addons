@@ -1,14 +1,28 @@
-## Interface: 90001
-## Title: HandyNotes_TreasureHunter
+## Interface: 90002
+## Title: HandyNotes_TreasureHunter (Draenor Treasures)
 ## Notes: Where the Treasure Hunter objects are in Draenor
 ## Author: Kemayo
-## Version: 1
+## Version: v23
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 86342
 ## SavedVariables: HandyNotes_TreasureHunterDB
 ## RequiredDeps: HandyNotes
 
 handler.lua
 config.lua
-Treasure.lua
+
+zones\Draenor.lua
+zones\Ashran.lua
+zones\FrostfireRidge.lua
+zones\Gorgrond.lua
+zones\Nagrand.lua
+zones\ShadowmoonValley.lua
+zones\SpiresOfArak.lua
+zones\Talador.lua
+zones\TanaanJungle.lua
+
+features\Garrisons.lua
+features\Mounts.lua
+features\Pepe.lua

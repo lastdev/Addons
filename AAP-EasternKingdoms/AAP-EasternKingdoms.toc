@@ -1,0 +1,9 @@
+## Interface: 90002
+## X-Min-Interface: 90002
+
+## Title: AAP - Eastern Kingdoms
+## Notes: Eastern Kingdoms for AAP
+## Author: Zyrrael
+## LoadOnDemand: 1
+## RequiredDeps: AAP-Core
+EasternKingdoms.lua

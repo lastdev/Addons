@@ -1,9 +1,11 @@
 ## Title:-|cffFFFFFFConRO|r- |cffFFFFFFPriest|r
-## Version: 9.0.3
+## Version: 9.1.6
 ## Author: Vae
-## Interface: 90001
+## Interface: 90002
 ## Dependencies: ConRO
+## SavedVariablesPerCharacter: ConROPriest
 ## LoadOnDemand: 1
 
 priest_ids.lua
 priest.lua
+priest_helpers.lua

@@ -13,6 +13,7 @@ local GetItemInfo = function(id)
 	return R:GetItemInfo(id)
 end
 
+local C = R.CONSTANTS
 
 -- Types of items
 local MOUNT = "MOUNT"
@@ -28,6 +29,7 @@ local MOP = "MOP"
 local WOD = "WOD"
 local LEGION = "LEGION"
 local BFA = "BFA"
+local SHADOWLANDS = "SHADOWLANDS"
 local HOLIDAY = "HOLIDAY"
 
 -- Methods of obtaining
@@ -384,6 +386,21 @@ function R:PrepareOptions()
 						  end,
 					  }, -- enableProfiling
 
+							tooltipActivation = {
+								type = "select",
+								name = L["Tooltip activation"],
+								desc = L["If \"On click\" is selected, activating the tracker is done via CTRL + SHIFT + Click, otherwise it's activated with a simple click."],
+								values = {
+									[C.TOOLTIP.ACTIVATION_METHOD_HOVER] = L["On hover"],
+									[C.TOOLTIP.ACTIVATION_METHOD_CLICK] = L["On click"],
+								},
+								get = function() return self.db.profile.tooltipActivation end,
+								set = function(info, val)
+									self.db.profile.tooltipActivation = val
+									self:Update("OPTIONS")
+								end,
+								order = newOrder(),
+							}, -- tooltipActivation
 						}, -- args
 					}, -- general
 
@@ -629,6 +646,19 @@ function R:PrepareOptions()
 								end,
 							},
 
+							hideKnownItemsInTooltip = {
+								type = "toggle",
+								order = newOrder(),
+								width = "double",
+								name = L["Hide obtained items in tooltips"],
+								desc = L["When enabled, Rarity will not add tooltip information for items you've already obtained."],
+								get = function() return self.db.profile.hideKnownItemsInTooltip end,
+								set = function(info, val)
+									self.db.profile.hideKnownItemsInTooltip = val
+									Rarity.GUI:UpdateText()
+								end,
+							},
+
 						}, -- args
 					}, -- worldTooltips
 
@@ -743,10 +773,65 @@ function R:PrepareOptions()
 							Rarity.GUI:UpdateText()
 						end,
 					},
+					shadowlands = {
+						type = "toggle",
+						order = newOrder(),
+						name = L["Shadowlands"],
+						get = function() return self.db.profile.cats[SHADOWLANDS] end,
+						set = function(info, val)
+							self.db.profile.cats[SHADOWLANDS] = val
+							Rarity.GUI:UpdateText()
+						end,
+					},
 
 						}, -- args
 					}, -- contentCategory
 
+					collectionType = {
+						type = "group",
+						name = L["Collectable Type Filter"],
+						order = newOrder(),
+						inline = true,
+						args = {
+
+						desc = {
+							type = "description",
+							name = L["These toggles filter which items appear in the main Rarity tooltip. Items are categorized by their type (eg. Mounts, Battle Pets...). Turning off these checkboxes does not turn off tracking for any items within the category; it simply hides the item from the tooltip in order to help reduce the number of items in it."],
+							order = newOrder(),
+						},
+					  mounts = {
+						  type = "toggle",
+						  order = newOrder(),
+						  name = L["Mounts"],
+						  get = function() return self.db.profile.collectionType[MOUNT] end,
+						  set = function(info, val)
+							  self.db.profile.collectionType[MOUNT] = val
+							  Rarity.GUI:UpdateText()
+						  end,
+					  },
+					  pets = {
+						  type = "toggle",
+						  order = newOrder(),
+						  name = L["Battle Pets"],
+						  get = function() return self.db.profile.collectionType[PET] end,
+						  set = function(info, val)
+							  self.db.profile.collectionType[PET] = val
+							  Rarity.GUI:UpdateText()
+						  end,
+					  },
+					  items = {
+						  type = "toggle",
+						  order = newOrder(),
+						  name = L["Toys & Items"],
+						  get = function() return self.db.profile.collectionType[ITEM] end,
+						  set = function(info, val)
+							  self.db.profile.collectionType[ITEM] = val
+							  Rarity.GUI:UpdateText()
+						  end,
+					  },
+
+						}, --args
+					}, -- collectionType
 
 					bar = {
 						type = "group",
@@ -1341,6 +1426,44 @@ function R:PrepareOptions()
 					}
 				}
 			},
+			trackingOverrides = {
+				name = L["Tracking Overrides"],
+				type = "group",
+				order = newOrder(),
+				inline = true,
+				args = {
+					trackPetsRepeatedly = {
+						type = "execute",
+						order = newOrder(),
+						-- width = "full",
+						name = L["Track pets repeatedly"],
+						desc = L["Set all battle pets to be tracked repeatedly."] .. " " .. L["Note: Your existing settings will be overwritten."],
+						func = function(info, val)
+							for index, item in pairs(self.db.profile.groups.pets) do
+								if type(item) == "table" then -- For some reason, there's a bunch of other properties, too...
+									item.repeatable = true
+									Rarity:Debug(format("Setting repeatable = %s for item %s", tostring(item.repeatable), item.name))
+								end
+							end
+						end,
+					},
+					untrackPetsRepeatedly = {
+						type = "execute",
+						order = newOrder(),
+						-- width = "full",
+						name = L["Untrack pets repeatedly"],
+						desc = L["Set all battle pets to NOT be tracked repeatedly."] .. " " .. L["Note: Your existing settings will be overwritten."],
+						func = function(info, val)
+							for index, item in pairs(self.db.profile.groups.pets) do
+								if type(item) == "table" then -- For some reason, there's a bunch of other properties, too...
+									item.repeatable = false
+									Rarity:Debug(format("Setting repeatable = %s for item %s", tostring(item.repeatable), item.name))
+								end
+							end
+						end,
+					}
+				}
+			}
 
 		},
 	}

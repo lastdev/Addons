@@ -179,7 +179,7 @@ function NugHealth.StaggerOnUpdate(self, time)
     if currentStagger ~= lastStagger then
         lastStagger = currentStagger
 
-        return self:PLAYER_STAGGER_UPDATE(currentStagger)
+        return self:PLAYER_STAGGER_UPDATE(currentStagger or 0)
     end
 end
 
@@ -421,7 +421,7 @@ local function GetForegroundSeparation(health, healthMax, showMissing)
 end
 
 local damageEffect = true
-function NugHealth.UNIT_HEALTH(self, event)
+function NugHealth.UNIT_HEALTH(self, event, unit, skipEffect)
     -- local h = UnitHealth("player")
     -- local mh = UnitHealthMax("player")
     -- local a = isClassic and 0 or UnitGetTotalAbsorbs("player")
@@ -454,6 +454,9 @@ function NugHealth.UNIT_HEALTH(self, event)
     self.absorb2:SetValue(shields/hm, perc)
     self.absorb:SetValue(shields/hm, perc)
     self.health.incoming:SetValue(incomingHeal/hm, perc)
+    if skipEffect then
+        self.health.lost.currentvalue = perc
+    end
     self.health.lost:SetNewHealthTarget(perc, perc)
 
     if damageEffect then
@@ -561,6 +564,7 @@ end
 
 function NugHealth.PLAYER_REGEN_DISABLED(self, event)
     self:StopHiding()
+    self:UNIT_HEALTH(nil, "player", true)
     self:Show()
 end
 function NugHealth.PLAYER_REGEN_ENABLED(self, event)
@@ -587,6 +591,7 @@ NugHealth.Commands = {
     ["unlock"] = function(v)
         NugHealth:EnableMouse(true)
         NugHealth:Show()
+        NugHealth:SetAlpha(1)
     end,
 	["gui"] = function(v)
         local self = NugHealth

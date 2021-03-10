@@ -6,9 +6,9 @@ if ns:IsSameLocale("ptBR") then
 	L.LOCALE_NAME = "ptBR"
 
 L["ALLOW_IN_LFD"] = "Permitir no localizador de masmorras."
-L["ALLOW_IN_LFD_DESC"] = "Clique com o botão direito do mouse em grupos ou candidatos do Localizador de Masmorras para copiar a URL do perfil do Raider.IO."
-L["ALLOW_ON_PLAYER_UNITS"] = "Permitir em quadros de unidade de jogador"
-L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Clique com o botão direito do mouse nos quadros da unidade do jogador para copiar o URL do perfil do Raider.IO."
+L["ALLOW_IN_LFD_DESC"] = "Clique-direito em grupos ou candidatos no localizador de masmorras para copiar o URL do perfil Raider.IO."
+L["ALLOW_ON_PLAYER_UNITS"] = "Permitir em retratos de jogador"
+L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Clique-direito no retrato do jogador para copiar a URL do perfil Raider.IO."
 L["ALWAYS_SHOW_EXTENDED_INFO"] = "Sempre mostrar a Pontuação de Função"
 L["ALWAYS_SHOW_EXTENDED_INFO_DESC"] = "Mantenha pressionado um modificador (shift/ctrl/alt) para mostrar as Pontuações de Funções do jogador na dica de ferramenta. Se você habilitar essa opção, as dicas de ferramentas sempre incluirão as pontuações de função."
 L["API_DEPRECATED"] = "|cffFF0000Warning!|r O Addon |cffFFFFFF%s|r está chamando uma função descontinuada do RaiderIO.%s. Esta função será removida em versões futuras. Por favor, incentive o autor de %s a atualizar seu complemento. Pilha de chamadas: %s"
@@ -16,6 +16,10 @@ L["API_DEPRECATED_UNKNOWN_ADDON"] = "<AddOn Desconhecido>"
 L["API_DEPRECATED_UNKNOWN_FILE"] = "<Arquivo de AddOn Desconhecido>"
 L["API_DEPRECATED_WITH"] = "|cffFF0000Warning!|r O Addon |cffFFFFFF%s|r está chamando uma função descontinuada do RaiderIO.%s. Esta função será removida em versões futuras. Incentive o autor de %s a atualizar para a nova API do RaiderIO.%s. Pilha de chamadas:%s"
 L["API_INVALID_DATABASE"] = "|cffFF0000Warning!|r Detectou um banco de dados Raider.IO inválido em |cffffffff%s|r. Atualize todas as regiões e facções no cliente Raider.IO ou reinstale o complemento manualmente."
+--[[Translation missing --]]
+--[[ L["AUTO_COMBATLOG"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["AUTO_COMBATLOG_DESC"] = ""--]] 
 L["BEST_FOR_DUNGEON"] = "Melhor por Masmorra."
 L["BEST_RUN"] = "Melhor M+"
 L["BEST_SCORE"] = "Melhor Pontuação M+ (%s)"
@@ -45,9 +49,13 @@ L["DUNGEON_SHORT_NAME_AD"] = "AD"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_DOS"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_EOA"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_HOA"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
 --[[Translation missing --]]
@@ -55,21 +63,33 @@ L["DUNGEON_SHORT_NAME_AD"] = "AD"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_MISTS"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ML"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_PF"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SD"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SEAT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SIEGE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SOA"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_TOP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TOS"] = ""--]] 
 --[[Translation missing --]]
@@ -146,6 +166,8 @@ L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r está usando dados expirados. Atua
 L["OUTDATED_EXPIRED_TITLE"] = "Os dados do Raider.IO expiraram"
 L["OUTDATED_EXPIRES_IN_DAYS"] = "Dados do Raider.IO expiram em %d dias"
 L["OUTDATED_EXPIRES_IN_HOURS"] = "Dados do Raider.IO expiram em %d horas"
+--[[Translation missing --]]
+--[[ L["OUTDATED_EXPIRES_IN_MINUTES"] = ""--]] 
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = [=[Atualize seu Addon agora para ver os dados mais precisos. Os jogadores trabalham duro para melhorar seu progresso, e exibir dados muito antigos é um desserviço para eles. Você pode usar o Raider.IO Client para manter seus dados sincronizados automaticamente
 ]=]
 L["PLAYER_PROFILE_TITLE"] = "Perfil do jogador M+"
@@ -196,6 +218,26 @@ L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encont
 --[[ L["RAID_BOSS_BOD_8"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_BOD_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_CN_9"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_EP_1"] = ""--]] 
 --[[Translation missing --]]
@@ -272,6 +314,8 @@ L["RAID_PROGRESS_TITLE"] = "Progresso de Raide"
 --[[Translation missing --]]
 --[[ L["RAIDERIO_BEST_RUN"] = ""--]] 
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO"
+--[[Translation missing --]]
+--[[ L["RAIDERIO_LIVE_TRACKING"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAIDERIO_MP_BASE_SCORE"] = ""--]] 
 --[[Translation missing --]]
@@ -379,6 +423,10 @@ L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO"
 --[[Translation missing --]]
 --[[ L["SHOW_SCORE_IN_COMBAT_DESC"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["SHOW_SCORE_WITH_MODIFIER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["SHOW_SCORE_WITH_MODIFIER_DESC"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["TANK"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["TANK_SCORE"] = ""--]] 
@@ -407,6 +455,10 @@ L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO"
 L["USE_ENGLISH_ABBREVIATION"] = "Forçar Abreviações em Inglês para Masmorras"
 --[[Translation missing --]]
 --[[ L["USE_ENGLISH_ABBREVIATION_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["WARNING_DEBUG_MODE_ENABLE"] = ""--]] 
 --[[Translation missing --]]

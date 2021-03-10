@@ -4,7 +4,7 @@
 
   Constants for mount spell information.
 
-  Copyright 2011-2020 Mike Battersby
+  Copyright 2011-2021 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -34,11 +34,15 @@ LM.SPELL.TELAARI_TALBUK = 165803
 LM.SPELL.MOONFANG = 145133
 LM.SPELL.DUSTMANE_DIREWOLF = 171844
 LM.SPELL.SOARING_SKYTERROR = 191633
-LM.SPELL.STAG_FORM = 210053
+LM.SPELL.MOUNT_FORM = 210053
 LM.SPELL.RATSTALLION_HARNESS = 220123
 LM.SPELL.BLUE_QIRAJI_WAR_TANK = 239766
 LM.SPELL.RED_QIRAJI_WAR_TANK = 239767
 LM.SPELL.SOULSHAPE = 310143
+LM.SPELL.FLICKER = 324701
+LM.SPELL.SPECTRAL_BRIDLE = 315315
+LM.SPELL.MAWRAT_HARNESS = 342780
+LM.SPELL.DEADSOUL_HOUND_HARNESS = 343635
 
 LM.ITEM = { }
 LM.ITEM.FLYING_BROOM = 33176
@@ -50,16 +54,19 @@ LM.ITEM.SHIMMERING_MOONSTONE = 101675
 LM.ITEM.RATSTALLION_HARNESS = 139421
 LM.ITEM.RUBY_QIRAJI_RESONATING_CRYSTAL = 151625
 LM.ITEM.SAPPHIRE_QIRAJI_RESONATING_CRYSTAL = 151626
+LM.ITEM.MAWRAT_HARNESS = 168035
+LM.ITEM.DEADSOUL_HOUND_HARNESS = 170498
+LM.ITEM.SPECTRAL_BRIDLE = 174464
 
 function LM.UnitAura(unit, aura, filter)
     local i = 1
     while true do
-        local name, _, _, _, _, _, _, _, _, id = UnitAura('player', i, filter)
+        local name, _, _, _, _, _, _, _, _, id = UnitAura(unit, i, filter)
         if not name then
             return
         end
         if name == aura or id == tonumber(aura) then
-            return UnitAura('player', i, filter)
+            return UnitAura(unit, i, filter)
         end
         i = i + 1
     end

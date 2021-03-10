@@ -14,12 +14,6 @@
 						<Anchor point="TOPLEFT" x="63" y="-100" />
 					</Anchors>
 				</FontString>
-                <FontString parentKey="AddQuestEditBoxLabel" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="500" y="36" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="63" y="-200" />
-					</Anchors>
-                </FontString>
 			</Layer>
 		</Layers>
 		<Frames>
@@ -53,25 +47,6 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.DailyResetDropDownLabel" relativePoint="BOTTOMLEFT" x="-20" y="-8" />
 				</Anchors>
 			</Frame>
-            
-            <EditBox parentKey="AddQuestEditbox" inherits="InputBoxTemplate">
-				<Size x="140" y="16" />
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.AddQuestEditBoxLabel" relativePoint="BOTTOMLEFT" x="0" y="-8" />
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self:SetAutoFocus( false );
-                        self:SetNumeric(true)
-					</OnLoad>
-					<OnEnterPressed>
-                        if (self:GetText() == "") then return end
-                        if (tostring(tonumber(self:GetText())) ~= self:GetText()) then return end
-						DataStore:GetManuallyTrackedQuests()[tonumber(self:GetText())] = true
-                        self:SetText("")
-					</OnEnterPressed>
-				</Scripts>
-            </EditBox>
 		</Frames>
 	</Frame>
 </Ui>

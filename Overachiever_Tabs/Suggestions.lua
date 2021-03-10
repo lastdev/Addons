@@ -21,10 +21,51 @@ local LBIR = LibStub:GetLibrary("LibBabble-Inventory-3.0"):GetReverseLookupTable
 
 local RecentReminders = Overachiever.RecentReminders
 
-local IsAlliance = UnitFactionGroup("player") == "Alliance"
 local suggested = {}
-
 local showHidden, numHidden = false, 0
+
+
+local function copytab(from, to)
+  for k,v in pairs(from) do
+    if(type(v) == "table") then
+      to[k] = {}
+      copytab(v, to[k]);
+    else
+      to[k] = v;
+    end
+  end
+end
+
+
+local IsAlliance = UnitFactionGroup("player") == "Alliance"
+
+local COVENANT_IDS = {
+}
+for i,id in ipairs(C_Covenants.GetCovenantIDs()) do
+	local data = C_Covenants.GetCovenantData(id)
+	-- We're assuming data.name is localized but data.textureKit is not, so the latter can be used for looking things up.
+	COVENANT_IDS[id] = { key = data.textureKit, name = data.name }
+	-- Possible textureKit values: "Kyrian", "Venthyr", "NightFae" (note the lack of a space!), or "Necrolord"
+end
+
+local function getPlayerCovenant()
+  local covID = C_Covenants.GetActiveCovenantID()
+	if (covID and covID ~= 0) then
+		local cov = COVENANT_IDS[covID]
+		assert(cov, "Shadowlands Covenant not found.")
+		return cov.key, cov.name
+	end
+	return false
+end
+
+local function isPlayerCovenant(key)
+	local covKey, covName = getPlayerCovenant()
+	if (covKey == key) then
+		return true, covName
+	end
+	return false
+end
+
 
 local ZONE_RENAME_REV = { -- lookup table so localizations can use their own renames
 --	["What we're calling this zone (localized)"] = "The key we're using for this zone",
@@ -35,26 +76,95 @@ local ZONE_RENAME_REV = { -- lookup table so localizations can use their own ren
 	[L.SUGGESTIONS_ZONERENAME_NAGRAND_OUTLAND] = "Nagrand (Outland)",
 	[L.SUGGESTIONS_ZONERENAME_NAGRAND_DRAENOR] = "Nagrand (Draenor)",
 	[L.SUGGESTIONS_ZONERENAME_KARAZHAN_LEGION] = "Return to Karazhan",
+  [L.SUGGESTIONS_ZONERENAME_COVENANT] = "Covenant",
+	[L.SUGGESTIONS_ZONERENAME_COVENANT_KYRIAN] = "Covenant (Kyrian)",
+	[L.SUGGESTIONS_ZONERENAME_COVENANT_NECROLORD] = "Covenant (Necrolord)",
+	[L.SUGGESTIONS_ZONERENAME_COVENANT_NIGHTFAE] = "Covenant (Night Fae)",
+	[L.SUGGESTIONS_ZONERENAME_COVENANT_VENTHYR] = "Covenant (Venthyr)",
 }
-
---[[
-local function isAtGarrison()
-  return C_Garrison.IsOnGarrisonMap()
-  -- Not perfect (returns false when the map opens to garrison but player is on the very outskirts) but good enough. Combined with using e.g. "Lunarfall"
-  -- for zone name lookup, it should work great.
-end
---]]
 
 local ZONE_SPECIAL_REDIR = {
-  --["Garrison"] = isAtGarrison,
-  ["Garrison"] = C_Garrison.IsOnGarrisonMap,
+	-- WoD Garrison:
+  function(zone, subzone)
+		if (C_Garrison.IsOnGarrisonMap()) then
+			-- Not perfect (returns false when the map opens to garrison but player is on the very outskirts) but good enough.
+			-- Consider combining with using e.g. "Lunarfall" for zone name lookup. (TODO: !! Not sure if that is needed any more. Test.)
+			return "Garrison"
+		end
+	end,
+	-- Shadowlands Covenant:
+	function(zone, subzone)
+		if (zone == "Bastion") then
+			local mapID = C_Map.GetBestMapForUnit("player")
+			if ((mapID == 1707 or mapID == 1708) and isPlayerCovenant("Kyrian")) then
+				return "Covenant (Kyrian)"
+			end
+    elseif (zone == "Maldraxxus") then
+			local mapID = C_Map.GetBestMapForUnit("player")
+			if ((mapID == 1698) and isPlayerCovenant("Necrolord")) then -- !! confirm map IDs
+				return "Covenant (Necrolord)"
+			end
+		elseif (zone == "Ardenweald") then
+			local mapID = C_Map.GetBestMapForUnit("player")
+			if ((mapID == 1701 or mapID == 1702 or mapID == 1703) and isPlayerCovenant("NightFae")) then -- !! confirm map IDs
+				return "Covenant (Night Fae)"
+			end
+    elseif (zone == "Revendreth") then
+      local mapID = C_Map.GetBestMapForUnit("player")
+      if ((mapID == 1699 or mapID == 1700) and isPlayerCovenant("Venthyr")) then -- !! confirm map IDs
+        return "Covenant (Venthyr)"
+      end
+		end
+	end,
 }
 
-local function GetZoneSpecialOverride()
-  for key,func in pairs(ZONE_SPECIAL_REDIR) do
-    if (func()) then  return key;  end
+local function GetZoneSpecialOverride(zone, subzone)
+	-- zone and subzone should be the Overachiever Key versions. See ZoneLookup().
+  for i,func in ipairs(ZONE_SPECIAL_REDIR) do
+		local z, s = func(zone, subzone)
+    if (z) then
+			if (s) then  return z, s;  end
+			return z, subzone
+		end
   end
-  return false
+  return zone, subzone
+end
+
+local function getFirstAchievementOfSeriesInCategory(id, category)
+	local cat
+	local ach, last = id, id
+	if (not category) then  category = GetAchievementCategory(id);  end
+	while (ach) do
+		ach = GetPreviousAchievement(ach)
+		if (ach) then
+			cat = GetAchievementCategory(ach)
+			if (cat == category) then  last = ach;  end
+		end
+	end
+	return last
+end
+
+local function getSuggestionsFromCategory(category)
+	-- Intelligently suggested achievements from a category. Omit those in a series if an earlier achievement in the series is in the same category.
+	-- TODO: Make it omit achievements that are requirements for a meta-achievement that's in the same category.
+	local tab = {}
+	for i=1,GetCategoryNumAchievements(category) do
+		local id = GetAchievementInfo(category, i)
+		if (not id) then
+			-- Absurdly, GetCategoryNumAchievements now seems to be giving the WRONG NUMBER for at least some categories. (Confirmed in WoW 6.2.2. Might have started earlier.)
+			-- Consequently, we need to watch for nil IDs and skip them.
+		else
+			local first = getFirstAchievementOfSeriesInCategory(id, category)
+			if (first) then  tab[first] = true;  end
+		end
+	end
+	local ret = {}
+	local i = 0
+	for id in pairs(tab) do
+		i = i + 1
+		ret[i] = id
+	end
+	return ret
 end
 
 
@@ -803,9 +913,142 @@ local ACHID_ZONE_MISC = {
 		14170, -- Thanks For The Mementos (series)
 		13998, -- Pure of Heart
 	},
--- !! TODO: add reputation-related achievements for factions tied to BFA zones
+	-- !! TODO: add reputation-related achievements for factions tied to BFA zones
+-- Shadowlands
+	["Bastion"] = {
+		14281, -- The Path to Ascension
+		14307, -- Adventurer of Bastion
+		14311, -- Treasures of Bastion
+		14514, -- Tour of Duty: Bastion
+		14737, -- What Bastion Remembered - !! tooltips?
+		14801, -- Sojourner of Bastion
+		14339, -- Shard Labor
+		14734, -- Rallying Cry of the Ascended
+		14735, -- Flight School Graduate
+		14741, -- Aerial Ace
+		14762, -- Breaking the Stratus Fear
+		14767, -- Count Your Blessings
+		14768, -- What is that Melody?
+		14335, -- The Ascended
+	},
+	["Maldraxxus"] = {
+		14206, -- Blade of the Primus
+		14308, -- Adventurer of Maldraxxus
+		14312, -- Treasures of Maldraxxus
+		14513, -- Tour of Duty: Maldraxxus
+		14634, -- Nine Afterlives - !! tooltips?
+		14763, -- Crypt Couture
+		14799, -- Sojourner of Maldraxxus
+		14802, -- Bloodsport
+		14336, -- Undying Army
+	},
+	["Ardenweald"] = {
+		14164, -- Awaken, Ardenweald
+		14309, -- Adventurer of Ardenweald
+		14313, -- Treasures of Ardenweald
+		14353, -- Ardenweald's a Stage
+		14511, -- Tour of Duty: Ardenweald
+		14774, -- Ardenweald Gourmand - !! tooltips?
+		14779, -- Wild Hunting - !! tooltips okay or need "Adventurer" quest treatment?
+		14788, -- Fractured Faerie Tales - !! tooltips?
+		14800, -- Sojourner of Ardenweald
+		14337, -- The Wild Hunt
+		14671, -- Something's Not Quite Right....
+    14672, -- A Bit of This, A Bit Of That (world quest)
+	},
+	["Revendreth"] = {
+		13878, -- The Master of Revendreth
+		14272, -- Best Bud With Benefits
+		14277, -- The Accuser's Avowed
+		14310, -- Adventurer of Revendreth
+		14314, -- Treasures of Revendreth
+		14512, -- Tour of Duty: Revendreth
+		14769, -- Bat!
+		14770, -- What We Ride in the Shadows - !! tooltips? mobID?
+		14771, -- The Afterlife Express - !! tooltips? mobID?
+		14798, -- Sojourner of Revendreth
+		14338, -- Court of Harvesters
+		14772, -- Caught in a Bat Romance
+	},
+	["The Maw"] = {
+		14334, -- Into the Maw
+		14656, -- Trading Partners
+		14658, -- Soulkeeper's Burden
+		14659, -- Handling His Henchmen - !! tooltips okay or need "Adventurer" quest treatment?
+		--14660, -- It's About Sending a Message - !! -- THIS IS SEQUEL TO ABOVE. If doing special handling for above, will this work too or should we handle this instead of that?
+		14738, -- Hunting Party
+		14742, -- Who Sent You?
+		14743, -- Deadly Serious - tooltips okay or need "Adventurer" quest treatment?
+		--14743, -- Better to Be Lucky Than Dead - !! -- THIS IS SEQUEL TO ABOVE. If doing special handling for above, will this work too or should we handle this instead of that?
+		14745, -- Grand Theft Shadehound
+		14746, -- Prepare for Trouble!
+		14747, -- Make it Double!
+		14761, -- Deciphering Death's Intentions - !! tooltips?
+		14894, -- To 'Ghast, Two Curios
+	},
+	["Covenant (Kyrian)"] = {
+		14851, -- Bastion of Protection
+		14852, -- The Hoot of the Issue
+		14853, -- All The Colors of the Painbow
+		14854, -- It's Not What You Wear
+		14856, -- Charmed, I'm Sure
+		14857, -- Itsy Bitsy Fighters
+		14858, -- Curse of Thirst
+		14859, -- Inside the Park Home Run
+		14860, -- Bare Necessities
+		14861, -- Learning from the Masters
+		14862, -- It's How You Wear It
+		14863, -- Death Foursworn
+		14864, -- Personal Nightmare
+		14865, -- Disciple of Humility
+		14866, -- Master of the Path
+		-- !! check these. any issues? any in a series?
+	},
+	["Covenant (Necrolord)"] = {
+		14764,  -- The Great Luckydo
+		14752,  -- Things To Do When You're Dead
+		-- All of these are part of 14752:
+		--14684,  -- Abominable Lives
+		--14748,  -- Wardrobe Makeover
+		--14751,  -- The Gang's All Here
+		--14753,  -- It's a Wrap
+		-- !! check these. any issues? any in a series?
+	},
+	["Covenant (Night Fae)"] = {
+		14670,  -- That's the Spirit
+		14675,  -- Spirit Talker
+		14676,  -- Divine Spirit Savior
+		14677,  -- Spiritual Observations
+		14780,  -- Meditation Master
+		14789,  -- All Spirits Great and Small
+		14775,  -- Mush Appreciated
+		-- !! check these. any issues? any in a series?
+	},
+	["Covenant (Venthyr)"] = {
+		14682,  -- The Party Herald
+		-- All of these are part of 14682:
+		--14680,  -- Something for Everyone
+		--14679,  -- Party Palace
+		--14678,  -- Court Favors
+		--14723,  -- Be Our Guest
+		--14724,  -- People Pleaser
+		--14725,  -- We Happy Few
+		--14681,  -- Dredger Academy
+		--14683,  -- Dredger Style
+		--14726,  -- It's Certainly Never Boring
+		--14727,  -- Master of Ceremonies
+		-- !! check these. any issues?
+	},
+  ["Torghast, Tower of the Damned"] = {
+    SUBZONES = {
+      --["The Runecarver's Oubliette"] = 14759, -- !! Currently redunant with the other Torghast grouping that uses getSuggestionsFromCategory. May want to add feature to narrow things down so it doesn't show the others in this subzone (but check case by case; might be more to put here).
+    }
+  },
 }
-ACHID_ZONE_MISC["Thunder Totem"] = ACHID_ZONE_MISC["Highmountain"] -- Make this quasi-subzone show suggestions from the main zone
+-- Make some subzones / quasi-subzones show suggestions from the main zone - !! not perfect as it won't tie in Explore achievements! TODO - maybe new system, use map IDs.
+ACHID_ZONE_MISC["Thunder Totem"] = ACHID_ZONE_MISC["Highmountain"]
+ACHID_ZONE_MISC["Darkhaven"] = ACHID_ZONE_MISC["Revendreth"]
+ACHID_ZONE_MISC["The Eternal Terrace Lift"] = ACHID_ZONE_MISC["Revendreth"]
 
 if (IsAlliance) then
   tinsert(ACHID_ZONE_MISC["Grizzly Hills"], 2016) -- "Grizzled Veteran"
@@ -892,6 +1135,12 @@ tinsert(ACHID_ZONE_MISC["Undercity"], "6621:3")
 tinsert(ACHID_ZONE_MISC["Silvermoon City"], "6621:4")
 
 do
+	local function mergelist(from, to)
+		for k,v in pairs(from) do
+			tinsert(to, v)
+		end
+	end
+
 	-- Black Empire Assaults (Battle for Azeroth 8.3):
 	local blackEmpireAssault = {
 		14160, -- Rare to Well Done
@@ -907,16 +1156,47 @@ do
 		14154, -- Defend the Vale
 		14156, -- The Rajani
 	}
-
-	local function mergelist(from, to)
-		for k,v in pairs(from) do
-			tinsert(to, v)
-		end
-	end
 	mergelist(blackEmpireAssault, ACHID_ZONE_MISC["Uldum"])
 	mergelist(blackEmpireAssaultUldum, ACHID_ZONE_MISC["Uldum"])
 	mergelist(blackEmpireAssault, ACHID_ZONE_MISC["Vale of Eternal Blossoms"])
 	mergelist(blackEmpireAssaultVale, ACHID_ZONE_MISC["Vale of Eternal Blossoms"])
+
+	-- Covenant sanctum achievements common to all Shadowlands covenants:
+	local covSanctum = {
+		14627, -- Choosing Your Purpose
+		14834, -- Bound with Purpose
+		14835, -- A Resolute Bond
+		14836, -- Unwavering Bond
+		14837, -- Nexus of Bonds
+		14628, -- The Road to Renown
+		14632, -- Conducting Anima
+		14633, -- Master Navigator
+		14636, -- Adventurer in Chief
+		14839, -- Bound to Adventure
+		14840, -- Adventures: Learning the Ropes
+		14843, -- Adventures: Harmony of Purpose
+		14844, -- Adventures: Into the Breach
+		14845, -- Adventures: A Step in the Right Direction
+		14637, -- Your Covenant's Flavor
+		14638, -- The Anima Must Flow
+		14639, -- Dedication to the Restoration
+		14777, -- Restoration Expert
+	}
+	mergelist(covSanctum, ACHID_ZONE_MISC["Covenant (Kyrian)"])
+	mergelist(covSanctum, ACHID_ZONE_MISC["Covenant (Necrolord)"])
+	mergelist(covSanctum, ACHID_ZONE_MISC["Covenant (Night Fae)"])
+	mergelist(covSanctum, ACHID_ZONE_MISC["Covenant (Venthyr)"])
+
+  local covKey = getPlayerCovenant()
+  if (covKey == "Kyrian") then
+    ACHID_ZONE_MISC["Covenant"] = ACHID_ZONE_MISC["Covenant (Kyrian)"]
+  elseif (covKey == "Necrolord") then
+    ACHID_ZONE_MISC["Covenant"] = ACHID_ZONE_MISC["Covenant (Necrolord)"]
+  elseif (covKey == "NightFae") then
+    ACHID_ZONE_MISC["Covenant"] = ACHID_ZONE_MISC["Covenant (Night Fae)"]
+  elseif (covKey == "Venthyr") then
+    ACHID_ZONE_MISC["Covenant"] = ACHID_ZONE_MISC["Covenant (Venthyr)"]
+  end
 end
 
 -- Alias:
@@ -1280,6 +1560,9 @@ local ACHID_INSTANCES = {
 		-- Heroic:
 		IsAlliance and 14150 or 14149, -- Heroic: War for the Shore
 	},
+
+-- Shadowlands Dungeons / Torghast
+	["Torghast, Tower of the Damned"] = getSuggestionsFromCategory(15440),
 }
 -- Aliases
 ACHID_INSTANCES["Molten Core"] = ACHID_INSTANCES["The Molten Core"]
@@ -1887,7 +2170,12 @@ local SUBZONES_REV = {}
 for k,v in pairs(L.SUBZONES) do  SUBZONES_REV[v] = k;  end
 
 local function ZoneLookup(zoneName, isSub, subz)
-  zoneName = zoneName or subz or ""
+	-- Get Overachiever Key version of zoneName which can be either zone text or subzone text. If it's a subzone, set isSub to true so we use slightly different logic.
+	-- subz is a fallback and only makes sense to use when isSub is not true.
+	-- Overachiever Key is normally the unlocalized (English) name for a zone/subzone (trimmed if needed), but it can also be a special key that this addon set up, usually for
+	-- disambiguation (e.g. "Dalaran (Northrend)" vs "Dalaran (Broken Isles)").
+  zoneName = zoneName or subz
+	if (not zoneName) then  return nil;  end
   local trimz = strtrim(zoneName)
   local result = isSub and SUBZONES_REV[trimz] or LBZR[trimz] or LBZR[zoneName] or trimz
   if (not isSub) then  result = Overachiever.GetZoneKey(result);  end
@@ -2095,7 +2383,124 @@ end
 
 local TradeskillSuggestions
 
+local function getOpenTradeskill()
+	local _, skillLineDisplayName, parentSkillLineDisplayName
+	_, skillLineDisplayName, _, _, _, _, parentSkillLineDisplayName = C_TradeSkillUI.GetTradeSkillLine()
+	-- The return of C_TradeSkillUI.GetTradeSkillLine() is inconsistent! skillLineDisplayName may be, say, "Cooking" or it may be "Shadowlands Cooking" -- and when it's "Cooking", parentSkillLineDisplayName isn't given at all.
+	-- It seems to be "Cooking" during the reaction to the "TRADE_SKILL_SHOW" event and "Shadowlands Cooking" otherwise.
+	return parentSkillLineDisplayName and parentSkillLineDisplayName or skillLineDisplayName
+end
+
 local Refresh_lastcount, Refresh_stoploop = 0
+
+local function getLocationSuggestions(retTab, zone, subzone, textoverride, instype, heroicD, heroicR, twentyfive, mythicD, mythicR)
+	local prevSuggested
+	if (retTab) then
+		prevSuggested = {}
+		copytab(suggested, prevSuggested)
+		wipe(suggested)
+	end
+
+	CurrentSubzone = subzone
+
+	if (instype and not textoverride) then  -- If in an instance:
+		Refresh_Add(ACHID_INSTANCES[zone])
+		if (instype == "pvp") then  -- If in a battleground:
+			Refresh_Add(ACHID_BATTLEGROUNDS)
+		end
+
+		if (heroicD or heroicR) then
+			if (twentyfive) then
+				Refresh_Add(ACHID_INSTANCES_HEROIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone], ACHID_INSTANCES_25[zone], ACHID_INSTANCES_25_HEROIC[zone])
+			else
+				Refresh_Add(ACHID_INSTANCES_HEROIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone], ACHID_INSTANCES_10[zone], ACHID_INSTANCES_10_HEROIC[zone])
+			end
+		else
+			if (twentyfive) then
+				Refresh_Add(ACHID_INSTANCES_NORMAL[zone], ACHID_INSTANCES_25[zone], ACHID_INSTANCES_25_NORMAL[zone])
+			else
+				Refresh_Add(ACHID_INSTANCES_NORMAL[zone], ACHID_INSTANCES_10[zone], ACHID_INSTANCES_10_NORMAL[zone])
+			end
+		end
+
+		if (mythicD or mythicR) then
+			Refresh_Add(ACHID_INSTANCES_MYTHIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone])
+			-- No need to check twentyfive; that's a legacy classification and the dungeons/raids with mythic-only achievements don't use it.
+		end
+
+	else
+		Refresh_Add(Overachiever.ExploreZoneIDLookup(zone), ACHID_ZONE_NUMQUESTS[zone], ACHID_ZONE_MISC[zone])
+		-- Also look for instance achievements for an instance you're near if we can look it up easily (since many zones
+		-- have subzones with the instance name when you're near the instance entrance and some instance entrances are
+		-- actually in their own "zone" using the instance's zone name):
+		Refresh_Add(ACHID_INSTANCES[subzone] or ACHID_INSTANCES[zone])
+
+		local ach10, ach25 = ACHID_INSTANCES_10[subzone] or ACHID_INSTANCES_10[zone], ACHID_INSTANCES_25[subzone] or ACHID_INSTANCES_25[zone]
+		local achH10, achH25 = ACHID_INSTANCES_10_HEROIC[subzone] or ACHID_INSTANCES_10_HEROIC[zone], ACHID_INSTANCES_25_HEROIC[subzone] or ACHID_INSTANCES_25_HEROIC[zone]
+		local achN10, achN25 = ACHID_INSTANCES_10_NORMAL[subzone] or ACHID_INSTANCES_10_NORMAL[zone], ACHID_INSTANCES_25_NORMAL[subzone] or ACHID_INSTANCES_25_NORMAL[zone]
+
+		if (ach10 or ach25 or achH10 or achH25 or achN10 or achN25) then
+		-- If there are 10-man or 25-man specific achievements, this is a raid:
+			if (heroicR) then
+				if (twentyfive) then
+					Refresh_Add(ACHID_INSTANCES_HEROIC[subzone] or ACHID_INSTANCES_HEROIC[zone],
+					ACHID_INSTANCES_HEROIC_PLUS[subzone] or ACHID_INSTANCES_HEROIC_PLUS[zone],
+					ach25, achH25)
+				else
+					Refresh_Add(ACHID_INSTANCES_HEROIC[subzone] or ACHID_INSTANCES_HEROIC[zone],
+					ACHID_INSTANCES_HEROIC_PLUS[subzone] or ACHID_INSTANCES_HEROIC_PLUS[zone],
+					ach10, achH10)
+				end
+			else
+				if (twentyfive) then
+					Refresh_Add(ACHID_INSTANCES_NORMAL[subzone] or ACHID_INSTANCES_NORMAL[zone], ach25, achN25)
+				else
+					Refresh_Add(ACHID_INSTANCES_NORMAL[subzone] or ACHID_INSTANCES_NORMAL[zone], ach10, achN10)
+				end
+			end
+		-- Not a raid (or at least no 10-man vs 25-man specific suggestions):
+		elseif (heroicD) then
+			Refresh_Add(ACHID_INSTANCES_HEROIC[subzone] or ACHID_INSTANCES_HEROIC[zone],
+			ACHID_INSTANCES_HEROIC_PLUS[subzone] or ACHID_INSTANCES_HEROIC_PLUS[zone])
+		else
+			Refresh_Add(ACHID_INSTANCES_NORMAL[subzone] or ACHID_INSTANCES_NORMAL[zone])
+		end
+
+		if (mythicD or mythicR) then
+			Refresh_Add(ACHID_INSTANCES_MYTHIC[subzone] or ACHID_INSTANCES_MYTHIC[zone],
+			ACHID_INSTANCES_HEROIC_PLUS[subzone] or ACHID_INSTANCES_HEROIC_PLUS[zone])
+		end
+	end
+
+	if (textoverride) then
+		Refresh_Add(ACHID_HOLIDAY[zone])
+	end
+
+	if (retTab) then
+		local tab = {}
+		copytab(suggested, tab)
+		wipe(suggested)
+		copytab(prevSuggested, suggested)
+		return tab
+	end
+end
+
+local function getCurrentLocationSuggestions()
+	local zone
+	local subzone = ZoneLookup(GetSubZoneText(), true) or ""
+	if (IsInInstance()) then
+		zone = ZoneLookup(GetInstanceInfo(), nil, subzone) -- No 'or ""' this time.
+	end
+	if (not zone) then
+		zone = ZoneLookup(GetRealZoneText(), nil, subzone) or ""
+	end
+	zone, subzone = GetZoneSpecialOverride(zone, subzone)
+
+	local textoverride = false
+	local instype, heroicD, mythicD, challenge, twentyfive, heroicR, mythicR = Overachiever.GetDifficulty()
+
+	return getLocationSuggestions(true, zone, subzone, textoverride, instype, heroicD, heroicR, twentyfive, mythicD, mythicR)
+end
 
 local function Refresh(self, instanceRetry)
   if (not frame:IsVisible() or Refresh_stoploop) then  return;  end
@@ -2104,7 +2509,7 @@ local function Refresh(self, instanceRetry)
 
   wipe(suggested)
   EditZoneOverride:ClearFocus()
-  CurrentSubzone = ZoneLookup(GetSubZoneText(), true)
+  CurrentSubzone = ZoneLookup(GetSubZoneText(), true) or ""
   local inputtext = strtrim(EditZoneOverride:GetText())
   local zone = LocationsList[ strlower(inputtext) ]
   local textoverride = false
@@ -2117,26 +2522,26 @@ local function Refresh(self, instanceRetry)
     if (self ~= subzdrop) then  subzdrop_Update(zone);  end
     local subz = subzdrop:GetSelectedValue()
     if (subz ~= 0) then
-	  CurrentSubzone = SUBZONES_REV[subz] or subz
-	end
+		  CurrentSubzone = SUBZONES_REV[subz] or subz
+		end
+	elseif (inputtext and inputtext ~= "") then
+		zone = ""
+		EditZoneOverride:SetTextColor(0.75, 0.1, 0.1)
+    subzdrop_Update()
   else
-    if (instanceRetry ~= true) then -- check specifically against true because it could be "LeftButton"
-      zone = GetZoneSpecialOverride()
-      if (not zone and IsInInstance()) then
-	    instanceTry = true
-	    zone = ZoneLookup(GetInstanceInfo(), nil, CurrentSubzone)
-		--zone = "fake place force retry"
-	  end
-	end
+		if (instanceRetry ~= true) then -- check specifically against true because it could be "LeftButton"
+			if (IsInInstance()) then
+				instanceTry = true
+				zone = ZoneLookup(GetInstanceInfo(), nil, CurrentSubzone) or ""
+				--zone = "fake place force retry"
+			end
+		end
     if (not zone) then
-	  instanceTry = false
-	  zone = ZoneLookup(GetRealZoneText(), nil, CurrentSubzone)
-	end
-    if (inputtext and inputtext ~= "") then  EditZoneOverride:SetTextColor(0.75, 0.1, 0.1);  end
-    --Refresh_stoploop = true
-    subzdrop:SetMenu(subzdrop_menu)
-    --Refresh_stoploop = nil
-    subzdrop:Disable()
+		  instanceTry = false
+		  zone = ZoneLookup(GetRealZoneText(), nil, CurrentSubzone) or ""
+		end
+		zone, CurrentSubzone = GetZoneSpecialOverride(zone, CurrentSubzone)
+    subzdrop_Update()
   end
   --print(zone)
 
@@ -2158,7 +2563,7 @@ local function Refresh(self, instanceRetry)
   numHidden = 0
 
   -- Suggestions based on an open tradeskill window or whether a fishing pole is equipped:
-  TradeskillSuggestions = select(2, C_TradeSkillUI.GetTradeSkillLine())
+  TradeskillSuggestions = getOpenTradeskill()
   local tradeskill = LBIR[TradeskillSuggestions]
   if (not ACHID_TRADESKILL[tradeskill] and IsEquippedItemType(LBI["Fishing Poles"])) then
     TradeskillSuggestions, tradeskill = LBI["Fishing"], "Fishing"
@@ -2171,9 +2576,16 @@ local function Refresh(self, instanceRetry)
     if (instype == "pvp") then  -- If in a battleground:
       Refresh_Add(ACHID_TRADESKILL_BG[tradeskill])
     end
+
   elseif (textoverride and zone == L.SUGGESTIONS_HIDDENLOCATION) then
     if (VARS_CHAR.SuggestionsHidden) then
       for id in pairs(VARS_CHAR.SuggestionsHidden) do
+        suggested[id] = true
+      end
+    end
+	elseif (textoverride and zone == L.SUGGESTIONS_AUTOTRACKEDLOCATION) then
+		if (VARS.SuggestionsAutoTracking) then
+      for id in pairs(VARS.SuggestionsAutoTracking) do
         suggested[id] = true
       end
     end
@@ -2182,78 +2594,7 @@ local function Refresh(self, instanceRetry)
     TradeskillSuggestions = nil
 
   -- Suggestions for your location:
-    if (instype and not textoverride) then  -- If in an instance:
-      Refresh_Add(ACHID_INSTANCES[zone])
-      if (instype == "pvp") then  -- If in a battleground:
-        Refresh_Add(ACHID_BATTLEGROUNDS)
-      end
-
-      if (heroicD or heroicR) then
-        if (twentyfive) then
-          Refresh_Add(ACHID_INSTANCES_HEROIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone], ACHID_INSTANCES_25[zone], ACHID_INSTANCES_25_HEROIC[zone])
-        else
-          Refresh_Add(ACHID_INSTANCES_HEROIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone], ACHID_INSTANCES_10[zone], ACHID_INSTANCES_10_HEROIC[zone])
-        end
-      else
-        if (twentyfive) then
-          Refresh_Add(ACHID_INSTANCES_NORMAL[zone], ACHID_INSTANCES_25[zone], ACHID_INSTANCES_25_NORMAL[zone])
-        else
-          Refresh_Add(ACHID_INSTANCES_NORMAL[zone], ACHID_INSTANCES_10[zone], ACHID_INSTANCES_10_NORMAL[zone])
-        end
-      end
-
-      if (mythicD or mythicR) then
-        Refresh_Add(ACHID_INSTANCES_MYTHIC[zone], ACHID_INSTANCES_HEROIC_PLUS[zone])
-        -- No need to check twentyfive; that's a legacy classification and the dungeons/raids with mythic-only achievements don't use it.
-      end
-
-    else
-      Refresh_Add(Overachiever.ExploreZoneIDLookup(zone), ACHID_ZONE_NUMQUESTS[zone], ACHID_ZONE_MISC[zone])
-      -- Also look for instance achievements for an instance you're near if we can look it up easily (since many zones
-      -- have subzones with the instance name when you're near the instance entrance and some instance entrances are
-      -- actually in their own "zone" using the instance's zone name):
-      Refresh_Add(ACHID_INSTANCES[CurrentSubzone] or ACHID_INSTANCES[zone])
-
-      local ach10, ach25 = ACHID_INSTANCES_10[CurrentSubzone] or ACHID_INSTANCES_10[zone], ACHID_INSTANCES_25[CurrentSubzone] or ACHID_INSTANCES_25[zone]
-      local achH10, achH25 = ACHID_INSTANCES_10_HEROIC[CurrentSubzone] or ACHID_INSTANCES_10_HEROIC[zone], ACHID_INSTANCES_25_HEROIC[CurrentSubzone] or ACHID_INSTANCES_25_HEROIC[zone]
-      local achN10, achN25 = ACHID_INSTANCES_10_NORMAL[CurrentSubzone] or ACHID_INSTANCES_10_NORMAL[zone], ACHID_INSTANCES_25_NORMAL[CurrentSubzone] or ACHID_INSTANCES_25_NORMAL[zone]
-
-      if (ach10 or ach25 or achH10 or achH25 or achN10 or achN25) then
-      -- If there are 10-man or 25-man specific achievements, this is a raid:
-        if (heroicR) then
-          if (twentyfive) then
-            Refresh_Add(ACHID_INSTANCES_HEROIC[CurrentSubzone] or ACHID_INSTANCES_HEROIC[zone],
-				ACHID_INSTANCES_HEROIC_PLUS[CurrentSubzone] or ACHID_INSTANCES_HEROIC_PLUS[zone],
-				ach25, achH25)
-          else
-            Refresh_Add(ACHID_INSTANCES_HEROIC[CurrentSubzone] or ACHID_INSTANCES_HEROIC[zone],
-				ACHID_INSTANCES_HEROIC_PLUS[CurrentSubzone] or ACHID_INSTANCES_HEROIC_PLUS[zone],
-				ach10, achH10)
-          end
-        else
-          if (twentyfive) then
-            Refresh_Add(ACHID_INSTANCES_NORMAL[CurrentSubzone] or ACHID_INSTANCES_NORMAL[zone], ach25, achN25)
-          else
-            Refresh_Add(ACHID_INSTANCES_NORMAL[CurrentSubzone] or ACHID_INSTANCES_NORMAL[zone], ach10, achN10)
-          end
-        end
-      -- Not a raid (or at least no 10-man vs 25-man specific suggestions):
-      elseif (heroicD) then
-        Refresh_Add(ACHID_INSTANCES_HEROIC[CurrentSubzone] or ACHID_INSTANCES_HEROIC[zone],
-			ACHID_INSTANCES_HEROIC_PLUS[CurrentSubzone] or ACHID_INSTANCES_HEROIC_PLUS[zone])
-      else
-        Refresh_Add(ACHID_INSTANCES_NORMAL[CurrentSubzone] or ACHID_INSTANCES_NORMAL[zone])
-      end
-
-      if (mythicD or mythicR) then
-	    Refresh_Add(ACHID_INSTANCES_MYTHIC[CurrentSubzone] or ACHID_INSTANCES_MYTHIC[zone],
-			ACHID_INSTANCES_HEROIC_PLUS[CurrentSubzone] or ACHID_INSTANCES_HEROIC_PLUS[zone])
-      end
-    end
-
-    if (textoverride) then
-      Refresh_Add(ACHID_HOLIDAY[zone])
-    end
+    getLocationSuggestions(false, zone, CurrentSubzone, textoverride, instype, heroicD, heroicR, twentyfive, mythicD, mythicR)
 
   end
 
@@ -2313,7 +2654,12 @@ function frame.SetNumListed(num)
     if (TradeskillSuggestions) then
       NoSuggestionsLabel:SetText(L.SUGGESTIONS_EMPTY_TRADESKILL:format(TradeskillSuggestions))
     else
-      NoSuggestionsLabel:SetText(L.SUGGESTIONS_EMPTY)
+			local inputtext = EditZoneOverride:GetText()
+			if (inputtext and inputtext ~= "") then
+				NoSuggestionsLabel:SetText(L.SUGGESTIONS_EMPTY_OVERRIDE)
+			else
+				NoSuggestionsLabel:SetText(L.SUGGESTIONS_EMPTY)
+			end
     end
     if (numHidden < 1) then  ResultsLabel:SetText(" ");  end
   end
@@ -2450,14 +2796,14 @@ do
   local function extractNames(list)
     local ZONE_RENAME = Overachiever.ZONE_RENAME
     local INSTANCE_RENAME = Overachiever.INSTANCE_RENAME
-	for i,v in ipairs(list) do
-		local z = WOW_BFA and v.name or v
-		local lz = LBZR[z] or z
-		if (not ZONE_RENAME[lz] and not INSTANCE_RENAME[lz]) then  -- Omit zones that we use a different name for so we don't create a confusing autocomplete (e.g. people type "Dalaran" but get no suggestions because we put them somewhere else).
-			places[z] = true -- Already localized so no need for LBZ here.
-		--else	Overachiever.chatprint("omitting "..z)
+		for i,v in ipairs(list) do
+			local z = WOW_BFA and v.name or v
+			local lz = LBZR[z] or z
+			if (not ZONE_RENAME[lz] and not INSTANCE_RENAME[lz]) then  -- Omit zones that we use a different name for so we don't create a confusing autocomplete (e.g. people type "Dalaran" but get no suggestions because we put them somewhere else).
+				places[z] = true -- Already localized so no need for LBZ here.
+			--else	Overachiever.chatprint("omitting "..z)
+			end
 		end
-	end
   end
 
   -- Add all zones to the list:
@@ -2471,10 +2817,10 @@ do
     for i=1,select("#", ...) do
       tab = select(i, ...)
       for k,v in pairs(tab) do
-	    list[ (locallookup and locallookup[k]) or LBZ[k] or ZONE_RENAME_REV[k] or k ] = true  -- Add localized version of zone/instance names.
-		--print("adding: k = "..(LBZ[k] or k)..(LBZ[k] and "" or "no LBZ[k]"))
-		if (Overachiever_Debug and (not (locallookup and locallookup[k])) and not LBZ[k] and not ZONE_RENAME_REV[k]) then  Overachiever.chatprint("POSSIBLE ERROR - no LBZ lookup found for "..k);  end
-	  end
+  	    list[ (locallookup and locallookup[k]) or LBZ[k] or ZONE_RENAME_REV[k] or k ] = true  -- Add localized version of zone/instance names.
+    		--print("adding: k = "..(LBZ[k] or k)..(LBZ[k] and "" or "no LBZ[k]"))
+    		if (Overachiever_Debug and (not (locallookup and locallookup[k])) and not LBZ[k] and not ZONE_RENAME_REV[k]) then  Overachiever.chatprint("POSSIBLE ERROR - no LBZ lookup found for "..k);  end
+  	  end
     end
   end
   addtolist(places, ACHID_INSTANCES, ACHID_INSTANCES_NORMAL, ACHID_INSTANCES_HEROIC, ACHID_INSTANCES_HEROIC_PLUS,
@@ -2486,7 +2832,9 @@ do
   locallookup = nil
   addtolist = nil
 
-  places[L.SUGGESTIONS_HIDDENLOCATION] = true  -- Add another special location, this for Hidden suggestions
+	-- Additional special "locations":
+  places[L.SUGGESTIONS_HIDDENLOCATION] = true  -- Hidden suggestions
+	places[L.SUGGESTIONS_AUTOTRACKEDLOCATION] = true  -- Auto-Tracked suggestions
 
   -- Arrange into alphabetically-sorted array:
   local count = 0
@@ -2573,7 +2921,8 @@ EditZoneOverride:SetScript("OnTabPressed", function(self)
 end)
 
 EditZoneOverride:SetScript("OnEnter", function(self)
-  GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+  GameTooltip:SetOwner(self, "ANCHOR_NONE");
+	GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 4, 32)
   GameTooltip:AddLine(L.SUGGESTIONS_LOCATION_TIP, 1, 1, 1)
   GameTooltip:AddLine(L.SUGGESTIONS_LOCATION_TIP2, nil, nil, nil, 1)
   GameTooltip:Show()
@@ -2615,7 +2964,7 @@ do
 
   function subzdrop_Update(zone)
     menu = menu or {}
-    if (menu[zone] == nil) then
+    if (zone and menu[zone] == nil) then
       local tab = {}
       addtosubzlist(suggested, zone, ACHID_ZONE_MISC, ACHID_INSTANCES, ACHID_INSTANCES_10, ACHID_INSTANCES_25,
                 ACHID_INSTANCES_10_NORMAL, ACHID_INSTANCES_25_NORMAL, ACHID_INSTANCES_10_HEROIC, ACHID_INSTANCES_25_HEROIC)
@@ -2640,7 +2989,7 @@ do
         menu[zone] = false
       end
     end
-    if (menu[zone]) then
+    if (zone and menu[zone]) then
       subzdrop:SetMenu(menu[zone])
       subzdrop:Enable()
     else
@@ -2729,22 +3078,74 @@ function Overachiever.OpenSuggestionsTab(text)
 	end
 end
 
+function Overachiever.GetLocalAutoTrackedSuggestions(incompleteOnly)
+	local tracking = VARS.SuggestionsAutoTracking
+	if (tracking) then
+		local sug = getCurrentLocationSuggestions()
+		local n = 0
+		for id in pairs(sug) do
+			local ok = false
+			if (tracking[id]) then
+				if (incompleteOnly) then
+					local _, complete
+					_, _, _, complete = GetAchievementInfo(id)
+					if (not complete) then  ok = true;  end
+				else
+					ok = true
+				end
+			end
+			if (ok) then
+				n = n + 1
+			else
+				sug[id] = nil
+			end
+		end
+		if (n == 0) then  return nil;  end
+		return sug
+	end
+	return nil
+end
+
 function frame.ShouldCrossOut(id)
 	return VARS_CHAR.SuggestionsHidden and VARS_CHAR.SuggestionsHidden[id]
 end
 
-function frame.HandleRightClick(id)
-	if (not IsShiftKeyDown()) then  return;  end
-	if (VARS_CHAR.SuggestionsHidden and VARS_CHAR.SuggestionsHidden[id]) then
-		VARS_CHAR.SuggestionsHidden[id] = nil
-		if (next(VARS_CHAR.SuggestionsHidden) == nil) then -- Is the table empty?
-			VARS_CHAR.SuggestionsHidden = nil
+function frame.ShouldAutoTrack(id)
+	return VARS.SuggestionsAutoTracking and VARS.SuggestionsAutoTracking[id]
+end
+
+function frame.HandleAchBtnClick(self, button, ignoreModifiers)
+	local id = self.id
+	if (button == "RightButton") then
+		if (IsShiftKeyDown() and not IsAltKeyDown()) then
+			if (VARS_CHAR.SuggestionsHidden and VARS_CHAR.SuggestionsHidden[id]) then
+				VARS_CHAR.SuggestionsHidden[id] = nil
+				if (next(VARS_CHAR.SuggestionsHidden) == nil) then -- Is the table empty?
+					VARS_CHAR.SuggestionsHidden = nil
+				end
+			else
+				if (not VARS_CHAR.SuggestionsHidden) then  VARS_CHAR.SuggestionsHidden = {};  end
+				VARS_CHAR.SuggestionsHidden[id] = true
+			end
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+			Refresh(panel)
+			return true
 		end
-	else
-		if (not VARS_CHAR.SuggestionsHidden) then  VARS_CHAR.SuggestionsHidden = {};  end
-		VARS_CHAR.SuggestionsHidden[id] = true
+	elseif (IsShiftKeyDown() and IsAltKeyDown()) then
+		if (VARS.SuggestionsAutoTracking and VARS.SuggestionsAutoTracking[id]) then
+			VARS.SuggestionsAutoTracking[id] = nil
+			if (next(VARS.SuggestionsAutoTracking) == nil) then -- Is the table empty?
+				VARS.SuggestionsAutoTracking = nil
+			end
+		else
+			if (not VARS.SuggestionsAutoTracking) then  VARS.SuggestionsAutoTracking = {};  end
+			VARS.SuggestionsAutoTracking[id] = true
+		end
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+		Refresh(panel)
+		Overachiever.AutoTrackingSettingUpdated()
+		return true
 	end
-	Refresh(panel)
 end
 
 --[[

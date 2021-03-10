@@ -1,3 +1,62 @@
+Ver 9.1.8
+	-Updated PvP code.
+	-Adjusted for new Warning code.
+	-Adjusted Protection rotation.
+
+Ver 9.1.7
+	-Fixed issue with Aura warning before you learn auras.
+
+Ver 9.1.6
+	-Added some Torghast powers.
+	-Added support for specialization disabling.
+
+Ver 9.1.5
+	-Trying to fix Final Verdict for retribution rotation.
+
+Ver 9.1.4
+	-Added aura warning.
+	-Added Summon Steward for Kyrian.
+	-Tweaked Range of abilites.
+
+Ver 9.1.3
+	-Small adjustments.
+	
+Ver 9.1.2
+	-Added Legendaries to library.
+	-Small tweaks for Ashen Hallow.
+
+Ver 9.1.1
+	-Fixed Crusader Talent burst for Retribution rotation.
+
+Ver 9.1.0
+	-Code Overhaul (Burst and Full Mode code changes. Local variable cleanup changes. Covenant Conduit framework built.)
+	-Added Phial of Serenity to defense rotations.
+	-Added Soulshape to movement.
+	-Supported under level 10 better.
+	
+Ver 9.0.7
+	-Small code fixes to help stutter issue.
+
+Ver 9.0.6
+	-Added Ashen Hallow to burst toggle.
+	-Added Word of Glory to Retribution Defense rotation per request.
+
+Ver 9.0.5
+	-Added Covenant abilities to Retribution rotation.
+
+Ver 9.0.4
+	-Fixed Protection talent Seraphim.
+	-Adjusted Shield of the Righteous usage.
+
+Ver 9.0.3
+	-Updated Protection rotation for prepatch.
+
+Ver 9.0.2
+	-Quick fix for Wake of Ashes during Burst mode.
+
+Ver 9.0.1
+	-Checked and updated Retribution rotation for prepatch.
+
 Ver 9.0.0
 	-Updated Library for PrePatch.
 	-Will work on rotation once all classes libraries have a once over.

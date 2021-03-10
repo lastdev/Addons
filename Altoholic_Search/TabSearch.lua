@@ -129,7 +129,6 @@ function ns:OnLoad()
 	parent.SortButtons.Sort3:SetText(L["Realm"])
 	parent.Slot:SetText(L["Equipment Slot"])
 	parent.Location:SetText(L["Location"])
-    parent.IncludeDescription:SetText("Also Search Description")
 end
 
 function ns:Update()
@@ -189,7 +188,7 @@ function ns:Update()
 				local category = categories[p.parentIndex]
 				local class = category.class
 				local subClass = category.subClasses[p.dataIndex]
-                
+			
 				menuButton.Text:SetText("|cFFBBFFBB   " .. GetItemSubClassInfo(class, subClass))
 				menuButton:SetScript("OnClick", Item_OnClick)
 				menuButton.itemTypeIndex = p.parentIndex
@@ -300,7 +299,6 @@ function ns:DropDownLocation_Initialize()
 		info.value = i
 		info.func = function(self) 
 				UIDropDownMenu_SetSelectedValue(parent.SelectLocation, self.value)
-                addon:SetOption("UI.Tabs.Search.LocationRealm", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectLocation))
 			end
 		info.checked = nil; 
 		info.icon = nil; 

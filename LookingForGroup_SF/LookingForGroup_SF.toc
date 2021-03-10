@@ -1,6 +1,0 @@
-## Interface: 80205
-## Author: cqwrteur
-## Title: LookingForGroup Spam Filter
-## Dependencies: LookingForGroup
-
-Core.lua

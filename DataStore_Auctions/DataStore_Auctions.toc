@@ -1,14 +1,13 @@
-## Interface: 90001
+﻿## Interface: 90002
 ## Title: DataStore_Auctions
 ## Notes: Stores information about character auctions and bids
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 9.0.1-024
+## Version: 
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_AuctionsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Project-ID: 20205
 
 locale.xml
 

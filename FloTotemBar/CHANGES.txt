@@ -1,18 +1,12 @@
-tag 4ce213a11da2b73da3e6bb9b2869375c3c06ebe5 9.0.44
+tag 81014bdc5dd82f3f7fd0e1962529f15982993a2d 9.0.44.2
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Sat Oct 17 11:19:15 2020 +0200
+Date:	Thu Nov 19 21:57:56 2020 +0100
 
-tagging for release
+Tagginf for release
 
-commit e5b9a5b0afb6c52a1983016b55e7d7417cfb0e56
+commit 0cc8d52a1a62560e4ec2174697f24ffd8fbff392
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Sat Oct 17 11:18:10 2020 +0200
+Date:   Thu Nov 19 21:54:49 2020 +0100
 
-    Version
-
-commit dc910c24c42819284bb50f25655a7a7f878f0be2
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Sat Oct 17 11:15:39 2020 +0200
-
-    Remove / add totems
+    Update toc and version number
 

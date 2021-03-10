@@ -1,7 +1,44 @@
-$Id: ChangeLog.txt 101 2019-09-03 14:43:10Z arith $
+$Id: ChangeLog.txt 116 2020-11-22 15:49:11Z arith $
 
 Revision History:
 =================
+
+* v1.38 (Nov. 22, 2020)
+------------------------
+- Toc update to support WoW 9.0.2
+- Disable no-lib release as the new CurseForge seems to bring-in more torubles for users to download addon
+- Library update - LibCurrency
+
+* v1.37 (Oct. 26, 2020)
+------------------------
+- Re-added LibUIDropDown
+- Library update: LibBabble-SubZone
+
+* v1.36 (Oct. 18, 2020)
+------------------------
+- Toc update to support WoW 9.0.1
+- Updated deprecated function call
+  - WorldMapTooltip
+
+* v1.35 (Jul. 26, 2020)
+------------------------
+- Library update: LibBabble-SubZone
+
+* v1.34 (Jan. 17, 2020)
+-----------------------
+- Toc update to support WoW 8.3.0
+- Lib Update: LibBabble-SubZone-3.0
+
+* v1.33 (Jan. 09, 2020)
+-----------------------
+- Fixed mapID of Antoran Wastes
+
+* v1.32 (Jan. 09, 2020)
+-----------------------
+- Toc update to support WoW 8.2.5
+- Lib Update: LibBabble-SubZone-3.0
+- Bug fix:
+  - icon not showing on Paladin's class hall has been fixed now
 
 * v1.31 (Sep. 03, 2019)
 -----------------------

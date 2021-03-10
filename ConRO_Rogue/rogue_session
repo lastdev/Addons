@@ -1,0 +1,12 @@
+<NotepadPlus>
+    <Session activeView="1">
+        <mainView activeIndex="2">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="322" startPos="65" endPos="65" selMode="0" offset="0" wrapCount="1" lang="Normal Text" encoding="-1" userReadOnly="no" filename="C:\Program Files\WoW\_retail_\Interface\AddOns\ConRO_Rogue\ConRO_Rogue.toc" backupFilePath="" originalFileLastModifTimestamp="612291393" originalFileLastModifTimestampHigh="30856267" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="7864439" mapWrapIndentMode="-1" mapIsWrap="no" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1134" startPos="209" endPos="209" selMode="0" offset="0" wrapCount="1" lang="Normal Text" encoding="-1" userReadOnly="no" filename="C:\Program Files\WoW\_retail_\Interface\AddOns\ConRO_Rogue\changes.txt" backupFilePath="" originalFileLastModifTimestamp="612336318" originalFileLastModifTimestampHigh="30856267" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="771751936" mapWrapIndentMode="-1" mapIsWrap="no" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="280" startPos="137" endPos="147" selMode="0" offset="0" wrapCount="1" lang="Lua" encoding="-1" userReadOnly="no" filename="C:\Program Files\WoW\_retail_\Interface\AddOns\ConRO_Rogue\rogue_ids.lua" backupFilePath="" originalFileLastModifTimestamp="1727419148" originalFileLastModifTimestampHigh="30856259" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="771751936" mapWrapIndentMode="-1" mapIsWrap="no" />
+        </mainView>
+        <subView activeIndex="0">
+            <File firstVisibleLine="923" xOffset="0" scrollWidth="2744" startPos="41939" endPos="41939" selMode="0" offset="0" wrapCount="1" lang="Lua" encoding="-1" userReadOnly="no" filename="C:\Program Files\WoW\_retail_\Interface\AddOns\ConRO_Rogue\rogue.lua" backupFilePath="" originalFileLastModifTimestamp="1033028589" originalFileLastModifTimestampHigh="30856271" mapFirstVisibleDisplayLine="-1" mapFirstVisibleDocLine="-1" mapLastVisibleDocLine="-1" mapNbLine="-1" mapHigherPos="-1" mapWidth="-1" mapHeight="-1" mapKByteInDoc="771751936" mapWrapIndentMode="-1" mapIsWrap="no" />
+        </subView>
+    </Session>
+</NotepadPlus>

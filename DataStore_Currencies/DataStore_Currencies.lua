@@ -1,8 +1,3 @@
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-    print("DataStore_Currencies does not support Classic WoW")
-    return
-end
-
 --[[	*** DataStore_Currencies ***
 Written by : Thaoky, EU-Marécages de Zangar
 July 6th, 2009
@@ -30,9 +25,11 @@ local CURRENCY_ID_BFA_SOWF = 1580				-- BfA: Seals of the Wartorn Fate
 local CURRENCY_ID_BFA_DUBLOONS = 1710			-- BfA: Seafarer's Dubloon
 local CURRENCY_ID_BFA_WAR_SUPPLIES = 1587		-- BfA: War Supplies
 local CURRENCY_ID_BFA_AZERITE = 1565			-- BfA: Rich Azerite Fragment
-local CURRENCY_ID_BFA_COAL_VISIONS = 1755
+local CURRENCY_ID_BFA_COALESCING_VISIONS = 1755			-- BfA: Coalescing Visions
 local CURRENCY_ID_BFA_TITAN_RESIDUUM = 1718
 local CURRENCY_ID_CONQUEST = 1602
+local CURRENCY_ID_REDEEMED_SOUL = 1810			-- Shadowlands: Redeemed Soul
+local CURRENCY_ID_ANIMA = 1813			-- Shadowlands: Reservoir Anima
 
 local AddonDB_Defaults = {
 	global = {
@@ -55,6 +52,17 @@ local AddonDB_Defaults = {
 }
 
 -- *** Utility functions ***
+local bAnd = bit.band
+
+local function LeftShift(value, numBits)
+	return value * (2 ^ numBits)
+end
+
+local function RightShift(value, numBits)
+	-- for bits beyond bit 31
+	return math.floor(value / 2^numBits)
+end
+
 local headersState
 local headerCount
 
@@ -63,11 +71,10 @@ local function SaveHeaders()
 	headerCount = 0		-- use a counter to avoid being bound to header names, which might not be unique.
 	
 	for i = C_CurrencyInfo.GetCurrencyListSize(), 1, -1 do		-- 1st pass, expand all categories
-        local info = C_CurrencyInfo.GetCurrencyListInfo(i)
-		local isHeader, isExpanded = info.isHeader, info.isHeaderExpanded
-		if isHeader then
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+		if info.isHeader then
 			headerCount = headerCount + 1
-			if not isExpanded then
+			if not info.isHeaderExpanded then
 				C_CurrencyInfo.ExpandCurrencyList(i, 1)
 				headersState[headerCount] = true
 			end
@@ -78,8 +85,9 @@ end
 local function RestoreHeaders()
 	headerCount = 0
 	for i = C_CurrencyInfo.GetCurrencyListSize(), 1, -1 do
-		local isHeader = C_CurrencyInfo.GetCurrencyListInfo(i).isHeader
-		if isHeader then
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+		
+		if info.isHeader then
 			headerCount = headerCount + 1
 			if headersState[headerCount] then
 				C_CurrencyInfo.ExpandCurrencyList(i, 0)		-- collapses the header
@@ -89,61 +97,111 @@ local function RestoreHeaders()
 	headersState = nil
 end
 
+local function RegisterHeader(name)
+	local ref = addon.db.global.Reference
+
+	-- if this header is not yet referenced ..
+	if not ref.HeadersRev[name] then
+	
+		table.insert(ref.Headers, name)			-- ex: [1] = "Shadowlands"
+		ref.HeadersRev[name] = #ref.Headers		-- ["Shadowlands"] = 1
+	end
+	
+	return ref.HeadersRev[name]			-- return this header's index
+end
+
+local function RegisterCurrency(name, iconFileID)
+	local ref = addon.db.global.Reference
+	
+	-- if this currency is not yet referenced ..
+	if not ref.CurrencyTextRev[name] then
+	
+		table.insert(ref.Currencies, format("%s|%s", name, iconFileID or ""))	-- ex; [28] = "Nethershard|132775"
+		ref.CurrencyTextRev[name] = #ref.Currencies										-- ["Nethershard"] = 28
+	end
+	
+	return ref.CurrencyTextRev[name]		-- return this currency's index
+end
+
+local function SaveCurrency(character, categoryIndex, currencyIndex, count)
+	-- 07/01/2021 : Changed bit layout to better fit future additions
+	
+	-- bit  0-6 : parent category index, 7 bits = 128 values, should be safe for a while ..
+	local attrib = categoryIndex
+		
+	-- bits 7-16 : currency index, 10 bits = 1024 values, should leave room for some time too ..
+	attrib = attrib + LeftShift(currencyIndex, 7)
+	
+	-- bits 17- : Item count
+	attrib = attrib + LeftShift(count, 17)
+
+	table.insert(character.Currencies, attrib)
+end
+
 
 -- *** Scanning functions ***
 local function ScanCurrencyTotals(id, divWeekly, divTotal)
 	local denomWeekly = divWeekly or 1
 	local denomTotal = divTotal or 1
 	
-    local info = C_CurrencyInfo.GetCurrencyInfo(id) 
-    local amount, earnedThisWeek, weeklyMax, totalMax = info.quantity, info.quantityEarnedThisWeek, info.maxWeeklyQuantity, info.maxQuantity
+	local info = C_CurrencyInfo.GetCurrencyInfo(id)
 	
-	weeklyMax = math.floor(weeklyMax / denomWeekly)
-	totalMax = math.floor(totalMax / denomTotal)
-	
-	addon.ThisCharacter.CurrencyInfo[id] = format("%s-%s-%s-%s", amount or 0, earnedThisWeek or 0, weeklyMax or 0, totalMax or 0)
-end
-
-local function ScanTotals()
--- deprecated
+	addon.ThisCharacter.CurrencyInfo[id] = format("%s-%s-%s-%s", 
+		info.quantity or 0, 
+		info.quantityEarnedThisWeek or 0, 
+		math.floor(info.maxWeeklyQuantity / denomWeekly) or 0, 
+		math.floor(info.maxQuantity / denomTotal) or 0)
 end
 
 local function ScanCurrencies()
 	SaveHeaders()
 	
-	local ref = addon.db.global.Reference
-	local currencies = addon.ThisCharacter.Currencies
-	wipe(currencies)
+	local char = addon.ThisCharacter
+	wipe(char.Currencies)
 	
-	local refIndex
-
+	local categoryIndex = 0
+	local currencyIndex = 0
+	
 	for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
-        local info = C_CurrencyInfo.GetCurrencyListInfo(i)
-		local name, isHeader, count, icon = info.name, info.isHeader, info.quantity, info.iconFileID
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
 		
-		if not ref.CurrencyTextRev[name] then		-- currency does not exist yet in our reference table
-			table.insert(ref.Currencies, format("%s|%s", name, icon or "") )			-- ex; [3] = "PVP"
-			ref.CurrencyTextRev[name] = #ref.Currencies		-- ["PVP"] = 3
+		if info.isHeader then
+			categoryIndex = RegisterHeader(info.name)
+		else
+			currencyIndex = RegisterCurrency(info.name, info.iconFileID)
+			SaveCurrency(char, categoryIndex, currencyIndex, info.quantity)
+			
+			-- If the currency has a link, we can scan its totals
+			local link = C_CurrencyInfo.GetCurrencyListLink(i)
+			if link then
+				ScanCurrencyTotals(C_CurrencyInfo.GetCurrencyIDFromLink(link))
+			end
 		end
-		
-		if isHeader then
-			count = 0
-        else
-            local currencyLink = C_CurrencyInfo.GetCurrencyListLink(i)
-            if currencyLink then
-                ScanCurrencyTotals(C_CurrencyInfo.GetCurrencyIDFromLink(currencyLink))
-            end        
-		end
-
-		currencies[i] = { ["isHeader"] = isHeader, ["index"] = ref.CurrencyTextRev[name], ["count"] = count }
 	end
-    
-    local currentValue = PVPGetConquestLevelInfo()
-    addon.ThisCharacter.Conquest = currentValue
 	
 	RestoreHeaders()
 	
-	addon.ThisCharacter.lastUpdate = time()
+	char.lastUpdate = time()
+end
+
+local function ScanReservoirCurrencies()
+	local char = addon.ThisCharacter
+	
+	-- ** 9.0 Anima Currency **
+	local currencyID = C_CovenantSanctumUI.GetAnimaInfo()
+	local info = C_CurrencyInfo.GetCurrencyInfo(currencyID)
+
+	local categoryIndex = RegisterHeader(EXPANSION_NAME8)		-- Get the category index for "Shadowlands"
+	local currencyIndex = RegisterCurrency(info.name, info.iconFileID)
+	SaveCurrency(char, categoryIndex, currencyIndex, info.quantity)
+	
+	-- ** 9.0 Redeemed Soul Currency **
+	for _, currencyID in ipairs(C_CovenantSanctumUI.GetSoulCurrencies()) do
+    	info = C_CurrencyInfo.GetCurrencyInfo(currencyID)
+		currencyIndex = RegisterCurrency(info.name, info.iconFileID)
+		SaveCurrency(char, categoryIndex, currencyIndex, info.quantity)
+		ScanCurrencyTotals(currencyID)
+	end	
 end
 
 local function ScanArcheology()
@@ -183,7 +241,16 @@ local function OnArtifactHistoryReady()
 	ScanArcheology()
 end
 
+local function OnCovenantSanctumInteractionStarted()
+	ScanReservoirCurrencies()
+end
+
 -- ** Mixins **
+local function _GetCurrencyHeaders()
+	-- return all referenced headers, but in a sorted array
+	return DataStore:SortedArrayClone(addon.db.global.Reference.Headers)
+end
+
 local function _GetNumCurrencies(character)
 	return #character.Currencies
 end
@@ -192,35 +259,33 @@ local function _GetCurrencyInfo(character, index)
 	local ref = addon.db.global.Reference
 	local currency = character.Currencies[index]
 	
-    if not currency then return false, "", 0, "" end
-    if type(currency) ~= "table" then return false, "", 0, "" end -- backward compatibility workaround
-	
-    local isHeader = currency.isHeader
-	local refIndex = currency.index
-	local count = currency.count
+	local catIndex = bAnd(currency, 127)
+	local refIndex = bAnd(RightShift(currency, 7), 1023)
+	local count = RightShift(currency, 17)
 
 	local info = ref.Currencies[refIndex]
 	local name, icon = strsplit("|", info or "")
+	local category = ref.Headers[catIndex]
 	
-	return isHeader, name, count, icon
+	return name, count, icon, category
 end
 
 local function _GetCurrencyInfoByName(character, token)
 	local ref = addon.db.global.Reference
 	
-	local isHeader, name, count, icon
 	for i = 1, #character.Currencies do
-		isHeader, name, count, icon = _GetCurrencyInfo(character, i)
+		local name, count, icon, category = _GetCurrencyInfo(character, i)
 	
 		if name == token then
-			return isHeader, name, count, icon
+			return name, count, icon, category
 		end
 	end
 end
 
 local function _GetCurrencyItemCount(character, searchedID)
-	local _, _, count = _GetCurrencyInfo(character, searchedID)
-    return count
+	local _, count = _GetCurrencyInfo(character, searchedID)
+	
+	return count
 end
 
 local function _GetArcheologyCurrencyInfo(character, index)
@@ -232,7 +297,7 @@ local function _GetCurrencyTotals(character, id)
 	if not info then
 		return 0, 0, 0, 0
 	end
-
+	
 	local amount, earnedThisWeek, weeklyMax, totalMax = strsplit("-", info)
 	return tonumber(amount), tonumber(earnedThisWeek), tonumber(weeklyMax), tonumber(totalMax)
 end
@@ -303,19 +368,25 @@ local function _GetBfARichAzerite(character)
 	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_AZERITE)
 end
 
-local function _GetBfACoalVisions(character)
-    return _GetCurrencyTotals(character, CURRENCY_ID_BFA_COAL_VISIONS)
+local function _GetBfACoalescingVisions(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_COALESCING_VISIONS)
 end
 
 local function _GetBfATitanResiduum(character)
-    return _GetCurrencyTotals(character, CURRENCY_ID_BFA_TITAN_RESIDUUM)
+	return _GetCurrencyTotals(character, CURRENCY_ID_BFA_TITAN_RESIDUUM)
 end
 
-local function _GetConquestPoints(character)
-    return character.Conquest
+local function _GetRedeemedSouls(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_REDEEMED_SOUL)
 end
+
+local function _GetReservoirAnima(character)
+	return _GetCurrencyTotals(character, CURRENCY_ID_ANIMA)
+end
+
 
 local PublicMethods = {
+	GetCurrencyHeaders = _GetCurrencyHeaders,
 	GetNumCurrencies = _GetNumCurrencies,
 	GetCurrencyInfo = _GetCurrencyInfo,
 	GetCurrencyInfoByName = _GetCurrencyInfoByName,
@@ -337,22 +408,14 @@ local PublicMethods = {
 	GetBfADubloons = _GetBfADubloons,
 	GetBfAWarSupplies = _GetBfAWarSupplies,
 	GetBfARichAzerite = _GetBfARichAzerite,
-    GetBfACoalVisions = _GetBfACoalVisions,
-    GetBfATitanResiduum = _GetBfATitanResiduum,
-    GetConquestPoints = _GetConquestPoints,
+	GetBfACoalescingVisions = _GetBfACoalescingVisions,
+	GetBfATitanResiduum = _GetBfATitanResiduum,
+	GetRedeemedSouls = _GetRedeemedSouls,
+	GetReservoirAnima = _GetReservoirAnima,
 }
 
 function addon:OnInitialize()
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-    
-    -- Update 2020/03/28: Clearing all old character data due to change in datastructure. Cannot salvage old data as it is corrupted now due to a datatype overflow bug.
-    if not addon.db.global.Characters then
-        addon.db.global.DatastoreCurrencies8_3_006Update = true
-    end
-    if not addon.db.global.DatastoreCurrencies8_3_006Update then
-        wipe(addon.db.global.Characters)
-        addon.db.global.DatastoreCurrencies8_3_006Update = true
-    end
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetNumCurrencies")
@@ -376,15 +439,17 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetBfADubloons")
 	DataStore:SetCharacterBasedMethod("GetBfAWarSupplies")
 	DataStore:SetCharacterBasedMethod("GetBfARichAzerite")
-    DataStore:SetCharacterBasedMethod("GetBfACoalVisions")
-    DataStore:SetCharacterBasedMethod("GetBfATitanResiduum")
-    DataStore:SetCharacterBasedMethod("GetConquestPoints")
+	DataStore:SetCharacterBasedMethod("GetBfACoalescingVisions")
+	DataStore:SetCharacterBasedMethod("GetBfATitanResiduum")
+	DataStore:SetCharacterBasedMethod("GetRedeemedSouls")
+	DataStore:SetCharacterBasedMethod("GetReservoirAnima")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("CURRENCY_DISPLAY_UPDATE", OnCurrencyDisplayUpdate)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
+	addon:RegisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED", OnCovenantSanctumInteractionStarted)
 	
 	local _, _, arch = GetProfessions()
 
@@ -396,5 +461,8 @@ function addon:OnEnable()
 end
 
 function addon:OnDisable()
+	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
+	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
+	addon:UnregisterEvent("COVENANT_SANCTUM_INTERACTION_STARTED")
 end

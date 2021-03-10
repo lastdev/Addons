@@ -1,5 +1,34 @@
 # Changelog
 
+## Changed in v23
+
+* Rearranged a lot of data, with various incidental fixups
+* Fixed the Voidtalon portals not showing up in zones where you own the treasure map
+* Changed the behavior of the treasure-map suppression -- if you set the "show found" option, the treasure-map treasures will now show again
+* Fixed Dekorhan's position
+* Systems updates from [HandyNotes: Shadowlands Treasures](https://www.curseforge.com/wow/addons/handynotes-shadowlands-treasures):
+    * Toggle for the overlay button if you want to disable it
+    * Rares which drop collectable loot can be told to count as complete if you've got their drop
+    * Rares which are part of an achievement can be told to count as complete if you've got the achievement, regardless of their quest status
+    * Changed how tooltips anchor on the map
+
+## Changed in v22
+
+* Added a bunch of missing drops
+* Cleaned up some overly long labels
+
+## Changed in v21
+
+* Cleaned up some data, filled out Tanaan Jungle rares better
+
+## Changed in v20
+
+* Pick up fixes and improvements from [HandyNotes: Shadowlands Treasures](https://www.curseforge.com/wow/addons/handynotes-shadowlands-treasures)
+
+## Changed in v19
+
+* Update for 9.0.2
+
 ## Changed in v18
 
 * After many years, hide the bugged Sunken Treasure in Shadowmoon Valley

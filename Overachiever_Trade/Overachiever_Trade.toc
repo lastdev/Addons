@@ -1,6 +1,6 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: Overachiever - Trade
-## Version: 1.1.1
+## Version: 1.1.4
 ## Author: Tuhljin
 ## Notes: Add achievement information to the Cooking window.
 ## LoadOnDemand: 1

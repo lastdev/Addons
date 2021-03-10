@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision:  $")
+end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
 
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local LCD = IsClassic and LibStub and LibStub("LibClassicDurations")
@@ -149,7 +149,11 @@ function XPerl_Target_OnLoad(self, partyid)
 	for i, event in pairs(events) do
 		if string.find(event, "^UNIT_") or string.find(event, "^INCOMING") then
 			if pcall(self.RegisterUnitEvent, self, event, partyid) then
-				self:RegisterUnitEvent(event, partyid)
+				if event == "UNIT_MAXPOWER" then
+					self:RegisterUnitEvent(event, partyid, "player")
+				else
+					self:RegisterUnitEvent(event, partyid)
+				end
 			end
 		else
 			if pcall(self.RegisterEvent, self, event) then
@@ -191,7 +195,8 @@ function XPerl_Target_OnLoad(self, partyid)
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 	self.nameFrame.cpMeter:SetFrameLevel(2)
-	self.nameFrame.cpMeter:SetMinMaxValues(0, 5)
+	local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
+	self.nameFrame.cpMeter:SetMinMaxValues(0, IsClassic and 5 or maxComboPoints)
 	self.nameFrame.cpMeter:GetStatusBarTexture():SetHorizTile(false)
 	self.nameFrame.cpMeter:GetStatusBarTexture():SetVertTile(false)
 
@@ -860,6 +865,16 @@ function XPerl_Target_SetMana(self)
 	--mb.text:SetFormattedText("%d/%d", targetmana, targetmanamax)
 end
 
+-- XPerl_Target_SetComboBar
+function XPerl_Target_SetComboBar(self)
+	if (tconf.combo.enable) then
+		local combopoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
+		local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
+		self.nameFrame.cpMeter:SetMinMaxValues(0, IsClassic and 5 or maxComboPoints)
+		self.nameFrame.cpMeter:SetValue(combopoints)
+	end
+end
+
 -- XPerl_Target_UpdateHealPrediction
 local function XPerl_Target_UpdateHealPrediction(self)
 	if self == XPerl_Target then
@@ -1072,7 +1087,7 @@ local function XPerl_Target_UpdateLeader(self)
 		self.nameFrame.leaderIcon:Hide()
 		if (UnitIsGroupAssistant(partyid)) then
 			self.nameFrame.assistIcon:Show()
-		else 
+		else
 			self.nameFrame.assistIcon:Hide()
 		end
 	end
@@ -1517,12 +1532,19 @@ function XPerl_Target_Events:RAID_TARGET_UPDATE()
 	RaidTargetUpdate(XPerl_Focus)
 end
 
--- UNIT_POWER_FREQUENT / UNIT_MAXPOWER
+-- UNIT_POWER_FREQUENT
 function XPerl_Target_Events:UNIT_POWER_FREQUENT()
 	XPerl_Target_SetMana(self)
 end
 
-XPerl_Target_Events.UNIT_MAXPOWER = XPerl_Target_Events.UNIT_POWER_FREQUENT
+-- UNIT_MAXPOWER
+function XPerl_Target_Events:UNIT_MAXPOWER(unit)
+	if unit == "target" then
+		XPerl_Target_SetMana(self)
+	else
+		XPerl_Target_SetComboBar(self)
+	end
+end
 
 -- UNIT_DISPLAYPOWER
 function XPerl_Target_Events:UNIT_DISPLAYPOWER()
@@ -1817,7 +1839,7 @@ function XPerl_Target_ComboFrame_Update()
 		end
 
 		local fadeInfo = { }
-		for i = 1, not IsClassic and 8 or 5 do
+		for i = 1, not IsClassic and 9 or 5 do
 			local comboPoint = _G["ComboPoint"..i]
 			if i < 6 then
 				comboPoint:Show()

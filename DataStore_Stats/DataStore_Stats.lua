@@ -18,6 +18,10 @@ local AddonDB_Defaults = {
 			['*'] = {				-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
 				Stats = {},
+				SeasonBestMaps = {},
+				SeasonBestMapsOvertime = {},
+				WeeklyBestMaps = {},
+				WeeklyBestKeystone = {}
 			}
 		}
 	}
@@ -104,9 +108,101 @@ local function ScanStats()
 	addon.ThisCharacter.lastUpdate = time()
 end
 
+local function ScanMythicPlusBestForMapInfo()
+	local char = addon.ThisCharacter
+	wipe(char.WeeklyBestMaps)
+	wipe(char.WeeklyBestKeystone)
+	wipe(char.SeasonBestMaps)
+	wipe(char.SeasonBestMapsOvertime)
+	
+	-- Get the dungeons
+	local maps = C_ChallengeMode.GetMapTable()
+	if not maps then return end
+
+	local bestTime = 999999
+	local bestLevel = 0
+	local bestMapID
+	
+	-- Loop through maps
+	for i = 1, #maps do
+		local mapID = maps[i]
+		local name, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
+		
+		-- Weekly Best
+		local durationSec, level = C_MythicPlus.GetWeeklyBestForMap(mapID)
+		
+		if level then
+			-- save this map's info
+			char.WeeklyBestMaps[mapID] = {}
+			local mapInfo = char.WeeklyBestMaps[mapID]
+
+			mapInfo.name = name
+			mapInfo.level = level
+			mapInfo.timeInSeconds = durationSec
+			mapInfo.texture = texture
+			
+			-- Is it the best ?
+			if (level > bestLevel) or ((level == bestLevel) and (durationSec < bestTime)) then
+				bestTime = durationSec
+				bestLevel = level
+				bestMapID = mapID
+			end
+		end
+
+		-- Season Best
+		local intimeInfo, overtimeInfo = C_MythicPlus.GetSeasonBestForMap(mapID)
+		if intimeInfo and intimeInfo.level then
+			char.SeasonBestMaps[mapID] = {}
+			local mapInfo = char.SeasonBestMaps[mapID]
+
+			mapInfo.name = name
+			mapInfo.level = intimeInfo.level
+			mapInfo.timeInSeconds = intimeInfo.durationSec
+			mapInfo.texture = texture
+		end
+		
+		if overtimeInfo and overtimeInfo.level then
+			char.SeasonBestMapsOvertime[mapID] = {}
+			local mapInfo = char.SeasonBestMapsOvertime[mapID]
+
+			mapInfo.name = name
+			mapInfo.level = overtimeInfo.level
+			mapInfo.timeInSeconds = overtimeInfo.durationSec
+			mapInfo.texture = texture
+		end
+		
+	end
+	
+	-- Save the best map info
+	if bestMapID then
+		local name = C_ChallengeMode.GetMapUIInfo(bestMapID)
+		local keyInfo = char.WeeklyBestKeystone
+		
+		keyInfo.name = name
+		keyInfo.level = bestLevel
+		keyInfo.timeInSeconds = bestTime
+	end
+
+	char.lastUpdate = time()
+end
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanStats()
+	
+	-- This call will trigger the "CHALLENGE_MODE_MAPS_UPDATE" event
+	-- It is necessary to ensure that the proper best times are read, because when logging on a character, it could still
+	-- show the best times of the previous alt until the event is triggered. So clearly, on alt can read another alt's data.
+	-- To avoid this, trigger the event from here (not before PLAYER_ALIVE, it's too soon)
+	C_MythicPlus.RequestMapInfo()
+end
+
+local function OnWeeklyRewardsUpdate()
+	ScanMythicPlusBestForMapInfo()
+end
+
+local function OnChallengeModeMapsUpdate()
+	ScanMythicPlusBestForMapInfo()
 end
 
 -- ** Mixins **
@@ -121,8 +217,38 @@ local function _GetStats(character, statType)
 	-- return tonumber(var1), tonumber(var2), tonumber(var3), tonumber(var4), tonumber(var5), tonumber(var6)
 end
 
+local function _GetWeeklyBestKeystoneName(character)
+	return character.WeeklyBestKeystone.name or ""
+end
+
+local function _GetWeeklyBestKeystoneLevel(character)
+	return character.WeeklyBestKeystone.level or 0
+end
+
+local function _GetWeeklyBestKeystoneTime(character)
+	return character.WeeklyBestKeystone.timeInSeconds or 0
+end
+
+local function _GetWeeklyBestMaps(character)
+	return character.WeeklyBestMaps
+end
+
+local function _GetSeasonBestMaps(character)
+	return character.SeasonBestMaps
+end
+
+local function _GetSeasonBestMapsOvertime(character)
+	return character.SeasonBestMapsOvertime
+end
+
 local PublicMethods = {
 	GetStats = _GetStats,
+	GetWeeklyBestKeystoneName = _GetWeeklyBestKeystoneName,
+	GetWeeklyBestKeystoneLevel = _GetWeeklyBestKeystoneLevel,
+	GetWeeklyBestKeystoneTime = _GetWeeklyBestKeystoneTime,
+	GetWeeklyBestMaps = _GetWeeklyBestMaps,
+	GetSeasonBestMaps = _GetSeasonBestMaps,
+	GetSeasonBestMapsOvertime = _GetSeasonBestMapsOvertime,
 }
 
 function addon:OnInitialize()
@@ -130,14 +256,24 @@ function addon:OnInitialize()
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetStats")
+	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneName")
+	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneLevel")
+	DataStore:SetCharacterBasedMethod("GetWeeklyBestKeystoneTime")
+	DataStore:SetCharacterBasedMethod("GetWeeklyBestMaps")
+	DataStore:SetCharacterBasedMethod("GetSeasonBestMaps")
+	DataStore:SetCharacterBasedMethod("GetSeasonBestMapsOvertime")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("UNIT_INVENTORY_CHANGED", ScanStats)
+	addon:RegisterEvent("WEEKLY_REWARDS_UPDATE", OnWeeklyRewardsUpdate)
+	addon:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", OnChallengeModeMapsUpdate)
 end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("UNIT_INVENTORY_CHANGED")
+	addon:UnregisterEvent("WEEKLY_REWARDS_UPDATE")
+	addon:UnregisterEvent("CHALLENGE_MODE_MAPS_UPDATE")
 end

@@ -1,5 +1,6 @@
 --[[	*** DataStore_Quests ***
 Written by : Thaoky, EU-Marécages de Zangar
+July 8th, 2009
 --]]
 
 if not DataStore then return end
@@ -20,7 +21,6 @@ local AddonDB_Defaults = {
 			TrackTurnIns = true,					-- by default, save the ids of completed quests in the history
 			AutoUpdateHistory = true,			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 			DailyResetHour = 3,					-- Reset dailies at 3am (default value)
-            ManuallyTrackedQuests = {},     -- a user defined table of Quest IDs that the player wants to track, should be used for "hidden" quests that aren't tracked on completion like Warfront weeklies
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
@@ -29,9 +29,6 @@ local AddonDB_Defaults = {
 				QuestLinks = {},
 				QuestHeaders = {},
 				QuestTags = {},
-				Emissaries = {},
-                RegularZoneQuests = {},
-                Callings = {}, -- Shadowlands version of Emissaries
 				Rewards = {},
 				Money = {},
 				Dailies = {},
@@ -39,53 +36,60 @@ local AddonDB_Defaults = {
 				HistoryBuild = nil,	-- build version under which the history has been saved
 				HistorySize = 0,
 				HistoryLastUpdate = nil,
+				
+				-- ** Expansion Features / 8.0 - Battle for Azeroth **
+				Emissaries = {},
+				
+				-- ** Expansion Features / 9.0 - Shadowlands **
+				Callings = {},
+				activeCovenantID = 0,				-- Active Covenant ID (0 = None)
+				covenantCampaignProgress = 0,		-- Track the progress in the covenant storyline
 			}
-		},
-        RegularZoneQuests = {},     -- tracks assault quests and rustbolt and such. This tracks overall quest info, while the character one tracks that characters progress
+		}
 	}
 }
 
 local emissaryQuests = {
-    -- Legion
-	[42420] = true, -- Court of Farondis
-	[42421] = true, -- Nightfallen
-	[42422] = true, -- The Wardens
-	[42233] = true, -- Highmountain Tribes
-	[42234] = true, -- Valarjar
-	[42170] = true, -- Dreamweavers
-	[43179] = true, -- Kirin Tor
-	[48642] = true, -- Argussian Reach
-	[48641] = true, -- Armies of Legionfall
-	[48639] = true, -- Army of the Light
+	-- 7.0 Legion / EXPANSION_NAME6
+	[42420] = 6, -- Court of Farondis
+	[42421] = 6, -- Nightfallen
+	[42422] = 6, -- The Wardens
+	[42233] = 6, -- Highmountain Tribes
+	[42234] = 6, -- Valarjar
+	[42170] = 6, -- Dreamweavers
+	[43179] = 6, -- Kirin Tor
+	[48642] = 6, -- Argussian Reach
+	[48641] = 6, -- Armies of Legionfall
+	[48639] = 6, -- Army of the Light
 	
-	-- BfA
-	[50604] = true, -- Tortollan Seekers 
-	[50562] = true, -- Champions of Azeroth
-	[50599] = true, -- Proudmoore Admiralty
-	[50600] = true, -- Order of Embers
-	[50601] = true, -- Storm's Wake
-	[50605] = true, -- Alliance War Effort
-	[50598] = true, -- Zandalari Empire
-	[50603] = true, -- Voldunai
-	[50602] = true, -- Talanji's Expedition
-	[50606] = true, -- Horde War Effort
-	[56119] = true, -- The Waveblade Ankoan
-    [56120] = true, -- The Unshackled
+	-- 8.0 Battle for Azeroth / EXPANSION_NAME7
+	[50604] = 7, -- Tortollan Seekers 
+	[50562] = 7, -- Champions of Azeroth
+	[50599] = 7, -- Proudmoore Admiralty
+	[50600] = 7, -- Order of Embers
+	[50601] = 7, -- Storm's Wake
+	[50605] = 7, -- Alliance War Effort
+	[50598] = 7, -- Zandalari Empire
+	[50603] = 7, -- Voldunai
+	[50602] = 7, -- Talanji's Expedition
+	[50606] = 7, -- Horde War Effort
+	[56119] = 7, -- The Waveblade Ankoan
+	[56120] = 7, -- The Unshackled
 }
 
-local regularZoneQuests = {    
-    -- Mechagon World Quest
-    [56139] = true, -- 6 treasure chests
-    [55901] = true, -- complete activities in Mechagon
-    [56131] = true, -- kill three rares on Mechagon
-     
-    -- Assaults / Invasions / Etc
-    [56064] = true, -- The Black Empire in Vale
-    [57157] = true, -- The Black Empire in Uldum
-    [55350] = true, -- Amathet in Uldum
-    [56308] = true, -- Aqir in Uldum
-    [57728] = true, -- Mantid in Vale
-    [57008] = true, -- Mogu in Vale
+local covenantCampaignIDs = {
+	[Enum.CovenantType.Kyrian] = 119,
+	[Enum.CovenantType.Venthyr] = 113,
+	[Enum.CovenantType.NightFae] = 117,
+	[Enum.CovenantType.Necrolord] = 115
+}
+
+local covenantCampaignQuestChapters = {
+	-- These are the quest id's of the last quest in each chapter
+	[Enum.CovenantType.Kyrian] = { 57904, 60272, 58798, 58181, 61878, 58571, 61697, 62555, 62557 },			-- https://www.wowhead.com/guides/kyrian-covenant-campaign-story-rewards
+	[Enum.CovenantType.Venthyr] = { 62921, 60272, 59343, 57893, 58444, 59233, 58395, 57646, 58407 },		-- https://www.wowhead.com/guides/venthyr-covenant-campaign-story-rewards
+	[Enum.CovenantType.NightFae] = { 62899, 60272, 59242, 59821, 59071, 61171, 58452, 59866, 60108 },		-- https://www.wowhead.com/guides/night-fae-covenant-campaign-story-rewards
+	[Enum.CovenantType.Necrolord] = { 59609, 60272, 57648, 58820, 59894, 57636, 58624, 61761, 62406 },		-- https://www.wowhead.com/guides/necrolords-covenant-campaign-story-rewards
 }
 
 -- *** Utility functions ***
@@ -101,8 +105,9 @@ end
 local function GetQuestLogIndexByName(name)
 	-- helper function taken from QuestGuru
 	for i = 1, C_QuestLog.GetNumQuestLogEntries() do
-		local title = C_QuestLog.GetInfo(i).title
-		if title == strtrim(name) then
+		local info = C_QuestLog.GetInfo(i)
+		
+		if info.title == strtrim(name) then
 			return i
 		end
 	end
@@ -178,7 +183,8 @@ end
 local function GetQuestTagID(questID, isComplete, frequency)
 
 	local info = C_QuestLog.GetQuestTagInfo(questID) or {}
-    local tagID = info.tagID
+	local tagID = info.tagID
+	
 	if tagID then	
 		-- if there is a tagID, process it
 		if tagID == QUEST_TAG_ACCOUNT then
@@ -206,6 +212,25 @@ local function GetQuestTagID(questID, isComplete, frequency)
 	end
 end
 
+local function InjectCallingsAsEmissaries()
+	-- simply loop through all characters, and add the callings to the emissaries table
+	for characterKey, character in pairs(addon.Characters) do
+		for questID, _ in pairs(character.Callings) do
+			emissaryQuests[questID] = 8	-- 8 as Shadowlands is EXPANSION_NAME8
+			
+			-- if the calling quest has not yet been taken at the npc (so it is only still in the Callings list)
+			-- the it will not be enough to just inject it, since the quest log won't find the quest and populate the data.
+
+			if not character.Emissaries[questID] then
+				local questTitle = C_TaskQuest.GetQuestInfoByQuestID(questID)
+				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+				
+				character.Emissaries[questID] = format("%d|%d|%d|%s|%d|%s", numFulfilled, numRequired, 
+					C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or " ", time(), questTitle)
+			end
+		end
+	end
+end
 
 -- *** Scanning functions ***
 local headersState = {}
@@ -214,10 +239,11 @@ local function SaveHeaders()
 	local headerCount = 0		-- use a counter to avoid being bound to header names, which might not be unique.
 
 	for i = C_QuestLog.GetNumQuestLogEntries(), 1, -1 do		-- 1st pass, expand all categories
-		local isHeader, isCollapsed = C_QuestLog.GetInfo(i).isHeader, C_QuestLog.GetInfo(i).isCollapsed
-		if isHeader then
+		local info = C_QuestLog.GetInfo(i)
+	
+		if info.isHeader then
 			headerCount = headerCount + 1
-			if isCollapsed then
+			if info.isCollapsed then
 				ExpandQuestHeader(i)
 				headersState[headerCount] = true
 			end
@@ -228,8 +254,9 @@ end
 local function RestoreHeaders()
 	local headerCount = 0
 	for i = C_QuestLog.GetNumQuestLogEntries(), 1, -1 do
-		local isHeader = C_QuestLog.GetInfo(i).isHeader
-		if isHeader then
+		local info = C_QuestLog.GetInfo(i)
+		
+		if info.isHeader then
 			headerCount = headerCount + 1
 			if headersState[headerCount] then
 				CollapseQuestHeader(i)
@@ -290,6 +317,25 @@ local function ScanRewardSpells(rewards)
 	end
 end
 
+local function ScanCovenantCampaignProgress()
+	-- Get the covenant ID, exit if invalid
+	local covenantID = C_Covenants.GetActiveCovenantID()
+	if covenantID == Enum.CovenantType.None then return end
+
+	local count = 0
+	
+	-- loop through the quest id's of the last quest of each chapter, and check if it is flagged completed
+	for _, questID in pairs(covenantCampaignQuestChapters[covenantID]) do
+		if C_QuestLog.IsQuestFlaggedCompleted(questID) then
+			count = count + 1
+		end
+	end
+	
+	local char = addon.ThisCharacter
+	char.activeCovenantID = C_Covenants.GetActiveCovenantID()
+	char.covenantCampaignProgress = count
+end
+
 local function ScanQuests()
 	local char = addon.ThisCharacter
 	local quests = char.Quests
@@ -299,34 +345,23 @@ local function ScanQuests()
 	local tags = char.QuestTags
 	local emissaries = char.Emissaries
 	local money = char.Money
-    local savedRegularZoneQuests = addon.db.global.RegularZoneQuests
 
 	wipe(quests)
 	wipe(links)
 	wipe(headers)
 	wipe(rewards)
 	wipe(tags)
-	-- wipe(emissaries)  -- going to try a different approach
 	wipe(money)
-    
-    for questID, details in pairs(emissaries) do
-        local numFulfilled, numRequired, timeLeft, objective, timeSaved, questName = strsplit("|", details)
-        if timeSaved and timeLeft and (tonumber(timeSaved) > 0) and (tonumber(timeLeft) > 0) then
-		    local secondsSinceLastUpdate = (time() - timeSaved)
-		    if secondsSinceLastUpdate > (tonumber(timeLeft) * 60) then		-- if the info has expired ..
-			     emissaries[questID] = nil			-- .. clear the entry
-		    end
-        end
-        
-        -- delete data saved before the addon update, if past its expiry
-        if (not timeSaved) and timeLeft and (tonumber(timeLeft) > 0) then
-		    local secondsSinceLastUpdate = (time() - char.lastUpdate)
-		    if secondsSinceLastUpdate > (tonumber(timeLeft) * 60) then
-			     emissaries[questID] = nil			-- .. clear the entry
-		    end
-        end            
+	
+	-- wipe(emissaries)
+	-- We do not want to delete all emissaries, some may have just been injected
+	for questID, expansionLevel in pairs(emissaryQuests) do
+		-- if they are not from shadowlands .. then they may be wiped
+		if expansionLevel < 8 then
+			emissaries[questID] = nil
+		end
 	end
-    
+
 	local currentSelection = C_QuestLog.GetSelectedQuest()		-- save the currently selected quest
 	SaveHeaders()
 
@@ -334,10 +369,10 @@ local function ScanQuests()
 	local lastHeaderIndex = 0
 	local lastQuestIndex = 0
 	
-	for questLogIndex = 1, C_QuestLog.GetNumQuestLogEntries() do 
-		local info = C_QuestLog.GetInfo(questLogIndex)
-        info.frequency = info.frequency or 0
-           
+	for i = 1, C_QuestLog.GetNumQuestLogEntries() do
+		local info = C_QuestLog.GetInfo(i)
+		info.frequency = info.frequency or 0
+		
 		if info.isHeader then
 			table.insert(headers, info.title or "")
 			lastHeaderIndex = lastHeaderIndex + 1
@@ -366,6 +401,7 @@ local function ScanQuests()
 			money[lastQuestIndex] = GetQuestLogRewardMoney()
 
 			-- is the quest an emissary quest ?
+			-- Note: this will also process callings, since they were injected earlier
 			if emissaryQuests[info.questID] then
 				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(info.questID, 1, false)
 				emissaries[info.questID] = format("%d|%d|%d|%s|%d|%s", numFulfilled, numRequired, C_TaskQuest.GetQuestTimeLeftMinutes(info.questID), objective or "", time(), info.title)
@@ -381,52 +417,31 @@ local function ScanQuests()
 			end
 		end
 	end
-    
-    for _, q in pairs({regularZoneQuests, ManuallyTrackedQuests}) do
-        for questID, _ in pairs(q) do
-            -- initialize the saved variable if needed
-            if not savedRegularZoneQuests then savedRegularZoneQuests = {} end
-            local objective, _, _, numFulfilled, numRequired
-            if C_QuestLog.IsQuestTask(questID) then
-                objective = GetQuestObjectiveInfo(questID, 1, false)
-                numFulfilled = C_TaskQuest.GetQuestProgressBarInfo(questID)
-                numRequired = 100
-            else
-                objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
-            end
-            -- if the current character has completed the quest already, then C_TaskQuest.GetQuestTimeLeftMinutes(questID) will return nil, so we can't give an accurate time remaining
-            local timeRemaining = C_TaskQuest.GetQuestTimeLeftMinutes(questID)
-    
-            if (not C_QuestLog.IsQuestFlaggedCompleted(questID)) and (not C_QuestSession.Exists()) then
-                savedRegularZoneQuests[questID] = format("%d|%d|%s|%d|%s", timeRemaining, numRequired, objective or "", time(), C_TaskQuest.GetQuestInfoByQuestID(questID))
-            end
-            char.RegularZoneQuests[questID] = {["numFulfilled"] = numFulfilled}    
-        end
-    end
 
 	RestoreHeaders()
 	C_QuestLog.SetSelectedQuest(currentSelection)		-- restore the selection to match the cursor, must be properly set if a user abandons a quest
-
+	ScanCovenantCampaignProgress()
+	
 	addon.ThisCharacter.lastUpdate = time()
 	
 	addon:SendMessage("DATASTORE_QUESTLOG_SCANNED", char)
 end
 
-local function ScanCallings(callings)
-    if not callings then return end
-    if not C_CovenantCallings.AreCallingsUnlocked() then return end
-    
-    local char = addon.ThisCharacter
-    local savedCallings = char.Callings
-    wipe(savedCallings)
-    
-    for i, calling in pairs(callings) do
-        if calling then
-            local questID = calling.questID
-            local timeRemaining = C_TaskQuest.GetQuestTimeLeftSeconds(calling.questID) or 0
-            savedCallings[questID] = timeRemaining
-        end
-    end
+local function ScanCallings(bountyInfo)
+	if not bountyInfo or not C_CovenantCallings.AreCallingsUnlocked() then return end
+
+	local char = addon.ThisCharacter
+	local callings = char.Callings
+	wipe(callings)
+	
+	for _, bounty in pairs(bountyInfo) do
+		local questID = bounty.questID
+		local timeRemaining = C_TaskQuest.GetQuestTimeLeftMinutes(questID) or 0
+		
+		callings[questID] = format("%s|%s", timeRemaining, bounty.icon)
+	end
+	
+	InjectCallingsAsEmissaries()
 end
 
 local queryVerbose
@@ -445,16 +460,17 @@ local function OnUnitQuestLogChanged()			-- triggered when accepting/validating 
 	addon:RegisterEvent("QUEST_LOG_UPDATE", OnQuestLogUpdate)		-- so register for this one ..
 end
 
-local function OnCovenantCallingsUpdated(event, ...)
-    ScanCallings(...)
+local function OnCovenantCallingsUpdated(event, bountyInfo)
+	-- source: https://wow.gamepedia.com/COVENANT_CALLINGS_UPDATED
+	ScanCallings(bountyInfo)
 end
 
 local function RefreshQuestHistory()
 	local thisChar = addon.ThisCharacter
 	local history = thisChar.History
 	wipe(history)
+	
 	local quests = C_QuestLog.GetAllCompletedQuestIDs()
-    -- 9.0: the questIDs were moved from values to keys
 
 	--[[	In order to save memory, we'll save the completion status of 32 quests into one number (by setting bits 0 to 31)
 		Ex:
@@ -487,11 +503,50 @@ local function RefreshQuestHistory()
 end
 
 -- ** Mixins **
+local function _GetEmissaryQuests()
+	return emissaryQuests
+end
+
+local function _GetEmissaryQuestInfo(character, questID)
+	local quest = character.Emissaries[questID]
+	if not quest then return end
+
+	local numFulfilled, numRequired, timeLeft, objective, timeSaved, questName = strsplit("|", quest)
+
+	numFulfilled = tonumber(numFulfilled) or 0
+	numRequired = tonumber(numRequired) or 0
+	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
+	
+	if timeLeft > 0 then
+		local secondsSinceLastUpdate = time() - character.lastUpdate
+		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
+			character.Emissaries[questID] = nil			-- .. clear the entry
+			return
+		end
+		
+		timeLeft = timeLeft - secondsSinceLastUpdate
+	end
+
+	local expansionLevel = emissaryQuests[questID]
+	
+	return numFulfilled, numRequired, timeLeft, objective, questName, expansionLevel
+end
+
 local function _GetQuestLogSize(character)
 	return #character.Quests
 end
 
-local function _GetQuestLogInfo(character, index)
+local function _GetQuestLogInfo(character, index, callingQuestID)
+	-- Typical function call : GetQuestLogInfo(character, 5)
+	-- Call for a calling : GetQuestLogInfo(character, nil, 12345)
+	-- 	index not necessary, calling quest id mandatory
+	
+	-- Special treatment in case info is requested for a calling that is not yet in the quest log
+	if not index and callingQuestID and emissaryQuests[callingQuestID] then
+		-- return only the quest name
+		return select(5, _GetEmissaryQuestInfo(character, callingQuestID))
+	end
+
 	local quest = character.Quests[index]
 	if not quest or type(quest) == "string" then return end
 	
@@ -599,79 +654,19 @@ local function _IsQuestCompletedBy(character, questID)
 	end
 end
 
-local function _GetEmissaryQuests()
-	return emissaryQuests
-end
-
-local function _IsQuestEmissary(questID)
-    return emissaryQuests[questID]
-end
-
-local function _GetRegularZoneQuests()
-    return regularZoneQuests
-end
-
-local function _GetCallingQuests(character)
-    return character.Callings
-end
-
-local function _GetEmissaryQuestInfo(character, questID)
-	local quest = character.Emissaries[questID]
-	if not quest then return end
-
-	local numFulfilled, numRequired, timeLeft, objective, timeSaved, questName = strsplit("|", quest)
-
-	numFulfilled = tonumber(numFulfilled) or 0
-	numRequired = tonumber(numRequired) or 0
-	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
-	
-	if timeLeft > 0 then
-		local secondsSinceLastUpdate = time() - character.lastUpdate
-		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
-			character.Emissaries[questID] = nil			-- .. clear the entry
-			return
-		end
-		
-		timeLeft = timeLeft - secondsSinceLastUpdate
-	end
-
-	return numFulfilled, numRequired, timeLeft, objective, questName
-end
-
-local function _GetRegularZoneQuestInfo(character, questID)
-	local sharedQuestInfo = addon.db.global.RegularZoneQuests[questID]
-	if not sharedQuestInfo then return end
-
-	local timeLeft, numRequired, objective, lastUpdate, title = strsplit("|", sharedQuestInfo)
-    
-    local characterSpecificQuestInfo = character.RegularZoneQuests[questID]
-    local numFulfilled = 0
-    if (characterSpecificQuestInfo) then
-        numFulfilled = characterSpecificQuestInfo.numFulfilled
-    end  
-
-	numFulfilled = tonumber(numFulfilled) or 0
-	numRequired = tonumber(numRequired) or 0
-	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
-	
-	if timeLeft > 0 then
-		local secondsSinceLastUpdate = time() - lastUpdate
-		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
-			addon.db.global.RegularZoneQuests[questID] = nil			-- .. clear the entry
-			return
-		end
-		
-		timeLeft = timeLeft - secondsSinceLastUpdate
-	end
-
-	return numFulfilled, numRequired, timeLeft, objective, title    
-end
-
 local function _IsCharacterOnQuest(character, questID)
+	-- Check if the quest is in the quest log
 	for index, link in pairs(character.QuestLinks) do
 		local id = link:match("quest:(%d+)")
 		if questID == tonumber(id) then
 			return true, index		-- return 'true' if the id was found, also return the index at which it was found
+		end
+	end
+	
+	-- If not in the quest log, it may be a Calling (even not yet accepted and not yet in the quest log)
+	for callingQuestID, _ in pairs(character.Callings) do
+		if questID == callingQuestID then
+			return true, nil
 		end
 	end
 end
@@ -715,13 +710,58 @@ local function _IterateQuests(character, category, callback)
 	end
 end
 
--- Do NOT wipe!
--- Only add Quest IDs to this.
-local function _GetManuallyTrackedQuests()
-    return GetOption("ManuallyTrackedQuests")
+local function _GetCovenantCampaignProgress(character)
+	return character.covenantCampaignProgress
+end
+
+local function _GetCovenantCampaignLength(character)
+	local covenantID = character.activeCovenantID
+	if not covenantID or covenantID == Enum.CovenantType.None then return 0 end
+	
+	local campaignID = covenantCampaignIDs[covenantID]				-- get the campaign ID of that character's covenant
+	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaing (always available for all covenants)
+	
+	return #chapters
+end
+
+local function _GetCovenantCampaignChaptersInfo(character)
+	local covenantID = character.activeCovenantID
+	if not covenantID or covenantID == Enum.CovenantType.None then return {} end
+	
+	local campaignID = covenantCampaignIDs[covenantID]				-- get the campaign ID of that character's covenant
+	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaing (always available for all covenants)
+	
+	local chaptersInfo = {}
+	
+	for _, id in pairs(chapters) do
+		local info = C_CampaignInfo.GetCampaignChapterInfo(id)
+		
+		-- completed will be true/false or nil
+		-- ex: progress is 3/9
+		-- 1 & 2 are true (completed)
+		-- 3 is false (ongoing, but not completed yet)
+		-- 4+ = nil (not yet started)
+		
+		local completed = nil
+		if character.covenantCampaignProgress > 0 then
+			
+			-- warning: orderIndex goes from 0 to 8, not 1 to 9
+			if (info.orderIndex < character.covenantCampaignProgress) then
+				completed = true
+			elseif (info.orderIndex == character.covenantCampaignProgress) then
+				completed = false
+			end
+		end
+		
+		table.insert(chaptersInfo, { name = info.name, completed = completed})
+	end	
+	
+	return chaptersInfo
 end
 
 local PublicMethods = {
+	GetEmissaryQuests = _GetEmissaryQuests,
+	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
 	GetQuestLogSize = _GetQuestLogSize,
 	GetQuestLogInfo = _GetQuestLogInfo,
 	GetQuestHeaders = _GetQuestHeaders,
@@ -736,16 +776,12 @@ local PublicMethods = {
 	GetDailiesHistory = _GetDailiesHistory,
 	GetDailiesHistorySize = _GetDailiesHistorySize,
 	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
-	GetEmissaryQuests = _GetEmissaryQuests,
-    GetRegularZoneQuests = _GetRegularZoneQuests,
-	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
-    GetRegularZoneQuestInfo = _GetRegularZoneQuestInfo,
 	IsCharacterOnQuest = _IsCharacterOnQuest,
 	GetCharactersOnQuest = _GetCharactersOnQuest,
 	IterateQuests = _IterateQuests,
-    IsQuestEmissary = _IsQuestEmissary,
-    GetCallingQuests = _GetCallingQuests,
-    GetManuallyTrackedQuests = _GetManuallyTrackedQuests,
+	GetCovenantCampaignProgress = _GetCovenantCampaignProgress,
+	GetCovenantCampaignLength = _GetCovenantCampaignLength,
+	GetCovenantCampaignChaptersInfo = _GetCovenantCampaignChaptersInfo,
 }
 
 function addon:OnInitialize()
@@ -765,17 +801,18 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
 	DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
-    DataStore:SetCharacterBasedMethod("GetRegularZoneQuestInfo")
 	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
 	DataStore:SetCharacterBasedMethod("IterateQuests")
-    DataStore:SetCharacterBasedMethod("GetCallingQuests")
+	DataStore:SetCharacterBasedMethod("GetCovenantCampaignProgress")
+	DataStore:SetCharacterBasedMethod("GetCovenantCampaignLength")
+	DataStore:SetCharacterBasedMethod("GetCovenantCampaignChaptersInfo")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("UNIT_QUEST_LOG_CHANGED", OnUnitQuestLogChanged)
-    addon:RegisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL", ScanQuests)
-    addon:RegisterEvent("COVENANT_CALLINGS_UPDATED", OnCovenantCallingsUpdated)
+	addon:RegisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL", ScanQuests)
+	addon:RegisterEvent("COVENANT_CALLINGS_UPDATED", OnCovenantCallingsUpdated)
 
 	addon:SetupOptions()
 
@@ -786,8 +823,6 @@ function addon:OnEnable()
 	-- Daily Reset Drop Down & label
 	local frame = DataStore.Frames.QuestsOptions.DailyResetDropDownLabel
 	frame:SetText(format("|cFFFFFFFF%s:", L["DAILY_QUESTS_RESET_LABEL"]))
-    
-    DataStore.Frames.QuestsOptions.AddQuestEditBoxLabel:SetText("Hidden Quest Tracking: Enter the Quest ID of a hidden quest you want to force tracking of.") -- TODO: Localize this
 
 	frame = DataStore_Quests_DailyResetDropDown
 	UIDropDownMenu_SetWidth(frame, 60) 
@@ -800,14 +835,15 @@ function addon:OnEnable()
 	UIDropDownMenu_SetSelectedValue(frame, GetOption("DailyResetHour"))
 	
 	ClearExpiredDailies()
+	InjectCallingsAsEmissaries()
 end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("UNIT_QUEST_LOG_CHANGED")
 	addon:UnregisterEvent("QUEST_QUERY_COMPLETE")
-    addon:UnregisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL")
-    addon:UnregisterEvent("COVENANT_CALLINGS_UPDATED")
+	addon:UnregisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL")
+	addon:UnregisterEvent("COVENANT_CALLINGS_UPDATED")
 end
 
 -- *** Hooks ***
@@ -829,7 +865,7 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
 
 	-- track daily quests turn-ins
-	if QuestIsDaily() or emissaryQuests[questID] or regularZoneQuests[questID] then
+	if QuestIsDaily() or emissaryQuests[questID] then
 		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
 		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
 	end
