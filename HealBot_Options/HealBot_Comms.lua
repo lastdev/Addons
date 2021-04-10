@@ -2,8 +2,6 @@ local HealBotcommAddonSummary={}
 local HealBotAddonSummaryNoCommsCPU={}
 local HealBotAddonSummaryNoCommsMem={}
 local HealBotAddonSummaryNoCommsSort={}
-local sortorder={}
-local hbtmpver={}
 local _
 
 local qAddonMsg={}
@@ -45,6 +43,14 @@ function HealBot_Comms_SendAddonMessage()
     end
 end
 
+function HealBot_Comms_SendInstantAddonMsg(addon_id, msg)
+    if IsInRaid() then
+        C_ChatInfo.SendAddonMessage(addon_id, msg, "RAID" );
+    elseif IsInGroup() then
+        C_ChatInfo.SendAddonMessage(addon_id, msg, "PARTY" );
+    end
+end
+
 function HealBot_Comms_GetChan(chan)
     if GetChannelName(chan)>0 then
         return GetChannelName(chan);
@@ -61,16 +67,9 @@ end
 function HealBot_Comms_About()
     local hbcommver=HealBot_GetInfo()
 
-    for x,_ in pairs(hbtmpver) do
-        hbtmpver[x]=nil
-    end
-    for x,_ in pairs(sortorder) do
-        sortorder[x]=nil;
-    end
-
     linenum=1
     for x,v in pairs(hbcommver) do
-        if not hbtmpver[x] and linenum<9 then
+        if linenum<9 then
             HealBot_Comms_Print_IncHealsSum(x,v,0,linenum)
             linenum=linenum+1
         end
@@ -189,12 +188,12 @@ function HealBot_Comms_MacroSuppressSound()
     end
 end    
 
-function HealBot_Comms_PerfLevel()
+function HealBot_Comms_PerfLevel(fps)
     if GetCVarBool("scriptProfile") then
         HealBot_Info_PerfLevelVal:SetText("WARNING CPU Profiling is turned ON")
         HealBot_Info_PerfLevelVal:SetTextColor(0.88,0.1,0.1)
     else
-        HealBot_Info_PerfLevelVal:SetText(HealBot_Globals.CPUUsage)
+        HealBot_Info_PerfLevelVal:SetText(HealBot_Globals.CPUUsage.."   ["..fps.."fps]")
         if HealBot_Globals.CPUUsage<3 then
             HealBot_Info_PerfLevelVal:SetTextColor(0.88,0.1,0.1)
         elseif HealBot_Globals.CPUUsage<5 then

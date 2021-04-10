@@ -1,9 +1,9 @@
-## Interface: 90002
+## Interface: 90005
 ## Title: Plater
 ## Notes: Nameplate addon designed for advanced users.
 ## SavedVariables: PlaterDB
 ## SavedVariablesPerCharacter: PlaterDBChr
-## Version: Plater-v9.0.2.326b-Retail
+## Version: Plater-v9.0.2.327b-Retail
 
 #@no-lib-strip@
 libs\libs.xml

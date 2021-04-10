@@ -1,8 +1,8 @@
-## Interface: 90002
+## Interface: 90005
 ## Title: RareTrackerWorldBosses
 ## Notes: Track and coordinate rare spawn timers for world bosses that drop mounts.
 ## Author: Melroy
-## Version: 7.1.1
+## Version: 7.1.3
 ## Dependencies: RareTrackerCore
 
 Locales\enUS.lua

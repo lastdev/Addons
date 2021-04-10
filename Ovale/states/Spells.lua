@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/Spells", 90047)
+local __exports = LibStub:NewLibrary("ovale/states/Spells", 90048)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local INFINITY = math.huge

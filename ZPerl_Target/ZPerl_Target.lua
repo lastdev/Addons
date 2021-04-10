@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: db18dc5e0c4c75bd4409e62e8418da694d08e359 $")
 
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local LCD = IsClassic and LibStub and LibStub("LibClassicDurations")
@@ -855,7 +855,7 @@ function XPerl_Target_SetMana(self)
 	mb:SetValue(targetmana)
 
 	local p = XPerl_GetDisplayedPowerType(self.partyid)
-	if (p == 0) then
+	if p == 0 then
 		mb.percent:SetFormattedText(percD, 100 * pmanaPct)	--	XPerl_Percent[floor(100 * (targetmana / targetmanamax))])
 	else
 		mb.percent:SetText(targetmana)

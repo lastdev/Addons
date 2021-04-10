@@ -13,6 +13,7 @@ scanTip:SetOwner(WorldFrame, "ANCHOR_NONE")
 GUI.scanTip = scanTip
 local numHolidayReminders = 0
 local showedHolidayReminderOverflow = false
+local tooltipOpenDelay = false
 
 -- Externals
 local L = LibStub("AceLocale-3.0"):GetLocale("Rarity")
@@ -80,7 +81,7 @@ local sort_category = Rarity.Utils.Sorting.sort_category
 local sort_zone = Rarity.Utils.Sorting.sort_zone
 local sort_progress = Rarity.Utils.Sorting.sort_progress
 local GetDate = Rarity.Utils.Time.GetDate
-local TSM_Interface = Rarity.Utils.TSM_Interface
+local AuctionDB = Rarity.AuctionDB
 
 -- Constants
 -- Sort parameters
@@ -407,13 +408,21 @@ end
 function dataobj.OnEnter(self)
 	frame = self
 	if Rarity.db.profile.tooltipActivation == CONSTANTS.TOOLTIP.ACTIVATION_METHOD_HOVER then
-		Rarity:ShowTooltip()
+		tooltipOpenDelay = true
+		-- The following will queue opening of the tooltip based on a user set delay that triggers on mouseover.
+		C_Timer.After(
+			Rarity.db.profile.tooltipShowDelay or 0.1, -- Delay in seconds
+			function()
+				Rarity:ShowDelayedTooltip()
+			end
+		)
 	else
 		Rarity:ShowQuicktip()
 	end
 end
 
 function dataobj.OnLeave(self)
+	tooltipOpenDelay = false	-- Set false to abort any pending Tooltip openings that is called in ShowDelayedTooltip()
 end
 
 function dataobj:OnClick(button)
@@ -434,10 +443,10 @@ function dataobj:OnClick(button)
 		end
 	elseif IsControlKeyDown() and isLeftButton then
 		Rarity.GUI:SelectNextSortOrder()
-	elseif (
-		(self.db.profile.tooltipActivation == CONSTANTS.TOOLTIP.ACTIVATION_METHOD_CLICK and isRightButton)
-		or (self.db.profile.tooltipActivation == CONSTANTS.TOOLTIP.ACTIVATION_METHOD_HOVER and isLeftButton)
-	) then
+	elseif
+		((self.db.profile.tooltipActivation == CONSTANTS.TOOLTIP.ACTIVATION_METHOD_CLICK and isRightButton) or
+			(self.db.profile.tooltipActivation == CONSTANTS.TOOLTIP.ACTIVATION_METHOD_HOVER and isLeftButton))
+	 then
 		-- Toggle progress bar visibility
 		R.db.profile.bar.visible = not R.db.profile.bar.visible
 		Rarity.GUI:UpdateBar()
@@ -670,10 +679,10 @@ local function showSubTooltip(cell, item)
 		tooltip2AddLine(colorize(L["Can be obtained with a bonus roll"], yellow))
 	end
 	if item.requiresAlliance then
-		tooltip2AddLine(colorize(L["This mount is only obtainable by Alliance players"], red))
+		tooltip2AddLine(colorize(L["This mount is only obtainable by Alliance players"], R.Caching:IsAlliance() and green or red))
 	end
 	if item.requiresHorde then
-		tooltip2AddLine(colorize(L["This mount is only obtainable by Horde players"], red))
+		tooltip2AddLine(colorize(L["This mount is only obtainable by Horde players"], R.Caching:IsHorde() and green or red))
 	end
 	if
 		hadSource or item.bonusSatchel or item.blackMarket or item.wasGuaranteed or item.worldBossFactionless or
@@ -894,7 +903,7 @@ local function showSubTooltip(cell, item)
 	tooltip2:AddSeparator(1, 1, 1, 1, 1)
 
 	-- Add TSM pricing information to the tooltip
-	if TSM_Interface:IsLoaded() and Rarity.db.profile.showTSMColumn then
+	if AuctionDB:IsLoaded() and Rarity.db.profile.showTSMColumn then
 		local tooltipLines = {
 			{priceSource = "DBMinBuyout", isMonetaryValue = true, localisedDisplayText = L["Min Buyout"]},
 			{priceSource = "DBMarket", isMonetaryValue = true, localisedDisplayText = L["Market Price"]},
@@ -906,7 +915,7 @@ local function showSubTooltip(cell, item)
 
 		local hasPrice = false
 		for _, lineInfo in pairs(tooltipLines) do -- Add text to tooltip if TSM4 has pricing data for this source
-			if not TSM_Interface:IsValidPriceSource(lineInfo.priceSource) then
+			if not AuctionDB:IsValidPriceSource(lineInfo.priceSource) then
 				Rarity:Print(
 					format(
 						"Attempting to use invalid price source %s to retrieve a price for item %d via TSM_API." ..
@@ -918,7 +927,7 @@ local function showSubTooltip(cell, item)
 				break
 			end
 
-			local formattedPrice = TSM_Interface:GetMarketPrice(item.itemId, lineInfo.priceSource, true)
+			local formattedPrice = AuctionDB:GetMarketPrice(item.itemId, lineInfo.priceSource, true)
 			if (formattedPrice ~= nil) then
 				hasPrice = true
 				tooltip2AddDoubleLine(
@@ -1176,7 +1185,14 @@ local function addGroup(group, requiresGroup)
 			end
 
 			if not v.itemId then
-				Rarity:Error(format("Failed to add tooltip line for item %s (%s) in group %s (invalid ID or the server didn't return any data)", k, v.name or "nil", group.name))
+				Rarity:Error(
+					format(
+						"Failed to add tooltip line for item %s (%s) in group %s (invalid ID or the server didn't return any data)",
+						k,
+						v.name or "nil",
+						group.name
+					)
+				)
 				return
 			end
 			-- Item
@@ -1488,7 +1504,7 @@ local function addGroup(group, requiresGroup)
 
 											-- Retrieve the DBMarket price provided by the TSM_API (if loaded)
 											local marketPrice =
-												Rarity.db.profile.showTSMColumn and TSM_Interface:GetMarketPrice(v.itemId, "DBMarket", true)
+												Rarity.db.profile.showTSMColumn and AuctionDB:GetMarketPrice(v.itemId, "DBMarket", true)
 
 											-- Add the item to the tooltip
 											local catIcon = ""
@@ -1583,7 +1599,14 @@ local function addGroup(group, requiresGroup)
 	return added, itemsExistInThisGroup
 end
 
-local renderingQuicktip = false;
+local renderingQuicktip = false
+
+-- Helper function to open the Tooltip GUI unless the delayed opening has been aborted meanwhile.
+function R:ShowDelayedTooltip()
+	if tooltipOpenDelay == true then
+		Rarity:ShowTooltip()
+	end
+end
 
 function R:HideQuicktip()
 	if quicktip and quicktip:IsVisible() then
@@ -1727,7 +1750,9 @@ function R:ShowTooltip(hidden)
 	tooltip:SetCell(line, 1, colorize(sortDesc, green), nil, nil, 3)
 
 	local function OnHeaderClicked()
-		if not IsControlKeyDown() then return end -- Unlike the LDB icon, this also works with right-click...
+		if not IsControlKeyDown() then
+			return
+		end -- Unlike the LDB icon, this also works with right-click...
 		-- I have no idea how to get the button from LDB. The tooltip says "click" and not "left-click", so both should be fine
 		Rarity.GUI:SelectNextSortOrder()
 	end
@@ -1739,9 +1764,9 @@ function R:ShowTooltip(hidden)
 	local somethingAdded = false
 
 	local group1start = debugprofilestop()
-	if(R.db.profile.collectionType[MOUNT]) then		
+	if (R.db.profile.collectionType[MOUNT]) then
 		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.mounts)
-		
+
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
 		end
@@ -1752,7 +1777,7 @@ function R:ShowTooltip(hidden)
 	local group1end = debugprofilestop()
 
 	local group2start = debugprofilestop()
-	if(R.db.profile.collectionType[PET]) then		
+	if (R.db.profile.collectionType[PET]) then
 		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.pets)
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
@@ -1764,8 +1789,8 @@ function R:ShowTooltip(hidden)
 	local group2end = debugprofilestop()
 
 	local group3start = debugprofilestop()
-	if(R.db.profile.collectionType[ITEM]) then
-		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.items)		
+	if (R.db.profile.collectionType[ITEM]) then
+		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.items)
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
 		end
@@ -1786,7 +1811,7 @@ function R:ShowTooltip(hidden)
 	end
 
 	local group5start = debugprofilestop()
-	if(R.db.profile.collectionType[MOUNT]) then
+	if (R.db.profile.collectionType[MOUNT]) then
 		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.mounts, true)
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
@@ -1798,7 +1823,7 @@ function R:ShowTooltip(hidden)
 	local group5end = debugprofilestop()
 
 	local group6start = debugprofilestop()
-	if(R.db.profile.collectionType[PET]) then
+	if (R.db.profile.collectionType[PET]) then
 		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.pets, true)
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
@@ -1810,7 +1835,7 @@ function R:ShowTooltip(hidden)
 	local group6end = debugprofilestop()
 
 	local group7start = debugprofilestop()
-	if(R.db.profile.collectionType[ITEM]) then
+	if (R.db.profile.collectionType[ITEM]) then
 		addedLast, itemsExistInThisGroup = addGroup(self.db.profile.groups.items, true)
 		if addedLast then
 			tooltip:AddSeparator(1, 1, 1, 1, 1.0)
@@ -1905,6 +1930,11 @@ end
 _G.GameTooltip:HookScript(
 	"OnTooltipSetUnit",
 	function(self)
+		-- If debug mode is on, find NPCID from mouseover target and append it to the tooltip
+		if R.db.profile.debugMode then
+			GameTooltip:AddLine("NPCID: " .. R:GetNPCIDFromGUID(UnitGUID("mouseover")), 255, 255, 255)
+		end
+
 		if not R.db or R.db.profile.enableTooltipAdditions == false then
 			return
 		end
@@ -2617,6 +2647,7 @@ local function RarityAchievementAlertFrame_SetUp(frame, itemId, attempts)
 	shieldIcon:SetTexture([[Interface\AchievementFrame\UI-Achievement-Shields-NoPoints]])
 
 	frame.Icon.Texture:SetTexture(itemTexture)
+	frame:EnableMouse(false)	-- Make achievement toast unclickable
 
 	if attempts == nil or attempts <= 0 then
 		attempts = 1
@@ -2634,6 +2665,7 @@ local function RarityAchievementAlertFrame_SetUp(frame, itemId, attempts)
 		function()
 			-- Put the achievement frame back to normal when we're done
 			unlocked:SetText(ACHIEVEMENT_UNLOCKED)
+			frame:EnableMouse(true)
 		end,
 		10
 	)
@@ -2697,7 +2729,11 @@ function R:ShowFoundAlert(itemId, attempts, item)
 		AchievementFrame_LoadUI()
 	end
 
-	RarityAchievementAlertSystem:AddAlert(itemId, attempts)
+	-- If option to generate achievement toast on item found is enabled, then generate the toast.
+	if Rarity.db.profile.showAchievementToast then
+		RarityAchievementAlertSystem:AddAlert(itemId, attempts)
+		PlaySound(12891) -- UI_Alert_AchievementGained
+	end
 
 	self:ScheduleTimer(
 		function()
@@ -2711,13 +2747,10 @@ function R:ShowFoundAlert(itemId, attempts, item)
 		end,
 		2
 	)
-
-	PlaySound(12891) -- UI_Alert_AchievementGained
 end
 
 -- Change sort order based on the current one (awkward, but alas... this should probably be improved later)
 function GUI:SelectNextSortOrder()
-
 	if R.db.profile.sortMode == SORT_NAME then
 		R.db.profile.sortMode = SORT_CATEGORY
 	elseif R.db.profile.sortMode == SORT_CATEGORY then
@@ -2736,7 +2769,6 @@ function GUI:SelectNextSortOrder()
 		qtip:Release("RarityTooltip")
 	end
 	Rarity:ShowTooltip()
-
 end
 
 Rarity.GUI = GUI

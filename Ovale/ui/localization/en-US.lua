@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/en-US", 90047)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/en-US", 90048)
 if not __exports then return end
 __exports.getENUS = function()
     return {

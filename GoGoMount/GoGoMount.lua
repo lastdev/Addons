@@ -587,7 +587,9 @@ function GoGo_ChooseMount()
 	
 	if not GoGo_Variables.ZoneExclude.TheMaw then
 	    -- cannot summon mounts in The Maw
-	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
+-- ich -- need to allow filter mounts AND Creeper and the other one...
+-- ich -- in the mean time just depend on the hardcoded settings to select the right mount
+--	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except mounts that can be summoned in The Maw - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if

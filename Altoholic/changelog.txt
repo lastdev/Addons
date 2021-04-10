@@ -14,6 +14,25 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+9.0.008 (05/04/2021)
+
+- Added an option to display an item's expansion level in the tooltip.
+- Created a new library, LibItemInfo, with the long term goal to deprecate LibPeriodicTable and offer a different kind of information.
+- This new library currently contains information about reagents and some additional items, to indicate to which expansion they belong, and in which bag
+they could be stored. 
+This feature, along with additional features coming in future releases will help you better manage your alts and your bank alts.
+Data has not been datamined, it has been manually curated with in-game data + Wowhead. 
+It is by no means complete yet (there is definitely more to come).
+Because it is manually curated, compiling it does take time even though it looks like a small feature (I did this at my pace while working on Classic features).
+
+The next few releases of retail should be interesting, stay tuned :)
+
+Note: You used to see "Source" in the tooltip, this will also be deprecated and replaced by "Info" + "Expansion".
+Only the latter will be displayed if information is found in LibItemInfo, if not, "Source" will be displayed instead.
+
+Just head to the auction house, and browse the trade goods, it should give you an idea of how useful this feature is :)
+
+
 9.0.007 (28/02/2021)
 
 - Summary Tab => Fixed the faction filter not working properly for languages other than English. This was due to the character faction being saved in English instead of localized.

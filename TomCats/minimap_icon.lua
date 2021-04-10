@@ -2,6 +2,7 @@
 local addonName, addon = ...
 
 local CreateFrame = CreateFrame
+local GameTooltip = GameTooltip
 local GetCursorPosition = GetCursorPosition
 local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
 local Minimap = Minimap
@@ -90,6 +91,7 @@ local function MinimapButtonOnload(self)
 		UpdatePosition()
 	end
 	local function OnUpdate()
+		local TomCats_Config = _G["TomCats_Config"]
 		if (TomCats_Config and TomCats_Config:IsVisible()) then
 			self.Icon:SetDesaturated(true)
 			self:Disable()
@@ -97,7 +99,6 @@ local function MinimapButtonOnload(self)
 			self.Icon:SetDesaturated(false)
 			self:Enable()
 		end
-
 		if (isDragging) then
 			UpdatePositionByCursor()
 		else
@@ -111,6 +112,14 @@ local function MinimapButtonOnload(self)
 				UpdatePosition()
 			end
 		end
+		if (addon.discoveries) then
+			local discoveries = addon.discoveries <= 9 and addon.discoveries or 9
+			self.Pill:Show()
+			self.Pill:SetTexCoord(0, 1, ((23 * discoveries) - 23) / 256, (23 * discoveries) / 256 )
+		else
+			self.Pill:Hide()
+		end
+
 	end
 	local function OnDragStart()
 		if (tooltipIsShowing) then
@@ -231,8 +240,7 @@ end
 
 local function OnEvent(event, arg1)
 	if (event == "PLAYER_STARTED_MOVING") then
-		if (TomCats_Account.lastVersionSeen ~= "2.2.5") then
-			TomCats_Account.lastVersionSeen = "2.2.5"
+		if (addon.IsNewVersion) then
 			if (addon.minimapButton:IsVisible() and not addon.minimapButton.GetPreferences().hidden) then
 				addon.minimapButton.AlertText:SetText("TomCat's Tours has been updated!")
 				PlaySound(SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST)
@@ -253,6 +261,13 @@ local function OnEvent(event, arg1)
 				GameTooltip:ClearLines()
 				GameTooltip:SetOwner(this, "ANCHOR_LEFT")
 				GameTooltip:SetText("TomCat's Tours", 1, 1, 1)
+				if (addon.discoveries) then
+					if (addon.discoveries > 1) then
+						GameTooltip:AddLine("You've made " .. addon.discoveries .. " new discoveries", nil, nil, nil, true)
+					elseif (addon.discoveries == 1) then
+						GameTooltip:AddLine("You've made " .. addon.discoveries .. " new discovery", nil, nil, nil, true)
+					end
+				end
 				GameTooltip:Show()
 			end,
 			Hide = function()

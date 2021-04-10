@@ -1980,14 +1980,15 @@ do
     local function BinarySearchGetIndexFromName(data, name, startIndex, endIndex)
         local minIndex = startIndex
         local maxIndex = endIndex
-        local mid, current
+        local mid, current, cmp
 
         while minIndex <= maxIndex do
             mid = floor((maxIndex + minIndex) / 2)
             current = data[mid]
-            if current == name then
-                return mid
-            elseif current < name then
+            cmp = strcmputf8i(current, name)
+            if cmp == 0 then
+                return mid, current
+            elseif cmp < 0 then
                 minIndex = mid + 1
             else
                 maxIndex = mid - 1
@@ -2013,11 +2014,21 @@ do
     ---@param provider DataProvider
     ---@return table, number, string
     local function SearchForBucketByName(provider, lookup, data, name, realm)
+        local internalRealm = realm
         local realmData = data[realm]
+        if not realmData then
+            for rn, rd in pairs(data) do
+                if rn ~= realm and strcmputf8i(rn, realm) == 0 then
+                    internalRealm = rn
+                    realmData = rd
+                    break
+                end
+            end
+        end
         if not realmData then
             return
         end
-        local nameIndex = BinarySearchGetIndexFromName(realmData, name, 2, #realmData)
+        local nameIndex, internalName = BinarySearchGetIndexFromName(realmData, name, 2, #realmData)
         if not nameIndex then
             return
         end
@@ -2038,7 +2049,7 @@ do
         elseif provider.data == ns.PROVIDER_DATA_TYPE.PvP then
             -- TODO
         end
-        return bucket, baseOffset, guid, name, realm
+        return bucket, baseOffset, guid, internalName, internalRealm
     end
 
     local function ReadBitsFromString(data, offset, length)
@@ -4323,6 +4334,25 @@ do
         end
     end
 
+    local hooked
+
+    local function TopBannerManager_Show(self)
+        if hooked then
+            return
+        end
+        local frame = _G.ChallengeModeCompleteBanner
+        if not frame or frame ~= self then
+            return
+        end
+        hooked = true
+        hooksecurefunc(frame, "PlayBanner", OnChallengeModeCompleteBannerPlay)
+        local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun = C_ChallengeMode.GetCompletionInfo()
+        if not practiceRun then
+            local bannerData = { mapID = mapID, level = level, time = time, onTime = onTime, keystoneUpgradeLevels = keystoneUpgradeLevels } ---@type ChallengeModeCompleteBannerData
+            OnChallengeModeCompleteBannerPlay(frame, bannerData)
+        end
+    end
+
     local function CheckCachedData()
         local cachedRuns = _G.RaiderIO_CachedRuns
         if not cachedRuns then
@@ -4347,19 +4377,19 @@ do
     end
 
     function fanfare:CanLoad()
-        return config:IsEnabled() and _G.ChallengeModeCompleteBanner and config:Get("debugMode") -- TODO: do not load this module by default (it's not yet tested well enough) but we do load it if debug mode is enabled
+        return config:IsEnabled() and config:Get("debugMode") -- TODO: do not load this module by default (it's not yet tested well enough) but we do load it if debug mode is enabled
     end
 
     function fanfare:OnLoad()
         self:Enable()
         KEYSTONE_DATE = provider:GetProvidersDates()
         CheckCachedData()
-        hooksecurefunc(_G.ChallengeModeCompleteBanner, "PlayBanner", OnChallengeModeCompleteBannerPlay)
+        hooksecurefunc("TopBannerManager_Show", TopBannerManager_Show)
     end
 
-    -- DEBUG: force show the end screen for UR+15 (1950 is the timer)
+    -- DEBUG: force show the end screen for MIST+15 (1800/1440/1080 is the timer)
     -- /run wipe(RaiderIO_CachedRuns)
-    -- /run C_ChallengeMode.GetCompletionInfo=function()return 251, 15, 1950, true, 1, false end
+    -- /run C_ChallengeMode.GetCompletionInfo=function()return 375, 15, 1800, true, 1, false end
     -- /run for _,f in ipairs({GetFramesRegisteredForEvent("CHALLENGE_MODE_COMPLETED")})do f:GetScript("OnEvent")(f,"CHALLENGE_MODE_COMPLETED")end
 
 end

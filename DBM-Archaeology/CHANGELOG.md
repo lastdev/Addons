@@ -1,6 +1,10 @@
 # <DBM> Archaeology
 
-## [r41](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r41) (2020-11-17)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r40...r41) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
+## [r42](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r42) (2021-03-09)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r41...r42) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
 
-- bump toc  
+- TOC Bump  
+- Update CI  
+- Update README.md  
+- Delete .travis.yml  
+- Create ci.yml  

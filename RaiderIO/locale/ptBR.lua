@@ -16,8 +16,7 @@ L["API_DEPRECATED_UNKNOWN_ADDON"] = "<AddOn Desconhecido>"
 L["API_DEPRECATED_UNKNOWN_FILE"] = "<Arquivo de AddOn Desconhecido>"
 L["API_DEPRECATED_WITH"] = "|cffFF0000Warning!|r O Addon |cffFFFFFF%s|r está chamando uma função descontinuada do RaiderIO.%s. Esta função será removida em versões futuras. Incentive o autor de %s a atualizar para a nova API do RaiderIO.%s. Pilha de chamadas:%s"
 L["API_INVALID_DATABASE"] = "|cffFF0000Warning!|r Detectou um banco de dados Raider.IO inválido em |cffffffff%s|r. Atualize todas as regiões e facções no cliente Raider.IO ou reinstale o complemento manualmente."
---[[Translation missing --]]
---[[ L["AUTO_COMBATLOG"] = ""--]] 
+L["AUTO_COMBATLOG"] = "Habilita Automaticamente o Log de Combate em Raides e Masmorras"
 --[[Translation missing --]]
 --[[ L["AUTO_COMBATLOG_DESC"] = ""--]] 
 L["BEST_FOR_DUNGEON"] = "Melhor por Masmorra."
@@ -142,14 +141,10 @@ L["MAINS_BEST_SCORE_BEST_SEASON"] = "Melhor pontuação M+ do principal (%s)"
 --[[ L["MAINS_SCORE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["MAINS_SCORE_COLON"] = ""--]] 
---[[Translation missing --]]
---[[ L["MODULE_AMERICAS"] = ""--]] 
---[[Translation missing --]]
---[[ L["MODULE_EUROPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["MODULE_KOREA"] = ""--]] 
---[[Translation missing --]]
---[[ L["MODULE_TAIWAN"] = ""--]] 
+L["MODULE_AMERICAS"] = "Américas"
+L["MODULE_EUROPE"] = "Europa"
+L["MODULE_KOREA"] = "Coreia"
+L["MODULE_TAIWAN"] = "Taiwan"
 --[[Translation missing --]]
 --[[ L["MY_PROFILE_TITLE"] = ""--]] 
 L["MYTHIC_PLUS_DB_MODULES"] = "Mítica+ Módulos de Banco de Dados"
@@ -160,19 +155,16 @@ L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r possui dados de facção da Horda/
 L["OUTDATED_DATABASE"] = "As pontuações têm %d dias"
 L["OUTDATED_DATABASE_HOURS"] = "As pontuações têm %d horas"
 L["OUTDATED_DATABASE_S"] = "|cffFFFFFF%s|r está usando dados com |cffFF6666%d|r dias. Atualize o Addon para obter pontuações mais precisas do Míticas+ ."
---[[Translation missing --]]
---[[ L["OUTDATED_DOWNLOAD_LINK"] = ""--]] 
+L["OUTDATED_DOWNLOAD_LINK"] = "Download: |cffffbd0a%s|r"
 L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r está usando dados expirados. Atualize agora para ver os dados mais precisos:  |cffFFFFFF%s|r"
 L["OUTDATED_EXPIRED_TITLE"] = "Os dados do Raider.IO expiraram"
 L["OUTDATED_EXPIRES_IN_DAYS"] = "Dados do Raider.IO expiram em %d dias"
 L["OUTDATED_EXPIRES_IN_HOURS"] = "Dados do Raider.IO expiram em %d horas"
---[[Translation missing --]]
---[[ L["OUTDATED_EXPIRES_IN_MINUTES"] = ""--]] 
+L["OUTDATED_EXPIRES_IN_MINUTES"] = "Dados do Raider.IO expiram em %d Minutos"
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = [=[Atualize seu Addon agora para ver os dados mais precisos. Os jogadores trabalham duro para melhorar seu progresso, e exibir dados muito antigos é um desserviço para eles. Você pode usar o Raider.IO Client para manter seus dados sincronizados automaticamente
 ]=]
 L["PLAYER_PROFILE_TITLE"] = "Perfil do jogador M+"
---[[Translation missing --]]
---[[ L["PREV_SEASON_SUFFIX"] = ""--]] 
+L["PREV_SEASON_SUFFIX"] = "(*)"
 L["PREVIOUS_SCORE"] = "Pontuação anterior da M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por  Masmorra"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
@@ -200,117 +192,62 @@ L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encont
 --[[ L["RAID_BOSS_ABT_8"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ABT_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOD_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_CN_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_EP_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_12"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NYA_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ULD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_HEROIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_MYTHIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_NORMAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = ""--]] 
+L["RAID_BOSS_BOD_1"] = "Campeã da Luz"
+L["RAID_BOSS_BOD_2"] = "Grong, a Aparição"
+L["RAID_BOSS_BOD_3"] = "Mestres Flamejade"
+L["RAID_BOSS_BOD_4"] = "Opulência"
+L["RAID_BOSS_BOD_5"] = "Conclave dos Escolhidos"
+L["RAID_BOSS_BOD_6"] = "Rei Rastakhan"
+L["RAID_BOSS_BOD_7"] = "Grão-faz-tudo Mekkatorque"
+L["RAID_BOSS_BOD_8"] = "Bloqueio da Muralha de Tempestade"
+L["RAID_BOSS_BOD_9"] = "Grã-senhora Jaina Proudmore"
+L["RAID_BOSS_CN_1"] = "Guinchasa"
+L["RAID_BOSS_CN_10"] = "Sir Denathrius"
+L["RAID_BOSS_CN_2"] = "Guarda-caça Altimor"
+L["RAID_BOSS_CN_3"] = "Destruidor Faminto"
+L["RAID_BOSS_CN_4"] = "Artífice Xy'Mox"
+L["RAID_BOSS_CN_5"] = "Salvação do Rei Sol"
+L["RAID_BOSS_CN_6"] = "Lady Verva Venumbra"
+L["RAID_BOSS_CN_7"] = "O Conselho de Sangue"
+L["RAID_BOSS_CN_8"] = "Punholodo"
+L["RAID_BOSS_CN_9"] = "Generais da Legião de Pedra"
+L["RAID_BOSS_EP_1"] = "Comandante Abissal Sivara"
+L["RAID_BOSS_EP_2"] = "Beemote de Aguanegra"
+L["RAID_BOSS_EP_3"] = "Luz de Azshara"
+L["RAID_BOSS_EP_4"] = "Lady Grimpagris"
+L["RAID_BOSS_EP_5"] = "Orgozoa"
+L["RAID_BOSS_EP_6"] = "Corte da Rainha"
+L["RAID_BOSS_EP_7"] = "Za'qui"
+L["RAID_BOSS_EP_8"] = "Rainha Azshara"
+L["RAID_BOSS_NYA_1"] = "Wrathion"
+L["RAID_BOSS_NYA_10"] = "Ra-den"
+L["RAID_BOSS_NYA_11"] = "Carapaça"
+L["RAID_BOSS_NYA_12"] = "N'Zoth"
+L["RAID_BOSS_NYA_2"] = "Maut"
+L["RAID_BOSS_NYA_3"] = "Skitra"
+L["RAID_BOSS_NYA_4"] = "Zanesh"
+L["RAID_BOSS_NYA_5"] = "A Mente Coletiva"
+L["RAID_BOSS_NYA_6"] = "Shad'har"
+L["RAID_BOSS_NYA_7"] = "Drest'agath"
+L["RAID_BOSS_NYA_8"] = "Il'gynoth"
+L["RAID_BOSS_NYA_9"] = "Vexiona"
+L["RAID_BOSS_ULD_1"] = "Taloc"
+L["RAID_BOSS_ULD_2"] = "M.A.D.R.E"
+L["RAID_BOSS_ULD_3"] = "Devoradora Fétida"
+L["RAID_BOSS_ULD_4"] = "Zek'voz"
+L["RAID_BOSS_ULD_5"] = "Vectis"
+L["RAID_BOSS_ULD_6"] = "Zul, Renascido"
+L["RAID_BOSS_ULD_7"] = "Mythrax"
+L["RAID_BOSS_ULD_8"] = "G'huun"
+L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heróica"
+L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítica"
+L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
+L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "H"
+L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
+L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
+L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encontros de Raide Derrotados"
 L["RAID_PROGRESS_TITLE"] = "Progresso de Raide"
---[[Translation missing --]]
---[[ L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = ""--]] 
+L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Pontuções Médias Cronometradas +%s"
 --[[Translation missing --]]
 --[[ L["RAIDERIO_BEST_RUN"] = ""--]] 
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO"

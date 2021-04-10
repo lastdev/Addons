@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/tools/Pool", 90047)
+local __exports = LibStub:NewLibrary("ovale/tools/Pool", 90048)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local assert = assert

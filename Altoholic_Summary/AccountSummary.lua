@@ -182,7 +182,11 @@ local function RidingSkillHeader_OnEnter(frame, tooltip)
 	
 	DataStore:IterateRidingSkills(function(skill) 
 		tooltip:AddDoubleLine(
-			format("%s%s %s%d", colors.white, LEVEL, colors.green, skill.minLevel), 
+			format("%s%s %s%d |r(%s %s%s|r)", 
+				colors.white, LEVEL, 
+				colors.green, skill.minLevel, 
+				COSTS_LABEL,
+				colors.gold, format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(skill.cost), 13, 13)), 
 			format("%s%s%%", colors.white, skill.speed))
 	end)
 end
@@ -2277,7 +2281,10 @@ columns["Renown"] = {
 	Width = 60,
 	JustifyH = "CENTER",
 	GetText = function(character) 
-		return format("%s%s", colors.white, select(3, DataStore:GetCovenantInfo(character)))
+		local level = select(3, DataStore:GetCovenantInfo(character))
+		local color = (level == 40) and colors.gold or colors.white
+	
+		return format("%s%s", color, level)
 	end,
 	OnClick = function(frame)
 			local character = frame:GetParent().character
@@ -2704,7 +2711,6 @@ local modes = {
 	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyBfAWarResources", "CurrencyBfASOWF", "CurrencyBfADubloons", "CurrencyBfAWarSupplies", "CurrencyBfARichAzerite" },
 	[MODE_FOLLOWERS] = { "Name", "Level", "FollowersLV40", "FollowersEpic", "FollowersLV630", "FollowersLV660", "FollowersLV675", "FollowersItems" },
 	[MODE_COVENANT] = { "Name", "Level", "CovenantName", "SoulbindName", "Renown", "CampaignProgress", "CurrencyAnima", "CurrencyRedeemedSoul" },
-	-- [MODE_MISCELLANEOUS] = { "Name", "Level", "GuildName", "Hearthstone" },
 	[MODE_MISCELLANEOUS] = { "Name", "Level", "GuildName", "Hearthstone", "ClassAndSpec" },
 	[MODE_KEYSTONES] = { "Name", "Level", "KeyName", "KeyLevel", "WeeklyBestKeyName", "WeeklyBestKeyLevel", "WeeklyBestKeyTime" },
 }

@@ -1,7 +1,9 @@
 # DataStore_Stats
 
-## r35 (2016-10-26)
+## r36 (2016-10-26)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.007 Commit  
     - Added support for weekly and season best mythic keystone dungeon runs.  
 - 9.0.003 Commit  

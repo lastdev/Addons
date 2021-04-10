@@ -435,6 +435,8 @@ Plater.TargetIndicators = {
 		desaturated = false,
 		width = 8,
 		height = 10,
+		autoScale = true,
+		--scale = 1,
 		x = 2,
 		y = 2,
 	},
@@ -445,6 +447,8 @@ Plater.TargetIndicators = {
 		desaturated = true,
 		width = 10,
 		height = 10,
+		autoScale = true,
+		--scale = 1,
 		x = 2,
 		y = 2,
 	},
@@ -455,6 +459,8 @@ Plater.TargetIndicators = {
 		desaturated = 1,
 		width = 4,
 		height = 4,
+		autoScale = false,
+		--scale = 1,
 		x = 2,
 		y = 2,
 	},
@@ -470,6 +476,8 @@ Plater.TargetIndicators = {
 		desaturated = false,
 		width = 6,
 		height = 6,
+		autoScale = true,
+		--scale = 1,
 		x = 1,
 		y = 1,
 	},
@@ -483,7 +491,11 @@ Plater.TargetIndicators = {
 		desaturated = false,
 		width = 18,
 		height = 12,
-		x = 18,
+		wscale = 1,
+		hscale = 1.2,
+		autoScale = true,
+		--scale = 1,
+		x = 14,
 		y = 0,
 	},
 	
@@ -496,6 +508,10 @@ Plater.TargetIndicators = {
 		desaturated = false,
 		width = 8,
 		height = 12,
+		wscale = 1,
+		hscale = 1.2,
+		autoScale = true,
+		--scale = 1,
 		x = 0,
 		y = 0,
 	},
@@ -510,6 +526,10 @@ Plater.TargetIndicators = {
 		width = 8,
 		height = 12,
 		alpha = 0.7,
+		wscale = 1,
+		hscale = 1.2,
+		autoScale = true,
+		--scale = 1,
 		x = 0,
 		y = 0,
 		color = "red",
@@ -524,6 +544,10 @@ Plater.TargetIndicators = {
 		desaturated = false,
 		width = 6,
 		height = 12,
+		wscale = 1,
+		hscale = 1.2,
+		autoScale = true,
+		--scale = 1,
 		x = 3,
 		y = 0,
 		blend = "ADD",
@@ -1892,10 +1916,19 @@ local class_specs_coords = {
 			buffSpecial:SetFrameStrata (profile.ui_parent_buff_special_strata)
 			
 			--level
-			castBar:SetFrameLevel (profile.ui_parent_cast_level)
-			buffFrame1:SetFrameLevel (profile.ui_parent_buff_level)
-			buffFrame2:SetFrameLevel (profile.ui_parent_buff2_level)
-			buffSpecial:SetFrameLevel (profile.ui_parent_buff_special_level)
+			local baseLevel = unitFrame:GetFrameLevel()
+			
+			local tmplevel = baseLevel + profile.ui_parent_cast_level + 3
+			castBar:SetFrameLevel ((tmplevel > 0) and tmplevel or 0)
+			
+			tmplevel = baseLevel + profile.ui_parent_buff_level + 3
+			buffFrame1:SetFrameLevel ((tmplevel > 0) and tmplevel or 0)
+			
+			tmplevel = baseLevel + profile.ui_parent_buff2_level + 10
+			buffFrame2:SetFrameLevel ((tmplevel > 0) and tmplevel or 0)
+			
+			tmplevel = baseLevel + profile.ui_parent_buff_special_level + 10
+			buffSpecial:SetFrameLevel ((tmplevel > 0) and tmplevel or 0)
 			
 			--raid-target marker adjust:
 			unitFrame.PlaterRaidTargetFrame:SetFrameStrata(unitFrame.healthBar:GetFrameStrata())
@@ -2225,7 +2258,7 @@ local class_specs_coords = {
 
 			Plater.RefreshTankCache()
 			
-			Plater.UpdateAuraCache()
+			--Plater.UpdateAuraCache()
 			Plater.UpdateAllPlates()
 			
 			--check if can run combat enter hook and schedule it true
@@ -2935,9 +2968,11 @@ local class_specs_coords = {
 			--> border
 				--create a border using default borders from the retail game
 				local healthBarBorder = CreateFrame("frame", nil, plateFrame.unitFrame.healthBar, "NamePlateFullBorderTemplate", BackdropTemplateMixin and "BackdropTemplate")
+				healthBarBorder:SetFrameLevel (plateFrame.unitFrame.healthBar:GetFrameLevel() + 1)
 				plateFrame.unitFrame.healthBar.border = healthBarBorder
 				
 				local powerBarBorder = CreateFrame("frame", nil, plateFrame.unitFrame.powerBar, "NamePlateFullBorderTemplate", BackdropTemplateMixin and "BackdropTemplate")
+				powerBarBorder:SetFrameLevel (plateFrame.unitFrame.powerBar:GetFrameLevel() + 1)
 				plateFrame.unitFrame.powerBar.border = powerBarBorder
 				powerBarBorder:SetVertexColor (0, 0, 0, 1)
 
@@ -3311,6 +3346,8 @@ local class_specs_coords = {
 			unitFrame.actorType = actorType
 			unitFrame.ActorType = actorType --exposed to scripts
 			
+			--reset color values
+			healthBar.R, healthBar.G, healthBar.B = nil, nil, nil
 			--sending true to force the color update when the color overrider is enabled
 			Plater.FindAndSetNameplateColor (unitFrame, true)
 			
@@ -4137,8 +4174,8 @@ function Plater.OnInit() --private --~oninit ~init
 			local unitFrame = castBar.unitFrame
 			local borderShield = castBar.BorderShield
 			
-			icon:SetDrawLayer ("OVERLAY", 5)
-			borderShield:SetDrawLayer ("OVERLAY", 6)
+			--icon:SetDrawLayer ("OVERLAY", 5)
+			--borderShield:SetDrawLayer ("OVERLAY", 6)
 			local castBarHeight = castBar:GetHeight()
 			
 			if (profile.castbar_icon_customization_enabled) then
@@ -4524,6 +4561,7 @@ function Plater.OnInit() --private --~oninit ~init
 				if (not UnitExists (unitFrame.unit) or self.CurrentHealth < 1) then
 					--the unit died!
 					unitFrame:Hide()
+					Plater.EndLogPerformanceCore("Plater-Core", "Health", "OnUpdateHealth")
 					return
 				end
 			end
@@ -4776,7 +4814,7 @@ end
 				end
 
 				--check if the mob is a quest mob
-				if (unitFrame [MEMBER_QUEST]) then
+				if (unitFrame [MEMBER_QUEST] and DB_PLATE_CONFIG [unitFrame.ActorType].quest_color_enabled) then
 					Plater.SetQuestColorByReaction (unitFrame)
 					return
 				end
@@ -5802,15 +5840,18 @@ end
 		end
 		
 		local width, height = preset.width, preset.height
-		local x, y = preset.x, preset.y
+		local wscale, hscale = preset.wscale or 1, preset.hscale or 1
+		local x, y = preset.x or 0, preset.y or 0
 		local desaturated = preset.desaturated
 		local coords = preset.coords
 		local path = preset.path
 		local blend = preset.blend or "BLEND"
 		local alpha = preset.alpha or 1
+		local doScale = preset.autoScale
+		local custScale = preset.scale
 		local overlayColorR, overlayColorG, overlayColorB = DF:ParseColors (preset.color or "white")
 		
-		local scale = healthBarHeight / 10
+		local scale = (not doScale and custScale) or (healthBarHeight / (doScale and height or 10))
 		
 		--four parts (textures)
 		if (#coords == 4) then
@@ -5819,22 +5860,22 @@ end
 				texture:Show()
 				texture:SetTexture (path)
 				texture:SetTexCoord (unpack (coords [i]))
-				texture:SetSize (width * scale, height * scale)
+				texture:SetSize (width * scale * wscale, height * scale * hscale)
 				texture:SetAlpha (alpha)
 				texture:SetVertexColor (overlayColorR, overlayColorG, overlayColorB)
 				texture:SetDesaturated (desaturated)
 				
 				if (i == 1) then
-					PixelUtil.SetPoint (texture, "topleft", plateFrame.unitFrame.healthBar, "topleft", -x, y)
+					PixelUtil.SetPoint (texture, "topleft", plateFrame.unitFrame.healthBar, "topleft", -x * scale, y * scale)
 					
 				elseif (i == 2) then
-					PixelUtil.SetPoint (texture, "bottomleft", plateFrame.unitFrame.healthBar, "bottomleft", -x, -y)
+					PixelUtil.SetPoint (texture, "bottomleft", plateFrame.unitFrame.healthBar, "bottomleft", -x * scale, -y * scale)
 					
 				elseif (i == 3) then
-					PixelUtil.SetPoint (texture, "bottomright", plateFrame.unitFrame.healthBar, "bottomright", x, -y)
+					PixelUtil.SetPoint (texture, "bottomright", plateFrame.unitFrame.healthBar, "bottomright", x * scale, -y * scale)
 					
 				elseif (i == 4) then
-					PixelUtil.SetPoint (texture, "topright", plateFrame.unitFrame.healthBar, "topright", x, y)
+					PixelUtil.SetPoint (texture, "topright", plateFrame.unitFrame.healthBar, "topright", x * scale, y * scale)
 					
 				end
 			end
@@ -5851,16 +5892,18 @@ end
 				texture:SetTexture (path)
 				texture:SetBlendMode (blend)
 				texture:SetTexCoord (unpack (coords [i]))
-				PixelUtil.SetSize (texture, width * scale, height * scale)
+				--PixelUtil.SetSize (texture, width * scale, height * scale)
+				PixelUtil.SetSize (texture, width * scale * wscale, height * scale * hscale)
+				--texture:SetSize (width * scale * wscale, height * scale * hscale)
 				texture:SetDesaturated (desaturated)
 				texture:SetAlpha (alpha)
 				texture:SetVertexColor (overlayColorR, overlayColorG, overlayColorB)
 				
 				if (i == 1) then
-					PixelUtil.SetPoint (texture, "left", plateFrame.unitFrame.healthBar, "left", -x, y)
+					PixelUtil.SetPoint (texture, "left", plateFrame.unitFrame.healthBar, "left", -x * scale, y * scale)
 					
 				elseif (i == 2) then
-					PixelUtil.SetPoint (texture, "right", plateFrame.unitFrame.healthBar, "right", x, -y)
+					PixelUtil.SetPoint (texture, "right", plateFrame.unitFrame.healthBar, "right", x * scale, -y * scale)
 				end
 			end
 			
@@ -6953,7 +6996,7 @@ end
 			end
 			if (config.indicator_spec) then
 				-- use BG info if available
-				local texture, L, R, T, B = Plater.GetSpecIconForUnitFromBG(plateFrame [MEMBER_UNITID])
+				local texture, L, R, T, B = Plater.GetSpecIconForUnitFromBG(plateFrame.unitFrame [MEMBER_UNITID])
 				if texture then
 					Plater.AddIndicator (plateFrame, "specicon", texture, L, R, T, B)
 				else
@@ -8249,25 +8292,71 @@ end
 	
 	local BG_PLAYER_CACHE = {}
 	function Plater.UpdateBgPlayerRoleCache()
-		local curNumScores = GetNumBattlefieldScores()
 		wipe(BG_PLAYER_CACHE)
-		for i = 1, curNumScores do
-			local name, _, _, _, _, faction, race, class, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(i)
-			if name then
-				BG_PLAYER_CACHE[name] = {faction = faction, race = race, class = class, classToken = classToken, talentSpec = talentSpec}
+		if Plater.ZoneInstanceType == "pvp" then
+			local curNumScores = GetNumBattlefieldScores()
+			for i = 1, curNumScores do
+				local info = C_PvP.GetScoreInfo(i)
+				if info then
+					local name, faction, race, class, classToken, talentSpec = info.name, info.faction, info.raceName, info.className, info.classToken, info.talentSpec
+					if name then
+						BG_PLAYER_CACHE[name] = {faction = faction, race = race, class = class, classToken = classToken, talentSpec = talentSpec, specID = (CLASS_INFO_CACHE[classToken] and CLASS_INFO_CACHE[classToken][talentSpec] and CLASS_INFO_CACHE[classToken][talentSpec].specID), name = name}
+					end
+				end
+			end
+		elseif Plater.ZoneInstanceType == "arena" then
+			local numOpps = GetNumArenaOpponentSpecs();
+			for i=1, numOpps do
+				local specID, gender = GetArenaOpponentSpec(i);
+				if (specID > 0) then
+					local name = GetUnitName ("arena"..i, true)
+					if name then
+						local id, talentSpec, _, _, _, class = GetSpecializationInfoByID(specID, gender);
+						local class, classToken = UnitClass("arena"..i);
+						local race = UnitRace("arena"..i);
+						BG_PLAYER_CACHE[name] = {faction = nil, race = race, class = class, classToken = classToken, talentSpec = talentSpec, specID = specID, name = name}
+					end
+				end
 			end
 		end
 	end
+
+	function Plater.GetUnitBGInfo(unit)
+
+		if (not UnitIsPlayer(unit)) then
+			return nil
+		end
+		
+		if (not Plater.ZoneInstanceType == "pvp" and not Plater.ZoneInstanceType == "arena") then
+			return nil
+		end
+
+		local name = GetUnitName(unit, true)
+		if not BG_PLAYER_CACHE[name] then
+			Plater.UpdateBgPlayerRoleCache()
+		end
+
+		return BG_PLAYER_CACHE[name]
+	end
 	
 	function Plater.GetSpecIconForUnitFromBG(unit)
+
+		if (not UnitIsPlayer(unit)) then
+			return nil
+		end
+		
+		if (not Plater.ZoneInstanceType == "pvp" and not Plater.ZoneInstanceType == "arena") then
+			return nil
+		end
+
 		local name = GetUnitName(unit, true)
 		if not BG_PLAYER_CACHE[name] then
 			Plater.UpdateBgPlayerRoleCache()
 		end
 		
 		local cache = BG_PLAYER_CACHE[name]
-		if cache then
-			return Plater.GetSpecIcon(CLASS_INFO_CACHE[cache.classToken] and CLASS_INFO_CACHE[cache.classToken][cache.talentSpec] and CLASS_INFO_CACHE[cache.classToken][cache.talentSpec].specID)
+		if cache and cache.specID then
+			return Plater.GetSpecIcon(cache.specID)
 		end
 		return nil
 	end

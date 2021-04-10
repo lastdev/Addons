@@ -327,10 +327,6 @@ function ConRO.DemonHunter.Havoc(_, timeShift, currentSpell, gcd, tChosen, pvpCh
 	if _ChaosStrike_RDY and (_Fury >= 50 or _ChaoticBlades_BUFF) then
 		return _ChaosStrike;
 	end
-
-	if _FelRush_RDY and tChosen[ids.Havoc_Talent.DemonBlades] and not tChosen[ids.Havoc_Talent.Momentum] and _FelRush_CHARGES >= 2 then
-		return _FelRush;
-	end
 	
 	if tChosen[ids.Havoc_Talent.DemonBlades] then
 		if _ThrowGlaive_RDY then

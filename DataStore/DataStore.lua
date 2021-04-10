@@ -26,6 +26,24 @@ local Characters, Guilds			-- pointers to the parts of the DB that contain chara
 
 local RegisteredModules = {}
 local RegisteredMethods = {}
+local modulesList = {
+	["DataStore_Achievements"] = true,
+	["DataStore_Agenda"] = true,
+	["DataStore_Auctions"] = true,
+	["DataStore_Characters"] = true,
+	["DataStore_Containers"] = true,
+	["DataStore_Crafts"] = true,
+	["DataStore_Currencies"] = true,
+	["DataStore_Garrisons"] = true,
+	["DataStore_Inventory"] = true,
+	["DataStore_Mails"] = true,
+	["DataStore_Pets"] = true,
+	["DataStore_Quests"] = true,
+	["DataStore_Reputations"] = true,
+	["DataStore_Spells"] = true,
+	["DataStore_Stats"] = true,
+	["DataStore_Talents"] = true
+}
 
 local guildMembersIndexes = {} 	-- hash table containing guild member info
 local onlineMembers = {}			-- simple hash table to track online members:		["member"] = true (or nil)
@@ -368,9 +386,12 @@ function addon:RegisterModule(moduleName, module, publicMethods, allowOverrides)
 	assert(type(moduleName) == "string")
 	assert(type(module) == "table")
 
+	if not modulesList[moduleName] then return end
+	modulesList[moduleName] = nil		-- Prevent a module from registering twice
+	
 	-- add the module's database address (addon.db.global) to the list of known modules, if it is not already known
 	if RegisteredModules[moduleName] then return end
-
+	
 	RegisteredModules[moduleName] = module
 	local db = module.db.global
 

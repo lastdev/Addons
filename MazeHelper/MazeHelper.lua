@@ -17,9 +17,11 @@ local startedInMinMode = false;
 
 -- NANO-OPTIMIZATIONS!
 local EMPTY_STRING = '';
-local PLAYER_STRING = 'player';
-local TARGET_STRING = 'target';
+
+local PLAYER_STRING    = 'player';
+local TARGET_STRING    = 'target';
 local MOUSEOVER_STRING = 'mouseover';
+local NPC_STRING       = 'npc';
 
 local MAX_BUTTONS = 8;
 local MAX_ACTIVE_BUTTONS = 4;
@@ -81,8 +83,6 @@ local EXPOSED_BOGGARD_NPC_ID = 170080;
 local SPRIGAN_RIOT_QUEST_ID = 60585;
 local SILKSTRIDER_CARETAKER_NPC_ID = 169273;
 
-local QUEENS_CONSERVATORY_SOUL_NPC_ID = 176324;
-
 local PASSED_COUNTER = 1;
 local SOLUTION_BUTTON_ID;
 local PREDICTED_SOLUTION_BUTTON_ID;
@@ -105,7 +105,6 @@ local EVENTS_INSTANCE = {
     'ZONE_CHANGED_NEW_AREA',
     'ENCOUNTER_START',
     'ENCOUNTER_END',
-    'BOSS_KILL',
     'CHAT_MSG_MONSTER_SAY',
 };
 
@@ -133,7 +132,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.LEAF_CIRCLE_FILL,
         coords_white = M.Symbols.COORDS_WHITE.LEAF_CIRCLE_FILL,
         leaf = true,
-        flower = false,
         circle = true,
         fill = true,
     },
@@ -143,7 +141,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.LEAF_CIRCLE_NOFILL,
         coords_white = M.Symbols.COORDS_WHITE.LEAF_CIRCLE_NOFILL,
         leaf = true,
-        flower = false,
         circle = true,
         fill = false,
     },
@@ -153,7 +150,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.FLOWER_CIRCLE_FILL,
         coords_white = M.Symbols.COORDS_WHITE.FLOWER_CIRCLE_FILL,
         leaf = false,
-        flower = true,
         circle = true,
         fill = true,
     },
@@ -163,7 +159,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.FLOWER_CIRCLE_NOFILL,
         coords_white = M.Symbols.COORDS_WHITE.FLOWER_CIRCLE_NOFILL,
         leaf = false,
-        flower = true,
         circle = true,
         fill = false,
     },
@@ -173,7 +168,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.LEAF_NOCIRCLE_FILL,
         coords_white = M.Symbols.COORDS_WHITE.LEAF_NOCIRCLE_FILL,
         leaf = true,
-        flower = false,
         circle = false,
         fill = true,
     },
@@ -183,7 +177,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.LEAF_NOCIRCLE_NOFILL,
         coords_white = M.Symbols.COORDS_WHITE.LEAF_NOCIRCLE_NOFILL,
         leaf = true,
-        flower = false,
         circle = false,
         fill = false,
     },
@@ -193,7 +186,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.FLOWER_NOCIRCLE_FILL,
         coords_white = M.Symbols.COORDS_WHITE.FLOWER_NOCIRCLE_FILL,
         leaf = false,
-        flower = true,
         circle = false,
         fill = true,
     },
@@ -203,7 +195,6 @@ local buttonsData = {
         coords = M.Symbols.COORDS_COLOR.FLOWER_NOCIRCLE_NOFILL,
         coords_white = M.Symbols.COORDS_WHITE.FLOWER_NOCIRCLE_NOFILL,
         leaf = false,
-        flower = true,
         circle = false,
         fill = false,
     },
@@ -217,6 +208,10 @@ local function mhPrint(message)
     end
 
     print(string.format(L['MAZE_HELPER_PRINT'], message));
+end
+
+local function GetNpcId(unit)
+    return tonumber((select(6, strsplit('-', UnitGUID(unit) or EMPTY_STRING))));
 end
 
 local function GetPartyChatType()
@@ -247,8 +242,13 @@ local function BorderColor_UpdateAll()
     end
 
     if PREDICTED_SOLUTION_BUTTON_ID and buttons[PREDICTED_SOLUTION_BUTTON_ID] then
-        buttons[PREDICTED_SOLUTION_BUTTON_ID]:SetPredicted();
+        buttons[PREDICTED_SOLUTION_BUTTON_ID]:SetPredictedBorder();
     end
+end
+
+local function PassedCounter_Update()
+    MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
+    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, isMinimized and 0 or -1);
 end
 
 local function BetterOnDragStop(frame, saveTable)
@@ -394,7 +394,7 @@ MazeHelper.frame.MinButton:SetScript('OnClick', function()
     MazeHelper.frame.PassedCounter:ClearAllPoints();
     PixelUtil.SetPoint(MazeHelper.frame.PassedCounter, 'LEFT', MazeHelper.frame, 'LEFT', -18, 5);
     MazeHelper.frame.PassedCounter:SetScale(1);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, 0);
+    PassedCounter_Update();
 
     if SOLUTION_BUTTON_ID then
         MazeHelper.frame.MiniSolution:SetShown(true);
@@ -452,8 +452,8 @@ MazeHelper.frame.InvisibleMaxButton:SetScript('OnClick', function()
     MazeHelper.frame.PassedCounter:ClearAllPoints();
     PixelUtil.SetPoint(MazeHelper.frame.PassedCounter, 'BOTTOM', MazeHelper.frame, 'TOP', 0, -32);
     MazeHelper.frame.PassedCounter:SetScale(1.25);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, -1);
     MazeHelper.frame.PassedCounter:SetShown(true);
+    PassedCounter_Update();
 
     MazeHelper.frame.MiniSolution:SetShown(false);
 
@@ -536,7 +536,7 @@ local function ResetAll()
     end
 
     for i = 1, MAX_BUTTONS do
-        buttons[i]:SetUnactive();
+        buttons[i]:SetUnactiveBorder();
         buttons[i]:ResetSequence();
 
         buttons[i].state = false;
@@ -588,11 +588,9 @@ MazeHelper.frame.PassedButton:SetText(L['PASSED']);
 PixelUtil.SetSize(MazeHelper.frame.PassedButton, tonumber(MazeHelper.frame.PassedButton:GetTextWidth()) + 20, 22);
 MazeHelper.frame.PassedButton:SetScript('OnClick', function()
     PASSED_COUNTER = PASSED_COUNTER + 1;
+    PassedCounter_Update();
 
-    MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', 0, isMinimized and 0 or -1);
-
-    MazeHelper:SendPassedCommand(PASSED_COUNTER);
+    MazeHelper:SendPassedCommand();
     ResetAll();
 end);
 MazeHelper.frame.PassedButton:SetEnabled(false);
@@ -613,6 +611,7 @@ PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.fra
 MazeHelper.frame.PassedCounter.Text:SetShadowColor(0.15, 0.15, 0.15);
 MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
 MazeHelper.frame.PassedCounter.Text:SetJustifyH('CENTER');
+
 
 -- Mini solution icon
 MazeHelper.frame.MiniSolution = CreateFrame('Frame', nil, MazeHelper.frame.MainHolder);
@@ -1013,10 +1012,14 @@ MazeHelper.frame.Settings.VersionText:SetText(Version);
 
 -- send & sender can be nil
 local function Button_SetActive(button, send, sender, isDoubleClick)
-    if isDoubleClick then
+    if isDoubleClick or IsShiftKeyDown() then
         if button.sequence == 1 then
             isPredictedTemporaryOff = true;
             button.SequenceText:SetText(1);
+
+            if send then
+                MazeHelper:SendButtonID(button.id, 'ACTIVE', isPredictedTemporaryOff);
+            end
         end
     end
 
@@ -1041,7 +1044,7 @@ local function Button_SetActive(button, send, sender, isDoubleClick)
     MazeHelper.frame.SolutionText:SetText(L['CHOOSE_SYMBOLS_' .. (MAX_ACTIVE_BUTTONS - NUM_ACTIVE_BUTTONS)]);
 
     if send then
-        MazeHelper:SendButtonID(button.id, 'ACTIVE');
+        MazeHelper:SendButtonID(button.id, 'ACTIVE', isPredictedTemporaryOff);
     end
 
     MazeHelper:UpdateSolution();
@@ -1066,14 +1069,14 @@ local function Button_SetUnactive(button, send, sender)
     button.state  = false;
     button.sender = sender;
 
-    button:SetUnactive();
+    button:SetUnactiveBorder();
     button:ResetSequence();
 
     if NUM_ACTIVE_BUTTONS < MAX_ACTIVE_BUTTONS then
         MazeHelper.frame.SolutionText:SetText(L['CHOOSE_SYMBOLS_' .. (MAX_ACTIVE_BUTTONS - NUM_ACTIVE_BUTTONS)]);
 
         if SOLUTION_BUTTON_ID then
-            buttons[SOLUTION_BUTTON_ID]:SetUnactive();
+            buttons[SOLUTION_BUTTON_ID]:SetUnactiveBorder();
         end
 
         for i = 1, MAX_BUTTONS do
@@ -1101,7 +1104,7 @@ local function Button_SetUnactive(button, send, sender)
     end
 
     if send then
-        MazeHelper:SendButtonID(button.id, 'UNACTIVE');
+        MazeHelper:SendButtonID(button.id, 'UNACTIVE', isPredictedTemporaryOff);
     end
 end
 
@@ -1146,35 +1149,35 @@ function MazeHelper:CreateButton(index)
         edgeSize = 2,
     });
 
-    button.SetActive = function(self)
+    button.SetActiveBorder = function(self)
         self:SetBackdropBorderColor(unpack(MHMOTSConfig.ActiveColor));
     end
 
-    button.SetUnactive = function(self)
+    button.SetUnactiveBorder = function(self)
         self:SetBackdropBorderColor(0, 0, 0, 0);
     end
 
-    button.SetReceived = function(self)
+    button.SetReceivedBorder = function(self)
         self:SetBackdropBorderColor(unpack(MHMOTSConfig.ReceivedColor));
     end
 
-    button.SetSolution = function(self)
+    button.SetSolutionBorder = function(self)
         self:SetBackdropBorderColor(unpack(MHMOTSConfig.SolutionColor));
     end
 
-    button.SetPredicted = function(self)
+    button.SetPredictedBorder = function(self)
         self:SetBackdropBorderColor(unpack(MHMOTSConfig.PredictedColor));
     end
 
     button.UpdateBorder = function(self)
         if self.state then
             if self.sender then
-                self:SetReceived();
+                self:SetReceivedBorder();
             else
-                self:SetActive();
+                self:SetActiveBorder();
             end
         else
-            self:SetUnactive();
+            self:SetUnactiveBorder();
         end
     end
 
@@ -1194,7 +1197,7 @@ function MazeHelper:CreateButton(index)
         self.SequenceText:SetText(EMPTY_STRING);
     end
 
-    button:SetUnactive();
+    button:SetUnactiveBorder();
     button:RegisterForClicks('LeftButtonUp', 'RightButtonUp');
 
     button:SetScript('OnClick', function(self, b)
@@ -1392,14 +1395,14 @@ function MazeHelper:UpdateSolution()
 
         for i = 1, MAX_BUTTONS do
             if not buttons[i].state then
-                buttons[i]:SetUnactive();
+                buttons[i]:SetUnactiveBorder();
             end
         end
 
         if PREDICTED_SOLUTION_BUTTON_ID then
-            buttons[PREDICTED_SOLUTION_BUTTON_ID]:SetPredicted();
+            buttons[PREDICTED_SOLUTION_BUTTON_ID]:SetPredictedBorder();
         else
-            buttons[SOLUTION_BUTTON_ID]:SetSolution();
+            buttons[SOLUTION_BUTTON_ID]:SetSolutionBorder();
         end
 
         MazeHelper.frame.LargeSymbol.Icon:SetTexCoord(unpack(MHMOTSConfig.UseColoredSymbols and buttonsData[SOLUTION_BUTTON_ID].coords or buttonsData[SOLUTION_BUTTON_ID].coords_white));
@@ -1465,7 +1468,7 @@ function MazeHelper:SendResetCommand()
     ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, 'SendReset', partyChatType);
 end
 
-function MazeHelper:SendPassedCommand(step, isAutoPass)
+function MazeHelper:SendPassedCommand(isAutoPass)
     if not MHMOTSConfig.SyncEnabled then
         return;
     end
@@ -1475,7 +1478,7 @@ function MazeHelper:SendPassedCommand(step, isAutoPass)
         return;
     end
 
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, isAutoPass and string.format('SendPassed|%s|%s', step, 'AP') or string.format('SendPassed|%s', step), partyChatType);
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, isAutoPass and string.format('SendPassed|%s|%s', PASSED_COUNTER, 'AP') or string.format('SendPassed|%s', PASSED_COUNTER), partyChatType);
 end
 
 function MazeHelper:SendPassedCounter(step)
@@ -1508,7 +1511,7 @@ function MazeHelper:RequestPassedCounter()
     ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format('REQPC|%s', PASSED_COUNTER), partyChatType);
 end
 
-function MazeHelper:SendButtonID(buttonID, mode)
+function MazeHelper:SendButtonID(buttonID, mode, isPredictedOff)
     if not MHMOTSConfig.SyncEnabled then
         return;
     end
@@ -1518,7 +1521,7 @@ function MazeHelper:SendButtonID(buttonID, mode)
         return;
     end
 
-    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format('SendButtonID|%s|%s', buttonID, mode), partyChatType);
+    ChatThrottleLib:SendAddonMessage(ADDON_COMM_MODE, ADDON_COMM_PREFIX, string.format('SendButtonID|%s|%s|%s', buttonID, mode, isPredictedOff and 'POFF' or 'PON'), partyChatType);
 end
 
 function MazeHelper:ReceiveResetCommand()
@@ -1527,9 +1530,7 @@ end
 
 function MazeHelper:ReceivePassedCommand(step)
     PASSED_COUNTER = step;
-
-    MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, isMinimized and 0 or -1);
+    PassedCounter_Update();
 
     ResetAll();
 end
@@ -1540,9 +1541,7 @@ function MazeHelper:ReceivePassedCounter(step)
     end
 
     PASSED_COUNTER = step;
-
-    MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, isMinimized and 0 or -1);
+    PassedCounter_Update();
 end
 
 function MazeHelper:ReceiveActiveButtonID(buttonID, sender)
@@ -1551,6 +1550,12 @@ function MazeHelper:ReceiveActiveButtonID(buttonID, sender)
     end
 
     Button_SetActive(buttons[buttonID], false, sender);
+
+    for i = 1, MAX_BUTTONS do
+        if buttons[i].state and buttons[i].sequence == 1 then
+            buttons[i].SequenceText:SetText(isPredictedTemporaryOff and 1 or M.INLINE_ENTRANCE_ICON);
+        end
+    end
 end
 
 function MazeHelper:ReceiveUnactiveButtonID(buttonID, sender)
@@ -1621,10 +1626,18 @@ end
 
 local function UpdateShown()
     if MHMOTSConfig.AutoToggleVisibility then
-        if MHMOTSConfig.ShowAtBoss then
-            MazeHelper.frame:SetShown((not bossKilled and inMOTS and GetMinimapZoneText() == L['ZONE_NAME']));
+        if inMOTS and GetMinimapZoneText() == L['ZONE_NAME'] then
+            if bossKilled then
+                MazeHelper.frame:SetShown(false);
+            else
+                if inEncounter then
+                    MazeHelper.frame:SetShown(MHMOTSConfig.ShowAtBoss);
+                else
+                    MazeHelper.frame:SetShown(true);
+                end
+            end
         else
-            MazeHelper.frame:SetShown((not inEncounter and inMOTS and GetMinimapZoneText() == L['ZONE_NAME']));
+            MazeHelper.frame:SetShown(false);
         end
 
         if MazeHelper.frame:IsShown() then
@@ -1664,14 +1677,13 @@ local function UpdateState()
     bossKilled  = inMOTS and (select(3, GetInstanceLockTimeRemainingEncounter(2))) or false;
     inEncounter = inMOTS and not bossKilled and UnitExists('boss1');
 
-    PASSED_COUNTER = 1;
-    MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
-    PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', (PASSED_COUNTER == 1) and -2 or 0, isMinimized and 0 or -1);
+    PASSED_COUNTER = (inMOTS and (select(3, GetInstanceLockTimeRemainingEncounter(1)))) and PASSED_COUNTER or 1;
+    PassedCounter_Update();
 
     startedInMinMode = false;
 
     if inMOTS then
-        MazeHelper:RequestPassedCounter(); -- if you were dc'ed or reloading ui
+        MazeHelper:RequestPassedCounter(); -- if you were dc'ed or reloaded ui
 
         for _, event in ipairs(EVENTS_INSTANCE) do
             MazeHelper.frame:RegisterEvent(event);
@@ -1847,16 +1859,12 @@ function MazeHelper.frame:ENCOUNTER_END(encounterId, _, _, _, success)
     UpdateBossState(encounterId, false, success);
 end
 
-function MazeHelper.frame:BOSS_KILL(encounterId)
-    UpdateBossState(encounterId, false, true);
-end
-
 function MazeHelper.frame:NAME_PLATE_UNIT_ADDED(unit)
     if not inEncounter then
         return;
     end
 
-    local npcId = tonumber((select(6, strsplit('-', UnitGUID(unit) or ''))) or '0');
+    local npcId = GetNpcId(unit);
     if not npcId or npcId ~= ILLUSIONARY_CLONE_ID then
         return;
     end
@@ -1889,7 +1897,7 @@ function MazeHelper.frame:PLAYER_TARGET_CHANGED()
         return;
     end
 
-    local npcId = tonumber((select(6, strsplit('-', UnitGUID(TARGET_STRING) or EMPTY_STRING))));
+    local npcId = GetNpcId(TARGET_STRING);
     if not npcId or npcId ~= ILLUSIONARY_CLONE_ID then
         return;
     end
@@ -1905,7 +1913,7 @@ function MazeHelper.frame:GOSSIP_SHOW()
         return;
     end
 
-    local npcId = tonumber((select(6, strsplit('-', UnitGUID('npc') or EMPTY_STRING))));
+    local npcId = GetNpcId(NPC_STRING);
     if not npcId then
 		return;
     end
@@ -1915,8 +1923,6 @@ function MazeHelper.frame:GOSSIP_SHOW()
     if inMOTS and DEPLETED_ANIMA_SEED_IDS[npcId] then
         isPositive = true;
     elseif npcId == SILKSTRIDER_CARETAKER_NPC_ID and C_TaskQuest.IsActive(SPRIGAN_RIOT_QUEST_ID) then
-        isPositive = true;
-    elseif npcId == QUEENS_CONSERVATORY_SOUL_NPC_ID then
         isPositive = true;
     end
 
@@ -1951,7 +1957,7 @@ function MazeHelper.frame:UPDATE_MOUSEOVER_UNIT()
         return;
     end
 
-    local npcId = tonumber((select(6, strsplit('-', UnitGUID(MOUSEOVER_STRING) or EMPTY_STRING))));
+    local npcId = GetNpcId(MOUSEOVER_STRING);
     if not npcId or npcId ~= EXPOSED_BOGGARD_NPC_ID then
 		return;
     end
@@ -1975,17 +1981,11 @@ function MazeHelper.frame:CHAT_MSG_MONSTER_SAY(message, npcName)
         return;
     end
 
-    if not SOLUTION_BUTTON_ID then
-        return;
-    end
-
     if MazeHelper.MISTCALLER_QUOTES_CURRENT and tContains(MazeHelper.MISTCALLER_QUOTES_CURRENT, message) then
         PASSED_COUNTER = PASSED_COUNTER + 1;
+        PassedCounter_Update();
 
-        MazeHelper.frame.PassedCounter.Text:SetText(PASSED_COUNTER);
-        PixelUtil.SetPoint(MazeHelper.frame.PassedCounter.Text, 'CENTER', MazeHelper.frame.PassedCounter, 'CENTER', 0, isMinimized and 0 or -1);
-
-        MazeHelper:SendPassedCommand(PASSED_COUNTER, true);
+        MazeHelper:SendPassedCommand(true);
         ResetAll();
 
         mhPrint(L['AUTO_PASS']);
@@ -2002,10 +2002,18 @@ function MazeHelper.frame:CHAT_MSG_ADDON(prefix, message, _, sender)
     end
 
     if prefix == ADDON_COMM_PREFIX then
-        local command, arg1, arg2 = strsplit('|', message);
+        local command, arg1, arg2, arg3 = strsplit('|', message);
 
         if command == 'SendButtonID' then
-            local buttonId, buttonMode = arg1, arg2;
+            local buttonId, buttonMode, isPredictedOff = arg1, arg2, arg3;
+
+            if isPredictedOff then
+                if isPredictedOff == 'POFF' then
+                    isPredictedTemporaryOff = true;
+                elseif isPredictedOff == 'PON' then
+                    isPredictedTemporaryOff = false;
+                end
+            end
 
             if buttonMode == 'ACTIVE' then
                 MazeHelper:ReceiveActiveButtonID(tonumber(buttonId), sender);

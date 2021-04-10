@@ -1,15 +1,19 @@
 --[[ See license.txt for license and copyright information ]]
-local _, addon = ...
+local addonName, addon = ...
 
+local BattlefieldMapFrame
 local C_Map = C_Map
 local C_VignetteInfo = C_VignetteInfo
 local CreateFrame = CreateFrame
 local CreateFromMixins = CreateFromMixins
+local hooksecurefunc = hooksecurefunc
 local MapCanvasPinMixin = MapCanvasPinMixin
 local nop = nop
+local TextureKitConstants = TextureKitConstants
 local WorldMapFrame
-local BattlefieldMapFrame
 
+TomCatsMapCanvasPinMixin = CreateFromMixins(addon.GetProxy(MapCanvasPinMixin))
+local TomCatsMapCanvasPinMixin = TomCatsMapCanvasPinMixin
 local TomCatsVignetteTooltip = TomCatsVignetteTooltip
 
 local maps = { }
@@ -17,19 +21,23 @@ local atlasSizes = { }
 local interval, minInterval, maxInterval = 1, 1/15, 1
 local timeSinceLastUpdate = 0
 local vignetteInfoCache = { }
+local activeEncounters = { }
+local activePins = { }
+local iconAnimationEnabled = true
+local globalPinScale = 1.0
 
 local PIN_STATUS = {
-	STATIC = {
-		texture = "VignetteKill",
-		scaleFactor = 1.00
+	STATIC = 1,
+	SPAWNED = 2,
+	COMPLETE = 3
+}
+
+local atlasTweaks = {
+	["Warfront-NeutralHero"] = {
+		scaleFactor = 1.2
 	},
-	SPAWNED = {
-		texture = "nazjatar-nagaevent",
-		scaleFactor = 1.40
-	},
-	COMPLETE = {
-		texture = "Capacitance-General-WorkOrderCheckmark",
-		scaleFactor = 0.90
+	["Capacitance-General-WorkOrderCheckmark"] = {
+		scaleFactor = 0.9
 	}
 }
 
@@ -50,18 +58,38 @@ local function rescale(pin)
 		end
 		local zoom = pin:GetParent():GetScale()
 		local mapData = maps[pin:GetMap()]
-		local sizeX = atlasSizes[atlasName][1] / zoom * (pin.scaleFactor or 1) * mapData.iconScale
-		local sizeY = atlasSizes[atlasName][2] / zoom * (pin.scaleFactor or 1) * mapData.iconScale
+		local sizeX = atlasSizes[atlasName][1] / zoom * (pin.scaleFactor or 1) * mapData.iconScale * globalPinScale
+		local sizeY = atlasSizes[atlasName][2] / zoom * (pin.scaleFactor or 1) * mapData.iconScale * globalPinScale
 		pin.Texture:SetSize(sizeX, sizeY)
 		pin.HighlightTexture:SetSize(sizeX, sizeY)
+		pin.BackHighlight:SetSize(sizeX, sizeY)
+		pin.Expand:SetSize(sizeX, sizeY)
 		pin:SetSize(sizeX, sizeY)
 	end
 end
 
 local function setPinIcon(pin, status)
-	pin.Texture:SetAtlas(status.texture, true)
-	pin.HighlightTexture:SetAtlas(status.texture, true)
-	pin.scaleFactor = status.scaleFactor
+	local atlas = (status <= PIN_STATUS.SPAWNED) and pin.vignette["Atlas"] or "Capacitance-General-WorkOrderCheckmark"
+	pin.Texture:SetAtlas(atlas, true)
+	pin.HighlightTexture:SetAtlas(atlas, true)
+	pin.scaleFactor = atlasTweaks[atlas] and atlasTweaks[atlas].scaleFactor or 1
+	if (status == PIN_STATUS.SPAWNED) then
+		activeEncounters[pin] = true
+		pin.Texture:SetVertexColor(1, 0, 0, 1)
+		pin.BackHighlight:Show()
+		pin.Expand:SetTexCoord(0, 1, 0, 1);
+		pin.Expand:SetAtlas(atlas, TextureKitConstants.IgnoreAtlasSize);
+		if (iconAnimationEnabled) then
+			pin.Expand:Show()
+			pin.ExpandAndFade:Play()
+		end
+	else
+		activeEncounters[pin] = false
+		pin.Texture:SetVertexColor(1, 1, 1, 1)
+		pin.BackHighlight:Hide()
+		pin.ExpandAndFade:Stop()
+		pin.Expand:Hide()
+	end
 	rescale(pin)
 end
 
@@ -143,15 +171,19 @@ local function OnUpdate(_, elapsed)
 						if (vignetteGUIDs) then
 							local position = GetVignettePosition(vignetteGUIDs, mapID)
 							if (position) then
-								pin.isSpawned = true
-								updateVignettePin(pin)
+								if (not pin.isSpawned) then
+									pin.isSpawned = true
+									updateVignettePin(pin)
+								end
 								pin:SetPosition(position:GetXY())
 								spawned = true
 							end
 						end
 						if (not spawned) then
-							pin.isSpawned = false
-							updateVignettePin(pin)
+							if (pin.isSpawned) then
+								pin.isSpawned = false
+								updateVignettePin(pin)
+							end
 							pin:SetPosition(pin.vignette:GetLocation())
 						end
 					end
@@ -244,24 +276,25 @@ local function setupMapProvider(map, iconScale)
 	end
 end
 
-local function OnEvent(event)
+local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
+		if (addonName == arg1) then
+			iconAnimationEnabled = _G["TomCats_Account"].preferences.MapOptions.iconAnimationEnabled
+			globalPinScale = _G["TomCats_Account"].preferences.MapOptions.iconScale
+		end
 		if (not WorldMapFrame and _G["WorldMapFrame"]) then
 			WorldMapFrame = addon.GetProxy(_G["WorldMapFrame"])
 			setupMapProvider(WorldMapFrame, 0.7)
 		end
 		if (not BattlefieldMapFrame and _G["BattlefieldMapFrame"]) then
 			BattlefieldMapFrame = addon.GetProxy(_G["BattlefieldMapFrame"])
-			setupMapProvider(BattlefieldMapFrame, 0.7)
+			setupMapProvider(BattlefieldMapFrame, 0.8)
 		end
 	end
 end
 
 addon.RegisterEvent("ADDON_LOADED", OnEvent)
 CreateFrame("Frame"):SetScript("OnUpdate", OnUpdate)
-
-TomCatsMapCanvasPinMixin = CreateFromMixins(addon.GetProxy(MapCanvasPinMixin))
-local TomCatsMapCanvasPinMixin = TomCatsMapCanvasPinMixin
 
 function TomCatsMapCanvasPinMixin:ApplyFrameLevel()
 	local frameLevel = self:GetMap():GetPinFrameLevelsManager():GetValidFrameLevel("PIN_FRAME_LEVEL_MAP_LINK")
@@ -273,6 +306,7 @@ function TomCatsMapCanvasPinMixin:IsMouseClickEnabled()
 end
 
 function TomCatsMapCanvasPinMixin:OnAcquired(vignette)
+	activePins[self] = true
 	self.vignette = vignette
 	local mapData = maps[self:GetMap()]
 	mapData.pins[vignette.ID] = self
@@ -307,6 +341,7 @@ function TomCatsMapCanvasPinMixin:OnMouseLeave()
 end
 
 function TomCatsMapCanvasPinMixin:OnReleased()
+	activePins[self] = nil
 	if (self.vignette) then
 		maps[self:GetMap()].pins[self.vignette.ID] = nil
 	end
@@ -315,4 +350,35 @@ function TomCatsMapCanvasPinMixin:OnReleased()
 	self.scaleFactor = nil
 	self.Texture:SetAtlas(nil)
 	self.HighlightTexture:SetAtlas(nil)
+	self.Texture:SetVertexColor(1, 1, 1, 1)
+	activeEncounters[self] = false
+	self.ExpandAndFade:Stop()
+	self.Expand:Hide()
+end
+
+function addon.SetIconScale(value)
+	globalPinScale = value
+	for pin in pairs(activePins) do
+		rescale(pin)
+	end
+end
+
+function addon.SetIconAnimationEnabled(value)
+	_G["TomCats_Account"].preferences.MapOptions.iconAnimationEnabled = value
+	iconAnimationEnabled = value
+	if (iconAnimationEnabled) then
+		for k, v in pairs(activeEncounters) do
+			if (v) then
+				k.Expand:Show()
+				k.ExpandAndFade:Play()
+			end
+		end
+	else
+		for k, v in pairs(activeEncounters) do
+			if (v) then
+				k.ExpandAndFade:Stop()
+				k.Expand:Hide()
+			end
+		end
+	end
 end

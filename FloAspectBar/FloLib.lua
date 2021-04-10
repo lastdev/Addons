@@ -10,7 +10,7 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 	local NUM_SPELL_SLOTS = 10;
 	local SCHOOL_COLORS = { 1.0, 0.7, 0.0 };
 	
-	FLOLIB_VERSION = 1.41;
+	FLOLIB_VERSION = 1.42;
 	
 	FLOLIB_ACTIVATE_SPEC = GetSpellInfo(200749);
 	
@@ -378,6 +378,7 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 			--Cooldown stuffs
 			cooldown = _G[self:GetName().."Button"..i.."Cooldown"];
 			local _, _, _, _, _, _, maxRankId = GetSpellInfo(GetSpellInfo(spell.id));
+			if maxRankId == nil then return end
 			start, duration, enable, charges, maxCharges = GetSpellCooldown(maxRankId);
 			if spell.talented then
 				start2, duration2, enable2 = GetSpellCooldown(spell.talented);

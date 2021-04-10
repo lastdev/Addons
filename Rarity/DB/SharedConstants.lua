@@ -10,45 +10,38 @@ local C = addonTable.constants
 -- Types of items
 C.TOOLTIP = {
 	ACTIVATION_METHOD_HOVER = "ACTIVATION_METHOD_HOVER",
-	ACTIVATION_METHOD_CLICK = "ACTIVATION_METHOD_CLICK",
+	ACTIVATION_METHOD_CLICK = "ACTIVATION_METHOD_CLICK"
 }
 
 -- Misc. stuff for the detailed lockout storage / defeat detection
 C.DEFEAT_DETECTION = {
 	MODE_OR = 1,
-	MODE_AND = 2,
+	MODE_AND = 2
 }
 
 -- Embedded mapIDs: It's best to avoid hardcoding these in case of yet another re-mapping on Blizzard's end...
 C.UIMAPIDS = {
-
 	ARATHI_HIGHLANDS = 14,
 	DARKSHORE = 62,
 	SILITHUS = 81,
-
 	ICECROWN = 118,
-
 	DEEPHOLM = 207,
 	TWILIGHT_HIGHLANDS = 241,
 	TOL_BARAD = 244,
 	TOL_BARAD_PENINSULA = 245,
 	ULDUM_CATACLYSM = 249,
-
 	MAGISTERS_TERRACE_GRAND_MAGISTERS_ASYLUM = 348,
 	MAGISTERS_TERRACE_OBSERVATION_GROUNDS = 349,
-
 	FROSTFIRE_RIDGE = 525,
 	LUNARFALL_GARRISON = 582,
 	FROSTWALL_GARRISON = 590,
-
 	KROKUUN = 830,
 	MACAREE = 882,
 	ANTORAN_WASTES = 885,
-
 	SEAT_OF_THE_TRIUMVIRATE = 903,
-
 	ZANDALAR = 875,
 	KULTIRAS = 876,
+	ATALDAZAR = 934,
 	FREEHOLD = 936,
 	TOLDAGOR = 974,
 	KINGS_REST = 1004,
@@ -68,33 +61,27 @@ C.UIMAPIDS = {
 	STORMSONG_VALLEY = 942,
 	ULDUM = 1527,
 	VALE_OF_ETERNAL_BLOSSOMS = 1530,
-
 	HORRIFIC_VISION_OF_STORMWIND = 1470,
 	HORRIFIC_VISION_OF_ORGRIMMAR = 1469,
-
 	NYALOTHA = 1582, -- Generic (doesn't matter which subzone, as waypoints inside of instances can no longer be set)
-
 	BASTION = 1533,
 	REVENDRETH = 1525,
 	MALDRAXXUS = 1536,
 	ARDENWEALD = 1565,
-
 	THE_MAW = 1543,
 	TORGHAST = 1751,
-
 	THE_NECROTIC_WAKE = 1666,
 	MISTS_OF_TIRNA_SCITHE = 1669,
 	PLAGUEFALL = 1674,
 	SANGUINE_DEPTHS = 1675,
-
-	CASTLE_NATHRIA = 1735,
+	CASTLE_NATHRIA = 1735
 }
 
 -- Types of items
 C.ITEM_TYPES = {
 	MOUNT = "MOUNT",
 	PET = "PET",
-	ITEM = "ITEM",
+	ITEM = "ITEM"
 }
 
 -- Types of different detection methods
@@ -107,7 +94,7 @@ C.DETECTION_METHODS = {
 	ARCH = "ARCH",
 	SPECIAL = "SPECIAL",
 	MINING = "MINING",
-	COLLECTION = "COLLECTION",
+	COLLECTION = "COLLECTION"
 }
 
 -- Categories (expansions-based, with some special types of items)
@@ -121,7 +108,7 @@ C.ITEM_CATEGORIES = {
 	LEGION = "LEGION",
 	BFA = "BFA",
 	SHADOWLANDS = "SHADOWLANDS",
-	HOLIDAY = "HOLIDAY",
+	HOLIDAY = "HOLIDAY"
 }
 
 -- Instance difficulties
@@ -139,14 +126,19 @@ C.INSTANCE_DIFFICULTIES = {
 	LFR = 17,
 	MYTHIC_DUNGEON = 23, -- Mythic 5-player instance
 	TIMEWALKING_DUNGEON = 24, -- Timewalking 5-player instance
-	TIMEWALKING_RAID = 33,
+	TIMEWALKING_RAID = 33
 }
-
 
 -- LDB feed text
 C.LDB_TEXT_STYLES = {
 	FEED_MINIMAL = "FEED_MINIMAL",
-	FEED_VERBOSE = "FEED_VERBOSE",
+	FEED_VERBOSE = "FEED_VERBOSE"
+}
+
+C.TOOLTIP_POSITIONS = {
+	TIP_LEFT = "TIP_LEFT",
+	TIP_RIGHT = "TIP_RIGHT",
+	TIP_HIDDEN = "TIP_HIDDEN"
 }
 
 C.SORT_METHODS = {
@@ -154,14 +146,71 @@ C.SORT_METHODS = {
 	SORT_DIFFICULTY = "SORT_DIFFICULTY",
 	SORT_PROGRESS = "SORT_PROGRESS",
 	SORT_CATEGORY = "SORT_CATEGORY",
-	SORT_ZONE = "SORT_ZONE",
+	SORT_ZONE = "SORT_ZONE"
 }
 
 C.COVENANT_IDS = {
 	KYRIAN = 1,
 	VENTHYR = 2,
 	NIGHT_FAE = 3,
-	NECROLORD = 4,
+	NECROLORD = 4
+}
+
+C.HOLIDAY_TEXTURES = {
+	WINTERS_VEIL = "Calendar_WinterVeil",
+	DARKMOON_FAIRE = "calendar_darkmoonfaireterokkar",
+	DAY_OF_THE_DEAD = "Calendar_DayOfTheDead",
+	BREWFEST = "Calendar_Brewfest",
+	HALLOWS_END = "Calendar_HallowsEnd",
+	PILGRIMS_BOUNTY = "Calendar_HarvestFestival",
+	WOW_ANNIVERSARY = "calendar_anniversary",
+	LOVE_IS_IN_THE_AIR = "Calendar_LoveInTheAir",
+	LUNAR_FESTIVAL = "Calendar_LunarFestival",
+	NOBLEGARDEN = "Calendar_Noblegarden",
+	CHILDRENS_WEEK = "Calendar_ChildrensWeek",
+	MIDSUMMER_FESTIVAL = "Calendar_Midsummer",
+	FIREWORKS = "calendar_fireworks", -- What is this used for?
+	PIRATES_DAY = "Calendar_PiratesDay"
+}
+
+-- This doesn't really belong here and needs streamlining anyway, but for now this is the best place.
+-- Tooltip Filters (Note: Currently, this system is merely a stub. but more (and custom) filters may be added in the future)
+-- These are used to decide whether the tooltip should be extended to display information about an CONSTANTS.ITEM_TYPES.ITEM for the NPCs listed in its tooltipNpcs table. Useful if we want to draw attention to an CONSTANTS.ITEM_TYPES.ITEM, but not every player can obtain it
+local GetInstanceInfo = GetInstanceInfo
+C.TOOLTIP_FILTERS = {
+	IS_SPELL_KNOWN = IsSpellKnown,
+	IS_PLAYER_IN_LFR = function()
+		-- Returns true if the player is in a LFR instance
+		local name,
+			type,
+			difficulty,
+			difficultyName,
+			maxPlayers,
+			playerDifficulty,
+			isDynamicInstance,
+			mapID,
+			instanceGroupSize = GetInstanceInfo()
+		return (difficulty == 7 or difficulty == 17) -- Legacy or regular LFR
+	end
+}
+
+-- Tooltip actions (used for modifiers)
+-- Building on the previous system, this extension can be used to adjust tooltips dynamically without adding separate logic to the addon's core
+C.TOOLTIP_ACTIONS = {
+	OVERRIDE_TOOLTIP_NPCS = function(entry, newTooltipNpcs) -- Overwrites all tooltip NPCs
+		-- Sanity checks
+		if
+			not (entry and type(entry) == "table" and newTooltipNpcs and type(newTooltipNpcs) == "number" or
+				type(newTooltipNpcs) == "table")
+		 then
+			Rarity:Debug("Action OVERRIDE_TOOLTIP_NPCS failed! Required parameters: entry, newTooltipNpcs")
+			return
+		end
+
+		-- The tooltipNpcs field needs to be a table (for backwards compatibiliy) even if it's only one CONSTANTS.DETECTION_METHODS.NPC
+		entry.tooltipNpcs = (type(newTooltipNpcs) == "table") and newTooltipNpcs or {newTooltipNpcs}
+		return entry
+	end
 }
 
 addonTable.constants = C

@@ -1,6 +1,9 @@
 # <DBM> Spell Timers
 
-## [r129](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r129) (2021-03-09)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r128...r129) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r131](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r131) (2021-04-04)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r130...r131) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- TOC Bump  
+- not isTBC, as isClassic will return true at the moment.  
+- Fix locales dissapearing on me  
+- TBC Support  
+- Fix classic TOC  

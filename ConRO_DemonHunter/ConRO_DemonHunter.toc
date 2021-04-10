@@ -1,5 +1,5 @@
 ## Title:-|cffFFFFFFConRO|r- |cffA330C9Demon Hunter|r
-## Version: 9.1.6
+## Version: 9.1.7
 ## Author: Vae
 ## Interface: 90002
 ## Dependencies: ConRO

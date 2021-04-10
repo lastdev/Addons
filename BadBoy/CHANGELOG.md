@@ -1,6 +1,7 @@
 # BadBoy
 
-## [v9.0.3](https://github.com/funkydude/BadBoy/tree/v9.0.3) (2020-11-18)
-[Full Changelog](https://github.com/funkydude/BadBoy/compare/v9.0.2...v9.0.3) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
+## [v9.0.5](https://github.com/funkydude/BadBoy/tree/v9.0.5) (2021-03-11)
+[Full Changelog](https://github.com/funkydude/BadBoy/compare/v9.0.3...v9.0.5) [Previous Releases](https://github.com/funkydude/BadBoy/releases)
 
 - bump toc  
+- Update esES (#132)  

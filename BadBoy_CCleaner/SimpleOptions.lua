@@ -1,6 +1,6 @@
 
 do
-	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner v9.0.1") --packager magic, replaced with tag version
+	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner v9.0.2") --packager magic, replaced with tag version
 
 	local ccleanerInput = CreateFrame("EditBox", nil, BadBoyConfig, "InputBoxTemplate")
 	ccleanerInput:SetPoint("TOPLEFT", BadBoyCCleanerConfigTitle, "BOTTOMLEFT", 10, -5)

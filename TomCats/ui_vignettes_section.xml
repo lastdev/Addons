@@ -32,7 +32,7 @@
 						</Texture>
 					</Layer>
 				</Layers>
-				<ButtonText nonspacewrap="true" parentKey="text" justifyH="LEFT" text="Rare Creatures">
+				<ButtonText nonspacewrap="true" parentKey="text" justifyH="LEFT" text="Points of Interest">
 					<Size x="234" y="10"/>
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" x="5" y="0"/>

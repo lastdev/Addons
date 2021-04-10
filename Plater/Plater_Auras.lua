@@ -200,8 +200,8 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 			
 			--get the table where all icon frames are stored in
 			local iconFrameContainer = self.PlaterBuffList
-			--get the amount of auras shown in the frame, this variable should be always reliable
-			local amountFramesShown = self.amountAurasShown
+			--get the amount of auras shown in the frame; iterate over all if not sorting
+			local amountFramesShown = #iconFrameContainer
 			
 			if (profile.aura_sort) then
 				local iconFrameContainerCopy = {}
@@ -214,6 +214,8 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 				end
 				iconFrameContainer = iconFrameContainerCopy
 				table.sort (iconFrameContainer, Plater.AuraIconsSortFunction)
+				--when sorted, this is reliable
+				amountFramesShown = index
 			end
 		
 			local growDirection
@@ -1105,7 +1107,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or actualAuraType == AURA_TYPE_ENRAGE
 
 					--check if the debuff isn't filtered out
-					if (not DB_DEBUFF_BANNED [name]) then
+					if (not DB_DEBUFF_BANNED [name] and not DB_DEBUFF_BANNED [spellId]) then
 				
 						--> if true it'll show all auras - this can be called from scripts to debug aura things
 						if (Plater.DebugAuras) then
@@ -1173,7 +1175,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					if (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and caster and (UnitIsUnit (caster, "player") or UnitIsUnit (caster, "pet")))) then
 						Plater.AddExtraIcon (self, name, texture, count, actualAuraType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, "HELPFUL", buffIndex)
 						
-					elseif (not DB_BUFF_BANNED [name]) then
+					elseif (not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) then
 						--> if true it'll show all auras - this can be called from scripts to debug aura things
 						if (Plater.DebugAuras) then
 							if (duration and duration < 60) then
@@ -1302,7 +1304,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					unitAuraCache.canStealOrPurge = unitAuraCache.canStealOrPurge or canStealOrPurge
 					unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or actualAuraType == AURA_TYPE_ENRAGE
 						
-					if (not DB_DEBUFF_BANNED [name]) then
+					if (not DB_DEBUFF_BANNED [name] and not DB_DEBUFF_BANNED [spellId]) then
 						local auraIconFrame, buffFrame = Plater.GetAuraIcon (self)
 						Plater.AddAura (buffFrame, auraIconFrame, debuffIndex, name, texture, count, auraType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, false, false, true, true, actualAuraType)
 						
@@ -1344,7 +1346,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 					unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or actualAuraType == AURA_TYPE_ENRAGE
 					
 					--> only show buffs casted by the player it self and less than 1 minute in duration
-					if (not DB_BUFF_BANNED [name] and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60)) and (caster and UnitIsUnit (caster, "player")))) then
+					if ((not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60)) and (caster and UnitIsUnit (caster, "player")))) then
 						local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
 						Plater.AddAura (buffFrame, auraIconFrame, buffIndex, name, texture, count, auraType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, false, false, false, true, actualAuraType)
 
@@ -1592,37 +1594,6 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 	function Plater.RefreshAuraCache()
 		local profile = Plater.db.profile
 		
-		--> load spells filtered out, use the spellname instead of the spellId
-			if (not DB_BUFF_BANNED) then
-				DB_BUFF_BANNED = {}
-				DB_DEBUFF_BANNED = {}
-			else
-				wipe (DB_BUFF_BANNED)
-				wipe (DB_DEBUFF_BANNED)
-			end
-		
-			for spellId, state in pairs (profile.aura_tracker.buff_banned) do
-				local spellName = GetSpellInfo (spellId)
-				if (spellName) then
-					if state then
-						DB_BUFF_BANNED [spellName] = true
-					else
-						DB_BUFF_BANNED [spellId] = true
-					end
-				end
-			end
-			
-			for spellId, state in pairs (profile.aura_tracker.debuff_banned) do
-				local spellName = GetSpellInfo (spellId)
-				if (spellName) then
-					if state then
-						DB_DEBUFF_BANNED [spellName] = true
-					else
-						DB_DEBUFF_BANNED [spellId] = true
-					end
-				end
-			end
-		
 		DB_AURA_ENABLED = profile.aura_enabled
 		DB_AURA_ALPHA = profile.aura_alpha
 		
@@ -1642,12 +1613,13 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
     end
     
     function Plater.UpdateAuraCache()
+		local profile = Plater.db.profile
 		--manual tracking has an indexed table to store what to track
 		--the extra auras for automatic tracking has a hash table with spellIds
 		
 		--manual aura tracking
-			local manualBuffsToTrack = Plater.db.profile.aura_tracker.buff
-			local manualDebuffsToTrack = Plater.db.profile.aura_tracker.debuff
+			local manualBuffsToTrack = profile.aura_tracker.buff
+			local manualDebuffsToTrack = profile.aura_tracker.debuff
 
 			wipe (MANUAL_TRACKING_DEBUFFS)
 			wipe (MANUAL_TRACKING_BUFFS)
@@ -1673,8 +1645,8 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 			end
 
 		--extra auras to track on automatic aura tracking
-			local extraBuffsToTrack = Plater.db.profile.aura_tracker.buff_tracked
-			local extraDebuffsToTrack = Plater.db.profile.aura_tracker.debuff_tracked
+			local extraBuffsToTrack = profile.aura_tracker.buff_tracked
+			local extraDebuffsToTrack = profile.aura_tracker.debuff_tracked
 			
 			wipe (AUTO_TRACKING_EXTRA_BUFFS)
 			wipe (AUTO_TRACKING_EXTRA_DEBUFFS)
@@ -1706,7 +1678,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 				end
 			end
 			
-			if (Plater.db.profile.aura_show_crowdcontrol and DF.CrowdControlSpells) then
+			if (profile.aura_show_crowdcontrol and DF.CrowdControlSpells) then
 				for spellId, _ in pairs (DF.CrowdControlSpells) do
 					local spellName = GetSpellInfo (spellId)
 					if (spellName) then
@@ -1718,7 +1690,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 				end
 			end
 			
-			if (Plater.db.profile.aura_show_offensive_cd and DF.CooldownsAttack) then
+			if (profile.aura_show_offensive_cd and DF.CooldownsAttack) then
 				for spellId, _ in pairs (DF.CooldownsAttack) do
 					local spellName = GetSpellInfo (spellId)
 					if (spellName) then
@@ -1730,7 +1702,7 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 				end
 			end
 			
-			if (Plater.db.profile.aura_show_defensive_cd and DF.CooldownsAllDeffensive) then
+			if (profile.aura_show_defensive_cd and DF.CooldownsAllDeffensive) then
 				for spellId, _ in pairs (DF.CooldownsAllDeffensive) do
 					local spellName = GetSpellInfo (spellId)
 					if (spellName) then
@@ -1738,6 +1710,37 @@ local AUTO_TRACKING_EXTRA_DEBUFFS = {}
 						AUTO_TRACKING_EXTRA_BUFFS [spellId] = true
 						DEFENSIVE_AURA_IDS [spellId] = true
 						CAN_TRACK_EXTRA_BUFFS = true
+					end
+				end
+			end
+			
+			--> load spells filtered out, use the spellname instead of the spellId
+			if (not DB_BUFF_BANNED) then
+				DB_BUFF_BANNED = {}
+				DB_DEBUFF_BANNED = {}
+			else
+				wipe (DB_BUFF_BANNED)
+				wipe (DB_DEBUFF_BANNED)
+			end
+		
+			for spellId, state in pairs (profile.aura_tracker.buff_banned) do
+				local spellName = GetSpellInfo (spellId)
+				if (spellName) then
+					if state then
+						DB_BUFF_BANNED [spellName] = true
+					else
+						DB_BUFF_BANNED [spellId] = true
+					end
+				end
+			end
+			
+			for spellId, state in pairs (profile.aura_tracker.debuff_banned) do
+				local spellName = GetSpellInfo (spellId)
+				if (spellName) then
+					if state then
+						DB_DEBUFF_BANNED [spellName] = true
+					else
+						DB_DEBUFF_BANNED [spellId] = true
 					end
 				end
 			end

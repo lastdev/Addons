@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90047)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/text-tools", 90048)
 if not __exports then return end
 local tonumber = tonumber
 local setmetatable = setmetatable

@@ -1,8 +1,8 @@
-﻿## Interface: 90002
+﻿## Interface: 90005
 ## Title: DataStore by |cFF69CCF0Thaoky|r
 ## Notes: Main DataStore Module
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r71
+## Version: r72
 ## OptionalDeps: Ace3, LibAboutPanel 
 ## SavedVariables: DataStoreDB
 ## X-Embeds: Ace3

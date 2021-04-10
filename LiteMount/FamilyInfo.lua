@@ -389,6 +389,7 @@ LM.MOUNTFAMILY["Elemental"] = {
     [231442] = true, -- Farseer's Raging Tempest
     [289555] = true, -- Glacial Tidestorm
     [340068] = true, -- Sintouched Deathwalker
+    [348162] = true, -- Wandering Ancient
 }
 
 LM.MOUNTFAMILY["Fathom Dweller"] = {
@@ -596,10 +597,12 @@ LM.MOUNTFAMILY["Horse"] = {
 
 LM.MOUNTFAMILY["Hound"] = {
     [344228] = true, -- Battle-Bound Warhound
+    [344577] = true, -- Bound Shadehound
     [344578] = true, -- Corridor Creeper
     [343635] = true, -- Deadsoul Hound Harness
     [189998] = true, -- Illidari Felstalker
     [312762] = true, -- Mawsworn Soulhunter
+    [343632] = true, -- Maw Seeker Harness
     [341766] = true, -- Warstitched Darkhound
 }
 

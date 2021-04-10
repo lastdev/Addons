@@ -902,6 +902,23 @@ function ConRO:Raidmob()
 	return strong;
 end
 
+function ConRO:ExtractTooltipDamage(_Spell_ID)
+    _Spell_Description = GetSpellDescription(_Spell_ID);
+    _Damage = _Spell_Description:match("%d+([%d%,]+)"); --Need to get correct digits here.
+	if _Damage == nil then
+		_Damage = _Spell_Description:match("(%d+)");
+	end
+	local _My_HP = tonumber("1560");
+	local _Will_Kill = "false";
+	local _Damage_Number = _Damage;
+	
+--	if _Damage_Number >= _My_HP then
+--		_Will_Kill = "true";
+--	end
+	
+	print(_Damage_Number .. " - " .. _My_HP .. " -- " .. _Will_Kill);
+end
+
 function ConRO:ExtractTooltip(spell, pattern)
 	local _pattern = gsub(pattern, "%%s", "([%%d%.,]+)");
 

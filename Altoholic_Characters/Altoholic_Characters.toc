@@ -1,4 +1,4 @@
-﻿## Interface: 90002
+﻿## Interface: 90005
 ## Title: Altoholic_Characters
 ## Notes: Altoholic's Characters UI
 ## Author: Thaoky (EU-Marécages de Zangar)
@@ -22,4 +22,3 @@ Frames\Garrisons.xml
 Frames\Covenants_Renown.xml
 Frames\Covenants_Reservoir.xml
 Frames\Covenants_Soulbinds.xml
-

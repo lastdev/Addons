@@ -131,6 +131,15 @@
                     </Anchors>
                 </Texture>
             </Layer>
+            <Layer level="OVERLAY" textureSubLevel="5">
+                <Texture parentKey="Pill" file="Interface\AddOns\TomCats\images\pills" scale="0.71" hidden="true">
+                    <Size x="32" y="23" />
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="BOTTOMRIGHT" x="-8" y="7"/>
+                    </Anchors>
+                    <TexCoords left="0.0" right="1.0" top="0" bottom="0.08984375" />
+                </Texture>
+            </Layer>
             <Layer level="OVERLAY">
                 <FontString parentKey="AlertText" hidden="true" alpha="0" justifyH="CENTER" inherits="GameFontHighlightLeft">
                     <Size x="138" y="45"/>

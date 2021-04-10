@@ -1,7 +1,9 @@
 # DataStore_Characters
 
-## r49 (2016-10-26)
+## r50 (2016-10-26)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.007 Commit  
     - Fixed faction being improperly reported for non-English languages.  
 - 9.0.006 Commit  

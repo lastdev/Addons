@@ -1,7 +1,9 @@
 # DataStore_Talents
 
-## r68 (2016-11-09)
+## r69 (2016-11-09)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.006 Commit  
     - Added GetActiveSpecInfo to get proper information over the active talent specialization  
     - Fixed scanning of talents for low level characters, sometimes not working, and potentially causing issues in client add-ons due to missing character key in the DB.  

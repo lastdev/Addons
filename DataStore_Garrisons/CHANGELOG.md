@@ -1,7 +1,9 @@
 # DataStore_Garrisons
 
-## r28 (2016-11-09)
+## r29 (2016-11-09)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.005 Commit  
     - Added support for the sanctum reservoir  
 - 9.0.003 Commit  

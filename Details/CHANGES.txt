@@ -1,98 +1,34 @@
-lightweight tag 5294541c321270071b9bef711b5991d49db47e89 DetailsRetail.9.0.2.8316.144
+tag 749854d063dc8bee0fe7a99380a568c9c97b39a7 DetailsRetail.9.0.5.8373.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Fri Mar 5 20:50:29 2021 -0300
+Date:	Thu Apr 1 10:29:59 2021 -0300
 
-commit 5294541c321270071b9bef711b5991d49db47e89
+commit f82f706bfa75a40465c12f7f24bafc2688255ae2
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 5 20:50:29 2021 -0300
+Date:   Thu Apr 1 10:28:26 2021 -0300
 
-    Version Bump
+    Version Update
 
-commit af696b454beeba24d5e2ad034856f9f2f326eba0
+commit d7718caacf020baa630d55dbe09fa0a5f084423d
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 5 19:47:04 2021 -0300
+Date:   Thu Apr 1 10:23:05 2021 -0300
 
-    Fix for not finding the coords for nil when an enemy dies in battleground
+    Framework update and Stop reset max segments amount on logon
 
-commit 0d33b510900354b44de0653cebb2386b8dcbe996
+commit 476e6161474c1bda904c01d5a514222fcb1114e2
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 5 19:40:18 2021 -0300
+Date:   Fri Mar 26 15:17:55 2021 -0300
 
-    Making custom scripts support inline texts
+    Make Monk's Storm, Earth, and Fire adds have their names in the charts
 
-commit 0d33b510900354b44de0653cebb2386b8dcbe996
+commit 94887b9db72ff1abb3e01fc780abe8c2fbaa0e99
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 5 19:40:18 2021 -0300
+Date:   Wed Mar 17 19:58:05 2021 -0300
 
-    Making custom scripts support inline texts
+    Remove debug prints
 
-commit 1b27156227641dd9b84340988d5306730b3491cc
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Wed Mar 3 15:40:43 2021 -0600
-
-    Fix for weird segment bug when swapping segments
-    
-    When using a custom display that uses a spell, this line sets a numerical value to the `class` key, which conflicts with the default Details metatable `:class()` function that I ensure is on every custom object. Honestly, this is such a niche bug that it's stupid it happens. But when it does happen, no new segments are created. Soo, fix.
-
-commit 1b27156227641dd9b84340988d5306730b3491cc
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Wed Mar 3 15:40:43 2021 -0600
-
-    Fix for weird segment bug when swapping segments
-    
-    When using a custom display that uses a spell, this line sets a numerical value to the `class` key, which conflicts with the default Details metatable `:class()` function that I ensure is on every custom object. Honestly, this is such a niche bug that it's stupid it happens. But when it does happen, no new segments are created. Soo, fix.
-
-commit b1dd10f1667f4ccb6afd776e3fac400ad8510b4c
+commit 842b6f27a118a6314b2e6008c408b24ba8c076ac
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Mar 1 16:19:00 2021 -0300
+Date:   Wed Mar 17 19:57:33 2021 -0300
 
-    Added actor:IsFriendlyNpc()
-
-commit 3958b85cdb1adc1bcf91b589a38d17032b46481d
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Sat Feb 27 15:24:08 2021 -0600
-
-    Fix for Total code and Percent code not exporting
-
-commit 3958b85cdb1adc1bcf91b589a38d17032b46481d
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Sat Feb 27 15:24:08 2021 -0600
-
-    Fix for Total code and Percent code not exporting
-
-commit bfce07842a9b3f070ae52eb18cc1f4d513bd72f6
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Feb 24 20:43:13 2021 -0300
-
-    Code cleanup
-
-commit 17ed4c6d6ea7f7e1fa762320375b9c243e5ac3c7
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Feb 23 20:39:50 2021 -0300
-
-    Fix for 'LUA error on arena entry (#194)'
-
-commit dc3d32546cea82eb55aeef83e0435736a711c381
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Feb 22 19:32:05 2021 -0300
-
-    Improvements for "Ignore death events after the necrolord triggers Forgeborne Reveries"
-
-commit ee3685492e2ab01fbf5dd1564149b1f17afeb3ff
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Feb 22 19:18:54 2021 -0300
-
-    Ignore death events after the necrolord triggers Forgeborne Reveries
-
-commit 8085b91ad6939116726c672ab3b6af47107ec1e1
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Feb 22 16:52:17 2021 -0300
-
-    Backend stuff
-
-commit 81a9c31f75553ecef37a50a573afcece91bb10ba
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Feb 22 16:44:37 2021 -0300
-
-    Backend updates
+    Added Reset Overall Data on Torghast
 

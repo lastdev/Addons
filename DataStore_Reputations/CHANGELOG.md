@@ -1,7 +1,9 @@
 # DataStore_Reputations
 
-## r48 (2016-10-26)
+## r49 (2016-10-26)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.006 Commit  
     - Added Enum.lua  
 - 9.0.005 Commit  

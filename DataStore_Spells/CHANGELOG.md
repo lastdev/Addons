@@ -1,7 +1,9 @@
 # DataStore_Spells
 
-## r36 (2016-10-26)
+## r37 (2016-10-26)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.006 Commit  
     - Added support for the riding skill  
 - 9.0.003 Commit  

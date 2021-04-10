@@ -3,6 +3,7 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local LII = LibStub("LibItemInfo-1.0")
 
 local THIS_ACCOUNT = "Default"
 local THIS_REALM = GetRealmName()
@@ -105,6 +106,24 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	["Platinum Deposit"]				   		= 152513, -- Platinum Ore
 	["Rich Platinum Deposit"]			   	= 152513, -- Platinum Ore
 
+	-- Shadowlands
+	["Laestrite Deposit"] 						= 171828, -- Laestrite Ore
+	["Rich Laestrite Deposit"] 				= 171828, -- Laestrite Ore
+	["Solenium Deposit"] 						= 171829, -- Solenium Ore
+	["Rich Solenium Deposit"] 					= 171829, -- Solenium Ore
+	["Oxxein Deposit"] 							= 171830, -- Oxxein Ore
+	["Rich Oxxein Deposit"] 					= 171830, -- Oxxein Ore
+	["Phaedrum Deposit"] 						= 171831, -- Phaedrum Ore
+	["Rich Phaedrum Deposit"] 					= 171831, -- Phaedrum Ore
+	["Sinvyr Deposit"] 							= 171832, -- Sinvyr Ore
+	["Rich Sinvyr Deposit"] 					= 171832, -- Sinvyr Ore
+	["Elethium Deposit"] 						= 171833, -- Elethium Ore
+	["Rich Elethium Deposit"] 					= 171833, -- Elethium Ore
+
+	["Ligneous Phaedrum Deposit"] 			= 181718, -- Ligneous Phaedrum Ore
+	["Monolithic Oxxein Deposit"] 			= 181719, -- Monolithic Oxxein Ore
+	["Menacing Sinvyr Deposit"] 				= 181720, -- Menacing Sinvyr Ore
+	["Luminous Solenium Deposit"] 			= 181450, -- Luminous Solenium Ore
 	
 	-- Herbs
 	-- Classic
@@ -544,6 +563,8 @@ local function ProcessTooltip(tooltip, link)
 	
 	if (itemID == 0) then return end
 	
+
+	
 	-- if there's no cached item id OR if it's different from the previous one ..
 	if (not cachedItemID) or 
 		(cachedItemID and (itemID ~= cachedItemID)) then
@@ -561,8 +582,6 @@ local function ProcessTooltip(tooltip, link)
 				cachedSource = format("%s%s: %s%s%s", colors.gold, L["Source"], colors.teal, domain, subDomain)
 			end
 		end
-
-
 		
 		-- .. then check player bags to see how many times he owns this item, and where
 		if addon:GetOption("UI.Tooltip.ShowItemCount") or addon:GetOption("UI.Tooltip.ShowTotalItemCount") then
@@ -585,7 +604,25 @@ local function ProcessTooltip(tooltip, link)
 		WriteTotal(tooltip)
 	end
 	
-	if cachedSource then		-- add item source
+	local isLibItemInfoShown = false
+	
+	if addon:GetOption("UI.Tooltip.ShowItemXPack") == true then
+		local expansion, expansionID, prof, bagType = LII:GetItemSource(itemID)
+
+		if expansion then
+			isLibItemInfoShown = true
+		
+			tooltip:AddLine(" ",1,1,1)
+			tooltip:AddLine(format("%s%s: %s%s", colors.gold, INFO, colors.teal, prof), 1,1,1)
+			if bagType then
+				tooltip:AddLine(format("%s%s: %s%s", colors.gold, "Goes in", colors.teal, bagType), 1,1,1)
+			end
+			tooltip:AddLine(format("%s%s: %s%s %s(%d.0)", colors.gold, EXPANSION_FILTER_TEXT, colors.teal, expansion,
+				colors.yellow, expansionID + 1), 1,1,1)
+		end
+	end
+	
+	if cachedSource and not isLibItemInfoShown then		-- add item source
 		tooltip:AddLine(" ",1,1,1)
 		tooltip:AddLine(cachedSource, 1,1,1)
 	end
@@ -600,7 +637,7 @@ local function ProcessTooltip(tooltip, link)
 			tooltip:AddDoubleLine(format("Item ID: %s%s", colors.green, itemID), format("iLvl: %s%s", colors.green, iLevel))
 		end
 	end
-	
+
 	local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
 	
 	-- 25/01/2015: Removed the code that displayed the pet owners, since they have been account wide for a while now..

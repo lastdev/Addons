@@ -1,3 +1,7 @@
+Ver 9.1.13
+	-Working on Damage amount scanning.
+	-Fix for interrupt and purge glitches cause by recent changes.
+
 Ver 9.1.12
 	-Fixed Weapon Buff function.
 

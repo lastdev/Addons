@@ -1,8 +1,8 @@
-﻿## Interface: 90002
+﻿## Interface: 90005
 ## Title: DataStore_Talents
 ## Notes: Stores information about character talents
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r68
+## Version: r69
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_TalentsDB, DataStore_TalentsRefDB

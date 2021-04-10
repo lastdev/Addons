@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/Cooldown", 90047)
+local __exports = LibStub:NewLibrary("ovale/states/Cooldown", 90048)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)

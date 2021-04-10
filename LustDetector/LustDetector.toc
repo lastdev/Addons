@@ -1,0 +1,9 @@
+## Interface: 90005
+## Title: LUSTDETECTOR
+## Author: Reencoded By Vicksmile - Goldrinn realm
+## Version: v2 Definitive version for SL
+## Notes: This addon will show on your party raid chat when someone cast any Haste Spell. Ex: Bloodlust
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter: LUSTDETECTOR, LUSTDETECTORMode
+LustDetector.lua

@@ -1,3 +1,6 @@
+Ver 9.1.7
+	-Updated Havoc rotation slightly.
+
 Ver 9.1.6
 	-Updated PvP code.
 

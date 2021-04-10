@@ -1,22 +1,17 @@
 --[[ See license.txt for license and copyright information ]]
 local _, addon = ...
 
-local CreateFrame = CreateFrame
-local BlizzardOptionsPanel_OnLoad = BlizzardOptionsPanel_OnLoad
+local BackdropTemplateMixin = BackdropTemplateMixin
 local BlizzardOptionsPanel_RegisterControl = BlizzardOptionsPanel_RegisterControl
-local InterfaceAddOnsList_Update = InterfaceAddOnsList_Update
-local InterfaceOptions_AddCategory = InterfaceOptions_AddCategory
-local InterfaceOptionsPanel_Cancel = InterfaceOptionsPanel_Cancel
-local InterfaceOptionsPanel_Default = InterfaceOptionsPanel_Default
-local InterfaceOptionsPanel_Refresh = InterfaceOptionsPanel_Refresh
 local CONTROLTYPE_CHECKBOX = CONTROLTYPE_CHECKBOX
-local UIParent = UIParent
+local CONTROLTYPE_SLIDER = CONTROLTYPE_SLIDER
+local InterfaceAddOnsList_Update = InterfaceAddOnsList_Update
+local InterfaceOptionsPanel_OnLoad = InterfaceOptionsPanel_OnLoad
 
-local function Config_Okay(self)
-	for _, v in ipairs(self.controls) do
-		if (v.okay) then v:okay() end
-	end
-end
+local TomCats_Config = TomCats_Config
+local TomCats_ConfigIconSizeSlider = TomCats_ConfigIconSizeSlider
+local TomCats_ConfigIconSizeSliderLow = TomCats_ConfigIconSizeSliderLow
+local TomCats_ConfigIconSizeSliderHigh = TomCats_ConfigIconSizeSliderHigh
 
 local function OnHyperlinkClick(self, link)
 	link = "https://" .. link
@@ -59,72 +54,84 @@ local function OnHyperlinkLeave(self)
 end
 
 do
-	local configFrame = CreateFrame("FRAME", "TomCats_Config", UIParent, "TomCats_ConfigTemplate")
-	configFrame.name = "TomCat's Tours"
-	configFrame.controls = { }
-	configFrame.Header.Text:SetFont(configFrame.Header.Text:GetFont(), 64)
-	local checkBox_minimapButton = configFrame.checkBox_minimapButton
-	checkBox_minimapButton.type = CONTROLTYPE_CHECKBOX
-	checkBox_minimapButton.Text:SetText("Show \"TomCat's Tours\" Minimap Button")
-	local function setTooltipText(value)
-		if (value == "1") then
-			checkBox_minimapButton.tooltipText = "Deselect to hide the main \"TomCat's Tours\" minimap button"
-		else
-			checkBox_minimapButton.tooltipText = "Select to show the main \"TomCat's Tours\" minimap button"
+	TomCats_Config.name = "TomCat's Tours"
+	TomCats_Config.controls = { }
+	TomCats_Config.Header.Text:SetFont(TomCats_Config.Header.Text:GetFont(), 64)
+	local function Setup_CheckBox(checkBoxInfo)
+		local checkBox = checkBoxInfo.component
+		checkBox.type = CONTROLTYPE_CHECKBOX
+		checkBox.Text:SetText(checkBoxInfo.label)
+		checkBox.tooltipText = checkBoxInfo.tooltip
+		checkBox.defaultValue = checkBoxInfo.defaultValue
+		checkBox.GetValue = function()
+			local prefsBase = _G["TomCats_Account"].preferences
+			local preferenceTable = checkBoxInfo.preferenceTable and prefsBase[checkBoxInfo.preferenceTable] or prefsBase
+			local currentValue
+			if (checkBoxInfo.inverseValue) then
+				currentValue = preferenceTable and preferenceTable[checkBoxInfo.preferenceKey] and "0" or "1"
+			else
+				currentValue = preferenceTable and preferenceTable[checkBoxInfo.preferenceKey] and "1" or "0"
+			end
+			return currentValue
 		end
+		checkBox.SetValue = checkBoxInfo.SetValue
+		BlizzardOptionsPanel_RegisterControl(checkBox, TomCats_Config)
 	end
-	setTooltipText("1")
-	checkBox_minimapButton.defaultValue = "1"
-	checkBox_minimapButton.GetValue = function()
-		local minimapButtonPrefs = TomCats_Account.preferences["TomCats-MinimapButton"]
-		local currentValue = minimapButtonPrefs and minimapButtonPrefs.hidden and "0" or "1"
-		setTooltipText(currentValue)
-		return currentValue
-	end
-	checkBox_minimapButton.SetValue = function(_, value)
-		setTooltipText(value)
-	end
-	checkBox_minimapButton.okay = function()
-		addon.minimapButton:SetEnabled(checkBox_minimapButton.value == "1")
-	end
-	BlizzardOptionsPanel_RegisterControl(checkBox_minimapButton, configFrame)
-
-	local checkBox_betaFeatures = configFrame.checkBox_betaFeatures
-	checkBox_betaFeatures.type = CONTROLTYPE_CHECKBOX
-	checkBox_betaFeatures.Text:SetText("Enable the Beta Features")
-	local function setTooltipText1(value)
-		if (value == "1") then
-			checkBox_betaFeatures.tooltipText = "Deselect to disable the beta features"
-		else
-			checkBox_betaFeatures.tooltipText = "Select to enable the beta features"
+	Setup_CheckBox({
+		component = TomCats_Config.checkBox_minimapButton,
+		label = "Main \"TomCat's Tours\" Minimap Button",
+		tooltip = "Displays the main \"TomCat's Tours\" minimap button",
+		defaultValue = "1",
+		preferenceTable = "TomCats-MinimapButton",
+		preferenceKey = "hidden",
+		inverseValue = true,
+		SetValue = function(_, value)
+			addon.minimapButton:SetEnabled(value == "1")
 		end
+	})
+	Setup_CheckBox({
+		component = TomCats_Config.checkBox_betaFeatures,
+		label = "Beta Features",
+		tooltip = "Enables the beta features",
+		defaultValue = "0",
+		preferenceKey = "betaEnabled",
+		SetValue = function(_, value)
+			addon.SetBetaEnabled(value == "1")
+		end
+	})
+	Setup_CheckBox({
+		component = TomCats_Config.checkBox_mapIconAnimation,
+		label = "Map Icon Animation",
+		tooltip = "Animates the map icons for spawned encounters",
+		defaultValue = "0",
+		preferenceTable = "MapOptions",
+		preferenceKey = "iconAnimationEnabled",
+		SetValue = function(_, value)
+			addon.SetIconAnimationEnabled(value == "1")
+		end
+	})
+	local slider = TomCats_ConfigIconSizeSlider
+	slider.type = CONTROLTYPE_SLIDER
+	slider.tooltipText = "Sets the size of the encounter icons which are displayed on the world map and battlefield map"
+	TomCats_ConfigIconSizeSliderLow:SetText("-")
+	TomCats_ConfigIconSizeSliderHigh:SetText("+")
+	TomCats_Config.IconSizeSliderLabel.Text:SetText("Map Icon Size");
+	slider.SetDisplayValue = slider.SetValue;
+	slider.GetValue = function()
+		return _G["TomCats_Account"].preferences.MapOptions.iconScale
 	end
-	setTooltipText1("0")
-	checkBox_betaFeatures.defaultValue = "0"
-	checkBox_betaFeatures.GetValue = function()
-		local enableBeta = addon.IsBetaEnabled and addon.IsBetaEnabled()
-		local currentValue = enableBeta and "1" or "0"
-		setTooltipText1(currentValue)
-		return currentValue
+	slider.GetCurrentValue = slider.GetValue
+	slider.SetValue = function (self, value)
+		self:SetDisplayValue(value);
+		self.value = value;
+		_G["TomCats_Account"].preferences.MapOptions.iconScale = value
+		addon.SetIconScale(value)
 	end
-	checkBox_betaFeatures.SetValue = function(_, value)
-		setTooltipText1(value)
-	end
-	checkBox_betaFeatures.okay = function()
-		addon.SetBetaEnabled(checkBox_betaFeatures.value == "1")
-	end
-	BlizzardOptionsPanel_RegisterControl(checkBox_betaFeatures, configFrame)
-
-	configFrame.html1:SetScript("OnHyperlinkClick", OnHyperlinkClick)
-	configFrame.html1:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
-	configFrame.html1:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
-	BlizzardOptionsPanel_OnLoad(
-			configFrame,
-			Config_Okay,
-			InterfaceOptionsPanel_Cancel,
-			InterfaceOptionsPanel_Default,
-			InterfaceOptionsPanel_Refresh
-	)
-	InterfaceOptions_AddCategory(configFrame)
+	BlizzardOptionsPanel_RegisterControl(slider, TomCats_Config);
+	BackdropTemplateMixin.OnBackdropLoaded(slider);
+	TomCats_Config.html1:SetScript("OnHyperlinkClick", OnHyperlinkClick)
+	TomCats_Config.html1:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
+	TomCats_Config.html1:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
+	InterfaceOptionsPanel_OnLoad(TomCats_Config)
 	InterfaceAddOnsList_Update()
 end

@@ -2684,7 +2684,16 @@ end
 function ConRO:AbilityInterrupt(_Spell, _Condition)
 	local color = ConRO.db.profile._Interrupt_Overlay_Color;
 	if self.Flags[_Spell] == nil then
-		self.Flags[_Spell] = false;	
+		self.Flags[_Spell] = false;
+		self:ClearAbilityInterruptIndependent(spell, spell);		--Trying out 8.2.8
+		ConROInterruptWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
+		ConROInterruptWindow.texture:SetVertexColor(.1, .1, .1);
+		if UIFrameIsFlashing(ConROInterruptWindow) then
+			UIFrameFlashStop(ConROInterruptWindow);
+			if ConRO.db.profile._Unlock_ConRO == true and ConRO.db.profile.enableInterruptWindow == true then
+				ConROInterruptWindow:Show();				
+			end	
+		end
 	end
 	if _Condition then
 		if not self.Flags[_Spell] then
@@ -2716,6 +2725,15 @@ function ConRO:AbilityPurge(_Spell, _Condition)
 	local color = ConRO.db.profile._Purge_Overlay_Color;
 	if self.Flags[_Spell] == nil then
 		self.Flags[_Spell] = false;
+		self:ClearAbilityPurgeIndependent(spell, spell);
+		ConROPurgeWindow:SetSize(ConRO.db.profile.flashIconSize * .25, ConRO.db.profile.flashIconSize * .25);
+		ConROPurgeWindow.texture:SetVertexColor(.1, .1, .1);
+		if UIFrameIsFlashing(ConROPurgeWindow) then
+			UIFrameFlashStop(ConROPurgeWindow);
+			if ConRO.db.profile._Unlock_ConRO == true and ConRO.db.profile.enablePurgeWindow == true then
+				ConROPurgeWindow:Show();
+			end
+		end
 	end
 	if _Condition then
 		if not self.Flags[_Spell] then
@@ -2723,7 +2741,7 @@ function ConRO:AbilityPurge(_Spell, _Condition)
 			ConROPurgeWindow.texture:SetVertexColor(color.r, color.g, color.b);
 			if not UIFrameIsFlashing(ConROPurgeWindow) and ConRO.db.profile.enablePurgeWindow then
 				UIFrameFlash(ConROPurgeWindow, 0.25, 0.25, -1);
-			end		
+			end
 		end
 		self.Flags[_Spell] = true;
 		self:AbilityPurgeIndependent(_Spell);
@@ -2734,12 +2752,12 @@ function ConRO:AbilityPurge(_Spell, _Condition)
 			if UIFrameIsFlashing(ConROPurgeWindow) then
 				UIFrameFlashStop(ConROPurgeWindow);
 				if ConRO.db.profile._Unlock_ConRO == true and ConRO.db.profile.enablePurgeWindow == true then
-					ConROPurgeWindow:Show();				
-				end			
-			end	
+					ConROPurgeWindow:Show();
+				end
+			end
 		end
 		self.Flags[_Spell] = false;
-		self:ClearAbilityPurgeIndependent(_Spell);		
+		self:ClearAbilityPurgeIndependent(_Spell);
 	end
 end
 

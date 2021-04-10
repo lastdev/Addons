@@ -1,6 +1,6 @@
 
 do
-	BadBoyGuildedConfigTitle:SetText("BadBoy_Guilded v9.0.1") -- Packager magic, replaced with tag version
+	BadBoyGuildedConfigTitle:SetText("BadBoy_Guilded v9.0.2") -- Packager magic, replaced with tag version
 
 	local guildedWhispers = CreateFrame("CheckButton", nil, BadBoyConfig, "OptionsBaseCheckButtonTemplate")
 	guildedWhispers:SetPoint("TOPLEFT", BadBoyGuildedConfigTitle, "BOTTOMLEFT")

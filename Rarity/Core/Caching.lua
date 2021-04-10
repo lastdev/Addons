@@ -1,6 +1,5 @@
 local _, addonTable = ...
 
-
 local Caching = {}
 
 -- Locals
@@ -14,9 +13,25 @@ local UnitFactionGroup = UnitFactionGroup
 function Caching:IsHorde()
 	if Rarity.isHorde == nil then
 		local englishFaction, localizedFaction = UnitFactionGroup("player")
-		if englishFaction == "Horde" then Rarity.isHorde = true else Rarity.isHorde = false end
+		if englishFaction == "Horde" then
+			Rarity.isHorde = true
+		else
+			Rarity.isHorde = false
+		end
 	end
 	return Rarity.isHorde
+end
+
+function Caching:IsAlliance()
+	if Rarity.isAlliance == nil then
+		local englishFaction, localizedFaction = UnitFactionGroup("player")
+		if englishFaction == "Alliance" then
+			Rarity.isAlliance = true
+		else
+			Rarity.isAlliance = false
+		end
+	end
+	return Rarity.isAlliance
 end
 
 function Caching:IsReady()

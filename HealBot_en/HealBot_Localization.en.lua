@@ -87,6 +87,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_TAB_EXTRAS              = "Extras"
 
     HEALBOT_OPTIONS_GLOBAL                  = "Global"
+    HEALBOT_OPTIONS_ALPHA                   = "Opacity";
     HEALBOT_OPTIONS_BARALPHA                = "Enabled opacity";
     HEALBOT_OPTIONS_BARALPHAINHEAL          = "Incoming heals opacity";
     HEALBOT_OPTIONS_BARALPHABACK            = "Background bar opacity";
@@ -159,7 +160,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_CDCSHOWHBARS            = "Change health bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_OPTIONS_CDCSHOWABARS            = "Change aggro bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_OPTIONS_CDCWARNINGS             = "Debuff warnings";
-    HEALBOT_OPTIONS_RAIDGROUPWARN           = "Raid heal group filter";
+    HEALBOT_OPTIONS_RAIDGROUPWARN           = "Raid filter";
     HEALBOT_OPTIONS_BUFFWARNINGS            = "Buff warnings";
     HEALBOT_OPTIONS_BUFFCUSTOM              = "Custom buffs";
     HEALBOT_OPTIONS_BUFFCUSTOMURL           = "Custom buffs are available at  "..HEALBOT_ABOUT_URL
@@ -264,6 +265,7 @@ function HealBot_Lang_enALL()
     HEALBOT_DISABLED_TARGET                 = "Target";
     HEALBOT_OPTIONS_SHOWCLASSONBAR          = "Show class on bar";
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Show health on bar";
+    HEALBOT_OPTIONS_SHOWTEXT                = "Show text";
     HEALBOT_OPTIONS_IGNOREINCOMINGONFULL    = "On full health ignore all incoming heals and "..HEALBOT_classicABSORBHOT.."s";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Include incoming heals";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Separate incoming heals";
@@ -307,8 +309,11 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_ICONOPTOORARROWBUTTON   = "OOR Arrow";
     HEALBOT_OPTIONS_NAMEOPTTEXT             = "Name text options";
     HEALBOT_OPTIONS_HEALTHOPTTEXT           = "Health text options";
+    HEALBOT_OPTIONS_AUXOPTTEXT              = "Aux text options";
+    HEALBOT_OPTIONS_TABNOTAVAIL             = "Tab not available with current frame";
     HEALBOT_OPTIONS_NAMEOPTCOLOUR           = "Name col"..HEALBOT_enWORD_COLOUR_SUFFIX.." options";
     HEALBOT_OPTIONS_HEALTHOPTCOLOUR         = "Health col"..HEALBOT_enWORD_COLOUR_SUFFIX.." options";
+    HEALBOT_OPTIONS_AUXOPTCOLOUR            = "Aux col"..HEALBOT_enWORD_COLOUR_SUFFIX.." options";
     HEALBOT_OPTIONS_HEALTHTEXTANCHOR        = "Health text anchor";
     HEALBOT_SKIN_HEADERBARCOL               = "Bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_SKIN_HEADERTEXTCOL              = "Text col"..HEALBOT_enWORD_COLOUR_SUFFIX;
@@ -477,7 +482,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_LONGBUFFTIMER           = "Long buffs"
 
     HEALBOT_OPTIONS_NOTIFY_MSG              = "Message"
-    HEALBOT_OPTIONS_CASTNOTIFYTAGS          = " #s=spell name  -  #n=players name "
+    HEALBOT_OPTIONS_CASTNOTIFYTAGS          = " #s=spell name  -  #l=spell link  -  #n=players name "
     HEALBOT_WORDS_YOU                       = "you";
     HEALBOT_WORDS_MOREMEM                   = "More Memory";
     HEALBOT_WORDS_LESSMEM                   = "Less Memory";
@@ -673,7 +678,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWCLASSICON           = "Show Class";
     HEALBOT_OPTIONS_SUBSORTSELFFIRST        = "Sub Sort - Self First"
     HEALBOT_OPTION_AGGROPCTBAR              = "Move bar"
-    HEALBOT_OPTION_AGGROPCTTXT              = "Show text"
     HEALBOT_OPTION_AGGROPCTTRACK            = "Track percentage" 
     HEALBOT_OPTIONS_ALERTAGGROLEVEL1        = "1 - Low threat"
     HEALBOT_OPTIONS_ALERTAGGROLEVEL2        = "2 - High threat"
@@ -801,6 +805,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_USEGAMETOOLTIP          = "Use Game Tooltip"
     HEALBOT_OPTIONS_SHOWPOWERCOUNTER        = "Show power counter"
     HEALBOT_OPTIONS_SHOWPOWERCOUNTER_PALA   = "Show holy power"
+    HEALBOT_OPTIONS_SHOWPOWERCOUNTER_ROGU   = "Show combo points"
+    HEALBOT_OPTIONS_SHOWPOWERCOUNTER_WARL   = "Show soul shards"
     HEALBOT_OPTIONS_SHOWPOWERCOUNTER_MONK   = "Show chi power"
     HEALBOT_OPTIONS_DISABLEHEALBOTSOLO      = "only when solo"
     HEALBOT_OPTIONS_CUSTOM_ALLDISEASE       = "All Disease"

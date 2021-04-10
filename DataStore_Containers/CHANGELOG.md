@@ -1,7 +1,9 @@
 # DataStore_Containers
 
-## r63 (2016-10-26)
+## r64 (2016-10-26)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.007 Commit  
     - Added support for mythic keystones  
 - 9.0.003 Commit  

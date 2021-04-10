@@ -1,5 +1,5 @@
-## Interface: 90002
-## X-Min-Interface: 90002
+## Interface: 90005
+## X-Min-Interface: 90005
 
 ## Title: AAP - Eastern Kingdoms
 ## Notes: Eastern Kingdoms for AAP

@@ -6,8 +6,8 @@ L.removePlayer = "Remove Player"
 
 local loc = GetLocale()
 if loc == "frFR" then
-	--L.addPlayer = "Add Player"
-	--L.removePlayer = "Remove Player"
+	L.addPlayer = "Ajouter un joueur"
+	L.removePlayer = "Supprimer un joueur"
 elseif loc == "deDE" then
 	--L.addPlayer = "Add Player"
 	--L.removePlayer = "Remove Player"

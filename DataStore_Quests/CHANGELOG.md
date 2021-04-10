@@ -1,7 +1,9 @@
 # DataStore_Quests
 
-## r51 (2016-10-30)
+## r52 (2016-10-30)
 
+- 9.0.008 Commit  
+    - TOC Update  
 - 9.0.005 Commit  
     - Fixed the campaign progress quest status  
 - 9.0.004 Commit  

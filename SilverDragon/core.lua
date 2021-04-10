@@ -10,7 +10,7 @@ addon.events = LibStub("CallbackHandler-1.0"):New(addon)
 local Debug
 do
 	local TextDump = LibStub("LibTextDump-1.0")
-	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90005.0'
+	local debuggable = GetAddOnMetadata(myname, "Version") == 'v90005.1'
 	local _window
 	local function GetDebugWindow()
 		if not _window then
