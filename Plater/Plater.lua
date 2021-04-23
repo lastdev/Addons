@@ -733,7 +733,19 @@ Plater.DefaultSpellRangeListF = {
 	[72] = 30, --> warrior fury
 	[73] = 30, --> warrior protect
 	
-	[1444] = 40, --> DAMAGER (low-level chars)
+	-- low-level (without spec)
+	[1444] = 40, --> Initial SHAMAN
+	[1446] = 40, --> Initial WARRIOR
+	[1447] = 40, --> Initial DRUID
+	[1448] = 40, --> Initial HUNTER
+	[1449] = 40, --> Initial MAGE
+	[1450] = 40, --> Initial MONK
+	[1451] = 40, --> Initial PALADIN
+	[1452] = 40, --> Initial PRIEST
+	[1453] = 40, --> Initial ROGUE
+	[1454] = 40, --> Initial WARLOCK
+	[1455] = 40, --> Initial DK
+	[1456] = 40, --> Initial DH
 }
 
 local class_specs_coords = {
@@ -985,6 +997,14 @@ local class_specs_coords = {
 							end
 							LDBIcon:Refresh ("Plater", PlaterDBChr.minimap)
 						end
+						
+						GameCooltip:AddMenu (1, function() Plater.EnableProfiling(true) end, true, nil, nil, "Start profiling", nil, true)
+						GameCooltip:AddIcon ([[Interface\Addons\Plater\media\sphere_full_64]], 1, 1, 14, 14, 0, 1, 0, 1, "red")
+						GameCooltip:AddMenu (1, function() Plater.DisableProfiling() end, true, nil, nil, "Stop profiling", nil, true)
+						GameCooltip:AddIcon ([[Interface\Addons\Plater\media\square_64]], 1, 1, 14, 14, 0, 1, 0, 1, "blue")
+						GameCooltip:AddMenu (1, function() Plater.ShowPerfData() end, true, nil, nil, "Show profiling data", nil, true)
+						GameCooltip:AddIcon ([[Interface\Addons\Plater\media\eye_64]], 1, 1, 14, 14, 0, 1, 0, 1, "green")
+						GameCooltip:AddLine ("$div")
 						GameCooltip:AddMenu (1, disable_minimap, true, nil, nil, "Hide/Show Minimap Icon", nil, true)
 						GameCooltip:AddIcon ([[Interface\Buttons\UI-Panel-HideButton-Disabled]], 1, 1, 14, 14, 7/32, 24/32, 8/32, 24/32, "gray")
 						
@@ -1128,7 +1148,9 @@ local class_specs_coords = {
 			unitFrame.BuffFrame:SetAlpha (1)
 			unitFrame.BuffFrame2:SetAlpha (1)
 			
+			Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 			return
+			
 		elseif (plateFrame [MEMBER_NOCOMBAT] or unitFrame.isWidgetOnlyMode) then
 			if unitFrame.isWidgetOnlyMode then
 				unitFrame:SetAlpha (1)
@@ -1144,6 +1166,7 @@ local class_specs_coords = {
 			unitFrame.BuffFrame:SetAlpha (1)
 			unitFrame.BuffFrame2:SetAlpha (1)
 			
+			Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 			return
 		
 		--the unit is friendly or not using range check and non targets alpha
@@ -1159,6 +1182,8 @@ local class_specs_coords = {
 			
 			plateFrame [MEMBER_RANGE] = true
 			unitFrame [MEMBER_RANGE] = true
+			
+			Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 			return
 		end
 		
@@ -1198,6 +1223,7 @@ local class_specs_coords = {
 		
 		if not rangeChecker then
 			rangeChecker = function (unit)
+				Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
 				return (LibRangeCheck:GetRange(unit) or 0) < (rangeCheckRange or 40)
 			end
 			Plater.GetSpellForRangeCheck()
@@ -2968,11 +2994,17 @@ local class_specs_coords = {
 			--> border
 				--create a border using default borders from the retail game
 				local healthBarBorder = CreateFrame("frame", nil, plateFrame.unitFrame.healthBar, "NamePlateFullBorderTemplate", BackdropTemplateMixin and "BackdropTemplate")
-				healthBarBorder:SetFrameLevel (plateFrame.unitFrame.healthBar:GetFrameLevel() + 1)
+				healthBarBorder.Left:SetDrawLayer("OVERLAY", 6)
+				healthBarBorder.Right:SetDrawLayer("OVERLAY", 6)
+				healthBarBorder.Top:SetDrawLayer("OVERLAY", 6)
+				healthBarBorder.Bottom:SetDrawLayer("OVERLAY", 6)
 				plateFrame.unitFrame.healthBar.border = healthBarBorder
 				
 				local powerBarBorder = CreateFrame("frame", nil, plateFrame.unitFrame.powerBar, "NamePlateFullBorderTemplate", BackdropTemplateMixin and "BackdropTemplate")
-				powerBarBorder:SetFrameLevel (plateFrame.unitFrame.powerBar:GetFrameLevel() + 1)
+				powerBarBorder.Left:SetDrawLayer("OVERLAY", 6)
+				powerBarBorder.Right:SetDrawLayer("OVERLAY", 6)
+				powerBarBorder.Top:SetDrawLayer("OVERLAY", 6)
+				powerBarBorder.Bottom:SetDrawLayer("OVERLAY", 6)
 				plateFrame.unitFrame.powerBar.border = powerBarBorder
 				powerBarBorder:SetVertexColor (0, 0, 0, 1)
 
@@ -3229,6 +3261,8 @@ local class_specs_coords = {
 			healthBar.ExecuteGlowUp:Hide()
 			healthBar.ExecuteGlowDown:Hide()
 			
+			--reset color values
+			healthBar.R, healthBar.G, healthBar.B = nil, nil, nil
 			
 			local actorType
 			
@@ -3346,8 +3380,6 @@ local class_specs_coords = {
 			unitFrame.actorType = actorType
 			unitFrame.ActorType = actorType --exposed to scripts
 			
-			--reset color values
-			healthBar.R, healthBar.G, healthBar.B = nil, nil, nil
 			--sending true to force the color update when the color overrider is enabled
 			Plater.FindAndSetNameplateColor (unitFrame, true)
 			
@@ -4550,6 +4582,8 @@ function Plater.OnInit() --private --~oninit ~init
 				local originalColor = plateFrame.PlateConfig.healthbar_color
 				local r, g, b = DF:LerpLinearColor (abs (currentHealth / currentHealthMax - 1), 1, originalColor[1], originalColor[2], originalColor[3], 1, .4, 0)
 				Plater.ChangeHealthBarColor_Internal (self, r, g, b, (originalColor[4] or 1), true)
+			--else
+				--Plater.ChangeHealthBarColor_Internal (self, unpack (plateFrame.PlateConfig.healthbar_color))
 			end
 			
 			Plater.CheckLifePercentText (unitFrame)
@@ -5129,9 +5163,9 @@ end
 			if (DB_USE_HEALTHCUTOFF and not unitFrame.IsSelf and not unitFrame.PlayerCannotAttack) then
 				local healthPercent = (healthBar.currentHealth or 1) / (healthBar.currentHealthMax or 1)
 				if (healthPercent < DB_HEALTHCUTOFF_AT) then
-					if (not healthBar.healthCutOff:IsShown() or healthBar.healthCutOff.isLower) then
-						healthBar.healthCutOff.isUpper = true
-						healthBar.healthCutOff.isLower = false
+					if (not healthBar.healthCutOff:IsShown() or healthBar.healthCutOff.isUpper) then
+						healthBar.healthCutOff.isUpper = false
+						healthBar.healthCutOff.isLower = true
 						healthBar.healthCutOff:ClearAllPoints()
 						healthBar.healthCutOff:SetSize (healthBar:GetHeight(), healthBar:GetHeight())
 						healthBar.healthCutOff:SetPoint ("center", healthBar, "left", healthBar:GetWidth() * DB_HEALTHCUTOFF_AT, 0)
@@ -5160,9 +5194,9 @@ end
 					
 					unitFrame.InExecuteRange = true
 				elseif (healthPercent > DB_HEALTHCUTOFF_AT_UPPER and healthPercent < 0.999) then
-					if (not healthBar.healthCutOff:IsShown() or healthBar.healthCutOff.isUpper) then
-						healthBar.healthCutOff.isUpper = false
-						healthBar.healthCutOff.isLower = true
+					if (not healthBar.healthCutOff:IsShown() or healthBar.healthCutOff.isLower) then
+						healthBar.healthCutOff.isUpper = true
+						healthBar.healthCutOff.isLower = false
 						healthBar.healthCutOff:ClearAllPoints()
 						healthBar.healthCutOff:SetSize (healthBar:GetHeight(), healthBar:GetHeight())
 						healthBar.healthCutOff:SetPoint ("center", healthBar, "right", - (healthBar:GetWidth() * (1-DB_HEALTHCUTOFF_AT_UPPER)), 0)
@@ -5624,11 +5658,13 @@ end
 									--check if this isn't a false positive where the mob target another unit to cast a spell
 									local hasTankAggro = false
 									for tankName, _ in pairs (TANK_CACHE) do
-										local threatStatus = UnitThreatSituation (tankName, self.displayedUnit)
-										if (threatStatus and threatStatus >= 2) then
-											--a tank has aggro on this unit, it is a false positive
-											hasTankAggro = true
-											break
+										if UnitExists(tankName) then
+											local threatStatus = UnitThreatSituation (tankName, self.displayedUnit)
+											if (threatStatus and threatStatus >= 2) then
+												--a tank has aggro on this unit, it is a false positive
+												hasTankAggro = true
+												break
+											end
 										end
 									end
 									
@@ -6675,6 +6711,17 @@ end
 						end
 					else
 						Plater.ChangeHealthBarColor_Internal (healthBar, unpack (DB_PLATE_CONFIG [actorType].fixed_class_color))
+					end
+				elseif unitFrame.IsSelf then
+					--refresh color
+					if (plateFrame.PlateConfig.healthbar_color_by_hp) then
+						local currentHealth = healthBar.currentHealth
+						local currentHealthMax = healthBar.currentHealthMax
+						local originalColor = plateFrame.PlateConfig.healthbar_color
+						local r, g, b = DF:LerpLinearColor (abs (currentHealth / currentHealthMax - 1), 1, originalColor[1], originalColor[2], originalColor[3], 1, .4, 0)
+						Plater.ChangeHealthBarColor_Internal (healthBar, r, g, b, (originalColor[4] or 1), true)
+					else
+						Plater.ChangeHealthBarColor_Internal (healthBar, unpack (DB_PLATE_CONFIG [actorType].healthbar_color))
 					end
 				else
 					-- could be a pet
@@ -9607,8 +9654,8 @@ end
 			["CommHandler"] = true,
 			["CommReceived"] = true,
 			["GetAllShownPlates"] = false,
-			["GetHashKey"] = true,
-			["IsShowingResourcesOnTarget"] = true,
+			["GetHashKey"] = false,
+			["IsShowingResourcesOnTarget"] = false,
 			["OnRetailNamePlateShow"] = true,
 			["UpdateSelfPlate"] = true,
 			["CastBarOnShow_Hook"] = true,
@@ -9727,7 +9774,6 @@ end
 		["WeakAurasSaved"] = true,
 	}
 	
-	--UNUSED (for now)
 	--this allows full shadowing on 'Plater' global with the filter above
 	local function buildShadowTable(privateFunctionsTable, tableKey, shadowTable)
 		if not privateFunctionsTable then return end
@@ -9901,9 +9947,9 @@ end
 			else
 				--store the function to execute
 				--setfenv (compiledScript, functionFilter)
-				if not Plater.db.profile.shadowMode then
+				if (Plater.db.profile.shadowMode and Plater.db.profile.shadowMode == 0) then -- legacy mode
 					DF:SetEnvironment(compiledScript, nil, platerModEnvironment)
-				elseif Plater.db.profile.shadowMode == 1 then
+				elseif (not Plater.db.profile.shadowMode or Plater.db.profile.shadowMode == 1) then
 					SetPlaterEnvironment(compiledScript)
 				end
 				
@@ -10080,9 +10126,9 @@ end
 				else
 					--store the function to execute inside the global script object
 					--setfenv (compiledScript, functionFilter)
-					if (not Plater.db.profile.shadowMode) then
+					if (Plater.db.profile.shadowMode and Plater.db.profile.shadowMode == 0) then -- legacy mode
 						DF:SetEnvironment(compiledScript, nil, platerModEnvironment)
-					elseif (Plater.db.profile.shadowMode == 1) then
+					elseif (not Plater.db.profile.shadowMode or Plater.db.profile.shadowMode == 1) then
 						SetPlaterEnvironment(compiledScript)
 					end
 					
@@ -10194,9 +10240,9 @@ end
 			else
 				--get the function to execute
 				--setfenv (compiledScript, functionFilter)
-				if (not Plater.db.profile.shadowMode) then
+				if (Plater.db.profile.shadowMode and Plater.db.profile.shadowMode == 0) then -- legacy mode
 					DF:SetEnvironment(compiledScript, nil, platerModEnvironment)
-				elseif (Plater.db.profile.shadowMode == 1) then
+				elseif (not Plater.db.profile.shadowMode or Plater.db.profile.shadowMode == 1) then
 					SetPlaterEnvironment(compiledScript)
 				end
 				scriptFunctions [scriptType] = compiledScript()

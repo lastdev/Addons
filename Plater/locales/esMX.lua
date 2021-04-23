@@ -104,4 +104,3 @@ L["OPTIONS_THREAT_MODIFIERS_HEALTHBARCOLOR"] = "Color de barra de salud"
 L["OPTIONS_THREAT_MODIFIERS_NAMECOLOR"] = "Nombre de color"
 L["OPTIONS_XOFFSET"] = "Vértice X"
 L["OPTIONS_YOFFSET"] = "Vértice Y"
-

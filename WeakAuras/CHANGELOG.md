@@ -1,34 +1,33 @@
-# [3.2.2](https://github.com/WeakAuras/WeakAuras2/tree/3.2.2) (2021-03-14)
+# [3.2.3](https://github.com/WeakAuras/WeakAuras2/tree/3.2.3) (2021-04-11)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.2.1...3.2.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.2.2...3.2.3)
 
 ## Highlights
 
- - DBM triggers rework
-- Bug fixes 
+ - Bug fixes
+- New border shapes 
 
 ## Commits
 
-InfusOnWoW (2):
+InfusOnWoW (4):
 
-- Fix aura_env being unavailable in some condition checks
-- Fix Legendary ID mapping
+- Don't reset Search filter for most aura changes
+- Distinguish between Rated and Unrated PVP in Instance Size Type
+- Update GCD if the duration changes
+- BT2: Show spell name to exact spell id field
 
-Stanzilla (5):
+Stanzilla (3):
 
-- Publish Classic to Wago Addons as well
-- Publish Retail to Wago Addons as well
 - Update WeakAurasModelPaths from wow.tools
-- Update WeakAurasModelPaths from wow.tools
+- Switch to the packager's new multi toc feature
 - Update WeakAurasModelPaths from wow.tools
 
-mrbuds (7):
+asaka-wa (1):
 
-- fix nameFunc for "Cooldown Ready (Equipment Slot)" trigger fixes #2976
-- set tocversion as an internal field for import diff
-- add DBT (DBM options) to .luacheckrc
-- DBM bars options table was moved
-- handle BigWigs_PauseBar and BigWigs_ResumeBar events
-- handle DBM_TimerPause & DBM_TimerResume callbacks fixes #2951
-- add state.paused support for timed progress auras
+- Add border shapes (#3012)
+
+mrbuds (2):
+
+- ensure a few "percentX" property doesn't return a boolean fix type error when they are use in conditions
+- fix potential nil error in dbm & bw triggers fixes #2982
 

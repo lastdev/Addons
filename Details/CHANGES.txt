@@ -1,34 +1,10 @@
-tag 749854d063dc8bee0fe7a99380a568c9c97b39a7 DetailsRetail.9.0.5.8373.144
+tag 062fd2ce6ca848d52cfd1b935777c2314acd57f0 DetailsRetail.9.0.5.8406.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Apr 1 10:29:59 2021 -0300
+Date:	Tue Apr 13 18:03:49 2021 -0300
 
-commit f82f706bfa75a40465c12f7f24bafc2688255ae2
+commit 4a28c63b4e0d2f9fd74338e6146e15522f3ef3b8
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Apr 1 10:28:26 2021 -0300
+Date:   Tue Apr 13 18:02:15 2021 -0300
 
-    Version Update
-
-commit d7718caacf020baa630d55dbe09fa0a5f084423d
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Apr 1 10:23:05 2021 -0300
-
-    Framework update and Stop reset max segments amount on logon
-
-commit 476e6161474c1bda904c01d5a514222fcb1114e2
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 26 15:17:55 2021 -0300
-
-    Make Monk's Storm, Earth, and Fire adds have their names in the charts
-
-commit 94887b9db72ff1abb3e01fc780abe8c2fbaa0e99
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Mar 17 19:58:05 2021 -0300
-
-    Remove debug prints
-
-commit 842b6f27a118a6314b2e6008c408b24ba8c076ac
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Mar 17 19:57:33 2021 -0300
-
-    Added Reset Overall Data on Torghast
+    Fixed combability issues with the tbc beta version
 

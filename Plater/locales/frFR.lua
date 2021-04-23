@@ -105,4 +105,3 @@ L["OPTIONS_THREAT_MODIFIERS_HEALTHBARCOLOR"] = "Couleur de la Barre de santé."
 L["OPTIONS_THREAT_MODIFIERS_NAMECOLOR"] = "Nom de la couleur"
 L["OPTIONS_XOFFSET"] = "Décalage X"
 L["OPTIONS_YOFFSET"] = "Décalage Y"
-

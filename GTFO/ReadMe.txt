@@ -1612,3 +1612,7 @@ Change Log:
 4.62
 * Updated for patch 9.0.5
 * Improved additional debugging mode
+
+4.62.1
+* Added Shadowlands spells (world)
+* Added SL spells for Castle Nathria
