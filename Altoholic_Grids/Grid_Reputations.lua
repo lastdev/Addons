@@ -254,6 +254,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2162), icon = "Inv_tabard_stormswake" },
 			{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
 			{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
+			{ name = DataStore:GetFactionName(2400), icon = "inv_faction_akoan" },
 		},
 		{	-- [2]
 			name = FACTION_HORDE,
@@ -265,6 +266,7 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2158) or "Voldunai", icon = "Inv_tabard_vulpera" },
 			{ name = DataStore:GetFactionName(2164), icon = "Inv_tabard_championsofazeroth" },
 			{ name = DataStore:GetFactionName(2163), icon = "Inv_tabard_tortollanseekers" },
+			{ name = DataStore:GetFactionName(2373), icon = "inv_faction_unshackled" },
 		},
 		{	-- [3]
 			name = OTHER,
@@ -516,7 +518,7 @@ local callbacks = {
 	RowSetup = function(self, rowFrame, dataRowID)
 			currentFaction = view[dataRowID]
 
-			rowFrame.Name.Text:SetText(colors.white .. currentFaction.name)
+			rowFrame.Name.Text:SetText(format("%s%s", colors.white, currentFaction.name))
 			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
 	RowOnEnter = function()	end,

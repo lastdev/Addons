@@ -15,9 +15,9 @@ local addonList = {
 	"Altoholic_Grids",
 }
 
-local url1 = "http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx"
-local url2 = "http://www.wowinterface.com/downloads/info8533-Altoholic.html"
-local url3 = "http://wow.curseforge.com/addons/altoholic/localization/"
+local url1 = "https://www.curseforge.com/wow/addons/altoholic"
+local url2 = "https://www.wowinterface.com/downloads/info8533-Altoholic.html"
+local url3 = "https://www.curseforge.com/wow/addons/altoholic/localization"
 
 local help = {
 	{	name = "General",
@@ -120,6 +120,24 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "9.0.009 Changes",
+		bulletedList = {
+			"Added missing BfA reputations.",
+			"Updated LibBabble-Factions.",
+			"Added the missing tooltip option for the extra information added in the previous release (doh!).",
+			"Fixed profession cooldowns not properly updating the agenda.",
+			"DataStore_Auctions : added 2 options to get a reminder when an alt has not visited the auction house in a long time.",
+			"If an alt has not visited the AH in 15 days (default value, configurable from 10 to 30), and this alt has placed auctions, the player will be reminded to visit the AH and check their mails.",
+			"Added support for LibDeflate, data transferred using the account sharing feature is now compressed, and the whole process is now much faster. Note that data transfer is still throttled, while the whole process will be 3-4 times faster than it was, it will never be lightning fast.",
+		},
+	},
+	{	name = "9.0.008 Changes",
+		bulletedList = {
+			"Added an option to display an item's expansion level in the tooltip.",
+			"Created a new library, LibItemInfo, with the long term goal to deprecate LibPeriodicTable and offer a different kind of information.",
+			"This new library currently contains information about reagents and some additional items, to indicate to which expansion they belong, and in which bag they could be stored.", 
+		},
+	},
 	{	name = "9.0.007 Changes",
 		bulletedList = {
 			"Summary Tab => Fixed the faction filter not working properly for languages other than English. This was due to the character faction being saved in English instead of localized.",
@@ -394,6 +412,7 @@ function addon:SetupOptions()
 	f.IncludeGuildBankInTotal.Text:SetText(L["Include guild bank count in the total count"])
 	f.ShowGuildBankCountPerTab.Text:SetText(L["Detailed guild bank count"])
 	f.ShowHearthstoneCount.Text:SetText(L["Show counters for hearthstones"])
+	f.ShowItemXPack.Text:SetText(L["Show extended item information"])
 	L["Show item source"] = nil
 	L["Show item count per character"] = nil
 	L["Show item count without details"] = nil
@@ -407,6 +426,7 @@ function addon:SetupOptions()
 	L["Show counters for all accounts"] = nil
 	L["Include guild bank count in the total count"] = nil
 	L["Show counters for hearthstones"] = nil
+	L["Show extended item information"] = nil
 	
 	-- ** Calendar **
 	f = AltoholicCalendarOptions

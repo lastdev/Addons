@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2424, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210325221206")
+mod:SetRevision("20210614184808")
 mod:SetCreatureID(167406)
 mod:SetEncounterID(2407)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -20,7 +20,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED_DOSE 326699",
 	"SPELL_PERIODIC_DAMAGE 327992",
 	"SPELL_PERIODIC_MISSED 327992",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
@@ -128,7 +127,6 @@ mod:AddSetIconOption("SetIconOnImpale", 329951, true, false, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnFatalFinesse", 332794, true, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnBalefulShadows", 344313, false, true, {7, 8})
 
-mod.vb.phase = 1
 mod.vb.priceCount = 0
 mod.vb.painCount = 0
 mod.vb.RavageCount = 0
@@ -138,7 +136,7 @@ mod.vb.HandCount = 0
 mod.vb.addCount = 0
 mod.vb.DebuffCount = 0
 mod.vb.DebuffIcon = 1
-mod.vb.addIcon = 8
+--mod.vb.addIcon = 8
 mod.vb.painCasting = false
 local expectedStacks = 6
 local P3Transition = false
@@ -275,7 +273,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(stage2Adds)
 	table.wipe(deadAdds)
 	table.wipe(castsPerGUID)
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.priceCount = 0
 	self.vb.painCount = 0
 	self.vb.RavageCount = 0
@@ -353,7 +351,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCommandRavage:Play("specialsoon")
 		timerCommandRavageCD:Start(self:IsEasy() and 59.5 or 57.3, self.vb.RavageCount+1)
 	elseif spellId == 328117 then--March of the Penitent (first intermission)
-		self.vb.phase = 1.5
+		self:SetStage(1.5)
 		specWarnMarchofthePenitent:Show()
 		timerCleansingPainCD:Stop()
 		timerBloodPriceCD:Stop()
@@ -382,10 +380,10 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 344776 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
-			if self.Options.SetIconOnBalefulShadows and self.vb.addIcon > 3 then--Only use up to 5 icons
-				self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, 0.2, 12, "SetIconOnBalefulShadows")
-			end
-			self.vb.addIcon = self.vb.addIcon - 1
+--			if self.Options.SetIconOnBalefulShadows and self.vb.addIcon > 3 then--Only use up to 5 icons
+--				self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, 0.2, 12, "SetIconOnBalefulShadows")
+--			end
+--			self.vb.addIcon = self.vb.addIcon - 1
 		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
@@ -434,7 +432,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnCommandMassacre:Play("watchstep")--Perhaps farfromline?
 		timerCommandMassacreCD:Start(self:IsMythic() and 41.4 or 47.4, self.vb.MassacreCount+1)--Mythic 41-45
 	elseif spellId == 326005 then
-		self.vb.phase = 3
+		self:SetStage(3)
 		self.vb.priceCount = 0
 		self.vb.painCount = 0--reused for shattering pain
 		self.vb.RavageCount = 0
@@ -561,15 +559,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnNightHunterTarget:CombinedShow(0.5, args.destName)
 				specWarnNightHunterTarget:ScheduleVoice(0.5, "helpsoak")
 			end
-		else
-			warnNightHunter:Cancel()
-			warnNightHunter:CombinedShow(0.5, args.destName)
 		end
+		warnNightHunter:CombinedShow(0.5, args.destName)
 		self.vb.DebuffIcon = self.vb.DebuffIcon + 1
-		if self.vb.DebuffIcon > 8 then
-			self.vb.DebuffIcon = 1
-			DBM:AddMsg("Cast event for Night Hunter is wrong, doing backup icon reset")
-		end
 	elseif spellId == 327992 and args:IsPlayer() and self:AntiSpam(2, 2) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
@@ -655,7 +647,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnWrackingPainTaunt:Play("tauntboss")
 		end
 	elseif spellId == 344313 then
-		self.vb.addIcon = 8
+--		self.vb.addIcon = 8
 		warnBalefulShadows:Show()
 	elseif spellId == 338738 then--Infinity's Toll being applied (Players leaving mind)
 		if args.sourceGUID == playerGUID then
@@ -667,6 +659,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		local timer = Timers[difficultyName][self.vb.phase][181089][self.vb.addCount+1]
 		if timer then
 			timerCrimsonCabalistsCD:Start(timer, self.vb.addCount+1)
+		end
+		if self.Options.SetIconOnBalefulShadows then--Only use up to 5 icons
+			self:ScanForMobs(175205, 0, 8, 2, 0.2, 25, "SetIconOnBalefulShadows")
 		end
 	end
 end
@@ -695,7 +690,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 328117 and self:IsInCombat() then--March of the Penitent
-		self.vb.phase = 2
+		self:SetStage(2)
 		self.vb.painCount = 0
 		self.vb.DebuffCount = 0
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
@@ -708,7 +703,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerWrackingPainCD:Start(21.1, 1)
 			timerHandofDestructionCD:Start(44.2, 1)
 			timerCommandMassacreCD:Start(63.7, 1)
-			timerNextPhase:Start(219.4)
+			timerNextPhase:Start(234.4)
 		else
 			--Remornia
 			timerImpaleCD:Start(27.5, 1)
@@ -717,6 +712,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerWrackingPainCD:Start(21.1, 1)
 			timerHandofDestructionCD:Start(46.6, 1)
 			timerCommandMassacreCD:Start(64.9, 1)
+			timerNextPhase:Start(219.4)
 		end
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(DBM_CORE_L.ADDS)

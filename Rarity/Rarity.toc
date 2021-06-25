@@ -2,7 +2,7 @@
 ## Interface: 90005
 ## X-Min-Interface: 90005
 ## Title: Rarity
-## Version: 1.0 (r707-release-2)
+## Version: 1.0 (r708-release-2)
 
 ## Notes: Tracks rare drops, including companions and mounts
 ## Notes-ruRU: Примечания
@@ -52,6 +52,8 @@ DB\SharedConstants.lua
 DB\Spells.lua
 
 # Collectibles Database (makes use of the shared constants, so load those first)
+DB\Item.lua
+DB\Schema.lua
 DB\ItemDB.lua
 
 ## Mounts
@@ -91,7 +93,6 @@ DB\Toys\BattleForAzeroth.lua
 DB\Toys\Shadowlands.lua
 
 # Utility/Helpers
-Utils\DatabaseMaintenanceHelper.lua
 Utils\DebugCache.lua
 Utils\PrettyPrint.lua
 Utils\Sorting.lua
@@ -114,5 +115,6 @@ Core\Session.lua
 Core\Settings.lua
 Core\Statistics.lua
 Core\Tracking.lua
+Core\Validation.lua
 Core.lua
 Options_Defaults.lua

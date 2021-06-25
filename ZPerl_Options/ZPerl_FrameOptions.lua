@@ -2,9 +2,9 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+XPerl_SetModuleRevision("$Revision: 60939e7684457a8c1cafb041c6be7812d55442fc $")
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -13,6 +13,88 @@ for k, v in pairs(localGroups) do
 end
 
 local protected = { }
+
+-- DefaultRaidClasses
+local function DefaultRaidClasses()
+	if IsClassic then
+		return {
+			{enable = true, name = "WARRIOR"},
+			--{enable = true, name = "DEATHKNIGHT"},
+			{enable = true, name = "ROGUE"},
+			{enable = true, name = "HUNTER"},
+			{enable = true, name = "MAGE"},
+			{enable = true, name = "WARLOCK"},
+			{enable = true, name = "PRIEST"},
+			{enable = true, name = "DRUID"},
+			{enable = true, name = "SHAMAN"},
+			{enable = true, name = "PALADIN"},
+			--{enable = true, name = "MONK"},
+			--{enable = true, name = "DEMONHUNTER"},
+		}
+	else
+		return {
+			{enable = true, name = "WARRIOR"},
+			{enable = true, name = "DEATHKNIGHT"},
+			{enable = true, name = "ROGUE"},
+			{enable = true, name = "HUNTER"},
+			{enable = true, name = "MAGE"},
+			{enable = true, name = "WARLOCK"},
+			{enable = true, name = "PRIEST"},
+			{enable = true, name = "DRUID"},
+			{enable = true, name = "SHAMAN"},
+			{enable = true, name = "PALADIN"},
+			{enable = true, name = "MONK"},
+			{enable = true, name = "DEMONHUNTER"},
+		}
+	end
+end
+
+-- ValidateClassNames
+local function ValidateClassNames(part)
+	if not part then
+		return
+	end
+	-- This should never happen, but I'm sure someone will find a way to break it
+
+	local list
+	if IsClassic then
+		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false, WARLOCK = false, PALADIN = false}
+	else
+		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false, WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false, DEMONHUNTER = false}
+	end
+	local valid
+	if (part.class) then
+		local classCount = 0
+		for i, info in pairs(part.class) do
+			if (type(info) == "table" and info.name) then
+				classCount = classCount + 1
+			end
+		end
+		if (classCount == WoWclassCount) then
+			valid = true
+		end
+
+		if (valid) then
+			for i = 1, WoWclassCount do
+				if (part.class[i]) then
+					list[part.class[i].name] = true
+				end
+			end
+		end
+	end
+
+	if (valid) then
+		for k, v in pairs(list) do
+			if (not v) then
+				valid = nil
+			end
+		end
+	end
+
+	if (not valid) then
+		part.class = DefaultRaidClasses(true)
+	end
+end
 
 function XPerl_OptionsFrame_DisableSlider(slider)
 	local name = slider:GetName()
@@ -663,8 +745,9 @@ local function CopySelectedSettings()
 	end
 
 	XPerl_GiveConfig()
+	XPerl_StartupSpellRange() -- Re-validate the spell range stuff
 
-	XPerl_StartupSpellRange()			-- Re-validate the spell range stuff
+	ValidateClassNames(XPerlDB.raid)
 
 	XPerl_Options:Hide()
 	XPerl_Options:Show()
@@ -991,88 +1074,6 @@ function XPerl_Options_DoRangeTooltip(self)
 	end
 end
 
--- DefaultRaidClasses
-local function DefaultRaidClasses()
-	if IsClassic then
-		return {
-			{enable = true, name = "WARRIOR"},
-			--{enable = true, name = "DEATHKNIGHT"},
-			{enable = true, name = "ROGUE"},
-			{enable = true, name = "HUNTER"},
-			{enable = true, name = "MAGE"},
-			{enable = true, name = "WARLOCK"},
-			{enable = true, name = "PRIEST"},
-			{enable = true, name = "DRUID"},
-			{enable = true, name = "SHAMAN"},
-			{enable = true, name = "PALADIN"},
-			--{enable = true, name = "MONK"},
-			--{enable = true, name = "DEMONHUNTER"},
-		}
-	else
-		return {
-			{enable = true, name = "WARRIOR"},
-			{enable = true, name = "DEATHKNIGHT"},
-			{enable = true, name = "ROGUE"},
-			{enable = true, name = "HUNTER"},
-			{enable = true, name = "MAGE"},
-			{enable = true, name = "WARLOCK"},
-			{enable = true, name = "PRIEST"},
-			{enable = true, name = "DRUID"},
-			{enable = true, name = "SHAMAN"},
-			{enable = true, name = "PALADIN"},
-			{enable = true, name = "MONK"},
-			{enable = true, name = "DEMONHUNTER"},
-		}
-	end
-end
-
--- ValidateClassNames
-local function ValidateClassNames(part)
-	if not part then
-		return
-	end
-	-- This should never happen, but I'm sure someone will find a way to break it
-
-	local list
-	if IsClassic then
-		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false}
-	else
-		list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false, HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false, DEMONHUNTER = false}
-	end
-	local valid
-	if (part.class) then
-		local classCount = 0
-		for i, info in pairs(part.class) do
-			if (type(info) == "table" and info.name) then
-				classCount = classCount + 1
-			end
-		end
-		if (classCount == WoWclassCount) then
-			valid = true
-		end
-
-		if (valid) then
-			for i = 1, WoWclassCount do
-				if (part.class[i]) then
-					list[part.class[i].name] = true
-				end
-			end
-		end
-	end
-
-	if (valid) then
-		for k, v in pairs(list) do
-			if (not v) then
-				valid = nil
-			end
-		end
-	end
-
-	if (not valid) then
-		part.class = DefaultRaidClasses(true)
-	end
-end
-
 -- SetClassNames
 local function SetClassNames(self)
 	ValidateClassNames(XPerlDB.raid)
@@ -1086,7 +1087,6 @@ local function SetClassNames(self)
 		end
 	end
 end
-
 
 -- XPerl_Options_MoveRaidClassUp
 function XPerl_Options_MoveRaidClassUp(self)

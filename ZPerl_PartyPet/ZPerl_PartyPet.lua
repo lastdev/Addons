@@ -13,13 +13,13 @@ XPerl_RequestConfig(function(New)
 	for k, v in pairs(PartyPetFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local AllPetFrames = {}
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local UnitName = UnitName
 local UnitHealth = UnitHealth

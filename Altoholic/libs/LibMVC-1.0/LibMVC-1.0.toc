@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 90005
 
 ## Title: Lib: LibMVC
 ## Notes: LibMVC

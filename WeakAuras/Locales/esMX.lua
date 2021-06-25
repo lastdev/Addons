@@ -19,6 +19,12 @@ L["%s - %i. Trigger"] = "%s - %i. Desencadenador"
 L["%s - Alpha Animation"] = "%s - Animación alfa"
 L["%s - Color Animation"] = "%s - Animación de color"
 L["%s - Condition Custom Chat"] = "%s - Condición chat personalizado"
+--[[Translation missing --]]
+L["%s - Custom Anchor"] = "%s - Custom Anchor"
+--[[Translation missing --]]
+L["%s - Custom Grow"] = "%s - Custom Grow"
+--[[Translation missing --]]
+L["%s - Custom Sort"] = "%s - Custom Sort"
 L["%s - Custom Text"] = "%s - Texto personalizado"
 L["%s - Finish"] = "%s - Terminar"
 L["%s - Finish Action"] = "%s - Terminar acción"
@@ -32,10 +38,14 @@ L["%s - Start Action"] = "%s - Iniciar acción"
 L["%s - Start Custom Text"] = "%s - Iniciar texto personalizado"
 L["%s - Translate Animation"] = "%s - Traducir animación"
 L["%s - Trigger Logic"] = "%s - Lógica del desencadenador"
+--[[Translation missing --]]
+L["%s Custom Variables"] = "%s Custom Variables"
 L["%s Duration Function"] = "%s Duración de la función"
 L["%s Icon Function"] = "%s Icono de la función"
 L["%s Name Function"] = "%s Nombre de la función"
 L["%s Overlay Color"] = "%s Color de superposición"
+--[[Translation missing --]]
+L["%s Overlay Function"] = "%s Overlay Function"
 L["%s Stacks Function"] = "%s Función de Acumulación"
 L["%s Texture Function"] = "%s Función de la textura"
 L["%s total auras"] = "%s Auras totales"
@@ -82,6 +92,8 @@ L["AbbreviateLargeNumbers (Blizzard)"] = "AbreviarNúmerosGrandes (Blizzard)"
 L["AbbreviateNumbers (Blizzard)"] = "AbreviarNúmeros (Blizzard)"
 L["Absorb"] = "Absorber"
 L["Absorb Display"] = "Mostrar absorción"
+--[[Translation missing --]]
+L["Absorb Heal Display"] = "Absorb Heal Display"
 L["Absorbed"] = "Absorbido"
 L["Action Button Glow"] = "Botón de acción resplandeciente"
 L["Action Usable"] = "Acción utilizable"
@@ -212,6 +224,8 @@ L["BG-System Neutral"] = "Campo de batalla-Sistema neutral"
 L["Big Number"] = "Big Number"
 L["BigWigs Addon"] = "Addon de BigWigs"
 L["BigWigs Message"] = "Mensaje de BigWigs"
+--[[Translation missing --]]
+L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "Temporizador de BigWigs"
 --[[Translation missing --]]
 L["Black Wing Lair"] = "Black Wing Lair"
@@ -337,6 +351,8 @@ L["Crushing"] = "Golpe aplastador"
 L["C'thun"] = "C'thun"
 --[[Translation missing --]]
 L["Current Experience"] = "Current Experience"
+--[[Translation missing --]]
+L["Current Movement Speed (%)"] = "Current Movement Speed (%)"
 --[[Translation missing --]]
 L[ [=[Current Zone Group
 ]=] ] = [=[Current Zone Group
@@ -620,6 +636,10 @@ L["Haste (%)"] = "Haste (%)"
 --[[Translation missing --]]
 L["Haste Rating"] = "Haste Rating"
 L["Heal"] = "Cura"
+--[[Translation missing --]]
+L["Heal Absorb"] = "Heal Absorb"
+--[[Translation missing --]]
+L["Heal Absorbed"] = "Heal Absorbed"
 L["Health"] = "Salud"
 L["Health (%)"] = "Salud (%)"
 --[[Translation missing --]]
@@ -795,6 +815,8 @@ L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 --[[Translation missing --]]
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
 --[[Translation missing --]]
+L["Legacy Spellname"] = "Legacy Spellname"
+--[[Translation missing --]]
 L["Length"] = "Length"
 L["Level"] = "Nivel"
 --[[Translation missing --]]
@@ -891,8 +913,6 @@ L["Monster Yell"] = "Monstruo - Susurrar"
 L["Most remaining time"] = "Most remaining time"
 L["Mounted"] = "Montado"
 L["Mouse Cursor"] = "Cursor"
---[[Translation missing --]]
-L["Movement Speed (%)"] = "Movement Speed (%)"
 --[[Translation missing --]]
 L["Movement Speed Rating"] = "Movement Speed Rating"
 L["Multi-target"] = "Objetivo múltiple"
@@ -995,6 +1015,8 @@ L["Orbit"] = "Orbitar"
 L["Orientation"] = "Orientation"
 --[[Translation missing --]]
 L["Ossirian the Unscarred"] = "Ossirian the Unscarred"
+--[[Translation missing --]]
+L["Other"] = "Other"
 --[[Translation missing --]]
 L["Other Addons"] = "Other Addons"
 --[[Translation missing --]]
@@ -1198,6 +1220,8 @@ L["Round Mode"] = "Round Mode"
 L["Ruins of Ahn'Qiraj"] = "Ruins of Ahn'Qiraj"
 --[[Translation missing --]]
 L["Run Custom Code"] = "Run Custom Code"
+--[[Translation missing --]]
+L["Run Speed (%)"] = "Run Speed (%)"
 L["Rune"] = "Runa"
 L["Rune #1"] = "Runa #1"
 L["Rune #2"] = "Runa #2"
@@ -1228,6 +1252,8 @@ L["Separator"] = "Separator"
 --[[Translation missing --]]
 L["Set IDs can be found on websites such as classic.wowhead.com/item-sets"] = "Set IDs can be found on websites such as classic.wowhead.com/item-sets"
 --[[Translation missing --]]
+L["Set IDs can be found on websites such as tbc.wowhead.com/item-sets"] = "Set IDs can be found on websites such as tbc.wowhead.com/item-sets"
+--[[Translation missing --]]
 L["Set IDs can be found on websites such as wowhead.com/item-sets"] = "Set IDs can be found on websites such as wowhead.com/item-sets"
 --[[Translation missing --]]
 L["Set Maximum Progress"] = "Set Maximum Progress"
@@ -1249,6 +1275,8 @@ L["Show Code"] = "Mostrar código"
 --[[Translation missing --]]
 L["Show GCD"] = "Show GCD"
 L["Show Global Cooldown"] = "Mostrar recargas globales"
+--[[Translation missing --]]
+L["Show Heal Absorb"] = "Show Heal Absorb"
 --[[Translation missing --]]
 L["Show Incoming Heal"] = "Show Incoming Heal"
 --[[Translation missing --]]
@@ -1312,8 +1340,6 @@ L["Source Unit"] = "Unidad de origen"
 --[[Translation missing --]]
 L["Source Unit Name/Realm"] = "Source Unit Name/Realm"
 --[[Translation missing --]]
-L["Source: "] = "Source: "
---[[Translation missing --]]
 L["Space"] = "Space"
 L["Spacing"] = "Espaciar"
 --[[Translation missing --]]
@@ -1348,6 +1374,8 @@ L["Spiral In And Out"] = "Espiral hacia adentro y afuera"
 --[[Translation missing --]]
 L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Acumulaciones"
+--[[Translation missing --]]
+L["Stage"] = "Stage"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 --[[Translation missing --]]

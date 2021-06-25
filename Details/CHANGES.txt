@@ -1,10 +1,28 @@
-tag 062fd2ce6ca848d52cfd1b935777c2314acd57f0 DetailsRetail.9.0.5.8406.144
+tag f6878036da75dda78d50c13578cc18385f1a4815 DetailsRetail.9.0.5.8516.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Apr 13 18:03:49 2021 -0300
+Date:	Mon May 31 15:40:31 2021 -0300
 
-commit 4a28c63b4e0d2f9fd74338e6146e15522f3ef3b8
+commit 361264a5f432c9fda2f52698c4daa0d0c2601e43
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Apr 13 18:02:15 2021 -0300
+Date:   Mon May 31 15:39:20 2021 -0300
 
-    Fixed combability issues with the tbc beta version
+    Version stuff
+
+commit 3374a15932e8307b32dd497a0f316fc3faa821ad
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Mon May 31 13:15:20 2021 -0500
+
+    Tiny Threat Resizing Fixes
+
+commit 3374a15932e8307b32dd497a0f316fc3faa821ad
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Mon May 31 13:15:20 2021 -0500
+
+    Tiny Threat Resizing Fixes
+
+commit 4b6c229d8b93f2aeaa6442f286b9258469ca4cd1
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sat May 29 20:02:17 2021 -0300
+
+    Old Twitch strings fixed, bar border updated to the new framework border
 

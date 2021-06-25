@@ -6,7 +6,7 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
 local LCC = LibStub("LibClassicCasterino", true)
@@ -15,7 +15,7 @@ if LCC then
     UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local _G = _G
 

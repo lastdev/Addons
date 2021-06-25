@@ -1,4 +1,4 @@
-local _, ns = ...
+local ns = select(2, ...) ---@type ns @The addon namespace.
 
 local locale = GetLocale()
 

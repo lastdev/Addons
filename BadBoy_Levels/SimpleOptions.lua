@@ -226,5 +226,4 @@ blockAllBtn:SetScript("OnClick", function(frame)
 	end
 end)
 
-BadBoyLevelsConfigTitle:SetText("BadBoy_Levels v9.0.5") -- Packager magic, replaced with tag version
-
+BadBoyLevelsConfigTitle:SetText("BadBoy_Levels")

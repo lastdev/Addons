@@ -11,9 +11,9 @@ function addon:SetupOptions()
 	DataStore:AddOptionCategory(f, addonName, "DataStore")
 
 	-- localize options
-	DataStoreMailOptions_SliderMailExpiry.tooltipText = L["Warn when mail expires in less days than this value"]; 
-	DataStoreMailOptions_SliderMailExpiryLow:SetText("1");
-	DataStoreMailOptions_SliderMailExpiryHigh:SetText("15"); 
+	DataStoreMailOptions_SliderMailExpiry.tooltipText = L["Warn when mail expires in less days than this value"]
+	DataStoreMailOptions_SliderMailExpiryLow:SetText("1")
+	DataStoreMailOptions_SliderMailExpiryHigh:SetText("15")
 	
 	-- restore saved options to gui
 	DataStoreMailOptions_SliderMailExpiry:SetValue(DataStore:GetOption(addonName, "MailWarningThreshold"))

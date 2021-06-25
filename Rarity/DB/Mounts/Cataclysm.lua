@@ -14,6 +14,7 @@ local cataclysmMounts = {
 		itemId = 68823,
 		npcs = {52151},
 		chance = 100,
+		blackMarket = true,
 		sourceText = L["Heroic difficulty"],
 		lockBossName = "Bloodlord Mandokir",
 		coords = {{m = 337, x = 60.4, y = 79.9, i = true}}
@@ -31,6 +32,7 @@ local cataclysmMounts = {
 		statisticId = {6161, 6162},
 		sourceText = L["Dropped by Ultraxion in Dragon Soul (any raid size or difficulty)"],
 		lockBossName = "Ultraxion",
+		blackMarket = true,
 		coords = {{m = 409, x = 49.6, y = 57.6, i = true}}
 	},
 	["Flametalon of Alysrazor"] = {
@@ -56,7 +58,7 @@ local cataclysmMounts = {
 		name = L["Fossilized Raptor"],
 		spellId = 84751,
 		itemId = 60954,
-		raceId = 18,
+		raceId = CONSTANTS.ARCHAEOLOGY_RACES.FOSSIL,
 		chance = 30,
 		sourceText = L["Obtained as a rare project for the Fossil branch of archaeology"],
 		coords = {
@@ -238,7 +240,7 @@ local cataclysmMounts = {
 		name = L["Scepter of Azj'Aqir"],
 		spellId = 92155,
 		itemId = 64883,
-		raceId = 14,
+		raceId = CONSTANTS.ARCHAEOLOGY_RACES.TOL_VIR,
 		chance = 500,
 		sourceText = L["Obtained as a very rare project for the Tol'vir branch of archaeology"],
 		coords = {{m = 249}}
@@ -273,6 +275,7 @@ local cataclysmMounts = {
 		itemId = 68824,
 		npcs = {52059},
 		chance = 100,
+		blackMarket = true,
 		sourceText = L["Heroic difficulty"],
 		lockBossName = "High Priestess Kilnara",
 		coords = {{m = 337, x = 48, y = 20, i = true}}

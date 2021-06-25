@@ -38,7 +38,10 @@ local mopPets = {
 		itemId = 89587,
 		items = {89125},
 		chance = 250,
-		creatureId = 61086
+		creatureId = 61086,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.NONE}
+		}
 	},
 	-- 5.1
 	["Anubisath Idol"] = {
@@ -134,7 +137,10 @@ local mopPets = {
 		itemId = 90900,
 		items = {92960},
 		chance = 50,
-		creatureId = 67230
+		creatureId = 67230,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.NONE}
+		}
 	},
 	["Imperial Silkworm"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,
@@ -145,7 +151,10 @@ local mopPets = {
 		itemId = 90902,
 		items = {92960},
 		chance = 10,
-		creatureId = 67233
+		creatureId = 67233,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.NONE}
+		}
 	},
 	["Jewel of Maddening Whispers"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,
@@ -221,6 +230,7 @@ local mopPets = {
 		statisticId = {8171, 8169, 8172, 8170, 8168},
 		creatureId = 70144,
 		enableCoin = true,
+		blackMarket = true,
 		lockBossName = "Ji-Kun",
 		coords = {{m = 508, x = 49.3, y = 41.5, i = true}}
 	},
@@ -237,6 +247,7 @@ local mopPets = {
 		doNotUpdateToHighestStat = true,
 		creatureId = 69748,
 		enableCoin = true,
+		blackMarket = true,
 		coords = {{m = 508, i = true}}
 	},
 	["Mountain Panda"] = {
@@ -248,7 +259,16 @@ local mopPets = {
 		itemId = 94210,
 		items = {94207},
 		chance = 7,
-		creatureId = 69892
+		creatureId = 69892,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.JADE_FOREST},
+			{m = CONSTANTS.UIMAPIDS.VALLEY_OF_THE_FOUR_WINDS},
+			{m = CONSTANTS.UIMAPIDS.KUNLAI_SUMMIT},
+			{m = CONSTANTS.UIMAPIDS.TOWNLONG_STEPPES},
+			{m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS_MOP},
+			{m = CONSTANTS.UIMAPIDS.KRASARANG_WILDS},
+			{m = CONSTANTS.UIMAPIDS.DREAD_WASTES}
+		}
 	},
 	["Snowy Panda"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,
@@ -259,7 +279,16 @@ local mopPets = {
 		itemId = 94209,
 		items = {94207},
 		chance = 7,
-		creatureId = 69893
+		creatureId = 69893,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.JADE_FOREST},
+			{m = CONSTANTS.UIMAPIDS.VALLEY_OF_THE_FOUR_WINDS},
+			{m = CONSTANTS.UIMAPIDS.KUNLAI_SUMMIT},
+			{m = CONSTANTS.UIMAPIDS.TOWNLONG_STEPPES},
+			{m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS_MOP},
+			{m = CONSTANTS.UIMAPIDS.KRASARANG_WILDS},
+			{m = CONSTANTS.UIMAPIDS.DREAD_WASTES}
+		}
 	},
 	["Son of Animus"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,
@@ -274,6 +303,7 @@ local mopPets = {
 		statisticId = {8186, 8184, 8187, 8185, 8183},
 		creatureId = 69820,
 		enableCoin = true,
+		blackMarket = true,
 		lockBossName = "Dark Animus",
 		coords = {{m = 508, x = 42.6, y = 57.6, i = true}}
 	},
@@ -286,7 +316,16 @@ local mopPets = {
 		itemId = 94208,
 		items = {94207},
 		chance = 7,
-		creatureId = 69891
+		creatureId = 69891,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.JADE_FOREST},
+			{m = CONSTANTS.UIMAPIDS.VALLEY_OF_THE_FOUR_WINDS},
+			{m = CONSTANTS.UIMAPIDS.KUNLAI_SUMMIT},
+			{m = CONSTANTS.UIMAPIDS.TOWNLONG_STEPPES},
+			{m = CONSTANTS.UIMAPIDS.VALE_OF_ETERNAL_BLOSSOMS_MOP},
+			{m = CONSTANTS.UIMAPIDS.KRASARANG_WILDS},
+			{m = CONSTANTS.UIMAPIDS.DREAD_WASTES}
+		}
 	},
 	["Direhorn Runt"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,
@@ -392,6 +431,7 @@ local mopPets = {
 		statisticId = {8181, 8179, 8180, 8182},
 		creatureId = 71200,
 		enableCoin = true,
+		blackMarket = true,
 		sourceText = L["All raid formats except Raid Finder"],
 		lockBossName = "Primordius",
 		coords = {{m = 508, i = true, x = 57.2, y = 78.2}}
@@ -469,6 +509,7 @@ local mopPets = {
 		statisticId = {8151, 8149, 8152, 8150, 8148},
 		creatureId = 70083,
 		enableCoin = true,
+		blackMarket = true,
 		lockBossName = "Horridon",
 		coords = {{m = 508, 26.8, y = 78.7, i = true}}
 	},
@@ -486,6 +527,7 @@ local mopPets = {
 		statisticId = {8178},
 		creatureId = 71199,
 		enableCoin = true,
+		blackMarket = true,
 		sourceText = L["Only Raid Finder difficulty"],
 		lockBossName = "Primordius",
 		coords = {{m = 508, x = 57.2, y = 78.2, i = true}}
@@ -585,6 +627,7 @@ local mopPets = {
 		npcs = {99999},
 		tooltipNpcs = {71504},
 		chance = 100,
+		blackMarket = true,
 		statisticId = {8624, 8622, 8625, 8623, 8621, 8620},
 		creatureId = 73352,
 		lockBossName = "Siegecrafter Blackfuse",
@@ -646,6 +689,7 @@ local mopPets = {
 		statisticId = {8569, 8571, 8573, 8570, 8568},
 		creatureId = 73350,
 		enableCoin = true,
+		blackMarket = true,
 		sourceText = L["All raid formats except Raid Finder"],
 		lockBossName = "Sha of Pride",
 		coords = {{m = 556, x = 22.5, y = 69.5, i = true}}
@@ -667,6 +711,7 @@ local mopPets = {
 		statisticId = {8568, 8567},
 		creatureId = 73351,
 		enableCoin = true,
+		blackMarket = true,
 		sourceText = L["Raid Finder or Flexible difficulty"],
 		lockBossName = "Sha of Pride",
 		coords = {{m = 556, x = 22.5, y = 69.5, i = true}}
@@ -732,6 +777,7 @@ local mopPets = {
 		statisticId = {8630, 8628, 8631, 8629, 8627, 8626},
 		creatureId = 73354,
 		enableCoin = true,
+		blackMarket = true,
 		lockBossName = "Paragons of the Klaxxi",
 		coords = {{m = 556, x = 68.3, y = 35.3, i = true}}
 	}, -- PARAGONS OF THE KLAXXI (all modes)
@@ -746,7 +792,10 @@ local mopPets = {
 		chance = 200,
 		creatureId = 73011,
 		questId = {31752, 34774},
-		tooltipNpcs = {77789, 43929}
+		tooltipNpcs = {77789, 43929},
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.NONE}
+		}
 	},
 	["Ominous Flame"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.MOP,

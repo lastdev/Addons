@@ -5,7 +5,7 @@
 GTFO Fail List - Shadowlands
 ]]--
 
-if (not GTFO.ClassicMode) then
+if (not (GTFO.ClassicMode or GTFO.BurningCrusadeMode)) then
 
 --- ***********************
 --- * Shadowlands (World) *
@@ -1077,6 +1077,20 @@ GTFO.SpellID["336162"] = {
 
 GTFO.SpellID["330137"] = {
   --desc = "Massacre (Sire Denathrius)";
+  sound = 3;
+};
+
+--- *************************
+--- * Sanctum of Domination *
+--- *************************
+
+GTFO.SpellID["347671"] = {
+  --desc = "Hungering Mist (The Tarragrue)";
+  sound = 3;
+};
+
+GTFO.SpellID["347737"] = {
+  --desc = "Hungering Mist (The Tarragrue)";
   sound = 3;
 };
 

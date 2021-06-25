@@ -5,7 +5,7 @@
 GTFO Spell List - Shadowlands
 ]]--
 
-if (not GTFO.ClassicMode) then
+if (not (GTFO.ClassicMode or GTFO.BurningCrusadeMode)) then
 
 --- ***********************
 --- * Shadowlands (World) *
@@ -590,5 +590,21 @@ GTFO.SpellID["335873"] = {
   --desc = "Rancor (Remornia)";
   sound = 1;
 };
+
+--- *************************
+--- * Sanctum of Domination *
+--- *************************
+
+GTFO.SpellID["350809"] = {
+  --desc = "Jailer's Misery (Deathseeker Eye)";
+  sound = 1;
+};
+
+GTFO.SpellID["355077"] = {
+  --desc = "Wracking Agony (Mawsworn Darkcaster)";
+  sound = 1;
+};
+
+
 
 end

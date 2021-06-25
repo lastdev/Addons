@@ -10,6 +10,7 @@ local wipe, tinsert = wipe, tinsert
 local GetNumShapeshiftForms, GetShapeshiftFormInfo = GetNumShapeshiftForms, GetShapeshiftFormInfo
 local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID = GetNumSpecializationsForClassID, GetSpecializationInfoForClassID
 local WrapTextInColorCode = WrapTextInColorCode
+local MAX_NUM_TALENTS = MAX_NUM_TALENTS or 20
 
 local function WA_GetClassColor(classFilename)
   local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[classFilename]
@@ -127,7 +128,7 @@ Private.unit_realm_name_types = {
 }
 
 local timeFormatter = {}
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   Mixin(timeFormatter, SecondsFormatterMixin)
   timeFormatter:Init(0, SecondsFormatter.Abbreviation.OneLetter)
 
@@ -184,7 +185,7 @@ local simpleFormatters = {
       return fmt:gsub(" ", ""):format(time)
     end,
     -- Modern Blizzard
-    [2] = not WeakAuras.IsClassic() and function(value)
+    [2] = WeakAuras.IsRetail() and function(value)
       return timeFormatter:Format(value)
     end
   }
@@ -894,7 +895,7 @@ do
   end
 end
 
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   Private.covenant_types = {}
   Private.covenant_types[0] = L["None"]
   for i = 1, 4 do
@@ -1092,6 +1093,7 @@ Private.subevent_suffix_types = {
   _DAMAGE = L["Damage"],
   _MISSED = L["Missed"],
   _HEAL = L["Heal"],
+  _HEAL_ABSORBED = L["Heal Absorbed"],
   _ENERGIZE = L["Energize"],
   _DRAIN = L["Drain"],
   _LEECH = L["Leech"],
@@ -1266,7 +1268,7 @@ end
 
 
 Private.talent_types = {}
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   local spec_frame = CreateFrame("frame");
   spec_frame:RegisterEvent("PLAYER_LOGIN")
   spec_frame:SetScript("OnEvent", update_specs);
@@ -1285,16 +1287,16 @@ if not WeakAuras.IsClassic() then
     tier = 1
   end
 else
-  for tab = 1, 5 do
-    for num_talent = 1, 20 do
-      local talentId = (tab - 1)*20+num_talent
+  for tab = 1, GetNumTalentTabs() do
+    for num_talent = 1, GetNumTalents(tab) do
+      local talentId = (tab - 1) * MAX_NUM_TALENTS + num_talent
       Private.talent_types[talentId] = L["Tab "]..tab.." - "..num_talent
     end
   end
 end
 
 Private.pvp_talent_types = {}
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   for i = 1,10 do
     tinsert(Private.pvp_talent_types, string.format(L["PvP Talent %i"], i));
   end
@@ -1720,6 +1722,29 @@ if WeakAuras.IsClassic() then -- Classic
       runes[tostring(v)] = nil
     end
   end
+elseif WeakAuras.IsBCC() then
+  Private.texture_types["Blizzard Alerts"] = nil
+  do
+    local beams = Private.texture_types["Beams"]
+    local beams_ids = {186193, 186194, 241098, 241099, 369749, 369750}
+    for _, v in ipairs(beams_ids) do
+      beams[tostring(v)] = nil
+    end
+  end
+  do
+    local icons = Private.texture_types["Icons"]
+    local icons_ids = {165605, 240925, 240961, 240972, 241049}
+    for _, v in ipairs(icons_ids) do
+      icons[tostring(v)] = nil
+    end
+  end
+  do
+    local runes = Private.texture_types["Runes"]
+    local runes_ids = {165922, 241003, 241004, 241005}
+    for _, v in ipairs(runes_ids) do
+      runes[tostring(v)] = nil
+    end
+  end
 end
 
 local PowerAurasPath = "Interface\\Addons\\WeakAuras\\PowerAurasMedia\\Auras\\"
@@ -1915,7 +1940,7 @@ Private.swing_types = {
   ["off"] = SECONDARYHANDSLOT
 }
 
-if WeakAuras.IsClassic() then
+if WeakAuras.IsClassic() or WeakAuras.IsBCC() then
   Private.swing_types["ranged"] = RANGEDSLOT
 end
 
@@ -2098,7 +2123,7 @@ Private.instance_difficulty_types = {
 
 }
 
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   -- Fill out instance_difficulty_types automatically.
   -- Unfourtunately the names BLizzard gives are not entirely unique,
   -- so try hard to disambiguate them via the type, and if nothing works by
@@ -2178,20 +2203,30 @@ Private.group_types = {
   raid = L["In Raid"]
 }
 
-Private.difficulty_types = {
-  none = L["None"],
-  normal = PLAYER_DIFFICULTY1,
-  heroic = PLAYER_DIFFICULTY2,
-  mythic = PLAYER_DIFFICULTY6,
-  timewalking = PLAYER_DIFFICULTY_TIMEWALKER,
-  lfr = PLAYER_DIFFICULTY3,
-  challenge = PLAYER_DIFFICULTY5
-}
+if WeakAuras.IsRetail() then
+  Private.difficulty_types = {
+    none = L["None"],
+    normal = PLAYER_DIFFICULTY1,
+    heroic = PLAYER_DIFFICULTY2,
+    mythic = PLAYER_DIFFICULTY6,
+    timewalking = PLAYER_DIFFICULTY_TIMEWALKER,
+    lfr = PLAYER_DIFFICULTY3,
+    challenge = PLAYER_DIFFICULTY5
+  }
+elseif WeakAuras.IsBCC() then
+  Private.difficulty_types = {
+    none = L["None"],
+    normal = PLAYER_DIFFICULTY1,
+    heroic = PLAYER_DIFFICULTY2,
+  }
+end
 
-if WeakAuras.IsClassic() then
+
+if WeakAuras.IsClassic() or WeakAuras.IsBCC() then
   Private.raid_role_types = {
     MAINTANK = "|TInterface\\GroupFrame\\UI-Group-maintankIcon:16:16|t "..MAINTANK,
-    MAINASSIST = "|TInterface\\GroupFrame\\UI-Group-mainassistIcon:16:16|t "..MAINASSIST
+    MAINASSIST = "|TInterface\\GroupFrame\\UI-Group-mainassistIcon:16:16|t "..MAINASSIST,
+    NONE = L["Other"]
   }
 else
   Private.role_types = {
@@ -2459,7 +2494,7 @@ if WeakAuras.IsClassic() then
   Private.pet_behavior_types.assist = nil
 end
 
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   Private.pet_spec_types = {
     [1] = select(2, GetSpecializationInfoByID(74)), -- Ferocity
     [2] = select(2, GetSpecializationInfoByID(81)), -- Tenacity
@@ -2558,7 +2593,7 @@ local mythic_plus_ignorelist = {
   [15] = true
 }
 
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   for i = 1, 255 do
     local r = not mythic_plus_ignorelist[i] and C_ChallengeMode.GetAffixInfo(i)
     if r then
@@ -2963,6 +2998,22 @@ Private.difficulty_info = {
     size = "twenty",
     difficulty = "normal",
   },
+  [173] = {
+    size = "party",
+    difficulty = "normal",
+  },
+  [174] = {
+    size = "party",
+    difficulty = "heroic",
+  },
+  [175] = {
+    size = "ten",
+    difficulty = "heroic",
+  },
+  [176] = {
+    size = "twentyfive",
+    difficulty = "heroic",
+  }
 }
 
 Private.glow_types = {
@@ -3014,7 +3065,7 @@ for i = 1, 4 do
   Private.multiUnitUnits.party["party"..i] = true
 end
 
-if not WeakAuras.IsClassic() then
+if WeakAuras.IsRetail() then
   for i = 1, MAX_BOSS_FRAMES do
     Private.baseUnitId["arena"..i] = true
     Private.baseUnitId["boss"..i] = true
@@ -3074,6 +3125,37 @@ Private.reset_ranged_swing_spells = {
   [75] = true, -- Auto Shot
 }
 
+Private.noreset_swing_spells = {
+  [23063] = true, -- Dense Dynamite
+  [4054] = true, -- Rough Dynamite
+  [4064] = true, -- Rough Copper Bomb
+  [4061] = true, -- Coarse Dynamite
+  [8331] = true, -- Ez-Thro Dynamite
+  [4065] = true, -- Large Copper Bomb
+  [4066] = true, -- Small Bronze Bomb
+  [4062] = true, -- Heavy Dynamite
+  [4067] = true, -- Big Bronze Bomb
+  [4068] = true, -- Iron Grenade
+  [23000] = true, -- Ez-Thro Dynamite II
+  [12421] = true, -- Mithril Frag Bomb
+  [4069] = true, -- Big Iron Bomb
+  [12562] = true, -- The Big One
+  [12543] = true, -- Hi-Explosive Bomb
+  [19769] = true, -- Thorium Grenade
+  [19784] = true, -- Dark Iron Bomb
+  [30216] = true, -- Fel Iron Bomb
+  [19821] = true, -- Arcane Bomb
+  [39965] = true, -- Frost Grenade
+  [30461] = true, -- The Bigger One
+  [30217] = true, -- Adamantite Grenade
+  [35476] = true, -- Drums of Battle
+  [35475] = true, -- Drums of War
+  [35477] = true, -- Drums of Speed
+  [35478] = true, -- Drums of Restoration
+  [34120] = true, -- Steady Shot (rank 1)
+  [19434] = true, -- Aimed Shot (rank 1)
+  --35474 Drums of Panic DO reset the swing timer, do not add
+}
 
 Private.item_weapon_types = {}
 
@@ -3265,9 +3347,42 @@ if WeakAuras.IsClassic() then
     2973, 14260, 14261, 14262, 14263, 14264, 14265, 14266, -- Raptor Strike
     6807, 6808, 6809, 8972, 9745, 9880, 9881, -- Maul
     20549, -- War Stomp
+    2480, 7919, 7918, 2764, 5019, -- Shoots
   }
   for i, spellid in ipairs(reset_swing_spell_list) do
     Private.reset_swing_spells[spellid] = true
+  end
+
+  Private.glow_types.ACShine = nil
+end
+
+if WeakAuras.IsBCC() then
+  Private.item_slot_types[0] = AMMOSLOT
+  Private.item_slot_types[18] = RANGEDSLOT
+  Private.talent_extra_option_types[0] = nil
+  Private.talent_extra_option_types[2] = nil
+
+  local reset_swing_spell_list = {
+    1464, 8820, 11604, 11605, 25242, -- Slam
+    78, 284, 285, 1608, 11564, 11565, 11566, 11567, 25286, 29707, 30324, -- Heroic Strike
+    845, 7369, 11608, 11609, 20569, 25231, -- Cleave
+    2973, 14260, 14261, 14262, 14263, 14264, 14265, 14266, 27014, -- Raptor Strike
+    6807, 6808, 6809, 8972, 9745, 9880, 9881, 26996, -- Maul
+    20549, -- War Stomp
+    2764, 3018, -- Shoots,
+    19434, 20900, 20901, 20902, 20903, 20904, 27065 -- Aimed Shot
+  }
+  for _, spellid in ipairs(reset_swing_spell_list) do
+    Private.reset_swing_spells[spellid] = true
+  end
+
+  local reset_ranged_swing_spell_list = {
+    2764, 3018, -- Shoots
+    19434, 20900, 20901, 20902, 20903, 20904, 27065 -- Aimed Shot
+  }
+
+  for _, spellid in ipairs(reset_ranged_swing_spell_list) do
+    Private.reset_ranged_swing_spells[spellid] = true
   end
 
   Private.glow_types.ACShine = nil

@@ -615,7 +615,7 @@ local function ProcessTooltip(tooltip, link)
 			tooltip:AddLine(" ",1,1,1)
 			tooltip:AddLine(format("%s%s: %s%s", colors.gold, INFO, colors.teal, prof), 1,1,1)
 			if bagType then
-				tooltip:AddLine(format("%s%s: %s%s", colors.gold, "Goes in", colors.teal, bagType), 1,1,1)
+				tooltip:AddLine(format("%s%s: %s%s", colors.gold, L["Goes in"], colors.teal, bagType), 1,1,1)
 			end
 			tooltip:AddLine(format("%s%s: %s%s %s(%d.0)", colors.gold, EXPANSION_FILTER_TEXT, colors.teal, expansion,
 				colors.yellow, expansionID + 1), 1,1,1)

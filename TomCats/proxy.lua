@@ -7,17 +7,21 @@ local proxies = { }
 
 function addon.AddProxy(target, mixin, initFunction, ...)
 	assert(mixin)
-	if (target and not proxies[target]) then
-		local proxy = CreateFromMixins(mixin)
-		proxy.target = target
-		proxies[target] = proxy
-		if (initFunction) then
-			if (type(initFunction) == "function") then
-				initFunction(proxy, ...)
-			elseif (type(initFunction) == "string") then
-				proxy[initFunction](proxy, ...)
+	if (target) then
+		local proxy = proxies[target]
+		if (not proxy) then
+			proxy = CreateFromMixins(mixin)
+			proxy.target = target
+			proxies[target] = proxy
+			if (initFunction) then
+				if (type(initFunction) == "function") then
+					initFunction(proxy, ...)
+				elseif (type(initFunction) == "string") then
+					proxy[initFunction](proxy, ...)
+				end
 			end
 		end
+		return proxy
 	end
 end
 

@@ -37,6 +37,7 @@ local INFO_REALM_LINE = 0
 local INFO_CHARACTER_LINE = 1
 local INFO_TOTAL_LINE = 2
 local THIS_ACCOUNT = "Default"
+local MAX_LOGOUT_TIMESTAMP = 5000000000
 
 local VIEW_BAGS = 1
 local VIEW_QUESTS = 2
@@ -433,6 +434,11 @@ local function NameRightClickMenu_Initialize(frame)
 		return
 	end
 
+	-- View => View xx ..
+	-- Mark as => Bank types
+	-- Delete this alt
+	
+	
 	frame:AddTitle(DataStore:GetColoredCharacterName(Characters:Get(characterInfoLine).key))
 	frame:AddTitle()
 	frame:AddButtonWithArgs(L["View bags"], VIEW_BAGS, ViewAltInfo, characterInfoLine)
@@ -825,7 +831,12 @@ columns["LastOnline"] = {
 			return format("%s%s", colors.green, GUILD_ONLINE_LABEL)
 		end
 		
-		return format("%s%s", colors.white, addon:FormatDelay(DataStore:GetLastLogout(character)))
+		local lastLogout = DataStore:GetLastLogout(character)
+		if lastLogout == MAX_LOGOUT_TIMESTAMP then
+			return UNKNOWN
+		end
+		
+		return format("%s%s", colors.white, addon:FormatDelay(lastLogout))
 	end,
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
@@ -841,7 +852,13 @@ columns["LastOnline"] = {
 				text = format("%s%s", colors.green, GUILD_ONLINE_LABEL)
 			else
 				-- other player, show real time since last online
-				text = format("%s: %s", LASTONLINE, SecondsToTime(time() - DataStore:GetLastLogout(character)))
+				local lastLogout = DataStore:GetLastLogout(character)
+				
+				if lastLogout == MAX_LOGOUT_TIMESTAMP then
+					text = UNKNOWN
+				else
+					text = format("%s: %s", LASTONLINE, SecondsToTime(time() - lastLogout))
+				end
 			end
 			
 			local tt = AltoTooltip

@@ -2,7 +2,7 @@
 ## Title: HandyNotes_LostAndFound
 ## Notes: Where the Lost and Found objects are in Pandaria
 ## Author: Kemayo
-## Version: v14
+## Version: v15
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

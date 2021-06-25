@@ -23,13 +23,14 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: db18dc5e0c4c75bd4409e62e8418da694d08e359 $")
+end, "$Revision: 2450e15218b1ebb017f444abdb3017f816eddf34 $")
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local LCD = IsClassic and LibStub and LibStub("LibClassicDurations")
-if IsClassic then
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local LCD = IsClassic and LibStub and LibStub("LibClassicDurations", true)
+if LCD then
 	LCD.RegisterCallback("ZPerl", "UNIT_BUFF", function(event, unit)
-		if unit == "target" then
+		if unit == "target" or unit == "focus" then
 			XPerl_Target_Events:UNIT_AURA(event, unit)
 		end
 	end)
@@ -49,6 +50,7 @@ local unpack = unpack
 
 local CanInspect = CanInspect
 local CheckInteractDistance = CheckInteractDistance
+local GetComboPoints = GetComboPoints
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local GetInspectSpecialization = GetInspectSpecialization
 local GetLootMethod = GetLootMethod
@@ -172,7 +174,7 @@ function XPerl_Target_OnLoad(self, partyid)
 		self.statsFrame.focusTarget:SetVertexColor(0.7, 1, 1, 0.5)
 
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
-		if not IsClassic then
+		if not IsVanillaClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 
@@ -183,7 +185,7 @@ function XPerl_Target_OnLoad(self, partyid)
 	else
 		XPerl_BlizzFrameDisable(FocusFrame)
 
-		if not IsClassic then
+		if not IsVanillaClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 		self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -340,18 +342,11 @@ end
 -- Combo Points
 ---------------
 function XPerl_Target_UpdateCombo(self)
-	-- Anticipation
-	--[[local name = GetSpellInfo(114015)
-	local _, _, count = UnitAura("player", name, "HELPFUL")
-	if not count then
-		count = 0
-	end]]
-	local combopoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
-	--local combopoints = GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", self.partyid) + count
-	local r, g, b = GetComboColour(combopoints)
+	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	local r, g, b = GetComboColour(comboPoints)
 	if (tconf.combo.enable) then
 		--self.cpFrame:Hide()
-		self.nameFrame.cpMeter:SetValue(combopoints)
+		self.nameFrame.cpMeter:SetValue(comboPoints)
 		self.nameFrame.cpMeter:Show()
 		if r and g and b then
 			self.nameFrame.cpMeter:SetStatusBarColor(r, g, b, 0.7)
@@ -367,7 +362,7 @@ function XPerl_Target_UpdateCombo(self)
 		--self.nameFrame.cpMeter:Hide()]]
 	if tconf.comboindicator.enable then
 		self.cpFrame:Show()
-		self.cpFrame.text:SetText(combopoints)
+		self.cpFrame.text:SetText(comboPoints)
 		if r and g and b then
 			self.cpFrame.text:SetTextColor(r, g, b)
 		else
@@ -378,7 +373,7 @@ function XPerl_Target_UpdateCombo(self)
 	end
 end
 
-local function XPerl_Target_DebuffUpdate(self)
+--[[local function XPerl_Target_DebuffUpdate(self)
 	local partyid = self.partyid
 	if (GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", partyid) == 0) then
 		local numDebuffs = 0
@@ -405,7 +400,7 @@ local function XPerl_Target_DebuffUpdate(self)
 	else
 		XPerl_Target_UpdateCombo(self)
 	end
-end
+end--]]
 
 -------------------------
 -- The Update Functions--
@@ -868,10 +863,10 @@ end
 -- XPerl_Target_SetComboBar
 function XPerl_Target_SetComboBar(self)
 	if (tconf.combo.enable) then
-		local combopoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
+		local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 		local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
 		self.nameFrame.cpMeter:SetMinMaxValues(0, IsClassic and 5 or maxComboPoints)
-		self.nameFrame.cpMeter:SetValue(combopoints)
+		self.nameFrame.cpMeter:SetValue(comboPoints)
 	end
 end
 
@@ -1830,8 +1825,7 @@ function XPerl_Target_Set_Bits(self)
 end
 
 function XPerl_Target_ComboFrame_Update()
-	--local comboPoints = GetComboPoints((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player")
-	local comboPoints = UnitPower((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
 	if comboPoints > 0 and UnitCanAttack((not IsClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", "target") then
 		if not ComboFrame:IsShown() then
 			ComboFrame:Show()

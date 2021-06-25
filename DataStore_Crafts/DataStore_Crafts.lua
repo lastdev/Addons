@@ -365,8 +365,6 @@ local function ScanRecipes()
 	addon:SendMessage("DATASTORE_RECIPES_SCANNED", char, tradeskillName)
 end
 
-
-
 local function ScanTradeSkills()
 	ScanRecipes()
 	
@@ -420,8 +418,25 @@ local function OnTradeSkillClose()
 	addon.isOpen = nil
 end
 
+local currentCraftRecipeID
+
+local function OnTradeSkillListUpdate(self)
+	if not currentCraftRecipeID then return end
+	
+	local cooldown = C_TradeSkillUI.GetRecipeCooldown(currentCraftRecipeID)
+	if cooldown then
+		ScanRecipes()
+		addon:SendMessage("DATASTORE_PROFESSION_COOLDOWN_UPDATED")
+		currentCraftRecipeID = nil
+	end
+end
+
 local function OnTradeSkillShow()
 	if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
+	
+	hooksecurefunc(C_TradeSkillUI, "CraftRecipe", function(recipeID) 
+		currentCraftRecipeID = recipeID
+	end)
 	
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
 	addon.isOpen = true
@@ -489,6 +504,8 @@ local function OnDataSourceChanged(self)
 	
 	ScanTradeSkills()
 end
+
+
 
 
 -- ** Mixins **
@@ -797,6 +814,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 	addon:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", OnDataSourceChanged)
+	addon:RegisterEvent("TRADE_SKILL_LIST_UPDATE", OnTradeSkillListUpdate)
 		
 	local _, _, arch = GetProfessions()
 
@@ -817,6 +835,7 @@ function addon:OnDisable()
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 	addon:UnregisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED")
+	addon:UnregisterEvent("TRADE_SKILL_LIST_UPDATE")
 end
 
 function addon:IsTradeSkillWindowOpen()

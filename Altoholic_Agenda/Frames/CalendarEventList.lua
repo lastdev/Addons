@@ -98,6 +98,10 @@ addon:Controller("AltoholicUI.CalendarEventList", {
 
 		scrollFrame:Update(#view)
 	end,
+	InvalidateView = function(frame)
+		isViewValid = nil
+	end,
+	
 	GetEventDateLineIndex = function(frame, year, month, day)
 		local eventDate = format("%04d-%02d-%02d", year, month, day)
 		for k, v in pairs(view) do

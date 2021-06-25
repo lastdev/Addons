@@ -77,6 +77,18 @@ local MODIFIERS_LIST = {
     [3] = 'SHIFT',
 };
 
+local CHANNELS_LIST = {
+    [1] = 'PARTY',
+    [2] = 'SAY',
+    [3] = 'YELL',
+};
+
+local CHANNELS_LIST_LOCALIZED = {
+    [1] = CHAT_MSG_PARTY,
+    [2] = CHAT_MSG_SAY,
+    [3] = CHAT_MSG_YELL,
+};
+
 local TOUGH_CROWD_QUEST_ID = 60739;
 local EXPOSED_BOGGARD_NPC_ID = 170080;
 
@@ -222,15 +234,33 @@ local function GetPartyChatType()
     return IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and 'INSTANCE_CHAT' or (IsInGroup(LE_PARTY_CATEGORY_HOME) and 'PARTY' or false);
 end
 
-local function AnnounceInChat(partyChatType)
+local function AnnounceInChat(partyChatType, fromButton)
     if not SOLUTION_BUTTON_ID or not partyChatType then
         return;
     end
 
-    if MHMOTSConfig.AnnounceWithEnglish and MazeHelper.currentLocale ~= 'enUS' then
-        SendChatMessage(string.format(L['ANNOUNCE_SOLUTION_WITH_ENGLISH'], buttons[SOLUTION_BUTTON_ID].data.name, buttons[SOLUTION_BUTTON_ID].data.ename), partyChatType);
+    local announceChannel;
+
+    if fromButton then
+        announceChannel = CHANNELS_LIST[MHMOTSConfig.AutoAnnouncerChannel];
     else
-        SendChatMessage(string.format(L['ANNOUNCE_SOLUTION'], buttons[SOLUTION_BUTTON_ID].data.name), partyChatType);
+        if MHMOTSConfig.AutoAnnouncerChannel == 1 then -- PARTY
+            announceChannel = partyChatType;
+        else
+            announceChannel = IsInInstance() and CHANNELS_LIST[MHMOTSConfig.AutoAnnouncerChannel] or CHANNELS_LIST[1];
+        end
+    end
+
+    if MazeHelper.currentLocale ~= 'enUS' then
+        if MHMOTSConfig.AnnounceOnlyEnglish then
+            SendChatMessage(string.format(L['ANNOUNCE_SOLUTION'], buttons[SOLUTION_BUTTON_ID].data.ename), announceChannel);
+        elseif MHMOTSConfig.AnnounceWithEnglish then
+            SendChatMessage(string.format(L['ANNOUNCE_SOLUTION_WITH_ENGLISH'], buttons[SOLUTION_BUTTON_ID].data.name, buttons[SOLUTION_BUTTON_ID].data.ename), announceChannel);
+        else
+            SendChatMessage(string.format(L['ANNOUNCE_SOLUTION'], buttons[SOLUTION_BUTTON_ID].data.name), announceChannel);
+        end
+    else
+        SendChatMessage(string.format(L['ANNOUNCE_SOLUTION'], buttons[SOLUTION_BUTTON_ID].data.name), announceChannel);
     end
 end
 
@@ -301,7 +331,7 @@ MazeHelper.frame:SetClampedToScreen(true);
 MazeHelper.frame:SetClampRectInsets(-4, 4, 24, 0);
 MazeHelper.frame:RegisterForDrag('LeftButton');
 MazeHelper.frame:SetScript('OnDragStart', function(self)
-    if self:IsMovable() then
+    if self:IsMovable() and not MHMOTSConfig.LockedDrag then
         self:StartMoving();
     end
 end);
@@ -413,6 +443,8 @@ MazeHelper.frame.MinButton:SetScript('OnClick', function()
 
     MazeHelper.frame.MinButton:SetShown(false);
 
+    MazeHelper.frame.LockDragButton:SetShown(false);
+
     MazeHelper.frame:SetClampRectInsets(-8, 4, 4, 0);
 end);
 MazeHelper.frame.MinButton:SetScript('OnEnter', function(self) self.icon:SetVertexColor(1, 0.85, 0, 1); end);
@@ -465,11 +497,13 @@ MazeHelper.frame.InvisibleMaxButton:SetScript('OnClick', function()
 
     MazeHelper.frame.MinButton:SetShown(true);
 
+    MazeHelper.frame.LockDragButton:SetShown(true);
+
     MazeHelper.frame:SetClampRectInsets(-4, 4, 24, 0);
 end);
 MazeHelper.frame.InvisibleMaxButton:RegisterForDrag('LeftButton');
 MazeHelper.frame.InvisibleMaxButton:SetScript('OnDragStart', function()
-    if MazeHelper.frame:IsMovable() then
+    if MazeHelper.frame:IsMovable() and not MHMOTSConfig.LockedDrag then
         MazeHelper.frame:StartMoving();
     end
 end);
@@ -643,12 +677,43 @@ MazeHelper.frame.AnnounceButton:SetScript('OnClick', function(self)
         return;
     end
 
-    AnnounceInChat(GetPartyChatType());
+    AnnounceInChat(GetPartyChatType(), true);
 
     self.clicked = true;
     self:SetShown(false);
 end);
 MazeHelper.frame.AnnounceButton:SetShown(false);
+
+local function GameTooltip_LockDragButton_Show(self)
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT');
+    GameTooltip:AddLine(MHMOTSConfig.LockedDrag and L['LOCKED_DRAG_BUTTON_TOOLTIP'] or L['UNLOCKED_DRAG_BUTTON_TOOLTIP'], 1, 0.85, 0, true);
+    GameTooltip:Show();
+end
+
+MazeHelper.frame.LockDragButton = CreateFrame('CheckButton', nil, MazeHelper.frame.MainHolder);
+PixelUtil.SetPoint(MazeHelper.frame.LockDragButton, 'BOTTOMLEFT', MazeHelper.frame, 'BOTTOMLEFT', 10, 28);
+PixelUtil.SetSize(MazeHelper.frame.LockDragButton, 14, 14);
+MazeHelper.frame.LockDragButton:SetNormalTexture(M.Icons.TEXTURE);
+MazeHelper.frame.LockDragButton.SetTurned = function(self, state)
+    if state then
+        self:GetNormalTexture():SetVertexColor(0.8, 0.2, 0.4, 1);
+        self:GetNormalTexture():SetTexCoord(unpack(M.Icons.COORDS.LOCKED_WHITE));
+    else
+        self:GetNormalTexture():SetVertexColor(0.2, 0.8, 0.4, 1);
+        self:GetNormalTexture():SetTexCoord(unpack(M.Icons.COORDS.UNLOCKED_WHITE));
+    end
+end
+MazeHelper.frame.LockDragButton:SetScript('OnClick', function(self)
+    MHMOTSConfig.LockedDrag = self:GetChecked();
+
+    self:SetTurned(MHMOTSConfig.LockedDrag);
+
+    if GameTooltip:IsOwned(self) then
+        GameTooltip_LockDragButton_Show(self);
+    end
+end);
+MazeHelper.frame.LockDragButton:HookScript('OnEnter', GameTooltip_LockDragButton_Show);
+MazeHelper.frame.LockDragButton:HookScript('OnLeave', GameTooltip_Hide);
 
 MazeHelper.frame.Settings = CreateFrame('Frame', nil, MazeHelper.frame);
 MazeHelper.frame.Settings:SetAllPoints();
@@ -680,7 +745,7 @@ local settingsScrollChild = E.CreateScrollFrame(MazeHelper.frame.Settings, 26);
 
 settingsScrollChild.Data.AutoToggleVisibility = E.CreateRoundedCheckButton(settingsScrollChild);
 settingsScrollChild.Data.AutoToggleVisibility:SetPosition('TOPLEFT', settingsScrollChild, 'TOPLEFT', 12, 0);
-settingsScrollChild.Data.AutoToggleVisibility:SetLabel(M.INLINE_NEW_ICON .. L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL']);
+settingsScrollChild.Data.AutoToggleVisibility:SetLabel(L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL']);
 settingsScrollChild.Data.AutoToggleVisibility:SetTooltip(L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP']);
 settingsScrollChild.Data.AutoToggleVisibility:SetScript('OnClick', function(self)
     MHMOTSConfig.AutoToggleVisibility = self:GetChecked();
@@ -843,9 +908,18 @@ settingsScrollChild.Data.PrintResettedPlayerName:SetScript('OnClick', function(s
     MHMOTSConfig.PrintResettedPlayerName = self:GetChecked();
 end);
 
+settingsScrollChild.Data.AnnounceOnlyEnglish = E.CreateRoundedCheckButton(settingsScrollChild);
+settingsScrollChild.Data.AnnounceOnlyEnglish:SetPosition('TOPLEFT', settingsScrollChild.Data.PrintResettedPlayerName, 'BOTTOMLEFT', 0, 0);
+settingsScrollChild.Data.AnnounceOnlyEnglish:SetLabel(M.INLINE_NEW_ICON .. L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL']);
+settingsScrollChild.Data.AnnounceOnlyEnglish:SetTooltip(L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP']);
+settingsScrollChild.Data.AnnounceOnlyEnglish:SetScript('OnClick', function(self)
+    MHMOTSConfig.AnnounceOnlyEnglish = self:GetChecked();
+
+    settingsScrollChild.Data.AnnounceWithEnglish:SetEnabled(not MHMOTSConfig.AnnounceOnlyEnglish);
+end);
 
 settingsScrollChild.Data.AnnounceWithEnglish = E.CreateRoundedCheckButton(settingsScrollChild);
-settingsScrollChild.Data.AnnounceWithEnglish:SetPosition('TOPLEFT', settingsScrollChild.Data.PrintResettedPlayerName, 'BOTTOMLEFT', 0, 0);
+settingsScrollChild.Data.AnnounceWithEnglish:SetPosition('TOPLEFT', settingsScrollChild.Data.AnnounceOnlyEnglish, 'BOTTOMLEFT', 0, 0);
 settingsScrollChild.Data.AnnounceWithEnglish:SetLabel(L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL']);
 settingsScrollChild.Data.AnnounceWithEnglish:SetTooltip(L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP']);
 settingsScrollChild.Data.AnnounceWithEnglish:SetScript('OnClick', function(self)
@@ -897,8 +971,19 @@ settingsScrollChild.Data.AutoAnnouncerAsHealer:SetScript('OnClick', function(sel
     MHMOTSConfig.AutoAnnouncerAsHealer = self:GetChecked();
 end);
 
+settingsScrollChild.Data.AutoAnnouncerChannel = E.CreateDropdown(settingsScrollChild);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetPoint('TOPLEFT', settingsScrollChild.Data.AutoAnnouncerAsPartyLeader, 'BOTTOMLEFT', 3, -6);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetSize(90, 20);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetScale(1);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetLabel(M.INLINE_NEW_ICON .. L['SETTINGS_AUTOANNOUNCE_CHANNEL']);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetTooltip(L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP']);
+settingsScrollChild.Data.AutoAnnouncerChannel:SetList(CHANNELS_LIST_LOCALIZED);
+settingsScrollChild.Data.AutoAnnouncerChannel.OnValueChangedCallback = function(_, value)
+    MHMOTSConfig.AutoAnnouncerChannel = tonumber(value);
+end
+
 settingsScrollChild.Data.ColorsHeader = E.CreateHeader(settingsScrollChild, L['SETTINGS_BORDERS_COLORS']);
-settingsScrollChild.Data.ColorsHeader:SetPosition('TOPLEFT', settingsScrollChild.Data.AutoAnnouncer, 'BOTTOMLEFT', 0, -32);
+settingsScrollChild.Data.ColorsHeader:SetPosition('TOPLEFT', settingsScrollChild.Data.AutoAnnouncer, 'BOTTOMLEFT', 0, -56);
 settingsScrollChild.Data.ColorsHeader:SetSize(settingsScrollChild:GetWidth() - 4, 18);
 
 settingsScrollChild.Data.ActiveColorPicker = E.CreateColorPicker(settingsScrollChild, DEFAULT_COLORS.Active)
@@ -1005,10 +1090,6 @@ settingsScrollChild.Data.SavedBackgroundAlphaLargeSymbol.OnValueChangedCallback 
     MHMOTSConfig.SavedBackgroundAlphaLargeSymbol = tonumber(value);
     MazeHelper.frame.LargeSymbol.Background:SetAlpha(MHMOTSConfig.SavedBackgroundAlphaLargeSymbol);
 end
-
-MazeHelper.frame.Settings.VersionText = MazeHelper.frame.Settings:CreateFontString(nil, 'ARTWORK', 'GameFontDisable');
-PixelUtil.SetPoint(MazeHelper.frame.Settings.VersionText, 'TOP', MazeHelper.frame.Settings, 'BOTTOM', 0, 12);
-MazeHelper.frame.Settings.VersionText:SetText(Version);
 
 -- send & sender can be nil
 local function Button_SetActive(button, send, sender, isDoubleClick)
@@ -1226,7 +1307,7 @@ function MazeHelper:CreateButton(index)
 
     button:RegisterForDrag('LeftButton');
     button:SetScript('OnDragStart', function()
-        if MazeHelper.frame:IsMovable() then
+        if MazeHelper.frame:IsMovable() and not MHMOTSConfig.LockedDrag then
             MazeHelper.frame:StartMoving();
         end
     end);
@@ -2060,6 +2141,8 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     MHMOTSConfig.SavedBackgroundAlpha            = MHMOTSConfig.SavedBackgroundAlpha or 0.85;
     MHMOTSConfig.SavedBackgroundAlphaLargeSymbol = MHMOTSConfig.SavedBackgroundAlphaLargeSymbol or 0.8;
 
+    MHMOTSConfig.LockedDrag = MHMOTSConfig.LockedDrag == nil and false or MHMOTSConfig.LockedDrag;
+
     MHMOTSConfig.AutoToggleVisibility    = MHMOTSConfig.AutoToggleVisibility == nil and true or MHMOTSConfig.AutoToggleVisibility;
     MHMOTSConfig.SyncEnabled             = MHMOTSConfig.SyncEnabled == nil and true or MHMOTSConfig.SyncEnabled;
     MHMOTSConfig.PredictSolution         = MHMOTSConfig.PredictSolution == nil and false or MHMOTSConfig.PredictSolution;
@@ -2071,6 +2154,7 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     MHMOTSConfig.ShowLargeSymbol         = MHMOTSConfig.ShowLargeSymbol == nil and true or MHMOTSConfig.ShowLargeSymbol;
     MHMOTSConfig.UseCloneAutoMarker      = MHMOTSConfig.UseCloneAutoMarker == nil and true or MHMOTSConfig.UseCloneAutoMarker;
     MHMOTSConfig.AnnounceWithEnglish     = MHMOTSConfig.AnnounceWithEnglish == nil and true or MHMOTSConfig.AnnounceWithEnglish;
+    MHMOTSConfig.AnnounceOnlyEnglish     = MHMOTSConfig.AnnounceOnlyEnglish == nil and false or MHMOTSConfig.AnnounceOnlyEnglish;
     MHMOTSConfig.SetMarkerSolutionPlayer = MHMOTSConfig.SetMarkerSolutionPlayer == nil and false or MHMOTSConfig.SetMarkerSolutionPlayer;
 
     MHMOTSConfig.SetMarkerOnTargetClone            = MHMOTSConfig.SetMarkerOnTargetClone == nil and true or MHMOTSConfig.SetMarkerOnTargetClone;
@@ -2082,6 +2166,7 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     MHMOTSConfig.AutoAnnouncerAsAlways      = MHMOTSConfig.AutoAnnouncerAsAlways == nil and false or MHMOTSConfig.AutoAnnouncerAsAlways;
     MHMOTSConfig.AutoAnnouncerAsTank        = MHMOTSConfig.AutoAnnouncerAsTank == nil and false or MHMOTSConfig.AutoAnnouncerAsTank;
     MHMOTSConfig.AutoAnnouncerAsHealer      = MHMOTSConfig.AutoAnnouncerAsHealer == nil and false or MHMOTSConfig.AutoAnnouncerAsHealer;
+    MHMOTSConfig.AutoAnnouncerChannel       = MHMOTSConfig.AutoAnnouncerChannel == nil and 1 or MHMOTSConfig.AutoAnnouncerChannel;
 
     MHMOTSConfig.ActiveColor    = MHMOTSConfig.ActiveColor    or DEFAULT_COLORS.Active;
     MHMOTSConfig.ReceivedColor  = MHMOTSConfig.ReceivedColor  or DEFAULT_COLORS.Received;
@@ -2091,6 +2176,8 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     MHMOTSConfig.PracticeNoSound = MHMOTSConfig.PracticeNoSound == nil and false or MHMOTSConfig.PracticeNoSound;
 
     MHMOTSConfig.MinimapButton = MHMOTSConfig.MinimapButton or { hide = false };
+
+    MazeHelper.frame.LockDragButton:SetTurned(MHMOTSConfig.LockedDrag);
 
     settingsScrollChild.Data.AutoToggleVisibility:SetChecked(MHMOTSConfig.AutoToggleVisibility);
     settingsScrollChild.Data.SyncEnabled:SetChecked(MHMOTSConfig.SyncEnabled);
@@ -2103,6 +2190,8 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     settingsScrollChild.Data.StartInMinMode:SetChecked(MHMOTSConfig.StartInMinMode);
     settingsScrollChild.Data.UseCloneAutoMarker:SetChecked(MHMOTSConfig.UseCloneAutoMarker);
     settingsScrollChild.Data.AnnounceWithEnglish:SetChecked(MHMOTSConfig.AnnounceWithEnglish);
+    settingsScrollChild.Data.AnnounceWithEnglish:SetEnabled(not MHMOTSConfig.AnnounceOnlyEnglish);
+    settingsScrollChild.Data.AnnounceOnlyEnglish:SetChecked(MHMOTSConfig.AnnounceOnlyEnglish);
     settingsScrollChild.Data.SetMarkerSolutionPlayer:SetChecked(MHMOTSConfig.SetMarkerSolutionPlayer);
     settingsScrollChild.Data.SetMarkerOnTargetClone:SetChecked(MHMOTSConfig.SetMarkerOnTargetClone);
     settingsScrollChild.Data.SetMarkerOnTargetCloneUseModifier:SetChecked(MHMOTSConfig.SetMarkerOnTargetCloneUseModifier);
@@ -2119,6 +2208,7 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
     settingsScrollChild.Data.AutoAnnouncerAsAlways:SetEnabled(MHMOTSConfig.AutoAnnouncer);
     settingsScrollChild.Data.AutoAnnouncerAsTank:SetEnabled(MHMOTSConfig.AutoAnnouncer);
     settingsScrollChild.Data.AutoAnnouncerAsHealer:SetEnabled(MHMOTSConfig.AutoAnnouncer);
+    settingsScrollChild.Data.AutoAnnouncerChannel:SetValue(tonumber(MHMOTSConfig.AutoAnnouncerChannel));
 
     settingsScrollChild.Data.Scale:SetValues(MHMOTSConfig.SavedScale, 0.25, 3, 0.05);
     settingsScrollChild.Data.ScaleLargeSymbol:SetValues(MHMOTSConfig.SavedScaleLargeSymbol, 0.25, 3, 0.05);
@@ -2142,6 +2232,7 @@ function MazeHelper.frame:ADDON_LOADED(addonName)
 
     if MazeHelper.currentLocale == 'enUS' then
         settingsScrollChild.Data.AnnounceWithEnglish:SetShown(false);
+        settingsScrollChild.Data.AnnounceOnlyEnglish:SetShown(false);
         settingsScrollChild.Data.AutoAnnouncer:SetPosition('TOPLEFT', settingsScrollChild.Data.PrintResettedPlayerName, 'BOTTOMLEFT', 0, 0);
     end
 

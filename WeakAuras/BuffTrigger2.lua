@@ -71,7 +71,7 @@ local timer = WeakAuras.timer
 local BuffTrigger = {}
 local triggerInfos = {}
 
-local UnitGroupRolesAssigned = not WeakAuras.IsClassic() and UnitGroupRolesAssigned or function() return "DAMAGER" end
+local UnitGroupRolesAssigned = WeakAuras.IsRetail() and UnitGroupRolesAssigned or function() return "DAMAGER" end
 
 -- keyed on unit, debuffType, spellname, with a scan object value
 -- scan object: id, triggernum, scanFunc
@@ -967,6 +967,14 @@ local function TriggerInfoApplies(triggerInfo, unit)
     return false
   end
 
+  if triggerInfo.arenaSpec and unit:sub(1, 5) == "arena" then
+    -- GetArenaOpponentSpec doesn't use unit ids!
+    local i = tonumber(unit:sub(6))
+    if not triggerInfo.arenaSpec[GetArenaOpponentSpec(i)] then
+      return false
+    end
+  end
+
   if triggerInfo.hostility and WeakAuras.GetPlayerReaction(unit) ~= triggerInfo.hostility then
     return false
   end
@@ -1631,6 +1639,7 @@ local function EventHandler(frame, event, arg1, arg2, ...)
       end
     end
   elseif event == "GROUP_ROSTER_UPDATE" then
+    unitVisible = {}
     local unitsToCheck = {}
     for unit in GetAllUnits("group", true) do
       RecheckActiveForUnitType("group", unit, deactivatedTriggerInfos)
@@ -1683,7 +1692,9 @@ frame:RegisterEvent("PLAYER_FLAGS_CHANGED")
 frame:RegisterUnitEvent("UNIT_PET", "player")
 if not WeakAuras.IsClassic() then
   frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
-  frame:RegisterEvent("ARENA_OPPONENT_UPDATE")
+  if WeakAuras.IsRetail() then
+    frame:RegisterEvent("ARENA_OPPONENT_UPDATE")
+  end
   frame:RegisterEvent("UNIT_ENTERED_VEHICLE")
   frame:RegisterEvent("UNIT_EXITED_VEHICLE")
 else
@@ -2277,6 +2288,7 @@ function BuffTrigger.Add(data)
       local effectiveGroupRole = groupTrigger and trigger.useGroupRole and trigger.group_role
       local effectiveRaidRole = groupTrigger and trigger.useRaidRole and trigger.raid_role
       local effectiveClass = groupTrigger and trigger.useClass and trigger.class
+      local effectiveArenaSpec = trigger.unit == "arena" and trigger.useArenaSpec and trigger.arena_spec
       local effectiveHostility = trigger.unit == "nameplate" and trigger.useHostility and trigger.hostility
       local effectiveIgnoreDead = groupTrigger and trigger.ignoreDead
       local effectiveIgnoreDisconnected = groupTrigger and trigger.ignoreDisconnected
@@ -2337,6 +2349,7 @@ function BuffTrigger.Add(data)
         ignoreInvisible = effectiveIgnoreInvisible,
         groupRole = effectiveGroupRole,
         raidRole = effectiveRaidRole,
+        arenaSpec = effectiveArenaSpec,
         groupSubType = groupSubType,
         groupCountFunc = groupCountFunc,
         class = effectiveClass,

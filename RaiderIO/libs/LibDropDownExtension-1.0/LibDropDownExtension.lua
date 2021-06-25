@@ -65,7 +65,7 @@ if not Lib then return end
 ---@field public customUncheckIconTexture string|number
 
 ---@class CustomDropDownCallback
----@field public events table<string, number|true>
+---@field public events table<string, number|boolean>
 ---@field public func function
 ---@field public options table<number, CustomDropDownOption>
 ---@field public data table

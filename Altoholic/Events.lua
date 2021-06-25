@@ -170,13 +170,14 @@ local eventTypes = {
 }
 
 -- *** Utility functions ***
-local function AddEvent(eventType, eventDate, eventTime, char, realm, index, externalTable)
+local function AddEvent(eventType, eventDate, eventTime, char, realm, account, index, externalTable)
 	table.insert(eventList, {
 		eventType = eventType, 
 		eventDate = eventDate, 
 		eventTime = eventTime, 
 		char = char,
 		realm = realm,
+		account = account,
 		parentID = index,
 		source = externalTable})
 end
@@ -194,41 +195,42 @@ local function SortEvents()
 end
 
 local function ClearExpiredEvents()
-	
-	for realm in pairs(DataStore:GetRealms()) do
-		for characterName, character in pairs(DataStore:GetCharacters(realm)) do
 
-			-- Profession Cooldowns
-			local professions = DataStore:GetProfessions(character)
-			if professions then
-				for professionName, profession in pairs(professions) do
-					DataStore:ClearExpiredCooldowns(profession)
-				end
-			end
-			
-			-- Saved Instances
-			local dungeons = DataStore:GetSavedInstances(character)
-			if dungeons then
-				for key, _ in pairs(dungeons) do
-					if DataStore:HasSavedInstanceExpired(character, key) then
-						DataStore:DeleteSavedInstance(character, key)
+	for account in pairs(DataStore:GetAccounts()) do
+		for realm in pairs(DataStore:GetRealms(account)) do
+			for characterName, character in pairs(DataStore:GetCharacters(realm, account)) do
+				-- Profession Cooldowns
+				local professions = DataStore:GetProfessions(character)
+				if professions then
+					for professionName, profession in pairs(professions) do
+						DataStore:ClearExpiredCooldowns(profession)
 					end
 				end
-			end
-			
-			-- Other timers (like mysterious egg, etc..)
-			local num = DataStore:GetNumItemCooldowns(character) or 0
-			for i = 1, num do
-				if DataStore:HasItemCooldownExpired(character, i) then
-					DataStore:DeleteItemCooldown(character, i)
+				
+				-- Saved Instances
+				local dungeons = DataStore:GetSavedInstances(character)
+				if dungeons then
+					for key, _ in pairs(dungeons) do
+						if DataStore:HasSavedInstanceExpired(character, key) then
+							DataStore:DeleteSavedInstance(character, key)
+						end
+					end
 				end
-			end
-			
-			-- Calendar events 
-			num = DataStore:GetNumCalendarEvents(character) or 0 
-			for i = 1, num do
-				if DataStore:HasCalendarEventExpired(character, i) then
-					DataStore:DeleteCalendarEvent(character, i)
+				
+				-- Other timers (like mysterious egg, etc..)
+				local num = DataStore:GetNumItemCooldowns(character) or 0
+				for i = 1, num do
+					if DataStore:HasItemCooldownExpired(character, i) then
+						DataStore:DeleteItemCooldown(character, i)
+					end
+				end
+				
+				-- Calendar events 
+				num = DataStore:GetNumCalendarEvents(character) or 0 
+				for i = 1, num do
+					if DataStore:HasCalendarEventExpired(character, i) then
+						DataStore:DeleteCalendarEvent(character, i)
+					end
 				end
 			end
 		end
@@ -316,7 +318,7 @@ function ns:GetInfo(index)
 	local event = ns:Get(index)		-- dereference event
 	if not event then return end
 	
-	local character = DataStore:GetCharacter(event.char, event.realm)
+	local character = DataStore:GetCharacter(event.char, event.realm, event.account)
 	local char = DataStore:GetColoredCharacterName(character)
 	
 	if event.realm ~= GetRealmName() then	-- different realm ?
@@ -402,71 +404,73 @@ function ns:BuildList()
 
 	local timeGap = DataStore:GetClientServerTimeGap() or 0
 	
-	for realm in pairs(DataStore:GetRealms()) do
-		for characterName, character in pairs(DataStore:GetCharacters(realm)) do
-			-- add all timers, even expired ones. Expiries will be handled elsewhere.
-			
-			-- Profession Cooldowns
-			local professions = DataStore:GetProfessions(character)
-			if professions then
-				for professionName, profession in pairs(professions) do
-					local supportsSharedCD
-					if professionName == GetSpellInfo(2259) or			-- alchemy
-						professionName == GetSpellInfo(3908) or 			-- tailoring
-						professionName == GetSpellInfo(2575) then			-- mining
-						supportsSharedCD = true		-- current profession supports shared cooldowns
-					end
-					
-					if supportsSharedCD then
-						local sharedCDFound		-- is there a shared cd for this profession ?
-						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
+	for account in pairs(DataStore:GetAccounts()) do
+		for realm in pairs(DataStore:GetRealms(account)) do
+			for characterName, character in pairs(DataStore:GetCharacters(realm, account)) do
+				-- add all timers, even expired ones. Expiries will be handled elsewhere.
+				
+				-- Profession Cooldowns
+				local professions = DataStore:GetProfessions(character)
+				if professions then
+					for professionName, profession in pairs(professions) do
+						local supportsSharedCD
+						if professionName == GetSpellInfo(2259) or			-- alchemy
+							professionName == GetSpellInfo(3908) or 			-- tailoring
+							professionName == GetSpellInfo(2575) then			-- mining
+							supportsSharedCD = true		-- current profession supports shared cooldowns
+						end
+						
+						if supportsSharedCD then
+							local sharedCDFound		-- is there a shared cd for this profession ?
+							for i = 1, DataStore:GetNumActiveCooldowns(profession) do
+								local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
 
-							if not sharedCDFound then
-								sharedCDFound = true
-								AddEvent(SHARED_CD_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, nil, professionName)
+								if not sharedCDFound then
+									sharedCDFound = true
+									AddEvent(SHARED_CD_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, account, nil, professionName)
+								end
+							end
+						else
+							for i = 1, DataStore:GetNumActiveCooldowns(profession) do
+								local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
+								AddEvent(COOLDOWN_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, account, i, profession)
 							end
 						end
-					else
-						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							local _, _, _, expiresAt = DataStore:GetCraftCooldownInfo(profession, i)
-							AddEvent(COOLDOWN_LINE, date("%Y-%m-%d", expiresAt), date("%H:%M", expiresAt), characterName, realm, i, profession)
-						end
 					end
 				end
-			end
-			
-			-- Saved Instances
-			local dungeons = DataStore:GetSavedInstances(character)
-			if dungeons then
-				for key, _ in pairs(dungeons) do
-					local reset, lastCheck = DataStore:GetSavedInstanceInfo(character, key)
-					local expires = reset + lastCheck + timeGap
-					AddEvent(INSTANCE_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, key)
-				end
-			end
-			
-			-- Calendar Events
-			local num = DataStore:GetNumCalendarEvents(character) or 0 
-			for i = 1, num do
-				local eventDate, eventTime = DataStore:GetCalendarEventInfo(character, i)
 				
-				-- TODO: do not add declined invitations
-				AddEvent(CALENDAR_LINE, eventDate, eventTime, characterName, realm, i)
-			end
-			
-			-- Other timers (like mysterious egg, etc..)
-			num = DataStore:GetNumItemCooldowns(character) or 0
-			for i = 1, num do
-				local _, lastCheck, duration = DataStore:GetItemCooldownInfo(character, i)
-				if duration == nil then
-					duration = 0
+				-- Saved Instances
+				local dungeons = DataStore:GetSavedInstances(character)
+				if dungeons then
+					for key, _ in pairs(dungeons) do
+						local reset, lastCheck = DataStore:GetSavedInstanceInfo(character, key)
+						local expires = reset + lastCheck + timeGap
+						AddEvent(INSTANCE_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, account, key)
+					end
 				end
-				if lastCheck == nil then
-					lastCheck = 0
+				
+				-- Calendar Events
+				local num = DataStore:GetNumCalendarEvents(character) or 0 
+				for i = 1, num do
+					local eventDate, eventTime = DataStore:GetCalendarEventInfo(character, i)
+					
+					-- TODO: do not add declined invitations
+					AddEvent(CALENDAR_LINE, eventDate, eventTime, characterName, realm, account, i)
 				end
-				local expires = duration + lastCheck + timeGap
-				AddEvent(TIMER_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, i)
+				
+				-- Other timers (like mysterious egg, etc..)
+				num = DataStore:GetNumItemCooldowns(character) or 0
+				for i = 1, num do
+					local _, lastCheck, duration = DataStore:GetItemCooldownInfo(character, i)
+					if duration == nil then
+						duration = 0
+					end
+					if lastCheck == nil then
+						lastCheck = 0
+					end
+					local expires = duration + lastCheck + timeGap
+					AddEvent(TIMER_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, account, i)
+				end
 			end
 		end
 	end

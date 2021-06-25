@@ -142,6 +142,7 @@ SI.defaultDB = {
   -- Warmode: boolean
   -- Artifact: string REMOVED
   -- Cloak: string REMOVED
+  -- Covenant: number
   -- Paragon: table
   -- oRace: string
   -- isResting: boolean
@@ -157,7 +158,7 @@ SI.defaultDB = {
   -- earnedThisWeek: integer
   -- weeklyMax: integer
   -- totalMax: integer
-  -- season: integer
+  -- totalEarned: integer
   -- relatedItemCount: integer
 
   -- Quests:  key: QuestID  value:
@@ -1468,6 +1469,7 @@ function SI:UpdateToonData()
       t.RestXP = nil
     end
     t.Warmode = C_PvP.IsWarModeDesired()
+    t.Covenant = C_Covenants.GetActiveCovenantID()
   end
 
   t.LastSeen = time()
@@ -1600,6 +1602,13 @@ hoverTooltip.ShowToonTooltip = function (cell, arg, ...)
     indicatortip:AddLine(COMBAT_XP_GAIN, format("%.0f%% + %.0f%%", t.XP / t.MaxXP * 100, percent))
   end
   indicatortip:AddLine(STAT_AVERAGE_ITEM_LEVEL,("%d "):format(t.IL or 0)..STAT_AVERAGE_ITEM_LEVEL_EQUIPPED:format(t.ILe or 0))
+  if t.Covenant and t.Covenant > 0 then
+    local data = C_Covenants.GetCovenantData(t.Covenant)
+    local name = data and data.name
+    if name then
+      indicatortip:AddLine(L["Covenant"], name)
+    end
+  end
   if t.Arena2v2rating and t.Arena2v2rating > 0 then
     indicatortip:AddLine(ARENA_2V2 .. ARENA_RATING, t.Arena2v2rating)
   end
@@ -2238,32 +2247,18 @@ hoverTooltip.ShowSpellIDTooltip = function (cell, arg, ...)
   finishIndicator()
 end
 
-local weeklyCapPatten = gsub(CURRENCY_WEEKLY_CAP, "%%s%%s/%%s", "(.+)")
-local totalCapPatten = gsub(CURRENCY_TOTAL_CAP, "%%s%%s/%%s", "(.+)")
-local seasonTotalPatten = gsub(CURRENCY_SEASON_TOTAL, "%%s%%s", "(.+)")
-
 hoverTooltip.ShowCurrencyTooltip = function (cell, arg, ...)
   local toon, idx, ci = unpack(arg)
   if not toon or not idx or not ci then return end
-  local data = C_CurrencyInfo.GetCurrencyInfo(idx)
-  local name, tex = data.name, data.iconFileID
-  tex = " \124T"..tex..":0\124t"
+  local info = C_CurrencyInfo.GetBasicCurrencyInfo(idx)
+  local tex = " \124T" .. info.icon .. ":0\124t"
   openIndicator(2, "LEFT","RIGHT")
   indicatortip:AddHeader(ClassColorise(SI.db.Toons[toon].Class, strsplit(' ', toon)), CurrencyColor(ci.amount or 0,ci.totalMax)..tex)
 
-  SI.ScanTooltip:SetCurrencyByID(idx)
-  name = SI.ScanTooltip:GetName()
-  local spacer
-  for i = 1, SI.ScanTooltip:NumLines() do
-    local left = _G[name .. "TextLeft" .. i]
-    local text = left:GetText()
-    if not (strfind(text, weeklyCapPatten) or strfind(text, totalCapPatten) or strfind(text, seasonTotalPatten)) then
-      -- omit player's values
-      indicatortip:AddLine("")
-      indicatortip:SetCell(indicatortip:GetLineCount(), 1, coloredText(left), nil, "LEFT", 2, nil, nil, nil, 250)
-      spacer = #strtrim(text) == 0
-    end
-  end
+  indicatortip:AddLine('')
+  indicatortip:SetCell(indicatortip:GetLineCount(), 1, GOLDFONT .. info.description .. FONTEND, nil, 'LEFT', 2, nil, nil, nil, 220)
+
+  local spacer = nil
   if ci.weeklyMax and ci.weeklyMax > 0 then
     if not spacer then
       indicatortip:AddLine(" ")
@@ -2271,12 +2266,20 @@ hoverTooltip.ShowCurrencyTooltip = function (cell, arg, ...)
     end
     indicatortip:AddLine(format(CURRENCY_WEEKLY_CAP, "", CurrencyColor(ci.earnedThisWeek or 0, ci.weeklyMax), SI:formatNumber(ci.weeklyMax)))
   end
-  if ci.totalMax and ci.totalMax > 0 then
+  if ci.totalEarned and ci.totalEarned > 0 and ci.totalMax and ci.totalMax > 0 then
     if not spacer then
       indicatortip:AddLine(" ")
       spacer = true
     end
-    indicatortip:AddLine(format(CURRENCY_TOTAL_CAP, "", CurrencyColor(ci.amount or 0,ci.totalMax), SI:formatNumber(ci.totalMax)))
+    indicatortip:AddLine(format(CURRENCY_TOTAL, "", CurrencyColor(ci.amount or 0, ci.totalMax)))
+    -- currently, only season currency use totalEarned
+    indicatortip:AddLine(format(CURRENCY_SEASON_TOTAL_MAXIMUM, "", CurrencyColor(ci.totalEarned or 0, ci.totalMax), SI:formatNumber(ci.totalMax)))
+  elseif ci.totalMax and ci.totalMax > 0 then
+    if not spacer then
+      indicatortip:AddLine(" ")
+      spacer = true
+    end
+    indicatortip:AddLine(format(CURRENCY_TOTAL_CAP, "", CurrencyColor(ci.amount or 0, ci.totalMax), SI:formatNumber(ci.totalMax)))
   end
   if SI.specialCurrency[idx] and SI.specialCurrency[idx].relatedItem then
     if not spacer then
@@ -2290,18 +2293,6 @@ hoverTooltip.ShowCurrencyTooltip = function (cell, arg, ...)
     else
       indicatortip:AddLine(itemName .. ": " .. (ci.relatedItemCount or 0))
     end
-  end
-  if ci.season and #ci.season > 0 then
-    if not spacer then
-      indicatortip:AddLine(" ")
-      spacer = true
-    end
-    local str = ci.season
-    local num = str:match("(%d+)")
-    if num then
-      str = str:gsub(num,SI:formatNumber(num))
-    end
-    indicatortip:AddLine(str)
   end
   finishIndicator()
 end
@@ -2464,7 +2455,7 @@ end
 function SI:OnInitialize()
   local versionString = GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "9.0.7" then
+  if versionString == "9.0.8" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -2570,6 +2561,7 @@ function SI:OnEnable()
   self:RegisterEvent("CHAT_MSG_COMBAT_XP_GAIN", "UpdateToonData")
   self:RegisterEvent("PLAYER_UPDATE_RESTING", "UpdateToonData")
   self:RegisterEvent("PVP_RATED_STATS_UPDATE", "UpdateToonData")
+  self:RegisterEvent("COVENANT_CHOSEN", "UpdateToonData")
   self:RegisterEvent("ZONE_CHANGED_NEW_AREA", RequestRatedInfo)
   self:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     RequestRatedInfo()

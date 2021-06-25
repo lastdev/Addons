@@ -1,7 +1,9 @@
 # DataStore_Auctions
 
-## r54 (2016-10-26)
+## r55 (2016-10-26)
 
+- 9.0.009 Commit  
+    - Added an option to warn about potential auction expiries.  
 - 9.0.008 Commit  
     - TOC Update  
 - 9.0.003 Commit  

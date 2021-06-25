@@ -64,21 +64,21 @@ function mod:PLAYER_LOGIN(frame, event)
 		connectedRealms[entry] = true
 	end
 
-	local tbl = {
+	local eventList = {
 		"CHAT_MSG_WHISPER",
 		"CHAT_MSG_WHISPER_INFORM",
 	}
-	for i = 1, #tbl do
-		local event = tbl[i]
-		local frames = {GetFramesRegisteredForEvent(event)}
-		for i = 1, #frames do
-			local f = frames[i]
-			f:UnregisterEvent(event)
+	for i = 1, #eventList do
+		local wEvent = eventList[i]
+		local frames = {GetFramesRegisteredForEvent(wEvent)}
+		for j = 1, #frames do
+			local f = frames[j]
+			f:UnregisterEvent(wEvent)
 		end
-		frame:RegisterEvent(event)
-		for i = 1, #frames do
-			local f = frames[i]
-			f:RegisterEvent(event)
+		frame:RegisterEvent(wEvent)
+		for j = 1, #frames do
+			local f = frames[j]
+			f:RegisterEvent(wEvent)
 		end
 	end
 
@@ -97,7 +97,7 @@ function mod:CHAT_MSG_SYSTEM(_, _, msg)
 	end
 end
 
-function mod:FRIENDLIST_UPDATE(_, _, msg)
+function mod:FRIENDLIST_UPDATE()
 	-- first run only (player login)
 	local num = C_FriendList.GetNumFriends()
 	for i = num, 1, -1 do
@@ -111,9 +111,9 @@ function mod:FRIENDLIST_UPDATE(_, _, msg)
 	end
 	-- end first run (player login)
 
-	function mod:FRIENDLIST_UPDATE()
-		local num = C_FriendList.GetNumFriends() --get total friends
-		for i = num, 1, -1 do
+	self.FRIENDLIST_UPDATE = function()
+		local numFriends = C_FriendList.GetNumFriends() --get total friends
+		for i = numFriends, 1, -1 do
 			local tbl = C_FriendList.GetFriendInfoByIndex(i)
 			local player, level = tbl.name, tbl.level
 			--sometimes a friend will return nil, I have no idea why, so force another update
@@ -125,8 +125,10 @@ function mod:FRIENDLIST_UPDATE(_, _, msg)
 
 					C_FriendList.RemoveFriendByIndex(i)
 					if type(level) ~= "number" then
-						print("|cFF33FF99BadBoy_Levels|r: Level wasn't a number, tell BadBoy author! It was:", level)
-						error("|cFF33FF99BadBoy_Levels|r: Level wasn't a number, tell BadBoy author! It was: ".. tostring(level))
+						local msg = "|cFF33FF99BadBoy_Levels|r: Level wasn't a number, tell BadBoy author! It was: ".. tostring(level)
+						print(msg)
+						geterrorhandler()(msg)
+						level = 1000
 					end
 					if level < filterTable[player] then
 						--Whisper the bad player what level they must be to whisper us
@@ -148,8 +150,8 @@ function mod:FRIENDLIST_UPDATE(_, _, msg)
 								Cellular:IncomingMessage(a2, a1, a6, nil, a11, a12)
 							else
 								local frames = {GetFramesRegisteredForEvent("CHAT_MSG_WHISPER")}
-								for i = 1, #frames do
-									local f = frames[i]
+								for j = 1, #frames do
+									local f = frames[j]
 									local name = f.GetName and f:GetName()
 									if type(name) == "string" and name:find("^ChatFrame") then
 										ChatFrame_MessageEventHandler(f, "CHAT_MSG_WHISPER", unpack(argsTable, 2, argsCount+1))
@@ -163,7 +165,9 @@ function mod:FRIENDLIST_UPDATE(_, _, msg)
 						-- No more players left so unmute the new "player has come online" sound that plays when a new friend is added.
 						-- Hopefully no one is actually muting this, because this will break it
 						C_Timer.After(0, function()
-							UnmuteSoundFile(567518)
+							if UnmuteSoundFile then -- XXX classic compat
+								UnmuteSoundFile(567518)
+							end
 							ChatFrame1:RegisterEvent("CHAT_MSG_SYSTEM") -- Re-enable the system message prints "player has come online"
 						end)
 					end
@@ -183,9 +187,16 @@ function mod:CHAT_MSG_WHISPER(_, _, ...)
 		local allow = false
 
 		if BADBOY_LEVELS_DB.allowfriends then
-			local isBnetFriend = C_BattleNet.GetGameAccountInfoByGUID(guid)
-			if isBnetFriend or C_FriendList.IsFriend(guid) then
-				allow = true
+			if C_BattleNet then -- Retail
+				local isBnetFriend = C_BattleNet.GetGameAccountInfoByGUID(guid)
+				if isBnetFriend or C_FriendList.IsFriend(guid) then
+					allow = true
+				end
+			else -- XXX classic compat
+				local _, isBnetFriend = BNGetGameAccountInfoByGUID(guid)
+				if isBnetFriend or C_FriendList.IsFriend(guid) then
+					allow = true
+				end
 			end
 		end
 		if BADBOY_LEVELS_DB.allowguild and IsGuildMember(guid) then
@@ -229,7 +240,9 @@ function mod:CHAT_MSG_WHISPER(_, _, ...)
 		idsToFilter[id] = true
 		-- Mute the new "player has come online" sound that plays when a friend is added.
 		-- Hopefully no one is actually muting this, because this will break it when it's unmuted above
-		MuteSoundFile(567518)
+		if MuteSoundFile then -- XXX classic compat
+			MuteSoundFile(567518)
+		end
 		ChatFrame1:UnregisterEvent("CHAT_MSG_SYSTEM") -- Block system messages "player has come online" and "player added to friends"
 		C_FriendList.AddFriend(trimmedPlayer, "badboy_temp")
 	else
@@ -248,7 +261,7 @@ function mod:CHAT_MSG_WHISPER_INFORM(_,_,msg,player, _, _, _, _, _, _, _, _, id)
 end
 
 -- whisper filtering function
-local function filter(_, event, _, _, _, _, _, _, _, _, _, _, id)
+local function filter(_, _, _, _, _, _, _, _, _, _, _, _, id)
 	if type(id) == "number" and idsToFilter[id] then
 		return true --filter everything not good (maybe)
 	end

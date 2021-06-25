@@ -1572,7 +1572,7 @@ function R:PrepareOptions()
 						width = "full",
 						desc = format(
 							L["Run the verification routine automatically after logging in. It can always be run manually (by typing %s)."],
-							"/rarity verify"
+							"/rarity validate"
 						),
 						get = function()
 							return self.db.profile.verifyDatabaseOnLogin
@@ -1825,13 +1825,13 @@ function R:CreateGroup(options, group, isUser)
 				requiresAllianceT = {
 					type = "description",
 					order = newOrder(),
-					name = colorize(L["This mount is only obtainable by Alliance players"], R.Caching:IsAlliance() and green or red),
+					name = colorize(L["This item is only obtainable by Alliance players"], R.Caching:IsAlliance() and green or red),
 					hidden = item.requiresAlliance == false or item.requiresAlliance == nil
 				},
 				requiresHordeT = {
 					type = "description",
 					order = newOrder(),
-					name = colorize(L["This mount is only obtainable by Horde players"], R.Caching:IsHorde() and green or red),
+					name = colorize(L["This item is only obtainable by Horde players"], R.Caching:IsHorde() and green or red),
 					hidden = item.requiresHorde == false or item.requiresHorde == nil
 				},
 				blankLine = {
@@ -2526,7 +2526,7 @@ function R:CreateGroup(options, group, isUser)
 						self:Update("OPTIONS")
 					end,
 					hidden = function()
-						return item.cat ~= HOLIDAY or (item.questId == nil and item.lockDungeonId == nil and item.holidayTexture == nil)
+						return (item.cat ~= HOLIDAY and item.worldQuestId == nil) or (item.questId == nil and item.lockDungeonId == nil and item.holidayTexture == nil)
 					end
 				},
 				spacer3 = {type = "header", name = L["Defeat Detection"], order = newOrder()},

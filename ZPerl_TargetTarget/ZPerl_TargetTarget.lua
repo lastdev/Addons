@@ -2,7 +2,8 @@
 -- Author: Resike
 -- License: GNU GPL v3, 18 October 2014
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local max = max
 local pairs = pairs
@@ -55,7 +56,7 @@ XPerl_RequestConfig(function(new)
 	if XPerl_PetTarget then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: f59e7d739fe667c357cee87d003de6e802c8ae29 $")
 
 local buffSetup
 
@@ -93,7 +94,7 @@ function ZPerl_TargetTarget_OnLoad(self)
 	elseif (self == XPerl_FocusTarget) then
 		self.parentid = "focus"
 		self.partyid = "focustarget"
-		if not IsClassic then
+		if not IsVanillaClassic then
 			self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 		end
 		for i, event in pairs(events) do

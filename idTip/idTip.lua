@@ -26,7 +26,7 @@ local kinds = {
   species = "SpeciesID",
 }
 
-local isClassicWow = select(4,GetBuildInfo()) < 20000
+local isClassicWow = select(4,GetBuildInfo()) < 90000
 
 local function contains(table, element)
   for _, value in pairs(table) do
@@ -330,6 +330,14 @@ f:SetScript("OnEvent", function(_, _, what)
         addLine(GameTooltip, npcId, kinds.unit);
       end
     end);
+
+  elseif what == "Blizzard_GarrisonUI" then
+    -- ability id
+    hooksecurefunc("AddAutoCombatSpellToTooltip", function (self, info)
+      if info and info.autoCombatSpellID then
+        addLine(self, info.autoCombatSpellID, kinds.ability)
+      end
+    end)
   end
 end)
 

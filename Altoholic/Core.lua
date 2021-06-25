@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.0.008"
-addon.VersionNum = 900008
+addon.Version = "v9.0.009b"
+addon.VersionNum = 900009
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -70,6 +70,7 @@ local AddonDB_Defaults = {
 			},
 		},
 		unsafeItems = {},
+		moreRecentVersion = nil,
 		options = {
 			-- ** Summary tab options **
 			["UI.Tabs.Summary.ShowRestXP150pc"] = false,						-- display max rest xp in normal 100% mode or in level equivalent 150% mode ?
@@ -280,14 +281,21 @@ end
 
 -- *** Guild Comm ***
 local function OnAnnounceLogin(self, guildName)
-	GuildBroadcast(MSG_SEND_VERSION, addon.Version)
+	GuildBroadcast(MSG_SEND_VERSION, addon.Version, addon.VersionNum)
 end
 
-local function OnSendVersion(sender, version)
+local function OnSendVersion(sender, version, versionNum)
 	if sender ~= UnitName("player") then								-- don't send back to self
 		GuildWhisper(sender, MSG_VERSION_REPLY, addon.Version)		-- reply by sending my own version
 	end
 	SaveVersion(sender, version)											-- .. and save it
+	
+	if versionNum and versionNum > addon.VersionNum and not addon.db.global.moreRecentVersion then
+		addon:Print("A new version of Altoholic is available, consider upgrading to get the latest features.")
+		addon:Print("Official sources : Curseforge & WoW Interface")
+		
+		addon.db.global.moreRecentVersion = addon.VersionNum
+	end
 end
 
 local function OnVersionReply(sender, version)
@@ -318,6 +326,12 @@ function addon:OnInitialize()
 	addon:RegisterMessage("DATASTORE_GUILD_MAIL_RECEIVED")
 	addon:RegisterMessage("DATASTORE_GLOBAL_MAIL_EXPIRY")
 	addon:RegisterMessage("DATASTORE_CS_TIMEGAP_FOUND")
+	addon:RegisterMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE")
+	
+	local global = addon.db.global
+	if global.moreRecentVersion and addon.VersionNum >= global.moreRecentVersion then
+		global.moreRecentVersion = nil
+	end
 end
 
 function addon:GetGuildMemberVersion(member)

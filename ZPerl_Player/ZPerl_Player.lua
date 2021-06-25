@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: c90ca4d25353186d9a29477279287fe2f320a73c $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -23,7 +23,7 @@ local function d(...)
 end
 --@end-debug@]===]
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local format = format
 
@@ -1152,6 +1152,142 @@ function XPerl_Player_Events:PLAYER_ENTERING_WORLD(event, initialLogin, reloadin
 								end
 							end
 						elseif newstate == 3 then
+							if extend then
+								if bar then
+									frame:SetHeight(62 + offset)
+									portrait:SetHeight(62 + offset)
+								else
+									frame:SetHeight(62 + offset - 10)
+									portrait:SetHeight(62 + offset - 10)
+								end
+							else
+								if bar then
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								else
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								end
+							end
+							if bar then
+								stats:SetHeight(40 + offset)
+							else
+								stats:SetHeight(40 + offset - 10)
+							end
+							if not above and buffs then
+								if extend then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								else
+									if bar then
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+									else
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+									end
+								end
+							end
+						else
+							if extend then
+								if bar then
+									frame:SetHeight(62 + offset)
+									portrait:SetHeight(62 + offset)
+								else
+									frame:SetHeight(62 + offset - 10)
+									portrait:SetHeight(62 + offset - 10)
+								end
+							else
+								if bar then
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								else
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								end
+							end
+							if bar then
+								stats:SetHeight(40 + offset)
+							else
+								stats:SetHeight(40 + offset - 10)
+							end
+							if not above and buffs then
+								if extend then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								else
+									if bar then
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+									else
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+									end
+								end
+							end
+						end
+					else
+						if newstate == 1 then
+							if extend then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+							stats:SetHeight(40 + offset)
+							if not above and buffs then
+								if extend then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								end
+							end
+						elseif newstate == 2 then
+							if extend then
+								if bar then
+									frame:SetHeight(62 + offset)
+									portrait:SetHeight(62 + offset)
+								else
+									frame:SetHeight(62 + offset - 10)
+									portrait:SetHeight(62 + offset - 10)
+								end
+							else
+								if bar then
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								else
+									frame:SetHeight(62)
+									portrait:SetHeight(62)
+								end
+							end
+							if bar then
+								stats:SetHeight(40 + offset)
+							else
+								stats:SetHeight(40 + offset - 10)
+							end
+							if not above and buffs then
+								if extend then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								else
+									if bar then
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+									else
+										buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset + 13.5)
+									end
+								end
+							end
+						elseif newstate == 3 then
+							if extend then
+								frame:SetHeight(62 + offset)
+								portrait:SetHeight(62 + offset)
+							else
+								frame:SetHeight(62)
+								portrait:SetHeight(62)
+							end
+							stats:SetHeight(40 + offset)
+							if not above and buffs then
+								if extend then
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
+								else
+									buffs:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, -buffoffset)
+								end
+							end
+						elseif newstate == 4 then
 							if extend then
 								if bar then
 									frame:SetHeight(62 + offset)

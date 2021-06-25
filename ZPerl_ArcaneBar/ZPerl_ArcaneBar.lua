@@ -14,7 +14,7 @@ end
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: d96e1fdbbd4a59135d05e101d6938f170d5c58f7 $")
 
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
 local LCC = LibStub("LibClassicCasterino", true)
@@ -23,7 +23,7 @@ if LCC then
     UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 -- Registers frame to spellcast events.
 local barColours = {
@@ -34,7 +34,7 @@ local barColours = {
 }
 
 local events = {
-	"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"
+	"UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED", "UNIT_SPELLCAST_INTERRUPTED", "UNIT_SPELLCAST_INTERRUPTIBLE",  "UNIT_SPELLCAST_NOT_INTERRUPTIBLE", "UNIT_SPELLCAST_DELAYED", "UNIT_SPELLCAST_CHANNEL_START", "UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_CHANNEL_STOP", "PLAYER_ENTERING_WORLD"
 }
 
 -- enableToggle
@@ -167,8 +167,8 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 		end
 
 		self:SetStatusBarColor(barColours.main.r, barColours.main.g, barColours.main.b, conf.transparency.frame)
-		if (notInterruptible) then
-			self.spellText:SetText(shield_icon .. shield_icon .. name:gsub(" %- No Text", "") .. shield_icon .. shield_icon)
+		if (not IsClassic and notInterruptible) then
+			self.spellText:SetText(shield_icon..shield_icon..name:gsub(" %- No Text", "")..shield_icon..shield_icon)
 		else
 			self.spellText:SetText(name:gsub(" %- No Text", ""))
 		end
@@ -239,6 +239,26 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 			self.fadeOut = 1
 			self.holdTime = GetTime() + CASTING_BAR_HOLD_TIME
 		end
+	elseif (event == "UNIT_SPELLCAST_INTERRUPTIBLE") or (event == "UNIT_SPELLCAST_NOT_INTERRUPTIBLE") then
+		if (self:IsShown()) then
+			local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
+			if (not name) then
+				name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitChannelInfo(self.unit)
+			end
+			if (not name or (not self.showTradeSkills and isTradeSkill)) then
+				-- if there is no name, there is no bar
+				self:Hide()
+				return
+			end
+			if (not IsClassic and notInterruptible) then
+				self.spellText:SetText(shield_icon..shield_icon..name:gsub(" %- No Text", "")..shield_icon..shield_icon)
+			else
+				self.spellText:SetText(name:gsub(" %- No Text", ""))
+			end
+			self.startTime = startTime / 1000
+			self.maxValue = endTime / 1000
+			self:SetMinMaxValues(self.startTime, self.maxValue)
+		end
 	elseif (event == "UNIT_SPELLCAST_DELAYED") then
 		if (self:IsShown()) then
 			local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(self.unit)
@@ -262,8 +282,8 @@ function XPerl_ArcaneBar_OnEvent(self, event, unit, ...)
 		self:SetStatusBarColor(barColours.channel.r, barColours.channel.g, barColours.channel.b, conf.transparency.frame)
 		self.barSpark:Show()
 		self.barParentName:Hide()
-		if (notInterruptible) then
-			self.spellText:SetText(shield_icon .. shield_icon .. name:gsub(" %- No Text", "") .. shield_icon .. shield_icon)
+		if (not IsClassic and notInterruptible) then
+			self.spellText:SetText(shield_icon..shield_icon..name:gsub(" %- No Text", "")..shield_icon..shield_icon)
 		else
 			self.spellText:SetText(name:gsub(" %- No Text", ""))
 		end

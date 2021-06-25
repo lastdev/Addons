@@ -148,6 +148,8 @@ L['SETTINGS_USE_CLONE_AUTOMARKER_LABEL'] = 'Auto marker';
 L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Automatically put markers on Illusionary Clones in a boss fight';
 L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Duplicate solution in English';
 L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Send the solution to the chat along with English phrases, for example, «Empty flower without a circle / Empty flower without a circle»|n|n|cffff6a00Ha-ha! Nevermind, it\'s only for non enUS/enGB locales|r';
+L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Solution in English only';
+L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Send the solution to the chat in English only';
 L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Set marker on player';
 L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Automatically set green marker on player if he clicked on symbol that became the solution';
 L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Background alpha';
@@ -174,6 +176,10 @@ L['SETTINGS_SKULLMARKER_CLONE_TOOLTIP'] = 'Automatically set the skull marker |T
 L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Use modifier key';
 L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Auto show/hide';
 L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Automatically toggle the visibility of the main window';
+L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Chat channel';
+L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Select the chat channel to which the solution will be sent';
+L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'Dragging is locked';
+L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'Dragging is unlocked';
 
 -- Русский (я)
 if gameLocale == 'ruRU' then
@@ -228,6 +234,8 @@ if gameLocale == 'ruRU' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Автоматически ставить метки на Иллюзорных клонов в бою с боссом';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Дублировать решение на английском';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Отправлять решение в чат вместе с английскими фразами, например, «Пустой цветок без круга / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Решение только на английском';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Отправлять решение в чат только на английском языке';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Ставить метку на игрока';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Автоматически ставить метку на игрока, если он кликнул по символу, который стал решением';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Видимость фона';
@@ -254,6 +262,10 @@ if gameLocale == 'ruRU' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Использовать клавишу-модификатор';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Авто показ/скрытие';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Автоматически управлять отображением главного окна';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Канал чата';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Выберите канал чата, в который будет отправляться решение';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'Перетаскивание заблокировано';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'Перетаскивание разблокировано';
 
     return;
 end
@@ -261,6 +273,7 @@ end
 -- German
 -- Udaberrico (https://github.com/Udaberrico)
 -- robozu (https://github.com/robozu)
+-- HalbHorst (https://www.curseforge.com/members/halbhorst)
 if gameLocale == 'deDE' then
     L['ZONE_NAME'] = 'Nebelschleierdickicht';
     L['MISTCALLER_NAME'] = 'Nebelruferin';
@@ -268,7 +281,7 @@ if gameLocale == 'deDE' then
     L['CHOOSE_SYMBOLS_4'] = 'Wählen Sie 4 Symbole';
     L['CHOOSE_SYMBOLS_3'] = 'Wählen Sie 3 weitere Symbole';
     L['CHOOSE_SYMBOLS_2'] = 'Wählen Sie 2 weitere Symbole';
-    L['CHOOSE_SYMBOLS_1'] = 'Wählen Sie 1 weiteres symbol';
+    L['CHOOSE_SYMBOLS_1'] = 'Wählen Sie 1 weiteres Symbol';
     L['SOLUTION_NA'] = '|cffffb833Keine Lösung gefunden|r';
     L['LEAF_FULL_CIRCLE'] = 'Gefülltes Blatt im Kreis';
     L['LEAF_FULL_NOCIRCLE'] = 'Gefülltes Blatt ohne Kreis';
@@ -313,23 +326,25 @@ if gameLocale == 'deDE' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Setze in einem Bosskampf automatisch Marker auf Illusionärer Klon';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Doppelte Lösung in Englisch';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Senden Sie die Lösung zusammen mit englischen Phrasen an den Chat, z. B. «Leere Blume ohne Kreis / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Lösung nur auf Englisch';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Senden Sie die Lösung nur auf Englisch an den Chat';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Setzen Sie einen Marker auf den Player';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Setzen Sie automatisch eine grüne Markierung auf den Spieler, wenn er auf das Symbol klickt, das zur Lösung wurde';
-    L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Hintergrundopazität';
+    L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Hintergrundtransparenz';
     L['SETTINGS_ALPHA_BACKGROUND_TOOLTIP'] = 'Stellen Sie die Deckkraft für den Hintergrund des Hauptfensters ein';
-    L['SETTINGS_ALPHA_BACKGROUND_LARGE_SYMBOL_LABEL'] = 'Hintergrundopazität des großen Symbols';
+    L['SETTINGS_ALPHA_BACKGROUND_LARGE_SYMBOL_LABEL'] = 'Hintergrundtransparenz des großen Symbols';
     L['SETTINGS_ALPHA_BACKGROUND_LARGE_SYMBOL_TOOLTIP'] = 'Stellen Sie die Deckkraft für den Hintergrund des großen Symbols ein';
     L['PRACTICE_TITLE'] = 'Wählen Sie ein Symbol aus, das sich in einer Hinsicht von den anderen unterscheidet';
     L['PRACTICE_PLAY_AGAIN'] = 'Nochmal abspielen';
     L['PRACTICE_BUTTON_TOOLTIP'] = 'Trainieren';
     L['MINIMAP_BUTTON_LMB'] = 'Linke Maustaste';
     L['MINIMAP_BUTTON_RMB'] = 'Rechte Maustaste';
-    L['MINIMAP_BUTTON_TOGGLE_MAZEHELPER'] = 'Schalter «Maze Helper» Rahmen';
+    L['MINIMAP_BUTTON_TOGGLE_MAZEHELPER'] = '«Maze Helper» Rahmen an/aus';
     L['MINIMAP_BUTTON_HIDE'] = 'Minikartenschaltfläche ausblenden';
-    L['MINIMAP_BUTTON_COMMAND_SHOW'] = 'Verwenden Sie /mh minimap, um das Minikartensymbol erneut anzuzeigen';
+    L['MINIMAP_BUTTON_COMMAND_SHOW'] = 'Verwenden Sie /mh minimap, um das Minikartensymbol erneut anzuzeigen.';
     L['SETTINGS_AUTO_PASS_LABEL'] = 'Auto-pass';
     L['SETTINGS_AUTO_PASS_TOOLTIP'] = 'Auto «|cff66ff6eBestanden|r» bei erfolgreichem Durchgang durch die Nebel';
-    L['SETTINGS_BORDERS_COLORS'] = 'Grenzen Farben';
+    L['SETTINGS_BORDERS_COLORS'] = 'Farben der Umrandung';
     L['SETTINGS_ACTIVE_COLORPICKER'] = 'Ausgewählt';
     L['SETTINGS_RECEIVED_COLORPICKER'] = 'Empfangen';
     L['SETTINGS_SOLUTION_COLORPICKER'] = 'Lösung';
@@ -339,6 +354,10 @@ if gameLocale == 'deDE' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Verwenden Sie die Modifizierertaste';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Auto ein-/ausblenden';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Schaltet die Sichtbarkeit des Hauptfensters automatisch um';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Chat-Kanal';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Wählen Sie den Chat-Kanal, an den die Lösung gesendet werden soll';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'Ziehen ist gesperrt';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'Ziehen ist freigeschaltet';
 
     return;
 end
@@ -396,6 +415,8 @@ if gameLocale == 'frFR' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Mettre automatiquement des marqueurs sur les Clones illusoires dans un combat de boss';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Dupliquer la solution en anglais';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Envoyez la solution au chat avec des phrases en anglais, par exemple, «Fleur vide sans cercle / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Solution en anglais uniquement';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Envoyez la solution au chat en anglais uniquement';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Placer un marqueur sur le joueur';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Définir automatiquement le marqueur vert sur le joueur s\'il clique sur le symbole qui est devenu la solution';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Opacité de l\'arrière-plan';
@@ -422,6 +443,10 @@ if gameLocale == 'frFR' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Utiliser la touche de modification';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Afficher/masquer automatiquement';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Basculer automatiquement la visibilité de la fenêtre principale';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Canal de chat';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Sélectionnez le canal de chat auquel la solution sera envoyée.';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'La drague est verrouillée';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'Le glisser est déverrouillé';
 
     return;
 end
@@ -479,6 +504,8 @@ if gameLocale == 'itIT' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Metti automaticamente i segnalini sui Clone Illusorio in una lotta con un boss';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Soluzione duplicata in inglese';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Invia la soluzione alla chat insieme a frasi in inglese, ad esempio, «Fiore vuoto senza cerchio / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Soluzione solo in inglese';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Invia la soluzione alla chat solo in inglese';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Imposta un indicatore sul giocatore';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Imposta automaticamente l\'indicatore verde sul giocatore se ha cliccato sul simbolo che è diventato la soluzione';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Opacità dello sfondo';
@@ -505,6 +532,10 @@ if gameLocale == 'itIT' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Usa il tasto modificatore';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Mostra/nascondi automaticamente';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Attiva/disattiva automaticamente la visibilità della finestra principale';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Canale chat';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Seleziona il canale di chat a cui verrà inviata la soluzione';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'Il trascinamento è bloccato';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'Il trascinamento è sbloccato';
 
     return;
 end
@@ -562,6 +593,8 @@ if gameLocale == 'ptBR' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Colocar marcadores automaticamente em Clones Ilusórios em uma luta de chefe';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Solução duplicada em inglês';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Envie a solução para o chat junto com frases em inglês, por exemplo, «Flor vazia sem círculo / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Solução apenas em inglês';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Envie a solução para o chat apenas em inglês';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Definir marcador no jogador';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Definir marcador verde automaticamente no jogador se ele clicar no símbolo que se tornou a solução';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Opacidade de fundo';
@@ -588,6 +621,10 @@ if gameLocale == 'ptBR' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Use a tecla modificadora';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Mostrar/ocultar automaticamente';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Alterna automaticamente a visibilidade da janela principal';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Canal de bate-papo';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Selecione o canal de bate-papo para o qual a solução será enviada';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'O arrasto está bloqueado';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'O arrasto é desbloqueado';
 
     return;
 end
@@ -645,6 +682,8 @@ if gameLocale == 'esES' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = 'Coloca marcadores automáticamente en Clones ilusorios en una pelea de jefes';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = 'Solución duplicada en inglés';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = 'Envía la solución al chat junto con frases en inglés, por ejemplo, «Flor vacía sin círculo / Empty flower without a circle»';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = 'Solución sólo en inglés';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = 'Enviar la solución al chat sólo en inglés';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = 'Establecer marcador en el jugador';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = 'Establece automáticamente un marcador verde en el jugador si hace clic en el símbolo que se convirtió en la solución';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = 'Opacidad de fondo';
@@ -671,6 +710,10 @@ if gameLocale == 'esES' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = 'Usar tecla modificadora';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = 'Mostrar/ocultar automáticamente';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = 'Alternar automáticamente la visibilidad de la ventana principal';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = 'Canal de chat';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = 'Seleccione el canal de chat al que se enviará la solución';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = 'El arrastre está bloqueado';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = 'El arrastre está desbloqueado';
 
     return;
 end
@@ -738,6 +781,8 @@ if gameLocale == 'zhTW' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = '在老闆戰鬥中自動在幻影克隆上放置標記';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = '英文重複解決方案';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = '將解決方案與英語短語一起發送至聊天，例如，“無外環空心的花/Empty flower without a circle”';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = '解決方案僅用英文';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = '僅用英語發送解決方案';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = '在玩家上設置標記';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = '如果玩家點擊成為解決方案的標誌，則自動在他身上設置綠色標記';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = '背景不透明度';
@@ -764,6 +809,10 @@ if gameLocale == 'zhTW' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = '使用修飾鍵';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = '自動顯示/隱藏';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = '自動切換主窗口的可見性';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = '聊天頻道';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = '選擇解決方案將發送到的聊天頻道';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = '拖動被鎖定';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = '拖動已解鎖';
 
     return;
 end
@@ -824,6 +873,8 @@ if gameLocale == 'zhCN' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = '在老板战斗中自动在幻影克隆上放置标记';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = '英文重复解决方案';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = '将解决方案与英语短语一起发送给聊天，例如，“无环 空心 花/Empty flower without a circle”';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = '仅有英文版本的解决方案';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = '只用英语发送聊天的解决方案';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = '在播放器上设置标记';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = '如果他单击成为解决方案的符号，则自动在玩家上设置绿色标记';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = '背景不透明度';
@@ -850,6 +901,10 @@ if gameLocale == 'zhCN' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = '使用修饰键';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = '自动显示/隐藏';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = '自动切换主窗口的可见性';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = '聊天频道';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = '选择解决方案将发送到的聊天频道';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = '拖动被锁定';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = '拖动已解锁';
 
     return;
 end
@@ -908,6 +963,8 @@ if gameLocale == 'koKR' then
     L['SETTINGS_USE_CLONE_AUTOMARKER_TOOLTIP'] = '보스전에서 환영 분신들에 징표를 자동으로 분배';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_LABEL'] = '영어로도 중복해서 표시';
     L['SETTINGS_ANNOUNCE_WITH_ENGLISH_TOOLTIP'] = '예를 들어 «원 없는 빈 꽃 / Empty flower without a circle»과 같이 영어 구문과 함께 정답을 채팅에 보냅니다';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_LABEL'] = '영어로만 솔루션';
+    L['SETTINGS_ANNOUNCE_ONLY_ENGLISH_TOOLTIP'] = '영어로만 채팅에 솔루션을 보냅니다';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_LABEL'] = '플레이어에 징표 설정';
     L['SETTINGS_SET_MARKER_SOLUTION_PLAYER_TOOLTIP'] = '답을 고르면 플레이어에게 자동으로 녹색 징표가 설정됩니다';
     L['SETTINGS_ALPHA_BACKGROUND_LABEL'] = '배경 불투명도';
@@ -934,6 +991,10 @@ if gameLocale == 'koKR' then
     L['SETTINGS_SKULLMARKER_USE_MODIFIER_TOOLTIP'] = '모드 키 사용';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_LABEL'] = '자동 표시 / 숨기기';
     L['SETTINGS_AUTO_TOGGLE_VISIBILITY_TOOLTIP'] = '기본 창의 가시성을 자동으로 전환';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL'] = '채팅 채널';
+    L['SETTINGS_AUTOANNOUNCE_CHANNEL_TOOLTIP'] = '솔루션을 보낼 채팅 채널을 선택하십시오.';
+    L['LOCKED_DRAG_BUTTON_TOOLTIP'] = '드래그가 잠겨 있습니다.';
+    L['UNLOCKED_DRAG_BUTTON_TOOLTIP'] = '드래그가 잠금 해제되었습니다.';
 
     return;
 end

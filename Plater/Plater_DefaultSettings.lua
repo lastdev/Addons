@@ -91,6 +91,7 @@ PLATER_DEFAULT_SETTINGS = {
 		plate_config  = {
 			friendlyplayer = {
 				enabled = true,
+				module_enabled = true,
 				only_damaged = true,
 				only_thename = false,
 				click_through = true,
@@ -105,6 +106,7 @@ PLATER_DEFAULT_SETTINGS = {
 				mana = {100, 3},
 				mana_incombat = {100, 3},
 				buff_frame_y_offset = 10,
+				castbar_offset_x = 0,
 				castbar_offset = 0,
 				
 				actorname_text_spacing = 10,
@@ -164,6 +166,7 @@ PLATER_DEFAULT_SETTINGS = {
 			
 			enemyplayer = {
 				enabled = true,
+				module_enabled = true,
 				show_guild_name = false,
 				
 				use_playerclass_color = true,
@@ -178,6 +181,7 @@ PLATER_DEFAULT_SETTINGS = {
 				mana_incombat = {100, 4},
 				
 				buff_frame_y_offset = 0,
+				castbar_offset_x = 0,
 				castbar_offset = 0,
 				
 				actorname_text_spacing = 12,
@@ -250,6 +254,7 @@ PLATER_DEFAULT_SETTINGS = {
 				all_names = true,
 				relevance_state = 4,
 				enabled = true,
+				module_enabled = true,
 				
 				health = {112, 12},
 				cast = {112, 10},
@@ -260,6 +265,7 @@ PLATER_DEFAULT_SETTINGS = {
 				mana_incombat = {100, 4},
 				
 				buff_frame_y_offset = 0,
+				castbar_offset_x = 0,
 				castbar_offset = 0,
 				
 				actorname_text_spacing = 10,
@@ -332,6 +338,7 @@ PLATER_DEFAULT_SETTINGS = {
 			
 			enemynpc = {
 				enabled = true,
+				module_enabled = true,
 				all_names = true,
 				
 				health = {112, 12},
@@ -343,6 +350,7 @@ PLATER_DEFAULT_SETTINGS = {
 				mana_incombat = {100, 4},
 				
 				buff_frame_y_offset = 0,
+				castbar_offset_x = 0,
 				castbar_offset = 0,
 				
 				actorname_text_spacing = 10,
@@ -417,6 +425,7 @@ PLATER_DEFAULT_SETTINGS = {
 
 			player = {
 				enabled = true,
+				module_enabled = true,
 				click_through = false,
 				health = {150, 12},
 				health_incombat = {150, 12},
@@ -428,6 +437,7 @@ PLATER_DEFAULT_SETTINGS = {
 				healthbar_enabled = true,
 				healthbar_color = {0.564706, 0.933333, 0.564706, 1},
 				healthbar_color_by_hp = false,
+				castbar_offset_x = 0,
 				castbar_offset = 0, --not used?
 				
 				castbar_enabled = true,
@@ -529,6 +539,8 @@ PLATER_DEFAULT_SETTINGS = {
 		
 		quick_hide = false, --hide the nameplate when the unit hits 0 health points | making disabled by default, this maybe is bugging hunters FD
 		
+		show_healthbars_on_not_attackable = false,
+		
 		enable_masque_support = false,
 		
 		use_name_translit = false,
@@ -598,6 +610,7 @@ PLATER_DEFAULT_SETTINGS = {
 		minor_height_scale = 0.95,
 		
 		--> widget settings
+		usePlaterWidget = false,
 		widget_bar_scale = 0.75,
 		widget_bar_anchor = {side = 4, x = 0, y = 0},
 		
@@ -2520,6 +2533,7 @@ PLATER_DEFAULT_SETTINGS = {
 		},
 		
 		aggro_can_check_notank = false,
+		tank_threat_colors = false,
 		
 		show_aggro_flash = false,
 		show_aggro_glow = true,

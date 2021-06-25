@@ -16,7 +16,7 @@ No data binding is implemented at this point, maybe later.
 
 --]]
 
-local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibMVC-1.0", 1
+local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibMVC-1.0", 3
 local lib = LibStub:NewLibrary(LIB_VERSION_MAJOR, LIB_VERSION_MINOR)
 
 if not lib then return end -- No upgrade needed
@@ -99,6 +99,10 @@ function lib:Service(name, args)
 	RegisterObject(name, args, registeredServices)
 end
 
+function lib:GetService(name)
+	return registeredServices[name]
+end
+
 -- *** View ***
 local function SetViewMethods(frame, controller)
 	-- simply assign all of the controller's methods to the frame
@@ -125,6 +129,9 @@ function lib:BindViewToController(frame, controller, inherits)
 	
 	SetViewMethods(frame, controllers[controller])
 	
+	-- This controller's OnBind will be overwritten by the inherited ones, save it for now.
+	local saveOnBind = frame.OnBind
+	
 	-- execute the OnBind methods
 	-- .. first the inherited ones (if any), from left to right
 	if inherits then
@@ -140,6 +147,9 @@ function lib:BindViewToController(frame, controller, inherits)
 			end
 		end
 	end
+	
+	-- Restore the saved OnBind
+	frame.OnBind = saveOnBind
 	
 	-- .. then the actual controller's OnBind
 	if frame.OnBind then

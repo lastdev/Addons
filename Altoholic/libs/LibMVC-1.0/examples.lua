@@ -115,3 +115,9 @@ addon:Service("YourAddon.Weaponry", { "YourAddon.Equipment", function(equipment)
 		end,
 	}
 end})
+
+-- *** Example 7 / Simple use of a service oustide of any controller ***
+
+local s = lib:GetService("YourAddon.Equipment")
+
+local x = s:DoStuff(1, 2)

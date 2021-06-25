@@ -6,7 +6,7 @@ local conf, pconf
 XPerl_RequestConfig(function(new)
 	conf = new
 	pconf = new.player
-end, "$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+end, "$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
 
 --local playerClass
 
@@ -17,7 +17,7 @@ local function d(fmt, ...)
 end
 --@end-debug@]===]
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 -- setCommon
 local function setCommon(self, filter, buffTemplate)

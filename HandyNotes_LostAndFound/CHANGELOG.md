@@ -1,6 +1,7 @@
 # HandyNotes_LostAndFound
 
-## [v14](https://github.com/kemayo/wow-handynotes-lostandfound/tree/v14) (2020-11-17)
-[Full Changelog](https://github.com/kemayo/wow-handynotes-lostandfound/commits/v14) [Previous Releases](https://github.com/kemayo/wow-handynotes-lostandfound/releases)
+## [v15](https://github.com/kemayo/wow-handynotes-lostandfound/tree/v15) (2020-12-23)
+[Full Changelog](https://github.com/kemayo/wow-handynotes-lostandfound/commits/v15) [Previous Releases](https://github.com/kemayo/wow-handynotes-lostandfound/releases)
 
-- Add a readme  
+- Merge pull request #1 from Ravendwyr/master  
+    Wilds and Waypoints  

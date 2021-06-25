@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 919e0f8a150cee048b33cf8ae0873d63cbccab98 $")
+XPerl_SetModuleRevision("$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -16,7 +16,7 @@ local XTitle
 local pendingTankListChange -- If in combat when tank list changes, then we'll defer it till next time we're out of combat
 local conf
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local GetNumGroupMembers = GetNumGroupMembers
 

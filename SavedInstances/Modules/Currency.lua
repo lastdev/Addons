@@ -1,11 +1,8 @@
 local SI, L = unpack(select(2, ...))
 local Module = SI:NewModule('Currency', 'AceEvent-3.0', 'AceTimer-3.0', 'AceBucket-3.0')
 
-local seasonTotalPatten = gsub(CURRENCY_SEASON_TOTAL, "%%s%%s", "(.+)")
-
 -- Lua functions
-local ipairs, pairs, strfind, wipe = ipairs, pairs, strfind, wipe
-local _G = _G
+local ipairs, pairs, wipe = ipairs, pairs, wipe
 
 -- WoW API / Variables
 local C_CurrencyInfo_GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
@@ -153,17 +150,6 @@ for _, tbl in pairs(specialCurrency) do
   end
 end
 
-local function GetSeasonCurrency(idx)
-  SI.ScanTooltip:SetCurrencyByID(idx)
-  local name = SI.ScanTooltip:GetName()
-  for i = 1, SI.ScanTooltip:NumLines() do
-    local text = _G[name .. "TextLeft" .. i]:GetText()
-    if strfind(text, seasonTotalPatten) then
-      return text
-    end
-  end
-end
-
 function Module:OnEnable()
   self:RegisterBucketEvent("CURRENCY_DISPLAY_UPDATE", 0.25, "UpdateCurrency")
   self:RegisterEvent("BAG_UPDATE", "UpdateCurrencyItem")
@@ -176,13 +162,17 @@ function Module:UpdateCurrency()
   t.currency = wipe(t.currency or {})
   for _,idx in ipairs(currency) do
     local data = C_CurrencyInfo_GetCurrencyInfo(idx)
-    local amount, earnedThisWeek, weeklyMax, totalMax, discovered =
-      data.quantity, data.quantityEarnedThisWeek, data.maxWeeklyQuantity, data.maxQuantity, data.discovered
-    if not discovered then
+    if not data.discovered then
       t.currency[idx] = nil
     else
       local ci = t.currency[idx] or {}
-      ci.amount, ci.earnedThisWeek, ci.weeklyMax, ci.totalMax = amount, earnedThisWeek, weeklyMax, totalMax
+      ci.amount = data.quantity
+      ci.totalMax = data.maxQuantity
+      ci.earnedThisWeek = data.quantityEarnedThisWeek
+      ci.weeklyMax = data.maxWeeklyQuantity
+      if data.useTotalEarnedForMaxQty then
+        ci.totalEarned = data.totalEarned
+      end
       -- handle special currency
       if specialCurrency[idx] then
         local tbl = specialCurrency[idx]
@@ -203,10 +193,11 @@ function Module:UpdateCurrency()
         ci.amount = ci.amount + 1
         ci.totalMax = ci.totalMax + 1
       end
-      ci.season = GetSeasonCurrency(idx)
-      if ci.weeklyMax == 0 then ci.weeklyMax = nil end -- don't store useless info
-      if ci.totalMax == 0 then ci.totalMax = nil end -- don't store useless info
-      if ci.earnedThisWeek == 0 then ci.earnedThisWeek = nil end -- don't store useless info
+      -- don't store useless info
+      if ci.weeklyMax == 0 then ci.weeklyMax = nil end
+      if ci.totalMax == 0 then ci.totalMax = nil end
+      if ci.earnedThisWeek == 0 then ci.earnedThisWeek = nil end
+      if ci.totalEarned == 0 then ci.totalEarned = nil end
       t.currency[idx] = ci
     end
   end

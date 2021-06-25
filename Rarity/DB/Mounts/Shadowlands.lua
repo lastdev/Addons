@@ -87,7 +87,6 @@ local shadowlandsMounts = {
 		name = L["Phalynx of Humility"],
 		spellId = 334386,
 		itemId = 180762,
-		items = {356818},
 		chance = 50,
 		questId = {61688},
 		sourceText = L["This mount can only drop for Kyrians. Requires channeling anima to Temple of Purity."],
@@ -103,7 +102,7 @@ local shadowlandsMounts = {
 		spellId = 344574,
 		itemId = 184160,
 		items = {184158},
-		chance = 10, -- Estimate
+		chance = 3,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.MALDRAXXUS}
 		}
@@ -116,7 +115,7 @@ local shadowlandsMounts = {
 		spellId = 344575,
 		itemId = 184162,
 		items = {184158},
-		chance = 10, -- Estimate
+		chance = 3,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.MALDRAXXUS}
 		}
@@ -129,7 +128,7 @@ local shadowlandsMounts = {
 		spellId = 344576,
 		itemId = 184161,
 		items = {184158},
-		chance = 10, -- Estimate
+		chance = 3,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.MALDRAXXUS}
 		}
@@ -294,7 +293,7 @@ local shadowlandsMounts = {
 		itemId = 184167,
 		spellId = 312762,
 		npcs = {174861},
-		chance = 100, -- Estimate
+		chance = 50,
 		questId = 63433,
 		groupSize = 5,
 		equalOdds = true,
@@ -315,7 +314,7 @@ local shadowlandsMounts = {
 		groupSize = 5,
 		equalOdds = true,
 		coords = {
-			{m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 50.67, y = 47.37, n = L["Theatre of Pain"]}
+			{m = CONSTANTS.UIMAPIDS.MALDRAXXUS, x = 50.67, y = 47.37, n = L["Theater of Pain"]}
 		}
 	},
 	["Marrowfang's Reins"] = {
@@ -359,7 +358,6 @@ local shadowlandsMounts = {
 		name = L["Ascended Skymane"],
 		spellId = 342335,
 		itemId = 183741,
-		items = {354175},
 		chance = 20,
 		tooltipNpcs = {170834, 170835, 170833, 170832, 170836},
 		questId = {60933},

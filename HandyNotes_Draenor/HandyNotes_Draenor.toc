@@ -1,0 +1,25 @@
+## Interface: 91000
+## Title: HandyNotes: Draenor
+## Version: 2.1
+## Notes: Find Draenor Rares and Treasures easily
+## Author: Lorade
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotesDraenorDB
+
+Include.xml
+
+Init.lua
+Interface.lua
+
+Zones\SpiresOfArak.lua
+Zones\FrostfireRidge.lua
+Zones\Gorgrond.lua
+Zones\Nagrand.lua
+Zones\ShadowmoonValley.lua
+Zones\Talador.lua
+Zones\TanaanJungle.lua
+
+Zones\Faction.lua
+Zones\Quests.lua
+
+Main.lua

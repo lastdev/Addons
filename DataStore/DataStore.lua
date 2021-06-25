@@ -386,7 +386,22 @@ function addon:RegisterModule(moduleName, module, publicMethods, allowOverrides)
 	assert(type(moduleName) == "string")
 	assert(type(module) == "table")
 
-	if not modulesList[moduleName] then return end
+	if not modulesList[moduleName] then 
+		local white	= "|cFFFFFFFF"
+		local teal = "|cFF00FF9A"
+		local cyan = "|cFF1CFAFE"
+		local yellow = "|cFFFFFF00"
+		local red = "|cFFFF0000"
+		local prefix = format("%sDataStore%s: ", teal, white)
+
+		print(format("%sError triggered by : %s%s", prefix, yellow, moduleName))
+		print("You are using an unauthorized DataStore module that breaches the licensing rights of DataStore's sole author (Thaoky, EU-Marécages de Zangar).")
+		print("The development and distribution of unauthorized DataStore modules outside of the official Altoholic package is prohibited by the 'All Rights Reserved' licensing terms.")
+		print("|cFFFFFF00What you should do :")
+		print(format("Leave the game and clear all Altoholic* and DataStore* folders from the %sInterface\\Addons%s folder, and make a manual download of the latest version of Altoholic from one of the two official sources (Curseforge and WoW Interface).", cyan, white))
+		print(format("Please respect the original author's work, and do not encourage the development of modules that %scan and have already been misused%s to harm other add-ons.", red, white))
+		return 
+	end
 	modulesList[moduleName] = nil		-- Prevent a module from registering twice
 	
 	-- add the module's database address (addon.db.global) to the list of known modules, if it is not already known

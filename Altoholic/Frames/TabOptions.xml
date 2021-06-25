@@ -404,6 +404,14 @@
 					<KeyValue key="option" value="UI.Tooltip.ShowHearthstoneCount" />
 				</KeyValues>
 			</CheckButton>
+			<CheckButton parentKey="ShowItemXPack" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeKey="$parent.ShowHearthstoneCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="option" value="UI.Tooltip.ShowItemXPack" />
+				</KeyValues>
+			</CheckButton>
 		</Frames>
 	</Frame>
 	

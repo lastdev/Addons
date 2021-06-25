@@ -1,6 +1,6 @@
 
 do
-	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner v9.0.2") --packager magic, replaced with tag version
+	BadBoyCCleanerConfigTitle:SetText("BadBoy_CCleaner")
 
 	local ccleanerInput = CreateFrame("EditBox", nil, BadBoyConfig, "InputBoxTemplate")
 	ccleanerInput:SetPoint("TOPLEFT", BadBoyCCleanerConfigTitle, "BOTTOMLEFT", 10, -5)
@@ -68,9 +68,9 @@ do
 			if BADBOY_CCLEANER[i] == t then found = i end
 		end
 		if found then
-			tremove(BADBOY_CCLEANER, found)
+			table.remove(BADBOY_CCLEANER, found)
 		else
-			tinsert(BADBOY_CCLEANER, t)
+			table.insert(BADBOY_CCLEANER, t)
 		end
 		table.sort(BADBOY_CCLEANER)
 		local text
@@ -85,14 +85,8 @@ do
 		ccleanerInput:SetText("")
 	end)
 
-	local ccleanerBackdrop = CreateFrame("Frame", nil, BadBoyConfig, "BackdropTemplate")
-	ccleanerBackdrop:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-		tile = true, tileSize = 16, edgeSize = 16,
-		insets = {left = 3, right = 3, top = 5, bottom = 3}}
-	)
-	ccleanerBackdrop:SetBackdropColor(0,0,0,1)
-	ccleanerBackdrop:SetPoint("TOPLEFT", ccleanerInput, "BOTTOMLEFT", -5, 0)
+	local ccleanerBackdrop = BadBoyConfig:CreateTexture()
+	ccleanerBackdrop:SetPoint("TOPLEFT", ccleanerInput, "BOTTOMLEFT", -5, -5)
 	ccleanerBackdrop:SetPoint("BOTTOMRIGHT", BadBoyConfig, "BOTTOMRIGHT", -27, 5)
+	ccleanerBackdrop:SetColorTexture(0, 0, 0, 0.6)
 end
-

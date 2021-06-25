@@ -1038,8 +1038,12 @@ L["Show counters for connected realms"] = true
 L["Include guild bank count in the total count"] = true
 L["Detailed guild bank count"] = true
 L["Show counters for hearthstones"] = true
+L["Show extended item information"] = true
 
 -- ** Frame 6 : Calendar **
 L["Week starts on Monday"] = true
 L["Warn %d minutes before an event starts"] = true
 L["Disable warnings"] = true
+
+L["Goes in"] = true
+L["AUCTION_HOUSE_NOT_VISITED_WARNING"] = "Auctions have not been checked on %s|r since %d days, check the auction house and your mailbox !"

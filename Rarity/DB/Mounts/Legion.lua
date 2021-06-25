@@ -14,7 +14,8 @@ local legionMounts = {
 		spellId = 242881,
 		itemId = 147806,
 		items = {152102},
-		chance = 20
+		chance = 20,
+		coords = {{m = CONSTANTS.UIMAPIDS.AZSUNA}}
 	},
 	["Highmountain Elderhorn"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -24,7 +25,8 @@ local legionMounts = {
 		spellId = 242874,
 		itemId = 147807,
 		items = {152104},
-		chance = 20
+		chance = 20,
+		coords = {{m = CONSTANTS.UIMAPIDS.HIGHMOUNTAIN}}
 	},
 	["Leywoven Flying Carpet"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -34,7 +36,9 @@ local legionMounts = {
 		spellId = 233364,
 		itemId = 143764,
 		items = {152105},
-		chance = 20
+		chance = 20,
+		blackMarket = true,
+		coords = {{m = CONSTANTS.UIMAPIDS.SURAMAR}}
 	},
 	["Torn Invitation"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -46,7 +50,7 @@ local legionMounts = {
 		chance = 200,
 		questId = 43943,
 		sourceText = L["The quest starter item for Reins of the Llothien Prowler"],
-		coords = {{m = 680}}
+		coords = {{m = CONSTANTS.UIMAPIDS.SURAMAR}}
 	},
 	["Valarjar Stormwing"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -56,7 +60,9 @@ local legionMounts = {
 		spellId = 242882,
 		itemId = 147805,
 		items = {152106},
-		chance = 20
+		chance = 20,
+		blackMarket = true,
+		coords = {{m = CONSTANTS.UIMAPIDS.STORMHEIM}}
 	},
 	["Wild Dreamrunner"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -66,7 +72,8 @@ local legionMounts = {
 		spellId = 242875,
 		itemId = 147804,
 		items = {152103},
-		chance = 20
+		chance = 20,
+		coords = {{m = CONSTANTS.UIMAPIDS.VALSHARAH}}
 	},
 	-- 7.1
 	["Smoldering Ember Wyrm"] = {
@@ -124,6 +131,7 @@ local legionMounts = {
 		npcs = {127288},
 		chance = 30,
 		questId = 48821,
+		blackMarket = true,
 		coords = {
 			{m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES, x = 62.96, y = 24.86, n = L["Houndmaster Kerrax"]}
 		}
@@ -277,7 +285,12 @@ local legionMounts = {
 		spellId = 254259,
 		itemId = 153044,
 		items = {152923},
-		chance = 20
+		chance = 20,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES},
+			{m = CONSTANTS.UIMAPIDS.KROKUUN},
+			{m = CONSTANTS.UIMAPIDS.MACAREE}
+		}
 	},
 	["Blessed Felcrusher"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -287,7 +300,12 @@ local legionMounts = {
 		spellId = 254258,
 		itemId = 153043,
 		items = {152923},
-		chance = 20
+		chance = 20,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES},
+			{m = CONSTANTS.UIMAPIDS.KROKUUN},
+			{m = CONSTANTS.UIMAPIDS.MACAREE}
+		}
 	},
 	["Glorious Felcrusher"] = {
 		cat = CONSTANTS.ITEM_CATEGORIES.LEGION,
@@ -297,7 +315,12 @@ local legionMounts = {
 		spellId = 254069,
 		itemId = 153042,
 		items = {152923},
-		chance = 20
+		chance = 20,
+		coords = {
+			{m = CONSTANTS.UIMAPIDS.ANTORAN_WASTES},
+			{m = CONSTANTS.UIMAPIDS.KROKUUN},
+			{m = CONSTANTS.UIMAPIDS.MACAREE}
+		}
 	},
 	-- 7.x
 	["Abyss Worm"] = {
@@ -312,6 +335,7 @@ local legionMounts = {
 		chance = 100,
 		groupSize = 3,
 		equalOdds = true,
+		blackMarket = true,
 		statisticId = {11893, 11894, 11895, 11896},
 		coords = {{m = 851, i = true}}
 	},
@@ -331,6 +355,7 @@ local legionMounts = {
 		chance = 100,
 		groupSize = 3,
 		equalOdds = true,
+		blackMarket = true,
 		statisticId = {10979, 10980, 10978},
 		coords = {{m = 772, i = true}}
 	},
@@ -394,6 +419,7 @@ local legionMounts = {
 		wasGuaranteed = true,
 		groupSize = 3,
 		equalOdds = true,
+		blackMarket = true,
 		statisticId = {11986},
 		coords = {{m = 910, i = true}}
 	}

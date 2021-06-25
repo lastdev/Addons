@@ -15,6 +15,8 @@ local THIS_ACCOUNT = "Default"
 local AddonDB_Defaults = {
 	global = {
 		Options = {
+			CheckLastVisit = true,				-- Check the last auction house visit time or not
+			CheckLastVisitThreshold = 15,
 			AutoClearExpiredItems = true,		-- Automatically clear expired auctions and bids
 		},
 		Characters = {
@@ -23,6 +25,7 @@ local AddonDB_Defaults = {
 				Bids = {},
 				lastUpdate = nil,				-- last time the AH was checked for this char
 				lastVisitDate = nil,			-- in YYYY MM DD  hh:mm, for external apps
+				lastAuctionsScan = nil,		-- last time an auction placed by the player was scanned
 			}
 		}
 	}
@@ -106,7 +109,19 @@ local function CheckExpiries()
 	local AHTypes = { "Auctions", "Bids" }
 	local timeLeft, diff
 	
+	local checkLastVisit = GetOption("CheckLastVisit")
+	local threshold = GetOption("CheckLastVisitThreshold")
+	local autoClear = GetOption("AutoClearExpiredItems")
+	
 	for key, character in pairs(addon.db.global.Characters) do
+		-- Check if the last auction visit was maybe a very long time ago, and warn the player that he may have missed items..
+		if checkLastVisit and character.lastAuctionsScan then
+			local seconds = time() - character.lastAuctionsScan
+			local days = floor(seconds / 86400)
+			
+			addon:SendMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE", character, key, days, threshold)
+		end
+		
 		for _, ahType in pairs(AHTypes) do					-- browse both auctions & bids
 			for index = #character[ahType], 1, -1 do		-- from last to first, to make sure table.remove does not screw up indexes.
 				timeLeft = select(7, _GetAuctionHouseItemInfo(character, ahType, index))
@@ -115,7 +130,8 @@ local function CheckExpiries()
 				end
 
 				diff = time() - character.lastUpdate
-				if diff > maxTimeLeft[timeLeft] then	-- has expired
+				
+				if diff > maxTimeLeft[timeLeft] and autoClear then		-- has expired
 					table.remove(character[ahType], index)
 				end
 			end
@@ -139,9 +155,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW")
 	addon:SetupOptions()
 	
-	if GetOption("AutoClearExpiredItems") then
-		addon:ScheduleTimer(CheckExpiries, 3)	-- check AH expiries 3 seconds later, to decrease the load at startup
-	end
+	addon:ScheduleTimer(CheckExpiries, 3)	-- check AH expiries 3 seconds later, to decrease the load at startup
 end
 
 function addon:OnDisable()
@@ -159,12 +173,19 @@ end
 local function ScanAuctions()
 	local AHZone = GetAuctionHouseZone()
 	
+	local now = time()
 	local character = addon.ThisCharacter
-	character.lastUpdate = time()
+	local numAuctions = C_AuctionHouse.GetNumOwnedAuctions()
+	
+	character.lastUpdate = now
+	character.lastAuctionsScan = nil
+	if numAuctions > 0 then
+		character.lastAuctionsScan = now
+	end
 	
 	_ClearAuctionEntries(character, "Auctions", AHZone)
 	
-	for i = 1, C_AuctionHouse.GetNumOwnedAuctions() do
+	for i = 1, numAuctions do
 		local info = C_AuctionHouse.GetOwnedAuctionInfo(i)
 		local saleStatus = info.status
 		local itemID = info.itemKey.itemID

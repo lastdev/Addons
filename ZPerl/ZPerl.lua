@@ -8,10 +8,11 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: e9c033d57c5e85de63bb911c08c742c8172dddef $")
-XPerl_SetModuleRevision("$Revision: e9c033d57c5e85de63bb911c08c742c8172dddef $")
+end, "$Revision: 225a5037c24c5547fdac76dfce4634a9fa28dcb5 $")
+XPerl_SetModuleRevision("$Revision: 225a5037c24c5547fdac76dfce4634a9fa28dcb5 $")
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local LCD = IsClassic and LibStub and LibStub("LibClassicDurations", true)
 local UnitAuraDirect
 if LCD then
