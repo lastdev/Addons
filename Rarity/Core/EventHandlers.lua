@@ -21,7 +21,7 @@ local strlower = _G.strlower
 local format = _G.format
 
 -- WOW APIs
-local GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
+local GetCurrencyInfo = _G.C_CurrencyInfo.GetCurrencyInfo
 local CombatLogGetCurrentEventInfo = _G.CombatLogGetCurrentEventInfo
 local UnitGUID = UnitGUID
 local LoadAddOn = LoadAddOn
@@ -88,6 +88,7 @@ function EventHandlers:Register()
 	self:RegisterEvent("ISLAND_COMPLETED", "OnIslandCompleted")
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", "OnSpellcastSucceeded")
 	self:RegisterEvent("QUEST_TURNED_IN", "OnQuestTurnedIn")
+	self:RegisterEvent("SHOW_LOOT_TOAST", "OnShowLootToast")
 	self:RegisterBucketEvent("UPDATE_INSTANCE_INFO", 1, "OnEvent")
 	self:RegisterBucketEvent("LFG_UPDATE_RANDOM_INFO", 1, "OnEvent")
 	self:RegisterBucketEvent("CALENDAR_UPDATE_EVENT_LIST", 1, "OnEvent")
@@ -97,15 +98,24 @@ end
 
 -- TODO: Move elsewhere/refactor
 local function addAttemptForItem(itemName, categoryName)
-	local self = Rarity
-	local v = self.db.profile.groups[categoryName][itemName]
-	if v and type(v) == "table" and v.enabled ~= false then
-		if v.attempts == nil then
-			v.attempts = 1
+
+	if not itemName or not categoryName then return end
+
+	local Rarity = Rarity
+
+	local group = Rarity.db.profile.groups[categoryName]
+	if not group then return end
+
+	local item = group[itemName]
+	if not item then return end
+
+	if item and type(item) == "table" and item.enabled ~= false and Rarity:IsAttemptAllowed(item) then -- Add one attempt for this item
+		if item.attempts == nil then
+			item.attempts = 1
 		else
-			v.attempts = v.attempts + 1
+			item.attempts = item.attempts + 1
 		end
-		self:OutputAttempts(v)
+		Rarity:OutputAttempts(item)
 	end
 end
 
@@ -147,6 +157,48 @@ function R:OnSpellcastSucceeded(event, unitID, castGUID, spellID)
 		Rarity:Debug("Detected Opening on " .. L["Dirty Glinting Object"] .. " (method = SPECIAL)")
 		addAttemptForItem("Lucy's Lost Collar", "pets")
 	end
+end
+
+-- TBD: Move to shared constants?
+local TYPE_IDENTIFIER_ITEM = "item" -- What others do they have? currency? gold? No idea.
+
+-- Upvalues
+--- WOW API
+local GetItemInfoInstant = GetItemInfoInstant
+
+function R:OnShowLootToast(
+	event,
+	typeIdentifier,
+	itemLink,
+	quantity,
+	specID,
+	sex,
+	personalLootToast,
+	toastMethod,
+	lessAwesome,
+	upgraded,
+	corrupted)
+	if typeIdentifier ~= TYPE_IDENTIFIER_ITEM then
+		return R:Debug(format("Ignoring loot toast of type %s (not an item)", typeIdentifier))
+	end
+
+	-- From wowhead: "\124cff0070dd\124Hitem:187278::::::::60:::::\124h[Talon-Pierced Mawsworn Lockbox]\124h\124r"
+	local itemID = GetItemInfoInstant(itemLink)
+
+	-- TBD: Should we generalize this to a LOOT_TOAST detection method? Not sure if there are many other items people would care about
+	-- Seems a bit too specialized, since we're detecting the loot toast for one item and then add attempts for another (hacky)
+	local TALONPIERCED_MAWSWORN_LOCKBOX = 187278 -- TBD: Move to shared enum for ITEM_IDS? If we ever get to that point, that is...
+	local lootToastItems = {
+		[TALONPIERCED_MAWSWORN_LOCKBOX] = "Wilderling Saddle"
+	}
+
+	local linkedItemName = lootToastItems[itemID]
+	if not linkedItemName then
+		return R:Debug(format("Ignoring loot toast item %s (not relevant)", itemID))
+	end
+
+	-- There's only one item, so hardcoding the mounts group isn't an issue (but if we do want to generalize this later, it'll be easy)
+	addAttemptForItem(linkedItemName, "items") -- Should take care of the covenant restriction by itself (and not add them if it doesn't match)
 end
 
 -------------------------------------------------------------------------------------
@@ -640,7 +692,7 @@ end
 function R:OnMouseOver(event)
 	local guid = UnitGUID("mouseover")
 	local npcid = self:GetNPCIDFromGUID(guid)
-	Rarity:Debug("Mouse hovered over NPC with id = " .. tostring(npcid))
+
 	if npcid == 50409 or npcid == 50410 then
 		if not Rarity.guids[guid] then
 			Rarity.guids[guid] = true
@@ -693,6 +745,8 @@ function R:OnChatCommand(input)
 		self.Validation:ValidateItemDB()
 	elseif strlower(input) == "purge" then -- TODO: This should be done automatically, no?
 		self.Database:PurgeObsoleteEntries()
+	elseif strlower(input) == "test" then
+		self.Testing:RunIntegrationTests()
 	elseif strlower(input) == "profiling" then
 		if self.db.profile.enableProfiling then
 			self.db.profile.enableProfiling = false
@@ -701,6 +755,8 @@ function R:OnChatCommand(input)
 			self.db.profile.enableProfiling = true
 			self:Print(L["Profiling ON"])
 		end
+	elseif strlower(input) == "tinspect" then --  TODO Document it?
+		Rarity.Profiling:InspectAccumulatedTimes()
 	else
 		LoadAddOn("Rarity_Options")
 		if R.optionsFrame then
@@ -910,46 +966,35 @@ end
 --
 -- This event is bucketed because it tends to fire tons of times in a row rapidly, leading to innaccurate results.
 -------------------------------------------------------------------------------------
+local table_wipe = table.wipe -- Nonstandard, but always exists in WOW's Lua environment
 
-function R:OnBagUpdate()
-	self:Debug("BAG_UPDATE")
-
-	-- Save a copy of your bags before this event
-	table.wipe(Rarity.tempbagitems)
-	for k, v in pairs(Rarity.bagitems) do
-		Rarity.tempbagitems[k] = v
+function R:BackUpInventoryItemAmounts()
+	table_wipe(Rarity.tempbagitems)
+	for itemID, inventoryAmount in pairs(Rarity.bagitems) do
+		Rarity.tempbagitems[itemID] = inventoryAmount
 	end
+end
 
-	-- Get a list of the items you have now, alerting if we find anything we're looking for
-	self:ScanBags()
-
-	if
-		not Rarity.isBankOpen and not Rarity.isGuildBankOpen and not Rarity.isAuctionHouseOpen and
-			not Rarity.isTradeWindowOpen and
-			not Rarity.isTradeskillOpen and
-			not Rarity.isMailboxOpen
-	 then
-		-- Check for a decrease in quantity of any items we're watching for
-		for k, v in pairs(Rarity.tempbagitems) do
-			if (Rarity.bagitems[k] or 0) < (Rarity.tempbagitems[k] or 0) then -- An inventory item went down in count or disappeared
-				if Rarity.used[k] then -- It's an item we care about
-					-- Scan through the whole item database now to find all items that could want this
-					for _k, _v in pairs(self.db.profile.groups) do
-						if type(_v) == "table" then
-							for kk, vv in pairs(_v) do
-								if type(vv) == "table" then
-									if vv.enabled ~= false then
-										if vv.method == CONSTANTS.DETECTION_METHODS.USE and vv.items ~= nil and type(vv.items) == "table" then
-											for kkk, vvv in pairs(vv.items) do
-												if vvv == k then
-													local i = vv
-													if i.attempts == nil then
-														i.attempts = 1
-													else
-														i.attempts = i.attempts + 1
-													end
-													self:OutputAttempts(i)
+function R:ProcessContainerItems()
+	for k, v in pairs(Rarity.tempbagitems) do
+		if (Rarity.bagitems[k] or 0) < (Rarity.tempbagitems[k] or 0) then -- An inventory item went down in count or disappeared
+			if Rarity.used[k] then -- It's an item we care about
+				-- Scan through the whole item database now to find all items that could want this
+				for _k, _v in pairs(self.db.profile.groups) do
+					if type(_v) == "table" then
+						for kk, vv in pairs(_v) do
+							if type(vv) == "table" then
+								if vv.enabled ~= false then
+									if vv.method == CONSTANTS.DETECTION_METHODS.USE and vv.items ~= nil and type(vv.items) == "table" then
+										for kkk, vvv in pairs(vv.items) do
+											if vvv == k then
+												local i = vv
+												if i.attempts == nil then
+													i.attempts = 1
+												else
+													i.attempts = i.attempts + 1
 												end
+												self:OutputAttempts(i)
 											end
 										end
 									end
@@ -957,76 +1002,171 @@ function R:OnBagUpdate()
 							end
 						end
 					end
-				-- End scan through all items
 				end
-			end
-		end
-
-		-- Check for an increase in quantity of any items we're watching for
-		for k, v in pairs(Rarity.bagitems) do
-			-- Handle collection items
-			if Rarity.items[k] then
-				if Rarity.items[k].method == CONSTANTS.DETECTION_METHODS.COLLECTION then
-					local bagCount = (Rarity.bagitems[k] or 0)
-
-					-- Our items hashtable only saves one item for this collected item, so we have to scan to find them all now.
-					-- Earlier, we pre-built a list of just the items that are COLLECTION items to save some time here.
-					for kk, vv in pairs(Rarity.collection_items) do
-						-- This item is a collection of several items; add them all up and check for attempts
-						if type(vv.collectedItemId) == "table" then
-							-- This item is a collection of a single type of item
-							if vv.enabled ~= false then
-								local total = 0
-								local originalCount = (vv.attempts or 0)
-								local goal = (vv.chance or 100)
-								for kkk, vvv in pairs(vv.collectedItemId) do
-									if (Rarity.bagitems[vvv] or 0) > 0 then
-										total = total + Rarity.bagitems[vvv]
-									end
-								end
-								if total > originalCount then
-									vv.attempts = total
-									if originalCount < goal and total >= goal then
-										self:OnItemFound(vv.itemId, vv)
-									elseif total > originalCount then
-										self:OutputAttempts(vv)
-									end
-								end
-							end
-						else
-							if
-								vv.enabled and
-									(vv.collectedItemId == Rarity.items[k].collectedItemId or
-										table_contains(Rarity.items[k].collectedItemId, vv.collectedItemId))
-							 then
-								local originalCount = (vv.attempts or 0)
-								local goal = (vv.chance or 100)
-								vv.lastAttempts = 0
-								if vv.attempts ~= bagCount then
-									vv.attempts = bagCount
-								end
-								if originalCount < bagCount and originalCount < goal and bagCount >= goal then
-									self:OnItemFound(vv.itemId, vv)
-								elseif originalCount < bagCount then
-									self:OutputAttempts(vv)
-								end
-							end
-						end
-					end
-				end
-			end
-
-			-- Other items
-			if (Rarity.bagitems[k] or 0) > (Rarity.tempbagitems[k] or 0) then -- An inventory item went up in count
-				if
-					Rarity.items[k] and Rarity.items[k].enabled ~= false and
-						Rarity.items[k].method ~= CONSTANTS.DETECTION_METHODS.COLLECTION
-				 then
-					self:OnItemFound(k, Rarity.items[k])
-				end
+			-- End scan through all items
 			end
 		end
 	end
+end
+
+function R:ProcessInventoryItems()
+	for itemID, currentInventoryAmount in pairs(Rarity.bagitems) do
+		self:Debug(format("Processing inventory item %s (currentInventoryAmount: %d)", itemID, currentInventoryAmount))
+		-- It's still really bad, but a major rework is probably too risky
+		self:ProcessCollectionItem(itemID)
+		self:ProcessOtherItem(itemID)
+	end
+end
+
+function R:ProcessCollectionItem(itemID)
+	if not itemID then
+		return
+	end
+
+	local item = Rarity.items[itemID]
+	if not item then
+		return
+	end
+
+	-- Handle collection items
+	self:Debug(format("Processed item %s is something we're tracking", itemID))
+
+	if not self:IsCollectionItem(item) then
+		return
+	end
+
+	self:Debug("Processed item is a COLLECTION item we're tracking")
+
+	local inventoryItemCount = R:GetInventoryItemCount(itemID)
+	self:Debug(format("Processing collection item with inventoryItemCount %d", inventoryItemCount))
+
+	-- Our items hashtable only saves one item for this collected item, so we have to scan to find them all now.
+	-- Earlier, we pre-built a list of just the items that are COLLECTION items to save some time here.
+	for collectionItemID, collectionItem in pairs(Rarity.collection_items) do
+		self:Debug(format("Checking for new attempts at COLLECTION item %s", collectionItem.name))
+
+		-- This item is a collection of several items; add them all up and check for attempts
+		if self:HasMultipleCollectionItems(collectionItem) then
+			self:Debug(format("Processing aggregate collection item %s", collectionItem.name))
+			self:ProcessCollectionItemAggregate(collectionItem)
+		else
+			self:Debug(format("Processing single collection item %s", collectionItem.name))
+			self:ProcessCollectionItemSingle(collectionItem, itemID)
+		end
+	end
+end
+
+function R:HasMultipleCollectionItems(item)
+	return type(item.collectedItemId) == "table"
+end
+
+-- TODO: DRY
+function R:IsCollectionItem(item)
+	return item.method == CONSTANTS.DETECTION_METHODS.COLLECTION
+end
+
+function R:ProcessOtherItem(itemID)
+
+	if not itemID then
+		return
+	end
+
+	local item = Rarity.items[itemID]
+	if not item then
+		return
+	end
+
+	local amountIncreasedSinceLastScan = (Rarity.bagitems[itemID] or 0) > (Rarity.tempbagitems[itemID] or 0)
+	if amountIncreasedSinceLastScan then -- An inventory item went up in count
+		if item and item.enabled ~= false and not self:IsCollectionItem(item) then
+			self:OnItemFound(itemID, item)
+		end
+	end
+end
+
+function R:GetInventoryItemCount(itemID)
+	local inventoryItemCount = (Rarity.bagitems[itemID] or 0)
+	return inventoryItemCount
+end
+
+-- Still incomprehensible, but I'll leave it for now
+function R:ProcessCollectionItemSingle(collectionItem, itemID)
+	local inventoryItemCount = self:GetInventoryItemCount(itemID)
+	local item = Rarity.items[itemID]
+
+	if
+		collectionItem.enabled and
+			(collectionItem.collectedItemId == item.collectedItemId or
+				table_contains(item.collectedItemId, collectionItem.collectedItemId))
+	 then
+		local originalCount = (collectionItem.attempts or 0)
+		local goal = (collectionItem.chance or 100)
+		collectionItem.lastAttempts = 0
+		if collectionItem.attempts ~= inventoryItemCount then
+			collectionItem.attempts = inventoryItemCount
+		end
+		if originalCount < inventoryItemCount and originalCount < goal and inventoryItemCount >= goal then
+			self:OnItemFound(collectionItem.itemId, collectionItem)
+		elseif originalCount < inventoryItemCount then
+			self:OutputAttempts(collectionItem)
+		end
+	end
+end
+
+-- Still incomprehensible, but I'll leave it for now
+function R:ProcessCollectionItemAggregate(collectionItem)
+	if collectionItem.enabled ~= false then
+		local total = 0
+		local originalCount = (collectionItem.attempts or 0)
+		local goal = (collectionItem.chance or 100)
+		self:Debug(format("Aggregate with total %d, originalCount %d, goal %d", total, originalCount, goal))
+		for kkk, vvv in pairs(collectionItem.collectedItemId) do
+			vvv = tonumber(vvv) -- It's stored as string, but we expect numbers...
+			self:Debug(format("Adding inventoryAmount for item %d (%s)", kkk, vvv))
+			if (Rarity.bagitems[vvv] or 0) > 0 then
+				total = total + Rarity.bagitems[vvv]
+				self:Debug(format("Found %d of these in bags, new total is %d", Rarity.bagitems[vvv], total))
+			end
+		end
+		if total > originalCount then
+			self:Debug("Total is > original count, overriding current attempts")
+			collectionItem.attempts = total
+			if originalCount < goal and total >= goal then
+				self:Debug("Triggering OnItemFound since we just reached the goal")
+				self:OnItemFound(collectionItem.itemId, collectionItem)
+			elseif total > originalCount then
+				self:Debug("Triggering OutputAttempts since we gained one item, but didn't reach the goal")
+				self:OutputAttempts(collectionItem)
+			end
+		end
+	end
+end
+
+-- It's an abomination, but without tests I'm not refactoring this any further
+function R:OnBagUpdate()
+	self:Debug("BAG_UPDATE")
+
+	-- Save a copy of your bags before this event
+	R:BackUpInventoryItemAmounts()
+
+	-- Get a list of the items you have now, alerting if we find anything we're looking for
+	self:ScanBags()
+
+	-- I assume that if there's even the feintest possibility of items being removed, we don't want to risk it?
+	local shouldSkipBagUpdate =
+		(Rarity.isBankOpen or Rarity.isGuildBankOpen or Rarity.isAuctionHouseOpen or Rarity.isTradeWindowOpen or
+		Rarity.isTradeskillOpen or
+		Rarity.isMailboxOpen)
+
+	if shouldSkipBagUpdate then
+		return
+	end
+
+	-- Check for a decrease in quantity of any items we're watching for
+	R:ProcessContainerItems()
+
+	-- Check for an increase in quantity of any items we're watching for
+	R:ProcessInventoryItems()
 end
 
 --[[
@@ -1371,6 +1511,23 @@ function R:OnEvent(event, ...)
 			Rarity:Debug("Detected Opening on " .. Rarity.lastNode .. " (method = SPECIAL)")
 			for _, name in pairs(names) do
 				local v = self.db.profile.groups.pets[name]
+				if v and type(v) == "table" and v.enabled ~= false then
+					if v.attempts == nil then
+						v.attempts = 1
+					else
+						v.attempts = v.attempts + 1
+					end
+					self:OutputAttempts(v)
+				end
+			end
+		end
+
+		-- Handle opening Zovaal's Vault (The Maw, Shadowlands treasure for Personal Ball and Chain & Jailer's Cage
+		if Rarity.isFishing and Rarity.isOpening and Rarity.lastNode and (Rarity.lastNode == L["Zovaal's Vault"]) then
+			local names = {"Personal Ball and Chain", "Jailer's Cage"}
+			Rarity:Debug("Detected Opening on " .. L["Zovaal's Vault"] .. " (method = SPECIAL)")
+			for _, name in pairs(names) do
+				local v = self.db.profile.groups.items[name]
 				if v and type(v) == "table" and v.enabled ~= false then
 					if v.attempts == nil then
 						v.attempts = 1

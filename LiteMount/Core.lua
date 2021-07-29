@@ -74,7 +74,7 @@ end
 
 function LiteMount:RecompileActions()
     for _,b in ipairs(self.actions) do
-        b:CompileActions()
+        b:CompileRules()
     end
 end
 
@@ -103,3 +103,6 @@ function LiteMount:PLAYER_REGEN_ENABLED()
     self:Initialize()
 end
 
+--[===[@debug@
+_G.LM = LM
+--@end-debug@]===]

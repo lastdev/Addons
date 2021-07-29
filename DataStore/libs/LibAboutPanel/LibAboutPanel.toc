@@ -9,9 +9,9 @@
 ## X-Donate: http://www.curseforge.com/projects/libaboutpanel/#w_donations
 
 ## Interface: 70300
-## Version: 9.0.2-002
-## X-Revision: 12
-## X-Date: 2020-10-05T23:56:44Z
+## Version: @project-version@
+## X-Revision: @project-revision@
+## X-Date: @file-date-iso@
 
 ## X-Category: Libraries
 ## X-Localizations: enUS, deDE, esES, esMX
@@ -20,5 +20,9 @@
 
 ## OptionalDeps: LibStub, CallbackHandler-1.0
 
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+#@end-no-lib-strip@
 
 LibAboutPanel.lua

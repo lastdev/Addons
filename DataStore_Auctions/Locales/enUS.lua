@@ -1,5 +1,7 @@
 local debug = false
---debug = true
+--[===[@debug@
+debug = true
+--@end-debug@]===]
 
 local L = LibStub("AceLocale-3.0"):NewLocale("DataStore_Auctions", "enUS", true, debug)
 

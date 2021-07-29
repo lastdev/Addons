@@ -1,8 +1,8 @@
-## Interface: 90002
+## Interface: 90100
 ## Dependencies: Vendor, AdiBags
 ## Title: Vendor_AdiBags
 ## Notes: AdiBags extension. Requires both Vendor and AdiBags
-## Version: 5.1.2
+## Version: 5.2.0
 ## Author: Malvir & Buskin of Lightbringer
 loc\locale.lua
 loc\enUS.lua

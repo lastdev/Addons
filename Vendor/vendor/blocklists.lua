@@ -10,13 +10,26 @@ local function isValidListType(listType)
         (listType == ListType.EXTENSION) or
         (listType == ListType.SELL) or
         (listType == ListType.KEEP) or
-        (listType == listType.DESTORY)
+        (listType == ListType.DESTORY)
 end
 
 local function isSystemListType(listType)
     return (listType == ListType.SELL) or
         (listType == ListType.KEEP) or
         (listType == ListType.DESTROY)
+end
+
+local function mapListIdToListType(listId) 
+    -- Determine the list id
+    if ((listId == SystemListId.SELL) or (listId == SystemListId.ALWAYS)) then
+        return ListType.SELL
+    elseif ((listId == SystemListId.KEEP) or (listId == SystemListId.NEVER)) then
+        return ListType.KEEP
+    elseif (listId == SystemListId.DESTROY) then
+        return ListType.DESTROY
+    end
+
+    return nil
 end
 
 local function getListFromProfile(listType)
@@ -34,10 +47,18 @@ end
 local function getExtensionList(listId)
 end
 
-local function getCustomList(listName)
+local function getCustomList(listId)
+    assert(string.len(listId) ~= 0, "The list must have an ID")
+    local listMgr = Addon:GetListManager()
+    local items, exists =  listMgr:GetListContents(listId)
+    assert(exists)
+    return items or EMPTY
 end
 
-local function commitCustomList(listName, list)
+local function commitCustomList(listId, list)
+    assert(string.len(listId) ~= 0, "The list must have an ID") 
+    local listMgr = Addon:GetListManager()
+    listMgr:UpdateListContents(listId, list)
 end
 
 local function removeFromList(list, itemId)
@@ -75,17 +96,17 @@ function BlockList:Create(_listType, _profile)
 end
 
 function BlockList:Add(itemId)
+    Addon:Debug("test", "BlockList:Add(%s, %s)", self, itemId)
     -- Validate ItemId
-    if not Addon:IsItemIdValid(itemId) then
+    if not C_Item.DoesItemExistByID(itemId) then
         Addon:Debug("blocklists", "Invalid Item ID: %s", itemId)
         return false
     end
 
-    table.forEach(self, print, "BlockList:Add")
     local list = self.get()
     if (addToList(list, itemId)) then
-        Addon:Debug("blocklists", "Added %s to '%s' list [%s]", itemId, self.listType. self.listId);
-        self:commit(list)
+        Addon:Debug("blocklists", "Added %s to '%s' list [%s]", itemId, self.listType, self.listId);
+        self.commit(list)
     end
 
     return false;
@@ -157,6 +178,10 @@ function BlockList:RemoveInvalid()
     end
 end
 
+function BlockList:IsReadOnly()
+    return false;
+end
+
 local SystemBlockList = {}
 
 function SystemBlockList:GetOthers()
@@ -176,7 +201,6 @@ function SystemBlockList:GetOthers()
 end
 
 function SystemBlockList:Add(itemId)
-    table.forEach(self, print, "SystemBlockList:Add")
     -- Validate ItemId
     if not Addon:IsItemIdValid(itemId) then
         Addon:Debug("blocklists", "Invalid Item ID: %s", tostring(itemId))
@@ -222,6 +246,78 @@ end
     }
 
     return Addon.object("SystemBlockList", instance, table.merge(BlockList, SystemBlockList))
+end
+
+local CustomBlockList = {}
+
+function CustomBlockList:GetName()
+    return (self.listName or "<unknown>")
+end
+
+--[[static]] function CustomBlockList:New(id, name)
+    assert(string.len(id) ~= 0, "A custom block list must have a name")
+    assert(string.len(name) ~= 0, "A custom block list must have a name")
+
+    local instance = 
+    {
+        listType = ListType.CUSTOM,
+        listId = id,
+        listName = name,
+        commit = function(list)            
+            commitCustomList(id, list)
+        end,
+        get = function()
+            return getCustomList(id)
+        end
+    }
+
+    return Addon.object("CustomBlockList", instance, table.merge(BlockList, CustomBlockList))
+end
+
+local ExtensionList = {}
+
+function ExtensionList:IsReadOnly()
+    return true
+end
+
+function ExtensionList:GetSource()
+    return self.source.Name or "<unknown>"
+end
+
+--[[static]] function ExtensionList:New(list)
+    local instance = 
+    {
+        listType = ListType.EXTENSION,
+        listId = list.Id,
+        listName = list.Name,
+        source = list.Extension,
+        get = function()
+            local items = list.Items
+            if (type(items) == "table") then
+                return items
+            elseif (type(items) == "function") then
+                local result, items = xpcall(items, CallErrorHandler)
+                if (not result) then
+                    return EMPTY
+                else
+                    local ids = {}
+                    for _, id in ipairs(items or EMPTY) do
+                        if (type(id) == "number") then
+                            ids[id] = true
+                        end
+                    end
+                    return ids
+                end
+            else
+                return EMPTY
+            end
+        end,
+        commit = function()
+            assert(false, "Extension lists are read-only and should never be modified.")
+        end
+    }
+
+    return Addon.object("ExtensionList", instance, table.merge(BlockList, ExtensionList))
 end
 
 
@@ -315,11 +411,39 @@ end
 
 -- Retrieve the specified list
 function Addon:GetList(listType)
+    -- Check for system list
     if (isSystemListType(listType)) then
         return SystemBlockList:New(listType)        
     end
 
-    error(string.format("There is no '%s' list", listType or ""));    
+    if (type(listType) == "string") then        
+        -- Check for system list
+        for name, value in pairs(ListType) do
+            if (isSystemListType(value) and (listType == string.lower(value))) then
+                return SystemBlockList:New(value)
+            end
+        end
+
+        local systemListType = mapListIdToListType(listType);
+        if (systemListType) then
+            return SystemBlockList:New(systemListType)
+        end
+
+        -- Check for custom list
+        local list = Addon:GetListManager():GetList(listType)
+        if (list) then
+            return CustomBlockList:New(list.Id, list.Name)    
+        end
+        
+        -- Check for extension list
+        local list = Addon:GetExtensionManger():GetList(listType)
+        if (list) then
+            return ExtensionList:New(list)
+        end
+    end
+
+    Addon:Debug("lists", "There is no '%s' list", listType or "");
+    return nil
 end
 
 function Addon:RemoveInvalidEntriesFromBlocklist(listType)

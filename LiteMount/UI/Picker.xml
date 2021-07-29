@@ -1,0 +1,54 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+
+<Script file="Picker.lua" />
+
+<Button name="LiteMountPickerMountButtonTemplate" virtual="true" inherits="LiteMountListButtonStyleTemplate">
+    <Size y="22" />
+    <NormalFont style="GameFontNormal" />
+    <ButtonText justifyH="LEFT" wordWrap="false">
+        <Anchors>
+            <Anchor point="LEFT" x="8" />
+            <Anchor point="RIGHT" x="-8" />
+        </Anchors>
+    </ButtonText>
+    <HighlightTexture alphaMode="ADD">
+        <Color r="0.3" g="0.5" b="1" a="0.3" />
+    </HighlightTexture>
+</Button>
+
+<Button name="LiteMountPickerButtonTemplate" virtual="true">
+    <Size y="22" />
+    <Frames>
+        <Button parentArray="mount" inherits="LiteMountPickerMountButtonTemplate" />
+        <Button parentArray="mount" inherits="LiteMountPickerMountButtonTemplate" />
+        <Button parentArray="mount" inherits="LiteMountPickerMountButtonTemplate" />
+    </Frames>
+</Button>
+                    
+<Frame name="LiteMountPicker" mixin="LiteMountPickerMixin" inherits="LiteMountContainerStyleTemplate" hidden="true">
+    <Size x="580" y="420" />
+    <Anchors>
+        <Anchor point="CENTER" y="80" />
+    </Anchors>
+    <Scripts>
+        <OnLoad inherit="prepend" method="OnLoad" />
+        <OnShow inherit="prepend" method="OnShow" />
+        <OnHide inherit="prepend" method="OnHide" />
+        <OnSizeChanged inherit="prepend" method="OnSizeChanged" />
+    </Scripts>
+    <Frames>
+        <Button inherits="UIPanelCloseButton">
+            <Anchors>
+                <Anchor point="TOPRIGHT" x="-4" y="-4" />
+            </Anchors>
+        </Button>
+        <ScrollFrame name="$parentScroll" parentKey="Scroll" inherits="MinimalHybridScrollFrameTemplate">
+            <Anchors>
+                <Anchor point="TOPLEFT" x="8" y="-42" />
+                <Anchor point="BOTTOMRIGHT" x="-28" y="8" />
+            </Anchors>
+        </ScrollFrame>
+    </Frames>
+</Frame>
+
+</Ui>

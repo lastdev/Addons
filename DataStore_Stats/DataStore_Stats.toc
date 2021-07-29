@@ -1,8 +1,8 @@
-﻿## Interface: 90005
+## Interface: 90100
 ## Title: DataStore_Stats
 ## Notes: Stores information about character statistics
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r36
+## Version: r33
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_StatsDB

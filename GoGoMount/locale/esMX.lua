@@ -1,4 +1,4 @@
-﻿if GetLocale() == "esMX" then
+if GetLocale() == "esMX" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount" -- Needs review
 	BINDING_NAME_GOGOBINDING = "Montar/Desmontar" -- Needs review
 	BINDING_NAME_GOGOBINDING2 = "Montar/Desmontar (no voladora)" -- Needs review

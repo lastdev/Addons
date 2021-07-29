@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v9.0.009b"
-addon.VersionNum = 900009
+addon.Version = "v9.1.001"
+addon.VersionNum = 901001
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -327,6 +327,7 @@ function addon:OnInitialize()
 	addon:RegisterMessage("DATASTORE_GLOBAL_MAIL_EXPIRY")
 	addon:RegisterMessage("DATASTORE_CS_TIMEGAP_FOUND")
 	addon:RegisterMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE")
+	addon:RegisterMessage("DATASTORE_GUILD_LEFT")
 	
 	local global = addon.db.global
 	if global.moreRecentVersion and addon.VersionNum >= global.moreRecentVersion then

@@ -1,4 +1,5 @@
-local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local APILevel = math.floor(select(4,GetBuildInfo())/10000)
+local isClassic = APILevel <= 2
 local GetSpecialization = isClassic and function() return 1 end or _G.GetSpecialization
 
 local UnitPower = UnitPower
@@ -59,10 +60,6 @@ local GENERAL_UPDATE = function(self)
     self:Update()
 end
 
----------------------
--- ROGUE
----------------------
-
 local COMBO_POINTS_UNIT_POWER_UPDATE = function(self,event,unit,ptype)
     if unit ~= "player" then return end
     if ptype == "COMBO_POINTS" then
@@ -70,19 +67,15 @@ local COMBO_POINTS_UNIT_POWER_UPDATE = function(self,event,unit,ptype)
     end
 end
 
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 
-local RogueGetComboPoints
-if isClassic then
-    local OriginalGetComboPoints = _G.GetComboPoints
-    RogueGetComboPoints = function(unit)
-        unit = unit or "player"
-        return OriginalGetComboPoints(unit, "target")
-    end
-else
-    local Enum_PowerType_ComboPoints = Enum.PowerType.ComboPoints
-    RogueGetComboPoints = function(unit)
-        return UnitPower("player", Enum_PowerType_ComboPoints)
-    end
+---------------------
+-- ROGUE
+---------------------
+
+local Enum_PowerType_ComboPoints = Enum.PowerType.ComboPoints
+local RogueGetComboPoints = function(unit)
+    return UnitPower("player", Enum_PowerType_ComboPoints)
 end
 
 local GetShadowdance = function()
@@ -120,7 +113,7 @@ NugComboBar:RegisterConfig("ComboPointsRogue", {
         self:SetSourceUnit("player")
         self:SetTargetUnit("player")
 
-        if isClassic then
+        if APILevel <= 5 then
             self.eventProxy:RegisterEvent("PLAYER_TARGET_CHANGED")
             self.eventProxy.PLAYER_TARGET_CHANGED = GENERAL_UPDATE
         end
@@ -132,19 +125,30 @@ NugComboBar:RegisterConfig("ComboPointsRogue", {
 
         if not isClassic then -- Kyrian Covenant Ability
             self.eventProxy:RegisterUnitEvent("UNIT_POWER_POINT_CHARGE", "player")
-            local selectedPoint = nil
+
             self.eventProxy.UNIT_POWER_POINT_CHARGE = function(self, event, unit)
                 local chargedPoints = GetUnitChargedPowerPoints("player") -- returns table or nil
-                local echoingReprimand = chargedPoints and chargedPoints[1]
-                if echoingReprimand ~= selectedPoint then
-                    selectedPoint = echoingReprimand
-                    if selectedPoint ~= nil then
-                        self:SelectPoint(selectedPoint)
-                    else
-                        self:DeselectAllPoints()
+                for i = 1, self.MAX_POINTS do
+                    local isSelected
+                    if chargedPoints then
+                        for _, pointIndex in ipairs(chargedPoints) do
+                            if i == pointIndex then
+                                isSelected = true
+                                break
+                            end
+                        end
                     end
+
+                    if isSelected then
+                        self:SelectPoint(i)
+                    else
+                        self:DeselectPoint(i)
+                    end
+                    self:Update()
                 end
             end
+
+            self:DeselectAllPoints()
             self.eventProxy.UNIT_POWER_POINT_CHARGE(self, nil, "player")
         end
     end,
@@ -187,7 +191,7 @@ NugComboBar:RegisterConfig("ComboPointsDruid", {
         self:SetDefaultValue(0)
         self.flags.soundFullEnabled = true
 
-        if isClassic then
+        if APILevel <= 5 then
             self.eventProxy:RegisterEvent("PLAYER_TARGET_CHANGED")
             self.eventProxy.PLAYER_TARGET_CHANGED = GENERAL_UPDATE
         end
@@ -819,3 +823,108 @@ NugComboBar:RegisterConfig("MaelstromWeapon", {
         self:SetPointGetter(GetMaelstromWaapon)
     end
 }, "SHAMAN", 2)
+
+end -- end of retail configs
+
+-- Classic
+
+if APILevel <= 2 then
+
+    local OriginalGetComboPoints = _G.GetComboPoints
+    local RogueGetComboPoints = function(unit)
+        unit = unit or "player"
+        return OriginalGetComboPoints(unit, "target")
+    end
+
+    local COMBO_POINTS_UNIT_POWER_UPDATE_CLASSIC = function(self,event,unit,ptype)
+        if unit ~= "player" then return end
+        -- In classic often when you switch targets the first UNIT_POWER_UPDATE for CPs is simply not firing,
+        -- It's still fired for ENERGY power type tho, so just checking on all power updates
+        -- if ptype == "COMBO_POINTS" then
+            return self:Update()
+        -- end
+    end
+
+    NugComboBar:RegisterConfig("ComboPointsRogueClassic", {
+        triggers = { GetSpecialization, GetSpell(193531) }, -- Deeper Stratagem,
+        setup = function(self, spec)
+            self.eventProxy:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
+            self.eventProxy.UNIT_POWER_UPDATE = COMBO_POINTS_UNIT_POWER_UPDATE_CLASSIC
+
+            self:SetDefaultValue(0)
+            self.flags.soundFullEnabled = true
+            self:SetSourceUnit("player")
+            self:SetTargetUnit("target")
+
+            if APILevel <= 5 then
+                self.eventProxy:RegisterEvent("PLAYER_TARGET_CHANGED")
+                self.eventProxy.PLAYER_TARGET_CHANGED = GENERAL_UPDATE
+            end
+
+            local maxCP = IsPlayerSpell(193531) and 6 or 5 -- Deeper Stratagem
+
+            self:SetMaxPoints(maxCP)
+            self:SetPointGetter(RogueGetComboPoints)
+        end,
+    }, "ROGUE")
+
+
+    NugComboBar:RegisterConfig("ComboPointsDruid", {
+        triggers = { GetSpecialization },
+        setup = function(self, spec)
+            self.eventProxy:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
+            self.eventProxy.UNIT_POWER_UPDATE = COMBO_POINTS_UNIT_POWER_UPDATE_CLASSIC
+            self:SetMaxPoints(5)
+            self:SetDefaultValue(0)
+            self.flags.soundFullEnabled = true
+
+            if APILevel <= 5 then
+                self.eventProxy:RegisterEvent("PLAYER_TARGET_CHANGED")
+                self.eventProxy.PLAYER_TARGET_CHANGED = GENERAL_UPDATE
+            end
+
+            self:SetSourceUnit("player")
+            self:SetTargetUnit("player")
+            self:SetPointGetter(RogueGetComboPoints)
+        end
+    }, "DRUID")
+
+
+    NugComboBar:RegisterConfig("ShapeshiftDruid", {
+        triggers = { GetSpecialization },
+
+        setup = function(self, spec)
+
+            self:RegisterEvent("UPDATE_SHAPESHIFT_FORM") -- Registering on main addon, not event proxy
+            self.UPDATE_SHAPESHIFT_FORM = function(self)
+
+                local spec = GetSpecialization()
+                local form = GetShapeshiftFormID()
+                self:ResetConfig()
+
+                if form == CAT_FORM then -- Ferocious Bite, in bfa without Feral Affinity you don't have bite or cps
+                    self:ApplyConfig("ComboPointsDruid")
+                    self:Update()
+                else
+                    self:Disable()
+                end
+            end
+            self.UPDATE_SHAPESHIFT_FORM(self)
+        end
+    }, "DRUID")
+
+    if APILevel == 2 then
+    NugComboBar:RegisterConfig("ArcaneBlastClassic", {
+        triggers = { GetSpecialization },
+        setup = function(self, spec)
+            self.eventProxy:RegisterUnitEvent("UNIT_AURA", "player")
+            self.eventProxy.UNIT_AURA = GENERAL_UPDATE
+            self:SetMaxPoints(3)
+            self:SetDefaultValue(0)
+            self.flags.soundFullEnabled = true
+            self:SetPointGetter(GetAuraStack(36032, "HARMFUL")) -- Teachings of the Monastery
+        end
+    }, "MAGE")
+    end
+
+end

@@ -10,7 +10,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
 local PARAGON_LABEL = "Paragon"
 
 local AddonDB_Defaults = {
@@ -250,6 +249,9 @@ local factions = {
 	{ id = 2439, name = GetFactionInfoByID(2439) },     -- The Avowed (Halls of Attonement)
 	{ id = 2464, name = GetFactionInfoByID(2464) },     -- Court of Night (Ardenweald)
 	{ id = 2463, name = GetFactionInfoByID(2463) },     -- Marasimus (Ardenweald)
+	
+	{ id = 2470, name = GetFactionInfoByID(2470) },     -- 9.1 Death's Advance
+	{ id = 2472, name = GetFactionInfoByID(2472) },     -- 9.1 Archivist's Codex
 }
 
 local FactionUIDsRev = {}

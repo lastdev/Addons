@@ -25,10 +25,43 @@ local TomCatsDiscoveryAlertSystem
 local TomCats_Config = TomCats_Config
 local TomCats_ConfigDiscoveries = TomCats_ConfigDiscoveries
 
-local atlasNameBlackList = { }
-local atlasNameWhiteList = { }
+local atlasNameExclusions = { }
+local atlasNameInclusions = { }
 
-local vignetteIDBlackList = {
+local vignetteIDExclusions = {
+	--[[ === Permanent Exclusions === ]]
+	--[[ Bordering Vale of the Eternal Blossom or in Zidormi's historical phase ]]
+	[112] = true,
+	[143] = true,
+	[154] = true,
+	[156] = true,
+
+	--[[ Rares that exist in the lesser vision instances but are being attributed to the parent zone ]]
+	[4029] = true,
+	[4031] = true,
+	[4034] = true,
+
+	--[[ === Requires Handling/Updating Data === ]]
+	[4255] = true, --[[
+		Ritual of Accusation, part of the Ember Court: Atoning Rituals event (Venthyr)
+		Larger star icon which is already visible on the world map.
+		No coordinates
+	]]
+	[4319] = true, --[[
+		Concert Kick-Off - unknown event, possibly in the ember court
+		Larger star icon which is already visible on the world map.
+		No coordinates
+	]]
+	[4489] = true, --[[
+		Mingle with Guests - unknown event, possibly in the ember court
+		Larger star icon which is already visible on the world map.
+		No coordinates
+	]]
+	[4550] = true, --[[
+		It's Raining Anima - unknown event, possibly in the ember court
+		Larger star icon which is already visible on the world map.
+		No coordinates
+	]]
 	[4435] = true, --[[
 		The Winter Wolf vignette belongs to NPC Gwynceirw <The Winter Wolf>, who is non-hostile.
 		This is part of the encounter involving Rotbriar Boggart, who is the actual rare.
@@ -41,7 +74,7 @@ local vignetteIDBlackList = {
 		The quest ID for the encounter is 60258 (same quest ID for both NPCs)
 
 		Dev: Swap out Rotbriar Boggart for The Winter Wolf as the tracked vignette so that the spawned icon may
-			appear before the encounter is started.  Put Rotbriar on the vignetteIDBlackList
+			appear before the encounter is started.  Put Rotbriar on the vignetteIDExclusions
 	]]
 	--[[
 		Dev notes for anima conductor related rares:
@@ -254,6 +287,10 @@ local vignetteIDBlackList = {
 	]]
 }
 
+for _, v in ipairs(addon.vignettes_known) do
+	vignetteIDExclusions[v] = true
+end
+
 do
 	local tmp1 = {
 		["poi-nzothpylon"] = true, -- minor n'zoth vision
@@ -276,9 +313,20 @@ do
 		["SmallQuestBang"] = true, -- from discord dump
 		["WarMode-Broker-32x32"] = true, -- from discord dump 3/15
 		["Vehicle-Air-Occupied"] = true, -- from discord dump 3/15
+		["Embercourt-Guest-DromanAliothe"] = true, -- from discord dump
+		["Embercourt-Guest-CryptkeeperKassir"] = true, -- from discord dump
+		["Embercourt-Guest-Kleia"] = true, -- from discord dump
+		["Embercourt-Guest-Pelagos"] = true, -- from discord dump
+		["Embercourt-Guest-GrandmasterVole"] = true, -- from discord dump
+		["Islands-AzeriteChest"] = true, -- from discord dump
+		["Islands-QuestBang"] = true, -- from discord dump
+		["Islands-HordeBoat"] = true, -- from discord dump
+		["Embercourt-Guest-HuntCaptainKorayn"] = true, -- from discord dump
+		["EmberCourt-32x32"] = true, -- from discord dump
+		["Embercourt-Guest-PlagueDeviserMarileth"] = true, -- from discord dump
 	}
 	for k in pairs(tmp1) do
-		atlasNameBlackList[string.lower(k)] = true
+		atlasNameExclusions[string.lower(k)] = true
 	end
 	local tmp2 = {
 		["Warfront-NeutralHero"] = true, -- special events in the maw
@@ -286,7 +334,7 @@ do
 		["VignetteKill"] = true, -- star icon (bfa)
 	}
 	for k in pairs(tmp2) do
-		atlasNameWhiteList[string.lower(k)] = true
+		atlasNameInclusions[string.lower(k)] = true
 	end
 	TomCats_ConfigDiscoveries.name = "Discoveries"
 	TomCats_ConfigDiscoveries.parent = "TomCat's Tours"
@@ -442,17 +490,17 @@ local function OnUpdate(_, elapsed)
 					if (not checkedVignetteGUIDs[v]) then
 						checkedVignetteGUIDs[v] = true
 						local vignetteInfo = C_VignetteInfo.GetVignetteInfo(v)
-						if (vignetteInfo and not vignetteIDBlackList[vignetteInfo.vignetteID]) then
+						if (vignetteInfo and not vignetteIDExclusions[vignetteInfo.vignetteID]) then
 							local vignette = vignettes[vignetteInfo.vignetteID]
 							if (vignetteInfo.type == 0) then
 								local atlasName = string.lower(vignetteInfo.atlasName)
-								if (atlasNameWhiteList[atlasName] and not vignette) then
+								if (atlasNameInclusions[atlasName] and not vignette) then
 									if (not discoveredVignettes[vignetteInfo.vignetteID]) then
 										discoveredVignettes[vignetteInfo.vignetteID] = GetExtendedVignetteInfo(vignetteInfo, mapID)
 										updateDiscoveryCount(1)
 										TomCatsDiscoveryAlertSystem:AddAlert()
 									end
-								elseif (not atlasNameBlackList[atlasName] and not atlasNameWhiteList[atlasName]) then
+								elseif (not atlasNameExclusions[atlasName] and not atlasNameInclusions[atlasName]) then
 									if (not discoveredVignetteAtlases[vignetteInfo.atlasName]) then
 										discoveredVignetteAtlases[vignetteInfo.atlasName] = GetExtendedVignetteInfo(vignetteInfo, mapID)
 										updateDiscoveryCount(1)
@@ -478,11 +526,11 @@ local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
-			if (_G["TomCats_Account"].discoveriesVersion ~= "2.2.16") then
+			if (_G["TomCats_Account"].discoveriesVersion ~= "2.3.14") then
 				_G["TomCats_Account"].discoveries.vignettes = { }
 				_G["TomCats_Account"].discoveries.vignetteAtlases = { }
 				_G["TomCats_Account"].discoveriesResetCount = 0
-				_G["TomCats_Account"].discoveriesVersion = "2.2.16"
+				_G["TomCats_Account"].discoveriesVersion = "2.3.14"
 			end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

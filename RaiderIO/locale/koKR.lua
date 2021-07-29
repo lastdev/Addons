@@ -184,6 +184,26 @@ L["RAID_BOSS_NYA_6"] = "만족할 줄 모르는 샤드하르"
 L["RAID_BOSS_NYA_7"] = "드레스타가스"
 L["RAID_BOSS_NYA_8"] = "다시 태어난 타락 일기노스"
 L["RAID_BOSS_NYA_9"] = "벡시오나"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_SOD_9"] = ""--]] 
 L["RAID_BOSS_ULD_1"] = "탈록"
 L["RAID_BOSS_ULD_2"] = "마더"
 L["RAID_BOSS_ULD_3"] = "악취나는 포식자"

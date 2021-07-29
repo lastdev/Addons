@@ -25,9 +25,7 @@ local tsort = table.sort
 local dummy = function() return 0 end
 local GetComboPoints = dummy
 
---- Compatibility with Classic
-local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local IsInPetBattle = isClassic and function() end or C_PetBattles.IsInBattle
+
 
 local function GetSpecializationWithFallback()
     local spec = _G.GetSpecialization()
@@ -38,7 +36,11 @@ local function GetSpecializationWithFallback()
     return spec
 end
 
-local GetSpecialization = isClassic and function() return nil end or GetSpecializationWithFallback
+--- Compatibility with Classic
+local APILevel = math.floor(select(4,GetBuildInfo())/10000)
+-- local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsInPetBattle = APILevel <= 3 and function() end or C_PetBattles.IsInBattle
+local GetSpecialization = APILevel <= 3 and function() return 1 end or GetSpecializationWithFallback
 
 local configs = {}
 local currentConfigName
@@ -161,6 +163,26 @@ local defaults = {
     },
 }
 NugComboBar.defaults = defaults
+
+if APILevel <= 2 then
+    defaults.global.classConfig = {
+        ROGUE = { "ComboPointsRogueClassic", "ComboPointsRogueClassic", "ComboPointsRogueClassic" },
+        DRUID = { "ShapeshiftDruid", "ComboPointsDruid", "ShapeshiftDruid", "ComboPointsDruid" },
+        PALADIN = { "Disabled", "Disabled", "Disabled" },
+        MONK = { "Disabled", "Disabled", "Disabled" },
+        WARLOCK = { "Disabled", "Disabled", "Disabled" },
+        DEMONHUNTER = { "Disabled", "Disabled" },
+        DEATHKNIGHT = { "Disabled", "Disabled", "Disabled" },
+        MAGE = { "ArcaneBlastClassic", "ArcaneBlastClassic", "ArcaneBlastClassic" },
+        WARRIOR = { "Disabled", "Disabled", "Disabled" },
+        SHAMAN = { "Disabled", "Disabled", "Disabled" },
+        HUNTER = { "Disabled", "Disabled", "Disabled" },
+        PRIEST = { "Disabled", "Disabled", "Disabled" },
+    }
+    if APILevel == 1 then
+        defaults.global.classConfig.MAGE = { "Disabled", "Disabled", "Disabled" }
+    end
+end
 
 function NugComboBar:LoadClassSettings()
         local class = select(2,UnitClass("player"))
@@ -368,7 +390,7 @@ do
         self:RegisterEvent("PLAYER_REGEN_ENABLED")
         self:RegisterEvent("PLAYER_REGEN_DISABLED")
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
-        if not isClassic then
+        if APILevel >= 5 then
             self:RegisterEvent("PET_BATTLE_OPENING_START")
             self:RegisterEvent("PET_BATTLE_CLOSE")
         end
@@ -429,7 +451,10 @@ function NugComboBar.PLAYER_TARGET_CHANGED(self, event)
     if self.db.profile.nameplateAttachTarget then
         local targetFrame = C_NamePlate.GetNamePlateForUnit("target")
 
-        if targetFrame then
+        local isAttackable = UnitCanAttack("player", "target")
+        local isFriendly = (UnitReaction("target", "player") or 0) > 4
+
+        if targetFrame and isAttackable and not isFriendly then
             self:Show()
             self:ClearAllPoints()
             self:SetPoint("BOTTOM", targetFrame, "TOP", self.db.profile.nameplateOffsetX, self.db.profile.nameplateOffsetY)
@@ -508,7 +533,16 @@ function NugComboBar:SelectPoint(i)
     if not point.Select then return end
     point:Select()
     point.isSelected = true
-    self:Update()
+end
+
+function NugComboBar:DeselectPoint(i)
+    local point = self:GetPoint(i)
+    if not point.Deselect then return end
+    if point.isSelected then
+        AnticipationOut(point, i)
+    end
+    point:Deselect()
+    point.isSelected = nil
 end
 
 function NugComboBar:DeselectAllPoints()
@@ -543,6 +577,8 @@ function NugComboBar:Update(unit, ...)
     else
         if not profile.nameplateAttachTarget then
             self:Show()
+        else
+            self:PLAYER_TARGET_CHANGED()
         end
     end -- usually frame is set to 0 alpha
 
@@ -621,9 +657,10 @@ function NugComboBar:Update(unit, ...)
                                 point:Reappear(animationLevel, AnticipationIn, i)
                             end
                         else
-                            if  (point.currentPreset and point.currentPreset ~= profile.preset3d)
+                            if  not point.isSelected and
+                                ((point.currentPreset and point.currentPreset ~= profile.preset3d)
                                 or
-                                (point.anticipationColor) then
+                                (point.anticipationColor)) then
 
                                 if i <= comboPoints then
                                     point:Reappear(animationLevel, AnticipationOut, i)
@@ -820,7 +857,7 @@ function NugComboBar:UpdatePosition()
     local playerNameplateEnabled = GetCVar("nameplateShowSelf") == "1"
     local profile = self.db.profile
     if profile.nameplateAttachTarget then
-        -- self:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+        self:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
         self:RegisterEvent("NAME_PLATE_UNIT_ADDED")
     elseif playerNameplateEnabled and profile.nameplateAttach then
         if C_NamePlate.GetNamePlateForUnit("player") then
@@ -1154,6 +1191,7 @@ end
 
 function NugComboBar.disableBlizzFrames()
     local class = select(2,UnitClass("player"))
+    if APILevel >= 5 then
         if class == "ROGUE" or class == "DRUID" then
             HideBlizzFrame(ComboPointPlayerFrame)
         end
@@ -1173,6 +1211,12 @@ function NugComboBar.disableBlizzFrames()
 		if class == "DEATHKNIGHT" then
 			HideBlizzFrame(RuneFrame, true)
         end
+    elseif APILevel <= 2 then
+        if class == "ROGUE" or class == "DRUID" then
+            ComboFrame:UnregisterAllEvents()
+            ComboFrame:Hide()
+        end
+    end
 end
 
 function NugComboBar.disableBlizzNameplates()
@@ -1392,6 +1436,12 @@ function NugComboBar.NAME_PLATE_UNIT_ADDED(self, event, unit)
 end
 
 function NugComboBar.NAME_PLATE_UNIT_REMOVED(self, event, unit)
+    if self.db.profile.nameplateAttachTarget then
+        if UnitIsUnit(unit, "target") then
+            self:Hide()
+        end
+    end
+
     if self.db.profile.nameplateAttach then
         if UnitIsUnit(unit, "player") then
             local frame = GetNamePlateForUnit(unit)

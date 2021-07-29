@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/engine/dbc", 90048)
+local __exports = LibStub:NewLibrary("ovale/engine/dbc", 90103)
 if not __exports then return end
 __exports.conduits = {
     [5] = {

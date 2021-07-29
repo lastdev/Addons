@@ -199,9 +199,9 @@ function addon:UpdateMemoryUsage(addons, parent, totalText)
 			totalMem = totalMem + memInKb
 			
 			if memInKb < 1024 then
-				text = format("%s%.0f %sKB", GREEN, memInKb, WHITE)
+				text = format("|r%s%.0f |r%sKB", GREEN, memInKb, WHITE)
 			else
-				text = format("%s%.2f %sMB", GREEN, memInKb/1024, WHITE)
+				text = format("|r%s%.2f |r%sMB", GREEN, memInKb/1024, WHITE)
 			end
 		else	-- module is disabled
 			text = RED..ADDON_DISABLED

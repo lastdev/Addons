@@ -10,7 +10,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
 local MAX_LOGOUT_TIMESTAMP = 5000000000	-- 5 billion, current values are at ~1.4 billion, in seconds, that leaves us 110+ years, I think we're covered..
 
 local AddonDB_Defaults = {
@@ -31,6 +30,7 @@ local AddonDB_Defaults = {
 				englishClass = nil,	-- "WARRIOR", "DRUID" .. english & caps, regardless of locale
 				classID = nil,
 				faction = nil,
+				localizedFaction = nil,
 				gender = nil,			-- UnitSex
 				lastLogoutTimestamp = nil,
 				money = nil,
@@ -85,18 +85,31 @@ end
 
 -- *** Event Handlers ***
 local function OnPlayerGuildUpdate()
+
 	-- at login this event is called between OnEnable and PLAYER_ALIVE, where GetGuildInfo returns a wrong value
 	-- however, the value returned here is correct
+	local character = addon.ThisCharacter
+	local hasGuild = (character.guildName ~= nil)
+	
 	if IsInGuild() then
 		-- find a way to improve this, it's minor, but it's called too often at login
 		local name, rank, index = GetGuildInfo("player")
 		if name and rank and index then
-			local character = addon.ThisCharacter
 			character.guildName = name
 			character.guildRankName = rank
 			character.guildRankIndex = index
 		end
-	end
+	else
+		-- If the event is triggered after a gkick/gquit, be sure to clean the guild info
+		character.guildName = nil
+		character.guildRankName = nil
+		character.guildRankIndex = nil
+		
+		-- if the character had a guild when entering this function, but is no longer in a guild, then trigger the event
+		if hasGuild then
+			addon:SendMessage("DATASTORE_GUILD_LEFT")
+		end
+	end	
 end
 
 local function ScanXPDisabled()
@@ -127,8 +140,7 @@ local function OnPlayerAlive()
 	character.race, character.englishRace = UnitRace("player")
 	character.class, character.englishClass, character.classID = UnitClass("player")
 	character.gender = UnitSex("player")
-	local _, localizedFaction = UnitFactionGroup("player")
-	character.faction = localizedFaction
+	character.faction, character.localizedFaction = UnitFactionGroup("player")
 	character.lastLogoutTimestamp = MAX_LOGOUT_TIMESTAMP
 	character.bindLocation = GetBindLocation()
 	character.lastUpdate = time()
@@ -200,18 +212,33 @@ local function _GetClassColor(class)
 end
 
 local function _GetCharacterFaction(character)
-	return character.faction or ""
+	return character.faction or "", character.localizedFaction or ""
 end
 	
 local function _GetColoredCharacterFaction(character)
-	if character.faction == FACTION_ALLIANCE then
-		return format("|cFF2459FF%s", FACTION_ALLIANCE)
-		
-	elseif character.faction == FACTION_HORDE then
-		return format("|cFFFF0000%s", FACTION_HORDE)
-		
-	else	-- for young pandas, who have a "Neutral" faction
-		return format("|cFF909090%s", character.faction)
+	-- Localized version may not yet be there, only added with a bugfix in 9.0.010 
+	-- removed the ELSE part later on, in the meantime, avoid generating loads of issues for players
+	
+	if character.localizedFaction then
+		if character.localizedFaction == FACTION_ALLIANCE then
+			return format("|cFF2459FF%s", FACTION_ALLIANCE)
+			
+		elseif character.localizedFaction == FACTION_HORDE then
+			return format("|cFFFF0000%s", FACTION_HORDE)
+			
+		else	-- for young pandas, who have a "Neutral" faction
+			return format("|cFF909090%s", character.localizedFaction)
+		end
+	else
+		if character.faction == "Alliance" then
+			return format("|cFF2459FF%s", "Alliance")
+			
+		elseif character.faction == "Horde" then
+			return format("|cFFFF0000%s", "Horde")
+			
+		else	-- for young pandas, who have a "Neutral" faction
+			return format("|cFF909090%s", character.faction)
+		end
 	end
 end
 

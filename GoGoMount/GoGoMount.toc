@@ -1,6 +1,6 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: GoGoMount (Ghuda's fork)
-## Version: 1.0.1
+## Version: 2.9.1
 ## Notes: One-key solution for mounting/dismounting, supports spells, shapeshifting
 ## Notes-enGB: One-key solution for mounting/dismounting, supports spells, shapeshifting
 ## Notes-deDE: Ein-Tasten-Lösung für das Auf- und Absitzen von Reittieren, unterstützt auch Zaubersprüche und Gestaltwandlung
@@ -10,8 +10,8 @@
 ## Notes-ruRU: Одним из ключей решения для монтажа / демонтажа, поддерживает заклинаний, shapeshifting
 ## Notes-zhTW: 一鍵上下馬，支援召喚和變形
 ## Notes-koKR: 탈것의 타기/내리기를 위한 1 키 해결, 주문, 변신 지원
-## Author: Ghuda (Vol'jin) based on gogoMounts by Gadgets (Tiker) and EMMount by Everyjams
+## Author: Ghuda (Vol'jin) based on gogoMounts by Gadgets (Tiker), EMMount by Everyjams and GoGoMount_ExtraMounts by sterrosa
 ## SavedVariablesPerCharacter: GoGo_Prefs GoGo_DebugLog
-## SavedVariables: GoGoMount_MountSettings
+## SavedVariables: GoGoMount_MountSettings GoGo_SLFlying
 
 GoGoMount.xml

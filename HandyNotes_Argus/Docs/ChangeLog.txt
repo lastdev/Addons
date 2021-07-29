@@ -3,9 +3,14 @@ $Id: ChangeLog.txt 79 2017-08-31 14:53:46Z arith $
 Revision History:
 =================
 
+* v0.30 (Jun. 30, 2021)
+-----------------------
+- ToC update to support WoW 9.1.0
+- Library update - LibUIDropDownMenu
+
 * v0.22 (Jun. 14, 2021)
 -----------------------
-- Library update - LibCurrency
+- Library update - LibUIDropDownMenu
 
 * v0.21 (May 19, 2021)
 -----------------------
@@ -15,7 +20,7 @@ Revision History:
 -----------------------
 - ToC update to support WoW 9.0.2
 - Disable no-lib release as the new CurseForge seems to bring-in more torubles for users to download addon
-- Library update - LibCurrency
+- Library update - LibUIDropDownMenu
 
 * v0.19 (Oct. 26, 2020)
 -----------------------
@@ -23,7 +28,7 @@ Revision History:
 
 * v0.18 (Oct. 21, 2020)
 -----------------------
-- Re-added LibUIDropDown
+- Re-added LibUIDropDownMenu
 
 * v0.17 (Oct. 18, 2020)
 -----------------------

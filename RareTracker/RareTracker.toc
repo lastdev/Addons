@@ -1,0 +1,7 @@
+## Interface: 90100
+## Title: RareTracker
+## Author: Melroy
+## Version: 1.0.5
+## OptionalDeps: RareTrackerCore
+
+RareTracker.lua

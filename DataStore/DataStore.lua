@@ -17,10 +17,11 @@ local addonName, addon = ...
 DataStore = LibStub("AceAddon-3.0"):NewAddon(addon, addonName, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0")
 addon.Version = "v" .. GetAddOnMetadata(addonName, "Version")
 
-local THIS_ACCOUNT = "Default"
-local THIS_REALM = GetRealmName()
-local THIS_CHAR = UnitName("player")
-local THIS_CHARKEY = format("%s.%s.%s", THIS_ACCOUNT, THIS_REALM, THIS_CHAR)
+addon.ThisAccount = "Default"
+addon.ThisRealm = GetRealmName()
+addon.ThisChar = UnitName("player")
+addon.ThisCharKey = format("%s.%s.%s", addon.ThisAccount, addon.ThisRealm, addon.ThisChar)
+
 local commPrefix = "DataStore"
 local Characters, Guilds			-- pointers to the parts of the DB that contain character, guild data
 
@@ -82,7 +83,7 @@ local function GetKey(name, realm, account)
 	-- default values
 	name = name or UnitName("player")
 	realm = realm or GetRealmName()
-	account = account or THIS_ACCOUNT
+	account = account or addon.ThisAccount
 
 	return format("%s.%s.%s", account, realm, name)
 end
@@ -134,7 +135,7 @@ local function GetAlts(guild)
 	for k, v in pairs(Characters) do
 		local accountKey, realmKey, charKey = strsplit(".", k)
 
-		if accountKey and accountKey == THIS_ACCOUNT then			-- same account
+		if accountKey and accountKey == addon.ThisAccount then			-- same account
 			if realmKey and realmKey == GetRealmName() then			-- same realm
 				if charKey and charKey ~= UnitName("player") then	-- skip current char
 					if v.guildName and v.guildName == guild then		-- same guild (to send only guilded alts, privacy concern, do not change this)
@@ -371,7 +372,7 @@ function addon:OnEnable()
 	end
 
 	addon.db.global.ConnectedRealms = nil
-	addon:SetLongRealmName(THIS_REALM:gsub(" ", ""), THIS_REALM)
+	addon:SetLongRealmName(addon.ThisRealm:gsub(" ", ""), addon.ThisRealm)
 end
 
 function addon:OnDisable()
@@ -525,7 +526,7 @@ function addon:GetThisGuildKey()
 	
 	if not realm then
 		-- realm = nil : guild is on the same realm as the player
-		return format("%s.%s.%s", THIS_ACCOUNT, GetRealmName(), guild)
+		return format("%s.%s.%s", addon.ThisAccount, GetRealmName(), guild)
 	end
 	
 	-- realm not nil : guild is on a connected realm
@@ -534,7 +535,7 @@ function addon:GetThisGuildKey()
 	local longName = addon:GetLongRealmName(realm)
 	if not longName then return end
 	
-	return format("%s.%s.%s", THIS_ACCOUNT, longName, guild)
+	return format("%s.%s.%s", addon.ThisAccount, longName, guild)
 end
 
 function addon:GetCharacter(name, realm, account)
@@ -547,7 +548,7 @@ end
 function addon:GetCharacters(realm, account)
 	-- get a list of characters on a given realm/account
 	realm = realm or GetRealmName()
-	account = account or THIS_ACCOUNT
+	account = account or addon.ThisAccount
 
 	local out = {}
 	local accountKey, realmKey, charKey
@@ -575,7 +576,7 @@ end
 
 function addon:DeleteCharacter(name, realm, account)
 	local key = GetKey(name, realm, account)
-	if not Characters[key] or key == THIS_CHARKEY then return end	-- never delete current character
+	if not Characters[key] or key == addon.ThisCharKey then return end	-- never delete current character
 
 	-- delete the character in all modules
 	for moduleName, moduleDB in pairs(RegisteredModules) do
@@ -610,7 +611,7 @@ end
 function addon:GetGuilds(realm, account)
 	-- get a list of guilds on a given realm/account
 	realm = realm or GetRealmName()
-	account = account or THIS_ACCOUNT
+	account = account or addon.ThisAccount
 
 	local out = {}
 	local accountKey, realmKey, guildKey
@@ -670,7 +671,7 @@ local function WipeCharacterTable(t)
 	if not t then return end
 
 	for key, v in pairs(t) do	-- key is the character key
-		if key ~= THIS_CHARKEY then	-- only delete an entry if it is not the current character
+		if key ~= addon.ThisCharKey then	-- only delete an entry if it is not the current character
 			t[key] = nil
 		end
 	end
@@ -698,7 +699,7 @@ function addon:ClearAllData()
 end
 
 function addon:GetRealms(account)
-	account = account or THIS_ACCOUNT
+	account = account or addon.ThisAccount
 
 	local out = {}
 	local accountKey, realmKey
@@ -731,6 +732,31 @@ function addon:GetAccounts()
 		end
 	end
 	return out
+end
+
+function addon:IterateCharacters(realmFilter, accountFilter, callback)
+	
+	-- to do : take the filters into account in the loop
+	
+	local accounts = addon:GetAccounts()							-- Get the accounts
+	accounts[addon.ThisAccount] = nil								-- Remove the current account, because we want to put it first in the list
+	local sortedAccounts = addon:HashToSortedArray(accounts)	-- Sort the remaining accounts in alphabetical order
+	table.insert(sortedAccounts, 1, addon.ThisAccount)			-- Then add the current account in first position
+
+	for _, account in pairs(sortedAccounts) do
+		local realms = addon:GetRealms(account)					-- Get the realms
+		realms[addon.ThisRealm] = nil									-- Remove the current realm, because we want to put it first in the list
+		local sortedRealms = addon:HashToSortedArray(realms)	-- Sort the remaining realms in alphabetical order
+		table.insert(sortedRealms, 1, addon.ThisRealm)			-- Then add the current realm in first position
+	
+		for _, realm in pairs(sortedRealms) do
+			local sortedCharacters = addon:HashToSortedArray(addon:GetCharacters(realm, account))
+			
+			for _, characterName in ipairs(sortedCharacters) do
+				callback(account, realm, characterName, addon:GetCharacter(characterName, realm, account))
+			end		
+		end
+	end
 end
 
 function addon:GetModules()
@@ -906,7 +932,7 @@ function addon:GetRealmsConnectedWith(realm)
 		for _, shortName in pairs(autoCompleteRealms) do
 			local longName = realms[shortName]
 			
-			if longName and longName ~= THIS_REALM then
+			if longName and longName ~= addon.ThisRealm then
 				table.insert(out, longName)
 			end
 		end
@@ -931,6 +957,17 @@ function addon:HashToSortedArray(hash)
 	
 	for k, _ in pairs(hash) do
 		table.insert(array, k)			-- simply insert every entry into an array ..
+	end
+	table.sort(array)						-- .. then sort it
+	
+	return array
+end
+
+function addon:HashValueToSortedArray(hash)
+	local array = {}
+	
+	for _, v in pairs(hash) do
+		table.insert(array, v)			-- simply insert every entry into an array ..
 	end
 	table.sort(array)						-- .. then sort it
 	

@@ -3,9 +3,10 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,timewalker"
 
-mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
+mod:SetRevision((string.sub("20210721041639", 1, -5)):sub(12, -3))
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
+mod:EnableWBEngageSync()--Enable syncing engage in outdoors
 
 mod:RegisterCombat("combat")
 

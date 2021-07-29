@@ -1,4 +1,4 @@
-﻿if GetLocale() == "ruRU" then
+if GetLocale() == "ruRU" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "Оседлать/Спешиться"
 	BINDING_NAME_GOGOBINDING2 = "Оседлать/Спешиться (наземный транспорт)"

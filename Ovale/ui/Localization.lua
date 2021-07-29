@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Localization", 90048)
+local __exports = LibStub:NewLibrary("ovale/ui/Localization", 90103)
 if not __exports then return end
 local GetLocale = GetLocale
 local __localizationdeDE = LibStub:GetLibrary("ovale/ui/localization/de-DE")

@@ -264,7 +264,6 @@ L.SLASHCMD_HELP2					= {
 	"/dbm break <min>: Sends a break timer for <min> minutes to the raid (requires promoted. alias: break).",
 	"/dbm version: Performs a boss mod version check (alias: ver).",
 	"/dbm version2: Performs a boss mod version check that also whispers out of date users (alias: ver2).",
-	"/dbm lockout: Asks raid members for their current raid instance lockouts (aliases: lockouts, ids) (requires promoted).",
 	"/dbm lag: Performs a raid-wide latency check.",
 	"/dbm durability: Performs a raid-wide durability check."
 }
@@ -303,6 +302,8 @@ L.SOUTH								= "South"
 L.INTERMISSION						= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 L.ORB								= "Orb"
 L.ORBS								= "Orbs"
+L.RING								= "Ring"
+L.RINGS								= "Rings"
 L.CHEST								= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
 L.NO_DEBUFF							= "Not %s"--For use in places like info frame where you put "Not Spellname"
 L.ALLY								= "Ally"--Such as "Move to Ally"
@@ -422,6 +423,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	moveawaycount					= "%s (%%s) - move away from others",
 	moveto							= "%s - move to >%%s<",
 	soak							= "%s - soak it",
+	soakcount						= "%s - soak %%s",
 	jump							= "%s - jump",
 	run								= "%s - run away",
 	cast							= "%s - stop casting",
@@ -468,6 +470,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	moveawaycount					= "Show special warning (with count) to move away from others for $spell:%s",
 	moveto							= "Show special warning to move to someone or some place for $spell:%s",
 	soak							= "Show special warning to soak for $spell:%s",
+	soakcount						= "Show special warning (with count) to soak for $spell:%s",
 	jump							= "Show special warning to move to jump for $spell:%s",
 	run 							= "Show special warning to run away from $spell:%s",
 	cast 							= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
@@ -486,6 +489,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 -- Auto-generated Timer Localizations
 L.AUTO_TIMER_TEXTS = {
 	target							= "%s: %%s",
+	targetcount						= "%s (%%2$s): %%1$s",
 	cast							= "%s",
 	castshort						= "%s ",--if short timers enabled, cast and next are same timer text, this is a conflict. the space resolves it
 	castcount						= "%s (%%s)",
@@ -497,7 +501,7 @@ L.AUTO_TIMER_TEXTS = {
 	ai								= "%s AI",
 	cd								= "%s CD",
 	cdshort							= "~%s",
-	cdcount							= "%s CD (%%s)",
+	cdcount							= "%s (%%s) CD",
 	cdcountshort					= "~%s (%%s)",
 	cdsource						= "%s CD: >%%s<",
 	cdsourceshort					= "~%s: >%%s<",
@@ -523,6 +527,7 @@ L.AUTO_TIMER_TEXTS = {
 
 L.AUTO_TIMER_OPTIONS = {
 	target							= "Show timer for $spell:%s debuff",
+	targetcount						= "Show timer (with count) for $spell:%s debuff",
 	cast							= "Show timer for $spell:%s cast",
 	castcount						= "Show timer (with count) for $spell:%s cast",
 	castsource						= "Show timer (with source) for $spell:%s cast",
@@ -574,7 +579,7 @@ L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortposition 					= "{rt%%1$d}%s %%2$d",--Icon, Spellname, number
 	combo							= "%s and %%s",--Spell name (from option, plus spellname given in arg)
 	repeatplayer					= UnitName("player"),--Doesn't need translation, it's just player name spam
-	repeaticon						= "{rt%%2$d}"--Doesn't need translation. It's just icon spam
+	repeaticon						= "{rt%%1$d}"--Doesn't need translation. It's just icon spam
 }
 L.AUTO_YELL_CUSTOM_POSITION			= "{rt%d}%s"--Doesn't need translating. Has no strings (Used in niche situations such as icon repeat yells)
 L.AUTO_YELL_CUSTOM_POSITION2		= "{rt%d}%s{rt%d}"--Doesn't need translating. Has no strings (Deprecated, will be removed soon)
@@ -629,24 +634,6 @@ L.SPEED_KILL_TIMER_TEXT				= "Record Victory"
 L.SPEED_CLEAR_TIMER_TEXT			= "Best Clear"
 L.COMBAT_RES_TIMER_TEXT				= "Next CR Charge"
 L.TIMER_RESPAWN						= "%s Respawn"
-
-
-L.REQ_INSTANCE_ID_PERMISSION		= "%s requested to see your current instance IDs and progress.\nDo you want to send this information to %s? He or she will be able to request this information during your current session (i. e. until you relog)."
-L.ERROR_NO_RAID						= "You need to be in a raid group to use this feature."
-L.INSTANCE_INFO_REQUESTED			= "Sent request for raid lockout information to the raid group.\nPlease note that the users will be asked for permission before sending the data to you, so it might take a minute until we get all responses."
-L.INSTANCE_INFO_STATUS_UPDATE		= "Got responses from %d players of %d " .. L.DBM .. " users: %d sent data, %d denied the request. Waiting %d more seconds for responses... "
-L.INSTANCE_INFO_ALL_RESPONSES		= "Received responses from all raid members"
-L.INSTANCE_INFO_DETAIL_DEBUG		= "Sender: %s ResultType: %s InstanceName: %s InstanceID: %s Difficulty: %d Size: %d Progress: %s"
-L.INSTANCE_INFO_DETAIL_HEADER		= "%s, difficulty %s:"
-L.INSTANCE_INFO_DETAIL_INSTANCE		= "    ID %s, progress %d: %s"
-L.INSTANCE_INFO_DETAIL_INSTANCE2	= "    Progress %d: %s"
-L.INSTANCE_INFO_NOLOCKOUT			= "There is no raid lockout information in your raid group."
-L.INSTANCE_INFO_STATS_DENIED		= "Denied the request: %s"
-L.INSTANCE_INFO_STATS_AWAY			= "Away: %s"
-L.INSTANCE_INFO_STATS_NO_RESPONSE	= "No recent " .. L.DBM .. " version installed: %s"
-L.INSTANCE_INFO_RESULTS				= "Instance ID scan results. Note that instances might show up more than once if there are players with localized WoW clients in your raid."
-L.INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s\n|HDBM:showRaidIdResults|h|cff3588ff[Show results now]|r|h"
---L.INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s"
 
 L.LAG_CHECKING						= "Checking raid Latency... "
 L.LAG_HEADER						= L.DEADLY_BOSS_MODS.. " - Latency Results"

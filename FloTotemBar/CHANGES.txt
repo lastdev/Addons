@@ -1,43 +1,12 @@
-tag 2532c899757e772d3002f2b46f8b80b3046da7de 9.0.45
+tag 1d851bd3d546c68174450c2c2e44e53e50318579 9.1.45
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Fri Mar 12 20:05:16 2021 +0100
+Date:	Wed Jun 30 14:18:17 2021 +0200
 
 Tagging for release
 
-commit a4ddf3fe0e5ac1a2b3c153bf39c05f51c1c2822c
+commit 6f6ab839207607d81a1b62fa59499b5facb0ac90
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 20:00:11 2021 +0100
+Date:   Wed Jun 30 14:17:48 2021 +0200
 
-    Fix timer bug with vesper totem
-
-commit e805e2596f654e1a50f184175dba2e8869bc3d37
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 19:59:51 2021 +0100
-
-    Fix random bug when switching spec
-
-commit fa684e0fc14a42b07e541ef4772b352032cfce50
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 17:44:13 2021 +0100
-
-    Bump version
-
-commit 9c498f51e2625576e28112c676c04c0bdca3108c
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 17:39:40 2021 +0100
-
-    Added some spells
-    Shaman :
-    Vesper Totem
-    
-    Hunter :
-    Binding Shot
-    Wild Spirits
-    Resonating Arrow
-
-commit 6a29879518792f7317165a8515ddf0428ad48467
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 17:30:51 2021 +0100
-
-    Fix mouse interaction with ExtraActionBarFrame
+    update packaging for release
 

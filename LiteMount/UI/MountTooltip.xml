@@ -4,23 +4,22 @@
 
 <Script file="MountTooltip.lua" />
 
-<Frame name="LiteMountPreview" inherits="TooltipBackdropTemplate" parent="UIParent" hidden="true" frameStrata="TOOLTIP" mixin="LiteMountPreviewMixin">
-    <Size x="250" y="250" />
-    <Anchors>
-        <Anchor point="TOPLEFT" relativeTo="GameTooltip" relativePoint="TOPRIGHT" x="4" />
-    </Anchors>
-    <Frames>
-       <PlayerModel parentKey="Model">
-            <Anchors>
-                <Anchor point="TOPLEFT" x="8" y="-8" />
-                <Anchor point="BOTTOMRIGHT" x="-8" y="8" />
-            </Anchors>
-        </PlayerModel>
-    </Frames>
+<GameTooltip name="LiteMountTooltip" inherits="GameTooltipTemplate" parent="UIParent" mixin="LiteMountTooltipMixin">
     <Scripts>
-        <OnLoad inherit="append" method="OnLoad" />
-        <OnShow inherit="append" method="OnShow" />
+        <OnHide inherit="prepend" method="OnHide" />
     </Scripts>
-</Frame>
+    <Frames>
+        <Frame parentKey="Preview" inherits="TooltipBackdropTemplate">
+            <Frames>
+                <ModelScene parentKey="ModelScene" inherits="NonInteractableModelSceneMixinTemplate">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="8" y="-8" />
+                        <Anchor point="BOTTOMRIGHT" x="-8" y="8" />
+                    </Anchors>
+                </ModelScene>
+            </Frames>
+        </Frame>
+    </Frames>
+</GameTooltip>
 
 </Ui>

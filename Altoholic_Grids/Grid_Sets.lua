@@ -425,8 +425,8 @@ local function BuildView()
 
 	local includePVE = addon:GetOption(OPTION_PVE)
 	local includePVP = addon:GetOption(OPTION_PVP)
-	local includeAlliance = addon:GetOption(format("%s%s", OPTION_PVPDESC_PREFIX, FACTION_ALLIANCE))
-	local includeHorde = addon:GetOption(format("%s%s", OPTION_PVPDESC_PREFIX, FACTION_HORDE))
+	local includeAlliance = addon:GetOption(format("%s%s", OPTION_PVPDESC_PREFIX, "Alliance"))
+	local includeHorde = addon:GetOption(format("%s%s", OPTION_PVPDESC_PREFIX, "Horde"))
 	local currentXPack = addon:GetOption(OPTION_XPACK)
 	
 	local activePVPTypes = {}
@@ -451,8 +451,8 @@ local function BuildView()
 			
 			local faction = setInfo.requiredFaction
 			if faction then
-				if ((faction == FACTION_ALLIANCE) and not includeAlliance) or
-					((faction == FACTION_HORDE) and not includeHorde) then
+				if ((faction == "Alliance") and not includeAlliance) or
+					((faction == "Horde") and not includeHorde) then
 					factionOK = false
 				end
 			end
@@ -526,8 +526,8 @@ local function DropDown_Initialize(frame, level)
 		
 		frame:AddCloseMenu()
 	elseif level == 2 then
-		frame:AddButton(FACTION_ALLIANCE, FACTION_ALLIANCE, OnPVPFilterChanged, nil, IsPVPDescriptionChecked(FACTION_ALLIANCE), level)
-		frame:AddButton(FACTION_HORDE, FACTION_HORDE, OnPVPFilterChanged, nil, IsPVPDescriptionChecked(FACTION_HORDE), level)
+		frame:AddButton(FACTION_ALLIANCE, "Alliance", OnPVPFilterChanged, nil, IsPVPDescriptionChecked("Alliance"), level)
+		frame:AddButton(FACTION_HORDE, "Horde", OnPVPFilterChanged, nil, IsPVPDescriptionChecked("Horde"), level)
 		frame:AddTitle(" ", nil, 2)
 	
 		for _, pvpDescription in ipairs(pvpSortedDescriptions) do

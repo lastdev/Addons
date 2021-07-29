@@ -1,8 +1,8 @@
-﻿## Interface: 90005
+## Interface: 90100
 ## Title: DataStore_Crafts
 ## Notes: Stores information about professions & crafts
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: r87
+## Version: r84
 ## Dependencies: DataStore
 ## OptionalDeps: Ace3
 ## SavedVariables: DataStore_CraftsDB, DataStore_CraftsRefDB

@@ -111,7 +111,7 @@ local C_Timer = _G.C_Timer
 local IsSpellKnown = _G.IsSpellKnown
 local CombatLogGetCurrentEventInfo = _G.CombatLogGetCurrentEventInfo
 local IsQuestFlaggedCompleted = _G.IsQuestFlaggedCompleted
-local C_Covenants = C_Covenants
+local C_Covenants = _G.C_Covenants
 
 local COMBATLOG_OBJECT_AFFILIATION_MINE = _G.COMBATLOG_OBJECT_AFFILIATION_MINE
 local COMBATLOG_OBJECT_AFFILIATION_PARTY = _G.COMBATLOG_OBJECT_AFFILIATION_PARTY
@@ -134,21 +134,15 @@ do
 	end
 end
 
---[[
-      HELPERS ----------------------------------------------------------------------------------------------------------------
-  ]]
--- Helper function (to look up map names more easily)
--- Returns the localized map name, or nil if the uiMapID is invalid
-local function GetMapNameByID(uiMapID)
-	local UiMapDetails = GetMapInfo(uiMapID)
-	return UiMapDetails and UiMapDetails.name or nil
-end
+local GetMapNameByID = Rarity.MapInfo.GetMapNameByID
 
 --[[
       LIFECYCLE ----------------------------------------------------------------------------------------------------------------
   ]]
 function R:OnInitialize()
 end
+
+local Output = Rarity.Output
 
 do
 	local isInitialized = false
@@ -166,7 +160,7 @@ do
 		self:PrepareDefaults() -- Loads in any new items
 
 		self.db = LibStub("AceDB-3.0"):New("RarityDB", self.defaults, true)
-		self:SetSinkStorage(self.db.profile)
+		Output:Setup()
 
 		self:RegisterChatCommand("rarity", "OnChatCommand")
 		self:RegisterChatCommand("rare", "OnChatCommand")
@@ -175,19 +169,6 @@ do
 
 		-- Expose private objects
 		R.npcs = npcs
-
-		-- LibSink still tries to call a non-existent Blizzard function sometimes
-		if not CombatText_StandardScroll then
-			CombatText_StandardScroll = 0
-		end
-		if not UIERRORS_HOLD_TIME then
-			UIERRORS_HOLD_TIME = 2
-		end
-		if not CombatText_AddMessage then
-			CombatText_AddMessage = function(text, _, r, g, b, sticky, _)
-				UIErrorsFrame:AddMessage(text, r, g, b, 1, UIERRORS_HOLD_TIME)
-			end
-		end
 
 		Rarity.GUI:InitialiseBar()
 
@@ -637,7 +618,8 @@ function R:UpdateInterestingThings()
 					if vv.method == COLLECTION and vv.collectedItemId ~= nil then
 						if type(vv.collectedItemId) == "table" then
 							for kkk, vvv in pairs(vv.collectedItemId) do
-								Rarity.items[vvv] = vv
+								local itemID = tonumber(vvv) -- It's stored as a list of strings, but we use numbers for indices
+								Rarity.items[itemID] = vv
 							end
 						else
 							Rarity.items[vv.collectedItemId] = vv

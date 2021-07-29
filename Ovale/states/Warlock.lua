@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/Warlock", 90048)
+local __exports = LibStub:NewLibrary("ovale/states/Warlock", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)

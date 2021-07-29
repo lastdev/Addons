@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/Spells", 90048)
+local __exports = LibStub:NewLibrary("ovale/states/Spells", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local INFINITY = math.huge
@@ -15,11 +15,12 @@ local isNumber = __toolstools.isNumber
 local warriorInterceptSpellId = 198304
 local warriorHeroicThrowSpellId = 57755
 __exports.OvaleSpellsClass = __class(nil, {
-    constructor = function(self, spellBook, ovale, ovaleDebug, ovaleProfiler, ovaleData, power, runes)
+    constructor = function(self, spellBook, ovale, ovaleDebug, ovaleProfiler, ovaleData, power, runes, spellActivationGlow)
         self.spellBook = spellBook
         self.ovaleData = ovaleData
         self.power = power
         self.runes = runes
+        self.spellActivationGlow = spellActivationGlow
         self.handleInitialize = function()
         end
         self.handleDisable = function()
@@ -125,6 +126,10 @@ __exports.OvaleSpellsClass = __class(nil, {
                     self.tracer:log("Spell ID '%s' meets power requirements.", spellId)
                     isUsable, noMana = true, false
                 end
+            end
+            if  not isUsable and self.spellActivationGlow:hasSpellActivationGlow(spellId) then
+                self.tracer:log("Spell ID '%s' has spell activation glow. Force it as usable.", spellId)
+                isUsable = true
             end
         else
             isUsable, noMana = IsUsableSpell(spellId)

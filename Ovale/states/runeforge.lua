@@ -1,26 +1,26 @@
-local __exports = LibStub:NewLibrary("ovale/states/runeforge", 90048)
+local __exports = LibStub:NewLibrary("ovale/states/runeforge", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
-local pairs = pairs
 local ipairs = ipairs
-local tonumber = tonumber
+local kpairs = pairs
+local pairs = pairs
 local unpack = unpack
+local wipe = wipe
 local concat = table.concat
 local insert = table.insert
 local C_LegendaryCrafting = C_LegendaryCrafting
-local GetInventoryItemQuality = GetInventoryItemQuality
-local GetInventoryItemLink = GetInventoryItemLink
-local INVSLOT_FIRST_EQUIPPED = INVSLOT_FIRST_EQUIPPED
-local INVSLOT_LAST_EQUIPPED = INVSLOT_LAST_EQUIPPED
+local Enum = Enum
 local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
 local returnBoolean = __enginecondition.returnBoolean
 local __toolstools = LibStub:GetLibrary("ovale/tools/tools")
 local isNumber = __toolstools.isNumber
 local oneTimeMessage = __toolstools.oneTimeMessage
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
-local match = string.match
+local __Equipment = LibStub:GetLibrary("ovale/states/Equipment")
+local inventorySlotNames = __Equipment.inventorySlotNames
 __exports.Runeforge = __class(nil, {
-    constructor = function(self, ovale, debug)
+    constructor = function(self, ovale, debug, equipment)
+        self.equipment = equipment
         self.equippedLegendaryById = {}
         self.debugRuneforges = {
             type = "group",
@@ -56,8 +56,9 @@ __exports.Runeforge = __class(nil, {
                     width = "full",
                     get = function()
                         local output = {}
-                        for id, v in pairs(self.equippedLegendaryById) do
-                            insert(output, id .. ": " .. v)
+                        insert(output, "Legendary bonus IDs:")
+                        for id in pairs(self.equippedLegendaryById) do
+                            insert(output, "    " .. id)
                         end
                         return concat(output, "\n")
                     end
@@ -65,30 +66,31 @@ __exports.Runeforge = __class(nil, {
             }
         }
         self.handleInitialize = function()
-            self.module:RegisterMessage("Ovale_EquipmentChanged", self.updateEquippedItems)
+            self.module:RegisterMessage("Ovale_EquipmentChanged", self.handleOvaleEquipmentChanged)
         end
         self.handleDisable = function()
             self.module:UnregisterMessage("Ovale_EquipmentChanged")
         end
-        self.updateEquippedItems = function()
-            self.equippedLegendaryById = {}
-            for slotId = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED, 1 do
-                if GetInventoryItemQuality("player", slotId) == 5 then
-                    local newItemLink = match(GetInventoryItemLink("player", slotId), "item:([%-?%d:]+)")
-                    if newItemLink then
-                        local newLegendaryId = match(newItemLink, "%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:%d*:(%d*):")
-                        self.equippedLegendaryById[tonumber(newLegendaryId)] = tonumber(slotId)
+        self.handleOvaleEquipmentChanged = function(event)
+            wipe(self.equippedLegendaryById)
+            for slot in kpairs(inventorySlotNames) do
+                local quality = self.equipment:getEquippedItemQuality(slot)
+                if quality == Enum.ItemQuality.Legendary then
+                    local bonusIds = self.equipment:getEquippedItemBonusIds(slot)
+                    if #bonusIds > 0 then
+                        local id = bonusIds[1]
+                        self.equippedLegendaryById[id] = true
                     end
                 end
             end
         end
         self.equippedRuneforge = function(positionalParameters)
-            local bonusItemId = unpack(positionalParameters)
-            if  not isNumber(bonusItemId) then
-                oneTimeMessage(bonusItemId .. " is not defined in EquippedRuneforge")
+            local id = unpack(positionalParameters)
+            if  not isNumber(id) then
+                oneTimeMessage(id .. " is not defined in EquippedRuneforge")
                 return 
             end
-            return returnBoolean(self.equippedLegendaryById[bonusItemId] ~= nil)
+            return returnBoolean(self.equippedLegendaryById[id])
         end
         debug.defaultOptions.args["runeforge"] = self.debugRuneforges
         debug.defaultOptions.args["legendaries"] = self.debugLegendaries

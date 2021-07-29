@@ -1,7 +1,7 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: Vendor
 ## Notes: Vendors junk you don't want and auto-repairs.
-## Version: 5.1.2
+## Version: 5.2.0
 ## SavedVariables: Vendor_CustomRuleDefinitions, Vendor_Settings, Vendor_debug, Vendor_Profiles, Vendor_CustomLists, Vendor_History
 ## SavedVariablesPerCharacter: Vendor_RulesConfig Vendor_ActiveProfile
 ## Author: Malvir & Buskin of Lightbringer

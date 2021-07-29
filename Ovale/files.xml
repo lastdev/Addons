@@ -56,7 +56,6 @@
    <Script file="states/Health.lua"/>
    <Script file="engine/condition.lua"/>
    <Script file="states/conduit.lua"/>
-   <Script file="states/runeforge.lua"/>
    <Script file="states/covenant.lua"/>
    <Script file="states/conditions.lua"/>
    <Script file="states/Warlock.lua"/>
@@ -66,7 +65,9 @@
    <Script file="states/combat.lua"/>
    <Script file="states/Future.lua"/>
    <Script file="engine/guid.lua"/>
+   <Script file="states/spellactivationglow.lua"/>
    <Script file="states/Equipment.lua"/>
+   <Script file="states/runeforge.lua"/>
    <Script file="engine/data.lua"/>
    <Script file="states/Spells.lua"/>
    <Script file="states/Cooldown.lua"/>

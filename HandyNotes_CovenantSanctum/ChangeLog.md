@@ -1,5 +1,10 @@
 ## Revision History:
 
+#### v9 (June 30 , 2021)
+-------------------------------
+* Updated zhTW
+* Bump .toc to 90100
+
 #### v8 (March 10 , 2021)
 -------------------------------
 * Added Spanish localization by [Irakua](https://www.curseforge.com/members/Irakua)

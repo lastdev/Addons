@@ -11,8 +11,8 @@ local config = ZPerlRaidMonConfig
 local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
 local LCC = LibStub("LibClassicCasterino", true)
 if LCC then
-    UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
-    UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
+	UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
+	UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
 end
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
@@ -21,7 +21,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
+XPerl_SetModuleRevision("$Revision: 26dd2f3e4984cffda76fcac1ddd39d0c29867f99 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150

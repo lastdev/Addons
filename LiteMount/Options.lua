@@ -44,22 +44,42 @@ Spell [falling] 130, 1706, 125883, 131347, 164862
 LeaveVehicle
 Dismount
 CopyTargetsMount
-# Swimming mount to fly in Nazjatar with Budding Deepcoral
-Mount [map:1355,flyable,qfc:56766] mt:254
-# Vashj'ir seahorse is faster underwater there
-Mount [map:203,submerged] mt:232
-# AQ-only bugs in the raid zone
-Mount [instance:531] mt:241
-# Use Arcanist's Manasaber if it will disguise you
-IF [extra:202477][aura:202477]
-  Mount [nosubmerged] id:881
-END
-IF [mod:shift,flyable][mod:shift,waterwalking]
-  Limit RUN/WALK,~FLY
-END
+ApplyRules
+Limit [mod:shift,nosubmerged,flyable] RUN/WALK,~FLY
+Limit [mod:shift,submerged] -SWIM
 SmartMount
 Macro
 ]]
+
+local DefaultRules = {
+    {   -- Vash'jir Seahorse
+        conditions = { "map:203", "submerged", op="AND" },
+        action = "Mount",
+        args = { "mt:232" }
+    },
+    {   -- Flying swimming mounts in Nazjatar with Budding Deepcoral
+        conditions = { "map:1355", "flyable", "qfc:56766", op="AND" },
+        action = "Mount",
+        args = { "mt:254" }
+    },
+    {   -- AQ Battle Tanks in the raid instance
+        conditions = { "instance:531", op="AND" },
+        action = "Mount",
+        args = { "mt:241" }
+    },
+    {   -- Arcanist's Manasaber to disguise you in Suramar
+        conditions = { "extra:202477", { "submerged", op="NOT" }, op="AND" },
+        action = "Mount",
+        args = { "id:881" }
+    },
+--[[
+    {   -- Rustbolt Resistor and Aerial Unit R-21/X avoid being shot down
+        conditions = { "map:1462", "flyable", op="AND" },
+        action = "Mount",
+        args = { "MECHAGON" }
+    },
+]]
+}
 
 -- A lot of things need to be cleaned up when flags are deleted/renamed
 
@@ -72,6 +92,7 @@ local defaults = {
         flagChanges         = { },
         mountPriorities     = { },
         buttonActions       = { ['*'] = DefaultButtonAction },
+        rules               = { }, -- Note: tables as * don't work
         copyTargetsMount    = true,
         excludeNewMounts    = false,
         priorityWeights     = { 1, 2, 6, 1 },
@@ -96,39 +117,11 @@ LM.Options = {
     ALWAYS_PRIORITY = 4,
 }
 
-
-local function FlagDiff(allFlags, a, b)
-    local diff = { }
-
-    for _,flagName in ipairs(allFlags) do
-        if flagName == "FAVORITES" then
-            -- Do nothing
-        elseif a[flagName] and not b[flagName] then
-            diff[flagName] = '-'
-        elseif not a[flagName] and b[flagName] then
-            diff[flagName] = '+'
-        end
-    end
-
-    if next(diff) == nil then
-        return nil
-    end
-
-    return diff
-end
-
-function LM.Options:FlagIsUsed(f)
-    for spellID,changes in pairs(self.db.profile.flagChanges) do
-        if changes[f] then return true end
-    end
-    return false
-end
-
 -- Note to self. In any profile except the active one, the defaults are not
 -- applied and you can't rely on them being there. This is super annoying.
 -- Any time you loop over the profiles table one profile has all the defaults
 -- jammed into it and all the other don't. You can't assume the profile has
--- any valeus in it at all.
+-- any values in it at all.
 
 -- Version 3 moved flag stuff global, and now version 4 is putting them
 -- back into profile. I hope I'm not making the same mistakes all over
@@ -201,6 +194,19 @@ function LM.Options:VersionUpgrade5()
     self.db.char.configVersion = 5
 end
 
+-- This fixes a stupid typo I made in the code at one point
+
+function LM.Options:VersionUpgrade6()
+    LM.Debug('VersionUpgrade: 6')
+    if self.db.char.unvailableMacro then
+        self.db.char.unavailableMacro = self.db.char.unvailableMacro
+        self.db.char.unvailableMacro = nil
+    end
+    self.db.char.configVersion = 6
+    for n,p in pairs(self.db.profiles) do p.configVersion = 6 end
+    self.db.global.configVersion = 6
+end
+
 function LM.Options:VersionUpgrade()
     local savedDefaults = self.db.defaults
     self.db:RegisterDefaults(nil)
@@ -208,6 +214,8 @@ function LM.Options:VersionUpgrade()
     self:VersionUpgrade4()
 
     self:VersionUpgrade5()
+
+    self:VersionUpgrade6()
 
     self.db:RegisterDefaults(savedDefaults)
 end
@@ -230,7 +238,7 @@ end
 
 function LM.Options:OnProfile()
     self:PruneDeletedFlags()
-    self:UpdateFlagCache()
+    table.wipe(self.cachedMountFlags)
     self:InitializePriorities()
     LiteMount:RecompileActions()
     self.db.callbacks:Fire("OnOptionsProfile")
@@ -243,6 +251,7 @@ end
 
 function LM.Options:Initialize()
     self.db = LibStub("AceDB-3.0"):New("LiteMountDB", defaults, true)
+    self.cachedMountFlags = {}
     self:VersionUpgrade()
     self.db.RegisterCallback(self, "OnProfileChanged", "OnProfile")
     self.db.RegisterCallback(self, "OnProfileCopied", "OnProfile")
@@ -258,12 +267,11 @@ function LM.Options:GetAllPriorities()
 end
 
 function LM.Options:GetRawMountPriorities()
-    return CopyTable(self.db.profile.mountPriorities)
+    return LM.tCopyShallow(self.db.profile.mountPriorities)
 end
 
 function LM.Options:SetRawMountPriorities(v)
-    self.db.profile.mountPriorities = CopyTable(v)
-    self:UpdateFlagCache()
+    self.db.profile.mountPriorities = v
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
@@ -307,12 +315,36 @@ end
     Mount flag overrides stuff
 ----------------------------------------------------------------------------]]--
 
+local function FlagDiff(a, b)
+    local diff = { }
+
+    for flagName in pairs(LM.tMerge(a,b)) do
+        if LM.Options:IsActiveFlag(flagName) then
+            if a[flagName] and not b[flagName] then
+                diff[flagName] = '-'
+            elseif not a[flagName] and b[flagName] then
+                diff[flagName] = '+'
+            end
+        end
+    end
+
+    diff.FAVORITES = nil
+
+    if next(diff) == nil then
+        return nil
+    end
+
+    return diff
+end
+
+
 function LM.Options:GetRawFlagChanges()
-    return CopyTable(self.db.profile.flagChanges)
+    return LM.tCopyShallow(self.db.profile.flagChanges)
 end
 
 function LM.Options:SetRawFlagChanges(v)
-    self.db.profile.flagChanges = CopyTable(v)
+    self.db.profile.flagChanges = v
+    table.wipe(self.cachedMountFlags)
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
@@ -320,25 +352,25 @@ function LM.Options:ApplyMountFlags(m)
 
     if not self.cachedMountFlags[m.spellID] then
         local changes = self.db.profile.flagChanges[m.spellID]
+
         self.cachedMountFlags[m.spellID] = CopyTable(m.flags)
 
-        if changes then
-            for _,flagName in ipairs(self.allFlags) do
-                if self:IsActiveFlag(flagName) then
-                    if changes[flagName] == '+' then
-                        self.cachedMountFlags[m.spellID][flagName] = true
-                    elseif changes[flagName] == '-' then
-                        self.cachedMountFlags[m.spellID][flagName] = nil
-                    end
+        for flagName, change in pairs(changes or {}) do
+            if self:IsActiveFlag(flagName) then
+                if change == '+' then
+                    self.cachedMountFlags[m.spellID][flagName] = true
+                elseif change == '-' then
+                    self.cachedMountFlags[m.spellID][flagName] = nil
                 end
             end
         end
-        if m.isFavorite then
-            self.cachedMountFlags[m.spellID].FAVORITES = true
-        end
     end
 
-    return self.cachedMountFlags[m.spellID]
+    local flags = CopyTable(self.cachedMountFlags[m.spellID])
+    if m.isFavorite then
+        flags.FAVORITES = true
+    end
+    return flags
 end
 
 function LM.Options:SetMountFlag(m, setFlag)
@@ -383,7 +415,7 @@ function LM.Options:ResetAllMountFlags()
 end
 
 function LM.Options:SetMountFlags(m, flags)
-    self.db.profile.flagChanges[m.spellID] = FlagDiff(self.allFlags, m.flags, flags)
+    self.db.profile.flagChanges[m.spellID] = FlagDiff(m.flags, flags)
     self.cachedMountFlags[m.spellID] = nil
     self.db.callbacks:Fire("OnOptionsModified")
 end
@@ -394,19 +426,19 @@ end
 ----------------------------------------------------------------------------]]--
 
 function LM.Options:GetRawFlags()
-    return self.db.profile.customFlags
+    return LM.tCopyShallow(self.db.profile.customFlags)
 end
 
 function LM.Options:SetRawFlags(v)
     self.db.profile.customFlags = v
-    self:UpdateFlagCache()
+    table.wipe(self.cachedMountFlags)
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
 function LM.Options:IsPrimaryFlag(f)
     -- These are pseudo-flags used in Mount:MatchesOneFilter and we don't
     -- let custom flags have the name.
-    if f == "NONE" or f == "CASTABLE" then
+    if f == "NONE" or f == "CASTABLE" or f == "FAVORITES" then
         return true
     else
         return LM.FLAG[f] ~= nil
@@ -425,13 +457,13 @@ function LM.Options:CreateFlag(f)
     if self.db.profile.customFlags[f] then return end
     if self:IsPrimaryFlag(f) then return end
     self.db.profile.customFlags[f] = { }
-    self:UpdateFlagCache()
+    table.wipe(self.cachedMountFlags)
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
 function LM.Options:DeleteFlag(f)
     self.db.profile.customFlags[f] = nil
-    self:UpdateFlagCache()
+    table.wipe(self.cachedMountFlags)
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
@@ -452,39 +484,47 @@ function LM.Options:RenameFlag(f, newF)
     self.db.profile.customFlags[f] = nil
     self.db.profile.customFlags[newF] = tmp
 
-    self:UpdateFlagCache()
+    table.wipe(self.cachedMountFlags)
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
--- This keeps a cached list of all flags in sort order, with the LM.FLAG
--- set of flags first, then the user-added flags in alphabetical order
-
-function LM.Options:UpdateFlagCache()
-    self.cachedMountFlags = wipe(self.cachedMountFlags or {})
-    self.allFlags = wipe(self.allFlags or {})
-
-    for f in pairs(LM.FLAG) do tinsert(self.allFlags, f) end
-    for f in pairs(self.db.profile.customFlags) do tinsert(self.allFlags, f) end
-
-    sort(self.allFlags,
-        function (a, b)
-            if LM.FLAG[a] and LM.FLAG[b] then
-                return LM.FLAG[a] < LM.FLAG[b]
-            elseif LM.FLAG[a] then
-                return true
-            elseif LM.FLAG[b] then
-                return false
-            else
-                return a < b
-            end
-        end)
+function LM.Options:GetFlags()
+    local out = {}
+    for f in pairs(LM.FLAG) do table.insert(out, f) end
+    table.sort(out, function (a, b) return LM.FLAG[a] < LM.FLAG[b] end)
+    return out
 end
 
-function LM.Options:GetAllFlags()
-    if not self.allFlags then
-        self:UpdateFlagCache()
+--[[----------------------------------------------------------------------------
+    Group stuff.
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetGroups()
+    local out = {}
+    for f in pairs(self.db.profile.customFlags) do
+        table.insert(out, f)
     end
-    return CopyTable(self.allFlags)
+    table.sort(out)
+    return out
+end
+
+
+--[[----------------------------------------------------------------------------
+    Rules stuff.
+----------------------------------------------------------------------------]]--
+
+function LM.Options:GetRules(n)
+    local rules = self.db.profile.rules[n] or DefaultRules
+    return LM.tCopyShallow(rules)
+end
+
+function LM.Options:SetRules(n, rules)
+    if not rules or tCompare(rules, DefaultRules, 10) then
+        self.db.profile.rules[n] = nil
+    else
+        self.db.profile.rules[n] = rules
+    end
+    self.db.callbacks:Fire("OnOptionsModified")
 end
 
 
@@ -547,7 +587,7 @@ end
 ----------------------------------------------------------------------------]]--
 
 function LM.Options:GetUnavailableMacro()
-    return self.db.char.unvailableMacro
+    return self.db.char.unavailableMacro
 end
 
 function LM.Options:GetUseUnavailableMacro()
@@ -555,7 +595,7 @@ function LM.Options:GetUseUnavailableMacro()
 end
 
 function LM.Options:SetUnavailableMacro(v)
-    self.db.char.unvailableMacro = v
+    self.db.char.unavailableMacro = v
     self.db.char.useUnavailableMacro = (v ~= "")
     self.db.callbacks:Fire("OnOptionsModified")
 end
@@ -611,12 +651,12 @@ end
 
 function LM.Options:SetButtonAction(i, v)
     self.db.profile.buttonActions[i] = v
-    LiteMount.actions[i]:CompileActions()
+    LiteMount.actions[i]:CompileRules()
     self.db.callbacks:Fire("OnOptionsModified")
 end
 
 function LM.Options:GetDefaultButtonAction()
-     return self.db.defaults.profile.buttonActions['*']
+     return LM.tCopyShallow(self.db.defaults.profile.buttonActions['*'])
 end
 
 
@@ -626,8 +666,24 @@ end
 
 
 function LM.Options:RecordInstance()
-    local name, _, _, _, _, _, _, id = GetInstanceInfo()
-    self.db.global.instances[id] = name
+    local info = { GetInstanceInfo() }
+    self.db.global.instances[info[8]] = info[1]
+end
+
+function LM.Options:GetInstances(id)
+    return LM.tCopyShallow(self.db.global.instances)
+end
+
+function LM.Options:GetInstanceNameByID(id)
+    if self.db.global.instances[id] then
+        return self.db.global.instances[id]
+    end
+
+    -- AQ is hard-coded in the default rules. This is not really the right
+    -- name but it's close enough.
+    if id == 531 then
+        return C_Map.GetMapInfo(319).name
+    end
 end
 
 
@@ -658,8 +714,6 @@ end
 ----------------------------------------------------------------------------]]--
 
 function LM.Options:ExportProfile(profileName)
-    local currentProfileName = self.db:GetCurrentProfile()
-
     -- remove all the defaults from the DB before export
     local savedDefaults = self.db.defaults
     self.db:RegisterDefaults(nil)

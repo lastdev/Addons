@@ -37,6 +37,7 @@ function LM.Mount:Get(className, ...)
 
     if not m.family then
         m.family = UNKNOWN
+        LM.MOUNTFAMILY[UNKNOWN][m.spellID] = true
 --[===[@debug@
         LM.PrintError('Mount with no family: ' .. m.name)
 --@end-debug@]===]
@@ -45,12 +46,48 @@ function LM.Mount:Get(className, ...)
     return m
 end
 
-function LM.Mount:CurrentFlags()
+function LM.Mount:GetFlags()
     return LM.Options:ApplyMountFlags(self)
+end
+
+function LM.Mount:GetGroups()
+    local flags = LM.Options:ApplyMountFlags(self)
+    for k in pairs(flags) do
+        if not LM.Options:IsCustomFlag(k) then
+            flags[k] = nil
+        end
+    end
+    return flags
 end
 
 function LM.Mount:Refresh()
     -- Nothing in base
+end
+
+function LM.Mount:MountFilterToString(f)
+    if not f or f == "NONE" then
+        return NONE
+    elseif f:sub(1,1) == '~' then
+        return string.format(L.LM_NOT_FORMAT, self:MountFilterToString(f:sub(2)))
+    elseif f:match('^id:%d+$') then
+        local _, id = string.split(':', f, 2)
+        return C_MountJournal.GetMountInfoByID(tonumber(id))
+    elseif f:match('^family:') then
+        local _, family = string.split(':', f, 2)
+        return L.LM_FAMILY .. ' : ' .. L[family]
+    elseif f:match('^mt:%d+$') then
+        local _, id = string.split(':', f, 2)
+        return TYPE .. " : " .. LM.MOUNT_TYPES[tonumber(id)]
+    elseif LM.Options:IsCustomFlag(f) then
+        return L.LM_GROUP .. ' : ' .. f
+    elseif LM.Options:IsPrimaryFlag(f) then
+        -- XXX LOCALIZE XXX
+        return L.LM_FLAG .. ' : ' .. f
+    else
+        local n = GetSpellInfo(f)
+        if n then return n end
+        return DISABLED_FONT_COLOR:WrapTextInColorCode(f)
+    end
 end
 
 function LM.Mount:MatchesOneFilter(flags, f)
@@ -58,6 +95,8 @@ function LM.Mount:MatchesOneFilter(flags, f)
         return false
     elseif f == "CASTABLE" then
         if self:IsCastable() then return true end
+    elseif f == "FAVORITES" then
+        if self.isFavorite then return true end
     elseif tonumber(f) then
         if self.spellID == tonumber(f) then return true end
     elseif f:sub(1, 3) == 'id:' then
@@ -95,7 +134,7 @@ function LM.Mount:MatchesFilter(flags, filterStr)
 end
 
 function LM.Mount:MatchesFilters(...)
-    local currentFlags = self:CurrentFlags()
+    local currentFlags = self:GetFlags()
     local f
 
     for i = 1, select('#', ...) do
@@ -125,7 +164,7 @@ function LM.Mount:IsCastable()
     elseif LM.Options:GetInstantOnlyMoving() then
         if castTime == 0 then return false end
     end
-    if LM.Environment:TheMaw() and not self:MawUsable() then
+    if LM.Environment:IsTheMaw() and not self:MawUsable() then
         return false
     end
     return true
@@ -137,7 +176,7 @@ end
 
 -- These should probably not be making new identical objects all tha time.
 
-function LM.Mount:GetCastAction()
+function LM.Mount:GetCastAction(env)
     local spellName = GetSpellInfo(self.spellID)
     return LM.SecureAction:Spell(spellName)
 end
@@ -161,7 +200,15 @@ local MawUsableSpells = {
 }
 
 function LM.Mount:MawUsable()
-    return MawUsableSpells[self.spellID]
+    -- The True Maw Walker unlocks all mounts, but the spell (353214) doesn't
+    -- seem to return true for IsSpellKnown(). The unlock is not account-wide
+    -- so the quest is good enough (for now).
+
+    if C_QuestLog.IsQuestFlaggedCompleted(63994) then
+        return true
+    else
+        return MawUsableSpells[self.spellID]
+    end
 end
 
 function LM.Mount:Dump(prefix)
@@ -170,7 +217,7 @@ function LM.Mount:Dump(prefix)
     local spellName = GetSpellInfo(self.spellID)
 
     local currentFlags, defaultFlags = {}, {}
-    for f in pairs(self:CurrentFlags()) do tinsert(currentFlags, f) end
+    for f in pairs(self:GetFlags()) do tinsert(currentFlags, f) end
     for f in pairs(self.flags) do tinsert(defaultFlags, f) end
     sort(currentFlags)
     sort(defaultFlags)

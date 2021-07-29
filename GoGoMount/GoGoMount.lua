@@ -16,6 +16,10 @@ function GoGo_OnLoad()
 	GoGoFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	GoGoFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 	GoGoFrame:RegisterEvent("ZONE_CHANGED")
+	
+	if GoGo_SLFlying == nil then
+		GoGo_SLFlying = false;
+	end
 end --function
 
 ---------
@@ -78,6 +82,12 @@ function GoGo_OnEvent(self, event, ...)
 					GoGo_DebugAddLine("GoGo_OnEvent: Shaman entering combat.  Setting macro.")
 				end --if
 				GoGo_FillButton(button, GoGo_InBook(GOGO_SPELLS["SHAMAN"]))
+			-- ICH - Disable combat SoulShape
+			elseif false and GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
+				if GoGo_Variables.Debug >= 10 then 
+					GoGo_DebugAddLine("GoGo_OnEvent: Night Fae entering combat.  Setting macro.")
+				end --if
+				GoGo_FillButton(button, GoGo_InBook(GOGO_SPELLS["NIGHTFAE"]))
 			elseif GoGo_Variables.Player.Class == "DRUID" then
 				if not GoGo_Prefs.DruidDisableInCombat then
 					GoGo_ZoneCheck()  -- Checking to see what we can and can not do in zones
@@ -323,7 +333,7 @@ function GoGo_ChooseMount()
 	if (GoGo_Variables.Player.Class == "DRUID") then
 		GoGo_TableAddUnique(GoGo_Variables.WaterSpeed, 101)  -- Aqua Form
 		GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 101)  -- Aqua Form
-		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 125)  -- Cat Form
+		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 130)  -- Cat Form
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 140)  -- Travel Form
 	elseif (GoGo_Variables.Player.Class == "SHAMAN") then
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 130)  -- Ghost Wolf
@@ -341,7 +351,7 @@ function GoGo_ChooseMount()
 		GoGo_DebugAddLine("GoGo_ChooseMount: " .. GoGo_Variables.Localize.Skill.Riding .. " = "..GoGo_Variables.RidingLevel)
 	end --if
 
-	if (table.getn(mounts) == 0) then
+	if (table.getn(mounts) == 0) and GoGo_Variables.Player.MapID then
 		if table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"]) > 0 then
 			GoGo_Variables.FilteredMounts = GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Preferred"] or {}
 			GoGo_CheckForUnknownMounts(GoGo_Variables.FilteredMounts)
@@ -390,10 +400,6 @@ function GoGo_ChooseMount()
 	end --if
 
 	GoGo_ZoneCheck()  -- Checking to see what we can and can not do in zones
-
-	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly and not GoGo_Variables.SelectHerbMount then
-		GoGo_Variables.SkipFlyingMount = true
-	end --if
 
 	GoGo_UpdateMountData()  -- update mount information with changes from talents, glyphs, etc.
 --[[
@@ -482,6 +488,11 @@ function GoGo_ChooseMount()
 			GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 401)
 		end --if
 --	end --if
+
+	if GoGo_Prefs.AutoExcludeFlyingMounts and (not GoGo_Variables.ZoneExclude.CanFly or GoGo_Variables.NoFlying) and not GoGo_Variables.SelectHerbMount then
+		GoGo_Variables.SkipFlyingMount = true
+	end --if
+
 
 	if (GoGo_Variables.Player.Class == "DRUID" and GoGo_Prefs.DruidFormNotRandomize and not GoGo_IsMoving() and not IsFalling()) then
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 9998)
@@ -585,11 +596,11 @@ function GoGo_ChooseMount()
 		end --if
 	end --if
 	
-	if not GoGo_Variables.ZoneExclude.TheMaw then
+	-- The True Maw Walker is not in the speelbook. Using quest completion instead
+	-- if not GoGo_Variables.ZoneExclude.TheMaw or GoGo_InBook(GoGo_Variables.Localize.TheTrueMawWalker) then
+	if not (GoGo_Variables.ZoneExclude.TheMaw or C_QuestLog.IsQuestFlaggedCompleted(GoGo_Variables.Localize.TheTrueMawWalkerQuest) ) then
 	    -- cannot summon mounts in The Maw
--- ich -- need to allow filter mounts AND Creeper and the other one...
--- ich -- in the mean time just depend on the hardcoded settings to select the right mount
---	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
+	    GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except mounts that can be summoned in The Maw - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
@@ -840,7 +851,7 @@ function GoGo_Dismount(button)
 				GoGo_FillButton(button, GoGo_GetMount())
 			else
 --				CancelUnitBuff("player", GoGo_IsShifted())  -- protected by blizzard now
-				GoGo_FillButton(button, GoGo_IsShifted())
+				GoGo_FillButton(button, GoGo_GetIDName(GoGo_IsShifted()))
 			end --if
 		end --if
 	elseif GoGo_Variables.Player.Class == "SHAMAN" then
@@ -921,6 +932,9 @@ function GoGo_BuildMountList()
 		if GoGo_InBook(GoGo_Variables.Localize.FlightForm) then  -- Flight Form that appears with "Glyph of the Stag" in Warcraft 6.0
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.FlightForm)
 		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.MountForm) then
+			table.insert(GoGo_MountList, GoGo_Variables.Localize.MountForm)
+		end --if
 		if GoGo_InBook(GoGo_Variables.Localize.TravelForm) then
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.TravelForm)
 		end --if
@@ -941,7 +955,8 @@ function GoGo_BuildMountList()
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.ZenFlight)
 			GoGo_TableAddUnique(GoGo_Variables.AirSpeed, 160)
 		end --if
-	elseif GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
+	end --if
+	if GoGo_Variables.Player.Covenant == GoGo_Variables.Localize.NightFae then
 			table.insert(GoGo_MountList, GoGo_Variables.Localize.SoulShape)
 	end --if
 
@@ -1097,14 +1112,15 @@ function GoGo_IsShifted()
 		GoGo_DebugAddLine("GoGo_IsShifted:  GoGo_IsShifted starting")
 	end --if
 	for i = 1, GetNumShapeshiftForms() do
-		local _, name, active = GetShapeshiftFormInfo(i)
+		local _, active, _, spellID = GetShapeshiftFormInfo(i)
 		if active then
 			if GoGo_Variables.Debug >= 10 then
-				GoGo_DebugAddLine("GoGo_IsShifted: Found " .. name)
+				GoGo_DebugAddLine("GoGo_IsShifted: Found " .. spellID)
 			end --if
-			return name
+			return spellID
 		end
 	end --for
+	return false
 end --function
 
 ---------
@@ -1326,7 +1342,7 @@ function GoGo_RemoveExcluded()  -- removes excluded mounts from mount selection 
 			end --for
 		end --for
 	end --if
-	if table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Excluded"]) > 0 then
+	if GoGo_Variables.Player.MapID and table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Excluded"]) > 0 then
 		for a = 1, table.getn(GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Excluded"]) do
 			for b = 1, table.getn(GoGo_Variables.FilteredMounts) do
 				if GoGo_Variables.FilteredMounts[b] == GoGo_Prefs.MapIDs[GoGo_Variables.Player.MapID]["Excluded"][a] then
@@ -1874,11 +1890,21 @@ end --function
 ---------
 function GoGo_UpdateMountData()
 ---------
+	if (GoGo_Variables.Player.Class == "DRUID") and (GoGo_Variables.Player.Level>=20) then
+		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10002] = 200
+		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 200)
+	end --if
+
 	if (GoGo_Variables.Player.Class == "DRUID") and GoGo_InBook(GoGo_Variables.Localize.FelineSwiftness) then
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.CatForm][10002] = 144
-		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 144)
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10002] = 161
-		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 161)
+		GoGo_Variables.MountDB[GoGo_Variables.Localize.CatForm][10002] = 149
+		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 149)
+		if (GoGo_Variables.Player.Level<20) then
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10002] = 161
+			GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 161)
+		else
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10002] = 230
+			GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 230)
+		end --if
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid with Feline Swiftness.  Modifying shape form speed data.")
 		end --if
@@ -1945,20 +1971,6 @@ function GoGo_UpdateMountData()
 		end --if
 	end --if
 	
-	if (GoGo_Variables.Player.Class == "WARLOCK") and (GoGo_GlyphActive(56232)) then
-		-- spellid:56232 = Warlock's Glyph of Nightmares
-		-- Update Felsteeds / Dreadsteeds water surface speed to player's ground surface mount speed (160 / 200)
-		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Warlock with Glyph of Nightmares.  Modifying Warlock class mounts' water surface speed data.")
-		end --if
-		if GoGo_GetRidingSkillLevel() >= 150 then  -- increase ground mounts to 200
-			GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 406, 10004, 200)
-			GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 200)
-		else
-			GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 406, 10004, 160)
-			GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 160)
-		end --if	
-	end --if
 ]]
 	
 	if not GoGo_Variables.ZoneExclude.ThousandNeedles then  -- we are in thousand needles - ground mounts swim faster with buff
@@ -2365,6 +2377,7 @@ GOGO_MESSAGES = {
 		end --if
 	end, --function
 	["UnknownMount"] = function() return GoGo_Variables.Localize.String.UnknownMountFound end, --function
+	["UnknownMountType"] = function() return GoGo_Variables.Localize.String.UnknownMountTypeFound end, --function
 	["optiongui"] = function() return "To open the GUI options window - </gogo options>" end, --function
 }
 
@@ -3232,7 +3245,12 @@ function GoGo_DebugCollectInformation()
 	end --if
 	GoGo_DebugAddLine("Information: Client locale is " .. GetLocale())
 	GoGo_DebugAddLine("Information: Location = " .. GetRealZoneText() .. " - " .. GetZoneText() .. " - " ..GetSubZoneText() .. " - " .. GetMinimapZoneText())
-	GoGo_DebugAddLine("Information: Current zone area ID as per C_Map.GetBestMapForUnit('player'): " .. C_Map.GetBestMapForUnit("player"))
+	AreaID = C_Map.GetBestMapForUnit("player")
+	if AreaID then
+		GoGo_DebugAddLine("Information: Current zone area ID as per C_Map.GetBestMapForUnit('player'): " .. AreaID)
+	else
+		GoGo_DebugAddLine("Information: Current zone area ID as per C_Map.GetBestMapForUnit('player') returned a nil value ")
+	end --if
 --	GoGo_DebugAddLine("Information: Current map ID as per GetCurrentMapDungeonLevel(): " .. GetCurrentMapDungeonLevel())
 --	local posX, posY = GetPlayerMapPosition("Player")
 --	GoGo_DebugAddLine("Information: Player location: X = ".. posX .. ", Y = " .. posY)

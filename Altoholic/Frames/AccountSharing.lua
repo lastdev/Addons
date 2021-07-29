@@ -3,6 +3,7 @@ local addon = _G[addonName]
 local colors = addon.Colors
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local LibSerialize = LibStub:GetLibrary("LibSerialize")
 
 Altoholic.Sharing = {}
 Altoholic.Sharing.Clients = {}		-- authorized clients
@@ -10,6 +11,7 @@ Altoholic.Sharing.Content = {}		-- shared content
 Altoholic.Sharing.AvailableContent = {}		-- available content
 
 local THIS_ACCOUNT = "Default"
+local TOC_SEP = ";"	-- separator used between items
 
 local AUTH_AUTO	= 1
 local AUTH_ASK		= 2
@@ -146,6 +148,7 @@ local optionalModules = {		-- this defines the order in which modules should be 
 	"DataStore_Containers",
 	"DataStore_Crafts",
 	"DataStore_Currencies",
+	"DataStore_Garrisons",
 	"DataStore_Inventory",
 	"DataStore_Mails",
 	"DataStore_Pets",
@@ -163,6 +166,7 @@ local moduleLabels = {		-- these are the labels
 	["DataStore_Containers"] = L["Containers"],
 	["DataStore_Crafts"] = TRADE_SKILLS,
 	["DataStore_Currencies"] = CURRENCY,
+	["DataStore_Garrisons"] = SPLASH_NEW_FEATURE1_TITLE,		-- "Garrisons"
 	["DataStore_Inventory"] = L["Equipment"],
 	["DataStore_Mails"] = L["Mails"],
 	["DataStore_Pets"] = format("%s & %s", COMPANIONS, MOUNTS),
@@ -491,18 +495,18 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	local toc = {}
 
 	for realm in pairs(DS:GetRealms()) do			-- all realms on this account
-		table.insert(toc, format("%s|%s", TOC_SETREALM, realm))
+		table.insert(toc, format("%s;%s", TOC_SETREALM, realm))
 	
 		for guildName, guild in pairs(DS:GetGuilds(realm)) do		-- add guilds
 			if isGuildShared(realm, guildName) then
-				table.insert(toc, format("%s|%s", TOC_SETGUILD, guildName))
+				table.insert(toc, format("%s;%s", TOC_SETGUILD, guildName))
 				
 				for tabID = 1, 8 do		-- add guild bank tabs
 					local tabName = DS:GetGuildBankTabName(guild, tabID)
 					if tabName and isGuildBankTabShared(realm, guildName, tabID) then
-						serializedData = Altoholic:Serialize(DS:GetGuildBankTab(guild, tabID))
+						serializedData = LibSerialize:Serialize(DS:GetGuildBankTab(guild, tabID))
 						lastUpdate = DS:GetGuildBankTabLastUpdate(guild, tabID)
-						table.insert(toc, format("%s|%s|%s|%s|%s", TOC_BANKTAB, tabName, tabID, strlen(serializedData), lastUpdate or 0))
+						table.insert(toc, format("%s;%s;%s;%s;%s", TOC_BANKTAB, tabName, tabID, strlen(serializedData), lastUpdate or 0))
 					end
 				end
 			end
@@ -513,23 +517,23 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 				-- get the size of mandatory modules
 				local size = 0
 				for k, module in pairs(mandatoryModules) do
-					serializedData = Altoholic:Serialize(DS:GetCharacterTable(module, characterName, realm))
+					serializedData = LibSerialize:Serialize(DS:GetCharacterTable(module, characterName, realm))
 					size = size + strlen(serializedData)
 				end
 				
 				local _, class = DS:GetCharacterClass(character)
 				lastUpdate = DS:GetModuleLastUpdate("DataStore_Characters", characterName, realm)
-				table.insert(toc, format("%s|%s|%s|%s|%s", TOC_SETCHAR, characterName, class, size, lastUpdate or 0))
+				table.insert(toc, format("%s;%s;%s;%s;%s", TOC_SETCHAR, characterName, class, size, lastUpdate or 0))
 				
 				
-				for k, module in pairs(optionalModules) do
+				for k, module in ipairs(optionalModules) do
 					if isCharacterDataShared(character, module) then
 						-- evaluate the size of transferred data
-						serializedData = Altoholic:Serialize(DS:GetCharacterTable(module, characterName, realm))
+						serializedData = LibSerialize:Serialize(DS:GetCharacterTable(module, characterName, realm))
 						lastUpdate = DS:GetModuleLastUpdate(module, characterName, realm)
 					
-						-- only pass the key to the right datastore module (ex 4 for DataStore_Crafts)
-						table.insert(toc, format("%s|%s|%s|%s", TOC_DATASTORE, k, strlen(serializedData), lastUpdate or 0))
+						-- Pass the right datastore module (ex DataStore_Crafts)
+						table.insert(toc, format("%s;%s;%d;%d", TOC_DATASTORE, module, strlen(serializedData), lastUpdate or 0))
 					end
 				end
 			end
@@ -538,8 +542,8 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	
 	-- add reference here
 	for class, _ in pairs(DS:GetReferenceTable()) do
-		serializedData = Altoholic:Serialize(DS:GetClassReference(class))
-		table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
+		serializedData = LibSerialize:Serialize(DS:GetClassReference(class))
+		table.insert(toc, format("%s;%s;%s", TOC_REFDATA, class, strlen(serializedData)))
 	end
 	
 	return toc
@@ -718,7 +722,7 @@ function Altoholic.Sharing.AvailableContent:BuildView()
 	local realm, character, guildName
 	
 	for i = 1, #self.ToC do
-		local tocType, arg1, arg2, arg3, arg4 = strsplit("|", self.ToC[i])
+		local tocType, arg1, arg2, arg3, arg4 = strsplit(TOC_SEP, self.ToC[i])
 		
 		if tocType == TOC_SETREALM then
 			realm = arg1
@@ -752,7 +756,7 @@ function Altoholic.Sharing.AvailableContent:BuildView()
 				table.insert(self.view, { 
 					linetype = CHARACTER_DATASTORE_LINE, 
 					key = character, 
-					module = optionalModules[tonumber(arg1)],
+					module = arg1,
 					size = tonumber(arg2),
 					lastUpdate = tonumber(arg3),
 					parentID = i,
@@ -857,7 +861,7 @@ function Altoholic.Sharing.AvailableContent:IsItemChecked(index)
 	if self.ToC then
 		local TocData = self.ToC[index]
 		if TocData then
-			local TocType = strsplit("|", TocData)
+			local TocType = strsplit(TOC_SEP, TocData)
 					
 			if TocType == TOC_SETREALM then
 				-- until I have more time to implement a fancier solution, always return true for realm lines, necessary to correctly switch realms when importing data from foreign realms

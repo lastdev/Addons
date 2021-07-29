@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 
 <!--@no-lib-strip@-->
+<Include file="LibUIDropDownMenu\LibUIDropDownMenu.xml"/>
 <!--@end-no-lib-strip@-->
 
 </Ui>

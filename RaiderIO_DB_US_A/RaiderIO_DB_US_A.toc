@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90100
 ## Title: Raider.IO |cffFFFFFFMythic Plus|r (Americas - Alliance)
 ## Author: Vladinator (Voidzone-Ravencrest), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
 ## Dependencies: RaiderIO

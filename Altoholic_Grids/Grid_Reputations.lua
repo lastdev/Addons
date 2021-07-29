@@ -289,6 +289,8 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2410), icon = "inv_tabard_maldraxxus_d_01" },         -- The Undying Army
 			{ name = DataStore:GetFactionName(2465), icon = "inv_tabard_ardenweald_d_01" },         -- The Wild Hunt
 			{ name = DataStore:GetFactionName(2432), icon = "inv_helm_cloth_oribosdungeon_c_01" },  -- Ve'nari
+			{ name = DataStore:GetFactionName(2470), icon = "inv_tabard_deathsadvance_b_01" },  	 -- 9.1 Death's Advance
+			{ name = DataStore:GetFactionName(2472), icon = "inv_inscription_80_scroll" },  			 -- 9.1 Archivist's Codex
 		},
 	},
 	{	-- [10]

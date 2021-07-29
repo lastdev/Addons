@@ -1,38 +1,21 @@
 ------------------------------------------------------------------------
-r552 | Zensunim | 2021-05-22 17:26:04 +0000 (Sat, 22 May 2021) | 4 lines
+r568 | Zensunim | 2021-07-24 20:51:12 +0000 (Sat, 24 Jul 2021) | 1 line
+Changed paths:
+   M /trunk/GTFO.toc
+
+Fixed TOC
+------------------------------------------------------------------------
+r567 | Zensunim | 2021-07-24 20:50:48 +0000 (Sat, 24 Jul 2021) | 4 lines
 Changed paths:
    M /trunk/GTFO.lua
-   M /trunk/GTFO.toc
-   M /trunk/GTFO.toc.classic.txt
-   M /trunk/GTFO_FF_BFA.lua
-   M /trunk/GTFO_FF_CAT.lua
-   M /trunk/GTFO_FF_LGN.lua
-   M /trunk/GTFO_FF_LK.lua
-   M /trunk/GTFO_FF_MP.lua
-   M /trunk/GTFO_FF_SL.lua
-   M /trunk/GTFO_FF_WOD.lua
-   M /trunk/GTFO_Fail_BFA.lua
-   M /trunk/GTFO_Fail_LGN.lua
-   M /trunk/GTFO_Fail_LK.lua
-   M /trunk/GTFO_Fail_MP.lua
    M /trunk/GTFO_Fail_SL.lua
-   M /trunk/GTFO_Fail_WOD.lua
    M /trunk/GTFO_Ignore.lua
-   M /trunk/GTFO_Mobs.lua
-   M /trunk/GTFO_Spells_BFA.lua
-   M /trunk/GTFO_Spells_CAT.lua
-   M /trunk/GTFO_Spells_Classic.lua
-   M /trunk/GTFO_Spells_GenericClassic.lua
-   M /trunk/GTFO_Spells_LGN.lua
-   M /trunk/GTFO_Spells_LK.lua
-   M /trunk/GTFO_Spells_MP.lua
    M /trunk/GTFO_Spells_SL.lua
-   M /trunk/GTFO_Spells_WOD.lua
    M /trunk/ReadMe.txt
 
-4.63
-* Updated ToC for WoW Classic 1.13.7
-* Added support and updated ToC for WoW TBC 2.5.1
+4.63.7
+* Added Shadowlands spells (world)
+* Added SL spells for Torghast
 * Added SL spells for Sanctum of Domination
 ------------------------------------------------------------------------
 

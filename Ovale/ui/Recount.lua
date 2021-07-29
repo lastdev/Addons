@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Recount", 90048)
+local __exports = LibStub:NewLibrary("ovale/ui/Recount", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0", true)

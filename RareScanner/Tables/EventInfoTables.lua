@@ -143,4 +143,7 @@ private.EVENT_INFO = {
 	[158720] = { zoneID = 1527, artID = { 1343 }, x = 0.5520068407058716, y = 0.793234646320343, zoneQuestId = { 57157 }, questID = { 57621 } }; 
 	[170899] = { zoneID = 1533, artID = { 1321 }, x = 0.5362, y = 0.8822,  questID = { 60933 } }; 
 	[356756] = { zoneID = 1533, artID = { 1321 }, x = 0.4163994, y = 0.54530585, questID = { 60314 }, worldmap = true }; --Horn of Courage
+	[180293] = { zoneID = 1543, artID = { 1693 }, x = 0.6276826858520508, y = 0.6724420189857483, questID = { 64258 }, worldmap = true }; --Assault Supply Carriage
+	[180181] = { zoneID = 1961, artID = { 1648 }, x = 0.5818808674812317, y = 0.1763358116149902, questID = { 64258 }, worldmap = true }; --Assault Supply Carriage
+	[177525] = { zoneID = 1543, artID = { 1693 }, x = 0.2799704074859619, y = 0.4773745238780975, resetTimer = 7200, worldmap = true }; --Tormentors event
 }

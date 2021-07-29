@@ -4,14 +4,29 @@
 
 <Script file="PanelTemplate.lua" />
 
-<Frame name="LiteMountOptionsContainerTemplate" virtual="true" inherits="TooltipBackdropTemplate">
+<Frame name="LiteMountContainerStyleTemplate" virtual="true" inherits="BackdropTemplate">
     <KeyValues>
+        <KeyValue key="backdropInfo" value="TOOLTIP_BACKDROP_STYLE_DEFAULT" type="global"/>
         <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
-        <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
-        <KeyValue key="backdropBorderColor" value="GRAY_FONT_COLOR" type="global"/>
-        <KeyValue key="backdropBorderColorAlpha" value="0.5" type="number"/>
+        <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
     </KeyValues>
 </Frame>
+
+<Button name="LiteMountListButtonStyleTemplate" virtual="true" inherits="BackdropTemplate">
+    <KeyValues>
+        <KeyValue key="backdropInfo" value="LM_LISTBUTTON_BACKDROP_INFO" type="global" />
+        <KeyValue key="backdropColor" value="GRAY_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
+    </KeyValues>
+</Button>
+
+<Button name="LiteMountButtonStyleTemplate" virtual="true" inherits="BackdropTemplate">
+    <KeyValues>
+        <KeyValue key="backdropInfo" value="TOOLTIP_BACKDROP_STYLE_DEFAULT" type="global"/>
+        <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
+        <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
+    </KeyValues>
+</Button>
 
 <Frame name="LiteMountOptionsPanelTemplate" hidden="true" virtual="true">
     <Scripts>
@@ -40,7 +55,42 @@
                 </OnClick>
             </Scripts>
         </Button>
+        <Frame parentKey="Disable" setAllPoints="true" hidden="true" enableMouse="true">
+            <Scripts>
+                <OnLoad>
+                    self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+                </OnLoad>
+            </Scripts>
+            <Layers>
+                <Layer level="OVERLAY">
+                    <Texture>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="3" y="-3" />
+                            <Anchor point="BOTTOMRIGHT" x="-3" y="3" />
+                        </Anchors>
+                        <Color r="0.3" g="0.3" b="0.3" a="0.6" />
+                    </Texture>
+                </Layer>
+            </Layers>
+        </Frame>
     </Frames>
+</Frame>
+
+<Frame name="LiteMountPopOverPanelTemplate" virtual="true" inherits="LiteMountContainerStyleTemplate">
+    <Scripts>
+        <OnLoad inherit="prepend" function="LiteMountPopOverPanel_OnLoad" />
+        <OnShow inherit="prepend" function="LiteMountPopOverPanel_OnShow" />
+        <OnHide inherit="prepend" function="LiteMountPopOverPanel_OnHide" />
+    </Scripts>
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString inherits="GameFontNormalLarge" parentKey="Title" text="LM_EDIT_RULE">
+                <Anchors>
+                    <Anchor point="TOP" y="-16" />
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
 </Frame>
 
 </Ui>

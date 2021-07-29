@@ -1,4 +1,4 @@
---Mini Dragon <流浪者酒馆-Brilla@金色平原> 20210529
+--Mini Dragon <流浪者酒馆-Brilla@金色平原> 20210619
 if GetLocale() ~= "zhCN" then return end
 local L
 
@@ -6,6 +6,10 @@ local L
 --  The Tarragrue 塔拉格鲁--
 ---------------------------
 L= DBM:GetModLocalization(2435)
+
+L:SetOptionLocalization({
+	warnRemnant	= "通告个人残渣层数"
+})
 
 L:SetMiscLocalization({
 	Remnant	= "残渣"
@@ -26,8 +30,6 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2439)
 
 L:SetMiscLocalization({
-	AgathaBlade		= "倒在我的剑下吧！",
-	AradneStrike	= "你们绝无胜算！",
 	Fragment		= "残片 "--Space is intentional, leave a space to add a number after it
 })
 

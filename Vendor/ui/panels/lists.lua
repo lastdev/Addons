@@ -38,11 +38,25 @@ function ListsItem:OnCreated()
     self:SetScript("OnLeave", self.OnLeave)
 end
 
+function ListsItem:GetTextColor(model)
+    model = model or self:GetModel()
+    if (model) then
+        if (model.custom) then
+            return Addon.RARE_BLUE_COLOR
+        elseif (model.extension) then
+            return Addon.HEIRLOOM_BLUE_COLOR
+        end
+    end
+
+    return NORMAL_FONT_COLOR
+end
+
 --[[===========================================================================
     | Called when the list item has it's model changed
     ========================================================================--]]
 function ListsItem:OnModelChanged(model)
     self.Name:SetText(model.name);
+    self.Name:SetTextColor(self:GetTextColor(model):GetRGB())
 end
 
 --[[===========================================================================
@@ -65,7 +79,7 @@ function ListsItem:OnSelected(selected)
         self.Name:SetTextColor(HIGHLIGHT_FONT_COLOR:GetRGB());
     else
         self.Selected:Hide();
-        self.Name:SetTextColor(NORMAL_FONT_COLOR:GetRGB());
+        self.Name:SetTextColor(self:GetTextColor():GetRGB());
     end
 end
 
@@ -107,9 +121,34 @@ function ListsPanel:OnLoad()
     self.Lists.ItemTemplate = "Vendor_ItemLists_ListItem";
     self.Lists.ItemClass = ListsItem;
     self.Items.isReadOnly = false;
+	--self.EditList:Disable();
 
     self.Lists.GetItems = function()
-        return SYSTEM_LISTS;
+        if (not self.lists) then
+            local lists = table.copy(SYSTEM_LISTS)
+            
+            for _, customList in ipairs(Addon:GetListManager():GetLists()) do
+                table.insert(lists, {
+                    id = customList.Id,
+                    tooltip = customList.Description,
+                    name = customList.Name,
+                    custom = true,
+                })
+            end            
+
+            for _, extList in ipairs(Addon:GetExtensionManger():GetLists()) do
+                table.insert(lists, {
+                    id = extList.Id,
+                    tooltip = extList.Description,
+                    name = extList.Name,
+                    extension = true,
+                })
+            end
+
+            self.lists = lists;
+        end
+
+        return self.lists;
     end
 
     self.Lists.OnSelection = function() 
@@ -126,6 +165,9 @@ function ListsPanel:OnLoad()
 
     self:SetScript("OnShow", self.OnShow);
     self:SetScript("OnHide", self.OnHide);
+
+    --self.NewList:SetScript("OnClick", function() self:OnCreateList() end)
+    --self.EditList:SetScript("OnClick", function() self:OnEditList() end)
 end
 
 --[[===========================================================================
@@ -138,13 +180,29 @@ function ListsPanel:OnShow()
     if (not self.Lists:GetSelected()) then
         self.Lists:Select(1);
     end
+
+    Addon:GetListManager():RegisterCallback("OnListChanged",
+        function(_, id, action)
+            if (action == "UPDATED") then
+                local selection = self.Lists:GetSelected()
+                if (selection and selection.id == id) then
+                    self:OnSelectionChanged()
+                end
+            elseif (action == "ADDED") then
+                self.lists = nil;
+                self.Lists:Update()
+            end
+        end
+        , 
+        self)
 end
 
 --[[===========================================================================
     | Called when the panel is hidden, unregisters our callback
     ========================================================================--]]
 function ListsPanel:OnHide()
-    Addon:GetProfileManager():UnregisterCallback("OnProfileChanged", self.OnSelectionChanged, self);
+    Addon:GetProfileManager():UnregisterCallback("OnProfileChanged", self.OnSelectionChanged, self)
+    Addon:GetListManager():UnregisterCallback("OnListChanged", self)
 end
 
 --[[===========================================================================
@@ -167,14 +225,26 @@ function ListsPanel:OnAddItem(item)
 
         -- Check for condition that this item is unsellable and we are attempting
         -- to add it to the system Sell list.
-        if itemid and list.listType == Addon.ListType.SELL then
+        if itemid and list:IsType(Addon.ListType.SELL) then
             if select(11, GetItemInfo(itemid)) == 0 then   -- itemprice is 0 means unsellable
                 Addon:Print(L.ITEMLIST_UNSELLABLE, select(2, GetItemInfo(itemid)) or itemid)
                 list = Addon:GetList(ListType.DESTROY)
             end
         end
 
+        Addon:Debug("test", "List: %s, %s", list, itemid)
         list:Add(itemid);
+    end
+end
+
+function ListsPanel:OnCreateList()
+    VendorListDialog:Create();
+end
+
+function ListsPanel:OnEditList()
+    local list = self.Lists:GetSelected();
+    if (list) then
+        VendorListDialog:Edit(list.id, list.name, list.tooltip);
     end
 end
 
@@ -193,6 +263,8 @@ function ListsPanel:GetSelectedList()
             return Addon:GetList(ListType.SELL), selection.empty;
         elseif (id == SystemListId.DESTROY) then
             return Addon:GetList(ListType.DESTROY), selection.empty;
+        else
+            return Addon:GetList(id), "<<GENERIC EMPTY MESSAGE -- NEED LOC>>"
         end
     end
 
@@ -209,14 +281,25 @@ function ListsPanel:OnSelectionChanged()
 
     if (not list) then
         -- List is empty
+        self.Items:SetReadOnly(true)
         self.Items:SetContents();
         self.ItemCount:SetFormattedText("(%d)", 0);
+        --self.EditList:Disable()
     else
         local contents = list:GetItems();
         local count = table.getn(contents);
         
+        self.Items:SetReadOnly(list:IsReadOnly())
         self.Items:SetContents(contents);
-        self.ItemCount:SetFormattedText("(%d)", count);
+        self.ItemCount:SetFormattedText("(%d)", count)
+
+        --[[
+        if (not list:IsType(ListType.EXTENSION)) then
+            self.EditList:Enable()
+        else 
+            self.EditList:Disable()
+        end
+        ]]
     end
 end
 

@@ -1,4 +1,4 @@
--- $Id: Handler.lua 59 2020-10-18 08:32:02Z arith $
+-- $Id: Handler.lua 63 2020-11-22 15:50:25Z arith $
 -----------------------------------------------------------------------
 -- Upvalued Lua API.
 -----------------------------------------------------------------------
@@ -9,7 +9,7 @@ local string = _G.string
 local format, gsub = string.format, string.gsub
 local next, wipe, pairs, select, type = next, wipe, pairs, select, type
 local GameTooltip, GetSpellInfo, CreateFrame, UnitClass = _G.GameTooltip, _G.GetSpellInfo, _G.CreateFrame, _G.UnitClass
-local UIDropDownMenu_CreateInfo, CloseDropDownMenus, UIDropDownMenu_AddButton, ToggleDropDownMenu = _G.UIDropDownMenu_CreateInfo, _G.CloseDropDownMenus, _G.UIDropDownMenu_AddButton, _G.ToggleDropDownMenu
+--local UIDropDownMenu_CreateInfo, CloseDropDownMenus, UIDropDownMenu_AddButton, ToggleDropDownMenu = L_UIDropDownMenu_CreateInfo, L_CloseDropDownMenus, L_UIDropDownMenu_AddButton, L_ToggleDropDownMenu
 
 local WorldMapTooltip = GameTooltip
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
@@ -23,6 +23,8 @@ local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 local LH = LibStub("AceLocale-3.0"):GetLocale("HandyNotes", false)
 local AceDB = LibStub("AceDB-3.0")
+-- UIDropDownMenu
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local addon = LibStub("AceAddon-3.0"):NewAddon(private.addon_name, "AceEvent-3.0")
@@ -35,6 +37,7 @@ addon.pluginName 	= private.pluginName
 
 addon.Name = FOLDER_NAME
 _G.HandyNotes_LegionInstanceWorldQuests = addon
+local profile
 
 -- //////////////////////////////////////////////////////////////////////////
 local cache_tooltip = CreateFrame("GameTooltip", private.addon_name.."_cacheToolTip", UIParent, "GameTooltipTemplate")
@@ -218,7 +221,7 @@ local function hideNode(button, uMapID, coord)
 end
 
 local function closeAllDropdowns()
-	CloseDropDownMenus(1)
+	LibDD:CloseDropDownMenus(1)
 end
 
 local function addTomTomWaypoint(button, uMapID, coord)
@@ -240,41 +243,42 @@ do
 		if (not level) then return end
 		if (level == 1) then
 			-- Create the title of the menu
-			info = UIDropDownMenu_CreateInfo()
+			info = LibDD:UIDropDownMenu_CreateInfo()
 			info.isTitle 		= true
 			info.text 		= "HandyNotes - " ..addon.pluginName
 			info.notCheckable 	= true
-			UIDropDownMenu_AddButton(info, level)
+			LibDD:UIDropDownMenu_AddButton(info, level)
 
 			if TomTom then
 				-- Waypoint menu item
-				info = UIDropDownMenu_CreateInfo()
+				info = LibDD:UIDropDownMenu_CreateInfo()
 				info.text = LH["Add this location to TomTom waypoints"]
 				info.notCheckable = true
 				info.func = addTomTomWaypoint
 				info.arg1 = currentMapID
 				info.arg2 = currentCoord
-				UIDropDownMenu_AddButton(info, level)
+				LibDD:UIDropDownMenu_AddButton(info, level)
 			end
 
 			-- Hide menu item
-			info = UIDropDownMenu_CreateInfo()
+			info = LibDD:UIDropDownMenu_CreateInfo()
 			info.text		= HIDE 
 			info.notCheckable 	= true
 			info.func		= hideNode
 			info.arg1		= currentMapID
 			info.arg2		= currentCoord
-			UIDropDownMenu_AddButton(info, level)
+			LibDD:UIDropDownMenu_AddButton(info, level)
 
 			-- Close menu item
-			info = UIDropDownMenu_CreateInfo()
+			info = LibDD:UIDropDownMenu_CreateInfo()
 			info.text		= CLOSE
 			info.func		= closeAllDropdowns
 			info.notCheckable 	= true
-			UIDropDownMenu_AddButton(info, level)
+			LibDD:UIDropDownMenu_AddButton(info, level)
 		end
 	end
-	local HL_Dropdown = CreateFrame("Frame", private.addon_name.."DropdownMenu")
+	--local HL_Dropdown = CreateFrame("Frame", private.addon_name.."DropdownMenu")
+	local HL_Dropdown = LibDD:Create_UIDropDownMenu(private.addon_name.."DropdownMenu")
 	HL_Dropdown.displayMode = "MENU"
 	HL_Dropdown.initialize = generateMenu
 
@@ -282,7 +286,7 @@ do
 		if (button == "RightButton" and not down) then
 			currentMapID = uMapID
 			currentCoord = coord
-			ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+			LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
 		end
 	end
 end

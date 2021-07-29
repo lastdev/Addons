@@ -50,6 +50,7 @@ GoGo_Variables.Localize = {
 		ShamanOptions = "Shaman Options",
 		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting",
 		UnknownMountFound = "An unknown mount has been found in your list of mounts.  Please report this so that it can be added to future versions of GoGoMount.",
+		UnknownMountTypeFound = "An unknown mount type has been found in your list of mounts.  Please report this so that it can be added to future versions of GoGoMount.",
 		UseAspectOfThePackInstead = "Use Aspect Of The Pack instead of Aspect Of The Cheeta",
 		UseAspectOfThePackInstead_Long = "When enabled, GoGoMount will cast Aspect of the Pack instead of Aspect of the Cheetah.  Local zone or global settings override this setting.  If this is set to use Aspect of the Pack and you have Aspect of the Cheetah as a zone favorite, Aspect of the Cheetah will be used.", -- Needs review
 		ZoneExclusionsDescription = "Zone specific exclusions work the same as global exclusions but specific to this zone.  Any mount marked below as an exclusion for the zone you're currently in will never be summoned.",

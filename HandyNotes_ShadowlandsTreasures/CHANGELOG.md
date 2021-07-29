@@ -1,5 +1,79 @@
 # Changelog
 
+## Changed in v30
+
+* Maw Kyrian Assault: added the Sinfall Screecher pet
+* A Sly Fox will now show on the minimap as well as the world map
+* Xyraxz and Yarxhov will be labeled as such, rather than as the relics they're guarding
+* Observer Yorik's quest id has been updated
+* A new Maelie location has been added
+* Maelie's progress will show better when you're at 6/6 and haven't turned in the quest to get the mount yet
+* Removed the Glimmerfly Cocoon toy finally, it's definitely not dropping
+
+## Changed in v29
+
+* Maw Night Fae Assault: include the Jailer's Personal Stash achievement
+* Maw Necrolord Assault: include the second Stolen Anima Vessel
+* Better explanation in the tooltip for things which are hidden in the rift
+* New feature: some points are in "groups", so you can now use the menu or right-clicking to hide all the points of that type. E.g. all the Korthia daily mounts, mawsworn chests, etc
+* Missing Maw rares: Deomen the Vortex, Guard Orguluus
+* Minor missing loot in Riftbound Caches
+
+## Changed in v28
+
+* You can now share a point to chat by shift-clicking a point or selecting it from the right-click menu (thanks, answering so many Maelie questions)
+* Covenant-gated points will now show as inactive rather than hidden, as you can generally participate and get loot if a covenant-member triggers them
+* Korthia now includes Mawsworn Caches
+* A Sly Fox is shown during the Maw Kyrian assaults
+* The Night Fae assault stolen anima vessels now have questids
+* The Skittering Broodmother in the Maw has moved
+* Added another Maelie location
+* Added another spectral key location
+* Missing Maw mob: Traitor Balthier
+* Added some missing loot from the Inquisitors in Revendreth
+
+## Changed in v27
+
+* Added rares in Maw: Blinding Shadow, Fallen Charger
+* Mine new loot; lots added to the Maw rares
+
+## Changed in v26
+
+* Nilganihmaht
+    * Better explain the Domination chest
+    * Show some of the quartered ancient ring pieces during the Necrolord assault
+    * Flag Torglluun as being in the rift
+* Show you how many razorwing eggs you've looted so far today (of the two you can get)
+
+## Changed in v25
+
+* Fix an error when trying to show loot for Ylava in the Maw (`C_Item.RequestLoadItemDataByID`)
+* Add some missing loot, and a missing Helgarde Supply Cache
+
+## Changed in v24
+
+* Added to the Maw:
+    * Nilganihmaht mount (apart from the necrolord assault bits)
+    * Stolen Anima Vessels
+    * Rift Hidden Caches
+    * Zovaal's Vault
+* Added Riftbound caches and Rift portals to Korthia
+* Explain Consumption's mechanic so you can maybe actually get loot from it
+
+## Changed in v23
+
+* Notes for transporters and waystone in Korthia
+* Add the new 9.1 treasures that're actually in the Maw
+* Add the various mounts via daily actions in Korthia
+* Improved ability to show progress in tooltips
+* Add some missing items from the Blackhound Cache in Maldraxxus
+
+## Changed in v22
+
+* Updated for 9.1
+* Korthia rares and treasures
+* Maw got animaflow teleporter waypoints
+
 ## Changed in v21
 
 * Updated for 9.0.5

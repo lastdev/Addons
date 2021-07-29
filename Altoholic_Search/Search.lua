@@ -760,8 +760,10 @@ local function BrowseCharacter(character)
 end
 
 local function BrowseRealm(realm, account, bothFactions)
+	local playerFaction = UnitFactionGroup("player")
+	
 	for characterName, character in pairs(DataStore:GetCharacters(realm, account)) do
-		if bothFactions or DataStore:GetCharacterFaction(character) == UnitFactionGroup("player") then
+		if bothFactions or DataStore:GetCharacterFaction(character) == playerFaction then
 			BrowseCharacter(character)
 		end
 	end
@@ -770,7 +772,7 @@ local function BrowseRealm(realm, account, bothFactions)
 		currentResultType = GUILD_ITEM_LINE
 
 		for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
-			if bothFactions or DataStore:GetGuildBankFaction(guild) == UnitFactionGroup("player") then
+			if bothFactions or DataStore:GetGuildBankFaction(guild) == playerFaction then
 				currentResultKey = format("%s.%s.%s", account, realm, guildName)
 				
 				for tabID = 1, 8 do

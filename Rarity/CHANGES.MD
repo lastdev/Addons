@@ -1,3 +1,50 @@
+**r710:**
+
+Additions:
+> Added an overview of the tracking data to each item's settings in the Options UI
+> Added tracking for toys obtained from Zovaal's Vault
+> Added links to the Rarity Discord and GitHub repository to the Options UI
+
+Changes:
+> The main window should now render MUCH faster, depending on the sort method selected (sorting by zone is still relatively slow)
+
+Fixes:
+> Fixed tracking for Wilderling Saddle
+> Fixed tracking for Rook
+> Fixed tracking for Intact Aquilon Core
+> Fixed an issue that could prevent items using the COLLECTION method from being tracked correctly
+
+Developer Notes:
+> By improving the sorting algorithms used internally, we were able to reduce the time spent on rendering the addon's main window significantly. The remaining time for all sort modes except "by zone" is now limited by the WOW client's UI system and can't be reduced as easily, though we're looking at workarounds to this problem. If you're still experiencing significant performance issues after updating, please let us know!
+
+Contributors (in alphabetical order):
+> AySz88
+> Tommy Godejord
+> Matthew Rowland
+
+-----
+
+**r709:**
+
+Additions:
+> Added tracking for mounts introduced in Chains of Domination 
+> Added tracking for various toys introduced in Chains of Domination
+> Added tracking for most pets introduced in Chains of Domination
+
+Changes:
+> Rarity's achievement toast now also supports two lines of text properly, similar to Blizzard's recently-updated version
+
+Fixes:
+> Fixed an issue where two icons would be displayed in the achievement toast
+
+Developer Notes:
+> There are a number of collectibles we don't currently have sufficient data on. These will be added as soon™ as possible, but it might still take a while.
+
+Contributors (in alphabetical order):
+> Tommy Godejord
+
+-----
+
 **r708:**
 
 Additions:
@@ -52,39 +99,3 @@ Fixes:
 Contributors (in alphabetical order):
 > Nick Bayley
 > Tommy Godejord
-
------
-
-**r705:**
-
-Additions:
-> Added tracking for various Shadowlands pets and toys that were previously missing
-> Added tracking for Smoldering Ember Wyrm (Return to Karazhan)
-> Added tracking for Gloop (Corrupted Vale of Eternal Blossoms/Uldum)
-> Added tooltips for achievement-related rares in Nazjatar, Mechagon Island, as well as Shadowlands zones
-
-Changes:
-> The main tooltip's sort order can now also be changed by CTRL-clicking on the tooltip header (in addition to clicking on the LDB icon/minimap button)
-
-Fixes:
-> Fixed an issue where duplicate attempts would be detected when defeating certain Timewalking encounters
-> Fixed waypoint data (including the displayed zone) for certain legacy collectibles
-> Fixed tracking for Mechagon Peacekeeper, Golden Snorf, and Microbot 8D (Operation: Mechagon)
-> Mining Elementium veins should now add attempts for Elementium Geode in all Cataclysm zones
-
-Contributors (in alphabetical order):
-> Tommy Godejord (https://github.com/godejord)
-
------
-
-**r704:**
-
-Additions:
-> Added tracking for various Shadowlands pets and toys that were previously missing
-
-Fixes:
-> Mechagon Peacekeeper should now correctly be displayed in the Group category
-> Attempts for Gahz'rooki's Summoning Stone should now be tracked correctly when looting relevant Kor'kron NPCs in The Barrens
-
-Contributors (in alphabetical order):
-> Tommy Godejord (https://github.com/godejord)

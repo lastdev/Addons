@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ioc", 90048)
+local __exports = LibStub:NewLibrary("ovale/ioc", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __Ovale = LibStub:GetLibrary("ovale/Ovale")
@@ -119,6 +119,8 @@ local __enginerunner = LibStub:GetLibrary("ovale/engine/runner")
 local Runner = __enginerunner.Runner
 local __enginecontrols = LibStub:GetLibrary("ovale/engine/controls")
 local Controls = __enginecontrols.Controls
+local __statesspellactivationglow = LibStub:GetLibrary("ovale/states/spellactivationglow")
+local SpellActivationGlow = __statesspellactivationglow.SpellActivationGlow
 __exports.IoC = __class(nil, {
     constructor = function(self)
         self.ovale = OvaleClass()
@@ -163,7 +165,8 @@ __exports.IoC = __class(nil, {
         self.spellDamage = OvaleSpellDamageClass(self.ovale, self.profiler)
         self.demonHunterSoulFragments = OvaleDemonHunterSoulFragmentsClass(self.aura, self.ovale, self.paperDoll)
         self.runes = OvaleRunesClass(self.ovale, self.debug, self.profiler, self.data, self.power, self.paperDoll)
-        self.spells = OvaleSpellsClass(self.spellBook, self.ovale, self.debug, self.profiler, self.data, self.power, self.runes)
+        self.spellActivationGlow = SpellActivationGlow(self.ovale, self.debug)
+        self.spells = OvaleSpellsClass(self.spellBook, self.ovale, self.debug, self.profiler, self.data, self.power, self.runes, self.spellActivationGlow)
         self.bestAction = OvaleBestActionClass(self.equipment, self.actionBar, self.data, self.cooldown, self.ovale, self.guid, self.future, self.spellBook, self.profiler, self.debug, self.variables, self.spells, runner)
         self.frame = OvaleFrameModuleClass(self.state, self.compile, self.future, self.baseState, self.enemies, self.ovale, self.options, self.debug, self.spellFlash, self.spellBook, self.bestAction, combat, runner, controls, self.scripts, self.actionBar)
         self.dataBroker = OvaleDataBrokerClass(self.paperDoll, self.frame, self.options, self.ovale, self.debug, self.scripts)
@@ -177,7 +180,7 @@ __exports.IoC = __class(nil, {
         self.simulationCraft = OvaleSimulationCraftClass(self.options, self.data, self.emiter, self.ast, self.parser, self.unparser, self.debug, self.compile, self.splitter, self.generator, self.ovale, controls)
         self.recount = OvaleRecountClass(self.ovale, self.score)
         local covenant = Covenant(self.ovale, self.debug)
-        local runeforge = Runeforge(self.ovale, self.debug)
+        local runeforge = Runeforge(self.ovale, self.debug, self.equipment)
         local conduit = Conduit(self.debug)
         self.conditions = OvaleConditions(self.condition, self.data, self.paperDoll, self.azeriteEssence, self.aura, self.baseState, self.cooldown, self.future, self.spellBook, self.frame, self.guid, self.damageTaken, self.power, self.enemies, self.lastSpell, self.health, self.options, self.lossOfControl, self.spellDamage, self.totem, self.demonHunterSigils, self.demonHunterSoulFragments, self.runes, self.bossMod, self.spells)
         self.runner = runner
@@ -209,5 +212,6 @@ __exports.IoC = __class(nil, {
         self.azeriteArmor:registerConditions(self.condition)
         self.stagger:registerConditions(self.condition)
         self.stance:registerConditions(self.condition)
+        self.spellActivationGlow:registerConditions(self.condition)
     end,
 })

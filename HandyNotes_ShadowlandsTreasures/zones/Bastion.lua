@@ -465,6 +465,7 @@ ns.RegisterPoints(1533, {
         npc=156339,
         loot={
             184365, -- Aegis of Salvation
+            {184401, pet=3063, covenant=Enum.CovenantType.Kyrian}, -- Larion Pouncer
         },
         note="Requires Kyrian player to summon",
     },
@@ -510,7 +511,7 @@ ns.RegisterPoints(1533, {
             179488, -- Cloudtail's Paw
             179485, -- Fang of Nemaeus
             179487, -- Aethon's Horn
-            {174445, toy=true}, -- Glimmerfly Cocoon
+            -- {174445, toy=true}, -- Glimmerfly Cocoon
         },
         note="Beasts of Bastion; talk to {npc:161441} to summon",
     },

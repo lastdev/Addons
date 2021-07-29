@@ -8,7 +8,7 @@
 
 local VERSION
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	VERSION = "9.0.28"
+	VERSION = "9.1.28"
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 	VERSION = "1.13.28"
 end
@@ -67,7 +67,9 @@ function FloAspectBar_OnLoad(self)
 	self.menuHooks = { SetPosition = FloAspectBar_SetPosition, SetBorders = FloAspectBar_SetBorders };
 	self:EnableMouse(1);
 	PetActionBarFrame:EnableMouse(false);
-	ExtraActionBarFrame:EnableMouse(false);
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+		ExtraActionBarFrame:EnableMouse(false);
+	end
 
 	if SHOW_WELCOME then
 		DEFAULT_CHAT_FRAME:AddMessage( "FloAspectBar "..VERSION.." loaded." );

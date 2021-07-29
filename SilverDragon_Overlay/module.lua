@@ -224,13 +224,13 @@ function module:ShowTooltip(pin)
     local id = pin.mobid
     if id and ns.mobdb[id] then
         tooltip:AddLine(core:GetMobLabel(id))
-        if ns.mobdb[id].notes then
-            tooltip:AddDoubleLine("Note", (core:RenderString(ns.mobdb[id].notes)))
-        end
         tooltip:AddDoubleLine("Last seen", core:FormatLastSeen(core.db.global.mob_seen[id]))
         if pin.config.tooltip_completion then
             ns:UpdateTooltipWithCompletion(tooltip, id)
             ns.Loot.Summary.UpdateTooltip(tooltip, id, not pin.config.tooltip_regularloot)
+        end
+        if ns.mobdb[id].notes then
+            tooltip:AddLine(core:RenderString(ns.mobdb[id].notes), 1, 1, 1, true)
         end
         if pin.config.tooltip_lootwindow and pin.config.tooltip_regularloot and ns.Loot.HasRegularLoot(id) then
             self.lootwindow = ns.Loot.Window.ShowForMob(id)
@@ -274,3 +274,32 @@ function module:CleanupTooltip()
     end
     self.tooltip:Hide()
 end
+
+local function AddMobToTooltip(tooltip, mobid, name)
+    if not (mobid and ns.mobdb[mobid]) then return end
+    if name then
+        tooltip:AddLine(core:GetMobLabel(mobid))
+    end
+    if db.worldmap.tooltip_completion then
+        ns:UpdateTooltipWithCompletion(tooltip, mobid)
+        ns.Loot.Summary.UpdateTooltip(tooltip, mobid, not db.worldmap.tooltip_regularloot)
+    end
+    if ns.mobdb[mobid].notes then
+        tooltip:AddLine(core:RenderString(ns.mobdb[mobid].notes), 1, 1, 1, true)
+    end
+    tooltip:Show()
+end
+
+hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
+    -- _G.PIN = self
+    if not self.hasTooltip then return end
+    local vignetteInfo = self.vignetteInfo
+    if vignetteInfo.vignetteID and ns.vignetteMobLookup[vignetteInfo.vignetteID] then
+        for mobid in pairs(ns.vignetteMobLookup[vignetteInfo.vignetteID]) do
+            AddMobToTooltip(GameTooltip, mobid, true)
+        end
+    end
+    if vignetteInfo.name then
+        AddMobToTooltip(GameTooltip, core:IdForMob(vignetteInfo.name))
+    end
+end)

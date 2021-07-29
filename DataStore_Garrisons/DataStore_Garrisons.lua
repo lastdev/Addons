@@ -10,7 +10,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
 local GARRISON_MISSIONS_STORAGE = "AvailableMissions"
 local GARRISON_ACTIVE_MISSIONS_STORAGE = "ActiveMissions"
 local ORDERHALL_MISSIONS_STORAGE = "AvailableOrderHallMissions"
@@ -656,8 +655,9 @@ local function ScanNextArtifactResearch()
 end
 
 local function ScanReservoirTalents()
+
 	if not C_CovenantSanctumUI.CanAccessReservoir() then return end
-	
+
 	local talents = addon.ThisCharacter.ReservoirTalents
 	wipe(talents)	
 	

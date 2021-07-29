@@ -10,6 +10,10 @@
 
 local _, LM = ...
 
+--[===[@debug@
+if LibDebug then LibDebug() end
+--@end-debug@]===]
+
 local L = LM.Localize
 
 local MacroName = "LiteMount"
@@ -98,7 +102,7 @@ COMMANDS['mounts'] =
         return true
     end
 
-COMMANDS['flags'] =
+COMMANDS['group'] =
     function (argstr, action, arg1, arg2)
         if action == "add" and arg1 then
             LM.Options:CreateFlag(arg1)
@@ -107,13 +111,8 @@ COMMANDS['flags'] =
         elseif action == "rename" and arg1 and arg2 then
             LM.Options:RenameFlag(arg1, arg2)
         elseif action == "list" and arg1 == nil then
-            local flags = LM.Options:GetAllFlags()
-            for i = 1, #flags do
-                if LM.Options:IsPrimaryFlag(flags[i]) then
-                    flags[i] = ORANGE_FONT_COLOR_CODE .. flags[i] .. FONT_COLOR_CODE_CLOSE
-                end
-            end
-            LM.Print(table.concat(flags, ' '))
+            local groups = LM.Options:GetGroups()
+            LM.Print(table.concat(groups, ' '))
         end
     end
 
@@ -136,7 +135,7 @@ COMMANDS['profile'] =
 
 COMMANDS['xmog'] =
     function (argstr, slotID)
-         slotId = tonumber(slotID) or 0
+        slotID = tonumber(slotID) or 0
         local tmSlot = TRANSMOG_SLOTS[slotID*100]
         if tmSlot then
             local ok, _, _, _, id = pcall(C_Transmog.GetSlotVisualInfo, tmSlot.location)
@@ -191,15 +190,16 @@ COMMANDS['pi'] =
 
 local function PrintUsage()
     LM.Print(GAMEMENU_HELP .. ":")
-    LM.Print("  /litemount priority <0-3>")
+    LM.Print("  /litemount priority <0-4>")
     LM.Print("  /litemount mounts [<substring>]")
     LM.Print("  /litemount maps [<substring>]")
     LM.Print("  /litemount continents [<substring>]")
     LM.Print("  /litemount location")
     LM.Print("  /litemount macro")
-    LM.Print("  /litemount flags add <flagname>")
-    LM.Print("  /litemount flags del <flagname>")
-    LM.Print("  /litemount flags rename <oldname> <newname>")
+    LM.Print("  /litemount group add <name>")
+    LM.Print("  /litemount group del <name>")
+    LM.Print("  /litemount group list")
+    LM.Print("  /litemount group rename <oldname> <newname>")
     LM.Print("  /litemount playermodel")
     LM.Print("  /litemount profile <profilename>")
     LM.Print("  /litemount xmog <slotnumber>")

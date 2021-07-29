@@ -1,24 +1,12 @@
-tag c45158c392f80adde01fea0cd7a769b47ea31095 9.0.28
+tag 7868c9b2a249eda934b923b4c70183eb841d2dd4 9.1.28
 Author:	Floraline <floraline@ophiuchus.org>
-Date:	Fri Mar 12 20:01:25 2021 +0100
+Date:	Wed Jun 30 14:06:09 2021 +0200
 
 Tagging for release
 
-commit bb75193000b1e05dd35f644ee1fb7a5335b48839
+commit dd947c8404b51eee2251e2ea698fe0f381606f2a
 Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 19:59:43 2021 +0100
+Date:   Wed Jun 30 14:05:33 2021 +0200
 
-    Fix random bug when switching spec
-
-commit eda711d723ec234ec68e746e379032620066099c
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 17:43:51 2021 +0100
-
-    Bump version
-
-commit 73bde2a85d4431c7304a5f2c374b0b4eb2aca607
-Author: Floraline <floraline@ophiuchus.org>
-Date:   Fri Mar 12 17:30:47 2021 +0100
-
-    Fix mouse interaction with ExtraActionBarFrame
+    Packaging
 

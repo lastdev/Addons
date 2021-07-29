@@ -1,11 +1,16 @@
-$Id: ChangeLog.txt 123 2021-06-14 09:26:34Z arithmandar $
+$Id: ChangeLog.txt 125 2021-06-30 13:36:44Z arithmandar $
 
 Revision History:
 =================
 
+* v1.42 (Jun. 30, 2021)
+-----------------------
+- ToC update to support WoW 9.1.0
+- Library update - LibUIDropDownMenu
+
 * v1.41 (Jun. 14, 2021)
 -----------------------
-- Library update - LibUIDropDown
+- Library update - LibUIDropDownMenu
 
 * v1.40 (May 19, 2021)
 -----------------------
@@ -15,7 +20,7 @@ Revision History:
 -----------------------
 - Toc update to support WoW 9.0.2
 - Disable no-lib release as the new CurseForge seems to bring-in more torubles for users to download addon
-- Library update - LibUIDropDown
+- Library update - LibUIDropDownMenu
 
 * v1.38 (Oct. 26, 2020)
 -----------------------
@@ -23,7 +28,7 @@ Revision History:
 
 * v1.37 (Oct. 21, 2020)
 -----------------------
-- Lib Update: LibUIDropDown
+- Lib Update: LibUIDropDownMenu
 
 * v1.36 (Oct. 18, 2020)
 -----------------------
@@ -31,7 +36,7 @@ Revision History:
 
 * v1.35 (Sep. 11, 2020)
 -----------------------
-- Re-added LibUIDropDown
+- Re-added LibUIDropDownMenu
 - Updated deprecated function call
   - WorldMapTooltip
   - IsQuestFlaggedCompleted  --> C_QuestLog.IsQuestFlaggedCompleted 

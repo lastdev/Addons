@@ -1,3 +1,152 @@
+commit a137df875a60bba0b4d3af26bd74a3e90bdcff03
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jul 19 19:05:09 2021 +0700
+
+    Fixed buttons localization
+
+commit a137df875a60bba0b4d3af26bd74a3e90bdcff03
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jul 19 19:05:09 2021 +0700
+
+    Fixed buttons localization
+
+commit 1ac52e9cd4a9f43a0056151ea44245d0521b4dee
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:46:12 2021 +0700
+
+    - Changed optimize algorithm. Now addon have two different options: Find the disposition with the maximum average left HP as a percentage and Find the disposition with the maximum of lowest left HP as a percentage. You can choose more suited variant for your purpose.
+    - Added more info on prediction screen
+    - Fixed new spells which starts on cooldown
+
+commit 1ac52e9cd4a9f43a0056151ea44245d0521b4dee
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:46:12 2021 +0700
+
+    - Changed optimize algorithm. Now addon have two different options: Find the disposition with the maximum average left HP as a percentage and Find the disposition with the maximum of lowest left HP as a percentage. You can choose more suited variant for your purpose.
+    - Added more info on prediction screen
+    - Fixed new spells which starts on cooldown
+
+commit 9102fa69b677bca7c261f248165ba554cb3dfec1
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:36:12 2021 +0700
+
+    Fixed bug with abilities "Increase max. health". It didn't increase current health.
+
+commit 25087009210bd000ed3ea1ed808eeb0b3ec19bfd
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:34:55 2021 +0700
+
+    Fixed bug with mission "Catch the Anima Successors"
+
+commit 400059d2a5eb5af2edac1732b22a96135c5cf10b
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:34:07 2021 +0700
+
+    Fixed bug with teleport from Covenant hall to Oribos
+
+commit a00e255dd7e816a71253cdecee544d14872b30a8
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jul 18 19:31:18 2021 +0700
+
+    Added traditional Chinese translation (thanks to BNS333)
+
+commit fbfe08746c477505e68611b83b973dabe55f26a8
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jul 2 11:12:11 2021 +0700
+
+    Fixed some rare visual bugs
+
+commit 696f48fd1888b7bf3a86bf21aff05a99e1c3973c
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jul 2 11:11:26 2021 +0700
+
+    Fixed attack type of new units
+
+commit 3b7cc2d117451f0d3e84a985060e560c75e8a754
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 21:59:01 2021 +0700
+
+    Hotfix
+
+commit 3b7cc2d117451f0d3e84a985060e560c75e8a754
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 21:59:01 2021 +0700
+
+    Hotfix
+
+commit bee9f3a99e02e76c8bdc3d38232fd7b059a7c9db
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 15:20:26 2021 +0700
+
+    [3.2.0]
+    - Fixed lvl-up calculation
+
+commit bee9f3a99e02e76c8bdc3d38232fd7b059a7c9db
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 15:20:26 2021 +0700
+
+    [3.2.0]
+    - Fixed lvl-up calculation
+
+commit 0199a21b54c835b02d72ceb0c235dd0f0e7a06b6
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 15:08:18 2021 +0700
+
+    [3.2.0]
+    - Changed wow interface version to actual
+
+commit 196de8081ce9afb2252ba0d7bf9831c2d78d475d
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 14:54:39 2021 +0700
+
+    [3.2.0]
+    - Added new followers
+    - Fixed bug with "lvl-up" 60 level followers
+
+commit 196de8081ce9afb2252ba0d7bf9831c2d78d475d
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jun 30 14:54:39 2021 +0700
+
+    [3.2.0]
+    - Added new followers
+    - Fixed bug with "lvl-up" 60 level followers
+
+commit 5bd7c637aaffbd81045886b97e0e6dd2caf4c64b
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Apr 5 17:20:16 2021 +0700
+
+    [3.2.0]
+    - Added enemies remaining HP, when add-on predicted lose
+    - Fixed passive skills
+
+commit 7d118b92eea9f6c27d3a91665f40d82546bf62e7
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Apr 2 18:53:51 2021 +0700
+
+    [3.2.0]
+    - Passive skills now applies at the beginning of fight
+    - Friendly buff and heal now affect on untargetable units
+    - Fixed error: reflect worked for auto-attack only
+
+commit a6078e514ba364eb57901b1e8846827a66b4c3e4
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Thu Apr 1 18:14:42 2021 +0700
+
+    [3.2.0]
+    - Fixed error with target selection
+    - Fixed damage and heal value of "Toxic Dispersal"
+
+commit 1d391f830ede37f24b56a5bb345697e6ca1395d3
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Mar 29 13:49:39 2021 +0700
+
+    [3.2.0]
+    - Added Simplified Chinese (thanks to huchang47) and Russian localization
+    - Fixed unit's auto attack, when attack type isn't match with unit role (ranged unit with melee attack and vice versa)
+    - Fixed some errors with target selection
+    - Fixed scaling bugs
+    - Changed combat log colors to blizzard's colors
+
 commit 6de8f09c7cce2bcc0aa96590463a2aa186786aeb
 Author: Kreolix <kreolix@yandex.ru>
 Date:   Wed Mar 24 23:39:44 2021 +0700

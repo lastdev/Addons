@@ -1480,7 +1480,8 @@ function EncounterDetails:OpenAndRefresh (_, segment)
 		local jaFoi = {}
 		
 		for id, tabela in _pairs (habilidades_usadas) do 
-			local spellname = GetSpellInfo (tabela [4])
+			local spellname = Details.GetSpellInfo(tabela [4])
+			
 			if (not jaFoi [spellname]) then
 				tabela [5] = spellname
 				tabela_em_ordem [#tabela_em_ordem+1] = tabela
@@ -2168,7 +2169,7 @@ function EncounterDetails:OnEvent (_, event, ...)
 			
 			if (_G._detalhes and _G._detalhes:InstallOkey()) then
 				
-				if (DetailsFramework.IsTimewalkWoW()) then
+				if (DetailsFramework.IsClassicWow()) then
 					return
 				end
 				
@@ -2180,7 +2181,7 @@ function EncounterDetails:OnEvent (_, event, ...)
 				local PLUGIN_LOCALIZED_NAME = Loc ["STRING_PLUGIN_NAME"]
 				local PLUGIN_REAL_NAME = "DETAILS_PLUGIN_ENCOUNTER_DETAILS"
 				local PLUGIN_ICON = [[Interface\Scenarios\ScenarioIcon-Boss]]
-				local PLUGIN_AUTHOR = "Details! Team"
+				local PLUGIN_AUTHOR = "Terciob"
 				local PLUGIN_VERSION = "v1.06"
 				
 				local default_settings = {

@@ -143,6 +143,10 @@ local vignette_denylist = {
 	[637] = true, -- Garrison Cache
 }
 local function shouldShowNotVisible(vignetteInfo, zone)
+	if vignetteInfo.onWorldMap and db.pointsofinterest then
+		-- on the world map, it's cool
+		return true
+	end
 	local variant = (vignetteInfo.atlasName == "VignetteLoot" or vignetteInfo.atlasName == "VignetteLootElite") and LOOT or MOB
 	if zone and (visible_overrides[zone] == true or visible_overrides[zone] == variant) then
 		return false
@@ -215,10 +219,6 @@ function module:WorkOutMobFromVignette(instanceid)
 		return self:NotifyForMobs(ns.vignetteMobLookup[vignetteInfo.vignetteID], current_zone, x, y, source, instanceid)
 	end
 	if vignetteInfo.name then
-		if ns.vignetteMobLookup[vignetteInfo.name] then
-			--Debug("vignetteMobLookup", vignetteInfo.name, vignetteInfo.vignetteID, ns.vignetteMobLookup[vignetteInfo.name])
-			return self:NotifyForMobs(ns.vignetteMobLookup[vignetteInfo.name], current_zone, x, y, source, instanceid)
-		end
 		local mobid = core:IdForMob(vignetteInfo.name)
 		if mobid then
 			--Debug("name", vignetteInfo.name, mobid)

@@ -19,13 +19,6 @@ LM.Environment = LM.CreateAutoEventFrame("Frame")
 LM.Environment:RegisterEvent("PLAYER_LOGIN")
 
 function LM.Environment:Initialize()
-    self.uiMapID = -1
-    self.uiMapPath = { }
-    self.uiMapPathIDs = { }
-
-    self.instanceID = -1
-    self.zoneText = nil
-
     self.combatTravelForm = nil
 
     self:UpdateSwimTimes()
@@ -34,7 +27,6 @@ function LM.Environment:Initialize()
     self.stoppedFalling = 0
     self.stoppedMoving = GetTime()
 
-    local elapsed = 0
     self:SetScript('OnUpdate', self.OnUpdate)
 
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -79,7 +71,7 @@ end
 
 -- A jump in place takes approximately 0.83 seconds
 
-function LM.Environment:JumpTime()
+function LM.Environment:GetJumpTime()
     local airTime = self.stoppedFalling - self.startedFalling
     if airTime > 0.73 and airTime < 0.93 then
         local timeSinceLanded = GetTime() - self.stoppedFalling
@@ -87,7 +79,7 @@ function LM.Environment:JumpTime()
     end
 end
 
-function LM.Environment:StationaryTime()
+function LM.Environment:GetStationaryTime()
     if not self.stoppedMoving then
         return 0
     else
@@ -110,38 +102,17 @@ function LM.Environment:IsMovingOrFalling()
     return (GetUnitSpeed("player") > 0 or IsFalling())
 end
 
-function LM.Environment:TheMaw()
+function LM.Environment:IsTheMaw()
+    local instanceID = select(8, GetInstanceInfo())
+
     -- This is the instanced starting experience
-    if self.instanceID == 2364 then return true end
+    if instanceID == 2364 then return true end
 
-    -- Otherwise, The Maw is just a Shadowlands zone in instance 2222
-    if LM.Environment.uiMapID == 1543 then return true end
-end
+    -- This is the instanced post-Maldraxxus questing
+    if instanceID == 2456 then return true end
 
-function LM.Environment:Update()
-    local map = C_Map.GetBestMapForUnit("player")
-
-    -- Right after zoning this can be unknown.
-    if not map then return end
-
-    local info = C_Map.GetMapInfo(map)
-
-    self.uiMapID  = map
-    self.uiMapName = info.name
-
-    wipe(self.uiMapPath)
-    wipe(self.uiMapPathIDs)
-    while info do
-        tinsert(self.uiMapPath, info.mapID)
-        self.uiMapPathIDs[info.mapID] = true
-        info = C_Map.GetMapInfo(info.parentMapID)
-    end
-
-    self.zoneText = GetZoneText()
-    self.subZoneText = GetSubZoneText()
-    self.instanceID = select(8, GetInstanceInfo())
-
-    LM.Options:RecordInstance()
+    -- Otherwise, The Maw is just zones in instance 2222
+    return LM.Environment:IsMapInPath(1543)
 end
 
 function LM.Environment:PLAYER_LOGIN()
@@ -162,23 +133,19 @@ function LM.Environment:MOUNT_JOURNAL_USABILITY_CHANGED()
 end
 
 function LM.Environment:PLAYER_ENTERING_WORLD()
-    LM.Debug("Updating location due to PLAYER_ENTERING_WORLD.")
-    self:Update()
+    LM.Options:RecordInstance()
 end
 
 function LM.Environment:ZONE_CHANGED()
-    LM.Debug("Updating location due to ZONE_CHANGED.")
-    self:Update()
+    LM.Options:RecordInstance()
 end
 
 function LM.Environment:ZONE_CHANGED_INDOORS()
-    LM.Debug("Updating location due to ZONE_CHANGED_INDOORS.")
-    self:Update()
+    LM.Options:RecordInstance()
 end
 
 function LM.Environment:ZONE_CHANGED_NEW_AREA()
-    LM.Debug("Updating location due to ZONE_CHANGED_NEW_AREA.")
-    self:Update()
+    LM.Options:RecordInstance()
 end
 
 function LM.Environment:UPDATE_SHAPESHIFT_FORM()
@@ -190,18 +157,49 @@ function LM.Environment:UPDATE_SHAPESHIFT_FORM()
     end
 end
 
-function LM.Environment:MapInPath(...)
-    for i = 1, select('#', ...) do
-        local id = select(i, ...)
-        if self.uiMapPathIDs[id] then return true end
+function LM.Environment:IsCombatTravelForm()
+    return self.combatTravelForm
+end
+
+function LM.Environment:MapIsMap(a, b)
+    if a == b then
+        return true
+    end
+    -- avoid nil == nil case
+    local aGroup = C_Map.GetMapGroupID(a)
+    if aGroup and aGroup == C_Map.GetMapGroupID(b) then
+        return true
+    end
+    return false
+end
+
+function LM.Environment:IsOnMap(mapID)
+    local currentMapID = C_Map.GetBestMapForUnit('player')
+    return self:MapIsMap(currentMapID, mapID)
+end
+
+function LM.Environment:GetMapPath()
+    local out = {}
+    local mapID = C_Map.GetBestMapForUnit('player')
+    while mapID and mapID > 0 do
+        table.insert(out, mapID)
+        mapID = C_Map.GetMapInfo(mapID).parentMapID
+    end
+    return out
+end
+
+function LM.Environment:IsMapInPath(mapID)
+    for _, pathMapID in ipairs(self:GetMapPath()) do
+        if self:MapIsMap(pathMapID, mapID) then return true end
     end
     return false
 end
 
 function LM.Environment:InInstance(...)
+    local currentID = select(8, GetInstanceInfo())
     for i = 1, select('#', ...) do
         local id = select(i, ...)
-        if self.instanceID == id then return true end
+        if currentID == id then return true end
     end
     return false
 end
@@ -268,6 +266,7 @@ local InstanceFlyableOverride = {
     [2293] = false,         -- Theater of Pain
     [2296] = false,         -- Castle Nathria
     [2363] = false,         -- Queen's Winter Conservatory
+    [2364] = false,         -- The Maw (Starting Experience)
 }
 
 function LM.Environment:ForceFlyable(instanceID)
@@ -285,8 +284,10 @@ function LM.Environment:CanFly()
         return false
     end
 
-    if InstanceFlyableOverride[self.instanceID] ~= nil then
-        return InstanceFlyableOverride[self.instanceID]
+    local instanceID = select(8, GetInstanceInfo())
+
+    if InstanceFlyableOverride[instanceID] ~= nil then
+        return InstanceFlyableOverride[instanceID]
     end
 
     -- Battle for Azeroth Pathfinder, Part 2
@@ -295,9 +296,11 @@ function LM.Environment:CanFly()
         if not IsSpellKnown(278833) then return false end
     end
 
-    -- Presumably Shadowlands Pathfinder at some point
+    -- Memories of Sunless Skies / Shadowlands Flying
     if self:InInstance(2222) then
-        return false
+        if not C_QuestLog.IsQuestFlaggedCompleted(63893) then
+            return false
+        end
     end
 
     -- Can't fly in Warfronts
@@ -318,14 +321,16 @@ end
 
 function LM.Environment:GetLocation()
     local path = { }
-    for _, mapID in ipairs(self.uiMapPath) do
-        tinsert(path, format("%s (%d)", C_Map.GetMapInfo(mapID).name, mapID))
+    for _, mapID in ipairs(self:GetMapPath()) do
+        local info = C_Map.GetMapInfo(mapID)
+        tinsert(path, format("%s (%d)", info.name, info.mapID))
     end
 
+    local info = { GetInstanceInfo() }
     return {
-        format("map: %s (%d)",  C_Map.GetMapInfo(self.uiMapID).name, self.uiMapID),
+        "map: " .. path[1],
         "mapPath: " .. table.concat(path, " -> "),
-        "instance: " .. self.instanceID,
+        "instance: " .. string.format("%s (%d)", info[1], info[8]),
         "zoneText: " .. GetZoneText(),
         "subZoneText: " .. GetSubZoneText(),
         "IsFlyableArea(): " .. tostring(IsFlyableArea()),
@@ -343,8 +348,25 @@ function LM.Environment:GetPlayerModel()
     return id
 end
 
+-- The level of black magic shenanigans here is off the charts. What on earth
+-- is ModelSceneID 290? I don't know but it's what DressUpFrame uses so ...
+-- This used in conditions to check if we're wearing a transmog outfit.
+
+local ModelSceneScanFrame = CreateFrame('ModelScene')
+Mixin(ModelSceneScanFrame, ModelSceneMixin)
+ModelSceneScanFrame:OnLoad()
+
+function LM.Environment:GetPlayerTransmogInfo()
+    ModelSceneScanFrame:Show()
+    ModelSceneScanFrame:TransitionToModelSceneID(290, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, true)
+    local actor = ModelSceneScanFrame:GetPlayerActor()
+    local infoList = actor:GetItemTransmogInfoList()
+    ModelSceneScanFrame:Hide()
+    return infoList
+end
+
 local maxMapID
-function LM.Environment:MaxMapID()
+function LM.Environment:GetMaxMapID()
     if not maxMapID then
         -- 10000 is a guess at something way over the current maximum
 
@@ -357,17 +379,38 @@ function LM.Environment:MaxMapID()
     return maxMapID
 end
 
+local function ValidDisplayMap(info, group, seenGroups)
+    if not info then
+        return false
+    end
+
+    if info.mapType <= Enum.UIMapType.Zone then
+        return C_Map.IsMapValidForNavBarDropDown(info.mapID)
+    end
+
+    if group then
+        if seenGroups[group] then
+            return false
+        else
+            seenGroups[group] = true
+        end
+    end
+    return true
+end
+
 function LM.Environment:GetMaps(str)
     local searchStr = string.lower(str or "")
 
     local lines = {}
+    local seenGroups = {}
 
-    for i = 1, self:MaxMapID() do
+    for i = 1, self:GetMaxMapID() do
         local info = C_Map.GetMapInfo(i)
-        if info then
+        local group = C_Map.GetMapGroupID(i)
+        if ValidDisplayMap(info, group, seenGroups) then
             local searchName = string.lower(info.name)
             if info.mapID == tonumber(str) or searchName:find(searchStr) then
-                tinsert(lines, format("% 4d : %s (parent %d)", info.mapID, info.name, info.parentMapID or 0))
+                tinsert(lines, string.format("% 4d : %s (parent %d)", info.mapID, info.name, info.parentMapID or 0))
             end
         end
     end
@@ -379,9 +422,12 @@ function LM.Environment:GetContinents(str)
 
     local lines = {}
 
-    for i = 1, self:MaxMapID() do
+    for i = 1, self:GetMaxMapID() do
         local info = C_Map.GetMapInfo(i)
-        if info and info.mapType == Enum.UIMapType.Continent then
+        if info
+            and info.mapType == Enum.UIMapType.Continent
+            and info.parentMapID > 0
+            and C_Map.IsMapValidForNavBarDropDown(i) then
             local searchName = string.lower(info.name)
             if info.mapID == tonumber(str) or searchName:find(searchStr) then
                 tinsert(lines, format("% 4d : %s", info.mapID, info.name))
@@ -389,4 +435,78 @@ function LM.Environment:GetContinents(str)
         end
     end
     return lines
+end
+
+function LM.Environment:GetInstances()
+    return LM.Options:GetInstances()
+end
+
+local ShowMapOverride = {
+    [407] = true,   -- Darkmoon Island (mapType Orphan)
+}
+
+local function FillChildren(info)
+    for _, child in ipairs(C_Map.GetMapChildrenInfo(info.mapID)) do
+        if ShowMapOverride[child.mapID] or C_Map.IsMapValidForNavBarDropDown(child.mapID) then
+            FillChildren(child)
+            table.insert(info, child)
+            table.sort(info, function (a,b) return a.name < b.name end)
+        end
+    end
+end
+
+-- IsMapValidForNavBarDropDown is dynamic somehow, so this has to be
+-- rebuilt each time even though that's inefficient.
+
+function LM.Environment:GetMapTree()
+    local mapTree = C_Map.GetMapInfo(946)
+    FillChildren(mapTree)
+    return mapTree
+end
+
+-- It's possible to pull the GetInstanceInfo() instance number from the
+-- encounter journal, but it's buried down in the encounter info and not
+-- in the actual instance info return which is annoying.
+-- This really FUBARs the Encounter journal, but I'm not sure if it's
+-- taint-safe to put it back. Wah!
+
+function LM.Environment:GetEJInstances()
+    LoadAddOn("Blizzard_EncounterJournal")
+
+    -- Save EJ state
+    EncounterJournal:UnregisterEvent("EJ_DIFFICULTY_UPDATE")
+    local originalTier = EJ_GetCurrentTier()
+    local origInstanceID = EncounterJournal.instanceID
+
+    local out = {}
+
+    for tier = 1, EJ_GetNumTiers() do
+        EJ_SelectTier(tier)
+        for _, isRaid in ipairs({ true, false }) do
+            local index = 1
+            while true do
+                local id, name, _, _, _, _, _, _, showDifficulty  = EJ_GetInstanceByIndex(index, isRaid)
+                if not name or not showDifficulty then break end
+                EJ_SelectInstance(id)
+                local i = 1
+                while true do
+                    local n, _, _, _, _, _, _, instanceID = EJ_GetEncounterInfoByIndex(i)
+                    if not n then break end
+                    if instanceID then
+                        out[instanceID] = name
+                        break
+                    end
+                    i = i + 1
+                end
+                index = index + 1
+            end
+        end
+    end
+
+    -- Restore EJ state
+    EJ_SelectTier(originalTier)
+    if origInstanceID then EJ_SelectInstance(origInstanceID) end
+    EncounterJournal:RegisterEvent("EJ_DIFFICULTY_UPDATE")
+
+    return out
 end

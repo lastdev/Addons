@@ -11,7 +11,3 @@ L["REQUEST_PLAYTIME_ENABLED"] = "Le temps de jeu sera lu à chaque connexion."
 L["REQUEST_PLAYTIME_TEXT"] = "Lire le temps de jeu à la connexion."
 L["REQUEST_PLAYTIME_TITLE"] = "Lire le temps de jeu"
 
-L["HIDE_LOGIN_PLAYTIME_DISABLED"] = "Your playtime will not be displayed when you login. (Other addons may interfere with this) [TRANSLATION NEEDED]"
-L["HIDE_LOGIN_PLAYTIME_ENABLED"] = "Your playtime will be displayed when you login. [TRANSLATION NEEDED]"
-L["HIDE_LOGIN_PLAYTIME_TEXT"] = "Hide login playtime [TRANSLATION NEEDED]"
-L["HIDE_LOGIN_PLAYTIME_TITLE"] = "Hide play time when logging in [TRANSLATION NEEDED]"

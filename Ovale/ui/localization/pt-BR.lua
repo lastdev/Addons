@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/pt-BR", 90048)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/pt-BR", 90103)
 if not __exports then return end
 __exports.setPTBR = function(l)
     l.action_bar = [[Action bar]]

@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/AzeriteArmor", 90048)
+local __exports = LibStub:NewLibrary("ovale/states/AzeriteArmor", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
@@ -6,24 +6,23 @@ local wipe = wipe
 local pairs = pairs
 local tostring = tostring
 local ipairs = ipairs
+local kpairs = pairs
 local sort = table.sort
 local insert = table.insert
 local concat = table.concat
-local C_Item = C_Item
-local ItemLocation = ItemLocation
 local C_AzeriteEmpoweredItem = C_AzeriteEmpoweredItem
 local GetSpellInfo = GetSpellInfo
 local __enginecondition = LibStub:GetLibrary("ovale/engine/condition")
 local returnBoolean = __enginecondition.returnBoolean
 local returnConstant = __enginecondition.returnConstant
 local azeriteSlots = {
-    [1] = true,
-    [3] = true,
-    [5] = true
+    HEADSLOT = true,
+    SHOULDERSLOT = true,
+    CHESTSLOT = true
 }
 __exports.OvaleAzeriteArmor = __class(nil, {
-    constructor = function(self, equipments, ovale, ovaleDebug)
-        self.equipments = equipments
+    constructor = function(self, equipment, ovale, ovaleDebug)
+        self.equipment = equipment
         self.traits = {}
         self.output = {}
         self.debugOptions = {
@@ -44,7 +43,7 @@ __exports.OvaleAzeriteArmor = __class(nil, {
             }
         }
         self.handleInitialize = function()
-            self.module:RegisterMessage("Ovale_EquipmentChanged", self.itemChanged)
+            self.module:RegisterMessage("Ovale_EquipmentChanged", self.handleOvaleEquipmentChanged)
             self.module:RegisterEvent("AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED", self.handleAzeriteEmpoweredItemSelectionUpdated)
             self.module:RegisterEvent("PLAYER_ENTERING_WORLD", self.handlePlayerEnteringWorld)
         end
@@ -53,9 +52,10 @@ __exports.OvaleAzeriteArmor = __class(nil, {
             self.module:UnregisterEvent("AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED")
             self.module:UnregisterEvent("PLAYER_ENTERING_WORLD")
         end
-        self.itemChanged = function()
-            local slotId = self.equipments.lastChangedSlot
-            if slotId ~= nil and azeriteSlots[slotId] then
+        self.handleOvaleEquipmentChanged = function(event, slot)
+            if slot == nil then
+                self:updateTraits()
+            elseif azeriteSlots[slot] then
                 self:updateTraits()
             end
         end
@@ -86,13 +86,13 @@ __exports.OvaleAzeriteArmor = __class(nil, {
     end,
     updateTraits = function(self)
         self.traits = {}
-        for slotId in pairs(azeriteSlots) do
-            local itemSlot = ItemLocation:CreateFromEquipmentSlot(slotId)
-            if C_Item.DoesItemExist(itemSlot) and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemSlot) then
-                local allTraits = C_AzeriteEmpoweredItem.GetAllTierInfo(itemSlot)
+        for slot in kpairs(azeriteSlots) do
+            local location = self.equipment:getEquippedItemLocation(slot)
+            if location ~= nil and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(location) then
+                local allTraits = C_AzeriteEmpoweredItem.GetAllTierInfo(location)
                 for _, traitsInRow in pairs(allTraits) do
                     for _, powerId in pairs(traitsInRow.azeritePowerIDs) do
-                        local isEnabled = C_AzeriteEmpoweredItem.IsPowerSelected(itemSlot, powerId)
+                        local isEnabled = C_AzeriteEmpoweredItem.IsPowerSelected(location, powerId)
                         if isEnabled then
                             local powerInfo = C_AzeriteEmpoweredItem.GetPowerInfo(powerId)
                             local name = GetSpellInfo(powerInfo.spellID)

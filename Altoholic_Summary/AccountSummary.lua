@@ -2024,6 +2024,90 @@ columns["CurrencyBfARichAzerite"] = {
 }
 
 
+columns["CurrencyStygia"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = format("     %s", FormatTexture("Interface\\Icons\\inv_stygia")),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, DataStore.Enum.CurrencyIDs.Stygia)
+		end,
+	headerOnClick = function() SortView("CurrencyStygia") end,
+	headerSort = function(self, character) return DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.Stygia) end,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount = DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.Stygia)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s", color, amount)
+		end,
+}
+
+columns["CurrencyValor"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = format("     %s", FormatTexture("Interface\\Icons\\pvecurrency-valor")),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, DataStore.Enum.CurrencyIDs.ValorPoints)
+		end,
+	headerOnClick = function() SortView("CurrencyValor") end,
+	headerSort = function(self, character) return DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.ValorPoints) end,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount, _, _, totalMax = DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.ValorPoints)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s%s/%s%s", color, amount, colors.white, colors.yellow, totalMax)
+		end,
+}
+
+columns["CurrencyConquest"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = format("     %s", FormatTexture("Interface\\Icons\\achievement_legionpvp2tier3")),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, DataStore.Enum.CurrencyIDs.Conquest)
+		end,
+	headerOnClick = function() SortView("CurrencyConquest") end,
+	headerSort = function(self, character) return DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.Conquest) end,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount = DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.Conquest)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s", color, amount)
+		end,
+}
+
+columns["CurrencySoulAsh"] = {
+	-- Header
+	headerWidth = 80,
+	headerLabel = format("     %s", FormatTexture("Interface\\Icons\\inv_soulash")),
+	headerOnEnter = function(frame, tooltip)
+			CurrencyHeader_OnEnter(frame, DataStore.Enum.CurrencyIDs.SoulAsh)
+		end,
+	headerOnClick = function() SortView("CurrencySoulAsh") end,
+	headerSort = function(self, character) return DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.SoulAsh) end,
+	
+	-- Content
+	Width = 80,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local amount = DataStore:GetCurrencyTotals(character, DataStore.Enum.CurrencyIDs.SoulAsh)
+			local color = (amount == 0) and colors.grey or colors.white
+			
+			return format("%s%s", color, amount)
+		end,
+}
+
 -- ** Garrison Followers **
 columns["FollowersLV40"] = {
 	-- Header
@@ -2299,7 +2383,7 @@ columns["Renown"] = {
 	JustifyH = "CENTER",
 	GetText = function(character) 
 		local level = select(3, DataStore:GetCovenantInfo(character))
-		local color = (level == 40) and colors.gold or colors.white
+		local color = (level >= 40) and colors.gold or colors.white
 	
 		return format("%s%s", color, level)
 	end,
@@ -2518,7 +2602,12 @@ columns["ClassAndSpec"] = {
 				else
 					-- .. then get the talent information ..
 					local _, talentName, icon = DataStore:GetTalentInfo(class, specIndex, tierIndex, choice)
-					tt:AddLine(format("%s%d: %s %s%s", colors.green, level, FormatTexture(icon), colors.white, talentName))
+					if talentName and icon then
+						tt:AddLine(format("%s%d: %s %s%s", colors.green, level, FormatTexture(icon), colors.white, talentName))
+					else
+						-- it may occasionally happen that information is no longer is the cache
+						tt:AddLine(format("%s%d: %s-", colors.green, level, colors.white))
+					end
 				end
 			end)
 
@@ -2725,7 +2814,8 @@ local modes = {
 	-- [MODE_SKILLS] = { "Name", "Level", "ProfCooking", "ProfFishing", "ProfArchaeology" },
 	[MODE_ACTIVITY] = { "Name", "Level", "Mails", "LastMailCheck", "Auctions", "Bids", "AHLastVisit", "MissionTableLastVisit" },
 	-- [MODE_CURRENCIES] = { "Name", "Level", "CurrencyGarrison", "CurrencyNethershard", "CurrencyLegionWarSupplies", "CurrencySOBF", "CurrencyOrderHall" },
-	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyBfAWarResources", "CurrencyBfASOWF", "CurrencyBfADubloons", "CurrencyBfAWarSupplies", "CurrencyBfARichAzerite" },
+	-- [MODE_CURRENCIES] = { "Name", "Level", "CurrencyBfAWarResources", "CurrencyBfASOWF", "CurrencyBfADubloons", "CurrencyBfAWarSupplies", "CurrencyBfARichAzerite" },
+	[MODE_CURRENCIES] = { "Name", "Level", "CurrencyStygia", "CurrencyValor", "CurrencyConquest", "CurrencySoulAsh" },
 	[MODE_FOLLOWERS] = { "Name", "Level", "FollowersLV40", "FollowersEpic", "FollowersLV630", "FollowersLV660", "FollowersLV675", "FollowersItems" },
 	[MODE_COVENANT] = { "Name", "Level", "CovenantName", "SoulbindName", "Renown", "CampaignProgress", "CurrencyAnima", "CurrencyRedeemedSoul" },
 	[MODE_MISCELLANEOUS] = { "Name", "Level", "GuildName", "Hearthstone", "ClassAndSpec" },

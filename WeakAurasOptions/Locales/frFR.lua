@@ -96,6 +96,8 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Point d'ancrage"
 	L["Anchored To"] = "Ancré à"
 	L["And "] = "Et"
+	--[[Translation missing --]]
+	L["and"] = "and"
 	L["and aligned left"] = "et alignés à gauche"
 	L["and aligned right"] = "et alignés à droite"
 	--[[Translation missing --]]
@@ -144,6 +146,8 @@ Off Screen]=]
 	L["Automatic"] = "Automatique"
 	--[[Translation missing --]]
 	L["Automatic length"] = "Automatic length"
+	--[[Translation missing --]]
+	L["Available Voices are system specific"] = "Available Voices are system specific"
 	L["Backdrop Color"] = "Couleur de Fond"
 	L["Backdrop in Front"] = "Fond Devant"
 	L["Backdrop Style"] = "Style de Fond"
@@ -935,6 +939,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Vertical Align"] = "Aligner verticalement"
 	L["Vertical Bar"] = "Barre verticale"
 	L["View"] = "Vue"
+	--[[Translation missing --]]
+	L["Voice"] = "Voice"
 	--[[Translation missing --]]
 	L["Whole Area"] = "Whole Area"
 	L["Width"] = "Largeur"

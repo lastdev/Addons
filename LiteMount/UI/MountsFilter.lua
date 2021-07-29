@@ -16,12 +16,6 @@ local MENU_SPLIT_SIZE = 20
 
 --[[------------------------------------------------------------------------]]--
 
-local function tSlice(t, from, to)
-    return { unpack(t, from, to) }
-end
-
---[[------------------------------------------------------------------------]]--
-
 LiteMountFilterMixin = {}
 
 function LiteMountFilterMixin:OnLoad()
@@ -40,6 +34,7 @@ function LiteMountFilterMixin:Attach(parent, fromPoint, frame, toPoint, xOff, yO
     self:SetParent(parent)
     self:ClearAllPoints()
     self:SetPoint(fromPoint, frame, toPoint, xOff, yOff)
+    self.Search:SetFocus()
 end
 
 --[[------------------------------------------------------------------------]]--
@@ -71,26 +66,26 @@ local DROPDOWNS = {
     ['COLLECTED'] = {
         value = 'COLLECTED',
         text = COLLECTED,
-        checked = function () return LM.UIFilter.IsFlagChecked("COLLECTED") end,
-        set = function (v) LM.UIFilter.SetFlagFilter("COLLECTED", v) end
+        checked = function () return LM.UIFilter.IsOtherChecked("COLLECTED") end,
+        set = function (v) LM.UIFilter.SetOtherFilter("COLLECTED", v) end
     },
     ['NOT_COLLECTED'] = {
         value = 'NOT_COLLECTED',
         text = NOT_COLLECTED,
-        checked = function () return LM.UIFilter.IsFlagChecked("NOT_COLLECTED") end,
-        set = function (v) LM.UIFilter.SetFlagFilter("NOT_COLLECTED", v) end
+        checked = function () return LM.UIFilter.IsOtherChecked("NOT_COLLECTED") end,
+        set = function (v) LM.UIFilter.SetOtherFilter("NOT_COLLECTED", v) end
     },
     ['UNUSABLE'] = {
         value = 'UNUSABLE',
         text = MOUNT_JOURNAL_FILTER_UNUSABLE,
-        checked = function () return LM.UIFilter.IsFlagChecked("UNUSABLE") end,
-        set = function (v) LM.UIFilter.SetFlagFilter("UNUSABLE", v) end
+        checked = function () return LM.UIFilter.IsOtherChecked("UNUSABLE") end,
+        set = function (v) LM.UIFilter.SetOtherFilter("UNUSABLE", v) end
     },
     ['HIDDEN'] = {
         value = 'HIDDEN',
         text = L.LM_HIDDEN,
-        checked = function () return LM.UIFilter.IsFlagChecked("HIDDEN") end,
-        set = function (v) LM.UIFilter.SetFlagFilter("HIDDEN", v) end
+        checked = function () return LM.UIFilter.IsOtherChecked("HIDDEN") end,
+        set = function (v) LM.UIFilter.SetOtherFilter("HIDDEN", v) end
     },
     ['PRIORITY'] = {
         value = 'PRIORITY',
@@ -101,9 +96,27 @@ local DROPDOWNS = {
         menulist = function () return LM.UIFilter.GetPriorities() end,
         gettext = function (k) return LM.UIFilter.GetPriorityText(k) end,
     },
-    ['FLAGS'] = {
-        value = 'FLAGS',
-        text = L.LM_FLAGS,
+    ['TYPE'] = {
+        value = 'TYPE',
+        text = TYPE,
+        checked = function (k) return LM.UIFilter.IsTypeChecked(k) end,
+        set = function (k, v) LM.UIFilter.SetTypeFilter(k, v) end,
+        setall = function (v) LM.UIFilter.SetAllTypeFilters(v) end,
+        menulist = function () return LM.UIFilter.GetTypes() end,
+        gettext = function (k) return LM.UIFilter.GetTypeText(k) end,
+    },
+    ['GROUP'] = {
+        value = 'GROUP',
+        text = L.LM_GROUP,
+        checked = function (k) return LM.UIFilter.IsGroupChecked(k) end,
+        set = function (k, v) LM.UIFilter.SetGroupFilter(k, v) end,
+        setall = function (v) LM.UIFilter.SetAllGroupFilters(v) end,
+        menulist = function () return LM.UIFilter.GetGroups() end,
+        gettext = function (k) return LM.UIFilter.GetGroupText(k) end,
+    },
+    ['FLAG'] = {
+        value = 'FLAG',
+        text = L.LM_FLAG,
         checked = function (k) return LM.UIFilter.IsFlagChecked(k) end,
         set = function (k, v) LM.UIFilter.SetFlagFilter(k, v) end,
         setall = function (v) LM.UIFilter.SetAllFlagFilters(v) end,
@@ -174,13 +187,21 @@ local function InitDropDownSection(template, self, level, menuList)
 
     info.notCheckable = nil
 
+    -- The complicated stride calc is because the %s...%s entries are super
+    -- annoying and so we want to max out the number of entries in the leafs
+    -- but still need to make sure each menu is small enough.
+
     if #menuList > MENU_SPLIT_SIZE * 1.5 then
         info.notCheckable = true
         info.hasArrow = true
         info.func = nil
-        for i = 1, #menuList, MENU_SPLIT_SIZE do
-            local j = math.min(#menuList, i+MENU_SPLIT_SIZE-1)
-            info.menuList = tSlice(menuList, i, j)
+
+        local stride = 1
+        while #menuList/stride > MENU_SPLIT_SIZE do stride = stride * MENU_SPLIT_SIZE end
+
+        for i = 1, #menuList, stride do
+            local j = math.min(#menuList, i+stride-1)
+            info.menuList = LM.tSlice(menuList, i, j)
             local f = template.gettext(info.menuList[1])
             local t = template.gettext(info.menuList[#info.menuList])
             info.text = format('%s...%s', f, t)
@@ -224,17 +245,23 @@ function LiteMountFilterButtonMixin:Initialize(level, menuList)
         ---- 4. HIDDEN ----
         InitDropDownSection(DROPDOWNS.HIDDEN, self, level, menuList)
 
-        ---- 5. PRIORITY ----
-        InitDropDownSection(DROPDOWNS.PRIORITY, self, level, menuList)
+        ---- 5. GROUP ----
+        InitDropDownSection(DROPDOWNS.GROUP, self, level, menuList)
 
-        ---- 6. FLAGS ----
-        InitDropDownSection(DROPDOWNS.FLAGS, self, level, menuList)
+        ---- 6. FLAG ----
+        InitDropDownSection(DROPDOWNS.FLAG, self, level, menuList)
 
-        ---- 7. FAMILY ----
+        ---- 7. TYPE ----
+        InitDropDownSection(DROPDOWNS.TYPE, self, level, menuList)
+
+        ---- 8. FAMILY ----
         InitDropDownSection(DROPDOWNS.FAMILY, self, level, menuList)
 
-        ---- 8. SOURCES ----
+        ---- 9. SOURCES ----
         InitDropDownSection(DROPDOWNS.SOURCES, self, level, menuList)
+
+        ---- 10. PRIORITY ----
+        InitDropDownSection(DROPDOWNS.PRIORITY, self, level, menuList)
     else
         InitDropDownSection(DROPDOWNS[UIDROPDOWNMENU_MENU_VALUE], self, level, menuList)
     end

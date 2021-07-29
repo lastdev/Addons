@@ -1,4 +1,4 @@
-﻿if GetLocale() == "frFR" then
+if GetLocale() == "frFR" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "Monter/descendre de monture"
 	BINDING_NAME_GOGOBINDING2 = "Monter/descendre de monture (non volante)"

@@ -4,42 +4,6 @@
 
 <Script file="Advanced.lua" />
 
-<Button name="LiteMountFlagButtonTemplate" virtual="true" mixin="LiteMountFlagButtonMixin">
-    <Size y="22" />
-
-    <Scripts>
-        <OnShow method="OnShow" />
-        <OnEnter method="OnEnter" />
-        <OnLeave method="OnLeave" />
-    </Scripts>
-
-    <Layers>
-        <Layer level="ARTWORK">
-            <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
-                <Anchors>
-                    <Anchor point="LEFT" x="24" />
-                    <Anchor point="RIGHT" x="-4" />
-                </Anchors>
-            </FontString>
-        </Layer>
-    </Layers>
-
-    <Frames>
-        <Button parentKey="DeleteButton" hidden="true">
-            <Size x="14" y="14" />
-            <Anchors> <Anchor point="LEFT" x="6" /> </Anchors>
-            <NormalTexture file="Interface\Buttons\UI-MinusButton-UP"/>
-            <PushedTexture file="Interface\Buttons\UI-MinusButton-DOWN"/>
-            <HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD"/>
-            <Scripts>
-                <OnClick>
-                    local f = self:GetParent().flag
-                    StaticPopup_Show("LM_OPTIONS_DELETE_FLAG", f, nil, f)
-                </OnClick>
-            </Scripts>
-        </Button>
-    </Frames>
-</Button>
 
 <Frame name="LiteMountAdvancedPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountAdvancedPanelMixin">
 
@@ -56,21 +20,14 @@
     </Layers>
 
     <Frames>
-        <Frame parentKey="EditBoxContainer" inherits="TooltipBackdropTemplate">
-            <Size x="424" />
-            <KeyValues>
-                <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
-                <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
-                <KeyValue key="backdropBorderColorAlpha" value="0.5" type="number"/>
-            </KeyValues>
+        <Frame parentKey="EditBoxContainer" inherits="LiteMountContainerStyleTemplate">
             <Anchors>
-                <Anchor point="TOP" y="-160" />
-                <Anchor point="LEFT" x="16" />
-                <Anchor point="BOTTOM" y="48" />
+                <Anchor point="TOPLEFT" x="16" y="-160" />
+                <Anchor point="BOTTOMRIGHT" x="-16" y="48" />
             </Anchors>
         </Frame>
 
-        <ScrollFrame parentKey="EditScroll" inherits="UIPanelScrollFrameTemplate" mixin="LiteMountAdvancedEditScrollMixin">
+        <ScrollFrame name="$parentEditScroll" parentKey="EditScroll" inherits="UIPanelScrollFrameTemplate" mixin="LiteMountAdvancedEditScrollMixin">
 
             <Anchors>
                 <Anchor point="TOPLEFT" x="8" y="-8" relativeKey="$parent.EditBoxContainer" />
@@ -113,46 +70,37 @@
             </Scripts>
         </Button>
 
+        <Button parentKey="UnlockButton" inherits="UIPanelButtonTemplate" mixin="LiteMountAdvancedUnlockButtonMixin" text="UNLOCK">
+            <Size x="96" y="22" />
+            <Anchors>
+                <Anchor point="CENTER" relativeKey="$parent.RevertButton" />
+            </Anchors>
+            <Scripts>
+                <OnShow method="OnShow" />
+                <OnClick method="OnClick" />
+            </Scripts>
+        </Button>
+
+<!--
+        <Button parentKey="PriorityImport" inherits="UIPanelButtonTemplate" text="Import Priorities">
+            <Scripts>
+                <OnClick>
+                    LiteMountOptionsPanel_PopOver(self:GetParent(), LiteMountPriorityImport)
+                </OnClick>
+            </Scripts>
+            <Size x="192" y="22" />
+            <Anchors>
+                <Anchor point="TOPRIGHT" relativeKey="$parent.EditBoxContainer" relativePoint="BOTTOMRIGHT" x="-8" y="-4" />
+            </Anchors>
+        </Button>
+-->
+
         <Frame parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
             <Size x="93" y="22" />
             <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.EditBoxContainer" x="-8" />
             </Anchors>
         </Frame>
-
-        <Frame parentKey="FlagContainer" inherits="TooltipBackdropTemplate">
-            <Anchors>
-                <Anchor point="TOPLEFT" relativeKey="$parent.EditBoxContainer" relativePoint="TOPRIGHT" x="8" />
-                <Anchor point="BOTTOM" relativeKey="$parent.EditBoxContainer" />
-                <Anchor point="RIGHT" x="-16" />
-            </Anchors>
-
-            <KeyValues>
-                <KeyValue key="backdropColor" value="BLACK_FONT_COLOR" type="global"/>
-                <KeyValue key="backdropColorAlpha" value="0.5" type="number"/>
-                <KeyValue key="backdropBorderColorAlpha" value="0.5" type="number"/>
-            </KeyValues>
-        </Frame>
-
-        <ScrollFrame parentKey="FlagScroll" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountFlagScrollMixin">
-            <Anchors>
-                <Anchor point="TOPLEFT" relativeKey="$parent.FlagContainer" x="8" y="-8" />
-                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.FlagContainer" x="-28" y="8" />
-            </Anchors>
-            <Scripts>
-                <OnLoad method="OnLoad" />
-            </Scripts>
-            <Frames>
-                <Button parentKey="AddFlagButton" inherits="UIPanelButtonTemplate" text="ADD" hidden="true">
-                    <Size x="96" y="22" />
-                    <Scripts>
-                        <OnClick>
-                            StaticPopup_Show("LM_OPTIONS_NEW_FLAG")
-                        </OnClick>
-                    </Scripts>
-                </Button>
-            </Frames>
-        </ScrollFrame>
 
         <EditBox parentKey="DocURL" autoFocus="false" ignoreArrows="true">
             <Size y="16" />
@@ -181,19 +129,9 @@
 
     </Frames>
 
-    <Layers>
-        <Layer level="ARTWORK">
-            <FontString parentKey="FlagsLabel" inherits="GameFontNormalLarge" text="LM_FLAGS">
-                <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.FlagContainer" x="30" y="8" />
-                </Anchors>
-            </FontString>
-        </Layer>
-    </Layers>
-
     <Scripts>
         <OnLoad method="OnLoad" />
-        <OnSizeChanged method="OnSizeChanged" />
+        <OnShow inherit="prepend" method="OnShow" />
     </Scripts>
 </Frame>
 

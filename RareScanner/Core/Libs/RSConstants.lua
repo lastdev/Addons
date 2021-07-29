@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 41
-RSConstants.CURRENT_LOOT_DB_VERSION = 53
+RSConstants.CURRENT_DB_VERSION = 43
+RSConstants.CURRENT_LOOT_DB_VERSION = 55
 
 ---============================================================================
 -- Special events
@@ -56,7 +56,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanEvents = true,
 			scanChatAlerts = true,
 			scanGarrison = false,
-			scanInstances = true,
+			scanInstances = false,
 			scanOnTaxi = true,
 			scanOnPetBattle = true,
 			scanWorldmapVignette = false,
@@ -134,6 +134,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			displayMinimapIcons = true,
 			waypointTomtom = false,
 			waypointIngame = true,
+			tooltipsScale = 1.0,
 			tooltipsOnIngameIcons = true,
 			tooltipsAchievements = true,
 			tooltipsNotes = true,
@@ -178,6 +179,7 @@ RSConstants.CMD_TOGGLE_EVENTS = "te"
 RSConstants.CMD_TOGGLE_EVENTS_ALERTS = "tea"
 RSConstants.CMD_TOGGLE_TREASURES = "tt"
 RSConstants.CMD_TOGGLE_TREASURES_ALERTS = "tta"
+RSConstants.CMD_TOGGLE_SCANNING_WORLD_MAP_VIGNETTES = "swmv"
 RSConstants.CMD_TOMTOM_WAYPOINT = "waypoint"
 
 ---============================================================================
@@ -189,12 +191,14 @@ RSConstants.NPC_VIGNETTE_ELITE = "VignetteKillElite"
 RSConstants.NPC_LEGION_VIGNETTE = "DemonInvasion5"
 RSConstants.NPC_NAZJATAR_VIGNETTE = "nazjatar-nagaevent"
 RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE = "Warfront-NeutralHero"
+RSConstants.NPC_TORMENTORS_VIGNETTE = "Tormentors-Boss"
 
 RSConstants.CONTAINER_VIGNETTE = "VignetteLoot"
 RSConstants.CONTAINER_ELITE_VIGNETTE = "VignetteLootElite"
 
 RSConstants.EVENT_VIGNETTE = "VignetteEvent"
 RSConstants.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
+RSConstants.EVENT_TORMENTORS_VIGNETTE = "Tormentors-Event"
 
 ---============================================================================
 -- MapIDS
@@ -241,14 +245,34 @@ RSConstants.ASCENDED_COUNCIL_NPCS = { 170832, 170833, 170834, 170835, 170836 }
 RSConstants.FOUR_PEOPLE_NPCS = { 170301, 169827, 170301, 170302 }
 RSConstants.BOUNDING_SHRROM_CONTAINERS = { 349793, 349797, 353330 }
 RSConstants.RIPE_PURIAN_CONTAINERS = { 353643, 353503, 353205, 353500, 352754, 353516, 353325, 353019, 353252, 353314, 352998 }
+RSConstants.RIFT_HIDDEN_ENTITIES = { 179883, 368645, 368646, 368647, 368648, 368649, 368650 }
+RSConstants.RIFT_NPCS = { 179608, 179911, 179913, 179914, 369437, 369438, 369439, 369440 }
+RSConstants.RIFT_NPCS_MAW = { 179735, 179853, 179851 }
+RSConstants.RELIC_CACHE = { 369292, 369294, 369310 }
+RSConstants.PILE_BONES = { 369297, 369295 }
+RSConstants.SHARDHIDE_STASH = { 369296 }
+RSConstants.CACHEs_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 369296 }
 
 -- NPCs that spawn after completing an event
 RSConstants.NPCS_WITH_PRE_EVENT = {
+-- EVENTID = NPCID
 	[164102] = 164093;
 	[167874] = 167851;
 	[168053] = 167721;
 	[165206] = 165230;
 	[160675] = 176347;
+	-- Korthia
+	[179759] = 179760;
+	[180145] = 179859;
+	[369247] = 179859;
+	[180144] = 179802;
+	[369130] = 179802;
+	[179464] = 179472;
+	[369444] = 180162;
+	[180064] = 180042;
+	[179969] = 179985;
+	[180028] = 180032;
+	[180013] = 180014;
 }
 
 -- NPCs that spawn after killing another NPC
@@ -262,7 +286,9 @@ RSConstants.NPCS_WITH_PRE_NPCS = {
 -- 156480 Next door entity inside Torghast
 -- 155660 Summons from the Depths
 RSConstants.INGNORED_VIGNETTES = { 156480, 155660, 163373 }
-RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303 }
+RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460 }
+RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
+RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }
 
 ---============================================================================
@@ -467,11 +493,11 @@ function RSConstants.IsScanneableAtlas(atlasName)
 end
 
 function RSConstants.IsEventAtlas(atlasName)
-	return atlasName == RSConstants.EVENT_VIGNETTE or atlasName == RSConstants.EVENT_ELITE_VIGNETTE
+	return atlasName == RSConstants.EVENT_VIGNETTE or atlasName == RSConstants.EVENT_ELITE_VIGNETTE or atlasName == RSConstants.EVENT_TORMENTORS_VIGNETTE
 end
 
 function RSConstants.IsNpcAtlas(atlasName)
-	return atlasName == RSConstants.NPC_VIGNETTE or atlasName == RSConstants.NPC_LEGION_VIGNETTE or atlasName == RSConstants.NPC_VIGNETTE_ELITE or atlasName == RSConstants.NPC_NAZJATAR_VIGNETTE or atlasName == RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE
+	return atlasName == RSConstants.NPC_VIGNETTE or atlasName == RSConstants.NPC_LEGION_VIGNETTE or atlasName == RSConstants.NPC_VIGNETTE_ELITE or atlasName == RSConstants.NPC_NAZJATAR_VIGNETTE or atlasName == RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE or atlasName == RSConstants.NPC_TORMENTORS_VIGNETTE
 end
 
 function RSConstants.IsContainerAtlas(atlasName)

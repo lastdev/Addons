@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
+end, "$Revision: 26dd2f3e4984cffda76fcac1ddd39d0c29867f99 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
@@ -426,7 +426,7 @@ end
 function XPerl_Player_Pet_OnEvent(self, event, unitID, ...)
 	local func = XPerl_Player_Pet_Events[event]
 	if string.find(event, "^UNIT_") then
-	 	if (unitID == "pet" or unitID == "player") then
+		if (unitID == "pet" or unitID == "player") then
 			func(self, unitID, ...)
 		end
 	else

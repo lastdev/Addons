@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/SimulationCraft", 90048)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/SimulationCraft", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local AceConfig = LibStub:GetLibrary("AceConfig-3.0", true)

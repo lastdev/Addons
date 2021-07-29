@@ -3,8 +3,8 @@
 ****************************************************************************************
 LibAboutPanel
 
-File date: 2020-10-05T23:56:44Z
-Project version: 9.0.2-002
+File date: @file-date-iso@
+Project version: @project-version@
 
 Author: Tekkub, Ackis
 
@@ -30,7 +30,9 @@ local L = {
 }
 
 local GAME_LOCALE = GetLocale()
-if GAME_LOCALE == "deDE" then
+if GAME_LOCALE == "frFR" then
+	L["About"] = "à propos de"
+elseif GAME_LOCALE == "deDE" then
 	L["About"] = "Über"
 	L["Author"] = "Autor"
 	L["Category"] = "Kategorie"
@@ -221,7 +223,7 @@ function lib.OnShow(frame)
 				end
 			elseif field == "Version" then
 				local addonversion = GetAddOnMetadata(frame.addonname, field)
-				-- Remove 12 and replace it with Repository
+				-- Remove @project-revision@ and replace it with Repository
 				addonversion = string.gsub(addonversion, "@project.revision@", "Repository") -- Curse
 				addonversion = string.gsub(addonversion, "wowi:revision", "Repository") -- WoWInterface
 				detail:SetText(addonversion)

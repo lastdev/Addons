@@ -13,5 +13,4 @@
     <Script file="profilemanager.lua"/>
     <Script file="libdatabroker.lua"/>
 
-    
 </Ui>

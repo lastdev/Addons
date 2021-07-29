@@ -10,19 +10,11 @@
 
 local _, LM = ...
 
+local L = LM.Localize
+
 --[===[@debug@
 if LibDebug then LibDebug() end
 --@end-debug@]===]
-
-local function tJoin(...)
-    local out = { }
-    for _,t in ipairs({ ... }) do
-        for _,v in ipairs(t) do
-            table.insert(out, v)
-        end
-    end
-    return out
-end
 
 local function ReplaceVars(list)
     local out = {}
@@ -67,19 +59,61 @@ local ACTIONS = { }
 -- Modifies the list of usable mounts so action list lines after this one
 -- get the restricted list. Always returns no action.
 
-ACTIONS['Limit'] =
-    function (args, env)
-        local filters = tJoin(env.filters[1], args)
-        table.insert(env.filters, 1, filters)
-        LM.Debug(" - new filter: " .. table.concat(env.filters[1], ' '))
-    end
+ACTIONS['Limit'] = {
+    handler =
+        function (args, env)
+            local filters = LM.tJoin(env.filters[1], args)
+            table.insert(env.filters, 1, filters)
+            LM.Debug(" - new filter: " .. table.concat(env.filters[1], ' '))
+        end
+}
 
-ACTIONS['Endlimit'] =
-    function (args, env)
-        if #env.filters == 1 then return end
-        table.remove(env.filters, 1)
-        LM.Debug(" - restored filter: " .. table.concat(env.filters[1], ' '))
-    end
+-- These ones are really just for user rules.
+
+ACTIONS['LimitSet'] = {
+    name = L.LM_LIMIT_MOUNTS,
+    tostring =
+        function (v)
+            -- XXX Doesn't support multiple args XXX
+            return LM.Mount:MountFilterToString(v)
+        end,
+    handler = function (args, env)
+            -- There's no point of multi-arg, just use the last
+            if #args > 0 then
+                local setArgs = { '=' .. args[#args] }
+                ACTIONS['Limit'].handler(setArgs, env)
+            end
+        end
+}
+
+ACTIONS['LimitInclude'] = {
+    name = L.LM_INCLUDE_MOUNTS,
+    tostring = function (v) return LM.Mount:MountFilterToString(v) end,
+    handler = function (args, env)
+            -- XXX this multi-arg support is super sketchy/wrong XXX
+            local plusArgs = LM.tMap(args, function (a) return '+' .. a end)
+            ACTIONS['Limit'].handler(plusArgs, env)
+        end
+}
+
+ACTIONS['LimitExclude'] = {
+    name = L.LM_EXCLUDE_MOUNTS,
+    tostring = function (v) return LM.Mount:MountFilterToString(v) end,
+    handler = function (args, env)
+            -- XXX this multi-arg support is super sketchy/wrong XXX
+            local minusArgs = LM.tMap(args, function (a) return '-' .. a end)
+            ACTIONS['Limit'].handler(minusArgs, env)
+        end
+}
+
+ACTIONS['Endlimit'] = {
+    handler =
+        function (args, env)
+            if #env.filters == 1 then return end
+            table.remove(env.filters, 1)
+            LM.Debug(" - restored filter: " .. table.concat(env.filters[1], ' '))
+        end
+}
 
 local function GetUsableSpell(arg)
     local spellID, name, _
@@ -110,210 +144,295 @@ local function GetUsableSpell(arg)
     end
 end
 
-ACTIONS['Spell'] =
-    function (args, env)
-        for _, arg in ipairs(args) do
-            LM.Debug(' - trying spell: ' .. tostring(arg))
-            local name, id = GetUsableSpell(arg)
+ACTIONS['Spell'] = {
+    name = L.LM_CAST_SPELL,
+    tostring =
+        function (v)
+            local name, _, _, _, _, _, id = GetSpellInfo(v)
             if name then
-                LM.Debug(" - setting action to spell " .. name)
-                return LM.SecureAction:Spell(name, env.unit)
+                return string.format("%s (%d)", name, id)
+            else
+                return v
+            end
+        end,
+    handler =
+        function (args, env)
+            for _, arg in ipairs(args) do
+                LM.Debug(' - trying spell: ' .. tostring(arg))
+                local name, id = GetUsableSpell(arg)
+                if name then
+                    LM.Debug(" - setting action to spell " .. name)
+                    return LM.SecureAction:Spell(name, env.unit)
+                end
             end
         end
-    end
+}
 
 -- Buff is the same as Spell but checks if you have a matching aura and
 -- doesn't recast. Note that it checks only for buffs on the assumption
 -- that you can't cast a debuff on yourself, and that it checks by name
 -- because for some spells (e.g., Levitate) the ID doesn't match.
 
-ACTIONS['Buff'] =
-    function (args, env)
-        for _, arg in ipairs(args) do
-            LM.Debug(' - trying buff: ' .. tostring(arg))
-            local name, id = GetUsableSpell(arg)
-            -- Glide won't cast while mounted
-            if id == 131347 and IsMounted() then return end
-            if name and not LM.UnitAura(env.unit or 'player', name) and
-               IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
-                LM.Debug(" - setting action to spell " .. name)
-                return LM.SecureAction:Spell(name, env.unit)
+ACTIONS['Buff'] = {
+    name = L.LM_APPLY_BUFF,
+    tostring = ACTIONS["Spell"].tostring,
+    handler =
+        function (args, env)
+            for _, arg in ipairs(args) do
+                LM.Debug(' - trying buff: ' .. tostring(arg))
+                local name, id = GetUsableSpell(arg)
+                -- Glide won't cast while mounted
+                if id == 131347 and IsMounted() then return end
+                if name and not LM.UnitAura(env.unit or 'player', name) and
+                   IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
+                    LM.Debug(" - setting action to spell " .. name)
+                    return LM.SecureAction:Spell(name, env.unit)
+                end
             end
         end
-    end
+}
 
-ACTIONS['CancelAura'] =
-    function (args, env)
-        for _, arg in ipairs(args) do
-            local name, _, _, _, _, _, _, _, _, _, castable = LM.UnitAura('player', arg)
-            if name and castable then
-                return LM.SecureAction:CancelAura(name)
+-- Set env.precast to a spell name to try to macro in before mounting journal
+-- mounts. This is a bit less strict than Spell and Buff because the macro
+-- still works even if the spell isn't usable, and has the advantage of
+-- avoiding the IsUsableSpell failures when targeting others.
+
+ACTIONS['PreCast'] = {
+    tostring = ACTIONS["Spell"].tostring,
+    handler =
+        function (args, env)
+            for _, arg in ipairs(args) do
+                local name, _, _, castTime, _, _, id = GetSpellInfo(arg)
+                if name and IsPlayerSpell(id) and castTime == 0 then
+                    LM.Debug(" - setting preCast to spell " .. name)
+                    env.preCast = name
+                    return
+                end
             end
         end
-    end
+}
+
+ACTIONS['CancelAura'] = {
+    name = L.LM_CANCEL_BUFF,
+    tostring = ACTIONS['Spell'].tostring,
+    handler =
+        function (args, env)
+            for _, arg in ipairs(args) do
+                local name, _, _, _, _, _, _, _, _, _, castable = LM.UnitAura('player', arg)
+                if name and castable then
+                    return LM.SecureAction:CancelAura(name)
+                end
+            end
+        end
+}
 
 -- In vehicle -> exit it
-ACTIONS['LeaveVehicle'] =
-    function (args, env)
-        if CanExitVehicle() then
-            LM.Debug(" - setting action to leavevehicle")
-            return LM.SecureAction:LeaveVehicle()
+ACTIONS['LeaveVehicle'] = {
+    handler =
+        function (args, env)
+            if CanExitVehicle() then
+                LM.Debug(" - setting action to leavevehicle")
+                return LM.SecureAction:LeaveVehicle()
+            end
         end
-    end
+}
 
 -- This includes dismounting from mounts and also canceling other mount-like
 -- things such as shapeshift forms
 
-ACTIONS['Dismount'] =
-    function (args, env)
-        -- Shortcut dismount from journal mounts. This has the (wanted) side
-        -- effect of dismounting you even from mounts that aren't enabled,
-        -- and the (wanted) side effect of dismounting while in moonkin form
-        -- without cancelling it.
-        if IsMounted() then
-            LM.Debug(" - setting action to dismount")
-            return LM.SecureAction:Macro(SLASH_DISMOUNT1)
-        end
+ACTIONS['Dismount'] = {
+    name = BINDING_NAME_DISMOUNT,
+    handler =
+        function (args, env)
+            -- Shortcut dismount from journal mounts. This has the (wanted) side
+            -- effect of dismounting you even from mounts that aren't enabled,
+            -- and the (wanted) side effect of dismounting while in moonkin form
+            -- without cancelling it.
+            if IsMounted() then
+                LM.Debug(" - setting action to dismount")
+                return LM.SecureAction:Macro(SLASH_DISMOUNT1)
+            end
 
-        -- Otherwise we look for the mount from its buff and return the cancel
-        -- actions.
-        local m = LM.PlayerMounts:GetActiveMount()
-        if m and m:IsCancelable() then
-            LM.Debug(" - setting action to cancel " .. m.name)
-            return m:GetCancelAction()
-        end
-    end
-
--- CancelForm has been absorbed into Dismount
-ACTIONS['CancelForm'] = function (args, env) end
-
--- Got a player target, try copying their mount
-ACTIONS['CopyTargetsMount'] =
-    function (args, env)
-        local unit = env.unit or "target"
-        if LM.Options:GetCopyTargetsMount() and UnitIsPlayer(unit) then
-            LM.Debug(string.format(" - trying to clone %s's mount", unit))
-            local m = LM.PlayerMounts:GetMountFromUnitAura(unit)
-            if m and m:IsCastable() then
-                LM.Debug(format(" - setting action to mount %s", m.name))
-                return m:GetCastAction()
+            -- Otherwise we look for the mount from its buff and return the cancel
+            -- actions.
+            local m = LM.PlayerMounts:GetActiveMount()
+            if m and m:IsCancelable() then
+                LM.Debug(" - setting action to cancel " .. m.name)
+                return m:GetCancelAction()
             end
         end
-    end
+}
 
-ACTIONS['SmartMount'] =
-    function (args, env)
+-- CancelForm has been absorbed into Dismount
+ACTIONS['CancelForm'] = {
+    handler = function (args, env) end
+}
 
-        local filters = ReplaceVars(tJoin(env.filters[1], args))
-        local filteredList = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
-
-        LM.Debug(" - filters: " .. table.concat(filters, ' '))
-        LM.Debug(" - filtered list contains " .. #filteredList .. " mounts")
-
-        if next(filteredList) == nil then return end
-
-        local m
-
-        if not m and LM.Conditions:Check("[submerged]") then
-            LM.Debug(" - trying Swimming Mount (underwater)")
-            local swim = filteredList:FilterSearch('SWIM')
-            LM.Debug(" - found " .. #swim .. " mounts.")
-            m = swim:PriorityRandom(env.random)
+-- Got a player target, try copying their mount
+ACTIONS['CopyTargetsMount'] = {
+    handler =
+        function (args, env)
+            local unit = env.unit or "target"
+            if LM.Options:GetCopyTargetsMount() and UnitIsPlayer(unit) then
+                LM.Debug(string.format(" - trying to clone %s's mount", unit))
+                local m = LM.PlayerMounts:GetMountFromUnitAura(unit)
+                if m and m:IsCastable() then
+                    LM.Debug(format(" - setting action to mount %s", m.name))
+                    return m:GetCastAction(env)
+                end
+            end
         end
+}
 
-        if not m and LM.Conditions:Check("[flyable]") then
-            LM.Debug(" - trying Flying Mount")
-            local fly = filteredList:FilterSearch('FLY')
-            LM.Debug(" - found " .. #fly .. " mounts.")
-            m = fly:PriorityRandom(env.random)
+ACTIONS['ApplyRules'] = {
+    handler =
+        function (args, env)
+            local rules = LM.Options:GetRules(env.id)
+            LM.Debug(string.format(" - checking %d rules for button %d", #rules, env.id))
+            for i,rule in ipairs(rules) do
+                local act = LM.Rules:Dispatch(rule, env)
+                if act then
+                    LM.Debug(string.format(" - found matching rule %d", i))
+                    return act
+                end
+            end
+            LM.Debug(" - no rules matched")
         end
+}
 
-        if not m and LM.Conditions:Check("[floating,nowaterwalking]") then
-            LM.Debug(" - trying Swimming Mount (on the surface)")
-            local swim = filteredList:FilterSearch('SWIM')
-            LM.Debug(" - found " .. #swim .. " mounts.")
-            m = swim:PriorityRandom(env.random)
+ACTIONS['SmartMount'] = {
+    name = L.LM_SMARTMOUNT_ACTION,
+    tostring =
+        function (v) return LM.Mount:MountFilterToString(v) end,
+    handler =
+        function (args, env)
+
+            local filters = ReplaceVars(LM.tJoin(env.filters[1], args))
+            local filteredList = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
+
+            LM.Debug(" - filters: " .. table.concat(filters, ' '))
+            LM.Debug(" - filtered list contains " .. #filteredList .. " mounts")
+
+            if next(filteredList) == nil then return end
+
+            local m
+
+            if not m and LM.Conditions:Check({"submerged"}, env) then
+                LM.Debug(" - trying Swimming Mount (underwater)")
+                local swim = filteredList:FilterSearch('SWIM')
+                LM.Debug(" - found " .. #swim .. " mounts.")
+                m = swim:PriorityRandom(env.random)
+            end
+
+            if not m and LM.Conditions:Check({"flyable"}, env) then
+                LM.Debug(" - trying Flying Mount")
+                local fly = filteredList:FilterSearch('FLY')
+                LM.Debug(" - found " .. #fly .. " mounts.")
+                m = fly:PriorityRandom(env.random)
+            end
+
+            if not m and LM.Conditions:Check({"floating", { "waterwalking", op="NOT" }}, env) then
+                LM.Debug(" - trying Swimming Mount (on the surface)")
+                local swim = filteredList:FilterSearch('SWIM')
+                LM.Debug(" - found " .. #swim .. " mounts.")
+                m = swim:PriorityRandom(env.random)
+            end
+
+            if not m then
+                LM.Debug(" - trying Running Mount")
+                local run = filteredList:FilterSearch('RUN')
+                LM.Debug(" - found " .. #run .. " mounts.")
+                m = run:PriorityRandom(env.random)
+            end
+
+            if not m then
+                LM.Debug(" - trying Walking Mount")
+                local walk = filteredList:FilterSearch('WALK')
+                LM.Debug(" - found " .. #walk .. " mounts.")
+                m = walk:PriorityRandom(env.random)
+            end
+
+            if m then
+                LM.Debug(format(" - setting action to mount %s", m.name))
+                return m:GetCastAction(env)
+            end
         end
+}
 
-        if not m then
-            LM.Debug(" - trying Running Mount")
-            local run = filteredList:FilterSearch('RUN')
-            LM.Debug(" - found " .. #run .. " mounts.")
-            m = run:PriorityRandom(env.random)
+ACTIONS['Mount'] = {
+    name = L.LM_MOUNT_ACTION,
+    tostring =
+        function (v) return LM.Mount:MountFilterToString(v) end,
+    handler =
+        function (args, env)
+            local filters = ReplaceVars(LM.tJoin(env.filters[1], args))
+            LM.Debug(" - filters: " .. table.concat(filters, ' '))
+            local mounts = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
+            local m = mounts:Random(env.random)
+            if m then
+                LM.Debug(format(" - setting action to mount %s", m.name))
+                return m:GetCastAction(env)
+            end
         end
+}
 
-        if not m then
-            LM.Debug(" - trying Walking Mount")
-            local walk = filteredList:FilterSearch('WALK')
-            LM.Debug(" - found " .. #walk .. " mounts.")
-            m = walk:PriorityRandom(env.random)
+ACTIONS['Macro'] = {
+    handler =
+        function (args, env)
+            if LM.Options:GetUseUnavailableMacro() then
+                LM.Debug(" - using unavailable macro")
+                local macrotext = LM.Options:GetUnavailableMacro()
+                return LM.SecureAction:Macro(macrotext)
+            end
         end
+}
 
-        if m then
-            LM.Debug(format(" - setting action to mount %s", m.name))
-            return m:GetCastAction()
+ACTIONS['Script'] = {
+    handler =
+        function (args, env)
+            local macroText = table.concat(args, ' ')
+            if SecureCmdOptionParse(macroText) then
+                LM.Debug(" - running script line: " .. macroText)
+                return LM.SecureAction:Macro(macroText)
+            end
         end
-    end
+}
 
-ACTIONS['Mount'] =
-    function (args, env)
-        local filters = ReplaceVars(tJoin(env.filters[1], args))
-        LM.Debug(" - filters: " .. table.concat(filters, ' '))
-        local mounts = LM.PlayerMounts:FilterSearch("CASTABLE"):Limit(unpack(filters))
-        local m = mounts:PriorityRandom(env.random)
-        if m then
-            LM.Debug(format(" - setting action to mount %s", m.name))
-            return m:GetCastAction()
+ACTIONS['CantMount'] = {
+    handler =
+        function (args, env)
+            -- This isn't a great message, but there isn't a better one that
+            -- Blizzard have already localized. See FrameXML/GlobalStrings.lua.
+            -- LM.Warning("You don't know any mounts you can use right now.")
+            LM.Warning(SPELL_FAILED_NO_MOUNTS_ALLOWED)
+
+            LM.Debug(" - setting action to can't mount now")
+            return LM.SecureAction:Macro("")
         end
-    end
+}
 
-ACTIONS['Macro'] =
-    function (args, env)
-        if LM.Options:GetUseUnavailableMacro() then
-            LM.Debug(" - using unavailable macro")
-            local macrotext = LM.Options:GetUnavailableMacro()
-            return LM.SecureAction:Macro(macrotext, env.unit)
+ACTIONS['Combat'] = {
+    handler =
+        function (args, env)
+            LM.Debug(" - setting action to in-combat action")
+
+            local macrotext
+            if LM.Options:GetUseCombatMacro() then
+                macrotext = LM.Options:GetCombatMacro()
+            else
+                macrotext = LM.Actions:DefaultCombatMacro()
+            end
+            return LM.SecureAction:Macro(macrotext)
         end
-    end
+}
 
-ACTIONS['Script'] =
-    function (args, env)
-        local macroText = table.concat(args, ' ')
-        if SecureCmdOptionParse(macroText) then
-            LM.Debug(" - running script line: " .. macroText)
-            return LM.SecureAction:Macro(macroText, env.unit)
+ACTIONS['Stop'] = {
+    handler =
+        function (args, env)
+            -- return true and set up to do nothing
+            return LM.SecureAction:Macro("")
         end
-    end
-
-ACTIONS['CantMount'] =
-    function (args, env)
-        -- This isn't a great message, but there isn't a better one that
-        -- Blizzard have already localized. See FrameXML/GlobalStrings.lua.
-        -- LM.Warning("You don't know any mounts you can use right now.")
-        LM.Warning(SPELL_FAILED_NO_MOUNTS_ALLOWED)
-
-        LM.Debug(" - setting action to can't mount now")
-        return LM.SecureAction:Macro("")
-    end
-
-ACTIONS['Combat'] =
-    function (args, env)
-        LM.Debug(" - setting action to in-combat action")
-
-        local macrotext
-        if LM.Options:GetUseCombatMacro() then
-            macrotext = LM.Options:GetCombatMacro()
-        else
-            macrotext = LM.Actions:DefaultCombatMacro()
-        end
-        return LM.SecureAction:Macro(macrotext)
-    end
-
-ACTIONS['Stop'] =
-    function (args, env)
-        -- return true and set up to do nothing
-        return LM.SecureAction:Macro("")
-    end
+}
 
 local function IsCastableItem(item)
     if not item then
@@ -322,11 +441,17 @@ local function IsCastableItem(item)
 
     local itemID = GetItemInfoInstant(item)
 
-    if not itemID or not IsUsableItem(itemID) then
+    if not itemID then
         return false
     end
 
-    if IsEquippableItem(itemID) and not IsEquippedItem(itemID) then
+    if PlayerHasToy(itemID) then
+        if not C_ToyBox.IsToyUsable(itemID) then
+            return false
+        end
+    elseif not IsUsableItem(itemID) then
+        return false
+    elseif IsEquippableItem(itemID) and not IsEquippedItem(itemID) then
         return false
     end
 
@@ -338,24 +463,34 @@ local function IsCastableItem(item)
     return false
 end
 
-ACTIONS['Use'] =
-    function (args, env)
-        for _, arg in ipairs(args) do
-            local name, bag, slot = SecureCmdItemParse(arg)
-            if slot then
-                local s, d, e = GetInventoryItemCooldown('player', slot)
-                if s == 0 and e == 1 then
-                    LM.Debug(' - Setting action to use slot ' .. slot)
-                    return LM.SecureAction:Item(slot, env.unit)
-                end
-            elseif name then
-                if IsCastableItem(name) then
-                    LM.Debug(' - setting action to use item ' .. name)
-                    return LM.SecureAction:Item(name, env.unit)
+ACTIONS['Use'] = {
+    handler =
+        function (args, env)
+            for _, arg in ipairs(args) do
+                local name, bag, slot = SecureCmdItemParse(arg)
+                if slot then
+                    local s, d, e = GetInventoryItemCooldown('player', slot)
+                    if s == 0 and e == 1 then
+                        LM.Debug(' - Setting action to use slot ' .. slot)
+                        return LM.SecureAction:Item(slot, env.unit)
+                    end
+                elseif name then
+                    if IsCastableItem(name) then
+                        LM.Debug(' - setting action to use item ' .. name)
+                        return LM.SecureAction:Item(name, env.unit)
+                    end
                 end
             end
         end
+}
+
+do
+    for a, info in pairs(ACTIONS) do
+        info.action = a
     end
+end
+
+--[[------------------------------------------------------------------------]]--
 
 LM.Actions = { }
 
@@ -407,9 +542,29 @@ function LM.Actions:GetFlowControlHandler(action)
 end
 
 function LM.Actions:GetHandler(action)
-    return ACTIONS[action]
+    local a = ACTIONS[action]
+    if a then return a.handler end
 end
 
 function LM.Actions:IsFlowSkipped(env)
     return tContains(env.flowControl, false)
+end
+
+function LM.Actions:ToString(action)
+    local a = ACTIONS[action]
+    if a and a.name then
+        return a.name
+    else
+        return action
+    end
+end
+
+function LM.Actions:ArgsToString(action, args)
+    local a = ACTIONS[action]
+    if not a then return end
+    if a.tostring then
+        return table.concat(LM.tMap(args, a.tostring), "\n")
+    else
+        return table.concat(args, ' ')
+    end
 end

@@ -39,7 +39,7 @@ LM.Journal.__index = LM.Journal
 
 function LM.Journal:Get(id, isUsable)
     local name, spellID, icon, _, _, sourceType, isFavorite, _, faction, isFiltered, isCollected, mountID = C_MountJournal.GetMountInfoByID(id)
-    local modelID, descriptionText, sourceText, isSelfMount, mountType = C_MountJournal.GetMountInfoExtraByID(mountID)
+    local modelID, descriptionText, sourceText, isSelfMount, mountType, sceneID = C_MountJournal.GetMountInfoExtraByID(mountID)
 
     if not name then
         LM.Debug(format("LM.Mount: Failed GetMountInfo for ID = #%d", id))
@@ -49,6 +49,7 @@ function LM.Journal:Get(id, isUsable)
     local m = LM.Mount.new(self)
 
     m.modelID       = modelID
+    m.sceneID       = sceneID
     m.name          = name
     m.spellID       = spellID
     m.mountID       = mountID
@@ -78,6 +79,8 @@ function LM.Journal:Get(id, isUsable)
         -- no flags
     elseif m.mountType == 241 then      -- AQ-only bugs
         -- no flags
+    elseif m.mountType == 242 then      -- Flyers for when dead in some zones
+        m.flags['FLY'] = true
     elseif m.mountType == 247 then      -- Red Flying Cloud
         m.flags['FLY'] = true
     elseif m.mountType == 248 then      -- Flying mounts
@@ -88,13 +91,17 @@ function LM.Journal:Get(id, isUsable)
         m.flags['WALK'] = true
     elseif m.mountType == 398 then      -- Kua'fon
         -- Kua'fon can fly if achievement 13573 is completed, otherwise run
+--[===[@debug@
+    else
+        LM.PrintError('Mount with unknown type number: ' .. m.name)
+--@end-debug@]===]
     end
 
     return m
 end
 
-function LM.Journal:CurrentFlags()
-    local flags = LM.Mount.CurrentFlags(self)
+function LM.Journal:GetFlags()
+    local flags = LM.Mount.GetFlags(self)
 
     -- Dynamic Kua'fon flags
     if self.mountType == 398 then
@@ -127,6 +134,18 @@ function LM.Journal:IsCastable()
         return false
     end
     return LM.Mount.IsCastable(self)
+end
+
+function LM.Journal:GetCastAction(env)
+    local spellName = GetSpellInfo(self.spellID)
+    if env and env.preCast then
+        return LM.SecureAction:Macro(
+                "/cast [@player] !" .. env.preCast .. "\n" ..
+                "/cast " .. spellName
+            )
+    else
+        return LM.Mount.GetCastAction(self, env)
+    end
 end
 
 function LM.Journal:Dump(prefix)

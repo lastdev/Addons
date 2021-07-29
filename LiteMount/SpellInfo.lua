@@ -10,13 +10,19 @@
 
 local _, LM = ...
 
+--[===[@debug@
+if LibDebug then LibDebug() end
+--@end-debug@]===]
+
+local L = LM.Localize
+
 -- The values are sort order
 LM.FLAG = { }
 LM.FLAG.SWIM        = 1
-LM.FLAG.FLY         = 3
-LM.FLAG.RUN         = 4
-LM.FLAG.WALK        = 5
-LM.FLAG.FAVORITES   = 6
+LM.FLAG.FLY         = 2
+LM.FLAG.RUN         = 3
+LM.FLAG.WALK        = 4
+LM.FLAG.FAVORITES   = 5 -- Must be last
 
 LM.SPELL = { }
 LM.SPELL.TRAVEL_FORM = 783
@@ -59,6 +65,20 @@ LM.ITEM.MAWRAT_HARNESS = 168035
 LM.ITEM.DEADSOUL_HOUND_HARNESS = 170498
 LM.ITEM.SPECTRAL_BRIDLE = 174464
 LM.ITEM.MAW_SEEKER_HARNESS = 170499
+
+LM.MOUNT_TYPES = {
+    [0]   = OTHER,
+    [230] = L.LM_GROUND,
+    [231] = GetSpellInfo(64731), -- Sea Turtle
+    [232] = C_Map.GetMapInfo(203).name, -- Vashj'ir
+    [241] = C_Map.GetMapInfo(319).name, -- Anh'Qiraj
+    [242] = DEAD,
+    [247] = C_MountJournal.GetMountInfoByID(509), -- Red Flying Cloud
+    [248] = L.FLY,
+    [254] = L.SWIM,
+    [284] = HEIRLOOMS,
+    [398] = C_MountJournal.GetMountInfoByID(1043), -- Kua'fon
+}
 
 function LM.UnitAura(unit, aura, filter)
     local i = 1

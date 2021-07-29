@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(611, "DBM-Party-WotLK", 3, 279)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20210614202848")
 mod:SetCreatureID(26529)
-mod:SetEncounterID(293, 297, 2002)
+mod:SetEncounterID(2002)
 
 mod:RegisterCombat("combat")
 

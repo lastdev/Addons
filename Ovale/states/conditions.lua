@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/states/conditions", 90048)
+local __exports = LibStub:NewLibrary("ovale/states/conditions", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local LibBabbleCreatureType = LibStub:GetLibrary("LibBabble-CreatureType-3.0", true)

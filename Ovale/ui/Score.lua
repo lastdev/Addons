@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/Score", 90048)
+local __exports = LibStub:NewLibrary("ovale/ui/Score", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __Ovale = LibStub:GetLibrary("ovale/Ovale")

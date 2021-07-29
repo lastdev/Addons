@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_warlock_spells", 90048)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_warlock_spells", 90103)
 if not __exports then return end
 __exports.registerWarlockSpells = function(scripts)
     local name = "ovale_warlock_spells"
@@ -374,9 +374,11 @@ Define(lead_by_example_soulbind 342156)
     ]]
     code = code .. [[
 #grimoire_of_sacrifice
-  SpellRequire(grimoire_of_sacrifice unusable set=1 enabled=(not pet.present()))
+    SpellRequire(grimoire_of_sacrifice unusable set=1 enabled=(not pet.present()))
+#immolate
+    SpellAddTargetDebuff(immolate immolate_warlock_debuff add=1)
 #soul_strike
-  SpellRequire(soul_strike unusable set=1 enabled=(not pet.present() or not pet.creaturefamily("Felguard")))
+    SpellRequire(soul_strike unusable set=1 enabled=(not pet.present() or not pet.creaturefamily("Felguard")))
     ]]
     scripts:registerScript("WARLOCK", nil, name, desc, code, "include")
 end

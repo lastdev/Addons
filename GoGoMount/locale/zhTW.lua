@@ -1,4 +1,4 @@
-﻿if GetLocale() == "zhTW" then
+if GetLocale() == "zhTW" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "坐騎/解除坐騎"
 	BINDING_NAME_GOGOBINDING2 = "坐騎/解除坐騎(無飛行)"

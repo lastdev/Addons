@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision((string.sub("20200912135206", 1, -5)):sub(12, -3))
+mod:SetRevision((string.sub("20210614230033", 1, -5)):sub(12, -3))
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.
@@ -29,11 +29,10 @@ local specWarnGaseousVolley			= mod:NewSpecialWarningSpell(169382, nil, nil, nil
 local specWarnToxicGas				= mod:NewSpecialWarningMove(169223, nil, nil, nil, 1, 8)
 
 mod.vb.spiderlingCount = 4
-mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	self.vb.spiderlingCount = 4
-	self.vb.phase = 1
+	self:SetStage(1)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -69,7 +68,7 @@ end
 
 function mod:UNIT_TARGETABLE_CHANGED()
 	if self.vb.phase == 1 then
-		self.vb.phase = 2
+		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
 	end

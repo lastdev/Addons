@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: c90ca4d25353186d9a29477279287fe2f320a73c $")
+end, "$Revision: 5c662b54cdac4a0fffa4fbd38c040b6efc0f311e $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -24,6 +24,7 @@ end
 --@end-debug@]===]
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local format = format
 
@@ -2075,7 +2076,7 @@ function XPerl_Player_Set_Bits(self)
 			}
 		end
 
-		if (not IsClassic and not self.totemHooked) then
+		if (not IsVanillaClassic and not self.totemHooked) then
 			hooksecurefunc("TotemFrame_Update", XPerl_Player_SetTotems)
 			self.totemHooked = true
 		end

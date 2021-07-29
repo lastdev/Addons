@@ -69,6 +69,7 @@ SI.WorldBosses = {
   [2431] = { quest=61816, expansion=8, level=60 }, -- Mortanis
   [2432] = { quest=61815, expansion=8, level=60 }, -- Oranomonos the Everbranching
   [2433] = { quest=61814, expansion=8, level=60 }, -- Nurgash Muckformed
+  [2456] = { quest=64531, expansion=8, level=60 }, -- Mor'geth, Tormentor of the Damned
 
   -- bosses with no EJ entry (eid is a placeholder)
   [9001] = { quest=38276, name=GARRISON_LOCATION_TOOLTIP.." "..BOSS, expansion=5, level=40 },
@@ -79,5 +80,6 @@ SI.WorldBosses = {
   -- Eastern Plaguelands (Shadowlands pre-patch event)
   [9005] = { quest=60542, name=L["Nathanos Blightcaller"], expansion=7, level=50 }, -- Nathanos Blightcaller
   -- The Maw
-  [9006] = { quest=63414, name=L["Wrath of the Jailer"], expansion=8, level=60 }, -- Wrath of the Jailer
+  [9006] = { quest=63414, name=L["Wrath of the Jailer"],    expansion=8, level=60 }, -- Wrath of the Jailer
+  [9007] = { quest=63854, name=L["Tormentors of Torghast"], expansion=8, level=60 }, -- Tormentors of Torghast
 }

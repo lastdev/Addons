@@ -100,7 +100,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 		if LUSTDETECTOR and warpSpells[spellID] and pNum > 0 and (event=="SPELL_CAST_SUCCESS") then
 			if (UnitPlayerOrPetInParty(sourceName) or UnitPlayerOrPetInRaid(sourceName)) then
 				if UnitIsPlayer(sourceName) then
-					LUSTDETECTORMSG("Lust Detector: "..sourceName.." Used an haste spell or drum on the party "..GetSpellLink(spellID).."!")
+					LUSTDETECTORMSG("Lust Detector: "..sourceName.." cast haste spell: "..GetSpellLink(spellID).." on the party!! ")
 				else
 					if UnitIsUnit("pet", sourceName) then
 						sourceName = ("%s"):format(UnitName("player"))
@@ -119,7 +119,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 							end
 						end
 					end
-					LUSTDETECTORMSG("Lust Detector: [HUNTER] "..sourceName.."\'s hunter's Pet Used "..GetSpellLink(spellID).."And increased +30% Haste on your party!")
+					LUSTDETECTORMSG("Lust Detector: [HUNTER] "..sourceName.."\'s Pet Used "..GetSpellLink(spellID).."And increased +30% Haste on your party!")
 				end
 			end
 		end

@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/ui/localization/zh-TW", 90048)
+local __exports = LibStub:NewLibrary("ovale/ui/localization/zh-TW", 90103)
 if not __exports then return end
 __exports.setZHTW = function(l)
     l.action_bar = [[快捷列]]

@@ -193,6 +193,7 @@ Ld["Time Left"] = "Time Left"
 Ld["Tooltip Scale"] = "Tooltip Scale"
 Ld["TOP"] = "TOP"
 Ld["Torghast"] = "Torghast"
+Ld["Tormentors of Torghast"] = "Tormentors of Torghast"
 Ld["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 Ld["Track Mythic keystone best run"] = "Track Mythic keystone best run"
 Ld["Trade Skill Cooldowns"] = "Trade Skill Cooldowns"
@@ -214,8 +215,7 @@ Ld["You can combine icons and text in a single indicator if you wish. Simply cho
 
 
 if locale == "frFR" then
-  --[[Translation missing --]]
-La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open weekly rewards"
+  La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Cliquez|r pour ouvrir les récompenses hebdomadaires"
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic-gauche|r pour détacher l'infobulle."
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic-milieu|r pour afficher les Infos Raid de Blizzard."
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Clic-droit|r pour configurer SavedInstances."
@@ -224,13 +224,10 @@ La["Abbreviate Mythic keystone dungeon names"] = "Abréger les noms des donjons 
 La["Account"] = "Compte"
 La["Account Summary"] = "Résumé du compte"
 La["Always show"] = "Toujours afficher"
---[[Translation missing --]]
-La["Amathet Reliquary"] = "Amathet Reliquary"
---[[Translation missing --]]
-La["Ambered Coffer"] = "Ambered Coffer"
+La["Amathet Reliquary"] = "Reliquaire amathet"
+La["Ambered Coffer"] = "Coffre ambré"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "Êtes-vous sûr de vouloir supprimer le personnage %s de la base de données SavedInstances ?"
---[[Translation missing --]]
-La["Are you sure you want to report all your keys to %s?"] = "Are you sure you want to report all your keys to %s?"
+La["Are you sure you want to report all your keys to %s?"] = "Êtes-vous sûr de vouloir communiquer toutes vos clés à %s ?"
 La["Are you sure you want to reset the SavedInstances character database? Characters will be re-populated as you log into them."] = "Êtes-vous sûr de vouloir remettre à zéro votre base de données de personnages pour SavedInstances ? Les données des personnages seront re-récupérées au moment où vous les connecterez."
 La["Attempt to recover completed daily quests for this character. Note this may recover some additional, linked daily quests that were not actually completed today."] = "Tente de récupérer les quêtes journalières accomplies par ce personnage. Notez que cela peut récupérer certaines quêtes supplémentaires liées qui n'ont pas été accomplies aujourd'hui."
 La["Automatically shrink the tooltip to fit on the screen"] = "Réduit automatiquement la taille de l'infobulle pour la faire tenir sur l'écran."
@@ -241,25 +238,19 @@ La["Bonus loot frame"] = "Cadre de jet de butin bonus"
 La["Bonus rolls"] = "Jets de dé bonus"
 La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = "Les informations de mort des boss manquent pour ce verrouillage d'instance.\\\\nC'est un bogue de Blizzard qui touche certains vieux raids."
---[[Translation missing --]]
-La["Calling Missing"] = "Calling Missing"
+La["Calling Missing"] = "Appel manquant"
 La["Categories"] = "Catégories"
 La["Characters"] = "Personnages"
 La["Color currency by cap"] = "Colorer les monnaies par cap"
---[[Translation missing --]]
-La["Combine Callings"] = "Combine Callings"
---[[Translation missing --]]
-La["Combine Emissaries"] = "Combine Emissaries"
---[[Translation missing --]]
-La["Combine emissaries of same expansion"] = "Combine emissaries of same expansion"
+La["Combine Callings"] = "Combiner les appels"
+La["Combine Emissaries"] = "Combiner les émissaires"
+La["Combine emissaries of same expansion"] = "Combiner les émissaires d'une même extension."
 La["Combine LFR"] = "Fusionner les RdR"
 La["Combine World Bosses"] = "Fusionner les boss extérieurs"
 La["Connected Realms"] = "Royaumes connectés"
---[[Translation missing --]]
-La["Covenant"] = "Covenant"
+La["Covenant"] = "Congrégation"
 La["Currency settings"] = "Monnaies"
---[[Translation missing --]]
-La["Cursed Coffer"] = "Cursed Coffer"
+La["Cursed Coffer"] = "Relique maudite"
 La["Daily Quests"] = "Quêtes journalières"
 La["Day"] = "Jour"
 La["Debug Mode"] = "Mode débogage"
@@ -267,10 +258,8 @@ La["Disable mouseover"] = "Désactiver le survol avec la souris"
 La["Disable tooltip display on icon mouseover"] = "Désactive l'affichage de l'infobulle lors du survol de la souris."
 La["Display instances in order of recommended level from lowest to highest"] = "Affiche les instances dans l'ordre du niveau recommandé le plus bas au plus élevé."
 La["Display instances with space inserted between categories"] = "Affiche les instances avec un espace entre les catégories."
---[[Translation missing --]]
 La["DOS"] = "DOS"
---[[Translation missing --]]
-La["Dragon of Nightmare"] = "Dragon of Nightmare"
+La["Dragon of Nightmare"] = "Les Dragons du Cauchemar"
 La["Dump quest debugging information"] = "lister les informations de débogage des quêtes"
 La["Dump time debugging information"] = "lister les informations de débogage du temps"
 La["Emissary Missing"] = "Émissaire manquant"
@@ -278,89 +267,63 @@ La["Emissary Quests"] = "Quêtes d'émissaire"
 La["Emissary quests"] = "Quêtes d'émissaire"
 La["Expansion"] = "Extension"
 La["Expired Lockout - Can be extended"] = "Verrouillage expiré - Peut être étendu"
---[[Translation missing --]]
-La["Export"] = "Export"
+La["Export"] = "Exporter"
 La["Extended Lockout - Not yet saved"] = "Verrouillage étendu - Pas encore sauvegardé"
 La["Facets of Research"] = "Facettes de recherche"
 La["Fit to screen"] = "Ajuster à la taille de l'écran"
 La["Flex"] = "Dynamique"
 La["Format large numbers"] = "Formater les grands nombres"
---[[Translation missing --]]
-La["Full Clear + 1 Mask"] = "Full Clear + 1 Mask"
---[[Translation missing --]]
-La["Full Clear + 2 Masks"] = "Full Clear + 2 Masks"
---[[Translation missing --]]
-La["Full Clear + 3 Masks"] = "Full Clear + 3 Masks"
---[[Translation missing --]]
-La["Full Clear + 4 Masks"] = "Full Clear + 4 Masks"
---[[Translation missing --]]
-La["Full Clear + 5 Masks"] = "Full Clear + 5 Masks"
---[[Translation missing --]]
-La["Full Clear No Masks"] = "Full Clear No Masks"
+La["Full Clear + 1 Mask"] = "Full Clear + 1 Masque"
+La["Full Clear + 2 Masks"] = "Full Clear + 2 Masque"
+La["Full Clear + 3 Masks"] = "Full Clear + 3 Masque"
+La["Full Clear + 4 Masks"] = "Full Clear + 4 Masque"
+La["Full Clear + 5 Masks"] = "Full Clear + 5 Masque"
+La["Full Clear No Masks"] = "Full Clear sans masques"
 La["General settings"] = "Options générales"
 La["Group"] = "Grouper "
---[[Translation missing --]]
-La["Guild"] = "Guild"
---[[Translation missing --]]
+La["Guild"] = "Guilde"
 La["HOA"] = "HOA"
 La["Hold Alt to show all data"] = "Maintenez Alt pour afficher toutes les données."
 La["Hover mouse on indicator for details"] = "Survolez les indicateurs avec la souris pour plus d'informations."
---[[Translation missing --]]
-La["Hunt: Death Elementals"] = "Hunt: Death Elementals"
---[[Translation missing --]]
-La["Hunt: Shadehounds"] = "Hunt: Shadehounds"
---[[Translation missing --]]
-La["Hunt: Soul Eaters"] = "Hunt: Soul Eaters"
---[[Translation missing --]]
-La["Hunt: Winged Soul Eaters"] = "Hunt: Winged Soul Eaters"
+La["Hunt: Death Elementals"] = "Partie de chasse : élémentaires de mort"
+La["Hunt: Shadehounds"] = "Partie de chasse : molosses d’ombre"
+La["Hunt: Soul Eaters"] = "Partie de chasse : mangeurs d’âmes"
+La["Hunt: Winged Soul Eaters"] = "Partie de chasse :  mangeurs d’âmes ailés"
 La["Ignore"] = "Ignorer "
 La["Indicators"] = "Indicateurs"
---[[Translation missing --]]
-La["Infested Strongbox"] = "Infested Strongbox"
+La["Infested Strongbox"] = "Coffre-fort infesté"
 La["Instance limit in Broker"] = "Limite d'instance dans la barre (libBroker)"
 La["Instances"] = "Instances"
 La["Interleave"] = "Entrelacer "
---[[Translation missing --]]
-La["Keystone report target"] = "Keystone report target"
+La["Keystone report target"] = "Cible du rapport de Clé mythique"
 La["Last updated"] = "Dernière mise à jour :"
 La["Legion Transmute"] = "Transmutation Légion"
---[[Translation missing --]]
-La["Lesser Visions of N'Zoth"] = "Lesser Visions of N'Zoth"
+La["Lesser Visions of N'Zoth"] = "Visions inférieures de N'Zoth"
 La["Level %d Characters"] = "Personnages de niveau %d"
 La["LFG cooldown"] = "Recherche de groupe"
 La["LFR"] = "RdR"
 La["List categories from the current expansion pack first"] = "Liste les catégories de l'extension actuelle en premier."
 La["List raid categories before dungeon categories"] = "Liste les catégories de raids avant celles des donjons."
---[[Translation missing --]]
-La["Lord Kazzak"] = "Lord Kazzak"
+La["Lord Kazzak"] = "Seigneur Kazzak"
 La["Manage"] = "Gérer "
---[[Translation missing --]]
-La["Mechanized Chest"] = "Mechanized Chest"
+La["Mechanized Chest"] = "Coffre mécanisé"
 La["Miscellaneous Tracking"] = "Suivis divers "
---[[Translation missing --]]
 La["MISTS"] = "MISTS"
---[[Translation missing --]]
-La["Mogu Strongbox"] = "Mogu Strongbox"
+La["Mogu Strongbox"] = "Coffre mogu"
 La["Most recent first"] = "Les plus récents en premier"
 La["Mythic Best"] = "Meilleur temps mythique"
 La["Mythic Key Best"] = "Meilleur niveau de clé de donjon mythique"
 La["Mythic Keystone"] = "Clé Mythique"
---[[Translation missing --]]
-La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
+La["Nathanos Blightcaller"] = "Nathanos le Flétrisseur"
 La["Never show"] = "Ne jamais afficher"
---[[Translation missing --]]
 La["NW"] = "NW"
 La["Opacity of the tooltip row highlighting"] = "Opacité de la mise en évidence des rangées de l'infobulle."
 La["Open config"] = "Ouvrir la configuration"
 La["Order must be a number in [0 - 999]"] = "l'ordre doit être un nombre compris entre [0 - 999]"
---[[Translation missing --]]
-La["Paragon Chests"] = "Paragon Chests"
---[[Translation missing --]]
-La["Party"] = "Party"
---[[Translation missing --]]
+La["Paragon Chests"] = "Coffre Parangon"
+La["Party"] = "Groupe"
 La["PF"] = "PF"
---[[Translation missing --]]
-La["Quest progresses"] = "Quest progresses"
+La["Quest progresses"] = "Progression des quêtes"
 La["Raids before dungeons"] = "Raids avant les donjons"
 La["Recent Bonus Rolls"] = "Jets de dé bonus récents"
 La["Recent Instances"] = "instance(s) récente(s) "
@@ -370,23 +333,18 @@ La["Reset Characters"] = "Remise à zéro des personnages"
 La["Reverse ordering"] = "Ordre inversé"
 La["Roll Bonus"] = "Jets de dé bonus"
 La["Row Highlight"] = "Surbrillance des rangées"
---[[Translation missing --]]
 La["SD"] = "SD"
 La["Set All"] = "Tout régler sur :"
---[[Translation missing --]]
-La["Show all emissary names"] = "Show all emissary names"
---[[Translation missing --]]
-La["Show both factions' emissay name"] = "Show both factions' emissay name"
---[[Translation missing --]]
-La["Show calling line when all quests completed"] = "Show calling line when all quests completed"
+La["Show all emissary names"] = "Afficher tous les noms d'émissaires"
+La["Show both factions' emissay name"] = "Montrer le nom des émissaires de chaque faction."
+La["Show calling line when all quests completed"] = "Afficher la ligne des appels lorsque toutes les quêtes sont terminées"
 La["Show category names"] = "Noms des catégories"
 La["Show category names in the tooltip"] = "Affiche les noms des catégories dans l'infobulle."
 La["Show cooldown for characters to use battleground system"] = "Affiche le temps restant avant que les personnages déserteurs ne puissent rejoindre un champs de bataille à nouveau."
 La["Show cooldown for characters to use LFG dungeon system"] = "Affiche le temps restant avant que les personnages ne puissent utiliser l'outil Recherche de groupe à nouveau."
 La["Show currency earned"] = "Voir les monnaies gagnées"
 La["Show currency max"] = "Voir le total maximum de monnaie"
---[[Translation missing --]]
-La["Show emissary line when all quests completed"] = "Show emissary line when all quests completed"
+La["Show emissary line when all quests completed"] = "Afficher la ligne des émissaires lorsque toutes les quêtes sont terminées"
 La["Show Expired"] = "Afficher les expirés"
 La["Show expired instance lockouts"] = "Affiche les verrouillages d'instances expirés."
 La["Show Holiday"] = "Evènements saisonniers"
@@ -402,16 +360,13 @@ La["Show server name"] = "Afficher le nom du serveur"
 La["Show the SavedInstances minimap button"] = "Affiche le bouton de SavedInstances sur la mini-carte."
 La["Show tooltip hints"] = "Astuces sur l'infobulle"
 La["Show When"] = "Montrer quand"
---[[Translation missing --]]
-La["Show when completed"] = "Show when completed"
+La["Show when completed"] = "Montrer quand terminé"
 La["Show when saved"] = "Quand inscrit"
 La["Show/Hide the SavedInstances tooltip"] = "Afficher/cacher l'infobulle de SavedInstances"
 La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "De la même manière, les mots KILLED et TOTAL seront remplacés par le nombre de boss tués et le nombre total de boss du raid pour ce verrouillage."
 La["Single category name"] = "Nom de catégorie unique"
---[[Translation missing --]]
 La["SOA"] = "SOA"
---[[Translation missing --]]
-La["Sort by currency name"] = "Sort by currency name"
+La["Sort by currency name"] = "Trier par nom de monnaie"
 La["Sort by server"] = "Trier par serveur"
 La["Sort categories by"] = "Trier les catégories par :"
 La["Sort Order"] = "Ordre de tri "
@@ -419,17 +374,15 @@ La["Sorting"] = "Trier"
 La["Space between categories"] = "Espacer les catégories"
 La["Text"] = "Texte"
 La["The Four Celestials"] = "Les Quatre Astres"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The World Awaits"] = "Le monde vous attend"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Ces instances comptent dans la limite de %i instances par heure pour le compte, et le temps avant qu'elles n'expirent."
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Ceci ne devrait être utilisé que pour les personnages qui ont été renommés ou supprimés car les personnages seront de toutes façons ré-affichés lorsque vous vous connecterez avec."
 La["Time /played"] = "Temps /joué"
 La["Time Left"] = "Temps restant "
 La["Tooltip Scale"] = "Taille de l'infobulle"
---[[Translation missing --]]
 La["TOP"] = "TOP"
---[[Translation missing --]]
-La["Torghast"] = "Torghast"
+La["Torghast"] = "Tourment"
+La["Tormentors of Torghast"] = "Tourmenteurs de Tourment"
 La["Track Mythic keystone acquisition"] = "Suivre l'acquisition de clé de donjon mythique"
 La["Track Mythic keystone best run"] = "Suivre le meilleur temps pour la clé de donjon mythique"
 La["Trade Skill Cooldowns"] = "Échéances des métiers"
@@ -437,20 +390,16 @@ La["Trade skills"] = "Échéances des métiers"
 La["Transmute"] = "Transmutation"
 La["Type"] = "Type"
 La["Use class color"] = "Colorer par classe"
---[[Translation missing --]]
-La["Vision Boss + 2 Bonus Objectives"] = "Vision Boss + 2 Bonus Objectives"
---[[Translation missing --]]
-La["Vision Boss Only"] = "Vision Boss Only"
---[[Translation missing --]]
-La["Warfronts"] = "Warfronts"
+La["Vision Boss + 2 Bonus Objectives"] = "Boss de la vision + 2 objectifs bonus"
+La["Vision Boss Only"] = "Boss de la vision uniquement"
+La["Warfronts"] = "Fronts de guerre"
 La["Warn about instance limit"] = "Alerte sur la limite d'instance"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Attention : vous êtes entré dans %i instances récemment et approchez la limite de %i instances par heure pour ce compte. Plus d'instances seront disponibles dans environ %s."
 La["Weekly Quests"] = "Quêtes hebdomadaires"
 La["Wild Transmute"] = "Transmutation sauvage"
 La["World Boss"] = "Boss extérieur"
 La["World Bosses"] = "Boss extérieurs"
---[[Translation missing --]]
-La["Wrath of the Jailer"] = "Wrath of the Jailer"
+La["Wrath of the Jailer"] = "Courroux du Geôlier"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Si vous le souhaitez, vous pouvez combiner les icônes et le texte en un seul indicateur. Il vous suffit de choisir une icône et d'insérer le mot ICON dans la zone de texte. Partout où le mot ICON sera trouvé, l'icône que vous avez choisi sera mise à la place."
 
 elseif locale == "deDE" then
@@ -463,10 +412,8 @@ La["Abbreviate Mythic keystone dungeon names"] = "Namen mythischer Schlüsselste
 La["Account"] = "Account"
 La["Account Summary"] = "Accountübersicht"
 La["Always show"] = "Immer anzeigen"
---[[Translation missing --]]
-La["Amathet Reliquary"] = "Amathet Reliquary"
---[[Translation missing --]]
-La["Ambered Coffer"] = "Ambered Coffer"
+La["Amathet Reliquary"] = "Reliquiar der Amathet"
+La["Ambered Coffer"] = "Bernbesetzte Kiste"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "Bist du sicher, dass du %s aus der SavedInstances-Charakterdatenbank löschen möchtest?"
 La["Are you sure you want to report all your keys to %s?"] = "Bist du dir sicher alle deine Schlüssel an %s zu senden? "
 La["Are you sure you want to reset the SavedInstances character database? Characters will be re-populated as you log into them."] = "Bist du sicher, dass du die SavedInstances-Charakterdatenbank zurücksetzen willst? Die Charaktere werden neu angelegt, wenn du sie einloggst."
@@ -490,11 +437,9 @@ La["Combine emissaries of same expansion"] = "Kombiniert die Abgesandten der sel
 La["Combine LFR"] = "LFR/Flex zusammenfassen"
 La["Combine World Bosses"] = "Weltbosse zusammenfassen"
 La["Connected Realms"] = "Verknüpfte Realms"
---[[Translation missing --]]
-La["Covenant"] = "Covenant"
+La["Covenant"] = "Pakt"
 La["Currency settings"] = "Abzeicheneinstellungen"
---[[Translation missing --]]
-La["Cursed Coffer"] = "Cursed Coffer"
+La["Cursed Coffer"] = "Kiste des Schwarzen Imperiums"
 La["Daily Quests"] = "Tägliche Quests"
 La["Day"] = "Tag"
 La["Debug Mode"] = "Debugmodus"
@@ -502,7 +447,6 @@ La["Disable mouseover"] = "Mouseover deaktivieren"
 La["Disable tooltip display on icon mouseover"] = "Deaktiviert die Anzeige des Tooltips bei Zeigen auf Icons mit der Maus"
 La["Display instances in order of recommended level from lowest to highest"] = "Instanzen nach vorgeschlagenem Level anzeigen, beginnend mit der niedrigsten zur höchsten Instanz"
 La["Display instances with space inserted between categories"] = "Instanzen mit einem Freiraum zwischen den verschiedenen Kategorien anzeigen"
---[[Translation missing --]]
 La["DOS"] = "DOS"
 La["Dragon of Nightmare"] = "Drache des Albtraums"
 La["Dump quest debugging information"] = "Quest Debugging Information"
@@ -527,24 +471,17 @@ La["Full Clear No Masks"] = "Full Clear, keine Masken"
 La["General settings"] = "Allgemeine Einstellungen"
 La["Group"] = "Gruppieren"
 La["Guild"] = "Gilde"
---[[Translation missing --]]
 La["HOA"] = "HOA"
 La["Hold Alt to show all data"] = "Halte Alt gedrückt, um alle Daten anzuzeigen"
 La["Hover mouse on indicator for details"] = "Für Details den Mauszeiger über den Indikator setzen"
---[[Translation missing --]]
-La["Hunt: Death Elementals"] = "Hunt: Death Elementals"
---[[Translation missing --]]
-La["Hunt: Shadehounds"] = "Hunt: Shadehounds"
---[[Translation missing --]]
-La["Hunt: Soul Eaters"] = "Hunt: Soul Eaters"
---[[Translation missing --]]
-La["Hunt: Winged Soul Eaters"] = "Hunt: Winged Soul Eaters"
+La["Hunt: Death Elementals"] = "Jagd: Todeselementare"
+La["Hunt: Shadehounds"] = "Jagd: Schemenhunde"
+La["Hunt: Soul Eaters"] = "Jagd: Seelenfresser"
+La["Hunt: Winged Soul Eaters"] = "Jagd: Geflügelte Seelenfresser"
 La["Ignore"] = "Ignorieren"
 La["Indicators"] = "Indikatoren"
---[[Translation missing --]]
-La["Infested Strongbox"] = "Infested Strongbox"
---[[Translation missing --]]
-La["Instance limit in Broker"] = "Instance limit in Broker"
+La["Infested Strongbox"] = "Befallene Schließkassette"
+La["Instance limit in Broker"] = "Instanzlimit im Broker"
 La["Instances"] = "Instanzen"
 La["Interleave"] = "Verschachteln"
 La["Keystone report target"] = "Sende Schlüsselstein an Ziel"
@@ -559,26 +496,21 @@ La["List raid categories before dungeon categories"] = "Schlachtzugskategorien v
 La["Lord Kazzak"] = "Lord Kazzak"
 La["Manage"] = "Verwalten"
 La["Mechanized Chest"] = "Mechanisierte Truhe"
-La["Miscellaneous Tracking"] = "Sontige Verfolgung"
---[[Translation missing --]]
+La["Miscellaneous Tracking"] = "Sonstige Verfolgung"
 La["MISTS"] = "MISTS"
---[[Translation missing --]]
-La["Mogu Strongbox"] = "Mogu Strongbox"
+La["Mogu Strongbox"] = "Schließkassette der Mogu"
 La["Most recent first"] = "Aktuellste zuerst"
 La["Mythic Best"] = "Beste mythische"
 La["Mythic Key Best"] = "Bester mythischer Schlüssel"
 La["Mythic Keystone"] = "Mythischer Schlüsselstein"
---[[Translation missing --]]
-La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
+La["Nathanos Blightcaller"] = "Nathanos Pestrufer"
 La["Never show"] = "Nie anzeigen"
---[[Translation missing --]]
 La["NW"] = "NW"
 La["Opacity of the tooltip row highlighting"] = "Transparenz der Zeilenhervorhebung im Tooltip"
 La["Open config"] = "Konfiguration öffnen"
 La["Order must be a number in [0 - 999]"] = "Auftrag muss eine Zahl mit [0 - 999] sein"
 La["Paragon Chests"] = "Paragonkiste"
 La["Party"] = "Gruppe"
---[[Translation missing --]]
 La["PF"] = "PF"
 La["Quest progresses"] = "Questfortschritte"
 La["Raids before dungeons"] = "Schlachtzüge vor Dungeons"
@@ -590,7 +522,6 @@ La["Reset Characters"] = "Charaktere zurücksetzen"
 La["Reverse ordering"] = "Umgekehrte Anordung"
 La["Roll Bonus"] = "Bonuswürfe"
 La["Row Highlight"] = "Zeilenhervorhebung"
---[[Translation missing --]]
 La["SD"] = "SD"
 La["Set All"] = "Alle festlegen"
 La["Show all emissary names"] = "Zeige alle Namen der Abgesandten"
@@ -623,7 +554,6 @@ La["Show when saved"] = "Anzeigen, wenn gespeichert"
 La["Show/Hide the SavedInstances tooltip"] = "Zeige/Verstecke den SavedInstances-Tooltip"
 La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "Ebenso werden die Wörter GETÖTET und GESAMT durch die Anzahl der getöteten und gesamten Bosse der ID ersetzt."
 La["Single category name"] = "Einzelner Kategoriename"
---[[Translation missing --]]
 La["SOA"] = "SOA"
 La["Sort by currency name"] = "Sortiere nach Währungsnamen"
 La["Sort by server"] = "Nach Server sortieren"
@@ -639,9 +569,9 @@ La["This should only be used for characters who have been renamed or deleted, as
 La["Time /played"] = "Zeit /gespielt"
 La["Time Left"] = "Verbleibende Zeit"
 La["Tooltip Scale"] = "Tooltip-Skalierung"
---[[Translation missing --]]
 La["TOP"] = "TOP"
 La["Torghast"] = "Torghast"
+La["Tormentors of Torghast"] = "Peiniger von Torghast"
 La["Track Mythic keystone acquisition"] = "Verfolge die erhaltenen Schlüsselsteine"
 La["Track Mythic keystone best run"] = "Verfolge den besten mythischen Durchlauf"
 La["Trade Skill Cooldowns"] = "Abklingzeiten der Berufsfertigkeiten"
@@ -662,8 +592,7 @@ La["Wrath of the Jailer"] = "Zorn des Kerkermeisters"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Nach Wunsch können Icons und Text in einem einzelnen Indikator kombiniert werden. Wähle ein Icon und gebe das Wort ICON in das Textfeld ein. Wo auch immer das Wort ICON gefunden wird, wird das gewählte Icon angefügt."
 
 elseif locale == "koKR" then
-  --[[Translation missing --]]
-La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open weekly rewards"
+  La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00클릭|r 위대한 금고 보기"
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00좌-클릭|r으로 툴팁 떼어내기"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00가운데-클릭|r 블리자드 공격대 정보 보기"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00우-클릭|r으로 SavedInstances 설정"
@@ -694,14 +623,13 @@ La["Calling Missing"] = "Calling Missing"
 La["Categories"] = "카테고리"
 La["Characters"] = "캐릭터"
 La["Color currency by cap"] = "화폐 한도에 채색"
---[[Translation missing --]]
-La["Combine Callings"] = "Combine Callings"
+La["Combine Callings"] = "부름퀘 모음"
 La["Combine Emissaries"] = "사절퀘 모음"
 La["Combine emissaries of same expansion"] = "확팩별 사절퀘 모음"
 La["Combine LFR"] = "공찾/탄공 합침"
 La["Combine World Bosses"] = "야외 보스 합침"
 La["Connected Realms"] = "연동 서버"
-La["Covenant"] = "성약단"
+La["Covenant"] = "성약의 단"
 La["Currency settings"] = "화폐 설정"
 --[[Translation missing --]]
 La["Cursed Coffer"] = "Cursed Coffer"
@@ -739,14 +667,10 @@ La["Guild"] = "길드"
 La["HOA"] = "속죄"
 La["Hold Alt to show all data"] = "알트키를 누르고 있으면 모든 정보 표시"
 La["Hover mouse on indicator for details"] = "마우스를 올리면 세부 내용 표시"
---[[Translation missing --]]
-La["Hunt: Death Elementals"] = "Hunt: Death Elementals"
---[[Translation missing --]]
-La["Hunt: Shadehounds"] = "Hunt: Shadehounds"
---[[Translation missing --]]
-La["Hunt: Soul Eaters"] = "Hunt: Soul Eaters"
---[[Translation missing --]]
-La["Hunt: Winged Soul Eaters"] = "Hunt: Winged Soul Eaters"
+La["Hunt: Death Elementals"] = "사냥: 죽음의 정령"
+La["Hunt: Shadehounds"] = "사냥: 그늘사냥개"
+La["Hunt: Soul Eaters"] = "사냥: 영혼탐식자"
+La["Hunt: Winged Soul Eaters"] = "사냥: 날개 달린 영혼탐식자"
 La["Ignore"] = "무시"
 La["Indicators"] = "표시기"
 --[[Translation missing --]]
@@ -797,8 +721,7 @@ La["SD"] = "심연"
 La["Set All"] = "모든 설정"
 La["Show all emissary names"] = "모든 사절 이름 표시"
 La["Show both factions' emissay name"] = "양쪽 진영의 사절퀘 모두 보기"
---[[Translation missing --]]
-La["Show calling line when all quests completed"] = "Show calling line when all quests completed"
+La["Show calling line when all quests completed"] = "부름퀘스트 완료시에만 보이기"
 La["Show category names"] = "카테고리 이름 표시"
 La["Show category names in the tooltip"] = "툴팁에 카테고리 이름을 표시합니다"
 La["Show cooldown for characters to use battleground system"] = "캐릭터가 전장 시스템을 사용하기 위해 남은 대기시간을 표시합니다."
@@ -835,8 +758,7 @@ La["Sorting"] = "정렬"
 La["Space between categories"] = "카테고리 사이에 공백"
 La["Text"] = "글자"
 La["The Four Celestials"] = "네 천신"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The World Awaits"] = "세상이 기다린다"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "계정당 1시간 내에 입장이 제한된 %i 개의 인스턴스에 포함된 인스턴스와 만료 될 때까지 남은 시간입니다"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "이름이 변경되거나 삭제된 캐릭터만 사용해야 하며 재로그인시 캐릭터의 정보가 다시 채워집니다."
 La["Time /played"] = "플레이 시간 표시"
@@ -844,6 +766,7 @@ La["Time Left"] = "남은 시간"
 La["Tooltip Scale"] = "툴팁 크기"
 La["TOP"] = "투기장"
 La["Torghast"] = "토르가스트"
+La["Tormentors of Torghast"] = "토르가스트의 고문관"
 La["Track Mythic keystone acquisition"] = "쐐기돌 추적"
 La["Track Mythic keystone best run"] = "쐐기 단수 기록"
 La["Trade Skill Cooldowns"] = "전문 기술 재사용 대기시간"
@@ -1101,6 +1024,8 @@ La["TOP"] = "TOP"
 --[[Translation missing --]]
 La["Torghast"] = "Torghast"
 --[[Translation missing --]]
+La["Tormentors of Torghast"] = "Tormentors of Torghast"
+--[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]
 La["Track Mythic keystone best run"] = "Track Mythic keystone best run"
@@ -1310,6 +1235,8 @@ La["Time Left"] = "Обновится через"
 La["Tooltip Scale"] = "Масштаб подсказки"
 La["TOP"] = "Театр"
 La["Torghast"] = "Торгаст"
+--[[Translation missing --]]
+La["Tormentors of Torghast"] = "Tormentors of Torghast"
 La["Track Mythic keystone acquisition"] = "Отслеживать полученные эпохальные ключи"
 La["Track Mythic keystone best run"] = "Отслеживать лучший заход на эпохальный ключ"
 La["Trade Skill Cooldowns"] = "Восстановление способностей профессий."
@@ -1436,7 +1363,7 @@ La["NW"] = "通灵"
 La["Opacity of the tooltip row highlighting"] = "高亮提示行的透明度"
 La["Open config"] = "开启设置"
 La["Order must be a number in [0 - 999]"] = "序号必须为0到999的数"
-La["Paragon Chests"] = "典范声望宝箱"
+La["Paragon Chests"] = "巅峰声望宝箱"
 La["Party"] = "小队"
 La["PF"] = "凋魂"
 La["Quest progresses"] = "任务进度"
@@ -1498,6 +1425,7 @@ La["Time Left"] = "剩余时间"
 La["Tooltip Scale"] = "提示框缩放"
 La["TOP"] = "剧场"
 La["Torghast"] = "托加斯特"
+La["Tormentors of Torghast"] = "托加斯特的折磨者"
 La["Track Mythic keystone acquisition"] = "追踪史诗钥石"
 La["Track Mythic keystone best run"] = "追踪史诗钥石每周最佳记录"
 La["Trade Skill Cooldowns"] = "商业技能冷却"
@@ -1518,15 +1446,13 @@ La["Wrath of the Jailer"] = "典狱长之怒"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "你可以在指示器上同时显示图标和文字。先选择一个图标，然后在文本中插入“ICON”到想要图标被展示的位置，显示时将被替换为指定图标。"
 
 elseif locale == "esES" then
-  --[[Translation missing --]]
-La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open weekly rewards"
-La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic|r para separar la ventana de descripción"
-La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic medio|r para mostrar el Info de banda"
+  La["|cffffff00Click|r to open weekly rewards"] = [=[|cffffff00Click|r para abrir recompensas semanales
+]=]
+La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic|r para separar la ventana de información"
+La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic medio|r para mostrar la Información de banda"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
---[[Translation missing --]]
-La["Abbreviate keystones"] = "Abbreviate keystones"
---[[Translation missing --]]
-La["Abbreviate Mythic keystone dungeon names"] = "Abbreviate Mythic keystone dungeon names"
+La["Abbreviate keystones"] = "Abreviar piedras angulares"
+La["Abbreviate Mythic keystone dungeon names"] = "Abreviar nombres de mazmorras de piedra angular"
 La["Account"] = "Cuenta"
 La["Account Summary"] = "Resumen de la cuenta"
 La["Always show"] = "Mostrar siempre"
@@ -1535,8 +1461,7 @@ La["Amathet Reliquary"] = "Amathet Reliquary"
 --[[Translation missing --]]
 La["Ambered Coffer"] = "Ambered Coffer"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "¿Estás seguro de que quieres borrar a %s de la base de datos de personajes de SavedInstances?"
---[[Translation missing --]]
-La["Are you sure you want to report all your keys to %s?"] = "Are you sure you want to report all your keys to %s?"
+La["Are you sure you want to report all your keys to %s?"] = "¿Estás seguro de que quieres informar a %s sobre todas tus piedras angulares?"
 La["Are you sure you want to reset the SavedInstances character database? Characters will be re-populated as you log into them."] = "¿Seguro que quieres reiniciar la base de datos de personajes de SavedInstances? Los personajes se añadirán de nuevo cuando entres con ellos."
 La["Attempt to recover completed daily quests for this character. Note this may recover some additional, linked daily quests that were not actually completed today."] = "Tratar de recuperar las misiones diarias ya completadas hoy por este personaje. Esto podría recuperar algunas otras misiones relacionadas que no fueron completadas hoy."
 La["Automatically shrink the tooltip to fit on the screen"] = "Encoger automáticamente la descripción para ajustarla a la pantalla"
@@ -1560,27 +1485,22 @@ La["Color currency by cap"] = "---- \"Show currency max\" is \"Mostrar máximos 
 La["Combine Callings"] = "Combine Callings"
 --[[Translation missing --]]
 La["Combine Emissaries"] = "Combine Emissaries"
---[[Translation missing --]]
-La["Combine emissaries of same expansion"] = "Combine emissaries of same expansion"
+La["Combine emissaries of same expansion"] = "Combinar emisarios de la misma expansión"
 La["Combine LFR"] = "Combinar BdG"
 La["Combine World Bosses"] = "Combinar jefes del mundo"
 La["Connected Realms"] = "Reinos conectados"
---[[Translation missing --]]
-La["Covenant"] = "Covenant"
+La["Covenant"] = "Curia"
 La["Currency settings"] = "Ajustes de moneda"
 --[[Translation missing --]]
 La["Cursed Coffer"] = "Cursed Coffer"
 La["Daily Quests"] = "Misiones diarias"
---[[Translation missing --]]
-La["Day"] = "Day"
---[[Translation missing --]]
-La["Debug Mode"] = "Debug Mode"
+La["Day"] = "Día"
+La["Debug Mode"] = "Modo de depuración"
 La["Disable mouseover"] = "Deshabilitar tooltip"
 La["Disable tooltip display on icon mouseover"] = "Deshabilita el tooltip al pasar el ratón por encima del icono"
 La["Display instances in order of recommended level from lowest to highest"] = "Mostrar instancias en orden de nivel recomendado de menor a mayor"
 La["Display instances with space inserted between categories"] = "Mostrar instancias con espacio entre categorías"
---[[Translation missing --]]
-La["DOS"] = "DOS"
+La["DOS"] = "EOL (DOS)"
 --[[Translation missing --]]
 La["Dragon of Nightmare"] = "Dragon of Nightmare"
 La["Dump quest debugging information"] = "Volcar información de depuración de misión"
@@ -1593,13 +1513,12 @@ La["Emissary Quests"] = "Emissary Quests"
 La["Emissary quests"] = "Emissary quests"
 La["Expansion"] = "Expansión"
 La["Expired Lockout - Can be extended"] = "Registro expirado - puede extenderse"
---[[Translation missing --]]
-La["Export"] = "Export"
+La["Export"] = "Exportar"
 La["Extended Lockout - Not yet saved"] = "Registro extendido - no se ha guardado"
 La["Facets of Research"] = "Facetas de investigación"
 La["Fit to screen"] = "Ajustar a pantalla"
 La["Flex"] = "Flexible"
-La["Format large numbers"] = "Dar formato a números grandes (separar con puntos los millares)"
+La["Format large numbers"] = "Dar formato a números grandes"
 --[[Translation missing --]]
 La["Full Clear + 1 Mask"] = "Full Clear + 1 Mask"
 --[[Translation missing --]]
@@ -1614,10 +1533,8 @@ La["Full Clear + 5 Masks"] = "Full Clear + 5 Masks"
 La["Full Clear No Masks"] = "Full Clear No Masks"
 La["General settings"] = "Opciones generales"
 La["Group"] = "Grupo"
---[[Translation missing --]]
-La["Guild"] = "Guild"
---[[Translation missing --]]
-La["HOA"] = "HOA"
+La["Guild"] = "Hermandad"
+La["HOA"] = "SdE (HOA)"
 La["Hold Alt to show all data"] = "Pulsa Alt para mostrar toda la información"
 La["Hover mouse on indicator for details"] = "Coloca el cursor sobre el indicador para más detalles"
 --[[Translation missing --]]
@@ -1652,35 +1569,26 @@ La["Lord Kazzak"] = "Lord Kazzak"
 La["Manage"] = "Gestionar"
 --[[Translation missing --]]
 La["Mechanized Chest"] = "Mechanized Chest"
-La["Miscellaneous Tracking"] = "Seguimiento misceláneo"
---[[Translation missing --]]
-La["MISTS"] = "MISTS"
+La["Miscellaneous Tracking"] = "Otros seguimientos"
+La["MISTS"] = "NTS (MISTS)"
 --[[Translation missing --]]
 La["Mogu Strongbox"] = "Mogu Strongbox"
 La["Most recent first"] = "Más reciente primero"
---[[Translation missing --]]
-La["Mythic Best"] = "Mythic Best"
---[[Translation missing --]]
-La["Mythic Key Best"] = "Mythic Key Best"
---[[Translation missing --]]
-La["Mythic Keystone"] = "Mythic Keystone"
+La["Mythic Best"] = "Mejor mítica"
+La["Mythic Key Best"] = "Mejor piedra angular mítica"
+La["Mythic Keystone"] = "Piedra angular mítica"
 --[[Translation missing --]]
 La["Nathanos Blightcaller"] = "Nathanos Blightcaller"
 La["Never show"] = "No mostrar nunca"
---[[Translation missing --]]
-La["NW"] = "NW"
+La["NW"] = "EN (NW)"
 La["Opacity of the tooltip row highlighting"] = "Opacidad de los resaltados en las filas de la ventana de información"
 La["Open config"] = "Abrir la configuración"
---[[Translation missing --]]
-La["Order must be a number in [0 - 999]"] = "Order must be a number in [0 - 999]"
+La["Order must be a number in [0 - 999]"] = "Orden debe ser un número en [0 - 999]"
 --[[Translation missing --]]
 La["Paragon Chests"] = "Paragon Chests"
---[[Translation missing --]]
-La["Party"] = "Party"
---[[Translation missing --]]
-La["PF"] = "PF"
---[[Translation missing --]]
-La["Quest progresses"] = "Quest progresses"
+La["Party"] = "Grupo"
+La["PF"] = "BP (PF)"
+La["Quest progresses"] = "Progreso de misiones"
 La["Raids before dungeons"] = "Bandas antes que mazmorras"
 La["Recent Bonus Rolls"] = "Tiradas extra recientes"
 La["Recent Instances"] = "Instancias recientes"
@@ -1690,8 +1598,7 @@ La["Reset Characters"] = "Reiniciar personajes"
 La["Reverse ordering"] = "Invertir orden"
 La["Roll Bonus"] = "Bonos de tirada"
 La["Row Highlight"] = "Resalta de fila"
---[[Translation missing --]]
-La["SD"] = "SD"
+La["SD"] = "CS (SD)"
 La["Set All"] = "Establecer todos"
 --[[Translation missing --]]
 La["Show all emissary names"] = "Show all emissary names"
@@ -1725,35 +1632,30 @@ La["Show server name"] = "Show server name"
 La["Show the SavedInstances minimap button"] = "Mostrar el botón del minimapa de SavedInstances"
 La["Show tooltip hints"] = "Mostrar consejos en descripciones"
 La["Show When"] = "Mostrar cuando"
---[[Translation missing --]]
-La["Show when completed"] = "Show when completed"
+La["Show when completed"] = "Mostrar completadas"
 La["Show when saved"] = "Mostrar si hay registro guardado"
 La["Show/Hide the SavedInstances tooltip"] = "Mostrar/ocultar la ventana de información de SavedInstances"
 La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "Las palabras \"KILLED\" y \"TOTAL\" se reemplazarán por el número de jefes derrotados y el total del registro."
 La["Single category name"] = "Nombre de la categoría individual"
---[[Translation missing --]]
-La["SOA"] = "SOA"
---[[Translation missing --]]
-La["Sort by currency name"] = "Sort by currency name"
+La["SOA"] = "AdA (SOA)"
+La["Sort by currency name"] = "Ordenar por nombre de moneda"
 La["Sort by server"] = "Ordenar por reino"
 La["Sort categories by"] = "Ordenar categorías por"
 La["Sort Order"] = "Establecer orden"
---[[Translation missing --]]
-La["Sorting"] = "Sorting"
+La["Sorting"] = "Ordenar"
 La["Space between categories"] = "Espacio entre categorías"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The World Awaits"] = "El mundo aguarda"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas instancias cuentan para el límite de %i por hora por cuenta, y expirará a la hora indicada."
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Esto sólo debe ser usado para personajes que han sido renombrados o borrados, ya que los personajes serán cargados de nuevo cuando te conectes con los mismos."
 La["Time /played"] = "Tiempo jugado (/played)"
 La["Time Left"] = "Tiempo restante"
 La["Tooltip Scale"] = "Tamaño de la ventana de información"
---[[Translation missing --]]
-La["TOP"] = "TOP"
---[[Translation missing --]]
+La["TOP"] = "TdD (TOP)"
 La["Torghast"] = "Torghast"
+--[[Translation missing --]]
+La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]
@@ -1767,8 +1669,7 @@ La["Use class color"] = "Usar color de clase"
 La["Vision Boss + 2 Bonus Objectives"] = "Vision Boss + 2 Bonus Objectives"
 --[[Translation missing --]]
 La["Vision Boss Only"] = "Vision Boss Only"
---[[Translation missing --]]
-La["Warfronts"] = "Warfronts"
+La["Warfronts"] = "Frentes de guerra"
 --[[Translation missing --]]
 La["Warn about instance limit"] = "Warn about instance limit"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Advertencia: Has entrado en %i estancias recientemente, y te estás acercando al límite de %i estancias por hora para tu cuenta. Tendrás más disponibles después de %s."
@@ -1817,8 +1718,7 @@ La["Combine emissaries of same expansion"] = "合併同資料片的特使"
 La["Combine LFR"] = "合併隨機團隊"
 La["Combine World Bosses"] = "合併世界首領"
 La["Connected Realms"] = "連結伺服器"
---[[Translation missing --]]
-La["Covenant"] = "Covenant"
+La["Covenant"] = "誓盟"
 La["Currency settings"] = "兌換通貨設定"
 --[[Translation missing --]]
 La["Cursed Coffer"] = "Cursed Coffer"
@@ -1947,8 +1847,7 @@ La["Sorting"] = "排序"
 La["Space between categories"] = "分類間距"
 La["Text"] = "文字"
 La["The Four Celestials"] = "四大天尊"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The World Awaits"] = "世界在等著"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "有些副本有每個帳號每小時可進入 %i 個副本和時間的限制，直到時間過為止。"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "這個功能只適用於已經更名或刪除的角色，登入這些角色時會重新擷取資料。"
 La["Time /played"] = "已遊玩時間"
@@ -1956,6 +1855,7 @@ La["Time Left"] = "剩餘時間"
 La["Tooltip Scale"] = "滑鼠提示縮放大小"
 La["TOP"] = "劇場"
 La["Torghast"] = "托迦司"
+La["Tormentors of Torghast"] = "托迦司的折磨者"
 La["Track Mythic keystone acquisition"] = "追蹤獲得的傳奇鑰石"
 La["Track Mythic keystone best run"] = "追蹤傳奇鑰石最佳紀錄"
 La["Trade Skill Cooldowns"] = "專業技能冷卻時間"
@@ -2201,6 +2101,8 @@ La["Tooltip Scale"] = "Escala da janela"
 La["TOP"] = "TOP"
 --[[Translation missing --]]
 La["Torghast"] = "Torghast"
+--[[Translation missing --]]
+La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]
@@ -2459,6 +2361,8 @@ La["Tooltip Scale"] = "Zoom del tooltip"
 La["TOP"] = "TOP"
 --[[Translation missing --]]
 La["Torghast"] = "Torghast"
+--[[Translation missing --]]
+La["Tormentors of Torghast"] = "Tormentors of Torghast"
 --[[Translation missing --]]
 La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
 --[[Translation missing --]]

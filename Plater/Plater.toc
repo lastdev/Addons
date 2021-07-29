@@ -1,9 +1,9 @@
-## Interface: 90005
+## Interface: 90100
 ## Title: Plater
 ## Notes: Nameplate addon designed for advanced users.
 ## SavedVariables: PlaterDB
 ## SavedVariablesPerCharacter: PlaterDBChr
-## Version: Plater-v331.1-Retail
+## Version: Plater-v336-Retail
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 
@@ -41,5 +41,6 @@ Plater_ChangeLog.lua
 Plater_Docs.lua
 Plater_BossModsSupport.lua
 Plater_Animations.lua
+Plater_CastColorPanels.lua
 Plater_Profiling.lua
 #Plater_SpellPrediction.lua

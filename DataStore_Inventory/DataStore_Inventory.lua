@@ -10,7 +10,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
 local commPrefix = "DS_Inv"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
@@ -83,7 +82,7 @@ local function GetMemberKey(guild, member)
 	--	Or it's a guild member ==> point to the guild table
 	local main = DataStore:GetNameOfMain(member)
 	if main and main == UnitName("player") then
-		local key = format("%s.%s.%s", THIS_ACCOUNT, GetRealmName(), member)
+		local key = format("%s.%s.%s", DataStore.ThisAccount, DataStore.ThisRealm, member)
 		return addon.db.global.Characters[key]
 	end
 	return guild.Members[member]
@@ -194,7 +193,7 @@ local function ScanTransmogCollection()
 	local collected, total
 	
 	-- browse all categories
-	for i = 1, DataStore:GetHashSize(Enum.TransmogCollectionType) do
+	for i = 1, DataStore:GetHashSize(Enum.TransmogCollectionType) - 1 do
 		name = C_TransmogCollection.GetCategoryInfo(i)
 		if name then
 			collected = C_TransmogCollection.GetCategoryCollectedCount(i)

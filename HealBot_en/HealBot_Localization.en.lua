@@ -69,10 +69,11 @@ function HealBot_Lang_enALL()
     HEALBOT_ACTION_UNLOCKED                 = "Unlocked";
 
     HEALBOT_OPTIONS_TITLE                   = HEALBOT_HEALBOT;
-    HEALBOT_OPTIONS_DEFAULTS                = "Defaults";
+    HEALBOT_OPTIONS_DEFAULTS                = "Global Defaults";
+    HEALBOT_OPTIONS_LOCALDEFAULTS           = "Local Defaults";
     HEALBOT_OPTIONS_CLOSE                   = "Close";
-    HEALBOT_OPTIONS_HARDRESET               = "ReloadUI"
-    HEALBOT_OPTIONS_SOFTRESET               = "ResetHB"
+    HEALBOT_OPTIONS_HARDRESET               = "Reload UI"
+    HEALBOT_OPTIONS_SOFTRESET               = "Reset HealBot"
     HEALBOT_OPTIONS_COPY                    = "Copy";
     HEALBOT_OPTIONS_TAB_GENERAL             = "General";
     HEALBOT_OPTIONS_TAB_SPELLS              = "Spells";
@@ -247,7 +248,7 @@ function HealBot_Lang_enALL()
     HEALBOT_TOOLTIP_RECOMMENDTEXT           = "Heal over time Recommendation";
     HEALBOT_TOOLTIP_NONE                    = "none available";
     HEALBOT_TOOLTIP_CORPSE                  = "Corpse of ";
-    HEALBOT_TOOLTIP_CD                      = " (CD ";
+    HEALBOT_TOOLTIP_CD                      = "  (";
     HEALBOT_TOOLTIP_SECS                    = " sec)";
     HEALBOT_TOOLTIP_MINS                    = " min)";
     HEALBOT_WORDS_SMALL                     = "Small"
@@ -299,7 +300,8 @@ function HealBot_Lang_enALL()
     HEALBOT_EIGHT                           = "8";
 
     HEALBOT_OPTIONS_SETDEFAULTS             = "Set defaults";
-    HEALBOT_OPTIONS_SETDEFAULTSMSG          = "Reset all options to default values";
+    HEALBOT_OPTIONS_SETDEFAULTSMSG          = "Reset all options on all characters\nto default values";
+    HEALBOT_OPTIONS_SETLOCALDEFAULTSMSG     = "Reset spells/buffs/debuffs for this character\nto default values";
     HEALBOT_OPTIONS_RIGHTBOPTIONS           = "Right click opens options";
 
     HEALBOT_OPTIONS_BARHEADEROPTTEXT        = "Bar Header options";
@@ -879,6 +881,7 @@ function HealBot_Lang_enALL()
     HEALBOT_EXTRASKINS_CAT_GROUP            = "Group"
     HEALBOT_EXTRASKINS_CAT_SRAID            = "Small Raid"
     HEALBOT_EXTRASKINS_CAT_LRAID            = "Large Raid"
+    HEALBOT_MACRO                           = "Macro"
     HEALBOT_EMOTE                           = "Emote"
     HEALBOT_EMOTE_CAT_COMBAT                = "Combat"
     HEALBOT_EMOTE_CAT_EMOTION               = "Emotion"
@@ -1036,6 +1039,7 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_TIMETOLIVE               = "HealBot TimeToLive"
     HEALBOT_PLUGIN_EXTRABUTTONS             = "HealBot ExtraButtons"
     HEALBOT_PLUGIN_COMBATPROT               = "HealBot CombatProt"
+    HEALBOT_PLUGIN_PERFORMANCE              = "HealBot Performance"
     HEALBOT_PLUGIN_QUICKSET                 = "HealBot QuickSet"
     HEALBOT_PLUGIN_EFFECTIVETANKS           = "HealBot EffectiveTanks"
     HEALBOT_PLUGIN_EFFICIENTHEALERS         = "HealBot EfficientHealers"

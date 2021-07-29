@@ -29,5 +29,4 @@
         description="BINDING_DESC_VENDORRULES" category="BINDING_CATEGORY_VENDOR">
         VendorRulesDialog:Toggle()
     </Binding>
-    
 </Bindings>

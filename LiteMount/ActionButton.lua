@@ -2,7 +2,7 @@
 
   LiteMount/ActionButton.lua
 
-  A SecureActionButton to call mount actions based on an action list.
+  A SecureActionButton to call mount rules based on an action list.
 
   Fancy SecureActionButton stuff. The default button mechanism is
   type="macro" macrotext="...". If we're not in combat we
@@ -22,41 +22,14 @@ local L = LM.Localize
 
 LM.ActionButton = { }
 
-function LM.ActionButton:Dispatch(action, env)
-
-    local isTrue
-    isTrue, env.unit = LM.Conditions:Eval(action.conditions)
-
-    local handler = LM.Actions:GetFlowControlHandler(action.action)
-    if handler then
-        LM.Debug("Dispatching flow control action " .. action.line)
-        handler(action.args or {}, env, isTrue)
-        return
-    end
-
-    if not isTrue or LM.Actions:IsFlowSkipped(env) then
-        return
-    end
-
-    handler = LM.Actions:GetHandler(action.action)
-    if not handler then
-        LM.WarningAndPrint(format(L.LM_ERR_BAD_ACTION, action.action))
-        return
-    end
-
-    LM.Debug("Dispatching action " .. action.line)
-
-    local act = handler(action.args or {}, env)
-    if act then
-        act:SetupActionButton(self)
-        return true
-    end
-end
-
-function LM.ActionButton:CompileActions()
+function LM.ActionButton:CompileRules()
     local actionList = LM.Options:GetButtonAction(self.id)
-    self.actions = LM.ActionList:Compile(actionList)
+    self.rules = LM.Rules:Compile(actionList)
 end
+
+-- mouseButton here is not real, because only LeftButton comes through the
+-- keybinding interface. But, you can pass arbitrary text as this argument
+-- with the /click slash command. E.g., /click LM_B1 blah
 
 function LM.ActionButton:PreClick(mouseButton)
 
@@ -73,20 +46,24 @@ function LM.ActionButton:PreClick(mouseButton)
         self.globalEnv.randomTime = GetTime()
     end
 
-    -- New sub-environment for this run
-    local subEnv = CopyTable(self.globalEnv)
-
     -- Set up the fresh run environment for a new run.
+    local subEnv = CopyTable(self.globalEnv)
     subEnv.filters = { { } }
     subEnv.flowControl = { }
+    subEnv.clickArg = mouseButton
 
-    for _,a in ipairs(self.actions) do
-        if self:Dispatch(a, subEnv) then
+    for _,rule in ipairs(self.rules) do
+        subEnv.unit = nil
+        local act = LM.Rules:Dispatch(rule, subEnv)
+        if act then
+            act:SetupActionButton(self)
             return
         end
     end
 
-    self:Dispatch({ action="CantMount", line="" }, subEnv)
+    local handler = LM.Actions:GetHandler('CantMount')
+    local act = handler()
+    act:SetupActionButton(self)
 end
 
 function LM.ActionButton:PostClick()
@@ -117,11 +94,11 @@ function LM.ActionButton:Create(n)
     -- So we can look up action lists in LM.Options
     b.id = n
 
-    -- Global actions environment
-    b.globalEnv = { }
+    -- Global environment
+    b.globalEnv = { id = n }
 
     -- Button-fu
-    b:CompileActions()
+    b:CompileRules()
 
     b:RegisterForClicks("AnyDown")
 
@@ -130,4 +107,13 @@ function LM.ActionButton:Create(n)
     b:SetScript("PostClick", self.PostClick)
 
     return b
+end
+
+function LM.ActionButton:HasApplyRules()
+    for _,r in ipairs(self.rules) do
+        if r.action == 'ApplyRules' then
+            return true
+        end
+    end
+    return false
 end

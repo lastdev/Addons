@@ -14,6 +14,38 @@ How to support Altoholic's development :
 
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
+
+9.1.001 (01/07/2021)
+
+- DataStore_Inventory : fixed a Lua error when scanning transmog collections.
+- DataStore_Reputations : Added new 9.1 factions.
+- Characters Tab : Fixed a Lua error when viewing the sanctum reservoir.
+- Summary Tab - Covenant Sanctum : Fixed an error in the reporting of the campaign progress.
+
+Note: Updates have been slow lately, but for a good reason :)
+In the past months, aside from working on the TBC version, I have also been working on revamping the UI.
+Suffice to say that it has been a tremendous effort, and that there is still quite some work to do, but as I start playing with it, I really enjoy
+the results and the improvements. Let's just say that the whole thing will be less rigid than it was.
+
+I am also working on removing all the old legacy code, some of which practically dates back to the very first versions of the add-on.
+At the end, it's close to a full rewrite. 
+As you may expect, I am taking my time to do things right, and strengthening the code everywhere I can, while improving the UI at the same time.
+When I am satisfied with the results, and getting closer to a release, I will be posting pictures on the Discord Server.
+
+Join us on : https://discord.gg/J7JnuQV
+
+
+9.0.010 (14/05/2021)
+
+- Summary Tab - Miscellaneous : Fixed guild info not properly reset when leaving a guild
+- Summary Tab - Added a faction filter for "this faction"
+- Summary Tab - Currencies : changed the columns to show Shadowlands currencies.
+- Fixed a Search issue related to the localized faction name. enUS & frFR clients were not affected, but most likely all other locales were.
+This is a proper fix to a bug I tried to fix earlier but only made worse :(
+Unfortunately, for some of you, reloading alts will be necessary. 
+Do not fully clean your SV files, but if you detect something fishy related to an alt's faction, just reload it.
+This issue may impact faction filtering in the account summary too. 
+
 9.0.009b (03/05/2021)
 
 - Minor bug fix in core.lua
@@ -56,6 +88,7 @@ Just head to the auction house, and browse the trade goods, it should give you a
 Reconnecting your alts is necessary. Players using English clients are unaffected.
 - DataStore_Characters : Fixed the reported faction name for languages other than English (this is related to the previous line). This could cause Alliance characters to be reported as Horde. But fear not, the Alliance had not been infiltrated by the Horde !
 - Summary Tab => Added a panel for the mythic keystones.
+
 
 9.0.006d (22/02/2021)
 

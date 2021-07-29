@@ -1,6 +1,6 @@
-## Interface: 90005
+## Interface: 90100
 ## Title: LiteMount
-## Version: 9.0.34
+## Version: 9.1.10
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## OptionalDependencies: LibDebug
@@ -11,6 +11,7 @@ Libs\embeds.xml
 Localization.lua
 
 AutoEventFrame.lua
+TableUtil.lua
 Print.lua
 
 #@debug@
@@ -37,7 +38,7 @@ SlashCommand.lua
 Conditions.lua
 Vars.lua
 Actions.lua
-ActionList.lua
+Rules.lua
 ActionButton.lua
 Core.lua
 

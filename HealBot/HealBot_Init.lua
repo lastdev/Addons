@@ -20,6 +20,18 @@ function HealBot_Init_retFoundHealSpells()
     return HealBot_KnownHeal_Names
 end
 
+function HealBot_Init_knownClassicHealSpell(sName)
+    return HealBot_KnownHeal_Names[sName]
+end
+
+function HealBot_Init_ClassicHealSpellMaxRank(sName)
+    if HealBot_Spell_Ranks[sName] then
+        return HealBot_Spell_Ranks[sName][0]
+    else
+        return 0
+    end
+end
+
 local cRank=false
 function HealBot_Init_FindSpellRangeCast(id, spellName, spellBookId)
 
@@ -64,9 +76,9 @@ function HealBot_Init_Spells_addSpell(spellId, spellName, spellBookId)
     if not skipSpells[spellName] then
         if HealBot_Init_FindSpellRangeCast(spellId, spellName, spellBookId) then
             if cRank then
-				if HealBot_Heal_Names[spellName] then 
-					local rank=tonumber(string.match(cRank, "%d")) or 0
-					if rank>0 then
+                local rank=tonumber(string.match(cRank, "%d+")) or 0
+                if rank>0 then
+                    if HealBot_Heal_Names[spellName] then 
 						HealBot_KnownHeal_Names[spellName]=true
 						if not HealBot_Spell_Ranks[spellName] then 
 							HealBot_Spell_Ranks[spellName]={} 
@@ -79,10 +91,7 @@ function HealBot_Init_Spells_addSpell(spellId, spellName, spellBookId)
 							end
 						end
 						spellName=strtrim(spellName).."("..cRank..")"
-					end
-				elseif HealBot_Buff_Names[spellName] then
-					local rank=tonumber(string.match(cRank, "%d")) or 0
-					if rank>0 then
+                    elseif HealBot_Buff_Names[spellName] then
 						if not HealBot_Buff_Ranks[spellName] then 
 							HealBot_Buff_Ranks[spellName]={} 
 							HealBot_Buff_Ranks[spellName][0]=1
@@ -93,8 +102,8 @@ function HealBot_Init_Spells_addSpell(spellId, spellName, spellBookId)
 								HealBot_Buff_Ranks[spellName][0]=rank
 							end
 						end
-					end
-				end
+                    end
+                end
 			end
             HealBot_Spell_IDs[spellId].name=spellName
             HealBot_Spell_IDs[spellId].known=IsSpellKnown(spellId)
@@ -216,4 +225,11 @@ function HealBot_Init_SmartCast()
         if HealBot_Spell_IDs[HEALBOT_ANCESTRAL_VISION] then SmartCast_MassRes=HealBot_Spell_IDs[HEALBOT_ANCESTRAL_VISION].name end
         if HealBot_Spell_IDs[HEALBOT_ANCESTRALSPIRIT] then SmartCast_Res=HealBot_Spell_IDs[HEALBOT_ANCESTRALSPIRIT].name end
     end
+    local massResNames={}
+    if GetSpellInfo(HEALBOT_RESURRECTION) then massResNames[GetSpellInfo(HEALBOT_RESURRECTION)]=true end
+    if GetSpellInfo(HEALBOT_REVITALIZE) then massResNames[GetSpellInfo(HEALBOT_REVITALIZE)]=true end
+    if GetSpellInfo(HEALBOT_REAWAKEN) then massResNames[GetSpellInfo(HEALBOT_REAWAKEN)]=true end
+    if GetSpellInfo(HEALBOT_ABSOLUTION) then massResNames[GetSpellInfo(HEALBOT_ABSOLUTION)]=true end
+    if GetSpellInfo(HEALBOT_ANCESTRAL_VISION) then massResNames[GetSpellInfo(HEALBOT_ANCESTRAL_VISION)]=true end
+    HealBot_setHealBot_MassResNames(massResNames)
 end

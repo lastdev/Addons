@@ -1,4 +1,4 @@
-﻿## Interface: 90005
+## Interface: 90100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Cataclysm)|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Groupe-Cataclysm|r
@@ -40,11 +40,11 @@
 ## X-DBM-Mod-Sort: 815
 ## X-DBM-Mod-MapID: 755,645,36,670,644,33,643,725,657,309,859,568,938,940,939,1,0,646
 ## X-DBM-Mod-LoadCID: 50063,50056,50089,50009,50061
-## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinCoreRevision: 20210721040757
 ## X-DBM-Mod-MinExpansion: 3
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r24
+## Version: r26
 
 localization.en.lua
 localization.de.lua

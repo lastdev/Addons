@@ -91,7 +91,7 @@ ns.RegisterPoints(1565, { -- Ardenweald
     },
     [76602970] = {
         achievement=14313, criteria=50034, -- Swollen Anima Seed
-        quest=62186,
+        quest=58013,
         loot={
             {182730, quest=62186}, -- Swollen Anima Seed
         },
@@ -143,6 +143,7 @@ ns.RegisterPoints(1565, { -- Ardenweald
 local vulpin = {
     achievement=14313, criteria=50038, -- Playful Vulpin Befriended
     quest=61086, -- also 61080, 61081, 61084, 61085 for progress
+    progress={61080, 61081, 61084, 61085, 61086},
     loot={
         {180645, pet=2905}, -- Dodger
     },
@@ -188,7 +189,7 @@ local travel = {criteria=50015,onquest=62622,inbag=183880,loot={{183880,quest=62
 local naughty = {criteria=50016,onquest=62623,inbag=183881,loot={{183881,quest=62623}},}
 ns.RegisterPoints(1565, {
     [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him"},
-    [56054040] = meandering,
+    [54604300] = meandering,
     [30004480] = wandering,
     [35602680] = wandering,
     [36104870] = wandering, -- (36404800 is more accurate, but overlaps Macabre)
@@ -426,8 +427,8 @@ ns.RegisterPoints(1565, {
     -- Ardenweald's a Stage:
     [41254445] = {
         achievement=14353, criteria={
-            48708, -- Argus
-            48709, -- Azshara
+            48708, -- Argus (quest: 61202)
+            48709, -- Azshara (quest: 61201)
             48706, -- Gul'dan (quest: 61204)
             48704, -- Jaina
             48707, -- Kil'jaeden (quest: 61203)

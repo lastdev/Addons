@@ -1,34 +1,28 @@
-tag 9f051e2b2fe830089dea4f803fce5848e9f94b96 9.0.34
+tag 9907e007e6ce7075ca8d8f25f65e30d4acc7772d 9.1.10
 Author:	Mike "Xodiv" Battersby <mib@post.com>
-Date:	Sun May 30 14:52:36 2021 +1000
+Date:	Sun Jul 11 19:50:32 2021 +1000
 
-LiteMount 9.0.34
- - Add Warp Stalker family
- - Add Viridian Phase-Hunter to Walp Stalker family
- - Don't print warning about missing family unless you're me
+LiteMount 9.1.10
 
-commit 9bfea6ce820cf263364d69ce807865ba18182a0c
+ - Fix covenant test with no covenant in advanced action list
+ - Add Covenant to rules conditions
+ - Add localized names for Covenant (fingers crossed)
+
+commit 78f7db800bb01be805eb49f85c94f91fe2cef045
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun May 30 14:47:59 2021 +1000
+Date:   Sun Jul 11 19:49:06 2021 +1000
 
-    Import localizations
+    Add covenants to the rules condition drop-down
 
-commit 6f82d081e0ed8196574ec3de30d1c5f5643f639c
+commit ad1109bc363fcd51e7bd469583a8ab8d0adb23fb
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun May 30 14:33:34 2021 +1000
+Date:   Sun Jul 11 19:48:44 2021 +1000
 
-    Warp Stalker is two words.
+    Import "Covenant" localizations
 
-commit 5a3e1e3df1bec056374ce1244eff7d59e5533587
+commit 9725463025b6bc3bdc93f540f8f06124c76b360d
 Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun May 30 14:29:17 2021 +1000
+Date:   Sun Jul 11 19:32:25 2021 +1000
 
-    Add WarpStalker family and Viridian Phase-Hunter
-
-commit 812a2253e904bbd0ca4aaba7f60fe521fbecd55f
-Author: Mike "Xodiv" Battersby <mib@post.com>
-Date:   Sun Mar 21 12:12:54 2021 +1000
-
-    Don't bug everyone about missing family. Hopefully I will notice
-    by myself
+    Bug fix for covenant test with no covenant (#58)
 

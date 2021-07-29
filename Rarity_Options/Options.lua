@@ -72,13 +72,10 @@ local classes = {
 	["WARRIOR"] = "|c" .. RAID_CLASS_COLORS["WARRIOR"]["colorStr"] .. L["Warrior"] .. "|r"
 }
 
-local red = {r = 1.0, g = 0.2, b = 0.2}
-local blue = {r = 0.4, g = 0.4, b = 1.0}
-local green = {r = 0.2, g = 1.0, b = 0.2}
-local yellow = {r = 1.0, g = 1.0, b = 0.2}
-local gray = {r = 0.5, g = 0.5, b = 0.5}
-local black = {r = 0.0, g = 0.0, b = 0.0}
-local white = {r = 1.0, g = 1.0, b = 1.0}
+local red = Rarity.Enum.Colors.Red
+local blue = Rarity.Enum.Colors.Blue
+local green = Rarity.Enum.Colors.Green
+local yellow = Rarity.Enum.Colors.Yellow
 
 local IMPORTEXPORT_SIGNATURE = "RFI2PD4jOjJ0NntgInc/ZA=="
 
@@ -149,13 +146,7 @@ local function formatItem(item)
 	return s
 end
 
-local function colorize(s, color)
-	if color and s then
-		return string.format("|cff%02x%02x%02x%s|r", (color.r or 1) * 255, (color.g or 1) * 255, (color.b or 1) * 255, s)
-	else
-		return s
-	end
-end
+local colorize = Rarity.Utils.String.Colorize
 
 local function compareName(a, b)
 	if not a or not b then
@@ -264,9 +255,9 @@ local function enc64(data)
 	return ((data:gsub(
 		".",
 		function(x)
-			local r, b = "", x:byte()
+			local r, byte = "", x:byte()
 			for i = 8, 1, -1 do
-				r = r .. (b % 2 ^ i - b % 2 ^ (i - 1) > 0 and "1" or "0")
+				r = r .. (byte % 2 ^ i - byte % 2 ^ (i - 1) > 0 and "1" or "0")
 			end
 			return r
 		end
@@ -325,6 +316,9 @@ end
 -- PRIMARY OPTIONS TABLE
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- Rarity API
+local Output = Rarity.Output
+
 function R:PrepareOptions()
 	self.options = {
 		name = function()
@@ -346,6 +340,32 @@ function R:PrepareOptions()
 				order = newOrder(),
 				childGroups = "tree",
 				args = {
+					community = {
+						type = "group",
+						name = L["Community"],
+						order = newOrder(),
+						inline = true,
+						args = {
+							github = {
+								type = "execute",
+								name = L["Contribute on GitHub"],
+								desc = L["You can follow the development process or contribute to the project on our public GitHub repository. What could be more fun than browsing a gigantic backlog of unresolved issues?"],
+								func = function(info)
+									Rarity.CopyPastePopup:SetEditBoxText("https://github.com/WowRarity/Rarity")
+									Rarity.CopyPastePopup:Show()
+								end,
+							},
+							discord = {
+								type = "execute",
+								name = L["Join the Rarity Discord"],
+								desc = L["You can ask questions, follow the latest Rarity news and share the excitement of finally getting that one elusive drop with your fellow collectors in our Discord server.\n\nPS: We have cookies."],
+								func = function(info)
+									Rarity.CopyPastePopup:SetEditBoxText("https://discord.gg/sQ3UqtSh6m")
+									Rarity.CopyPastePopup:Show()
+								end,
+							}
+						}
+					},
 					general = {
 						type = "group",
 						name = L["General Options"],
@@ -693,7 +713,7 @@ function R:PrepareOptions()
 							tooltipShowDelay = {
 								order = newOrder(),
 								type = "range",
-				 				width = "double",
+								width = "double",
 								name = L["Primary tooltip show delay"],
 								desc = L["When you move your mouse over the Rarity minimap icon, it will take this long before the GUI opens."],
 								min = 0,
@@ -701,7 +721,7 @@ function R:PrepareOptions()
 								step = .1,
 								get = function() return self.db.profile.tooltipShowDelay or 0.1 end,
 								set = function(_, val)
-				  				self.db.profile.tooltipShowDelay = val
+								self.db.profile.tooltipShowDelay = val
 								end,
 							}
 						} -- args
@@ -1176,7 +1196,7 @@ function R:PrepareOptions()
 									self.db.profile.onlyAnnounceFound = val
 								end
 							},
-							output = self:GetSinkAce3OptionsDataTable()
+							output = Output:GetOptionsTable()
 						} -- args
 					} -- announcements
 				} -- args
@@ -1503,7 +1523,7 @@ function R:PrepareOptions()
 
 							alertWithCopy(
 								L[
-									"Copy the generated Rarity Item Pack string below using Ctrl-C. You can then paste it elsewhere using Ctrl-V.\n\nFeel free to comment on the Curse web site to share your Item Pack. Allara will promote the best ones to the main add-on page."
+									"Copy the generated Rarity Export String below using Ctrl-C. You can then paste it elsewhere using Ctrl-V.\n\nFeel free to post it on Curse, GitHub, or Discord to share your Item Pack. We will publish the best ones to the main add-on page."
 								],
 								enc
 							)
@@ -1659,6 +1679,45 @@ function R:PrepareOptions()
 						end
 					}
 				}
+			},
+			profilingTools = {
+				name = L["Performance"],
+				type = "group",
+				order = newOrder(),
+				inline = true,
+				args = {
+					disableSorting = {
+						type = "execute",
+						order = newOrder(),
+						-- width = "full",
+						name = L["Disable sorting"],
+						desc = L["Disable sorting inside the main window. Can be used to troubleshoot performance issues."] ..
+							" " .. L["Note: Your existing settings will be overwritten."],
+						func = function(info, val)
+							self.db.profile.sortMode = C.SORT_METHODS.SORT_NONE
+						end
+					},
+					showAccumulatedTimes = {
+						type = "execute",
+						order = newOrder(),
+						-- width = "full",
+						name = L["Show profiling data"],
+						desc = L["Displays accumulated profiling data for the current session."] .. " " ..  L["This is merely a shortcut introduced to make life easier for developers, and as a regular player you can safely ignore it."],
+						func = function(info, val)
+							Rarity.Profiling:InspectAccumulatedTimes()
+						end
+					},
+					resetAccumulatedTimes = {
+						type = "execute",
+						order = newOrder(),
+						-- width = "full",
+						name = L["Reset profiling data"],
+						desc = L["Deletes accumulated profiling data for the current session."] .. " " ..  L["This is merely a shortcut introduced to make life easier for developers, and as a regular player you can safely ignore it."],
+						func = function(info, val)
+							Rarity.Profiling:ResetAccumulatedTimes()
+						end
+					},
+				}
 			}
 		}
 	}
@@ -1788,6 +1847,23 @@ function R:CreateGroup(options, group, isUser)
 					order = newOrder(),
 					name = item.sourceText or "",
 					hidden = item.sourceText == nil or item.sourceText == ""
+				},
+				currentAttemptsDesc = {
+					type = "description",
+					order = newOrder(),
+					name = colorize(L["Current Attempts"] .. ": ", green) .. tostring((item.attempts or 0) - (item.lastAttempts or 0))
+				},
+				lastAttemptsDesc = {
+					type = "description",
+					order = newOrder(),
+					name = colorize(L["Last Obtained In"] .. ": ", green) .. tostring(item.lastAttempts or 0),
+					hidden = (item.lastAttempts or 0) == 0
+				},
+				totalAttemptsDesc = {
+					type = "description",
+					order = newOrder(),
+					name = colorize(L["Total Attempts"] .. ": ", green) .. tostring(item.attempts or 0),
+					hidden = (item.lastAttempts or 0) == 0
 				},
 				worldBossFactionless = {
 					type = "description",

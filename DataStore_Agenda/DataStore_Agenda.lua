@@ -11,8 +11,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
-
 local AddonDB_Defaults = {
 	global = {
 		Options = {
@@ -49,7 +47,8 @@ end
 
 -- *** Scanning functions ***
 local function ScanContacts()
-	local contacts = addon.ThisCharacter.Contacts
+	local character = addon.ThisCharacter
+	local contacts = character.Contacts
 
 	local oldValues = {}
 
@@ -83,11 +82,12 @@ local function ScanContacts()
 		end
 	end
 
-	addon.ThisCharacter.lastUpdate = time()
+	character.lastUpdate = time()
 end
 
 local function ScanDungeonIDs()
-	local dungeons = addon.ThisCharacter.DungeonIDs
+	local character = addon.ThisCharacter
+	local dungeons = character.DungeonIDs
 	wipe(dungeons)
 
 	for i = 1, GetNumSavedInstances() do
@@ -105,6 +105,8 @@ local function ScanDungeonIDs()
 			dungeons[key] = format("%s|%s|%s|%s", instanceReset, time(), extended, isRaid )
 		end
 	end
+	
+	character.lastUpdate = time()
 end
 
 local function ScanLFGDungeon(dungeonID)

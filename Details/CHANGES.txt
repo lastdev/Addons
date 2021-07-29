@@ -1,28 +1,16 @@
-tag f6878036da75dda78d50c13578cc18385f1a4815 DetailsRetail.9.0.5.8516.144
+tag 393a436ace1a703f50a50d26e6a7c32254c373aa DetailsRetail.9.1.0.8722.145
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon May 31 15:40:31 2021 -0300
+Date:	Thu Jul 15 12:02:32 2021 -0300
 
-commit 361264a5f432c9fda2f52698c4daa0d0c2601e43
+commit 10b1c14f2d0aa86e799b51ba19cecb68613b8856
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon May 31 15:39:20 2021 -0300
+Date:   Thu Jul 15 12:02:07 2021 -0300
 
-    Version stuff
+    Fixed Spikeball damage taken
 
-commit 3374a15932e8307b32dd497a0f316fc3faa821ad
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Mon May 31 13:15:20 2021 -0500
-
-    Tiny Threat Resizing Fixes
-
-commit 3374a15932e8307b32dd497a0f316fc3faa821ad
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Mon May 31 13:15:20 2021 -0500
-
-    Tiny Threat Resizing Fixes
-
-commit 4b6c229d8b93f2aeaa6442f286b9258469ca4cd1
+commit 37b7687d5fb56802cbb8038dfca5582ef844b06c
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat May 29 20:02:17 2021 -0300
+Date:   Wed Jul 14 23:36:16 2021 -0300
 
-    Old Twitch strings fixed, bar border updated to the new framework border
+    Rewrite on the Painsmith's Spikeball handler
 

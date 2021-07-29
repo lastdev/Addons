@@ -74,7 +74,14 @@ function RSNotes.GetNote(entityID, mapID)
 	-- Requires 4 people to summon NPCs
 	elseif (RSUtils.Contains(RSConstants.FOUR_PEOPLE_NPCS, entityID)) then
 		return AL["NOTE_FOUR_PEOPLE_NPCS"]
+	-- Requires entering the rift
+	elseif (RSUtils.Contains(RSConstants.RIFT_NPCS, entityID)) then
+		return AL["NOTE_RIFT_NPCS"]
+	-- Requires entering the rift in the maw
+	elseif (RSUtils.Contains(RSConstants.RIFT_NPCS_MAW, entityID)) then
+		return AL["NOTE_RIFT_NPCS_MAW"]
 	end
+	
 	-- Rune of constructs Containers
 	if (RSUtils.Contains(RSConstants.RUNE_CONSTRUCTS_CONTAINERS, entityID)) then
 		return AL["NOTE_RUNE_CONSTRUCTS_CONTAINERS"]
@@ -93,6 +100,12 @@ function RSNotes.GetNote(entityID, mapID)
 	-- Ripe purian Containers
 	elseif (RSUtils.Contains(RSConstants.RIPE_PURIAN_CONTAINERS, entityID)) then
 		return AL["NOTE_RIPE_PURIAN_CONTAINERS"]
+	-- Rift hidden containers
+	elseif (RSUtils.Contains(RSConstants.RIFT_HIDDEN_ENTITIES, entityID)) then
+		return AL["NOTE_RIFT_HIDDEN_CONTAINERS"]
+	-- Korthia caches found by Swagsnout gromit
+	elseif (RSUtils.Contains(RSConstants.CACHEs_SWAGSNOUT_GROMIT, entityID)) then
+		return AL["NOTE_CACHEs_SWAGSNOUT_GROMIT"]
 	end
 	
 end

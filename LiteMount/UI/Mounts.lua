@@ -12,16 +12,6 @@ local _, LM = ...
 
 local L = LM.Localize
 
-local NUM_FLAG_BUTTONS = 5
-
-local function tslice(t, first, last)
-    local out = { }
-    for i = first or 1, last or #t do
-        tinsert(out, t[i])
-    end
-    return out
-end
-
 --[[--------------------------------------------------------------------------]]--
 
 LiteMountPriorityMixin = {}
@@ -51,8 +41,8 @@ end
 function LiteMountPriorityMixin:Set(v)
     local mount = self:GetParent().mount
     if mount then
-        LM.Options:SetPriority(mount, v or LM.Options.DEFAULT_PRIORITY)
         LiteMountMountsPanel.MountScroll.isDirty = true
+        LM.Options:SetPriority(mount, v or LM.Options.DEFAULT_PRIORITY)
     end
 end
 
@@ -71,18 +61,18 @@ function LiteMountPriorityMixin:Decrement()
 end
 
 function LiteMountPriorityMixin:OnEnter()
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:ClearLines()
-    GameTooltip:AddLine(L.LM_PRIORITY)
+    LiteMountTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    LiteMountTooltip:ClearLines()
+    LiteMountTooltip:AddLine(L.LM_PRIORITY)
     for _,p in ipairs(LM.UIFilter.GetPriorities()) do
         local t, d = LM.UIFilter.GetPriorityText(p)
-        GameTooltip:AddLine(t .. ' - ' .. d)
+        LiteMountTooltip:AddLine(t .. ' - ' .. d)
     end
-    GameTooltip:Show()
+    LiteMountTooltip:Show()
 end
 
 function LiteMountPriorityMixin:OnLeave()
-    GameTooltip:Hide()
+    LiteMountTooltip:Hide()
 end
 
 --[[--------------------------------------------------------------------------]]--
@@ -91,8 +81,8 @@ LiteMountAllPriorityMixin = {}
 
 function LiteMountAllPriorityMixin:Set(v)
     local mounts = LM.UIFilter.GetFilteredMountList()
-    LM.Options:SetPriorities(mounts, v or LM.Options.DEFAULT_PRIORITY)
     LiteMountMountsPanel.MountScroll.isDirty = true
+    LM.Options:SetPriorities(mounts, v or LM.Options.DEFAULT_PRIORITY)
 end
 
 function LiteMountAllPriorityMixin:Get()
@@ -120,29 +110,25 @@ LiteMountFlagBitMixin = {}
 function LiteMountFlagBitMixin:OnClick()
     local mount = self:GetParent().mount
 
+    LiteMountMountsPanel.MountScroll.isDirty = true
     if self:GetChecked() then
         LM.Options:SetMountFlag(mount, self.flag)
     else
         LM.Options:ClearMountFlag(mount, self.flag)
     end
-    LiteMountMountsPanel.MountScroll.isDirty = true
 end
 
 function LiteMountFlagBitMixin:OnEnter()
     if self.flag then
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        if self.flag == "FAVORITES" then
-            GameTooltip:SetText("Blizzard " .. L[self.flag])
-        else
-            GameTooltip:SetText(L[self.flag])
-        end
-        GameTooltip:Show()
+        LiteMountTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        LiteMountTooltip:SetText(L[self.flag])
+        LiteMountTooltip:Show()
     end
 end
 
 function LiteMountFlagBitMixin:OnLeave()
-    if GameTooltip:GetOwner() == self then
-        GameTooltip:Hide()
+    if LiteMountTooltip:GetOwner() == self then
+        LiteMountTooltip:Hide()
     end
 end
 
@@ -156,20 +142,14 @@ function LiteMountFlagBitMixin:Update(flag, mount)
         self:Show()
     end
 
-    local cur = mount:CurrentFlags()
+    local cur = mount:GetFlags()
 
     self:SetChecked(cur[flag] or false)
 
-    if flag == "FAVORITES" then
-        self.Modified:Show()
-        self.Modified:SetDesaturated(true)
-        self:Disable()
-    else
-        -- If we changed this from the default then color the background
-        self.Modified:SetShown(mount.flags[flag] ~= cur[flag])
-        self.Modified:SetDesaturated(false)
-        self:Enable()
-    end
+    -- If we changed this from the default then color the background
+    self.Modified:SetShown(mount.flags[flag] ~= cur[flag])
+    self.Modified:SetDesaturated(false)
+    self:Enable()
 end
 
 --[[--------------------------------------------------------------------------]]--
@@ -178,13 +158,12 @@ LiteMountMountIconMixin = {}
 
 function LiteMountMountIconMixin:OnEnter()
     local m = self:GetParent().mount
-    LM.ShowMountTooltip(self, m)
+    LiteMountTooltip:SetOwner(self, "ANCHOR_RIGHT", 8)
+    LiteMountTooltip:SetMount(m, true)
 end
 
 function LiteMountMountIconMixin:OnLeave()
-    LM.HideMountTooltip()
-    LiteMountPreview:Hide()
-    GameTooltip:Hide()
+    LiteMountTooltip:Hide()
 end
 
 function LiteMountMountIconMixin:PreClick(mouseButton)
@@ -215,7 +194,7 @@ end
 
 LiteMountMountButtonMixin = {}
 
-function LiteMountMountButtonMixin:Update(pageFlags, mount)
+function LiteMountMountButtonMixin:Update(bitFlags, mount)
     self.mount = mount
     self.Icon:SetNormalTexture(mount.icon)
     self.Name:SetText(mount.name)
@@ -226,7 +205,7 @@ function LiteMountMountButtonMixin:Update(pageFlags, mount)
 
     local i = 1
     while self["Bit"..i] do
-        self["Bit"..i]:Update(pageFlags[i], mount)
+        self["Bit"..i]:Update(bitFlags[i], mount)
         i = i + 1
     end
 
@@ -259,9 +238,7 @@ LiteMountMountScrollMixin = {}
 -- are size 0x0 on create and even after OnShow, we have to trap
 -- OnSizeChanged on the scrollframe to make the buttons correctly.
 function LiteMountMountScrollMixin:CreateMoreButtons()
-    HybridScrollFrame_CreateButtons(self, "LiteMountMountButtonTemplate",
-                                    0, -1, "TOPLEFT", "TOPLEFT",
-                                    0, -1, "TOP", "BOTTOM")
+    HybridScrollFrame_CreateButtons(self, "LiteMountMountButtonTemplate")
 end
 
 function LiteMountMountScrollMixin:OnLoad()
@@ -273,7 +250,6 @@ end
 function LiteMountMountScrollMixin:OnSizeChanged()
     self:CreateMoreButtons()
     self:Update()
-    self.stepSize = self.buttonHeight
 end
 
 function LiteMountMountScrollMixin:Update()
@@ -287,14 +263,13 @@ function LiteMountMountScrollMixin:Update()
 
     local offset = HybridScrollFrame_GetOffset(self)
 
-
     local mounts = LM.UIFilter.GetFilteredMountList()
 
     for i = 1, #self.buttons do
         local button = self.buttons[i]
         local index = offset + i
         if index <= #mounts then
-            button:Update(LiteMountMountsPanel.pageFlags, mounts[index])
+            button:Update(LiteMountMountsPanel.allFlags, mounts[index])
             button:Show()
             if button.Icon:IsMouseOver() then button.Icon:OnEnter() end
         else
@@ -302,8 +277,8 @@ function LiteMountMountScrollMixin:Update()
         end
     end
 
-    local totalHeight = self.buttonHeight * #mounts
-    local shownHeight = self.buttonHeight * #self.buttons
+    local totalHeight = #mounts * self.buttonHeight
+    local shownHeight = self:GetHeight()
 
     HybridScrollFrame_Update(self, totalHeight, shownHeight)
 end
@@ -329,54 +304,17 @@ end
 
 LiteMountMountsPanelMixin = {}
 
-function LiteMountMountsPanelMixin:UpdateFlagPaging()
-    local allFlags = LM.Options:GetAllFlags()
-
-    self.maxFlagPages = math.ceil(#allFlags / NUM_FLAG_BUTTONS)
-
-    -- If you change profiles the new one might have fewer pages
-    self.currentFlagPage = Clamp(self.currentFlagPage, 1, self.maxFlagPages)
-
-    self.PrevPageButton:SetEnabled(self.currentFlagPage ~= 1)
-    self.NextPageButton:SetEnabled(self.currentFlagPage ~= self.maxFlagPages)
-
-    local pageOffset = (self.currentFlagPage - 1 ) * NUM_FLAG_BUTTONS + 1
-    self.pageFlags = tslice(allFlags, pageOffset, pageOffset+NUM_FLAG_BUTTONS-1)
-
-    local label
-    for i = 1, NUM_FLAG_BUTTONS do
-        label = self["BitLabel"..i]
-        if self.pageFlags[i] then
-            label:SetText(L[self.pageFlags[i]])
-            label:Show()
-        else
-            label:Hide()
-        end
-    end
-end
-
 function LiteMountMountsPanelMixin:Update()
     LM.UIFilter.ClearCache()
-    self:UpdateFlagPaging()
     self.MountScroll:Update()
     self.AllPriority:Update()
 end
 
 function LiteMountMountsPanelMixin:default()
     LM.UIDebug(self, 'Custom_Default')
+    self.MountScroll.isDirty = true
     LM.Options:ResetAllMountFlags()
     LM.Options:SetPriorities(LM.PlayerMounts.mounts, LM.Options.DEFAULT_PRIORITY)
-    self.MountScroll.isDirty = true
-end
-
-function LiteMountMountsPanelMixin:NextFlagPage()
-    self.currentFlagPage = self.currentFlagPage + 1
-    LiteMountMountsPanel:Update()
-end
-
-function LiteMountMountsPanelMixin:PrevFlagPage()
-    self.currentFlagPage = self.currentFlagPage - 1
-    LiteMountMountsPanel:Update()
 end
 
 function LiteMountMountsPanelMixin:OnLoad()
@@ -387,13 +325,18 @@ function LiteMountMountsPanelMixin:OnLoad()
 
     self.name = MOUNTS
 
+    self.allFlags = LM.Options:GetFlags()
+
+    -- Note, explicitly not FAVORITES (#5)
+    for i = 1, 4 do
+        local label = self["BitLabel"..i]
+        if self.allFlags[i] then
+            label:SetText(L[self.allFlags[i]])
+        end
+    end
     -- We are using the MountScroll SetControl to do ALL the updating.
 
     LiteMountOptionsPanel_RegisterControl(self.MountScroll)
-
-    self.currentFlagPage = 1
-    self.maxFlagPages = 1
-    self.pageFlags = { }
 
     LiteMountOptionsPanel_OnLoad(self)
 end

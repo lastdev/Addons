@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/simulationcraft/parser", 90048)
+local __exports = LibStub:NewLibrary("ovale/simulationcraft/parser", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local __enginelexer = LibStub:GetLibrary("ovale/engine/lexer")

@@ -1,4 +1,4 @@
-﻿if GetLocale() == "koKR" then
+if GetLocale() == "koKR" then
 	BINDING_HEADER_GOGOHEADER = "GoGoMount"
 	BINDING_NAME_GOGOBINDING = "타기/내리기"
 	BINDING_NAME_GOGOBINDING2 = "타기/내리기 (나는 탈것 제외)"

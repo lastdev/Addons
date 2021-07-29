@@ -79,11 +79,11 @@ end
 function AuditItem:GetRuleColor(model)
 	if (model.RuleDefinition) then
 		if (model.RuleDefinition.Extension) then
-			return HEIRLOOM_BLUE_COLOR
+			return Addon.HEIRLOOM_BLUE_COLOR
 		elseif (model.RuleDefinition.Custom) then
-			return RARE_BLUE_COLOR
+			return Addon.RARE_BLUE_COLOR
 		end
-		return ARTIFACT_GOLD_COLOR
+		return Addon.ARTIFACT_GOLD_COLOR
 	end
 
 	-- No longer exists
@@ -148,7 +148,7 @@ function AuditItem:OnUpdate()
 end
 
 function Audit:GetItems()
-	if (self.items) then
+	if (type(self.items) == "table") then
 		return self.items
 	end
 
@@ -161,7 +161,7 @@ function Audit:GetItems()
 		search = string.lower(search)
 	end
 
-	for _, item in ipairs(Addon:GetCharacterHistory()) do
+	for _, item in pairs(Addon:GetCharacterHistory()) do
 		local ruleId, ruleName = Addon:GetRuleInfoFromHistoryId(item.Rule)
 		item.Quality = C_Item.GetItemQualityByID(item.Id) or 0
 		item.SearchKey = string.lower(C_Item.GetItemNameByID(item.Id) or "")
@@ -180,7 +180,7 @@ function Audit:GetItems()
 	end)
 
 	self.items = items;
-	return items;	
+	return items;
 end
 
 function Audit:OnLoad()

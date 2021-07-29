@@ -3,6 +3,8 @@
 
 	<Script file="libs/LibStub/LibStub.lua" />
 	<Script file="libs/LibDropDownExtension-1.0/LibDropDownExtension.lua" />
+	<Script file="libs/CallbackHandler-1.0/CallbackHandler-1.0.lua" />
+	<Script file="libs/LibCombatLogging-1.0/LibCombatLogging.lua" />
 
 	<Script file="locale/locale.lua" />
 	<Script file="locale/enUS.lua" />

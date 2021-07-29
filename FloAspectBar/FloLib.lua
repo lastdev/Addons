@@ -10,7 +10,7 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 	local NUM_SPELL_SLOTS = 10;
 	local SCHOOL_COLORS = { 1.0, 0.7, 0.0 };
 	
-	FLOLIB_VERSION = 1.42;
+	FLOLIB_VERSION = 1.43;
 	
 	FLOLIB_ACTIVATE_SPEC = GetSpellInfo(200749);
 	
@@ -46,6 +46,9 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 	-- Show borders on a frame
 	function FloLib_ShowBorders(self)
 	
+		if not self.SetBackdrop then
+			Mixin(self, BackdropTemplateMixin)
+		end
 		self:SetBackdrop( { bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
 							edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
 							tile = true,
@@ -67,6 +70,9 @@ if not FLOLIB_VERSION or FLOLIB_VERSION < 1.41 then
 	-- Hide borders on a frame
 	function FloLib_HideBorders(self)
 	
+		if not self.SetBackdrop then
+			Mixin(self, BackdropTemplateMixin)
+		end
 		self:SetBackdrop(nil);
 	end
 	

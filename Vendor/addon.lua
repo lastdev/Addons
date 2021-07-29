@@ -29,7 +29,6 @@ function Addon:OnInitialize()
         self:SetupDebugConsoleCommands()
     end
     --@end-debug@]==]
-    
 
     -- Set up events
     self:RegisterEvent("MERCHANT_SHOW", "OnMerchantShow")

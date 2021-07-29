@@ -1,9 +1,11 @@
-local __exports = LibStub:NewLibrary("ovale/engine/best-action", 90048)
+local __exports = LibStub:NewLibrary("ovale/engine/best-action", 90103)
 if not __exports then return end
 local __class = LibStub:GetLibrary("tslib").newClass
 local aceEvent = LibStub:GetLibrary("AceEvent-3.0", true)
 local pairs = pairs
 local tonumber = tonumber
+local tostring = tostring
+local upper = string.upper
 local GetActionCooldown = GetActionCooldown
 local GetActionTexture = GetActionTexture
 local GetItemIcon = GetItemIcon
@@ -40,7 +42,8 @@ __exports.OvaleBestActionClass = __class(nil, {
             local result = node.result
             setResultType(result, "action")
             if  not isNumber(itemId) then
-                local itemIdFromSlot = self.ovaleEquipment:getEquippedItemBySlotName(itemId)
+                local slot = upper(tostring(itemId))
+                local itemIdFromSlot = self.ovaleEquipment:getEquippedItemId(slot)
                 if  not itemIdFromSlot then
                     self.tracer:log("Unknown item '%s'.", itemId)
                     return result

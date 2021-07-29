@@ -1,5 +1,11 @@
 # Changelog
 
+## Changed in v24
+
+* Updated for 9.1
+* Datamined for missing loot data
+* Cross/check in tooltips for knowable loot
+
 ## Changed in v23
 
 * Rearranged a lot of data, with various incidental fixups

@@ -79,75 +79,75 @@ private.ITEM_QUALITY = {
 local SPEAR_ID = 17 --CHECK (none uses it)
 
 private.ITEM_CLASSES = {
-	[LE_ITEM_CLASS_CONSUMABLE] = { 0, 1, 2, 3, 5, 7, 8, 9 }, --consumables
-	[LE_ITEM_CLASS_CONTAINER] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, --bags
-	[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_SWORD2H, LE_ITEM_WEAPON_WARGLAIVE, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_BEARCLAW, LE_ITEM_WEAPON_CATCLAW, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_GENERIC, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_THROWN, SPEAR_ID, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_WAND, LE_ITEM_WEAPON_FISHINGPOLE }, --weapons
-	[LE_ITEM_CLASS_GEM] = { LE_ITEM_GEM_INTELLECT, LE_ITEM_GEM_AGILITY, LE_ITEM_GEM_STRENGTH, LE_ITEM_GEM_STAMINA, LE_ITEM_GEM_SPIRIT, LE_ITEM_GEM_CRITICALSTRIKE, LE_ITEM_GEM_MASTERY, LE_ITEM_GEM_HASTE, LE_ITEM_GEM_VERSATILITY, 9, LE_ITEM_GEM_MULTIPLESTATS, LE_ITEM_GEM_ARTIFACTRELIC }, --gemes
-	[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_LIBRAM, LE_ITEM_ARMOR_IDOL, LE_ITEM_ARMOR_TOTEM, LE_ITEM_ARMOR_SIGIL, LE_ITEM_ARMOR_RELIC }, --armor
-	[LE_ITEM_CLASS_REAGENT] = { 0, 1 }, --consumable
-	[LE_ITEM_CLASS_PROJECTILE] = { 2, 3 }, --projectile
-	[LE_ITEM_CLASS_TRADEGOODS] = { 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16 }, --tradeables
-	[LE_ITEM_CLASS_ITEM_ENHANCEMENT] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }, --object improvements
-	[LE_ITEM_CLASS_RECIPE] = { LE_ITEM_RECIPE_BOOK, LE_ITEM_RECIPE_LEATHERWORKING, LE_ITEM_RECIPE_TAILORING, LE_ITEM_RECIPE_ENGINEERING, LE_ITEM_RECIPE_BLACKSMITHING, LE_ITEM_RECIPE_COOKING, LE_ITEM_RECIPE_ALCHEMY, LE_ITEM_RECIPE_FIRST_AID, LE_ITEM_RECIPE_ENCHANTING, LE_ITEM_RECIPE_FISHING, LE_ITEM_RECIPE_JEWELCRAFTING, LE_ITEM_RECIPE_INSCRIPTION }, --recipes
+	[Enum.ItemClass.Consumable] = { 0, 1, 2, 3, 5, 7, 8, 9 }, --consumables
+	[Enum.ItemClass.Container] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, --bags
+	[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Warglaive, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Thrown, SPEAR_ID, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Wand, Enum.ItemWeaponSubclass.Fishingpole }, --weapons
+	[Enum.ItemClass.Gem] = { Enum.ItemGemSubclass.Intellect, Enum.ItemGemSubclass.Agility, Enum.ItemGemSubclass.Strength, Enum.ItemGemSubclass.Stamina, Enum.ItemGemSubclass.Spirit, Enum.ItemGemSubclass.Criticalstrike, Enum.ItemGemSubclass.Mastery, Enum.ItemGemSubclass.Haste, Enum.ItemGemSubclass.Versatility, 9, Enum.ItemGemSubclass.Multiplestats, Enum.ItemGemSubclass.Artifactrelic }, --gemes
+	[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Libram, Enum.ItemArmorSubclass.Idol, Enum.ItemArmorSubclass.Totem, Enum.ItemArmorSubclass.Sigil, Enum.ItemArmorSubclass.Relic }, --armor
+	[Enum.ItemClass.Reagent] = { 0, 1 }, --consumable
+	[Enum.ItemClass.Projectile] = { 2, 3 }, --projectile
+	[Enum.ItemClass.Tradegoods] = { 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16 }, --tradeables
+	[Enum.ItemClass.ItemEnhancement] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }, --object improvements
+	[Enum.ItemClass.Recipe] = { Enum.ItemRecipeSubclass.Book, Enum.ItemRecipeSubclass.Leatherworking, Enum.ItemRecipeSubclass.Tailoring, Enum.ItemRecipeSubclass.Engineering, Enum.ItemRecipeSubclass.Blacksmithing, Enum.ItemRecipeSubclass.Cooking, Enum.ItemRecipeSubclass.Alchemy, Enum.ItemRecipeSubclass.FirstAid, Enum.ItemRecipeSubclass.Enchanting, Enum.ItemRecipeSubclass.Fishing, Enum.ItemRecipeSubclass.Jewelcrafting, Enum.ItemRecipeSubclass.Inscription }, --recipes
 	-- [10] = { }, --money (obsolete)
-	-- [LE_ITEM_CLASS_QUIVER] = { 0 }, --quiver  (obsolete)
-	[LE_ITEM_CLASS_QUESTITEM] = { 0 }, --quests
-	[LE_ITEM_CLASS_KEY] = { 0, 1 }, --keys
+	-- [Enum.ItemClass.Quiver] = { 0 }, --quiver  (obsolete)
+	[Enum.ItemClass.Questitem] = { 0 }, --quests
+	[Enum.ItemClass.Key] = { 0, 1 }, --keys
 	-- [14] = { }, --permanent (obsolete)
-	[LE_ITEM_CLASS_MISCELLANEOUS] = { LE_ITEM_MISCELLANEOUS_JUNK, LE_ITEM_MISCELLANEOUS_REAGENT, LE_ITEM_MISCELLANEOUS_COMPANION_PET, LE_ITEM_MISCELLANEOUS_HOLIDAY, LE_ITEM_MISCELLANEOUS_OTHER, LE_ITEM_MISCELLANEOUS_MOUNT }, --miscellaneous
-	--[LE_ITEM_CLASS_GLYPH] = { 0 }, --glyphs
-	[LE_ITEM_CLASS_BATTLEPET] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, --battle pets
-	--[LE_ITEM_CLASS_WOW_TOKEN] = { 0 }, --wow token
+	[Enum.ItemClass.Miscellaneous] = { Enum.ItemMiscellaneousSubclass.Junk, Enum.ItemMiscellaneousSubclass.Reagent, Enum.ItemMiscellaneousSubclass.CompanionPet, Enum.ItemMiscellaneousSubclass.Holiday, Enum.ItemMiscellaneousSubclass.Other, Enum.ItemMiscellaneousSubclass.Mount }, --miscellaneous
+	--[Enum.ItemClass.Glyph] = { 0 }, --glyphs
+	[Enum.ItemClass.Battlepet] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, --battle pets
+	--[Enum.ItemClass.WowToken] = { 0 }, --wow token
 }
 
 private.CLASS_PROFICIENCIES = {
 	[1] = { --Warrior
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD2H, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[2] = { --Paladin
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_SWORD2H, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[3] = { --Hunter
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD2H, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[4] = { --Rogue
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_BOWS, LE_ITEM_WEAPON_GUNS, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_CROSSBOW, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[5] = { --Priest
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC, LE_ITEM_WEAPON_WAND },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[6] = { --DeathKnight
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_SWORD2H, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_PLATE, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[7] = { --Shaman
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_AXE2H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_MAIL, LE_ITEM_ARMOR_SHIELD, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[8] = { --Mage
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_GENERIC, LE_ITEM_WEAPON_WAND },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[9] = { --Warlock
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_GENERIC, LE_ITEM_WEAPON_WAND },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[10] = { --Monk
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[11] = { --Druid
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_POLEARM, LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_STAFF, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_BEARCLAW, LE_ITEM_WEAPON_MACE2H, LE_ITEM_WEAPON_MACE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 	[12] = { --Demon Hunter
-		[LE_ITEM_CLASS_WEAPON] = { LE_ITEM_WEAPON_UNARMED, LE_ITEM_WEAPON_FISHINGPOLE, LE_ITEM_WEAPON_DAGGER, LE_ITEM_WEAPON_SWORD1H, LE_ITEM_WEAPON_WARGLAIVE, LE_ITEM_WEAPON_AXE1H, LE_ITEM_WEAPON_GENERIC },
-		[LE_ITEM_CLASS_ARMOR] = { LE_ITEM_ARMOR_CLOTH, LE_ITEM_ARMOR_LEATHER, LE_ITEM_ARMOR_COSMETIC, LE_ITEM_ARMOR_GENERIC, LE_ITEM_ARMOR_RELIC }
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Warglaive, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Generic },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
 	};
 }
 
@@ -992,25 +992,15 @@ local function GetCustomNpcOptions()
 				handler = RareScanner,
 				desc = RSNpcDB.GetNpcName(tonumber(npcID)),
 				args = {
-					deleteNpc = {
-						order = 1,
-						name = AL["CUSTOM_NPC_DELETE_NPC"],
-						desc = AL["CUSTOM_NPC_DELETE_NPC_DESC"],
-						type = "execute",
-						confirm = true,
-						confirmText = string.format(AL["CUSTOM_NPC_DELETE_NPC_CONFIRM"], RSNpcDB.GetNpcName(tonumber(npcID))),
-						func = function()
-							private.custom_npcs_options[npcID] = nil
-							custom_npcs_options.args[npcID] = nil
-							RSNpcDB.DeleteCustomNpcInfo(npcID)
-							RSGeneralDB.RemoveAlreadyFoundEntity(tonumber(npcID))
-						end,
-						width = "normal",
-					},
 					separatorFindZone = {
-						order = 2,
+						order = 1,
 						type = "header",
 						name = AL["CUSTOM_NPC_FIND_ZONES"],
+					},
+					infoZone = {
+						order = 2,
+						type = "description",
+						name = AL["CUSTOM_NPC_INFO"],
 					},
 					continents = {
 						order = 3.1,
@@ -1067,14 +1057,12 @@ local function GetCustomNpcOptions()
 							if (not private.custom_npcs_options[npcID].zones[private.custom_npcs_options[npcID].subzone]) then
 								if (private.custom_npcs_options[npcID].subzone == RSConstants.ALL_ZONES_CUSTOM_NPC) then
 									private.custom_npcs_options[npcID].zones[private.custom_npcs_options[npcID].subzone] = AL["ALL_ZONES"]
-									private.custom_npcs_options[npcID].zone = private.custom_npcs_options[npcID].subzone
-									
-									-- It won't have coordinates, so add it directly
-									RSNpcDB.SetCustomNpcInfo(npcID, private.custom_npcs_options[npcID])
 								else
 									private.custom_npcs_options[npcID].zones[private.custom_npcs_options[npcID].subzone] = getZoneName(private.custom_npcs_options[npcID].subzone)
-									private.custom_npcs_options[npcID].zone = private.custom_npcs_options[npcID].subzone
 								end
+								
+								private.custom_npcs_options[npcID].zone = private.custom_npcs_options[npcID].subzone
+								RSNpcDB.SetCustomNpcInfo(npcID, private.custom_npcs_options[npcID])
 							end
 						end,
 						width = "normal",
@@ -1147,7 +1135,7 @@ local function GetCustomNpcOptions()
 							local coordinatePairs = { strsplit(",", value) }
 							for i, coordinatePair in ipairs(coordinatePairs) do
 								local coordx, coordy = 	strsplit("-", coordinatePair)
-								if (not coordx or tonumber(coordx) == nil or not coordy or tonumber(coordy) == nil) then
+								if (not coordx or string.match(coordx, "^%-?%d+$") == nil or not coordy or string.match(coordy, "^%-?%d+$") == nil) then
 									return string.format(AL["CUSTOM_NPC_VALIDATION_COORD"], coordinatePair)
 								end
 							end
@@ -1232,6 +1220,21 @@ local function GetCustomNpcOptions()
 							return true
 						end,
 						width = "full",
+					},
+					deleteNpc = {
+						order = 11,
+						name = AL["CUSTOM_NPC_DELETE_NPC"],
+						desc = AL["CUSTOM_NPC_DELETE_NPC_DESC"],
+						type = "execute",
+						confirm = true,
+						confirmText = string.format(AL["CUSTOM_NPC_DELETE_NPC_CONFIRM"], RSNpcDB.GetNpcName(tonumber(npcID))),
+						func = function()
+							private.custom_npcs_options[npcID] = nil
+							custom_npcs_options.args[npcID] = nil
+							RSNpcDB.DeleteCustomNpcInfo(npcID)
+							RSGeneralDB.RemoveAlreadyFoundEntity(tonumber(npcID))
+						end,
+						width = "normal",
 					},
 				}
 			}
@@ -1770,9 +1773,10 @@ local function GetCollectionFilters()
 					type = "toggle",
 					name = AL["FILTER_NPCS_ONLY_MAP"],
 					desc = AL["COLLECTION_FILTERS_ONLY_MAP_DESC"],
-					get = function() return RSConfigDB.IsCollectionsFilteredOnlyOnWorldMap() end,
+					get = function() return RSConfigDB.IsNpcFilteredOnlyOnWorldMap() or RSConfigDB.IsContainerFilteredOnlyOnWorldMap() end,
 					set = function(_, value)
-						RSConfigDB.SetCollectionsFilteredOnlyOnWorldMap(value)
+						RSConfigDB.SetNpcFilteredOnlyOnWorldMap(value)
+						RSConfigDB.SetContainerFilteredOnlyOnWorldMap(value)
 					end,
 					width = "full",
 				},
@@ -2612,8 +2616,22 @@ local function GetMapOptions()
 					handler = RareScanner,
 					desc = AL["MAP_TOOLTIPS_DESC"],
 					args = {
-						worldmapTooltips = {
+						scale = {
 							order = 1,
+							type = "range",
+							name = AL["MAP_TOOLTIPS_SCALE"],
+							desc = AL["MAP_TOOLTIPS_SCALE_DESC"],
+							min	= 0.1,
+							max	= 1.5,
+							step = 0.05,
+							get = function() return RSConfigDB.GetWorldMapTooltipsScale() end,
+							set = function(_, value)
+								RSConfigDB.SetWorldMapTooltipsScale(value)
+							end,
+							width = "full",
+						},
+						worldmapTooltips = {
+							order = 2,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_WORLDMAP_ICONS"],
 							desc = AL["MAP_TOOLTIPS_WORLDMAP_ICONS_DESC"],
@@ -2624,7 +2642,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						achievementsInfo = {
-							order = 2,
+							order = 3,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_ACHIEVEMENT"],
 							desc = AL["MAP_TOOLTIPS_ACHIEVEMENT_DESC"],
@@ -2635,7 +2653,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						notes = {
-							order = 3,
+							order = 4,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_NOTES"],
 							desc = AL["MAP_TOOLTIPS_NOTES_DESC"],
@@ -2646,7 +2664,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						loot = {
-							order = 4,
+							order = 5,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_LOOT"],
 							desc = AL["MAP_TOOLTIPS_LOOT_DESC"],
@@ -2657,7 +2675,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						lastTimeSeen = {
-							order = 5,
+							order = 6,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_SEEN"],
 							desc = AL["MAP_TOOLTIPS_SEEN_DESC"],
@@ -2668,7 +2686,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						state = {
-							order = 6,
+							order = 7,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_STATE"],
 							desc = AL["MAP_TOOLTIPS_STATE_DESC"],
@@ -2679,7 +2697,7 @@ local function GetMapOptions()
 							width = "full",
 						},
 						commands = {
-							order = 7,
+							order = 8,
 							type = "toggle",
 							name = AL["MAP_TOOLTIPS_COMMANDS"],
 							desc = AL["MAP_TOOLTIPS_COMMANDS_DESC"],

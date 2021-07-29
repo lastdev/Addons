@@ -1,4 +1,4 @@
-local __exports = LibStub:NewLibrary("ovale/scripts/ovale_paladin_spells", 90048)
+local __exports = LibStub:NewLibrary("ovale/scripts/ovale_paladin_spells", 90103)
 if not __exports then return end
 __exports.registerPaladinSpells = function(scripts)
     local name = "ovale_paladin_spells"
@@ -239,6 +239,7 @@ Define(divine_shield 642)
 	SpellRequire(divine_shield unusable set=1 enabled=(debuffpresent(forbearance_debuff)))
 Define(forbearance_debuff 25771)
     SpellInfo(forbearance_debuff duration=30)
+#hammer_of_wrath
     SpellRequire(hammer_of_wrath unusable set=1 enabled=(target.healthpercent() > 20 and (level()<58 or not buffpresent(avenging_wrath))))
 Define(lay_on_hands 633)
     SpellInfo(lay_on_hands cd=600)

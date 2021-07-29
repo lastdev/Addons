@@ -880,3 +880,4 @@ L["Goes in"] = true
 L["Show extended item information"] = true
 
 L["AUCTION_HOUSE_NOT_VISITED_WARNING"] = "Auctions have not been checked on %s|r since %d days, check the auction house and your mailbox !"
+L["This faction"] = true

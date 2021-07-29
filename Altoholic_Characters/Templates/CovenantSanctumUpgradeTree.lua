@@ -38,7 +38,7 @@ addon:Controller("AltoholicUI.CovenantSanctumUpgradeTree", {
 		
 		-- Get a valid tree ID
 		local treeInfo = DataStore:GetReservoirTalentTreeInfo(character, treeType)
-		if not treeInfo.treeID then return end
+		if not treeInfo or not treeInfo.treeID then return end
 		
 		local info = C_Garrison.GetTalentTreeInfo(treeInfo.treeID)
 		local textureKit = C_Covenants.GetCovenantData(covenantID).textureKit

@@ -436,7 +436,7 @@ function HandyNotes_Draenor:WorldEnter()
         HandyNotes:RegisterPluginDB("HandyNotes_Draenor", self, HandyNotes_Draenor.options)
     end
 
-    self:RegisterBucketEvent({"LOOT_CLOSED"}, 1, "LOOT_CLOSED")
+    self:RegisterBucketEvent({"CRITERIA_UPDATE", "CRITERIA_EARNED", "NEW_TOY_ADDED", "NEW_MOUNT_ADDED"}, 2, "LOOT_CLOSED")
 
 end
 

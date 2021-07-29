@@ -98,6 +98,7 @@ local function FactionIcon_Initialize(frame, level)
 	frame:AddButton(FACTION_ALLIANCE, 1, OnFactionFilterChange, nil, (option == 1))
 	frame:AddButton(FACTION_HORDE, 2, OnFactionFilterChange, nil, (option == 2))
 	frame:AddButton(L["Both factions"], 3, OnFactionFilterChange, nil, (option == 3))
+	frame:AddButton(L["This faction"], 4, OnFactionFilterChange, nil, (option == 4))
 	frame:AddCloseMenu()
 end
 

@@ -4,42 +4,112 @@
 
 <Script file="Rules.lua" />
 
-<Button name="LiteMountRuleButtonTemplate" virtual="true" mixin="LiteMountRuleButtonMixin" inherits="BackdropTemplate">
-    <KeyValues>
-        <KeyValue key="backdropInfo" value="BACKDROP_TOOLTIP_8_8_1111" type="global" />
-        <KeyValue key="backdropColor" value="DARKGRAY_COLOR" type="global"/>
-        <KeyValue key="backdropColorAlpha" value="0.3" type="number" />
-        <KeyValue key="backdropBorderColor" value="DARKGRAY_COLOR" type="global"/>
-        <KeyValue key="backdropBorderColorAlpha" value="0.3" type="number" />
-    </KeyValues>
-    <Size y="33" />
-    <Scripts>
-        <OnShow method="OnShow" />
-    </Scripts>
-
+<Frame name="LiteMountRulePartTemplate" virtual="true">
     <Layers>
         <Layer level="ARTWORK">
-            <FontString parentKey="NumText" inherits="GameFontNormal" justifyH="LEFT">
-                <Size x="24" />
+            <FontString parentKey="Text" name="$parentText" inherits="GameFontNormal" spacing="5" justifyH="LEFT" multiLine="true">
                 <Anchors>
-                    <Anchor point="LEFT" x="16" />
-                </Anchors>
-            </FontString>
-            <FontString parentKey="RuleText" inherits="GameFontHighlight" justifyH="LEFT">
-                <Anchors>
-                    <Anchor point="LEFT" relativeKey="$parent.NumText" relativePoint="RIGHT" x="4" />
-                    <Anchor point="RIGHT" x="-16" />
+                    <Anchor point="LEFT" />
+                    <Anchor point="RIGHT" />
                 </Anchors>
             </FontString>
         </Layer>
     </Layers>
+    <Scripts>
+        <OnLoad inherit="prepend">
+            self.SetText = function (self, ...) self.Text:SetText(...) end
+            self.GetText = function (self, ...) self.Text:GetText(...) end
+        </OnLoad>
+    </Scripts>
+</Frame>
+
+<Button name="LiteMountRuleButtonTemplate" virtual="true" mixin="LiteMountRuleButtonMixin" inherits="LiteMountListButtonStyleTemplate">
+    <Size y="66" />
+    <Scripts>
+        <OnShow method="OnShow" inherit="prepend" />
+        <OnLoad method="OnLoad" inherit="prepend" />
+        <OnClick method="OnClick" inherit="prepend" />
+    </Scripts>
+
+    <Layers>
+        <Layer level="ARTWORK">
+            <FontString parentKey="NumText" inherits="GameFontNormalLarge" justifyH="CENTER">
+                <Size x="32" />
+                <Anchors>
+                    <Anchor point="LEFT" x="4" />
+                </Anchors>
+            </FontString>
+            <Texture parentKey="Selected" alphaMode="ADD" hidden="true">
+                <Color r="0.1" g="0.1" b="0" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="2" y="-2" />
+                    <Anchor point="BOTTOMRIGHT" x="-2" y="2" />
+                </Anchors>
+            </Texture>
+        </Layer>
+    </Layers>
+    <Frames>
+        <Button parentKey="MoveUp">
+            <Scripts>
+                <OnEnter inherit="prepend">
+                    LiteMountTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+                    LiteMountTooltip:AddLine(TRACKER_SORT_MANUAL_UP)
+                    LiteMountTooltip:Show()
+                </OnEnter>
+                <OnLeave inherit="prepend">
+                    LiteMountTooltip:Hide()
+                </OnLeave>
+            </Scripts>
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" relativePoint="RIGHT" x="-8" />
+            </Anchors>
+            <Size x="22" y="22"/>
+            <NormalTexture atlas="hud-MainMenuBar-arrowup-up" />
+            <PushedTexture atlas="hud-MainMenuBar-arrowup-down" />
+            <HighlightTexture atlas="hud-MainMenuBar-arrowup-highlight" alphaMode="ADD" />
+        </Button>
+        <Button parentKey="MoveDown">
+            <Scripts>
+                <OnEnter inherit="prepend">
+                    LiteMountTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+                    LiteMountTooltip:AddLine(TRACKER_SORT_MANUAL_DOWN)
+                    LiteMountTooltip:Show()
+                </OnEnter>
+                <OnLeave inherit="prepend">
+                    LiteMountTooltip:Hide()
+                </OnLeave>
+            </Scripts>
+            <Anchors>
+                <Anchor point="TOPRIGHT" relativePoint="RIGHT" x="-8" />
+            </Anchors>
+            <Size x="22" y="22"/>
+            <NormalTexture atlas="hud-MainMenuBar-arrowdown-up" />
+            <PushedTexture atlas="hud-MainMenuBar-arrowdown-down" />
+            <HighlightTexture atlas="hud-MainMenuBar-arrowdown-highlight" alphaMode="ADD" />
+        </Button>
+        <Frame parentKey="Condition" inherits="LiteMountRulePartTemplate">
+            <Size x="260" y="58" />
+            <Anchors> <Anchor point="LEFT" relativeKey="$parent.NumText" relativePoint="RIGHT" x="8" /> </Anchors>
+        </Frame>
+        <Frame parentKey="Action" inherits="LiteMountRulePartTemplate">
+            <Size y="58" />
+            <Anchors>
+                <Anchor point="LEFT" relativeKey="$parent.Condition" relativePoint="RIGHT" x="16" />
+                <Anchor point="RIGHT" x="-40" />
+            </Anchors>
+        </Frame>
+    </Frames>
 </Button>
 
 <Frame name="LiteMountRulesPanel" hidden="true" inherits="LiteMountOptionsPanelTemplate" mixin="LiteMountRulesPanelMixin">
 
+    <KeyValues>
+        <KeyValue key="name" value="BRAWL_TOOLTIP_RULES" type="global" />
+    </KeyValues>
+
     <Layers>
         <Layer level="ARTWORK">
-            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_ACTIONS_EXP">
+            <FontString parentKey="ExplainText" inherits="GameFontNormal" justifyV="TOP" justifyH="LEFT" text="LM_RULES_EXP">
                 <Anchors>
                     <Anchor point="TOP" y="-48" />
                     <Anchor point="LEFT" x="48" />
@@ -50,7 +120,7 @@
     </Layers>
 
     <Frames>
-        <ScrollFrame parentKey="Scroll" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountRulesScrollMixin">
+        <ScrollFrame name="$parentScroll" parentKey="Scroll" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountRulesScrollMixin">
             <Anchors>
                 <Anchor point="TOPLEFT" x="16" y="-120" />
                 <Anchor point="BOTTOMRIGHT" x="-34" y="48" />
@@ -58,19 +128,62 @@
             <Scripts>
                 <OnLoad method="OnLoad" />
             </Scripts>
+            <Layers>
+                <Layer level="OVERLAY">
+                    <FontString parentKey="Inactive" inherits="GameFontNormalHuge">
+                        <Size x="480" />
+                        <Color r="1" g="0" b="0" />
+                        <Anchors>
+                            <Anchor point="CENTER" />
+                        </Anchors>
+                    </FontString>
+                </Layer>
+            </Layers>
         </ScrollFrame>
 
-        <Frame parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
+        <Frame name="$parentBindingDropDown" parentkey="BindingDropDown" inherits="UIDropDownMenuTemplate">
             <Size x="93" y="22" />
             <Anchors>
                 <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.Scroll" x="-8" />
             </Anchors>
         </Frame>
 
+        <Button parentKey="DefaultButton" inherits="UIPanelButtonTemplate" text="DEFAULT">
+            <Size x="96" y="22" />
+            <Anchors>
+                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.Scroll" x="-8" y="3" />
+            </Anchors>
+            <Scripts>
+                <OnClick>
+                    local parent = self:GetParent()
+                    LiteMountOptionsControl_Default(parent.Scroll, true)
+                </OnClick>
+            </Scripts>
+        </Button>
+
+        <Button parentKey="AddButton" inherits="UIPanelButtonTemplate" text="ADD">
+            <Size x="72" y="22" />
+            <Anchors>
+                <Anchor point="TOPRIGHT" relativeKey="$parent.Scroll" relativePoint="BOTTOMRIGHT" x="-4" y="-8" />
+            </Anchors>
+        </Button>
+        <Button parentKey="EditButton" inherits="UIPanelButtonTemplate" text="EDIT">
+            <Size x="72" y="22" />
+            <Anchors>
+                <Anchor point="RIGHT" relativeKey="$parent.AddButton" relativePoint="LEFT" x="-4" />
+            </Anchors>
+        </Button>
+        <Button parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="DELETE">
+            <Size x="72" y="22" />
+            <Anchors>
+                <Anchor point="RIGHT" relativeKey="$parent.EditButton" relativePoint="LEFT" x="-4" />
+            </Anchors>
+        </Button>
     </Frames>
 
     <Scripts>
         <OnLoad method="OnLoad" />
+        <OnHide method="OnHide" />
         <OnSizeChanged method="OnSizeChanged" />
     </Scripts>
 </Frame>

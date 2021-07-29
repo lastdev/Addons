@@ -19,6 +19,7 @@ local TomCatsVignetteTooltip = TomCatsVignetteTooltip
 local maps = { }
 local atlasSizes = { }
 local interval, minInterval, maxInterval = 1, 1/15, 1
+local imagePath = ("Interface\\AddOns\\%s\\images\\"):format(addonName)
 local timeSinceLastUpdate = 0
 local vignetteInfoCache = { }
 local activeEncounters = { }
@@ -52,6 +53,9 @@ end
 
 local function rescale(pin)
 	local atlasName = pin.Texture:GetAtlas()
+	if (not atlasName) then
+		atlasName = pin.Texture:GetTexture()
+	end
 	if (atlasName) then
 		if (not atlasSizes[atlasName]) then
 			atlasSizes[atlasName] = { pin.Texture:GetSize() }
@@ -68,17 +72,46 @@ local function rescale(pin)
 	end
 end
 
+local customVignetteIconOverrides = {
+	["vignetteevent"] = true,
+	["vignettekill"] = true
+}
+
 local function setPinIcon(pin, status)
 	local atlas = (status <= PIN_STATUS.SPAWNED) and pin.vignette["Atlas"] or "Capacitance-General-WorkOrderCheckmark"
-	pin.Texture:SetAtlas(atlas, true)
-	pin.HighlightTexture:SetAtlas(atlas, true)
-	pin.scaleFactor = atlasTweaks[atlas] and atlasTweaks[atlas].scaleFactor or 1
+	local override = false
+	if (customVignetteIconOverrides[atlas] and _G.TomCats_Account.preferences.defaultVignetteIcon ~= "default") then
+		override = _G.TomCats_Account.preferences.defaultVignetteIcon
+	end
+	if (override) then
+		pin.Texture:SetAtlas(nil)
+		pin.Texture:SetTexture(imagePath .. "icon-" .. override)
+		pin.Texture:SetSize(32,32)
+		pin.HighlightTexture:SetAtlas(nil)
+		pin.HighlightTexture:SetTexture(imagePath .. "icon-" .. override)
+		pin.scaleFactor = 0.75
+	else
+		--pin.Texture:ClearAllPoints()
+		pin.Texture:SetTexture(nil)
+		pin.Texture:SetAtlas(atlas, true)
+		--pin.HighlightTexture:ClearAllPoints()
+		pin.HighlightTexture:SetTexture(nil)
+		pin.HighlightTexture:SetAtlas(atlas, true)
+		pin.scaleFactor = atlasTweaks[atlas] and atlasTweaks[atlas].scaleFactor or 1
+	end
 	if (status == PIN_STATUS.SPAWNED) then
 		activeEncounters[pin] = true
 		pin.Texture:SetVertexColor(1, 0, 0, 1)
 		pin.BackHighlight:Show()
 		pin.Expand:SetTexCoord(0, 1, 0, 1);
-		pin.Expand:SetAtlas(atlas, TextureKitConstants.IgnoreAtlasSize);
+		if (override) then
+			pin.Expand:SetAtlas(nil);
+			pin.Expand:SetTexture(imagePath .. "icon-" .. override);
+		else
+			pin.Expand:SetTexture(nil)
+			pin.Expand:SetAtlas(atlas, TextureKitConstants.IgnoreAtlasSize);
+		end
+
 		if (iconAnimationEnabled) then
 			pin.Expand:Show()
 			pin.ExpandAndFade:Play()
@@ -162,6 +195,7 @@ local function OnUpdate(_, elapsed)
 					end
 				end
 			end
+			addon.vignetteGUIDsByVignetteID = vignetteGUIDsByVignetteID
 			for vignetteID in pairs(affectedMaps[1].pins) do
 				local vignetteGUIDs = vignetteGUIDsByVignetteID and vignetteGUIDsByVignetteID[vignetteID]
 				for _, mapInfo in ipairs(affectedMaps) do
@@ -184,7 +218,12 @@ local function OnUpdate(_, elapsed)
 								pin.isSpawned = false
 								updateVignettePin(pin)
 							end
-							pin:SetPosition(pin.vignette:GetLocation())
+							local x, y = pin.vignette:GetLocation()
+							if (not x) then
+								x = -100
+								y = -100
+							end
+							pin:SetPosition(x, y)
 						end
 					end
 				end
@@ -215,7 +254,7 @@ function TomCatsMapCanvasDataProviderMixin:RefreshAllData()
 		local vignetteInfo = addon.getVignettes(mapFrame:GetMapID())
 		if (vignetteInfo) then
 			for vignetteID, vignette in pairs(vignetteInfo) do
-				if (vignette.isVisible) then
+				if (vignette.isPinned) then
 					if (not mapData.pins[vignetteID]) then
 						ShowHide(mapFrame:AcquirePin("TomCatsMapPinTemplate", vignette), not self.hideAll)
 					end
@@ -276,6 +315,45 @@ local function setupMapProvider(map, iconScale)
 	end
 end
 
+local trackedVignettePins = { }
+
+local vignettePinOverridesIDs = { }
+
+for _, v in ipairs(addon.vignettes_known) do
+	vignettePinOverridesIDs[v] = true
+end
+
+--todo: Determine if this will create any performance issue when more rares are added to the overrides lookup (currently OK)
+local function Hook_Pin_Show(self)
+	if (self:IsShown() and self.vignetteID and vignettePinOverridesIDs[self.vignetteID]) then
+		self:Hide()
+	end
+end
+
+local function trackVignettePins(mapFrame)
+	local pinPool = mapFrame.pinPools[_G.VignetteDataProviderMixin:GetPinTemplate()]
+	if (pinPool) then
+		for pin in pinPool:EnumerateActive() do
+			if (not trackedVignettePins[pin]) then
+				trackedVignettePins[pin] = true
+				hooksecurefunc(pin, "Show", Hook_Pin_Show)
+				Hook_Pin_Show(pin)
+			end
+		end
+	end
+end
+
+local function Hook_AcquirePin(self, pinTemplate, ...)
+	if (pinTemplate == _G.VignetteDataProviderMixin:GetPinTemplate() or pinTemplate == "AreaPOIPinTemplate") then
+		trackVignettePins(self)
+	end
+end
+
+local function setupVignettePinOverride(mapFrame)
+	hooksecurefunc(mapFrame, "AcquirePin", Hook_AcquirePin)
+	trackVignettePins(mapFrame)
+end
+
 local function OnEvent(event, arg1)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
@@ -285,10 +363,12 @@ local function OnEvent(event, arg1)
 		if (not WorldMapFrame and _G["WorldMapFrame"]) then
 			WorldMapFrame = addon.GetProxy(_G["WorldMapFrame"])
 			setupMapProvider(WorldMapFrame, 0.7)
+			setupVignettePinOverride(_G["WorldMapFrame"])
 		end
 		if (not BattlefieldMapFrame and _G["BattlefieldMapFrame"]) then
 			BattlefieldMapFrame = addon.GetProxy(_G["BattlefieldMapFrame"])
 			setupMapProvider(BattlefieldMapFrame, 0.8)
+			setupVignettePinOverride(_G["BattlefieldMapFrame"])
 		end
 	end
 end
@@ -310,7 +390,12 @@ function TomCatsMapCanvasPinMixin:OnAcquired(vignette)
 	self.vignette = vignette
 	local mapData = maps[self:GetMap()]
 	mapData.pins[vignette.ID] = self
-	self:SetPosition(vignette:GetLocation())
+	local x, y = vignette:GetLocation()
+	if (not x) then
+		x = -100
+		y = -100
+	end
+	self:SetPosition(x,y)
 	updateVignettePin(self)
 	rescale(self)
 	self:ApplyCurrentScale()

@@ -23,11 +23,11 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 2450e15218b1ebb017f444abdb3017f816eddf34 $")
+end, "$Revision: 26dd2f3e4984cffda76fcac1ddd39d0c29867f99 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local LCD = IsClassic and LibStub and LibStub("LibClassicDurations", true)
+local LCD = IsVanillaClassic and LibStub and LibStub("LibClassicDurations", true)
 if LCD then
 	LCD.RegisterCallback("ZPerl", "UNIT_BUFF", function(event, unit)
 		if unit == "target" or unit == "focus" then

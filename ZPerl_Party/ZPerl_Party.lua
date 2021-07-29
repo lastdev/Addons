@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 00a3cadfbbc8615840794db77581992f54190a2b $")
+end, "$Revision: e465fe16508990efacd6c524381066a3b6519002 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -764,7 +764,7 @@ local function XPerl_Party_UpdatePVP(self)
 end
 
 -- XPerl_Party_UpdateCombat
-function XPerl_Party_UpdateCombat(self)
+local function XPerl_Party_UpdateCombat(self)
 	local partyid = self.partyid
 	if (UnitIsVisible(partyid)) then
 		if (UnitAffectingCombat(partyid)) then

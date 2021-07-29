@@ -1,5 +1,37 @@
 # Changelog
 
+## Changed in v90100.4
+
+* Mine new loot; lots added to the Maw rares
+
+## Changed in v90100.3
+
+* Missing Maw rares: Blinding Shadow, Fallen Charger
+* Include the Playful Vulpin in Ardenweald. It's a critter, so nameplate scanning can't catch it, but the macro will work.
+* Show a note in the map-icon tooltip if the Overlay addon is disabled, so you know why there are no icons
+* Show achievement status for all of Consumption's stages
+* Add some loot
+
+## Changed in v90100.2
+
+* Add rare information to the Blizzard world map icons (the big stars in Korthia, mostly)
+* Explain Consumption, because people are killing it too soon 😭
+* Don't try to set target icons in raids unless you're the RL
+* Add some missing 9.1 Maw rares
+* Add vignetteids to trigger alerts for Korthia rares whose names aren't their event
+
+## Changed in v90100.1
+
+* Conquering Korthia achievement
+* Maelie the Wanderer in Korthia
+* Better display of long notes in tooltips
+
+## Changed in v90100.0
+
+* Update for 9.1
+* New rares in Korthia
+* Avoid an error in loot when an item is uncached and not fetched
+
 ## Changed in v90005.2
 
 * Blizzard has fixed a few typos in mob names, so add some code that'll refresh the name-cache when you actually see one of these mobs

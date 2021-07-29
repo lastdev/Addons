@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90100
 #@non-debug@
 ## Title: HandyNotes - Legion Instance World Quests
 ## Title-deDE: HandyNotes - Legion Instance World Quests
@@ -23,12 +23,12 @@
 # ## Notes-zhTW: 顯示軍臨天下副本裡的世界任務相關稀有菁英位置與任務的資訊
 #@end-debug@
 ## Author: arith
-## Version: v1.22
+## Version: v1.27
 ## RequiredDeps: HandyNotes
-## OptionalDeps: 
+## OptionalDeps: !LibUIDropDownMenu
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_LegionInstanceWorldQuestsDB
-## X-Date: 2020-10-18T8:32:02Z
+## X-Date: 2021-06-30T13:39:37Z
 ## X-License: GPLv2
 ## X-Category: Map
 

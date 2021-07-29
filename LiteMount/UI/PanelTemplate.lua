@@ -46,6 +46,17 @@
 
 ----------------------------------------------------------------------------]]--
 
+LM_LISTBUTTON_BACKDROP_INFO = {
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    tile = true,
+    tileSize = 8,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+}
+
+LM_NEARLYBLACK_COLOR = CreateColor(0.2, 0.2, 0.2)
+
+----------------------------------------------------------------------------]]--
+
 local _, LM = ...
 
 local L = LM.Localize
@@ -91,8 +102,13 @@ end
 
 function LiteMountOptionsPanel_Refresh(self, trigger)
     LM.UIDebug(self, "Panel_Refresh t="..tostring(trigger))
+    local anyDirty = false
     for _,control in ipairs(self.controls or {}) do
         LiteMountOptionsControl_Refresh(control, trigger)
+        if control.isDirty then anyDirty = true end
+    end
+    if not self.hideRevertButton then
+        self.RevertButton:SetEnabled(anyDirty)
     end
 end
 
@@ -150,7 +166,7 @@ function LiteMountOptionsPanel_OnLoad(self)
 
     if self ~= LiteMountOptions then
         self.parent = LiteMountOptions.name
-        self.name = _G[self.name] or self.name
+        self.name = _G[self.name] or L[self.name] or self.name
         self.Title:SetText("LiteMount : " .. self.name)
     else
         self.name = "LiteMount"
@@ -170,6 +186,14 @@ function LiteMountOptionsPanel_OnLoad(self)
     LiteMountOptionsPanel_AutoLocalize(self)
 
     InterfaceOptions_AddCategory(self)
+end
+
+function LiteMountOptionsPanel_PopOver(self, f)
+    f.overFrame = self
+    f:SetParent(self)
+    f:ClearAllPoints()
+    f:SetPoint("CENTER", self, "CENTER")
+    f:Show()
 end
 
 function LiteMountOptionsControl_Refresh(self, trigger)
@@ -192,12 +216,15 @@ end
 
 function LiteMountOptionsControl_Revert(self)
     LM.UIDebug(self, "Control_Revert")
-    for i = 1, (self.ntabs or 1) do
-        if self.oldValues[i] ~= nil then
-            self:SetOption(self.oldValues[i], i)
+    if self.isDirty then
+        self.isDirty = nil
+        for i = 1, (self.ntabs or 1) do
+            if self.oldValues[i] ~= nil then
+                self:SetOption(self.oldValues[i], i)
+                self.oldValues[i] = self:GetOption(i)
+            end
         end
     end
-    self.isDirty = nil
 end
 
 function LiteMountOptionsControl_Cancel(self)
@@ -213,6 +240,8 @@ function LiteMountOptionsControl_Default(self, onlyCurrentTab)
 
     LM.UIDebug(self, "Control_Default "..tostring(onlyCurrentTab))
 
+    self.isDirty = true
+
     if onlyCurrentTab then
         self:SetOption(self:GetOptionDefault(self.tab), self.tab)
     else
@@ -220,21 +249,20 @@ function LiteMountOptionsControl_Default(self, onlyCurrentTab)
             self:SetOption(self:GetOptionDefault(i), i)
         end
     end
-    self.isDirty = true
 end
 
 function LiteMountOptionsControl_OnChanged(self)
     LM.UIDebug(self, "Control_OnChanged")
-    self:SetOption(self:GetControl(), self.tab)
     self.isDirty = true
+    self:SetOption(self:GetControl(), self.tab)
 end
 
 function LiteMountOptionsControl_OnTextChanged(self, userInput)
+    self.isDirty = true
     if userInput == true then
         LM.UIDebug(self, "Control_OnTextChanged")
         self:SetOption(self:GetControl(), self.tab)
     end
-    self.isDirty = true
 end
 
 function LiteMountOptionsControl_SetTab(self, n)
@@ -276,4 +304,21 @@ function LiteMountOptionsPanel_RegisterControl(control, parent)
     parent = parent or control:GetParent()
     parent.controls = parent.controls or { }
     tinsert(parent.controls, control)
+end
+
+function LiteMountPopOverPanel_OnLoad(self)
+    self.name = _G[self.name] or L[self.name] or self.name
+    self.Title:SetText(self.name)
+end
+
+function LiteMountPopOverPanel_OnShow(self)
+    self:SetFrameLevel(self.overFrame:GetFrameLevel() + 4)
+    self.overFrame.Disable:Show()
+end
+
+function LiteMountPopOverPanel_OnHide(self)
+    self.overFrame.Disable:Hide()
+    self.overFrame = nil
+    self:Hide()
+    self:SetParent(nil)
 end

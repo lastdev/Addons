@@ -1,35 +1,8 @@
 --[[ See license.txt for license and copyright information ]]
 local addonName, addon = ...
 
-local HINT_ALL = { }
-
-local defaultSavedVariables = {
-	TomCats_Account = {
-		preferences = {
-			["TomCats-MinimapButton"] = {
-				position = -2.888,
-				hidden = false
-			},
-			MapOptions = {
-				iconAnimationEnabled = true,
-				iconScale = 1.0
-			},
-			betaEnabled = false
-		},
-		lastVersionSeen = "NONE",
-		discoveriesVersion = "0",
-		discoveriesResetCount = 0,
-		discoveries = {
-			vignettes = HINT_ALL,
-			vignetteAtlases = HINT_ALL
-		}
-	},
-	TomCats_Character = {
-		loveisintheair = {
-			preferences = HINT_ALL
-		}
-	}
-}
+local defaultSavedVariables = addon.defaultSavedVariables or { }
+local HINT_ALL = addon.constants.HINT_ALL
 
 local function OverlayVariables(template, overlay)
 	local newVars = { }

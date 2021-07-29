@@ -73,8 +73,10 @@ local function RefreshVignetteSection(section)
 		local lookupByName = { }
 		for _, v in pairs(state.vignettes) do
 			local name = v["Name"]
-			table.insert(rareNames, name)
-			lookupByName[name] = v
+			if (not lookupByName[name]) then
+				table.insert(rareNames, name)
+				lookupByName[name] = v
+			end
 		end
 		table.sort(rareNames)
 		for _, v in ipairs(rareNames) do
@@ -90,7 +92,7 @@ local function RefreshVignetteSection(section)
 	local lastShown
 	local titleIndex = 1
 	for _, vignette in ipairs(state.vignettesSorted) do
-		if (vignette.isVisible) then
+		if (vignette.isListed) then
 			local button = state.titles[titleIndex]
 			titleIndex = titleIndex + 1
 			button.text:SetText(vignette["Name"])
@@ -173,7 +175,12 @@ function TomCatsVignetteTitleMixin:OnClick()
 		addon.VignetteArrow:ClearTarget()
 		addon.VignetteArrow.vignetteID = nil
 	else
-		local x, y = self.vignette:GetLocation()
+		local x, y
+		if (not self.vignette["Alias"]) then
+			x, y = self.vignette:GetLocation()
+		else
+			x, y = self.vignette["Alias"]:GetLocation()
+		end
 		addon.VignetteArrow:SetTarget(x, y, WorldMapFrame:GetMapID())
 		addon.VignetteArrow.vignetteID = self.vignette.ID
 	end

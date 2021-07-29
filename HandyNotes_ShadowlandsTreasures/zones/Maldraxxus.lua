@@ -236,7 +236,7 @@ ns.RegisterPoints(1536, { -- Maldraxxus
     -- [] = {criteria=49875, quest=62468, inbag=nil,}, -- Vesitgial Wings (just cooking mats)
     -- [] = {criteria=49925, quest=62580, inbag=nil,}, -- Barrel O' Fish
     -- [] = {criteria=50559, quest=62823, inbag=nil,}, -- Underpowered Gravity Pack
-    -- [] = {criteria=49917, quest=62582, inbag=nil,}, -- Spare Weapon
+    -- [] = {criteria=49917, quest=62582, inbag=183824,}, -- Spare Weapon
     -- Known but not work waypointing:
     -- [] = {criteria=50560, quest=62760, inbag=184038,}, -- Trained Corpselice (on Smorgas)
     -- [] = {criteria=49867, quest=61712, inbag=nil,}, -- Holiday Hat (vendor crafting mats)
@@ -269,8 +269,11 @@ ns.RegisterPoints(1536, { -- Maldraxxus
         quest=60368,
         label="Blackhound Cache",
         loot={
+            183619, -- Everlasting Boneforged Greataxe
+            {183827, quest=62575, covenant=Enum.CovenantType.Necrolord}, -- Blacksteel Backplate (stitching)
+            {183824, quest=62582, covenant=Enum.CovenantType.Necrolord}, -- Cache of Spare Weapons (stitching)
             {184318, toy=true}, -- Battlecry of Krexus
-            183827, -- Blacksteel Backplate
+            181800, -- Standard of the Blackhound Warband
         },
         covenant=Enum.CovenantType.Necrolord,
     },
@@ -492,25 +495,23 @@ ns.RegisterPoints(1536, {
         },
         level=60,
     },
-    [53706130] = { -- Nirvaska the Summoner
+    [50356330] = { -- Nirvaska the Summoner
         achievement=14308, criteria=48868,
-        quest=58875, -- incorrect?
+        quest=58629, -- incorrect?
         npc=161857,
         loot={
-            182205, -- Scarab-Shell Faceguard
             183700, -- Forgotten Summoner's Shoulderpads
             {181811,covenant=Enum.CovenantType.Necrolord}, -- Beckoner's Shadowy Crystal
         },
         level=60,
         note="Only when the {quest:58490} world quest is up",
     },
-    [50356330] = { -- Pesticide
+    [53706130] = { -- Pesticide
         achievement=14308, criteria=48849,
-        quest=58629,
+        quest=58875,
         npc=162767,
         loot={
             182205, -- Scarab-Shell Faceguard
-            183700, -- Forgotten Summoner's Shoulderpads
         },
     },
     [53851875] = { -- Ravenomous
@@ -737,6 +738,9 @@ local jellycat = ns.nodeMaker{
     note="Pet all nine cats to get {item:184449}",
     icon=true,
     minimap=true,
+    loot={
+        {184449, toy=true}, -- Jiggles's Favorite Toy
+    }
 }
 ns.RegisterPoints(1536, {
     [32025705] = jellycat{criteria=49426,}, -- Snots

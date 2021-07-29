@@ -12,9 +12,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local THIS_ACCOUNT = "Default"
-local THIS_REALM = GetRealmName()
-
 local AddonDB_Defaults = {
 	global = {
 		Options = {
@@ -91,6 +88,8 @@ local covenantCampaignQuestChapters = {
 	[Enum.CovenantType.NightFae] = { 62899, 60272, 59242, 59821, 59071, 61171, 58452, 59866, 60108 },		-- https://www.wowhead.com/guides/night-fae-covenant-campaign-story-rewards
 	[Enum.CovenantType.Necrolord] = { 59609, 60272, 57648, 58820, 59894, 57636, 58624, 61761, 62406 },		-- https://www.wowhead.com/guides/necrolords-covenant-campaign-story-rewards
 }
+
+local TorghastQuestLine = { 62932, 62935, 62938, 60139, 62966, 62969, 60146, 62836, 61730 }
 
 -- *** Utility functions ***
 local bAnd = bit.band
@@ -674,8 +673,8 @@ end
 local function _GetCharactersOnQuest(questName, player, realm, account)
 	-- Get the characters of the current realm that are also on a given quest
 	local out = {}
-	account = account or THIS_ACCOUNT
-	realm = realm or THIS_REALM
+	account = account or DataStore.ThisAccount
+	realm = realm or DataStore.ThisRealm
 
 	for characterKey, character in pairs(addon.Characters) do
 		local accountName, realmName, characterName = strsplit(".", characterKey)
@@ -732,8 +731,8 @@ local function _GetCovenantCampaignChaptersInfo(character)
 	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaing (always available for all covenants)
 	
 	local chaptersInfo = {}
-	
-	for _, id in pairs(chapters) do
+
+	for index, id in ipairs(chapters) do
 		local info = C_CampaignInfo.GetCampaignChapterInfo(id)
 		
 		-- completed will be true/false or nil
@@ -741,22 +740,34 @@ local function _GetCovenantCampaignChaptersInfo(character)
 		-- 1 & 2 are true (completed)
 		-- 3 is false (ongoing, but not completed yet)
 		-- 4+ = nil (not yet started)
-		
-		local completed = nil
-		if character.covenantCampaignProgress > 0 then
 			
-			-- warning: orderIndex goes from 0 to 8, not 1 to 9
-			if (info.orderIndex < character.covenantCampaignProgress) then
-				completed = true
-			elseif (info.orderIndex == character.covenantCampaignProgress) then
-				completed = false
-			end
+		local completed = nil
+		if (index <= character.covenantCampaignProgress) then
+			completed = true
+		elseif (index == character.covenantCampaignProgress + 1) and (character.covenantCampaignProgress ~= 0) then
+			completed = false
 		end
 		
 		table.insert(chaptersInfo, { name = info.name, completed = completed})
 	end	
 	
 	return chaptersInfo
+end
+
+local function _GetTorghastStorylineProgress(character)
+	local count = 0
+	
+	for _, questID in ipairs(TorghastQuestLine) do
+		if _IsQuestCompletedBy(character, questID) then
+			count = count + 1
+		end
+	end
+	
+	return count
+end
+
+local function _GetTorghastStorylineLength(character)
+	return #TorghastQuestLine
 end
 
 local PublicMethods = {
@@ -782,6 +793,8 @@ local PublicMethods = {
 	GetCovenantCampaignProgress = _GetCovenantCampaignProgress,
 	GetCovenantCampaignLength = _GetCovenantCampaignLength,
 	GetCovenantCampaignChaptersInfo = _GetCovenantCampaignChaptersInfo,
+	GetTorghastStorylineProgress = _GetTorghastStorylineProgress,
+	GetTorghastStorylineLength = _GetTorghastStorylineLength,
 }
 
 function addon:OnInitialize()
@@ -806,6 +819,8 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignProgress")
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignLength")
 	DataStore:SetCharacterBasedMethod("GetCovenantCampaignChaptersInfo")
+	DataStore:SetCharacterBasedMethod("GetTorghastStorylineProgress")
+	DataStore:SetCharacterBasedMethod("GetTorghastStorylineLength")
 end
 
 function addon:OnEnable()

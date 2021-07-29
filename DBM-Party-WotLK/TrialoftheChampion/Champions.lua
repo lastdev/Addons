@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(634, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010024")
+mod:SetRevision("20210614202848")
 mod:SetCreatureID(34657, 34701, 34702, 34703, 34705, 35569, 35570, 35571, 35572, 35617)
-mod:SetEncounterID(334, 336, 2022)
+mod:SetEncounterID(2022)
 
 mod:RegisterCombat("combat")
 mod:SetWipeTime(60)--prevent wipe for no vehicle user

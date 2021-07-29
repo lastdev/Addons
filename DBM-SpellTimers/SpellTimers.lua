@@ -25,8 +25,8 @@
 --    * Noncommercial. You may not use this work for commercial purposes.
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
-local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local isTBC = DBM:GetTOC() == 20501 or false--TODO, fixme when TBC WOW_PROJECT_ID added
+local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
+local isTBC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
 
 local default_bartext = "%spell: %player"
 local default_settings = {
@@ -387,7 +387,7 @@ do
 						DBM:AddMsg("DBM-SpellTimers Index mismatch error! " .. guikey .. " " .. spellid)
 					end
 					local bartext = v.bartext:gsub("%%spell", spellinfo or "UNKNOWN SPELL"):gsub("%%player", sourceName or "UNKNOWN SOURCE"):gsub("%%target", destName or "UNKNOWN TARGET")
-					SpellBarIndex[bartext] = Bars:CreateBar(v.cooldown, bartext, GetSpellTexture(isClassic and v.spell or spellid), nil, true)
+					SpellBarIndex[bartext] = DBT:CreateBar(v.cooldown, bartext, GetSpellTexture(isClassic and v.spell or spellid), nil, true)
 					if settings.showlocal then
 						local msg = L.Local_CastMessage:format(bartext)
 						if not lastmsg or lastmsg ~= msg then
@@ -403,7 +403,7 @@ do
 				for _, v in pairs(myportals) do
 					if isClassic and DBM:GetSpellInfo(v.spell) == spellinfo or v.spell == spellid then
 						local bartext = v.bartext:gsub("%%spell", spellinfo):gsub("%%player", sourceName):gsub("%%target", destName)
-						SpellBarIndex[bartext] = Bars:CreateBar(v.cooldown, bartext, GetSpellTexture(isClassic and v.spell or spellid), nil, true)
+						SpellBarIndex[bartext] = DBT:CreateBar(v.cooldown, bartext, GetSpellTexture(isClassic and v.spell or spellid), nil, true)
 						if settings.showlocal then
 							local msg = L.Local_CastMessage:format(bartext)
 							if not lastmsg or lastmsg ~= msg then

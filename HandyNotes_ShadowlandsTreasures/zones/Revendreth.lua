@@ -159,6 +159,7 @@ ns.RegisterPoints(1525, {
             {182589, mount=1391}, -- Loyal Gorger
         },
         note="Kill {npc:160821}, do 7 days of dailies for {npc:173499}, get a mount",
+        group="Daily Mounts",
     },
     --
     -- [45507810] = {
@@ -238,6 +239,7 @@ ns.RegisterPoints(1525, {
     minimap=true,
     level=60,
     upcoming=false,
+    group="Daily Mounts",
 })
 ns.RegisterPoints(52, { -- Westfall
     -- Day 1: oats
@@ -255,6 +257,7 @@ ns.RegisterPoints(52, { -- Westfall
     atlas="stablemaster",scale=1.2,
     minimap=true,
     level=60,
+    group="Daily Mounts",
 })
 
 -- Carriages
@@ -335,6 +338,7 @@ ns.RegisterPoints(1525, {
     achievement=14771,
     atlas="vehicle-silvershardmines-minecartred",scale=1.2,
     always=true,
+    group="Carriage Routes",
 })
 
 -- Castle Sinrunners: What We Ride In The Shadows
@@ -471,6 +475,7 @@ ns.RegisterPoints(1525, {
     always=true,
     label="{npc:174032}",
     note="Requires {currency:1820} x 5",
+    group="Sinrunners",
 })
 
 -- Bat!
@@ -488,6 +493,7 @@ ns.RegisterPoints(1525, {
     texture=ns.merge(ns.atlas_texture("ancientmana"), {r=1, g=0, b=0}),
     level=60,
     note="It's inconsistent whether you'll get credit for animating any particular bat",
+    group="Dredbats",
 })
 
 -- Rares
@@ -755,6 +761,20 @@ ns.RegisterPoints(1525, {
 })
 
 -- It's Always Sinny In Revendreth
+local inquisitor_loot = {
+    180493, -- Inquisitor's Robes
+    184213, -- Ritualist's Soles
+    184214, -- Chained Manacles
+    184217, -- Sinstone Stompers
+    180451, -- Grand Inquisitor's Sinstone Fragment
+}
+local high_inquisitor_loot = {
+    184211, -- High Inquisitor's Banded Cincture
+    184212, -- Intimidator Trainer's Cuffs
+    184215, -- Depraved Houndmasster's Grips
+    184216, -- Stoneborn Bodyguard's Shoulderplates
+    180451, -- Grand Inquisitor's Sinstone Fragment
+}
 ns.RegisterPoints(1525, {
     [73005200] = { -- Archivist Fane
         label="{npc:160248}",
@@ -765,53 +785,57 @@ ns.RegisterPoints(1525, {
         criteria=48136,
         npc=159151,
         requires_item=172999,
+        loot=inquisitor_loot,
     },
     [64704640] = { -- Inquisitor Otilia
         criteria=48135,
         npc=156918,
         requires_item=172998,
+        loot=inquisitor_loot,
     },
     [67254340] = { -- Inquisitor Petre
         criteria=48134,
         npc=156919,
         requires_item=172997,
+        loot=inquisitor_loot,
     },
     [69754720] = { -- Inquisitor Sorin
         criteria=48133,
         npc=156916,
         requires_item=172996,
+        loot=inquisitor_loot,
     },
     [75304415] = { -- High Inquisitor Gabi
         npc=159152,
         requires_item=173000,
         criteria=48137,
-        loot={
+        loot=ns.merge({
             180500, -- High Inquisitor's Bloody Cloak
-        },
+        }, high_inquisitor_loot),
     },
     [71254235] = { -- High Inquisitor Radu
         criteria=48138,
         npc=159153,
         requires_item=173001,
-        loot={
+        loot=ns.merge({
             180499, -- High Inquisitor's Cloak of Fanaticism
-        },
+        }, high_inquisitor_loot),
     },
     [72105315] = { -- High Inquisitor Dacian
         criteria=48140,
         npc=159155,
         requires_item=173006,
-        loot={
+        loot=ns.merge({
             180496, -- High Inquisitor's Drape of Shame
-        },
+        }, high_inquisitor_loot),
     },
     [69755225] = { -- High Inquisitor Magda
         criteria=48139,
         npc=159154,
         requires_item=173005,
-        loot={
+        loot=ns.merge({
             180498, -- High Inquisitor's Obscene Shawl
-        },
+        }, high_inquisitor_loot),
     },
     [69654540] = { -- Grand Inquisitor Aurica
         criteria=48142,
@@ -819,7 +843,7 @@ ns.RegisterPoints(1525, {
         requires_item=173008,
         loot={
             177803, -- Grand Inquisitor's Stave
-            184210, -- Spiked Cudgel fo the Inquisition (sic)
+            184210, -- Spiked Cudgel of the Inquisition
         },
     },
     [64505275] = { -- Grand Inquisitor Nicu
@@ -828,7 +852,7 @@ ns.RegisterPoints(1525, {
         requires_item=173007,
         loot={
             177803, -- Grand Inquisitor's Stave
-            184210, -- Spiked Cudgel fo the Inquisition (sic)
+            184210, -- Spiked Cudgel of the Inquisition
         },
     },
 }, {

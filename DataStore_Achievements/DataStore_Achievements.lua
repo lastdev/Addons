@@ -10,8 +10,6 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-local THIS_ACCOUNT = "Default"
-
 local AddonDB_Defaults = {
 	global = {
 		Account = {
@@ -129,7 +127,7 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 	if num == 1 then
 		-- if there's only 1 criteria, we know for sure it hasn't been completed (otherwise the achievement itself would be completed)
 		-- so only the quantity matters (and only if it's > 0)
-		local _, _, _, quantity = GetAchievementCriteriaInfo(id, 1);
+		local _, _, _, quantity = GetAchievementCriteriaInfo(id, 1)
 		if quantity and quantity > 0 then
 			storage.Partial[id] = quantity
 		end
@@ -141,7 +139,7 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 	-- 3) Partially completed achievements (with multiple criteria)
 	for j = 1, num do
 		-- ** calling GetAchievementCriteriaInfo in this loop is what costs the most in terms of cpu time **
-		local _, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(id, j);
+		local _, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(id, j)
 
 		-- MoP fix, some achievements not completed by current alt, but completed by another alt, return that the criteria is completed, even when it's not
 		-- This is visible for reputation achievements for example.
@@ -164,12 +162,15 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 end
 
 local function ScanAllAchievements()
+	-- 2021/06/25 : do not wipe information about fully completed achievements, they will not go "uncompleted" any time soon.
+	-- The reason is that achievements that are both horde and alliance have different id's, and wiping would cancel the achievement
+	-- when logging on with the other faction. (especially for account-wide achievements)
 	wipe(addon.db.global.Account.Partial)
-	wipe(addon.db.global.Account.Completed)
-	wipe(addon.db.global.Account.CompletionDates)
+	-- wipe(addon.db.global.Account.Completed)
+	-- wipe(addon.db.global.Account.CompletionDates)
 	wipe(addon.ThisCharacter.Partial)
-	wipe(addon.ThisCharacter.Completed)
-	wipe(addon.ThisCharacter.CompletionDates)
+	-- wipe(addon.ThisCharacter.Completed)
+	-- wipe(addon.ThisCharacter.CompletionDates)
 
 	local cats = GetCategoryList()
 	local prevID
